@@ -1,0 +1,168 @@
+
+################
+# That Hay Bale
+################
+
+# After jumping in the haystack, go to any screen except Jhonka
+Drat. The winds are heavy on all but a couple of key screens... looks like you're no longer in stealth mode.
+# + look
+Well, there's that big bale of hay over there.
+# + look hay
+It reminds you of a warm, safe place where as a child you'd hide.
+# + look in hay
+You search and search through the haystack. Nope. No needles.
+# + look tree
+It's Arbor Day, Charlie Brown!
+# + look fence
+A standard peasant fence. Trogdor makes milk's meat outta these things.
+# + enter hay / jump in hay / hide in hay (not muddy)
+Not right now, man. You're feeling fairly clean given you just bathed 3 fortnights ago.
+# + enter hay / jump in hay (muddy but not nearby)
+Who do you think you are, MJ? Try from a little closer. 
+# + enter hay / jump into hay
+You've not known much better than a roll in the hay alone.
+You leap in the hay like a two years old boy. Uh oh. The hay sticks to your muddy body. You're a walking hay bale! Just like that one guy from that one show!
+# + hug tree
+To every thing, turn, turn, turn. There is a season, turn, turn, turn. 
+# + get hay
+Who do you think you are? Some kind of Thy Dungeonman? You don't need any hay.
+
+##############
+# Mud Puddle
+##############
+
+# + (walk into puddle when raining)
+Now you've done it! You're covered in sticky, albeit fine smelling, mud. Your "Scalding Lake" T-shirt is all soiled, too. You just washed it last harvest!
+# + look (dry)
+There's a dried out mud puddle. It's all caked and cracked like the kind rock stars are always standing on.
+# + look (wet)
+Not much to see. 'Sides that big mud puddle. 
+# + get / look rock
+That rock's not doin' a whole lot for me.
+# + get mud (when it's wet, before you fall in)
+You can't get the mud so much. More like the mud'll get you.
+# + get mud (when it's wet, after you fall in)
+You've already gotten an heapin' helpin' all up on yo'self. 
+
+
+###############
+# Archery Range
+###############
+
+# + look
+You've come across some kind of shooting gallery. There's a depressed looking archer at the desk there.
+# + look archer (before speaking to Mendelev)
+He looks depressed. He keeps sighing all obviously like he wants you to ask about it.
+# + look archer (before saying haldo to Dongolev)
+He looks depressed. Jeez, who invited the fun sponge?
+# + look archer(s)/(anything not covered elsewhere)  (after saying haldo to Dongolev)
+You've come across some kind of shooting gallery. A pair of twin brothers seem to be running the place.
+# + look target
+Hey, they had those same targets at Peasant Scout Camp!
+# + look desk
+It says 'archery' on it. My wife's drunk.
+
+# + talk man
+"Oh, hi. I'm Mendelev," says the archer. "I used to run a shooting range here with my brother Dongolev. But we don't talk so much anymore. I haven't seen him in a Jhonka's age. If you ever run into him, tell him I said 'haldo'.
+"You mean 'hello,'" you ask?
+"Oh, um. No. Shut up. I said 'haldo' and I meant 'haldo.' Tell him I said 'haldo.'"
+# + give super trinket
+"That'll work," says Mendelev. Just hit 3 bullseyes and you win the SuperTime FunBow TM!"
+"The ARROW KEYS aim left and right and the SPACE BAR operates the bow. You'll need to press it a couple of times to get a nice shot off but we don't give lessons so you're on your own."
+# (get [X]=3-5 bullseyes)
+"Nice shootin! [X] hits." Says Mendelev. "Here's your prize!" You got the SuperTime FunBow TM! We don't sell ammo, so you'll have to find your own arrows for it.
+# + ask about fire (all ask abouts m&d must both be there)
+"Trogdor just burned down some idiot peasant's cottage. You should ask him," says Mendelev. / "Yeah, this jerk goes on vacation to some prancey lake and..." / They see you staring daggers at them and turn bright red. / "Oh. Nevermind," says Dongolev. "Um, yeah. What's a fire?" adds Mendelwhatever.
+# + ask about naked ned
+"That guy creeps us out. In fact, shut up about him."
+# + ask about robe
+"We wouldn't know. We only wear archer clothes. You just can't arch real well in a robe, y'know?"
+# + ask about smell
+"That giant pig running around sure smells bad. Maybe talk to him."
+# + ask about trogdor
+"Oh man, there was this one time when I came THIS close to having Trogdor ARROWED!" says Dongolev. / "Hey, shut up! That was me!" interrupts Mendelev, "YOU almost arrowed that blue baby!" says Dongolev. / "Did not!" / "Did so!" / "Did not!" / (You see where this is going.)
+# + ask about (unknown)
+"Either we don't know anything about that, or you're real boring."
+# + haldo (after Dongolev has returned)
+"HALDO!!" 
+# + play game (before saying haldo to Dongolev)
+The gallery's not open and you got no bow or arrows, Cupid.
+# + get/take/steal target
+No. Those will fall on you and more than likely kill you. 
+# + get/take/steal arrow
+They have 'RANGE' printed on them, so it would be kind of embarrassing to have to shoot around with them. Also, that guy over there is giving you the evil eye.
+# + talk (while away from or behind the desk)
+"Why don't you saddle up to the front of the table there, cowboy?"
+# + talk (after beating the minigame)
+"Go away!" says Dongolev. "We're arguing about who's hotter," adds Mendelev.
+
+
+
+##################
+# River and Stone
+##################
+
+# + look
+Not much to see. River's got a rock in it.
+# + look water
+Got a rock in it.
+# + look rock
+The ages have worn this rock down. It is a rock of ages. Still a-rollin.
+# + swim
+Peasants can't swim. Like, it's illegal.
+# + get/take/steal rock
+For what? Now you're just making up puzzles to solve.
+
+
+#########################
+# Mountain Pass / Knight
+#########################
+
+# + look
+You've reached the mountain pass that leads to Trogdor's lair. A royal knight blocks the entrance.
+# + look knight/man/dude/guy
+He looks way cooler than you.
+# + look sign
+What that sign there? That sign says 'Trogdor.'
+# + look trogdor
+I know it's labeled 'Trogdor,' but it's really just a sign, silly. I mean, attack it if you want... 
+# + talk knight (beginning)
+You explain your situation to the knight. That Trogdor burninated your cottage and you've sworn revenge. You ask for passage up the mountain to settle your score. (Press RETURN to advance through conversations)
+"Hang on there, Trogdorkilla," says the knight. "I can only allow actual peasants up the mountain pass to face Trogdor. And you CLEARLY are not one."
+"Look, Dragonheart..."
+"You don't STINK like a peasant."
+"You don't DRESS like a peasant."
+"And you're definitely not ON FIRE like a peasant."
+"Once you're those 3 things, come back and maybe we can talk."
+"Be sure to LOOK around lots. Talk to everyone you see and ASK ABOUT stuff. Type HELP if you get confused and INVENTORY to see your worldly stuff. Type SAVE or LOAD to save or load your game. Duh."
+# + talk knight (with kerrek's belt)
+"Frankly, Matthew Broderick, you sure stink like a peasant. But you still don't DRESS like a peasant and you're not ON FIRE like a peasant."
+# + talk knight (with ned's robe, on fire or not)
+"My dear Adso, you are dressed well but you don't STINK and you're not ON FIRE. Let us instead exercise our brains and try to solve this tantalizing conundrum."
+# + talk knight (after acquiring Kerrek's belt and Naked Ned's robe)
+"Almost there, Dirk the Daring. You stink like a peasant and you dress like one too. But you're clearly still not ON FIRE."
+# + talk knight (after have all three)
+Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.
+This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!
+Please insert floppy disk 2 into Drive B and press enter.
+Disk read error. Please insert floppy disk 2 into Drive B and press enter.
+# + attack sign / break sign
+I was being facetious, Mr. Smarty-short-pants. No sign attacking for you.
+# + ask about fire
+"Well, whenever I see peasants, they tend to be on fire. So get yourself on fire. I hear horse grease gives a nice, controlled burn."
+# + ask about Jhonka
+"Since the Kerrek showed up, we don't see the Jhonka so much anymore. He lives in that little cave over in west Peasantry."
+# + ask about Kerrek
+"I call him Big Stinky. He's slow and stupid, but he'll pound you into milks meat without a second thought." 
+# + ask about naked ned
+"That weirdo used to live over in west Peasantry but now I guess he just prances around the forest in his birthday suit."
+# + ask about robe
+"Peasants wear those brown robes. You know, with the rope around the waist. Get yourself one of those."
+# + ask about smell
+"I never met a peasant that didn't stink. If you wanna smell bad, get the Kerrek involved. That thing reeks!"
+# + ask about trogdor
+"If I had a gold coin for every whining peasant's cottage that freaking dragon burninated, I'd be rich as a jhonka."
+# + ask about (unknown)
+"I don't know anything about that, short pants."
+
+

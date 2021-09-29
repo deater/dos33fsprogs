@@ -1,0 +1,214 @@
+
+#####################################
+# Outside Mysterious (Ned's) Cottage
+#####################################
+
+# + look
+There's a run-of-the-mill non-burninated thatched-roof cottage here. Its stonework looks a little shoddy.
+# + look cottage
+A run-of-the-mill, non-burninated thatched-roof cottage here. Its stonework looks a little shoddy.
+# + look hole (before deploying baby)
+You peer into the tiny opening. The cottage appears to be empty.
+# + look hole (after deploying baby)
+There is no baby here, but there's an open door on the other side of the room. If you could only get to it somehow! 
+# + look rock (before removing it)
+There appears to be a loose stone towards the back of the cottage.
+# + look rock (after removing it)
+Some jerk removed a loose stone from the back of the cottage. 
+# + look fence
+A standard peasant fence. Trogdor makes milk's meat outta these things.
+# + move rock
+You slide the stone over to reveal a little hole. If only you could cut off your arms, legs, and head you might be able to squeeze through!
+# + put baby into the hole
+Deploying Q-Baby...
+Way to go, baby! It got the cottage door opened and headed off to a new life. He becomes Valedictorian of his graduating class, goes to Scalding Lake State, gets a degree in Advanced Peasantry and lands a job at Thatch-Pro: building better cottages for a better tomorrow.
+You grow apart and the letters from him become fewer and fewer. He develops a severe mead problem and blames you for never being there.
+# + break/kick/punch door 
+Violence is not the answer.
+# cut off arms, legs, and head
+Very funny. You have trouble cutting out coupons in the weekly 'Peasant Penny-Pincher' circular. I'd like to see you try. 
+# + try  (Warning: You die.)
+Okay, fine. You try to cut off your hard-earned extremities. It doesn't work. You dead. Thanks for nothing.
+# + open door
+How? There's no knob.
+# + open door (after baby opens)
+It's already open. Since this is an adventure game we're gonna proffer you adventure yourself on in there.
+# + pull/push door
+It doesn't budge, man.
+# + knock
+You could knock until your knuckles bleed. Nobody's home. 
+# + knock until knuckles bleed
+You knock for about 4 hours until your knuckles are raw and bloody. That was fun!
+# + knock until knuckles bleed (again)
+You done that already. A great time was had by all. 
+# + deploy/drop/use baby (before baby)
+Swell idea, but is you ain't my baby? I.e. you ain't got one?
+# + deploy/drop/use baby (before moving stone)
+Use the baby where? You haven't anywhere inconsiderate to stuff 'm.
+# + deploy/drop/use baby (after baby left)
+Li'l P.B. has moved on, and the door seems to be open... I can't see why we'd go through this all over again. 
+# + close door (before baby opens)
+Already done. That was easy!
+# + close door (after baby opens)
+You can't. That baby really wrenched it open good. 
+# + get rock (after moving it)
+You've already moved the stone out of the way to reveal a less-than peasant-sized hole. 
+
+
+##################
+# Wavy Tree (Ned)
+##################
+
+# + look
+Nothing special here except for that weird wavy tree.
+# + look ned (when Naked Ned is peeking out)
+A fairly naked man is peering out from behind that tree.
+# + look tree
+It's weird and wavy.
+# + climb tree
+You don't climb wavy trees.
+# + talk (with Naked Ned visible)
+You startled him and he disappears! 
+# + talk Naked Ned (with Naked Ned visible)
+'Never speak of this meeting!' says the nudie and he disapperars.
+# + talk tree
+Trees can't talk but a breeze picks up and you swear the leaves whisper the words 'Naked Ned.' Weird.
+
+###############################################
+# Kerrek Tracks 1/2 (top or bottom footprints?)
+###############################################
+
+# (Walk too close to the Kerrek) — {The Kerrek pounds your head into the ground}
+Your mom always told you not to take head poundings from strange Kerreks. And NOW looks what's happened. You dead. Thanks for playing.
+# + shoot Kerrek with bow
+Here goes nothin', Kid Icarus
+ARROWED!! Nice shot. You smote the Kerrek! He lay there stinking.
+A light rain heralds the washing free of the Kerrek's grip on the land. You're feeling pretty good, though, so the artless symbolism doesn't bug you.
+# + get belt
+You strap the Kerrek's belt buckle around your waist. Oh boy. You sure stink now.
+# + look
+There are large hoof prints in the grass here.
+# + look (no Kerrek)
+There are large hoof prints in the the grass here. And it smells like a public latrine.
+# + look (living Kerrek)
+# + look footprints/tracks (living Kerrek) 
+It's the Kerrek, you moron! Get outta here!
+# + look footprints/tracks (Kerrek not present)
+If you weren't a simpleton you might think these were Kerrek prints. But since you are a simpleton, you just go, 'Yay! Piggies!' 
+# + look (dead Kerrek)
+There are large hoof prints in the grass here. There is a large Kerrek-shaped mound on the grass.
+# + look (rotting Kerrek)
+There are large hoof prints in the grass here. Part of the ground looks just like a rotting kerrek.
+# + look (skeletal Kerrek)
+There are large hoof prints in the grass here. Looks like someone left their spare bones here. 
+# + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
+#   (Warning: This speeds the Kerrek up, so be careful.) 
+The kerrek is a teetotaller and is offended by your offer. You've really cheesed him off now.
+# + make friends with kerrek
+Look, it didn't work for Strongbad and it's not gonna work for you either.
+# + load / save (while he's still alive)
+You can't be fumbling with a floppy while the Kerrek is bearing down on you.
+# + kill kerrek (he is there, no bow or arrow)
+With what?! You got no weapons except your butter-knife wit.
+# + kill kerrek (he is there, you have arrow but not bow)
+With what?! You gonna throw that arrow at him?
+# + kill kerrek (he is there, you have bow, not arrow
+With what?! You got no arrow, fool!
+# + kill kerrek (he is dead)
+Yeah. You smote the Kerrek. You deserve a trophy full of Mutton-ums.
+# + kill kerrek (he is not there)
+Good idea. But you kinda need the actual Kerrek to be here for that to work. 
+# + get arrow (after killing)
+Eww! No way. That thing's got some serious Kerrek-Brand kooties on it now. 
+# + get kerrek
+Well, he does smell real bad. But he's a bit too big to fit in your pocket.
+# + look belt (still alive)
+Yecch. I wouldn't touch that unless it was, like, an important quest item or something.
+# + look kerrek (immediately after killing him)
+He dead. And the only thing of value on him is his stinky belt buckle.
+# + look kerrek (immediately after taking the belt)
+He dead.
+# + look kerrek (while he's decomposing)
+He dead. You didn't think he could have smelled any worse? Well, guess what: He smells worse.
+# + look kerrek (when he's all bones)
+He dead. He wasn't fat, he was just big boned! Poor pig-man. 
+# + talk kerrek (while he is alive)
+'Me llamo Julio,' you begin... It seems only to further anger the already tempramental Kerrek. That stupid 'Learn Kerrek in 3 Weeks' cassette did nothing for you!
+
+############################
+# Outside Baby Lady Cottage
+############################
+
+# + look
+There's a ranch-style thatched roof cottage here. There are also what appear to be four crunch berry bushes but you can't be sure.
+# + look cottage
+You had a cottage once. A lot like this one. *sniff* Trogdor will pay!
+# + look door
+# (This response repeats whatever your command was back at you. When typing commands, you can put anything you want between the command and the object and it will still work, so here, if you type "look at door" or "look at the ugly brown door" or "lookasdfasdfdoor", it will put that in between the quotes.)
+Listen to you, "look door" What kinda gaming is that? It's a door and it's closed.
+# + look berries
+Crunch berries maybe. 
+# + look bushes
+You suspect they might be crunch berry bushes.
+# + open door
+You open er up and head on in.
+# + get berries (first bush)
+You reach into the bush to snag some berries but they all just squish in your hand.
+# + get berries (second bush)
+Man, nothing in this bush but squished berries either.
+# + get berries (third bush)
+Too bad you don't want any squished berries, cuz hey: jackpot!
+# + get berries (fourth bush)
+You reach into the bush to snag you some berries but instead find a Super Trinket! These things are awesome! You have a sneaking suspicion that SOMEONE in this game will need this thing.
+# + search bush (same twice)
+You already searched that bush. It was okay. Nothing to write home about... oh, wait... you don't have a home. My b.
+# + search bush (alredy found trinket)
+You've searched your fill of berry bushes for this game. If you want to search more press 'reload' on the browser 
+# + knock
+'It's open,' says a female voice from inside. Um, it's NOT open, but you get her drift.
+# + knock (after she leaves)
+No one answers. That crazy lady took off. How ever will you get past this closed door now?
+# + get berries (the same bush twice)
+You already searched that bush. It was okay. Nothing to write home about... oh, wait... you don't have a home. My b.
+# + get berries (after you've gotten the trinket)
+You've searched your fill of berry bushes for this game. If you want to search more press 'reload' on the browser
+
+
+#############################
+# Burninated Trees / Lantern
+#############################
+
+# + look
+A signal lantern of some kind hangs from a burninated tree.
+# + look (night)
+A burning signal lantern hangs from a severely burninated tree. 
+# + look lantern (unlit)
+It's unlit at the moment. That fancy pants royal knight probably lights it on nights when Troggie's on the prowl.
+# + look lantern (lit)
+It's lit! Musta been a Trogdor sighting tonight. 
+# + look stump
+NOT a good place to sit.
+# + look tree
+Severely burninated. They could probably use some salve.
+# + (walking under candle in burninated trees)
+Whoa! The horse grease on your robe caught fire! You're a for-real peasant now.
+# + (exiting on fire)
+Man, screens sure get light fast around here.
+# + light lantern (before lit)
+With what? Your red-hot intellect?
+# + light lantern (already lit)
+Already lit, moron. 
+# + get fire (at night, before grease)
+You're just not flammable enough.
+# + get fire (at night, after grease)
+You don't need to get IT. Just let IT get YOU.
+# + get fire (at night, after getting on fire)
+You're already on fire! What? You want to be MORE on fire? 
+# + get lantern
+Better not. There's an engraved plaque on it that says, "Do Not Remove Under Penalty Of 'You Die'".
+# + get plague
+Wrong game, Mispeller Jones. Try the little button to the left of the 'W'.
+# + get  plaque
+You have enough of that on your browning, rotten peasant teeth already.
+
+

@@ -1,0 +1,182 @@
+
+
+##############
+# Jhonka cave
+##############
+
+# + Type any command other than "yes" or "no" after the Jhonka asks if you stole the riches
+Just answer him, yes or no, you fool!
+# + look
+There's a little cave with a little door with a little note on it.
+# + look (kerrek dead, before riches)
+There's a disgusting little Jhonka hopping around outside a little cave.A fat pile of riches lies next to him.
+# + look (after kerrek dead, after take riches)
+There's a disgusting little Jhonka hopping around outside a little cave. 
+# + look club/turkey leg (when he's outside)
+Turkey leg or no, it looks like the Jhonka's been gnawing on it.
+# + look cave
+Just a little cave. Calm down.
+# + look fence
+A standard peasant fence. Trogdor makes milk's meat outta these things.
+# + look jhonka (when he's outside)
+The Jhonka is gray and grody. He's got a cromagnon forehead and jaw with a pair of wicked incisors. He sports an old loin-cheese cloth and carries either a big club or one of those roasted turkey legs you got at the Ren Fest.
+# + read note (before killing Kerrek)
++ It says "scared of kerrek. go way. -j"
+# + (walk in haystack)
+Hey, nice disguise! The Jhonka doesn't seem to notice you.
+# + steal riches
+Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! "You take my riches?!" growls the Jhonka.
+# + no
+"Okay. Lemme know if you see riches anywhere," he grunts and goes back to his hopping. You smooth talker, you.
+# + ask about fire
+"Burninator make fire! Barbecue all peasants!"
+# + ask about Jhonka
+"The Kerrek is dead!" he cries and hops around some more. You wonder how someone this primitive could have made that much dough. 
+# + ask about naked ned (or) robe
+"Filthy naked peasant! Stay away from my cave-hole!" Who's he calling naked? HE'S the one wearing the string bikini.
+# + ask about smell
+"Kerrek smell! Now Kerrek dead!" screeches the Jhonka. So you can infer from this that all smells are dead? You always sucked at the analytical questions.
+# + ask about trogdor
+"All hail Burninator! Trogdor Number One! Beat Peasant Tech!" says the grimy Jhonka.
+# + ask about (unknown)
+"Jhonka don't know nothing bout that!"
+# + yes (to the Jhonka when he asks you about his riches)
+'I KILL YOU!!' screams the Jhonka.
+# {The Jhonka clubs you to death}  (Warning: Obviously, you will die.) 
+Club or turkey leg, the jhonka sure just beat you senseless with whatever he was holding. You dead. Thanks for playing!
+# + open door
+It's locked. With one o' them SCHLAGE deadbolts, too. Those things are hard core.
+# + knock (while he's inside)
+A gravelly voice inside yells,
+'JUST US CHICKENS'
+# or
+'NO FOR RENT'
+# or 
+'I GIVE LAST YEAR!'
+# or 
+'GAVE AT OFFICE'
+# or: 
+'GO WAY!'
+# + kill jhonka (outside)
+No way! Jhonka's are born scrappers. He may be little, but he'll crawl ya.
+# + get club (when he's out)
+Now there's a surefire way to get yourself killed.
+# + get note
+It's been magically sealed to the door with a wondrously whimsical spell.
+# + give riches (before jumping in hay)
+The Jhonka will see you! And rip out your jugular with his teeth or something equally horrible.
+# + talk jhonka (while inside the hay)
+Not now! You'll blow your cover!
+
+##########################
+# Your Burninated Cottage
+##########################
+
+# + look
+The remains of your thatched-roof cottage lie before you. You swear revenge against Trogdor.
+# + look cottage
+All your baubles and trinkets, your flasks and scrolls, your goblets and staffs! BURNINATED!! (And then, if you haven't taken the map yet:) Looks like there's a piece of unburninated paper on the ground. 
+# + look ground
+Hey, it's your old fireproof map to Peasantry. 
+# + look paper
+Hey, it's your old fireproof map to Peasantry. 
+# + get map (in right spot?)
+You tuck it nice-like into your short, short pants. Type MAP at nearly any time to check the map.
+# + get map (if you already have it)
+Yeah but like you already map the took, guy!
+
+###################
+# Pebble Lake West
+###################
+
+# + look
+There's definitely half a lake here with a sandy shore.
+# + look lake/water
+It extends onto the next screen and has a sandy shore.
+# + look sand (after pebbles)
+Remember those pebbles on the beach? Man, those were good times. 
+# + look bush
+Don't worry about that bush. Yeah, there's red berries on it but never you mind.
+# + look berries
+Shut up.
+# + get pebbles
+You grab up a handful of fairly substantial pebbles. You make sure to get an even mix of sedentary, igneous, and, um, sureptitious rocks.
+# + throw baby
+Something tells you this is a good idea and you lob the little one into the lake.
+You won't be arrested after all! The little guy has resurfaced safely, carrying an old bottle of soda. You take the soda and stow your swaddling buddy for takeoff.
+# + swim
+Not in this game, Swimmer Dan! In this game, you drown. 
+# + skip stones
+You've always been terrible at skipping stones. And you're even worse at just plain throwing rocks in lakes. You decide to save yourself the embarrassment.
+# + get berries
+NO MAN! JEEZ! 
+# + get pebbles/rocks (from too far)
+You do your best Mr. Fantastic impression, but you can't reach from here. 
+# + throw baby (before getting the baby)
+I think you misread the walkthrough on GameFAQs. You gotta get the baby first.
+# + throw baby (after getting the soda)
+Baby Dashing is a little waterlogged from the toss, and you read his soft gurgling to mean that there's no more soda left.
+# + throw baby/feed (at south side)
+Maybe try again from the center of the lake. Looks deeper there.
+
+
+###################
+# Pebble Lake East
+###################
+
+# + look / look lake
+Why it's half a lake.
+# + look (when the old man is fishing)
+Why it's half a lake.With a fisherman in it. And he's fishing! 
+# + look man/guy/peasant/old guy/old man (while he is fishing)
+An older peasant sits silently in a boat with his line in the water.
+# + look sand
+One million three hundred thousand seventy-four hundred and sixty two... One million three hundred thousand seventy-four hundred and sixty three... Drat! You lost count again.
+# + look boat/dinghy (while he is fishing)
+Keep your eyes off my dinghy!
+# + look boat/dinghy (after he is gone)
+It was loaned out to the Fishing Challenge videogame. 
+# + talk man (before throwing chicken feed in lake)
+You holler at the old man about Trogdor, but he just grumbles about the fish not biting. "Must be using the wrong bait..." he says, suggestively.
+# + throw chicken feed
+You toss the feed into the lake. You shed a tear for each one. "Goodbye, Monty" you sniff. "Bye Delga, Rasputin. Farewell, Combledon!" and so forth.
+Woah! That crotchety old man just caught a pantload of fish! "Now I can get back to running the inn," he says and rows to shore and hauls his boat out and cleans, guts, and filets all the fish and a buncha other stuff we didn't animate.
+# + throw feed (before getting the feed)
+You have nothing with which to do that...with.
+# + throw feed (after throwing the feed)  (The repetition is probably just a goof.) 
+You already fed the fish. Let's get moving here, people! You already fed the fish. Let's get moving here, people!
+# + throw baby/feed (at south side)
+Maybe try again from the center of the lake. Looks deeper there.
+# + throw (anything but the feed while he is fishing)
+'That isn't gonna work for bait!' the old man screams, at a needlessly harsh volume.
+# + throw (anything when fisherman gone)
+You already fed the fish. Let's get moving, here, people!
+
+
+####################
+# Outside Giant Inn
+####################
+
+# + look
+There's a giant Inn here. It takes up, like, the entire screen.
+# + look door
+Just a door. A door with a note on it.
+# + look inn
+Looks okay from out here. But do they have a free breakfast buffet?
+# + look sign
+If you can't read that sign, you need to quit playing this game. 
+# + look window
+Check it out! There's an INN in there.
+# + read note (before feed in lake)
+It says, "Gone Fishin" just like that grog coozie your cousin got you.
+# + open door (after old man)
+You open the door and step inside the inn.
+# + open door (before old man)
+It's locked fast!
+# + knock (closed)
+No answer.
+# + knock (open)
+Just open it, man!
+# + get note
+What is it with you and notes?! No!! 
+

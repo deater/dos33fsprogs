@@ -2,6 +2,8 @@
 
 ; Peasantry Part 4 (bottom line of map)
 
+; ned cottage, wavy tree, kerrek 2, lady cottage, burninated tree
+
 WHICH_PEASANTRY = 3
 
 ; by Vince `deater` Weaver	vince@deater.net
@@ -208,21 +210,6 @@ fake_error2:
 
 
 map_backgrounds_low:
-;	.byte	<todo_lzsa		; 0
-;	.byte	<todo_lzsa		; 1
-;	.byte	<todo_lzsa		; 2
-;	.byte	<waterfall_lzsa		; 3	-- temp intentional bug
-;	.byte	<waterfall_lzsa		; 4	-- waterfall
-;	.byte	<todo_lzsa		; 5
-;	.byte	<todo_lzsa		; 6
-;	.byte	<todo_lzsa		; 7
-;	.byte	<river_lzsa		; 8	-- river
-;	.byte	<knight_lzsa		; 9	-- knight
-;	.byte	<todo_lzsa		; 10
-;	.byte	<cottage_lzsa		; 11	-- cottage
-;	.byte	<lake_w_lzsa		; 12	-- lake west
-;	.byte	<lake_e_lzsa		; 13	-- lake east
-;	.byte	<inn_lzsa		; 14	-- inn
 	.byte	<empty_hut_lzsa		; 15	-- empty hut
 	.byte	<ned_lzsa		; 16	-- ned
 	.byte	<bottom_prints_lzsa	; 17	-- bottom footprints
@@ -230,21 +217,6 @@ map_backgrounds_low:
 	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
 
 map_backgrounds_hi:
-;	.byte	>todo_lzsa		; 0
-;	.byte	>todo_lzsa		; 1
-;	.byte	>todo_lzsa		; 2
-;	.byte	>todo_lzsa		; 3
-;	.byte	>waterfall_lzsa		; 4	-- waterfall
-;	.byte	>todo_lzsa		; 5
-;	.byte	>todo_lzsa		; 6
-;	.byte	>todo_lzsa		; 7
-;	.byte	>river_lzsa		; 8	-- river
-;	.byte	>knight_lzsa		; 9	-- knight
-;	.byte	>todo_lzsa		; 10
-;	.byte	>cottage_lzsa		; 11	-- cottage
-;	.byte	>lake_w_lzsa		; 12	-- lake west
-;	.byte	>lake_e_lzsa		; 13	-- lake east
-;	.byte	>inn_lzsa		; 14	-- inn
 	.byte	>empty_hut_lzsa		; 15	-- empty hut
 	.byte	>ned_lzsa		; 16	-- ned
 	.byte	>bottom_prints_lzsa	; 17	-- bottom footprints

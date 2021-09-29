@@ -2,6 +2,8 @@
 
 ; Peasantry Part 3 (third line of map)
 
+; Jhonka, your cottage, w lake, e lake, inn
+
 WHICH_PEASANTRY = 2
 
 ; by Vince `deater` Weaver	vince@deater.net
