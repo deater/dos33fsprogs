@@ -11,7 +11,7 @@ load_menu:
 	; first read all three saves
 	; updating the save info
 
-	; TODO
+	jsr	update_save_info
 
 	;============================
 	; Next update the save message
@@ -359,9 +359,9 @@ save_name3:
 .byte  0
 
 save_titles:
-.byte	6,44, "SAVE 1",0
-.byte	6,68, "SAVE 2",0
-.byte	6,92, "SAVE 3",0
+.byte	6,44, "SLOT 1",0
+.byte	6,68, "SLOT 2",0
+.byte	6,92, "SLOT 3",0
 .byte	6,116,"BACK",0
 
 
@@ -564,6 +564,38 @@ are_you_sure:
 .byte  0,43,40, 0,240,90
 .byte  10,61
 .byte  "ARE YOU SURE? (Y/N)",0
+
+
+	;=========================
+	; update save info
+	;=========================
+update_save_info:
+
+	ldx	#0
+update_save_info_loop:
+	clc
+	txa
+	pha
+	adc	#LOAD_SAVE1
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	pla
+	tax
+
+	lda	$BC06		; MAP_LOCATION
+	sta	load_slot_levels,X
+	lda	$BC0E		; SCORE_HUNDREDS
+	sta	load_slot_pts_high,X
+	lda	$BC0F		; SCORE_HUNDREDS
+	sta	load_slot_pts_low,X
+
+	inx
+	cpx	#3
+	bne	update_save_info_loop
+
+	rts
 
 
 load_slot_levels:
