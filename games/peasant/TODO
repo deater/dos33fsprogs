@@ -4,10 +4,10 @@ General:
 - More frames in peasant sprites
 - Hook up text parser
 - When load game, stop walking
-- Load the names of saves from disk
 - Let disk 2 live in the 2nd drive?  
 	LDA $C08A,X to select first drive
 	LDA $C08B,X to select second drive
+- Implement game over screen
 
 Videlectrix Title:
 - Can we make it faster?
@@ -15,10 +15,15 @@ Videlectrix Title:
 Intro:
 - Speaker music for title if no Mockingboard
 
+Map:
+- implement map
+
 Peasantry:
-- Better animation of River
+- animation for the boat
+- animation of River
+- animation of waterfall
 - Priorities for all rooms
-- Hook up hidden glen, inside of cottage and inn
+- Hook up hidden glen, inside of cottages and inn
 - Archery minigame
 
 Tower:
@@ -27,7 +32,7 @@ Tower:
 Trogdor:
 - All the rest
 - Rest of Trogdor's speech
-- Properly disable speech if SSI-263 is available
+- Fix speech generation
 
 Ending:
 - Smoother baby animation?  Use page-flipping?

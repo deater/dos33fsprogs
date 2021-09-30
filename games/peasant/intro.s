@@ -24,6 +24,10 @@ peasant_quest_intro:
 	; restart music, only drum loop
 	;******************************
 
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound
+
 	; hack! modify the PT3 file to ignore the latter half
 
 	lda	#$ff			; end after 4 patterns
@@ -35,6 +39,7 @@ peasant_quest_intro:
 	jsr	pt3_init_song
 
 	cli
+mockingboard_notfound:
 
 	;************************
 	; Cottage
@@ -91,10 +96,18 @@ peasant_quest_intro:
 
 escape_handler:
 
+	;==========================
+	; disable music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound2
+
 	sei				; turn off music
 	jsr	clear_ay_both		; clear AY state
 
 	jsr	mockingboard_disable_interrupt
+mockingboard_notfound2:
 
 	;=============================
 	; start new game

@@ -221,9 +221,17 @@ altfire_good:
 	bit	PAGE2			; return to viewing PAGE2
 
 
+	;==============================
+	; disable music, if applicable
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound2
+
 	sei	; disable music
 
 	jsr	clear_ay_both
+mockingboard_notfound2:
 
 	;************************
 	; Tips
