@@ -19,16 +19,11 @@ WHICH_PEASANTRY = 2
 peasant_quest:
 	lda	#0
 	sta	GAME_OVER
-
+	sta	FRAME
 	jsr	hgr_make_tables
 
 	jsr	hgr2
 
-
-
-
-	lda	#0
-	sta	FRAME
 
 	; update map location
 
@@ -204,7 +199,7 @@ fake_error2:
 
 .include "graphics/graphics_peasant3.inc"
 
-.include "sprites/boat_sprites.inc"
+;.include "sprites/boat_sprites.inc"
 
 map_backgrounds_low:
 	.byte	<jhonka_lzsa		; 10	-- jhonka
