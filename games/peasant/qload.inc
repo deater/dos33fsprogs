@@ -23,6 +23,7 @@ invert_smc1	=$0f64
 disp_put_string_cursor	=$167c
 hgr_put_char_cursor	=$0f15
 vgi_simple_rectangle	=$12ef
+peasant_text	=$178b
 hposn_high = $BA00
 hposn_low = $BB00
 driveoff = $A22

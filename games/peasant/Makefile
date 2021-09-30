@@ -117,6 +117,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s disp_put_string_cursor qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_char_cursor qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s vgi_simple_rectangle qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s peasant_text qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 	echo "driveoff = \$$A22" >> qload.inc

@@ -255,6 +255,9 @@ length_array:
 .include "hgr_hgr2.s"		; this one is maybe only needed once?
 .include "gr_offsets.s"
 
+peasant_text:
+	.byte 25,2,"Peasant's Quest",0
+
 qload_end:
 
 ;.assert (>qload_end - >qload_start) < $e , error, "loader too big"

@@ -125,9 +125,6 @@ forever:
 
 .include "graphics_copy/copy_graphics.inc"
 
-peasant_text:
-        .byte 25,2,"Peasant's Quest",0
-
 score_text:
 	.byte 0,2,"Score: 0 of 150",0
 

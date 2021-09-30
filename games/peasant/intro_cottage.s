@@ -180,10 +180,6 @@ done_cottage:
 ; 01234567 01234567
 
 
-peasant_text:
-	.byte 25,2,"Peasant's Quest",0
-
-
 cottage_text1:
 	.byte 0,52,24,  0,253,82
 	.byte 9,35,"YOU are Rather Dashing, a",13

@@ -19,11 +19,24 @@ upcase_loop:
 	jmp	upcase_loop
 done_upcase_loop:
 
+	;=====================
+	; get the verb
+
 	jsr	get_verb
+
+	;=====================
+	; get the noun
 
 ;	jsr	get_noun
 
+
+	;=============================
+	; handle room-specific actions
+
 ;	jsr	local_parser
+
+	;================================
+	; fall through to default actions
 
 	lda	CURRENT_VERB
 
