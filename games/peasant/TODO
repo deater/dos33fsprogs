@@ -5,6 +5,8 @@ before 0.75 release
 + merge electric duet
 + complete waterfall, including animation
 + have init routine set starting score, etc
++ intro, use plain sprite routine, not masked?
+	alternately, load the all-red screen
 
 after 0.75
 + move copy to disk2
