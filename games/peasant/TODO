@@ -7,6 +7,7 @@ before 0.75 release
 + have init routine set starting score, etc
 + intro, use plain sprite routine, not masked?
 	alternately, load the all-red screen
++ Fix the speech generation code
 
 after 0.75
 + move copy to disk2
