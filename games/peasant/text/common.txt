@@ -1,35 +1,63 @@
-############
-# Anywhere
-############
+;==================
+; Anywhere
+;==================
 
-# + get/wear belt (after getting it)
-You're already wearing it. Too bad you smell like the trash barge off Peasant Isle.
-# + wear mask
-Not on this screen. You've got your image to think about. Actually, you might want to start deliberating on that right now.
-# + wear robe
-You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.
-# + wear robe (not in inventory)
-You don't have anything but your 'Scalding Lake' t-shirt. And pants. Forgot to mention the pants.
-# + wear robe (already wearing)
-You're already in the old skool robe. Represent. 
-# + look (when in hay disguise)
-Right now, you see a bunch of hay. 
-# + look trees
-You are an incredibly boring person.
-# + ask about (unknown)
-"Ask about what?" 
-# + boo
-Scared me.
-# + cheat
-Meh.
-# + dan (or any phrase involving Dan; anywhere)
-Dan's still okay. Got a place on Dekalb with Rick and his wife. Slimmed up a bit and looking towards the future.
-# + dance (anywhere)
-You'd rather just stand here and soak up the scene.
-# + die (anywhere) (Warning: This kills you.)
-That wasn't very smart. You dead.
-# + drink
-For simplicity's sake you are immune to hunger and thirst in this game. So you got that going for you./Which is nice. 
+; + get/wear belt (after getting it)
+.byte "You're already wearing it. Too bad you smell like the trash barge off Peasant Isle.",0
+
+; + wear mask (after getting it)
+.byte "Not on this screen. You've got your image to think about. Actually, you might want to start deliberating on that right now.",0
+
+; + wear robe (after getting it)
+.byte "You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.",0
+
+; + wear robe (not in inventory)
+.byte "You don't have anything but",13
+.byte "your 'Scalding Lake'",13
+.byte "t-shirt.",0
+.byte "And pants. Forgot to",13
+.byte "mention the pants.",0
+
+; + wear robe (already wearing)
+.byte "You're already in the old skool robe. Represent.",0
+
+; + look (when in hay disguise)
+.byte "Right now, you see a bunch of hay.",0
+ 
+; + look trees
+.byte "You are an incredibly",13
+.byte "boring person.",0
+
+; + ask about (unknown)
+.byte "Ask about what?",0
+ 
+; + boo
+.byte "Scared me.",0
+
+; + cheat
+.byte "Meh.",0
+
+; + dan (or any phrase involving Dan; anywhere)
+.byte "Dan's still okay. Got a",13
+.byte "place on Dekalb with Rick",13
+.byte "and his wife. Slimmed up a",13
+.byte "bit and looking towards the",13
+.byte "future.",0
+
+; + dance (anywhere)
+.byte "You'd rather just stand",13
+.byte "here and soak up the scene.",0
+
+; + die (anywhere) (Warning: This kills you.)
+.byte "That wasn't very smart. You dead.",0
+
+; + drink
+.byte "For simplicity's sake you",13
+.byte "are immune to hunger and",
+.byte "thirst in this game. So you",13
+.byte "got that going for you.",0
+.byte "Which is nice.",0
+ 
 # + quit  (Warning: The game actually does quit.) 
 Well fine Boring Sanders! Hope you saved your game cause it is OVER between us!
 # + map (before you find it)
