@@ -1,5 +1,20 @@
 TODO:
 
+before 0.75 release
++ update version file
++ merge electric duet
++ complete waterfall, including animation
++ have init routine set starting score, etc
+
+after 0.75
++ move copy to disk2
++ re-do how off edge-of-screen works (have destination for all 4 co-ords?)
++ move drawing to PAGE1 and use PAGE2 for RAM?
+	This would remove backing store when drawing text boxes?
++ add dictionary lookup for text
++ add standard set of text box sizes
+
+
 General:
 - More frames in peasant sprites
 - Hook up text parser

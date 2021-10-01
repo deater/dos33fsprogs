@@ -154,7 +154,7 @@ title.o:	title.s qload.inc music.inc \
 		graphics_title/title_graphics.inc \
 		graphics_title/altfire.inc \
 		directions.s \
-		pt3_lib_mockingboard_patch.s
+		pt3_lib_mockingboard_patch.s duet.s
 	ca65 -o title.o title.s -l title.lst
 
 ###

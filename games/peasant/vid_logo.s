@@ -33,7 +33,7 @@ intro_text:
 	lda	#>boot_message
 	sta	OUTH
 
-	ldx	#7
+	ldx	#8
 text_loop:
 
 	jsr	move_and_print
@@ -442,6 +442,7 @@ boot_message:
 .byte	0,5,"APPLE II PORT: VINCE WEAVER",0
 .byte	0,6,"DISK CODE    : QKUMBA",0
 .byte	0,7,"LZSA CODE    : EMMANUEL MARTY",0
+.byte	0,8,"ELECTRIC DUET: PAUL LUTUS",0
 .byte	7,19,"______",0
 .byte	5,20,"A \/\/\/ SOFTWARE PRODUCTION",0
 

@@ -18,6 +18,18 @@ TEMP3   = $13
 TEMP4   = $14
 TEMP5   = $15
 
+; electric duet
+FREQ1          =       $10
+FREQ2          =       $11
+DURATION       =       $12
+INSTRUMENT1    =       $13
+INSTRUMENT2    =       $14
+MADDRL         =       $15
+MADDRH         =       $16
+LOC4E          =       $4E
+COUNT256       =       $4F
+
+
 HGR_BITS	= $1C
 
 CH		= $24

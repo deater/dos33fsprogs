@@ -1,0 +1,38 @@
+Demakes
+
+HGr-MIST
+
+HGR
+	(horrible hgr)
+
+Backgrounds
+	AGI-like?  They abandoned it.  Would save space
+
+Sprites
+	easier in blocks 0f 7
+	still have to rotate 1 pixel for odd columns
+	transparency a pain with color clash
+
+Animations
+	too big?
+
+Mini-games?
+
+Text
+	HGR drawing lib (no built in on 2)
+	How to fit?  Lookup for common word distribution?
+	
+Ram-map
+
+Music
+	Mockingboard, pt3 player
+	no mockingboard, electric duet, but can't do more than
+		page flip (missing flame).  Worth it?
+
+Speech
+	Can we do SAM?  9k?
+	SSI-263 but unobtanium
+
+Disks:
+	Fitting on disk.
+	swappign fun for nostalgia, not so much when actually playing

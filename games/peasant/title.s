@@ -18,82 +18,7 @@ title:
 	jsr	hgr_make_tables
 
 
-	;========================
-	; Music
-	;========================
 
-
-	;===================================
-	; Setup Mockingboard
-	;===================================
-
-PT3_ENABLE_APPLE_IIC = 1
-
-	lda	SOUND_STATUS
-	and	#SOUND_MOCKINGBOARD
-	beq	mockingboard_notfound
-
-	;==================================
-	; load music into the language card
-	;	into $D000 set 2
-	;==================================
-
-	; switch in language card
-	; read/write RAM, $d000 bank 2
-
-	lda	$C083
-	lda	$C083
-
-;	lda	$C081		; enable ROM
-;	lda	$C081		; enable write
-
-	; actually load it
-	lda	#LOAD_MUSIC
-	sta	WHICH_LOAD
-
-	jsr	load_file
-
-
-	lda	#0
-	sta	DONE_PLAYING
-
-	lda	#1
-	sta	LOOP
-
-	jsr     mockingboard_patch      ; patch to work in slots other than 4?
-
-	;=======================
-	; Set up 50Hz interrupt
-	;========================
-
-	jsr     mockingboard_init
-	jsr     mockingboard_setup_interrupt
-
-
-zurg:
-
-	;============================
-	; Init the Mockingboard
-	;============================
-
-	jsr     reset_ay_both
-	jsr     clear_ay_both
-
-	;==================
-	; init song
-	;==================
-
-	jsr	pt3_init_song
-
-
-
-	;=======================
-	; start music
-	;=======================
-
-	cli
-
-mockingboard_notfound:
 
 
 	;=========================
@@ -135,8 +60,112 @@ do_title:
 
 	bit	KEYRESET
 
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound
+
+
+	jsr	mockingboard_loop
+	jmp	title_loop_done
+
+mockingboard_notfound:
+
+	jsr	duet_loop
+
+title_loop_done:
+
+
+	;************************
+	; Tips
+	;************************
+
+	jsr	directions
+
+
+	lda	#LOAD_INTRO
+	sta	WHICH_LOAD
+
+
+	rts
+
+
+
+
+
 	;=====================
-	; main loop
+	;=====================
+	; mockingboard loop
+	;=====================
+	;=====================
+
+mockingboard_loop:
+
+	;===================================
+	; Setup Mockingboard
+	;===================================
+
+PT3_ENABLE_APPLE_IIC = 1
+
+	;==================================
+	; load music into the language card
+	;	into $D000 set 2
+	;==================================
+
+	; switch in language card
+	; read/write RAM, $d000 bank 2
+
+	lda	$C083
+	lda	$C083
+
+;	lda	$C081		; enable ROM
+;	lda	$C081		; enable write
+
+	; actually load it
+	lda	#LOAD_MUSIC
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	lda	#0
+	sta	DONE_PLAYING
+
+	lda	#1
+	sta	LOOP
+
+	jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+	jsr     mockingboard_init
+	jsr     mockingboard_setup_interrupt
+
+
+zurg:
+
+	;============================
+	; Init the Mockingboard
+	;============================
+
+	jsr     reset_ay_both
+	jsr     clear_ay_both
+
+	;==================
+	; init song
+	;==================
+
+	jsr	pt3_init_song
+
+
+
+	;=======================
+	; start music
+	;=======================
+
+	cli
+
 
 	; we're supposed to animate flame, flash the "CLICK ANYWHERE" sign
 	; and show trogdor when his music plays
@@ -221,31 +250,54 @@ altfire_good:
 	bit	PAGE2			; return to viewing PAGE2
 
 
-	;==============================
-	; disable music, if applicable
-
-	lda	SOUND_STATUS
-	and	#SOUND_MOCKINGBOARD
-	beq	mockingboard_notfound2
+	;==============
+	; disable music
 
 	sei	; disable music
 
 	jsr	clear_ay_both
-mockingboard_notfound2:
-
-	;************************
-	; Tips
-	;************************
-
-	jsr	directions
-
-
-	lda	#LOAD_INTRO
-	sta	WHICH_LOAD
-
 
 	rts
 
+
+
+
+	;=====================
+	;=====================
+	; Electric Duet Loop
+	;=====================
+	;=====================
+
+duet_loop:
+
+
+	lda	#<peasant_ed
+	sta	MADDRL
+	lda	#>peasant_ed
+	sta	MADDRH
+
+duet_loop_again:
+	jsr	play_ed
+
+	lda	#1
+	sta	peasant_ed+24
+	lda	#0
+	sta	peasant_ed+25
+	sta	peasant_ed+26
+
+
+	lda	#<(peasant_ed+24)
+	sta	MADDRL
+	lda	#>(peasant_ed+24)
+	sta	MADDRH
+
+	lda	duet_done
+	beq	duet_loop_again
+
+duet_finished:
+	bit	KEYRESET
+
+	rts
 
 
 
@@ -256,8 +308,12 @@ mockingboard_notfound2:
 
 ;.include "hgr_font.s"
 ;.include "hgr_tables.s"
-
 ;.include "hgr_hgr2.s"
+
+.include "duet.s"
+
+peasant_ed:
+.incbin "music/peasant.ed"
 
 .include "pt3_lib_mockingboard_patch.s"
 
