@@ -11,6 +11,7 @@ all:	graphics_intro.inc \
 	graphics_peasant3.inc \
 	graphics_peasant4.inc \
 	priority_peasant1.inc \
+	priority_intro.inc \
 	priority_peasant2.inc \
 	priority_peasant3.inc \
 	priority_peasant4.inc
@@ -29,7 +30,7 @@ graphics_intro.inc:	\
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_intro.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_intro.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_intro.inc
-	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_intro.inc
+#	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_intro.inc
 
 ###
 
@@ -90,7 +91,14 @@ graphics_peasant4.inc:	\
 	echo "crooked_tree_lzsa: .incbin \"crooked_tree.lzsa\"" >> graphics_peasant4.inc
 
 ###########
-###########
+
+priority_intro.inc:	\
+	todo_priority.lzsa
+	echo "cottage_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_intro.inc
+	echo "lake_w_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
+	echo "lake_e_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
+	echo "river_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
+	echo "knight_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
 
 priority_peasant1.inc:	\
 	waterfall_priority.lzsa \

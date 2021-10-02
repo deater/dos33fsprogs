@@ -19,6 +19,8 @@ lake_east:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
+	;=====================
+	; load bg
 
 	lda	#<(lake_e_lzsa)
 	sta	getsrc_smc+1
@@ -28,6 +30,23 @@ lake_east:
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
+
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+	lda	#<lake_e_priority_lzsa
+	sta	getsrc_smc+1
+	lda	#>lake_e_priority_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$20			; temporarily load to $2000
+
+	jsr	decompress_lzsa2_fast
+
+	; copy to $400
+
+	jsr	gr_copy_to_page1
+
 
 	lda	#<peasant_text
 	sta	OUTL

@@ -8,6 +8,11 @@ HGR
 Backgrounds
 	AGI-like?  They abandoned it.  Would save space
 
+Priority backgrounds, like AGI
+	+ load at $400, lo-res
+	+ Can't use screen holes tricky (original Apple II 4k of RAM
+		so need to put slot info in first 4k)
+
 Sprites
 	easier in blocks 0f 7
 	still have to rotate 1 pixel for odd columns

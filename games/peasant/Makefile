@@ -164,6 +164,7 @@ INTRO:	intro.o
 
 intro.o:	intro.s zp.inc qload.inc music.inc \
 		graphics/graphics_intro.inc sprites/peasant_sprite.inc \
+		graphics/priority_intro.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
 		hgr_partial_save.s \

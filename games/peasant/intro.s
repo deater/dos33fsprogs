@@ -188,8 +188,11 @@ mockingboard_notfound2:
 .include "hgr_1x5_sprite.s"
 
 
+.include "gr_copy.s"
+
 .include "wait.s"
 .include "wait_a_bit.s"
 
 .include "graphics/graphics_intro.inc"
 
+.include "graphics/priority_intro.inc"

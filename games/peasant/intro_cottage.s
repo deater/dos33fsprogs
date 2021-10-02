@@ -34,6 +34,24 @@ cottage:
 
 	jsr	decompress_lzsa2_fast
 
+
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+	lda	#<cottage_priority_lzsa
+	sta	getsrc_smc+1
+	lda	#>cottage_priority_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$20			; temporarily load to $2000
+
+	jsr	decompress_lzsa2_fast
+
+	; copy to $400
+
+	jsr	gr_copy_to_page1
+
+
 	;===================
 	; print title
 
