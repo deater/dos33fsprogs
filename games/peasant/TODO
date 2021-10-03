@@ -2,13 +2,13 @@ TODO:
 
 before 0.75 release
 + update version file
-+ merge electric duet
 + complete waterfall, including animation
 + have init routine set starting score, etc
-+ intro, use plain sprite routine, not masked?
-	alternately, load the all-red screen
 + Fix the speech generation code
 + hold down open-apple at boot skip sound check?
++ update intro to walk closer to edges
++ fix color 15 on prioirty to cover all
++ fix issue where walking stops when you cross to screen w priority
 
 after 0.75
 + move copy to disk2

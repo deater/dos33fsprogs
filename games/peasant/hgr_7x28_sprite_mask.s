@@ -8,22 +8,34 @@
 	; for now, BG mask is only all or nothing
 	; so we just skip drawing if behind
 
-	; left sprite AT INL/INH
-	; right sprite at INL/INH + 14
-	; left mask at INL/INH + 28
-	; right mask at INL/INH + 42
+	; sprite AT INL/INH
+	; mask at INL/INH + 28
 
 hgr_draw_sprite_7x28:
 
 	lda	#0
 	sta	MASK_COUNTDOWN
 
-	; set up pointers
+	; calculate peasant priority
+	; based on head
+
+	lda	PEASANT_Y
+	sec
+	sbc	#48			; Y=48
+	lsr				; div by 8
+	lsr
+	lsr
+	clc
+	adc	#2
+	sta	PEASANT_PRIORITY
+
+	; set up sprite pointers
 	lda	INL
 	sta	h728_smc1+1
 	lda	INH
 	sta	h728_smc1+2
 
+	; set up mask pointers
 	clc
 	lda	INL
 	adc	#28
@@ -169,21 +181,11 @@ restore_yloop:
 	; updates MASK
 update_bg_mask:
 
-	; calculate peasant priority
-	; based on head
-	; FIXME: only do this once at beginning
-	lda	PEASANT_Y
-	sec
-	sbc	#48			; Y=48
-	lsr				; div by 8
-	lsr
-	lsr
-	clc
-	adc	#2
-	sta	PEASANT_PRIORITY
-
-
 			; rrrr rtii	top 5 bits row, bit 2 top/bottom
+
+	sty	xsave
+mask_try_again:
+	stx	ysave
 
 	txa
 	and	#$04	; see if odd/even
@@ -227,6 +229,20 @@ mask_bottom:
 mask_mask_mask:
 	sta	MASK
 
+	cmp	#$0			; 0 means collision, find mask
+	bne	mask_not_zero		; by iteratively going down till
+	ldx	ysave			; non-zero
+	ldy	xsave
+	inx
+	inx
+	inx
+	inx
+	jmp	mask_try_again
+
+mask_not_zero:
+	cmp	#$f			; priority F means always on top
+	beq	mask_true
+
 	cmp	PEASANT_PRIORITY
 	beq	mask_false		; branch less than equal
 	bcc	mask_false		; blt
@@ -259,7 +275,7 @@ mask_false:
 ; 12 	128-135			; 8
 ; 13 	136-143
 ; 14	144-151
-; 15    152-159
+; 15 = fg = always hide
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -270,3 +286,8 @@ mask_false:
 save_sprite_7x28:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
+ysave:
+.byte $00
+xsave:
+.byte $00

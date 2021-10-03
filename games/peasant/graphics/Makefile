@@ -30,7 +30,6 @@ graphics_intro.inc:	\
 	echo "lake_e_lzsa: .incbin \"lake_e.lzsa\"" >> graphics_intro.inc
 	echo "river_lzsa: .incbin \"river.lzsa\"" >> graphics_intro.inc
 	echo "knight_lzsa: .incbin \"knight.lzsa\"" >> graphics_intro.inc
-#	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> graphics_intro.inc
 
 ###
 
@@ -93,11 +92,11 @@ graphics_peasant4.inc:	\
 ###########
 
 priority_intro.inc:	\
-	todo_priority.lzsa knight_priority.lzsa
+	todo_priority.lzsa river_priority.lzsa knight_priority.lzsa
 	echo "cottage_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_intro.inc
 	echo "lake_w_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
 	echo "lake_e_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
-	echo "river_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
+	echo "river_priority_lzsa: .incbin \"river_priority.lzsa\"" >> priority_intro.inc
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_intro.inc
 
 priority_peasant1.inc:	\
@@ -113,11 +112,11 @@ priority_peasant1.inc:	\
 ###
 
 priority_peasant2.inc:	\
-	todo_priority.lzsa knight_priority.lzsa
+	todo_priority.lzsa river_priority.lzsa knight_priority.lzsa
 	echo "haystack_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant2.inc
 	echo "puddle_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
 	echo "archery_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
-	echo "river_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	echo "river_priority_lzsa: .incbin \"river_priority.lzsa\"" >> priority_peasant2.inc
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_peasant2.inc
 
 ###
@@ -337,6 +336,14 @@ lady_cottage_priority.lzsa:	lady_cottage_priority.hgr
 
 lady_cottage_priority.hgr:	lady_cottage_priority.png
 	$(PNG2GR) lady_cottage_priority.png lady_cottage_priority.hgr
+
+###
+
+river_priority.lzsa:	river_priority.hgr
+	$(LZSA) -r -f2 river_priority.hgr river_priority.lzsa
+
+river_priority.hgr:	river_priority.png
+	$(PNG2GR) river_priority.png river_priority.hgr
 
 ###
 
