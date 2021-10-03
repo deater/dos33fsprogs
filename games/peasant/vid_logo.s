@@ -116,6 +116,13 @@ not_gs:
 	lda	#0
 	sta	SOUND_STATUS		; clear out, sound enabled
 
+	;===========================================
+	; skip checks if open-apple being held down
+
+	lda	$C061
+	bne	skip_all_checks
+
+
 	jsr	detect_language_card
 	bcs	no_language_card
 
@@ -190,6 +197,9 @@ detect_ssi:
 ssi_not_found:
 
 mockingboard_notfound:
+
+
+skip_all_checks:
 
 	lda	#30
 	jsr	wait_a_bit
