@@ -2,11 +2,8 @@ TODO:
 
 before 0.75 release
 + complete waterfall, including animation
-+ have init routine set starting score, etc
-+ Fix the speech generation code
 + update intro to walk closer to edges
 + fix issue where walking stops when you cross to screen w priority
-+ get screenshot of boat in lake, trogdor, end scene and update website
 
 after 0.75
 + move copy to disk2
