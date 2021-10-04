@@ -5,8 +5,10 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	cliff_graphics.inc
+all:	cliff_graphics.inc \
+	priority_cliff.inc
 
+###
 
 cliff_graphics.inc:	\
 	cliff_base.lzsa
@@ -22,7 +24,22 @@ cliff_base.hgr:	cliff_base.png
 
 ###
 
+priority_cliff.inc:  \
+	todo_priority.lzsa
+	echo "cliff_base_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_cliff.inc
+
+####
+
+
+todo_priority.lzsa:	todo_priority.gr
+	$(LZSA) -r -f2 todo_priority.gr todo_priority.lzsa
+
+todo_priority.gr:	todo_priority.png
+	$(PNG2GR) todo_priority.png todo_priority.gr
+
+####
+
 
 clean:	
-	rm -f *~ trogdor_graphics.inc *.lzsa *.gr *.hgr
+	rm -f *~ cliff_graphics.inc priority_cliff.inc *.lzsa *.gr *.hgr
 

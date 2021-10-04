@@ -195,7 +195,7 @@ insert_disk_string:
 which_disk_array:
 	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
 	.byte 1,1,1,1		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 2,2,1,1		; TROGDOR, ENDING, MUSIC
+	.byte 2,2,1,2		; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 1,1,1,1		;
 	.byte 1			;
 	.byte 1,1,1,1,1		; SAVE1, SAVE2, SAVE3
@@ -204,7 +204,7 @@ which_disk_array:
 load_address_array:
 	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte $60,$60,$60,$60	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte $60,$60,$D0,$40	; TROGDOR, ENDING, MUSIC
+	.byte $60,$60,$D0,$60	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte $40,$40,$40,$40	;
 	.byte $08		;
 	.byte $BC,$BC,$BC,$0A	; SAVE1, SAVE2, SAVE3
@@ -214,7 +214,7 @@ load_address_array:
 track_array:
         .byte  4, 6, 9,13	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 19,24, 3,20	; TROGDOR, ENDING, MUSIC
+	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 30,32,28,30	;
 	.byte  0		;
 	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
@@ -223,7 +223,7 @@ track_array:
 sector_array:
         .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC
+	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  0,13, 0, 1	;
 	.byte  6		;
 	.byte 11,12,13,14,15	; SAVE1, SAVE2, SAVE3
@@ -232,7 +232,7 @@ sector_array:
 length_array:
         .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte  80, 80, 80, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte  80, 80, 16,109	; TROGDOR, ENDING, MUSIC
+	.byte  80, 80, 16, 80	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  20, 33, 27, 78	;
 	.byte   3		;
 	.byte   1,1,1,1,1	; SAVE1, SAVE2, SAVE3

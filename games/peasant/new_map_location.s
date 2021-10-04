@@ -22,11 +22,15 @@ map_wrap_x:
 	cmp	#5
 	bcc	map_wrap_y		; blt
 
-	lda	#0
-	beq	update_map_x		; bra
+	lda	#NEW_FROM_DISK
+	sta	GAME_OVER
+
+	lda	#LOAD_CLIFF
+	sta	WHICH_LOAD
+	rts
 
 map_x_went_negative:
-	lda	#4
+	lda	#0		; don't wrap anymore
 
 update_map_x:
 	sta	MAP_X
