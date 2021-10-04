@@ -74,8 +74,8 @@ drink_message2:
 ; + what the f- / this sucks
 .byte "Come now. Don't get discouraged.",0
 
-; + where (offset 21)
-where_label:
+; + where (offset 22)
+where_message:
 .byte "You're hanging out in",13
 .byte "                         ",0
 

@@ -158,12 +158,44 @@ check_show:
 
 check_version:
 	cmp	#VERB_VERSION
-	bne	check_unknown
+	bne	check_where
 
         lda     #<version_message
         sta     OUTL
         lda     #>version_message
 	jmp	finish_parse_message
+
+check_where:
+	cmp	#VERB_WHERE
+	bne	check_unknown
+
+where_blargh:
+	ldx	MAP_LOCATION
+	lda	location_names_l,X
+	sta	INL
+	lda	location_names_h,X
+	sta	INH
+
+        lda     #<(where_message+22)
+        sta     OUTL
+        lda     #>(where_message+22)
+	sta	OUTH
+
+	ldy	#0
+where_loop:
+	lda	(INL),Y
+	sta	(OUTL),Y
+	beq	where_done
+	iny
+	bne	where_loop	; bra
+
+where_done:
+
+        lda     #<where_message
+        sta     OUTL
+        lda     #>where_message
+	jmp	finish_parse_message
+
 
 check_unknown:
 	lda	#<help_message
@@ -253,6 +285,7 @@ verb_lookup:
 .byte "SAVE",VERB_SAVE|$80
 .byte "SHOW",VERB_SHOW|$80
 .byte "VER",VERB_VERSION|$80
+.byte "WHERE",VERB_WHERE|$80
 .byte $00
 
 
