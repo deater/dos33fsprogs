@@ -109,10 +109,12 @@ escape_handler:
 	jsr	mockingboard_disable_interrupt
 mockingboard_notfound2:
 
+
+
 	;=============================
 	; start new game
 	;=============================
-
+start_new_game:
 	lda	#LOAD_PEASANT2
 	sta	WHICH_LOAD
 
@@ -132,10 +134,10 @@ mockingboard_notfound2:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 
-	lda	#1
+	lda	#0
 	sta	SCORE_HUNDREDS
 
-	lda	#$33
+	lda	#$00
 	sta	SCORE_TENSONES
 
 	lda	#4
@@ -143,23 +145,21 @@ mockingboard_notfound2:
 	lda	#1
 	sta	MAP_Y
 
-	lda	#$FF
+	lda	#$00
 	sta	INVENTORY_1
 	sta	INVENTORY_2
 	lda	#INV3_SHIRT
 	sta	INVENTORY_3
 
 	; 1100 1011
-	lda	#$CB
+	lda	#$00
 	sta	INVENTORY_1_GONE
 	; 0001 1101
-	lda	#$1d
+	lda	#$00
 	sta	INVENTORY_2_GONE
 	;
 	lda	#$0
 	sta	INVENTORY_3_GONE
-
-
 
 	rts
 
