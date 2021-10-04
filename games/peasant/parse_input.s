@@ -40,10 +40,20 @@ done_upcase_loop:
 
 	lda	CURRENT_VERB
 
+check_cheat:
+
+	cmp	#VERB_CHEAT
+	bne	check_copy
+
+	lda	#<cheat_message
+	sta	OUTL
+	lda	#>cheat_message
+	jmp	finish_parse_message
+
 check_copy:
 
 	cmp	#VERB_COPY
-	bne	check_inventory
+	bne	check_dance
 
 	; want copy
 	lda	#NEW_FROM_DISK
@@ -53,6 +63,40 @@ check_copy:
 	sta	WHICH_LOAD
 
 	jmp	done_parse_message
+
+check_dance:
+
+	cmp	#VERB_DANCE
+	bne	check_drink
+
+	lda	#<dance_message
+	sta	OUTL
+	lda	#>dance_message
+	jmp	finish_parse_message
+
+check_drink:
+
+	cmp	#VERB_DRINK
+	bne	check_inventory
+
+	lda	#<drink_message
+	sta	OUTL
+	lda	#>drink_message
+        sta     OUTH
+	jsr	print_text_message
+
+	jsr	wait_until_keypress
+
+	jsr	hgr_partial_restore
+
+	lda	#<drink_message2
+	sta	OUTL
+	lda	#>drink_message2
+        sta     OUTH
+
+	jmp	finish_parse_message
+
+
 
 check_inventory:
 	cmp	#VERB_INVENTORY
@@ -74,9 +118,9 @@ check_look:
 	cmp	#VERB_LOOK
 	bne     check_talk
 
-        lda     #<fake_error1
-        sta     OUTL
-        lda     #>fake_error1
+	lda	#<look_irrelevant_message
+	sta	OUTL
+	lda	#>look_irrelevant_message
 	jmp	finish_parse_message
 
 
@@ -84,9 +128,9 @@ check_talk:
 	cmp	#VERB_TALK
 	bne	check_save
 
-	lda	#<fake_error2
+	lda	#<talk_noone_message
 	sta	OUTL
-	lda	#>fake_error2
+	lda	#>talk_noone_message
 	jmp	finish_parse_message
 
 check_save:
@@ -114,21 +158,21 @@ check_show:
 
 check_version:
 	cmp	#VERB_VERSION
-	bne	check_help
+	bne	check_unknown
 
         lda     #<version_message
         sta     OUTL
         lda     #>version_message
 	jmp	finish_parse_message
 
-check_help:
+check_unknown:
 	lda	#<help_message
 	sta	OUTL
 	lda	#>help_message
 
 finish_parse_message:
         sta     OUTH
-        jsr     hgr_text_box
+	jsr	print_text_message
 
 	jsr	wait_until_keypress
 
@@ -198,7 +242,10 @@ inc_verb_ptr_noflo:
 	rts
 
 verb_lookup:
+.byte "CHEAT",VERB_CHEAT|$80
 .byte "COPY",VERB_COPY|$80
+.byte "DANCE",VERB_DANCE|$80
+.byte "DRINK",VERB_DRINK|$80
 .byte "INV",VERB_INVENTORY|$80
 .byte "LOAD",VERB_LOAD|$80
 .byte "LOOK",VERB_LOOK|$80
@@ -207,3 +254,105 @@ verb_lookup:
 .byte "SHOW",VERB_SHOW|$80
 .byte "VER",VERB_VERSION|$80
 .byte $00
+
+
+.include "text/common.inc"
+
+
+	;======================
+	; print text message
+
+	; OUTL/OUTH point to message
+
+	; first we need to calculate the size of the message (lines)
+	; next we need to set up the box
+
+print_text_message:
+	jsr	count_message_lines
+
+	ldy	message_len
+	dey
+
+        lda     message_x1h,Y
+        sta     BOX_X1H
+
+        lda     message_x1l,Y
+        sta     BOX_X1L
+
+        lda     message_y1,Y
+        sta     BOX_Y1
+
+        lda     message_x2h,Y
+        sta     BOX_X2H
+
+        lda     message_x2l,Y
+        sta     BOX_X2L
+
+        lda     message_y2,Y
+        sta     BOX_Y2
+
+	tya
+	pha
+
+	jsr	hgr_partial_save
+
+	jsr	draw_box
+
+	pla
+	tay
+
+	lda	message_tx,Y
+	sta	CURSOR_X
+
+	lda	message_ty,Y
+	sta	CURSOR_Y
+
+	jsr	disp_put_string_cursor
+
+	rts
+
+;.byte   0,43,24, 0,253,82
+;.byte   8,41
+
+; alternate 1
+;.byte 0,35,34, 0,253,72
+;.byte 7,49,"OK go for it.",0
+
+; .byte 0,35,34, 0,253,82
+ ;       .byte 7,49
+
+
+;                       1	2	3	4	5	6	7	8
+message_x1h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
+message_x1l:	.byte	35,	35,	35,	35,	35,	35,	35,	35
+message_y1:	.byte	24,	24,	24,	24,	20,	20,	20,	20
+message_x2h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
+message_x2l:	.byte	253,	253,	253,	253,	253,	253,	253,	253
+message_y2:	.byte	54,	62,	82,	82,	86,	86,	86,	86
+message_tx:	.byte	7,	7,	7,	7,	7,	7,	7,	7
+message_ty:	.byte	36,	36,	41,	35,	33,	33,	33,	33
+
+
+	;======================
+	; count message lines
+	; in OUTL/OUTH
+count_message_lines:
+	ldy	#0
+	sty	message_len
+count_message_lines_loop:
+	lda	(OUTL),Y
+	beq	count_message_done
+	cmp	#13
+	bne	count_message_not_cr
+	inc	message_len
+count_message_not_cr:
+	iny
+	bne	count_message_lines_loop	; bra
+
+count_message_done:
+	inc	message_len	; increment for end of message too
+
+	rts
+
+message_len:
+	.byte $0

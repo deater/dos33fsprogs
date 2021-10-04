@@ -1,23 +1,21 @@
 TODO:
 
 before 0.75 release
-+ update version file
 + complete waterfall, including animation
 + have init routine set starting score, etc
 + Fix the speech generation code
-+ hold down open-apple at boot skip sound check?
 + update intro to walk closer to edges
-+ fix color 15 on prioirty to cover all
 + fix issue where walking stops when you cross to screen w priority
++ get screenshot of boat in lake, trogdor, end scene and update website
 
 after 0.75
 + move copy to disk2
 + re-do how off edge-of-screen works (have destination for all 4 co-ords?)
 + move drawing to PAGE1 and use PAGE2 for RAM?
 	This would remove backing store when drawing text boxes?
-+ add dictionary lookup for text
-+ add standard set of text box sizes
-
++ add dictionary lookup for text for smaller size
++ optimize text box sizes
++ replace parse_input lookup with a giant jump table
 
 General:
 - More frames in peasant sprites

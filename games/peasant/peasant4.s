@@ -187,20 +187,20 @@ game_over:
 .include "version.inc"
 .include "loadsave_menu.s"
 
-help_message:
-.byte   0,43,24, 0,253,82
-.byte   8,41,"I don't understand. Type",13
-.byte	     "HELP for assistances.",0
+;help_message:
+;.byte   0,43,24, 0,253,82
+;.byte   8,41,"I don't understand. Type",13
+;.byte	     "HELP for assistances.",0
 
-fake_error1:
-.byte   0,43,24, 0,253,82
-.byte   8,41,"?SYNTAX ERROR IN 1020",13
-.byte	     "]",127,0
+;fake_error1:
+;.byte   0,43,24, 0,253,82
+;.byte   8,41,"?SYNTAX ERROR IN 1020",13
+;.byte	     "]",127,0
 
-fake_error2:
-.byte   0,43,24, 0,253,82
-.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
-.byte	     "]",127,0
+;fake_error2:
+;.byte   0,43,24, 0,253,82
+;.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
+;.byte	     "]",127,0
 
 
 map_backgrounds_low:
