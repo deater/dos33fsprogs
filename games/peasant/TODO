@@ -1,11 +1,13 @@
 TODO:
 
-before 0.75 release
+next:
++ fix keyboard input so it handles lowecase
+	wasd
+	Y/N on load/save 
 + complete waterfall, including animation
 + update intro to walk closer to edges
 + fix issue where walking stops when you cross to screen w priority
 
-after 0.75
 + move copy to disk2
 + re-do how off edge-of-screen works (have destination for all 4 co-ords?)
 + move drawing to PAGE1 and use PAGE2 for RAM?
