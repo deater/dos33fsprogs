@@ -38,6 +38,9 @@ ending:
         and     #SOUND_MOCKINGBOARD
         beq     skip_end_music
 
+	jsr	mockingboard_init
+	jsr	reset_ay_both
+
 	jsr	mockingboard_setup_interrupt
 
 	lda	#$09			; don't end after 4

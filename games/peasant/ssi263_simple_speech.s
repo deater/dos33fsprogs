@@ -52,24 +52,24 @@ ssi263_speech_init:
 	; set defaults
 
 	; filter frequency
-	lda	#$E9
-	ldx	#SSI263_F
-	jsr	ssi263_write_chip
+;	lda	#$E9
+;	ldx	#SSI263_F
+;	jsr	ssi263_write_chip
 
 	; control / articulation/ amplitude
-	lda	#$5C
-	ldx	#SSI263_CAA
-	jsr	ssi263_write_chip
+;	lda	#$5C
+;	ldx	#SSI263_CAA
+;	jsr	ssi263_write_chip
 
 	; rate/inflection
-	lda	#$A8
-	ldx	#SSI263_RI
-	jsr	ssi263_write_chip
+;	lda	#$A8
+;	ldx	#SSI263_RI
+;	jsr	ssi263_write_chip
 
 	; inflection
-	lda	#$50
-	ldx	#SSI263_I
-	jsr	ssi263_write_chip
+;	lda	#$50
+;	ldx	#SSI263_I
+;	jsr	ssi263_write_chip
 
 
 	cli				; enable interrupts
@@ -185,6 +185,27 @@ not_end:
 	lda	(SPEECH_PTRL),Y
 	ldx	#SSI263_DRP		; duration/phoneme
 	jsr	ssi263_write_chip
+
+	; filter frequency
+	lda	#$E9
+	ldx	#SSI263_F
+	jsr	ssi263_write_chip
+
+	; control / articulation/ amplitude
+	lda	#$5C
+	ldx	#SSI263_CAA
+	jsr	ssi263_write_chip
+
+	; rate/inflection
+	lda	#$A8
+	ldx	#SSI263_RI
+	jsr	ssi263_write_chip
+
+	; inflection
+	lda	#$50
+	ldx	#SSI263_I
+	jsr	ssi263_write_chip
+
 
 	; Next data (inc 16 bit)
 	inc	SPEECH_PTRL
