@@ -1,9 +1,10 @@
 TODO:
 
 next:
-+ fix keyboard input so it handles lowecase
-	wasd
-	Y/N on load/save 
++ Loading screen is slow when getting names
+	Print "Loading" message while doing it?
++ After loading, no need to clear text before moving to next level
+
 + complete waterfall, including animation
 + update intro to walk closer to edges
 + fix issue where walking stops when you cross to screen w priority

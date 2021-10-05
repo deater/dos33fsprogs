@@ -274,6 +274,8 @@ urgh_done_ls:
 	jmp	done_ls_keypress
 
 ls_check_down:
+	and	#$5F			; make uppercase
+
 	cmp	#$0A
 	beq	ls_handle_down
 	cmp	#'S'
@@ -599,7 +601,7 @@ wait_confirmation:
 
 	bit	KEYRESET		; clear keypress
 
-	and	#$7f
+	and	#$5F			; clear high-bit, make uppercase
 	cmp	#'Y'
 	bne	dont_do_it
 

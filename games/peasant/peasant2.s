@@ -55,8 +55,10 @@ new_location:
 
 	lda	map_backgrounds_low,X
 	sta	getsrc_smc+1
+;	sta	last_bg_l
 	lda	map_backgrounds_hi,X
 	sta	getsrc_smc+2
+;	sta	last_bg_h
 
 	lda	#$40
 
@@ -236,3 +238,7 @@ map_priority_hi:
 	.byte	>archery_priority_lzsa		; 7	-- archery
 	.byte	>river_priority_lzsa		; 8	-- river
 	.byte	>knight_priority_lzsa		; 9	-- knight
+
+
+
+

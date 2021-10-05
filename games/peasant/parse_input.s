@@ -213,6 +213,16 @@ restore_parse_message:
 
 	jsr	hgr_partial_restore
 
+;	lda     last_bg_l
+ ;       sta     getsrc_smc+1
+  ;      lda     last_bg_h
+   ;     sta     getsrc_smc+2
+
+   ;     lda     #$40
+
+;	jsr	decompress_lzsa2_fast
+
+
 done_parse_message:
 
 
@@ -389,3 +399,7 @@ count_message_done:
 
 message_len:
 	.byte $0
+
+last_bg_l:	.byte $00
+last_bg_h:	.byte $00
+

@@ -218,7 +218,7 @@ handle_inv_keypress:
 
 	pla
 
-	and	#$7f			; clear top bit
+	and	#$5F			; clear top bit, make uppercase
 
 	cmp	#27
 	beq	urgh_done		; ESCAPE
