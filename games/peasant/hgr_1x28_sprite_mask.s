@@ -1,7 +1,9 @@
-
 	;===============================================
-	; hgr 7x28 draw sprite, with bg mask in GR $400
+	; hgr 1x28 draw sprite, with bg mask in GR $400
 	;===============================================
+	; used primarily to draw Rather Dashing
+	;===============================================
+	;
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y
 
@@ -11,7 +13,7 @@
 	; sprite AT INL/INH
 	; mask at INL/INH + 28
 
-hgr_draw_sprite_7x28:
+hgr_draw_sprite_1x28:
 
 	lda	#0
 	sta	MASK_COUNTDOWN
@@ -45,7 +47,7 @@ hgr_draw_sprite_7x28:
 	sta	h728_smc3+2
 
 	ldx	#0			; X is row counter
-hgr_7x28_sprite_yloop:
+hgr_1x28_sprite_yloop:
 	lda	MASK_COUNTDOWN
 	and	#$3			; only update every 4th
 	bne	mask_good
@@ -99,16 +101,16 @@ draw_sprite_skip:
 
 	inx
 	cpx	#28
-	bne	hgr_7x28_sprite_yloop
+	bne	hgr_1x28_sprite_yloop
 
 	rts
 
 
 	;======================
-	; save bg 7x28
+	; save bg 1x28
 	;======================
 
-save_bg_7x28:
+save_bg_1x28:
 
 	ldx	#0
 save_yloop:
@@ -133,7 +135,7 @@ save_yloop:
 	ldy	CURSOR_X
 
 	lda	(GBASL),Y
-	sta	save_sprite_7x28,X
+	sta	save_sprite_1x28,X
 
 	inx
 	cpx	#28
@@ -142,10 +144,10 @@ save_yloop:
 	rts
 
 	;======================
-	; restore bg 7x28
+	; restore bg 1x28
 	;======================
 
-restore_bg_7x28:
+restore_bg_1x28:
 
 	ldx	#0
 restore_yloop:
@@ -163,7 +165,7 @@ restore_yloop:
 
 	ldy	CURSOR_X
 
-	lda	save_sprite_7x28,X
+	lda	save_sprite_1x28,X
 	sta	(GBASL),Y
 
 	inx
@@ -283,7 +285,7 @@ mask_false:
 ; save area
 ;====================
 
-save_sprite_7x28:
+save_sprite_1x28:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 

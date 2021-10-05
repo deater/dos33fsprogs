@@ -70,7 +70,7 @@ river:
 	;=======================
 	; walking
 
-	jsr	save_bg_7x28
+	jsr	save_bg_1x28
 
 river_walk_loop:
 
@@ -79,7 +79,7 @@ river_walk_loop:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	restore_bg_7x28
+	jsr	restore_bg_1x28
 
 	; draw peasant
 
@@ -97,7 +97,7 @@ river_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_7x28
+	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 

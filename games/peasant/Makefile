@@ -62,7 +62,7 @@ qload.o:	qload.s qboot.inc \
 		hgr_font.s \
 		draw_box.s \
 		hgr_rectangle.s \
-		hgr_7x28_sprite_mask.s \
+		hgr_1x28_sprite_mask.s \
 		hgr_1x5_sprite.s \
 		hgr_partial_save.s \
 		hgr_input.s \
@@ -101,9 +101,9 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s save_bg_7x28 qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s restore_bg_7x28 qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr_draw_sprite_7x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s save_bg_1x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_draw_sprite_1x28 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s input_buffer qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box_nosave qload.lst >> qload.inc
@@ -167,7 +167,7 @@ intro.o:	intro.s zp.inc qload.inc music.inc \
 		graphics/graphics_intro.inc sprites/peasant_sprite.inc \
 		graphics/priority_intro.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		hgr_partial_save.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		title.s directions.s \
@@ -202,7 +202,7 @@ cliff.o:	cliff.s zp.inc \
 		graphics_cliff/cliff_graphics.inc sprites/peasant_sprite.inc \
 		graphics_cliff/priority_cliff.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s
@@ -219,7 +219,7 @@ peasant1.o:	peasant1.s zp.inc \
 		graphics/graphics_peasant1.inc sprites/peasant_sprite.inc \
 		graphics/priority_peasant1.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s
@@ -235,7 +235,7 @@ peasant2.o:	peasant2.s zp.inc \
 		graphics/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s inventory.s loadsave_menu.s
@@ -250,7 +250,7 @@ peasant3.o:	peasant3.s zp.inc \
 		graphics/graphics_peasant3.inc sprites/peasant_sprite.inc \
 		graphics/priority_peasant3.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s
@@ -265,7 +265,7 @@ peasant4.o:	peasant4.s zp.inc \
 		graphics/graphics_peasant4.inc sprites/peasant_sprite.inc \
 		graphics/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s
@@ -281,7 +281,7 @@ trogdor.o:	trogdor.s zp.inc \
 		sprites/inventory_sprites.inc \
 		ssi263_simple_speech.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_7x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s inventory.s
@@ -297,7 +297,7 @@ ending.o:	ending.s zp.inc qload.inc music.inc \
 		graphics_end/ending_graphics.inc sprites/peasant_sprite.inc \
 		sprites/ending_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_14x14_sprite_mask.s hgr_1x5_sprite.s \
+		hgr_2x14_sprite_mask.s hgr_1x5_sprite.s \
 		hgr_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s parse_input.s new_map_location.s \

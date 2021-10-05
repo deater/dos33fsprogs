@@ -4,6 +4,23 @@ peasant2	18302
 		16653 (work on load/save support)
 		17191 (more work on priorities)
 		19326 (include common text)
+		19577 -- at release 0.75
+
+
+partial save, can we fit in 4k?
+	102 lines			; inventory was 115?
+	only 2-38	36 => 113 lines
+
+
+sprite routines:
+	14x14 sprite mask -> for drawing baby in ending
+	1x5 sprite -> intro, lake bubbles
+	1x8 sprite -> draw font
+	2x16 sprite -> inventory
+	7x28 sprite -> unused
+	7x28 sprite mask -> draw peasant
+	hgr_sprite -> generic
+
 Notes
 ~~~~~
 Some people would like actual S.A.M. support like the original game,

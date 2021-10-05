@@ -550,7 +550,7 @@ game_over:
 ;.include "hgr_tables.s"
 ;.include "hgr_text_box.s"
 
-.include "hgr_14x14_sprite_mask.s"
+.include "hgr_2x14_sprite_mask.s"
 .include "hgr_sprite.s"
 ;.include "hgr_hgr2.s"
 

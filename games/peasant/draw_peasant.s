@@ -100,7 +100,7 @@ draw_right1:
 done_pick_draw:
 	sta	INH
 
-	jsr	hgr_draw_sprite_7x28
+	jsr	hgr_draw_sprite_1x28
 
 	rts
 
