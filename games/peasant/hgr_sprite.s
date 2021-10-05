@@ -9,30 +9,31 @@
 	; sprite AT INL/INH
 
 hgr_draw_sprite:
+
 	ldy	#0
-	lda	(INL),Y
+	lda	(INL),Y			; load xsize
 	clc
 	adc	CURSOR_X
-	sta	h4231_width_end_smc+1	; self modify for end of output
+	sta	sprite_width_end_smc+1	; self modify for end of line
 
-	iny
+	iny				; load ysize
 	lda	(INL),Y
-	sta	h4231_ysize_smc+1
+	sta	sprite_ysize_smc+1	; self modify
 
-	; set up sprite pointers
+	; skip the xsize/ysize and point to sprite
 	clc
-	lda	INL
+	lda	INL			; 16-bit add
 	adc	#2
-	sta	h4231_smc1+1
+	sta	sprite_smc1+1
 	lda	INH
 	adc	#0
-	sta	h4231_smc1+2
+	sta	sprite_smc1+2
 
 	ldx	#0			; X is pointer offset
 
-	stx	MASK			; actually row
+	stx	MASK			; actual row
 
-hgr_42x31_sprite_yloop:
+hgr_sprite_yloop:
 
 	lda	MASK			; row
 
@@ -49,9 +50,9 @@ hgr_42x31_sprite_yloop:
 
 	ldy	CURSOR_X
 
-h3231_inner_loop:
+sprite_inner_loop:
 
-h4231_smc1:
+sprite_smc1:
 	lda	$d000		; get sprite pattern
 	sta	(GBASL),Y	; store out
 
@@ -59,23 +60,22 @@ h4231_smc1:
 	iny
 
 
-	inc	h4231_smc1+1
-	bne	h4231_noflo
-	inc	h4231_smc1+2
+	inc	sprite_smc1+1
+	bne	sprite_noflo
+	inc	sprite_smc1+2
+sprite_noflo:
 
-h4231_noflo:
-
-h4231_width_end_smc:
+sprite_width_end_smc:
 	cpy	#6
-	bne	h3231_inner_loop
+	bne	sprite_inner_loop
 
 
 	inc	MASK		; row
 	lda	MASK		; row
 
-h4231_ysize_smc:
+sprite_ysize_smc:
 	cmp	#31
-	bne	hgr_42x31_sprite_yloop
+	bne	hgr_sprite_yloop
 
 	rts
 

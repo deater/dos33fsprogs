@@ -1,7 +1,9 @@
 
-	;======================
-	; hgr 1x8 draw sprite
-	;======================
+	;======================================
+	; hgr 1x8 draw sprite XOR
+	;======================================
+	; mostly used for text print routines
+	;======================================
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y*7
 	; X, Y, A trashed
@@ -17,26 +19,15 @@ hgr_draw_sprite_1x8:
 	ldx	#0
 hgr_1x8_sprite_yloop:
 	txa
-	pha
 
 	clc
-	adc	CURSOR_Y
+	adc	CURSOR_Y	; calculate row
 
-;	ldx	#0
-;	ldy	#0
-
-	; calc GBASL/GBASH
-;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
-
-	tax
-	lda	hposn_low,X
+	tay			; get co-ords for it
+	lda	hposn_low,Y
 	sta	GBASL
-	lda	hposn_high,X
+	lda	hposn_high,Y
 	sta	GBASH
-
-
-	pla
-	tax
 
 	ldy	CURSOR_X
 
