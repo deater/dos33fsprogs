@@ -22,7 +22,7 @@ check_keyboard:
 
 key_was_pressed:
 
-	and	#$7f		 ; strip off high bit
+	and	#$5f		 ; strip off high bit and make uppercase
 
 	;==========================
 	; Left
