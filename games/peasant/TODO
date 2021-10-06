@@ -1,6 +1,7 @@
 TODO:
 
 next:
++ ESC SKIPS at top of intro
 + Loading screen is slow when getting names
 	Print "Loading" message while doing it?
 + After loading, no need to clear text before moving to next level
