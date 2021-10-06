@@ -25,17 +25,27 @@ cliff_base.hgr:	cliff_base.png
 ###
 
 priority_cliff.inc:  \
-	todo_priority.lzsa
-	echo "cliff_base_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_cliff.inc
+	todo_priority.lzsa \
+	cliff_base_priority.lzsa
+	echo "cliff_base_priority_lzsa: .incbin \"cliff_base_priority.lzsa\"" > priority_cliff.inc
+
 
 ####
-
 
 todo_priority.lzsa:	todo_priority.gr
 	$(LZSA) -r -f2 todo_priority.gr todo_priority.lzsa
 
 todo_priority.gr:	todo_priority.png
 	$(PNG2GR) todo_priority.png todo_priority.gr
+
+####
+
+cliff_base_priority.lzsa:	cliff_base_priority.gr
+	$(LZSA) -r -f2 cliff_base_priority.gr cliff_base_priority.lzsa
+
+cliff_base_priority.gr:	cliff_base_priority.png
+	$(PNG2GR) cliff_base_priority.png cliff_base_priority.gr
+
 
 ####
 
