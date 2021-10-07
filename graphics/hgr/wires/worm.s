@@ -32,24 +32,39 @@ wires:
 
 	jsr	HGR2
 
+	lda	#$00
+	sta	GBASL
+	lda	#$40
+	sta	GBASH
 
 
+	lda	#$81
+vert_loop:
 
-	ldx	#$0
+smc:
+	sta	$4000
+	eor	#$1
 
-outer_loop:
+	inc	smc+1
+	bne	noflo
+	inc	smc+2
+noflo:
+	ldy	smc+2
+	cpy	#$60
+	bne	vert_loop
 
 
 	; pulse loop horizontal
 
+	ldy	#0
+	ldx	#0
+
 	lda	#$00
-	tay
-
 	sta	GBASL
-
+outer_loop:
 	lda	#$40
 	sta	GBASH
-horiz_loop:
+inner_loop:
 
 	lda	even_lookup,X
 	sta	(GBASL),Y
@@ -65,49 +80,47 @@ noflo2:
 
 	lda	#$44
 	cmp	GBASH
-	bne	horiz_loop
+	bne	inner_loop
 
 
 
-	lda	#$44
-	sta	smc+2
 
 
-vert_loop:
-	txa
-	clc
-	adc	#2
-	asl
-	asl
-	adc	#$40
-	sbc	smc+2
-	cmp	#8
-	lda	#$81
-	bcs	noeor
-	ora	#$02
-noeor:
+	; pulse loop vertical
+	lda	#0
+	sta	GBASL
 
-smc:
-	sta	$4400
+	lda	addr_lookup,X
+	sta	GBASH
 
-	inc	smc+1
-	inc	smc+1
-	bne	noflo
-	inc	smc+2
-noflo:
-	ldy	smc+2
-	cpy	#$60
-	bne	vert_loop
+	ldy	#0
+	sty	COUNT
+vouter:
+
+
+vinner:
+	lda	(GBASL),Y
+	eor	#$1
+	sta	(GBASL),Y
+
+	iny
+	iny
+
+	bne	vinner
+
+blargh:
+	inc	GBASH
+	inc	COUNT
+	lda	COUNT
+	cmp	#4
+	bne	vouter
+
 
 
 	inx
-	cpx	#7
-	bne	noreset
-
-	ldx	#0
-noreset:
-
-	; wait
+	txa
+	and	#$7
+	tax
 
 	lda	#100
 	jsr	WAIT
@@ -117,9 +130,8 @@ noreset:
 
 
 even_lookup:
-;.byte	$D7
-.byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
+.byte	$D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
 odd_lookup:
-;.byte	$AA
-.byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
-
+.byte	$AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
+addr_lookup:
+.byte	$44,$48,$4C,$50, $54,$58,$5C,$20

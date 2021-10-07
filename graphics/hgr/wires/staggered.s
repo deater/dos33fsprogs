@@ -32,24 +32,17 @@ wires:
 
 	jsr	HGR2
 
-
-
-
-	ldx	#$0
-
-outer_loop:
-
-
 	; pulse loop horizontal
 
 	lda	#$00
 	tay
-
+	tax
 	sta	GBASL
 
+outer_loop:
 	lda	#$40
 	sta	GBASH
-horiz_loop:
+inner_loop:
 
 	lda	even_lookup,X
 	sta	(GBASL),Y
@@ -59,67 +52,31 @@ horiz_loop:
 	sta	(GBASL),Y
 
 	iny
-	bne	noflo2
+	bne	inner_loop
+
 	inc	GBASH
-noflo2:
-
-	lda	#$44
-	cmp	GBASH
-	bne	horiz_loop
-
-
-
-	lda	#$44
-	sta	smc+2
-
-
-vert_loop:
-	txa
-	clc
-	adc	#2
-	asl
-	asl
-	adc	#$40
-	sbc	smc+2
-	cmp	#8
-	lda	#$81
-	bcs	noeor
-	ora	#$02
-noeor:
-
-smc:
-	sta	$4400
-
-	inc	smc+1
-	inc	smc+1
-	bne	noflo
-	inc	smc+2
-noflo:
-	ldy	smc+2
-	cpy	#$60
-	bne	vert_loop
-
 
 	inx
-	cpx	#7
-	bne	noreset
+	txa
+	and	#$7
+	tax
 
-	ldx	#0
-noreset:
 
-	; wait
+	lda	#$60
+	cmp	GBASH
+	bne	inner_loop
 
-	lda	#100
+;	lda	#100
 	jsr	WAIT
+
+	inx
 
 	jmp	outer_loop
 
 
 
 even_lookup:
-;.byte	$D7
-.byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
+.byte	$D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
 odd_lookup:
-;.byte	$AA
-.byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
+.byte	$AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
 

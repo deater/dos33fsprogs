@@ -9,7 +9,12 @@ HGR_PAGE	= $E6
 GBASL		= $26
 GBASH		= $27
 
-COUNT		= $FE
+D		= $F9
+XX		= $FA
+YY		= $FB
+R		= $FC
+CX		= $FD
+CY		= $FE
 FRAME		= $FF
 
 ; soft-switches
@@ -32,65 +37,19 @@ wires:
 
 	jsr	HGR2
 
-
-
-
-	ldx	#$0
-
-outer_loop:
-
-
-	; pulse loop horizontal
-
 	lda	#$00
-	tay
-
 	sta	GBASL
-
 	lda	#$40
 	sta	GBASH
-horiz_loop:
-
-	lda	even_lookup,X
-	sta	(GBASL),Y
-	iny
-
-	lda	odd_lookup,X
-	sta	(GBASL),Y
-
-	iny
-	bne	noflo2
-	inc	GBASH
-noflo2:
-
-	lda	#$44
-	cmp	GBASH
-	bne	horiz_loop
 
 
-
-	lda	#$44
-	sta	smc+2
-
-
-vert_loop:
-	txa
-	clc
-	adc	#2
-	asl
-	asl
-	adc	#$40
-	sbc	smc+2
-	cmp	#8
 	lda	#$81
-	bcs	noeor
-	ora	#$02
-noeor:
+vert_loop:
 
 smc:
-	sta	$4400
+	sta	$4000
+	eor	#$1
 
-	inc	smc+1
 	inc	smc+1
 	bne	noflo
 	inc	smc+2
@@ -100,26 +59,22 @@ noflo:
 	bne	vert_loop
 
 
-	inx
-	cpx	#7
-	bne	noreset
 
-	ldx	#0
-noreset:
+	ldy	#0
+horiz_loop:
+	lda	#$D5
+	sta	(GBASL),Y
+	iny
+	lda	#$AA
+	sta	(GBASL),Y
+	iny
+	bne	horiz_loop
 
-	; wait
-
-	lda	#100
-	jsr	WAIT
-
-	jmp	outer_loop
+	inc	GBASH
+	lda	GBASH
+	cmp	#$44
+	bne	horiz_loop
 
 
-
-even_lookup:
-;.byte	$D7
-.byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
-odd_lookup:
-;.byte	$AA
-.byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
-
+end:
+	jmp	end

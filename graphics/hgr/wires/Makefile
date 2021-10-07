@@ -7,10 +7,12 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	wires.dsk
 
-wires.dsk:	HELLO WIRES BLUEORANGE BLUEORANGEZ
+wires.dsk:	HELLO WIRES CYCLE STAGGERED BLUEORANGE BLUEORANGEZ
 	cp $(EMPTY_DISK)/empty.dsk wires.dsk
 	$(DOS33) -y wires.dsk SAVE A HELLO
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 WIRES
+	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 CYCLE
+	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 STAGGERED
 	$(DOS33) -y wires.dsk BSAVE -a 0x0373 BLUEORANGE
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 BLUEORANGEZ
 
@@ -29,6 +31,23 @@ wires.o:	wires.s
 
 ####
 
+STAGGERED:	staggered.o
+	ld65 -o STAGGERED staggered.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+staggered.o:	staggered.s
+	ca65 -o staggered.o staggered.s -l staggered.lst
+
+
+####
+
+CYCLE:	cycle.o
+	ld65 -o CYCLE cycle.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+cycle.o:	cycle.s
+	ca65 -o cycle.o cycle.s -l cycle.lst
+
+####
+
 BLUEORANGE:	blueorange.o
 	ld65 -o BLUEORANGE blueorange.o -C $(LINKER_SCRIPTS)/apple2_373.inc
 
@@ -44,4 +63,4 @@ BLUEORANGEZ:	blueorange.o
 ######
 
 clean:	
-	rm -f *~ *.o *.lst WIRES
+	rm -f *~ *.o *.lst WIRES CYCLE
