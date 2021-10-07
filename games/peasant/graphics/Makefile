@@ -93,9 +93,11 @@ graphics_peasant4.inc:	\
 ###########
 
 priority_intro.inc:	\
-	todo_priority.lzsa lake_e_priority.lzsa river_priority.lzsa knight_priority.lzsa
-	echo "cottage_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_intro.inc
-	echo "lake_w_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_intro.inc
+	cottage_priority.lzsa \
+	lake_w_priority.lzsa lake_e_priority.lzsa \
+	river_priority.lzsa knight_priority.lzsa
+	echo "cottage_priority_lzsa: .incbin \"cottage_priority.lzsa\"" > priority_intro.inc
+	echo "lake_w_priority_lzsa: .incbin \"lake_w_priority.lzsa\"" >> priority_intro.inc
 	echo "lake_e_priority_lzsa: .incbin \"lake_e_priority.lzsa\"" >> priority_intro.inc
 	echo "river_priority_lzsa: .incbin \"river_priority.lzsa\"" >> priority_intro.inc
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_intro.inc
@@ -123,10 +125,12 @@ priority_peasant2.inc:	\
 ###
 
 priority_peasant3.inc:	\
-	todo_priority.lzsa lake_e_priority.lzsa
+	todo_priority.lzsa \
+	cottage_priority.lzsa \
+	lake_w_priority.lzsa lake_e_priority.lzsa
 	echo "jhonka_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant3.inc
-	echo "cottage_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
-	echo "lake_w_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+	echo "cottage_priority_lzsa: .incbin \"cottage_priority.lzsa\"" >> priority_peasant3.inc
+	echo "lake_w_priority_lzsa: .incbin \"lake_w_priority.lzsa\"" >> priority_peasant3.inc
 	echo "lake_e_priority_lzsa: .incbin \"lake_e_priority.lzsa\"" >> priority_peasant3.inc
 	echo "inn_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
 
@@ -332,6 +336,14 @@ todo.hgr:	todo.png
 
 ###
 
+cottage_priority.lzsa:	cottage_priority.hgr
+	$(LZSA) -r -f2 cottage_priority.hgr cottage_priority.lzsa
+
+cottage_priority.hgr:	cottage_priority.png
+	$(PNG2GR) cottage_priority.png cottage_priority.hgr
+
+###
+
 lady_cottage_priority.lzsa:	lady_cottage_priority.hgr
 	$(LZSA) -r -f2 lady_cottage_priority.hgr lady_cottage_priority.lzsa
 
@@ -362,6 +374,13 @@ lake_e_priority.lzsa:	lake_e_priority.hgr
 lake_e_priority.hgr:	lake_e_priority.png
 	$(PNG2GR) lake_e_priority.png lake_e_priority.hgr
 
+###
+
+lake_w_priority.lzsa:	lake_w_priority.hgr
+	$(LZSA) -r -f2 lake_w_priority.hgr lake_w_priority.lzsa
+
+lake_w_priority.hgr:	lake_w_priority.png
+	$(PNG2GR) lake_w_priority.png lake_w_priority.hgr
 
 
 ####
