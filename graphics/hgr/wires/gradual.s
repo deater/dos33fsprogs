@@ -17,14 +17,24 @@ FRAME		= $FF
 ; ROM routines
 
 HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
+HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
+HPLOT0		= $F457		; plot at (Y,X), (A)
+HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
+COLORTBL	= $F6F6
+PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
+NEXTCOL		= $F85F		; COLOR=COLOR+3
+SETCOL		= $F864		; COLOR=A
+SETGR		= $FB40		; set graphics and clear LO-RES screen
+BELL2		= $FBE4
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 wires:
 
 	jsr	HGR2
 
-reset_x:
-	ldx	#$0
+	; set to F0 for shorter weird intro
+
+;	ldx	#$0
 
 outer_loop:
 
@@ -46,8 +56,8 @@ horiz_loop:
 
 	lda	odd_lookup,X
 	sta	(GBASL),Y
-	iny
 
+	iny
 	bne	noflo2
 	inc	GBASH
 noflo2:
@@ -57,8 +67,10 @@ noflo2:
 	bne	horiz_loop
 
 
-	; A should already be $44 here
-	; Y should be 0
+
+	lda	#$44
+	sta	smc+2
+
 
 vert_loop:
 	txa
@@ -67,28 +79,40 @@ vert_loop:
 	asl
 	asl
 	adc	#$40
-	sbc	GBASH
+	sbc	smc+2
 	cmp	#8
 	lda	#$81
 	bcs	noeor
 	ora	#$02
 noeor:
 
-	sta	(GBASL),Y
+smc:
+	sta	$4400
 
-	inc	GBASL
-	inc	GBASL
+	inc	smc+1
+	inc	smc+1
 	bne	noflo
-	inc	GBASH
+	inc	smc+2
 noflo:
-	lda	#$60
-	cmp	GBASH
+	ldy	#$60
+	cpy	smc+2
 	bne	vert_loop
 
 	inx			; wrap at 7
 	cpx	#7
-	beq	reset_x
-	bne	outer_loop
+	bne	noreset
+
+	ldx	#0
+noreset:
+
+	; wait
+
+	tya			; wait $60
+	jsr	WAIT
+
+	jmp	outer_loop
+
+
 
 even_lookup:
 .byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
