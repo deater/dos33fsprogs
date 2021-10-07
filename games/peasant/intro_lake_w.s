@@ -31,14 +31,11 @@ lake_west:
 
 	jsr	decompress_lzsa2_fast
 
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
+	;================
+	; print title
 
-	jsr	hgr_put_string
+	jsr	intro_print_title
 
-;	jsr	hgr_save
 
 	; load priority to $400
 	; indirectly as we can't trash screen holes

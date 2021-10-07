@@ -55,14 +55,7 @@ cottage:
 	;===================
 	; print title
 
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
-
-	jsr	hgr_put_string
-
-;	jsr	hgr_save
+	jsr	intro_print_title
 
 	;====================
 	; save background

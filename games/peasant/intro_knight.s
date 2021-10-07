@@ -32,15 +32,10 @@ knight:
 
 	jsr	decompress_lzsa2_fast
 
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
+	;==================
+	; print title line
 
-	jsr	hgr_put_string
-
-;	jsr	hgr_save
-
+	jsr	intro_print_title
 
 	; load priority to $400
 	; indirectly as we can't trash screen holes

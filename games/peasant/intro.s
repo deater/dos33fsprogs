@@ -196,3 +196,25 @@ start_new_game:
 .include "graphics/graphics_intro.inc"
 
 .include "graphics/priority_intro.inc"
+
+skip_text:
+        .byte 0,2,"ESC Skips",0
+
+	;===================
+        ; print title
+intro_print_title:
+	lda	#<peasant_text
+	sta	OUTL
+	lda	#>peasant_text
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	lda	#<skip_text
+	sta	OUTL
+	lda	#>skip_text
+	sta	OUTH
+
+	jmp	hgr_put_string		; tail call
+
+

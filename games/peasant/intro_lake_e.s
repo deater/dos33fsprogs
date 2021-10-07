@@ -47,16 +47,10 @@ lake_east:
 
 	jsr	gr_copy_to_page1
 
+	;================
+	; print title line
 
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
-
-	jsr	hgr_put_string
-
-;	jsr	hgr_save
-
+	jsr	intro_print_title
 
 	;====================
 	; save background
