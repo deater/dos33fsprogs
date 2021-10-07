@@ -1,6 +1,6 @@
 TODO:
 
-next:
++ background priority mask not working when at far top of screen
 + ESC SKIPS at top of intro
 + Loading screen is slow when getting names
 	Print "Loading" message while doing it?
@@ -10,7 +10,6 @@ next:
 + update intro to walk closer to edges
 + fix issue where walking stops when you cross to screen w priority
 
-+ move copy to disk2
 + re-do how off edge-of-screen works (have destination for all 4 co-ords?)
 + move drawing to PAGE1 and use PAGE2 for RAM?
 	This would remove backing store when drawing text boxes?
