@@ -8,7 +8,7 @@ EMPTY_DISK = ../../empty_disk
 
 all:	peasant.dsk peasant_side2.dsk
 
-peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
+peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
 	SAVE1 SAVE2 SAVE3 MUSIC
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
@@ -23,15 +23,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO COPY_CHECK \
 	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  13 0 COPY_CHECK 0   0
 	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	WBOOT2 TROGDOR ENDING CLIFF
+peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
 	$(DOS33_RAW) peasant_side2.dsk  0 0  WBOOT2       0   1
+	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK    0   0
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0

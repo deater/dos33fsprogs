@@ -193,7 +193,7 @@ insert_disk_string:
 
 
 which_disk_array:
-	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
+	.byte 1,1,1,2		; VID_LOGO, TITLE, INTRO. COPY_CHECK
 	.byte 1,1,1,1		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 2,2,1,2		; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 1,1,1,1		;
@@ -212,7 +212,7 @@ load_address_array:
 	.byte $BC		; disk detect
 
 track_array:
-        .byte  4, 6, 9,13	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+        .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 30,32,28,30	;
