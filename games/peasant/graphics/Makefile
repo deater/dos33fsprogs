@@ -128,23 +128,24 @@ priority_peasant2.inc:	\
 priority_peasant3.inc:	\
 	todo_priority.lzsa \
 	cottage_priority.lzsa \
-	lake_w_priority.lzsa lake_e_priority.lzsa
+	lake_w_priority.lzsa lake_e_priority.lzsa inn_priority.lzsa
 	echo "jhonka_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant3.inc
 	echo "cottage_priority_lzsa: .incbin \"cottage_priority.lzsa\"" >> priority_peasant3.inc
 	echo "lake_w_priority_lzsa: .incbin \"lake_w_priority.lzsa\"" >> priority_peasant3.inc
 	echo "lake_e_priority_lzsa: .incbin \"lake_e_priority.lzsa\"" >> priority_peasant3.inc
-	echo "inn_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant3.inc
+	echo "inn_priority_lzsa: .incbin \"inn_priority.lzsa\"" >> priority_peasant3.inc
 
 ###
 
 priority_peasant4.inc:	\
 	todo_priority.lzsa \
-	lady_cottage_priority.lzsa
+	lady_cottage_priority.lzsa \
+	crooked_tree_priority.lzsa
 	echo "empty_hut_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant4.inc
 	echo "ned_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
 	echo "bottom_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
 	echo "lady_cottage_priority_lzsa: .incbin \"lady_cottage_priority.lzsa\"" >> priority_peasant4.inc
-	echo "crooked_tree_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
+	echo "crooked_tree_priority_lzsa: .incbin \"crooked_tree_priority.lzsa\"" >> priority_peasant4.inc
 
 
 ###
@@ -342,6 +343,22 @@ cottage_priority.lzsa:	cottage_priority.hgr
 
 cottage_priority.hgr:	cottage_priority.png
 	$(PNG2GR) cottage_priority.png cottage_priority.hgr
+
+###
+
+crooked_tree_priority.lzsa:	crooked_tree_priority.hgr
+	$(LZSA) -r -f2 crooked_tree_priority.hgr crooked_tree_priority.lzsa
+
+crooked_tree_priority.hgr:	crooked_tree_priority.png
+	$(PNG2GR) crooked_tree_priority.png crooked_tree_priority.hgr
+
+###
+
+inn_priority.lzsa:	inn_priority.hgr
+	$(LZSA) -r -f2 inn_priority.hgr inn_priority.lzsa
+
+inn_priority.hgr:	inn_priority.png
+	$(PNG2GR) inn_priority.png inn_priority.hgr
 
 ###
 
