@@ -1,0 +1,2 @@
+1FORI=0TO+93:POKE922+I,4*PEEK(2125+I)-204+(PEEK(2219+I/3)-35)/4^(I-INT(I/3)*3):NEXT
+2&"/foW2]/\T;]CM;be2W8dbg2W<eg%i<YCd4emQ8M)35IBl;e5\S_*33M:l2j<]1l;]Ka<gjmk4oa[^heohcghS[]S\aeDY3S53)@B5A%]4F5M4*(ILMK*0%&S88MNE&

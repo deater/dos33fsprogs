@@ -18,7 +18,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	XOR_ZOOM.BAS MOD9_HGR.BAS SIER_HGR.BAS MOVE.BAS SINE.BAS XDRAW128.BAS \
 	GATOR.BAS CURSOR.BAS STARGATE.BAS TUNNEL.BAS STARFIELD.BAS \
 	STAROOPS.BAS HGRSTARFIELD.BAS COOL_BOT.BAS WEB.BAS ORB.BAS \
-	FIREWORKS.BAS THINKING.BAS ARCS.BAS
+	FIREWORKS.BAS THINKING.BAS ARCS.BAS WIRE_HGR.BAS
 
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
@@ -96,6 +96,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A FIREWORKS.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A THINKING.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A ARCS.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A WIRE_HGR.BAS
 
 ####
 
@@ -471,6 +472,11 @@ SIER.BAS:	sier.bas
 
 DROPS.BAS:	drops.bas
 	$(TOKENIZE) < drops.bas > DROPS.BAS
+
+####
+
+WIRE_HGR.BAS:	wire_hgr.bas
+	$(TOKENIZE) < wire_hgr.bas > WIRE_HGR.BAS
 
 ####
 
