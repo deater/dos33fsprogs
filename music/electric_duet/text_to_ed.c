@@ -42,6 +42,7 @@
 #include "notes.h"
 
 static int debug=0;
+static int offset=0;
 
 static int bpm=120;
 static int baselen=80;
@@ -358,10 +359,18 @@ int main(int argc, char **argv) {
 		baselen=70;
 	}
 	else if (bpm==160) {// 2.66Hz, 375ms, should be 60
-		baselen=60;
+//		baselen=60;
+		baselen=64; // multiple of 16?
 	}
 	else if (bpm==250) {
-		baselen=50;	// eyeballed
+		baselen=48;	// eyeballed
+	}
+	else if (bpm==300) {	//40 is too fast
+		baselen=42;
+	}
+	else if (bpm==320) {// 2.66Hz, 375ms, should be 60
+//		baselen=60;
+		baselen=32; // multiple of 16?
 	}
 	else {
 		fprintf(stderr,"Warning!  Unusual BPM of %d\n",bpm);
@@ -379,6 +388,7 @@ int main(int argc, char **argv) {
 	int lyric_line=1;
 
 	fprintf(ed_file,"%c%c%c",1,voice1,voice2);
+	offset+=3;
 
 	while(1) {
 		result=fgets(string,BUFSIZ,in_file);
@@ -523,8 +533,9 @@ int main(int argc, char **argv) {
 				lyric_line++;
 
 				fprintf(ed_file,"%c%c%c",same_count,a_last,b_last);
+				offset+=3;
 				if (debug) {
-					printf("*** %x %x %x\n",same_count,a_last,b_last);
+					printf("%04X: %x %x %x\n",offset,same_count,a_last,b_last);
 				}
 				same_count=0;
 
