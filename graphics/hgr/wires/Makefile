@@ -7,10 +7,11 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	wires.dsk
 
-wires.dsk:	HELLO WIRES CYCLE STAGGERED BLUEORANGE BLUEORANGEZ
+wires.dsk:	HELLO WIRES WIRES_BOT CYCLE STAGGERED BLUEORANGE BLUEORANGEZ
 	cp $(EMPTY_DISK)/empty.dsk wires.dsk
 	$(DOS33) -y wires.dsk SAVE A HELLO
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 WIRES
+	$(DOS33) -y wires.dsk BSAVE -a 0x039a WIRES_BOT
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 CYCLE
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 STAGGERED
 	$(DOS33) -y wires.dsk BSAVE -a 0x0373 BLUEORANGE
@@ -28,6 +29,15 @@ WIRES:	wires.o
 
 wires.o:	wires.s
 	ca65 -o wires.o wires.s -l wires.lst
+
+####
+
+WIRES_BOT:	wires_bot.o
+	ld65 -o WIRES_BOT wires_bot.o -C $(LINKER_SCRIPTS)/apple2_39a.inc
+
+wires_bot.o:	wires_bot.s
+	ca65 -o wires_bot.o wires_bot.s -l wires_bot.lst
+
 
 ####
 
