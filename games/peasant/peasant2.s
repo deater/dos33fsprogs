@@ -121,7 +121,7 @@ game_loop:
 
 	lda	GAME_OVER
 	bmi	oops_new_location
-	bne	game_over
+	bne	level_over
 
 
 	; delay
@@ -139,10 +139,34 @@ oops_new_location:
 	;************************
 	; exit level
 	;************************
-game_over:
+level_over:
+	lda	MAP_LOCATION
+	cmp	#LOCATION_OUTSIDE_INN
+	bne	really_level_over
+
+	; be sure we're in range
+	lda	PEASANT_X
+	cmp	#6
+	bcc	really_level_over	; fine
+
+	cmp	#18
+	bcc	to_left
+	cmp	#30
+	bcc	to_right
+
+really_level_over:
 
 	rts
 
+to_right:
+	lda	#31
+	sta	PEASANT_X
+	rts
+
+to_left:
+	lda	#5
+	sta	PEASANT_X
+	rts
 
 
 .include "wait_keypress.s"
@@ -187,27 +211,6 @@ game_over:
 ;.include "hgr_text_box.s"
 ;.include "clear_bottom.s"
 ;.include "hgr_hgr2.s"
-
-;.include "text/common.inc"
-
-
-
-
-
-;help_message:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"I don't understand. Type",13
-;.byte	     "HELP for assistances.",0
-
-;fake_error1:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?SYNTAX ERROR IN 1020",13
-;.byte	     "]",127,0
-
-;fake_error2:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
-;.byte	     "]",127,0
 
 
 
