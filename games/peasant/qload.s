@@ -213,7 +213,7 @@ load_address_array:
 
 track_array:
         .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+	.byte 13,19,24,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 30,32,28,30	;
 	.byte  0		;
@@ -231,7 +231,7 @@ sector_array:
 
 length_array:
         .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  80, 80, 80, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+	.byte  80, 80, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  80, 80, 16, 80	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  20, 33, 27, 78	;
 	.byte   3		;

@@ -126,10 +126,10 @@ priority_peasant2.inc:	\
 ###
 
 priority_peasant3.inc:	\
-	todo_priority.lzsa \
+	jhonka_priority.lzsa \
 	cottage_priority.lzsa \
 	lake_w_priority.lzsa lake_e_priority.lzsa inn_priority.lzsa
-	echo "jhonka_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant3.inc
+	echo "jhonka_priority_lzsa: .incbin \"jhonka_priority.lzsa\"" > priority_peasant3.inc
 	echo "cottage_priority_lzsa: .incbin \"cottage_priority.lzsa\"" >> priority_peasant3.inc
 	echo "lake_w_priority_lzsa: .incbin \"lake_w_priority.lzsa\"" >> priority_peasant3.inc
 	echo "lake_e_priority_lzsa: .incbin \"lake_e_priority.lzsa\"" >> priority_peasant3.inc
@@ -359,6 +359,14 @@ inn_priority.lzsa:	inn_priority.hgr
 
 inn_priority.hgr:	inn_priority.png
 	$(PNG2GR) inn_priority.png inn_priority.hgr
+
+###
+
+jhonka_priority.lzsa:	jhonka_priority.hgr
+	$(LZSA) -r -f2 jhonka_priority.hgr jhonka_priority.lzsa
+
+jhonka_priority.hgr:	jhonka_priority.png
+	$(PNG2GR) jhonka_priority.png jhonka_priority.hgr
 
 ###
 
