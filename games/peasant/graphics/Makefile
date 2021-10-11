@@ -104,10 +104,11 @@ priority_intro.inc:	\
 
 priority_peasant1.inc:	\
 	todo_priority.lzsa \
+	gary_priority.lzsa top_prints_priority.lzsa \
 	leaning_tree_priority.lzsa \
 	waterfall_priority.lzsa
-	echo "gary_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant1.inc
-	echo "top_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "gary_priority_lzsa: .incbin \"gary_priority.lzsa\"" > priority_peasant1.inc
+	echo "top_prints_priority_lzsa: .incbin \"top_prints_priority.lzsa\"" >> priority_peasant1.inc
 	echo "wishing_well_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
 	echo "leaning_tree_priority_lzsa: .incbin \"leaning_tree_priority.lzsa\"" >> priority_peasant1.inc
 	echo "waterfall_priority_lzsa: .incbin \"waterfall_priority.lzsa\"" >> priority_peasant1.inc
@@ -116,9 +117,11 @@ priority_peasant1.inc:	\
 ###
 
 priority_peasant2.inc:	\
-	todo_priority.lzsa river_priority.lzsa knight_priority.lzsa
-	echo "haystack_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant2.inc
-	echo "puddle_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	todo_priority.lzsa \
+	haystack_priority.lzsa puddle_priority.lzsa \
+	river_priority.lzsa knight_priority.lzsa
+	echo "haystack_priority_lzsa: .incbin \"haystack_priority.lzsa\"" > priority_peasant2.inc
+	echo "puddle_priority_lzsa: .incbin \"puddle_priority.lzsa\"" >> priority_peasant2.inc
 	echo "archery_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
 	echo "river_priority_lzsa: .incbin \"river_priority.lzsa\"" >> priority_peasant2.inc
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_peasant2.inc
@@ -371,6 +374,22 @@ empty_hut_priority.hgr:	empty_hut_priority.png
 
 ###
 
+gary_priority.lzsa:	gary_priority.hgr
+	$(LZSA) -r -f2 gary_priority.hgr gary_priority.lzsa
+
+gary_priority.hgr:	gary_priority.png
+	$(PNG2GR) gary_priority.png gary_priority.hgr
+
+###
+
+haystack_priority.lzsa:	haystack_priority.hgr
+	$(LZSA) -r -f2 haystack_priority.hgr haystack_priority.lzsa
+
+haystack_priority.hgr:	haystack_priority.png
+	$(PNG2GR) haystack_priority.png haystack_priority.hgr
+
+###
+
 inn_priority.lzsa:	inn_priority.hgr
 	$(LZSA) -r -f2 inn_priority.hgr inn_priority.lzsa
 
@@ -408,6 +427,14 @@ ned_priority.lzsa:	ned_priority.hgr
 
 ned_priority.hgr:	ned_priority.png
 	$(PNG2GR) ned_priority.png ned_priority.hgr
+
+###
+
+puddle_priority.lzsa:	puddle_priority.hgr
+	$(LZSA) -r -f2 puddle_priority.hgr puddle_priority.lzsa
+
+puddle_priority.hgr:	puddle_priority.png
+	$(PNG2GR) puddle_priority.png puddle_priority.hgr
 
 ###
 
@@ -449,6 +476,14 @@ todo_priority.lzsa:	todo_priority.gr
 
 todo_priority.gr:	todo_priority.png
 	$(PNG2GR) todo_priority.png todo_priority.gr
+
+###
+
+top_prints_priority.lzsa:	top_prints_priority.hgr
+	$(LZSA) -r -f2 top_prints_priority.hgr top_prints_priority.lzsa
+
+top_prints_priority.hgr:	top_prints_priority.png
+	$(PNG2GR) top_prints_priority.png top_prints_priority.hgr
 
 ####
 
