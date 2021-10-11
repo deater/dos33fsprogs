@@ -17,6 +17,12 @@ TODO:
 + optimize text box sizes
 + replace parse_input lookup with a giant jump table
 
+Border special cases:
+	+ Mountain pass walking to Inn
+	+ Jhonka cave walking to Cottage
+
+
+
 General:
 - More frames in peasant sprites
 - Hook up text parser

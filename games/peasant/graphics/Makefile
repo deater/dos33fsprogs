@@ -138,12 +138,14 @@ priority_peasant3.inc:	\
 ###
 
 priority_peasant4.inc:	\
-	todo_priority.lzsa \
+	empty_hut_priority.lzsa \
+	ned_priority.lzsa \
+	bottom_prints_priority.lzsa \
 	lady_cottage_priority.lzsa \
 	crooked_tree_priority.lzsa
-	echo "empty_hut_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_peasant4.inc
-	echo "ned_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
-	echo "bottom_prints_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant4.inc
+	echo "empty_hut_priority_lzsa: .incbin \"empty_hut_priority.lzsa\"" > priority_peasant4.inc
+	echo "ned_priority_lzsa: .incbin \"ned_priority.lzsa\"" >> priority_peasant4.inc
+	echo "bottom_prints_priority_lzsa: .incbin \"bottom_prints_priority.lzsa\"" >> priority_peasant4.inc
 	echo "lady_cottage_priority_lzsa: .incbin \"lady_cottage_priority.lzsa\"" >> priority_peasant4.inc
 	echo "crooked_tree_priority_lzsa: .incbin \"crooked_tree_priority.lzsa\"" >> priority_peasant4.inc
 
@@ -335,6 +337,13 @@ todo.hgr:	todo.png
 ###########################################
 ###########################################
 
+###
+
+bottom_prints_priority.lzsa:	bottom_prints_priority.hgr
+	$(LZSA) -r -f2 bottom_prints_priority.hgr bottom_prints_priority.lzsa
+
+bottom_prints_priority.hgr:	bottom_prints_priority.png
+	$(PNG2GR) bottom_prints_priority.png bottom_prints_priority.hgr
 
 ###
 
@@ -351,6 +360,14 @@ crooked_tree_priority.lzsa:	crooked_tree_priority.hgr
 
 crooked_tree_priority.hgr:	crooked_tree_priority.png
 	$(PNG2GR) crooked_tree_priority.png crooked_tree_priority.hgr
+
+###
+
+empty_hut_priority.lzsa:	empty_hut_priority.hgr
+	$(LZSA) -r -f2 empty_hut_priority.hgr empty_hut_priority.lzsa
+
+empty_hut_priority.hgr:	empty_hut_priority.png
+	$(PNG2GR) empty_hut_priority.png empty_hut_priority.hgr
 
 ###
 
@@ -383,6 +400,14 @@ leaning_tree_priority.lzsa:	leaning_tree_priority.hgr
 
 leaning_tree_priority.hgr:	leaning_tree_priority.png
 	$(PNG2GR) leaning_tree_priority.png leaning_tree_priority.hgr
+
+###
+
+ned_priority.lzsa:	ned_priority.hgr
+	$(LZSA) -r -f2 ned_priority.hgr ned_priority.lzsa
+
+ned_priority.hgr:	ned_priority.png
+	$(PNG2GR) ned_priority.png ned_priority.hgr
 
 ###
 
