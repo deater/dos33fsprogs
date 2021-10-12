@@ -178,6 +178,8 @@ river_path:
 	.byte 34,105
 	.byte 35,105
 	.byte 36,105
+	.byte 37,105
+	.byte 38,105
 	.byte $FF,$FF
 
 

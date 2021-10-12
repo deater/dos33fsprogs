@@ -608,7 +608,7 @@ print_text_message:
 ;                       1	2	3	4	5	6	7	8
 message_x1h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
 message_x1l:	.byte	35,	35,	35,	35,	35,	35,	35,	35
-message_y1:	.byte	24,	24,	24,	24,	20,	20,	20,	20
+message_y1:	.byte	24,	24,	24,	24,	24,	24,	24,	24
 message_x2h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
 message_x2l:	.byte	253,	253,	253,	253,	253,	253,	253,	253
 message_y2:	.byte	54,	62,	70,	78,	86,	94,	102,	110

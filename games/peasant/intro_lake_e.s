@@ -155,6 +155,9 @@ lake_e_message1:
 
 
 lake_e_path:
+	.byte 4,151
+	.byte 5,151
+	.byte 6,151
 	.byte 7,151
 	.byte 8,151
 	.byte 9,151
