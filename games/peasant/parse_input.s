@@ -40,20 +40,31 @@ done_upcase_loop:
 
 	lda	CURRENT_VERB
 
-check_cheat:
+	; jump table
+	asl
+	tax
+	lda	verb_table+1, X  	; high byte first
+	pha
+	lda	verb_table,X		; low byte next
+	pha
+	rts				; jump to routine
 
-	cmp	#VERB_CHEAT
-	bne	check_copy
+
+	;================
+	; cheat
+	;================
+parse_cheat:
 
 	lda	#<cheat_message
 	sta	OUTL
 	lda	#>cheat_message
 	jmp	finish_parse_message
 
-check_copy:
+	;=================
+	; copy
+	;=================
 
-	cmp	#VERB_COPY
-	bne	check_dance
+parse_copy:
 
 	; want copy
 	lda	#NEW_FROM_DISK
@@ -64,20 +75,22 @@ check_copy:
 
 	jmp	done_parse_message
 
-check_dance:
+	;===================
+	; dance
+	;===================
 
-	cmp	#VERB_DANCE
-	bne	check_drink
+parse_dance:
 
 	lda	#<dance_message
 	sta	OUTL
 	lda	#>dance_message
 	jmp	finish_parse_message
 
-check_drink:
+	;=====================
+	; drink
+	;=====================
 
-	cmp	#VERB_DRINK
-	bne	check_inventory
+parse_drink:
 
 	lda	#<drink_message
 	sta	OUTL
@@ -97,54 +110,62 @@ check_drink:
 	jmp	finish_parse_message
 
 
+	;====================
+	; inventory
+	;====================
 
-check_inventory:
-	cmp	#VERB_INVENTORY
-	bne	check_load
+parse_inventory:
 
 	jsr	show_inventory
 
 	jmp	restore_parse_message
 
-check_load:
-	cmp	#VERB_LOAD
-	bne     check_look
+	;=====================
+	; load
+	;=====================
+
+parse_load:
 
 	jsr	load_menu
 
 	jmp	restore_parse_message
 
-check_look:
-	cmp	#VERB_LOOK
-	bne     check_talk
+	;=================
+	; look
+	;=================
+
+parse_look:
 
 	lda	#<look_irrelevant_message
 	sta	OUTL
 	lda	#>look_irrelevant_message
 	jmp	finish_parse_message
 
+	;===================
+	; talk
+	;===================
 
-check_talk:
-	cmp	#VERB_TALK
-	bne	check_save
+parse_talk:
 
 	lda	#<talk_noone_message
 	sta	OUTL
 	lda	#>talk_noone_message
 	jmp	finish_parse_message
 
-check_save:
-	cmp	#VERB_SAVE
-        bne     check_show
+	;===================
+	; save
+	;===================
+parse_save:
 
 	jsr	save_menu
 
 	jmp	restore_parse_message
 
+	;===================
+	; show
+	;===================
 
-check_show:
-	cmp	#VERB_SHOW
-	bne	check_version
+parse_show:
 
 	bit	LORES
 	bit	PAGE1
@@ -156,20 +177,22 @@ check_show:
 
 	jmp	done_parse_message
 
-check_version:
-	cmp	#VERB_VERSION
-	bne	check_where
+	;=====================
+	; version
+	;=====================
+
+parse_version:
 
         lda     #<version_message
         sta     OUTL
         lda     #>version_message
 	jmp	finish_parse_message
 
-check_where:
-	cmp	#VERB_WHERE
-	bne	check_unknown
+	;=====================
+	; where
+	;=====================
+parse_where:
 
-where_blargh:
 	ldx	MAP_LOCATION
 	lda	location_names_l,X
 	sta	INL
@@ -196,11 +219,72 @@ where_done:
         lda     #>where_message
 	jmp	finish_parse_message
 
-
-check_unknown:
+	;==================
+	; unknown
+	;=================
+parse_ask:
+parse_boo:
+parse_break:
+parse_buy:
+parse_climb:
+parse_close:
+parse_deploy:
+parse_die:
+parse_ditch:
+parse_drop:
+parse_enter:
+parse_feed:
+parse_get:
+parse_give:
+parse_go:
+parse_haldo:
+parse_jump:
+parse_kick:
+parse_kill:
+parse_knock:
+parse_light:
+parse_make:
+parse_map:
+parse_no:
+parse_open:
+parse_party:
+parse_pet:
+parse_play:
+parse_pull:
+parse_punch:
+parse_push:
+parse_put:
+parse_pwd:
+parse_quit:
+parse_read:
+parse_ride:
+parse_ring:
+parse_scare:
+parse_shoot:
+parse_sit:
+parse_skip:
+parse_sleep:
+parse_smell:
+parse_sniff:
+parse_steal:
+parse_swim:
+parse_take:
+parse_this:
+parse_throw:
+parse_try:
+parse_turn:
+parse_use:
+parse_wake:
+parse_wear:
+parse_what:
+parse_why:
+parse_yet:
+parse_unknown:
 	lda	#<help_message
 	sta	OUTL
 	lda	#>help_message
+	jmp	finish_parse_message
+
 
 finish_parse_message:
         sta     OUTH
@@ -403,3 +487,76 @@ message_len:
 last_bg_l:	.byte $00
 last_bg_h:	.byte $00
 
+
+
+verb_table:
+	.word	parse_unknown-1	; VERB_UNKNOWN	= 0
+	.word	parse_ask-1	; VERB_ASK	= 1
+	.word	parse_boo-1	; VERB_BOO	= 2
+	.word	parse_break-1	; VERB_BREAK	= 3
+	.word	parse_buy-1	; VERB_BUY	= 4
+	.word	parse_cheat-1	; VERB_CHEAT	= 5
+	.word	parse_climb-1	; VERB_CLIMB	= 6
+	.word	parse_close-1	; VERB_CLOSE	= 7
+	.word	parse_copy-1	; VERB_COPY	= 8
+	.word	parse_dance-1	; VERB_DANCE	= 9
+	.word	parse_deploy-1	; VERB_DEPLOY	= 10
+	.word	parse_die-1	; VERB_DIE	= 11
+	.word	parse_ditch-1	; VERB_DITCH	= 12
+	.word	parse_drink-1	; VERB_DRINK	= 13
+	.word	parse_drop-1	; VERB_DROP	= 14
+	.word	parse_enter-1	; VERB_ENTER	= 15
+	.word	parse_feed-1	; VERB_FEED	= 16
+	.word	parse_get-1	; VERB_GET	= 17
+	.word	parse_give-1	; VERB_GIVE	= 18
+	.word	parse_go-1	; VERB_GO	= 19
+	.word	parse_haldo-1	; VERB_HALDO	= 20
+	.word	parse_inventory-1	; VERB_INVENTORY= 21
+	.word	parse_jump-1	; VERB_JUMP	= 22
+	.word	parse_kick-1	; VERB_KICK	= 23
+	.word	parse_kill-1	; VERB_KILL	= 24
+	.word	parse_knock-1	; VERB_KNOCK	= 25
+	.word	parse_light-1	; VERB_LIGHT	= 26
+	.word	parse_load-1	; VERB_LOAD	= 27
+	.word	parse_look-1	; VERB_LOOK	= 28
+	.word	parse_make-1	; VERB_MAKE	= 29
+	.word	parse_map-1	; VERB_MAP	= 30
+	.word	parse_no-1	; VERB_NO	= 31
+	.word	parse_open-1	; VERB_OPEN	= 32
+	.word	parse_party-1	; VERB_PARTY	= 33
+	.word	parse_pet-1	; VERB_PET	= 34
+	.word	parse_play-1	; VERB_PLAY	= 35
+	.word	parse_pull-1	; VERB_PULL	= 36
+	.word	parse_punch-1	; VERB_PUNCH	= 37
+	.word	parse_push-1	; VERB_PUSH	= 38
+	.word	parse_put-1	; VERB_PUT	= 39
+	.word	parse_pwd-1	; VERB_PWD	= 40
+	.word	parse_quit-1	; VERB_QUIT	= 41
+	.word	parse_read-1	; VERB_READ	= 42
+	.word	parse_ride-1	; VERB_RIDE	= 43
+	.word	parse_ring-1	; VERB_RING	= 44
+	.word	parse_save-1	; VERB_SAVE	= 45
+	.word	parse_scare-1	; VERB_SCARE	= 46
+	.word	parse_shoot-1	; VERB_SHOOT	= 47
+	.word	parse_show-1	; VERB_SHOW	= 48
+	.word	parse_sit-1	; VERB_SIT	= 49
+	.word	parse_skip-1	; VERB_SKIP	= 50
+	.word	parse_sleep-1	; VERB_SLEEP	= 51
+	.word	parse_smell-1	; VERB_SMELL	= 52
+	.word	parse_sniff-1	; VERB_SNIFF	= 53
+	.word	parse_steal-1	; VERB_STEAL	= 54
+	.word	parse_swim-1	; VERB_SWIM	= 55
+	.word	parse_take-1	; VERB_TAKE	= 56
+	.word	parse_talk-1	; VERB_TALK	= 57
+	.word	parse_this-1	; VERB_THIS	= 58
+	.word	parse_throw-1	; VERB_THROW	= 59
+	.word	parse_try-1	; VERB_TRY	= 60
+	.word	parse_turn-1	; VERB_TURN	= 61
+	.word	parse_use-1	; VERB_USE	= 62
+	.word	parse_version-1	; VERB_VERSION	= 63
+	.word	parse_wake-1	; VERB_WAKE	= 64
+	.word	parse_wear-1	; VERB_WEAR	= 65
+	.word	parse_what-1	; VERB_WHAT	= 66
+	.word	parse_where-1	; VERB_WHERE	= 67
+	.word	parse_why-1	; VERB_WHY	= 68
+	.word	parse_yet-1	; VERB_YES	= 69

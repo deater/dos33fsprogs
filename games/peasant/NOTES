@@ -5,7 +5,8 @@ peasant2	18302
 		17191 (more work on priorities)
 		19326 (include common text)
 		19577 -- at release 0.75
-
+		19944 -- after all priorities added
+		20050 -- parse lookup table
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?

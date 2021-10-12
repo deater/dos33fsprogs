@@ -103,13 +103,12 @@ priority_intro.inc:	\
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_intro.inc
 
 priority_peasant1.inc:	\
-	todo_priority.lzsa \
 	gary_priority.lzsa top_prints_priority.lzsa \
-	leaning_tree_priority.lzsa \
+	wishing_well_priority.lzsa leaning_tree_priority.lzsa \
 	waterfall_priority.lzsa
 	echo "gary_priority_lzsa: .incbin \"gary_priority.lzsa\"" > priority_peasant1.inc
 	echo "top_prints_priority_lzsa: .incbin \"top_prints_priority.lzsa\"" >> priority_peasant1.inc
-	echo "wishing_well_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant1.inc
+	echo "wishing_well_priority_lzsa: .incbin \"wishing_well_priority.lzsa\"" >> priority_peasant1.inc
 	echo "leaning_tree_priority_lzsa: .incbin \"leaning_tree_priority.lzsa\"" >> priority_peasant1.inc
 	echo "waterfall_priority_lzsa: .incbin \"waterfall_priority.lzsa\"" >> priority_peasant1.inc
 
@@ -501,6 +500,13 @@ waterfall_priority.lzsa:	waterfall_priority.gr
 waterfall_priority.gr:	waterfall_priority.png
 	$(PNG2GR) waterfall_priority.png waterfall_priority.gr
 
+####
+
+wishing_well_priority.lzsa:	wishing_well_priority.hgr
+	$(LZSA) -r -f2 wishing_well_priority.hgr wishing_well_priority.lzsa
+
+wishing_well_priority.hgr:	wishing_well_priority.png
+	$(PNG2GR) wishing_well_priority.png wishing_well_priority.hgr
 
 ###
 
