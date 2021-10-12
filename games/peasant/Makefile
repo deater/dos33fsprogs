@@ -216,7 +216,8 @@ PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant1.o:	peasant1.s zp.inc \
-		graphics/graphics_peasant1.inc sprites/peasant_sprite.inc \
+		sprites/peasant_sprite.inc sprites/inventory_sprites.inc \
+		graphics/graphics_peasant1.inc \
 		graphics/priority_peasant1.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
@@ -363,6 +364,9 @@ graphics_title/title_graphics.inc:
 graphics/graphics_peasant1.inc:
 	cd graphics && make
 
+graphics_cliff/cliff_graphics.inc:
+	cd graphics_cliff && make
+
 graphics_copy/copy_graphics.inc:
 	cd graphics_copy && make
 
@@ -372,12 +376,25 @@ graphics_trogdor/trogdor_graphics.inc:
 graphics_end/ending_graphics.inc:
 	cd graphics_end && make
 
-
 sprites/inventory_sprites.inc:
 	cd sprites && make
 
 sprites/trogdor_sprites.inc:
 	cd sprites && make
+
+
+###
+
+distclean:
+	make clean
+	cd sprites && make clean
+	cd graphics_vid && make clean
+	cd graphics_title && make clean
+	cd graphics && make clean
+	cd graphics_copy && make clean
+	cd graphics_trogdor && make clean
+	cd graphics_end && make clean
+	cd graphics_cliff && make clean
 
 ###
 

@@ -66,5 +66,5 @@ vid_graphics.inc:	\
 ###
 
 clean:	
-	rm -f *~ outline.inc *.lzsa *.gr *.hgr
+	rm -f *~ vid_graphics.inc *.lzsa *.gr *.hgr
 
