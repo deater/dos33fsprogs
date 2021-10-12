@@ -32,6 +32,7 @@
 .byte "Ask about what?",0
  
 ; + boo
+boo_message:
 .byte "Scared me.",0
 
 ; + cheat
@@ -39,6 +40,7 @@ cheat_message:
 .byte "Meh.",0
 
 ; + dan (or any phrase involving Dan; anywhere)
+dan_message:
 .byte "Dan's still okay. Got a",13
 .byte "place on Dekalb with Rick",13
 .byte "and his wife. Slimmed up a",13
@@ -51,7 +53,9 @@ dance_message:
 .byte "here and soak up the scene.",0
 
 ; + die (anywhere) (Warning: This kills you.)
-.byte "That wasn't very smart. You dead.",0
+die_message:
+.byte "That wasn't very smart. You",13
+.byte "dead.",0
 
 ; + drink
 drink_message:
@@ -63,16 +67,32 @@ drink_message2:
 .byte "Which is nice.",0
  
 ; + quit  (Warning: The game actually does quit.) 
-.byte "Well fine Boring Sanders! Hope you saved your game cause it is OVER between us!",0
+quit_message:
+.byte "Well fine Boring Sanders!",13
+.byte "Hope you saved your game",13
+.byte "cause it is OVER between",13
+.byte "us!",0
 
 ; + map (before you find it)
-.byte "We are neither confirming nor denying the presence of a map in this game, but irridisregardless, you don't have one.",0
+map_message:
+.byte "We are neither confirming",13
+.byte "nor denying the presence of",13
+.byte "a map in this game, but",13
+.byte "irridisregardless, you",13
+.byte "don't have one.",0
 
 ; + party
-.byte "You are part of the Whig party. They are making gangrene-awareness their number one campaign priority.",0
+party_message:
+.byte "You are part of the Whig",13
+.byte "party. They are making",13
+.byte "gangrene-awareness their",13
+.byte "number one campaign",13
+.byte "priority.",0
 
 ; + what the f- / this sucks
-.byte "Come now. Don't get discouraged.",0
+what_message:
+.byte "Come now. Don't get",13
+.byte "discouraged.",0
 
 ; + where (offset 22)
 where_message:
@@ -80,32 +100,65 @@ where_message:
 .byte "                         ",0
 
 ; + why
+why_message:
 .byte "I wish I knew.",0
+
 ; + haldo
-.byte "That's totally not Dongolev.",0
+haldo_message:
+.byte "That's totally not",13
+.byte "Dongolev.",0
+
 ; + smell/sniff
-.byte "Smells like a computer game.",0
+smell_message:
+.byte "Smells like a computer",13
+.byte "game.",0
+
 ; + pwd
 .byte "~peasantsquest/{location}",0
+
 ; + go _____
-.byte "Use the arrow keys, pal. Just like a joypad only more like your day job.",0
+go_message:
+.byte "Use the arrow keys, pal.",13
+.byte "Just like a joypad only",13
+.byte "more like your day job.",0
+
 ; + ditch/drop baby (if you have it)
 .byte "Quit tryin to ditch the baby!",0
-; + ditch/drop/deploy/use baby (before you have it or after left)
-; + throw baby (anywhere without the baby)
-.byte "You don't even have two babies to rub together.",0
-; + climb cliff (screens where cliff is there)
-.byte "There aren't enough footholds and you don't have any carabeaners on you.",0
+
+; + ???? ditch/drop/deploy/use baby (after baby left)
+; + drop baby, throw baby (before getting the baby)
+no_baby_message:
+.byte "You don't even have two",13
+.byte "babies to rub together.",0
+
+; + climb cliff (screens where cliff is there [pass doesn't count?])
+climb_cliff_message:
+.byte "There aren't enough",13
+.byte "footholds and you don't",13
+.byte "have any carabeaners on",13
+.byte "you.",0
+
 ; + climb tree
-.byte "But then your hands would get all sappy.",0
+.byte "But then your hands would",13
+.byte "get all sappy.",0
+
 ; + climb tree (after getting room at inn)
 .byte "Naw. That's dumb. Do better.",0
-; + get/take/steal
-.byte "You probably WISH you could get that.",0
+
+; ???? steal
+; + get/take
+get_message:
+.byte "You probably WISH you could",13
+.byte "get that.",0
+
 ; + get pebbles/rocks (after you've gotten them)
 .byte "Come now. We've been through this jaunty little bit before. You took them from the half lake screen with the cattail and stuff.",0
+
 ; + give
-.byte "You don't need to give that now.",0
+give_message:
+.byte "You don't need to give",13
+.byte "that now.",0
+
 ; + throw baby (anywhere but the west side of the lake)
 .byte "Hmmm. Maybe try someplace else.",0
 
@@ -128,15 +181,22 @@ look_irrelevant_message:
 ; + look (at something currently in your inventory)
 .byte "You've totally got one of those! Check your INVENTORY to give'r a serious looksee.",0
 
-; + help
 ; + load
 ; + save
 ; + show priority
 ; + version
 ; + copy
 
+unknown_message:
+.byte "I don't understand. Type",13
+.byte "HELP for assistances.",0
 
 help_message:
-.byte	"I don't understand. Type",13
-.byte	"HELP for assistances.",0
-
+.byte "Type LOOK to see your",13
+.byte "surroundings.  Type",13
+.byte "INVENTORY or INV to see",13
+.byte "your stuff. Type WHERE to",13
+.byte "see the name of the place",13
+.byte "you're in. Type SAVE or",13
+.byte "LOAD to save or load your",13
+.byte "game.",0

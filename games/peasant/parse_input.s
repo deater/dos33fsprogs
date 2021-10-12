@@ -13,7 +13,10 @@ parse_input:
 upcase_loop:
 	lda	input_buffer,X
 	beq	done_upcase_loop
-	and	#$DF
+	cmp	#' '|$80		; skip uppercasing space
+	bne	skip_uppercase
+	and	#$DF			; uppercase
+skip_uppercase:
 	sta	input_buffer,X
 	inx
 	jmp	upcase_loop
@@ -51,6 +54,148 @@ done_upcase_loop:
 
 
 	;================
+	; quit
+	;================
+parse_quit:
+	lda	#<quit_message
+	sta	OUTL
+	lda	#>quit_message
+	jmp	finish_parse_message
+
+	;================
+	; smell / sniff
+	;================
+parse_smell:
+parse_sniff:
+	lda	#<smell_message
+	sta	OUTL
+	lda	#>smell_message
+	jmp	finish_parse_message
+
+	;================
+	; dan
+	;================
+parse_dan:
+	lda	#<dan_message
+	sta	OUTL
+	lda	#>dan_message
+	jmp	finish_parse_message
+
+	;================
+	; go
+	;================
+parse_go:
+	lda	#<go_message
+	sta	OUTL
+	lda	#>go_message
+	jmp	finish_parse_message
+
+	;================
+	; drop/throw
+	;================
+parse_drop:
+parse_throw:
+	lda	#<no_baby_message
+	sta	OUTL
+	lda	#>no_baby_message
+	jmp	finish_parse_message
+
+	;================
+	; climb
+	;================
+parse_climb:
+	lda	#<climb_cliff_message
+	sta	OUTL
+	lda	#>climb_cliff_message
+	jmp	finish_parse_message
+
+	;================
+	; get/take/steal
+	;================
+parse_get:
+parse_take:
+parse_steal:
+	lda	#<get_message
+	sta	OUTL
+	lda	#>get_message
+	jmp	finish_parse_message
+
+	;================
+	; give
+	;================
+parse_give:
+	lda	#<give_message
+	sta	OUTL
+	lda	#>give_message
+	jmp	finish_parse_message
+
+	;================
+	; haldo
+	;================
+parse_haldo:
+	lda	#<haldo_message
+	sta	OUTL
+	lda	#>haldo_message
+	jmp	finish_parse_message
+
+	;================
+	; why
+	;================
+parse_why:
+	lda	#<why_message
+	sta	OUTL
+	lda	#>why_message
+	jmp	finish_parse_message
+
+	;================
+	; this / what the
+	;================
+parse_this:
+parse_what:
+	lda	#<what_message
+	sta	OUTL
+	lda	#>what_message
+	jmp	finish_parse_message
+
+
+	;================
+	; party
+	;================
+parse_party:
+	lda	#<party_message
+	sta	OUTL
+	lda	#>party_message
+	jmp	finish_parse_message
+
+	;================
+	; map
+	;================
+parse_map:
+	lda	#<map_message
+	sta	OUTL
+	lda	#>map_message
+	jmp	finish_parse_message
+
+	;================
+	; help
+	;================
+parse_help:
+	lda	#<help_message
+	sta	OUTL
+	lda	#>help_message
+	jmp	finish_parse_message
+
+
+	;================
+	; boo
+	;================
+parse_boo:
+	lda	#<boo_message
+	sta	OUTL
+	lda	#>boo_message
+	jmp	finish_parse_message
+
+	;================
 	; cheat
 	;================
 parse_cheat:
@@ -85,6 +230,18 @@ parse_dance:
 	sta	OUTL
 	lda	#>dance_message
 	jmp	finish_parse_message
+
+	;===================
+	; die
+	;===================
+
+parse_die:
+
+	lda	#<die_message
+	sta	OUTL
+	lda	#>die_message
+	jmp	finish_parse_message
+
 
 	;=====================
 	; drink
@@ -223,31 +380,21 @@ where_done:
 	; unknown
 	;=================
 parse_ask:
-parse_boo:
 parse_break:
 parse_buy:
-parse_climb:
 parse_close:
 parse_deploy:
-parse_die:
 parse_ditch:
-parse_drop:
 parse_enter:
 parse_feed:
-parse_get:
-parse_give:
-parse_go:
-parse_haldo:
 parse_jump:
 parse_kick:
 parse_kill:
 parse_knock:
 parse_light:
 parse_make:
-parse_map:
 parse_no:
 parse_open:
-parse_party:
 parse_pet:
 parse_play:
 parse_pull:
@@ -255,7 +402,6 @@ parse_punch:
 parse_push:
 parse_put:
 parse_pwd:
-parse_quit:
 parse_read:
 parse_ride:
 parse_ring:
@@ -264,25 +410,17 @@ parse_shoot:
 parse_sit:
 parse_skip:
 parse_sleep:
-parse_smell:
-parse_sniff:
-parse_steal:
 parse_swim:
-parse_take:
-parse_this:
-parse_throw:
 parse_try:
 parse_turn:
 parse_use:
 parse_wake:
 parse_wear:
-parse_what:
-parse_why:
 parse_yet:
 parse_unknown:
-	lda	#<help_message
+	lda	#<unknown_message
 	sta	OUTL
-	lda	#>help_message
+	lda	#>unknown_message
 	jmp	finish_parse_message
 
 
@@ -298,12 +436,10 @@ restore_parse_message:
 	jsr	hgr_partial_restore
 
 ;	lda     last_bg_l
- ;       sta     getsrc_smc+1
-  ;      lda     last_bg_h
-   ;     sta     getsrc_smc+2
-
-   ;     lda     #$40
-
+;	sta     getsrc_smc+1
+;	lda     last_bg_h
+;	sta     getsrc_smc+2
+;	lda     #$40
 ;	jsr	decompress_lzsa2_fast
 
 
@@ -368,18 +504,38 @@ inc_verb_ptr_noflo:
 	rts
 
 verb_lookup:
+.byte "BOO",VERB_BOO|$80
 .byte "CHEAT",VERB_CHEAT|$80
+.byte "CLIMB",VERB_CLIMB|$80
 .byte "COPY",VERB_COPY|$80
 .byte "DANCE",VERB_DANCE|$80
+.byte "DIE",VERB_DIE|$80
 .byte "DRINK",VERB_DRINK|$80
+.byte "DROP",VERB_DROP|$80
+.byte "GET",VERB_GET|$80
+.byte "GIVE",VERB_GIVE|$80
+.byte "GO ",VERB_GO|$80
+.byte "HALDO",VERB_HALDO|$80
+.byte "HELP",VERB_HELP|$80
 .byte "INV",VERB_INVENTORY|$80
 .byte "LOAD",VERB_LOAD|$80
 .byte "LOOK",VERB_LOOK|$80
+.byte "MAP",VERB_MAP|$80
+.byte "PARTY",VERB_PARTY|$80
+.byte "QUIT",VERB_QUIT|$80
+.byte "SMELL",VERB_SMELL|$80
+.byte "SNIFF",VERB_SNIFF|$80
+.byte "TAKE",VERB_TAKE|$80
 .byte "TALK",VERB_TALK|$80
+.byte "THIS",VERB_THIS|$80
+.byte "THROW",VERB_THROW|$80
 .byte "SAVE",VERB_SAVE|$80
 .byte "SHOW",VERB_SHOW|$80
+.byte "STEAL",VERB_STEAL|$80
 .byte "VER",VERB_VERSION|$80
+.byte "WHAT THE",VERB_WHAT|$80
 .byte "WHERE",VERB_WHERE|$80
+.byte "WHY",VERB_WHY|$80
 .byte $00
 
 
@@ -455,9 +611,9 @@ message_x1l:	.byte	35,	35,	35,	35,	35,	35,	35,	35
 message_y1:	.byte	24,	24,	24,	24,	20,	20,	20,	20
 message_x2h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
 message_x2l:	.byte	253,	253,	253,	253,	253,	253,	253,	253
-message_y2:	.byte	54,	62,	82,	82,	86,	86,	86,	86
+message_y2:	.byte	54,	62,	70,	78,	86,	94,	102,	110
 message_tx:	.byte	7,	7,	7,	7,	7,	7,	7,	7
-message_ty:	.byte	36,	36,	41,	35,	33,	33,	33,	33
+message_ty:	.byte	36,	36,	36,	36,	36,	36,	36,	36
 
 
 	;======================
@@ -560,3 +716,4 @@ verb_table:
 	.word	parse_where-1	; VERB_WHERE	= 67
 	.word	parse_why-1	; VERB_WHY	= 68
 	.word	parse_yet-1	; VERB_YES	= 69
+	.word	parse_help-1	; VERB_HELP	= 70

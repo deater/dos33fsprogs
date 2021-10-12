@@ -1,5 +1,8 @@
 TODO:
 
++ consolidate the lookup info for message box sizes, as in the
+	end only Y2 is changing
+
 + background priority mask not working when at far top of screen
 + ESC SKIPS at top of intro
 + Loading screen is slow when getting names

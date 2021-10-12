@@ -231,7 +231,7 @@ sector_array:
 
 length_array:
         .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  80, 80, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+	.byte  80, 88, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  80, 80, 16, 80	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  20, 33, 27, 78	;
 	.byte   3		;
