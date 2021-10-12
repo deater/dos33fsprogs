@@ -117,12 +117,12 @@ priority_peasant1.inc:	\
 ###
 
 priority_peasant2.inc:	\
-	todo_priority.lzsa \
 	haystack_priority.lzsa puddle_priority.lzsa \
+	archery_priority.lzsa \
 	river_priority.lzsa knight_priority.lzsa
 	echo "haystack_priority_lzsa: .incbin \"haystack_priority.lzsa\"" > priority_peasant2.inc
 	echo "puddle_priority_lzsa: .incbin \"puddle_priority.lzsa\"" >> priority_peasant2.inc
-	echo "archery_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_peasant2.inc
+	echo "archery_priority_lzsa: .incbin \"archery_priority.lzsa\"" >> priority_peasant2.inc
 	echo "river_priority_lzsa: .incbin \"river_priority.lzsa\"" >> priority_peasant2.inc
 	echo "knight_priority_lzsa: .incbin \"knight_priority.lzsa\"" >> priority_peasant2.inc
 
@@ -339,6 +339,14 @@ todo.hgr:	todo.png
 
 ###########################################
 ###########################################
+
+###
+
+archery_priority.lzsa:	archery_priority.hgr
+	$(LZSA) -r -f2 archery_priority.hgr archery_priority.lzsa
+
+archery_priority.hgr:	archery_priority.png
+	$(PNG2GR) archery_priority.png archery_priority.hgr
 
 ###
 
