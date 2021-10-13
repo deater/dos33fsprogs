@@ -192,7 +192,7 @@ game_over:
 ;.byte	     "]",127,0
 
 
-.include "graphics/graphics_peasant3.inc"
+.include "graphics_peasantry/graphics_peasant3.inc"
 
 ;.include "sprites/boat_sprites.inc"
 
@@ -210,7 +210,7 @@ map_backgrounds_hi:
 	.byte	>lake_e_lzsa		; 13	-- lake east
 	.byte	>inn_lzsa		; 14	-- inn
 
-.include "graphics/priority_peasant3.inc"
+.include "graphics_peasantry/priority_peasant3.inc"
 
 map_priority_low:
 	.byte	<jhonka_priority_lzsa		; 10	-- jhonka

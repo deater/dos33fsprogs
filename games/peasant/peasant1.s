@@ -199,7 +199,7 @@ game_over:
 ;.byte	     "]",127,0
 
 
-.include "graphics/graphics_peasant1.inc"
+.include "graphics_peasantry/graphics_peasant1.inc"
 
 map_backgrounds_low:
 	.byte	<gary_lzsa		; 0	-- gary the horse
@@ -216,7 +216,7 @@ map_backgrounds_hi:
 	.byte	>waterfall_lzsa		; 4	-- waterfall
 
 
-.include "graphics/priority_peasant1.inc"
+.include "graphics_peasantry/priority_peasant1.inc"
 
 map_priority_low:
 	.byte	<gary_priority_lzsa		; 0	-- gary the horse

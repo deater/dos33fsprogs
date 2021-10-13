@@ -187,8 +187,8 @@ to_left:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics/graphics_peasant2.inc"
-.include "graphics/priority_peasant2.inc"
+.include "graphics_peasantry/graphics_peasant2.inc"
+.include "graphics_peasantry/priority_peasant2.inc"
 
 .include "version.inc"
 

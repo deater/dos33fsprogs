@@ -193,9 +193,9 @@ start_new_game:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics/graphics_intro.inc"
+.include "graphics_peasantry/graphics_intro.inc"
 
-.include "graphics/priority_intro.inc"
+.include "graphics_peasantry/priority_intro.inc"
 
 skip_text:
         .byte 0,2,"ESC Skips",0

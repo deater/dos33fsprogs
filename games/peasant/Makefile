@@ -164,8 +164,8 @@ INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 intro.o:	intro.s zp.inc qload.inc music.inc \
-		graphics/graphics_intro.inc sprites/peasant_sprite.inc \
-		graphics/priority_intro.inc \
+		graphics_peasantry/graphics_intro.inc sprites/peasant_sprite.inc \
+		graphics_peasantry/priority_intro.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		hgr_partial_save.s \
@@ -217,8 +217,8 @@ PEASANT1:	peasant1.o
 
 peasant1.o:	peasant1.s zp.inc \
 		sprites/peasant_sprite.inc sprites/inventory_sprites.inc \
-		graphics/graphics_peasant1.inc \
-		graphics/priority_peasant1.inc \
+		graphics_peasantry/graphics_peasant1.inc \
+		graphics_peasantry/priority_peasant1.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -232,8 +232,8 @@ PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant2.o:	peasant2.s zp.inc \
-		graphics/graphics_peasant2.inc sprites/peasant_sprite.inc \
-		graphics/priority_peasant2.inc \
+		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprite.inc \
+		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
@@ -248,8 +248,8 @@ PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant3.o:	peasant3.s zp.inc \
-		graphics/graphics_peasant3.inc sprites/peasant_sprite.inc \
-		graphics/priority_peasant3.inc \
+		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprite.inc \
+		graphics_peasantry/priority_peasant3.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -263,8 +263,8 @@ PEASANT4:	peasant4.o
 	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant4.o:	peasant4.s zp.inc \
-		graphics/graphics_peasant4.inc sprites/peasant_sprite.inc \
-		graphics/priority_peasant4.inc \
+		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprite.inc \
+		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -361,7 +361,7 @@ graphics_title/title_graphics.inc:
 	cd graphics_title && make
 
 
-graphics/graphics_peasant1.inc:
+graphics_peasantry/graphics_peasant1.inc:
 	cd graphics && make
 
 graphics_cliff/cliff_graphics.inc:

@@ -512,5 +512,11 @@ wishing_well_priority.hgr:	wishing_well_priority.png
 
 
 clean:	
-	rm -f *~ graphics.inc *.lzsa *.gr *.hgr
+	rm -f *~ graphics_intro.inc \
+		graphics_peasant1.inc graphics_peasant2.inc \
+		graphics_peasant3.inc graphics_peasant4.inc \
+		priority_intro.inc \
+		priority_peasant1.inc priority_peasant2.inc \
+		priority_peasant3.inc priority_peasant4.inc \
+		*.lzsa *.gr *.hgr
 

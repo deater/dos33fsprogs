@@ -181,8 +181,8 @@ game_over:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics/graphics_peasant4.inc"
-.include "graphics/priority_peasant4.inc"
+.include "graphics_peasantry/graphics_peasant4.inc"
+.include "graphics_peasantry/priority_peasant4.inc"
 
 .include "version.inc"
 .include "loadsave_menu.s"
