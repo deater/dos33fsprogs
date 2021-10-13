@@ -124,11 +124,11 @@ game_over:
 .include "graphics_over/game_over_graphics.inc"
 
 game_over_text:
-.byte "Thanks so much for playing",13
+.byte 34,"Thanks so much for playing",13
 .byte "this game here! Don't get too",13
 .byte "frustrated. Take some time",13
 .byte "for yourself. Have a refreshing",13
 .byte "coffee. Relax. Then come back",13
-.byte "and try again maybe!",13
+.byte "and try again maybe!",34,13
 .byte "          -The Videlectrix Guys",0
 

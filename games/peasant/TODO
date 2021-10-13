@@ -1,12 +1,17 @@
 TODO:
 
++ animation for game_over
++ hook up game_over for "quit" and "copy"
++ music for game over
+
 + consolidate the lookup info for message box sizes, as in the
 	end only Y2 is changing
 
 + background priority mask not working when at far top of screen
-+ ESC SKIPS at top of intro
 + Loading screen is slow when getting names
 	Print "Loading" message while doing it?
+  Or: move all save games to one sector (64 bytes each?)
+
 + After loading, no need to clear text before moving to next level
 
 + complete waterfall, including animation
@@ -48,7 +53,6 @@ Peasantry:
 - animation for the boat
 - animation of River
 - animation of waterfall
-- Priorities for all rooms
 - Hook up hidden glen, inside of cottages and inn
 - Archery minigame
 
