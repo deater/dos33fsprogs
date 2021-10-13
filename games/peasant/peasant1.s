@@ -181,23 +181,7 @@ game_over:
 ;.include "clear_bottom.s"
 ;.include "hgr_hgr2.s"
 
-
-
-;help_message:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"I don't understand. Type",13
-;.byte	     "HELP for assistances.",0
-
-;fake_error1:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?SYNTAX ERROR IN 1020",13
-;.byte	     "]",127,0
-
-;fake_error2:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
-;.byte	     "]",127,0
-
+;.include "text/peasant1.inc"
 
 .include "graphics_peasantry/graphics_peasant1.inc"
 
@@ -231,3 +215,4 @@ map_priority_hi:
 	.byte	>wishing_well_priority_lzsa	; 2	-- wishing well
 	.byte	>leaning_tree_priority_lzsa	; 3	-- leaning tree
 	.byte	>waterfall_priority_lzsa	; 4	-- waterfall
+

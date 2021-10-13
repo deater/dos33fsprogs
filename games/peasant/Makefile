@@ -356,6 +356,15 @@ SAVE3:	save3.o
 save3.o:	save3.s
 	ca65 -o save3.o save3.s -l save3.lst
 
+###
+
+dialog_test:	dialog_test.o
+	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_test.o:	dialog_test.s
+	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
+
+
 ####
 
 graphics_vid/vid_graphics.inc:
