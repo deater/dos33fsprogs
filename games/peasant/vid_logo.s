@@ -120,7 +120,8 @@ not_gs:
 	; skip checks if open-apple being held down
 
 	lda	$C061
-	beq	skip_all_checks
+	and	#$80			; only bit 7 is affected
+	bne	skip_all_checks		; rest is floating bus
 
 
 	jsr	detect_language_card
