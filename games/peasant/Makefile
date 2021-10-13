@@ -363,9 +363,11 @@ graphics_vid/vid_graphics.inc:
 graphics_title/title_graphics.inc:
 	cd graphics_title && make
 
+graphics_peasantry/graphics_intro.inc:
+	cd graphics_peasantry && make
 
 graphics_peasantry/graphics_peasant1.inc:
-	cd graphics && make
+	cd graphics_peasantry && make
 
 graphics_cliff/cliff_graphics.inc:
 	cd graphics_cliff && make
@@ -396,7 +398,7 @@ distclean:
 	cd sprites && make clean
 	cd graphics_vid && make clean
 	cd graphics_title && make clean
-	cd graphics && make clean
+	cd graphics_peasantry && make clean
 	cd graphics_copy && make clean
 	cd graphics_trogdor && make clean
 	cd graphics_end && make clean
