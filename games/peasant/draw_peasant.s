@@ -105,4 +105,4 @@ done_pick_draw:
 	rts
 
 
-.include "sprites/peasant_sprite.inc"
+.include "sprites/peasant_sprites.inc"

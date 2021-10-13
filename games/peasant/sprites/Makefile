@@ -1,7 +1,27 @@
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
-	boat_sprites.inc
+	boat_sprites.inc peasant_sprites.inc
+
+peasant_sprites.inc:	peasant_sprites.png
+	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_right1_mask   peasant_sprites.png  21   1 21 29 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_right2_sprite peasant_sprites.png  35  34 35 62 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_right2_mask   peasant_sprites.png  21  34 21 62 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_up1_sprite    peasant_sprites.png  35  68 35 96 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_up1_mask      peasant_sprites.png  21  68 21 96 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_up2_sprite    peasant_sprites.png  35 102 35 130 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_up2_mask      peasant_sprites.png  21 102 21 130 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_left1_sprite  peasant_sprites.png  84   1 90 29 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_left1_mask    peasant_sprites.png  70   1 76 29 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_left2_sprite  peasant_sprites.png  84  34 90 63 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_left2_mask    peasant_sprites.png  70  34 76 63 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_down1_sprite  peasant_sprites.png  84  68 90 97 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_down1_mask    peasant_sprites.png  70  68 76 97 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_down2_sprite  peasant_sprites.png  84 102 90 131 >> peasant_sprites.inc
+	$(HGR_SPRITE) -l peasant_down2_mask    peasant_sprites.png  70 102 76 131 >> peasant_sprites.inc
+
+
 
 boat_sprites.inc:	boat_sprites.png
 	$(HGR_SPRITE) -s -l boat0 boat_sprites.png  7   1 81   45 > boat_sprites.inc
@@ -84,4 +104,5 @@ trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l dashing8_sprite trogdor_sprites.png 126 6 132 45 >> trogdor_sprites.inc
 
 clean:
-	rm -f *~ inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc
+	rm -f *~ peasant_sprites.inc inventory_sprites.inc \
+		ending_sprites.inc trogdor_sprites.inc
