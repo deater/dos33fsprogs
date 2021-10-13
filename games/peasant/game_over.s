@@ -58,6 +58,8 @@ game_over:
 	;=====================
 	; play music
 
+	; G FF EE D C (an octave lower for the C?)
+
 	; TODO
 
 	jsr	wait_until_keypress
