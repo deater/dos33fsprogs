@@ -236,6 +236,11 @@ parse_dance:
 	;===================
 
 parse_die:
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	GAME_OVER
 
 	lda	#<die_message
 	sta	OUTL

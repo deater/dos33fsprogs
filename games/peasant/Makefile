@@ -24,23 +24,20 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
 	$(DOS33_RAW) peasant.dsk  13 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant.dsk  19 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  18 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF
+peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF GAME_OVER
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
-	$(DOS33_RAW) peasant_side2.dsk  0 0  WBOOT2       0   1
-	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK    0   0
+	$(DOS33_RAW) peasant_side2.dsk   0 0  WBOOT2      0   1
+	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK   0   0
+	$(DOS33_RAW) peasant_side2.dsk   3 0 GAME_OVER    0   0
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0
 
 
-###
-
-#HELLO:	hello.bas
-#	$(TOKENIZE) < hello.bas > HELLO
 
 ###
 
@@ -50,7 +47,6 @@ QBOOT:	qboot_sector.o
 qboot_sector.o:	qboot_sector.s	qboot_stage2.s
 	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
 
-###
 
 ###
 
@@ -208,6 +204,22 @@ cliff.o:	cliff.s zp.inc \
 		peasant_move.s score.s
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
+###
+
+
+GAME_OVER:	game_over.o
+	ld65 -o GAME_OVER game_over.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+game_over.o:	game_over.s zp.inc \
+		graphics_over/game_over_graphics.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s \
+		peasant_move.s score.s
+	ca65 -o game_over.o game_over.s -l game_over.lst
+
+
 
 ###
 
@@ -321,15 +333,6 @@ copy_check.o:	copy_check.s graphics_copy/copy_graphics.inc \
 
 ###
 
-FONT_TEST:	font_test.o
-	ld65 -o FONT_TEST font_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-font_test.o:	font_test.s hgr_font.s hgr_1x8_sprite.s
-	ca65 -o font_test.o font_test.s -l font_test.lst
-
-
-###
-
 SAVE1:	save1.o
 	ld65 -o SAVE1 save1.o -C ../../linker_scripts/apple2_e00.inc
 
@@ -370,6 +373,9 @@ graphics_cliff/cliff_graphics.inc:
 graphics_copy/copy_graphics.inc:
 	cd graphics_copy && make
 
+graphics_over/game_over_graphics.inc:
+	cd graphics_over && make
+
 graphics_trogdor/trogdor_graphics.inc:
 	cd graphics_trogdor && make
 
@@ -395,13 +401,14 @@ distclean:
 	cd graphics_trogdor && make clean
 	cd graphics_end && make clean
 	cd graphics_cliff && make clean
+	cd graphics_over && make clean
 
 ###
 
 clean:	
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			TROGDOR ENDING MUSIC
+			TROGDOR ENDING MUSIC GAME_OVER
 
 
 
