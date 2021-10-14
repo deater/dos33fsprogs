@@ -68,7 +68,6 @@
 
 .include "kerrek.inc"
 
-
 ;=========================
 ; Old Well / Wishing Well
 ;=========================
@@ -181,17 +180,23 @@
 .byte "You yell into the well and enjoy the echo. Keep in mind there are no stereos yet.",0
 
 
-
 ;=============
 ; Yellow Tree
 ;=============
 
 ; + look
-.byte "Rushing river b/w yellow tree.",0
+.byte "Rushing river b/w yellow",13
+.byte "tree.",0
+
 ; + look tree
-.byte "You're really hurtin' for puzzle solutions, huh?",0
+.byte "You're really hurtin' for",13
+.byte "puzzle solutions, huh?",0
+
 ; + look cottage
-.byte "You see a cottage in the distance. You hold your fingers up to one eye and pretend to squash it.",0
+.byte "You see a cottage in the",13
+.byte "distance. You hold your",13
+.byte "fingers up to one eye and",13
+.byte "pretend to squash it.",0
 
 
 ;===========
@@ -199,11 +204,27 @@
 ;===========
 
 ; + look
-.byte "There's a beautiful, magical waterfall cascading down the cliff side.",0
+.byte "There's a beautiful,",13
+.byte "magical waterfall",13
+.byte "cascading down the cliff",13
+.byte "side.",0
+
 ; + look tree
-.byte "You see some trees in the distance. You hold your fingers up to one eye and pretend to squash it.",0
+.byte "You see some trees in the",13
+.byte "distance. You hold your",13
+.byte "fingers up to one eye and",13
+.byte "pretend to squash it.",0
+
 ; + look waterfall
-.byte "Upon closer inspection, you discover it's not magical. That's just mist, not magic sparkles or anything.",0
+.byte "Upon closer inspection,",13
+.byte "you discover it's not",13
+.byte "magical. That's just mist,",13
+.byte "not magic sparkles or",13
+.byte "anything.",0
+
 ; + swim
-.byte "That waterfall would probably churn you into one of those weight-gain protein smoothies.",0
+.byte "That waterfall would",13
+.byte "probably churn you into one",13
+.byte "of those weight-gain",13
+.byte "protein smoothies.",0
 
