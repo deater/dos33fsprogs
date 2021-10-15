@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
       + 128.0 + (128.0 * sin((xx + yy) / 16.0))
       + 128.0 + (128.0 * sin(sqrt( (double)(xx * xx + yy * yy)) / 8.0))
     ) / 4;
-#else
+//#else
  	col = (int)
     ((
         4.0 + sin(xx / 16.0)
@@ -71,8 +71,21 @@ int main(int argc, char **argv) {
          // + sin(sqrt(xx * xx + yy * yy) / 8.0)
     )*32) ;
 
-	printf("%d %d %d\n",xx,yy,col);
+	printf("%d %d %d %.2f %.2f %.2f\n",xx,yy,col,
+		sin(xx/16.0), sin(yy/8.0), sin((xx+yy)/16.0));
+//#endif
+#else
+ 	col = (int)
+    (
+        128.0 + 32*sin(xx / 16.0)
+          + 32*sin(yy / 8.0)
+          + 32*sin((xx + yy) / 16.0)
+    ) ;
+
+	printf("%d %d %d %.2f %.2f %.2f\n",xx,yy,col,
+		sin(xx/16.0), sin(yy/8.0), sin((xx+yy)/16.0));
 #endif
+
 
 
 			offscreen[xx][yy]=col;

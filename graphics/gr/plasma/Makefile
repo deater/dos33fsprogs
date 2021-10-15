@@ -7,7 +7,9 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	plasma.dsk
 
-plasma.dsk:	HELLO PLASMA PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
+plasma.dsk:	HELLO PLASMA PLASMA2 \
+	DIAMONDS STATIC \
+	PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
 	cp $(EMPTYDISK) plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA
@@ -16,6 +18,9 @@ plasma.dsk:	HELLO PLASMA PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
 	$(DOS33) -y plasma.dsk BSAVE -a 0x36B PLASMA_BOT
 	$(DOS33) -y plasma.dsk BSAVE -a 0xC00 WIRES
 	$(DOS33) -y plasma.dsk BSAVE -a 0x36B WIRES_BOT
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 PLASMA2
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 DIAMONDS
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 STATIC
 
 ###
 
@@ -29,6 +34,33 @@ PLASMA:	plasma.o
 
 plasma.o:	plasma.s
 	ca65 -o plasma.o plasma.s -l plasma.lst
+
+###
+
+PLASMA2:	plasma2.o
+	ld65 -o PLASMA2 plasma2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+plasma2.o:	plasma2.s
+	ca65 -o plasma2.o plasma2.s -l plasma2.lst
+
+###
+
+DIAMONDS:	diamonds.o
+	ld65 -o DIAMONDS diamonds.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+diamonds.o:	diamonds.s
+	ca65 -o diamonds.o diamonds.s -l diamonds.lst
+
+
+###
+
+STATIC:	static.o
+	ld65 -o STATIC static.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+static.o:	static.s
+	ca65 -o static.o static.s -l static.lst
+
+
 
 ###
 
