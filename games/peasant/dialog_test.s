@@ -1,5 +1,6 @@
 ;.include "text/peasant1.inc"
 ;.include "text/peasant2.inc"
 ;.include "text/peasant3.inc"
-.include "text/peasant4.inc"
-
+;.include "text/peasant4.inc"
+;.include "text/inside.inc"
+.include "text/cliff.inc"

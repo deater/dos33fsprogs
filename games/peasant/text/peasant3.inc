@@ -257,19 +257,42 @@
 .byte "wrong bait...",34," he says,",13
 .byte "suggestively.",0
 
+; + throw baby/feed (at south side)
+.byte "Maybe try again from the",13
+.byte "center of the lake. Looks",13
+.byte "deeper there.",0
+
+; 1PT!
 ; + throw chicken feed
-.byte "You toss the feed into the lake. You shed a tear for each one. ",34,"Goodbye, Monty",34," you sniff. ",34,"Bye Delga, Rasputin. Farewell, Combledon!",34," and so forth.",0
-.byte "Woah! That crotchety old man just caught a pantload of fish! ",34,"Now I can get back to running the inn,",34," he says and rows to shore and hauls his boat out and cleans, guts, and filets all the fish and a buncha other stuff we didn't animate.",0
+.byte "You toss the feed into the",13
+.byte "lake. You shed a tear for",13
+.byte "each one. ",34,"Goodbye, Monty",34,13
+.byte "you sniff. ",34,"Bye Delga,",13
+.byte "Rasputin. Farewell,",13
+.byte "Combledon!",34," and so forth.",0
+; throw two handfulls, fish animation
+.byte "Woah! That crotchety old",13
+.byte "man just caught a pantload",13
+.byte "of fish! ",34,"Now I can get",13
+.byte "back to running the inn,",34,13
+.byte "he says and rows to shore",13
+.byte "and hauls his boat out and",13
+.byte "cleans, guts, and filets",13
+.byte "all the fish and a buncha",13
+.byte "other stuff we didn't",13
+.byte "animate.",0
 
 ; + throw feed (before getting the feed)
 .byte "You have nothing with which",13
 .byte "to do that ... with.",0
 
 ; + throw feed (after throwing the feed)  (The repetition is probably just a goof.) 
-.byte "You already fed the fish. Let's get moving here, people! You already fed the fish. Let's get moving here, people!",0
+.byte "You already fed the fish.",13
+.byte "Let's get moving here,",13
+.byte "people!You already fed the",13
+.byte "fish. Let's get moving,",13
+.byte "here, people!",0
 
-; + throw baby/feed (at south side)
-.byte "Maybe try again from the center of the lake. Looks deeper there.",0
 
 ; + throw (anything but the feed while he is fishing)
 .byte 34,"That isn't gonna work for",13
@@ -278,7 +301,9 @@
 .byte "volume.",0
 
 ; + throw (anything when fisherman gone)
-.byte "You already fed the fish. Let's get moving, here, people!",0
+.byte "You already fed the fish.",13
+.byte "Let's get moving, here,",13
+.byte "people!",0
 
 
 ;===================
@@ -314,8 +339,10 @@
 .byte "like that grog coozie your",13
 .byte "cousin got you.",0
 
+; + open
 ; + open door (after old man)
-.byte "You open the door and step inside the inn.",0
+.byte "You open the door and step",13
+.byte "inside the inn.",0
 
 ; + open door (before old man)
 .byte "It's locked fast!",0
