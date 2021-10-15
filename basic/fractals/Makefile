@@ -6,11 +6,12 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	fractal.dsk
 
-fractal.dsk:	HELLO DRAGON.BAS DRAGON_SMALL.BAS
+fractal.dsk:	HELLO DRAGON.BAS DRAGON_SMALL.BAS RESTRICT.BAS
 	cp $(EMPTY_DISK) fractal.dsk
 	$(DOS33) -y fractal.dsk SAVE A HELLO
 	$(DOS33) -y fractal.dsk SAVE A DRAGON.BAS
 	$(DOS33) -y fractal.dsk SAVE A DRAGON_SMALL.BAS
+	$(DOS33) -y fractal.dsk SAVE A RESTRICT.BAS
 
 ####
 
@@ -27,6 +28,10 @@ DRAGON.BAS:	dragon.bas
 DRAGON_SMALL.BAS:	dragon_small.bas
 	$(TOKENIZE) < dragon_small.bas > DRAGON_SMALL.BAS
 
+####
+
+RESTRICT.BAS:	restrict.bas
+	$(TOKENIZE) < restrict.bas > RESTRICT.BAS
 
 ####
 
