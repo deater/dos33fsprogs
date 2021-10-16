@@ -8,7 +8,7 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 all:	plasma.dsk
 
 plasma.dsk:	HELLO PLASMA PLASMA2 \
-	DIAMONDS STATIC \
+	DIAMONDS STATIC STATIC_BOT \
 	PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
 	cp $(EMPTYDISK) plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
@@ -21,6 +21,7 @@ plasma.dsk:	HELLO PLASMA PLASMA2 \
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 PLASMA2
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 DIAMONDS
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 STATIC
+	$(DOS33) -y plasma.dsk BSAVE -a 0x384 STATIC_BOT
 
 ###
 
@@ -59,6 +60,14 @@ STATIC:	static.o
 
 static.o:	static.s
 	ca65 -o static.o static.s -l static.lst
+
+###
+
+STATIC_BOT:	static_bot.o
+	ld65 -o STATIC_BOT static_bot.o -C $(LINKERSCRIPTS)/apple2_384.inc
+
+static_bot.o:	static_bot.s
+	ca65 -o static_bot.o static_bot.s -l static_bot.lst
 
 
 
