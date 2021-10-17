@@ -114,57 +114,12 @@ mockingboard_notfound2:
 	;=============================
 	; start new game
 	;=============================
-start_new_game:
-	lda	#LOAD_PEASANT2
-	sta	WHICH_LOAD
 
-	;=========================
-	; init peasant position
-	; draw at 18,108
+	jmp	start_new_game
 
-	lda	#18
-	sta	PEASANT_X
-	lda	#108
-	sta	PEASANT_Y
-
-	lda	#PEASANT_DIR_RIGHT
-	sta	PEASANT_DIR
-
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-
-	lda	#0
-	sta	SCORE_HUNDREDS
-
-	lda	#$00
-	sta	SCORE_TENSONES
-
-	lda	#4
-	sta	MAP_X
-	lda	#1
-	sta	MAP_Y
-
-	lda	#$00
-	sta	INVENTORY_1
-	sta	INVENTORY_2
-	lda	#INV3_SHIRT
-	sta	INVENTORY_3
-
-	; 1100 1011
-	lda	#$00
-	sta	INVENTORY_1_GONE
-	; 0001 1101
-	lda	#$00
-	sta	INVENTORY_2_GONE
-	;
-	lda	#$0
-	sta	INVENTORY_3_GONE
-
-	rts
+.include "new_game.s"
 
 
-;.include "decompress_fast_v2.s"
 .include "wait_keypress.s"
 
 .include "intro_cottage.s"
@@ -175,6 +130,7 @@ start_new_game:
 
 .include "draw_peasant.s"
 
+;.include "decompress_fast_v2.s"
 ;.include "hgr_font.s"
 ;.include "draw_box.s"
 ;.include "hgr_rectangle.s"

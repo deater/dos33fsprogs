@@ -196,7 +196,7 @@ which_disk_array:
 	.byte 1,1,1,2		; VID_LOGO, TITLE, INTRO. COPY_CHECK
 	.byte 1,1,1,1		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 2,2,1,2		; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte 2,1,1,1		; GAME_OVER
+	.byte 2,1,1,1		; GAME_OVER, INVENTORY
 	.byte 1			;
 	.byte 1,1,1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte $f		; disk detect
@@ -205,7 +205,7 @@ load_address_array:
 	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte $60,$60,$60,$60	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte $60,$60,$D0,$60	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte $60,$40,$40,$40	; GAME_OVER
+	.byte $60,$D0,$40,$40	; GAME_OVER, INVENTORY
 	.byte $08		;
 	.byte $BC,$BC,$BC,$0A	; SAVE1, SAVE2, SAVE3
 	.byte $0A		;
@@ -213,9 +213,9 @@ load_address_array:
 
 track_array:
         .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte 13,18,24,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte  3,32,28,30	; GAME_OVER
+	.byte  3,14,28,30	; GAME_OVER, INVENTORY
 	.byte  0		;
 	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
 	.byte  0		; disk detect
@@ -224,7 +224,7 @@ sector_array:
         .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte  0,13, 0, 1	; GAME_OVER
+	.byte  0, 0, 0, 1	; GAME_OVER, INVENTORY
 	.byte  6		;
 	.byte 11,12,13,14,15	; SAVE1, SAVE2, SAVE3
 	.byte  0		; disk detect
@@ -233,7 +233,7 @@ length_array:
         .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte  80, 88, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  80, 80, 16, 80	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte  16, 33, 27, 78	; GAME_OVER
+	.byte  16, 16, 27, 78	; GAME_OVER, INVENTORY
 	.byte   3		;
 	.byte   1,1,1,1,1	; SAVE1, SAVE2, SAVE3
 	.byte   1		; disk detect

@@ -1,8 +1,10 @@
 TODO:
 
-+ animation for game_over
++ print warning message on 48k systems that we need at least 64k
+
++ more frames in animation for game_over
 + hook up game_over for "quit" and "copy"
-+ music for game over
++ better music for game over
 
 + consolidate the lookup info for message box sizes, as in the
 	end only Y2 is changing

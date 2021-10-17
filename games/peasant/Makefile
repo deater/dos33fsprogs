@@ -24,9 +24,10 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  13 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant.dsk  18 0 PEASANT2	  0   0
-	$(DOS33_RAW) peasant.dsk  24 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant.dsk  14 0 INVENTORY  0   0
+	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
+	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
 peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF GAME_OVER
@@ -185,7 +186,8 @@ intro.o:	intro.s zp.inc qload.inc music.inc \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		title.s directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
-		intro_river.s intro_knight.s
+		intro_river.s intro_knight.s \
+		new_game.s
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
