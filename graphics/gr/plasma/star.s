@@ -39,23 +39,19 @@ plasma:
 
 draw_plasma:
 
-;	lda	#$0f
-;	sta	MASK
+	lda	#$0f
+	sta	MASK
 
 	ldx	#47		; YY
 create_yloop:
 
-;	lda	MASK
-;	eor	#$FF
-;	sta	MASK
+	lda	MASK
+	eor	#$FF
+	sta	MASK
 
-;	txa
-;	lsr
-;	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-
-	ldy	#0
 	txa
-	jsr	PLOT	; (Y,A) sets GBASL/GBASH, Y
+	lsr
+	jsr	GBASCALC	; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 	ldy	#39
 
@@ -65,7 +61,7 @@ create_xloop:
 	sta	SUM
 
 	tya			; XX
-	jsr	calcsine_div2
+	jsr	calcsine
 
 	txa			; YY
 	jsr	calcsine
@@ -74,7 +70,7 @@ create_xloop:
 	sty	SAVEY		; XX
 	txa
 	adc	SAVEY		; XX + YY
-	jsr	calcsine_div2
+	jsr	calcsine
 
 	clc
 	adc	FRAME
@@ -219,39 +215,21 @@ frame_smc:
 .endif
 
 
-;calcsine_div8:
+;calcsine_div_8:
 ;	lsr
-;calcsine_div4:
+;calcsine_div_4:
 ;	lsr
-
-calcsine_div2:
-	lsr
+;calcsine_div_2:
+;	lsr
 calcsine:
+;	asl
 	stx	SAVEX
-
-	and	#$3f
-
+	and	#$1f
 	tax
-	rol
-	rol
-	rol
-	bcc	sinadd
-
-sinsub:
-	lda	#0
-	lda	SUM
-;	sec
-	sbc	sinetable-32,X
-	jmp	sindone
-
-sinadd:
-	lda	SUM
-;	clc
-	adc	sinetable,X
-
-sindone:
+	lda	sinetable,X
+	clc
+	adc	SUM
 	sta	SUM
-
 	ldx	SAVEX
 	rts
 
@@ -269,21 +247,10 @@ colorlookup:
 
 sinetable:
 ; this is actually (32*sin(x))
-
-.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20,$1F,$1F,$1E,$1D,$1C,$1A,$18
-.byte $16,$14,$11,$0F,$0C,$09,$06,$03
-;.byte $00,$FD,$FA,$F7,$F4,$F1,$EF,$EC
-;.byte $EA,$E8,$E6,$E4,$E3,$E2,$E1,$E1
-;.byte $E0,$E1,$E1,$E2,$E3,$E4,$E6,$E8
-;.byte $EA,$EC,$EF,$F1,$F4,$F7,$FA,$FD
-
-
-;.byte $00,$06,$0C,$11,$16,$1A,$1D,$1F
-;.byte $20,$1F,$1D,$1A,$16,$11,$0C,$06
-;.byte $00,$FA,$F4,$EF,$EA,$E6,$E3,$E1
-;.byte $E0,$E1,$E3,$E6,$EA,$EF,$F4,$FA
+.byte $00,$06,$0C,$11,$16,$1A,$1D,$1F
+.byte $20,$1F,$1D,$1A,$16,$11,$0C,$06
+.byte $00,$FA,$F4,$EF,$EA,$E6,$E3,$E1
+.byte $E0,$E1,$E3,$E6,$EA,$EF,$F4,$FA
 
 ;.byte $00,$0C,$16,$1D
 ;.byte $20,$1D,$16,$0C

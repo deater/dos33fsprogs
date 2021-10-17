@@ -13,6 +13,8 @@
 #define PI 3.14159265358979323846264338327950
 
 
+int sine_lookup[64];
+
 #if 1
 static unsigned char color_lookup[]={0x0, 0x0, 0x5, 0x5,
 				     0x7, 0x7, 0xf, 0xf,
@@ -27,7 +29,7 @@ static unsigned char color_lookup[]={0x0, 0x5, 0x7, 0xf,
 
 #endif
 
-static int offscreen[40][40];
+static int offscreen[40][48];
 
 int main(int argc, char **argv) {
 
@@ -42,7 +44,13 @@ int main(int argc, char **argv) {
 
 	ram[DRAW_PAGE]=0x0;
 
-	for(yy=0;yy<40;yy++) {
+	for(xx=0;xx<64;xx++) {
+
+		sine_lookup[xx]=32.0*sin( (xx*2*PI)/64);
+
+	}
+
+	for(yy=0;yy<48;yy++) {
 	for(xx=0;xx<40;xx++) {
 
 //	col = ( 32.0 + (32.0 * sin(xx / 4.0))
@@ -75,12 +83,19 @@ int main(int argc, char **argv) {
 		sin(xx/16.0), sin(yy/8.0), sin((xx+yy)/16.0));
 //#endif
 #else
+ //	col = (int)
+ //   ( 128.0 + 32*sin(xx / 16.0)
+ //         + 32*sin(yy / 8.0)
+ //         + 32*sin((xx + yy) / 16.0)
+ //   ) ;
+
+
  	col = (int)
-    (
-        128.0 + 32*sin(xx / 16.0)
-          + 32*sin(yy / 8.0)
-          + 32*sin((xx + yy) / 16.0)
+    ( 128.0 + sine_lookup[ (int)(xx/2)&0x3f ]
+          + sine_lookup[ (int)(yy/1)&0x3f ]
+          + sine_lookup[ (int)((xx + yy)/2)&0x3f ]
     ) ;
+
 
 	printf("%d %d %d %.2f %.2f %.2f\n",xx,yy,col,
 		sin(xx/16.0), sin(yy/8.0), sin((xx+yy)/16.0));
@@ -93,7 +108,7 @@ int main(int argc, char **argv) {
 	}
 
 	while(1) {
-		for(yy=0;yy<40;yy++) {
+		for(yy=0;yy<48;yy++) {
 			for(xx=0;xx<40;xx++) {
 				col=offscreen[xx][yy];
 				color_equals(color_lookup[col]);

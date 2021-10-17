@@ -9,7 +9,8 @@ all:	plasma.dsk
 
 plasma.dsk:	HELLO PLASMA PLASMA2 \
 	DIAMONDS STATIC STATIC_BOT \
-	PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT
+	PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT \
+	SMALLCIRCS STAR OVAL
 	cp $(EMPTYDISK) plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA
@@ -22,6 +23,9 @@ plasma.dsk:	HELLO PLASMA PLASMA2 \
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 DIAMONDS
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 STATIC
 	$(DOS33) -y plasma.dsk BSAVE -a 0x384 STATIC_BOT
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 SMALLCIRCS
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 STAR
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 OVAL
 
 ###
 
@@ -43,6 +47,33 @@ PLASMA2:	plasma2.o
 
 plasma2.o:	plasma2.s
 	ca65 -o plasma2.o plasma2.s -l plasma2.lst
+
+###
+
+SMALLCIRCS:	smallcircs.o
+	ld65 -o SMALLCIRCS smallcircs.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+smallcircs.o:	smallcircs.s
+	ca65 -o smallcircs.o smallcircs.s -l smallcircs.lst
+
+###
+
+STAR:	star.o
+	ld65 -o STAR star.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+star.o:	star.s
+	ca65 -o star.o star.s -l star.lst
+
+
+###
+
+OVAL:	oval.o
+	ld65 -o OVAL oval.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+oval.o:	oval.s
+	ca65 -o oval.o oval.s -l oval.lst
+
+
 
 ###
 
