@@ -6,6 +6,8 @@
 .byte "Hopefully this guy will have some sense and not shoot you.",0
 ; {Dongolev shoots you in the head}
 .byte "That guy has no sense. He shot you. Dumb, dumb, dumb. Nice one, William Tell. You dead. Thanks for playing.",0
+
+; +3 points
 ; + haldo
 .byte "the archer stops arching and turns to you. ",34,"My brother told you to tell me haldo? He must want to start the old business back up!",34,0
 
@@ -42,6 +44,7 @@
 ; + climb/jump fence
 .byte "Not going to dignify that with a response.",0
 
+; + 2 points
 ; + get arrow
 .byte "You pick out a really good one and yank it from the tree. Hooray! Now you have an arrow!",0
 
@@ -133,7 +136,7 @@
 ; + talk lady (after she's gone)
 .byte "You'd call out her name and let it ring through the empty room, enveloping you in sorrow, but you don't actually know her name.",0
 
-; 1 PT!
+; +1 POINT!
 ; + get/take/steal chicken feed    [walks you to it]
 .byte "You used to eat this stuff",13
 .byte "like crazy when you were a",13

@@ -173,7 +173,7 @@
 ; + get berries
 .byte "NO MAN! JEEZ!",0
 
-; + get stones
+; + get stones	; +1 POINT
 ; + get pebbles
 .byte "You grab up a handful of",13
 .byte "fairly substantial",13
@@ -262,7 +262,7 @@
 .byte "center of the lake. Looks",13
 .byte "deeper there.",0
 
-; 1PT!
+; +2 points
 ; + throw chicken feed
 .byte "You toss the feed into the",13
 .byte "lake. You shed a tear for",13

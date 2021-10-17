@@ -114,6 +114,7 @@
 .byte "It says 'archery' on it. My",13
 .byte "wife's drunk.",0
 
+; POINTS +2
 ; + talk man (you walk over) [ note, did verify the quotes here]
 .byte 34,"Oh, hi. I'm Mendelev,",34,13
 .byte "says the archer. ",34,"I used to",13

@@ -20,6 +20,7 @@
 ; + look stump
 .byte "You run out of ideas as to what to do next, and stare at the stump.",0
 
+; +2 POINTS
 ; + wear mask
 .byte "You slip on the hideous monster maskus.",0
 .byte "You scared the crap outta Poor Gary! He broke on through to the other side!",0
@@ -93,6 +94,7 @@
 ; + look tree
 .byte "That's one orange tree alright.",0
 
+; +2 POINTS
 ; + put pebbles in bucket
 .byte "You plunk all your pebbles into the bucket. The weight causes it to descend to the bottom of the well with a quickness!",0
 

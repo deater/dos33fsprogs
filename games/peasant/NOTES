@@ -1,3 +1,21 @@
+Dialog issues:
+				Uncompressed	LZSA
+	DIALOG_PEASANT1		7394		4002
+	DIALOG_PEASANT2		6857		3943
+	DIALOG_PEASANT3		5809		3411
+	DIALOG_PEASANT4		6900		3851
+	DIALOG_CLIFF		4768		2825
+	DIALOG_INSIDE		10832		5741
+
+
+Inventory:
+	3CEE - 4a5f	= D71 = 3441 bytes
+Common parser:
+	4ac - 11af	= D03	3331 bytes
+
+
+
+
 peasant2	18302
 		18043 (decompress fast moved)
 		15899 (much of hgr code moved to qload)
@@ -7,6 +25,7 @@ peasant2	18302
 		19577 -- at release 0.75
 		19944 -- after all priorities added
 		20050 -- parse lookup table
+		20493 -- more parse code
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?

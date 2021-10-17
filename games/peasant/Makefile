@@ -5,12 +5,13 @@ DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts
 EMPTY_DISK = ../../empty_disk
+LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
-	SAVE1 SAVE2 SAVE3 MUSIC
+	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
@@ -132,6 +133,22 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
 
+
+###
+
+inventory.inc:	generate_common INVENTORY
+	./generate_common -a 0xd000 -s show_inventory inventory.lst > inventory.inc
+
+###
+
+INVENTORY:	inventory.o
+	ld65 -o INVENTORY inventory.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+inventory.o:	inventory.s \
+		sprites/inventory_sprites.inc \
+		hgr_2x16_sprite.s
+	ca65 -o inventory.o inventory.s -l inventory.lst
+
 ###
 
 VID_LOGO:	vid_logo.o
@@ -194,7 +211,7 @@ music.o:	music.s zp.inc \
 CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-cliff.o:	cliff.s zp.inc \
+cliff.o:	cliff.s zp.inc inventory.inc \
 		graphics_cliff/cliff_graphics.inc sprites/peasant_sprites.inc \
 		graphics_cliff/priority_cliff.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -228,7 +245,7 @@ game_over.o:	game_over.s zp.inc \
 PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant1.o:	peasant1.s zp.inc \
+peasant1.o:	peasant1.s zp.inc inventory.inc \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
@@ -244,7 +261,7 @@ peasant1.o:	peasant1.s zp.inc \
 PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant2.o:	peasant2.s zp.inc \
+peasant2.o:	peasant2.s zp.inc inventory.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
@@ -260,7 +277,7 @@ peasant2.o:	peasant2.s zp.inc \
 PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant3.o:	peasant3.s zp.inc \
+peasant3.o:	peasant3.s zp.inc inventory.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -275,7 +292,7 @@ peasant3.o:	peasant3.s zp.inc \
 PEASANT4:	peasant4.o
 	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant4.o:	peasant4.s zp.inc \
+peasant4.o:	peasant4.s zp.inc inventory.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -358,11 +375,74 @@ save3.o:	save3.s
 
 ###
 
-dialog_test:	dialog_test.o
-	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_6000.inc
+DIALOG_PEASANT1.LZSA:	dialog_peasant1
+	$(LZSA) -r -f2 dialog_peasant1 DIALOG_PEASANT1.LZSA
 
-dialog_test.o:	dialog_test.s
-	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
+dialog_peasant1:	dialog_peasant1.o
+	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_peasant1.o:	dialog_peasant1.s
+	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
+
+###
+
+DIALOG_PEASANT2.LZSA:	dialog_peasant2
+	$(LZSA) -r -f2 dialog_peasant2 DIALOG_PEASANT2.LZSA
+
+dialog_peasant2:	dialog_peasant2.o
+	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_peasant2.o:	dialog_peasant2.s
+	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
+
+###
+
+DIALOG_PEASANT3.LZSA:	dialog_peasant3
+	$(LZSA) -r -f2 dialog_peasant3 DIALOG_PEASANT3.LZSA
+
+dialog_peasant3:	dialog_peasant3.o
+	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_peasant3.o:	dialog_peasant3.s
+	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
+
+###
+
+DIALOG_PEASANT4.LZSA:	dialog_peasant4
+	$(LZSA) -r -f2 dialog_peasant4 DIALOG_PEASANT4.LZSA
+
+dialog_peasant4:	dialog_peasant4.o
+	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_peasant4.o:	dialog_peasant4.s
+	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
+
+###
+
+DIALOG_INSIDE.LZSA:	dialog_inside
+	$(LZSA) -r -f2 dialog_inside DIALOG_INSIDE.LZSA
+
+dialog_inside:	dialog_inside.o
+	ld65 -o dialog_inside dialog_inside.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_inside.o:	dialog_inside.s
+	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
+
+###
+
+DIALOG_CLIFF.LZSA:	dialog_cliff
+	$(LZSA) -r -f2 dialog_cliff DIALOG_CLIFF.LZSA
+
+dialog_cliff:	dialog_cliff.o
+	ld65 -o dialog_cliff dialog_cliff.o -C ../../linker_scripts/apple2_6000.inc
+
+dialog_cliff.o:	dialog_cliff.s
+	ca65 -o dialog_cliff.o dialog_cliff.s -l dialog_cliff.lst
+
+
+
+
+
 
 
 ####

@@ -10,7 +10,7 @@ WHICH_PEASANTRY=0
 .include "zp.inc"
 
 .include "qload.inc"
-
+.include "inventory.inc"
 
 cliff_base:
 	lda	#0
@@ -151,7 +151,7 @@ game_over:
 
 .include "parse_input.s"
 
-.include "inventory.s"
+;.include "inventory.s"
 
 .include "score.s"
 

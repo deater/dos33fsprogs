@@ -15,7 +15,7 @@ WHICH_PEASANTRY=1
 .include "zp.inc"
 
 .include "qload.inc"
-
+.include "inventory.inc"
 
 peasant_quest:
 	lda	#0
@@ -192,7 +192,7 @@ to_left:
 
 .include "version.inc"
 
-.include "inventory.s"
+;.include "inventory.s"
 
 .include "loadsave_menu.s"
 

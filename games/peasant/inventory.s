@@ -1,4 +1,6 @@
-; note this is around 2k
+.include "zp.inc"
+.include "hardware.inc"
+.include "qload.inc"
 
 	;=====================
 	; show inventory

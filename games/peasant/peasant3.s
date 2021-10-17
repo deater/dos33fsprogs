@@ -14,7 +14,7 @@ WHICH_PEASANTRY = 2
 .include "zp.inc"
 
 .include "qload.inc"
-
+.include "inventory.inc"
 
 peasant_quest:
 	lda	#0
@@ -166,7 +166,7 @@ game_over:
 
 .include "parse_input.s"
 
-.include "inventory.s"
+;.include "inventory.s"
 
 .include "keyboard.s"
 

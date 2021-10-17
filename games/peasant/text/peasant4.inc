@@ -214,6 +214,7 @@
 .byte "squished berries, cuz hey:",13
 .byte "jackpot!",0
 
+; +2 POINTS
 ; + get berries (fourth bush)
 .byte "You reach into the bush to",13
 .byte "snag you some berries but",13
