@@ -248,7 +248,7 @@ game_over.o:	game_over.s zp.inc \
 PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant1.o:	peasant1.s zp.inc inventory.inc \
+peasant1.o:	peasant1.s zp.inc inventory.inc dialog_peasant2.inc \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \

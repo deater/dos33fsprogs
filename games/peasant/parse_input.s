@@ -610,41 +610,48 @@ verb_lookup:
 print_text_message:
 	jsr	count_message_lines
 
-	ldy	message_len
-	dey
-
-        lda     message_x1h,Y
+        lda     #0			; always 0
         sta     BOX_X1H
-
-        lda     message_x1l,Y
-        sta     BOX_X1L
-
-        lda     message_y1,Y
-        sta     BOX_Y1
-
-        lda     message_x2h,Y
         sta     BOX_X2H
 
-        lda     message_x2l,Y
+        lda     #35			; always 35
+        sta     BOX_X1L
+
+        lda     #24			; always 24
+        sta     BOX_Y1
+
+        lda     #253			; always 253
         sta     BOX_X2L
 
-        lda     message_y2,Y
+;                      1   2   3   4   5   6    7    8
+;message_y2:	.byte 54, 62, 70, 78, 86, 94, 102, 110
+
+	; y2 is 46+(8*(len))
+
+	lda	message_len
+	asl
+	asl
+	asl
+	clc
+	adc	#46
+
+;        lda     message_y2,Y
         sta     BOX_Y2
 
-	tya
-	pha
+;	tya
+;	pha
 
 	jsr	hgr_partial_save
 
 	jsr	draw_box
 
-	pla
-	tay
+;	pla
+;	tay
 
-	lda	message_tx,Y
+	lda	#7			; always 7
 	sta	CURSOR_X
 
-	lda	message_ty,Y
+	lda	#36			; always 36
 	sta	CURSOR_Y
 
 	jsr	disp_put_string_cursor
@@ -662,15 +669,7 @@ print_text_message:
  ;       .byte 7,49
 
 
-;                       1	2	3	4	5	6	7	8
-message_x1h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
-message_x1l:	.byte	35,	35,	35,	35,	35,	35,	35,	35
-message_y1:	.byte	24,	24,	24,	24,	24,	24,	24,	24
-message_x2h:	.byte	0,	0,	0,	0,	0,	0,	0,	0
-message_x2l:	.byte	253,	253,	253,	253,	253,	253,	253,	253
-message_y2:	.byte	54,	62,	70,	78,	86,	94,	102,	110
-message_tx:	.byte	7,	7,	7,	7,	7,	7,	7,	7
-message_ty:	.byte	36,	36,	36,	36,	36,	36,	36,	36
+
 
 
 	;======================
