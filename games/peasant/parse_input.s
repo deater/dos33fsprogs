@@ -7,7 +7,8 @@
 
 parse_input:
 
-	; uppercase buffer
+	;==================
+	; uppercase the buffer
 
 	ldx	#0
 upcase_loop:
@@ -30,7 +31,7 @@ done_upcase_loop:
 	;=====================
 	; get the noun
 
-;	jsr	get_noun
+	jsr	get_noun
 
 
 	;=============================
@@ -472,7 +473,8 @@ done_parse_message:
 	;===========================
 	; get verb
 	;===========================
-	;
+	; verb has to be the first word
+
 get_verb:
 	lda	#VERB_UNKNOWN		; default
 	sta	CURRENT_VERB
@@ -483,32 +485,34 @@ get_verb:
 	sta	get_verb_loop+2
 
 next_verb_loop:
-	ldx	#0
+	ldx	#0			; set match count to none
 	stx	WORD_MATCH
+
 get_verb_loop:
-	lda	verb_lookup
-	bmi	done_verb
-	beq	done_get_verb_loop
-	cmp	input_buffer,X
-	beq	verb_char_matched
+	lda	verb_lookup		; get char from verb
+	bmi	done_verb		; if high bit set, done this verb
+	beq	done_get_verb_loop	; if zero, we're totally done
+
+	cmp	input_buffer,X		; compare verb char to buffer
+	beq	verb_char_matched	;
 verb_char_nomatch:
-	dec	WORD_MATCH
+	dec	WORD_MATCH		; indicate no match
 verb_char_matched:
-	jsr	inc_verb_ptr
-	inx
-	jmp	get_verb_loop
+	jsr	inc_verb_ptr		; matched, increment verb pointer
+	inx				; increment input pointer
+	jmp	get_verb_loop		; (bra) loop
 
 done_verb:
-	ldx	WORD_MATCH
-	beq	found_verb
+	ldx	WORD_MATCH		; check if we matched
+	beq	found_verb		; if so, found
 
 no_found_verb:
-	jsr	inc_verb_ptr
-	jmp	next_verb_loop
+	jsr	inc_verb_ptr		; not found, point to next verb
+	jmp	next_verb_loop		; try again
 
 found_verb:
-	and	#$7f
-	sta	CURRENT_VERB
+	and	#$7f			; found
+	sta	CURRENT_VERB		; strip high bit and save found verb
 
 done_get_verb_loop:
 
@@ -596,12 +600,86 @@ verb_lookup:
 .byte $00
 
 
+
+
+	;===========================
+	;===========================
+	; get noun
+	;===========================
+	;===========================
+	;
+	; assume command is "VERB SOMETHING SOMETHING SOMETHING"
+	; skip to first space, return NONE if nothing else
+	;		parse for first matching noun
+	;		return UNKNOWN if no matches
+
+get_noun:
+	lda	#NOUN_NONE		; default
+	sta	CURRENT_NOUN
+
+	lda	#<noun_lookup		; reset verb pointer
+	sta	get_noun_smc+1
+	lda	#>noun_lookup
+	sta	get_noun_smc+2
+
+next_noun_loop:
+	ldx	#0
+	stx	WORD_MATCH
+
+get_noun_loop:
+
+get_noun_smc:
+	lda	noun_lookup
+	bmi	done_noun
+	beq	done_get_noun_loop
+	cmp	input_buffer,X
+	beq	noun_char_matched
+noun_char_nomatch:
+	dec	WORD_MATCH
+noun_char_matched:
+	jsr	inc_noun_ptr
+	inx
+	jmp	get_noun_loop
+
+done_noun:
+	ldx	WORD_MATCH
+	beq	found_noun
+
+no_found_noun:
+	jsr	inc_noun_ptr
+	jmp	next_noun_loop
+
+found_noun:
+	and	#$7f
+	sta	CURRENT_NOUN
+
+done_get_noun_loop:
+
+	rts
+
+inc_noun_ptr:
+	inc	get_noun_smc+1
+	bne	inc_noun_ptr_noflo
+	inc	get_noun_smc+2
+inc_noun_ptr_noflo:
+
+	rts
+
+noun_lookup:
+.byte "ARCHER",NOUN_ARCHER|$80
+.byte "KNIGHT",NOUN_KNIGHT|$80
+.byte "SIGN",NOUN_SIGN|$80
+.byte $00
+
+
 .include "text/common.inc"
 
 
-	;======================
+	;=======================
+	;=======================
 	; print text message
-
+	;=======================
+	;=======================
 	; OUTL/OUTH point to message
 
 	; first we need to calculate the size of the message (lines)
@@ -635,18 +713,13 @@ print_text_message:
 	clc
 	adc	#46
 
-;        lda     message_y2,Y
         sta     BOX_Y2
-
-;	tya
-;	pha
 
 	jsr	hgr_partial_save
 
 	jsr	draw_box
 
-;	pla
-;	tay
+	; print text at 7 (*7), 36
 
 	lda	#7			; always 7
 	sta	CURSOR_X
@@ -658,22 +731,11 @@ print_text_message:
 
 	rts
 
-;.byte   0,43,24, 0,253,82
-;.byte   8,41
-
-; alternate 1
-;.byte 0,35,34, 0,253,72
-;.byte 7,49,"OK go for it.",0
-
-; .byte 0,35,34, 0,253,82
- ;       .byte 7,49
-
-
-
-
-
+	;======================
 	;======================
 	; count message lines
+	;======================
+	;======================
 	; in OUTL/OUTH
 count_message_lines:
 	ldy	#0
