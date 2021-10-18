@@ -523,38 +523,76 @@ inc_verb_ptr_noflo:
 	rts
 
 verb_lookup:
+.byte "ASK",VERB_ASK|$80
 .byte "BOO",VERB_BOO|$80
+.byte "BREAK",VERB_BREAK|$80
+.byte "BUY",VERB_BUY|$80
 .byte "CHEAT",VERB_CHEAT|$80
 .byte "CLIMB",VERB_CLIMB|$80
+.byte "CLOSE",VERB_CLOSE|$80
 .byte "COPY",VERB_COPY|$80
 .byte "DANCE",VERB_DANCE|$80
+.byte "DEPLOY",VERB_DEPLOY|$80
 .byte "DIE",VERB_DIE|$80
+.byte "DITCH",VERB_DITCH|$80
 .byte "DRINK",VERB_DRINK|$80
 .byte "DROP",VERB_DROP|$80
+.byte "ENTER",VERB_ENTER|$80
+.byte "FEED",VERB_FEED|$80
 .byte "GET",VERB_GET|$80
 .byte "GIVE",VERB_GIVE|$80
 .byte "GO ",VERB_GO|$80
 .byte "HALDO",VERB_HALDO|$80
 .byte "HELP",VERB_HELP|$80
 .byte "INV",VERB_INVENTORY|$80
+.byte "JUMP",VERB_JUMP|$80
+.byte "KICK",VERB_KICK|$80
+.byte "KILL",VERB_KILL|$80
+.byte "KNOCK",VERB_KNOCK|$80
+.byte "LIGHT",VERB_LIGHT|$80
 .byte "LOAD",VERB_LOAD|$80
 .byte "LOOK",VERB_LOOK|$80
+.byte "MAKE",VERB_MAKE|$80
 .byte "MAP",VERB_MAP|$80
+.byte "NO",VERB_NO|$80
+.byte "OPEN",VERB_OPEN|$80
 .byte "PARTY",VERB_PARTY|$80
+.byte "PET",VERB_PET|$80
+.byte "PLAY",VERB_PLAY|$80
+.byte "PULL",VERB_PULL|$80
+.byte "PUNCH",VERB_PUNCH|$80
+.byte "PUSH",VERB_PUSH|$80
+.byte "PUT",VERB_PUT|$80
+.byte "PWD",VERB_PWD|$80
 .byte "QUIT",VERB_QUIT|$80
+.byte "READ",VERB_READ|$80
+.byte "RIDE",VERB_RIDE|$80
+.byte "RING",VERB_RING|$80
+.byte "SAVE",VERB_SAVE|$80
+.byte "SCARE",VERB_SCARE|$80
+.byte "SHOOT",VERB_SHOOT|$80
+.byte "SHOW",VERB_SHOW|$80
+.byte "SIT",VERB_SIT|$80
+.byte "SKIP",VERB_SKIP|$80
+.byte "SLEEP",VERB_SLEEP|$80
 .byte "SMELL",VERB_SMELL|$80
 .byte "SNIFF",VERB_SNIFF|$80
+.byte "STEAL",VERB_STEAL|$80
+.byte "SWIM",VERB_SWIM|$80
 .byte "TAKE",VERB_TAKE|$80
 .byte "TALK",VERB_TALK|$80
 .byte "THIS",VERB_THIS|$80
 .byte "THROW",VERB_THROW|$80
-.byte "SAVE",VERB_SAVE|$80
-.byte "SHOW",VERB_SHOW|$80
-.byte "STEAL",VERB_STEAL|$80
+.byte "TRY",VERB_TRY|$80
+.byte "TURN",VERB_TURN|$80
+.byte "USE",VERB_USE|$80
 .byte "VER",VERB_VERSION|$80
+.byte "WAKE",VERB_WAKE|$80
+.byte "WEAR",VERB_WEAR|$80
 .byte "WHAT THE",VERB_WHAT|$80
 .byte "WHERE",VERB_WHERE|$80
 .byte "WHY",VERB_WHY|$80
+.byte "YES",VERB_YES|$80
 .byte $00
 
 
