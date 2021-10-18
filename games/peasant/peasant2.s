@@ -246,3 +246,5 @@ map_priority_hi:
 
 ;peasant2_text_lzsa:
 ;.incbin "DIALOG_PEASANT2.LZSA"
+
+;.include "dialog_peasant2.inc"

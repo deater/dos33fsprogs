@@ -308,9 +308,13 @@ parse_load:
 
 parse_look:
 
-	lda	#<look_irrelevant_message
+	lda	#<pass_look_message
 	sta	OUTL
-	lda	#>look_irrelevant_message
+	lda	#>pass_look_message
+
+;	lda	#<look_irrelevant_message
+;	sta	OUTL
+;	lda	#>look_irrelevant_message
 	jmp	finish_parse_message
 
 	;===================
@@ -732,3 +736,5 @@ verb_table:
 	.word	parse_why-1	; VERB_WHY	= 68
 	.word	parse_yet-1	; VERB_YES	= 69
 	.word	parse_help-1	; VERB_HELP	= 70
+
+.include "dialog_peasant2.inc"

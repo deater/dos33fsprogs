@@ -264,7 +264,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant2.o:	peasant2.s zp.inc inventory.inc \
+peasant2.o:	peasant2.s zp.inc inventory.inc dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
@@ -400,6 +400,11 @@ dialog_peasant2.o:	dialog_peasant2.s
 
 ###
 
+dialog_peasant2.inc:	generate_common dialog_peasant2
+	./generate_common -a 0xe000 -s pass_look_message dialog_peasant2.lst > dialog_peasant2.inc
+
+####
+
 DIALOG_PEASANT3.LZSA:	dialog_peasant3
 	$(LZSA) -r -f2 dialog_peasant3 DIALOG_PEASANT3.LZSA
 
@@ -503,7 +508,5 @@ distclean:
 clean:	
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			TROGDOR ENDING MUSIC GAME_OVER
-
-
-
+			TROGDOR ENDING MUSIC GAME_OVER \
+			dialog_peasant2

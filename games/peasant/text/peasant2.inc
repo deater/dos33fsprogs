@@ -219,6 +219,7 @@
 ;========================
 
 ; + look
+pass_look_message:
 .byte "You've reached the",13
 .byte "mountain pass that leads to",13
 .byte "Trogdor's lair. A royal",13
