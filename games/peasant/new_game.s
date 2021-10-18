@@ -29,6 +29,26 @@ start_new_game:
         lda     LCBANK1
         lda     LCBANK1
 
+	; load dialog to $20
+
+        lda     #LOAD_DIALOG2
+        sta     WHICH_LOAD
+
+        jsr     load_file
+
+	; decompress to $E000
+
+	lda	#$00
+	sta	getsrc_smc+1
+        lda	#$20
+        sta     getsrc_smc+2
+
+        lda     #$E0
+
+        jsr     decompress_lzsa2_fast
+
+
+
 	; start in PEASANT2 file
 
 	lda	#LOAD_PEASANT2

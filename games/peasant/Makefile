@@ -11,7 +11,7 @@ all:	peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
-	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY
+	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY DIALOG_PEASANT2.LZSA
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
@@ -24,6 +24,7 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
+	$(DOS33_RAW) peasant.dsk  13 0 DIALOG_PEASANT2.LZSA  0   0
 	$(DOS33_RAW) peasant.dsk  14 0 INVENTORY  0   0
 	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
