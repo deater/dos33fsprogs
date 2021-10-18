@@ -15,8 +15,8 @@ start_new_game:
 	; switch in language card
         ; read/write RAM, $d000 bank 2
 
-        lda     $C083
-        lda     $C083
+        lda     LCBANK2
+        lda     LCBANK2
 
         ; actually load it
         lda     #LOAD_INVENTORY
@@ -24,6 +24,10 @@ start_new_game:
 
         jsr     load_file
 
+	; read/write RAM, $d000 bank 1
+
+        lda     LCBANK1
+        lda     LCBANK1
 
 	; start in PEASANT2 file
 

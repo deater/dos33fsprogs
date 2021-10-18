@@ -25,7 +25,8 @@ peasant2	18302
 		19577 -- at release 0.75
 		19944 -- after all priorities added
 		20050 -- parse lookup table
-		20493 -- more parse code
+		20493 -- more parse code (release 0.76)
+		16995 -- move inventory to language card
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -78,18 +79,20 @@ T	  1 = QLOAD	 4813 bytes	19S = 1T3S
 T	  3 = MUSIC	 4045 bytes	16S = 1T0S
 T	  4 = VID_LOGO	 6911 bytes	27S = 1T11S
 T	  6 = TITLE      9662 bytes	38S = 2T6S
-T	  9 = INTRO	16040 bytes	63S = 3T15S
-T	 13 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
-T	 19 = PEASANT2					; 79 = 20224
-T        24 = PEASANT3
+T	  9 = INTRO	13436 bytes	52S = 3T4S
+T	 14 = INVENTORY  3498 bytes         = 1T0S
+T	 15 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
+T	 20 = PEASANT2  16995 bytes	67s = 4T3S	; 79 = 20224
+T        25 = PEASANT3
 T	 30 = PEASANT4
 
 Disk2 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  1 = COPY_CHECK 4922 bytes	20S = 1T4S
+T         3 = GAME_OVER
 T	 19 = TROGDOR	13673 bytes	
 T        24 = ENDING	19690 bytes	77S = 4T13S
-
+T	 29 = CLIFF
 
 
 238, to 280 (6)

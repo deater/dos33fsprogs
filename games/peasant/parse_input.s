@@ -278,7 +278,17 @@ parse_drink:
 
 parse_inventory:
 
+	; switch in LC bank2
+
+	lda	LCBANK2
+	lda	LCBANK2
+
 	jsr	show_inventory
+
+	; switch back LC bank1
+
+	lda	LCBANK1
+	lda	LCBANK1
 
 	jmp	restore_parse_message
 
