@@ -26,6 +26,8 @@ Mini-games?
 Text
 	HGR drawing lib (no built in on 2)
 	How to fit?  Lookup for common word distribution?
+
+	Using high-bit terminated strings rather than nul in some cases
 	
 Ram-map
 

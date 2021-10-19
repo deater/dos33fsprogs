@@ -109,7 +109,16 @@ start_new_game:
 ;	lda	#$00
 	sta	INVENTORY_3_GONE
 
+	; setup game state
 
+	lda	#0
+	sta	GAME_STATE_0
+	sta	GAME_STATE_1
+	sta	GAME_STATE_2
+	sta	NED_STATUS
+	sta	BUSH_STATUS
+	sta	KERREK_STATE
+	sta	ARROW_SCORE
 
 	rts
 

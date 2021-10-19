@@ -56,6 +56,71 @@ done_upcase_loop:
 
 
 	;================
+	; ask
+	;================
+parse_ask:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_FIRE
+	beq	ask_about_fire
+	cmp	#NOUN_JHONKA
+	beq	ask_about_jhonka
+	cmp	#NOUN_KERREK
+	beq	ask_about_kerrek
+	cmp	#NOUN_NED
+	beq	ask_about_ned
+	cmp	#NOUN_ROBE
+	beq	ask_about_robe
+	cmp	#NOUN_SMELL
+	beq	ask_about_smell
+	cmp	#NOUN_TROGDOR
+	beq	ask_about_trogdor
+
+	; else ask about unknown
+
+ask_about_unknown:
+	ldx	#<knight_ask_unknown_message
+	ldy	#>knight_ask_unknown_message
+	jmp	finish_parse_message
+
+ask_about_fire:
+	ldx	#<knight_ask_fire_message
+	ldy	#>knight_ask_fire_message
+	jmp	finish_parse_message
+
+ask_about_jhonka:
+	ldx	#<knight_ask_jhonka_message
+	ldy	#>knight_ask_jhonka_message
+	jmp	finish_parse_message
+
+ask_about_kerrek:
+	ldx	#<knight_ask_kerrek_message
+	ldy	#>knight_ask_kerrek_message
+	jmp	finish_parse_message
+
+ask_about_ned:
+	ldx	#<knight_ask_ned_message
+	ldy	#>knight_ask_ned_message
+	jmp	finish_parse_message
+
+ask_about_robe:
+	ldx	#<knight_ask_robe_message
+	ldy	#>knight_ask_robe_message
+	jmp	finish_parse_message
+
+ask_about_smell:
+	ldx	#<knight_ask_smell_message
+	ldy	#>knight_ask_smell_message
+	jmp	finish_parse_message
+
+ask_about_trogdor:
+	ldx	#<knight_ask_trogdor_message
+	ldy	#>knight_ask_trogdor_message
+	jmp	finish_parse_message
+
+
+
+	;================
 	; attack
 	;================
 parse_break:
@@ -256,14 +321,8 @@ parse_die:
 parse_drink:
 
 	ldx	#<drink_message
-	stx	OUTL
 	ldy	#>drink_message
-	sty	OUTH
-	jsr	print_text_message
-
-	jsr	wait_until_keypress
-
-	jsr	hgr_partial_restore
+	jsr	partial_message_step
 
 	ldx	#<drink_message2
 	ldy	#>drink_message2
@@ -358,8 +417,73 @@ irrelevant_look:
 
 parse_talk:
 
+	lda	CURRENT_NOUN
+	cmp	#NOUN_KNIGHT
+	beq	talk_to_knight
+	cmp	#NOUN_GUY
+	beq	talk_to_knight
+	cmp	#NOUN_MAN
+	beq	talk_to_knight
+	cmp	#NOUN_DUDE
+	beq	talk_to_knight
+
+	; else, no one
+talk_noone:
 	ldx	#<talk_noone_message
 	ldy	#>talk_noone_message
+	jmp	finish_parse_message
+
+talk_to_knight:
+
+	lda	GAME_STATE_2
+	and	#TALKED_TO_KNIGHT
+	bne	knight_skip_text
+
+	; first time only
+	ldx	#<talk_knight_first_message
+	ldy	#>talk_knight_first_message
+	jsr	partial_message_step
+
+	; first time only
+	ldx	#<talk_knight_second_message
+	ldy	#>talk_knight_second_message
+	jsr	partial_message_step
+
+knight_skip_text:
+	ldx	#<talk_knight_third_message
+	ldy	#>talk_knight_third_message
+	jsr	partial_message_step
+
+	ldx	#<talk_knight_stink_message
+	ldy	#>talk_knight_stink_message
+	jsr	partial_message_step
+
+	ldx	#<talk_knight_dress_message
+	ldy	#>talk_knight_dress_message
+	jsr	partial_message_step
+
+	ldx	#<talk_knight_fire_message
+	ldy	#>talk_knight_fire_message
+	jsr	partial_message_step
+
+	ldx	#<talk_knight_fourth_message
+	ldy	#>talk_knight_fourth_message
+
+	lda	GAME_STATE_2
+	and	#TALKED_TO_KNIGHT
+	bne	knight_skip_text2
+
+	jsr	partial_message_step
+
+	; first time only
+	ldx	#<talk_knight_fifth_message
+	ldy	#>talk_knight_fifth_message
+
+	lda	GAME_STATE_2
+	ora	#TALKED_TO_KNIGHT
+	sta	GAME_STATE_2
+
+knight_skip_text2:
 	jmp	finish_parse_message
 
 	;===================
@@ -430,7 +554,6 @@ where_done:
 	;==================
 	; unknown
 	;=================
-parse_ask:
 parse_buy:
 parse_close:
 parse_deploy:
@@ -925,6 +1048,19 @@ message_len:
 last_bg_l:	.byte $00
 last_bg_h:	.byte $00
 
+
+	;======================
+	;======================
+	; partial message step
+	;======================
+	;======================
+partial_message_step:
+	stx	OUTL
+	sty	OUTH
+	jsr	print_text_message
+	jsr	wait_until_keypress
+	jsr	hgr_partial_restore
+	rts
 
 
 verb_table:

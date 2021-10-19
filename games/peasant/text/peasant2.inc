@@ -248,7 +248,8 @@ attack_sign_message:
 .byte "Smarty-short-pants. No",13
 .byte "sign attacking for you.",0
 
-; + talk knight (beginning, first try)
+; + talk knight (beginning, first time only)
+talk_knight_first_message:
 .byte "You explain your situation",13
 .byte "to the knight. That Trogdor",13
 .byte "burninated your cottage",13
@@ -259,6 +260,8 @@ attack_sign_message:
 .byte "(Press RETURN to advance",13
 .byte "through conversations)",0
 
+; (first time only)
+talk_knight_second_message:
 .byte 34,"Hang on there,",13
 .byte "Trogdorkilla,",34," says the",13
 .byte "knight. ",34,"I can only allow",13
@@ -268,22 +271,28 @@ attack_sign_message:
 .byte "are not one.",34,0
 
 ; + talk (again) picks up here
+talk_knight_third_message:
 .byte 34,"Look, Dragonheart...",34,0
 
-.byte 34,"You don't STINK like a",0
-.byte " peasant.",34,0
+talk_knight_stink_message:
+.byte 34,"You don't STINK like a",13
+.byte "peasant.",34,0
 
+talk_knight_dress_message:
 .byte 34,"You don't DRESS like a",13
 .byte "peasant.",34,0
 
+talk_knight_fire_message:
 .byte 34,"And you're definitely not",13
 .byte "ON FIRE like a peasant.",34,0
 
+talk_knight_fourth_message:
 .byte "Once you're those 3",13
 .byte "things, come back and maybe",13
 .byte "we can talk.",34,0
 
-; only first time through
+; first time only
+talk_knight_fifth_message:
 .byte "Be sure to LOOK around",13
 .byte "lots. TALK to everyone you",13
 .byte "see and ASK ABOUT stuff.",13
@@ -309,6 +318,7 @@ attack_sign_message:
 .byte "Disk read error. Please insert floppy disk 2 into Drive B and press enter.",0
 
 ; + ask about fire
+knight_ask_fire_message:
 .byte 34,"Well, whenever I see",13
 .byte "peasants, they tend to be",13
 .byte "on fire. So get yourself on",13
@@ -317,6 +327,7 @@ attack_sign_message:
 .byte "burn.",34,0
 
 ; + ask about Jhonka
+knight_ask_jhonka_message:
 .byte 34,"Since the Kerrek showed",13
 .byte "up, we don't see the Jhonka",13
 .byte "so much anymore. He lives",13
@@ -324,6 +335,7 @@ attack_sign_message:
 .byte "west Peasantry.",34,0
 
 ; + ask about Kerrek
+knight_ask_kerrek_message:
 .byte 34,"I call him Big Stinky.",13
 .byte "He's slow and stupid, but",13
 .byte "he'll pound you into milks",13
@@ -331,6 +343,7 @@ attack_sign_message:
 .byte "thought.",34,0
  
 ; + ask about naked ned
+knight_ask_ned_message:
 .byte 34,"That weirdo used to live",13
 .byte "over in west Peasantry but",13
 .byte "now I guess he just prances",13
@@ -338,12 +351,14 @@ attack_sign_message:
 .byte "birthday suit.",34,0
 
 ; + ask about robe
+knight_ask_robe_message:
 .byte 34,"Peasants wear those brown",13
 .byte "robes. You know, with the",13
 .byte "rope around the waist. Get",13
 .byte "yourself one of those.",34,0
 
 ; + ask about smell
+knight_ask_smell_message:
 .byte 34,"I never met a peasant that",13
 .byte "didn't stink. If you wanna",13
 .byte "smell bad, get the Kerrek",13
@@ -351,6 +366,7 @@ attack_sign_message:
 .byte "reeks!",34,0
 
 ; + ask about trogdor
+knight_ask_trogdor_message:
 .byte 34,"If I had a gold coin for",13
 .byte "every whining peasant's",13
 .byte "cottage that freaking",13
@@ -358,7 +374,6 @@ attack_sign_message:
 .byte "rich as a jhonka.",0
 
 ; + ask about (unknown)
+knight_ask_unknown_message:
 .byte 34,"I don't know anything",13
 .byte "about that, short pants.",34,0
-
-

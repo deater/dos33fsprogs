@@ -70,3 +70,7 @@ Ending:
 - Smoother baby animation?  Use page-flipping?
   Modify sprite routine to auto-shift colors so we can have more
   of an arc on baby trajectory?
+
+Pass:
+- hook up/fix dialog when you have various items
+- be sure to fix the "talk knight" dialog for robe/fire etc
