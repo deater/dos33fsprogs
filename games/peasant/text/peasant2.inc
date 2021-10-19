@@ -236,12 +236,14 @@ sign_look_message:
 .byte "sign says 'Trogdor.'",0
 
 ; + look trogdor
+trogdor_look_message:
 .byte "I know it's labeled",13
 .byte "'Trogdor,' but it's really",13
 .byte "just a sign, silly. I mean,",13
 .byte "attack it if you want...",0
 
 ; + attack sign / break sign
+attack_sign_message:
 .byte "I was being facetious, Mr.",13
 .byte "Smarty-short-pants. No",13
 .byte "sign attacking for you.",0

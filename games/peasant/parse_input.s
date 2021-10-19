@@ -54,6 +54,24 @@ done_upcase_loop:
 	rts				; jump to routine
 
 
+
+	;================
+	; attack
+	;================
+parse_break:
+parse_attack:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_SIGN
+	beq	attack_sign
+
+	jmp	parse_unknown
+
+attack_sign:
+	ldx	#<attack_sign_message
+	ldy	#>attack_sign_message
+	jmp	finish_parse_message
+
+
 	;================
 	; quit
 	;================
@@ -290,10 +308,23 @@ parse_load:
 parse_look:
 
 	lda	CURRENT_NOUN
+
 	cmp	#NOUN_KNIGHT
 	beq	knight_look
+	cmp	#NOUN_MAN
+	beq	knight_look
+	cmp	#NOUN_DUDE
+	beq	knight_look
+	cmp	#NOUN_GUY
+	beq	knight_look
+
+	cmp	#NOUN_SIGN
+	beq	sign_look
+	cmp	#NOUN_TROGDOR
+	beq	trogdor_look
 	cmp	#NOUN_NONE
 	beq	pass_look
+
 	bne	irrelevant_look
 
 knight_look:
@@ -304,6 +335,16 @@ knight_look:
 pass_look:
 	ldx	#<pass_look_message
 	ldy	#>pass_look_message
+	jmp	finish_parse_message
+
+sign_look:
+	ldx	#<sign_look_message
+	ldy	#>sign_look_message
+	jmp	finish_parse_message
+
+trogdor_look:
+	ldx	#<trogdor_look_message
+	ldy	#>trogdor_look_message
 	jmp	finish_parse_message
 
 irrelevant_look:
@@ -390,7 +431,6 @@ where_done:
 	; unknown
 	;=================
 parse_ask:
-parse_break:
 parse_buy:
 parse_close:
 parse_deploy:
@@ -587,6 +627,7 @@ verb_lookup:
 .byte "WHERE",VERB_WHERE|$80
 .byte "WHY",VERB_WHY|$80
 .byte "YES",VERB_YES|$80
+.byte "ATTACK",VERB_ATTACK|$80
 .byte $00
 
 
@@ -698,8 +739,100 @@ end_of_input:
 
 noun_lookup:
 .byte "ARCHER",NOUN_ARCHER|$80
+.byte "ARROW",NOUN_ARROW|$80
+.byte "BABY",NOUN_BABY|$80
+.byte "BEADS",NOUN_BEADS|$80
+.byte "BELL",NOUN_BELL|$80
+.byte "BELT",NOUN_BELT|$80
+.byte "BERRIES",NOUN_BERRIES|$80
+.byte "BOAT",NOUN_BOAT|$80
+.byte "BONE",NOUN_BONE|$80
+.byte "BOW",NOUN_BOW|$80
+.byte "BROOM",NOUN_BROOM|$80
+.byte "BUSHES",NOUN_BUSHES|$80
+.byte "CANDLE",NOUN_CANDLE|$80
+.byte "CAVE",NOUN_CAVE|$80
+.byte "CHAIR",NOUN_CHAIR|$80
+.byte "CLIFF",NOUN_CLIFF|$80
+.byte "CLUB",NOUN_CLUB|$80
+.byte "COLD",NOUN_COLD|$80
+.byte "COTTAGE",NOUN_COTTAGE|$80
+.byte "CRANK",NOUN_CRANK|$80
+.byte "CURTAINS",NOUN_CURTAINS|$80
+.byte "DAN",NOUN_DAN|$80
+.byte "DESK",NOUN_DESK|$80
+.byte "DINGHY",NOUN_DINGHY|$80
+.byte "DOING",NOUN_DOING_SPROINGS|$80
+.byte "DOOR",NOUN_DOOR|$80
+.byte "DRAWER",NOUN_DRAWER|$80
+.byte "DRESSER",NOUN_DRESSER|$80
+.byte "DUDE",NOUN_DUDE|$80
+.byte "FEED",NOUN_FEED|$80
+.byte "FENCE",NOUN_FENCE|$80
+.byte "FIRE",NOUN_FIRE|$80
+.byte "FLIES",NOUN_FLIES|$80
+.byte "FOOD",NOUN_FOOD|$80
+.byte "FOOTPRINTS",NOUN_FOOTPRINTS|$80
+.byte "GAME",NOUN_GAME|$80
+.byte "GARY",NOUN_GARY|$80
+.byte "GREEN",NOUN_GREEN|$80
+.byte "GROUND",NOUN_GROUND|$80
+.byte "GUY",NOUN_GUY|$80
+.byte "HAY",NOUN_HAY|$80
+.byte "HOLE",NOUN_HOLE|$80
+.byte "HORSE",NOUN_HORSE|$80
+.byte "INN",NOUN_INN|$80
+.byte "JHONKA",NOUN_JHONKA|$80
+.byte "KERREK",NOUN_KERREK|$80
 .byte "KNIGHT",NOUN_KNIGHT|$80
+.byte "LADY",NOUN_LADY|$80
+.byte "LAKE",NOUN_LAKE|$80
+.byte "LANTERN",NOUN_LANTERN|$80
+.byte "LEG",NOUN_LEG|$80
+.byte "LIGHTNING",NOUN_LIGHTNING|$80
+.byte "MAN",NOUN_MAN|$80
+.byte "MAP",NOUN_MAP|$80
+.byte "MASK",NOUN_MASK|$80
+.byte "MUD",NOUN_MUD|$80
+.byte "NED",NOUN_NED|$80
+.byte "NOTE",NOUN_NOTE|$80
+.byte "OPENINGS",NOUN_OPENINGS|$80
+.byte "PAINTING",NOUN_PAINTING|$80
+.byte "PAPER",NOUN_PAPER|$80
+.byte "PEASANT",NOUN_PEASANT|$80
+.byte "PEBBLES",NOUN_PEBBLES|$80
+.byte "PILLOW",NOUN_PILLOW|$80
+.byte "PILLS",NOUN_PILLS|$80
+.byte "PLAGUE",NOUN_PLAGUE|$80
+.byte "PLAQUE",NOUN_PLAQUE|$80
+.byte "POT",NOUN_POT|$80
+.byte "RICHES",NOUN_RICHES|$80
+.byte "ROBE",NOUN_ROBE|$80
+.byte "ROCK",NOUN_ROCK|$80
+.byte "ROOM",NOUN_ROOM|$80
+.byte "RUB",NOUN_RUB|$80
+.byte "RUG",NOUN_RUG|$80
+.byte "SANDWICH",NOUN_SANDWICH|$80
+.byte "SAND",NOUN_SAND|$80
+.byte "SHELF",NOUN_SHELF|$80
 .byte "SIGN",NOUN_SIGN|$80
+.byte "SKELETON",NOUN_SKELETON|$80
+.byte "SKULL",NOUN_SKULL|$80
+.byte "SMELL",NOUN_SMELL|$80
+.byte "SODA",NOUN_SODA|$80
+.byte "STUFF",NOUN_STUFF|$80
+.byte "STUMP",NOUN_STUMP|$80
+.byte "SUB",NOUN_SUB|$80
+.byte "TARGET",NOUN_TARGET|$80
+.byte "TRACKS",NOUN_TRACKS|$80
+.byte "TREE",NOUN_TREE|$80
+.byte "TRINKET",NOUN_TRINKET|$80
+.byte "TROGDOR",NOUN_TROGDOR|$80
+.byte "WATERFALL",NOUN_WATERFALL|$80
+.byte "WATER",NOUN_WATER|$80
+.byte "WELL",NOUN_WELL|$80
+.byte "WINDOW",NOUN_WINDOW|$80
+.byte "WOMAN",NOUN_WOMAN|$80
 .byte $00
 
 
@@ -866,5 +999,6 @@ verb_table:
 	.word	parse_why-1	; VERB_WHY	= 68
 	.word	parse_yet-1	; VERB_YES	= 69
 	.word	parse_help-1	; VERB_HELP	= 70
+	.word	parse_attack-1	; VERB_ATTACK	= 71
 
 .include "dialog_peasant2.inc"

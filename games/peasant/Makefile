@@ -89,6 +89,15 @@ generate_common:	generate_common.o
 generate_common.o:	generate_common.c
 	$(CC) $(CFLAGS) -c generate_common.c
 
+###
+
+generate_all_symbols:	generate_all_symbols.o
+	$(CC) $(LFLAGS) -o generate_all_symbols generate_all_symbols.o
+
+generate_all_symbols.o:	generate_all_symbols.c
+	$(CC) $(CFLAGS) -c generate_all_symbols.c
+
+
 ####
 
 qload.inc:	generate_common QLOAD
@@ -395,14 +404,13 @@ DIALOG_PEASANT2.LZSA:	dialog_peasant2
 dialog_peasant2:	dialog_peasant2.o
 	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_6000.inc
 
-dialog_peasant2.o:	dialog_peasant2.s
+dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc
 	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
 
 ###
 
-dialog_peasant2.inc:	generate_common dialog_peasant2
-	./generate_common -a 0xe000 -s pass_look_message dialog_peasant2.lst > dialog_peasant2.inc
-	./generate_common -a 0xe000 -s knight_look_message dialog_peasant2.lst >> dialog_peasant2.inc
+dialog_peasant2.inc:	generate_all_symbols dialog_peasant2
+	./generate_all_symbols -a 0xe000 dialog_peasant2.lst > dialog_peasant2.inc
 
 ####
 
