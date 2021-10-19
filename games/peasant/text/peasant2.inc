@@ -226,10 +226,12 @@ pass_look_message:
 .byte "knight blocks the entrance.",0
 
 ; + look knight/man/dude/guy
+knight_look_message:
 .byte "He looks way cooler than",13
 .byte "you.",0
 
 ; + look sign
+sign_look_message:
 .byte "What that sign there? That",13
 .byte "sign says 'Trogdor.'",0
 

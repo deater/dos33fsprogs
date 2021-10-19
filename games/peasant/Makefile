@@ -402,6 +402,7 @@ dialog_peasant2.o:	dialog_peasant2.s
 
 dialog_peasant2.inc:	generate_common dialog_peasant2
 	./generate_common -a 0xe000 -s pass_look_message dialog_peasant2.lst > dialog_peasant2.inc
+	./generate_common -a 0xe000 -s knight_look_message dialog_peasant2.lst >> dialog_peasant2.inc
 
 ####
 

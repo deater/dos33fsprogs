@@ -58,9 +58,8 @@ done_upcase_loop:
 	; quit
 	;================
 parse_quit:
-	lda	#<quit_message
-	sta	OUTL
-	lda	#>quit_message
+	ldx	#<quit_message
+	ldy	#>quit_message
 	jmp	finish_parse_message
 
 	;================
@@ -68,27 +67,24 @@ parse_quit:
 	;================
 parse_smell:
 parse_sniff:
-	lda	#<smell_message
-	sta	OUTL
-	lda	#>smell_message
+	ldx	#<smell_message
+	ldy	#>smell_message
 	jmp	finish_parse_message
 
 	;================
 	; dan
 	;================
 parse_dan:
-	lda	#<dan_message
-	sta	OUTL
-	lda	#>dan_message
+	ldx	#<dan_message
+	ldy	#>dan_message
 	jmp	finish_parse_message
 
 	;================
 	; go
 	;================
 parse_go:
-	lda	#<go_message
-	sta	OUTL
-	lda	#>go_message
+	ldx	#<go_message
+	ldy	#>go_message
 	jmp	finish_parse_message
 
 	;================
@@ -96,18 +92,16 @@ parse_go:
 	;================
 parse_drop:
 parse_throw:
-	lda	#<no_baby_message
-	sta	OUTL
-	lda	#>no_baby_message
+	ldx	#<no_baby_message
+	ldy	#>no_baby_message
 	jmp	finish_parse_message
 
 	;================
 	; climb
 	;================
 parse_climb:
-	lda	#<climb_cliff_message
-	sta	OUTL
-	lda	#>climb_cliff_message
+	ldx	#<climb_cliff_message
+	ldy	#>climb_cliff_message
 	jmp	finish_parse_message
 
 	;================
@@ -116,36 +110,32 @@ parse_climb:
 parse_get:
 parse_take:
 parse_steal:
-	lda	#<get_message
-	sta	OUTL
-	lda	#>get_message
+	ldx	#<get_message
+	ldy	#>get_message
 	jmp	finish_parse_message
 
 	;================
 	; give
 	;================
 parse_give:
-	lda	#<give_message
-	sta	OUTL
-	lda	#>give_message
+	ldx	#<give_message
+	ldy	#>give_message
 	jmp	finish_parse_message
 
 	;================
 	; haldo
 	;================
 parse_haldo:
-	lda	#<haldo_message
-	sta	OUTL
-	lda	#>haldo_message
+	ldx	#<haldo_message
+	ldy	#>haldo_message
 	jmp	finish_parse_message
 
 	;================
 	; why
 	;================
 parse_why:
-	lda	#<why_message
-	sta	OUTL
-	lda	#>why_message
+	ldx	#<why_message
+	ldy	#>why_message
 	jmp	finish_parse_message
 
 	;================
@@ -153,9 +143,8 @@ parse_why:
 	;================
 parse_this:
 parse_what:
-	lda	#<what_message
-	sta	OUTL
-	lda	#>what_message
+	ldx	#<what_message
+	ldy	#>what_message
 	jmp	finish_parse_message
 
 
@@ -163,27 +152,24 @@ parse_what:
 	; party
 	;================
 parse_party:
-	lda	#<party_message
-	sta	OUTL
-	lda	#>party_message
+	ldx	#<party_message
+	ldy	#>party_message
 	jmp	finish_parse_message
 
 	;================
 	; map
 	;================
 parse_map:
-	lda	#<map_message
-	sta	OUTL
-	lda	#>map_message
+	ldx	#<map_message
+	ldy	#>map_message
 	jmp	finish_parse_message
 
 	;================
 	; help
 	;================
 parse_help:
-	lda	#<help_message
-	sta	OUTL
-	lda	#>help_message
+	ldx	#<help_message
+	ldy	#>help_message
 	jmp	finish_parse_message
 
 
@@ -191,9 +177,8 @@ parse_help:
 	; boo
 	;================
 parse_boo:
-	lda	#<boo_message
-	sta	OUTL
-	lda	#>boo_message
+	ldx	#<boo_message
+	ldy	#>boo_message
 	jmp	finish_parse_message
 
 	;================
@@ -201,9 +186,8 @@ parse_boo:
 	;================
 parse_cheat:
 
-	lda	#<cheat_message
-	sta	OUTL
-	lda	#>cheat_message
+	ldx	#<cheat_message
+	ldy	#>cheat_message
 	jmp	finish_parse_message
 
 	;=================
@@ -227,9 +211,8 @@ parse_copy:
 
 parse_dance:
 
-	lda	#<dance_message
-	sta	OUTL
-	lda	#>dance_message
+	ldx	#<dance_message
+	ldy	#>dance_message
 	jmp	finish_parse_message
 
 	;===================
@@ -243,9 +226,8 @@ parse_die:
 	lda	#1
 	sta	GAME_OVER
 
-	lda	#<die_message
-	sta	OUTL
-	lda	#>die_message
+	ldx	#<die_message
+	ldy	#>die_message
 	jmp	finish_parse_message
 
 
@@ -255,20 +237,18 @@ parse_die:
 
 parse_drink:
 
-	lda	#<drink_message
-	sta	OUTL
-	lda	#>drink_message
-        sta     OUTH
+	ldx	#<drink_message
+	stx	OUTL
+	ldy	#>drink_message
+	sty	OUTH
 	jsr	print_text_message
 
 	jsr	wait_until_keypress
 
 	jsr	hgr_partial_restore
 
-	lda	#<drink_message2
-	sta	OUTL
-	lda	#>drink_message2
-        sta     OUTH
+	ldx	#<drink_message2
+	ldy	#>drink_message2
 
 	jmp	finish_parse_message
 
@@ -309,13 +289,26 @@ parse_load:
 
 parse_look:
 
-	lda	#<pass_look_message
-	sta	OUTL
-	lda	#>pass_look_message
+	lda	CURRENT_NOUN
+	cmp	#NOUN_KNIGHT
+	beq	knight_look
+	cmp	#NOUN_NONE
+	beq	pass_look
+	bne	irrelevant_look
 
-;	lda	#<look_irrelevant_message
-;	sta	OUTL
-;	lda	#>look_irrelevant_message
+knight_look:
+	ldx	#<knight_look_message
+	ldy	#>knight_look_message
+	jmp	finish_parse_message
+
+pass_look:
+	ldx	#<pass_look_message
+	ldy	#>pass_look_message
+	jmp	finish_parse_message
+
+irrelevant_look:
+	ldx	#<look_irrelevant_message
+	ldy	#>look_irrelevant_message
 	jmp	finish_parse_message
 
 	;===================
@@ -324,9 +317,8 @@ parse_look:
 
 parse_talk:
 
-	lda	#<talk_noone_message
-	sta	OUTL
-	lda	#>talk_noone_message
+	ldx	#<talk_noone_message
+	ldy	#>talk_noone_message
 	jmp	finish_parse_message
 
 	;===================
@@ -360,9 +352,8 @@ parse_show:
 
 parse_version:
 
-        lda     #<version_message
-        sta     OUTL
-        lda     #>version_message
+	ldx	#<version_message
+	ldy	#>version_message
 	jmp	finish_parse_message
 
 	;=====================
@@ -391,9 +382,8 @@ where_loop:
 
 where_done:
 
-        lda     #<where_message
-        sta     OUTL
-        lda     #>where_message
+	ldx	#<where_message
+	ldy	#>where_message
 	jmp	finish_parse_message
 
 	;==================
@@ -438,14 +428,14 @@ parse_wake:
 parse_wear:
 parse_yet:
 parse_unknown:
-	lda	#<unknown_message
-	sta	OUTL
-	lda	#>unknown_message
+	ldx	#<unknown_message
+	ldy	#>unknown_message
 	jmp	finish_parse_message
 
 
 finish_parse_message:
-        sta     OUTH
+	stx	OUTL
+	sty	OUTH
 	jsr	print_text_message
 
 	jsr	wait_until_keypress
@@ -485,8 +475,8 @@ get_verb:
 	sta	get_verb_loop+2
 
 next_verb_loop:
-	ldx	#0			; set match count to none
-	stx	WORD_MATCH
+	ldx	#0			; set input pointer to zero
+	stx	WORD_MATCH		; set match count to zero
 
 get_verb_loop:
 	lda	verb_lookup		; get char from verb
@@ -614,35 +604,48 @@ verb_lookup:
 	;		return UNKNOWN if no matches
 
 get_noun:
-	lda	#NOUN_NONE		; default
+	lda	#NOUN_NONE		; if we have to second word, then none
 	sta	CURRENT_NOUN
 
-	lda	#<noun_lookup		; reset verb pointer
+	ldx	#0			; input pointer
+
+try_next_word:
+	jsr	noun_next_space
+	bcs	done_get_noun_loop
+
+	stx	TEMP0			; save input pointer
+
+	lda	#<noun_lookup		; reset noun pointer
 	sta	get_noun_smc+1
 	lda	#>noun_lookup
 	sta	get_noun_smc+2
 
+	lda	#NOUN_UNKNOWN		; at this point we have second word
+	sta	CURRENT_NOUN		; so if we hit end it's unknown
+
 next_noun_loop:
-	ldx	#0
-	stx	WORD_MATCH
+	ldx	TEMP0			; reset to begin of current word
+	lda	#0
+	sta	WORD_MATCH		; set match count to zero
 
 get_noun_loop:
 
 get_noun_smc:
-	lda	noun_lookup
-	bmi	done_noun
-	beq	done_get_noun_loop
-	cmp	input_buffer,X
-	beq	noun_char_matched
+	lda	noun_lookup		; load byte from current noun
+	bmi	done_noun		; if high bit set, hit end
+	beq	try_next_word		; if zero, end of list
+
+	cmp	input_buffer,X		; compare with input buffer
+	beq	noun_char_matched	; see if matched
 noun_char_nomatch:
-	dec	WORD_MATCH
+	dec	WORD_MATCH		; indicate wasn't a match
 noun_char_matched:
 	jsr	inc_noun_ptr
 	inx
-	jmp	get_noun_loop
+	jmp	get_noun_loop		; loop
 
 done_noun:
-	ldx	WORD_MATCH
+	ldx	WORD_MATCH		; if we matched noun...
 	beq	found_noun
 
 no_found_noun:
@@ -650,7 +653,7 @@ no_found_noun:
 	jmp	next_noun_loop
 
 found_noun:
-	and	#$7f
+	and	#$7f			; found, strip high bit and save
 	sta	CURRENT_NOUN
 
 done_get_noun_loop:
@@ -664,6 +667,34 @@ inc_noun_ptr:
 inc_noun_ptr_noflo:
 
 	rts
+
+
+	;=========================
+	; noun next space
+	;=========================
+	; point X to one past next space in input_buffer
+	; carry set if hit end
+noun_next_space:
+	lda	input_buffer,X
+	beq	end_of_input
+
+	cmp	#' '
+	beq	end_of_word
+
+	inx
+	jmp	noun_next_space
+
+end_of_word:
+	inx			; point one past
+	clc
+	rts
+
+end_of_input:
+	sec
+	rts
+
+
+
 
 noun_lookup:
 .byte "ARCHER",NOUN_ARCHER|$80
