@@ -688,6 +688,8 @@ verb_lookup:
 .byte "WHY",VERB_WHY|$80
 .byte "YES",VERB_YES|$80
 .byte "ATTACK",VERB_ATTACK|$80
+.byte "HUG",VERB_HUG|$80
+.byte "HIDE",VERB_HIDE|$80
 .byte $00
 
 
@@ -895,6 +897,7 @@ noun_lookup:
 .byte "WOMAN",NOUN_WOMAN|$80
 .byte "RIVER",NOUN_RIVER|$80
 .byte "STONE",NOUN_STONE|$80
+.byte "IN HAY",NOUN_IN_HAY|$80
 .byte $00
 
 

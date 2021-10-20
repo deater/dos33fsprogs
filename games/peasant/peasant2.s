@@ -262,14 +262,14 @@ map_priority_hi:
 	.byte	>knight_priority_lzsa		; 9	-- knight
 
 verb_tables_low:
-	.byte	<river_stone_verb_table		; 5	-- haystack
+	.byte	<hay_bale_verb_table		; 5	-- haystack
 	.byte	<river_stone_verb_table		; 6	-- puddle
 	.byte	<river_stone_verb_table		; 7	-- archery
 	.byte	<river_stone_verb_table		; 8	-- river
 	.byte	<mountain_pass_verb_table	; 9	-- knight
 
 verb_tables_hi:
-	.byte	>river_stone_verb_table		; 5	-- haystack
+	.byte	>hay_bale_verb_table		; 5	-- haystack
 	.byte	>river_stone_verb_table		; 6	-- puddle
 	.byte	>river_stone_verb_table		; 7	-- archery
 	.byte	>river_stone_verb_table		; 8	-- river

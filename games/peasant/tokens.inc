@@ -70,7 +70,9 @@ VERB_WHY	= 68
 VERB_YES	= 69
 VERB_HELP	= 70
 VERB_ATTACK	= 71
-VERB_ALL_DONE	= 72	; not a verb, but indicating end, must be last
+VERB_HUG	= 72
+VERB_HIDE	= 73
+VERB_ALL_DONE	= 74	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;
@@ -171,5 +173,6 @@ NOUN_WINDOW	= 94
 NOUN_WOMAN	= 95
 NOUN_RIVER	= 96
 NOUN_STONE	= 97
+NOUN_IN_HAY	= 98
 ;
-NOUN_UNKNOWN	= 98
+NOUN_UNKNOWN	= 99

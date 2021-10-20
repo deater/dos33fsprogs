@@ -7,29 +7,35 @@
 .byte "Drat. The winds are heavy on all but a couple of key screens... looks like you're no longer in stealth mode.",0
 
 ; + look
+hay_look_message:
 .byte "Well, there's that big bale",13
 .byte "of hay over there.",0
 
 ; + look hay
+hay_look_at_hay_message:
 .byte "It reminds you of a warm,",13
 .byte "safe place where as a child",13
 .byte "you'd hide.",0
 
 ; + look in hay
+hay_look_in_hay_message:
 .byte "You search and search",13
 .byte "through the haystack.",13
 .byte "Nope. No needles.",0
 
 ; + look tree
+hay_look_at_tree_message:
 .byte "It's Arbor Day, Charlie",13
 .byte "Brown!",0
 
 ; + look fence (merge with others?)
+hay_look_at_fence_message:
 .byte "A standard peasant fence.",13
 .byte "Trogdor makes milk's meat",13
 .byte "outta these things.",0
 
 ; + enter hay / jump in hay / hide in hay (not muddy)
+hay_enter_hay_clean_message:
 .byte "Not right now, man. You're",13
 .byte "feeling fairly clean given",13
 .byte "you just bathed 3",13
@@ -38,16 +44,19 @@
 ; + enter hay / jump in hay (muddy but not nearby)
 .byte "Who do you think you are, MJ? Try from a little closer.",0
 
-; + enter hay / jump into hay
+; + enter hay / jump into hay (muddy)
 .byte "You've not known much better than a roll in the hay alone.",0
 .byte "You leap in the hay like a two years old boy. Uh oh. The hay sticks to your muddy body. You're a walking hay bale! Just like that one guy from that one show!",0
 
 ; + hug tree (walks to it)
+hay_hug_tree_message:
 .byte "To every thing, turn, turn,",13
 .byte "turn. There is a season,",13
 .byte "turn, turn, turn.",0
  
-; + get hay
+; + get/steal/take hay
+;   although only "get" says the "probably wish you could get" message non-hay
+hay_get_hay_message:
 .byte "Who do you think you are?",13
 .byte "Some kind of Thy",13
 .byte "Dungeonman? You don't need",13
@@ -208,7 +217,7 @@ river_look_at_rock_message:
 .byte "rock down. It is a rock of",13
 .byte "ages. Still a-rollin.",0
 
-; + swim river/water
+; + swim river/water/rock/stone
 river_swim_message:
 .byte "Peasants can't swim. Like,",13
 .byte "it's illegal.",0
