@@ -66,6 +66,10 @@ Peasantry:
   + Hook up responses when mud is wet
 - Archery
   + Archer animations
+  + Hook up minigame
+  + Hook up getting points
+  + Hook up dialog changes
+  + Hook up stuff that happens after Dongolev is back
 - River/Rock
   + River animation
 - Mountain Pass

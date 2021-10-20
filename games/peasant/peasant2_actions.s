@@ -220,6 +220,203 @@ puddle_look_at_rock:
 	;=======================
 	;=======================
 	;=======================
+	; Archery
+	;=======================
+	;=======================
+	;=======================
+
+archery_verb_table:
+	.byte VERB_ASK
+	.word archery_ask-1
+	.byte VERB_GET
+	.word archery_get-1
+	.byte VERB_GIVE
+	.word archery_give-1
+	.byte VERB_HALDO
+	.word archery_haldo-1
+	.byte VERB_LOOK
+	.word archery_look-1
+	.byte VERB_PLAY
+	.word archery_play-1
+	.byte VERB_STEAL
+	.word archery_steal-1
+	.byte VERB_TALK
+	.word archery_talk-1
+	.byte VERB_TAKE
+	.word archery_take-1
+	.byte 0
+
+
+	;================
+	; ask
+	;================
+archery_ask:
+
+	; TODO
+
+	jmp	parse_common_ask
+
+
+	;================
+	; get
+	;================
+archery_get:
+archery_steal:
+archery_take:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_TARGET
+	beq	archery_get_target
+	cmp	#NOUN_ARROW
+	beq	archery_get_arrow
+
+	; else "probably wish" message
+
+	jmp	parse_common_get
+
+archery_get_target:
+	ldx	#<archery_get_target_message
+	ldy	#>archery_get_target_message
+	jmp	finish_parse_message
+
+archery_get_arrow:
+	ldx	#<archery_get_arrow_message
+	ldy	#>archery_get_arrow_message
+	jmp	finish_parse_message
+
+	;================
+	; give
+	;================
+archery_give:
+
+	; TODO
+
+	jmp	parse_common_give
+
+	;================
+	; haldo
+	;================
+archery_haldo:
+
+	; TODO
+
+	jmp	parse_common_haldo
+
+
+
+	;=================
+	; look
+	;=================
+
+archery_look:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DESK
+	beq	archery_look_at_desk
+	cmp	#NOUN_TARGET
+	beq	archery_look_at_target
+	cmp	#NOUN_ARCHER
+	beq	archery_look_at_archer
+	cmp	#NOUN_NONE
+	beq	archery_look_at
+
+	jmp	parse_common_look
+
+archery_look_at:
+	ldx	#<archery_look_message
+	ldy	#>archery_look_message
+	jmp	finish_parse_message
+
+archery_look_at_archer:
+	ldx	#<archery_look_at_archer_message
+	ldy	#>archery_look_at_archer_message
+	jmp	finish_parse_message
+
+archery_look_at_target:
+	ldx	#<archery_look_at_target_message
+	ldy	#>archery_look_at_target_message
+	jmp	finish_parse_message
+
+archery_look_at_desk:
+	ldx	#<archery_look_at_desk_message
+	ldy	#>archery_look_at_desk_message
+	jmp	finish_parse_message
+
+
+	;================
+	; play
+	;================
+archery_play:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_GAME
+	beq	archery_play_game
+
+	jmp	parse_common_unknown
+
+archery_play_game:
+	ldx	#<archery_play_game_message
+	ldy	#>archery_play_game_message
+	jmp	finish_parse_message
+
+	;================
+	; talk
+	;================
+archery_talk:
+
+	; only talk if close
+	lda	PEASANT_X
+	cmp	#23
+	bcc	archery_talk_too_far
+	; check Y too?
+	; probably less than $7D?
+	; actual game will walk you in if close
+	; will it work from beind?
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_MAN
+	beq	archery_talk_mendelev
+	cmp	#NOUN_GUY
+	beq	archery_talk_mendelev
+	cmp	#NOUN_DUDE
+	beq	archery_talk_mendelev
+	cmp	#NOUN_MENDELEV
+	beq	archery_talk_mendelev
+	cmp	#NOUN_ARCHER
+	beq	archery_talk_mendelev
+
+	jmp	parse_common_unknown
+
+archery_talk_mendelev:
+	ldx	#<archery_talk_mendelev_message
+	ldy	#>archery_talk_mendelev_message
+	jsr	partial_message_step
+
+	ldx	#<archery_talk_mendelev2_message
+	ldy	#>archery_talk_mendelev2_message
+	jsr	partial_message_step
+
+	; add 1 point to score
+	; make noise
+	; but after the below somehow?
+
+	ldx	#<archery_talk_mendelev3_message
+	ldy	#>archery_talk_mendelev3_message
+	jmp	finish_parse_message
+
+
+archery_talk_too_far:
+	ldx	#<archery_talk_far_message
+	ldy	#>archery_talk_far_message
+	jmp	finish_parse_message
+
+
+
+	;=======================
+	;=======================
+	;=======================
 	; River and Stone
 	;=======================
 	;=======================

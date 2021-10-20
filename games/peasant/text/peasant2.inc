@@ -104,6 +104,7 @@ puddle_get_rock_message:
 ;===============
 
 ; + look
+archery_look_message:
 .byte "You've come across some",13
 .byte "kind of shooting gallery.",13
 .byte "There's a depressed",13
@@ -111,28 +112,41 @@ puddle_get_rock_message:
 .byte "there.",0
 
 ; + look archer (before speaking to Mendelev)
+archery_look_at_archer_message:
 .byte "He looks depressed. He",13
 .byte "keeps sighing all",13
 .byte "obviously like he wants you",13
 .byte "to ask about it.",0
 
-; + look archer (before saying haldo to Dongolev)
-.byte "He looks depressed. Jeez, who invited the fun sponge?",0
+; + look archer (after talk but before saying haldo to Dongolev)
+.byte "He looks depressed. Jeez,",13
+.byte "who invited the fun sponge?",0
 
 ; + look archer(s)/(anything not covered elsewhere)  (after saying haldo to Dongolev)
 .byte "You've come across some kind of shooting gallery. A pair of twin brothers seem to be running the place.",0
 
 ; + look target
+archery_look_at_target_message:
 .byte "Hey, they had those same",13
 .byte "targets at Peasant Scout",13
 .byte "Camp!",0
 
 ; + look desk
+archery_look_at_desk_message:
 .byte "It says 'archery' on it. My",13
 .byte "wife's drunk.",0
 
-; POINTS +2
-; + talk man (you walk over) [ note, did verify the quotes here]
+; + talk (while away from or behind the desk)
+archery_talk_far_message:
+.byte "Why don't you saddle up to",13
+.byte "the front of the table",13
+.byte "there, cowboy?",0
+
+
+; POINTS +1
+; + talk {nothing}/man/guy/dude/archer/Mendelev
+;        (you walk over) [ note, did verify the quotes here]
+archery_talk_mendelev_message:
 .byte 34,"Oh, hi. I'm Mendelev,",34,13
 .byte "says the archer. ",34,"I used to",13
 .byte "run a shooting range here",13
@@ -142,8 +156,12 @@ puddle_get_rock_message:
 .byte "in a Jhonka's age. If you",13
 .byte "ever run into him, tell him",13
 .byte "I said 'haldo'.",0
+
+archery_talk_mendelev2_message:
 .byte 34,"You mean 'hello,'",34," you",13
 .byte "ask?",0
+
+archery_talk_mendelev3_message:
 .byte 34,"Oh, um. No. Shut up. I",13
 .byte "said 'haldo' and I meant",13
 .byte "'haldo.' Tell him I said",13
@@ -177,25 +195,25 @@ puddle_get_rock_message:
 .byte "HALDO!!",0
 
 ; + play game (before saying haldo to Dongolev)
+archery_play_game_message:
 .byte "The gallery's not open and",13
 .byte "you got no bow or arrows,",13
 .byte "Cupid.",0
 
 ; + get/take/steal target
+archery_get_target_message:
 .byte "No. Those will fall on you",13
 .byte "and more than likely kill",13
 .byte "you.",0
  
 ; + get/take/steal arrow
+archery_get_arrow_message:
 .byte "They have ",34,"RANGE",34," printed",13
 .byte "on them, so it would be",13
 .byte "kind of embarrassing to have",13
 .byte "to shoot around with them.",13
 .byte "Also, that guy over there",13
 .byte "is giving you the evil eye.",0
-
-; + talk (while away from or behind the desk)
-.byte "Why don't you saddle up to the front of the table there, cowboy?",0
 
 ; + talk (after talking to him before) NOT IN WIKI
 .byte 34,"Tell my bro I said 'haldo'",13
