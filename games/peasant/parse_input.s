@@ -893,6 +893,8 @@ noun_lookup:
 .byte "WELL",NOUN_WELL|$80
 .byte "WINDOW",NOUN_WINDOW|$80
 .byte "WOMAN",NOUN_WOMAN|$80
+.byte "RIVER",NOUN_RIVER|$80
+.byte "STONE",NOUN_STONE|$80
 .byte $00
 
 

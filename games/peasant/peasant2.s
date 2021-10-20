@@ -29,14 +29,6 @@ peasant_quest:
 
 	jsr	update_map_location
 
-	; load updated verb table
-
-	lda	#<mountain_pass_verb_table
-	sta	INL
-	lda	#>mountain_pass_verb_table
-	sta	INH
-	jsr	load_custom_verb_table
-
 
 
 	; update score
@@ -52,6 +44,23 @@ peasant_quest:
 new_location:
 	lda	#0
 	sta	GAME_OVER
+
+	;==========================
+	; load updated verb table
+
+	; we are PEASANT2 so locations 5...9 map to 0...4
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#5
+	tax
+
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
+
 
 	;=====================
 	; load bg
@@ -251,6 +260,21 @@ map_priority_hi:
 	.byte	>archery_priority_lzsa		; 7	-- archery
 	.byte	>river_priority_lzsa		; 8	-- river
 	.byte	>knight_priority_lzsa		; 9	-- knight
+
+verb_tables_low:
+	.byte	<river_stone_verb_table		; 5	-- haystack
+	.byte	<river_stone_verb_table		; 6	-- puddle
+	.byte	<river_stone_verb_table		; 7	-- archery
+	.byte	<river_stone_verb_table		; 8	-- river
+	.byte	<mountain_pass_verb_table	; 9	-- knight
+
+verb_tables_hi:
+	.byte	>river_stone_verb_table		; 5	-- haystack
+	.byte	>river_stone_verb_table		; 6	-- puddle
+	.byte	>river_stone_verb_table		; 7	-- archery
+	.byte	>river_stone_verb_table		; 8	-- river
+	.byte	>mountain_pass_verb_table	; 9	-- knight
+
 
 
 
