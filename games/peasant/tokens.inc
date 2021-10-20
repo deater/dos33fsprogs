@@ -70,6 +70,7 @@ VERB_WHY	= 68
 VERB_YES	= 69
 VERB_HELP	= 70
 VERB_ATTACK	= 71
+VERB_ALL_DONE	= 72	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;

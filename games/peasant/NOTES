@@ -63,7 +63,7 @@ $08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
 $0B-$1F QLOAD disk routines and HGR drawing routines
 $20-$3F HGR Page 1
 $40-$5f HGR Page 2
-$60-$?? Programs	(roughly 22k available?)
+$60-$AF Programs	(roughly 22k available?) (we max at 20k on disk)
 $B8-$BB Hi-res lookup tables
 $BC     temp area for load/save files
 $BD-$BE temp area when saving game
@@ -72,6 +72,10 @@ $C0-$CF	I/O
 $D0-$DF (Language Card BANK1) ?????
 $D0-$DF (Language Card BANK2)	Mockingboard music/PT3-routines
 $E0-$FF (Language Card) ?????
+
+$D0-$DF (bank2) inventory
+$D0-$DF (bank1) common parser code
+$E0-$FF per-level parser strings
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

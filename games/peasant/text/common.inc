@@ -12,9 +12,12 @@
 .byte "You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.",0
 
 ; + wear robe (not in inventory)
+wear_robe_none_message:
 .byte "You don't have anything but",13
 .byte "your 'Scalding Lake'",13
 .byte "t-shirt.",0
+
+wear_robe_none_message2:
 .byte "And pants. Forgot to",13
 .byte "mention the pants.",0
 
@@ -25,10 +28,12 @@
 .byte "Right now, you see a bunch of hay.",0
  
 ; + look trees
+look_trees_message:
 .byte "You are an incredibly",13
 .byte "boring person.",0
 
 ; + ask about (unknown)
+unknown_ask_message:
 .byte "Ask about what?",0
  
 ; + boo
@@ -113,8 +118,10 @@ smell_message:
 .byte "Smells like a computer",13
 .byte "game.",0
 
-; + pwd
-.byte "~peasantsquest/{location}",0
+; + pwd (offset 17)
+pwd_message:
+.byte "~peasantsquest/",13
+.byte "                         ",0
 
 ; + go _____
 go_message:
@@ -123,6 +130,7 @@ go_message:
 .byte "more like your day job.",0
 
 ; + ditch/drop baby (if you have it)
+ditch_baby_message:
 .byte "Quit tryin to ditch the baby!",0
 
 ; + ???? ditch/drop/deploy/use baby (after baby left)
@@ -139,6 +147,7 @@ climb_cliff_message:
 .byte "you.",0
 
 ; + climb tree
+climb_tree_message:
 .byte "But then your hands would",13
 .byte "get all sappy.",0
 

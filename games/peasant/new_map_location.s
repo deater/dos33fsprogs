@@ -9,11 +9,24 @@ new_map_location:
 
 	; fall through
 
+
+update_map_location:
+
+	;==================
+	; setup verb table
+
+	jsr	setup_verb_table
+
+
 	;==================
 	; update map
 	;	on main map, it's (MAP_Y*5)+MAP_X
-update_map_location:
+
+
 	; put in map
+
+
+
 
 map_wrap_x:
 	; wrap X (0..4)

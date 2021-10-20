@@ -34,13 +34,8 @@ done_upcase_loop:
 	jsr	get_noun
 
 
-	;=============================
-	; handle room-specific actions
-
-;	jsr	local_parser
-
 	;================================
-	; fall through to default actions
+	; jump into verb table
 
 	lda	CURRENT_VERB
 
@@ -54,212 +49,29 @@ done_upcase_loop:
 	rts				; jump to routine
 
 
+	;==============================
+	;==============================
+	;==============================
+	;==============================
+	; common routines
+	;==============================
+	;==============================
+	;==============================
+	;==============================
+
 
 	;================
 	; ask
 	;================
-parse_ask:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_FIRE
-	beq	ask_about_fire
-	cmp	#NOUN_JHONKA
-	beq	ask_about_jhonka
-	cmp	#NOUN_KERREK
-	beq	ask_about_kerrek
-	cmp	#NOUN_NED
-	beq	ask_about_ned
-	cmp	#NOUN_ROBE
-	beq	ask_about_robe
-	cmp	#NOUN_SMELL
-	beq	ask_about_smell
-	cmp	#NOUN_TROGDOR
-	beq	ask_about_trogdor
-
-	; else ask about unknown
-
-ask_about_unknown:
-	ldx	#<knight_ask_unknown_message
-	ldy	#>knight_ask_unknown_message
+parse_common_ask:
+	ldx	#<unknown_ask_message
+	ldy	#>unknown_ask_message
 	jmp	finish_parse_message
-
-ask_about_fire:
-	ldx	#<knight_ask_fire_message
-	ldy	#>knight_ask_fire_message
-	jmp	finish_parse_message
-
-ask_about_jhonka:
-	ldx	#<knight_ask_jhonka_message
-	ldy	#>knight_ask_jhonka_message
-	jmp	finish_parse_message
-
-ask_about_kerrek:
-	ldx	#<knight_ask_kerrek_message
-	ldy	#>knight_ask_kerrek_message
-	jmp	finish_parse_message
-
-ask_about_ned:
-	ldx	#<knight_ask_ned_message
-	ldy	#>knight_ask_ned_message
-	jmp	finish_parse_message
-
-ask_about_robe:
-	ldx	#<knight_ask_robe_message
-	ldy	#>knight_ask_robe_message
-	jmp	finish_parse_message
-
-ask_about_smell:
-	ldx	#<knight_ask_smell_message
-	ldy	#>knight_ask_smell_message
-	jmp	finish_parse_message
-
-ask_about_trogdor:
-	ldx	#<knight_ask_trogdor_message
-	ldy	#>knight_ask_trogdor_message
-	jmp	finish_parse_message
-
-
-
-	;================
-	; attack
-	;================
-parse_break:
-parse_attack:
-	lda	CURRENT_NOUN
-	cmp	#NOUN_SIGN
-	beq	attack_sign
-
-	jmp	parse_unknown
-
-attack_sign:
-	ldx	#<attack_sign_message
-	ldy	#>attack_sign_message
-	jmp	finish_parse_message
-
-
-	;================
-	; quit
-	;================
-parse_quit:
-	ldx	#<quit_message
-	ldy	#>quit_message
-	jmp	finish_parse_message
-
-	;================
-	; smell / sniff
-	;================
-parse_smell:
-parse_sniff:
-	ldx	#<smell_message
-	ldy	#>smell_message
-	jmp	finish_parse_message
-
-	;================
-	; dan
-	;================
-parse_dan:
-	ldx	#<dan_message
-	ldy	#>dan_message
-	jmp	finish_parse_message
-
-	;================
-	; go
-	;================
-parse_go:
-	ldx	#<go_message
-	ldy	#>go_message
-	jmp	finish_parse_message
-
-	;================
-	; drop/throw
-	;================
-parse_drop:
-parse_throw:
-	ldx	#<no_baby_message
-	ldy	#>no_baby_message
-	jmp	finish_parse_message
-
-	;================
-	; climb
-	;================
-parse_climb:
-	ldx	#<climb_cliff_message
-	ldy	#>climb_cliff_message
-	jmp	finish_parse_message
-
-	;================
-	; get/take/steal
-	;================
-parse_get:
-parse_take:
-parse_steal:
-	ldx	#<get_message
-	ldy	#>get_message
-	jmp	finish_parse_message
-
-	;================
-	; give
-	;================
-parse_give:
-	ldx	#<give_message
-	ldy	#>give_message
-	jmp	finish_parse_message
-
-	;================
-	; haldo
-	;================
-parse_haldo:
-	ldx	#<haldo_message
-	ldy	#>haldo_message
-	jmp	finish_parse_message
-
-	;================
-	; why
-	;================
-parse_why:
-	ldx	#<why_message
-	ldy	#>why_message
-	jmp	finish_parse_message
-
-	;================
-	; this / what the
-	;================
-parse_this:
-parse_what:
-	ldx	#<what_message
-	ldy	#>what_message
-	jmp	finish_parse_message
-
-
-	;================
-	; party
-	;================
-parse_party:
-	ldx	#<party_message
-	ldy	#>party_message
-	jmp	finish_parse_message
-
-	;================
-	; map
-	;================
-parse_map:
-	ldx	#<map_message
-	ldy	#>map_message
-	jmp	finish_parse_message
-
-	;================
-	; help
-	;================
-parse_help:
-	ldx	#<help_message
-	ldy	#>help_message
-	jmp	finish_parse_message
-
 
 	;================
 	; boo
 	;================
-parse_boo:
+parse_common_boo:
 	ldx	#<boo_message
 	ldy	#>boo_message
 	jmp	finish_parse_message
@@ -267,17 +79,43 @@ parse_boo:
 	;================
 	; cheat
 	;================
-parse_cheat:
+parse_common_cheat:
 
 	ldx	#<cheat_message
 	ldy	#>cheat_message
 	jmp	finish_parse_message
 
+	;================
+	; climb
+	;================
+parse_common_climb:
+
+	lda	CURRENT_NOUN
+	cmp	#NOUN_CLIFF
+	beq	climb_cliff
+	cmp	#NOUN_TREE
+	beq	climb_tree
+
+	jmp	parse_common_unknown
+
+climb_tree:
+	; FIXME: this changes after INN
+	ldx	#<climb_tree_message
+	ldy	#>climb_tree_message
+	jmp	finish_parse_message
+
+climb_cliff:
+	; FIXME: only on certain locations
+	ldx	#<climb_cliff_message
+	ldy	#>climb_cliff_message
+	jmp	finish_parse_message
+
+
 	;=================
 	; copy
 	;=================
 
-parse_copy:
+parse_common_copy:
 
 	; want copy
 	lda	#NEW_FROM_DISK
@@ -292,17 +130,26 @@ parse_copy:
 	; dance
 	;===================
 
-parse_dance:
+parse_common_dance:
 
 	ldx	#<dance_message
 	ldy	#>dance_message
+	jmp	finish_parse_message
+
+
+	;================
+	; dan
+	;================
+parse_common_dan:
+	ldx	#<dan_message
+	ldy	#>dan_message
 	jmp	finish_parse_message
 
 	;===================
 	; die
 	;===================
 
-parse_die:
+parse_common_die:
 	lda	#LOAD_GAME_OVER
 	sta	WHICH_LOAD
 
@@ -314,11 +161,36 @@ parse_die:
 	jmp	finish_parse_message
 
 
+	;================
+	; ditch/drop
+	;================
+parse_common_ditch:
+parse_common_drop:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_BABY
+	beq	ditch_baby
+
+	jmp	parse_common_unknown
+
+ditch_baby:
+	lda	INVENTORY_1
+	and	INV1_BABY
+	beq	no_baby
+
+	ldx	#<ditch_baby_message
+	ldy	#>ditch_baby_message
+	jmp	finish_parse_message
+
+no_baby:
+	ldx	#<no_baby_message
+	ldy	#>no_baby_message
+	jmp	finish_parse_message
+
 	;=====================
 	; drink
 	;=====================
 
-parse_drink:
+parse_common_drink:
 
 	ldx	#<drink_message
 	ldy	#>drink_message
@@ -329,12 +201,67 @@ parse_drink:
 
 	jmp	finish_parse_message
 
+	;================
+	; drop/throw
+	;================
+parse_common_throw:
+	ldx	#<no_baby_message
+	ldy	#>no_baby_message
+	jmp	finish_parse_message
+
+
+	;================
+	; get/take/steal
+	;================
+parse_common_get:
+parse_common_take:
+parse_common_steal:
+	ldx	#<get_message
+	ldy	#>get_message
+	jmp	finish_parse_message
+
+
+	;================
+	; give
+	;================
+parse_common_give:
+	ldx	#<give_message
+	ldy	#>give_message
+	jmp	finish_parse_message
+
+
+	;================
+	; go
+	;================
+parse_common_go:
+	ldx	#<go_message
+	ldy	#>go_message
+	jmp	finish_parse_message
+
+
+	;================
+	; haldo
+	;================
+parse_common_haldo:
+	ldx	#<haldo_message
+	ldy	#>haldo_message
+	jmp	finish_parse_message
+
+
+	;================
+	; help
+	;================
+parse_common_help:
+	ldx	#<help_message
+	ldy	#>help_message
+	jmp	finish_parse_message
+
 
 	;====================
 	; inventory
 	;====================
 
-parse_inventory:
+parse_common_inventory:
 
 	; switch in LC bank2
 
@@ -354,7 +281,7 @@ parse_inventory:
 	; load
 	;=====================
 
-parse_load:
+parse_common_load:
 
 	jsr	load_menu
 
@@ -364,132 +291,85 @@ parse_load:
 	; look
 	;=================
 
-parse_look:
+parse_common_look:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_KNIGHT
-	beq	knight_look
-	cmp	#NOUN_MAN
-	beq	knight_look
-	cmp	#NOUN_DUDE
-	beq	knight_look
-	cmp	#NOUN_GUY
-	beq	knight_look
-
-	cmp	#NOUN_SIGN
-	beq	sign_look
-	cmp	#NOUN_TROGDOR
-	beq	trogdor_look
-	cmp	#NOUN_NONE
-	beq	pass_look
-
-	bne	irrelevant_look
-
-knight_look:
-	ldx	#<knight_look_message
-	ldy	#>knight_look_message
-	jmp	finish_parse_message
-
-pass_look:
-	ldx	#<pass_look_message
-	ldy	#>pass_look_message
-	jmp	finish_parse_message
-
-sign_look:
-	ldx	#<sign_look_message
-	ldy	#>sign_look_message
-	jmp	finish_parse_message
-
-trogdor_look:
-	ldx	#<trogdor_look_message
-	ldy	#>trogdor_look_message
-	jmp	finish_parse_message
+	cmp	#NOUN_TREE
+	beq	trees_look
 
 irrelevant_look:
 	ldx	#<look_irrelevant_message
 	ldy	#>look_irrelevant_message
 	jmp	finish_parse_message
 
-	;===================
-	; talk
-	;===================
-
-parse_talk:
-
-	lda	CURRENT_NOUN
-	cmp	#NOUN_KNIGHT
-	beq	talk_to_knight
-	cmp	#NOUN_GUY
-	beq	talk_to_knight
-	cmp	#NOUN_MAN
-	beq	talk_to_knight
-	cmp	#NOUN_DUDE
-	beq	talk_to_knight
-
-	; else, no one
-talk_noone:
-	ldx	#<talk_noone_message
-	ldy	#>talk_noone_message
+trees_look:
+	ldx	#<look_trees_message
+	ldy	#>look_trees_message
 	jmp	finish_parse_message
 
-talk_to_knight:
 
-	lda	GAME_STATE_2
-	and	#TALKED_TO_KNIGHT
-	bne	knight_skip_text
+	;================
+	; map
+	;================
+parse_common_map:
+	ldx	#<map_message
+	ldy	#>map_message
+	jmp	finish_parse_message
 
-	; first time only
-	ldx	#<talk_knight_first_message
-	ldy	#>talk_knight_first_message
-	jsr	partial_message_step
 
-	; first time only
-	ldx	#<talk_knight_second_message
-	ldy	#>talk_knight_second_message
-	jsr	partial_message_step
+	;================
+	; party
+	;================
+parse_common_party:
+	ldx	#<party_message
+	ldy	#>party_message
+	jmp	finish_parse_message
 
-knight_skip_text:
-	ldx	#<talk_knight_third_message
-	ldy	#>talk_knight_third_message
-	jsr	partial_message_step
+	;=====================
+	; pwd
+	;=====================
+parse_common_pwd:
 
-	ldx	#<talk_knight_stink_message
-	ldy	#>talk_knight_stink_message
-	jsr	partial_message_step
+	ldx	MAP_LOCATION
+	lda	location_names_l,X
+	sta	INL
+	lda	location_names_h,X
+	sta	INH
 
-	ldx	#<talk_knight_dress_message
-	ldy	#>talk_knight_dress_message
-	jsr	partial_message_step
+        lda     #<(pwd_message+17)
+        sta     OUTL
+        lda     #>(pwd_message+17)
+	sta	OUTH
 
-	ldx	#<talk_knight_fire_message
-	ldy	#>talk_knight_fire_message
-	jsr	partial_message_step
+	ldy	#0
+pwd_loop:
+	lda	(INL),Y
+	sta	(OUTL),Y
+	beq	pwd_done
+	iny
+	bne	pwd_loop	; bra
 
-	ldx	#<talk_knight_fourth_message
-	ldy	#>talk_knight_fourth_message
+pwd_done:
 
-	lda	GAME_STATE_2
-	and	#TALKED_TO_KNIGHT
-	bne	knight_skip_text2
+	ldx	#<pwd_message
+	ldy	#>pwd_message
+	jmp	finish_parse_message
 
-	jsr	partial_message_step
 
-	; first time only
-	ldx	#<talk_knight_fifth_message
-	ldy	#>talk_knight_fifth_message
 
-	lda	GAME_STATE_2
-	ora	#TALKED_TO_KNIGHT
-	sta	GAME_STATE_2
-
-knight_skip_text2:
+	;================
+	; quit
+	;================
+parse_common_quit:
+	ldx	#<quit_message
+	ldy	#>quit_message
 	jmp	finish_parse_message
 
 	;===================
 	; save
 	;===================
-parse_save:
+parse_common_save:
 
 	jsr	save_menu
 
@@ -499,7 +379,7 @@ parse_save:
 	; show
 	;===================
 
-parse_show:
+parse_common_show:
 
 	bit	LORES
 	bit	PAGE1
@@ -511,20 +391,83 @@ parse_show:
 
 	jmp	done_parse_message
 
+
+
+	;================
+	; smell / sniff
+	;================
+parse_common_smell:
+parse_common_sniff:
+	ldx	#<smell_message
+	ldy	#>smell_message
+	jmp	finish_parse_message
+
+	;===================
+	; talk
+	;===================
+
+parse_common_talk:
+
+	; else, no one
+talk_noone:
+	ldx	#<talk_noone_message
+	ldy	#>talk_noone_message
+	jmp	finish_parse_message
+
+	;==================
+	; unknown
+	;=================
+parse_common_unknown:
+	ldx	#<unknown_message
+	ldy	#>unknown_message
+	jmp	finish_parse_message
+
 	;=====================
 	; version
 	;=====================
 
-parse_version:
+parse_common_version:
 
 	ldx	#<version_message
 	ldy	#>version_message
 	jmp	finish_parse_message
 
+
+	;================
+	; wear
+	;================
+parse_common_wear:
+
+	lda	CURRENT_NOUN
+	cmp	#NOUN_ROBE
+	bne	wear_unknown
+
+	ldx	#<wear_robe_none_message
+	ldy	#>wear_robe_none_message
+	jsr	partial_message_step
+
+	ldx	#<wear_robe_none_message2
+	ldy	#>wear_robe_none_message2
+	jmp	finish_parse_message
+
+wear_unknown:
+	jmp	parse_common_unknown
+
+
+
+	;================
+	; this / what the
+	;================
+parse_common_this:
+parse_common_what:
+	ldx	#<what_message
+	ldy	#>what_message
+	jmp	finish_parse_message
+
 	;=====================
 	; where
 	;=====================
-parse_where:
+parse_common_where:
 
 	ldx	MAP_LOCATION
 	lda	location_names_l,X
@@ -551,49 +494,43 @@ where_done:
 	ldy	#>where_message
 	jmp	finish_parse_message
 
-	;==================
-	; unknown
-	;=================
-parse_buy:
-parse_close:
-parse_deploy:
-parse_ditch:
-parse_enter:
-parse_feed:
-parse_jump:
-parse_kick:
-parse_kill:
-parse_knock:
-parse_light:
-parse_make:
-parse_no:
-parse_open:
-parse_pet:
-parse_play:
-parse_pull:
-parse_punch:
-parse_push:
-parse_put:
-parse_pwd:
-parse_read:
-parse_ride:
-parse_ring:
-parse_scare:
-parse_shoot:
-parse_sit:
-parse_skip:
-parse_sleep:
-parse_swim:
-parse_try:
-parse_turn:
-parse_use:
-parse_wake:
-parse_wear:
-parse_yet:
-parse_unknown:
-	ldx	#<unknown_message
-	ldy	#>unknown_message
+
+
+	;================
+	; why
+	;================
+parse_common_why:
+	ldx	#<why_message
+	ldy	#>why_message
 	jmp	finish_parse_message
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 finish_parse_message:
@@ -1062,79 +999,124 @@ partial_message_step:
 	jsr	hgr_partial_restore
 	rts
 
+verb_table = $BF00
 
-verb_table:
-	.word	parse_unknown-1	; VERB_UNKNOWN	= 0
-	.word	parse_ask-1	; VERB_ASK	= 1
-	.word	parse_boo-1	; VERB_BOO	= 2
-	.word	parse_break-1	; VERB_BREAK	= 3
-	.word	parse_buy-1	; VERB_BUY	= 4
-	.word	parse_cheat-1	; VERB_CHEAT	= 5
-	.word	parse_climb-1	; VERB_CLIMB	= 6
-	.word	parse_close-1	; VERB_CLOSE	= 7
-	.word	parse_copy-1	; VERB_COPY	= 8
-	.word	parse_dance-1	; VERB_DANCE	= 9
-	.word	parse_deploy-1	; VERB_DEPLOY	= 10
-	.word	parse_die-1	; VERB_DIE	= 11
-	.word	parse_ditch-1	; VERB_DITCH	= 12
-	.word	parse_drink-1	; VERB_DRINK	= 13
-	.word	parse_drop-1	; VERB_DROP	= 14
-	.word	parse_enter-1	; VERB_ENTER	= 15
-	.word	parse_feed-1	; VERB_FEED	= 16
-	.word	parse_get-1	; VERB_GET	= 17
-	.word	parse_give-1	; VERB_GIVE	= 18
-	.word	parse_go-1	; VERB_GO	= 19
-	.word	parse_haldo-1	; VERB_HALDO	= 20
-	.word	parse_inventory-1	; VERB_INVENTORY= 21
-	.word	parse_jump-1	; VERB_JUMP	= 22
-	.word	parse_kick-1	; VERB_KICK	= 23
-	.word	parse_kill-1	; VERB_KILL	= 24
-	.word	parse_knock-1	; VERB_KNOCK	= 25
-	.word	parse_light-1	; VERB_LIGHT	= 26
-	.word	parse_load-1	; VERB_LOAD	= 27
-	.word	parse_look-1	; VERB_LOOK	= 28
-	.word	parse_make-1	; VERB_MAKE	= 29
-	.word	parse_map-1	; VERB_MAP	= 30
-	.word	parse_no-1	; VERB_NO	= 31
-	.word	parse_open-1	; VERB_OPEN	= 32
-	.word	parse_party-1	; VERB_PARTY	= 33
-	.word	parse_pet-1	; VERB_PET	= 34
-	.word	parse_play-1	; VERB_PLAY	= 35
-	.word	parse_pull-1	; VERB_PULL	= 36
-	.word	parse_punch-1	; VERB_PUNCH	= 37
-	.word	parse_push-1	; VERB_PUSH	= 38
-	.word	parse_put-1	; VERB_PUT	= 39
-	.word	parse_pwd-1	; VERB_PWD	= 40
-	.word	parse_quit-1	; VERB_QUIT	= 41
-	.word	parse_read-1	; VERB_READ	= 42
-	.word	parse_ride-1	; VERB_RIDE	= 43
-	.word	parse_ring-1	; VERB_RING	= 44
-	.word	parse_save-1	; VERB_SAVE	= 45
-	.word	parse_scare-1	; VERB_SCARE	= 46
-	.word	parse_shoot-1	; VERB_SHOOT	= 47
-	.word	parse_show-1	; VERB_SHOW	= 48
-	.word	parse_sit-1	; VERB_SIT	= 49
-	.word	parse_skip-1	; VERB_SKIP	= 50
-	.word	parse_sleep-1	; VERB_SLEEP	= 51
-	.word	parse_smell-1	; VERB_SMELL	= 52
-	.word	parse_sniff-1	; VERB_SNIFF	= 53
-	.word	parse_steal-1	; VERB_STEAL	= 54
-	.word	parse_swim-1	; VERB_SWIM	= 55
-	.word	parse_take-1	; VERB_TAKE	= 56
-	.word	parse_talk-1	; VERB_TALK	= 57
-	.word	parse_this-1	; VERB_THIS	= 58
-	.word	parse_throw-1	; VERB_THROW	= 59
-	.word	parse_try-1	; VERB_TRY	= 60
-	.word	parse_turn-1	; VERB_TURN	= 61
-	.word	parse_use-1	; VERB_USE	= 62
-	.word	parse_version-1	; VERB_VERSION	= 63
-	.word	parse_wake-1	; VERB_WAKE	= 64
-	.word	parse_wear-1	; VERB_WEAR	= 65
-	.word	parse_what-1	; VERB_WHAT	= 66
-	.word	parse_where-1	; VERB_WHERE	= 67
-	.word	parse_why-1	; VERB_WHY	= 68
-	.word	parse_yet-1	; VERB_YES	= 69
-	.word	parse_help-1	; VERB_HELP	= 70
-	.word	parse_attack-1	; VERB_ATTACK	= 71
+
+	;=========================
+	;=========================
+	; setup verb table
+	;=========================
+	;=========================
+setup_verb_table:
+
+	;===========================
+	; first make it all unknown
+
+	ldx	#0
+unknown_loop:
+	lda	#<(parse_common_unknown-1)
+	sta	verb_table,X
+	lda	#>(parse_common_unknown-1)
+	sta	verb_table+1,X
+	inx
+	inx
+	cpx	VERB_ALL_DONE
+	bne	unknown_loop
+
+	;=========================
+	; now add in common calls
+
+	ldx	#0
+common_verb_loop:
+	lda	common_verb_table,X
+	beq	done_verb_loop		; 0 means done
+
+	asl				; mul by 2
+	tay
+	lda	common_verb_table+1,X
+	sta	verb_table,Y
+	lda	common_verb_table+2,X
+	sta	verb_table+1,Y
+	inx
+	inx
+	inx
+	jmp	common_verb_loop	; make this a bne (bra)?
+
+done_verb_loop:
+	rts
+
+
+common_verb_table:
+	.byte VERB_ASK
+	.word parse_common_ask-1
+	.byte VERB_BOO
+	.word parse_common_boo-1
+	.byte VERB_CHEAT
+	.word parse_common_cheat-1
+	.byte VERB_CLIMB
+	.word parse_common_climb-1
+	.byte VERB_COPY
+	.word parse_common_copy-1
+	.byte VERB_DANCE
+	.word parse_common_dance-1
+	.byte VERB_DIE
+	.word parse_common_die-1
+	.byte VERB_DITCH
+	.word parse_common_ditch-1
+	.byte VERB_DRINK
+	.word parse_common_drink-1
+	.byte VERB_DROP
+	.word parse_common_drop-1
+	.byte VERB_GET
+	.word parse_common_get-1
+	.byte VERB_GIVE
+	.word parse_common_give-1
+	.byte VERB_GO
+	.word parse_common_go-1
+	.byte VERB_HALDO
+	.word parse_common_haldo-1
+	.byte VERB_HELP
+	.word parse_common_help-1
+	.byte VERB_INVENTORY
+	.word parse_common_inventory-1
+	.byte VERB_LOAD
+	.word parse_common_load-1
+	.byte VERB_LOOK
+	.word parse_common_look-1
+	.byte VERB_MAP
+	.word parse_common_map-1
+	.byte VERB_PARTY
+	.word parse_common_party-1
+	.byte VERB_PWD
+	.word parse_common_pwd-1
+	.byte VERB_QUIT
+	.word parse_common_quit-1
+	.byte VERB_SAVE
+	.word parse_common_save-1
+	.byte VERB_SHOW
+	.word parse_common_show-1
+	.byte VERB_SMELL
+	.word parse_common_smell-1
+	.byte VERB_SNIFF
+	.word parse_common_sniff-1
+	.byte VERB_TAKE
+	.word parse_common_take-1
+	.byte VERB_TALK
+	.word parse_common_talk-1
+	.byte VERB_THIS
+	.word parse_common_this-1
+	.byte VERB_THROW
+	.word parse_common_throw-1
+	.byte VERB_VERSION
+	.word parse_common_version-1
+	.byte VERB_WEAR
+	.word parse_common_wear-1
+	.byte VERB_WHAT
+	.word parse_common_what-1
+	.byte VERB_WHERE
+	.word parse_common_where-1
+	.byte VERB_WHY
+	.word parse_common_why-1
+	.byte 0
 
 .include "dialog_peasant2.inc"
