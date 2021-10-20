@@ -52,6 +52,44 @@ Map:
 - implement map
 
 Peasantry:
+- Gary
+- Kerrek 1
+- Well
+- Yellow Tree
+- Waterfall
+  + Waterfall animation
+
+- Haystack
+  + Hook up dialog for mud
+  + Hook up sprites for walking hay
+- Puddle
+  + Hook up responses when mud is wet
+- Archery
+  + Archer animations
+- River/Rock
+  + River animation
+- Mountain Pass
+  + Knight animations
+  + hook up/fix dialog when you have various items
+  + be sure to fix the "talk knight" dialog for robe/fire etc
+  + Block path unless you have all three items
+
+- Jhonka
+- Cottage
+- West Lake
+  + Water animations
+- East Lake
+  + Boat animations
+  + Water animations
+- Inn
+
+- Ned Cottage
+- Ned
+- Kerrek2
+  + See Kerrek1
+- Lady Cottage
+- Burnt trees
+
 - animation for the boat
 - animation of River
 - animation of waterfall
@@ -71,6 +109,4 @@ Ending:
   Modify sprite routine to auto-shift colors so we can have more
   of an arc on baby trajectory?
 
-Pass:
-- hook up/fix dialog when you have various items
-- be sure to fix the "talk knight" dialog for robe/fire etc
+

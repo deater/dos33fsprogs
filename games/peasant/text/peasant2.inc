@@ -71,6 +71,7 @@ hay_get_hay_message:
 .byte "Now you've done it! You're covered in sticky, albeit fine smelling, mud. Your ",34,"Scalding Lake",34," T-shirt is all soiled, too. You just washed it last harvest!",0
 
 ; + look (dry)
+puddle_look_at_message:
 .byte "There's a dried out mud",13
 .byte "puddle. It's all caked and",13
 .byte "cracked like the kind",13
@@ -80,7 +81,14 @@ hay_get_hay_message:
 ; + look (wet)
 .byte "Not much to see. 'Sides that big mud puddle.",0
 
+; + look mud / puddle				; NOT IN WIKI?
+puddle_look_mud_message:
+.byte "The bone-dry mud puddle is",13
+.byte "cracked and caked.",0
+
+
 ; + get / look rock
+puddle_get_rock_message:
 .byte "That rock's not doin' a",13
 .byte "whole lot for me.",0
 

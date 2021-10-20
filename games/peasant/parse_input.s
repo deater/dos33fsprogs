@@ -898,6 +898,7 @@ noun_lookup:
 .byte "RIVER",NOUN_RIVER|$80
 .byte "STONE",NOUN_STONE|$80
 .byte "IN HAY",NOUN_IN_HAY|$80
+.byte "PUDDLE",NOUN_PUDDLE|$80
 .byte $00
 
 
