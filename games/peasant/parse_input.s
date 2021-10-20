@@ -1026,20 +1026,40 @@ unknown_loop:
 	;=========================
 	; now add in common calls
 
-	ldx	#0
+	lda	#<common_verb_table
+	sta	INL
+	lda	#>common_verb_table
+	sta	INH
+
+;	jsr	load_custom_verb_table
+
+;	rts
+
+	; Fallthrough
+
+	;=========================
+	;=========================
+	; load custom verb table
+	;=========================
+	;=========================
+	; verb table to load in INL/INH
+load_custom_verb_table:
+
+
+	ldy	#0
 common_verb_loop:
-	lda	common_verb_table,X
+	lda	(INL),Y
 	beq	done_verb_loop		; 0 means done
 
 	asl				; mul by 2
-	tay
-	lda	common_verb_table+1,X
-	sta	verb_table,Y
-	lda	common_verb_table+2,X
-	sta	verb_table+1,Y
-	inx
-	inx
-	inx
+	tax
+	iny
+	lda	(INL),Y
+	sta	verb_table,X
+	iny
+	lda	(INL),Y
+	sta	verb_table+1,X
+	iny
 	jmp	common_verb_loop	; make this a bne (bra)?
 
 done_verb_loop:
@@ -1119,4 +1139,4 @@ common_verb_table:
 	.word parse_common_why-1
 	.byte 0
 
-.include "dialog_peasant2.inc"
+

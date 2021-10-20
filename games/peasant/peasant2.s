@@ -29,6 +29,16 @@ peasant_quest:
 
 	jsr	update_map_location
 
+	; load updated verb table
+
+	lda	#<mountain_pass_verb_table
+	sta	INL
+	lda	#>mountain_pass_verb_table
+	sta	INH
+	jsr	load_custom_verb_table
+
+
+
 	; update score
 
 	jsr	update_score
@@ -248,3 +258,5 @@ map_priority_hi:
 ;.incbin "DIALOG_PEASANT2.LZSA"
 
 ;.include "dialog_peasant2.inc"
+
+.include "peasant2_actions.s"

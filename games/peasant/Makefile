@@ -274,6 +274,7 @@ PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant2.o:	peasant2.s zp.inc inventory.inc dialog_peasant2.inc \
+		peasant2_actions.s \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \

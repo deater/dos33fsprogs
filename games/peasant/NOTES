@@ -28,6 +28,8 @@ peasant2	18302
 		20493 -- more parse code (release 0.76)
 		16995 -- move inventory to language card
 		17122 -- add all verbs in (+), optimize text box drawing (-)
+		17918 -- text parsing nearing completion
+		18208 -- mountain pass parsing working
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
