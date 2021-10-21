@@ -46,7 +46,6 @@ peasantry3:
 
 	jsr	update_score
 
-
 	;=============================
 	;=============================
 	; new screen location

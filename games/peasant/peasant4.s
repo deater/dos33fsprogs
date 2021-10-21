@@ -2,7 +2,7 @@
 
 ; Peasantry Part 4 (bottom line of map)
 
-; ned cottage, wavy tree, kerrek 2, lady cottage, burninated tree
+;	ned cottage, wavy tree, kerrek 2, lady cottage, burninated tree
 
 WHICH_PEASANTRY = 3
 
@@ -17,19 +17,26 @@ WHICH_PEASANTRY = 3
 .include "inventory.inc"
 .include "parse_input.inc"
 
-peasant_quest:
+peasantry4:
+
 	lda	#0
 	sta	GAME_OVER
-
-	jsr	hgr_make_tables
-
-	jsr	hgr2
-
-
-
-
-	lda	#0
 	sta	FRAME
+
+	jsr	hgr_make_tables		; necessary?
+	jsr	hgr2			; necessary?
+
+	; decompress dialog to $D000
+
+	lda	#<peasant4_text_lzsa
+	sta	getsrc_smc+1
+	lda	#>peasant4_text_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$D0
+
+	jsr	decompress_lzsa2_fast
+
 
 	; update map location
 
@@ -48,6 +55,22 @@ peasant_quest:
 new_location:
 	lda	#0
 	sta	GAME_OVER
+
+	;==========================
+	; load updated verb table
+
+	; we are PEASANT4 so locations 15...19 map to 0...4
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#15
+	tax
+
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
 
 	;=====================
 	; load bg
@@ -225,3 +248,23 @@ map_priority_hi:
 	.byte	>crooked_tree_priority_lzsa	; 19	-- crooked tree
 
 
+
+verb_tables_low:
+	.byte	<crooked_tree_verb_table	; 15	-- empty hut
+	.byte	<crooked_tree_verb_table	; 16	-- ned
+	.byte	<crooked_tree_verb_table	; 17	-- bottom footprints
+	.byte	<crooked_tree_verb_table	; 18	-- cottage lady
+	.byte	<crooked_tree_verb_table	; 19	-- crooked tree
+
+verb_tables_hi:
+	.byte	>crooked_tree_verb_table	; 15	-- empty hut
+	.byte	>crooked_tree_verb_table	; 16	-- ned
+	.byte	>crooked_tree_verb_table	; 17	-- bottom footprints
+	.byte	>crooked_tree_verb_table	; 18	-- cottage lady
+	.byte	>crooked_tree_verb_table	; 19	-- crooked tree
+
+
+peasant4_text_lzsa:
+.incbin "DIALOG_PEASANT4.LZSA"
+
+.include "peasant4_actions.s"
