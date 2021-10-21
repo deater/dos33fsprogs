@@ -2,7 +2,7 @@
 
 ; Peasantry Part 3 (third line of map)
 
-; Jhonka, your cottage, w lake, e lake, inn
+;	Jhonka, your cottage, w lake, e lake, inn
 
 WHICH_PEASANTRY = 2
 
@@ -17,13 +17,25 @@ WHICH_PEASANTRY = 2
 .include "inventory.inc"
 .include "parse_input.inc"
 
-peasant_quest:
+peasantry3:
+
 	lda	#0
 	sta	GAME_OVER
 	sta	FRAME
-	jsr	hgr_make_tables
 
-	jsr	hgr2
+	jsr	hgr_make_tables		; necessary?
+	jsr	hgr2			; necessary?
+
+	; decompress dialog to $D000
+
+	lda	#<peasant3_text_lzsa
+	sta	getsrc_smc+1
+	lda	#>peasant3_text_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$D0
+
+	jsr	decompress_lzsa2_fast
 
 
 	; update map location
@@ -44,6 +56,23 @@ peasant_quest:
 new_location:
 	lda	#0
 	sta	GAME_OVER
+
+
+	;==========================
+	; load updated verb table
+
+	; we are PEASANT3 so locations 10...14 map to 0...4
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#10
+	tax
+
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
 
 	;=====================
 	; load bg
@@ -214,3 +243,23 @@ map_priority_hi:
 	.byte	>lake_w_priority_lzsa		; 12	-- lake west
 	.byte	>lake_e_priority_lzsa		; 13	-- lake east
 	.byte	>inn_priority_lzsa		; 14	-- inn
+
+verb_tables_low:
+	.byte   <inn_verb_table			; 10	-- jhonka
+	.byte   <inn_verb_table			; 11	-- cottage
+	.byte   <inn_verb_table			; 12	-- lake west
+	.byte   <inn_verb_table			; 13	-- lake east
+	.byte   <inn_verb_table			; 14	-- inn
+
+verb_tables_hi:
+	.byte   >inn_verb_table			; 10	-- jhonka
+	.byte   >inn_verb_table			; 11	-- cottage
+	.byte   >inn_verb_table			; 12	-- lake west
+	.byte   >inn_verb_table			; 13	-- lake east
+	.byte   >inn_verb_table			; 14	-- inn
+
+
+peasant3_text_lzsa:
+.incbin "DIALOG_PEASANT3.LZSA"
+
+.include "peasant3_actions.s"

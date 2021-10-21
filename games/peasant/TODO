@@ -1,5 +1,9 @@
 TODO:
 
+optimizations:
++ always load CURERENT_NOUN into A before calling into parsing
+	routines
+
 + print warning message on 48k systems that we need at least 64k
 
 + more frames in animation for game_over

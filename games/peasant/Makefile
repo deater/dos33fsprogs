@@ -264,8 +264,7 @@ PEASANT1:	peasant1.o
 
 peasant1.o:	peasant1.s zp.inc inventory.inc \
 		parse_input.inc \
-		peasant1_actions.s \
-		DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
+		peasant1_actions.s DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
@@ -283,15 +282,14 @@ PEASANT2:	peasant2.o
 
 peasant2.o:	peasant2.s zp.inc inventory.inc \
 		parse_input.inc \
-		peasant2_actions.s \
-		dialog_peasant2.inc DIALOG_PEASANT2.LZSA \
+		peasant2_actions.s DIALOG_PEASANT2.LZSA dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s inventory.s loadsave_menu.s
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
@@ -301,12 +299,14 @@ PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant3.o:	peasant3.s zp.inc inventory.inc \
+		parse_input.inc \
+		peasant3_actions.s DIALOG_PEASANT3.LZSA dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o peasant3.o peasant3.s -l peasant3.lst
 
@@ -316,12 +316,14 @@ PEASANT4:	peasant4.o
 	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant4.o:	peasant4.s zp.inc inventory.inc \
+		parse_input.inc \
+		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o peasant4.o peasant4.s -l peasant4.lst
 
@@ -470,6 +472,10 @@ dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc
 
 ###
 
+dialog_peasant3.inc:	generate_all_symbols dialog_peasant3
+	./generate_all_symbols -a 0xd000 dialog_peasant3.lst > dialog_peasant3.inc
+
+####
 DIALOG_PEASANT4.LZSA:	dialog_peasant4
 	$(LZSA) -r -f2 dialog_peasant4 DIALOG_PEASANT4.LZSA
 
@@ -480,6 +486,11 @@ dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc
 	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
 
 ###
+
+dialog_peasant4.inc:	generate_all_symbols dialog_peasant4
+	./generate_all_symbols -a 0xd000 dialog_peasant4.lst > dialog_peasant4.inc
+
+####
 
 DIALOG_INSIDE.LZSA:	dialog_inside
 	$(LZSA) -r -f2 dialog_inside DIALOG_INSIDE.LZSA

@@ -42,11 +42,10 @@ peasantry2:
 
 	jsr	update_map_location
 
-
-
 	; update score
 
 	jsr	update_score
+
 
 	;=============================
 	;=============================
