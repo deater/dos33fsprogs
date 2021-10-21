@@ -8,6 +8,7 @@
 ; + wear mask (after getting it)
 .byte "Not on this screen. You've got your image to think about. Actually, you might want to start deliberating on that right now.",0
 
+; +3 points
 ; + wear robe (after getting it)
 .byte "You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.",0
 

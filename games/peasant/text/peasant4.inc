@@ -67,7 +67,7 @@
 ; + look rock (after removing it)
 .byte "Some jerk removed a loose stone from the back of the cottage.",0
 
-; + get rock		plays music, increments points
+; + get rock	+2 POINTS
 ; + move rock
 .byte "You slide the stone over to",13
 .byte "reveal a little hole. If",13
@@ -97,6 +97,7 @@
 .byte "work. You dead. Thanks for",13
 .byte "nothing.",0
 
+;+5 POINTS
 ; + put baby into the hole
 .byte "Deploying Q-Baby...",0
 .byte "Way to go, baby! It got the cottage door opened and headed off to a new life. He becomes Valedictorian of his graduating class, goes to Scalding Lake State, gets a degree in Advanced Peasantry and lands a job at Thatch-Pro: building better cottages for a better tomorrow.",0
@@ -288,6 +289,7 @@
 .byte "could probably use some",13
 .byte "salve.",0
 
+; +10 POINTS
 ; + (walking under candle in burninated trees)
 .byte "Whoa! The horse grease on your robe caught fire! You're a for-real peasant now.",0
 

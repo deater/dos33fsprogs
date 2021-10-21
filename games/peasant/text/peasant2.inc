@@ -44,6 +44,7 @@ hay_enter_hay_clean_message:
 ; + enter hay / jump in hay (muddy but not nearby)
 .byte "Who do you think you are, MJ? Try from a little closer.",0
 
+; + 3 POINTS
 ; + enter hay / jump into hay (muddy)
 .byte "You've not known much better than a roll in the hay alone.",0
 .byte "You leap in the hay like a two years old boy. Uh oh. The hay sticks to your muddy body. You're a walking hay bale! Just like that one guy from that one show!",0
@@ -67,6 +68,7 @@ hay_get_hay_message:
 ; Mud Puddle
 ;=============
 
+; +2 POINTS
 ; + (walk into puddle when raining)
 .byte "Now you've done it! You're covered in sticky, albeit fine smelling, mud. Your ",34,"Scalding Lake",34," T-shirt is all soiled, too. You just washed it last harvest!",0
 
@@ -143,7 +145,8 @@ archery_talk_far_message:
 .byte "there, cowboy?",0
 
 
-; POINTS +1
+; POINTS +1 (default) if you talk before finding Dongolev
+; POINTS +1 extra point if you get trinket or mask first
 ; + talk {nothing}/man/guy/dude/archer/Mendelev
 ;        (you walk over) [ note, did verify the quotes here]
 archery_talk_mendelev_message:
@@ -167,6 +170,7 @@ archery_talk_mendelev3_message:
 .byte "'haldo.' Tell him I said",13
 .byte "'haldo.'",34,0
 
+; + 2 POINTS
 ; + give super trinket
 .byte 34,"That'll work,",34," says Mendelev. Just hit 3 bullseyes and you win the SuperTime FunBow TM!",0
 .byte "The ARROW KEYS aim left and right and the SPACE BAR operates the bow. You'll need to press it a couple of times to get a nice shot off but we don't give lessons so you're on your own.",0
@@ -199,6 +203,8 @@ archery_play_game_message:
 .byte "The gallery's not open and",13
 .byte "you got no bow or arrows,",13
 .byte "Cupid.",0
+
+; BEAT GAME = +3 POINTS
 
 ; + get/take/steal target
 archery_get_target_message:
@@ -351,6 +357,7 @@ talk_knight_fifth_message:
 ; + talk knight (after acquiring Kerrek's belt and Naked Ned's robe)
 .byte "Almost there, Dirk the Daring. You stink like a peasant and you dress like one too. But you're clearly still not ON FIRE.",0
 
+; + 7 POINTS
 ; + talk knight (after have all three)
 .byte "Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.",0
 .byte "This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!",0

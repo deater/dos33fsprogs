@@ -165,6 +165,7 @@
 ; + get chair (after she is gone)
 .byte "No. Too big for pants.",0
 
+; +5 POINTS
 ; + give riches
 .byte 34,"My riches!!",34," she screams and snatches up every last gold coin. ",34,"Thanks, sucker! Here you go!",34," she shoves the baby into your hands and bolts out the door.",0
 .byte "You later learn that she does this all the time and is wanted throughout the countryside. Those riches probably WERE the Jhonka's and who knows whose baby that is. Well, it's yours now.",0
@@ -309,7 +310,8 @@
 .byte "You have no baby nor any",13
 .byte "immediate prospects.",0
 
-; + give baby
+; +5 POINTS
+; + give/use baby (by desk)
 .byte 34,"Well lookit that little guy!",34," says the Innkeeper. ",34,"You want a treat, do ya? What do babies like?",34," He fishes around in his pockets.",0
 .byte 34,"Um, how bout my medication!",34," You grab the bottle of pills before he can force them on the baby. ",34,"Hey, those were for him!",34,0
 
@@ -322,6 +324,7 @@
 .byte "the old guy. ",34,"Where's your",13
 .byte "robe?",34,0
 
+; +3 POINTS
 ; + get room (with robe)
 .byte 34,"Okay, youngster,",34," says the decrepit old person. ",34,"Just bed on down for the night and I'm sure I'll remember to collect the fee come morning.",34,0
 .byte "Night falls like a bad power point presentation.",0
@@ -330,6 +333,7 @@
 ; + get a room (when on fire)
 .byte 34,"Board of Peasant Health says I can't serve any folk that's on fire. Nothing personal. Well, I mean, I don't like you much anyway.",34,0
 
+; +2 POINTS
 ; + get/take/steal pot
 .byte "You reach way up to the top shelf.",0
 .byte "Oh great! Now you can't see a thing and your head is covered in highly flammable horse grease. You better get out of here before that disgusting old man comes back.",0
@@ -514,6 +518,7 @@
 ; + open drawer (after getting robe and closing)
 .byte "You already closed it, which was nice, and so we gave you some points. Let sleeping drawers lie.",0
 
+;+1 POINT
 ; + close drawer
 .byte "Aww, how thoughtful and boring of you. Break into this peasant's home, steal his clothes, but remember to tidy up after yourself. You're a real saint.",0
 
@@ -523,6 +528,7 @@
 ; + close drawer (already closed)
 .byte "A riddle: What can be closed that is already closed? (hint: not this drawer)",0
 
+; +10 points
 ; + get robe
 .byte "Yeah! Get that robe!",0
 

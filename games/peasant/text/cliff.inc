@@ -11,6 +11,7 @@
 .byte "falling down the minute you",13
 .byte "try to climb it.",0
 
+; +3 POINTS (maybe at the top?)
 ; + climb  (walks to center of cliff)
 .byte "With a new determination",13
 .byte "you dig your fingers into",13
@@ -75,6 +76,10 @@
 ;======================================
 ; Trogdor's Outer Sanctum / Outer Cave
 ;======================================
+
+; +5 POINTS (give sub or answer question)
+; +5 POINTS (give soda or answer question)
+; +5 POINTS (give pills or answer question)
 
 ; Type any command other than "take the quiz" or "give (requested item)"
 ; after being apporached by a Keeper
@@ -160,12 +165,14 @@
 ; + (enter Trogdor's cave)
 .byte "the beaded curtain slams shut behind you. There's no turning back now.",0
 
+; +7 POINTS
 ; + throw sword
 .byte "This is it! You hurl the Trog-Sword with all your might at the sleeping Burninator.",0
 .byte "Now you've done it! Trogdor's awake and the Trog-Sword doesn't seem to be doing a whole lot.",0
 .byte "Your legs lock in fear, your eyes glaze over and you wish for some Depeasant adult undergarments. But you think you hear Trogdor whimpering!",0
 .byte "Aw crap, that's you whimpering. At least your voice still works, I guess.",0
 
+; +10 POINTS
 ; + talk trogdor
 .byte "You scream that your name is Rather Dashing and that Trogdor burninated your cottage and you're here for revenge!",0
 .byte 34,"Sup, mortal,",34," booms Trogdor. ",34,"I really appreciate you making the effort to come all the way up here and vanquish me and all. But, I'm kinda indestructible.",34,0

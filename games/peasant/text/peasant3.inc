@@ -41,6 +41,7 @@
 ; + steal riches
 .byte "Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! ",34,"You take my riches?!",34," growls the Jhonka.",0
 
+; + 7 POINTS
 ; + no
 .byte 34,"Okay. Lemme know if you see riches anywhere,",34," he grunts and goes back to his hopping. You smooth talker, you.",0
 
@@ -199,6 +200,7 @@
 ; + get pebbles/rocks (from too far)
 .byte "You do your best Mr. Fantastic impression, but you can't reach from here.",0
 
+; +5 POINTS
 ; + throw baby
 .byte "Something tells you this is a good idea and you lob the little one into the lake.",0
 .byte "You won't be arrested after all! The little guy has resurfaced safely, carrying an old bottle of soda. You take the soda and stow your swaddling buddy for takeoff.",0
@@ -262,7 +264,7 @@
 .byte "center of the lake. Looks",13
 .byte "deeper there.",0
 
-; +2 points
+; +2 POINTS
 ; + throw chicken feed
 .byte "You toss the feed into the",13
 .byte "lake. You shed a tear for",13
@@ -357,3 +359,4 @@
 .byte "What is it with you and",13
 .byte "notes?! No!! ",0
 
+; +3 POINTS: leave inn with pot on head

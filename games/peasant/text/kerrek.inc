@@ -5,11 +5,13 @@
 ; (Walk too close to the Kerrek) — {The Kerrek pounds your head into the ground}
 .byte "Your mom always told you not to take head poundings from strange Kerreks. And NOW looks what's happened. You dead. Thanks for playing.",0
 
+; + 5 POINTS
 ; + shoot Kerrek with bow
 .byte "Here goes nothin', Kid Icarus",0
 .byte "ARROWED!! Nice shot. You smote the Kerrek! He lay there stinking.",0
 .byte "A light rain heralds the washing free of the Kerrek's grip on the land. You're feeling pretty good, though, so the artless symbolism doesn't bug you.",0
 
+; + 10 POINTS
 ; + get belt
 .byte "You strap the Kerrek's belt buckle around your waist. Oh boy. You sure stink now.",0
 

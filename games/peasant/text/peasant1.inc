@@ -193,10 +193,12 @@ gary_talk_message:
 ; + turn crank (after mask, close, second time)
 .byte "The drama grips you, but the bucket is empty. On the bright side, you're getting a pretty sweet workout for your Deltoidus Rex muscles.",0
  
+; + 2 POINTS
 ; + turn crank (baby)
 .byte "You haul the bucket back up. Lucky for you, the baby is still in it and appears to be unscathed. As a bonus, it looks like he found a Meatball sub down there. Score! You take the sub.",0
 .byte "Oh, and the baby. You take the baby.",0
 
+; + 3 POINTS
 ; + put baby in bucket
 .byte "Okay, Father of the Year. You put a baby in a bucket and it quickly descends deep into the well. Yours is a black, black heart.",0
 
