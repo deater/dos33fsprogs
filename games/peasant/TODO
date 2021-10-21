@@ -53,6 +53,7 @@ Map:
 
 Peasantry:
 - Gary
+  + fly animation
   + hook up death
   + hook up mask stuff
   + hook up animation when you get kicked
