@@ -262,8 +262,10 @@ game_over.o:	game_over.s zp.inc \
 PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant1.o:	peasant1.s zp.inc inventory.inc parse_input.inc \
-		dialog_peasant2.inc \
+peasant1.o:	peasant1.s zp.inc inventory.inc \
+		parse_input.inc \
+		peasant1_actions.s \
+		DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
@@ -279,9 +281,10 @@ peasant1.o:	peasant1.s zp.inc inventory.inc parse_input.inc \
 PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant2.o:	peasant2.s zp.inc inventory.inc dialog_peasant2.inc \
+peasant2.o:	peasant2.s zp.inc inventory.inc \
 		parse_input.inc \
 		peasant2_actions.s \
+		dialog_peasant2.inc DIALOG_PEASANT2.LZSA \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
@@ -430,8 +433,13 @@ DIALOG_PEASANT1.LZSA:	dialog_peasant1
 dialog_peasant1:	dialog_peasant1.o
 	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant1.o:	dialog_peasant1.s
+dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc
 	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
+
+###
+
+dialog_peasant1.inc:	generate_all_symbols dialog_peasant1
+	./generate_all_symbols -a 0xd000 dialog_peasant1.lst > dialog_peasant1.inc
 
 ###
 
@@ -457,7 +465,7 @@ DIALOG_PEASANT3.LZSA:	dialog_peasant3
 dialog_peasant3:	dialog_peasant3.o
 	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant3.o:	dialog_peasant3.s
+dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc
 	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
 
 ###
@@ -468,7 +476,7 @@ DIALOG_PEASANT4.LZSA:	dialog_peasant4
 dialog_peasant4:	dialog_peasant4.o
 	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant4.o:	dialog_peasant4.s
+dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc
 	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
 
 ###
@@ -479,7 +487,7 @@ DIALOG_INSIDE.LZSA:	dialog_inside
 dialog_inside:	dialog_inside.o
 	ld65 -o dialog_inside dialog_inside.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_inside.o:	dialog_inside.s
+dialog_inside.o:	dialog_inside.s text/inside.inc
 	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
 
 ###
@@ -490,7 +498,7 @@ DIALOG_CLIFF.LZSA:	dialog_cliff
 dialog_cliff:	dialog_cliff.o
 	ld65 -o dialog_cliff dialog_cliff.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_cliff.o:	dialog_cliff.s
+dialog_cliff.o:	dialog_cliff.s text/cliff.inc
 	ca65 -o dialog_cliff.o dialog_cliff.s -l dialog_cliff.lst
 
 ####

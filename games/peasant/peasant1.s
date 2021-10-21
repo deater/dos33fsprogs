@@ -1,6 +1,7 @@
 ; Peasant's Quest
 
 ; Peasantry Part 1 (top line of map)
+
 ; 	Gary, Kerrek 1, Well, Yellow Tree, Waterfall
 
 WHICH_PEASANTRY = 0
@@ -14,17 +15,27 @@ WHICH_PEASANTRY = 0
 
 .include "qload.inc"
 .include "inventory.inc"
+.include "parse_input.inc"
 
-peasant_quest:
+peasantry1:
+
 	lda	#0
 	sta	GAME_OVER
 	sta	FRAME
 
-	jsr	hgr_make_tables
+	jsr	hgr_make_tables		; necessary?
+	jsr	hgr2			; necessary?
 
-	jsr	hgr2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	; decompress dialog to $d000
 
+	lda	#<peasant1_text_lzsa
+	sta	getsrc_smc+1
+	lda	#>peasant1_text_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$D0
+
+	jsr	decompress_lzsa2_fast
 
 	; update map location
 
@@ -43,6 +54,20 @@ peasant_quest:
 new_location:
 	lda	#0
 	sta	GAME_OVER
+
+	;==========================
+	; load updated verb table
+
+	; we are PEASANT1 so locations 0...4 map to 0...4
+
+	ldx	MAP_LOCATION
+
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
+
 
 	;=====================
 	; load bg
@@ -154,8 +179,6 @@ game_over:
 .include "peasant_move.s"
 
 ;.include "parse_input.s"
-.include "parse_input.inc"
-
 
 .include "score.s"
 
@@ -219,3 +242,23 @@ map_priority_hi:
 	.byte	>leaning_tree_priority_lzsa	; 3	-- leaning tree
 	.byte	>waterfall_priority_lzsa	; 4	-- waterfall
 
+
+verb_tables_low:
+	.byte   <gary_verb_table		; 0	-- gary the horse
+	.byte   <gary_verb_table		; 1	-- top footprints
+	.byte   <gary_verb_table		; 2	-- wishing well
+	.byte   <gary_verb_table		; 3	-- leaning tree
+	.byte   <gary_verb_table		; 4	-- waterfall
+
+verb_tables_hi:
+	.byte   >gary_verb_table		; 0	-- gary the horse
+	.byte   >gary_verb_table		; 1	-- top footprints
+	.byte   >gary_verb_table		; 2	-- wishing well
+	.byte   >gary_verb_table		; 3	-- leaning tree
+	.byte   >gary_verb_table		; 4	-- waterfall
+
+
+peasant1_text_lzsa:
+.incbin "DIALOG_PEASANT1.LZSA"
+
+.include "peasant1_actions.s"

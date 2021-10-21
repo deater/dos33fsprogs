@@ -4,8 +4,7 @@
 
 ;	haystack, puddle, archery, river, knight (pass)
 
-
-WHICH_PEASANTRY=1
+WHICH_PEASANTRY = 1
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -18,8 +17,8 @@ WHICH_PEASANTRY=1
 .include "inventory.inc"
 .include "parse_input.inc"
 
+peasantry2:
 
-peasant_quest:
 	lda	#0
 	sta	GAME_OVER
 	sta	FRAME
@@ -294,7 +293,5 @@ verb_tables_hi:
 
 peasant2_text_lzsa:
 .incbin "DIALOG_PEASANT2.LZSA"
-
-;.include "dialog_peasant2.inc"
 
 .include "peasant2_actions.s"

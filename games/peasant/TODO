@@ -53,6 +53,12 @@ Map:
 
 Peasantry:
 - Gary
+  + hook up death
+  + hook up mask stuff
+  + hook up animation when you get kicked
+  + hook up scare animation 
+  + hook up random number picks scare message
+  + hook up after-gary, fence hole and no horse
 - Kerrek 1
 - Well
 - Yellow Tree
