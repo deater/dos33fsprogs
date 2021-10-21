@@ -153,8 +153,8 @@ game_over:
 
 .include "peasant_move.s"
 
-.include "parse_input.s"
-
+;.include "parse_input.s"
+.include "parse_input.inc"
 
 
 .include "score.s"

@@ -11,6 +11,7 @@ WHICH_PEASANTRY=0
 
 .include "qload.inc"
 .include "inventory.inc"
+.include "parse_input.inc"
 
 cliff_base:
 	lda	#0
@@ -149,7 +150,7 @@ game_over:
 
 .include "peasant_move.s"
 
-.include "parse_input.s"
+;.include "parse_input.s"
 
 ;.include "inventory.s"
 

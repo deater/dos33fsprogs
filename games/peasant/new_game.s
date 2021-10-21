@@ -29,21 +29,21 @@ start_new_game:
         lda     LCBANK1
         lda     LCBANK1
 
-	; load dialog to $20
+	; load parse_input compressed to $2000
 
-        lda     #LOAD_DIALOG2
+        lda     #LOAD_PARSE_INPUT
         sta     WHICH_LOAD
 
         jsr     load_file
 
-	; decompress to $E000
+	; decompress to $EE00
 
 	lda	#$00
 	sta	getsrc_smc+1
         lda	#$20
         sta     getsrc_smc+2
 
-        lda     #$E0
+        lda     #$EE
 
         jsr     decompress_lzsa2_fast
 

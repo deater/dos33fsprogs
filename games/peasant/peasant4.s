@@ -15,6 +15,7 @@ WHICH_PEASANTRY = 3
 
 .include "qload.inc"
 .include "inventory.inc"
+.include "parse_input.inc"
 
 peasant_quest:
 	lda	#0
@@ -176,7 +177,7 @@ game_over:
 
 .include "new_map_location.s"
 
-.include "parse_input.s"
+;.include "parse_input.s"
 
 ;.include "inventory.s"
 

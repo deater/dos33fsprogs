@@ -1,9 +1,9 @@
-;.include "zp.inc"
-;.include "hardware.inc"
-;.include "qload.inc"
+.include "zp.inc"
+.include "hardware.inc"
+.include "qload.inc"
 
-;.include "version.inc"
-;.include "inventory.inc"
+.include "version.inc"
+.include "inventory.inc"
 
 .include "tokens.inc"
 

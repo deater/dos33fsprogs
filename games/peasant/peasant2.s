@@ -16,6 +16,8 @@ WHICH_PEASANTRY=1
 
 .include "qload.inc"
 .include "inventory.inc"
+.include "parse_input.inc"
+
 
 peasant_quest:
 	lda	#0
@@ -24,6 +26,18 @@ peasant_quest:
 
 	jsr	hgr_make_tables		; necessary?
 	jsr	hgr2			; necessary?
+
+	; decompress dialog to $D000
+
+	lda	#<peasant2_text_lzsa
+        sta     getsrc_smc+1
+        lda     #>peasant2_text_lzsa
+        sta     getsrc_smc+2
+
+        lda     #$D0
+
+        jsr     decompress_lzsa2_fast
+
 
 	; update map location
 
@@ -197,7 +211,7 @@ to_left:
 
 .include "score.s"
 
-.include "parse_input.s"
+;.include "parse_input.s"
 
 .include "keyboard.s"
 
@@ -278,8 +292,8 @@ verb_tables_hi:
 
 
 
-;peasant2_text_lzsa:
-;.incbin "DIALOG_PEASANT2.LZSA"
+peasant2_text_lzsa:
+.incbin "DIALOG_PEASANT2.LZSA"
 
 ;.include "dialog_peasant2.inc"
 

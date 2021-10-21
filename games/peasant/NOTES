@@ -31,6 +31,8 @@ peasant2	18302
 		17918 -- text parsing nearing completion
 		18208 -- mountain pass parsing working
 		18780 -- most dialog hooked up
+		17394 -- move loadsave to qload.inc
+		17100 -- move parse_input high and move p2 strings back in
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -77,8 +79,8 @@ $D0-$DF (Language Card BANK2)	Mockingboard music/PT3-routines
 $E0-$FF (Language Card) ?????
 
 $D0-$DF (bank2) inventory
-$D0-$DF (bank1) common parser code
-$E0-$FF per-level parser strings
+$D0-$ED (bank1) per-levelstrings
+$EE-$FF common parser code
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
