@@ -1,4 +1,12 @@
+;.include "zp.inc"
+;.include "hardware.inc"
+;.include "qload.inc"
+
+;.include "version.inc"
+;.include "inventory.inc"
+
 .include "tokens.inc"
+
 
 	;==========================
 	; parse input
@@ -544,13 +552,6 @@ finish_parse_message:
 restore_parse_message:
 
 	jsr	hgr_partial_restore
-
-;	lda     last_bg_l
-;	sta     getsrc_smc+1
-;	lda     last_bg_h
-;	sta     getsrc_smc+2
-;	lda     #$40
-;	jsr	decompress_lzsa2_fast
 
 
 done_parse_message:

@@ -120,7 +120,7 @@ mockingboard_notfound2:
 .include "new_game.s"
 
 
-.include "wait_keypress.s"
+;.include "wait_keypress.s"
 
 .include "intro_cottage.s"
 .include "intro_lake_w.s"

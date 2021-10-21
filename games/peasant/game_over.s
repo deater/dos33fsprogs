@@ -157,14 +157,14 @@ done_beep:
 .include "hgr_sprite.s"
 .include "speaker_beeps.s"
 
-.include "wait_keypress.s"
+;.include "wait_keypress.s"
 
 .include "score.s"
 
 .include "wait.s"
 .include "wait_a_bit.s"
+;.include "loadsave_menu.s"
 
-.include "loadsave_menu.s"
 
 .include "graphics_over/game_over_graphics.inc"
 

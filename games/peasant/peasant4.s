@@ -147,11 +147,13 @@ game_over:
 
 
 
-;.include "decompress_fast_v2.s"
-.include "wait_keypress.s"
+
 
 .include "draw_peasant.s"
 
+; moved to qload
+
+;.include "decompress_fast_v2.s"
 ;.include "hgr_font.s"
 ;.include "draw_box.s"
 ;.include "hgr_rectangle.s"
@@ -163,6 +165,8 @@ game_over:
 ;.include "hgr_text_box.s"
 ;.include "clear_bottom.s"
 ;.include "hgr_hgr2.s"
+;.include "wait_keypress.s"
+;.include "loadsave_menu.s"
 
 .include "gr_copy.s"
 
@@ -185,22 +189,8 @@ game_over:
 .include "graphics_peasantry/priority_peasant4.inc"
 
 .include "version.inc"
-.include "loadsave_menu.s"
 
-;help_message:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"I don't understand. Type",13
-;.byte	     "HELP for assistances.",0
 
-;fake_error1:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?SYNTAX ERROR IN 1020",13
-;.byte	     "]",127,0
-
-;fake_error2:
-;.byte   0,43,24, 0,253,82
-;.byte   8,41,"?UNDEF'D STATEMENT ERROR",13
-;.byte	     "]",127,0
 
 
 map_backgrounds_low:

@@ -538,9 +538,10 @@ game_over:
 	jmp	boat
 
 
-;.include "decompress_fast_v2.s"
-.include "wait_keypress.s"
 
+; moved to qload
+
+;.include "decompress_fast_v2.s"
 ;.include "hgr_font.s"
 ;.include "draw_box.s"
 ;.include "hgr_rectangle.s"
@@ -549,10 +550,12 @@ game_over:
 ;.include "hgr_input.s"
 ;.include "hgr_tables.s"
 ;.include "hgr_text_box.s"
+;.include "wait_keypress.s"
+;.include "hgr_hgr2.s"
 
 .include "hgr_2x14_sprite_mask.s"
 .include "hgr_sprite.s"
-;.include "hgr_hgr2.s"
+
 
 .include "score.s"
 

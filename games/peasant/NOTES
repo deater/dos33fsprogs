@@ -12,7 +12,7 @@ Inventory:
 	3CEE - 4a5f	= D71 = 3441 bytes
 Common parser:
 	4ac - 11af	= D03	3331 bytes
-
+	4c2 - 156e	= 10ac  4268 bytes
 
 
 
@@ -30,6 +30,7 @@ peasant2	18302
 		17122 -- add all verbs in (+), optimize text box drawing (-)
 		17918 -- text parsing nearing completion
 		18208 -- mountain pass parsing working
+		18780 -- most dialog hooked up
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -62,7 +63,7 @@ $02	Disk Lookup
 $03	Disk Lookup, IRQ vectors
 $04-$07 Text/GR page 1 (priority map)
 $08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
-$0B-$1F QLOAD disk routines and HGR drawing routines
+$0B-$1F QLOAD disk routines and HGR drawing routines (5120 bytes)
 $20-$3F HGR Page 1
 $40-$5f HGR Page 2
 $60-$AF Programs	(roughly 22k available?) (we max at 20k on disk)

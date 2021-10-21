@@ -188,8 +188,6 @@ to_left:
 	rts
 
 
-.include "wait_keypress.s"
-
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
@@ -213,7 +211,7 @@ to_left:
 
 ;.include "inventory.s"
 
-.include "loadsave_menu.s"
+
 
 
 ; moved to QLOAD
@@ -230,6 +228,8 @@ to_left:
 ;.include "hgr_text_box.s"
 ;.include "clear_bottom.s"
 ;.include "hgr_hgr2.s"
+;.include "wait_keypress.s"
+;.include "loadsave_menu.s"
 
 
 

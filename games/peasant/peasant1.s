@@ -142,7 +142,8 @@ game_over:
 	rts
 
 
-.include "wait_keypress.s"
+
+;.include "inventory.s"
 
 .include "draw_peasant.s"
 
@@ -154,7 +155,7 @@ game_over:
 
 .include "parse_input.s"
 
-;.include "inventory.s"
+
 
 .include "score.s"
 
@@ -164,7 +165,7 @@ game_over:
 .include "wait_a_bit.s"
 
 .include "version.inc"
-.include "loadsave_menu.s"
+
 
 
 ; Moved to qload
@@ -180,6 +181,8 @@ game_over:
 ;.include "hgr_text_box.s"
 ;.include "clear_bottom.s"
 ;.include "hgr_hgr2.s"
+;.include "wait_keypress.s"
+;.include "loadsave_menu.s"
 
 ;.include "text/peasant1.inc"
 

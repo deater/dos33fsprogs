@@ -254,6 +254,8 @@ length_array:
 .include "clear_bottom.s"
 .include "hgr_hgr2.s"		; this one is maybe only needed once?
 .include "gr_offsets.s"
+.include "loadsave_menu.s"
+.include "wait_keypress.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0

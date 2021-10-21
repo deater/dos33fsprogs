@@ -127,6 +127,11 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr_put_char_cursor qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s vgi_simple_rectangle qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s peasant_text qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s save_menu qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s load_menu qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s location_names_l qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s location_names_h qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s wait_until_keypress qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 	echo "driveoff = \$$A22" >> qload.inc
@@ -385,6 +390,18 @@ SAVE3:	save3.o
 
 save3.o:	save3.s
 	ca65 -o save3.o save3.s -l save3.lst
+
+###
+
+PARSE_INPUT.LZSA:	parse_input
+	$(LZSA) -r -f2 parse_input PARSE_INPUT.LZSA
+
+parse_input:	parse_input.o
+	ld65 -o parse_input parse_input.o -C ../../linker_scripts/apple2_d000.inc
+
+parse_input.o:	parse_input.s tokens.inc
+	ca65 -o parse_input.o parse_input.s -l parse_input.lst
+
 
 ###
 

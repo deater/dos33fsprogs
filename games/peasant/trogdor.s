@@ -313,7 +313,7 @@ game_over:
 
 
 ;.include "decompress_fast_v2.s"
-.include "wait_keypress.s"
+;.include "wait_keypress.s"
 
 
 
