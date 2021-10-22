@@ -691,6 +691,7 @@ verb_lookup:
 .byte "ATTACK",VERB_ATTACK|$80
 .byte "HUG",VERB_HUG|$80
 .byte "HIDE",VERB_HIDE|$80
+.byte "MOVE",VERB_MOVE|$80
 .byte $00
 
 
@@ -901,6 +902,7 @@ noun_lookup:
 .byte "IN HAY",NOUN_IN_HAY|$80
 .byte "PUDDLE",NOUN_PUDDLE|$80
 .byte "MENDELEV",NOUN_MENDELEV|$80
+.byte "BLEED",NOUN_BLEED|$80
 .byte $00
 
 

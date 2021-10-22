@@ -1,310 +1,239 @@
 .include "tokens.inc"
 
-.if 0
 	;=======================
 	;=======================
 	;=======================
-	; Gary the Horse
+	; Ned's Cottage
 	;=======================
 	;=======================
 	;=======================
 
-gary_verb_table:
-	.byte VERB_BREAK
-	.word gary_break-1
+ned_cottage_verb_table:
 	.byte VERB_CLIMB
-	.word gary_climb-1
-	.byte VERB_FEED
-	.word gary_feed-1
+	.word ned_cottage_climb-1
+	.byte VERB_DEPLOY
+	.word ned_cottage_deploy-1
+	.byte VERB_DROP
+	.word ned_cottage_drop-1
 	.byte VERB_GET
-	.word gary_get-1
+	.word ned_cottage_get-1
 	.byte VERB_JUMP
-	.word gary_jump-1
-	.byte VERB_KICK
-	.word gary_kick-1
-	.byte VERB_KILL
-	.word gary_kill-1
+	.word ned_cottage_jump-1
+	.byte VERB_KNOCK
+	.word ned_cottage_knock-1
 	.byte VERB_LOOK
-	.word gary_look-1
-	.byte VERB_PET
-	.word gary_pet-1
-	.byte VERB_PUNCH
-	.word gary_punch-1
-	.byte VERB_SIT
-	.word gary_sit-1
-	.byte VERB_RIDE
-	.word gary_ride-1
-	.byte VERB_SCARE
-	.word gary_scare-1
-	.byte VERB_TALK
-	.word gary_talk-1
-	.byte VERB_WEAR
-	.word gary_wear-1
+	.word ned_cottage_look-1
+	.byte VERB_MOVE
+	.word ned_cottage_move-1
+	.byte VERB_OPEN
+	.word ned_cottage_open-1
+	.byte VERB_USE
+	.word ned_cottage_use-1
 	.byte 0
 
 	;================
-	; break
+	; climb/jump
 	;================
-gary_sit:
-gary_break:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_STUMP
-	beq	gary_sit_stump
-
-	jmp	parse_common_unknown
-
-gary_sit_stump:
-	jmp	gary_look_at_stump
-
-	;================
-	; climb
-	;================
-gary_jump:
-gary_climb:
+ned_cottage_jump:
+ned_cottage_climb:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_FENCE
-	beq	gary_climb_fence
+	beq	ned_cottage_climb_fence
 
 	jmp	parse_common_unknown
 
-gary_climb_fence:
-	ldx	#<gary_climb_fence_message
-	ldy	#>gary_climb_fence_message
+ned_cottage_climb_fence:
+	ldx	#<ned_cottage_climb_fence_message
+	ldy	#>ned_cottage_climb_fence_message
 	jmp	finish_parse_message
 
-
 	;================
-	; feed
+	; knock
 	;================
-gary_feed:
+ned_cottage_knock:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_GARY
-	beq	gary_feed_horse
-	cmp	#NOUN_HORSE
-	beq	gary_feed_horse
+	cmp	#NOUN_BLEED
+	beq	ned_cottage_knock_door_bleed
+	cmp	#NOUN_DOOR
+	beq	ned_cottage_knock_door
+	cmp	#NOUN_NONE
+	beq	ned_cottage_knock_door
 
 	jmp	parse_common_unknown
 
-gary_feed_horse:
-	ldx	#<gary_feed_horse_message
-	ldy	#>gary_feed_horse_message
+ned_cottage_knock_door:
+	ldx	#<ned_cottage_knock_door_message
+	ldy	#>ned_cottage_knock_door_message
 	jmp	finish_parse_message
+
+ned_cottage_knock_door_bleed:
+	lda	GAME_STATE_2
+	and	#KNUCKLES_BLEED
+	beq	not_bleeding
+bleeding:
+
+	ldx	#<ned_cottage_knock_door_bleed_message2
+	ldy	#>ned_cottage_knock_door_bleed_message2
+	jmp	finish_parse_message
+
+
+not_bleeding:
+	lda	GAME_STATE_2
+	ora	#KNUCKLES_BLEED
+	sta	GAME_STATE_2
+
+	ldx	#<ned_cottage_knock_door_bleed_message
+	ldy	#>ned_cottage_knock_door_bleed_message
+	jmp	finish_parse_message
+
+
+	;================
+	; open
+	;================
+ned_cottage_open:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	ned_cottage_open_door
+	cmp	#NOUN_NONE
+	beq	ned_cottage_open_door
+
+	jmp	parse_common_unknown
+
+ned_cottage_open_door:
+	ldx	#<ned_cottage_open_door_message
+	ldy	#>ned_cottage_open_door_message
+	jmp	finish_parse_message
+
+	;================
+	; push/pull
+	;================
+ned_cottage_push:
+ned_cottage_pull:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	ned_cottage_push_door
+
+	jmp	parse_common_unknown
+
+ned_cottage_push_door:
+	ldx	#<ned_cottage_push_door_message
+	ldy	#>ned_cottage_push_door_message
+	jmp	finish_parse_message
+
 
 
 	;================
 	; get
 	;================
-gary_get:
+ned_cottage_get:
+ned_cottage_move:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_FLIES
-	beq	gary_get_flies
+	cmp	#NOUN_ROCK
+	beq	ned_cottage_rock
 
 	; else "probably wish" message
 
 	jmp	parse_common_get
 
-gary_get_flies:
-	ldx	#<gary_get_flies_message
-	ldy	#>gary_get_flies_message
+ned_cottage_rock:
+	ldx	#<ned_cottage_get_rock_message
+	ldy	#>ned_cottage_get_rock_message
 	jmp	finish_parse_message
 
-	;===================
-	; kick/kill/punch
-	;===================
-
-gary_kick:
-gary_kill:
-gary_punch:
-
+	;================
+	; deploy/drop/use baby
+	;================
+ned_cottage_deploy:
+ned_cottage_drop:
+ned_cottage_use:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_GARY
-	beq	kick_gary
-	cmp	#NOUN_HORSE
-	beq	kick_gary
-
-	cmp	#NOUN_FLIES
-	beq	kick_flies
-
-	cmp	#NOUN_STUMP
-	beq	kick_stump
+	cmp	#NOUN_BABY
+	beq	ned_cottage_baby
 
 	jmp	parse_common_unknown
 
-kick_gary:
-	; TODO: this kills you
-	ldx	#<gary_kick_horse_message
-	ldy	#>gary_kick_horse_message
-	jsr	partial_message_step
-
-	ldx	#<gary_kick_horse_message2
-	ldy	#>gary_kick_horse_message2
+ned_cottage_baby:
+	ldx	#<ned_cottage_baby_before_message
+	ldy	#>ned_cottage_baby_before_message
 	jmp	finish_parse_message
 
-kick_flies:
-	ldx	#<gary_kick_flies_message
-	ldy	#>gary_kick_flies_message
+
+	;===================
+	; break/kick/punch
+	;===================
+ned_cottage_break:
+ned_cottage_kick:
+ned_cottage_punch:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	kick_cottage
+
+	jmp	parse_common_unknown
+
+kick_cottage:
+	ldx	#<ned_cottage_break_door_message
+	ldy	#>ned_cottage_break_door_message
 	jmp	finish_parse_message
 
-kick_stump:
-	ldx	#<gary_kick_stump_message
-	ldy	#>gary_kick_stump_message
-	jmp	finish_parse_message
 
 	;=================
 	; look
 	;=================
 
-gary_look:
+ned_cottage_look:
 
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_FENCE
-	beq	gary_look_at_fence
-	cmp	#NOUN_FLIES
-	beq	gary_look_at_flies
-	cmp	#NOUN_GARY
-	beq	gary_look_at_horse
-	cmp	#NOUN_HORSE
-	beq	gary_look_at_horse
-	cmp	#NOUN_STUMP
-	beq	gary_look_at_stump
+	beq	ned_cottage_look_at_fence
+	cmp	#NOUN_COTTAGE
+	beq	ned_cottage_look_at_cottage
+	cmp	#NOUN_ROCK
+	beq	ned_cottage_look_at_rock
+	cmp	#NOUN_HOLE
+	beq	ned_cottage_look_at_hole
 
 	cmp	#NOUN_NONE
-	beq	gary_look_at
+	beq	ned_cottage_look_at
 
 	jmp	parse_common_look
 
-gary_look_at:
-	ldx	#<gary_look_message
-	ldy	#>gary_look_message
+ned_cottage_look_at:
+	ldx	#<ned_cottage_look_message
+	ldy	#>ned_cottage_look_message
 	jmp	finish_parse_message
 
-gary_look_at_fence:
-	ldx	#<gary_look_fence_message
-	ldy	#>gary_look_fence_message
+ned_cottage_look_at_cottage:
+	ldx	#<ned_cottage_look_cottage_message
+	ldy	#>ned_cottage_look_cottage_message
 	jmp	finish_parse_message
 
-gary_look_at_flies:
-	ldx	#<gary_look_flies_message
-	ldy	#>gary_look_flies_message
+ned_cottage_look_at_fence:
+	ldx	#<ned_cottage_look_fence_message
+	ldy	#>ned_cottage_look_fence_message
 	jmp	finish_parse_message
 
-gary_look_at_gary:
-gary_look_at_horse:
-	ldx	#<gary_look_horse_message
-	ldy	#>gary_look_horse_message
+ned_cottage_look_at_rock:
+	ldx	#<ned_cottage_look_rock_message
+	ldy	#>ned_cottage_look_rock_message
 	jmp	finish_parse_message
 
-gary_look_at_stump:
-	ldx	#<gary_look_stump_message
-	ldy	#>gary_look_stump_message
-	jmp	finish_parse_message
-
-	;================
-	; pet
-	;================
-gary_pet:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_GARY
-	beq	gary_pet_horse
-	cmp	#NOUN_HORSE
-	beq	gary_pet_horse
-
-	jmp	parse_common_unknown
-
-gary_pet_horse:
-	ldx	#<gary_pet_horse_message
-	ldy	#>gary_pet_horse_message
-	jmp	finish_parse_message
-
-
-	;================
-	; ride
-	;================
-gary_ride:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_GARY
-	beq	gary_ride_horse
-	cmp	#NOUN_HORSE
-	beq	gary_ride_horse
-
-	jmp	parse_common_unknown
-
-gary_ride_horse:
-	ldx	#<gary_ride_horse_message
-	ldy	#>gary_ride_horse_message
-	jmp	finish_parse_message
-
-	;================
-	; scare
-	;================
-gary_scare:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_GARY
-	beq	gary_scare_horse
-	cmp	#NOUN_HORSE
-	beq	gary_scare_horse
-
-	jmp	parse_common_unknown
-
-	; FIXME: randomly pick from 3 choices
-gary_scare_horse:
-	ldx	#<gary_scare_horse_message1
-	ldy	#>gary_scare_horse_message1
+ned_cottage_look_at_hole:
+	ldx	#<ned_cottage_look_hole_message
+	ldy	#>ned_cottage_look_hole_message
 	jmp	finish_parse_message
 
 
 
-	;================
-	; talk
-	;================
-gary_talk:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_GARY
-	beq	gary_talk_horse
-	cmp	#NOUN_HORSE
-	beq	gary_talk_horse
-	cmp	#NOUN_STUMP
-	beq	gary_look_at_stump
-	cmp	#NOUN_NONE
-	beq	gary_talk_horse
-
-	jmp	parse_common_talk
-
-gary_talk_horse:
-	ldx	#<gary_talk_message
-	ldy	#>gary_talk_message
-	jmp	finish_parse_message
-
-
-	;===================
-	; wear mask
-	;===================
-
-gary_wear:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_MASK
-	beq	wear_mask
-
-	jmp	parse_common_unknown
-
-wear_mask:
-	jmp	parse_common_unknown
-
-
-
-
+.if 0
 
 	;=======================
 	;=======================

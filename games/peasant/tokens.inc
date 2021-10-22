@@ -72,7 +72,8 @@ VERB_HELP	= 70
 VERB_ATTACK	= 71
 VERB_HUG	= 72
 VERB_HIDE	= 73
-VERB_ALL_DONE	= 74	; not a verb, but indicating end, must be last
+VERB_MOVE	= 74
+VERB_ALL_DONE	= 75	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;
@@ -176,5 +177,6 @@ NOUN_STONE	= 97
 NOUN_IN_HAY	= 98
 NOUN_PUDDLE	= 99
 NOUN_MENDELEV	= 100
+NOUN_BLEED	= 101
 ;
-NOUN_UNKNOWN	= 101
+NOUN_UNKNOWN	= 102

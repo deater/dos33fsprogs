@@ -4,6 +4,7 @@
 ;====================================
 
 ; + look
+ned_cottage_look_message:
 .byte "There's a run-of-the-mill",13
 .byte "non-burninated",13
 .byte "thatched-roof cottage",13
@@ -11,6 +12,7 @@
 .byte "a little shoddy.",0
 
 ; + look cottage
+ned_cottage_look_cottage_message:
 .byte "A run-of-the-mill,",13
 .byte "non-burninated",13
 .byte "thatched-roof cottage",13
@@ -18,6 +20,7 @@
 .byte "little shoddy.",0
 
 ; + open door
+ned_cottage_open_door_message:
 .byte "How? There's no knob.",0
 
 ; + open door (after baby opens)
@@ -25,33 +28,46 @@
 
 ; + pull door
 ; + push door
+ned_cottage_push_door_message:
 .byte "It doesn't budge, man.",0
 
 ; + knock
+ned_cottage_knock_door_message:
 .byte "You could knock until your",13
 .byte "knuckles bleed. Nobody's",13
 .byte "home.",0
 
 ; + knock until knuckles bleed
+ned_cottage_knock_door_bleed_message:
 .byte "You knock for about 4 hours",13
 .byte "until your knuckles are raw",13
 .byte "and bloody. That was fun!",0
 
 ; + knock until knuckles bleed (again)
+ned_cottage_knock_door_bleed_message2:
 .byte "You done that already. A",13
 .byte "great time was had by all.",0
 
 ; + break door
 ; + kick door
-; + punch door 
+; + punch door
+ned_cottage_break_door_message:
 .byte "Violence is not the answer.",0
 
 ; + look fence
+ned_cottage_look_fence_message:
 .byte "A standard peasant fence.",13
 .byte "Trogdor makes milk's meat",13
 .byte "outta these things.",0
 
-; + look hole (before deploying baby)
+; + climb/jump fence
+ned_cottage_climb_fence_message:
+.byte "No, you have business to",13
+.byte "attend to here in",13
+.byte "Peasantry.",0
+
+; + look hole (before deploying baby) (even if rock not moved yet)
+ned_cottage_look_hole_message:
 .byte "You peer into the tiny",13
 .byte "opening. The cottage",13
 .byte "appears to be empty.",0
@@ -60,6 +76,7 @@
 .byte "There is no baby here, but there's an open door on the other side of the room. If you could only get to it somehow!",0
 
 ; + look rock (before removing it)
+ned_cottage_look_rock_message:
 .byte "There appears to be a loose",13
 .byte "stone towards the back of",13
 .byte "the cottage.",0
@@ -69,6 +86,7 @@
 
 ; + get rock	+2 POINTS
 ; + move rock
+ned_cottage_get_rock_message:
 .byte "You slide the stone over to",13
 .byte "reveal a little hole. If",13
 .byte "only you could cut off your",13
@@ -104,6 +122,7 @@
 .byte "You grow apart and the letters from him become fewer and fewer. He develops a severe mead problem and blames you for never being there.",0
 
 ; + deploy/drop/use baby (before baby)
+ned_cottage_baby_before_message:
 .byte "Swell idea, but is you",13
 .byte "ain't my baby? I.e. you",13
 .byte "ain't got one?",0
