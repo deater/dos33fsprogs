@@ -250,14 +250,14 @@ map_priority_hi:
 
 
 verb_tables_low:
-	.byte	<crooked_tree_verb_table	; 15	-- empty hut
+	.byte	<ned_cottage_verb_table		; 15	-- empty hut
 	.byte	<crooked_tree_verb_table	; 16	-- ned
 	.byte	<crooked_tree_verb_table	; 17	-- bottom footprints
 	.byte	<crooked_tree_verb_table	; 18	-- cottage lady
 	.byte	<crooked_tree_verb_table	; 19	-- crooked tree
 
 verb_tables_hi:
-	.byte	>crooked_tree_verb_table	; 15	-- empty hut
+	.byte	>ned_cottage_verb_table		; 15	-- empty hut
 	.byte	>crooked_tree_verb_table	; 16	-- ned
 	.byte	>crooked_tree_verb_table	; 17	-- bottom footprints
 	.byte	>crooked_tree_verb_table	; 18	-- cottage lady

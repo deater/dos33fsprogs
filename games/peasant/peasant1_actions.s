@@ -580,115 +580,54 @@ archery_talk_too_far:
 	ldx	#<archery_talk_far_message
 	ldy	#>archery_talk_far_message
 	jmp	finish_parse_message
+.endif
 
 
+	;=======================
+	;=======================
+	;=======================
+	; Yellow Tree
+	;=======================
+	;=======================
+	;=======================
 
-	;=======================
-	;=======================
-	;=======================
-	; River and Stone
-	;=======================
-	;=======================
-	;=======================
-
-river_stone_verb_table:
-        .byte VERB_GET
-        .word river_stone_get-1
+yellow_tree_verb_table:
         .byte VERB_LOOK
-        .word river_stone_look-1
-        .byte VERB_STEAL
-        .word river_stone_steal-1
-        .byte VERB_SWIM
-        .word river_stone_swim-1
-        .byte VERB_TAKE
-        .word river_stone_take-1
+        .word yellow_tree_look-1
 	.byte 0
-
-
-	;================
-	; get
-	;================
-river_stone_steal:
-river_stone_take:
-river_stone_get:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_ROCK
-	beq	river_get_rock
-	cmp	#NOUN_STONE
-	beq	river_get_rock
-
-	; else "probably wish" message
-
-	jmp	parse_common_get
-
-river_get_rock:
-	ldx	#<river_get_rock_message
-	ldy	#>river_get_rock_message
-	jmp	finish_parse_message
 
 	;=================
 	; look
 	;=================
 
-river_stone_look:
+yellow_tree_look:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROCK
-	beq	river_look_at_rock
-	cmp	#NOUN_STONE
-	beq	river_look_at_rock
-	cmp	#NOUN_WATER
-	beq	river_look_at_water
-	cmp	#NOUN_RIVER
-	beq	river_look_at_water
+	cmp	#NOUN_TREE
+	beq	yellow_tree_look_tree
+	cmp	#NOUN_COTTAGE
+	beq	yellow_tree_look_cottage
 	cmp	#NOUN_NONE
-	beq	river_look_at
+	beq	yellow_tree_look_at
 
 	jmp	parse_common_look
 
-river_look_at:
-	ldx	#<river_look_message
-	ldy	#>river_look_message
+yellow_tree_look_at:
+	ldx	#<yellow_tree_look_message
+	ldy	#>yellow_tree_look_message
 	jmp	finish_parse_message
 
-river_look_at_rock:
-	ldx	#<river_look_at_rock_message
-	ldy	#>river_look_at_rock_message
+yellow_tree_look_cottage:
+	ldx	#<yellow_tree_look_cottage_message
+	ldy	#>yellow_tree_look_cottage_message
 	jmp	finish_parse_message
 
-river_look_at_water:
-	ldx	#<river_look_at_water_message
-	ldy	#>river_look_at_water_message
+yellow_tree_look_tree:
+	ldx	#<yellow_tree_look_tree_message
+	ldy	#>yellow_tree_look_tree_message
 	jmp	finish_parse_message
 
-
-
-	;===================
-	; swim
-	;===================
-
-river_stone_swim:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_WATER
-	beq	river_swim
-	cmp	#NOUN_RIVER
-	beq	river_swim
-	cmp	#NOUN_ROCK
-	beq	river_swim
-	cmp	#NOUN_STONE
-	beq	river_swim
-
-	jmp	parse_common_unknown
-
-river_swim:
-	ldx	#<river_swim_message
-	ldy	#>river_swim_message
-	jmp	finish_parse_message
-.endif
 
 	;=======================
 	;=======================
