@@ -248,14 +248,14 @@ verb_tables_low:
 	.byte   <gary_verb_table		; 1	-- top footprints
 	.byte   <gary_verb_table		; 2	-- wishing well
 	.byte   <gary_verb_table		; 3	-- leaning tree
-	.byte   <gary_verb_table		; 4	-- waterfall
+	.byte   <waterfall_verb_table		; 4	-- waterfall
 
 verb_tables_hi:
 	.byte   >gary_verb_table		; 0	-- gary the horse
 	.byte   >gary_verb_table		; 1	-- top footprints
 	.byte   >gary_verb_table		; 2	-- wishing well
 	.byte   >gary_verb_table		; 3	-- leaning tree
-	.byte   >gary_verb_table		; 4	-- waterfall
+	.byte   >waterfall_verb_table		; 4	-- waterfall
 
 
 peasant1_text_lzsa:
