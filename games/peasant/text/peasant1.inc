@@ -150,24 +150,29 @@ gary_talk_message:
 ;=========================
 
 ; (Leave the screen after putting the baby in the bucket)
-.byte "ice try. Ditch the baby at the bottom of the well, eh? Thought you'd be able to just walk away and it's nothing by mead and wenches from now on, huh? Well guess what? You dead. Thanks for playing.",0
+.byte "Nice try. Ditch the baby at the bottom of the well, eh? Thought you'd be able to just walk away and it's nothing by mead and wenches from now on, huh? Well guess what? You dead. Thanks for playing.",0
 
 ; + look
+well_look_at_message:
 .byte "There's a really generic well here. Oh, and apparently it's autumn on this screen.",0
 
 ; + look well
+well_look_at_well_message:
 .byte "Pretty average. You're not a big well person. You're more into bridges. It does have a cute little bucket though. Your dad liked buckets. Oh, and there's a metal crank too. Meemaw loved cranks.",0
 
 ; + look crank (before putting pebbles in the bucket)
+well_look_at_crank_message:
 .byte "It looks rusted in place.",0
 
 ; + look crank (after putting pebbles in the bucket)
 .byte "That is a bonafide crank. It seems to work now.",0
 
 ; + look in well
+well_look_in_well_message:
 .byte "It's dark and welly in there. Smell like stank too.",0
 
 ; + look tree
+well_look_at_tree_message:
 .byte "That's one orange tree alright.",0
 
 ; +2 POINTS
@@ -257,6 +262,7 @@ gary_talk_message:
 .byte "Riiight, right. Which ones?",0
 
 ; + talk well
+well_talk_message:
 .byte "You yell into the well and enjoy the echo. Keep in mind there are no stereos yet.",0
 
 

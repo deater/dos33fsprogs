@@ -16,6 +16,7 @@
 .byte "You strap the Kerrek's belt buckle around your waist. Oh boy. You sure stink now.",0
 
 ; + look
+kerrek_look_at_message:
 .byte "There are large hoof prints in the grass here.",0
 
 ; + look (no Kerrek)
@@ -23,7 +24,8 @@
 
 ; + look (living Kerrek)
 ; + look footprints/tracks (living Kerrek) 
-.byte "It's the Kerrek, you moron! Get outta here!",0
+.byte "It's the Kerrek, you moron!",13
+.byte "Get outta here!",0
 
 ; + look footprints/tracks (Kerrek not present)
 .byte "If you weren't a simpleton you might think these were Kerrek prints. But since you are a simpleton, you just go, 'Yay! Piggies!' ",0
@@ -39,16 +41,25 @@
 
 ; + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
 ;   (Warning: This speeds the Kerrek up, so be careful.) 
-.byte "The kerrek is a teetotaller and is offended by your offer. You've really cheesed him off now.",0
+.byte "The kerrek is a teetotaller",13
+.byte "and is offended by your",13
+.byte "offer. You've really",13
+.byte "cheesed him off now.",0
 
 ; + make friends with kerrek
-.byte "Look, it didn't work for Strongbad and it's not gonna work for you either.",0
+.byte "Look, it didn't work for",13
+.byte "Strongbad and it's not",13
+.byte "gonna work for you either.",0
 
 ; + load / save (while he's still alive)
-.byte "You can't be fumbling with a floppy while the Kerrek is bearing down on you.",0
+.byte "You can't be fumbling with",13
+.byte "a floppy while the Kerrek",13
+.byte "is bearing down on you.",0
 
 ; + kill kerrek (he is there, no bow or arrow)
-.byte "With what?! You got no weapons except your butter-knife wit.",0
+.byte "With what?! You got no",13
+.byte "weapons except your",13
+.byte "butter-knife wit.",0
 
 ; + kill kerrek (he is there, you have arrow but not bow)
 .byte "With what?! You gonna throw that arrow at him?",0
@@ -66,10 +77,15 @@
 .byte "Eww! No way. That thing's got some serious Kerrek-Brand kooties on it now.",0
 
 ; + get kerrek
-.byte "Well, he does smell real bad. But he's a bit too big to fit in your pocket.",0
+.byte "Well, he does smell real",13
+.byte "bad. But he's a bit too big",13
+.byte "to fit in your pocket.",0
 
 ; + look belt (still alive)
-.byte "Yecch. I wouldn't touch that unless it was, like, an important quest item or something.",0
+.byte "Yecch. I wouldn't touch",13
+.byte "that unless it was, like,",13
+.byte "an important quest item or",13
+.byte "something.",0
 
 ; + look kerrek (immediately after killing him)
 .byte "He dead. And the only thing of value on him is his stinky belt buckle.",0
@@ -84,7 +100,13 @@
 .byte "He dead. He wasn't fat, he was just big boned! Poor pig-man.",0
  
 ; + talk kerrek (while he is alive)
-.byte "'Me llamo Julio,' you begin... It seems only to further anger the already tempramental Kerrek. That stupid 'Learn Kerrek in 3 Weeks' cassette did nothing for you!",0
+.byte 34,"Me llamo Julio,",34," you",13
+.byte "begin... It seems only to",13
+.byte "further anger the already",13
+.byte "tempramental Kerrek. That",13
+.byte "stupid ",34,"Learn Kerrek in 3",13
+.byte "Weeks",34," cassette did",13
+.byte "nothing for you!",0
 
 
 

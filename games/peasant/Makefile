@@ -265,6 +265,7 @@ PEASANT1:	peasant1.o
 peasant1.o:	peasant1.s zp.inc inventory.inc \
 		parse_input.inc \
 		peasant1_actions.s DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
+		kerrek_actions.s \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
@@ -318,6 +319,7 @@ PEASANT4:	peasant4.o
 peasant4.o:	peasant4.s zp.inc inventory.inc \
 		parse_input.inc \
 		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
+		kerrek_actions.s \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
