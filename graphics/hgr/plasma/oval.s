@@ -1,5 +1,10 @@
 ; Ovals
 
+
+; inner loop after lots of ops = 49 cycles (376320) = 2.6fps
+;		optimized to 38 (256-entry sine table) = (291840) = 3.4fps
+;		optimized to 37 (row_sum smc) = (284160) = 3.5fps
+
 ; zero page
 GBASL	= $26
 GBASH	= $27
@@ -33,6 +38,76 @@ oval:
 
 	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 
+	;====================
+	; create sinetable
+
+.if 0
+	ldy	#0
+sinetable_loop:
+	tya							; 2
+	and	#$3f	; wrap sine at 63 entries		; 2
+
+	tax							; 2
+	cmp	#$20	; see if negative			; 2
+	bcc	sin_pos						; 2/3
+
+sin_neg:
+	lda	#0						; 2
+	sbc	sinetable_base-32,X				; 4+
+	jmp	sin_done					; 3
+
+sin_pos:
+	; carry already clear
+	lda	sinetable_base,X				; 4+
+
+sin_done:
+	sta	sinetable,Y
+	iny
+	bne	sinetable_loop
+.endif
+
+
+
+	ldy	#0
+sinetable_loop:
+	tya							; 2
+	and	#$3f	; wrap sine at 63 entries		; 2
+
+	cmp	#$20
+	php
+
+	and	#$1f
+
+	cmp	#$10
+	bcc	sin_blah
+
+sin_right:
+	sec
+	eor	#$FF
+	adc	#$20		; 32-X
+sin_blah:
+	tax
+	lda	sinetable_base,X				; 4+
+
+	plp
+	bcc	sin_done
+
+sin_negate:
+	clc
+	eor	#$ff
+	adc	#1
+
+sin_done:
+	sta	sinetable,Y
+	iny
+	bne	sinetable_loop
+
+
+
+	;============================
+	; main loop
+	;============================
+
 draw_oval:
 	inc	FRAME
 
@@ -50,80 +125,54 @@ create_yloop:
 
 	ldy	#39		; XX
 
-	lda	FRAME
-	sta	SUM
-
 	lda	HGR_Y		; YY
-	jsr	calcsine_div2
+
+calcsine_div2:
+	lsr							; 2
+	tax
+	clc
+	lda	sinetable,X
+	adc	FRAME
+	sta	row_sum_smc+1
 
 	ldx	HGR_Y		; YY
 
-	sta	ROW_SUM
+
 create_xloop:
-	lda	ROW_SUM
-	sta	SUM
 
-	tya			; XX
-	jsr	calcsine
+	;=====================
+	; critical inner loop
+	;   every cycle here is 40x192 cycles
+	;=====================
 
-	lsr				; double colors
-	and	#$7			; mask
-	tax
-	lda	colorlookup,X
-	sta	SAVEY
+	lda	sinetable,Y					; 4+
+	clc							; 2
+row_sum_smc:
+	adc	#$dd			; row base value	; 2
 
-	tya
-	ror
-	bcc	noshift
-	ror	SAVEY
-noshift:
-	lda	SAVEY
-;	and	#$7f
-	sta	(GBASL),Y
+	lsr				; double colors		; 2
+	and	#$7			; mask			; 2
+	tax							; 2
+	lda	colorlookup,X		; lookup in table	; 5
 
-	dey
-	bpl	create_xloop
+ror_nop_smc:
+	ror				; $6A/$EA		; 2
+;	and	#$7f			; make all purple
+	sta	(GBASL),Y					; 6
+
+	lda	ror_nop_smc		; toggle ror/nop	; 4
+	eor	#$80						; 2
+	sta	ror_nop_smc					; 4
+
+	dey							; 2
+	bpl	create_xloop					; 2/3
 
 	dec	HGR_Y
 	bne	create_yloop
 
-	; X and Y both $FF
+	; we skip drawing line 0 as it makes it easier
 
 	beq	draw_oval
-
-
-	;==============================
-	; calcsine
-	;==============================
-	; looks up sine of value in A
-	; accumulates it with SUM
-	; returns result in A
-	; Y preserved
-
-calcsine_div2:
-	lsr							; 2
-calcsine:
-	and	#$3f	; wrap sine at 63 entries		; 2
-
-	tax							; 2
-	rol							; 2
-	rol							; 2
-	rol							; 2
-	bcc	sinadd						; 2/3
-
-sinsub:
-	lda	SUM						; 3
-;	sec
-	sbc	sinetable-32,X					; 4+
-	jmp	sindone						; 3
-
-sinadd:
-	lda	SUM						; 3
-;	clc
-	adc	sinetable,X					; 4+
-
-sindone:
-	rts							; 6
 
 
 colorlookup:
@@ -131,10 +180,18 @@ colorlookup:
 .byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
 ;.byte $00
 
-sinetable:
+sinetable_base:
 ; this is actually (32*sin(x))
 
 .byte $00,$03,$06,$09,$0C,$0F,$11,$14
 .byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20,$1F,$1F,$1E,$1D,$1C,$1A,$18
-.byte $16,$14,$11,$0F,$0C,$09,$06,$03
+.byte $20
+;,$1F,$1F,$1E,$1D,$1C,$1A,$18
+;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
+
+
+	; for bot
+
+	jmp	oval
+
+sinetable=$6000
