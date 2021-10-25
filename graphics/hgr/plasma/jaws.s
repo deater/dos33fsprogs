@@ -1,4 +1,5 @@
-; Ovals
+
+; Jaws -- can remove the sine table to make smaller
 
 
 ; inner loop after lots of ops = 49 cycles (376320) = 2.6fps
@@ -61,6 +62,8 @@ sin_right:
 sin_left:
 	tax
 	lda	sinetable_base,X				; 4+
+	lsr
+	lsr
 
 	plp
 	bcc	sin_done
@@ -155,9 +158,11 @@ colorlookup:
 .byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
 ;.byte $00
 
+sinetable_base = $F5BA
 
-sinetable_base:
+;sinetable_base:
 ; this is actually (32*sin(x))
+
 .byte $00,$03,$06,$09,$0C,$0F,$11,$14
 .byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
 .byte $20
@@ -165,6 +170,9 @@ sinetable_base:
 ;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
 
 
+	; for bot
+
+	jmp	oval
 
 sinetable=$6000
 gbasl = $6100

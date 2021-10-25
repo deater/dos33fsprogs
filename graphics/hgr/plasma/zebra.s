@@ -90,7 +90,7 @@ draw_oval:
 
 create_yloop:
 	lda	HGR_Y
-;	ldx	#39		; X is don't care?
+	ldx	#39
 	ldy	#0
 
 	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
@@ -124,10 +124,8 @@ create_xloop:
 row_sum_smc:
 	adc	#$dd			; row base value	; 2
 
-	lsr				; double colors		; 2
-					; also puts bit in carry
-					; which helps make blue
-	and	#$7			; mask			; 2
+;	lsr				; double colors		; 2
+	and	#$fe			; mask			; 2
 	tax							; 2
 	lda	colorlookup,X		; lookup in table	; 5
 
@@ -152,12 +150,18 @@ ror_nop_smc:
 
 
 colorlookup:
-.byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
+
+.byte $11,$11,$55,$55,$5d,$5d
+.byte $7f,$7f,$5d,$5d,$55,$55
+.byte $11,$11,$00		; use 00 from sinetable
 ;.byte $00
 
+;.byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
+;.byte $00
 
 sinetable_base:
 ; this is actually (32*sin(x))
+
 .byte $00,$03,$06,$09,$0C,$0F,$11,$14
 .byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
 .byte $20
@@ -165,6 +169,9 @@ sinetable_base:
 ;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
 
 
+	; for bot
+
+	jmp	oval
 
 sinetable=$6000
 gbasl = $6100

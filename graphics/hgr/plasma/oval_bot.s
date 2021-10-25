@@ -85,11 +85,13 @@ sin_done:
 draw_oval:
 	inc	FRAME
 
-	ldx	#191		; YY
-	stx	HGR_Y
+	lda	#191		; YY
+;	sta	HGR_Y
 
 create_yloop:
-	lda	HGR_Y
+;	dec	HGR_Y
+
+;	lda	HGR_Y
 ;	ldx	#39		; X is don't care?
 	ldy	#0
 
@@ -144,11 +146,27 @@ ror_nop_smc:
 	bpl	create_xloop					; 2/3
 
 	dec	HGR_Y
+	lda	HGR_Y
 	bne	create_yloop
 
 	; we skip drawing line 0 as it makes it easier
 
-	beq	draw_oval
+flip_pages:
+
+	; Y should be $FF here
+
+	iny
+	lda	HGR_PAGE
+	cmp	#$20
+	beq	done_page
+	iny
+done_page:
+	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
+
+	eor	#$60		; flip draw page between $400/$800
+	sta	HGR_PAGE
+
+	bne	draw_oval	; bra
 
 
 colorlookup:
@@ -165,6 +183,9 @@ sinetable_base:
 ;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
 
 
+	; for bot
+	; 3F5 - 7d = 378
+	jmp	oval
 
 sinetable=$6000
 gbasl = $6100
