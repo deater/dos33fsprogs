@@ -73,7 +73,73 @@ done_copy_tail_loop:
 	cld			; clear decimal mode
 	rts
 
+	;========================
+	; score points
+	;========================
+	; value to add in A
+	; plays tone
+	; clears old
+	; updates new
+score_points:
+	; update score
 
+	sed			; set BCD mode
+	clc
+	adc	SCORE_TENSONES
+	sta	SCORE_TENSONES
+	lda	#0
+	adc	SCORE_HUNDREDS
+	sta	SCORE_HUNDREDS
+	cld			; clear BCD mode
+
+	; update score string
+
+	jsr	update_score
+
+	; clear top
+clear_top:
+	; draw rectangle
+
+	lda     #$3		; color is white1
+	sta     VGI_RCOLOR
+
+	lda     #0
+	sta     VGI_RX1
+	lda     #0
+	sta     VGI_RY1
+	lda	#140
+	sta	VGI_RXRUN
+	lda	#12
+        sta     VGI_RYRUN
+
+        jsr     vgi_simple_rectangle
+
+	; print score
+
+	jsr	print_score
+
+	; play tone
+
+	;===========================
+	; weep-boom sound
+
+	lda	#32
+	sta	speaker_duration
+	lda	#NOTE_E4
+	sta	speaker_frequency
+	jsr	speaker_beep
+	lda	#64
+	sta	speaker_duration
+	lda	#NOTE_F4
+	sta	speaker_frequency
+	jsr	speaker_beep
+	lda	#128
+	sta	speaker_duration
+	lda	#NOTE_F3
+	sta	speaker_frequency
+	jsr	speaker_beep
+
+	rts
 
 
 
@@ -83,3 +149,5 @@ score_text:
 
 score_tail:
 	.byte " of 150",0
+
+.include "speaker_beeps.s"

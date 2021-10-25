@@ -72,7 +72,7 @@ $60-$AF Programs	(roughly 22k available?) (we max at 20k on disk)
 $B8-$BB Hi-res lookup tables
 $BC     temp area for load/save files
 $BD-$BE temp area when saving game
-$BF	 ???
+$BF	verb table
 $C0-$CF	I/O
 $D0-$DF (Language Card BANK1) ?????
 $D0-$DF (Language Card BANK2)	Mockingboard music/PT3-routines
@@ -80,7 +80,7 @@ $E0-$FF (Language Card) ?????
 
 $D0-$DF (bank2) inventory
 $D0-$ED (bank1) per-levelstrings
-$EE-$FF common parser code
+$EE-$FF common parser code  (4.5k = 4608 bytes)
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

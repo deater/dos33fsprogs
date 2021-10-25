@@ -562,7 +562,7 @@ game_over:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "speaker_beeps.s"
+;.include "speaker_beeps.s"
 
 .include "graphics_end/ending_graphics.inc"
 

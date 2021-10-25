@@ -318,6 +318,7 @@ PEASANT4:	peasant4.o
 
 peasant4.o:	peasant4.s zp.inc inventory.inc \
 		parse_input.inc \
+		sprites/ned_sprites.inc \
 		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
 		kerrek_actions.s \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \

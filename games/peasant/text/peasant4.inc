@@ -95,12 +95,14 @@ ned_cottage_get_rock_message:
 .byte "through!",0
 
 ; + get rock (after moving it)
+ned_cottage_get_rock_already_message:
 .byte "You've already moved the",13
 .byte "stone out of the way to",13
 .byte "reveal a less-than",13
 .byte "peasant-sized hole.",0
 
 ; cut off arms, legs, and head   (possibly just "cut off arms")
+ned_cottage_cut_arms_message:
 .byte "Very funny. You have",13
 .byte "trouble cutting out",13
 .byte "coupons in the weekly",13
@@ -109,6 +111,7 @@ ned_cottage_get_rock_message:
 .byte "you try.",0
 
 ; + try  (Warning: You die.)
+ned_cottage_try_message:
 .byte "Okay, fine. You try to cut",13
 .byte "off your hard-earned",13
 .byte "extremities. It doesn't",13

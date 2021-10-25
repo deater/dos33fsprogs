@@ -91,6 +91,36 @@ new_location:
 
 	jsr	decompress_lzsa2_fast
 
+	;====================
+	; update ned cottage if necessary
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_OUTSIDE_NN
+	bne	not_necessary_cottage
+
+	lda	GAME_STATE_2
+	and	#COTTAGE_ROCK_MOVED
+	beq	not_necessary_cottage
+
+	; 161,117
+	lda	#23
+	sta	CURSOR_X
+	lda	#117
+	sta	CURSOR_Y
+
+	lda	#<rock_moved_sprite
+	sta	INL
+	lda	#>rock_moved_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+not_necessary_cottage:
+
+
+
+
 	; load priority
 
 	lda	MAP_LOCATION
@@ -268,3 +298,7 @@ peasant4_text_lzsa:
 .incbin "DIALOG_PEASANT4.LZSA"
 
 .include "peasant4_actions.s"
+
+.include "sprites/ned_sprites.inc"
+
+.include "hgr_sprite.s"

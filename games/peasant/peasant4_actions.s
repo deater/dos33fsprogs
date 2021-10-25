@@ -13,6 +13,8 @@ ned_cottage_verb_table:
 	.word ned_cottage_break-1
 	.byte VERB_CLIMB
 	.word ned_cottage_climb-1
+	.byte VERB_CUT
+	.word ned_cottage_cut-1
 	.byte VERB_DEPLOY
 	.word ned_cottage_deploy-1
 	.byte VERB_DROP
@@ -39,6 +41,8 @@ ned_cottage_verb_table:
 	.word ned_cottage_punch-1
 	.byte VERB_USE
 	.word ned_cottage_use-1
+	.byte VERB_TRY
+	.word ned_cottage_try-1
 	.byte 0
 
 	;================
@@ -151,8 +155,68 @@ ned_cottage_move:
 	jmp	parse_common_get
 
 ned_cottage_rock:
+	lda	GAME_STATE_2
+	and	#COTTAGE_ROCK_MOVED
+	bne	ned_cottage_rock_moved
+
+ned_cottage_rock_not_moved:
+	; move rock
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
+	jsr	restore_bg_1x28
+
+	; 161,117
+	lda	#23
+	sta	CURSOR_X
+	lda	#117
+	sta	CURSOR_Y
+
+	lda	#<rock_moved_sprite
+	sta	INL
+	lda	#>rock_moved_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
+	jsr	save_bg_1x28
+
+	jsr	draw_peasant
+
+
+	; make rock moved
+
+
+	lda	GAME_STATE_2
+	ora	#COTTAGE_ROCK_MOVED
+	sta	GAME_STATE_2
+
 	ldx	#<ned_cottage_get_rock_message
 	ldy	#>ned_cottage_get_rock_message
+
+	jsr	finish_parse_message
+
+	; add 2 points to score
+
+	lda	#2
+	jsr	score_points
+
+	rts
+
+
+
+ned_cottage_rock_moved:
+
+	ldx	#<ned_cottage_get_rock_already_message
+	ldy	#>ned_cottage_get_rock_already_message
 	jmp	finish_parse_message
 
 	;================
@@ -192,6 +256,45 @@ kick_cottage:
 	ldx	#<ned_cottage_break_door_message
 	ldy	#>ned_cottage_break_door_message
 	jmp	finish_parse_message
+
+
+	;===================
+	; cut
+	;===================
+ned_cottage_cut:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_ARMS
+	beq	cut_off_arms
+
+	jmp	parse_common_unknown
+
+cut_off_arms:
+	ldx	#<ned_cottage_cut_arms_message
+	ldy	#>ned_cottage_cut_arms_message
+	jmp	finish_parse_message
+
+	;===================
+	; try
+	;===================
+ned_cottage_try:
+
+;	lda	CURRENT_NOUN
+;	cmp	#NOUN_NONE
+
+	; you die
+
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	GAME_OVER
+
+	ldx	#<ned_cottage_try_message
+	ldy	#>ned_cottage_try_message
+	jmp	finish_parse_message
+
 
 
 	;=================

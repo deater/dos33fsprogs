@@ -155,7 +155,7 @@ done_beep:
 ;	jmp	forever
 
 .include "hgr_sprite.s"
-.include "speaker_beeps.s"
+;.include "speaker_beeps.s"
 
 ;.include "wait_keypress.s"
 

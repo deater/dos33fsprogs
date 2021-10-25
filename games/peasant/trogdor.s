@@ -117,31 +117,8 @@ done_speech:
 
 	; UPDATE SCORE
 
-	lda	#$43
-	sta	SCORE_TENSONES
-	jsr	update_score
-
-;	jsr	update_top
-
-
-	;===========================
-	; weep-boom sound
-
-	lda     #32
-        sta     speaker_duration
-        lda     #NOTE_E4
-        sta     speaker_frequency
-        jsr     speaker_beep
-	lda     #64
-        sta     speaker_duration
-        lda     #NOTE_F4
-        sta     speaker_frequency
-        jsr     speaker_beep
-	lda     #128
-        sta     speaker_duration
-        lda     #NOTE_F3
-        sta     speaker_frequency
-        jsr     speaker_beep
+	lda	#10
+	jsr	score_points
 
 trogdor_open:
 
@@ -344,7 +321,7 @@ game_over:
 
 .include "version.inc"
 
-.include "speaker_beeps.s"
+;.include "speaker_beeps.s"
 
 .include "hgr_sprite.s"
 
