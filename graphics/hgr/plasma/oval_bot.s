@@ -86,20 +86,16 @@ draw_oval:
 	inc	FRAME
 
 	lda	#191		; YY
-;	sta	HGR_Y
 
 create_yloop:
-;	dec	HGR_Y
+	; HGR_Y (YY) is in A here
 
-;	lda	HGR_Y
 ;	ldx	#39		; X is don't care?
 	ldy	#0
 
 	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 	; restore values
-
-	ldy	#39		; XX
 
 	lda	HGR_Y		; YY
 
@@ -113,7 +109,7 @@ calcsine_div2:
 
 	ldx	HGR_Y		; YY
 
-
+	ldy	#39		; XX
 create_xloop:
 
 	;=====================
@@ -147,6 +143,7 @@ ror_nop_smc:
 
 	dec	HGR_Y
 	lda	HGR_Y
+	cmp	#$ff
 	bne	create_yloop
 
 	; we skip drawing line 0 as it makes it easier
@@ -155,13 +152,13 @@ flip_pages:
 
 	; Y should be $FF here
 
-	iny
+;	iny
 	lda	HGR_PAGE
 	cmp	#$20
-	beq	done_page
-	iny
+	bne	done_page
+	dey
 done_page:
-	ldx	PAGE1,Y		; set display page to PAGE1 or PAGE2
+	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
 
 	eor	#$60		; flip draw page between $400/$800
 	sta	HGR_PAGE
@@ -185,9 +182,8 @@ sinetable_base:
 
 	; for bot
 	; 3F5 - 7d = 378
-	jmp	oval
+;	jmp	oval
 
 sinetable=$6000
-gbasl = $6100
-gbash = $6200
+
 

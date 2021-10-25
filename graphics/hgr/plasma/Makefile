@@ -15,7 +15,7 @@ plasma_hgr.dsk:	HELLO OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_BOT
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 ZEBRA
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 JAWS
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 TWIST
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x378 OVAL_BOT
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 OVAL_BOT
 
 ###
 
@@ -33,7 +33,7 @@ oval.o:	oval.s
 ###
 
 OVAL_BOT:	oval_bot.o
-	ld65 -o OVAL_BOT oval_bot.o -C $(LINKERSCRIPTS)/apple2_378.inc
+	ld65 -o OVAL_BOT oval_bot.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
 oval_bot.o:	oval_bot.s
 	ca65 -o oval_bot.o oval_bot.s -l oval_bot.lst
