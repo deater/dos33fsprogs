@@ -224,6 +224,20 @@ parse_common_throw:
 parse_common_get:
 parse_common_take:
 parse_common_steal:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_PEBBLES
+	bne	not_pebbles
+
+was_pebbles:
+	lda	INVENTORY_1
+	and	#INV1_PEBBLES
+	beq	not_pebbles
+
+	ldx	#<get_pebbles_message
+	ldy	#>get_pebbles_message
+	jmp	finish_parse_message
+
+not_pebbles:
 	ldx	#<get_message
 	ldy	#>get_message
 	jmp	finish_parse_message

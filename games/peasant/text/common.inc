@@ -162,7 +162,12 @@ get_message:
 .byte "get that.",0
 
 ; + get pebbles/rocks (after you've gotten them)
-.byte "Come now. We've been through this jaunty little bit before. You took them from the half lake screen with the cattail and stuff.",0
+get_pebbles_message:
+.byte "Come now. We've been",13
+.byte "through this jaunty little",13
+.byte "bit before. You took them",13
+.byte "from the half lake screen",13
+.byte "with the cattail and stuff.",0
 
 ; + give
 give_message:

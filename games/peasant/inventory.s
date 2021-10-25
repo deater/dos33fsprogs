@@ -67,29 +67,29 @@ draw_inv_text:
 	lda	#28
 	sta	CURSOR_Y
 
-	ldy	#0
+	ldy	#0			; row
 
 inv_reset_mask:
-	lda	#1
+	lda	#1			; start at low item
 	sta	INVENTORY_MASK
 
 draw_inv_loop:
 
-	cpy	#9
+	cpy	#9			; if <9, left column >=9, right
 	bcs	right_column		; bge
 
 left_column:
-	lda	#4
+	lda	#4			; left column is #4
 	bne	done_column		; bra
 right_column:
-	lda	#23
+	lda	#23			; right column is #23
 done_column:
 	sta	CURSOR_X
 
 	tya
-	pha
+	pha				; save Y
 
-	jsr	have_item_y
+	jsr	have_item_y		; check if have item
 
 	beq	questionmarks
 
@@ -337,10 +337,10 @@ done_inv_keypress:
 have_item:
 	ldy	INVENTORY_Y
 have_item_y:
-	tya
-	and	#$3
+	tya				; move to A
+	and	#$7			; mask off to bottom 2?
 	tax
-	lda	masks,X
+	lda	masks,X			; load in mask
 	sta	INVENTORY_MASK
 
 	tya

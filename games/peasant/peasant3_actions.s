@@ -295,9 +295,30 @@ lake_west_get_berries:
 	jmp	finish_parse_message
 
 lake_west_get_pebbles:
+	lda	INVENTORY_1
+	and	#INV1_PEBBLES
+	bne	lake_west_yes_pebbles
+
+lake_west_no_pebbles:
+	; FIXME: only if standing on them
+
+	; pick up pebbles
+	lda	INVENTORY_1
+	ora	#INV1_PEBBLES
+	sta	INVENTORY_1
+
+	; add score
+
+	lda	#1
+	jsr	score_points
+
+	; print message
 	ldx	#<lake_west_get_pebbles_message
 	ldy	#>lake_west_get_pebbles_message
 	jmp	finish_parse_message
+
+lake_west_yes_pebbles:
+	jmp	parse_common_get
 
 
 	;=================
