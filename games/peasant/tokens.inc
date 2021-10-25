@@ -73,7 +73,8 @@ VERB_ATTACK	= 71
 VERB_HUG	= 72
 VERB_HIDE	= 73
 VERB_MOVE	= 74
-VERB_ALL_DONE	= 75	; not a verb, but indicating end, must be last
+VERB_CUT	= 75
+VERB_ALL_DONE	= 76	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;
@@ -181,5 +182,6 @@ NOUN_BLEED	= 101
 NOUN_IN_WELL	= 102
 NOUN_BUCKET	= 103
 NOUN_WISH	= 104
+NOUN_ARMS	= 105
 ;
-NOUN_UNKNOWN	= 105
+NOUN_UNKNOWN	= 106

@@ -619,6 +619,7 @@ inc_verb_ptr_noflo:
 
 verb_lookup:
 .byte "ASK",VERB_ASK|$80
+.byte "ATTACK",VERB_ATTACK|$80
 .byte "BOO",VERB_BOO|$80
 .byte "BREAK",VERB_BREAK|$80
 .byte "BUY",VERB_BUY|$80
@@ -626,6 +627,7 @@ verb_lookup:
 .byte "CLIMB",VERB_CLIMB|$80
 .byte "CLOSE",VERB_CLOSE|$80
 .byte "COPY",VERB_COPY|$80
+.byte "CUT",VERB_CUT|$80
 .byte "DANCE",VERB_DANCE|$80
 .byte "DEPLOY",VERB_DEPLOY|$80
 .byte "DIE",VERB_DIE|$80
@@ -639,6 +641,8 @@ verb_lookup:
 .byte "GO ",VERB_GO|$80
 .byte "HALDO",VERB_HALDO|$80
 .byte "HELP",VERB_HELP|$80
+.byte "HIDE",VERB_HIDE|$80
+.byte "HUG",VERB_HUG|$80
 .byte "INV",VERB_INVENTORY|$80
 .byte "JUMP",VERB_JUMP|$80
 .byte "KICK",VERB_KICK|$80
@@ -649,6 +653,7 @@ verb_lookup:
 .byte "LOOK",VERB_LOOK|$80
 .byte "MAKE",VERB_MAKE|$80
 .byte "MAP",VERB_MAP|$80
+.byte "MOVE",VERB_MOVE|$80
 .byte "NO",VERB_NO|$80
 .byte "OPEN",VERB_OPEN|$80
 .byte "PARTY",VERB_PARTY|$80
@@ -688,10 +693,6 @@ verb_lookup:
 .byte "WHERE",VERB_WHERE|$80
 .byte "WHY",VERB_WHY|$80
 .byte "YES",VERB_YES|$80
-.byte "ATTACK",VERB_ATTACK|$80
-.byte "HUG",VERB_HUG|$80
-.byte "HIDE",VERB_HIDE|$80
-.byte "MOVE",VERB_MOVE|$80
 .byte $00
 
 
@@ -803,16 +804,19 @@ end_of_input:
 
 noun_lookup:
 .byte "ARCHER",NOUN_ARCHER|$80
+.byte "ARMS",NOUN_ARMS|$80
 .byte "ARROW",NOUN_ARROW|$80
 .byte "BABY",NOUN_BABY|$80
 .byte "BEADS",NOUN_BEADS|$80
 .byte "BELL",NOUN_BELL|$80
 .byte "BELT",NOUN_BELT|$80
 .byte "BERRIES",NOUN_BERRIES|$80
+.byte "BLEED",NOUN_BLEED|$80
 .byte "BOAT",NOUN_BOAT|$80
 .byte "BONE",NOUN_BONE|$80
 .byte "BOW",NOUN_BOW|$80
 .byte "BROOM",NOUN_BROOM|$80
+.byte "BUCKET",NOUN_BUCKET|$80
 .byte "BUSH",NOUN_BUSH|$80
 .byte "CANDLE",NOUN_CANDLE|$80
 .byte "CAVE",NOUN_CAVE|$80
@@ -842,6 +846,7 @@ noun_lookup:
 .byte "GREEN",NOUN_GREEN|$80
 .byte "GROUND",NOUN_GROUND|$80
 .byte "GUY",NOUN_GUY|$80
+.byte "IN HAY",NOUN_IN_HAY|$80
 .byte "HAY",NOUN_HAY|$80
 .byte "HOLE",NOUN_HOLE|$80
 .byte "HORSE",NOUN_HORSE|$80
@@ -857,6 +862,7 @@ noun_lookup:
 .byte "MAN",NOUN_MAN|$80
 .byte "MAP",NOUN_MAP|$80
 .byte "MASK",NOUN_MASK|$80
+.byte "MENDELEV",NOUN_MENDELEV|$80
 .byte "MUD",NOUN_MUD|$80
 .byte "NED",NOUN_NED|$80
 .byte "NOTE",NOUN_NOTE|$80
@@ -870,7 +876,9 @@ noun_lookup:
 .byte "PLAGUE",NOUN_PLAGUE|$80
 .byte "PLAQUE",NOUN_PLAQUE|$80
 .byte "POT",NOUN_POT|$80
+.byte "PUDDLE",NOUN_PUDDLE|$80
 .byte "RICHES",NOUN_RICHES|$80
+.byte "RIVER",NOUN_RIVER|$80
 .byte "ROBE",NOUN_ROBE|$80
 .byte "ROCK",NOUN_ROCK|$80
 .byte "ROOM",NOUN_ROOM|$80
@@ -884,6 +892,7 @@ noun_lookup:
 .byte "SKULL",NOUN_SKULL|$80
 .byte "SMELL",NOUN_SMELL|$80
 .byte "SODA",NOUN_SODA|$80
+.byte "STONE",NOUN_STONE|$80
 .byte "STUFF",NOUN_STUFF|$80
 .byte "STUMP",NOUN_STUMP|$80
 .byte "SUB",NOUN_SUB|$80
@@ -897,15 +906,8 @@ noun_lookup:
 .byte "IN WELL",NOUN_IN_WELL|$80
 .byte "WELL",NOUN_WELL|$80
 .byte "WINDOW",NOUN_WINDOW|$80
-.byte "WOMAN",NOUN_WOMAN|$80
-.byte "RIVER",NOUN_RIVER|$80
-.byte "STONE",NOUN_STONE|$80
-.byte "IN HAY",NOUN_IN_HAY|$80
-.byte "PUDDLE",NOUN_PUDDLE|$80
-.byte "MENDELEV",NOUN_MENDELEV|$80
-.byte "BLEED",NOUN_BLEED|$80
-.byte "BUCKET",NOUN_BUCKET|$80
 .byte "WISH",NOUN_WISH|$80
+.byte "WOMAN",NOUN_WOMAN|$80
 .byte $00
 
 
@@ -1033,7 +1035,7 @@ unknown_loop:
 	sta	verb_table+1,X
 	inx
 	inx
-	cpx	VERB_ALL_DONE
+	cpx	#(VERB_ALL_DONE*2)
 	bne	unknown_loop
 
 	;=========================
@@ -1151,5 +1153,3 @@ common_verb_table:
 	.byte VERB_WHY
 	.word parse_common_why-1
 	.byte 0
-
-
