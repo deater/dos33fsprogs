@@ -6,7 +6,8 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	fireworks fw_purple lines image_load hgr_view seven random16 scroll scroll-asm
+all:	fireworks fw_purple lines image_load hgr_view seven \
+	random16 scroll scroll-asm plasma_new
 
 ###
 
@@ -39,6 +40,14 @@ fireworks:	fireworks.o $(GR_SIM)
 
 fireworks.o:	fireworks.c
 	$(CC) $(CFLAGS) -c fireworks.c
+
+###
+
+plasma_new:	plasma_new.o $(GR_SIM)
+	$(CC) -o plasma_new plasma_new.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
+
+plasma_new.o:	plasma_new.c
+	$(CC) $(CFLAGS) -c plasma_new.c
 
 ###
 
