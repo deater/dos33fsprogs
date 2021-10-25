@@ -398,20 +398,35 @@ archery_talk_mendelev:
 	ldy	#>archery_talk_mendelev2_message
 	jsr	partial_message_step
 
-	; add 1 point to score
-	; make noise
-	; but after the below somehow?
-
 	ldx	#<archery_talk_mendelev3_message
 	ldy	#>archery_talk_mendelev3_message
-	jmp	finish_parse_message
+	jsr	finish_parse_message
 
+	; add 1 point to score if don't have mask or trinket
+	; add 2 points otherwise
+
+	lda	INVENTORY_2
+	and	#INV2_TRINKET
+	bne	archer_2_points
+
+	lda	INVENTORY_1
+	and	#INV1_MONSTER_MASK
+	bne	archer_2_points
+
+archer_1_point:
+	lda	#1
+	bne	archer_score_points	; bra
+archer_2_points:
+	lda	#2
+archer_score_points:
+	jsr	score_points
+
+	rts
 
 archery_talk_too_far:
 	ldx	#<archery_talk_far_message
 	ldy	#>archery_talk_far_message
 	jmp	finish_parse_message
-
 
 
 	;=======================
