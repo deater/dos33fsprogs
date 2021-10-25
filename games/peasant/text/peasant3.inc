@@ -6,6 +6,7 @@
 .byte "Just answer him, yes or no, you fool!",0
 
 ; + look
+jhonka_look_at_message:
 .byte "There's a little cave with",13
 .byte "a little door with a little",13
 .byte "note on it.",0
@@ -20,10 +21,12 @@
 .byte "Turkey leg or no, it looks like the Jhonka's been gnawing on it.",0
 
 ; + look cave
+jhonka_look_at_cave_message:
 .byte "Just a little cave. Calm",13
 .byte "down.",0
 
-; + look fence (need to be standing near it?)
+; + look fence
+jhonka_look_at_fence_message:
 .byte "A standard peasant fence.",13
 .byte "Trogdor makes milk's meat",13
 .byte "outta these things.",0
@@ -31,7 +34,8 @@
 ; + look jhonka (when he's outside)
 .byte "The Jhonka is gray and grody. He's got a cromagnon forehead and jaw with a pair of wicked incisors. He sports an old loin-cheese cloth and carries either a big club or one of those roasted turkey legs you got at the Ren Fest.",0
 
-; + read note (before killing Kerrek) [ will walk to it if far away]
+; + look/read note (before killing Kerrek) [ will walk to it if far away]
+jhonka_read_note_message:
 .byte "It says ",34,"scared of kerrek.",13
 .byte "go way. -j",34,0
 
@@ -69,22 +73,27 @@
 .byte "Club or turkey leg, the jhonka sure just beat you senseless with whatever he was holding. You dead. Thanks for playing!",0
 
 ; + open door [ will walk you there]
+jhonka_open_door_message:
 .byte "It's locked. With one o'",13
 .byte "them SCHLAGE deadbolts,",13
 .byte "too. Those things are hard",13
 .byte "core.",0
 
 ; + knock (while he's inside) [ will walk over]
+jhonka_knock_message1:
 .byte "A gravelly voice inside",13
-
 .byte "yells, 'JUST US CHICKENS'",0
 ; or
+.byte "A gravelly voice inside",13
 .byte "yells, 'NO FOR RENT'",0
 ; or 
+.byte "A gravelly voice inside",13
 .byte "yells, 'I GIVE LAST YEAR!'",0
 ; or 
+.byte "A gravelly voice inside",13
 .byte "yells, 'GAVE AT OFFICE'",0
 ; or: 
+.byte "A gravelly voice inside",13
 .byte "yells, 'GO WAY!'",0
 
 ; + kill jhonka (outside)
@@ -94,9 +103,10 @@
 .byte "Now there's a surefire way to get yourself killed.",0
 
 ; + get note
+jhonka_get_note_message:
 .byte "It's been magically sealed",13
 .byte "to the door with a",13
-.byte " wondrously whimsical spell.",0
+.byte "wondrously whimsical spell.",0
 
 ; + give riches (before jumping in hay)
 .byte "The Jhonka will see you! And rip out your jugular with his teeth or something equally horrible.",0
@@ -104,11 +114,18 @@
 ; + talk jhonka (while inside the hay)
 .byte "Not now! You'll blow your cover!",0
 
+; + climb/jump fence
+jhonka_climb_fence_message:
+.byte "No, you have business to",13
+.byte "attend to here in",13
+.byte "Peasantry.",0
+
 ;=========================
 ; Your Burninated Cottage
 ;=========================
 
 ; + look [WIKI IS WRONG]
+cottage_look_at_message:
 .byte "The remains of your",13
 .byte "thatched-roof cottage lie",13
 .byte "burninated before you. You",13
@@ -116,21 +133,25 @@
 .byte "Trogdor.",0
 
 ; + look cottage
+cottage_look_at_cottage_message:
 .byte "All your baubles and",13
 .byte "trinkets, your flasks and",13
 .byte "scrolls, your goblets and",13
 .byte "staffs! BURNINATED!!",0
 ; (And then, if you haven't taken the map yet:)
+cottage_look_at_cottage_message_map:
 .byte "Looks like there's a piece",13
 .byte "of unburninated paper on",13
 .byte "the ground.",0
  
 ; + look ground
 ; + look paper
+cottage_look_at_map_message:
 .byte "Hey, it's your old",13
 .byte "fireproof map to Peasantry.",0
  
-; + get map
+; + get/take/steal map/paper
+cottage_get_map_message:
 .byte "You tuck it nice-like into",13
 .byte "your short, short pants.",13
 .byte "Type MAP at nearly any time",13
@@ -145,16 +166,19 @@
 ;==================
 
 ; + look
+lake_west_look_at_message:
 .byte "There's definitely half a",13
 .byte "lake here with a sandy",13
 .byte "shore.",0
 
 ; + look lake/water
+lake_west_look_at_lake_message:
 .byte "It extends onto the next",13
 .byte "screen and has a sandy",13
 .byte "shore.",0
 
 ; + look sand NOT IN WIKI
+lake_west_look_at_sand_message:
 .byte "There's a bunch of fairly",13
 .byte "substantial pebbles in the",13
 .byte "sand.",0
@@ -163,19 +187,23 @@
 .byte "Remember those pebbles on the beach? Man, those were good times.",0
 
 ; + look bush
+lake_west_look_at_bush_message:
 .byte "Don't worry about that",13
 .byte "bush. Yeah, there's red",13
 .byte "berries on it but never you",13
 .byte "mind.",0
 
 ; + look berries
+lake_west_look_at_berries_message:
 .byte "Shut up.",0
 
 ; + get berries
+lake_west_get_berries_message:
 .byte "NO MAN! JEEZ!",0
 
 ; + get stones	; +1 POINT
 ; + get pebbles
+lake_west_get_pebbles_message:
 .byte "You grab up a handful of",13
 .byte "fairly substantial",13
 .byte "pebbles. You make sure to",13
@@ -183,12 +211,14 @@
 .byte "sedentary, igneous, and,",13
 .byte "um, sureptitious rocks.",0
 
-; + swim
+; + swim {none}/lake/water
+lake_west_swim_message:
 .byte "Not in this game, Swimmer",13
 .byte "Dan! In this game, you",13
 .byte "drown.",0
 
-; + skip stones
+; + skip stones/pebbles
+lake_west_skip_stones_message:
 .byte "You've always been",13
 .byte "terrible at skipping",13
 .byte "stones. And you're even",13
@@ -206,6 +236,7 @@
 .byte "You won't be arrested after all! The little guy has resurfaced safely, carrying an old bottle of soda. You take the soda and stow your swaddling buddy for takeoff.",0
 
 ; + throw baby (before getting the baby)
+lake_west_throw_baby_message:
 .byte "I think you misread the",13
 .byte "walkthrough on GameFAQs.",13
 .byte "You gotta get the baby",13
@@ -214,7 +245,7 @@
 ; + throw baby (after getting the soda)
 .byte "Baby Dashing is a little waterlogged from the toss, and you read his soft gurgling to mean that there's no more soda left.",0
 
-; + throw baby/feed (at south side)
+; + throw feed (at south side)
 .byte "Maybe try again from the center of the lake. Looks deeper there.",0
 
 
@@ -223,28 +254,34 @@
 ;==================
 
 ; + look / look lake
+lake_east_look_at_lake_message_man_gone:
 .byte "Why it's half a lake.",0
 
 ; + look (when the old man is fishing)
+lake_east_look_at_lake_message:
 .byte "Why it's half a lake.With a",13	; [SIC] on the space after lake
 .byte "fisherman in it. And he's",13
 .byte "fishing!",0
 
-; + look man/guy/peasant/old guy/old man (while he is fishing)
+; + look dude/man/guy/peasant/old guy/old man (while he is fishing)
+lake_east_look_at_man_message:
 .byte "An older peasant sits",13
 .byte "silently in a boat with his",13
 .byte "line in the water.",0
 
 ; + look sand
+lake_east_look_at_sand_message:
 .byte "One million three hundred",13
 .byte "thousand seventy-four",13
 .byte "hundred and sixty two...",13
 .byte "One million three hundred",13
 .byte "thousand seventy-four",13
 .byte "hundred and sixty three...",0
+lake_east_look_at_sand_message2:
 .byte " Drat! You lost count again.",0
 
 ; + look boat/dinghy (while he is fishing)
+lake_east_look_at_boat_message:
 .byte 34,"Keep your eyes off my",13
 .byte "dinghy!",34,0
 
@@ -252,6 +289,7 @@
 .byte "It was loaned out to the Fishing Challenge videogame.",0
 
 ; + talk man (before throwing chicken feed in lake)
+lake_east_talk_man_message:
 .byte "You holler at the old man",13
 .byte "about Trogdor, but he just",13
 .byte "grumbles about the fish not",13
@@ -259,7 +297,7 @@
 .byte "wrong bait...",34," he says,",13
 .byte "suggestively.",0
 
-; + throw baby/feed (at south side)
+; + throw feed (at south side)
 .byte "Maybe try again from the",13
 .byte "center of the lake. Looks",13
 .byte "deeper there.",0
@@ -285,6 +323,7 @@
 .byte "animate.",0
 
 ; + throw feed (before getting the feed)
+lake_east_throw_feed_message:
 .byte "You have nothing with which",13
 .byte "to do that ... with.",0
 
@@ -295,8 +334,8 @@
 .byte "fish. Let's get moving,",13
 .byte "here, people!",0
 
-
 ; + throw (anything but the feed while he is fishing)
+lake_east_throw_default_message:
 .byte 34,"That isn't gonna work for",13
 .byte "bait!",34," the old man screams,",13
 .byte "at a needlessly harsh",13

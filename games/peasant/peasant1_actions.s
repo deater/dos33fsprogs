@@ -327,10 +327,26 @@ wear_mask:
 	;=======================
 
 wishing_well_verb_table:
+	.byte VERB_CLIMB
+	.word well_climb-1
+	.byte VERB_GET
+	.word well_get-1
 	.byte VERB_LOOK
 	.word well_look-1
+	.byte VERB_MAKE
+	.word well_make-1
+	.byte VERB_PUT
+	.word well_put-1
+	.byte VERB_STEAL
+	.word well_get-1
+	.byte VERB_TAKE
+	.word well_get-1
 	.byte VERB_TALK
 	.word well_talk-1
+	.byte VERB_THROW
+	.word well_throw-1
+	.byte VERB_TURN
+	.word well_turn-1
 	.byte 0
 
 
@@ -350,6 +366,8 @@ well_look:
 	beq	well_look_at_tree
 	cmp	#NOUN_CRANK
 	beq	well_look_at_crank
+	cmp	#NOUN_BUCKET
+	beq	well_look_at_bucket
 	cmp	#NOUN_NONE
 	beq	well_look_at
 
@@ -363,6 +381,10 @@ well_look_at:
 well_look_at_well:
 	ldx	#<well_look_at_well_message
 	ldy	#>well_look_at_well_message
+	jsr	partial_message_step
+
+	ldx	#<well_look_at_well_message2
+	ldy	#>well_look_at_well_message2
 	jmp	finish_parse_message
 
 well_look_at_crank:
@@ -378,6 +400,72 @@ well_look_in_well:
 well_look_at_tree:
 	ldx	#<well_look_at_tree_message
 	ldy	#>well_look_at_tree_message
+	jmp	finish_parse_message
+
+well_look_at_bucket:
+	ldx	#<well_look_at_bucket_message
+	ldy	#>well_look_at_bucket_message
+	jmp	finish_parse_message
+
+	;================
+	; make
+	;================
+well_make:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_WISH
+	beq	well_make_wish
+
+	jmp	parse_common_unknown
+
+well_make_wish:
+	ldx	#<well_make_wish_message
+	ldy	#>well_make_wish_message
+	jmp	finish_parse_message
+
+	;================
+	; climb
+	;================
+well_climb:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BUCKET
+	beq	well_climb_bucket
+	cmp	#NOUN_WELL
+	beq	well_climb_well
+	cmp	#NOUN_IN_WELL
+	beq	well_climb_well
+
+	jmp	parse_common_climb
+
+well_climb_bucket:
+	ldx	#<well_climb_bucket_message
+	ldy	#>well_climb_bucket_message
+	jmp	finish_parse_message
+
+well_climb_well:
+	ldx	#<well_climb_well_message
+	ldy	#>well_climb_well_message
+	jmp	finish_parse_message
+
+
+	;================
+	; get
+	;================
+well_get:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BUCKET
+	beq	well_get_bucket
+
+	jmp	parse_common_get
+
+well_get_bucket:
+	ldx	#<well_get_bucket_message
+	ldy	#>well_get_bucket_message
 	jmp	finish_parse_message
 
 	;================
@@ -396,6 +484,66 @@ well_talk_well:
 	ldx	#<well_talk_message
 	ldy	#>well_talk_message
 	jmp	finish_parse_message
+
+
+	;================
+	; throw
+	;================
+well_throw:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BABY
+	beq	well_throw_baby
+
+	jmp	parse_common_unknown
+
+well_throw_baby:
+	ldx	#<well_throw_baby_message
+	ldy	#>well_throw_baby_message
+	jmp	finish_parse_message
+
+
+	;================
+	; turn
+	;================
+well_turn:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_CRANK
+	beq	well_turn_crank
+
+	jmp	parse_common_unknown
+
+well_turn_crank:
+	ldx	#<well_turn_crank_message
+	ldy	#>well_turn_crank_message
+	jmp	finish_parse_message
+
+
+	;================
+	; put
+	;================
+	; FIXME: need to find object here
+	;	put baby (where)?
+	;	put pebbles (in well, in bucket?)
+well_put:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BABY
+	beq	well_throw_baby
+
+	bne	well_put_anything_else
+
+	; do we need to check for bucket at end?
+well_put_anything_else:
+	ldx	#<well_put_anything_message
+	ldy	#>well_put_anything_message
+	jmp	finish_parse_message
+
+
 
 
 	;=======================

@@ -813,7 +813,7 @@ noun_lookup:
 .byte "BONE",NOUN_BONE|$80
 .byte "BOW",NOUN_BOW|$80
 .byte "BROOM",NOUN_BROOM|$80
-.byte "BUSHES",NOUN_BUSHES|$80
+.byte "BUSH",NOUN_BUSH|$80
 .byte "CANDLE",NOUN_CANDLE|$80
 .byte "CAVE",NOUN_CAVE|$80
 .byte "CHAIR",NOUN_CHAIR|$80
@@ -904,6 +904,8 @@ noun_lookup:
 .byte "PUDDLE",NOUN_PUDDLE|$80
 .byte "MENDELEV",NOUN_MENDELEV|$80
 .byte "BLEED",NOUN_BLEED|$80
+.byte "BUCKET",NOUN_BUCKET|$80
+.byte "WISH",NOUN_WISH|$80
 .byte $00
 
 

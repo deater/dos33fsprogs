@@ -28,7 +28,16 @@ Text
 	How to fit?  Lookup for common word distribution?
 
 	Using high-bit terminated strings rather than nul in some cases
+
+	think original auto-wraps text, do it manually
+
+	VERB/NOUN parsing is more or less good enough
+		could use object "PUT BABY IN WELL"
+		a few places.  cheat?
+	Have to distinguish LOOK AT WELL/LOOK IN WELL
 	
+	how many verbs/nouns?
+
 Ram-map
 
 Music

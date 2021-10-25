@@ -415,6 +415,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_common_unknown parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_look parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_get parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_common_climb parse_input.lst >> parse_input.inc
 
 
 ###

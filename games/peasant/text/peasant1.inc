@@ -154,11 +154,27 @@ gary_talk_message:
 
 ; + look
 well_look_at_message:
-.byte "There's a really generic well here. Oh, and apparently it's autumn on this screen.",0
+.byte "There's a really generic",13
+.byte "well here. Oh, and",13
+.byte "apparently it's autumn on",13
+.byte "this screen.",0
 
 ; + look well
 well_look_at_well_message:
-.byte "Pretty average. You're not a big well person. You're more into bridges. It does have a cute little bucket though. Your dad liked buckets. Oh, and there's a metal crank too. Meemaw loved cranks.",0
+.byte "Pretty average. You're not",13
+.byte "a big well person. You're",13
+.byte "more into bridges. It does",13
+.byte "have a cute little bucket",13
+.byte "though. Your dad liked",13
+.byte "buckets. Oh, and there's a",13
+.byte "metal crank too. Meemaw",13
+.byte "loved cranks.",0
+
+; if not gotten mask
+well_look_at_well_message2:
+.byte "You can just make out",13
+.byte "something floating in the",13
+.byte "water down there.",0
 
 ; + look crank (before putting pebbles in the bucket)
 well_look_at_crank_message:
@@ -167,13 +183,29 @@ well_look_at_crank_message:
 ; + look crank (after putting pebbles in the bucket)
 .byte "That is a bonafide crank. It seems to work now.",0
 
-; + look in well
+; + look in well (after mask)
+well_look_in_well_message2:
+.byte "It's dark and welly in",13
+.byte "there. Smell like stank",13
+.byte "too.",0
+
+; + look in well (before mask)
 well_look_in_well_message:
-.byte "It's dark and welly in there. Smell like stank too.",0
+.byte "It's dark and welly in",13
+.byte "there. Smell like stank",13
+.byte "too. You can just make out",13
+.byte "something floating in the",13
+.byte "water down there.",0
 
 ; + look tree
 well_look_at_tree_message:
-.byte "That's one orange tree alright.",0
+.byte "That's one orange tree",13
+.byte "alright.",0
+
+; + look bucket (NOT IN WIKI?)
+well_look_at_bucket_message:
+.byte "An empty wooden bucket",13
+.byte "hangs on a rope in the well.",0
 
 ; +2 POINTS
 ; + put pebbles in bucket
@@ -183,7 +215,10 @@ well_look_at_tree_message:
 .byte "You can't reach from there.",0
 
 ; + turn crank (before pebbles, close)
-.byte "It won't budge. Maybe if there was something heavy in that bucket...",0
+well_turn_crank_message:
+.byte "It won't budge. Maybe if",13
+.byte "there was something heavy",13
+.byte "in that bucket...",0
 
 ; + turn crank (pebbles)
 .byte "The crank seems to have loosened and you haul the bucket back up. What's this? Why there's a monster maskus in there! No doubt leftover from some pagan ritual. Silly pagans.",0
@@ -211,28 +246,42 @@ well_look_at_tree_message:
 .byte "What do you propose to do with them? Discuss.",0
  
 ; + make wish
-.byte "This isn't that kind of well. This is a plaguewater well.",0
+well_make_wish_message:
+.byte "This isn't that kind of",13
+.byte "well. This is a plaguewater",13
+.byte "well.",0
 
-; + deploy/drop/use baby
+; + deploy/drop/use baby (if you have it)
 .byte "Like where?",0
 
 ; + climb in bucket
+well_climb_bucket_message:
 .byte "Your butt is too big.",0
 
-; + climb in well
-.byte "No go. Your insurance doesn't cover that.",0
+; + climb in well/well
+well_climb_well_message:
+.byte "No go. Your insurance",13
+.byte "doesn't cover that.",0
 
 ; + get/take/steal bucket
-.byte "You can't, it's tied to a rope and you're terrible with knots.",0
+well_get_bucket_message:
+.byte "You can't, it's tied to a",13
+.byte "rope and you're terrible",13
+.byte "with knots.",0
 
-; + throw baby
+; + throw baby (if you have it)
 .byte "Throw it where?",0
 
-; + put baby
+; + put baby (if you have it)
 .byte "Where you wanna toss em?",0
 
+; + throw baby
 ; + put baby in bucket/well (before baby/after baby)
-.byte "Hmmmm... A baby, eh? You check your sundial. Babies-R-Us is probably closed by now.",0
+well_throw_baby_message:
+.byte "Hmmmm... A baby, eh? You",13
+.byte "check your sundial.",13
+.byte "Babies-R-Us is probably",13
+.byte "closed by now.",0
 
 ; + put baby in bucket (too far)
 .byte "You're not that keen a shot. Try standing a little closer.",0
@@ -241,7 +290,9 @@ well_look_at_tree_message:
 .byte "Li'l tyke seems to enjoy the ride, but -- thin or not -- we've got a plot to advance here.",0
 
 ; + put (anything else) in bucket
-.byte "That's not heavy enough to weigh down the bucket.",0
+well_put_anything_message:
+.byte "That's not heavy enough to",13
+.byte "weigh down the bucket.",0
 
 ; + put baby in well
 .byte "Jeez man! At least put the poor little guy in the bucket! Give him a fighting chance!",0
@@ -259,11 +310,15 @@ well_look_at_tree_message:
 .byte "Then it'd be tough to get them back. You never go ANYWHERE without your rocks",0
 
 ; + put pebbles/rocks in well (don't have them/already mask)
-.byte "Riiight, right. Which ones?",0
+.byte "Riiight, right. Which",13
+.byte "ones?",0
 
 ; + talk well
 well_talk_message:
-.byte "You yell into the well and enjoy the echo. Keep in mind there are no stereos yet.",0
+.byte "You yell into the well and",13
+.byte "enjoy the echo. Keep in",13
+.byte "mind there are no stereos",13
+.byte "yet.",0
 
 
 ;=============

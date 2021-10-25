@@ -146,6 +146,7 @@ ned_cottage_baby_before_message:
 ; he stays out unless you talk to him?
 
 ; + look
+ned_tree_look_at_message:
 .byte "Nothing special here",13
 .byte "except for that weird wavy",13
 .byte "tree.",0
@@ -159,9 +160,11 @@ ned_cottage_baby_before_message:
 .byte "that tree.",0
 
 ; + look tree
+ned_tree_look_at_tree_message:
 .byte "It's weird and wavy.",0
 
 ; + climb tree
+ned_tree_climb_tree_message:
 .byte "You don't climb wavy trees.",0
 
 ; + talk (with Naked Ned visible)  (he disappears until you re-enter)
@@ -175,6 +178,7 @@ ned_cottage_baby_before_message:
 .byte "and he disapperars.",0
 
 ; + talk tree
+ned_tree_talk_tree_message:
 .byte "Trees can't talk but a",13
 .byte "breeze picks up and you",13
 .byte "swear the leaves whisper",13
@@ -192,6 +196,7 @@ ned_cottage_baby_before_message:
 ;===========================
 
 ; + look
+lady_cottage_look_at_message:
 .byte "There's a ranch-style",13
 .byte "thatched roof cottage",13
 .byte "here. There are also what",13
@@ -200,20 +205,24 @@ ned_cottage_baby_before_message:
 .byte "be sure.",0
 
 ; + look cottage
+lady_cottage_look_at_cottage_message:
 .byte "You had a cottage once. A",13
 .byte "lot like this one. *sniff*",13
 .byte "Trogdor will pay!",0
 
 ; + look door
 ; (This response repeats whatever your command was back at you. When typing commands, you can put anything you want between the command and the object and it will still work, so here, if you type "look at door" or "look at the ugly brown door" or "lookasdfasdfdoor", it will put that in between the quotes.)
+lady_cottage_look_at_door_message:
 .byte "Listen to you, ",34,"look door",34,13
 .byte "What kinda gaming is that?",13
 .byte "It's a door and it's closed.",0
 
 ; + look berries
+lady_cottage_look_at_berries_message:
 .byte "Crunch berries maybe.",13
 
 ; + look bushes
+lady_cottage_look_at_bushes_message:
 .byte "You suspect they might be",13
 .byte "crunch berry bushes.",0
 

@@ -9,6 +9,8 @@
 	;=======================
 
 ned_cottage_verb_table:
+	.byte VERB_BREAK
+	.word ned_cottage_break-1
 	.byte VERB_CLIMB
 	.word ned_cottage_climb-1
 	.byte VERB_DEPLOY
@@ -19,6 +21,8 @@ ned_cottage_verb_table:
 	.word ned_cottage_get-1
 	.byte VERB_JUMP
 	.word ned_cottage_jump-1
+	.byte VERB_KICK
+	.word ned_cottage_kick-1
 	.byte VERB_KNOCK
 	.word ned_cottage_knock-1
 	.byte VERB_LOOK
@@ -27,6 +31,12 @@ ned_cottage_verb_table:
 	.word ned_cottage_move-1
 	.byte VERB_OPEN
 	.word ned_cottage_open-1
+	.byte VERB_PUSH
+	.word ned_cottage_push-1
+	.byte VERB_PULL
+	.word ned_cottage_pull-1
+	.byte VERB_PUNCH
+	.word ned_cottage_punch-1
 	.byte VERB_USE
 	.word ned_cottage_use-1
 	.byte 0
@@ -232,88 +242,81 @@ ned_cottage_look_at_hole:
 	jmp	finish_parse_message
 
 
-
-.if 0
-
 	;=======================
 	;=======================
 	;=======================
-	; Puddle
+	; Ned Tree
 	;=======================
 	;=======================
 	;=======================
 
-puddle_verb_table:
-	.byte VERB_GET
-	.word puddle_get-1
-	.byte VERB_TAKE
-	.word puddle_take-1
-	.byte VERB_STEAL
-	.word puddle_steal-1
+ned_verb_table:
+	.byte VERB_CLIMB
+	.word ned_tree_climb-1
 	.byte VERB_LOOK
-	.word puddle_look-1
+	.word ned_tree_look-1
+	.byte VERB_TALK
+	.word ned_tree_talk-1
 	.byte 0
 
 
 	;================
-	; get
+	; climb
 	;================
-puddle_get:
-puddle_steal:
-puddle_take:
+ned_tree_climb:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROCK
-	beq	puddle_get_rock
-	cmp	#NOUN_STONE
-	beq	puddle_get_rock
+	cmp	#NOUN_TREE
+	beq	ned_tree_climb_tree
 
+	jmp	parse_common_unknown
 
-	; else "probably wish" message
+ned_tree_climb_tree:
+	ldx	#<ned_tree_climb_tree_message
+	ldy	#>ned_tree_climb_tree_message
+	jmp	finish_parse_message
 
-	jmp	parse_common_get
+	;================
+	; talk
+	;================
+ned_tree_talk:
+	lda	CURRENT_NOUN
 
-puddle_get_rock:
-	ldx	#<puddle_get_rock_message
-	ldy	#>puddle_get_rock_message
+	cmp	#NOUN_TREE
+	beq	ned_tree_talk_tree
+
+	jmp	parse_common_talk
+
+ned_tree_talk_tree:
+	ldx	#<ned_tree_talk_tree_message
+	ldy	#>ned_tree_talk_tree_message
 	jmp	finish_parse_message
 
 	;=================
 	; look
 	;=================
 
-puddle_look:
+ned_tree_look:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROCK
-	beq	puddle_look_at_rock
-	cmp	#NOUN_STONE
-	beq	puddle_look_at_rock
-	cmp	#NOUN_MUD
-	beq	puddle_look_at_mud
-	cmp	#NOUN_PUDDLE
-	beq	puddle_look_at_mud
+	cmp	#NOUN_TREE
+	beq	ned_tree_look_at_tree
 	cmp	#NOUN_NONE
-	beq	puddle_look_at
+	beq	ned_tree_look_at
 
 	jmp	parse_common_look
 
-puddle_look_at:
-	ldx	#<puddle_look_at_message
-	ldy	#>puddle_look_at_message
+ned_tree_look_at:
+	ldx	#<ned_tree_look_at_message
+	ldy	#>ned_tree_look_at_message
 	jmp	finish_parse_message
 
-puddle_look_at_mud:
-	ldx	#<puddle_look_mud_message
-	ldy	#>puddle_look_mud_message
+ned_tree_look_at_tree:
+	ldx	#<ned_tree_look_at_tree_message
+	ldy	#>ned_tree_look_at_tree_message
 	jmp	finish_parse_message
 
-puddle_look_at_rock:
-	ldx	#<puddle_get_rock_message
-	ldy	#>puddle_get_rock_message
-	jmp	finish_parse_message
-.endif
 
 	;=======================
 	;=======================
@@ -325,115 +328,66 @@ puddle_look_at_rock:
 
 .include "kerrek_actions.s"
 
-.if 0
-
 
 	;=======================
 	;=======================
 	;=======================
-	; River and Stone
+	; Baby Lady Cottage
 	;=======================
 	;=======================
 	;=======================
 
-river_stone_verb_table:
-        .byte VERB_GET
-        .word river_stone_get-1
-        .byte VERB_LOOK
-        .word river_stone_look-1
-        .byte VERB_STEAL
-        .word river_stone_steal-1
-        .byte VERB_SWIM
-        .word river_stone_swim-1
-        .byte VERB_TAKE
-        .word river_stone_take-1
+lady_cottage_verb_table:
+	.byte VERB_LOOK
+	.word lady_cottage_look-1
 	.byte 0
-
-
-	;================
-	; get
-	;================
-river_stone_steal:
-river_stone_take:
-river_stone_get:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_ROCK
-	beq	river_get_rock
-	cmp	#NOUN_STONE
-	beq	river_get_rock
-
-	; else "probably wish" message
-
-	jmp	parse_common_get
-
-river_get_rock:
-	ldx	#<river_get_rock_message
-	ldy	#>river_get_rock_message
-	jmp	finish_parse_message
 
 	;=================
 	; look
 	;=================
 
-river_stone_look:
+lady_cottage_look:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROCK
-	beq	river_look_at_rock
-	cmp	#NOUN_STONE
-	beq	river_look_at_rock
-	cmp	#NOUN_WATER
-	beq	river_look_at_water
-	cmp	#NOUN_RIVER
-	beq	river_look_at_water
+	cmp	#NOUN_BERRIES
+	beq	lady_cottage_look_at_berries
+	cmp	#NOUN_BUSH
+	beq	lady_cottage_look_at_bushes
+	cmp	#NOUN_COTTAGE
+	beq	lady_cottage_look_at_cottage
+	cmp	#NOUN_DOOR
+	beq	lady_cottage_look_at_door
 	cmp	#NOUN_NONE
-	beq	river_look_at
+	beq	lady_cottage_look_at
 
 	jmp	parse_common_look
 
-river_look_at:
-	ldx	#<river_look_message
-	ldy	#>river_look_message
+lady_cottage_look_at:
+	ldx	#<lady_cottage_look_at_message
+	ldy	#>lady_cottage_look_at_message
 	jmp	finish_parse_message
 
-river_look_at_rock:
-	ldx	#<river_look_at_rock_message
-	ldy	#>river_look_at_rock_message
+lady_cottage_look_at_cottage:
+	ldx	#<lady_cottage_look_at_cottage_message
+	ldy	#>lady_cottage_look_at_cottage_message
 	jmp	finish_parse_message
 
-river_look_at_water:
-	ldx	#<river_look_at_water_message
-	ldy	#>river_look_at_water_message
+lady_cottage_look_at_door:
+	ldx	#<lady_cottage_look_at_door_message
+	ldy	#>lady_cottage_look_at_door_message
 	jmp	finish_parse_message
 
-
-
-	;===================
-	; swim
-	;===================
-
-river_stone_swim:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_WATER
-	beq	river_swim
-	cmp	#NOUN_RIVER
-	beq	river_swim
-	cmp	#NOUN_ROCK
-	beq	river_swim
-	cmp	#NOUN_STONE
-	beq	river_swim
-
-	jmp	parse_common_unknown
-
-river_swim:
-	ldx	#<river_swim_message
-	ldy	#>river_swim_message
+lady_cottage_look_at_berries:
+	ldx	#<lady_cottage_look_at_berries_message
+	ldy	#>lady_cottage_look_at_berries_message
 	jmp	finish_parse_message
-.endif
+
+lady_cottage_look_at_bushes:
+	ldx	#<lady_cottage_look_at_bushes_message
+	ldy	#>lady_cottage_look_at_bushes_message
+	jmp	finish_parse_message
+
 
 	;=======================
 	;=======================

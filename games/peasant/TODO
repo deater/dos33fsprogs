@@ -1,5 +1,8 @@
 TODO:
 
+make text every 9th row so descenders don't interfere?
+Would throw out option of using part of page2 as more RAM
+
 optimizations:
 + always load CURERENT_NOUN into A before calling into parsing
 	routines

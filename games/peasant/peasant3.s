@@ -244,17 +244,17 @@ map_priority_hi:
 	.byte	>inn_priority_lzsa		; 14	-- inn
 
 verb_tables_low:
-	.byte   <inn_verb_table			; 10	-- jhonka
-	.byte   <inn_verb_table			; 11	-- cottage
-	.byte   <inn_verb_table			; 12	-- lake west
-	.byte   <inn_verb_table			; 13	-- lake east
+	.byte   <jhonka_cave_verb_table		; 10	-- jhonka
+	.byte   <cottage_verb_table		; 11	-- cottage
+	.byte   <lake_west_verb_table		; 12	-- lake west
+	.byte   <lake_east_verb_table		; 13	-- lake east
 	.byte   <inn_verb_table			; 14	-- inn
 
 verb_tables_hi:
-	.byte   >inn_verb_table			; 10	-- jhonka
-	.byte   >inn_verb_table			; 11	-- cottage
-	.byte   >inn_verb_table			; 12	-- lake west
-	.byte   >inn_verb_table			; 13	-- lake east
+	.byte   >jhonka_cave_verb_table		; 10	-- jhonka
+	.byte   >cottage_verb_table		; 11	-- cottage
+	.byte   >lake_west_verb_table		; 12	-- lake west
+	.byte   >lake_east_verb_table		; 13	-- lake east
 	.byte   >inn_verb_table			; 14	-- inn
 
 
