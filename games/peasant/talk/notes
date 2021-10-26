@@ -1,3 +1,18 @@
+Peasant's Quest for the Apple II:
+Taking a 2000s Flash Game Back to the 1980s
+
+Peasant's Quest is a Flash-based adventure game designed by
+the creators of the Homestar Runner website and released in 2004.
+The game has a retro-feel, designed to look like Sierra adventure games
+from the 1980s such as King's Quest.  In this talk I'll describe
+taking the game and de-making it to an actual system from the 1980s:
+an Apple II with 64k of RAM.  I'll describe the various challenges
+I encountered along the way, mostly the Apple II's horrible high-res
+graphics mode as well as trying to cram all of the content into 64k of
+RAM while maintaining a low amount of floppy-disk swapping during gameplay.
+
+
+
 Demakes
 
 HGr-MIST
@@ -7,6 +22,9 @@ HGR
 
 Backgrounds
 	AGI-like?  They abandoned it.  Would save space
+
+HGR Graphics
+	pink line on left of screen (picture)
 
 Priority backgrounds, like AGI
 	+ load at $400, lo-res
@@ -39,6 +57,9 @@ Text
 	how many verbs/nouns?
 
 Ram-map
+
+keyboard: (picture)
+	no up/down arrows
 
 Music
 	Mockingboard, pt3 player
