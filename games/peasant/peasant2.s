@@ -167,9 +167,9 @@ oops_new_location:
 	jmp	new_location
 
 
-	;************************
+	;========================
 	; exit level
-	;************************
+	;========================
 level_over:
 	lda	MAP_LOCATION
 	cmp	#LOCATION_OUTSIDE_INN

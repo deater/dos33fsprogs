@@ -505,6 +505,18 @@ dialog_inside:	dialog_inside.o
 dialog_inside.o:	dialog_inside.s text/inside.inc
 	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
 
+####
+
+DIALOG_INN.LZSA:	dialog_inn
+	$(LZSA) -r -f2 dialog_inn DIALOG_INN.LZSA
+
+dialog_inn:	dialog_inn.o
+	ld65 -o dialog_inn dialog_inn.o -C ../../linker_scripts/apple2_d000.inc
+
+dialog_inn.o:	dialog_inn.s text/inn.inc
+	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
+
+
 ###
 
 DIALOG_CLIFF.LZSA:	dialog_cliff
