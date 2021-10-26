@@ -7,7 +7,8 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	plasma_hgr.dsk
 
-plasma_hgr.dsk:	HELLO OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_BOT
+plasma_hgr.dsk:	HELLO OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_FLIP MOVING \
+		MIRROR
 	cp $(EMPTYDISK) plasma_hgr.dsk
 	$(DOS33) -y plasma_hgr.dsk SAVE A HELLO
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OVAL
@@ -15,7 +16,9 @@ plasma_hgr.dsk:	HELLO OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_BOT
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 ZEBRA
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 JAWS
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 TWIST
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 OVAL_BOT
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 OVAL_FLIP
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 MOVING
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 MIRROR
 
 ###
 
@@ -32,11 +35,28 @@ oval.o:	oval.s
 
 ###
 
-OVAL_BOT:	oval_bot.o
-	ld65 -o OVAL_BOT oval_bot.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+OVAL_FLIP:	oval_flip.o
+	ld65 -o OVAL_FLIP oval_flip.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
-oval_bot.o:	oval_bot.s
-	ca65 -o oval_bot.o oval_bot.s -l oval_bot.lst
+oval_flip.o:	oval_flip.s
+	ca65 -o oval_flip.o oval_flip.s -l oval_flip.lst
+
+###
+
+MOVING:	moving.o
+	ld65 -o MOVING moving.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+
+moving.o:	moving.s
+	ca65 -o moving.o moving.s -l moving.lst
+
+###
+
+MIRROR:	mirror.o
+	ld65 -o MIRROR mirror.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+
+mirror.o:	mirror.s
+	ca65 -o mirror.o mirror.s -l mirror.lst
+
 
 
 ###
@@ -76,5 +96,5 @@ purple_waves.o:	purple_waves.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_BOT
+	rm -f *~ *.o *.lst OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_FLIP
 
