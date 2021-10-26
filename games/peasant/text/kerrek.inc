@@ -17,10 +17,13 @@
 
 ; + look
 kerrek_look_at_message:
-.byte "There are large hoof prints in the grass here.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here.",0
 
 ; + look (no Kerrek)
-.byte "There are large hoof prints in the the grass here. And it smells like a public latrine.",0
+.byte "There are large hoof prints",13
+.byte "in the the grass here. And",13
+.byte "it smells like a public latrine.",0
 
 ; + look (living Kerrek)
 ; + look footprints/tracks (living Kerrek) 
@@ -28,7 +31,11 @@ kerrek_look_at_message:
 .byte "Get outta here!",0
 
 ; + look footprints/tracks (Kerrek not present)
-.byte "If you weren't a simpleton you might think these were Kerrek prints. But since you are a simpleton, you just go, 'Yay! Piggies!' ",0
+.byte "If you weren't a simpleton",13
+.byte "you might think these were",13
+.byte "Kerrek prints. But since",13
+.byte "you are a simpleton, you",13
+.byte "just go, ",34,"Yay! Piggies!",34,0
 
 ; + look (dead Kerrek)
 .byte "There are large hoof prints in the grass here. There is a large Kerrek-shaped mound on the grass.",0
@@ -71,7 +78,9 @@ kerrek_look_at_message:
 .byte "Yeah. You smote the Kerrek. You deserve a trophy full of Mutton-ums.",0
 
 ; + kill kerrek (he is not there)
-.byte "Good idea. But you kinda need the actual Kerrek to be here for that to work.",0
+.byte "Good idea. But you kinda",13
+.byte "need the actual Kerrek to",13
+.byte "be here for that to work.",0
 
 ; + get arrow (after killing)
 .byte "Eww! No way. That thing's got some serious Kerrek-Brand kooties on it now.",0
