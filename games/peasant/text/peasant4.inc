@@ -24,7 +24,11 @@ ned_cottage_open_door_message:
 .byte "How? There's no knob.",0
 
 ; + open door (after baby opens)
-.byte "It's already open. Since this is an adventure game we're gonna proffer you adventure yourself on in there.",0
+.byte "It's already open. Since",13
+.byte "this is an adventure game",13
+.byte "we're gonna proffer you",13
+.byte "adventure yourself on in",13
+.byte "there.",0
 
 ; + pull door
 ; + push door
@@ -73,7 +77,11 @@ ned_cottage_look_hole_message:
 .byte "appears to be empty.",0
 
 ; + look hole (after deploying baby)
-.byte "There is no baby here, but there's an open door on the other side of the room. If you could only get to it somehow!",0
+.byte "There is no baby here, but",13
+.byte "there's an open door on the",13
+.byte "other side of the room. If",13
+.byte "you could only get to it",13
+.byte "somehow!",0
 
 ; + look rock (before removing it)
 ned_cottage_look_rock_message:
@@ -82,7 +90,9 @@ ned_cottage_look_rock_message:
 .byte "the cottage.",0
 
 ; + look rock (after removing it)
-.byte "Some jerk removed a loose stone from the back of the cottage.",0
+.byte "Some jerk removed a loose",13
+.byte "stone from the back of the",13
+.byte "cottage.",0
 
 ; + get rock	+2 POINTS
 ; + move rock
@@ -121,8 +131,25 @@ ned_cottage_try_message:
 ;+5 POINTS
 ; + put baby into the hole
 .byte "Deploying Q-Baby...",0
-.byte "Way to go, baby! It got the cottage door opened and headed off to a new life. He becomes Valedictorian of his graduating class, goes to Scalding Lake State, gets a degree in Advanced Peasantry and lands a job at Thatch-Pro: building better cottages for a better tomorrow.",0
-.byte "You grow apart and the letters from him become fewer and fewer. He develops a severe mead problem and blames you for never being there.",0
+
+.byte "Way to go, baby! It got the",13
+.byte "cottage door opened and",13
+.byte "headed off to a new life.",13
+.byte "He becomes Valedictorian",13
+.byte "of his graduating class,",13
+.byte "goes to Scalding Lake",13
+.byte "State, gets a degree in",13
+.byte "Advanced Peasantry and",13
+.byte "lands a job at Thatch-Pro:",13
+.byte "building better cottages",13
+.byte "for a better tomorrow.",0
+
+.byte "You grow apart and the",13
+.byte "letters from him become",13
+.byte "fewer and fewer. He",13
+.byte "develops a severe mead",13
+.byte "problem and blames you for",13
+.byte "never being there.",0
 
 ; + deploy/drop/use baby (before baby)
 ned_cottage_baby_before_message:
@@ -134,13 +161,19 @@ ned_cottage_baby_before_message:
 .byte "Use the baby where? You haven't anywhere inconsiderate to stuff 'm.",0
 
 ; + deploy/drop/use baby (after baby left)
-.byte "Li'l P.B. has moved on, and the door seems to be open... I can't see why we'd go through this all over again.",0
+.byte "Li'l P.B. has moved on, and",13
+.byte "the door seems to be",13
+.byte "open... I can't see why",13
+.byte "we'd go through this all",13
+.byte "over again.",0
+
 ; + close door (before baby opens)
 .byte "Already done. That was",13
 .byte "easy!",0
 
 ; + close door (after baby opens)
-.byte "You can't. That baby really wrenched it open good.",0
+.byte "You can't. That baby really",13
+.byte "wrenched it open good.",0
 
 ;=================
 ; Wavy Tree (Ned)
