@@ -487,8 +487,8 @@ load_loop:
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	load_loop
 
-	lda	#$1		; 1 means exit to loader?
-	sta	GAME_OVER
+	lda	#NEW_FROM_DISK		; load whole level from disk 
+	sta	LEVEL_OVER
 
 done_load:
 
@@ -565,8 +565,8 @@ copy_loop:
 	jsr	driveoff
 
 done_save:
-	lda	#$FF		; reload level as we scrawled on $2000
-	sta	GAME_OVER
+	lda	#NEW_LOCATION	; reload level as we scrawled on $2000
+	sta	LEVEL_OVER
 
 	rts
 
@@ -758,15 +758,16 @@ lname_kerrek_2:		.byte "Kerrek Tracks 2",0		; C4 LOCATION_KERREK_2
 lname_outside_lady:	.byte "Outside Baby Lady Cottage",0	; D4 LOCATION_OUTSIDE_LADY
 lname_burn_tree:	.byte "Burninated Trees",0		; E4 LOCATION_BURN_TREES
 
-lname_hidden_glen:	.byte "Hidden Glen",0			; LOCATION_HIDDEN_GLEN
+
 lname_cliff_base:	.byte "Cliff Base",0			; LOCATION_CLIFF_BASE
 lname_cliffland_heights:.byte "Cliffland Heights",0		; LOCATION_CLIFF_HEIGHTS
 lname_trogdor_outer:	.byte "Trogdor's Outer Sanctum",0	; LOCATION_TROGDOR_OUTER
 lname_trogdor_posh:	.byte "Trogdor's Posh Lair",0		; LOCATION_TROGDOR_LAIR
 
+lname_hidden_glen:	.byte "Hidden Glen",0			; LOCATION_HIDDEN_GLEN
 lname_inside_lady:	.byte "Inside Baby Lady Cottage",0	; LOCATION_INSIDE_LADY
-lname_inside_inn:	.byte "Inside Giant Inn",0		; LOCATION_INSIDE_INN
 lname_inside_nn:	.byte "Inside Mysterious Cottage",0	; LOCATION_INSIDE_NN
+lname_inside_inn:	.byte "Inside Giant Inn",0		; LOCATION_INSIDE_INN
 
 lname_empty:		.byte "Empty",0
 location_names_end:

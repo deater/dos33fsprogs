@@ -2,6 +2,8 @@
 ; Hidden Glen
 ;================
 
+blah:
+
 ; (Walk in the path of Dongolev's arrows)
 .byte "Hopefully this guy will have some sense and not shoot you.",0
 ; {Dongolev shoots you in the head}

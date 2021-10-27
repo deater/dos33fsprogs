@@ -2,8 +2,6 @@
 
 ; Cliff Base
 
-WHICH_PEASANTRY=0
-
 ; by Vince `deater` Weaver	vince@deater.net
 
 .include "hardware.inc"
@@ -15,7 +13,7 @@ WHICH_PEASANTRY=0
 
 cliff_base:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables
@@ -40,7 +38,7 @@ cliff_base:
 
 new_location:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 
 	;=====================
 	; load bg
@@ -115,7 +113,7 @@ game_loop:
 
 	jsr	check_keyboard
 
-	lda	GAME_OVER
+	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over
 

@@ -4,8 +4,6 @@
 
 ;	Jhonka, your cottage, w lake, e lake, inn
 
-WHICH_PEASANTRY = 2
-
 ; by Vince `deater` Weaver	vince@deater.net
 
 ; with apologies to everyone
@@ -17,10 +15,12 @@ WHICH_PEASANTRY = 2
 .include "inventory.inc"
 .include "parse_input.inc"
 
+LOCATION_BASE   = LOCATION_JHONKA_CAVE	; index starts here (10)
+
 peasantry3:
 
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables		; necessary?
@@ -40,7 +40,7 @@ peasantry3:
 
 	; update map location
 
-	jsr	update_map_location
+;	jsr	update_map_location
 
 	; update score
 
@@ -54,7 +54,7 @@ peasantry3:
 
 new_location:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 
 
 	;==========================
@@ -64,7 +64,7 @@ new_location:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#10
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	verb_tables_low,X
@@ -80,7 +80,7 @@ new_location:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#10
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	map_backgrounds_low,X
@@ -96,7 +96,7 @@ new_location:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#10
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	map_priority_low,X
@@ -146,7 +146,7 @@ game_loop:
 
 	jsr	check_keyboard
 
-	lda	GAME_OVER
+	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over
 

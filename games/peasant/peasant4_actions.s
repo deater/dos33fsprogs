@@ -288,8 +288,8 @@ ned_cottage_try:
 	lda	#LOAD_GAME_OVER
 	sta	WHICH_LOAD
 
-	lda	#1
-	sta	GAME_OVER
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
 
 	ldx	#<ned_cottage_try_message
 	ldy	#>ned_cottage_try_message

@@ -4,8 +4,6 @@
 
 ; 	Gary, Kerrek 1, Well, Yellow Tree, Waterfall
 
-WHICH_PEASANTRY = 0
-
 ; by Vince `deater` Weaver	vince@deater.net
 
 ; with apologies to everyone
@@ -17,10 +15,12 @@ WHICH_PEASANTRY = 0
 .include "inventory.inc"
 .include "parse_input.inc"
 
+LOCATION_BASE   = LOCATION_POOR_GARY	; index starts here (0)
+
 peasantry1:
 
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables		; necessary?
@@ -39,7 +39,7 @@ peasantry1:
 
 	; update map location
 
-	jsr	update_map_location
+;	jsr	update_map_location
 
 	; update score
 
@@ -53,7 +53,7 @@ peasantry1:
 
 new_location:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 
 	;==========================
 	; load updated verb table
@@ -142,7 +142,7 @@ game_loop:
 
 	jsr	check_keyboard
 
-	lda	GAME_OVER
+	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over
 

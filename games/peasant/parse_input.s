@@ -127,7 +127,7 @@ parse_common_copy:
 
 	; want copy
 	lda	#NEW_FROM_DISK
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 
 	lda     #LOAD_COPY_CHECK
 	sta	WHICH_LOAD
@@ -161,8 +161,8 @@ parse_common_die:
 	lda	#LOAD_GAME_OVER
 	sta	WHICH_LOAD
 
-	lda	#1
-	sta	GAME_OVER
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
 
 	ldx	#<die_message
 	ldy	#>die_message
@@ -1033,10 +1033,10 @@ verb_table = $BF00
 
 	;=========================
 	;=========================
-	; setup verb table
+	; setup default verb table
 	;=========================
 	;=========================
-setup_verb_table:
+setup_default_verb_table:
 
 	;===========================
 	; first make it all unknown
@@ -1060,11 +1060,8 @@ unknown_loop:
 	lda	#>common_verb_table
 	sta	INH
 
-;	jsr	load_custom_verb_table
+	; fallthrough
 
-;	rts
-
-	; Fallthrough
 
 	;=========================
 	;=========================

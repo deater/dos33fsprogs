@@ -5,16 +5,16 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	inside_graphics.inc \
+all:	graphics_inside.inc \
 	priority_inside.inc
 
 ###
 
-inside_graphics.inc:	\
+graphics_inside.inc:	\
 	hidden_glen.lzsa inside_cottage.lzsa inside_nn.lzsa
-	echo "hidden_glen_lzsa: .incbin \"hidden_glen.lzsa\"" > inside_graphics.inc
-	echo "inside_cottage_lzsa: .incbin \"inside_cottage.lzsa\"" >> inside_graphics.inc
-	echo "inside_nn_lzsa: .incbin \"inside_nn.lzsa\"" >> inside_graphics.inc
+	echo "hidden_glen_lzsa: .incbin \"hidden_glen.lzsa\"" > graphics_inside.inc
+	echo "inside_cottage_lzsa: .incbin \"inside_cottage.lzsa\"" >> graphics_inside.inc
+	echo "inside_nn_lzsa: .incbin \"inside_nn.lzsa\"" >> graphics_inside.inc
 
 ###
 
@@ -73,5 +73,5 @@ hidden_glen_priority.gr:	hidden_glen_priority.png
 
 
 clean:	
-	rm -f *~ inside_graphics.inc priority_inside.inc *.lzsa *.gr *.hgr
+	rm -f *~ graphics_inside.inc priority_inside.inc *.lzsa *.gr *.hgr
 

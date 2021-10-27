@@ -4,8 +4,6 @@
 
 ;	ned cottage, wavy tree, kerrek 2, lady cottage, burninated tree
 
-WHICH_PEASANTRY = 3
-
 ; by Vince `deater` Weaver	vince@deater.net
 
 ; with apologies to everyone
@@ -17,10 +15,12 @@ WHICH_PEASANTRY = 3
 .include "inventory.inc"
 .include "parse_input.inc"
 
+LOCATION_BASE   = LOCATION_OUTSIDE_NN     ; index starts here (15)
+
 peasantry4:
 
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables		; necessary?
@@ -40,7 +40,7 @@ peasantry4:
 
 	; update map location
 
-	jsr	update_map_location
+;	jsr	update_map_location
 
 	; update score
 
@@ -54,7 +54,7 @@ peasantry4:
 
 new_location:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 
 	;==========================
 	; load updated verb table
@@ -63,7 +63,7 @@ new_location:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#15
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	verb_tables_low,X
@@ -79,7 +79,7 @@ new_location:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#15
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	map_backgrounds_low,X
@@ -125,7 +125,7 @@ not_necessary_cottage:
 
 	lda	MAP_LOCATION
 	sec
-	sbc	#15
+	sbc	#LOCATION_BASE
 	tax
 
 	lda	map_priority_low,X
@@ -175,7 +175,7 @@ game_loop:
 
 	jsr	check_keyboard
 
-	lda	GAME_OVER
+	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over
 

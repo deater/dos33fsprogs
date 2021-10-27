@@ -1,8 +1,8 @@
 ; Peasant's Quest
 
-; Peasantry Part 2 (second line of map)
+; Inside Graphics
 
-;	haystack, puddle, archery, river, knight (pass)
+;	inside lady cottage, inside ned cottage, hidden glen
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -15,10 +15,9 @@
 .include "inventory.inc"
 .include "parse_input.inc"
 
-LOCATION_BASE   = LOCATION_HAY_BALE	; index starts here (5)
+LOCATION_BASE	= LOCATION_HIDDEN_GLEN		; index starts here (24)
 
-
-peasantry2:
+inside:
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -29,9 +28,9 @@ peasantry2:
 
 	; decompress dialog to $D000
 
-	lda	#<peasant2_text_lzsa
+	lda	#<inside_text_lzsa
         sta     getsrc_smc+1
-        lda     #>peasant2_text_lzsa
+        lda     #>inside_text_lzsa
         sta     getsrc_smc+2
 
         lda     #$D0
@@ -40,7 +39,8 @@ peasantry2:
 
 
 	; update map location
-;	jsr	update_map_location
+
+	jsr	update_map_location
 
 	; update score
 
@@ -60,11 +60,7 @@ new_location:
 	;==========================
 	; load updated verb table
 
-        ; setup default verb table
-
-        jsr     setup_default_verb_table
-
-	; we are PEASANT2 so locations 5...9 map to 0...4
+	; we are INSIDE so locations 24...26 map to 0...2
 
 	lda	MAP_LOCATION
 	sec
@@ -81,7 +77,7 @@ new_location:
 	;=====================
 	; load bg
 
-	; we are PEASANT2 so locations 5...9 map to 0...4
+	; we are INSIDE so locations 24...26 map to 0...2
 
 	lda	MAP_LOCATION
 	sec
@@ -100,7 +96,7 @@ new_location:
 	jsr	decompress_lzsa2_fast
 
 
-	; we are PEASANT2 so locations 5...9 map to 0...4
+	; we are INSIDE so locations 24...26 map to 0...2
 
 	lda	MAP_LOCATION
 	sec
@@ -220,8 +216,8 @@ to_left:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "graphics_peasantry/graphics_peasant2.inc"
-.include "graphics_peasantry/priority_peasant2.inc"
+.include "graphics_inside/graphics_inside.inc"
+.include "graphics_inside/priority_inside.inc"
 
 .include "version.inc"
 
@@ -250,51 +246,40 @@ to_left:
 
 
 map_backgrounds_low:
-	.byte	<haystack_lzsa		; 5	-- haystack
-	.byte	<puddle_lzsa		; 6	-- puddle
-	.byte	<archery_lzsa		; 7	-- archery
-	.byte	<river_lzsa		; 8	-- river
-	.byte	<knight_lzsa		; 9	-- knight
+	.byte	<hidden_glen_lzsa	; 24	-- hidden glen
+	.byte	<inside_cottage_lzsa	; 25	-- inside lady cottage
+	.byte	<inside_nn_lzsa		; 26	-- inside ned cottage
 
 map_backgrounds_hi:
-	.byte	>haystack_lzsa		; 5	-- haystack
-	.byte	>puddle_lzsa		; 6	-- puddle
-	.byte	>archery_lzsa		; 7	-- archery
-	.byte	>river_lzsa		; 8	-- river
-	.byte	>knight_lzsa		; 9	-- knight
+	.byte	>hidden_glen_lzsa	; 24	-- hidden glen
+	.byte	>inside_cottage_lzsa	; 25	-- inside lady cottage
+	.byte	>inside_nn_lzsa		; 26	-- inside ned cottage
 
 map_priority_low:
-	.byte	<haystack_priority_lzsa		; 5	-- haystack
-	.byte	<puddle_priority_lzsa		; 6	-- puddle
-	.byte	<archery_priority_lzsa		; 7	-- archery
-	.byte	<river_priority_lzsa		; 8	-- river
-	.byte	<knight_priority_lzsa		; 9	-- knight
+	.byte	<hidden_glen_priority_lzsa	; 24	-- hidden glen
+	.byte	<inside_cottage_priority_lzsa	; 25	-- inside lady cottage
+	.byte	<inside_nn_priority_lzsa	; 26	-- inside ned cottage
 
 map_priority_hi:
-	.byte	>haystack_priority_lzsa		; 5	-- haystack
-	.byte	>puddle_priority_lzsa		; 6	-- puddle
-	.byte	>archery_priority_lzsa		; 7	-- archery
-	.byte	>river_priority_lzsa		; 8	-- river
-	.byte	>knight_priority_lzsa		; 9	-- knight
+	.byte	>hidden_glen_priority_lzsa	; 24	-- hidden glen
+	.byte	>inside_cottage_priority_lzsa	; 25	-- inside lady cottage
+	.byte	>inside_nn_priority_lzsa	; 26	-- inside ned cottage
+
 
 verb_tables_low:
-	.byte	<hay_bale_verb_table		; 5	-- haystack
-	.byte	<puddle_verb_table		; 6	-- puddle
-	.byte	<archery_verb_table		; 7	-- archery
-	.byte	<river_stone_verb_table		; 8	-- river
-	.byte	<mountain_pass_verb_table	; 9	-- knight
+	.byte	<hidden_glen_verb_table		; 24	-- hidden glen
+	.byte	<inside_cottage_verb_table	; 25	-- inside lady cottage
+	.byte	<inside_nn_verb_table		; 26	-- inside ned cottage
 
 verb_tables_hi:
-	.byte	>hay_bale_verb_table		; 5	-- haystack
-	.byte	>puddle_verb_table		; 6	-- puddle
-	.byte	>archery_verb_table		; 7	-- archery
-	.byte	>river_stone_verb_table		; 8	-- river
-	.byte	>mountain_pass_verb_table	; 9	-- knight
+	.byte	>hidden_glen_verb_table		; 24	-- hidden glen
+	.byte	>inside_cottage_verb_table	; 25	-- inside lady cottage
+	.byte	>inside_nn_verb_table		; 26	-- inside ned cottage
 
 
 
 
-peasant2_text_lzsa:
-.incbin "DIALOG_PEASANT2.LZSA"
+inside_text_lzsa:
+.incbin "DIALOG_INSIDE.LZSA"
 
-.include "peasant2_actions.s"
+.include "inside_actions.s"

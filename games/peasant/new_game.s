@@ -84,10 +84,13 @@ start_new_game:
 
 	; map location
 
-	lda	#4
-	sta	MAP_X
-	lda	#1
-	sta	MAP_Y
+	lda	#LOCATION_MOUNTAIN_PASS
+	sta	MAP_LOCATION
+
+;	lda	#4
+;	sta	MAP_X
+;	lda	#1
+;	sta	MAP_Y
 
 	; inventory is only t-shirt
 

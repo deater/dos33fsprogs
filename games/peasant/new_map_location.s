@@ -1,89 +1,75 @@
 
 	;=====================
-	; new map location
+	; update map location
 	;=====================
-
-new_map_location:
-	lda	#NEW_LOCATION
-	sta	GAME_OVER
-
-	; fall through
-
-
+	; new location is in A
 update_map_location:
 
-	;==================
-	; setup verb table
+	; get disk location of old location
+	; we do this because the disk load code will over-write WHICH_LOAD
 
-	jsr	setup_verb_table
+	ldx	MAP_LOCATION
+	ldy	location_to_file,X
+	sty	WHICH_LOAD
 
-
-	;==================
-	; update map
-	;	on main map, it's (MAP_Y*5)+MAP_X
-
-
-	; put in map
-
-
-
-
-map_wrap_x:
-	; wrap X (0..4)
-	lda	MAP_X
-	bmi	map_x_went_negative
-	cmp	#5
-	bcc	map_wrap_y		; blt
-
-	lda	#NEW_FROM_DISK
-	sta	GAME_OVER
-
-	lda	#LOAD_CLIFF
-	sta	WHICH_LOAD
-	rts
-
-map_x_went_negative:
-	lda	#0		; don't wrap anymore
-
-update_map_x:
-	sta	MAP_X
-
-map_wrap_y:
-
-	; wrap Y (0..3)
-	lda	MAP_Y
-	and	#$3
-	sta	MAP_Y
-
-	clc
-	lda	MAP_Y
-	asl
-	asl
-	adc	MAP_Y
-	adc	MAP_X
+	; save new location
 
 	sta	MAP_LOCATION
 
-	; see if we need to change disk
+	;==============================
+	; check if need to switch disk
 
-	lda	MAP_Y
-	cmp	#WHICH_PEASANTRY
+	tax
+	lda	location_to_file,X
+	cmp	WHICH_LOAD
+	beq	same_disk
+new_disk:
+	sta	WHICH_LOAD		; point to new file
+	lda	#NEW_FROM_DISK		; indicate we need to load
+	sta	LEVEL_OVER
+	rts
 
-	beq	were_good
-
-must_load_from_disk:
-	lda	#NEW_FROM_DISK
-	sta	GAME_OVER
-
-	lda	MAP_Y
-	clc
-	adc	#LOAD_PEASANT1
-	sta	WHICH_LOAD
-
-were_good:
+same_disk:
+	lda	#NEW_LOCATION
+	sta	LEVEL_OVER
 	rts
 
 
+	;=========================
+	; Move Map NORTH
+	;=========================
+move_map_north:
+	lda	MAP_LOCATION
+	tax
+	lda	exits_north,X
+	jmp	update_map_location
+
+	;=========================
+	; Move Map SOUTH
+	;=========================
+move_map_south:
+	lda	MAP_LOCATION
+	tax
+	lda	exits_south,X
+	jmp	update_map_location
+
+	;=========================
+	; Move Map EAST
+	;=========================
+move_map_east:
+	lda	MAP_LOCATION
+	tax
+	lda	exits_east,X
+	jmp	update_map_location
+
+	;=========================
+	; Move Map WEST
+	;=========================
+move_map_west:
+	lda	MAP_LOCATION
+	tax
+	lda	exits_west,X
+	jmp	update_map_location
 
 exits_north:
 .byte LOCATION_OUTSIDE_NN	; LOCATION_POOR_GARY	=	0
@@ -110,14 +96,15 @@ exits_north:
 .byte LOCATION_LAKE_EAST	; LOCATION_OUTSIDE_LADY	=	18
 .byte LOCATION_OUTSIDE_INN	; LOCATION_BURN_TREES	= 	19
 
-.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	20
-.byte LOCATION_CLIFF_HEIGHTS	; LOCATION_CLIFF_BASE	=	21
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	22
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	23
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	24
+.byte LOCATION_CLIFF_HEIGHTS	; LOCATION_CLIFF_BASE	=	20
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	21
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	22
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	23
+
+.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	24
 .byte LOCATION_EMPTY		; LOCATION_INSIDE_LADY	= 	25
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	26
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	27
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	26
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	27
 .byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
 
 exits_south:
@@ -145,14 +132,15 @@ exits_south:
 .byte LOCATION_YELLOW_TREE	; LOCATION_OUTSIDE_LADY	=	18
 .byte LOCATION_WATERFALL	; LOCATION_BURN_TREES	= 	19
 
-.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	20
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	21
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	22
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	23
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	24
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	20
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	21
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	22
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	23
+
+.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	24
 .byte LOCATION_OUTSIDE_LADY	; LOCATION_INSIDE_LADY	= 	25
-.byte LOCATION_OUTSIDE_INN	; LOCATION_INSIDE_INN	=	26
-.byte LOCATION_OUTSIDE_NN	; LOCATION_INSIDE_NN	=	27
+.byte LOCATION_OUTSIDE_NN	; LOCATION_INSIDE_NN	=	26
+.byte LOCATION_OUTSIDE_INN	; LOCATION_INSIDE_INN	=	27
 .byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
 
 exits_east:
@@ -180,14 +168,15 @@ exits_east:
 .byte LOCATION_BURN_TREES	; LOCATION_OUTSIDE_LADY	=	18
 .byte LOCATION_EMPTY		; LOCATION_BURN_TREES	= 	19
 
-.byte LOCATION_POOR_GARY	; LOCATION_HIDDEN_GLEN	=	20
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	21
-.byte LOCATION_TROGDOR_OUTER	; LOCATION_CLIFF_HEIGHTS=	22
-.byte LOCATION_TROGDOR_LAIR	; LOCATION_TROGDOR_OUTER=	23
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	24
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	20
+.byte LOCATION_TROGDOR_OUTER	; LOCATION_CLIFF_HEIGHTS=	21
+.byte LOCATION_TROGDOR_LAIR	; LOCATION_TROGDOR_OUTER=	22
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	23
+
+.byte LOCATION_POOR_GARY	; LOCATION_HIDDEN_GLEN	=	24
 .byte LOCATION_EMPTY		; LOCATION_INSIDE_LADY	= 	25
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	26
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	27
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	26
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	27
 .byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
 
 exits_west:
@@ -215,14 +204,15 @@ exits_west:
 .byte LOCATION_KERREK_2		; LOCATION_OUTSIDE_LADY	=	18
 .byte LOCATION_OUTSIDE_LADY	; LOCATION_BURN_TREES	= 	19
 
-.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	20
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	21
-.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	22
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	23
-.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	24
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_BASE	=	20
+.byte LOCATION_EMPTY		; LOCATION_CLIFF_HEIGHTS=	21
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_OUTER=	22
+.byte LOCATION_EMPTY		; LOCATION_TROGDOR_LAIR	=	23
+
+.byte LOCATION_EMPTY		; LOCATION_HIDDEN_GLEN	=	24
 .byte LOCATION_EMPTY		; LOCATION_INSIDE_LADY	= 	25
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	26
-.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	27
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_NN	=	26
+.byte LOCATION_EMPTY		; LOCATION_INSIDE_INN	=	27
 .byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
 
 location_to_file:
@@ -250,14 +240,14 @@ location_to_file:
 .byte LOAD_PEASANT4		; LOCATION_OUTSIDE_LADY	=	18
 .byte LOAD_PEASANT4		; LOCATION_BURN_TREES	= 	19
 
-.byte LOAD_INSIDE		; LOCATION_HIDDEN_GLEN	=	20
-.byte LOAD_CLIFF		; LOCATION_CLIFF_BASE	=	21
-.byte LOAD_CLIFF		; LOCATION_CLIFF_HEIGHTS=	22
-.byte LOAD_CLIFF		; LOCATION_TROGDOR_OUTER=	23
-.byte LOAD_TROGDOR		; LOCATION_TROGDOR_LAIR	=	24
-.byte LOAD_INSIDE		; LOCATION_INSIDE_LADY	= 	25
-.byte LOAD_INN			; LOCATION_INSIDE_INN	=	26
-.byte LOAD_INSIDE		; LOCATION_INSIDE_NN	=	27
-.byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
+.byte LOAD_CLIFF		; LOCATION_CLIFF_BASE	=	20
+.byte LOAD_CLIFF		; LOCATION_CLIFF_HEIGHTS=	21
+.byte LOAD_CLIFF		; LOCATION_TROGDOR_OUTER=	22
+.byte LOAD_TROGDOR		; LOCATION_TROGDOR_LAIR	=	23
 
+.byte LOAD_INSIDE		; LOCATION_HIDDEN_GLEN	=	24
+.byte LOAD_INSIDE		; LOCATION_INSIDE_LADY	= 	25
+.byte LOAD_INSIDE		; LOCATION_INSIDE_NN	=	26
+.byte LOAD_INN			; LOCATION_INSIDE_INN	=	27
+.byte LOCATION_EMPTY		; LOCATION_EMPTY	=	28
 

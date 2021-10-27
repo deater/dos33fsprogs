@@ -52,9 +52,7 @@ really_move_peasant:
 	;============================
 peasant_x_toobig:
 
-	inc	MAP_X
-
-	jsr	new_map_location
+	jsr	move_map_east
 
 	lda	#0		; new X location
 
@@ -63,9 +61,7 @@ peasant_x_toobig:
 	;============================
 peasant_x_negative:
 
-	dec	MAP_X
-
-	jsr	new_map_location
+	jsr	move_map_west
 
 	lda	#39		; new X location
 
@@ -110,9 +106,7 @@ done_movex:
 	;============================
 peasant_y_toobig:
 
-	inc	MAP_Y
-
-	jsr	new_map_location
+	jsr	move_map_south
 
 	lda	#45		; new X location
 
@@ -122,9 +116,7 @@ peasant_y_toobig:
 	;============================
 peasant_y_negative:
 
-	dec	MAP_Y
-
-	jsr	new_map_location
+	jsr	move_map_north
 
 	lda	#160		; new X location
 
@@ -136,7 +128,7 @@ done_movey:
 
 	; if we moved off screen, don't re-draw peasant
 
-        lda     GAME_OVER
+        lda     LEVEL_OVER
         bne     peasant_the_same
 
 	; save behind new position

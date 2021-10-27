@@ -31,11 +31,13 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF GAME_OVER
+peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF GAME_OVER INSIDE
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
 	$(DOS33_RAW) peasant_side2.dsk   0 0  WBOOT2      0   1
 	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK   0   0
 	$(DOS33_RAW) peasant_side2.dsk   3 0 GAME_OVER    0   0
+#	$(DOS33_RAW) peasant_side2.dsk   4 0 MAP          0   0
+	$(DOS33_RAW) peasant_side2.dsk   5 0 INSIDE       0   0
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0
@@ -376,6 +378,24 @@ copy_check.o:	copy_check.s graphics_copy/copy_graphics.inc \
 		copy_check.s
 	ca65 -o copy_check.o copy_check.s -l copy_check.lst
 
+###
+
+INSIDE:	inside.o
+	ld65 -o INSIDE inside.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+inside.o:	inside.s zp.inc inventory.inc \
+		parse_input.inc \
+		inside_actions.s DIALOG_INSIDE.LZSA dialog_inside.inc \
+		graphics_inside/graphics_inside.inc sprites/peasant_sprites.inc \
+		graphics_inside/priority_inside.inc \
+		sprites/inventory_sprites.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s new_map_location.s \
+		peasant_move.s score.s inventory.s loadsave_menu.s
+	ca65 -o inside.o inside.s -l inside.lst
+
 
 ###
 
@@ -405,7 +425,7 @@ save3.o:	save3.s
 
 parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_input parse_input.lst > parse_input.inc
-	./generate_common -a 0xee00 -s setup_verb_table parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s setup_default_verb_table parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s load_custom_verb_table parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s partial_message_step parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s finish_parse_message parse_input.lst >> parse_input.inc
@@ -504,6 +524,11 @@ dialog_inside:	dialog_inside.o
 
 dialog_inside.o:	dialog_inside.s text/inside.inc
 	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
+
+###
+
+dialog_inside.inc:	generate_all_symbols dialog_inside
+	./generate_all_symbols -a 0xd000 dialog_inside.lst > dialog_inside.inc
 
 ####
 

@@ -11,7 +11,7 @@
 
 trogdor:
 	lda	#0
-	sta	GAME_OVER
+	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables		; needed?
