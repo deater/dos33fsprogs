@@ -589,6 +589,9 @@ graphics_trogdor/trogdor_graphics.inc:
 graphics_end/ending_graphics.inc:
 	cd graphics_end && make
 
+graphics_inside/graphics_inside.inc:
+	cd graphics_inside && make
+
 sprites/inventory_sprites.inc:
 	cd sprites && make
 

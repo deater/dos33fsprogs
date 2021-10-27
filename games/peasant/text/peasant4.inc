@@ -308,15 +308,21 @@ lady_cottage_look_at_bushes_message:
 ;.byte "more press 'reload' on the browser 
 
 ; + knock (walks to door)
+lady_cottage_knock_door_message:
 .byte 34,"It's open,",34," says a female",13
 .byte "voice from inside. Um, it's",13
 .byte "NOT open, but you get her",13
 .byte "drift.",0
 
 ; + knock (after she leaves)
-.byte "No one answers. That crazy lady took off. How ever will you get past this closed door now?",0
+lady_cottage_knock_door_gone_message:
+.byte "No one answers. That crazy",13
+.byte "lady took off. How ever",13
+.byte "will you get past this",13
+.byte "closed door now?",0
 
 ; + open door
+lady_cottage_open_door_message:
 .byte "You open er up and head on",13
 .byte "in.",0
 

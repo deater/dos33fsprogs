@@ -443,6 +443,10 @@ ned_tree_look_at_tree:
 lady_cottage_verb_table:
 	.byte VERB_LOOK
 	.word lady_cottage_look-1
+	.byte VERB_KNOCK
+	.word lady_cottage_knock-1
+	.byte VERB_OPEN
+	.word lady_cottage_open-1
 	.byte 0
 
 	;=================
@@ -490,6 +494,63 @@ lady_cottage_look_at_bushes:
 	ldx	#<lady_cottage_look_at_bushes_message
 	ldy	#>lady_cottage_look_at_bushes_message
 	jmp	finish_parse_message
+
+
+	;================
+	; knock
+	;================
+lady_cottage_knock:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	lady_cottage_knock_door
+	cmp	#NOUN_NONE
+	beq	lady_cottage_knock_door
+
+	jmp	parse_common_unknown
+
+lady_cottage_knock_door:
+
+	lda	GAME_STATE_0
+	and	#LADY_GONE
+	bne	lady_cottage_knock_door_gone
+
+	ldx	#<lady_cottage_knock_door_message
+	ldy	#>lady_cottage_knock_door_message
+	jmp	finish_parse_message
+
+lady_cottage_knock_door_gone:
+	ldx	#<lady_cottage_knock_door_gone_message
+	ldy	#>lady_cottage_knock_door_gone_message
+	jmp	finish_parse_message
+
+
+	;================
+	; open
+	;================
+lady_cottage_open:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	lady_cottage_open_door
+	cmp	#NOUN_NONE
+	beq	lady_cottage_open_door
+
+	jmp	parse_common_unknown
+
+lady_cottage_open_door:
+
+	ldx	#<lady_cottage_open_door_message
+	ldy	#>lady_cottage_open_door_message
+
+	jsr	partial_message_step
+
+	lda	#LOCATION_INSIDE_LADY
+	jsr	update_map_location
+
+	rts
+
+
 
 
 	;=======================
