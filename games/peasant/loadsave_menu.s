@@ -694,14 +694,17 @@ location_names_l:
 	.byte <lname_kerrek_2
 	.byte <lname_outside_lady
 	.byte <lname_burn_tree
-	.byte <lname_hidden_glen
+
 	.byte <lname_cliff_base
 	.byte <lname_cliffland_heights
 	.byte <lname_trogdor_outer
 	.byte <lname_trogdor_posh
+
+	.byte <lname_hidden_glen
 	.byte <lname_inside_lady
-	.byte <lname_inside_inn
 	.byte <lname_inside_nn
+	.byte <lname_inside_inn
+
 	.byte <lname_empty
 
 location_names_h:
@@ -725,14 +728,17 @@ location_names_h:
 	.byte >lname_kerrek_2
 	.byte >lname_outside_lady
 	.byte >lname_burn_tree
-	.byte >lname_hidden_glen
+
 	.byte >lname_cliff_base
 	.byte >lname_cliffland_heights
 	.byte >lname_trogdor_outer
 	.byte >lname_trogdor_posh
+
+	.byte >lname_hidden_glen
 	.byte >lname_inside_lady
-	.byte >lname_inside_inn
 	.byte >lname_inside_nn
+	.byte >lname_inside_inn
+
 	.byte >lname_empty
 
 
@@ -757,7 +763,6 @@ lname_wavy_tree:	.byte "Wavy Tree",0			; B4 LOCATION_WAVY_TREE
 lname_kerrek_2:		.byte "Kerrek Tracks 2",0		; C4 LOCATION_KERREK_2
 lname_outside_lady:	.byte "Outside Baby Lady Cottage",0	; D4 LOCATION_OUTSIDE_LADY
 lname_burn_tree:	.byte "Burninated Trees",0		; E4 LOCATION_BURN_TREES
-
 
 lname_cliff_base:	.byte "Cliff Base",0			; LOCATION_CLIFF_BASE
 lname_cliffland_heights:.byte "Cliffland Heights",0		; LOCATION_CLIFF_HEIGHTS

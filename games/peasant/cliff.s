@@ -1,6 +1,8 @@
 ; Peasant's Quest
 
-; Cliff Base
+; Cliff
+
+;	Cliff base, cliff heights, trogdor outer
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -11,20 +13,27 @@
 .include "inventory.inc"
 .include "parse_input.inc"
 
+LOCATION_BASE	= LOCATION_CLIFF_BASE ; (20)
+
 cliff_base:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables
+	jsr	hgr2
 
-	jsr	hgr2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	; decompress dialog to $D000
 
+	lda	#<cliff_text_lzsa
+	sta	getsrc_smc+1
+	lda	#>cliff_text_lzsa
+	sta	getsrc_smc+2
 
-	; update map location
+	lda	#$D0
 
-;	jsr	update_map_location
+	jsr	decompress_lzsa2_fast
+
 
 	; update score
 
@@ -40,12 +49,39 @@ new_location:
 	lda	#0
 	sta	LEVEL_OVER
 
+	;==========================
+	; load updated verb table
+
+	; setup default verb table
+
+	jsr	setup_default_verb_table
+
+	; local verb table
+
+	lda     MAP_LOCATION
+	sec
+	sbc     #LOCATION_BASE
+	tax
+
+;	lda	verb_tables_low,X
+;	sta	INL
+;	lda	verb_tables_hi,X
+;	sta	INH
+;	jsr	load_custom_verb_table
+
+
+
 	;=====================
 	; load bg
 
-	lda	#<cliff_base_lzsa
+	lda     MAP_LOCATION
+	sec
+	sbc     #LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
 	sta	getsrc_smc+1
-	lda	#>cliff_base_lzsa
+	lda	map_backgrounds_hi,X
 	sta	getsrc_smc+2
 
 	lda	#$40
@@ -55,9 +91,14 @@ new_location:
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
-	lda	#<cliff_base_priority_lzsa
+	lda     MAP_LOCATION
+	sec
+	sbc     #LOCATION_BASE
+	tax
+
+	lda	map_priority_low,X
 	sta	getsrc_smc+1
-	lda	#>cliff_base_priority_lzsa
+	lda	map_priority_hi,X
 	sta	getsrc_smc+2
 
 	lda	#$20			; temporarily load to $2000
@@ -179,7 +220,36 @@ game_over:
 ;.include "loadsave_menu.s"
 ;.include "wait_keypress.s"
 
-
 .include "graphics_cliff/cliff_graphics.inc"
 
 .include "graphics_cliff/priority_cliff.inc"
+
+map_backgrounds_low:
+	.byte   <cliff_base_lzsa
+	.byte   <cliff_base_lzsa
+	.byte   <cliff_base_lzsa
+
+map_backgrounds_hi:
+	.byte   >cliff_base_lzsa
+	.byte   >cliff_base_lzsa
+	.byte   >cliff_base_lzsa
+
+map_priority_low:
+	.byte	<cliff_base_priority_lzsa
+	.byte	<cliff_base_priority_lzsa
+	.byte	<cliff_base_priority_lzsa
+
+map_priority_hi:
+	.byte	>cliff_base_priority_lzsa
+	.byte	>cliff_base_priority_lzsa
+	.byte	>cliff_base_priority_lzsa
+
+verb_tables_low:
+
+verb_tables_hi:
+
+
+cliff_text_lzsa:
+.incbin "DIALOG_CLIFF.LZSA"
+
+.include "cliff_actions.s"

@@ -231,6 +231,8 @@ CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 cliff.o:	cliff.s zp.inc inventory.inc \
+		parse_input.inc \
+		cliff_actions.s DIALOG_CLIFF.LZSA dialog_cliff.inc \
 		graphics_cliff/cliff_graphics.inc sprites/peasant_sprites.inc \
 		graphics_cliff/priority_cliff.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -552,6 +554,11 @@ dialog_cliff:	dialog_cliff.o
 
 dialog_cliff.o:	dialog_cliff.s text/cliff.inc
 	ca65 -o dialog_cliff.o dialog_cliff.s -l dialog_cliff.lst
+
+###
+
+dialog_cliff.inc:	generate_all_symbols dialog_cliff
+	./generate_all_symbols -a 0xd000 dialog_cliff.lst > dialog_cliff.inc
 
 ####
 

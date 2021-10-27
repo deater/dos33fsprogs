@@ -40,7 +40,7 @@ inside:
 
 	; update map location
 
-	jsr	update_map_location
+;	jsr	update_map_location
 
 	; update score
 
