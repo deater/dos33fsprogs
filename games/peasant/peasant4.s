@@ -58,6 +58,12 @@ new_location:
 
 	;==========================
 	; load updated verb table
+	;==========================
+
+	; setup default verb table
+
+	jsr	setup_default_verb_table
+
 
 	; we are PEASANT4 so locations 15...19 map to 0...4
 

@@ -38,10 +38,6 @@ peasantry3:
 	jsr	decompress_lzsa2_fast
 
 
-	; update map location
-
-;	jsr	update_map_location
-
 	; update score
 
 	jsr	update_score
@@ -59,6 +55,12 @@ new_location:
 
 	;==========================
 	; load updated verb table
+	;==========================
+
+	; setup default verb table
+
+	jsr	setup_default_verb_table
+
 
 	; we are PEASANT3 so locations 10...14 map to 0...4
 

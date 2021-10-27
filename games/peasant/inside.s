@@ -37,11 +37,6 @@ inside:
 
         jsr     decompress_lzsa2_fast
 
-
-	; update map location
-
-;	jsr	update_map_location
-
 	; update score
 
 	jsr	update_score
@@ -59,6 +54,12 @@ new_location:
 
 	;==========================
 	; load updated verb table
+	;==========================
+
+	; setup default verb table
+
+	jsr	setup_default_verb_table
+
 
 	; we are INSIDE so locations 24...26 map to 0...2
 
@@ -67,12 +68,13 @@ new_location:
 	sbc	#LOCATION_BASE
 	tax
 
+.if 0
 	lda	verb_tables_low,X
 	sta	INL
 	lda	verb_tables_hi,X
 	sta	INH
 	jsr	load_custom_verb_table
-
+.endif
 
 	;=====================
 	; load bg
