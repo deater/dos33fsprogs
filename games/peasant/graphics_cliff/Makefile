@@ -11,9 +11,10 @@ all:	cliff_graphics.inc \
 ###
 
 cliff_graphics.inc:	\
-	cliff_base.lzsa cliff_heights.lzsa
+	cliff_base.lzsa cliff_heights.lzsa outer.lzsa
 	echo "cliff_base_lzsa: .incbin \"cliff_base.lzsa\"" > cliff_graphics.inc
 	echo "cliff_heights_lzsa: .incbin \"cliff_heights.lzsa\"" >> cliff_graphics.inc
+	echo "outer_lzsa: .incbin \"outer.lzsa\"" >> cliff_graphics.inc
 
 ###
 
@@ -31,6 +32,15 @@ cliff_heights.lzsa:	cliff_heights.hgr
 cliff_heights.hgr:	cliff_heights.png
 	$(PNG2HGR) cliff_heights.png > cliff_heights.hgr
 
+###
+
+outer.lzsa:	outer.hgr
+	$(LZSA) -r -f2 outer.hgr outer.lzsa
+
+outer.hgr:	outer.png
+	$(PNG2HGR) outer.png > outer.hgr
+
+
 
 ###
 
@@ -40,6 +50,7 @@ priority_cliff.inc:  \
 	cliff_heights_priority.lzsa
 	echo "cliff_base_priority_lzsa: .incbin \"cliff_base_priority.lzsa\"" > priority_cliff.inc
 	echo "cliff_heights_priority_lzsa: .incbin \"cliff_heights_priority.lzsa\"" >> priority_cliff.inc
+	echo "outer_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_cliff.inc
 
 
 ####

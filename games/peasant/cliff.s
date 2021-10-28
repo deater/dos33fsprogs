@@ -227,22 +227,22 @@ game_over:
 map_backgrounds_low:
 	.byte   <cliff_base_lzsa
 	.byte   <cliff_heights_lzsa
-	.byte   <cliff_base_lzsa
+	.byte   <outer_lzsa
 
 map_backgrounds_hi:
 	.byte   >cliff_base_lzsa
 	.byte   >cliff_heights_lzsa
-	.byte   >cliff_base_lzsa
+	.byte   >outer_lzsa
 
 map_priority_low:
 	.byte	<cliff_base_priority_lzsa
 	.byte	<cliff_heights_priority_lzsa
-	.byte	<cliff_base_priority_lzsa
+	.byte	<outer_priority_lzsa
 
 map_priority_hi:
 	.byte	>cliff_base_priority_lzsa
 	.byte	>cliff_heights_priority_lzsa
-	.byte	>cliff_base_priority_lzsa
+	.byte	>outer_priority_lzsa
 
 verb_tables_low:
 
