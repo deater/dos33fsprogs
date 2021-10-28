@@ -922,6 +922,8 @@ noun_lookup:
 .byte "WINDOW",NOUN_WINDOW|$80
 .byte "WISH",NOUN_WISH|$80
 .byte "WOMAN",NOUN_WOMAN|$80
+.byte "GOLD",NOUN_GOLD|$80
+.byte "MONEY",NOUN_MONEY|$80
 .byte $00
 
 

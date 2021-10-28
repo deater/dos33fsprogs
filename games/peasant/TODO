@@ -1,5 +1,6 @@
 TODO:
 
+is the letter K broken?
 
 map: fills in as you visit the areas
 
@@ -108,14 +109,23 @@ Peasantry:
 - Ned
 - Kerrek2
   + See Kerrek1
-- Lady Cottage
+- Lady Cottage outside
 - Burnt trees
+
+- Lady Cottage inside
+  + walk-to-shelf when get feed
+  + Rocking animation (both her there and not)
+  + Messages when leaving
 
 - animation for the boat
 - animation of River
 - animation of waterfall
 - Hook up hidden glen, inside of cottages and inn
 - Archery minigame
+
+
+
+
 
 Tower:
 - Tower level

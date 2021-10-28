@@ -52,6 +52,9 @@ Text
 	VERB/NOUN parsing is more or less good enough
 		could use object "PUT BABY IN WELL"
 		a few places.  cheat?
+		PUT PEBBLES IN WELL vs
+		PUT PEBBLES IN BUCKET vs
+		PUT BABY IN WELL
 	Have to distinguish LOOK AT WELL/LOOK IN WELL
 	
 	how many verbs/nouns?

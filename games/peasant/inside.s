@@ -68,13 +68,11 @@ new_location:
 	sbc	#LOCATION_BASE
 	tax
 
-.if 0
 	lda	verb_tables_low,X
 	sta	INL
 	lda	verb_tables_hi,X
 	sta	INH
 	jsr	load_custom_verb_table
-.endif
 
 	;=====================
 	; load bg
@@ -151,6 +149,64 @@ game_loop:
 	inc	FRAME
 
 	jsr	check_keyboard
+
+	;=====================
+	; level specific
+	;=====================
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_INSIDE_LADY
+	bne	skip_level_specific
+
+inside_lady_cottage:
+	; check if leaving
+
+	lda	PEASANT_Y
+	cmp	#$95
+	bcc	skip_level_specific
+
+	; we're exiting, print proper message
+
+	lda	INVENTORY_2
+	and	#INV2_TRINKET
+	bne	after_trinket_message
+
+	lda	INVENTORY_2_GONE
+	and	#INV2_TRINKET
+	bne	after_trinket_message
+
+
+before_trinket_message:
+	ldx	#<inside_cottage_leaving_message
+	ldy	#>inside_cottage_leaving_message
+	jsr	finish_parse_message
+	jmp	done_trinket_message
+
+after_trinket_message:
+	ldx	#<inside_cottage_leaving_post_trinket_message
+	ldy	#>inside_cottage_leaving_post_trinket_message
+	jsr	finish_parse_message
+
+done_trinket_message:
+
+	; put outside door
+	lda	#$17
+	sta	PEASANT_X
+	lda	#$7D
+	sta	PEASANT_Y
+
+	; stop walking
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+
+	; move back
+
+	lda     #LOCATION_OUTSIDE_LADY
+	jsr	update_map_location
+
+skip_level_specific:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
