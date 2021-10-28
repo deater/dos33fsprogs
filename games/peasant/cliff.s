@@ -63,11 +63,11 @@ new_location:
 	sbc     #LOCATION_BASE
 	tax
 
-;	lda	verb_tables_low,X
-;	sta	INL
-;	lda	verb_tables_hi,X
-;	sta	INH
-;	jsr	load_custom_verb_table
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
 
 
 
@@ -245,8 +245,15 @@ map_priority_hi:
 	.byte	>outer_priority_lzsa
 
 verb_tables_low:
+	.byte	<cliff_base_verb_table
+	.byte	<cliff_heights_verb_table
+	.byte	<cave_outer_verb_table
 
 verb_tables_hi:
+	.byte	>cliff_base_verb_table
+	.byte	>cliff_heights_verb_table
+	.byte	>cave_outer_verb_table
+
 
 
 cliff_text_lzsa:
