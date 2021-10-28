@@ -36,9 +36,10 @@ cliff_heights.hgr:	cliff_heights.png
 
 priority_cliff.inc:  \
 	todo_priority.lzsa \
-	cliff_base_priority.lzsa
+	cliff_base_priority.lzsa \
+	cliff_heights_priority.lzsa
 	echo "cliff_base_priority_lzsa: .incbin \"cliff_base_priority.lzsa\"" > priority_cliff.inc
-	echo "cliff_heights_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_cliff.inc
+	echo "cliff_heights_priority_lzsa: .incbin \"cliff_heights_priority.lzsa\"" >> priority_cliff.inc
 
 
 ####
@@ -56,6 +57,14 @@ cliff_base_priority.lzsa:	cliff_base_priority.gr
 
 cliff_base_priority.gr:	cliff_base_priority.png
 	$(PNG2GR) cliff_base_priority.png cliff_base_priority.gr
+
+####
+
+cliff_heights_priority.lzsa:	cliff_heights_priority.gr
+	$(LZSA) -r -f2 cliff_heights_priority.gr cliff_heights_priority.lzsa
+
+cliff_heights_priority.gr:	cliff_heights_priority.png
+	$(PNG2GR) cliff_heights_priority.png cliff_heights_priority.gr
 
 
 ####
