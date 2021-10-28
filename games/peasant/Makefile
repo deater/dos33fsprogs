@@ -595,6 +595,9 @@ graphics_inside/graphics_inside.inc:
 sprites/inventory_sprites.inc:
 	cd sprites && make
 
+sprites/peasant_sprites.inc:
+	cd sprites && make
+
 sprites/trogdor_sprites.inc:
 	cd sprites && make
 

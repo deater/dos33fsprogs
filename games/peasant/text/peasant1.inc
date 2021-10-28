@@ -91,7 +91,8 @@ gary_scare_horse_message3:
 .byte "these baby spiders come",13
 .byte "out. It doesn't phase him.",0
 
-; + kick/kill/punch poor gary (before scaring) (Warning: Needless to say, this kills you.)
+; + kick/kill/punch poor gary (before scaring)
+; (Warning: Needless to say, this kills you.)
 gary_kick_horse_message:
 .byte "You attempt to cause Poor",13
 .byte "Gary harm for no good",13
@@ -105,6 +106,7 @@ gary_kick_horse_message2:
 .byte "packs a mean whallop. You",13
 .byte "dead. Thanks for playing.",0
 ; game over screen
+
 ; + kick/kill/punch flies (before scaring him)
 gary_kick_flies_message:
 .byte "Those flies and that",13
