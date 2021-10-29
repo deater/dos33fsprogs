@@ -197,6 +197,22 @@ cottage_take:
 	jmp	parse_common_get
 
 cottage_get_map:
+	lda	INVENTORY_3
+	and	#INV3_MAP
+	beq	actually_get_map
+
+already_have_map:
+	ldx	#<cottage_get_map_already_message
+	ldy	#>cottage_get_map_already_message
+	jmp	finish_parse_message
+
+
+actually_get_map:
+	; actually get map
+	lda	INVENTORY_3
+	ora	#INV3_MAP
+	sta	INVENTORY_3
+
 	ldx	#<cottage_get_map_message
 	ldy	#>cottage_get_map_message
 	jmp	finish_parse_message
@@ -231,6 +247,12 @@ cottage_look_at_cottage:
 
 	jsr	partial_message_step
 
+	lda	INVENTORY_3
+	and	#INV3_MAP
+	beq	cottage_look_map_still_there
+	rts
+
+cottage_look_map_still_there:
 	ldx	#<cottage_look_at_cottage_message_map
 	ldy	#>cottage_look_at_cottage_message_map
 
@@ -300,7 +322,7 @@ lake_west_get_pebbles:
 	bne	lake_west_yes_pebbles
 
 lake_west_no_pebbles:
-	; FIXME: only if standing on them
+	; TODO: only if standing on them
 
 	; pick up pebbles
 	lda	INVENTORY_1
@@ -355,8 +377,22 @@ lake_west_look_at_lake:
 	jmp	finish_parse_message
 
 lake_west_look_at_sand:
+	lda	INVENTORY_1
+	and	#INV1_PEBBLES
+	bne	look_sand_pebbles_gone
+
+	lda	INVENTORY_1_GONE
+	and	#INV1_PEBBLES
+	bne	look_sand_pebbles_gone
+
+look_sand_pebbles_there:
 	ldx	#<lake_west_look_at_sand_message
 	ldy	#>lake_west_look_at_sand_message
+	jmp	finish_parse_message
+
+look_sand_pebbles_gone:
+	ldx	#<lake_west_look_at_sand_after_message
+	ldy	#>lake_west_look_at_sand_after_message
 	jmp	finish_parse_message
 
 lake_west_look_at_bush:
@@ -477,11 +513,30 @@ lake_east_look:
 	jmp	parse_common_look
 
 lake_east_look_at_lake:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	look_at_lake_man_there
+
+	ldx	#<lake_east_look_at_lake_message_man_gone
+	ldy	#>lake_east_look_at_lake_message_man_gone
+	jmp	finish_parse_message
+
+look_at_lake_man_there:
 	ldx	#<lake_east_look_at_lake_message
 	ldy	#>lake_east_look_at_lake_message
 	jmp	finish_parse_message
 
+
 lake_east_look_at_man:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	look_at_man_hes_there
+
+	; not there, so can't see him
+
+	jmp	parse_common_look
+
+look_at_man_hes_there:
 	ldx	#<lake_east_look_at_man_message
 	ldy	#>lake_east_look_at_man_message
 	jmp	finish_parse_message
@@ -495,9 +550,18 @@ lake_east_look_at_sand:
 	ldy	#>lake_east_look_at_sand_message2
 	jmp	finish_parse_message
 
-
-
 lake_east_look_at_boat:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	look_at_boat_hes_there
+
+	; not there, so can't see him
+
+	ldx	#<lake_east_look_at_boat_gone_message
+	ldy	#>lake_east_look_at_boat_gone_message
+	jmp	finish_parse_message
+
+look_at_boat_hes_there:
 	ldx	#<lake_east_look_at_boat_message
 	ldy	#>lake_east_look_at_boat_message
 	jmp	finish_parse_message
@@ -523,6 +587,16 @@ lake_east_talk:
 	jmp	parse_common_talk
 
 lake_east_talk_to_man:
+
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	talk_hes_there
+
+	ldx	#<lake_east_talk_man_after_message
+	ldy	#>lake_east_talk_man_after_message
+	jmp	finish_parse_message
+
+talk_hes_there:
 	ldx	#<lake_east_talk_man_message
 	ldy	#>lake_east_talk_man_message
 	jmp	finish_parse_message
@@ -542,14 +616,84 @@ lake_east_throw:
 	bne	lake_east_throw_default
 
 lake_east_throw_feed:
-	ldx	#<lake_east_throw_feed_message
-	ldy	#>lake_east_throw_feed_message
+	; check if have feed
+	lda	INVENTORY_1
+	and	#INV1_CHICKEN_FEED
+	bne	do_have_feed
+
+dont_have_feed:
+	ldx	#<lake_east_throw_feed_none_message
+	ldy	#>lake_east_throw_feed_none_message
 	jmp	finish_parse_message
 
+do_have_feed:
+	; check if too far south
+
+	lda	PEASANT_Y
+	cmp	#$80
+	bcs	throw_feed_too_south	; bge
+
+	; check if man still there
+
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	throw_feed_hes_there
+
+	; he's not there
+
+	ldx	#<lake_east_throw_feed_already_message
+	ldy	#>lake_east_throw_feed_already_message
+	jmp	finish_parse_message
+
+throw_feed_hes_there:
+
+	; actually throw feed
+
+	ldx	#<lake_east_throw_feed_message
+	ldy	#>lake_east_throw_feed_message
+	jsr	partial_message_step
+
+	; feed fish
+	lda	GAME_STATE_1
+	ora	#FISH_FED
+	sta	GAME_STATE_1
+
+	; no longer have feed
+	lda	INVENTORY_1_GONE
+	ora	#INV1_CHICKEN_FEED
+	sta	INVENTORY_1_GONE
+
+	; add 2 points to score
+
+	lda	#2
+	jsr	score_points
+
+	ldx	#<lake_east_throw_feed2_message
+	ldy	#>lake_east_throw_feed2_message
+	jmp	finish_parse_message
+
+throw_feed_too_south:
+	ldx	#<lake_east_throw_feed_too_south_message
+	ldy	#>lake_east_throw_feed_too_south_message
+	jmp	finish_parse_message
+
+	; throw anything but feed
 lake_east_throw_default:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	lake_east_throw_feed_man_default
+
+	; not there
+
+	ldx	#<lake_east_throw_default_gone_message
+	ldy	#>lake_east_throw_default_gone_message
+	jmp	finish_parse_message
+
+lake_east_throw_feed_man_default:
 	ldx	#<lake_east_throw_default_message
 	ldy	#>lake_east_throw_default_message
 	jmp	finish_parse_message
+
 
 
 
@@ -587,9 +731,17 @@ outside_inn_get:
 	jmp	parse_common_get
 
 inn_note_get:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	bne	inn_get_note_no_note
+
 	ldx	#<outside_inn_note_get_message
 	ldy	#>outside_inn_note_get_message
 	jmp	finish_parse_message
+
+inn_get_note_no_note:
+
+	jmp	inn_note_no_note
 
 	;================
 	; knock
@@ -605,6 +757,16 @@ outside_inn_knock:
 	jmp	parse_common_unknown
 
 inn_door_knock:
+
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	inn_knock_locked
+
+	ldx	#<outside_inn_door_knock_message
+	ldy	#>outside_inn_door_knock_message
+	jmp	finish_parse_message
+
+inn_knock_locked:
 	ldx	#<outside_inn_door_knock_locked_message
 	ldy	#>outside_inn_door_knock_locked_message
 	jmp	finish_parse_message
@@ -623,6 +785,19 @@ outside_inn_open:
 	jmp	parse_common_unknown
 
 inn_door_open:
+
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	beq	inn_open_locked
+
+	lda	#LOCATION_INSIDE_INN
+	jsr	update_map_location
+
+	ldx	#<outside_inn_door_open_message
+	ldy	#>outside_inn_door_open_message
+	jmp	finish_parse_message
+
+inn_open_locked:
 	ldx	#<outside_inn_door_open_locked_message
 	ldy	#>outside_inn_door_open_locked_message
 	jmp	finish_parse_message
@@ -673,6 +848,16 @@ inn_look:
 	jmp	finish_parse_message
 
 inn_door_look:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	bne	inn_door_no_note
+
+	ldx	#<outside_inn_door_look_note_message
+	ldy	#>outside_inn_door_look_note_message
+	jmp	finish_parse_message
+
+inn_door_no_note:
+
 	ldx	#<outside_inn_door_look_message
 	ldy	#>outside_inn_door_look_message
 	jmp	finish_parse_message
@@ -688,8 +873,17 @@ inn_window_look:
 	jmp	finish_parse_message
 
 inn_note_look:
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	bne	inn_note_no_note
+
 	ldx	#<outside_inn_note_look_message
 	ldy	#>outside_inn_note_look_message
+	jmp	finish_parse_message
+
+inn_note_no_note:
+	ldx	#<outside_inn_note_look_gone_message
+	ldy	#>outside_inn_note_look_gone_message
 	jmp	finish_parse_message
 
 

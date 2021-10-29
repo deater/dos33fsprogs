@@ -2,6 +2,7 @@
 ; Jhonka cave
 ;=============
 
+; TODO
 ; + Type any command other than "yes" or "no" after the Jhonka asks if you stole the riches
 .byte "Just answer him, yes or no, you fool!",0
 
@@ -11,12 +12,15 @@ jhonka_look_at_message:
 .byte "a little door with a little",13
 .byte "note on it.",0
 
+; TODO
 ; + look (kerrek dead, before riches)
 .byte "There's a disgusting little Jhonka hopping around outside a little cave.A fat pile of riches lies next to him.",0
 
+; TODO
 ; + look (after kerrek dead, after take riches)
 .byte "There's a disgusting little Jhonka hopping around outside a little cave.",0
 
+; TODO
 ; + look club/turkey leg (when he's outside)
 .byte "Turkey leg or no, it looks like the Jhonka's been gnawing on it.",0
 
@@ -31,42 +35,54 @@ jhonka_look_at_fence_message:
 .byte "Trogdor makes milk's meat",13
 .byte "outta these things.",0
 
+; TODO
 ; + look jhonka (when he's outside)
 .byte "The Jhonka is gray and grody. He's got a cromagnon forehead and jaw with a pair of wicked incisors. He sports an old loin-cheese cloth and carries either a big club or one of those roasted turkey legs you got at the Ren Fest.",0
 
+; TODO
 ; + look/read note (before killing Kerrek) [ will walk to it if far away]
 jhonka_read_note_message:
 .byte "It says ",34,"scared of kerrek.",13
 .byte "go way. -j",34,0
 
+; TODO
 ; + (walk in haystack)
 .byte "Hey, nice disguise! The Jhonka doesn't seem to notice you.",0
 
+; TODO
 ; + steal riches
 .byte "Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! ",34,"You take my riches?!",34," growls the Jhonka.",0
 
+; TODO
 ; + 7 POINTS
 ; + no
 .byte 34,"Okay. Lemme know if you see riches anywhere,",34," he grunts and goes back to his hopping. You smooth talker, you.",0
 
+; TODO
 ; + ask about fire
 .byte "Burninator make fire! Barbecue all peasants!",0
 
+; TODO
 ; + ask about Jhonka
 .byte 34,"The Kerrek is dead!",34," he cries and hops around some more. You wonder how someone this primitive could have made that much dough.",0
 
+; TODO
 ; + ask about naked ned (or) robe
 .byte 34,"Filthy naked peasant! Stay away from my cave-hole!",34," Who's he calling naked? HE'S the one wearing the string bikini.",0
 
+; TODO
 ; + ask about smell
 .byte 34,"Kerrek smell! Now Kerrek dead!",34," screeches the Jhonka. So you can infer from this that all smells are dead? You always sucked at the analytical questions.",0
 
+; TODO
 ; + ask about trogdor
 .byte 34,"All hail Burninator! Trogdor Number One! Beat Peasant Tech!",34," says the grimy Jhonka.",0
 
+; TODO
 ; + ask about (unknown)
 .byte "Jhonka don't know nothing bout that!",0
 
+; TODO
 ; + yes (to the Jhonka when he asks you about his riches)
 .byte "'I KILL YOU!!' screams the Jhonka.",0
 ; {The Jhonka clubs you to death}  (Warning: Obviously, you will die.) 
@@ -79,6 +95,7 @@ jhonka_open_door_message:
 .byte "too. Those things are hard",13
 .byte "core.",0
 
+; TODO
 ; + knock (while he's inside) [ will walk over]
 jhonka_knock_message1:
 .byte "A gravelly voice inside",13
@@ -96,9 +113,11 @@ jhonka_knock_message1:
 .byte "A gravelly voice inside",13
 .byte "yells, 'GO WAY!'",0
 
+; TODO
 ; + kill jhonka (outside)
 .byte "No way! Jhonka's are born scrappers. He may be little, but he'll crawl ya.",0
 
+; TODO
 ; + get club (when he's out)
 .byte "Now there's a surefire way to get yourself killed.",0
 
@@ -108,9 +127,11 @@ jhonka_get_note_message:
 .byte "to the door with a",13
 .byte "wondrously whimsical spell.",0
 
+; TODO
 ; + give riches (before jumping in hay)
 .byte "The Jhonka will see you! And rip out your jugular with his teeth or something equally horrible.",0
 
+; TODO
 ; + talk jhonka (while inside the hay)
 .byte "Not now! You'll blow your cover!",0
 
@@ -138,6 +159,7 @@ cottage_look_at_cottage_message:
 .byte "trinkets, your flasks and",13
 .byte "scrolls, your goblets and",13
 .byte "staffs! BURNINATED!!",0
+
 ; (And then, if you haven't taken the map yet:)
 cottage_look_at_cottage_message_map:
 .byte "Looks like there's a piece",13
@@ -158,6 +180,7 @@ cottage_get_map_message:
 .byte "to check the map.",0
 
 ; + get map (if you already have it)
+cottage_get_map_already_message:
 .byte "Yeah but like you already",13
 .byte "map the took, guy!",0
 
@@ -184,7 +207,10 @@ lake_west_look_at_sand_message:
 .byte "sand.",0
 
 ; + look sand (after pebbles)
-.byte "Remember those pebbles on the beach? Man, those were good times.",0
+lake_west_look_at_sand_after_message:
+.byte "Remember those pebbles on",13
+.byte "the beach? Man, those were",13
+.byte "good times.",0
 
 ; + look bush
 lake_west_look_at_bush_message:
@@ -227,9 +253,11 @@ lake_west_skip_stones_message:
 .byte "You decide to save yourself",13
 .byte "the embarrassment.",0
 
+; TODO
 ; + get pebbles/rocks (from too far)
 .byte "You do your best Mr. Fantastic impression, but you can't reach from here.",0
 
+; TODO
 ; +5 POINTS
 ; + throw baby
 .byte "Something tells you this is a good idea and you lob the little one into the lake.",0
@@ -242,11 +270,12 @@ lake_west_throw_baby_message:
 .byte "You gotta get the baby",13
 .byte "first.",0
 
+; TODO
 ; + throw baby (after getting the soda)
 .byte "Baby Dashing is a little waterlogged from the toss, and you read his soft gurgling to mean that there's no more soda left.",0
 
 ; + throw feed (at south side)
-.byte "Maybe try again from the center of the lake. Looks deeper there.",0
+;.byte "Maybe try again from the center of the lake. Looks deeper there.",0
 
 
 ;==================
@@ -286,7 +315,10 @@ lake_east_look_at_boat_message:
 .byte "dinghy!",34,0
 
 ; + look boat/dinghy (after he is gone)
-.byte "It was loaned out to the Fishing Challenge videogame.",0
+lake_east_look_at_boat_gone_message:
+.byte "It was loaned out to the",13
+.byte "Fishing Challenge",13
+.byte "videogame.",0
 
 ; + talk man (before throwing chicken feed in lake)
 lake_east_talk_man_message:
@@ -297,20 +329,30 @@ lake_east_talk_man_message:
 .byte "wrong bait...",34," he says,",13
 .byte "suggestively.",0
 
+; + talk man (after throwing chicken feed in lake) WIKI IS WRONG
+lake_east_talk_man_after_message:
+.byte "He DEFINITELY can't hear",13	; [sic] actual game has 'here' here
+.byte "you from here. He's in the",13
+.byte "INN.",0
+
 ; + throw feed (at south side)
+lake_east_throw_feed_too_south_message:
 .byte "Maybe try again from the",13
 .byte "center of the lake. Looks",13
 .byte "deeper there.",0
 
 ; +2 POINTS
 ; + throw chicken feed
+lake_east_throw_feed_message:
 .byte "You toss the feed into the",13
 .byte "lake. You shed a tear for",13
 .byte "each one. ",34,"Goodbye, Monty",34,13
 .byte "you sniff. ",34,"Bye Delga,",13
 .byte "Rasputin. Farewell,",13
 .byte "Combledon!",34," and so forth.",0
+
 ; throw two handfulls, fish animation
+lake_east_throw_feed2_message:
 .byte "Woah! That crotchety old",13
 .byte "man just caught a pantload",13
 .byte "of fish! ",34,"Now I can get",13
@@ -323,11 +365,12 @@ lake_east_talk_man_message:
 .byte "animate.",0
 
 ; + throw feed (before getting the feed)
-lake_east_throw_feed_message:
+lake_east_throw_feed_none_message:
 .byte "You have nothing with which",13
 .byte "to do that ... with.",0
 
 ; + throw feed (after throwing the feed)  (The repetition is probably just a goof.) 
+lake_east_throw_feed_already_message:
 .byte "You already fed the fish.",13
 .byte "Let's get moving here,",13
 .byte "people!You already fed the",13
@@ -342,6 +385,7 @@ lake_east_throw_default_message:
 .byte "volume.",0
 
 ; + throw (anything when fisherman gone)
+lake_east_throw_default_gone_message:
 .byte "You already fed the fish.",13
 .byte "Let's get moving, here,",13
 .byte "people!",0
@@ -358,9 +402,13 @@ outside_inn_look_message:
 .byte "entire screen.",0
 
 ; + look door
-outside_inn_door_look_message:
+outside_inn_door_look_note_message:
 .byte "Just a door. A door with a",13
 .byte "note on it.",0
+
+; + look door (after fish fed)
+outside_inn_door_look_message:
+.byte "Just a door.",0
 
 ; + look inn
 outside_inn_inn_look_message:
@@ -386,8 +434,13 @@ outside_inn_note_look_message:
 .byte "like that grog coozie your",13
 .byte "cousin got you.",0
 
+; + get/look/read note (after feed in lake)
+outside_inn_note_look_gone_message:
+.byte "The note is gone.",0
+
 ; + open
 ; + open door (after old man)
+outside_inn_door_open_message:
 .byte "You open the door and step",13
 .byte "inside the inn.",0
 
@@ -400,6 +453,7 @@ outside_inn_door_knock_locked_message:
 .byte "No answer.",0
 
 ; + knock (open)
+outside_inn_door_knock_message:
 .byte "Just open it, man!",0
 
 ; + get note
