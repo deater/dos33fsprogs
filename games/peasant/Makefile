@@ -617,6 +617,9 @@ graphics_end/ending_graphics.inc:
 graphics_inside/graphics_inside.inc:
 	cd graphics_inside && make
 
+graphics_inn/graphics_inn.inc:
+	cd graphics_inn && make
+
 sprites/inventory_sprites.inc:
 	cd sprites && make
 
@@ -632,14 +635,17 @@ sprites/trogdor_sprites.inc:
 distclean:
 	make clean
 	cd sprites && make clean
-	cd graphics_vid && make clean
-	cd graphics_title && make clean
-	cd graphics_peasantry && make clean
-	cd graphics_copy && make clean
-	cd graphics_trogdor && make clean
-	cd graphics_end && make clean
 	cd graphics_cliff && make clean
+	cd graphics_copy && make clean
+	cd graphics_end && make clean
+	cd graphics_inn && make clean
+	cd graphics_inside && make clean
+#	cd graphics_map && make clean
 	cd graphics_over && make clean
+	cd graphics_peasantry && make clean
+	cd graphics_title && make clean
+	cd graphics_trogdor && make clean
+	cd graphics_vid && make clean
 
 ###
 
