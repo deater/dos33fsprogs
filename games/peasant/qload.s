@@ -216,7 +216,7 @@ track_array:
         .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte  3,14,13,30	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+	.byte  3,14,13,10	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte  5		; INSIDE
 	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
 	.byte  0		; disk detect

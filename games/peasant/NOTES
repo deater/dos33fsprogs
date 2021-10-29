@@ -171,8 +171,10 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  1 (get pebbles)
 +  1 (get feed)
 +  5 (give riches)
++  5 (give baby) [inn]
++  3 (get room)
 ======
-  21 points
+  29 points
 
 
 deaths implemented

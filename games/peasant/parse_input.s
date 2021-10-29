@@ -924,6 +924,10 @@ noun_lookup:
 .byte "WOMAN",NOUN_WOMAN|$80
 .byte "GOLD",NOUN_GOLD|$80
 .byte "MONEY",NOUN_MONEY|$80
+.byte "CARPET",NOUN_CARPET|$80
+.byte "BED",NOUN_BED|$80
+.byte "MATTRESS",NOUN_MATTRESS|$80
+.byte "PARCHMENT",NOUN_PARCHMENT|$80
 .byte $00
 
 

@@ -31,13 +31,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING CLIFF GAME_OVER INSIDE
+peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING \
+	CLIFF GAME_OVER INSIDE INN
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
 	$(DOS33_RAW) peasant_side2.dsk   0 0  WBOOT2      0   1
 	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK   0   0
 	$(DOS33_RAW) peasant_side2.dsk   3 0 GAME_OVER    0   0
 #	$(DOS33_RAW) peasant_side2.dsk   4 0 MAP          0   0
 	$(DOS33_RAW) peasant_side2.dsk   5 0 INSIDE       0   0
+	$(DOS33_RAW) peasant_side2.dsk  10 0 INN          0   0
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0
@@ -398,6 +400,25 @@ inside.o:	inside.s zp.inc inventory.inc \
 		peasant_move.s score.s inventory.s loadsave_menu.s
 	ca65 -o inside.o inside.s -l inside.lst
 
+###
+
+INN:	inn.o
+	ld65 -o INN inn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+inn.o:	inn.s zp.inc inventory.inc \
+		parse_input.inc \
+		inn_actions.s DIALOG_INN.LZSA dialog_inn.inc \
+		graphics_inn/graphics_inn.inc sprites/peasant_sprites.inc \
+		graphics_inn/priority_inn.inc \
+		sprites/inventory_sprites.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s new_map_location.s \
+		peasant_move.s score.s inventory.s loadsave_menu.s
+	ca65 -o inn.o inn.s -l inn.lst
+
+
 
 ###
 
@@ -543,8 +564,12 @@ dialog_inn:	dialog_inn.o
 dialog_inn.o:	dialog_inn.s text/inn.inc
 	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
 
-
 ###
+
+dialog_inn.inc:	generate_all_symbols dialog_inn
+	./generate_all_symbols -a 0xd000 dialog_inn.lst > dialog_inn.inc
+
+####
 
 DIALOG_CLIFF.LZSA:	dialog_cliff
 	$(LZSA) -r -f2 dialog_cliff DIALOG_CLIFF.LZSA
