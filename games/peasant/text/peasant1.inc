@@ -15,7 +15,8 @@ gary_look_fence_message:
 .byte "as toothpicks.",0
 
 ; + look fence (after scaring him)
-.byte "It's got a big ol' hole in it. For walking through.",0
+.byte "It's got a big ol' hole in",13
+.byte "it. For walking through.",0
 
 ; + look flies (before scaring him)
 gary_look_flies_message:
@@ -37,13 +38,22 @@ gary_look_stump_message:
 .byte "at the stump.",0
 
 ; +2 POINTS
-; + wear mask
-.byte "You slip on the hideous monster maskus.",0
-.byte "You scared the crap outta Poor Gary! He broke on through to the other side!",0
+; + wear mask / scare horse
+.byte "You slip on the hideous",13
+.byte "monster maskus.",0
+
+; TODO: mask on face, gary turns and runs through fence
+
+.byte "You scared the crap outta",13
+.byte "Poor Gary! He broke on",13
+.byte "through to the other side!",0
 
 ; + wear mask (after scaring him)
 ; + kick/kill/punch poor gary (after scaring)
-.byte "Gary's gone now. Let go. Just let go./Let go!",0
+.byte "Gary's gone now. Let go.",13
+.byte "Just let go.",0
+
+.byte "Let go!",0
 
 ; + break/kick stump / sit on stump
 gary_kick_stump_message:
@@ -122,7 +132,9 @@ gary_climb_fence_message:
 .byte "Peasantry.",0
 
 ; + climb/jump fence after scaring)
-.byte "More like you should walk through that gaping hole in it. Just an idea.",0
+.byte "More like you should walk",13
+.byte "through that gaping hole in",13
+.byte "it. Just an idea.",0
 
 ; + get flies (before scaring him)
 gary_get_flies_message:
@@ -183,7 +195,8 @@ well_look_at_crank_message:
 .byte "It looks rusted in place.",0
 
 ; + look crank (after putting pebbles in the bucket)
-.byte "That is a bonafide crank. It seems to work now.",0
+.byte "That is a bonafide crank.",13
+.byte "It seems to work now.",0
 
 ; + look in well (after mask)
 well_look_in_well_message2:
@@ -211,7 +224,11 @@ well_look_at_bucket_message:
 
 ; +2 POINTS
 ; + put pebbles in bucket
-.byte "You plunk all your pebbles into the bucket. The weight causes it to descend to the bottom of the well with a quickness!",0
+.byte "You plunk all your pebbles",13
+.byte "into the bucket. The weight",13
+.byte "causes it to descend to the",13
+.byte "bottom of the well with a",13
+.byte "quickness!",0
 
 ; + turn crank (before pebbles, far away)
 .byte "You can't reach from there.",0
@@ -222,18 +239,38 @@ well_turn_crank_message:
 .byte "there was something heavy",13
 .byte "in that bucket...",0
 
+; TODO: animation, bucket up with mask
 ; + turn crank (pebbles)
-.byte "The crank seems to have loosened and you haul the bucket back up. What's this? Why there's a monster maskus in there! No doubt leftover from some pagan ritual. Silly pagans.",0
-.byte "You grab up the scary moster maskus. Man, this thing could scare a horse!",0
+.byte "The crank seems to have",13
+.byte "loosened and you haul the ",13
+.byte "bucket back up. What's",13
+.byte "this? Why there's a monster",13
+.byte "maskus in there! No doubt",13
+.byte "leftover from some pagan",13
+.byte "ritual. Silly pagans.",0
 
+.byte "You grab up the scary",13
+.byte "moster maskus. Man, this",13
+.byte "thing could scare a horse!",0
+
+; like edge of screen far
 ; + turn crank (after mask, far away)
-.byte "You got a short reach to match your short pants. Try standing closer to that crank.",0
+.byte "You got a short reach to",13
+.byte "match your short pants. Try",13
+.byte "standing closer to that",13
+.byte "crank.",0
 
 ; + turn crank (after mask, close, first time)
-.byte "Down she goes! You could do this all day!",0
+.byte "Down she goes! You could",13
+.byte "do this all day!",0
 
 ; + turn crank (after mask, close, second time)
-.byte "The drama grips you, but the bucket is empty. On the bright side, you're getting a pretty sweet workout for your Deltoidus Rex muscles.",0
+.byte "The drama grips you, but",13
+.byte "the bucket is empty. On the",13
+.byte "bright side, you're",13
+.byte "getting a pretty sweet",13
+.byte "workout for your Deltoidus",13
+.byte "Rex muscles.",0
  
 ; + 2 POINTS
 ; + turn crank (baby)
@@ -306,7 +343,9 @@ well_put_anything_message:
 .byte "Find some pebbles first and you might have the makings of a good idea. About time.",0
 
 ; + put pebbles/rocks in bucket (after mask)
-.byte "We've already been through this exercise and it went pretty well, ya?",0
+.byte "We've already been through",13
+.byte "this exercise and it went",13
+.byte "pretty well, ya?",0
 
 ; + put pebbles/rocks in well (you have them)
 .byte "Then it'd be tough to get them back. You never go ANYWHERE without your rocks",0

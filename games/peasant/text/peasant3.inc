@@ -255,7 +255,10 @@ lake_west_skip_stones_message:
 
 ; TODO
 ; + get pebbles/rocks (from too far)
-.byte "You do your best Mr. Fantastic impression, but you can't reach from here.",0
+.byte "You do your best Mr.",13
+.byte "Fantastic impression,",13
+.byte "but you can't reach from",13
+.byte "here.",0
 
 ; TODO
 ; +5 POINTS

@@ -12,52 +12,85 @@
 .byte "the archer stops arching and turns to you. ",34,"My brother told you to tell me haldo? He must want to start the old business back up!",34,0
 
 ; + haldo (before talking to Mendelev)
-.byte "What'd you read that in PQ Stragedy Guide? Go talk to my brother first.",0
+.byte "What'd you read that in",13
+.byte "the PQ Stragedy Guide? Go",13
+.byte "talk to my brother first.",0
 
 ; + haldo (after Dongolev leaves)
-.byte 34,"Haldo?",34,". you call out... ",34,"Hadloooooo",34,0
+.byte 34,"Haldo?",34,". you call out...",13
+.byte 34,"Hadloooooo",34,0
 
 ; + look (with Dongolev)
-.byte "Well, looky here! A hidden glen! You LOVE hidden glens. This one has some kinda archer in it.",0
+.byte "Well, looky here! A hidden",13
+.byte "glen! You LOVE hidden",13
+.byte "glens. This one has some",13
+.byte "kinda archer in it.",0
 
 ; + look (w/o Dongolev)
-.byte "You're in a hidden glen. There's a tree with zillions of arrows in it.",0
+.byte "You're in a hidden glen.",13
+.byte "There's a tree with",13
+.byte "zillions of arrows in it.",0
  
-; + look archer
-.byte "He sure looks miffed at that tree. He's emptied 5 good quivers' worth into that poor thing.",0
+; + look archer )when there)
+.byte "He sure looks miffed at",13
+.byte "that tree. He's emptied 5",13
+.byte "good quivers' worth into",13
+.byte "that poor thing.",0
 
-; + look arrow
-.byte "Somebody call a tree doctor. Them puppies are stuck in there like a, um, er ... stuck pig.",0
+; + look arrow (before taken)
+.byte "Somebody call a tree",13
+.byte "doctor. Them puppies are",13
+.byte "stuck in there like a, um,",13
+.byte "er ... stuck pig.",0
 
 ; + look bushes
-.byte "There's some thick 'ol bushes up in this hidden glen.",0
+.byte "There's some thick 'ol",13
+.byte "bushes up in this hidden",13
+.byte "glen.",0
 
 ; + look fence
-.byte "Wow! There's a hole in it on THIS side too!",0
+.byte "Wow! There's a hole in it",13
+.byte "on THIS side too!",0
 
 ; + look tree
-.byte "Dude, and then the elf, like, totally climbed up it. It was awesome!",0
+.byte "Dude, and then the elf,",13
+.byte "like, totally climbed up",13
+.byte "it. It was awesome!",0
 
 ; + climb tree
-.byte "Naw, you'd probably figure out some way to kill yourself doing that.",0
+.byte "Naw, you'd probably figure",13
+.byte "out some way to kill",13
+.byte "yourself doing that.",0
 
 ; + climb/jump fence
-.byte "Not going to dignify that with a response.",0
+.byte "Not going to dignify that",13
+.byte "with a response.",0
 
 ; + 2 points
 ; + get arrow
 .byte "You pick out a really good one and yank it from the tree. Hooray! Now you have an arrow!",0
 
 ; + get arrow (Dogolev there) (Warning: As you can see, this kills you.)
-.byte "Something tells me now's not a good time.",0
+.byte "Something tells me now's",13
+.byte "not a good time.",0
 ; {you get the arrow anyway and Dongolev shoots you}
-.byte "It wasn't a good time. Hey, my mom's making peasant-kabobs for dinner TOO! Right. Anyway. You dead. Thanks for playing, and try not to die.",0
+; graphically, your head gets stuck to tree
+.byte "It wasn't a good time. Hey,",13
+.byte "my mom's making",13
+.byte "peasant-kabobs for dinner",13
+.byte "TOO!",0
+
+.byte "Right. Anyway. You dead.",13
+.byte "Thanks for playing, and try",13
+.byte "not to die.",0
 
 ; + get arrow (After you get the arrow OR get arrow from after Kerrek)
 .byte "You're pretty much all set on the arrow front. They're kinda cool, though.",0
 
 ; + get arrow (after killing Kerrek)
-.byte "You grab yet another arrow from the tree hoping to get some bonus points.",0
+.byte "You grab yet another arrow",13
+.byte "from the tree hoping to get",13
+.byte "some bonus points.",0
 
 
 ;==========================
