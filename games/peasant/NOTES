@@ -174,8 +174,11 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  5 (give baby) [inn]
 +  3 (get room)
 +  2 (feed fish)
++  2 (put pebbles in bucket)
++  3 (put baby in bucket)
++  2 (turn crank [baby in bucket])
 ======
-  31 points
+  38 points
 
 
 deaths implemented

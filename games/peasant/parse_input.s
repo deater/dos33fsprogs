@@ -709,7 +709,31 @@ verb_lookup:
 .byte "YES",VERB_YES|$80
 .byte $00
 
+	;==========================
+	; get noun again
+	;==========================
+	; skips "baby" and "pebbles" and tries again
+	; needed for Well scene
 
+get_noun_again:
+
+	; point to alternate
+
+	lda	#<noun_lookup_again
+	sta	get_noun_src_smc1+1
+	lda	#>noun_lookup_again
+	sta	get_noun_src_smc2+1
+
+	jsr	get_noun
+
+	; point back
+
+	lda	#<noun_lookup
+	sta	get_noun_src_smc1+1
+	lda	#>noun_lookup
+	sta	get_noun_src_smc2+1
+
+	rts
 
 
 	;===========================
@@ -735,8 +759,10 @@ try_next_word:
 
 	stx	TEMP0			; save input pointer
 
+get_noun_src_smc1:
 	lda	#<noun_lookup		; reset noun pointer
 	sta	get_noun_smc+1
+get_noun_src_smc2:
 	lda	#>noun_lookup
 	sta	get_noun_smc+2
 
@@ -817,11 +843,16 @@ end_of_input:
 
 
 noun_lookup:
+.byte "BABY",NOUN_BABY|$80		; these are first
+.byte "PEBBLES",NOUN_PEBBLES|$80	; so at Well we can also
+.byte "STONE",NOUN_STONE|$80		; check for destination (bucket/well)
+
+noun_lookup_again:
 .byte "ARCHER",NOUN_ARCHER|$80
 .byte "ARMS",NOUN_ARMS|$80
 .byte "ARROW",NOUN_ARROW|$80
-.byte "BABY",NOUN_BABY|$80
 .byte "BEADS",NOUN_BEADS|$80
+.byte "BED",NOUN_BED|$80
 .byte "BELL",NOUN_BELL|$80
 .byte "BELT",NOUN_BELT|$80
 .byte "BERRIES",NOUN_BERRIES|$80
@@ -833,6 +864,7 @@ noun_lookup:
 .byte "BUCKET",NOUN_BUCKET|$80
 .byte "BUSH",NOUN_BUSH|$80
 .byte "CANDLE",NOUN_CANDLE|$80
+.byte "CARPET",NOUN_CARPET|$80
 .byte "CAVE",NOUN_CAVE|$80
 .byte "CHAIR",NOUN_CHAIR|$80
 .byte "CLIFF",NOUN_CLIFF|$80
@@ -857,6 +889,7 @@ noun_lookup:
 .byte "FOOTPRINTS",NOUN_FOOTPRINTS|$80
 .byte "GAME",NOUN_GAME|$80
 .byte "GARY",NOUN_GARY|$80
+.byte "GOLD",NOUN_GOLD|$80
 .byte "GREEN",NOUN_GREEN|$80
 .byte "GROUND",NOUN_GROUND|$80
 .byte "GUY",NOUN_GUY|$80
@@ -876,15 +909,17 @@ noun_lookup:
 .byte "MAN",NOUN_MAN|$80
 .byte "MAP",NOUN_MAP|$80
 .byte "MASK",NOUN_MASK|$80
+.byte "MATTRESS",NOUN_MATTRESS|$80
 .byte "MENDELEV",NOUN_MENDELEV|$80
+.byte "MONEY",NOUN_MONEY|$80
 .byte "MUD",NOUN_MUD|$80
 .byte "NED",NOUN_NED|$80
 .byte "NOTE",NOUN_NOTE|$80
 .byte "OPENINGS",NOUN_OPENINGS|$80
 .byte "PAINTING",NOUN_PAINTING|$80
 .byte "PAPER",NOUN_PAPER|$80
+.byte "PARCHMENT",NOUN_PARCHMENT|$80
 .byte "PEASANT",NOUN_PEASANT|$80
-.byte "PEBBLES",NOUN_PEBBLES|$80
 .byte "PILLOW",NOUN_PILLOW|$80
 .byte "PILLS",NOUN_PILLS|$80
 .byte "PLAGUE",NOUN_PLAGUE|$80
@@ -906,7 +941,6 @@ noun_lookup:
 .byte "SKULL",NOUN_SKULL|$80
 .byte "SMELL",NOUN_SMELL|$80
 .byte "SODA",NOUN_SODA|$80
-.byte "STONE",NOUN_STONE|$80
 .byte "STUFF",NOUN_STUFF|$80
 .byte "STUMP",NOUN_STUMP|$80
 .byte "SUB",NOUN_SUB|$80
@@ -922,12 +956,6 @@ noun_lookup:
 .byte "WINDOW",NOUN_WINDOW|$80
 .byte "WISH",NOUN_WISH|$80
 .byte "WOMAN",NOUN_WOMAN|$80
-.byte "GOLD",NOUN_GOLD|$80
-.byte "MONEY",NOUN_MONEY|$80
-.byte "CARPET",NOUN_CARPET|$80
-.byte "BED",NOUN_BED|$80
-.byte "MATTRESS",NOUN_MATTRESS|$80
-.byte "PARCHMENT",NOUN_PARCHMENT|$80
 .byte $00
 
 
