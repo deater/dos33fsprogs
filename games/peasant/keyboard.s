@@ -21,6 +21,7 @@ check_keyboard:
 	rts
 
 key_was_pressed:
+	inc	SEEDL
 
 	and	#$5f		 ; strip off high bit and make uppercase
 

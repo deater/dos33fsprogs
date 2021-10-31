@@ -74,7 +74,8 @@ qload.o:	qload.s qboot.inc \
 		clear_bottom.s \
 		hgr_hgr2.s \
 		gr_offsets.s \
-		qkumba_popwr.s
+		qkumba_popwr.s \
+		random16.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -136,6 +137,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s location_names_l qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s location_names_h qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait_until_keypress qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s random16 qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 	echo "driveoff = \$$A22" >> qload.inc

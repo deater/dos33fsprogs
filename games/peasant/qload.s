@@ -257,6 +257,7 @@ length_array:
 .include "gr_offsets.s"
 .include "loadsave_menu.s"
 .include "wait_keypress.s"
+.include "random16.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
