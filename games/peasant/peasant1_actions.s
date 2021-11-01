@@ -803,7 +803,7 @@ well_turn_crank_baby_in:
 	; take baby from well
 
 	lda	GAME_STATE_0
-	and	#~BABY_IN_WELL
+	and	#<(~BABY_IN_WELL)
 	sta	GAME_STATE_0
 
 	ldx	#<well_turn_crank_baby2_message
