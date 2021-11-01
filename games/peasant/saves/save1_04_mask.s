@@ -12,7 +12,7 @@
 .byte 0			; MAP_X		=	$94
 .byte 1			; MAP_Y		=	$95
 .byte LOCATION_HAY_BALE	; MAP_LOCATION	=	$96
-.byte GARY_SCARED|TALKED_TO_MENDELEV
+.byte GARY_SCARED
 			; GAME_STATE_0	=	$97
 .byte $00		; GAME_STATE_1	=	$98
 .byte TALKED_TO_KNIGHT

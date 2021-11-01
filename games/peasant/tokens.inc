@@ -74,7 +74,8 @@ VERB_HUG	= 72
 VERB_HIDE	= 73
 VERB_MOVE	= 74
 VERB_CUT	= 75
-VERB_ALL_DONE	= 76	; not a verb, but indicating end, must be last
+VERB_SAY	= 76
+VERB_ALL_DONE	= 77	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;
@@ -189,6 +190,7 @@ NOUN_CARPET	= 108
 NOUN_BED	= 109
 NOUN_MATTRESS	= 110
 NOUN_PARCHMENT	= 111
-
+NOUN_DONGOLEV	= 112
+NOUN_HALDO	= 113
 ;
-NOUN_UNKNOWN	= 112
+NOUN_UNKNOWN	= 114

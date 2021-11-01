@@ -156,6 +156,10 @@ game_loop:
 
 	lda	MAP_LOCATION
 	cmp	#LOCATION_INSIDE_LADY
+	beq	inside_lady_cottage
+	cmp	#LOCATION_HIDDEN_GLEN
+	beq	inside_hidden_glen
+
 	bne	skip_level_specific
 
 inside_lady_cottage:
@@ -205,6 +209,47 @@ done_trinket_message:
 
 	lda     #LOCATION_OUTSIDE_LADY
 	jsr	update_map_location
+
+	jmp	skip_level_specific
+
+inside_hidden_glen:
+
+	;=====================================
+	; check if in line of Dongolev's arrow
+
+	; first check if he's there
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	bne	skip_level_specific
+
+	; check if in range
+	lda	PEASANT_Y
+	cmp	#$54
+	bne	skip_level_specific
+
+	; oops we're getting shot
+
+	ldx	#<hidden_glen_walk_in_way_message
+	ldy	#>hidden_glen_walk_in_way_message
+	jsr	partial_message_step
+
+	ldx	#<hidden_glen_walk_in_way_message2
+	ldy	#>hidden_glen_walk_in_way_message2
+	jsr	partial_message_step
+
+	ldx	#<hidden_glen_walk_in_way_message3
+	ldy	#>hidden_glen_walk_in_way_message3
+	jsr	partial_message_step
+
+	; this kills you
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+
+	jmp	skip_level_specific
 
 skip_level_specific:
 

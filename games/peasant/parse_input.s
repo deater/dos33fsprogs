@@ -683,6 +683,7 @@ verb_lookup:
 .byte "RIDE",VERB_RIDE|$80
 .byte "RING",VERB_RING|$80
 .byte "SAVE",VERB_SAVE|$80
+.byte "SAY",VERB_SAY|$80
 .byte "SCARE",VERB_SCARE|$80
 .byte "SHOOT",VERB_SHOOT|$80
 .byte "SHOW",VERB_SHOW|$80
@@ -877,6 +878,7 @@ noun_lookup_again:
 .byte "DESK",NOUN_DESK|$80
 .byte "DINGHY",NOUN_DINGHY|$80
 .byte "DOING",NOUN_DOING_SPROINGS|$80
+.byte "DONGOLEV",NOUN_DONGOLEV|$80
 .byte "DOOR",NOUN_DOOR|$80
 .byte "DRAWER",NOUN_DRAWER|$80
 .byte "DRESSER",NOUN_DRESSER|$80
@@ -893,6 +895,7 @@ noun_lookup_again:
 .byte "GREEN",NOUN_GREEN|$80
 .byte "GROUND",NOUN_GROUND|$80
 .byte "GUY",NOUN_GUY|$80
+.byte "HALDO",NOUN_HALDO|$80
 .byte "IN HAY",NOUN_IN_HAY|$80
 .byte "HAY",NOUN_HAY|$80
 .byte "HOLE",NOUN_HOLE|$80

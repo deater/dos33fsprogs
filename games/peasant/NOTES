@@ -178,8 +178,10 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  3 (put baby in bucket)
 +  2 (turn crank [baby in bucket])
 +  2 (scare gary)
++  2 (get arrow)
++  3 (say haldo to dongolev)
 ======
-  40 points
+  45 points
 
 
 deaths implemented
@@ -187,3 +189,5 @@ deaths implemented
 +1	Typing "die"
 +2	Cutting off arms, legs, and head
 +3	kick/punch/kill old gary
++4	get arrow (while dongolev shooting)
++5	walk on range (while dongolev shooting)
