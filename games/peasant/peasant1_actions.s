@@ -54,7 +54,7 @@ gary_break:
 	jmp	parse_common_unknown
 
 gary_sit_stump:
-	jmp	gary_look_at_stump
+	jmp	gary_kick_stump
 
 	;================
 	; climb
@@ -69,6 +69,18 @@ gary_climb:
 	jmp	parse_common_unknown
 
 gary_climb_fence:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	gary_climb_fence_there
+
+gary_climb_fence_gone:
+
+	ldx	#<gary_climb_fence_gone_message
+	ldy	#>gary_climb_fence_gone_message
+	jmp	finish_parse_message
+
+gary_climb_fence_there:
+
 	ldx	#<gary_climb_fence_message
 	ldy	#>gary_climb_fence_message
 	jmp	finish_parse_message
@@ -88,6 +100,12 @@ gary_feed:
 	jmp	parse_common_unknown
 
 gary_feed_horse:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	gary_feed_horse_there
+	jmp	parse_common_unknown
+
+gary_feed_horse_there:
 	ldx	#<gary_feed_horse_message
 	ldy	#>gary_feed_horse_message
 	jmp	finish_parse_message
@@ -107,6 +125,11 @@ gary_get:
 	jmp	parse_common_get
 
 gary_get_flies:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	get_flies_there
+	jmp	parse_common_get
+get_flies_there:
 	ldx	#<gary_get_flies_message
 	ldy	#>gary_get_flies_message
 	jmp	finish_parse_message
@@ -130,26 +153,44 @@ gary_punch:
 	beq	kick_flies
 
 	cmp	#NOUN_STUMP
-	beq	kick_stump
+	beq	gary_kick_stump
 
 	jmp	parse_common_unknown
 
 kick_gary:
-	; TODO: this kills you
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	kick_gary_there
+	jmp	gary_scare_horse_gone
+
+kick_gary_there:
+
 	ldx	#<gary_kick_horse_message
 	ldy	#>gary_kick_horse_message
 	jsr	partial_message_step
+
+	; this kills you
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
 
 	ldx	#<gary_kick_horse_message2
 	ldy	#>gary_kick_horse_message2
 	jmp	finish_parse_message
 
 kick_flies:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	kick_flies_there
+	jmp	parse_common_unknown
+kick_flies_there:
 	ldx	#<gary_kick_flies_message
 	ldy	#>gary_kick_flies_message
 	jmp	finish_parse_message
 
-kick_stump:
+gary_kick_stump:
 	ldx	#<gary_kick_stump_message
 	ldy	#>gary_kick_stump_message
 	jmp	finish_parse_message
@@ -160,6 +201,30 @@ kick_stump:
 
 gary_look:
 
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	gary_look_pre_scare
+
+gary_look_post_scare:
+
+	lda	CURRENT_NOUN
+	cmp	#NOUN_FENCE
+	beq	gary_look_at_fence_post
+	cmp	#NOUN_STUMP
+	beq	gary_look_at_stump
+	cmp	#NOUN_NONE			; same
+	beq	gary_look_at
+
+	jmp	parse_common_look
+
+gary_look_at_fence_post:
+	ldx	#<gary_look_fence_after_scare_message
+	ldy	#>gary_look_fence_after_scare_message
+	jmp	finish_parse_message
+
+	;=================
+	; pre scare
+gary_look_pre_scare:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_FENCE
@@ -178,11 +243,13 @@ gary_look:
 
 	jmp	parse_common_look
 
+	; look at
 gary_look_at:
 	ldx	#<gary_look_message
 	ldy	#>gary_look_message
 	jmp	finish_parse_message
 
+	; look at fence
 gary_look_at_fence:
 	ldx	#<gary_look_fence_message
 	ldy	#>gary_look_fence_message
@@ -204,6 +271,107 @@ gary_look_at_stump:
 	ldy	#>gary_look_stump_message
 	jmp	finish_parse_message
 
+
+	;===================
+	; wear mask
+	;===================
+
+gary_wear:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_MASK
+	beq	wear_mask
+
+	jmp	parse_common_unknown
+
+wear_mask:
+	; if no have mask, unknown
+	; otherwise, same as if we did "scare gary"
+	lda	INVENTORY_1
+	and	#INV1_MONSTER_MASK
+	bne	gary_scare_horse
+
+	jmp	parse_common_unknown
+
+
+	;================
+	; scare
+	;================
+gary_scare:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_GARY
+	beq	gary_scare_horse
+	cmp	#NOUN_HORSE
+	beq	gary_scare_horse
+
+	jmp	parse_common_unknown
+
+
+gary_scare_horse:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	bne	gary_scare_horse_gone
+
+	lda	INVENTORY_1
+	and	#INV1_MONSTER_MASK
+	beq	gary_scare_horse_nomask
+
+gary_scare_horse_mask:
+
+	ldx	#<gary_scare_message
+	ldy	#>gary_scare_message
+	jsr	partial_message_step
+
+	; get points
+
+	lda	#2
+	jsr	score_points
+
+	lda	GAME_STATE_0
+	ora	#GARY_SCARED
+	sta	GAME_STATE_0
+
+	; TODO: break fence
+
+	ldx	#<gary_scare_message2
+	ldy	#>gary_scare_message2
+	jmp	finish_parse_message
+
+
+gary_scare_horse_nomask:
+
+	jsr	random16
+	and	#$3		; 0..4
+	beq	gary_scare_try2
+	cmp	#$1
+	beq	gary_scare_try3
+
+gary_scare_try1:
+	ldx	#<gary_scare_horse_message1
+	ldy	#>gary_scare_horse_message1
+	jmp	finish_parse_message
+
+gary_scare_try2:
+	ldx	#<gary_scare_horse_message2
+	ldy	#>gary_scare_horse_message2
+	jmp	finish_parse_message
+
+gary_scare_try3:
+	ldx	#<gary_scare_horse_message3
+	ldy	#>gary_scare_horse_message3
+	jmp	finish_parse_message
+
+gary_scare_horse_gone:
+	ldx	#<gary_gone_message
+	ldy	#>gary_gone_message
+	jsr	partial_message_step
+
+	ldx	#<gary_gone_message2
+	ldy	#>gary_gone_message2
+	jmp	finish_parse_message
+
 	;================
 	; pet
 	;================
@@ -218,6 +386,11 @@ gary_pet:
 	jmp	parse_common_unknown
 
 gary_pet_horse:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	pet_horse_there
+	jmp	parse_common_unknown
+pet_horse_there:
 	ldx	#<gary_pet_horse_message
 	ldy	#>gary_pet_horse_message
 	jmp	finish_parse_message
@@ -237,27 +410,14 @@ gary_ride:
 	jmp	parse_common_unknown
 
 gary_ride_horse:
-	ldx	#<gary_ride_horse_message
-	ldy	#>gary_ride_horse_message
-	jmp	finish_parse_message
-
-	;================
-	; scare
-	;================
-gary_scare:
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_GARY
-	beq	gary_scare_horse
-	cmp	#NOUN_HORSE
-	beq	gary_scare_horse
-
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	ride_horse_there
 	jmp	parse_common_unknown
 
-	; FIXME: randomly pick from 3 choices
-gary_scare_horse:
-	ldx	#<gary_scare_horse_message1
-	ldy	#>gary_scare_horse_message1
+ride_horse_there:
+	ldx	#<gary_ride_horse_message
+	ldy	#>gary_ride_horse_message
 	jmp	finish_parse_message
 
 
@@ -273,33 +433,24 @@ gary_talk:
 	cmp	#NOUN_HORSE
 	beq	gary_talk_horse
 	cmp	#NOUN_STUMP
-	beq	gary_look_at_stump
+	beq	gary_talk_stump
 	cmp	#NOUN_NONE
 	beq	gary_talk_horse
 
 	jmp	parse_common_talk
 
 gary_talk_horse:
+	lda	GAME_STATE_0
+	and	#GARY_SCARED
+	beq	gary_talk_there
+	jmp	parse_common_talk
+gary_talk_there:
 	ldx	#<gary_talk_message
 	ldy	#>gary_talk_message
 	jmp	finish_parse_message
 
-
-	;===================
-	; wear mask
-	;===================
-
-gary_wear:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_MASK
-	beq	wear_mask
-
-	jmp	parse_common_unknown
-
-wear_mask:
-	jmp	parse_common_unknown
+gary_talk_stump:
+	jmp	gary_kick_stump
 
 
 

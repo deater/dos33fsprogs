@@ -177,12 +177,13 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  2 (put pebbles in bucket)
 +  3 (put baby in bucket)
 +  2 (turn crank [baby in bucket])
++  2 (scare gary)
 ======
-  38 points
+  40 points
 
 
 deaths implemented
 ==================
 +1	Typing "die"
 +2	Cutting off arms, legs, and head
-
++3	kick/punch/kill old gary

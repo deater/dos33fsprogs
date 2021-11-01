@@ -15,6 +15,7 @@ gary_look_fence_message:
 .byte "as toothpicks.",0
 
 ; + look fence (after scaring him)
+gary_look_fence_after_scare_message:
 .byte "It's got a big ol' hole in",13
 .byte "it. For walking through.",0
 
@@ -37,48 +38,7 @@ gary_look_stump_message:
 .byte "what to do next, and stare",13
 .byte "at the stump.",0
 
-; +2 POINTS
-; + wear mask / scare horse
-.byte "You slip on the hideous",13
-.byte "monster maskus.",0
-
-; TODO: mask on face, gary turns and runs through fence
-
-.byte "You scared the crap outta",13
-.byte "Poor Gary! He broke on",13
-.byte "through to the other side!",0
-
-; + wear mask (after scaring him)
-; + kick/kill/punch poor gary (after scaring)
-.byte "Gary's gone now. Let go.",13
-.byte "Just let go.",0
-
-.byte "Let go!",0
-
-; + break/kick stump / sit on stump
-gary_kick_stump_message:
-.byte "Are you THAT bored? Do some",13
-.byte "questing already!",0
-
-; + feed horse (before he's gone)
-gary_feed_horse_message:
-.byte "There's a good chance that",13
-.byte "horse has NEVER eaten. I",13
-.byte "doubt he'll start now.",0
-
-; + ride horse/poor gary (before he's gone)
-gary_ride_horse_message:
-.byte "Naw, snapping horse spines",13
-.byte "just doesn't seem as cool",13
-.byte "as it did in high school.",0
-
-; + pet horse/poor gary (before he's gone)
-gary_pet_horse_message:
-.byte "Aww, that's sweet. Poor",13
-.byte "Gary tries in vain to bite",13
-.byte "your arm off.",0
-
-; + scare horse (before getting the mask)
+; + scare gary/horse (before getting the mask)
 gary_scare_horse_message1:
 .byte "You tell Gary the THE",13
 .byte "CALLS ARE COMING FROM",13
@@ -100,6 +60,45 @@ gary_scare_horse_message3:
 .byte "big zit he has and all",13
 .byte "these baby spiders come",13
 .byte "out. It doesn't phase him.",0
+
+; +2 POINTS
+; + wear mask / scare horse
+gary_scare_message:
+.byte "You slip on the hideous",13
+.byte "monster maskus.",0
+
+; TODO: mask on face, gary turns and runs through fence
+
+gary_scare_message2:
+.byte "You scared the crap outta",13
+.byte "Poor Gary! He broke on",13
+.byte "through to the other side!",0
+
+; + wear mask (after scaring him)
+; + kick/kill/punch poor gary (after scaring)
+gary_gone_message:
+.byte "Gary's gone now. Let go.",13
+.byte "Just let go.",0
+gary_gone_message2:
+.byte "Let go!",0
+
+; + feed horse (before he's gone)
+gary_feed_horse_message:
+.byte "There's a good chance that",13
+.byte "horse has NEVER eaten. I",13
+.byte "doubt he'll start now.",0
+
+; + ride horse/poor gary (before he's gone)
+gary_ride_horse_message:
+.byte "Naw, snapping horse spines",13
+.byte "just doesn't seem as cool",13
+.byte "as it did in high school.",0
+
+; + pet horse/poor gary (before he's gone)
+gary_pet_horse_message:
+.byte "Aww, that's sweet. Poor",13
+.byte "Gary tries in vain to bite",13
+.byte "your arm off.",0
 
 ; + kick/kill/punch poor gary (before scaring)
 ; (Warning: Needless to say, this kills you.)
@@ -132,9 +131,17 @@ gary_climb_fence_message:
 .byte "Peasantry.",0
 
 ; + climb/jump fence after scaring)
+gary_climb_fence_gone_message:
 .byte "More like you should walk",13
 .byte "through that gaping hole in",13
 .byte "it. Just an idea.",0
+
+; + break/kick stump
+; + sit stump
+; + talk stump
+gary_kick_stump_message:
+.byte "Are you THAT bored? Do some",13
+.byte "questing already!",0
 
 ; + get flies (before scaring him)
 gary_get_flies_message:
