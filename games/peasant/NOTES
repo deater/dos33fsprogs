@@ -181,8 +181,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  2 (get arrow)
 +  3 (say haldo to dongolev)
 +  3 (jump in hay)
++  2 (fall in mud puddle)
 ======
-  48 points
+  50 points
 
 
 deaths implemented

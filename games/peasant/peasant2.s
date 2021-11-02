@@ -154,10 +154,73 @@ game_loop:
 
 	jsr	check_keyboard
 
+	;=====================
+	; level specific
+	;=====================
+
+	lda     MAP_LOCATION
+	cmp     #LOCATION_MUD_PUDDLE
+	beq     at_mud_puddle
+        bne     skip_level_specific
+
+at_mud_puddle:
+	; see if falling in
+
+	; see if puddle wet
+	lda	GAME_STATE_1
+	and	#PUDDLE_WET
+	beq	skip_level_specific
+
+	; see if clean
+	lda	GAME_STATE_2
+	and	#COVERED_IN_MUD
+	bne	skip_level_specific
+
+	; see if X in range
+	lda	PEASANT_X
+	cmp	#$B
+	bcc	skip_level_specific
+	cmp	#$1B
+	bcs	skip_level_specific
+
+	; see if Y in range
+	lda	PEASANT_Y
+	cmp	#$64
+	bcc	skip_level_specific
+	cmp	#$80
+	bcs	skip_level_specific
+
+	; in range!
+	ldx	#<puddle_walk_in_message
+	ldy	#>puddle_walk_in_message
+	jsr	partial_message_step
+
+	; make muddy
+	lda	GAME_STATE_2
+	ora	#COVERED_IN_MUD
+	sta	GAME_STATE_2
+
+	; do animation?
+
+	; points if we haven't already
+	lda	GAME_STATE_2
+	and	#GOT_MUDDY_ALREADY
+	bne	skip_level_specific
+
+	; add 2 points to score
+
+	lda	#2
+	jsr	score_points
+
+	lda	GAME_STATE_2
+	ora	#GOT_MUDDY_ALREADY
+	sta	GAME_STATE_2
+
+
+skip_level_specific:
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
-
 
 	; delay
 
