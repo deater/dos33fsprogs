@@ -113,6 +113,42 @@ hay_bale_hide:
 	jmp	parse_common_unknown
 
 enter_hay:
+
+	lda	GAME_STATE_2
+	and	#COVERED_IN_MUD
+	beq	enter_hay_no_mud
+
+enter_hay_muddy:
+	; check if in range
+	lda	PEASANT_X
+	cmp	#15
+	bcs	really_enter_hay_muddy
+
+enter_hay_too_far:
+	ldx	#<hay_enter_hay_clean_message
+	ldy	#>hay_enter_hay_clean_message
+	jmp	finish_parse_message
+
+really_enter_hay_muddy:
+	ldx	#<hay_enter_hay_muddy_message
+	ldy	#>hay_enter_hay_muddy_message
+	jsr	partial_message_step
+
+	; add 3 points to score
+
+	lda	#3
+	jsr	score_points
+
+	; get in hay
+	lda	GAME_STATE_1
+	ora	#HAY_BALE
+	sta	GAME_STATE_1
+
+	ldx	#<hay_enter_hay_muddy_message2
+	ldy	#>hay_enter_hay_muddy_message2
+	jmp	finish_parse_message
+
+enter_hay_no_mud:
 	ldx	#<hay_enter_hay_clean_message
 	ldy	#>hay_enter_hay_clean_message
 	jmp	finish_parse_message
