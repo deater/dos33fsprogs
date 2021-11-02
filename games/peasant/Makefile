@@ -9,6 +9,9 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	peasant.dsk peasant_side2.dsk
 
+zip:	peasant.dsk peasant_side2.dsk
+	zip peasant.zip peasant.dsk peasant_side2.dsk
+
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
 	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY PARSE_INPUT.LZSA
