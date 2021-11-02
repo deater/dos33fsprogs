@@ -241,8 +241,9 @@ done_iic_hack:
 	; Note, on Apple II the clock isn't 1MHz but is actually closer to
 	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
 
-	; 4fe7 / 1.023e6 = .020s, 50Hz
 	; 9c40 / 1.023e6 = .040s, 25Hz
+	; 8534 / 1.023e6 = .033s, 30Hz
+	; 4fe7 / 1.023e6 = .020s, 50Hz
 	; 411a / 1.023e6 = .016s, 60Hz
 
 	; French Touch uses
@@ -263,15 +264,61 @@ setup_irq_smc3:
 setup_irq_smc4:
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
-	lda	#$E7
-;	lda	#$20
+	lda	#$34
+;	lda	#$E7
 setup_irq_smc5:
 	sta	MOCK_6522_T1CL	; write into low-order latch
-	lda	#$4f
-;	lda	#$4E
+	lda	#$85
+;	lda	#$4f
 setup_irq_smc6:
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
 	rts
+
+
+init_registers:
+	; set fine note A
+
+	ldx	#$00
+	lda	#$00
+	jsr	pt3_write_reg
+
+	; set coarse note A
+
+	ldx	#$01
+	lda	#$00
+	jsr	pt3_write_reg
+
+	; set mixer ABC enabled
+
+	ldx	#$07
+	lda	#$38
+	jsr	pt3_write_reg
+
+	; A volume 14
+
+	ldx	#$08
+	lda	#$E
+	jsr	pt3_write_reg
+
+	; B volume 12
+
+	ldx	#$09
+	lda	#$C
+	jsr	pt3_write_reg
+
+	; C volume 12
+
+	ldx	#$0A
+	lda	#$C
+	jsr	pt3_write_reg
+
+	rts
+
+
+
+
+
+

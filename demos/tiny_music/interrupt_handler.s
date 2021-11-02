@@ -35,31 +35,76 @@ interrupt_handler:
 pt3_irq_handler:
 	bit	MOCK_6522_T1CL	; clear 6522 interrupt by reading T1C-L	; 4
 
-	; set note A
+	; see if still counting down
+	lda	SONG_COUNTDOWN
+	bpl	done_update_song
 
+try_again:
+	ldy	SONG_OFFSET
+set_notes_loop:
+
+
+	; see if hit end
+	lda	(SONG_L),Y
+	cmp	#$FF
+	bne	all_ok
+
+	; if at end, reset
+	lda	#0
+	sta	SONG_OFFSET
+	beq	try_again
+all_ok:
+
+
+	; see if note
+
+	tax
+	and	#$C0
+	cmp	#$C0
+	bne	note_only
+
+	; was timing
+
+	txa
+	and	#$3f
+	sta	SONG_COUNTDOWN
+	iny
+	sty	SONG_OFFSET
+	jmp	done_update_song
+
+note_only:
+	txa
+	; CCOONNNN -- c=channel, o=octave, n=note
+	; FIXME: OONNNNCC instead?
+
+	pha
+	lsr
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$FE
+	sta	out_smc+1
+	pla
+	and	#$3F
+	tax
+	lda	frequency_lookup,X
+	sty	y_smc+1
+out_smc:
 	ldx	#$00
-	lda	#$F4
-	jsr	pt3_write_reg
+	jsr	pt3_write_reg	; trashes A/X/Y
 
-	; set coarse note A
+	; set coarse note A	(assume 0)
+	;			could get extra octave by putting 1 here
 
-	ldx	#$01
-	lda	#$00
-	jsr	pt3_write_reg
+y_smc:
+	ldy	#0
+	iny
+	jmp	set_notes_loop
 
-	; set mixer ABC enabled
+done_update_song:
 
-	ldx	#$07
-	lda	#$38
-	jsr	pt3_write_reg
-
-	; A volume 14
-
-	ldx	#$08
-	lda	#$E
-	jsr	pt3_write_reg
-
-
+	dec	SONG_COUNTDOWN
 
 
 	;=================================
@@ -134,3 +179,6 @@ pt3_write_reg:
         sta     MOCK_6522_ORB2          ; write on PB2                  ; 4
         sty     MOCK_6522_ORB2                                          ; 4
 	rts
+
+
+

@@ -27,6 +27,7 @@ MUSIC:	music.o
 
 music.o:	music.s \
 	zp.inc hardware.inc nozp.inc \
+	yankee_music.s \
 	interrupt_handler.s mockingboard_setup.s
 	ca65 -o music.o music.s -l music.lst
 
