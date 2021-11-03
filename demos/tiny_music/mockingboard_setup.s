@@ -279,6 +279,10 @@ setup_irq_smc6:
 
 
 init_registers:
+	lda	#0
+	sta	SONG_OFFSET
+	sta	SONG_COUNTDOWN
+
 	; set fine note A
 
 	ldx	#$00

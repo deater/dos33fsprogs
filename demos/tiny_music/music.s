@@ -29,20 +29,11 @@ tiny_music:
 	;===================
 	; Player Setup
 
-	lda	#0
-	sta	DONE_PLAYING
-	lda	#1
-	sta	LOOP
 
-
-	lda	#<song_track_a
+	lda	#<yankee_doodle_song
 	sta	SONG_L
-	lda	#>song_track_a
+	lda	#>yankee_doodle_song
 	sta	SONG_H
-
-	lda	#0
-	sta	SONG_OFFSET
-	sta	SONG_COUNTDOWN
 
 	; assume mockingboard in slot#4
 

@@ -5,7 +5,7 @@
 	; CCOONNNN -- c=channel, o=octave, n=note
 	; 11LLLLLL -- L=length	1/32=1, 1/16=2, 1/8=4, 1/4=8 1/2=16 1=32
 
-song_track_a:
+yankee_doodle_song:
 	.byte	$17	;00 01 0111	G3 1/4
 	.byte	$4B	;01 00 1011	B2 1
 	.byte	$87	;10 00 0111	G2 1
