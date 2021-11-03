@@ -159,11 +159,16 @@ archery_look_at_archer_message:
 .byte "to ask about it.",0
 
 ; + look archer (after talk but before saying haldo to Dongolev)
+archery_look_at_archer_sponge_message:
 .byte "He looks depressed. Jeez,",13
 .byte "who invited the fun sponge?",0
 
 ; + look archer(s)/(anything not covered elsewhere)  (after saying haldo to Dongolev)
-.byte "You've come across some kind of shooting gallery. A pair of twin brothers seem to be running the place.",0
+archery_look_at_archer_otherwise_message:
+.byte "You've come across some",13
+.byte "kind of shooting gallery. A",13
+.byte "pair of twin brothers seem",13
+.byte "to be running the place.",0
 
 ; + look target
 archery_look_at_target_message:
@@ -208,6 +213,16 @@ archery_talk_mendelev3_message:
 .byte "'haldo.' Tell him I said",13
 .byte "'haldo.'",34,0
 
+; + talk (after talking to him before) NOT IN WIKI
+.byte 34,"Tell my bro I said 'haldo'",13
+.byte "if you see him,",34," he says",13
+.byte "and goes back to pouting.",0
+
+; + talk (after beating the minigame)
+.byte 34,"Go away!",34," says Dongolev.",13
+.byte 34,"We're arguing about who's",13
+.byte "hotter,",34," adds Mendelev.",0
+
 ; + 2 POINTS
 ; + give super trinket
 .byte 34,"That'll work,",34," says Mendelev. Just hit 3 bullseyes and you win the SuperTime FunBow TM!",0
@@ -215,28 +230,78 @@ archery_talk_mendelev3_message:
 ; (get [X]=3-5 bullseyes)
 .byte 34,"Nice shootin! [X] hits.",34," Says Mendelev. ",34,"Here's your prize!",34," You got the SuperTime FunBow TM! We don't sell ammo, so you'll have to find your own arrows for it.",0
 
+;=======
+; ask
+
 ; + ask about fire (all ask abouts m&d must both be there)
-.byte 34,"Trogdor just burned down some idiot peasant's cottage. You should ask him,",34," says Mendelev. / ",34,"Yeah, this jerk goes on vacation to some prancey lake and...",34," / They see you staring daggers at them and turn bright red. / ",34,"Oh. Nevermind,",34," says Dongolev. ",34,"Um, yeah. What's a fire?",34," adds Mendelwhatever.",0
+archery_ask_about_fire_message:
+.byte 34,"Trogdor just burned down",13
+.byte "some idiot peasant's",13
+.byte "cottage. You should ask",13
+.byte "him,",34," says Mendelev.",0
+archery_ask_about_fire_message2:
+.byte 34,"Yeah, this jerk goes on",13
+.byte "vacation to some prancey",13
+.byte "lake and...",34,0
+archery_ask_about_fire_message3:
+.byte "They see you staring",13
+.byte "daggers at them and turn",13
+.byte "bright red.",0
+archery_ask_about_fire_message4:
+.byte 34,"Oh. Nevermind,",34," says",13
+.byte "Dongolev. ",34,"Um, yeah.",13
+.byte "What's a fire?",34," adds",13
+.byte "Mendelwhatever.",0
 
 ; + ask about naked ned
-.byte "That guy creeps us out. In fact, shut up about him.",0
+archery_ask_about_ned_message:
+.byte "That guy creeps us out. In",13
+.byte "fact, shut up about him.",0
 
 ; + ask about robe
-.byte "We wouldn't know. We only wear archer clothes. You just can't arch real well in a robe, y'know?",0
+archery_ask_about_robe_message:
+.byte 34,"We wouldn't know. We only",13
+.byte "wear archer clothes. You",13
+.byte "just can't arch real well",13
+.byte "in a robe, y'know?",34,0
 
 ; + ask about smell
-.byte "That giant pig running around sure smells bad. Maybe talk to him.",0
+archery_ask_about_smell_message:
+.byte 34,"That giant pig running",13
+.byte "around sure smells bad. Maybe",13
+.byte "talk to him.",34,0
 
 ; + ask about trogdor
-.byte 34,"Oh man, there was this one time when I came THIS close to having Trogdor ARROWED!",34," says Dongolev. / ",34,"Hey, shut up! That was me!",34," interrupts Mendelev, ",34,"YOU almost arrowed that blue baby!",34," says Dongolev. / ",34,"Did not!",34," / ",34,"Did so!",34," / ",34,"Did not!",34," / (You see where this is going.)",0
+archery_ask_about_trogdor_message:
+.byte 34,"Oh man, there was this one",13
+.byte "time when I came THIS close",13
+.byte "to having Trogdor",13
+.byte "ARROWED!",34," says Dongolev.",0
+archery_ask_about_trogdor_message2:
+.byte 34,"Hey, shut up! That was me!",34,13
+.byte "interrupts Mendelev, ",34,"YOU",13
+.byte "almost arrowed that blue",13
+.byte "baby!",34," says Dongolev.",0
+archery_ask_about_trogdor_message3:
+.byte 34,"Did not!",34,0
+archery_ask_about_trogdor_message4:
+.byte 34,"Did so!",34,0
+archery_ask_about_trogdor_message5:
+.byte 34,"Did not!",34,0
+archery_ask_about_trogdor_message6:
+.byte "(You see where this is",13
+.byte "going.)",0
 
 ; + ask about (unknown)
-.byte "Either we don't know anything about that, or you're real boring.",0
+archery_ask_about_unknown_message:
+.byte 34,"Either we don't know",13
+.byte "anything about that, or",13
+.byte "you're real boring.",34,0
 
 ; + haldo (after Dongolev has returned)
 .byte "HALDO!!",0
 
-; + play game (before saying haldo to Dongolev)
+; + play game (before saying haldo to Dongolev) (before trinket?)
 archery_play_game_message:
 .byte "The gallery's not open and",13
 .byte "you got no bow or arrows,",13
@@ -259,13 +324,7 @@ archery_get_arrow_message:
 .byte "Also, that guy over there",13
 .byte "is giving you the evil eye.",0
 
-; + talk (after talking to him before) NOT IN WIKI
-.byte 34,"Tell my bro I said 'haldo'",13
-.byte "if you see him,",34," he says",13
-.byte "and goes back to pouting.",0
 
-; + talk (after beating the minigame)
-.byte 34,"Go away!",34," says Dongolev. ",34,"We're arguing about who's hotter,",34," adds Mendelev.",0
 
 
 ;=================

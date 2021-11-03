@@ -332,10 +332,87 @@ archery_verb_table:
 	; ask
 	;================
 archery_ask:
-
-	; TODO
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	bne	archery_ask_after_haldo
 
 	jmp	parse_common_ask
+
+archery_ask_after_haldo:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_FIRE
+	beq	archery_ask_about_fire
+	cmp	#NOUN_NED
+	beq	archery_ask_about_ned
+	cmp	#NOUN_SMELL
+	beq	archery_ask_about_smell
+	cmp	#NOUN_ROBE
+	beq	archery_ask_about_robe
+	cmp	#NOUN_TROGDOR
+	beq	archery_ask_about_trogdor
+
+archery_ask_about_unknown:
+	ldx	#<archery_ask_about_unknown_message
+	ldy	#>archery_ask_about_unknown_message
+	jmp	finish_parse_message
+
+archery_ask_about_fire:
+	ldx	#<archery_ask_about_fire_message
+	ldy	#>archery_ask_about_fire_message
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_fire_message2
+	ldy	#>archery_ask_about_fire_message2
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_fire_message3
+	ldy	#>archery_ask_about_fire_message3
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_fire_message4
+	ldy	#>archery_ask_about_fire_message4
+	jmp	finish_parse_message
+
+archery_ask_about_ned:
+	ldx	#<archery_ask_about_ned_message
+	ldy	#>archery_ask_about_ned_message
+	jmp	finish_parse_message
+
+archery_ask_about_robe:
+	ldx	#<archery_ask_about_robe_message
+	ldy	#>archery_ask_about_robe_message
+	jmp	finish_parse_message
+
+archery_ask_about_smell:
+	ldx	#<archery_ask_about_smell_message
+	ldy	#>archery_ask_about_smell_message
+	jmp	finish_parse_message
+
+archery_ask_about_trogdor:
+	ldx	#<archery_ask_about_trogdor_message
+	ldy	#>archery_ask_about_trogdor_message
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_trogdor_message2
+	ldy	#>archery_ask_about_trogdor_message2
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_trogdor_message3
+	ldy	#>archery_ask_about_trogdor_message3
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_trogdor_message4
+	ldy	#>archery_ask_about_trogdor_message4
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_trogdor_message5
+	ldy	#>archery_ask_about_trogdor_message5
+	jsr	partial_message_step
+
+	ldx	#<archery_ask_about_trogdor_message6
+	ldy	#>archery_ask_about_trogdor_message6
+	jmp	finish_parse_message
 
 
 	;================
@@ -410,9 +487,30 @@ archery_look_at:
 	jmp	finish_parse_message
 
 archery_look_at_archer:
+	; first check if we've talked to mendelev
+	lda	GAME_STATE_0
+	and	#TALKED_TO_MENDELEV
+	beq	archery_look_at_archer_before
+
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	archery_look_at_archer_after
+
+archery_look_at_otherwise:
+	ldx	#<archery_look_at_archer_otherwise_message
+	ldy	#>archery_look_at_archer_otherwise_message
+	jmp	finish_parse_message
+
+archery_look_at_archer_before:
 	ldx	#<archery_look_at_archer_message
 	ldy	#>archery_look_at_archer_message
 	jmp	finish_parse_message
+
+archery_look_at_archer_after:
+	ldx	#<archery_look_at_archer_sponge_message
+	ldy	#>archery_look_at_archer_sponge_message
+	jmp	finish_parse_message
+
 
 archery_look_at_target:
 	ldx	#<archery_look_at_target_message
@@ -445,6 +543,10 @@ archery_play_game:
 	; talk
 	;================
 archery_talk:
+	; before talk, only will talk if close enough
+	; after talk mendelev, gives talk to brother message
+	; after dongolev back, ???
+
 
 	; only talk if close
 	lda	PEASANT_X
