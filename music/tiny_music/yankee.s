@@ -3,6 +3,7 @@
 ; 514B -- Initial implementation
 ; 423B -- inline everything
 ; 400B -- put register init at end of song
+; 381B -- generate the frequency table
 
 SONG_L	= $70
 SONG_H	= $71

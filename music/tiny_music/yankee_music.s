@@ -12,7 +12,7 @@ yankee_doodle_song:
 	.byte	$00				; $06
 	.byte	$38				; $07 mixer (ABC on)
 	.byte	$0E,$0C,$0C			; $08 volume A/B/C
-	.byte	$00,$00,$00,$00			; $09
+	.byte	$00,$00,$00			; $0B
 ; music
 	.byte	$17	;00 01 0111	G3 1/4
 	.byte	$4B	;01 00 1011	B2 1
