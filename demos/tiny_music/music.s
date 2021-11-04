@@ -1,5 +1,8 @@
 ; Tiny Mockingboard Player
 
+; 514B -- Initial implementation
+; 423B -- inline everything
+
 SONG_L	= $70
 SONG_H	= $71
 SONG_OFFSET = $72
@@ -36,13 +39,8 @@ tiny_music:
 	sta	SONG_H
 
 	; assume mockingboard in slot#4
-
 	jsr	mockingboard_init
-	jsr	mockingboard_setup_interrupt
-	jsr	reset_ay_both
-	jsr	clear_ay_both
 
-	jsr	init_registers
 start_interrupts:
 	cli
 

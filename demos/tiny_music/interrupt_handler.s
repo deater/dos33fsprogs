@@ -32,7 +32,7 @@ interrupt_handler:
 	inc	$0404		; debug (flashes char onscreen)
 
 
-pt3_irq_handler:
+ay3_irq_handler:
 	bit	MOCK_6522_T1CL	; clear 6522 interrupt by reading T1C-L	; 4
 
 	; see if still counting down
@@ -92,7 +92,7 @@ note_only:
 	sty	y_smc+1
 out_smc:
 	ldx	#$00
-	jsr	pt3_write_reg	; trashes A/X/Y
+	jsr	ay3_write_reg	; trashes A/X/Y
 
 	; set coarse note A	(assume 0)
 	;			could get extra octave by putting 1 here
@@ -111,21 +111,8 @@ done_update_song:
 	; Finally done with this interrupt
 	;=================================
 
-done_pt3_irq_handler:
+done_ay3_irq_handler:
 
-
-	jmp	exit_interrupt
-
-	;=================================
-	; Finally done with this interrupt
-	;=================================
-
-quiet_exit:
-	stx	DONE_PLAYING
-	jsr	clear_ay_both
-
-	ldx	#$ff		; also mute the channel
-	stx	AY_REGISTERS+7	; just in case
 
 
 exit_interrupt:
@@ -157,28 +144,6 @@ frequency_lookup:
 ; .byte $77,$70,$6A,$64,$5E,$59,$54,$4F,$4B,$47,$43,$3F,$00,$00,$00,$00
 ; .byte $3B,$38,$35,$32,$2F,$2C,$2A,$27,$25,$23,$21,$1F,$00,$00,$00,$00
 
-	;=====================
-	; address in X
-	; value in A
-pt3_write_reg:
-        stx     MOCK_6522_ORA1          ; put address on PA1            ; 4
-        stx     MOCK_6522_ORA2          ; put address on PA2            ; 4
-        ldy     #MOCK_AY_LATCH_ADDR     ; latch_address for PB1         ; 2
-        sty     MOCK_6522_ORB1          ; latch_address on PB1          ; 4
-        sty     MOCK_6522_ORB2          ; latch_address on PB2          ; 4
-        ldy     #MOCK_AY_INACTIVE       ; go inactive                   ; 2
-        sty     MOCK_6522_ORB1                                          ; 4
-        sty     MOCK_6522_ORB2                                          ; 4
-
-        ; value
-        sta     MOCK_6522_ORA1          ; put value on PA1              ; 4
-        sta     MOCK_6522_ORA2          ; put value on PA2              ; 4
-        lda     #MOCK_AY_WRITE          ;                               ; 2
-        sta     MOCK_6522_ORB1          ; write on PB1                  ; 4
-        sty     MOCK_6522_ORB1                                          ; 4
-        sta     MOCK_6522_ORB2          ; write on PB2                  ; 4
-        sty     MOCK_6522_ORB2                                          ; 4
-	rts
 
 
 

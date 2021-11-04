@@ -53,180 +53,41 @@ MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 
 	;========================
+	;========================
 	; Mockingboard Init
 	;========================
+	;========================
+
+mockingboard_init:
+
+
+
+	;=========================
 	; Initialize the 6522s
 	; set the data direction for all pins of PortA/PortB to be output
 
-mockingboard_init:
+
 	lda	#$ff		; all output (1)
 
-mock_init_smc1:
-	sta	MOCK_6522_DDRB1
+	sta	MOCK_6522_DDRB1	; set for 6522 #1
 	sta	MOCK_6522_DDRA1
-mock_init_smc2:
-	sta	MOCK_6522_DDRB2
+
+	sta	MOCK_6522_DDRB2	; set for 6522 #2
 	sta	MOCK_6522_DDRA2
-	rts
-
-	;===================================
-	;===================================
-	; Reset Both AY-3-8910s
-	;===================================
-	;===================================
-
-	;======================
-	; Reset Left AY-3-8910
-	;======================
-reset_ay_both:
-	lda	#MOCK_AY_RESET
-reset_ay_smc1:
-	sta	MOCK_6522_ORB1
-	lda	#MOCK_AY_INACTIVE
-reset_ay_smc2:
-	sta	MOCK_6522_ORB1
-
-	;======================
-	; Reset Right AY-3-8910
-	;======================
-;reset_ay_right:
-;could be merged with both
-	lda	#MOCK_AY_RESET
-reset_ay_smc3:
-	sta	MOCK_6522_ORB2
-	lda	#MOCK_AY_INACTIVE
-reset_ay_smc4:
-	sta	MOCK_6522_ORB2
-	rts
 
 
-;	Write sequence
-;	Inactive -> Latch Address -> Inactive -> Write Data -> Inactive
-
-	;=========================================
-	; Write Right/Left to save value AY-3-8910
-	;=========================================
-	; register in X
-	; value in MB_VALUE
-
-write_ay_both:
-	; address
-
-write_ay_smc1:
-	stx	MOCK_6522_ORA1		; put address on PA1		; 4
-	stx	MOCK_6522_ORA2		; put address on PA2		; 4
-	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1		; 2
-write_ay_smc2:
-	sta	MOCK_6522_ORB1		; latch_address on PB1		; 4
-	sta	MOCK_6522_ORB2		; latch_address on PB2		; 4
-	ldy	#MOCK_AY_INACTIVE	; go inactive			; 2
-write_ay_smc3:
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
-								;===========
-								;        28
-	; value
-	lda	MB_VALUE						; 3
-write_ay_smc4:
-	sta	MOCK_6522_ORA1		; put value on PA1		; 4
-	sta	MOCK_6522_ORA2		; put value on PA2		; 4
-	lda	#MOCK_AY_WRITE		;				; 2
-write_ay_smc5:
-	sta	MOCK_6522_ORB1		; write on PB1			; 4
-	sta	MOCK_6522_ORB2		; write on PB2			; 4
-write_ay_smc6:
-	sty	MOCK_6522_ORB1						; 4
-	sty	MOCK_6522_ORB2						; 4
-								;===========
-								;        29
-
-	rts								; 6
-								;===========
-								;       63
-write_ay_both_end:
-;.assert >write_ay_both = >write_ay_both_end, error, "write_ay_both crosses page"
-
-	;=======================================
-	; clear ay -- clear all 14 AY registers
-	; should silence the card
-	;=======================================
-	; 7+(74*14)+5=1048
-clear_ay_both:
-	ldx	#13				; 2
-	lda	#0				; 2
-	sta	MB_VALUE			; 3
-clear_ay_left_loop:
-	jsr	write_ay_both			; 6+63
-	dex					; 2
-	bpl	clear_ay_left_loop		; 3
-						; -1
-	rts					; 6
-
-clear_ay_end:
-;.assert >clear_ay_both = >clear_ay_end, error, "clear_ay_both crosses page"
-
-	;=============================
-	; Setup
-	;=============================
 mockingboard_setup_interrupt:
-
-.ifdef PT3_ENABLE_APPLE_IIC
-	lda	APPLEII_MODEL
-	cmp	#'C'
-	bne	done_iic_hack
-
-	; bypass the firmware interrupt handler
-	; should we do this on IIe too? probably faster
-
-	; first we have to copy the ROM to the language card
-
-	sei				; disable interrupts
-
-
-
-copy_rom_loop:
-	lda	$c089			; read ROM, write RAM1
-	lda	$c089
-
-	ldy	#0
-read_rom_loop:
-	lda	$D000,Y
-	sta	$400,Y			; note this uses text page as
-					; temporary data store
-	iny
-	bne	read_rom_loop
-
-	lda	$c08B			; read/write RAM1
-	lda	$c08B			;
-
-write_rom_loop:
-	lda	$400,Y
-	sta	$D000,Y
-	iny
-	bne	write_rom_loop
-
-	inc	read_rom_loop+2
-	inc	write_rom_loop+5
-	bne	copy_rom_loop
-
-	lda	#<interrupt_handler
-	sta	$fffe
-	lda	#>interrupt_handler
-	sta	$ffff
-
-	lda	#$EA			; nop out the "lda $45" in the irq handler
-	sta	interrupt_smc
-	sta	interrupt_smc+1
-.endif
-
-done_iic_hack:
-
 
 	;=========================
 	; Setup Interrupt Handler
 	;=========================
+
+	; NOTE: we don't support IIc as it's a hack
+	;	traditionally Mockingboard on IIc was rare
+
+	;========================
+	; set up interrupt
 	; Vector address goes to 0x3fe/0x3ff
-	; FIXME: should chain any existing handler
 
 	lda	#<interrupt_handler
 	sta	$03fe
@@ -252,31 +113,42 @@ done_iic_hack:
 	sei			; disable interrupts just in case
 
 	lda	#$40		; Continuous interrupts, don't touch PB7
-setup_irq_smc1:
 	sta	MOCK_6522_ACR	; ACR register
+
 	lda	#$7F		; clear all interrupt flags
-setup_irq_smc2:
 	sta	MOCK_6522_IER	; IER register (interrupt enable)
 
 	lda	#$C0
-setup_irq_smc3:
 	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
-setup_irq_smc4:
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
 	lda	#$34
 ;	lda	#$E7
-setup_irq_smc5:
 	sta	MOCK_6522_T1CL	; write into low-order latch
+
 	lda	#$85
 ;	lda	#$4f
-setup_irq_smc6:
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter
 				; clear interrupt and start counting
 
-	rts
 
+
+	;===================================
+	;===================================
+	; Reset Both AY-3-8910s
+	;===================================
+	;===================================
+
+	;===========================
+	; Reset Right/Left AY-3-8910
+	;===========================
+	lda	#MOCK_AY_RESET
+	sta	MOCK_6522_ORB1
+	sta	MOCK_6522_ORB2
+	lda	#MOCK_AY_INACTIVE
+	sta	MOCK_6522_ORB1
+	sta	MOCK_6522_ORB2
 
 init_registers:
 	lda	#0
@@ -287,42 +159,79 @@ init_registers:
 
 	ldx	#$00
 	lda	#$00
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	; set coarse note A
 
 	ldx	#$01
 	lda	#$00
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	; set mixer ABC enabled
 
 	ldx	#$07
 	lda	#$38
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	; A volume 14
 
 	ldx	#$08
 	lda	#$E
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	; B volume 12
 
 	ldx	#$09
 	lda	#$C
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	; C volume 12
 
 	ldx	#$0A
 	lda	#$C
-	jsr	pt3_write_reg
+	jsr	ay3_write_reg
 
 	rts
 
 
+	;=====================
+	;=====================
+	;=====================
+	; ay3 write reg
+	;=====================
+	;=====================
+	;=====================
+	; writes to both chips (so same output to both Right/Left)
+	; address in X (preserved)
+	; value in A
 
+	; NOTE: it looks like you could interleave things to save bytes
+	; but technically this violates the AY-3-8910 spec sheet on
+	; finishing accesses in less than 10us (10 cycles)
 
+ay3_write_reg:
+	pha
+	lda	#MOCK_AY_LATCH_ADDR     ; latch_address for PB1         ; 2
+	ldy	#MOCK_AY_INACTIVE       ; go inactive                   ; 2
 
+	stx	MOCK_6522_ORA1          ; put address on PA1            ; 4
+	sta	MOCK_6522_ORB1          ; latch_address on PB1          ; 4
+	sty	MOCK_6522_ORB1                                          ; 4
 
+	stx	MOCK_6522_ORA2          ; put address on PA2            ; 4
+	sta	MOCK_6522_ORB2          ; latch_address on PB2		; 4
+	sty	MOCK_6522_ORB2						; 4
+	pla
+
+	; value
+	sta	MOCK_6522_ORA1          ; put value on PA1              ; 4
+	sta	MOCK_6522_ORA2          ; put value on PA2              ; 4
+	lda	#MOCK_AY_WRITE          ;                               ; 2
+
+	sta	MOCK_6522_ORB1          ; write on PB1                  ; 4
+	sty	MOCK_6522_ORB1                                          ; 4
+
+	sta	MOCK_6522_ORB2          ; write on PB2                  ; 4
+	sty	MOCK_6522_ORB2                                          ; 4
+
+	rts
