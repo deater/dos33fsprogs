@@ -26,7 +26,7 @@ MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 music.o:	music.s \
-	zp.inc hardware.inc nozp.inc \
+	zp.inc hardware.inc \
 	yankee_music.s \
 	interrupt_handler.s mockingboard_setup.s
 	ca65 -o music.o music.s -l music.lst

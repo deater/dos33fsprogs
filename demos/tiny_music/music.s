@@ -2,13 +2,12 @@
 
 ; 514B -- Initial implementation
 ; 423B -- inline everything
+; 400B -- put register init at end of song
 
 SONG_L	= $70
 SONG_H	= $71
 SONG_OFFSET = $72
 SONG_COUNTDOWN = $73
-
-
 
 ; proposed format
 ; CCOONNNN -- c=channel, o=octave, n=note
@@ -50,7 +49,5 @@ forever:
 
 .include        "mockingboard_setup.s"
 .include        "interrupt_handler.s"
-
-	.include "nozp.inc"
 
 	.include "yankee_music.s"

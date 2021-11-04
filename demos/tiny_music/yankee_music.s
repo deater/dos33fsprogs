@@ -6,6 +6,14 @@
 	; 11LLLLLL -- L=length	1/32=1, 1/16=2, 1/8=4, 1/4=8 1/2=16 1=32
 
 yankee_doodle_song:
+
+; register init
+	.byte	$00,$00,$00,$00,$00,$00		; $00: A/B/C fine/coarse
+	.byte	$00				; $06
+	.byte	$38				; $07 mixer (ABC on)
+	.byte	$0E,$0C,$0C			; $08 volume A/B/C
+	.byte	$00,$00,$00,$00			; $09
+; music
 	.byte	$17	;00 01 0111	G3 1/4
 	.byte	$4B	;01 00 1011	B2 1
 	.byte	$87	;10 00 0111	G2 1

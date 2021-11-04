@@ -151,45 +151,33 @@ mockingboard_setup_interrupt:
 	sta	MOCK_6522_ORB2
 
 init_registers:
+
+	; init song data
+
 	lda	#0
 	sta	SONG_OFFSET
 	sta	SONG_COUNTDOWN
 
-	; set fine note A
+	; read 14 bytes from beginning of song to init
 
-	ldx	#$00
-	lda	#$00
+	ldx	#13
+init_loop:
+init_smc:
+	txa
+	tay
+	lda	(SONG_L),Y
 	jsr	ay3_write_reg
+	dex
+	bne	init_loop
 
-	; set coarse note A
-
-	ldx	#$01
-	lda	#$00
-	jsr	ay3_write_reg
-
-	; set mixer ABC enabled
-
-	ldx	#$07
-	lda	#$38
-	jsr	ay3_write_reg
-
-	; A volume 14
-
-	ldx	#$08
-	lda	#$E
-	jsr	ay3_write_reg
-
-	; B volume 12
-
-	ldx	#$09
-	lda	#$C
-	jsr	ay3_write_reg
-
-	; C volume 12
-
-	ldx	#$0A
-	lda	#$C
-	jsr	ay3_write_reg
+	; update SONG_L to point to beginning
+	lda	SONG_L
+	clc
+	adc	#14
+	sta	SONG_L
+	bcc	no_oflo
+	inc	SONG_H
+no_oflo:
 
 	rts
 
