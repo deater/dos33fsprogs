@@ -60,8 +60,6 @@ MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 mockingboard_init:
 
-
-
 	;=========================
 	; Initialize the 6522s
 	; set the data direction for all pins of PortA/PortB to be output
@@ -166,11 +164,11 @@ init_smc:
 	txa
 	tay
 	lda	(SONG_L),Y
-	jsr	ay3_write_reg
+	jsr	ay3_write_reg		; trashes Y
 	dex
 	bne	init_loop
 
-	; update SONG_L to point to beginning
+	; update SONG_L to point past the init
 	lda	SONG_L
 	clc
 	adc	#14
@@ -178,6 +176,17 @@ init_smc:
 	bcc	no_oflo
 	inc	SONG_H
 no_oflo:
+
+	; create Frequency Table
+	ldx	#12
+make_freq_loop:
+	lda	frequency_lookup,X
+	lsr
+	sta	frequency_lookup+16,X
+	lsr
+	sta	frequency_lookup+32,X
+	dex
+	bpl	make_freq_loop
 
 	rts
 
@@ -223,3 +232,12 @@ ay3_write_reg:
 	sty	MOCK_6522_ORB2                                          ; 4
 
 	rts
+
+
+; starts at C4
+frequency_lookup:
+.byte $F4,$E6,$D9,$CD,$C1,$B7,$AC,$A3,$99,$91,$89,$81,$00
+
+;.byte $00,$00,$00,$00
+;.byte $7A,$73,$6C,$66,$60,$5B,$56,$51,$4C,$48,$44,$40,$00,$00,$00,$00
+;.byte $3D,$39,$36,$33,$30,$2D,$2B,$28,$26,$24,$22,$20,$00,$00,$00,$00

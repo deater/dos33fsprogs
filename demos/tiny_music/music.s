@@ -47,7 +47,10 @@ forever:
 	jmp	forever
 
 
-.include        "mockingboard_setup.s"
+.include "yankee_music.s"
+
 .include        "interrupt_handler.s"
 
-	.include "yankee_music.s"
+; must be last
+.include        "mockingboard_setup.s"
+
