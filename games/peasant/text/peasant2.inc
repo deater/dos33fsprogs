@@ -218,17 +218,86 @@ archery_talk_mendelev3_message:
 .byte "if you see him,",34," he says",13
 .byte "and goes back to pouting.",0
 
+; + talk (after dongolev back, before minigame)
+;   talk mendelev, dongolev, brothers, guy, dude, man
+;        (have arrow, not sure if that matters)
+.byte 34,"Haldo!",34," say the brothers.",13
+.byte 34,"Test your skill! Give us",13
+.byte "the right super item from",13
+.byte "your inventory and you can",13
+.byte "give it as many tries as",13
+.byte "you need!",34,0
+
 ; + talk (after beating the minigame)
+;   talk mendelev, dongolev, brothers, guy, dude, man
 .byte 34,"Go away!",34," says Dongolev.",13
 .byte 34,"We're arguing about who's",13
 .byte "hotter,",34," adds Mendelev.",0
 
 ; + 2 POINTS
 ; + give super trinket
-.byte 34,"That'll work,",34," says Mendelev. Just hit 3 bullseyes and you win the SuperTime FunBow TM!",0
-.byte "The ARROW KEYS aim left and right and the SPACE BAR operates the bow. You'll need to press it a couple of times to get a nice shot off but we don't give lessons so you're on your own.",0
+.byte 34,"That'll work,",34," says",13
+.byte "Mendelev. Just hit 3",13
+.byte "bullseyes and you win the",13
+.byte "SuperTime FunBow TM!",0
+
+.byte 34,"The ARROW KEYS aim left",13
+.byte "and right and the SPACE BAR",13
+.byte "operates the bow. You'll",13
+.byte "need to press it a couple",13
+.byte "of times to get a nice shot",13
+.byte "off but we don't give",13
+.byte "lessons so you're on your",13
+.byte "own.",0
+
 ; (get [X]=3-5 bullseyes)
-.byte 34,"Nice shootin! [X] hits.",34," Says Mendelev. ",34,"Here's your prize!",34," You got the SuperTime FunBow TM! We don't sell ammo, so you'll have to find your own arrows for it.",0
+.byte 34,"Nice shootin! 3 hits.",34,13
+.byte "Says Mendelev. ",34,"Here's",13
+.byte "your prize!",34," You got the",13
+.byte "SuperTime FunBow TM! We",13
+.byte "don't sell ammo, so you'll",13
+.byte "have to find your own",13
+.byte "arrows for it.",0
+
+.byte 34,"Sorry!",34," says",13
+.byte "Dongolev.",34,"Not a single",13
+.byte "hit. Your game face must be",13
+.byte "on back-order. Maybe come",13
+.byte "back when your shipment",13
+.byte "comes in.",0
+
+;.byte 34,"Sorry!",34," says",13
+;.byte "Dongolev.",34,"Only 1",13
+;.byte "hit. Your game face must be",13
+;.byte "on back-order. Maybe come",13
+;.byte "back when your shipment",13
+;.byte "comes in.",0
+
+
+.byte 34,"But since you gave us this",13
+.byte "trinket, and you obviously",13
+.byte "don't have a prayer of",13
+.byte "winning, you can play again",13
+.byte "whenever you want.",34,0
+
+; play game
+.byte 34,"Haldo again!",34," say the",13
+.byte "brothers. ",34,"Get 3 bullseyes",13
+.byte "this time and you'll win",13
+.byte "yourself an SuperTime",13		; [sic]
+.byte "FunBow",34,0
+
+; then gives The ARROW KEYS message again
+
+; hints
+; slack, just aim at middle, both at red line
+; full left, aim at right edge of leg
+; full right, aim at left edge of leg
+
+
+; play game after won, goes the "arguing" thing
+
+
 
 ;=======
 ; ask
@@ -446,7 +515,12 @@ talk_knight_fifth_message:
 .byte "or load your game. Duh.",0
 
 ; + talk knight (with kerrek's belt)
-.byte "Frankly, Matthew Broderick, you sure stink like a peasant. But you still don't DRESS like a peasant and you're not ON FIRE like a peasant.",0
+.byte "Frankly, Matthew",13
+.byte "Broderick, you sure stink",13
+.byte "like a peasant. But you",13
+.byte "still don't DRESS like a",13
+.byte "peasant and you're not ON",13
+.byte "FIRE like a peasant.",0
 
 ; + talk knight (with ned's robe, on fire or not)
 .byte "My dear Adso, you are dressed well but you don't STINK and you're not ON FIRE. Let us instead exercise our brains and try to solve this tantalizing conundrum.",0

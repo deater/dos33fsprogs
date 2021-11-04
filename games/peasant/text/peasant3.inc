@@ -4,7 +4,9 @@
 
 ; TODO
 ; + Type any command other than "yes" or "no" after the Jhonka asks if you stole the riches
-.byte "Just answer him, yes or no, you fool!",0
+; you can't walk while waiting here
+.byte "Just answer him, yes or no,",13
+.byte "you fool!",0
 
 ; + look
 jhonka_look_at_message:
@@ -14,20 +16,36 @@ jhonka_look_at_message:
 
 ; TODO
 ; + look (kerrek dead, before riches)
-.byte "There's a disgusting little Jhonka hopping around outside a little cave.A fat pile of riches lies next to him.",0
+.byte "There's a disgusting",13
+.byte "little Jhonka hopping",13
+.byte "around outside a little",13
+.byte "cave.A fat pile of riches",13
+.byte "lies next to him.",0
 
 ; TODO
 ; + look (after kerrek dead, after take riches)
-.byte "There's a disgusting little Jhonka hopping around outside a little cave.",0
+.byte "There's a disgusting",13
+.byte "little Jhonka hopping",13
+.byte "around outside a small",13	; WIKI wrong
+.byte "cave.",0
 
 ; TODO
 ; + look club/turkey leg (when he's outside)
-.byte "Turkey leg or no, it looks like the Jhonka's been gnawing on it.",0
+.byte "Turkey leg or no, it looks",13
+.byte "like the Jhonka's been",13
+.byte "gnawing on it.",0
 
 ; + look cave
 jhonka_look_at_cave_message:
 .byte "Just a little cave. Calm",13
 .byte "down.",0
+
+; + look door (after kerrek?)		; not in WIKI
+.byte "Just a door, nothing more.",0
+
+; + look riches
+.byte "That's one fat pile of",13
+.byte "riches alright.",0
 
 ; + look fence
 jhonka_look_at_fence_message:
@@ -37,7 +55,15 @@ jhonka_look_at_fence_message:
 
 ; TODO
 ; + look jhonka (when he's outside)
-.byte "The Jhonka is gray and grody. He's got a cromagnon forehead and jaw with a pair of wicked incisors. He sports an old loin-cheese cloth and carries either a big club or one of those roasted turkey legs you got at the Ren Fest.",0
+.byte "The Jhonka is gray and",13
+.byte "grody. He's got a cromagnon",13
+.byte "forehead and jaw with a",13
+.byte "pair of wicked incisors. He",13
+.byte "sports an old loin-cheese",13
+.byte "cloth and carries either",13
+.byte "a big club or one of those",13
+.byte "roasted turkey legs you got",13
+.byte "at the Ren Fest.",0
 
 ; TODO
 ; + look/read note (before killing Kerrek) [ will walk to it if far away]
@@ -47,48 +73,87 @@ jhonka_read_note_message:
 
 ; TODO
 ; + (walk in haystack)
-.byte "Hey, nice disguise! The Jhonka doesn't seem to notice you.",0
+.byte "Hey, nice disguise! The",13
+.byte "Jhonka doesn't seem to",13
+.byte "notice you.",0
 
 ; TODO
-; + steal riches
-.byte "Oh OH! A stiff breeze blew all the hay and, surprisingly, the mud off of you! ",34,"You take my riches?!",34," growls the Jhonka.",0
+; + steal/get riches
+.byte "Oh OH! A stiff breeze blew",13
+.byte "all the hay and,",13
+.byte "surprisingly, the mud off",13
+.byte "of you! ",34,"You take my",13
+.byte "riches?!",34," growls the",13
+.byte "Jhonka.",0
 
 ; TODO
 ; + 7 POINTS
 ; + no
-.byte 34,"Okay. Lemme know if you see riches anywhere,",34," he grunts and goes back to his hopping. You smooth talker, you.",0
-
-; TODO
-; + ask about fire
-.byte "Burninator make fire! Barbecue all peasants!",0
-
-; TODO
-; + ask about Jhonka
-.byte 34,"The Kerrek is dead!",34," he cries and hops around some more. You wonder how someone this primitive could have made that much dough.",0
-
-; TODO
-; + ask about naked ned (or) robe
-.byte 34,"Filthy naked peasant! Stay away from my cave-hole!",34," Who's he calling naked? HE'S the one wearing the string bikini.",0
-
-; TODO
-; + ask about smell
-.byte 34,"Kerrek smell! Now Kerrek dead!",34," screeches the Jhonka. So you can infer from this that all smells are dead? You always sucked at the analytical questions.",0
-
-; TODO
-; + ask about trogdor
-.byte 34,"All hail Burninator! Trogdor Number One! Beat Peasant Tech!",34," says the grimy Jhonka.",0
-
-; TODO
-; + ask about (unknown)
-.byte "Jhonka don't know nothing bout that!",0
+.byte 34,"Okay. Lemme know if you",13
+.byte "see riches anywhere,",34," he",13
+.byte "grunts and goes back to his",13
+.byte "hopping. You smooth",13
+.byte "talker, you.",0
 
 ; TODO
 ; + yes (to the Jhonka when he asks you about his riches)
-.byte "'I KILL YOU!!' screams the Jhonka.",0
+.byte 34,"I KILL YOU!!",34," screams the",13
+.byte "Jhonka.",0
 ; {The Jhonka clubs you to death}  (Warning: Obviously, you will die.) 
-.byte "Club or turkey leg, the jhonka sure just beat you senseless with whatever he was holding. You dead. Thanks for playing!",0
+.byte "Club or turkey leg, the",13
+.byte "Jhonka sure just beat you",13
+.byte "senseless with whatever he",13
+.byte "was holding. You dead.",13
+.byte "Thanks for playing!",0
 
-; + open door [ will walk you there]
+
+; TODO
+; + ask about fire
+.byte 34,"Burninator make fire!",13
+.byte "Barbecue all peasants!",34,0
+
+; TODO
+; + ask about Jhonka
+.byte 34,"The Kerrek is dead!",34," he",13
+.byte "cries and hops around some",13
+.byte "more. You wonder how",13
+.byte "someone this primitive",13
+.byte "could have made that much",13
+.byte " dough.",0
+
+; TODO
+; + ask about naked ned (or) robe
+.byte 34,"Filthy naked peasant!",13
+.byte "Stay away from my",13
+.byte "cave-hole!",34," Who's he",13
+.byte "calling naked? HE'S the one",13
+.byte "wearing the string bikini.",0
+
+; TODO
+; + ask about smell
+.byte 34,"Kerrek smell! Now Kerrek",13
+.byte "dead!",34," screeches the",13
+.byte "Jhonka. So you can infer",13
+.byte "from this that all smells",13
+.byte "are dead? You always sucked",13
+.byte "at the analytical",13
+.byte "questions.",0
+
+; TODO
+; + ask about trogdor
+.byte 34,"All hail Burninator!",13
+.byte "Trogdor Number One! Beat",13
+.byte "Peasant Tech!",34," says the",13
+.byte "grimy Jhonka.",0
+
+; TODO
+; + ask about (unknown)
+.byte 34,"Jhonka don't know nothing",13
+.byte "bout that!",34,0
+
+
+
+; + open door [ will walk you there] {before jhonka out}
 jhonka_open_door_message:
 .byte "It's locked. With one o'",13
 .byte "them SCHLAGE deadbolts,",13
@@ -115,11 +180,14 @@ jhonka_knock_message1:
 
 ; TODO
 ; + kill jhonka (outside)
-.byte "No way! Jhonka's are born scrappers. He may be little, but he'll crawl ya.",0
+.byte "No way! Jhonka's are born",13	; [sic]
+.byte "scrappers. He may be",13
+.byte "little, but he'll crawl ya.",0
 
 ; TODO
 ; + get club (when he's out)
-.byte "Now there's a surefire way to get yourself killed.",0
+.byte "Now there's a surefire way",13
+.byte "to get yourself killed.",0
 
 ; + get note
 jhonka_get_note_message:
@@ -128,12 +196,28 @@ jhonka_get_note_message:
 .byte "wondrously whimsical spell.",0
 
 ; TODO
-; + give riches (before jumping in hay)
-.byte "The Jhonka will see you! And rip out your jugular with his teeth or something equally horrible.",0
+; + get riches (before jumping in hay)
+.byte "The Jhonka will see you!",13
+.byte "And rip out your jugular",13
+.byte "with his teeth or something",13
+.byte "equally horrible.",0
+
+; + give / give {anything}
+.byte 34,"Don't need nothing from no",13
+.byte "filthy peasantses!!",34,0
 
 ; TODO
 ; + talk jhonka (while inside the hay)
 .byte "Not now! You'll blow your cover!",0
+
+; + talk
+; + talk jhonka (jhonka there, not in hay)
+.byte 34,"The Kerrek is dead!",34," he",13
+.byte "cries and hops around some",13
+.byte "more. You wonder how",13
+.byte "someone this primitive",13
+.byte "could have made that much",13
+.byte "dough.",0
 
 ; + climb/jump fence
 jhonka_climb_fence_message:

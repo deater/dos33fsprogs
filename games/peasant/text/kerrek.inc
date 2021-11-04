@@ -7,13 +7,33 @@
 
 ; + 5 POINTS
 ; + shoot Kerrek with bow
-.byte "Here goes nothin', Kid Icarus",0
-.byte "ARROWED!! Nice shot. You smote the Kerrek! He lay there stinking.",0
-.byte "A light rain heralds the washing free of the Kerrek's grip on the land. You're feeling pretty good, though, so the artless symbolism doesn't bug you.",0
+.byte "Here goes nothin', Kid",13
+.byte "Icarus",0
+
+.byte "ARROWED!! Nice shot. You",13
+.byte "smote the Kerrek! He lay",13
+.byte "there stinking.",0
+
+.byte "A light rain heralds the",13
+.byte "washing free of the",13
+.byte "Kerrek's grip on the land.",13
+.byte "You're feeling pretty",13
+.byte "good, though, so the",13
+.byte "artless symbolism doesn't",13
+.byte "bug you.",0
 
 ; + 10 POINTS
 ; + get belt
-.byte "You strap the Kerrek's belt buckle around your waist. Oh boy. You sure stink now.",0
+.byte "You strap the Kerrek's belt",13
+.byte "buckle around your waist.",13
+.byte "Oh boy. You sure stink now.",0
+
+; + get belt (after already have it)  ; not in wiki
+.byte "You totally got the belt",13
+.byte "already, as evidenced by",13
+.byte "the rancid cloud of odor",13
+.byte "that follows you like a",13
+.byte "shadow.",0
 
 ; + look
 kerrek_look_at_message:
@@ -38,13 +58,23 @@ kerrek_look_at_message:
 .byte "just go, ",34,"Yay! Piggies!",34,0
 
 ; + look (dead Kerrek)
-.byte "There are large hoof prints in the grass here. There is a large Kerrek-shaped mound on the grass.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here.",13
+.byte "There is a large",13
+.byte "Kerrek-shaped mound on the",13
+.byte "grass.",0
 
 ; + look (rotting Kerrek)
-.byte "There are large hoof prints in the grass here. Part of the ground looks just like a rotting kerrek.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here. Part",13
+.byte "of the ground looks just",13
+.byte "like a rotting kerrek.",0
 
 ; + look (skeletal Kerrek)
-.byte "There are large hoof prints in the grass here. Looks like someone left their spare bones here.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here.",13
+.byte "Looks like someone left",13
+.byte "their spare bones here.",0
 
 ; + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
 ;   (Warning: This speeds the Kerrek up, so be careful.) 
@@ -75,7 +105,9 @@ kerrek_look_at_message:
 .byte "With what?! You got no arrow, fool!",0
 
 ; + kill kerrek (he is dead)
-.byte "Yeah. You smote the Kerrek. You deserve a trophy full of Mutton-ums.",0
+.byte "Yeah. You smote the Kerrek.",13
+.byte "You deserve a trophy full",13
+.byte "of Mutton-ums.",0
 
 ; + kill kerrek (he is not there)
 .byte "Good idea. But you kinda",13
@@ -83,7 +115,10 @@ kerrek_look_at_message:
 .byte "be here for that to work.",0
 
 ; + get arrow (after killing)
-.byte "Eww! No way. That thing's got some serious Kerrek-Brand kooties on it now.",0
+.byte "Eww! No way. That thing's",13
+.byte "got some serious",13
+.byte "Kerrek-Brand kooties on it",13
+.byte "now.",0
 
 ; + get kerrek
 .byte "Well, he does smell real",13
@@ -97,16 +132,26 @@ kerrek_look_at_message:
 .byte "something.",0
 
 ; + look kerrek (immediately after killing him)
-.byte "He dead. And the only thing of value on him is his stinky belt buckle.",0
+.byte "He dead. And the only thing",13
+.byte "of value on him is his",13
+.byte "stinky belt buckle.",0
 
 ; + look kerrek (immediately after taking the belt)
 .byte "He dead.",0
 
 ; + look kerrek (while he's decomposing)
-.byte "He dead. You didn't think he could have smelled any worse? Well, guess what: He smells worse.",0
+.byte "He dead. You didn't think",13
+.byte "he could have smelled any",13
+.byte "worse? Well, guess what: He",13
+.byte "smells worse.",0
 
 ; + look kerrek (when he's all bones)
-.byte "He dead. He wasn't fat, he was just big boned! Poor pig-man.",0
+.byte "He dead. He wasn't fat, he",13
+.byte "was just big boned! Poor",13
+.byte "pig-man.",0
+; + look bones (skips the "he dead." part?)
+.byte "He wasn't fat, he was just",13
+.byte "big boned! Poor pig-man.",0
  
 ; + talk kerrek (while he is alive)
 .byte 34,"Me llamo Julio,",34," you",13
@@ -118,4 +163,5 @@ kerrek_look_at_message:
 .byte "nothing for you!",0
 
 
-
+; rain stops after 5?
+; on/off screen X times to rotting? or is it time?
