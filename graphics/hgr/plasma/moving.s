@@ -96,17 +96,18 @@ create_yloop:
 	; restore values
 
 	lda	HGR_Y		; YY
+	tax
 
 calcsine_div4:
 	lsr
 	lsr							; 2
 	sec
 	sbc	FRAME
-	tax
-	lda	sinetable,X
+	tay
+	lda	sinetable,y
 	sta	row_sum_smc+1
 
-	ldx	HGR_Y		; YY
+;	ldx	HGR_Y		; YY
 
 	ldy	#39		; XX
 create_xloop:
