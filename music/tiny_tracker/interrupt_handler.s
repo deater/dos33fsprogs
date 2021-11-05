@@ -72,6 +72,7 @@ note_only:
 	lsr
 	lsr
 	lsr
+	sta	octave_smc+1
 	lsr
 	and	#$FE
 	sta	out_smc+1
@@ -79,9 +80,8 @@ note_only:
 	txa
 
 	and	#$3F
+
 	tax
-	lda	frequency_lookup_high,X
-	sta	out_smc2+1
 	lda	frequency_lookup_low,X
 	sty	y_smc+1
 out_smc:
@@ -93,8 +93,18 @@ out_smc:
 	;        else coarse=0
 
 	inx
-out_smc2:
+octave_smc:
 	lda	#$dd
+	and	#$3		; if 0 then 1
+				; if 1,2,3 then 0
+	bne	blah0
+blah1:
+	lda	#1
+	bne	blah_blah
+blah0:
+	lda	#0
+blah_blah:
+
 	jsr	ay3_write_reg	; trashes A/Y
 
 y_smc:

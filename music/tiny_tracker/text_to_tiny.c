@@ -30,7 +30,7 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 		case 'A': offset=9; break;
 		case 'B': offset=11; break;
 
-		case 'R': offset=12; flat=0; sharp=0; octave=0; break;
+		case 'R': offset=12; flat=0; sharp=0; octave=3; break;
 
 		default:
 			fprintf(stderr,"Unknown note %c\n",note);

@@ -20,14 +20,8 @@ HELLO:	hello.bas
 
 ####
 
-YANKEE:	yankee.o
-	ld65 -o YANKEE yankee.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
-
-yankee.o:	yankee.s \
-	zp.inc hardware.inc \
-	yankee_music.s \
-	interrupt_handler.s mockingboard_setup.s
-	ca65 -o yankee.o yankee.s -l yankee.lst
+peasant_music.s:	peasant.txt text_to_tiny
+	./text_to_tiny peasant.txt > peasant_music.s
 
 ####
 
@@ -59,4 +53,5 @@ frequency.o:	frequency.c
 ####
 
 clean:
-	rm -f *~ *.o *.lst YANKEE PEASANT HELLO text_to_tiny frequency
+	rm -f *~ *.o *.lst YANKEE PEASANT HELLO text_to_tiny frequency peasant_music.s
+

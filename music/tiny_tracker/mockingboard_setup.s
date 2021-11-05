@@ -178,7 +178,7 @@ init_smc:
 no_oflo:
 
 	; create Frequency Table
-	ldx	#12
+	ldx	#11
 make_freq_loop:
 	sec
 	lda	frequency_lookup_low,X
@@ -189,15 +189,11 @@ make_freq_loop:
 	lsr
 	sta	frequency_lookup_low+48,X
 
-	lda	#1
-	sta	frequency_lookup_high,X
-	lda	#0
-	sta	frequency_lookup_high+16,X
-	sta	frequency_lookup_high+32,X
-	sta	frequency_lookup_high+48,X
-
 	dex
 	bpl	make_freq_loop
+
+	inx
+	stx	frequency_lookup_low+28
 
 	rts
 
@@ -247,11 +243,9 @@ ay3_write_reg:
 
 ; starts at C4
 frequency_lookup_low:
-.byte $E8,$CD,$B3,$9B,$83,$6E,$59,$46,$33,$22,$12,$02,$00
+.byte $E8,$CD,$B3,$9B,$83,$6E,$59,$46,$33,$22,$12,$02
 
 ;$1E8,$1CD,$1B3,$19B,$183,$16E,$159,$146,$133,$122,$112,$102,
 ;.byte $F4,$E6,$D9,$CD,$C1,$B7,$AC,$A3,$99,$91,$89,$81,$00,$00,$00,$00
 ;.byte $7A,$73,$6C,$66,$60,$5B,$56,$51,$4C,$48,$44,$40,$00,$00,$00,$00
 ;.byte $3D,$39,$36,$33,$30,$2D,$2B,$28,$26,$24,$22,$20,$00,$00,$00,$00
-
-frequency_lookup_high = frequency_lookup_low+64
