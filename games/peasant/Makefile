@@ -35,14 +35,15 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
 
 peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING \
-	CLIFF GAME_OVER INSIDE INN
+	CLIFF GAME_OVER INSIDE INN ARCHERY
 	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
 	$(DOS33_RAW) peasant_side2.dsk   0 0  WBOOT2      0   1
 	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK   0   0
 	$(DOS33_RAW) peasant_side2.dsk   3 0 GAME_OVER    0   0
 #	$(DOS33_RAW) peasant_side2.dsk   4 0 MAP          0   0
-	$(DOS33_RAW) peasant_side2.dsk   5 0 INSIDE       0   0
-	$(DOS33_RAW) peasant_side2.dsk  10 0 INN          0   0
+	$(DOS33_RAW) peasant_side2.dsk   6 0 ARCHERY      0   0
+	$(DOS33_RAW) peasant_side2.dsk   9 0 INSIDE       0   0
+	$(DOS33_RAW) peasant_side2.dsk  14 0 INN          0   0
 	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0
@@ -233,7 +234,6 @@ music.o:	music.s zp.inc \
 
 ###
 
-
 CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -248,6 +248,22 @@ cliff.o:	cliff.s zp.inc inventory.inc \
 		keyboard.s parse_input.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o cliff.o cliff.s -l cliff.lst
+
+###
+
+ARCHERY:	archery.o
+	ld65 -o ARCHERY archery.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+archery.o:	archery.s zp.inc inventory.inc \
+		parse_input.inc \
+		graphics_archery/archery_graphics.inc \
+		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
+		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		keyboard.s parse_input.s new_map_location.s \
+		peasant_move.s score.s
+	ca65 -o archery.o archery.s -l archery.lst
+
 
 ###
 
@@ -592,6 +608,9 @@ dialog_cliff.inc:	generate_all_symbols dialog_cliff
 	./generate_all_symbols -a 0xd000 dialog_cliff.lst > dialog_cliff.inc
 
 ####
+
+graphics_archery/archery_graphics.inc:
+	cd graphics_archery && make
 
 graphics_vid/vid_graphics.inc:
 	cd graphics_vid && make

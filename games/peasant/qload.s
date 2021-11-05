@@ -197,9 +197,8 @@ which_disk_array:
 	.byte 1,1,1,1		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 2,2,1,2		; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte 2,1,1,2		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte 2			; INSIDE
-	.byte 1,1,1,1		; SAVE1, SAVE2, SAVE3
-	.byte 1
+	.byte 2,2,2		; INSIDE, ARCHERY, MAP
+	.byte 1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte $f		; disk detect
 
 load_address_array:
@@ -207,18 +206,17 @@ load_address_array:
 	.byte $60,$60,$60,$60	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte $60,$60,$D0,$60	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte $60,$D0,$20,$60	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte $60		; INSIDE
-	.byte $BC,$BC,$BC,$0A	; SAVE1, SAVE2, SAVE3
-	.byte $0A		;
+	.byte $60,$60,$60	; INSIDE, ARCHERY, MAP
+	.byte $BC,$BC,$BC	; SAVE1, SAVE2, SAVE3
 	.byte $BC		; disk detect
 
 track_array:
         .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte 19,24, 3,29	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte  3,14,13,10	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  5		; INSIDE
-	.byte  0, 0, 0, 0, 0	; SAVE1, SAVE2, SAVE3
+	.byte  3,14,13,14	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+	.byte  9,6,4		; INSIDE, ARCHERY, MAP
+	.byte  0, 0, 0		; SAVE1, SAVE2, SAVE3
 	.byte  0		; disk detect
 
 sector_array:
@@ -226,8 +224,8 @@ sector_array:
 	.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  0, 0, 0, 0	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  0		; INSIDE
-	.byte 11,12,13,14,15	; SAVE1, SAVE2, SAVE3
+	.byte  0, 0, 0		; INSIDE, ARCHERY, MAP
+	.byte  11,12,13		; SAVE1, SAVE2, SAVE3
 	.byte  0		; disk detect
 
 length_array:
@@ -235,8 +233,8 @@ length_array:
 	.byte  80, 88, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 	.byte  80, 80, 16, 80	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte  16, 16, 18, 80	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  80		; INSIDE
-	.byte   1,1,1,1,1	; SAVE1, SAVE2, SAVE3
+	.byte  80, 64, 16	; INSIDE, ARCHERY, MAP
+	.byte   1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte   1		; disk detect
 
 .include "qkumba_popwr.s"

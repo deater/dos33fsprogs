@@ -705,6 +705,9 @@ location_names_l:
 	.byte <lname_inside_nn
 	.byte <lname_inside_inn
 
+	.byte <lname_archery_game
+	.byte <lname_map
+
 	.byte <lname_empty
 
 location_names_h:
@@ -738,6 +741,9 @@ location_names_h:
 	.byte >lname_inside_lady
 	.byte >lname_inside_nn
 	.byte >lname_inside_inn
+
+	.byte >lname_archery_game
+	.byte >lname_map
 
 	.byte >lname_empty
 
@@ -773,6 +779,9 @@ lname_hidden_glen:	.byte "Hidden Glen",0			; LOCATION_HIDDEN_GLEN
 lname_inside_lady:	.byte "Inside Baby Lady Cottage",0	; LOCATION_INSIDE_LADY
 lname_inside_nn:	.byte "Inside Mysterious Cottage",0	; LOCATION_INSIDE_NN
 lname_inside_inn:	.byte "Inside Giant Inn",0		; LOCATION_INSIDE_INN
+
+lname_archery_game:	.byte "Archery Game",0			; LOCATION_INSIDE_INN
+lname_map:		.byte "Map",0				; LOCATION_INSIDE_INN
 
 lname_empty:		.byte "Empty",0
 location_names_end:
