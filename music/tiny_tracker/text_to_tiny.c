@@ -13,6 +13,8 @@
 #include <string.h>
 #include <math.h>
 
+static int octave_adjust=1;
+
 // CCOONNNN -- c=channel, o=octave, n=note
 
 int note_to_ed(char note, int flat, int sharp, int octave) {
@@ -39,7 +41,7 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 	if (sharp==2) offset+=2;
 
 
-	offset=((octave&0x3)<<4)|offset;
+	offset=((((octave+octave_adjust)-3)&0x3)<<4)|offset;
 
 	return offset;
 }
@@ -47,8 +49,6 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 
 
 static int debug=0;
-
-static int octave_adjust=0;
 
 static int line=0;
 
@@ -97,7 +97,7 @@ static int get_note(char *string, int sp, struct note_type *n, int line) {
 	/* get note info */
 	n->sharp=0;
 	n->flat=0;
-	n->ed_freq=0;
+	n->ed_freq=-1;
 	n->note=ch;
 	sp++;
 	if (string[sp]==' ') ;
@@ -121,7 +121,7 @@ static int get_note(char *string, int sp, struct note_type *n, int line) {
 	if (n->note!='-') {
 
 		freq=note_to_ed(n->note,n->flat,n->sharp,
-					n->octave+octave_adjust);
+					n->octave);
 
 		n->enabled=1;
 		n->length=0;
@@ -302,9 +302,9 @@ printf("\n");
 		if (result==NULL) break;
 		line++;
 
-		a.ed_freq=0;
-		b.ed_freq=0;
-		c.ed_freq=0;
+		a.ed_freq=-1;
+		b.ed_freq=-1;
+		c.ed_freq=-1;
 		a.length=0;
 		b.length=0;
 		c.length=0;
@@ -324,7 +324,7 @@ printf("\n");
 		if (sp!=-1) sp=get_note(string,sp,&c,line);
 
 
-		if ((a.ed_freq!=0)||(b.ed_freq!=0)||(c.ed_freq!=0)) {
+		if ((a.ed_freq>=0)||(b.ed_freq>=0)||(c.ed_freq>=0)) {
 			if (!first) {
 				printf("\t.byte $%02X ; L = %d\n",
 					current_length|0xc0,current_length);
@@ -337,19 +337,19 @@ printf("\n");
 		}
 
 
-		if (a.ed_freq!=0) {
+		if (a.ed_freq>=0) {
 			printf("\t.byte $%02X ; A = %c%c%d\n",
 				a.ed_freq,
 				a.note,sharp_char[a.sharp+2*a.flat],
 				a.octave);
 		}
-		if (b.ed_freq!=0) {
+		if (b.ed_freq>=0) {
 			printf("\t.byte $%02X ; B = %c%c%d\n",
 				b.ed_freq|0x40,
 				b.note,sharp_char[b.sharp+2*b.flat],
 				b.octave);
 		}
-		if (c.ed_freq!=0) {
+		if (c.ed_freq>=0) {
 			printf("\t.byte $%02X ; C = %c%c%d\n",
 				c.ed_freq|0x80,
 				c.note,sharp_char[c.sharp+2*c.flat],
@@ -361,7 +361,7 @@ printf("\n");
 
 	}
 
-	printf("\t.byte $FF\n");
+	printf("\t.byte $C0 ; end\n");
 
 	(void) irq;
 	(void) loop;

@@ -6,7 +6,7 @@ HGR2PNG = ../../utils/hgr-utils/png2hgr
 LINKER_SCRIPTS = ../../linker_scripts
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	tiny_tracker.dsk text_to_tiny
+all:	tiny_tracker.dsk text_to_tiny frequency
 
 tiny_tracker.dsk:	HELLO PEASANT
 	cp $(EMPTY_DISK)/empty.dsk ./tiny_tracker.dsk
@@ -50,5 +50,13 @@ text_to_tiny.o:	text_to_tiny.c
 
 ####
 
+frequency:	frequency.o
+	$(CC) -o frequency frequency.o -lm
+
+frequency.o:	frequency.c
+	$(CC) $(CFLAGS) -c frequency.c
+
+####
+
 clean:
-	rm -f *~ *.o *.lst YANKEE PEASANT HELLO text_to_tiny
+	rm -f *~ *.o *.lst YANKEE PEASANT HELLO text_to_tiny frequency

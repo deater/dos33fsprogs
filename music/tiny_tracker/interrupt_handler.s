@@ -41,41 +41,33 @@ try_again:
 	ldy	SONG_OFFSET
 set_notes_loop:
 
-
 	; see if hit end
 	lda	(SONG_L),Y
-	cmp	#$FF
+	cmp	#$C0
 	bne	all_ok
 
-	; if at end, reset
-	lda	#0
-	sta	SONG_OFFSET
-	beq	try_again
-all_ok:
+	; if at end, loop
 
+loop_forever:
+	jmp	loop_forever
+
+;	lda	#0
+;	sta	SONG_OFFSET
+;	beq	try_again
+all_ok:
 
 	; see if note
 
 	tax
 	and	#$C0
 	cmp	#$C0
-	bne	note_only
-
-	; was timing
-
-	txa
-	and	#$3f
-	sta	SONG_COUNTDOWN
-	iny
-	sty	SONG_OFFSET
-	jmp	done_update_song
+	beq	handle_timing
 
 note_only:
 	txa
 	; CCOONNNN -- c=channel, o=octave, n=note
-	; FIXME: OONNNNCC instead?
+	; TODO: OONNNNCC instead?
 
-	pha
 	lsr
 	lsr
 	lsr
@@ -83,25 +75,52 @@ note_only:
 	lsr
 	and	#$FE
 	sta	out_smc+1
-	pla
+
+	txa
+
 	and	#$3F
 	tax
-	lda	frequency_lookup,X
+	lda	frequency_lookup_high,X
+	sta	out_smc2+1
+	lda	frequency_lookup_low,X
 	sty	y_smc+1
 out_smc:
 	ldx	#$00
-	jsr	ay3_write_reg	; trashes A/X/Y
+	jsr	ay3_write_reg	; trashes A/Y
 
-	; set coarse note A	(assume 0)
-	;			could get extra octave by putting 1 here
+	; set coarse note A
+	;  hack: if octave=0 (C2) then coarse=1
+	;        else coarse=0
+
+	inx
+out_smc2:
+	lda	#$dd
+	jsr	ay3_write_reg	; trashes A/Y
 
 y_smc:
 	ldy	#0
 	iny
+	bne	not_wrap2
+	inc	SONG_H
+not_wrap2:
 	jmp	set_notes_loop
 
-done_update_song:
+handle_timing:
+	; was timing
 
+	txa
+
+	and	#$3f
+	sta	SONG_COUNTDOWN
+	iny
+	sty	SONG_OFFSET
+	bne	not_wrap1
+
+	inc	SONG_H
+
+not_wrap1:
+
+done_update_song:
 	dec	SONG_COUNTDOWN
 
 
