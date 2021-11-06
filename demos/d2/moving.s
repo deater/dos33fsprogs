@@ -6,54 +6,11 @@
 	;================================
 moving:
 
-	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
-				; A and Y both 0 at end
-	;==================
-	; create sinetable
-
-	;ldy	#0		; Y is 0
-sinetable_loop:
-	tya							; 2
-	and	#$3f	; wrap sine at 63 entries		; 2
-
-	cmp	#$20
-	php		; save pos/negative for later
-
-	and	#$1f
-
-	cmp	#$10
-	bcc	sin_left		; blt
-
-sin_right:
-	; sec	carry should be set here
-	eor	#$FF
-	adc	#$20			; 32-X
-sin_left:
-	tax
-	lda	sinetable_base,X				; 4+
-
-	plp
-	bcc	sin_done
-
-sin_negate:
-	; carry set here
-	eor	#$ff
-;	adc	#0		; FIXME: this makes things off by 1
-
-sin_done:
-	sta	sinetable,Y
-
-	iny
-	bne	sinetable_loop
-
-
-	; NOTE: making gbash/gbasl table wasn't worth it
-
 	;============================
 	; main loop
 	;============================
 
-draw_oval:
+draw_moving:
 	inc	FRAME
 
 	lda	#191		; YY
@@ -137,8 +94,11 @@ done_page:
 	eor	#$60		; flip draw page between $2000/$4000
 	sta	HGR_PAGE
 
-	bne	draw_oval	; bra
+	lda	FRAME
+	cmp	#$1f
+	bne	draw_moving	; bra
 
+	rts
 
 colorlookup:
 .byte $22,$aa,$ba,$ff,$ba,$aa,$22	; use 00 from sinetable
@@ -158,7 +118,7 @@ sinetable_base:
 
 	; for bot
 	; 3F5 - 7d = 378
-;	jmp	oval
+;	jmp	moving
 
 sinetable=$8000
 

@@ -1,0 +1,182 @@
+; Ovals
+
+; zero page
+;GBASL	= $26
+;GBASH	= $27
+;YY	= $69
+;ROW_SUM = $70
+
+;HGR_X           = $E0
+;HGR_XH          = $E1
+;HGR_Y           = $E2
+;HGR_COLOR       = $E4
+;HGR_PAGE        = $E6
+
+;FRAME	= $FC
+;SUM	= $FD
+;SAVEX	= $FE
+;SAVEY	= $FF
+
+; soft-switches
+;FULLGR	= $C052
+;PAGE1	= $C054
+
+; ROM routines
+
+;HGR2	= $F3D8
+;HPOSN	= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+
+	;================================
+	; Clear screen and setup graphics
+	;================================
+oval:
+
+;	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
+
+	;====================
+	; create sinetable
+
+;	ldy	#0
+;sinetable_loop:
+;	tya							; 2
+;	and	#$3f	; wrap sine at 63 entries		; 2
+
+;	cmp	#$20
+;	php		; save pos/negative for later
+;
+;	and	#$1f
+
+;	cmp	#$10
+;	bcc	sin_left
+
+;sin_right:
+	; sec	carry should be set?
+;	eor	#$FF
+;	adc	#$20		; 32-X
+;sin_left:
+;	tax
+;	lda	sinetable_base,X				; 4+
+
+;	plp
+;	bcc	sin_done
+
+;sin_negate:
+	; carry set here
+;	eor	#$ff
+;	adc	#0
+
+;sin_done:
+;	sta	sinetable,Y
+
+;	iny
+;	bne	sinetable_loop
+
+	; NOTE: making gbash/gbasl table wasn't worth it
+
+	;============================
+	; main loop
+	;============================
+
+draw_oval:
+	inc	FRAME
+
+	lda	#191		; YY
+
+oval_yloop:
+	; HGR_Y (YY) is in A here
+
+;	ldx	#39		; X is don't care?
+	ldy	#0
+
+	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+
+	; restore values
+
+	lda	HGR_Y		; YY
+
+calcsine_div2:
+	lsr							; 2
+	tax
+	clc
+	lda	sinetable,X
+	adc	FRAME
+	sta	oval_row_sum_smc+1
+
+	ldx	HGR_Y		; YY
+
+	ldy	#39		; XX
+oval_xloop:
+
+	;=====================
+	; critical inner loop
+	;   every cycle here is 40x192 cycles
+	;=====================
+
+	lda	sinetable,Y					; 4+
+	clc							; 2
+oval_row_sum_smc:
+	adc	#$dd			; row base value	; 2
+
+	lsr				; double colors		; 2
+					; also puts bit in carry
+					; which helps make blue
+	and	#$7			; mask			; 2
+	tax							; 2
+	lda	colorlookup2,X		; lookup in table	; 5
+
+oval_ror_nop_smc:
+	ror				; $6A/$EA		; 2
+;	and	#$7f			; make all purple
+	sta	(GBASL),Y					; 6
+
+	lda	oval_ror_nop_smc		; toggle ror/nop	; 4
+	eor	#$80						; 2
+	sta	oval_ror_nop_smc					; 4
+
+	dey							; 2
+	bpl	oval_xloop					; 2/3
+
+	dec	HGR_Y
+	lda	HGR_Y
+	cmp	#$ff
+	bne	oval_yloop
+
+	; we skip drawing line 0 as it makes it easier
+
+oval_flip_pages:
+
+	; Y should be $FF here
+
+;	iny
+	lda	HGR_PAGE
+	cmp	#$20
+	bne	oval_done_page
+	dey
+oval_done_page:
+	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
+
+	eor	#$60		; flip draw page between $400/$800
+	sta	HGR_PAGE
+
+	bne	draw_oval	; bra
+
+
+colorlookup2:
+.byte $11,$55,$5d,$7f,$5d,$55,$11,$00
+
+;sinetable_base:
+; this is actually (32*sin(x))
+;.byte $00,$03,$06,$09,$0C,$0F,$11,$14
+;.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
+;.byte $20
+;,$1F,$1F,$1E,$1D,$1C,$1A,$18
+;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
+
+
+	; for bot
+	; 3F5 - 7d = 378
+;	jmp	oval
+
+;sinetable=$6000
+
+

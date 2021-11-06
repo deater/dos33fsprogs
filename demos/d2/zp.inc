@@ -20,5 +20,6 @@ HGR_Y           = $E2
 HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 
+COUNT	= $FB
 FRAME	= $FC
 
