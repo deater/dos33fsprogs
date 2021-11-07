@@ -5,6 +5,8 @@
 	; Clear screen and setup graphics
 	;================================
 moving:
+	lda	#0
+	sta	FRAME
 
 	;============================
 	; main loop
@@ -80,19 +82,21 @@ ror_nop_smc:
 	cmp	#$ff		; blah want to draw line 0
 	bne	create_yloop
 
-flip_pages:
+	jsr	flip_page
+
+;flip_pages:
 
 	; Y should be $FF here
 
-	lda	HGR_PAGE	; will be $20/$40
-	cmp	#$20
-	bne	done_page
-	dey
-done_page:
-	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
+;	lda	HGR_PAGE	; will be $20/$40
+;	cmp	#$20
+;	bne	done_page
+;	dey
+;done_page:
+;	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
 
-	eor	#$60		; flip draw page between $2000/$4000
-	sta	HGR_PAGE
+;	eor	#$60		; flip draw page between $2000/$4000
+;	sta	HGR_PAGE
 
 	lda	FRAME
 	cmp	#$1f
@@ -107,18 +111,11 @@ colorlookup:
 ;.byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
 ;.byte $00
 
-
-;sinetable_base = $F5BA
-
 sinetable_base:
 ; this is actually (32*sin(x))
 .byte $00,$03,$06,$09,$0C,$0F,$11,$14
 .byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
 .byte $20
-
-	; for bot
-	; 3F5 - 7d = 378
-;	jmp	moving
 
 sinetable=$8000
 

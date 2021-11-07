@@ -49,11 +49,18 @@ set_notes_loop:
 	; if at end, loop
 
 loop_forever:
-	jmp	loop_forever
+;	jmp	loop_forever
 
-;	lda	#0
-;	sta	SONG_OFFSET
-;	beq	try_again
+	lda	#0
+	sta	SONG_OFFSET
+
+	lda	#<peasant_song
+	sta	SONG_L
+	lda	#>peasant_song
+	sta	SONG_H
+
+
+	jmp	try_again
 all_ok:
 
 	; see if note

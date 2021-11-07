@@ -29,7 +29,7 @@ D2:	d2.o
 	ld65 -o D2 d2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 d2.o:	d2.s \
-	moving.s wires.s \
+	moving.s wires.s oval.s dsr_shape.s \
 	zp.inc hardware.inc \
 	peasant_music.s \
 	interrupt_handler.s mockingboard_setup.s

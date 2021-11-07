@@ -27,8 +27,9 @@ PTRIG		=	$C070
 
 NORMAL	= $F273
 HGR2    = $F3D8
+HCLR	= $F3F2
 HPOSN   = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
-
+XDRAW0	= $F65D
        
 
 ;; MONITOR ROUTINES

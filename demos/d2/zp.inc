@@ -14,11 +14,14 @@ SONG_H		= $71
 SONG_OFFSET	= $72
 SONG_COUNTDOWN	= $73
 
+OUR_ROT		= $A5
+
 HGR_X           = $E0
 HGR_XH          = $E1
 HGR_Y           = $E2
 HGR_COLOR       = $E4
 HGR_PAGE        = $E6
+HGR_SCALE	= $E7
 
 COUNT	= $FB
 FRAME	= $FC

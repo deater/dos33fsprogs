@@ -33,49 +33,12 @@ oval:
 
 ;	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 
-	;====================
-	; create sinetable
-
-;	ldy	#0
-;sinetable_loop:
-;	tya							; 2
-;	and	#$3f	; wrap sine at 63 entries		; 2
-
-;	cmp	#$20
-;	php		; save pos/negative for later
-;
-;	and	#$1f
-
-;	cmp	#$10
-;	bcc	sin_left
-
-;sin_right:
-	; sec	carry should be set?
-;	eor	#$FF
-;	adc	#$20		; 32-X
-;sin_left:
-;	tax
-;	lda	sinetable_base,X				; 4+
-
-;	plp
-;	bcc	sin_done
-
-;sin_negate:
-	; carry set here
-;	eor	#$ff
-;	adc	#0
-
-;sin_done:
-;	sta	sinetable,Y
-
-;	iny
-;	bne	sinetable_loop
-
-	; NOTE: making gbash/gbasl table wasn't worth it
-
 	;============================
 	; main loop
 	;============================
+
+	lda	#0
+	sta	FRAME
 
 draw_oval:
 	inc	FRAME
@@ -143,40 +106,17 @@ oval_ror_nop_smc:
 
 	; we skip drawing line 0 as it makes it easier
 
-oval_flip_pages:
+	jsr	flip_page
 
-	; Y should be $FF here
-
-;	iny
-	lda	HGR_PAGE
-	cmp	#$20
-	bne	oval_done_page
-	dey
-oval_done_page:
-	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
-
-	eor	#$60		; flip draw page between $400/$800
-	sta	HGR_PAGE
+	lda	FRAME
+	cmp	#32
 
 	bne	draw_oval	; bra
 
+	rts
 
 colorlookup2:
 .byte $11,$55,$5d,$7f,$5d,$55,$11,$00
 
-;sinetable_base:
-; this is actually (32*sin(x))
-;.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-;.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-;.byte $20
-;,$1F,$1F,$1E,$1D,$1C,$1A,$18
-;.byte $16,$14,$11,$0F,$0C,$09,$06,$03
-
-
-	; for bot
-	; 3F5 - 7d = 378
-;	jmp	oval
-
-;sinetable=$6000
 
 

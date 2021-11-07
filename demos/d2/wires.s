@@ -6,10 +6,12 @@ wires:
 
 ;	jsr	HGR2
 
-reset_x:
 	ldx	#$0
 	stx	FRAME
 
+reset_x:
+	ldx	#$0
+	stx	COUNT
 outer_loop:
 
 
@@ -73,7 +75,11 @@ noflo:
 	cpx	#7
 	beq	reset_x
 
+	inc	COUNT
 	inc	FRAME
+	lda	FRAME
+	cmp	#32
+
 	bne	outer_loop
 
 	rts
@@ -82,12 +88,6 @@ even_lookup:
 .byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
 odd_lookup:
 .byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
-
-
-	; want this to be at 3f5
-	; Length is 94 so start at
-	;               $3F5 - 91 = $39A
-
 
 
 
