@@ -100,6 +100,7 @@ DONE_PLAYING    = $89
 DONE_SONG       = $8A
 APPLEII_MODEL	= $8B
 ESC_PRESSED	= $8C
+PREVIOUS_LOCATION= $8D
 
 ;=======================
 ; savegame state

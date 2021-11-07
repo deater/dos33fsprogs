@@ -335,6 +335,23 @@ trees_look:
 	; map
 	;================
 parse_common_map:
+
+	lda	INVENTORY_3
+	and	#INV3_MAP
+	beq	dont_have_map
+
+do_have_map:
+	lda	MAP_LOCATION
+	sta	PREVIOUS_LOCATION
+	lda	#LOAD_MAP
+	sta	WHICH_LOAD
+	lda	#LOCATION_MAP
+	sta	MAP_LOCATION
+	lda	#1
+	sta	LEVEL_OVER
+	jmp	done_parse_message
+
+dont_have_map:
 	ldx	#<map_message
 	ldy	#>map_message
 	jmp	finish_parse_message

@@ -5,13 +5,13 @@
 ; want to load this to address $90
 
 ;
-.byte LOAD_PEASANT2	; WHICH_LOAD	= 	$90
+.byte LOAD_PEASANT3	; WHICH_LOAD	= 	$90
 .byte 10		; PEASANT_X	=	$91
 .byte 100		; PEASANT_Y	=	$92
 .byte PEASANT_DIR_UP	; PEASANT_DIR	=	$93
 .byte 0			; MAP_X		=	$94
 .byte 1			; MAP_Y		=	$95
-.byte LOCATION_HAY_BALE	; MAP_LOCATION	=	$96
+.byte LOCATION_YOUR_COTTAGE	; MAP_LOCATION	=	$96
 .byte GARY_SCARED|TALKED_TO_MENDELEV
 			; GAME_STATE_0	=	$97
 .byte $00		; GAME_STATE_1	=	$98
