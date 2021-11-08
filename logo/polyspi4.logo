@@ -1,0 +1,6 @@
+TO POLYSPI4 :S :A :D :L
+IF :SIZE < :L [STOP]
+FD :S RT :A
+POLYSPI4 (:S - :D) :A :D
+END
+
