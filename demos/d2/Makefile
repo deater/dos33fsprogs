@@ -6,12 +6,12 @@ HGR2PNG = ../../utils/hgr-utils/png2hgr
 LINKER_SCRIPTS = ../../linker_scripts
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	tiny_tracker.dsk text_to_tiny
+all:	hgr_d2.dsk text_to_tiny
 
-tiny_tracker.dsk:	HELLO D2
-	cp $(EMPTY_DISK)/empty.dsk ./tiny_tracker.dsk
-	$(DOS33) -y tiny_tracker.dsk SAVE A HELLO
-	$(DOS33) -y tiny_tracker.dsk -t BIN -a 0x6000 BSAVE D2
+hgr_d2.dsk:	HELLO D2
+	cp $(EMPTY_DISK)/empty.dsk ./hgr_d2.dsk
+	$(DOS33) -y hgr_d2.dsk SAVE A HELLO
+	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x6000 BSAVE D2
 
 ####
 

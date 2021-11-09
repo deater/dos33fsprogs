@@ -1,11 +1,10 @@
-; Demo2
+; HGR Demo2
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
-
 
 d2:
 
@@ -78,10 +77,14 @@ sin_done:
 	jsr	dsr_spin
 
 forever:
+	jsr	print_message
+
+	bit	TEXTGR
 
 	jsr	moving
 
 	jsr	fast_hclr
+
 	jsr	flip_page
 
 	jsr	wires
@@ -106,24 +109,45 @@ done_flip_page:
 
         rts
 
+	;===================
+	; print message
+	;===================
+print_message:
+	jsr	clear_both_bottoms
 
+	ldx	#35
+print_message_loop:
+	lda	message1,X
+	ora	#$80
+	sta	$650,X
+	sta	$A50,X
+	lda	message2,X
+	ora	#$80
+	sta	$6d0,X
+	sta	$AD0,X
+	dex
+	bpl	print_message_loop
+
+	rts
+
+
+;      01234567890123456789012345678901234567890"
+message1:
+.byte "THE APPLE II HAS NO PALETTE ROTATION"
+message2:
+.byte "WE ARE DOING THIS THE HARD WAY...   "
+
+.byte "CODE: DEATER",0
+.byte "MUSIC: MA2E",0
 
 .include	"dsr_shape.s"
 .include	"moving.s"
 .include	"wires.s"
 .include	"oval.s"
+.include	"clear_bottom.s"
 
 ; music
 .include	"peasant_music.s"
 .include        "interrupt_handler.s"
 ; must be last
 .include        "mockingboard_setup.s"
-
-; Moving
-;   moving, orange and green
-
-
-
-
-
-
