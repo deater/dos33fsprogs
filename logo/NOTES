@@ -142,7 +142,7 @@ $BB-$BE	-- editor help
 $BF	-- prodos
 $C0-$CF	-- I/O
 $D0-$DF	-- Logo code 
-$E0-$FF	-- ProDOS
+$E0-$FF	-- ProDOS	; empty/all zeros?
 
 Info
 $300 = max num data files *9  (usually 54)
