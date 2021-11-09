@@ -1,3 +1,5 @@
+peasant3_dialog_start:
+
 ;=============
 ; Jhonka cave
 ;=============
@@ -549,3 +551,7 @@ outside_inn_note_get_message:
 .byte "notes?! No!! ",0
 
 ; +3 POINTS: leave inn with pot on head
+
+peasant3_dialog_end:
+
+.assert (>peasant3_dialog_end - >peasant3_dialog_start) < $1E , error, "peasant3 dialog too big"

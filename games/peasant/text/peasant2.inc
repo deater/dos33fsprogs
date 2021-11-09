@@ -1,3 +1,4 @@
+peasant2_dialog_start:
 
 ;===============
 ; That Hay Bale
@@ -595,3 +596,7 @@ knight_ask_trogdor_message:
 knight_ask_unknown_message:
 .byte 34,"I don't know anything",13
 .byte "about that, short pants.",34,0
+
+peasant2_dialog_end:
+
+.assert (>peasant2_dialog_end - >peasant2_dialog_start) < $1E , error, "peasant2 dialog too big"

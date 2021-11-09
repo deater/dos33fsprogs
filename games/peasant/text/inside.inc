@@ -1,3 +1,5 @@
+inside_dialog_start:
+
 ;================
 ; Hidden Glen
 ;================
@@ -564,3 +566,7 @@ inside_cottage_leaving_post_trinket_message:
 .byte "foreground. You don't see",13
 .byte "me all typing ",34,"get",13
 .byte "computer monitor",34,", do you?",0
+
+inside_dialog_end:
+
+.assert (>inside_dialog_end - >inside_dialog_start) < $1E , error, "inside dialog too big"

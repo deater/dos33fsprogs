@@ -1,3 +1,5 @@
+inn_dialog_start:
+
 ;==================
 ; Inside Giant Inn
 ;==================
@@ -242,4 +244,7 @@ inside_inn_sleep_bed_message:
 .byte "to that stinky old guy over",13
 .byte "there about that.",0
 
+inn_dialog_end:
+
+.assert (>inn_dialog_end - >inn_dialog_start) < $1E , error, "inn dialog too big"
 

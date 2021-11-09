@@ -1,3 +1,5 @@
+peasant1_dialog_start:
+
 ;===================
 ; Poor Gary's Glen
 ;===================
@@ -520,3 +522,6 @@ waterfall_swim_message:
 .byte "of those weight-gain",13
 .byte "protein smoothies.",0
 
+peasant1_dialog_end:
+
+.assert (>peasant1_dialog_end - >peasant1_dialog_start) < $1E , error, "peasant1 dialog too big"
