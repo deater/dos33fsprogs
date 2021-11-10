@@ -186,10 +186,11 @@ POINTS IMPLEMENTED: (in order of implementation)
   50 points
 
 
-deaths implemented
+deaths/endings implemented
 ==================
 +1	Typing "die"
-+2	Cutting off arms, legs, and head
-+3	kick/punch/kill old gary
-+4	get arrow (while dongolev shooting)
-+5	walk on range (while dongolev shooting)
++2	Beating the game
++3	Cutting off arms, legs, and head
++4	kick/punch/kill old gary
++5	get arrow (while dongolev shooting)
++6	walk on range (while dongolev shooting)
