@@ -57,11 +57,7 @@ mockingboard_not_found:
 
 	.include "nozp.inc"
 
+.include	"decompress_fast_v2.s"
 
 PT3_LOC = $1000
-;PT3_LOC = $2000
-;.align	$100
-song:
-;.incbin "../../demos/applebot_demo/music/mAZE_-_The_Upbeated_Eaten_Apple.pt3"
-;.incbin "../../demos/outline2021/demo/mAZE_-_Apple_snapple_Outline.pt3"
-;.incbin "./music/Fret.pt3"
+
