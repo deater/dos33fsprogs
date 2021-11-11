@@ -31,6 +31,9 @@ logo_demo.dsk:	LOGO3 MUSIC DEMO MAP
 	$(PRODOS) -y logo_demo.dsk -t BIN -a 0xE000 SAVE MAP
 	$(PRODOS) -y logo_demo.dsk -t BIN -a 0x2000 SAVE ./music/mA2E_-_Apple_2_for_Demosplash_2021.pt3 MA2E.PT3
 	$(PRODOS) -y logo_demo.dsk SAVE -t TXT DEMO
+#	printf '\xa9\x0d' | dd of=logo_demo.dsk bs=1 seek=9873 count=2 conv=notrunc
+#	printf '\xea\xea\xea' | dd of=logo_demo.dsk bs=1 seek=9905 count=3 conv=notrunc
+
 
 
 ####
