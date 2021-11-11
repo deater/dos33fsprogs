@@ -26,6 +26,14 @@ PTRIG		=	$C070
 ;; BASIC ROUTINES
 
 NORMAL	=	$F273
+BKGND0          = $F3F4         ; clear current page to A
+HPOSN           = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
+HPLOT0          = $F457         ; plot at (Y,X), (A)
+COLOR_SHIFT     = $F47E
+HLINRL          = $F530         ; (X,A),(Y)
+HGLIN	=	$F53A         ; line to (X,A),(Y)
+COLORTBL        = $F6F6
+
 
 ;; MONITOR ROUTINES
 

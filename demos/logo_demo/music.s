@@ -58,6 +58,7 @@ mockingboard_not_found:
 	.include "nozp.inc"
 
 .include	"decompress_fast_v2.s"
+.include	"myst_vgi.s"
 
 PT3_LOC = $1000
 
