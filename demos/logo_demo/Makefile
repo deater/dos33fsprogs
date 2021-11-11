@@ -5,10 +5,13 @@ TEXT_TO_PRODOS = ../../utils/prodos-utils/text_to_prodos
 EMPTY_DISK = ../../empty_disk/empty.po
 HGR2PNG = ../../utils/hgr-utils/png2hgr
 LINKER_SCRIPTS = ../../linker_scripts
+PNG2HGR = ../../utils/hgr-utils/png2hgr
+LZSA = ~/research/lzsa/lzsa/lzsa
+
 
 all:	logo_demo.dsk
 
-logo_demo.dsk:	LOGO3 MUSIC DEMO
+logo_demo.dsk:	LOGO3 MUSIC DEMO map.lzsa
 	cp ../../logo/dsks/apple_logo_ii.dsk ./logo_demo.dsk
 	$(PRODOS) -y logo_demo.dsk -t BIN -a 0x2000 SAVE LOGO3
 	$(PRODOS) -y logo_demo.dsk DELETE FORMAT
@@ -46,6 +49,14 @@ music.o:	music.s \
 
 DEMO:	demo.logo
 	$(TEXT_TO_PRODOS) < demo.logo > DEMO
+
+####
+
+map.lzsa:	map.hgr
+	$(LZSA) -r -f2 map.hgr map.lzsa
+
+map.hgr:	map.png
+	$(PNG2HGR) map.png > map.hgr
 
 ####
 
