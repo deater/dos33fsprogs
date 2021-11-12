@@ -85,7 +85,7 @@ inner_loop:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#255
+	cmp	#$70
 	bne	outer_loop
 
 	lda	save1
