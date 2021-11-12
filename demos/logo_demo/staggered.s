@@ -41,8 +41,6 @@ staggered:
 	lda	FRAME
 	sta	save3
 
-
-
 	; pulse loop horizontal
 
 	lda	#$00
@@ -74,7 +72,7 @@ inner_loop:
 	tax
 
 
-	lda	#$60
+	lda	#$40
 	cmp	GBASH
 	bne	inner_loop
 
@@ -87,7 +85,7 @@ inner_loop:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#32
+	cmp	#128
 	bne	outer_loop
 
 	lda	save1
