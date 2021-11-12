@@ -18,7 +18,7 @@ hgr_d2_1k.zip:	D2 d2.s file_id.diz hgr_d2.dsk
 	cp *.s ./demosplash2021_hgr_d2_1k
 	cp file_id.diz ./demosplash2021_hgr_d2_1k
 	cp hgr_d2.dsk ./demosplash2021_hgr_d2_1k
-	cp hgr_d2_720p.mp4 ./demosplash2021_hgr_d2_1k
+	cp hgr_d2.webm ./demosplash2021_hgr_d2_1k
 	zip -r hgr_d2_1k.zip demosplash2021_hgr_d2_1k
 
 ####
