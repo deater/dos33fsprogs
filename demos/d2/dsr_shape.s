@@ -77,9 +77,9 @@ hclr_smc:
 	and	#$1f
 	bne	hclr_outer
 
-	rts
+;	rts
 
-shape_dsr:
-.byte	$2d,$36,$ff,$3f
-.byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
-.byte	$91,$3f,$36,$00
+;shape_dsr:
+;.byte	$2d,$36,$ff,$3f
+;.byte	$24,$ad,$22,$24,$94,$21,$2c,$4d
+;.byte	$91,$3f,$36,$00

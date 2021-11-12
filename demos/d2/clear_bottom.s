@@ -9,4 +9,4 @@ cbloop:
 	sta	$B00,X
 	dex
 	bne	cbloop
-	rts
+;	rts

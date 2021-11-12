@@ -65,6 +65,7 @@ row_sum_smc:
 					; which helps proper color gen
 	and	#$7						; 2
 	tax							; 2
+colorlookup_smc:
 	lda	colorlookup,X		; lookup in table	; 5
 
 ror_nop_smc:

@@ -79,10 +79,24 @@ sin_done:
 
 	;=====================
 	; setup credits
-	; TODO: inline?
 
-	jsr	print_message
+	;===================
+	; print message
+	;===================
+print_message:
 
+.include	"clear_bottom.s"
+
+	ldx	#12
+print_message_loop:
+	lda	message1,X
+	sta	$6d2,X
+	sta	$Ad2,X
+	lda	message2,X
+	sta	$6ea,X
+	sta	$Aea,X
+	dex
+	bpl	print_message_loop
 
 
 	;==========================
@@ -90,7 +104,7 @@ sin_done:
 	;==========================
 
 
-	jsr	dsr_spin
+.include	"dsr_shape.s"
 
 	; start music, no music for spin
 
@@ -127,11 +141,17 @@ forever:
 	;=====================
 	; repeat
 
+	; switch things up for the second round
+
 	lda	#$7f
 	sta	color_smc+1
 	lda	#159
 	sta	moving_size_smc+1
 	sta	oval_size_smc+1
+	lda	#<colorlookup2
+	sta	colorlookup_smc+1
+
+	; make split screen so credits are visible
 
 	bit	TEXTGR
 
@@ -156,27 +176,7 @@ done_flip_page:
 
         rts
 
-	;===================
-	; print message
-	;===================
-print_message:
 
-	; TODO: inline?
-
-	jsr	clear_both_bottoms
-
-	ldx	#12
-print_message_loop:
-	lda	message1,X
-	sta	$6d2,X
-	sta	$Ad2,X
-	lda	message2,X
-	sta	$6ea,X
-	sta	$Aea,X
-	dex
-	bpl	print_message_loop
-
-	rts
 
 
 ;      01234567890123456789012345678901234567890"
@@ -196,17 +196,20 @@ hiasc "CODE:  DEATER"
 message2:
 hiasc "MUSIC: MA2E  "
 
-.include	"dsr_shape.s"
-;.include	"oval.s"
-.include	"clear_bottom.s"
 
-colorlookup2:
-.byte $11,$55,$5d,$7f,$5d,$55,$11,$00
+
+shape_dsr:
+.byte   $2d,$36,$ff,$3f
+.byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
+.byte   $91,$3f,$36,$00
 
 even_lookup:
 .byte   $D7,$DD,$F5, $D5,$D5,$D5,$D5
 odd_lookup:
 .byte   $AA,$AA,$AA, $AB,$AE,$BA,$EA
+
+colorlookup2:
+.byte $11,$55,$5d,$7f,$5d,$55,$11,$00
 
 colorlookup:
 .byte $22,$aa,$ba,$ff,$ba,$aa,$22       ; use 00 from sinetable
