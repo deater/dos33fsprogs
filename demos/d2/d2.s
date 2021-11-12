@@ -1,8 +1,10 @@
 ; HGR Demo2
 
-; by deater (Vince Weaver) <vince@deater.net>
+; Apple II graphics/music in 1k
 
-; 1484
+; 1k demo for Demosplash 2021
+
+; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
 	.include "zp.inc"
@@ -117,11 +119,15 @@ forever:
 
 .include "moving.s"
 
-	;=====================
-	; clear screen
+	;=========================
+	; clear screen first time
+
+skip_clear_smc:
+	lda	#0
+	bne	skip_clear
 
 	jsr	fast_hclr
-
+skip_clear:
 	jsr	flip_page
 
 	;=====================
@@ -145,6 +151,7 @@ forever:
 
 	lda	#$7f
 	sta	color_smc+1
+	sta	skip_clear_smc+1
 	lda	#159
 	sta	moving_size_smc+1
 	sta	oval_size_smc+1
@@ -163,6 +170,9 @@ forever:
 	; common flip page routine
 
 flip_page:
+	lda	KEYPRESS
+	bmi	its_over
+
 	ldy	#$0
         lda     HGR_PAGE        ; will be $20/$40
         cmp     #$20
@@ -176,7 +186,18 @@ done_flip_page:
 
         rts
 
+	;================
+	; halt music
+	; stop playing
+	; turn off sound
+its_over:
+	sei
+	lda	#$3f
+	ldx	#7
+	jsr	ay3_write_reg
 
+stuck_forever:
+	bne	stuck_forever
 
 
 ;      01234567890123456789012345678901234567890"
@@ -221,6 +242,8 @@ sinetable_base:
 .byte $20
 
 sinetable=$8000
+
+.include	"fast_hclr.s"
 
 ; music
 .include	"mA2E_2.s"

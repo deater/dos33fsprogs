@@ -54,13 +54,13 @@ loop_forever:
 	lda	#0
 	sta	SONG_OFFSET
 
-	lda	#<peasant_song
-	sta	SONG_L
-	lda	#>peasant_song
-	sta	SONG_H
+;	lda	#<peasant_song
+;	sta	SONG_L
+;	lda	#>peasant_song
+;	sta	SONG_H
 
 
-	jmp	try_again
+	beq	try_again		; bra
 all_ok:
 
 	; see if note
@@ -117,10 +117,11 @@ blah_blah:
 y_smc:
 	ldy	#0
 	iny
-	bne	not_wrap2
-	inc	SONG_H
-not_wrap2:
-	jmp	set_notes_loop
+
+;	bne	not_wrap2		; assume less than 256 bytes
+;	inc	SONG_H
+;not_wrap2:
+	bne	set_notes_loop		; bra
 
 handle_timing:
 	; was timing

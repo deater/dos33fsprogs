@@ -86,20 +86,6 @@ ror_nop_smc:
 
 	jsr	flip_page
 
-;flip_pages:
-
-	; Y should be $FF here
-
-;	lda	HGR_PAGE	; will be $20/$40
-;	cmp	#$20
-;	bne	done_page
-;	dey
-;done_page:
-;	ldx	PAGE1-$FE,Y	; set display page to PAGE1 or PAGE2
-
-;	eor	#$60		; flip draw page between $2000/$4000
-;	sta	HGR_PAGE
-
 	lda	FRAME
 	cmp	#$1b		; NOTE: NEEDS TO BE ODD
 	bne	draw_moving	; bra
