@@ -15,6 +15,7 @@ moving:
 draw_moving:
 	inc	FRAME
 
+moving_size_smc:
 	lda	#191		; YY
 
 create_yloop:
@@ -102,21 +103,21 @@ ror_nop_smc:
 	cmp	#$1b		; NOTE: NEEDS TO BE ODD
 	bne	draw_moving	; bra
 
-	rts
+;	rts
 
-colorlookup:
-.byte $22,$aa,$ba,$ff,$ba,$aa,$22	; use 00 from sinetable
-;.byte $00
+;colorlookup:
+;.byte $22,$aa,$ba,$ff,$ba,$aa,$22	; use 00 from sinetable
+;;.byte $00
 
-;.byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
-;.byte $00
+;;.byte $11,$55,$5d,$7f,$5d,$55,$11	; use 00 from sinetable
+;;.byte $00
 
-sinetable_base:
-; this is actually (32*sin(x))
-.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20
+;sinetable_base:
+;; this is actually (32*sin(x))
+;.byte $00,$03,$06,$09,$0C,$0F,$11,$14
+;.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
+;.byte $20
 
-sinetable=$8000
+;sinetable=$8000
 
 

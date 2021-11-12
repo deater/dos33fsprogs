@@ -101,7 +101,7 @@ forever:
 	;=====================
 	; orange/green effect
 
-	jsr	moving
+.include "moving.s"
 
 	;=====================
 	; clear screen
@@ -113,15 +113,25 @@ forever:
 	;=====================
 	; wires effect
 
-	jsr	wires
+.include "wires.s"
+
+;	jsr	wires
 
 	;=====================
 	; oval effect
 
-	jsr	oval
+;	jsr	oval
+
+.include "oval.s"
 
 	;=====================
 	; repeat
+
+	lda	#$7f
+	sta	color_smc+1
+	lda	#159
+	sta	moving_size_smc+1
+	sta	oval_size_smc+1
 
 	bit	TEXTGR
 
@@ -187,10 +197,27 @@ message2:
 hiasc "MUSIC: MA2E  "
 
 .include	"dsr_shape.s"
-.include	"moving.s"
-.include	"wires.s"
-.include	"oval.s"
+;.include	"oval.s"
 .include	"clear_bottom.s"
+
+colorlookup2:
+.byte $11,$55,$5d,$7f,$5d,$55,$11,$00
+
+even_lookup:
+.byte   $D7,$DD,$F5, $D5,$D5,$D5,$D5
+odd_lookup:
+.byte   $AA,$AA,$AA, $AB,$AE,$BA,$EA
+
+colorlookup:
+.byte $22,$aa,$ba,$ff,$ba,$aa,$22       ; use 00 from sinetable
+
+sinetable_base:
+; this is actually (32*sin(x))
+.byte $00,$03,$06,$09,$0C,$0F,$11,$14
+.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
+.byte $20
+
+sinetable=$8000
 
 ; music
 .include	"mA2E_2.s"

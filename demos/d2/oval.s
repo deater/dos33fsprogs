@@ -43,6 +43,7 @@ oval:
 draw_oval:
 	inc	FRAME
 
+oval_size_smc:
 	lda	#191		; YY
 
 oval_yloop:
@@ -89,7 +90,9 @@ oval_row_sum_smc:
 
 oval_ror_nop_smc:
 	ror				; $6A/$EA		; 2
-;	and	#$7f			; make all purple
+
+color_smc:
+	and	#$ff			; make all purple
 	sta	(GBASL),Y					; 6
 
 	lda	oval_ror_nop_smc		; toggle ror/nop	; 4
@@ -113,10 +116,7 @@ oval_ror_nop_smc:
 
 	bne	draw_oval	; bra
 
-	rts
+;	rts
 
-colorlookup2:
-.byte $11,$55,$5d,$7f,$5d,$55,$11,$00
-
-
-
+;colorlookup2:
+;.byte $11,$55,$5d,$7f,$5d,$55,$11,$00

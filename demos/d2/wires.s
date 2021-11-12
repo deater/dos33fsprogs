@@ -82,13 +82,9 @@ noflo:
 
 	bne	outer_loop
 
-	rts
+;	rts
 
-even_lookup:
-.byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
-odd_lookup:
-.byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
-
-
-
-
+;even_lookup:
+;.byte	$D7,$DD,$F5, $D5,$D5,$D5,$D5
+;odd_lookup:
+;.byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
