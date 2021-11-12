@@ -1,0 +1,11 @@
+HGR_D2
+-
+1k-byte Demo for Apple II, Demosplash 2021
+Seven hi-res scenes, with Mockingboard music
+
+Should run on most Apple II systems
+Mockingboard must be in Slot #4
+Keypress should stop the demo and silence the music
+
+	Code: Deater / dSr
+	Music: mA2E / dSr
