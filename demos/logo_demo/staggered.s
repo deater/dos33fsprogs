@@ -3,13 +3,13 @@
 
 ; D0+ used by HGR routines
 
-HGR_COLOR	= $E4
-HGR_PAGE	= $E6
+;HGR_COLOR	= $E4
+;HGR_PAGE	= $E6
 
 GBASL		= $26
 GBASH		= $27
 
-COUNT		= $FE
+;COUNT		= $FE
 FRAME		= $FF
 
 ; soft-switches
@@ -28,9 +28,20 @@ SETGR		= $FB40		; set graphics and clear LO-RES screen
 BELL2		= $FBE4
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
-wires:
+staggered:
 
-	jsr	HGR2
+;	jsr	HGR2
+
+	lda	GBASL
+	sta	save1
+
+	lda	GBASH
+	sta	save2
+
+	lda	FRAME
+	sta	save3
+
+
 
 	; pulse loop horizontal
 
@@ -38,9 +49,10 @@ wires:
 	tay
 	tax
 	sta	GBASL
+	sta	FRAME
 
 outer_loop:
-	lda	#$40
+	lda	#$20
 	sta	GBASH
 inner_loop:
 
@@ -67,16 +79,49 @@ inner_loop:
 	bne	inner_loop
 
 ;	lda	#100
-	jsr	WAIT
+	jsr	wait
 
 	inx
 
-	jmp	outer_loop
+;	jmp	outer_loop
 
+	inc	FRAME
+	lda	FRAME
+	cmp	#32
+	bne	outer_loop
+
+	lda	save1
+	sta	GBASL
+
+	lda	save2
+	sta	GBASH
+
+	lda	save3
+	sta	FRAME
+
+	rts
+
+
+wait:
+        sec
+wait2:
+        pha
+wait3:
+        sbc     #$01
+        bne     wait3
+        pla
+        sbc     #$01
+        bne     wait2
+        rts
 
 
 even_lookup:
 .byte	$D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
 odd_lookup:
 .byte	$AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
+
+save1:	.byte $00
+save2:	.byte $00
+save3:	.byte $00
+
 
