@@ -25,13 +25,19 @@ peasant_music.s:	peasant.txt text_to_tiny
 
 ####
 
+mA2E_2.s:	mA2E_2.txt text_to_tiny
+	./text_to_tiny mA2E_2.txt > mA2E_2.s
+
+
+####
+
 D2:	d2.o
 	ld65 -o D2 d2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 d2.o:	d2.s \
 	moving.s wires.s oval.s dsr_shape.s \
 	zp.inc hardware.inc \
-	peasant_music.s \
+	mA2E_2.s \
 	interrupt_handler.s mockingboard_setup.s
 	ca65 -o d2.o d2.s -l d2.lst
 
@@ -46,5 +52,4 @@ text_to_tiny.o:	text_to_tiny.c
 ####
 
 clean:
-	rm -f *~ *.o *.lst D2 HELLO text_to_tiny peasant_music.s
-
+	rm -f *~ *.o *.lst D2 HELLO text_to_tiny mA2E_2.s

@@ -120,11 +120,13 @@ mockingboard_setup_interrupt:
 	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
-	lda	#$34
+	lda	#$40
+;	lda	#$34
 ;	lda	#$E7
 	sta	MOCK_6522_T1CL	; write into low-order latch
 
-	lda	#$85
+	lda	#$9C
+;	lda	#$85
 ;	lda	#$4f
 	sta	MOCK_6522_T1CH	; write into high-order latch,
 				; load both values into counter

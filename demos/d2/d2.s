@@ -2,6 +2,8 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; 1484
+
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
@@ -18,10 +20,12 @@ d2:
 	sta	SONG_H
 
 	; assume mockingboard in slot#4
+
+	; TODO: inline?
+
 	jsr	mockingboard_init
 
-start_interrupts:
-	cli
+
 
 	;================================
 	; Clear screen and setup graphics
@@ -30,7 +34,7 @@ start_interrupts:
 	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 				; A and Y both 0 at end
 
-	sty	FRAME		; start at 1 for wires purposes
+	sty	FRAME		; start at 0
 
 	;==================
 	; create sinetable
@@ -62,7 +66,7 @@ sin_left:
 sin_negate:
 	; carry set here
 	eor	#$ff
-;	adc	#0		; FIXME: this makes things off by 1
+	adc	#0
 
 sin_done:
 	sta	sinetable,Y
@@ -70,30 +74,61 @@ sin_done:
 	iny
 	bne	sinetable_loop
 
-
 	; NOTE: making gbash/gbasl table wasn't worth it
+
+
+	;=====================
+	; setup credits
+	; TODO: inline?
+
+	jsr	print_message
+
+
+
+	;==========================
+	; beginning of demo
+	;==========================
 
 
 	jsr	dsr_spin
 
-forever:
-	jsr	print_message
+	; start music, no music for spin
 
-	bit	TEXTGR
+start_interrupts:
+	cli
+
+forever:
+	;=====================
+	; orange/green effect
 
 	jsr	moving
+
+	;=====================
+	; clear screen
 
 	jsr	fast_hclr
 
 	jsr	flip_page
 
+	;=====================
+	; wires effect
+
 	jsr	wires
 
+	;=====================
+	; oval effect
+
 	jsr	oval
+
+	;=====================
+	; repeat
 
 	jmp	forever
 
 
+
+	;===========================
+	; common flip page routine
 
 flip_page:
 	ldy	#$0
@@ -113,16 +148,19 @@ done_flip_page:
 	; print message
 	;===================
 print_message:
+
+	; TODO: inline?
+
 	jsr	clear_both_bottoms
 
-	ldx	#35
+	ldx	#13
 print_message_loop:
 	lda	message1,X
-	ora	#$80
+;	ora	#$80
 	sta	$650,X
 	sta	$A50,X
 	lda	message2,X
-	ora	#$80
+;	ora	#$80
 	sta	$6d0,X
 	sta	$AD0,X
 	dex
@@ -132,13 +170,21 @@ print_message_loop:
 
 
 ;      01234567890123456789012345678901234567890"
-message1:
-.byte "THE APPLE II HAS NO PALETTE ROTATION"
-message2:
-.byte "WE ARE DOING THIS THE HARD WAY...   "
+;message1:
+;.byte "THE APPLE II HAS NO PALETTE ROTATION"
+;message2:
+;.byte "WE ARE DOING THIS THE HARD WAY...   "
 
-.byte "CODE: DEATER",0
-.byte "MUSIC: MA2E",0
+.macro hiasc str
+.repeat .strlen(str),I
+.byte .strat(str,I) | $80
+.endrep
+.endmacro
+
+message1:
+hiasc "CODE:  DEATER"
+message2:
+hiasc "MUSIC: MA2E  "
 
 .include	"dsr_shape.s"
 .include	"moving.s"
@@ -147,7 +193,7 @@ message2:
 .include	"clear_bottom.s"
 
 ; music
-.include	"peasant_music.s"
+.include	"mA2E_2.s"
 .include        "interrupt_handler.s"
 ; must be last
 .include        "mockingboard_setup.s"

@@ -13,7 +13,7 @@
 #include <string.h>
 #include <math.h>
 
-static int octave_adjust=1;
+static int octave_adjust=0;
 
 // CCOONNNN -- c=channel, o=octave, n=note
 
