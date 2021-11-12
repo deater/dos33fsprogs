@@ -1,0 +1,13 @@
+LOGO DREAMS
+-
+Demo written in Apple // LOGO for Apple II, Demosplash 2021
+
+Apple Logo // added support for easily loading and calling into
+machine language routines...
+
+Requires an Apple IIe with Enhanced Firmware
+Music won't work on an original IIe
+Mockingboard must be in Slot #4
+
+	Code: Deater / dSr
+	Music: mA2E / dSr

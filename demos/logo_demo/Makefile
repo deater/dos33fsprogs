@@ -11,6 +11,23 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 
 all:	logo_demo.dsk
 
+submit:	logo_demo.zip
+
+####
+
+logo-demo.zip:	file_id.diz logo_demo.dsk
+        mkdir -p demosplash2021_logo_demo
+        cp *.s ./demosplash2021_logo_demo
+        cp *.logo ./demosplash2021_logo_demo
+        cp file_id.diz ./demosplash2021_logo_demo
+        cp logo_demo.dsk ./demosplash2021_logo_demo
+        cp logo_demo.webm ./demosplash2021_logo_demo
+        zip -r logo_demo.zip demosplash2021_logo_demo
+
+
+
+####
+
 logo_demo.dsk:	LOGO3 MUSIC DEMO MAP MA2E.PT3 STARTUP
 	cp ../../logo/dsks/apple_logo_ii.dsk ./logo_demo.dsk
 	$(PRODOS) -y logo_demo.dsk -t BIN -a 0x2000 SAVE LOGO3
