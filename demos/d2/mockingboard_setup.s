@@ -100,6 +100,7 @@ mockingboard_setup_interrupt:
 	; Note, on Apple II the clock isn't 1MHz but is actually closer to
 	;       roughly 1.023MHz, and every 65th clock is stretched (it's complicated)
 
+	; c7ce / 1.023e6 = .050s, 20Hz
 	; 9c40 / 1.023e6 = .040s, 25Hz
 	; 8534 / 1.023e6 = .033s, 30Hz
 	; 4fe7 / 1.023e6 = .020s, 50Hz
@@ -120,12 +121,14 @@ mockingboard_setup_interrupt:
 	sta	MOCK_6522_IFR	; IFR: 1100, enable interrupt on timer one oflow
 	sta	MOCK_6522_IER	; IER: 1100, enable timer one interrupt
 
-	lda	#$40
+	lda	#$CE
+;	lda	#$40
 ;	lda	#$34
 ;	lda	#$E7
 	sta	MOCK_6522_T1CL	; write into low-order latch
 
-	lda	#$9C
+	lda	#$C7
+;	lda	#$9C
 ;	lda	#$85
 ;	lda	#$4f
 	sta	MOCK_6522_T1CH	; write into high-order latch,

@@ -78,7 +78,7 @@ noflo:
 	inc	COUNT
 	inc	FRAME
 	lda	FRAME
-	cmp	#32
+	cmp	#53
 
 	bne	outer_loop
 

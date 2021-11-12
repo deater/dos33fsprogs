@@ -99,7 +99,7 @@ ror_nop_smc:
 ;	sta	HGR_PAGE
 
 	lda	FRAME
-	cmp	#$1f
+	cmp	#$1b		; NOTE: NEEDS TO BE ODD
 	bne	draw_moving	; bra
 
 	rts

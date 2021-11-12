@@ -123,6 +123,8 @@ forever:
 	;=====================
 	; repeat
 
+	bit	TEXTGR
+
 	jmp	forever
 
 
@@ -153,16 +155,14 @@ print_message:
 
 	jsr	clear_both_bottoms
 
-	ldx	#13
+	ldx	#12
 print_message_loop:
 	lda	message1,X
-;	ora	#$80
-	sta	$650,X
-	sta	$A50,X
+	sta	$6d2,X
+	sta	$Ad2,X
 	lda	message2,X
-;	ora	#$80
-	sta	$6d0,X
-	sta	$AD0,X
+	sta	$6ea,X
+	sta	$Aea,X
 	dex
 	bpl	print_message_loop
 
