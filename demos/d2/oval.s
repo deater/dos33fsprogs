@@ -1,5 +1,7 @@
 ; Ovals
 
+; plots SIN(X)+FRAME+SIN(Y/2) (I think?)
+
 ; zero page
 ;GBASL	= $26
 ;GBASH	= $27
@@ -59,11 +61,11 @@ oval_yloop:
 	lda	HGR_Y		; YY
 
 calcsine_div2:
-	lsr							; 2
+	lsr			; YY/2					; 2
 	tax
 	clc
 	lda	sinetable,X
-	adc	FRAME
+	adc	FRAME		; FRAME+SIN(YY/2)
 	sta	oval_row_sum_smc+1
 
 	ldx	HGR_Y		; YY

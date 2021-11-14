@@ -1,6 +1,11 @@
 ; Moving
 ;   moving, orange and green
 
+
+; this is plotting
+;	sin(y/4-FRAME) + sin(x) + sin(x+frame)
+; or at least I think so.  Comment your code!
+
 	;================================
 	; Clear screen and setup graphics
 	;================================
@@ -28,16 +33,16 @@ create_yloop:
 
 	; restore values
 
-	lda	HGR_Y		; YY
+	lda	HGR_Y		; YY in X
 	tax
 
 calcsine_div4:
-	lsr
+	lsr			; YY/4
 	lsr							; 2
 	sec
-	sbc	FRAME
+	sbc	FRAME		; YY/4-FRAME
 	tay
-	lda	sinetable,y
+	lda	sinetable,y	; A=SIN(YY/4-FRAME)
 	sta	row_sum_smc+1
 
 ;	ldx	HGR_Y		; YY
@@ -51,14 +56,15 @@ create_xloop:
 	;=====================
 
 	clc
-	tya
-	adc	FRAME
+	tya				; XX
+	adc	FRAME			; XX+FRAME
 	tax
-	lda	sinetable,X
+	lda	sinetable,X		; SIN(XX+FRAME)
 
-	adc	sinetable,Y					; 4+
+	adc	sinetable,Y		; SIN(XX)+SIN(XX+FRAME)	; 4+
 row_sum_smc:
 	adc	#$dd			; row base value	; 2
+					; this is SIN(YY/4-FRAME)
 
 	lsr				; double colors		; 2
 					; also puts bit in carry
