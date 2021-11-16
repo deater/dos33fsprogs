@@ -97,6 +97,8 @@ disp_end_of_line:
 	lda	SAVED_X
 	sta	CURSOR_X
 
+disp_inc_done:
+
 	jsr	inc_outl
 
 	jmp	disp_put_string_loop
@@ -107,14 +109,31 @@ disp_put_string_done:
 
 	rts
 
+	;====================
+	; use text lookup
+
 disp_use_lookup:
 	and	#$7f
 	tax
 	lda	text_offset_table,X
+
+	tax
+disp_word_loop:
+	txa
+	stx	disp_loop_smc+1
+	lda	word_table,X
+	php
+
 	jsr	hgr_put_char_cursor
         inc     CURSOR_X
-        jsr     inc_outl
-        jmp     disp_put_string_loop
+	plp
+	bmi	disp_inc_done
+
+disp_loop_smc:
+	ldx	#$dd
+	inx
+	bne	disp_word_loop		; bra
+
 
 	;============================
 	; like above, but don't save
