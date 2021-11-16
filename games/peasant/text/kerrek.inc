@@ -58,23 +58,23 @@ kerrek_look_at_message:
 .byte "just go, ",34,"Yay! Piggies!",34,0
 
 ; + look (dead Kerrek)
-;.byte "There are large hoof prints",13
-;.byte "in the grass here.",13
-;.byte "There is a large",13
-;.byte "Kerrek-shaped mound on the",13
-;.byte "grass.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here.",13
+.byte "There is a large",13
+.byte "Kerrek-shaped mound on the",13
+.byte "grass.",0
 
 ; + look (rotting Kerrek)
-;.byte "There are large hoof prints",13
-;.byte "in the grass here. Part",13
-;.byte "of the ground looks just",13
-;.byte "like a rotting kerrek.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here. Part",13
+.byte "of the ground looks just",13
+.byte "like a rotting kerrek.",0
 
 ; + look (skeletal Kerrek)
-;.byte "There are large hoof prints",13
-;.byte "in the grass here.",13
-;.byte "Looks like someone left",13
-;.byte "their spare bones here.",0
+.byte "There are large hoof prints",13
+.byte "in the grass here.",13
+.byte "Looks like someone left",13
+.byte "their spare bones here.",0
 
 ; + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
 ;   (Warning: This speeds the Kerrek up, so be careful.) 

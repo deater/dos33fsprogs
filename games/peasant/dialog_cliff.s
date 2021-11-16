@@ -1,1 +1,2 @@
-.include "text/cliff.inc"
+.include "text/lookup.inc"
+.include "text/cliff.inc.lookup"

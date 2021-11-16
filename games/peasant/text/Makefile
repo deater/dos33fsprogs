@@ -1,12 +1,41 @@
 CC = gcc
 CFLAGS = -O2 -Wall -g
 
-all:	dump_text shrink_text peasant2.inc.lookup
+all:	dump_text shrink_text \
+	peasant1.inc.lookup \
+	peasant2.inc.lookup \
+	peasant3.inc.lookup \
+	peasant4.inc.lookup \
+	kerrek.inc.lookup \
+	inside.inc.lookup \
+	inn.inc.lookup \
+	cliff.inc.lookup
 
 ###
 
+cliff.inc.lookup:	cliff.inc shrink_text
+	./shrink_text < cliff.inc > cliff.inc.lookup
+
+inn.inc.lookup:	inn.inc shrink_text
+	./shrink_text < inn.inc > inn.inc.lookup
+
+inside.inc.lookup:	inside.inc shrink_text
+	./shrink_text < inside.inc > inside.inc.lookup
+
+peasant1.inc.lookup:	peasant1.inc shrink_text
+	./shrink_text < peasant1.inc > peasant1.inc.lookup
+
 peasant2.inc.lookup:	peasant2.inc shrink_text
 	./shrink_text < peasant2.inc > peasant2.inc.lookup
+
+peasant3.inc.lookup:	peasant3.inc shrink_text
+	./shrink_text < peasant3.inc > peasant3.inc.lookup
+
+peasant4.inc.lookup:	peasant4.inc shrink_text
+	./shrink_text < peasant4.inc > peasant4.inc.lookup
+
+kerrek.inc.lookup:	kerrek.inc shrink_text
+	./shrink_text < kerrek.inc > kerrek.inc.lookup
 
 
 ###

@@ -1,2 +1,3 @@
-.include "text/inn.inc"
+.include "text/lookup.inc"
+.include "text/inn.inc.lookup"
 

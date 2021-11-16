@@ -1,13 +1,11 @@
 
 		orig	lzsa	word	wordlzsa
 		====	====	====	====
-cliff		2836	1801
-inn		3815	2251
-inside		7213	4111
-peasant1	7465	4234
+cliff		2836	1801	2209	1656
+inn		3815	2251	2926	2105
+inside		7213	4111	5645	3891
+peasant1	7758	4313	6564	4286
 peasant2	7439	4269	5807	4055
-peasant3	6229	3599
-peasant4	6819	3947
+peasant3	6229	3599	4837	3379
+peasant4	7112	4023	5991	3997
 
-not peasant1/peasant4 has some of the kerrek text commented out
-so it would fit
