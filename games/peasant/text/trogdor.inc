@@ -33,9 +33,20 @@
 .byte "You scream that your name is Rather Dashing and that Trogdor burninated your cottage and you're here for revenge!",0
 .byte 34,"Sup, mortal,",34," booms Trogdor. ",34,"I really appreciate you making the effort to come all the way up here and vanquish me and all. But, I'm kinda indestructible.",34,0
 .byte 34,"Yeah, I can't be killed. I'm surprised nobody mentioned that to you. I'll admit though, you've gotten farther than anybody else ever has. I bet they'll make a statue or something in honor of you somewheres.",34,0
-.byte 34,"I can honestly say it'll be a pleasure and an honor to burninate you, Rather Dashing.",34,0
-.byte "Aw that sure was nice of him!",0
-.byte "Congratulations! You've won! No one can kill Trogdor but you came closer than anybody ever! Way to go!",0
+
+.byte 34,"I can honestly say it'll",13
+.byte "be a pleasure and an honor",13
+.byte "to burninate you, Rather",13
+.byte "Dashing.",34,0
+
+.byte "Aw that sure was nice of",13
+.byte "him!",0
+
+.byte "Congratulations! You've",13
+.byte "won! No one can kill",13
+.byte "Trogdor but you came closer",13
+.byte "than anybody ever! Way to",13
+.byte "go!",0
 
 ; + wake up trogdor
 .byte "'Troggie...', you murmur. 'Troggie, wake up it's time for Burnination school.' He's not budging.",0

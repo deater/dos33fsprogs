@@ -10,6 +10,7 @@ all:	dump_text shrink_text \
 	inside.inc.lookup \
 	inn.inc.lookup \
 	cliff.inc.lookup \
+	trogdor.inc.lookup \
 	common.inc.lookup
 
 ###
@@ -41,6 +42,8 @@ peasant4.inc.lookup:	peasant4.inc shrink_text
 kerrek.inc.lookup:	kerrek.inc shrink_text
 	./shrink_text < kerrek.inc > kerrek.inc.lookup
 
+trogdor.inc.lookup:	trogdor.inc shrink_text
+	./shrink_text < trogdor.inc > trogdor.inc.lookup
 
 ###
 
