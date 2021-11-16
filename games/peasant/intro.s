@@ -153,6 +153,8 @@ mockingboard_notfound2:
 
 .include "graphics_peasantry/priority_intro.inc"
 
+.include "text/intro.inc"
+
 skip_text:
         .byte 0,2,"ESC Skips",0
 

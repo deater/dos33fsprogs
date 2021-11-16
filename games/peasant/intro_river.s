@@ -149,10 +149,10 @@ done_river:
 
 ; walk up a bit
 
-river_message1:
-	.byte 0,35,34, 0,253,82
-	.byte 7,49,"You can start playing in a",13
-	.byte	   "second here.",0
+;river_message1:
+;	.byte 0,35,34, 0,253,82
+;	.byte 7,49,"You can start playing in a",13
+;	.byte	   "second here.",0
 
 ; walks behind tree
 

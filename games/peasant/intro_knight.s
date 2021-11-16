@@ -160,9 +160,9 @@ done_knight:
 
 ; stops as approach knight
 
-knight_message1:
-	.byte 0,35,34, 0,253,72
-	.byte 7,49,"OK go for it.",0
+;knight_message1:
+;	.byte 0,35,34, 0,253,72
+;	.byte 7,49,"OK go for it.",0
 
 
 

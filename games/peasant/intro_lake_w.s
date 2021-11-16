@@ -151,11 +151,11 @@ done_lake_w:
 
 ; walk halfway across the screen
 
-lake_w_message1:
-	.byte	0,42,24, 0,252,82
-	.byte	8,41,"You head east toward the",13
-	.byte	     "mountain atop which",13
-	.byte	     "TROGDOR lives.",0
+;lake_w_message1:
+;	.byte	0,42,24, 0,252,82
+;	.byte	8,41,"You head east toward the",13
+;	.byte	     "mountain atop which",13
+;	.byte	     "TROGDOR lives.",0
 
 ; walk to edge
 

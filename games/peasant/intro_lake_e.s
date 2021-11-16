@@ -145,14 +145,11 @@ done_lake_e:
 
 ; walk sideways, near corner
 
-lake_e_message1:
-	.byte 0,35,34, 0,253,72
-	.byte 7,49,"That's a nice looking lake.",0
+;lake_e_message1:
+;	.byte 0,35,34, 0,253,72
+;	.byte 7,49,"That's a nice looking lake.",0
 
 ; nearly hit head on sign, it goes away, walk off screen
-
-
-
 
 lake_e_path:
 	.byte 4,151
@@ -320,10 +317,3 @@ bubble_e_sprite5:
 	.byte $A2	; 001X XX10
 	.byte $88	; 1XX0 10XX
 	.byte $AA	; 0010 1010
-
-
-
-
-
-
-
