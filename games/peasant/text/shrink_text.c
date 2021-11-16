@@ -1,13 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 
-#define NUM_WORDS 70
+#define NUM_WORDS 75
 
 static char word_list[NUM_WORDS][20]={
 	"already","cottage","peasant","There's","Trogdor",
 	"little","you're","You're",
-	"about","can't","don't","there","There",
-	"baby","dead","from","have","here","into","it's","It's","just","like","says","some","that","That","this","with","your",
+	"about","can't","don't","looks","there","There","those",
+	"baby","dead","from","game","good","have","here","into","it's","It's","just","like","over","says","some","that","That","this","with","your",
 	"all","and","are","but","for","get","got","him","his","not","now","old","one","out","see","the","The","was","you","You",
 	"an","at","be","do","go","he","He","in","is","it","It","my","no","No","of","on","or","so","to","up",
 };
@@ -26,12 +26,16 @@ static char replacement_list[NUM_WORDS][32]={
 	"DIALOG_ABOUT",
 	"DIALOG_CANT",
 	"DIALOG_DONT",
+	"DIALOG_LOOKS",
 	"DIALOG_THERE",
 	"DIALOG_CAPITAL_THERE",
+	"DIALOG_THOSE",
 
 	"DIALOG_BABY",
 	"DIALOG_DEAD",
 	"DIALOG_FROM",
+	"DIALOG_GAME",
+	"DIALOG_GOOD",
 	"DIALOG_HAVE",
 	"DIALOG_HERE",
 	"DIALOG_INTO",
@@ -39,6 +43,7 @@ static char replacement_list[NUM_WORDS][32]={
 	"DIALOG_CAPITAL_ITS",
 	"DIALOG_JUST",
 	"DIALOG_LIKE",
+	"DIALOG_OVER",
 	"DIALOG_SAYS",
 	"DIALOG_SOME",
 	"DIALOG_THAT",
