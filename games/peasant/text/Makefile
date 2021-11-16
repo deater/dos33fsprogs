@@ -9,12 +9,16 @@ all:	dump_text shrink_text \
 	kerrek.inc.lookup \
 	inside.inc.lookup \
 	inn.inc.lookup \
-	cliff.inc.lookup
+	cliff.inc.lookup \
+	common.inc.lookup
 
 ###
 
 cliff.inc.lookup:	cliff.inc shrink_text
 	./shrink_text < cliff.inc > cliff.inc.lookup
+
+common.inc.lookup:	common.inc shrink_text
+	./shrink_text < common.inc > common.inc.lookup
 
 inn.inc.lookup:	inn.inc shrink_text
 	./shrink_text < inn.inc > inn.inc.lookup
@@ -57,7 +61,4 @@ shrink_text.o:	shrink_text.c
 ###
 
 clean:	
-	rm -f *.o dump_text shrink_text *.lookup
-
-
-
+	rm -f *.o *~ dump_text shrink_text *.lookup

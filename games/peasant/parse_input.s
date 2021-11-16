@@ -979,7 +979,8 @@ noun_lookup_again:
 .byte $00
 
 
-.include "text/common.inc"
+.include "text/lookup.inc"
+.include "text/common.inc.lookup"
 
 
 	;=======================

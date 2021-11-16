@@ -246,7 +246,7 @@ cliff.o:	cliff.s zp.inc inventory.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
@@ -261,7 +261,7 @@ archery.o:	archery.s zp.inc inventory.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o archery.o archery.s -l archery.lst
 
@@ -276,7 +276,7 @@ map.o:	map.s zp.inc inventory.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o map.o map.s -l map.lst
 
@@ -294,7 +294,7 @@ game_over.o:	game_over.s zp.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o game_over.o game_over.s -l game_over.lst
 
@@ -316,7 +316,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s
 	ca65 -o peasant1.o peasant1.s -l peasant1.lst
 
@@ -386,7 +386,7 @@ trogdor.o:	trogdor.s zp.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s inventory.s
 
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
@@ -403,7 +403,7 @@ ending.o:	ending.s zp.inc qload.inc music.inc \
 		hgr_2x14_sprite_mask.s hgr_1x5_sprite.s \
 		hgr_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s parse_input.s new_map_location.s \
+		keyboard.s new_map_location.s \
 		peasant_move.s score.s inventory.s
 
 	ca65 -o ending.o ending.s -l ending.lst
@@ -509,7 +509,7 @@ PARSE_INPUT.LZSA:	parse_input
 parse_input:	parse_input.o
 	ld65 -o parse_input parse_input.o -C ../../linker_scripts/apple2_ee00.inc
 
-parse_input.o:	parse_input.s tokens.inc
+parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
 	ca65 -o parse_input.o parse_input.s -l parse_input.lst
 
 
@@ -521,7 +521,7 @@ DIALOG_PEASANT1.LZSA:	dialog_peasant1
 dialog_peasant1:	dialog_peasant1.o
 	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc
+dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc.lookup
 	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
 
 ###
@@ -537,7 +537,7 @@ DIALOG_PEASANT2.LZSA:	dialog_peasant2
 dialog_peasant2:	dialog_peasant2.o
 	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc
+dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc.lookup
 	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
 
 ###
@@ -553,7 +553,7 @@ DIALOG_PEASANT3.LZSA:	dialog_peasant3
 dialog_peasant3:	dialog_peasant3.o
 	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc
+dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc.lookup
 	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
 
 ###
@@ -568,7 +568,7 @@ DIALOG_PEASANT4.LZSA:	dialog_peasant4
 dialog_peasant4:	dialog_peasant4.o
 	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc
+dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc.lookup
 	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
 
 ###
@@ -584,7 +584,7 @@ DIALOG_INSIDE.LZSA:	dialog_inside
 dialog_inside:	dialog_inside.o
 	ld65 -o dialog_inside dialog_inside.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_inside.o:	dialog_inside.s text/inside.inc
+dialog_inside.o:	dialog_inside.s text/inside.inc.lookup
 	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
 
 ###
@@ -600,7 +600,7 @@ DIALOG_INN.LZSA:	dialog_inn
 dialog_inn:	dialog_inn.o
 	ld65 -o dialog_inn dialog_inn.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_inn.o:	dialog_inn.s text/inn.inc
+dialog_inn.o:	dialog_inn.s text/inn.inc.lookup
 	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
 
 ###
@@ -623,6 +623,14 @@ dialog_cliff.o:	dialog_cliff.s text/cliff.inc
 
 dialog_cliff.inc:	generate_all_symbols dialog_cliff
 	./generate_all_symbols -a 0xd000 dialog_cliff.lst > dialog_cliff.inc
+
+####
+
+dialog_test:	dialog_test.o
+	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_d000.inc
+
+dialog_test.o:	dialog_test.s
+	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
 
 ####
 
@@ -676,6 +684,11 @@ sprites/peasant_sprites.inc:
 sprites/trogdor_sprites.inc:
 	cd sprites && make
 
+####
+
+text/common.inc.lookup:
+	cd text && make
+
 
 ###
 
@@ -694,6 +707,7 @@ distclean:
 	cd graphics_title && make clean
 	cd graphics_trogdor && make clean
 	cd graphics_vid && make clean
+	cd text && make clean
 
 ###
 
