@@ -77,6 +77,8 @@ disp_put_string_loop:
 	ldy     #0
 	lda     (OUTL),Y
 	beq     disp_put_string_done
+	bmi	disp_use_lookup
+
 	cmp	#13
 	beq	disp_end_of_line
 
@@ -105,7 +107,14 @@ disp_put_string_done:
 
 	rts
 
-
+disp_use_lookup:
+	and	#$7f
+	tax
+	lda	text_offset_table,X
+	jsr	hgr_put_char_cursor
+        inc     CURSOR_X
+        jsr     inc_outl
+        jmp     disp_put_string_loop
 
 	;============================
 	; like above, but don't save
@@ -117,3 +126,5 @@ hgr_text_box_nosave:
 	lda	#1
 	sta	skip_box_save_smc+1
 	rts
+
+.include "text/word_list.s"

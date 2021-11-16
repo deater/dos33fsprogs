@@ -75,6 +75,7 @@ qload.o:	qload.s qboot.inc \
 		hgr_input.s \
 		hgr_tables.s \
 		hgr_text_box.s \
+		text/word_list.s \
 		clear_bottom.s \
 		hgr_hgr2.s \
 		gr_offsets.s \
