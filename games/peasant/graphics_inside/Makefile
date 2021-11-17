@@ -46,8 +46,9 @@ inside_nn.hgr:	inside_nn.png
 
 priority_inside.inc:  \
 	todo_priority.lzsa \
+	hidden_glen_priority.lzsa \
 	inside_cottage_priority.lzsa
-	echo "hidden_glen_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_inside.inc
+	echo "hidden_glen_priority_lzsa: .incbin \"hidden_glen_priority.lzsa\"" > priority_inside.inc
 	echo "inside_cottage_priority_lzsa: .incbin \"inside_cottage_priority.lzsa\"" >> priority_inside.inc
 	echo "inside_nn_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_inside.inc
 
