@@ -654,6 +654,10 @@ descriptions_high:
 	.byte >map_description
 	.byte >tshirt_description
 
+.include "text/lookup.inc"
+.include "text/inventory.inc.lookup"
+
+.if 0
 
 ; arrow
 arrow_description:
@@ -777,7 +781,7 @@ tshirt_description:
 .byte "fishing, stoning heathens. What",13
 .byte "a Blast!",0
 
-
+.endif
 
 	;========================
 	; overwrite entry

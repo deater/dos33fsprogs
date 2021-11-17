@@ -34,6 +34,7 @@ peasant2	18302
 		17394 -- move loadsave to qload.inc
 		17100 -- move parse_input high and move p2 strings back in
 		17368 -- use lookup table for next room (and other changes)
+		17780 -- size as of the switch to dictionary word lookup
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?

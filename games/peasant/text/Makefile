@@ -11,7 +11,8 @@ all:	dump_text shrink_text \
 	inn.inc.lookup \
 	cliff.inc.lookup \
 	trogdor.inc.lookup \
-	common.inc.lookup
+	common.inc.lookup \
+	inventory.inc.lookup
 
 ###
 
@@ -26,6 +27,9 @@ inn.inc.lookup:	inn.inc shrink_text
 
 inside.inc.lookup:	inside.inc shrink_text
 	./shrink_text < inside.inc > inside.inc.lookup
+
+inventory.inc.lookup:	inventory.inc shrink_text
+	./shrink_text < inventory.inc > inventory.inc.lookup
 
 peasant1.inc.lookup:	peasant1.inc shrink_text
 	./shrink_text < peasant1.inc > peasant1.inc.lookup
