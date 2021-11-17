@@ -35,7 +35,12 @@ cliff_base_climb2_message:
 
 ;    (Hit by rock or pterodactyl when climbing the cliff) 
 ;    {You fall to the ground and lie in a heap}
-.byte "Oops! You climbed real bad. You knew that you were AVOIDING the rocks, right? Not collecting them. Anyways, nice try. You dead. Thanks for playing.",0
+.byte "Oops! You climbed real bad.",13
+.byte "You knew that you were",13
+.byte "AVOIDING the rocks, right?",13
+.byte "Not collecting them.",13
+.byte "Anyways, nice try. You",13
+.byte "dead. Thanks for playing.",0
 
 ;===================
 ; Cliffland Heights
@@ -93,7 +98,10 @@ cliff_heights_get_bone_message:
 
 ; Type any command other than "take the quiz" or "give (requested item)"
 ; after being apporached by a Keeper
-.byte "I think he wants something from your inventory. Or you could just tell him ",34,"take the quiz",34,0
+.byte "I think he wants something",13
+.byte "from your inventory. Or you",13
+.byte "could just tell him ",34,"take",13
+.byte "the quiz",34,0
 
 ; + look
 cave_outer_look_message:
@@ -128,33 +136,223 @@ cave_outer_look_skeleton_message:
 .byte "think those are dead person",13
 .byte "bones.",0
 
-; + (approached by first keeper)
-.byte "Foolish peasant! How dare you enter this fairly sacred chamber!",0
-.byte "You explain that you're here to smote Trogdor and if he doesn't get outta your way, him too!",0
-.byte "You cannot vanquish Trogdor! Only the Three Keepers of Trogdor hold the tools with which to destroy the Burninator. The Trog-Shield, the Trog-Helmet, and the Trog-Sword.",0
-.byte "And the only way we'll give them up is if you answer the three Trog-Trivia questions correctly.",0
-.byte "Unless you happen to have something to eat on ya. Then we could forego my question.",0
+;=========================
+; First Keeper
+;=========================
 
-; + give sandwich
-.byte "No way! I was just kidding but you've really got a meatball sub. This rules! Here, you can have the Trog-Shield.",0
+; + (approached by first keeper)
+.byte "Foolish peasant! How dare",13
+.byte "you enter this fairly",13
+.byte "sacred chamber!",0
+
+.byte "You explain that you're",13
+.byte "here to smote Trogdor and",13
+.byte "if he doesn't get outta",13
+.byte "your way, him too!",0
+
+.byte "You cannot vanquish",13
+.byte "Trogdor! Only the Three",13
+.byte "Keepers of Trogdor hold the",13
+.byte "tools with which to destroy",13
+.byte "the Burninator. The",13
+.byte "Trog-Shield, the",13
+.byte "Trog-Helmet, and the",13
+.byte "Trog-Sword.",0
+
+.byte "And the only way we'll give",13
+.byte "them up is if you answer",13
+.byte "the three Trog-Trivia",13
+.byte "questions correctly.",0
+
+.byte "Unless you happen to have",13
+.byte "something to eat on ya.",13
+.byte "Then we could forego my",13
+.byte "question.",0
+
+; can't leave or do anything except take quiz or give sub
+;	prints a message saying so
+
+; take quiz
+
+.byte "Your shake off the Keeper of",13
+.byte "Trogdor's request.",13
+.byte "Seriously - this guy should",13
+.byte "get a job.",0
+
+.byte "Okay here goes. What did you win from the Archery game?",13
+.byte "A. SuperBow FunTime TM",13
+.byte "B. SuperTime FunBow TM",13	; correct
+.byte "C. SuperFun BowTime TM",0
+
+.byte "Okay here goes. What does",13
+.byte "Mendelev have you tell",13
+.byte "Dongolev?",13
+.byte "A. Haldo",13			; correct
+.byte "B. Hallo",13
+.byte "C. Allo",0
+
+
+.byte "Okay here goes. What is the only creature the Jhonka fears?",13
+.byte "A. Poor Gary",13
+.byte "B. The Baby",13
+.byte "C. The Kerrek",0			; correct
+
+; Response to Correct Answer
+.byte 34,"Ah crap! You're right.",13
+.byte "Here, take this stupid",13
+.byte "Trog-Shield!",0
+
+; Response to Incorrect Answer
+.byte "Sorry peasant! You fail! And as punishment, you will be turned into... RON CUMBERDALE!!",0
+.byte "You ask who the crap Ron Cumberdale is.",0
+.byte "Just this kid from 4th grade that I really hated. But he was a BIG LOSER and HE SMELLED!",0
+.byte "Well, you not exactly dead. But there's no way you could defeat Trogdor as Ron Cumberdale. Your quest ends here. Thanks for playing.",0
+
+
+; + give sub, sandwich
+.byte "No way! I was just kidding",13
+.byte "but you've really got a",13
+.byte "meatball sub. This rules!",13
+.byte "Here, you can have the",13
+.byte "Trog-Shield.",0
+
+; you now have the shield and can leave if you want
+
+;=========================
+; Second Keeper
+;=========================
 
 ; + (approached by second keeper)
-.byte "Hold, peasant! You must answer the second dreaded Trog-Trivia question!",0
-.byte "Or we could call it even if I had an ice cold drink right now.",0
+.byte "Hold, peasant! You must",13
+.byte "answer the second dreaded",13
+.byte "Trog-Trivia question!",0
+
+.byte "Or we could call it even if",13
+.byte "I had an ice cold drink",13
+.byte "right now.",0
+
+; take quiz
+; + get a job again
+
+
+.byte "Listen careful now. Which one of these letters is the letter C?",13
+.byte "A. B",13 
+.byte "B. C",13		; correct
+.byte "C. A",0
+
+.byte "Listen careful now. How many berry bushes are there in the whole kingdom of Peasantry?",13
+.byte "A. 4",13
+.byte "B. 5",13
+.byte "C. 6 ",0
+
+.byte "Listen careful now. What",13
+.byte "was the Innkeeper's pantry",13
+.byte "full of?",13 
+.byte "A. Epsom Salts",13
+.byte "B. Epson Printers",13 
+.byte "C. Old Man Rub",0		; correct
+
+; Response to Correct Answer
+.byte 34,"That's right. Oh. This",13
+.byte "sucks. Guess I have to give",13
+.byte "you this Trog-Helmet.",13
+.byte "Dang.",0
+
+; Response to Incorrect Answer
+.byte "WRONG! You are hereby cursed to write corny folk songs for the rest of eternity! The kind that only OLD PEOPLE LIKE!!",0
+.byte "Well, you not exactly dead. But you certainly can't face Trogdor after writing 'Wheat Grows Sweet, But My Gal's Sweeter'. Your quest ends here. Thanks for playing.",0
 
 ; + give soda
-.byte "Sweet deal, peasant. I underestimated you. Wear this Trog-Helmet with style.",0
+.byte "Sweet deal, peasant. I",13
+.byte "underestimated you. Wear",13
+.byte "this Trog-Helmet with",13
+.byte "style.",0
+
+;=========================
+; Third Keeper
+;=========================
 
 ; + (approached by third keeper)
-.byte "Think you're pretty hot stuff, eh? Let's see you answer the deadly and pretty impossible THIRD TROG-TRIVIA QUESTION!",0
-.byte "That is, unless you've got something for my lower back. Man, it's killin me!",0
+.byte "Think you're pretty hot",13
+.byte "stuff, eh? Let's see you",13
+.byte "answer the deadly and",13
+.byte "pretty impossible THIRD",13
+.byte "TROG-TRIVIA QUESTION!",0
+
+.byte "That is, unless you've got",13
+.byte "something for my lower",13
+.byte "back. Man, it's killin me!",0
+
+; .take quiz
+; + get a job again
+
+.byte "Riddle me this. To whom",13
+.byte "did the robe you're wearing",13
+.byte "originally belong?",13
+.byte "A. Nobleman Nicholas",13
+.byte "B. Nina Neverawesome",13
+.byte "C. Naked Ned",0		; correct
+
+
+.byte "Riddle me this. What color are the leaves on the tree that grows by the well?",13
+.byte "A. Orange",13
+.byte "B. Green",13
+.byte "C. Yellow",0
+
+
+.byte "Riddle me this. Which way does the river that runs through Peasantry flow?",13
+.byte "A. West to East",13
+.byte "B. Northwest to South",13
+.byte "C. Northeast to Southwest",0
+
+; Response to Correct Answer
+
+.byte "Uh oh. You got it right.",13
+.byte "Trogdor's gonna kill me.",13
+.byte "Okay, you can have the",13
+.byte "Trog-Sword. Just promise",13
+.byte "not to kill any Trogdor's",13	; [sic]
+.byte "with it, kay?",0
+
+.byte "You just stare at the",13
+.byte "Keeper blankly.",0
+
+.byte 34,"Okay fine! You can have",13
+.byte "the dumb thing anyways.",13
+.byte "Trogdor's through the",13
+.byte "beaded curtain over there.",34,0
+
+; now print "fabled Trog-sword" below
+
+; Response to Incorrect Answer
+
+.byte "YES! I was hoping you'd get mine wrong. No Trog-Sword for you. In fact, no skin for you either!",0
+.byte "Wow. You sure dead. You had a good run, though. Thanks for playin.",0
+
+; Response if not A, B, or C
+; then print following followed by repeat of question
+.byte "Peasant fool! Choose A, B,",13
+.byte "or C!",0
+
+
 
 ; + give pills
-.byte "Whoa! Where'd you find this stuff? I don't think this is even legal anymore. These babies'll definitely smote LUMBAGO the, um, LOWER BACKINATOR!!",0
-.byte "The fabled Trog-Sword is yours. You now have the means to strike down Trogdor. Good luck, peasant.",0
+.byte "Whoa! Where'd you find this",13
+.byte "stuff? I don't think this",13
+.byte "is even legal anymore.",13
+.byte "These babies'll definitely",13
+.byte "smote LUMBAGO the, um,",13
+.byte "LOWER BACKINATOR!!",0
+
+; lift sword and it gleams
+; bead curtain parts
+
+.byte "The fabled Trog-Sword is",13
+.byte "yours. You now have the",13
+.byte "means to strike down",13
+.byte "Trogdor. Good luck,",13
+.byte "peasant.",0
 
 ; + climb cliff
 cave_outer_climb_message:
 .byte "Nope. It's too sheer.",0
-
-
