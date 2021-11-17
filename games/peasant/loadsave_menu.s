@@ -48,9 +48,10 @@ common_menu:
 
 update_save_loop:
 
+
 	;======================
 	; print points
-
+	;======================
 
 	ldy	#0
 
@@ -63,11 +64,11 @@ usl_hundreds:
 	inc	usl_leading_zero_smc+1
 
 	clc
-	adc	#'0'+$80
+	adc	#'0'				; convert to ascii
 	bne	usl_print_hundreds		; bra
 
 usl_no_hundreds:
-	lda	#' '+$80
+	lda	#' '				; no leading 0
 usl_print_hundreds:
 	sta	(OUTL),Y
 
@@ -87,11 +88,11 @@ usl_leading_zero_smc:
 	beq	usl_no_tens
 
 usl_go_tens:
-	adc	#'0'+$80
+	adc	#'0'				; convert to ASCII
 	bne	usl_print_tens		; bra
 
 usl_no_tens:
-	lda	#' '+$80
+	lda	#' '				; no leading 0
 
 usl_print_tens:
 	sta	(OUTL),Y
@@ -103,7 +104,7 @@ usl_ones:
 
 	and	#$f
 	clc
-	adc	#'0'+$80
+	adc	#'0'				; convert to ascii
 	sta	(OUTL),Y
 
 	; move to text line
@@ -121,7 +122,7 @@ usl_ones:
 	; clear out the old name
 
 	ldy	#25
-	lda	#' '+$80
+	lda	#' '				; clear to space
 save_memset:
 	sta	(OUTL),Y
 	dey
