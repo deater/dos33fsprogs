@@ -17,6 +17,8 @@ hidden_glen_verb_table:
         .word hidden_glen_haldo-1
         .byte VERB_GET
         .word hidden_glen_get-1
+        .byte VERB_TAKE
+        .word hidden_glen_get-1
         .byte VERB_CLIMB
         .word hidden_glen_climb-1
         .byte VERB_JUMP
