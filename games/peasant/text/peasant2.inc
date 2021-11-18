@@ -215,6 +215,7 @@ archery_talk_mendelev3_message:
 .byte "'haldo.'",34,0
 
 ; + talk (after talking to him before) NOT IN WIKI
+archery_talk_mendelev_between_message:
 .byte 34,"Tell my bro I said 'haldo'",13
 .byte "if you see him,",34," he says",13
 .byte "and goes back to pouting.",0
@@ -222,6 +223,7 @@ archery_talk_mendelev3_message:
 ; + talk (after dongolev back, before minigame)
 ;   talk mendelev, dongolev, brothers, guy, dude, man
 ;        (have arrow, not sure if that matters)
+archery_talk_before_minigame_message:
 .byte 34,"Haldo!",34," say the brothers.",13
 .byte 34,"Test your skill! Give us",13
 .byte "the right super item from",13
@@ -229,14 +231,18 @@ archery_talk_mendelev3_message:
 .byte "give it as many tries as",13
 .byte "you need!",34,0
 
+; + talk (after trinket, before minigame) same as "play game"
+
 ; + talk (after beating the minigame)
 ;   talk mendelev, dongolev, brothers, guy, dude, man
+archery_talk_after_minigame_message:
 .byte 34,"Go away!",34," says Dongolev.",13
 .byte 34,"We're arguing about who's",13
 .byte "hotter,",34," adds Mendelev.",0
 
 ; + 2 POINTS
 ; + give super trinket
+archery_give_trinket_message:
 .byte 34,"That'll work,",34," says",13
 .byte "Mendelev. Just hit 3",13
 .byte "bullseyes and you win the",13
@@ -274,14 +280,22 @@ archery_talk_mendelev3_message:
 ;.byte "back when your shipment",13
 ;.byte "comes in.",0
 
-
 .byte 34,"But since you gave us this",13
 .byte "trinket, and you obviously",13
 .byte "don't have a prayer of",13
 .byte "winning, you can play again",13
 .byte "whenever you want.",34,0
 
-; play game
+
+; give trinket (already gave)		not in wiki
+archery_give_trinket_again_message:
+.byte "You already gave them the",13
+.byte "trinket. Fortunately, you",13
+.byte "have an open invitation to",13
+.byte "humiliate yourself at the",13
+.byte "range.",0
+
+; play game, talk
 .byte 34,"Haldo again!",34," say the",13
 .byte "brothers. ",34,"Get 3 bullseyes",13
 .byte "this time and you'll win",13

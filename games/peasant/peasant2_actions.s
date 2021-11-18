@@ -447,9 +447,54 @@ archery_get_arrow:
 	;================
 archery_give:
 
-	; TODO
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_TRINKET
+	beq	archery_give_trinket
 
 	jmp	parse_common_give
+
+archery_give_trinket:
+	; only if dongolev there
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	archery_no_give
+
+	lda	GAME_STATE_0
+	and	#TRINKET_GIVEN
+	bne	archery_give_trinket_again
+
+	lda	INVENTORY_2
+	and	#INV2_TRINKET
+	bne	archery_give_trinket_first
+
+	; otherwise, default
+archery_no_give:
+	jmp	parse_common_give
+
+archery_give_trinket_first:
+
+	; score 2 points
+	lda	#2
+	jsr	score_points
+
+	ldx	#<archery_give_trinket_message
+	ldy	#>archery_give_trinket_message
+	jsr	partial_message_step
+
+	jmp	do_archery_game
+
+
+archery_give_trinket_again:
+	ldx	#<archery_give_trinket_again_message
+	ldy	#>archery_give_trinket_again_message
+	jmp	finish_parse_message
+
+
+do_archery_game:
+	; play game?
+
+	rts
 
 	;================
 	; haldo
@@ -551,12 +596,18 @@ archery_talk:
 	; only talk if close
 	lda	PEASANT_X
 	cmp	#23
-	bcc	archery_talk_too_far
+	bcs	archery_talk_close
 	; check Y too?
 	; probably less than $7D?
 	; actual game will walk you in if close
 	; will it work from beind?
 
+archery_talk_too_far:
+	ldx	#<archery_talk_far_message
+	ldy	#>archery_talk_far_message
+	jmp	finish_parse_message
+
+archery_talk_close:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_MAN
@@ -569,10 +620,60 @@ archery_talk:
 	beq	archery_talk_mendelev
 	cmp	#NOUN_ARCHER
 	beq	archery_talk_mendelev
+	cmp	#NOUN_DONGOLEV
+	beq	archery_talk_dongolev
+	cmp	#NOUN_NONE
+	beq	archery_talk_mendelev
 
 	jmp	parse_common_unknown
 
+archery_talk_dongolev:
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	bne	archery_yes_dongolev
+
+	jmp	parse_common_talk
+
 archery_talk_mendelev:
+	lda	GAME_STATE_0
+	and	#TALKED_TO_MENDELEV
+	beq	archery_no_mendelev_yet
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	archery_yes_mendelev_no_dongolev
+
+archery_yes_dongolev:
+	; three options, before trinket, after trinket, after minigame
+	lda	GAME_STATE_0
+	and	#ARROW_BEATEN
+	bne	archery_after_minigame
+
+	lda	GAME_STATE_0
+	and	#TRINKET_GIVEN
+	bne	archery_after_trinket
+
+archery_before_trinket:
+	ldx	#<archery_talk_before_minigame_message
+	ldy	#>archery_talk_before_minigame_message
+	jmp	finish_parse_message
+
+archery_after_trinket:
+	jmp	archery_play_game
+
+archery_after_minigame:
+	ldx	#<archery_talk_after_minigame_message
+	ldy	#>archery_talk_after_minigame_message
+	jmp	finish_parse_message
+
+
+archery_yes_mendelev_no_dongolev:
+	ldx	#<archery_talk_mendelev_between_message
+	ldy	#>archery_talk_mendelev_between_message
+	jmp	finish_parse_message
+
+
+archery_no_mendelev_yet:
+
 	ldx	#<archery_talk_mendelev_message
 	ldy	#>archery_talk_mendelev_message
 	jsr	partial_message_step
@@ -606,10 +707,7 @@ archer_score_points:
 
 	rts
 
-archery_talk_too_far:
-	ldx	#<archery_talk_far_message
-	ldy	#>archery_talk_far_message
-	jmp	finish_parse_message
+
 
 
 	;=======================
