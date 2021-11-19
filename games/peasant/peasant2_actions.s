@@ -501,11 +501,16 @@ do_archery_game:
 	;================
 archery_haldo:
 
-	; TODO
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	bne	archery_haldo_after_haldo
 
 	jmp	parse_common_haldo
 
-
+archery_haldo_after_haldo:
+	ldx	#<archery_haldo_message
+	ldy	#>archery_haldo_message
+	jmp	finish_parse_message
 
 	;=================
 	; look
@@ -575,14 +580,45 @@ archery_play:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_GAME
-	beq	archery_play_game
+	beq	archery_check_play_game
 
 	jmp	parse_common_unknown
 
+archery_check_play_game:
+
+	lda	GAME_STATE_0
+	and	#ARROW_BEATEN
+	bne	archery_play_game_arrow_beaten
+
+	lda	GAME_STATE_0
+	and	#TRINKET_GIVEN
+	bne	archery_play_game
+
+archery_play_game_closed:
+	ldx	#<archery_play_game_closed_message
+	ldy	#>archery_play_game_closed_message
+	jmp	finish_parse_message
+
+archery_play_game_arrow_beaten:
+	jmp	archery_after_minigame
+
 archery_play_game:
+
 	ldx	#<archery_play_game_message
 	ldy	#>archery_play_game_message
-	jmp	finish_parse_message
+	jsr	partial_message_step
+
+	ldx	#<archery_play_game_message2
+	ldy	#>archery_play_game_message2
+	jsr	partial_message_step
+
+	; play game
+
+	lda     #LOCATION_ARCHERY_GAME
+	jsr	update_map_location
+
+	rts
+
 
 	;================
 	; talk

@@ -248,43 +248,7 @@ archery_give_trinket_message:
 .byte "bullseyes and you win the",13
 .byte "SuperTime FunBow TM!",0
 
-.byte 34,"The ARROW KEYS aim left",13
-.byte "and right and the SPACE BAR",13
-.byte "operates the bow. You'll",13
-.byte "need to press it a couple",13
-.byte "of times to get a nice shot",13
-.byte "off but we don't give",13
-.byte "lessons so you're on your",13
-.byte "own.",0
-
-; (get [X]=3-5 bullseyes)
-.byte 34,"Nice shootin! 3 hits.",34,13
-.byte "Says Mendelev. ",34,"Here's",13
-.byte "your prize!",34," You got the",13
-.byte "SuperTime FunBow TM! We",13
-.byte "don't sell ammo, so you'll",13
-.byte "have to find your own",13
-.byte "arrows for it.",0
-
-.byte 34,"Sorry!",34," says",13
-.byte "Dongolev.",34,"Not a single",13
-.byte "hit. Your game face must be",13
-.byte "on back-order. Maybe come",13
-.byte "back when your shipment",13
-.byte "comes in.",0
-
-;.byte 34,"Sorry!",34," says",13
-;.byte "Dongolev.",34,"Only 1",13
-;.byte "hit. Your game face must be",13
-;.byte "on back-order. Maybe come",13
-;.byte "back when your shipment",13
-;.byte "comes in.",0
-
-.byte 34,"But since you gave us this",13
-.byte "trinket, and you obviously",13
-.byte "don't have a prayer of",13
-.byte "winning, you can play again",13
-.byte "whenever you want.",34,0
+; jmp to archery_play_game_message2
 
 
 ; give trinket (already gave)		not in wiki
@@ -295,23 +259,33 @@ archery_give_trinket_again_message:
 .byte "humiliate yourself at the",13
 .byte "range.",0
 
-; play game, talk
+; play game, after trinket
+archery_play_game_message:
 .byte 34,"Haldo again!",34," say the",13
 .byte "brothers. ",34,"Get 3 bullseyes",13
 .byte "this time and you'll win",13
 .byte "yourself an SuperTime",13		; [sic]
 .byte "FunBow",34,0
 
-; then gives The ARROW KEYS message again
+archery_play_game_message2:
+.byte 34,"The ARROW KEYS aim left",13
+.byte "and right and the SPACE BAR",13
+.byte "operates the bow. You'll",13
+.byte "need to press it a couple",13
+.byte "of times to get a nice shot",13
+.byte "off but we don't give",13
+.byte "lessons so you're on your",13
+.byte "own.",0
+
+
+
 
 ; hints
 ; slack, just aim at middle, both at red line
 ; full left, aim at right edge of leg
 ; full right, aim at left edge of leg
 
-
 ; play game after won, goes the "arguing" thing
-
 
 
 ;=======
@@ -383,15 +357,16 @@ archery_ask_about_unknown_message:
 .byte "you're real boring.",34,0
 
 ; + haldo (after Dongolev has returned)
+archery_haldo_message:
 .byte "HALDO!!",0
 
 ; + play game (before saying haldo to Dongolev) (before trinket?)
-archery_play_game_message:
+archery_play_game_closed_message:
 .byte "The gallery's not open and",13
 .byte "you got no bow or arrows,",13
 .byte "Cupid.",0
 
-; BEAT GAME = +3 POINTS
+
 
 ; + get/take/steal target
 archery_get_target_message:
@@ -407,6 +382,42 @@ archery_get_arrow_message:
 .byte "to shoot around with them.",13
 .byte "Also, that guy over there",13
 .byte "is giving you the evil eye.",0
+
+
+
+
+; (get [X]=3-5 bullseyes)
+.byte 34,"Nice shootin! 3 hits.",34,13
+.byte "Says Mendelev. ",34,"Here's",13
+.byte "your prize!",34," You got the",13
+.byte "SuperTime FunBow TM! We",13
+.byte "don't sell ammo, so you'll",13
+.byte "have to find your own",13
+.byte "arrows for it.",0
+
+; BEAT GAME = +3 POINTS
+; get bow
+
+.byte 34,"Sorry!",34," says",13
+.byte "Dongolev.",34,"Not a single",13
+.byte "hit. Your game face must be",13
+.byte "on back-order. Maybe come",13
+.byte "back when your shipment",13
+.byte "comes in.",0
+
+.byte 34,"Sorry!",34," says",13
+.byte "Dongolev.",34,"Only 1",13
+.byte "hit. Your game face must be",13
+.byte "on back-order. Maybe come",13
+.byte "back when your shipment",13
+.byte "comes in.",0
+
+.byte 34,"But since you gave us this",13
+.byte "trinket, and you obviously",13
+.byte "don't have a prayer of",13
+.byte "winning, you can play again",13
+.byte "whenever you want.",34,0
+
 
 
 
