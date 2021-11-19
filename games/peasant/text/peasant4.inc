@@ -265,23 +265,27 @@ lady_cottage_look_at_bushes_message:
 
 ; walks to nearest?
 ; + get berries (first bush) [walks to lower left]
+lady_cottage_searched_1_bush_message:
 .byte "You reach into the bush to",13
 .byte "snag some berries but",13
 .byte "they all just squish in",13
 .byte "your hand.",0
 
 ; + get berries (second bush)	[left]
+lady_cottage_searched_2_bushes_message:
 .byte "Man, nothing in this bush",13
 .byte "but squished berries",13
 .byte "either.",0
 
 ; + get berries (third bush)
+lady_cottage_searched_3_bushes_message:
 .byte "Too bad you don't want any",13
 .byte "squished berries, cuz hey:",13
 .byte "jackpot!",0
 
 ; +2 POINTS
 ; + get berries (fourth bush)
+lady_cottage_searched_4_bushes_message:
 .byte "You reach into the bush to",13
 .byte "snag you some berries but",13
 .byte "instead find a Super",13
@@ -293,6 +297,7 @@ lady_cottage_look_at_bushes_message:
 
 ; + get berries (same twice)
 ; + search bush (same twice)
+lady_cottage_already_searched_message:
 .byte "You already searched that",13
 .byte "bush. It was okay. Nothing",13
 .byte "to write home about... oh,",13
@@ -301,6 +306,7 @@ lady_cottage_look_at_bushes_message:
 
 ; + search bush (already found trinket)
 ; + get berries (already found trinket)
+lady_cottage_already_trinket_message:
 .byte "You've searched your fill",13
 .byte "of berry bushes for this",13
 .byte "game. If you want to search",13

@@ -702,6 +702,7 @@ verb_lookup:
 .byte "SAVE",VERB_SAVE|$80
 .byte "SAY",VERB_SAY|$80
 .byte "SCARE",VERB_SCARE|$80
+.byte "SEARCH",VERB_SEARCH|$80
 .byte "SHOOT",VERB_SHOOT|$80
 .byte "SHOW",VERB_SHOW|$80
 .byte "SIT",VERB_SIT|$80

@@ -35,6 +35,7 @@ peasant2	18302
 		17100 -- move parse_input high and move p2 strings back in
 		17368 -- use lookup table for next room (and other changes)
 		17780 -- size as of the switch to dictionary word lookup
+		18012 -- hook up more of archery
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -184,8 +185,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  3 (jump in hay)
 +  2 (fall in mud puddle)
 +  2 (give trinket to brothers)
++  2 (get super trinket)
 ======
-  52 points
+  54 points
 
 
 deaths/endings implemented
