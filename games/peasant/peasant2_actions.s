@@ -460,10 +460,12 @@ archery_give_trinket:
 	and	#HALDO_TO_DONGOLEV
 	beq	archery_no_give
 
+	; check if already gave it
 	lda	GAME_STATE_0
 	and	#TRINKET_GIVEN
 	bne	archery_give_trinket_again
 
+	; be sure we have it
 	lda	INVENTORY_2
 	and	#INV2_TRINKET
 	bne	archery_give_trinket_first
@@ -478,11 +480,21 @@ archery_give_trinket_first:
 	lda	#2
 	jsr	score_points
 
+	; set trinket given game state
+	lda	GAME_STATE_0
+	ora	#TRINKET_GIVEN
+	sta	GAME_STATE_0
+
+	; mark us no longer having it
+	lda	INVENTORY_2_GONE
+	ora	#INV2_TRINKET
+	sta	INVENTORY_2_GONE
+
 	ldx	#<archery_give_trinket_message
 	ldy	#>archery_give_trinket_message
 	jsr	partial_message_step
 
-	jmp	do_archery_game
+	jmp	archery_play_game2
 
 
 archery_give_trinket_again:
@@ -490,11 +502,6 @@ archery_give_trinket_again:
 	ldy	#>archery_give_trinket_again_message
 	jmp	finish_parse_message
 
-
-do_archery_game:
-	; play game?
-
-	rts
 
 	;================
 	; haldo
@@ -608,6 +615,7 @@ archery_play_game:
 	ldy	#>archery_play_game_message
 	jsr	partial_message_step
 
+archery_play_game2:
 	ldx	#<archery_play_game_message2
 	ldy	#>archery_play_game_message2
 	jsr	partial_message_step
