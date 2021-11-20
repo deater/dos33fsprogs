@@ -95,6 +95,15 @@ game_loop:
 
 	jsr	wait_until_keypress
 
+;	lda	#$30		; got 0 of 3
+;	lda	#$31		; got 1 of 3
+	lda	#$33		; got 3 of 3
+	sta	ARROW_SCORE
+
+	lda	ARROW_SCORE
+	ora	#ARROW_DONE
+	sta	ARROW_SCORE
+
 	lda	#LOCATION_ARCHERY
 	jmp	update_map_location
 
@@ -123,6 +132,9 @@ game_loop:
 	; exit level
 	;************************
 game_over:
+	lda	ARROW_SCORE
+	ora	#ARROW_DONE
+	sta	ARROW_SCORE
 
 	rts
 

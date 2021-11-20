@@ -102,6 +102,7 @@ APPLEII_MODEL	= $8B
 ESC_PRESSED	= $8C
 PREVIOUS_LOCATION= $8D
 
+
 ;=======================
 ; savegame state
 ;=======================
@@ -158,6 +159,7 @@ KERREK_STATE	= $9C
 	KERREK_DECOMPOSING = $02
 	KERREK_SKELETON	= $03
 ARROW_SCORE	= $9D	; bottom=score, top=random num needed 3-5?
+	ARROW_DONE  = $80
 
 SCORE_HUNDREDS	= $9E
 SCORE_TENSONES	= $9F	

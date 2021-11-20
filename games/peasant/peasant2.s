@@ -146,6 +146,79 @@ new_location:
 
 	jsr	draw_peasant
 
+
+	;=====================
+	; special archery
+	;=====================
+
+	lda	ARROW_SCORE
+	bpl	game_loop
+
+	; coming back from archery game
+
+	and	#$7f		; unset
+	sta	ARROW_SCORE
+
+	and	#$f			; see if score (bottom) is 0
+	beq	arrow_game_zero
+
+	sta	TEMP0
+
+	lda	ARROW_SCORE
+	lsr
+	lsr
+	lsr
+	lsr
+	cmp	TEMP0
+	bne	arrow_game_lost
+
+arrow_game_won:
+	; get 3 points
+	lda	#3
+	jsr	score_points
+
+	; get bow
+	lda	INVENTORY_1
+	ora	#INV1_BOW
+	sta	INVENTORY_1
+
+	; set won
+	lda	GAME_STATE_0
+	ora	#ARROW_BEATEN
+	sta	GAME_STATE_0
+
+	lda	TEMP0
+	clc
+	adc	#'0'
+	sta	archery_won_message+14
+
+	ldx	#<archery_won_message
+	ldy	#>archery_won_message
+	jsr	partial_message_step
+	jmp	game_loop
+
+arrow_game_zero:
+	ldx	#<archery_zero_message
+	ldy	#>archery_zero_message
+	jsr	partial_message_step
+	jmp	arrow_game_lose_common
+
+arrow_game_lost:
+	lda	TEMP0
+	clc
+	adc	#'0'
+	sta	archery_some_message+24	; urgh affected by compression
+
+	ldx	#<archery_some_message
+	ldy	#>archery_some_message
+	jsr	partial_message_step
+
+arrow_game_lose_common:
+	ldx	#<archery_lose_message
+	ldy	#>archery_lose_message
+	jsr	partial_message_step
+
+
 game_loop:
 
 	jsr	move_peasant

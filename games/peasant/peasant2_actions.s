@@ -625,6 +625,10 @@ archery_play_game2:
 	lda     #LOCATION_ARCHERY_GAME
 	jsr	update_map_location
 
+	; FIXME: make random
+	lda	#$30
+	sta	ARROW_SCORE
+
 	rts
 
 

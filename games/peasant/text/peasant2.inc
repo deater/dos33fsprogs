@@ -387,6 +387,7 @@ archery_get_arrow_message:
 
 
 ; (get [X]=3-5 bullseyes)
+archery_won_message:
 .byte 34,"Nice shootin! 3 hits.",34,13
 .byte "Says Mendelev. ",34,"Here's",13
 .byte "your prize!",34," You got the",13
@@ -398,6 +399,7 @@ archery_get_arrow_message:
 ; BEAT GAME = +3 POINTS
 ; get bow
 
+archery_zero_message:
 .byte 34,"Sorry!",34," says",13
 .byte "Dongolev.",34,"Not a single",13
 .byte "hit. Your game face must be",13
@@ -405,6 +407,7 @@ archery_get_arrow_message:
 .byte "back when your shipment",13
 .byte "comes in.",0
 
+archery_some_message:
 .byte 34,"Sorry!",34," says",13
 .byte "Dongolev.",34,"Only 1",13
 .byte "hit. Your game face must be",13
@@ -412,6 +415,7 @@ archery_get_arrow_message:
 .byte "back when your shipment",13
 .byte "comes in.",0
 
+archery_lose_message:
 .byte 34,"But since you gave us this",13
 .byte "trinket, and you obviously",13
 .byte "don't have a prayer of",13

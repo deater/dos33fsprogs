@@ -36,6 +36,7 @@ peasant2	18302
 		17368 -- use lookup table for next room (and other changes)
 		17780 -- size as of the switch to dictionary word lookup
 		18012 -- hook up more of archery
+		18120 -- finish hooking up archery
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -186,8 +187,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  2 (fall in mud puddle)
 +  2 (give trinket to brothers)
 +  2 (get super trinket)
++  3 (win archery game)
 ======
-  54 points
+  57 points
 
 
 deaths/endings implemented
