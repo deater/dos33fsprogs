@@ -205,49 +205,179 @@ kerrek_shoot:
 
 kerrek_look:
 
+	; first see if kerrek is on screen
+
+	lda	KERREK_STATE
+	bpl	kerrek_look_not_there
+
+kerrek_look_there:
+
+	; check if there and alive
+
+	lda	KERREK_STATE
+	and	#$f
+	bne	kerrek_look_there_dead
+
+kerrek_look_there_alive:
+
+	; see what we're looking at
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BELT
+	beq	kerrek_look_belt_alive
+
+	; kerrek was there and alive
+kerrek_look_there_alive_everything_else:
+	ldx	#<kerrek_look_kerrek_message
+	ldy	#>kerrek_look_kerrek_message
+	jmp	finish_parse_message
+
+kerrek_look_belt_alive:
+	ldx	#<kerrek_look_belt_alive_message
+	ldy	#>kerrek_look_belt_alive_message
+	jmp	finish_parse_message
+
+
+kerrek_look_there_dead:
+	; kerrek was there and dead
+	; already masked off
+
+	cmp	#KERREK_DEAD
+	beq	kerrek_look_there_dead_dead
+	cmp	#KERREK_DECOMPOSING
+	beq	kerrek_look_there_dead_decomposing
+;	cmp	#KERREK_SKELETON
+
+
+	;============================
+	; look, kerrek is a skeleton
+	;============================
+
+	; here is kerrek a skeleton
+kerrek_look_there_dead_bones:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_BONE
+	beq	kerrek_look_there_dead_bones_bones
+	cmp	#NOUN_KERREK
+	beq	kerrek_look_there_dead_bones_kerrek
+
+kerrek_look_there_dead_bones_default:
+	; typed "look" after kerrek a skeleton
+	ldx	#<kerrek_look_kerrek_bones_message
+	ldy	#>kerrek_look_kerrek_bones_message
+	jmp	finish_parse_message
+
+kerrek_look_there_dead_bones_kerrek:
+	; typed "look kerrek" after kerrek a skeleton
+
+	ldx	#<kerrek_look_bones_kerrek_message
+	ldy	#>kerrek_look_bones_kerrek_message
+	jmp	finish_parse_message
+
+kerrek_look_there_dead_bones_bones:
+	; typed "look bones" after kerrek a skeleton
+
+	ldx	#<kerrek_look_bones_message
+	ldy	#>kerrek_look_bones_message
+	jmp	finish_parse_message
+
+
+	;==============================
+	; look, kerrek is freshly dead
+	;==============================
+
+kerrek_look_there_dead_dead:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_KERREK
+	beq	kerrek_look_there_dead_look_kerrek
+
+	; typed "look" when kerrek just killed
+kerrek_look_there_dead_look:
+	ldx	#<kerrek_look_dead_message
+	ldy	#>kerrek_look_dead_message
+	jmp	finish_parse_message
+
+
+	; typed "look kerrek" when kerrek just killed
+kerrek_look_there_dead_look_kerrek:
+
+	; see if belt there
+
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	bne	kerrek_look_there_dead_look_kerrek_no_belt
+
+kerrek_look_there_dead_look_kerrek_belt:
+	ldx	#<kerrek_look_kerrek_dead_message
+	ldy	#>kerrek_look_kerrek_dead_message
+	jmp	finish_parse_message
+
+kerrek_look_there_dead_look_kerrek_no_belt:
+	ldx	#<kerrek_look_kerrek_dead_nobelt_message
+	ldy	#>kerrek_look_kerrek_dead_nobelt_message
+	jmp	finish_parse_message
+
+
+	;==============================
+	; look, kerrek is decomposing
+	;==============================
+
+	; here if kerrek is in decompsing state
+kerrek_look_there_dead_decomposing:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_KERREK
+	beq	kerrek_look_there_dead_decomposing_kerrek
+
+	; here if "look" when decomposing
+
+	ldx	#<kerrek_look_decomposing_message
+	ldy	#>kerrek_look_decomposing_message
+	jmp	finish_parse_message
+
+kerrek_look_there_dead_decomposing_kerrek:
+	; here if "look kerrek" when decomposing
+
+	ldx	#<kerrek_look_kerrek_decomposing_message
+	ldy	#>kerrek_look_kerrek_decomposing_message
+	jmp	finish_parse_message
+
+
+	;==============================
+	; look, kerrek is not there
+	;==============================
+
+kerrek_look_not_there:
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_FOOTPRINTS
 	beq	kerrek_look_footprints
 	cmp	#NOUN_TRACKS
-	beq	kerrek_look_tracks
+	beq	kerrek_look_footprints
 
-	cmp	#NOUN_NONE
-	beq	kerrek_look_at
 
-	jmp	parse_common_look
+	; check if alive elsewhere
 
-kerrek_look_at:
-	lda	KERREK_STATE
-	bmi	kerrek_look_none_kerrek
-
-kerrek_look_none_no_kerrek:
 	lda	KERREK_STATE
 	and	#$f
-	beq	kerrek_look_none_kerrek_alive
-kerrek_look_none_kerrek_dead:
-	ldx	#<kerrek_look_no_dead_kerrek_message
-	ldy	#>kerrek_look_no_dead_kerrek_message
-	jmp	finish_parse_message
+	bne	kerrek_look_not_there_dead
 
-kerrek_look_none_kerrek_alive:
+kerrek_look_not_there_alive:
+
 	ldx	#<kerrek_look_no_kerrek_message
 	ldy	#>kerrek_look_no_kerrek_message
 	jmp	finish_parse_message
 
-kerrek_look_none_kerrek:
-	ldx	#<kerrek_look_kerrek_message
-	ldy	#>kerrek_look_kerrek_message
+kerrek_look_not_there_dead:
+
+	ldx	#<kerrek_look_no_dead_kerrek_message
+	ldy	#>kerrek_look_no_dead_kerrek_message
 	jmp	finish_parse_message
 
 kerrek_look_tracks:
 kerrek_look_footprints:
-	lda	KERREK_STATE
-	bpl	kerrek_look_none_kerrek
-
 	ldx	#<kerrek_look_footprints_message
 	ldy	#>kerrek_look_footprints_message
 	jmp	finish_parse_message
-
-
 

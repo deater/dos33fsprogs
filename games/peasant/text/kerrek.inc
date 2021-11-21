@@ -88,10 +88,7 @@
 ; look
 ;==================
 
-; + look (no Kerrek, kerrek dead)
-kerrek_look_no_dead_kerrek_message:
-.byte "There are large hoof prints",13
-.byte "in the the grass here.",0
+
 
 ; + look (no Kerrek)
 kerrek_look_no_kerrek_message:
@@ -100,13 +97,12 @@ kerrek_look_no_kerrek_message:
 .byte "it smells like a public",13
 .byte "latrine.",0
 
-; + look (living Kerrek)
-; + look footprints/tracks (living Kerrek) 
-kerrek_look_kerrek_message:
-.byte "It's the Kerrek, you moron!",13
-.byte "Get outta here!",0
+; + look (no Kerrek, kerrek dead)
+kerrek_look_no_dead_kerrek_message:
+.byte "There are large hoof prints",13
+.byte "in the the grass here.",0
 
-; + look footprints/tracks (Kerrek not present)
+; + look footprints/tracks (no Kerrek)
 kerrek_look_footprints_message:
 .byte "If you weren't a simpleton",13
 .byte "you might think these were",13
@@ -114,51 +110,93 @@ kerrek_look_footprints_message:
 .byte "you are a simpleton, you",13
 .byte "just go, ",34,"Yay! Piggies!",34,0
 
+
+
+
+
+;==========================
+; alive
+;==========================
+
+; + look [anything] (living Kerrek there) kerrek_there && alive
+; + look footprints/tracks (living Kerrek there) 
+kerrek_look_kerrek_message:
+.byte "It's the Kerrek, you moron!",13
+.byte "Get outta here!",0
+
+; + look belt (still alive)
+kerrek_look_belt_alive_message:
+.byte "Yecch. I wouldn't touch",13
+.byte "that unless it was, like,",13
+.byte "an important quest item or",13
+.byte "something.",0
+
+;==========================
+; dead form but belt there
+;==========================
+
 ; + look (dead Kerrek)
+kerrek_look_dead_message:
 .byte "There are large hoof prints",13
 .byte "in the grass here.",13
 .byte "There is a large",13
 .byte "Kerrek-shaped mound on the",13
 .byte "grass.",0
 
+; + look kerrek (immediately after killing him)
+kerrek_look_kerrek_dead_message:
+.byte "He dead. And the only thing",13
+.byte "of value on him is his",13
+.byte "stinky belt buckle.",0
+
+;==========================
+; dead form but belt taken
+;==========================
+
+; + look (see above)
+
+; + look kerrek (immediately after taking the belt)
+kerrek_look_kerrek_dead_nobelt_message:
+.byte "He dead.",0
+
+
+;==================
+; decomposing form
+;==================
+
 ; + look (rotting Kerrek)
+kerrek_look_decomposing_message:
 .byte "There are large hoof prints",13
 .byte "in the grass here. Part",13
 .byte "of the ground looks just",13
 .byte "like a rotting kerrek.",0
 
-; + look (skeletal Kerrek)
-.byte "There are large hoof prints",13
-.byte "in the grass here.",13
-.byte "Looks like someone left",13
-.byte "their spare bones here.",0
-
-; + look belt (still alive)
-.byte "Yecch. I wouldn't touch",13
-.byte "that unless it was, like,",13
-.byte "an important quest item or",13
-.byte "something.",0
-
-; + look kerrek (immediately after killing him)
-.byte "He dead. And the only thing",13
-.byte "of value on him is his",13
-.byte "stinky belt buckle.",0
-
-; + look kerrek (immediately after taking the belt)
-.byte "He dead.",0
-
 ; + look kerrek (while he's decomposing)
+kerrek_look_kerrek_decomposing_message:
 .byte "He dead. You didn't think",13
 .byte "he could have smelled any",13
 .byte "worse? Well, guess what: He",13
 .byte "smells worse.",0
 
+;==================
+; skeleton form
+;==================
+
+; + look (skeletal Kerrek)
+kerrek_look_kerrek_bones_message:
+.byte "There are large hoof prints",13
+.byte "in the grass here.",13
+.byte "Looks like someone left",13
+.byte "their spare bones here.",0
+
 ; + look kerrek (when he's all bones)
+kerrek_look_bones_kerrek_message:
 .byte "He dead. He wasn't fat, he",13
 .byte "was just big boned! Poor",13
 .byte "pig-man.",0
 
 ; + look bones (skips the "he dead." part?)
+kerrek_look_bones_message:
 .byte "He wasn't fat, he was just",13
 .byte "big boned! Poor pig-man.",0
 
