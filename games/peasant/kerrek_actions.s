@@ -82,6 +82,10 @@ kerrek_row4:
 	;=======================
 
 kerrek_verb_table:
+	.byte VERB_GET
+	.word kerrek_get-1
+	.byte VERB_TAKE
+	.word kerrek_get-1
 	.byte VERB_LOAD
 	.word kerrek_load-1
 	.byte VERB_SAVE
@@ -99,6 +103,74 @@ kerrek_verb_table:
 	.byte VERB_BUY
 	.word kerrek_buy-1
 	.byte 0
+
+	;=================
+	; get
+	;=================
+kerrek_get:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_KERREK
+	beq	kerrek_get_kerrek
+	cmp	#NOUN_ARROW
+	beq	kerrek_get_arrow
+	cmp	#NOUN_BELT
+	beq	kerrek_get_belt
+
+kerrek_cant_get:
+	jmp	parse_common_get
+
+kerrek_get_kerrek:
+	ldx	#<kerrek_get_kerrek_message
+	ldy	#>kerrek_get_kerrek_message
+	jmp	finish_parse_message
+
+kerrek_get_arrow:
+	; only if kerrek dead and on screen
+
+	lda	KERREK_STATE
+	bpl	kerrek_cant_get
+	and	#$f
+	beq	kerrek_cant_get
+
+	ldx	#<kerrek_get_arrow_message
+	ldy	#>kerrek_get_arrow_message
+	jmp	finish_parse_message
+
+kerrek_get_belt:
+
+	; only if kerrek dead and on screen
+
+	lda	KERREK_STATE
+	bpl	kerrek_cant_get
+	and	#$f
+	beq	kerrek_cant_get
+
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	bne	kerrek_get_belt_already
+
+kerrek_get_belt_finally:
+	; get belt
+	; add 10 to score
+
+	lda	INVENTORY_1
+	ora	#INV1_KERREK_BELT
+	sta	INVENTORY_1
+
+	lda	#10
+	jsr	score_points
+
+	ldx	#<kerrek_get_belt_message
+	ldy	#>kerrek_get_belt_message
+	jmp	finish_parse_message
+
+kerrek_get_belt_already:
+	ldx	#<kerrek_get_belt_already_message
+	ldy	#>kerrek_get_belt_already_message
+	jmp	finish_parse_message
+
 
 	;=================
 	; buy

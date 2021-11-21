@@ -55,16 +55,20 @@
 .byte "need the actual Kerrek to",13
 .byte "be here for that to work.",0
 
-
+;=====================
+; get
+;=====================
 
 
 ; + 10 POINTS
 ; + get belt
+kerrek_get_belt_message:
 .byte "You strap the Kerrek's belt",13
 .byte "buckle around your waist.",13
 .byte "Oh boy. You sure stink now.",0
 
 ; + get belt (after already have it)  ; not in wiki
+kerrek_get_belt_already_message:
 .byte "You totally got the belt",13
 .byte "already, as evidenced by",13
 .byte "the rancid cloud of odor",13
@@ -72,23 +76,22 @@
 .byte "shadow.",0
 
 ; + get arrow (after killing)
+kerrek_get_arrow_message:
 .byte "Eww! No way. That thing's",13
 .byte "got some serious",13
 .byte "Kerrek-Brand kooties on it",13
 .byte "now.",0
 
 ; + get kerrek
+kerrek_get_kerrek_message:
 .byte "Well, he does smell real",13
 .byte "bad. But he's a bit too big",13
 .byte "to fit in your pocket.",0
 
 
-
 ;==================
 ; look
 ;==================
-
-
 
 ; + look (no Kerrek)
 kerrek_look_no_kerrek_message:
