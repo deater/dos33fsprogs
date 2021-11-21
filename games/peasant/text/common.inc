@@ -3,10 +3,17 @@
 ;==================
 
 ; + get/wear belt (after getting it)
-.byte "You're already wearing it. Too bad you smell like the trash barge off Peasant Isle.",0
+.byte "You're already wearing it.",13
+.byte "Too bad you smell like the",13
+.byte "trash barge off Peasant",13
+.byte "Isle.",0
 
 ; + wear mask (after getting it)
-.byte "Not on this screen. You've got your image to think about. Actually, you might want to start deliberating on that right now.",0
+.byte "Not on this screen. You've",13
+.byte "got your image to think",13
+.byte "about. Actually, you might",13
+.byte "want to start deliberating",13
+.byte "on that right now.",0
 
 ; +3 points
 ; + wear robe (after getting it)
@@ -103,6 +110,7 @@ what_message:
 ; + where (offset 22)
 where_message:
 .byte "You're hanging out in",13
+where_message_offset:
 .byte "                         ",0
 
 ; + why

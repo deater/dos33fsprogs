@@ -259,6 +259,8 @@ archery_give_trinket_again_message:
 .byte "humiliate yourself at the",13
 .byte "range.",0
 
+; launches into game...
+
 ; play game, after trinket
 archery_play_game_message:
 .byte 34,"Haldo again!",34," say the",13

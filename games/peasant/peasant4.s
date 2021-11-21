@@ -154,9 +154,24 @@ not_necessary_cottage:
 
 	jsr	hgr_put_string
 
+	;==============
 	; put score
 
 	jsr	print_score
+
+
+	;====================
+	; handle kerrek
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_KERREK_2
+	bne	not_kerrek
+
+	jsr	kerrek_setup
+
+not_kerrek:
+
+
 
 	;====================
 	; save background

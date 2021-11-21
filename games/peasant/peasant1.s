@@ -121,6 +121,20 @@ new_location:
 
 	jsr	print_score
 
+
+
+	;====================
+	; handle kerrek
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_KERREK_1
+	bne	not_kerrek
+
+	jsr	kerrek_setup
+ 
+not_kerrek:
+
+
 	;====================
 	; save background
 

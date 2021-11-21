@@ -61,6 +61,9 @@ PEASANT_YADD	= $6B
 LEVEL_OVER	= $6C
 	NEW_LOCATION	= $FF
 	NEW_FROM_DISK	= $01
+KERREK_SPEED	= $6D
+KERREK_DIRECTION= $6E	; 0 = left, 1=right
+
 
 SPEECH_PTRL    = $70
 SPEECH_PTRH    = $71
@@ -99,8 +102,10 @@ MB_ADDR_H       = $88
 DONE_PLAYING    = $89
 DONE_SONG       = $8A
 APPLEII_MODEL	= $8B
+
 ESC_PRESSED	= $8C
 PREVIOUS_LOCATION= $8D
+
 
 
 ;=======================
@@ -158,6 +163,9 @@ KERREK_STATE	= $9C
 	KERREK_DEAD	= $01
 	KERREK_DECOMPOSING = $02
 	KERREK_SKELETON	= $03
+	KERREK_ROW1	= $40
+	KERREK_ONSCREEN = $80
+
 ARROW_SCORE	= $9D	; bottom=score, top=random num needed 3-5?
 	ARROW_DONE  = $80
 
@@ -192,7 +200,10 @@ INVENTORY_3	= $A2
 INVENTORY_1_GONE	= $A3	; had item, but now it's gone
 INVENTORY_2_GONE	= $A4
 INVENTORY_3_GONE	= $A5
-END_OF_SAVE		= $A6
+KERREK_X		= $A6	; should be in save area, as we use
+KERREK_Y		= $A7	; for skeleton location
+
+END_OF_SAVE		= $A8
 
 CURRENT_VERB	= $B0		; parser
 CURRENT_NOUN	= $B1

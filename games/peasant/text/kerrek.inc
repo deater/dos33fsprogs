@@ -3,16 +3,26 @@
 ;================================================
 
 ; (Walk too close to the Kerrek) — {The Kerrek pounds your head into the ground}
-.byte "Your mom always told you not to take head poundings from strange Kerreks. And NOW looks what's happened. You dead. Thanks for playing.",0
+.byte "Your mom always told you",13
+.byte "not to take head poundings",13
+.byte "from strange Kerreks. And",13
+.byte "NOW looks what's happened.",13
+.byte "You dead. Thanks for",13
+.byte "playing.",0
 
 ; + 5 POINTS
+; + kill kerrek
 ; + shoot Kerrek with bow
 .byte "Here goes nothin', Kid",13
 .byte "Icarus",0
 
+; animation of shooting him, him falling
+
 .byte "ARROWED!! Nice shot. You",13
 .byte "smote the Kerrek! He lay",13
 .byte "there stinking.",0
+
+; pause
 
 .byte "A light rain heralds the",13
 .byte "washing free of the",13
@@ -21,6 +31,32 @@
 .byte "good, though, so the",13
 .byte "artless symbolism doesn't",13
 .byte "bug you.",0
+
+; + kill kerrek (he is there, no bow or arrow)
+.byte "With what?! You got no",13
+.byte "weapons except your",13
+.byte "butter-knife wit.",0
+
+; + kill kerrek (he is there, you have arrow but not bow)
+.byte "With what?! You gonna throw",13
+.byte "that arrow at him?",0
+
+; + kill kerrek (he is there, you have bow, not arrow
+.byte "With what?! You got no",13
+.byte "arrow, fool!",0
+
+; + kill kerrek (he is dead)
+.byte "Yeah. You smote the Kerrek.",13
+.byte "You deserve a trophy full",13
+.byte "of Mutton-ums.",0
+
+; + kill kerrek (he is not there)
+.byte "Good idea. But you kinda",13
+.byte "need the actual Kerrek to",13
+.byte "be here for that to work.",0
+
+
+
 
 ; + 10 POINTS
 ; + get belt
@@ -35,22 +71,43 @@
 .byte "that follows you like a",13
 .byte "shadow.",0
 
-; + look
-kerrek_look_at_message:
+; + get arrow (after killing)
+.byte "Eww! No way. That thing's",13
+.byte "got some serious",13
+.byte "Kerrek-Brand kooties on it",13
+.byte "now.",0
+
+; + get kerrek
+.byte "Well, he does smell real",13
+.byte "bad. But he's a bit too big",13
+.byte "to fit in your pocket.",0
+
+
+
+;==================
+; look
+;==================
+
+; + look (no Kerrek, kerrek dead)
+kerrek_look_no_dead_kerrek_message:
 .byte "There are large hoof prints",13
-.byte "in the grass here.",0
+.byte "in the the grass here.",0
 
 ; + look (no Kerrek)
+kerrek_look_no_kerrek_message:
 .byte "There are large hoof prints",13
 .byte "in the the grass here. And",13
-.byte "it smells like a public latrine.",0
+.byte "it smells like a public",13
+.byte "latrine.",0
 
 ; + look (living Kerrek)
 ; + look footprints/tracks (living Kerrek) 
+kerrek_look_kerrek_message:
 .byte "It's the Kerrek, you moron!",13
 .byte "Get outta here!",0
 
 ; + look footprints/tracks (Kerrek not present)
+kerrek_look_footprints_message:
 .byte "If you weren't a simpleton",13
 .byte "you might think these were",13
 .byte "Kerrek prints. But since",13
@@ -76,55 +133,6 @@ kerrek_look_at_message:
 .byte "Looks like someone left",13
 .byte "their spare bones here.",0
 
-; + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
-;   (Warning: This speeds the Kerrek up, so be careful.) 
-.byte "The kerrek is a teetotaller",13
-.byte "and is offended by your",13
-.byte "offer. You've really",13
-.byte "cheesed him off now.",0
-
-; + make friends with kerrek
-.byte "Look, it didn't work for",13
-.byte "Strongbad and it's not",13
-.byte "gonna work for you either.",0
-
-; + load / save (while he's still alive)
-.byte "You can't be fumbling with",13
-.byte "a floppy while the Kerrek",13
-.byte "is bearing down on you.",0
-
-; + kill kerrek (he is there, no bow or arrow)
-.byte "With what?! You got no",13
-.byte "weapons except your",13
-.byte "butter-knife wit.",0
-
-; + kill kerrek (he is there, you have arrow but not bow)
-.byte "With what?! You gonna throw that arrow at him?",0
-
-; + kill kerrek (he is there, you have bow, not arrow
-.byte "With what?! You got no arrow, fool!",0
-
-; + kill kerrek (he is dead)
-.byte "Yeah. You smote the Kerrek.",13
-.byte "You deserve a trophy full",13
-.byte "of Mutton-ums.",0
-
-; + kill kerrek (he is not there)
-.byte "Good idea. But you kinda",13
-.byte "need the actual Kerrek to",13
-.byte "be here for that to work.",0
-
-; + get arrow (after killing)
-.byte "Eww! No way. That thing's",13
-.byte "got some serious",13
-.byte "Kerrek-Brand kooties on it",13
-.byte "now.",0
-
-; + get kerrek
-.byte "Well, he does smell real",13
-.byte "bad. But he's a bit too big",13
-.byte "to fit in your pocket.",0
-
 ; + look belt (still alive)
 .byte "Yecch. I wouldn't touch",13
 .byte "that unless it was, like,",13
@@ -149,11 +157,39 @@ kerrek_look_at_message:
 .byte "He dead. He wasn't fat, he",13
 .byte "was just big boned! Poor",13
 .byte "pig-man.",0
+
 ; + look bones (skips the "he dead." part?)
 .byte "He wasn't fat, he was just",13
 .byte "big boned! Poor pig-man.",0
- 
+
+
+;===============
+; buy
+;===============
+
+; + buy kerrek a cold one (in the Kerrek's domain while he's still alive)
+;   (Warning: This speeds the Kerrek up, so be careful.) 
+kerrek_buy_cold_one_message:
+.byte "The kerrek is a teetotaller",13
+.byte "and is offended by your",13
+.byte "offer. You've really",13
+.byte "cheesed him off now.",0
+
+; + make friends with kerrek
+kerrek_make_friends_message:
+.byte "Look, it didn't work for",13
+.byte "Strongbad and it's not",13
+.byte "gonna work for you either.",0
+
+; + load / save (while he's still alive)
+kerrek_load_save_message:
+.byte "You can't be fumbling with",13
+.byte "a floppy while the Kerrek",13
+.byte "is bearing down on you.",0
+
+
 ; + talk kerrek (while he is alive)
+kerrek_talk_message:
 .byte 34,"Me llamo Julio,",34," you",13
 .byte "begin... It seems only to",13
 .byte "further anger the already",13

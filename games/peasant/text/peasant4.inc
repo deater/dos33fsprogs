@@ -226,7 +226,7 @@ ned_tree_talk_tree_message:
 ; Kerrek Tracks 1/2 (top or bottom footprints?)
 ;===============================================
 
-.include "kerrek.inc"
+.include "kerrek.inc.lookup"
 
 ;===========================
 ; Outside Baby Lady Cottage

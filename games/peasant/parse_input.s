@@ -514,9 +514,9 @@ parse_common_where:
 	lda	location_names_h,X
 	sta	INH
 
-        lda     #<(where_message+22)
+        lda     #<(where_message_offset)
         sta     OUTL
-        lda     #>(where_message+22)
+        lda     #>(where_message_offset)
 	sta	OUTH
 
 	ldy	#0

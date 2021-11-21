@@ -310,6 +310,7 @@ PEASANT1:	peasant1.o
 peasant1.o:	peasant1.s zp.inc inventory.inc \
 		parse_input.inc \
 		peasant1_actions.s DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
+		text/peasant1.inc text/kerrek.inc \
 		kerrek_actions.s \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
@@ -366,6 +367,7 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 		sprites/ned_sprites.inc \
 		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
 		kerrek_actions.s \
+		text/peasant4.inc text/kerrek.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -499,6 +501,8 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_common_look parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_get parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_climb parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_common_load parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_common_save parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s get_noun_again parse_input.lst >> parse_input.inc
 
 
