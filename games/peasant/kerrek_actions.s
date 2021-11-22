@@ -6,6 +6,12 @@
 ;	if dead on this screen
 ;	if dead not on this screen
 
+	;=======================
+	;=======================
+	; kerrek setup
+	;=======================
+	;=======================
+	; call at beginning of level to setup kerrek state
 
 kerrek_setup:
 	; first see if Kerrek alive
@@ -19,9 +25,9 @@ kerrek_setup_alive:
 	beq	kerrek_alive_not_there
 kerrek_alive_out:
 
-	lda	#20
+	lda	#22
 	sta	KERREK_X
-	lda	#100
+	lda	#76
 	sta	KERREK_Y
 	lda	#0
 	sta	KERREK_DIRECTION
@@ -71,6 +77,81 @@ kerrek_row4:
 	bne	kerrek_not_there
 
 	rts
+
+
+
+	;=======================
+	;=======================
+	; kerrek collision
+	;=======================
+	;=======================
+	; see if the kerrek got us
+
+kerrek_collision:
+
+	; first, only if kerrek out
+
+	lda	#KERREK_STATE
+	bpl	kerrek_no_collision
+
+
+	; first check X
+
+	; if (peasant_x >= kerrek_x-1) && (peasant_x<=kerrek_x+2)
+	;   this is roughly equivelant to |kerrek_x-peasant_x|  < 2
+
+	lda	KERREK_X
+	sec
+	sbc	PEASANT_X
+	bpl	kerrek_x_distance_good
+kerrek_x_distance_negate:
+	eor	#$FF
+	clc
+	adc	#1
+kerrek_x_distance_good:
+	cmp	#2
+	bcs	kerrek_no_collision
+
+	; next check Y
+
+	;   this is roughly equivelant to |kerrek_y+20-peasant_y|  < 5
+
+	lda	KERREK_Y
+	clc
+	adc	#20
+	sec
+	sbc	PEASANT_Y
+	bpl	kerrek_y_distance_good
+kerrek_y_distance_negate:
+	eor	#$FF
+	clc
+	adc	#1
+kerrek_y_distance_good:
+	cmp	#5
+	bcs	kerrek_no_collision
+
+
+kerrek_got_ya:
+	; game over, man!
+
+	; animate pounding you into ground
+
+	ldx	#<kerrek_pound_message
+	ldy	#>kerrek_pound_message
+	jsr	partial_message_step
+
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+kerrek_no_collision:
+
+	rts
+
+
+
 
 
 	;=======================

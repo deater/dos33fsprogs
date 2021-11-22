@@ -2,7 +2,10 @@
 ; Kerrek Tracks 1/2 (top or bottom footprints?)
 ;================================================
 
-; (Walk too close to the Kerrek) — {The Kerrek pounds your head into the ground}
+; (Walk too close to the Kerrek)
+; {The Kerrek pounds your head into the ground}
+; then prints message
+kerrek_pound_message:
 .byte "Your mom always told you",13
 .byte "not to take head poundings",13
 .byte "from strange Kerreks. And",13

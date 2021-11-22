@@ -196,6 +196,8 @@ game_loop:
 
 	jsr	check_keyboard
 
+	jsr	kerrek_collision
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over
