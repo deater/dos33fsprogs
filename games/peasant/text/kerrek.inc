@@ -13,20 +13,23 @@ kerrek_pound_message:
 .byte "You dead. Thanks for",13
 .byte "playing.",0
 
+
 ; + 5 POINTS
 ; + kill kerrek
 ; + shoot Kerrek with bow
+kerrek_kill_message:
 .byte "Here goes nothin', Kid",13
 .byte "Icarus",0
 
 ; animation of shooting him, him falling
 
+kerrek_kill_message2:
 .byte "ARROWED!! Nice shot. You",13
 .byte "smote the Kerrek! He lay",13
 .byte "there stinking.",0
 
 ; pause
-
+kerrek_kill_message3:
 .byte "A light rain heralds the",13
 .byte "washing free of the",13
 .byte "Kerrek's grip on the land.",13
@@ -36,24 +39,30 @@ kerrek_pound_message:
 .byte "bug you.",0
 
 ; + kill kerrek (he is there, no bow or arrow)
+kerrek_kill_no_bow_no_arrow_message:
 .byte "With what?! You got no",13
 .byte "weapons except your",13
 .byte "butter-knife wit.",0
 
 ; + kill kerrek (he is there, you have arrow but not bow)
+kerrek_kill_only_arrow_message:
 .byte "With what?! You gonna throw",13
 .byte "that arrow at him?",0
 
 ; + kill kerrek (he is there, you have bow, not arrow
+kerrek_kill_only_bow_message:
 .byte "With what?! You got no",13
 .byte "arrow, fool!",0
 
 ; + kill kerrek (he is dead)
+;  even if not on screen with dead body
+kerrek_kill_kerrek_dead_message:
 .byte "Yeah. You smote the Kerrek.",13
 .byte "You deserve a trophy full",13
 .byte "of Mutton-ums.",0
 
 ; + kill kerrek (he is not there)
+kerrek_kill_kerrek_not_there_message:
 .byte "Good idea. But you kinda",13
 .byte "need the actual Kerrek to",13
 .byte "be here for that to work.",0

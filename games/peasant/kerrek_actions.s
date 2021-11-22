@@ -29,7 +29,7 @@ kerrek_alive_out:
 	sta	KERREK_X
 	lda	#76
 	sta	KERREK_Y
-	lda	#0
+	lda	#1			; right
 	sta	KERREK_DIRECTION
 	lda	#1
 	sta	KERREK_SPEED
@@ -348,8 +348,87 @@ kerrek_save:
 	;=================
 kerrek_kill:
 kerrek_shoot:
+	; check we are trying to kill kerrek?
+	lda	CURRENT_NOUN
+	cmp	#NOUN_KERREK
+	beq	kerrek_kill_kerrek
 
-	rts
+	jmp	parse_common_unknown
+
+kerrek_kill_kerrek:
+
+	; first check if Kerrek is alive
+	lda	KERREK_STATE
+	and	#$f
+	bpl	kerrek_kill_still_alive
+
+kerrek_kill_hes_dead:
+	ldx	#<kerrek_kill_kerrek_dead_message
+	ldy	#>kerrek_kill_kerrek_dead_message
+	jmp	finish_parse_message
+
+kerrek_kill_still_alive:
+
+	; next check if he's on screen
+	lda	KERREK_STATE
+	bmi	kerrek_kill_on_screen
+
+kerrek_kill_off_screen:
+	ldx	#<kerrek_kill_kerrek_not_there_message
+	ldy	#>kerrek_kill_kerrek_not_there_message
+	jmp	finish_parse_message
+
+kerrek_kill_on_screen:
+	; he's alive and on screen
+
+	; check if have bow and arrow
+
+	lda	INVENTORY_1
+	and	#(INV1_BOW | INV1_ARROW)
+	beq	kerrek_kill_no_bow_no_arrow
+	cmp	#INV1_BOW
+	beq	kerrek_kill_only_bow
+	cmp	#INV1_ARROW
+	beq	kerrek_kill_only_arrow
+
+kerrek_actually_kill:
+	ldx	#<kerrek_kill_message
+	ldy	#>kerrek_kill_message
+	jsr	partial_message_step
+
+	ldx	#<kerrek_kill_message2
+	ldy	#>kerrek_kill_message2
+	jsr	partial_message_step
+
+	lda	#5
+	jsr	score_points
+
+	inc	KERREK_STATE	; make kerrek dead
+
+	lda	GAME_STATE_1
+	ora	#(RAINING|PUDDLE_WET)
+	sta	GAME_STATE_1
+
+
+	ldx	#<kerrek_kill_message3
+	ldy	#>kerrek_kill_message3
+	jmp	finish_parse_message
+
+
+kerrek_kill_only_bow:
+	ldx	#<kerrek_kill_only_bow_message
+	ldy	#>kerrek_kill_only_bow_message
+	jmp	finish_parse_message
+
+kerrek_kill_only_arrow:
+	ldx	#<kerrek_kill_only_arrow_message
+	ldy	#>kerrek_kill_only_arrow_message
+	jmp	finish_parse_message
+
+kerrek_kill_no_bow_no_arrow:
+	ldx	#<kerrek_kill_no_bow_no_arrow_message
+	ldy	#>kerrek_kill_no_bow_no_arrow_message
+	jmp	finish_parse_message
 
 
 	;=================
