@@ -53,7 +53,7 @@ kerrek_alive_not_there:
 
 kerrek_not_there:
 	lda	KERREK_STATE
-	and	#(~KERREK_ONSCREEN)
+	and	#<(~KERREK_ONSCREEN)
 	sta	KERREK_STATE
 	rts
 
