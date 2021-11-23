@@ -14,6 +14,10 @@ jhonka_cave_verb_table:
 	.word jhonka_climb-1
 	.byte VERB_GET
 	.word jhonka_get-1
+	.byte VERB_TAKE
+	.word jhonka_get-1
+	.byte VERB_STEAL
+	.word jhonka_get-1
 	.byte VERB_JUMP
 	.word jhonka_jump-1
 	.byte VERB_LOOK
@@ -24,6 +28,8 @@ jhonka_cave_verb_table:
 	.word jhonka_read-1
 	.byte VERB_KNOCK
 	.word jhonka_knock-1
+	.byte VERB_ASK
+	.word jhonka_ask-1
 	.byte 0
 
 
@@ -49,13 +55,50 @@ jhonka_climb_fence:
 	; get
 	;================
 jhonka_get:
+	; check if alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_get_kerrek_dead
+
+jhonka_get_kerrek_alive:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_RICHES
+	beq	jhonka_get_riches
+	cmp	#NOUN_CLUB
+	beq	jhonka_get_club
+	cmp	#NOUN_LEG
+	beq	jhonka_get_club
+
+	; else "probably wish" message
+	jmp	parse_common_get
+
+jhonka_get_riches:
+
+	; TODO: see if in hay
+
+	ldx	#<jhonka_steal_riches_message
+	ldy	#>jhonka_steal_riches_message
+
+	; TODO: points, etc
+
+	jmp	finish_parse_message
+
+jhonka_get_club:
+	ldx	#<jhonka_get_club_message
+	ldy	#>jhonka_get_club_message
+	jmp	finish_parse_message
+
+
+jhonka_get_kerrek_dead:
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_NOTE
 	beq	jhonka_get_note
 
 	; else "probably wish" message
-
 	jmp	parse_common_get
 
 jhonka_get_note:
@@ -155,6 +198,63 @@ jhonka_knock_door:
 	jmp	finish_parse_message
 
 
+
+	;================
+	; ask
+	;================
+jhonka_ask:
+	; check if alive
+	lda	KERREK_STATE
+	and	#$f
+	beq	jhonka_ask_kerrek_alive
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_FIRE
+	beq	jhonka_ask_fire
+	cmp	#NOUN_JHONKA
+	beq	jhonka_ask_jhonka
+	cmp	#NOUN_NED
+	beq	jhonka_ask_ned
+	cmp	#NOUN_ROBE
+	beq	jhonka_ask_ned
+	cmp	#NOUN_SMELL
+	beq	jhonka_ask_smell
+	cmp	#NOUN_TROGDOR
+	beq	jhonka_ask_smell
+
+jhonka_ask_unknown:
+	ldx	#<jhonka_ask_about_unknown_message
+	ldy	#>jhonka_ask_about_unknown_message
+	jmp	finish_parse_message
+
+jhonka_ask_fire:
+	ldx	#<jhonka_ask_about_fire_message
+	ldy	#>jhonka_ask_about_fire_message
+	jmp	finish_parse_message
+
+jhonka_ask_jhonka:
+	ldx	#<jhonka_ask_about_jhonka_message
+	ldy	#>jhonka_ask_about_jhonka_message
+	jmp	finish_parse_message
+
+jhonka_ask_ned:
+	ldx	#<jhonka_ask_about_ned_message
+	ldy	#>jhonka_ask_about_ned_message
+	jmp	finish_parse_message
+
+jhonka_ask_smell:
+	ldx	#<jhonka_ask_about_smell_message
+	ldy	#>jhonka_ask_about_smell_message
+	jmp	finish_parse_message
+
+jhonka_ask_trogdor:
+	ldx	#<jhonka_ask_about_trogdor_message
+	ldy	#>jhonka_ask_about_trogdor_message
+	jmp	finish_parse_message
+
+jhonka_ask_kerrek_alive:
+	jmp	parse_common_ask
 
 
 

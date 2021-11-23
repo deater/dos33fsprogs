@@ -5,16 +5,89 @@ peasant3_dialog_start:
 ;=============
 
 ; TODO
-; + Type any command other than "yes" or "no" after the Jhonka asks if you stole the riches
-; you can't walk while waiting here
-.byte "Just answer him, yes or no,",13
-.byte "you fool!",0
+; + (walk in haystack)
+.byte "Hey, nice disguise! The",13
+.byte "Jhonka doesn't seem to",13
+.byte "notice you.",0
+
+
+; kerrek alive
 
 ; + look
 jhonka_look_at_message:
 .byte "There's a little cave with",13
 .byte "a little door with a little",13
 .byte "note on it.",0
+
+; + look door (before kerrek)		; not in WIKI
+.byte "There's a little note on it.",0
+
+; + look cave
+jhonka_look_at_cave_message:
+.byte "Just a little cave. Calm",13
+.byte "down.",0
+
+; + look fence
+; same as alive
+jhonka_look_at_fence_message:
+.byte "A standard peasant fence.",13
+.byte "Trogdor makes milk's meat",13
+.byte "outta these things.",0
+
+; + look/read note (before killing Kerrek) [ will walk to it if far away]
+jhonka_read_note_message:
+.byte "It says ",34,"scared of kerrek.",13
+.byte "go way. -j",34,0
+
+; + open door [ will walk you there] {before jhonka out}
+; ??????
+jhonka_open_door_message:
+.byte "It's locked. With one o'",13
+.byte "them SCHLAGE deadbolts,",13
+.byte "too. Those things are hard",13
+.byte "core.",0
+
+; TODO
+; + knock (while he's inside) [ will walk over]
+jhonka_knock_message1:
+.byte "A gravelly voice inside",13
+.byte "yells, 'JUST US CHICKENS'",0
+; or
+.byte "A gravelly voice inside",13
+.byte "yells, 'NO FOR RENT'",0
+; or 
+.byte "A gravelly voice inside",13
+.byte "yells, 'I GIVE LAST YEAR!'",0
+; or 
+.byte "A gravelly voice inside",13
+.byte "yells, 'GAVE AT OFFICE'",0
+; or: 
+.byte "A gravelly voice inside",13
+.byte "yells, 'GO WAY!'",0
+
+; + get note (kerrek alive)
+jhonka_get_note_message:
+.byte "It's been magically sealed",13
+.byte "to the door with a",13
+.byte "wondrously whimsical spell.",0
+
+; + climb/jump fence
+jhonka_climb_fence_message:
+.byte "No, you have business to",13
+.byte "attend to here in",13
+.byte "Peasantry.",0
+
+
+;================================
+; kerrek dead
+
+
+; TODO
+; + Type any command other than "yes" or "no" 
+; after the Jhonka asks if you stole the riches
+; you can't walk while waiting here
+.byte "Just answer him, yes or no,",13
+.byte "you fool!",0
 
 ; TODO
 ; + look (kerrek dead, before riches)
@@ -38,9 +111,7 @@ jhonka_look_at_message:
 .byte "gnawing on it.",0
 
 ; + look cave
-jhonka_look_at_cave_message:
-.byte "Just a little cave. Calm",13
-.byte "down.",0
+; same as alive?
 
 ; + look door (after kerrek?)		; not in WIKI
 .byte "Just a door, nothing more.",0
@@ -50,12 +121,8 @@ jhonka_look_at_cave_message:
 .byte "riches alright.",0
 
 ; + look fence
-jhonka_look_at_fence_message:
-.byte "A standard peasant fence.",13
-.byte "Trogdor makes milk's meat",13
-.byte "outta these things.",0
+; same as alive
 
-; TODO
 ; + look jhonka (when he's outside)
 .byte "The Jhonka is gray and",13
 .byte "grody. He's got a cromagnon",13
@@ -67,20 +134,21 @@ jhonka_look_at_fence_message:
 .byte "roasted turkey legs you got",13
 .byte "at the Ren Fest.",0
 
-; TODO
-; + look/read note (before killing Kerrek) [ will walk to it if far away]
-jhonka_read_note_message:
-.byte "It says ",34,"scared of kerrek.",13
-.byte "go way. -j",34,0
+
+; + get club / leg  (when he's out)
+jhonka_get_club_message:
+.byte "Now there's a surefire way",13
+.byte "to get yourself killed.",0
 
 ; TODO
-; + (walk in haystack)
-.byte "Hey, nice disguise! The",13
-.byte "Jhonka doesn't seem to",13
-.byte "notice you.",0
+; + get riches (before jumping in hay)
+.byte "The Jhonka will see you!",13
+.byte "And rip out your jugular",13
+.byte "with his teeth or something",13
+.byte "equally horrible.",0
 
-; TODO
 ; + steal/get riches
+jhonka_steal_riches_message:
 .byte "Oh OH! A stiff breeze blew",13
 .byte "all the hay and,",13
 .byte "surprisingly, the mud off",13
@@ -109,13 +177,13 @@ jhonka_read_note_message:
 .byte "Thanks for playing!",0
 
 
-; TODO
 ; + ask about fire
+jhonka_ask_about_fire_message:
 .byte 34,"Burninator make fire!",13
 .byte "Barbecue all peasants!",34,0
 
-; TODO
 ; + ask about Jhonka
+jhonka_ask_about_jhonka_message:
 .byte 34,"The Kerrek is dead!",34," he",13
 .byte "cries and hops around some",13
 .byte "more. You wonder how",13
@@ -123,16 +191,16 @@ jhonka_read_note_message:
 .byte "could have made that much",13
 .byte " dough.",0
 
-; TODO
 ; + ask about naked ned (or) robe
+jhonka_ask_about_ned_message:
 .byte 34,"Filthy naked peasant!",13
 .byte "Stay away from my",13
 .byte "cave-hole!",34," Who's he",13
 .byte "calling naked? HE'S the one",13
 .byte "wearing the string bikini.",0
 
-; TODO
 ; + ask about smell
+jhonka_ask_about_smell_message:
 .byte 34,"Kerrek smell! Now Kerrek",13
 .byte "dead!",34," screeches the",13
 .byte "Jhonka. So you can infer",13
@@ -141,68 +209,25 @@ jhonka_read_note_message:
 .byte "at the analytical",13
 .byte "questions.",0
 
-; TODO
 ; + ask about trogdor
+jhonka_ask_about_trogdor_message:
 .byte 34,"All hail Burninator!",13
 .byte "Trogdor Number One! Beat",13
 .byte "Peasant Tech!",34," says the",13
 .byte "grimy Jhonka.",0
 
-; TODO
 ; + ask about (unknown)
+jhonka_ask_about_unknown_message:
 .byte 34,"Jhonka don't know nothing",13
 .byte "bout that!",34,0
 
-
-
-; + open door [ will walk you there] {before jhonka out}
-jhonka_open_door_message:
-.byte "It's locked. With one o'",13
-.byte "them SCHLAGE deadbolts,",13
-.byte "too. Those things are hard",13
-.byte "core.",0
-
-; TODO
-; + knock (while he's inside) [ will walk over]
-jhonka_knock_message1:
-.byte "A gravelly voice inside",13
-.byte "yells, 'JUST US CHICKENS'",0
-; or
-.byte "A gravelly voice inside",13
-.byte "yells, 'NO FOR RENT'",0
-; or 
-.byte "A gravelly voice inside",13
-.byte "yells, 'I GIVE LAST YEAR!'",0
-; or 
-.byte "A gravelly voice inside",13
-.byte "yells, 'GAVE AT OFFICE'",0
-; or: 
-.byte "A gravelly voice inside",13
-.byte "yells, 'GO WAY!'",0
+; open door?
 
 ; TODO
 ; + kill jhonka (outside)
 .byte "No way! Jhonka's are born",13	; [sic]
 .byte "scrappers. He may be",13
 .byte "little, but he'll crawl ya.",0
-
-; TODO
-; + get club (when he's out)
-.byte "Now there's a surefire way",13
-.byte "to get yourself killed.",0
-
-; + get note
-jhonka_get_note_message:
-.byte "It's been magically sealed",13
-.byte "to the door with a",13
-.byte "wondrously whimsical spell.",0
-
-; TODO
-; + get riches (before jumping in hay)
-.byte "The Jhonka will see you!",13
-.byte "And rip out your jugular",13
-.byte "with his teeth or something",13
-.byte "equally horrible.",0
 
 ; + give / give {anything}
 .byte 34,"Don't need nothing from no",13
@@ -214,18 +239,17 @@ jhonka_get_note_message:
 
 ; + talk
 ; + talk jhonka (jhonka there, not in hay)
-.byte 34,"The Kerrek is dead!",34," he",13
-.byte "cries and hops around some",13
-.byte "more. You wonder how",13
-.byte "someone this primitive",13
-.byte "could have made that much",13
-.byte "dough.",0
+; same as look jhonka?
+;.byte 34,"The Kerrek is dead!",34," he",13
+;.byte "cries and hops around some",13
+;.byte "more. You wonder how",13
+;.byte "someone this primitive",13
+;.byte "could have made that much",13
+;.byte "dough.",0
 
 ; + climb/jump fence
-jhonka_climb_fence_message:
-.byte "No, you have business to",13
-.byte "attend to here in",13
-.byte "Peasantry.",0
+; same as alive
+
 
 ;=========================
 ; Your Burninated Cottage
