@@ -19,7 +19,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	GATOR.BAS CURSOR.BAS STARGATE.BAS TUNNEL.BAS STARFIELD.BAS \
 	STAROOPS.BAS HGRSTARFIELD.BAS COOL_BOT.BAS WEB.BAS ORB.BAS \
 	FIREWORKS.BAS THINKING.BAS ARCS.BAS WIRE_HGR.BAS STATIC.BAS \
-	OVAL.BAS OVAL_HGR.BAS MOVING.BAS
+	OVAL.BAS OVAL_HGR.BAS MOVING.BAS THICK_SINE.BAS
 
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
@@ -102,6 +102,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A OVAL.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A OVAL_HGR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A MOVING.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A THICK_SINE.BAS
 
 ####
 
@@ -228,6 +229,11 @@ FALLING.BAS:	falling.bas
 
 SNOW.BAS:	snow.bas
 	$(TOKENIZE) < snow.bas > SNOW.BAS
+
+####
+
+THICK_SINE.BAS:	thick_sine.bas
+	$(TOKENIZE) < thick_sine.bas > THICK_SINE.BAS
 
 ####
 
