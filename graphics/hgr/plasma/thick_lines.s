@@ -1,8 +1,4 @@
-; thick sine
-
-; TODO: could we get this down to 64 bytes?
-;	put the sine table in the zero page?
-;	only generate 64 bytes of sine?
+; thick lines
 
 
 ; zero page
@@ -131,15 +127,12 @@ blah:
 	jmp	draw_circle
 
 
-sinetable_base:
+;sinetable_base:
 ; this is actually (32*sin(x))
-.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20
 
 	; for bot
 	; 3F5 - 7d = 378
 ;	jmp	oval
 
 sinetable=$6000
-;sinetable_base=$F5BA
+sinetable_base=$F5BA

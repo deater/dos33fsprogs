@@ -8,10 +8,11 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 all:	plasma_hgr.dsk
 
 plasma_hgr.dsk:	HELLO OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_FLIP MOVING \
-		MIRROR THICK_SINE
+		MIRROR THICK_SINE THICK_LINES
 	cp $(EMPTYDISK) plasma_hgr.dsk
 	$(DOS33) -y plasma_hgr.dsk SAVE A HELLO
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 THICK_SINE
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3F5 THICK_LINES
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OVAL
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 PURPLE_WAVES
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 ZEBRA
@@ -49,6 +50,14 @@ THICK_SINE:	thick_sine.o
 
 thick_sine.o:	thick_sine.s
 	ca65 -o thick_sine.o thick_sine.s -l thick_sine.lst
+
+###
+
+THICK_LINES:	thick_lines.o
+	ld65 -o THICK_LINES thick_lines.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+
+thick_lines.o:	thick_lines.s
+	ca65 -o thick_lines.o thick_lines.s -l thick_lines.lst
 
 ###
 
@@ -106,5 +115,5 @@ purple_waves.o:	purple_waves.s
 
 clean:	
 	rm -f *~ *.o *.lst OVAL PURPLE_WAVES ZEBRA JAWS TWIST OVAL_FLIP \
-			THICK_SINE
+			THICK_SINE THICK_LINES
 
