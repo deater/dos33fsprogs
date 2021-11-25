@@ -1,0 +1,28 @@
+15	0	39	0	47	; background	; C x1 x2 y1 y2
+13	8	30	13	31	; yellow feathers
+1	4	35	28	32	; red feathers
+9	5	34	21	26	; orange feathers
+9	10	13	7	14	; orange upper left
+9	12	15	13	20	; orange lower left
+9	26	29	6	14	; orange upper right
+9	24	27	13	20	; orange lower right
+1	16	23	5	12	; upper red
+8	17	22	10	16	; head
+8	19	20	17	20	; neck
+8	12	27	21	39	; body 1
+8	10	29	23	36	; body 2
+8	8	9	37	39	; left wing
+8	30	31	37	39	; right wing
+9	15	15	39	44	; left leg
+9	24	24	39	44	; right leg
+9	14	16	44	44	; left foot
+9	23	25	44	44	; right foot
+0	18	21	1	7	; hat
+0	16	23	8	9	; brim
+15	18	21	10	12	; eyes
+0	18	21	12	12	; eyes
+8	19	20	10	12	; eye break
+9	19	20	14	16	; beak
+9	18	21	14	14	; beak
+8	18	21	6	7	; hat brim
+13	20	21	6	7	; hat buckle
