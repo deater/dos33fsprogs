@@ -58,9 +58,9 @@ jhonka_get:
 	; check if alive
 	lda	KERREK_STATE
 	and	#$f
-	bne	jhonka_get_kerrek_dead
+	beq	jhonka_get_kerrek_alive
 
-jhonka_get_kerrek_alive:
+jhonka_get_kerrek_dead:
 
 	lda	CURRENT_NOUN
 
@@ -70,6 +70,8 @@ jhonka_get_kerrek_alive:
 	beq	jhonka_get_club
 	cmp	#NOUN_LEG
 	beq	jhonka_get_club
+	cmp	#NOUN_NOTE
+	beq	jhonka_get_note
 
 	; else "probably wish" message
 	jmp	parse_common_get
@@ -91,7 +93,8 @@ jhonka_get_club:
 	jmp	finish_parse_message
 
 
-jhonka_get_kerrek_dead:
+
+jhonka_get_kerrek_alive:
 
 	lda	CURRENT_NOUN
 
@@ -113,6 +116,85 @@ jhonka_get_note:
 
 jhonka_look:
 
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	beq	jhonka_look_kerrek_alive
+
+
+jhonka_look_kerrek_dead:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	jhonka_look_at_door_out
+	cmp	#NOUN_JHONKA
+	beq	jhonka_look_at_jhonka_out
+	cmp	#NOUN_RICHES
+	beq	jhonka_look_at_riches
+	cmp	#NOUN_CLUB
+	beq	jhonka_look_at_club
+	cmp	#NOUN_LEG
+	beq	jhonka_look_at_leg
+
+	cmp	#NOUN_NONE
+	beq	jhonka_look_at_out
+
+	; these are same as kerrek alive
+	cmp	#NOUN_FENCE
+	beq	jhonka_look_at_fence
+	cmp	#NOUN_CAVE
+	beq	jhonka_look_at_cave
+
+jhonka_look_not_there:
+	jmp	parse_common_look
+
+jhonka_look_at_out:
+	; see if riches still there
+
+	lda	INVENTORY_2
+	and	#INV2_RICHES
+	bne	jhonka_look_at_no_riches
+
+jhonka_look_at_with_riches:
+	ldx	#<jhonka_look_at_with_riches_message
+	ldy	#>jhonka_look_at_with_riches_message
+	jmp	finish_parse_message
+
+jhonka_look_at_no_riches:
+	ldx	#<jhonka_look_at_no_riches_message
+	ldy	#>jhonka_look_at_no_riches_message
+	jmp	finish_parse_message
+
+
+jhonka_look_at_riches:
+	; see if riches still there
+
+	lda	INVENTORY_2
+	and	#INV2_RICHES
+	bne	jhonka_look_not_there
+
+	ldx	#<jhonka_look_at_riches_message
+	ldy	#>jhonka_look_at_riches_message
+	jmp	finish_parse_message
+
+jhonka_look_at_club:
+jhonka_look_at_leg:
+	ldx	#<jhonka_look_at_club_message
+	ldy	#>jhonka_look_at_club_message
+	jmp	finish_parse_message
+
+jhonka_look_at_door_out:
+	ldx	#<jhonka_look_at_door_out_message
+	ldy	#>jhonka_look_at_door_out_message
+	jmp	finish_parse_message
+
+jhonka_look_at_jhonka_out:
+	ldx	#<jhonka_look_at_jhonka_out_message
+	ldy	#>jhonka_look_at_jhonka_out_message
+	jmp	finish_parse_message
+
+
+jhonka_look_kerrek_alive:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_FENCE
@@ -121,6 +203,8 @@ jhonka_look:
 	beq	jhonka_look_at_cave
 	cmp	#NOUN_NOTE
 	beq	jhonka_read_note
+	cmp	#NOUN_DOOR
+	beq	jhonka_look_at_door
 
 	cmp	#NOUN_NONE
 	beq	jhonka_look_at
@@ -137,6 +221,11 @@ jhonka_look_at_cave:
 	ldy	#>jhonka_look_at_cave_message
 	jmp	finish_parse_message
 
+jhonka_look_at_door:
+	ldx	#<jhonka_look_at_door_message
+	ldy	#>jhonka_look_at_door_message
+	jmp	finish_parse_message
+
 jhonka_look_at_fence:
 	ldx	#<jhonka_look_at_fence_message
 	ldy	#>jhonka_look_at_fence_message
@@ -147,11 +236,18 @@ jhonka_look_at_fence:
 	; read
 	;================
 jhonka_read:
+
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_cant_read_note
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_NOTE
 	beq	jhonka_read_note
 
+jhonka_cant_read_note:
 	jmp	parse_common_unknown
 
 jhonka_read_note:
@@ -164,6 +260,11 @@ jhonka_read_note:
 	; open
 	;================
 jhonka_open:
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_cant_open_door
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_DOOR
@@ -171,6 +272,7 @@ jhonka_open:
 	cmp	#NOUN_NONE
 	beq	jhonka_open_door
 
+jhonka_cant_open_door:
 	jmp	parse_common_unknown
 
 jhonka_open_door:
@@ -183,6 +285,11 @@ jhonka_open_door:
 	; knock
 	;================
 jhonka_knock:
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_cant_knock_door
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_DOOR
@@ -190,12 +297,51 @@ jhonka_knock:
 	cmp	#NOUN_NONE
 	beq	jhonka_knock_door
 
+jhonka_cant_knock_door:
 	jmp	parse_common_unknown
 
 jhonka_knock_door:
+	jsr	random16
+	and	#$7
+
+	beq	jhonka_knock5
+	cmp	#$1
+	beq	jhonka_knock4
+	cmp	#$2
+	beq	jhonka_knock3
+	cmp	#$3
+	beq	jhonka_knock2
+
+	cmp	#$4
+	beq	jhonka_knock5
+	cmp	#$5
+	beq	jhonka_knock4
+
+jhonka_knock1:
 	ldx	#<jhonka_knock_message1
 	ldy	#>jhonka_knock_message1
 	jmp	finish_parse_message
+
+jhonka_knock2:
+	ldx	#<jhonka_knock_message2
+	ldy	#>jhonka_knock_message2
+	jmp	finish_parse_message
+
+jhonka_knock3:
+	ldx	#<jhonka_knock_message3
+	ldy	#>jhonka_knock_message3
+	jmp	finish_parse_message
+
+jhonka_knock4:
+	ldx	#<jhonka_knock_message4
+	ldy	#>jhonka_knock_message4
+	jmp	finish_parse_message
+
+jhonka_knock5:
+	ldx	#<jhonka_knock_message5
+	ldy	#>jhonka_knock_message5
+	jmp	finish_parse_message
+
 
 
 

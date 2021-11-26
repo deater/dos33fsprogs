@@ -13,13 +13,14 @@ peasant3_dialog_start:
 
 ; kerrek alive
 
-; + look
+; + look (kerrek alive)
 jhonka_look_at_message:
 .byte "There's a little cave with",13
 .byte "a little door with a little",13
 .byte "note on it.",0
 
-; + look door (before kerrek)		; not in WIKI
+; + look door (kerrek alive)		; not in WIKI
+jhonka_look_at_door_message:
 .byte "There's a little note on it.",0
 
 ; + look cave
@@ -28,7 +29,6 @@ jhonka_look_at_cave_message:
 .byte "down.",0
 
 ; + look fence
-; same as alive
 jhonka_look_at_fence_message:
 .byte "A standard peasant fence.",13
 .byte "Trogdor makes milk's meat",13
@@ -39,29 +39,32 @@ jhonka_read_note_message:
 .byte "It says ",34,"scared of kerrek.",13
 .byte "go way. -j",34,0
 
-; + open door [ will walk you there] {before jhonka out}
-; ??????
+; + open door [ will walk you there] {before jhonka out, if jhonka out nothing)
 jhonka_open_door_message:
 .byte "It's locked. With one o'",13
 .byte "them SCHLAGE deadbolts,",13
 .byte "too. Those things are hard",13
 .byte "core.",0
 
-; TODO
+
 ; + knock (while he's inside) [ will walk over]
 jhonka_knock_message1:
 .byte "A gravelly voice inside",13
-.byte "yells, 'JUST US CHICKENS'",0
-; or
+.byte "yells,  'JUST US CHICKENS'",0
+
+jhonka_knock_message2:
 .byte "A gravelly voice inside",13
 .byte "yells, 'NO FOR RENT'",0
-; or 
+
+jhonka_knock_message3:
 .byte "A gravelly voice inside",13
 .byte "yells, 'I GIVE LAST YEAR!'",0
-; or 
+
+jhonka_knock_message4:
 .byte "A gravelly voice inside",13
 .byte "yells, 'GAVE AT OFFICE'",0
-; or: 
+
+jhonka_knock_message5:
 .byte "A gravelly voice inside",13
 .byte "yells, 'GO WAY!'",0
 
@@ -81,7 +84,6 @@ jhonka_climb_fence_message:
 ;================================
 ; kerrek dead
 
-
 ; TODO
 ; + Type any command other than "yes" or "no" 
 ; after the Jhonka asks if you stole the riches
@@ -89,34 +91,37 @@ jhonka_climb_fence_message:
 .byte "Just answer him, yes or no,",13
 .byte "you fool!",0
 
-; TODO
 ; + look (kerrek dead, before riches)
+jhonka_look_at_with_riches_message:
 .byte "There's a disgusting",13
 .byte "little Jhonka hopping",13
 .byte "around outside a little",13
 .byte "cave.A fat pile of riches",13
 .byte "lies next to him.",0
 
-; TODO
 ; + look (after kerrek dead, after take riches)
+jhonka_look_at_no_riches_message:
 .byte "There's a disgusting",13
 .byte "little Jhonka hopping",13
 .byte "around outside a small",13	; WIKI wrong
 .byte "cave.",0
 
-; TODO
+
 ; + look club/turkey leg (when he's outside)
+jhonka_look_at_club_message:
 .byte "Turkey leg or no, it looks",13
 .byte "like the Jhonka's been",13
 .byte "gnawing on it.",0
 
 ; + look cave
-; same as alive?
+; same as alive
 
 ; + look door (after kerrek?)		; not in WIKI
+jhonka_look_at_door_out_message:
 .byte "Just a door, nothing more.",0
 
 ; + look riches
+jhonka_look_at_riches_message:
 .byte "That's one fat pile of",13
 .byte "riches alright.",0
 
@@ -124,6 +129,7 @@ jhonka_climb_fence_message:
 ; same as alive
 
 ; + look jhonka (when he's outside)
+jhonka_look_at_jhonka_out_message:
 .byte "The Jhonka is gray and",13
 .byte "grody. He's got a cromagnon",13
 .byte "forehead and jaw with a",13
