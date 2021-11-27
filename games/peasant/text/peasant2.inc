@@ -546,7 +546,10 @@ talk_knight_fifth_message:
 .byte "Type SAVE or LOAD to save",13
 .byte "or load your game. Duh.",0
 
+
 ; + talk knight (with kerrek's belt)
+; starts here, this alone
+talk_knight_after_belt_message:
 .byte "Frankly, Matthew",13
 .byte "Broderick, you sure stink",13
 .byte "like a peasant. But you",13
@@ -555,17 +558,42 @@ talk_knight_fifth_message:
 .byte "FIRE like a peasant.",0
 
 ; + talk knight (with ned's robe, on fire or not)
-.byte "My dear Adso, you are dressed well but you don't STINK and you're not ON FIRE. Let us instead exercise our brains and try to solve this tantalizing conundrum.",0
+talk_knight_after_robe_message:		; guessed at spacing
+.byte "My dear Adso, you are",13
+.byte "dressed well but you don't",13
+.byte "STINK and you're not ON",13
+.byte "FIRE. Let us instead",13
+.byte "exercise our brains and",13
+.byte "try to solve this",13
+.byte "tantalizing conundrum.",0
 
 ; + talk knight (after acquiring Kerrek's belt and Naked Ned's robe)
-.byte "Almost there, Dirk the Daring. You stink like a peasant and you dress like one too. But you're clearly still not ON FIRE.",0
+talk_knight_after_robe_and_belt_message:
+.byte "Almost there, Dirk the",13
+.byte "Daring. You stink like a",13
+.byte "peasant and you dress like",13
+.byte "one too. But you're clearly",13
+.byte "still not ON FIRE.",0
 
 ; + 7 POINTS
-; + talk knight (after have all three)
-.byte "Lookin good, Mr. Peasant. Good luck with ol' Beefy Arm up there.",0
-.byte "This is it! You can finally get revenge on Trogdor! Nice work so far, stupid!",0
-.byte "Please insert floppy disk 2 into Drive B and press enter.",0
-.byte "Disk read error. Please insert floppy disk 2 into Drive B and press enter.",0
+; + talk knight (after have robe, belt, and on fire)
+talk_knight_after_robe_belt_fire_message:
+.byte "Lookin good, Mr. Peasant.",13
+.byte "Good luck with ol' Beefy",13
+.byte "Arm up there.",0
+
+talk_knight_after_robe_belt_fire_message2:
+.byte "This is it! You can finally",13
+.byte "get revenge on Trogdor! Nice",13
+.byte "work so far, stupid!",0
+
+; Not included, would probably just confuse people
+;.byte "Please insert floppy disk 2",13
+;.byte "into Drive B and press enter.",0
+
+;.byte "Disk read error. Please insert",13
+;.byte "floppy disk 2 into Drive B and",13
+;.byte "press enter.",0
 
 ; + ask about fire
 knight_ask_fire_message:

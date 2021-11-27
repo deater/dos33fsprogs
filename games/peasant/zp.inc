@@ -137,7 +137,7 @@ GAME_STATE_1 = $98
 	FISH_FED=$01		; also implies man gone and inn open
 	PUDDLE_WET=$02
 	IN_HAY_BALE=$04
-	JHONKA_OUT=$08
+;	JHONKA_OUT=$08		; implied by KERREK_STATE & $0f !=0
 	RAINING=$10
 	NIGHT=$20
 	POT_ON_HEAD=$40

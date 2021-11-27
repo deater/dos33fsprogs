@@ -1051,6 +1051,18 @@ talk_to_knight:
 	jsr	partial_message_step
 
 knight_skip_text:
+	; see if have belt
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	bne	knight_kerrek_belt
+
+	; see if have robe
+	lda	GAME_STATE_1
+	and	#WEARING_ROBE
+	bne	knight_robe
+
+	; else, have nothing
+
 	ldx	#<talk_knight_third_message
 	ldy	#>talk_knight_third_message
 	jsr	partial_message_step
@@ -1085,6 +1097,51 @@ knight_skip_text:
 	sta	GAME_STATE_2
 
 knight_skip_text2:
+	jmp	finish_parse_message
+
+knight_kerrek_belt:
+	; see if also have robe
+	lda	GAME_STATE_1
+	and	#WEARING_ROBE
+	bne	knight_belt_robe
+
+	ldx	#<talk_knight_after_belt_message
+	ldy	#>talk_knight_after_belt_message
+	jmp	finish_parse_message
+
+knight_robe:
+	; see if also have belt
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	bne	knight_belt_robe
+
+	ldx	#<talk_knight_after_robe_message
+	ldy	#>talk_knight_after_robe_message
+	jmp	finish_parse_message
+
+knight_belt_robe:
+	; see if also on fire
+	lda	GAME_STATE_2
+	and	#ON_FIRE
+	bne	knight_belt_fire
+
+	ldx	#<talk_knight_after_robe_and_belt_message
+	ldy	#>talk_knight_after_robe_and_belt_message
+	jmp	finish_parse_message
+
+knight_belt_fire:
+	; TODO: move knight, open path
+
+	; score points
+	lda	#7
+	jsr	score_points
+
+	ldx	#<talk_knight_after_robe_belt_fire_message
+	ldy	#>talk_knight_after_robe_belt_fire_message
+	jsr	partial_message_step
+
+	ldx	#<talk_knight_after_robe_belt_fire_message2
+	ldy	#>talk_knight_after_robe_belt_fire_message2
 	jmp	finish_parse_message
 
 
