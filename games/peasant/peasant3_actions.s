@@ -30,6 +30,12 @@ jhonka_cave_verb_table:
 	.word jhonka_knock-1
 	.byte VERB_ASK
 	.word jhonka_ask-1
+	.byte VERB_TALK
+	.word jhonka_talk-1
+	.byte VERB_GIVE
+	.word jhonka_give-1
+	.byte VERB_KILL
+	.word jhonka_kill-1
 	.byte 0
 
 
@@ -78,6 +84,16 @@ jhonka_get_kerrek_dead:
 
 jhonka_get_riches:
 
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	bne	jhonka_get_riches_in_hay
+
+jhonka_get_riches_no_hay:
+	ldx	#<jhonka_get_riches_no_hay_message
+	ldy	#>jhonka_get_riches_no_hay_message
+	jmp	finish_parse_message
+
+jhonka_get_riches_in_hay:
 	; TODO: see if in hay
 
 	ldx	#<jhonka_steal_riches_message
@@ -402,6 +418,74 @@ jhonka_ask_trogdor:
 jhonka_ask_kerrek_alive:
 	jmp	parse_common_ask
 
+
+
+	;================
+	; talk
+	;================
+jhonka_talk:
+
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	beq	jhonka_cant_talk
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_JHONKA
+	beq	jhonka_talk_to
+	cmp	#NOUN_NONE
+	beq	jhonka_talk_to
+
+jhonka_cant_talk:
+	jmp	parse_common_talk
+
+jhonka_talk_to:
+	; check if in hay
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	jhonka_ask_jhonka	; same as ask about jhonka
+
+jhonka_talk_in_hay:
+	ldx	#<jhonka_talk_in_hay_message
+	ldy	#>jhonka_talk_in_hay_message
+	jmp	finish_parse_message
+
+
+	;================
+	; give
+	;================
+jhonka_give:
+
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_do_give
+
+	jmp	parse_common_give
+
+jhonka_do_give:
+	ldx	#<jhonka_give_message
+	ldy	#>jhonka_give_message
+	jmp	finish_parse_message
+
+	;================
+	; kill
+	;================
+jhonka_kill:
+
+	; check if kerrek alive
+	lda	KERREK_STATE
+	and	#$f
+	bne	jhonka_do_kill
+
+	jmp	parse_common_unknown
+
+jhonka_do_kill:
+	ldx	#<jhonka_kill_message
+	ldy	#>jhonka_kill_message
+	jmp	finish_parse_message
 
 
 

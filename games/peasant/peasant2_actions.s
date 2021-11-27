@@ -141,7 +141,7 @@ really_enter_hay_muddy:
 
 	; get in hay
 	lda	GAME_STATE_1
-	ora	#HAY_BALE
+	ora	#IN_HAY_BALE
 	sta	GAME_STATE_1
 
 	ldx	#<hay_enter_hay_muddy_message2

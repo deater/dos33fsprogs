@@ -84,12 +84,6 @@ jhonka_climb_fence_message:
 ;================================
 ; kerrek dead
 
-; TODO
-; + Type any command other than "yes" or "no" 
-; after the Jhonka asks if you stole the riches
-; you can't walk while waiting here
-.byte "Just answer him, yes or no,",13
-.byte "you fool!",0
 
 ; + look (kerrek dead, before riches)
 jhonka_look_at_with_riches_message:
@@ -116,11 +110,11 @@ jhonka_look_at_club_message:
 ; + look cave
 ; same as alive
 
-; + look door (after kerrek?)		; not in WIKI
+; + look door (after kerrek)		; not in WIKI
 jhonka_look_at_door_out_message:
 .byte "Just a door, nothing more.",0
 
-; + look riches
+; + look riches (if riches are there)
 jhonka_look_at_riches_message:
 .byte "That's one fat pile of",13
 .byte "riches alright.",0
@@ -146,14 +140,14 @@ jhonka_get_club_message:
 .byte "Now there's a surefire way",13
 .byte "to get yourself killed.",0
 
-; TODO
 ; + get riches (before jumping in hay)
+jhonka_get_riches_no_hay_message:
 .byte "The Jhonka will see you!",13
 .byte "And rip out your jugular",13
 .byte "with his teeth or something",13
 .byte "equally horrible.",0
 
-; + steal/get riches
+; + steal/get riches (in hay)
 jhonka_steal_riches_message:
 .byte "Oh OH! A stiff breeze blew",13
 .byte "all the hay and,",13
@@ -182,6 +176,13 @@ jhonka_steal_riches_message:
 .byte "was holding. You dead.",13
 .byte "Thanks for playing!",0
 
+; TODO
+; + Type any command other than "yes" or "no" 
+; after the Jhonka asks if you stole the riches
+; you can't walk while waiting here
+.byte "Just answer him, yes or no,",13
+.byte "you fool!",0
+
 
 ; + ask about fire
 jhonka_ask_about_fire_message:
@@ -195,7 +196,7 @@ jhonka_ask_about_jhonka_message:
 .byte "more. You wonder how",13
 .byte "someone this primitive",13
 .byte "could have made that much",13
-.byte " dough.",0
+.byte "dough.",0
 
 ; + ask about naked ned (or) robe
 jhonka_ask_about_ned_message:
@@ -227,25 +228,24 @@ jhonka_ask_about_unknown_message:
 .byte 34,"Jhonka don't know nothing",13
 .byte "bout that!",34,0
 
-; open door?
-
-; TODO
 ; + kill jhonka (outside)
+jhonka_kill_message:
 .byte "No way! Jhonka's are born",13	; [sic]
 .byte "scrappers. He may be",13
 .byte "little, but he'll crawl ya.",0
 
 ; + give / give {anything}
+jhonka_give_message:
 .byte 34,"Don't need nothing from no",13
 .byte "filthy peasantses!!",34,0
 
-; TODO
 ; + talk jhonka (while inside the hay)
+jhonka_talk_in_hay_message:
 .byte "Not now! You'll blow your cover!",0
 
 ; + talk
 ; + talk jhonka (jhonka there, not in hay)
-; same as look jhonka?
+; same as ask about jhonka
 ;.byte 34,"The Kerrek is dead!",34," he",13
 ;.byte "cries and hops around some",13
 ;.byte "more. You wonder how",13
