@@ -140,7 +140,7 @@ jhonka_get_club_message:
 .byte "Now there's a surefire way",13
 .byte "to get yourself killed.",0
 
-; + get riches (before jumping in hay)
+; + get riches (before jumping in hay, also even after taking them)
 jhonka_get_riches_no_hay_message:
 .byte "The Jhonka will see you!",13
 .byte "And rip out your jugular",13

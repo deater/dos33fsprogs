@@ -91,7 +91,7 @@ kerrek_collision:
 
 	; first, only if kerrek out
 
-	lda	#KERREK_STATE
+	lda	KERREK_STATE
 	bpl	kerrek_no_collision
 
 
