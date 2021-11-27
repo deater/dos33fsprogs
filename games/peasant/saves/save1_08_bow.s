@@ -33,3 +33,6 @@
 .byte INV2_TRINKET
 			; INVENTORY_2_GONE_=	$A4
 .byte $00		; INVENTORY_3_GONE =	$A5
+.byte 22		; KERREK_X	=	$A6
+.byte 76		; KERREK_Y	=	$A7
+
