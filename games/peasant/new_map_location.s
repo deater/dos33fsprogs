@@ -9,6 +9,7 @@ update_map_location:
 	; we do this because the disk load code will over-write WHICH_LOAD
 
 	ldx	MAP_LOCATION
+	stx	PREVIOUS_LOCATION
 	ldy	location_to_file,X
 	sty	WHICH_LOAD
 

@@ -94,6 +94,9 @@ kerrek_collision:
 	lda	KERREK_STATE
 	bpl	kerrek_no_collision
 
+	; next, see if kerrek alive
+	and	#$ff
+	bne	kerrek_no_collision
 
 	; first check X
 

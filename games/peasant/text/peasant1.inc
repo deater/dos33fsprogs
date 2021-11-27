@@ -178,7 +178,7 @@ well_leave_baby_in_well_message:
 .byte "the bottom of the well, eh?",13
 .byte "Thought you'd be able to",13
 .byte "just walk away and it's",13
-.byte "nothing by mead and",13
+.byte "nothing but mead and",13
 .byte "wenches from now on, huh?",13
 .byte "Well guess what? You dead.",13
 .byte "Thanks for playing.",0

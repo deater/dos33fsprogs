@@ -131,7 +131,7 @@ new_location:
 	bne	not_kerrek
 
 	jsr	kerrek_setup
- 
+
 not_kerrek:
 
 
@@ -164,20 +164,23 @@ game_loop:
 	bmi	oops_new_location
 	bne	game_over
 
-
 	; delay
 
 	lda	#200
 	jsr	wait
 
-
 	jmp	game_loop
+
+	;====================
+	; end of level
 
 oops_new_location:
 
 	; special case if leaving with baby in well
 
-	lda	MAP_LOCATION
+	; trouble though, by this point MAP_LOCATION is the new one?
+
+	lda	PREVIOUS_LOCATION
 	cmp	#LOCATION_OLD_WELL
 	bne	skip_level_specific
 
