@@ -504,6 +504,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_common_load parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_save parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s get_noun_again parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_input_smc parse_input.lst >> parse_input.inc
 
 
 ###

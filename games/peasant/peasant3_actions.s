@@ -64,7 +64,23 @@ jhonka_get:
 	; check if alive
 	lda	KERREK_STATE
 	and	#$f
-	beq	jhonka_get_kerrek_alive
+	bne	jhonka_get_kerrek_dead
+
+jhonka_get_kerrek_alive:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_NOTE
+	beq	jhonka_get_note
+
+	; else "probably wish" message
+	jmp	parse_common_get
+
+jhonka_get_note:
+	ldx	#<jhonka_get_note_message
+	ldy	#>jhonka_get_note_message
+	jmp	finish_parse_message
+
 
 jhonka_get_kerrek_dead:
 
@@ -94,14 +110,71 @@ jhonka_get_riches_no_hay:
 	jmp	finish_parse_message
 
 jhonka_get_riches_in_hay:
-	; TODO: see if in hay
 
 	ldx	#<jhonka_steal_riches_message
 	ldy	#>jhonka_steal_riches_message
+	jsr	partial_message_step
 
-	; TODO: points, etc
+jhonka_wait_for_answer:
+	jsr	clear_bottom
+	jsr	hgr_input
 
+	lda	#$60			; modify parse input to return
+	sta	parse_input_smc		; rather than verb-jump
+
+	jsr	parse_input
+
+	lda	CURRENT_VERB
+	cmp	#VERB_NO
+	beq	jhonka_verb_no
+	cmp	#VERB_YES
+	beq	jhonka_verb_yes
+
+	ldx	#<jhonka_answer_him_message
+	ldy	#>jhonka_answer_him_message
+	jsr	partial_message_step
+
+	jmp	jhonka_wait_for_answer
+
+jhonka_verb_no:
+	; restore parse_message
+	lda	#$EA
+	sta	parse_input_smc
+
+	; get riches
+
+	lda	INVENTORY_2
+	ora	#INV2_RICHES
+	sta	INVENTORY_2
+
+	; add 7 points
+	lda	#7
+	jsr	score_points
+
+	ldx	#<jhonka_no_message
+	ldy	#>jhonka_no_message
 	jmp	finish_parse_message
+
+jhonka_verb_yes:
+	; restore parse_message
+	lda	#$EA
+	sta	parse_input_smc
+
+	; this kills you
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+	ldx	#<jhonka_yes_message
+	ldy	#>jhonka_yes_message
+	jsr	partial_message_step
+
+	ldx	#<jhonka_yes_message2
+	ldy	#>jhonka_yes_message2
+	jmp	finish_parse_message
+
 
 jhonka_get_club:
 	ldx	#<jhonka_get_club_message
@@ -110,20 +183,7 @@ jhonka_get_club:
 
 
 
-jhonka_get_kerrek_alive:
 
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_NOTE
-	beq	jhonka_get_note
-
-	; else "probably wish" message
-	jmp	parse_common_get
-
-jhonka_get_note:
-	ldx	#<jhonka_get_note_message
-	ldy	#>jhonka_get_note_message
-	jmp	finish_parse_message
 
 
 	;=================

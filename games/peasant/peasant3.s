@@ -140,6 +140,30 @@ new_location:
 
 	jsr	draw_peasant
 
+
+	;=======================
+	; before game text
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_JHONKA_CAVE
+	bne	no_before_game_text
+
+	; at jhonka cave
+
+	; check to see if in hay
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	no_before_game_text
+
+	ldx	#<jhonka_in_hay_message
+	ldy	#>jhonka_in_hay_message
+	jsr	finish_parse_message
+
+
+no_before_game_text:
+
+
 game_loop:
 
 	jsr	move_peasant

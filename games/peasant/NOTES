@@ -191,8 +191,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 + 10 (get belt)
 +  5 (kill kerrek)
 +  7 (talk to knight once have belt, robe, and on fire)
++  7 (get riches from jhonka)
 ======
-  79 points
+  86 points
 
 
 deaths/endings implemented
@@ -200,7 +201,8 @@ deaths/endings implemented
 +1	Typing "die"
 +2	Beating the game
 +3	Cutting off arms, legs, and head
-+4	kick/punch/kill old gary
-+5	get arrow (while dongolev shooting)
-+6	walk on range (while dongolev shooting)
++4	kick/punch/kill Old Gary
++5	get arrow (while Dongolev shooting)
++6	walk on range (while Dongolev shooting)
 +7	walk too close to Kerrek
++8	say "yes" when Jhonka asks if you stole riches

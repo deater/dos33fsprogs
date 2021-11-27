@@ -41,6 +41,8 @@ done_upcase_loop:
 
 	jsr	get_noun
 
+parse_input_smc:
+	nop
 
 	;================================
 	; jump into verb table

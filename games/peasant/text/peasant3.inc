@@ -4,8 +4,8 @@ peasant3_dialog_start:
 ; Jhonka cave
 ;=============
 
-; TODO
 ; + (walk in haystack)
+jhonka_in_hay_message:
 .byte "Hey, nice disguise! The",13
 .byte "Jhonka doesn't seem to",13
 .byte "notice you.",0
@@ -156,30 +156,33 @@ jhonka_steal_riches_message:
 .byte "riches?!",34," growls the",13
 .byte "Jhonka.",0
 
-; TODO
+
 ; + 7 POINTS
 ; + no
+jhonka_no_message:
 .byte 34,"Okay. Lemme know if you",13
 .byte "see riches anywhere,",34," he",13
 .byte "grunts and goes back to his",13
 .byte "hopping. You smooth",13
 .byte "talker, you.",0
 
-; TODO
 ; + yes (to the Jhonka when he asks you about his riches)
+jhonka_yes_message:
 .byte 34,"I KILL YOU!!",34," screams the",13
 .byte "Jhonka.",0
+
 ; {The Jhonka clubs you to death}  (Warning: Obviously, you will die.) 
+jhonka_yes_message2:
 .byte "Club or turkey leg, the",13
 .byte "Jhonka sure just beat you",13
 .byte "senseless with whatever he",13
 .byte "was holding. You dead.",13
 .byte "Thanks for playing!",0
 
-; TODO
 ; + Type any command other than "yes" or "no" 
 ; after the Jhonka asks if you stole the riches
 ; you can't walk while waiting here
+jhonka_answer_him_message:
 .byte "Just answer him, yes or no,",13
 .byte "you fool!",0
 
@@ -241,7 +244,8 @@ jhonka_give_message:
 
 ; + talk jhonka (while inside the hay)
 jhonka_talk_in_hay_message:
-.byte "Not now! You'll blow your cover!",0
+.byte "Not now! You'll blow your",13
+.byte "cover!",0
 
 ; + talk
 ; + talk jhonka (jhonka there, not in hay)
