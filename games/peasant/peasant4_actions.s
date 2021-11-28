@@ -43,6 +43,10 @@ ned_cottage_verb_table:
 	.word ned_cottage_use-1
 	.byte VERB_TRY
 	.word ned_cottage_try-1
+	.byte VERB_PUT
+	.word ned_cottage_put-1
+	.byte VERB_CLOSE
+	.word ned_cottage_close-1
 	.byte 0
 
 	;================
@@ -61,6 +65,35 @@ ned_cottage_climb_fence:
 	ldx	#<ned_cottage_climb_fence_message
 	ldy	#>ned_cottage_climb_fence_message
 	jmp	finish_parse_message
+
+	;================
+	; close
+	;================
+ned_cottage_close:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DOOR
+	beq	ned_cottage_close_door
+
+	jmp	parse_common_unknown
+
+ned_cottage_close_door:
+	; see if baby gone
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	ned_cottage_close_door_after
+
+ned_cottage_close_door_before:
+	ldx	#<ned_cottage_close_door_before_message
+	ldy	#>ned_cottage_close_door_before_message
+	jmp	finish_parse_message
+
+ned_cottage_close_door_after:
+	ldx	#<ned_cottage_close_door_after_message
+	ldy	#>ned_cottage_close_door_after_message
+	jmp	finish_parse_message
+
+
 
 	;================
 	; knock
@@ -117,8 +150,19 @@ ned_cottage_open:
 	jmp	parse_common_unknown
 
 ned_cottage_open_door:
+	; see if baby was deployed
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	ned_cottage_open_door_after_baby
+
+ned_cottage_open_door_before_baby:
 	ldx	#<ned_cottage_open_door_message
 	ldy	#>ned_cottage_open_door_message
+	jmp	finish_parse_message
+
+ned_cottage_open_door_after_baby:
+	ldx	#<ned_cottage_open_door_after_baby_message
+	ldy	#>ned_cottage_open_door_after_baby_message
 	jmp	finish_parse_message
 
 	;================
@@ -225,6 +269,7 @@ ned_cottage_rock_moved:
 ned_cottage_deploy:
 ned_cottage_drop:
 ned_cottage_use:
+ned_cottage_put:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_BABY
@@ -233,8 +278,65 @@ ned_cottage_use:
 	jmp	parse_common_unknown
 
 ned_cottage_baby:
+	; see if have baby
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	ned_cottage_baby_nobaby
+
+	; see if baby gone
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	ned_cottage_baby_gone
+
+	; check_if_rock_moved
+	lda	GAME_STATE_2
+	and	#COTTAGE_ROCK_MOVED
+	beq	ned_cottage_baby_before
+
+	; see if baby was deployed
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	ned_cottage_baby_gone
+
+ned_cottage_baby_deploy:
+	; actually deploy baby
+
+	ldx	#<ned_cottage_deploy_baby_message
+	ldy	#>ned_cottage_deploy_baby_message
+	jsr	partial_message_step
+
+	; add points
+	lda	#5
+	jsr	score_points
+
+	; baby is gone
+	lda	INVENTORY_1_GONE
+	ora	#INV1_BABY
+	sta	INVENTORY_1_GONE
+
+
+	ldx	#<ned_cottage_deploy_baby_message2
+	ldy	#>ned_cottage_deploy_baby_message2
+	jsr	partial_message_step
+
+	ldx	#<ned_cottage_deploy_baby_message3
+	ldy	#>ned_cottage_deploy_baby_message3
+	jmp	finish_parse_message
+
+
+ned_cottage_baby_before:	; before rock
 	ldx	#<ned_cottage_baby_before_message
 	ldy	#>ned_cottage_baby_before_message
+	jmp	finish_parse_message
+
+ned_cottage_baby_nobaby:
+	ldx	#<ned_cottage_baby_nobaby_message
+	ldy	#>ned_cottage_baby_nobaby_message
+	jmp	finish_parse_message
+
+ned_cottage_baby_gone:
+	ldx	#<ned_cottage_baby_gone_message
+	ldy	#>ned_cottage_baby_gone_message
 	jmp	finish_parse_message
 
 
@@ -340,8 +442,20 @@ ned_cottage_look_at_rock:
 	jmp	finish_parse_message
 
 ned_cottage_look_at_hole:
+
+	; see if baby was deployed
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	ned_cottage_look_at_hole_after
+
+ned_cottage_look_at_hole_before:
 	ldx	#<ned_cottage_look_hole_message
 	ldy	#>ned_cottage_look_hole_message
+	jmp	finish_parse_message
+
+ned_cottage_look_at_hole_after:
+	ldx	#<ned_cottage_look_hole_after_message
+	ldy	#>ned_cottage_look_hole_after_message
 	jmp	finish_parse_message
 
 

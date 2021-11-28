@@ -25,6 +25,7 @@ ned_cottage_open_door_message:
 .byte "How? There's no knob.",0
 
 ; + open door (after baby opens)
+ned_cottage_open_door_after_baby_message:
 .byte "It's already open. Since",13
 .byte "this is an adventure game",13
 .byte "we're gonna proffer you",13
@@ -33,10 +34,12 @@ ned_cottage_open_door_message:
 
 ; + pull door
 ; + push door
+;	same even when open
 ned_cottage_push_door_message:
 .byte "It doesn't budge, man.",0
 
 ; + knock
+;	same even when open
 ned_cottage_knock_door_message:
 .byte "You could knock until your",13
 .byte "knuckles bleed. Nobody's",13
@@ -78,6 +81,7 @@ ned_cottage_look_hole_message:
 .byte "appears to be empty.",0
 
 ; + look hole (after deploying baby)
+ned_cottage_look_hole_after_message:
 .byte "There is no baby here, but",13
 .byte "there's an open door on the",13
 .byte "other side of the room. If",13
@@ -130,9 +134,13 @@ ned_cottage_try_message:
 .byte "nothing.",0
 
 ;+5 POINTS
+; + deploy baby
 ; + put baby into the hole
+ned_cottage_deploy_baby_message:
 .byte "Deploying Q-Baby...",0
 
+; animation
+ned_cottage_deploy_baby_message2:
 .byte "Way to go, baby! It got the",13
 .byte "cottage door opened and",13
 .byte "headed off to a new life.",13
@@ -145,6 +153,7 @@ ned_cottage_try_message:
 .byte "building better cottages",13
 .byte "for a better tomorrow.",0
 
+ned_cottage_deploy_baby_message3:
 .byte "You grow apart and the",13
 .byte "letters from him become",13
 .byte "fewer and fewer. He",13
@@ -153,15 +162,19 @@ ned_cottage_try_message:
 .byte "never being there.",0
 
 ; + deploy/drop/use baby (before baby)
-ned_cottage_baby_before_message:
+ned_cottage_baby_nobaby_message:
 .byte "Swell idea, but is you",13
 .byte "ain't my baby? I.e. you",13
 .byte "ain't got one?",0
 
 ; + deploy/drop/use baby (before moving stone)
-.byte "Use the baby where? You haven't anywhere inconsiderate to stuff 'm.",0
+ned_cottage_baby_before_message:
+.byte "Use the baby where? You",13
+.byte "haven't anywhere",13
+.byte "inconsiderate to stuff'm.",0
 
 ; + deploy/drop/use baby (after baby left)
+ned_cottage_baby_gone_message:
 .byte "Li'l P.B. has moved on, and",13
 .byte "the door seems to be",13
 .byte "open... I can't see why",13
@@ -169,10 +182,12 @@ ned_cottage_baby_before_message:
 .byte "over again.",0
 
 ; + close door (before baby opens)
+ned_cottage_close_door_before_message:
 .byte "Already done. That was",13
 .byte "easy!",0
 
 ; + close door (after baby opens)
+ned_cottage_close_door_after_message:
 .byte "You can't. That baby really",13
 .byte "wrenched it open good.",0
 

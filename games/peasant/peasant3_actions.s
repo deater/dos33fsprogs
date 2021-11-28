@@ -858,6 +858,13 @@ lake_west_throw_baby:
 	and	#INV1_BABY
 	beq	lake_west_throw_baby_no_baby
 
+	; next see if baby gone
+
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	lake_west_throw_baby_no_baby
+
+
 	; see if in right spot
 	; TODO:
 	lda	PEASANT_X
