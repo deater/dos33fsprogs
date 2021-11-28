@@ -380,25 +380,40 @@ lake_west_skip_stones_message:
 .byte "but you can't reach from",13
 .byte "here.",0
 
-; TODO
 ; +5 POINTS
 ; + throw baby
-.byte "Something tells you this is a good idea and you lob the little one into the lake.",0
-.byte "You won't be arrested after all! The little guy has resurfaced safely, carrying an old bottle of soda. You take the soda and stow your swaddling buddy for takeoff.",0
+lake_west_throw_baby_message:
+.byte "Something tells you this is",13
+.byte "a good idea and you lob the",13
+.byte "little one into the lake.",0
+
+lake_west_throw_baby_message2:
+.byte "You won't be arrested after",13
+.byte "all! The little guy has",13
+.byte "resurfaced safely,",13
+.byte "carrying an old bottle of",13
+.byte "soda. You take the soda and",13
+.byte "stow your swaddling buddy",13
+.byte "for takeoff.",0
 
 ; + throw baby (before getting the baby)
-lake_west_throw_baby_message:
+lake_west_throw_baby_no_baby_message:
 .byte "I think you misread the",13
 .byte "walkthrough on GameFAQs.",13
 .byte "You gotta get the baby",13
 .byte "first.",0
 
-; TODO
 ; + throw baby (after getting the soda)
-.byte "Baby Dashing is a little waterlogged from the toss, and you read his soft gurgling to mean that there's no more soda left.",0
+lake_west_throw_baby_already_message:
+.byte "Baby Dashing is a little",13
+.byte "waterlogged from the last",13
+.byte "toss, and you read his soft",13
+.byte "gurgling to mean that",13
+.byte "there's no more soda left.",0
 
 ; + throw feed (at south side)
-;.byte "Maybe try again from the center of the lake. Looks deeper there.",0
+; + throw baby (not in right spot)
+; same as lake_east_throw_feed_too_south_message:
 
 
 ;==================

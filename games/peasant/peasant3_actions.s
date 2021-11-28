@@ -835,6 +835,7 @@ lake_west_swim_lake:
 	ldy	#>lake_west_swim_message
 	jmp	finish_parse_message
 
+
 	;================
 	; throw
 	;================
@@ -844,15 +845,67 @@ lake_west_throw:
 	cmp	#NOUN_BABY
 	beq	lake_west_throw_baby
 
+	cmp	#NOUN_FEED
+	beq	lake_west_throw_feed
+
 	jmp	parse_common_unknown
 
 lake_west_throw_baby:
+
+	; first see if have baby
+
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	lake_west_throw_baby_no_baby
+
+	; see if in right spot
+	; TODO:
+	lda	PEASANT_X
+	lda	PEASANT_Y
+
+	; see if have soda
+
+	lda	INVENTORY_2
+	and	#INV2_SODA
+	bne	lake_west_throw_baby_already
+
+	; throwing for the first time
+lake_west_throw_baby_for_reals:
+	; do the animation
+
 	ldx	#<lake_west_throw_baby_message
 	ldy	#>lake_west_throw_baby_message
+	jsr	partial_message_step
+
+	; score points
+	lda	#5
+	jsr	score_points
+
+	; get soda
+	lda	INVENTORY_2
+	ora	#INV2_SODA
+	sta	INVENTORY_2
+
+	ldx	#<lake_west_throw_baby_message2
+	ldy	#>lake_west_throw_baby_message2
 	jmp	finish_parse_message
 
 
+lake_west_throw_baby_already:
+	ldx	#<lake_west_throw_baby_already_message
+	ldy	#>lake_west_throw_baby_already_message
+	jmp	finish_parse_message
 
+lake_west_throw_baby_no_baby:
+	ldx	#<lake_west_throw_baby_no_baby_message
+	ldy	#>lake_west_throw_baby_no_baby_message
+	jmp	finish_parse_message
+
+
+lake_west_throw_feed:
+	ldx	#<lake_east_throw_feed_too_south_message
+	ldy	#>lake_east_throw_feed_too_south_message
+	jmp	finish_parse_message
 
 
 
