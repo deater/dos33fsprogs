@@ -294,6 +294,10 @@ well_put_baby_message:
 
 ; + 3 POINTS
 ; + put baby in bucket
+;   [note, if you do this when baby already
+;			at bottom, it will just do it again
+;			also, baby stays in inventory all along.
+
 well_put_baby_in_bucket_message:
 .byte "Okay, Father of the Year.",13
 .byte "You put a baby in a bucket",13
