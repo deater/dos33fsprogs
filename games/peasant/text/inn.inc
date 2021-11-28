@@ -95,14 +95,25 @@ inside_inn_give_baby_before_message:
 ; +5 POINTS
 ; + give/use baby (by desk)
 inside_inn_give_baby_message:
-.byte 34,"Well lookit that little guy!",34," says the Innkeeper. ",34,"You want a treat, do ya? What do babies like?",34," He fishes around in his pockets.",0
+.byte 34,"Well lookit that little",13
+.byte "guy!",34," says the Innkeeper.",13
+.byte 34,"You want a treat, do ya?",13
+.byte "What do babies like?",34," He",13
+.byte "fishes around in his",13
+.byte "pockets.",0
 
 inside_inn_give_baby2_message:
-.byte 34,"Um, how bout my medication!",34," You grab the bottle of pills before he can force them on the baby. ",34,"Hey, those were for him!",34,0
+.byte 34,"Um, how bout my",13
+.byte "medication!",34," You grab the",13
+.byte "bottle of pills before he",13
+.byte "can force them on the baby.",13
+.byte 34,"Hey, those were for him!",34,0
 
 ; + give/use baby (when you already have the pills)
 inside_inn_give_baby_already_message:
-.byte "You already milked that fogey for all the pills he's worth.",0
+.byte "You already milked that",13
+.byte "fogey for all the pills",13
+.byte "he's worth.",0
 
 ; + get a room (without robe) (do you need to be wearing it?)
 inside_inn_get_room_no_robe_message:
