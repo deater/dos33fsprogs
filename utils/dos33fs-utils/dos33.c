@@ -930,6 +930,7 @@ int main(int argc, char **argv) {
 	unsigned char type='b';
 	int dos_fd=0,i;
 
+	int exit_status=0;
 	int command,catalog_entry;
 	char temp_string[BUFSIZ];
 	char apple_filename[31],new_filename[31];
@@ -1021,6 +1022,7 @@ int main(int argc, char **argv) {
 	case COMMAND_UNKNOWN:
 		fprintf(stderr,"ERROR!  Unknown command %s\n",temp_string);
 		fprintf(stderr,"\tTry \"%s -h\" for help.\n\n",argv[0]);
+		exit_status=2;
 		goto exit_and_close;
 		break;
 
@@ -1032,6 +1034,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s LOAD apple_filename\n",
 				argv[0],image);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1062,6 +1065,7 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			exit_status=1;
 			goto exit_and_close;
 		}
 
@@ -1085,6 +1089,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s SAVE type "
 					"file_name apple_filename\n\n",
 					argv[0],image);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1109,6 +1114,7 @@ int main(int argc, char **argv) {
 						"file_name apple_filename\n\n",
 						argv[0],image);
 			}
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1152,6 +1158,7 @@ int main(int argc, char **argv) {
 				result_string=fgets(temp_string,BUFSIZ,stdin);
 				if ((result_string==NULL) || (temp_string[0]!='y')) {
 					printf("Exiting early...\n");
+					exit_status=1;
 					goto exit_and_close;
 				}
 			}
@@ -1159,14 +1166,22 @@ int main(int argc, char **argv) {
 			dos33_delete_file(vtoc,dos_fd,catalog_entry);
 		}
 		if (command==COMMAND_SAVE) {
-			dos33_add_file(vtoc,dos_fd,type,
+			int err=dos33_add_file(vtoc,dos_fd,type,
 				ADD_RAW, address, length,
 				local_filename,apple_filename);
+			if (err) {
+				exit_status=1;
+				goto exit_and_close;
+			}
 		}
 		else {
-			dos33_add_file(vtoc,dos_fd,type,
+			int err=dos33_add_file(vtoc,dos_fd,type,
 				ADD_BINARY, address, length,
 				local_filename,apple_filename);
+			if (err) {
+				exit_status=1;
+				goto exit_and_close;
+			}
 		}
 		break;
 
@@ -1174,6 +1189,7 @@ int main(int argc, char **argv) {
 	case COMMAND_RAW_WRITE:
 
 		fprintf(stderr,"ERROR!  Not implemented!\n\n");
+		exit_status=1;
 		goto exit_and_close;
 
 		break;
@@ -1184,6 +1200,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need file_name\n");
 			fprintf(stderr,"%s %s DELETE apple_filename\n",
 				argv[0],image);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1195,6 +1212,8 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr, "Error!  File %s does not exist\n",
 					apple_filename);
+			/* Should possibly set exit_status=1 here? But
+			   the end state is what the user desired... */
 			goto exit_and_close;
 		}
 		dos33_delete_file(vtoc,dos_fd,catalog_entry);
@@ -1218,6 +1237,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s %s apple_filename\n",
 				argv[0],image,temp_string);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1230,6 +1250,7 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			exit_status=1;
 			goto exit_and_close;
 		}
 
@@ -1244,6 +1265,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
+			exit_status=2;
 	     		goto exit_and_close;
 		}
 
@@ -1256,6 +1278,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
+			exit_status=2;
 	     		goto exit_and_close;
 		}
 
@@ -1268,6 +1291,7 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 							apple_filename);
+			exit_status=1;
 			goto exit_and_close;
 		}
 
@@ -1281,6 +1305,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s UNDELETE apple_filename\n\n",
 				argv[0],image);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1296,6 +1321,7 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			exit_status=1;
 			goto exit_and_close;
 		}
 
@@ -1308,6 +1334,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need file_name\n");
 			fprintf(stderr,"%s %s HELLO apple_filename\n\n",
 				argv[0],image);
+			exit_status=2;
 			goto exit_and_close;
 		}
 
@@ -1331,11 +1358,12 @@ int main(int argc, char **argv) {
 		/* use temp file?  Walking a sector at a time seems a pain */
 	default:
 		fprintf(stderr,"Sorry, unsupported command %s\n\n",temp_string);
+		exit_status=2;
 		goto exit_and_close;
 	}
 
 exit_and_close:
 	close(dos_fd);
 
-	return 0;
+	return exit_status;
 }
