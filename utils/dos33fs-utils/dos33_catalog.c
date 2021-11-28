@@ -183,14 +183,18 @@ static int dos33_print_file_info(int fd,int catalog_tsf) {
 
 	printf("\n");
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -1;
+	}
 
 	return 0;
 }
 
-void dos33_catalog(int dos_fd, unsigned char *vtoc) {
+int dos33_catalog(int dos_fd, unsigned char *vtoc) {
 
 	int catalog_entry;
+	int result;
 
 	/* get first catalog */
 	catalog_entry=dos33_get_catalog_ts(vtoc);
@@ -200,11 +204,14 @@ void dos33_catalog(int dos_fd, unsigned char *vtoc) {
 		catalog_entry=dos33_find_next_file(dos_fd,catalog_entry,vtoc);
 		if (debug) fprintf(stderr,"CATALOG entry=$%X\n",catalog_entry);
 		if (catalog_entry>0) {
-			dos33_print_file_info(dos_fd,catalog_entry);
+			result=dos33_print_file_info(dos_fd,catalog_entry);
+			if (result<0) return -1;
 			/* why 1<<16 ? */
 			catalog_entry+=(1<<16);
 			/* dos33_find_next_file() handles wrapping issues */
 		}
 	}
 	printf("\n");
+
+	return 0;
 }
