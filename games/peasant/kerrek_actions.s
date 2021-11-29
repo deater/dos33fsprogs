@@ -243,7 +243,7 @@ kerrek_get_belt_finally:
 	ora	#INV1_KERREK_BELT
 	sta	INVENTORY_1
 
-	lda	#10
+	lda	#$10		; it's BCD
 	jsr	score_points
 
 	ldx	#<kerrek_get_belt_message

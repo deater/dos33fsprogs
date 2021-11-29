@@ -117,7 +117,7 @@ done_speech:
 
 	; UPDATE SCORE
 
-	lda	#10
+	lda	#$10		; it's BCD
 	jsr	score_points
 
 trogdor_open:
