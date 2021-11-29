@@ -816,211 +816,257 @@ inside_cottage_sleep:
 	;=======================
 
 inside_nn_verb_table:
-.if 0
-	.byte VERB_ASK
-	.word archery_ask-1
-	.byte VERB_GET
-	.word archery_get-1
-	.byte VERB_GIVE
-	.word archery_give-1
-	.byte VERB_HALDO
-	.word archery_haldo-1
 	.byte VERB_LOOK
-	.word archery_look-1
-	.byte VERB_PLAY
-	.word archery_play-1
-	.byte VERB_STEAL
-	.word archery_steal-1
-	.byte VERB_TALK
-	.word archery_talk-1
+	.word inside_nn_look-1
+	.byte VERB_OPEN
+	.word inside_nn_open-1
+	.byte VERB_CLOSE
+	.word inside_nn_close-1
+	.byte VERB_GET
+	.word inside_nn_get-1
 	.byte VERB_TAKE
-	.word archery_take-1
-.endif
+	.word inside_nn_take-1
+	.byte VERB_STEAL
+	.word inside_nn_steal-1
 	.byte 0
-.if 0
-
-	;================
-	; ask
-	;================
-archery_ask:
-
-	; TODO
-
-	jmp	parse_common_ask
-
 
 	;================
 	; get
 	;================
-archery_get:
-archery_steal:
-archery_take:
+inside_nn_get:
+inside_nn_steal:
+inside_nn_take:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_TARGET
-	beq	archery_get_target
-	cmp	#NOUN_ARROW
-	beq	archery_get_arrow
+	cmp	#NOUN_ROBE
+	beq	inside_nn_get_robe
+	cmp	#NOUN_DRESSER
+	beq	inside_nn_get_dresser
+	cmp	#NOUN_DRAWER
+	beq	inside_nn_get_drawer
+	cmp	#NOUN_BROOM
+	beq	inside_nn_get_broom
 
 	; else "probably wish" message
 
 	jmp	parse_common_get
 
-archery_get_target:
-	ldx	#<archery_get_target_message
-	ldy	#>archery_get_target_message
+inside_nn_get_robe:
+	; first see if drawer closed
+
+	lda	GAME_STATE_2
+	and	#DRESSER_OPEN
+	beq	inside_nn_get_robe_drawer_closed
+
+	; next see if already have it
+
+	lda	INVENTORY_2
+	and	#INV2_ROBE
+	beq	inside_nn_actually_get_robe
+
+inside_nn_get_robe_already_have:
+	ldx	#<inside_nn_get_robe_already_message
+	ldy	#>inside_nn_get_robe_already_message
 	jmp	finish_parse_message
 
-archery_get_arrow:
-	ldx	#<archery_get_arrow_message
-	ldy	#>archery_get_arrow_message
+inside_nn_get_robe_drawer_closed:
+	ldx	#<inside_nn_get_robe_drawer_closed_message
+	ldy	#>inside_nn_get_robe_drawer_closed_message
 	jmp	finish_parse_message
 
-	;================
-	; give
-	;================
-archery_give:
 
-	; TODO
+inside_nn_actually_get_robe:
 
-	jmp	parse_common_give
+	; get 10 pts
 
-	;================
-	; haldo
-	;================
-archery_haldo:
+	lda	#$10
+	jsr	score_points
 
-	; TODO
+	; get robe
 
-	jmp	parse_common_haldo
+	lda	INVENTORY_2
+	ora	#INV2_ROBE
+	sta	INVENTORY_2
 
+	ldx	#<inside_nn_get_robe_message
+	ldy	#>inside_nn_get_robe_message
+	jmp	finish_parse_message
+
+
+inside_nn_get_dresser:
+inside_nn_get_drawer:
+	ldx	#<inside_nn_get_dresser_message
+	ldy	#>inside_nn_get_dresser_message
+	jmp	finish_parse_message
+
+inside_nn_get_broom:
+	ldx	#<inside_nn_get_broom_message
+	ldy	#>inside_nn_get_broom_message
+	jmp	finish_parse_message
 
 
 	;=================
 	; look
 	;=================
 
-archery_look:
+inside_nn_look:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_DESK
-	beq	archery_look_at_desk
-	cmp	#NOUN_TARGET
-	beq	archery_look_at_target
-	cmp	#NOUN_ARCHER
-	beq	archery_look_at_archer
+	cmp	#NOUN_BROOM
+	beq	inside_nn_look_broom
+	cmp	#NOUN_DRAWER
+	beq	inside_nn_look_drawer
+	cmp	#NOUN_DRESSER
+	beq	inside_nn_look_dresser
+
 	cmp	#NOUN_NONE
-	beq	archery_look_at
+	beq	inside_nn_look_at
 
 	jmp	parse_common_look
 
-archery_look_at:
-	ldx	#<archery_look_message
-	ldy	#>archery_look_message
+inside_nn_look_at:
+	ldx	#<inside_nn_look_at_message
+	ldy	#>inside_nn_look_at_message
 	jmp	finish_parse_message
 
-archery_look_at_archer:
-	ldx	#<archery_look_at_archer_message
-	ldy	#>archery_look_at_archer_message
+inside_nn_look_broom:
+	ldx	#<inside_nn_look_brook_message
+	ldy	#>inside_nn_look_brook_message
 	jmp	finish_parse_message
 
-archery_look_at_target:
-	ldx	#<archery_look_at_target_message
-	ldy	#>archery_look_at_target_message
+inside_nn_look_dresser:
+inside_nn_look_drawer:
+	lda	GAME_STATE_2
+	and	#DRESSER_OPEN
+	bne	inside_nn_look_drawer_open
+
+inside_nn_look_drawer_closed:
+
+	ldx	#<inside_nn_look_closed_drawer_message
+	ldy	#>inside_nn_look_closed_drawer_message
 	jmp	finish_parse_message
 
-archery_look_at_desk:
-	ldx	#<archery_look_at_desk_message
-	ldy	#>archery_look_at_desk_message
+inside_nn_look_drawer_open:
+	lda	INVENTORY_2
+	and	#INV2_ROBE
+	bne	inside_nn_look_drawer_open_norobe
+
+inside_nn_look_drawer_open_robe:
+	ldx	#<inside_nn_look_open_drawer_message
+	ldy	#>inside_nn_look_open_drawer_message
 	jmp	finish_parse_message
+
+inside_nn_look_drawer_open_norobe:
+	ldx	#<inside_nn_look_norobe_drawer_message
+	ldy	#>inside_nn_look_norobe_drawer_message
+	jmp	finish_parse_message
+
 
 
 	;================
-	; play
+	; open
 	;================
-archery_play:
+inside_nn_open:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_GAME
-	beq	archery_play_game
+	cmp	#NOUN_DRAWER
+	beq	inside_nn_open_drawer
+	cmp	#NOUN_DRESSER
+	beq	inside_nn_open_drawer
 
 	jmp	parse_common_unknown
 
-archery_play_game:
-	ldx	#<archery_play_game_message
-	ldy	#>archery_play_game_message
-	jmp	finish_parse_message
+inside_nn_open_drawer:
+	; first check to see if it's already open
 
-	;================
-	; talk
-	;================
-archery_talk:
+	lda	GAME_STATE_2
+	and	#DRESSER_OPEN
+	bne	inside_nn_open_drawer_already_open
 
-	; only talk if close
-	lda	PEASANT_X
-	cmp	#23
-	bcc	archery_talk_too_far
-	; check Y too?
-	; probably less than $7D?
-	; actual game will walk you in if close
-	; will it work from beind?
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_MAN
-	beq	archery_talk_mendelev
-	cmp	#NOUN_GUY
-	beq	archery_talk_mendelev
-	cmp	#NOUN_DUDE
-	beq	archery_talk_mendelev
-	cmp	#NOUN_MENDELEV
-	beq	archery_talk_mendelev
-	cmp	#NOUN_ARCHER
-	beq	archery_talk_mendelev
-
-	jmp	parse_common_unknown
-
-archery_talk_mendelev:
-	ldx	#<archery_talk_mendelev_message
-	ldy	#>archery_talk_mendelev_message
-	jsr	partial_message_step
-
-	ldx	#<archery_talk_mendelev2_message
-	ldy	#>archery_talk_mendelev2_message
-	jsr	partial_message_step
-
-	ldx	#<archery_talk_mendelev3_message
-	ldy	#>archery_talk_mendelev3_message
-	jsr	finish_parse_message
-
-	; add 1 point to score if don't have mask or trinket
-	; add 2 points otherwise
+	; see if robe has been taken
 
 	lda	INVENTORY_2
-	and	#INV2_TRINKET
-	bne	archer_2_points
+	and	#INV2_ROBE
+	beq	inside_nn_open_drawer_closed_full
 
-	lda	INVENTORY_1
-	and	#INV1_MONSTER_MASK
-	bne	archer_2_points
-
-archer_1_point:
-	lda	#1
-	bne	archer_score_points	; bra
-archer_2_points:
-	lda	#2
-archer_score_points:
-	jsr	score_points
-
-	rts
-
-archery_talk_too_far:
-	ldx	#<archery_talk_far_message
-	ldy	#>archery_talk_far_message
+inside_nn_open_drawer_closed_empty:
+	ldx	#<inside_nn_open_empty_drawer_message
+	ldy	#>inside_nn_open_empty_drawer_message
 	jmp	finish_parse_message
 
-.endif
+inside_nn_open_drawer_closed_full:
+	; open the drawer
+
+	lda	GAME_STATE_2
+	ora	#DRESSER_OPEN
+	sta	GAME_STATE_2
+
+	ldx	#<inside_nn_open_closed_drawer_message
+	ldy	#>inside_nn_open_closed_drawer_message
+	jmp	finish_parse_message
+
+inside_nn_open_drawer_already_open:
+	ldx	#<inside_nn_open_open_drawer_message
+	ldy	#>inside_nn_open_open_drawer_message
+	jmp	finish_parse_message
+
+	;================
+	; close
+	;================
+inside_nn_close:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_DRAWER
+	beq	inside_nn_close_drawer
+	cmp	#NOUN_DRESSER
+	beq	inside_nn_close_drawer
+
+	jmp	parse_common_unknown
+
+inside_nn_close_drawer:
+	; first check to see if it's open
+
+	lda	GAME_STATE_2
+	and	#DRESSER_OPEN
+	bne	inside_nn_close_drawer_open
+
+inside_nn_close_drawer_closed:
+	ldx	#<inside_nn_close_closed_drawer_message
+	ldy	#>inside_nn_close_closed_drawer_message
+	jmp	finish_parse_message
+
+inside_nn_close_drawer_open:
+
+	; regardless, we close the drawer
+
+	lda	GAME_STATE_2
+	and	#<(~DRESSER_OPEN)
+	sta	GAME_STATE_2
+
+	; see if robe has been taken
+
+	lda	INVENTORY_2
+	and	#INV2_ROBE
+	beq	inside_nn_close_drawer_full
+
+inside_nn_close_drawer_empty:
+	; get 1 pt
+
+	lda	#1
+	jsr	score_points
+
+	ldx	#<inside_nn_close_empty_drawer_message
+	ldy	#>inside_nn_close_empty_drawer_message
+	jmp	finish_parse_message
+
+inside_nn_close_drawer_full:
+
+	ldx	#<inside_nn_close_full_drawer_message
+	ldy	#>inside_nn_close_full_drawer_message
+	jmp	finish_parse_message
+
+
 
 
 .include "dialog_inside.inc"

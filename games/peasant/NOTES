@@ -194,8 +194,11 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  7 (get riches from jhonka)
 +  5 (throw baby)
 +  5 (deploy baby)
++  1 (close drawer)
++ 10 (get robe)
++  3 (wear robe)
 ======
-  96 points
+ 110 points
 
 
 deaths/endings implemented
