@@ -234,6 +234,10 @@ game_loop:
 	sta	PEASANT_Y
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
 
 not_ned_cottage:
 

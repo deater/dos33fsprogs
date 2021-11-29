@@ -159,8 +159,35 @@ game_loop:
 	beq	inside_lady_cottage
 	cmp	#LOCATION_HIDDEN_GLEN
 	beq	inside_hidden_glen
+	cmp	#LOCATION_INSIDE_NN
+	beq	inside_nn_cottage
 
-	bne	skip_level_specific
+	jmp	skip_level_specific
+
+inside_nn_cottage:
+	; check if leaving
+
+	lda	PEASANT_Y
+	cmp	#$95
+	bcc	skip_level_specific
+
+	; put outside door
+	lda	#13
+	sta	PEASANT_X
+	lda	#$6D
+	sta	PEASANT_Y
+
+	; stop walking
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+	; move back
+
+	lda     #LOCATION_OUTSIDE_NN
+	jsr	update_map_location
+
+	jmp	skip_level_specific
 
 inside_lady_cottage:
 	; check if leaving
@@ -250,6 +277,7 @@ inside_hidden_glen:
 
 
 	jmp	skip_level_specific
+
 
 skip_level_specific:
 
