@@ -174,7 +174,7 @@ inside_nn_cottage:
 	; put outside door
 	lda	#13
 	sta	PEASANT_X
-	lda	#$6D
+	lda	#$71
 	sta	PEASANT_Y
 
 	; stop walking

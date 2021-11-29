@@ -524,7 +524,7 @@ parse_common_wear_robe:
 
 	lda	GAME_STATE_1
 	and	#WEARING_ROBE
-	beq	parse_common_wear_robe_no_have
+	bne	parse_common_wear_robe_already
 
 parse_common_wear_robe_do_have:
 	; wear the robe
@@ -540,11 +540,12 @@ parse_common_wear_robe_do_have:
 
 	ldx	#<wear_robe_message
 	ldy	#>wear_robe_message
-	jsr	partial_message_step
 	jmp	finish_parse_message
 
-
-
+parse_common_wear_robe_already:
+	ldx	#<wear_robe_already_message
+	ldy	#>wear_robe_already_message
+	jmp	finish_parse_message
 
 parse_common_wear_robe_no_have:
 	ldx	#<wear_robe_none_message

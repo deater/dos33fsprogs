@@ -214,7 +214,7 @@ game_loop:
 	lda	PEASANT_Y	; #$68
 	cmp	#$64
 	bcc	not_ned_cottage
-	cmp	#$71
+	cmp	#$70
 	bcs	not_ned_cottage
 
 	lda	PEASANT_X	; 15 - 17
