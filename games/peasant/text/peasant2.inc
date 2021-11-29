@@ -558,14 +558,14 @@ talk_knight_after_belt_message:
 .byte "FIRE like a peasant.",0
 
 ; + talk knight (with ned's robe, on fire or not)
-talk_knight_after_robe_message:		; guessed at spacing
+talk_knight_after_robe_message:
 .byte "My dear Adso, you are",13
 .byte "dressed well but you don't",13
 .byte "STINK and you're not ON",13
 .byte "FIRE. Let us instead",13
-.byte "exercise our brains and",13
-.byte "try to solve this",13
-.byte "tantalizing conundrum.",0
+.byte "exercise our brains and try",13
+.byte "to solve this tantalizing",13
+.byte "conundrum.",0
 
 ; + talk knight (after acquiring Kerrek's belt and Naked Ned's robe)
 talk_knight_after_robe_and_belt_message:
