@@ -423,7 +423,7 @@ delays:
 ;.include "decompress_fast_v2.s"
 .include "hgr_overlay.s"
 
-.include "speaker_beeps.s"
+.include "speaker_beeps.inc"
 
 .include "text_print.s"
 .include "gr_offsets.s"

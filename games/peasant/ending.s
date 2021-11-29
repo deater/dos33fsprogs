@@ -557,12 +557,12 @@ game_over:
 .include "hgr_sprite.s"
 
 
-.include "score.s"
+;.include "score.s"
 
 .include "wait.s"
 .include "wait_a_bit.s"
 
-;.include "speaker_beeps.s"
+.include "speaker_beeps.inc"
 
 .include "graphics_end/ending_graphics.inc"
 

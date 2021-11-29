@@ -480,9 +480,73 @@ parse_common_version:
 parse_common_wear:
 
 	lda	CURRENT_NOUN
+
 	cmp	#NOUN_ROBE
+	beq	parse_common_wear_robe
+	cmp	#NOUN_BELT
+	beq	parse_common_wear_belt
+	cmp	#NOUN_MASK
+	beq	parse_common_wear_mask
+
 	bne	wear_unknown
 
+parse_common_wear_belt:
+	; first see if have it
+
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	beq	wear_unknown
+
+	ldx	#<wear_belt_message
+	ldy	#>wear_belt_message
+	jmp	finish_parse_message
+
+parse_common_wear_mask:
+	; first see if have it
+
+	lda	INVENTORY_1
+	and	#INV1_MONSTER_MASK
+	beq	wear_unknown
+
+	ldx	#<wear_mask_message
+	ldy	#>wear_mask_message
+	jmp	finish_parse_message
+
+
+parse_common_wear_robe:
+	; first check if have it
+
+	lda	INVENTORY_2
+	and	#INV2_ROBE
+	beq	parse_common_wear_robe_no_have
+
+	; next check if already wearing
+
+	lda	GAME_STATE_1
+	and	#WEARING_ROBE
+	beq	parse_common_wear_robe_no_have
+
+parse_common_wear_robe_do_have:
+	; wear the robe
+
+	lda	GAME_STATE_1
+	ora	#WEARING_ROBE
+	sta	GAME_STATE_1
+
+	; get 3 points
+
+	lda	#3
+	jsr	score_points
+
+	ldx	#<wear_robe_message
+	ldy	#>wear_robe_message
+	jsr	partial_message_step
+	jmp	finish_parse_message
+
+
+
+
+parse_common_wear_robe_no_have:
 	ldx	#<wear_robe_none_message
 	ldy	#>wear_robe_none_message
 	jsr	partial_message_step

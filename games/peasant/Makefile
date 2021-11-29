@@ -143,6 +143,12 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s location_names_h qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait_until_keypress qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s random16 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s score_points qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s print_score qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s update_score qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s speaker_duration qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s speaker_frequency qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 	echo "driveoff = \$$A22" >> qload.inc

@@ -241,7 +241,6 @@ level_over:
 .include "new_map_location.s"
 .include "peasant_move.s"
 
-.include "score.s"
 
 ;.include "parse_input.s"
 
@@ -276,6 +275,7 @@ level_over:
 ;.include "hgr_hgr2.s"
 ;.include "wait_keypress.s"
 ;.include "loadsave_menu.s"
+;.include "score.s"
 
 
 

@@ -227,7 +227,7 @@ game_over:
 
 ;.include "parse_input.s"
 
-.include "score.s"
+;.include "score.s"
 
 .include "keyboard.s"
 

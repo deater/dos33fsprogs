@@ -212,7 +212,7 @@ game_loop:
 
 	; at cottage, door open, check our co-ords
 	lda	PEASANT_Y	; #$68
-	cmp	#$67
+	cmp	#$64
 	bcc	not_ned_cottage
 	cmp	#$71
 	bcs	not_ned_cottage
@@ -287,12 +287,12 @@ game_over:
 ;.include "hgr_hgr2.s"
 ;.include "wait_keypress.s"
 ;.include "loadsave_menu.s"
+;.include "score.s"
+
 
 .include "gr_copy.s"
 
 .include "peasant_move.s"
-
-.include "score.s"
 
 .include "new_map_location.s"
 

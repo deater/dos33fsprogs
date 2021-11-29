@@ -3,12 +3,14 @@
 ;==================
 
 ; + get/wear belt (after getting it)
+wear_belt_message:
 .byte "You're already wearing it.",13
 .byte "Too bad you smell like the",13
 .byte "trash barge off Peasant",13
 .byte "Isle.",0
 
 ; + wear mask (after getting it)
+wear_mask_message:
 .byte "Not on this screen. You've",13
 .byte "got your image to think",13
 .byte "about. Actually, you might",13
@@ -17,7 +19,17 @@
 
 ; +3 points
 ; + wear robe (after getting it)
-.byte "You slip into the vintage robe. It smells like grampa's lap. Now you're lookin like a serious peasant.",0
+wear_robe_message:
+.byte "You slip into the vintage",13
+.byte "robe. It smells like",13
+.byte "grampa's lap. Now you're",13
+.byte "lookin like a serious",13
+.byte "peasant.",0
+
+; + wear robe (already wearing)
+wear_robe_already_message:
+.byte "You're already in the old",13
+.byte "skool robe. Represent.",0
 
 ; + wear robe (not in inventory)
 wear_robe_none_message:
@@ -28,9 +40,6 @@ wear_robe_none_message:
 wear_robe_none_message2:
 .byte "And pants. Forgot to",13
 .byte "mention the pants.",0
-
-; + wear robe (already wearing)
-.byte "You're already in the old skool robe. Represent.",0
 
 ; + look (when in hay disguise)
 .byte "Right now, you see a bunch of hay.",0

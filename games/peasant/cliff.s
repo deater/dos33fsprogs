@@ -193,7 +193,7 @@ game_over:
 
 ;.include "inventory.s"
 
-.include "score.s"
+;.include "score.s"
 
 .include "keyboard.s"
 

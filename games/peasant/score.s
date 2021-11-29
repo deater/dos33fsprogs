@@ -150,4 +150,3 @@ score_text:
 score_tail:
 	.byte " of 150",0
 
-.include "speaker_beeps.s"

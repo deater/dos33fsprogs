@@ -256,6 +256,8 @@ length_array:
 .include "loadsave_menu.s"
 .include "wait_keypress.s"
 .include "random16.s"
+.include "score.s"
+.include "speaker_beeps.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0
