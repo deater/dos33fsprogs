@@ -198,6 +198,45 @@ game_loop:
 
 	jsr	kerrek_collision
 
+	; check if can enter ned cottage
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_OUTSIDE_NN
+	bne	not_ned_cottage
+
+	; OK are are at the cottage, is the door open?
+
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	beq	not_ned_cottage
+
+	; at cottage, door open, check our co-ords
+	lda	PEASANT_Y	; #$68
+	cmp	#$67
+	bcc	not_ned_cottage
+	cmp	#$71
+	bcs	not_ned_cottage
+
+	lda	PEASANT_X	; 15 - 17
+	cmp	#15
+	bcc	not_ned_cottage
+	cmp	#18
+	bcs	not_ned_cottage
+
+	; we did it, we're entering Ned's cottage
+
+	lda	#LOCATION_INSIDE_NN
+	jsr	update_map_location
+
+	lda	#11
+	sta	PEASANT_X
+	lda	#$90
+	sta	PEASANT_Y
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+not_ned_cottage:
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	game_over

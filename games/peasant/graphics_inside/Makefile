@@ -45,12 +45,12 @@ inside_nn.hgr:	inside_nn.png
 ###
 
 priority_inside.inc:  \
-	todo_priority.lzsa \
+	inside_nn_priority.lzsa \
 	hidden_glen_priority.lzsa \
 	inside_cottage_priority.lzsa
 	echo "hidden_glen_priority_lzsa: .incbin \"hidden_glen_priority.lzsa\"" > priority_inside.inc
 	echo "inside_cottage_priority_lzsa: .incbin \"inside_cottage_priority.lzsa\"" >> priority_inside.inc
-	echo "inside_nn_priority_lzsa: .incbin \"todo_priority.lzsa\"" >> priority_inside.inc
+	echo "inside_nn_priority_lzsa: .incbin \"inside_nn_priority.lzsa\"" >> priority_inside.inc
 
 ####
 
@@ -62,11 +62,11 @@ inside_cottage_priority.gr:	inside_cottage_priority.png
 
 ####
 
-todo_priority.lzsa:	todo_priority.gr
-	$(LZSA) -r -f2 todo_priority.gr todo_priority.lzsa
+inside_nn_priority.lzsa:	inside_nn_priority.gr
+	$(LZSA) -r -f2 inside_nn_priority.gr inside_nn_priority.lzsa
 
-todo_priority.gr:	todo_priority.png
-	$(PNG2GR) todo_priority.png todo_priority.gr
+inside_nn_priority.gr:	inside_nn_priority.png
+	$(PNG2GR) inside_nn_priority.png inside_nn_priority.gr
 
 ####
 
@@ -78,6 +78,7 @@ hidden_glen_priority.gr:	hidden_glen_priority.png
 
 
 ####
+
 
 
 clean:	
