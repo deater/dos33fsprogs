@@ -362,7 +362,9 @@ crooked_look_day_message:
 .byte "burninated tree.",0
 
 ; + look (night)
-.byte "A burning signal lantern hangs from a severely burninated tree. ",0
+.byte "A burning signal lantern",13
+.byte "hangs from a severely",13
+.byte "burninated tree. ",0
 
 ; + look lantern (unlit)
 crooked_look_lantern_message:
@@ -373,7 +375,8 @@ crooked_look_lantern_message:
 .byte "the prowl.",0
 
 ; + look lantern (lit)
-.byte "It's lit! Musta been a Trogdor sighting tonight.",0
+.byte "It's lit! Musta been a",13
+.byte "Trogdor sighting tonight.",0
 
 ; + look stump
 crooked_look_stump_message:
@@ -387,10 +390,14 @@ crooked_look_tree_message:
 
 ; +10 POINTS
 ; + (walking under candle in burninated trees)
-.byte "Whoa! The horse grease on your robe caught fire! You're a for-real peasant now.",0
+.byte "Whoa! The horse grease on",13
+.byte "your robe caught fire!",13
+.byte "You're a for-real peasant",13
+.byte "now.",0
 
 ; + (exiting on fire)
-.byte "Man, screens sure get light fast around here.",0
+.byte "Man, screens sure get light",13
+.byte "fast around here.",0
 
 ; + light lantern (before lit)
 crooked_tree_light_lantern_message:
@@ -407,7 +414,9 @@ crooked_tree_light_lantern_message:
 .byte "You don't need to get IT. Just let IT get YOU.",0
 
 ; + get fire (at night, after getting on fire)
-.byte "You're already on fire! What? You want to be MORE on fire?",0
+.byte "You're already on fire!",13
+.byte "What? You want to be MORE",13
+.byte "on fire?",0
 
 ; + get lantern
 crooked_tree_get_lantern_message:

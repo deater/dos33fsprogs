@@ -236,9 +236,8 @@ inside_inn_get:
 	jmp	parse_common_get
 
 inn_get_room:
-
-	lda	INVENTORY_2
-	and	#INV2_ROBE	; check if have robe
+	lda	GAME_STATE_1
+	and	#WEARING_ROBE	; check if wearing robe
 	bne	inn_get_room_have_robe
 
 inn_get_room_no_robe:
