@@ -25,16 +25,16 @@ inside_inn.hgr:	inside_inn.png
 ###
 
 priority_inn.inc:  \
-	todo_priority.lzsa
-	echo "inside_inn_priority_lzsa: .incbin \"todo_priority.lzsa\"" > priority_inn.inc
+	inside_inn_priority.lzsa
+	echo "inside_inn_priority_lzsa: .incbin \"inside_inn_priority.lzsa\"" > priority_inn.inc
 
 ####
 
-todo_priority.lzsa:	todo_priority.gr
-	$(LZSA) -r -f2 todo_priority.gr todo_priority.lzsa
+inside_inn_priority.lzsa:	inside_inn_priority.gr
+	$(LZSA) -r -f2 inside_inn_priority.gr inside_inn_priority.lzsa
 
-todo_priority.gr:	todo_priority.png
-	$(PNG2GR) todo_priority.png todo_priority.gr
+inside_inn_priority.gr:	inside_inn_priority.png
+	$(PNG2GR) inside_inn_priority.png inside_inn_priority.gr
 
 ####
 
