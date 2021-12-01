@@ -408,10 +408,13 @@ crooked_tree_light_lantern_message:
 .byte "Already lit, moron.",0
  
 ; + get fire (at night, before grease)
-.byte "You're just not flammable enough.",0
+.byte "You're just not",13		; guess, not measured
+.byte "flammable enough.",0
 
 ; + get fire (at night, after grease)
-.byte "You don't need to get IT. Just let IT get YOU.",0
+.byte "You don't need to get",13	; guess, not measured
+.byte "IT. Just let IT get",13
+.byte "YOU.",0
 
 ; + get fire (at night, after getting on fire)
 .byte "You're already on fire!",13
