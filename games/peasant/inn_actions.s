@@ -27,6 +27,8 @@ inside_inn_verb_table:
         .word inside_inn_sleep-1
         .byte VERB_OPEN
         .word inside_inn_open-1
+        .byte VERB_LIGHT
+        .word inside_inn_light-1
 	.byte 0
 
 	;=================
@@ -34,7 +36,13 @@ inside_inn_verb_table:
 	;=================
 
 inside_inn_look:
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	inside_inn_look_day
 
+	jmp	inside_inn_look_night
+
+inside_inn_look_day:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_PILLOW
@@ -67,6 +75,8 @@ inside_inn_look:
 	beq	inn_look_at_bell
 	cmp	#NOUN_DESK
 	beq	inn_look_at_desk
+	cmp	#NOUN_DOOR
+	beq	inn_look_at_door
 
 	cmp	#NOUN_NONE
 	beq	inn_look_at
@@ -123,12 +133,91 @@ inn_look_at_desk:
 	ldy	#>inside_inn_look_desk_message
 	jmp	finish_parse_message
 
+inn_look_at_door:
+	ldx	#<inside_inn_open_door_message
+	ldy	#>inside_inn_open_door_message
+	jmp	finish_parse_message
+
+
+inside_inn_look_night:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_PILLOW
+	beq	inn_look_at_pillow
+	cmp	#NOUN_NOTE
+	beq	inn_look_at_paper
+	cmp	#NOUN_PAPER
+	beq	inn_look_at_paper
+	cmp	#NOUN_PAINTING
+	beq	inn_look_at_painting
+	cmp	#NOUN_DUDE
+	beq	inn_look_at_man_night
+	cmp	#NOUN_GUY
+	beq	inn_look_at_man_night
+	cmp	#NOUN_MAN
+	beq	inn_look_at_man_night
+	cmp	#NOUN_WINDOW
+	beq	inn_look_at_window
+	cmp	#NOUN_PILLOW
+	beq	inn_look_at_pillow
+	cmp	#NOUN_RUG
+	beq	inn_look_at_rug
+	cmp	#NOUN_CARPET
+	beq	inn_look_at_rug
+	cmp	#NOUN_BED
+	beq	inn_look_at_bed
+	cmp	#NOUN_MATTRESS
+	beq	inn_look_at_bed
+	cmp	#NOUN_BELL
+	beq	inn_look_at_bell
+	cmp	#NOUN_DESK
+	beq	inn_look_at_desk
+	cmp	#NOUN_POT
+	beq	inn_look_at_pot_night
+
+	cmp	#NOUN_NONE
+	beq	inn_look_at_night
+
+	jmp	parse_common_look
+
+inn_look_at_night:
+	ldx	#<inside_inn_look_night_message
+	ldy	#>inside_inn_look_night_message
+	jmp	finish_parse_message
+
+inn_look_at_man_night:
+	ldx	#<inside_inn_look_man_night_message
+	ldy	#>inside_inn_look_man_night_message
+	jmp	finish_parse_message
+
+inn_look_at_pot_night:
+	ldx	#<inside_inn_look_pot_night_message
+	ldy	#>inside_inn_look_pot_night_message
+	jmp	finish_parse_message
+
+inn_look_at_desk_night:
+	ldx	#<inside_inn_look_desk_night_message
+	ldy	#>inside_inn_look_desk_night_message
+	jmp	finish_parse_message
+
+inn_look_at_candle_night:
+	ldx	#<inside_inn_look_candle_night_message
+	ldy	#>inside_inn_look_candle_night_message
+	jmp	finish_parse_message
+
+
 
 	;=================
 	; talk
 	;=================
 
 inside_inn_talk:
+
+	; no talking at night
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	inn_talk_no_one
 
 	lda	CURRENT_NOUN
 
@@ -140,7 +229,7 @@ inside_inn_talk:
 	beq	inn_talk_man
 	cmp	#NOUN_DUDE
 	beq	inn_talk_man
-
+inn_talk_no_one:
 	jmp	parse_common_talk
 
 inn_talk_man:
@@ -154,11 +243,17 @@ inn_talk_man:
 
 inside_inn_give:
 
+	; no giving at night
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	inn_give_no_one
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_BABY
 	beq	inn_give_baby
-
+inn_give_no_one:
 	jmp	parse_common_give
 
 inn_give_baby:
@@ -210,8 +305,6 @@ inside_inn_get:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROOM
-	beq	inn_get_room
 	cmp	#NOUN_PAPER
 	beq	inn_get_paper
 	cmp	#NOUN_NOTE
@@ -232,36 +325,19 @@ inside_inn_get:
 	beq	inn_get_bell
 	cmp	#NOUN_BED
 	beq	inn_get_bed
+	cmp	#NOUN_POT
+	beq	inn_get_pot
+	cmp	#NOUN_GREASE
+	beq	inn_get_grease
+	cmp	#NOUN_CANDLE
+	beq	inn_get_candle
+	cmp	#NOUN_RUB
+	beq	inn_get_rub
+
+	cmp	#NOUN_ROOM
+	beq	inn_get_room
 
 	jmp	parse_common_get
-
-inn_get_room:
-	lda	GAME_STATE_1
-	and	#WEARING_ROBE	; check if wearing robe
-	bne	inn_get_room_have_robe
-
-inn_get_room_no_robe:
-	ldx	#<inside_inn_get_room_no_robe_message
-	ldy	#>inside_inn_get_room_no_robe_message
-	jmp	finish_parse_message
-
-inn_get_room_have_robe:
-	ldx	#<inside_inn_get_room_message
-	ldy	#>inside_inn_get_room_message
-	jsr	partial_message_step
-
-	; add 3 points to score
-
-	lda	#3
-	jsr	score_points
-
-	ldx	#<inside_inn_get_room2_message
-	ldy	#>inside_inn_get_room2_message
-	jsr	partial_message_step
-
-	ldx	#<inside_inn_get_room3_message
-	ldy	#>inside_inn_get_room3_message
-	jmp	finish_parse_message
 
 inn_get_paper:
 	ldx	#<inside_inn_get_paper_message
@@ -298,12 +374,126 @@ inn_get_bed:
 	ldy	#>inside_inn_get_bed_message
 	jmp	finish_parse_message
 
+inn_get_pot:
+inn_get_grease:
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	inn_do_get_grease
+	jmp	parse_common_get
+
+inn_do_get_grease:
+	lda	GAME_STATE_2
+	and	#GREASE_ON_HEAD
+	beq	inn_finally_get_grease
+
+inn_grease_already:
+	ldx	#<inside_inn_grease_already_message
+	ldy	#>inside_inn_grease_already_message
+	jmp	finish_parse_message
+
+inn_finally_get_grease:
+	ldx	#<inside_inn_get_grease_message
+	ldy	#>inside_inn_get_grease_message
+	jsr	partial_message_step
+
+	lda	#2
+	jsr	score_points
+
+	lda	GAME_STATE_2
+	ora	#GREASE_ON_HEAD
+	sta	GAME_STATE_2
+
+	lda	GAME_STATE_1
+	ora	#POT_ON_HEAD
+	sta	GAME_STATE_1
+
+	ldx	#<inside_inn_get_grease_message2
+	ldy	#>inside_inn_get_grease_message2
+	jmp	finish_parse_message
+
+inn_get_candle:
+	ldx	#<inside_inn_get_candle_message
+	ldy	#>inside_inn_get_candle_message
+	jmp	finish_parse_message
+
+inn_get_rub:
+	ldx	#<inside_inn_get_rub_message
+	ldy	#>inside_inn_get_rub_message
+	jmp	finish_parse_message
+
+
+
+
+inn_get_room:
+	lda	GAME_STATE_1
+	and	#WEARING_ROBE	; check if wearing robe
+	bne	inn_get_room_have_robe
+
+inn_get_room_no_robe:
+	ldx	#<inside_inn_get_room_no_robe_message
+	ldy	#>inside_inn_get_room_no_robe_message
+	jmp	finish_parse_message
+
+inn_get_room_on_fire:
+	ldx	#<inside_inn_get_room_no_robe_message
+	ldy	#>inside_inn_get_room_no_robe_message
+	jmp	finish_parse_message
+
+inn_get_room_have_robe:
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	inn_get_room_have_room_day
+
+	jmp	parse_common_get
+
+inn_get_room_have_room_day:
+	lda	GAME_STATE_2
+	and	#ON_FIRE	; check if on fire
+	bne	inn_get_room_on_fire
+
+	ldx	#<inside_inn_get_room_message
+	ldy	#>inside_inn_get_room_message
+	jsr	partial_message_step
+
+	; add 3 points to score
+	; only do this once though
+
+	lda	GAME_STATE_1
+	and	#ALREADY_GOT_ROOM
+	bne	inn_get_room_skip_points
+
+	lda	#3
+	jsr	score_points
+inn_get_room_skip_points:
+
+	; Make it night
+	lda	GAME_STATE_1
+	ora	#(NIGHT|ALREADY_GOT_ROOM)
+	sta	GAME_STATE_1
+
+	ldx	#<inside_inn_get_room2_message
+	ldy	#>inside_inn_get_room2_message
+	jsr	partial_message_step
+
+	ldx	#<inside_inn_get_room3_message
+	ldy	#>inside_inn_get_room3_message
+	jmp	finish_parse_message
+
+
 
 	;=================
 	; ask about
 	;=================
 
 inside_inn_ask:
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	inn_ask_day
+
+	jmp	parse_common_ask
+
+inn_ask_day:
 
 	lda	CURRENT_NOUN
 
@@ -373,6 +563,10 @@ inn_ring_bell:
 
 inside_inn_sleep:
 
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	inn_sleep_no_one
+
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_BED
@@ -380,6 +574,7 @@ inside_inn_sleep:
 	cmp	#NOUN_NONE
 	beq	inn_sleep_bed
 
+inn_sleep_no_one:
 	jmp	parse_common_unknown
 
 inn_sleep_bed:
@@ -404,6 +599,29 @@ inn_open_door:
 	ldx	#<inside_inn_open_door_message
 	ldy	#>inside_inn_open_door_message
 	jmp	finish_parse_message
+
+	;=================
+	; light
+	;=================
+
+inside_inn_light:
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	inn_light_day
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_CANDLE
+	beq	inn_light_candle
+inn_light_day:
+	jmp	parse_common_unknown
+
+inn_light_candle:
+	ldx	#<inside_inn_get_candle_message
+	ldy	#>inside_inn_get_candle_message
+	jmp	finish_parse_message
+
 
 
 

@@ -197,8 +197,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  1 (close drawer)
 + 10 (get robe)
 +  3 (wear robe)
++  2 (get grease)
 ======
- 110 points
+ 112 points
 
 
 deaths/endings implemented

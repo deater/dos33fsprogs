@@ -137,7 +137,7 @@ GAME_STATE_1 = $98
 	FISH_FED=$01		; also implies man gone and inn open
 	PUDDLE_WET=$02
 	IN_HAY_BALE=$04
-;	JHONKA_OUT=$08		; implied by KERREK_STATE & $0f !=0
+	ALREADY_GOT_ROOM=$08
 	RAINING=$10
 	NIGHT=$20
 	POT_ON_HEAD=$40
@@ -150,6 +150,7 @@ GAME_STATE_2 = $99
 	TALKED_TO_KNIGHT = $10
 	COVERED_IN_MUD = $20
 	GOT_MUDDY_ALREADY = $40
+	GREASE_ON_HEAD =$80
 
 NED_STATUS	= $9A
 BUSH_STATUS	= $9B	; status of bush search

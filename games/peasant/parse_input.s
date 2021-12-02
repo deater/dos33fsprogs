@@ -977,6 +977,7 @@ noun_lookup_again:
 .byte "GAME",NOUN_GAME|$80
 .byte "GARY",NOUN_GARY|$80
 .byte "GOLD",NOUN_GOLD|$80
+.byte "GREASE",NOUN_GREASE|$80
 .byte "GREEN",NOUN_GREEN|$80
 .byte "GROUND",NOUN_GROUND|$80
 .byte "GUY",NOUN_GUY|$80
