@@ -143,13 +143,44 @@ new_location:
 
 	;=======================
 	; before game text
+	;=======================
+
 
 	lda	MAP_LOCATION
+
 	cmp	#LOCATION_JHONKA_CAVE
+	beq	before_jhonka_cave
+
+	cmp	#LOCATION_OUTSIDE_INN
+	beq	before_inn
+
 	bne	no_before_game_text
 
+
+	;=====================
+	; at inn
+
+before_inn:
+	; see if pot on head
+
+	lda	GAME_STATE_1
+	and	#POT_ON_HEAD
+	beq	no_before_game_text
+
+	; take pott off head
+
+	lda	GAME_STATE_1
+	and	#<(~POT_ON_HEAD)
+	sta	GAME_STATE_1
+
+	ldx	#<outside_inn_pot_message
+	ldy	#>outside_inn_pot_message
+	jsr	finish_parse_message
+
+	;=====================
 	; at jhonka cave
 
+before_jhonka_cave:
 	; check to see if in hay
 
 	lda	GAME_STATE_1

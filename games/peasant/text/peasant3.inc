@@ -533,6 +533,17 @@ lake_east_throw_default_gone_message:
 ; Outside Giant Inn
 ;===================
 
+; + (exiting inn with pot on head)
+outside_inn_pot_message:
+.byte "Phew! You discard the big",13
+.byte "black pot and wipe the",13
+.byte "horse grease from your",13
+.byte "eyes. The hood of your robe",13
+.byte "is still covered in highly",13
+.byte "flammable horse grease,",13
+.byte "though.",0
+
+
 ; + look
 outside_inn_look_message:
 .byte "There's a giant Inn here.",13
