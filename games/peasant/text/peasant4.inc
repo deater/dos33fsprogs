@@ -359,12 +359,6 @@ lady_cottage_open_door_message:
 ; Burninated Trees / Lantern
 ;============================
 
-; after you've walked through (???) screens?
-; unclear how this works
-.byte "Man, screens sure get light",13
-.byte "fast around here.",0
-
-
 ; + look
 crooked_look_day_message:
 .byte "A signal lantern of some",13

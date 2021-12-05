@@ -435,8 +435,8 @@ inn_get_room_no_robe:
 	jmp	finish_parse_message
 
 inn_get_room_on_fire:
-	ldx	#<inside_inn_get_room_no_robe_message
-	ldy	#>inside_inn_get_room_no_robe_message
+	ldx	#<inside_inn_get_room_on_fire_message
+	ldy	#>inside_inn_get_room_on_fire_message
 	jmp	finish_parse_message
 
 inn_get_room_have_robe:

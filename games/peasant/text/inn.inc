@@ -180,6 +180,7 @@ inside_inn_get_room3_message:
 .byte "you to get up.",0
 
 ; + get a room (when on fire)
+inside_inn_get_room_on_fire_message:
 .byte 34,"Board of Peasant Health",13	; [sic] in game says \oard
 .byte "says I can't serve any folk",13
 .byte "that's on fire. Nothing",13

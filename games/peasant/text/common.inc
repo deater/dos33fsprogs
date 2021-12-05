@@ -11,6 +11,12 @@
 .byte "you're no longer in stealth",13
 .byte "mode.",0
 
+; TODO
+; when it's night
+; after you've walked through (???) screens?
+; unclear how this works
+.byte "Man, screens sure get light",13
+.byte "fast around here.",0
 
 ; + get/wear belt (after getting it)
 wear_belt_message:
