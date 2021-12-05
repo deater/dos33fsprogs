@@ -14,7 +14,18 @@
 	; input is in input_buffer
 
 parse_input:
+	;===========================
+	; speacial case: pot on head
 
+	lda	GAME_STATE_1
+	and	#POT_ON_HEAD
+	beq	no_pot_on_head
+
+	ldx	#<inside_inn_pot_on_head_message
+	ldy	#>inside_inn_pot_on_head_message
+	jmp	finish_parse_message
+
+no_pot_on_head:
 	;==================
 	; uppercase the buffer
 

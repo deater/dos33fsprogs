@@ -4,11 +4,6 @@ inn_dialog_start:
 ; Inside Giant Inn
 ;==================
 
-; Type any command while the pot of horse grease is on your head
-.byte "You need to get out of",13
-.byte "there before that smelly",13
-.byte "octogenarian gets back.",0
-
 ; + look (day)
 inside_inn_look_message:
 .byte "What a dump! Only one bed",13

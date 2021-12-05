@@ -2,6 +2,12 @@
 ; Anywhere
 ;==================
 
+; Type any command while the pot of horse grease is on your head
+inside_inn_pot_on_head_message:
+.byte "You need to get out of",13
+.byte "there before that smelly",13
+.byte "octogenarian gets back.",0
+
 ; TODO
 ; After jumping in the haystack, go to any screen except Jhonka
 ; both hay and mud go away

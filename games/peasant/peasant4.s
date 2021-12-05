@@ -232,9 +232,9 @@ game_loop:
 	; check if Y in range
 	lda	PEASANT_Y
 	cmp	#$85
-	bcs	not_burn_trees
-	cmp	#$65
-	bcc	not_burn_trees
+	bcs	not_burn_trees	; bge
+	cmp	#$70
+	bcc	not_burn_trees	; blt
 
 	; finally set on fire
 
