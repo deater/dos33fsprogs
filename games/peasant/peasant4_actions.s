@@ -437,6 +437,17 @@ ned_cottage_look_at_fence:
 	jmp	finish_parse_message
 
 ned_cottage_look_at_rock:
+	; check to see if it has been moved
+	lda	GAME_STATE_2
+	and	#COTTAGE_ROCK_MOVED
+	beq	ned_cottage_look_at_rock_unmoved
+
+ned_cottage_look_at_rock_moved:
+	ldx	#<ned_cottage_look_rock_moved_message
+	ldy	#>ned_cottage_look_rock_moved_message
+	jmp	finish_parse_message
+
+ned_cottage_look_at_rock_unmoved:
 	ldx	#<ned_cottage_look_rock_message
 	ldy	#>ned_cottage_look_rock_message
 	jmp	finish_parse_message
@@ -501,6 +512,10 @@ ned_tree_talk:
 
 	cmp	#NOUN_TREE
 	beq	ned_tree_talk_tree
+	cmp	#NOUN_NONE
+	beq	ned_tree_talk_at
+	cmp	#NOUN_NED
+	beq	ned_tree_talk_ned
 
 	jmp	parse_common_talk
 
@@ -508,6 +523,41 @@ ned_tree_talk_tree:
 	ldx	#<ned_tree_talk_tree_message
 	ldy	#>ned_tree_talk_tree_message
 	jmp	finish_parse_message
+
+ned_tree_talk_ned:
+	; only if he's out
+	lda	NED_STATUS
+	bmi	ned_tree_talk_ned_out
+
+	jmp	parse_common_talk
+
+ned_tree_talk_ned_out:
+
+	ldx	#<ned_tree_talk_ned_message
+	ldy	#>ned_tree_talk_ned_message
+	jmp	finish_parse_message
+
+ned_tree_talk_at:
+	; only if he's out
+
+	lda	NED_STATUS
+	bmi	ned_tree_talk_at_out
+
+	jmp	parse_common_talk
+
+ned_tree_talk_at_out:
+
+	; scare him away
+
+	lda	#0
+	sta	NED_STATUS
+
+	; FIXME: do we need to re-draw?
+
+	ldx	#<ned_tree_talk_none_message
+	ldy	#>ned_tree_talk_none_message
+	jmp	finish_parse_message
+
 
 	;=================
 	; look
@@ -521,6 +571,15 @@ ned_tree_look:
 	beq	ned_tree_look_at_tree
 	cmp	#NOUN_NONE
 	beq	ned_tree_look_at
+	cmp	#NOUN_DUDE
+	beq	ned_tree_look_guy
+	cmp	#NOUN_GUY
+	beq	ned_tree_look_guy
+	cmp	#NOUN_MAN
+	beq	ned_tree_look_guy
+	cmp	#NOUN_NED
+	beq	ned_tree_look_guy
+
 
 	jmp	parse_common_look
 
@@ -532,6 +591,19 @@ ned_tree_look_at:
 ned_tree_look_at_tree:
 	ldx	#<ned_tree_look_at_tree_message
 	ldy	#>ned_tree_look_at_tree_message
+	jmp	finish_parse_message
+
+ned_tree_look_guy:
+
+	; only if he's visible
+	lda	NED_STATUS
+	bmi	ned_tree_look_ned_out
+
+	jmp	parse_common_look
+
+ned_tree_look_ned_out:
+	ldx	#<ned_tree_look_ned_message
+	ldy	#>ned_tree_look_ned_message
 	jmp	finish_parse_message
 
 

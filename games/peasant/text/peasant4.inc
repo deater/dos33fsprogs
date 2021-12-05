@@ -95,6 +95,7 @@ ned_cottage_look_rock_message:
 .byte "the cottage.",0
 
 ; + look rock (after removing it)
+ned_cottage_look_rock_moved_message:
 .byte "Some jerk removed a loose",13
 .byte "stone from the back of the",13
 .byte "cottage.",0
@@ -207,6 +208,7 @@ ned_tree_look_at_message:
 ; + look guy
 ; + look man
 ; + look ned (when Naked Ned is peeking out)
+ned_tree_look_ned_message:
 .byte "A fairly naked man is",13
 .byte "peering out from behind",13
 .byte "that tree.",0
@@ -220,11 +222,13 @@ ned_tree_climb_tree_message:
 .byte "You don't climb wavy trees.",0
 
 ; + talk (with Naked Ned visible)  (he disappears until you re-enter)
+ned_tree_talk_none_message:
 .byte "You startled him and he",13
 .byte "disappears!",0
 
 ; + talk ned
 ; + talk Naked Ned (with Naked Ned visible)
+ned_tree_talk_ned_message:
 .byte "'Never speak of this",13
 .byte "meeting!' says the nudie",13
 .byte "and he disapperars.",0

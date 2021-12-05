@@ -153,6 +153,10 @@ GAME_STATE_2 = $99
 	GREASE_ON_HEAD =$80
 
 NED_STATUS	= $9A
+	; 0 = hiding
+	; 1..127 = countdown to appearing
+	; negative = out
+
 BUSH_STATUS	= $9B	; status of bush search
 	BUSH_1_SEARCHED = $01
 	BUSH_2_SEARCHED = $02
