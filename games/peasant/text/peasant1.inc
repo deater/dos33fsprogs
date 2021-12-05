@@ -449,11 +449,12 @@ well_get_bucket_message:
 ; throw
 
 ; + throw baby (if you have it)
+well_throw_baby_have_message:
 .byte "Throw it where?",0
 
 ; + throw baby
 ; + put baby in bucket/well (before baby/after baby)
-well_throw_baby_message:
+well_throw_baby_none_message:
 well_put_baby_none_message:
 .byte "Hmmmm... A baby, eh? You",13
 .byte "check your sundial.",13

@@ -712,8 +712,26 @@ well_throw:
 	jmp	parse_common_unknown
 
 well_throw_baby:
-	ldx	#<well_throw_baby_message
-	ldy	#>well_throw_baby_message
+	; first see if have baby
+
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	well_throw_baby_none
+
+	; next see if still have baby
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	well_throw_baby_none
+
+well_throw_baby_have:
+
+	ldx	#<well_throw_baby_have_message
+	ldy	#>well_throw_baby_have_message
+	jmp	finish_parse_message
+
+well_throw_baby_none:
+	ldx	#<well_throw_baby_none_message
+	ldy	#>well_throw_baby_none_message
 	jmp	finish_parse_message
 
 
