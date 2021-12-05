@@ -226,7 +226,7 @@ ned_tree_talk_none_message:
 .byte "You startled him and he",13
 .byte "disappears!",0
 
-; + talk ned
+; + talk ned			(he disappears)
 ; + talk Naked Ned (with Naked Ned visible)
 ned_tree_talk_ned_message:
 .byte "'Never speak of this",13
@@ -359,6 +359,12 @@ lady_cottage_open_door_message:
 ; Burninated Trees / Lantern
 ;============================
 
+; after you've walked through (???) screens?
+; unclear how this works
+.byte "Man, screens sure get light",13
+.byte "fast around here.",0
+
+
 ; + look
 crooked_look_day_message:
 .byte "A signal lantern of some",13
@@ -366,19 +372,21 @@ crooked_look_day_message:
 .byte "burninated tree.",0
 
 ; + look (night)
+crooked_look_night_message:
 .byte "A burning signal lantern",13
 .byte "hangs from a severely",13
 .byte "burninated tree. ",0
 
-; + look lantern (unlit)
-crooked_look_lantern_message:
+; + look lantern (day)
+crooked_look_lantern_day_message:
 .byte "It's unlit at the moment.",13
 .byte "That fancy pants royal",13
 .byte "knight probably lights it",13
 .byte "on nights when Troggie's on",13
 .byte "the prowl.",0
 
-; + look lantern (lit)
+; + look lantern (night)
+crooked_look_lantern_night_message:
 .byte "It's lit! Musta been a",13
 .byte "Trogdor sighting tonight.",0
 
@@ -394,33 +402,33 @@ crooked_look_tree_message:
 
 ; +10 POINTS
 ; + (walking under candle in burninated trees)
+crooked_catch_fire_message:
 .byte "Whoa! The horse grease on",13
 .byte "your robe caught fire!",13
 .byte "You're a for-real peasant",13
 .byte "now.",0
 
-; + (exiting on fire)
-.byte "Man, screens sure get light",13
-.byte "fast around here.",0
-
-; + light lantern (before lit)
-crooked_tree_light_lantern_message:
+; + light lantern (day)
+crooked_tree_light_lantern_day_message:
 .byte "With what? Your red-hot",13
 .byte "intellect?",0
 
-; + light lantern (already lit)
+; + light lantern (night)
+crooked_tree_light_lantern_night_message:
 .byte "Already lit, moron.",0
  
 ; + get fire (at night, before grease)
-.byte "You're just not",13		; guess, not measured
-.byte "flammable enough.",0
+crooked_tree_get_fire_not_greased_message:
+.byte "You're just not flammable",13
+.byte "enough.",0
 
 ; + get fire (at night, after grease)
-.byte "You don't need to get",13	; guess, not measured
-.byte "IT. Just let IT get",13
-.byte "YOU.",0
+crooked_tree_get_fire_greased_message:
+.byte "You don't need to get IT.",13
+.byte "Just let IT get YOU.",0
 
 ; + get fire (at night, after getting on fire)
+crooked_tree_get_fire_already_message:
 .byte "You're already on fire!",13
 .byte "What? You want to be MORE",13
 .byte "on fire?",0

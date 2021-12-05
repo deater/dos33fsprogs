@@ -533,6 +533,12 @@ ned_tree_talk_ned:
 
 ned_tree_talk_ned_out:
 
+	; scare him away
+
+	lda	#0
+	sta	NED_STATUS
+	; FIXME: do we need to re-draw?
+
 	ldx	#<ned_tree_talk_ned_message
 	ldy	#>ned_tree_talk_ned_message
 	jmp	finish_parse_message
@@ -551,7 +557,6 @@ ned_tree_talk_at_out:
 
 	lda	#0
 	sta	NED_STATUS
-
 	; FIXME: do we need to re-draw?
 
 	ldx	#<ned_tree_talk_none_message
@@ -946,7 +951,42 @@ crooked_tree_get:
 
 crooked_get_fire:
 	; only at night
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	crooked_get_fire_night
+
 	jmp	parse_common_get
+
+crooked_get_fire_night:
+
+	; first check if already on fire
+
+	lda	GAME_STATE_2
+	and	#ON_FIRE
+	bne	crooked_get_fire_already_alight
+
+	; next check if have grease or not
+
+	lda	GAME_STATE_2
+	and	#GREASE_ON_HEAD
+	beq	crooked_get_fire_not_greased
+
+crooked_get_fire_greased:
+	ldx	#<crooked_tree_get_fire_greased_message
+	ldy	#>crooked_tree_get_fire_greased_message
+	jmp	finish_parse_message
+
+crooked_get_fire_not_greased:
+	ldx	#<crooked_tree_get_fire_not_greased_message
+	ldy	#>crooked_tree_get_fire_not_greased_message
+	jmp	finish_parse_message
+
+
+crooked_get_fire_already_alight:
+	ldx	#<crooked_tree_get_fire_already_message
+	ldy	#>crooked_tree_get_fire_already_message
+	jmp	finish_parse_message
 
 crooked_get_lantern:
 	ldx	#<crooked_tree_get_lantern_message
@@ -975,8 +1015,19 @@ crooked_tree_light:
 	jmp	parse_common_unknown
 
 light_lantern:
-	ldx	#<crooked_tree_light_lantern_message
-	ldy	#>crooked_tree_light_lantern_message
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	bne	light_lantern_night
+
+light_lantern_day:
+	ldx	#<crooked_tree_light_lantern_day_message
+	ldy	#>crooked_tree_light_lantern_day_message
+	jmp	finish_parse_message
+
+light_lantern_night:
+	ldx	#<crooked_tree_light_lantern_night_message
+	ldy	#>crooked_tree_light_lantern_night_message
 	jmp	finish_parse_message
 
 
@@ -1000,13 +1051,35 @@ crooked_tree_look:
 	jmp	parse_common_look
 
 crooked_look:
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	crooked_look_day
+
+crooked_look_night:
+	ldx	#<crooked_look_night_message
+	ldy	#>crooked_look_night_message
+	jmp	finish_parse_message
+
+crooked_look_day:
 	ldx	#<crooked_look_day_message
 	ldy	#>crooked_look_day_message
 	jmp	finish_parse_message
 
 crooked_look_lantern:
-	ldx	#<crooked_look_lantern_message
-	ldy	#>crooked_look_lantern_message
+
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	crooked_look_lantern_day
+
+crooked_look_lantern_night:
+	ldx	#<crooked_look_lantern_night_message
+	ldy	#>crooked_look_lantern_night_message
+	jmp	finish_parse_message
+
+crooked_look_lantern_day:
+	ldx	#<crooked_look_lantern_day_message
+	ldy	#>crooked_look_lantern_day_message
 	jmp	finish_parse_message
 
 crooked_look_stump:

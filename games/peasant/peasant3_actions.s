@@ -141,6 +141,11 @@ jhonka_verb_no:
 	lda	#$EA
 	sta	parse_input_smc
 
+	; dry up the mud
+	lda	GAME_STATE_1
+	and	#<(~PUDDLE_WET)
+	sta	GAME_STATE_1
+
 	; get riches
 
 	lda	INVENTORY_2

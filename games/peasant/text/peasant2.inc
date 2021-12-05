@@ -89,6 +89,9 @@ hay_get_hay_message:
 ; Mud Puddle
 ;=============
 
+; note, puddle goes dry after you get riches?
+
+
 ; +2 POINTS
 ; + (walk into puddle when raining)
 puddle_walk_in_message:

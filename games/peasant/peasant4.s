@@ -196,10 +196,65 @@ game_loop:
 
 	jsr	check_keyboard
 
+	;==========================
+	; check if kerrek collision
+	;==========================
+
 	jsr	kerrek_collision
 
-	; check if can enter ned cottage
+	;==========================
+	; check if lighting on fire
+	;==========================
 
+	lda	MAP_LOCATION
+	cmp	#LOCATION_BURN_TREES
+	bne	not_burn_trees
+
+	; see if already on fire
+
+	lda	GAME_STATE_2
+	and	#ON_FIRE
+	bne	not_burn_trees
+
+	; see if have grease on head
+
+	lda	GAME_STATE_2
+	and	#GREASE_ON_HEAD
+	beq	not_burn_trees
+
+	; check if X in range
+	lda	PEASANT_X
+	cmp	#$A		; blt
+	bcc	not_burn_trees
+	cmp	#$D
+	bcs	not_burn_trees	; bge
+
+	; check if Y in range
+	lda	PEASANT_Y
+	cmp	#$85
+	bcs	not_burn_trees
+	cmp	#$65
+	bcc	not_burn_trees
+
+	; finally set on fire
+
+	lda	GAME_STATE_2
+	ora	#ON_FIRE
+	sta	GAME_STATE_2
+
+	; increment score
+	lda	#$10	; bcd
+	jsr	score_points
+
+	ldx	#<crooked_catch_fire_message
+	ldy	#>crooked_catch_fire_message
+	jsr	partial_message_step
+
+not_burn_trees:
+
+	;===============================
+	; check if can enter ned cottage
+	;===============================
 	lda	MAP_LOCATION
 	cmp	#LOCATION_OUTSIDE_NN
 	bne	not_ned_cottage
