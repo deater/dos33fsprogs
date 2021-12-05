@@ -717,7 +717,11 @@ lake_west_get_pebbles:
 	bne	lake_west_yes_pebbles
 
 lake_west_no_pebbles:
-	; TODO: only if standing on them
+	; only if standing vaguely near them
+
+	lda	PEASANT_Y
+	cmp	#$70
+	bcs	pebbles_too_far		; bge
 
 	; pick up pebbles
 	lda	INVENTORY_1
@@ -733,6 +737,13 @@ lake_west_no_pebbles:
 	ldx	#<lake_west_get_pebbles_message
 	ldy	#>lake_west_get_pebbles_message
 	jmp	finish_parse_message
+
+pebbles_too_far:
+	ldx	#<lake_west_pebbles_too_far_message
+	ldy	#>lake_west_pebbles_too_far_message
+	jmp	finish_parse_message
+
+
 
 lake_west_yes_pebbles:
 	jmp	parse_common_get

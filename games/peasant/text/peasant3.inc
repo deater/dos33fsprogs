@@ -373,8 +373,8 @@ lake_west_skip_stones_message:
 .byte "You decide to save yourself",13
 .byte "the embarrassment.",0
 
-; TODO
 ; + get pebbles/rocks (from too far)
+lake_west_pebbles_too_far_message:
 .byte "You do your best Mr.",13
 .byte "Fantastic impression,",13
 .byte "but you can't reach from",13

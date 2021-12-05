@@ -2,6 +2,16 @@
 ; Anywhere
 ;==================
 
+; TODO
+; After jumping in the haystack, go to any screen except Jhonka
+; both hay and mud go away
+.byte "Drat. The winds are heavy",13
+.byte "on all but a couple of key",13
+.byte "screens... looks like",13
+.byte "you're no longer in stealth",13
+.byte "mode.",0
+
+
 ; + get/wear belt (after getting it)
 wear_belt_message:
 .byte "You're already wearing it.",13

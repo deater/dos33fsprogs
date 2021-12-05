@@ -4,15 +4,6 @@ peasant2_dialog_start:
 ; That Hay Bale
 ;===============
 
-; TODO
-; After jumping in the haystack, go to any screen except Jhonka
-; both hay and mud go away
-.byte "Drat. The winds are heavy",13
-.byte "on all but a couple of key",13
-.byte "screens... looks like",13
-.byte "you're no longer in stealth",13
-.byte "mode.",0
-
 ; + look
 hay_look_message:
 .byte "Well, there's that big bale",13
@@ -89,8 +80,7 @@ hay_get_hay_message:
 ; Mud Puddle
 ;=============
 
-; note, puddle goes dry after you get riches?
-
+; note, puddle goes dry after you get riches
 
 ; +2 POINTS
 ; + (walk into puddle when raining)
