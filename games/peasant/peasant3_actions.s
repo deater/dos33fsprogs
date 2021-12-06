@@ -98,6 +98,11 @@ jhonka_get_kerrek_dead:
 	; else "probably wish" message
 	jmp	parse_common_get
 
+jhonka_get_club:
+	ldx	#<jhonka_get_club_message
+	ldy	#>jhonka_get_club_message
+	jmp	finish_parse_message
+
 jhonka_get_riches:
 
 	lda	GAME_STATE_1
@@ -114,6 +119,15 @@ jhonka_get_riches_in_hay:
 	ldx	#<jhonka_steal_riches_message
 	ldy	#>jhonka_steal_riches_message
 	jsr	partial_message_step
+
+	; exit hay bale
+	lda	GAME_STATE_1
+	and	#<(~IN_HAY_BALE)
+	sta	GAME_STATE_1
+	; no longer muddy
+	lda	GAME_STATE_2
+	and	#<(~COVERED_IN_MUD)
+	sta	GAME_STATE_2
 
 jhonka_wait_for_answer:
 	jsr	clear_bottom
@@ -181,10 +195,7 @@ jhonka_verb_yes:
 	jmp	finish_parse_message
 
 
-jhonka_get_club:
-	ldx	#<jhonka_get_club_message
-	ldy	#>jhonka_get_club_message
-	jmp	finish_parse_message
+
 
 
 
@@ -196,6 +207,18 @@ jhonka_get_club:
 	;=================
 
 jhonka_look:
+
+	; first check if in hay
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	not_in_hay_bale
+
+	ldx	#<hay_look_while_in_hay_message
+	ldy	#>hay_look_while_in_hay_message
+	jmp	finish_parse_message
+
+not_in_hay_bale:
 
 	; check if kerrek alive
 	lda	KERREK_STATE

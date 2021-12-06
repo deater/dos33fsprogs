@@ -317,7 +317,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 		parse_input.inc \
 		peasant1_actions.s DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
 		text/peasant1.inc text/kerrek.inc \
-		kerrek_actions.s \
+		kerrek_actions.s peasant_common.s \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
@@ -339,6 +339,7 @@ peasant2.o:	peasant2.s zp.inc inventory.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/inventory_sprites.inc \
+		peasant_common.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -356,6 +357,7 @@ peasant3.o:	peasant3.s zp.inc inventory.inc \
 		peasant3_actions.s DIALOG_PEASANT3.LZSA dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
+		peasant_common.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -372,7 +374,7 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 		parse_input.inc \
 		sprites/ned_sprites.inc \
 		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
-		kerrek_actions.s \
+		kerrek_actions.s peasant_common.s \
 		text/peasant4.inc text/kerrek.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
@@ -511,6 +513,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_common_save parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s get_noun_again parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_input_smc parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s hay_blown_away_message parse_input.lst >> parse_input.inc
 
 
 ###

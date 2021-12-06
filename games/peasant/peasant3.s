@@ -140,6 +140,11 @@ new_location:
 
 	jsr	draw_peasant
 
+	;=======================
+	; check if in hay
+
+	jsr check_haystack_exit
+
 
 	;=======================
 	; before game text
@@ -226,7 +231,7 @@ game_over:
 	rts
 
 
-
+.include "peasant_common.s"
 
 .include "draw_peasant.s"
 

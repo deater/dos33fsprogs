@@ -146,6 +146,11 @@ new_location:
 
 	jsr	draw_peasant
 
+	;======================
+	; check if in hay
+
+	jsr	check_haystack_exit
+
 
 	;=====================
 	; special archery
@@ -339,6 +344,8 @@ to_left:
 	sta	PEASANT_X
 	rts
 
+
+.include "peasant_common.s"
 
 .include "draw_peasant.s"
 

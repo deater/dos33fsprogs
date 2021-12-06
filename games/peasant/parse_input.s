@@ -7,6 +7,8 @@
 
 .include "tokens.inc"
 
+parse_input_file_begin:
+
 
 	;==========================
 	; parse input
@@ -1299,3 +1301,10 @@ common_verb_table:
 	.byte VERB_WHY
 	.word parse_common_why-1
 	.byte 0
+
+parse_input_file_end:
+
+; make sure smaller than 4.5k
+
+.assert (>parse_input_file_end - >parse_input_file_begin) < 18 , error, "peasant1 dialog too big"
+

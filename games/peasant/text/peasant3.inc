@@ -4,6 +4,11 @@ peasant3_dialog_start:
 ; Jhonka cave
 ;=============
 
+; + look (at anything, while hiding inside the bale of hay)
+hay_look_while_in_hay_message:
+.byte "Right now, you see a bunch",13
+.byte "of hay.",0
+
 ; + (walk in haystack)
 jhonka_in_hay_message:
 .byte "Hey, nice disguise! The",13

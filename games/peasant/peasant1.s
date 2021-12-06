@@ -123,6 +123,7 @@ new_location:
 
 
 
+
 	;====================
 	; handle kerrek
 
@@ -149,6 +150,12 @@ not_kerrek:
 	jsr	save_bg_1x28
 
 	jsr	draw_peasant
+
+	;===================
+	; check hay
+
+	jsr	check_haystack_exit
+
 
 game_loop:
 
@@ -213,7 +220,7 @@ game_over:
 
 	rts
 
-
+.include "peasant_common.s"
 
 ;.include "inventory.s"
 

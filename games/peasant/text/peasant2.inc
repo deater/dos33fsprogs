@@ -4,6 +4,11 @@ peasant2_dialog_start:
 ; That Hay Bale
 ;===============
 
+; + look (at anything, while hiding inside the bale of hay)
+hay_look_while_in_hay_message:
+.byte "Right now, you see a bunch",13
+.byte "of hay.",0
+
 ; + look
 hay_look_message:
 .byte "Well, there's that big bale",13

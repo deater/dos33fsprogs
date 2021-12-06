@@ -53,7 +53,17 @@ hay_get_hay:
 	;=================
 
 hay_bale_look:
+	; first check if in hay
 
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	not_in_hay_bale
+
+	ldx	#<hay_look_while_in_hay_message
+	ldy	#>hay_look_while_in_hay_message
+	jmp	finish_parse_message
+
+not_in_hay_bale:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_HAY

@@ -8,9 +8,10 @@ inside_inn_pot_on_head_message:
 .byte "there before that smelly",13
 .byte "octogenarian gets back.",0
 
-; TODO
+
 ; After jumping in the haystack, go to any screen except Jhonka
 ; both hay and mud go away
+hay_blown_away_message:
 .byte "Drat. The winds are heavy",13
 .byte "on all but a couple of key",13
 .byte "screens... looks like",13
@@ -226,14 +227,17 @@ look_irrelevant_message:
 .byte "You don't need to look at",13
 .byte "that.",0
 
-; + look (at anything, while hiding inside the bale of hay)
-.byte "Right now, you see a bunch of hay.",0
-
 ; + look (at something previously in your inventory but now gone)
-.byte "You used to have one, before the great item blight of 402. Check your INVENTORY to read about it.",0
+.byte "You used to have one,",13
+.byte "before the great item",13
+.byte "blight of 402. Check your",13
+.byte "INVENTORY to read about it.",0
 
 ; + look (at something currently in your inventory)
-.byte "You've totally got one of those! Check your INVENTORY to give'r a serious looksee.",0
+.byte "You've totally got one of",13
+.byte "those! Check your",13
+.byte "INVENTORY to give'r a",13
+.byte "serious looksee.",0
 
 ; + load
 ; + save

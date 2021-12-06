@@ -188,6 +188,13 @@ not_kerrek:
 
 	jsr	draw_peasant
 
+
+	;======================
+	; check if in haystack
+
+	jsr	check_haystack_exit
+
+
 game_loop:
 
 	jsr	move_peasant
@@ -322,7 +329,7 @@ game_over:
 
 
 
-
+.include "peasant_common.s"
 
 .include "draw_peasant.s"
 
