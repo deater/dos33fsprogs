@@ -8,7 +8,6 @@ inside_inn_pot_on_head_message:
 .byte "there before that smelly",13
 .byte "octogenarian gets back.",0
 
-
 ; After jumping in the haystack, go to any screen except Jhonka
 ; both hay and mud go away
 hay_blown_away_message:
@@ -63,9 +62,6 @@ wear_robe_none_message:
 wear_robe_none_message2:
 .byte "And pants. Forgot to",13
 .byte "mention the pants.",0
-
-; + look (when in hay disguise)
-.byte "Right now, you see a bunch of hay.",0
  
 ; + look trees
 look_trees_message:
@@ -174,7 +170,7 @@ go_message:
 ditch_baby_message:
 .byte "Quit tryin to ditch the baby!",0
 
-; + ???? ditch/drop/deploy/use baby (after baby left)
+; + ditch/drop/deploy/use baby (after baby left)
 ; + drop baby, throw baby (before getting the baby)
 no_baby_message:
 .byte "You don't even have two",13

@@ -57,6 +57,20 @@ done_upcase_loop:
 parse_input_smc:
 	nop
 
+
+	;================================
+	; check for "dan"
+
+	lda	CURRENT_NOUN
+	cmp	#NOUN_DAN
+	bne	not_dan
+
+	ldx	#<dan_message
+	ldy	#>dan_message
+	jmp	finish_parse_message
+
+not_dan:
+
 	;================================
 	; jump into verb table
 

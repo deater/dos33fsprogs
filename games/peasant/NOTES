@@ -37,6 +37,7 @@ peasant2	18302
 		17780 -- size as of the switch to dictionary word lookup
 		18012 -- hook up more of archery
 		18120 -- finish hooking up archery
+		17941 -- after most of text hooked up (more code was moved to qload)
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
