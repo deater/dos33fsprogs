@@ -184,12 +184,14 @@ climb_cliff_message:
 .byte "have any carabeaners on",13
 .byte "you.",0
 
-; + climb tree
+; + climb tree (day)
 climb_tree_message:
 .byte "But then your hands would",13
 .byte "get all sappy.",0
 
-; + climb tree (after getting room at inn)
+; + climb tree (at night?)
+;	(wiki says: after getting room at inn but that doesn't seem to be right)
+climb_tree_night_message:
 .byte "Naw. That's dumb. Do better.",0
 
 ; ???? steal
@@ -212,7 +214,9 @@ give_message:
 .byte "that now.",0
 
 ; + throw baby (anywhere but the west side of the lake)
-.byte "Hmmm. Maybe try someplace else.",0
+throw_baby_yes_message:
+.byte "Hmmm. Maybe try someplace",13
+.byte "else.",0
 
 ; + talk
 talk_noone_message:
@@ -224,12 +228,14 @@ look_irrelevant_message:
 .byte "You don't need to look at",13
 .byte "that.",0
 
+; TODO
 ; + look (at something previously in your inventory but now gone)
 .byte "You used to have one,",13
 .byte "before the great item",13
 .byte "blight of 402. Check your",13
 .byte "INVENTORY to read about it.",0
 
+; TODO
 ; + look (at something currently in your inventory)
 .byte "You've totally got one of",13
 .byte "those! Check your",13

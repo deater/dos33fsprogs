@@ -141,7 +141,16 @@ parse_common_climb:
 	jmp	parse_common_unknown
 
 climb_tree:
-	; FIXME: this changes after INN
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	climb_tree_day
+
+climb_tree_night:
+	ldx	#<climb_tree_night_message
+	ldy	#>climb_tree_night_message
+	jmp	finish_parse_message
+
+climb_tree_day:
 	ldx	#<climb_tree_message
 	ldy	#>climb_tree_message
 	jmp	finish_parse_message
@@ -207,7 +216,7 @@ parse_common_drop:
 
 ditch_baby:
 	lda	INVENTORY_1
-	and	INV1_BABY
+	and	#INV1_BABY
 	beq	no_baby
 
 	ldx	#<ditch_baby_message
@@ -238,6 +247,23 @@ parse_common_drink:
 	; drop/throw
 	;================
 parse_common_throw:
+	lda	CURRENT_NOUN
+	cmp	#NOUN_BABY
+	beq	throw_baby
+
+	jmp	parse_common_unknown
+
+throw_baby:
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	throw_baby_no_baby
+
+throw_baby_yes_baby:
+	ldx	#<throw_baby_yes_message
+	ldy	#>throw_baby_yes_message
+	jmp	finish_parse_message
+
+throw_baby_no_baby:
 	ldx	#<no_baby_message
 	ldy	#>no_baby_message
 	jmp	finish_parse_message
