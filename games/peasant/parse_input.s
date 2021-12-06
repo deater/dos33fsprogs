@@ -76,6 +76,23 @@ parse_input_smc:
 
 not_dan:
 
+	;=================================
+	; check if "look"ing at something in inventory
+
+	lda	CURRENT_VERB
+	cmp	#VERB_LOOK
+	bne	not_look
+
+	jsr	look_check_if_in_inventory
+
+	; if carry clear then can return early
+
+	bcs	not_look
+
+	rts
+
+not_look:
+
 	;================================
 	; jump into verb table
 
@@ -1033,6 +1050,7 @@ noun_lookup_again:
 .byte "HALDO",NOUN_HALDO|$80
 .byte "IN HAY",NOUN_IN_HAY|$80
 .byte "HAY",NOUN_HAY|$80
+.byte "HELM",NOUN_HELM|$80
 .byte "HOLE",NOUN_HOLE|$80
 .byte "HORSE",NOUN_HORSE|$80
 .byte "INN",NOUN_INN|$80
@@ -1074,6 +1092,8 @@ noun_lookup_again:
 .byte "SANDWICH",NOUN_SANDWICH|$80
 .byte "SAND",NOUN_SAND|$80
 .byte "SHELF",NOUN_SHELF|$80
+.byte "SHIELD",NOUN_SHIELD|$80
+.byte "SHIRT",NOUN_SHIRT|$80
 .byte "SIGN",NOUN_SIGN|$80
 .byte "SKELETON",NOUN_SKELETON|$80
 .byte "SKULL",NOUN_SKULL|$80
@@ -1082,6 +1102,7 @@ noun_lookup_again:
 .byte "STUFF",NOUN_STUFF|$80
 .byte "STUMP",NOUN_STUMP|$80
 .byte "SUB",NOUN_SUB|$80
+.byte "SWORD",NOUN_SWORD|$80
 .byte "TARGET",NOUN_TARGET|$80
 .byte "TRACKS",NOUN_TRACKS|$80
 .byte "TREE",NOUN_TREE|$80
@@ -1337,6 +1358,143 @@ common_verb_table:
 	.byte VERB_WHY
 	.word parse_common_why-1
 	.byte 0
+
+
+
+	;===================================
+	; before looking
+	; check if item is/was in inventory
+	;===================================
+	; carry set if not found
+	; carry clear if found
+look_check_if_in_inventory:
+
+	lda	CURRENT_NOUN
+
+	ldx	#INV1_ARROW
+	cmp	#NOUN_ARROW
+	beq	check_inventory_1
+
+	ldx	#INV1_BABY
+	cmp	#NOUN_BABY
+	beq	check_inventory_1
+
+	ldx	#INV1_KERREK_BELT
+	cmp	#NOUN_BELT
+	beq	check_inventory_1
+
+	ldx	#INV1_CHICKEN_FEED
+	cmp	#NOUN_FEED
+	beq	check_inventory_1
+
+	ldx	#INV1_BOW
+	cmp	#NOUN_BOW
+	beq	check_inventory_1
+
+	ldx	#INV1_MONSTER_MASK
+	cmp	#NOUN_MASK
+	beq	check_inventory_1
+
+	ldx	#INV1_PEBBLES
+	cmp	#NOUN_PEBBLES
+	beq	check_inventory_1
+
+	ldx	#INV1_PILLS
+	cmp	#NOUN_PILLS
+	beq	check_inventory_1
+
+	ldx	#INV2_RICHES
+	cmp	#NOUN_RICHES
+	beq	check_inventory_2
+
+	ldx	#INV2_ROBE
+	cmp	#NOUN_ROBE
+	beq	check_inventory_2
+
+	ldx	#INV2_SODA
+	cmp	#NOUN_SODA
+	beq	check_inventory_2
+
+	ldx	#INV2_MEATBALL_SUB
+	cmp	#NOUN_SUB
+	beq	check_inventory_2
+
+	ldx	#INV2_TRINKET
+	cmp	#NOUN_TRINKET
+	beq	check_inventory_2
+
+	ldx	#INV2_TROGHELM
+	cmp	#NOUN_HELM
+	beq	check_inventory_2
+
+	ldx	#INV2_TROGSHIELD
+	cmp	#NOUN_SHIELD
+	beq	check_inventory_2
+
+	ldx	#INV2_TROGSWORD
+	cmp	#NOUN_SWORD
+	beq	check_inventory_2
+
+	ldx	#INV3_SHIRT
+	cmp	#NOUN_SHIRT
+	beq	check_inventory_3
+
+item_not_found:
+	sec
+	rts
+
+check_inventory_1:
+	txa
+	and	INVENTORY_1_GONE
+	bne	inventory_gone
+
+	txa
+	and	INVENTORY_1
+	bne	inventory_there
+
+	sec
+	rts
+
+check_inventory_2:
+	txa
+	and	INVENTORY_2_GONE
+	bne	inventory_gone
+
+	txa
+	and	INVENTORY_2
+	bne	inventory_there
+
+	sec
+	rts
+
+check_inventory_3:
+	txa
+	and	INVENTORY_3_GONE
+	bne	inventory_gone
+
+	txa
+	and	INVENTORY_3
+	bne	inventory_there
+
+	sec
+	rts
+
+inventory_gone:
+	ldx	#<look_inventory_gone_message
+	ldy	#>look_inventory_gone_message
+	jsr	partial_message_step
+	clc
+	rts
+inventory_there:
+	ldx	#<look_inventory_there_message
+	ldy	#>look_inventory_there_message
+	jsr	partial_message_step
+	clc
+	rts
+
+
+
+
 
 parse_input_file_end:
 

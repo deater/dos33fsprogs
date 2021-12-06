@@ -221,15 +221,16 @@ look_irrelevant_message:
 .byte "You don't need to look at",13
 .byte "that.",0
 
-; TODO
+
 ; + look (at something previously in your inventory but now gone)
+look_inventory_gone_message:
 .byte "You used to have one,",13
 .byte "before the great item",13
 .byte "blight of 402. Check your",13
 .byte "INVENTORY to read about it.",0
 
-; TODO
 ; + look (at something currently in your inventory)
+look_inventory_there_message:
 .byte "You've totally got one of",13
 .byte "those! Check your",13
 .byte "INVENTORY to give'r a",13
