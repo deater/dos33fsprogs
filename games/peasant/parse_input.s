@@ -54,6 +54,11 @@ done_upcase_loop:
 
 	jsr	get_noun
 
+
+	;===========================================
+	; this is turned to a "rts" in cases where
+	; we want to skip the verb table
+	; (mostly jhonka "yes/no" and maybe in trogdor cave
 parse_input_smc:
 	nop
 
@@ -171,15 +176,6 @@ parse_common_dance:
 
 	ldx	#<dance_message
 	ldy	#>dance_message
-	jmp	finish_parse_message
-
-
-	;================
-	; dan
-	;================
-parse_common_dan:
-	ldx	#<dan_message
-	ldy	#>dan_message
 	jmp	finish_parse_message
 
 	;===================
@@ -405,9 +401,9 @@ parse_common_pwd:
 	lda	location_names_h,X
 	sta	INH
 
-        lda     #<(pwd_message+17)
+        lda     #<(pwd_message_offset)
         sta     OUTL
-        lda     #>(pwd_message+17)
+        lda     #>(pwd_message_offset)
 	sta	OUTH
 
 	ldy	#0

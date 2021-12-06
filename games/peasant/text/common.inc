@@ -158,6 +158,7 @@ smell_message:
 ; + pwd (offset 17)
 pwd_message:
 .byte "~peasantsquest/",13
+pwd_message_offset:
 .byte "                         ",0
 
 ; + go _____
