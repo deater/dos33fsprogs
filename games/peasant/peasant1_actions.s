@@ -1142,11 +1142,32 @@ yellow_tree_look_tree:
 	;=======================
 
 waterfall_verb_table:
+	.byte VERB_CLIMB
+	.word waterfall_climb-1
 	.byte VERB_LOOK
 	.word waterfall_look-1
 	.byte VERB_SWIM
 	.word waterfall_swim-1
 	.byte 0
+
+	;=================
+	; climb
+	;=================
+
+waterfall_climb:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_CLIFF
+	beq	waterfall_climb_cliff
+
+	jmp	parse_common_unknown
+
+waterfall_climb_cliff:
+	ldx	#<waterfall_climb_cliff_message
+	ldy	#>waterfall_climb_cliff_message
+	jmp	finish_parse_message
+
 
 	;=================
 	; look

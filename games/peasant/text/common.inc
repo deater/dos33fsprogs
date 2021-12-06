@@ -177,13 +177,6 @@ no_baby_message:
 .byte "You don't even have two",13
 .byte "babies to rub together.",0
 
-; + climb cliff (screens where cliff is there [pass doesn't count?])
-climb_cliff_message:
-.byte "There aren't enough",13
-.byte "footholds and you don't",13
-.byte "have any carabeaners on",13
-.byte "you.",0
-
 ; + climb tree (day)
 climb_tree_message:
 .byte "But then your hands would",13

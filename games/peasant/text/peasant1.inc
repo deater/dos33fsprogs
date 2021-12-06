@@ -527,6 +527,13 @@ waterfall_swim_message:
 .byte "of those weight-gain",13
 .byte "protein smoothies.",0
 
+; + climb cliff
+waterfall_climb_cliff_message:
+.byte "There aren't enough",13
+.byte "footholds and you don't",13
+.byte "have any carabeaners on",13
+.byte "you.",0
+
 peasant1_dialog_end:
 
 .assert (>peasant1_dialog_end - >peasant1_dialog_start) < $1E , error, "peasant1 dialog too big"

@@ -923,6 +923,8 @@ bush_count_lookup:
 	;=======================
 
 crooked_tree_verb_table:
+        .byte VERB_CLIMB
+        .word crooked_tree_climb-1
         .byte VERB_GET
         .word crooked_tree_get-1
         .byte VERB_LIGHT
@@ -930,6 +932,22 @@ crooked_tree_verb_table:
         .byte VERB_LOOK
         .word crooked_tree_look-1
 	.byte 0
+
+	;================
+	; climb
+	;================
+crooked_tree_climb:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_CLIFF
+	beq	crooked_climb_cliff
+
+	jmp	parse_common_unknown
+
+crooked_climb_cliff:
+	ldx	#<crooked_tree_climb_cliff_message
+	ldy	#>crooked_tree_climb_cliff_message
+	jmp	finish_parse_message
 
 
 	;================

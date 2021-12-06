@@ -447,6 +447,13 @@ crooked_tree_get_plaque_message:
 .byte "your browning, rotten",13
 .byte "peasant teeth already.",0
 
+; + climb cliff
+crooked_tree_climb_cliff_message:
+.byte "There aren't enough",13
+.byte "footholds and you don't",13
+.byte "have any carabeaners on",13
+.byte "you.",0
+
 peasant4_dialog_end:
 
 .assert (>peasant4_dialog_end - >peasant4_dialog_start) < $1E , error, "peasant4 dialog too big"

@@ -133,8 +133,6 @@ parse_common_cheat:
 parse_common_climb:
 
 	lda	CURRENT_NOUN
-	cmp	#NOUN_CLIFF
-	beq	climb_cliff
 	cmp	#NOUN_TREE
 	beq	climb_tree
 
@@ -154,13 +152,6 @@ climb_tree_day:
 	ldx	#<climb_tree_message
 	ldy	#>climb_tree_message
 	jmp	finish_parse_message
-
-climb_cliff:
-	; FIXME: only on certain locations
-	ldx	#<climb_cliff_message
-	ldy	#>climb_cliff_message
-	jmp	finish_parse_message
-
 
 	;=================
 	; copy
@@ -219,6 +210,11 @@ ditch_baby:
 	and	#INV1_BABY
 	beq	no_baby
 
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	no_baby
+
+
 	ldx	#<ditch_baby_message
 	ldy	#>ditch_baby_message
 	jmp	finish_parse_message
@@ -257,6 +253,10 @@ throw_baby:
 	lda	INVENTORY_1
 	and	#INV1_BABY
 	beq	throw_baby_no_baby
+
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	throw_baby_no_baby
 
 throw_baby_yes_baby:
 	ldx	#<throw_baby_yes_message
