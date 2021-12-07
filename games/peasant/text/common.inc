@@ -169,7 +169,8 @@ go_message:
 
 ; + ditch/drop baby (if you have it)
 ditch_baby_message:
-.byte "Quit tryin to ditch the baby!",0
+.byte "Quit tryin to ditch the",13
+.byte "baby!",0
 
 ; + ditch/drop/deploy/use baby (after baby left)
 ; + drop baby, throw baby (before getting the baby)
