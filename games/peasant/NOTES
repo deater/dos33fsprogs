@@ -90,24 +90,29 @@ $EE-$FF common parser code  (4.5k = 4608 bytes)
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T	  0 = Qboot
-T	  1 = QLOAD	 4813 bytes	19S = 1T3S
+T	  1 = QLOAD	 5286 bytes	21S = 1T5S
 T	  3 = MUSIC	 4045 bytes	16S = 1T0S
-T	  4 = VID_LOGO	 6911 bytes	27S = 1T11S
-T	  6 = TITLE      9662 bytes	38S = 2T6S
-T	  9 = INTRO	13436 bytes	52S = 3T4S
-T	 14 = INVENTORY  3498 bytes         = 1T0S
-T	 15 = PEASANT1  22501 bytes	79S = 4T15S	; 88 is max?
-T	 20 = PEASANT2  16995 bytes	67s = 4T3S	; 79 = 20224
-T        25 = PEASANT3
-T	 30 = PEASANT4
+T	  4 = VID_LOGO	 7574 bytes	30S = 1T14S
+T	  6 = TITLE      8950 bytes	35S = 2T3S
+T	  9 = INTRO	13467 bytes	52S = 3T4S
+T	 14 = INVENTORY  3121 bytes     13S = 0T13S
+T	 15 = PEASANT1  17007 bytes	67S = 4T3S	; 88 is max?
+T	 20 = PEASANT2  17941 bytes	71S = 4T7S	; 79 = 20224
+T        25 = PEASANT3  18154 bytes	71S = 4T7S
+T	 30 = PEASANT4	15806 bytes	62S = 3T14S
 
 Disk2 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-T	  1 = COPY_CHECK 4922 bytes	20S = 1T4S
-T         3 = GAME_OVER
-T	 19 = TROGDOR	13673 bytes	
-T        24 = ENDING	19690 bytes	77S = 4T13S
-T	 29 = CLIFF
+T	  0 = WBOOT
+T	  1 = COPY_CHECK 2942 bytes	12S = 0T12S
+T         3 = GAME_OVER	 2111 bytes	 9S = 0T9S
+T	  4 = MAP        2703 bytes     11S = 0T11S
+T         6 = ARCHERY	 2112 bytes     11S = 0T11S
+T         9 = INSIDE	14178 bytes     56s = 3T8S
+T        14 = INN	 6906 bytes     27S = 1T11S
+T	 19 = TROGDOR	11468 bytes     45S = 2T13S	
+T        24 = ENDING	17619 bytes	69S = 4T5S
+T	 29 = CLIFF     13024 bytes     51S = 3T3S
 
 
 238, to 280 (6)
