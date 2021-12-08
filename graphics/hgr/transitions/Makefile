@@ -10,7 +10,7 @@ all:	transition.dsk
 transition.dsk:	HELLO RECTANGLE BARS
 	cp $(EMPTYDISK) transition.dsk
 	$(DOS33) -y transition.dsk SAVE A HELLO
-	$(DOS33) -y transition.dsk BSAVE -a 0xc00 RECTANGLE
+	$(DOS33) -y transition.dsk BSAVE -a 0x3f5 RECTANGLE
 	$(DOS33) -y transition.dsk BSAVE -a 0xc00 BARS
 
 ###
@@ -21,7 +21,7 @@ HELLO:	hello.bas
 ###
 
 RECTANGLE:	rectangle.o
-	ld65 -o RECTANGLE rectangle.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o RECTANGLE rectangle.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
 rectangle.o:	rectangle.s
 	ca65 -o rectangle.o rectangle.s -l rectangle.lst
