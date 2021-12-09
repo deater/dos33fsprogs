@@ -11,8 +11,9 @@ all:	graphics_inn.inc \
 ###
 
 graphics_inn.inc:	\
-	inside_inn.lzsa
+	inside_inn.lzsa inside_inn_night.lzsa
 	echo "inside_inn_lzsa: .incbin \"inside_inn.lzsa\"" > graphics_inn.inc
+	echo "inside_inn_night_lzsa: .incbin \"inside_inn_night.lzsa\"" >> graphics_inn.inc
 
 ###
 
@@ -21,6 +22,15 @@ inside_inn.lzsa:	inside_inn.hgr
 
 inside_inn.hgr:	inside_inn.png
 	$(PNG2HGR) inside_inn.png > inside_inn.hgr
+
+###
+
+inside_inn_night.lzsa:	inside_inn_night.hgr
+	$(LZSA) -r -f2 inside_inn_night.hgr inside_inn_night.lzsa
+
+inside_inn_night.hgr:	inside_inn_night.png
+	$(PNG2HGR) inside_inn_night.png > inside_inn_night.hgr
+
 
 ###
 
