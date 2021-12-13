@@ -12,7 +12,6 @@ cliff_base_look_message:
 .byte "falling down the minute you",13
 .byte "try to climb it.",0
 
-; +3 POINTS (maybe at the top?)
 ; + climb  (walks to center of cliff)
 cliff_base_climb_message:
 .byte "With a new determination",13
@@ -47,6 +46,8 @@ cliff_base_climb2_message:
 ;===================
 
 ; arrive
+; +3 POINTS (maybe at the top?)
+
 .byte "Nice jorb climbing the",13
 .byte "cliff. You have a real way",13
 .byte "with those arrow keys.",0
@@ -91,6 +92,9 @@ cliff_heights_get_bone_message:
 ;======================================
 ; Trogdor's Outer Sanctum / Outer Cave
 ;======================================
+
+; note: if you don't have the item, it doesn't give
+;       you an option and launches directly into the quiz
 
 ; +5 POINTS (give sub or answer question)
 ; +5 POINTS (give soda or answer question)

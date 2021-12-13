@@ -316,30 +316,51 @@ oops_new_location:
 	; exit level
 	;========================
 level_over:
+
+	; specical case if going outside inn
+	; we don't want to end up behind inn
+
 	lda	MAP_LOCATION
 	cmp	#LOCATION_OUTSIDE_INN
-	bne	really_level_over
+	bne	not_behind_inn
 
 	; be sure we're in range
 	lda	PEASANT_X
 	cmp	#6
-	bcc	really_level_over	; fine
+	bcc	really_level_over	; fine if at far right
 
 	cmp	#18
-	bcc	to_left
+	bcc	to_left_of_inn
 	cmp	#30
-	bcc	to_right
+	bcc	to_right_of_inn
 
+					; fine if at far left
+
+not_behind_inn:
+	lda	MAP_LOCATION
+	cmp	#LOCATION_CLIFF_BASE
+	bne	not_going_to_cliff
+
+	lda	#18
+	sta	PEASANT_X
+	lda	#140
+	sta	PEASANT_Y
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	sta	PEASANT_DIR
+
+not_going_to_cliff:
 really_level_over:
 
 	rts
 
-to_right:
+to_right_of_inn:
 	lda	#31
 	sta	PEASANT_X
 	rts
 
-to_left:
+to_left_of_inn:
 	lda	#5
 	sta	PEASANT_X
 	rts

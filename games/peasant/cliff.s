@@ -124,12 +124,11 @@ new_location:
 
 	;=====================
 	; move peasant
-	; FIXME: don't do this if loading game
 
-	lda	#20
-	sta	PEASANT_X
-	lda	#150
-	sta	PEASANT_Y
+;	lda	#20
+;	sta	PEASANT_X
+;	lda	#150
+;	sta	PEASANT_Y
 
 	;====================
 	; save background
@@ -156,7 +155,7 @@ game_loop:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	bne	game_over
+	bne	level_over
 
 
 	; delay
@@ -168,13 +167,54 @@ game_loop:
 	jmp	game_loop
 
 oops_new_location:
+
+	; new location but same file
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_CLIFF_HEIGHTS
+	bne	not_the_cliff
+
+	lda	PREVIOUS_LOCATION
+	cmp	#LOCATION_TROGDOR_OUTER
+	beq	to_cliff_from_outer
+
+to_cliff_from_cliff:
+	lda	#18
+	sta	PEASANT_X
+	lda	#140
+	sta	PEASANT_Y
+	bne	not_the_cliff		; bra
+
+to_cliff_from_outer:
+	lda	#32
+	sta	PEASANT_X
+	lda	#120
+	sta	PEASANT_Y
+	bne	not_the_cliff		; bra
+
+not_the_cliff:
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_TROGDOR_OUTER
+	bne	not_outer
+
+	lda	#2
+	sta	PEASANT_X
+	lda	#100
+	sta	PEASANT_Y
+
+not_outer:
+just_go_there:
+
 	jmp	new_location
 
 
 	;************************
 	; exit level
 	;************************
-game_over:
+level_over:
+
+	; new location, different file
 
 	rts
 
