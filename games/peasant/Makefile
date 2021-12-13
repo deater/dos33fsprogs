@@ -393,12 +393,14 @@ TROGDOR:	trogdor.o
 trogdor.o:	trogdor.s zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
 		sprites/inventory_sprites.inc \
+		DIALOG_TROGDOR.LZSA dialog_trogdor.inc \
 		ssi263_simple_speech.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s
+		peasant_move.s score.s inventory.s \
+		trogdor_actions.s
 
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
@@ -501,6 +503,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s load_custom_verb_table parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s partial_message_step parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s finish_parse_message parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s finish_parse_message_nowait parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_talk parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_haldo parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_common_give parse_input.lst >> parse_input.inc
@@ -638,6 +641,23 @@ dialog_cliff.o:	dialog_cliff.s text/cliff.inc
 
 dialog_cliff.inc:	generate_all_symbols dialog_cliff
 	./generate_all_symbols -a 0xd000 dialog_cliff.lst > dialog_cliff.inc
+
+####
+
+DIALOG_TROGDOR.LZSA:	dialog_trogdor
+	$(LZSA) -r -f2 dialog_trogdor DIALOG_TROGDOR.LZSA
+
+dialog_trogdor:	dialog_trogdor.o
+	ld65 -o dialog_trogdor dialog_trogdor.o -C ../../linker_scripts/apple2_d000.inc
+
+dialog_trogdor.o:	dialog_trogdor.s text/cliff.inc
+	ca65 -o dialog_trogdor.o dialog_trogdor.s -l dialog_trogdor.lst
+
+###
+
+dialog_trogdor.inc:	generate_all_symbols dialog_trogdor
+	./generate_all_symbols -a 0xd000 dialog_trogdor.lst > dialog_trogdor.inc
+
 
 ####
 

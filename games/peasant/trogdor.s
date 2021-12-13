@@ -8,6 +8,10 @@
 .include "zp.inc"
 
 .include "qload.inc"
+.include "inventory.inc"
+.include "parse_input.inc"
+
+LOCATION_BASE = LOCATION_TROGDOR_LAIR	; 23
 
 trogdor:
 	lda	#0
@@ -15,270 +19,118 @@ trogdor:
 	sta	FRAME
 
 	jsr	hgr_make_tables		; needed?
-
 	jsr	hgr2			; needed?
+
+	; decompress dialog to $D000
+
+	lda	#<trogdor_text_lzsa
+	sta	getsrc_smc+1
+	lda	#>trogdor_text_lzsa
+	sta	getsrc_smc+2
+
+	lda	#$d0
+	jsr	decompress_lzsa2_fast
 
 	; update score
 
 	jsr	update_score
 
-trogdor_cave:
 
-	lda	#<trogdor_cave_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_cave_lzsa
-	sta	getsrc_smc+2
+	;=============================
+	;=============================
+	; new screen location
+	;=============================
+	;=============================
 
-	lda	#$40
+new_location:
+	lda	#0
+	sta	LEVEL_OVER
 
-	jsr	decompress_lzsa2_fast
+	;==========================
+	; load updated verb table
 
-	;======================
-	; draw rather dashing
+	; setup default verb table
 
-	lda	#12
-	sta	CURSOR_X
-	lda	#142
-	sta	CURSOR_Y
+	jsr	setup_default_verb_table
 
-	lda	#<dashing0_sprite
+	; local verb table
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	verb_tables_low,X
 	sta	INL
-	lda	#>dashing0_sprite
+	lda	verb_tables_hi,X
 	sta	INH
-
-	jsr	hgr_draw_sprite
-
-
-	jsr	update_top
-
-	jsr	wait_until_keypress
-
-	;==============================
-	;==============================
-	; print honestly say message
-	;==============================
-	;==============================
-
-	lda	#<trogdor_string
-	sta	OUTL
-	lda	#>trogdor_string
-	sta     OUTH
-        jsr     hgr_text_box
-
-	;==================================
-	; text to speech, where available!
-
-	lda	SOUND_STATUS
-	and	#SOUND_SSI263
-	beq	skip_speech
-
-speech_loop:
-
-        ; trogdor
-
-	lda	#4			; assume slot #4 for now
-	jsr	ssi263_speech_init
-
-        lda     #<trogdor_honestly
-        sta     SPEECH_PTRL
-        lda     #>trogdor_honestly
-        sta     SPEECH_PTRH
-
-        jsr     ssi263_speak
-
-wait_for_speech:
-	lda	speech_busy
-	bmi	wait_for_speech
-	bpl	done_speech
-
-skip_speech:
-	jsr	wait_until_keypress
-
-done_speech:
-	jsr	hgr_partial_restore
-
-
-	;==============================
-	;==============================
-	; print nice of him message
-	;==============================
-	;==============================
-
-	lda	#<trogdor_string2
-	sta	OUTL
-	lda	#>trogdor_string2
-	sta     OUTH
-        jsr     hgr_text_box
-
-	jsr	wait_until_keypress
-
-	jsr	hgr_partial_restore
-
-
-	; UPDATE SCORE
-
-	lda	#$10		; it's BCD
-	jsr	score_points
-
-trogdor_open:
-
-	lda	#<trogdor_open_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_open_lzsa
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	;======================
-	; draw rather dashing
-
-	lda	#12
-	sta	CURSOR_X
-	lda	#142
-	sta	CURSOR_Y
-
-	lda	#<dashing0_sprite
-	sta	INL
-	lda	#>dashing0_sprite
-	sta	INH
-
-	jsr	hgr_draw_sprite
-
-	jsr	update_top
-
-;	jsr	wait_until_keypress
-
-
-trogdor_flame1:
-
-	lda	#<trogdor_flame1_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_flame1_lzsa
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-trogdor_flame2:
-
-	lda	#<trogdor_flame2_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_flame2_lzsa
-	sta	getsrc_smc+2
-
-	lda	#$20
-
-	jsr	decompress_lzsa2_fast
-
-
-	ldx	#32
-	stx	BABY_COUNT
-
-burninate_loop:
-	bit	PAGE1
-
-	lda     #16
-        sta     speaker_duration
-        lda     #NOTE_C3
-        sta     speaker_frequency
-        jsr     speaker_beep
-
-;	jsr	wait_until_keypress
-
-	bit	PAGE2
-
-	lda     #16
-        sta     speaker_duration
-        lda     #NOTE_D3
-        sta     speaker_frequency
-        jsr     speaker_beep
-
-;	jsr	wait_until_keypress
-
-	dec	BABY_COUNT
-	bne	burninate_loop
-
+	jsr	load_custom_verb_table
 
 	;=====================
-	;=====================
-	; stop fire
-	; open mount
-	; charred
-	; smoke
+	; load bg
 
-	lda	#<trogdor_cave_lzsa
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
 	sta	getsrc_smc+1
-	lda	#>trogdor_cave_lzsa
+	lda	map_backgrounds_hi,X
 	sta	getsrc_smc+2
 
 	lda	#$40
 
 	jsr	decompress_lzsa2_fast
 
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20			; temporarily load to $2000
+
+	jsr	decompress_lzsa2_fast
+
+	; copy to $400
+
+	jsr	gr_copy_to_page1
+
+	; update name/score
+
 	jsr	update_top
 
-	;======================
-	; draw rather dashing
 
-	lda	#12
-	sta	CURSOR_X
-	lda	#142
-	sta	CURSOR_Y
+game_loop:
+;	jsr	move_peasant
 
-	lda	#1
-	sta	BABY_COUNT
+	inc	FRAME
 
-dashing_loop:
+	jsr	check_keyboard
 
-	ldy	BABY_COUNT
-	lda	dashing_progress_l,Y
-	sta	INL
-	lda	dashing_progress_h,Y
-	sta	INH
+	lda	LEVEL_OVER
+	bmi	oops_new_location
+	bne	level_over
 
-	jsr	hgr_draw_sprite
+	; delay
 
-	lda	#220
+	lda	#200
 	jsr	wait
 
-	ldy	BABY_COUNT
-	cpy	#7
-	bne	no_boom
-
-	lda     #64
-        sta     speaker_duration
-        lda     #NOTE_C3
-        sta     speaker_frequency
-        jsr     speaker_beep
-
-no_boom:
-
-	inc	BABY_COUNT
-	lda	BABY_COUNT
-	cmp	#9
-	bne	dashing_loop
+	jmp	game_loop
 
 
-	; collapse with boom
+oops_new_location:
 
-	;==================
-	; message
-
-	lda	#<trogdor_string3
-	sta	OUTL
-	lda	#>trogdor_string3
-	sta     OUTH
-        jsr     hgr_text_box
-
-	jsr	wait_until_keypress
-
-game_over:
-
-
-
+level_over:
 
 	; go to end credits
 
@@ -291,19 +143,13 @@ game_over:
 
 ;.include "decompress_fast_v2.s"
 ;.include "wait_keypress.s"
-
-
-
 ;.include "hgr_font.s"
 ;.include "draw_box.s"
 ;.include "hgr_rectangle.s"
-
 ;.include "hgr_1x5_sprite.s"
-
 ;.include "draw_peasant.s"
 ;.include "hgr_7x28_sprite_mask.s"
 ;.include "hgr_save_restore.s"
-
 ;.include "hgr_partial_save.s"
 ;.include "hgr_input.s"
 ;.include "hgr_tables.s"
@@ -315,6 +161,7 @@ game_over:
 
 .include "gr_copy.s"
 
+.include "keyboard.s"
 .include "wait.s"
 .include "wait_a_bit.s"
 
@@ -329,30 +176,32 @@ game_over:
 
 .include "graphics_trogdor/trogdor_graphics.inc"
 
+.include "graphics_trogdor/priority_trogdor.inc"
+
 .include "sprites/trogdor_sprites.inc"
 
-trogdor_string:
-	.byte   0,43,32, 0,253,82
-	.byte   8,41
-	.byte 34,"I can honestly say it'll",13
-	.byte "be a pleasure and an honor",13
-	.byte "to burninate you, Rather",13
-	.byte "Dashing.",34,0
+;trogdor_string:
+;	.byte   0,43,32, 0,253,82
+;	.byte   8,41
+;	.byte 34,"I can honestly say it'll",13
+;	.byte "be a pleasure and an honor",13
+;	.byte "to burninate you, Rather",13
+;	.byte "Dashing.",34,0
 
-trogdor_string2:
-	.byte   0,43,32, 0,253,66
-	.byte   8,41
-	.byte "Aw that sure was nice of",13
-	.byte "him!",0
+;trogdor_string2:
+;	.byte   0,43,32, 0,253,66
+;	.byte   8,41
+;	.byte "Aw that sure was nice of",13
+;	.byte "him!",0
 
-trogdor_string3:
-	.byte   0,43,32, 0,253,90
-	.byte   8,41
-	.byte "Congratulations! You've",13
-	.byte "won! No one can kill",13
-	.byte "Trogdor but you came closer",13
-	.byte "than anybody ever! Way to",13
-	.byte "go!",0
+;trogdor_string3:
+;	.byte   0,43,32, 0,253,90
+;	.byte   8,41
+;	.byte "Congratulations! You've",13
+;	.byte "won! No one can kill",13
+;	.byte "Trogdor but you came closer",13
+;	.byte "than anybody ever! Way to",13
+;	.byte "go!",0
 
 
 update_top:
@@ -372,14 +221,26 @@ update_top:
         rts
 
 
-dashing_progress_l:
-	.byte <dashing0_sprite,<dashing1_sprite,<dashing2_sprite
-	.byte <dashing3_sprite,<dashing4_sprite,<dashing5_sprite
-	.byte <dashing6_sprite,<dashing7_sprite,<dashing8_sprite
+map_backgrounds_low:
+	.byte   <trogdor_sleep_lzsa
 
-dashing_progress_h:
-	.byte >dashing0_sprite,>dashing1_sprite,>dashing2_sprite
-	.byte >dashing3_sprite,>dashing4_sprite,>dashing5_sprite
-	.byte >dashing6_sprite,>dashing7_sprite,>dashing8_sprite
+map_backgrounds_hi:
+	.byte   >trogdor_sleep_lzsa
+
+map_priority_low:
+	.byte   <trogdor_priority_lzsa
+
+map_priority_hi:
+	.byte   >trogdor_priority_lzsa
+
+verb_tables_low:
+	.byte   <trogdor_inner_verb_table
+
+verb_tables_hi:
+	.byte   >trogdor_inner_verb_table
 
 
+trogdor_text_lzsa:
+.incbin "DIALOG_TROGDOR.LZSA"
+
+.include "trogdor_actions.s"

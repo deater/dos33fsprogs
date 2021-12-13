@@ -701,9 +701,11 @@ parse_common_why:
 
 
 
-
-
-
+finish_parse_message_nowait:
+	stx	OUTL
+	sty	OUTH
+	jsr	print_text_message
+	rts
 
 finish_parse_message:
 	stx	OUTL

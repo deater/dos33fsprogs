@@ -117,14 +117,17 @@
 .byte "or something in honor of",13
 .byte "you somewheres.",0			; [sic] no end quote	
 
+trogdor_honestly_message:
 .byte 34,"I can honestly say it'll",13
 .byte "be a pleasure and an honor",13
 .byte "to burninate you, Rather",13
 .byte "Dashing.",34,0
 
+trogdor_honestly_message2:
 .byte "Aw that sure was nice of",13
 .byte "him!",0
 
+trogdor_honestly_message3:
 .byte "Congratulations! You've",13
 .byte "won! No one can kill",13
 .byte "Trogdor but you came closer",13
