@@ -650,7 +650,7 @@ DIALOG_TROGDOR.LZSA:	dialog_trogdor
 dialog_trogdor:	dialog_trogdor.o
 	ld65 -o dialog_trogdor dialog_trogdor.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_trogdor.o:	dialog_trogdor.s text/cliff.inc
+dialog_trogdor.o:	dialog_trogdor.s text/trogdor.inc
 	ca65 -o dialog_trogdor.o dialog_trogdor.s -l dialog_trogdor.lst
 
 ###

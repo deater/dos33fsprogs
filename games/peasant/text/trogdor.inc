@@ -10,13 +10,22 @@
 .byte "Maybe next time don't get",13
 .byte "too close.",0
 
+; + (enter Trogdor's cave)
+trogdor_entry_message:
+.byte "The beaded curtain slams",13
+.byte "shut behind you. There's no",13
+.byte "turning back now.",0
+
+
 ; + look
+trogdor_look_message:
 .byte "You're in a giant cavern",13
 .byte "which houses a giant",13
 .byte "dragon. You didn't shrink",13
 .byte "or anything.",0
 
 ; + look dragon/trogdor (while he's asleep)
+trogdor_look_trogdor_message:
 .byte "Holy crap! Trogdor's way",13
 .byte "bigger in person than he",13
 .byte "looks in most tapestries",13
@@ -25,12 +34,8 @@
 .byte "cottage doesn't seem so bad",13
 .byte "anymore.",0
 
-; + (enter Trogdor's cave)
-.byte "The beaded curtain slams",13
-.byte "shut behind you. There's no",13
-.byte "turning back now.",0
-
 ; + wake up trogdor
+trogdor_wake_message:
 .byte 34,"Troggie...",34,", you murmur.",13
 .byte 34,"Troggie, wake up it's time",13
 .byte "for Burnination school.",34,13
@@ -38,16 +43,20 @@
 
 ; + attack trogdor (when he's asleep)
 ; + kill / slay trogdor (while Trogdor's asleep, in his lair)
+trogdor_attack_message:
 .byte "Like how?",0
 
 ; + talk trogdor (while he's asleep)
+trogdor_talk_message:
 .byte "You yell some choice",13
 .byte "expletives at Trogdor but",13
 .byte "he doesn't wake up. There's",13
 .byte "a cool echo, though.",0
 
+
 ; +7 POINTS
 ; + throw sword
+trogdor_throw_sword_message:
 .byte "This is it! You hurl the",13
 .byte "Trog-Sword with all your",13
 .byte "might at the sleeping",13
@@ -55,11 +64,13 @@
 
 ; walks over, throws, animation
 
+trogdor_throw_sword_message2:
 .byte "Now you've done it!",13
 .byte "Trogdor's awake and the",13
 .byte "Trog-Sword doesn't seem to",13
 .byte "be doing a whole lot.",0
 
+trogdor_throw_sword_message3:
 .byte "Your legs lock in fear,",13
 .byte "your eyes glaze over and",13
 .byte "you wish for some Depeasant",13
@@ -67,6 +78,7 @@
 .byte "you think you hear Trogdor",13
 .byte "whimpering!",0
 
+trogdor_throw_sword_message4:
 .byte "Aw crap, that's you",13
 .byte "whimpering. At least your",13
 .byte "voice still works, I guess.",0

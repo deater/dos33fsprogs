@@ -76,7 +76,8 @@ VERB_HIDE	= 74
 VERB_MOVE	= 75
 VERB_CUT	= 76
 VERB_SAY	= 77
-VERB_ALL_DONE	= 78	; not a verb, but indicating end, must be last
+VERB_SLAY	= 78
+VERB_ALL_DONE	= 79	; not a verb, but indicating end, must be last
 
 NOUN_NONE	= 0
 ;
@@ -198,5 +199,6 @@ NOUN_SHIRT	= 115
 NOUN_SHIELD	= 116
 NOUN_SWORD	= 117
 NOUN_HELM	= 118
+NOUN_DRAGON	= 119
 ;
-NOUN_UNKNOWN	= 119
+NOUN_UNKNOWN	= 120

@@ -109,6 +109,13 @@ new_location:
 	jsr	update_top
 
 
+	;===========================
+	; intro message
+
+	ldx	#<trogdor_entry_message
+	ldy	#>trogdor_entry_message
+	jsr	finish_parse_message
+
 game_loop:
 ;	jsr	move_peasant
 

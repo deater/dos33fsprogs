@@ -842,6 +842,7 @@ verb_lookup:
 .byte "SHOW",VERB_SHOW|$80
 .byte "SIT",VERB_SIT|$80
 .byte "SKIP",VERB_SKIP|$80
+.byte "SLAY",VERB_SLAY|$80
 .byte "SLEEP",VERB_SLEEP|$80
 .byte "SMELL",VERB_SMELL|$80
 .byte "SNIFF",VERB_SNIFF|$80
@@ -1033,6 +1034,7 @@ noun_lookup_again:
 .byte "DOING",NOUN_DOING_SPROINGS|$80
 .byte "DONGOLEV",NOUN_DONGOLEV|$80
 .byte "DOOR",NOUN_DOOR|$80
+.byte "DRAGON",NOUN_DRAGON|$80
 .byte "DRAWER",NOUN_DRAWER|$80
 .byte "DRESSER",NOUN_DRESSER|$80
 .byte "DUDE",NOUN_DUDE|$80

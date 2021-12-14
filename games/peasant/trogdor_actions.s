@@ -1,3 +1,5 @@
+.include "tokens.inc"
+
 	;=======================
 	;=======================
 	;=======================
@@ -7,9 +9,117 @@
 	;=======================
 
 trogdor_inner_verb_table:
-;	.byte VERB_LOOK
-;	.word cliff_base_look-1
+	.byte VERB_ATTACK
+	.word trogdor_attack-1
+	.byte VERB_KILL
+	.word trogdor_attack-1
+	.byte VERB_SLAY
+	.word trogdor_attack-1
+	.byte VERB_LOOK
+	.word trogdor_look-1
+	.byte VERB_WAKE
+	.word trogdor_wake-1
+	.byte VERB_TALK
+	.word trogdor_talk-1
+	.byte VERB_THROW
+	.word trogdor_throw-1
 	.byte 0
+
+
+trogdor_look:
+	lda     CURRENT_NOUN
+	cmp	#NOUN_NONE
+	beq	trogdor_look_at
+	cmp	#NOUN_DRAGON
+	beq	trogdor_look_trogdor
+	cmp	#NOUN_TROGDOR
+	beq	trogdor_look_trogdor
+
+	jmp	parse_common_look
+
+trogdor_look_at:
+	ldx	#<trogdor_look_message
+	ldy	#>trogdor_look_message
+	jmp	finish_parse_message
+
+trogdor_look_trogdor:
+	ldx	#<trogdor_look_trogdor_message
+	ldy	#>trogdor_look_trogdor_message
+	jmp	finish_parse_message
+
+
+trogdor_wake:
+	lda     CURRENT_NOUN
+	cmp	#NOUN_DRAGON
+	beq	trogdor_wake_trogdor
+	cmp	#NOUN_TROGDOR
+	beq	trogdor_wake_trogdor
+
+	jmp	parse_common_unknown
+
+trogdor_wake_trogdor:
+	ldx	#<trogdor_wake_message
+	ldy	#>trogdor_wake_message
+	jmp	finish_parse_message
+
+trogdor_attack:
+	lda     CURRENT_NOUN
+	cmp	#NOUN_DRAGON
+	beq	trogdor_attack_trogdor
+	cmp	#NOUN_TROGDOR
+	beq	trogdor_attack_trogdor
+
+	jmp	parse_common_unknown
+
+trogdor_attack_trogdor:
+	ldx	#<trogdor_attack_message
+	ldy	#>trogdor_attack_message
+	jmp	finish_parse_message
+
+
+trogdor_talk:
+	lda     CURRENT_NOUN
+	cmp	#NOUN_DRAGON
+	beq	trogdor_talk_trogdor
+	cmp	#NOUN_TROGDOR
+	beq	trogdor_talk_trogdor
+
+	jmp	parse_common_talk
+
+trogdor_talk_trogdor:
+	ldx	#<trogdor_talk_message
+	ldy	#>trogdor_talk_message
+	jmp	finish_parse_message
+
+
+trogdor_throw:
+	lda     CURRENT_NOUN
+	cmp	#NOUN_SWORD
+	beq	trogdor_throw_sword
+
+	jmp	parse_common_unknown
+
+trogdor_throw_sword:
+	ldx	#<trogdor_throw_sword_message
+	ldy	#>trogdor_throw_sword_message
+	jsr	partial_message_step
+
+	lda	#7
+	jsr	score_points
+
+	ldx	#<trogdor_throw_sword_message2
+	ldy	#>trogdor_throw_sword_message2
+	jsr	partial_message_step
+
+	ldx	#<trogdor_throw_sword_message3
+	ldy	#>trogdor_throw_sword_message3
+	jsr	partial_message_step
+
+	ldx	#<trogdor_throw_sword_message4
+	ldy	#>trogdor_throw_sword_message4
+	jmp	finish_parse_message
+
+
 
 
 
