@@ -4,6 +4,27 @@
 	; sc01-dictionary.pdf
 	; was very helpful here
 
+
+	; "Sup, mortal," booms
+	; Trogdor. "I really"
+	; "appreciate you making the"
+	; "effort to come all the way"
+	; "up here and vanquish me and"
+	; "all. But, I'm kinda"
+	; "indestructible."
+trogdor_sup:
+
+
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+	.byte $FF
+
+
+	; "I can honestly say it'll",13
+	; "be a pleasure and an honor",13
+	; "to burninate you, Rather",13
+	; "Dashing.",34,0
+
 trogdor_honestly:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA

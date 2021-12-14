@@ -11,6 +11,9 @@
 .byte "too close.",0
 
 ; + (enter Trogdor's cave)
+
+; NOTE: Plays music (du du du du du DEEDOODEEDOO)
+
 trogdor_entry_message:
 .byte "The beaded curtain slams",13
 .byte "shut behind you. There's no",13
@@ -64,6 +67,12 @@ trogdor_throw_sword_message:
 
 ; walks over, throws, animation
 
+; short beep
+; opens eyes
+; gets up
+; room shakes, rock falls
+; he roars
+
 trogdor_throw_sword_message2:
 .byte "Now you've done it!",13
 .byte "Trogdor's awake and the",13
@@ -115,7 +124,7 @@ trogdor_throw_sword_message4:
 .byte "Trogdor. ",34,"I really",13
 .byte "appreciate you making the",13
 .byte "effort to come all the way",13
-.byte "up here and vanquish me and",13
+.byte "up here to vanquish me and",13	; and vanquish me ?
 .byte "all. But, I'm kinda",13
 .byte "indestructible.",34,0
 
