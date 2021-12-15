@@ -34,9 +34,14 @@ speech_loop:
 ;	lda	#>trogdor_honestly
 ;	sta	SPEECH_PTRH
 
-	lda	#<trogdor_sup
+;	lda	#<trogdor_sup
+;	sta	SPEECH_PTRL
+;	lda	#>trogdor_sup
+;	sta	SPEECH_PTRH
+
+	lda	#<trogdor_surprised
 	sta	SPEECH_PTRL
-	lda	#>trogdor_sup
+	lda	#>trogdor_surprised
 	sta	SPEECH_PTRH
 
 	jsr	ssi263_speak
@@ -78,12 +83,13 @@ trogdor_honestly:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-	.byte PHONEME_K		; K	; Can
+	.byte PHONEME_K		; K	; can
 	.byte PHONEME_AE1	; AE1
 	.byte PHONEME_N		; N
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_AH	; AH	; Honestly
+
+	.byte PHONEME_AH	; AH	; honestly
 	.byte PHONEME_N		; N
 	.byte PHONEME_EH1	; EH1
 	.byte PHONEME_S		; S
@@ -92,7 +98,8 @@ trogdor_honestly:
 	.byte PHONEME_E1	; E1
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
-	.byte PHONEME_S		; S	; Say
+
+	.byte PHONEME_S		; S	; say
 	.byte PHONEME_A		; A
 	.byte PHONEME_AY	; AY
 	.byte PHONEME_Y		; Y
@@ -197,7 +204,7 @@ trogdor_honestly:
 	; Trogdor. "I really"
 	; "appreciate you making the"
 	; "effort to come all the way"
-	; "up here to vanquish me and"
+	; "up here and vanquish me and"
 	; "all. But, I'm kinda"
 	; "indestructible."
 trogdor_sup:
@@ -321,10 +328,10 @@ trogdor_sup:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
-	.byte PHONEME_T		; T	; to
-	.byte PHONEME_IU	; IU
-	.byte PHONEME_U1	; U1
-	.byte PHONEME_U1	; U1
+	.byte PHONEME_AE1	; AE1	; and
+	.byte PHONEME_EH	; EH
+	.byte PHONEME_N		; N
+	.byte PHONEME_D		; D
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
 
@@ -367,7 +374,7 @@ trogdor_sup:
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA	; ,
 
-	.byte PHONEME_AH1	; AH1	; I'M
+	.byte PHONEME_AH1	; AH1	; I'm
 	.byte PHONEME_Y		; Y
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_Y		; M
@@ -401,5 +408,306 @@ trogdor_sup:
 
 	.byte PHONEME_PAUSE	; PA
 	.byte PHONEME_PAUSE	; PA
+
+	.byte $FF
+
+
+
+	; "Yeah, I can't be killed."
+	; "I'm surprised nobody"
+	; "mentioned that to you. I'll"
+	; "admit though, you've"
+	; "gotten farther than"
+	; "anybody else ever has. I"
+	; "bet they'll make a statue"
+	; "or something in honor of"
+	; "you somewheres."
+
+trogdor_surprised:
+
+	.byte PHONEME_Y		; Y	Yeah,
+	.byte PHONEME_A		; AH
+	.byte PHONEME_UH	; EH
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA ,
+
+	.byte PHONEME_AH1	; AH1	; I
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_K		; K	; can't
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_EH1	; EH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_B		; B	; be
+	.byte PHONEME_E1	; E1
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_K		; K	; killed
+	.byte PHONEME_I		; I
+	.byte PHONEME_L		; L
+	.byte PHONEME_D		; D
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA	.
+
+	.byte PHONEME_AH1	; AH1	; I'm
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_Y		; M
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_S		; S	surprised
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_P		; P
+	.byte PHONEME_R		; R
+	.byte PHONEME_AH1	; AH3
+	.byte PHONEME_EH1	; EH3
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_D		; D
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_N		; N	nobody
+	.byte PHONEME_OO	; OO1
+	.byte PHONEME_OU	; O1
+	.byte PHONEME_B		; B
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_D		; D
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_M		; M	mentioned
+	.byte PHONEME_EH	; EH1
+	.byte PHONEME_EH1	; EH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_SCH	; SCH
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_N		; N
+	.byte PHONEME_D		; D
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_THV	; THV   ; that
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_T		; T	; to
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_Y		; Y	; you
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_PAUSE	; PA	; .
+	.byte PHONEME_PAUSE	; PA	; .
+
+	.byte PHONEME_AH1	; AH1	; I'll
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_UH	; UH
+	.byte PHONEME_L		; L
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_AE1	; AE1	; admit
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_D		; D
+	.byte PHONEME_M		; M
+	.byte PHONEME_I		; I
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_AE1	; TH	; though
+;	.byte PHONEME_OO	; OO1
+	.byte PHONEME_OU	; O1
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA 	; ,
+
+	.byte PHONEME_Y		; Y	; you've
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_V		; V
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_KV	; KV	; gotten
+	.byte PHONEME_AH	; AH1
+	.byte PHONEME_T		; T
+	.byte PHONEME_EH	; EH
+	.byte PHONEME_N		; N
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_F		; F	; farther
+	.byte PHONEME_AH	; AH1
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_R		; R
+	.byte PHONEME_TH	; TH
+	.byte PHONEME_ER	; ER
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_TH	; TH	; than
+	.byte PHONEME_EH1	; EH1
+;	.byte PHONEME_EH3	; EH3
+	.byte PHONEME_N		; N
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_EH	; EH2	; anybody
+	.byte PHONEME_EH	; EH2
+	.byte PHONEME_N		; N
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_B		; B
+	.byte PHONEME_AH1	; AH1
+	.byte PHONEME_D		; D
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_EH1	; EH1	; else
+	.byte PHONEME_EH	; EH2
+	.byte PHONEME_L		; L
+	.byte PHONEME_S		; S
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_EH1	; EH1	; ever
+	.byte PHONEME_V		; V
+	.byte PHONEME_EH1	; EH1
+	.byte PHONEME_R		; R
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_HF	; H	; has
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA	; .
+
+	.byte PHONEME_AH1	; AH1	; I
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_B		; B	; bet
+	.byte PHONEME_EH1	; EH1
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_T		; T
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_TH	; TH	; they'll
+	.byte PHONEME_AI	; AI
+	.byte PHONEME_Y		; Y
+	.byte PHONEME_L		; L
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_M		; M	; make
+	.byte PHONEME_AI	; AI
+	.byte PHONEME_K		; K
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH	; UH	; a
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_S		; S	; statue
+	.byte PHONEME_T		; T
+	.byte PHONEME_AE1	; AE1
+	.byte PHONEME_T		; T
+	.byte PHONEME_SCH	; SCH
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH	; O1	; or
+	.byte PHONEME_R		; R
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_S		; S	; something
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_M		; M
+	.byte PHONEME_TH	; TH
+	.byte PHONEME_I		; I
+	.byte PHONEME_NG	; NG
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_I		; I1	; in
+	.byte PHONEME_N		; N
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_AH	; AH	; honor
+	.byte PHONEME_N		; N
+	.byte PHONEME_UH	; O1
+	.byte PHONEME_R		; R
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_UH1	; UH1   ; of
+	.byte PHONEME_UH3	; UH3
+	.byte PHONEME_V		; V
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_Y		; Y	; you
+	.byte PHONEME_IU	; IU
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_U1	; U1
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_S		; S	; somewheres
+	.byte PHONEME_UH1	; UH1
+	.byte PHONEME_UH2	; UH2
+	.byte PHONEME_M		; M
+	.byte PHONEME_W		; W
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_A		; A2
+	.byte PHONEME_EH	; EH3
+	.byte PHONEME_R		; R
+	.byte PHONEME_Z		; Z
+	.byte PHONEME_PAUSE	; PA
+	.byte PHONEME_PAUSE	; PA
+
+	.byte PHONEME_PAUSE	; PA	.
+
 
 	.byte $FF
