@@ -98,7 +98,8 @@ trogdor_throw_sword_message4:
 ;======================================
 ;======================================
 
-; Type any command other than "Talk" or "Talk Trogdor" after Trogdor wakes up
+; any command except talk/look
+trogdor_awake_message:
 .byte "Trogdor is awake and a",13
 .byte "couple seconds from a",13
 .byte "Rather Dashing BBQ. Might",13
@@ -106,6 +107,7 @@ trogdor_throw_sword_message4:
 .byte "him.",0
 
 ; + look dragon/trogdor (when he's awake)
+trogdor_look_awake_message:
 .byte "Trogdor is looming",13
 .byte "menacingly over you with a",13
 .byte "tiny wee sword stuck in his",13
@@ -114,20 +116,23 @@ trogdor_throw_sword_message4:
 
 ; +10 POINTS
 ; + talk trogdor
+end_talk_message:
 .byte "You scream that your name",13
 .byte "is Rather Dashing and that",13
 .byte "Trogdor burninated your",13
 .byte "cottage and you're here for",13
 .byte "revenge!",0
 
+trogdor_sup_message:
 .byte 34,"Sup, mortal,",34," booms",13
 .byte "Trogdor. ",34,"I really",13
 .byte "appreciate you making the",13
 .byte "effort to come all the way",13
-.byte "up here to vanquish me and",13	; and vanquish me ?
+.byte "up here and vanquish me and",13
 .byte "all. But, I'm kinda",13
 .byte "indestructible.",34,0
 
+trogdor_surprised_message:
 .byte 34,"Yeah, I can't be killed.",13
 .byte "I'm surprised nobody",13
 .byte "mentioned that to you. I'll",13

@@ -27,6 +27,7 @@ trogdor_inner_verb_table:
 
 
 trogdor_look:
+
 	lda     CURRENT_NOUN
 	cmp	#NOUN_NONE
 	beq	trogdor_look_at
@@ -49,6 +50,7 @@ trogdor_look_trogdor:
 
 
 trogdor_wake:
+
 	lda     CURRENT_NOUN
 	cmp	#NOUN_DRAGON
 	beq	trogdor_wake_trogdor
@@ -117,13 +119,65 @@ trogdor_throw_sword:
 
 	ldx	#<trogdor_throw_sword_message4
 	ldy	#>trogdor_throw_sword_message4
-	jmp	finish_parse_message
+	jsr	partial_message_step
+
+	;==============================
+	; now we can no longer move
+	;	you have about 10s or so to say "look" or "talk"
+	;	otherwise it continues to the ending
+
+	jsr	clear_bottom
+	lda	#$60			; modify parse input to return
+	sta	parse_input_smc		; rather than verb-jump
 
 
+	lda	#$FF
+	sta	BABY_COUNT
+
+trogdor_awake_loop:
+
+	lda	#120
+	jsr	wait
+
+	lda	KEYPRESS
+	bpl	awake_no_keypress
+
+	jsr	clear_bottom
+	jsr	hgr_input
+
+        jsr     parse_input
+
+        lda     CURRENT_VERB
+        cmp     #VERB_LOOK
+	bne     awake_check_talk
+awake_looking:
+	ldx	#<trogdor_look_awake_message
+	ldy	#>trogdor_look_awake_message
+	jsr	partial_message_step
+	jmp	awake_try_again
+
+awake_check_talk:
+        cmp     #VERB_TALK
+        beq     awake_talk_trogdor
+
+awake_default:
+	ldx	#<trogdor_awake_message
+	ldy	#>trogdor_awake_message
+	jsr	partial_message_step
+
+awake_try_again:
+	jsr	clear_bottom
+
+awake_no_keypress:
+	dec	BABY_COUNT
+	bne	trogdor_awake_loop
 
 
+	; we timed out!  Skip to burnination
+	jmp	burninate_rather_dashing
 
-trogdor_cave:
+
+awake_talk_trogdor:
 
 	lda	#<trogdor_cave_lzsa
 	sta	getsrc_smc+1
@@ -149,10 +203,52 @@ trogdor_cave:
 
 	jsr	hgr_draw_sprite
 
-
 	jsr	update_top
 
-	jsr	wait_until_keypress
+
+	;========================
+	;
+
+	ldx	#<end_talk_message
+	ldy	#>end_talk_message
+	jsr	partial_message_step
+
+	;==============================
+	;==============================
+	; print sup message
+	;==============================
+	;==============================
+
+	ldx	#<trogdor_sup_message
+	ldy	#>trogdor_sup_message
+	jsr	finish_parse_message_nowait
+
+        lda     #<trogdor_sup
+        sta     SPEECH_PTRL
+        lda     #>trogdor_sup
+        sta     SPEECH_PTRH
+
+	jsr	trogdor_talks
+
+
+	;==============================
+	;==============================
+	; print surprised message
+	;==============================
+	;==============================
+
+	ldx	#<trogdor_surprised_message
+	ldy	#>trogdor_surprised_message
+	jsr	finish_parse_message_nowait
+
+        lda     #<trogdor_honestly
+        sta     SPEECH_PTRL
+        lda     #>trogdor_honestly
+        sta     SPEECH_PTRH
+
+	jsr	trogdor_talks
+
+
 
 	;==============================
 	;==============================
@@ -164,37 +260,14 @@ trogdor_cave:
 	ldy	#>trogdor_honestly_message
 	jsr	finish_parse_message_nowait
 
-	;==================================
-	; text to speech, where available!
 
-	lda	SOUND_STATUS
-	and	#SOUND_SSI263
-	beq	skip_speech
-
-speech_loop:
-
-        ; trogdor
-
-	lda	#4			; assume slot #4 for now
-	jsr	ssi263_speech_init
 
         lda     #<trogdor_honestly
         sta     SPEECH_PTRL
         lda     #>trogdor_honestly
         sta     SPEECH_PTRH
 
-        jsr     ssi263_speak
-
-wait_for_speech:
-	lda	speech_busy
-	bmi	wait_for_speech
-	bpl	done_speech
-
-skip_speech:
-	jsr	wait_until_keypress
-
-done_speech:
-	jsr	hgr_partial_restore
+	jsr	trogdor_talks
 
 
 	;==============================
@@ -207,11 +280,12 @@ done_speech:
 	ldy	#>trogdor_honestly_message2
 	jsr	finish_parse_message
 
-
 	; UPDATE SCORE
 
 	lda	#$10		; it's BCD
 	jsr	score_points
+
+burninate_rather_dashing:
 
 trogdor_open:
 
@@ -279,8 +353,6 @@ burninate_loop:
         sta     speaker_frequency
         jsr     speaker_beep
 
-;	jsr	wait_until_keypress
-
 	bit	PAGE2
 
 	lda     #16
@@ -288,8 +360,6 @@ burninate_loop:
         lda     #NOTE_D3
         sta     speaker_frequency
         jsr     speaker_beep
-
-;	jsr	wait_until_keypress
 
 	dec	BABY_COUNT
 	bne	burninate_loop
@@ -373,6 +443,52 @@ game_over:
 
         rts
 
+
+
+	;============================
+	; trogdor talks
+	;============================
+
+trogdor_talks:
+
+	;==================================
+	; text to speech, where available!
+
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	skip_speech
+
+	lda	MOCKINGBOARD_SLOT		; assume slot #4 for now
+	jsr	ssi263_speech_init
+
+        jsr     ssi263_speak
+
+	bit	KEYRESET
+wait_for_speech:
+	lda	KEYPRESS
+	bmi	cancel_speech
+
+	lda	speech_busy
+	bmi	wait_for_speech
+	bpl	done_speech
+
+cancel_speech:
+	bit	KEYRESET
+
+	jsr	ssi263_speech_shutdown
+
+	jmp	done_speech
+
+
+skip_speech:
+	jsr	wait_until_keypress
+
+done_speech:
+	jsr	hgr_partial_restore
+
+	rts
+
+
 dashing_progress_l:
 	.byte <dashing0_sprite,<dashing1_sprite,<dashing2_sprite
 	.byte <dashing3_sprite,<dashing4_sprite,<dashing5_sprite
@@ -385,3 +501,4 @@ dashing_progress_h:
 
 
 .include "dialog_trogdor.inc"
+

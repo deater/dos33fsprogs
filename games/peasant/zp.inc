@@ -120,8 +120,10 @@ PEASANT_DIR	= $93
 	PEASANT_DIR_RIGHT	= 1
 	PEASANT_DIR_LEFT	= 2
 	PEASANT_DIR_DOWN	= 3
-;MAP_X		= $94
-;MAP_Y		= $95
+
+GAME_STATE_3	= $94
+;	SWORD_THROWN	= $01
+
 MAP_LOCATION	= $96
 
 GAME_STATE_0	= $97
@@ -208,7 +210,14 @@ INVENTORY_3_GONE	= $A5
 KERREK_X		= $A6	; should be in save area, as we use
 KERREK_Y		= $A7	; for skeleton location
 
-END_OF_SAVE		= $A8
+VISITED_0		= $A8	; for MAP drawing purposes	
+VISITED_1		= $A9
+VISITED_2		= $AA
+VISITED_3		= $AB
+
+END_OF_SAVE		= $AC
+
+;=============================================
 
 CURRENT_VERB	= $B0		; parser
 CURRENT_NOUN	= $B1

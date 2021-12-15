@@ -118,6 +118,7 @@ start_new_game:
 	sta	GAME_STATE_0
 	sta	GAME_STATE_1
 	sta	GAME_STATE_2
+	sta	GAME_STATE_3
 	sta	NED_STATUS
 	sta	BUSH_STATUS
 	sta	KERREK_STATE
