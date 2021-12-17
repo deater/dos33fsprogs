@@ -241,9 +241,9 @@ awake_talk_trogdor:
 	ldy	#>trogdor_surprised_message
 	jsr	finish_parse_message_nowait
 
-        lda     #<trogdor_honestly
+        lda     #<trogdor_surprised
         sta     SPEECH_PTRL
-        lda     #>trogdor_honestly
+        lda     #>trogdor_surprised
         sta     SPEECH_PTRH
 
 	jsr	trogdor_talks
@@ -437,6 +437,9 @@ no_boom:
 game_over:
 
 	; go to end credits
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
 
 	lda     #LOAD_ENDING
         sta     WHICH_LOAD

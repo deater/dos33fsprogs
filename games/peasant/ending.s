@@ -29,26 +29,41 @@ ending:
 	;=====================
 	; re-start music
 	;=====================
-	; need to un-do any patching
-	; reset to beginning of song
-	; and start interrupts
 
 	; only if mockingboard enabled
 	lda     SOUND_STATUS
         and     #SOUND_MOCKINGBOARD
         beq     skip_end_music
 
+	; re-load intro theme from disk
+
+	lda     $C083
+        lda     $C083
+
+        ; actually load it
+        lda     #LOAD_MUSIC
+        sta     WHICH_LOAD
+
+        jsr     load_file
+
+        lda     #0
+        sta     DONE_PLAYING
+
+        lda     #1
+        sta     LOOP
+
+
 	jsr	mockingboard_init
 	jsr	reset_ay_both
 
 	jsr	mockingboard_setup_interrupt
 
-	lda	#$09			; don't end after 4
-	sta	PT3_LOC+$C9+$4
+;	lda	#$09			; don't end after 4
+;	sta	PT3_LOC+$C9+$4
 
 	; 2??
-	lda	#$3			; set LOOP to 2
-	sta	PT3_LOC+$66
+;	lda	#$3			; set LOOP to 2
+;	sta	PT3_LOC+$66
 
 	jsr	pt3_init_song
 
@@ -534,8 +549,18 @@ final_screen:
 	jsr	wait_until_keypress
 
 game_over:
+	; stop music
+	lda     SOUND_STATUS
+        and     #SOUND_MOCKINGBOARD
+        beq     stuck_forever
 
-	jmp	boat
+	sei
+
+	jsr	clear_ay_both
+
+
+stuck_forever:
+	jmp	stuck_forever
 
 
 

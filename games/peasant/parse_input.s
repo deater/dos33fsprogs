@@ -17,7 +17,7 @@ parse_input_file_begin:
 
 parse_input:
 	;===========================
-	; speacial case: pot on head
+	; special case: pot on head
 
 	lda	GAME_STATE_1
 	and	#POT_ON_HEAD
