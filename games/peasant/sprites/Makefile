@@ -1,7 +1,8 @@
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
-	boat_sprites.inc peasant_sprites.inc ned_sprites.inc
+	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
+	peasant_robe_sprites.inc
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
@@ -20,6 +21,25 @@ peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_down1_mask    peasant_sprites.png  70  68 76 96 >> peasant_sprites.inc
 	$(HGR_SPRITE) -l peasant_down2_sprite  peasant_sprites.png  84 102 90 130 >> peasant_sprites.inc
 	$(HGR_SPRITE) -l peasant_down2_mask    peasant_sprites.png  70 102 76 130 >> peasant_sprites.inc
+
+peasant_robe_sprites.inc:	peasant_sprites.png
+	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  133   1 133 29 > peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_right1_mask   peasant_sprites.png  119   1 119 29 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_right2_sprite peasant_sprites.png  133  34 133 62 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_right2_mask   peasant_sprites.png  119  34 119 62 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_up1_sprite    peasant_sprites.png  133  68 133 96 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_up1_mask      peasant_sprites.png  119  68 119 96 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_up2_sprite    peasant_sprites.png  133 102 133 130 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_up2_mask      peasant_sprites.png  119 102 119 130 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_left1_sprite  peasant_sprites.png  182   1 188 29 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_left1_mask    peasant_sprites.png  168   1 174 29 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_left2_sprite  peasant_sprites.png  182  34 188 62 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_left2_mask    peasant_sprites.png  168  34 174 62 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_down1_sprite  peasant_sprites.png  182  68 188 96 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_down1_mask    peasant_sprites.png  168  68 174 96 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_down2_sprite  peasant_sprites.png  182 102 188 130 >> peasant_robe_sprites.inc
+	$(HGR_SPRITE) -l peasant_down2_mask    peasant_sprites.png  168 102 174 130 >> peasant_robe_sprites.inc
+
 
 
 
@@ -105,7 +125,20 @@ trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l dashing6_sprite trogdor_sprites.png 98 6 104 45 >> trogdor_sprites.inc
 	$(HGR_SPRITE) -s -l dashing7_sprite trogdor_sprites.png 112 6 118 45 >> trogdor_sprites.inc
 	$(HGR_SPRITE) -s -l dashing8_sprite trogdor_sprites.png 126 6 132 45 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l tiny_r1_sprite trogdor_sprites.png 14 49 20 54 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l tiny_r2_sprite trogdor_sprites.png 28 49 34 54 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l tiny_l1_sprite trogdor_sprites.png 14 57 20 61 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l tiny_l2_sprite trogdor_sprites.png 28 57 34 61 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword1_sprite trogdor_sprites.png 42 48 48 53 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword2_sprite trogdor_sprites.png 49 48 55 53 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword3_sprite trogdor_sprites.png 56 48 62 53 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword4_sprite trogdor_sprites.png 63 48 69 53 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword5_sprite trogdor_sprites.png 70 48 76 53 >> trogdor_sprites.inc
+	$(HGR_SPRITE) -s -l sword6_sprite trogdor_sprites.png 77 48 83 53 >> trogdor_sprites.inc
+
+
 
 clean:
 	rm -f *~ peasant_sprites.inc inventory_sprites.inc \
-		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc
+		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc \
+		peasant_robe_sprites.inc

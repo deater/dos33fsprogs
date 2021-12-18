@@ -1,6 +1,6 @@
 ; Peasant's Quest Trgodor scene
 
-; From when the sword hits Trogdor on
+; The inner sanctum
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -108,6 +108,21 @@ new_location:
 
 	jsr	update_top
 
+	;====================
+	; save background
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sta	CURSOR_Y
+
+	;=======================
+	; draw initial peasant
+
+	jsr	save_bg_1x5
+
+	jsr	draw_peasant
+
 
 	;===========================
 	; intro message
@@ -117,7 +132,7 @@ new_location:
 	jsr	finish_parse_message
 
 game_loop:
-;	jsr	move_peasant
+	jsr	move_peasant_tiny
 
 	inc	FRAME
 
@@ -147,6 +162,9 @@ level_over:
         rts
 
 
+.include "peasant_move_tiny.s"
+.include "draw_peasant_tiny.s"
+.include "hgr_1x5_save_bg.s"
 
 ;.include "decompress_fast_v2.s"
 ;.include "wait_keypress.s"
@@ -186,29 +204,6 @@ level_over:
 .include "graphics_trogdor/priority_trogdor.inc"
 
 .include "sprites/trogdor_sprites.inc"
-
-;trogdor_string:
-;	.byte   0,43,32, 0,253,82
-;	.byte   8,41
-;	.byte 34,"I can honestly say it'll",13
-;	.byte "be a pleasure and an honor",13
-;	.byte "to burninate you, Rather",13
-;	.byte "Dashing.",34,0
-
-;trogdor_string2:
-;	.byte   0,43,32, 0,253,66
-;	.byte   8,41
-;	.byte "Aw that sure was nice of",13
-;	.byte "him!",0
-
-;trogdor_string3:
-;	.byte   0,43,32, 0,253,90
-;	.byte   8,41
-;	.byte "Congratulations! You've",13
-;	.byte "won! No one can kill",13
-;	.byte "Trogdor but you came closer",13
-;	.byte "than anybody ever! Way to",13
-;	.byte "go!",0
 
 
 update_top:

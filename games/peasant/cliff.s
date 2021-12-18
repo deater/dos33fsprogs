@@ -214,7 +214,17 @@ just_go_there:
 	;************************
 level_over:
 
-	; new location, different file
+	; new location
+	; in theory this can only be TROGDOR
+
+	lda	#4
+	sta	PEASANT_X
+	lda	#170
+	sta	PEASANT_Y
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
 
 	rts
 

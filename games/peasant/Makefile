@@ -396,10 +396,11 @@ trogdor.o:	trogdor.s zp.inc \
 		DIALOG_TROGDOR.LZSA dialog_trogdor.inc \
 		ssi263_simple_speech.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
+		hgr_1x5_save_bg.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		draw_peasant_tiny.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s \
+		peasant_move_tiny.s score.s inventory.s \
 		trogdor_actions.s
 
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
