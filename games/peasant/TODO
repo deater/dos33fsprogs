@@ -1,150 +1,169 @@
 TODO:
 
-LOOKing at things in inventory
+General:
++ make text every 9th row so descenders don't interfere?
++ background priority mask not working when at far top of screen
++ fix issue where walking stops when you cross to screen w priority
+  (most visible, mountain pass to river)
++ More frames in peasant sprites
++ Let disk 2 live in the 2nd drive?  
+	LDA $C08A,X to select first drive
+	LDA $C08B,X to select second drive
 
-update knight for kerrek belt
-kerrek decay
 
-string compression: run trgodor level, intro, and instructions through it
-
-can get stuck on top of targets at archery range
-
-map: fills in as you visit the areas
-
-make text every 9th row so descenders don't interfere?
-Would throw out option of using part of page2 as more RAM
-
-optimizations:
+Text parsing:
 + always load CURERENT_NOUN into A before calling into parsing
 	routines
 
+Each time enter room:
++ Have kerrek decay more
++ Check for night being over
++ Check for rain being done
++ Update map visited location
++ Blow away haystack if applicable
+
+Title:
 + print warning message on 48k systems that we need at least 64k
-
-+ more frames in animation for game_over
-+ hook up game_over for "quit" and "copy"
-+ better music for game over
-
-+ consolidate the lookup info for message box sizes, as in the
-	end only Y2 is changing
-
-+ background priority mask not working when at far top of screen
-+ Loading screen is slow when getting names
-	Print "Loading" message while doing it?
-  Or: move all save games to one sector (64 bytes each?)
-
-+ After loading, no need to clear text before moving to next level
-
-+ complete waterfall, including animation
-+ update intro to walk closer to edges
-+ fix issue where walking stops when you cross to screen w priority
-
-+ re-do how off edge-of-screen works (have destination for all 4 co-ords?)
-+ move drawing to PAGE1 and use PAGE2 for RAM?
-	This would remove backing store when drawing text boxes?
-+ add dictionary lookup for text for smaller size
-+ optimize text box sizes
-+ replace parse_input lookup with a giant jump table
-
-Border special cases:
-	+ Mountain pass walking to Inn
-	+ Jhonka cave walking to Cottage
-
-
-
-General:
-- More frames in peasant sprites
-- Hook up text parser
-- When load game, stop walking
-- Let disk 2 live in the 2nd drive?  
-	LDA $C08A,X to select first drive
-	LDA $C08B,X to select second drive
-- Implement game over screen
-
-Videlectrix Title:
-- Can we make it faster?
++ Better electric duet music?
 
 Intro:
-- Speaker music for title if no Mockingboard
++ Use string compression
++ Use common sprite interface
++ Use walkto interface
 
 Map:
-- implement map
++ Blot out areas you haven't been to
++ Draw current location on map
 
-Peasantry:
+Game Over:
++ more frames in animation for game_over
++ better music for game over
+
+Loading Screen:
++ Move all save games into one sector
++ After loading, no need to clear text before moving to next level
++ After loading, clear xadd/yadd so not walking
+
+
+Peasant1:
+~~~~~~~~~
+
 - Gary
   + fly animation
-  + hook up death
   + hook up mask stuff
   + hook up animation when you get kicked
   + hook up scare animation 
-  + hook up random number picks scare message
   + hook up after-gary, fence hole and no horse
 - Kerrek 1
+  + Implement kerrek
+  + Implement dead kerrek
+  + Animate kerrek
+  + Animate shooting kerrek
+  + Sound effect when kerrek appears
+  + Animate getting belt
+  + Implement rain
 - Well
+  + Walk to
+  + Animate lowering bucket
+  + Animate getting mask
+  + Animate baby in well
 - Yellow Tree
 - Waterfall
   + Waterfall animation
 
+Peasant2:
+~~~~~~~~~
+
 - Haystack
-  + Hook up dialog for mud
+  + Animate jumping into haystack
   + Hook up sprites for walking hay
 - Puddle
-  + Hook up responses when mud is wet
+  + Alternate version with wet mud
+  + Animation for falling into mud
 - Archery
   + Archer animations
   + Hook up minigame
-  + Hook up getting points
-  + Hook up dialog changes
-  + Hook up stuff that happens after Dongolev is back
+  + fix where we can get stuck on top of targets at archery range
 - River/Rock
   + River animation
 - Mountain Pass
   + Knight animations
-  + hook up/fix dialog when you have various items
-  + be sure to fix the "talk knight" dialog for robe/fire etc
   + Block path unless you have all three items
 
+Peasant3:
+~~~~~~~~~
 - Jhonka
+  + Animate Jhonka
+  + Take note off door once Kerrek dead
+  + Draw riches when applicable
 - Cottage
+  + Fix y-coords when walking to Jhonka
 - West Lake
-  + Water animations
+  + Animate water
+  + Make pebbles go away once you pick them up
+  + Animate "throw baby" sequence
 - East Lake
-  + Boat animations
-  + Water animations
+  + Animate Boat
+  + Animate Water
+  + Animate whole fish-feeding sequence
 - Inn
+  + Take note off door once old man is inside
+  + Animate taking pot off head
 
+Peasant4:
+~~~~~~~~~
 - Ned Cottage
+  + Animate deploying baby
+  + Make door open once baby deployed
 - Ned
+  + Animate Ned
+  + Can you walk behind him?
 - Kerrek2
   + See Kerrek1
 - Lady Cottage outside
+  + Walk to bushes as search them
 - Burnt trees
+  + Animate flame at night
 
+Inside:
+~~~~~~~
 - Lady Cottage inside
   + walk-to-shelf when get feed
   + Rocking animation (both her there and not)
-  + Messages when leaving
+- Jhonka Cave Inside
+  + Animate opening drawer
+- Hidden Glen
+  + Animate Dongolev
+  + Animate Dongolev shooting
+  + Walk to tree to get arrows
 
-- animation for the boat
-- animation of River
-- animation of waterfall
-- Hook up hidden glen, inside of cottages and inn
-- Archery minigame
+Inside Inn:
+~~~~~~~~~~~
++ Walk funny when pot on head
++ Animate innkeeper (day)
++ Animate pot falling on head
++ Animate getting room (sleeping in bed, waking up)
++ Animate night falling
 
-
-
-
-
-Tower:
-- Tower level
+Cliff:
+~~~~~~
++ Hook up points/message for arriving at cliff
++ Cliff minigame
++ Animate lightning
++ Fix the priority/entry points for the various entrances
++ Hook up dialog with keepers
++ Animate keepers
++ Animate the three deaths
 
 Trogdor:
-- All the rest
-- Rest of Trogdor's speech
-- Fix speech generation
+~~~~~~~~
++ Walk to
++ Animate fire death
++ Animate throwing sword
++ Animate Trogdor standing up
 
 Ending:
-- Smoother baby animation?  Use page-flipping?
-  Modify sprite routine to auto-shift colors so we can have more
+~~~~~~~
++ Smoother baby animation?  Use page-flipping?
++ Modify sprite routine to auto-shift colors so we can have more
   of an arc on baby trajectory?
-
-
