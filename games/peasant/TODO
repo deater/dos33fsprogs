@@ -1,6 +1,7 @@
 TODO:
 
 General:
+~~~~~~~~
 + make text every 9th row so descenders don't interfere?
 + background priority mask not working when at far top of screen
 + fix issue where walking stops when you cross to screen w priority
@@ -11,11 +12,21 @@ General:
 	LDA $C08B,X to select second drive
 
 
+Peasant sprites:
+~~~~~~~~~~~~~~~~
++ Need some generic way of handling this/location in RAM to hold this?
++ Wearing robe
++ Wearing robe and on fire
++ Wearing haystack
++ Muddy
+
 Text parsing:
+~~~~~~~~~~~~~
 + always load CURERENT_NOUN into A before calling into parsing
 	routines
 
 Each time enter room:
+~~~~~~~~~~~~~~~~~~~~~
 + Have kerrek decay more
 + Check for night being over
 + Check for rain being done
@@ -23,23 +34,28 @@ Each time enter room:
 + Blow away haystack if applicable
 
 Title:
+~~~~~~
 + print warning message on 48k systems that we need at least 64k
 + Better electric duet music?
 
 Intro:
+~~~~~~
 + Use string compression
 + Use common sprite interface
 + Use walkto interface
 
 Map:
+~~~~
 + Blot out areas you haven't been to
 + Draw current location on map
 
 Game Over:
+~~~~~~~~~~
 + more frames in animation for game_over
 + better music for game over
 
 Loading Screen:
+~~~~~~~~~~~~~~~
 + Move all save games into one sector
 + After loading, no need to clear text before moving to next level
 + After loading, clear xadd/yadd so not walking
@@ -68,6 +84,7 @@ Peasant1:
   + Animate getting mask
   + Animate baby in well
 - Yellow Tree
+  + adjust enter/leaving x/y co-ordinates?
 - Waterfall
   + Waterfall animation
 
