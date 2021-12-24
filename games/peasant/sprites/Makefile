@@ -2,7 +2,7 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
 	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
-	peasant_robe_sprites.inc
+	peasant_robe_sprites.inc kerrek_sprites.inc
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
@@ -114,6 +114,15 @@ ending_sprites.inc:	end_sprites.png end_boat_sprites.png
 	$(HGR_SPRITE) -s -l foam0 end_sprites.png 155  38 165 85 >> ending_sprites.inc
 	$(HGR_SPRITE) -s -l foam1 end_sprites.png 183  38 195 85 >> ending_sprites.inc
 
+kerrek_sprites.inc:	kerrek_sprites.png
+	$(HGR_SPRITE) -s -l kerrek_l1_sprite kerrek_sprites.png 14 2 27 53 > kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_l1_head_sprite kerrek_sprites.png 7 6 13 14 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_l2_sprite kerrek_sprites.png 49 2 62 53 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_l2_head_sprite kerrek_sprites.png 42 6 48 13 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_r1_sprite kerrek_sprites.png 7 56 21 108 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_r1_head_sprite kerrek_sprites.png 21 60 27 68 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_r2_sprite kerrek_sprites.png 42 56 56 108 >> kerrek_sprites.inc
+	$(HGR_SPRITE) -s -l kerrek_r2_head_sprite kerrek_sprites.png 56 60 62 66 >> kerrek_sprites.inc
 
 trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l dashing0_sprite trogdor_sprites.png 14 6 20 45 > trogdor_sprites.inc

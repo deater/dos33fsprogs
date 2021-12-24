@@ -36,6 +36,8 @@ really_move_peasant:
 	pha
 
 	tay
+	; FIXME: should we add YADD first, like we do in peasant_move_tiny?
+
 	ldx	PEASANT_Y
 	jsr	peasant_collide
 

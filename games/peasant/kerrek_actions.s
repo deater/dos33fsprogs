@@ -8,6 +8,30 @@
 
 	;=======================
 	;=======================
+	; kerrek draw
+	;=======================
+	;=======================
+kerrek_draw:
+
+	lda	#<kerrek_l1_sprite
+	sta	INL
+	lda	#>kerrek_l1_sprite
+	sta	INH
+
+	lda	KERREK_X
+	sta	CURSOR_X
+
+	lda	KERREK_Y
+	sta	CURSOR_Y
+
+
+	jsr	hgr_draw_sprite
+
+
+	rts
+
+	;=======================
+	;=======================
 	; kerrek setup
 	;=======================
 	;=======================
@@ -616,3 +640,4 @@ kerrek_look_footprints:
 	ldy	#>kerrek_look_footprints_message
 	jmp	finish_parse_message
 
+.include "sprites/kerrek_sprites.inc"

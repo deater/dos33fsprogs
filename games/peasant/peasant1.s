@@ -165,6 +165,7 @@ game_loop:
 
 	jsr	check_keyboard
 
+	jsr	kerrek_draw
 	jsr	kerrek_collision
 
 	lda	LEVEL_OVER
@@ -243,7 +244,7 @@ game_over:
 
 .include "version.inc"
 
-
+.include "hgr_sprite.s"
 
 ; Moved to qload
 ;.include "decompress_fast_v2.s"

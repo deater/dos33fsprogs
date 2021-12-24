@@ -319,6 +319,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 		text/peasant1.inc text/kerrek.inc \
 		kerrek_actions.s peasant_common.s \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
+		sprites/kerrek_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
