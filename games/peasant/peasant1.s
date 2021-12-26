@@ -165,8 +165,10 @@ game_loop:
 
 	jsr	check_keyboard
 
+	; FIXME: draw kerrek before peasant if behind him
 	jsr	kerrek_draw
-	jsr	kerrek_collision
+
+	jsr	kerrek_move_and_check_collision
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location

@@ -155,4 +155,4 @@ trogdor_sprites.inc:	trogdor_sprites.png
 clean:
 	rm -f *~ peasant_sprites.inc inventory_sprites.inc \
 		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc \
-		peasant_robe_sprites.inc
+		peasant_robe_sprites.inc kerrek_sprites.inc

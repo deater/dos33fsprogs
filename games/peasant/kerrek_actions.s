@@ -6,12 +6,32 @@
 ;	if dead on this screen
 ;	if dead not on this screen
 
+.include "speaker_beeps.inc"
+
 	;=======================
 	;=======================
 	; kerrek draw
 	;=======================
 	;=======================
 kerrek_draw:
+
+	; first, only if kerrek out
+
+	lda	KERREK_STATE
+	bpl	kerrek_no_draw
+
+	; next, see if kerrek alive
+	and	#$f
+	bne	kerrek_no_draw
+	beq	kerrek_actually_draw
+
+kerrek_no_draw:
+	rts
+
+kerrek_actually_draw:
+
+
+	; draw body
 
 	lda	#<kerrek_l1_sprite
 	sta	INL
@@ -24,6 +44,26 @@ kerrek_draw:
 	lda	KERREK_Y
 	sta	CURSOR_Y
 
+	jsr	hgr_draw_sprite
+
+	; draw head
+
+	lda	#<kerrek_l1_head_sprite
+	sta	INL
+	lda	#>kerrek_l1_head_sprite
+	sta	INH
+
+	ldx	KERREK_X
+	dex
+	stx	CURSOR_X
+
+	ldx	KERREK_Y
+	inx
+	inx
+	inx
+	inx
+	inx
+	stx	CURSOR_Y
 
 	jsr	hgr_draw_sprite
 
@@ -71,6 +111,10 @@ kerrek_there:
 	ora	#KERREK_ONSCREEN
 	sta	KERREK_STATE
 
+	; play sound
+
+	jsr	kerrek_warning_music	; could be JMP
+
 	rts
 
 kerrek_alive_not_there:
@@ -103,6 +147,37 @@ kerrek_row4:
 	rts
 
 
+	; not sure about this one
+	; GFED?
+	; GEFD?
+	; GEFC?
+	; GFEC?
+kerrek_warning_music:
+	lda     #48
+	sta     speaker_duration
+	lda     #NOTE_G3
+	sta     speaker_frequency
+	jsr     speaker_beep
+
+	lda     #24
+	sta     speaker_duration
+	lda     #NOTE_F3
+	sta     speaker_frequency
+	jsr     speaker_beep
+
+	lda     #48
+	sta     speaker_duration
+	lda     #NOTE_E3
+	sta     speaker_frequency
+	jsr     speaker_beep
+
+	lda     #96
+	sta     speaker_duration
+	lda     #NOTE_C3
+	sta     speaker_frequency
+	jsr     speaker_beep
+
+	rts
 
 	;=======================
 	;=======================
@@ -111,7 +186,7 @@ kerrek_row4:
 	;=======================
 	; see if the kerrek got us
 
-kerrek_collision:
+kerrek_move_and_check_collision:
 
 	; first, only if kerrek out
 
@@ -119,8 +194,54 @@ kerrek_collision:
 	bpl	kerrek_no_collision
 
 	; next, see if kerrek alive
-	and	#$ff
+	and	#$f
 	bne	kerrek_no_collision
+
+
+kerrek_move:
+	; only move every other frame?
+
+	lda	FRAME
+	and	#$1
+	bne	kerrek_move_done
+
+	; if kerrek_x > peasant_x, kerrek_x--
+	; if kerrek_x < peasant_x, kerrek_x++
+
+	lda	KERREK_X
+	cmp	PEASANT_X
+	bcs	kerrek_move_left
+kerrek_move_right:
+	inc	KERREK_X
+	jmp	kerrek_lr_done
+kerrek_move_left:
+	dec	KERREK_X
+
+kerrek_lr_done:
+
+	; Kerrek is ~50 tall
+	; peasant is ~28(?) tall
+
+	; if kerrek_y > peasant_y, kerrek_y--
+	; if kerrek_y < peasant_y, kerrek_y++
+	clc
+	lda	KERREK_Y
+	adc	#22
+	cmp	PEASANT_Y
+	bcs	kerrek_move_down
+kerrek_move_up:
+	inc	KERREK_Y
+	inc	KERREK_Y
+	jmp	kerrek_ud_done
+kerrek_move_down:
+	dec	KERREK_Y
+	dec	KERREK_Y
+
+kerrek_ud_done:
+
+kerrek_move_done:
+
+kerrek_check_collision:
 
 	; first check X
 

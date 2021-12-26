@@ -207,7 +207,9 @@ game_loop:
 	; check if kerrek collision
 	;==========================
 
-	jsr	kerrek_collision
+	jsr	kerrek_draw
+
+	jsr	kerrek_move_and_check_collision
 
 	;==========================
 	; check if lighting on fire

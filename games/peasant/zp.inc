@@ -10,6 +10,7 @@ MOCKINGBOARD_SLOT	= $06
 DISP_PAGE	= $07		; only in videlectrix intro?
 DRAW_PAGE	= $08
 NIBCOUNT	= $09
+DISK_TRY	= $0A
 
 TEMP0   = $10
 TEMP1   = $11
