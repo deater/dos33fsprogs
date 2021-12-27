@@ -30,12 +30,48 @@ kerrek_no_draw:
 
 kerrek_actually_draw:
 
-
 	; draw body
 
+	lda	KERREK_DIRECTION
+	beq	kerrek_draw_body_left
+
+kerrek_draw_body_right:
+	lda	KERREK_X
+	and	#1
+	beq	kerrek_draw_body_right_even
+
+kerrek_draw_body_right_odd:
+
+	lda	#<kerrek_r1_sprite
+	sta	INL
+	lda	#>kerrek_r1_sprite
+	jmp	kerrek_draw_body_common
+
+kerrek_draw_body_right_even:
+
+	lda	#<kerrek_r2_sprite
+	sta	INL
+	lda	#>kerrek_r2_sprite
+	jmp	kerrek_draw_body_common
+
+kerrek_draw_body_left:
+
+	lda	KERREK_X
+	and	#1
+	beq	kerrek_draw_body_left_even
+
+kerrek_draw_body_left_odd:
+	lda	#<kerrek_l2_sprite
+	sta	INL
+	lda	#>kerrek_l2_sprite
+	jmp	kerrek_draw_body_common
+
+kerrek_draw_body_left_even:
 	lda	#<kerrek_l1_sprite
 	sta	INL
 	lda	#>kerrek_l1_sprite
+
+kerrek_draw_body_common:
 	sta	INH
 
 	lda	KERREK_X
@@ -45,6 +81,9 @@ kerrek_actually_draw:
 	sta	CURSOR_Y
 
 	jsr	hgr_draw_sprite
+
+.if 0
+kerrek_draw_head_left:
 
 	; draw head
 
@@ -66,8 +105,7 @@ kerrek_actually_draw:
 	stx	CURSOR_Y
 
 	jsr	hgr_draw_sprite
-
-
+.endif
 	rts
 
 	;=======================
@@ -212,9 +250,13 @@ kerrek_move:
 	cmp	PEASANT_X
 	bcs	kerrek_move_left
 kerrek_move_right:
+	lda	#KERREK_RIGHT
+	sta	KERREK_DIRECTION
 	inc	KERREK_X
 	jmp	kerrek_lr_done
 kerrek_move_left:
+	lda	#KERREK_LEFT
+	sta	KERREK_DIRECTION
 	dec	KERREK_X
 
 kerrek_lr_done:
@@ -230,12 +272,16 @@ kerrek_lr_done:
 	cmp	PEASANT_Y
 	bcs	kerrek_move_down
 kerrek_move_up:
-	inc	KERREK_Y
-	inc	KERREK_Y
+	clc
+	lda	KERREK_Y
+	adc	#4
+	sta	KERREK_Y
 	jmp	kerrek_ud_done
 kerrek_move_down:
-	dec	KERREK_Y
-	dec	KERREK_Y
+	sec
+	lda	KERREK_Y
+	sbc	#4
+	sta	KERREK_Y
 
 kerrek_ud_done:
 
