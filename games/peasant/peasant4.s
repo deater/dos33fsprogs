@@ -78,6 +78,26 @@ new_location:
 	sta	INH
 	jsr	load_custom_verb_table
 
+	;=========================
+	; load priority to $400
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_priority_low,X
+	sta	getsrc_smc+1
+	lda	map_priority_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	gr_copy_to_page1
+
+
 	;=====================
 	; load bg
 
@@ -93,9 +113,11 @@ new_location:
 	lda	map_backgrounds_hi,X
 	sta	getsrc_smc+2
 
-	lda	#$40
+	lda	#$20
 
 	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
 
 	;====================
 	; update ned cottage if necessary
@@ -127,23 +149,7 @@ not_necessary_cottage:
 
 
 
-	; load priority
 
-	lda	MAP_LOCATION
-	sec
-	sbc	#LOCATION_BASE
-	tax
-
-	lda	map_priority_low,X
-	sta	getsrc_smc+1
-	lda	map_priority_hi,X
-	sta	getsrc_smc+2
-
-	lda	#$20
-
-	jsr	decompress_lzsa2_fast
-
-	jsr	gr_copy_to_page1
 
 	; put peasant text
 
@@ -359,8 +365,8 @@ game_over:
 ;.include "loadsave_menu.s"
 ;.include "score.s"
 
-
 .include "gr_copy.s"
+.include "hgr_copy.s"
 
 .include "peasant_move.s"
 

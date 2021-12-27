@@ -77,28 +77,9 @@ new_location:
 	sta	INH
 	jsr	load_custom_verb_table
 
-
-	;=====================
-	; load bg
-
-	; we are PEASANT2 so locations 5...9 map to 0...4
-
-	lda	MAP_LOCATION
-	sec
-	sbc	#LOCATION_BASE
-	tax
-
-	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
-;	sta	last_bg_l
-	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
-;	sta	last_bg_h
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
+	;============================
+	; load priority to $400
+	; indirectly as we can't trash screen holes
 
 	; we are PEASANT2 so locations 5...9 map to 0...4
 
@@ -117,6 +98,30 @@ new_location:
 	jsr	decompress_lzsa2_fast
 
 	jsr	gr_copy_to_page1
+
+	;=====================
+	; load bg
+
+	; we are PEASANT2 so locations 5...9 map to 0...4
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
+	sta	getsrc_smc+1
+	lda	map_backgrounds_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	; copy to $4000
+
+	jsr	hgr_copy
+
 
 	; put peasant text
 
@@ -412,6 +417,7 @@ to_left_of_inn:
 ;.include "loadsave_menu.s"
 ;.include "score.s"
 
+.include "hgr_copy.s"
 
 map_backgrounds_low:
 	.byte	<haystack_lzsa		; 5	-- haystack
