@@ -126,6 +126,12 @@ new_location:
 
 	;====================
 	; handle kerrek
+	;====================
+
+	; clear out old state otherwise kerrek can follow us around
+
+	lda	#0
+	sta	KERREK_STATE
 
 	lda	MAP_LOCATION
 	cmp	#LOCATION_KERREK_1

@@ -118,6 +118,7 @@ kerrek_draw_head_right_common:
 
 	ldx	KERREK_X
 	inx
+	inx
 	jmp	kerrek_draw_head_common
 
 kerrek_draw_head_left:
@@ -147,14 +148,13 @@ kerrek_draw_head_left_common:
 
 	ldx	KERREK_X
 	dex
-	stx	CURSOR_X
-
 
 kerrek_draw_head_common:
+	stx	CURSOR_X
 
 	lda	KERREK_Y
 	clc
-	adc	#6
+	adc	#4
 	sta	CURSOR_Y
 
 	jsr	hgr_draw_sprite
@@ -237,6 +237,11 @@ kerrek_row4:
 
 	rts
 
+	;=======================
+	;=======================
+	; kerrek warning sting
+	;=======================
+	;=======================
 
 	; not sure about this one
 	; GFED?

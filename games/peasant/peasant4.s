@@ -162,6 +162,12 @@ not_necessary_cottage:
 
 	;====================
 	; handle kerrek
+	;====================
+
+	; clear out state
+
+	lda	#0
+	sta	KERREK_STATE
 
 	lda	MAP_LOCATION
 	cmp	#LOCATION_KERREK_2
