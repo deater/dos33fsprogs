@@ -115,6 +115,8 @@ check_lake_w_action1:
 check_lake_w_action2:
 	cmp	#20
 	bne	done_lake_w_action
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 	jsr	display_lake_w_text1
 

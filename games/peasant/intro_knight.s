@@ -116,6 +116,8 @@ check_knight_action1:
 check_knight_action2:
 	cmp	#8
 	bne	check_knight_action3
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 	jmp	done_knight_action
 

@@ -13,6 +13,7 @@ hgr_partial_save:
 	ldx	BOX_Y2
 	stx	SAVED_Y2
 
+.if 0
 partial_save_yloop:
 
 	lda	hposn_low,X
@@ -37,7 +38,7 @@ psx_smc2:
 	dex
 	cpx	BOX_Y1
 	bcs	partial_save_yloop
-
+.endif
 	rts
 
 
@@ -48,7 +49,12 @@ psx_smc2:
 	; loads from $20
 	; save to $40
 
+	; restores from X = A<=to<=X
+	;               Y = SAVED_Y1 to SAVED_Y2
+
 hgr_partial_restore:
+	sta	partial_restore_x1_smc+1
+	stx	partial_restore_x2_smc+1
 
 	ldx	SAVED_Y2
 
@@ -64,6 +70,7 @@ partial_restore_yloop:
 	sbc	#$20
 	sta	prx_smc1+2
 
+partial_restore_x2_smc:
 	ldy	#$27
 partial_restore_xloop:
 prx_smc1:
@@ -71,6 +78,8 @@ prx_smc1:
 prx_smc2:
 	sta	$d000,Y
 	dey
+partial_restore_x1_smc:
+	cpy	#$00
 	bpl	partial_restore_xloop
 
 	dex

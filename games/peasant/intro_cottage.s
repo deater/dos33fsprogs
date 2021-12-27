@@ -123,6 +123,9 @@ check_cottage_action1:
 check_cottage_action2:
 	cmp	#1
 	bne	check_cottage_action3
+
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 
 	; display cottage text 2
@@ -136,6 +139,8 @@ check_cottage_action2:
 check_cottage_action3:
 	cmp	#13
 	bne	done_cottage_action
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 
 	; display cottage text 3

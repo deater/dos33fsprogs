@@ -1,3 +1,4 @@
+.if 0
 	;=======================
 	; HGR Save
 	;=======================
@@ -231,3 +232,4 @@ hgr_restore_loop:
 hgr_restore_done:
 	rts
 
+.endif

@@ -111,6 +111,8 @@ check_lake_e_action1:
 check_lake_e_action2:
 	cmp	#28
 	bne	done_lake_e_action
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR

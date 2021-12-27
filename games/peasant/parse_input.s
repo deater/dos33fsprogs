@@ -717,6 +717,8 @@ finish_parse_message:
 
 restore_parse_message:
 
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 
 
@@ -1223,6 +1225,8 @@ partial_message_step:
 	sty	OUTH
 	jsr	print_text_message
 	jsr	wait_until_keypress
+	lda	#0
+	ldx	#39
 	jsr	hgr_partial_restore
 	rts
 

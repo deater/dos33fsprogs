@@ -31,6 +31,23 @@ kerrek_no_draw:
 kerrek_actually_draw:
 
 	;=================
+	; erase old kerrek
+	;=================
+
+	lda	PREV_Y
+	sta	SAVED_Y1
+	clc
+	adc	#51
+	sta	SAVED_Y2
+
+	lda	PREV_X
+	tax
+	inx
+	inx
+	jsr	hgr_partial_restore
+
+
+	;=================
 	; draw kerrek body
 	;=================
 
@@ -38,7 +55,8 @@ kerrek_actually_draw:
 	beq	kerrek_draw_body_left
 
 kerrek_draw_body_right:
-	lda	KERREK_X
+	ldx	KERREK_X
+	txa
 	and	#1
 	beq	kerrek_draw_body_right_even
 
@@ -58,26 +76,28 @@ kerrek_draw_body_right_even:
 
 kerrek_draw_body_left:
 
+	ldx	KERREK_X
+	inx
+
 	lda	KERREK_X
 	and	#1
 	beq	kerrek_draw_body_left_even
 
 kerrek_draw_body_left_odd:
-	lda	#<kerrek_l2_sprite
-	sta	INL
-	lda	#>kerrek_l2_sprite
-	jmp	kerrek_draw_body_common
-
-kerrek_draw_body_left_even:
 	lda	#<kerrek_l1_sprite
 	sta	INL
 	lda	#>kerrek_l1_sprite
+	jmp	kerrek_draw_body_common
+
+kerrek_draw_body_left_even:
+	lda	#<kerrek_l2_sprite
+	sta	INL
+	lda	#>kerrek_l2_sprite
 
 kerrek_draw_body_common:
 	sta	INH
 
-	lda	KERREK_X
-	sta	CURSOR_X
+	stx	CURSOR_X
 
 	lda	KERREK_Y
 	sta	CURSOR_Y
@@ -132,22 +152,21 @@ kerrek_draw_head_left:
 
 kerrek_draw_head_left_odd:
 
-	lda	#<kerrek_l2_head_sprite
+	lda	#<kerrek_l1_head_sprite
 	sta	INL
-	lda	#>kerrek_l2_head_sprite
+	lda	#>kerrek_l1_head_sprite
 	jmp	kerrek_draw_head_left_common
 
 kerrek_draw_head_left_even:
 
-	lda	#<kerrek_l1_head_sprite
+	lda	#<kerrek_l2_head_sprite
 	sta	INL
-	lda	#>kerrek_l1_head_sprite
+	lda	#>kerrek_l2_head_sprite
 
 kerrek_draw_head_left_common:
 	sta	INH
 
 	ldx	KERREK_X
-	dex
 
 kerrek_draw_head_common:
 	stx	CURSOR_X
@@ -182,8 +201,10 @@ kerrek_alive_out:
 
 	lda	#22
 	sta	KERREK_X
+	sta	PREV_X
 	lda	#76
 	sta	KERREK_Y
+	sta	PREV_Y
 	lda	#1			; right
 	sta	KERREK_DIRECTION
 	lda	#1
@@ -301,6 +322,12 @@ kerrek_move:
 	and	#$1
 	bne	kerrek_move_done
 
+	; save old values
+	lda	KERREK_X
+	sta	PREV_X
+	lda	KERREK_Y
+	sta	PREV_Y
+
 	; if kerrek_x > peasant_x, kerrek_x--
 	; if kerrek_x < peasant_x, kerrek_x++
 
@@ -349,20 +376,18 @@ kerrek_check_collision:
 
 	; first check X
 
-	; if (peasant_x >= kerrek_x-1) && (peasant_x<=kerrek_x+2)
-	;   this is roughly equivelant to |kerrek_x-peasant_x|  < 2
+	; if (peasant_x >= kerrek_x) && (peasant_x<=kerrek_x+2)
 
-	lda	KERREK_X
-	sec
-	sbc	PEASANT_X
-	bpl	kerrek_x_distance_good
-kerrek_x_distance_negate:
-	eor	#$FF
+	lda	PEASANT_X
+	cmp	KERREK_X
+	bcc	kerrek_no_collision
+
 	clc
-	adc	#1
-kerrek_x_distance_good:
-	cmp	#2
-	bcs	kerrek_no_collision
+	lda	KERREK_X
+	adc	#2
+	cmp	PEASANT_X
+	bcc	kerrek_no_collision
+
 
 	; next check Y
 
