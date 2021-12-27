@@ -9,7 +9,7 @@ kerrek_pound_message:
 .byte "Your mom always told you",13
 .byte "not to take head poundings",13
 .byte "from strange Kerreks. And",13
-.byte "NOW looks what's happened.",13
+.byte "NOW look what's happened.",13	; wrong in Wiki
 .byte "You dead. Thanks for",13
 .byte "playing.",0
 
