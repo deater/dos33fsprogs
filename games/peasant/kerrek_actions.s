@@ -30,7 +30,9 @@ kerrek_no_draw:
 
 kerrek_actually_draw:
 
-	; draw body
+	;=================
+	; draw kerrek body
+	;=================
 
 	lda	KERREK_DIRECTION
 	beq	kerrek_draw_body_left
@@ -82,30 +84,81 @@ kerrek_draw_body_common:
 
 	jsr	hgr_draw_sprite
 
-.if 0
+
+	;=================
+	; draw kerrek head
+	;=================
+
+	lda	KERREK_DIRECTION
+	beq	kerrek_draw_head_left
+
+kerrek_draw_head_right:
+
+	; draw head right
+
+	lda	KERREK_X
+	and	#1
+	beq	kerrek_draw_head_right_even
+
+kerrek_draw_head_right_odd:
+
+	lda	#<kerrek_r1_head_sprite
+	sta	INL
+	lda	#>kerrek_r1_head_sprite
+	jmp	kerrek_draw_head_right_common
+
+kerrek_draw_head_right_even:
+
+	lda	#<kerrek_r2_head_sprite
+	sta	INL
+	lda	#>kerrek_r2_head_sprite
+
+kerrek_draw_head_right_common:
+	sta	INH
+
+	ldx	KERREK_X
+	inx
+	jmp	kerrek_draw_head_common
+
 kerrek_draw_head_left:
 
-	; draw head
+	; draw head left
+
+	lda	KERREK_X
+	and	#1
+	beq	kerrek_draw_head_left_even
+
+
+kerrek_draw_head_left_odd:
+
+	lda	#<kerrek_l2_head_sprite
+	sta	INL
+	lda	#>kerrek_l2_head_sprite
+	jmp	kerrek_draw_head_left_common
+
+kerrek_draw_head_left_even:
 
 	lda	#<kerrek_l1_head_sprite
 	sta	INL
 	lda	#>kerrek_l1_head_sprite
+
+kerrek_draw_head_left_common:
 	sta	INH
 
 	ldx	KERREK_X
 	dex
 	stx	CURSOR_X
 
-	ldx	KERREK_Y
-	inx
-	inx
-	inx
-	inx
-	inx
-	stx	CURSOR_Y
+
+kerrek_draw_head_common:
+
+	lda	KERREK_Y
+	clc
+	adc	#6
+	sta	CURSOR_Y
 
 	jsr	hgr_draw_sprite
-.endif
+
 	rts
 
 	;=======================
