@@ -15,10 +15,12 @@ show_inventory:
 
 	lda	#20
 	sta	BOX_Y1
+	sta	SAVED_Y1
 	lda	#135
 	sta	BOX_Y2
+	sta	SAVED_Y2
 
-	jsr	hgr_partial_save
+;	jsr	hgr_partial_save
 
 
 	;====================

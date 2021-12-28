@@ -38,7 +38,14 @@ skip_box_save_smc:
 	lda	#1
 	beq	skip_box_save
 
-	jsr	hgr_partial_save
+	lda     BOX_Y1
+        sta     SAVED_Y1
+
+        ldx     BOX_Y2
+        stx     SAVED_Y2
+
+;	jsr	hgr_partial_save
+
 skip_box_save:
 
 	jsr	draw_box

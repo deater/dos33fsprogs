@@ -38,6 +38,7 @@ peasant2	18302
 		18012 -- hook up more of archery
 		18120 -- finish hooking up archery
 		17941 -- after most of text hooked up (more code was moved to qload)
+		17929 -- after redoing so background is always in PAGE1
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?

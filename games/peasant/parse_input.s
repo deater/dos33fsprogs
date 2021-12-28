@@ -1150,6 +1150,7 @@ print_text_message:
 
         lda     #24			; always 24
         sta     BOX_Y1
+	sta	SAVED_Y1
 
         lda     #253			; always 253
         sta     BOX_X2L
@@ -1167,8 +1168,9 @@ print_text_message:
 	adc	#46
 
         sta     BOX_Y2
+	sta	SAVED_Y2
 
-	jsr	hgr_partial_save
+;	jsr	hgr_partial_save
 
 	jsr	draw_box
 

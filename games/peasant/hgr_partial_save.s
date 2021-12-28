@@ -4,6 +4,7 @@
 	; loads from $40
 	; save to $20
 	; only save from row in P2 to P2+P4
+.if 0
 hgr_partial_save:
 
 	clc
@@ -13,7 +14,6 @@ hgr_partial_save:
 	ldx	BOX_Y2
 	stx	SAVED_Y2
 
-.if 0
 partial_save_yloop:
 
 	lda	hposn_low,X
@@ -38,9 +38,9 @@ psx_smc2:
 	dex
 	cpx	BOX_Y1
 	bcs	partial_save_yloop
-.endif
-	rts
 
+	rts
+.endif
 
 
 	;=======================

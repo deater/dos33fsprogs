@@ -128,7 +128,6 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr_partial_restore qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_input qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr_partial_save qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s draw_box qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s disp_put_string qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s disp_one_line qload.lst >> qload.inc
