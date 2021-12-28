@@ -167,7 +167,62 @@ not_kerrek:
 	jsr	check_haystack_exit
 
 
+	;========================================
+	;========================================
+	;========================================
+	; main loop
+	;========================================
+	;========================================
+	;========================================
+
 game_loop:
+
+	;===================================
+	; animate waterfall (if applicable)
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_WATERFALL
+	bne	leave_waterfall_alone
+
+	lda	FRAME
+	and	#$7
+	beq	erase_waterfall
+	cmp	#4
+	beq	draw_waterfall
+	bne	leave_waterfall_alone
+
+draw_waterfall:
+
+	lda	#36
+	sta	CURSOR_X
+	lda	#94
+	sta	CURSOR_Y
+
+	lda	#<waterfall_sprite
+	sta	INL
+	lda	#>waterfall_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	jmp	leave_waterfall_alone
+erase_waterfall:
+
+
+	lda	#94
+	sta	SAVED_Y1
+	lda	#141
+	sta	SAVED_Y2
+
+	lda	#36
+	ldx	#38
+
+
+	jsr	hgr_partial_restore
+
+leave_waterfall_alone:
+
+
 
 	jsr	move_peasant
 
@@ -279,6 +334,7 @@ game_over:
 ;.include "text/peasant1.inc"
 
 .include "graphics_peasantry/graphics_peasant1.inc"
+.include "sprites/waterfall_sprites.inc"
 
 map_backgrounds_low:
 	.byte	<gary_lzsa		; 0	-- gary the horse

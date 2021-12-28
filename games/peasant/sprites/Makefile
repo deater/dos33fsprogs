@@ -2,7 +2,8 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
 	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
-	peasant_robe_sprites.inc kerrek_sprites.inc
+	peasant_robe_sprites.inc kerrek_sprites.inc \
+	waterfall_sprites.inc
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
@@ -152,7 +153,12 @@ trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l sleep1_sprite trogdor_sprites.png 14 70 27 79 >> trogdor_sprites.inc
 	$(HGR_SPRITE) -s -l sleep2_sprite trogdor_sprites.png 28 70 41 79 >> trogdor_sprites.inc
 
+waterfall_sprites.inc:	waterfall_sprites.png
+	$(HGR_SPRITE) -s -l waterfall_sprite waterfall_sprites.png 14 5 27 52 > waterfall_sprites.inc
+
+
 clean:
 	rm -f *~ peasant_sprites.inc inventory_sprites.inc \
 		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc \
-		peasant_robe_sprites.inc kerrek_sprites.inc
+		peasant_robe_sprites.inc kerrek_sprites.inc \
+		waterfall_sprites.inc
