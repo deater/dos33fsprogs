@@ -67,23 +67,8 @@ new_location:
 	sta	INH
 	jsr	load_custom_verb_table
 
-	;=====================
-	; load bg
 
-	lda	MAP_LOCATION
-	sec
-	sbc	#LOCATION_BASE
-	tax
-
-	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
-	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
+	;========================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -105,6 +90,27 @@ new_location:
 
 	jsr	gr_copy_to_page1
 
+
+	;=====================
+	; load bg
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
+	sta	getsrc_smc+1
+	lda	map_backgrounds_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+	;=====================
 	; update name/score
 
 	jsr	update_top
@@ -120,9 +126,9 @@ new_location:
 	;=======================
 	; draw initial peasant
 
-	jsr	save_bg_1x5
+;	jsr	save_bg_1x5
 
-	jsr	draw_peasant
+	jsr	draw_peasant_tiny
 
 
 	;===========================
@@ -132,10 +138,34 @@ new_location:
 	ldy	#>trogdor_entry_message
 	jsr	finish_parse_message
 
+
+	;==========================
+	;==========================
+	;==========================
+	; main loop
+	;==========================
+	;==========================
+	;==========================
+
 game_loop:
+
+	;===================
+	; move peasant
+
 	jsr	move_peasant_tiny
 
+	;===================
+	; always draw peasant
+
+	jsr	draw_peasant_tiny
+
+	;====================
+	; increment frame
+
 	inc	FRAME
+
+	;====================
+	; check keyboard
 
 	jsr	check_keyboard
 
@@ -269,9 +299,10 @@ draw_sprite_h:
 
 .include "move_peasant_tiny.s"
 .include "draw_peasant_tiny.s"
-.include "hgr_1x5_save_bg.s"
+;.include "hgr_1x5_save_bg.s"
 
 .include "gr_copy.s"
+.include "hgr_copy.s"
 
 .include "keyboard.s"
 .include "wait.s"

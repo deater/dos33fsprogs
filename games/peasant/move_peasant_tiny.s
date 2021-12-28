@@ -1,4 +1,4 @@
-; Move that Peasant!
+; Move that Peasant (tiny)!
 
 move_peasant_tiny:
 
@@ -6,21 +6,27 @@ move_peasant_tiny:
 
 	lda	PEASANT_XADD
 	ora	PEASANT_YADD
-	bne	really_move_peasant
+	bne	really_move_peasant_tiny
 
-	jmp	peasant_the_same
+	jmp	peasant_the_same_tiny
 
-really_move_peasant:
+really_move_peasant_tiny:
 
 	; restore bg behind peasant
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-
 	lda	PEASANT_Y
-	sta	CURSOR_Y
+	sta	SAVED_Y1
+	clc
+	adc	#5
+	sta	SAVED_Y2
 
-	jsr	restore_bg_1x5
+	ldx	PEASANT_X
+	txa
+	inx
+
+	jsr	hgr_partial_restore
+
+;	jsr	restore_bg_1x5
 
 	; move peasant
 
@@ -104,23 +110,23 @@ done_movey:
 	; if we moved off screen, don't re-draw peasant
 
         lda     LEVEL_OVER
-        bne     peasant_the_same
+        bne     peasant_the_same_tiny
 
 	; save behind new position
 
-	lda	PEASANT_X
-	sta	CURSOR_X
+;	lda	PEASANT_X
+;	sta	CURSOR_X
 
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
-	jsr	save_bg_1x5
+;	jsr	save_bg_1x5
 
 	; draw peasant
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
 
-peasant_the_same:
+peasant_the_same_tiny:
 
 	rts
 

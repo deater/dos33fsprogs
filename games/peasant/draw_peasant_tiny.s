@@ -1,8 +1,8 @@
 
 	;============================
-	; draw peasant
+	; draw peasant (tiny)
 	;============================
-draw_peasant:
+draw_peasant_tiny:
 	lda	PEASANT_X
 	sta	CURSOR_X
 	lda	PEASANT_Y

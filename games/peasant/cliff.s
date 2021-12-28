@@ -69,25 +69,7 @@ new_location:
 	sta	INH
 	jsr	load_custom_verb_table
 
-
-
-	;=====================
-	; load bg
-
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
-
-	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
-	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
+	;===============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -109,6 +91,27 @@ new_location:
 
 	jsr	gr_copy_to_page1
 
+
+	;=====================
+	; load bg
+
+	lda     MAP_LOCATION
+	sec
+	sbc     #LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
+	sta	getsrc_smc+1
+	lda	map_backgrounds_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+	;===================
 	; put peasant text
 
 	lda	#<peasant_text
@@ -122,34 +125,33 @@ new_location:
 
 	jsr	print_score
 
-	;=====================
-	; move peasant
 
-;	lda	#20
-;	sta	PEASANT_X
-;	lda	#150
-;	sta	PEASANT_Y
-
-	;====================
-	; save background
-
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	;=======================
-	; draw initial peasant
-
-	jsr	save_bg_1x28
-
-	jsr	draw_peasant
-
+	;===========================
+	;===========================
+	;===========================
+	; main loop
+	;===========================
+	;===========================
+	;===========================
 game_loop:
+
+	;===================
+	; move peasant
 
 	jsr	move_peasant
 
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	;=====================
+	; increment frame
+
 	inc	FRAME
+
+	;======================
+	; check keyboard
 
 	jsr	check_keyboard
 
@@ -235,6 +237,7 @@ level_over:
 .include "move_peasant.s"
 
 .include "gr_copy.s"
+.include "hgr_copy.s"
 
 .include "new_map_location.s"
 
