@@ -74,29 +74,8 @@ new_location:
 	sta	INH
 	jsr	load_custom_verb_table
 
-	;=====================
-	; load bg
-
-	; we are INSIDE so locations 24...26 map to 0...2
-
-	lda	MAP_LOCATION
-	sec
-	sbc	#LOCATION_BASE
-	tax
-
-	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
-;	sta	last_bg_l
-	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
-;	sta	last_bg_h
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-
-	; we are INSIDE so locations 24...26 map to 0...2
+	;===========================
+	; load priority
 
 	lda	MAP_LOCATION
 	sec
@@ -113,6 +92,30 @@ new_location:
 	jsr	decompress_lzsa2_fast
 
 	jsr	gr_copy_to_page1
+
+	;=====================
+	; load bg
+
+	; we are INSIDE so locations 24...26 map to 0...2
+
+	lda	MAP_LOCATION
+	sec
+	sbc	#LOCATION_BASE
+	tax
+
+	lda	map_backgrounds_low,X
+	sta	getsrc_smc+1
+
+	lda	map_backgrounds_hi,X
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+
 
 	; put peasant text
 
@@ -238,6 +241,7 @@ level_over:
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
+.include "hgr_copy.s"
 
 .include "new_map_location.s"
 

@@ -14,7 +14,6 @@ really_move_peasant:
 
 	; restore bg behind peasant
 
-
 	lda	PEASANT_Y
 	sta	SAVED_Y1
 	clc
