@@ -14,6 +14,21 @@ really_move_peasant:
 
 	; restore bg behind peasant
 
+
+	lda	PEASANT_Y
+	sta	SAVED_Y1
+	clc
+	adc	#28
+	sta	SAVED_Y2
+
+	ldx	PEASANT_X
+	txa
+	inx
+
+	jsr	hgr_partial_restore
+
+
+.if 0
 	lda	PEASANT_X
 	sta	CURSOR_X
 
@@ -21,6 +36,7 @@ really_move_peasant:
 	sta	CURSOR_Y
 
 	jsr	restore_bg_1x28
+.endif
 
 	; move peasant
 
@@ -129,7 +145,7 @@ done_movey:
 	sta	PEASANT_Y
 
 	; if we moved off screen, don't re-draw peasant
-
+.if 0
         lda     LEVEL_OVER
         bne     peasant_the_same
 
@@ -146,7 +162,7 @@ done_movey:
 	; draw peasant
 
 	jsr	draw_peasant
-
+.endif
 peasant_the_same:
 
 	rts

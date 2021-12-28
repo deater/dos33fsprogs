@@ -3,6 +3,13 @@
 	; draw peasant
 	;============================
 draw_peasant:
+
+	; skip if room over, as otherwise we'll draw at the
+	; wrong edge of screen
+
+	lda	LEVEL_OVER
+	bne	done_draw_peasant
+
 	lda	PEASANT_X
 	sta	CURSOR_X
 	lda	PEASANT_Y
@@ -22,10 +29,9 @@ draw_peasant:
 	; up up up up
 peasant_up:
 
-	lda	FRAME
-	and	#1
+	lda	PEASANT_Y
+	and	#4
 	beq	peasant_up1
-
 
 peasant_up2:
 	lda	#<peasant_up2_sprite
@@ -43,10 +49,9 @@ peasant_up1:
 	; down down down
 peasant_down:
 
-	lda	FRAME
-	and	#1
+	lda	PEASANT_Y
+	and	#4
 	beq	peasant_down1
-
 
 peasant_down2:
 	lda	#<peasant_down2_sprite
@@ -102,7 +107,10 @@ done_pick_draw:
 
 	jsr	hgr_draw_sprite_1x28
 
+done_draw_peasant:
+
 	rts
 
 
-.include "sprites/peasant_sprites.inc"
+;.include "sprites/peasant_sprites.inc"
+.include "sprites/peasant_robe_sprites.inc"

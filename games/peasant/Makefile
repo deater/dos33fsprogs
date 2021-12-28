@@ -254,7 +254,7 @@ cliff.o:	cliff.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
 ###
@@ -269,7 +269,7 @@ archery.o:	archery.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o archery.o archery.s -l archery.lst
 
 ###
@@ -284,7 +284,7 @@ map.o:	map.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o map.o map.s -l map.lst
 
 
@@ -302,7 +302,7 @@ game_over.o:	game_over.s zp.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o game_over.o game_over.s -l game_over.lst
 
 
@@ -326,7 +326,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o peasant1.o peasant1.s -l peasant1.lst
 
 ###
@@ -345,7 +345,7 @@ peasant2.o:	peasant2.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s inventory.s loadsave_menu.s
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
 ###
@@ -363,7 +363,7 @@ peasant3.o:	peasant3.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o peasant3.o peasant3.s -l peasant3.lst
 
 ###
@@ -383,7 +383,7 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s
+		move_peasant.s score.s
 	ca65 -o peasant4.o peasant4.s -l peasant4.lst
 
 ###
@@ -401,7 +401,7 @@ trogdor.o:	trogdor.s zp.inc \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		draw_peasant_tiny.s \
 		keyboard.s new_map_location.s \
-		peasant_move_tiny.s score.s inventory.s \
+		move_peasant_tiny.s score.s inventory.s \
 		trogdor_actions.s
 
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
@@ -419,7 +419,7 @@ ending.o:	ending.s zp.inc qload.inc music.inc \
 		hgr_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s
+		move_peasant.s score.s inventory.s
 
 	ca65 -o ending.o ending.s -l ending.lst
 
@@ -450,7 +450,7 @@ inside.o:	inside.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s inventory.s loadsave_menu.s
 	ca65 -o inside.o inside.s -l inside.lst
 
 ###
@@ -468,7 +468,7 @@ inn.o:	inn.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		peasant_move.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s inventory.s loadsave_menu.s
 	ca65 -o inn.o inn.s -l inn.lst
 
 

@@ -38,10 +38,6 @@ peasantry2:
 
         jsr     decompress_lzsa2_fast
 
-
-	; update map location
-;	jsr	update_map_location
-
 	; update score
 
 	jsr	update_score
@@ -139,17 +135,17 @@ new_location:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; draw initial peasant
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
 
 	;======================
 	; check if in hay
@@ -229,11 +225,32 @@ arrow_game_lose_common:
 	jsr	partial_message_step
 
 
+	;================================
+	;================================
+	;================================
+	; main loop
+	;================================
+	;================================
+	;================================
 game_loop:
+
+	;====================
+	; move peasant
 
 	jsr	move_peasant
 
+	;====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	;====================
+	; increment frame
+
 	inc	FRAME
+
+	;====================
+	; check keyboard
 
 	jsr	check_keyboard
 
@@ -372,14 +389,12 @@ to_left_of_inn:
 
 
 .include "peasant_common.s"
-
+.include "move_peasant.s"
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
 
 .include "new_map_location.s"
-.include "peasant_move.s"
-
 
 
 ;.include "parse_input.s"
@@ -391,31 +406,6 @@ to_left_of_inn:
 
 .include "graphics_peasantry/graphics_peasant2.inc"
 .include "graphics_peasantry/priority_peasant2.inc"
-
-.include "version.inc"
-
-;.include "inventory.s"
-
-
-
-
-; moved to QLOAD
-
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "clear_bottom.s"
-;.include "hgr_hgr2.s"
-;.include "wait_keypress.s"
-;.include "loadsave_menu.s"
-;.include "score.s"
 
 .include "hgr_copy.s"
 

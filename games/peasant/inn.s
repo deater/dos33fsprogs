@@ -234,15 +234,12 @@ level_over:
 	rts
 
 
+.include "move_peasant.s"
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
 
 .include "new_map_location.s"
-.include "peasant_move.s"
-
-
-;.include "parse_input.s"
 
 .include "keyboard.s"
 
@@ -252,30 +249,7 @@ level_over:
 .include "graphics_inn/graphics_inn.inc"
 .include "graphics_inn/priority_inn.inc"
 
-.include "version.inc"
 
-;.include "inventory.s"
-
-
-
-
-; moved to QLOAD
-
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "clear_bottom.s"
-;.include "hgr_hgr2.s"
-;.include "wait_keypress.s"
-;.include "loadsave_menu.s"
-;.include "score.s"
 
 
 

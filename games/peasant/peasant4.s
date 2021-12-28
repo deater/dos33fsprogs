@@ -37,11 +37,6 @@ peasantry4:
 
 	jsr	decompress_lzsa2_fast
 
-
-	; update map location
-
-;	jsr	update_map_location
-
 	; update score
 
 	jsr 	update_score
@@ -147,10 +142,6 @@ new_location:
 not_necessary_cottage:
 
 
-
-
-
-
 	; put peasant text
 
 	lda	#<peasant_text
@@ -188,17 +179,17 @@ not_kerrek:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; draw initial peasant
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
 
 
 	;======================
@@ -207,11 +198,34 @@ not_kerrek:
 	jsr	check_haystack_exit
 
 
+
+	;===============================
+	;===============================
+	;===============================
+	; main loop
+	;===============================
+	;===============================
+	;===============================
+
 game_loop:
+
+	;===================
+	; move peasant
 
 	jsr	move_peasant
 
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	;====================
+	; increment frame
+
 	inc	FRAME
+
+	;=====================
+	; check keyboard
 
 	jsr	check_keyboard
 
@@ -344,37 +358,13 @@ game_over:
 
 
 .include "peasant_common.s"
-
+.include "move_peasant.s"
 .include "draw_peasant.s"
-
-; moved to qload
-
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "clear_bottom.s"
-;.include "hgr_hgr2.s"
-;.include "wait_keypress.s"
-;.include "loadsave_menu.s"
-;.include "score.s"
 
 .include "gr_copy.s"
 .include "hgr_copy.s"
 
-.include "peasant_move.s"
-
 .include "new_map_location.s"
-
-;.include "parse_input.s"
-
-;.include "inventory.s"
 
 .include "keyboard.s"
 
@@ -383,8 +373,6 @@ game_over:
 
 .include "graphics_peasantry/graphics_peasant4.inc"
 .include "graphics_peasantry/priority_peasant4.inc"
-
-.include "version.inc"
 
 
 

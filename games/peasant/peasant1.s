@@ -149,17 +149,17 @@ not_kerrek:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; draw initial peasant
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
 
 	;===================
 	; check hay
@@ -223,14 +223,27 @@ erase_waterfall:
 leave_waterfall_alone:
 
 
+	;======================
+	; move peasant
 
 	jsr	move_peasant
 
+	;======================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	;=======================
+	; next frame
+
 	inc	FRAME
+
+	;=======================
+	; check keyboard
 
 	jsr	check_keyboard
 
-	; FIXME: draw kerrek before peasant if behind him
+	; FIXME: draw kerrek before peasant if behind him?
 
 	jsr	kerrek_draw
 
@@ -290,45 +303,20 @@ game_over:
 	rts
 
 .include "peasant_common.s"
-
-;.include "inventory.s"
-
+.include "move_peasant.s"
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
 
 .include "new_map_location.s"
 
-.include "peasant_move.s"
-
-;.include "parse_input.s"
-
-;.include "score.s"
-
 .include "keyboard.s"
 
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "version.inc"
-
 .include "hgr_sprite.s"
 
-; Moved to qload
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "clear_bottom.s"
-;.include "hgr_hgr2.s"
-;.include "wait_keypress.s"
-;.include "loadsave_menu.s"
 .include "hgr_copy.s"
 
 ;.include "text/peasant1.inc"

@@ -564,25 +564,10 @@ stuck_forever:
 
 
 
-; moved to qload
-
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x5_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "wait_keypress.s"
-;.include "hgr_hgr2.s"
 
 .include "hgr_2x14_sprite_mask.s"
 .include "hgr_sprite.s"
 
-
-;.include "score.s"
 
 .include "wait.s"
 .include "wait_a_bit.s"
