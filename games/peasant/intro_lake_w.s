@@ -340,7 +340,7 @@ bubble_progress:
 	.word bubble_sprite5
 
 
-	.include "sprites/bubble_sprites.inc"
+	.include "sprites/bubble_sprites_w.inc"
 
 .if 0
 bubble_sprite0:

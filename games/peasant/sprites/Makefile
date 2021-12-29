@@ -3,7 +3,7 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
 	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
 	peasant_robe_sprites.inc kerrek_sprites.inc \
-	waterfall_sprites.inc bubble_sprites.inc
+	waterfall_sprites.inc bubble_sprites_w.inc bubble_sprites_e.inc
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
@@ -156,18 +156,25 @@ trogdor_sprites.inc:	trogdor_sprites.png
 waterfall_sprites.inc:	waterfall_sprites.png
 	$(HGR_SPRITE) -s -l waterfall_sprite waterfall_sprites.png 14 5 27 52 > waterfall_sprites.inc
 
-bubble_sprites.inc:	bubble_sprites.png
-	$(HGR_SPRITE) -s -l bubble_sprite0 bubble_sprites.png 7 1  13 6 > bubble_sprites.inc
-	$(HGR_SPRITE) -s -l bubble_sprite1 bubble_sprites.png 7 8  13 13 >> bubble_sprites.inc
-	$(HGR_SPRITE) -s -l bubble_sprite2 bubble_sprites.png 7 15 13 20 >> bubble_sprites.inc
-	$(HGR_SPRITE) -s -l bubble_sprite3 bubble_sprites.png 7 22 13 27 >> bubble_sprites.inc
-	$(HGR_SPRITE) -s -l bubble_sprite4 bubble_sprites.png 7 29 13 34 >> bubble_sprites.inc
-	$(HGR_SPRITE) -s -l bubble_sprite5 bubble_sprites.png 7 36 13 41 >> bubble_sprites.inc
+bubble_sprites_w.inc:	bubble_sprites_w.png
+	$(HGR_SPRITE) -s -l bubble_sprite0 bubble_sprites_w.png 7 1  13 6 > bubble_sprites_w.inc
+	$(HGR_SPRITE) -s -l bubble_sprite1 bubble_sprites_w.png 7 8  13 13 >> bubble_sprites_w.inc
+	$(HGR_SPRITE) -s -l bubble_sprite2 bubble_sprites_w.png 7 15 13 20 >> bubble_sprites_w.inc
+	$(HGR_SPRITE) -s -l bubble_sprite3 bubble_sprites_w.png 7 22 13 27 >> bubble_sprites_w.inc
+	$(HGR_SPRITE) -s -l bubble_sprite4 bubble_sprites_w.png 7 29 13 34 >> bubble_sprites_w.inc
+	$(HGR_SPRITE) -s -l bubble_sprite5 bubble_sprites_w.png 7 36 13 41 >> bubble_sprites_w.inc
 
-
+bubble_sprites_e.inc:	bubble_sprites_e.png
+	$(HGR_SPRITE) -s -l bubble_e_sprite0 bubble_sprites_e.png 7 1  13 6 > bubble_sprites_e.inc
+	$(HGR_SPRITE) -s -l bubble_e_sprite1 bubble_sprites_e.png 7 8  13 13 >> bubble_sprites_e.inc
+	$(HGR_SPRITE) -s -l bubble_e_sprite2 bubble_sprites_e.png 7 15 13 20 >> bubble_sprites_e.inc
+	$(HGR_SPRITE) -s -l bubble_e_sprite3 bubble_sprites_e.png 7 22 13 27 >> bubble_sprites_e.inc
+	$(HGR_SPRITE) -s -l bubble_e_sprite4 bubble_sprites_e.png 7 29 13 34 >> bubble_sprites_e.inc
+	$(HGR_SPRITE) -s -l bubble_e_sprite5 bubble_sprites_e.png 7 36 13 41 >> bubble_sprites_e.inc
 
 clean:
 	rm -f *~ peasant_sprites.inc inventory_sprites.inc \
 		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc \
 		peasant_robe_sprites.inc kerrek_sprites.inc \
-		waterfall_sprites.inc bubble_sprites.inc
+		waterfall_sprites.inc bubble_sprites_w.inc \
+		bubble_sprites_e.inc

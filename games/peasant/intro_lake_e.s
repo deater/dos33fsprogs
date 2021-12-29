@@ -19,18 +19,7 @@ lake_east:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
-	;=====================
-	; load bg
-
-	lda	#<(lake_e_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(lake_e_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
+	;============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -47,6 +36,22 @@ lake_east:
 
 	jsr	gr_copy_to_page1
 
+
+	;=====================
+	; load bg
+
+	lda	#<(lake_e_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(lake_e_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+
 	;================
 	; print title line
 
@@ -55,10 +60,10 @@ lake_east:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; walking
@@ -219,7 +224,7 @@ update_bubbles_e:
 	lda	#94
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite			;_1x5
 
 
 	; bubble 2
@@ -241,7 +246,7 @@ update_bubbles_e:
 	lda	#103
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite			;_1x5
 
 	; bubble 3
 
@@ -262,7 +267,7 @@ update_bubbles_e:
 	lda	#130
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite			;_1x5
 
 	rts
 
@@ -277,45 +282,54 @@ bubble_progress_e:
 	.word bubble_e_sprite4
 	.word bubble_e_sprite5
 
+.include "sprites/bubble_sprites_e.inc"
 
+.if 0
 bubble_e_sprite0:
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $80	; 1 000 0000
-	.byte $AA
+	.byte 1,5
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $80	; 1 000 0000	0 00 00 00	KKKKKKK
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
 
 bubble_e_sprite1:
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $88	; 1 XXX 10XX
-	.byte $A2	; 0 010 XX10
+	.byte 1,5
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $A2	; 1 010 0010	0 10 00 10	BBBKKBB
 
 bubble_e_sprite2:
-	.byte $AA
-	.byte $AA
-	.byte $A2	; 0 010 XX10
-	.byte $88	; 1 XXX 10XX
-	.byte $AA
+	.byte 1,5
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $A2	; 1 010 0010	0 10 00 10	BBBKKBB
+	.byte $88+++	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
 
 bubble_e_sprite3:
-	.byte $AA
-	.byte $A2	; 101X XX10
-	.byte $88	; 00XX 1XX0
-	.byte $88	; 1XX0 10XX
-	.byte $AA
+	.byte 1,5
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $A2	; 1 010 0010	0 10 00 10	BBBKKBB
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
 
 bubble_e_sprite4:
-	.byte $88	; 0xx0 10xx
-	.byte $A2	; 101x xx10
-	.byte $88	; 00xx 1xx0
-	.byte $88	; 1xx0 10XX
-	.byte $AA	; 0010 1010
+	.byte 1,5
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $A2	; 1 010 0010	0 10 00 10	BBBKKBB
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
 
 bubble_e_sprite5:
-	.byte $AA	; 0010 1010
-	.byte $88	; 1XX0 10XX
-	.byte $A2	; 001X XX10
-	.byte $88	; 1XX0 10XX
-	.byte $AA	; 0010 1010
+	.byte 1,5
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $A2	; 1 010 0010	0 10 00 10	BBBKKBB
+	.byte $88	; 1 000 1000	0 00 10 00	KKKBBKK
+	.byte $AA	; 1 010 1010	0 10 10 10	BBBBBBB
+.endif
