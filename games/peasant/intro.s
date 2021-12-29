@@ -14,15 +14,16 @@ peasant_quest_intro:
 
 	lda	#0
 	sta	ESC_PRESSED
+	sta	LEVEL_OVER
 
 	jsr	hgr_make_tables
 
 	jsr	hgr2
 
 
-	;*******************************
+	;===============================
 	; restart music, only drum loop
-	;******************************
+	;===============================
 
 	lda	SOUND_STATUS
 	and	#SOUND_MOCKINGBOARD
@@ -41,51 +42,51 @@ peasant_quest_intro:
 	cli
 mockingboard_notfound:
 
-	;************************
+	;========================
 	; Cottage
-	;************************
+	;========================
 
 	jsr	cottage
 
 	lda	ESC_PRESSED
 	bne	escape_handler
 
-	;************************
+	;========================
 	; Lake West
-	;************************
+	;========================
 
 	jsr	lake_west
 
 	lda	ESC_PRESSED
 	bne	escape_handler
 
-	;************************
+	;========================
 	; Lake East
-	;************************
+	;========================
 
 	jsr	lake_east
 
 	lda	ESC_PRESSED
 	bne	escape_handler
 
-	;************************
+	;========================
 	; River
-	;************************
+	;========================
 
 	jsr	river
 
 	lda	ESC_PRESSED
 	bne	escape_handler
 
-	;************************
+	;========================
 	; Knight
-	;************************
+	;========================
 
 	jsr knight
 
-	;************************
+	;========================
 	; Start actual game
-	;************************
+	;========================
 
 	jsr	draw_peasant
 
@@ -119,9 +120,6 @@ mockingboard_notfound2:
 
 .include "new_game.s"
 
-
-;.include "wait_keypress.s"
-
 .include "intro_cottage.s"
 .include "intro_lake_w.s"
 .include "intro_lake_e.s"
@@ -130,21 +128,12 @@ mockingboard_notfound2:
 
 .include "draw_peasant.s"
 
-;.include "decompress_fast_v2.s"
-;.include "hgr_font.s"
-;.include "draw_box.s"
-;.include "hgr_rectangle.s"
-;.include "hgr_1x28_sprite.s"
-;.include "hgr_partial_save.s"
-;.include "hgr_input.s"
-;.include "hgr_tables.s"
-;.include "hgr_text_box.s"
-;.include "hgr_hgr2.s"
-
 .include "hgr_1x5_sprite.s"
 
+.include "hgr_sprite.s"
 
 .include "gr_copy.s"
+.include "hgr_copy.s"
 
 .include "wait.s"
 .include "wait_a_bit.s"

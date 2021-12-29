@@ -1,8 +1,11 @@
 ; Lake West
 
-	;************************
+; Everyone knows west lake is the best lake
+
+
+	;========================
 	; Lake West
-	;************************
+	;========================
 lake_west:
 	lda	#0
 	sta	FRAME
@@ -19,24 +22,7 @@ lake_west:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
-	;==================
-	; draw background
-
-	lda	#<(lake_w_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(lake_w_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	;================
-	; print title
-
-	jsr	intro_print_title
-
-
+	;===============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -54,18 +40,38 @@ lake_west:
 	jsr	gr_copy_to_page1
 
 
+	;==================
+	; load background
+
+	lda	#<(lake_w_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(lake_w_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+	;================
+	; print title
+
+	jsr	intro_print_title
+
+
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; walking
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 lake_w_walk_loop:
 
@@ -92,7 +98,7 @@ lake_w_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
@@ -104,6 +110,7 @@ check_lake_w_action1:
 	cmp	#0
 	bne	check_lake_w_action2
 
+	;==========================
 	; re-display cottage text 3
 	lda	#<cottage_text3
 	sta	OUTL
@@ -115,17 +122,23 @@ check_lake_w_action1:
 check_lake_w_action2:
 	cmp	#20
 	bne	done_lake_w_action
+
+	;=========================
+	; clear old text
+
 	lda	#0
 	ldx	#39
 	jsr	hgr_partial_restore
+
+	;===========================
+	; display text
+
 	jsr	display_lake_w_text1
 
 done_lake_w_action:
 
 
 	jsr	update_bubbles
-
-
 
 
 ;	jsr	wait_until_keypress
@@ -269,7 +282,7 @@ update_bubbles:
 	lda	#125
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 	; bubble 3
 
@@ -290,7 +303,7 @@ update_bubbles:
 	lda	#141
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 	; bubble 4
 
@@ -311,12 +324,7 @@ update_bubbles:
 	lda	#115
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
-
-
-
-
-
+	jsr	hgr_draw_sprite		; _1x5
 
 	rts
 
@@ -332,45 +340,55 @@ bubble_progress:
 	.word bubble_sprite5
 
 
+	.include "sprites/bubble_sprites.inc"
+
+.if 0
 bubble_sprite0:
-	.byte $2A
-	.byte $AA
-	.byte $2A
-	.byte $80	; 1 000 0000
-	.byte $2A
+	.byte 1,5
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $AA	; 1 010 1010	0 +10 10 10 BBBBBBB
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $80	; 1 000 0000	0 00 00 00 KKKKKKK
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
 
 bubble_sprite1:
-	.byte $2A
-	.byte $AA
-	.byte $2A
-	.byte $88	; 1 XXX 10XX
-	.byte $22	; 0 010 XX10
+	.byte 1,5
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $AA	; 1 010 1010	0 10 10 10 BBBBBBB
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $88	; 1 000 1000	0 00 10 00 KKKBBKK
+	.byte $22	; 0 010 0010	0 10 00 10 PPPKKPP
 
 bubble_sprite2:
-	.byte $2A
-	.byte $AA
-	.byte $22	; 0 010 XX10
-	.byte $88	; 1 XXX 10XX
-	.byte $2A
+	.byte 1,5
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $AA	; 1 010 1010	0 10 10 10 BBBBBBB
+	.byte $22	; 0 010 0010	0 10 00 10 PPPKKPP
+	.byte $88	; 1 000 1000	0 00 10 00 KKKBBKK
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
 
 bubble_sprite3:
-	.byte $2A
-	.byte $A2	; 101X XX10
-	.byte $08	; 00XX 1XX0
-	.byte $88	; 1XX0 10XX
-	.byte $2A
+	.byte 1,5
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
+	.byte $A2	; 1 010 0010	0 10 00 10 BBBKKBB
+	.byte $08	; 0 000 1000	0 00 10 00 KKKPPKK
+	.byte $88	; 1 000 1000	0 00 10 00 KKKBBKK
+	.byte $2A	; 0 010 1010	0 10 10 10 PPPPPPP
 
 bubble_sprite4:
-	.byte $08	; 0xx0 10xx
-	.byte $A2	; 101x xx10
-	.byte $08	; 00xx 1xx0
-	.byte $88	; 1xx0 10XX
-	.byte $2A	; 0010 1010
+	.byte 1,5
+	.byte $08	; 0000 1000	0 00 10 00 KKKPPKK
+	.byte $A2	; 1010 0010	0 10 00 10 BBBKKBB
+	.byte $08	; 0000 1000	0 00 10 00 KKKPPKK
+	.byte $88	; 1000 1000	0 00 10 00 KKKBBKK
+	.byte $2A	; 0010 1010	0 10 10 10 PPPPPPP
 
 bubble_sprite5:
-	.byte $2A	; 0010 1010
-	.byte $88	; 1XX0 10XX
-	.byte $22	; 001X XX10
-	.byte $88	; 1XX0 10XX
-	.byte $2A	; 0010 1010
+	.byte 1,5
+	.byte $2A	; 0010 1010	0 10 10 10 PPPPPPP
+	.byte $88	; 1000 1000	0 00 10 00 KKKBBKK
+	.byte $22	; 0010 0010	0 10 00 10 PPPKKPP
+	.byte $88	; 1000 1000	0 00 10 00 KKKBBKK
+	.byte $2A	; 0010 1010	0 10 10 10 PPPPPPP
 
+.endif

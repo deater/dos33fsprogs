@@ -231,7 +231,7 @@ ned_cottage_rock_not_moved:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 

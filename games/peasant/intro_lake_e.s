@@ -1,8 +1,8 @@
 ; Lake East
 
-	;************************
+	;========================
 	; Lake East
-	;************************
+	;========================
 lake_east:
 	lda	#0
 	sta	FRAME
@@ -63,7 +63,7 @@ lake_east:
 	;=======================
 	; walking
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 lake_e_walk_loop:
 
@@ -90,7 +90,7 @@ lake_e_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 

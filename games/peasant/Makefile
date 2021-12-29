@@ -119,7 +119,6 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s save_bg_1x28 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_draw_sprite_1x28 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s input_buffer qload.lst >> qload.inc

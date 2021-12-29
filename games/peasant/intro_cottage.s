@@ -1,11 +1,12 @@
 ; THATCHED ROOF COTTAGES
+
 ; More specifically, the Dashing Residence
 
 cottage:
 
-	;************************
+	;========================
 	; Cottage
-	;************************
+	;========================
 
 	lda	#0
 	sta	FRAME
@@ -22,19 +23,7 @@ cottage:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
-	;==================
-	; draw background
-
-	lda	#<(cottage_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(cottage_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-
+	;=============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -52,6 +41,21 @@ cottage:
 	jsr	gr_copy_to_page1
 
 
+
+	;==========================
+	; load background to $2000 (PAGE1)
+
+	lda	#<(cottage_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(cottage_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
 	;===================
 	; print title
 
@@ -60,15 +64,15 @@ cottage:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; walking
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 cottage_walk_loop:
 
@@ -98,20 +102,20 @@ cottage_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
 
-	;========================
-	; handle special
-
+	;======================
+	; handle special action
 
 	lda	FRAME
 check_cottage_action1:
 	cmp	#0
 	bne	check_cottage_action2
 
+	;========================
 	; display cottage text 1
 
 	lda	#<cottage_text1
@@ -124,25 +128,30 @@ check_cottage_action2:
 	cmp	#1
 	bne	check_cottage_action3
 
+	;=======================
+	; un-draw the text box
 	lda	#0
 	ldx	#39
 	jsr	hgr_partial_restore
 
+	;=======================
 	; display cottage text 2
-
 	lda	#<cottage_text2
 	sta	OUTL
 	lda	#>cottage_text2
-
 	jmp	finish_cottage_action
 
 check_cottage_action3:
 	cmp	#13
 	bne	done_cottage_action
+
+	;=========================
+	; undraw the text box
 	lda	#0
 	ldx	#39
 	jsr	hgr_partial_restore
 
+	;=========================
 	; display cottage text 3
 
 	lda	#<cottage_text3
@@ -154,8 +163,6 @@ finish_cottage_action:
 	jsr	hgr_text_box
 
 done_cottage_action:
-
-
 
 ;	jsr	wait_until_keypress
 
@@ -261,5 +268,4 @@ cottage_path:
 	.byte 37,147
 	.byte 38,147
 	.byte $FF,$FF
-
 

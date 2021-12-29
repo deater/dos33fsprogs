@@ -65,7 +65,7 @@ knight:
 	;=======================
 	; walking
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 knight_walk_loop:
 
@@ -92,7 +92,7 @@ knight_walk_loop:
 	sta	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 

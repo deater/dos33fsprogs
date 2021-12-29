@@ -133,23 +133,45 @@ new_location:
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; draw initial peasant
 
-	jsr	save_bg_1x28
+;	jsr	save_bg_1x28
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
+
+	;===========================
+	;===========================
+	;===========================
+	; main loop
+	;===========================
+	;===========================
+	;===========================
 
 game_loop:
 
+	;========================
+	; move the peasant
+
 	jsr	move_peasant
 
+	;========================
+	; draw the peasant
+
+	jsr	draw_peasant
+
+	;========================
+	; increment the frame
+
 	inc	FRAME
+
+	;========================
+	; check the keyboard
 
 	jsr	check_keyboard
 

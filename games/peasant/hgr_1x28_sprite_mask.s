@@ -105,12 +105,12 @@ draw_sprite_skip:
 
 	rts
 
-
+.if 0
 	;======================
 	; save bg 1x28
 	;======================
 
-save_bg_1x28:
+bsave_bg_1x28:
 
 	ldx	#0
 save_yloop:
@@ -142,6 +142,7 @@ save_yloop:
 	bne	save_yloop
 
 	rts
+.endif
 
 	;======================
 	; restore bg 1x28
@@ -149,28 +150,41 @@ save_yloop:
 
 restore_bg_1x28:
 
-	ldx	#0
-restore_yloop:
-	txa				; current row
-	clc
-	adc	CURSOR_Y		; add in y start point
+	; restore bg behind peasant
 
+	; is this actually faster than using the generic version?
+
+	ldy	CURSOR_Y		; y start point
+
+	ldx	#27			; height
+
+restore_yloop:
 	; calc GBASL/GBASH using lookup table
 
-	tay
+	clc
 	lda	hposn_low,Y
-	sta	GBASL
+	adc	PEASANT_X
+	sta	restore_page1_smc+1
+	sta	restore_page2_smc+1
+
+	; $40 -> $20   0100 0000 -> 0010 0000
+	; $41 -> $21   0100 0001 -> 0010 0001
+	; $51 -> $31   0101 0011 -> 0101 0001
+
 	lda	hposn_high,Y
-	sta	GBASH
+	sta	restore_page2_smc+2
+	eor	#$60
+	sta	restore_page1_smc+2
 
-	ldy	CURSOR_X
+restore_page1_smc:
+	lda	$DDDD
+restore_page2_smc:
+	sta	$DDDD
 
-	lda	save_sprite_1x28,X
-	sta	(GBASL),Y
+	iny
 
-	inx
-	cpx	#28
-	bne	restore_yloop
+	dex
+	bpl	restore_yloop
 
 	rts
 
@@ -285,9 +299,9 @@ mask_false:
 ; save area
 ;====================
 
-save_sprite_1x28:
-.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+;save_sprite_1x28:
+;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 ysave:
 .byte $00
