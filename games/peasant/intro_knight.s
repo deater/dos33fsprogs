@@ -3,7 +3,7 @@
 	;************************
 	; Knight
 	;************************
-knight:
+intro_knight:
 	lda	#0
 	sta	FRAME
 
@@ -20,23 +20,7 @@ knight:
 	sta	PEASANT_DIR
 
 
-	;=====================
-	; load bg
-
-	lda	#<(knight_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(knight_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	;==================
-	; print title line
-
-	jsr	intro_print_title
-
+	;=========================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -54,13 +38,33 @@ knight:
 	jsr	gr_copy_to_page1
 
 
+	;=====================
+	; load bg
+
+	lda	#<(knight_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(knight_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+	;==================
+	; print title line
+
+	jsr	intro_print_title
+
+
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; walking

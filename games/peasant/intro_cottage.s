@@ -2,7 +2,7 @@
 
 ; More specifically, the Dashing Residence
 
-cottage:
+intro_cottage:
 
 	;========================
 	; Cottage

@@ -3,7 +3,7 @@
 	;************************
 	; River
 	;************************
-river:
+intro_river:
 	lda	#0
 	sta	FRAME
 
@@ -19,25 +19,7 @@ river:
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
 
-	;====================
-	; load bg
-
-
-	lda	#<(river_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(river_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
-
-	;================
-	; print title
-
-	jsr	intro_print_title
-
-
+	;========================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
@@ -54,13 +36,34 @@ river:
 
 	jsr	gr_copy_to_page1
 
+
+	;====================
+	; load bg
+
+
+	lda	#<(river_lzsa)
+	sta	getsrc_smc+1
+	lda	#>(river_lzsa)
+	sta	getsrc_smc+2
+
+	lda	#$20
+
+	jsr	decompress_lzsa2_fast
+
+	jsr	hgr_copy
+
+	;================
+	; print title
+
+	jsr	intro_print_title
+
 	;====================
 	; save background
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 	;=======================
 	; walking
@@ -209,7 +212,7 @@ update_bubbles_r:
 	lda	#166
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 
 	; bubble 2
@@ -231,7 +234,7 @@ update_bubbles_r:
 	lda	#154
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 	; bubble 3
 
@@ -252,7 +255,7 @@ update_bubbles_r:
 	lda	#160
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 	rts
 
@@ -264,24 +267,23 @@ bubble_progress_r:
 	.word bubble_r_sprite1
 
 
+	.include "sprites/river_bubble_sprites.inc"
+
+.if 0
 bubble_r_sprite0:
-	.byte $AA
-	.byte $FF
-	.byte $AA
-	.byte $FF
-	.byte $AA
+	.byte 1,5
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
+	.byte $FF	; 1111 1111	1 11 11 11	WWWWWWW
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
+	.byte $FF	; 1111 1111	1 11 11 11	WWWWWWW
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
 
 bubble_r_sprite1:
-	.byte $FF
-	.byte $AA
-	.byte $AA
-	.byte $AA
-	.byte $FF
+	.byte 1,5
+	.byte $FF	; 1111 1111	1 11 11 11	WWWWWWW
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
+	.byte $AA	; 1010 1010	0 10 10 10	BBBBBBB
+	.byte $FF	; 1111 1111	1 11 11 11	WWWWWWW
 
-
-
-
-
-
-
-
+.endif

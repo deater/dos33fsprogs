@@ -213,6 +213,7 @@ intro.o:	intro.s zp.inc qload.inc music.inc \
 		sprites/peasant_sprites.inc \
 		sprites/bubble_sprites_e.inc \
 		sprites/bubble_sprites_w.inc \
+		sprites/river_bubble_sprites.inc \
 		text/intro.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_1x5_sprite.s hgr_save_restore.s \

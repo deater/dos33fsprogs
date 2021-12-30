@@ -6,7 +6,7 @@
 	;========================
 	; Lake West
 	;========================
-lake_west:
+intro_lake_west:
 	lda	#0
 	sta	FRAME
 

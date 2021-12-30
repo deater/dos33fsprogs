@@ -46,7 +46,7 @@ mockingboard_notfound:
 	; Cottage
 	;========================
 
-	jsr	cottage
+	jsr	intro_cottage
 
 	lda	ESC_PRESSED
 	bne	escape_handler
@@ -55,7 +55,7 @@ mockingboard_notfound:
 	; Lake West
 	;========================
 
-	jsr	lake_west
+	jsr	intro_lake_west
 
 	lda	ESC_PRESSED
 	bne	escape_handler
@@ -64,7 +64,7 @@ mockingboard_notfound:
 	; Lake East
 	;========================
 
-	jsr	lake_east
+	jsr	intro_lake_east
 
 	lda	ESC_PRESSED
 	bne	escape_handler
@@ -73,7 +73,7 @@ mockingboard_notfound:
 	; River
 	;========================
 
-	jsr	river
+	jsr	intro_river
 
 	lda	ESC_PRESSED
 	bne	escape_handler
@@ -82,7 +82,7 @@ mockingboard_notfound:
 	; Knight
 	;========================
 
-	jsr knight
+	jsr	intro_knight
 
 	;========================
 	; Start actual game

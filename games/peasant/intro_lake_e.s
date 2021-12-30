@@ -3,7 +3,7 @@
 	;========================
 	; Lake East
 	;========================
-lake_east:
+intro_lake_east:
 	lda	#0
 	sta	FRAME
 
