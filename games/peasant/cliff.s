@@ -21,7 +21,7 @@ cliff_base:
 	sta	FRAME
 
 	jsr	hgr_make_tables
-	jsr	hgr2
+;	jsr	hgr2
 
 	; decompress dialog to $D000
 

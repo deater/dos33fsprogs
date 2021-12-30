@@ -24,7 +24,7 @@ inside:
 	sta	FRAME
 
 	jsr	hgr_make_tables		; necessary?
-	jsr	hgr2			; necessary?
+;	jsr	hgr2			; necessary?
 
 	; decompress dialog to $D000
 
