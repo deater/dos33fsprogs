@@ -260,7 +260,7 @@ update_bubbles:
 	lda	#91
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 
 	; bubble 2
@@ -324,7 +324,7 @@ update_bubbles:
 	lda	#115
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite		; _1x5
+	jsr	hgr_draw_sprite		;_1x5
 
 	rts
 

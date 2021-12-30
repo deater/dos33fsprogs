@@ -245,7 +245,7 @@ length_array:
 .include "draw_box.s"
 .include "hgr_rectangle.s"
 .include "hgr_1x28_sprite_mask.s"
-.include "hgr_1x5_sprite.s"
+;.include "hgr_1x5_sprite.s"
 .include "hgr_partial_save.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"
