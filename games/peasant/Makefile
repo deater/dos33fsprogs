@@ -77,6 +77,7 @@ qload.o:	qload.s qboot.inc \
 		text/word_list.s \
 		clear_bottom.s \
 		hgr_hgr2.s \
+		hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random16.s
