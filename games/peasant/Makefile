@@ -215,6 +215,7 @@ intro.o:	intro.s zp.inc qload.inc music.inc \
 		sprites/bubble_sprites_w.inc \
 		sprites/river_bubble_sprites.inc \
 		text/intro.inc \
+		animate_river.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_save_restore.s \
 		hgr_partial_save.s \
@@ -341,7 +342,8 @@ peasant2.o:	peasant2.s zp.inc inventory.inc \
 		peasant2_actions.s DIALOG_PEASANT2.LZSA dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
-		sprites/inventory_sprites.inc \
+		sprites/river_bubble_sprites.inc \
+		animate_river.s \
 		peasant_common.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_save_restore.s \

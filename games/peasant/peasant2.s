@@ -239,6 +239,10 @@ game_loop:
 
 	jsr	move_peasant
 
+	lda	LEVEL_OVER
+	bmi	oops_new_location
+	bne	level_over
+
 	;====================
 	; always draw peasant
 
@@ -254,6 +258,7 @@ game_loop:
 
 	jsr	check_keyboard
 
+
 	;=====================
 	; level specific
 	;=====================
@@ -261,7 +266,20 @@ game_loop:
 	lda     MAP_LOCATION
 	cmp     #LOCATION_MUD_PUDDLE
 	beq     at_mud_puddle
+	cmp	#LOCATION_RIVER_STONE
+	beq	at_river
         bne     skip_level_specific
+
+	;=======================
+	; handle river animation
+	;=======================
+at_river:
+	jsr	animate_river
+	jmp	skip_level_specific
+
+	;=====================
+	; handle mud puddle
+	;=====================
 
 at_mud_puddle:
 	; see if falling in
@@ -318,15 +336,12 @@ at_mud_puddle:
 
 
 skip_level_specific:
-	lda	LEVEL_OVER
-	bmi	oops_new_location
-	bne	level_over
+
 
 	; delay
 
 	lda	#200
 	jsr	wait
-
 
 	jmp	game_loop
 
@@ -396,9 +411,6 @@ to_left_of_inn:
 
 .include "new_map_location.s"
 
-
-;.include "parse_input.s"
-
 .include "keyboard.s"
 
 .include "wait.s"
@@ -408,6 +420,9 @@ to_left_of_inn:
 .include "graphics_peasantry/priority_peasant2.inc"
 
 .include "hgr_copy.s"
+.include "hgr_sprite.s"
+
+.include "animate_river.s"
 
 map_backgrounds_low:
 	.byte	<haystack_lzsa		; 5	-- haystack
