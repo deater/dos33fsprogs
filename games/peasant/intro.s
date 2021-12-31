@@ -144,6 +144,8 @@ mockingboard_notfound2:
 
 .include "text/intro.inc"
 
+.include "animate_bubbles.s"
+
 skip_text:
         .byte 0,2,"ESC Skips",0
 

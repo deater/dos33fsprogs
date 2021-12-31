@@ -52,9 +52,8 @@ Title:
 
 Intro:
 ~~~~~~
-+ Use string compression
-+ Use common sprite interface
-+ Use walkto interface
++ Use walkto interface?
++ Let message 2 last longer
 
 Map:
 ~~~~
@@ -98,7 +97,6 @@ Peasant1:
 - Yellow Tree
   + adjust enter/leaving x/y co-ordinates?
 - Waterfall
-  + Waterfall animation
 
 Peasant2:
 ~~~~~~~~~
@@ -114,7 +112,7 @@ Peasant2:
   + Hook up minigame
   + fix where we can get stuck on top of targets at archery range
 - River/Rock
-  + River animation
+  + Better/bigger River animation
 - Mountain Pass
   + Knight animations
   + Block path unless you have all three items
@@ -128,12 +126,12 @@ Peasant3:
 - Cottage
   + Fix y-coords when walking to Jhonka
 - West Lake
-  + Animate water
+  + Better/bigger water animation
   + Make pebbles go away once you pick them up
   + Animate "throw baby" sequence
 - East Lake
   + Animate Boat
-  + Animate Water
+  + Better/bigger water animation
   + Animate whole fish-feeding sequence
 - Inn
   + Take note off door once old man is inside

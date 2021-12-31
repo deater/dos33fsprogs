@@ -222,6 +222,13 @@ game_loop:
 	jsr	move_peasant
 
 	;=====================
+	; check if level over
+
+	lda	LEVEL_OVER
+	bmi	oops_new_location
+	bne	game_over
+
+	;=====================
 	; always draw peasant
 
 	jsr	draw_peasant
@@ -236,10 +243,28 @@ game_loop:
 
 	jsr	check_keyboard
 
-	lda	LEVEL_OVER
-	bmi	oops_new_location
-	bne	game_over
 
+	;===================
+	; level specific
+	;=====================
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_LAKE_EAST
+	beq	at_lake_east
+	cmp	#LOCATION_LAKE_WEST
+	beq	at_lake_west
+	bne	skip_level_specific
+
+at_lake_east:
+	jsr	animate_bubbles_e
+	jmp	skip_level_specific
+
+at_lake_west:
+	jsr	animate_bubbles_w
+
+skip_level_specific:
+
+	;=========
 	; delay
 
 	lda	#200
@@ -264,6 +289,7 @@ game_over:
 
 .include "gr_copy.s"
 .include "hgr_copy.s"
+.include "hgr_sprite.s"
 
 .include "new_map_location.s"
 
@@ -325,3 +351,5 @@ peasant3_text_lzsa:
 .incbin "DIALOG_PEASANT3.LZSA"
 
 .include "peasant3_actions.s"
+
+.include "animate_bubbles.s"
