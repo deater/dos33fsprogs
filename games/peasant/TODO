@@ -48,6 +48,7 @@ Each time enter room:
 Title:
 ~~~~~~
 + print warning message on 48k systems that we need at least 64k
+  (done, but should we stop them from continuing?)
 + Better electric duet music?
 
 Intro:
@@ -81,6 +82,8 @@ Peasant1:
   + hook up animation when you get kicked
   + hook up scare animation 
   + hook up after-gary, fence hole and no horse
+  + update x-coords when walk off screen (fence)
+  + setup priority wall depending on if fence broken
 - Kerrek 1
   + Implement kerrek
   + Implement dead kerrek
@@ -104,6 +107,7 @@ Peasant2:
 - Haystack
   + Animate jumping into haystack
   + Hook up sprites for walking hay
+  + adjust enter leave x/y (mostly near fence)
 - Puddle
   + Alternate version with wet mud
   + Animation for falling into mud
@@ -123,6 +127,7 @@ Peasant3:
   + Animate Jhonka
   + Take note off door once Kerrek dead
   + Draw riches when applicable
+  + x/y when entering screen (along fence)
 - Cottage
   + Fix y-coords when walking to Jhonka
 - West Lake
@@ -142,6 +147,7 @@ Peasant4:
 - Ned Cottage
   + Animate deploying baby
   + Make door open once baby deployed
+  + enter x/y (mostly near fence)
 - Ned
   + Animate Ned
   + Can you walk behind him?
