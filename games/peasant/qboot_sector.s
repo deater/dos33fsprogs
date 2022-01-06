@@ -221,7 +221,7 @@ preread:
 ;        pha
 
 	lda	#<(firsttrk*2)
-	sta	phase+1
+	sta	phase_smc+1
 	ldx	#sectors
 	lda	#address
 	ldy	#firstsec

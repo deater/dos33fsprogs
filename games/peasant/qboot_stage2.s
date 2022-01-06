@@ -232,8 +232,8 @@ sector:
 total:
 	ldx	#$d1
 	beq	driveoff
-	inc	phase+1
-	inc	phase+1		; update current track
+	inc	phase_smc+1
+	inc	phase_smc+1		; update current track
 	jmp	inittrk
 
 driveoff:
@@ -247,11 +247,11 @@ seek:
 	ldx	#0
 	stx	step+1
 copy_cur:
-curtrk:
+curtrk_smc:
 	lda	#0
 	sta	tmpval+1
 	sec
-phase:
+phase_smc:			; track*2 to seek to
 	sbc	#$d1
 	beq	seekret
 
@@ -259,12 +259,12 @@ phase:
 	bcs	sback
 
 	eor	#$ff
-	inc	curtrk+1
+	inc	curtrk_smc+1
 
         bcc     ssback
 sback:
         adc     #$fe
-        dec     curtrk+1
+        dec     curtrk_smc+1
 ssback:
 	cmp	step+1
 	bcc	loop10
@@ -276,7 +276,7 @@ loop10:
 	tay
 	sec
 loop11:
-	lda	curtrk+1
+	lda	curtrk_smc+1
 	ldx	step1, Y
 	bne	loop12
 loopmmm:
@@ -338,7 +338,7 @@ load_new:
 
 	lda	load_track
 	asl			; track to start*2
-	sta     phase+1
+	sta     phase_smc+1
 
 	lda	load_sector
 	tay			; sector to start

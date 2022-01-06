@@ -31,12 +31,17 @@ qload_start:
 
 	lda	#1
 	sta	CURRENT_DISK		; current disk number
+	sta	DRIVE1_DISK		; it's in drive1
+	sta	CURRENT_DRIVE		; and currently using drive 1
 
-	jsr	load_file
+	lda	#0
+	sta	DRIVE2_DISK		; don't know if disk there yet
 
-	jsr	$6000
+	jsr	load_file		; actually load intro
 
-	lda	#LOAD_TITLE		; load title
+	jsr	$6000			; run intro
+
+	lda	#LOAD_TITLE		; next load title
 	sta	WHICH_LOAD
 
 main_game_loop:
@@ -60,9 +65,9 @@ start_title:
 load_file:
 	ldx	WHICH_LOAD
 
-	lda	which_disk_array,X
-	cmp	CURRENT_DISK
-	bne	change_disk
+	lda	which_disk_array,X		; get disk# for file to load
+	cmp	CURRENT_DISK			; if not currently using
+	bne	change_disk			; need to change disk
 
 load_file_no_diskcheck:
 	lda	load_address_array,X
@@ -86,12 +91,45 @@ load_file_no_diskcheck:
 	; change disk
 	;===================================================
 	;===================================================
+	; WHICH_LOAD is still in X?
 
 change_disk:
 
-	; turn off disk drive light
+	; see if disk we want is in drive1
+check_drive1:
+	lda	which_disk_array,X
+	cmp	DRIVE1_DISK
+	bne	check_drive2
 
-	jsr	driveoff
+	jsr	switch_drive1		; switch to drive1
+	jmp	update_disk
+
+check_drive2:
+	cmp	DRIVE2_DISK
+	bne	disk_not_found
+
+	jsr	switch_drive2		; switch to drive2
+	jmp	update_disk
+
+disk_not_found:
+
+	; check if disk in drive2
+	; carry clear if not
+
+	jsr	check_floppy_in_drive2
+
+	bcc	nothing_in_drive2
+
+	; a disk is in drive2, try to use it
+
+	bcs	verify_disk
+
+
+nothing_in_drive2:
+
+	; switch back to drive1
+	jsr	switch_drive1
+
 
 	;==============================
 	; print "insert disk" message
@@ -132,7 +170,7 @@ fnf_keypress:
 	;==============================================
 	; actually verify proper disk is there
 	; read T0:S0 and verify proper disk
-
+verify_disk:
 	lda	WHICH_LOAD
 	pha
 
@@ -177,10 +215,15 @@ disk_compare:
 
 	;==============================================
 	; all good, retry original load
+update_disk:
+
+	ldx	CURRENT_DRIVE
+	sta	DRIVE1_DISK-1,X		; indexed from 1
 
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
 	sta	CURRENT_DISK
+
 
 	jmp	load_file
 
@@ -239,13 +282,14 @@ length_array:
 
 .include "qkumba_popwr.s"
 
+.include "drive2.s"
+
 .include "decompress_fast_v2.s"
 
 .include "hgr_font.s"
 .include "draw_box.s"
 .include "hgr_rectangle.s"
 .include "hgr_1x28_sprite_mask.s"
-;.include "hgr_1x5_sprite.s"
 .include "hgr_partial_save.s"
 .include "hgr_input.s"
 .include "hgr_tables.s"

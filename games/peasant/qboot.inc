@@ -1,9 +1,10 @@
-; made by hand?
-seek	=  $a26
-driveon  = $a9D
-driveoff = $a22
-load_new = $aAB
-load_address=$aC4
+seek	=$0a26
+curtrk_smc	=$0a2b
+phase_smc	=$0a31
+driveon	=$0a9d
+driveoff	=$0a22
+load_new	=$0aab
+load_address	=$0ac4
 load_track=load_address+1
 load_sector=load_address+2
 load_length=load_address+3

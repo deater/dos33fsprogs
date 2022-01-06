@@ -1,8 +1,40 @@
-; based on anti-m/anti-m.a
+; roughly based on anti-m/anti-m.a
+
+
+; Notes from qkumba/4am
+
+; Drive with no disk and no motor, will return same value in range $00..$7f
+; Drive with no disk but motor running will return random $00..$FF
+; Some cards will return random even with no drive connected
+; so the best way to detect if disk is there is to try seeking/reading
+;	and seeing if you get valid data
+
+
+; FIXME: patch these
+
+switch_drive1:
+	lda	curtrk_smc+1
+	sta	DRIVE2_TRACK	;	save track location
+	lda	$C0EA		; 	drive 1 select
+	lda	#1
+	sta	CURRENT_DRIVE
+	lda	DRIVE1_TRACK	;	restore saved track location
+	sta	curtrk_smc+1
+	rts
+
+switch_drive2:
+	lda	curtrk_smc+1
+	sta	DRIVE1_TRACK	;	save track location
+	lda	$C0EB		;	drive 2 select
+	lda	#2
+	sta	CURRENT_DRIVE
+	lda	DRIVE2_TRACK	;	restore saved track location
+	sta	curtrk_smc+1
+	rts
 
 check_floppy_in_drive2:
 
-	lda	$C0EB		;	drive 2 select
+	jsr	switch_drive2
 
 	jsr	driveon
 
@@ -10,7 +42,16 @@ check_floppy_in_drive2:
 
 ;	jsr	spinup		; spin up drive
 
-	jsr	seek		; seek to where?
+;	jsr	seek_track0	; seek to track0
+
+	; seek to track 0
+
+	lda	#(35*2)		; worst case scenario(?)
+	sta	curtrk_smc+1
+	lda	#0		; seek to track0
+	sta	phase_smc+1
+
+	jsr	seek
 
 
 	;=====================================
@@ -59,3 +100,5 @@ check_if_96:
 
 done_check:
 	jmp	driveoff
+
+

@@ -110,6 +110,20 @@ generate_all_symbols.o:	generate_all_symbols.c
 
 ####
 
+qboot.inc:	generate_common QBOOT
+	./generate_common -a 0x000 -s seek qboot_sector.lst > qboot.inc
+	./generate_common -a 0x000 -s curtrk_smc qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s phase_smc qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s driveon qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s driveoff qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s load_new qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s load_address qboot_sector.lst >> qboot.inc
+	echo "load_track=load_address+1" >> qboot.inc
+	echo "load_sector=load_address+2" >> qboot.inc
+	echo "load_length=load_address+3" >> qboot.inc
+
+####
+
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
 	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
