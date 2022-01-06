@@ -127,6 +127,7 @@ qboot.inc:	generate_common QBOOT
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
 	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc

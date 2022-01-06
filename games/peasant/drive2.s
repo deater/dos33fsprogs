@@ -32,6 +32,18 @@ switch_drive2:
 	sta	curtrk_smc+1
 	rts
 
+	;=================================
+	; check floppy in drive2
+	;=================================
+	; switches to drive2
+	; turns drive on
+	; seeks to track0
+	; attempts to read a sector
+	; if fails, returns C=0
+	; if succeeds, returns C=1
+	; turns drive off
+	; switches back to drive1
+
 check_floppy_in_drive2:
 
 	jsr	switch_drive2
@@ -99,6 +111,9 @@ check_if_96:
 	; because result was greater or equal to #$96
 
 done_check:
-	jmp	driveoff
+	jsr	driveoff
+
+	jmp	switch_drive1		; tail call
+
 
 

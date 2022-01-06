@@ -15,6 +15,10 @@
 
 intro_text:
 
+	;===========================
+	; print text part of intro
+	;===========================
+
 	jsr	TEXT
 	jsr	HOME
 
@@ -139,7 +143,21 @@ yes_language_card:
 	ora	#SOUND_IN_LC
 	sta	SOUND_STATUS
 
+	jmp	done_language_card
+
 no_language_card:
+	;===============================
+	; print error if not enough RAM
+	;===============================
+
+	lda	#<ram_error
+	sta	OUTL
+	lda	#>ram_error
+	sta	OUTH
+
+	jsr	move_and_print
+
+done_language_card:
 
 	;===================================
 	; Detect Mockingboard
@@ -200,10 +218,53 @@ ssi_not_found:
 mockingboard_notfound:
 
 
+	;==================================
+	; check if disk in drive #2
+	;==================================
+
+	lda	#0			; mark drive2 as empty
+	sta	DRIVE2_DISK
+
+	jsr	check_floppy_in_drive2
+	bcc	no_floppy_drive2
+
+yes_floppy_drive2:
+
+	lda	#2			; assume for now disk2 is in it
+	sta	DRIVE2_DISK
+
+	; print message
+
+	lda	#<drive2_message
+	sta	OUTL
+	lda	#>drive2_message
+	sta	OUTH
+
+	jsr	move_and_print
+	jmp	done_drive2_check
+
+no_floppy_drive2:
+
+done_drive2_check:
+
+
 skip_all_checks:
+
+
+	;=============================
+	; linger at sysinfo a bit
+	;=============================
 
 	lda	#30
 	jsr	wait_a_bit
+
+
+
+	;===================================
+	;===================================
+	; do the animated vidalectrix intro
+	;===================================
+	;===================================
 
 videlectrix_intro:
 	jsr	hgr2				; HGR_PAGE=$40
@@ -454,11 +515,16 @@ boot_message:
 .byte	0,6,"DISK CODE    : QKUMBA",0
 .byte	0,7,"LZSA CODE    : EMMANUEL MARTY",0
 .byte	0,8,"ELECTRIC DUET: PAUL LUTUS",0
-.byte	7,19,"______",0
-.byte	5,20,"A \/\/\/ SOFTWARE PRODUCTION",0
+.byte	7,18,"______",0
+.byte	5,19,"A \/\/\/ SOFTWARE PRODUCTION",0
 
 config_string:
 ;             0123456789012345678901234567890123456789
 .byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
 ;                             MOCKINGBOARD: NONE
 
+ram_error:
+.byte	1,21,"SORRY, 48K REQUIRED TO PLAY THIS GAME",0
+
+drive2_message:
+.byte	10,22,"FOUND DISK IN DRIVE2",0

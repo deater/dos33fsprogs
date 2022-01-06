@@ -34,9 +34,6 @@ qload_start:
 	sta	DRIVE1_DISK		; it's in drive1
 	sta	CURRENT_DRIVE		; and currently using drive 1
 
-	lda	#0
-	sta	DRIVE2_DISK		; don't know if disk there yet
-
 	jsr	load_file		; actually load intro
 
 	jsr	$6000			; run intro
@@ -47,17 +44,9 @@ qload_start:
 main_game_loop:
 	jsr	load_file
 
-;	lda	WHICH_LOAD
-;	bne	not_title
-
-
-start_title:
-	jsr	$6000
+	jsr	$6000			; all entry points currently $6000
 	jmp	main_game_loop
 
-;not_title:
-;	jsr	$2000
-;	jmp	main_game_loop
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -116,19 +105,19 @@ disk_not_found:
 	; check if disk in drive2
 	; carry clear if not
 
-	jsr	check_floppy_in_drive2
+;	jsr	check_floppy_in_drive2
 
-	bcc	nothing_in_drive2
+;	bcc	nothing_in_drive2
 
 	; a disk is in drive2, try to use it
 
-	bcs	verify_disk
+;	bcs	verify_disk
 
 
 nothing_in_drive2:
 
 	; switch back to drive1
-	jsr	switch_drive1
+;	jsr	switch_drive1
 
 
 	;==============================
@@ -150,17 +139,6 @@ nothing_in_drive2:
 	sta	(OUTL),Y
 
 	jsr	hgr_text_box
-
-;	ldy	#0
-
-;quick_print:
-;	lda	(OUTL),Y
-;	beq	quick_print_done
-;	jsr	COUT1
-;	iny
-;	jmp	quick_print
-
-;quick_print_done:
 
 fnf_keypress:
 	lda	KEYPRESS
@@ -217,13 +195,12 @@ disk_compare:
 	; all good, retry original load
 update_disk:
 
-	ldx	CURRENT_DRIVE
-	sta	DRIVE1_DISK-1,X		; indexed from 1
-
 	ldx	WHICH_LOAD
 	lda	which_disk_array,X
 	sta	CURRENT_DISK
 
+	ldx	CURRENT_DRIVE
+	sta	DRIVE1_DISK-1,X		; indexed from 1
 
 	jmp	load_file
 
