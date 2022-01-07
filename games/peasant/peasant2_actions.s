@@ -25,6 +25,8 @@ hay_bale_verb_table:
         .word hay_bale_steal-1
         .byte VERB_TAKE
         .word hay_bale_take-1
+	.byte VERB_CLIMB
+	.word hay_bale_climb-1
 	.byte 0
 
 
@@ -47,6 +49,9 @@ hay_get_hay:
 	ldx	#<hay_get_hay_message
 	ldy	#>hay_get_hay_message
 	jmp	finish_parse_message
+
+
+
 
 	;=================
 	; look
@@ -107,6 +112,23 @@ hay_look_at_fence:
 	jmp	finish_parse_message
 
 
+	;================
+	; climb
+	;================
+hay_bale_climb:
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_FENCE
+	beq	hay_climb_fence
+
+	jmp	parse_common_unknown
+
+hay_climb_fence:
+	ldx	#<hay_climb_fence_message
+	ldy	#>hay_climb_fence_message
+	jmp	finish_parse_message
+
+
 	;===================
 	; enter hay
 	;===================
@@ -117,6 +139,8 @@ hay_bale_hide:
 
 	lda	CURRENT_NOUN
 
+	cmp	#NOUN_FENCE
+	beq	hay_climb_fence
 	cmp	#NOUN_HAY
 	beq	enter_hay
 

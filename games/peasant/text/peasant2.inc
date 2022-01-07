@@ -80,6 +80,11 @@ hay_get_hay_message:
 .byte "Dungeonman? You don't need",13
 .byte "any hay.",0
 
+; + climb/jump fence
+hay_climb_fence_message:
+.byte "No, you have business to",13
+.byte "attend to here in",13
+.byte "Peasantry.",0
 
 ;=============
 ; Mud Puddle

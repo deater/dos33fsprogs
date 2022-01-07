@@ -112,5 +112,5 @@ done_draw_peasant:
 	rts
 
 
-;.include "sprites/peasant_sprites.inc"
-.include "sprites/peasant_robe_sprites.inc"
+.include "sprites/peasant_sprites.inc"
+;.include "sprites/peasant_robe_sprites.inc"

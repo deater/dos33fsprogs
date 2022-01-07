@@ -40,6 +40,7 @@ peasant2	18302
 		17941 -- after most of text hooked up (more code was moved to qload)
 		17929 -- after redoing so background is always in PAGE1
 		18132 -- add in river animation code
+		18181 -- forgot the "climb fence" message
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
