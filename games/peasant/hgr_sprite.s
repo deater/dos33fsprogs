@@ -46,6 +46,11 @@ hgr_sprite_yloop:
 	lda	hposn_low,Y
 	sta	GBASL
 	lda	hposn_high,Y
+
+	; eor	#$00 draws on page2
+	; eor	#$60 draws on page1
+hgr_sprite_page_smc:
+	eor	#$00
 	sta	GBASH
 
 	ldy	CURSOR_X

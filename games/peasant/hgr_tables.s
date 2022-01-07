@@ -123,7 +123,7 @@ hposn:
 
 	and	#$1F
 
-	ora	HGR_PAGE
+	ora	HGR_PAGE	; default is $40 in this game
 	sta	GBASH
 
 ;	txa

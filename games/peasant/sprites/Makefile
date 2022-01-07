@@ -4,7 +4,7 @@ all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
 	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
 	peasant_robe_sprites.inc kerrek_sprites.inc \
 	waterfall_sprites.inc bubble_sprites_w.inc bubble_sprites_e.inc \
-	river_bubble_sprites.inc
+	river_bubble_sprites.inc gary_sprites.inc
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc
@@ -58,6 +58,16 @@ boat_sprites.inc:	boat_sprites.png
 ned_sprites.inc:	ned_sprites.png
 	$(HGR_SPRITE) -s -l rock_moved_sprite ned_sprites.png  7   1 27   12 > ned_sprites.inc
 
+gary_sprites.inc:	gary_sprites.png
+	$(HGR_SPRITE) -s -l gary_base_sprite gary_sprites.png   21  98 55   124 > gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_fly1_sprite gary_sprites.png   63  98 76   117 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_fly2_sprite gary_sprites.png   91  98 104  117 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_tail1_sprite gary_sprites.png 119  98 132  117 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_tail2_sprite gary_sprites.png 147  98 160  117 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_foot1_sprite gary_sprites.png  91 118 118  128 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_foot0_sprite gary_sprites.png  63 118  76  128 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_foot1_sprite gary_sprites.png  91 118 104  128 >> gary_sprites.inc
+	$(HGR_SPRITE) -s -l gary_foot2_sprite gary_sprites.png 119 118 132  128 >> gary_sprites.inc
 
 inventory_sprites.inc:	inventory.png
 	$(HGR_SPRITE) -l arrow_sprite inventory.png 14 3 27 19 > inventory_sprites.inc
@@ -182,4 +192,5 @@ clean:
 		ending_sprites.inc trogdor_sprites.inc ned_sprites.inc \
 		peasant_robe_sprites.inc kerrek_sprites.inc \
 		waterfall_sprites.inc bubble_sprites_w.inc \
-		bubble_sprites_e.inc river_bubble_sprites.inc
+		bubble_sprites_e.inc river_bubble_sprites.inc \
+		gary_sprites.inc
