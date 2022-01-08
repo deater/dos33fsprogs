@@ -354,7 +354,7 @@ oops_new_location:
 	;========================
 level_over:
 	cmp	#NEW_FROM_LOAD		; skip to end if loading save game
-	bne	really_level_over
+	beq	really_level_over
 
 	; specical case if going outside inn
 	; we don't want to end up behind inn
