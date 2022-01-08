@@ -423,7 +423,7 @@ no_draw_gary_flies:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	bne	game_over
+	bne	level_over
 
 	; delay
 
@@ -459,7 +459,7 @@ at_old_well:
 
 	lda	#NEW_FROM_DISK	; needed?
 	sta	LEVEL_OVER
-	jmp	game_over
+	jmp	level_over
 
 skip_level_specific:
 
@@ -470,7 +470,8 @@ skip_level_specific:
 	;************************
 	; exit level
 	;************************
-game_over:
+level_over:
+	; note: check reason for load if changing gamestate
 
 	rts
 

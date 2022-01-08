@@ -491,7 +491,7 @@ load_loop:
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	load_loop
 
-	lda	#NEW_FROM_DISK		; load whole level from disk 
+	lda	#NEW_FROM_LOAD		; load whole level from disk
 	sta	LEVEL_OVER
 
 done_load:

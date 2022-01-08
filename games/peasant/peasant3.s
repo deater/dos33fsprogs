@@ -226,7 +226,7 @@ game_loop:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	bne	game_over
+	bne	level_over
 
 	;=====================
 	; always draw peasant
@@ -279,7 +279,10 @@ oops_new_location:
 	;************************
 	; exit level
 	;************************
-game_over:
+level_over:
+
+	; FIXME: check for load from savegame if modifying game state
+
 	rts
 
 

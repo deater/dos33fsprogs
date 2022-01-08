@@ -333,7 +333,7 @@ not_ned_cottage:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	bne	game_over
+	bne	level_over
 
 
 	; delay
@@ -351,7 +351,9 @@ oops_new_location:
 	;************************
 	; exit level
 	;************************
-game_over:
+level_over:
+
+	; note: check for load from savegame if change state
 
 	rts
 

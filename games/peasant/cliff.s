@@ -216,6 +216,9 @@ just_go_there:
 	;************************
 level_over:
 
+	cmp	#NEW_FROM_LOAD		; see if loading save game
+	beq	exiting_cliff
+
 	; new location
 	; in theory this can only be TROGDOR
 
@@ -227,7 +230,7 @@ level_over:
 	lda	#0
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
-
+exiting_cliff:
 	rts
 
 

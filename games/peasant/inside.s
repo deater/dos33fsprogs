@@ -329,6 +329,11 @@ oops_new_location:
 	; exit level
 	;========================
 level_over:
+
+	cmp	#NEW_FROM_LOAD		; skip ahead if load from disk
+	beq	really_level_over
+
+
 	lda	MAP_LOCATION
 	cmp	#LOCATION_OUTSIDE_INN
 	bne	really_level_over

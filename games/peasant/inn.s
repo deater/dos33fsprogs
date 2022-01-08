@@ -256,6 +256,8 @@ oops_new_location:
 	;========================
 level_over:
 
+	; NOTE: check for load from savegame if modify game state
+
 	rts
 
 
