@@ -27,17 +27,15 @@ really_move_peasant:
 	jsr	hgr_partial_restore
 
 
-.if 0
-	lda	PEASANT_X
-	sta	CURSOR_X
-
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	restore_bg_1x28
-.endif
-
+	;=========================
+	;=========================
 	; move peasant
+	;=========================
+	;=========================
+
+
+	;==========================
+	; first move in X direction
 
 	clc
 	lda	PEASANT_X
@@ -47,6 +45,10 @@ really_move_peasant:
 
 	cmp	#40
 	bcs	peasant_x_toobig		; if newx>=40, hanfle (bge)
+
+
+	;======================================
+	; not off screen, so check if collision
 
 	pha
 
@@ -58,13 +60,16 @@ really_move_peasant:
 
 	pla
 
-	bcc	done_movex			; no collide
+	bcc	do_move_peasant_y		; no X collide
+
+	;==================================
+	; we collided in X, so stop moving
 
 	jsr	stop_peasant			; stop moving
 
-	lda	PEASANT_X			; leave same
-
-	jmp	done_movex
+	; leave PEASANT_X same as was
+	lda	PEASANT_X
+	jmp	do_move_peasant_y
 
 	;============================
 peasant_x_toobig:
@@ -86,11 +91,15 @@ peasant_x_negative:
 
 	; check edge of screen
 done_movex:
-	sta	PEASANT_X
+	; if we get here we changed screens
+	sta	PEASANT_X		; update new location
+	jmp	peasant_the_same	; skip checking for Y collision
+
 
 
 	; Move Peasant Y
-
+do_move_peasant_y:
+	sta	PEASANT_X
 	clc
 	lda	PEASANT_Y
 	adc	PEASANT_YADD			; newy in A
@@ -143,25 +152,8 @@ peasant_y_negative:
 done_movey:
 	sta	PEASANT_Y
 
-	; if we moved off screen, don't re-draw peasant
-.if 0
-        lda     LEVEL_OVER
-        bne     peasant_the_same
+	; if we moved off screen, don't re-draw peasant ?
 
-	; save behind new position
-
-	lda	PEASANT_X
-	sta	CURSOR_X
-
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	save_bg_1x28
-
-	; draw peasant
-
-	jsr	draw_peasant
-.endif
 peasant_the_same:
 
 	rts
