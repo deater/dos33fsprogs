@@ -1,5 +1,3 @@
-
-
 	;===========================
 	; hgr text box
 	;===========================
@@ -98,7 +96,7 @@ disp_put_string_loop:
 disp_end_of_line:
 	clc
 	lda	CURSOR_Y
-	adc	#8
+	adc	#9		; skip 9 so descenders don't interfere
 	sta	CURSOR_Y
 
 	lda	SAVED_X

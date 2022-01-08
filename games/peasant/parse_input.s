@@ -1158,7 +1158,8 @@ print_text_message:
 ;                      1   2   3   4   5   6    7    8
 ;message_y2:	.byte 54, 62, 70, 78, 86, 94, 102, 110
 
-	; y2 is 46+(8*(len))
+	; y2 was 46+(8*(len))
+	;	we now skip 9, so 46+(9*len)
 
 	lda	message_len
 	asl
@@ -1166,6 +1167,7 @@ print_text_message:
 	asl
 	clc
 	adc	#46
+	adc	message_len
 
         sta     BOX_Y2
 	sta	SAVED_Y2

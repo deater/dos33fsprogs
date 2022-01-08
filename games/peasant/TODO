@@ -83,7 +83,7 @@ Peasant1:
   + hook up scare animation 
   + hook up after-gary, fence hole and no horse
   + update x-coords when walk off screen (fence)
-  + setup priority wall depending on if fence broken
+  + setup priority wall depending on if fence broken (lo-res box?)
 - Kerrek 1
   + Implement kerrek
   + Implement dead kerrek
