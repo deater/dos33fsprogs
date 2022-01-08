@@ -80,7 +80,8 @@ qload.o:	qload.s qboot.inc \
 		hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
-		random16.s
+		random16.s \
+		drive2.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -116,6 +117,8 @@ qboot.inc:	generate_common QBOOT
 	./generate_common -a 0x000 -s phase_smc qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s driveon qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s driveoff qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s switch_drive1 qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s switch_drive2 qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s load_new qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s load_address qboot_sector.lst >> qboot.inc
 	echo "load_track=load_address+1" >> qboot.inc

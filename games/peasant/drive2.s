@@ -1,6 +1,5 @@
 ; roughly based on anti-m/anti-m.a
 
-
 ; Notes from qkumba/4am
 
 ; Drive with no disk and no motor, will return same value in range $00..$7f
@@ -9,13 +8,12 @@
 ; so the best way to detect if disk is there is to try seeking/reading
 ;	and seeing if you get valid data
 
-
-; FIXME: patch these
-
+.if 0
 switch_drive1:
 	lda	curtrk_smc+1
 	sta	DRIVE2_TRACK	;	save track location
-	lda	$C0EA		; 	drive 1 select
+slotpatch10:
+	lda	$C0d1		; 	drive 1 select
 	lda	#1
 	sta	CURRENT_DRIVE
 	lda	DRIVE1_TRACK	;	restore saved track location
@@ -25,12 +23,14 @@ switch_drive1:
 switch_drive2:
 	lda	curtrk_smc+1
 	sta	DRIVE1_TRACK	;	save track location
-	lda	$C0EB		;	drive 2 select
+slotpatch11:
+	lda	$C0d1		;	drive 2 select
 	lda	#2
 	sta	CURRENT_DRIVE
 	lda	DRIVE2_TRACK	;	restore saved track location
 	sta	curtrk_smc+1
 	rts
+.endif
 
 	;=================================
 	; check floppy in drive2
@@ -48,13 +48,7 @@ check_floppy_in_drive2:
 
 	jsr	switch_drive2
 
-	jsr	driveon
-
-;	lda	$C0E9		;	motor on	1110 1001
-
-;	jsr	spinup		; spin up drive
-
-;	jsr	seek_track0	; seek to track0
+	jsr	driveon		; turn drive on
 
 	; seek to track 0
 
@@ -88,7 +82,8 @@ check_drive2_loop:
 keep_trying:
 
 get_valid_byte:
-	lda	$C0EC			; read byte
+;	lda	$C0EC			; read byte
+	jsr	readnib
 	bpl	get_valid_byte		; keep trying if high bit not set
 
 check_if_d5:
@@ -96,13 +91,15 @@ check_if_d5:
 	bne	check_drive2_loop	; if not, try again
 
 check_if_aa:
-	lda	$C0EC			; read byte
+;	lda	$C0EC			; read byte
+	jsr	readnib
 	bpl	check_if_aa		; keep trying until valid
 	cmp	#$AA			; see if aa
 	bne 	get_valid_byte		; if not try again
 
 check_if_96:
-	lda	$C0EC			; read byte
+;	lda	$C0EC			; read byte
+	jsr	readnib
 	bpl	check_if_96		; keep trying until valid
 	cmp	#$96			; see if 96
 	bne	check_if_d5		; if not try again
@@ -114,6 +111,4 @@ done_check:
 	jsr	driveoff
 
 	jmp	switch_drive1		; tail call
-
-
 

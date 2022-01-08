@@ -1,6 +1,8 @@
 ;	fast seek/multi-read
 ;	copyright (c) Peter Ferrie 2015-16
 
+.include "zp.inc"
+
 	; Paramaters for loading QLOAD
 
 	sectors   = 21		; user-defined
@@ -22,7 +24,7 @@
         znibble		= $fe         ; only during init
         zmask		= $ff         ; only during init
 
-	WHICH_SLOT	= $DA
+;	WHICH_SLOT	= $DA
 
 ; $26/$27	sector read location (ROM)
 ; $3D		sector number (ROM)
@@ -109,6 +111,17 @@ patch_loop:
 
 	eor	#9              ; PHASEOFF (c080)
 	sta	slotpatch8+1
+
+	; patch self-modifying code for disk1
+	ora	#$A		; (C08A)
+	sta	slotpatch10+1
+
+	; patch self-modifying code for disk2
+	ora	#$1		; (C08B)
+	sta	slotpatch11+1
+
+	;========================
+	; ???
 
 	ldx	#$3f
 	stx	zmask
@@ -225,6 +238,28 @@ preread:
 	ldx	#sectors
 	lda	#address
 	ldy	#firstsec
+	rts
+
+switch_drive1:
+	lda	curtrk_smc+1
+	sta	DRIVE2_TRACK	;	save track location
+slotpatch10:
+	lda	$C0d1		; 	drive 1 select
+	lda	#1
+	sta	CURRENT_DRIVE
+	lda	DRIVE1_TRACK	;	restore saved track location
+	sta	curtrk_smc+1
+	rts
+
+switch_drive2:
+	lda	curtrk_smc+1
+	sta	DRIVE1_TRACK	;	save track location
+slotpatch11:
+	lda	$C0d1		;	drive 2 select
+	lda	#2
+	sta	CURRENT_DRIVE
+	lda	DRIVE2_TRACK	;	restore saved track location
+	sta	curtrk_smc+1
 	rts
 
 
