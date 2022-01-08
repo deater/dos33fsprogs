@@ -66,6 +66,7 @@ PEASANT_YADD	= $6B
 LEVEL_OVER	= $6C
 	NEW_LOCATION	= $FF
 	NEW_FROM_DISK	= $01
+	NEW_FROM_LOAD	= $02		; loaded from load/save menu
 KERREK_SPEED	= $6D
 KERREK_DIRECTION= $6E	; 0 = left, 1=right
 	KERREK_LEFT = 0
