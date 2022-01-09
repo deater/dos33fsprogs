@@ -2,6 +2,12 @@
 
 ; by Vince `deater` Weaver, vince@deater.net	--- d e s i r e ---
 
+
+; 178 bytes -- original conversion from BASIC
+; 176 bytes -- know HGR2 returns with A=0
+; 172 bytes -- optimize page flip code
+; 170 bytes -- assume XDRAW never got over X=256
+
 ; zero page locations
 
 HGR_COLOR	= $E4
@@ -17,44 +23,43 @@ PAGE1		= $C054
 PAGE2		= $C055
 
 ; ROM calls
-HGR2	= $F3D8
+HGR2	= $F3D8		; after: A=0, Y=0, HGR_SHAPE=$40/$60
 HCLR	= $F3F2		; clear current page to 0
 BKGND0	= $F3F4		; clear current page to A
-HPOSN	= $F411		; move to (Y,X), (A)
-HPLOT0	= $F457		; plot at (Y,X), (A)
+HPOSN	= $F411		; move to (Y,X), (A)	(saves A,X,Y to zero page)
+HPLOT0	= $F457		; plot at (Y,X), (A)	(calls HPOSN)
 HGLIN	= $F53A		; line to (X,A), (Y)
+DRAW0	= $F601
 XDRAW0	= $F65D
 
 flyer:
-	jsr	HGR2	; HGR2		HGR_PAGE=$40
-	lda	#0
-	sta	FRAME
+	jsr	HGR2			; HGR2		HGR_PAGE=$40
+	sta	FRAME			; A=0 after HGR2
 
-			; ROT=0
 animate_loop:
 	clc
 	lda	#96
 	adc	FRAME
-	sta	HORIZON_LINE	; S=96+J
+	sta	HORIZON_LINE		; S=96+FRAME
 
 	; flip draw page $20/$40
 	lda	HGR_PAGE
 	eor	#$60
 	sta	HGR_PAGE
 
-	cmp	#$20
-	beq	flip_page2
+	; flip page
+	; have $20/$40 want to map to C054/C055
 
-flip_page1:
-	bit	PAGE1
-	jmp	done_flip
-flip_page2:
-	bit	PAGE2
-done_flip:
+	asl
+	asl			; $20 -> C=1 $00
+	asl			; $40 -> C=0 $00
+
+	adc	#0
+	tax
+	cmp	PAGE1,X
 
 	; clear screen
 	jsr	HCLR
-
 
 	;===============
 	; draw mountain
@@ -118,9 +123,7 @@ horizon_lines_loop:
 	adc	#1
 	sta	HGR_SCALE
 
-
-
-	ldy	#0
+;	ldy	#0
 	ldx	#140
 	lda	HORIZON_Y
 	jsr	xdraw
@@ -141,7 +144,7 @@ horizon_lines_loop:
 	clc
 	adc	140
 
-	ldy	#0
+;	ldy	#0
 	tax
 	lda	#180
 	jsr	xdraw
@@ -164,25 +167,22 @@ done_frame:
 	sta	FRAME
 	jmp	animate_loop
 
-
-
-
-
-
-
 	;=======================
 	; xdraw
 	;=======================
 xdraw:
 	; setup X and Y co-ords
 
-;	ldy	#0		; XPOSH always 0 for us
+	ldy	#0		; XPOSH always 0 for us
 ;	ldx	XPOS
 ;	lda	YPOS
 	jsr	HPOSN		; X= (y,x) Y=(a)
 
 	ldx	#<ship_table
 	ldy	#>ship_table
+
+;	lda	#$7f
+;	sta	HGR_COLOR
 
 	lda	#0		; set rotation
 
@@ -191,7 +191,28 @@ xdraw:
 
 	rts
 
-
-
+	; optimize, can probably shave byte off
+	; was originally in ASCII for basic bot purposes
+	; "#%%-...",0
+	; but we don't have that limitation
 ship_table:
-	.byte "#%%-...",0
+	.byte	$23	; 00 100 011	NLT UP X
+	.byte	$25	; 00 100 101	RT  UP X
+	.byte	$25	; 00 100 101	RT  UP X
+	.byte	$2D	; 00 101 101	RT  RT X
+	.byte	$2E	; 00 101 110	DN  RT X
+	.byte	$2E	; 00 101 110	DN  RT X
+	.byte	$0E	; 00 001 110	DN  RT X
+	.byte	$0
+
+
+;	.byte	$23	; 00 100 011	NLT UP X
+;	.byte	$25	; 00 100 101	RT  UP X
+;	.byte	$25	; 00 100 101	RT  UP X
+;	.byte	$2D	; 00 101 101	RT  RT X
+;	.byte	$2E	; 00 101 110	DN  RT X
+;	.byte	$2E	; 00 101 110	DN  RT X
+;	.byte	$2E	; 00 101 110	DN  RT X
+;	.byte	$0
+
+

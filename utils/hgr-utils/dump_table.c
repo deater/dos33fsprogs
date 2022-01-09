@@ -5,14 +5,14 @@
 #include <stdlib.h>
 
 static char name[8][5]={
-	"NUP",
-	"NRT",
-	"NDN",
-	"NLT",
-	"UP",
-	"RT",
-	"DN",
-	"LT"
+	"NUP",	/* 0 */
+	"NRT",	/* 1 */
+	"NDN",	/* 2 */
+	"NLT",	/* 3 */
+	"UP",	/* 4 */
+	"RT",	/* 5 */
+	"DN",	/* 6 */
+	"LT"	/* 7 */
 };
 
 int main(int argc, char **argv) {
