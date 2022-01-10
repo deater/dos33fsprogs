@@ -114,25 +114,5 @@ init_loop:
 	jsr	ay3_write_regs
 
 
-.if 0
-	; 24 bytes + 13 bytes = 37 bytes
-init_loop:
-	txa
-	tay
-	lda	(SONG_L),Y
-	jsr	ay3_write_reg		; trashes Y
-	dex
-	bne	init_loop
-
-	; update SONG_L to point past the init
-	lda	SONG_L
-	clc
-	adc	#14
-	sta	SONG_L
-	bcc	no_oflo
-	inc	SONG_H
-no_oflo:
-
-.endif
 
 

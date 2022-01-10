@@ -12,16 +12,21 @@
 ; 426 bytes -- terminate init with $FF rather than extra $00
 ; 424 bytes -- move inits to zero together
 ; 414 bytes -- update ay output to write all registers
+; 405 bytes -- more optimizing the interrupt handler
+; 398 bytes -- only put song address one place
+; 393 bytes -- don't keep song offset in Y
 
 d2:
 
 	;===================
 	; music Player Setup
 
-	lda	#<peasant_song
-	sta	SONG_L
-	lda	#>peasant_song
-	sta	SONG_H
+tracker_song = peasant_song
+
+;	lda	#<peasant_song
+;	sta	SONG_L
+;	lda	#>peasant_song
+;	sta	SONG_H
 
 	; assume mockingboard in slot#4
 

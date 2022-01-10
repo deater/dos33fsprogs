@@ -19,9 +19,12 @@
 
 interrupt_handler:
 	php			; save status flags
-	cld			; clear decimal mode	FIXME
-	pha			; save A				; 3
-				; A is saved in $45 by firmware
+
+	; we don't use decimal mode so no need to clear it?
+
+	; A is saved in $45 by firmware
+	; we are assuming a II/II+/IIe here
+
 	txa
 	pha			; save X
 	tya
@@ -31,36 +34,39 @@ interrupt_handler:
 
 
 ay3_irq_handler:
-	bit	MOCK_6522_T1CL	; clear 6522 interrupt by reading T1C-L	; 4
 
+	;==========================================
+	; clear 6522 interrupt by reading T1C-L	; 4
+
+	bit	MOCK_6522_T1CL
+
+	;============================
 	; see if still counting down
+
 	lda	SONG_COUNTDOWN
 	bpl	done_update_song
 
-try_again:
-	ldy	SONG_OFFSET
 set_notes_loop:
 
+	;==================
+	; load next byte
+
+	ldy	SONG_OFFSET
+	lda	tracker_song,Y
+
+	;==================
 	; see if hit end
-	lda	(SONG_L),Y
+
 	cmp	#$C0
 	bne	all_ok
 
-	; if at end, loop
+	;====================================
+	; if at end, loop back to beginning
 
-loop_forever:
-;	jmp	loop_forever
+	ldy	#0			; reset song offset
+	sty	SONG_OFFSET
+	beq	set_notes_loop		; bra
 
-	lda	#0
-	sta	SONG_OFFSET
-
-;	lda	#<peasant_song
-;	sta	SONG_L
-;	lda	#>peasant_song
-;	sta	SONG_H
-
-
-	beq	try_again		; bra
 all_ok:
 
 	; see if note
@@ -79,30 +85,26 @@ note_only:
 	lsr
 	lsr
 	lsr
-	sta	octave_smc+1
+	sta	OCTAVE			; save octave for later
 	lsr
-	and	#$FE
-	sta	out_smc+1
+	and	#$FE			; fine register value, want in X
+	sta	REGISTER
 
-	txa
-
+	txa				; get note
 	and	#$3F
 
-	tax
+	tax				; lookup in table
 	lda	frequency_lookup_low,X
-	sty	y_smc+1				; backup Y
-out_smc:
-	ldx	#$00
+
+	ldx	REGISTER
 	sta	AY_REGS,X
-;	jsr	ay3_write_regs	; trashes A/Y
 
 	; set coarse note A
 	;  hack: if octave=0 (C2) then coarse=1
 	;        else coarse=0
 
 	inx
-octave_smc:
-	lda	#$dd
+	lda	OCTAVE
 	and	#$3		; if 0 then 1
 				; if 1,2,3 then 0
 	bne	blah0
@@ -115,13 +117,14 @@ blah_blah:
 	sta	AY_REGS,X
 	jsr	ay3_write_regs	; trashes A/X/Y
 
-y_smc:
-	ldy	#0
-	iny
 
-;	bne	not_wrap2		; assume less than 256 bytes
-;	inc	SONG_H
-;not_wrap2:
+	;============================
+	; point to next
+
+	inc	SONG_OFFSET
+
+	; assume less than 256 bytes
+
 	bne	set_notes_loop		; bra
 
 handle_timing:
@@ -131,13 +134,7 @@ handle_timing:
 
 	and	#$3f
 	sta	SONG_COUNTDOWN
-	iny
-	sty	SONG_OFFSET
-	bne	not_wrap1
-
-	inc	SONG_H
-
-not_wrap1:
+	inc	SONG_OFFSET
 
 done_update_song:
 	dec	SONG_COUNTDOWN
@@ -153,10 +150,10 @@ done_ay3_irq_handler:
 	tay			; restore Y
 	pla
 	tax			; restore X
-	pla			; restore a				; 4
 
-	; on II+/IIe (but not IIc) we need to do this?
-interrupt_smc:
+	; on II+/IIe the firmware saves A in $45
+	; this won't work on a IIc/IIgs
+
 	lda	$45		; restore A
 	plp			; restore flags
 
@@ -165,10 +162,4 @@ interrupt_smc:
 								;============
 								; typical
 								; ???? cycles
-
-
-
-
-
-
 
