@@ -63,21 +63,21 @@ set_notes_loop:
 	;====================================
 	; if at end, loop back to beginning
 
-	ldy	#0			; reset song offset
-	sty	SONG_OFFSET
+	lda	#0			; reset song offset
+	sta	SONG_OFFSET
 	beq	set_notes_loop		; bra
 
 all_ok:
 
 	; see if note
 
-	tax
+	tay
 	and	#$C0
 	cmp	#$C0
 	beq	handle_timing
 
 note_only:
-	txa
+	tya
 	; CCOONNNN -- c=channel, o=octave, n=note
 	; TODO: OONNNNCC instead?
 
@@ -88,33 +88,32 @@ note_only:
 	sta	OCTAVE			; save octave for later
 	lsr
 	and	#$FE			; fine register value, want in X
-	sta	REGISTER
+	tax
 
-	txa				; get note
+	tya				; get note
 	and	#$3F
+	tay				; lookup in table
+	lda	frequency_lookup_low,Y
 
-	tax				; lookup in table
-	lda	frequency_lookup_low,X
-
-	ldx	REGISTER
-	sta	AY_REGS,X
+	sta	AY_REGS,X		; set proper register value
 
 	; set coarse note A
 	;  hack: if octave=0 (C2) then coarse=1
 	;        else coarse=0
 
-	inx
+	inx			; point to corase register
+
 	lda	OCTAVE
 	and	#$3		; if 0 then 1
 				; if 1,2,3 then 0
-	bne	blah0
-blah1:
+	beq	invert
+
 	lda	#1
-	bne	blah_blah
-blah0:
-	lda	#0
-blah_blah:
+invert:
+	eor	#$1
+
 	sta	AY_REGS,X
+
 	jsr	ay3_write_regs	; trashes A/X/Y
 
 
@@ -130,10 +129,11 @@ blah_blah:
 handle_timing:
 	; was timing
 
-	txa
+	tya
 
 	and	#$3f
 	sta	SONG_COUNTDOWN
+
 	inc	SONG_OFFSET
 
 done_update_song:

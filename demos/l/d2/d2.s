@@ -15,6 +15,8 @@
 ; 405 bytes -- more optimizing the interrupt handler
 ; 398 bytes -- only put song address one place
 ; 393 bytes -- don't keep song offset in Y
+; 390 bytes -- use Y instead of X
+; 388 bytes -- optimizing octave selection
 
 d2:
 
