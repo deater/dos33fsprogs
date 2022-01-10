@@ -19,7 +19,7 @@
 
 interrupt_handler:
 	php			; save status flags
-	cld			; clear decimal mode
+	cld			; clear decimal mode	FIXME
 	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
@@ -90,10 +90,11 @@ note_only:
 
 	tax
 	lda	frequency_lookup_low,X
-	sty	y_smc+1
+	sty	y_smc+1				; backup Y
 out_smc:
 	ldx	#$00
-	jsr	ay3_write_reg	; trashes A/Y
+	sta	AY_REGS,X
+;	jsr	ay3_write_regs	; trashes A/Y
 
 	; set coarse note A
 	;  hack: if octave=0 (C2) then coarse=1
@@ -111,8 +112,8 @@ blah1:
 blah0:
 	lda	#0
 blah_blah:
-
-	jsr	ay3_write_reg	; trashes A/Y
+	sta	AY_REGS,X
+	jsr	ay3_write_regs	; trashes A/X/Y
 
 y_smc:
 	ldy	#0

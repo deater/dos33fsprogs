@@ -9,12 +9,14 @@
 ; 466 bytes -- original from D2 demo
 ; 436 bytes -- left channel only
 ; 427 bytes -- optimize init a bit
+; 426 bytes -- terminate init with $FF rather than extra $00
+; 424 bytes -- move inits to zero together
+; 414 bytes -- update ay output to write all registers
 
 d2:
 
 	;===================
 	; music Player Setup
-
 
 	lda	#<peasant_song
 	sta	SONG_L
@@ -23,9 +25,13 @@ d2:
 
 	; assume mockingboard in slot#4
 
-	; TODO: inline?
+	; inline mockingboard_init
 
-	jsr	mockingboard_init
+.include "mockingboard_init.s"
+
+.include "tracker_init.s"
+
+	; start the music playing
 
 	cli
 
@@ -41,12 +47,11 @@ bob:
 its_over:
 	sei
 	lda	#$3f
-	ldx	#7
-	jsr	ay3_write_reg
+	sta	AY_REGS+7
+	jsr	ay3_write_regs
 
 stuck_forever:
 	bne	stuck_forever
-
 
 
 ; music

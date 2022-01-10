@@ -52,7 +52,8 @@ D2:	d2.o
 d2.o:	d2.s \
 	zp.inc hardware.inc \
 	mA2E_2.s \
-	interrupt_handler.s mockingboard_setup.s
+	interrupt_handler.s mockingboard_setup.s mockingboard_init.s \
+	tracker_init.s
 	ca65 -o d2.o d2.s -l d2.lst
 
 ####

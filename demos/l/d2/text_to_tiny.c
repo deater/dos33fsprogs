@@ -292,11 +292,11 @@ int main(int argc, char **argv) {
 
 printf("peasant_song:\n");
 printf("; register init\n");
-printf("\t.byte   $00,$00,$00,$00,$00,$00         ; $00: A/B/C fine/coarse\n");
-printf("\t.byte   $00                             ; $06\n");
-printf("\t.byte   $38                             ; $07 mixer (ABC on)\n");
-printf("\t.byte   $0E,$0C,$0C                     ; $08 volume A/B/C\n");
-printf("\t.byte   $00,$00,$00,$00                 ; $09\n");
+//printf("\t.byte   $00,$00,$00,$00,$00,$00         ; $00: A/B/C fine/coarse\n");
+//printf("\t.byte   $00                             ; $06\n");
+//printf("\t.byte   $38                             ; $07 mixer (ABC on)\n");
+//printf("\t.byte   $0E,$0C,$0C                     ; $08 volume A/B/C\n");
+//printf("\t.byte   $00,$00,$00,$00                 ; $09\n");
 printf("\n");
 
 	while(1) {
