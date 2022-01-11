@@ -78,41 +78,25 @@ all_ok:
 
 note_only:
 	tya
-	; CCOONNNN -- c=channel, o=octave, n=note
-	; TODO: OONNNNCC instead?
+	; CCXNNNNN -- c=channel, n=note
 
 	lsr
 	lsr
 	lsr
 	lsr
-	sta	OCTAVE			; save octave for later
 	lsr
 	and	#$FE			; fine register value, want in X
 	tax
 
 	tya				; get note
-	and	#$3F
+	and	#$1F
 	tay				; lookup in table
-	lda	frequency_lookup_low,Y
+	lda	frequencies_low,Y
 
 	sta	AY_REGS,X		; set proper register value
 
-	; set coarse note A
-	;  hack: if octave=0 (C2) then coarse=1
-	;        else coarse=0
-
-	inx			; point to corase register
-
-	lda	OCTAVE
-	and	#$3		; if 0 then 1
-				; if 1,2,3 then 0
-	beq	invert
-
-	lda	#1
-invert:
-	eor	#$1
-
-	sta	AY_REGS,X
+	lda	frequencies_high,Y
+	sta	AY_REGS+1,X
 
 	jsr	ay3_write_regs	; trashes A/X/Y
 

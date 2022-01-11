@@ -19,6 +19,15 @@ static int notes_used[64];
 static int allocated_notes[64];
 static int notes_allocated=0;
 
+
+unsigned short frequencies[]={
+//C   C#    D     D#    E     F     F#    G     G#    A     A#      B
+0x1E8,0x1CD,0x1B3,0x19B,0x183,0x16E,0x159,0x146,0x133,0x122,0x112,0x102, //3
+0x0F4,0x0E6,0x0D9,0x0CD,0x0C1,0x0B7,0x0AC,0x0A3,0x099,0x091,0x089,0x081, //4
+0x07A,0x073,0x06C,0x066,0x060,0x05B,0x056,0x051,0x04C,0x048,0x044,0x040, //5
+0x03D,0x039,0x036,0x033,0x030,0x02D,0x02B,0x028,0x026,0x024,0x022,0x020, //6
+};
+
 // CCOONNNN -- c=channel, o=octave, n=note
 
 int note_to_ed(char note, int flat, int sharp, int octave) {
@@ -45,7 +54,8 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 	if (sharp==2) offset+=2;
 
 
-	offset=((((octave+octave_adjust)-3)&0x3)<<4)|offset;
+	offset=((((octave+octave_adjust)-3)&0x3)*12)+offset;
+//	offset=((((octave+octave_adjust)-3)&0x3)<<4)|offset;
 
 	return offset;
 }
@@ -371,10 +381,11 @@ printf("\n");
 
 
 		if (a.ed_freq>=0) {
-			printf("\t.byte $%02X ; A = %c%c%d\n",
+			printf("\t.byte $%02X ; A = %c%c%d freq=%d offset=%d\n",
 				a.offset,
 				a.note,sharp_char[a.sharp+2*a.flat],
-				a.octave);
+				a.octave,
+				a.ed_freq,a.offset);
 		}
 		if (b.ed_freq>=0) {
 			printf("\t.byte $%02X ; B = %c%c%d\n",
@@ -383,10 +394,11 @@ printf("\n");
 				b.octave);
 		}
 		if (c.ed_freq>=0) {
-			printf("\t.byte $%02X ; C = %c%c%d\n",
+			printf("\t.byte $%02X ; C = %c%c%d freq=%d offset=%d\n",
 				c.offset|0x80,
 				c.note,sharp_char[c.sharp+2*c.flat],
-				c.octave);
+				c.octave,
+				c.ed_freq,c.offset);
 		}
 
 		current_length++;
@@ -411,6 +423,23 @@ printf("\n");
 	printf(";.byte ");
 	for(n=0;n<notes_allocated;n++) {
 		printf("%d,",allocated_notes[n]);
+	}
+	printf("\n");
+
+	printf("frequencies_high:\n");
+	printf(".byte ");
+	for(n=0;n<notes_allocated;n++) {
+		printf("$%02X",(frequencies[allocated_notes[n]]>>8));
+		if (n!=(notes_allocated-1)) printf(",");
+	}
+	printf("\n");
+
+
+	printf("frequencies_low:\n");
+	printf(".byte ");
+	for(n=0;n<notes_allocated;n++) {
+		printf("$%02X",(frequencies[allocated_notes[n]])&0xff);
+		if (n!=(notes_allocated-1)) printf(",");
 	}
 	printf("\n");
 

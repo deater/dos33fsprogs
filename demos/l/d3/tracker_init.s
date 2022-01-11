@@ -1,24 +1,6 @@
 
 tracker_init:
 
-	; create Frequency Table
-	ldx	#11
-make_freq_loop:
-	sec
-	lda	frequency_lookup_low,X
-	ror
-	sta	frequency_lookup_low+16,X
-	lsr
-	sta	frequency_lookup_low+32,X
-	lsr
-	sta	frequency_lookup_low+48,X
-
-	dex
-	bpl	make_freq_loop
-
-	inx
-	stx	frequency_lookup_low+28
-
 	; setup initial ay-3-8910 values (this depends on song)
 
 	lda	#$38

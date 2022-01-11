@@ -17,6 +17,7 @@
 ; 393 bytes -- don't keep song offset in Y
 ; 390 bytes -- use Y instead of X
 ; 388 bytes -- optimizing octave selection
+; 373 bytes -- completely redo file format to avoid freq table
 
 d2:
 

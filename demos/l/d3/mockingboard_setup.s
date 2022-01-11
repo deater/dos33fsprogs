@@ -35,15 +35,6 @@ ay3_write_reg_loop:
 	rts
 
 
-; starts at C4
-frequency_lookup_low:
-.byte $E8,$CD,$B3,$9B,$83,$6E,$59,$46,$33,$22,$12,$02
-
-;$1E8,$1CD,$1B3,$19B,$183,$16E,$159,$146,$133,$122,$112,$102,
-;.byte $F4,$E6,$D9,$CD,$C1,$B7,$AC,$A3,$99,$91,$89,$81,$00,$00,$00,$00
-;.byte $7A,$73,$6C,$66,$60,$5B,$56,$51,$4C,$48,$44,$40,$00,$00,$00,$00
-;.byte $3D,$39,$36,$33,$30,$2D,$2B,$28,$26,$24,$22,$20,$00,$00,$00,$00
-
 
 init_addresses:
 	.byte <MOCK_6522_DDRB1,<MOCK_6522_DDRA1		; set the data direction for all pins of PortA/PortB to be output
