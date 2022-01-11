@@ -40,6 +40,18 @@ ay3_irq_handler:
 
 	bit	MOCK_6522_T1CL
 
+	; drop note down after first
+	lda	#$C
+	sta	AY_REGS+8
+	sta	AY_REGS+10
+
+;       lda     #$0E
+;       sta     AY_REGS+8                       ; $08 volume A
+;       lda     #$0C
+;       sta     AY_REGS+9                       ; $09 volume B
+;       sta     AY_REGS+10                      ; $0A volume C
+
+
 	;============================
 	; see if still counting down
 
@@ -57,7 +69,7 @@ set_notes_loop:
 	;==================
 	; see if hit end
 
-	cmp	#$C0
+	cmp	#$FF
 	bne	all_ok
 
 	;====================================
@@ -71,25 +83,37 @@ all_ok:
 
 	; see if note
 
-	tay
-	and	#$C0
-	cmp	#$C0
-	beq	handle_timing
+;	tay
+;	and	#$C0
+;	cmp	#$C0
+;	beq	handle_timing
 
 note_only:
+;	tya
+	; NNNNNLLC -- c=channel, n=note
+
+	tay
+
+	ldx	#0
+	lsr
+	bcc	channel_a
+	ldx	#4	; skip to C
+channel_a:
+
+	and	#$3
+	sta	SONG_COUNTDOWN
+;	inc	SONG_COUNTDOWN
+
 	tya
-	; CCXNNNNN -- c=channel, n=note
+	lsr
+	lsr
+	lsr
 
-	lsr
-	lsr
-	lsr
-	lsr
-	lsr
-	and	#$FE			; fine register value, want in X
-	tax
+;	and	#$FE			; fine register value, want in X
+;	tax
 
-	tya				; get note
-	and	#$1F
+;	tya				; get note
+;	and	#$1F
 	tay				; lookup in table
 	lda	frequencies_low,Y
 
@@ -98,27 +122,38 @@ note_only:
 	lda	frequencies_high,Y
 	sta	AY_REGS+1,X
 
-	jsr	ay3_write_regs	; trashes A/X/Y
-
+	lda	#$F
+	sta	AY_REGS+8
 
 	;============================
 	; point to next
 
+	; assume less than 256 bytes
 	inc	SONG_OFFSET
 
-	; assume less than 256 bytes
 
-	bne	set_notes_loop		; bra
+	lda	SONG_COUNTDOWN
+	beq	set_notes_loop		; bra
+
+
+
+.include "ay3_write_regs.s"
+
+;	jsr	ay3_write_regs
+
+
+
+
 
 handle_timing:
 	; was timing
 
-	tya
+;	tya
 
-	and	#$3f
-	sta	SONG_COUNTDOWN
+;	and	#$3f
+;	sta	SONG_COUNTDOWN
 
-	inc	SONG_OFFSET
+;	inc	SONG_OFFSET
 
 done_update_song:
 	dec	SONG_COUNTDOWN
@@ -146,4 +181,9 @@ done_ay3_irq_handler:
 								;============
 								; typical
 								; ???? cycles
+
+
+
+
+
 

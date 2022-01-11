@@ -18,17 +18,22 @@ static int octave_adjust=0;
 static int notes_used[64];
 static int allocated_notes[64];
 static int notes_allocated=0;
+static int total_len=0;
 
 
 unsigned short frequencies[]={
 //C   C#    D     D#    E     F     F#    G     G#    A     A#      B
+//0x7A3,0x735,0x6CD,0x66C,0x60F,0x5B8,0x566,0x518,0x4CF,0x48A,0x449,0x40B,
+0x3D1,0x39A,0x366,0x336,0x307,0x2DC,0x2B3,0x28C,0x267,0x245,0x224,0x205,
 0x1E8,0x1CD,0x1B3,0x19B,0x183,0x16E,0x159,0x146,0x133,0x122,0x112,0x102, //3
 0x0F4,0x0E6,0x0D9,0x0CD,0x0C1,0x0B7,0x0AC,0x0A3,0x099,0x091,0x089,0x081, //4
 0x07A,0x073,0x06C,0x066,0x060,0x05B,0x056,0x051,0x04C,0x048,0x044,0x040, //5
-0x03D,0x039,0x036,0x033,0x030,0x02D,0x02B,0x028,0x026,0x024,0x022,0x020, //6
+//0x03D,0x039,0x036,0x033,0x030,0x02D,0x02B,0x028,0x026,0x024,0x022,0x020, //6
+//0x01E,0x01C,0x01B,0x019,0x018,0x016,0x015,0x014,0x013,0x012,0x011,0x010,
+//0x00F,0x00E,0x00D,0x00C,0x00C,0x00B,0x00A,0x00A,0x009,0x009,0x008,0x008,
 };
 
-// CCOONNNN -- c=channel, o=octave, n=note
+// CLLNNNN
 
 int note_to_ed(char note, int flat, int sharp, int octave) {
 
@@ -315,6 +320,8 @@ int main(int argc, char **argv) {
 //	int a_len=0,b_len=0,a_freq=0,b_freq=0;
 	int current_length=0;
 	int first=1;
+	int a_last=-1,c_last=-1;
+	unsigned char temp_value;
 
 printf("peasant_song:\n");
 printf("; register init\n");
@@ -354,44 +361,86 @@ printf("\n");
 		if (a.ed_freq>=0) {
 			a.offset=allocate_note(a.ed_freq);
 			notes_used[a.ed_freq]++;
-			fprintf(stderr,"A: %d\n",a.ed_freq);
+			printf("; A: %d\n",a.ed_freq);
 		}
 		if (b.ed_freq>=0) {
 			b.offset=allocate_note(b.ed_freq);
 			notes_used[b.ed_freq]++;
-			fprintf(stderr,"B: %d\n",b.ed_freq);
+			printf("; B: %d\n",b.ed_freq);
 		}
 		if (c.ed_freq>=0) {
 			c.offset=allocate_note(c.ed_freq);
 			notes_used[c.ed_freq]++;
-			fprintf(stderr,"C: %d\n",c.ed_freq);
+			printf("; C: %d\n",c.ed_freq);
 		}
 
 		if ((a.ed_freq>=0)||(b.ed_freq>=0)||(c.ed_freq>=0)) {
+			printf("; none: a=%d c=%d len=%d\n",a_last,c_last,current_length);
+			//NNNNNLLC
+
+
+
 			if (!first) {
-				printf("\t.byte $%02X ; L = %d\n",
-					current_length|0xc0,current_length);
-				printf("\n");
-				current_length=0;
+				if (a_last>=0) {
+					temp_value=(a_last<<3)|0;
+					if (c_last<0) temp_value|=(current_length<<1);
+
+					printf("\t.byte $%02X ; A=%d L=%d\n",
+						temp_value,
+						a_last,c_last>=0?0:current_length);
+					total_len++;
+					a_last=-1;
+				}
+
+				if (c_last>=0) {
+					printf("\t.byte $%02X ; C=%d L=%d\n",
+						(unsigned char)(c_last<<3)|((current_length)<<1)|1,
+						c_last,current_length);
+					total_len++;
+					c_last=-1;
+				}
 			}
+			current_length=0;
+
+			//if (!first) {
+//				printf("\t.byte $%02X ; L = %d\n",
+//					current_length|0xc0,current_length);
+//				printf("\n");
+//				current_length=0;
+//				total_len++;
+			//}
+
 
 			first=0;
-
 		}
 
 
+		if (a.ed_freq>=0) {
+			a_last=a.offset;
+		}
+		if (b.ed_freq>=0) {
+
+		}
+		if (c.ed_freq>=0) {
+			c_last=c.offset;
+		}
+
+
+#if 0
 		if (a.ed_freq>=0) {
 			printf("\t.byte $%02X ; A = %c%c%d freq=%d offset=%d\n",
 				a.offset,
 				a.note,sharp_char[a.sharp+2*a.flat],
 				a.octave,
 				a.ed_freq,a.offset);
+			total_len++;
 		}
 		if (b.ed_freq>=0) {
 			printf("\t.byte $%02X ; B = %c%c%d\n",
 				b.offset|0x40,
 				b.note,sharp_char[b.sharp+2*b.flat],
 				b.octave);
+			total_len++;
 		}
 		if (c.ed_freq>=0) {
 			printf("\t.byte $%02X ; C = %c%c%d freq=%d offset=%d\n",
@@ -399,14 +448,41 @@ printf("\n");
 				c.note,sharp_char[c.sharp+2*c.flat],
 				c.octave,
 				c.ed_freq,c.offset);
+			total_len++;
 		}
-
+#endif
 		current_length++;
 
 
 	}
 
-	printf("\t.byte $C0 ; end\n");
+
+	printf("; last: a=%d c=%d len=%d\n",a_last,c_last,current_length);
+	if (a_last>=0) {
+		temp_value=(a_last<<3)|0;
+		if (c_last<0) temp_value|=(current_length<<1);
+		printf("\t.byte $%02X ; A=%d L=%d\n",
+			temp_value,
+			a_last,c_last>=0?0:current_length);
+		total_len++;
+		a_last=-1;
+	}
+
+	if (c_last>=0) {
+		printf("\t.byte $%02X ; C=%d L=%d\n",
+			(unsigned char)(c_last<<3)|((current_length)<<1)|1,
+			c_last,current_length);
+		total_len++;
+		c_last=-1;
+	}
+
+
+//	printf("\t.byte $%02X ; L = %d\n",
+//		current_length|0xc0,current_length);
+//	printf("\n");
+
+	printf("\t.byte $FF ; end\n");
+	total_len++;
 
 	int o,n;
 
@@ -431,6 +507,7 @@ printf("\n");
 	for(n=0;n<notes_allocated;n++) {
 		printf("$%02X",(frequencies[allocated_notes[n]]>>8));
 		if (n!=(notes_allocated-1)) printf(",");
+		total_len++;
 	}
 	printf("\n");
 
@@ -440,8 +517,11 @@ printf("\n");
 	for(n=0;n<notes_allocated;n++) {
 		printf("$%02X",(frequencies[allocated_notes[n]])&0xff);
 		if (n!=(notes_allocated-1)) printf(",");
+		total_len++;
 	}
 	printf("\n");
+
+	printf("; total len=%d\n",total_len);
 
 	(void) irq;
 	(void) loop;

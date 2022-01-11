@@ -43,6 +43,11 @@ peasant_music.s:	peasant.txt text_to_tiny
 mA2E_2.s:	mA2E_2.txt text_to_tiny
 	./text_to_tiny mA2E_2.txt > mA2E_2.s
 
+####
+
+mA2E_3.s:	mA2E_3.txt text_to_tiny
+	./text_to_tiny mA2E_3.txt > mA2E_3.s
+
 
 ####
 
@@ -51,9 +56,9 @@ D2:	d2.o
 
 d2.o:	d2.s \
 	zp.inc hardware.inc \
-	mA2E_2.s \
-	interrupt_handler.s mockingboard_setup.s mockingboard_init.s \
-	tracker_init.s
+	mA2E_2.s mA2E_3.s \
+	interrupt_handler.s mockingboard_init.s \
+	tracker_init.s mockingboard_constants.s ay3_write_regs.s
 	ca65 -o d2.o d2.s -l d2.lst
 
 ####

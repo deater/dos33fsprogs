@@ -61,7 +61,7 @@ MOCK_AY_LATCH_ADDR	=	$7	;	1	1	1
 
 mockingboard_init:
 
-	sei			; disable interrupts, is this necessary?
+;	sei			; disable interrupts, is this necessary?
 
 	;=========================
 	; Setup Interrupt Handler
@@ -74,13 +74,15 @@ mockingboard_init:
 	; set up interrupt
 	; Vector address goes to 0x3fe/0x3ff
 
-	lda	#<interrupt_handler
-	sta	$03fe
-	lda	#>interrupt_handler
-	sta	$03ff
+	; can save 10 bytes if we load in memory so this
+	; is in the right place automatically
 
-
-
+	lda	#<interrupt_handler	; 2
+	sta	$03fe			; 3
+	lda	#>interrupt_handler	; 2
+	sta	$03ff			; 3
+					;=========
+					; 10
 	;=========================
 	; Initialize the 6522s
 	; Reset Left AY-3-8910
@@ -88,9 +90,8 @@ mockingboard_init:
 
 	; entries=10
 	; 14 + 2*entries = 34 bytes
-	; to beat = 46 bytes
 
-	ldy	#0
+	ldy	#0			; 2
 init_it_loop:
 	lda	init_values,Y		; 3
 	ldx	init_addresses,Y	; 3
@@ -99,20 +100,6 @@ init_it_loop:
 	sta	$c400,X			; 3
 	bne	init_it_loop		; 2
 doneit:
-
-
-init_registers_to_zero:
-	ldx	#13
-	lda	#0
-	sta	SONG_OFFSET		; also init song stuff
-	sta	SONG_COUNTDOWN
-init_loop:
-	sta	AY_REGS,X
-	dex
-	bne	init_loop
-
-	jsr	ay3_write_regs
-
 
 
 
