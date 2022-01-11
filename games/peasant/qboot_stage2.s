@@ -319,16 +319,38 @@ code_end:
 driveon:
 
 slotpatch9:
-        lda     $c0d1
+        lda     $c0d1		; turn drive on first
+
+				; then you select drive
+
+	; this could be more compact
+
+	lda	CURRENT_DRIVE
+	cmp	#2
+	beq	driveon_disk2
+
+driveon_disk1:
+
+slotpatch10:
+	lda     $C0d1		;       drive 1 select
+	jmp	done_drive_select
+
+driveon_disk2:
+
+slotpatch11:
+	lda     $C0d1		;       drive 2 select
+
+done_drive_select:
+
 
         ; wait 1s
-
-        ldx     #6
 wait_1s:
+        ldx     #6
+wait_1s_loop:
         lda     #255
         jsr     wait
         dex
-        bne     wait_1s
+        bne     wait_1s_loop
 
 	rts
 

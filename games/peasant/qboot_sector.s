@@ -243,8 +243,8 @@ preread:
 switch_drive1:
 	lda	curtrk_smc+1
 	sta	DRIVE2_TRACK	;	save track location
-slotpatch10:
-	lda	$C0d1		; 	drive 1 select
+;slotpatch10:
+;	lda	$C0d1		; 	drive 1 select
 	lda	#1
 	sta	CURRENT_DRIVE
 	lda	DRIVE1_TRACK	;	restore saved track location
@@ -254,8 +254,8 @@ slotpatch10:
 switch_drive2:
 	lda	curtrk_smc+1
 	sta	DRIVE1_TRACK	;	save track location
-slotpatch11:
-	lda	$C0d1		;	drive 2 select
+;slotpatch11:
+;	lda	$C0d1		;	drive 2 select
 	lda	#2
 	sta	CURRENT_DRIVE
 	lda	DRIVE2_TRACK	;	restore saved track location

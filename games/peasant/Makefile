@@ -116,6 +116,7 @@ qboot.inc:	generate_common QBOOT
 	./generate_common -a 0x000 -s curtrk_smc qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s phase_smc qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s driveon qboot_sector.lst >> qboot.inc
+	./generate_common -a 0x000 -s wait_1s qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s driveoff qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s switch_drive1 qboot_sector.lst >> qboot.inc
 	./generate_common -a 0x000 -s switch_drive2 qboot_sector.lst >> qboot.inc
@@ -167,8 +168,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s speaker_frequency qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
-	echo "driveoff = \$$A22" >> qload.inc
-	echo "driveon = \$$A9D" >> qload.inc
+#	echo "driveoff = \$$A22" >> qload.inc
+#	echo "driveon = \$$A9D" >> qload.inc
 
 ####
 

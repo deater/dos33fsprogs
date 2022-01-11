@@ -19,6 +19,37 @@ tmpsec = $3C
 
 qload_start:
 
+
+
+	; 0..$10?
+	; 0  1  2  3  4  5  6  7  8  9   a b  c  d  e  f  10
+	; AA AA AA AA AA 07 05 40 20 01 01 01 00 0A 00 AA AA
+	; 00 C6 00 00 ff 07 05 40 20 00 01 01 00 0a 00 00 AA
+
+
+	; $300
+	;	80+OK,	40 bad, 60 bad, 70 good, 68=bad
+
+	;        0  1  2  3  4  5  6  7  8  9  A  B  C  D
+	; $360 = DC E0 00 E4 E8 EC F0 F4 00 00 00 00   = bad
+	; $360 = dc e0 00 e4 e8 ec f0 f4 f8 fc 00 00 00 01 00 00 02 03 = good
+	; boot = ff ff 00 00 ff ff 00 00 ff ff 00 00 00 01 00 00 02 03
+
+	; preshift table is $300 - $369
+
+	; $36C to $3D5 is used as decode table by disk II drive
+
+.if 0
+	ldy	WHICH_SLOT		; temporarily save
+	lda	#$AA
+	ldx	#$2
+zp_clear_loop:
+	sta	$00,X
+	inx
+	bne	zp_clear_loop
+	sty	WHICH_SLOT
+.endif
+
 	; init the write code
 	lda	WHICH_SLOT
 	jsr	popwr_init
@@ -34,12 +65,20 @@ qload_start:
 	sta	DRIVE1_DISK		; it's in drive1
 	sta	CURRENT_DRIVE		; and currently using drive 1
 
+	lda	#$ff
+	sta	DRIVE1_TRACK
+	sta	DRIVE2_TRACK
+
 	jsr	load_file		; actually load intro
 
 	jsr	$6000			; run intro
 
 	lda	#LOAD_TITLE		; next load title
 	sta	WHICH_LOAD
+
+;	bit	$C054
+;	bit	$C051
+;	brk
 
 main_game_loop:
 	jsr	load_file
@@ -163,12 +202,12 @@ verify_disk:
 
 	; first sector now in $BC00
 	;	offset 5B
-	;		disk1 = $d0
+	;		disk1 = $12
 	;		disk2 = $32 ('2')
 	;		disk3 = $33 ('3')
 
 	lda	$BC5B
-	cmp	#$d0
+	cmp	#$12
 	beq	is_disk1
 	cmp	#$32
 	beq	is_disk2
