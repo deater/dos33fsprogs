@@ -75,6 +75,10 @@ set_notes_loop:
 	;====================================
 	; if at end, loop back to beginning
 
+	lda	clear_screen_smc+1
+	eor	#$7f
+	sta	clear_screen_smc+1
+
 	lda	#0			; reset song offset
 	sta	SONG_OFFSET
 	beq	set_notes_loop		; bra

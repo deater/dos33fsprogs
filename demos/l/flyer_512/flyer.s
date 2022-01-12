@@ -8,6 +8,14 @@
 ; 172 bytes -- optimize page flip code
 ; 170 bytes -- assume XDRAW never got over X=256
 ; 504 bytes -- merge in the music code
+; 507 bytes -- turn off drive motor
+; 510 bytes -- add color change bg
+; 508 bytes -- assume Y=0 when entering mockingboard init code
+; 506 bytes -- optimize frame wrap
+; 505 bytes -- shave byte off wicket scale
+; 504 bytes -- tail call in xdraw
+; 512 bytes -- switch color with music
+; 510 bytes -- unneeded reload of A
 
 ; zero page locations
 
@@ -70,7 +78,6 @@ tracker_song = peasant_song
 	cli
 
 
-
 animate_loop:
 	clc
 	lda	#96
@@ -94,10 +101,9 @@ animate_loop:
 	cmp	PAGE1,X
 
 	; clear screen
-	lda	#$7f
+clear_screen_smc:
+	lda	#$00		; clear to this color
 	jsr	BKGND0
-
-;	jsr	HCLR
 
 	;===============
 	; draw mountain
@@ -128,6 +134,8 @@ animate_loop:
 	jsr	HGLIN
 
 	; color = green (1)
+	; blue =$D5=1101 0101 want 0010 1010
+
 	lda	#$2A
 	sta	HGR_COLOR
 
@@ -141,7 +149,7 @@ horizon_lines_loop:
 	; HPLOT 0,Y TO 279,Y
 	ldy	#0
 	ldx	#0
-	lda	HORIZON_Y
+;	lda	HORIZON_Y
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
 	ldx	#1
@@ -156,14 +164,15 @@ horizon_lines_loop:
 
 	lda	HORIZON_LINE
 	lsr
-	lsr				; SCALE=1+S/5
-	clc
-	adc	#1
-	sta	HGR_SCALE
+	lsr				; SCALE=1+S/4
+	tax
+	inx
+	stx	HGR_SCALE
+
 
 ;	ldy	#0
-	ldx	#140
-	lda	HORIZON_Y
+	ldx	#140			; X=140
+	lda	HORIZON_Y		; Y
 	jsr	xdraw
 
 	lda	HORIZON_LINE
@@ -177,34 +186,39 @@ horizon_lines_loop:
 	lda	#2
 	sta	HGR_SCALE	; SCALE=2
 
+	; set X based on frame
+	; FIXME: would really prefer sine
+
 	lda	FRAME
 	and	#$f
-	clc
-	adc	140
+	clc			; not necessary?
+	adc	#140		; X=140+frame&15
 
-;	ldy	#0
 	tax
-	lda	#180
+	lda	#180		; Y=180
 	jsr	xdraw
 
 			; H=H+0.3
 
+	;========================
+	; wrap frame
+
 
 	; J=(J+12)*(J<84)
 	lda	FRAME
-	cmp	#84
-	bcs	reset_frame
+	cmp	#84			; if (J>84) then J=0
+	bcc	no_reset_frame		; bge
 
-	clc
+	lda	#$F4			; -12
+
+no_reset_frame:
+	clc				; J=J+12
 	adc	#12
-	bne	done_frame
 
-reset_frame:
-	lda	#0
-done_frame:
 	sta	FRAME
 
-bob:
+
+check_keypress:
 	lda	KEYPRESS
 	bmi	quiet
 
@@ -240,15 +254,11 @@ xdraw:
 	ldx	#<ship_table
 	ldy	#>ship_table
 
-;	lda	#$7f
-;	sta	HGR_COLOR
-
 	lda	#0		; set rotation
 
-	jsr	XDRAW0		; XDRAW 1 AT X,Y
+	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 
-	rts
 
 	; optimize, can probably shave byte off
 	; was originally in ASCII for basic bot purposes
@@ -261,19 +271,8 @@ ship_table:
 	.byte	$2D	; 00 101 101	RT  RT X
 	.byte	$2E	; 00 101 110	DN  RT X
 	.byte	$2E	; 00 101 110	DN  RT X
-	.byte	$0E	; 00 001 110	DN  RT X
+	.byte	$0E	; 00 001 110	NDN RT X
 	.byte	$0
-
-
-;	.byte	$23	; 00 100 011	NLT UP X
-;	.byte	$25	; 00 100 101	RT  UP X
-;	.byte	$25	; 00 100 101	RT  UP X
-;	.byte	$2D	; 00 101 101	RT  RT X
-;	.byte	$2E	; 00 101 110	DN  RT X
-;	.byte	$2E	; 00 101 110	DN  RT X
-;	.byte	$2E	; 00 101 110	DN  RT X
-;	.byte	$0
-
 
 ; music
 .include	"mA2E_3.s"

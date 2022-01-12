@@ -91,7 +91,9 @@ mockingboard_init:
 	; entries=10
 	; 14 + 2*entries = 34 bytes
 
-	ldy	#0			; 2
+;	assume Y=0 on entry
+
+;	ldy	#0			; 2
 init_it_loop:
 	lda	init_values,Y		; 3
 	ldx	init_addresses,Y	; 3
