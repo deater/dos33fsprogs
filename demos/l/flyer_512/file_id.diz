@@ -1,5 +1,9 @@
-Tiny Text
+Future Flyer
 -
-Textmode Hex Scroller
-8-byte Intro for Apple II, Lovebyte 2021
+Shapetable flyer with mockingboard music
+512-byte boot-sector for Apple II, Lovebyte 2022
 by Deater / dSr
+music by mA2E
+
+Note: assumes Mockingboard in Slot#4.
+Music only plays on left speaker.

@@ -1,14 +1,19 @@
 ; Flyer
+; 512 byte Apple II "boot sector" with graphics and Music
 
 ; by Vince `deater` Weaver, vince@deater.net	--- d e s i r e ---
-
 
 ; 178 bytes -- original conversion from BASIC
 ; 176 bytes -- know HGR2 returns with A=0
 ; 172 bytes -- optimize page flip code
 ; 170 bytes -- assume XDRAW never got over X=256
+; 504 bytes -- merge in the music code
 
 ; zero page locations
+
+AY_REGS		= $70
+SONG_OFFSET	= $82
+SONG_COUNTDOWN	= $83
 
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
@@ -19,6 +24,8 @@ HORIZON_LINE	= $FE
 FRAME		= $FF
 
 ; soft-switches
+KEYPRESS	= $C000
+KEYRESET	= $C010
 PAGE1		= $C054
 PAGE2		= $C055
 
@@ -32,9 +39,37 @@ HGLIN	= $F53A		; line to (X,A), (Y)
 DRAW0	= $F601
 XDRAW0	= $F65D
 
+
+	.byte	2			; number of sectors to load
+
+	; turn off drive motor
+	lda	$C088,X			; turn off drive motor
+					; hopefully slot*16 is in X
+
+
 flyer:
+
 	jsr	HGR2			; HGR2		HGR_PAGE=$40
-	sta	FRAME			; A=0 after HGR2
+	sta	FRAME			; A=0, Y=0 after HGR2
+
+	;===================
+	; music Player Setup
+
+tracker_song = peasant_song
+
+	; assume mockingboard in slot#4
+
+	; inline mockingboard_init
+
+.include "mockingboard_init.s"
+
+.include "tracker_init.s"
+
+	; start the music playing
+
+	cli
+
+
 
 animate_loop:
 	clc
@@ -59,7 +94,10 @@ animate_loop:
 	cmp	PAGE1,X
 
 	; clear screen
-	jsr	HCLR
+	lda	#$7f
+	jsr	BKGND0
+
+;	jsr	HCLR
 
 	;===============
 	; draw mountain
@@ -165,7 +203,28 @@ reset_frame:
 	lda	#0
 done_frame:
 	sta	FRAME
+
+bob:
+	lda	KEYPRESS
+	bmi	quiet
+
 	jmp	animate_loop
+
+quiet:
+	lda	#$3f
+	sta	AY_REGS+7
+
+end:
+	bne	end
+
+
+
+
+
+
+
+
+
 
 	;=======================
 	; xdraw
@@ -216,3 +275,8 @@ ship_table:
 ;	.byte	$0
 
 
+; music
+.include	"mA2E_3.s"
+.include        "interrupt_handler.s"
+; must be last
+.include	"mockingboard_constants.s"
