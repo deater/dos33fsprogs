@@ -16,20 +16,25 @@
 ; 504 bytes -- tail call in xdraw
 ; 512 bytes -- switch color with music
 ; 510 bytes -- unneeded reload of A
+; 517 bytes -- made flyer go back and forth
+; 512 bytes -- removed extra cc, merged to common ZP zero init
 
 ; zero page locations
 
 AY_REGS		= $70
-SONG_OFFSET	= $82
-SONG_COUNTDOWN	= $83
+FRAME		= $80
+SONG_OFFSET	= $81
+SONG_COUNTDOWN	= $82
+
 
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 HGR_SCALE	= $E7
 HGR_ROTATION	= $F9
+FRAME2		= $DC
 HORIZON_Y	= $FD
 HORIZON_LINE	= $FE
-FRAME		= $FF
+
 
 ; soft-switches
 KEYPRESS	= $C000
@@ -58,7 +63,8 @@ XDRAW0	= $F65D
 flyer:
 
 	jsr	HGR2			; HGR2		HGR_PAGE=$40
-	sta	FRAME			; A=0, Y=0 after HGR2
+;	sta	FRAME			; A=0, Y=0 after HGR2
+					; init by mockingboard init
 
 	;===================
 	; music Player Setup
@@ -186,15 +192,20 @@ horizon_lines_loop:
 	lda	#2
 	sta	HGR_SCALE	; SCALE=2
 
-	; set X based on frame
-	; FIXME: would really prefer sine
+	;====================
+	; move ship
 
-	lda	FRAME
-	and	#$f
-	clc			; not necessary?
-	adc	#140		; X=140+frame&15
+	inc	FRAME2
+	lda	FRAME2
+	and	#$7
+	tay
 
-	tax
+	ldx	positions,Y
+	;=========================
+	; draw ship
+
+;	ldx	#140
+
 	lda	#180		; Y=180
 	jsr	xdraw
 
@@ -209,15 +220,18 @@ horizon_lines_loop:
 	cmp	#84			; if (J>84) then J=0
 	bcc	no_reset_frame		; bge
 
-	lda	#$F4			; -12
+	; we know carry is set here
+	lda	#$F3			; (-13) -12-C
 
 no_reset_frame:
-	clc				; J=J+12
-	adc	#12
+	; we know carry is clear here
+	adc	#12			; J=J+12
 
 	sta	FRAME
 
 
+	;=======================
+	; check for keypress
 check_keypress:
 	lda	KEYPRESS
 	bmi	quiet
@@ -229,12 +243,7 @@ quiet:
 	sta	AY_REGS+7
 
 end:
-	bne	end
-
-
-
-
-
+	brk				; end?
 
 
 
@@ -274,8 +283,12 @@ ship_table:
 	.byte	$0E	; 00 001 110	NDN RT X
 	.byte	$0
 
+
+positions:
+	;	 +4   +8  +8  +4
+	.byte  170,174,182,190,194,190,182,174
+
+.include        "interrupt_handler.s"
+.include	"mockingboard_constants.s"
 ; music
 .include	"mA2E_3.s"
-.include        "interrupt_handler.s"
-; must be last
-.include	"mockingboard_constants.s"

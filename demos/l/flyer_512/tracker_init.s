@@ -3,10 +3,10 @@ tracker_init:
 	; setup initial ay-3-8910 values (this depends on song)
 
 init_registers_to_zero:
-	ldx	#13
+	ldx	#$13			; init past end to zero others too
 	lda	#0
-	sta	SONG_OFFSET		; also init song stuff
-	sta	SONG_COUNTDOWN
+;	sta	SONG_OFFSET		; also init song stuff
+;	sta	SONG_COUNTDOWN
 init_loop:
 	sta	AY_REGS,X
 	dex
