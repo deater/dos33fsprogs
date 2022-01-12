@@ -1,32 +1,19 @@
-include ../../../Makefile.inc
+include ../../Makefile.inc
 
-DOS33 = ../../../utils/dos33fs-utils/dos33
-EMPTY_DISK = ../../../empty_disk
-HGR2PNG = ../../../utils/hgr-utils/png2hgr
-LINKER_SCRIPTS = ../../../linker_scripts
-TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
+DOS33 = ../../utils/dos33fs-utils/dos33
+EMPTY_DISK = ../../empty_disk
+HGR2PNG = ../../utils/hgr-utils/png2hgr
+LINKER_SCRIPTS = ../../linker_scripts
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	hgr_d2.dsk text_to_tiny
-
-submit:	hgr_d2_1k.zip
+all:	tiny_tracker2.dsk
 
 ####
 
-hgr_d2_1k.zip:	D2 d2.s file_id.diz hgr_d2.dsk
-	mkdir -p demosplash2021_hgr_d2_1k
-	cp D2 ./demosplash2021_hgr_d2_1k
-	cp *.s ./demosplash2021_hgr_d2_1k
-	cp file_id.diz ./demosplash2021_hgr_d2_1k
-	cp hgr_d2.dsk ./demosplash2021_hgr_d2_1k
-	cp hgr_d2.webm ./demosplash2021_hgr_d2_1k
-	zip -r hgr_d2_1k.zip demosplash2021_hgr_d2_1k
-
-####
-
-hgr_d2.dsk:	HELLO D2
-	cp $(EMPTY_DISK)/empty.dsk ./hgr_d2.dsk
-	$(DOS33) -y hgr_d2.dsk SAVE A HELLO
-	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x6000 BSAVE D2
+tiny_tracker2.dsk:	HELLO D2
+	cp $(EMPTY_DISK)/empty.dsk ./tiny_tracker2.dsk
+	$(DOS33) -y tiny_tracker2.dsk SAVE A HELLO
+	$(DOS33) -y tiny_tracker2.dsk -t BIN -a 0x6000 BSAVE D2
 
 ####
 
