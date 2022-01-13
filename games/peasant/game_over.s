@@ -161,10 +161,10 @@ done_beep:
 
 ;.include "score.s"
 
-.include "wait.s"
+
 .include "wait_a_bit.s"
 ;.include "loadsave_menu.s"
-
+.include "wait.s"
 
 .include "graphics_over/game_over_graphics.inc"
 

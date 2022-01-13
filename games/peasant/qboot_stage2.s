@@ -335,7 +335,7 @@ seek_delay:
 seek_delay_outer:
 
 	; inner delay
-	; delay 2+(19*5)+1 = 98 cycles = ~100us
+	; delay 2+(19*5)+1 = 98 cycles, + 6+2 = 106 cycles = ~100us
 
 	ldx	#$13			; 2
 seek_delay_inner:
@@ -343,11 +343,13 @@ seek_delay_inner:
 	bne	seek_delay_inner	; 2/3
 
 
-	dec	sector_smc+1		; why?
-	bne	seek_delay_outer
+	dec	sector_smc+1		; 6	 holds the on/off delay time
+	bne	seek_delay_outer	; 2/3
 
-	lsr				; what is A here?
-					; looks like it's the carry bit
+seek_delay_end:
+
+	lsr				; bottom bit of A here
+					; is the carry bit
 					; from phase on/off
 
 	bcs	do_phase_off		; repeat, this time off
@@ -448,3 +450,5 @@ load_length:
 
 
 code_end:
+
+.assert (>seek_delay_end - >seek_delay) < 1 , error, "seek delay spans page"

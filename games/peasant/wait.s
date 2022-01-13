@@ -1,6 +1,7 @@
 ; copy of ROM wait
 ; because we might disable ROM
 
+
 wait:
 	sec
 wait2:
@@ -12,3 +13,6 @@ wait3:
 	sbc	#$01
 	bne	wait2
 	rts
+wait_end:
+
+.assert (>wait_end - >wait) < 1 , error, "wait crosses page boundary"

@@ -122,6 +122,7 @@ done_check:
 
 
 done_check_failed:
+
 	jsr	driveoff
 
 	jsr	wait_1s
