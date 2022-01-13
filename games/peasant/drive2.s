@@ -50,18 +50,24 @@ check_floppy_in_drive2:
 
 
 
+;	jsr	wait_1s
+
+
 	; seek to track 0
 
-	lda	#$44		; 68 = 34 tracks; worst case scenario(?)
+	lda	#$0		;
 	sta	curtrk_smc+1
-	lda	#0		; seek to track0
+	lda	#$13		;
 	sta	phase_smc+1
-;.if 0
+
+
+;	lda	#$44		; 68 = 34 tracks; worst case scenario(?)
+;	sta	curtrk_smc+1
+;	lda	#0		; seek to track0
+;	sta	phase_smc+1
+
 ;	jsr	antim_seek_track0
 	jsr	seek
-;.endif
-
-;	brk
 
 	;=====================================
 	; try 768 times to find valid sector

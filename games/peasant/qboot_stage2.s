@@ -241,6 +241,9 @@ slotpatch7:
 	lda	$c0d1
 
 seekret:
+
+	; the RWTS waits 25ms after seeking for things to settle
+
 	rts
 
 	;=================================
@@ -327,15 +330,19 @@ do_phase_common:
 	and	#3			; mask to 1 of 4 phases
 	rol				; double for index (put C in bit 1)
 	tax
+
 slotpatch8:
-	sta	$c0d1, X		; flip the phase (PHASEOFF $c080 / $c0e0)
+	sta	$c0d1, X		; flip the phase
+					; C080...C087 seeks inward (toward 34)
+					; C087...C080 seeks outward (to 0)
+
 
 seek_delay:
 
 seek_delay_outer:
 
 	; inner delay
-	; delay 2+(19*5)+1 = 98 cycles, + 6+2 = 106 cycles = ~100us
+	; delay 2+(19*5)-1 = 97 cycles, + 6+2 = 105 cycles = ~100us
 
 	ldx	#$13			; 2
 seek_delay_inner:
@@ -378,20 +385,22 @@ driveon:
 
 slotpatch9:
         lda     $c0d1		; turn drive on first
-
 				; then you select drive
+
+
+driveon_disk1:
+
+slotpatch10:
+	lda     $C0d1			;       drive 1 select
+;	jmp	done_drive_select
+
 
 	; this could be more compact
 
 	lda	CURRENT_DRIVE
 	cmp	#2
-	beq	driveon_disk2
+	bne	done_drive_select
 
-driveon_disk1:
-
-slotpatch10:
-	lda     $C0d1		;       drive 1 select
-	jmp	done_drive_select
 
 driveon_disk2:
 

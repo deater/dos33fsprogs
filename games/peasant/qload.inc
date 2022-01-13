@@ -1,5 +1,5 @@
-load_file	=$0b2a
-sector_write	=$0c85
+load_file	=$0b30
+sector_write	=$0c8b
 check_floppy_in_drive2	=$0de6
 requested_sector	=$0d17
 decompress_lzsa2_fast	=$0e35

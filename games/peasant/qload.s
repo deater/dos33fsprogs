@@ -76,9 +76,8 @@ zp_clear_loop:
 	lda	#LOAD_TITLE		; next load title
 	sta	WHICH_LOAD
 
-;	bit	$C054
-;	bit	$C051
-;	brk
+	bit	$C054
+	bit	$C051
 
 main_game_loop:
 	jsr	load_file
