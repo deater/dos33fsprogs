@@ -101,9 +101,9 @@ inner_read:
 another:
 	jsr	readnib
 	rol			; set carry
-	sta	sector+1
+	sta	sector_smc+1
 	jsr	readnib
-	and	sector+1
+	and	sector_smc+1
 	dey
 	bpl	another
 
@@ -111,7 +111,7 @@ another:
 	ldx	addrtbl, Y	; fetch corresponding address
 	beq	read		; done?
 
-	sta	sector+1	; store index for later
+	sta	sector_smc+1	; store index for later
 
 	stx	adrpatch1+2
 	stx	adrpatch8+2
@@ -145,7 +145,7 @@ check_mode:
 	beq	read		; loop if not expecting #$AD
 
 loop33:
-	sta	tmpval+1	; zero rolling checksum
+	sta	tmpval_smc+1	; zero rolling checksum
 slotpatch2:
 loop4:
 	ldx	$c0d1
@@ -154,7 +154,7 @@ loop4:
 adrpatch2:
 	sta	$d102, Y	; store 2-bit array
 
-tmpval:
+tmpval_smc:
 	eor	#$d1
 	iny
 	bne	loop33
@@ -216,7 +216,7 @@ adrpatch9:
 branch_read2:
 	bcs	branch_read	; branch if checksum failure
 
-sector:
+sector_smc:
 	ldy	#$d1
 	txa
 	sta	addrtbl, Y	; zero corresponding address
@@ -243,33 +243,45 @@ slotpatch7:
 seekret:
 	rts
 
+	;=================================
+	;=================================
+	; seek, SEEK!
+	;=================================
+	;=================================
+	; phase_smc+1 = track*2 to seek to
+	; curtrk+1 = current track
+
 seek:
 	ldx	#0
-	stx	step+1
+	stx	step_smc+1
+
 copy_cur:
+
 curtrk_smc:
-	lda	#0
-	sta	tmpval+1
+	lda	#0			; current track
+	sta	tmpval_smc+1
 	sec
-phase_smc:			; track*2 to seek to
-	sbc	#$d1
-	beq	seekret
+phase_smc:
+	sbc	#$d1			; track*2 to seek to
+	beq	seekret			; if equal, we are already there
 
-	; if seek backwards
-	bcs	sback
+	; A is distance
+	bcs	sback			; if positive, skip ahead
 
-	eor	#$ff
-	inc	curtrk_smc+1
+	eor	#$ff			; negate the distance
+	inc	curtrk_smc+1		; move track counter up
 
-        bcc     ssback
+        bcc     ssback			; bra
+
 sback:
-        adc     #$fe
-        dec     curtrk_smc+1
+        adc     #$fe			; distance -=2
+        dec     curtrk_smc+1		; move track counter down
 ssback:
-	cmp	step+1
-	bcc	loop10
-step:
-	lda	#$d1
+	cmp	step_smc+1		; compare to step
+	bcc	loop10			; if less than, skip
+
+step_smc:
+	lda	#$d1			; load step value
 loop10:
 	cmp	#8
 	bcs	loop11
@@ -279,30 +291,38 @@ loop11:
 	lda	curtrk_smc+1
 	ldx	step1, Y
 	bne	loop12
+
+
 loopmmm:
 	clc
-	lda	tmpval+1
+	lda	tmpval_smc+1
 	ldx	step2, Y
 loop12:
-	stx	sector+1
+	stx	sector_smc+1
 	and	#3
 	rol
 	tax
 slotpatch8:
-	sta	$c0d1, X
+	sta	$c0d1, X		; PHASEOFF $c080 / $c0e0
 loopmm:
-	ldx	#$13
+
+	; delay 2+(19*5)+1 = 98 cycles = ~100us
+
+	ldx	#$13			; 2
 loopm:
-	dex
-	bne	loopm
-	dec	sector+1
+	dex				; 2
+	bne	loopm			; 2/3
+
+	dec	sector_smc+1
 	bne	loopmm
+
 	lsr
 	bcs	loopmmm
-	inc	step+1
-	bne	copy_cur
 
-step1:		.byte 1, $30, $28, $24, $20, $1e, $1d, $1c
+	inc	step_smc+1
+	bne	copy_cur		; bra?
+
+step1:		.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
 step2:		.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 addrtbl:	.res 16
 
@@ -344,12 +364,17 @@ done_drive_select:
 
 
         ; wait 1s
+
+	; WAIT takes 1/2(26+27A+5A^2) us
+	;	so for A=255 = (26+6885 +325125)*1/2 = 166018s *6 = ~1s
+
+	; 6, 5, 4, 3, 2, 1
 wait_1s:
-        ldx     #6
+        ldx     #6			; 2
 wait_1s_loop:
-        lda     #255
-        jsr     wait
-        dex
+        lda     #255			; 2
+        jsr     wait			; 6
+        dex				; 2
         bne     wait_1s_loop
 
 	rts

@@ -241,6 +241,10 @@ preread:
 	rts
 
 switch_drive1:
+;	lda	CURRENT_DRIVE
+;	cmp	#1
+;	beq	switch_drive1
+
 	lda	curtrk_smc+1
 	sta	DRIVE2_TRACK	;	save track location
 ;slotpatch10:
@@ -252,6 +256,10 @@ switch_drive1:
 	rts
 
 switch_drive2:
+;	lda	CURRENT_DRIVE
+;	cmp	#2
+;	beq	switch_drive2
+
 	lda	curtrk_smc+1
 	sta	DRIVE1_TRACK	;	save track location
 ;slotpatch11:

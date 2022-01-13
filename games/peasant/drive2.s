@@ -34,6 +34,7 @@
 
 check_floppy_in_drive2:
 
+
 	; anti-m does E9,EB, spinup (motor on, then select d2?)
 	; then delays, then seeks
 	; at end, driveoff E8
@@ -41,23 +42,25 @@ check_floppy_in_drive2:
 	jsr	switch_drive2
 
 	jsr	driveon		; turn drive on
+
 				; seems counter-intuitive but you're
 				; supposed to do this before
 				; switching to drive2?
-
-
+				; the driveon code does this internally
 
 
 
 	; seek to track 0
 
-	lda	#(40*2)		; worst case scenario(?)
+	lda	#$44		; 68 = 34 tracks; worst case scenario(?)
 	sta	curtrk_smc+1
 	lda	#0		; seek to track0
 	sta	phase_smc+1
-
+;.if 0
 	jsr	seek
+;.endif
 
+;;	brk
 
 	;=====================================
 	; try 768 times to find valid sector
@@ -104,6 +107,8 @@ check_if_96:
 	; because result was greater or equal to #$96
 
 done_check:
+	brk
+
 	jsr	driveoff
 
 	jsr	wait_1s
@@ -113,6 +118,7 @@ done_check:
 	sec
 
 	rts
+
 
 done_check_failed:
 	jsr	driveoff
