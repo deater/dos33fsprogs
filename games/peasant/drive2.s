@@ -57,10 +57,11 @@ check_floppy_in_drive2:
 	lda	#0		; seek to track0
 	sta	phase_smc+1
 ;.if 0
+;	jsr	antim_seek_track0
 	jsr	seek
 ;.endif
 
-;;	brk
+;	brk
 
 	;=====================================
 	; try 768 times to find valid sector
@@ -107,7 +108,7 @@ check_if_96:
 	; because result was greater or equal to #$96
 
 done_check:
-	brk
+;	brk
 
 	jsr	driveoff
 
@@ -131,4 +132,88 @@ done_check_failed:
 
 	rts
 
+.if 0
 
+step=$fd
+phase=$fe
+tmptrk=$ff
+tmpsec2=$3c
+; $3d also modified?
+
+antim_seek_track0:
+	ldy	#0
+	sty	step
+	sty	phase
+	lda	#$44
+	sta	tmptrk
+
+copy_cur:
+	lda	tmptrk
+	sta	tmpsec2
+	sec
+	sbc	phase
+	beq	lPPP1
+	bcs	lP1
+	eor	#$ff
+	inc	tmptrk
+	bcc	lPP1
+lP1:
+	sbc	#1
+	dec	tmptrk
+lPP1:
+	cmp	step
+	bcc	lP2
+	lda	step
+lP2:
+	cmp	#8
+	bcs	lP3
+	tay
+	sec
+lP3:
+	jsr	lPPPP1
+	lda	step1, y
+	jsr	adelay
+	lda	tmpsec2
+	clc
+	jsr	lPPPPP1
+	lda	step2, y
+	jsr	adelay
+	inc	step
+	bne	copy_cur
+lPPP1:
+	jsr	adelay
+	clc
+lPPPP1:
+	lda	tmptrk
+
+lPPPPP1:
+	and	#3
+	rol
+	tax
+	lda	$C0E0, x
+	rts
+
+
+step1:
+.byte	$01, $30, $28, $24, $20, $1e, $1d, $1c
+step2:
+.byte	$70, $2c, $26, $22, $1f, $1e, $1d, $1c
+
+adelay:
+
+adelay_loop:
+	ldx	#$11
+adelay_inner:
+	dex
+	bne	adelay_inner
+	inc	tmpsec2
+	bne	adelay_skip
+	inc	tmpsec2+1
+adelay_skip:
+	sec
+	sbc	#1
+	bne	adelay_loop
+knownret:
+	rts
+
+.endif

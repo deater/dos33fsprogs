@@ -252,84 +252,120 @@ seekret:
 	; curtrk+1 = current track
 
 seek:
-	ldx	#0
+	ldx	#0			; reset acceleration count?
 	stx	step_smc+1
 
 copy_cur:
 
 curtrk_smc:
 	lda	#0			; current track
-	sta	tmpval_smc+1
+	sta	tmpval_smc+1		; save current track for later
+
+	; calculate how far we need to seek
+
 	sec
 phase_smc:
 	sbc	#$d1			; track*2 to seek to
 	beq	seekret			; if equal, we are already there
 
-	; A is distance
-	bcs	sback			; if positive, skip ahead
+	; A is distance, update direction
 
+	bcs	seeking_out		; if positive, skip ahead
+
+seeking_in:
 	eor	#$ff			; negate the distance
-	inc	curtrk_smc+1		; move track counter up
+	inc	curtrk_smc+1		; move track counter inward
 
         bcc     ssback			; bra
 
-sback:
-        adc     #$fe			; distance -=2
-        dec     curtrk_smc+1		; move track counter down
+seeking_out:
+        adc     #$fe			; distance -=1 (carry always 1)
+        dec     curtrk_smc+1		; move track counter outward
+
 ssback:
 	cmp	step_smc+1		; compare to step
-	bcc	loop10			; if less than, skip
+	bcc	skip_set_step		; if below minimum, don't change?
+
+	;==================
+	; step the proper number of times
 
 step_smc:
 	lda	#$d1			; load step value
-loop10:
-	cmp	#8
-	bcs	loop11
-	tay
-	sec
-loop11:
-	lda	curtrk_smc+1
-	ldx	step1, Y
-	bne	loop12
 
+skip_set_step:
 
-loopmmm:
-	clc
-	lda	tmpval_smc+1
-	ldx	step2, Y
-loop12:
+	; set acceleration (???)
+
+	cmp	#8			; see if >8
+					; our on/off
+					; tables only 8 bytes long
+					; (dos33 they are 12?)
+
+					; what is Y in that case?
+					; apparently in maxes out
+
+	bcs	skip11
+
+	tay				; acceleration value in Y
+
+do_phase_on:
+	sec				; carry set is phase on
+
+skip11:
+	lda	curtrk_smc+1		; current track in A
+	ldx	phase_on_time, Y	; get phase on time in X
+	bne	do_phase_common		; (bra?)
+
+do_phase_off:
+	clc				; carry set, phase off
+	lda	tmpval_smc+1		; restore original track
+	ldx	phase_off_time, Y	; get phase off time in X
+
+do_phase_common:
 	stx	sector_smc+1
-	and	#3
-	rol
+					; A is the track?
+	and	#3			; mask to 1 of 4 phases
+	rol				; double for index (put C in bit 1)
 	tax
 slotpatch8:
-	sta	$c0d1, X		; PHASEOFF $c080 / $c0e0
-loopmm:
+	sta	$c0d1, X		; flip the phase (PHASEOFF $c080 / $c0e0)
 
+seek_delay:
+
+seek_delay_outer:
+
+	; inner delay
 	; delay 2+(19*5)+1 = 98 cycles = ~100us
 
 	ldx	#$13			; 2
-loopm:
+seek_delay_inner:
 	dex				; 2
-	bne	loopm			; 2/3
+	bne	seek_delay_inner	; 2/3
 
-	dec	sector_smc+1
-	bne	loopmm
 
-	lsr
-	bcs	loopmmm
+	dec	sector_smc+1		; why?
+	bne	seek_delay_outer
 
-	inc	step_smc+1
-	bne	copy_cur		; bra?
+	lsr				; what is A here?
+					; looks like it's the carry bit
+					; from phase on/off
 
-step1:		.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
-step2:		.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
+	bcs	do_phase_off		; repeat, this time off
+
+	inc	step_smc+1		; increment step count
+	bne	copy_cur		; bra(?) back to beginning
+
+
+; phase on/off tables, in 100us multiples
+
+phase_on_time:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
+phase_off_time:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
+
+
 addrtbl:	.res 16
 
 partial1:	.byte $00
 partial2:	.byte $00
-code_end:
-
 
 
 ;==========================
@@ -409,3 +445,6 @@ load_length:
 	.byte $00
 
 .include "wait.s"
+
+
+code_end:
