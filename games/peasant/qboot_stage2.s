@@ -264,33 +264,34 @@ curtrk_smc:
 	lda	#0			; current track
 	sta	tmpval_smc+1		; save current track for later
 
-	; calculate how far we need to seek
+	; calculate direction to seek
 
 	sec
 phase_smc:
 	sbc	#$d1			; track*2 to seek to
 	beq	seekret			; if equal, we are already there
+					; so we are done
 
 	; A is distance, update direction
 
-	bcs	seeking_out		; if positive, skip ahead
+	bcs	seeking_out		; if positive, seeking out to 34
 
 seeking_in:
-	eor	#$ff			; negate the distance
+	eor	#$ff			; negate the result? (why?)
 	inc	curtrk_smc+1		; move track counter inward
-
         bcc     ssback			; bra
 
 seeking_out:
-        adc     #$fe			; distance -=1 (carry always 1)
+        adc     #$fe			; difference -=1 (carry always 1)
         dec     curtrk_smc+1		; move track counter outward
 
 ssback:
 	cmp	step_smc+1		; compare to step
 	bcc	skip_set_step		; if below minimum, don't change?
 
-	;==================
-	; step the proper number of times
+	;================================
+	; step the proper length of time
+	; taking into account momentum?
 
 step_smc:
 	lda	#$d1			; load step value
@@ -309,7 +310,7 @@ skip_set_step:
 
 	bcs	skip11
 
-	tay				; acceleration value in Y
+	tay				; acceleration offset in Y
 
 do_phase_on:
 	sec				; carry set is phase on
@@ -328,9 +329,9 @@ do_phase_common:
 	stx	sector_smc+1
 					; A is the track?
 	and	#3			; mask to 1 of 4 phases
-	rol				; double for index (put C in bit 1)
+	rol				; double to the 8 phase on/off
+					; with carry the on/off
 	tax
-
 slotpatch8:
 	sta	$c0d1, X		; flip the phase
 					; C080...C087 seeks inward (toward 34)
