@@ -208,6 +208,45 @@ static void print_help(int just_version, char *exec_name) {
 }
 
 
+static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
+
+	unsigned char temp_value;
+
+	if (*a_last>=0) {
+		temp_value=(*a_last<<3)|0;
+		if ((*b_last<0) || (*c_last<0)) {
+			 temp_value|=4;
+		}
+		printf("\t.byte $%02X ; A=%d L=%d\n",
+			temp_value,
+			*a_last,(*b_last<0)||(*c_last<0));
+		(*total_len)++;
+		*a_last=-1;
+	}
+
+	if (*b_last>=0) {
+		temp_value=(*b_last<<3)|1;
+		if (*c_last<0) temp_value|=4;
+
+		printf("\t.byte $%02X ; B=%d L=%d\n",
+			temp_value,
+			*b_last,(*c_last<0));
+		(*total_len)++;
+		*b_last=-1;
+	}
+
+	if (*c_last>=0) {
+		printf("\t.byte $%02X ; C=%d L=%d\n",
+			(unsigned char)(*c_last<<3)|4|2,
+			*c_last,1);
+		(*total_len)++;
+		*c_last=-1;
+	}
+
+	return 0;
+}
+
+
 int main(int argc, char **argv) {
 
 	char string[BUFSIZ];
@@ -226,7 +265,7 @@ int main(int argc, char **argv) {
 	char comments[BUFSIZ];
 	char *comments_ptr=comments;
 
-	unsigned char sharp_char[]=" #-=";
+//	unsigned char sharp_char[]=" #-=";
 
 	/* Parse command line arguments */
 	while ((copt = getopt(argc, argv, "dhvo:i:"))!=-1) {
@@ -320,8 +359,7 @@ int main(int argc, char **argv) {
 //	int a_len=0,b_len=0,a_freq=0,b_freq=0;
 	int current_length=0;
 	int first=1;
-	int a_last=-1,c_last=-1;
-	unsigned char temp_value;
+	int a_last=-1,b_last=-1,c_last=-1;
 
 printf("peasant_song:\n");
 printf("; register init\n");
@@ -376,29 +414,12 @@ printf("\n");
 
 		if ((a.ed_freq>=0)||(b.ed_freq>=0)||(c.ed_freq>=0)) {
 			printf("; none: a=%d c=%d len=%d\n",a_last,c_last,current_length);
-			//NNNNNLLC
-
-
+			//(old) NNNNNLLC
+			//(new) NNNNNLCC
+			// L=Last
 
 			if (!first) {
-				if (a_last>=0) {
-					temp_value=(a_last<<3)|0;
-					if (c_last<0) temp_value|=(current_length<<1);
-
-					printf("\t.byte $%02X ; A=%d L=%d\n",
-						temp_value,
-						a_last,c_last>=0?0:current_length);
-					total_len++;
-					a_last=-1;
-				}
-
-				if (c_last>=0) {
-					printf("\t.byte $%02X ; C=%d L=%d\n",
-						(unsigned char)(c_last<<3)|((current_length)<<1)|1,
-						c_last,current_length);
-					total_len++;
-					c_last=-1;
-				}
+				write_note(&a_last,&b_last,&c_last,&total_len);
 			}
 			current_length=0;
 
@@ -419,38 +440,12 @@ printf("\n");
 			a_last=a.offset;
 		}
 		if (b.ed_freq>=0) {
-
+			b_last=b.offset;
 		}
 		if (c.ed_freq>=0) {
 			c_last=c.offset;
 		}
 
-
-#if 0
-		if (a.ed_freq>=0) {
-			printf("\t.byte $%02X ; A = %c%c%d freq=%d offset=%d\n",
-				a.offset,
-				a.note,sharp_char[a.sharp+2*a.flat],
-				a.octave,
-				a.ed_freq,a.offset);
-			total_len++;
-		}
-		if (b.ed_freq>=0) {
-			printf("\t.byte $%02X ; B = %c%c%d\n",
-				b.offset|0x40,
-				b.note,sharp_char[b.sharp+2*b.flat],
-				b.octave);
-			total_len++;
-		}
-		if (c.ed_freq>=0) {
-			printf("\t.byte $%02X ; C = %c%c%d freq=%d offset=%d\n",
-				c.offset|0x80,
-				c.note,sharp_char[c.sharp+2*c.flat],
-				c.octave,
-				c.ed_freq,c.offset);
-			total_len++;
-		}
-#endif
 		current_length++;
 
 
@@ -458,28 +453,7 @@ printf("\n");
 
 
 	printf("; last: a=%d c=%d len=%d\n",a_last,c_last,current_length);
-	if (a_last>=0) {
-		temp_value=(a_last<<3)|0;
-		if (c_last<0) temp_value|=(current_length<<1);
-		printf("\t.byte $%02X ; A=%d L=%d\n",
-			temp_value,
-			a_last,c_last>=0?0:current_length);
-		total_len++;
-		a_last=-1;
-	}
-
-	if (c_last>=0) {
-		printf("\t.byte $%02X ; C=%d L=%d\n",
-			(unsigned char)(c_last<<3)|((current_length)<<1)|1,
-			c_last,current_length);
-		total_len++;
-		c_last=-1;
-	}
-
-
-//	printf("\t.byte $%02X ; L = %d\n",
-//		current_length|0xc0,current_length);
-//	printf("\n");
+	write_note(&a_last,&b_last,&c_last,&total_len);
 
 	printf("\t.byte $FF ; end\n");
 	total_len++;

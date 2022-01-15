@@ -6,11 +6,10 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 
-; goal is 332 bytes
+; aiming for under 256
 
-; 319 bytes -- switch songs to mA2E_3
-; 415 bytes -- double length of song
-; 334 bytes -- merge length into value
+; 309 bytes -- first try
+
 
 ; if can straddle interrupt vector, save 10 bytes
 ; if can guarantee Y is 0 on entry, save 2 bytes
@@ -48,7 +47,7 @@ end:
 
 
 ; music
-.include	"mA2E_3.s"
+.include	"mA2E_2.s"
 .include        "interrupt_handler.s"
 ; must be last
 .include	"mockingboard_constants.s"

@@ -41,15 +41,16 @@ ay3_irq_handler:
 	bit	MOCK_6522_T1CL
 
 	; drop note down after first
-	lda	#$C
-	sta	AY_REGS+8
-	sta	AY_REGS+10
+;	lda	#$C
+;	sta	AY_REGS+8
+;	sta	AY_REGS+9
+;	sta	AY_REGS+10
 
-;       lda     #$0E
-;       sta     AY_REGS+8                       ; $08 volume A
-;       lda     #$0C
-;       sta     AY_REGS+9                       ; $09 volume B
-;       sta     AY_REGS+10                      ; $0A volume C
+       lda     #$0E
+       sta     AY_REGS+8                       ; $08 volume A
+       lda     #$0C
+       sta     AY_REGS+9                       ; $09 volume B
+       sta     AY_REGS+10                      ; $0A volume C
 
 
 	;============================
@@ -90,30 +91,22 @@ all_ok:
 
 note_only:
 ;	tya
-	; NNNNNLLC -- c=channel, n=note
+	; NNNNNECC -- c=channel, n=note
 
-	tay
+	tay				; save note in Y
 
-	ldx	#0
-	lsr
-	bcc	channel_a
-	ldx	#4	; skip to C
-channel_a:
+	and	#3
+	asl
+	tax				; put channel offset in X
 
-	and	#$3
+	lda	#$2			; always 4 lines long
 	sta	SONG_COUNTDOWN
-;	inc	SONG_COUNTDOWN
 
 	tya
 	lsr
 	lsr
-	lsr
+	lsr				; get note in A
 
-;	and	#$FE			; fine register value, want in X
-;	tax
-
-;	tya				; get note
-;	and	#$1F
 	tay				; lookup in table
 	lda	frequencies_low,Y
 
