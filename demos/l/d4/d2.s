@@ -6,7 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 
-; aiming for under 256
+; for a 256 entry we need to fit in 252 bytes
 
 ; 310 bytes -- initial
 ; 268 bytes -- strip out interrupts
@@ -16,6 +16,7 @@
 ; 252 bytes -- bne vs jmp
 ; 250 bytes -- song only has 16 notes so can never be negative
 ; 249 bytes -- make terminating value $80 instead of $FF
+; 247 bytes -- combine note loop.  makes song a bit faster
 
 d2:
 
@@ -37,7 +38,7 @@ game_loop:
 	; start the music playing
 
 .include "play_frame.s"
-
+.include "ay3_write_regs.s"
 
 	; delay 20Hz, or 1/20s = 50ms
 

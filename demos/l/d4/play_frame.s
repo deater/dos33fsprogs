@@ -63,20 +63,6 @@ note_only:
 	; assume less than 256 bytes
 	inc	SONG_OFFSET
 
-
-	lda	SONG_COUNTDOWN
-	beq	set_notes_loop		; bra
-
-.include "ay3_write_regs.s"
-
 done_update_song:
 	dec	SONG_COUNTDOWN
-
-
-
-
-
-
-
-
-
+	bmi	set_notes_loop
