@@ -1,16 +1,4 @@
 play_frame:
-	; drop note down after first
-;	lda	#$C
-;	sta	AY_REGS+8
-;	sta	AY_REGS+9
-;	sta	AY_REGS+10
-
-       lda     #$0E
-       sta     AY_REGS+8                       ; $08 volume A
-       lda     #$0C
-       sta     AY_REGS+9                       ; $09 volume B
-       sta     AY_REGS+10                      ; $0A volume C
-
 
 	;============================
 	; see if still counting down
@@ -29,17 +17,18 @@ set_notes_loop:
 	;==================
 	; see if hit end
 
-	cmp	#$FF
-	bne	all_ok
+	; this song only 16 notes so valid notes always positive
+;	cmp	#$80
+	bpl	all_ok
 
 	;====================================
 	; if at end, loop back to beginning
 
-	lda	#0			; reset song offset
+	asl			; reset song offset to 0
 	sta	SONG_OFFSET
-	beq	set_notes_loop		; bra
-
+	beq	set_notes_loop
 all_ok:
+
 
 note_only:
 
@@ -67,9 +56,6 @@ note_only:
 
 	lda	frequencies_high,Y
 	sta	AY_REGS+1,X
-
-	lda	#$F
-	sta	AY_REGS+8
 
 	;============================
 	; point to next

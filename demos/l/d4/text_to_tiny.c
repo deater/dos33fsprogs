@@ -455,7 +455,10 @@ printf("\n");
 	printf("; last: a=%d c=%d len=%d\n",a_last,c_last,current_length);
 	write_note(&a_last,&b_last,&c_last,&total_len);
 
-	printf("\t.byte $FF ; end\n");
+//	printf("\t.byte $FF ; end\n");
+
+	/* assume 16 notes or fewer */
+	printf("\t.byte $80 ; end\n");
 	total_len++;
 
 	int o,n;

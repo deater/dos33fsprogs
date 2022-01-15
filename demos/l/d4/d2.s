@@ -9,11 +9,13 @@
 ; aiming for under 256
 
 ; 310 bytes -- initial
-
-
-; if can straddle interrupt vector, save 10 bytes
-; if can guarantee Y is 0 on entry, save 2 bytes
-
+; 268 bytes -- strip out interrupts
+; 262 bytes -- simplify init
+; 261 bytes -- optimize init more
+; 253 bytes -- optimize var init
+; 252 bytes -- bne vs jmp
+; 250 bytes -- song only has 16 notes so can never be negative
+; 249 bytes -- make terminating value $80 instead of $FF
 
 d2:
 
@@ -30,24 +32,21 @@ tracker_song = peasant_song
 
 .include "tracker_init.s"
 
+game_loop:
+
 	; start the music playing
 
-	cli
+.include "play_frame.s"
 
-bob:
-	lda	KEYPRESS
-	bpl	bob
 
-quiet:
-	lda	#$3f
-	sta	AY_REGS+7
+	; delay 20Hz, or 1/20s = 50ms
 
-end:
-	bne	end
+	lda	#140
+	jsr	WAIT
+
+	beq	game_loop
 
 
 ; music
 .include	"mA2E_2.s"
-.include        "interrupt_handler.s"
-; must be last
-.include	"mockingboard_constants.s"
+
