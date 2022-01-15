@@ -8,7 +8,7 @@
 
 ; aiming for under 256
 
-; 309 bytes -- first try
+; 310 bytes -- initial
 
 
 ; if can straddle interrupt vector, save 10 bytes

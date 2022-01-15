@@ -214,7 +214,7 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 
 	if (*a_last>=0) {
 		temp_value=(*a_last<<3)|0;
-		if ((*b_last<0) || (*c_last<0)) {
+		if ((*b_last<0) && (*c_last<0)) {
 			 temp_value|=4;
 		}
 		printf("\t.byte $%02X ; A=%d L=%d\n",
