@@ -40,17 +40,11 @@ ay3_irq_handler:
 
 	bit	MOCK_6522_T1CL
 
-	; drop note down after first
+	; drop note down after first (rudimentary envelope)
+
 	lda	#$C
-	sta	AY_REGS+8
-	sta	AY_REGS+10
-
-;       lda     #$0E
-;       sta     AY_REGS+8                       ; $08 volume A
-;       lda     #$0C
-;       sta     AY_REGS+9                       ; $09 volume B
-;       sta     AY_REGS+10                      ; $0A volume C
-
+	sta	AY_REGS+8		; Channel A
+	sta	AY_REGS+9		; Channel B
 
 	;============================
 	; see if still counting down
@@ -85,39 +79,27 @@ set_notes_loop:
 
 all_ok:
 
-	; see if note
 
-;	tay
-;	and	#$C0
-;	cmp	#$C0
-;	beq	handle_timing
+handle_note:
 
-note_only:
-;	tya
 	; NNNNNLLC -- c=channel, n=note
 
-	tay
+	tay				; save in Y
 
-	ldx	#0
+	and	#1
+	asl
+	tax				; channel A/B*2 in X
+
+	tya
 	lsr
-	bcc	channel_a
-	ldx	#4	; skip to C
-channel_a:
-
 	and	#$3
 	sta	SONG_COUNTDOWN
-;	inc	SONG_COUNTDOWN
 
 	tya
 	lsr
 	lsr
 	lsr
 
-;	and	#$FE			; fine register value, want in X
-;	tax
-
-;	tya				; get note
-;	and	#$1F
 	tay				; lookup in table
 	lda	frequencies_low,Y
 
@@ -127,7 +109,7 @@ channel_a:
 	sta	AY_REGS+1,X
 
 	lda	#$F
-	sta	AY_REGS+8
+	sta	AY_REGS+8		; volume A
 
 	;============================
 	; point to next
