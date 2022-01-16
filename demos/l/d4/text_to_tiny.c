@@ -479,6 +479,16 @@ printf("\n");
 	}
 	printf("\n");
 
+	/* put these first as we use the high bit to end things? */
+	printf("frequencies_low:\n");
+	printf(".byte ");
+	for(n=0;n<notes_allocated;n++) {
+		printf("$%02X",(frequencies[allocated_notes[n]])&0xff);
+		if (n!=(notes_allocated-1)) printf(",");
+		total_len++;
+	}
+	printf("\n");
+
 	printf("frequencies_high:\n");
 	printf(".byte ");
 	for(n=0;n<notes_allocated;n++) {
@@ -489,14 +499,6 @@ printf("\n");
 	printf("\n");
 
 
-	printf("frequencies_low:\n");
-	printf(".byte ");
-	for(n=0;n<notes_allocated;n++) {
-		printf("$%02X",(frequencies[allocated_notes[n]])&0xff);
-		if (n!=(notes_allocated-1)) printf(",");
-		total_len++;
-	}
-	printf("\n");
 
 	printf("; total len=%d\n",total_len);
 

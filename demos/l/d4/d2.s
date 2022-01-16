@@ -17,6 +17,8 @@
 ; 250 bytes -- song only has 16 notes so can never be negative
 ; 249 bytes -- make terminating value $80 instead of $FF
 ; 247 bytes -- combine note loop.  makes song a bit faster
+; 245 bytes -- try to optimize writing out volume
+; 255 bytes -- add in some visualization
 
 d2:
 
@@ -33,7 +35,15 @@ tracker_song = peasant_song
 
 .include "tracker_init.s"
 
+	jsr	SETGR
+
 game_loop:
+	; typically A=0, X=FF, Y=0
+
+;	lda	$70
+;blah_smc:
+;	sta	$400
+;	inc	blah_smc+1
 
 	; start the music playing
 

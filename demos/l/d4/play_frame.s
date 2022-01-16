@@ -19,7 +19,7 @@ set_notes_loop:
 
 	; this song only 16 notes so valid notes always positive
 ;	cmp	#$80
-	bpl	all_ok
+	bpl	not_end
 
 	;====================================
 	; if at end, loop back to beginning
@@ -27,20 +27,24 @@ set_notes_loop:
 	asl			; reset song offset to 0
 	sta	SONG_OFFSET
 	beq	set_notes_loop
-all_ok:
 
-
-note_only:
+not_end:
 
 	; NNNNNECC -- c=channel, e=end, n=note
 
-	tay				; save note in Y
+	pha				; save note
 
 	and	#3
+	tax
+	ldy	#$0E
+	sty	AY_REGS+8,X		; $08 set volume A,B,C
+
 	asl
 	tax				; put channel offset in X
 
-	tya
+
+	pla				; restore note
+	tay
 	and	#$4
 	sta	SONG_COUNTDOWN		; always 4 long?
 
@@ -50,12 +54,19 @@ note_only:
 	lsr				; get note in A
 
 	tay				; lookup in table
-	lda	frequencies_low,Y
-
-	sta	AY_REGS,X		; set proper register value
 
 	lda	frequencies_high,Y
 	sta	AY_REGS+1,X
+;	sta	$500,X
+
+	lda	frequencies_low,Y
+	sta	AY_REGS,X		; set proper register value
+
+	; visualization
+blah_urgh:
+	sta	$400,Y
+	inc	blah_urgh+1
+
 
 	;============================
 	; point to next
