@@ -25,10 +25,21 @@ slotpatch1:			; smc
 	bpl	readnib
 	rts
 
+	;===============================
+	;===============================
+	;===============================
+	; seek then read
+	;===============================
+	;===============================
+	;===============================
+	; Y = starting sector
+	; A = page to read into
+	; X = number of sectors to read
+
         ;fill address array for one track
 seekread:
 	sty	startsec+1
-	sta	tmpadr+1
+	sta	tmpadr_smc+1
 	stx	total+1
 
 inittrk:
@@ -48,11 +59,17 @@ it_skip:
 startsec:
 	ldy	#$d1
 
-tmpadr:
+	;===========================================
+	; fill in table of addresses we want to read
+	; corresponding to sectors on the track
+	; if they are 0, it means we don't need it
+
 tmpadr_loop:
+
+tmpadr_smc:
 	lda	#$d1
 	sta	addrtbl, y
-	inc	tmpadr+1
+	inc	tmpadr_smc+1
 	iny
 	dec	partial1
 	bne	tmpadr_loop
@@ -77,6 +94,9 @@ tmpadr_loop:
 	; ends with $DE $AA $EB
 read:
 
+	ldx	#0	; if we don't set this, bad things can happen
+			; if we start on a data field w/o setting
+			; the sector first
 outer_read:
 	jsr	readnib
 inner_read:
@@ -89,31 +109,41 @@ inner_read:
 
 					; look for $D5 $AA $AD
 
-	tay			; we need Y=#$AA later
+	tay				; we need Y=#$AA later
 	jsr	readnib
-	eor	#$ad		; zero A if match
-	beq	check_mode
+	eor	#$ad			; zero A if match
+	beq	check_mode		; WHY?
 
         ; if not #$AD, then #$96 is assumed
 	; so in address field
 
-	ldy	#2		; volume, track, sector
+	; following are volume, track, sector
+
+	ldy	#2			; volume, track, sector
 another:
+
+	; these are stored in a weird 4+4 format and this is how
+	; you decode them
+
 	jsr	readnib
-	rol			; set carry
+	rol
 	sta	sector_smc+1
 	jsr	readnib
-	and	sector_smc+1
-	dey
+	and	sector_smc+1		; now A has the value
+
+	dey				; work through the values
 	bpl	another
 
-	tay
-	ldx	addrtbl, Y	; fetch corresponding address
-	beq	read		; done?
+	tay				; A should be sector#?
+					; Y is now sector # VMW
+	ldx	addrtbl, Y		; fetch corresponding address
+					; in table.
 
-	sta	sector_smc+1	; store index for later
+	beq	outer_read		; if address 0, not valid, try again
 
-	stx	adrpatch1+2
+	sta	sector_smc+1		; store sector for later
+
+	stx	adrpatch1+2		; store address to all of these
 	stx	adrpatch8+2
 	stx	adrpatch2+2
 	stx	adrpatch3+2
@@ -121,14 +151,14 @@ another:
 	stx	adrpatch7+2
 
 	inx
-	stx	adrpatch9+2
+	stx	adrpatch9+2		; store address+1 here
 	dex
 
 	dex
-	stx	adrpatch4+2
+	stx	adrpatch4+2		; store address-1 here?
 	stx	adrpatch6+2
 
-	ldy	#$fe
+	ldy	#$fe			; Y=-2
 
 loop2:
 adrpatch1:
@@ -138,11 +168,11 @@ adrpatch1:
 	bne	loop2
 
 branch_read:
-        bcs	read		; branch always
+        bcs	outer_read	; branch always
 
 check_mode:
 	cpx	#0
-	beq	read		; loop if not expecting #$AD
+	beq	outer_read	; loop if not expecting #$AD
 
 loop33:
 	sta	tmpval_smc+1	; zero rolling checksum
@@ -240,11 +270,8 @@ driveoff:
 slotpatch7:
 	lda	$c0d1
 
-seekret:
-
-	; the RWTS waits 25ms after seeking for things to settle
-
 	rts
+
 
 	;=================================
 	;=================================
@@ -254,6 +281,146 @@ seekret:
 	; phase_smc+1 = track*2 to seek to
 	; curtrk+1 = current track
 
+
+	; due to problems when switching drive1/drive
+	; we include here instead the larger but less fancy
+	; seek from PRORWTS
+
+	; "no tricks here, just the regular stuff" -- qkumba
+
+step      = $CC         ;(internal) state for stepper motor
+;tmptrk    = $CD         ;(internal) temporary copy of current track
+;phase     = $CE         ;(internal) current phase for seek
+;tmpsec	  = $3c
+
+	; X = destination track
+	; Y = 0
+
+;cu;rtrk_smc:
+;	lda	#0
+
+seek:
+
+;p;hase_smc:
+;	lda	#0
+;	sta	phase
+
+curtrk_smc:
+	lda	#0
+
+	ldy	#0		; added
+	sty	step
+;	asl	phase
+
+;	txa			; get destination in A
+;	asl			; multiply to get half track
+copy_cur:
+	tax			; current track
+	sta	tmpval_smc+1 ;tmptrk		; save current track for later
+
+	; calculate direction to seek
+
+	sec
+phase_smc:
+	sbc	#$d1		; track *2 to seek to?
+	beq	done_seek	; if match, we're there
+
+	; update direction
+
+	bcs	seeking_out	; if positive, seeking out toward T34
+
+seeking_in:
+	eor	#$ff		; negate the result?
+	inx			; move current track inward
+	bcc	seek_dir_done
+
+seeking_out:
+	sbc	#1		; difference -1 (carry is set here)
+	dex			; move current track outward
+
+seek_dir_done:
+	cmp	step		; compare to step
+	bcc	skip_set_step	; if below minimum, don't change?
+
+	lda	step		; load step value
+
+skip_set_step:
+
+	; set acceleration/momentum
+
+	cmp	#8			; see if > 8
+					; our momentum table is 8
+					; (DOS3.3 it's 12)
+					; Y maxes out if over 8
+
+	bcs	skip_update_momentum
+	tay				; acceleration offset in Y
+	sec				; carry set is phase on
+skip_update_momentum:
+
+	txa				; current track in A
+	pha				; save for later
+	ldx	phase_on_time, Y	; load on time from table
+
+done_seek:	; +++
+	php				; save flags(?)
+	bne	skip_p			; bra?
+loop_mmm:
+	clc				; set phase off
+	lda	tmpval_smc+1 ;tmptrk			; restore saved track
+	ldx	phase_off_time, Y	; get off time from table
+skip_p:
+	stx	sector_smc+1 ;tmpsec			; why
+	and	#3			; mask to 1 of 3 phases
+	rol				; multiply by 2, set low bit to carry
+					; carry holds on/off
+	tax
+	lsr				; get low bit in carry for later
+					; but must do before A destroyed
+;unrseek=unrelocdsk+(*-reloc)
+
+slotpatch8:
+	lda	$C0D1, X
+
+seek_delay:
+
+	; delay 2+(19*5)-1 = 97 cycles, + 6+2 = 105 cycles = ~100us
+
+seek_delay_outer:
+	ldx	#$13			; 2
+seek_delay_inner:
+	dex				; 2
+	bne	seek_delay_inner	; 2/3
+
+	dec	sector_smc+1 ;tmpsec			; 6	holds on/off delay time
+	bne	seek_delay_outer	; 2/3
+seek_delay_end:
+
+	; C is from the LSR previously? so phase bit
+
+	bcs	loop_mmm		; if carry set, try again phase off
+	plp				; restore?
+
+	beq	seekret			; if zero we were done
+
+	pla				; restore current track
+	inc	step			; increment step count
+	bne	copy_cur		; (bra) try again
+
+seekret:
+	; update current track
+	ldx	phase_smc+1
+	stx	curtrk_smc+1
+	; the DOS3.3 RWTS waits 25ms after seeking for things to settle
+
+	rts
+
+
+;curtrk_smc:				; FIXME
+;	lda	#0
+
+
+.if 0
 seek:
 	ldx	#0			; reset acceleration count?
 	stx	step_smc+1
@@ -365,6 +532,7 @@ seek_delay_end:
 	inc	step_smc+1		; increment step count
 	bne	copy_cur		; bra(?) back to beginning
 
+.endif
 
 ; phase on/off tables, in 100us multiples
 

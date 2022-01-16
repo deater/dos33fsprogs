@@ -45,7 +45,6 @@ text_loop:
 	dex
 	bne	text_loop
 
-
 	;===================
 	; detect model
 	;===================

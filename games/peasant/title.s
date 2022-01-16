@@ -9,16 +9,13 @@
 .include "music.inc"
 
 title:
-	jsr	hgr2
+	jsr	hgr2				; clear screen, HGR page 2
 
 	;=========================
 	; set up hgr lookup tables
 	;=========================
 
-	jsr	hgr_make_tables
-
-
-
+	jsr	hgr_make_tables			; necessary?
 
 
 	;=========================
@@ -32,8 +29,8 @@ do_title:
 	lda	#0
 	sta	FRAME
 
-	;======================
-	; load regular to $40
+	;================================
+	; load regular title image to $40
 
 	lda	#<(title_trogfree_lzsa)
 	sta	getsrc_smc+1
@@ -45,8 +42,8 @@ do_title:
 	jsr	decompress_lzsa2_fast
 
 
-	;======================
-	; load trogdor to $20
+	;=================================
+	; load trogdor title image to $20
 
 	lda	#<(title_lzsa)
 	sta	getsrc_smc+1
@@ -64,7 +61,6 @@ do_title:
 	lda	SOUND_STATUS
 	and	#SOUND_MOCKINGBOARD
 	beq	mockingboard_notfound
-
 
 	jsr	mockingboard_loop
 	jmp	title_loop_done
@@ -172,10 +168,10 @@ zurg:
 
 reset_altfire:
 	lda	#50
-	sta	ALTFIRE
+	sta	ALTFIRE				; start on yy=50 on screen
 
-	lda	#<altfire_sprite
-	sta	alt_smc1+1
+	lda	#<altfire_sprite		; point to alternate fire
+	sta	alt_smc1+1			; sprite in memory
 	sta	alt_smc2+1
 
 	lda	#>altfire_sprite
@@ -187,55 +183,57 @@ title_loop:
 	lda	C_VOLUME	; see if volume on trogdor channel
 	beq	no_trog
 
-	bit	PAGE1
+	bit	PAGE1		; if it did, flip page to trogdor
 	jmp	done_trog
 
 no_trog:
-	bit	PAGE2
+	bit	PAGE2		; otherwise stay at regular
+
 done_trog:
 
+				; work on flame
 	lda	FRAME		; skip most of time
 	and	#$3f
 	bne	altfire_good
 
-
 	; do altfire loop
 
-	ldx	ALTFIRE
+	ldx	ALTFIRE		; point (GBASL) to current line to copy
 	lda	hposn_high,X
 	sta	GBASH
 	lda	hposn_low,X
 	sta	GBASL
 
-	ldy	#34
+	ldy	#34		; xx=34*7
 inner_altfire:
 
-	lda	(GBASL),Y
-	pha
-alt_smc1:
-	lda	$d000
-	sta	(GBASL),Y
-	pla
-alt_smc2:
-	sta	$d000
+	; swap sprite data with screen data
 
-	inc	alt_smc1+1
+	lda	(GBASL),Y	; get pixels from screen
+	pha			; save for later
+alt_smc1:
+	lda	$d000		; get pixels from sprite
+	sta	(GBASL),Y	; store to screen
+	pla			; restore saved pixels
+alt_smc2:
+	sta	$d000		; store to pixel area
+
+	inc	alt_smc1+1	; increment the sprite pointers
 	inc	alt_smc2+1
 	bne	alt_noflo
 
-	inc	alt_smc1+2
+	inc	alt_smc1+2	; handle 16-bit if overflowed
 	inc	alt_smc2+2
-
 
 alt_noflo:
 	iny
-	cpy	#40
+	cpy	#40		; continue to xx=(40*7)
 	bne	inner_altfire
 
 
 	inc	ALTFIRE
 	lda	ALTFIRE
-	cmp	#135
+	cmp	#135		; continue until yy=135
 	beq	reset_altfire
 
 altfire_good:
@@ -244,8 +242,11 @@ altfire_good:
 
 	lda	KEYPRESS				; 4
 	bpl	title_loop				; 3
-	bit	KEYRESET	; clear the keyboard buffer
 
+	;==========================
+	; key was pressed, exit
+
+	bit	KEYRESET		; clear the keyboard buffer
 
 	bit	PAGE2			; return to viewing PAGE2
 

@@ -55,12 +55,13 @@ check_floppy_in_drive2:
 
 	; seek to track 0
 
-	lda	#$44		; 68 = 34 tracks; worst case scenario(?)
+	lda	#$46		; 70 = 35 tracks; worst case scenario(?)
 	sta	curtrk_smc+1
-	lda	#0		; seek to track0
+	lda	#$0		; seek to track0
 	sta	phase_smc+1
 
 ;	jsr	antim_seek_track0
+
 	jsr	seek
 
 	;=====================================

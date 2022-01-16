@@ -19,7 +19,7 @@
 ; 247 bytes -- combine note loop.  makes song a bit faster
 ; 245 bytes -- try to optimize writing out volume
 ; 255 bytes -- add in some visualization
-
+; 252 bytes -- re-arrange decode code
 d2:
 
 	;===================
@@ -35,17 +35,12 @@ tracker_song = peasant_song
 
 .include "tracker_init.s"
 
-	jsr	SETGR
+	jsr	SETGR			; enable lo-res graphics
 
 game_loop:
-	; typically A=0, X=FF, Y=0
+	; typically A=0, X=FF, Y=0 here
 
-;	lda	$70
-;blah_smc:
-;	sta	$400
-;	inc	blah_smc+1
-
-	; start the music playing
+	; play a frame of music
 
 .include "play_frame.s"
 .include "ay3_write_regs.s"
@@ -56,7 +51,6 @@ game_loop:
 	jsr	WAIT
 
 	beq	game_loop
-
 
 ; music
 .include	"mA2E_2.s"

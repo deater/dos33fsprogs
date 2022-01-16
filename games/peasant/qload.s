@@ -65,7 +65,7 @@ zp_clear_loop:
 	sta	DRIVE1_DISK		; it's in drive1
 	sta	CURRENT_DRIVE		; and currently using drive 1
 
-	lda	#$ff
+	lda	#$FF
 	sta	DRIVE1_TRACK
 	sta	DRIVE2_TRACK
 
@@ -75,9 +75,6 @@ zp_clear_loop:
 
 	lda	#LOAD_TITLE		; next load title
 	sta	WHICH_LOAD
-
-	bit	$C054
-	bit	$C051
 
 main_game_loop:
 	jsr	load_file
