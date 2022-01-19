@@ -5,11 +5,11 @@
 	;=====================
 	;=====================
 	;=====================
-	; write all 14 registers at AY_REGS
+	; write all 13 registers at AY_REGS
 
 ay3_write_regs:
 
-	ldx	#13
+	ldx	#12
 ay3_write_reg_loop:
 
 	lda	#MOCK_AY_LATCH_ADDR     ; latch_address for PB1         ; 2
@@ -28,7 +28,4 @@ ay3_write_reg_loop:
 
 	dex
 	bpl	ay3_write_reg_loop
-
-;	rts
-
 

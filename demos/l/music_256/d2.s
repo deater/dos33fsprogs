@@ -32,9 +32,12 @@
 ; 241 bytes -- forgot we didn't need to init volume in play_frame anymore
 ; 238 bytes -- can use Y to save note value in play_frame now
 ; 237 bytes -- make song terminator #$FF so we don't have to load it
+; 235 bytes -- note X is $FF on entry to mockingboard entry
 
 .zeropage
-;.globalzp       rot_smc
+.globalzp       frequencies_low
+.globalzp       frequencies_high
+
 
 d2:
 	; this is also the start of AY_REGS
@@ -50,6 +53,8 @@ d2:
 	bmi	skip_const
 
 	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
+
+.include "notes.inc"
 
 skip_const:
 
@@ -101,7 +106,7 @@ inner_wait:
 .byte $00,$00,$00,$00
 .byte $00,$00,$00,$00,$00
 .byte $00,$00,$00
-.byte $00
+.byte $00,$00,$00
 
 ; music
 .include	"mA2E_2.s"

@@ -65,13 +65,29 @@ mockingboard_init:
 	; Initialize the 6522s
 	; Reset Left AY-3-8910
 	;===========================
+	; 15 bytes
 
-	ldx	#$FF
-	stx	MOCK_6522_DDRB1
-	stx	MOCK_6522_DDRA1
+	; X is FF on entry?
 
-	inx				;	#MOCK_AY_RESET $0
-	stx	MOCK_6522_ORB1
-	ldx	#MOCK_AY_INACTIVE	;	$4
-	stx	MOCK_6522_ORB1
+;	ldx	#$FF			; 2
+	stx	MOCK_6522_DDRB1		; 3	$C402
+	stx	MOCK_6522_DDRA1		; 3	$C403
 
+	inx				; 1	#MOCK_AY_RESET $0
+	stx	MOCK_6522_ORB1		; 3	$C400
+	ldx	#MOCK_AY_INACTIVE	; 2	$4
+	stx	MOCK_6522_ORB1		; 3	$C400
+
+
+;	lda	#$FF			; 2
+;	ldy	#$2			; 2
+;	sta	($44),Y			; 2
+;	iny				; 1
+;	sta	($44),Y			; 2
+
+;	lda	#0			; 2
+;	ldy	#$0			; 2
+; blah:
+;	sta	$C400,Y			; 3
+;	lda	#$4			; 2
+;	sta	(blah+1),Y		; 2

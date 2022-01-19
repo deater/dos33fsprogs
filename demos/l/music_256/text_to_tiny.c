@@ -461,46 +461,55 @@ printf("\n");
 	printf("\t.byte $FF ; end\n");
 	total_len++;
 
+
+	FILE *fff;
+
 	int o,n;
 
+	fff=fopen("notes.inc","w");
+	if (fff==NULL) {
+		fprintf(stderr,"Oh no!\n");
+		exit(1);
+	}
+
 	for(o=0;o<4;o++) {
-		printf("; Octave %d : ",o);
+		fprintf(fff,"; Octave %d : ",o);
 		for(n=0;n<12;n++) {
-			printf("%d ",notes_used[(o*12)+n]);
+			fprintf(fff,"%d ",notes_used[(o*12)+n]);
 		}
-		printf("\n");
+		fprintf(fff,"\n");
 	}
 
-	printf("; %d notes allocated\n",notes_allocated);
+	fprintf(fff,"; %d notes allocated\n",notes_allocated);
 
-	printf(";.byte ");
+	fprintf(fff,";.byte ");
 	for(n=0;n<notes_allocated;n++) {
-		printf("%d,",allocated_notes[n]);
+		fprintf(fff,"%d,",allocated_notes[n]);
 	}
-	printf("\n");
+	fprintf(fff,"\n");
 
 	/* put these first as we use the high bit to end things? */
-	printf("frequencies_low:\n");
-	printf(".byte ");
+	fprintf(fff,"frequencies_low:\n");
+	fprintf(fff,".byte ");
 	for(n=0;n<notes_allocated;n++) {
-		printf("$%02X",(frequencies[allocated_notes[n]])&0xff);
-		if (n!=(notes_allocated-1)) printf(",");
+		fprintf(fff,"$%02X",(frequencies[allocated_notes[n]])&0xff);
+		if (n!=(notes_allocated-1)) fprintf(fff,",");
 		total_len++;
 	}
-	printf("\n");
+	fprintf(fff,"\n");
 
-	printf("frequencies_high:\n");
-	printf(".byte ");
+	fprintf(fff,"frequencies_high:\n");
+	fprintf(fff,".byte ");
 	for(n=0;n<notes_allocated;n++) {
-		printf("$%02X",(frequencies[allocated_notes[n]]>>8));
-		if (n!=(notes_allocated-1)) printf(",");
+		fprintf(fff,"$%02X",(frequencies[allocated_notes[n]]>>8));
+		if (n!=(notes_allocated-1)) fprintf(fff,",");
 		total_len++;
 	}
-	printf("\n");
+	fprintf(fff,"\n");
 
 
 
-	printf("; total len=%d\n",total_len);
+	fprintf(fff,"; total len=%d\n",total_len);
 
 	(void) irq;
 	(void) loop;

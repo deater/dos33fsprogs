@@ -15,7 +15,7 @@ submit:	hgr_d2_1k.zip
 hgr_d2.dsk:	HELLO D2
 	cp $(EMPTY_DISK)/empty.dsk ./hgr_d2.dsk
 	$(DOS33) -y hgr_d2.dsk SAVE A HELLO
-	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x80 BSAVE D2
+	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x60 BSAVE D2
 
 ####
 
@@ -37,7 +37,7 @@ mA2E_2.s:	mA2E_2.txt text_to_tiny
 ####
 
 D2:	d2.o
-	ld65 -o D2 d2.o -C ./apple2_80_zp.inc
+	ld65 -o D2 d2.o -C ./apple2_60_zp.inc
 
 d2.o:	d2.s \
 	zp.inc hardware.inc \
