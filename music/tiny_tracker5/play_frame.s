@@ -3,8 +3,7 @@ play_frame:
 	;============================
 	; see if still counting down
 
-song_countdown_smc:
-	lda	#$FF			; initially negative so we enter loop
+	lda	SONG_COUNTDOWN
 	bpl	done_update_song
 
 set_notes_loop:
@@ -12,31 +11,31 @@ set_notes_loop:
 	;==================
 	; load next byte
 
-	pla			; located on stack
+	ldy	SONG_OFFSET
+	lda	tracker_song,Y
 
 	;==================
 	; see if hit end
 
 	; this song only 16 notes so valid notes always positive
+;	cmp	#$80
 	bpl	not_end
 
 	;====================================
 	; if at end, loop back to beginning
 
 	asl			; reset song offset to 0
-	tax
-	txs
+	sta	SONG_OFFSET
 	beq	set_notes_loop
 
 not_end:
 
 	; NNNNNECC -- c=channel, e=end, n=note
 
-	sta	SAVE			; save note
+	pha				; save note
 
 	and	#3
 	tax
-
 	ldy	#$0E
 	sty	AY_REGS+8,X		; $08 set volume A,B,C
 
@@ -44,10 +43,10 @@ not_end:
 	tax				; put channel offset in X
 
 
-	lda	SAVE			; restore note
+	pla				; restore note
 	tay
 	and	#$4
-	sta	song_countdown_smc+1	; always 4 long?
+	sta	SONG_COUNTDOWN		; always 4 long?
 
 	tya
 	lsr
@@ -72,8 +71,9 @@ blah_urgh:
 	;============================
 	; point to next
 
-	; don't have to, PLA did it for us
+	; assume less than 256 bytes
+	inc	SONG_OFFSET
 
 done_update_song:
-	dec	song_countdown_smc+1
+	dec	SONG_COUNTDOWN
 	bmi	set_notes_loop

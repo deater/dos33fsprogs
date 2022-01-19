@@ -15,7 +15,7 @@ submit:	hgr_d2_1k.zip
 hgr_d2.dsk:	HELLO D2
 	cp $(EMPTY_DISK)/empty.dsk ./hgr_d2.dsk
 	$(DOS33) -y hgr_d2.dsk SAVE A HELLO
-	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x80 BSAVE D2
+	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x6000 BSAVE D2
 
 ####
 
@@ -32,18 +32,22 @@ peasant_music.s:	peasant.txt text_to_tiny
 mA2E_2.s:	mA2E_2.txt text_to_tiny
 	./text_to_tiny mA2E_2.txt > mA2E_2.s
 
+####
+
+mA2E_3.s:	mA2E_3.txt text_to_tiny
+	./text_to_tiny mA2E_3.txt > mA2E_3.s
 
 
 ####
 
 D2:	d2.o
-	ld65 -o D2 d2.o -C ./apple2_80_zp.inc
+	ld65 -o D2 d2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 d2.o:	d2.s \
 	zp.inc hardware.inc \
-	mA2E_2.s \
+	mA2E_2.s mA2E_3.s \
 	mockingboard_init.s play_frame.s \
-	ay3_write_regs.s
+	tracker_init.s ay3_write_regs.s
 	ca65 -o d2.o d2.s -l d2.lst
 
 ####

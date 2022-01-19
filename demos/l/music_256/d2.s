@@ -20,7 +20,38 @@
 ; 245 bytes -- try to optimize writing out volume
 ; 255 bytes -- add in some visualization
 ; 252 bytes -- re-arrange decode code
+; 251 bytes -- load in zero page
+; 256 bytes -- expand WAIT to not use jsr
+; 258 bytes -- get rid of pha/pla
+; 255 bytes -- use PLA to load the data after setting stack to 0
+; 249 bytes -- optimize init code to not write 0s to ZP and init $38/$e/$e/$e
+;		but instead count on A/B/C over-writing and have the
+;		ay buffer over-write the init code
+; 247 bytes -- count on X always being $FF when hit delay
+; 246 bytes -- make SONG_COUNTDOWN self-modify code
+
+.zeropage
+;.globalzp       rot_smc
+
 d2:
+	; this is also the start of AY_REGS
+	; we count on A/B/C being played first note
+	; so the code gets over-written
+
+	; depends on AY ignoring envelope values if unused
+
+	jsr	SETGR			; enable lo-res graphics
+					; A=$D0, Z=1
+
+	ldx	#$FF			; set stack offset
+	bmi	skip_const
+
+	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
+
+skip_const:
+
+	txs				; write 0 to stack pointer
+
 
 	;===================
 	; music Player Setup
@@ -33,9 +64,7 @@ tracker_song = peasant_song
 
 .include "mockingboard_init.s"
 
-.include "tracker_init.s"
 
-	jsr	SETGR			; enable lo-res graphics
 
 game_loop:
 	; typically A=0, X=FF, Y=0 here
@@ -45,12 +74,28 @@ game_loop:
 .include "play_frame.s"
 .include "ay3_write_regs.s"
 
-	; delay 20Hz, or 1/20s = 50ms
+	; X is in theory $ff when we get here
 
-	lda	#140
-	jsr	WAIT
+	; delay 20Hz, or 1/20s = 50ms
+	;	50,000 cycles
+
+	; 2 + 256*(2+39*5-1) = 49,922
+
+;	ldx	#0		; 2
+outer_wait:
+	ldy	#39		; 2
+inner_wait:
+	dey			; 2
+	bne	inner_wait	; 3/2
+
+	dex			; 2
+	bne	outer_wait	; 3/2
 
 	beq	game_loop
+
+
+; pad so starts at $80
+.byte $00,$00,$00,$00
 
 ; music
 .include	"mA2E_2.s"
