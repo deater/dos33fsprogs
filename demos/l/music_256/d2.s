@@ -33,7 +33,7 @@
 ; 238 bytes -- can use Y to save note value in play_frame now
 ; 237 bytes -- make song terminator #$FF so we don't have to load it
 ; 235 bytes -- note X is $FF on entry to mockingboard entry
-; 234 bytes -- qkumba noticed we can execute the AY config
+; 233 bytes -- qkumba noticed we can execute the AY config
 
 .zeropage
 ;.globalzp       frequencies_low
@@ -58,6 +58,7 @@ d2:
 	nop
 
 	; we can execute these... (as qkumba noticed)
+	; it's SEC, ASL $0E0E
 
 	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
 
@@ -104,6 +105,7 @@ inner_wait:
 
 
 ; pad so starts at $80
+; use this for visualization
 .byte $00,$00,$00,$00
 .byte $00,$00,$00,$00,$00
 .byte $00,$00,$00
