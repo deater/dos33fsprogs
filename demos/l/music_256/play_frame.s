@@ -52,15 +52,14 @@ not_end:
 
 	lda	frequencies_high,Y
 	sta	AY_REGS+1,X
-;	sta	$500,X
 
 	lda	frequencies_low,Y
 	sta	AY_REGS,X		; set proper register value
 
 	; visualization
-blah_urgh:
-	sta	$400,Y
-	inc	blah_urgh+1
+;blah_urgh:
+;	sta	$400,Y
+;	inc	blah_urgh+1
 
 
 	;============================

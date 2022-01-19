@@ -29,6 +29,7 @@ NORMAL	= $F273
 HGR2    = $F3D8
 HCLR	= $F3F2
 HPOSN   = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
+COSTBL	= $F5BA
 XDRAW0	= $F65D
        
 

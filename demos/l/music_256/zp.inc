@@ -9,7 +9,7 @@ GBASH   = $27
 BASL    = $28
 BASH    = $29
 
-AY_REGS		= $80
+AY_REGS		= $80-$7
 
 HGR_Y           = $E2
 HGR_COLOR       = $E4

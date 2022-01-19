@@ -40,7 +40,15 @@
 ;.globalzp       frequencies_high
 
 
-d2:
+music_split:
+
+	; we can execute these... (as qkumba noticed)
+	; it's SEC, ASL $0E0E
+
+	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
+					; want to start at AY_REGS+7
+
+
 	; this is also the start of AY_REGS
 	; we count on A/B/C being played first note
 	; so the code gets over-written
@@ -50,17 +58,11 @@ d2:
 	jsr	SETGR			; enable lo-res graphics
 					; A=$D0, Z=1
 
+	bit	FULLGR			; make graphcs full screen
+
 	ldx	#$FF			; set stack offset
-;	bmi	skip_const
 
 	txs				; write 0 to stack pointer
-
-	nop
-
-	; we can execute these... (as qkumba noticed)
-	; it's SEC, ASL $0E0E
-
-	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
 
 
 	;===================
@@ -82,6 +84,27 @@ game_loop:
 	; play a frame of music
 
 .include "play_frame.s"
+
+	; visualization?
+
+viz_smc:
+	ldx	#$00		; 2
+
+	lda	AY_REGS+4	; 2	; C channel low freq
+	sta	$400,X		; 3
+	lda	AY_REGS+2	; 2	; C channel low freq
+	sta	$500,X		; 3
+	lda	AY_REGS+0	; 2	; C channel low freq
+	sta	$600,X		; 3
+
+	inc	viz_smc+1	; 2
+
+;	nop
+;	nop
+
+
+
+
 .include "ay3_write_regs.s"
 
 	; X is in theory $ff when we get here
@@ -106,10 +129,12 @@ inner_wait:
 
 ; pad so starts at $80
 ; use this for visualization
-.byte $00,$00,$00,$00
-.byte $00,$00,$00,$00,$00
-.byte $00,$00,$00
-.byte $00,$00,$00,$00
+;.byte $00,$00
+;.byte $00,$00
+;.byte $00,$00,$00,$00,$00
+;.byte $00
+;.byte $00,$00
+;.byte $00,$00,$00,$00
 
 ; music
 .include	"mA2E_2.s"

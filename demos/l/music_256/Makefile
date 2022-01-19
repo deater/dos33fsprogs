@@ -12,10 +12,11 @@ submit:	hgr_d2_1k.zip
 
 ####
 
-hgr_d2.dsk:	HELLO D2
+hgr_d2.dsk:	HELLO D2 VIZ
 	cp $(EMPTY_DISK)/empty.dsk ./hgr_d2.dsk
 	$(DOS33) -y hgr_d2.dsk SAVE A HELLO
 	$(DOS33) -y hgr_d2.dsk -t BIN -a 0x80 BSAVE D2
+	$(DOS33) -y hgr_d2.dsk -t BIN -a 0xc00 BSAVE VIZ
 
 ####
 
@@ -48,6 +49,16 @@ d2.o:	d2.s \
 
 ####
 
+VIZ:	viz.o
+	ld65 -o VIZ viz.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+viz.o:	viz.s \
+	zp.inc hardware.inc
+	ca65 -o viz.o viz.s -l viz.lst
+
+
+####
+
 text_to_tiny:	text_to_tiny.o
 	$(CC) -o text_to_tiny text_to_tiny.o -lm
 
@@ -57,4 +68,4 @@ text_to_tiny.o:	text_to_tiny.c
 ####
 
 clean:
-	rm -f *~ *.o *.lst D2 HELLO text_to_tiny mA2E_2.s
+	rm -f *~ *.o *.lst D2 VIZ HELLO text_to_tiny mA2E_2.s
