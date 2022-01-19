@@ -34,6 +34,7 @@
 ; 237 bytes -- make song terminator #$FF so we don't have to load it
 ; 235 bytes -- note X is $FF on entry to mockingboard entry
 ; 233 bytes -- qkumba noticed we can execute the AY config
+; 252 bytes -- max out visualization
 
 .zeropage
 ;.globalzp       frequencies_low
@@ -92,16 +93,17 @@ viz_smc:
 
 	lda	AY_REGS+4	; 2	; C channel low freq
 	sta	$400,X		; 3
-	lda	AY_REGS+2	; 2	; C channel low freq
+	lda	AY_REGS+2	; 2	; B channel low freq
 	sta	$500,X		; 3
-	lda	AY_REGS+0	; 2	; C channel low freq
+	lda	AY_REGS+0	; 2	; A channel low freq
 	sta	$600,X		; 3
 
 	inc	viz_smc+1	; 2
 
-;	nop
-;	nop
-
+	nop			; 1
+	nop			; 1
+			;==============
+			;	21 bytes for visualization
 
 
 
