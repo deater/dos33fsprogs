@@ -30,6 +30,8 @@
 ; 247 bytes -- count on X always being $FF when hit delay
 ; 246 bytes -- make SONG_COUNTDOWN self-modify code
 ; 241 bytes -- forgot we didn't need to init volume in play_frame anymore
+; 238 bytes -- can use Y to save note value in play_frame now
+; 237 bytes -- make song terminator #$FF so we don't have to load it
 
 .zeropage
 ;.globalzp       rot_smc
@@ -98,6 +100,8 @@ inner_wait:
 ; pad so starts at $80
 .byte $00,$00,$00,$00
 .byte $00,$00,$00,$00,$00
+.byte $00,$00,$00
+.byte $00
 
 ; music
 .include	"mA2E_2.s"

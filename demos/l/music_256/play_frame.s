@@ -23,29 +23,23 @@ set_notes_loop:
 	;====================================
 	; if at end, loop back to beginning
 
-	asl			; reset song offset to 0
-	tax
+	tax				; reset stack offset to $FF
 	txs
-	beq	set_notes_loop
+	bmi	set_notes_loop
 
 not_end:
 
 	; NNNNNECC -- c=channel, e=end, n=note
 
-	sta	SAVE			; save note
+	tay				; save note
 
 	and	#3
-	tax
-
-	ldy	#$0E
-	sty	AY_REGS+8,X		; $08 set volume A,B,C
 
 	asl
 	tax				; put channel offset in X
 
+	tya				; restore note
 
-	lda	SAVE			; restore note
-	tay
 	and	#$4
 	sta	song_countdown_smc+1	; always 4 long?
 

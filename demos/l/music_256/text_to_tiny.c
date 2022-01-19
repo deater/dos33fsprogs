@@ -458,7 +458,7 @@ printf("\n");
 //	printf("\t.byte $FF ; end\n");
 
 	/* assume 16 notes or fewer */
-	printf("\t.byte $80 ; end\n");
+	printf("\t.byte $FF ; end\n");
 	total_len++;
 
 	int o,n;
