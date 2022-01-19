@@ -33,10 +33,11 @@
 ; 238 bytes -- can use Y to save note value in play_frame now
 ; 237 bytes -- make song terminator #$FF so we don't have to load it
 ; 235 bytes -- note X is $FF on entry to mockingboard entry
+; 234 bytes -- qkumba noticed we can execute the AY config
 
 .zeropage
-.globalzp       frequencies_low
-.globalzp       frequencies_high
+;.globalzp       frequencies_low
+;.globalzp       frequencies_high
 
 
 d2:
@@ -50,15 +51,15 @@ d2:
 					; A=$D0, Z=1
 
 	ldx	#$FF			; set stack offset
-	bmi	skip_const
-
-	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
-
-.include "notes.inc"
-
-skip_const:
+;	bmi	skip_const
 
 	txs				; write 0 to stack pointer
+
+	nop
+
+	; we can execute these... (as qkumba noticed)
+
+	.byte	$38,$e,$e,$e		; mixer, A, B, C volume
 
 
 	;===================
@@ -106,7 +107,8 @@ inner_wait:
 .byte $00,$00,$00,$00
 .byte $00,$00,$00,$00,$00
 .byte $00,$00,$00
-.byte $00,$00,$00
+.byte $00,$00,$00,$00
 
 ; music
 .include	"mA2E_2.s"
+.include	"notes.inc"
