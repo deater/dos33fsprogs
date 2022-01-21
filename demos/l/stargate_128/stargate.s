@@ -1,8 +1,13 @@
-; 5 REM BY @hisham_hm Mar 7 @AppleIIBot
+; Stargate in 121 bytes!
 
-; buggy version that looks cool
+; a 128-byte intro for Lovebyte 2022
+; by Deater / Desire
 
-; took a while, but there are two bugs.  COUNT (and thus X) gets the wrong
+; this came about by accident while I was trying to convert
+; a BASIC square tunnel effect by @hisham_hm that was on
+; the @AppleIIBot on 7 March 2021
+
+; There are at least two bugs.  COUNT (and thus X) gets the wrong
 ;	value and never resets, mostly due to the jmp at the end going
 ;	to the wrong place.  The init of COUNTMAX is wrong too
 
@@ -144,7 +149,3 @@ end:
 
 	jmp	cycle
 
-	; want to load at $3f5, this originally at 379
-	; so load at $37c
-
-	jmp	tunnel

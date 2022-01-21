@@ -19,6 +19,19 @@ stargate.dsk:	$(DOS33) HELLO STARGATE
 
 ###
 
+submit:	stargate_128.zip
+
+stargate_128.zip:	STARGATE stargate.s file_id.diz stargate.dsk
+	mkdir -p lovebyte2022_stargate_128
+	cp STARGATE ./lovebyte2022_stargate_128
+	cp stargate.s ./lovebyte2022_stargate_128
+	cp file_id.diz ./lovebyte2022_stargate_128
+	cp stargate.dsk ./lovebyte2022_stargate_128
+	cp stargate_128_720p.mp4 ./lovebyte2022_stargate_128
+	zip -r stargate_128.zip lovebyte2022_stargate_128
+
+###
+
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 

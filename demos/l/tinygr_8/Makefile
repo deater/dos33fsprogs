@@ -16,13 +16,13 @@ tiny_gr8.dsk:	HELLO TINY_GR
 submit:	tiny_gr8.zip
 
 tiny_gr8.zip:	TINY_GR tiny_gr.s file_id.diz tiny_gr8.dsk
-	mkdir -p lovebyte2021_tiny_gr8
-	cp TINY_GR ./lovebyte2021_tiny_gr8
-	cp tiny_gr.s ./lovebyte2021_tiny_gr8
-	cp file_id.diz ./lovebyte2021_tiny_gr8
-	cp tiny_gr8.dsk ./lovebyte2021_tiny_gr8
-	cp tiny_gr_720p.mp4 ./lovebyte2021_tiny_gr8
-	zip -r text8.zip lovebyte2021_tiny_gr8
+	mkdir -p lovebyte2022_tiny_gr8
+	cp TINY_GR ./lovebyte2022_tiny_gr8
+	cp tiny_gr.s ./lovebyte2022_tiny_gr8
+	cp file_id.diz ./lovebyte2022_tiny_gr8
+	cp tiny_gr8.dsk ./lovebyte2022_tiny_gr8
+	cp tiny_gr8_720p.mp4 ./lovebyte2022_tiny_gr8
+	zip -r tiny_gr8.zip lovebyte2022_tiny_gr8
 
 ####
 
