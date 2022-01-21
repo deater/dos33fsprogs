@@ -57,6 +57,10 @@ not_end:
 	sta	AY_REGS,X		; set proper register value
 
 	; visualization
+
+star_smc:
+       sta     $500                    ; 3
+
 ;blah_urgh:
 ;	sta	$400,Y
 ;	inc	blah_urgh+1

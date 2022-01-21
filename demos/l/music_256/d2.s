@@ -39,7 +39,7 @@
 .zeropage
 ;.globalzp       frequencies_low
 ;.globalzp       frequencies_high
-
+.globalzp	colors
 
 music_split:
 
@@ -86,28 +86,29 @@ game_loop:
 
 .include "play_frame.s"
 
+	;=================
+	;=================
 	; visualization?
-
-viz_smc:
-	ldx	#$00		; 2
-
-	lda	AY_REGS+4	; 2	; C channel low freq
-	sta	$400,X		; 3
-	lda	AY_REGS+2	; 2	; B channel low freq
-	sta	$500,X		; 3
-	lda	AY_REGS+0	; 2	; A channel low freq
-	sta	$600,X		; 3
-
-	inc	viz_smc+1	; 2
-
-	nop			; 1
-	nop			; 1
-			;==============
-			;	21 bytes for visualization
+	;=================
+	;=================
 
 
+.include "visual.s"
+
+	;==================
+	;==================
+	; write music to AY registers
+	;==================
+	;==================
 
 .include "ay3_write_regs.s"
+
+
+	;==================
+	;==================
+	; delay to ~20Hz
+	;==================
+	;==================
 
 	; X is in theory $ff when we get here
 
@@ -128,15 +129,10 @@ inner_wait:
 
 	beq	game_loop
 
+colors:
+	.byte 0,9,13,15
 
-; pad so starts at $80
-; use this for visualization
-;.byte $00,$00
-;.byte $00,$00
-;.byte $00,$00,$00,$00,$00
-;.byte $00
-;.byte $00,$00
-;.byte $00,$00,$00,$00
+; this needs to start at $80
 
 ; music
 .include	"mA2E_2.s"

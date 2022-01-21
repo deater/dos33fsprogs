@@ -42,7 +42,7 @@ D2:	d2.o
 
 d2.o:	d2.s \
 	zp.inc hardware.inc \
-	mA2E_2.s \
+	mA2E_2.s visual.s \
 	mockingboard_init.s play_frame.s \
 	ay3_write_regs.s
 	ca65 -o d2.o d2.s -l d2.lst
