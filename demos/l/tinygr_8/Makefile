@@ -9,13 +9,13 @@ all:	tiny_gr8.dsk
 tiny_gr8.dsk:	HELLO TINY_GR
 	cp $(EMPTYDISK) tiny_gr8.dsk
 	$(DOS33) -y tiny_gr8.dsk SAVE A HELLO
-	$(DOS33) -y tiny_gr8.dsk BSAVE -a 0xB8 TINY_GR
+	$(DOS33) -y tiny_gr8.dsk BSAVE -a 0xB9 TINY_GR
 
 ###
 
-submit:	text8.zip
+submit:	tiny_gr8.zip
 
-text8.zip:	TINY_GR tiny_gr.s file_id.diz tiny_gr8.dsk
+tiny_gr8.zip:	TINY_GR tiny_gr.s file_id.diz tiny_gr8.dsk
 	mkdir -p lovebyte2021_tiny_gr8
 	cp TINY_GR ./lovebyte2021_tiny_gr8
 	cp tiny_gr.s ./lovebyte2021_tiny_gr8
@@ -35,7 +35,7 @@ HELLO:	hello.bas
 ###
 
 TINY_GR:	tiny_gr.o
-	ld65 -o TINY_GR tiny_gr.o -C ./apple2_b8.inc
+	ld65 -o TINY_GR tiny_gr.o -C ./apple2_b9.inc
 
 tiny_gr.o:	tiny_gr.s
 	ca65 -o tiny_gr.o tiny_gr.s -l tiny_gr.lst

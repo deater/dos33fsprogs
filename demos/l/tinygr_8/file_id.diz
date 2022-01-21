@@ -1,5 +1,17 @@
-Tiny Text
+Tiny GR 8
 -
-Textmode Hex Scroller
-8-byte Intro for Apple II, Lovebyte 2021
+8-byte Intro for Apple II, Lovebyte 2022
 by Deater / dSr
+
+You can't do much 6502 assembly in 8 bytes.
+This code takes advantage of the fact that on boot, Applesoft BASIC
+puts a short routine CHRGET in RAM at address $B1-$C8 that parses
+tokens.  We can drop our code in the middle of there and re-use
+some of the branching infrastructure.
+
+What this code does is just read out memory, starting at $7800 and
+printing it to the screen, with lo-res mode enabled.  This makes
+a pattern that depends on the default power up of the DRAM (white and black
+bars for many Apple II models).  At the end it crashes through DOS3.3
+(the colored pattern) and then into the MMIO (soft-switch) area
+which leads to a switch to hi-res, some brief sound, then a crash.
