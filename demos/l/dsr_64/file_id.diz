@@ -1,5 +1,8 @@
-Tiny Xdraw
+Dsr64
 -
-Hi-res Xdraw Pattern
-16-byte Intro for Apple II, Lovebyte 2021
+Rotates/Scales the dSr logo in 64-bytes
+64-byte Intro for Apple II, Lovebyte 2022
 by Deater / dSr
+
+Uses the Apple II's hi-res vector scaling/rotating routines
+built into the ROM.  Still needed some tricks to fit in 64B.

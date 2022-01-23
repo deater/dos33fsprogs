@@ -102,7 +102,7 @@ animate_loop:
 	asl			; $20 -> C=1 $00
 	asl			; $40 -> C=0 $00
 
-	adc	#0
+	rol
 	tax
 	cmp	PAGE1,X
 
