@@ -4,25 +4,25 @@ DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	xdraw2_16.dsk
+all:	xdraw_wave_16.dsk
 
-xdraw2_16.dsk:	HELLO XDRAW2
-	cp $(EMPTYDISK) xdraw2_16.dsk
-	$(DOS33) -y xdraw2_16.dsk SAVE A HELLO
-	$(DOS33) -y xdraw2_16.dsk BSAVE -a 0xE7 XDRAW2
+xdraw_wave_16.dsk:	HELLO XDRAW_WAVE
+	cp $(EMPTYDISK) xdraw_wave_16.dsk
+	$(DOS33) -y xdraw_wave_16.dsk SAVE A HELLO
+	$(DOS33) -y xdraw_wave_16.dsk BSAVE -a 0xE7 XDRAW_WAVE
 
 ###
 
 submit:	xdraw16.zip
 
-xdraw16.zip:	XDRAW2 xdraw2.s file_id.diz xdraw2_16.dsk
-	mkdir -p lovebyte2021_xdraw2_16
-	cp XDRAW2 ./lovebyte2021_xdraw2_16
-	cp xdraw2.s ./lovebyte2021_xdraw2_16
-	cp file_id.diz ./lovebyte2021_xdraw2_16
-	cp xdraw2_16.dsk ./lovebyte2021_xdraw2_16
-	cp xdraw2_720p.mp4 ./lovebyte2021_xdraw2_16
-	zip -r xdraw16.zip lovebyte2021_xdraw2_16
+xdraw16.zip:	XDRAW_WAVE xdraw_wave.s file_id.diz xdraw_wave_16.dsk
+	mkdir -p lovebyte2021_xdraw_wave_16
+	cp XDRAW_WAVE ./lovebyte2021_xdraw_wave_16
+	cp xdraw_wave.s ./lovebyte2021_xdraw_wave_16
+	cp file_id.diz ./lovebyte2021_xdraw_wave_16
+	cp xdraw_wave_16.dsk ./lovebyte2021_xdraw_wave_16
+	cp xdraw_wave_720p.mp4 ./lovebyte2021_xdraw_wave_16
+	zip -r xdraw16.zip lovebyte2021_xdraw_wave_16
 
 ####
 
@@ -34,13 +34,13 @@ HELLO:	hello.bas
 
 ###
 
-XDRAW2:	xdraw2.o
-	ld65 -o XDRAW2 xdraw2.o -C ./apple2_e7_zp.inc
+XDRAW_WAVE:	xdraw_wave.o
+	ld65 -o XDRAW_WAVE xdraw_wave.o -C ./apple2_e7_zp.inc
 
-xdraw2.o:	xdraw2.s
-	ca65 -o xdraw2.o xdraw2.s -l xdraw2.lst
+xdraw_wave.o:	xdraw_wave.s
+	ca65 -o xdraw_wave.o xdraw_wave.s -l xdraw_wave.lst
 
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO XDRAW2 *.zip
+	rm -f *~ *.o *.lst HELLO XDRAW_WAVE *.zip
