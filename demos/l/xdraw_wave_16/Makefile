@@ -13,16 +13,16 @@ xdraw_wave_16.dsk:	HELLO XDRAW_WAVE
 
 ###
 
-submit:	xdraw16.zip
+submit:	xdraw_wave16.zip
 
-xdraw16.zip:	XDRAW_WAVE xdraw_wave.s file_id.diz xdraw_wave_16.dsk
-	mkdir -p lovebyte2021_xdraw_wave_16
-	cp XDRAW_WAVE ./lovebyte2021_xdraw_wave_16
-	cp xdraw_wave.s ./lovebyte2021_xdraw_wave_16
-	cp file_id.diz ./lovebyte2021_xdraw_wave_16
-	cp xdraw_wave_16.dsk ./lovebyte2021_xdraw_wave_16
-	cp xdraw_wave_720p.mp4 ./lovebyte2021_xdraw_wave_16
-	zip -r xdraw16.zip lovebyte2021_xdraw_wave_16
+xdraw_wave16.zip:	XDRAW_WAVE xdraw_wave.s file_id.diz xdraw_wave_16.dsk
+	mkdir -p lovebyte2022_xdraw_wave_16
+	cp XDRAW_WAVE ./lovebyte2022_xdraw_wave_16
+	cp xdraw_wave.s ./lovebyte2022_xdraw_wave_16
+	cp file_id.diz ./lovebyte2022_xdraw_wave_16
+	cp xdraw_wave_16.dsk ./lovebyte2022_xdraw_wave_16
+	cp xdraw_wave_720p.mp4 ./lovebyte2022_xdraw_wave_16
+	zip -r xdraw_wave16.zip lovebyte2022_xdraw_wave_16
 
 ####
 

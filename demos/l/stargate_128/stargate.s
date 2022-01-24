@@ -20,6 +20,7 @@ COUNTMAX	= $FD
 COUNT		= $FE
 NEWCOLOR	= $FF
 
+SPEAKER		= $C030
 FULLGR		= $C052
 
 
@@ -52,8 +53,11 @@ cycle:
 
 	; 30 FOR I=X TO 15+X STEP 5:COLOR=0
 
+;	bit	SPEAKER
+
 	ldx	COUNT
 iloop:
+
 	lda	#0
 	sta	COLOR
 
@@ -111,7 +115,6 @@ iloop:
 	; N=N+1
 
 	inc	NEWCOLOR
-
 
 	lda	#75
 	jsr	WAIT

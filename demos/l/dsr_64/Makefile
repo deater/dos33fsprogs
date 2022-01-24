@@ -13,16 +13,16 @@ dsr_64.dsk:	HELLO DSR
 
 ###
 
-submit:	xdraw16.zip
+submit:	dsr64.zip
 
-xdraw16.zip:	DSR dsr.s file_id.diz dsr_64.dsk
-	mkdir -p lovebyte2021_dsr_64
-	cp DSR ./lovebyte2021_dsr_64
-	cp dsr.s ./lovebyte2021_dsr_64
-	cp file_id.diz ./lovebyte2021_dsr_64
-	cp dsr_64.dsk ./lovebyte2021_dsr_64
-	cp dsr_720p.mp4 ./lovebyte2021_dsr_64
-	zip -r xdraw16.zip lovebyte2021_dsr_64
+dsr64.zip:	DSR dsr.s file_id.diz dsr_64.dsk
+	mkdir -p lovebyte2022_dsr_64
+	cp DSR ./lovebyte2022_dsr_64
+	cp dsr.s ./lovebyte2022_dsr_64
+	cp file_id.diz ./lovebyte2022_dsr_64
+	cp dsr_64.dsk ./lovebyte2022_dsr_64
+	cp dsr_720p.mp4 ./lovebyte2022_dsr_64
+	zip -r dsr64.zip lovebyte2022_dsr_64
 
 ####
 

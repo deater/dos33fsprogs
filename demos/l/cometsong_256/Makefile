@@ -10,14 +10,14 @@ all:	cometsong.dsk
 
 ####
 
-submit:	cometsong_256.zip
+submit:	cometsong256.zip
 
-cometsong256.zip: COMETSONG cometsong.s file_id.diz cometsong_256.dsk
+cometsong256.zip:	COMETSONG cometsong.s file_id.diz cometsong.dsk
 	mkdir -p lovebyte2022_cometsong_256
 	cp COMETSONG ./lovebyte2022_cometsong_256
 	cp *.s ./lovebyte2022_cometsong_256
 	cp file_id.diz ./lovebyte2022_cometsong_256
-	cp cometsong_256.dsk ./lovebyte2022_cometsong_256
+	cp cometsong.dsk ./lovebyte2022_cometsong_256
 	cp cometsong_720p.mp4 ./lovebyte2022_cometsong_256
 	zip -r cometsong256.zip lovebyte2022_cometsong_256
 
