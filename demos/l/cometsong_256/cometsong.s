@@ -1,4 +1,4 @@
-; Apple II graphics/music in 1k
+; Apple II graphics/music in 256B
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -41,7 +41,7 @@
 ;.globalzp       frequencies_high
 .globalzp	colors
 
-music_split:
+cometsong:
 
 	; we can execute these... (as qkumba noticed)
 	; it's SEC, ASL $0E0E

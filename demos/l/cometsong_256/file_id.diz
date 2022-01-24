@@ -1,0 +1,17 @@
+Cometsong
+-
+3-channel Mockingboard music with Lo-res graphics
+256-byte Intro for Apple II, Lovebyte 2022
+by Deater / dSr
+
+Fitting Mockingboard music in 256B was a challenge.
+Note: only plays music out the left stereo channel.
+Thanks to mA2E for the music.
+Thanks to qkumba for optimization help.
+
+This code does a lot of tricky things.  It loads into the zero page
+(which makes memory use less) but the music data overflows into
+the low half of the stack (at $100 on 6502).  The rest of the code
+avoids the use of the stack, so we can use the "PLA" (pull stack
+to accumulator) instruction to do an auto-increment load through
+the music.  This trick saved 15+ bytes.
