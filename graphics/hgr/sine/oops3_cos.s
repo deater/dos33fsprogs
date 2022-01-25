@@ -10,7 +10,6 @@
 ;  74 bytes -- optimize frame
 ;  72 bytes -- depend on X being 0 at end of loop
 ;  71 bytes -- rerrange so can beq rather than jmp
-;  70 bytes -- update the sine table division
 
 ; zero page
 sinetable=$70
@@ -45,7 +44,7 @@ rom_sine:
 	;==========================================
 	; create sinetable using ROM cosine table
 
-;	ldy	#0		; from HGR2
+;	ldy	#0
 	ldx	#$f
 sinetable_loop:
 
@@ -54,6 +53,7 @@ force_zero:
 	lsr			; rom value is *256
 	lsr			; we want *32
 ;	lsr
+	adc	#$60
 
 	sta	sinetable+$10,Y
 	sta	sinetable+$00,X
@@ -91,15 +91,16 @@ draw_sine:
 
 	; X is zero here
 
-	; 9 bytes to flip color (was 14)
+	; 10 bytes to flip color (was 14)
 
 	txa
 ;	lda	#$FF
 	bit	FRAME
-	bvs	color_black
+	bvs	color_white
 	eor	#$FF
-color_black:
+color_white:
 	sta	HGR_COLOR
+
 
 circle_loop:
 
@@ -112,8 +113,7 @@ circle_loop:
 
 	; multiply by 2 and center on screen $60 is midscreen
 ;	asl
-	clc
-	adc	#$60
+;	adc	#$60
 
 ;	ldx	HGR_X		; saved in HGR_X
 	ldy	#0		; saved in HGR_XH
