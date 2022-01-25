@@ -7,7 +7,8 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	plasma_hgr.dsk
 
-plasma_hgr.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE
+plasma_hgr.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
+	OOPS_COS OOPS2_COS
 	cp $(EMPTYDISK) plasma_hgr.dsk
 	$(DOS33) -y plasma_hgr.dsk SAVE A HELLO
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 APPROX_SINE
@@ -15,6 +16,8 @@ plasma_hgr.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 ROM_SINE
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 THICK_SINE
 	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 THICK_COS
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OOPS_COS
+	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OOPS2_COS
 
 
 ###
@@ -49,6 +52,25 @@ thick_cos.o:	thick_cos.s
 
 ###
 
+OOPS_COS:	oops_cos.o
+	ld65 -o OOPS_COS oops_cos.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+oops_cos.o:	oops_cos.s
+	ca65 -o oops_cos.o oops_cos.s -l oops_cos.lst
+
+###
+
+OOPS2_COS:	oops2_cos.o
+	ld65 -o OOPS2_COS oops2_cos.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+oops2_cos.o:	oops2_cos.s
+	ca65 -o oops2_cos.o oops2_cos.s -l oops2_cos.lst
+
+
+
+
+###
+
 TABLE_SINE:	table_sine.o
 	ld65 -o TABLE_SINE table_sine.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
@@ -67,5 +89,5 @@ rom_sine.o:	rom_sine.s
 
 clean:	
 	rm -f *~ *.o *.lst THICK_SINE THICK_COS \
-		TABLE_SINE ROM_SINE APPROX_SINE
+		TABLE_SINE ROM_SINE APPROX_SINE OOPS_COS OOPS2_COS
 

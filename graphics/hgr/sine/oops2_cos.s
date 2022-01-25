@@ -5,10 +5,6 @@
 ;  86 bytes -- put sine table in zero page
 ;  89 bytes -- adjust to add #1 to avoid thick line at middle
 ;  87 bytes -- Y is 0 after HGR2
-;  83 bytes -- optimize color flip
-;  79 bytes -- use X
-;  74 bytes -- optimize frame
-;  72 bytes -- depend on X being 0 at end of loop
 
 ; zero page
 sinetable=$70
@@ -18,8 +14,8 @@ HGR_Y           = $E2
 HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 
-
-FRAME	= $FF
+SAVEX	= $FE
+SAVEY	= $FF
 
 ; ROM routines
 
@@ -77,51 +73,60 @@ force_zero:
 	; main loop
 	;============================
 
-	inx
-draw_sine:
-	; X is 0 here, either from above, or from end of loop
+;	dex
+	stx	HGR_COLOR	; required
+				; though in emulator it defaults to $FF
 
-;	ldx	#0		; HGR_X
+draw_circle:
 
-	; offset next time through
+	ldy	#0
+	sty	SAVEY
 
-	inc	FRAME
-
-	; X is zero here
-
-	; 10 bytes to flip color (was 14)
-
-	txa
-;	lda	#$FF
-	bit	FRAME
-	bvs	color_white
-	eor	#$FF
-color_white:
-	sta	HGR_COLOR
-
+blah_smc:
+	ldx	#0
+	stx	SAVEX
 
 circle_loop:
+	lda	SAVEX
+	and	#$3f
+	tax
+	lda	sinetable,X
 
-	; get sine value
-
-	lda	FRAME
-	and	#$3f		; wrap value to 0..63
-	tay
-	lda	sinetable,Y
-
-	; multiply by 2 and center on screen $60 is midscreen
+;	clc
 	asl
-	adc	#$60
 
-;	ldx	HGR_X		; saved in HGR_X
-	ldy	#0		; saved in HGR_XH
+	; $60 is midscreen
+	adc	#$60
+	ldx	SAVEY
+	ldy	#0
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
-	inc	FRAME
+	inc	SAVEX
 
-	ldx	HGR_X
-	inx			; HGR_X
-
+	inc	SAVEY
 	bne	circle_loop
 
-	beq	draw_sine
+done:
+	inc	blah_smc+1
+
+	; 14 bytes to flip color
+
+;	lda	SAVEX
+;	and	#$3f
+;	cmp	#$3f
+;	bne	blah
+
+	bit	SAVEX
+	bvc	blah
+
+	lda	#$FF
+blah:
+	eor	#$FF
+	sta	HGR_COLOR
+
+;	lda	HGR_COLOR		; flip draw color $ff/$00/$ff
+;	eor	#$ff
+;	sta	HGR_COLOR
+;blah:
+
+	jmp	draw_circle

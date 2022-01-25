@@ -21,6 +21,10 @@ force_zero:
 	sta	sinetable+$10,X
 	sta	sinetable+$00,Y
 	eor	#$FF
+
+	sec				; these aren't strictly necessary
+	adc	#$0			; depending how accurate you want it
+
 	sta	sinetable+$30,X
 	sta	sinetable+$20,Y
 
