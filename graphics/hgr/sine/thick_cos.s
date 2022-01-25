@@ -1,36 +1,26 @@
 ; thick sine
 
-; TODO: could we get this down to 64 bytes?
-;	put the sine table in the zero page?
-;	only generate 64 bytes of sine?
-
+; 105 bytes -- original with table sine
+;  89 bytes -- use ROM cosine table to generate sine table
+;  86 bytes -- put sine table in zero page
 
 ; zero page
-GBASL	= $26
-GBASH	= $27
-YY	= $69
-ROW_SUM = $70
-
+sinetable=$70
 HGR_X           = $E0
 HGR_XH          = $E1
 HGR_Y           = $E2
 HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 
-FRAME	= $FC
-SUM	= $FD
 SAVEX	= $FE
 SAVEY	= $FF
-
-; soft-switches
-FULLGR	= $C052
-PAGE1	= $C054
 
 ; ROM routines
 
 HGR2	= $F3D8
 HPOSN	= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 HPLOT0	= $F457		; plot at (Y,X), (A)
+costable_base = $F5BA
 
 	;================================
 	; Clear screen and setup graphics
@@ -39,52 +29,46 @@ thick_sine:
 
 	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 				; A and Y both 0 at end
-	;==================
-	; create sinetable
 
-	;ldy	#0		; Y is 0
+; try to get sine table from ROM
+
+rom_sine:
+
+	;==========================================
+	; create sinetable using ROM cosine table
+
+	ldx	#0
+	ldy	#$f
 sinetable_loop:
-	tya							; 2
-	and	#$3f	; wrap sine at 63 entries		; 2
 
-	cmp	#$20
-	php		; save pos/negative for later
+	lda	costable_base+1,X
+force_zero:
+	lsr			; rom value is *256
+	lsr			; we want *32
+	lsr
 
-	and	#$1f
-
-	cmp	#$10
-	bcc	sin_left		; blt
-
-sin_right:
-	; sec	carry should be set here
+	sta	sinetable+$10,X
+	sta	sinetable+$00,Y
 	eor	#$FF
-	adc	#$20			; 32-X
-sin_left:
-	tax
-	lda	sinetable_base,X				; 4+
+	sta	sinetable+$30,X
+	sta	sinetable+$20,Y
 
-	plp
-	bcc	sin_done
+	lda	#0
 
-sin_negate:
-	; carry set here
-	eor	#$ff
-	adc	#0		; FIXME: this makes things off by 1
+	inx
+	dey
 
-sin_done:
-	sta	sinetable,Y
+	beq	force_zero
+	bpl	sinetable_loop
 
-	iny
-	bne	sinetable_loop
-
-	; Y is 0 at this point?
+	; y is FF at this point
 
 
 	;============================
 	; main loop
 	;============================
 
-	dey
+;	dey
 	sty	HGR_COLOR	; required
 				; though in emulator it defaults to $FF
 
@@ -98,7 +82,9 @@ blah_smc:
 	stx	SAVEX
 
 circle_loop:
-	ldx	SAVEX
+	lda	SAVEX
+	and	#$3f
+	tax
 	lda	sinetable,X
 
 ;	clc
@@ -131,15 +117,7 @@ blah:
 	jmp	draw_circle
 
 
-sinetable_base:
-; this is actually (32*sin(x))
-.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20
 
-	; for bot
-	; 3F5 - 7d = 378
-;	jmp	oval
 
-sinetable=$6000
-;sinetable_base=$F5BA
+
+
