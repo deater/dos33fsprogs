@@ -5,22 +5,22 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	plasma_hgr.dsk
+all:	sines.dsk
 
-plasma_hgr.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
+sines.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
 	OOPS_COS OOPS2_COS OOPS3_COS OOPS4_COS ROTATE
-	cp $(EMPTYDISK) plasma_hgr.dsk
-	$(DOS33) -y plasma_hgr.dsk SAVE A HELLO
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 APPROX_SINE
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 TABLE_SINE
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 ROM_SINE
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 THICK_SINE
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 THICK_COS
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OOPS_COS
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0xc00 OOPS2_COS
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3f5 OOPS3_COS
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3f5 OOPS4_COS
-	$(DOS33) -y plasma_hgr.dsk BSAVE -a 0x3f5 ROTATE
+	cp $(EMPTYDISK) sines.dsk
+	$(DOS33) -y sines.dsk SAVE A HELLO
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 APPROX_SINE
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 TABLE_SINE
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 ROM_SINE
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 THICK_SINE
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 THICK_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 OOPS_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 OOPS2_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS3_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS4_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 ROTATE
 
 
 ###

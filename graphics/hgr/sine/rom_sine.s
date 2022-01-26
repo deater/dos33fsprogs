@@ -28,10 +28,10 @@ force_zero:
 	sta	sinetable+$30,X
 	sta	sinetable+$20,Y
 
-	lda	#0
-
 	inx
 	dey
+
+	tya				; force a zero at end
 
 	beq	force_zero
 	bpl	sinetable_loop

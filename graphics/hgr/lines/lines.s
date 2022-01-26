@@ -152,6 +152,9 @@ noc2:
 	bne	right_lines_loop
 
 
+
+
+
 	;=========================================
 	; draw line
 	;	from x1,y1 to x2,y2

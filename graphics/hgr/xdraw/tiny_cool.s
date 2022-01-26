@@ -1,4 +1,9 @@
-; Tiny Tiny
+; Tiny Cool - 32B demo
+
+; makes a pretty neat spinning pattern
+; not necessarily repeatable, it's walking through each memory page
+;	and grabbing offset 32 or so as a shape table
+;	what you get depends on contents of RAM
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -24,11 +29,11 @@ tiny_tiny:
 	jsr	HGR2		; Hi-res graphics, no text at bottom
 				; Y=0, A=0 after this call
 
-	lda	#1
-	sta	HGR_SCALE
+	iny
+	sty	HGR_SCALE
 
 tiny_loop:
-	; setup X and Y co-ords
+	; setup X and Y co-ords for center of screen
 	ldy	#0		; Y always 0
 	ldx	#140
 	lda	#96
@@ -42,7 +47,8 @@ rot_smc:
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 
-	inc	rot_smc+1
+				; increment rotation
+	inc	rot_smc+1	; oops also increments high byte of shape table
 	jmp	tiny_loop
 
 shape_table:

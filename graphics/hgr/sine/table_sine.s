@@ -1,10 +1,14 @@
-; thick sine
+; table look up sine
+
+; trying to make a 64 entry 32*sin() in the zero page
+; want to beat 35 bytes (that's what the cos/ROM does)
+
+; 57 bytes -- original
+; 48 bytes -- optimize
+; 46 bytes -- zero page
 
 ; zero page
-GBASL	= $26
-GBASH	= $27
-YY	= $69
-ROW_SUM = $70
+
 
 HGR_X           = $E0
 HGR_XH          = $E1
@@ -17,46 +21,35 @@ SUM	= $FD
 SAVEX	= $FE
 SAVEY	= $FF
 
+sinetable=$70
 
-thick_sine:
+
+table_sine:
 
 	;==================
 	; create sinetable
 
-	ldy	#0		; Y is 0
+	ldx	#0		; Y is 0
+	ldy	#$10
+
 sinetable_loop:
-	tya							; 2
-	and	#$3f	; wrap sine at 63 entries		; 2
-
-	cmp	#$20
-	php		; save pos/negative for later
-
-	and	#$1f
-
-	cmp	#$10
-	bcc	sin_left		; blt
-
-sin_right:
-	; sec	carry should be set here
-	eor	#$FF
-	adc	#$20			; 32-X
-sin_left:
-	tax
 	lda	sinetable_base,X				; 4+
 
-	plp
-	bcc	sin_done
+	sta	sinetable+$10,X
+	sta	sinetable+$00,Y
 
-sin_negate:
-	; carry set here
 	eor	#$ff
-	adc	#0		; FIXME: this makes things off by 1
 
-sin_done:
-	sta	sinetable,Y
+	sec				; these maybe not needed
+	adc	#$0
 
-	iny
-	bne	sinetable_loop
+	sta	sinetable+$30,X
+	sta	sinetable+$20,Y
+
+	inx
+	dey
+
+	bpl	sinetable_loop
 
 	; Y is 0 at this point?
 
@@ -66,10 +59,9 @@ done:
 
 sinetable_base:
 ; this is actually (32*sin(x))
-.byte $00,$03,$06,$09,$0C,$0F,$11,$14
-.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F
-.byte $20
+;.byte $00,$03,$06,$09,$0C,$0F,$11,$14
+;.byte $16,$18,$1A,$1C,$1D,$1E,$1F,$1F,$20
 
-
-sinetable=$6000
+.byte $20,$1F,$1F,$1E,$1D,$1C,$1A,$18,$16
+.byte $14,$11,$0F,$0C,$09,$06,$03,$00
 

@@ -11,9 +11,10 @@
 ;  72 bytes -- depend on X being 0 at end of loop
 ;  71 bytes -- rerrange so can beq rather than jmp
 ;  70 bytes -- update the sine table division
+;  69 bytes -- optimize sine routine
 
 ; zero page
-sinetable=$70
+sinetable=$60
 HGR_X           = $E0
 HGR_XH          = $E1
 HGR_Y           = $E2
@@ -52,22 +53,23 @@ sinetable_loop:
 	lda	costable_base+1,Y
 force_zero:
 	lsr			; rom value is *256
-	lsr			; we want *32
-;	lsr
+	lsr			; we want *64
 
 	sta	sinetable+$10,Y
 	sta	sinetable+$00,X
 	eor	#$FF
+
 	sec
 	adc	#$0
+
 	sta	sinetable+$30,Y
 	sta	sinetable+$20,X
 
-	lda	#0			; hack, ROM cosine table doesn't
-					; have a good zero for some reason
-
 	iny
 	dex
+
+	txa				; hack, ROM cosine table doesn't
+					; have a good zero for some reason
 
 	beq	force_zero
 	bpl	sinetable_loop
@@ -107,11 +109,11 @@ circle_loop:
 
 	lda	FRAME
 	and	#$3f		; wrap value to 0..63
+
 	tay
 	lda	sinetable,Y
 
-	; multiply by 2 and center on screen $60 is midscreen
-;	asl
+	; center on screen $60 is midscreen
 	clc
 	adc	#$60
 
