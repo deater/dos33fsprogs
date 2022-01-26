@@ -1,5 +1,9 @@
 ; rotate
 
+; 117 bytes -- original
+; 114 bytes -- optimize FRAME init
+; 108 bytes -- optimize page flip
+
 ; zero page
 sinetable=$70
 HGR_X           = $E0
@@ -28,8 +32,7 @@ WAIT    = $FCA8
 	;================================
 thick_sine:
 
-	jsr	HGR
-;	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
+	jsr	HGR		; set hi-res 140x192, page1
 				; A and Y both 0 at end
 
 ; try to get sine table from ROM
@@ -66,50 +69,142 @@ force_zero:
 	beq	force_zero
 	bpl	sinetable_loop
 
+
+
+	;======================================
+	; draw log #1
+	;======================================
+
 	; x is FF at this point
 
-	inx
-	stx	FRAME
+	stx	HGR_COLOR		; set color to white
 
-	jsr	draw_sine
+	inx	; X must be 0
+	jsr	draw_log
+
+	; X is 0 here
+
+	;======================================
+	; draw log #1
+	;======================================
 
 
 	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 				; A and Y both 0 at end
-	sty	FRAME
-	inc	invert_smc+1
 
-	jsr	draw_sine
+	inc	invert_smc+1	; draw the opposite pattern
+
+	jsr	draw_log	; X must be 0
+
+	;======================================
+	; flip pages, forever
+	;======================================
+
+	; X is 0 entering
 
 flip_loop:
 
-; flip draw page $20/$40
-        lda     HGR_PAGE
-        eor     #$60
-        sta     HGR_PAGE
+	; flip pages
 
-        ; flip page
-        ; have $20/$40 want to map to C054/C055
+page_smc:
+	bit	PAGE1
 
-        asl
-        asl                     ; $20 -> C=1 $00
-        asl                     ; $40 -> C=0 $00
-        rol
-        tax
-        sta     PAGE1,X
 
-	lda	#255
-	jsr	WAIT
+;	lda	#255
+;	jsr	WAIT
+
+; based on code from here
+; http://eightbitsoundandfury.ld8.org/programming.html
+
+; A,X,Y trashed
+; duration also trashed
+
+NOTE_C3		=	255
+NOTE_CSHARP3	=	241
+NOTE_D3		=	227
+NOTE_DSHARP3	=	214
+NOTE_E3		=	202
+NOTE_F3		=	191
+NOTE_FSHARP3	=	180
+NOTE_G3		=	170
+NOTE_GSHARP3	=	161
+NOTE_A3		=	152
+NOTE_ASHARP3	=	143
+NOTE_B3		=	135
+
+NOTE_C4		=	128
+NOTE_CSHARP4	=	121
+NOTE_D4		=	114
+NOTE_DSHARP4	=	108
+NOTE_E4		=	102
+NOTE_F4		=	96
+NOTE_FSHARP4	=	91
+NOTE_G4		=	85
+NOTE_GSHARP4	=	81
+NOTE_A4		=	76
+NOTE_ASHARP4	=	72
+NOTE_B4		=	68
+
+NOTE_C5		=	64
+NOTE_CSHARP5	=	60
+NOTE_D5		=	57
+NOTE_DSHARP5	=	54
+NOTE_E5		=	51
+NOTE_F5		=	48
+NOTE_FSHARP5	=	45
+NOTE_G5		=	43
+NOTE_GSHARP5	=	40
+NOTE_A5		=	38
+NOTE_ASHARP5	=	36
+NOTE_B5		=	34
+
+	lda	#NOTE_C3
+	sta	speaker_frequency
+	lda	#200
+	sta	speaker_duration
+
+speaker_beep:
+	ldy	#20
+speaker_tone:
+	lda	$C030		; click speaker
+speaker_loop:
+	dey			; y never set?
+	bne	slabel1		; duration roughly 256*?
+	dec	speaker_duration	; (Duration)
+	beq	done_tone
+slabel1:
+	dex
+	bne	speaker_loop
+	ldx	speaker_frequency	; (Frequency)
+	jmp	speaker_tone
+done_tone:
+
+
+
+
+
+
+
+
+
+	lda	page_smc+1
+	eor	#$1
+	sta	page_smc+1
 
 	jmp	flip_loop
 
 
-
 	;============================
-	; main loop
+	;============================
+	; draw log
+	;============================
 	;============================
 
-draw_sine:
+draw_log:
+
+	stx	FRAME
+
+draw_sine_loop:
 	; X is 0 here, either from above, or from end of loop
 
 	ldx	#0		; HGR_X
@@ -120,18 +215,13 @@ draw_sine:
 
 	; X is zero here
 
-	; 10 bytes to flip color (was 14)
-
-;	txa
-	lda	#$FF
 	bit	FRAME
-	bvc	color_white
+	bvc	not_done
 
-	rts
+	rts			; done
 
-;	eor	#$FF
-color_white:
-	sta	HGR_COLOR
+not_done:
+
 
 
 circle_loop:
@@ -152,10 +242,7 @@ skip_invert:
 	tay
 	lda	sinetable,Y
 
-	; multiply by 2 and center on screen $60 is midscreen
-;	asl
-
-;	clc
+	; center on screen $60 is midscreen
 
 	adc	#$60
 
@@ -170,6 +257,10 @@ skip_invert:
 
 	bne	circle_loop
 
-	beq	draw_sine
+	beq	draw_sine_loop
 
 
+speaker_duration:
+	.res 1
+speaker_frequency:
+	.res 1
