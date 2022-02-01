@@ -83,7 +83,6 @@ tracker_song = peasant_song
 
 	cli
 
-
 animate_loop:
 	clc
 	lda	#96
@@ -115,6 +114,9 @@ clear_screen_smc:
 	; draw mountain
 	;	FIXME: we in theory only have to do this once
 	;		as we never over-write it
+
+	;		the problem is we have no easy way to just
+	;		erase half the screen
 
 	; color = blue (6)
 
