@@ -2,6 +2,9 @@
 
 ; 280 bytes -- initial combo
 ; 276 bytes -- shave some bytes
+; 275 bytes -- common HLINRL function (thought it would save more)
+; 271 bytes -- optimize circle draw code
+; 268 bytes -- circle code now <128 so use bne instead of jmp
 
 ; zero page
 
@@ -19,6 +22,7 @@ YY		= $F9
 MINUSYY		= $FA
 D		= $FB
 R		= $FC
+DADD		= $FD
 FRAME		= $FF
 
 ; soft-switches
@@ -56,6 +60,14 @@ combo:
 
 	.include "staggered.s"
 	.include "boxes.s"
+
+
+	; sadly this only saves a byte
+combo_hlinrl:
+	ldy	#0
+	ldx	#0
+	jmp	HLINRL          ; plot relative (X,A), (Y)
+
 
 even_lookup:
 .byte   $D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5

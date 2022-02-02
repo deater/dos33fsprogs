@@ -4,8 +4,6 @@
 ; it's doing Bresenham circle algo I think, which does weird
 ;	things when radius=0
 
-; FIXME: assume hcolor is 3 somehow?
-
 orb:
 	; a=0, y=0 here
 
@@ -23,17 +21,12 @@ draw_next:
 	; draw circle at (CX,CY) of radius R
 	; signed 8-bit math so problems if R > 64?
 
-	; XX=0 YY=R
-	; D=3-2*R
-	; GOTO6
-
 	lda	#0
-	sta	XX
+	sta	XX			; XX = 0
 
-;	lda	R
-	stx	YY
+	stx	YY			; YY =R (X is R here)
 
-	lda	#3
+	lda	#3			; D=3-2*R
 	sec
 	sbc	R
 	sbc	R
@@ -41,20 +34,26 @@ draw_next:
 
 	; always odd, never zero
 
-	bne	do_plots		; bra
+	bne	do_plots		; bra	skip ahead first time through
 
 circle_loop:
-	; X=X+1
+	inc	XX			; XX=XX+1
 
-	inc	XX
+	lda	XX			; XX is common both paths
+	ldy	#6			; default path add 6
 
 	; IF D>0 THEN Y=Y-1:D=D+4*(X-Y)+10
-	lda	D
-	bmi	else
+	bit	D			; check if negative w/o changing A
+	bmi	d_negative
 
-	dec	YY
+	dec	YY			; YY=YY-1
 
-	lda	XX
+
+.if 0
+d_positive:
+	; D=D+4*(XX-YY)+10
+
+	; XX is already in A
 	sec
 	sbc	YY
 	asl
@@ -63,14 +62,33 @@ circle_loop:
 	adc	#10
 	jmp	store_D
 
-else:
+d_negative:
 	; ELSE D=D+4*X+6
-	lda	XX
+;	lda	XX
 	asl
 	asl
 	clc
 	adc	#6
 store_D:
+	adc	D
+	sta	D
+.endif
+
+d_positive:
+	; D=D+4*(XX-YY)+10
+
+	; XX is already in A
+	sec
+	sbc	YY
+	ldy	#10
+d_negative:
+	; ELSE D=D+4*(XX)+6
+common_D:
+	sty	DADD
+	asl
+	asl
+	clc
+	adc	DADD
 	adc	D
 	sta	D
 
@@ -109,6 +127,8 @@ pos_loop:
 	eor	#$2
 	tay
 ;	lda	CX
+
+
 	lda	#128
 	clc
 	adc	XX,Y
@@ -135,12 +155,12 @@ pos_loop:
 	lda	XX,Y
 	asl
 
-	ldy	#0
-	ldx	#0
+;	ldy	#0
+;	ldx	#0
 
-	jsr	HLINRL		; plot relative (X,A), (Y)
+;	jsr	HLINRL		; plot relative (X,A), (Y)
+	jsr	combo_hlinrl
 				; so in our case (0,XX*2),0
-
 
 
 	dec	COUNT
@@ -157,10 +177,7 @@ done:
 	inx				; increment radius
 	jsr	HCOLOR1			; use as color
 
-	cpx	#48			; loop
-	beq	rdone
-	; GOTO1
-	jmp	draw_next
+	cpx	#48			; run until R=48
+	bne	draw_next		; loop	(GOTO 1)
 
 rdone:
-

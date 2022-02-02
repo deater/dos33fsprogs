@@ -56,9 +56,10 @@ rectangle_loop:
 
 	lda	XRUN		; XRUN into A
 	and	#$3f
-	ldx	#0		; always 0
-	ldy	#0		; relative Y is 0
-	jsr	HLINRL		; (X,A),(Y)
+;	ldx	#0		; always 0
+;	ldy	#0		; relative Y is 0
+;	jsr	HLINRL		; (X,A),(Y)
+	jsr	combo_hlinrl
 
 blah:
 	inc	Y1
