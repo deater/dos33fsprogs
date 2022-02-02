@@ -18,6 +18,7 @@
 ; 510 bytes -- unneeded reload of A
 ; 517 bytes -- made flyer go back and forth
 ; 512 bytes -- removed extra cc, merged to common ZP zero init
+; 510 bytes -- optimize page flip
 
 ; zero page locations
 
@@ -81,7 +82,7 @@ tracker_song = peasant_song
 
 	; start the music playing
 
-	cli
+;	cli
 
 animate_loop:
 	clc
@@ -237,6 +238,8 @@ no_reset_frame:
 check_keypress:
 	lda	KEYPRESS
 	bmi	quiet
+
+	cli
 
 	jmp	animate_loop
 

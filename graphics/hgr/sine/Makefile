@@ -8,7 +8,7 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 all:	sines.dsk
 
 sines.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
-	OOPS_COS OOPS2_COS OOPS3_COS OOPS4_COS ROTATE
+	OOPS_COS OOPS2_COS OOPS3_COS OOPS4_COS ROTATE THICK
 	cp $(EMPTYDISK) sines.dsk
 	$(DOS33) -y sines.dsk SAVE A HELLO
 	$(DOS33) -y sines.dsk BSAVE -a 0xc00 APPROX_SINE
@@ -21,7 +21,7 @@ sines.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
 	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS3_COS
 	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS4_COS
 	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 ROTATE
-
+	$(DOS33) -y sines.dsk BSAVE -a 0xc00 THICK
 
 ###
 
@@ -55,11 +55,20 @@ thick_cos.o:	thick_cos.s
 
 ###
 
+THICK:	thick.o
+	ld65 -o THICK thick.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+thick.o:	thick.s
+	ca65 -o thick.o thick.s -l thick.lst
+
+###
+
 OOPS_COS:	oops_cos.o
 	ld65 -o OOPS_COS oops_cos.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
 oops_cos.o:	oops_cos.s
 	ca65 -o oops_cos.o oops_cos.s -l oops_cos.lst
+
 
 ###
 
@@ -112,7 +121,7 @@ rom_sine.o:	rom_sine.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst THICK_SINE THICK_COS \
+	rm -f *~ *.o *.lst THICK_SINE THICK_COS THICK \
 		TABLE_SINE ROM_SINE APPROX_SINE \
 		OOPS_COS OOPS2_COS OOPS3_COS OOPS4_COS ROTATE
 
