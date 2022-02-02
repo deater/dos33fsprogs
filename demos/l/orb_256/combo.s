@@ -11,11 +11,14 @@
 ; 263 bytes -- more circle optimization
 ; 261 bytes -- optimize boxes
 ; 257 bytes -- optimize staggered
+; 255 bytes -- put some circle draw code in loop
+; 253 bytes -- reuse previous zeroed ZP address for the staggered code
+; 252 bytes -- trying removing random SEC to see if it hurts things
 
 ; zero page
 
-GBASL		= $26
-GBASH		= $27
+;GBASL		= $26
+;GBASH		= $27
 ; D0+ used by HGR routines
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
@@ -28,6 +31,8 @@ X1              = $F3
 COLOR           = $F4
 
 COUNT		= $F6
+INDEXL		= $F6
+INDEXH		= $F7
 
 XX		= $F7
 MINUSXX		= $F8

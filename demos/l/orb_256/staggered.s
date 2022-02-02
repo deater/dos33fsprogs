@@ -5,33 +5,35 @@ staggered:
 	stx	FRAME				; set FRAME to 48
 
 	ldx	#$00				; init X to 0
-	stx	GBASL				; set GBASL to 0
+	; we can count on INDEXL (COUNT) being 0 from the orb code
+;	stx	INDEXL				; set INDEXL to 0
 
 	; pulse loop horizontal
 outer_loop:
-	lda	#$40				; reset GBASH to begin page2
-	sta	GBASH
+	lda	#$40				; reset INDEXH to begin page2
+	sta	INDEXH
 
 inner_loop:
 	lda	even_lookup,X			; get even color
-	sta	(GBASL),Y			; store it to memory
+	sta	(INDEXL),Y			; store it to memory
 	iny
 
 	lda	odd_lookup,X			; get odd color
-	sta	(GBASL),Y			; store it to memory
+	sta	(INDEXL),Y			; store it to memory
 	iny
 
 	bne	inner_loop			; repeat for 256
 
-	inc	GBASH				; point to next page
+	inc	INDEXH				; point to next page
 
-	inx					; wrap lookup at 8
-	txa
+	inx					; point to next lookup
+
+	txa					; wrap to 0..7
 	and	#$7
 	tax
 
 	lda	#$60				; see if done
-	cmp	GBASH
+	cmp	INDEXH
 	bne	inner_loop
 
 ;	lda	#100				; A is $60 here

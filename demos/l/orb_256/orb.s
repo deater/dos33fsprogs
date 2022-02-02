@@ -33,6 +33,8 @@ draw_next:
 	sbc	R
 	sbc	R
 
+	; D is now in A
+
 	; always odd, never zero
 
 	bne	do_plots		; bra	skip ahead first time through
@@ -53,7 +55,7 @@ d_positive:
 	; D=D+4*(XX-YY)+10
 
 	; XX is already in A
-	sec
+;	sec				; saves a byte, seems to be OK?
 	sbc	YY
 	ldy	#10
 d_negative:
@@ -71,17 +73,17 @@ do_plots:
 
 	sta	D
 
-	; setup constants
+	; setup plus/minus XX/YY
 
-	lda	XX
+	ldx	#2
+plus_minus_loop:
+	lda	XX,X
 	eor	#$FF
-	sta	MINUSXX
-	inc	MINUSXX
-
-	lda	YY
-	eor	#$FF
-	sta	MINUSYY
-	inc	MINUSYY
+	sta	MINUSXX,X
+	inc	MINUSXX,X
+	dex
+	dex
+	bpl	plus_minus_loop
 
 	; HPLOT CX+X,CY+Y
 	; HPLOT CX-X,CY+Y
@@ -106,7 +108,7 @@ pos_loop:
 	lda	#96			; center around y=96
 	clc
 	adc	XX,X			; index with COUNT
-	pha				; save for later
+	tay				; save for later
 
 	; calc x co-ord
 
@@ -121,7 +123,7 @@ pos_loop:
 
 	tax
 
-	pla			; restore Y co-ordinate
+	tya			; restore Y co-ordinate
 	ldy	#0		; always 0
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
@@ -148,7 +150,7 @@ pos_loop:
 
 	; IF YY>=XX THEN 4
 	; should be equivelant to IF XX<YY
-	; but sadly appears we need IF XX<=YY for same effect
+	; but sadly appears we need IF XX<=YY for our initial effect
 	lda	YY
 	cmp	XX
 	bcs	circle_loop
