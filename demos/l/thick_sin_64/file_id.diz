@@ -1,0 +1,10 @@
+Thick Sine
+-
+64-byte Intro for Apple II, Lovebyte 2022
+by Deater / dSr
+
+The tricky part is getting a SIN table this
+small.  The Apple II has a COS table in ROM
+but it's a bit of a pain to use, and is
+missing the last value (which is why there's
+a gap in the sine here)
