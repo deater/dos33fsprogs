@@ -5,16 +5,14 @@
 ;	things when radius=0
 
 orb:
-	; a=0, y=0 here (it's after HGR2)
+	; a=0, y=0 here
 
-	tax			; x=0 (set R=0)
+	tax			; x=0
 
 	dey			; set init color to white
 	sty	HGR_COLOR	; set init color to white
 
 draw_next:
-	; X is always R here
-
 	stx	R
 
 	;===============================
@@ -32,6 +30,7 @@ draw_next:
 	sec
 	sbc	R
 	sbc	R
+	sta	D
 
 	; always odd, never zero
 
@@ -65,12 +64,9 @@ common_D:
 	clc
 	adc	DADD
 	adc	D
-
-do_plots:
-	; D is always in A here
-
 	sta	D
 
+do_plots:
 	; setup constants
 
 	lda	XX
@@ -92,37 +88,35 @@ do_plots:
 	; HPLOT CX+Y,CY-X
 	; HPLOT CX-Y,CY-X
 
-	ldx	#3
-
+	lda	#3
+	sta	COUNT
 pos_loop:
+
 	; calc left side
 
-	; COUNT already in X here
+	; calc X co-ord
 
-	stx	COUNT
+	lda	COUNT
+	ora	#$1
+	eor	#$2
+	tax
+;	lda	CX
+
+
+	lda	#128
+	clc
+	adc	XX,X
+	tax
 
 	; calc y co-ord
 
-	lda	#96			; center around y=96
-	clc
-	adc	XX,X			; index with COUNT
-	pha				; save for later
-
-	; calc x co-ord
-
-	txa				; get count
-	ora	#$1			; generate pattern
-	eor	#$2			; ???
-	tax				; offset in array
-
-	lda	#128			; center around x=128
+	ldx	COUNT
+;	lda	CY
+	lda	#96
 	clc
 	adc	XX,X
 
-	tax
-
-	pla			; restore Y co-ordinate
-	ldy	#0		; always 0
+	ldy	#0
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
@@ -138,16 +132,12 @@ pos_loop:
 	jsr	combo_hlinrl	; plot relative (X,A), (Y)
 				; so in our case (0,XX*2),0
 
-				; X/A/Y saved to zero page
-				; X/Y were zero
-	ldx	COUNT
-	dex			; decrement count
 
+	dec	COUNT
 	bpl	pos_loop
 
-
 	; IF YY>=XX THEN 4
-	; should be equivelant to IF XX<YY
+	; equivelant to IF XX<YY
 	; but sadly appears we need IF XX<=YY for same effect
 	lda	YY
 	cmp	XX

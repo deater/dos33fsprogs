@@ -18,13 +18,15 @@ outer_boxes:
 	ldx	#5			; grab 5 bytes
 					; YRUN, XRUN, Y1, X1, COLOR
 data_smc:
-	lda	$f180
+	lda	$f200			; was $f180
 	sta	YRUN-1,X		; store reverse for some reason
 	inc	data_smc+1		; move to next
 	dex
 	bne	data_smc
 
-	lda	YRUN
+	; at end, YRUN is in A, X=0
+
+;	lda	YRUN			; keep size of YRUN<64
 	and	#$3f
 	sta	YRUN
 
@@ -45,23 +47,20 @@ rectangle_loop:
 	and	#$f
 	tax
 
-	jsr	HCOLOR1
-;	lda	COLORTBL,X	; index into color table
-;	sta	HGR_COLOR	; and store
+	jsr	HCOLOR1		; index into color table with X
+				; Note: we purposefully index off end
 
 	ldx	X1		; X1 into X
 	lda	Y1		; Y1 into A
 	ldy	#0		; always 0
-	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+	jsr	HPLOT0		; (Y,X),(A)  (values stored in HGRX,XH,Y)
 
 	lda	XRUN		; XRUN into A
-	and	#$3f
-;	ldx	#0		; always 0
-;	ldy	#0		; relative Y is 0
-;	jsr	HLINRL		; (X,A),(Y)
-	jsr	combo_hlinrl
+	and	#$3f		; keep it <64
 
-blah:
+	; sets X=0,Y=0 first
+	jsr	combo_hlinrl	; draw relative (X,A),Y
+
 	inc	Y1
 	dec	YRUN
 	bne	rectangle_loop

@@ -1,5 +1,7 @@
 ; combo -- Apple II Hires
 
+; need 252 bytes to qualify (4 byte Apple II header)
+
 ; 280 bytes -- initial combo
 ; 276 bytes -- shave some bytes
 ; 275 bytes -- common HLINRL function (thought it would save more)
@@ -7,6 +9,8 @@
 ; 268 bytes -- circle code now <128 so use bne instead of jmp
 ; 266 bytes -- use X to index in zero page
 ; 263 bytes -- more circle optimization
+; 261 bytes -- optimize boxes
+; 257 bytes -- optimize staggered
 
 ; zero page
 
@@ -58,9 +62,6 @@ WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 combo:
 
-	lda	#$20
-	sta	FRAME
-
 	jsr	HGR2		; after, A=0, Y=0
 
 
@@ -71,6 +72,11 @@ combo:
 	.include "boxes.s"
 
 
+even_lookup:
+.byte   $D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
+odd_lookup:
+.byte   $AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
+
 	; sadly this only saves a byte
 combo_hlinrl:
 	ldy	#0
@@ -78,8 +84,5 @@ combo_hlinrl:
 	jmp	HLINRL          ; plot relative (X,A), (Y)
 
 
-even_lookup:
-.byte   $D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
-odd_lookup:
-.byte   $AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
+
 
