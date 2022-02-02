@@ -5,14 +5,16 @@
 ;	things when radius=0
 
 orb:
-	; a=0, y=0 here
+	; a=0, y=0 here (it's after HGR2)
 
-	tax			; x=0
+	tax			; x=0 (set R=0)
 
 	dey			; set init color to white
 	sty	HGR_COLOR	; set init color to white
 
 draw_next:
+	; X is always R here
+
 	stx	R
 
 	;===============================
@@ -30,7 +32,6 @@ draw_next:
 	sec
 	sbc	R
 	sbc	R
-	sta	D
 
 	; always odd, never zero
 
@@ -48,32 +49,6 @@ circle_loop:
 
 	dec	YY			; YY=YY-1
 
-
-.if 0
-d_positive:
-	; D=D+4*(XX-YY)+10
-
-	; XX is already in A
-	sec
-	sbc	YY
-	asl
-	asl
-	clc
-	adc	#10
-	jmp	store_D
-
-d_negative:
-	; ELSE D=D+4*X+6
-;	lda	XX
-	asl
-	asl
-	clc
-	adc	#6
-store_D:
-	adc	D
-	sta	D
-.endif
-
 d_positive:
 	; D=D+4*(XX-YY)+10
 
@@ -90,9 +65,12 @@ common_D:
 	clc
 	adc	DADD
 	adc	D
-	sta	D
 
 do_plots:
+	; D is always in A here
+
+	sta	D
+
 	; setup constants
 
 	lda	XX
@@ -114,35 +92,37 @@ do_plots:
 	; HPLOT CX+Y,CY-X
 	; HPLOT CX-Y,CY-X
 
-	lda	#3
-	sta	COUNT
-pos_loop:
+	ldx	#3
 
+pos_loop:
 	; calc left side
 
-	; calc X co-ord
+	; COUNT already in X here
 
-	lda	COUNT
-	ora	#$1
-	eor	#$2
-	tay
-;	lda	CX
-
-
-	lda	#128
-	clc
-	adc	XX,Y
-	tax
+	stx	COUNT
 
 	; calc y co-ord
 
-	ldy	COUNT
-;	lda	CY
-	lda	#96
+	lda	#96			; center around y=96
 	clc
-	adc	XX,Y
+	adc	XX,X			; index with COUNT
+	pha				; save for later
 
-	ldy	#0
+	; calc x co-ord
+
+	txa				; get count
+	ora	#$1			; generate pattern
+	eor	#$2			; ???
+	tax				; offset in array
+
+	lda	#128			; center around x=128
+	clc
+	adc	XX,X
+
+	tax
+
+	pla			; restore Y co-ordinate
+	ldy	#0		; always 0
 
 	jsr	HPLOT0		; plot at (Y,X), (A)
 
@@ -151,23 +131,24 @@ pos_loop:
 	lda	COUNT
 	and	#$2
 	eor	#$2
-	tay
-	lda	XX,Y
+	tax
+	lda	XX,X
 	asl
 
-;	ldy	#0
-;	ldx	#0
-
-;	jsr	HLINRL		; plot relative (X,A), (Y)
-	jsr	combo_hlinrl
+	jsr	combo_hlinrl	; plot relative (X,A), (Y)
 				; so in our case (0,XX*2),0
 
+				; X/A/Y saved to zero page
+				; X/Y were zero
+	ldx	COUNT
+	dex			; decrement count
 
-	dec	COUNT
 	bpl	pos_loop
 
 
-	; IFY>=XTHEN4
+	; IF YY>=XX THEN 4
+	; equivelant to IF XX<YY
+	; but sadly appears we need IF XX<=YY for same effect
 	lda	YY
 	cmp	XX
 	bcs	circle_loop

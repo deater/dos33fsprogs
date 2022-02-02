@@ -5,6 +5,8 @@
 ; 275 bytes -- common HLINRL function (thought it would save more)
 ; 271 bytes -- optimize circle draw code
 ; 268 bytes -- circle code now <128 so use bne instead of jmp
+; 266 bytes -- use X to index in zero page
+; 263 bytes -- more circle optimization
 
 ; zero page
 
@@ -13,6 +15,13 @@ GBASH		= $27
 ; D0+ used by HGR routines
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
+
+
+YRUN            = $F0
+XRUN            = $F1
+Y1              = $F2
+X1              = $F3
+COLOR           = $F4
 
 COUNT		= $F6
 

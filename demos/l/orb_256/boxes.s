@@ -5,11 +5,11 @@
 
 ; zero page
 
-YRUN		= $F0
-XRUN		= $F1
-Y1		= $F2
-X1		= $F3
-COLOR		= $F4
+;YRUN		= $F0
+;XRUN		= $F1
+;Y1		= $F2
+;X1		= $F3
+;COLOR		= $F4
 
 boxes64:
 
