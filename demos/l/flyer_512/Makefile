@@ -20,16 +20,18 @@ flyer_512.dsk:	FLYER
 flyer_512.woz:	FLYER
 	$(PICTUREDSK) ./flux_image/desire2.bmp flyer_512.woz FLYER
 
-submit:	text8.zip
+submit:	flyer512.zip
 
-text8.zip:	FLYER flyer.s file_id.diz flyer_512.dsk
+flyer512.zip:	FLYER flyer.s file_id.diz flyer_512.dsk
 	mkdir -p lovebyte2021_flyer_512
 	cp FLYER ./lovebyte2021_flyer_512
-	cp flyer.s ./lovebyte2021_flyer_512
+	cp *.s ./lovebyte2021_flyer_512
 	cp file_id.diz ./lovebyte2021_flyer_512
 	cp flyer_512.dsk ./lovebyte2021_flyer_512
+	cp flyer_512.woz ./lovebyte2021_flyer_512
 	cp flyer_720p.mp4 ./lovebyte2021_flyer_512
-	zip -r text8.zip lovebyte2021_flyer_512
+	cp desire2.png ./lovebyte2021_flyer_512
+	zip -r flyer512.zip lovebyte2021_flyer_512
 
 ####
 

@@ -1,10 +1,10 @@
-Stargate 128
+Orb 256
 -
-128-byte Intro for Apple II, Lovebyte 2022
+256-byte Intro for Apple II, Lovebyte 2022
 by Deater / dSr
 
-Draws some lo-res stars as you approach a stargate.
+Three parts
+* A mystical orb
+* A shimmery display
+* Endless boxes
 
-Made this effect mostly by accident while trying to
-convert a BASIC rectangular tunnel effect by
-@hisham_hm to assembly language.

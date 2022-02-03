@@ -16,7 +16,7 @@ thick_sine.dsk:	HELLO THICK_SINE
 
 submit:	thick_sine64
 
-thick_sine64:	DSR dsr.s file_id.diz thick_sine.dsk
+thick_sine64:	thick_sine.s file_id.diz thick_sine.dsk
 	mkdir -p lovebyte2022_thick_sine64
 	cp THICK_SINE ./lovebyte2022_thick_sine64
 	cp thick_sine.s ./lovebyte2022_thick_sine64

@@ -19,16 +19,19 @@ orb.dsk:	$(DOS33) HELLO COMBO
 
 ###
 
-submit:	combo_256.zip
+submit:	orb_256.zip
 
-combo_256.zip:	BOXES boxes.s file_id.diz orb.dsk
-	mkdir -p lovebyte2022_combo_256
-	cp BOXES ./lovebyte2022_combo_256
-	cp boxes.s ./lovebyte2022_combo_256
-	cp file_id.diz ./lovebyte2022_combo_256
-	cp orb.dsk ./lovebyte2022_combo_256
-	cp combo_256_720p.mp4 ./lovebyte2022_combo_256
-	zip -r combo_256.zip lovebyte2022_combo_256
+orb_256.zip:	COMBO combo.s orb.s staggered.s boxes.s file_id.diz orb.dsk
+	mkdir -p lovebyte2022_orb_256
+	cp COMBO ./lovebyte2022_orb_256
+	cp combo.s ./lovebyte2022_orb_256
+	cp staggered.s ./lovebyte2022_orb_256
+	cp orb.s ./lovebyte2022_orb_256
+	cp boxes.s ./lovebyte2022_orb_256
+	cp file_id.diz ./lovebyte2022_orb_256
+	cp orb.dsk ./lovebyte2022_orb_256
+	cp orb_720p.mp4 ./lovebyte2022_orb_256
+	zip -r orb_256.zip lovebyte2022_orb_256
 
 ###
 
