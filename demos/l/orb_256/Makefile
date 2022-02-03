@@ -7,26 +7,26 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk
 
-all:	combo.dsk
+all:	orb.dsk
 
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
 
-combo.dsk:	$(DOS33) HELLO COMBO
-	cp $(EMPTYDISK)/empty.dsk combo.dsk
-	$(DOS33) -y combo.dsk SAVE A HELLO
-	$(DOS33) -y combo.dsk BSAVE -a 0xc00 COMBO
+orb.dsk:	$(DOS33) HELLO COMBO
+	cp $(EMPTYDISK)/empty.dsk orb.dsk
+	$(DOS33) -y orb.dsk SAVE A HELLO
+	$(DOS33) -y orb.dsk BSAVE -a 0xc00 COMBO
 
 ###
 
 submit:	combo_256.zip
 
-combo_256.zip:	BOXES boxes.s file_id.diz combo.dsk
+combo_256.zip:	BOXES boxes.s file_id.diz orb.dsk
 	mkdir -p lovebyte2022_combo_256
 	cp BOXES ./lovebyte2022_combo_256
 	cp boxes.s ./lovebyte2022_combo_256
 	cp file_id.diz ./lovebyte2022_combo_256
-	cp combo.dsk ./lovebyte2022_combo_256
+	cp orb.dsk ./lovebyte2022_combo_256
 	cp combo_256_720p.mp4 ./lovebyte2022_combo_256
 	zip -r combo_256.zip lovebyte2022_combo_256
 

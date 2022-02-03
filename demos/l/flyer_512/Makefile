@@ -3,9 +3,11 @@ include ../../../Makefile.inc
 DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../../empty_disk/empty.dsk
+PICTUREDSK = ~/research/picturedsk.git/picturedsk
 
-all:	flyer_512.dsk
+all:	flyer_512.dsk flyer_512.woz
 
+###
 
 flyer_512.dsk:	FLYER
 	# 0, 7, 14, 6, 13, 5, 12, 4, 11, 3, 10, 2, 9, 1, 8, 15
@@ -14,6 +16,9 @@ flyer_512.dsk:	FLYER
 	dd conv=notrunc if=FLYER of=flyer_512.dsk bs=256 count=1 seek=7 skip=1
 
 ###
+
+flyer_512.woz:	FLYER
+	$(PICTUREDSK) ./flux_image/desire2.bmp flyer_512.woz FLYER
 
 submit:	text8.zip
 

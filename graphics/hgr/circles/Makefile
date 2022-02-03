@@ -7,8 +7,8 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	circles.dsk
 
-circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB \
-		BRES.BAS BRESBOT.BAS BRESCOOL.BAS \
+circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB ORB_TINY \
+		BRES.BAS BRESBOT.BAS BRESCOOL.BAS HORROR \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS ARCS_BOT
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
 	$(DOS33) -y circles.dsk SAVE A HELLO
@@ -25,6 +25,8 @@ circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB \
 	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 WEB
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 PAC
 	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 ORB
+	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 ORB_TINY
+	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 HORROR
 	$(DOS33) -y circles.dsk BSAVE -a 0x9600 ARCS_BOT
 
 ###
@@ -124,6 +126,22 @@ orb.o:	orb.s
 	ca65 -o orb.o orb.s -l orb.lst
 
 
+#
+
+ORB_TINY:	orb_tiny.o
+	ld65 -o ORB_TINY orb_tiny.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
+
+orb_tiny.o:	orb_tiny.s
+	ca65 -o orb_tiny.o orb_tiny.s -l orb_tiny.lst
+
+#
+
+HORROR:	horror.o
+	ld65 -o HORROR horror.o -C $(LINKER_SCRIPTS)/apple2_3f5.inc
+
+horror.o:	horror.s
+	ca65 -o horror.o horror.s -l horror.lst
+
 
 
 ###
@@ -131,4 +149,4 @@ orb.o:	orb.s
 clean:	
 	rm -f *~ *.o *.lst CIRCLES ARCS WEB CIRCLES_FILL PAC ORB \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS BRESTEST.BAS \
-		MID.BAS MIDBOT.BAS MIDCOOL.BAS
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS ORB_TINY HORROR
