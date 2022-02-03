@@ -175,5 +175,5 @@ done:
 	jsr	HCOLOR1			; use as color
 
 ;	cpx	#48			; run until R=48
-	bne	draw_next		; loop	(GOTO 1)
+	jmp	draw_next		; loop	(GOTO 1)
 

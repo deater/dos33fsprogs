@@ -1,82 +1,58 @@
-; wires -- Apple II Hires
+	; shimmery blue pattern
+
+INDEXL          = $F6
+INDEXH          = $F7
+
+HGR2            = $F3D8         ; set hires page2 and clear $4000-$5fff
+WAIT            = $FCA8         ; delay 1/2(26+27A+5A^2) us
 
 
-; D0+ used by HGR routines
 
-HGR_COLOR	= $E4
-HGR_PAGE	= $E6
+staggered:
+	jsr	HGR2				; after, A=0, Y=0
 
-GBASL		= $26
-GBASH		= $27
-
-COUNT		= $FE
-FRAME		= $FF
-
-; soft-switches
-
-; ROM routines
-
-HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
-HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
-HPLOT0		= $F457		; plot at (Y,X), (A)
-HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
-COLORTBL	= $F6F6
-PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
-NEXTCOL		= $F85F		; COLOR=COLOR+3
-SETCOL		= $F864		; COLOR=A
-SETGR		= $FB40		; set graphics and clear LO-RES screen
-BELL2		= $FBE4
-WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
-
-wires:
-
-	jsr	HGR2
+	tax					; init X to 0
+	stx	INDEXL				; set INDEXL to 0
 
 	; pulse loop horizontal
-
-	lda	#$00
-	tay
-	tax
-	sta	GBASL
-
 outer_loop:
-	lda	#$40
-	sta	GBASH
+	lda	#$40				; reset INDEXH to begin page2
+	sta	INDEXH
+
 inner_loop:
-
-	lda	even_lookup,X
-	sta	(GBASL),Y
+	lda	even_lookup,X			; get even color
+	sta	(INDEXL),Y			; store it to memory
 	iny
 
-	lda	odd_lookup,X
-	sta	(GBASL),Y
-
+	lda	odd_lookup,X			; get odd color
+	sta	(INDEXL),Y			; store it to memory
 	iny
-	bne	inner_loop
 
-	inc	GBASH
+	bne	inner_loop			; repeat for 256
 
-	inx
-	txa
+	inc	INDEXH				; point to next page
+
+	inx					; point to next lookup
+
+	txa					; wrap to 0..7
 	and	#$7
 	tax
 
-
-	lda	#$60
-	cmp	GBASH
+	lda	#$60				; see if done
+	cmp	INDEXH
 	bne	inner_loop
 
-;	lda	#100
-	jsr	WAIT
+;	lda	#100				; A is $60 here
+	jsr	WAIT				; pause a bit
 
-	inx
+	; A is 0 here
+
+	inx					; offset next FRAME
 
 	jmp	outer_loop
-
 
 
 even_lookup:
 .byte	$D7,$DD,$F5,$D5, $D5,$D5,$D5,$D5
 odd_lookup:
 .byte	$AA,$AA,$AA,$AB, $AB,$AE,$BA,$EA
-
