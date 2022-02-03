@@ -7,7 +7,8 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	wires.dsk
 
-wires.dsk:	HELLO WIRES WIRES_BOT CYCLE STAGGERED BLUEORANGE BLUEORANGEZ
+wires.dsk:	HELLO WIRES WIRES_BOT CYCLE STAGGERED BLUEORANGE BLUEORANGEZ \
+		STATIC STATIC_COLUMN
 	cp $(EMPTY_DISK)/empty.dsk wires.dsk
 	$(DOS33) -y wires.dsk SAVE A HELLO
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 WIRES
@@ -16,6 +17,8 @@ wires.dsk:	HELLO WIRES WIRES_BOT CYCLE STAGGERED BLUEORANGE BLUEORANGEZ
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 STAGGERED
 	$(DOS33) -y wires.dsk BSAVE -a 0x0373 BLUEORANGE
 	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 BLUEORANGEZ
+	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 STATIC
+	$(DOS33) -y wires.dsk BSAVE -a 0x0C00 STATIC_COLUMN
 
 ###
 
@@ -47,6 +50,22 @@ STAGGERED:	staggered.o
 staggered.o:	staggered.s
 	ca65 -o staggered.o staggered.s -l staggered.lst
 
+####
+
+STATIC:	static.o
+	ld65 -o STATIC static.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+static.o:	static.s
+	ca65 -o static.o static.s -l static.lst
+
+####
+
+STATIC_COLUMN:	static_column.o
+	ld65 -o STATIC_COLUMN static_column.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+static_column.o:	static_column.s
+	ca65 -o static_column.o static_column.s -l static_column.lst
+
 
 ####
 
@@ -73,4 +92,4 @@ BLUEORANGEZ:	blueorange.o
 ######
 
 clean:	
-	rm -f *~ *.o *.lst WIRES CYCLE
+	rm -f *~ *.o *.lst WIRES CYCLE STAGGERED STATIC STATIC_COLUMN
