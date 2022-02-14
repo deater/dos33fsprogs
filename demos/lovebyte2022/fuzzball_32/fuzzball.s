@@ -20,8 +20,12 @@ XDRAW0		= $F65D
 .zeropage
 
 	; we load at address $E7 in memory, which is the location
-	; of HGR_SCALE.  This means the scale is the first byte of
-	; the program which is $20 from the JSR
+	; of HGR_SCALE.
+
+	; this is an artifact of the original program to get SCALE=$20
+	; (from jsr opcode).  But now we set SCALE=1
+	; soon here meaning we could in theory move the program
+	; to load elsewhere
 
 tiny_tiny:
 
