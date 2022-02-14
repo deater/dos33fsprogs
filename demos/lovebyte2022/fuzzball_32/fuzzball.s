@@ -1,4 +1,4 @@
-; Fuzzball -- a 32 byte Intro for Apple II
+; Fuzzball -- a 29 byte Intro for Apple II
 
 ; this one was an accident, it ends up walking through memory
 ;	a page at a time and using it as a shape table
