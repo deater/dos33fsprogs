@@ -19,6 +19,10 @@ XDRAW0		= $F65D
 
 .zeropage
 
+	; we load at address $E7 in memory, which is the location
+	; of HGR_SCALE.  This means the scale is the first byte of
+	; the program which is $20 from the JSR
+
 tiny_tiny:
 
 	jsr	HGR2		; Hi-res graphics, no text at bottom
@@ -28,21 +32,28 @@ tiny_tiny:
 	sty	HGR_SCALE
 
 tiny_loop:
-	; move back to center of screen
-	ldy	#0		; Y always 0
-	ldx	#140
-	lda	#96
-	jsr	HPOSN		; X= (y,x) Y=(a)
+	; move back to center of screen (screen is 280x192)
+	ldy	#0		; upper byte always 0
+	ldx	#140		; X-coord
+	lda	#96		; Y-coord
+	jsr	HPOSN		; X-coord = (y,x) Y-coord =(a)
 
 	bit	SPEAKER		; click the speaker
 
 rot_smc:
-	lda	#0		; ROT=0
+	lda	#0		; ROT=0 (rotation value)
 	tay			; ldy	#>shape_table
 
-	; X is 140 here
+	; The shape table is at memory address (Y,X)
 
-	jsr	XDRAW0		; XDRAW 1 AT X,Y
+	; The effect was found when the original code was modified to not
+	; have ROT not be 0, and so instead of pointing to the desired
+	; shape table in the zero page it was walking all across memory
+
+	; X is 140 here, since we are pointing at random data it doesn't
+	; really matter what it is
+
+	jsr	XDRAW0		; XDRAW 1 AT X-coord,Y-coord
 				; Both A and X are 0 at exit
 
 	inc	rot_smc+1
