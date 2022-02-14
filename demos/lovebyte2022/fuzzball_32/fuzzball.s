@@ -23,8 +23,8 @@ XDRAW0		= $F65D
 	; of HGR_SCALE.
 
 	; this is an artifact of the original program to get SCALE=$20
-	; (from jsr opcode).  But now we set SCALE=1
-	; soon here meaning we could in theory move the program
+	; (from jsr opcode).  But now we set SCALE=1 explicitly,
+	; meaning we could in theory move the program
 	; to load elsewhere
 
 tiny_tiny:
@@ -50,7 +50,7 @@ rot_smc:
 
 	; The shape table is at memory address (Y,X)
 
-	; The effect was found when the original code was modified to not
+	; The effect was found when the original code was modified to
 	; have ROT not be 0, and so instead of pointing to the desired
 	; shape table in the zero page it was walking all across memory
 
