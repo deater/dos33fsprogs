@@ -15,6 +15,7 @@ Common parser:
 	4c2 - 156e	= 10ac  4268 bytes
 
 
+peasant3 18554	-> 22442
 
 peasant2	18302
 		18043 (decompress fast moved)
@@ -76,19 +77,19 @@ $08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
 $0B-$1F QLOAD disk routines and HGR drawing routines (5120 bytes)
 $20-$3F HGR Page 1
 $40-$5f HGR Page 2
-$60-$AF Programs	(roughly 22k available?) (we max at 20k on disk)
+$60-$AF Programs	(we limit to 20k, 20480 bytes, $50 pages)
+$B0-$??
 $B8-$BB Hi-res lookup tables
 $BC     temp area for load/save files
 $BD-$BE temp area when saving game
 $BF	verb table
 $C0-$CF	I/O
-$D0-$DF (Language Card BANK1) ?????
-$D0-$DF (Language Card BANK2)	Mockingboard music/PT3-routines
-$E0-$FF (Language Card) ?????
 
-$D0-$DF (bank2) inventory
-$D0-$ED (bank1) per-levelstrings
-$EE-$FF common parser code  (4.5k = 4608 bytes)
+Language card (high 16k)
+
+$D0-$ED (bank1) per-levelstrings	
+$D0-$DF (bank2) inventory		(3122 bytes)
+$EE-$FF common parser code  (4.5k = 4608 bytes [4332 currently])
 
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -99,7 +100,7 @@ T	  4 = VID_LOGO	 7574 bytes	30S = 1T14S
 T	  6 = TITLE      8950 bytes	35S = 2T3S
 T	  9 = INTRO	13467 bytes	52S = 3T4S
 T	 14 = INVENTORY  3121 bytes     13S = 0T13S
-T	 15 = PEASANT1  17007 bytes	67S = 4T3S	; 88 is max?
+T	 15 = PEASANT1  17007 bytes	67S = 4T3S	; 80 is max
 T	 20 = PEASANT2  17941 bytes	71S = 4T7S	; 79 = 20224
 T        25 = PEASANT3  18154 bytes	71S = 4T7S
 T	 30 = PEASANT4	15806 bytes	62S = 3T14S

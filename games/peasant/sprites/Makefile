@@ -1,7 +1,7 @@
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	inventory_sprites.inc ending_sprites.inc trogdor_sprites.inc \
-	boat_sprites.inc peasant_sprites.inc ned_sprites.inc \
+	boat_sprites.inc boat_sprites_fish.inc peasant_sprites.inc ned_sprites.inc \
 	peasant_robe_sprites.inc kerrek_sprites.inc \
 	waterfall_sprites.inc bubble_sprites_w.inc bubble_sprites_e.inc \
 	river_bubble_sprites.inc gary_sprites.inc
@@ -46,14 +46,18 @@ peasant_robe_sprites.inc:	peasant_sprites.png
 
 
 boat_sprites.inc:	boat_sprites.png
-	$(HGR_SPRITE) -s -l boat0 boat_sprites.png  7   1 81   45 > boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat1 boat_sprites.png  7  47 81   91 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat2 boat_sprites.png  7  93 81  137 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat3 boat_sprites.png  7 139 81  183 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat4 boat_sprites.png 91   1 165  45 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat5 boat_sprites.png 91  47 165  91 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat6 boat_sprites.png 91  93 165 137 >> boat_sprites.inc
-	$(HGR_SPRITE) -s -l boat7 boat_sprites.png 91 139 165 183 >> boat_sprites.inc
+#	$(HGR_SPRITE) -s -l boat0 boat_sprites.png  7   1 81   45 > boat_sprites.inc
+#	$(HGR_SPRITE) -s -l boat1 boat_sprites.png  7  47 81   91 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l boat0 boat_sprites.png  7  19 62   45 > boat_sprites.inc
+	$(HGR_SPRITE) -s -l boat1 boat_sprites.png  7  65 62   90 >> boat_sprites.inc
+
+boat_sprites_fish.inc:	boat_sprites.png
+	$(HGR_SPRITE) -s -l boat2 boat_sprites.png  7  93 81  137 > boat_sprites_fish.inc
+	$(HGR_SPRITE) -s -l boat3 boat_sprites.png  7 139 81  183 >> boat_sprites_fish.inc
+	$(HGR_SPRITE) -s -l boat4 boat_sprites.png 91   1 165  45 >> boat_sprites_fish.inc
+	$(HGR_SPRITE) -s -l boat5 boat_sprites.png 91  47 165  91 >> boat_sprites_fish.inc
+	$(HGR_SPRITE) -s -l boat6 boat_sprites.png 91  93 165 137 >> boat_sprites_fish.inc
+	$(HGR_SPRITE) -s -l boat7 boat_sprites.png 91 139 165 183 >> boat_sprites_fish.inc
 
 ned_sprites.inc:	ned_sprites.png
 	$(HGR_SPRITE) -s -l rock_moved_sprite ned_sprites.png  7   1 27   12 > ned_sprites.inc

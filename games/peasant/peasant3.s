@@ -257,6 +257,40 @@ game_loop:
 
 at_lake_east:
 	jsr	animate_bubbles_e
+
+        ; draw dude
+
+	lda	GAME_STATE_1
+	and	#FISH_FED
+	bne	done_dude
+
+	lda	FRAME
+	and	#$8
+	beq	draw_boat1
+
+draw_boat0:
+	lda	#<boat0
+	sta	INL
+	lda	#>boat0
+	jmp	done_choose_boat
+draw_boat1:
+	lda	#<boat1
+	sta	INL
+	lda	#>boat1
+
+done_choose_boat:
+        sta     INH
+
+        lda     #1
+        sta     CURSOR_X
+        lda     #70
+        sta     CURSOR_Y
+
+        jsr     hgr_draw_sprite
+
+done_dude:
+
+
 	jmp	skip_level_specific
 
 at_lake_west:
@@ -303,7 +337,7 @@ level_over:
 
 .include "graphics_peasantry/graphics_peasant3.inc"
 
-;.include "sprites/boat_sprites.inc"
+.include "sprites/boat_sprites.inc"
 
 map_backgrounds_low:
 	.byte	<jhonka_lzsa		; 10	-- jhonka

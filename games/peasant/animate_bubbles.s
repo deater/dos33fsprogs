@@ -68,9 +68,7 @@ animate_bubbles_e:
 	lda	#130
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite			;_1x5
-
-	rts
+	jmp	hgr_draw_sprite			;_1x5
 
 
 bubble_progress_e:
