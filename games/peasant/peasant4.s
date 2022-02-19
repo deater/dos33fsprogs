@@ -197,6 +197,12 @@ not_kerrek:
 
 	jsr	check_haystack_exit
 
+	;======================
+	; init ned
+	; FIXME: make random
+
+	lda	#64
+	sta	NED_STATUS
 
 
 	;===============================
@@ -224,6 +230,18 @@ game_loop:
 
 	inc	FRAME
 
+	;====================
+	; update ned
+
+	lda	NED_STATUS
+	beq	leave_ned_alone
+	cmp	#129
+	bcs	leave_ned_alone
+
+	inc	NED_STATUS
+
+leave_ned_alone:
+
 	;=====================
 	; check keyboard
 
@@ -237,9 +255,36 @@ game_loop:
 
 	jsr	kerrek_move_and_check_collision
 
+
 	;==========================
-	; check if lighting on fire
+	; draw ned if necessary
 	;==========================
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_WAVY_TREE
+	bne	not_at_wavy_tree
+
+	lda	NED_STATUS
+	bpl	ned_not_out
+
+	lda	#25
+	sta	CURSOR_X
+	lda	#88
+	sta	CURSOR_Y
+
+	lda	#<ned3_sprite
+	sta	INL
+	lda	#>ned3_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+ned_not_out:
+not_at_wavy_tree:
+
+	;==========================================
+	; check if lighting on fire at crooked tree
+	;==========================================
 
 	lda	MAP_LOCATION
 	cmp	#LOCATION_BURN_TREES
@@ -348,9 +393,9 @@ oops_new_location:
 	jmp	new_location
 
 
-	;************************
+	;========================
 	; exit level
-	;************************
+	;========================
 level_over:
 
 	; note: check for load from savegame if change state

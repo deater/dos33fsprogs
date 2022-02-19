@@ -165,7 +165,9 @@ GAME_STATE_2 = $99
 NED_STATUS	= $9A
 	; 0 = hiding
 	; 1..127 = countdown to appearing
-	; negative = out
+	; 128 = hands on tree
+	; 129 = half out
+	; 130+/negative = out
 
 BUSH_STATUS	= $9B	; status of bush search
 	BUSH_1_SEARCHED = $01

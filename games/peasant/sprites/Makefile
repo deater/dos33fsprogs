@@ -61,6 +61,10 @@ boat_sprites_fish.inc:	boat_sprites.png
 
 ned_sprites.inc:	ned_sprites.png
 	$(HGR_SPRITE) -s -l rock_moved_sprite ned_sprites.png  7   1 27   12 > ned_sprites.inc
+	$(HGR_SPRITE) -s -l ned1_sprite ned_sprites.png  28  110 41 121 >> ned_sprites.inc
+	$(HGR_SPRITE) -s -l ned2_sprite ned_sprites.png  28  128 41 154 >> ned_sprites.inc
+	$(HGR_SPRITE) -s -l ned3_sprite ned_sprites.png  7   157 41 184 >> ned_sprites.inc
+
 
 gary_sprites.inc:	gary_sprites.png
 	$(HGR_SPRITE) -s -l gary_base_sprite gary_sprites.png   21  98 55   124 > gary_sprites.inc
