@@ -4,7 +4,7 @@ DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk
 
-all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene
+all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
@@ -21,7 +21,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	FIREWORKS.BAS THINKING.BAS ARCS.BAS WIRE_HGR.BAS STATIC.BAS \
 	OVAL.BAS OVAL_HGR.BAS MOVING.BAS THICK_SINE.BAS TURKEY.BAS \
 	FLAME_HGR.BAS RECT.BAS SNOWY.BAS EDGAR.BAS OOPS4.BAS OOPS3.BAS \
-	HORROR.BAS DIAMOND.BAS
+	HORROR.BAS DIAMOND.BAS LEMM.BAS
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -113,6 +113,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A OOPS3.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A HORROR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A DIAMOND.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A LEMM.BAS
 
 ####
 
@@ -126,6 +127,14 @@ make_boxes:	make_boxes.o
 
 make_boxes.o:	make_boxes.c
 	$(CC) $(CFLAGS) -c make_boxes.c
+
+###
+
+make_hgr_boxes:	make_hgr_boxes.o
+	$(CC) $(LFLAGS) -o make_hgr_boxes make_hgr_boxes.o
+
+make_hgr_boxes.o:	make_hgr_boxes.c
+	$(CC) $(CFLAGS) -c make_hgr_boxes.c
 
 
 ###
@@ -634,5 +643,10 @@ DIAMOND.BAS:	diamond.bas
 
 ####
 
+LEMM.BAS:	lemm.bas
+	$(TOKENIZE) < lemm.bas > LEMM.BAS
+
+####
+
 clean:
-	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba convert_vmw make_boxes convert_back convert_tgreene LOAD *.BAS
+	rm -f *~ *.o *.lst convert_to convert_from convert_qkumba convert_vmw make_boxes convert_back convert_tgreene LOAD *.BAS make_hgr_boxes
