@@ -535,7 +535,7 @@ ned_tree_talk_ned_out:
 
 	; scare him away
 
-	lda	#0
+	lda	#253
 	sta	NED_STATUS
 	; FIXME: do we need to re-draw?
 
@@ -555,7 +555,7 @@ ned_tree_talk_at_out:
 
 	; scare him away
 
-	lda	#0
+	lda	#253
 	sta	NED_STATUS
 	; FIXME: do we need to re-draw?
 
