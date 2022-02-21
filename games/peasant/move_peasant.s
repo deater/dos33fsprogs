@@ -14,18 +14,7 @@ really_move_peasant:
 
 	; restore bg behind peasant
 
-	lda	PEASANT_Y
-	sta	SAVED_Y1
-	clc
-	adc	#28
-	sta	SAVED_Y2
-
-	ldx	PEASANT_X
-	txa
-	inx
-
-	jsr	hgr_partial_restore
-
+	jsr	erase_peasant
 
 	;=========================
 	;=========================
@@ -157,6 +146,26 @@ done_movey:
 peasant_the_same:
 
 	rts
+
+
+	;===========================
+	; erase peasant
+	;===========================
+
+	; restore bg behind peasant
+erase_peasant:
+	lda	PEASANT_Y
+	sta	SAVED_Y1
+	clc
+	adc	#28
+	sta	SAVED_Y2
+
+	ldx	PEASANT_X
+	txa
+	inx
+
+	jmp	hgr_partial_restore	; tail call
+
 
 
 
