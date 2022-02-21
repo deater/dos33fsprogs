@@ -357,6 +357,12 @@ not_ned_cottage:
 	bmi	oops_new_location
 	bne	level_over
 
+	; play music sting if needed
+	lda	kerrek_play_sting
+	beq	no_sting
+	jsr     kerrek_warning_music
+	dec	kerrek_play_sting
+no_sting:
 
 	; delay
 

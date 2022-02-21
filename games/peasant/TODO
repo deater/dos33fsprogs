@@ -85,9 +85,10 @@ Peasant1:
   + update x-coords when walk off screen (fence)
   + setup priority wall depending on if fence broken (lo-res box?)
 - Kerrek 1
-  + Implement kerrek
+  + allow kerrek to hit from left (instead of just right)
+  + make sure kerrek hit animation doesn't go off screen
   + Implement dead kerrek
-  + Animate kerrek
+  + Animate kerrek (more frames)
   + Animate shooting kerrek
   + Sound effect when kerrek appears
   + Animate getting belt

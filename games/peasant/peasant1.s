@@ -425,6 +425,16 @@ no_draw_gary_flies:
 	bmi	oops_new_location
 	bne	level_over
 
+
+	; oh kerrek where is thine sting
+	; play music sting if needed
+	lda	kerrek_play_sting
+	beq	no_sting
+	jsr	kerrek_warning_music
+	dec	kerrek_play_sting
+no_sting:
+
+
 	; delay
 
 	lda	#200

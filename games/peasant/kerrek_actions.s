@@ -223,11 +223,14 @@ kerrek_there:
 	ora	#KERREK_ONSCREEN
 	sta	KERREK_STATE
 
-	; play sound
-
-	jsr	kerrek_warning_music	; could be JMP
+	; play sting
+	inc	kerrek_play_sting
 
 	rts
+
+	; oh kerrek where art thine sting
+kerrek_play_sting:
+	.byte	$00
 
 kerrek_alive_not_there:
 
@@ -270,13 +273,13 @@ kerrek_row4:
 	; GEFC?
 	; GFEC?
 kerrek_warning_music:
-	lda     #48
+	lda     #96
 	sta     speaker_duration
 	lda     #NOTE_G3
 	sta     speaker_frequency
 	jsr     speaker_beep
 
-	lda     #24
+	lda     #48
 	sta     speaker_duration
 	lda     #NOTE_F3
 	sta     speaker_frequency
@@ -288,7 +291,7 @@ kerrek_warning_music:
 	sta     speaker_frequency
 	jsr     speaker_beep
 
-	lda     #96
+	lda     #192
 	sta     speaker_duration
 	lda     #NOTE_C3
 	sta     speaker_frequency
@@ -655,11 +658,17 @@ kerrek_got_ya:
 
 	jsr	hgr_draw_sprite
 
+
+	; bonk sound effect
+	lda	#96
+	sta	speaker_duration
+	lda	#NOTE_C3
+	sta	speaker_frequency
+	jsr	speaker_beep
+
 	; wait a bit
 
-	; FIXME: sound effect
-
-	lda	#5
+	lda	#2
 	jsr	wait_a_bit
 
 
@@ -687,6 +696,21 @@ kerrek_got_ya:
 	sta     INH
 
         jsr     hgr_draw_sprite
+
+	; draw big arm
+
+	lda	#<kerrek_r_hitting_arm_down_sprite
+	sta	INL
+	lda	#>kerrek_r_hitting_arm_down_sprite
+	sta	INH
+	lda	KERREK_X
+	sta	CURSOR_X
+	lda	KERREK_Y
+	clc
+	adc	#11
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
 
 	lda	#5
 	jsr	wait_a_bit
