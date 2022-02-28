@@ -243,21 +243,6 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
-	;====================
-	; always draw peasant
-
-	jsr	draw_peasant
-
-	;====================
-	; increment frame
-
-	inc	FRAME
-
-	;====================
-	; check keyboard
-
-	jsr	check_keyboard
-
 
 	;=====================
 	; level specific
@@ -268,6 +253,8 @@ game_loop:
 	beq     at_mud_puddle
 	cmp	#LOCATION_RIVER_STONE
 	beq	at_river
+	cmp	#LOCATION_ARCHERY
+	beq	at_archery
         bne     skip_level_specific
 
 	;=======================
@@ -275,6 +262,13 @@ game_loop:
 	;=======================
 at_river:
 	jsr	animate_river
+	jmp	skip_level_specific
+
+	;=======================
+	; archery animations
+	;=======================
+at_archery:
+	jsr	animate_archery
 	jmp	skip_level_specific
 
 	;=====================
@@ -337,7 +331,25 @@ at_mud_puddle:
 
 skip_level_specific:
 
+	;====================
+	; always draw peasant
 
+	jsr	draw_peasant
+
+	;====================
+	; increment frame
+
+	inc	FRAME
+
+	;====================
+	; check keyboard
+
+	jsr	check_keyboard
+
+
+
+
+	;=====================
 	; delay
 
 	lda	#200
@@ -405,6 +417,43 @@ to_left_of_inn:
 	rts
 
 
+	;========================
+	; animate archery
+	;=========================
+animate_archery:
+
+	lda     FRAME
+	and     #4
+	bne	mendelev_arm_moved
+
+mendelev_normal:
+
+	lda	#107
+	sta	SAVED_Y1
+	lda	#110
+	sta	SAVED_Y2
+
+	lda	#29
+	ldx	#31
+	jmp	hgr_partial_restore
+
+mendelev_arm_moved:
+
+	lda	#<mendelev1_sprite
+	sta	INL
+	inx
+	lda	#>mendelev1_sprite
+	sta	INH
+
+	lda	#29
+	sta     CURSOR_X
+	lda	#107
+	sta	CURSOR_Y
+
+	jmp	hgr_draw_sprite		;
+
+
+
 .include "peasant_common.s"
 .include "move_peasant.s"
 .include "draw_peasant.s"
@@ -425,6 +474,8 @@ to_left_of_inn:
 .include "hgr_sprite.s"
 
 .include "animate_river.s"
+
+.include "sprites/archery_sprites.inc"
 
 map_backgrounds_low:
 	.byte	<haystack_lzsa		; 5	-- haystack
