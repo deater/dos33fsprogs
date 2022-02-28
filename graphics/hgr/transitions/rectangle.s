@@ -61,7 +61,7 @@ rectangle:
 	jsr	HGR2		; set hi-res 140x192, page2, fullscreen
 				; A and Y both 0 at end
 
-over:
+again:
 	; clear our zp things to 0
 
 	ldx	#15
@@ -112,7 +112,7 @@ main_loop:
 end:
 	txa			; put zero into A
 	inc	color_smc+1
-	bne	over
+	bne	again
 
 
 	;=================================
@@ -145,6 +145,7 @@ out_loop:
 	lda	GBASH_SAVED
 	sta	GBASH
 	ldy	XX
+
 in_loop:
 
 color_smc:
@@ -160,8 +161,9 @@ output_smc:
 	dex
 	bne	in_loop
 
-	lda	#25		; wait a bit
-	jsr	WAIT
+	; A here is $40 - $60 (64 - 96)
+;	lda	#25		; wait a bit
+;	jsr	WAIT
 
 check_x:
 	clc

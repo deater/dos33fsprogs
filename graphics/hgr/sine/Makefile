@@ -16,7 +16,7 @@ sines.dsk:	HELLO APPROX_SINE THICK_SINE THICK_COS TABLE_SINE ROM_SINE \
 	$(DOS33) -y sines.dsk BSAVE -a 0xc00 ROM_SINE
 	$(DOS33) -y sines.dsk BSAVE -a 0xc00 THICK_SINE
 	$(DOS33) -y sines.dsk BSAVE -a 0xc00 THICK_COS
-	$(DOS33) -y sines.dsk BSAVE -a 0xc00 OOPS_COS
+	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS_COS
 	$(DOS33) -y sines.dsk BSAVE -a 0xc00 OOPS2_COS
 	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS3_COS
 	$(DOS33) -y sines.dsk BSAVE -a 0x3f5 OOPS4_COS
@@ -64,7 +64,7 @@ thick.o:	thick.s
 ###
 
 OOPS_COS:	oops_cos.o
-	ld65 -o OOPS_COS oops_cos.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o OOPS_COS oops_cos.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
 oops_cos.o:	oops_cos.s
 	ca65 -o oops_cos.o oops_cos.s -l oops_cos.lst

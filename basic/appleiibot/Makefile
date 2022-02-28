@@ -21,7 +21,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	FIREWORKS.BAS THINKING.BAS ARCS.BAS WIRE_HGR.BAS STATIC.BAS \
 	OVAL.BAS OVAL_HGR.BAS MOVING.BAS THICK_SINE.BAS TURKEY.BAS \
 	FLAME_HGR.BAS RECT.BAS SNOWY.BAS EDGAR.BAS OOPS4.BAS OOPS3.BAS \
-	HORROR.BAS DIAMOND.BAS LEMM.BAS
+	HORROR.BAS DIAMOND.BAS LEMM.BAS OOPS.BAS
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -114,6 +114,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A HORROR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A DIAMOND.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A LEMM.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A OOPS.BAS
 
 ####
 
@@ -619,6 +620,11 @@ OOPS4.BAS:	oops4.bas
 
 OOPS3.BAS:	oops3.bas
 	$(TOKENIZE) < oops3.bas > OOPS3.BAS
+
+####
+
+OOPS.BAS:	oops.bas
+	$(TOKENIZE) < oops.bas > OOPS.BAS
 
 
 ####

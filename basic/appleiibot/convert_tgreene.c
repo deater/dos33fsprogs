@@ -14,14 +14,22 @@
 
 int main(int argc, char **argv) {
 
-	int mode=END_AT_3F5;
-//	int mode=BEGIN_AT_3F5;
+	int mode=BEGIN_AT_3F5;
 	int i = 0;
 	int e = 0,filesize;
 	int val,pv,final;
 	unsigned char in[1024];
 	unsigned char enc[1024],enc2[1024];
 	int third,enc_ptr=0;
+	int filesize_digits;
+
+	if (argc>1) {
+		if (argv[1][0]=='-') {
+			if (argv[1][1]=='e') {
+				mode=END_AT_3F5;
+			}
+		}
+	}
 
 //	printf("1REM");
 
@@ -113,15 +121,20 @@ int main(int argc, char **argv) {
 	printf("2CALL768\"%s%s\n",enc2,enc);
 #endif
 
+	if ((filesize-1)<10) filesize_digits=1;
+	else if ((filesize-1)<100) filesize_digits=2;
+	else filesize_digits=3;
+
 	if (mode==END_AT_3F5) {
 		fprintf(stderr,"Ending at $3F5\n");
 		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
 			"%d+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
-			filesize-1,
-			0x3f5-filesize+3,
-			2125,
-			64+4*OFFSET,
-			2125+filesize,OFFSET2);
+			filesize-1,			// filesize for loop
+			0x3f5-filesize+3,		// destination
+			2122+filesize_digits,		// read from 6
+			64+4*OFFSET,			// ??
+			2122+filesize+filesize_digits, // read from 2
+			OFFSET2);
 		printf("2&\"%s%s\n",enc2,enc);
 	}
 
@@ -129,14 +142,14 @@ int main(int argc, char **argv) {
 	// if using & to jump to beginning (over-writing text page)
 	if (mode==BEGIN_AT_3F5) {
 		fprintf(stderr,"Beginning at $3F5\n");
-
 		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
 			"%d+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
-			filesize-1,
-			0x3f5,
-			2126,
-			4*OFFSET+64,
-			2126+filesize,OFFSET2);
+			filesize-1,			// filesize for loop
+			0x3f5,				// destination
+			2123+filesize_digits,		// read from 6
+			4*OFFSET+64,			// ?
+			2123+filesize+filesize_digits,	// read from 2
+			OFFSET2);
 		printf("2&\"%s%s\n",enc2,enc);
 	}
 
