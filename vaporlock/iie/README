@@ -1,0 +1,3 @@
+was trying some vaporlock for the AppleIIbot
+but forgot the emulator used there (linapple?)
+doesn't implement the VBLANK register, or mid-screen mode switching
