@@ -5,12 +5,12 @@ PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
 PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
 PNG2RLE = ../../utils/gr-utils/png2rle
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-
+EMPTY = ../../empty_disk/empty.dsk
 
 all:	scroller.dsk
 
 scroller.dsk:	HELLO SCROLLER
-	cp empty.dsk scroller.dsk
+	cp $(EMPTY) scroller.dsk
 	$(DOS33) -y scroller.dsk SAVE A HELLO
 	$(DOS33) -y scroller.dsk BSAVE -a 0x1000 SCROLLER
 
