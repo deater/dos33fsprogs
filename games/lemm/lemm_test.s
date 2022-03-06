@@ -163,34 +163,21 @@ skip_all_checks:
         ; switch in language card
         ; read/write RAM, $d000 bank 2
 
-        lda     $C083
-        lda     $C083
-
-;       lda     $C081           ; enable ROM
-;       lda     $C081           ; enable write
+	lda	$C083
+	lda	$C083
 
         ; actually load it
 
-	lda     #<lemm5_part1_lzsa
-	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>lemm5_part1_lzsa
-	sta     getsrc_smc+2	; LZSA_SRC_HI
+	lda	#0
+	sta	CURRENT_CHUNK
+	sta	DONE_PLAYING
 
-	lda	#$d0
+	jsr	load_song_chunk
 
-	jsr	decompress_lzsa2_fast
+	lda	#1
+	sta	LOOP
 
-        lda     #0
-        sta     DONE_PLAYING
-	sta	BASE_FRAME_L
-
-	lda	#$D0
-	sta	BASE_FRAME_H
-
-	 lda     #1
-        sta     LOOP
-
-        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+	jsr	mockingboard_patch	; patch to work in slots other than 4?
 
         ;=======================
         ; Set up 50Hz interrupt
@@ -283,6 +270,34 @@ load_graphics_loop:
 
 
 
+	;========================
+	; load song chunk
+	;	CURRENT_CHUNK is which one
+
+load_song_chunk:
+	ldx	CURRENT_CHUNK
+	lda     music_parts_l,X
+	sta     getsrc_smc+1	; LZSA_SRC_LO
+	lda     music_parts_h,X
+	sta     getsrc_smc+2	; LZSA_SRC_HI
+	bne	load_song_chunk_good
+
+	; wrapped
+	lda	#$00
+	sta	CURRENT_CHUNK
+	beq	load_song_chunk		; try again
+
+load_song_chunk_good:
+	lda	#$d0
+	sta	BASE_FRAME_H
+
+	jsr	decompress_lzsa2_fast
+
+        lda     #0
+	sta	BASE_FRAME_L
+
+	rts
+
 	;==========================
 	; includes
 	;==========================
@@ -319,19 +334,17 @@ config_string:
 .byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
 ;                             MOCKINGBOARD: NONE
 
-
-;	.include "pt3_lib_core.s"
-;	.include "pt3_lib_init.s"
-;	.include "interrupt_handler.s"
-;	.include "pt3_lib_mockingboard_detect.s"
-;	.include "pt3_lib_mockingboard_setup.s"
-
 new_title:
 .include "graphics/graphics_test.inc"
 
-
-
+music_parts_h:
+	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa,$00
+music_parts_l:
+	.byte <lemm5_part1_lzsa,<lemm5_part2_lzsa,<lemm5_part3_lzsa
 
 lemm5_part1_lzsa:
 .incbin "music/lemm5.part1.lzsa"
-
+lemm5_part2_lzsa:
+.incbin "music/lemm5.part2.lzsa"
+lemm5_part3_lzsa:
+.incbin "music/lemm5.part3.lzsa"

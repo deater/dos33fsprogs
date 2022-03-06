@@ -50,7 +50,13 @@ ym_play_music:
 frame_loop:
 	ldy	#0
 	lda	(CURRENT_FRAME_L),Y
-	jsr	update_register
+	cmp	#$ff
+	bne	all_good
+	cpx	#1			; see if A coarse is $FF
+	beq	go_next_chunk		; if so, end of song, loop
+
+all_good:
+	jsr	update_ay_register
 
 	clc
 	lda	CURRENT_FRAME_H
@@ -70,20 +76,59 @@ frame_loop:
 	cmp	#$D4
 	bne	not_oflo
 
-	; FIXME: handle out of data properly
-	lda	#$D0
-	sta	BASE_FRAME_H
+go_next_chunk:
+	inc	CURRENT_CHUNK
+	jsr	load_song_chunk
+
 
 not_oflo:
 
+	jmp	exit_interrupt
+
+	;=================================
+	; Finally done with this interrupt
+	;=================================
+
+quiet_exit:
+	stx	DONE_PLAYING
+	jsr	clear_ay_both
+
+	; mute the sound
+
+	ldx	#7
+	lda	#$ff
+	jsr	update_ay_register
 
 
-	jmp	done_pt3_update_register
+exit_interrupt:
+
+	pla
+	tay			; restore Y
+	pla
+	tax			; restore X
+	pla			; restore a				; 4
+
+	; on II+/IIe (but not IIc) we need to do this?
+interrupt_smc:
+	lda	$45		; restore A
+	plp
+
+	rti			; return from interrupt			; 6
+
+								;============
+								; typical
+								; ???? cycles
 
 
 
 
-update_register:
+
+	;=========================
+	; update ay_register
+	; reg in X
+	; value in A
+
+update_ay_register:
 
 pt3_irq_smc2:
         stx     MOCK_6522_ORA1          ; put address on PA1            ; 4
@@ -111,42 +156,6 @@ pt3_irq_smc7:
 
 	rts
 
-done_pt3_update_register:
 
 done_pt3_irq_handler:
-
-	jmp	exit_interrupt
-
-	;=================================
-	; Finally done with this interrupt
-	;=================================
-
-quiet_exit:
-	stx	DONE_PLAYING
-	jsr	clear_ay_both
-
-	ldx	#$ff		; also mute the channel
-	stx	AY_REGISTERS+7	; just in case
-
-
-exit_interrupt:
-
-	pla
-	tay			; restore Y
-	pla
-	tax			; restore X
-	pla			; restore a				; 4
-
-	; on II+/IIe (but not IIc) we need to do this?
-interrupt_smc:
-	lda	$45		; restore A
-	plp
-
-	rti			; return from interrupt			; 6
-
-								;============
-								; typical
-								; ???? cycles
-
-
 
