@@ -27,7 +27,8 @@ LEMM_TEST:	lemm_test.o
 	ld65 -o LEMM_TEST lemm_test.o -C ../../linker_scripts/apple2_4000.inc
 
 lemm_test.o:	lemm_test.s zp.inc hardware.inc \
-		graphics/graphics_test.inc
+		graphics/graphics_test.inc \
+		interrupt_handler.s
 	ca65 -o lemm_test.o lemm_test.s -l lemm_test.lst
 
 ####

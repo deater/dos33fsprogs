@@ -7,18 +7,15 @@
 	.include "hardware.inc"
 
 lemm_test_start:
-	;===================
-	; init screen
-	;===================
 
-	jsr	TEXT
-	jsr	HOME
-	bit	KEYRESET
+	lda	#0
+	sta	DRAW_PAGE
 
-	bit	SET_GR
-	bit	PAGE0
-	bit	HIRES
-	bit	FULLGR
+	;====================
+	; detect model
+	;====================
+
+	jsr	detect_appleii_model
 
 	;===================
 	; machine workarounds
@@ -54,6 +51,192 @@ lemm_test_start:
 	sta   CLOCKCTL			; set twice for VidHD
 
 not_a_iigs:
+
+	;===================
+        ; print config
+        ;===================
+
+        lda     #<config_string
+        sta     OUTL
+        lda     #>config_string
+        sta     OUTH
+
+        jsr     move_and_print
+
+        ; print detected model
+
+        lda     APPLEII_MODEL
+        ora     #$80
+        sta     $7d0+8                  ; 23,8
+
+        ; if GS print the extra S
+        cmp     #'G'|$80
+        bne     not_gs
+        lda     #'S'|$80
+        sta     $7d0+9
+
+not_gs:
+
+	;=========================================
+        ; detect if we have a language card (64k)
+        ; and load sound into it if possible
+        ;===================================
+
+        lda     #0
+        sta     SOUND_STATUS            ; clear out, sound enabled
+
+        ;===========================================
+        ; skip checks if open-apple being held down
+
+        lda     $C061
+        and     #$80                    ; only bit 7 is affected
+        bne     skip_all_checks         ; rest is floating bus
+
+
+        jsr     detect_language_card
+        bcs     no_language_card
+
+yes_language_card:
+        ; update status
+        lda     #'6'|$80
+        sta     $7d0+11         ; 23,11
+        lda     #'4'|$80
+        sta     $7d0+12         ; 23,12
+
+        ; update sound status
+        lda     SOUND_STATUS
+        ora     #SOUND_IN_LC
+        sta     SOUND_STATUS
+
+        jmp     done_language_card
+
+no_language_card:
+
+done_language_card:
+
+        ;===================================
+        ; Detect Mockingboard
+        ;===================================
+
+PT3_ENABLE_APPLE_IIC = 1
+
+        ; detect mockingboard
+        jsr     mockingboard_detect
+
+        bcc     mockingboard_notfound
+
+mockingboard_found:
+        ; print detected location
+
+        lda     #'S'+$80                ; change NO to slot
+        sta     $7d0+30
+
+        lda     MB_ADDR_H               ; $C4 = 4, want $B4 1100 -> 1011
+        and     #$87
+        ora     #$30
+
+        sta     $7d0+31                 ; 23,31
+
+        ; NOTE: in this game we need both language card && mockingboard
+        ;       to enable mockingboard music
+
+        lda     SOUND_STATUS
+        and     #SOUND_IN_LC
+        beq     dont_enable_mc
+
+        lda     SOUND_STATUS
+        ora     #SOUND_MOCKINGBOARD
+        sta     SOUND_STATUS
+
+dont_enable_mc:
+
+mockingboard_notfound:
+
+skip_all_checks:
+
+
+	;==================================
+        ; load music into the language card
+        ;       into $D000 set 2
+        ;==================================
+
+        ; switch in language card
+        ; read/write RAM, $d000 bank 2
+
+        lda     $C083
+        lda     $C083
+
+;       lda     $C081           ; enable ROM
+;       lda     $C081           ; enable write
+
+        ; actually load it
+
+	lda     #<lemm5_part1_lzsa
+	sta     getsrc_smc+1	; LZSA_SRC_LO
+	lda     #>lemm5_part1_lzsa
+	sta     getsrc_smc+2	; LZSA_SRC_HI
+
+	lda	#$d0
+
+	jsr	decompress_lzsa2_fast
+
+        lda     #0
+        sta     DONE_PLAYING
+	sta	BASE_FRAME_L
+
+	lda	#$D0
+	sta	BASE_FRAME_H
+
+	 lda     #1
+        sta     LOOP
+
+        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
+        ;=======================
+        ; Set up 50Hz interrupt
+        ;========================
+
+        jsr     mockingboard_init
+        jsr     mockingboard_setup_interrupt
+
+
+zurg:
+	;============================
+        ; Init the Mockingboard
+        ;============================
+
+        jsr     reset_ay_both
+        jsr     clear_ay_both
+
+
+
+        ;=======================
+        ; start music
+        ;=======================
+
+
+
+
+
+
+	jsr	wait_until_keypress
+
+        cli
+
+	;===================
+	; init screen
+	;===================
+
+;	jsr	TEXT		; can't, swapped ROM out
+;	jsr	HOME
+	bit	KEYRESET
+
+	bit	SET_GR
+	bit	PAGE0
+	bit	HIRES
+	bit	FULLGR
+
+
 
 	;===================
 	; Load hires graphics
@@ -97,91 +280,6 @@ load_graphics_loop:
 
 	jmp	load_graphics_loop
 
-	;===================================
-	; detect if we have a language card
-	; and load sound into it if possible
-	;===================================
-
-;	lda	#0
-;	sta	SOUND_STATUS		; clear out, sound enabled
-
-;	jsr	detect_language_card
-;	bcs	no_language_card
-
-	; update sound status
-;	lda	SOUND_STATUS
-;	ora	#SOUND_IN_LC
-;	sta	SOUND_STATUS
-
-	; load sounds into LC
-
-	; read ram, write ram, use $d000 bank1
-;	bit	$C08B
-;	bit	$C08B
-
-;	lda	#<linking_noise_compressed
-;	sta	getsrc_smc+1
-;	lda	#>linking_noise_compressed
-;	sta	getsrc_smc+2
-
-;	lda	#$D0	; decompress to $D000
-
-;	jsr	decompress_lzsa2_fast
-
-;blah:
-
-	; read rom, nowrite, use $d000 bank1
-;	bit	$C08A
-
-no_language_card:
-
-	;===================================
-	; Setup Mockingboard
-	;===================================
-;	lda	#0
-;	sta	DONE_PLAYING
-;	sta	LOOP
-
-	; detect mockingboard
-;	jsr	mockingboard_detect
-
-;	bcc	mockingboard_notfound
-
-mockingboard_found:
-;;       jsr     mockingboard_patch      ; patch to work in slots other than 4?
-
-;	lda	SOUND_STATUS
-;	ora	#SOUND_MOCKINGBOARD
-;	sta	SOUND_STATUS
-
-	;=======================
-	; Set up 50Hz interrupt
-	;========================
-
-;	jsr	mockingboard_init
-;	jsr	mockingboard_setup_interrupt
-
-	;============================
-	; Init the Mockingboard
-	;============================
-
-;	jsr	reset_ay_both
-;	jsr	clear_ay_both
-
-	;==================
-	; init song
-	;==================
-
-;	jsr     pt3_init_song
-
-;	jmp     done_setup_sound
-
-
-mockingboard_notfound:
-
-
-done_setup_sound:
-
 
 
 
@@ -192,21 +290,36 @@ done_setup_sound:
 ;	.include	"gr_pageflip.s"
 ;	.include	"gr_copy.s"
 ;	.include	"wait_a_bit.s"
-;	.include	"gr_offsets.s"
+	.include	"gr_offsets.s"
 	.include	"decompress_fast_v2.s"
 
 	.include	"wait_keypress.s"
 
 ;	.include	"print_help.s"
 ;	.include	"gr_fast_clear.s"
-;	.include	"text_print.s"
+	.include	"text_print.s"
 
 ;	.include	"init_vars.s"
 ;	.include	"graphics_title/title_graphics.inc"
-;	.include	"lc_detect.s"
+	.include	"lc_detect.s"
 
 
 	; pt3 player
+
+;.include "pt3_lib_mockingboard.inc"
+.include "pt3_lib_detect_model.s"
+.include "pt3_lib_mockingboard_detect.s"
+.include "pt3_lib_mockingboard_setup.s"
+.include "interrupt_handler.s"
+.include "pt3_lib_mockingboard_patch.s"
+
+
+config_string:
+;             0123456789012345678901234567890123456789
+.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+;                             MOCKINGBOARD: NONE
+
+
 ;	.include "pt3_lib_core.s"
 ;	.include "pt3_lib_init.s"
 ;	.include "interrupt_handler.s"
@@ -219,15 +332,6 @@ new_title:
 
 
 
-
-
-
-
-
-
-;PT3_LOC = theme_music
-
-;.align $100
-;theme_music:
-;.incbin "audio/theme.pt3"
+lemm5_part1_lzsa:
+.incbin "music/lemm5.part1.lzsa"
 

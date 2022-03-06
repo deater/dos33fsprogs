@@ -28,7 +28,7 @@ HELLO:	hello.bas
 SCROLLER:	scroller.o
 	ld65 -o SCROLLER scroller.o -C ../../linker_scripts/apple2_1000.inc
 
-scroller.o:	scroller.s gr_copy.s gr_unrle.s gr_unrle_large.s \
+scroller.o:	scroller.s gr_copy.s \
 	gr_copy_large.s \
 	zp.inc hardware.inc spaceman.lzsa spaceman2.lzsa
 	ca65 -o scroller.o scroller.s -l scroller.lst
@@ -38,7 +38,7 @@ scroller.o:	scroller.s gr_copy.s gr_unrle.s gr_unrle_large.s \
 DSR_INTRO:	dsr_intro.o
 	ld65 -o DSR_INTRO dsr_intro.o -C ../../linker_scripts/apple2_1000.inc
 
-dsr_intro.o:	dsr_intro.s gr_copy.s gr_unrle.s gr_unrle_large.s \
+dsr_intro.o:	dsr_intro.s gr_copy.s \
 	gr_copy_large.s \
 	zp.inc hardware.inc desire.lzsa desire2.lzsa
 	ca65 -o dsr_intro.o dsr_intro.s -l dsr_intro.lst
