@@ -4,7 +4,7 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	graphics_test.inc
+all:	graphics_test.inc graphics_level1.inc
 
 ###
 
@@ -15,6 +15,12 @@ graphics_test.inc:	\
 	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_test.inc
 	echo "level2_lzsa: .incbin \"level2.lzsa\"" >> graphics_test.inc
 	echo "level2_actual_lzsa: .incbin \"level2_actual.lzsa\"" >> graphics_test.inc
+
+
+graphics_level1.inc:	\
+	level1.lzsa
+	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_level1.inc
+
 
 ###
 

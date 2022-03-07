@@ -10,9 +10,10 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	lemm.dsk
 
-lemm.dsk:	HELLO LEMM_TEST
+lemm.dsk:	HELLO LEMM LEMM_TEST
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33) -y lemm.dsk SAVE A HELLO
+	$(DOS33) -y lemm.dsk BSAVE -a 0x6000 LEMM
 	$(DOS33) -y lemm.dsk BSAVE -a 0x4000 LEMM_TEST
 
 
@@ -33,11 +34,23 @@ lemm_test.o:	lemm_test.s zp.inc hardware.inc \
 
 ####
 
+LEMM:	lemm.o
+	ld65 -o LEMM lemm.o -C ../../linker_scripts/apple2_6000.inc
+
+lemm.o:	lemm.s zp.inc hardware.inc \
+		graphics/graphics_test.inc \
+		intro_level1.s \
+		interrupt_handler.s
+	ca65 -o lemm.o lemm.s -l lemm.lst
+
+
+####
+
 graphics/graphics_test.inc:
 	cd	graphics && make
 
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LEMM
+	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST
 
