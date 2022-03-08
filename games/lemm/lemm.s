@@ -211,6 +211,10 @@ zurg:
         ; Load Graphics
         ;=======================
 
+	lda	#$20
+	sta	HGR_PAGE
+	jsr	hgr_make_tables
+
 	bit	SET_GR
 	bit	PAGE0
 	bit	HIRES
@@ -247,11 +251,26 @@ zurg:
 
         cli
 
+	; set up time
 
+	lda	#$5
+	sta	TIME_MINUTES
+	lda	#$12
+	sta	TIME_SECONDS
+
+
+	;===================
 	;===================
 	; Main Loop
 	;===================
+	;===================
 main_loop:
+
+
+	jsr	update_time
+
+	lda	#$ff
+	jsr	wait
 
 
 	jmp	main_loop
@@ -301,12 +320,15 @@ load_song_chunk_good:
 
 ;	.include	"print_help.s"
 ;	.include	"gr_fast_clear.s"
+
 	.include	"text_print.s"
 
-;	.include	"init_vars.s"
-;	.include	"graphics_title/title_graphics.inc"
 	.include	"lc_detect.s"
 
+	.include	"wait.s"
+	.include	"hgr_tables.s"
+	.include	"hgr_sprite.s"
+	.include	"update_time.s"
 	.include	"intro_level1.s"
 
 	; pt3 player
@@ -324,8 +346,9 @@ config_string:
 .byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
 ;                             MOCKINGBOARD: NONE
 
-new_title:
+
 .include "graphics/graphics_level1.inc"
+.include "graphics/sprites.inc"
 
 music_parts_h:
 	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa,$00

@@ -51,6 +51,12 @@ CURRENT_FRAME_H		= $71
 BASE_FRAME_L		= $72
 BASE_FRAME_H		= $73
 CURRENT_CHUNK		= $74
+TIME_MINUTES		= $75
+TIME_SECONDS		= $76
+CURSOR_X		= $77
+CURSOR_Y		= $78
+DISP_PAGE		= $79
+DRAW_PAGE		= $7A
 
 APPLEII_MODEL		= $8B
 
@@ -67,21 +73,11 @@ SOUND_STATUS	=	$DE
 	SOUND_IN_LC	= $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 
-GRID_PAGE	=	$DF
-ANIMATE_FRAME	=	$E0
-LEVEL_OVER	=	$E1
-	GAME_OVER	=	$FF
-	NEXT_LEVEL	=	$01
-LOCATIONS_L	=	$E2
-LOCATIONS_H	=	$E3
 
-; temp var per-world define
-LONG_FRAME	=	$E4	; nibel
-CURRENT_DISPLAY	=	$E4	; selena
-LAST_PLAYED	=	$E4	; selena
+HGR_PAGE	=	$E6
 
-DISP_PAGE	=	$ED	; ALL
-DRAW_PAGE	=	$EE	; ALL
+
+
 
 ; rest of pt3_player
 LOOP		= $F4
