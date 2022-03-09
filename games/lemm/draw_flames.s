@@ -13,9 +13,9 @@ draw_flames:
 	sta	INH
 
 	ldx	#31		; 217
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#108
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jsr	hgr_draw_sprite
 
@@ -31,9 +31,9 @@ draw_flames:
 	sta	INH
 
 	ldx	#35		; 245
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#108
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jmp	hgr_draw_sprite
 

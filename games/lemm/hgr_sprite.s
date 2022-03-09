@@ -2,7 +2,7 @@
 	; hgr draw sprite (only at 7-bit boundaries)
 	;===========================================
 	; SPRITE in INL/INH
-	; Location at CURSOR_X CURSOR_Y
+	; Location at XPOS YPOS
 
 	; xsize, ysize  in first two bytes
 
@@ -13,7 +13,7 @@ hgr_draw_sprite:
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc
-	adc	CURSOR_X
+	adc	XPOS
 	sta	sprite_width_end_smc+1	; self modify for end of line
 
 	iny				; load ysize
@@ -38,7 +38,7 @@ hgr_sprite_yloop:
 	lda	MASK			; row
 
 	clc
-	adc	CURSOR_Y		; add in cursor_y
+	adc	YPOS		; add in cursor_y
 
 	; calc GBASL/GBASH
 
@@ -53,7 +53,7 @@ hgr_sprite_page_smc:
 	eor	#$00
 	sta	GBASH
 
-	ldy	CURSOR_X
+	ldy	XPOS
 
 sprite_inner_loop:
 
@@ -95,7 +95,7 @@ sprite_ysize_smc:
 	; and shifts it if in odd column
 
 	; SPRITE in INL/INH
-	; Location at CURSOR_X CURSOR_Y
+	; Location at XPOS YPOS
 
 	; xsize, ysize  in first two bytes
 
@@ -107,7 +107,7 @@ hgr_draw_sprite_autoshift:
 
 	; SEC=$38 0b0011 1000 CLC=$18 0b0001 10000
 
-	lda	CURSOR_X
+	lda	XPOS
 	lsr
 	bcc	make_it_even
 
@@ -123,7 +123,7 @@ make_it_so:
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc
-	adc	CURSOR_X
+	adc	XPOS
 	sta	sprite_width_end_smc_as+1	; self modify for end of line
 
 	iny				; load ysize
@@ -148,7 +148,7 @@ hgr_sprite_yloop_as:
 	lda	MASK			; row
 
 	clc
-	adc	CURSOR_Y		; add in cursor_y
+	adc	YPOS		; add in cursor_y
 
 	; calc GBASL/GBASH
 
@@ -163,7 +163,7 @@ hgr_sprite_page_smc_as:
 	eor	#$00
 	sta	GBASH
 
-	ldy	CURSOR_X
+	ldy	XPOS
 
 sprite_inner_loop_as:
 

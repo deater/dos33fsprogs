@@ -40,9 +40,9 @@ draw_time:
 	; 246, 152
 
 	ldx	#35		; 245
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#152
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jsr	hgr_draw_sprite_autoshift
 
@@ -60,9 +60,9 @@ draw_time:
 	sta	INH
 
 	ldx	#37
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#152
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jsr	hgr_draw_sprite_autoshift
 
@@ -78,9 +78,9 @@ draw_time:
 	sta	INH
 
 	ldx	#38
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#152
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jsr	hgr_draw_sprite_autoshift
 

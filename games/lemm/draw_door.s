@@ -13,9 +13,9 @@ draw_door:
 	sta	INH
 
 	ldx	#9		; 63
-        stx     CURSOR_X
+        stx     XPOS
 	lda	#36
-	sta	CURSOR_Y
+	sta	YPOS
 
 	jsr	hgr_draw_sprite
 

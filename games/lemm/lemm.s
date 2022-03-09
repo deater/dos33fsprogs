@@ -251,6 +251,16 @@ zurg:
 	jsr	decompress_lzsa2_fast
 
 
+        ;=======================
+        ; Setup cursor
+        ;=======================
+
+	lda	#0
+	sta	OVER_LEMMING
+	lda	#10
+	sta	CURSOR_X
+	lda	#100
+	sta	CURSOR_Y
 
         ;=======================
         ; Play "Let's Go"
@@ -310,6 +320,9 @@ door_is_open:
 	jsr	draw_flames
 
 	jsr	update_time
+
+	jsr	draw_pointer
+
 
 	lda	#$ff
 	jsr	wait
@@ -380,10 +393,13 @@ load_song_chunk_good:
 ;	.include	"print_help.s"
 ;	.include	"gr_fast_clear.s"
 
+
+	.include	"hgr_14x14_sprite.s"
 	.include	"text_print.s"
 
 	.include	"lc_detect.s"
 
+	.include	"draw_pointer.s"
 
 	.include	"hgr_tables.s"
 	.include	"hgr_sprite.s"
