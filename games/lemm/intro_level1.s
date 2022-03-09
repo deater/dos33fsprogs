@@ -1,10 +1,26 @@
 
+	;=====================================
+	; print the intro message for level1
+	;=====================================
+
 intro_level1:
+
+	; clear text screen
+
+	jsr	clear_all
+
+	; print non-inverse
+
+	jsr	set_normal
+
+	; print messages
 
 	lda	#<level1_intro_text
 	sta	OUTL
 	lda	#>level1_intro_text
 	sta	OUTH
+
+	; print the text
 
 	ldx	#8
 text_loop:
@@ -13,6 +29,8 @@ text_loop:
 
 	dex
 	bne	text_loop
+
+	; wait until keypress
 
 	jsr	wait_until_keypress
 

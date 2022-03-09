@@ -391,7 +391,7 @@ load_song_chunk_good:
 	.include	"wait_keypress.s"
 
 ;	.include	"print_help.s"
-;	.include	"gr_fast_clear.s"
+	.include	"gr_fast_clear.s"
 
 
 	.include	"hgr_14x14_sprite.s"

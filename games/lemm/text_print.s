@@ -60,86 +60,23 @@ done_print_string:
 
 	rts
 
+	; set normal text
+set_normal:
+	lda	#$80
+	sta	ps_smc1+1
 
-.if 0
-	;================================
-	; move and print a list of lines
-	;================================
-move_and_print_list:
-	jsr	move_and_print
-	ldy	#0
-	lda	(OUTL),Y
-	bpl	move_and_print_list
+	lda	#09             ; ora
+	sta	ps_smc1
+
+	rts
+
+	; restore inverse text
+set_inverse:
+	lda	#$29
+	sta	ps_smc1
+	lda	#$3f
+	sta	ps_smc1+1
 
 	rts
 
 
-
-	;================================
-	; move and print a list of lines
-	;================================
-move_and_print_list_both_pages:
-	lda	DRAW_PAGE
-	pha
-
-	lda	OUTL
-	pha
-	lda	OUTH
-	pha
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	jsr	move_and_print_list
-
-	pla
-	sta	OUTH
-	pla
-	sta	OUTL
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	move_and_print_list
-
-	pla
-	sta	DRAW_PAGE
-
-
-	rts
-
-
-
-	;=======================
-	; print to both pages
-	;=======================
-print_both_pages:
-	lda	DRAW_PAGE
-	pha
-
-	lda	OUTL
-	pha
-	lda	OUTH
-	pha
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	jsr	move_and_print
-
-	pla
-	sta	OUTH
-	pla
-	sta	OUTL
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	jsr	move_and_print
-
-	pla
-	sta	DRAW_PAGE
-
-
-	rts
-.endif
