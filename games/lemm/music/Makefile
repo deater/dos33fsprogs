@@ -3,8 +3,9 @@ YM5_TO_RAW = ~/research/vmw-meter.git/ay-3-8910/conversion_tools/ym5_to_raw
 YM_TO_YM5 = ~/research/vmw-meter.git/ay-3-8910/conversion_tools/ym_to_ym5
 RAW_INTERLEAVE = ~/research/vmw-meter.git/ay-3-8910/conversion_tools/raw_interleave
 
-all:	lemm5.part1.lzsa lemm5.part2.lzsa lemm5.part3.lzsa
-#	lemm5.part4.lzsa lemm5.part5.lzsa lemm5.part6.lzsa \
+all:	lemm5.part1.lzsa lemm5.part2.lzsa lemm5.part3.lzsa \
+	lemm5.part4.lzsa lemm5.part5.lzsa
+# lemm5.part6.lzsa \
 #	lemm5.part7.lzsa lemm5.part8.lzsa
 
 lemm5.raw:	lemm5.ym
@@ -12,37 +13,22 @@ lemm5.raw:	lemm5.ym
 
 
 lemm5.part1:	lemm5.raw
-	$(RAW_INTERLEAVE) -m 11 -c 1024 ./lemm5
+	$(RAW_INTERLEAVE) -m 11 -c 512 ./lemm5
 
 lemm5.part1.lzsa:	lemm5.part1
 	$(LZSA) -r -f2 lemm5.part1 lemm5.part1.lzsa
 
-#lemm5.part2:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part2 bs=4096 count=1 seek=1 skip=1
-
 lemm5.part2.lzsa:	lemm5.part2
 	$(LZSA) -r -f2 lemm5.part2 lemm5.part2.lzsa
-
-
-#lemm5.part3:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part3 bs=4096 count=1 seek=2 skip=2
 
 lemm5.part3.lzsa:	lemm5.part3
 	$(LZSA) -r -f2 lemm5.part3 lemm5.part3.lzsa
 
+lemm5.part4.lzsa:	lemm5.part4
+	$(LZSA) -r -f2 lemm5.part4 lemm5.part4.lzsa
 
-#lemm5.part4:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part4 bs=4096 count=1 seek=3 skip=3
-
-#lemm5.part4.lzsa:	lemm5.part4
-#	$(LZSA) -r -f2 lemm5.part4 lemm5.part4.lzsa
-
-
-#lemm5.part5:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part5 bs=4096 count=1 seek=4 skip=4
-
-#lemm5.part5.lzsa:	lemm5.part5
-#	$(LZSA) -r -f2 lemm5.part5 lemm5.part5.lzsa
+lemm5.part5.lzsa:	lemm5.part5
+	$(LZSA) -r -f2 lemm5.part5 lemm5.part5.lzsa
 
 
 #lemm5.part6:	lemm5.raw

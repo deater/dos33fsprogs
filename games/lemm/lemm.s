@@ -377,9 +377,12 @@ config_string:
 .include "graphics/sprites.inc"
 
 music_parts_h:
-	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa,$00
+	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
+	.byte >lemm5_part4_lzsa,>lemm5_part5_lzsa,$00
+
 music_parts_l:
 	.byte <lemm5_part1_lzsa,<lemm5_part2_lzsa,<lemm5_part3_lzsa
+	.byte <lemm5_part4_lzsa,<lemm5_part5_lzsa
 
 lemm5_part1_lzsa:
 .incbin "music/lemm5.part1.lzsa"
@@ -387,3 +390,8 @@ lemm5_part2_lzsa:
 .incbin "music/lemm5.part2.lzsa"
 lemm5_part3_lzsa:
 .incbin "music/lemm5.part3.lzsa"
+lemm5_part4_lzsa:
+.incbin "music/lemm5.part4.lzsa"
+lemm5_part5_lzsa:
+.incbin "music/lemm5.part5.lzsa"
+

@@ -60,7 +60,7 @@ all_good:
 
 	clc
 	lda	CURRENT_FRAME_H
-	adc	#$4
+	adc	#$2				; was 4
 	sta	CURRENT_FRAME_H
 
 	inx
@@ -73,7 +73,7 @@ all_good:
 
 	inc	BASE_FRAME_H
 	lda	BASE_FRAME_H
-	cmp	#$D4
+	cmp	#$D2				; was D4
 	bne	not_oflo
 
 go_next_chunk:
