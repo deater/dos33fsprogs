@@ -238,12 +238,7 @@ zurg:
 
 	jsr	decompress_lzsa2_fast
 
-	;=======================
-	; init vars
-	;=======================
 
-	lda	#0
-	sta	LEVEL_OVER
 
         ;=======================
         ; Play "Let's Go"
@@ -254,7 +249,16 @@ zurg:
         ; start music
         ;=======================
 
-        cli
+;        cli
+
+	;=======================
+	; init vars
+	;=======================
+
+	lda	#0
+	sta	LEVEL_OVER
+	sta	DOOR_OPEN
+	sta	FRAMEL
 
 	; set up time
 
@@ -270,6 +274,13 @@ zurg:
 	;===================
 	;===================
 main_loop:
+
+	lda	DOOR_OPEN
+	bne	door_is_open
+
+	jsr	draw_door
+
+door_is_open:
 
 	jsr	draw_flames
 
@@ -344,6 +355,7 @@ load_song_chunk_good:
 	.include	"update_time.s"
 	.include	"intro_level1.s"
 	.include	"draw_flames.s"
+	.include	"draw_door.s"
 
 	; pt3 player
 

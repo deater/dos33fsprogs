@@ -40,6 +40,7 @@ LEMM:	lemm.o
 lemm.o:	lemm.s zp.inc hardware.inc \
 		graphics/graphics_test.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
+		draw_door.s \
 		interrupt_handler.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 

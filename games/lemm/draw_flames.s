@@ -1,5 +1,5 @@
 
-	; updates the time left
+
 draw_flames:
 
 	; draw left_flame
