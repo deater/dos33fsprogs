@@ -41,7 +41,20 @@ pt3_irq_smc1:
 
 ym_play_music:
 
+	; see if need to pre-load next chunk
 	lda	BASE_FRAME_L
+	cmp	#1
+	bne	no_preload_chunk
+
+	lda	BASE_FRAME_H
+	and	#1
+	bne	no_preload_chunk
+
+	inc	LOAD_NEXT_CHUNK			; defer this until after interrupt
+
+no_preload_chunk:
+
+	lda	BASE_FRAME_L		; reset frame pointer to beginning
 	sta	CURRENT_FRAME_L
 	lda	BASE_FRAME_H
 	sta	CURRENT_FRAME_H
@@ -56,49 +69,42 @@ frame_loop:
 	beq	go_next_chunk		; if so, end of song, loop
 
 all_good:
-	jsr	update_ay_register
+	jsr	update_ay_register	; output to the AY
 
 	clc
-	lda	CURRENT_FRAME_H
+	lda	CURRENT_FRAME_H		; next register set is 2 pages away
 	adc	#$2				; was 4
 	sta	CURRENT_FRAME_H
 
 	inx
-	cpx	#12
+	cpx	#12			; only output 11 regs
 	bne	frame_loop
 
 
-	inc	BASE_FRAME_L
+	inc	BASE_FRAME_L			; increment frame ptr (16bit)
 	bne	not_oflo
 
-	inc	BASE_FRAME_H
-	lda	BASE_FRAME_H
-	cmp	#$D2				; was D4
+	inc	BASE_FRAME_H			; wrap to next page
+	lda	BASE_FRAME_H			; if too big, go to next chunk
+	and	#$3
+	cmp	#$2				; was D4
 	bne	not_oflo
 
 go_next_chunk:
+	lda	CHUNK_NEXT_PLAY			; toggle $D0/$E8
+	eor	#$38
+	sta	CHUNK_NEXT_PLAY
+
+	sta	BASE_FRAME_H
+
+
 	inc	CURRENT_CHUNK
-	jsr	load_song_chunk
+
+;	inc	LOAD_NEXT_CHUNK			; defer this until after interrupt
+;	jsr	load_song_chunk
 
 
 not_oflo:
-
-	jmp	exit_interrupt
-
-	;=================================
-	; Finally done with this interrupt
-	;=================================
-
-quiet_exit:
-	stx	DONE_PLAYING
-	jsr	clear_ay_both
-
-	; mute the sound
-
-	ldx	#7
-	lda	#$ff
-	jsr	update_ay_register
-
 
 exit_interrupt:
 
@@ -159,3 +165,21 @@ pt3_irq_smc7:
 
 done_pt3_irq_handler:
 
+
+
+
+disable_music:
+
+	sei
+
+	ldx	#1
+	stx	DONE_PLAYING
+	jsr	clear_ay_both
+
+	; mute the sound
+
+	ldx	#7
+	lda	#$ff
+	jsr	update_ay_register
+
+	rts

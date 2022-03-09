@@ -168,14 +168,26 @@ skip_all_checks:
 
         ; actually load it
 
+
+	; set up music
+
+
 	lda	#0
 	sta	CURRENT_CHUNK
 	sta	DONE_PLAYING
+	sta	BASE_FRAME_L
 
+	lda	#$D0
+	sta	CHUNK_NEXT_LOAD		; Load at $D0
 	jsr	load_song_chunk
+
+	lda	#$D0			; music starts at $d000
+	sta	CHUNK_NEXT_PLAY
+	sta	BASE_FRAME_H
 
 	lda	#1
 	sta	LOOP
+	sta	CURRENT_CHUNK
 
 	jsr	mockingboard_patch	; patch to work in slots other than 4?
 
@@ -259,6 +271,7 @@ zurg:
 	sta	LEVEL_OVER
 	sta	DOOR_OPEN
 	sta	FRAMEL
+	sta	LOAD_NEXT_CHUNK
 
 	; set up time
 
@@ -274,6 +287,18 @@ zurg:
 	;===================
 	;===================
 main_loop:
+
+	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
+	beq	no_load_chunk		; outside IRQ to avoid glitch in music
+
+	jsr	load_song_chunk
+
+	lda	#0			; reset
+	sta	LOAD_NEXT_CHUNK
+
+
+no_load_chunk:
+
 
 	lda	DOOR_OPEN
 	bne	door_is_open
@@ -298,13 +323,21 @@ door_is_open:
 
 
 level_over:
-	jmp	level_over
+
+	bit	SET_TEXT
+
+	jsr	disable_music
+
+
+loop_forever:
+	jmp	loop_forever
 
 
 
 	;========================
 	; load song chunk
-	;	CURRENT_CHUNK is which one
+	;	CURRENT_CHUNK is which one, 0..N
+	;	CHUNK_DEST is $D0 or $E8
 
 load_song_chunk:
 	ldx	CURRENT_CHUNK
@@ -314,19 +347,21 @@ load_song_chunk:
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 	bne	load_song_chunk_good
 
-	; wrapped
+	; $00 in chunk table means we are off the end, so wrap
 	lda	#$00
-	sta	CURRENT_CHUNK
+	sta	CURRENT_CHUNK		; reset chunk to 0
 	beq	load_song_chunk		; try again
 
 load_song_chunk_good:
-	lda	#$d0
-	sta	BASE_FRAME_H
+	lda	CHUNK_NEXT_LOAD		; decompress to $D0 or $E8
+;	eor	#$38			; want the opposite of CHUNK_DEST
 
 	jsr	decompress_lzsa2_fast
 
-        lda     #0
-	sta	BASE_FRAME_L
+
+	lda	CHUNK_NEXT_LOAD		; point to next location
+	eor	#$38
+	sta	CHUNK_NEXT_LOAD
 
 	rts
 
@@ -349,13 +384,14 @@ load_song_chunk_good:
 
 	.include	"lc_detect.s"
 
-	.include	"wait.s"
+
 	.include	"hgr_tables.s"
 	.include	"hgr_sprite.s"
 	.include	"update_time.s"
 	.include	"intro_level1.s"
 	.include	"draw_flames.s"
 	.include	"draw_door.s"
+	.include	"wait.s"
 
 	; pt3 player
 
