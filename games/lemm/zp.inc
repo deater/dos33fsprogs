@@ -27,9 +27,6 @@ SEEDH	= $4f
 XMAX	= $50
 
 
-
-; MIST zero page addresses
-
 FRAMEL			= $60
 FRAMEH			= $61
 ;CURSOR_X		= $62
@@ -45,7 +42,7 @@ IN_RIGHT		= $6B
 BTC_L			= $6C
 BTC_H			= $6D
 
-
+; ym player
 CURRENT_FRAME_L		= $70
 CURRENT_FRAME_H		= $71
 BASE_FRAME_L		= $72
@@ -57,6 +54,7 @@ CURSOR_X		= $77
 CURSOR_Y		= $78
 DISP_PAGE		= $79
 DRAW_PAGE		= $7A
+LEVEL_OVER		= $7B
 
 APPLEII_MODEL		= $8B
 

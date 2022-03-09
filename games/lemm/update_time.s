@@ -16,6 +16,16 @@ no_time_uflo:
 
 	cld
 
+	lda	TIME_MINUTES
+	bne	not_over
+	lda	TIME_SECONDS
+	bne	not_over
+
+	inc	LEVEL_OVER
+
+
+not_over:
+
 
 draw_time:
 
@@ -34,7 +44,7 @@ draw_time:
 	lda	#152
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_autoshift
 
 	; draw seconds
 	lda	TIME_SECONDS
@@ -54,7 +64,7 @@ draw_time:
 	lda	#152
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_autoshift
 
 
 	; draw seconds
@@ -72,7 +82,7 @@ draw_time:
 	lda	#152
 	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_autoshift
 
 	rts
 

@@ -238,7 +238,12 @@ zurg:
 
 	jsr	decompress_lzsa2_fast
 
+	;=======================
+	; init vars
+	;=======================
 
+	lda	#0
+	sta	LEVEL_OVER
 
         ;=======================
         ; Play "Let's Go"
@@ -266,15 +271,23 @@ zurg:
 	;===================
 main_loop:
 
+	jsr	draw_flames
 
 	jsr	update_time
 
 	lda	#$ff
 	jsr	wait
 
+	inc	FRAMEL
+
+	lda	LEVEL_OVER
+	bne	level_over
 
 	jmp	main_loop
 
+
+level_over:
+	jmp	level_over
 
 
 
@@ -330,6 +343,7 @@ load_song_chunk_good:
 	.include	"hgr_sprite.s"
 	.include	"update_time.s"
 	.include	"intro_level1.s"
+	.include	"draw_flames.s"
 
 	; pt3 player
 
