@@ -283,6 +283,8 @@ zurg:
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
 	sta	JOYSTICK_ENABLED
+	lda	#1
+	sta	LEMMINGS_TO_RELEASE
 
 	jsr     save_bg_14x14           ; save initial bg
 
