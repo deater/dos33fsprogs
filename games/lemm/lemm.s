@@ -341,6 +341,7 @@ level_over:
 
 	jsr	disable_music
 
+	jsr	outro_level1
 
 loop_forever:
 	jmp	loop_forever

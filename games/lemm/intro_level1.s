@@ -55,6 +55,46 @@ intro_not_iie:
 
 	rts
 
+
+	;=====================================
+	; print the outro message for level1
+	;=====================================
+
+outro_level1:
+
+	; clear text screen
+
+	jsr	clear_all
+
+	; print non-inverse
+
+	jsr	set_normal
+
+	; print messages
+
+	lda	#<level1_win_text
+	sta	OUTL
+	lda	#>level1_win_text
+	sta	OUTH
+
+	; print the text
+
+	ldx	#9
+l1_outro_loop:
+
+	jsr	move_and_print
+
+	dex
+	bne	l1_outro_loop
+
+	bit	KEYRESET
+
+	; wait until keypress
+
+	jmp	wait_until_keypress
+
+
+
 level1_intro_text:
 .byte  0, 8,"LEVEL 1",0
 .byte 15, 8,"JUST DIG!",0
@@ -65,6 +105,29 @@ level1_intro_text:
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONINUE",0
 
+level1_win_text:
+.byte  6, 1,"ALL LEMMINGS ACCOUNTED FOR.",0
+.byte 12, 3,"YOU RESCUED 100%",0
+.byte 12, 4,"YOU NEEDED   10%",0
+.byte  2, 6,"SUPERB! YOU RESCUED EVERY LEMMING ON",0
+.byte  2, 7,"THAT LEVEL. CAN YOU DO IT AGAIN...",0
+.byte  6,15,"YOUR ACCESS CODE FOR LEVEL 2",0
+.byte 12,16,"IS PLZNOTATARI",0
+.byte  6,20,"PRESS RETURN FOR NEXT LEVEL",0
+.byte  9,21,"PRESS ESCAPE FOR MENU",0
+
+level1_lose_text:
+.byte  6, 1,"ALL LEMMINGS ACCOUNTED FOR.",0
+.byte 12, 3,"YOU RESCUED   0%",0
+.byte 12, 4,"YOU NEEDED  100%",0
+.byte  3, 6,"ROCK BOTTOM! I HOPE FOR YOUR SAKE",0
+.byte  8, 7,"THAT YOU NUKED THAT LEVEL.",0
+.byte  6,20,"PRESS RETURN FOR NEXT LEVEL",0
+.byte  9,21,"PRESS ESCAPE FOR MENU",0
+
+
+
+level5_intro_text:
 .byte  0, 8,"LEVEL 5",0
 .byte 15, 8,"YOU NEED BASHERS THIS TIME",0
 .byte  9,12,"NUMBER OF LEMMINGS 50",0
