@@ -8,6 +8,7 @@ CLR80COL	=	$C000	; PAGE0/PAGE1 normal
 SET80COL	=	$C001	; PAGE0/PAGE1 switches PAGE0 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+VBLANK		=	$C019	; IIe *not* RDVBL (VBL signal low)
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
