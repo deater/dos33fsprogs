@@ -262,9 +262,9 @@ zurg:
 	lda	#100
 	sta	CURSOR_Y
 
-        ;=======================
-        ; Play "Let's Go"
-        ;=======================
+	;=======================
+	; Play "Let's Go"
+	;=======================
 
 
         ;=======================
@@ -282,6 +282,9 @@ zurg:
 	sta	DOOR_OPEN
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
+	sta	JOYSTICK_ENABLED
+
+	jsr     save_bg_14x14           ; save initial bg
 
 	; set up time
 
@@ -330,7 +333,9 @@ door_is_open:
 	sta	TIMER_COUNT
 timer_not_yet:
 
-	jsr	draw_pointer
+	jsr	handle_keypress
+
+;	jsr	draw_pointer
 
 
 	lda	#$ff
@@ -399,6 +404,9 @@ load_song_chunk_good:
 	.include	"decompress_fast_v2.s"
 
 	.include	"wait_keypress.s"
+
+	.include	"keyboard.s"
+	.include	"joystick.s"
 
 ;	.include	"print_help.s"
 	.include	"gr_fast_clear.s"

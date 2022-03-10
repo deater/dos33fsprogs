@@ -8,7 +8,7 @@ draw_pointer:
 	lda	#0
 	sta	OVER_LEMMING
 
-;	jsr	save_bg_14x14		; save old bg
+	jsr	save_bg_14x14		; save old bg
 
 	; for now assume the only 14x14 sprites are the pointers
 
@@ -43,9 +43,9 @@ draw_pointer:
 
 
 
-	lda     #>finger_turn_right_sprite
+	lda     #<point_sprite_l
 	sta	INL
-	lda     #>finger_turn_right_sprite
+	lda     #>point_sprite_l
 	sta	INH
 	jsr	hgr_draw_sprite_14x14
 

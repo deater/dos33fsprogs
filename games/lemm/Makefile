@@ -29,7 +29,7 @@ LEMM_TEST:	lemm_test.o
 
 lemm_test.o:	lemm_test.s zp.inc hardware.inc \
 		graphics/graphics_test.inc \
-		interrupt_handler.s
+		interrupt_handler.s keyboard.s
 	ca65 -o lemm_test.o lemm_test.s -l lemm_test.lst
 
 ####
