@@ -321,6 +321,28 @@ no_load_chunk:
 
 door_is_open:
 
+	;======================
+	; release lemmings
+	;======================
+
+	lda	LEMMINGS_TO_RELEASE
+	beq	done_release_lemmings
+
+	lda	DOOR_OPEN
+	beq	done_release_lemmings
+
+	lda	FRAMEL
+	and	#$f
+	bne	done_release_lemmings
+
+	lda	#1
+	sta	lemming_out
+
+	dec	LEMMINGS_TO_RELEASE
+
+done_release_lemmings:
+
+
 	jsr	draw_flames
 
 	lda	TIMER_COUNT
@@ -332,6 +354,10 @@ door_is_open:
 	lda	#$0
 	sta	TIMER_COUNT
 timer_not_yet:
+
+	jsr	move_lemmings
+
+	jsr	draw_lemming
 
 	jsr	handle_keypress
 
@@ -411,6 +437,8 @@ load_song_chunk_good:
 ;	.include	"print_help.s"
 	.include	"gr_fast_clear.s"
 
+	.include	"move_lemming.s"
+	.include	"draw_lemming.s"
 
 	.include	"hgr_14x14_sprite.s"
 	.include	"text_print.s"

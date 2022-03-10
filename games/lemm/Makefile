@@ -29,7 +29,7 @@ LEMM_TEST:	lemm_test.o
 
 lemm_test.o:	lemm_test.s zp.inc hardware.inc \
 		graphics/graphics_test.inc \
-		interrupt_handler.s keyboard.s
+		interrupt_handler.s
 	ca65 -o lemm_test.o lemm_test.s -l lemm_test.lst
 
 ####
@@ -40,8 +40,8 @@ LEMM:	lemm.o
 lemm.o:	lemm.s zp.inc hardware.inc \
 		graphics/graphics_test.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
-		draw_door.s \
-		interrupt_handler.s
+		draw_door.s move_lemming.s draw_lemming.s \
+		interrupt_handler.s keyboard.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 
 

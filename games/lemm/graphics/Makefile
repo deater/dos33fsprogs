@@ -49,6 +49,7 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l door2_sprite sprites.png    7 76 55 91 >> sprites.inc
 	$(HGR_SPRITE) -s -l door3_sprite sprites.png    7 98 55 114 >> sprites.inc
 	$(HGR_SPRITE) -s -l door4_sprite sprites.png    7 118 55 137 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_fall1_sprite sprites.png    56 32 62 41 >> sprites.inc
 
 
 
