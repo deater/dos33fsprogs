@@ -29,6 +29,7 @@ interrupt_handler:
 
 ;	inc	$0404		; debug (flashes char onscreen)
 
+	inc	TIMER_COUNT
 
 pt3_irq_smc1:
         bit     MOCK_6522_T1CL  ; clear 6522 interrupt by reading T1C-L ; 4

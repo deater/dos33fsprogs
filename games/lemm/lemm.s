@@ -287,9 +287,10 @@ zurg:
 
 	lda	#$5
 	sta	TIME_MINUTES
-	lda	#$12
+	lda	#$00
 	sta	TIME_SECONDS
 
+	sta	TIMER_COUNT
 
 	;===================
 	;===================
@@ -319,7 +320,15 @@ door_is_open:
 
 	jsr	draw_flames
 
+	lda	TIMER_COUNT
+	cmp	#$50
+	bcc	timer_not_yet
+
 	jsr	update_time
+
+	lda	#$0
+	sta	TIMER_COUNT
+timer_not_yet:
 
 	jsr	draw_pointer
 
