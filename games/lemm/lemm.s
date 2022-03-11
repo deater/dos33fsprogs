@@ -283,6 +283,10 @@ zurg:
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
 	sta	JOYSTICK_ENABLED
+	sta	LEMMINGS_OUT
+
+	jsr	update_lemmings_out
+
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
 
@@ -336,6 +340,9 @@ door_is_open:
 	lda	FRAMEL
 	and	#$f
 	bne	done_release_lemmings
+
+	inc	LEMMINGS_OUT
+	jsr	update_lemmings_out
 
 	lda	#1
 	sta	lemming_out

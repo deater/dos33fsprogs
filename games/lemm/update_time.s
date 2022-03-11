@@ -87,6 +87,30 @@ draw_time:
 	rts
 
 
+	; update lemmings out number
+update_lemmings_out:
+
+	; draw minute
+	ldy	LEMMINGS_OUT
+
+	lda	bignums_l,Y
+	sta	INL
+	lda	bignums_h,Y
+	sta	INH
+
+	; 246, 152
+
+	ldx	#15		; 105
+        stx     XPOS
+	lda	#152
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	rts
+
+
+
 bignums_l:
 .byte	<big0_sprite,<big1_sprite,<big2_sprite,<big3_sprite,<big4_sprite
 .byte	<big5_sprite,<big6_sprite,<big7_sprite,<big8_sprite,<big9_sprite
