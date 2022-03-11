@@ -5,7 +5,7 @@ move_lemmings:
 	lda	lemming_out,Y
 
 	bne	really_move_lemming
-	jmp	done_move_lemming
+	jmp	done_checking_lemming
 
 really_move_lemming:
 	lda	lemming_status
@@ -100,7 +100,43 @@ done_digging:
 
 
 done_move_lemming:
+
+	; see if beat level
+
+	lda	lemming_y
+	cmp	#116
+	bcc	not_done_level
+	cmp	#127
+	bcs	not_done_level
+	lda	lemming_x
+	cmp	#31
+	bcc	not_done_level
+
+	; done level
+
+	jsr	remove_lemming
+
+	lda	#1
+	sta	LEVEL_OVER
+
+not_done_level:
+
+done_checking_lemming:
+
 	rts
+
+	;==========================
+	; remove lemming from game
+remove_lemming:
+
+	lda	#0
+	sta	lemming_out
+
+	dec	LEMMINGS_OUT
+	jsr	update_lemmings_out
+
+	rts
+
 
 lemming_direction:
 	.byte 1
