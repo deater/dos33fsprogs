@@ -190,50 +190,12 @@ check_return:
 
 return_pressed:
 
-;	lda	IN_SPECIAL
-;	beq	not_special_return
+	; TODO: actually check if over
 
-special_return:
-;	jsr	handle_special
+	lda	#LEMMING_DIGGING
+	sta	lemming_status
 
-	; special case, don't make cursor visible
-;	jmp	no_keypress
-
-;not_special_return:
-;
-;	lda	IN_RIGHT
-;	beq	not_right_return
-
-;	cmp	#1
-;	beq	right_return
-
-;right_uturn:
-;	jsr	uturn
-;	jmp	no_keypress
-
-;right_return:
-;	jsr	turn_right
-;	jmp	no_keypress
-
-;not_right_return:
-
-;	lda	IN_LEFT
-;	beq	not_left_return
-
-;	cmp	#1
-;	beq	left_return
-;left_uturn:
-;	jsr	uturn
-;	jmp	no_keypress
-
-;left_return:
-;	jsr	turn_left
-;	jmp	no_keypress
-
-;not_left_return:
-
-;	jsr	go_forward
-	jmp	no_keypress
+	jmp	done_keypress
 
 done_keypress:
 
