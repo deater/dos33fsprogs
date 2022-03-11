@@ -357,6 +357,8 @@ done_release_lemmings:
 	sta	TIMER_COUNT
 timer_not_yet:
 
+	jsr	erase_lemming
+
 	jsr	move_lemmings
 
 	jsr	draw_lemming
@@ -438,6 +440,8 @@ load_song_chunk_good:
 
 ;	.include	"print_help.s"
 	.include	"gr_fast_clear.s"
+
+	.include	"hgr_partial_save.s"
 
 	.include	"move_lemming.s"
 	.include	"draw_lemming.s"
