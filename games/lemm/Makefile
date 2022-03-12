@@ -38,7 +38,7 @@ LEMM:	lemm.o
 	ld65 -o LEMM lemm.o -C ../../linker_scripts/apple2_6000.inc
 
 lemm.o:	lemm.s zp.inc hardware.inc \
-		graphics/graphics_test.inc \
+		graphics/graphics_test.inc graphics/sprites.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
 		interrupt_handler.s keyboard.s \

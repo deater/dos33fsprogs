@@ -8,7 +8,12 @@ move_lemmings:
 	jmp	done_checking_lemming
 
 really_move_lemming:
-	lda	lemming_status
+	; bump frame
+	tya
+	tax
+	inc	lemming_frame,X		; only can inc with X
+
+	lda	lemming_status,Y
 	cmp	#LEMMING_FALLING
 	beq	do_lemming_falling
 	cmp	#LEMMING_WALKING
@@ -149,6 +154,8 @@ lemming_y:
 lemming_out:
 	.byte $0
 
+lemming_frame:
+	.byte 0
 
 LEMMING_FALLING = 1
 LEMMING_WALKING = 2
