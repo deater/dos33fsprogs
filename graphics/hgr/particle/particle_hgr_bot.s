@@ -52,24 +52,28 @@ main_loop:
 ;	lda	#100
 ;	jsr	WAIT
 
-	lda	#0			; already 0 from wait
-	sta	HGR_COLOR
 
-	ldx	#PARTICLES
-	stx	PARTICLE
-	stx	PARTICLE2
+
+	ldy	#PARTICLES
 
 clear_loop:
 
-	ldy	PARTICLE
+	lda	#0			; already 0 from wait
+	sta	HGR_COLOR
+
+	tya
+	pha
 
 	ldx	particle_x,Y
 	lda	particle_y,Y
 	ldy	#0
 	jsr	HPLOT0			; plot at (Y,X), (A)
 
-	dec	PARTICLE
-	bpl	clear_loop
+	pla
+	tay
+
+;	dey
+;	bpl	clear_loop
 
 
 
@@ -78,9 +82,11 @@ clear_loop:
 ;	ldx	#PARTICLES
 draw_particles_loop:
 
-	ldy	PARTICLE2
 	tya
 	tax
+
+;	txa
+;	tay
 
 	; adjust x
 
@@ -145,15 +151,23 @@ y_good:
 	lda	#$ff
 	sta	HGR_COLOR
 
+	tya
+	pha
+
 	ldx	particle_x,Y
 	lda	particle_y,Y
 	ldy	#0
 	jsr	HPLOT0			; plot at (Y,X), (A)
 
-	dec	PARTICLE2
-	bpl	draw_particles_loop
+	pla
+	tay
+
+	dey
+;	bpl	draw_particles_loop
+	bpl	clear_loop
 
 	bmi	main_loop
+
 
 
 	; -8 to 8
@@ -176,5 +190,8 @@ noeor:
 	rts
 
 	; need this to be at $3F5
+
+	; we are 139 long so
+	; $3F5 - 136 = 36D
 
 	jmp	particle

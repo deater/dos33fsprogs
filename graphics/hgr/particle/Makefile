@@ -16,7 +16,7 @@ particle_hgr.dsk:	$(DOS33) HELLO PARTICLE_HGR PARTICLE_HGR_BOT
 	cp $(EMPTY_DISK)/empty.dsk particle_hgr.dsk
 	$(DOS33) -y particle_hgr.dsk SAVE A HELLO
 	$(DOS33) -y particle_hgr.dsk BSAVE -a 0xc00 PARTICLE_HGR
-	$(DOS33) -y particle_hgr.dsk BSAVE -a 0x36C PARTICLE_HGR_BOT
+	$(DOS33) -y particle_hgr.dsk BSAVE -a 0x36D PARTICLE_HGR_BOT
 
 ###
 
@@ -34,7 +34,7 @@ particle_hgr.o: particle_hgr.s
 ###
 
 PARTICLE_HGR_BOT:   particle_hgr_bot.o
-	ld65 -o PARTICLE_HGR_BOT particle_hgr_bot.o -C $(LINKERSCRIPTS)/apple2_36c.inc
+	ld65 -o PARTICLE_HGR_BOT particle_hgr_bot.o -C $(LINKERSCRIPTS)/apple2_36d.inc
 
 particle_hgr_bot.o: particle_hgr_bot.s
 	ca65 -o particle_hgr_bot.o particle_hgr_bot.s -l particle_hgr_bot.lst
