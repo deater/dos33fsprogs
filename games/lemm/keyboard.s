@@ -190,16 +190,27 @@ check_return:
 
 return_pressed:
 
-	; TODO: actually check if over
+	; first check if over lemming
 
+	lda	OVER_LEMMING
+	bpl	not_over_lemming
+
+	; for now assume we've got diggingselected
 	lda	#LEMMING_DIGGING
 	sta	lemming_status
 
 	jmp	done_keypress
 
+not_over_lemming:
+
+	; TODO
+
+	; handle clicking on bottom row
+
+
+
 done_keypress:
 
-;	jsr	draw_pointer
 
 no_keypress:
 	bit	KEYRESET

@@ -8,8 +8,6 @@ draw_pointer:
 	lda	#0
 	sta	OVER_LEMMING
 
-;	jsr	save_bg_14x14		; save old bg
-
 	; for now assume the only 14x14 sprites are the pointers
 
 	lda	CURSOR_X
@@ -18,8 +16,6 @@ draw_pointer:
 	sta	YPOS
 
 	; see if over lemming
-
-	; TODO
 
 	; see if CURSOR_X==LEMMING_X
 	lda	CURSOR_X
@@ -47,6 +43,9 @@ check_pointer_y:
 
 
 just_select:
+	lda	#$80
+	sta	OVER_LEMMING
+
 	lda     #<select_sprite_l
 	sta	INL
 	lda     #>select_sprite_l
