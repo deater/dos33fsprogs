@@ -26,6 +26,10 @@ draw_lemming:
 	lda	lemming_out,Y
 	beq	done_draw_lemming
 
+	lda	lemming_status,Y
+	cmp	#LEMMING_DIGGING
+	beq	draw_digging_sprite
+
 
 draw_falling_sprite:
 
@@ -53,6 +57,33 @@ draw_falling_common:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
+	jmp	draw_common
+
+
+	;======================
+	; digging
+
+draw_digging_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	dig_sprite_l,X
+	sta	INL
+	lda	dig_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#2
+	jmp	draw_common
+
+
+
+draw_common:
 	sta	YPOS
 
 	jsr	hgr_draw_sprite
@@ -75,4 +106,15 @@ rfall_sprite_h:
 	.byte >lemming_rfall1_sprite,>lemming_rfall2_sprite
 	.byte >lemming_rfall3_sprite,>lemming_rfall4_sprite
 
+
+dig_sprite_l:
+	.byte <lemming_dig1_sprite,<lemming_dig2_sprite
+	.byte <lemming_dig3_sprite,<lemming_dig4_sprite
+	.byte <lemming_dig5_sprite,<lemming_dig6_sprite
+	.byte <lemming_dig7_sprite,<lemming_dig8_sprite
+dig_sprite_h:
+	.byte >lemming_dig1_sprite,>lemming_dig2_sprite
+	.byte >lemming_dig3_sprite,>lemming_dig4_sprite
+	.byte >lemming_dig5_sprite,>lemming_dig6_sprite
+	.byte >lemming_dig7_sprite,>lemming_dig8_sprite
 
