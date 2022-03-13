@@ -25,12 +25,22 @@ really_move_lemming:
 	beq	do_lemming_digging
 	jmp	done_move_lemming
 
+
+	;=========================
+	; falling
+	;=========================
+
 do_lemming_falling:
+	inc	lemming_y		; fall speed
 	inc	lemming_y
 
 	jsr	collision_check_ground
 
 	jmp	done_move_lemming
+
+	;=========================
+	; walking
+	;=========================
 
 do_lemming_walking:
 
@@ -49,6 +59,20 @@ do_lemming_walking:
         lda     hposn_low,Y
         sta     GBASL
 
+	; increment
+	; only do this every 4th frame?
+
+	lda	lemming_frame
+	and	#$3
+	beq	walking_increment
+
+	lda	lemming_x
+	jmp	walking_done
+
+
+walking_increment:
+	; actually incrememt
+
 	clc
 	lda	lemming_x
 	adc	lemming_direction
@@ -60,6 +84,7 @@ do_lemming_walking:
 
 walking_yes_wall:
 
+	; reverse direction
 	lda	lemming_direction
 	eor	#$ff
 	clc

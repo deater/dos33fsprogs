@@ -1,4 +1,8 @@
-
+	;==================
+	;==================
+	; erase lemming
+	;==================
+	;==================
 erase_lemming:
 	ldy	#0
 
@@ -10,7 +14,7 @@ erase_lemming:
 	sbc	#3
 	sta	SAVED_Y1
 	clc
-	adc	#11
+	adc	#12
 	sta	SAVED_Y2
 
 	lda	lemming_x,Y
@@ -21,7 +25,11 @@ erase_lemming:
 done_erase_lemming:
 	rts
 
-
+	;=========================
+	;=========================
+	; draw lemming
+	;=========================
+	;=========================
 draw_lemming:
 	ldy	#0
 
@@ -124,7 +132,7 @@ draw_digging_sprite:
 draw_common:
 	sta	YPOS
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_autoshift
 
 done_draw_lemming:
 	rts
