@@ -178,5 +178,32 @@ lwalk_sprite_h:
 	.byte >lemming_lwalk5_sprite,>lemming_lwalk6_sprite
 	.byte >lemming_lwalk7_sprite,>lemming_lwalk8_sprite
 
+explosion_sprite_l:
+	.byte <lemming_explode1_sprite,<lemming_explode1_sprite
+	.byte <lemming_explode2_sprite,<lemming_explode3_sprite
+	.byte <lemming_explode4_sprite,<lemming_explode5_sprite
+	.byte <lemming_explode6_sprite,<lemming_explode7_sprite
+	.byte <lemming_explode8_sprite,<lemming_explode7_sprite
+	.byte <lemming_explode9_sprite,<lemming_explode8_sprite
+	.byte <lemming_explode9_sprite,<lemming_explode8_sprite
+	.byte <lemming_explode9_sprite,<lemming_explode8_sprite
+
+explosion_sprite_h:
+	.byte >lemming_explode1_sprite,>lemming_explode1_sprite
+	.byte >lemming_explode2_sprite,>lemming_explode3_sprite
+	.byte >lemming_explode4_sprite,>lemming_explode5_sprite
+	.byte >lemming_explode6_sprite,>lemming_explode7_sprite
+	.byte >lemming_explode8_sprite,>lemming_explode7_sprite
+	.byte >lemming_explode9_sprite,>lemming_explode8_sprite
+	.byte >lemming_explode9_sprite,>lemming_explode8_sprite
+	.byte >lemming_explode9_sprite,>lemming_explode8_sprite
+
+
+; 787989898
+; clcrlrlrle
+
+
+
+
 
 

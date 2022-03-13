@@ -12,10 +12,10 @@ all:	graphics_test.inc graphics_level1.inc sprites.inc
 graphics_test.inc:	\
 	level1.lzsa \
 	level2.lzsa \
-	level2_actual.lzsa
+	level2_fine.lzsa
 	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_test.inc
 	echo "level2_lzsa: .incbin \"level2.lzsa\"" >> graphics_test.inc
-	echo "level2_actual_lzsa: .incbin \"level2_actual.lzsa\"" >> graphics_test.inc
+	echo "level2_fine_lzsa: .incbin \"level2_fine.lzsa\"" >> graphics_test.inc
 
 
 graphics_level1.inc:	\
@@ -49,6 +49,10 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l door2_sprite sprites.png    7 76 55 91 >> sprites.inc
 	$(HGR_SPRITE) -s -l door3_sprite sprites.png    7 98 55 114 >> sprites.inc
 	$(HGR_SPRITE) -s -l door4_sprite sprites.png    7 118 55 137 >> sprites.inc
+	$(HGR_SPRITE) -s -l bdoor1_sprite sprites.png   63 57 104 69 >> sprites.inc
+	$(HGR_SPRITE) -s -l bdoor2_sprite sprites.png   63 76 104 91 >> sprites.inc
+	$(HGR_SPRITE) -s -l bdoor3_sprite sprites.png   63 98 104 114 >> sprites.inc
+	$(HGR_SPRITE) -s -l bdoor4_sprite sprites.png   63 118 104 137 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_rfall1_sprite sprites.png  14 161  20 170 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_rfall2_sprite sprites.png  28 161  34 170 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_rfall3_sprite sprites.png  42 161  48 170 >> sprites.inc
@@ -81,6 +85,34 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l lemming_rwalk6_sprite sprites.png 210 143 216 153 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_rwalk7_sprite sprites.png 224 143 230 153 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_rwalk8_sprite sprites.png 238 143 244 153 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_explode1_sprite sprites.png  14 175  20 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode2_sprite sprites.png  42 175  48 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode3_sprite sprites.png  56 175  62 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode4_sprite sprites.png  70 175  76 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode5_sprite sprites.png  84 175  90 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode6_sprite sprites.png  98 175 104 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode7_sprite sprites.png 112 175 118 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode8_sprite sprites.png 140 175 146 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode9_sprite sprites.png 168 175 174 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l explosion_sprite sprites.png 252 172 265 187 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l countdown1_sprite sprites.png  140 136 146 141 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown2_sprite sprites.png  154 136 160 141 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown3_sprite sprites.png  168 136 174 141 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown4_sprite sprites.png  182 136 188 141 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown5_sprite sprites.png  196 136 202 141 >> sprites.inc
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -111,11 +143,11 @@ level2.hgr:	level2.png
 
 ###
 
-level2_actual.lzsa:	level2_actual.hgr
-	$(LZSA) -r -f2 level2_actual.hgr level2_actual.lzsa
+level2_fine.lzsa:	level2_fine.hgr
+	$(LZSA) -r -f2 level2_fine.hgr level2_fine.lzsa
 
-level2_actual.hgr:	level2_actual.png
-	$(PNG2HGR) level2_actual.png > level2_actual.hgr
+level2_fine.hgr:	level2_fine.png
+	$(PNG2HGR) level2_fine.png > level2_fine.hgr
 
 ####
 
