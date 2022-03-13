@@ -79,9 +79,9 @@ keypress:
 
 handle_input:
 
-	pha
-	jsr	restore_bg_14x14	; restore old background
-	pla
+;	pha
+;	jsr	restore_bg_14x14	; restore old background
+;	pla
 
 check_sound:
 	cmp	#$14			; control-T
@@ -199,7 +199,7 @@ return_pressed:
 
 done_keypress:
 
-	jsr	draw_pointer
+;	jsr	draw_pointer
 
 no_keypress:
 	bit	KEYRESET

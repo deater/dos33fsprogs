@@ -114,7 +114,7 @@ do_level1:
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
 
-	jsr     save_bg_14x14           ; save initial bg
+;	jsr     save_bg_14x14           ; save initial bg
 
 	; set up time
 
@@ -188,7 +188,12 @@ done_release_lemmings:
 	sta	TIMER_COUNT
 timer_not_yet:
 
+
+	; main drawing loop
+
 	jsr	erase_lemming
+
+	jsr	erase_pointer
 
 	jsr	move_lemmings
 
@@ -196,8 +201,7 @@ timer_not_yet:
 
 	jsr	handle_keypress
 
-;	jsr	draw_pointer
-
+	jsr	draw_pointer
 
 	lda	#$ff
 	jsr	wait

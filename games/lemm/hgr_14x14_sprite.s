@@ -94,6 +94,7 @@ hds_smc2:
 	rts
 
 
+.if 0
 
 	;======================
 	; save bg 14x14
@@ -196,12 +197,13 @@ restore_yloop:
 ; save area
 ;====================
 
-save_right_14x14:
+;save_right_14x14:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
-save_left_14x14:
+;save_left_14x14:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 
+.endif
 
 .include "pointer_sprites.inc"

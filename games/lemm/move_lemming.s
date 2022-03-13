@@ -1,4 +1,7 @@
 
+	;==========================
+	; move them
+	;==========================
 move_lemmings:
 
 	ldy	#0
@@ -32,12 +35,16 @@ do_lemming_falling:
 do_lemming_walking:
 
 
+	; collision detect walls
+
 	lda	lemming_y
 	clc
 	adc	#3		; waist-high?
 	tay
 
 	lda     hposn_high,Y
+	clc
+	adc	#$20
         sta     GBASH
         lda     hposn_low,Y
         sta     GBASL
@@ -78,6 +85,8 @@ do_lemming_digging:
 	tay
 
 	lda     hposn_high,Y
+	clc
+	adc	#$20
         sta     GBASH
         lda     hposn_low,Y
         sta     GBASL
@@ -89,11 +98,12 @@ do_lemming_digging:
 digging_digging:
 	lda	#$0
 	sta	(GBASL),Y
-	lda	GBASH
-	adc	#$20
-	sta	GBASH
-	lda	#$0
-	sta	(GBASL),Y
+;	lda	GBASH
+;	clc
+;	adc	#$20				; erase bg
+;	sta	GBASH
+;	lda	#$0
+;	sta	(GBASL),Y
 
 	inc	lemming_y
 
@@ -167,6 +177,9 @@ lemming_status:
 lemming_job:
 	.byte $00
 
+	;=============================
+	; collision check ground
+	;=============================
 
 collision_check_ground:
 	lda	lemming_y
@@ -175,6 +188,8 @@ collision_check_ground:
 	tay
 
 	lda     hposn_high,Y
+	clc
+	adc	#$20			; check bg, not fg
         sta     GBASH
         lda     hposn_low,Y
         sta     GBASL
