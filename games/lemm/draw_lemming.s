@@ -6,9 +6,11 @@ erase_lemming:
 	beq	done_erase_lemming
 
 	lda	lemming_y,Y
+	sec
+	sbc	#3
 	sta	SAVED_Y1
 	clc
-	adc	#8
+	adc	#11
 	sta	SAVED_Y2
 
 	lda	lemming_x,Y
@@ -24,12 +26,48 @@ draw_lemming:
 	ldy	#0
 
 	lda	lemming_out,Y
-	beq	done_draw_lemming
+	bne	do_draw_lemming
 
+	jmp	done_draw_lemming
+
+do_draw_lemming:
 	lda	lemming_status,Y
 	cmp	#LEMMING_DIGGING
 	beq	draw_digging_sprite
+	cmp	#LEMMING_FALLING
+	beq	draw_falling_sprite
 
+draw_walking_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_walking_right
+
+draw_walking_left:
+	lda	lwalk_sprite_l,X
+	sta	INL
+	lda	lwalk_sprite_h,X
+	jmp	draw_walking_common
+
+draw_walking_right:
+	lda	rwalk_sprite_l,X
+	sta	INL
+	lda	rwalk_sprite_h,X
+
+draw_walking_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_common
+
+	;====================
+	; draw falling
+	;====================
 
 draw_falling_sprite:
 
@@ -117,4 +155,28 @@ dig_sprite_h:
 	.byte >lemming_dig3_sprite,>lemming_dig4_sprite
 	.byte >lemming_dig5_sprite,>lemming_dig6_sprite
 	.byte >lemming_dig7_sprite,>lemming_dig8_sprite
+
+rwalk_sprite_l:
+	.byte <lemming_rwalk1_sprite,<lemming_rwalk2_sprite
+	.byte <lemming_rwalk3_sprite,<lemming_rwalk4_sprite
+	.byte <lemming_rwalk5_sprite,<lemming_rwalk6_sprite
+	.byte <lemming_rwalk7_sprite,<lemming_rwalk8_sprite
+rwalk_sprite_h:
+	.byte >lemming_rwalk1_sprite,>lemming_rwalk2_sprite
+	.byte >lemming_rwalk3_sprite,>lemming_rwalk4_sprite
+	.byte >lemming_rwalk5_sprite,>lemming_rwalk6_sprite
+	.byte >lemming_rwalk7_sprite,>lemming_rwalk8_sprite
+
+lwalk_sprite_l:
+	.byte <lemming_lwalk1_sprite,<lemming_lwalk2_sprite
+	.byte <lemming_lwalk3_sprite,<lemming_lwalk4_sprite
+	.byte <lemming_lwalk5_sprite,<lemming_lwalk6_sprite
+	.byte <lemming_lwalk7_sprite,<lemming_lwalk8_sprite
+lwalk_sprite_h:
+	.byte >lemming_lwalk1_sprite,>lemming_lwalk2_sprite
+	.byte >lemming_lwalk3_sprite,>lemming_lwalk4_sprite
+	.byte >lemming_lwalk5_sprite,>lemming_lwalk6_sprite
+	.byte >lemming_lwalk7_sprite,>lemming_lwalk8_sprite
+
+
 
