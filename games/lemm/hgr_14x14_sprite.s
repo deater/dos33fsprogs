@@ -73,18 +73,18 @@ hgr_14x14_sprite_yloop:
 
 	lda	(GBASL),Y
 hds_smc3:
-	and	point_mask_l,X
+	and	crosshair_mask_l,X
 hds_smc1:
-	ora	point_sprite_l,X
+	ora	crosshair_sprite_l,X
 	sta	(GBASL),Y
 
 	iny
 
 	lda	(GBASL),Y
 hds_smc4:
-	and	point_mask_r,X
+	and	crosshair_mask_r,X
 hds_smc2:
-	ora	point_sprite_r,X
+	ora	crosshair_sprite_r,X
 	sta	(GBASL),Y
 
 	inx
@@ -204,4 +204,4 @@ save_left_14x14:
 
 
 
-.include "common_sprites.inc"
+.include "pointer_sprites.inc"

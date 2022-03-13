@@ -43,9 +43,9 @@ draw_pointer:
 
 
 
-	lda     #<point_sprite_l
+	lda     #<crosshair_sprite_l
 	sta	INL
-	lda     #>point_sprite_l
+	lda     #>crosshair_sprite_l
 	sta	INH
 	jsr	hgr_draw_sprite_14x14
 
