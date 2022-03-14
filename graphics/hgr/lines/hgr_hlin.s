@@ -1,170 +1,3 @@
-; hgr fast hlin
-
-
-HGR_BITS	= $1C
-GBASL		= $26
-GBASH		= $27
-HGR_COLOR	= $E4
-HGR_PAGE	= $E6
-
-div7_table	= $9000
-mod7_table	= $9100
-
-KEYPRESS        =       $C000
-KEYRESET        =       $C010
-
-HGR2            = $F3D8         ; clear PAGE2 to 0
-HGR             = $F3E2         ; set hires page1 and clear $2000-$3fff
-HPOSN           = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
-COLOR_SHIFT     = $F47E
-COLORTBL        = $F6F6
-
-
-
-main:
-	; set graphics
-
-	jsr	HGR
-
-
-	; init tables
-
-	jsr	vgi_init
-
-	; draw lines
-	ldy	#0
-loop1:
-	tya
-	lsr
-	and	#$7
-	tax
-	jsr	set_hcolor
-
-	tya
-	pha
-
-	ldx	#10
-;	lda	#10
-;	ldy	#100
-	jsr	hgr_hlin
-
-	pla
-	tay
-
-	iny
-	iny
-	cpy	#190
-	bne	loop1
-
-	jsr	wait_until_keypress
-
-
-; test 2
-
-
-	jsr	HGR2
-
-	; draw lines
-	ldy	#0
-loop2:
-	ldx	#7			; draw white
-	jsr	set_hcolor
-
-	tya				; save y on stack
-	pha
-
-	tya				; line
-	lsr
-	sec
-	eor	#$ff
-	adc	#96
-	tax
-
-	tya
-
-	jsr	hgr_hlin
-
-	pla
-	tay
-
-	iny
-	iny
-	cpy	#192
-	bne	loop2
-
-	jsr	wait_until_keypress
-
-; test 3
-
-
-	jsr	HGR2
-
-	; draw lines
-	ldy	#0
-loop3:
-	ldx	#7			; draw white
-	jsr	set_hcolor
-
-	tya
-	pha
-	ldx	#0
-
-	jsr	hgr_hlin
-
-	pla
-	tay
-
-	iny
-	cpy	#192
-	bne	loop3
-
-	jsr	wait_until_keypress
-
-; test 4
-
-	jsr	HGR2
-
-	; draw lines
-	ldy	#0
-loop4:
-	ldx	#3			; draw white1
-	jsr	set_hcolor
-
-	tya
-	pha
-
-	eor	#$ff
-	sec
-	adc	#192
-	tax
-
-	tya
-
-	jsr	hgr_hlin
-
-	pla
-	tay
-
-	iny
-	cpy	#192
-	bne	loop4
-
-	jsr	wait_until_keypress
-
-
-
-done:
-	jmp	main
-
-wait_until_keypress:
-	bit	KEYRESET
-keypress_loop:
-	lda	KEYPRESS
-	bpl	keypress_loop
-
-	rts
-
-
 	;=================================
 	; Simple Horizontal LINE
 	;=================================
@@ -178,8 +11,8 @@ hgr_hlin:
 	sty	xrun_save
 	stx	x1_save
 
-	;ldx	VGI_RX1		; X1 into X
-	; lda	VGI_RY1		; Y1 into A
+	; X1 already in X
+	; Y1 already in A	; Y1 into A
 	ldy	#0		; always 0
 	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 				; important part is row is in GBASL/GBASH
@@ -187,10 +20,8 @@ hgr_hlin:
 
 	; Y is already the RX1/7
 
-;	inc	xrun_save	; needed because we compare with beq/bne
-
 	; check if narrow corner case where begin and end same block
-	; if RX%7 + XRUN < 8
+	; if RX%7 + XRUN < 7
 
 	ldx	x1_save
 	lda	mod7_table,X
@@ -200,8 +31,7 @@ hgr_hlin:
 	bcs	not_same_block
 
 same_block:
-	; want to use MASK of left_mask (MOD7) ORed with
-	;				right_mask (7-(mod7+xrun7)
+	; want to use MASK of left_mask (MOD7) ANDed with ~left_mask (MOD7+XRUN)
 
 	; 4+3
 	; 0000 CCCC	0000 1111
@@ -216,38 +46,30 @@ same_block:
 ; 5800 = BF			BF
 ;----
 ; 5C00 = FF			FF
-; 4080 = ff 83			FF 81
-; 4480 = ff 87
-; 4880 = ff 8F
+; 4080 = ff 81			FF 81
+; 4480 = ff 83
+; 4880 = ff 87
 
 	lda	mod7_table,X		; get x1%7
 	tax				; put in X
-	lda	left_masks,X
-	sta	$10
+	lda	left_masks,X		; get left mask
+	sta	same_block_mask_smc+1
 
 	txa				; x1%7
 	clc
 	adc	xrun_save		; (x1%7)+xrun
 	tax
-	lda	left_masks,X
+	lda	left_masks,X		; get left mask
+
 	eor	#$7f
-	and	$10
-	sta	$10
+	and	same_block_mask_smc+1
+	sta	same_block_mask_smc+1
 
 	lda	(GBASL),Y
 	eor	HGR_BITS
-	and	$10
+same_block_mask_smc:
+	and	#$dd
 	eor	(GBASL),Y
-
-;	lda	(GBASL),Y		; get current pattern
-;	eor	HGR_BITS
-;	and	left_masks,X
-
-
-;	ldx	xrun_save
-;	and	right_masks,X
-;	eor	(GBASL),Y
-
 	sta	(GBASL),Y
 
 	rts
@@ -255,7 +77,7 @@ same_block:
 not_same_block:
 
 	; see if not starting on boundary
-;	ldx	x1_save
+	; X still has X1 in it
 	lda	mod7_table,X
 	beq	draw_run
 
@@ -280,9 +102,6 @@ handle_ragged_left:
 	adc	xrun_save
 	sta	xrun_save
 
-;	lda	HGR_BITS	; cycle colors for next
-;	jsr	COLOR_SHIFT
-
 	jsr	shift_colors
 
 
@@ -294,7 +113,6 @@ draw_run:
 
 	lda	HGR_BITS	; get color
 	sta	(GBASL),Y	; store out
-;	jsr	COLOR_SHIFT	; shift colors
 
 	iny			; move to next block
 
@@ -310,10 +128,7 @@ draw_run:
 	; draw rightmost
 draw_right:
 
-	beq	done_row
-
-;	lda	HGR_BITS
-;	jsr	COLOR_SHIFT
+	beq	done_hgr_hlin
 
 	; see if not starting on boundary
 	ldx	xrun_save
@@ -325,10 +140,8 @@ draw_right:
 	eor	(GBASL),Y
 	sta	(GBASL),Y
 
-done_row:
+done_hgr_hlin:
 
-
-done_done:
 	rts
 
 
@@ -337,71 +150,12 @@ x1_save:	.byte $00
 xrun_save:	.byte $00
 
 
-
-
-
-
-
-	;=====================
-	; make /7 %7 tables
-	;=====================
-
-vgi_init:
-
-vgi_make_tables:
-
-	ldy	#0
-	lda	#0
-	ldx	#0
-div7_loop:
-	sta	div7_table,Y
-
-	inx
-	cpx	#7
-	bne	div7_not7
-
-	clc
-	adc	#1
-	ldx	#0
-div7_not7:
-	iny
-	bne	div7_loop
-
-
-	ldy	#0
-	lda	#0
-mod7_loop:
-	sta	mod7_table,Y
-	clc
-	adc	#1
-	cmp	#7
-	bne	mod7_not7
-	lda	#0
-mod7_not7:
-	iny
-	bne	mod7_loop
-
-	rts
+right_masks:
+	.byte $80,$81,$83,$87, $8F,$9F,$BF
 
 left_masks:
 	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
-	;	CCCCCCC
-	;	0CCCCCC
-	;	00CCCCC
-	;	000CCCC
-	;	0000CCC
-	;	00000CC
-	;	000000C
-right_masks:
-;	.byte $81,$83,$87, $8F,$9F,$BF,$FF
-	.byte $80,$81,$83,$87, $8F,$9F,$BF,$FF
-	;	C000000
-	;	CC00000
-	;	CCC0000
-	;	CCCC000
-	;	CCCCC00
-	;	CCCCCC0
-	;	CCCCCCC
+
 
 	;==========================
 	; shift colors

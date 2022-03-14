@@ -60,6 +60,8 @@ simple_rectangle_loop:
 	cmp	#8
 	bcs	not_corner
 
+; FIXME: this is wrong, see hgr hlin code
+
 corner:
 	; left=(RX1 MOD 7) right=(RX1 MOD 7)+XRUN
 	; mask is left AND right

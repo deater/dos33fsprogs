@@ -13,6 +13,7 @@ TODO:
 
 General:
 ~~~~~~~~
++ fix the rectangle code to be proper (see hgr_hlin)
 + wait for screen refresh on IIe/IIc/IIgs
 + make text every 9th row so descenders don't interfere?
 + background priority mask not working when at far top of screen

@@ -113,6 +113,9 @@ save_color:
 .else
 
 
+; FIXME: I improved the code to properly handle the limits
+;	see the hgr hlin code
+
 
 
 	; FAST
