@@ -7,12 +7,13 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	lines.dsk
 
-lines.dsk:	HELLO LINES LINES_ROM HLIN_TEST
+lines.dsk:	HELLO LINES LINES_ROM HLIN_TEST VLIN_TEST
 	cp $(EMPTY_DISK)/empty.dsk lines.dsk
 	$(DOS33) -y lines.dsk SAVE A HELLO
 	$(DOS33) -y lines.dsk BSAVE -a 0x0C00 LINES
 	$(DOS33) -y lines.dsk BSAVE -a 0x0C00 LINES_ROM
 	$(DOS33) -y lines.dsk BSAVE -a 0x0C00 HLIN_TEST
+	$(DOS33) -y lines.dsk BSAVE -a 0x0C00 VLIN_TEST
 
 ###
 
@@ -49,10 +50,18 @@ HLIN_TEST:	hlin_test.o
 hlin_test.o:	hlin_test.s hgr_hlin.s
 	ca65 -o hlin_test.o hlin_test.s -l hlin_test.lst
 
+###
+
+VLIN_TEST:	vlin_test.o
+	ld65 -o VLIN_TEST vlin_test.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+vlin_test.o:	vlin_test.s hgr_vlin.s
+	ca65 -o vlin_test.o vlin_test.s -l vlin_test.lst
+
 
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO LINES LINES_ROM HLIN_TEST
+	rm -f *~ *.o *.lst HELLO LINES LINES_ROM HLIN_TEST VLIN_TEST
 
