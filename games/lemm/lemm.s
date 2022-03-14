@@ -273,6 +273,7 @@ load_song_chunk_good:
 	.include	"draw_door.s"
 	.include	"wait.s"
 	.include	"hgr_hlin.s"
+	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
 
 	; pt3 player
