@@ -76,6 +76,9 @@ hposn_loop:
 	; ...
 	;	x100 0000	0000001		start at 6
 
+right_masks:
+	.byte $80,$81,$83,$87, $8F,$9F,$BF
+
 left_masks:
 	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
 
@@ -87,10 +90,6 @@ left_masks:
 	; ...
 	;	x011 1111	1111110		end at 5
 	;	x111 1111	1111111		end at 6
-right_masks:
-	.byte $81,$83,$87, $8F,$9F,$BF,$FF
-
-
 
 
 	; from the Apple II firmware

@@ -5,6 +5,7 @@ NIBCOUNT	= $00
 
 ;; Zero page monitor routines addresses
 
+HGR_BITS= $1C
 WNDLFT	= $20
 WNDWDTH	= $21
 WNDTOP	= $22
@@ -82,7 +83,7 @@ SOUND_STATUS	=	$DE
 	SOUND_IN_LC	= $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 
-
+HGR_COLOR	=	$E4
 HGR_PAGE	=	$E6
 
 

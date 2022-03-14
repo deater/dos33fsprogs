@@ -13,11 +13,25 @@ hgr_hlin:
 
 	; X1 already in X
 	; Y1 already in A	; Y1 into A
-	ldy	#0		; always 0
-	jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+	;ldy	#0		; always 0
+	;jsr	HPOSN		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 				; important part is row is in GBASL/GBASH
 	; HPOSN also shifts color odd/even for us
 	; HPOSN also puts X1/7 into Y
+
+	tay			; get row info for Y1 into GBASL/GBASH
+	lda	hposn_high,Y
+	sta	GBASH
+	lda	hposn_low,Y
+	sta	GBASL
+
+	lda	div7_table,X	; put X1/7 into Y
+	tay
+
+	and	#$1			; only shift if in odd column?
+	beq	hlin_no_shift_colors
+	jsr	shift_colors
+hlin_no_shift_colors:
 
 	; check if narrow corner case where begin and end same block
 	; if RX%7 + XRUN < 7
@@ -141,11 +155,11 @@ x1_save:	.byte $00
 xrun_save:	.byte $00
 
 
-right_masks:
-	.byte $80,$81,$83,$87, $8F,$9F,$BF
+;right_masks:
+;	.byte $80,$81,$83,$87, $8F,$9F,$BF
 
-left_masks:
-	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
+;left_masks:
+;	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
 
 
 	;==========================
@@ -170,10 +184,14 @@ done_shift_colors:
 	;==========================
 	; color in X
 set_hcolor:
-	lda	COLORTBL,X
+	lda	hgr_colortbl,X
 	sta	HGR_COLOR
 	rts
 
+	; lives at $F6F6 in Applesoft ROM
+hgr_colortbl:
+	.byte $00,$2A,$55,$7F
+	.byte $80,$AA,$D5,$FF
 
 ; notes
 	; 4+3

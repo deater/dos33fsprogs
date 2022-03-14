@@ -15,6 +15,7 @@ KEYRESET	= $C010
 
 HGR2            = $F3D8         ; clear PAGE2 to 0
 HGR             = $F3E2         ; set hires page1 and clear $2000-$3fff
+BKGND0		= $F3F4		; clear screen to A
 HPOSN           = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 COLOR_SHIFT     = $F47E
 COLORTBL        = $F6F6
@@ -97,7 +98,13 @@ loop2:
 ; test 3
 
 
-	jsr	HGR2
+;	jsr	HGR2
+
+	; note, clear to bgcolor=black2 or else edge looks a bit
+	;	ragged when $FF touches $00
+
+	lda	#$80
+	jsr	BKGND0
 
 	; draw lines
 	ldy	#0

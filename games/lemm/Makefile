@@ -41,6 +41,7 @@ lemm.o:	lemm.s zp.inc hardware.inc \
 		graphics/graphics_test.inc graphics/sprites.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
+		hgr_hlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
 		pointer_sprites.inc \
 		level1.s

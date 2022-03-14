@@ -190,6 +190,8 @@ check_return:
 
 return_pressed:
 
+	jsr	update_menu
+
 	; first check if over lemming
 
 	lda	OVER_LEMMING
