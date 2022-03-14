@@ -1,14 +1,13 @@
 
-proper animations
-ability to explode
-particle effects
-proper cursors
-click on menu
-wait a second after last lemming gone to exit
-proper check for successful vs not end of level
-ability to walk up hills
-level 5
-let's go sound
-fill in some of the ground so we don't get stuck when digging
-dig off the map, end level
-better select pointer
++ proper animations
++ ability to explode
++ particle effects
++ click on menu
++ wait a second after last lemming gone to exit
++ proper check for successful vs not end of level
++ ability to walk up hills
++ level 5
++ let's go sound
++ fill in some of the ground so we don't get stuck when digging
++ dig off the map, end level
+
