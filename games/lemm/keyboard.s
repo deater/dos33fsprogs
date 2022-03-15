@@ -190,10 +190,18 @@ check_return:
 
 return_pressed:
 
-	jsr	update_menu
+	; first check if off bottom of screen
 
-	; first check if over lemming
+	lda	CURSOR_Y
+	cmp	#168-8			; center of cursor
+	bcc	return_check_lemming
 
+	jsr	handle_menu
+
+	jmp	done_keypress
+
+	; next check if over lemming
+return_check_lemming:
 	lda	OVER_LEMMING
 	bpl	not_over_lemming
 
@@ -205,11 +213,6 @@ return_pressed:
 
 not_over_lemming:
 
-	; TODO
-
-	; handle clicking on bottom row
-
-
 
 done_keypress:
 
@@ -220,3 +223,68 @@ no_keypress:
 
 
 
+
+handle_menu:
+	; see where we clicked
+	lda	CURSOR_X
+	; urgh need to multiply by 7
+	clc
+	asl
+	adc	CURSOR_X
+	asl
+	adc	CURSOR_X
+	clc
+	adc	#24			; adjust to center
+
+	lsr				; /16 for on-screen co-ords
+	lsr
+	lsr
+	lsr				; each box is 16 wide
+
+	cmp	#3
+	bcc	plus_minus_buttons
+	cmp	#11
+	beq	pause_button
+	cmp	#12
+	beq	nuke_button
+	bcs	map_grid_button
+
+	; otherwise was job button
+job_button:
+
+	pha
+	; erase old
+
+	jsr	erase_menu
+
+	; update value
+	pla
+	sec
+	sbc	#2
+	sta	BUTTON_LOCATION
+
+	; draw new
+
+	jsr	update_menu
+	jmp	done_menu
+
+plus_minus_buttons:
+	; TODO
+	jmp	done_menu
+
+nuke_button:
+	; TODO
+	jmp	done_menu
+
+map_grid_button:
+	; TODO
+	jmp	done_menu
+
+pause_button:
+	bit	KEYRESET
+	jsr	wait_until_keypress
+
+
+done_menu:
+
+	rts

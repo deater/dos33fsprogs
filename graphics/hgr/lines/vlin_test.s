@@ -176,6 +176,40 @@ loop4:
 	jsr	wait_until_keypress
 
 
+; test 5
+
+;	jsr	HGR2
+
+	; draw lines
+	ldy	#0
+loop5:
+	ldx	#0			; draw white1
+	jsr	set_hcolor
+
+	tya
+	pha
+	tax				; X1=Y
+
+	eor	#$ff
+	sec
+	adc	#192			; Y1=192-Y
+
+
+					; run = Y
+
+	jsr	hgr_vlin
+
+	pla
+	tay
+
+	iny
+	cpy	#192
+	bne	loop5
+
+	jsr	wait_until_keypress
+
+
+
 
 done:
 	jmp	main

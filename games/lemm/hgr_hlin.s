@@ -28,6 +28,11 @@ hgr_hlin:
 	lda	div7_table,X	; put X1/7 into Y
 	tay
 
+	; reset color bits
+	ldx	HGR_COLOR
+	lda	hgr_colortbl,X
+	sta	HGR_BITS
+
 	and	#$1			; only shift if in odd column?
 	beq	hlin_no_shift_colors
 	jsr	shift_colors
@@ -185,7 +190,7 @@ done_shift_colors:
 	; color in X
 set_hcolor:
 	lda	hgr_colortbl,X
-	sta	HGR_COLOR
+	sta	HGR_BITS
 	rts
 
 	; lives at $F6F6 in Applesoft ROM

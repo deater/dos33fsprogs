@@ -9,6 +9,7 @@ do_level1:
 	sta	CURRENT_CHUNK
 	sta	DONE_PLAYING
 	sta	BASE_FRAME_L
+	sta	BUTTON_LOCATION
 
 	lda	#$D0
 	sta	CHUNK_NEXT_LOAD		; Load at $D0
