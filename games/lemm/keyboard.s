@@ -205,6 +205,12 @@ return_check_lemming:
 	lda	OVER_LEMMING
 	bpl	not_over_lemming
 
+	; check if digging selected
+
+	lda	BUTTON_LOCATION
+	cmp	#8
+	bne	done_keypress
+
 	; for now assume we've got diggingselected
 	lda	#LEMMING_DIGGING
 	sta	lemming_status
