@@ -11,6 +11,19 @@ do_level5:
 	sta	BASE_FRAME_L
 	sta	BUTTON_LOCATION
 
+        ; set up first song
+
+        lda     #<music6_parts_l
+        sta     chunk_l_smc+1
+        lda     #>music6_parts_l
+        sta     chunk_l_smc+2
+
+        lda     #<music6_parts_h
+        sta     chunk_h_smc+1
+        lda     #>music6_parts_h
+        sta     chunk_h_smc+2
+
+
 	lda	#$D0
 	sta	CHUNK_NEXT_LOAD		; Load at $D0
 	jsr	load_song_chunk
@@ -179,7 +192,7 @@ l5_door_is_open:
 l5_done_release_lemmings:
 
 
-	jsr	draw_flames
+;	jsr	draw_flames
 
 	lda	TIMER_COUNT
 	cmp	#$50

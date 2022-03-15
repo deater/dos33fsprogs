@@ -11,6 +11,19 @@ do_level1:
 	sta	BASE_FRAME_L
 	sta	BUTTON_LOCATION
 
+	; set up first song
+
+	lda	#<music_parts_l
+	sta	chunk_l_smc+1
+	lda	#>music_parts_l
+	sta	chunk_l_smc+2
+
+	lda	#<music_parts_h
+	sta	chunk_h_smc+1
+	lda	#>music_parts_h
+	sta	chunk_h_smc+2
+
+
 	lda	#$D0
 	sta	CHUNK_NEXT_LOAD		; Load at $D0
 	jsr	load_song_chunk
@@ -22,6 +35,8 @@ do_level1:
 	lda	#1
 	sta	LOOP
 	sta	CURRENT_CHUNK
+
+
 
         ;=======================
         ; show title screen

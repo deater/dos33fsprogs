@@ -235,9 +235,11 @@ play_level5:
 
 load_song_chunk:
 	ldx	CURRENT_CHUNK
-	lda     music_parts_l,X
+chunk_l_smc:
+	lda     music6_parts_l,X
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     music_parts_h,X
+chunk_h_smc:
+	lda     music6_parts_h,X
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 	bne	load_song_chunk_good
 
@@ -339,4 +341,24 @@ lemm5_part4_lzsa:
 .incbin "music/lemm5.part4.lzsa"
 lemm5_part5_lzsa:
 .incbin "music/lemm5.part5.lzsa"
+
+music6_parts_h:
+	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
+	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,$00
+
+music6_parts_l:
+	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
+	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa
+
+lemm6_part1_lzsa:
+.incbin "music/lemm6.part1.lzsa"
+lemm6_part2_lzsa:
+.incbin "music/lemm6.part2.lzsa"
+lemm6_part3_lzsa:
+.incbin "music/lemm6.part3.lzsa"
+lemm6_part4_lzsa:
+.incbin "music/lemm6.part4.lzsa"
+lemm6_part5_lzsa:
+.incbin "music/lemm6.part5.lzsa"
+
 
