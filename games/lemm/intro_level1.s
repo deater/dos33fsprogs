@@ -3,11 +3,24 @@
 	; print the intro message for level1
 	;=====================================
 
-intro_level1:
+intro_level:
 
+	lda	WHICH_LEVEL
+	cmp	#1
+	bne	its_level_5_preview
+
+its_level_1_preview:
 	lda	#<level1_preview_lzsa
 	sta	getsrc_smc+1    ; LZSA_SRC_LO
 	lda	#>level1_preview_lzsa
+	jmp	done_load_preview
+
+its_level_5_preview:
+	lda	#<level5_preview_lzsa
+	sta	getsrc_smc+1    ; LZSA_SRC_LO
+	lda	#>level5_preview_lzsa
+done_load_preview:
+
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$20
@@ -25,9 +38,22 @@ intro_level1:
 
 	; print messages
 
+	lda	WHICH_LEVEL
+	cmp	#1
+	bne	its_level_5_text
+
+its_level_1_text:
 	lda	#<level1_intro_text
 	sta	OUTL
 	lda	#>level1_intro_text
+	jmp	its_level_1_text_done
+
+its_level_5_text:
+	lda	#<level5_intro_text
+	sta	OUTL
+	lda	#>level5_intro_text
+
+its_level_1_text_done:
 	sta	OUTH
 
 	; print the text
@@ -148,7 +174,6 @@ level5_intro_text:
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONINUE",0
-
 
 
 .align $100

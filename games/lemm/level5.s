@@ -1,5 +1,5 @@
 
-do_level1:
+do_level5:
 
 	;==============
 	; set up music
@@ -27,7 +27,7 @@ do_level1:
         ; show title screen
         ;=======================
 
-	lda	#1
+	lda	#5
 	sta	WHICH_LEVEL
 	jsr	intro_level
 
@@ -44,18 +44,18 @@ do_level1:
 	bit	HIRES
 	bit	FULLGR
 
-	lda     #<level1_lzsa
+	lda     #<level5_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level1_lzsa
+	lda     #>level5_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda     #<level1_lzsa
+	lda     #<level5_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level1_lzsa
+	lda     #>level5_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$40
@@ -133,10 +133,10 @@ do_level1:
 	; Main Loop
 	;===================
 	;===================
-l1_main_loop:
+l5_main_loop:
 
 	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
-	beq	l1_no_load_chunk	; outside IRQ to avoid glitch in music
+	beq	l5_no_load_chunk	; outside IRQ to avoid glitch in music
 
 	jsr	load_song_chunk
 
@@ -144,29 +144,29 @@ l1_main_loop:
 	sta	LOAD_NEXT_CHUNK
 
 
-l1_no_load_chunk:
+l5_no_load_chunk:
 
 
 	lda	DOOR_OPEN
-	bne	l1_door_is_open
+	bne	l5_door_is_open
 
 	jsr	draw_door
 
-l1_door_is_open:
+l5_door_is_open:
 
 	;======================
 	; release lemmings
 	;======================
 
 	lda	LEMMINGS_TO_RELEASE
-	beq	l1_done_release_lemmings
+	beq	l5_done_release_lemmings
 
 	lda	DOOR_OPEN
-	beq	l1_done_release_lemmings
+	beq	l5_done_release_lemmings
 
 	lda	FRAMEL
 	and	#$f
-	bne	l1_done_release_lemmings
+	bne	l5_done_release_lemmings
 
 	inc	LEMMINGS_OUT
 	jsr	update_lemmings_out
@@ -176,20 +176,20 @@ l1_door_is_open:
 
 	dec	LEMMINGS_TO_RELEASE
 
-l1_done_release_lemmings:
+l5_done_release_lemmings:
 
 
 	jsr	draw_flames
 
 	lda	TIMER_COUNT
 	cmp	#$50
-	bcc	l1_timer_not_yet
+	bcc	l5_timer_not_yet
 
 	jsr	update_time
 
 	lda	#$0
 	sta	TIMER_COUNT
-l1_timer_not_yet:
+l5_timer_not_yet:
 
 
 	; main drawing loop
@@ -212,12 +212,12 @@ l1_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l1_level_over
+	bne	l5_level_over
 
-	jmp	l1_main_loop
+	jmp	l5_main_loop
 
 
-l1_level_over:
+l5_level_over:
 
 	bit	SET_TEXT
 

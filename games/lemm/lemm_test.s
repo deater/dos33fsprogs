@@ -241,9 +241,9 @@ load_graphics_loop:
 
 	jsr	wait_until_keypress
 
-	lda     #<level2_lzsa
+	lda     #<level5_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_lzsa
+	lda     #>level5_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
@@ -252,9 +252,9 @@ load_graphics_loop:
 
 	jsr	wait_until_keypress
 
-	lda     #<level2_fine_lzsa
+	lda     #<level5_fine_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_fine_lzsa
+	lda     #>level5_fine_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20

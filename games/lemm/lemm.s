@@ -202,7 +202,23 @@ zurg:
 play_level1:
 	jsr	do_level1
 
-	jmp	play_level1
+	lda	LEVEL_OVER
+	cmp	#LEVEL_WIN
+	beq	play_level5
+	bne	play_level1
+
+
+	;=======================
+	; do level5
+	;=======================
+
+play_level5:
+	jsr	do_level5
+
+	lda	LEVEL_OVER
+	cmp	#LEVEL_WIN
+	beq	play_level1
+	bne	play_level5
 
 
 
@@ -241,9 +257,6 @@ load_song_chunk_good:
 	; includes
 	;==========================
 
-;	.include	"gr_pageflip.s"
-;	.include	"gr_copy.s"
-;	.include	"wait_a_bit.s"
 	.include	"gr_offsets.s"
 	.include	"decompress_fast_v2.s"
 
@@ -253,6 +266,7 @@ load_song_chunk_good:
 	.include	"joystick.s"
 
 	.include	"level1.s"
+	.include	"level5.s"
 
 	.include	"gr_fast_clear.s"
 
@@ -297,6 +311,7 @@ config_string:
 
 
 .include "graphics/graphics_level1.inc"
+.include "graphics/graphics_level5.inc"
 .include "graphics/sprites.inc"
 
 music_parts_h:

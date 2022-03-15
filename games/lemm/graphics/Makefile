@@ -5,17 +5,17 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	graphics_test.inc graphics_level1.inc sprites.inc
+all:	graphics_test.inc graphics_level1.inc graphics_level5.inc sprites.inc
 
 ###
 
 graphics_test.inc:	\
 	level1.lzsa \
-	level2.lzsa \
-	level2_fine.lzsa
+	level5.lzsa \
+	level5_fine.lzsa
 	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_test.inc
-	echo "level2_lzsa: .incbin \"level2.lzsa\"" >> graphics_test.inc
-	echo "level2_fine_lzsa: .incbin \"level2_fine.lzsa\"" >> graphics_test.inc
+	echo "level5_lzsa: .incbin \"level5.lzsa\"" >> graphics_test.inc
+	echo "level5_fine_lzsa: .incbin \"level5_fine.lzsa\"" >> graphics_test.inc
 
 
 graphics_level1.inc:	\
@@ -23,6 +23,12 @@ graphics_level1.inc:	\
 	level1_preview.lzsa
 	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_level1.inc
 	echo "level1_preview_lzsa: .incbin \"level1_preview.lzsa\"" >> graphics_level1.inc
+
+graphics_level5.inc:	\
+	level5.lzsa \
+	level5_preview.lzsa
+	echo "level5_lzsa: .incbin \"level5.lzsa\"" > graphics_level5.inc
+	echo "level5_preview_lzsa: .incbin \"level5_preview.lzsa\"" >> graphics_level5.inc
 
 ###
 
@@ -135,19 +141,28 @@ level1_preview.hgr:	level1_preview.png
 
 ###
 
-level2.lzsa:	level2.hgr
-	$(LZSA) -r -f2 level2.hgr level2.lzsa
+level5.lzsa:	level5.hgr
+	$(LZSA) -r -f2 level5.hgr level5.lzsa
 
-level2.hgr:	level2.png
-	$(PNG2HGR) level2.png > level2.hgr
+level5.hgr:	level5.png
+	$(PNG2HGR) level5.png > level5.hgr
 
 ###
 
-level2_fine.lzsa:	level2_fine.hgr
-	$(LZSA) -r -f2 level2_fine.hgr level2_fine.lzsa
 
-level2_fine.hgr:	level2_fine.png
-	$(PNG2HGR) level2_fine.png > level2_fine.hgr
+level5_preview.lzsa:	level5_preview.hgr
+	$(LZSA) -r -f2 level5_preview.hgr level5_preview.lzsa
+
+level5_preview.hgr:	level5_preview.png
+	$(PNG2HGR) level5_preview.png > level5_preview.hgr
+
+###
+
+level5_fine.lzsa:	level5_fine.hgr
+	$(LZSA) -r -f2 level5_fine.hgr level5_fine.lzsa
+
+level5_fine.hgr:	level5_fine.png
+	$(PNG2HGR) level5_fine.png > level5_fine.hgr
 
 ####
 
