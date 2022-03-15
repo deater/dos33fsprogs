@@ -189,7 +189,10 @@ zurg:
         ; wait for keypress
         ;=======================
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	#25
+	jsr	wait_a_bit
 
 
 	;=======================
@@ -275,6 +278,7 @@ load_song_chunk_good:
 	.include	"hgr_hlin.s"
 	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
+	.include	"wait_a_bit.s"
 
 	; pt3 player
 
