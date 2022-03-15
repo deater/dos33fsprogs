@@ -85,7 +85,11 @@ sprite_ysize_smc:
 	rts
 
 
-
+hgr_sprite_page_toggle:
+	lda	hgr_sprite_page_smc+1
+	eor	#$60
+	sta	hgr_sprite_page_smc+1
+	rts
 
 	;===========================================
 	; hgr draw sprite (only at 7-bit boundaries)

@@ -1,16 +1,15 @@
-+ wait with timeout at loading screen
-+ copy last frame of door animation to background
 + only dig if digger selected
++ ability to walk up hills
 + ability to explode
 + particle effects
 + wait a second after last lemming gone to exit
 + update the "in" %
 + proper check for successful vs not end of level
-+ ability to walk up hills
++ dig off the map, end level
 + level 5
   -- door animation
   -- music
 + let's go sound
 + fill in some of the ground so we don't get stuck when digging
-+ dig off the map, end level
+
 

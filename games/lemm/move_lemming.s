@@ -90,7 +90,6 @@ walking_yes_wall:
 	clc
 	adc	#1
 	sta	lemming_direction
-
 	lda	lemming_x
 
 walking_no_wall:
@@ -224,6 +223,8 @@ collision_check_ground:
 	and	#$7f
 	beq	ground_falling
 ground_walking:
+;	lda	#0
+;	sta	lemming_frame
 	lda	#LEMMING_WALKING
 	jmp	done_check_ground
 ground_falling:
