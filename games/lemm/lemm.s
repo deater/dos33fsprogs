@@ -302,6 +302,8 @@ load_song_chunk_good:
 	.include	"update_menu.s"
 	.include	"wait_a_bit.s"
 	.include	"title.s"
+	.include	"audio.s"
+	.include	"letsgo.s"
 
 	; pt3 player
 
@@ -320,8 +322,11 @@ config_string:
 
 
 .include "graphics/graphics_level1.inc"
-.include "graphics/graphics_level5.inc"
+;.include "graphics/graphics_level5.inc"
 .include "graphics/sprites.inc"
+
+level5_lzsa:
+level5_preview_lzsa:
 
 music_parts_h:
 	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
@@ -361,4 +366,5 @@ lemm6_part4_lzsa:
 lemm6_part5_lzsa:
 .incbin "music/lemm6.part5.lzsa"
 
-
+letsgo:
+.incbin "sounds/letsgo.btc"

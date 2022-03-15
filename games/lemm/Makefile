@@ -71,7 +71,7 @@ lemm.o:	lemm.s zp.inc hardware.inc \
 		hgr_hlin.s hgr_vlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
 		pointer_sprites.inc \
-		level1.s level5.s title.s
+		level1.s level5.s title.s audio.s letsgo.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 
 

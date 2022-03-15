@@ -108,6 +108,8 @@ do_level1:
 	; Play "Let's Go"
 	;=======================
 
+	jsr	play_letsgo
+
 
         ;=======================
         ; start music
