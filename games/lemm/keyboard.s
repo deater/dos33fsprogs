@@ -178,7 +178,8 @@ check_escape:
 	cmp	#27
 	bne	check_return
 escape_pressed:
-	inc	LEVEL_OVER
+	lda	#LEVEL_FAIL
+	sta	LEVEL_OVER
 
 	jmp	done_keypress
 

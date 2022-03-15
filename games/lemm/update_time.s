@@ -21,7 +21,11 @@ no_time_uflo:
 	lda	TIME_SECONDS
 	bne	not_over
 
-	inc	LEVEL_OVER
+	; out of time
+
+
+	lda	#LEVEL_FAIL
+	sta	LEVEL_OVER
 
 
 not_over:

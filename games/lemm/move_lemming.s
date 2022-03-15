@@ -155,7 +155,7 @@ done_move_lemming:
 
 	jsr	remove_lemming
 
-	lda	#1
+	lda	#LEVEL_WIN
 	sta	LEVEL_OVER
 
 not_done_level:

@@ -70,11 +70,23 @@ outro_level1:
 
 	jsr	set_normal
 
+
+	lda	LEVEL_OVER
+	cmp	#LEVEL_WIN
+	bne	print_l1_lose_message
+
 	; print messages
 
 	lda	#<level1_win_text
 	sta	OUTL
 	lda	#>level1_win_text
+	jmp	print_l1_common
+print_l1_lose_message:
+	lda	#<level1_lose_text
+	sta	OUTL
+	lda	#>level1_lose_text
+
+print_l1_common:
 	sta	OUTH
 
 	; print the text
@@ -124,12 +136,12 @@ level1_lose_text:
 .byte  8, 7,"THAT YOU NUKED THAT LEVEL.",0
 .byte  6,20,"PRESS RETURN FOR NEXT LEVEL",0
 .byte  9,21,"PRESS ESCAPE FOR MENU",0
-
-
+.byte 10,10," ",0	; lazy hack
+.byte 10,10," ",0
 
 level5_intro_text:
 .byte  0, 8,"LEVEL 5",0
-.byte 15, 8,"YOU NEED BASHERS THIS TIME",0
+.byte 14, 8,"YOU NEED BASHERS THIS TIME",0
 .byte  9,12,"NUMBER OF LEMMINGS 50",0
 .byte 12,14,"10%  TO BE SAVED",0
 .byte 12,16,"RELEASE RATE 50",0
