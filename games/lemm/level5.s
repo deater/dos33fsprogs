@@ -163,7 +163,7 @@ l5_no_load_chunk:
 	lda	DOOR_OPEN
 	bne	l5_door_is_open
 
-	jsr	draw_door
+	jsr	draw_door_5
 
 l5_door_is_open:
 
