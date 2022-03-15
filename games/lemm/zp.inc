@@ -2,6 +2,7 @@
 
 ;; LZSA addresses
 NIBCOUNT	= $00
+WHICH_LOAD	= $01
 
 ;; Zero page monitor routines addresses
 
