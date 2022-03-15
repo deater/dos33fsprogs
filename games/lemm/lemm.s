@@ -12,6 +12,12 @@ lemm_test_start:
 	sta	DRAW_PAGE
 
 	;====================
+	; show title message
+	;====================
+
+	jsr	show_title
+
+	;====================
 	; detect model
 	;====================
 
@@ -293,6 +299,7 @@ load_song_chunk_good:
 	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
 	.include	"wait_a_bit.s"
+	.include	"title.s"
 
 	; pt3 player
 
