@@ -1,4 +1,4 @@
-
+LETSGO = $D000
 LETSGO_LENGTH = 14
 
 play_letsgo:
@@ -7,23 +7,27 @@ play_letsgo:
 	;beq     done_link_noise
 
 	; switch in language card
-	; read RAM, no write, $d000 bank 1
+	; read/write RAM $d000 bank 1
 
-	; bit     $C088
+	 bit     $C083
+	 bit     $C083
+
 
 	; call the btc player
 
-	lda	#<letsgo
+	lda	#<LETSGO
 	sta	BTC_L
-	lda	#>letsgo
+	lda	#>LETSGO
 	sta	BTC_H
 
 	ldx	#LETSGO_LENGTH           ; 14 pages long???
 	jsr	play_audio
 
-        ; restore rom, no write, $d000 bank 1
+        ; read/write RAM, $d000 bank 2
 
-;	bit     $c08A
+	bit     $c08B
+	bit     $c08B
+
 
 	rts
 

@@ -160,6 +160,28 @@ mockingboard_notfound:
 
 skip_all_checks:
 
+	;==================================
+        ; load sound into the language card
+        ;       into $D000 set 1
+        ;==================================
+
+	; read/write RAM, use $d000 bank1
+	bit	$C083
+	bit	$C083
+
+	lda	#<letsgo
+	sta	getsrc_smc+1
+	lda	#>letsgo
+	sta	getsrc_smc+2
+
+	lda	#$D0    ; decompress to $D000
+
+	jsr	decompress_lzsa2_fast
+
+	; read/write RAM, use $d000 bank2
+	bit	$C08b
+	bit	$C08b
+
 
 	;==================================
         ; load music into the language card
@@ -169,8 +191,8 @@ skip_all_checks:
         ; switch in language card
         ; read/write RAM, $d000 bank 2
 
-	lda	$C083
-	lda	$C083
+	lda	$C08b
+	lda	$C08b
 
 
 	jsr	mockingboard_patch	; patch to work in slots other than 4?
@@ -322,11 +344,11 @@ config_string:
 
 
 .include "graphics/graphics_level1.inc"
-;.include "graphics/graphics_level5.inc"
+.include "graphics/graphics_level5.inc"
 .include "graphics/sprites.inc"
 
-level5_lzsa:
-level5_preview_lzsa:
+;level5_lzsa:
+;level5_preview_lzsa:
 
 music_parts_h:
 	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
@@ -367,4 +389,4 @@ lemm6_part5_lzsa:
 .incbin "music/lemm6.part5.lzsa"
 
 letsgo:
-.incbin "sounds/letsgo.btc"
+.incbin "sounds/letsgo.btc.lz4"
