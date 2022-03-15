@@ -45,6 +45,8 @@ hgr_vlin_loop:
 current_row_smc:
 	ldy	#$dd	; get row info for Y1 into GBASL/GBASH
 	lda	hposn_high,Y
+hgr_vlin_page_smc:
+	eor	#$00
 	sta	GBASH
 	lda	hposn_low,Y
 	sta	GBASL
@@ -75,3 +77,8 @@ vlin_masks:
 	.byte $81,$82,$84,$88,$90,$A0,$C0
 
 
+hgr_vlin_page_toggle:
+	lda	hgr_vlin_page_smc+1
+	eor	#$60
+	sta	hgr_vlin_page_smc+1
+	rts

@@ -57,6 +57,17 @@ draw_button:
 	adc	#15
 	sta	button_smc4+1
 
+	; draw on both pages
+	jsr	actual_button_draw
+	jsr	hgr_hlin_page_toggle
+	jsr	hgr_vlin_page_toggle
+	jsr	actual_button_draw
+	jsr	hgr_hlin_page_toggle
+	jsr	hgr_vlin_page_toggle
+	rts
+
+actual_button_draw:
+
 button_smc1:
 	ldx	#144
 	lda	#168

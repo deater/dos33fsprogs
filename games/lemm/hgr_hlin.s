@@ -21,6 +21,12 @@ hgr_hlin:
 
 	tay			; get row info for Y1 into GBASL/GBASH
 	lda	hposn_high,Y
+
+        ; eor   #$00 draws on page2
+        ; eor   #$60 draws on page1
+hgr_hlin_page_smc:
+        eor     #$00
+
 	sta	GBASH
 	lda	hposn_low,Y
 	sta	GBASL
@@ -197,6 +203,15 @@ set_hcolor:
 hgr_colortbl:
 	.byte $00,$2A,$55,$7F
 	.byte $80,$AA,$D5,$FF
+
+
+hgr_hlin_page_toggle:
+	lda	hgr_hlin_page_smc+1
+	eor	#$60
+	sta	hgr_hlin_page_smc+1
+	rts
+
+
 
 ; notes
 	; 4+3
