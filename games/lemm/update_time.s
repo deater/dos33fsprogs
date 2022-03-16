@@ -1,6 +1,27 @@
 
 	; updates the time left
 update_time:
+
+	; update explosion timer
+	; not ideal (first second might be short)
+	lda	lemming_exploding
+	beq	not_done_exploding
+
+	inc	lemming_exploding
+	lda	lemming_exploding
+	cmp	#6
+	bne	not_done_exploding
+
+	lda	#LEMMING_EXPLODING
+	sta	lemming_status
+	lda	#0
+	sta	lemming_frame
+	sta	lemming_exploding
+
+
+not_done_exploding:
+
+
 	sed
 
 	sec

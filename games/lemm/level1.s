@@ -95,6 +95,7 @@ do_level1:
 
 	lda	#0
 	sta	lemming_out
+	sta	lemming_exploding
 	lda	#12
 	sta	lemming_x
 	lda	#45

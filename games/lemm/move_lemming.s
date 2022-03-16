@@ -194,12 +194,15 @@ lemming_frame:
 LEMMING_FALLING = 1
 LEMMING_WALKING = 2
 LEMMING_DIGGING = 3
+LEMMING_EXPLODING = 4
 
 lemming_status:
 	.byte LEMMING_FALLING
 
-lemming_job:
+lemming_exploding:
 	.byte $00
+
+
 
 	;=============================
 	; collision check ground

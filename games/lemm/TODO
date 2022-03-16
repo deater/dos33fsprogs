@@ -3,11 +3,6 @@
 + particle effects
 + wait a second after last lemming gone to exit
 + update the "in" %
-+ proper check for successful vs not end of level
 + dig off the map, end level
-+ level 5
-  -- door animation
-  -- music
-+ let's go sound
 + fill in some of the ground so we don't get stuck when digging
-+ update level5 end message to be personalized
++ Update credits?

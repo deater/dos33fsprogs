@@ -280,7 +280,8 @@ plus_minus_buttons:
 	jmp	done_menu
 
 nuke_button:
-	; TODO
+	lda	#1
+	sta	lemming_exploding
 	jmp	done_menu
 
 map_grid_button:

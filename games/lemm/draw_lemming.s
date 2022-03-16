@@ -11,10 +11,10 @@ erase_lemming:
 
 	lda	lemming_y,Y
 	sec
-	sbc	#3
+	sbc	#6
 	sta	SAVED_Y1
 	clc
-	adc	#12
+	adc	#15
 	sta	SAVED_Y2
 
 	lda	lemming_x,Y
@@ -34,16 +34,41 @@ draw_lemming:
 	ldy	#0
 
 	lda	lemming_out,Y
-	bne	do_draw_lemming
+	bne	do_draw_countdown
 
 	jmp	done_draw_lemming
 
+do_draw_countdown:
+	lda	lemming_exploding,Y
+	beq	do_draw_lemming
+
+	ldx	lemming_exploding
+	dex
+
+	lda	countdown_sprites_l,X
+	sta	INL
+	lda	countdown_sprites_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#6
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+
 do_draw_lemming:
+	ldy	#0
 	lda	lemming_status,Y
 	cmp	#LEMMING_DIGGING
 	beq	draw_digging_sprite
 	cmp	#LEMMING_FALLING
 	beq	draw_falling_sprite
+	cmp	#LEMMING_EXPLODING
+	beq	draw_exploding_sprite
 
 draw_walking_sprite:
 
@@ -98,6 +123,27 @@ draw_falling_right:
 	lda	rfall_sprite_h,X
 
 draw_falling_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_common
+
+
+	;====================
+	; draw exploding
+	;====================
+
+draw_exploding_sprite:
+
+	lda	lemming_frame,Y
+	and	#$f
+	tax
+
+	lda	exploding_sprite_l,X
+	sta	INL
+	lda	exploding_sprite_h,X
 	sta	INH
 
 	ldx	lemming_x,Y
@@ -186,7 +232,7 @@ lwalk_sprite_h:
 	.byte >lemming_lwalk5_sprite,>lemming_lwalk6_sprite
 	.byte >lemming_lwalk7_sprite,>lemming_lwalk8_sprite
 
-explosion_sprite_l:
+exploding_sprite_l:
 	.byte <lemming_explode1_sprite,<lemming_explode1_sprite
 	.byte <lemming_explode2_sprite,<lemming_explode3_sprite
 	.byte <lemming_explode4_sprite,<lemming_explode5_sprite
@@ -196,7 +242,7 @@ explosion_sprite_l:
 	.byte <lemming_explode9_sprite,<lemming_explode8_sprite
 	.byte <lemming_explode9_sprite,<lemming_explode8_sprite
 
-explosion_sprite_h:
+exploding_sprite_h:
 	.byte >lemming_explode1_sprite,>lemming_explode1_sprite
 	.byte >lemming_explode2_sprite,>lemming_explode3_sprite
 	.byte >lemming_explode4_sprite,>lemming_explode5_sprite
@@ -210,8 +256,11 @@ explosion_sprite_h:
 ; 787989898
 ; clcrlrlrle
 
+countdown_sprites_l:
+.byte <countdown5_sprite,<countdown4_sprite,<countdown3_sprite
+.byte <countdown2_sprite,<countdown1_sprite
 
-
-
-
+countdown_sprites_h:
+.byte >countdown5_sprite,>countdown4_sprite,>countdown3_sprite
+.byte >countdown2_sprite,>countdown1_sprite
 
