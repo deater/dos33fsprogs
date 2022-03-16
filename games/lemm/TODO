@@ -1,8 +1,7 @@
 + ability to walk up hills
-+ ability to explode
-+ particle effects
 + wait a second after last lemming gone to exit
 + update the "in" %
 + dig off the map, end level
 + fill in some of the ground so we don't get stuck when digging
 + Update credits?
++ "Out" counter is only printed to page1 so gets erased by cursor

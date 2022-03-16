@@ -24,8 +24,8 @@ MASK	= $2E
 COLOR_MASK = $2F
 COLOR	= $30
 
-SEEDL	= $4e
-SEEDH	= $4f
+SEEDLO	= $4e
+SEEDHI	= $4f
 XMAX	= $50
 
 

@@ -69,6 +69,8 @@ do_draw_lemming:
 	beq	draw_falling_sprite
 	cmp	#LEMMING_EXPLODING
 	beq	draw_exploding_sprite
+	cmp	#LEMMING_PARTICLES
+	beq	draw_particles
 
 draw_walking_sprite:
 
@@ -141,6 +143,17 @@ draw_exploding_sprite:
 	jsr	handle_explosion
 
 	jmp	done_draw_lemming
+
+	;====================
+	; draw particles
+	;====================
+
+draw_particles:
+
+	jsr	handle_particles
+
+	jmp	done_draw_lemming
+
 
 
 	;======================
@@ -256,6 +269,28 @@ countdown_sprites_h:
 .byte >countdown2_sprite,>countdown1_sprite
 
 
+handle_particles:
+	jsr	hgr_draw_particles
+
+	lda	lemming_frame
+	cmp	#16
+	bne	still_going
+
+	; partway through make lemming not out
+	lda	#0
+	sta	lemming_out
+	jsr	update_lemmings_out
+	lda	#LEVEL_FAIL
+	sta	LEVEL_OVER
+
+still_going:
+
+
+
+
+not_done_particle:
+	rts
+
 
 	; moved to make room
 handle_explosion:
@@ -266,6 +301,11 @@ handle_explosion:
 	beq	draw_explosion
 
 start_particles:
+
+	lda	#0
+	sta	lemming_frame
+
+	jsr	init_particles
 
 	; erase explosion
 

@@ -70,7 +70,7 @@ lemm.o:	lemm.s zp.inc hardware.inc \
 		draw_door.s move_lemming.s draw_lemming.s \
 		hgr_hlin.s hgr_vlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
-		pointer_sprites.inc \
+		pointer_sprites.inc particle_hgr.s \
 		level1.s level5.s title.s audio.s letsgo.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 

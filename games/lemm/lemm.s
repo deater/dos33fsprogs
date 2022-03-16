@@ -326,6 +326,7 @@ load_song_chunk_good:
 	.include	"title.s"
 	.include	"audio.s"
 	.include	"letsgo.s"
+	.include	"particle_hgr.s"
 
 	; pt3 player
 
