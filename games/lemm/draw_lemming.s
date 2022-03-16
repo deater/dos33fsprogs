@@ -137,19 +137,10 @@ draw_falling_common:
 
 draw_exploding_sprite:
 
-	lda	lemming_frame,Y
-	and	#$f
-	tax
 
-	lda	exploding_sprite_l,X
-	sta	INL
-	lda	exploding_sprite_h,X
-	sta	INH
+	jsr	handle_explosion
 
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
-	jmp	draw_common
+	jmp	done_draw_lemming
 
 
 	;======================
@@ -264,3 +255,107 @@ countdown_sprites_h:
 .byte >countdown5_sprite,>countdown4_sprite,>countdown3_sprite
 .byte >countdown2_sprite,>countdown1_sprite
 
+
+
+	; moved to make room
+handle_explosion:
+
+	lda	lemming_frame,Y
+	cmp	#$10
+	bcc	exploding_animation
+	beq	draw_explosion
+
+start_particles:
+
+	; erase explosion
+
+	ldy	#0
+
+	lda	lemming_y,Y
+	sec
+	sbc	#16
+	sta	SAVED_Y1
+	clc
+	adc	#32
+	sta	SAVED_Y2
+
+	lda	lemming_x,Y
+	sec
+	sbc	#1
+	tax
+	inx
+	inx
+	inx
+	jsr	hgr_partial_restore
+
+	; start particles
+
+
+	lda	#LEMMING_PARTICLES
+	sta	lemming_status
+
+	rts
+
+
+draw_explosion:
+
+	; first erase pit in background art
+
+	jsr	hgr_hlin_page_toggle		; toggle to page2
+
+	; line from (x,a) to (x+y,a)
+	ldx	lemming_x
+	dex
+	ldy	#3
+	lda	lemming_y
+	clc
+	adc	#10
+	jsr	hgr_hlin
+
+	; line from (x,a) to (x+y,a)
+	ldx	lemming_x
+	ldy	#1
+	lda	lemming_y
+	clc
+	adc	#11
+	jsr	hgr_hlin
+
+
+	jsr	hgr_hlin_page_toggle		; toggle to page1
+
+	ldy	#0
+	lda	#<explosion_sprite
+	sta	INL
+	lda	#>explosion_sprite
+	sta	INH
+
+	ldx	lemming_x,Y
+	dex
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#5
+
+;	jmp	draw_common
+	jmp	done_handle_exploding
+
+exploding_animation:
+;	and	#$f
+	tax
+
+	lda	exploding_sprite_l,X
+	sta	INL
+	lda	exploding_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+;	jmp	draw_common
+
+done_handle_exploding:
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	rts
