@@ -172,7 +172,7 @@ load_address_array:
 track_array:
         .byte  3,10,12,14	; LEMM, LEVEL1, LEVEL2, LEVEL3
 	.byte 16,18,20,22	; LEVEL4, LEVEL5
-	.byte 24,26,28,40	;
+	.byte 24,26,28,30	;
 
 sector_array:
         .byte  0, 0, 0, 0	; LEMM, LEVEL1, LEVEL2, LEVEL3
