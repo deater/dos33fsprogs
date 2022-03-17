@@ -263,11 +263,14 @@ l5_level_over:
 
 music6_parts_h:
 	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
-	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,$00
+	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,>lemm6_part6_lzsa
+	.byte >lemm6_part7_lzsa
+	.byte $00
 
 music6_parts_l:
 	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
-	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa
+	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa,<lemm6_part6_lzsa
+	.byte <lemm6_part7_lzsa
 
 lemm6_part1_lzsa:
 .incbin "music/lemm6.part1.lzsa"
@@ -279,4 +282,15 @@ lemm6_part4_lzsa:
 .incbin "music/lemm6.part4.lzsa"
 lemm6_part5_lzsa:
 .incbin "music/lemm6.part5.lzsa"
+lemm6_part6_lzsa:
+.incbin "music/lemm6.part6.lzsa"
+lemm6_part7_lzsa:
+.incbin "music/lemm6.part7.lzsa"
+;lemm6_part8_lzsa:
+;.incbin "music/lemm6.part8.lzsa"
+;lemm6_part9_lzsa:
+;.incbin "music/lemm6.part9.lzsa"
+;lemm6_part10_lzsa:
+;.incbin "music/lemm6.part10.lzsa"
+
 

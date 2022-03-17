@@ -6,7 +6,9 @@ RAW_INTERLEAVE = ~/research/vmw-meter.git/ay-3-8910/conversion_tools/raw_interle
 all:	lemm5.part1.lzsa lemm5.part2.lzsa lemm5.part3.lzsa \
 	lemm5.part4.lzsa lemm5.part5.lzsa \
 	lemm6.part1.lzsa lemm6.part2.lzsa lemm6.part3.lzsa \
-	lemm6.part4.lzsa lemm6.part5.lzsa
+	lemm6.part4.lzsa lemm6.part5.lzsa lemm6.part6.lzsa \
+	lemm6.part7.lzsa lemm6.part8.lzsa lemm6.part9.lzsa \
+	lemm6.part10.lzsa
 
 # lemm5.part6.lzsa \
 #	lemm5.part7.lzsa lemm5.part8.lzsa
@@ -57,29 +59,21 @@ lemm6.part4.lzsa:	lemm6.part4
 lemm6.part5.lzsa:	lemm6.part5
 	$(LZSA) -r -f2 lemm6.part5 lemm6.part5.lzsa
 
-####
+lemm6.part6.lzsa:	lemm6.part6
+	$(LZSA) -r -f2 lemm6.part6 lemm6.part6.lzsa
 
+lemm6.part7.lzsa:	lemm6.part7
+	$(LZSA) -r -f2 lemm6.part7 lemm6.part7.lzsa
 
-#lemm5.part6:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part6 bs=4096 count=1 seek=5 skip=5
+lemm6.part8.lzsa:	lemm6.part8
+	$(LZSA) -r -f2 lemm6.part8 lemm6.part8.lzsa
 
-#lemm5.part6.lzsa:	lemm5.part6
-#	$(LZSA) -r -f2 lemm5.part1 lemm5.part1.lzsa
+lemm6.part9.lzsa:	lemm6.part9
+	$(LZSA) -r -f2 lemm6.part9 lemm6.part9.lzsa
 
-
-#lemm5.part7:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part7 bs=4096 count=1 seek=6 skip=6
-
-#lemm5.part7.lzsa:	lemm5.part7
-#	$(LZSA) -r -f2 lemm5.part7 lemm5.part7.lzsa
-
-
-#lemm5.part8:	lemm5.raw
-#	dd conv=notrunc if=lemm5.raw of=lemm5.part8 bs=4096 count=1 seek=7 skip=7
-
-#lemm5.part8.lzsa:	lemm5.part8
-#	$(LZSA) -r -f2 lemm5.part8 lemm5.part8.lzsa
+lemm6.part10.lzsa:	lemm6.part10
+	$(LZSA) -r -f2 lemm6.part10 lemm6.part10.lzsa
 
 
 clean:	
-	rm -f *.lzsa *.part1 *.part2 *.part3 *.part4 *.part5 *.part6 *.part7 *.part8
+	rm -f *.lzsa *.part1 *.part2 *.part3 *.part4 *.part5 *.part6 *.part7 *.part8 *.part9 *.part10
