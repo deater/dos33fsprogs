@@ -185,6 +185,10 @@ split_screen_iie:
 	; wait for vblank on IIe
 	; positive? during vblank
 
+;	bit	SET_GR		; 4
+;	bit	HIRES		; 4
+;	bit	FULLGR
+
 wait_vblank_iie:
 	lda	VBLANK
 	bmi	wait_vblank_iie		; wait for positive (in vblank)
@@ -198,8 +202,6 @@ split_loop:
 	; hires for 64 lines
 	;	each line 65 cycles (25 hblank+40 bytes)
 
-	bit	HIRES		; 4
-	bit	SET_GR		; 4
 
 	; (64*65)-8 = 4160-8 = 4152
 
@@ -214,24 +216,50 @@ loop2:	dex								; 2
 	dey								; 2
 	bne	loop1							; 2nt/3
 
+
 	; text for 128 lines + horizontal blank
 	; vblank = 4550 cycles
 
-	; (128*65)+4550-15 = 8320+4550-15 = 12855
 
 	bit	LORES		; 4
 	bit	SET_TEXT	; 4
 
+	; (128*65)+4550-15 = 8320+4550-15 = 12855
+
+	; ZZZZ 8305
+
+	; Try X=68 Y=24 cycles=8305
+
+	ldy	#24							; 2
+loop13:	ldx	#68							; 2
+loop14:	dex								; 2
+	bne	loop14							; 2nt/3
+	dey								; 2
+	bne	loop13							; 2nt/3
+
+
+	bit	SET_GR		; 4
+	bit	HIRES		; 4
+
+	; don't really need to split this up?  Was trying
+	; to get retrotink to display properly instead of black/white
+
 	; Try X=150 Y=17 cycles=12853
 
-	nop		; 2
+	; ZZZZ 4550
 
-	ldy	#17							; 2
-loop3:	ldx	#150							; 2
+	; Try X=13 Y=64 cycles=4545
+
+	nop		; 2
+	lda	$0	; 3
+
+	ldy	#64							; 2
+loop3:	ldx	#13							; 2
 loop4:	dex								; 2
 	bne	loop4							; 2nt/3
 	dey								; 2
 	bne	loop3							; 2nt/3
+
 
 	lda	KEYPRESS	; 4
 	bpl	split_loop	; 2nt/3t

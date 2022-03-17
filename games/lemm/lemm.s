@@ -318,7 +318,7 @@ load_song_chunk_good:
 	.include	"intro_level1.s"
 	.include	"draw_flames.s"
 	.include	"draw_door.s"
-	.include	"wait.s"
+
 	.include	"hgr_hlin.s"
 	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
@@ -327,6 +327,7 @@ load_song_chunk_good:
 	.include	"audio.s"
 	.include	"letsgo.s"
 	.include	"particle_hgr.s"
+	.include	"wait.s"
 
 	; pt3 player
 

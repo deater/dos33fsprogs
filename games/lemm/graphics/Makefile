@@ -5,7 +5,10 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	graphics_test.inc graphics_level1.inc graphics_level5.inc sprites.inc
+all:	graphics_test.inc \
+	graphics_level1.inc \
+	graphics_level2.inc \
+	graphics_level5.inc sprites.inc
 
 ###
 
@@ -23,6 +26,13 @@ graphics_level1.inc:	\
 	level1_preview.lzsa
 	echo "level1_lzsa: .incbin \"level1.lzsa\"" > graphics_level1.inc
 	echo "level1_preview_lzsa: .incbin \"level1_preview.lzsa\"" >> graphics_level1.inc
+
+graphics_level2.inc:	\
+	level2.lzsa
+#	level1_preview.lzsa
+	echo "level2_lzsa: .incbin \"level2.lzsa\"" > graphics_level2.inc
+#	echo "level1_preview_lzsa: .incbin \"level1_preview.lzsa\"" >> graphics_level1.inc
+
 
 graphics_level5.inc:	\
 	level5.lzsa \
@@ -137,6 +147,14 @@ level1_preview.lzsa:	level1_preview.hgr
 
 level1_preview.hgr:	level1_preview.png
 	$(PNG2HGR) level1_preview.png > level1_preview.hgr
+
+###
+
+level2.lzsa:	level2.hgr
+	$(LZSA) -r -f2 level2.hgr level2.lzsa
+
+level2.hgr:	level2.png
+	$(PNG2HGR) level2.png > level2.hgr
 
 
 ###
