@@ -100,5 +100,5 @@ graphics/graphics_test.inc:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST
+	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common
 

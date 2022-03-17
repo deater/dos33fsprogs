@@ -243,3 +243,25 @@ l5_level_over:
 	rts
 
 
+
+.include "graphics/graphics_level5.inc"
+
+music6_parts_h:
+	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
+	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,$00
+
+music6_parts_l:
+	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
+	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa
+
+lemm6_part1_lzsa:
+.incbin "music/lemm6.part1.lzsa"
+lemm6_part2_lzsa:
+.incbin "music/lemm6.part2.lzsa"
+lemm6_part3_lzsa:
+.incbin "music/lemm6.part3.lzsa"
+lemm6_part4_lzsa:
+.incbin "music/lemm6.part4.lzsa"
+lemm6_part5_lzsa:
+.incbin "music/lemm6.part5.lzsa"
+

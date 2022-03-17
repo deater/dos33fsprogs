@@ -296,8 +296,6 @@ load_song_chunk_good:
 	.include	"keyboard.s"
 	.include	"joystick.s"
 
-	.include	"level1.s"
-	.include	"level5.s"
 
 	.include	"gr_fast_clear.s"
 
@@ -345,51 +343,10 @@ config_string:
 .byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
 ;                             MOCKINGBOARD: NONE
 
-
-.include "graphics/graphics_level1.inc"
-.include "graphics/graphics_level5.inc"
 .include "graphics/sprites.inc"
-
-;level5_lzsa:
-;level5_preview_lzsa:
-
-music_parts_h:
-	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
-	.byte >lemm5_part4_lzsa,>lemm5_part5_lzsa,$00
-
-music_parts_l:
-	.byte <lemm5_part1_lzsa,<lemm5_part2_lzsa,<lemm5_part3_lzsa
-	.byte <lemm5_part4_lzsa,<lemm5_part5_lzsa
-
-lemm5_part1_lzsa:
-.incbin "music/lemm5.part1.lzsa"
-lemm5_part2_lzsa:
-.incbin "music/lemm5.part2.lzsa"
-lemm5_part3_lzsa:
-.incbin "music/lemm5.part3.lzsa"
-lemm5_part4_lzsa:
-.incbin "music/lemm5.part4.lzsa"
-lemm5_part5_lzsa:
-.incbin "music/lemm5.part5.lzsa"
-
-music6_parts_h:
-	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
-	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,$00
-
-music6_parts_l:
-	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
-	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa
-
-lemm6_part1_lzsa:
-.incbin "music/lemm6.part1.lzsa"
-lemm6_part2_lzsa:
-.incbin "music/lemm6.part2.lzsa"
-lemm6_part3_lzsa:
-.incbin "music/lemm6.part3.lzsa"
-lemm6_part4_lzsa:
-.incbin "music/lemm6.part4.lzsa"
-lemm6_part5_lzsa:
-.incbin "music/lemm6.part5.lzsa"
 
 letsgo:
 .incbin "sounds/letsgo.btc.lz4"
+
+	.include	"level1.s"
+	.include	"level5.s"
