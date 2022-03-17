@@ -5,6 +5,7 @@
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
+	.include "qload.inc"
 
 lemm_test_start:
 
@@ -288,7 +289,7 @@ load_song_chunk_good:
 	;==========================
 
 	.include	"gr_offsets.s"
-	.include	"decompress_fast_v2.s"
+;	.include	"decompress_fast_v2.s"
 
 	.include	"wait_keypress.s"
 
@@ -324,7 +325,7 @@ load_song_chunk_good:
 	.include	"update_menu.s"
 	.include	"wait_a_bit.s"
 	.include	"title.s"
-	.include	"audio.s"
+;	.include	"audio.s"
 	.include	"letsgo.s"
 	.include	"particle_hgr.s"
 	.include	"wait.s"

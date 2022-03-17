@@ -5,3 +5,6 @@
 + fill in some of the ground so we don't get stuck when digging
 + Update credits?
 + "Out" counter is only printed to page1 so gets erased by cursor
++ Level2
++ Falling too far and you go splat
++ Have loadable levels

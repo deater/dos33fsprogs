@@ -40,8 +40,16 @@ qboot_sector.o:	qboot_sector.s	qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
-qload.o:	qload.s qboot.inc
+qload.o:	qload.s qboot.inc	\
+	audio.s decompress_fast_v2.s gr_offsets.s
 	ca65 -o qload.o qload.s -l qload.lst
+
+###
+
+qload.inc:	generate_common QLOAD
+	./generate_common -a 0x1200 -s play_audio qload.lst > qload.inc
+	./generate_common -a 0x1200 -s decompress_lzsa2_fast qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s getsrc_smc qload.lst >> qload.inc
 
 
 ###
@@ -64,7 +72,7 @@ lemm_test.o:	lemm_test.s zp.inc hardware.inc \
 LEMM:	lemm.o
 	ld65 -o LEMM lemm.o -C ../../linker_scripts/apple2_6000.inc
 
-lemm.o:	lemm.s zp.inc hardware.inc \
+lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
 		graphics/graphics_test.inc graphics/sprites.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
@@ -73,6 +81,15 @@ lemm.o:	lemm.s zp.inc hardware.inc \
 		pointer_sprites.inc particle_hgr.s \
 		level1.s level5.s title.s audio.s letsgo.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
+
+
+####
+
+generate_common:	generate_common.o
+	$(CC) $(LFLAGS) -o generate_common generate_common.o
+
+generate_common.o:	generate_common.c
+	$(CC) $(CFLAGS) -c generate_common.c
 
 
 ####

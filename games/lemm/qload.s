@@ -180,70 +180,55 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,3,3		; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 1,1,3,2		; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte 2,1,2,2		; CABIN,DENTIST,ARBOR,NIBEL
-	.byte 1,1,1,3		; SHIP,GENERATOR,D'NI,SUB
-	.byte 1			; TEXT_TITLE
-	.byte 1,1,1,1,1		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte $f		; FIRST_SECTOR
+	.byte 1,1,3,3		; LEMM
+	.byte 1,1,3,2		;
+	.byte 2,1,2,2		;
+	.byte 1,1,1,3		;
+	.byte 1			;
+	.byte 1,1,1,1,1		;
+	.byte $f		;
 
 load_address_array:
-        .byte $60,$20,$20,$20	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte $20,$20,$20,$20	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte $20,$20,$20,$20	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte $20,$20,$20,$20	; SHIP,GENERATOR,D'NI,SUB
-	.byte $08		; TEXT_TITLE
-	.byte $0E,$0E,$0E,$0E
-	.byte $0E		; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte $0C		; FIRST_SECTOR
+        .byte $60,$20,$20,$20	; LEMM
+	.byte $20,$20,$20,$20	;
+	.byte $20,$20,$20,$20	;
+	.byte $20,$20,$20,$20	;
+	.byte $08		;
+	.byte $0E,$0E,$0E,$0E	;
+	.byte $0E		;
+	.byte $0C		;
 
 track_array:
-        .byte  3, 8, 1,21	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 18,31,11, 1	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte 27,26,10,20	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte 30,32,28,30	; SHIP,GENERATOR,D'NI,SUB
-	.byte  0		; TEXT_TITLE
-	.byte  0, 0, 0, 0, 0	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte  0		; FIRST_SECTOR
+        .byte  3, 8, 1,21	; LEMM
+	.byte 18,31,11, 1	;
+	.byte 27,26,10,20	;
+	.byte 30,32,28,30	;
+	.byte  0		;
+	.byte  0, 0, 0, 0, 0	;
+	.byte  0		;
 
 sector_array:
-        .byte  0, 0, 0, 0	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte  0, 8, 0, 0	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte  0, 0, 0, 0	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte  0,13, 0, 1	; SHIP,GENERATOR,D'NI,SUB
-	.byte  6		; TEXT_TITLE
-	.byte 11,12,13,14,15	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte  0		; FIRST_SECTOR
+        .byte  0, 0, 0, 0	; LEMM
+	.byte  0, 8, 0, 0	;
+	.byte  0, 0, 0, 0	;
+	.byte  0,13, 0, 1	;
+	.byte  6		;
+	.byte 11,12,13,14,15	;
+	.byte  0		;
 
 length_array:
-        .byte  96,159,157,145	; MIST_TITLE,MIST,MECHE,SELENA
-	.byte 128, 20,158,135	; OCTAGON,VIEWER,STONEY,CHANNEL
-	.byte  61, 31,159,109	; CABIN,DENTIST,ARBOR,NIBEL
-	.byte  20, 33, 27, 78	; SHIP,GENERATOR,D'NI,SUB
-	.byte   3		; TEXT_TITLE
-	.byte   1,1,1,1,1	; SAVE1,SAVE2,SAVE3,SAVE4,SAVE5
-	.byte   1		; FIRST_SECTOR
+        .byte  96,159,157,145	; LEMM
+	.byte 128, 20,158,135	;
+	.byte  61, 31,159,109	;
+	.byte  20, 33, 27, 78	;
+	.byte   3		;
+	.byte   1,1,1,1,1	;
+	.byte   1		;
 
-;        .include        "audio.s"
-;	.include	"linking_noise.s"
- ;       .include        "decompress_fast_v2.s"
-  ;      .include        "draw_pointer.s"
-   ;     .include        "end_level.s"
-;	.include        "gr_copy.s"
-;        .include        "gr_fast_clear.s"
- ;       .include        "gr_offsets.s"
- ;       .include        "gr_pageflip.s"
- ;       .include        "gr_putsprite_crop.s"
- ;       .include        "keyboard.s"
- ;       .include        "text_print.s"
-;	.include	"loadstore.s"
-;	.include	"joystick.s"
+	.include	"audio.s"
+	.include	"decompress_fast_v2.s"
+	.include	"gr_offsets.s"
 
- ;       .include        "page_sprites.inc"
-;	.include        "common_sprites.inc"
-
-;	.include	"qkumba_popwr.s"
 
 qload_end:
 
