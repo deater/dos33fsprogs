@@ -185,6 +185,8 @@ length_array:
 	.byte  32, 32, 32, 32	;
 
 
+	.include	"wait.s"
+	.include	"wait_a_bit.s"
 	.include	"audio.s"
 	.include	"decompress_fast_v2.s"
 	.include	"gr_offsets.s"

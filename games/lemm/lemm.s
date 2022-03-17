@@ -13,6 +13,9 @@ lemm_test_start:
 	lda	#0
 	sta	DRAW_PAGE
 
+	lda	#1
+	sta	WHICH_LEVEL
+
 	;====================
 	; show title message
 	;====================
@@ -224,36 +227,37 @@ zurg:
 	lda	#25
 	jsr	wait_a_bit
 
+
+
+	;=======================
+	; do level
+	;=======================
+
+play_level:
+
 	; load level from disk
-	lda	#1
+	lda	WHICH_LEVEL		; FIXME: don't reload if already right
+					;        maybe put level# at $a000?
 	sta	WHICH_LOAD
 	jsr	load_file
 
-
-	;=======================
-	; do level1
-	;=======================
-
-play_level1:
-	jsr	do_level1
+	jsr	start_level
 
 	lda	LEVEL_OVER
 	cmp	#LEVEL_WIN
-	beq	play_level5
-	bne	play_level1
+	beq	level_won
+	bne	level_lost
 
+level_won:
+;	inc	WHICH_LEVEL
 
-	;=======================
-	; do level5
-	;=======================
+	lda	#5
+	sta	WHICH_LEVEL
 
-play_level5:
-	jsr	do_level5
+level_lost:
 
-	lda	LEVEL_OVER
-	cmp	#LEVEL_WIN
-	beq	play_level1
-	bne	play_level5
+	jmp	play_level
+
 
 
 
@@ -265,10 +269,10 @@ play_level5:
 load_song_chunk:
 	ldx	CURRENT_CHUNK
 chunk_l_smc:
-	lda     music6_parts_l,X
+	lda     $DDDD,X
 	sta     getsrc_smc+1	; LZSA_SRC_LO
 chunk_h_smc:
-	lda     music6_parts_h,X
+	lda     $DDDD,X
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 	bne	load_song_chunk_good
 
@@ -294,8 +298,8 @@ load_song_chunk_good:
 	; includes
 	;==========================
 
-	.include	"gr_offsets.s"
-;	.include	"decompress_fast_v2.s"
+
+
 
 	.include	"wait_keypress.s"
 
@@ -327,12 +331,19 @@ load_song_chunk_good:
 	.include	"hgr_hlin.s"
 	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
-	.include	"wait_a_bit.s"
+
 	.include	"title.s"
-;	.include	"audio.s"
 	.include	"letsgo.s"
 	.include	"particle_hgr.s"
-	.include	"wait.s"
+
+
+
+	; moved to qload.s
+;	.include	"wait.s"
+;	.include	"wait_a_bit.s"
+;	.include	"audio.s"
+;	.include	"decompress_fast_v2.s"
+;	.include	"gr_offsets.s"
 
 	; pt3 player
 
@@ -355,7 +366,8 @@ letsgo:
 .incbin "sounds/letsgo.btc.lz4"
 
 ;	.include	"level1.s"
-	.include	"level5.s"
+;	.include	"level5.s"
 
-do_level1	= $a000
-level1_preview_lzsa = $b06b
+
+start_level	= $a000
+

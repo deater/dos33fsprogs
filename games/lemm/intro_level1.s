@@ -9,22 +9,12 @@ intro_level:
 
 	jsr	clear_all
 
-	lda	WHICH_LEVEL
-	cmp	#1
-	bne	its_level_5_preview
 
-its_level_1_preview:
-	lda	#<level1_preview_lzsa
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>level1_preview_lzsa
-	jmp	done_load_preview
-
-its_level_5_preview:
-	lda	#<level5_preview_lzsa
-	sta	getsrc_smc+1    ; LZSA_SRC_LO
-	lda	#>level5_preview_lzsa
-done_load_preview:
-
+level_preview_l_smc:
+	lda	#$DD
+	sta	getsrc_smc+1	    ; LZSA_SRC_LO
+level_preview_h_smc:
+	lda	#$DD
 	sta	getsrc_smc+2    ; LZSA_SRC_HI
 
 	lda	#$20

@@ -8,6 +8,15 @@
 do_level1:
 
 	;==============
+	; set up intro
+	;==============
+
+	lda	#<level1_preview_lzsa
+	sta	level_preview_l_smc+1
+	lda	#>level1_preview_lzsa
+	sta	level_preview_h_smc+1
+
+	;==============
 	; set up music
 	;==============
 
@@ -48,8 +57,8 @@ do_level1:
         ; show title screen
         ;=======================
 
-	lda	#1
-	sta	WHICH_LEVEL
+;	lda	#1
+;	sta	WHICH_LEVEL
 	jsr	intro_level
 
         ;=======================

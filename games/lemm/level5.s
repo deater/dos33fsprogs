@@ -1,5 +1,20 @@
+.include "zp.inc"
+.include "hardware.inc"
+.include "lemm.inc"
+.include "lemming_status.inc"
+.include "qload.inc"
 
 do_level5:
+
+	;==============
+	; set up intro
+	;==============
+
+	lda	#<level5_preview_lzsa
+	sta	level_preview_l_smc+1
+	lda	#>level5_preview_lzsa
+	sta	level_preview_h_smc+1
+
 
 	;==============
 	; set up music

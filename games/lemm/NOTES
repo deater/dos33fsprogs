@@ -24,6 +24,9 @@ Plan:
 level data
 	number of lemmings
 	number needed to win (percent?  percent is hard)
+	lemming_start_x
+	lemming_start_y
+	lemming_start_direction
 	location of entrance door
 	entrace door type
 	location of exit door
