@@ -5,6 +5,10 @@
 
 intro_level:
 
+	; clear text screen
+
+	jsr	clear_all
+
 	lda	WHICH_LEVEL
 	cmp	#1
 	bne	its_level_5_preview
@@ -28,9 +32,7 @@ done_load_preview:
 	jsr	decompress_lzsa2_fast
 
 
-	; clear text screen
-
-	jsr	clear_all
+;	bit	SET_TEXT
 
 	; print non-inverse
 
@@ -91,6 +93,10 @@ outro_level1:
 	; clear text screen
 
 	jsr	clear_all
+
+	; set text
+
+	bit	SET_TEXT
 
 	; print non-inverse
 

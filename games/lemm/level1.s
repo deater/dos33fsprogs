@@ -237,7 +237,7 @@ l1_timer_not_yet:
 
 l1_level_over:
 
-	bit	SET_TEXT
+;	bit	SET_TEXT
 
 	jsr	disable_music
 
