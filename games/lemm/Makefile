@@ -18,13 +18,14 @@ all:	lemm.dsk
 #	$(DOS33) -y lemm.dsk BSAVE -a 0x4000 LEMM_TEST
 
 
-lemm.dsk:	QBOOT QLOAD LEMM LEMM
+lemm.dsk:	QBOOT QLOAD LEMM LEVEL1
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) lemm.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) lemm.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) lemm.dsk  3  0 LEMM       0   0
+	$(DOS33_RAW) lemm.dsk  10 0 LEVEL1     0   0
 
 
 ###
@@ -47,7 +48,8 @@ qload.o:	qload.s qboot.inc	\
 ###
 
 qload.inc:	generate_common QLOAD
-	./generate_common -a 0x1200 -s play_audio qload.lst > qload.inc
+	./generate_common -a 0x1200 -s load_file qload.lst > qload.inc
+	./generate_common -a 0x1200 -s play_audio qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s decompress_lzsa2_fast qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s getsrc_smc qload.lst >> qload.inc
 
@@ -73,14 +75,56 @@ LEMM:	lemm.o
 	ld65 -o LEMM lemm.o -C ../../linker_scripts/apple2_6000.inc
 
 lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
-		graphics/graphics_test.inc graphics/sprites.inc \
+		graphics/sprites.inc \
 		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
 		hgr_hlin.s hgr_vlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
 		pointer_sprites.inc particle_hgr.s \
-		level1.s level5.s title.s audio.s letsgo.s
+		level5.s title.s audio.s letsgo.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
+
+
+###
+
+lemm.inc:	generate_common LEMM
+	./generate_common -a 0x6000 -s chunk_h_smc lemm.lst > lemm.inc
+	./generate_common -a 0x6000 -s chunk_l_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s load_song_chunk lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s intro_level lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s hgr_make_tables lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s play_letsgo lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_out lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_exploding lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_x lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_y lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_direction lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s lemming_status lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_lemming lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s move_lemmings lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s erase_lemming lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s update_time lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_door lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_flames lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_pointer lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s erase_pointer lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s handle_keypress lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s wait lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s outro_level1 lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s update_lemmings_out lemm.lst >> lemm.inc
+
+
+
+####
+
+LEVEL1:	level1.o
+	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_a000.inc
+
+level1.o:	level1.s zp.inc hardware.inc qload.inc lemm.inc \
+		graphics/graphics_level1.inc
+	ca65 -o level1.o level1.s -l level1.lst
+
 
 
 ####

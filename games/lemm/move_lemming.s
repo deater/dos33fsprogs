@@ -191,12 +191,6 @@ lemming_out:
 lemming_frame:
 	.byte 0
 
-LEMMING_FALLING = 1
-LEMMING_WALKING = 2
-LEMMING_DIGGING = 3
-LEMMING_EXPLODING = 4
-LEMMING_PARTICLES = 5
-
 lemming_status:
 	.byte LEMMING_FALLING
 

@@ -1,4 +1,10 @@
 
+.include "zp.inc"
+.include "hardware.inc"
+.include "qload.inc"
+.include "lemm.inc"
+.include "lemming_status.inc"
+
 do_level1:
 
 	;==============
@@ -13,14 +19,14 @@ do_level1:
 
 	; set up first song
 
-	lda	#<music_parts_l
+	lda	#<music5_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music_parts_l
+	lda	#>music5_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music_parts_h
+	lda	#<music5_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music_parts_h
+	lda	#>music5_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -251,11 +257,11 @@ l1_level_over:
 .include "graphics/graphics_level1.inc"
 
 
-music_parts_h:
+music5_parts_h:
 	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
 	.byte >lemm5_part4_lzsa,>lemm5_part5_lzsa,$00
 
-music_parts_l:
+music5_parts_l:
 	.byte <lemm5_part1_lzsa,<lemm5_part2_lzsa,<lemm5_part3_lzsa
 	.byte <lemm5_part4_lzsa,<lemm5_part5_lzsa
 

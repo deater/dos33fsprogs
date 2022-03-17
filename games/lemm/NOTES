@@ -1,1 +1,32 @@
 LEMM: 23782 (original v0.01)
+
+
+Plan:
+	$000 = zero page
+	$100 = stack
+	$300 = disk lookup tables
+	$400-$700 = text page 1
+	$800-$b00 = hgr lookup tables
+	$c00-$f00 = particle effects?
+	$1000-$1100 = disk code
+	$1200-$1f00 = common routines
+
+	HGR PAGE1 = $2000
+	HGR PAGE2 = $4000
+
+	LEMM load at $6000
+
+	LEVELs load at $A000
+
+	SOUND/MUSIC data in language card at $D000
+
+
+level data
+	number of lemmings
+	number needed to win (percent?  percent is hard)
+	location of entrance door
+	entrace door type
+	location of exit door
+	number of each job type
+	release speed
+	

@@ -11,7 +11,9 @@
 ; p86 (dos reference)
 ;
 
-WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
+;WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
+
+WAIT = norom_wait
 
 .org $1000
 
@@ -311,7 +313,6 @@ partial2:	.byte $00
 code_end:
 
 
-
 ;==========================
 ; enable drive motor
 ;==========================
@@ -360,4 +361,22 @@ load_sector:
 	.byte $00
 load_length:
 	.byte $00
+
+
+
+; copy of ROM wait
+; because we might disable ROM
+
+norom_wait:
+	sec
+wait2:
+	pha
+wait3:
+	sbc	#$01
+	bne	wait3
+	pla
+	sbc	#$01
+	bne	wait2
+	rts
+wait_end:
 

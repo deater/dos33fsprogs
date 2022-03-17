@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "qload.inc"
+	.include "lemming_status.inc"
 
 lemm_test_start:
 
@@ -223,6 +224,11 @@ zurg:
 	lda	#25
 	jsr	wait_a_bit
 
+	; load level from disk
+	lda	#1
+	sta	WHICH_LOAD
+	jsr	load_file
+
 
 	;=======================
 	; do level1
@@ -348,5 +354,8 @@ config_string:
 letsgo:
 .incbin "sounds/letsgo.btc.lz4"
 
-	.include	"level1.s"
+;	.include	"level1.s"
 	.include	"level5.s"
+
+do_level1	= $a000
+level1_preview_lzsa = $b06b
