@@ -5,6 +5,8 @@
 + fill in some of the ground so we don't get stuck when digging
 + Update credits?
 + "Out" counter is only printed to page1 so gets erased by cursor
-+ Level2
++ Level3
 + Falling too far and you go splat
-+ Have loadable levels
++ See if the jerky animation is due to starting at an odd x vs
+	even x, maybe we should start animation 4 frames in if that's
+	the case

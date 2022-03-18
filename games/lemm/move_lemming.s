@@ -1,4 +1,3 @@
-
 	;==========================
 	; move them
 	;==========================
@@ -44,6 +43,9 @@ do_lemming_falling:
 
 do_lemming_walking:
 
+	; see if ground has risen up
+
+	jsr	collision_check_hill
 
 	; collision detect walls
 
@@ -228,15 +230,43 @@ collision_check_ground:
 	ldy	lemming_x
 	lda	(GBASL),Y
 	and	#$7f
-	beq	ground_falling
+	beq	ground_falling		; if empty space below us, fall
 ground_walking:
-;	lda	#0
-;	sta	lemming_frame
-	lda	#LEMMING_WALKING
+	lda	#LEMMING_WALKING	; else, walk
 	jmp	done_check_ground
 ground_falling:
 	lda	#LEMMING_FALLING
 done_check_ground:
 	sta	lemming_status
+
+	rts
+
+
+
+	;=============================
+	; collision check hill
+	;=============================
+
+collision_check_hill:
+	lda	lemming_y
+	clc
+	adc	#8
+	tay
+
+	lda     hposn_high,Y
+	clc
+	adc	#$20			; check bg, not fg
+        sta     GBASH
+        lda     hposn_low,Y
+        sta     GBASL
+
+	ldy	lemming_x
+	lda	(GBASL),Y
+	and	#$7f
+	beq	on_ground		; if empty space below us, good
+underground:
+	dec	lemming_y		; bump us up
+
+on_ground:
 
 	rts
