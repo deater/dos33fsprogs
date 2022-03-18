@@ -28,10 +28,10 @@ graphics_level1.inc:	\
 	echo "level1_preview_lzsa: .incbin \"level1_preview.lzsa\"" >> graphics_level1.inc
 
 graphics_level2.inc:	\
-	level2.lzsa
-#	level1_preview.lzsa
+	level2.lzsa \
+	level2_preview.lzsa
 	echo "level2_lzsa: .incbin \"level2.lzsa\"" > graphics_level2.inc
-#	echo "level1_preview_lzsa: .incbin \"level1_preview.lzsa\"" >> graphics_level1.inc
+	echo "level2_preview_lzsa: .incbin \"level2_preview.lzsa\"" >> graphics_level2.inc
 
 
 graphics_level5.inc:	\
@@ -156,6 +156,14 @@ level2.lzsa:	level2.hgr
 level2.hgr:	level2.png
 	$(PNG2HGR) level2.png > level2.hgr
 
+
+###
+
+level2_preview.lzsa:	level2_preview.hgr
+	$(LZSA) -r -f2 level2_preview.hgr level2_preview.lzsa
+
+level2_preview.hgr:	level2_preview.png
+	$(PNG2HGR) level2_preview.png > level2_preview.hgr
 
 ###
 

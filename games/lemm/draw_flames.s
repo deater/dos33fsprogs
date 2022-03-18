@@ -1,4 +1,6 @@
-
+	;=======================
+	; draw exit flames
+	;=======================
 
 draw_flames:
 
@@ -12,8 +14,10 @@ draw_flames:
 	lda	lflame_h,Y
 	sta	INH
 
+l_flame_x_smc:
 	ldx	#31		; 217
         stx     XPOS
+l_flame_y_smc:
 	lda	#108
 	sta	YPOS
 
@@ -30,8 +34,10 @@ draw_flames:
 	lda	rflame_h,Y
 	sta	INH
 
+r_flame_x_smc:
 	ldx	#35		; 245
         stx     XPOS
+r_flame_y_smc:
 	lda	#108
 	sta	YPOS
 

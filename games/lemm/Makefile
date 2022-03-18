@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL5
+	LEVEL1 LEVEL2 LEVEL5
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -27,6 +27,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) lemm.dsk  3  0 LEMM       0   0
 	$(DOS33_RAW) lemm.dsk  10 0 LEVEL1     0   0
+	$(DOS33_RAW) lemm.dsk  12 0 LEVEL2     0   0
 	$(DOS33_RAW) lemm.dsk  18 0 LEVEL5     0   0
 
 
@@ -121,8 +122,14 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s update_lemmings_out lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s level_preview_h_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s level_preview_l_smc lemm.lst >> lemm.inc
-
-
+	./generate_common -a 0x6000 -s r_flame_x_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s r_flame_y_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s l_flame_x_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s l_flame_y_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s exit_x1_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s exit_x2_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s exit_y1_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s exit_y2_smc lemm.lst >> lemm.inc
 
 ####
 
@@ -132,6 +139,16 @@ LEVEL1:	level1.o
 level1.o:	level1.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level1.inc
 	ca65 -o level1.o level1.s -l level1.lst
+
+####
+
+LEVEL2:	level2.o
+	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_a000.inc
+
+level2.o:	level2.s zp.inc hardware.inc qload.inc lemm.inc \
+		graphics/graphics_level2.inc
+	ca65 -o level2.o level2.s -l level2.lst
+
 
 ####
 

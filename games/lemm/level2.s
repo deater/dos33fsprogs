@@ -1,28 +1,56 @@
+
 .include "zp.inc"
 .include "hardware.inc"
+.include "qload.inc"
 .include "lemm.inc"
 .include "lemming_status.inc"
-.include "qload.inc"
 
-do_level5:
+do_level2:
 
-	;==============
-	; set up stuff
-	;==============
-	lda	#9
+
+	;======================
+	; set up initial stuff
+	;======================
+	lda	#3
 	sta	DOOR_X
-	lda	#24
+	lda	#5
 	sta	DOOR_Y
+
+	lda	#7
+	sta	INIT_X
+	lda	#15
+	sta	INIT_Y
+
+	lda	#29			; 196
+	sta	l_flame_x_smc+1
+	lda	#122
+	sta	l_flame_y_smc+1
+        sta	r_flame_y_smc+1
+
+	lda	#33			; 245
+	sta	r_flame_x_smc+1
+
+	; exit location (1c 8b)
+
+	lda	#29			; 
+	sta	exit_x1_smc+1
+	lda	#33
+	sta	exit_x2_smc+1
+
+	lda	#121
+	sta	exit_y1_smc+1
+	lda	#144
+	sta	exit_y2_smc+1
+
 
 	;==============
 	; set up intro
 	;==============
 
-	lda	#<level5_preview_lzsa
+	lda	#<level2_preview_lzsa
 	sta	level_preview_l_smc+1
-	lda	#>level5_preview_lzsa
+	lda	#>level2_preview_lzsa
 	sta	level_preview_h_smc+1
-
 
 	;==============
 	; set up music
@@ -34,17 +62,17 @@ do_level5:
 	sta	BASE_FRAME_L
 	sta	BUTTON_LOCATION
 
-        ; set up first song
+	; set up first song
 
-        lda     #<music6_parts_l
-        sta     chunk_l_smc+1
-        lda     #>music6_parts_l
-        sta     chunk_l_smc+2
+	lda	#<music8_parts_l
+	sta	chunk_l_smc+1
+	lda	#>music8_parts_l
+	sta	chunk_l_smc+2
 
-        lda     #<music6_parts_h
-        sta     chunk_h_smc+1
-        lda     #>music6_parts_h
-        sta     chunk_h_smc+2
+	lda	#<music8_parts_h
+	sta	chunk_h_smc+1
+	lda	#>music8_parts_h
+	sta	chunk_h_smc+2
 
 
 	lda	#$D0
@@ -59,12 +87,12 @@ do_level5:
 	sta	LOOP
 	sta	CURRENT_CHUNK
 
+
+
         ;=======================
         ; show title screen
         ;=======================
 
-	lda	#5
-	sta	WHICH_LEVEL
 	jsr	intro_level
 
         ;=======================
@@ -80,18 +108,18 @@ do_level5:
 	bit	HIRES
 	bit	FULLGR
 
-	lda     #<level5_lzsa
+	lda     #<level2_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level5_lzsa
+	lda     #>level2_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda     #<level5_lzsa
+	lda     #<level2_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level5_lzsa
+	lda     #>level2_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$40
@@ -117,9 +145,9 @@ do_level5:
 	lda	#0
 	sta	lemming_out
 	sta	lemming_exploding
-	lda	#12
+	lda	INIT_X
 	sta	lemming_x
-	lda	#40
+	lda	INIT_Y
 	sta	lemming_y
 	lda	#1
 	sta	lemming_direction
@@ -131,6 +159,7 @@ do_level5:
 	;=======================
 
 	jsr	play_letsgo
+
 
         ;=======================
         ; start music
@@ -171,10 +200,10 @@ do_level5:
 	; Main Loop
 	;===================
 	;===================
-l5_main_loop:
+l2_main_loop:
 
 	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
-	beq	l5_no_load_chunk	; outside IRQ to avoid glitch in music
+	beq	l2_no_load_chunk	; outside IRQ to avoid glitch in music
 
 	jsr	load_song_chunk
 
@@ -182,29 +211,29 @@ l5_main_loop:
 	sta	LOAD_NEXT_CHUNK
 
 
-l5_no_load_chunk:
+l2_no_load_chunk:
 
 
 	lda	DOOR_OPEN
-	bne	l5_door_is_open
+	bne	l2_door_is_open
 
-	jsr	draw_door_5
+	jsr	draw_door
 
-l5_door_is_open:
+l2_door_is_open:
 
 	;======================
 	; release lemmings
 	;======================
 
 	lda	LEMMINGS_TO_RELEASE
-	beq	l5_done_release_lemmings
+	beq	l2_done_release_lemmings
 
 	lda	DOOR_OPEN
-	beq	l5_done_release_lemmings
+	beq	l2_done_release_lemmings
 
 	lda	FRAMEL
 	and	#$f
-	bne	l5_done_release_lemmings
+	bne	l2_done_release_lemmings
 
 	inc	LEMMINGS_OUT
 	jsr	update_lemmings_out
@@ -214,20 +243,20 @@ l5_door_is_open:
 
 	dec	LEMMINGS_TO_RELEASE
 
-l5_done_release_lemmings:
+l2_done_release_lemmings:
 
 
-;	jsr	draw_flames
+	jsr	draw_flames
 
 	lda	TIMER_COUNT
 	cmp	#$50
-	bcc	l5_timer_not_yet
+	bcc	l2_timer_not_yet
 
 	jsr	update_time
 
 	lda	#$0
 	sta	TIMER_COUNT
-l5_timer_not_yet:
+l2_timer_not_yet:
 
 
 	; main drawing loop
@@ -250,12 +279,12 @@ l5_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l5_level_over
+	bne	l2_level_over
 
-	jmp	l5_main_loop
+	jmp	l2_main_loop
 
 
-l5_level_over:
+l2_level_over:
 
 ;	bit	SET_TEXT
 
@@ -267,38 +296,32 @@ l5_level_over:
 
 
 
-.include "graphics/graphics_level5.inc"
 
-music6_parts_h:
-	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
-	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,>lemm6_part6_lzsa
-	.byte >lemm6_part7_lzsa
+.include "graphics/graphics_level2.inc"
+
+
+music8_parts_h:
+	.byte >lemm8_part1_lzsa,>lemm8_part2_lzsa,>lemm8_part3_lzsa
+	.byte >lemm8_part4_lzsa,>lemm8_part5_lzsa,>lemm8_part6_lzsa
 	.byte $00
 
-music6_parts_l:
-	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
-	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa,<lemm6_part6_lzsa
-	.byte <lemm6_part7_lzsa
+music8_parts_l:
+	.byte <lemm8_part1_lzsa,<lemm8_part2_lzsa,<lemm8_part3_lzsa
+	.byte <lemm8_part4_lzsa,<lemm8_part5_lzsa,<lemm8_part6_lzsa
 
-lemm6_part1_lzsa:
-.incbin "music/lemm6.part1.lzsa"
-lemm6_part2_lzsa:
-.incbin "music/lemm6.part2.lzsa"
-lemm6_part3_lzsa:
-.incbin "music/lemm6.part3.lzsa"
-lemm6_part4_lzsa:
-.incbin "music/lemm6.part4.lzsa"
-lemm6_part5_lzsa:
-.incbin "music/lemm6.part5.lzsa"
-lemm6_part6_lzsa:
-.incbin "music/lemm6.part6.lzsa"
-lemm6_part7_lzsa:
-.incbin "music/lemm6.part7.lzsa"
-;lemm6_part8_lzsa:
-;.incbin "music/lemm6.part8.lzsa"
-;lemm6_part9_lzsa:
-;.incbin "music/lemm6.part9.lzsa"
-;lemm6_part10_lzsa:
-;.incbin "music/lemm6.part10.lzsa"
+
+
+lemm8_part1_lzsa:
+.incbin "music/lemm8.part1.lzsa"
+lemm8_part2_lzsa:
+.incbin "music/lemm8.part2.lzsa"
+lemm8_part3_lzsa:
+.incbin "music/lemm8.part3.lzsa"
+lemm8_part4_lzsa:
+.incbin "music/lemm8.part4.lzsa"
+lemm8_part5_lzsa:
+.incbin "music/lemm8.part5.lzsa"
+lemm8_part6_lzsa:
+.incbin "music/lemm8.part6.lzsa"
 
 

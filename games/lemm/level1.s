@@ -8,6 +8,48 @@
 do_level1:
 
 	;==============
+	; set up stuff
+	;==============
+
+	lda	#9
+	sta	DOOR_X
+	lda	#36
+	sta	DOOR_Y
+
+	lda     #12
+	sta     INIT_X
+	lda     #45
+	sta     INIT_Y
+
+	; flame locations
+
+	lda	#31			; 217
+	sta	l_flame_x_smc+1
+	lda	#108
+	sta	l_flame_y_smc+1
+	sta	r_flame_y_smc+1
+
+	lda	#35			; 245
+	sta	r_flame_x_smc+1
+
+	; door exit location
+
+	lda	#31			;
+	sta	exit_x1_smc+1
+	lda	#35
+	sta	exit_x2_smc+1
+
+	lda	#116
+	sta	exit_y1_smc+1
+	lda	#127
+	sta	exit_y2_smc+1
+
+
+
+
+
+
+	;==============
 	; set up intro
 	;==============
 

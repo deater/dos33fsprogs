@@ -227,7 +227,15 @@ zurg:
 	lda	#25
 	jsr	wait_a_bit
 
+	; see if we pressed a number
 
+	cmp	#'2'+$80
+	bne	oof
+
+	lda	#2
+	sta	WHICH_LEVEL
+
+oof:
 
 	;=======================
 	; do level
@@ -249,7 +257,11 @@ play_level:
 	bne	level_lost
 
 level_won:
-;	inc	WHICH_LEVEL
+	inc	WHICH_LEVEL
+
+	lda	WHICH_LEVEL
+	cmp	#3
+	bcc	level_lost
 
 	lda	#5
 	sta	WHICH_LEVEL
@@ -364,9 +376,6 @@ config_string:
 
 letsgo:
 .incbin "sounds/letsgo.btc.lz4"
-
-;	.include	"level1.s"
-;	.include	"level5.s"
 
 
 start_level	= $a000

@@ -14,25 +14,33 @@ draw_door:
 	lda	door_h,Y
 	sta	INH
 
-	ldx	#9		; 63
+	ldx	DOOR_X		; 63
         stx     XPOS
-	lda	#36
+	lda	DOOR_Y
 	sta	YPOS
 
 	jsr	hgr_draw_sprite
 
 	jsr	hgr_sprite_page_toggle
 
-	ldx	#9		; 63
+	lda	FRAMEL
+	lsr
+	and	#$3
+	tay
+
+	lda	door_l,Y
+	sta	INL
+	lda	door_h,Y
+	sta	INH
+
+	ldx	DOOR_X		; 63
         stx     XPOS
-	lda	#36
+	lda	DOOR_Y
 	sta	YPOS
 
 	jsr	hgr_draw_sprite
 
 	jsr	hgr_sprite_page_toggle
-
-
 
 	lda	FRAMEL
 	cmp	#7
@@ -74,9 +82,9 @@ draw_door_5:
 	lda	bdoor_h,Y
 	sta	INH
 
-	ldx	#9		; 63
+	ldx	DOOR_X		; 63
         stx     XPOS
-	lda	#24
+	lda	DOOR_Y
 	sta	YPOS
 
 	jsr	hgr_draw_sprite

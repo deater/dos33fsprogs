@@ -140,16 +140,25 @@ done_digging:
 
 done_move_lemming:
 
-	; see if beat level
+	; see if at exit
 
 	lda	lemming_y
+exit_y1_smc:
 	cmp	#116
 	bcc	not_done_level
+exit_y2_smc:
 	cmp	#127
 	bcs	not_done_level
+
+
 	lda	lemming_x
+exit_x1_smc:
 	cmp	#31
 	bcc	not_done_level
+exit_x2_smc:
+	cmp	#35
+	bcs	not_done_level
+
 
 	; done level
 

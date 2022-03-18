@@ -75,6 +75,12 @@ WHICH_LEVEL		= $88
 
 APPLEII_MODEL		= $8B
 
+DOOR_X			= $90	; location of door
+DOOR_Y			= $91
+INIT_X			= $92	; initial lemming position
+INIT_Y			= $93
+
+
 
 ; done game puzzle state
 
