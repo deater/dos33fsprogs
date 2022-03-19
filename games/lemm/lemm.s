@@ -229,10 +229,14 @@ zurg:
 
 	; see if we pressed a number
 
-	cmp	#'2'+$80
-	bne	oof
+	cmp	#'1'+$80
+	bcc	oof
+	cmp	#'6'+$80
+	bcs	oof
 
-	lda	#2
+	and	#$7f
+	sec
+	sbc	#'0'
 	sta	WHICH_LEVEL
 
 oof:
@@ -378,5 +382,4 @@ letsgo:
 .incbin "sounds/letsgo.btc.lz4"
 
 
-start_level	= $a000
-
+start_level	= $a001

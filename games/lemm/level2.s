@@ -5,6 +5,8 @@
 .include "lemm.inc"
 .include "lemming_status.inc"
 
+.byte 2		; level 2
+
 do_level2:
 
 
