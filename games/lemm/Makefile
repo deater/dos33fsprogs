@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL2 LEVEL4  LEVEL5
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -27,9 +27,10 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) lemm.dsk  3  0 LEMM       0   0
 	$(DOS33_RAW) lemm.dsk  10 0 LEVEL1     0   0
-	$(DOS33_RAW) lemm.dsk  12 0 LEVEL2     0   0
-	$(DOS33_RAW) lemm.dsk  16 0 LEVEL4     0   0
-	$(DOS33_RAW) lemm.dsk  18 0 LEVEL5     0   0
+	$(DOS33_RAW) lemm.dsk  13 0 LEVEL2     0   0
+	$(DOS33_RAW) lemm.dsk  16 0 LEVEL3     0   0
+	$(DOS33_RAW) lemm.dsk  19 0 LEVEL4     0   0
+	$(DOS33_RAW) lemm.dsk  22 0 LEVEL5     0   0
 
 
 ###
@@ -150,6 +151,16 @@ LEVEL2:	level2.o
 level2.o:	level2.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level2.inc
 	ca65 -o level2.o level2.s -l level2.lst
+
+####
+
+LEVEL3:	level3.o
+	ld65 -o LEVEL3 level3.o -C ../../linker_scripts/apple2_9000.inc
+
+level3.o:	level3.s zp.inc hardware.inc qload.inc lemm.inc \
+		graphics/graphics_level3.inc
+	ca65 -o level3.o level3.s -l level3.lst
+
 
 ####
 

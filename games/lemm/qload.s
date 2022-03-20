@@ -170,9 +170,9 @@ load_address_array:
 	.byte $A0,$A0,$A0,$A0	;
 
 track_array:
-        .byte  3,10,12,14	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte 16,18,20,22	; LEVEL4, LEVEL5
-	.byte 24,26,28,30	;
+        .byte  3,10,13,16	; LEMM, LEVEL1, LEVEL2, LEVEL3
+	.byte 19,22,25,28	; LEVEL4, LEVEL5
+	.byte 31,31,31,31	;
 
 sector_array:
         .byte  0, 0, 0, 0	; LEMM, LEVEL1, LEVEL2, LEVEL3

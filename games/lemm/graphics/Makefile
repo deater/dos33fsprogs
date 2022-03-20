@@ -8,6 +8,7 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 all:	graphics_test.inc \
 	graphics_level1.inc \
 	graphics_level2.inc \
+	graphics_level3.inc \
 	graphics_level4.inc \
 	graphics_level5.inc \
 	sprites.inc
@@ -34,6 +35,13 @@ graphics_level2.inc:	\
 	level2_preview.lzsa
 	echo "level2_lzsa: .incbin \"level2.lzsa\"" > graphics_level2.inc
 	echo "level2_preview_lzsa: .incbin \"level2_preview.lzsa\"" >> graphics_level2.inc
+
+graphics_level3.inc:	\
+	level3.lzsa \
+	level3_preview.lzsa
+	echo "level3_lzsa: .incbin \"level3.lzsa\"" > graphics_level3.inc
+	echo "level3_preview_lzsa: .incbin \"level3_preview.lzsa\"" >> graphics_level3.inc
+
 
 
 graphics_level4.inc:	\
@@ -172,6 +180,23 @@ level2_preview.lzsa:	level2_preview.hgr
 
 level2_preview.hgr:	level2_preview.png
 	$(PNG2HGR) level2_preview.png > level2_preview.hgr
+
+###
+
+level3.lzsa:	level3.hgr
+	$(LZSA) -r -f2 level3.hgr level3.lzsa
+
+level3.hgr:	level3.png
+	$(PNG2HGR) level3.png > level3.hgr
+
+###
+
+
+level3_preview.lzsa:	level3_preview.hgr
+	$(LZSA) -r -f2 level3_preview.hgr level3_preview.lzsa
+
+level3_preview.hgr:	level3_preview.png
+	$(PNG2HGR) level3_preview.png > level3_preview.hgr
 
 ###
 
