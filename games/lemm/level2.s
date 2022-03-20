@@ -204,16 +204,14 @@ do_level2:
 	;===================
 l2_main_loop:
 
-	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
-	beq	l2_no_load_chunk	; outside IRQ to avoid glitch in music
+	;=========================
+	; load next chunk of music
+	; if necessary
+	;=========================
 
-	jsr	load_song_chunk
-
-	lda	#0			; reset
-	sta	LOAD_NEXT_CHUNK
+	jsr	load_music
 
 
-l2_no_load_chunk:
 
 
 	lda	DOOR_OPEN

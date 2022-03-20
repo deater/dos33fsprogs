@@ -202,40 +202,40 @@ do_level4:
 	; Main Loop
 	;===================
 	;===================
-l2_main_loop:
+l4_main_loop:
 
-	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
-	beq	l2_no_load_chunk	; outside IRQ to avoid glitch in music
+	;=========================
+	; load next chunk of music
+	; if necessary
+	;=========================
 
-	jsr	load_song_chunk
-
-	lda	#0			; reset
-	sta	LOAD_NEXT_CHUNK
+	jsr	load_music
 
 
-l2_no_load_chunk:
+
+l4_no_load_chunk:
 
 
 	lda	DOOR_OPEN
-	bne	l2_door_is_open
+	bne	l4_door_is_open
 
 	jsr	draw_door
 
-l2_door_is_open:
+l4_door_is_open:
 
 	;======================
 	; release lemmings
 	;======================
 
 	lda	LEMMINGS_TO_RELEASE
-	beq	l2_done_release_lemmings
+	beq	l4_done_release_lemmings
 
 	lda	DOOR_OPEN
-	beq	l2_done_release_lemmings
+	beq	l4_done_release_lemmings
 
 	lda	FRAMEL
 	and	#$f
-	bne	l2_done_release_lemmings
+	bne	l4_done_release_lemmings
 
 	inc	LEMMINGS_OUT
 	jsr	update_lemmings_out
@@ -245,20 +245,20 @@ l2_door_is_open:
 
 	dec	LEMMINGS_TO_RELEASE
 
-l2_done_release_lemmings:
+l4_done_release_lemmings:
 
 
 	jsr	draw_flames
 
 	lda	TIMER_COUNT
 	cmp	#$50
-	bcc	l2_timer_not_yet
+	bcc	l4_timer_not_yet
 
 	jsr	update_time
 
 	lda	#$0
 	sta	TIMER_COUNT
-l2_timer_not_yet:
+l4_timer_not_yet:
 
 
 	; main drawing loop
@@ -281,12 +281,12 @@ l2_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l2_level_over
+	bne	l4_level_over
 
-	jmp	l2_main_loop
+	jmp	l4_main_loop
 
 
-l2_level_over:
+l4_level_over:
 
 ;	bit	SET_TEXT
 

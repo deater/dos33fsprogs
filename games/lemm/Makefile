@@ -89,7 +89,7 @@ lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
 		hgr_hlin.s hgr_vlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
 		pointer_sprites.inc particle_hgr.s \
-		title.s audio.s letsgo.s
+		title.s audio.s letsgo.s load_music.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 
 
@@ -131,11 +131,12 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s exit_x2_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_y1_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_y2_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s load_music lemm.lst >> lemm.inc
 
 ####
 
 LEVEL1:	level1.o
-	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_a000.inc
+	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_9000.inc
 
 level1.o:	level1.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level1.inc
@@ -144,7 +145,7 @@ level1.o:	level1.s zp.inc hardware.inc qload.inc lemm.inc \
 ####
 
 LEVEL2:	level2.o
-	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_a000.inc
+	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_9000.inc
 
 level2.o:	level2.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level2.inc
@@ -153,7 +154,7 @@ level2.o:	level2.s zp.inc hardware.inc qload.inc lemm.inc \
 ####
 
 LEVEL4:	level4.o
-	ld65 -o LEVEL4 level4.o -C ../../linker_scripts/apple2_a000.inc
+	ld65 -o LEVEL4 level4.o -C ../../linker_scripts/apple2_9000.inc
 
 level4.o:	level4.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level4.inc
@@ -164,7 +165,7 @@ level4.o:	level4.s zp.inc hardware.inc qload.inc lemm.inc \
 ####
 
 LEVEL5:	level5.o
-	ld65 -o LEVEL5 level5.o -C ../../linker_scripts/apple2_a000.inc
+	ld65 -o LEVEL5 level5.o -C ../../linker_scripts/apple2_9000.inc
 
 level5.o:	level5.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level5.inc

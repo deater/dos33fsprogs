@@ -175,16 +175,14 @@ do_level5:
 	;===================
 l5_main_loop:
 
-	lda	LOAD_NEXT_CHUNK		; see if we need to load next chunk
-	beq	l5_no_load_chunk	; outside IRQ to avoid glitch in music
+	;=========================
+	; load next chunk of music
+	; if necessary
+	;=========================
 
-	jsr	load_song_chunk
-
-	lda	#0			; reset
-	sta	LOAD_NEXT_CHUNK
+	jsr	load_music
 
 
-l5_no_load_chunk:
 
 
 	lda	DOOR_OPEN
@@ -274,13 +272,15 @@ l5_level_over:
 music6_parts_h:
 	.byte >lemm6_part1_lzsa,>lemm6_part2_lzsa,>lemm6_part3_lzsa
 	.byte >lemm6_part4_lzsa,>lemm6_part5_lzsa,>lemm6_part6_lzsa
-	.byte >lemm6_part7_lzsa
+	.byte >lemm6_part7_lzsa,>lemm6_part8_lzsa,>lemm6_part9_lzsa
+	.byte >lemm6_part10_lzsa
 	.byte $00
 
 music6_parts_l:
 	.byte <lemm6_part1_lzsa,<lemm6_part2_lzsa,<lemm6_part3_lzsa
 	.byte <lemm6_part4_lzsa,<lemm6_part5_lzsa,<lemm6_part6_lzsa
-	.byte <lemm6_part7_lzsa
+	.byte <lemm6_part7_lzsa,<lemm6_part8_lzsa,<lemm6_part9_lzsa
+	.byte <lemm6_part10_lzsa
 
 lemm6_part1_lzsa:
 .incbin "music/lemm6.part1.lzsa"
@@ -296,11 +296,11 @@ lemm6_part6_lzsa:
 .incbin "music/lemm6.part6.lzsa"
 lemm6_part7_lzsa:
 .incbin "music/lemm6.part7.lzsa"
-;lemm6_part8_lzsa:
-;.incbin "music/lemm6.part8.lzsa"
-;lemm6_part9_lzsa:
-;.incbin "music/lemm6.part9.lzsa"
-;lemm6_part10_lzsa:
-;.incbin "music/lemm6.part10.lzsa"
+lemm6_part8_lzsa:
+.incbin "music/lemm6.part8.lzsa"
+lemm6_part9_lzsa:
+.incbin "music/lemm6.part9.lzsa"
+lemm6_part10_lzsa:
+.incbin "music/lemm6.part10.lzsa"
 
 

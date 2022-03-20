@@ -95,11 +95,12 @@ go_next_chunk:
 	lda	CHUNK_NEXT_PLAY			; toggle $D0/$E8
 	eor	#$38
 	sta	CHUNK_NEXT_PLAY
-
 	sta	BASE_FRAME_H
 
+	lda	#0
+	sta	BASE_FRAME_L			; in case song ended early
 
-	inc	CURRENT_CHUNK
+	inc	CURRENT_CHUNK			; point to next chunk
 
 ;	inc	LOAD_NEXT_CHUNK			; defer this until after interrupt
 ;	jsr	load_song_chunk

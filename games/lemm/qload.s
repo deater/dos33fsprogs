@@ -165,8 +165,8 @@ which_disk_array:
 	.byte 1,1,1,1		;
 
 load_address_array:
-        .byte $60,$A0,$A0,$A0	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte $A0,$A0,$A0,$A0	; LEVEL4, LEVEL5
+        .byte $60,$90,$90,$90	; LEMM, LEVEL1, LEVEL2, LEVEL3
+	.byte $90,$90,$A0,$A0	; LEVEL4, LEVEL5
 	.byte $A0,$A0,$A0,$A0	;
 
 track_array:
@@ -180,8 +180,8 @@ sector_array:
 	.byte  0, 0, 0, 0	;
 
 length_array:
-        .byte  64, 32, 32, 32	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte  32, 32, 32, 32	; LEVEL4, LEVEL5
+        .byte  48, 46, 46, 46	; LEMM, LEVEL1, LEVEL2, LEVEL3
+	.byte  46, 46, 32, 32	; LEVEL4, LEVEL5
 	.byte  32, 32, 32, 32	;
 
 

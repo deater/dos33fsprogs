@@ -277,39 +277,6 @@ level_lost:
 
 
 
-	;========================
-	; load song chunk
-	;	CURRENT_CHUNK is which one, 0..N
-	;	CHUNK_DEST is $D0 or $E8
-
-load_song_chunk:
-	ldx	CURRENT_CHUNK
-chunk_l_smc:
-	lda     $DDDD,X
-	sta     getsrc_smc+1	; LZSA_SRC_LO
-chunk_h_smc:
-	lda     $DDDD,X
-	sta     getsrc_smc+2	; LZSA_SRC_HI
-	bne	load_song_chunk_good
-
-	; $00 in chunk table means we are off the end, so wrap
-	lda	#$00
-	sta	CURRENT_CHUNK		; reset chunk to 0
-	beq	load_song_chunk		; try again
-
-load_song_chunk_good:
-	lda	CHUNK_NEXT_LOAD		; decompress to $D0 or $E8
-;	eor	#$38			; want the opposite of CHUNK_DEST
-
-	jsr	decompress_lzsa2_fast
-
-
-	lda	CHUNK_NEXT_LOAD		; point to next location
-	eor	#$38
-	sta	CHUNK_NEXT_LOAD
-
-	rts
-
 	;==========================
 	; includes
 	;==========================
@@ -352,6 +319,7 @@ load_song_chunk_good:
 	.include	"letsgo.s"
 	.include	"particle_hgr.s"
 
+	.include	"load_music.s"
 
 
 	; moved to qload.s
@@ -382,4 +350,4 @@ letsgo:
 .incbin "sounds/letsgo.btc.lz4"
 
 
-start_level	= $a001
+start_level	= $9001
