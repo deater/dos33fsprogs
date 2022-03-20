@@ -16,6 +16,20 @@ do_level5:
 	lda	#24
 	sta	DOOR_Y
 
+	lda	#12
+	sta	INIT_X
+	lda	#40
+	sta	INIT_Y
+
+	; flame locations
+
+	; n/a
+
+	; exit location
+
+	; n/a
+
+
 	;==============
 	; set up intro
 	;==============
@@ -65,8 +79,6 @@ do_level5:
         ; show title screen
         ;=======================
 
-	lda	#5
-	sta	WHICH_LEVEL
 	jsr	intro_level
 
         ;=======================
@@ -112,33 +124,6 @@ do_level5:
 	lda	#100
 	sta	CURSOR_Y
 
-        ;=======================
-        ; Init Lemmings
-        ;=======================
-
-	lda	#0
-	sta	lemming_out
-	sta	lemming_exploding
-	lda	#12
-	sta	lemming_x
-	lda	#40
-	sta	lemming_y
-	lda	#1
-	sta	lemming_direction
-	lda	#LEMMING_FALLING
-	sta	lemming_status
-
-	;=======================
-	; Play "Let's Go"
-	;=======================
-
-	jsr	play_letsgo
-
-        ;=======================
-        ; start music
-        ;=======================
-
-;        cli
 
 	;=======================
 	; init vars
@@ -149,15 +134,13 @@ do_level5:
 	sta	DOOR_OPEN
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
-	sta	JOYSTICK_ENABLED
 	sta	LEMMINGS_OUT
 
 	jsr	update_lemmings_out
 
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
-
-;	jsr     save_bg_14x14           ; save initial bg
+	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -167,6 +150,14 @@ do_level5:
 	sta	TIME_SECONDS
 
 	sta	TIMER_COUNT
+
+
+	;=======================
+	; Play "Let's Go"
+	;=======================
+
+	jsr	play_letsgo
+
 
 	;===================
 	;===================
@@ -183,6 +174,9 @@ l5_main_loop:
 	jsr	load_music
 
 
+	;=====================
+	; open door
+	;=====================
 
 
 	lda	DOOR_OPEN
@@ -206,16 +200,13 @@ l5_door_is_open:
 	and	#$f
 	bne	l5_done_release_lemmings
 
-	inc	LEMMINGS_OUT
-	jsr	update_lemmings_out
-
-	lda	#1
-	sta	lemming_out
-
-	dec	LEMMINGS_TO_RELEASE
+	jsr	release_lemming
 
 l5_done_release_lemmings:
 
+	;=====================
+	; animate flames
+	;=====================
 
 ;	jsr	draw_flames
 
@@ -257,14 +248,14 @@ l5_timer_not_yet:
 
 l5_level_over:
 
-;	bit	SET_TEXT
-
 	jsr	disable_music
 
 	jsr	outro_level1
 
 	rts
 
+
+	.include	"release_lemming.s"
 
 
 .include "graphics/graphics_level5.inc"

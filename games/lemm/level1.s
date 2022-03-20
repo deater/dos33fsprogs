@@ -1,4 +1,3 @@
-
 .include "zp.inc"
 .include "hardware.inc"
 .include "qload.inc"
@@ -102,8 +101,6 @@ do_level1:
         ; show title screen
         ;=======================
 
-;	lda	#1
-;	sta	WHICH_LEVEL
 	jsr	intro_level
 
         ;=======================
@@ -149,34 +146,7 @@ do_level1:
 	lda	#100
 	sta	CURSOR_Y
 
-        ;=======================
-        ; Init Lemmings
-        ;=======================
 
-	lda	#0
-	sta	lemming_out
-	sta	lemming_exploding
-	lda	#12
-	sta	lemming_x
-	lda	#45
-	sta	lemming_y
-	lda	#1
-	sta	lemming_direction
-	lda	#LEMMING_FALLING
-	sta	lemming_status
-
-	;=======================
-	; Play "Let's Go"
-	;=======================
-
-	jsr	play_letsgo
-
-
-        ;=======================
-        ; start music
-        ;=======================
-
-;        cli
 
 	;=======================
 	; init vars
@@ -187,15 +157,13 @@ do_level1:
 	sta	DOOR_OPEN
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
-	sta	JOYSTICK_ENABLED
 	sta	LEMMINGS_OUT
 
-	jsr	update_lemmings_out
+	jsr	update_lemmings_out	; update  display
 
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
-
-;	jsr     save_bg_14x14           ; save initial bg
+	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -205,6 +173,14 @@ do_level1:
 	sta	TIME_SECONDS
 
 	sta	TIMER_COUNT
+
+	;=======================
+	; Play "Let's Go"
+	;=======================
+
+	jsr	play_letsgo
+
+
 
 	;===================
 	;===================
@@ -221,7 +197,9 @@ l1_main_loop:
         jsr     load_music
 
 
-
+	;=========================
+	; open door
+	;=========================
 
 	lda	DOOR_OPEN
 	bne	l1_door_is_open
@@ -244,16 +222,13 @@ l1_door_is_open:
 	and	#$f
 	bne	l1_done_release_lemmings
 
-	inc	LEMMINGS_OUT
-	jsr	update_lemmings_out
-
-	lda	#1
-	sta	lemming_out
-
-	dec	LEMMINGS_TO_RELEASE
+	jsr	release_lemming
 
 l1_done_release_lemmings:
 
+	;=====================
+	; animate  flames
+	;=====================
 
 	jsr	draw_flames
 
@@ -305,6 +280,10 @@ l1_level_over:
 
 
 
+	.include "release_lemming.s"
+
+
+
 
 .include "graphics/graphics_level1.inc"
 
@@ -327,4 +306,5 @@ lemm5_part4_lzsa:
 .incbin "music/lemm5.part4.lzsa"
 lemm5_part5_lzsa:
 .incbin "music/lemm5.part5.lzsa"
+
 

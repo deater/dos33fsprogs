@@ -1,4 +1,3 @@
-
 .include "zp.inc"
 .include "hardware.inc"
 .include "qload.inc"
@@ -23,6 +22,8 @@ do_level4:
 	lda	#22
 	sta	INIT_Y
 
+	; flame locations
+
 	lda	#29			;
 	sta	l_flame_x_smc+1
 	lda	#23
@@ -32,7 +33,7 @@ do_level4:
 	lda	#33			;
 	sta	r_flame_x_smc+1
 
-	; exit location
+	; door exit location
 
 	lda	#29			;
 	sta	exit_x1_smc+1
@@ -140,34 +141,6 @@ do_level4:
 	lda	#100
 	sta	CURSOR_Y
 
-        ;=======================
-        ; Init Lemmings
-        ;=======================
-
-	lda	#0
-	sta	lemming_out
-	sta	lemming_exploding
-	lda	INIT_X
-	sta	lemming_x
-	lda	INIT_Y
-	sta	lemming_y
-	lda	#1
-	sta	lemming_direction
-	lda	#LEMMING_FALLING
-	sta	lemming_status
-
-	;=======================
-	; Play "Let's Go"
-	;=======================
-
-	jsr	play_letsgo
-
-
-        ;=======================
-        ; start music
-        ;=======================
-
-;        cli
 
 	;=======================
 	; init vars
@@ -178,15 +151,13 @@ do_level4:
 	sta	DOOR_OPEN
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
-	sta	JOYSTICK_ENABLED
 	sta	LEMMINGS_OUT
 
 	jsr	update_lemmings_out
 
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
-
-;	jsr     save_bg_14x14           ; save initial bg
+	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -196,6 +167,13 @@ do_level4:
 	sta	TIME_SECONDS
 
 	sta	TIMER_COUNT
+
+	;=======================
+	; Play "Let's Go"
+	;=======================
+
+	jsr	play_letsgo
+
 
 	;===================
 	;===================
@@ -237,16 +215,13 @@ l4_door_is_open:
 	and	#$f
 	bne	l4_done_release_lemmings
 
-	inc	LEMMINGS_OUT
-	jsr	update_lemmings_out
-
-	lda	#1
-	sta	lemming_out
-
-	dec	LEMMINGS_TO_RELEASE
+	jsr	release_lemming
 
 l4_done_release_lemmings:
 
+	;=====================
+	; animate flames
+	;=====================
 
 	jsr	draw_flames
 
@@ -288,8 +263,6 @@ l4_timer_not_yet:
 
 l4_level_over:
 
-;	bit	SET_TEXT
-
 	jsr	disable_music
 
 	jsr	outro_level1
@@ -297,6 +270,7 @@ l4_level_over:
 	rts
 
 
+	.include	"release_lemming.s"
 
 
 .include "graphics/graphics_level4.inc"

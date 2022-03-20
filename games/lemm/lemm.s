@@ -8,10 +8,14 @@
 	.include "qload.inc"
 	.include "lemming_status.inc"
 
-lemm_test_start:
+lemm:
+	;=====================
+	; initializations
+	;=====================
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	JOYSTICK_ENABLED
 
 	lda	#1
 	sta	WHICH_LEVEL

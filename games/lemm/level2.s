@@ -1,4 +1,3 @@
-
 .include "zp.inc"
 .include "hardware.inc"
 .include "qload.inc"
@@ -13,6 +12,7 @@ do_level2:
 	;======================
 	; set up initial stuff
 	;======================
+
 	lda	#3
 	sta	DOOR_X
 	lda	#5
@@ -23,6 +23,8 @@ do_level2:
 	lda	#15
 	sta	INIT_Y
 
+	; flame locations
+
 	lda	#29			; 196
 	sta	l_flame_x_smc+1
 	lda	#122
@@ -32,9 +34,9 @@ do_level2:
 	lda	#33			; 245
 	sta	r_flame_x_smc+1
 
-	; exit location (1c 8b)
+	; door exit location
 
-	lda	#29			; 
+	lda	#29			;
 	sta	exit_x1_smc+1
 	lda	#33
 	sta	exit_x2_smc+1
@@ -140,35 +142,6 @@ do_level2:
 	lda	#100
 	sta	CURSOR_Y
 
-        ;=======================
-        ; Init Lemmings
-        ;=======================
-
-	lda	#0
-	sta	lemming_out
-	sta	lemming_exploding
-	lda	INIT_X
-	sta	lemming_x
-	lda	INIT_Y
-	sta	lemming_y
-	lda	#1
-	sta	lemming_direction
-	lda	#LEMMING_FALLING
-	sta	lemming_status
-
-	;=======================
-	; Play "Let's Go"
-	;=======================
-
-	jsr	play_letsgo
-
-
-        ;=======================
-        ; start music
-        ;=======================
-
-;        cli
-
 	;=======================
 	; init vars
 	;=======================
@@ -178,15 +151,13 @@ do_level2:
 	sta	DOOR_OPEN
 	sta	FRAMEL
 	sta	LOAD_NEXT_CHUNK
-	sta	JOYSTICK_ENABLED
 	sta	LEMMINGS_OUT
 
-	jsr	update_lemmings_out
+	jsr	update_lemmings_out	; update display
 
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
-
-;	jsr     save_bg_14x14           ; save initial bg
+	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -196,6 +167,14 @@ do_level2:
 	sta	TIME_SECONDS
 
 	sta	TIMER_COUNT
+
+
+	;=======================
+	; Play "Let's Go"
+	;=======================
+
+	jsr	play_letsgo
+
 
 	;===================
 	;===================
@@ -212,7 +191,9 @@ l2_main_loop:
 	jsr	load_music
 
 
-
+	;=========================
+	; open door
+	;=========================
 
 	lda	DOOR_OPEN
 	bne	l2_door_is_open
@@ -238,12 +219,13 @@ l2_door_is_open:
 	inc	LEMMINGS_OUT
 	jsr	update_lemmings_out
 
-	lda	#1
-	sta	lemming_out
-
-	dec	LEMMINGS_TO_RELEASE
+	jsr	release_lemming
 
 l2_done_release_lemmings:
+
+	;======================
+	; animate flames
+	;======================
 
 
 	jsr	draw_flames
@@ -286,14 +268,15 @@ l2_timer_not_yet:
 
 l2_level_over:
 
-;	bit	SET_TEXT
-
 	jsr	disable_music
 
 	jsr	outro_level1
 
 	rts
 
+
+
+	.include	"release_lemming.s"
 
 
 

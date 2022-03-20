@@ -140,6 +140,7 @@ LEVEL1:	level1.o
 	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_9000.inc
 
 level1.o:	level1.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
 		graphics/graphics_level1.inc
 	ca65 -o level1.o level1.s -l level1.lst
 
@@ -149,6 +150,7 @@ LEVEL2:	level2.o
 	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_9000.inc
 
 level2.o:	level2.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
 		graphics/graphics_level2.inc
 	ca65 -o level2.o level2.s -l level2.lst
 
@@ -158,6 +160,7 @@ LEVEL3:	level3.o
 	ld65 -o LEVEL3 level3.o -C ../../linker_scripts/apple2_9000.inc
 
 level3.o:	level3.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
 		graphics/graphics_level3.inc
 	ca65 -o level3.o level3.s -l level3.lst
 
@@ -168,6 +171,7 @@ LEVEL4:	level4.o
 	ld65 -o LEVEL4 level4.o -C ../../linker_scripts/apple2_9000.inc
 
 level4.o:	level4.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
 		graphics/graphics_level4.inc
 	ca65 -o level4.o level4.s -l level4.lst
 
@@ -179,6 +183,7 @@ LEVEL5:	level5.o
 	ld65 -o LEVEL5 level5.o -C ../../linker_scripts/apple2_9000.inc
 
 level5.o:	level5.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
 		graphics/graphics_level5.inc
 	ca65 -o level5.o level5.s -l level5.lst
 

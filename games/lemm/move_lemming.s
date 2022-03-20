@@ -1,3 +1,26 @@
+
+lemming_x:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_y:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_direction:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_out:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_frame:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_status:
+	.byte 0,0,0,0,0,0,0,0,0,0
+lemming_exploding:
+	.byte 0,0,0,0,0,0,0,0,0,0
+
+
+
+
+
+
+
+
 	;==========================
 	; move them
 	;==========================
@@ -186,27 +209,6 @@ remove_lemming:
 	jsr	update_lemmings_out
 
 	rts
-
-
-lemming_direction:
-	.byte 1
-
-lemming_x:
-	.byte 12
-lemming_y:
-	.byte 45
-
-lemming_out:
-	.byte $0
-
-lemming_frame:
-	.byte 0
-
-lemming_status:
-	.byte LEMMING_FALLING
-
-lemming_exploding:
-	.byte $00
 
 
 
