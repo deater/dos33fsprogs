@@ -13,35 +13,35 @@ do_level4:
 	;======================
 	; set up initial stuff
 	;======================
-	lda	#3
-	sta	DOOR_X
 	lda	#5
+	sta	DOOR_X
+	lda	#10
 	sta	DOOR_Y
 
-	lda	#7
+	lda	#8
 	sta	INIT_X
-	lda	#15
+	lda	#22
 	sta	INIT_Y
 
-	lda	#29			; 196
+	lda	#29			;
 	sta	l_flame_x_smc+1
-	lda	#122
+	lda	#23
 	sta	l_flame_y_smc+1
         sta	r_flame_y_smc+1
 
-	lda	#33			; 245
+	lda	#33			;
 	sta	r_flame_x_smc+1
 
-	; exit location (1c 8b)
+	; exit location
 
-	lda	#29			; 
+	lda	#29			;
 	sta	exit_x1_smc+1
 	lda	#33
 	sta	exit_x2_smc+1
 
-	lda	#121
+	lda	#21
 	sta	exit_y1_smc+1
-	lda	#144
+	lda	#45
 	sta	exit_y2_smc+1
 
 
