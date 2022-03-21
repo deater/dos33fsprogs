@@ -343,21 +343,31 @@ draw_explosion:
 
 	jsr	hgr_hlin_page_toggle		; toggle to page2
 
+	ldx	#0
+	sta	HGR_COLOR
+
 	; line from (x,a) to (x+y,a)
-	ldx	lemming_x
-	dex
-	ldy	#3
+	lda	lemming_x
+	asl
+	adc	lemming_x
+	asl
+	adc	lemming_x		; multiply by 7
+	tax
+	pha
+	ldy	#7
+
 	lda	lemming_y
 	clc
-	adc	#11
+	adc	#9
 	jsr	hgr_hlin
 
 	; line from (x,a) to (x+y,a)
-	ldx	lemming_x
-	ldy	#1
+	pla
+	tax
+	ldy	#7
 	lda	lemming_y
 	clc
-	adc	#12
+	adc	#10
 	jsr	hgr_hlin
 
 
