@@ -47,10 +47,6 @@ do_level1:
 	sta	exit_y2_smc+1
 
 
-
-
-
-
 	;==============
 	; set up intro
 	;==============
@@ -59,6 +55,11 @@ do_level1:
 	sta	level_preview_l_smc+1
 	lda	#>level1_preview_lzsa
 	sta	level_preview_h_smc+1
+
+	lda	#<level1_intro_text
+	sta	intro_text_smc_l+1
+	lda	#>level1_intro_text
+	sta	intro_text_smc_h+1
 
 	;==============
 	; set up music
@@ -308,3 +309,12 @@ lemm5_part5_lzsa:
 .incbin "music/lemm5.part5.lzsa"
 
 
+level1_intro_text:
+.byte  0, 8,"LEVEL 1",0
+.byte 15, 8,"JUST DIG!",0
+.byte  9,12,"NUMBER OF LEMMINGS 10",0
+.byte 12,14,"10%  TO BE SAVED",0
+.byte 12,16,"RELEASE RATE 50",0
+.byte 13,18,"TIME 5 MINUTES",0
+.byte 15,20,"RATING FUN",0
+.byte  8,23,"PRESS RETURN TO CONINUE",0

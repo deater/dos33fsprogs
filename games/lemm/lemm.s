@@ -317,7 +317,7 @@ level_continue:
 	.include	"hgr_tables.s"
 	.include	"hgr_sprite.s"
 	.include	"update_time.s"
-	.include	"intro_level1.s"
+	.include	"intro_level.s"
 	.include	"draw_flames.s"
 	.include	"draw_door.s"
 

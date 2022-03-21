@@ -1,7 +1,7 @@
 
-	;=====================================
-	; print the intro message for level1
-	;=====================================
+	;========================
+	; print the intro message
+	;========================
 
 intro_level:
 
@@ -12,17 +12,14 @@ intro_level:
 
 level_preview_l_smc:
 	lda	#$DD
-	sta	getsrc_smc+1	    ; LZSA_SRC_LO
+	sta	getsrc_smc+1	; LZSA_SRC_LO
 level_preview_h_smc:
 	lda	#$DD
-	sta	getsrc_smc+2    ; LZSA_SRC_HI
+	sta	getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
-
-
-;	bit	SET_TEXT
 
 	; print non-inverse
 
@@ -30,22 +27,11 @@ level_preview_h_smc:
 
 	; print messages
 
-	lda	WHICH_LEVEL
-	cmp	#1
-	bne	its_level_5_text
-
-its_level_1_text:
-	lda	#<level1_intro_text
+intro_text_smc_l:
+	lda	#$dd
 	sta	OUTL
-	lda	#>level1_intro_text
-	jmp	its_level_1_text_done
-
-its_level_5_text:
-	lda	#<level5_intro_text
-	sta	OUTL
-	lda	#>level5_intro_text
-
-its_level_1_text_done:
+intro_text_smc_h:
+	lda	#$dd
 	sta	OUTH
 
 	; print the text
@@ -74,9 +60,9 @@ intro_not_iie:
 	rts
 
 
-	;=====================================
-	; print the outro message for level1
-	;=====================================
+	;========================
+	; print the outro message
+	;========================
 
 outro_level1:
 
@@ -128,17 +114,6 @@ l1_outro_loop:
 	jmp	wait_until_keypress
 
 
-
-level1_intro_text:
-.byte  0, 8,"LEVEL 1",0
-.byte 15, 8,"JUST DIG!",0
-.byte  9,12,"NUMBER OF LEMMINGS 10",0
-.byte 12,14,"10%  TO BE SAVED",0
-.byte 12,16,"RELEASE RATE 50",0
-.byte 13,18,"TIME 5 MINUTES",0
-.byte 15,20,"RATING FUN",0
-.byte  8,23,"PRESS RETURN TO CONINUE",0
-
 level1_win_text:
 .byte  6, 1,"ALL LEMMINGS ACCOUNTED FOR.",0
 .byte 12, 3,"YOU RESCUED 100%",0
@@ -160,16 +135,6 @@ level1_lose_text:
 .byte  9,21,"PRESS ESCAPE FOR MENU",0
 .byte 10,10," ",0	; lazy hack
 .byte 10,10," ",0
-
-level5_intro_text:
-.byte  0, 8,"LEVEL 5",0
-.byte 14, 8,"YOU NEED BASHERS THIS TIME",0
-.byte  9,12,"NUMBER OF LEMMINGS 50",0
-.byte 12,14,"10%  TO BE SAVED",0
-.byte 12,16,"RELEASE RATE 50",0
-.byte 13,18,"TIME 5 MINUTES",0
-.byte 15,20,"RATING FUN",0
-.byte  8,23,"PRESS RETURN TO CONINUE",0
 
 
 .align $100

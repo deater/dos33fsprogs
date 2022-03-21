@@ -39,6 +39,11 @@ do_level5:
 	lda	#>level5_preview_lzsa
 	sta	level_preview_h_smc+1
 
+	lda	#<level5_intro_text
+	sta	intro_text_smc_l+1
+	lda	#>level5_intro_text
+	sta	intro_text_smc_h+1
+
 
 	;==============
 	; set up music
@@ -294,4 +299,12 @@ lemm6_part9_lzsa:
 lemm6_part10_lzsa:
 .incbin "music/lemm6.part10.lzsa"
 
-
+level5_intro_text:
+.byte  0, 8,"LEVEL 5",0
+.byte  9, 8,"YOU NEED BASHERS THIS TIME",0
+.byte  9,12,"NUMBER OF LEMMINGS 50",0
+.byte 12,14,"10%  TO BE SAVED",0
+.byte 12,16,"RELEASE RATE 50",0
+.byte 13,18,"TIME 5 MINUTES",0
+.byte 15,20,"RATING FUN",0
+.byte  8,23,"PRESS RETURN TO CONINUE",0

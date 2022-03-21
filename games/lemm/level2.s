@@ -56,6 +56,12 @@ do_level2:
 	lda	#>level2_preview_lzsa
 	sta	level_preview_h_smc+1
 
+	lda	#<level2_intro_text
+	sta	intro_text_smc_l+1
+	lda	#>level2_intro_text
+	sta	intro_text_smc_h+1
+
+
 	;==============
 	; set up music
 	;==============
@@ -308,3 +314,12 @@ lemm8_part6_lzsa:
 .incbin "music/lemm8.part6.lzsa"
 
 
+level2_intro_text:
+.byte  0, 8,"LEVEL 2",0
+.byte  9, 8,"ONLY FLOATERS CAN SURVIVE THIS",0
+.byte  9,12,"NUMBER OF LEMMINGS 10",0
+.byte 12,14,"10%  TO BE SAVED",0
+.byte 12,16,"RELEASE RATE 50",0
+.byte 13,18,"TIME 5 MINUTES",0
+.byte 15,20,"RATING FUN",0
+.byte  8,23,"PRESS RETURN TO CONINUE",0

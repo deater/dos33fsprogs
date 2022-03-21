@@ -85,7 +85,7 @@ LEMM:	lemm.o
 
 lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
 		graphics/sprites.inc \
-		intro_level1.s update_time.s hgr_sprite.s draw_flames.s  \
+		intro_level.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
 		hgr_hlin.s hgr_vlin.s update_menu.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
@@ -133,6 +133,8 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s exit_y1_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_y2_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s load_music lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s intro_text_smc_l lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s intro_text_smc_h lemm.lst >> lemm.inc
 
 ####
 
