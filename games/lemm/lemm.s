@@ -245,6 +245,9 @@ zurg:
 
 oof:
 
+	lda	#$0
+	sta	$9000			; make sure we load first level
+
 	;=======================
 	; do level
 	;=======================
@@ -252,29 +255,32 @@ oof:
 play_level:
 
 	; load level from disk
-	lda	WHICH_LEVEL		; FIXME: don't reload if already right
-					;        maybe put level# at $a000?
+	lda	WHICH_LEVEL		; see if level is same as current
+	cmp	$9000
+	beq	level_already_resident
+
 	sta	WHICH_LOAD
 	jsr	load_file
 
+level_already_resident:
 	jsr	start_level
 
 	lda	LEVEL_OVER
 	cmp	#LEVEL_WIN
 	beq	level_won
-	bne	level_lost
+	bne	level_continue
 
 level_won:
 	inc	WHICH_LEVEL
 
 	lda	WHICH_LEVEL
-	cmp	#3
-	bcc	level_lost
+	cmp	#6
+	bcc	level_continue
 
-	lda	#5
+	lda	#1			; wrap to level1?
 	sta	WHICH_LEVEL
 
-level_lost:
+level_continue:
 
 	jmp	play_level
 
