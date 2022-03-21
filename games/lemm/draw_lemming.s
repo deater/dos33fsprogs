@@ -349,7 +349,7 @@ draw_explosion:
 	ldy	#3
 	lda	lemming_y
 	clc
-	adc	#10
+	adc	#11
 	jsr	hgr_hlin
 
 	; line from (x,a) to (x+y,a)
@@ -357,11 +357,13 @@ draw_explosion:
 	ldy	#1
 	lda	lemming_y
 	clc
-	adc	#11
+	adc	#12
 	jsr	hgr_hlin
 
 
-	jsr	hgr_hlin_page_toggle		; toggle to page1
+	jsr	hgr_hlin_page_toggle		; toggle back to page1
+
+	jsr	click_speaker
 
 	ldy	#0
 	lda	#<explosion_sprite

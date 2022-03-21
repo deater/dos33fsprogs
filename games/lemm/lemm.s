@@ -324,6 +324,7 @@ level_lost:
 	.include	"particle_hgr.s"
 
 	.include	"load_music.s"
+	.include	"simple_sounds.s"
 
 
 	; moved to qload.s

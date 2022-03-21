@@ -1,12 +1,11 @@
 + more than 1 lemming
-+ move common code for lemming release to separate function,
-  update all 5 levels
++ click sound effect?  select job, click on lemming,
+	lemming explode, lemming exit
 
 + wait a second after last lemming gone to exit
 + update the "in" %
 + dig off the map, end level
 + fill in some of the ground so we don't get stuck when digging
-+ Update credits?
 + "Out" counter is only printed to page1 so gets erased by cursor
 + Falling too far and you go splat
 + See if the jerky animation is due to starting at an odd x vs

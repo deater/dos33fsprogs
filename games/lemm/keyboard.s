@@ -72,16 +72,28 @@ actually_handle_keypress:
 
 keypress:
 	and	#$7f			; clear high bit
-	cmp	#' '
-	beq	handle_input		; make sure not to lose space
+	cmp	#$40
+	bcc	handle_input		; make sure not to lose space
+					; and numbers
+
 	and	#$df			; convert uppercase to lower case
 
 
 handle_input:
 
-;	pha
-;	jsr	restore_bg_14x14	; restore old background
-;	pla
+
+	; first check if 1...8 pressed
+	cmp	#'1'
+	bcc	check_sound
+	cmp	#'9'
+	bcs	check_sound
+
+	sec				; map 1->3, 2->4, 4->5, etc
+	sbc	#'1'
+	clc
+	adc	#3
+	jsr	handle_menu_which_in_a
+	jmp	done_keypress
 
 check_sound:
 	cmp	#$14			; control-T
@@ -94,7 +106,6 @@ check_sound:
 
 	; can't be ^J as that's the same as down
 check_joystick:
-;	cmp	#$10			; control-P
 	cmp	#'J'
 	bne	check_left
 
@@ -212,7 +223,10 @@ return_check_lemming:
 	cmp	#8
 	bne	done_keypress
 
-	; for now assume we've got diggingselected
+	; for now assume we've got digging selected
+
+	jsr	click_speaker
+
 	lda	#LEMMING_DIGGING
 	sta	lemming_status
 
@@ -248,6 +262,8 @@ handle_menu:
 	lsr
 	lsr				; each box is 16 wide
 
+handle_menu_which_in_a:
+
 	cmp	#3
 	bcc	plus_minus_buttons
 	cmp	#11
@@ -260,6 +276,12 @@ handle_menu:
 job_button:
 
 	pha
+
+	jsr	click_speaker
+
+	pla
+	pha
+
 	; erase old
 
 	jsr	erase_menu
