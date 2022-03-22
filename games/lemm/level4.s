@@ -62,6 +62,9 @@ do_level4:
 
 	lda	#$00			; BCD
 	sta	PERCENT_NEEDED		; means 100%
+	lda	#$10
+	sta	PERCENT_ADD
+
 
 	;==============
 	; set up music

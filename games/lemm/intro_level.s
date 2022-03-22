@@ -184,21 +184,25 @@ upr_out_tens:
 	lda	PERCENT_RESCUED_H
 	bne	print_the_message	; 100%, was a win
 
-blip:
 	inx				; (1) NEEDED+20% < T < 100%
 	lda	PERCENT_NEEDED
-	clc
-	adc	#$20			; FIXME: only if < 80%
+	cmp	#$79
+	bcs	percent_too_high
+
+	clc				; not needed?
+	adc	#$20
 	cmp	PERCENT_RESCUED_L
-	bcs	print_the_message
+	bcc	print_the_message
+
+percent_too_high:
 
 	inx				; (2) NEEDED < T < NEEDED+20%
-	lda	PERCENT_RESCUED_L
-	cmp	PERCENT_NEEDED
+	lda	PERCENT_NEEDED
+	cmp	PERCENT_RESCUED_L
 	bcc	print_the_message
 
 	inx				; (3) NEEDED == T
-	cmp	PERCENT_NEEDED
+	cmp	PERCENT_RESCUED_L
 	beq	print_the_message
 
 	inx				; (4) T = NEEDED - 1
@@ -213,7 +217,7 @@ blip:
 	sec
 	sbc	#5
 	cmp	PERCENT_NEEDED
-	bcs	print_the_message
+	bcc	print_the_message
 
 	inx				; (6) NEEDED/2 < T < NEEDED-5
 	lda	PERCENT_RESCUED_L
@@ -299,14 +303,14 @@ level_message1_text:
 
 ; NEEDED < T < NEEDED+20%
 level_message2_text:
-.byte  2, 6,"THAT LEVEL SEEMED NO PROBLEM TO YOU ON",0
-.byte  3, 7,"THAT ATTEMPT. ONTO THE NEXT...",0
+.byte  2, 6,"THAT LEVEL SEEMED NO PROBLEM TO YOU",0
+.byte  3, 7,"ON THAT ATTEMPT. ONTO THE NEXT...",0
 .byte  $FF
 
 ; NEEDED == T
 level_message3_text:
-.byte  2, 6,"RIGHT ON. YOU CAN'T GET MUCH CLOSER THAN",0
-.byte  3, 7,"THAT. LET'S TRY THE NEXT...",0
+.byte  2, 6,"RIGHT ON. YOU CAN'T GET MUCH CLOSER",0
+.byte  3, 7,"THAN THAT. LET'S TRY THE NEXT...",0
 .byte  $FF
 
 ; T = NEEDED - 1

@@ -48,7 +48,7 @@ do_level1:
 
 	lda	#$10		; BCD
 	sta	PERCENT_NEEDED
-
+	sta	PERCENT_ADD
 
 	;==============
 	; set up intro

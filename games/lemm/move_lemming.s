@@ -213,6 +213,17 @@ remove_lemming:
 	sec
 	sbc	#1
 	sta	LEMMINGS_OUT
+
+	lda	PERCENT_RESCUED_L
+	clc
+	adc	PERCENT_ADD
+	sta	PERCENT_RESCUED_L
+	bcc	no_percent_oflo
+
+	inc	PERCENT_RESCUED_H
+
+no_percent_oflo:
+
 	cld
 
 	jsr	update_lemmings_out
