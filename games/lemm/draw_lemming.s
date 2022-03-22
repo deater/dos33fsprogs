@@ -1,10 +1,14 @@
 	;==================
 	;==================
-	; erase lemming
+	; erase lemmings
 	;==================
 	;==================
 erase_lemming:
 	ldy	#0
+	sty	CURRENT_LEMMING
+erase_lemming_loop:
+
+	ldy	CURRENT_LEMMING
 
 	lda	lemming_out,Y
 	beq	done_erase_lemming
@@ -23,6 +27,11 @@ erase_lemming:
 	jsr	hgr_partial_restore
 
 done_erase_lemming:
+	inc	CURRENT_LEMMING
+	lda	CURRENT_LEMMING
+	cmp	#MAX_LEMMINGS
+	bne	erase_lemming_loop
+
 	rts
 
 	;=========================
@@ -32,6 +41,11 @@ done_erase_lemming:
 	;=========================
 draw_lemming:
 	ldy	#0
+	sty	CURRENT_LEMMING
+
+draw_lemming_loop:
+
+	ldy	CURRENT_LEMMING
 
 	lda	lemming_out,Y
 	bne	do_draw_countdown
@@ -61,7 +75,8 @@ do_draw_countdown:
 
 
 do_draw_lemming:
-	ldy	#0
+	ldy	CURRENT_LEMMING
+
 	lda	lemming_status,Y
 	cmp	#LEMMING_DIGGING
 	beq	draw_digging_sprite
@@ -185,6 +200,14 @@ draw_common:
 	jsr	hgr_draw_sprite_autoshift
 
 done_draw_lemming:
+
+	inc	CURRENT_LEMMING
+	lda	CURRENT_LEMMING
+	cmp	#MAX_LEMMINGS
+	beq	really_done_draw_lemming
+	jmp	draw_lemming_loop
+
+really_done_draw_lemming:
 	rts
 
 

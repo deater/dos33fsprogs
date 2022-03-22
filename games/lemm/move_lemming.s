@@ -21,14 +21,16 @@ lemming_exploding:
 
 
 
-
-
 	;==========================
 	; move them
 	;==========================
 move_lemmings:
 
 	ldy	#0
+	sty	CURRENT_LEMMING
+move_lemming_loop:
+
+	ldy	CURRENT_LEMMING
 	lda	lemming_out,Y
 
 	bne	really_move_lemming
@@ -55,8 +57,10 @@ really_move_lemming:
 	;=========================
 
 do_lemming_falling:
-	inc	lemming_y		; fall speed
-	inc	lemming_y
+	tya
+	tax
+	inc	lemming_y,X		; fall speed
+	inc	lemming_y,X
 
 	jsr	collision_check_ground
 
@@ -74,75 +78,88 @@ do_lemming_walking:
 
 	; collision detect walls
 
-	lda	lemming_y
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
 	clc
 	adc	#3		; waist-high?
-	tay
+	tax
 
-	lda     hposn_high,Y
+	lda     hposn_high,X
 	clc
 	adc	#$20
         sta     GBASH
-        lda     hposn_low,Y
+        lda     hposn_low,X
         sta     GBASL
 
 	; increment
 	; only do this every 4th frame?
 
-	lda	lemming_frame
+	lda	lemming_frame,Y
 	and	#$3
 	beq	walking_increment
 
-	lda	lemming_x
-	jmp	walking_done
+	bne	walking_done
 
 
 walking_increment:
 	; actually incrememt
 
-	clc
-	lda	lemming_x
-	adc	lemming_direction
-	tay
+	clc				; increment/decrement X
+	lda	lemming_x,Y
+	adc	lemming_direction,Y	; A is now incremented version
+;	sta	lemming_x,Y
+	tay				; Y is now incremented version
 
-	lda	(GBASL),Y
+	lda	(GBASL),Y		; collision check
 	and	#$7f
 	beq	walking_no_wall
 
 walking_yes_wall:
+	;  we hit a wall, reverse course, undo the increment
+	; Y is updated
+
+	jsr	check_at_exit_xiny
 
 	; reverse direction
-	lda	lemming_direction
+	ldy	CURRENT_LEMMING
+	lda	lemming_direction,Y
 	eor	#$ff
 	clc
 	adc	#1
-	sta	lemming_direction
-	lda	lemming_x
+	sta	lemming_direction,Y
+	jmp	walking_no_increment
 
 walking_no_wall:
+	; y is incremented version
 	tya
+	ldy	CURRENT_LEMMING
+	sta	lemming_x,Y
 
-walking_done:
-	sta	lemming_x
+walking_no_increment:
 
 	jsr	collision_check_ground
 
+walking_done:
 	jmp	done_move_lemming
 
+	;=====================
+	; digging
+	;=====================
 do_lemming_digging:
-	lda	lemming_y
+	lda	lemming_y,Y
 	clc
 	adc	#9
-	tay
+	tax
 
-	lda     hposn_high,Y
+	lda     hposn_high,X
 	clc
 	adc	#$20
         sta     GBASH
-        lda     hposn_low,Y
+        lda     hposn_low,X
         sta     GBASL
 
-	ldy	lemming_x
+	lda	lemming_x,Y
+	tay
 	lda	(GBASL),Y
 	and	#$7f
 	beq	digging_falling
@@ -156,59 +173,56 @@ digging_digging:
 ;	lda	#$0
 ;	sta	(GBASL),Y
 
-	inc	lemming_y
+	ldx	CURRENT_LEMMING
+	inc	lemming_y,X
 
 	jmp	done_digging
 digging_falling:
+	ldy	CURRENT_LEMMING
 	lda	#LEMMING_FALLING
-	sta	lemming_status
+	sta	lemming_status,Y
 done_digging:
 
 
 done_move_lemming:
 
-	; see if at exit
-
-	lda	lemming_y
-exit_y1_smc:
-	cmp	#116
-	bcc	not_done_level
-exit_y2_smc:
-	cmp	#127
-	bcs	not_done_level
-
-
-	lda	lemming_x
-exit_x1_smc:
-	cmp	#31
-	bcc	not_done_level
-exit_x2_smc:
-	cmp	#35
-	bcs	not_done_level
-
-
-	; done level
-
-	jsr	remove_lemming
-
-	lda	#LEVEL_WIN
-	sta	LEVEL_OVER
-
-not_done_level:
 
 done_checking_lemming:
+
+	inc     CURRENT_LEMMING
+	lda     CURRENT_LEMMING
+	cmp     #MAX_LEMMINGS
+	beq     really_done_checking_lemming
+	jmp	move_lemming_loop
+really_done_checking_lemming:
 
 	rts
 
 	;==========================
 	; remove lemming from game
+	;==========================
 remove_lemming:
 
-	lda	#0
-	sta	lemming_out
+	jsr	click_speaker
 
-	dec	LEMMINGS_OUT
+	lda	#0
+	sta	lemming_out,Y
+
+	sed			; decrement BCD value
+	lda	LEMMINGS_OUT
+	sec
+	sbc	#1
+	sta	LEMMINGS_OUT
+	cld
+
 	jsr	update_lemmings_out
+
+	lda	LEMMINGS_OUT
+	bne	not_last_lemming
+
+	lda	#LEVEL_WIN
+	sta	LEVEL_OVER
+not_last_lemming:
 
 	rts
 
@@ -219,19 +233,20 @@ remove_lemming:
 	;=============================
 
 collision_check_ground:
-	lda	lemming_y
+	lda	lemming_y,Y
 	clc
 	adc	#9
-	tay
+	tax
 
-	lda     hposn_high,Y
+	lda     hposn_high,X
 	clc
 	adc	#$20			; check bg, not fg
         sta     GBASH
-        lda     hposn_low,Y
+        lda     hposn_low,X
         sta     GBASL
 
-	ldy	lemming_x
+	lda	lemming_x,Y
+	tay
 	lda	(GBASL),Y
 	and	#$7f
 	beq	ground_falling		; if empty space below us, fall
@@ -241,7 +256,8 @@ ground_walking:
 ground_falling:
 	lda	#LEMMING_FALLING
 done_check_ground:
-	sta	lemming_status
+	ldy	CURRENT_LEMMING
+	sta	lemming_status,Y
 
 	rts
 
@@ -252,25 +268,73 @@ done_check_ground:
 	;=============================
 
 collision_check_hill:
-	lda	lemming_y
+	lda	lemming_y,Y
 	clc
 	adc	#8
-	tay
+	tax
 
-	lda     hposn_high,Y
+	lda     hposn_high,X
 	clc
 	adc	#$20			; check bg, not fg
         sta     GBASH
-        lda     hposn_low,Y
+        lda     hposn_low,X
         sta     GBASL
 
-	ldy	lemming_x
+	lda	lemming_x,Y
+	tay
 	lda	(GBASL),Y
 	and	#$7f
 	beq	on_ground		; if empty space below us, good
 underground:
-	dec	lemming_y		; bump us up
+	ldx	CURRENT_LEMMING
+	dec	lemming_y,X		; bump us up
 
 on_ground:
 
 	rts
+
+
+	;=============================
+	; check at exit
+	;=============================
+check_at_exit_xiny:
+	tya
+	ldy	CURRENT_LEMMING
+	jmp	check_at_exit_y
+
+check_at_exit:
+
+	; see if at exit
+
+	ldy	CURRENT_LEMMING
+
+	; check X
+
+	lda	lemming_x,Y
+check_at_exit_y:
+
+exit_x1_smc:
+	cmp	#31
+	bcc	not_done_level
+exit_x2_smc:
+	cmp	#35
+	bcs	not_done_level
+
+	; check Y
+
+	lda	lemming_y,Y
+exit_y1_smc:
+	cmp	#116
+	bcc	not_done_level
+exit_y2_smc:
+	cmp	#127
+	bcs	not_done_level
+
+	; done level
+
+	jsr	remove_lemming
+
+
+not_done_level:
+	rts
+

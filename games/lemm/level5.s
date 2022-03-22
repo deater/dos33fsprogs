@@ -185,19 +185,7 @@ l5_door_is_open:
 	; release lemmings
 	;======================
 
-	lda	LEMMINGS_TO_RELEASE
-	beq	l5_done_release_lemmings
-
-	lda	DOOR_OPEN
-	beq	l5_done_release_lemmings
-
-	lda	FRAMEL
-	and	#$f
-	bne	l5_done_release_lemmings
-
 	jsr	release_lemming
-
-l5_done_release_lemmings:
 
 	;=====================
 	; animate flames

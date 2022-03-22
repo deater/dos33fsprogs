@@ -236,7 +236,7 @@ l1_timer_not_yet:
 
 	jsr	draw_pointer
 
-	lda	#$ff
+	lda	#$f0
 	jsr	wait
 
 	inc	FRAMEL
