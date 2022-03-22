@@ -134,18 +134,8 @@ do_level5:
 	; init vars
 	;=======================
 
-	lda	#0
-	sta	LEVEL_OVER
-	sta	DOOR_OPEN
-	sta	FRAMEL
-	sta	LOAD_NEXT_CHUNK
-	sta	LEMMINGS_OUT
-
-	jsr	update_lemmings_out
-
 	lda	#1
 	sta	LEMMINGS_TO_RELEASE
-	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -153,9 +143,9 @@ do_level5:
 	sta	TIME_MINUTES
 	lda	#$00
 	sta	TIME_SECONDS
+	sta	TIMER_COUNT	; 1/50
 
-	sta	TIMER_COUNT
-
+	jsr	init_level
 
 	;=======================
 	; Play "Let's Go"
@@ -259,8 +249,6 @@ l5_level_over:
 
 	rts
 
-
-	.include	"release_lemming.s"
 
 
 .include "graphics/graphics_level5.inc"

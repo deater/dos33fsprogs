@@ -147,24 +147,12 @@ do_level1:
 	lda	#100
 	sta	CURSOR_Y
 
-
-
 	;=======================
 	; init vars
 	;=======================
 
-	lda	#0
-	sta	LEVEL_OVER
-	sta	DOOR_OPEN
-	sta	FRAMEL
-	sta	LOAD_NEXT_CHUNK
-	sta	LEMMINGS_OUT
-
-	jsr	update_lemmings_out	; update  display
-
-	lda	#1
+	lda	#10
 	sta	LEMMINGS_TO_RELEASE
-	jsr	clear_lemmings_out
 
 	; set up time
 
@@ -173,7 +161,9 @@ do_level1:
 	lda	#$00
 	sta	TIME_SECONDS
 
-	sta	TIMER_COUNT
+	sta	TIMER_COUNT		; ??
+
+	jsr	init_level
 
 	;=======================
 	; Play "Let's Go"
@@ -213,19 +203,7 @@ l1_door_is_open:
 	; release lemmings
 	;======================
 
-	lda	LEMMINGS_TO_RELEASE
-	beq	l1_done_release_lemmings
-
-	lda	DOOR_OPEN
-	beq	l1_done_release_lemmings
-
-	lda	FRAMEL
-	and	#$f
-	bne	l1_done_release_lemmings
-
 	jsr	release_lemming
-
-l1_done_release_lemmings:
 
 	;=====================
 	; animate  flames
@@ -278,12 +256,6 @@ l1_level_over:
 	jsr	outro_level1
 
 	rts
-
-
-
-	.include "release_lemming.s"
-
-
 
 
 .include "graphics/graphics_level1.inc"

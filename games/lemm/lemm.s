@@ -254,7 +254,12 @@ oof:
 
 play_level:
 
+	;=======================
 	; load level from disk
+	;=======================
+
+	; skip if already resident
+
 	lda	WHICH_LEVEL		; see if level is same as current
 	cmp	$9000
 	beq	level_already_resident
@@ -263,6 +268,11 @@ play_level:
 	jsr	load_file
 
 level_already_resident:
+
+	;==================
+	; start level
+	;==================
+
 	jsr	start_level
 
 	lda	LEVEL_OVER
@@ -331,7 +341,8 @@ level_continue:
 
 	.include	"load_music.s"
 	.include	"simple_sounds.s"
-
+	.include	"release_lemming.s"
+	.include	"init_level.s"
 
 	; moved to qload.s
 ;	.include	"wait.s"

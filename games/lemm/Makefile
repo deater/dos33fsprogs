@@ -87,9 +87,9 @@ lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
 		graphics/sprites.inc \
 		intro_level.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
-		hgr_hlin.s hgr_vlin.s update_menu.s \
+		hgr_hlin.s hgr_vlin.s update_menu.s init_level.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
-		pointer_sprites.inc particle_hgr.s \
+		pointer_sprites.inc particle_hgr.s release_lemming.s \
 		title.s audio.s letsgo.s load_music.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
 
@@ -135,6 +135,8 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s load_music lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s intro_text_smc_l lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s intro_text_smc_h lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s release_lemming lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s init_level lemm.lst >> lemm.inc
 
 ####
 
@@ -209,5 +211,7 @@ graphics/graphics_test.inc:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common
+	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common \
+		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 \
+		lemm.inc
 

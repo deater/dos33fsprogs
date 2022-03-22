@@ -1,4 +1,6 @@
 
+; TODO: auto-size this based on MAX_LEMMINGS
+
 lemming_x:
 	.byte 0,0,0,0,0,0,0,0,0,0
 lemming_y:

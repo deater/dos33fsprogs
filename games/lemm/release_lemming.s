@@ -1,6 +1,4 @@
 
-
-
         ;=======================
         ; Clear Lemmings Out
         ;=======================
@@ -11,16 +9,31 @@ clear_lemmings_out:
 clear_lemmings_loop:
 	sta	lemming_out,Y
 	iny
-	cpy	LEMMINGS_TO_RELEASE
+	cpy	#MAX_LEMMINGS
 	bne	clear_lemmings_loop
 
 	rts
 
         ;=======================
-        ; Init Lemmings
+        ; Release Lemmings
         ;=======================
+	; TODO: adjust speed based on release speed
 release_lemming:
-	ldy	#0
+
+	; don't release if we've released them all
+	lda	LEMMINGS_TO_RELEASE
+	beq	done_release_lemmings
+
+	; don't release if door is still opening
+	lda	DOOR_OPEN
+	beq	done_release_lemmings
+
+	; only release every X frames
+	lda	FRAMEL
+	and	#$f
+	bne	done_release_lemmings
+
+	ldy	NEXT_LEMMING_TO_RELEASE
 
 	lda	#1
 	sta	lemming_out,Y
@@ -35,11 +48,20 @@ release_lemming:
 	lda	#LEMMING_FALLING
 	sta	lemming_status,Y
 
-	inc	LEMMINGS_OUT
+	sed
+	lda	LEMMINGS_OUT		; BCD
+	clc
+	adc	#1
+	sta	LEMMINGS_OUT
+	cld
+
 	jsr	update_lemmings_out
+
+	inc	NEXT_LEMMING_TO_RELEASE
 
 	dec	LEMMINGS_TO_RELEASE
 
+done_release_lemmings:
 
 	rts
 

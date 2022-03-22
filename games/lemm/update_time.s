@@ -111,21 +111,50 @@ draw_time:
 
 	rts
 
-
+	;===========================
+	;===========================
 	; update lemmings out number
+	;===========================
+	;===========================
+
+	; TODO: combine with time drawing code?
+
 update_lemmings_out:
 
-	; draw minute
-	ldy	LEMMINGS_OUT
+	; draw tens
+	lda	LEMMINGS_OUT
+	lsr
+	lsr
+	lsr
+	lsr
+	beq	lemmings_out_ones
+lemmings_out_tens:
+
+	tay
+	lda	bignums_l,Y
+	sta	INL
+	lda	bignums_h,Y
+	sta	INH
+
+	ldx	#15		; 105
+        stx     XPOS
+	lda	#152
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+
+lemmings_out_ones:
+	lda	LEMMINGS_OUT
+	and	#$f
+	tay
 
 	lda	bignums_l,Y
 	sta	INL
 	lda	bignums_h,Y
 	sta	INH
 
-	; 246, 152
-
-	ldx	#15		; 105
+	ldx	#16		; 112
         stx     XPOS
 	lda	#152
 	sta	YPOS
