@@ -80,3 +80,14 @@ set_inverse:
 	rts
 
 
+	;================================
+	; move and print a list of lines
+	;================================
+	; look for negative X meaning done
+move_and_print_list:
+	jsr     move_and_print
+	ldy     #0
+	lda     (OUTL),Y
+	bpl     move_and_print_list
+
+	rts

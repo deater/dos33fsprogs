@@ -29,6 +29,8 @@ do_level5:
 
 	; n/a
 
+	lda	#$10			; BCD
+	sta	PERCENT_NEEDED
 
 	;==============
 	; set up intro
@@ -233,7 +235,7 @@ l5_level_over:
 
 	jsr	disable_music
 
-	jsr	outro_level1
+	jsr	outro_level
 
 	rts
 

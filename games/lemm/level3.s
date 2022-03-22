@@ -45,6 +45,8 @@ do_level3:
 	lda	#144
 	sta	exit_y2_smc+1
 
+	lda	#$10			; BCD
+	sta	PERCENT_NEEDED
 
 	;==============
 	; set up intro
@@ -176,7 +178,7 @@ do_level3:
 	; Main Loop
 	;===================
 	;===================
-l4_main_loop:
+l3_main_loop:
 
 	;=========================
 	; load next chunk of music
@@ -191,11 +193,11 @@ l4_main_loop:
 	;=========================
 
 	lda	DOOR_OPEN
-	bne	l4_door_is_open
+	bne	l3_door_is_open
 
 	jsr	draw_door
 
-l4_door_is_open:
+l3_door_is_open:
 
 	;======================
 	; release lemmings
@@ -211,13 +213,13 @@ l4_door_is_open:
 
 	lda	TIMER_COUNT
 	cmp	#$50
-	bcc	l4_timer_not_yet
+	bcc	l3_timer_not_yet
 
 	jsr	update_time
 
 	lda	#$0
 	sta	TIMER_COUNT
-l4_timer_not_yet:
+l3_timer_not_yet:
 
 
 	; main drawing loop
@@ -240,16 +242,12 @@ l4_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l4_level_over
+	bne	l3_level_over
 
-	jmp	l4_main_loop
+	jmp	l3_main_loop
 
 
-l4_level_over:
-
-	jsr	disable_music
-
-	jsr	outro_level1
+l3_level_over:
 
 	rts
 

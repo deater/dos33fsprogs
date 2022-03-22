@@ -46,6 +46,8 @@ do_level2:
 	lda	#144
 	sta	exit_y2_smc+1
 
+	lda	#$10			; BCD
+	sta	PERCENT_NEEDED
 
 	;==============
 	; set up intro
@@ -248,10 +250,6 @@ l2_timer_not_yet:
 
 
 l2_level_over:
-
-	jsr	disable_music
-
-	jsr	outro_level1
 
 	rts
 

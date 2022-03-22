@@ -120,7 +120,7 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s erase_pointer lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s handle_keypress lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
-	./generate_common -a 0x6000 -s outro_level1 lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s outro_level lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s update_lemmings_out lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s level_preview_h_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s level_preview_l_smc lemm.lst >> lemm.inc

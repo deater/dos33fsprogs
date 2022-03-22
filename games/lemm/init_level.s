@@ -9,6 +9,8 @@ init_level:
 	sta	LOAD_NEXT_CHUNK
 	sta	LEMMINGS_OUT
 	sta	NEXT_LEMMING_TO_RELEASE
+	sta	PERCENT_RESCUED_L
+	sta	PERCENT_RESCUED_H
 
 	jsr	clear_lemmings_out
 

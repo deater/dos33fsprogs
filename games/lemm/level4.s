@@ -60,6 +60,8 @@ do_level4:
 	lda	#>level4_intro_text
 	sta	intro_text_smc_h+1
 
+	lda	#$00			; BCD
+	sta	PERCENT_NEEDED		; means 100%
 
 	;==============
 	; set up music
@@ -247,10 +249,6 @@ l4_timer_not_yet:
 
 
 l4_level_over:
-
-	jsr	disable_music
-
-	jsr	outro_level1
 
 	rts
 

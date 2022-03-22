@@ -270,10 +270,22 @@ play_level:
 level_already_resident:
 
 	;==================
-	; start level
+	; play level
 	;==================
 
 	jsr	start_level
+
+	;==================
+	; level over
+	;==================
+
+	; disable music
+
+	jsr     disable_music
+
+	; print end message
+
+	jsr     outro_level
 
 	lda	LEVEL_OVER
 	cmp	#LEVEL_WIN
