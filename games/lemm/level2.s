@@ -155,7 +155,7 @@ do_level2:
 	; init vars
 	;=======================
 
-	lda	#1
+	lda	#10
 	sta	LEMMINGS_TO_RELEASE
 
 	; set up time
@@ -239,7 +239,9 @@ l2_timer_not_yet:
 
 	jsr	draw_pointer
 
-	lda	#$ff
+	; wait a bit
+
+	lda	#$f0
 	jsr	wait
 
 	inc	FRAMEL

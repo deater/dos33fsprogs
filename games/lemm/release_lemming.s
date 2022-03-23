@@ -39,6 +39,7 @@ release_lemming:
 	sta	lemming_out,Y
 	lda	#0
 	sta	lemming_exploding,Y
+	sta	lemming_fall_distance,Y
 	lda	INIT_X
 	sta	lemming_x,Y
 	lda	INIT_Y

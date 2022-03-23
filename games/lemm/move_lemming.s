@@ -1,4 +1,5 @@
 
+
 ; TODO: auto-size this based on MAX_LEMMINGS
 
 lemming_x:
@@ -15,7 +16,8 @@ lemming_status:
 	.byte 0,0,0,0,0,0,0,0,0,0
 lemming_exploding:
 	.byte 0,0,0,0,0,0,0,0,0,0
-
+lemming_fall_distance:
+	.byte 0,0,0,0,0,0,0,0,0,0
 
 
 
@@ -61,6 +63,8 @@ do_lemming_falling:
 	tax
 	inc	lemming_y,X		; fall speed
 	inc	lemming_y,X
+
+	inc	lemming_fall_distance,X	; how far
 
 	jsr	collision_check_ground
 
@@ -201,12 +205,12 @@ really_done_checking_lemming:
 	;==========================
 	; remove lemming from game
 	;==========================
+	; Y points to CURRENT_LEMMING
+	; if C set it means they exited
+
 remove_lemming:
 
-	jsr	click_speaker
-
-	lda	#0
-	sta	lemming_out,Y
+	bcc	didnt_exit
 
 	sed			; decrement BCD value
 	lda	LEMMINGS_OUT
@@ -226,7 +230,16 @@ no_percent_oflo:
 
 	cld
 
+didnt_exit:
+
+	jsr	click_speaker
+
+	lda	#0
+	sta	lemming_out,Y
+
 	jsr	update_lemmings_out
+
+	; if that was the last one, then level over
 
 	lda	LEMMINGS_OUT
 	bne	not_last_lemming
@@ -262,8 +275,21 @@ collision_check_ground:
 	and	#$7f
 	beq	ground_falling		; if empty space below us, fall
 ground_walking:
+
+	; hit ground walking
+
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_fall_distance,Y
+	cmp	#16
+	bcs	lemming_goes_splat
+
+	lda	#0
+	sta	lemming_fall_distance,Y
+
 	lda	#LEMMING_WALKING	; else, walk
 	jmp	done_check_ground
+
 ground_falling:
 	lda	#LEMMING_FALLING
 done_check_ground:
@@ -272,6 +298,12 @@ done_check_ground:
 
 	rts
 
+lemming_goes_splat:
+
+	clc
+	jsr	remove_lemming
+
+	rts
 
 
 	;=============================
@@ -342,7 +374,7 @@ exit_y2_smc:
 	bcs	not_done_level
 
 	; done level
-
+	sec
 	jsr	remove_lemming
 
 

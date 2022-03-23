@@ -353,9 +353,9 @@ start_particles:
 
 	; start particles
 
-
+	ldy	CURRENT_LEMMING
 	lda	#LEMMING_PARTICLES
-	sta	lemming_status
+	sta	lemming_status,Y
 
 	rts
 
@@ -369,26 +369,32 @@ draw_explosion:
 	ldx	#0
 	sta	HGR_COLOR
 
+	ldy	CURRENT_LEMMING
+
 	; line from (x,a) to (x+y,a)
-	lda	lemming_x
+	lda	lemming_x,Y
 	asl
-	adc	lemming_x
+	adc	lemming_x,Y
 	asl
-	adc	lemming_x		; multiply by 7
+	adc	lemming_x,Y		; multiply by 7
 	tax
 	pha
-	ldy	#7
 
-	lda	lemming_y
+	lda	lemming_y,Y
 	clc
 	adc	#9
+
+	ldy	#7
+
 	jsr	hgr_hlin
 
 	; line from (x,a) to (x+y,a)
 	pla
 	tax
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
 	ldy	#7
-	lda	lemming_y
 	clc
 	adc	#10
 	jsr	hgr_hlin
@@ -404,6 +410,7 @@ draw_explosion:
 	lda	#>explosion_sprite
 	sta	INH
 
+	ldy	CURRENT_LEMMING
 	ldx	lemming_x,Y
 	dex
         stx     XPOS

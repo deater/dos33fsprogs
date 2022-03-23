@@ -157,7 +157,7 @@ do_level4:
 	; init vars
 	;=======================
 
-	lda	#1
+	lda	#10
 	sta	LEMMINGS_TO_RELEASE
 
 	; set up time
