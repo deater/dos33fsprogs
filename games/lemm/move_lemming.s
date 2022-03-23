@@ -283,7 +283,7 @@ ground_walking:
 	ldy	CURRENT_LEMMING
 
 	lda	lemming_fall_distance,Y
-	cmp	#32
+	cmp	#24
 	bcs	lemming_goes_splat
 
 	lda	#0

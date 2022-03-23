@@ -146,6 +146,7 @@ upr_not_100:
 	bcc	upr_out_tens
 
 always_tens:
+	ldx	PERCENT_RESCUED_L
 	txa
 	lsr
 	lsr

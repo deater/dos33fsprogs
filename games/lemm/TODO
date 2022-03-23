@@ -1,4 +1,3 @@
-+ more than 1 lemming
 + draw roughly circular bg destruction when lemming explodes
 + wait a second after last lemming gone to exit
 + update the "in" %
@@ -10,3 +9,10 @@
 	even x, maybe we should start animation 4 frames in if that's
 	the case.  Or maybe it's the shift for odd frames, make
 	the shift the other way if walking left/right
++ Add floater
++ Add stopper
++ Add climber
+
++ when nuke, they should stop coming out of the door
++ offset the frames when nuking so not simultaneous
++ on explosion, start with invisible 6 so we always get a full 5s
