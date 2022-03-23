@@ -220,10 +220,10 @@ remove_lemming:
 	bcc	no_percent_oflo
 
 	inc	PERCENT_RESCUED_H
-
+no_percent_oflo:
 	cld
 
-no_percent_oflo:
+	jsr	update_percent_in
 
 didnt_exit:
 
@@ -237,6 +237,7 @@ didnt_exit:
 	jsr	click_speaker
 
 	lda	#0
+	ldy	CURRENT_LEMMING
 	sta	lemming_out,Y
 
 	jsr	update_lemmings_out
@@ -283,7 +284,7 @@ ground_walking:
 	ldy	CURRENT_LEMMING
 
 	lda	lemming_fall_distance,Y
-	cmp	#24
+	cmp	#32
 	bcs	lemming_goes_splat
 
 	lda	#0
