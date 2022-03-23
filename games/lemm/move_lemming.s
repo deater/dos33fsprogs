@@ -212,12 +212,7 @@ remove_lemming:
 
 	bcc	didnt_exit
 
-	sed			; decrement BCD value
-	lda	LEMMINGS_OUT
-	sec
-	sbc	#1
-	sta	LEMMINGS_OUT
-
+	sed
 	lda	PERCENT_RESCUED_L
 	clc
 	adc	PERCENT_ADD
@@ -226,11 +221,18 @@ remove_lemming:
 
 	inc	PERCENT_RESCUED_H
 
-no_percent_oflo:
-
 	cld
 
+no_percent_oflo:
+
 didnt_exit:
+
+	sed			; decrement BCD value
+	lda	LEMMINGS_OUT
+	sec
+	sbc	#1
+	sta	LEMMINGS_OUT
+	cld
 
 	jsr	click_speaker
 
@@ -281,7 +283,7 @@ ground_walking:
 	ldy	CURRENT_LEMMING
 
 	lda	lemming_fall_distance,Y
-	cmp	#16
+	cmp	#32
 	bcs	lemming_goes_splat
 
 	lda	#0

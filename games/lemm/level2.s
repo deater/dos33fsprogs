@@ -144,7 +144,7 @@ do_level2:
         ; Setup cursor
         ;=======================
 
-	lda	#0
+	lda	#$FF
 	sta	OVER_LEMMING
 	lda	#10
 	sta	CURSOR_X

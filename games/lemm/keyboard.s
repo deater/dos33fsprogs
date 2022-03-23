@@ -215,7 +215,9 @@ return_pressed:
 	; next check if over lemming
 return_check_lemming:
 	lda	OVER_LEMMING
-	bpl	not_over_lemming
+	bmi	not_over_lemming
+
+	tay
 
 	; check if digging selected
 
@@ -228,7 +230,7 @@ return_check_lemming:
 	jsr	click_speaker
 
 	lda	#LEMMING_DIGGING
-	sta	lemming_status
+	sta	lemming_status,Y
 
 	jmp	done_keypress
 
@@ -297,23 +299,55 @@ job_button:
 	jsr	update_menu
 	jmp	done_menu
 
+
+	;============================
+	;============================
+	; plus/minus button
+	;============================
+	;============================
 plus_minus_buttons:
 	; TODO
 	jmp	done_menu
 
+	;============================
+	;============================
+	; nuke
+	;============================
+	;============================
+	; TODO: offset them a bit so it's not simultaneous
+	; FIXME: also stop more from coming out the door
+
 nuke_button:
 	lda	#1
-	sta	lemming_exploding
+	ldy	#0
+nuke_loop:
+	sta	lemming_exploding,Y
+	iny
+	cpy	#MAX_LEMMINGS
+	bne	nuke_loop
+
 	jmp	done_menu
+
+	;============================
+	;============================
+	; map grid
+	;============================
+	;============================
 
 map_grid_button:
 	; TODO
 	jmp	done_menu
 
+	;============================
+	;============================
+	; pause
+	;============================
+	;============================
+	; FIXME: should stop clock too
 pause_button:
+
 	bit	KEYRESET
 	jsr	wait_until_keypress
-
 
 done_menu:
 

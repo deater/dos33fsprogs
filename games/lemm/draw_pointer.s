@@ -5,8 +5,8 @@
 
 draw_pointer:
 
-	lda	#0
-	sta	OVER_LEMMING
+	lda	#$FF
+	sta	OVER_LEMMING		; first assume not over lemming
 
 	; for now assume the only 14x14 sprites are the pointers
 
@@ -17,14 +17,20 @@ draw_pointer:
 
 	; see if over lemming
 
+	ldy	#0
+see_if_over_loop:
+
+	lda	lemming_out,Y
+	beq	no_lemming_try_again
+
 	; see if CURSOR_X==LEMMING_X
 	lda	CURSOR_X
-	cmp	lemming_x
+	cmp	lemming_x,Y
 	beq	check_pointer_y
 	clc
 	adc	#1
-	cmp	lemming_x
-	bne	just_crosshair
+	cmp	lemming_x,Y
+	bne	no_lemming_try_again
 
 check_pointer_y:
 	; see if CURSOR_Y+7 > lemming_y && CURSOR_Y+7 < lemming_y+9
@@ -32,19 +38,30 @@ check_pointer_y:
 	lda	CURSOR_Y
 	clc
 	adc	#7
-	cmp	lemming_y
-	bcc	just_crosshair
+	cmp	lemming_y,Y
+	bcc	no_lemming_try_again
 
 	lda	CURSOR_Y		; if cursor_y+7 > lemming_y+9
 	sec
 	sbc	#2
-	cmp	lemming_y
-	bcs	just_crosshair
+	cmp	lemming_y,Y
+	bcs	no_lemming_try_again
 
+yes_over_lemming:
+	sty	OVER_LEMMING
+	jmp	yes_yes_lemming
+
+no_lemming_try_again:
+	iny
+	cpy	#MAX_LEMMINGS
+	bne	see_if_over_loop
+
+
+yes_yes_lemming:
+	lda	OVER_LEMMING
+	bmi	just_crosshair
 
 just_select:
-	lda	#$80
-	sta	OVER_LEMMING
 
 	lda     #<select_sprite_l
 	sta	INL
