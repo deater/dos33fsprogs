@@ -4,22 +4,32 @@ update_time:
 
 	; update explosion timer
 	; not ideal (first second might be short)
-	lda	lemming_exploding
+
+	ldy	#0
+update_exploding_loop:
+	lda	lemming_exploding,Y
 	beq	not_done_exploding
 
-	inc	lemming_exploding
-	lda	lemming_exploding
+
+	tya
+	tax
+	inc	lemming_exploding,X
+	lda	lemming_exploding,Y
 	cmp	#6
 	bne	not_done_exploding
 
 	lda	#LEMMING_EXPLODING
-	sta	lemming_status
+	sta	lemming_status,Y
 	lda	#0
-	sta	lemming_frame
-	sta	lemming_exploding
-
+	sta	lemming_frame,Y
+	sta	lemming_exploding,Y
 
 not_done_exploding:
+
+	iny
+	cpy	#MAX_LEMMINGS
+	bne	update_exploding_loop
+
 
 
 	sed

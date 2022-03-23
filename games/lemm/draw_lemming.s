@@ -56,7 +56,7 @@ do_draw_countdown:
 	lda	lemming_exploding,Y
 	beq	do_draw_lemming
 
-	ldx	lemming_exploding
+	ldx	lemming_exploding,Y
 	dex
 
 	lda	countdown_sprites_l,X
@@ -292,19 +292,25 @@ countdown_sprites_h:
 .byte >countdown2_sprite,>countdown1_sprite
 
 
+	;==========================
+	; Handle particles
+	;==========================
+
 handle_particles:
 	jsr	hgr_draw_particles
 
-	lda	lemming_frame
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_frame,Y
 	cmp	#16
 	bne	still_going
 
-	; partway through make lemming not out
+	; TODO: partway through make lemming not out?
+
 	lda	#0
-	sta	lemming_out
-	jsr	update_lemmings_out
-	lda	#LEVEL_FAIL
-	sta	LEVEL_OVER
+	sta	lemming_out,Y
+
+	jsr	remove_lemming
 
 still_going:
 
@@ -314,6 +320,9 @@ still_going:
 not_done_particle:
 	rts
 
+	;==========================
+	; Handle explosion
+	;==========================
 
 	; moved to make room
 handle_explosion:
@@ -326,13 +335,13 @@ handle_explosion:
 start_particles:
 
 	lda	#0
-	sta	lemming_frame
+	sta	lemming_frame,Y
 
 	jsr	init_particles
 
 	; erase explosion
 
-	ldy	#0
+	ldy	CURRENT_LEMMING
 
 	lda	lemming_y,Y
 	sec
