@@ -303,8 +303,14 @@ done_check_ground:
 
 lemming_goes_splat:
 
-	clc
-	jsr	remove_lemming
+	lda	#LEMMING_SPLATTING
+	sta	lemming_status,Y
+
+	lda	#0
+	sta	lemming_frame,Y
+
+;	clc
+;	jsr	remove_lemming
 
 	rts
 

@@ -86,6 +86,8 @@ do_draw_lemming:
 	beq	draw_exploding_sprite
 	cmp	#LEMMING_PARTICLES
 	beq	draw_particles
+	cmp	#LEMMING_SPLATTING
+	beq	draw_splatting_sprite
 
 draw_walking_sprite:
 
@@ -158,6 +160,18 @@ draw_exploding_sprite:
 	jsr	handle_explosion
 
 	jmp	done_draw_lemming
+
+	;====================
+	; draw splatting
+	;====================
+
+draw_splatting_sprite:
+
+
+	jsr	handle_splatting
+
+	jmp	done_draw_lemming
+
 
 	;====================
 	; draw particles
@@ -290,6 +304,19 @@ countdown_sprites_l:
 countdown_sprites_h:
 .byte >countdown5_sprite,>countdown4_sprite,>countdown3_sprite
 .byte >countdown2_sprite,>countdown1_sprite
+
+
+splatting_sprite_l:
+	.byte <lemming_splat1_sprite,<lemming_splat2_sprite
+	.byte <lemming_splat3_sprite,<lemming_splat4_sprite
+	.byte <lemming_splat5_sprite,<lemming_splat6_sprite
+	.byte <lemming_splat7_sprite,<lemming_splat8_sprite
+
+splatting_sprite_h:
+	.byte >lemming_splat1_sprite,>lemming_splat2_sprite
+	.byte >lemming_splat3_sprite,>lemming_splat4_sprite
+	.byte >lemming_splat5_sprite,>lemming_splat6_sprite
+	.byte >lemming_splat7_sprite,>lemming_splat8_sprite
 
 
 	;==========================
@@ -450,4 +477,41 @@ done_handle_exploding:
 
 	jsr	hgr_draw_sprite_autoshift
 
+	rts
+
+
+
+	;==========================
+	; Handle splatting
+	;==========================
+
+	; moved to make room
+handle_splatting:
+
+	lda	lemming_frame,Y
+	cmp	#$8
+	beq	done_splatting
+
+draw_splatting:
+	jsr	click_speaker
+
+	tax
+
+	lda	splatting_sprite_l,X
+	sta	INL
+	lda	splatting_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	rts
+
+done_splatting:
+	clc
+	jsr	remove_lemming		; FIXME: tail call
 	rts
