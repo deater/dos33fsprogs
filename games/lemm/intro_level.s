@@ -299,7 +299,7 @@ level_message0_text:
 ; NEEDED+20% < T < 100%
 level_message1_text:
 .byte  2, 6,"YOU TOTALLY STORMED THAT LEVEL!",0
-.byte  3, 7,"LET'S SEE IF YOU CAN STORM THE NEXT...",0
+.byte  1, 7,"LET'S SEE IF YOU CAN STORM THE NEXT...",0
 .byte  $FF
 
 ; NEEDED < T < NEEDED+20%

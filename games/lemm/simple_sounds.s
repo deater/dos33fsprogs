@@ -5,9 +5,11 @@
 	; FIXME: make it last longer?
 
 click_speaker:
+	pha
 	lda	SOUND_STATUS
 	bmi	done_click
 	bit	$c030
+	pla
 done_click:
 	rts
 

@@ -221,18 +221,47 @@ return_check_lemming:
 
 	; check if digging selected
 
-	lda	BUTTON_LOCATION
-	cmp	#8
-	bne	done_keypress
-
-	; for now assume we've got digging selected
-
 	jsr	click_speaker
 
-	lda	#LEMMING_DIGGING
-	sta	lemming_status,Y
+	lda	BUTTON_LOCATION
+	cmp	#1
+	beq	make_climber
+	cmp	#2
+	beq	make_floater
+	cmp	#3
+	beq	make_exploding
+	cmp	#4
+	beq	make_stopper
+	cmp	#5
+	beq	make_builder
+	cmp	#6
+	beq	make_basher
+	cmp	#7
+	beq	make_miner
+	cmp	#8
+	beq	make_digger
+	bne	done_keypress
 
+make_climber:
 	jmp	done_keypress
+make_floater:
+	jmp	done_keypress
+make_exploding:
+	jsr	make_exploding_routine
+	jmp	done_keypress
+make_stopper:
+	jmp	done_keypress
+make_builder:
+	jmp	done_keypress
+make_basher:
+	jmp	done_keypress
+make_miner:
+	jmp	done_keypress
+make_digger:
+	jsr	make_digger_routine
+	jmp	done_keypress
+
+
 
 not_over_lemming:
 
@@ -246,6 +275,38 @@ no_keypress:
 
 
 
+	;========================
+	; make digger
+	;========================
+make_digger_routine:
+
+	; only do it if walking
+	lda	lemming_status,Y
+	cmp	#LEMMING_WALKING
+	bne	done_make_digger
+
+	lda	#LEMMING_DIGGING
+	sta	lemming_status,Y
+
+	; FIXME: decrement digger_count
+done_make_digger:
+	rts
+
+	;========================
+	; make exploding
+	;========================
+make_exploding_routine:
+
+	lda	#1
+	sta	lemming_exploding,Y
+	rts
+
+
+	;=============================
+	;=============================
+	; handle menu
+	;=============================
+	;=============================
 
 handle_menu:
 	; see where we clicked
@@ -274,6 +335,7 @@ handle_menu_which_in_a:
 	beq	nuke_button
 	bcs	map_grid_button
 
+	;==========================
 	; otherwise was job button
 job_button:
 

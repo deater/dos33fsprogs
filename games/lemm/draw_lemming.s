@@ -310,7 +310,8 @@ handle_particles:
 	lda	#0
 	sta	lemming_out,Y
 
-	jsr	remove_lemming
+	clc				; mark as not exiting via door
+	jsr	remove_lemming		; remove the lemming
 
 still_going:
 
