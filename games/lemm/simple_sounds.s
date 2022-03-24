@@ -8,7 +8,7 @@ click_speaker:
 	pha
 	lda	SOUND_STATUS
 	bmi	done_click
-	bit	$c030
+	bit	SPEAKER
 	pla
 done_click:
 	rts

@@ -16,3 +16,6 @@
 + when nuke, they should stop coming out of the door
 + offset the frames when nuking so not simultaneous
 + on explosion, start with invisible 6 so we always get a full 5s
+
++ nuke/exploding should not happen if lemming is splatting
+	or already exploding
