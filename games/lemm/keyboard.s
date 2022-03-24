@@ -306,7 +306,14 @@ job_button:
 	;============================
 	;============================
 plus_minus_buttons:
-	; TODO
+
+	lda	release_lemming_speed+1
+	cmp	#1
+	beq	done_plus_adjust
+
+	lsr	release_lemming_speed+1	; make release faster
+
+done_plus_adjust:
 	jmp	done_menu
 
 	;============================

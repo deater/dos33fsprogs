@@ -2,6 +2,10 @@
 	; reset level vars
 	;====================
 init_level:
+
+	lda	#$f			; default release speed
+	sta	release_lemming_speed+1
+
 	lda	#0
 	sta	LEVEL_OVER
 	sta	DOOR_OPEN

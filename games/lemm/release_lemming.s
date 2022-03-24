@@ -30,6 +30,7 @@ release_lemming:
 
 	; only release every X frames
 	lda	FRAMEL
+release_lemming_speed:
 	and	#$f
 	bne	done_release_lemmings
 
