@@ -37,7 +37,7 @@ do_level3:
 
 	lda	#15			;
 	sta	exit_x1_smc+1
-	lda	#19
+	lda	#20
 	sta	exit_x2_smc+1
 
 	lda	#122

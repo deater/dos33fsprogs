@@ -252,6 +252,7 @@ make_exploding:
 	jsr	make_exploding_routine
 	jmp	done_keypress
 make_stopper:
+	jsr	make_stopper_routine
 	jmp	done_keypress
 make_builder:
 	jmp	done_keypress
@@ -321,6 +322,45 @@ make_floater_routine:
 	lda	#LEMMING_FLOATER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
+	rts
+
+	;========================
+	; make stopper
+	;========================
+make_stopper_routine:
+	lda	lemming_status,Y
+	cmp	#LEMMING_FLOATER		; can't stop if floating
+	beq	cant_stop
+	cmp	#LEMMING_FALLING		; can't stop if falling
+	beq	cant_stop
+
+	lda	#LEMMING_STOPPING
+	sta	lemming_status,Y
+
+	; put line on page2 to make lemmings reverse
+
+;	 line from (x,a) to (x,a+y)
+	lda	#$7f
+	sta	HGR_COLOR
+
+	jsr	hgr_vlin_page_toggle
+
+	clc
+	lda	lemming_x,Y		; multiply x by 7
+	asl
+	adc	lemming_x,Y
+	asl
+	adc	lemming_x,Y
+
+	tax
+	lda	lemming_y,Y
+	ldy	#10
+
+	jsr	hgr_vlin
+
+	jsr	hgr_vlin_page_toggle
+
+cant_stop:
 	rts
 
 

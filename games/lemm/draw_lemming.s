@@ -90,6 +90,8 @@ do_draw_lemming:
 	beq	draw_particles
 	cmp	#LEMMING_SPLATTING
 	beq	draw_splatting_sprite
+	cmp	#LEMMING_STOPPING
+	beq	draw_stopping_sprite
 
 draw_walking_sprite:
 
@@ -159,6 +161,19 @@ draw_splatting_sprite:
 	jsr	handle_splatting
 
 	jmp	done_draw_lemming
+
+
+	;====================
+	; draw stopping
+	;====================
+
+draw_stopping_sprite:
+
+
+	jsr	handle_stopping
+
+	jmp	done_draw_lemming
+
 
 
 	;====================
@@ -385,6 +400,27 @@ umbrella_sprite_h:
 	.byte >lemming_umbrella5_sprite,>lemming_umbrella6_sprite
 	.byte >lemming_umbrella7_sprite,>lemming_umbrella8_sprite
 
+stopper_sprite_l:
+	.byte <lemming_stopper1_sprite,<lemming_stopper2_sprite
+	.byte <lemming_stopper3_sprite,<lemming_stopper4_sprite
+	.byte <lemming_stopper5_sprite,<lemming_stopper6_sprite
+	.byte <lemming_stopper7_sprite,<lemming_stopper7_sprite
+	.byte <lemming_stopper9_sprite,<lemming_stopper10_sprite
+	.byte <lemming_stopper11_sprite,<lemming_stopper12_sprite
+	.byte <lemming_stopper13_sprite,<lemming_stopper14_sprite
+	.byte <lemming_stopper7_sprite,<lemming_stopper7_sprite
+
+stopper_sprite_h:
+	.byte >lemming_stopper1_sprite,>lemming_stopper2_sprite
+	.byte >lemming_stopper3_sprite,>lemming_stopper4_sprite
+	.byte >lemming_stopper5_sprite,>lemming_stopper6_sprite
+	.byte >lemming_stopper7_sprite,>lemming_stopper7_sprite
+	.byte >lemming_stopper9_sprite,>lemming_stopper10_sprite
+	.byte >lemming_stopper11_sprite,>lemming_stopper12_sprite
+	.byte >lemming_stopper13_sprite,>lemming_stopper14_sprite
+	.byte >lemming_stopper7_sprite,>lemming_stopper7_sprite
+
+
 
 	;==========================
 	; Handle particles
@@ -579,3 +615,31 @@ done_splatting:
 	clc
 	jsr	remove_lemming		; FIXME: tail call
 	rts
+
+
+
+	;==========================
+	; Handle stopping
+	;==========================
+
+handle_stopping:
+
+	lda	lemming_frame,Y
+	and	#$f
+	tax
+
+	lda	stopper_sprite_l,X
+	sta	INL
+	lda	stopper_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	rts
+
+
