@@ -342,9 +342,6 @@ handle_particles:
 
 still_going:
 
-
-
-
 not_done_particle:
 	rts
 

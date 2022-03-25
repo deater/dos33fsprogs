@@ -155,15 +155,17 @@ init_particle:
 
 ;	lda	#128			; init x
 
-	lda	lemming_x
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_x,Y
 	asl
-	adc	lemming_x
+	adc	lemming_x,Y
 	asl
-	adc	lemming_x		; mul by 7
+	adc	lemming_x,Y		; mul by 7
 
 	sta	particle_x,X
 
-	lda	lemming_y
+	lda	lemming_y,Y
 ;	lda	#100			; init y
 	sta	particle_y,X
 

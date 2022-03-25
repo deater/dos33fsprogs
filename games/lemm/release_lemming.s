@@ -17,7 +17,6 @@ clear_lemmings_loop:
         ;=======================
         ; Release Lemmings
         ;=======================
-	; TODO: adjust speed based on release speed
 release_lemming:
 
 	; don't release if we've released them all
@@ -41,6 +40,7 @@ release_lemming_speed:
 	lda	#0
 	sta	lemming_exploding,Y
 	sta	lemming_fall_distance,Y
+	sta	lemming_attribute,Y
 	lda	INIT_X
 	sta	lemming_x,Y
 	lda	INIT_Y

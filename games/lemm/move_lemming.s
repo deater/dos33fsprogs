@@ -18,8 +18,8 @@ lemming_exploding:
 	.byte 0,0,0,0,0,0,0,0,0,0
 lemming_fall_distance:
 	.byte 0,0,0,0,0,0,0,0,0,0
-
-
+lemming_attribute:
+	.byte 0,0,0,0,0,0,0,0,0,0
 
 
 
