@@ -82,6 +82,8 @@ do_draw_lemming:
 	beq	draw_digging_sprite
 	cmp	#LEMMING_FALLING
 	beq	draw_falling_sprite
+	cmp	#LEMMING_FLOATING
+	beq	draw_floating_sprite
 	cmp	#LEMMING_EXPLODING
 	beq	draw_exploding_sprite
 	cmp	#LEMMING_PARTICLES
@@ -117,36 +119,22 @@ draw_walking_common:
 	lda	lemming_y,Y
 	jmp	draw_common
 
+
+	;====================
+	; draw floating
+	;====================
+
+draw_floating_sprite:
+	jsr	do_draw_floating_sprite
+	jmp	draw_common
+
+
 	;====================
 	; draw falling
 	;====================
 
 draw_falling_sprite:
-
-	lda	lemming_frame,Y
-	and	#$3
-	tax
-
-	lda	lemming_direction,Y
-	bpl	draw_falling_right
-
-draw_falling_left:
-	lda	lfall_sprite_l,X
-	sta	INL
-	lda	lfall_sprite_h,X
-	jmp	draw_falling_common
-
-draw_falling_right:
-	lda	rfall_sprite_l,X
-	sta	INL
-	lda	rfall_sprite_h,X
-
-draw_falling_common:
-	sta	INH
-
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
+	jsr	do_draw_falling_sprite
 	jmp	draw_common
 
 
@@ -222,6 +210,73 @@ done_draw_lemming:
 	jmp	draw_lemming_loop
 
 really_done_draw_lemming:
+	rts
+
+
+	;===============
+	;===============
+	; draw floating
+	;===============
+	;===============
+
+do_draw_floating_sprite:
+	lda	lemming_frame,Y
+	cmp	#4
+	bcc	umbrella_opening		; blt
+						; if <4 then draw first 4
+						; frames
+
+	and	#3				; otherwise repeat frames
+	clc					; 4..7
+	adc	#4
+
+umbrella_opening:
+	tax
+
+	lda	umbrella_sprite_l,X
+	sta	INL
+	lda	umbrella_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#4
+	rts
+
+	;===============
+	;===============
+	; draw falling
+	;===============
+	;===============
+
+do_draw_falling_sprite:
+
+	lda	lemming_frame,Y
+	and	#$3
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_falling_right
+
+draw_falling_left:
+	lda	lfall_sprite_l,X
+	sta	INL
+	lda	lfall_sprite_h,X
+	jmp	draw_falling_common
+
+draw_falling_right:
+	lda	rfall_sprite_l,X
+	sta	INL
+	lda	rfall_sprite_h,X
+
+draw_falling_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
 	rts
 
 
@@ -317,6 +372,18 @@ splatting_sprite_h:
 	.byte >lemming_splat3_sprite,>lemming_splat4_sprite
 	.byte >lemming_splat5_sprite,>lemming_splat6_sprite
 	.byte >lemming_splat7_sprite,>lemming_splat8_sprite
+
+umbrella_sprite_l:
+	.byte <lemming_umbrella1_sprite,<lemming_umbrella2_sprite
+	.byte <lemming_umbrella3_sprite,<lemming_umbrella4_sprite
+	.byte <lemming_umbrella5_sprite,<lemming_umbrella6_sprite
+	.byte <lemming_umbrella7_sprite,<lemming_umbrella8_sprite
+
+umbrella_sprite_h:
+	.byte >lemming_umbrella1_sprite,>lemming_umbrella2_sprite
+	.byte >lemming_umbrella3_sprite,>lemming_umbrella4_sprite
+	.byte >lemming_umbrella5_sprite,>lemming_umbrella6_sprite
+	.byte >lemming_umbrella7_sprite,>lemming_umbrella8_sprite
 
 
 	;==========================

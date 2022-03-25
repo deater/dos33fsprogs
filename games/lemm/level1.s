@@ -286,4 +286,4 @@ level1_intro_text:
 .byte 12,16,"RELEASE RATE 50",0
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
-.byte  8,23,"PRESS RETURN TO CONINUE",0
+.byte  8,23,"PRESS RETURN TO CONTINUE",0

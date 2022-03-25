@@ -1,5 +1,3 @@
-
-
 ; TODO: auto-size this based on MAX_LEMMINGS
 
 lemming_x:
@@ -51,6 +49,8 @@ really_move_lemming:
 	beq	do_lemming_walking
 	cmp	#LEMMING_DIGGING
 	beq	do_lemming_digging
+	cmp	#LEMMING_FLOATING
+	beq	do_lemming_floating
 	jmp	done_move_lemming
 
 
@@ -59,16 +59,18 @@ really_move_lemming:
 	;=========================
 
 do_lemming_falling:
-	tya
-	tax
-	inc	lemming_y,X		; fall speed
-	inc	lemming_y,X
-
-	inc	lemming_fall_distance,X	; how far
-
-	jsr	collision_check_ground
-
+	jsr	handle_lemming_falling
 	jmp	done_move_lemming
+
+
+	;=========================
+	; floating
+	;=========================
+
+do_lemming_floating:
+	jsr	handle_lemming_floating
+	jmp	done_move_lemming
+
 
 	;=========================
 	; walking
@@ -146,6 +148,11 @@ walking_no_increment:
 walking_done:
 	jmp	done_move_lemming
 
+
+
+
+
+
 	;=====================
 	; digging
 	;=====================
@@ -201,6 +208,54 @@ done_checking_lemming:
 really_done_checking_lemming:
 
 	rts
+
+
+	;=====================
+	; falling
+	;=====================
+handle_lemming_falling:
+
+	tya
+	tax
+	inc	lemming_y,X		; fall speed
+	inc	lemming_y,X
+
+	inc	lemming_fall_distance,X	; how far
+
+	lda	lemming_fall_distance,X
+	cmp	#12
+	bcc	not_fallen_enough		; blt
+
+	lda	lemming_attribute,X
+	bpl	not_fallen_enough		; see if high bit set
+
+	; we can switch to floating
+	lda	#LEMMING_FLOATING
+	sta	lemming_status,X
+
+	lda	#0
+	sta	lemming_frame,X
+
+not_fallen_enough:
+	jsr	collision_check_ground
+
+	rts
+
+	;=====================
+	; floating
+	;=====================
+handle_lemming_floating:
+	tya
+	tax
+	inc	lemming_y,X		; fall speed
+	lda	#0
+	sta	lemming_fall_distance,X
+
+	jsr	collision_check_ground
+
+	rts
+
+
 
 	;==========================
 	; remove lemming from game
@@ -291,14 +346,19 @@ ground_walking:
 	sta	lemming_fall_distance,Y
 
 	lda	#LEMMING_WALKING	; else, walk
-	jmp	done_check_ground
+	jmp	update_status_check_ground
 
 ground_falling:
+	ldy	CURRENT_LEMMING
+	lda	lemming_status,Y	; if floating, don't go back to fall
+	cmp	#LEMMING_FLOATING
+	beq	done_check_ground
+
 	lda	#LEMMING_FALLING
-done_check_ground:
+update_status_check_ground:
 	ldy	CURRENT_LEMMING
 	sta	lemming_status,Y
-
+done_check_ground:
 	rts
 
 lemming_goes_splat:

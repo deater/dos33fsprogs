@@ -243,8 +243,10 @@ return_check_lemming:
 	bne	done_keypress
 
 make_climber:
+	jsr	make_climber_routine
 	jmp	done_keypress
 make_floater:
+	jsr	make_floater_routine
 	jmp	done_keypress
 make_exploding:
 	jsr	make_exploding_routine
@@ -300,6 +302,27 @@ make_exploding_routine:
 	lda	#1
 	sta	lemming_exploding,Y
 	rts
+
+	;========================
+	; make climber
+	;========================
+make_climber_routine:
+
+	lda	#LEMMING_CLIMBER
+	ora	lemming_attribute,Y
+	sta	lemming_attribute,Y
+	rts
+
+	;========================
+	; make floater
+	;========================
+make_floater_routine:
+
+	lda	#LEMMING_FLOATER
+	ora	lemming_attribute,Y
+	sta	lemming_attribute,Y
+	rts
+
 
 
 	;=============================
