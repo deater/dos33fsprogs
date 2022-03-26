@@ -10,22 +10,37 @@ sound_effects:
 
 	jsr	water
 
-;	jsr	whistle
+	jsr	wait_until_keypress
 
-;	jsr	boop
+	jsr	whistle
 
-;	jsr	beep
+	jsr	wait_until_keypress
 
-;	jsr	boop
+	jsr	boop
 
-;	jsr	static
+	jsr	wait_until_keypress
+
+	jsr	beep
+
+	jsr	wait_until_keypress
+
+	jsr	boop
+
+	jsr	wait_until_keypress
+
+	jsr	static
+
+	jsr	wait_until_keypress
 
 end:
-	lda	KEYPRESS
-	bpl	end
-	bit	KEYRESET
+	jsr	sound_effects
 
-	jmp	sound_effects
+
+wait_until_keypress:
+	lda	KEYPRESS
+	bpl	wait_until_keypress
+	bit	KEYRESET
+	rts
 
 
 
