@@ -92,7 +92,7 @@ do_draw_lemming:
 	rts					; jump to it
 
 
-draw_common:
+draw_lemming_common:
 	sta	YPOS
 
 	jsr	hgr_draw_sprite_autoshift
@@ -102,7 +102,6 @@ done_draw_lemming:
 	inc	CURRENT_LEMMING
 	lda	CURRENT_LEMMING
 	cmp	#MAX_LEMMINGS
-;	beq	really_done_draw_lemming
 	bne	draw_lemming_loop
 
 really_done_draw_lemming:
@@ -117,13 +116,13 @@ draw_lemming_jump_l:
 	.byte	<(draw_particles-1)
 	.byte	<(draw_splatting_sprite-1)
 	.byte	<(draw_floating_sprite-1)
-	.byte	0 ; <(draw_climbing_sprite-1)
-	.byte	0 ; <(draw_bashing_sprite-1)
+	.byte	<(draw_climbing_sprite-1)
+	.byte	<(draw_bashing_sprite-1)
 	.byte	<(draw_stopping_sprite-1)
-	.byte	0 ; <(draw_mining_sprite-1)
-	.byte	0 ; <(draw_building_sprite-1)
-	.byte	0 ; <(draw_shrugging_sprite-1)
-	.byte	0 ; <(draw_pullup_sprite-1)
+	.byte	<(draw_mining_sprite-1)
+	.byte	<(draw_building_sprite-1)
+	.byte	<(draw_shrugging_sprite-1)
+	.byte	<(draw_pullup_sprite-1)
 
 draw_lemming_jump_h:
 	.byte	>(draw_falling_sprite-1)
@@ -133,13 +132,13 @@ draw_lemming_jump_h:
 	.byte	>(draw_particles-1)
 	.byte	>(draw_splatting_sprite-1)
 	.byte	>(draw_floating_sprite-1)
-	.byte	0 ; >(draw_climbing_sprite-1)
-	.byte	0 ; >(draw_bashing_sprite-1)
+	.byte	>(draw_climbing_sprite-1)
+	.byte	>(draw_bashing_sprite-1)
 	.byte	>(draw_stopping_sprite-1)
-	.byte	0 ; >(draw_mining_sprite-1)
-	.byte	0 ; >(draw_building_sprite-1)
-	.byte	0 ; >(draw_shrugging_sprite-1)
-	.byte	0 ; >(draw_pullup_sprite-1)
+	.byte	>(draw_mining_sprite-1)
+	.byte	>(draw_building_sprite-1)
+	.byte	>(draw_shrugging_sprite-1)
+	.byte	>(draw_pullup_sprite-1)
 
 
 	;=========================
@@ -174,7 +173,225 @@ draw_walking_common:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
-	jmp	draw_common
+	jmp	draw_lemming_common
+
+
+
+	;=========================
+	;=========================
+	; draw climbing
+	;=========================
+	;=========================
+
+draw_climbing_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_climbing_right
+
+draw_climbing_left:
+	lda	lclimb_sprite_l,X
+	sta	INL
+	lda	lclimb_sprite_h,X
+	jmp	draw_climbing_common
+
+draw_climbing_right:
+	lda	rclimb_sprite_l,X
+	sta	INL
+	lda	rclimb_sprite_h,X
+
+draw_climbing_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+
+	;=========================
+	;=========================
+	; draw bashing
+	;=========================
+	;=========================
+
+draw_bashing_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_bashing_right
+
+draw_bashing_left:
+	lda	lbash_sprite_l,X
+	sta	INL
+	lda	lbash_sprite_h,X
+	jmp	draw_bashing_common
+
+draw_bashing_right:
+	lda	rbash_sprite_l,X
+	sta	INL
+	lda	rbash_sprite_h,X
+
+draw_bashing_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+	;=========================
+	;=========================
+	; draw mining
+	;=========================
+	;=========================
+
+draw_mining_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_mining_right
+
+draw_mining_left:
+	lda	lmine_sprite_l,X
+	sta	INL
+	lda	lmine_sprite_h,X
+	jmp	draw_mining_common
+
+draw_mining_right:
+	lda	rmine_sprite_l,X
+	sta	INL
+	lda	rmine_sprite_h,X
+
+draw_mining_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+	;=========================
+	;=========================
+	; draw building
+	;=========================
+	;=========================
+
+draw_building_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_building_right
+
+draw_building_left:
+	lda	lbuild_sprite_l,X
+	sta	INL
+	lda	lbuild_sprite_h,X
+	jmp	draw_building_common
+
+draw_building_right:
+	lda	rbuild_sprite_l,X
+	sta	INL
+	lda	rbuild_sprite_h,X
+
+draw_building_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+	;=========================
+	;=========================
+	; draw shrugging
+	;=========================
+	;=========================
+
+draw_shrugging_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_shrugging_right
+
+draw_shrugging_left:
+	lda	lshrug_sprite_l,X
+	sta	INL
+	lda	lshrug_sprite_h,X
+	jmp	draw_shrugging_common
+
+draw_shrugging_right:
+	lda	rshrug_sprite_l,X
+	sta	INL
+	lda	rshrug_sprite_h,X
+
+draw_shrugging_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+	;=========================
+	;=========================
+	; draw pullup
+	;=========================
+	;=========================
+
+draw_pullup_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	lemming_direction,Y
+	bpl	draw_pullup_right
+
+draw_pullup_left:
+	lda	lpullup_sprite_l,X
+	sta	INL
+	lda	lpullup_sprite_h,X
+	jmp	draw_pullup_common
+
+draw_pullup_right:
+	lda	rpullup_sprite_l,X
+	sta	INL
+	lda	rpullup_sprite_h,X
+
+draw_pullup_common:
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	jmp	draw_lemming_common
+
+
+
+
+
+
 
 
 	;=========================
@@ -209,7 +426,7 @@ umbrella_opening:
 	sec
 	sbc	#4
 
-	jmp	draw_common
+	jmp	draw_lemming_common
 
 
 	;=========================
@@ -245,7 +462,7 @@ draw_falling_common:
         stx     XPOS
 	lda	lemming_y,Y
 
-	jmp	draw_common
+	jmp	draw_lemming_common
 
 
 	;=========================
@@ -373,24 +590,20 @@ exploding_animation:
 	lda	lemming_y,Y
 
 done_handle_exploding:
-	sta	YPOS
+	jmp	draw_lemming_common
 
-	jsr	hgr_draw_sprite_autoshift
+;	sta	YPOS
 
-	jmp	done_draw_lemming
+;	jsr	hgr_draw_sprite_autoshift
 
+;	jmp	done_draw_lemming
+
+	;====================
 	;====================
 	; draw splatting
 	;====================
-
+	;====================
 draw_splatting_sprite:
-
-	;==========================
-	; Handle splatting
-	;==========================
-
-	; moved to make room
-handle_splatting:
 
 	lda	lemming_frame,Y
 	cmp	#$8
@@ -442,11 +655,14 @@ draw_stopping_sprite:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
-	sta	YPOS
 
-	jsr	hgr_draw_sprite_autoshift
+	jmp	draw_lemming_common
 
-	jmp	done_draw_lemming
+;	sta	YPOS
+
+;	jsr	hgr_draw_sprite_autoshift
+
+;	jmp	done_draw_lemming
 
 
 
@@ -503,15 +719,14 @@ draw_digging_sprite:
 	lda	lemming_y,Y
 	sec
 	sbc	#2
-	jmp	draw_common
+	jmp	draw_lemming_common
 
 
 
 
-
-
-
-
+;===============
+; sprite tables
+;===============
 
 
 
@@ -639,4 +854,143 @@ stopper_sprite_h:
 	.byte >lemming_stopper11_sprite,>lemming_stopper12_sprite
 	.byte >lemming_stopper13_sprite,>lemming_stopper14_sprite
 	.byte >lemming_stopper7_sprite,>lemming_stopper7_sprite
+
+
+rclimb_sprite_l:
+	.byte <lemming_rclimb1_sprite,<lemming_rclimb2_sprite
+	.byte <lemming_rclimb3_sprite,<lemming_rclimb4_sprite
+	.byte <lemming_rclimb5_sprite,<lemming_rclimb6_sprite
+	.byte <lemming_rclimb7_sprite,<lemming_rclimb8_sprite
+rclimb_sprite_h:
+	.byte >lemming_rclimb1_sprite,>lemming_rclimb2_sprite
+	.byte >lemming_rclimb3_sprite,>lemming_rclimb4_sprite
+	.byte >lemming_rclimb5_sprite,>lemming_rclimb6_sprite
+	.byte >lemming_rclimb7_sprite,>lemming_rclimb8_sprite
+
+lclimb_sprite_l:
+	.byte <lemming_lclimb1_sprite,<lemming_lclimb2_sprite
+	.byte <lemming_lclimb3_sprite,<lemming_lclimb4_sprite
+	.byte <lemming_lclimb5_sprite,<lemming_lclimb6_sprite
+	.byte <lemming_lclimb7_sprite,<lemming_lclimb8_sprite
+lclimb_sprite_h:
+	.byte >lemming_lclimb1_sprite,>lemming_lclimb2_sprite
+	.byte >lemming_lclimb3_sprite,>lemming_lclimb4_sprite
+	.byte >lemming_lclimb5_sprite,>lemming_lclimb6_sprite
+	.byte >lemming_lclimb7_sprite,>lemming_lclimb8_sprite
+
+
+rbash_sprite_l:
+	.byte <lemming_rbasher1_sprite,<lemming_rbasher2_sprite
+	.byte <lemming_rbasher3_sprite,<lemming_rbasher4_sprite
+	.byte <lemming_rbasher5_sprite,<lemming_rbasher6_sprite
+	.byte <lemming_rbasher7_sprite,<lemming_rbasher8_sprite
+rbash_sprite_h:
+	.byte >lemming_rbasher1_sprite,>lemming_rbasher2_sprite
+	.byte >lemming_rbasher3_sprite,>lemming_rbasher4_sprite
+	.byte >lemming_rbasher5_sprite,>lemming_rbasher6_sprite
+	.byte >lemming_rbasher7_sprite,>lemming_rbasher8_sprite
+
+lbash_sprite_l:
+	.byte <lemming_lbasher1_sprite,<lemming_lbasher2_sprite
+	.byte <lemming_lbasher3_sprite,<lemming_lbasher4_sprite
+	.byte <lemming_lbasher5_sprite,<lemming_lbasher6_sprite
+	.byte <lemming_lbasher7_sprite,<lemming_lbasher8_sprite
+lbash_sprite_h:
+	.byte >lemming_lbasher1_sprite,>lemming_lbasher2_sprite
+	.byte >lemming_lbasher3_sprite,>lemming_lbasher4_sprite
+	.byte >lemming_lbasher5_sprite,>lemming_lbasher6_sprite
+	.byte >lemming_lbasher7_sprite,>lemming_lbasher8_sprite
+
+
+rmine_sprite_l:
+	.byte <lemming_rmine1_sprite,<lemming_rmine2_sprite
+	.byte <lemming_rmine3_sprite,<lemming_rmine4_sprite
+	.byte <lemming_rmine5_sprite,<lemming_rmine6_sprite
+	.byte <lemming_rmine7_sprite,<lemming_rmine8_sprite
+rmine_sprite_h:
+	.byte >lemming_rmine1_sprite,>lemming_rmine2_sprite
+	.byte >lemming_rmine3_sprite,>lemming_rmine4_sprite
+	.byte >lemming_rmine5_sprite,>lemming_rmine6_sprite
+	.byte >lemming_rmine7_sprite,>lemming_rmine8_sprite
+
+lmine_sprite_l:
+	.byte <lemming_lmine1_sprite,<lemming_lmine2_sprite
+	.byte <lemming_lmine3_sprite,<lemming_lmine4_sprite
+	.byte <lemming_lmine5_sprite,<lemming_lmine6_sprite
+	.byte <lemming_lmine7_sprite,<lemming_lmine8_sprite
+lmine_sprite_h:
+	.byte >lemming_lmine1_sprite,>lemming_lmine2_sprite
+	.byte >lemming_lmine3_sprite,>lemming_lmine4_sprite
+	.byte >lemming_lmine5_sprite,>lemming_lmine6_sprite
+	.byte >lemming_lmine7_sprite,>lemming_lmine8_sprite
+
+
+rbuild_sprite_l:
+	.byte <lemming_rbuild1_sprite,<lemming_rbuild2_sprite
+	.byte <lemming_rbuild3_sprite,<lemming_rbuild4_sprite
+	.byte <lemming_rbuild5_sprite,<lemming_rbuild6_sprite
+	.byte <lemming_rbuild7_sprite,<lemming_rbuild8_sprite
+rbuild_sprite_h:
+	.byte >lemming_rbuild1_sprite,>lemming_rbuild2_sprite
+	.byte >lemming_rbuild3_sprite,>lemming_rbuild4_sprite
+	.byte >lemming_rbuild5_sprite,>lemming_rbuild6_sprite
+	.byte >lemming_rbuild7_sprite,>lemming_rbuild8_sprite
+
+lbuild_sprite_l:
+	.byte <lemming_lbuild1_sprite,<lemming_lbuild2_sprite
+	.byte <lemming_lbuild3_sprite,<lemming_lbuild4_sprite
+	.byte <lemming_lbuild5_sprite,<lemming_lbuild6_sprite
+	.byte <lemming_lbuild7_sprite,<lemming_lbuild8_sprite
+lbuild_sprite_h:
+	.byte >lemming_lbuild1_sprite,>lemming_lbuild2_sprite
+	.byte >lemming_lbuild3_sprite,>lemming_lbuild4_sprite
+	.byte >lemming_lbuild5_sprite,>lemming_lbuild6_sprite
+	.byte >lemming_lbuild7_sprite,>lemming_lbuild8_sprite
+
+
+rpullup_sprite_l:
+	.byte <lemming_rpullup1_sprite,<lemming_rpullup2_sprite
+	.byte <lemming_rpullup3_sprite,<lemming_rpullup4_sprite
+	.byte <lemming_rpullup5_sprite,<lemming_rpullup6_sprite
+	.byte <lemming_rpullup7_sprite,<lemming_rpullup8_sprite
+rpullup_sprite_h:
+	.byte >lemming_rpullup1_sprite,>lemming_rpullup2_sprite
+	.byte >lemming_rpullup3_sprite,>lemming_rpullup4_sprite
+	.byte >lemming_rpullup5_sprite,>lemming_rpullup6_sprite
+	.byte >lemming_rpullup7_sprite,>lemming_rpullup8_sprite
+
+lpullup_sprite_l:
+	.byte <lemming_lpullup1_sprite,<lemming_lpullup2_sprite
+	.byte <lemming_lpullup3_sprite,<lemming_lpullup4_sprite
+	.byte <lemming_lpullup5_sprite,<lemming_lpullup6_sprite
+	.byte <lemming_lpullup7_sprite,<lemming_lpullup8_sprite
+lpullup_sprite_h:
+	.byte >lemming_lpullup1_sprite,>lemming_lpullup2_sprite
+	.byte >lemming_lpullup3_sprite,>lemming_lpullup4_sprite
+	.byte >lemming_lpullup5_sprite,>lemming_lpullup6_sprite
+	.byte >lemming_lpullup7_sprite,>lemming_lpullup8_sprite
+
+
+rshrug_sprite_l:
+	.byte <lemming_rshrug1_sprite,<lemming_rshrug2_sprite
+	.byte <lemming_shrug3_sprite,<lemming_shrug4_sprite
+	.byte <lemming_shrug5_sprite,<lemming_shrug6_sprite
+	.byte <lemming_shrug7_sprite,<lemming_shrug8_sprite
+rshrug_sprite_h:
+	.byte >lemming_rshrug1_sprite,>lemming_rshrug2_sprite
+	.byte >lemming_shrug3_sprite,>lemming_shrug4_sprite
+	.byte >lemming_shrug5_sprite,>lemming_shrug6_sprite
+	.byte >lemming_shrug7_sprite,>lemming_shrug8_sprite
+
+lshrug_sprite_l:
+	.byte <lemming_lshrug1_sprite,<lemming_lshrug2_sprite
+	.byte <lemming_shrug3_sprite,<lemming_shrug4_sprite
+	.byte <lemming_shrug5_sprite,<lemming_shrug6_sprite
+	.byte <lemming_shrug7_sprite,<lemming_shrug8_sprite
+lshrug_sprite_h:
+	.byte >lemming_lshrug1_sprite,>lemming_lshrug2_sprite
+	.byte >lemming_shrug3_sprite,>lemming_shrug4_sprite
+	.byte >lemming_shrug5_sprite,>lemming_shrug6_sprite
+	.byte >lemming_shrug7_sprite,>lemming_shrug8_sprite
+
 
