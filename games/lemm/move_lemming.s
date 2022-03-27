@@ -43,39 +43,118 @@ really_move_lemming:
 	inc	lemming_frame,X		; only can inc with X
 
 	lda	lemming_status,Y
-	cmp	#LEMMING_FALLING
-	beq	do_lemming_falling
-	cmp	#LEMMING_WALKING
-	beq	do_lemming_walking
-	cmp	#LEMMING_DIGGING
-	beq	do_lemming_digging
-	cmp	#LEMMING_FLOATING
-	beq	do_lemming_floating
-	jmp	done_move_lemming
+	tax
+	lda	move_lemming_jump_h,X
+	pha
+	lda	move_lemming_jump_l,X
+	pha
+	rts				; jump to it
+
+done_move_lemming:
 
 
+done_checking_lemming:
+
+	inc     CURRENT_LEMMING
+	lda     CURRENT_LEMMING
+	cmp     #MAX_LEMMINGS
+	beq     really_done_checking_lemming
+	jmp	move_lemming_loop
+really_done_checking_lemming:
+
+	rts
+
+
+move_lemming_jump_l:
+	.byte   <(do_lemming_falling-1)
+	.byte   <(do_lemming_walking-1)
+	.byte   <(do_lemming_digging-1)
+	.byte   <(do_lemming_exploding-1)
+	.byte   <(do_lemming_particles-1)
+	.byte   <(do_lemming_splatting-1)
+	.byte   <(do_lemming_floating-1)
+	.byte   <(do_lemming_climbing-1)
+	.byte   <(do_lemming_bashing-1)
+	.byte   <(do_lemming_stopping-1)
+	.byte   <(do_lemming_mining-1)
+	.byte   <(do_lemming_building-1)
+	.byte   <(do_lemming_shrugging-1)
+	.byte   <(do_lemming_pullup-1)
+
+move_lemming_jump_h:
+	.byte   >(do_lemming_falling-1)
+	.byte   >(do_lemming_walking-1)
+	.byte   >(do_lemming_digging-1)
+	.byte   >(do_lemming_exploding-1)
+	.byte   >(do_lemming_particles-1)
+	.byte   >(do_lemming_splatting-1)
+	.byte   >(do_lemming_floating-1)
+	.byte   >(do_lemming_climbing-1)
+	.byte   >(do_lemming_bashing-1)
+	.byte   >(do_lemming_stopping-1)
+	.byte   >(do_lemming_mining-1)
+	.byte   >(do_lemming_building-1)
+	.byte   >(do_lemming_shrugging-1)
+	.byte   >(do_lemming_pullup-1)
+
+
+	;=========================
 	;=========================
 	; falling
 	;=========================
-
+	;=========================
 do_lemming_falling:
-	jsr	handle_lemming_falling
+
+	tya
+	tax
+	inc	lemming_y,X		; fall speed
+	inc	lemming_y,X
+
+	inc	lemming_fall_distance,X	; how far
+
+	lda	lemming_fall_distance,X
+	cmp	#12
+	bcc	not_fallen_enough		; blt
+
+	lda	lemming_attribute,X
+	bpl	not_fallen_enough		; see if high bit set
+
+	; we can switch to floating
+	lda	#LEMMING_FLOATING
+	sta	lemming_status,X
+
+	lda	#0
+	sta	lemming_frame,X
+
+not_fallen_enough:
+	jsr	collision_check_ground
+
 	jmp	done_move_lemming
 
 
+	;=========================
 	;=========================
 	; floating
 	;=========================
-
+	;=========================
 do_lemming_floating:
-	jsr	handle_lemming_floating
+
+	tya
+	tax
+	inc	lemming_y,X		; fall speed
+	lda	#0
+	sta	lemming_fall_distance,X
+
+	jsr	collision_check_ground
+
 	jmp	done_move_lemming
 
 
 	;=========================
+	;=========================
 	; walking
 	;=========================
-
+	;=========================
 do_lemming_walking:
 
 	; see if ground has risen up
@@ -193,67 +272,28 @@ digging_falling:
 	lda	#LEMMING_FALLING
 	sta	lemming_status,Y
 done_digging:
+	jmp	done_move_lemming
 
-
-done_move_lemming:
-
-
-done_checking_lemming:
-
-	inc     CURRENT_LEMMING
-	lda     CURRENT_LEMMING
-	cmp     #MAX_LEMMINGS
-	beq     really_done_checking_lemming
-	jmp	move_lemming_loop
-really_done_checking_lemming:
-
-	rts
 
 
 	;=====================
-	; falling
+	; do nothing
 	;=====================
-handle_lemming_falling:
 
-	tya
-	tax
-	inc	lemming_y,X		; fall speed
-	inc	lemming_y,X
+	; placeholders
+do_lemming_exploding:
+do_lemming_pullup:
+do_lemming_shrugging:
+do_lemming_building:
+do_lemming_mining:
+do_lemming_stopping:
+do_lemming_bashing:
+do_lemming_climbing:
+do_lemming_splatting:
+do_lemming_particles:
 
-	inc	lemming_fall_distance,X	; how far
+	jmp	done_move_lemming
 
-	lda	lemming_fall_distance,X
-	cmp	#12
-	bcc	not_fallen_enough		; blt
-
-	lda	lemming_attribute,X
-	bpl	not_fallen_enough		; see if high bit set
-
-	; we can switch to floating
-	lda	#LEMMING_FLOATING
-	sta	lemming_status,X
-
-	lda	#0
-	sta	lemming_frame,X
-
-not_fallen_enough:
-	jsr	collision_check_ground
-
-	rts
-
-	;=====================
-	; floating
-	;=====================
-handle_lemming_floating:
-	tya
-	tax
-	inc	lemming_y,X		; fall speed
-	lda	#0
-	sta	lemming_fall_distance,X
-
-	jsr	collision_check_ground
-
-	rts
 
 
 
