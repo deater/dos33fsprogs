@@ -90,77 +90,77 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l bdoor3_sprite sprites.png   63 98 104 114 >> sprites.inc
 	$(HGR_SPRITE) -s -l bdoor4_sprite sprites.png   63 118 104 137 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_rfall1_sprite sprites.png  14 161  20 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rfall2_sprite sprites.png  28 161  34 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rfall3_sprite sprites.png  42 161  48 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rfall4_sprite sprites.png  56 161  62 170 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rfall1_sprite sprites.png  14 171  20 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rfall2_sprite sprites.png  28 171  34 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rfall3_sprite sprites.png  42 171  48 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rfall4_sprite sprites.png  56 171  62 180 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_lfall1_sprite sprites.png  70 161  76 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lfall2_sprite sprites.png  84 161  90 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lfall3_sprite sprites.png  98 161 104 170 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lfall4_sprite sprites.png 112 161 118 170 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lfall1_sprite sprites.png  70 171  76 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lfall2_sprite sprites.png  84 171  90 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lfall3_sprite sprites.png  98 171 104 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lfall4_sprite sprites.png 112 171 118 180 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_dig1_sprite sprites.png  14 142  20 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig2_sprite sprites.png  28 142  34 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig3_sprite sprites.png  42 142  48 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig4_sprite sprites.png  56 142  62 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig5_sprite sprites.png  70 142  76 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig6_sprite sprites.png  84 142  90 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig7_sprite sprites.png  98 142 104 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_dig8_sprite sprites.png 112 142 118 153 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig1_sprite sprites.png  14 157  20 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig2_sprite sprites.png  28 157  34 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig3_sprite sprites.png  42 157  48 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig4_sprite sprites.png  56 157  62 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig5_sprite sprites.png  70 157  76 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig6_sprite sprites.png  84 157  90 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig7_sprite sprites.png  98 157 104 168 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_dig8_sprite sprites.png 112 157 118 168 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_lwalk1_sprite sprites.png 140 159 146 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk2_sprite sprites.png 154 159 160 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk3_sprite sprites.png 168 159 174 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk4_sprite sprites.png 182 159 188 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk5_sprite sprites.png 196 159 202 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk6_sprite sprites.png 210 159 216 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk7_sprite sprites.png 224 159 230 169 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_lwalk8_sprite sprites.png 238 159 244 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk1_sprite sprites.png 140 170 146 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk2_sprite sprites.png 154 170 160 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk3_sprite sprites.png 168 170 174 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk4_sprite sprites.png 182 170 188 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk5_sprite sprites.png 196 170 202 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk6_sprite sprites.png 210 170 216 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk7_sprite sprites.png 224 170 230 180 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lwalk8_sprite sprites.png 238 170 244 180 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_rwalk1_sprite sprites.png 140 143 146 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk2_sprite sprites.png 154 143 160 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk3_sprite sprites.png 168 143 174 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk4_sprite sprites.png 182 143 188 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk5_sprite sprites.png 196 143 202 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk6_sprite sprites.png 210 143 216 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk7_sprite sprites.png 224 143 230 153 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_rwalk8_sprite sprites.png 238 143 244 153 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk1_sprite sprites.png 140 159 146 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk2_sprite sprites.png 154 159 160 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk3_sprite sprites.png 168 159 174 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk4_sprite sprites.png 182 159 188 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk5_sprite sprites.png 196 159 202 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk6_sprite sprites.png 210 159 216 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk7_sprite sprites.png 224 159 230 169 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rwalk8_sprite sprites.png 238 159 244 169 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_explode1_sprite sprites.png  14 175  20 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode2_sprite sprites.png  42 175  48 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode3_sprite sprites.png  56 175  62 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode4_sprite sprites.png  70 175  76 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode5_sprite sprites.png  84 175  90 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode6_sprite sprites.png  98 175 104 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode7_sprite sprites.png 112 175 118 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode8_sprite sprites.png 140 175 146 185 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_explode9_sprite sprites.png 168 175 174 185 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode1_sprite sprites.png  14 181  20 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode2_sprite sprites.png  42 181  48 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode3_sprite sprites.png  56 181  62 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode4_sprite sprites.png  70 181  76 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode5_sprite sprites.png  84 181  90 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode6_sprite sprites.png  98 181 104 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode7_sprite sprites.png 112 181 118 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode8_sprite sprites.png 140 181 146 191 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_explode9_sprite sprites.png 168 181 174 191 >> sprites.inc
 	$(HGR_SPRITE) -s -l explosion_sprite sprites.png 252 172 265 187 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l countdown1_sprite sprites.png  140 136 146 141 >> sprites.inc
-	$(HGR_SPRITE) -s -l countdown2_sprite sprites.png  154 136 160 141 >> sprites.inc
-	$(HGR_SPRITE) -s -l countdown3_sprite sprites.png  168 136 174 141 >> sprites.inc
-	$(HGR_SPRITE) -s -l countdown4_sprite sprites.png  182 136 188 141 >> sprites.inc
-	$(HGR_SPRITE) -s -l countdown5_sprite sprites.png  196 136 202 141 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown1_sprite sprites.png  140 153 146 158 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown2_sprite sprites.png  154 153 160 158 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown3_sprite sprites.png  168 153 174 158 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown4_sprite sprites.png  182 153 188 158 >> sprites.inc
+	$(HGR_SPRITE) -s -l countdown5_sprite sprites.png  196 153 202 158 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_umbrella1_sprite sprites.png 140 117 146 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella2_sprite sprites.png 154 117 160 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella3_sprite sprites.png 168 117 174 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella4_sprite sprites.png 182 117 188 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella5_sprite sprites.png 196 117 202 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella6_sprite sprites.png 210 117 216 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella7_sprite sprites.png 224 117 230 132 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_umbrella8_sprite sprites.png 238 117 244 132 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella1_sprite sprites.png 140 137 146 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella2_sprite sprites.png 154 137 160 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella3_sprite sprites.png 168 137 174 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella4_sprite sprites.png 182 137 188 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella5_sprite sprites.png 196 137 202 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella6_sprite sprites.png 210 137 216 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella7_sprite sprites.png 224 137 230 152 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_umbrella8_sprite sprites.png 238 137 244 152 >> sprites.inc
 	#
-	$(HGR_SPRITE) -s -l lemming_splat1_sprite sprites.png 140 75 146 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat2_sprite sprites.png 154 75 160 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat3_sprite sprites.png 168 75 174 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat4_sprite sprites.png 182 75 188 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat5_sprite sprites.png 196 75 202 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat6_sprite sprites.png 210 75 216 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat7_sprite sprites.png 224 75 230 83 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_splat8_sprite sprites.png 238 75 244 83 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat1_sprite sprites.png  14 147  20 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat2_sprite sprites.png  28 147  34 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat3_sprite sprites.png  42 147  48 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat4_sprite sprites.png  56 147  62 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat5_sprite sprites.png  70 147  76 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat6_sprite sprites.png  84 147  90 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat7_sprite sprites.png  98 147 104 155 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_splat8_sprite sprites.png 112 147 118 155 >> sprites.inc
 	#
 	$(HGR_SPRITE) -s -l lemming_stopper1_sprite sprites.png 154  1 160 11 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_stopper2_sprite sprites.png 168  1 174 11 >> sprites.inc
@@ -170,14 +170,120 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l lemming_stopper6_sprite sprites.png 224  1 230 11 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_stopper7_sprite sprites.png 238  1 244 11 >> sprites.inc
 #	$(HGR_SPRITE) -s -l lemming_stopper8_sprite sprites.png 252  1 258 11 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper9_sprite sprites.png 154  13 160 23 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper10_sprite sprites.png 168  13 174 23 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper11_sprite sprites.png 182  13 188 23 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper12_sprite sprites.png 196  13 202 23 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper13_sprite sprites.png 210  13 216 23 >> sprites.inc
-	$(HGR_SPRITE) -s -l lemming_stopper14_sprite sprites.png 224  13 230 23 >> sprites.inc
-#	$(HGR_SPRITE) -s -l lemming_stopper15_sprite sprites.png 238  13 244 23 >> sprites.inc
-#	$(HGR_SPRITE) -s -l lemming_stopper16_sprite sprites.png 252  13 258 23 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper9_sprite sprites.png  154 12 160 24 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper10_sprite sprites.png 168 12 174 24 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper11_sprite sprites.png 182 12 188 24 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper12_sprite sprites.png 196 12 202 24 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper13_sprite sprites.png 210 12 216 24 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_stopper14_sprite sprites.png 224 12 230 24 >> sprites.inc
+#	$(HGR_SPRITE) -s -l lemming_stopper15_sprite sprites.png 238 12 244 24 >> sprites.inc
+#	$(HGR_SPRITE) -s -l lemming_stopper16_sprite sprites.png 252 12 258 24 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_rbasher1_sprite sprites.png 154 23 160 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher2_sprite sprites.png 168 23 174 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher3_sprite sprites.png 182 23 188 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher4_sprite sprites.png 196 23 202 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher5_sprite sprites.png 210 23 216 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher6_sprite sprites.png 224 23 230 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher7_sprite sprites.png 238 23 244 32 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbasher8_sprite sprites.png 252 23 258 32 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lbasher1_sprite sprites.png 154 33 160 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher2_sprite sprites.png 168 33 174 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher3_sprite sprites.png 182 33 188 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher4_sprite sprites.png 196 33 202 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher5_sprite sprites.png 210 33 216 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher6_sprite sprites.png 224 33 230 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher7_sprite sprites.png 238 33 244 42 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbasher8_sprite sprites.png 252 33 258 42 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_rbuild1_sprite sprites.png 140 56 146 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild2_sprite sprites.png 154 56 160 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild3_sprite sprites.png 168 56 174 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild4_sprite sprites.png 182 56 188 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild5_sprite sprites.png 196 56 202 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild6_sprite sprites.png 210 56 216 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild7_sprite sprites.png 224 56 230 66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rbuild8_sprite sprites.png 238 56 244 66 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lbuild1_sprite sprites.png 140 67 146 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild2_sprite sprites.png 154 67 160 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild3_sprite sprites.png 168 67 174 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild4_sprite sprites.png 182 67 188 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild5_sprite sprites.png 196 67 202 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild6_sprite sprites.png 210 67 216 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild7_sprite sprites.png 224 67 230 77 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lbuild8_sprite sprites.png 238 67 244 77 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_rpullup1_sprite sprites.png 140 103 146 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup2_sprite sprites.png 154 103 160 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup3_sprite sprites.png 168 103 174 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup4_sprite sprites.png 182 103 188 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup5_sprite sprites.png 196 103 202 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup6_sprite sprites.png 210 103 216 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup7_sprite sprites.png 224 103 230 113 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rpullup8_sprite sprites.png 238 103 244 113 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lpullup1_sprite sprites.png 140 91 146 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup2_sprite sprites.png 154 91 160 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup3_sprite sprites.png 168 91 174 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup4_sprite sprites.png 182 91 188 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup5_sprite sprites.png 196 91 202 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup6_sprite sprites.png 210 91 216 101>> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup7_sprite sprites.png 224 91 230 101 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lpullup8_sprite sprites.png 238 91 244 101 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_rclimb1_sprite sprites.png 140 126 146 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb2_sprite sprites.png 154 126 160 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb3_sprite sprites.png 168 126 174 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb4_sprite sprites.png 182 126 188 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb5_sprite sprites.png 196 126 202 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb6_sprite sprites.png 210 126 216 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb7_sprite sprites.png 224 126 230 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rclimb8_sprite sprites.png 238 126 244 136 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lclimb1_sprite sprites.png 140 115 146 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb2_sprite sprites.png 154 115 160 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb3_sprite sprites.png 168 115 174 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb4_sprite sprites.png 182 115 188 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb5_sprite sprites.png 196 115 202 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb6_sprite sprites.png 210 115 216 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb7_sprite sprites.png 224 115 230 125 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lclimb8_sprite sprites.png 238 115 244 125 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lshrug1_sprite sprites.png 112 80 118 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lshrug2_sprite sprites.png 126 80 132 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rshrug1_sprite sprites.png 140 80 146 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rshrug2_sprite sprites.png 154 80 160 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug3_sprite sprites.png  168 80 174 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug4_sprite sprites.png  182 80 188 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug5_sprite sprites.png  196 80 202 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug6_sprite sprites.png  210 80 216 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug7_sprite sprites.png  224 80 230 89 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_shrug8_sprite sprites.png  238 80 244 89 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_lmine1_sprite sprites.png 252  54 258  66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine2_sprite sprites.png 252  68 258  80 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine3_sprite sprites.png 252  82 258  94 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine4_sprite sprites.png 252  96 258 108 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine5_sprite sprites.png 252 110 258 122 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine6_sprite sprites.png 252 124 258 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine7_sprite sprites.png 252 138 258 150 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_lmine8_sprite sprites.png 252 152 258 164 >> sprites.inc
+	#
+	$(HGR_SPRITE) -s -l lemming_rmine1_sprite sprites.png 266  54 272  66 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine2_sprite sprites.png 266  68 272  80 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine3_sprite sprites.png 266  82 272  94 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine4_sprite sprites.png 266  96 272 108 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine5_sprite sprites.png 266 110 272 122 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine6_sprite sprites.png 266 124 272 136 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine7_sprite sprites.png 266 138 272 150 >> sprites.inc
+	$(HGR_SPRITE) -s -l lemming_rmine8_sprite sprites.png 266 152 272 164 >> sprites.inc
+
+
+
+
+
 
 
 
