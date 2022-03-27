@@ -34,6 +34,9 @@ done_erase_lemming:
 
 	rts
 
+
+
+
 	;=========================
 	;=========================
 	; draw lemming
@@ -47,10 +50,11 @@ draw_lemming_loop:
 
 	ldy	CURRENT_LEMMING
 
-	lda	lemming_out,Y
-	bne	do_draw_countdown
+	lda	lemming_out,Y			; if lemming not out, skip
+	beq	done_draw_lemming
 
-	jmp	done_draw_lemming
+	;===============================
+	; draw countdown if applicable
 
 do_draw_countdown:
 	lda	lemming_exploding,Y
@@ -75,23 +79,74 @@ do_draw_countdown:
 
 
 do_draw_lemming:
-	ldy	CURRENT_LEMMING
 
+	; set up jump table
+	ldy	CURRENT_LEMMING
 	lda	lemming_status,Y
-	cmp	#LEMMING_DIGGING
-	beq	draw_digging_sprite
-	cmp	#LEMMING_FALLING
-	beq	draw_falling_sprite
-	cmp	#LEMMING_FLOATING
-	beq	draw_floating_sprite
-	cmp	#LEMMING_EXPLODING
-	beq	draw_exploding_sprite
-	cmp	#LEMMING_PARTICLES
-	beq	draw_particles
-	cmp	#LEMMING_SPLATTING
-	beq	draw_splatting_sprite
-	cmp	#LEMMING_STOPPING
-	beq	draw_stopping_sprite
+	tax
+
+	lda	draw_lemming_jump_h,X
+	pha
+	lda	draw_lemming_jump_l,X
+	pha
+	rts					; jump to it
+
+
+draw_common:
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+done_draw_lemming:
+
+	inc	CURRENT_LEMMING
+	lda	CURRENT_LEMMING
+	cmp	#MAX_LEMMINGS
+;	beq	really_done_draw_lemming
+	bne	draw_lemming_loop
+
+really_done_draw_lemming:
+	rts
+
+
+draw_lemming_jump_l:
+	.byte	<(draw_falling_sprite-1)
+	.byte	<(draw_walking_sprite-1)
+	.byte	<(draw_digging_sprite-1)
+	.byte	<(draw_exploding_sprite-1)
+	.byte	<(draw_particles-1)
+	.byte	<(draw_splatting_sprite-1)
+	.byte	<(draw_floating_sprite-1)
+	.byte	0 ; <(draw_climbing_sprite-1)
+	.byte	0 ; <(draw_bashing_sprite-1)
+	.byte	<(draw_stopping_sprite-1)
+	.byte	0 ; <(draw_mining_sprite-1)
+	.byte	0 ; <(draw_building_sprite-1)
+	.byte	0 ; <(draw_shrugging_sprite-1)
+	.byte	0 ; <(draw_pullup_sprite-1)
+
+draw_lemming_jump_h:
+	.byte	>(draw_falling_sprite-1)
+	.byte	>(draw_walking_sprite-1)
+	.byte	>(draw_digging_sprite-1)
+	.byte	>(draw_exploding_sprite-1)
+	.byte	>(draw_particles-1)
+	.byte	>(draw_splatting_sprite-1)
+	.byte	>(draw_floating_sprite-1)
+	.byte	0 ; >(draw_climbing_sprite-1)
+	.byte	0 ; >(draw_bashing_sprite-1)
+	.byte	>(draw_stopping_sprite-1)
+	.byte	0 ; >(draw_mining_sprite-1)
+	.byte	0 ; >(draw_building_sprite-1)
+	.byte	0 ; >(draw_shrugging_sprite-1)
+	.byte	0 ; >(draw_pullup_sprite-1)
+
+
+	;=========================
+	;=========================
+	; draw walking
+	;=========================
+	;=========================
 
 draw_walking_sprite:
 
@@ -122,119 +177,14 @@ draw_walking_common:
 	jmp	draw_common
 
 
-	;====================
+	;=========================
+	;=========================
 	; draw floating
-	;====================
+	;=========================
+	;=========================
 
 draw_floating_sprite:
-	jsr	do_draw_floating_sprite
-	jmp	draw_common
 
-
-	;====================
-	; draw falling
-	;====================
-
-draw_falling_sprite:
-	jsr	do_draw_falling_sprite
-	jmp	draw_common
-
-
-	;====================
-	; draw exploding
-	;====================
-
-draw_exploding_sprite:
-
-
-	jsr	handle_explosion
-
-	jmp	done_draw_lemming
-
-	;====================
-	; draw splatting
-	;====================
-
-draw_splatting_sprite:
-
-
-	jsr	handle_splatting
-
-	jmp	done_draw_lemming
-
-
-	;====================
-	; draw stopping
-	;====================
-
-draw_stopping_sprite:
-
-
-	jsr	handle_stopping
-
-	jmp	done_draw_lemming
-
-
-
-	;====================
-	; draw particles
-	;====================
-
-draw_particles:
-
-	jsr	handle_particles
-
-	jmp	done_draw_lemming
-
-
-
-	;======================
-	; digging
-
-draw_digging_sprite:
-
-	lda	lemming_frame,Y
-	and	#$7
-	tax
-
-	lda	dig_sprite_l,X
-	sta	INL
-	lda	dig_sprite_h,X
-	sta	INH
-
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
-	sec
-	sbc	#2
-	jmp	draw_common
-
-
-
-draw_common:
-	sta	YPOS
-
-	jsr	hgr_draw_sprite_autoshift
-
-done_draw_lemming:
-
-	inc	CURRENT_LEMMING
-	lda	CURRENT_LEMMING
-	cmp	#MAX_LEMMINGS
-	beq	really_done_draw_lemming
-	jmp	draw_lemming_loop
-
-really_done_draw_lemming:
-	rts
-
-
-	;===============
-	;===============
-	; draw floating
-	;===============
-	;===============
-
-do_draw_floating_sprite:
 	lda	lemming_frame,Y
 	cmp	#4
 	bcc	umbrella_opening		; blt
@@ -258,15 +208,17 @@ umbrella_opening:
 	lda	lemming_y,Y
 	sec
 	sbc	#4
-	rts
 
-	;===============
-	;===============
+	jmp	draw_common
+
+
+	;=========================
+	;=========================
 	; draw falling
-	;===============
-	;===============
+	;=========================
+	;=========================
 
-do_draw_falling_sprite:
+draw_falling_sprite:
 
 	lda	lemming_frame,Y
 	and	#$3
@@ -292,7 +244,275 @@ draw_falling_common:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
-	rts
+
+	jmp	draw_common
+
+
+	;=========================
+	;=========================
+	; draw exploding
+	;=========================
+	;=========================
+
+draw_exploding_sprite:
+
+	lda	lemming_frame,Y
+	cmp	#$10
+;	bcc	exploding_animation
+	beq	draw_explosion
+	bcs	start_particles
+	jmp	exploding_animation
+
+start_particles:
+
+	lda	#0
+	sta	lemming_frame,Y
+
+	jsr	init_particles
+
+	; erase explosion
+
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_y,Y
+	sec
+	sbc	#16
+	sta	SAVED_Y1
+	clc
+	adc	#32
+	sta	SAVED_Y2
+
+	lda	lemming_x,Y
+	sec
+	sbc	#1
+	tax
+	inx
+	inx
+	inx
+	jsr	hgr_partial_restore
+
+	; start particles
+
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_PARTICLES
+	sta	lemming_status,Y
+
+	jmp	done_draw_lemming
+
+draw_explosion:
+
+	; first erase pit in background art
+
+	jsr	hgr_hlin_page_toggle		; toggle to page2
+
+	ldx	#0
+	sta	HGR_COLOR
+
+	ldy	CURRENT_LEMMING
+
+	; line from (x,a) to (x+y,a)
+	lda	lemming_x,Y
+	asl
+	adc	lemming_x,Y
+	asl
+	adc	lemming_x,Y		; multiply by 7
+	tax
+	pha
+
+	lda	lemming_y,Y
+	clc
+	adc	#9
+
+	ldy	#7
+
+	jsr	hgr_hlin
+
+	; line from (x,a) to (x+y,a)
+	pla
+	tax
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
+	ldy	#7
+	clc
+	adc	#10
+	jsr	hgr_hlin
+
+
+	jsr	hgr_hlin_page_toggle		; toggle back to page1
+
+	jsr	click_speaker
+
+	ldy	#0
+	lda	#<explosion_sprite
+	sta	INL
+	lda	#>explosion_sprite
+	sta	INH
+
+	ldy	CURRENT_LEMMING
+	ldx	lemming_x,Y
+	dex
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#5
+
+	jmp	done_handle_exploding
+
+exploding_animation:
+;	and	#$f
+	tax
+
+	lda	exploding_sprite_l,X
+	sta	INL
+	lda	exploding_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+
+done_handle_exploding:
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	jmp	done_draw_lemming
+
+	;====================
+	; draw splatting
+	;====================
+
+draw_splatting_sprite:
+
+	;==========================
+	; Handle splatting
+	;==========================
+
+	; moved to make room
+handle_splatting:
+
+	lda	lemming_frame,Y
+	cmp	#$8
+	beq	done_splatting
+
+draw_splatting:
+	jsr	click_speaker
+
+	tax
+
+	lda	splatting_sprite_l,X
+	sta	INL
+	lda	splatting_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	jmp	done_draw_lemming
+
+done_splatting:
+	clc
+	jsr	remove_lemming		; FIXME: tail call
+
+	jmp	done_draw_lemming
+
+
+	;====================
+	;====================
+	; draw stopping
+	;====================
+	;====================
+
+draw_stopping_sprite:
+
+	lda	lemming_frame,Y
+	and	#$f
+	tax
+
+	lda	stopper_sprite_l,X
+	sta	INL
+	lda	stopper_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	jmp	done_draw_lemming
+
+
+
+	;====================
+	;====================
+	; draw particles
+	;====================
+	;====================
+
+draw_particles:
+
+	jsr	hgr_draw_particles
+
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_frame,Y
+	cmp	#16
+	bne	still_going
+
+	; TODO: partway through make lemming not out?
+
+	lda	#0
+	sta	lemming_out,Y
+
+	clc				; mark as not exiting via door
+	jsr	remove_lemming		; remove the lemming
+
+still_going:
+
+not_done_particle:
+	jmp	done_draw_lemming
+
+
+
+	;======================
+	;======================
+	; digging
+	;======================
+	;======================
+
+draw_digging_sprite:
+
+	lda	lemming_frame,Y
+	and	#$7
+	tax
+
+	lda	dig_sprite_l,X
+	sta	INL
+	lda	dig_sprite_h,X
+	sta	INH
+
+	ldx	lemming_x,Y
+        stx     XPOS
+	lda	lemming_y,Y
+	sec
+	sbc	#2
+	jmp	draw_common
+
+
+
+
+
+
+
+
+
 
 
 lfall_sprite_l:
@@ -419,227 +639,4 @@ stopper_sprite_h:
 	.byte >lemming_stopper11_sprite,>lemming_stopper12_sprite
 	.byte >lemming_stopper13_sprite,>lemming_stopper14_sprite
 	.byte >lemming_stopper7_sprite,>lemming_stopper7_sprite
-
-
-
-	;==========================
-	; Handle particles
-	;==========================
-
-handle_particles:
-	jsr	hgr_draw_particles
-
-	ldy	CURRENT_LEMMING
-
-	lda	lemming_frame,Y
-	cmp	#16
-	bne	still_going
-
-	; TODO: partway through make lemming not out?
-
-	lda	#0
-	sta	lemming_out,Y
-
-	clc				; mark as not exiting via door
-	jsr	remove_lemming		; remove the lemming
-
-still_going:
-
-not_done_particle:
-	rts
-
-	;==========================
-	; Handle explosion
-	;==========================
-
-	; moved to make room
-handle_explosion:
-
-	lda	lemming_frame,Y
-	cmp	#$10
-	bcc	exploding_animation
-	beq	draw_explosion
-
-start_particles:
-
-	lda	#0
-	sta	lemming_frame,Y
-
-	jsr	init_particles
-
-	; erase explosion
-
-	ldy	CURRENT_LEMMING
-
-	lda	lemming_y,Y
-	sec
-	sbc	#16
-	sta	SAVED_Y1
-	clc
-	adc	#32
-	sta	SAVED_Y2
-
-	lda	lemming_x,Y
-	sec
-	sbc	#1
-	tax
-	inx
-	inx
-	inx
-	jsr	hgr_partial_restore
-
-	; start particles
-
-	ldy	CURRENT_LEMMING
-	lda	#LEMMING_PARTICLES
-	sta	lemming_status,Y
-
-	rts
-
-
-draw_explosion:
-
-	; first erase pit in background art
-
-	jsr	hgr_hlin_page_toggle		; toggle to page2
-
-	ldx	#0
-	sta	HGR_COLOR
-
-	ldy	CURRENT_LEMMING
-
-	; line from (x,a) to (x+y,a)
-	lda	lemming_x,Y
-	asl
-	adc	lemming_x,Y
-	asl
-	adc	lemming_x,Y		; multiply by 7
-	tax
-	pha
-
-	lda	lemming_y,Y
-	clc
-	adc	#9
-
-	ldy	#7
-
-	jsr	hgr_hlin
-
-	; line from (x,a) to (x+y,a)
-	pla
-	tax
-
-	ldy	CURRENT_LEMMING
-	lda	lemming_y,Y
-	ldy	#7
-	clc
-	adc	#10
-	jsr	hgr_hlin
-
-
-	jsr	hgr_hlin_page_toggle		; toggle back to page1
-
-	jsr	click_speaker
-
-	ldy	#0
-	lda	#<explosion_sprite
-	sta	INL
-	lda	#>explosion_sprite
-	sta	INH
-
-	ldy	CURRENT_LEMMING
-	ldx	lemming_x,Y
-	dex
-        stx     XPOS
-	lda	lemming_y,Y
-	sec
-	sbc	#5
-
-;	jmp	draw_common
-	jmp	done_handle_exploding
-
-exploding_animation:
-;	and	#$f
-	tax
-
-	lda	exploding_sprite_l,X
-	sta	INL
-	lda	exploding_sprite_h,X
-	sta	INH
-
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
-;	jmp	draw_common
-
-done_handle_exploding:
-	sta	YPOS
-
-	jsr	hgr_draw_sprite_autoshift
-
-	rts
-
-
-
-	;==========================
-	; Handle splatting
-	;==========================
-
-	; moved to make room
-handle_splatting:
-
-	lda	lemming_frame,Y
-	cmp	#$8
-	beq	done_splatting
-
-draw_splatting:
-	jsr	click_speaker
-
-	tax
-
-	lda	splatting_sprite_l,X
-	sta	INL
-	lda	splatting_sprite_h,X
-	sta	INH
-
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
-	sta	YPOS
-
-	jsr	hgr_draw_sprite_autoshift
-
-	rts
-
-done_splatting:
-	clc
-	jsr	remove_lemming		; FIXME: tail call
-	rts
-
-
-
-	;==========================
-	; Handle stopping
-	;==========================
-
-handle_stopping:
-
-	lda	lemming_frame,Y
-	and	#$f
-	tax
-
-	lda	stopper_sprite_l,X
-	sta	INL
-	lda	stopper_sprite_h,X
-	sta	INH
-
-	ldx	lemming_x,Y
-        stx     XPOS
-	lda	lemming_y,Y
-	sta	YPOS
-
-	jsr	hgr_draw_sprite_autoshift
-
-	rts
-
 
