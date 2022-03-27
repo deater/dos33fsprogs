@@ -343,8 +343,6 @@ level_continue:
 	.include	"draw_flames.s"
 	.include	"draw_door.s"
 
-	.include	"hgr_hlin.s"
-	.include	"hgr_vlin.s"
 	.include	"update_menu.s"
 
 	.include	"title.s"
@@ -362,6 +360,9 @@ level_continue:
 ;	.include	"audio.s"
 ;	.include	"decompress_fast_v2.s"
 ;	.include	"gr_offsets.s"
+;	.include	"hgr_hlin.s"
+;	.include	"hgr_vlin.s"
+;	.include	"hgr_box.s"
 
 	; pt3 player
 

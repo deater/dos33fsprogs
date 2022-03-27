@@ -190,7 +190,10 @@ length_array:
 	.include	"audio.s"
 	.include	"decompress_fast_v2.s"
 	.include	"gr_offsets.s"
-
+	.include	"hgr_hlin.s"
+	.include	"hgr_vlin.s"
+	.include	"hgr_box.s"
+	.include	"hgr_tables.s"
 
 qload_end:
 

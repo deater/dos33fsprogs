@@ -48,7 +48,8 @@ QLOAD:	qload.o
 
 qload.o:	qload.s qboot.inc	\
 	audio.s decompress_fast_v2.s gr_offsets.s \
-	wait.s wait_a_bit.s
+	wait.s wait_a_bit.s \
+	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -61,6 +62,12 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_hlin qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vlin qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_box qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_hlin_page_toggle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vlin_page_toggle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_box_page_toggle qload.lst >> qload.inc
 
 
 ###
@@ -87,7 +94,7 @@ lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
 		graphics/sprites.inc \
 		intro_level.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
-		hgr_hlin.s hgr_vlin.s update_menu.s init_level.s \
+		update_menu.s init_level.s \
 		interrupt_handler.s keyboard.s draw_pointer.s \
 		pointer_sprites.inc particle_hgr.s release_lemming.s \
 		title.s audio.s letsgo.s load_music.s

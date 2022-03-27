@@ -40,7 +40,7 @@ do_level4:
 	lda	#33
 	sta	exit_x2_smc+1
 
-	lda	#21
+	lda	#20
 	sta	exit_y1_smc+1
 	lda	#45
 	sta	exit_y2_smc+1

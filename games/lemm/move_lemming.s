@@ -228,10 +228,6 @@ walking_done:
 	jmp	done_move_lemming
 
 
-
-
-
-
 	;=====================
 	; digging
 	;=====================
@@ -277,6 +273,65 @@ done_digging:
 
 
 	;=====================
+	; mining
+	;=====================
+do_lemming_mining:
+	lda	lemming_y,Y
+	clc
+	adc	#9
+	tax
+
+	lda     hposn_high,X	; set up collision check underfoot
+	clc
+	adc	#$20
+        sta     GBASH
+        lda     hposn_low,X
+        sta     GBASL
+
+	lda	lemming_x,Y	; if fell through,then fall
+	tay
+	lda	(GBASL),Y
+	and	#$7f
+	beq	mining_falling
+
+mining_mining:
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_frame,Y
+	and	#$f
+	bne	no_mining_this_frame
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tay
+	lda	#$0			; clear out dirt (FIXME: block?)
+	sta	(GBASL),Y
+
+	ldx	CURRENT_LEMMING
+	inc	lemming_y,X
+	inc	lemming_y,X
+	inc	lemming_y,X
+
+	lda	lemming_x,X
+	clc
+	adc	lemming_direction,X
+	sta	lemming_x,X
+
+no_mining_this_frame:
+	jmp	done_mining
+
+
+mining_falling:
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_FALLING
+	sta	lemming_status,Y
+done_mining:
+	jmp	done_move_lemming
+
+
+
+
+	;=====================
 	; do nothing
 	;=====================
 
@@ -285,7 +340,6 @@ do_lemming_exploding:
 do_lemming_pullup:
 do_lemming_shrugging:
 do_lemming_building:
-do_lemming_mining:
 do_lemming_stopping:
 do_lemming_bashing:
 do_lemming_climbing:
