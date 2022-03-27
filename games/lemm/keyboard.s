@@ -224,46 +224,31 @@ return_check_lemming:
 	jsr	click_speaker
 
 	lda	BUTTON_LOCATION
-	cmp	#1
-	beq	make_climber
-	cmp	#2
-	beq	make_floater
-	cmp	#3
-	beq	make_exploding
-	cmp	#4
-	beq	make_stopper
-	cmp	#5
-	beq	make_builder
-	cmp	#6
-	beq	make_basher
-	cmp	#7
-	beq	make_miner
-	cmp	#8
-	beq	make_digger
-	bne	done_keypress
+	tax
 
-make_climber:
-	jsr	make_climber_routine
-	jmp	done_keypress
-make_floater:
-	jsr	make_floater_routine
-	jmp	done_keypress
-make_exploding:
-	jsr	make_exploding_routine
-	jmp	done_keypress
-make_stopper:
-	jsr	make_stopper_routine
-	jmp	done_keypress
-make_builder:
-	jmp	done_keypress
-make_basher:
-	jmp	done_keypress
-make_miner:
-	jmp	done_keypress
-make_digger:
-	jsr	make_digger_routine
-	jmp	done_keypress
+	lda	button_jump_h,X
+	pha
+	lda	button_jump_l,X
+	pha
+	rts					; jump to it
 
+;	cmp	#1
+;	beq	make_climber
+;	cmp	#2
+;	beq	make_floater
+;	cmp	#3
+;	beq	make_exploding
+;	cmp	#4
+;	beq	make_stopper
+;	cmp	#5
+;	beq	make_builder
+;	cmp	#6
+;	beq	make_basher
+;	cmp	#7
+;	beq	make_miner
+;	cmp	#8
+;	beq	make_digger
+;	bne	done_keypress
 
 
 not_over_lemming:
@@ -278,56 +263,63 @@ no_keypress:
 
 
 
-	;========================
-	; make digger
-	;========================
-make_digger_routine:
+button_jump_l:
+	.byte	$0
+	.byte	<(make_climber-1)
+	.byte	<(make_floater-1)
+	.byte	<(make_exploding-1)
+	.byte	<(make_stopper-1)
+	.byte	<(make_builder-1)
+	.byte	<(make_basher-1)
+	.byte	<(make_miner-1)
+	.byte	<(make_digger-1)
 
-	; only do it if walking
-	lda	lemming_status,Y
-	cmp	#LEMMING_WALKING
-	bne	done_make_digger
+button_jump_h:
+	.byte	$0
+	.byte	>(make_climber-1)
+	.byte	>(make_floater-1)
+	.byte	>(make_exploding-1)
+	.byte	>(make_stopper-1)
+	.byte	>(make_builder-1)
+	.byte	>(make_basher-1)
+	.byte	>(make_miner-1)
+	.byte	>(make_digger-1)
 
-	lda	#LEMMING_DIGGING
-	sta	lemming_status,Y
 
-	; FIXME: decrement digger_count
-done_make_digger:
-	rts
 
-	;========================
-	; make exploding
-	;========================
-make_exploding_routine:
-
-	lda	#1
-	sta	lemming_exploding,Y
-	rts
 
 	;========================
 	; make climber
 	;========================
-make_climber_routine:
-
+make_climber:
 	lda	#LEMMING_CLIMBER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
-	rts
+	jmp	done_keypress
 
 	;========================
 	; make floater
 	;========================
-make_floater_routine:
-
+make_floater:
 	lda	#LEMMING_FLOATER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
-	rts
+	jmp	done_keypress
+
+
+	;========================
+	; make exploding
+	;========================
+make_exploding:
+	lda	#1
+	sta	lemming_exploding,Y
+	jmp	done_keypress
+
 
 	;========================
 	; make stopper
 	;========================
-make_stopper_routine:
+make_stopper:
 	lda	lemming_status,Y
 	cmp	#LEMMING_FLOATER		; can't stop if floating
 	beq	cant_stop
@@ -361,7 +353,84 @@ make_stopper_routine:
 	jsr	hgr_vlin_page_toggle
 
 cant_stop:
-	rts
+	jmp	done_keypress
+
+
+	;========================
+	; make builder
+	;========================
+make_builder:
+	; only do it if walking
+	lda	lemming_status,Y
+	cmp	#LEMMING_WALKING
+	bne	done_make_builder
+
+	lda	#LEMMING_BUILDING
+	sta	lemming_status,Y
+
+	; FIXME: decrement count
+done_make_builder:
+	jmp	done_keypress
+
+
+	;========================
+	; make basher
+	;========================
+make_basher:
+	; only do it if walking
+	lda	lemming_status,Y
+	cmp	#LEMMING_WALKING
+	bne	done_make_basher
+
+	lda	#LEMMING_BASHING
+	sta	lemming_status,Y
+
+	; FIXME: decrement count
+done_make_basher:
+	jmp	done_keypress
+
+
+	;========================
+	; make miner
+	;========================
+make_miner:
+	; only do it if walking
+	lda	lemming_status,Y
+	cmp	#LEMMING_WALKING
+	bne	done_make_miner
+
+	lda	#LEMMING_MINING
+	sta	lemming_status,Y
+
+	; FIXME: decrement count
+done_make_miner:
+	jmp	done_keypress
+
+
+	;========================
+	; make digger
+	;========================
+make_digger:
+	; only do it if walking
+	lda	lemming_status,Y
+	cmp	#LEMMING_WALKING
+	bne	done_make_digger
+
+	lda	#LEMMING_DIGGING
+	sta	lemming_status,Y
+
+	; FIXME: decrement digger_count
+done_make_digger:
+	jmp	done_keypress
+
+
+
+
+
+
+
+
+
 
 
 
