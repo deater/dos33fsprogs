@@ -301,11 +301,26 @@ mining_mining:
 	and	#$f
 	bne	no_mining_this_frame
 
+	ldx	#0
+	stx	HGR_COLOR
+
+	; (X,A) to (X,A+Y) where X is xcoord/7
+	jsr	hgr_box_page_toggle
 	ldy	CURRENT_LEMMING
 	lda	lemming_x,Y
-	tay
-	lda	#$0			; clear out dirt (FIXME: block?)
-	sta	(GBASL),Y
+	tax
+	lda	lemming_y,Y
+	ldy	#9
+	jsr	hgr_box
+
+	jsr	hgr_box_page_toggle
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	lda	lemming_y,Y
+	ldy	#9
+	jsr	hgr_box
+
 
 	ldx	CURRENT_LEMMING
 	inc	lemming_y,X
