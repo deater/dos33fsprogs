@@ -520,43 +520,60 @@ draw_explosion:
 
 	; first erase pit in background art
 
-	jsr	hgr_hlin_page_toggle		; toggle to page2
-
 	ldx	#0
-	sta	HGR_COLOR
+	stx	HGR_COLOR
 
+	; (X,A) to (X,A+Y) where X is xcoord/7
+	jsr     hgr_box_page_toggle
 	ldy	CURRENT_LEMMING
-
-	; line from (x,a) to (x+y,a)
 	lda	lemming_x,Y
-	asl
-	adc	lemming_x,Y
-	asl
-	adc	lemming_x,Y		; multiply by 7
 	tax
-	pha
-
 	lda	lemming_y,Y
-	clc
-	adc	#9
-
-	ldy	#7
-
-	jsr	hgr_hlin
-
-	; line from (x,a) to (x+y,a)
-	pla
-	tax
+	ldy     #11
+	jsr	hgr_box
 
 	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	inx
 	lda	lemming_y,Y
-	ldy	#7
-	clc
-	adc	#10
-	jsr	hgr_hlin
+	ldy     #8
+	jsr	hgr_box
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	dex
+	lda	lemming_y,Y
+	ldy     #8
+	jsr	hgr_box
 
 
-	jsr	hgr_hlin_page_toggle		; toggle back to page1
+	jsr	hgr_box_page_toggle
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	lda	lemming_y,Y
+	ldy     #11
+	jsr	hgr_box
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	inx
+	lda	lemming_y,Y
+	ldy     #8
+	jsr	hgr_box
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	dex
+	lda	lemming_y,Y
+	ldy     #8
+	jsr	hgr_box
+
 
 	jsr	click_speaker
 
