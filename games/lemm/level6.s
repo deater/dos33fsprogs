@@ -78,14 +78,14 @@ do_level6:
 
 	; set up first song
 
-	lda	#<music8_parts_l
+	lda	#<music12_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music8_parts_l
+	lda	#>music12_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music8_parts_h
+	lda	#<music12_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music8_parts_h
+	lda	#>music12_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -255,37 +255,38 @@ l4_level_over:
 
 	rts
 
-
 .include "graphics/graphics_level6.inc"
 
 
-music8_parts_h:
-	.byte >lemm9_part1_lzsa,>lemm9_part2_lzsa,>lemm9_part3_lzsa
-	.byte >lemm9_part4_lzsa,>lemm9_part5_lzsa,>lemm9_part6_lzsa
-	.byte >lemm9_part7_lzsa
+music12_parts_h:
+	.byte >lemm12_part1_lzsa,>lemm12_part2_lzsa,>lemm12_part3_lzsa
+	.byte >lemm12_part4_lzsa,>lemm12_part5_lzsa,>lemm12_part6_lzsa
+	.byte >lemm12_part7_lzsa,>lemm12_part8_lzsa
 	.byte $00
 
-music8_parts_l:
-	.byte <lemm9_part1_lzsa,<lemm9_part2_lzsa,<lemm9_part3_lzsa
-	.byte <lemm9_part4_lzsa,<lemm9_part5_lzsa,<lemm9_part6_lzsa
-	.byte <lemm9_part7_lzsa
+music12_parts_l:
+	.byte <lemm12_part1_lzsa,<lemm12_part2_lzsa,<lemm12_part3_lzsa
+	.byte <lemm12_part4_lzsa,<lemm12_part5_lzsa,<lemm12_part6_lzsa
+	.byte <lemm12_part7_lzsa,<lemm12_part8_lzsa
 
 
 
-lemm9_part1_lzsa:
-.incbin "music/lemm9.part1.lzsa"
-lemm9_part2_lzsa:
-.incbin "music/lemm9.part2.lzsa"
-lemm9_part3_lzsa:
-.incbin "music/lemm9.part3.lzsa"
-lemm9_part4_lzsa:
-.incbin "music/lemm9.part4.lzsa"
-lemm9_part5_lzsa:
-.incbin "music/lemm9.part5.lzsa"
-lemm9_part6_lzsa:
-.incbin "music/lemm9.part6.lzsa"
-lemm9_part7_lzsa:
-.incbin "music/lemm9.part7.lzsa"
+lemm12_part1_lzsa:
+.incbin "music/lemm12.part1.lzsa"
+lemm12_part2_lzsa:
+.incbin "music/lemm12.part2.lzsa"
+lemm12_part3_lzsa:
+.incbin "music/lemm12.part3.lzsa"
+lemm12_part4_lzsa:
+.incbin "music/lemm12.part4.lzsa"
+lemm12_part5_lzsa:
+.incbin "music/lemm12.part5.lzsa"
+lemm12_part6_lzsa:
+.incbin "music/lemm12.part6.lzsa"
+lemm12_part7_lzsa:
+.incbin "music/lemm12.part7.lzsa"
+lemm12_part8_lzsa:
+.incbin "music/lemm12.part8.lzsa"
 
 
 level6_intro_text:
