@@ -11,6 +11,7 @@ all:	graphics_test.inc \
 	graphics_level3.inc \
 	graphics_level4.inc \
 	graphics_level5.inc \
+	graphics_level6.inc \
 	sprites.inc
 
 ###
@@ -42,8 +43,6 @@ graphics_level3.inc:	\
 	echo "level3_lzsa: .incbin \"level3.lzsa\"" > graphics_level3.inc
 	echo "level3_preview_lzsa: .incbin \"level3_preview.lzsa\"" >> graphics_level3.inc
 
-
-
 graphics_level4.inc:	\
 	level4.lzsa \
 	level4_preview.lzsa
@@ -55,6 +54,13 @@ graphics_level5.inc:	\
 	level5_preview.lzsa
 	echo "level5_lzsa: .incbin \"level5.lzsa\"" > graphics_level5.inc
 	echo "level5_preview_lzsa: .incbin \"level5_preview.lzsa\"" >> graphics_level5.inc
+
+graphics_level6.inc:	\
+	level6.lzsa \
+	level6_preview.lzsa
+	echo "level6_lzsa: .incbin \"level6.lzsa\"" > graphics_level6.inc
+	echo "level6_preview_lzsa: .incbin \"level6_preview.lzsa\"" >> graphics_level6.inc
+
 
 ###
 
@@ -390,6 +396,23 @@ level5_fine.hgr:	level5_fine.png
 	$(PNG2HGR) level5_fine.png > level5_fine.hgr
 
 ####
+
+level6.lzsa:	level6.hgr
+	$(LZSA) -r -f2 level6.hgr level6.lzsa
+
+level6.hgr:	level6.png
+	$(PNG2HGR) level6.png > level6.hgr
+
+###
+
+
+level6_preview.lzsa:	level6_preview.hgr
+	$(LZSA) -r -f2 level6_preview.hgr level6_preview.lzsa
+
+level6_preview.hgr:	level6_preview.png
+	$(PNG2HGR) level6_preview.png > level6_preview.hgr
+
+###
 
 clean:	
 	rm -f *~ graphics_test.inc sprites.inc \
