@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -31,6 +31,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  16 0 LEVEL3     0   0
 	$(DOS33_RAW) lemm.dsk  19 0 LEVEL4     0   0
 	$(DOS33_RAW) lemm.dsk  22 0 LEVEL5     0   0
+	$(DOS33_RAW) lemm.dsk  25 0 LEVEL6     0   0
 
 
 ###
@@ -47,9 +48,11 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
 qload.o:	qload.s qboot.inc	\
+	hgr.inc \
 	audio.s decompress_fast_v2.s gr_offsets.s \
 	wait.s wait_a_bit.s \
-	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s
+	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s hgr_14x14_sprite.s \
+	hgr_partial_restore.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -68,6 +71,11 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_hlin_page_toggle qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_vlin_page_toggle qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_box_page_toggle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_make_tables qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_partial_restore qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite_14x14 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s crosshair_sprite_l qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s select_sprite_l qload.lst >> qload.inc
 
 
 ###
@@ -90,12 +98,12 @@ lemm_test.o:	lemm_test.s zp.inc hardware.inc \
 LEMM:	lemm.o
 	ld65 -o LEMM lemm.o -C ../../linker_scripts/apple2_6000.inc
 
-lemm.o:	lemm.s zp.inc hardware.inc qload.inc \
+lemm.o:	lemm.s zp.inc hardware.inc qload.inc hgr.inc \
 		graphics/sprites.inc \
 		intro_level.s update_time.s hgr_sprite.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
 		update_menu.s init_level.s \
-		interrupt_handler.s keyboard.s draw_pointer.s \
+		interrupt_handler.s keyboard.s \
 		pointer_sprites.inc particle_hgr.s release_lemming.s \
 		title.s audio.s letsgo.s load_music.s
 	ca65 -o lemm.o lemm.s -l lemm.lst
@@ -108,7 +116,6 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s chunk_l_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s load_song_chunk lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s intro_level lemm.lst >> lemm.inc
-	./generate_common -a 0x6000 -s hgr_make_tables lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s play_letsgo lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s lemming_out lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s lemming_exploding lemm.lst >> lemm.inc
@@ -123,8 +130,6 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s draw_door lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_door_5 lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_flames lemm.lst >> lemm.inc
-	./generate_common -a 0x6000 -s draw_pointer lemm.lst >> lemm.inc
-	./generate_common -a 0x6000 -s erase_pointer lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s handle_keypress lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s outro_level lemm.lst >> lemm.inc
@@ -144,6 +149,8 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s intro_text_smc_h lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s release_lemming lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s init_level lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_pointer lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s erase_pointer lemm.lst >> lemm.inc
 
 ####
 
@@ -198,6 +205,16 @@ level5.o:	level5.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level5.inc
 	ca65 -o level5.o level5.s -l level5.lst
 
+####
+
+LEVEL6:	level6.o
+	ld65 -o LEVEL6 level6.o -C ../../linker_scripts/apple2_9000.inc
+
+level6.o:	level6.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		graphics/graphics_level6.inc
+	ca65 -o level6.o level6.s -l level6.lst
+
 
 
 
@@ -219,6 +236,6 @@ graphics/graphics_test.inc:
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common \
-		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 \
-		lemm.inc
+		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 \
+		lemm.inc qload.inc
 

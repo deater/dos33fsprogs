@@ -2,11 +2,11 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
-; Zero Page
-	.include "zp.inc"
+	.include "zp.inc"		; Zero Page use
 	.include "hardware.inc"
 	.include "qload.inc"
 	.include "lemming_status.inc"
+	.include "hgr.inc"
 
 lemm:
 	;=====================
@@ -235,7 +235,7 @@ zurg:
 
 	cmp	#'1'+$80
 	bcc	oof
-	cmp	#'6'+$80
+	cmp	#'7'+$80
 	bcs	oof
 
 	and	#$7f
@@ -296,7 +296,7 @@ level_won:
 	inc	WHICH_LEVEL
 
 	lda	WHICH_LEVEL
-	cmp	#6
+	cmp	#7
 	bcc	level_continue
 
 	lda	#1			; wrap to level1?
@@ -324,19 +324,15 @@ level_continue:
 
 	.include	"gr_fast_clear.s"
 
-	.include	"hgr_partial_save.s"
-
 	.include	"move_lemming.s"
 	.include	"draw_lemming.s"
 
-	.include	"hgr_14x14_sprite.s"
 	.include	"text_print.s"
 
 	.include	"lc_detect.s"
 
 	.include	"draw_pointer.s"
 
-	.include	"hgr_tables.s"
 	.include	"hgr_sprite.s"
 	.include	"update_time.s"
 	.include	"intro_level.s"
@@ -363,6 +359,10 @@ level_continue:
 ;	.include	"hgr_hlin.s"
 ;	.include	"hgr_vlin.s"
 ;	.include	"hgr_box.s"
+;	.include	"hgr_tables.s"
+;	.include	"hgr_partial_restore.s"
+;	.include	"hgr_14x14_sprite.s"
+
 
 	; pt3 player
 
