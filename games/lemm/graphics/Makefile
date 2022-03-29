@@ -12,6 +12,7 @@ all:	graphics_test.inc \
 	graphics_level4.inc \
 	graphics_level5.inc \
 	graphics_level6.inc \
+	graphics_level7.inc \
 	sprites.inc
 
 ###
@@ -60,6 +61,13 @@ graphics_level6.inc:	\
 	level6_preview.lzsa
 	echo "level6_lzsa: .incbin \"level6.lzsa\"" > graphics_level6.inc
 	echo "level6_preview_lzsa: .incbin \"level6_preview.lzsa\"" >> graphics_level6.inc
+
+graphics_level7.inc:	\
+	level7.lzsa \
+	level7_preview.lzsa
+	echo "level7_lzsa: .incbin \"level7.lzsa\"" > graphics_level7.inc
+	echo "level7_preview_lzsa: .incbin \"level7_preview.lzsa\"" >> graphics_level7.inc
+
 
 
 ###
@@ -411,6 +419,24 @@ level6_preview.lzsa:	level6_preview.hgr
 
 level6_preview.hgr:	level6_preview.png
 	$(PNG2HGR) level6_preview.png > level6_preview.hgr
+
+####
+
+level7.lzsa:	level7.hgr
+	$(LZSA) -r -f2 level7.hgr level7.lzsa
+
+level7.hgr:	level7.png
+	$(PNG2HGR) level7.png > level7.hgr
+
+###
+
+
+level7_preview.lzsa:	level7_preview.hgr
+	$(LZSA) -r -f2 level7_preview.hgr level7_preview.lzsa
+
+level7_preview.hgr:	level7_preview.png
+	$(PNG2HGR) level7_preview.png > level7_preview.hgr
+
 
 ###
 

@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -32,6 +32,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  19 0 LEVEL4     0   0
 	$(DOS33_RAW) lemm.dsk  22 0 LEVEL5     0   0
 	$(DOS33_RAW) lemm.dsk  25 0 LEVEL6     0   0
+	$(DOS33_RAW) lemm.dsk  28 0 LEVEL7     0   0
 
 
 ###
@@ -216,6 +217,17 @@ level6.o:	level6.s zp.inc hardware.inc qload.inc lemm.inc \
 	ca65 -o level6.o level6.s -l level6.lst
 
 
+####
+
+LEVEL7:	level7.o
+	ld65 -o LEVEL7 level7.o -C ../../linker_scripts/apple2_9000.inc
+
+level7.o:	level7.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		graphics/graphics_level7.inc
+	ca65 -o level7.o level7.s -l level7.lst
+
+
 
 
 ####
@@ -236,6 +248,7 @@ graphics/graphics_test.inc:
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common \
-		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 \
+		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 \
+		LEVEL6 LEVEL7 \
 		lemm.inc qload.inc
 

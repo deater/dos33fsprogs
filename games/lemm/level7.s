@@ -4,66 +4,66 @@
 .include "lemm.inc"
 .include "lemming_status.inc"
 
-.byte 3		; level 3
+.byte 7		; level 7
 
-do_level3:
+do_level7:
+
 
 	;======================
 	; set up initial stuff
 	;======================
-
-	lda	#15
+	lda	#8
 	sta	DOOR_X
-	lda	#0
+	lda	#72
 	sta	DOOR_Y
 
-	lda	#18
-	sta	INIT_X
 	lda	#11
+	sta	INIT_X
+	lda	#83
 	sta	INIT_Y
 
-	; flame location
+	; flame locations
 
-	lda	#15			;
+	lda	#27			;
 	sta	l_flame_x_smc+1
-	lda	#122
+	lda	#92
 	sta	l_flame_y_smc+1
         sta	r_flame_y_smc+1
 
-	lda	#19			;
+	lda	#31			;
 	sta	r_flame_x_smc+1
 
 	; door exit location
 
-	lda	#15			;
+	lda	#27			;
 	sta	exit_x1_smc+1
-	lda	#20
+	lda	#30
 	sta	exit_x2_smc+1
 
-	lda	#119
+	lda	#90
 	sta	exit_y1_smc+1
-	lda	#144
+	lda	#125
 	sta	exit_y2_smc+1
 
-	lda	#$10			; BCD
-	sta	PERCENT_NEEDED
-
-	lda	#$2
-	sta	PERCENT_ADD
 
 	;==============
 	; set up intro
 	;==============
 
-	lda	#<level3_preview_lzsa
+	lda	#<level7_preview_lzsa
 	sta	level_preview_l_smc+1
-	lda	#>level3_preview_lzsa
+	lda	#>level7_preview_lzsa
 	sta	level_preview_h_smc+1
 
-	lda	#<level3_intro_text
+	lda	#<level7_intro_text
 	sta	intro_text_smc_l+1
-	lda	#>level3_intro_text
+	lda	#>level7_intro_text
 	sta	intro_text_smc_h+1
+
+	lda	#$20			; BCD
+	sta	PERCENT_NEEDED
+	lda	#$10
+	sta	PERCENT_ADD
 
 
 	;==============
@@ -78,14 +78,14 @@ do_level3:
 
 	; set up first song
 
-	lda	#<music11_parts_l
+	lda	#<music13_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music11_parts_l
+	lda	#>music13_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music11_parts_h
+	lda	#<music13_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music11_parts_h
+	lda	#>music13_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -122,18 +122,18 @@ do_level3:
 	bit	HIRES
 	bit	FULLGR
 
-	lda     #<level3_lzsa
+	lda     #<level7_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level3_lzsa
+	lda     #>level7_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda     #<level3_lzsa
+	lda     #<level7_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level3_lzsa
+	lda     #>level7_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$40
@@ -151,6 +151,7 @@ do_level3:
 	sta	CURSOR_X
 	lda	#100
 	sta	CURSOR_Y
+
 
 	;=======================
 	; init vars
@@ -181,7 +182,7 @@ do_level3:
 	; Main Loop
 	;===================
 	;===================
-l3_main_loop:
+l7_main_loop:
 
 	;=========================
 	; load next chunk of music
@@ -191,16 +192,16 @@ l3_main_loop:
 	jsr	load_music
 
 
-	;=========================
-	; open door
-	;=========================
+
+l7_no_load_chunk:
+
 
 	lda	DOOR_OPEN
-	bne	l3_door_is_open
+	bne	l7_door_is_open
 
 	jsr	draw_door
 
-l3_door_is_open:
+l7_door_is_open:
 
 	;======================
 	; release lemmings
@@ -208,21 +209,21 @@ l3_door_is_open:
 
 	jsr	release_lemming
 
-	;======================
+	;=====================
 	; animate flames
-	;======================
+	;=====================
 
 	jsr	draw_flames
 
 	lda	TIMER_COUNT
 	cmp	#50
-	bcc	l3_timer_not_yet
+	bcc	l7_timer_not_yet
 
 	jsr	update_time
 
 	lda	#$0
 	sta	TIMER_COUNT
-l3_timer_not_yet:
+l7_timer_not_yet:
 
 
 	; main drawing loop
@@ -245,55 +246,52 @@ l3_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l3_level_over
+	bne	l7_level_over
 
-	jmp	l3_main_loop
+	jmp	l7_main_loop
 
 
-l3_level_over:
+l7_level_over:
 
 	rts
 
+.include "graphics/graphics_level7.inc"
 
 
-.include "graphics/graphics_level3.inc"
-
-
-music11_parts_h:
-	.byte >lemm11_part1_lzsa,>lemm11_part2_lzsa,>lemm11_part3_lzsa
-	.byte >lemm11_part4_lzsa,>lemm11_part5_lzsa,>lemm11_part6_lzsa
-	.byte >lemm11_part7_lzsa
+music13_parts_h:
+	.byte >lemm13_part1_lzsa,>lemm13_part2_lzsa,>lemm13_part3_lzsa
+	.byte >lemm13_part4_lzsa,>lemm13_part5_lzsa,>lemm13_part6_lzsa
 	.byte $00
 
-music11_parts_l:
-	.byte <lemm11_part1_lzsa,<lemm11_part2_lzsa,<lemm11_part3_lzsa
-	.byte <lemm11_part4_lzsa,<lemm11_part5_lzsa,<lemm11_part6_lzsa
-	.byte <lemm11_part7_lzsa
+music13_parts_l:
+	.byte <lemm13_part1_lzsa,<lemm13_part2_lzsa,<lemm13_part3_lzsa
+	.byte <lemm13_part4_lzsa,<lemm13_part5_lzsa,<lemm13_part6_lzsa
 
 
 
-lemm11_part1_lzsa:
-.incbin "music/lemm11.part1.lzsa"
-lemm11_part2_lzsa:
-.incbin "music/lemm11.part2.lzsa"
-lemm11_part3_lzsa:
-.incbin "music/lemm11.part3.lzsa"
-lemm11_part4_lzsa:
-.incbin "music/lemm11.part4.lzsa"
-lemm11_part5_lzsa:
-.incbin "music/lemm11.part5.lzsa"
-lemm11_part6_lzsa:
-.incbin "music/lemm11.part6.lzsa"
-lemm11_part7_lzsa:
-.incbin "music/lemm11.part7.lzsa"
+lemm13_part1_lzsa:
+.incbin "music/lemm13.part1.lzsa"
+lemm13_part2_lzsa:
+.incbin "music/lemm13.part2.lzsa"
+lemm13_part3_lzsa:
+.incbin "music/lemm13.part3.lzsa"
+lemm13_part4_lzsa:
+.incbin "music/lemm13.part4.lzsa"
+lemm13_part5_lzsa:
+.incbin "music/lemm13.part5.lzsa"
+lemm13_part6_lzsa:
+.incbin "music/lemm13.part6.lzsa"
+;lemm13_part7_lzsa:			; only one frame, and that crashes things
+;.incbin "music/lemm13.part7.lzsa"
 
 
-level3_intro_text:
-.byte  0, 8,"LEVEL 3",0
-.byte  9, 8,"TAILOR-MADE FOR BLOCKERS",0
-.byte  9,12,"NUMBER OF LEMMINGS 50",0
-.byte 12,14,"10%  TO BE SAVED",0
-.byte 12,16,"RELEASE RATE 50",0
+
+level7_intro_text:
+.byte  0, 8,"LEVEL 7",0
+.byte  8, 8,"AS LONG AS YOU TRY YOUR BEST",0
+.byte  9,12,"NUMBER OF LEMMINGS 80",0
+.byte 12,14,"90%  TO BE SAVED",0
+.byte 12,16,"RELEASE RATE 99",0
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0

@@ -160,28 +160,28 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte 1,1,1,1		; LEVEL4, LEVEL5, LEVEL6
+	.byte 1,1,1,1		; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte 1,1,1,1		; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte 1,1,1,1		;
 
 load_address_array:
-        .byte $60,$90,$90,$90	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte $90,$90,$90,$90	; LEVEL4, LEVEL5, LEVEL6
+        .byte $60,$90,$90,$90	; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte $90,$90,$90,$90	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte $90,$90,$90,$90	;
 
 track_array:
-        .byte  3,10,13,16	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte 19,22,25,28	; LEVEL4, LEVEL5, LEVEL6
+        .byte  3,10,13,16	; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte 19,22,25,28	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte 31,31,31,31	;
 
 sector_array:
-        .byte  0, 0, 0, 0	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte  0, 0, 0, 0	; LEVEL4, LEVEL5, LEVEL6
+        .byte  0, 0, 0, 0	; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte  0, 0, 0, 0	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte  0, 0, 0, 0	;
 
 length_array:
-        .byte  48, 46, 46, 46	; LEMM, LEVEL1, LEVEL2, LEVEL3
-	.byte  46, 46, 46, 32	; LEVEL4, LEVEL5, LEVEL6
+        .byte  48, 46, 46, 46	; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte  32, 32, 32, 32	;
 
 

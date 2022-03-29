@@ -264,7 +264,7 @@ no_keypress:
 
 
 button_jump_l:
-	.byte	$0
+	.byte	<(make_nop-1)
 	.byte	<(make_climber-1)
 	.byte	<(make_floater-1)
 	.byte	<(make_exploding-1)
@@ -275,7 +275,7 @@ button_jump_l:
 	.byte	<(make_digger-1)
 
 button_jump_h:
-	.byte	$0
+	.byte	>(make_nop-1)
 	.byte	>(make_climber-1)
 	.byte	>(make_floater-1)
 	.byte	>(make_exploding-1)
@@ -286,6 +286,8 @@ button_jump_h:
 	.byte	>(make_digger-1)
 
 
+make_nop:
+	jmp	done_keypress
 
 
 	;========================

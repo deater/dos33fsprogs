@@ -20,8 +20,10 @@ all:	lemm5.part1.lzsa lemm5.part2.lzsa lemm5.part3.lzsa \
 	lemm11.part7.lzsa \
 	lemm12.part1.lzsa lemm12.part2.lzsa lemm12.part3.lzsa \
 	lemm12.part4.lzsa lemm12.part5.lzsa lemm12.part6.lzsa \
-	lemm12.part7.lzsa lemm12.part8.lzsa
-
+	lemm12.part7.lzsa lemm12.part8.lzsa \
+	lemm13.part1.lzsa lemm13.part2.lzsa lemm13.part3.lzsa \
+	lemm13.part4.lzsa lemm13.part5.lzsa lemm13.part6.lzsa \
+	lemm13.part7.lzsa
 
 
 lemm5.raw:	lemm5.ym
@@ -212,6 +214,39 @@ lemm12.part7.lzsa:	lemm12.part7
 
 lemm12.part8.lzsa:	lemm12.part8
 	$(LZSA) -r -f2 lemm12.part8 lemm12.part8.lzsa
+
+
+
+
+####
+
+lemm13.part1:	lemm13.raw
+	$(RAW_INTERLEAVE) -m 11 -c 512 ./lemm13
+
+lemm13.part1.lzsa:	lemm13.part1
+	$(LZSA) -r -f2 lemm13.part1 lemm13.part1.lzsa
+
+lemm13.part2.lzsa:	lemm13.part2
+	$(LZSA) -r -f2 lemm13.part2 lemm13.part2.lzsa
+
+lemm13.part3.lzsa:	lemm13.part3
+	$(LZSA) -r -f2 lemm13.part3 lemm13.part3.lzsa
+
+lemm13.part4.lzsa:	lemm13.part4
+	$(LZSA) -r -f2 lemm13.part4 lemm13.part4.lzsa
+
+lemm13.part5.lzsa:	lemm13.part5
+	$(LZSA) -r -f2 lemm13.part5 lemm13.part5.lzsa
+
+lemm13.part6.lzsa:	lemm13.part6
+	$(LZSA) -r -f2 lemm13.part6 lemm13.part6.lzsa
+
+lemm13.part7.lzsa:	lemm13.part7
+	$(LZSA) -r -f2 lemm13.part7 lemm13.part7.lzsa
+
+lemm13.part8.lzsa:	lemm13.part8
+	$(LZSA) -r -f2 lemm13.part8 lemm13.part8.lzsa
+
 
 
 

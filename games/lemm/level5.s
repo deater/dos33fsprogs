@@ -198,7 +198,7 @@ l5_door_is_open:
 ;	jsr	draw_flames
 
 	lda	TIMER_COUNT
-	cmp	#$50
+	cmp	#50
 	bcc	l5_timer_not_yet
 
 	jsr	update_time
