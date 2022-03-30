@@ -80,14 +80,14 @@ do_level9:
 
 	; set up first song
 
-	lda	#<music17_parts_l
+	lda	#<music2_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music17_parts_l
+	lda	#>music2_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music17_parts_h
+	lda	#<music2_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music17_parts_h
+	lda	#>music2_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -260,35 +260,31 @@ l9_level_over:
 .include "graphics/graphics_level9.inc"
 
 
-music17_parts_h:
-	.byte >lemm17_part1_lzsa,>lemm17_part2_lzsa,>lemm17_part3_lzsa
-	.byte >lemm17_part4_lzsa,>lemm17_part5_lzsa,>lemm17_part6_lzsa
-	.byte >lemm17_part7_lzsa,>lemm17_part8_lzsa
+music2_parts_h:
+	.byte >lemm2_part1_lzsa,>lemm2_part2_lzsa,>lemm2_part3_lzsa
+	.byte >lemm2_part4_lzsa,>lemm2_part5_lzsa,>lemm2_part6_lzsa
 	.byte $00
 
-music17_parts_l:
-	.byte <lemm17_part1_lzsa,<lemm17_part2_lzsa,<lemm17_part3_lzsa
-	.byte <lemm17_part4_lzsa,<lemm17_part5_lzsa,<lemm17_part6_lzsa
-	.byte <lemm17_part7_lzsa,<lemm17_part8_lzsa
+music2_parts_l:
+	.byte <lemm2_part1_lzsa,<lemm2_part2_lzsa,<lemm2_part3_lzsa
+	.byte <lemm2_part4_lzsa,<lemm2_part5_lzsa,<lemm2_part6_lzsa
 
 
 
-lemm17_part1_lzsa:
-.incbin "music/lemm17.part1.lzsa"
-lemm17_part2_lzsa:
-.incbin "music/lemm17.part2.lzsa"
-lemm17_part3_lzsa:
-.incbin "music/lemm17.part3.lzsa"
-lemm17_part4_lzsa:
-.incbin "music/lemm17.part4.lzsa"
-lemm17_part5_lzsa:
-.incbin "music/lemm17.part5.lzsa"
-lemm17_part6_lzsa:
-.incbin "music/lemm17.part6.lzsa"
-lemm17_part7_lzsa:
-.incbin "music/lemm17.part7.lzsa"
-lemm17_part8_lzsa:
-.incbin "music/lemm17.part8.lzsa"
+lemm2_part1_lzsa:
+.incbin "music/lemm2.part1.lzsa"
+lemm2_part2_lzsa:
+.incbin "music/lemm2.part2.lzsa"
+lemm2_part3_lzsa:
+.incbin "music/lemm2.part3.lzsa"
+lemm2_part4_lzsa:
+.incbin "music/lemm2.part4.lzsa"
+lemm2_part5_lzsa:
+.incbin "music/lemm2.part5.lzsa"
+lemm2_part6_lzsa:
+.incbin "music/lemm2.part6.lzsa"
+
+
 
 
 ; actually level11
