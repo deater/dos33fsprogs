@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7 LEVEL8
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7 LEVEL8 LEVEL9
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -34,6 +34,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  21 0 LEVEL6     0   0
 	$(DOS33_RAW) lemm.dsk  24 0 LEVEL7     0   0
 	$(DOS33_RAW) lemm.dsk  27 0 LEVEL8     0   0
+	$(DOS33_RAW) lemm.dsk  30 0 LEVEL9     0   0
 
 
 
@@ -242,6 +243,25 @@ level8.o:	level8.s zp.inc hardware.inc qload.inc lemm.inc \
 		graphics/graphics_level8.inc
 	ca65 -o level8.o level8.s -l level8.lst
 
+####
+
+LEVEL9:	level9.o
+	ld65 -o LEVEL9 level9.o -C ../../linker_scripts/apple2_9000.inc
+
+level9.o:	level9.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		graphics/graphics_level9.inc
+	ca65 -o level9.o level9.s -l level9.lst
+
+####
+
+LEVEL10:	level10.o
+	ld65 -o LEVEL10 level10.o -C ../../linker_scripts/apple2_9000.inc
+
+level10.o:	level10.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		graphics/graphics_level10.inc
+	ca65 -o level10.o level10.s -l level10.lst
 
 
 
