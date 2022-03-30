@@ -1,17 +1,16 @@
-+ draw roughly circular bg destruction when lemming explodes
 + wait a second after last lemming gone to exit
-+ update the "in" %
 + dig off the map, end level
 + fill in some of the ground so we don't get stuck when digging
 + "Out" counter is only printed to page1 so gets erased by cursor
-+ Falling too far and you go splat
 + See if the jerky animation is due to starting at an odd x vs
 	even x, maybe we should start animation 4 frames in if that's
 	the case.  Or maybe it's the shift for odd frames, make
 	the shift the other way if walking left/right
-+ Add floater
-+ Add stopper
 + Add climber
++ Add basher
++ Add builder
++ Make particles thicker?  Look fine, not show up in recordings
++ Erase particles as last step
 
 + when nuke, they should stop coming out of the door
 + offset the frames when nuking so not simultaneous
@@ -19,6 +18,5 @@
 
 + nuke/exploding should not happen if lemming is splatting
 	or already exploding
-
-+ green flame for ice level
++ green flame for ice level?
 

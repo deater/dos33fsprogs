@@ -313,8 +313,7 @@ make_floater:
 	; make exploding
 	;========================
 make_exploding:
-	lda	#1
-	sta	lemming_exploding,Y
+	jsr	explode_lemming
 	jmp	done_keypress
 
 
@@ -518,13 +517,15 @@ done_plus_adjust:
 	;============================
 	;============================
 	; TODO: offset them a bit so it's not simultaneous
-	; FIXME: also stop more from coming out the door
 
 nuke_button:
-	lda	#1
+	; stop lemmings from exiting
+	lda	#0
+	sta	LEMMINGS_TO_RELEASE
+
 	ldy	#0
 nuke_loop:
-	sta	lemming_exploding,Y
+	jsr	explode_lemming
 	iny
 	cpy	#MAX_LEMMINGS
 	bne	nuke_loop
@@ -554,4 +555,23 @@ pause_button:
 
 done_menu:
 
+	rts
+
+
+	;=====================
+	;=====================
+	; explode lemming
+	;=====================
+	;=====================
+	; which is in  Y
+explode_lemming:
+	; only explode if not already exploding
+
+	lda	lemming_exploding,Y
+	bne	skip_explode
+
+	lda	#1
+	sta	lemming_exploding,Y
+
+skip_explode:
 	rts

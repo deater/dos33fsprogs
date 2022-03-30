@@ -1,3 +1,27 @@
+Plan for future scrolling:
+	+ Foreground drawn with a tilemap
+		Write program to pick optimal tiles
+		5 wide screen = ? in size
+		Scroll the tilemap
+	+ Actual collision detection happens in offscreen buffer
+		Each pixel equivalent is one 7-pixel chunk wide
+		Should be small enough
+		Physics engine happens entirely on that
+
+
+
+Heights for detection:
+	Walking lemming = 10 high
+	Floating lemming = 16 high
+
+	Detect ground (walking) = y+10?
+	Detect in ground (need to bump up) = ?
+	Height we detect wall collision = ?
+
+
+
+
+
 LEMM: 23782 (original v0.01)
 
 
