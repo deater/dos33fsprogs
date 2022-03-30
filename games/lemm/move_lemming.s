@@ -262,72 +262,47 @@ do_lemming_digging:
 	; mining
 	;=====================
 do_lemming_mining:
-	lda	lemming_y,Y
-	clc
-	adc	#9
-	tax
-
-	lda     hposn_high,X	; set up collision check underfoot
-	clc
-	adc	#$20
-        sta     GBASH
-        lda     hposn_low,X
-        sta     GBASL
-
-	lda	lemming_x,Y	; if fell through,then fall
-	tay
-	lda	(GBASL),Y
-	and	#$7f
-	beq	mining_falling
-
-mining_mining:
-
 	ldy	CURRENT_LEMMING
 	lda	lemming_frame,Y
 	and	#$f
-	bne	no_mining_this_frame
+	bne	no_mining_this_frame		; only move dirt on frame 0
 
-	ldx	#0
+	ldx	#0				; erase background
 	stx	HGR_COLOR
 
 	; (X,A) to (X,A+Y) where X is xcoord/7
-	jsr	hgr_box_page_toggle
+
+	jsr	hgr_box_page_toggle		; erase box page1
 	ldy	CURRENT_LEMMING
 	lda	lemming_x,Y
 	tax
 	lda	lemming_y,Y
-	ldy	#9
+	ldy	#10
 	jsr	hgr_box
 
-	jsr	hgr_box_page_toggle
+	jsr	hgr_box_page_toggle		; erase box page2
 	ldy	CURRENT_LEMMING
 	lda	lemming_x,Y
 	tax
 	lda	lemming_y,Y
-	ldy	#9
+	ldy	#10
 	jsr	hgr_box
 
 
-	ldx	CURRENT_LEMMING
+	ldx	CURRENT_LEMMING			; move 3 lines down
 	inc	lemming_y,X
 	inc	lemming_y,X
 	inc	lemming_y,X
 
-	lda	lemming_x,X
+	lda	lemming_x,X			; move left or right
 	clc
 	adc	lemming_direction,X
 	sta	lemming_x,X
 
 no_mining_this_frame:
-	jmp	done_mining
-
-
-mining_falling:
-	ldy	CURRENT_LEMMING
-	lda	#LEMMING_FALLING
-	sta	lemming_status,Y
 done_mining:
 	jmp	done_move_lemming
+
 
 
 
