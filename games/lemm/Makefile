@@ -19,7 +19,7 @@ all:	lemm.dsk
 
 
 lemm.dsk:	QBOOT QLOAD LEMM \
-	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7 LEVEL8 LEVEL9
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7 LEVEL8 LEVEL9 LEVEL10
 	cp $(EMPTY_DISK) lemm.dsk
 	$(DOS33_RAW) lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) lemm.dsk  0  2 QBOOT      1   1
@@ -35,6 +35,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  24 0 LEVEL7     0   0
 	$(DOS33_RAW) lemm.dsk  27 0 LEVEL8     0   0
 	$(DOS33_RAW) lemm.dsk  30 0 LEVEL9     0   0
+	$(DOS33_RAW) lemm.dsk  33 0 LEVEL10    0   0
 
 
 
@@ -278,7 +279,7 @@ generate_common.o:	generate_common.c
 ####
 
 graphics/graphics_test.inc:
-	cd	graphics && make
+	cd graphics && make
 
 ####
 

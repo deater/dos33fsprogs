@@ -15,8 +15,9 @@ all:	graphics_test.inc \
 	graphics_level7.inc \
 	graphics_level8.inc \
 	graphics_level9.inc \
+	graphics_level10.inc \
 	sprites.inc
-#	graphics_level10.inc
+
 
 
 ###

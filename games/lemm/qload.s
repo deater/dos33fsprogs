@@ -182,7 +182,7 @@ sector_array:
 length_array:
         .byte  48, 46, 46, 46	; LEMM,   LEVEL1, LEVEL2, LEVEL3
 	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  46, 46, 46, 46	; LEVEL8, LEVEL9, LEVEL10
+	.byte  46, 46, 32, 32	; LEVEL8, LEVEL9, LEVEL10
 
 
 	.include	"wait.s"
