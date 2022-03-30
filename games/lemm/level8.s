@@ -39,7 +39,7 @@ do_level8:
 
 	lda	#9			;
 	sta	exit_x1_smc+1
-	lda	#13
+	lda	#14
 	sta	exit_x2_smc+1
 
 	lda	#112

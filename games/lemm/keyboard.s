@@ -232,24 +232,6 @@ return_check_lemming:
 	pha
 	rts					; jump to it
 
-;	cmp	#1
-;	beq	make_climber
-;	cmp	#2
-;	beq	make_floater
-;	cmp	#3
-;	beq	make_exploding
-;	cmp	#4
-;	beq	make_stopper
-;	cmp	#5
-;	beq	make_builder
-;	cmp	#6
-;	beq	make_basher
-;	cmp	#7
-;	beq	make_miner
-;	cmp	#8
-;	beq	make_digger
-;	bne	done_keypress
-
 
 not_over_lemming:
 
@@ -326,14 +308,16 @@ make_stopper:
 	beq	cant_stop
 	cmp	#LEMMING_FALLING		; can't stop if falling
 	beq	cant_stop
+	cmp	#LEMMING_STOPPING		; an unmoving object can't be
+	beq	cant_stop			; stopped!
 
 	lda	#LEMMING_STOPPING
 	sta	lemming_status,Y
 
 	; put line on page2 to make lemmings reverse
 
-;	 line from (x,a) to (x,a+y)
-	lda	#$7f
+	; line from (x,a) to (x,a+y)
+	lda	#$7
 	sta	HGR_COLOR
 
 	jsr	hgr_vlin_page_toggle
@@ -344,10 +328,14 @@ make_stopper:
 	adc	lemming_x,Y
 	asl
 	adc	lemming_x,Y
+	adc	#2			; center a bit
 
 	tax
 	lda	lemming_y,Y
-	ldy	#10
+	clc
+	adc	#3
+
+	ldy	#7
 
 	jsr	hgr_vlin
 

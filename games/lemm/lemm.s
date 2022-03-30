@@ -296,7 +296,7 @@ level_won:
 	inc	WHICH_LEVEL
 
 	lda	WHICH_LEVEL
-	cmp	#7
+	cmp	#11
 	bcc	level_continue
 
 	lda	#1			; wrap to level1?
