@@ -311,15 +311,10 @@ done_mining:
 	; bashing
 	;=====================
 do_lemming_bashing:
-.if 0
-	jsr	collide_below
-
-mining_mining:
-
 	ldy	CURRENT_LEMMING
 	lda	lemming_frame,Y
 	and	#$f
-	bne	no_mining_this_frame
+	bne	no_bashing_this_frame
 
 	ldx	#0
 	stx	HGR_COLOR
@@ -328,6 +323,8 @@ mining_mining:
 	jsr	hgr_box_page_toggle
 	ldy	CURRENT_LEMMING
 	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
 	tax
 	lda	lemming_y,Y
 	ldy	#9
@@ -336,32 +333,20 @@ mining_mining:
 	jsr	hgr_box_page_toggle
 	ldy	CURRENT_LEMMING
 	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
 	tax
 	lda	lemming_y,Y
 	ldy	#9
 	jsr	hgr_box
 
-
-	ldx	CURRENT_LEMMING
-	inc	lemming_y,X
-	inc	lemming_y,X
-	inc	lemming_y,X
-
-	lda	lemming_x,X
+	ldy	CURRENT_LEMMING			; FIXME: combine with earlier?
+	lda	lemming_x,Y
 	clc
-	adc	lemming_direction,X
-	sta	lemming_x,X
+	adc	lemming_direction,Y
+	sta	lemming_x,Y
 
-no_mining_this_frame:
-	jmp	done_mining
-
-
-mining_falling:
-	ldy	CURRENT_LEMMING
-	lda	#LEMMING_FALLING
-	sta	lemming_status,Y
-done_mining:
-.endif
+no_bashing_this_frame:
 	jmp	done_move_lemming
 
 
