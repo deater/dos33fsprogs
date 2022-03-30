@@ -27,22 +27,22 @@ lemming_attribute:
 move_lemmings:
 
 	ldy	#0
-	sty	CURRENT_LEMMING
+	sty	CURRENT_LEMMING			; reset loop
+
 move_lemming_loop:
 
-	ldy	CURRENT_LEMMING
+	ldy	CURRENT_LEMMING			; get current in Y
 	lda	lemming_out,Y
 
-	bne	really_move_lemming
-	jmp	done_checking_lemming
+	beq	skip_move_lemming		; if not out, don't move
 
 really_move_lemming:
 	; bump frame
 	tya
 	tax
-	inc	lemming_frame,X		; only can inc with X
+	inc	lemming_frame,X			; only can inc with X
 
-	lda	lemming_status,Y
+	lda	lemming_status,Y		; use jump table based on status
 	tax
 	lda	move_lemming_jump_h,X
 	pha
@@ -50,16 +50,16 @@ really_move_lemming:
 	pha
 	rts				; jump to it
 
+skip_move_lemming:
 done_move_lemming:
 
+	jsr	collision_check_ground
 
-done_checking_lemming:
-
-	inc     CURRENT_LEMMING
+	inc     CURRENT_LEMMING		; loop until done
 	lda     CURRENT_LEMMING
 	cmp     #MAX_LEMMINGS
-	beq     really_done_checking_lemming
-	jmp	move_lemming_loop
+	bne	move_lemming_loop
+
 really_done_checking_lemming:
 
 	rts
@@ -127,7 +127,7 @@ do_lemming_falling:
 	sta	lemming_frame,X
 
 not_fallen_enough:
-	jsr	collision_check_ground
+;	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -145,7 +145,7 @@ do_lemming_floating:
 	lda	#0
 	sta	lemming_fall_distance,X
 
-	jsr	collision_check_ground
+;	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -222,7 +222,7 @@ walking_no_wall:
 
 walking_no_increment:
 
-	jsr	collision_check_ground
+;	jsr	collision_check_ground
 
 walking_done:
 	jmp	done_move_lemming
@@ -232,42 +232,28 @@ walking_done:
 	; digging
 	;=====================
 do_lemming_digging:
-	lda	lemming_y,Y
+
+	lda	lemming_y,Y		; point to spot below us
 	clc
 	adc	#9
 	tax
 
 	lda     hposn_high,X
 	clc
-	adc	#$20
+	adc	#$20			; point to background
         sta     GBASH
         lda     hposn_low,X
         sta     GBASL
 
 	lda	lemming_x,Y
 	tay
-	lda	(GBASL),Y
-	and	#$7f
-	beq	digging_falling
-digging_digging:
-	lda	#$0
-	sta	(GBASL),Y
-;	lda	GBASH
-;	clc
-;	adc	#$20				; erase bg
-;	sta	GBASH
-;	lda	#$0
-;	sta	(GBASL),Y
 
-	ldx	CURRENT_LEMMING
+	lda	#$0
+	sta	(GBASL),Y			; erase bg
+
+	ldx	CURRENT_LEMMING			; dig down
 	inc	lemming_y,X
 
-	jmp	done_digging
-digging_falling:
-	ldy	CURRENT_LEMMING
-	lda	#LEMMING_FALLING
-	sta	lemming_status,Y
-done_digging:
 	jmp	done_move_lemming
 
 
@@ -347,19 +333,81 @@ done_mining:
 
 
 	;=====================
+	; bashing
+	;=====================
+do_lemming_bashing:
+.if 0
+	jsr	collide_below
+
+mining_mining:
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_frame,Y
+	and	#$f
+	bne	no_mining_this_frame
+
+	ldx	#0
+	stx	HGR_COLOR
+
+	; (X,A) to (X,A+Y) where X is xcoord/7
+	jsr	hgr_box_page_toggle
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	lda	lemming_y,Y
+	ldy	#9
+	jsr	hgr_box
+
+	jsr	hgr_box_page_toggle
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	tax
+	lda	lemming_y,Y
+	ldy	#9
+	jsr	hgr_box
+
+
+	ldx	CURRENT_LEMMING
+	inc	lemming_y,X
+	inc	lemming_y,X
+	inc	lemming_y,X
+
+	lda	lemming_x,X
+	clc
+	adc	lemming_direction,X
+	sta	lemming_x,X
+
+no_mining_this_frame:
+	jmp	done_mining
+
+
+mining_falling:
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_FALLING
+	sta	lemming_status,Y
+done_mining:
+.endif
+	jmp	done_move_lemming
+
+
+
+
+
+
+	;=====================
 	; do nothing
 	;=====================
 
 	; placeholders
-do_lemming_exploding:
+do_lemming_exploding:		; nothing special
 do_lemming_pullup:
 do_lemming_shrugging:
+do_lemming_stopping:		; nothing special
 do_lemming_building:
-do_lemming_stopping:
-do_lemming_bashing:
+
 do_lemming_climbing:
-do_lemming_splatting:
-do_lemming_particles:
+do_lemming_splatting:		; nothing special
+do_lemming_particles:		; work done in draw
 
 	jmp	done_move_lemming
 
@@ -424,9 +472,10 @@ not_last_lemming:
 	;=============================
 
 collision_check_ground:
+	ldy	CURRENT_LEMMING
 	lda	lemming_y,Y
 	clc
-	adc	#9
+	adc	#9			; FIXME: should be 10?
 	tax
 
 	lda     hposn_high,X
@@ -441,8 +490,25 @@ collision_check_ground:
 	lda	(GBASL),Y
 	and	#$7f
 	beq	ground_falling		; if empty space below us, fall
-ground_walking:
 
+on_the_ground:
+	; if we get here we're on the ground
+
+	; if we were previously falling/floating we need to do something
+	; otherwise do nothing
+
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_status,Y
+
+	cmp	#LEMMING_FALLING
+	beq	hit_ground
+	cmp	#LEMMING_FLOATING
+	beq	hit_ground
+	bne	done_check_ground	 ; could rts here?
+
+
+hit_ground:
 	; hit ground walking
 
 	ldy	CURRENT_LEMMING
@@ -457,6 +523,7 @@ ground_walking:
 	lda	#LEMMING_WALKING	; else, walk
 	jmp	update_status_check_ground
 
+	; nothing beneath us, falling
 ground_falling:
 	ldy	CURRENT_LEMMING
 	lda	lemming_status,Y	; if floating, don't go back to fall
