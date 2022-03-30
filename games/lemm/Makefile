@@ -55,7 +55,7 @@ qload.o:	qload.s qboot.inc	\
 	audio.s decompress_fast_v2.s gr_offsets.s \
 	wait.s wait_a_bit.s \
 	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s hgr_14x14_sprite.s \
-	hgr_partial_restore.s
+	hgr_sprite.s hgr_partial_restore.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -79,7 +79,10 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_draw_sprite_14x14 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s crosshair_sprite_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s select_sprite_l qload.lst >> qload.inc
-
+	./generate_common -a 0x1200 -s hgr_sprite_as_toggle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_sprite_page_toggle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite_autoshift qload.lst >> qload.inc
 
 ###
 
@@ -103,7 +106,7 @@ LEMM:	lemm.o
 
 lemm.o:	lemm.s zp.inc hardware.inc qload.inc hgr.inc \
 		graphics/sprites.inc \
-		intro_level.s update_time.s hgr_sprite.s draw_flames.s  \
+		intro_level.s update_time.s draw_flames.s  \
 		draw_door.s move_lemming.s draw_lemming.s \
 		update_menu.s init_level.s \
 		interrupt_handler.s keyboard.s \

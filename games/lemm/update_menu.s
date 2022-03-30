@@ -1,5 +1,6 @@
-	;
-	;
+	;=============================
+	; update menu
+	;=============================
 update_menu:
 	lda	BUTTON_LOCATION
 	bne	actually_update_menu
@@ -15,7 +16,7 @@ actually_update_menu:
 	rts
 
 	;========================
-	;
+	; erase menu
 	;========================
 erase_menu:
 	lda	BUTTON_LOCATION

@@ -196,6 +196,7 @@ length_array:
 	.include	"hgr_tables.s"
 	.include	"hgr_partial_restore.s"
 	.include	"hgr_14x14_sprite.s"
+	.include	"hgr_sprite.s"
 
 qload_end:
 

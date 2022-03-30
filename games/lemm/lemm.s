@@ -333,7 +333,6 @@ level_continue:
 
 	.include	"draw_pointer.s"
 
-	.include	"hgr_sprite.s"
 	.include	"update_time.s"
 	.include	"intro_level.s"
 	.include	"draw_flames.s"
@@ -362,6 +361,7 @@ level_continue:
 ;	.include	"hgr_tables.s"
 ;	.include	"hgr_partial_restore.s"
 ;	.include	"hgr_14x14_sprite.s"
+;	.include	"hgr_sprite.s"
 
 
 	; pt3 player

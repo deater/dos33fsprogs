@@ -163,7 +163,7 @@ hgr_sprite_yloop_as:
 
 	; eor	#$00 draws on page2
 	; eor	#$60 draws on page1
-hgr_sprite_page_smc_as:
+hgr_sprite_smc_as:
 	eor	#$00
 	sta	GBASH
 
@@ -222,3 +222,9 @@ sprite_ysize_smc_as:
 	rts
 
 
+
+hgr_sprite_as_toggle:
+	lda	hgr_sprite_smc_as+1
+	eor	#$60
+	sta	hgr_sprite_smc_as+1
+	rts

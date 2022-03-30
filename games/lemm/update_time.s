@@ -72,30 +72,43 @@ not_over:
 
 draw_time:
 
+	;==============
 	; draw minute
-	ldy	TIME_MINUTES
 
-	lda	bignums_l,Y
-	sta	INL
-	lda	bignums_h,Y
-	sta	INH
+	; draw twice, once on each page
 
-	; 246, 152
+	jsr	hgr_sprite_as_toggle
 
-	ldx	#35		; 245
-        stx     XPOS
-	lda	#152
-	sta	YPOS
+	lda	TIME_MINUTES
+	ldx	#35		; XPOS
+	jsr	print_one_digit
 
-	jsr	hgr_draw_sprite_autoshift
+	jsr	hgr_sprite_as_toggle
+
+	lda	TIME_MINUTES
+	ldx	#35		; XPOS
+	jsr	print_one_digit
+
 
 	;================
 	; draw seconds
 
+	; draw twice, once on each page
+
+	jsr	hgr_sprite_as_toggle
+
 	lda	TIME_SECONDS
-	ldx	#37
+	ldx	#37			; x location
 	sec				; no leading zero removal
-	jmp	print_two_digits
+	jsr	print_two_digits
+
+	jsr	hgr_sprite_as_toggle
+
+	lda	TIME_SECONDS
+	ldx	#37			; x location
+	sec				; no leading zero removal
+
+	jmp	print_two_digits	; tail call
 
 
 	;===========================
@@ -130,9 +143,20 @@ not_hundred_yet:
 	clc				; leading zero removal
 hundreds_entry:
 
+	php
+	jsr	hgr_sprite_as_toggle
 	lda	PERCENT_RESCUED_L
 	ldx	#24
+	plp
+	php
+	jsr	print_two_digits
+
+	jsr	hgr_sprite_as_toggle
+	lda	PERCENT_RESCUED_L
+	ldx	#24
+	plp
 	jmp	print_two_digits
+
 
 
 	;===========================
@@ -143,13 +167,45 @@ hundreds_entry:
 
 update_lemmings_out:
 
+	jsr	hgr_sprite_as_toggle
+	lda	LEMMINGS_OUT
+	ldx	#15
+	clc				; leading zero removal
+	jsr	print_two_digits
 
+	jsr	hgr_sprite_as_toggle
 	lda	LEMMINGS_OUT
 	ldx	#15
 	clc				; leading zero removal
 	jmp	print_two_digits
 
 
+
+
+	;===========================
+	;===========================
+	; print one-digit number
+	;===========================
+	;===========================
+	; A is the BCD value
+	; X is the X location
+	; we assume 152 for Y location
+
+print_one_digit:
+	tay
+
+	lda	bignums_l,Y
+	sta	INL
+	lda	bignums_h,Y
+	sta	INH
+
+        stx     XPOS
+	lda	#152
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	rts
 
 	;===========================
 	;===========================
