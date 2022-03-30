@@ -235,7 +235,7 @@ zurg:
 
 	cmp	#'1'+$80
 	bcc	oof
-	cmp	#'8'+$80
+	cmp	#'9'+$80
 	bcs	oof
 
 	and	#$7f

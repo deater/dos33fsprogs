@@ -162,27 +162,27 @@ error_string:
 which_disk_array:
 	.byte 1,1,1,1		; LEMM,   LEVEL1, LEVEL2, LEVEL3
 	.byte 1,1,1,1		; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 1,1,1,1		;
+	.byte 1,1,1,1		; LEVEL8, LEVEL9, LEVEL10
 
 load_address_array:
         .byte $60,$90,$90,$90	; LEMM,   LEVEL1, LEVEL2, LEVEL3
 	.byte $90,$90,$90,$90	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte $90,$90,$90,$90	;
+	.byte $90,$90,$90,$90	; LEVEL8, LEVEL9, LEVEL10
 
 track_array:
-        .byte  3,10,13,16	; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte 19,22,25,28	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 31,31,31,31	;
+        .byte  3, 6, 9,12	; LEMM,   LEVEL1, LEVEL2, LEVEL3
+	.byte 15,18,21,24	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
+	.byte 27,30,33,33	; LEVEL8, LEVEL9, LEVEL10
 
 sector_array:
         .byte  0, 0, 0, 0	; LEMM,   LEVEL1, LEVEL2, LEVEL3
 	.byte  0, 0, 0, 0	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  0, 0, 0, 0	;
+	.byte  0, 0, 0, 0	; LEVEL8, LEVEL9, LEVEL10
 
 length_array:
         .byte  48, 46, 46, 46	; LEMM,   LEVEL1, LEVEL2, LEVEL3
 	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  32, 32, 32, 32	;
+	.byte  46, 46, 46, 46	; LEVEL8, LEVEL9, LEVEL10
 
 
 	.include	"wait.s"

@@ -13,7 +13,11 @@ all:	graphics_test.inc \
 	graphics_level5.inc \
 	graphics_level6.inc \
 	graphics_level7.inc \
+	graphics_level8.inc \
 	sprites.inc
+#	graphics_level9.inc \
+#	graphics_level10.inc
+
 
 ###
 
@@ -67,6 +71,25 @@ graphics_level7.inc:	\
 	level7_preview.lzsa
 	echo "level7_lzsa: .incbin \"level7.lzsa\"" > graphics_level7.inc
 	echo "level7_preview_lzsa: .incbin \"level7_preview.lzsa\"" >> graphics_level7.inc
+
+graphics_level8.inc:	\
+	level8.lzsa \
+	level8_preview.lzsa
+	echo "level8_lzsa: .incbin \"level8.lzsa\"" > graphics_level8.inc
+	echo "level8_preview_lzsa: .incbin \"level8_preview.lzsa\"" >> graphics_level8.inc
+
+graphics_level9.inc:	\
+	level9.lzsa \
+	level9_preview.lzsa
+	echo "level9_lzsa: .incbin \"level9.lzsa\"" > graphics_level9.inc
+	echo "level9_preview_lzsa: .incbin \"level9_preview.lzsa\"" >> graphics_level9.inc
+
+graphics_level10.inc:	\
+	level10.lzsa \
+	level10_preview.lzsa
+	echo "level10_lzsa: .incbin \"level10.lzsa\"" > graphics_level10.inc
+	echo "level10_preview_lzsa: .incbin \"level10_preview.lzsa\"" >> graphics_level10.inc
+
 
 
 
@@ -436,6 +459,58 @@ level7_preview.lzsa:	level7_preview.hgr
 
 level7_preview.hgr:	level7_preview.png
 	$(PNG2HGR) level7_preview.png > level7_preview.hgr
+
+####
+
+level8.lzsa:	level8.hgr
+	$(LZSA) -r -f2 level8.hgr level8.lzsa
+
+level8.hgr:	level8.png
+	$(PNG2HGR) level8.png > level8.hgr
+
+###
+
+
+level8_preview.lzsa:	level8_preview.hgr
+	$(LZSA) -r -f2 level8_preview.hgr level8_preview.lzsa
+
+level8_preview.hgr:	level8_preview.png
+	$(PNG2HGR) level8_preview.png > level8_preview.hgr
+
+####
+
+level9.lzsa:	level9.hgr
+	$(LZSA) -r -f2 level9.hgr level9.lzsa
+
+level9.hgr:	level9.png
+	$(PNG2HGR) level9.png > level9.hgr
+
+###
+
+
+level9_preview.lzsa:	level9_preview.hgr
+	$(LZSA) -r -f2 level9_preview.hgr level9_preview.lzsa
+
+level9_preview.hgr:	level9_preview.png
+	$(PNG2HGR) level9_preview.png > level9_preview.hgr
+
+####
+
+level10.lzsa:	level10.hgr
+	$(LZSA) -r -f2 level10.hgr level10.lzsa
+
+level10.hgr:	level10.png
+	$(PNG2HGR) level10.png > level10.hgr
+
+###
+
+
+level10_preview.lzsa:	level10_preview.hgr
+	$(LZSA) -r -f2 level10_preview.hgr level10_preview.lzsa
+
+level10_preview.hgr:	level10_preview.png
+	$(PNG2HGR) level10_preview.png > level10_preview.hgr
+
 
 
 ###
