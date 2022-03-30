@@ -257,7 +257,6 @@ do_lemming_digging:
 	jmp	done_move_lemming
 
 
-
 	;=====================
 	; mining
 	;=====================
@@ -351,6 +350,60 @@ no_bashing_this_frame:
 
 
 
+	;=====================
+	; building
+	;=====================
+do_lemming_building:
+	ldy	CURRENT_LEMMING
+	lda	lemming_frame,Y
+	and	#$f
+	bne	no_building_this_frame		; only move dirt on frame 0
+
+	ldx	#7				; draw white block
+	stx	HGR_COLOR
+
+	; (X,A) to (X,A+Y) where X is xcoord/7
+
+	jsr	hgr_box_page_toggle		; erase box page1
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
+	tax
+	lda	lemming_y,Y
+	clc
+	adc	#7
+	ldy	#2
+	jsr	hgr_box
+
+	jsr	hgr_box_page_toggle		; erase box page2
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
+	tax
+	lda	lemming_y,Y
+	clc
+	adc	#7
+	ldy	#2
+	jsr	hgr_box
+
+
+	ldx	CURRENT_LEMMING			; move 2 lines up
+	dec	lemming_y,X
+	dec	lemming_y,X
+;	dec	lemming_y,X
+
+	lda	lemming_x,X			; move left or right
+	clc
+	adc	lemming_direction,X
+	sta	lemming_x,X
+
+no_building_this_frame:
+done_building:
+	jmp	done_move_lemming
+
+
 
 
 
@@ -363,8 +416,6 @@ do_lemming_exploding:		; nothing special
 do_lemming_pullup:
 do_lemming_shrugging:
 do_lemming_stopping:		; nothing special
-do_lemming_building:
-
 do_lemming_climbing:
 do_lemming_splatting:		; nothing special
 do_lemming_particles:		; work done in draw

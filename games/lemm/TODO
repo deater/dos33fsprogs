@@ -1,5 +1,6 @@
 + bridges you can walk through from underneath, not
 	sure how to implement that
++ bashes stop when nothing to right/left
 
 + wait a second after last lemming gone to exit
 + dig off the map, end level
@@ -9,7 +10,6 @@
 	the case.  Or maybe it's the shift for odd frames, make
 	the shift the other way if walking left/right
 + Add climber
-+ Add basher
 + Add builder
 + Make particles thicker?  Look fine, not show up in recordings
 + Erase particles as last step
