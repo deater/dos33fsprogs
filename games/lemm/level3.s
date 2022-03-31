@@ -214,16 +214,7 @@ l3_door_is_open:
 
 	jsr	draw_flames
 
-	lda	TIMER_COUNT
-	cmp	#50
-	bcc	l3_timer_not_yet
-
-	jsr	update_time
-
-	lda	#$0
-	sta	TIMER_COUNT
-l3_timer_not_yet:
-
+	jsr	update_timer
 
 	; main drawing loop
 
@@ -254,7 +245,7 @@ l3_level_over:
 
 	rts
 
-
+.include "update_timer.s"
 
 .include "graphics/graphics_level3.inc"
 

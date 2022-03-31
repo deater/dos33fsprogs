@@ -215,15 +215,7 @@ l7_door_is_open:
 
 	jsr	draw_flames
 
-	lda	TIMER_COUNT
-	cmp	#50
-	bcc	l7_timer_not_yet
-
-	jsr	update_time
-
-	lda	#$0
-	sta	TIMER_COUNT
-l7_timer_not_yet:
+	jsr	update_timer
 
 
 	; main drawing loop
@@ -254,6 +246,8 @@ l7_timer_not_yet:
 l7_level_over:
 
 	rts
+
+.include "update_timer.s"
 
 .include "graphics/graphics_level7.inc"
 

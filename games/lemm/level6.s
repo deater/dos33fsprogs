@@ -182,7 +182,7 @@ do_level6:
 	; Main Loop
 	;===================
 	;===================
-l4_main_loop:
+l6_main_loop:
 
 	;=========================
 	; load next chunk of music
@@ -193,15 +193,15 @@ l4_main_loop:
 
 
 
-l4_no_load_chunk:
+l6_no_load_chunk:
 
 
 	lda	DOOR_OPEN
-	bne	l4_door_is_open
+	bne	l6_door_is_open
 
 	jsr	draw_door
 
-l4_door_is_open:
+l6_door_is_open:
 
 	;======================
 	; release lemmings
@@ -215,16 +215,7 @@ l4_door_is_open:
 
 	jsr	draw_flames
 
-	lda	TIMER_COUNT
-	cmp	#50
-	bcc	l4_timer_not_yet
-
-	jsr	update_time
-
-	lda	#$0
-	sta	TIMER_COUNT
-l4_timer_not_yet:
-
+	jsr	update_timer
 
 	; main drawing loop
 
@@ -246,14 +237,16 @@ l4_timer_not_yet:
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l4_level_over
+	bne	l6_level_over
 
-	jmp	l4_main_loop
+	jmp	l6_main_loop
 
 
-l4_level_over:
+l6_level_over:
 
 	rts
+
+.include "update_timer.s"
 
 .include "graphics/graphics_level6.inc"
 

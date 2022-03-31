@@ -214,16 +214,7 @@ l2_door_is_open:
 
 	jsr	draw_flames
 
-	lda	TIMER_COUNT
-	cmp	#50
-	bcc	l2_timer_not_yet
-
-	jsr	update_time
-
-	lda	#$0
-	sta	TIMER_COUNT
-l2_timer_not_yet:
-
+	jsr	update_timer
 
 	; main drawing loop
 
@@ -257,6 +248,7 @@ l2_level_over:
 	rts
 
 
+.include "update_timer.s"
 
 .include "graphics/graphics_level2.inc"
 
