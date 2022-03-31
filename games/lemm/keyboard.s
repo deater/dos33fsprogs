@@ -349,13 +349,29 @@ cant_stop:
 	; make builder
 	;========================
 make_builder:
-	; only do it if walking
+
+	; if walking, shrugging, bashing
+
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
-	bne	done_make_builder
+	beq	really_make_builder
+	cmp	#LEMMING_SHRUGGING
+	beq	really_make_builder
+	cmp	#LEMMING_BASHING
+	beq	really_make_builder
 
+
+	jmp	done_make_builder
+
+really_make_builder:
 	lda	#LEMMING_BUILDING
 	sta	lemming_status,Y
+
+	; build count=0
+	lda	lemming_attribute,Y
+	and	#$f0
+	sta	lemming_attribute,Y
+
 
 	; FIXME: decrement count
 done_make_builder:

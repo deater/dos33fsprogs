@@ -205,8 +205,21 @@ walking_yes_wall:
 
 	jsr	check_at_exit_xiny
 
-	; reverse direction
+	; check if climber, if so climb
 	ldy	CURRENT_LEMMING
+
+	lda	lemming_attribute,Y
+	and	#LEMMING_CLIMBER
+	beq	not_climber
+
+	lda	#LEMMING_CLIMBING
+	sta	lemming_status,Y
+	jmp	walking_done
+
+not_climber:
+
+	; reverse direction
+
 	lda	lemming_direction,Y
 	eor	#$ff
 	clc
@@ -406,11 +419,65 @@ do_lemming_building:
 	adc	lemming_direction,X
 	sta	lemming_x,X
 
+	inc	lemming_attribute,X
+	lda	lemming_attribute,X
+	cmp	#12
+	bne	done_building
+
+	; hit the end!
+
+	lda	#LEMMING_SHRUGGING
+	sta	lemming_status,X
+
 no_building_this_frame:
 done_building:
 	jmp	done_move_lemming
 
+	;========================
+	; stopping
+	;========================
+do_lemming_stopping:
+	; we do want to see if something knocks the ground out from
+	; under us
 
+	jsr	collision_check_ground
+	jmp	done_move_lemming
+
+
+
+	;========================
+	; shrugging
+	;========================
+do_lemming_shrugging:
+	lda	lemming_frame,Y
+	cmp	#8
+	bne	not_done_shrugging
+
+	lda	#LEMMING_WALKING	; done shrug, start walking again
+	sta	lemming_status,Y
+
+not_done_shrugging:
+	jmp	done_move_lemming
+
+
+	;========================
+	; climbing
+	;========================
+do_lemming_climbing:
+	lda	lemming_frame,Y
+	and	#3
+	bne	not_done_climbing
+
+	; climb
+	tya
+	tax
+	dec	lemming_y,X
+
+	; FIXME: if hit roof, fall
+	; FIXME: if hit top, switch to pullup
+
+not_done_climbing:
+	jmp	done_move_lemming
 
 
 
@@ -421,9 +488,6 @@ done_building:
 	; placeholders
 do_lemming_exploding:		; nothing special
 do_lemming_pullup:
-do_lemming_shrugging:
-do_lemming_stopping:		; nothing special
-do_lemming_climbing:
 do_lemming_splatting:		; nothing special
 do_lemming_particles:		; work done in draw
 
