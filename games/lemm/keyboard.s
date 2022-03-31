@@ -333,9 +333,9 @@ make_stopper:
 	tax
 	lda	lemming_y,Y
 	clc
-	adc	#3
+	adc	#1
 
-	ldy	#7
+	ldy	#8
 
 	jsr	hgr_vlin
 

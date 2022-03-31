@@ -85,6 +85,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_sprite_page_toggle qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite_autoshift qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite_or_autoshift qload.lst >> qload.inc
 
 ###
 

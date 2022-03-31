@@ -246,6 +246,8 @@ walking_done:
 	;=====================
 do_lemming_digging:
 
+;	ldy	#CURRENT_LEMMING
+
 	lda	lemming_y,Y		; point to spot below us
 	clc
 	adc	#9
@@ -267,7 +269,10 @@ do_lemming_digging:
 	ldx	CURRENT_LEMMING			; dig down
 	inc	lemming_y,X
 
+blurgh:
+
 	jsr	collision_check_ground
+
 
 	jmp	done_move_lemming
 
@@ -313,9 +318,10 @@ do_lemming_mining:
 	adc	lemming_direction,X
 	sta	lemming_x,X
 
+	jsr	collision_check_ground
+
 no_mining_this_frame:
 done_mining:
-	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -362,9 +368,14 @@ do_lemming_bashing:
 	adc	lemming_direction,Y
 	sta	lemming_x,Y
 
+	; here?
+	jsr	collision_check_side
+
+
 no_bashing_this_frame:
 
-	jsr	collision_check_ground
+
+;	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -580,6 +591,45 @@ not_last_lemming:
 	rts
 
 
+	;=============================
+	; collision check side
+	;=============================
+	; for bashing
+	; maybe can also be used when building?
+collision_check_side:
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
+	clc
+	adc	#3
+	tax
+
+	lda     hposn_high,X
+	clc
+	adc	#$20			; check bg, not fg
+        sta     GBASH
+        lda     hposn_low,X
+        sta     GBASL
+
+	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
+
+	tay
+	lda	(GBASL),Y
+	and	#$7f
+	bne	gotta_keep_going
+
+broke_on_through_to_the_other_side:
+
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_WALKING
+	sta	lemming_status,Y
+
+gotta_keep_going:
+
+	rts
+
 
 	;=============================
 	; collision check above
@@ -697,14 +747,14 @@ on_the_ground:
 	; otherwise do nothing
 
 
-;	ldy	CURRENT_LEMMING
-;	lda	lemming_status,Y
+	ldy	CURRENT_LEMMING
+	lda	lemming_status,Y
 
-;	cmp	#LEMMING_FALLING
-;	beq	hit_ground
-;	cmp	#LEMMING_FLOATING
-;	beq	hit_ground
-;	bne	done_check_ground	 ; could rts here?
+	cmp	#LEMMING_FALLING
+	beq	hit_ground
+	cmp	#LEMMING_FLOATING
+	beq	hit_ground
+	bne	done_check_ground	 ; could rts here?
 
 
 hit_ground:

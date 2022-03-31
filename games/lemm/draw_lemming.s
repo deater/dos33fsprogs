@@ -13,6 +13,12 @@ erase_lemming_loop:
 	lda	lemming_out,Y
 	beq	done_erase_lemming
 
+	; don't erase blockers?
+	lda	lemming_status,Y
+	cmp	#LEMMING_STOPPING
+	beq	done_erase_lemming
+
+
 	lda	lemming_y,Y
 	sec
 	sbc	#6
@@ -95,7 +101,7 @@ do_draw_lemming:
 draw_lemming_common:
 	sta	YPOS
 
-	jsr	hgr_draw_sprite_autoshift
+	jsr	hgr_draw_sprite_or_autoshift
 
 done_draw_lemming:
 
@@ -673,7 +679,14 @@ draw_stopping_sprite:
         stx     XPOS
 	lda	lemming_y,Y
 
-	jmp	draw_lemming_common
+;	jmp	draw_lemming_common
+
+	; special case, don't or so we hide background spike
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	jmp	done_draw_lemming
 
 ;	sta	YPOS
 
