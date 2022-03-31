@@ -34,7 +34,7 @@ title_loop:
 
 
 title_text:
-.byte  0, 0,"LOADING LEMM V0.05 (28 MAR 2022)",0
+.byte  0, 0,"LOADING LEMM V0.06 (31 MAR 2022)",0
 .byte  0, 1,"  LEMM PROOF-OF-CONCEPT DEMAKE",0
 .byte  0, 3,"BASED ON LEMMINGS BY DMA DESIGN",0
 .byte  0, 5,"  APPLE II PORT: VINCE WEAVER",0
@@ -49,5 +49,5 @@ title_text:
 .byte  0,16,"       ______",0
 .byte  0,17,"     A \/\/\/ SOFTWARE PRODUCTION",0
 .byte  0,19," HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0
-.byte  4,21,"PRESS 1-6 TO CHOOSE START LEVEL",0
+.byte  4,21,"PRESS 1-9 TO CHOOSE START LEVEL",0
 
