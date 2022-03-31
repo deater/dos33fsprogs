@@ -53,7 +53,7 @@ really_move_lemming:
 skip_move_lemming:
 done_move_lemming:
 
-	jsr	collision_check_ground
+;	jsr	collision_check_ground
 
 	inc     CURRENT_LEMMING		; loop until done
 	lda     CURRENT_LEMMING
@@ -127,7 +127,7 @@ do_lemming_falling:
 	sta	lemming_frame,X
 
 not_fallen_enough:
-;	jsr	collision_check_ground
+	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -145,7 +145,7 @@ do_lemming_floating:
 	lda	#0
 	sta	lemming_fall_distance,X
 
-;	jsr	collision_check_ground
+	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -222,7 +222,7 @@ walking_no_wall:
 
 walking_no_increment:
 
-;	jsr	collision_check_ground
+	jsr	collision_check_ground
 
 walking_done:
 	jmp	done_move_lemming
@@ -253,6 +253,8 @@ do_lemming_digging:
 
 	ldx	CURRENT_LEMMING			; dig down
 	inc	lemming_y,X
+
+	jsr	collision_check_ground
 
 	jmp	done_move_lemming
 
@@ -300,6 +302,8 @@ do_lemming_mining:
 
 no_mining_this_frame:
 done_mining:
+	jsr	collision_check_ground
+
 	jmp	done_move_lemming
 
 
@@ -346,6 +350,9 @@ do_lemming_bashing:
 	sta	lemming_x,Y
 
 no_bashing_this_frame:
+
+	jsr	collision_check_ground
+
 	jmp	done_move_lemming
 
 
@@ -509,14 +516,14 @@ on_the_ground:
 	; otherwise do nothing
 
 
-	ldy	CURRENT_LEMMING
-	lda	lemming_status,Y
+;	ldy	CURRENT_LEMMING
+;	lda	lemming_status,Y
 
-	cmp	#LEMMING_FALLING
-	beq	hit_ground
-	cmp	#LEMMING_FLOATING
-	beq	hit_ground
-	bne	done_check_ground	 ; could rts here?
+;	cmp	#LEMMING_FALLING
+;	beq	hit_ground
+;	cmp	#LEMMING_FLOATING
+;	beq	hit_ground
+;	bne	done_check_ground	 ; could rts here?
 
 
 hit_ground:
