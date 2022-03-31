@@ -286,7 +286,16 @@ draw_mining_common:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
-	jmp	draw_lemming_common
+;	jmp	draw_lemming_common
+
+
+	; special case, don't OR so we aren't embedded in dirt
+	sta	YPOS
+
+	jsr	hgr_draw_sprite_autoshift
+
+	jmp	done_draw_lemming
+
 
 
 	;=========================
@@ -749,8 +758,8 @@ draw_digging_sprite:
 	lda	lemming_y,Y
 	sec
 	sbc	#2
-	jmp	draw_lemming_common
 
+	jmp	draw_lemming_common
 
 
 

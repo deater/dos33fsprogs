@@ -1,4 +1,5 @@
 + Try oring the lemmings sprites instead of over-writing
+  (did this, but now they have red hair sometimes?)
 
 + bridges you can walk through from underneath, not
 	sure how to implement that

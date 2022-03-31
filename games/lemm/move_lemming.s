@@ -286,6 +286,7 @@ do_lemming_mining:
 	and	#$f
 	bne	no_mining_this_frame		; only move dirt on frame 0
 
+
 	ldx	#0				; erase background
 	stx	HGR_COLOR
 
@@ -306,7 +307,6 @@ do_lemming_mining:
 	lda	lemming_y,Y
 	ldy	#10
 	jsr	hgr_box
-
 
 	ldx	CURRENT_LEMMING			; move 3 lines down
 	inc	lemming_y,X
