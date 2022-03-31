@@ -1,3 +1,5 @@
++ Try oring the lemmings sprites instead of over-writing
+
 + bridges you can walk through from underneath, not
 	sure how to implement that
 + bashes stop when nothing to right/left

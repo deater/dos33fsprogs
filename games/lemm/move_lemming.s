@@ -440,7 +440,10 @@ do_lemming_stopping:
 	; we do want to see if something knocks the ground out from
 	; under us
 
-	jsr	collision_check_ground
+	; in practice that is tricky as the barrier we draw causes
+	; the lemming to jump. hmmm
+
+;	jsr	collision_check_ground
 	jmp	done_move_lemming
 
 
@@ -472,12 +475,42 @@ do_lemming_climbing:
 	tya
 	tax
 	dec	lemming_y,X
-
-	; FIXME: if hit roof, fall
-	; FIXME: if hit top, switch to pullup
+	dec	lemming_y,X
 
 not_done_climbing:
+	jsr	collision_check_ceiling
+
+	jsr	collision_check_above
+
 	jmp	done_move_lemming
+
+
+	;========================
+	; pulling up
+	;========================
+do_lemming_pullup:
+	lda	lemming_frame,Y
+	cmp	#8
+	bne	not_done_pullup
+
+	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
+	sta	lemming_x,Y
+
+	lda	#LEMMING_WALKING
+	sta	lemming_status,Y
+
+	jmp	done_pullup
+
+not_done_pullup:
+	; climb
+	tya
+	tax
+	dec	lemming_y,X
+done_pullup:
+	jmp	done_move_lemming
+
 
 
 
@@ -487,7 +520,6 @@ not_done_climbing:
 
 	; placeholders
 do_lemming_exploding:		; nothing special
-do_lemming_pullup:
 do_lemming_splatting:		; nothing special
 do_lemming_particles:		; work done in draw
 
@@ -546,6 +578,91 @@ didnt_exit:
 not_last_lemming:
 
 	rts
+
+
+
+	;=============================
+	; collision check above
+	;=============================
+	; looking above right/left
+	; useful for climbers to see if at top
+collision_check_above:
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
+	tax
+
+	lda     hposn_high,X
+	clc
+	adc	#$20			; check bg, not fg
+        sta     GBASH
+        lda     hposn_low,X
+        sta     GBASL
+
+	lda	lemming_x,Y
+	clc
+	adc	lemming_direction,Y
+
+	tay
+	lda	(GBASL),Y
+	and	#$7f
+	bne	gotta_keep_climbing
+
+at_the_top:
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_PULLUP
+	sta	lemming_status,Y
+
+	lda	#0			; reset frame for pullup
+	sta	lemming_frame,Y
+
+gotta_keep_climbing:
+
+	rts
+
+
+	;=============================
+	; collision check ceiling
+	;=============================
+
+collision_check_ceiling:
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
+	tax
+
+	lda     hposn_high,X
+	clc
+	adc	#$20			; check bg, not fg
+        sta     GBASH
+        lda     hposn_low,X
+        sta     GBASL
+
+	lda	lemming_x,Y
+	tay
+	lda	(GBASL),Y
+	and	#$7f
+	beq	done_check_ceiling	; if empty space above us, OK
+
+hit_head:
+	; o/~ I hit my head, I heard the phone ring... o/~
+
+	; face other direction, fall
+
+	ldy	CURRENT_LEMMING
+	lda	lemming_direction,Y
+
+	eor	#$ff
+	clc
+	adc	#1
+	sta	lemming_direction,Y
+
+
+	lda	#LEMMING_FALLING
+	sta	lemming_status,Y
+
+done_check_ceiling:
+
+	rts
+
 
 
 
