@@ -28,7 +28,7 @@ do_level10:
 
 	lda	#35			;
 	sta	l_flame_x_smc+1
-	lda	#189
+	lda	#89
 	sta	l_flame_y_smc+1
         sta	r_flame_y_smc+1
 
