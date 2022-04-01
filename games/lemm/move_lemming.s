@@ -381,43 +381,100 @@ no_bashing_this_frame:
 
 
 
+
+;
+;           xxxxxxx
+;        xxxxxxx
+;    xxxxxxx
+; xxxxxxx
+;
+
+
 	;=====================
 	; building
 	;=====================
 do_lemming_building:
 	ldy	CURRENT_LEMMING
 	lda	lemming_frame,Y
-	and	#$f
-	bne	no_building_this_frame		; only move dirt on frame 0
+	and	#$7
+	beq	yes_building_this_frame
+	jmp	no_building_this_frame		; only move dirt on frame 0
 
+yes_building_this_frame:
 	ldx	#7				; draw white block
 	stx	HGR_COLOR
 
-	; (X,A) to (X,A+Y) where X is xcoord/7
+	lda	lemming_attribute,Y
+	and	#$1
+	bne	building_odd
 
-	jsr	hgr_box_page_toggle		; erase box page1
+building_even:
+
 	ldy	CURRENT_LEMMING
+
+	lda	lemming_y,Y
+	clc
+	adc	#8
+
+	tax                    ; get row info for Y1 into GBASL/GBASH
+	lda     hposn_high,X
+	sta     GBASH
+
+	lda	hposn_low,X
+	sta	GBASL
+
 	lda	lemming_x,Y
 	clc
 	adc	lemming_direction,Y
-	tax
+	tay
+
+	lda	#$ff
+	sta	(GBASL),Y
+
+	lda	GBASH
+	clc
+	adc	#$20
+	sta	GBASH
+	lda	#$ff
+	sta	(GBASL),Y
+
+	jmp	update_building
+
+building_odd:
+
+	ldy	CURRENT_LEMMING
+
 	lda	lemming_y,Y
 	clc
 	adc	#7
-	ldy	#2
-	jsr	hgr_box
 
-	jsr	hgr_box_page_toggle		; erase box page2
-	ldy	CURRENT_LEMMING
+	tax                    ; get row info for Y1 into GBASL/GBASH
+	lda     hposn_high,X
+	sta     GBASH
+
+	lda	hposn_low,X
+	sta	GBASL
+
 	lda	lemming_x,Y
 	clc
 	adc	lemming_direction,Y
-	tax
-	lda	lemming_y,Y
+	tay
+
+	lda	#$ff
+	sta	(GBASL),Y
+	iny
+	sta	(GBASL),Y
+
+	dey
+	lda	GBASH
 	clc
-	adc	#7
-	ldy	#2
-	jsr	hgr_box
+	adc	#$20
+	sta	GBASH
+	lda	#$ff
+	sta	(GBASL),Y
+	iny
+	sta	(GBASL),Y
+
 
 
 	ldx	CURRENT_LEMMING			; move 2 lines up
@@ -430,15 +487,21 @@ do_lemming_building:
 	adc	lemming_direction,X
 	sta	lemming_x,X
 
+update_building:
+	ldx	CURRENT_LEMMING
 	inc	lemming_attribute,X
 	lda	lemming_attribute,X
-	cmp	#12
+	and	#$f
+	cmp	#11
 	bne	done_building
 
 	; hit the end!
 
 	lda	#LEMMING_SHRUGGING
 	sta	lemming_status,X
+
+	lda	#0
+	sta	lemming_frame,X
 
 no_building_this_frame:
 done_building:

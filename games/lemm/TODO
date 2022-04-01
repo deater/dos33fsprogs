@@ -1,5 +1,11 @@
-+ Try oring the lemmings sprites instead of over-writing
-  (did this, but now they have red hair sometimes?)
+
++ special case
+	no collision with all-white frames (allow walking through bridges)
+	no climbing on spikes
++ have bridge stop building when hits wall
+	(real game, reverses too maybe?)
+
+
 
 + bridges you can walk through from underneath, not
 	sure how to implement that
