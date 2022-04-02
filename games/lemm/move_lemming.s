@@ -196,6 +196,10 @@ walking_increment:
 	tay				; Y is now incremented version
 
 	lda	(GBASL),Y		; collision check
+
+	cmp	#$ff			; don't collide with bridge
+	beq	walking_no_wall
+
 	and	#$7f
 	beq	walking_no_wall
 
@@ -401,8 +405,8 @@ do_lemming_building:
 	jmp	no_building_this_frame		; only move dirt on frame 0
 
 yes_building_this_frame:
-	ldx	#7				; draw white block
-	stx	HGR_COLOR
+;	ldx	#7				; draw white block
+;	stx	HGR_COLOR
 
 	lda	lemming_attribute,Y
 	and	#$1
@@ -414,7 +418,7 @@ building_even:
 
 	lda	lemming_y,Y
 	clc
-	adc	#8
+	adc	#9
 
 	tax                    ; get row info for Y1 into GBASL/GBASH
 	lda     hposn_high,X
@@ -446,7 +450,7 @@ building_odd:
 
 	lda	lemming_y,Y
 	clc
-	adc	#7
+	adc	#8
 
 	tax                    ; get row info for Y1 into GBASL/GBASH
 	lda     hposn_high,X
@@ -455,27 +459,49 @@ building_odd:
 	lda	hposn_low,X
 	sta	GBASL
 
-	lda	lemming_x,Y
+	lda	lemming_x,Y		; build one block beyond
 	clc
 	adc	lemming_direction,Y
-	tay
+	sta	build_smc4+1
+	sta	build_smc3+1
+	clc
+	adc	lemming_direction,Y
+	sta	build_smc1+1
+	sta	build_smc2+1
 
-	lda	#$ff
+	lda	#$ff			; put one block
+build_smc4:
+	ldy	#$dd
 	sta	(GBASL),Y
-	iny
+build_smc1:
+	ldy	#$dd			; also put one beyond
 	sta	(GBASL),Y
 
-	dey
 	lda	GBASH
 	clc
 	adc	#$20
 	sta	GBASH
 	lda	#$ff
+build_smc3:
+	ldy	#$dd
 	sta	(GBASL),Y
-	iny
+build_smc2:
+	ldy	#$dd			; see if hit wall
+	lda	(GBASL),Y
+	and	#$7f
+	beq	coast_clear
+hit_something:
+
+	ldy	CURRENT_LEMMING
+	lda	#LEMMING_WALKING
+	sta	lemming_status,Y
+
+	jmp	keep_at_it
+coast_clear:
+	lda	#$ff
 	sta	(GBASL),Y
 
-
+keep_at_it:
 
 	ldx	CURRENT_LEMMING			; move 2 lines up
 	dec	lemming_y,X

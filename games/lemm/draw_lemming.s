@@ -365,6 +365,9 @@ draw_shrugging_common:
 	ldx	lemming_x,Y
         stx     XPOS
 	lda	lemming_y,Y
+	clc
+	adc	#1			; offset by 1 for some reason
+
 	jmp	draw_lemming_common
 
 
