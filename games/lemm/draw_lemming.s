@@ -367,6 +367,7 @@ draw_shrugging_common:
 	lda	lemming_y,Y
 	clc
 	adc	#1			; offset by 1 for some reason
+					; guess I could update the sprites
 
 	jmp	draw_lemming_common
 

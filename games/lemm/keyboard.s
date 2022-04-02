@@ -316,6 +316,40 @@ make_stopper:
 
 	; put line on page2 to make lemmings reverse
 
+	; make it a specific pattern so climbers won't climb over
+
+	lda	lemming_x,Y
+	sta	dbl_smc2+1
+
+	lda	lemming_y,Y
+	tax
+	inx
+	clc
+	adc	#8
+	sta	dbl_smc+1
+
+draw_blocker_loop:
+
+	lda	hposn_high,X
+	clc
+	adc	#$20
+	sta	GBASH
+	lda	hposn_low,X
+	sta	GBASL
+
+dbl_smc2:
+	ldy	#30
+
+	lda	#$10
+	sta	(GBASL),Y
+
+	inx
+dbl_smc:
+	cpx	#8
+	bne	draw_blocker_loop
+
+
+.if 0
 	; line from (x,a) to (x,a+y)
 	lda	#$7
 	sta	HGR_COLOR
@@ -340,6 +374,7 @@ make_stopper:
 	jsr	hgr_vlin
 
 	jsr	hgr_vlin_page_toggle
+.endif
 
 cant_stop:
 	jmp	done_keypress

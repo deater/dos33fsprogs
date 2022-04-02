@@ -204,6 +204,9 @@ walking_increment:
 	beq	walking_no_wall
 
 walking_yes_wall:
+	pha
+
+
 	;  we hit a wall, reverse course, undo the increment
 	; Y is updated
 
@@ -211,6 +214,12 @@ walking_yes_wall:
 
 	; check if climber, if so climb
 	ldy	CURRENT_LEMMING
+
+	pla
+
+	cmp	#$10
+	beq	not_climber		; HACK: special case so climbers
+					; don't climb over stoppers
 
 	lda	lemming_attribute,Y
 	and	#LEMMING_CLIMBER
@@ -520,6 +529,13 @@ update_building:
 	and	#$f
 	cmp	#11
 	bne	done_building
+	cmp	#8
+	bcc	no_build_click
+
+	jsr	click_speaker
+
+no_build_click:
+
 
 	; hit the end!
 
