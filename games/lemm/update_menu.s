@@ -1,12 +1,105 @@
 	;=============================
-	; update menu
+	; update remaining_all
 	;=============================
-update_menu:
-	lda	BUTTON_LOCATION
-	bne	actually_update_menu
+update_remaining_all:
+
+	ldx	#0
+ura_loop:
+	txa
+	pha
+	jsr	update_remaining
+	pla
+	tax
+	inx
+	cpx	#8
+	bne	ura_loop
 	rts
 
-actually_update_menu:
+
+	;=============================
+	; update remaining
+	;=============================
+	; X is which one to update
+update_remaining:
+	txa
+	pha
+
+        jsr     hgr_sprite_page_toggle		; toggle page (bg)
+
+	lda	CLIMBER_COUNT,X
+	tay
+
+        lda     littlenums_l,Y
+        sta     INL
+        lda     littlenums_h,Y
+        sta     INH
+
+        lda     remaining_x,X
+        sta     XPOS
+        lda     #169
+        sta     YPOS
+
+	jsr	hgr_draw_sprite
+
+	;
+
+	pla
+	tax
+
+        jsr     hgr_sprite_page_toggle		; toggle page (bg)
+
+	lda	CLIMBER_COUNT,X
+	tay
+
+        lda     littlenums_l,Y
+        sta     INL
+        lda     littlenums_h,Y
+        sta     INH
+
+        lda     remaining_x,X
+        sta     XPOS
+        lda     #169
+        sta     YPOS
+
+	jsr	hgr_draw_sprite
+
+	rts
+
+
+	; X locations to print the counts at
+	; approximate, 7-bit boundaries where graphics are on 8-bit
+remaining_x:
+	.byte 5,7,10,12,14,17,19,21
+
+littlenums_l:
+	.byte <little00_sprite,<little01_sprite,<little02_sprite
+	.byte <little03_sprite,<little04_sprite,<little05_sprite
+	.byte <little06_sprite,<little07_sprite,<little08_sprite
+	.byte <little09_sprite,<little10_sprite,<little11_sprite
+	.byte <little12_sprite,<little13_sprite,<little14_sprite
+	.byte <little15_sprite,<little16_sprite,<little17_sprite
+	.byte <little18_sprite,<little19_sprite,<little20_sprite
+
+littlenums_h:
+	.byte >little00_sprite,>little01_sprite,>little02_sprite
+	.byte >little03_sprite,>little04_sprite,>little05_sprite
+	.byte >little06_sprite,>little07_sprite,>little08_sprite
+	.byte >little09_sprite,>little10_sprite,>little11_sprite
+	.byte >little12_sprite,>little13_sprite,>little14_sprite
+	.byte >little15_sprite,>little16_sprite,>little17_sprite
+	.byte >little18_sprite,>little19_sprite,>little20_sprite
+
+
+
+	;=============================
+	; update selection
+	;=============================
+update_selection:
+	lda	BUTTON_LOCATION
+	bne	actually_update_selection
+	rts
+
+actually_update_selection:
 	ldx	#7
 	stx	HGR_COLOR
 

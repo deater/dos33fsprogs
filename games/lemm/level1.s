@@ -13,6 +13,17 @@ do_level1:
 	; set up stuff
 	;==============
 
+	lda	#0
+	sta	CLIMBER_COUNT
+	sta	FLOATER_COUNT
+	sta	EXPLODER_COUNT
+	sta	STOPPER_COUNT
+	sta	BUILDER_COUNT
+	sta	BASHER_COUNT
+	sta	MINER_COUNT
+	lda	#20
+	sta	DIGGER_COUNT
+
 	lda	#9
 	sta	DOOR_X
 	lda	#36
@@ -167,6 +178,9 @@ do_level1:
 	sta	TIMER_COUNT		; ??
 
 	jsr	init_level
+
+	jsr	update_remaining_all
+
 
 	;=======================
 	; Play "Let's Go"

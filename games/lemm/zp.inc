@@ -85,6 +85,14 @@ DOOR_Y			= $91
 INIT_X			= $92	; initial lemming position
 INIT_Y			= $93
 
+CLIMBER_COUNT		= $94
+FLOATER_COUNT		= $95
+EXPLODER_COUNT		= $96
+STOPPER_COUNT		= $97
+BUILDER_COUNT		= $98
+BASHER_COUNT		= $99
+MINER_COUNT		= $9A
+DIGGER_COUNT		= $9B
 
 
 ; done game puzzle state

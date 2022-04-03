@@ -167,6 +167,8 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s init_level lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_pointer lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s erase_pointer lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s update_remaining lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s update_remaining_all lemm.lst >> lemm.inc
 
 ####
 

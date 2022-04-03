@@ -451,6 +451,9 @@ done_make_miner:
 	; make digger
 	;========================
 make_digger:
+	lda	DIGGER_COUNT		; only if we have some left
+	beq	done_make_digger
+
 	; only do it if walking
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
@@ -459,7 +462,10 @@ make_digger:
 	lda	#LEMMING_DIGGING
 	sta	lemming_status,Y
 
-	; FIXME: decrement digger_count
+	dec	DIGGER_COUNT
+	ldx	#7
+	jsr	update_remaining
+
 done_make_digger:
 	jmp	done_keypress
 
@@ -530,7 +536,7 @@ job_button:
 
 	; draw new
 
-	jsr	update_menu
+	jsr	update_selection
 	jmp	done_menu
 
 
