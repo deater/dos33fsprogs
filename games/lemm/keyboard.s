@@ -276,18 +276,38 @@ make_nop:
 	; make climber
 	;========================
 make_climber:
+	lda	CLIMBER_COUNT		; only if we have some left
+	beq	done_make_climber
+
 	lda	#LEMMING_CLIMBER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
+
+	dec	CLIMBER_COUNT
+
+	ldx	#0
+	jsr	update_remaining
+
+done_make_climber:
 	jmp	done_keypress
 
 	;========================
 	; make floater
 	;========================
 make_floater:
+	lda	FLOATER_COUNT		; only if we have some left
+	beq	done_make_floater
+
 	lda	#LEMMING_FLOATER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
+
+	dec	FLOATER_COUNT
+
+	ldx	#1
+	jsr	update_remaining
+
+done_make_floater:
 	jmp	done_keypress
 
 
@@ -295,7 +315,17 @@ make_floater:
 	; make exploding
 	;========================
 make_exploding:
+	lda	EXPLODER_COUNT		; only if we have some left
+	beq	done_make_exploder
+
 	jsr	explode_lemming
+
+	dec	EXPLODER_COUNT
+
+	ldx	#2
+	jsr	update_remaining
+
+done_make_exploder:
 	jmp	done_keypress
 
 
@@ -303,6 +333,9 @@ make_exploding:
 	; make stopper
 	;========================
 make_stopper:
+	lda	STOPPER_COUNT		; only if we have some left
+	beq	cant_stop
+
 	lda	lemming_status,Y
 	cmp	#LEMMING_FLOATER		; can't stop if floating
 	beq	cant_stop
@@ -349,32 +382,10 @@ dbl_smc:
 	bne	draw_blocker_loop
 
 
-.if 0
-	; line from (x,a) to (x,a+y)
-	lda	#$7
-	sta	HGR_COLOR
+	dec	STOPPER_COUNT
 
-	jsr	hgr_vlin_page_toggle
-
-	clc
-	lda	lemming_x,Y		; multiply x by 7
-	asl
-	adc	lemming_x,Y
-	asl
-	adc	lemming_x,Y
-	adc	#2			; center a bit
-
-	tax
-	lda	lemming_y,Y
-	clc
-	adc	#1
-
-	ldy	#8
-
-	jsr	hgr_vlin
-
-	jsr	hgr_vlin_page_toggle
-.endif
+	ldx	#3
+	jsr	update_remaining
 
 cant_stop:
 	jmp	done_keypress
@@ -399,6 +410,9 @@ make_builder:
 	jmp	done_make_builder
 
 really_make_builder:
+	lda	BUILDER_COUNT		; only if we have some left
+	beq	done_make_builder
+
 	lda	#LEMMING_BUILDING
 	sta	lemming_status,Y
 
@@ -408,7 +422,10 @@ really_make_builder:
 	sta	lemming_attribute,Y
 
 
-	; FIXME: decrement count
+	dec	BUILDER_COUNT
+	ldx	#4
+	jsr	update_remaining
+
 done_make_builder:
 	jmp	done_keypress
 
@@ -417,6 +434,9 @@ done_make_builder:
 	; make basher
 	;========================
 make_basher:
+	lda	BASHER_COUNT		; only if we have some left
+	beq	done_make_basher
+
 	; only do it if walking
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
@@ -425,7 +445,10 @@ make_basher:
 	lda	#LEMMING_BASHING
 	sta	lemming_status,Y
 
-	; FIXME: decrement count
+	dec	BASHER_COUNT
+	ldx	#5
+	jsr	update_remaining
+
 done_make_basher:
 	jmp	done_keypress
 
@@ -434,6 +457,9 @@ done_make_basher:
 	; make miner
 	;========================
 make_miner:
+	lda	MINER_COUNT		; only if we have some left
+	beq	done_make_miner
+
 	; only do it if walking
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
@@ -442,7 +468,10 @@ make_miner:
 	lda	#LEMMING_MINING
 	sta	lemming_status,Y
 
-	; FIXME: decrement count
+	dec	MINER_COUNT
+	ldx	#6
+	jsr	update_remaining
+
 done_make_miner:
 	jmp	done_keypress
 

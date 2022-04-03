@@ -21,7 +21,7 @@ do_level1:
 	sta	BUILDER_COUNT
 	sta	BASHER_COUNT
 	sta	MINER_COUNT
-	lda	#20
+	lda	#10
 	sta	DIGGER_COUNT
 
 	lda	#9
