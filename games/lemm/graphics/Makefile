@@ -317,21 +317,28 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l lemming_lmine6_sprite sprites.png 266 124 272 136 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_lmine7_sprite sprites.png 266 138 272 150 >> sprites.inc
 	$(HGR_SPRITE) -s -l lemming_lmine8_sprite sprites.png 266 152 272 164 >> sprites.inc
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	#
+	$(HGR_SPRITE) -s -l little00_sprite sprites.png 140  19 146  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little01_sprite sprites.png 126  19 132  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little02_sprite sprites.png 112  19 116  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little03_sprite sprites.png  98  19 104  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little04_sprite sprites.png  84  19  90  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little05_sprite sprites.png  70  19  76  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little06_sprite sprites.png  56  19  62  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little07_sprite sprites.png  42  19  48  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little08_sprite sprites.png  28  19  34  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little09_sprite sprites.png  14  19  20  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little10_sprite sprites.png   0  19   6  27 >> sprites.inc
+	$(HGR_SPRITE) -s -l little11_sprite sprites.png 140  28 146  36 >> sprites.inc
+	$(HGR_SPRITE) -s -l little12_sprite sprites.png 126  28 132  36 >> sprites.inc
+	$(HGR_SPRITE) -s -l little13_sprite sprites.png 112  28 116  36 >> sprites.inc
+	$(HGR_SPRITE) -s -l little14_sprite sprites.png 140  37 146  45 >> sprites.inc
+	$(HGR_SPRITE) -s -l little15_sprite sprites.png 126  37 132  45 >> sprites.inc
+	$(HGR_SPRITE) -s -l little16_sprite sprites.png 112  37 116  45 >> sprites.inc
+	$(HGR_SPRITE) -s -l little17_sprite sprites.png 140  46 146  54 >> sprites.inc
+	$(HGR_SPRITE) -s -l little18_sprite sprites.png 126  46 132  54 >> sprites.inc
+	$(HGR_SPRITE) -s -l little19_sprite sprites.png 112  46 116  54 >> sprites.inc
+	$(HGR_SPRITE) -s -l little20_sprite sprites.png  98  46 104  54 >> sprites.inc
 
 
 ###

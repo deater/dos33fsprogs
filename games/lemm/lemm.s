@@ -313,23 +313,13 @@ level_continue:
 	; includes
 	;==========================
 
-
-
-
 	.include	"wait_keypress.s"
 
 	.include	"keyboard.s"
 	.include	"joystick.s"
 
-
-	.include	"gr_fast_clear.s"
-
 	.include	"move_lemming.s"
 	.include	"draw_lemming.s"
-
-	.include	"text_print.s"
-
-	.include	"lc_detect.s"
 
 	.include	"draw_pointer.s"
 
@@ -362,6 +352,9 @@ level_continue:
 ;	.include	"hgr_partial_restore.s"
 ;	.include	"hgr_14x14_sprite.s"
 ;	.include	"hgr_sprite.s"
+;	.include	"lc_detect.s"
+;	.include	"gr_fast_clear.s"
+;	.include	"text_print.s"
 
 
 	; pt3 player
@@ -377,7 +370,6 @@ level_continue:
 config_string:
 ;             0123456789012345678901234567890123456789
 .byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
-;                             MOCKINGBOARD: NONE
 
 .include "graphics/sprites.inc"
 

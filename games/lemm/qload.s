@@ -197,6 +197,9 @@ length_array:
 	.include	"hgr_partial_restore.s"
 	.include	"hgr_14x14_sprite.s"
 	.include	"hgr_sprite.s"
+	.include	"lc_detect.s"
+	.include	"gr_fast_clear.s"
+	.include	"text_print.s"
 
 qload_end:
 

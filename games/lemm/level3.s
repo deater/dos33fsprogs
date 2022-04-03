@@ -14,7 +14,7 @@ do_level3:
 
 	lda	#15
 	sta	DOOR_X
-	lda	#0
+	lda	#1
 	sta	DOOR_Y
 
 	lda	#18

@@ -57,7 +57,8 @@ qload.o:	qload.s qboot.inc	\
 	audio.s decompress_fast_v2.s gr_offsets.s \
 	wait.s wait_a_bit.s \
 	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s hgr_14x14_sprite.s \
-	hgr_sprite.s hgr_partial_restore.s
+	hgr_sprite.s hgr_partial_restore.s lc_detect.s gr_fast_clear.s \
+	text_print.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -86,6 +87,12 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite_autoshift qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite_or_autoshift qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s move_and_print_list qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s move_and_print qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s set_normal qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_all qload.lst >> qload.inc
 
 ###
 
