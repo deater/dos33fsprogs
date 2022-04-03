@@ -22,6 +22,7 @@ do_level4:
 	sta	DIGGER_COUNT
 	lda	#10
 	sta	CLIMBER_COUNT
+	lda	#1
 	sta	MINER_COUNT
 
 	lda	#5
