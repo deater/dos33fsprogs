@@ -187,10 +187,27 @@ done_down_pressed:
 
 check_escape:
 	cmp	#27
-	bne	check_return
+	bne	check_cheat
 escape_pressed:
 	lda	#LEVEL_FAIL
 	sta	LEVEL_OVER
+
+	jmp	done_keypress
+
+check_cheat:
+	cmp	#'!'
+	bne	check_return
+cheat_pressed:
+
+	lda	#20
+	ldx	#7
+cheat_loop:
+	sta	CLIMBER_COUNT,X
+	dex
+	bpl	cheat_loop
+
+	jsr	update_remaining_all
+
 
 	jmp	done_keypress
 
