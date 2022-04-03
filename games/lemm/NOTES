@@ -1,3 +1,11 @@
+Implementation details:
+	+ stoppers have special $10 line behind them
+		has to be special so climbers can't treat it as wall
+		and climb
+	+ bridge is solid $FF color.  Allow things to walk through this,
+		so shouldn't allow backgrounds to have this pattern
+
+
 Plan for future scrolling:
 	+ Foreground drawn with a tilemap
 		Write program to pick optimal tiles

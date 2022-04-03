@@ -12,6 +12,8 @@ hgr_partial_restore:
 	stx	partial_restore_x2_smc+1
 
 	ldx	SAVED_Y2
+	bpl	partial_restore_yloop
+	ldx	#0
 
 partial_restore_yloop:
 
@@ -40,6 +42,6 @@ partial_restore_x1_smc:
 
 	dex
 	cpx	SAVED_Y1
-	bcs	partial_restore_yloop	; bge
+	bpl	partial_restore_yloop	; urgh bcs gets stuck
 
 	rts

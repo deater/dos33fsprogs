@@ -595,9 +595,12 @@ do_lemming_climbing:
 
 not_done_climbing:
 	jsr	collision_check_ceiling
+	bcs	done_climbing		; carry set we hit ceiling
+					; don't check pullup then
 
 	jsr	collision_check_above
 
+done_climbing:
 	jmp	done_move_lemming
 
 
@@ -813,9 +816,11 @@ hit_head:
 
 	lda	#LEMMING_FALLING
 	sta	lemming_status,Y
+	sec
+	rts
 
 done_check_ceiling:
-
+	clc
 	rts
 
 
