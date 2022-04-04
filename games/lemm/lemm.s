@@ -14,17 +14,7 @@ lemm:
 	;=====================
 
 	lda	#0
-	sta	DRAW_PAGE
 	sta	JOYSTICK_ENABLED
-
-	lda	#1
-	sta	WHICH_LEVEL
-
-	;====================
-	; show title message
-	;====================
-
-	jsr	show_title
 
 	;====================
 	; detect model
@@ -66,6 +56,27 @@ lemm:
 	sta   CLOCKCTL			; set twice for VidHD
 
 not_a_iigs:
+
+
+	;===========================
+	; go here if escape pressed
+	;===========================
+
+
+restart:
+	lda	#1
+	sta	WHICH_LEVEL
+	lda	#0
+	sta	DRAW_PAGE
+
+
+	;====================
+	; show title message
+	;====================
+
+	jsr	show_title
+
+
 
 	;===================
         ; print config
@@ -287,6 +298,12 @@ level_already_resident:
 
 	jsr     outro_level
 
+	cmp	#(27+$80)	; escape
+	bne	not_restart
+
+	jmp	restart
+
+not_restart:
 	lda	LEVEL_OVER
 	cmp	#LEVEL_WIN
 	beq	level_won
