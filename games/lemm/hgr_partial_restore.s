@@ -11,8 +11,9 @@ hgr_partial_restore:
 	sta	partial_restore_x1_smc+1
 	stx	partial_restore_x2_smc+1
 
-	ldx	SAVED_Y2
-	bpl	partial_restore_yloop
+	ldx	SAVED_Y2			; handle wrap around
+	cpx	#192
+	bcc	partial_restore_yloop		; assume > 192 off screen negative
 	ldx	#0
 
 partial_restore_yloop:
