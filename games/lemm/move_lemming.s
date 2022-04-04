@@ -1,28 +1,20 @@
-; TODO: auto-size this based on MAX_LEMMINGS
+; autosized lemmings state based on compile-time MAX_LEMMINGS value
+;						currently 10
+lemming_x:		.res MAX_LEMMINGS,0
+lemming_y:		.res MAX_LEMMINGS,0
+lemming_direction:	.res MAX_LEMMINGS,0
+lemming_out:		.res MAX_LEMMINGS,0
+lemming_frame:		.res MAX_LEMMINGS,0
+lemming_status:		.res MAX_LEMMINGS,0
+lemming_exploding:	.res MAX_LEMMINGS,0
+lemming_fall_distance:	.res MAX_LEMMINGS,0
+lemming_attribute:	.res MAX_LEMMINGS,0
 
-lemming_x:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_y:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_direction:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_out:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_frame:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_status:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_exploding:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_fall_distance:
-	.byte 0,0,0,0,0,0,0,0,0,0
-lemming_attribute:
-	.byte 0,0,0,0,0,0,0,0,0,0
 
 
 
 	;==========================
-	; move them
+	; move the lemmings
 	;==========================
 move_lemmings:
 
@@ -50,11 +42,27 @@ really_move_lemming:
 	pha
 	rts				; jump to it
 
-skip_move_lemming:
+
 done_move_lemming:
 
-;	jsr	collision_check_ground
+	; sanity boundary check, remove if X<0 or X>40 or Y<0 or Y>180
+	ldy	CURRENT_LEMMING
+	lda	lemming_x,Y
+;	bmi	lemming_in_space
+	cmp	#40
+	bcs	lemming_in_space	; if negative wraps around to 255
 
+	lda	lemming_y,Y
+	cmp	#180			; if negative, wraps around to 255
+	bcc	lemming_in_bounds	; so we catch it with this check too
+
+lemming_in_space:
+	clc
+	jsr	remove_lemming
+
+lemming_in_bounds:
+
+skip_move_lemming:
 	inc     CURRENT_LEMMING		; loop until done
 	lda     CURRENT_LEMMING
 	cmp     #MAX_LEMMINGS
