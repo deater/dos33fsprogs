@@ -34,7 +34,7 @@ title_loop:
 
 
 title_text:
-.byte  0, 0,"LOADING LEMM V0.07 (2 APR 2022)",0
+.byte  0, 0,"LOADING LEMM V0.08 (4 APR 2022)",0
 .byte  0, 1,"  LEMM PROOF-OF-CONCEPT DEMAKE",0
 .byte  0, 3,"BASED ON LEMMINGS BY DMA DESIGN",0
 .byte  0, 5,"  APPLE II PORT: VINCE WEAVER",0
