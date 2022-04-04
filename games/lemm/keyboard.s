@@ -293,8 +293,13 @@ make_nop:
 	; make climber
 	;========================
 make_climber:
+
 	lda	CLIMBER_COUNT		; only if we have some left
 	beq	done_make_climber
+
+	lda	lemming_attribute,Y	; don't make climber if already one
+	and	#LEMMING_CLIMBER
+	bne	done_make_climber
 
 	lda	#LEMMING_CLIMBER
 	ora	lemming_attribute,Y
