@@ -120,11 +120,8 @@ check_left:
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
-	lda	CURSOR_X		; if 41<x<$FE don't decrement
-	cmp	#41
-	bcc	do_dec_cursor_x
-	cmp	#$FE
-	bcc	done_left_pressed
+	lda	CURSOR_X		; if X==0 don't decrement
+	beq	done_left_pressed
 do_dec_cursor_x:
 	dec	CURSOR_X
 done_left_pressed:
@@ -136,11 +133,9 @@ check_right:
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
-	lda	CURSOR_X		; if 40<x<$FE don't increment
-	cmp	#40
-	bcc	do_inc_cursor_x
-	cmp	#$FE
-	bcc	done_right_pressed
+	lda	CURSOR_X		; if X>=38 don't increment
+	cmp	#38
+	bcs	done_right_pressed
 do_inc_cursor_x:
 	inc	CURSOR_X
 done_right_pressed:
@@ -152,11 +147,8 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
-	lda	CURSOR_Y		; if 191<y<$F0 don't decrement
-	cmp	#191
-	bcc	do_dec_cursor_y
-	cmp	#$F0
-	bcc	done_up_pressed
+	lda	CURSOR_Y		; if Y==0 don't increment
+	beq	done_up_pressed
 do_dec_cursor_y:
 	dec	CURSOR_Y
 	dec	CURSOR_Y
@@ -172,11 +164,11 @@ check_down:
 	cmp	#$0A
 	bne	check_escape
 down_pressed:
-	lda	CURSOR_Y		; if 191<y<$EE don't decrement
-	cmp	#191
-	bcc	do_inc_cursor_y
-	cmp	#$EE
-	bcc	done_down_pressed
+	lda	CURSOR_Y		; if Y>=176 then don't inc?
+	cmp	#176			; cursor is 14 in size
+;	bcc	do_inc_cursor_y
+;	cmp	#$EE
+	bcs	done_down_pressed
 do_inc_cursor_y:
 	inc	CURSOR_Y
 	inc	CURSOR_Y

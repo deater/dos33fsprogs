@@ -88,7 +88,7 @@ erase_pointer:
 	lda	CURSOR_Y
 	sta	SAVED_Y1
 	clc
-	adc	#16
+	adc	#14
 	sta	SAVED_Y2
 
 	lda     CURSOR_X

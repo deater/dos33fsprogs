@@ -14,7 +14,8 @@ hgr_partial_restore:
 	ldx	SAVED_Y2			; handle wrap around
 	cpx	#192
 	bcc	partial_restore_yloop		; assume > 192 off screen negative
-	ldx	#0
+
+	ldx	#0			; X is end y-co-ord?
 
 partial_restore_yloop:
 
