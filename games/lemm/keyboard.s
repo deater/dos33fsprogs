@@ -312,6 +312,10 @@ make_floater:
 	lda	FLOATER_COUNT		; only if we have some left
 	beq	done_make_floater
 
+	lda	lemming_attribute,Y	; don't make floater if already one
+	and	#LEMMING_FLOATER
+	bne	done_make_floater
+
 	lda	#LEMMING_FLOATER
 	ora	lemming_attribute,Y
 	sta	lemming_attribute,Y
