@@ -230,7 +230,7 @@ LEVEL6:	level6.o
 
 level6.o:	level6.s zp.inc hardware.inc qload.inc lemm.inc \
 		release_lemming.s \
-		graphics/graphics_level6.inc
+		graphics/graphics_level6.inc graphics/l6_animation.inc
 	ca65 -o level6.o level6.s -l level6.lst
 
 

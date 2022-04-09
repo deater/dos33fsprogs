@@ -228,9 +228,21 @@ l6_door_is_open:
 
 	jsr	draw_flames
 
+	;=====================
+	; draw level animation
+	;=====================
+
+	jsr	flame_thrower
+
+	;====================
+	; update timer
+	;====================
+
 	jsr	update_timer
 
+	;====================
 	; main drawing loop
+	;====================
 
 	jsr	erase_lemming
 
@@ -304,3 +316,76 @@ level6_intro_text:
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0
+
+
+.include "graphics/l6_animation.inc"
+
+	;======================
+	; flame thrower
+	;======================
+flame_thrower:
+
+	; erase old
+
+	; X a->x, savey1->savey2
+
+	lda	#21
+	sta	SAVED_Y1
+	lda	#36
+	sta	SAVED_Y2
+
+	lda	#11
+	ldx	#19
+
+	jsr	hgr_partial_restore
+
+	; draw new
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	flame_sprites_l,Y
+	sta	INL
+	lda	flame_sprites_h,Y
+	sta	INH
+
+	lda	flame_sprites_x,Y
+	sta	XPOS
+
+	lda	flame_sprites_y,Y
+	sta	YPOS
+
+        jsr	hgr_draw_sprite
+
+	rts
+
+flame_sprites_l:
+	.byte <flame0_sprite,<flame1_sprite
+	.byte <flame2_sprite,<flame3_sprite
+	.byte <flame4_sprite,<flame5_sprite
+	.byte <flame6_sprite,<flame7_sprite
+
+flame_sprites_h:
+	.byte >flame0_sprite,>flame1_sprite
+	.byte >flame2_sprite,>flame3_sprite
+	.byte >flame4_sprite,>flame5_sprite
+	.byte >flame6_sprite,>flame7_sprite
+
+flame_sprites_x:
+;	.byte 15,13
+;	.byte 12,12
+;	.byte 11,11
+;	.byte 11,11
+	.byte 16,14
+	.byte 13,13
+	.byte 12,12
+	.byte 10,12
+
+flame_sprites_y:
+	.byte 27,26
+	.byte 24,25
+	.byte 26,23
+	.byte 21,21
+
+
