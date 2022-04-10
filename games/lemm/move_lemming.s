@@ -993,3 +993,45 @@ exit_y2_smc:
 not_done_level:
 	rts
 
+
+
+
+
+
+	;=============================
+	; check if hit hazzard
+	;=============================
+	; TODO: make configurable
+collision_check_hazzard:
+	ldy	#0
+	sty	CURRENT_LEMMING
+
+check_hazzard_loop:
+	ldy	CURRENT_LEMMING
+	lda	lemming_y,Y
+	cmp	#130
+	bcs	in_hazzard
+
+	bcc	continue_check_hazzard
+
+in_hazzard:
+
+	lda	lemming_status,Y
+	cmp	#LEMMING_SPLATTING
+	beq	continue_check_hazzard		; don't re-splat
+
+	lda	#LEMMING_SPLATTING
+	sta	lemming_status,Y
+
+	lda	#0
+	sta	lemming_frame,Y
+
+continue_check_hazzard:
+
+	inc	CURRENT_LEMMING
+	lda	CURRENT_LEMMING
+	cmp	#MAX_LEMMINGS
+	bne	check_hazzard_loop
+
+	rts
+

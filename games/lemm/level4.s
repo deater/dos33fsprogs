@@ -251,6 +251,12 @@ l4_door_is_open:
 
 	jsr	move_lemmings
 
+	;=========================
+	; extra check if in water
+
+	jsr	collision_check_hazzard
+
+
 	jsr	draw_lemming
 
 	jsr	handle_keypress
