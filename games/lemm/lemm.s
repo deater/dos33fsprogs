@@ -372,10 +372,6 @@ level_continue:
 ;	.include	"gr_fast_clear.s"
 ;	.include	"text_print.s"
 ;	.include	"simple_sounds.s"
-
-
-	; pt3 player
-
 ;;.include "pt3_lib_mockingboard.inc"
 ;.include "pt3_lib_detect_model.s"
 ;.include "pt3_lib_mockingboard_detect.s"

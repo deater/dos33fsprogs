@@ -144,6 +144,15 @@ sprites.inc:	sprites.png
 	$(HGR_SPRITE) -s -l rflame3_sprite sprites.png 21 43 27 48 >> sprites.inc
 	$(HGR_SPRITE) -s -l rflame4_sprite sprites.png 21 50 27 55 >> sprites.inc
 	#
+	$(HGR_SPRITE) -s -l lflameg1_sprite sprites.png 35 29 41 35 >> sprites.inc
+	$(HGR_SPRITE) -s -l lflameg2_sprite sprites.png 35 36 41 41 >> sprites.inc
+	$(HGR_SPRITE) -s -l lflameg3_sprite sprites.png 35 43 41 48 >> sprites.inc
+	$(HGR_SPRITE) -s -l lflameg4_sprite sprites.png 35 50 41 55 >> sprites.inc
+	$(HGR_SPRITE) -s -l rflameg1_sprite sprites.png 49 29 55 35 >> sprites.inc
+	$(HGR_SPRITE) -s -l rflameg2_sprite sprites.png 49 36 55 41 >> sprites.inc
+	$(HGR_SPRITE) -s -l rflameg3_sprite sprites.png 49 43 55 48 >> sprites.inc
+	$(HGR_SPRITE) -s -l rflameg4_sprite sprites.png 49 50 55 55 >> sprites.inc
+	#
 	$(HGR_SPRITE) -s -l door1_sprite sprites.png    7 57 55 69 >> sprites.inc
 	$(HGR_SPRITE) -s -l door2_sprite sprites.png    7 76 55 91 >> sprites.inc
 	$(HGR_SPRITE) -s -l door3_sprite sprites.png    7 98 55 114 >> sprites.inc

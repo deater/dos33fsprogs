@@ -38,13 +38,13 @@ do_level5:
 	; flame locations
 
 	lda	#35
-	sta	l_flame_x_smc+1
+	sta	l_flame_g_x_smc+1
 	lda	#72
-	sta	l_flame_y_smc+1
-	sta	r_flame_y_smc+1
+	sta	l_flame_g_y_smc+1
+	sta	r_flame_g_y_smc+1
 
 	lda	#39
-	sta	r_flame_x_smc+1
+	sta	r_flame_g_x_smc+1
 
 	; door exit location
 
@@ -228,7 +228,7 @@ l5_door_is_open:
 	; animate flames
 	;=====================
 
-	jsr	draw_flames
+	jsr	draw_flames_green
 
 	jsr	update_timer
 

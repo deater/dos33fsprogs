@@ -159,6 +159,7 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s draw_door lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_door_5 lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_flames lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s draw_flames_green lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s handle_keypress lemm.lst >> lemm.inc
 #	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s outro_level lemm.lst >> lemm.inc
@@ -169,6 +170,10 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s r_flame_y_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s l_flame_x_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s l_flame_y_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s r_flame_g_x_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s r_flame_g_y_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s l_flame_g_x_smc lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s l_flame_g_y_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_x1_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_x2_smc lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s exit_y1_smc lemm.lst >> lemm.inc
