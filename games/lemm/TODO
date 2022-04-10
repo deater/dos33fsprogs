@@ -1,7 +1,6 @@
-Bubbles on L4
-Hook up exit L5
-Flame on L?
-Spinning thigns on L?
+Spinning things on L7
+one-way wall L9
+Improve explosions
 
 Change wait delay on levels with bg animations?
 Have 20 lemmings on some levels?
@@ -21,6 +20,4 @@ Only scan for Maximum Lemming number rather than maximum possible number?
 
 + offset the frames when nuking so not simultaneous
 + on explosion, start with invisible 6 so we always get a full 5s
-
-+ green flame for ice level?
 

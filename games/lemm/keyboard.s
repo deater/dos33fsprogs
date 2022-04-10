@@ -451,6 +451,9 @@ done_make_builder:
 	;========================
 	; make basher
 	;========================
+	; note on Level 9 we have one-way blocks
+	; cheat and just only allow digging when facing left on L9
+
 make_basher:
 	lda	BASHER_COUNT		; only if we have some left
 	beq	done_make_basher
@@ -460,9 +463,19 @@ make_basher:
 	cmp	#LEMMING_WALKING
 	bne	done_make_basher
 
+	; see if level #9
+	lda	WHICH_LEVEL
+	cmp	#9
+	bne	not_oneway
+
+	lda	lemming_direction,Y
+	bpl	couldnt_bash		; on l9 only if facing left
+
+not_oneway:
 	lda	#LEMMING_BASHING
 	sta	lemming_status,Y
 
+couldnt_bash:
 	dec	BASHER_COUNT
 	ldx	#5
 	jsr	update_remaining
