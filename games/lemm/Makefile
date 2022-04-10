@@ -58,7 +58,10 @@ qload.o:	qload.s qboot.inc	\
 	wait.s wait_a_bit.s \
 	hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s hgr_14x14_sprite.s \
 	hgr_sprite.s hgr_partial_restore.s lc_detect.s gr_fast_clear.s \
-	text_print.s
+	text_print.s simple_sounds.s \
+	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard_setup.s interrupt_handler.s \
+	pt3_lib_mockingboard_patch.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ###
@@ -93,6 +96,16 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s set_normal qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_all qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s click_speaker qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s detect_appleii_model qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s mockingboard_patch qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s mockingboard_init qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s mockingboard_setup_interrupt qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s disable_music qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s reset_ay_both qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_ay_both qload.lst >> qload.inc
+
 
 ###
 
@@ -147,7 +160,7 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s draw_door_5 lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_flames lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s handle_keypress lemm.lst >> lemm.inc
-	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
+#	./generate_common -a 0x6000 -s disable_music lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s outro_level lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s update_lemmings_out lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s level_preview_h_smc lemm.lst >> lemm.inc

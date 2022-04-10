@@ -352,7 +352,6 @@ level_continue:
 	.include	"particle_hgr.s"
 
 	.include	"load_music.s"
-	.include	"simple_sounds.s"
 	.include	"release_lemming.s"
 	.include	"init_level.s"
 
@@ -372,16 +371,17 @@ level_continue:
 ;	.include	"lc_detect.s"
 ;	.include	"gr_fast_clear.s"
 ;	.include	"text_print.s"
+;	.include	"simple_sounds.s"
 
 
 	; pt3 player
 
-;.include "pt3_lib_mockingboard.inc"
-.include "pt3_lib_detect_model.s"
-.include "pt3_lib_mockingboard_detect.s"
-.include "pt3_lib_mockingboard_setup.s"
-.include "interrupt_handler.s"
-.include "pt3_lib_mockingboard_patch.s"
+;;.include "pt3_lib_mockingboard.inc"
+;.include "pt3_lib_detect_model.s"
+;.include "pt3_lib_mockingboard_detect.s"
+;.include "pt3_lib_mockingboard_setup.s"
+;.include "interrupt_handler.s"
+;.include "pt3_lib_mockingboard_patch.s"
 
 
 config_string:
