@@ -34,17 +34,35 @@ do_level5:
 	lda	#40
 	sta	INIT_Y
 
+
 	; flame locations
 
-	; n/a
+	lda	#35
+	sta	l_flame_x_smc+1
+	lda	#72
+	sta	l_flame_y_smc+1
+	sta	r_flame_y_smc+1
 
-	; exit location
+	lda	#39
+	sta	r_flame_x_smc+1
 
-	; n/a
+	; door exit location
+
+	lda	#34
+	sta	exit_x1_smc+1
+	lda	#39
+	sta	exit_x2_smc+1
+
+	lda	#64
+	sta	exit_y1_smc+1
+	lda	#100
+	sta	exit_y2_smc+1
+
+
 
 	lda	#$10			; BCD
 	sta	PERCENT_NEEDED
-	lda	#$2
+	lda	#$10
 	sta	PERCENT_ADD
 
 	;==============
@@ -151,7 +169,7 @@ do_level5:
 	; init vars
 	;=======================
 
-	lda	#1
+	lda	#10
 	sta	LEMMINGS_TO_RELEASE
 
 	; set up time
@@ -210,7 +228,7 @@ l5_door_is_open:
 	; animate flames
 	;=====================
 
-;	jsr	draw_flames
+	jsr	draw_flames
 
 	jsr	update_timer
 
