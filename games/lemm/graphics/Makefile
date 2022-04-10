@@ -17,6 +17,7 @@ all:	graphics_test.inc \
 	graphics_level9.inc \
 	graphics_level10.inc \
 	sprites.inc \
+	l4_animation.inc \
 	l6_animation.inc
 
 
@@ -91,6 +92,18 @@ graphics_level10.inc:	\
 	level10_preview.lzsa
 	echo "level10_lzsa: .incbin \"level10.lzsa\"" > graphics_level10.inc
 	echo "level10_preview_lzsa: .incbin \"level10_preview.lzsa\"" >> graphics_level10.inc
+
+###
+
+l4_animation.inc:	level_animations.png
+	$(HGR_SPRITE) -s -l bubble0_sprite level_animations.png   0 102  13 117> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble1_sprite level_animations.png  14 102  27 117>> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble2_sprite level_animations.png  28 102  41 117 >> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble3_sprite level_animations.png  42 102  55 117 >> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble4_sprite level_animations.png  56 102  69 117 >> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble5_sprite level_animations.png  70 102  83 117 >> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble6_sprite level_animations.png  84 102  97 117 >> l4_animation.inc
+	$(HGR_SPRITE) -s -l bubble7_sprite level_animations.png  98 102 111 117 >> l4_animation.inc
 
 
 ###

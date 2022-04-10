@@ -230,6 +230,16 @@ l4_door_is_open:
 
 	jsr	draw_flames
 
+	;====================
+	; draw level animation
+	;====================
+
+	jsr	draw_bubbles
+
+	;====================
+	; update timer
+	;====================
+
 	jsr	update_timer
 
 
@@ -305,3 +315,72 @@ level4_intro_text:
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0
+
+	;===============
+	; draw bubbles
+	;===============
+draw_bubbles:
+
+	; bubble 1
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	bubble_sprites_l,Y
+	sta	INL
+	lda	bubble_sprites_h,Y
+	sta	INH
+
+	lda	#4		; 4, 14, 24, 34
+	sta	XPOS
+
+	lda	#137
+	sta	YPOS
+
+	jsr	hgr_draw_sprite
+
+
+	; bubble 2
+
+	lda	FRAMEL
+	clc
+	adc	#4
+	and	#$7
+	tay
+
+	lda	bubble_sprites_l,Y
+	sta	INL
+	lda	bubble_sprites_h,Y
+	sta	INH
+
+	lda	#24		; 4, 14, 24, 34
+	sta	XPOS
+
+	lda	#137
+	sta	YPOS
+
+	jmp	hgr_draw_sprite		; tail call
+
+
+
+;	rts
+
+
+.include "graphics/l4_animation.inc"
+
+
+bubble_sprites_l:
+.byte <bubble0_sprite,<bubble1_sprite
+.byte <bubble2_sprite,<bubble3_sprite
+.byte <bubble4_sprite,<bubble5_sprite
+.byte <bubble6_sprite,<bubble7_sprite
+
+bubble_sprites_h:
+.byte >bubble0_sprite,>bubble1_sprite
+.byte >bubble2_sprite,>bubble3_sprite
+.byte >bubble4_sprite,>bubble5_sprite
+.byte >bubble6_sprite,>bubble7_sprite
+
+
+

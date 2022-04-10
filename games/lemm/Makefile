@@ -208,7 +208,7 @@ LEVEL4:	level4.o
 
 level4.o:	level4.s zp.inc hardware.inc qload.inc lemm.inc \
 		release_lemming.s \
-		graphics/graphics_level4.inc
+		graphics/graphics_level4.inc graphics/l4_animation.inc
 	ca65 -o level4.o level4.s -l level4.lst
 
 
