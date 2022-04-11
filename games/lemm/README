@@ -1,0 +1,117 @@
+lemm -- a Lemmings proof-of-concept for the Apple II
+
+by Vince `Deater` Weaver <vince@deater.net>
+http://www.deater.net/weave/vmwprod/lemm/
+
+Background
+~~~~~~~~~~
+
+Lemmings is a 1991 game by DMA Design originally for the OCS Amiga but
+ported to many other platforms
+
+This is a proof of concept of what it would look like on an Apple II
+from 1977
+
+(NOTE: while it might technically be possible to play this on an Apple II
+from 1977, you would need to upgrade it to 48k of RAM which would have been
+astronomically expensive before 1980 or so, and you'd need a Disk II drive
+with DOS3.3 which again is around 1980, and for best results you want
+64k of RAM (a language card or Apple IIe) and Mockingboard for sound which 
+would push things more toward 1983.
+
+How was it Made
+~~~~~~~~~~~~~~~
+
+This was made purely from observing gameplay and taking screenshots of
+the DOS and Amiga versions.  No reverse-engineering or asset decoding
+happened.
+
+The music files are YM5 files found on the internet that were presumably
+captured from the Atari ST version of the game.
+
+I developed the game in 6502 assembly language on Linux using the ca65
+assembler.  Graphics were manipulated using the Gimp.
+
+
+What's missing
+~~~~~~~~~~~~~~
+
+This demo only has 10 levels, all single-screen.  I think it might just be
+barely possible to have scrolling backgrounds like the original, but it
+would take a major re-write of the entire game engine.
+
+The bridge builder's bridges aren't right.  Due to Apple II limitations
+it's hard to get properly sized bridges.
+
+You can't really play speaker sounds in the background on Apple II, so
+the sound effects are limited to "Let's Go" at the beginning.
+
+The one-way digging is a bit of a hack, and non-diggable surfaces are
+not supported.
+
+Mouse support is missing (I don't have a mouse, also mice are often
+slot#4 which would conflict with the Mockingboard).  Keyboard support
+is a bit awkward, but that's due to limitations of the keyboard on
+Apple II/II+.  I could probably improve this with separate code paths
+for IIe/IIc or by using the timers on the Mockingboard but not sure
+it's worth the trouble.
+
+Novelty
+~~~~~~~
+
+This actually isn't the first 8-bit port.  I'd like to think it's nicer
+looking than the C64 or ZX-Spectrum ports, but those ports have scrollable
+backgrounds and a full set of levels.
+
+
+Code Layout
+~~~~~~~~~~~
+
+Qkumba's QBOOT fast track-at-a-time loader is used for loading data from disk.
+Raw tracks are written to disk, there's no operating system (no DOS33 or ProDos)
+involved.
+
+The QBOOT bootsector loads two sectors to RAM from boot at $800, then
+it loads the second-stage loader and library code to 4k at $1000.
+HGR (280x192x6 color) graphics are 8k at $2000, and HGR2 (page2, used
+for background) is another 8k at $4000.  The LEMM game engine lives in 12k
+starting at $6000.  Each level has to fit in 11.5k or so (qboot can't
+load up against the $C000 I/O area) starting at $9000.
+
+If a language card (16k RAM expansion) is available, then
+the "let's go" sound sample is stored in 4k at Language Card $D000 bank 0
+and 12k of BANK1 is used for decoded music data.
+
+Unlike my PT3 player which can play compact tracker music in roughly 3k,
+I could only find the lemmings music in YM format.  This compresses nice
+too (and is simple to play) but to decompress the songs it takes roughly
+14 channels * 50Hz = 700 bytes per second of music, so you only get about
+10s of music fitting in the language card.  To make things work the song
+is broken up in chunks and every 5s or so more music has to be decoded.
+While the current buffer is playing the next buffer is decoded so there
+are no glitches in the music, but this takes more than a video frame to
+do so there's an occasional glitch in gameplay as this happens.
+
+Since we are constantly playing music from the language card, we can't
+easily use any ROM routines so useful routines like WAIT and HPOSN
+are re-implemented in RAM.
+
+
+Memory Map
+~~~~~~~~~~
+	$0000-$00ff  = zero page
+	$0100-$01ff  = stack
+	$0300-$03c0  = disk lookup tables
+	$0400-$07ff  = text page 1
+	$0800-$0bff  = hgr lookup tables
+	$0c00-$0fff  = particle effects? (check this)
+	$1000-$1100  = disk track loading code
+	$1200-$1f00  = common library routines
+	$2000-$3fff  = HGR page 1
+	$4000-$5fff  = HGR page 2
+	$6000-$8fff  = LEMM game engine
+	$9000-$Beff  = Current Level
+	$C000-$Cfff  = I/O area
+	$D000-$Dfff  = (bank 0) sound sample for "let's go"
+	$D000-$F000  = (bank 1) decoded music data
+
