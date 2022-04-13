@@ -1008,6 +1008,9 @@ collision_check_hazzard:
 
 check_hazzard_loop:
 	ldy	CURRENT_LEMMING
+	lda	lemming_out,Y
+	beq	continue_check_hazzard
+
 	lda	lemming_y,Y
 	cmp	#130
 	bcs	in_hazzard
@@ -1034,4 +1037,46 @@ continue_check_hazzard:
 	bne	check_hazzard_loop
 
 	rts
+
+
+	;=============================
+	; check if hit hazzard2
+	;=============================
+	; TODO: make configurable
+collision_check_hazzard2:
+	ldy	#0
+	sty	CURRENT_LEMMING
+
+check_hazzard_loop2:
+	ldy	CURRENT_LEMMING
+
+	lda	lemming_out,Y
+	beq	continue_check_hazzard2
+
+	lda	lemming_x,Y
+	cmp	#10
+
+	bcs	continue_check_hazzard2
+
+in_hazzard2:
+
+	lda	lemming_status,Y
+	cmp	#LEMMING_SPLATTING
+	beq	continue_check_hazzard2		; don't re-splat
+
+	lda	#LEMMING_SPLATTING
+	sta	lemming_status,Y
+
+	lda	#0
+	sta	lemming_frame,Y
+
+continue_check_hazzard2:
+
+	inc	CURRENT_LEMMING
+	lda	CURRENT_LEMMING
+	cmp	#MAX_LEMMINGS
+	bne	check_hazzard_loop2
+
+	rts
+
 

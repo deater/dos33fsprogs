@@ -229,16 +229,33 @@ l7_door_is_open:
 
 	jsr	draw_flames
 
+	;=====================
+	; update timer
+	;=====================
+
 	jsr	update_timer
 
+	;=====================
+	; draw level animation
+	;=====================
 
+	jsr	draw_spinners
+
+
+	;===================
 	; main drawing loop
+	;===================
 
 	jsr	erase_lemming
 
 	jsr	erase_pointer
 
 	jsr	move_lemmings
+
+	;=========================
+	; extra check if hit slicer
+
+	jsr     collision_check_hazzard2
 
 	jsr	draw_lemming
 
@@ -303,3 +320,83 @@ level7_intro_text:
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0
+
+.include "graphics/l7_animation.inc"
+
+	;===================
+	; spinners
+	;===================
+
+draw_spinners:
+
+	; top
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	spinner_sprites_l,Y
+	sta	INL
+	lda	spinner_sprites_h,Y
+	sta	INH
+
+	lda	#18
+	sta	XPOS
+
+	lda	#49
+	sta	YPOS
+
+	jsr	hgr_draw_sprite
+
+	; right
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	spinner_sprites_l,Y
+	sta	INL
+	lda	spinner_sprites_h,Y
+	sta	INH
+
+	lda	#32
+	sta	XPOS
+
+	lda	#109
+	sta	YPOS
+
+	jsr	hgr_draw_sprite
+
+	; left
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	spinner_sprites_l,Y
+	sta	INL
+	lda	spinner_sprites_h,Y
+	sta	INH
+
+	lda	#6
+	sta	XPOS
+
+	lda	#109
+	sta	YPOS
+
+	jsr	hgr_draw_sprite
+
+
+	rts
+
+spinner_sprites_l:
+	.byte <spinner0_sprite,<spinner1_sprite
+	.byte <spinner2_sprite,<spinner3_sprite
+	.byte <spinner4_sprite,<spinner5_sprite
+	.byte <spinner6_sprite,<spinner7_sprite
+
+spinner_sprites_h:
+	.byte >spinner0_sprite,>spinner1_sprite
+	.byte >spinner2_sprite,>spinner3_sprite
+	.byte >spinner4_sprite,>spinner5_sprite
+	.byte >spinner6_sprite,>spinner7_sprite

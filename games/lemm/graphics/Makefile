@@ -18,7 +18,8 @@ all:	graphics_test.inc \
 	graphics_level10.inc \
 	sprites.inc \
 	l4_animation.inc \
-	l6_animation.inc
+	l6_animation.inc \
+	l7_animation.inc
 
 
 
@@ -118,7 +119,17 @@ l6_animation.inc:	level_animations.png
 	$(HGR_SPRITE) -s -l flame6_sprite level_animations.png   0  85  27 93 >> l6_animation.inc
 	$(HGR_SPRITE) -s -l flame7_sprite level_animations.png  28  86  34 87 >> l6_animation.inc
 
+###
 
+l7_animation.inc:	level_animations.png
+	$(HGR_SPRITE) -s -l spinner0_sprite level_animations.png 126  13 153  18 > l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner1_sprite level_animations.png 126  31 153  36 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner2_sprite level_animations.png 126  49 153  54 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner3_sprite level_animations.png 126  67 153  72 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner4_sprite level_animations.png 126  85 153  90 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner5_sprite level_animations.png 126 103 153 108 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner6_sprite level_animations.png 126 121 153 126 >> l7_animation.inc
+	$(HGR_SPRITE) -s -l spinner7_sprite level_animations.png 126 139 153 144 >> l7_animation.inc
 
 ###
 

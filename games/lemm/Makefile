@@ -188,6 +188,7 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s update_remaining lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s update_remaining_all lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s collision_check_hazzard lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s collision_check_hazzard2 lemm.lst >> lemm.inc
 
 ####
 
@@ -260,7 +261,7 @@ LEVEL7:	level7.o
 
 level7.o:	level7.s zp.inc hardware.inc qload.inc lemm.inc \
 		release_lemming.s \
-		graphics/graphics_level7.inc
+		graphics/graphics_level7.inc  graphics/l7_animation.inc
 	ca65 -o level7.o level7.s -l level7.lst
 
 ####
