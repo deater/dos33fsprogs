@@ -336,6 +336,7 @@ make_exploding:
 	lda	EXPLODER_COUNT		; only if we have some left
 	beq	done_make_exploder
 
+	ldx	#0			; regular frame start
 	jsr	explode_lemming
 
 	dec	EXPLODER_COUNT
@@ -621,16 +622,17 @@ done_plus_adjust:
 	; nuke
 	;============================
 	;============================
-	; TODO: offset them a bit so it's not simultaneous
 
 nuke_button:
 	; stop lemmings from exiting
 	lda	#0
 	sta	LEMMINGS_TO_RELEASE
 
+	ldx	#0			; initial frame offset
 	ldy	#0
 nuke_loop:
 	jsr	explode_lemming
+	dex
 	iny
 	cpy	#MAX_LEMMINGS
 	bne	nuke_loop
@@ -669,13 +671,18 @@ done_menu:
 	;=====================
 	;=====================
 	; which is in  Y
+	; frame is in  X
 explode_lemming:
 	; only explode if not already exploding
 
 	lda	lemming_exploding,Y
 	bne	skip_explode
 
-	lda	#1
+	txa
+	sta	lemming_exploding_frame,Y
+
+	lda	#2			; 2 not 1 as we don't display the
+					; first partial second
 	sta	lemming_exploding,Y
 
 skip_explode:

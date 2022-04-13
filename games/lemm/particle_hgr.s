@@ -2,7 +2,7 @@
 
 ; by Vince `deater` Weaver
 
-PARTICLES = 64
+PARTICLES = 32
 SCALE = 2
 
 ;HGR_BITS	= $1C
@@ -140,7 +140,7 @@ y_good:
 HPLOT0:
 ;	line from (x,a) to (x+y,a)
 
-	ldy	#1
+	ldy	#2
 	jsr	hgr_hlin
 
 	rts

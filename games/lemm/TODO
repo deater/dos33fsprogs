@@ -1,6 +1,12 @@
-Spinning things on L7
-one-way wall L9
 Improve explosions
++ offset the frames when nuking so not simultaneous
++ on explosion, start with invisible 6 so we always get a full 5s
++ Make particles thicker?  Look fine, not show up in recordings
++ Erase particles as last step
+
+Request from internet:
++ Acceleration on cursor movement keys
+	This is trickier than it sounds
 
 Change wait delay on levels with bg animations?
 Have 20 lemmings on some levels?
@@ -15,9 +21,7 @@ Only scan for Maximum Lemming number rather than maximum possible number?
 	even x, maybe we should start animation 4 frames in if that's
 	the case.  Or maybe it's the shift for odd frames, make
 	the shift the other way if walking left/right
-+ Make particles thicker?  Look fine, not show up in recordings
-+ Erase particles as last step
 
-+ offset the frames when nuking so not simultaneous
-+ on explosion, start with invisible 6 so we always get a full 5s
+
+
 

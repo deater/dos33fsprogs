@@ -63,18 +63,30 @@ draw_lemming_loop:
 	; draw countdown if applicable
 
 do_draw_countdown:
-	lda	lemming_exploding,Y
-	beq	do_draw_lemming
+	lda	lemming_exploding,Y		; see if exploding
+	beq	do_draw_lemming			; if not skip ahead
+
+						; sprites are 5,4,3,2,1
+
+	tya
+	tax
+	inc	lemming_exploding_frame,X
+
+	; decrement  first because
+	; =0 means no exploding
+	; also to make sure 5 appears a whole second, skip first second
 
 	ldx	lemming_exploding,Y
 	dex
+	dex
+	bmi	do_draw_lemming
 
-	lda	countdown_sprites_l,X
+	lda	countdown_sprites_l,X		; look up number sprite
 	sta	INL
 	lda	countdown_sprites_h,X
 	sta	INH
 
-	ldx	lemming_x,Y
+	ldx	lemming_x,Y			; draw 6 pixels above head
         stx     XPOS
 	lda	lemming_y,Y
 	sec

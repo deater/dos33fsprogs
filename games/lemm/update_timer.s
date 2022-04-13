@@ -1,4 +1,6 @@
 update_timer:
+	jsr	update_explosion_timer
+
 	lda	SOUND_STATUS
 	and	#SOUND_MOCKINGBOARD
 	bne	timer_mockingboard

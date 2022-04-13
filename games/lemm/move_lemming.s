@@ -5,6 +5,7 @@ lemming_y:		.res MAX_LEMMINGS,0
 lemming_direction:	.res MAX_LEMMINGS,0
 lemming_out:		.res MAX_LEMMINGS,0
 lemming_frame:		.res MAX_LEMMINGS,0
+lemming_exploding_frame:.res MAX_LEMMINGS,0
 lemming_status:		.res MAX_LEMMINGS,0
 lemming_exploding:	.res MAX_LEMMINGS,0
 lemming_fall_distance:	.res MAX_LEMMINGS,0

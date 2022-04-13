@@ -1,29 +1,27 @@
-
-
-	;============================
-	; update the time
-	;============================
-	; this gets called approximately once a second
-
-	; updates the time left
-update_time:
-
 	;==============================
 	; update explosion timer
 	;==============================
 	; not ideal (first second might be short)
+	; called roughly at 7Hz
 
+update_explosion_timer:
 	ldy	#0
 update_exploding_loop:
 	lda	lemming_exploding,Y
 	beq	not_done_exploding
 
+	lda	lemming_exploding_frame,Y		; roughly 1s?
+	cmp	#7
+	bne	not_done_exploding
+
+	lda	#0			; reset
+	sta	lemming_exploding_frame,Y
 
 	tya
 	tax
 	inc	lemming_exploding,X
 	lda	lemming_exploding,Y
-	cmp	#6
+	cmp	#7			; value is 2+displayed
 	bne	not_done_exploding
 
 	lda	#LEMMING_EXPLODING
@@ -38,7 +36,21 @@ not_done_exploding:
 	cpy	#MAX_LEMMINGS
 	bne	update_exploding_loop
 
+	rts
 
+
+
+
+
+	;============================
+	; update the time
+	;============================
+	; this gets called approximately once a second
+
+	; updates the time left
+update_time:
+
+;	jsr	update_explosion_timer
 
 	sed
 

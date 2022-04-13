@@ -156,6 +156,7 @@ lemm.inc:	generate_common LEMM
 	./generate_common -a 0x6000 -s move_lemmings lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s erase_lemming lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s update_time lemm.lst >> lemm.inc
+	./generate_common -a 0x6000 -s update_explosion_timer lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_door lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_door_5 lemm.lst >> lemm.inc
 	./generate_common -a 0x6000 -s draw_flames lemm.lst >> lemm.inc
