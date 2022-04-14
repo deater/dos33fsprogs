@@ -39,18 +39,29 @@ intro_text_smc_h:
 	ldx	#8
 text_loop:
 
-	jsr	move_and_print
+	jsr	move_and_print			; print texty, 8 lines
 
 	dex
 	bne	text_loop
 
-	bit	KEYRESET
+	bit	KEYRESET			; clear keyboard strobe
 
-	lda	APPLEII_MODEL
+
+	lda	APPLEII_MODEL			; if IIe/IIgs try split screen?
+	cmp	#'C'
+	beq	intro_iic
 	cmp	#'E'
+	beq	intro_iie
+	cmp	#'G'
+	beq	intro_iigs
 	bne	intro_not_iie
 
+intro_iic:				; iic is same code, but bpl/bmi swapped
+	jmp	split_screen_iic
+intro_iie:
 	jmp	split_screen_iie
+intro_iigs:
+	jmp	split_screen_iigs
 
 intro_not_iie:
 	; wait until keypress
@@ -353,16 +364,43 @@ level_end_messages_h:
 
 .align $100
 
+	;==============
+	; this code from https://comp.sys.apple2.narkive.com/dHkvl39d/vblank-apple-iic
+	; as well as IIc technote #9
+split_screen_iic:
+	bit	$c041
+	bmi	rdvbl
+	sta	$c07f		; turn off IOUdis
+	sta	$c05b		; ENVBL enable vblank
+	sta	$c07e		; ??
+rdvbl:
+	bit	$c019
+	bmi	rdvbl
+	lda	$c070		; clear vblank
+rdvbl2:
+	bit	$c019
+	bpl	rdvbl2
+	lda	$c070		; clears vblank
+
+	jmp	start_vblank
+
 ; split screen?
 
-split_screen_iie:
+split_screen_iigs:
+	; wait for vblank on IIgs
+	; opposte of IIe?
 
+wait_vblank_iigs:
+	lda	VBLANK
+	bpl	wait_vblank_iigs	; wait for negative (in vblank)
+wait_vblank_done_iigs:
+	lda	VBLANK			; wait for positive (vlank done)
+	bmi	wait_vblank_done_iigs
+	jmp	split_loop
+
+split_screen_iie:
 	; wait for vblank on IIe
 	; positive? during vblank
-
-;	bit	SET_GR		; 4
-;	bit	HIRES		; 4
-;	bit	FULLGR
 
 wait_vblank_iie:
 	lda	VBLANK
@@ -370,6 +408,7 @@ wait_vblank_iie:
 wait_vblank_done_iie:
 	lda	VBLANK			; wait for negative (vlank done)
 	bpl	wait_vblank_done_iie
+	jmp	split_loop
 
 	;
 split_loop:
@@ -413,6 +452,7 @@ loop14:	dex								; 2
 	bne	loop13							; 2nt/3
 
 
+start_vblank:
 	bit	SET_GR		; 4
 	bit	HIRES		; 4
 
