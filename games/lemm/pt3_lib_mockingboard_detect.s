@@ -45,7 +45,7 @@ mockingboard_detect:
 	;   it difficult if you actually wanted to use any
 	;   Applesoft/Monitor ROM routines
 
-.ifdef PT3_ENABLE_APPLE_IIC
+;.ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
 	cmp	#'C'
 	bne	not_iic
@@ -56,7 +56,7 @@ mockingboard_detect:
 
         sta	MOCK_6522_DDRA1		; $C403
 	sta	MOCK_6522_T1CL		; $C404
-.endif
+;.endif
 
 not_iic:
 	lda	#$00

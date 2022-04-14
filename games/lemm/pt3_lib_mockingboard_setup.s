@@ -172,57 +172,19 @@ mockingboard_setup_interrupt:
 
 
 	; for this game with things in language card including
-	; irq handler, always force IIc mode
+	; irq handler, always force IIc mode (where RAM swapped in
+	; and we put the irq handler address directly up at $FFFE)
 
-;.ifdef PT3_ENABLE_APPLE_IIC
-;	lda	APPLEII_MODEL
-;	cmp	#'C'
-;	bne	done_iic_hack
-
-	; bypass the firmware interrupt handler
-	; should we do this on IIe too? probably faster
-
-	; first we have to copy the ROM to the language card
-.if 0
-	sei				; disable interrupts
-
-copy_rom_loop:
-	lda	$c089			; read ROM, write RAM1
-	lda	$c089
-
-	ldy	#0
-read_rom_loop:
-	lda	$D000,Y
-	sta	$400,Y			; note this uses text page as
-					; temporary data store
-	iny
-	bne	read_rom_loop
-
-	lda	$c08B			; read/write RAM1
-	lda	$c08B			;
-
-write_rom_loop:
-	lda	$400,Y
-	sta	$D000,Y
-	iny
-	bne	write_rom_loop
-
-	inc	read_rom_loop+2
-	inc	write_rom_loop+5
-	bne	copy_rom_loop
-.endif
 	lda	#<interrupt_handler
 	sta	$fffe
 	lda	#>interrupt_handler
 	sta	$ffff
 
-
-	; nop out the "lda $45" in the irq handler
+	; nop out the "lda $45" since we are bypassing the ROM irq handler
+	; that puts A in $45
 	lda	#$EA
 	sta	interrupt_smc
 	sta	interrupt_smc+1
-;.endif
-done_iic_hack:
 
 
 	;=========================
@@ -231,10 +193,10 @@ done_iic_hack:
 	; Vector address goes to 0x3fe/0x3ff
 	; FIXME: should chain any existing handler
 
-	lda	#<interrupt_handler
-	sta	$03fe
-	lda	#>interrupt_handler
-	sta	$03ff
+;	lda	#<interrupt_handler
+;	sta	$03fe
+;	lda	#>interrupt_handler
+;	sta	$03ff
 
 	;============================
 	; Enable 50Hz clock on 6522
