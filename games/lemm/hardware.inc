@@ -8,11 +8,14 @@ CLR80COL	=	$C000	; PAGE0/PAGE1 normal
 SET80COL	=	$C001	; PAGE0/PAGE1 switches PAGE0 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
-VBLANK		=	$C019	; IIe *not* RDVBL (VBL signal low)
+VBLANK		=	$C019	; IIe *not* RDVBL (VBL low), IIgs opposite 
+RSTVBL		=	$C019	; reset VBLANK interrupt (iic)
+RDVBLBAR	=	$C019
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
+RDVBLMSK	=	$C041	; read VBL interrupt (bit 7)
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
@@ -21,17 +24,17 @@ PAGE0		=	$C054
 PAGE1		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
+CLRAN1		=	$C05A	; clear annunciator 1 (if IOUDIS off)
+DISVBL		=	$C05A	; disable VBLANK (iic) (if IOUDIS on)
+SETAN1		=	$C05B	; set annunciator 1   (if IOUDIS off)
+ENVBL		=	$C05B	; enable VBLANK (iic)  (if IOUDIS on)
 AN3		=	$C05E	; Annunciator 3
-
-
-
-
-
-
-
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
-PTRIG		=	$C070
+PTRIG		=	$C070	; Analog input reset
+VBLINT		=	$C070	; Analog input reset + reset vblank (iic)
+IOUDISON	=	$C07E	; iic
+IOUDISOFF	=	$C07F	; iic
 
 ;; BASIC ROUTINES
 
