@@ -364,7 +364,7 @@ level_end_messages_h:
 
 .align $100
 
-.if 1
+.if 0
 	;==============
 	; this code from https://comp.sys.apple2.narkive.com/dHkvl39d/vblank-apple-iic
 	; as well as IIc technote #9
@@ -389,7 +389,7 @@ rdvbl2:
 	; alternate implementation by Oliver Schmidt
 	; from https://github.com/cc65/cc65/blob/master/libsrc/apple2/waitvsync.s
 split_screen_iic:
-	sei			; disables interrupts
+;	sei			; disables interrupts
 	sta	IOUDISOFF
 	lda	RDVBLMSK
 	bit	ENVBL
@@ -400,9 +400,10 @@ split_screen_iic:
 	bcs	:+		; VBL interrupts were already enabled
 	bit	DISVBL
 :	sta	IOUDISON	; IIc Tech Ref Man: The firmware normally leaves IOUDIS on.
-	cli			; re-enable interrupts
+;	cli			; re-enable interrupts
 
 	jmp	start_vblank
+
 .endif
 
 
