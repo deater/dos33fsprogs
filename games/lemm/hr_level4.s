@@ -1,81 +1,82 @@
+; Homestar Runner Expansion L4
+
 .include "zp.inc"
 .include "hardware.inc"
 .include "qload.inc"
 .include "lemm.inc"
 .include "lemming_status.inc"
 
-.byte 2		; level 2
+.byte 4		; level 4
 
-do_level2:
+do_level4:
 
 
 	;======================
 	; set up initial stuff
 	;======================
 
-	lda     #0
+	lda	#20
 	sta	CLIMBER_COUNT
+	sta	FLOATER_COUNT
 	sta	EXPLODER_COUNT
 	sta	STOPPER_COUNT
 	sta	BUILDER_COUNT
 	sta	BASHER_COUNT
 	sta	MINER_COUNT
 	sta	DIGGER_COUNT
-	lda	#10
-	sta	FLOATER_COUNT
 
-
-
-	lda	#3
+	lda	#31
 	sta	DOOR_X
 	lda	#4
 	sta	DOOR_Y
 
-	lda	#7
+	lda	#34
 	sta	INIT_X
-	lda	#15
+	lda	#14
 	sta	INIT_Y
 
 	; flame locations
 
-	lda	#29			; 196
+	lda	#4			;
 	sta	l_flame_x_smc+1
-	lda	#122
+	lda	#86
 	sta	l_flame_y_smc+1
         sta	r_flame_y_smc+1
 
-	lda	#33			; 245
+	lda	#8			;
 	sta	r_flame_x_smc+1
 
 	; door exit location
 
-	lda	#29			;
+	lda	#4			;
 	sta	exit_x1_smc+1
-	lda	#33
+	lda	#9
 	sta	exit_x2_smc+1
 
-	lda	#119
+	lda	#80
 	sta	exit_y1_smc+1
-	lda	#144
+	lda	#115
 	sta	exit_y2_smc+1
 
-	lda	#$10			; BCD
-	sta	PERCENT_NEEDED
-	sta	PERCENT_ADD
 
 	;==============
 	; set up intro
 	;==============
 
-	lda	#<level2_preview_lzsa
+	lda	#<hr_level4_preview_lzsa
 	sta	level_preview_l_smc+1
-	lda	#>level2_preview_lzsa
+	lda	#>hr_level4_preview_lzsa
 	sta	level_preview_h_smc+1
 
-	lda	#<level2_intro_text
+	lda	#<level4_intro_text
 	sta	intro_text_smc_l+1
-	lda	#>level2_intro_text
+	lda	#>level4_intro_text
 	sta	intro_text_smc_h+1
+
+	lda	#$50			; BCD
+	sta	PERCENT_NEEDED
+	lda	#$10
+	sta	PERCENT_ADD
 
 
 	;==============
@@ -90,14 +91,14 @@ do_level2:
 
 	; set up first song
 
-	lda	#<music8_parts_l
+	lda	#<music17_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music8_parts_l
+	lda	#>music17_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music8_parts_h
+	lda	#<music17_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music8_parts_h
+	lda	#>music17_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -134,18 +135,18 @@ do_level2:
 	bit	HIRES
 	bit	FULLGR
 
-	lda     #<level2_lzsa
+	lda     #<hr_level4_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_lzsa
+	lda     #>hr_level4_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda     #<level2_lzsa
+	lda     #<hr_level4_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_lzsa
+	lda     #>hr_level4_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$40
@@ -163,6 +164,7 @@ do_level2:
 	sta	CURSOR_X
 	lda	#100
 	sta	CURSOR_Y
+
 
 	;=======================
 	; init vars
@@ -195,7 +197,7 @@ do_level2:
 	; Main Loop
 	;===================
 	;===================
-l2_main_loop:
+l4_main_loop:
 
 	;=========================
 	; load next chunk of music
@@ -205,16 +207,16 @@ l2_main_loop:
 	jsr	load_music
 
 
-	;=========================
-	; open door
-	;=========================
+
+l4_no_load_chunk:
+
 
 	lda	DOOR_OPEN
-	bne	l2_door_is_open
+	bne	l4_door_is_open
 
 	jsr	draw_door
 
-l2_door_is_open:
+l4_door_is_open:
 
 	;======================
 	; release lemmings
@@ -222,10 +224,9 @@ l2_door_is_open:
 
 	jsr	release_lemming
 
-	;======================
+	;=====================
 	; animate flames
-	;======================
-
+	;=====================
 
 	jsr	draw_flames
 
@@ -245,60 +246,62 @@ l2_door_is_open:
 
 	jsr	draw_pointer
 
-	; wait a bit
-
-	lda	#$f0
+	lda	#$ff
 	jsr	wait
 
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l2_level_over
+	bne	l4_level_over
 
-	jmp	l2_main_loop
+	jmp	l4_main_loop
 
 
-l2_level_over:
+l4_level_over:
 
 	rts
 
-
 .include "update_timer.s"
 
-.include "graphics/graphics_level2.inc"
+.include "hr_graphics/graphics_hr_level4.inc"
 
 
-music8_parts_h:
-	.byte >lemm8_part1_lzsa,>lemm8_part2_lzsa,>lemm8_part3_lzsa
-	.byte >lemm8_part4_lzsa,>lemm8_part5_lzsa,>lemm8_part6_lzsa
+music17_parts_h:
+	.byte >lemm17_part1_lzsa,>lemm17_part2_lzsa,>lemm17_part3_lzsa
+	.byte >lemm17_part4_lzsa,>lemm17_part5_lzsa,>lemm17_part6_lzsa
+	.byte >lemm17_part7_lzsa,>lemm17_part8_lzsa
 	.byte $00
 
-music8_parts_l:
-	.byte <lemm8_part1_lzsa,<lemm8_part2_lzsa,<lemm8_part3_lzsa
-	.byte <lemm8_part4_lzsa,<lemm8_part5_lzsa,<lemm8_part6_lzsa
+music17_parts_l:
+	.byte <lemm17_part1_lzsa,<lemm17_part2_lzsa,<lemm17_part3_lzsa
+	.byte <lemm17_part4_lzsa,<lemm17_part5_lzsa,<lemm17_part6_lzsa
+	.byte <lemm17_part7_lzsa,<lemm17_part8_lzsa
 
 
 
-lemm8_part1_lzsa:
-.incbin "music/lemm8.part1.lzsa"
-lemm8_part2_lzsa:
-.incbin "music/lemm8.part2.lzsa"
-lemm8_part3_lzsa:
-.incbin "music/lemm8.part3.lzsa"
-lemm8_part4_lzsa:
-.incbin "music/lemm8.part4.lzsa"
-lemm8_part5_lzsa:
-.incbin "music/lemm8.part5.lzsa"
-lemm8_part6_lzsa:
-.incbin "music/lemm8.part6.lzsa"
+lemm17_part1_lzsa:
+.incbin "music/lemm17.part1.lzsa"
+lemm17_part2_lzsa:
+.incbin "music/lemm17.part2.lzsa"
+lemm17_part3_lzsa:
+.incbin "music/lemm17.part3.lzsa"
+lemm17_part4_lzsa:
+.incbin "music/lemm17.part4.lzsa"
+lemm17_part5_lzsa:
+.incbin "music/lemm17.part5.lzsa"
+lemm17_part6_lzsa:
+.incbin "music/lemm17.part6.lzsa"
+lemm17_part7_lzsa:
+.incbin "music/lemm17.part7.lzsa"
+lemm17_part8_lzsa:
+.incbin "music/lemm17.part8.lzsa"
 
-
-level2_intro_text:
-.byte  0, 8,"LEVEL 2",0
-.byte  9, 8,"ONLY FLOATERS CAN SURVIVE THIS",0
-.byte  9,12,"NUMBER OF LEMMINGS 10",0
-.byte 12,14,"10%  TO BE SAVED",0
-.byte 12,16,"RELEASE RATE 50",0
+level4_intro_text:
+.byte  0, 8,"LEVEL 4",0
+.byte 12, 8,"DUCK A L'ORANGE",0
+.byte  9,12,"NUMBER OF LEMMINGS 80",0
+.byte 12,14,"50%  TO BE SAVED",0
+.byte 12,16,"RELEASE RATE 99",0
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0

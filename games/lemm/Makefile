@@ -9,7 +9,7 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk/empty.dsk
 LINKER_SCRIPTS = ../../linker_scripts
 
-all:	lemm.dsk
+all:	lemm.dsk hr_lemm.dsk
 
 #lemm.dsk:	HELLO LEMM LEMM_TEST
 #	cp $(EMPTY_DISK) lemm.dsk
@@ -36,6 +36,28 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 	$(DOS33_RAW) lemm.dsk  27 0 LEVEL8     0   0
 	$(DOS33_RAW) lemm.dsk  30 0 LEVEL9     0   0
 	$(DOS33_RAW) lemm.dsk  33 0 LEVEL10    0   0
+
+
+hr_lemm.dsk:	QBOOT QLOAD HR_LEMM \
+	HR_LEVEL1 HR_LEVEL2 HR_LEVEL3 HR_LEVEL4 HR_LEVEL5 \
+	LEVEL6 LEVEL7 LEVEL8 LEVEL9 LEVEL10
+	cp $(EMPTY_DISK) hr_lemm.dsk
+	$(DOS33_RAW) hr_lemm.dsk  0  0 QBOOT      0   1
+	$(DOS33_RAW) hr_lemm.dsk  0  2 QBOOT      1   1
+	$(DOS33_RAW) hr_lemm.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) hr_lemm.dsk  1  0 QLOAD      0   0
+	$(DOS33_RAW) hr_lemm.dsk  3  0 HR_LEMM    0   0
+	$(DOS33_RAW) hr_lemm.dsk  6  0 HR_LEVEL1  0   0
+	$(DOS33_RAW) hr_lemm.dsk  9  0 HR_LEVEL2  0   0
+	$(DOS33_RAW) hr_lemm.dsk  12 0 HR_LEVEL3  0   0
+	$(DOS33_RAW) hr_lemm.dsk  15 0 HR_LEVEL4  0   0
+	$(DOS33_RAW) hr_lemm.dsk  18 0 HR_LEVEL5  0   0
+	$(DOS33_RAW) hr_lemm.dsk  21 0 LEVEL6     0   0
+	$(DOS33_RAW) hr_lemm.dsk  24 0 LEVEL7     0   0
+	$(DOS33_RAW) hr_lemm.dsk  27 0 LEVEL8     0   0
+	$(DOS33_RAW) hr_lemm.dsk  30 0 LEVEL9     0   0
+	$(DOS33_RAW) hr_lemm.dsk  33 0 LEVEL10    0   0
+
 
 
 
@@ -135,7 +157,23 @@ lemm.o:	lemm.s zp.inc hardware.inc qload.inc hgr.inc \
 		interrupt_handler.s keyboard.s \
 		pointer_sprites.inc particle_hgr.s release_lemming.s \
 		title.s audio.s letsgo.s load_music.s
-	ca65 -o lemm.o lemm.s -l lemm.lst
+	ca65 -DHR_VERSION=0 -o lemm.o lemm.s -l lemm.lst
+
+####
+
+HR_LEMM:	hr_lemm.o
+	ld65 -o HR_LEMM hr_lemm.o -C ../../linker_scripts/apple2_6000.inc
+
+hr_lemm.o:	lemm.s zp.inc hardware.inc qload.inc hgr.inc \
+		graphics/sprites.inc \
+		intro_level.s update_time.s draw_flames.s  \
+		draw_door.s move_lemming.s draw_lemming.s \
+		update_menu.s init_level.s \
+		interrupt_handler.s keyboard.s \
+		pointer_sprites.inc particle_hgr.s release_lemming.s \
+		title.s audio.s letsgo.s load_music.s
+	ca65 -DHR_VERSION=1 -o hr_lemm.o lemm.s -l hr_lemm.lst
+
 
 
 ###
@@ -314,9 +352,65 @@ graphics/graphics_test.inc:
 
 ####
 
+HR_LEVEL1:	hr_level1.o
+	ld65 -o HR_LEVEL1 hr_level1.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level1.o:	hr_level1.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level1.inc
+	ca65 -o hr_level1.o hr_level1.s -l hr_level1.lst
+
+####
+
+HR_LEVEL2:	hr_level2.o
+	ld65 -o HR_LEVEL2 hr_level2.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level2.o:	hr_level2.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level2.inc
+	ca65 -o hr_level2.o hr_level2.s -l hr_level2.lst
+
+####
+
+HR_LEVEL3:	hr_level3.o
+	ld65 -o HR_LEVEL3 hr_level3.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level3.o:	hr_level3.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level3.inc
+	ca65 -o hr_level3.o hr_level3.s -l hr_level3.lst
+
+####
+
+HR_LEVEL4:	hr_level4.o
+	ld65 -o HR_LEVEL4 hr_level4.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level4.o:	hr_level4.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level4.inc
+	ca65 -o hr_level4.o hr_level4.s -l hr_level4.lst
+
+####
+
+HR_LEVEL5:	hr_level5.o
+	ld65 -o HR_LEVEL5 hr_level5.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level5.o:	hr_level5.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level5.inc
+	ca65 -o hr_level5.o hr_level5.s -l hr_level5.lst
+
+
+
+
+
+
+####
+
 clean:		
 	rm -f *~ *.o *.lst HELLO LEMM LEMM_TEST generate_common \
 		LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 \
 		LEVEL6 LEVEL7 LEVEL8 LEVEL9 LEVEL10 \
+		HR_LEMM \
+		HR_LEVEL1 HR_LEVEL2 HR_LEVEL3 HR_LEVEL4 HR_LEVEL5 \
 		lemm.inc qload.inc
-

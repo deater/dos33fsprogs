@@ -140,7 +140,7 @@ y_good:
 HPLOT0:
 ;	line from (x,a) to (x+y,a)
 
-	ldy	#2
+	ldy	#4
 	jsr	hgr_hlin
 
 	rts

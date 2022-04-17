@@ -1,81 +1,82 @@
+; Homestar Runner Expansion L5
+
 .include "zp.inc"
 .include "hardware.inc"
 .include "qload.inc"
 .include "lemm.inc"
 .include "lemming_status.inc"
 
-.byte 2		; level 2
+.byte 5		; level 5
 
-do_level2:
-
+do_level5:
 
 	;======================
 	; set up initial stuff
 	;======================
 
-	lda     #0
+	lda	#10
 	sta	CLIMBER_COUNT
-	sta	EXPLODER_COUNT
-	sta	STOPPER_COUNT
+	sta	FLOATER_COUNT
 	sta	BUILDER_COUNT
 	sta	BASHER_COUNT
 	sta	MINER_COUNT
 	sta	DIGGER_COUNT
-	lda	#10
-	sta	FLOATER_COUNT
+	sta	EXPLODER_COUNT
+	sta	STOPPER_COUNT
 
-
-
-	lda	#3
+	lda	#30
 	sta	DOOR_X
-	lda	#4
+	lda	#2
 	sta	DOOR_Y
 
-	lda	#7
+	lda	#33
 	sta	INIT_X
-	lda	#15
+	lda	#13
 	sta	INIT_Y
 
 	; flame locations
 
-	lda	#29			; 196
+	lda	#3			;
 	sta	l_flame_x_smc+1
-	lda	#122
+	lda	#59
 	sta	l_flame_y_smc+1
-        sta	r_flame_y_smc+1
 
-	lda	#33			; 245
+	lda	#15			;
 	sta	r_flame_x_smc+1
+	lda	#102			;
+        sta	r_flame_y_smc+1
 
 	; door exit location
 
-	lda	#29			;
+	lda	#7			;
 	sta	exit_x1_smc+1
-	lda	#33
+	lda	#10
 	sta	exit_x2_smc+1
 
-	lda	#119
+	lda	#110
 	sta	exit_y1_smc+1
-	lda	#144
+	lda	#140
 	sta	exit_y2_smc+1
 
-	lda	#$10			; BCD
-	sta	PERCENT_NEEDED
-	sta	PERCENT_ADD
 
 	;==============
 	; set up intro
 	;==============
 
-	lda	#<level2_preview_lzsa
+	lda	#<hr_level5_preview_lzsa
 	sta	level_preview_l_smc+1
-	lda	#>level2_preview_lzsa
+	lda	#>hr_level5_preview_lzsa
 	sta	level_preview_h_smc+1
 
-	lda	#<level2_intro_text
+	lda	#<level5_intro_text
 	sta	intro_text_smc_l+1
-	lda	#>level2_intro_text
+	lda	#>level5_intro_text
 	sta	intro_text_smc_h+1
+
+	lda	#$20			; BCD
+	sta	PERCENT_NEEDED
+	lda	#$10
+	sta	PERCENT_ADD
 
 
 	;==============
@@ -90,14 +91,14 @@ do_level2:
 
 	; set up first song
 
-	lda	#<music8_parts_l
+	lda	#<music5_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music8_parts_l
+	lda	#>music5_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music8_parts_h
+	lda	#<music5_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music8_parts_h
+	lda	#>music5_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -134,18 +135,18 @@ do_level2:
 	bit	HIRES
 	bit	FULLGR
 
-	lda     #<level2_lzsa
+	lda     #<hr_level5_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_lzsa
+	lda     #>hr_level5_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda     #<level2_lzsa
+	lda     #<hr_level5_lzsa
 	sta     getsrc_smc+1	; LZSA_SRC_LO
-	lda     #>level2_lzsa
+	lda     #>hr_level5_lzsa
 	sta     getsrc_smc+2	; LZSA_SRC_HI
 
 	lda	#$40
@@ -159,10 +160,11 @@ do_level2:
 
 	lda	#$FF
 	sta	OVER_LEMMING
-	lda	#10
+	lda	#20
 	sta	CURSOR_X
-	lda	#100
+	lda	#50
 	sta	CURSOR_Y
+
 
 	;=======================
 	; init vars
@@ -181,7 +183,7 @@ do_level2:
 
 	jsr	init_level
 
-	jsr	update_remaining_all
+	jsr     update_remaining_all
 
 	;=======================
 	; Play "Let's Go"
@@ -195,7 +197,7 @@ do_level2:
 	; Main Loop
 	;===================
 	;===================
-l2_main_loop:
+l5_main_loop:
 
 	;=========================
 	; load next chunk of music
@@ -205,16 +207,16 @@ l2_main_loop:
 	jsr	load_music
 
 
-	;=========================
-	; open door
-	;=========================
+
+l5_no_load_chunk:
+
 
 	lda	DOOR_OPEN
-	bne	l2_door_is_open
+	bne	l5_door_is_open
 
 	jsr	draw_door
 
-l2_door_is_open:
+l5_door_is_open:
 
 	;======================
 	; release lemmings
@@ -222,16 +224,27 @@ l2_door_is_open:
 
 	jsr	release_lemming
 
-	;======================
+	;=====================
 	; animate flames
-	;======================
-
+	;=====================
 
 	jsr	draw_flames
 
+	;=====================
+	; draw level animation
+	;=====================
+
+	jsr	flame_thrower
+
+	;====================
+	; update timer
+	;====================
+
 	jsr	update_timer
 
+	;====================
 	; main drawing loop
+	;====================
 
 	jsr	erase_lemming
 
@@ -245,60 +258,127 @@ l2_door_is_open:
 
 	jsr	draw_pointer
 
-	; wait a bit
-
-	lda	#$f0
+	lda	#$ff
 	jsr	wait
 
 	inc	FRAMEL
 
 	lda	LEVEL_OVER
-	bne	l2_level_over
+	bne	l5_level_over
 
-	jmp	l2_main_loop
+	jmp	l5_main_loop
 
 
-l2_level_over:
+l5_level_over:
 
 	rts
 
-
 .include "update_timer.s"
 
-.include "graphics/graphics_level2.inc"
+.include "hr_graphics/graphics_hr_level5.inc"
 
 
-music8_parts_h:
-	.byte >lemm8_part1_lzsa,>lemm8_part2_lzsa,>lemm8_part3_lzsa
-	.byte >lemm8_part4_lzsa,>lemm8_part5_lzsa,>lemm8_part6_lzsa
+music5_parts_h:
+	.byte >lemm5_part1_lzsa,>lemm5_part2_lzsa,>lemm5_part3_lzsa
 	.byte $00
 
-music8_parts_l:
-	.byte <lemm8_part1_lzsa,<lemm8_part2_lzsa,<lemm8_part3_lzsa
-	.byte <lemm8_part4_lzsa,<lemm8_part5_lzsa,<lemm8_part6_lzsa
+music5_parts_l:
+	.byte <lemm5_part1_lzsa,<lemm5_part2_lzsa,<lemm5_part3_lzsa
+
+lemm5_part1_lzsa:
+.incbin "hr_music/lemm5.part1.lzsa"
+lemm5_part2_lzsa:
+.incbin "hr_music/lemm5.part2.lzsa"
+lemm5_part3_lzsa:
+.incbin "hr_music/lemm5.part3.lzsa"
 
 
-
-lemm8_part1_lzsa:
-.incbin "music/lemm8.part1.lzsa"
-lemm8_part2_lzsa:
-.incbin "music/lemm8.part2.lzsa"
-lemm8_part3_lzsa:
-.incbin "music/lemm8.part3.lzsa"
-lemm8_part4_lzsa:
-.incbin "music/lemm8.part4.lzsa"
-lemm8_part5_lzsa:
-.incbin "music/lemm8.part5.lzsa"
-lemm8_part6_lzsa:
-.incbin "music/lemm8.part6.lzsa"
-
-
-level2_intro_text:
-.byte  0, 8,"LEVEL 2",0
-.byte  9, 8,"ONLY FLOATERS CAN SURVIVE THIS",0
-.byte  9,12,"NUMBER OF LEMMINGS 10",0
-.byte 12,14,"10%  TO BE SAVED",0
+level5_intro_text:
+.byte  0, 8,"LEVEL 5",0
+.byte  8, 8,"BURNINATING THE COUNTRYSIDE",0
+.byte  9,12,"NUMBER OF LEMMINGS 50",0
+.byte 12,14,"20%  TO BE SAVED",0
 .byte 12,16,"RELEASE RATE 50",0
 .byte 13,18,"TIME 5 MINUTES",0
 .byte 15,20,"RATING FUN",0
 .byte  8,23,"PRESS RETURN TO CONTINUE",0
+
+
+.include "graphics/l6_animation.inc"
+
+	;======================
+	; flame thrower
+	;======================
+flame_thrower:
+
+	; erase old
+
+	; X a->x, savey1->savey2
+
+	lda	#51
+	sta	SAVED_Y1
+	lda	#66
+	sta	SAVED_Y2
+
+	lda	#7
+	ldx	#15
+
+	jsr	hgr_partial_restore
+
+	; draw new
+
+	lda	FRAMEL
+	and	#$7
+	tay
+
+	lda	flame_sprites_l,Y
+	sta	INL
+	lda	flame_sprites_h,Y
+	sta	INH
+
+	lda	flame_sprites_x,Y
+	sta	XPOS
+
+	lda	flame_sprites_y,Y
+	sta	YPOS
+
+        jsr	hgr_draw_sprite
+
+	rts
+
+flame_sprites_l:
+	.byte <flame0_sprite,<flame1_sprite
+	.byte <flame2_sprite,<flame3_sprite
+	.byte <flame4_sprite,<flame5_sprite
+	.byte <flame6_sprite,<flame7_sprite
+
+flame_sprites_h:
+	.byte >flame0_sprite,>flame1_sprite
+	.byte >flame2_sprite,>flame3_sprite
+	.byte >flame4_sprite,>flame5_sprite
+	.byte >flame6_sprite,>flame7_sprite
+
+flame_sprites_x:
+;        .byte 16,14
+;        .byte 13,13
+;        .byte 12,12
+;        .byte 10,12
+	.byte 12,10
+	.byte 9,9
+	.byte 8,8
+	.byte 6,8
+
+
+; 15x56
+flame_sprites_y:
+;	.byte 27,26
+;	.byte 24,25
+;	.byte 26,23
+;	.byte 21,21
+	.byte 57,56
+	.byte 54,55
+	.byte 56,53
+	.byte 51,51
+
+
+
