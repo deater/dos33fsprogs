@@ -284,7 +284,7 @@ music2_parts_h:
 	.byte >lemm2_part7_lzsa,>lemm2_part8_lzsa,>lemm2_part9_lzsa
 	.byte >lemm2_part10_lzsa,>lemm2_part11_lzsa,>lemm2_part12_lzsa
 	.byte >lemm2_part13_lzsa,>lemm2_part14_lzsa,>lemm2_part15_lzsa
-	.byte >lemm2_part16_lzsa; ,>lemm2_part17_lzsa,>lemm2_part18_lzsa
+;	.byte >lemm2_part16_lzsa,>lemm2_part17_lzsa,>lemm2_part18_lzsa
 	.byte $00
 
 music2_parts_l:
@@ -293,7 +293,7 @@ music2_parts_l:
 	.byte <lemm2_part7_lzsa,<lemm2_part8_lzsa,<lemm2_part9_lzsa
 	.byte <lemm2_part10_lzsa,<lemm2_part11_lzsa,<lemm2_part12_lzsa
 	.byte <lemm2_part13_lzsa,<lemm2_part14_lzsa,<lemm2_part15_lzsa
-	.byte <lemm2_part16_lzsa; ,<lemm2_part17_lzsa,<lemm2_part18_lzsa
+;	.byte <lemm2_part16_lzsa,<lemm2_part17_lzsa,<lemm2_part18_lzsa
 
 
 
@@ -327,8 +327,8 @@ lemm2_part14_lzsa:
 .incbin "hr_music/lemm2.part14.lzsa"
 lemm2_part15_lzsa:
 .incbin "hr_music/lemm2.part15.lzsa"
-lemm2_part16_lzsa:
-.incbin "hr_music/lemm2.part16.lzsa"
+;lemm2_part16_lzsa:
+;.incbin "hr_music/lemm2.part16.lzsa"
 ;lemm2_part17_lzsa:
 ;.incbin "hr_music/lemm2.part17.lzsa"
 ;lemm2_part18_lzsa:
