@@ -40,7 +40,7 @@ lemm.dsk:	QBOOT QLOAD LEMM \
 
 hr_lemm.dsk:	QBOOT QLOAD HR_LEMM \
 	HR_LEVEL1 HR_LEVEL2 HR_LEVEL3 HR_LEVEL4 HR_LEVEL5 \
-	LEVEL6 LEVEL7 LEVEL8 LEVEL9 LEVEL10
+	HR_LEVEL6 HR_LEVEL7 LEVEL8 LEVEL9 LEVEL10
 	cp $(EMPTY_DISK) hr_lemm.dsk
 	$(DOS33_RAW) hr_lemm.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) hr_lemm.dsk  0  2 QBOOT      1   1
@@ -52,8 +52,8 @@ hr_lemm.dsk:	QBOOT QLOAD HR_LEMM \
 	$(DOS33_RAW) hr_lemm.dsk  12 0 HR_LEVEL3  0   0
 	$(DOS33_RAW) hr_lemm.dsk  15 0 HR_LEVEL4  0   0
 	$(DOS33_RAW) hr_lemm.dsk  18 0 HR_LEVEL5  0   0
-	$(DOS33_RAW) hr_lemm.dsk  21 0 LEVEL6     0   0
-	$(DOS33_RAW) hr_lemm.dsk  24 0 LEVEL7     0   0
+	$(DOS33_RAW) hr_lemm.dsk  21 0 HR_LEVEL6  0   0
+	$(DOS33_RAW) hr_lemm.dsk  24 0 HR_LEVEL7  0   0
 	$(DOS33_RAW) hr_lemm.dsk  27 0 LEVEL8     0   0
 	$(DOS33_RAW) hr_lemm.dsk  30 0 LEVEL9     0   0
 	$(DOS33_RAW) hr_lemm.dsk  33 0 LEVEL10    0   0
@@ -399,6 +399,27 @@ hr_level5.o:	hr_level5.s zp.inc hardware.inc qload.inc lemm.inc \
 		release_lemming.s \
 		hr_graphics/graphics_hr_level5.inc
 	ca65 -o hr_level5.o hr_level5.s -l hr_level5.lst
+
+####
+
+HR_LEVEL6:	hr_level6.o
+	ld65 -o HR_LEVEL6 hr_level6.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level6.o:	hr_level6.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level6.inc
+	ca65 -o hr_level6.o hr_level6.s -l hr_level6.lst
+
+####
+
+HR_LEVEL7:	hr_level7.o
+	ld65 -o HR_LEVEL7 hr_level7.o -C ../../linker_scripts/apple2_9000.inc
+
+hr_level7.o:	hr_level7.s zp.inc hardware.inc qload.inc lemm.inc \
+		release_lemming.s \
+		hr_graphics/graphics_hr_level7.inc
+	ca65 -o hr_level7.o hr_level7.s -l hr_level7.lst
+
 
 
 
