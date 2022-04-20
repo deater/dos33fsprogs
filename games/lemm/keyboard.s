@@ -459,10 +459,21 @@ make_basher:
 	lda	BASHER_COUNT		; only if we have some left
 	beq	done_make_basher
 
-	; only do it if walking
+
+	; only do it if walking, digging, mining, building, bashing
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
+	beq	yes_make_basher
+	cmp	#LEMMING_DIGGING
+	beq	yes_make_basher
+	cmp	#LEMMING_MINING
+	beq	yes_make_basher
+	cmp	#LEMMING_BUILDING
+	beq	yes_make_basher
+	cmp	#LEMMING_BASHING
 	bne	done_make_basher
+
+yes_make_basher:
 
 	; see if level #9
 	lda	WHICH_LEVEL
@@ -492,10 +503,20 @@ make_miner:
 	lda	MINER_COUNT		; only if we have some left
 	beq	done_make_miner
 
-	; only do it if walking
+	; only do it if walking, digging, mining, building, bashing
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
+	beq	yes_make_miner
+	cmp	#LEMMING_DIGGING
+	beq	yes_make_miner
+	cmp	#LEMMING_MINING
+	beq	yes_make_miner
+	cmp	#LEMMING_BUILDING
+	beq	yes_make_miner
+	cmp	#LEMMING_BASHING
 	bne	done_make_miner
+
+yes_make_miner:
 
 	lda	#LEMMING_MINING
 	sta	lemming_status,Y
@@ -515,11 +536,20 @@ make_digger:
 	lda	DIGGER_COUNT		; only if we have some left
 	beq	done_make_digger
 
-	; only do it if walking
+	; only do it if walking, digging, mining, building, bashing
 	lda	lemming_status,Y
 	cmp	#LEMMING_WALKING
+	beq	yes_make_digger
+	cmp	#LEMMING_DIGGING
+	beq	yes_make_digger
+	cmp	#LEMMING_MINING
+	beq	yes_make_digger
+	cmp	#LEMMING_BUILDING
+	beq	yes_make_digger
+	cmp	#LEMMING_BASHING
 	bne	done_make_digger
 
+yes_make_digger:
 	lda	#LEMMING_DIGGING
 	sta	lemming_status,Y
 
