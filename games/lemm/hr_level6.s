@@ -91,14 +91,14 @@ do_level6:
 
 	; set up first song
 
-	lda	#<music8_parts_l
+	lda	#<never_parts_l
 	sta	chunk_l_smc+1
-	lda	#>music8_parts_l
+	lda	#>never_parts_l
 	sta	chunk_l_smc+2
 
-	lda	#<music8_parts_h
+	lda	#<never_parts_h
 	sta	chunk_h_smc+1
-	lda	#>music8_parts_h
+	lda	#>never_parts_h
 	sta	chunk_h_smc+2
 
 
@@ -269,29 +269,53 @@ l6_level_over:
 .include "hr_graphics/graphics_hr_level6.inc"
 
 
-music8_parts_h:
-	.byte >lemm8_part1_lzsa,>lemm8_part2_lzsa,>lemm8_part3_lzsa
-	.byte >lemm8_part4_lzsa,>lemm8_part5_lzsa,>lemm8_part6_lzsa
+never_parts_h:
+	.byte >never_part1_lzsa,>never_part2_lzsa,>never_part3_lzsa
+	.byte >never_part4_lzsa,>never_part5_lzsa,>never_part6_lzsa
+	.byte >never_part7_lzsa,>never_part8_lzsa,>never_part9_lzsa
+	.byte >never_part10_lzsa,>never_part11_lzsa,>never_part12_lzsa
+	.byte >never_part13_lzsa,>never_part14_lzsa; ,>never_part15_lzsa
 	.byte $00
 
-music8_parts_l:
-	.byte <lemm8_part1_lzsa,<lemm8_part2_lzsa,<lemm8_part3_lzsa
-	.byte <lemm8_part4_lzsa,<lemm8_part5_lzsa,<lemm8_part6_lzsa
+never_parts_l:
+	.byte <never_part1_lzsa,<never_part2_lzsa,<never_part3_lzsa
+	.byte <never_part4_lzsa,<never_part5_lzsa,<never_part6_lzsa
+	.byte <never_part7_lzsa,<never_part8_lzsa,<never_part9_lzsa
+	.byte <never_part10_lzsa,<never_part11_lzsa,<never_part12_lzsa
+	.byte <never_part13_lzsa,<never_part14_lzsa ;,<never_part15_lzsa
 
 
+never_part1_lzsa:
+.incbin "hr_music/never.part1.lzsa"
+never_part2_lzsa:
+.incbin "hr_music/never.part2.lzsa"
+never_part3_lzsa:
+.incbin "hr_music/never.part3.lzsa"
+never_part4_lzsa:
+.incbin "hr_music/never.part4.lzsa"
+never_part5_lzsa:
+.incbin "hr_music/never.part5.lzsa"
+never_part6_lzsa:
+.incbin "hr_music/never.part6.lzsa"
+never_part7_lzsa:
+.incbin "hr_music/never.part7.lzsa"
+never_part8_lzsa:
+.incbin "hr_music/never.part8.lzsa"
+never_part9_lzsa:
+.incbin "hr_music/never.part9.lzsa"
+never_part10_lzsa:
+.incbin "hr_music/never.part10.lzsa"
+never_part11_lzsa:
+.incbin "hr_music/never.part11.lzsa"
+never_part12_lzsa:
+.incbin "hr_music/never.part12.lzsa"
+never_part13_lzsa:
+.incbin "hr_music/never.part13.lzsa"
+never_part14_lzsa:
+.incbin "hr_music/never.part14.lzsa"
+;never_part15_lzsa:
+;.incbin "hr_music/never.part15.lzsa"
 
-lemm8_part1_lzsa:
-.incbin "music/lemm8.part1.lzsa"
-lemm8_part2_lzsa:
-.incbin "music/lemm8.part2.lzsa"
-lemm8_part3_lzsa:
-.incbin "music/lemm8.part3.lzsa"
-lemm8_part4_lzsa:
-.incbin "music/lemm8.part4.lzsa"
-lemm8_part5_lzsa:
-.incbin "music/lemm8.part5.lzsa"
-lemm8_part6_lzsa:
-.incbin "music/lemm8.part6.lzsa"
 
 
 level6_intro_text:
