@@ -12,11 +12,11 @@ all:	scroller.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-scroller.dsk:	$(DOS33) HELLO HEXAGON
+scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT
 	cp $(EMPTY_DISK)/empty.dsk scroller.dsk
 	$(DOS33) -y scroller.dsk SAVE A HELLO
-	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 HEXAGON
-#	$(DOS33) -y scroller.dsk BSAVE -a 0x36C PARTICLE_BOT
+	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 DIAMOND
+	$(DOS33) -y scroller.dsk BSAVE -a 0x36B DIAMOND_BOT
 
 ###
 
@@ -25,23 +25,23 @@ HELLO:	hello.bas
 
 ###
 
-HEXAGON:   hexagon.o
-	ld65 -o HEXAGON hexagon.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+DIAMOND:   diamond.o
+	ld65 -o DIAMOND diamond.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-hexagon.o: hexagon.s
-	ca65 -o hexagon.o hexagon.s -l hexagon.lst
+diamond.o: diamond.s
+	ca65 -o diamond.o diamond.s -l diamond.lst
 
 ###
 
-HEXAGON_BOT:   hexagon_bot.o
-	ld65 -o HEXAGON_BOT hexagon_bot.o -C $(LINKERSCRIPTS)/apple2_36c.inc
+DIAMOND_BOT:   diamond_bot.o
+	ld65 -o DIAMOND_BOT diamond_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
-hexagon_bot.o: hexagon_bot.s
-	ca65 -o hexagon_bot.o hexagon_bot.s -l hexagon_bot.lst
+diamond_bot.o: diamond_bot.s
+	ca65 -o diamond_bot.o diamond_bot.s -l diamond_bot.lst
 
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO HEXAGON HEXAGON_BOT
+	rm -f *~ *.o *.lst HELLO DIAMOND DIAMOND_BOT
 
