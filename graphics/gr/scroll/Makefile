@@ -18,8 +18,7 @@ scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT RANDOM RANDOM_BOT
 	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 DIAMOND
 	$(DOS33) -y scroller.dsk BSAVE -a 0x36B DIAMOND_BOT
 	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 RANDOM
-#	$(DOS33) -y scroller.dsk BSAVE -a 0x36B RANDOM_BOT
-	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 RANDOM_BOT
+	$(DOS33) -y scroller.dsk BSAVE -a 0x36B RANDOM_BOT
 
 ###
 
@@ -54,8 +53,7 @@ random.o: random.s
 
 
 RANDOM_BOT:   random_bot.o
-#	ld65 -o RANDOM_BOT random_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
-	ld65 -o RANDOM_BOT random_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o RANDOM_BOT random_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
 random_bot.o: random_bot.s
 	ca65 -o random_bot.o random_bot.s -l random_bot.lst

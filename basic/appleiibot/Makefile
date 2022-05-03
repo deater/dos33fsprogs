@@ -22,7 +22,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	OVAL.BAS OVAL_HGR.BAS MOVING.BAS THICK_SINE.BAS TURKEY.BAS \
 	FLAME_HGR.BAS RECT.BAS SNOWY.BAS EDGAR.BAS OOPS4.BAS OOPS3.BAS \
 	HORROR.BAS DIAMOND.BAS LEMM.BAS OOPS.BAS SPLIT.BAS PARTICLE.BAS \
-	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS
+	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -120,6 +120,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A PARTICLE.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PARTICLE_HGR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A DIAMOND_SCROLL.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A RANDOM_SCROLL.BAS
 
 ####
 
@@ -675,6 +676,12 @@ PARTICLE_HGR.BAS:	particle_hgr.bas
 
 DIAMOND_SCROLL.BAS:	diamond_scroll.bas
 	$(TOKENIZE) < diamond_scroll.bas > DIAMOND_SCROLL.BAS
+
+####
+
+RANDOM_SCROLL.BAS:	random_scroll.bas
+	$(TOKENIZE) < random_scroll.bas > RANDOM_SCROLL.BAS
+
 
 ####
 

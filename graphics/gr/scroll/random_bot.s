@@ -1,7 +1,15 @@
 ; random scroll bot
 
-; 126 bytes
-; 124 bytes (optimize PAGE load)
+; 162 bytes -- working code
+; 158 bytes -- play with bitmap
+; 156 bytes -- use HGR2 to init screen (and A)
+; 155 bytes -- remove use of LINE count
+; 155 bytes -- use ZP for output
+; 153 bytes -- count X backwards
+; 150 bytes -- use $28 to center Y trick
+; 146 bytes -- inline update scroll, makes it scroll right rather than up
+; 144 bytes -- share common sta OUTH
+; 141 bytes -- more wrapping loop stuff
 
 ; *****  *****
 ; *****  *****
@@ -19,6 +27,7 @@ PAGE1		= $C054
 PAGE2		= $C055
 LORES		= $C056		; Enable LORES graphics
 
+HGR2		= $F3D8
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
 SETGR		= $FB40
@@ -27,8 +36,8 @@ WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 GBASL		= $26
 GBASH		= $27
 
-B1		= $FC
-B2		= $FD
+OUTL		= $FC
+OUTH		= $FD
 
 PAGE		= $FE
 LINE		= $FF
@@ -37,56 +46,82 @@ pattern1	= $f000		; location  in memory
 
 random:
 
-	jsr	SETGR		; set LORES
-	bit	FULLGR		; display FULLSCREEN
+	jsr	HGR2		; set HIRES, FULLSCREEN
+	bit	LORES		; set LORES
 
-	lda	#$0		; reset to beginning
-	sta	PAGE
+	; A is 0 from HGR2
+	sta	OUTL
 
-random_loop:
+;	lda	#$4
 
-	lda	#8		; lines to count (*3=24)
-	sta	LINE
+main_loop:
+	sta	PAGE		; start at page 1
+
+	asl		; make OUTH $4 or $8 depending on value in PAGE
+			; which we have in A above or at end of loop
+	asl		; C is 0
+	adc	#4
+
+	sta	OUTH
+
+	lda	#200
+	jsr	WAIT
+
 
 	;============================
 	; draw an interleaved line
 
 line_loop:
-	ldx	#119
+	ldy	#119
 
 screen_loop:
 
-	txa			 ; extrapolate Y from X
+	tya			 ; extrapolate Y from X
 	and	#$7
-	tay
+	tax
 
 pattern_smc:
-	lda	pattern1,Y
+	lda	pattern1,X
 
 inner_loop_smc:
-	sta	$400,X
 
-	dex
+	sta	(OUTL),Y
+
+	dey
 	bpl	screen_loop
 
 	;=================================
 	; move to next pattern
-	; assume we are in same 256 byte page (so high byte never change)
 
-	jsr	scroll_pattern
+;	jsr	scroll_pattern
+
+scroll_pattern:
+	clc
+	lda	pattern_smc+1
+	adc	#8
+	and	#$1f
+	sta	pattern_smc+1
+;	rts
+
 
 	; move to next line
 
 	clc
-	lda	inner_loop_smc+1
+	lda	OUTL
 	adc	#$80
-	sta	inner_loop_smc+1	; FIXME just inc if carry set
-	bcc	noflo
-	inc	inner_loop_smc+2
-noflo:
+	sta	OUTL
 
-	dec	LINE
+	bcc	line_loop
+
+	; A is $00 if we get here
+
+	adc	OUTH
+	sta	OUTH
+
+	and	#$3
 	bne	line_loop
+
+done_bg:
 
 	;=======================================
 	; done drawing frame
@@ -96,38 +131,39 @@ noflo:
 	;======================
 	; draw bitmap
 
-	ldx	#0
+	ldx	#7
 boxloop:
 	txa
-	clc
-	adc	#8
-	jsr	GBASCALC
+	jsr	GBASCALC		; calc address of X
+					; note we center to middle of screen
+					; by noting the middle 8 lines
+					; are offset by $28 from first 8 lines
 
 	; GBASL is in A at this point
 
 	clc
-	adc	#12
-	sta	GBASL
+	adc	#12+$28
+	sta	GBASL		; center x-coord and y-coord at same time
 
-	lda	PAGE
+
+	lda	PAGE		; want to add 0 or 4 (not 0 or 1)
 	asl
-	asl
-;	clc
+	asl			; this sets C to 0
 	adc	GBASH
 	sta	GBASH
-
-	lda	bitmap,X
-	sta	B1
-	lda	bitmap2,X
-	sta	B2
 
 
 	ldy	#15
 draw_line_loop:
 
-	lda	#$00
-	ror	B1
-	ror	B2
+	lda	bitmap2,X	; get low bit of bitmap2 into carry
+	lsr
+
+	lda	#$00		; black is default color
+
+	ror	bitmap,X	; 16-bit rotate (in memory)
+	ror	bitmap2,X
+
 	bcc	its_black
 
 	lda	#$ff
@@ -137,15 +173,18 @@ its_black:
 	dey
 	bpl	draw_line_loop
 
-	inx
-	cpx	#8
-	bne	boxloop
+	dex
+	bpl	boxloop
 
 
 	;=========================
 	; scroll one line
 
-	jsr	scroll_pattern
+;	jsr	scroll_pattern
+
+	; to scroll up need to add 8?
+	inc	pattern_smc+1
+
 
 	; switch page
 	lda	PAGE
@@ -154,24 +193,28 @@ its_black:
 	ldy	PAGE1,X		; flip page
 
 	eor	#$1
-	sta	PAGE		; is 4 or 8
+;	sta	PAGE		; is 0 or 1
 
 	; reset page smc
 
-	asl
-	asl
-;	clc
-	adc	#4
-	sta	inner_loop_smc+2
+	; OUTH is either C00 or 800
+	;	want C00 to go to 400 and 800 to stay the same
 
-	lda	#200
-	jsr	WAIT
+;	asl
+;	asl		; C is 0
+;	adc	#4
+
+
+;	sta	OUTH
+
+;	lda	#200
+;	jsr	WAIT
 
 	; A is 0 after
 
-	beq	random_loop
+	jmp	main_loop		; bra
 
-
+.if 0
 scroll_pattern:
 	clc
 	lda	pattern_smc+1
@@ -179,6 +222,8 @@ scroll_pattern:
 	and	#$1f
 	sta	pattern_smc+1
 	rts
+
+.endif
 
 ;01234567|01234567
 ;
@@ -212,6 +257,8 @@ bitmap2:
 
 
 ; want this at $3F5
+
+; we are 141 bytes long, so 36b
 
 	jmp	random
 
