@@ -12,11 +12,14 @@ all:	scroller.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT
+scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT RANDOM RANDOM_BOT
 	cp $(EMPTY_DISK)/empty.dsk scroller.dsk
 	$(DOS33) -y scroller.dsk SAVE A HELLO
 	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 DIAMOND
 	$(DOS33) -y scroller.dsk BSAVE -a 0x36B DIAMOND_BOT
+	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 RANDOM
+#	$(DOS33) -y scroller.dsk BSAVE -a 0x36B RANDOM_BOT
+	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 RANDOM_BOT
 
 ###
 
@@ -39,9 +42,27 @@ DIAMOND_BOT:   diamond_bot.o
 diamond_bot.o: diamond_bot.s
 	ca65 -o diamond_bot.o diamond_bot.s -l diamond_bot.lst
 
+###
+
+RANDOM:   random.o
+	ld65 -o RANDOM random.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+random.o: random.s
+	ca65 -o random.o random.s -l random.lst
 
 ###
 
+
+RANDOM_BOT:   random_bot.o
+#	ld65 -o RANDOM_BOT random_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+	ld65 -o RANDOM_BOT random_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+random_bot.o: random_bot.s
+	ca65 -o random_bot.o random_bot.s -l random_bot.lst
+
+###
+
+
 clean:	
-	rm -f *~ *.o *.lst HELLO DIAMOND DIAMOND_BOT
+	rm -f *~ *.o *.lst HELLO DIAMOND DIAMOND_BOT RANDOM
 
