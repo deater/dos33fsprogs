@@ -12,14 +12,14 @@ all:	scroller.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT RANDOM RANDOM_BOT
+scroller.dsk:	$(DOS33) HELLO DIAMOND DIAMOND_BOT RANDOM RANDOM_BOT RANDOM_128
 	cp $(EMPTY_DISK)/empty.dsk scroller.dsk
 	$(DOS33) -y scroller.dsk SAVE A HELLO
 	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 DIAMOND
 	$(DOS33) -y scroller.dsk BSAVE -a 0x36B DIAMOND_BOT
 	$(DOS33) -y scroller.dsk BSAVE -a 0xc00 RANDOM
 	$(DOS33) -y scroller.dsk BSAVE -a 0x36B RANDOM_BOT
-
+	$(DOS33) -y scroller.dsk BSAVE -a 0x70 RANDOM_128
 ###
 
 HELLO:	hello.bas
@@ -48,6 +48,14 @@ RANDOM:   random.o
 
 random.o: random.s
 	ca65 -o random.o random.s -l random.lst
+
+###
+
+RANDOM_128:   random_128.o
+	ld65 -o RANDOM_128 random_128.o -C $(LINKERSCRIPTS)/apple2_70_zp.inc
+
+random_128.o: random_128.s
+	ca65 -o random_128.o random_128.s -l random_128.lst
 
 ###
 
