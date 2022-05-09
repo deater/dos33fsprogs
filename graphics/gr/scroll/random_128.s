@@ -10,18 +10,11 @@
 ; 127 bytes -- don't wrap pattern lookup at 8
 ; 126 bytes -- use X for loop
 
-; *****  *****
-; *****  *****
-;    **  **                 @@  @@@@@@
-;    **  **                 @@  @@
-;    **  **             @@@@@@  @@@@@@  @@@@@@
-; *****  *****          @@  @@      @@  @@
-; *****  *****          @@@@@@  @@@@@@  @@
-
 
 ; by Vince `deater` Weaver
 
-SETTEXT		= $C051
+SET_GR		= $C050
+SET_TEXT	= $C051
 FULLGR		= $C052
 PAGE1		= $C054
 PAGE2		= $C055
@@ -49,6 +42,7 @@ pattern1	= $f000		; location  in memory
 .globalzp       pattern_smc
 .globalzp	bitmap
 .globalzp	bitmap2
+.globalzp	inner_loop_smc
 
 
 
@@ -205,6 +199,38 @@ its_black:
 	bpl	main_loop		; bra
 
 
+;012|456|012|456|
+;@@@@@@@@@@@@@@@@'
+;@@@@ @    @@@@@@'
+;@@@@ @ @@@@@@@@@'
+;@    @    @    @'
+;@ @@ @@@@ @ @@@@'
+;@    @    @ @@@@'
+;@@@@@@@@@@@@@@@@'
+;
+
+bitmap:
+	.byte $FF ;,$FF
+	.byte $F4 ;,$3F
+	.byte $F5 ;,$FF
+	.byte $84 ;,$21
+	.byte $B7 ;,$AF
+	.byte $84 ;,$2F
+	.byte $FF ;,$FF
+	.byte $00 ;,$00
+
+bitmap2:
+	.byte $FF
+	.byte $3F
+	.byte $FF
+	.byte $21
+	.byte $AF
+	.byte $2F
+	.byte $FF
+	.byte $00
+
+
+
 ;01234567|01234567
 ;
 ;   @@@@   @@@@
@@ -214,6 +240,7 @@ its_black:
 ;   @@@@   @@@@
 ;
 ;@@@@@@@@@@@@@@@@
+.if 0
 bitmap:
 	.byte $FF ;,$FF
 	.byte $E1 ;,$87
@@ -233,4 +260,4 @@ bitmap2:
 	.byte $87
 	.byte $FF
 	.byte $00
-
+.endif
