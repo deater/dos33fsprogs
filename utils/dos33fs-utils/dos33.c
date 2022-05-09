@@ -271,6 +271,10 @@ static int dos33_add_file(unsigned char *vtoc,
 			/* clear the t/s sector */
 			memset(ts_buffer,0,BYTES_PER_SECTOR);
 
+			/* set offset into file */
+			ts_buffer[TSL_OFFSET_H]=get_high_byte(i);
+			ts_buffer[TSL_OFFSET_L]=get_low_byte(i);
+
 			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
 			result=write(fd,ts_buffer,BYTES_PER_SECTOR);
 
@@ -291,10 +295,6 @@ static int dos33_add_file(unsigned char *vtoc,
 				/* point from old ts list to new one we just made */
 				ts_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
 				ts_buffer[TSL_NEXT_SECTOR]=get_low_byte(ts_list);
-
-				/* set offset into file */
-				ts_buffer[TSL_OFFSET_H]=get_high_byte((i-122)*256);
-				ts_buffer[TSL_OFFSET_L]=get_low_byte((i-122)*256);
 
 				/* write out the old t/s list with updated info */
 				lseek(fd,
