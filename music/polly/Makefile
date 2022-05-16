@@ -10,12 +10,13 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	polly.dsk
 
-polly.dsk:	HELLO POLLY BOOP REPO
+polly.dsk:	HELLO POLLY BOOP REPO REPO2
 	cp $(EMPTY_DISK) polly.dsk
 	$(DOS33) -y polly.dsk SAVE A HELLO
 	$(DOS33) -y polly.dsk BSAVE -a 0x1000 POLLY
 	$(DOS33) -y polly.dsk BSAVE -a 0x1000 BOOP
 	$(DOS33) -y polly.dsk BSAVE -a 0x1000 REPO
+	$(DOS33) -y polly.dsk BSAVE -a 0x1000 REPO2
 
 ###
 
@@ -52,6 +53,14 @@ repo.o:	repo.s sample.inc
 
 ###
 
+REPO2: repo2.o
+	ld65 -o REPO2 repo2.o -C ../../linker_scripts/apple2_1000.inc
+
+repo2.o:	repo2.s sample.inc
+	ca65 -o repo2.o repo2.s -l repo2.lst
+
+###
+
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
@@ -59,5 +68,5 @@ HELLO:	hello.bas
 ####
 
 clean:	
-		rm -f *~ *.o *.lst HELLO POLLY BOOP REPO decode_trace
+		rm -f *~ *.o *.lst HELLO POLLY BOOP REPO REPO2 decode_trace
 

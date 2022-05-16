@@ -12,6 +12,7 @@ int main(int argc, char **argv) {
 	int speaker_access;
 	int count=0,which=0;
 	int diffs[MAX];
+	int first=1;
 
 	while(1) {
 		result=fgets(string,BUFSIZ,stdin);
@@ -23,7 +24,13 @@ int main(int argc, char **argv) {
 
 		if (speaker_access) {
 			diffs[count]=cycles-oldcycles;
-			count++;
+			if (first) {
+				/* skip first */
+				first=0;
+			}
+			else {
+				count++;
+			}
 			oldcycles=cycles;
 		}
 
@@ -32,6 +39,46 @@ int main(int argc, char **argv) {
 			exit(1);
 		}
 	}
+
+	/* now print high */
+
+	printf("extra_high_values:\n");
+	for(which=0;which<count;which++) {
+		if ((which%16)==0) {
+			printf(".byte\t");
+		}
+		else {
+			printf(",");
+		}
+		printf("$%02X",(diffs[which]>>16));
+		if ((which%16)!=15) {
+		}
+		else {
+			printf("\n");
+		}
+	}
+	printf("\n.byte\t$FF\n");
+
+
+	/* now print high */
+
+	printf("high_values:\n");
+	for(which=0;which<count;which++) {
+		if ((which%16)==0) {
+			printf(".byte\t");
+		}
+		else {
+			printf(",");
+		}
+		printf("$%02X",(diffs[which]>>8)&0xff);
+		if ((which%16)!=15) {
+		}
+		else {
+			printf("\n");
+		}
+	}
+	printf("\n.byte\t$FF\n");
+
 
 	/* now print low */
 
