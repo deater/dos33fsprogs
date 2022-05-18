@@ -54,10 +54,18 @@ check6:
 
 	cmp	#'6'+$80
 	bne	check7
-;	jsr	drum4
+	jsr	siren
 	jmp	repo2
 
 check7:
+
+	cmp	#'7'+$80
+	bne	check8
+	jsr	siren2
+	jmp	repo2
+
+check8:
+
 
 
 done:
@@ -402,4 +410,104 @@ dcd_inner:
 
 	rts
 
+	;=================
+	;
+siren:
+	; x=0 to 255
+	; delay=14+34*X
+
+	ldx	#0
+siren_xloop:
+	 bit	$C030		; 4
+
+	txa			; 2
+	tay			; 2
+siren_yloop:
+	; need to delay 25 cycles
+
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+
+
+	dey			; 2
+	bne	siren_yloop	; 3
+
+	; need to delay 9 cycles
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+
+
+	inx			; 2
+	bne	siren_xloop	; 3
+
+
+	rts
+
+
+	;=================
+	;
+siren2:
+	; x=0 to 255
+
+	; click + delay=14+34*X
+	; cilck + delay=14+34*(255-X)
+
+	ldx	#0
+siren2_xloop:
+	 bit	$C030		; 4
+
+	txa			; 2
+	tay			; 2
+siren2_yloop:
+	; need to delay 25 cycles
+
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+
+
+	dey			; 2
+	bne	siren2_yloop	; 3
+
+	; need to delay 14 cycles
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+	lda	$0	; 3
+	nop		; 2
+
+	; down
+
+	bit	$C030		; 4
+
+	txa			; 2
+	eor	#$ff		; 2
+	sec			; 2
+	adc	#$FF		; 2
+	tay			; 2
+siren2_yloop2:
+	; need to delay 25 cycles
+
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+	lsr	$0		; 5
+
+
+	dey			; 2
+	bne	siren2_yloop2	; 3
+
+	inx			; 2
+	bne	siren2_xloop	; 3
+
+
+	rts
 
