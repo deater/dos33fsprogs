@@ -13,6 +13,7 @@
 
 ; by Vince `deater` Weaver
 
+SPEAKER		= $C030
 SET_GR		= $C050
 SET_TEXT	= $C051
 FULLGR		= $C052
@@ -65,8 +66,10 @@ main_loop:
 
 	sta	OUTH
 
-	lda	#200
-	jsr	WAIT
+	bit	SPEAKER
+
+;	lda	#200
+;	jsr	WAIT
 
 
 	;============================
