@@ -11,7 +11,11 @@
 /* data packed in as XX YYY ZZZ */
 /* ZZZ = first dir, YYY = next, XX = last, can only be no-draw as 2 bits */
 /*	note XX can't be NUP (00) */
-
+/* */
+/* NUP=0	UP=4 */
+/* NRT=1	RT=5 */
+/* NDN=2	DN=6 */
+/* NLT=3	LT=7 */
 
 #include <stdio.h>
 #include <string.h>
@@ -260,7 +264,7 @@ int main(int argc, char **argv) {
 				/* Try to fit in LOC_C.  */
 
 				/* This can only hold no-draw moves */
-				/* Also a LOC_C of 0 is ignored                           */
+				/* Also a LOC_C of 0 is ignored     */
 				if ((command&0x4) || (command==0)) {
 
 					/* Write to LOC_A instead */
@@ -274,11 +278,12 @@ int main(int argc, char **argv) {
 				else {
 					/* write to LOC_C */
 
-					if (current_offset==8) {
-					}
-					else {
+//					if (current_offset==8) {
+						/* What?? why?? */
+//					}
+//					else {
 						table[current_offset]|=((command&0x3)<<6);
-					}
+//					}
 
 					warn_if_zero(table[current_offset],line);
 
