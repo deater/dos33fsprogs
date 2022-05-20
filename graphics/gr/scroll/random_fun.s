@@ -211,6 +211,41 @@ its_black:
 	bpl	main_loop		; bra
 
 
+; updated desire logo thanks to 
+
+;012|456|012|456|
+;@@@@@@@@@@@@@@@@'
+;@   @@    @   @@'
+;@@@  @@@@@@@@  @'
+;@ @  @    @   @@'
+;@ @  @@@  @@@  @'
+;@    @    @ @  @'
+;@@@@@@@@@@@@@@@@'
+;
+
+bitmap:
+	.byte $FF ;,$FF
+	.byte $8C ;,$23
+	.byte $E7 ;,$F9
+	.byte $A4 ;,$23
+	.byte $A7 ;,$39
+	.byte $84 ;,$29
+	.byte $FF ;,$FF
+	.byte $00 ;,$00
+
+bitmap2:
+	.byte $FF
+	.byte $23
+	.byte $F9
+
+	.byte $23
+	.byte $39
+	.byte $29
+	.byte $FF
+	.byte $00
+
+
+
 ;012|456|012|456|
 ;@@@@@@@@@@@@@@@@'
 ;@@@@ @    @@@@@@'
@@ -221,25 +256,25 @@ its_black:
 ;@@@@@@@@@@@@@@@@'
 ;
 
-bitmap:
-	.byte $FF ;,$FF
-	.byte $F4 ;,$3F
-	.byte $F5 ;,$FF
-	.byte $84 ;,$21
-	.byte $B7 ;,$AF
-	.byte $84 ;,$2F
-	.byte $FF ;,$FF
-	.byte $00 ;,$00
+;bitmap:
+;	.byte $FF ;,$FF
+;	.byte $F4 ;,$3F
+;	.byte $F5 ;,$FF
+;	.byte $84 ;,$21
+;	.byte $B7 ;,$AF
+;	.byte $84 ;,$2F
+;	.byte $FF ;,$FF
+;	.byte $00 ;,$00
 
-bitmap2:
-	.byte $FF
-	.byte $3F
-	.byte $FF
-	.byte $21
-	.byte $AF
-	.byte $2F
-	.byte $FF
-	.byte $00
+;bitmap2:
+;	.byte $FF
+;	.byte $3F
+;	.byte $FF
+;	.byte $21
+;	.byte $AF
+;	.byte $2F
+;	.byte $FF
+;	.byte $00
 
 
 
