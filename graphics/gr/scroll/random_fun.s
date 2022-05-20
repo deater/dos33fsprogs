@@ -33,10 +33,11 @@ GBASH		= $27
 OUTL		= $74
 OUTH		= $75
 
+FRAME		= $6D
 PAGE		= $6E
 LINE		= $6F
 
-pattern1	= $f000		; location  in memory
+pattern1	= $d000		; location  in memory
 
 .zeropage
 .globalzp       pattern_smc
@@ -68,9 +69,18 @@ main_loop:
 
 	bit	SPEAKER
 
-;	lda	#200
-;	jsr	WAIT
+	lda	#100
+	jsr	WAIT
 
+	inc	FRAME
+
+	lda	FRAME
+	and	#$3f
+	bne	no_inc_bg
+
+	inc	pattern_smc+2
+
+no_inc_bg:
 
 	;============================
 	; draw an interleaved line
