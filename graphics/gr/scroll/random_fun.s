@@ -55,8 +55,6 @@ random:
 
 	bit	FULLGR		; set FULL 48x40		; 75 76 77
 
-;	bit	SETTEXT
-
 main_loop:
 	sta	PAGE		; start at page 1
 
@@ -67,7 +65,7 @@ main_loop:
 
 	sta	OUTH
 
-	bit	SPEAKER
+;	bit	SPEAKER
 
 	lda	#100
 	jsr	WAIT
