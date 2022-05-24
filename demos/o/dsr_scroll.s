@@ -88,39 +88,18 @@ dsr_scroll_intro:
 
 
 	;=========================================
-	; hi-res loop
+	; setup hi-res dsr on both pages
 	;=========================================
 
 hires_setup:
 
-	jsr	xdraw		; non-rotate, HGR2
+	lda	#0		; non-rotate, on HGR PAGE2
+	jsr	xdraw		;
 
-	; flip draw page $20/$40
-        lda     HGR_PAGE
-        eor     #$60
+        lda     #$20		; switch drawing to HGR PAGE1
         sta     HGR_PAGE
-
-	lda	#2
-	sta	rot_smc+1
+	lda	#2		; rotate 2/64 of 360 degrees
 	jsr	xdraw
-
-;hires_loop:
-;	lda	#200
-;	jsr	WAIT
-
-;	jsr	flip_page
-
-;	dec	COUNT
-;	bne	hires_loop
-
-
-
-
-lo_res_scroll:
-
-;	bit	LORES		; set LORES
-;	lda	#0		; set OUTL to 0, also PAGE
-;	sta	OUTL
 
 
 	;===============================
@@ -128,6 +107,8 @@ lo_res_scroll:
 	; main loop
 	;===============================
 	;===============================
+
+	; A is zero due to call to xdraw
 
 main_loop:
 	; current page is in A at this point
@@ -291,7 +272,9 @@ flip_page:
 	;=======================
 	; xdraw
 	;=======================
+	; rotation in A
 xdraw:
+	pha			; save rotation
 	; setup X and Y co-ords
 
 	ldy	#0		; XPOSH always 0 for us
@@ -307,11 +290,13 @@ xdraw:
 	ldx	#<shape_dsr	; point to our shape
 	ldy	#>shape_dsr	; this is always zero since in zero page
 
-rot_smc:
-	lda	#$0		; set rotation
+;rot_smc:
+;	lda	#$0		; set rotation
+
+	pla			; restore rotation
 
 	jmp	XDRAW0		; XDRAW 1 AT X,Y
-
+				; A is zero at end
 
 ; updated desire logo thanks to 
 
