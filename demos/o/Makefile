@@ -5,25 +5,25 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../empty_disk/empty.dsk
 LINKERSCRIPTS = ../../linker_scripts/
 
-all:	dsr_64.dsk
+all:	dsr_scroll.dsk
 
-dsr_64.dsk:	HELLO DSR
-	cp $(EMPTYDISK) dsr_64.dsk
-	$(DOS33) -y dsr_64.dsk SAVE A HELLO
-	$(DOS33) -y dsr_64.dsk BSAVE -a 0xC00 DSR
+dsr_scroll.dsk:	HELLO DSR_SCROLL
+	cp $(EMPTYDISK) dsr_scroll.dsk
+	$(DOS33) -y dsr_scroll.dsk SAVE A HELLO
+	$(DOS33) -y dsr_scroll.dsk BSAVE -a 0xC00 DSR_SCROLL
 
 ###
 
-submit:	dsr64.zip
+submit:	dsrscroll.zip
 
-dsr64.zip:	DSR dsr.s file_id.diz dsr_64.dsk
-	mkdir -p lovebyte2022_dsr_64
-	cp DSR ./lovebyte2022_dsr_64
-	cp dsr.s ./lovebyte2022_dsr_64
-	cp file_id.diz ./lovebyte2022_dsr_64
-	cp dsr_64.dsk ./lovebyte2022_dsr_64
-	cp dsr_720p.mp4 ./lovebyte2022_dsr_64
-	zip -r dsr64.zip lovebyte2022_dsr_64
+dsrscroll.zip:	DSR_SCROLL dsr_scroll.s file_id.diz dsr_scroll.dsk
+	mkdir -p outline2022_dsr_scroll
+	cp DSR_SCROLL ./outline2022_dsr_scroll
+	cp dsr_scroll.s ./outline2022_dsr_scroll
+	cp file_id.diz ./outline2022_dsr_scroll
+	cp dsr_scroll.dsk ./outline2022_dsr_scroll
+	cp dsr_720p.mp4 ./outline2022_dsr_scroll
+	zip -r dsrscroll.zip outline2022_dsr_scroll
 
 ####
 
@@ -35,13 +35,13 @@ HELLO:	hello.bas
 
 ###
 
-DSR:	dsr.o
-	ld65 -o DSR dsr.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+DSR_SCROLL:	dsr_scroll.o
+	ld65 -o DSR_SCROLL dsr_scroll.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-dsr.o:	dsr.s
-	ca65 -o dsr.o dsr.s -l dsr.lst
+dsr_scroll.o:	dsr_scroll.s
+	ca65 -o dsr_scroll.o dsr_scroll.s -l dsr_scroll.lst
 
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO DSR *.zip
+	rm -f *~ *.o *.lst HELLO DSR_SCROLL *.zip
