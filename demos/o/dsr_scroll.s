@@ -11,6 +11,15 @@ GBASH		=	$27
 A5H		=	$45
 XREG		=	$46
 YREG		=	$47
+
+PHASE		=	$6C
+FRAME		=	$6D
+PAGE		=	$6E
+LINE		=	$6F
+OUTL		=	$74
+OUTH		=	$75
+COUNT		=	$76
+
 			; C0-CF should be clear
 			; D0-DF?? D0-D5 = HGR scratch?
 HGR_DX		=	$D0	; HGLIN
@@ -31,27 +40,6 @@ HGR_SHAPE_TABLE2=	$E9
 HGR_COLLISIONS	=	$EA
 
 
-
-
-;HGR2		= $F3D8
-PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
-GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
-SETGR		= $FB40
-;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
-
-;GBASL		= $26
-;GBASH		= $27
-
-OUTL		= $74
-OUTH		= $75
-
-FRAME		= $6D
-PAGE		= $6E
-LINE		= $6F
-
-OUR_ROT		= $E0
-
-
 ; soft-switch
 SPEAKER		= $C030
 SET_GR		= $C050
@@ -68,99 +56,83 @@ HCLR		= $F3F2		; A=0, Y=0 after, X unchanged
 HPOSN		= $F411
 XDRAW0		= $F65D
 XDRAW1		= $F661
+PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
+GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
+SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 RESTORE		= $FF3F
 
 
-pattern1	= $d000		; location  in memory
+pattern1	= $d000		; location in memory to use as
+				; background pixel pattern
 
 
-dsr_intro:
+	;========================================
+	;========================================
+	; actual start
+	;========================================
+	;========================================
 
-	jsr	HGR2		; Hi-res, full screen		; 3
+dsr_scroll_intro:
+
+	jsr	HGR2		; Hi-res, full screen
 				; Y=0, A=0 after this call
 
-	ldy	#8
-	sty	HGR_SCALE	; 2	init scale to 0
+	sta	PAGE		; needed?
+	sta	PHASE
+	sta	FRAME
+	sta	OUTL
+
+	lda	#8
+	sta	HGR_SCALE	; init scale to 8
+
 
 	;=========================================
-	; MAIN LOOP
+	; hi-res loop
 	;=========================================
 
-;main_loop:
-;	inc	HGR_SCALE	; 2	; increment scale
+hires_setup:
 
-;	inc	rot_smc+1	; 2	; rotate
-;	inc	rot_smc+1	; 2
+	jsr	xdraw		; non-rotate, HGR2
 
-
-	;=======================
-	; xdraw
-	;=======================
-xdraw:
-	; setup X and Y co-ords
-
-	ldy	#0		; XPOSH always 0 for us
-	ldx	#140
-	lda	#96
-	jsr	HPOSN		; X= (y,x) Y=(a)
-				; after, A=COLOR.BITS
-				; Y = xoffset (140/7=20?)
-				; X = remainder?
-
-	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
-
-	ldx	#<shape_dsr	; point to our shape
-	ldy	#>shape_dsr	; this is always zero since in zero page
-
-rot_smc:
-	lda	#$0		; set rotation
-
-	jsr	XDRAW0		; XDRAW 1 AT X,Y
-
-flip_page:
 	; flip draw page $20/$40
         lda     HGR_PAGE
         eor     #$60
         sta     HGR_PAGE
 
-        ; flip page
-        ; have $20/$40 want to map to C054/C055
+	lda	#2
+	sta	rot_smc+1
+	jsr	xdraw
 
-        asl
-        asl                     ; $20 -> C=1 $00
-        asl                     ; $40 -> C=0 $00
-	rol
-        tax
-        sta	PAGE1,X
+;hires_loop:
+;	lda	#200
+;	jsr	WAIT
 
-	lda	#200
-	jsr	WAIT
+;	jsr	flip_page
 
-;blah:
-;	jmp	blah
+;	dec	COUNT
+;	bne	hires_loop
 
 
 
 
+lo_res_scroll:
+
+;	bit	LORES		; set LORES
+;	lda	#0		; set OUTL to 0, also PAGE
+;	sta	OUTL
 
 
-
-
-
-random:
-
-	bit	LORES
-
-;	jsr	SETGR		; set LORES			; 70 71 72
-
-	lda	#0		; also OUTL=0/OUTH		; 73 74
-	sta	OUTL
-
-;	bit	FULLGR		; set FULL 48x40		; 75 76 77
+	;===============================
+	;===============================
+	; main loop
+	;===============================
+	;===============================
 
 main_loop:
-	sta	PAGE		; start at page 1
+	; current page is in A at this point
+
+	sta	PAGE
 
 	asl		; make OUTH $4 or $8 depending on value in PAGE
 			; which we have in A above or at end of loop
@@ -171,7 +143,7 @@ main_loop:
 
 ;	bit	SPEAKER
 
-	lda	#100
+	lda	#200
 	jsr	WAIT
 
 	inc	FRAME
@@ -303,6 +275,8 @@ its_black:
 
 
 	; switch page
+flip_page:
+
 	lda	PAGE
 
 	tax
@@ -311,6 +285,32 @@ its_black:
 	eor	#$1
 
 	bpl	main_loop		; bra
+
+
+
+	;=======================
+	; xdraw
+	;=======================
+xdraw:
+	; setup X and Y co-ords
+
+	ldy	#0		; XPOSH always 0 for us
+	ldx	#140
+	lda	#80		; 96 would be halfway?
+	jsr	HPOSN		; X= (y,x) Y=(a)
+				; after, A=COLOR.BITS
+				; Y = xoffset (140/7=20?)
+				; X = remainder?
+
+	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
+
+	ldx	#<shape_dsr	; point to our shape
+	ldy	#>shape_dsr	; this is always zero since in zero page
+
+rot_smc:
+	lda	#$0		; set rotation
+
+	jmp	XDRAW0		; XDRAW 1 AT X,Y
 
 
 ; updated desire logo thanks to 
