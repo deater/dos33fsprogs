@@ -3,13 +3,14 @@ include ../../Makefile.inc
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../empty_disk/empty.dsk
+LINKERSCRIPTS = ../../linker_scripts/
 
 all:	dsr_64.dsk
 
 dsr_64.dsk:	HELLO DSR
 	cp $(EMPTYDISK) dsr_64.dsk
 	$(DOS33) -y dsr_64.dsk SAVE A HELLO
-	$(DOS33) -y dsr_64.dsk BSAVE -a 0x70 DSR
+	$(DOS33) -y dsr_64.dsk BSAVE -a 0xC00 DSR
 
 ###
 
@@ -35,7 +36,7 @@ HELLO:	hello.bas
 ###
 
 DSR:	dsr.o
-	ld65 -o DSR dsr.o -C ./apple2_70_zp.inc
+	ld65 -o DSR dsr.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
 dsr.o:	dsr.s
 	ca65 -o dsr.o dsr.s -l dsr.lst

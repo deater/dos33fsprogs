@@ -1,4 +1,6 @@
-; Tiny DSR intro
+; New Demo
+
+; by Vince `deater` Weaver
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -28,24 +30,49 @@ HGR_SHAPE_TABLE	=	$E8
 HGR_SHAPE_TABLE2=	$E9
 HGR_COLLISIONS	=	$EA
 
+
+
+
+;HGR2		= $F3D8
+PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
+GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
+SETGR		= $FB40
+;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+
+;GBASL		= $26
+;GBASH		= $27
+
+OUTL		= $74
+OUTH		= $75
+
+FRAME		= $6D
+PAGE		= $6E
+LINE		= $6F
+
+OUR_ROT		= $E0
+
+
 ; soft-switch
-PAGE1		=	$C054
+SPEAKER		= $C030
+SET_GR		= $C050
+SET_TEXT	= $C051
+FULLGR		= $C052
+PAGE1		= $C054
+PAGE2		= $C055
+LORES		= $C056		; Enable LORES graphics
 
 ; ROM calls
-HGR2		=	$F3D8
-HGR		=	$F3E2
-HPOSN		=	$F411
-XDRAW0		=	$F65D
-XDRAW1		=	$F661
-RESTORE		=	$FF3F
-WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
-HCLR    = $F3F2		; A=0, Y=0 after, X unchanged
-
-OUR_ROT=$E0
+HGR2		= $F3D8
+HGR		= $F3E2
+HCLR		= $F3F2		; A=0, Y=0 after, X unchanged
+HPOSN		= $F411
+XDRAW0		= $F65D
+XDRAW1		= $F661
+WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+RESTORE		= $FF3F
 
 
-.zeropage
-.globalzp	rot_smc
+pattern1	= $d000		; location  in memory
 
 
 dsr_intro:
@@ -60,7 +87,7 @@ dsr_intro:
 	; MAIN LOOP
 	;=========================================
 
-main_loop:
+;main_loop:
 ;	inc	HGR_SCALE	; 2	; increment scale
 
 ;	inc	rot_smc+1	; 2	; rotate
@@ -84,7 +111,7 @@ xdraw:
 	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
 
 	ldx	#<shape_dsr	; point to our shape
-;	ldy	#>shape_dsr	; this is always zero since in zero page
+	ldy	#>shape_dsr	; this is always zero since in zero page
 
 rot_smc:
 	lda	#$0		; set rotation
@@ -107,18 +134,219 @@ flip_page:
         tax
         sta	PAGE1,X
 
-blah:
-	jmp	blah
+	lda	#200
+	jsr	WAIT
 
-	; A and X are 0/1 here
-
-	; if rot_smc not 64 then loop
-
-	bit	rot_smc+1	;	set V if bit 6 set
-	bvc	main_loop	; 2
+;blah:
+;	jmp	blah
 
 
-	; fall through at end and crash
+
+
+
+
+
+
+
+random:
+
+	bit	LORES
+
+;	jsr	SETGR		; set LORES			; 70 71 72
+
+	lda	#0		; also OUTL=0/OUTH		; 73 74
+	sta	OUTL
+
+;	bit	FULLGR		; set FULL 48x40		; 75 76 77
+
+main_loop:
+	sta	PAGE		; start at page 1
+
+	asl		; make OUTH $4 or $8 depending on value in PAGE
+			; which we have in A above or at end of loop
+	asl		; C is 0
+	adc	#4
+
+	sta	OUTH
+
+;	bit	SPEAKER
+
+	lda	#100
+	jsr	WAIT
+
+	inc	FRAME
+
+	lda	FRAME
+	and	#$3f
+	bne	no_inc_bg
+
+	inc	pattern_smc+2
+
+no_inc_bg:
+
+	;============================
+	; draw an interleaved line
+full_loop:
+	ldx	#3
+
+line_loop:
+	ldy	#119
+
+screen_loop:
+
+	tya			; extrapolate X from Y
+;	and	#$7		; could be bigger?
+;	tax
+
+pattern_smc:
+	lda	pattern1,Y
+
+inner_loop_smc:
+
+	sta	(OUTL),Y
+
+	dey
+	bpl	screen_loop
+
+	;=================================
+	; move to next pattern
+
+scroll_pattern:
+	clc
+	lda	pattern_smc+1
+	adc	#8
+	and	#$1f
+	sta	pattern_smc+1
+
+	; move to next line by adding $80
+	;  we save a byte by using EOR instead
+
+	lda	OUTL
+	eor	#$80			; add $80
+	sta	OUTL
+
+	bne	line_loop
+
+	; we overflowed, so increment OUTH
+
+	inc	OUTH
+
+;	lda	OUTH			; check if at end
+;	and	#$3
+;	bne	line_loop
+
+	dex
+	bpl	line_loop
+
+
+done_bg:
+
+	;=======================================
+	; done drawing frame
+	;=======================================
+
+
+	;======================
+	; draw bitmap
+
+	ldx	#7
+boxloop:
+	txa
+	jsr	GBASCALC		; calc address of X
+					; note we center to middle of screen
+					; by noting the middle 8 lines
+					; are offset by $28 from first 8 lines
+
+	; GBASL is in A at this point
+
+	clc
+	adc	#12+$28
+	sta	GBASL		; center x-coord and y-coord at same time
+
+
+	lda	PAGE		; want to add 0 or 4 (not 0 or 1)
+	asl
+	asl			; this sets C to 0
+	adc	GBASH
+	sta	GBASH
+
+
+	ldy	#15
+draw_line_loop:
+
+	lda	bitmap2,X	; get low bit of bitmap2 into carry
+	lsr
+
+	lda	#$00		; black is default color
+
+	ror	bitmap,X	; 16-bit rotate (in memory)
+	ror	bitmap2,X
+
+	bcc	its_black
+
+	lda	#$ff
+its_black:
+	sta	(GBASL),Y		; partway down screen
+
+	dey
+	bpl	draw_line_loop
+
+	dex
+	bpl	boxloop
+
+
+	;=========================
+	; scroll one line
+
+	; to scroll up need to add 8?
+	inc	pattern_smc+1
+
+
+	; switch page
+	lda	PAGE
+
+	tax
+	ldy	PAGE1,X			; flip page
+
+	eor	#$1
+
+	bpl	main_loop		; bra
+
+
+; updated desire logo thanks to 
+
+;012|456|012|456|
+;@@@@@@@@@@@@@@@@'
+;@   @@    @   @@'
+;@@@  @@@@@@@@  @'
+;@ @  @    @   @@'
+;@ @  @@@  @@@  @'
+;@    @    @ @  @'
+;@@@@@@@@@@@@@@@@'
+;
+
+bitmap:
+	.byte $FF ;,$FF
+	.byte $8C ;,$23
+	.byte $E7 ;,$F9
+	.byte $A4 ;,$23
+	.byte $A7 ;,$39
+	.byte $84 ;,$29
+	.byte $FF ;,$FF
+	.byte $00 ;,$00
+
+bitmap2:
+	.byte $FF
+	.byte $23
+	.byte $F9
+
+	.byte $23
+	.byte $39
+	.byte $29
+	.byte $FF
+	.byte $00
+
+
 
 
 shape_dsr:
