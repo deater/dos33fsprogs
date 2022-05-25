@@ -1,15 +1,21 @@
-; New Demo
+; DSR Scroll Demo -- 256B Apple II Demo for Outline 2022
 
-; by Vince `deater` Weaver
+; by Vince `deater` Weaver / dSr
 
-
-; 253 bytes -- init with no sound
+; 253 bytes -- initial implementation with no sound
 ; 251 bytes -- no phase
 ; 247 bytes -- move scale before so don't have to reload 0
 ; 243 bytes -- use BIT trick
 ; 242 bytes -- load frame into Y
 ; 240 bytes -- more BIT trick
 ; 239 bytes -- compare with BMI
+; 263 bytes -- initially add sound
+; 262 bytes -- make Y always 0 in xdraw
+; 260 bytes -- ust BIT to determine phase
+; 258 bytes -- no need to init PAGE at start
+; 257 bytes -- remove a CLC as we know carry always set
+; 256 bytes -- optimize phase now that we are setting 0/7 not 1/8
+; 255 bytes -- optimize same area some more
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -23,10 +29,8 @@ YREG		=	$47
 
 FRAME		=	$6D
 PAGE		=	$6E
-LINE		=	$6F
 OUTL		=	$74
 OUTH		=	$75
-COUNT		=	$76
 
 			; C0-CF should be clear
 			; D0-DF?? D0-D5 = HGR scratch?
@@ -90,7 +94,6 @@ dsr_scroll_intro:
 	jsr	HGR2		; Hi-res, full screen
 				; Y=0, A=0 after this call
 
-	sta	PAGE		; needed?
 	sta	FRAME
 	sta	OUTL
 
@@ -101,8 +104,10 @@ dsr_scroll_intro:
 hires_setup:
 
 	; A is 0 here
+	; Y is also 0 here
 ;	lda	#0		; non-rotate, on HGR PAGE2
 	jsr	xdraw		;
+	tay			; reset Y to 0
 
         lda     #$20		; switch drawing to HGR PAGE1
         sta     HGR_PAGE
@@ -130,15 +135,12 @@ main_loop:
 
 	sta	OUTH
 
-;	bit	SPEAKER
-
-
 	;=======================
 	; delay
 	;=======================
 
 	lda	#200
-	jsr	WAIT
+	jsr	play_sound
 
 	;=======================
 	; handle state
@@ -148,47 +150,71 @@ main_loop:
 	; LO-RES DOWN  SCROLL	128..191
 	; TEXT RIGHT SCROLL	192..255
 
+
 	ldx	#0
 
 	inc	FRAME
 
-	ldy	FRAME
-	cpy	#192		; 192
-	bcs	phase3
-	tya
-	bmi	phase2		; 128
-	cpy	#64		; 64
-	bcc	phase0
+	lda	#$1F
+	bit	FRAME			; puts bit 7 in N and bit 6 in V
+	php				; save flags (zero is one we care)
+
+	bpl	n_clear
+	bvc	phase2
+	bvs	phase3
+n_clear:
+	bvc	phase0
+;	bvs	phase1
 
 phase1:
-	bit	LORES			; enable lo-res
-	lda	#8			; make vertical scroll
+	; LORES Vertical Scroll
 
-	.byte	$2C			; BIT trick to skip the load
+	bit	LORES			; enable lo-res
+	ldx	#7			; make vertical scroll
+
+;	.byte	$24			; BIT trick to skip the txa
 phase2:
-	lda	#1			; make horizontal scroll
-	sta	pattern_dir_smc+1
-	bne	done_phase		; bra
+	; LORES Horizontal Scroll
+
+					; X is 7 or 0 here
+;	txa				; make horizontal scroll (0)
+;	lda	#0			; make horizontal scroll
+	stx	pattern_dir_smc+1
+	jmp	done_phase		; bra
 
 
 phase0:
+	; HIRES on GRAPHICS on
 	bit	HIRES
-	.byte	$24			; BIT trick
+	.byte	$24			; BIT trick to skip the inx
 phase3:
+	; TEXT ON
 	inx				; point to SET_TEXT rather than SET_GR
 	lda	SET_GR,X		; set mode
 
 done_phase:
-
-	tya				; FRAME
-	and	#$1f
+	plp			; restore flags
 	bne	not_zero
 
-	; rolled around, reset?
+was_zero:
+
+	; update pointer to "random" background color
 
 	inc	pattern_smc+2
 
+	ldy	#135
+boop_loop:
+	lda	#8
+	jsr	play_sound
+
+	lda	#9
+	jsr	play_sound
+
+	dey
+	bne	boop_loop
+
 not_zero:
+
 
 
 	;============================
@@ -251,7 +277,7 @@ done_bg:
 	;=======================================
 	; done drawing frame
 	;=======================================
-
+bit	$C030
 
 	;======================
 	; draw bitmap
@@ -304,11 +330,14 @@ its_black:
 
 	;=========================
 	; scroll one line
+	;=========================
+	; if +1 then horizontal
+	; if +8 then vertical
 
-	; to scroll up need to add 8?
-;	inc	pattern_smc+1
+	; our current bitmap top line is all FFs
+	; so we know carry will be set here
 
-	clc
+;	clc
 	lda	pattern_smc+1
 pattern_dir_smc:
 	adc	#$8
@@ -334,11 +363,12 @@ flip_page:
 	; xdraw
 	;=======================
 	; rotation in A
+	; Y should be 0 on entry
 xdraw:
 	pha			; save rotation
 	; setup X and Y co-ords
 
-	ldy	#0		; XPOSH always 0 for us
+;	ldy	#0		; XPOSH always 0 for us
 	ldx	#140
 	lda	#80		; 96 would be halfway?
 	jsr	HPOSN		; X= (y,x) Y=(a)
@@ -357,6 +387,14 @@ xdraw:
 				; A is zero at end
 
 				; tail call
+
+	;=============================
+	; play_sound
+	;=============================
+play_sound:
+	bit	$C030
+	jmp	WAIT
+
 
 ; updated desire logo thanks to Jade/HMD
 
@@ -384,7 +422,6 @@ bitmap2:
 	.byte $FF
 	.byte $23
 	.byte $F9
-
 	.byte $23
 	.byte $39
 	.byte $29
