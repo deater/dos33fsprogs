@@ -2,6 +2,15 @@
 
 ; by Vince `deater` Weaver
 
+
+; 253 bytes -- init with no sound
+; 251 bytes -- no phase
+; 247 bytes -- move scale before so don't have to reload 0
+; 243 bytes -- use BIT trick
+; 242 bytes -- load frame into Y
+; 240 bytes -- more BIT trick
+; 239 bytes -- compare with BMI
+
 ; zero page locations
 HGR_SHAPE	=	$1A
 HGR_SHAPE2	=	$1B
@@ -12,7 +21,6 @@ A5H		=	$45
 XREG		=	$46
 YREG		=	$47
 
-PHASE		=	$6C
 FRAME		=	$6D
 PAGE		=	$6E
 LINE		=	$6F
@@ -48,6 +56,7 @@ FULLGR		= $C052
 PAGE1		= $C054
 PAGE2		= $C055
 LORES		= $C056		; Enable LORES graphics
+HIRES		= $C057		; Enable HIRES graphics
 
 ; ROM calls
 HGR2		= $F3D8
@@ -75,17 +84,15 @@ pattern1	= $d000		; location in memory to use as
 
 dsr_scroll_intro:
 
+	lda	#8
+	sta	HGR_SCALE	; init scale to 8
+
 	jsr	HGR2		; Hi-res, full screen
 				; Y=0, A=0 after this call
 
 	sta	PAGE		; needed?
-	sta	PHASE
 	sta	FRAME
 	sta	OUTL
-
-	lda	#8
-	sta	HGR_SCALE	; init scale to 8
-
 
 	;=========================================
 	; setup hi-res dsr on both pages
@@ -93,7 +100,8 @@ dsr_scroll_intro:
 
 hires_setup:
 
-	lda	#0		; non-rotate, on HGR PAGE2
+	; A is 0 here
+;	lda	#0		; non-rotate, on HGR PAGE2
 	jsr	xdraw		;
 
         lda     #$20		; switch drawing to HGR PAGE1
@@ -124,18 +132,64 @@ main_loop:
 
 ;	bit	SPEAKER
 
+
+	;=======================
+	; delay
+	;=======================
+
 	lda	#200
 	jsr	WAIT
 
+	;=======================
+	; handle state
+	;=======================
+	; HI-RES WIGGLE		  0.. 63
+	; LO-RES RIGHT SCROLL	 64..127
+	; LO-RES DOWN  SCROLL	128..191
+	; TEXT RIGHT SCROLL	192..255
+
+	ldx	#0
+
 	inc	FRAME
 
-	lda	FRAME
-	and	#$3f
-	bne	no_inc_bg
+	ldy	FRAME
+	cpy	#192		; 192
+	bcs	phase3
+	tya
+	bmi	phase2		; 128
+	cpy	#64		; 64
+	bcc	phase0
+
+phase1:
+	bit	LORES			; enable lo-res
+	lda	#8			; make vertical scroll
+
+	.byte	$2C			; BIT trick to skip the load
+phase2:
+	lda	#1			; make horizontal scroll
+	sta	pattern_dir_smc+1
+	bne	done_phase		; bra
+
+
+phase0:
+	bit	HIRES
+	.byte	$24			; BIT trick
+phase3:
+	inx				; point to SET_TEXT rather than SET_GR
+	lda	SET_GR,X		; set mode
+
+done_phase:
+
+	tya				; FRAME
+	and	#$1f
+	bne	not_zero
+
+	; rolled around, reset?
 
 	inc	pattern_smc+2
 
-no_inc_bg:
+not_zero:
+
 
 	;============================
 	; draw an interleaved line
@@ -252,7 +306,13 @@ its_black:
 	; scroll one line
 
 	; to scroll up need to add 8?
-	inc	pattern_smc+1
+;	inc	pattern_smc+1
+
+	clc
+	lda	pattern_smc+1
+pattern_dir_smc:
+	adc	#$8
+	sta	pattern_smc+1
 
 
 	; switch page
@@ -265,8 +325,9 @@ flip_page:
 
 	eor	#$1
 
-	bpl	main_loop		; bra
+;	bpl	main_loop		; bra
 
+	jmp	main_loop
 
 
 	;=======================
@@ -288,17 +349,16 @@ xdraw:
 	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
 
 	ldx	#<shape_dsr	; point to our shape
-	ldy	#>shape_dsr	; this is always zero since in zero page
-
-;rot_smc:
-;	lda	#$0		; set rotation
+	ldy	#>shape_dsr	;
 
 	pla			; restore rotation
 
 	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; A is zero at end
 
-; updated desire logo thanks to 
+				; tail call
+
+; updated desire logo thanks to Jade/HMD
 
 ;012|456|012|456|
 ;@@@@@@@@@@@@@@@@'
@@ -330,9 +390,6 @@ bitmap2:
 	.byte $29
 	.byte $FF
 	.byte $00
-
-
-
 
 shape_dsr:
 .byte	$2d,$36,$ff,$3f
