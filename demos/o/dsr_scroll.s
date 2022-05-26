@@ -2,6 +2,9 @@
 
 ; by Vince `deater` Weaver / dSr
 
+; sound routines inspired by those in the Pollywog Game by Alan Wootton
+
+
 ; 253 bytes -- initial implementation with no sound
 ; 251 bytes -- no phase
 ; 247 bytes -- move scale before so don't have to reload 0
@@ -16,41 +19,27 @@
 ; 257 bytes -- remove a CLC as we know carry always set
 ; 256 bytes -- optimize phase now that we are setting 0/7 not 1/8
 ; 255 bytes -- optimize same area some more
+; 263 bytes -- make it two-tone
+; 262 bytes -- note can set X to 0 from A
+; 257 bytes -- use HGR/HGR2 to clear both screens
+; 256 bytes -- call into ROM to save one last byte
 
 ; zero page locations
-HGR_SHAPE	=	$1A
-HGR_SHAPE2	=	$1B
-HGR_BITS	=	$1C
-GBASL		=	$26
-GBASH		=	$27
-A5H		=	$45
-XREG		=	$46
-YREG		=	$47
+OUTL		= $14
+OUTH		= $15
 
-FRAME		=	$6D
-PAGE		=	$6E
-OUTL		=	$74
-OUTH		=	$75
 
-			; C0-CF should be clear
-			; D0-DF?? D0-D5 = HGR scratch?
-HGR_DX		=	$D0	; HGLIN
-HGR_DX2		=	$D1	; HGLIN
-HGR_DY		=	$D2	; HGLIN
-HGR_QUADRANT	=	$D3
-HGR_E		=	$D4
-HGR_E2		=	$D5
-HGR_X		=	$E0
-HGR_X2		=	$E1
-HGR_Y		=	$E2
-HGR_COLOR	=	$E4
-HGR_HORIZ	=	$E5
-HGR_PAGE	=	$E6
-HGR_SCALE	=	$E7
-HGR_SHAPE_TABLE	=	$E8
-HGR_SHAPE_TABLE2=	$E9
-HGR_COLLISIONS	=	$EA
+GBASL		= $26
+GBASH		= $27
 
+
+PAGE		= $6E
+FRAME		= $7A
+
+; note $D0-$EF used by the hi-res Applesoft ROM routines
+
+HGR_PAGE	= $E6
+HGR_SCALE	= $E7
 
 ; soft-switch
 SPEAKER		= $C030
@@ -73,7 +62,7 @@ PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
 SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
-RESTORE		= $FF3F
+
 
 
 pattern1	= $d000		; location in memory to use as
@@ -91,11 +80,16 @@ dsr_scroll_intro:
 	lda	#8
 	sta	HGR_SCALE	; init scale to 8
 
-	jsr	HGR2		; Hi-res, full screen
+	jsr	HGR		; Hi-res, PAGE1, split-screen
 				; Y=0, A=0 after this call
 
-	sta	FRAME
-	sta	OUTL
+	; can save 1 byte by calling $D690
+	; sets $7A and $14 to 0
+
+;	sta	FRAME
+;	sta	OUTL
+
+	jsr	$D690
 
 	;=========================================
 	; setup hi-res dsr on both pages
@@ -107,10 +101,12 @@ hires_setup:
 	; Y is also 0 here
 ;	lda	#0		; non-rotate, on HGR PAGE2
 	jsr	xdraw		;
-	tay			; reset Y to 0
+;	tay			; reset Y to 0
 
-        lda     #$20		; switch drawing to HGR PAGE1
-        sta     HGR_PAGE
+
+	jsr	HGR2		; Hi-res, PAGE2, full-screen
+				; Y=0, A=0 after this call
+
 	lda	#2		; rotate 2/64 of 360 degrees
 	jsr	xdraw
 
@@ -142,6 +138,8 @@ main_loop:
 	lda	#200
 	jsr	play_sound
 
+	; A is 0 after this
+
 	;=======================
 	; handle state
 	;=======================
@@ -151,7 +149,7 @@ main_loop:
 	; TEXT RIGHT SCROLL	192..255
 
 
-	ldx	#0
+	tax			; put 0 into X
 
 	inc	FRAME
 
@@ -172,14 +170,10 @@ phase1:
 	bit	LORES			; enable lo-res
 	ldx	#7			; make vertical scroll
 
-;	.byte	$24			; BIT trick to skip the txa
 phase2:
 	; LORES Horizontal Scroll
-
 					; X is 7 or 0 here
-;	txa				; make horizontal scroll (0)
-;	lda	#0			; make horizontal scroll
-	stx	pattern_dir_smc+1
+	stx	pattern_dir_smc+1	; self-modify the add code
 	jmp	done_phase		; bra
 
 
@@ -204,6 +198,8 @@ was_zero:
 
 	ldy	#135
 boop_loop:
+
+bl_smc:
 	lda	#8
 	jsr	play_sound
 
@@ -212,6 +208,10 @@ boop_loop:
 
 	dey
 	bne	boop_loop
+
+	lda	bl_smc+1		; toggle short to long sound
+	eor	#$2
+	sta	bl_smc+1
 
 not_zero:
 
@@ -277,7 +277,8 @@ done_bg:
 	;=======================================
 	; done drawing frame
 	;=======================================
-bit	$C030
+
+	bit	$C030			; additional click noise
 
 	;======================
 	; draw bitmap
@@ -376,7 +377,7 @@ xdraw:
 				; Y = xoffset (140/7=20?)
 				; X = remainder?
 
-	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
+;	jsr	HCLR		; A=0 and Y=0 after, X=unchanged
 
 	ldx	#<shape_dsr	; point to our shape
 	ldy	#>shape_dsr	;
