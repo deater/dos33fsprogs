@@ -1,0 +1,14 @@
+dSr Scroll
+-
+256-byte Intro for Apple II, Outline 2022
+by Deater / dSr
+
+Wiggles the Desire logo in Hires (shape tables and page flip)
+Then scrolls some lo-res chunky pixels under a DSR logo.
+The lo-res pattern is just ROM/RAM contents, so some of it
+might look a bit different depending on the state of RAM.
+
+It plays some sound through the beeper/speaker.  No timers
+on the Apple II so that's all cycle counted.
+
+There are various tricks going on to make this all fit.

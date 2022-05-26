@@ -64,8 +64,16 @@ SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 
+; d000 was first
+; f300 not bad
+; f400 good
+; f500 so so
+; f600 less so
+; f700 soso
+; f800
 
-pattern1	= $d000		; location in memory to use as
+pattern1	= $f800		; location in memory to use as
+;pattern1	= $d000		; location in memory to use as
 				; background pixel pattern
 
 
