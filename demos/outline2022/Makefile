@@ -25,6 +25,19 @@ dsrscroll.zip:	DSR_SCROLL dsr_scroll.s file_id.diz dsr_scroll.dsk
 	cp dsr_720p.mp4 ./outline2022_dsr_scroll
 	zip -r dsrscroll.zip outline2022_dsr_scroll
 
+###
+
+submit_small:	dsrscroll_small.zip
+
+dsrscroll_small.zip:	DSR_SCROLL dsr_scroll.s file_id.diz dsr_scroll.dsk
+	mkdir -p outline2022_dsr_scroll
+	cp DSR_SCROLL ./outline2022_dsr_scroll
+	cp dsr_scroll.s ./outline2022_dsr_scroll
+	cp file_id.diz ./outline2022_dsr_scroll
+	cp dsr_scroll.dsk ./outline2022_dsr_scroll
+	zip -r dsrscroll_small.zip outline2022_dsr_scroll
+
+
 ####
 
 
