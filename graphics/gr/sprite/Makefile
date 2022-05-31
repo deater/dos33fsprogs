@@ -12,10 +12,11 @@ all:	star.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-star.dsk:	$(DOS33) HELLO STAR
+star.dsk:	$(DOS33) HELLO STAR STARS
 	cp $(EMPTY_DISK)/empty.dsk star.dsk
 	$(DOS33) -y star.dsk SAVE A HELLO
 	$(DOS33) -y star.dsk BSAVE -a 0xc00 STAR
+	$(DOS33) -y star.dsk BSAVE -a 0xc00 STARS
 
 ###
 
@@ -29,6 +30,15 @@ STAR:   star.o
 
 star.o: star.s
 	ca65 -o star.o star.s -l star.lst
+
+###
+
+STARS:   stars.o
+	ld65 -o STARS stars.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+stars.o: stars.s
+	ca65 -o stars.o stars.s -l stars.lst
+
 
 ###
 

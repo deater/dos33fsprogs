@@ -1,11 +1,6 @@
-; bouncing star
+; star
 
 ; by Vince `deater` Weaver
-
-; 135 -- original
-; 122 -- clear screen w/o consideration of screen holes
-; 121 -- try to optimize the rotate in the sprite
-; 119 -- draw transparent
 
 SPEAKER		= $C030
 SET_GR		= $C050
@@ -47,9 +42,8 @@ star:
 
 	bit	FULLGR		; set FULL 48x40
 
-	; A should be 0 here
 main_loop:
-	sta	PAGE	; save PAGE value (PAGE in A here)
+	sta	PAGE		; start at page 1
 
 	asl		; make OUTH $4 or $8 depending on value in PAGE
 			; which we have in A above or at end of loop
@@ -63,23 +57,50 @@ main_loop:
 
 	inc	FRAME
 
-	;=================================
-	; clear lo-res screen, page1/page2
-	;=================================
-	; proper with avoiding screen holes is ~25 instructions
-
-	ldx	#4
+	;============================
+	; clear screen
+	;============================
 full_loop:
-	ldy	#$00
-inner_loop:
-	lda	#$55		; color
+	ldx	#3
+
+line_loop:
+	ldy	#119
+
+screen_loop:
+
+	tya			; extrapolate X from Y
+
+	lda	#$44
+
+;inner_loop_smc:
+
 	sta	(OUTL),Y
+
 	dey
-	bne	inner_loop
+	bpl	screen_loop
+
+	; move to next line by adding $80
+	;  we save a byte by using EOR instead
+
+	lda	OUTL
+	eor	#$80			; add $80
+	sta	OUTL
+
+	bne	line_loop
+
+	; we overflowed, so increment OUTH
 
 	inc	OUTH
+
 	dex
-	bne	full_loop
+	bpl	line_loop
+
+	;============================
+	; end clear screen
+	;============================
+
+
+done_bg:
 
 
 	;======================
@@ -105,10 +126,9 @@ boxloop:
 	; GBASL is in A at this point
 
 	clc
-	adc	#16
-	sta	GBASL		; center x-coord
+	adc	#12
+	sta	GBASL		; center x-coord and y-coord at same time
 
-	; adjust for proper page
 
 	lda	PAGE		; want to add 0 or 4 (not 0 or 1)
 	asl
@@ -116,27 +136,28 @@ boxloop:
 	adc	GBASH
 	sta	GBASH
 
+
 	ldy	#7
-	lda	bitmap,X	; get low bit of bitmap into carry
 draw_line_loop:
+
+	lda	bitmap,X	; get low bit of bitmap2 into carry
 	lsr
 
-	pha
+	lda	#$00		; black is default color
 
-	bcc	its_transparent
+	ror	bitmap,X	; 16-bit rotate (in memory)
+
+	bcc	its_black
 
 	lda	#$dd		; yellow
-	sta	(GBASL),Y	; draw on screen
-its_transparent:
-
-	pla
+its_black:
+	sta	(GBASL),Y		; partway down screen
 
 	dey
 	bpl	draw_line_loop
 
 	dex
 	bpl	boxloop
-
 
 	;======================
 	; switch page

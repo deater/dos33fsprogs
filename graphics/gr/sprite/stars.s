@@ -1,11 +1,13 @@
-; bouncing star
+; bouncing stars
 
 ; by Vince `deater` Weaver
 
-; 135 -- original
-; 122 -- clear screen w/o consideration of screen holes
-; 121 -- try to optimize the rotate in the sprite
-; 119 -- draw transparent
+; 119 bytes -- single star original
+; 143 bytes -- three stars
+; 141 bytes -- optimize init
+; 140 bytes -- 0 is already in X
+; 143 bytes -- stars move independently
+; 140 bytes -- optimize XPOS in multiple calls to draw_stars
 
 SPEAKER		= $C030
 SET_GR		= $C050
@@ -27,25 +29,23 @@ GBASH		= $27
 OUTL		= $74
 OUTH		= $75
 YPOS		= $76
+XPOS		= $77
 
 FRAME		= $6D
 PAGE		= $6E
 LINE		= $6F
 
-pattern1	= $d000		; location  in memory
-
 ;.zeropage
 ;.globalzp	pattern_smc
 
 
-star:
+stars:
+	jsr	HGR2		; sets graphics/full-screen/hires/PAGE2
+				; sets A and Y to 0
 
-	jsr	SETGR		; set LORES
+	bit	LORES		; switch to lo-res mode
 
-	lda	#0
-	sta	OUTL
-
-	bit	FULLGR		; set FULL 48x40
+	sta	OUTL		; store 0 to OUTL
 
 	; A should be 0 here
 main_loop:
@@ -58,55 +58,91 @@ main_loop:
 
 	sta	OUTH
 
-	lda	#100
+	lda	#100	; pause a bit
 	jsr	WAIT
 
-	inc	FRAME
+	inc	FRAME	; increment frame #
 
 	;=================================
 	; clear lo-res screen, page1/page2
 	;=================================
 	; proper with avoiding screen holes is ~25 instructions
 
-	ldx	#4
+	ldx	#4		; lores is 1k, so 4 pages
 full_loop:
-	ldy	#$00
-inner_loop:
+	ldy	#$00		; clear whole page
 	lda	#$55		; color
+inner_loop:
 	sta	(OUTL),Y
 	dey
 	bne	inner_loop
 
-	inc	OUTH
+	inc	OUTH		; point to next page
 	dex
 	bne	full_loop
 
 
+	;====================
+	; draw the stars
+	;====================
+
+	txa			; X is zero here
+;	lda	#0
+;	sta	XPOS
+
+	jsr	draw_star
+	jsr	draw_star
+	jsr	draw_star
+
 	;======================
-	; draw 8x8 bitmap
+	; flip page
 	;======================
 
-	lda	FRAME
+	lda	PAGE
+
+	tax
+	ldy	PAGE1,X			; flip page
+
+	eor	#$1			; invert (leaving in A)
+
+	bpl	main_loop		; bra
+
+
+
+
+	;======================
+	; draw 8x8 bitmap star
+	;======================
+	; A is XPOS on entry
+draw_star:
+
+	; calculate YPOS
+	sta	XPOS
+
+;	lda	XPOS
+	lsr			; make middle star offset+4 from others
+	lsr
+
+	adc	FRAME
 	and	#$7
 	tax
 	lda	bounce,X
 	sta	YPOS
 
-	ldx	#7
+
+	ldx	#7		; draw 7 lines
 boxloop:
 	txa
 	clc
 	adc	YPOS
-	jsr	GBASCALC		; calc address of X
-					; note we center to middle of screen
-					; by noting the middle 8 lines
-					; are offset by $28 from first 8 lines
+	jsr	GBASCALC	; calc address of line in X (Y-coord)
+
 
 	; GBASL is in A at this point
 
 	clc
-	adc	#16
-	sta	GBASL		; center x-coord
+	adc	XPOS		; adjust to X-coord
+	sta	GBASL
 
 	; adjust for proper page
 
@@ -116,7 +152,11 @@ boxloop:
 	adc	GBASH
 	sta	GBASH
 
-	ldy	#7
+	;=================
+	; draw line
+
+
+	ldy	#7		; 8-bits wide
 	lda	bitmap,X	; get low bit of bitmap into carry
 draw_line_loop:
 	lsr
@@ -137,19 +177,12 @@ its_transparent:
 	dex
 	bpl	boxloop
 
+	lda	XPOS
+	clc
+	adc	#16
+;	sta	XPOS
 
-	;======================
-	; switch page
-	;======================
-
-	lda	PAGE
-
-	tax
-	ldy	PAGE1,X			; flip page
-
-	eor	#$1
-
-	bpl	main_loop		; bra
+	rts
 
 
 ; star bitmap
@@ -176,3 +209,7 @@ bitmap:
 
 bounce:
 	.byte 10,11,12,13,13,12,11,10
+
+	; for apple II bot
+
+	jmp	stars
