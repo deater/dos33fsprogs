@@ -17,7 +17,7 @@ star.dsk:	$(DOS33) HELLO STAR STARS STARS_BOT
 	$(DOS33) -y star.dsk SAVE A HELLO
 	$(DOS33) -y star.dsk BSAVE -a 0xc00 STAR
 	$(DOS33) -y star.dsk BSAVE -a 0xc00 STARS
-	$(DOS33) -y star.dsk BSAVE -a 0xc00 STARS_BOT
+	$(DOS33) -y star.dsk BSAVE -a 0x36B STARS_BOT
 
 ###
 
@@ -44,7 +44,7 @@ stars.o: stars.s
 ###
 
 STARS_BOT:   stars_bot.o
-	ld65 -o STARS_BOT stars_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o STARS_BOT stars_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
 
 stars_bot.o: stars_bot.s
 	ca65 -o stars_bot.o stars_bot.s -l stars_bot.lst

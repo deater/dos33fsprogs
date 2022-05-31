@@ -19,10 +19,13 @@
 #define END_AT_3F5	0
 #define BEGIN_AT_3F5	1
 
+static int debug=0;
+
 static int print_help(char *name) {
 
 	printf("\n");
-	printf("Usage: %s [-e] [-h]\n",name);
+	printf("Usage: %s [-d] [-e] [-h]\n",name);
+	printf("\t-d : enables debug messages\n");
 	printf("\t-e : ends program at 3F5 (useful for lo-res programs)\n");
 	printf("\t     default is to start program at 3F5\n");
 	printf("\n");
@@ -35,14 +38,20 @@ int main(int argc, char **argv) {
 	int mode=BEGIN_AT_3F5;
 	int i = 0;
 	int e = 0,filesize;
-	int val,pv,final;
+	int val;
+	int pv,final;
 	unsigned char in[1024];
 	unsigned char enc[1024],enc2[1024];
 	int third,enc_ptr=0;
 	int filesize_digits;
 
+	/* FIXME: need to enumerate all arguments */
+	/*        should probably use getopt() instead */
 	if (argc>1) {
 		if (argv[1][0]=='-') {
+			if (argv[1][1]=='d') {
+				debug=1;
+			}
 			if (argv[1][1]=='e') {
 				mode=END_AT_3F5;
 			}
@@ -69,6 +78,8 @@ int main(int argc, char **argv) {
 			val=val>>2;
 			val=val+OFFSET;
 			final=((val-OFFSET)<<2)+third-0x40;
+
+if (debug) {
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
 				i,pv,val,third,final);
 			if (pv!=final) fprintf(stderr,"error0: no match!\n");
@@ -81,6 +92,7 @@ int main(int argc, char **argv) {
 			if (val=='\"') fprintf(stderr,"error0, additional quotation marks\n");
 //			printf("%c",val); //(in[i + 0] >> 2) + OFFSET);
 			//printf("%c",val); //(in[i + 0] >> 2) + OFFSET);
+}
 			enc2[enc_ptr]=val;
 			enc_ptr++;
 		}
@@ -94,6 +106,7 @@ int main(int argc, char **argv) {
 			val=val+OFFSET;
 			final=((val-OFFSET)<<2)+(third>>2)-0x40;
 
+if (debug) {
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
 				i+1,pv,val,third>>2,final);
 			if (pv!=final) fprintf(stderr,"error1: no match!\n");
@@ -104,6 +117,7 @@ int main(int argc, char **argv) {
 			if (val>0x7e) fprintf(stderr,"error1, too big! in=%x pv=%x e=%x val=%x\n",
 				in[i+0],pv,third,val);
 //			printf("%c",val); //(in[i + 1] >> 2) + OFFSET);
+}
 			enc2[enc_ptr]=val;
 			enc_ptr++;
 		}
@@ -116,6 +130,8 @@ int main(int argc, char **argv) {
 			val=val>>2;
 			val=val+OFFSET;
 			final=((val-OFFSET)<<2)+(third>>4)-0x40;
+
+if (debug) {
 			fprintf(stderr,"%d: %x -> %x %x ==> %x\n",
 				i+2,pv,val,third>>4,final);
 			if (pv!=final) fprintf(stderr,"error2: no match!\n");
@@ -126,6 +142,7 @@ int main(int argc, char **argv) {
 			if (val>0x7e) fprintf(stderr,"error2 too big! in=%x pv=%x e=%x val=%x\n",
 				in[i+0],pv,third,val);
 //			printf("%c",val);//(in[i + 2] >> 2) + OFFSET);
+}
 			enc2[enc_ptr]=val;
 			enc_ptr++;
 		}
@@ -149,6 +166,8 @@ int main(int argc, char **argv) {
 
 	if (mode==END_AT_3F5) {
 		fprintf(stderr,"Ending at $3F5\n");
+		fprintf(stderr,"You'll want to load your program at $%03X\n",
+			0x3f5-filesize+3);
 		printf("1FORI=0TO%d:POKE%d+I,4*PEEK(%d+I)-"
 			"%d+(PEEK(%d+I/3)-%d)/4^(I-INT(I/3)*3):NEXT\n",
 			filesize-1,			// filesize for loop
