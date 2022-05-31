@@ -12,11 +12,12 @@ all:	star.dsk
 $(DOS33):	
 	cd ../../../utils/dos33fs-utils && make
 
-star.dsk:	$(DOS33) HELLO STAR STARS
+star.dsk:	$(DOS33) HELLO STAR STARS STARS_BOT
 	cp $(EMPTY_DISK)/empty.dsk star.dsk
 	$(DOS33) -y star.dsk SAVE A HELLO
 	$(DOS33) -y star.dsk BSAVE -a 0xc00 STAR
 	$(DOS33) -y star.dsk BSAVE -a 0xc00 STARS
+	$(DOS33) -y star.dsk BSAVE -a 0xc00 STARS_BOT
 
 ###
 
@@ -42,14 +43,14 @@ stars.o: stars.s
 
 ###
 
-STAR_BOT:   star_bot.o
-	ld65 -o STAR_BOT star_bot.o -C $(LINKERSCRIPTS)/apple2_36b.inc
+STARS_BOT:   stars_bot.o
+	ld65 -o STARS_BOT stars_bot.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-star_bot.o: star_bot.s
-	ca65 -o star_bot.o star_bot.s -l star_bot.lst
+stars_bot.o: stars_bot.s
+	ca65 -o stars_bot.o stars_bot.s -l stars_bot.lst
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO STAR STAR_BOT
+	rm -f *~ *.o *.lst HELLO STAR STARS STARS_BOT
 

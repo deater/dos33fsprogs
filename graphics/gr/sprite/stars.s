@@ -8,6 +8,7 @@
 ; 140 bytes -- 0 is already in X
 ; 143 bytes -- stars move independently
 ; 140 bytes -- optimize XPOS in multiple calls to draw_stars
+; 145 bytes -- color changing background
 
 SPEAKER		= $C030
 SET_GR		= $C050
@@ -33,7 +34,7 @@ XPOS		= $77
 
 FRAME		= $6D
 PAGE		= $6E
-LINE		= $6F
+
 
 ;.zeropage
 ;.globalzp	pattern_smc
@@ -62,7 +63,11 @@ main_loop:
 	jsr	WAIT
 
 	inc	FRAME	; increment frame #
+	bne	no_cs
 
+	inc	bg_smc+1
+
+no_cs:
 	;=================================
 	; clear lo-res screen, page1/page2
 	;=================================
@@ -71,6 +76,7 @@ main_loop:
 	ldx	#4		; lores is 1k, so 4 pages
 full_loop:
 	ldy	#$00		; clear whole page
+bg_smc:
 	lda	#$55		; color
 inner_loop:
 	sta	(OUTL),Y

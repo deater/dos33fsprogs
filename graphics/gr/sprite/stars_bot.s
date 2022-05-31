@@ -13,6 +13,8 @@
 ; 143 bytes -- speed up the color transition
 ; 144 bytes -- tried to share adjust_page in subroutine, backfired
 ; 143 bytes -- revert last change
+; 142 bytes -- draw stars right to left
+; 141 bytes -- assume GBASCALC always leaves C set to 0
 
 SPEAKER		= $C030
 SET_GR		= $C050
@@ -24,7 +26,7 @@ LORES		= $C056		; Enable LORES graphics
 
 HGR2		= $F3D8
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
-GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH
+GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH (what is C?)
 SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
@@ -33,6 +35,7 @@ GBASH		= $27
 
 YPOS		= $76
 XPOS		= $77
+PO		= $78
 
 FRAME		= $6D
 PAGE		= $6E
@@ -55,7 +58,7 @@ main_loop:
 
 	asl		; make OUTH $4 or $8 depending on value in PAGE
 			; which we have in A above or at end of loop
-	asl		; C is 0
+	asl		; (this also sets C to 0)
 	adc	#4
 
 	sta	GBASH
@@ -63,11 +66,11 @@ main_loop:
 	inc	FRAME	; increment frame #
 	lda	FRAME
 	and	#$1f	; cycle colors ever 32 frames
-	bne	no_cs
+	bne	no_color_cycle
 
 	inc	bg_smc+1
 
-no_cs:
+no_color_cycle:
 
 	lda	#100	; pause a bit
 	jsr	WAIT
@@ -79,10 +82,10 @@ no_cs:
 	; clear lo-res screen, page1/page2
 	;=================================
 	; proper with avoiding screen holes is ~25 instructions
+	; this is more like 16
+	; assume GBASL/GBASH already points to proper $400 or $800
 
 	ldx	#4		; lores is 1k, so 4 pages
-;	stx	GBASH
-;	jsr	adjust_page
 full_loop:
 	ldy	#$00		; clear whole page
 bg_smc:
@@ -96,12 +99,15 @@ inner_loop:
 	dex
 	bne	full_loop
 
+	; X=0
+	; Y=0
+	; A=color
 
 	;====================
 	; draw the stars
 	;====================
 
-	txa			; X is zero here
+	lda	#32		; start from right to save a byte
 
 	;======================
 	; draw 8x8 bitmap star
@@ -112,7 +118,6 @@ draw_star:
 	; calculate YPOS
 	sta	XPOS
 
-;	lda	XPOS
 	lsr			; make middle star offset+4 from others
 	lsr
 
@@ -130,16 +135,14 @@ boxloop:
 	adc	YPOS
 	jsr	GBASCALC	; calc address of line in X (Y-coord)
 
-
 	; GBASL is in A at this point
+	; is C always 0?
 
-	clc
+;	clc
 	adc	XPOS		; adjust to X-coord
 	sta	GBASL
 
 	; adjust for proper page
-
-;	jsr	adjust_page
 
 	lda	PAGE		; want to add 0 or 4 (not 0 or 1)
 	asl
@@ -172,23 +175,22 @@ its_transparent:
 	dex
 	bpl	boxloop
 
-	lda	XPOS
-	clc
-	adc	#16
-
-	cmp	#48
-	bne	draw_star
+	lda	XPOS		; move to next position
+				; going right to left saves 2 bytes for cmp
+	sec
+	sbc	#16
+	bpl	draw_star
 
 
 	; X is $FF here
 	; Y is $FF here
-	; A is 48 here
+	; A is -16 here
 
 	;======================
 	; flip page
 	;======================
 
-	lda	PAGE
+	lda	PAGE			; 0 or 1
 
 	tax
 	ldy	PAGE1,X			; flip page
@@ -198,19 +200,10 @@ its_transparent:
 	bpl	main_loop		; bra
 
 
-	; GBASL in A
-;adjust_page:
-;	sta	GBASL
-;	lda	PAGE		; want to add 0 or 4 (not 0 or 1)
-;	asl
-;	asl			; this sets C to 0
-;	adc	GBASH
-;	sta	GBASH
-;	rts
 
-
-
+;=================
 ; star bitmap
+;=================
 
 ;012|456|
 ;   @     ;

@@ -1,16 +1,34 @@
-/* code by qkumba */
+/* Based on code by qkumba */
+/* TGreene improved the algorithm to be a bit smaller */
 
 #include <stdio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
+/* ASCII offset */
 #define OFFSET	35
 #define OFFSET2	35
 
-//#define OFFSET	35
+/* We are jumping into the decoded code using the & operator */
+/* This just does a jmp to $3F5 */
+/* Easiest is to just load our code there */
+/* The problem is this loads most of the code to the 1st text/lo-res page */
+/* For text/lo-res programs instead load code so it ends at $3F8, */
+/*    usually you have a 3-byte jmp to the start of your code at $3F5 */
 
 #define END_AT_3F5	0
 #define BEGIN_AT_3F5	1
 
+static int print_help(char *name) {
+
+	printf("\n");
+	printf("Usage: %s [-e] [-h]\n",name);
+	printf("\t-e : ends program at 3F5 (useful for lo-res programs)\n");
+	printf("\t     default is to start program at 3F5\n");
+	printf("\n");
+
+	return 0;
+}
 
 int main(int argc, char **argv) {
 
@@ -27,6 +45,10 @@ int main(int argc, char **argv) {
 		if (argv[1][0]=='-') {
 			if (argv[1][1]=='e') {
 				mode=END_AT_3F5;
+			}
+			if (argv[1][1]=='h') {
+				print_help(argv[0]);
+				exit(1);
 			}
 		}
 	}
