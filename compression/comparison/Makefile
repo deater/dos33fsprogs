@@ -15,12 +15,15 @@ LINKERSCRIPTS = ../../linker_scripts/
 
 all:	compression_test.dsk
 
-compression_test.dsk: HELLO LZSA_TEST EXOMIZER_TEST ZX02_TEST
+compression_test.dsk: HELLO LZSA_TEST EXOMIZER_TEST \
+		ZX02_OPT_TEST ZX02_SMALL_TEST ZX02_FAST_TEST
 	cp $(EMPTYDISK) compression_test.dsk
 	$(DOS33) -y compression_test.dsk SAVE A HELLO
 	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 LZSA_TEST
 	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 EXOMIZER_TEST
-	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 ZX02_TEST
+	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 ZX02_OPT_TEST
+	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 ZX02_SMALL_TEST
+	$(DOS33) -y compression_test.dsk BSAVE -a 0x6000 ZX02_FAST_TEST
 
 
 
@@ -59,11 +62,29 @@ level5.exo:	level5.hgr
 
 ###
 
-ZX02_TEST:	zx02_test.o
-	ld65 -o ZX02_TEST zx02_test.o -C $(LINKERSCRIPTS)/apple2_6000.inc
+ZX02_OPT_TEST:	zx02_opt_test.o
+	ld65 -o ZX02_OPT_TEST zx02_opt_test.o -C $(LINKERSCRIPTS)/apple2_6000.inc
 
-zx02_test.o:	zx02_test.s zx02_optim.s level5.zx02
-	ca65 -o zx02_test.o zx02_test.s -l zx02_test.lst
+zx02_opt_test.o:	zx02_opt_test.s zx02_optim.s level5.zx02
+	ca65 -o zx02_opt_test.o zx02_opt_test.s -l zx02_opt_test.lst
+
+###
+
+ZX02_SMALL_TEST:	zx02_small_test.o
+	ld65 -o ZX02_SMALL_TEST zx02_small_test.o -C $(LINKERSCRIPTS)/apple2_6000.inc
+
+zx02_small_test.o:	zx02_small_test.s zx02_small.s level5.zx02
+	ca65 -o zx02_small_test.o zx02_small_test.s -l zx02_small_test.lst
+
+###
+
+ZX02_FAST_TEST:	zx02_fast_test.o
+	ld65 -o ZX02_FAST_TEST zx02_fast_test.o -C $(LINKERSCRIPTS)/apple2_6000.inc
+
+zx02_fast_test.o:	zx02_fast_test.s zx02_fast.s level5.zx02
+	ca65 -o zx02_fast_test.o zx02_fast_test.s -l zx02_fast_test.lst
+
+
 
 ###
 
@@ -78,4 +99,6 @@ level5.hgr:	level5.png
 
 
 clean:	
-	rm -f HELLO LZSA_TEST EXOMIZER_TEST *~ *.o *.lst level5.lzsa
+	rm -f HELLO LZSA_TEST EXOMIZER_TEST \
+		ZX02_OPT_TEST ZX02_SMALL_TEST \
+		*~ *.o *.lst level5.lzsa
