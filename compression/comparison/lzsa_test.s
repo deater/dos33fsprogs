@@ -21,6 +21,9 @@ end:
 	jmp	end
 
 
-.include "graphics_level5.inc"
+
 
 .include "decompress_fast_v2.s"
+
+level5_lzsa:
+.incbin "level5.lzsa"
