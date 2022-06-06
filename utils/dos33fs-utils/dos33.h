@@ -57,6 +57,13 @@
 #define DOS33_FILE_NORMAL 0
 #define DOS33_FILE_DELETED 1
 
+/* Internal Error Returns */
+#define ERROR_INVALID_FILENAME  1
+#define ERROR_FILE_NOT_FOUND    2
+#define ERROR_NO_SPACE          3
+#define ERROR_IMAGE_NOT_FOUND   4
+#define ERROR_CATALOG_FULL      5
+
 /* dos33_vtoc_bitmap.c */
 int dos33_vtoc_free_space(unsigned char *vtoc);
 void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector);

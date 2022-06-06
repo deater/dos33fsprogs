@@ -108,7 +108,7 @@ repeat_catalog:
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
 
-	return -1;
+	return -ERROR_FILE_NOT_FOUND;
 }
 
 static int dos33_free_sector(unsigned char *vtoc,int fd,int track,int sector) {
@@ -139,7 +139,7 @@ static int dos33_allocate_sector(int fd, unsigned char *vtoc) {
 
 	if (result<0) {
 		fprintf(stderr,"ERROR: dos33_allocate_sector: Disk full!\n");
-		return -1;
+		return -ERROR_NO_SPACE;
 	}
 
 
@@ -161,11 +161,7 @@ static int dos33_allocate_sector(int fd, unsigned char *vtoc) {
 }
 
 
-#define ERROR_INVALID_FILENAME	1
-#define ERROR_FILE_NOT_FOUND	2
-#define ERROR_NO_SPACE		3
-#define ERROR_IMAGE_NOT_FOUND	4
-#define ERROR_CATALOG_FULL	5
+
 
 #define ADD_RAW		0
 #define ADD_BINARY	1
@@ -192,7 +188,7 @@ static int dos33_add_file(unsigned char *vtoc,
 	if (apple_filename[0]<64) {
 		fprintf(stderr,"Error!  First char of filename "
 				"must be ASCII 64 or above!\n");
-		if (!ignore_errors) return ERROR_INVALID_FILENAME;
+		if (!ignore_errors) return -ERROR_INVALID_FILENAME;
 	}
 
 	/* Check for comma in filename */
@@ -200,7 +196,7 @@ static int dos33_add_file(unsigned char *vtoc,
 		if (apple_filename[i]==',') {
 			fprintf(stderr,"Error!  "
 				"Cannot have , in a filename!\n");
-			return ERROR_INVALID_FILENAME;
+			return -ERROR_INVALID_FILENAME;
 		}
 	}
 
@@ -211,7 +207,7 @@ static int dos33_add_file(unsigned char *vtoc,
 	/* Determine size of file to upload */
 	if (stat(filename,&file_info)<0) {
 		fprintf(stderr,"Error!  %s not found!\n",filename);
-		return ERROR_FILE_NOT_FOUND;
+		return -ERROR_FILE_NOT_FOUND;
 	}
 
 	file_size=(int)file_info.st_size;
@@ -240,7 +236,7 @@ static int dos33_add_file(unsigned char *vtoc,
 		fprintf(stderr,"Error!  Not enough free space "
 				"on disk image (need %d have %d)\n",
 				needed_sectors*BYTES_PER_SECTOR,free_space);
-		return ERROR_NO_SPACE;
+		return -ERROR_NO_SPACE;
 	}
 
 	/* plus one because we need a sector for the tail */
@@ -253,20 +249,23 @@ static int dos33_add_file(unsigned char *vtoc,
 	input_fd=open(filename,O_RDONLY);
 	if (input_fd<0) {
 		fprintf(stderr,"Error! could not open %s\n",filename);
-		return ERROR_IMAGE_NOT_FOUND;
+		return -ERROR_IMAGE_NOT_FOUND;
 	}
 
 	i=0;
 	while (i<size_in_sectors) {
 
 		/* Create new T/S list if necessary */
+		/* This is called for the initial creation */
+		/*	but also every 122 sectors which is */
+		/*	the max a T/S list can hold (30.5k) */
 		if (i%TSL_MAX_NUMBER==0) {
 			old_ts_list=ts_list;
 
-			/* allocate a sector for the new list */
+			/* allocate a sector for the new T/S list */
 			ts_list=dos33_allocate_sector(fd,vtoc);
 			sectors_used++;
-			if (ts_list<0) return -1;
+			if (ts_list<0) return ts_list;
 
 			/* clear the t/s sector */
 			memset(ts_buffer,0,BYTES_PER_SECTOR);
@@ -310,7 +309,8 @@ static int dos33_add_file(unsigned char *vtoc,
 		data_ts=dos33_allocate_sector(fd,vtoc);
 		sectors_used++;
 
-		if (data_ts<0) return -1;
+		/* handle error */
+		if (data_ts<0) return data_ts;
 
 		/* clear data sector */
 		memset(data_buffer,0,BYTES_PER_SECTOR);
@@ -373,7 +373,7 @@ continue_parsing_catalog:
 	if (result!=BYTES_PER_SECTOR) {
 		fprintf(stderr,"Catalog: Error, only read %d bytes at $%02X:$%02X (%s)\n",
 			result,catalog_track,catalog_sector,strerror(errno));
-		return ERROR_NO_SPACE;
+		return -ERROR_NO_SPACE;
 	}
 
 	/* Find empty directory entry */
@@ -397,7 +397,7 @@ continue_parsing_catalog:
 		/* can we allocate new catalog sectors */
 		/* and point to them?? */
 		fprintf(stderr,"Error!  No more room for files!\n");
-		return ERROR_CATALOG_FULL;
+		return -ERROR_CATALOG_FULL;
 	}
 
 	catalog_track=catalog_buffer[CATALOG_NEXT_T];
