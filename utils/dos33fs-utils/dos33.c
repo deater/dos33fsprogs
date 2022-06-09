@@ -36,7 +36,7 @@ static int dos33_read_vtoc(int fd, unsigned char *vtoc) {
 	/* read in VTOC */
 	result=read(fd,vtoc,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error reading VTOC: %s\n",strerror(errno));
 		return -ERROR_VTOC;
 	}
@@ -59,7 +59,8 @@ static int dos33_check_file_exists(int fd,
 	unsigned char catalog_buffer[BYTES_PER_SECTOR];
 
 	/* read the VTOC into buffer */
-	dos33_read_vtoc(fd,vtoc);
+	result=dos33_read_vtoc(fd,vtoc);
+	if (result<0) return result;
 
 	/* FIXME: we have a function for this */
 	/* get the catalog track and sector from the VTOC */
@@ -71,6 +72,9 @@ repeat_catalog:
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	/* scan all file entries in catalog sector */
 	for(i=0;i<7;i++) {
@@ -107,8 +111,6 @@ repeat_catalog:
 
 	if (catalog_sector!=0) goto repeat_catalog;
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
-
 	return -ERROR_FILE_NOT_FOUND;
 }
 
@@ -123,7 +125,7 @@ static int dos33_free_sector(unsigned char *vtoc,int fd,int track,int sector) {
 	lseek(fd,DISK_OFFSET(VTOC_TRACK,VTOC_SECTOR),SEEK_SET);
 	result=write(fd,vtoc,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"dos33_free_sector: error writing VTOC\n");
 		return -ERROR_VTOC;
 	}
@@ -157,7 +159,7 @@ static int dos33_allocate_sector(int fd, unsigned char *vtoc) {
 	/* Write out VTOC */
 	result=write(fd,vtoc,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error on I/O\n");
 		return -ERROR_VTOC;
 	}
@@ -285,6 +287,9 @@ static int dos33_add_file(unsigned char *vtoc,
 
 			lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
 			result=write(fd,ts_buffer,BYTES_PER_SECTOR);
+			if (result<BYTES_PER_SECTOR) {
+				return -ERROR_FILE_WRITE;
+			}
 
 			if (i==0) {
 				initial_ts_list=ts_list;
@@ -299,6 +304,9 @@ static int dos33_add_file(unsigned char *vtoc,
 					SEEK_SET);
 
 				result=read(fd,ts_buffer,BYTES_PER_SECTOR);
+				if (result<BYTES_PER_SECTOR) {
+					return -ERROR_FILE_READ;
+				}
 
 				/* point from old ts list to new one we just made */
 				ts_buffer[TSL_NEXT_TRACK]=get_high_byte(ts_list);
@@ -311,15 +319,19 @@ static int dos33_add_file(unsigned char *vtoc,
 					SEEK_SET);
 
 				result=write(fd,ts_buffer,BYTES_PER_SECTOR);
+				if (result<BYTES_PER_SECTOR) {
+					return -ERROR_FILE_WRITE;
+				}
 			}
 		}
 
 		/* allocate a sector */
 		data_ts=dos33_allocate_sector(fd,vtoc);
-		sectors_used++;
 
 		/* handle error */
 		if (data_ts<0) return data_ts;
+
+		sectors_used++;
 
 		/* clear data sector */
 		memset(data_buffer,0,BYTES_PER_SECTOR);
@@ -331,24 +343,35 @@ static int dos33_add_file(unsigned char *vtoc,
 			data_buffer[1]=(address>>8)&0xff;
 			data_buffer[2]=(length)&0xff;
 			data_buffer[3]=((length)>>8)&0xff;
-			bytes_read=read(input_fd,data_buffer+4,
+			result=read(input_fd,data_buffer+4,
 					BYTES_PER_SECTOR-4);
-			bytes_read+=4;
+			bytes_read=result+4;
 		}
 		else {
-			bytes_read=read(input_fd,data_buffer,
+			result=read(input_fd,data_buffer,
 					BYTES_PER_SECTOR);
+			bytes_read=result;
 		}
-		first_write=0;
 
-		if (bytes_read<0) fprintf(stderr,"Error reading bytes!\n");
+		/* Note, we might not read a full sector worth */
+		/* if the file is smaller */
+		if (result<0) {
+			fprintf(stderr,"Error reading input file!\n");
+			return -ERROR_FILE_READ;
+		}
+
+		first_write=0;
 
 		/* write to disk image */
 		lseek(fd,DISK_OFFSET((data_ts>>8)&0xff,data_ts&0xff),SEEK_SET);
 		result=write(fd,data_buffer,BYTES_PER_SECTOR);
 
+		if (result<BYTES_PER_SECTOR) {
+			return -ERROR_FILE_WRITE;
+		}
+
 		if (debug) {
-			printf("Writing %i bytes to %i/%i\n",
+			printf("Wrote %i bytes to %i/%i\n",
 				bytes_read,(data_ts>>8)&0xff,data_ts&0xff);
 		}
 
@@ -357,6 +380,9 @@ static int dos33_add_file(unsigned char *vtoc,
 		/* read in t/s list */
 		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
 		result=read(fd,ts_buffer,BYTES_PER_SECTOR);
+		if (result<BYTES_PER_SECTOR) {
+			return -ERROR_FILE_READ;
+		}
 
 		/* point to new data sector */
 		ts_buffer[((i%TSL_MAX_NUMBER)*2)+TSL_LIST]=(data_ts>>8)&0xff;
@@ -365,6 +391,9 @@ static int dos33_add_file(unsigned char *vtoc,
 		/* write t/s list back out */
 		lseek(fd,DISK_OFFSET((ts_list>>8)&0xff,ts_list&0xff),SEEK_SET);
 		result=write(fd,ts_buffer,BYTES_PER_SECTOR);
+		if (result<BYTES_PER_SECTOR) {
+			return -ERROR_FILE_WRITE;
+		}
 
 		i++;
 	}
@@ -448,7 +477,7 @@ got_a_dentry:
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,catalog_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error on I/O\n");
 		return -ERROR_CATALOG;
 	}
@@ -485,6 +514,9 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	tsl_track=sector_buffer[CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TS_LIST_T];
@@ -500,6 +532,10 @@ keep_saving:
 	/* Read in TSL Sector */
 	lseek(fd,DISK_OFFSET(tsl_track,tsl_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
+
 	tsl_pointer=0;
 
 	/* check each track/sector pair in the list */
@@ -517,6 +553,9 @@ keep_saving:
 		else {
 			lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
 			result=read(fd,&data_sector,BYTES_PER_SECTOR);
+			if (result<BYTES_PER_SECTOR) {
+				return -ERROR_FILE_READ;
+			}
 
 			/* some file formats have the size in the first sector */
 			/* so cheat and get real file size from file itself    */
@@ -540,6 +579,9 @@ keep_saving:
 			/* write the block read in out to the output file */
 			lseek(output_fd,output_pointer*BYTES_PER_SECTOR,SEEK_SET);
 			result=write(output_fd,&data_sector,BYTES_PER_SECTOR);
+			if (result<BYTES_PER_SECTOR) {
+				return -ERROR_FILE_WRITE;
+			}
 			last_output_pointer=output_pointer+1;
 		}
 		output_pointer++;
@@ -610,6 +652,9 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	file_type=sector_buffer[CATALOG_FILE_LIST+
 				(catalog_file*CATALOG_ENTRY_SIZE)
@@ -626,7 +671,7 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error on I/O\n");
 		return -ERROR_CATALOG;
 	}
@@ -651,6 +696,9 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	/* copy over filename */
 	for(x=0;x<strlen(new_name);x++) {
@@ -670,7 +718,7 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error on I/O\n");
 		return -ERROR_CATALOG;
 	}
@@ -694,6 +742,9 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 	/* Read in Catalog Sector */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,sector_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	/* get the stored track value, and put it back  */
 	/* FIXME: should walk file to see if T/s valild */
@@ -716,7 +767,7 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"Error on I/O\n");
 		return -ERROR_CATALOG;
 	}
@@ -747,6 +798,9 @@ static int dos33_delete_file(unsigned char *vtoc,int fd,int fsl) {
 	/* Load in the catalog table for the file */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	file_type=catalog_buffer[CATALOG_FILE_LIST+
 			(catalog_entry*CATALOG_ENTRY_SIZE)
@@ -773,8 +827,9 @@ keep_deleting:
 	/* load in the t/s list info */
 	lseek(fd,DISK_OFFSET(ts_track,ts_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"delete: error reading catalog\n");
+		return -ERROR_FILE_READ;
 	}
 
 	/* Free each sector listed by t/s list */
@@ -826,8 +881,9 @@ keep_deleting:
 	}
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=read(fd,catalog_buffer,BYTES_PER_SECTOR);
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"delete: error reading catalog\n");
+		return -ERROR_FILE_READ;
 	}
 
 	/* save track as last char of name, for undelete purposes */
@@ -843,7 +899,7 @@ keep_deleting:
 	/* re seek to catalog position and write out changes */
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,catalog_buffer,BYTES_PER_SECTOR);
-	if (result<0) {
+	if (result<BYTES_PER_SECTOR) {
 		fprintf(stderr,"delete: error writing catalog\n");
 		return -ERROR_CATALOG;
 	}
@@ -855,10 +911,13 @@ keep_deleting:
 static int dos33_rename_hello(int fd, char *new_name) {
 
 	char buffer[BYTES_PER_SECTOR];
-	int i;
+	int i,result;
 
 	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	read(fd,buffer,BYTES_PER_SECTOR);
+	result=read(fd,buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_READ;
+	}
 
 	for(i=0;i<30;i++) {
 		if (i<strlen(new_name)) {
@@ -870,7 +929,10 @@ static int dos33_rename_hello(int fd, char *new_name) {
 	}
 
 	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
-	write(fd,buffer,BYTES_PER_SECTOR);
+	result=write(fd,buffer,BYTES_PER_SECTOR);
+	if (result<BYTES_PER_SECTOR) {
+		return -ERROR_FILE_WRITE;
+	}
 
 	return 0;
 }
@@ -1049,14 +1111,16 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
 		return -ERROR_FILE_NOT_FOUND;
 	}
-	dos33_read_vtoc(dos_fd,vtoc);
+	retval=dos33_read_vtoc(dos_fd,vtoc);
+	if (retval<0) goto exit_and_close;
 
 	/* Move to next argument */
 	optind++;
 
 	if (optind==argc) {
 		fprintf(stderr,"ERROR!  Must specify command!\n\n");
-		return -2;
+		retval=-ERROR_INVALID_PARAMATER;
+		goto exit_and_close;
 	}
 
 	/* Grab command */
@@ -1130,6 +1194,8 @@ int main(int argc, char **argv) {
 
        case COMMAND_CATALOG:
 		retval=dos33_read_vtoc(dos_fd,vtoc);
+		if (retval<0) return retval;
+
 		dos33_catalog(dos_fd,vtoc);
 
 		break;
@@ -1213,6 +1279,7 @@ int main(int argc, char **argv) {
 				result_string=fgets(temp_string,BUFSIZ,stdin);
 				if ((result_string==NULL) || (temp_string[0]!='y')) {
 					printf("Exiting early...\n");
+					retval=-ERROR_INVALID_PARAMATER;
 					goto exit_and_close;
 				}
 			}

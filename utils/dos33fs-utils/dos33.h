@@ -68,6 +68,7 @@
 #define ERROR_CATALOG		8
 #define ERROR_FILE_WRITE	9
 #define ERROR_INVALID_PARAMATER	10
+#define ERROR_FILE_READ		11
 
 /* dos33_vtoc_bitmap.c */
 int dos33_vtoc_free_space(unsigned char *vtoc);
@@ -79,7 +80,7 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 
 /* dos33_catalog.c */
 unsigned char dos33_char_to_type(char type, int lock);
-void dos33_catalog(int dos_fd, unsigned char *vtoc);
+int dos33_catalog(int dos_fd, unsigned char *vtoc);
 char *dos33_filename_to_ascii(char *dest,unsigned char *src,int len);
 unsigned char dos33_file_type(int value);
 
