@@ -38,6 +38,7 @@ static int dos33_read_vtoc(int fd, unsigned char *vtoc) {
 
 	if (result<0) {
 		fprintf(stderr,"Error reading VTOC: %s\n",strerror(errno));
+		return -ERROR_VTOC;
 	}
 
 	return 0;
@@ -124,6 +125,7 @@ static int dos33_free_sector(unsigned char *vtoc,int fd,int track,int sector) {
 
 	if (result<0) {
 		fprintf(stderr,"dos33_free_sector: error writing VTOC\n");
+		return -ERROR_VTOC;
 	}
 
 	return 0;
@@ -155,7 +157,10 @@ static int dos33_allocate_sector(int fd, unsigned char *vtoc) {
 	/* Write out VTOC */
 	result=write(fd,vtoc,BYTES_PER_SECTOR);
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -ERROR_VTOC;
+	}
 
 	return ((found_track<<8)+found_sector);
 }
@@ -443,7 +448,10 @@ got_a_dentry:
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,catalog_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -ERROR_CATALOG;
+	}
 
 	return 0;
 }
@@ -574,10 +582,14 @@ keep_saving:
 		else {
 			printf("Auto-truncating file size to %d\n",file_size);
 			result=ftruncate(output_fd,file_size);
+			if (result<0) {
+				fprintf(stderr,"Error on I/O\n");
+				return -ERROR_FILE_WRITE;
+			}
 		}
 	}
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+
 
 	return 0;
 
@@ -614,7 +626,10 @@ static int dos33_lock_file(int fd,int fts,int lock) {
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -ERROR_CATALOG;
+	}
 
 	return 0;
 
@@ -657,6 +672,7 @@ static int dos33_rename_file(int fd,int fts,char *new_name) {
 
 	if (result<0) {
 		fprintf(stderr,"Error on I/O\n");
+		return -ERROR_CATALOG;
 	}
 
 	return 0;
@@ -700,7 +716,10 @@ static int dos33_undelete_file(int fd,int fts,char *new_name) {
 	lseek(fd,DISK_OFFSET(catalog_track,catalog_sector),SEEK_SET);
 	result=write(fd,sector_buffer,BYTES_PER_SECTOR);
 
-	if (result<0) fprintf(stderr,"Error on I/O\n");
+	if (result<0) {
+		fprintf(stderr,"Error on I/O\n");
+		return -ERROR_CATALOG;
+	}
 
 	return 0;
 }
@@ -826,6 +845,7 @@ keep_deleting:
 	result=write(fd,catalog_buffer,BYTES_PER_SECTOR);
 	if (result<0) {
 		fprintf(stderr,"delete: error writing catalog\n");
+		return -ERROR_CATALOG;
 	}
 
 	return 0;
@@ -975,6 +995,7 @@ int main(int argc, char **argv) {
 	int c;
 	int address=0, length=0;
 	unsigned char vtoc[BYTES_PER_SECTOR];
+	int retval=0;
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
@@ -1018,7 +1039,7 @@ int main(int argc, char **argv) {
 
 	if (optind==argc) {
 		fprintf(stderr,"ERROR!  Must specify disk image!\n\n");
-		return -1;
+		return -ERROR_INVALID_PARAMATER;
 	}
 
 	/* get argument 1, which is image name */
@@ -1026,7 +1047,7 @@ int main(int argc, char **argv) {
 	dos_fd=open(image,O_RDWR);
 	if (dos_fd<0) {
 		fprintf(stderr,"Error opening disk_image: %s\n",image);
-		return -1;
+		return -ERROR_FILE_NOT_FOUND;
 	}
 	dos33_read_vtoc(dos_fd,vtoc);
 
@@ -1056,6 +1077,7 @@ int main(int argc, char **argv) {
 	case COMMAND_UNKNOWN:
 		fprintf(stderr,"ERROR!  Unknown command %s\n",temp_string);
 		fprintf(stderr,"\tTry \"%s -h\" for help.\n\n",argv[0]);
+		retval=-ERROR_INVALID_PARAMATER;
 		goto exit_and_close;
 		break;
 
@@ -1067,12 +1089,13 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s LOAD apple_filename\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		if (debug) printf("\tApple filename: %s\n",apple_filename);
+		if (debug) printf("\tAhpple filename: %s\n",apple_filename);
 
 		/* get output filename */
 		optind++;
@@ -1097,15 +1120,16 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			retval=catalog_entry;
 			goto exit_and_close;
 		}
 
-		dos33_load_file(dos_fd,catalog_entry,local_filename);
+		retval=dos33_load_file(dos_fd,catalog_entry,local_filename);
 
 		break;
 
        case COMMAND_CATALOG:
-		dos33_read_vtoc(dos_fd,vtoc);
+		retval=dos33_read_vtoc(dos_fd,vtoc);
 		dos33_catalog(dos_fd,vtoc);
 
 		break;
@@ -1120,6 +1144,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s SAVE type "
 					"file_name apple_filename\n\n",
 					argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1144,6 +1169,7 @@ int main(int argc, char **argv) {
 						"file_name apple_filename\n\n",
 						argv[0],image);
 			}
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1193,13 +1219,14 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Deleting previous version...\n");
 			dos33_delete_file(vtoc,dos_fd,catalog_entry);
 		}
+
 		if (command==COMMAND_SAVE) {
-			dos33_add_file(vtoc,dos_fd,type,
+			retval=dos33_add_file(vtoc,dos_fd,type,
 				ADD_RAW, address, length,
 				local_filename,apple_filename);
 		}
 		else {
-			dos33_add_file(vtoc,dos_fd,type,
+			retval=dos33_add_file(vtoc,dos_fd,type,
 				ADD_BINARY, address, length,
 				local_filename,apple_filename);
 		}
@@ -1209,6 +1236,7 @@ int main(int argc, char **argv) {
 	case COMMAND_RAW_WRITE:
 
 		fprintf(stderr,"ERROR!  Not implemented!\n\n");
+		retval=-ERROR_INVALID_PARAMATER;
 		goto exit_and_close;
 
 		break;
@@ -1219,6 +1247,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need file_name\n");
 			fprintf(stderr,"%s %s DELETE apple_filename\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1230,9 +1259,10 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr, "Error!  File %s does not exist\n",
 					apple_filename);
+			retval=catalog_entry;
 			goto exit_and_close;
 		}
-		dos33_delete_file(vtoc,dos_fd,catalog_entry);
+		retval=dos33_delete_file(vtoc,dos_fd,catalog_entry);
 
 		break;
 
@@ -1253,6 +1283,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s %s apple_filename\n",
 				argv[0],image,temp_string);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1265,10 +1296,11 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			retval=catalog_entry;
 			goto exit_and_close;
 		}
 
-		dos33_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
+		retval=dos33_lock_file(dos_fd,catalog_entry,command==COMMAND_LOCK);
 
 		break;
 
@@ -1279,6 +1311,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 	     		goto exit_and_close;
 		}
 
@@ -1291,6 +1324,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"%s %s RENAME apple_filename_old "
 				"apple_filename_new\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 	     		goto exit_and_close;
 		}
 
@@ -1303,6 +1337,7 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 							apple_filename);
+			retval=catalog_entry;
 			goto exit_and_close;
 		}
 
@@ -1316,6 +1351,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need apple file_name\n");
 			fprintf(stderr,"%s %s UNDELETE apple_filename\n\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1331,10 +1367,11 @@ int main(int argc, char **argv) {
 		if (catalog_entry<0) {
 			fprintf(stderr,"Error!  %s not found!\n",
 				apple_filename);
+			retval=catalog_entry;
 			goto exit_and_close;
 		}
 
-		dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
+		retval=dos33_undelete_file(dos_fd,catalog_entry,apple_filename);
 
 		break;
 
@@ -1343,6 +1380,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error! Need file_name\n");
 			fprintf(stderr,"%s %s HELLO apple_filename\n\n",
 				argv[0],image);
+			retval=-ERROR_INVALID_PARAMATER;
 			goto exit_and_close;
 		}
 
@@ -1356,6 +1394,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,
 				"Warning!  File %s does not exist\n",
 					apple_filename);
+			retval=catalog_entry;
 		}
 		dos33_rename_hello(dos_fd,apple_filename);
 		break;
@@ -1366,11 +1405,12 @@ int main(int argc, char **argv) {
 		/* use temp file?  Walking a sector at a time seems a pain */
 	default:
 		fprintf(stderr,"Sorry, unsupported command %s\n\n",temp_string);
+		retval=-ERROR_INVALID_PARAMATER;
 		goto exit_and_close;
 	}
 
 exit_and_close:
 	close(dos_fd);
 
-	return 0;
+	return retval;
 }
