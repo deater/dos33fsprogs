@@ -59,7 +59,7 @@ static void dump_vtoc(unsigned char *vtoc) {
 int dos33_dump(unsigned char *vtoc, int fd) {
 
 	int num_tracks,catalog_t,catalog_s,file,ts_t,ts_s,ts_total;
-	int track,sector;
+	int track,sector,type;
 	int i;
 	int deleted=0;
 	char temp_string[BUFSIZ];
@@ -67,6 +67,7 @@ int dos33_dump(unsigned char *vtoc, int fd) {
 	unsigned char catalog_buffer[BYTES_PER_SECTOR];
 	unsigned char data[BYTES_PER_SECTOR];
 	int result;
+	int size_already=0;
 
 	/* Read Track 1 Sector 9 */
 	lseek(fd,DISK_OFFSET(1,9),SEEK_SET);
@@ -104,6 +105,7 @@ repeat_catalog:
 	dump_sector(catalog_buffer);
 
 	for(file=0;file<7;file++) {
+		size_already=0;
 		printf("\n\n");
 
 		ts_t=catalog_buffer[(CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_TS_LIST_T))];
@@ -138,28 +140,62 @@ repeat_catalog:
 		printf("\tLocked = %s\n",
 			catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]>0x7f?
 			"YES":"NO");
-		printf("\tType = %c\n",
-			dos33_file_type(catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]));
+		type=dos33_file_type(catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE)+FILE_TYPE]);
+		printf("\tType = %c\n",type);
 		printf("\tSize in sectors = %i\n",
 			catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_L)]+
 			(catalog_buffer[CATALOG_FILE_LIST+(file*CATALOG_ENTRY_SIZE+FILE_SIZE_H)]<<8));
 
-repeat_tsl:
-		printf("\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
+		/* read first sector to try to get size */
+		if (type=='B') {
+
+		}
+
 		if (deleted) goto continue_dump;
+
+repeat_tsl:
+
+		/* read T/S list */
 		lseek(fd,DISK_OFFSET(ts_t,ts_s),SEEK_SET);
 		result=read(fd,&tslist,BYTES_PER_SECTOR);
 
+		/* read data */
 		for(i=0;i<ts_total;i++) {
 			track=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)];
 			sector=tslist[TSL_LIST+(i*TSL_ENTRY_SIZE)+1];
 			if ((track==0) && (sector==0)) printf(".");
-			else printf("\n\t\t%02X/%02X",track,sector);
+			else {
+				if (!size_already) {
+					/* Read Data */
+					lseek(fd,DISK_OFFSET(track,sector),SEEK_SET);
+					result=read(fd,data,BYTES_PER_SECTOR);
+					if (type=='B') {
+						printf("\tAddress=$%04X\n",
+							data[0]|(data[1]<<8));
+						printf("\tSize=$%04X (%d)\n",
+							data[2]|(data[3]<<8),
+							data[2]|(data[3]<<8));
+					}
+					else if ((type=='A') || (type=='I')) {
+						printf("\tSize=$%04X (%d)\n",
+							data[0]|(data[1]<<8),
+							data[0]|(data[1]<<8));
+					}
+					size_already=1;
+					printf("\n\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
+				}
+
+				printf("\n\t\t%02X/%02X",track,sector);
+			}
 		}
 		ts_t=tslist[TSL_NEXT_TRACK];
 		ts_s=tslist[TSL_NEXT_SECTOR];
 
-		if (!((ts_s==0) && (ts_t==0))) goto repeat_tsl;
+		if (!((ts_s==0) && (ts_t==0))) {
+			printf("\n\tNext T/S List $%02X/$%02X:\n",ts_t,ts_s);
+			goto repeat_tsl;
+		}
+
 continue_dump:;
 	}
 

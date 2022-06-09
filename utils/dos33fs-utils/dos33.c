@@ -455,13 +455,14 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 	unsigned char sector_buffer[BYTES_PER_SECTOR];
 	int tsl_pointer=0,output_pointer=0;
 	int result;
+	int total_sectors=0,last_output_pointer=0;
 
 	/* FIXME!  Warn if overwriting file! */
 	output_fd=open(filename,O_WRONLY|O_CREAT|O_TRUNC,0666);
 	if (output_fd<0) {
 		fprintf(stderr,"Error! could not open %s for local save\n",
 			filename);
-		return -1;
+		return -ERROR_CANNOT_OPEN;
 	}
 
 	catalog_file=fts>>16;
@@ -480,7 +481,8 @@ static int dos33_load_file(int fd,int fts,char *filename) {
 	file_type=dos33_file_type(sector_buffer[CATALOG_FILE_LIST+
 			(catalog_file*CATALOG_ENTRY_SIZE)+FILE_TYPE]);
 
-//	printf("file_type: %c\n",file_type);
+	if (debug) printf("Using TSL at %02X:%02X\n",tsl_track,tsl_sector);
+	if (debug) printf("file_type: %c\n",file_type);
 
 keep_saving:
 	/* Read in TSL Sector */
@@ -497,6 +499,8 @@ keep_saving:
 
 		if ((data_s==0) && (data_t==0)) {
 			/* empty */
+			/* this is complicated, can be a "hole" if in middle */
+			/* or else ignored if at the end */
 		}
 		else {
 			lseek(fd,DISK_OFFSET(data_t,data_s),SEEK_SET);
@@ -508,39 +512,65 @@ keep_saving:
 				switch(file_type) {
 				case 'A':
 				case 'I':
-					file_size=data_sector[0]+(data_sector[1]<<8)+2;
+					file_size=data_sector[0]+
+							(data_sector[1]<<8)+2;
 					break;
 				case 'B':
-					file_size=data_sector[2]+(data_sector[3]<<8)+4;
+					file_size=data_sector[2]+
+							(data_sector[3]<<8)+4;
 					break;
 				default:
 					file_size=-1;
 				}
+				if (debug) printf("File size = %d\n",file_size);
 			}
 
 			/* write the block read in out to the output file */
 			lseek(output_fd,output_pointer*BYTES_PER_SECTOR,SEEK_SET);
 			result=write(output_fd,&data_sector,BYTES_PER_SECTOR);
+			last_output_pointer=output_pointer+1;
 		}
 		output_pointer++;
 		tsl_pointer++;
 	}
 
+	total_sectors=last_output_pointer;
+
 	/* finished with TSL sector, see if we have another */
 	tsl_track=sector_buffer[TSL_NEXT_TRACK];
 	tsl_sector=sector_buffer[TSL_NEXT_SECTOR];
 
-//	printf("Next track/sector=%d/%d op=%d\n",tsl_track,tsl_sector,
-//		output_pointer*BYTES_PER_SECTOR);
-
 	if ((tsl_track==0) && (tsl_sector==0)) {
 	}
-	else goto keep_saving;
+	else {
+		if (debug) printf("Next track/sector=%02X:%02X op=%d\n",
+			tsl_track,tsl_sector,
+			output_pointer*BYTES_PER_SECTOR);
+		goto keep_saving;
+	}
 
 	/* Correct the file size */
+	/* Note: this can cause issues if the original disk image */
+	/*       was doing something extra-clever and intentionally */
+	/*	 had a mis-matched file size */
 	if (file_size>=0) {
-//		printf("Truncating file size to %d\n",file_size);
-		result=ftruncate(output_fd,file_size);
+
+		if (debug) printf("Total size %d sectors (%d bytes)\n",
+			total_sectors,total_sectors*BYTES_PER_SECTOR);
+
+		/* Tricky,  0...255 will give sectors of 0 */
+		/*        256...511 will give sectors of 1 */
+		if (((file_size-1)/256)!=total_sectors-1) {
+			printf("Warning! Total size %d not within "
+				"256 bytes of sector total (%d %d)!\n",
+				file_size,file_size/256,total_sectors);
+			printf("This could mean your program is trying "
+				"to be clever.  Not truncating.\n");
+		}
+		else {
+			printf("Auto-truncating file size to %d\n",file_size);
+			result=ftruncate(output_fd,file_size);
+		}
 	}
 
 	if (result<0) fprintf(stderr,"Error on I/O\n");
@@ -828,8 +858,9 @@ static void display_help(char *name, int version_only) {
 
 	if (version_only) return;
 
-	printf("Usage: %s [-h] [-y] [-x] disk_image COMMAND [options]\n",name);
+	printf("Usage: %s [-h] [-d] [-y] [-x] disk_image COMMAND [options]\n",name);
 	printf("\t-h : this help message\n");
+	printf("\t-d : enable debugging\n");
 	printf("\t-y : always answer yes for anying warning questions\n");
 	printf("\t-x : ignore errors (useful for making invalid filenames)\n");
 	printf("\n");

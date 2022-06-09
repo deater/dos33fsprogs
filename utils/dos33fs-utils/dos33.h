@@ -63,6 +63,7 @@
 #define ERROR_NO_SPACE          3
 #define ERROR_IMAGE_NOT_FOUND   4
 #define ERROR_CATALOG_FULL      5
+#define ERROR_CANNOT_OPEN	6
 
 /* dos33_vtoc_bitmap.c */
 int dos33_vtoc_free_space(unsigned char *vtoc);
