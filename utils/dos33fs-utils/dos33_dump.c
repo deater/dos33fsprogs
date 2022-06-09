@@ -182,7 +182,14 @@ repeat_tsl:
 							data[0]|(data[1]<<8));
 					}
 					size_already=1;
-					printf("\n\tT/S List $%02X/$%02X:\n",ts_t,ts_s);
+					printf("\n\tT/S List at $%02X/$%02X\n",ts_t,ts_s);
+
+				}
+				if (i==0) {
+					printf("\tT/S offset (how far into file this list points) "
+						"$%04X sectors (%d bytes)\n",
+						(tslist[TSL_OFFSET_H]<<8)+tslist[TSL_OFFSET_L],
+						BYTES_PER_SECTOR*((tslist[TSL_OFFSET_H]<<8)+tslist[TSL_OFFSET_L]));
 				}
 
 				printf("\n\t\t%02X/%02X",track,sector);
@@ -192,7 +199,7 @@ repeat_tsl:
 		ts_s=tslist[TSL_NEXT_SECTOR];
 
 		if (!((ts_s==0) && (ts_t==0))) {
-			printf("\n\tNext T/S List $%02X/$%02X:\n",ts_t,ts_s);
+			printf("\n\tNext T/S List at $%02X/$%02X\n",ts_t,ts_s);
 			goto repeat_tsl;
 		}
 

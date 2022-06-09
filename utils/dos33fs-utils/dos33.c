@@ -270,7 +270,11 @@ static int dos33_add_file(unsigned char *vtoc,
 			/* clear the t/s sector */
 			memset(ts_buffer,0,BYTES_PER_SECTOR);
 
-			/* set offset into file */
+			/* This field in the TSL descibes the file offset */
+			/* (in sectors from the beginning) that the first */
+			/* T/S entry represents */
+			/* We were setting this wrong for a while as I don't */
+			/* think DOS33 uses it, but apparently some programs do */
 			ts_buffer[TSL_OFFSET_H]=get_high_byte(i);
 			ts_buffer[TSL_OFFSET_L]=get_low_byte(i);
 
