@@ -1,0 +1,2 @@
+1FORI=0TO30:POKE1013+I,4*PEEK(2125+I)-204+(PEEK(2156+I/3)-35)/4^(I-INT(I/3)*3):NEXT
+2&"-hoOqTq]gNq\n:7p[3ZqW<Ugciren7l[8*<6#8%\+#
