@@ -5,7 +5,7 @@ LEVEL5.PNG (hires background image from Lemmings, 8k)
 		File size	Routine Size		Time (cycles)	FPS
 		===========================================================
 lzsa_fast	4012		259 bytes		7cc5e = 511,070	~2.0
-exomizer	3851(?)		???			?????
+exomizer	3868		283 bytes		9F149 = 651,593 ~1.5
 zx02_opt	3869		138 bytes		7076f = 460,655 ~2.2
 zx02_small	3869		130 bytes		93CCB = 605,387 ~1.7
 zx02_fast	3869		175 bytes		63EE8 = 409,320 ~2.5
