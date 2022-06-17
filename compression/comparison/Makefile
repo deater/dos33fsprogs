@@ -48,7 +48,7 @@ level5.lzsa:	level5.hgr
 ###
 
 EXOMIZER_TEST:	exomizer_test.o
-	ld65 -o EXOMIZER_TEST exomizer_test.o -C $(LINKERSCRIPTS)/apple2_6000.inc
+	ld65 -o EXOMIZER_TEST exomizer_test.o -DFORWARD_DECRUNCHING=1 -C $(LINKERSCRIPTS)/apple2_6000.inc
 
 exomizer_test.o:	exomizer_test.s exodecrunch.s level5.exo
 	ca65 -o exomizer_test.o exomizer_test.s -l exomizer_test.lst
@@ -57,8 +57,10 @@ exomizer_test.o:	exomizer_test.s exodecrunch.s level5.exo
 
 level5.exo:	level5.hgr
 #	$(EXOMIZER) mem level5.hgr -o level5.exo
-	$(EXOMIZER) mem -l "$$6000" "level5.hgr,$$2000" -o level5.exo
-
+#	$(EXOMIZER) mem -l "$$6000" "level5.hgr,$$2000" -o level5.exo
+#	$(EXOMIZER) mem -q -P23 -lnone level5.hgr@0x2000 -o level5.exo
+#	$(EXOMIZER) mem -q -P23 -lnone level5.hgr@0x4000 -o level5.exo
+	$(EXOMIZER) raw -q -P23 level5.hgr -o level5.exo
 
 ###
 
