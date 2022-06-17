@@ -4,7 +4,7 @@
 lzsa_test:
 
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 	bit	HIRES
 	bit	FULLGR
 

@@ -1,79 +1,98 @@
-; -------------------------------------------------------------------
-; this file is intended to be assembled and linked with the cc65 toolchain.
-; It has not been tested with any other assemblers or linkers.
-; -------------------------------------------------------------------
-; -------------------------------------------------------------------
-; example usage of the standard decruncher
-; this program decrunches data to memory
-; -------------------------------------------------------------------
-; if decrunching forwards then the following line must be uncommented.
-;DECRUNCH_FORWARDS = 1
-.IFNDEF DECRUNCH_FORWARDS
-DECRUNCH_FORWARDS = 0
-.ENDIF
-; -------------------------------------------------------------------
-;.import decrunch
-;.export get_crunched_byte
-;.import end_of_data
+.include "zp.inc"
+.include "hardware.inc"
 
-;        .byte $01,$08,$0b,$08,<2003,>2003,$9e,'2','0','6','1',0,0,0
-; -------------------------------------------------------------------
-; we begin here
-; -------------------------------------------------------------------
+exomizer_test:
 
-	lda	#$20
-	sta	zp_dest_hi
-	lda	#$00
-	sta	zp_dest_lo
+        bit     SET_GR
+        bit     PAGE1
+        bit     HIRES
+        bit     FULLGR
 
-
-.IF DECRUNCH_FORWARDS = 0
-        lda $04
-        sta _byte_lo
-        lda $05
-        sta _byte_hi
-.ELSE
-	lda	#<end_of_data
+	lda	#<data_begin
 	sta	_byte_lo
-	lda	#>end_of_data
+	lda	#>data_begin
 	sta	_byte_hi
 
-;        lda $02
- ;       sta _byte_lo
-  ;      lda $03
-   ;     sta _byte_hi
-.ENDIF
-        jsr decrunch
+	jsr	decrunch
+
+.if 0
+
+;	lda	#<data_begin
+;	sta	zp_src_lo
+;	lda	#>data_begin
+;	sta	zp_src_hi
+
+
+	lda   #$1F
+        pha
+        lda   #>(data_end)	; sizehi2
+        pha
+        lda   #<(data_end)	; sizelo2
+        pha
+        lda   #>(start_d-1)		; #>(@loaddecrunch - 1)
+        pha
+        lda   #<(start_d-1)		; #<(@loaddecrunch - 1)
+        pha
+
+	jmp	decrunch_table
+
+
+;decrunch_table:
+;!warn "entry=",*
+;        pla			; <loaddecrunch
+ ;       tay
+
+;        pla			; >loaddecrunch
+;        tax
+;        clc
+
+;        pla			; sizelo2
+;        adc #$F8
+;        sta _byte_lo
+
+;        pla			;sizehi2
+;        sta zp_bitbuf
+
+;        pla			;#$1F
+;        adc zp_bitbuf
+;        sta _byte_hi
+
+;        txa
+;        pha
+
+;        tya
+ ;       pha
+
+ ;       jmp decrunch
+
+
+
+
+;	jsr	decrunch
+
+.endif
 
 end:
 	jmp	end
 
-; -------------------------------------------------------------------
+
 get_crunched_byte:
-.IF DECRUNCH_FORWARDS = 0
-        lda _byte_lo
-        bne _byte_skip_hi
-        dec _byte_hi
-_byte_skip_hi:
-        dec _byte_lo
-.ENDIF
 _byte_lo = * + 1
 _byte_hi = * + 2
-        lda $ffff               ; needs to be set correctly before
-
-.IF DECRUNCH_FORWARDS <> 0
-        inc _byte_lo
-        bne _byte_skip_hi
-        inc _byte_hi
+         lda $1234        ; needs to be set correctly before
+                          ; decrunch_file is called.
+         inc _byte_lo
+         bne _byte_skip_hi
+         inc _byte_hi
 _byte_skip_hi:
-.ENDIF
-        rts                     ; decrunch_file is called.
-; end_of_data needs to point to the address just after the address
-; of the last byte of crunched data.
-; -------------------------------------------------------------------
+         rts
+
+start_d:
 
 .include "exodecrunch.s"
 
-.incbin "level5.exo"
 
-end_of_data:
+data_begin:
+.byte $20,$00
+.incbin "level5.exo"
+data_end:
