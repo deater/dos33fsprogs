@@ -4,7 +4,8 @@ DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk
 
-all:	appleiibot.dsk convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes
+all:	appleiibot.dsk appleiibot2.dsk \
+	convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
@@ -23,7 +24,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	FLAME_HGR.BAS RECT.BAS SNOWY.BAS EDGAR.BAS OOPS4.BAS OOPS3.BAS \
 	HORROR.BAS DIAMOND.BAS LEMM.BAS OOPS.BAS SPLIT.BAS PARTICLE.BAS \
 	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS STAR_BOUNCE.BAS\
-	OOZE.BAS HORIZ_STAR.BAS SECRET_COLLECT.BAS PLANET.BAS PLANET_GR.BAS
+	OOZE.BAS HORIZ_STAR.BAS SECRET_COLLECT.BAS PLANET.BAS PLANET_GR.BAS \
+	BOXES.BAS
 #	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 	cp empty.dsk appleiibot.dsk
 	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -128,6 +130,12 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A SECRET_COLLECT.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET_GR.BAS
+
+appleiibot2.dsk:	BOXES.BAS HELLO
+	cp empty.dsk appleiibot2.dsk
+	$(DOS33) -y appleiibot2.dsk SAVE A HELLO
+	$(DOS33) -y appleiibot2.dsk SAVE A BOXES.BAS
+
 
 ####
 
@@ -719,6 +727,10 @@ PLANET.BAS:	planet.bas
 PLANET_GR.BAS:	planet_gr.bas
 	$(TOKENIZE) < planet_gr.bas > PLANET_GR.BAS
 
+####
+
+BOXES.BAS:	boxes.bas
+	$(TOKENIZE) < boxes.bas > BOXES.BAS
 
 
 
