@@ -26,8 +26,8 @@ mona.hgr.zx02:	mona.hgr
 
 ###
 
-gw.hgr:	gw.png
-	$(PNG_TO_HGR) gw.png > gw.hgr
+#gw.hgr:	gw.png
+#	$(PNG_TO_HGR) gw.png > gw.hgr
 
 gw.hgr.zx02:	gw.hgr
 	$(ZX02) gw.hgr gw.hgr.zx02
