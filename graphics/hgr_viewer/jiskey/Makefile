@@ -1,29 +1,40 @@
+include ../../../Makefile.inc
 
-PNG2RLE = ../../../../utils/gr-utils/png2rle
-PNG2GR = ../../../../utils/gr-utils/png2gr
-PNG2HGR = ../../../../utils/hgr-utils/png2hgr
-LZSA = ~/research/lzsa/lzsa/lzsa
-B2D = ../../../../utils/bmp2dhr/b2d
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+PNG_TO_HGR =	../../../utils/hgr-utils/png2hgr
 
-all:	graphics.inc
+all:	grl.hgr.zx02 witch.hgr.zx02 mona.hgr.zx02 gw.hgr.zx02
 
 
-graphics.inc:	\
-	mona.lzsa
-	echo "mona_lzsa: .incbin \"mona.lzsa\"" > graphics.inc
+####
 
+witch.hgr.zx02:	witch.hgr
+	$(ZX02) witch.hgr witch.hgr.zx02
 
 ###
 
-mona.lzsa:	mona.hgr
-	$(LZSA) -r -f2 mona.hgr mona.lzsa
+grl.hgr.zx02:	grl.hgr
+	$(ZX02) grl.hgr grl.hgr.zx02
+
+###
 
 mona.hgr:	mona.png
-	$(PNG2HGR) mona.png > mona.hgr
+	$(PNG_TO_HGR) mona.png > mona.hgr
+
+mona.hgr.zx02:	mona.hgr
+	$(ZX02) mona.hgr mona.hgr.zx02
 
 ###
 
+gw.hgr:	gw.png
+	$(PNG_TO_HGR) gw.png > gw.hgr
 
-clean:	
-	rm -f *~ outline.inc *.lzsa *.gr *.hgr
+gw.hgr.zx02:	gw.hgr
+	$(ZX02) gw.hgr gw.hgr.zx02
+
+
+###
+
+clean:
+		rm -f *~ *.o *.lst
 
