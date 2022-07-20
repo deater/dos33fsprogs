@@ -1,0 +1,2 @@
+   5  HOME
+ 105  PRINT  CHR$ (4)"BRUN HIRES"
