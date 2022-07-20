@@ -7,7 +7,7 @@ PNG_TO_RLE = ../../utils/gr-utils/png2rle
 EMPTY_DISK = ../../empty_disk/empty.dsk
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	hires_plain.dsk hires_special.dsk hires_jiskey.dsk
+all:	hires_plain.dsk hires_jiskey.dsk
 
 hires_special.dsk:	HELLO HIRES_SPECIAL \
 		special/bbl.hgr.zx02 special/bbl2.hgr.zx02 \
