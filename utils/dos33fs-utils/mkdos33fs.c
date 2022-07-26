@@ -244,8 +244,8 @@ int main(int argc, char **argv) {
 		lseek(fd,0,SEEK_SET);
 		/* copy first 3 sectors */
 		for(i=0;i<3*(num_sectors);i++) {
-			result=read(dos_fd,vtoc_buffer,sector_size);
-			result=write(fd,vtoc_buffer,sector_size);
+			result=read(dos_fd,sector_buffer,sector_size);
+			result=write(fd,sector_buffer,sector_size);
 		}
 		close(dos_fd);
 
@@ -253,26 +253,22 @@ int main(int argc, char **argv) {
 
 		/* Track 1 sector 9 */
 		lseek(fd,((1*num_sectors)+9)*sector_size,SEEK_SET);
-		result=read(fd,vtoc_buffer,sector_size);
+		result=read(fd,sector_buffer,sector_size);
 
 		/* filename begins at offset 75 */
 		for(i=0;i<30;i++) {
-			vtoc_buffer[0x75+i]=boot_filename[i]|0x80;
+			sector_buffer[0x75+i]=boot_filename[i]|0x80;
 		}
 		lseek(fd,((1*num_sectors)+9)*sector_size,SEEK_SET);
-		result=write(fd,vtoc_buffer,sector_size);
+		result=write(fd,sector_buffer,sector_size);
 
 		/* if copying dos reserve tracks 1 and 2 as well */
-
-		vtoc_buffer[VTOC_FREE_BITMAPS+4]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+5]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+6]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+7]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+8]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+9]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+10]=0x00;
-		vtoc_buffer[VTOC_FREE_BITMAPS+11]=0x00;
-
+		for(i=0;i<num_sectors;i++) {
+			dos33_vtoc_reserve_sector(vtoc_buffer, 1, i);
+			dos33_vtoc_reserve_sector(vtoc_buffer, 2, i);
+		}
+		/* FIXME: free some room as DOS doesn't use all */
+		/* of track 2*/
 	}
 
 
