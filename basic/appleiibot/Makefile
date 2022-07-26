@@ -4,7 +4,7 @@ DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk
 
-all:	appleiibot.dsk appleiibot2.dsk \
+all:	appleiibot.dsk \
 	convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
@@ -25,10 +25,10 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	HORROR.BAS DIAMOND.BAS LEMM.BAS OOPS.BAS SPLIT.BAS PARTICLE.BAS \
 	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS STAR_BOUNCE.BAS\
 	OOZE.BAS HORIZ_STAR.BAS SECRET_COLLECT.BAS PLANET.BAS PLANET_GR.BAS \
-	BOXES.BAS
-#	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
-	cp empty.dsk appleiibot.dsk
-	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
+	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS
+	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
+#	cp empty.dsk appleiibot.dsk
+#	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A HELLO
 	$(DOS33) -y appleiibot.dsk SAVE A E2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A FLAME.BAS
@@ -130,11 +130,14 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A SECRET_COLLECT.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET_GR.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A BOXES.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS2.BAS
 
-appleiibot2.dsk:	BOXES.BAS HELLO
-	cp empty.dsk appleiibot2.dsk
-	$(DOS33) -y appleiibot2.dsk SAVE A HELLO
-	$(DOS33) -y appleiibot2.dsk SAVE A BOXES.BAS
+#appleiibot2.dsk:	BOXES.BAS HELLO
+#	cp empty.dsk appleiibot2.dsk
+#	$(DOS33) -y appleiibot2.dsk SAVE A HELLO
+#	$(DOS33) -y appleiibot2.dsk SAVE A BOXES.BAS
 
 
 ####
@@ -731,6 +734,16 @@ PLANET_GR.BAS:	planet_gr.bas
 
 BOXES.BAS:	boxes.bas
 	$(TOKENIZE) < boxes.bas > BOXES.BAS
+
+####
+
+SOLARIS.BAS:	solaris.bas
+	$(TOKENIZE) < solaris.bas > SOLARIS.BAS
+
+####
+
+SOLARIS2.BAS:	solaris2.bas
+	$(TOKENIZE) < solaris2.bas > SOLARIS2.BAS
 
 
 
