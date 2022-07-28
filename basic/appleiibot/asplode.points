@@ -1,0 +1,50 @@
+279	16	0	77	25	#  0 Upper left
+	77	103			#  1 Down
+	15	189			#  2 Lower left
+279	77	25	201	25	#  3 Right
+	201	103			#  4 Down
+	77	103			#  5 Done square
+279	201	103	267	189	#  6 Lower Right
+279	201	25	266	0	#  7 Upper right
+279	129	30	153	30	#  8 Top head
+	165	51			#  9 Right head
+	165	69			# 10 Side head
+	159	84			# 11 Side head
+	147	93			# 12 Bottom right
+	129	93			# 13 Bottom head
+	120	84			# 14 Bottom left
+	111	69			# 15 Left
+	111	51			# 16 Left
+	129	30			# 17 Top Left
+279	135	81	147	81	# 18 Top mouth
+	147	89			# 19 Right mouth
+	135	89			# 20 Bottom Mouth
+	135	81			# 21 Left Mouth
+279	126	39	120	51	# 22 Left Horn
+	117	69			# 23 Left
+	129	84			# 24 Left
+	129	78			# 25 Left
+	135	72			# 26 Nose
+	147	72			# 27 Right
+	153	78			# 28 Right
+	153	84
+	159	66			# 29 Right
+	159	51			# 30 Right
+	153	39			# 31 Right Horn
+279	127	39	123	54	# 32 Left Horn again
+	141	72			# 34
+	153	54
+	153	39			# Right Horn again
+	153	45
+	141	63			# Bottom point
+	129	48
+	127	39			# Back at start
+279	129	60	129	66	# Left Eye
+	135	69
+	147	69
+	150	66
+	147	60
+279	135	54	135	48	# Shield
+	147	48
+	147	54
+0

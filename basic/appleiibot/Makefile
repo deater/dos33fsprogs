@@ -5,7 +5,7 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk
 
 all:	appleiibot.dsk \
-	convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes
+	convert_to convert_back convert_qkumba make_boxes convert_vmw convert_tgreene make_hgr_boxes make_points
 
 appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	CIRCLES.BAS AUTUMN.BAS QKUMBA.BAS ASTEROID.BAS PERSON.BAS SHIP.BAS \
@@ -25,7 +25,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	HORROR.BAS DIAMOND.BAS LEMM.BAS OOPS.BAS SPLIT.BAS PARTICLE.BAS \
 	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS STAR_BOUNCE.BAS\
 	OOZE.BAS HORIZ_STAR.BAS SECRET_COLLECT.BAS PLANET.BAS PLANET_GR.BAS \
-	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS
+	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS ASPLODE.BAS
 	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -133,6 +133,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A BOXES.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS2.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A ASPLODE.BAS
 
 #appleiibot2.dsk:	BOXES.BAS HELLO
 #	cp empty.dsk appleiibot2.dsk
@@ -152,6 +153,14 @@ make_boxes:	make_boxes.o
 
 make_boxes.o:	make_boxes.c
 	$(CC) $(CFLAGS) -c make_boxes.c
+
+###
+
+make_points:	make_points.o
+	$(CC) $(LFLAGS) -o make_points make_points.o
+
+make_points.o:	make_points.c
+	$(CC) $(CFLAGS) -c make_points.c
 
 ###
 
@@ -744,6 +753,11 @@ SOLARIS.BAS:	solaris.bas
 
 SOLARIS2.BAS:	solaris2.bas
 	$(TOKENIZE) < solaris2.bas > SOLARIS2.BAS
+
+####
+
+ASPLODE.BAS:	asplode.bas
+	$(TOKENIZE) < asplode.bas > ASPLODE.BAS
 
 
 
