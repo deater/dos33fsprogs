@@ -280,14 +280,18 @@ videlectrix_intro:
 
 	; Load logo offscreen at $9000
 
-	lda	#<(videlectrix_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(videlectrix_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(videlectrix_zx02)
+	sta	zx_src_l+1
+;	sta	getsrc_smc+1
+	lda	#>(videlectrix_zx02)
+	sta	zx_src_h+1
+;	sta	getsrc_smc+2
 
 	lda	#$90
 
-	jsr	decompress_lzsa2_fast
+;	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
+
 
 ;	jsr	wait_until_keypress
 
@@ -322,16 +326,19 @@ done_page:
 	bmi	done_loop
 
 	lda	animation_low,Y
-	sta	getsrc_smc+1
+;	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	animation_high,Y
-	sta	getsrc_smc+2
+;	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	tya
 	pha
 
 	lda	DRAW_PAGE
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
+;	jsr	decompress_lzsa2_fast
 
 	jsr	hgr_overlay
 
@@ -371,56 +378,56 @@ done_loop:
 ;	jmp	forever
 
 animation_low:
-	.byte	<videlectrix_lzsa	;	.byte	<title_anim01_lzsa
-	.byte	<title_anim02_lzsa
-	.byte	<title_anim03_lzsa	;	.byte	<title_anim04_lzsa
-	.byte	<title_anim05_lzsa	;	.byte	<title_anim06_lzsa
-	.byte	<title_anim07_lzsa	;	.byte	<title_anim08_lzsa
-	.byte	<title_anim09_lzsa	;	.byte	<title_anim10_lzsa
-	.byte	<title_anim11_lzsa	;	.byte	<title_anim12_lzsa
-	.byte	<title_anim13_lzsa	;	.byte	<title_anim14_lzsa
-	.byte	<title_anim15_lzsa	;	.byte	<title_anim16_lzsa
-	.byte	<title_anim17_lzsa	;	.byte	<title_anim18_lzsa
-	.byte	<title_anim19_lzsa	;	.byte	<title_anim20_lzsa
-	.byte	<title_anim21_lzsa	;	.byte	<title_anim22_lzsa
-	.byte	<title_anim23_lzsa	;	.byte	<title_anim24_lzsa
-	.byte	<title_anim25_lzsa	;	.byte	<title_anim26_lzsa
-	.byte	<title_anim27_lzsa	;	.byte	<title_anim28_lzsa
-	.byte	<title_anim29_lzsa
-	.byte	<title_anim30_lzsa
-	.byte	<title_anim31_lzsa
-	.byte	<title_anim32_lzsa
-	.byte	<title_anim33_lzsa
-	.byte	<title_anim33_lzsa
-	.byte	<title_anim33_lzsa
-	.byte	<title_anim34_lzsa
-	.byte	<title_anim34_lzsa
+	.byte	<videlectrix_zx02	;	.byte	<title_anim01_zx02
+	.byte	<title_anim02_zx02
+	.byte	<title_anim03_zx02	;	.byte	<title_anim04_zx02
+	.byte	<title_anim05_zx02	;	.byte	<title_anim06_zx02
+	.byte	<title_anim07_zx02	;	.byte	<title_anim08_zx02
+	.byte	<title_anim09_zx02	;	.byte	<title_anim10_zx02
+	.byte	<title_anim11_zx02	;	.byte	<title_anim12_zx02
+	.byte	<title_anim13_zx02	;	.byte	<title_anim14_zx02
+	.byte	<title_anim15_zx02	;	.byte	<title_anim16_zx02
+	.byte	<title_anim17_zx02	;	.byte	<title_anim18_zx02
+	.byte	<title_anim19_zx02	;	.byte	<title_anim20_zx02
+	.byte	<title_anim21_zx02	;	.byte	<title_anim22_zx02
+	.byte	<title_anim23_zx02	;	.byte	<title_anim24_zx02
+	.byte	<title_anim25_zx02	;	.byte	<title_anim26_zx02
+	.byte	<title_anim27_zx02	;	.byte	<title_anim28_zx02
+	.byte	<title_anim29_zx02
+	.byte	<title_anim30_zx02
+	.byte	<title_anim31_zx02
+	.byte	<title_anim32_zx02
+	.byte	<title_anim33_zx02
+	.byte	<title_anim33_zx02
+	.byte	<title_anim33_zx02
+	.byte	<title_anim34_zx02
+	.byte	<title_anim34_zx02
 
 animation_high:
-	.byte	>videlectrix_lzsa	;	.byte	>title_anim01_lzsa
-	.byte	>title_anim02_lzsa
-	.byte	>title_anim03_lzsa	;	.byte	>title_anim04_lzsa
-	.byte	>title_anim05_lzsa	;	.byte	>title_anim06_lzsa
-	.byte	>title_anim07_lzsa	;	.byte	>title_anim08_lzsa
-	.byte	>title_anim09_lzsa	;	.byte	>title_anim10_lzsa
-	.byte	>title_anim11_lzsa	;	.byte	>title_anim12_lzsa
-	.byte	>title_anim13_lzsa	;	.byte	>title_anim14_lzsa
-	.byte	>title_anim15_lzsa	;	.byte	>title_anim16_lzsa
-	.byte	>title_anim17_lzsa	;	.byte	>title_anim18_lzsa
-	.byte	>title_anim19_lzsa	;	.byte	>title_anim20_lzsa
-	.byte	>title_anim21_lzsa	;	.byte	>title_anim22_lzsa
-	.byte	>title_anim23_lzsa	;	.byte	>title_anim24_lzsa
-	.byte	>title_anim25_lzsa	;	.byte	>title_anim26_lzsa
-	.byte	>title_anim27_lzsa	;	.byte	>title_anim28_lzsa
-	.byte	>title_anim29_lzsa
-	.byte	>title_anim30_lzsa
-	.byte	>title_anim31_lzsa
-	.byte	>title_anim32_lzsa
-	.byte	>title_anim33_lzsa
-	.byte	>title_anim33_lzsa
-	.byte	>title_anim33_lzsa
-	.byte	>title_anim34_lzsa
-	.byte	>title_anim34_lzsa
+	.byte	>videlectrix_zx02	;	.byte	>title_anim01_zx02
+	.byte	>title_anim02_zx02
+	.byte	>title_anim03_zx02	;	.byte	>title_anim04_zx02
+	.byte	>title_anim05_zx02	;	.byte	>title_anim06_zx02
+	.byte	>title_anim07_zx02	;	.byte	>title_anim08_zx02
+	.byte	>title_anim09_zx02	;	.byte	>title_anim10_zx02
+	.byte	>title_anim11_zx02	;	.byte	>title_anim12_zx02
+	.byte	>title_anim13_zx02	;	.byte	>title_anim14_zx02
+	.byte	>title_anim15_zx02	;	.byte	>title_anim16_zx02
+	.byte	>title_anim17_zx02	;	.byte	>title_anim18_zx02
+	.byte	>title_anim19_zx02	;	.byte	>title_anim20_zx02
+	.byte	>title_anim21_zx02	;	.byte	>title_anim22_zx02
+	.byte	>title_anim23_zx02	;	.byte	>title_anim24_zx02
+	.byte	>title_anim25_zx02	;	.byte	>title_anim26_zx02
+	.byte	>title_anim27_zx02	;	.byte	>title_anim28_zx02
+	.byte	>title_anim29_zx02
+	.byte	>title_anim30_zx02
+	.byte	>title_anim31_zx02
+	.byte	>title_anim32_zx02
+	.byte	>title_anim33_zx02
+	.byte	>title_anim33_zx02
+	.byte	>title_anim33_zx02
+	.byte	>title_anim34_zx02
+	.byte	>title_anim34_zx02
 
 
 notes:
@@ -480,7 +487,6 @@ delays:
 
 
 
-;.include "decompress_fast_v2.s"
 .include "hgr_overlay.s"
 
 .include "speaker_beeps.inc"
@@ -512,7 +518,7 @@ boot_message:
 .byte	0,3,"ORIGINAL BY VIDELECTRIX",0
 .byte	0,5,"APPLE II PORT: VINCE WEAVER",0
 .byte	0,6,"DISK CODE    : QKUMBA",0
-.byte	0,7,"LZSA CODE    : EMMANUEL MARTY",0
+.byte	0,7,"ZX02 CODE    : DMSC",0
 .byte	0,8,"ELECTRIC DUET: PAUL LUTUS",0
 .byte	7,18,"______",0
 .byte	5,19,"A \/\/\/ SOFTWARE PRODUCTION",0

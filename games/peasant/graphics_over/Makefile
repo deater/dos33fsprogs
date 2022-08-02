@@ -2,9 +2,10 @@
 PNG2RLE = ../../../utils/gr-utils/png2rle
 PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2HGR = ../../../utils/hgr-utils/png2hgr
-LZSA = ~/research/lzsa/lzsa/lzsa
+#LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
 all:	game_over_graphics.inc game_over_animation.inc
 
@@ -23,24 +24,24 @@ game_over_animation.inc:       progression.png
 	$(HGR_SPRITE) -s -l over_anim11 progression.png 175 36 188 65 >> game_over_animation.inc
 
 game_over_graphics.inc:	\
-	game_over.lzsa \
-	videlectrix.lzsa
-	echo "game_over_lzsa: .incbin \"game_over.lzsa\"" > game_over_graphics.inc
-	echo "videlectrix_lzsa: .incbin \"videlectrix.lzsa\"" >> game_over_graphics.inc
+	game_over.zx02 \
+	videlectrix.zx02
+	echo "game_over_zx02: .incbin \"game_over.zx02\"" > game_over_graphics.inc
+	echo "videlectrix_zx02: .incbin \"videlectrix.zx02\"" >> game_over_graphics.inc
 
 
 ###
 
-videlectrix.lzsa:	videlectrix.hgr
-	$(LZSA) -r -f2 videlectrix.hgr videlectrix.lzsa
+videlectrix.zx02:	videlectrix.hgr
+	$(ZX02) -f videlectrix.hgr videlectrix.zx02
 
 videlectrix.hgr:	videlectrix.png
 	$(PNG2HGR) videlectrix.png > videlectrix.hgr
 
 ###
 
-game_over.lzsa:	game_over.hgr
-	$(LZSA) -r -f2 game_over.hgr game_over.lzsa
+game_over.zx02:	game_over.hgr
+	$(ZX02) -f game_over.hgr game_over.zx02
 
 game_over.hgr:	game_over.png
 	$(PNG2HGR) game_over.png > game_over.hgr
@@ -52,5 +53,5 @@ game_over.hgr:	game_over.png
 
 
 clean:	
-	rm -f *~ game_over_graphics.inc game_over_animation.inc *.lzsa *.gr *.hgr
+	rm -f *~ game_over_graphics.inc game_over_animation.inc *.zx02 *.gr *.hgr
 

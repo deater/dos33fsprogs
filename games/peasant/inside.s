@@ -28,14 +28,14 @@ inside:
 
 	; decompress dialog to $D000
 
-	lda	#<inside_text_lzsa
-        sta     getsrc_smc+1
-        lda     #>inside_text_lzsa
-        sta     getsrc_smc+2
+	lda	#<inside_text_zx02
+        sta     zx_src_l+1
+        lda     #>inside_text_zx02
+        sta     zx_src_h+1
 
         lda     #$D0
 
-        jsr     decompress_lzsa2_fast
+        jsr     zx02_full_decomp
 
 	; update score
 
@@ -84,13 +84,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	gr_copy_to_page1
 
@@ -106,14 +106,14 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -384,24 +384,24 @@ to_left:
 
 
 map_backgrounds_low:
-	.byte	<hidden_glen_lzsa	; 24	-- hidden glen
-	.byte	<inside_cottage_lzsa	; 25	-- inside lady cottage
-	.byte	<inside_nn_lzsa		; 26	-- inside ned cottage
+	.byte	<hidden_glen_zx02	; 24	-- hidden glen
+	.byte	<inside_cottage_zx02	; 25	-- inside lady cottage
+	.byte	<inside_nn_zx02		; 26	-- inside ned cottage
 
 map_backgrounds_hi:
-	.byte	>hidden_glen_lzsa	; 24	-- hidden glen
-	.byte	>inside_cottage_lzsa	; 25	-- inside lady cottage
-	.byte	>inside_nn_lzsa		; 26	-- inside ned cottage
+	.byte	>hidden_glen_zx02	; 24	-- hidden glen
+	.byte	>inside_cottage_zx02	; 25	-- inside lady cottage
+	.byte	>inside_nn_zx02		; 26	-- inside ned cottage
 
 map_priority_low:
-	.byte	<hidden_glen_priority_lzsa	; 24	-- hidden glen
-	.byte	<inside_cottage_priority_lzsa	; 25	-- inside lady cottage
-	.byte	<inside_nn_priority_lzsa	; 26	-- inside ned cottage
+	.byte	<hidden_glen_priority_zx02	; 24	-- hidden glen
+	.byte	<inside_cottage_priority_zx02	; 25	-- inside lady cottage
+	.byte	<inside_nn_priority_zx02	; 26	-- inside ned cottage
 
 map_priority_hi:
-	.byte	>hidden_glen_priority_lzsa	; 24	-- hidden glen
-	.byte	>inside_cottage_priority_lzsa	; 25	-- inside lady cottage
-	.byte	>inside_nn_priority_lzsa	; 26	-- inside ned cottage
+	.byte	>hidden_glen_priority_zx02	; 24	-- hidden glen
+	.byte	>inside_cottage_priority_zx02	; 25	-- inside lady cottage
+	.byte	>inside_nn_priority_zx02	; 26	-- inside ned cottage
 
 
 verb_tables_low:
@@ -417,7 +417,7 @@ verb_tables_hi:
 
 
 
-inside_text_lzsa:
-.incbin "DIALOG_INSIDE.LZSA"
+inside_text_zx02:
+.incbin "DIALOG_INSIDE.ZX02"
 
 .include "inside_actions.s"

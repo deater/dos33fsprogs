@@ -24,14 +24,14 @@ intro_knight:
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
-	lda	#<knight_priority_lzsa
-	sta	getsrc_smc+1
-	lda	#>knight_priority_lzsa
-	sta	getsrc_smc+2
+	lda	#<knight_priority_zx02
+	sta	zx_src_l+1
+	lda	#>knight_priority_zx02
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $400
 
@@ -41,14 +41,14 @@ intro_knight:
 	;=====================
 	; load bg
 
-	lda	#<(knight_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(knight_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(knight_zx02)
+	sta	zx_src_l+1
+	lda	#>(knight_zx02)
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 

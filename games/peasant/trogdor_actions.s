@@ -179,14 +179,14 @@ awake_no_keypress:
 
 awake_talk_trogdor:
 
-	lda	#<trogdor_cave_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_cave_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_cave_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_cave_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	;======================
 	; draw rather dashing
@@ -289,14 +289,14 @@ burninate_rather_dashing:
 
 trogdor_open:
 
-	lda	#<trogdor_open_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_open_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_open_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_open_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	;======================
 	; draw rather dashing
@@ -320,25 +320,25 @@ trogdor_open:
 
 trogdor_flame1:
 
-	lda	#<trogdor_flame1_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_flame1_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_flame1_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_flame1_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 trogdor_flame2:
 
-	lda	#<trogdor_flame2_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_flame2_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_flame2_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_flame2_zx02
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 
 	ldx	#32
@@ -372,14 +372,14 @@ burninate_loop:
 	; charred
 	; smoke
 
-	lda	#<trogdor_cave_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_cave_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_cave_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_cave_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 

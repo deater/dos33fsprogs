@@ -23,6 +23,15 @@ TEMP3   = $13
 TEMP4   = $14
 TEMP5   = $15
 
+; zx02 code
+offset	= $10
+offseth	= $11
+ZX0_src	= $12
+ZX0_dst	= $14
+ZX0_srch= $15
+bitr	= $16
+pntr	= $17
+pntrh	= $18
 ; electric duet
 FREQ1          =       $10
 FREQ2          =       $11

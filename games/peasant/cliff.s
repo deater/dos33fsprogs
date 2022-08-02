@@ -25,14 +25,14 @@ cliff_base:
 
 	; decompress dialog to $D000
 
-	lda	#<cliff_text_lzsa
-	sta	getsrc_smc+1
-	lda	#>cliff_text_lzsa
-	sta	getsrc_smc+2
+	lda	#<cliff_text_zx02
+	sta	zx_src_l+1
+	lda	#>cliff_text_zx02
+	sta	zx_src_h+1
 
 	lda	#$D0
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 
 	; update score
@@ -79,13 +79,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $400
 
@@ -101,13 +101,13 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -259,24 +259,24 @@ exiting_cliff:
 .include "graphics_cliff/priority_cliff.inc"
 
 map_backgrounds_low:
-	.byte   <cliff_base_lzsa
-	.byte   <cliff_heights_lzsa
-	.byte   <outer_lzsa
+	.byte   <cliff_base_zx02
+	.byte   <cliff_heights_zx02
+	.byte   <outer_zx02
 
 map_backgrounds_hi:
-	.byte   >cliff_base_lzsa
-	.byte   >cliff_heights_lzsa
-	.byte   >outer_lzsa
+	.byte   >cliff_base_zx02
+	.byte   >cliff_heights_zx02
+	.byte   >outer_zx02
 
 map_priority_low:
-	.byte	<cliff_base_priority_lzsa
-	.byte	<cliff_heights_priority_lzsa
-	.byte	<outer_priority_lzsa
+	.byte	<cliff_base_priority_zx02
+	.byte	<cliff_heights_priority_zx02
+	.byte	<outer_priority_zx02
 
 map_priority_hi:
-	.byte	>cliff_base_priority_lzsa
-	.byte	>cliff_heights_priority_lzsa
-	.byte	>outer_priority_lzsa
+	.byte	>cliff_base_priority_zx02
+	.byte	>cliff_heights_priority_zx02
+	.byte	>outer_priority_zx02
 
 verb_tables_low:
 	.byte	<cliff_base_verb_table
@@ -290,7 +290,7 @@ verb_tables_hi:
 
 
 
-cliff_text_lzsa:
-.incbin "DIALOG_CLIFF.LZSA"
+cliff_text_zx02:
+.incbin "DIALOG_CLIFF.ZX02"
 
 .include "cliff_actions.s"

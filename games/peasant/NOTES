@@ -42,6 +42,8 @@ peasant2	18302
 		17929 -- after redoing so background is always in PAGE1
 		18132 -- add in river animation code
 		18181 -- forgot the "climb fence" message
+		17497 -- use ZX02 compression instead of LZSA
+
 
 partial save, can we fit in 4k?
 	102 lines			; inventory was 115?
@@ -224,3 +226,30 @@ deaths/endings implemented
 +6	walk on range (while Dongolev shooting)
 +7	walk too close to Kerrek
 +8	say "yes" when Jhonka asks if you stole riches
+
+
+
+v0.84 sizes:	lzsa	 zx02
+=============	======	 =====
+QLOAD		 5239	 5122
+MUSIC		 4045	 4045
+VID_LOGO	 7678	 7370
+TITLE		 8950	 8466
+INTRO		13583	12871
+PARSE_INPUT      3510	 3249
+INVENTORY	 3122    3122
+PEASANT1	19150	18208
+PEASANT2	18254	17497
+PEASANT3	18880	17927
+PEASANT4	17610	16701
+
+COPY_CHECK	 2942	 2834
+GAME_OVER	 2113	 2074
+MAP		 2703	 2556
+ARCHERY		 2112	 2016
+INSIDE		14157	13460
+INN		 9342	 8938
+TROGDOR		15657	14774
+ENDING		17642	17038
+CLIFF		13418	12648
+

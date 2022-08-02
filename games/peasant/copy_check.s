@@ -26,14 +26,14 @@ copy_check:
 
 
 trogdor_question:
-	lda	#<(trogdor_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(trogdor_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(trogdor_zx02)
+	sta	zx_src_l+1
+	lda	#>(trogdor_zx02)
+	sta	zx_src_h+2
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	lda	#<copy_protection_text
 	sta	OUTL
@@ -85,14 +85,14 @@ wrong:
 
 game_over:
 
-	lda	#<(game_over_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(game_over_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(game_over_zx02)
+	sta	zx_src_l+1
+	lda	#>(game_over_zx02)
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	lda	#<peasant_text
 	sta	OUTL

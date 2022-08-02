@@ -32,28 +32,29 @@ do_title:
 	;================================
 	; load regular title image to $40
 
-	lda	#<(title_trogfree_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(title_trogfree_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(title_trogfree_zx02)
+	sta	zx_src_l+1
+	lda	#>(title_trogfree_zx02)
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+;	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 
 	;=================================
 	; load trogdor title image to $20
 
-	lda	#<(title_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(title_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(title_zx02)
+	sta	zx_src_l+1
+	lda	#>(title_zx02)
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
-
+;	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	bit	KEYRESET
 

@@ -29,14 +29,14 @@ peasantry2:
 
 	; decompress dialog to $D000
 
-	lda	#<peasant2_text_lzsa
-        sta     getsrc_smc+1
-        lda     #>peasant2_text_lzsa
-        sta     getsrc_smc+2
+	lda	#<peasant2_text_zx02
+        sta     zx_src_l+1
+        lda     #>peasant2_text_zx02
+        sta     zx_src_h+1
 
         lda     #$D0
 
-        jsr     decompress_lzsa2_fast
+        jsr     zx02_full_decomp
 
 	; update score
 
@@ -85,13 +85,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	gr_copy_to_page1
 
@@ -106,13 +106,13 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $4000
 
@@ -478,32 +478,32 @@ mendelev_arm_moved:
 .include "sprites/archery_sprites.inc"
 
 map_backgrounds_low:
-	.byte	<haystack_lzsa		; 5	-- haystack
-	.byte	<puddle_lzsa		; 6	-- puddle
-	.byte	<archery_lzsa		; 7	-- archery
-	.byte	<river_lzsa		; 8	-- river
-	.byte	<knight_lzsa		; 9	-- knight
+	.byte	<haystack_zx02		; 5	-- haystack
+	.byte	<puddle_zx02		; 6	-- puddle
+	.byte	<archery_zx02		; 7	-- archery
+	.byte	<river_zx02		; 8	-- river
+	.byte	<knight_zx02		; 9	-- knight
 
 map_backgrounds_hi:
-	.byte	>haystack_lzsa		; 5	-- haystack
-	.byte	>puddle_lzsa		; 6	-- puddle
-	.byte	>archery_lzsa		; 7	-- archery
-	.byte	>river_lzsa		; 8	-- river
-	.byte	>knight_lzsa		; 9	-- knight
+	.byte	>haystack_zx02		; 5	-- haystack
+	.byte	>puddle_zx02		; 6	-- puddle
+	.byte	>archery_zx02		; 7	-- archery
+	.byte	>river_zx02		; 8	-- river
+	.byte	>knight_zx02		; 9	-- knight
 
 map_priority_low:
-	.byte	<haystack_priority_lzsa		; 5	-- haystack
-	.byte	<puddle_priority_lzsa		; 6	-- puddle
-	.byte	<archery_priority_lzsa		; 7	-- archery
-	.byte	<river_priority_lzsa		; 8	-- river
-	.byte	<knight_priority_lzsa		; 9	-- knight
+	.byte	<haystack_priority_zx02		; 5	-- haystack
+	.byte	<puddle_priority_zx02		; 6	-- puddle
+	.byte	<archery_priority_zx02		; 7	-- archery
+	.byte	<river_priority_zx02		; 8	-- river
+	.byte	<knight_priority_zx02		; 9	-- knight
 
 map_priority_hi:
-	.byte	>haystack_priority_lzsa		; 5	-- haystack
-	.byte	>puddle_priority_lzsa		; 6	-- puddle
-	.byte	>archery_priority_lzsa		; 7	-- archery
-	.byte	>river_priority_lzsa		; 8	-- river
-	.byte	>knight_priority_lzsa		; 9	-- knight
+	.byte	>haystack_priority_zx02		; 5	-- haystack
+	.byte	>puddle_priority_zx02		; 6	-- puddle
+	.byte	>archery_priority_zx02		; 7	-- archery
+	.byte	>river_priority_zx02		; 8	-- river
+	.byte	>knight_priority_zx02		; 9	-- knight
 
 verb_tables_low:
 	.byte	<hay_bale_verb_table		; 5	-- haystack
@@ -522,7 +522,7 @@ verb_tables_hi:
 
 
 
-peasant2_text_lzsa:
-.incbin "DIALOG_PEASANT2.LZSA"
+peasant2_text_zx02:
+.incbin "DIALOG_PEASANT2.ZX02"
 
 .include "peasant2_actions.s"

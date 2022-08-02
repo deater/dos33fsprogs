@@ -39,14 +39,14 @@ new_location:
 	sbc     #LOCATION_BASE
 	tax
 
-	lda	#<target_lzsa
-	sta	getsrc_smc+1
-	lda	#>target_lzsa
-	sta	getsrc_smc+2
+	lda	#<target_zx02
+	sta	zx_src_l+1
+	lda	#>target_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; put peasant text
 

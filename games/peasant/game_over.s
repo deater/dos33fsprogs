@@ -30,14 +30,14 @@ game_over:
 	; draw game over background
 	;===========================
 
-	lda	#<game_over_lzsa
-	sta	getsrc_smc+1
-	lda	#>game_over_lzsa
-	sta	getsrc_smc+2
+	lda	#<game_over_zx02
+	sta	zx_src_l+1
+	lda	#>game_over_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; put peasant text
 
@@ -123,14 +123,14 @@ done_beep:
 	;=====================
 	; draw videlectrix
 
-	lda	#<videlectrix_lzsa
-	sta	getsrc_smc+1
-	lda	#>videlectrix_lzsa
-	sta	getsrc_smc+2
+	lda	#<videlectrix_zx02
+	sta	zx_src_l+1
+	lda	#>videlectrix_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	lda	#<game_over_text
 	sta	OUTL

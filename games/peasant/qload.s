@@ -296,7 +296,8 @@ length_array:
 
 .include "drive2.s"
 
-.include "decompress_fast_v2.s"
+.include "zx02_optim.s"
+;.include "decompress_fast_v2.s"
 
 .include "hgr_font.s"
 .include "draw_box.s"

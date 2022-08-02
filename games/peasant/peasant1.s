@@ -28,14 +28,14 @@ peasantry1:
 
 	; decompress dialog to $d000
 
-	lda	#<peasant1_text_lzsa
-	sta	getsrc_smc+1
-	lda	#>peasant1_text_lzsa
-	sta	getsrc_smc+2
+	lda	#<peasant1_text_zx02
+	sta	zx_src_l+1
+	lda	#>peasant1_text_zx02
+	sta	zx_src_h+1
 
 	lda	#$D0
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 
 	; update score
@@ -79,13 +79,13 @@ new_location:
 	ldx	MAP_LOCATION
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $400
 
@@ -100,13 +100,13 @@ new_location:
 	ldx	MAP_LOCATION
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	;=========================
 	; update bg based on gary
@@ -509,35 +509,35 @@ level_over:
 .include "sprites/gary_sprites.inc"
 
 map_backgrounds_low:
-	.byte	<gary_lzsa		; 0	-- gary the horse
-	.byte	<top_prints_lzsa	; 1	-- top footprints
-	.byte	<wishing_well_lzsa	; 2	-- wishing well
-	.byte	<leaning_tree_lzsa	; 3	-- leaning tree
-	.byte	<waterfall_lzsa		; 4	-- waterfall
+	.byte	<gary_zx02		; 0	-- gary the horse
+	.byte	<top_prints_zx02	; 1	-- top footprints
+	.byte	<wishing_well_zx02	; 2	-- wishing well
+	.byte	<leaning_tree_zx02	; 3	-- leaning tree
+	.byte	<waterfall_zx02		; 4	-- waterfall
 
 map_backgrounds_hi:
-	.byte	>gary_lzsa		; 0	-- gary the horse
-	.byte	>top_prints_lzsa	; 1	-- top footprints
-	.byte	>wishing_well_lzsa	; 2	-- wishing well
-	.byte	>leaning_tree_lzsa	; 3	-- leaning tree
-	.byte	>waterfall_lzsa		; 4	-- waterfall
+	.byte	>gary_zx02		; 0	-- gary the horse
+	.byte	>top_prints_zx02	; 1	-- top footprints
+	.byte	>wishing_well_zx02	; 2	-- wishing well
+	.byte	>leaning_tree_zx02	; 3	-- leaning tree
+	.byte	>waterfall_zx02		; 4	-- waterfall
 
 
 .include "graphics_peasantry/priority_peasant1.inc"
 
 map_priority_low:
-	.byte	<gary_priority_lzsa		; 0	-- gary the horse
-	.byte	<top_prints_priority_lzsa	; 1	-- top footprints
-	.byte	<wishing_well_priority_lzsa	; 2	-- wishing well
-	.byte	<leaning_tree_priority_lzsa	; 3	-- leaning tree
-	.byte	<waterfall_priority_lzsa	; 4	-- waterfall
+	.byte	<gary_priority_zx02		; 0	-- gary the horse
+	.byte	<top_prints_priority_zx02	; 1	-- top footprints
+	.byte	<wishing_well_priority_zx02	; 2	-- wishing well
+	.byte	<leaning_tree_priority_zx02	; 3	-- leaning tree
+	.byte	<waterfall_priority_zx02	; 4	-- waterfall
 
 map_priority_hi:
-	.byte	>gary_priority_lzsa		; 0	-- gary the horse
-	.byte	>top_prints_priority_lzsa	; 1	-- top footprints
-	.byte	>wishing_well_priority_lzsa	; 2	-- wishing well
-	.byte	>leaning_tree_priority_lzsa	; 3	-- leaning tree
-	.byte	>waterfall_priority_lzsa	; 4	-- waterfall
+	.byte	>gary_priority_zx02		; 0	-- gary the horse
+	.byte	>top_prints_priority_zx02	; 1	-- top footprints
+	.byte	>wishing_well_priority_zx02	; 2	-- wishing well
+	.byte	>leaning_tree_priority_zx02	; 3	-- leaning tree
+	.byte	>waterfall_priority_zx02	; 4	-- waterfall
 
 
 verb_tables_low:
@@ -557,7 +557,7 @@ verb_tables_hi:
 
 
 
-peasant1_text_lzsa:
-.incbin "DIALOG_PEASANT1.LZSA"
+peasant1_text_zx02:
+.incbin "DIALOG_PEASANT1.ZX02"
 
 .include "peasant1_actions.s"

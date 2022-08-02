@@ -5,7 +5,8 @@ DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts
 EMPTY_DISK = ../../empty_disk
-LZSA = ~/research/lzsa/lzsa/lzsa
+#LZSA = ~/research/lzsa/lzsa/lzsa
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
 all:	peasant.dsk peasant_side2.dsk
 
@@ -13,8 +14,8 @@ zip:	peasant.dsk peasant_side2.dsk
 	zip peasant.zip peasant.dsk peasant_side2.dsk
 
 peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
-	PEASANT1 PEASANT2 PEASANT3 PEASANT4 ENDING TROGDOR \
-	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY PARSE_INPUT.LZSA
+	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
+	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY PARSE_INPUT.ZX02
 	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
 	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
@@ -27,7 +28,7 @@ peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
 	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  13 0 PARSE_INPUT.LZSA  0   0
+	$(DOS33_RAW) peasant.dsk  13 0 PARSE_INPUT.ZX02  0   0
 	$(DOS33_RAW) peasant.dsk  14 0 INVENTORY  0   0
 	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
@@ -65,7 +66,7 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
 qload.o:	qload.s qboot.inc \
-		decompress_fast_v2.s \
+		zx02_optim.s \
 		hgr_font.s \
 		draw_box.s \
 		hgr_rectangle.s \
@@ -133,8 +134,11 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s zx02_full_decomp qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s zx_src_l qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s zx_src_h qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
@@ -205,7 +209,7 @@ VID_LOGO:	vid_logo.o
 	ld65 -o VID_LOGO vid_logo.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 vid_logo.o:	vid_logo.s qload.inc \
-		decompress_fast_v2.s hgr_overlay.s speaker_beeps.s \
+		hgr_overlay.s speaker_beeps.s \
 		graphics_vid/vid_graphics.inc
 	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 
@@ -270,7 +274,7 @@ CLIFF:	cliff.o
 
 cliff.o:	cliff.s zp.inc inventory.inc \
 		parse_input.inc \
-		cliff_actions.s DIALOG_CLIFF.LZSA dialog_cliff.inc \
+		cliff_actions.s DIALOG_CLIFF.ZX02 dialog_cliff.inc \
 		graphics_cliff/cliff_graphics.inc sprites/peasant_sprites.inc \
 		graphics_cliff/priority_cliff.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -338,7 +342,7 @@ PEASANT1:	peasant1.o
 
 peasant1.o:	peasant1.s zp.inc inventory.inc \
 		parse_input.inc \
-		peasant1_actions.s DIALOG_PEASANT1.LZSA dialog_peasant1.inc \
+		peasant1_actions.s DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
 		text/peasant1.inc text/kerrek.inc \
 		kerrek_actions.s peasant_common.s \
 		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
@@ -360,7 +364,7 @@ PEASANT2:	peasant2.o
 
 peasant2.o:	peasant2.s zp.inc inventory.inc \
 		parse_input.inc \
-		peasant2_actions.s DIALOG_PEASANT2.LZSA dialog_peasant2.inc \
+		peasant2_actions.s DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/river_bubble_sprites.inc \
@@ -380,7 +384,7 @@ PEASANT3:	peasant3.o
 
 peasant3.o:	peasant3.s zp.inc inventory.inc \
 		parse_input.inc \
-		peasant3_actions.s DIALOG_PEASANT3.LZSA dialog_peasant3.inc \
+		peasant3_actions.s DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
 		peasant_common.s \
@@ -400,7 +404,7 @@ PEASANT4:	peasant4.o
 peasant4.o:	peasant4.s zp.inc inventory.inc \
 		parse_input.inc \
 		sprites/ned_sprites.inc \
-		peasant4_actions.s DIALOG_PEASANT4.LZSA dialog_peasant4.inc \
+		peasant4_actions.s DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
 		kerrek_actions.s peasant_common.s \
 		text/peasant4.inc text/kerrek.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
@@ -420,7 +424,7 @@ TROGDOR:	trogdor.o
 trogdor.o:	trogdor.s zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
 		sprites/inventory_sprites.inc \
-		DIALOG_TROGDOR.LZSA dialog_trogdor.inc \
+		DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 		ssi263_simple_speech.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_save_restore.s \
@@ -468,7 +472,7 @@ INSIDE:	inside.o
 
 inside.o:	inside.s zp.inc inventory.inc \
 		parse_input.inc \
-		inside_actions.s DIALOG_INSIDE.LZSA dialog_inside.inc \
+		inside_actions.s DIALOG_INSIDE.ZX02 dialog_inside.inc \
 		graphics_inside/graphics_inside.inc sprites/peasant_sprites.inc \
 		graphics_inside/priority_inside.inc \
 		sprites/inventory_sprites.inc \
@@ -486,7 +490,7 @@ INN:	inn.o
 
 inn.o:	inn.s zp.inc inventory.inc \
 		parse_input.inc \
-		inn_actions.s DIALOG_INN.LZSA dialog_inn.inc \
+		inn_actions.s DIALOG_INN.ZX02 dialog_inn.inc \
 		graphics_inn/graphics_inn.inc sprites/peasant_sprites.inc \
 		graphics_inn/priority_inn.inc \
 		sprites/inventory_sprites.inc \
@@ -549,8 +553,8 @@ parse_input.inc:	generate_common parse_input
 
 ###
 
-PARSE_INPUT.LZSA:	parse_input
-	$(LZSA) -r -f2 parse_input PARSE_INPUT.LZSA
+PARSE_INPUT.ZX02:	parse_input
+	$(ZX02) -f  parse_input PARSE_INPUT.ZX02
 
 parse_input:	parse_input.o
 	ld65 -o parse_input parse_input.o -C ../../linker_scripts/apple2_ee00.inc
@@ -561,8 +565,8 @@ parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
 
 ###
 
-DIALOG_PEASANT1.LZSA:	dialog_peasant1
-	$(LZSA) -r -f2 dialog_peasant1 DIALOG_PEASANT1.LZSA
+DIALOG_PEASANT1.ZX02:	dialog_peasant1
+	$(ZX02) -f  dialog_peasant1 DIALOG_PEASANT1.ZX02
 
 dialog_peasant1:	dialog_peasant1.o
 	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_d000.inc
@@ -577,8 +581,8 @@ dialog_peasant1.inc:	generate_all_symbols dialog_peasant1
 
 ###
 
-DIALOG_PEASANT2.LZSA:	dialog_peasant2
-	$(LZSA) -r -f2 dialog_peasant2 DIALOG_PEASANT2.LZSA
+DIALOG_PEASANT2.ZX02:	dialog_peasant2
+	$(ZX02) -f  dialog_peasant2 DIALOG_PEASANT2.ZX02
 
 dialog_peasant2:	dialog_peasant2.o
 	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_d000.inc
@@ -593,8 +597,8 @@ dialog_peasant2.inc:	generate_all_symbols dialog_peasant2
 
 ####
 
-DIALOG_PEASANT3.LZSA:	dialog_peasant3
-	$(LZSA) -r -f2 dialog_peasant3 DIALOG_PEASANT3.LZSA
+DIALOG_PEASANT3.ZX02:	dialog_peasant3
+	$(ZX02) -f  dialog_peasant3 DIALOG_PEASANT3.ZX02
 
 dialog_peasant3:	dialog_peasant3.o
 	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_d000.inc
@@ -608,8 +612,8 @@ dialog_peasant3.inc:	generate_all_symbols dialog_peasant3
 	./generate_all_symbols -a 0xd000 dialog_peasant3.lst > dialog_peasant3.inc
 
 ####
-DIALOG_PEASANT4.LZSA:	dialog_peasant4
-	$(LZSA) -r -f2 dialog_peasant4 DIALOG_PEASANT4.LZSA
+DIALOG_PEASANT4.ZX02:	dialog_peasant4
+	$(ZX02) -f  dialog_peasant4 DIALOG_PEASANT4.ZX02
 
 dialog_peasant4:	dialog_peasant4.o
 	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_d000.inc
@@ -624,8 +628,8 @@ dialog_peasant4.inc:	generate_all_symbols dialog_peasant4
 
 ####
 
-DIALOG_INSIDE.LZSA:	dialog_inside
-	$(LZSA) -r -f2 dialog_inside DIALOG_INSIDE.LZSA
+DIALOG_INSIDE.ZX02:	dialog_inside
+	$(ZX02) -f  dialog_inside DIALOG_INSIDE.ZX02
 
 dialog_inside:	dialog_inside.o
 	ld65 -o dialog_inside dialog_inside.o -C ../../linker_scripts/apple2_d000.inc
@@ -640,8 +644,8 @@ dialog_inside.inc:	generate_all_symbols dialog_inside
 
 ####
 
-DIALOG_INN.LZSA:	dialog_inn
-	$(LZSA) -r -f2 dialog_inn DIALOG_INN.LZSA
+DIALOG_INN.ZX02:	dialog_inn
+	$(ZX02) -f  dialog_inn DIALOG_INN.ZX02
 
 dialog_inn:	dialog_inn.o
 	ld65 -o dialog_inn dialog_inn.o -C ../../linker_scripts/apple2_d000.inc
@@ -656,8 +660,8 @@ dialog_inn.inc:	generate_all_symbols dialog_inn
 
 ####
 
-DIALOG_CLIFF.LZSA:	dialog_cliff
-	$(LZSA) -r -f2 dialog_cliff DIALOG_CLIFF.LZSA
+DIALOG_CLIFF.ZX02:	dialog_cliff
+	$(ZX02) -f  dialog_cliff DIALOG_CLIFF.ZX02
 
 dialog_cliff:	dialog_cliff.o
 	ld65 -o dialog_cliff dialog_cliff.o -C ../../linker_scripts/apple2_d000.inc
@@ -672,8 +676,8 @@ dialog_cliff.inc:	generate_all_symbols dialog_cliff
 
 ####
 
-DIALOG_TROGDOR.LZSA:	dialog_trogdor
-	$(LZSA) -r -f2 dialog_trogdor DIALOG_TROGDOR.LZSA
+DIALOG_TROGDOR.ZX02:	dialog_trogdor
+	$(ZX02) -f  dialog_trogdor DIALOG_TROGDOR.ZX02
 
 dialog_trogdor:	dialog_trogdor.o
 	ld65 -o dialog_trogdor dialog_trogdor.o -C ../../linker_scripts/apple2_d000.inc
@@ -778,4 +782,4 @@ clean:
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC GAME_OVER \
-			dialog_peasant2
+			*.ZX02 dialog_peasant2

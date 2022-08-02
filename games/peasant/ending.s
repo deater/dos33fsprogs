@@ -77,14 +77,14 @@ skip_end_music:
 	;=====================
 boat:
 
-	lda	#<lake_e_boat_lzsa
-	sta	getsrc_smc+1
-	lda	#>lake_e_boat_lzsa
-	sta	getsrc_smc+2
+	lda	#<lake_e_boat_zx02
+	sta	zx_src_l+1
+	lda	#>lake_e_boat_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 
@@ -218,14 +218,14 @@ waterfall:
 	lda	#0
 	sta	FRAME
 
-	lda	#<waterfall_lzsa
-	sta	getsrc_smc+1
-	lda	#>waterfall_lzsa
-	sta	getsrc_smc+2
+	lda	#<waterfall_zx02
+	sta	zx_src_l+1
+	lda	#>waterfall_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 
@@ -374,14 +374,14 @@ done_baby:
 
 jhonka:
 
-	lda	#<jhonka_lzsa
-	sta	getsrc_smc+1
-	lda	#>jhonka_lzsa
-	sta	getsrc_smc+2
+	lda	#<jhonka_zx02
+	sta	zx_src_l+1
+	lda	#>jhonka_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 
@@ -455,14 +455,14 @@ animation_loop:
 
 cottage:
 
-	lda	#<cottage_lzsa
-	sta	getsrc_smc+1
-	lda	#>cottage_lzsa
-	sta	getsrc_smc+2
+	lda	#<cottage_zx02
+	sta	zx_src_l+1
+	lda	#>cottage_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 
@@ -535,14 +535,14 @@ cottage:
 	;========================
 final_screen:
 
-	lda	#<the_end_lzsa
-	sta	getsrc_smc+1
-	lda	#>the_end_lzsa
-	sta	getsrc_smc+2
+	lda	#<the_end_zx02
+	sta	zx_src_l+1
+	lda	#>the_end_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	update_top
 

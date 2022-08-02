@@ -38,14 +38,14 @@ the_map:
 	sbc     #LOCATION_BASE
 	tax
 
-	lda	#<map_lzsa
-	sta	getsrc_smc+1
-	lda	#>map_lzsa
-	sta	getsrc_smc+2
+	lda	#<map_zx02
+	sta	zx_src_l+1
+	lda	#>map_zx02
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 game_loop:
 

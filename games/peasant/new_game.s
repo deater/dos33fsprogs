@@ -39,13 +39,13 @@ start_new_game:
 	; decompress to $EE00
 
 	lda	#$00
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
         lda	#$20
-        sta     getsrc_smc+2
+        sta     zx_src_h+1
 
         lda     #$EE
 
-        jsr     decompress_lzsa2_fast
+        jsr     zx02_full_decomp
 
 
 

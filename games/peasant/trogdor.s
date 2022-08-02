@@ -23,13 +23,13 @@ trogdor:
 
 	; decompress dialog to $D000
 
-	lda	#<trogdor_text_lzsa
-	sta	getsrc_smc+1
-	lda	#>trogdor_text_lzsa
-	sta	getsrc_smc+2
+	lda	#<trogdor_text_zx02
+	sta	zx_src_l+1
+	lda	#>trogdor_text_zx02
+	sta	zx_src_h+1
 
 	lda	#$d0
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; update score
 
@@ -78,13 +78,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $400
 
@@ -100,13 +100,13 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -342,16 +342,16 @@ update_top:
 
 
 map_backgrounds_low:
-	.byte   <trogdor_sleep_lzsa
+	.byte   <trogdor_sleep_zx02
 
 map_backgrounds_hi:
-	.byte   >trogdor_sleep_lzsa
+	.byte   >trogdor_sleep_zx02
 
 map_priority_low:
-	.byte   <trogdor_priority_lzsa
+	.byte   <trogdor_priority_zx02
 
 map_priority_hi:
-	.byte   >trogdor_priority_lzsa
+	.byte   >trogdor_priority_zx02
 
 verb_tables_low:
 	.byte   <trogdor_inner_verb_table
@@ -360,7 +360,7 @@ verb_tables_hi:
 	.byte   >trogdor_inner_verb_table
 
 
-trogdor_text_lzsa:
-.incbin "DIALOG_TROGDOR.LZSA"
+trogdor_text_zx02:
+.incbin "DIALOG_TROGDOR.ZX02"
 
 .include "trogdor_actions.s"

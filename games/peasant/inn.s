@@ -28,14 +28,14 @@ inside_inn:
 
 	; decompress dialog to $D000
 
-	lda	#<inn_text_lzsa
-        sta     getsrc_smc+1
-        lda     #>inn_text_lzsa
-        sta     getsrc_smc+2
+	lda	#<inn_text_zx02
+        sta     zx_src_l+1
+        lda     #>inn_text_zx02
+        sta     zx_src_h+1
 
         lda     #$D0
 
-        jsr     decompress_lzsa2_fast
+        jsr     zx02_full_decomp
 
 	; update score
 
@@ -83,13 +83,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	gr_copy_to_page1
 
@@ -104,14 +104,14 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -282,16 +282,16 @@ level_over:
 
 
 map_backgrounds_low:
-	.byte	<inside_inn_lzsa
+	.byte	<inside_inn_zx02
 
 map_backgrounds_hi:
-	.byte	>inside_inn_lzsa
+	.byte	>inside_inn_zx02
 
 map_priority_low:
-	.byte	<inside_inn_priority_lzsa
+	.byte	<inside_inn_priority_zx02
 
 map_priority_hi:
-	.byte	>inside_inn_priority_lzsa
+	.byte	>inside_inn_priority_zx02
 
 verb_tables_low:
 	.byte	<inside_inn_verb_table
@@ -301,7 +301,7 @@ verb_tables_hi:
 
 
 
-inn_text_lzsa:
-.incbin "DIALOG_INN.LZSA"
+inn_text_zx02:
+.incbin "DIALOG_INN.ZX02"
 
 .include "inn_actions.s"

@@ -28,14 +28,14 @@ peasantry4:
 
 	; decompress dialog to $D000
 
-	lda	#<peasant4_text_lzsa
-	sta	getsrc_smc+1
-	lda	#>peasant4_text_lzsa
-	sta	getsrc_smc+2
+	lda	#<peasant4_text_zx02
+	sta	zx_src_l+1
+	lda	#>peasant4_text_zx02
+	sta	zx_src_h+1
 
 	lda	#$D0
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; update score
 
@@ -82,13 +82,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	gr_copy_to_page1
 
@@ -104,13 +104,13 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -506,34 +506,34 @@ no_draw_ned:
 
 
 map_backgrounds_low:
-	.byte	<empty_hut_lzsa		; 15	-- empty hut
-	.byte	<ned_lzsa		; 16	-- ned
-	.byte	<bottom_prints_lzsa	; 17	-- bottom footprints
-	.byte	<lady_cottage_lzsa	; 18	-- cottage lady
-	.byte	<crooked_tree_lzsa	; 19	-- crooked tree
+	.byte	<empty_hut_zx02		; 15	-- empty hut
+	.byte	<ned_zx02		; 16	-- ned
+	.byte	<bottom_prints_zx02	; 17	-- bottom footprints
+	.byte	<lady_cottage_zx02	; 18	-- cottage lady
+	.byte	<crooked_tree_zx02	; 19	-- crooked tree
 
 map_backgrounds_hi:
-	.byte	>empty_hut_lzsa		; 15	-- empty hut
-	.byte	>ned_lzsa		; 16	-- ned
-	.byte	>bottom_prints_lzsa	; 17	-- bottom footprints
-	.byte	>lady_cottage_lzsa	; 18	-- cottage lady
-	.byte	>crooked_tree_lzsa	; 19	-- crooked tree
+	.byte	>empty_hut_zx02		; 15	-- empty hut
+	.byte	>ned_zx02		; 16	-- ned
+	.byte	>bottom_prints_zx02	; 17	-- bottom footprints
+	.byte	>lady_cottage_zx02	; 18	-- cottage lady
+	.byte	>crooked_tree_zx02	; 19	-- crooked tree
 
 
 
 map_priority_low:
-	.byte	<empty_hut_priority_lzsa	; 15	-- empty hut
-	.byte	<ned_priority_lzsa		; 16	-- ned
-	.byte	<bottom_prints_priority_lzsa	; 17	-- bottom footprints
-	.byte	<lady_cottage_priority_lzsa	; 18	-- cottage lady
-	.byte	<crooked_tree_priority_lzsa	; 19	-- crooked tree
+	.byte	<empty_hut_priority_zx02	; 15	-- empty hut
+	.byte	<ned_priority_zx02		; 16	-- ned
+	.byte	<bottom_prints_priority_zx02	; 17	-- bottom footprints
+	.byte	<lady_cottage_priority_zx02	; 18	-- cottage lady
+	.byte	<crooked_tree_priority_zx02	; 19	-- crooked tree
 
 map_priority_hi:
-	.byte	>empty_hut_priority_lzsa	; 15	-- empty hut
-	.byte	>ned_priority_lzsa		; 16	-- ned
-	.byte	>bottom_prints_priority_lzsa	; 17	-- bottom footprints
-	.byte	>lady_cottage_priority_lzsa	; 18	-- cottage lady
-	.byte	>crooked_tree_priority_lzsa	; 19	-- crooked tree
+	.byte	>empty_hut_priority_zx02	; 15	-- empty hut
+	.byte	>ned_priority_zx02		; 16	-- ned
+	.byte	>bottom_prints_priority_zx02	; 17	-- bottom footprints
+	.byte	>lady_cottage_priority_zx02	; 18	-- cottage lady
+	.byte	>crooked_tree_priority_zx02	; 19	-- crooked tree
 
 
 
@@ -552,8 +552,8 @@ verb_tables_hi:
 	.byte	>crooked_tree_verb_table	; 19	-- crooked tree
 
 
-peasant4_text_lzsa:
-.incbin "DIALOG_PEASANT4.LZSA"
+peasant4_text_zx02:
+.incbin "DIALOG_PEASANT4.ZX02"
 
 .include "peasant4_actions.s"
 

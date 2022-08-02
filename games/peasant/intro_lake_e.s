@@ -23,14 +23,14 @@ intro_lake_east:
 	; load priority to $400
 	; indirectly as we can't trash screen holes
 
-	lda	#<lake_e_priority_lzsa
-	sta	getsrc_smc+1
-	lda	#>lake_e_priority_lzsa
-	sta	getsrc_smc+2
+	lda	#<lake_e_priority_zx02
+	sta	zx_src_l+1
+	lda	#>lake_e_priority_zx02
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	; copy to $400
 
@@ -40,14 +40,14 @@ intro_lake_east:
 	;=====================
 	; load bg
 
-	lda	#<(lake_e_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(lake_e_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(lake_e_zx02)
+	sta	zx_src_l+1
+	lda	#>(lake_e_zx02)
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 

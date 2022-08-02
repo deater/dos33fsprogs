@@ -28,14 +28,14 @@ peasantry3:
 
 	; decompress dialog to $D000
 
-	lda	#<peasant3_text_lzsa
-	sta	getsrc_smc+1
-	lda	#>peasant3_text_lzsa
-	sta	getsrc_smc+2
+	lda	#<peasant3_text_zx02
+	sta	zx_src_l+1
+	lda	#>peasant3_text_zx02
+	sta	zx_src_h+1
 
 	lda	#$D0
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 
 	; update score
@@ -85,13 +85,13 @@ new_location:
 	tax
 
 	lda	map_priority_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_priority_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	gr_copy_to_page1
 
@@ -107,13 +107,13 @@ new_location:
 	tax
 
 	lda	map_backgrounds_low,X
-	sta	getsrc_smc+1
+	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
-	sta	getsrc_smc+2
+	sta	zx_src_h+1
 
 	lda	#$20
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	jsr	hgr_copy
 
@@ -340,34 +340,34 @@ level_over:
 .include "sprites/boat_sprites.inc"
 
 map_backgrounds_low:
-	.byte	<jhonka_lzsa		; 10	-- jhonka
-	.byte	<cottage_lzsa		; 11	-- cottage
-	.byte	<lake_w_lzsa		; 12	-- lake west
-	.byte	<lake_e_lzsa		; 13	-- lake east
-	.byte	<inn_lzsa		; 14	-- inn
+	.byte	<jhonka_zx02		; 10	-- jhonka
+	.byte	<cottage_zx02		; 11	-- cottage
+	.byte	<lake_w_zx02		; 12	-- lake west
+	.byte	<lake_e_zx02		; 13	-- lake east
+	.byte	<inn_zx02		; 14	-- inn
 
 map_backgrounds_hi:
-	.byte	>jhonka_lzsa		; 10	-- jhonka
-	.byte	>cottage_lzsa		; 11	-- cottage
-	.byte	>lake_w_lzsa		; 12	-- lake west
-	.byte	>lake_e_lzsa		; 13	-- lake east
-	.byte	>inn_lzsa		; 14	-- inn
+	.byte	>jhonka_zx02		; 10	-- jhonka
+	.byte	>cottage_zx02		; 11	-- cottage
+	.byte	>lake_w_zx02		; 12	-- lake west
+	.byte	>lake_e_zx02		; 13	-- lake east
+	.byte	>inn_zx02		; 14	-- inn
 
 .include "graphics_peasantry/priority_peasant3.inc"
 
 map_priority_low:
-	.byte	<jhonka_priority_lzsa		; 10	-- jhonka
-	.byte	<cottage_priority_lzsa		; 11	-- cottage
-	.byte	<lake_w_priority_lzsa		; 12	-- lake west
-	.byte	<lake_e_priority_lzsa		; 13	-- lake east
-	.byte	<inn_priority_lzsa		; 14	-- inn
+	.byte	<jhonka_priority_zx02		; 10	-- jhonka
+	.byte	<cottage_priority_zx02		; 11	-- cottage
+	.byte	<lake_w_priority_zx02		; 12	-- lake west
+	.byte	<lake_e_priority_zx02		; 13	-- lake east
+	.byte	<inn_priority_zx02		; 14	-- inn
 
 map_priority_hi:
-	.byte	>jhonka_priority_lzsa		; 10	-- jhonka
-	.byte	>cottage_priority_lzsa		; 11	-- cottage
-	.byte	>lake_w_priority_lzsa		; 12	-- lake west
-	.byte	>lake_e_priority_lzsa		; 13	-- lake east
-	.byte	>inn_priority_lzsa		; 14	-- inn
+	.byte	>jhonka_priority_zx02		; 10	-- jhonka
+	.byte	>cottage_priority_zx02		; 11	-- cottage
+	.byte	>lake_w_priority_zx02		; 12	-- lake west
+	.byte	>lake_e_priority_zx02		; 13	-- lake east
+	.byte	>inn_priority_zx02		; 14	-- inn
 
 verb_tables_low:
 	.byte   <jhonka_cave_verb_table		; 10	-- jhonka
@@ -384,8 +384,8 @@ verb_tables_hi:
 	.byte   >inn_verb_table			; 14	-- inn
 
 
-peasant3_text_lzsa:
-.incbin "DIALOG_PEASANT3.LZSA"
+peasant3_text_zx02:
+.incbin "DIALOG_PEASANT3.ZX02"
 
 .include "peasant3_actions.s"
 

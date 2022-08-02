@@ -2,52 +2,53 @@
 PNG2RLE = ../../../utils/gr-utils/png2rle
 PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2HGR = ../../../utils/hgr-utils/png2hgr
-LZSA = ~/research/lzsa/lzsa/lzsa
+#LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../utils/bmp2dhr/b2d
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
 all:	ending_graphics.inc
 
 
 ending_graphics.inc:	\
-	lake_e_boat.lzsa \
-	waterfall.lzsa \
-	jhonka.lzsa \
-	cottage.lzsa \
-	the_end.lzsa
-	echo "lake_e_boat_lzsa: .incbin \"lake_e_boat.lzsa\"" > ending_graphics.inc
-	echo "waterfall_lzsa: .incbin \"waterfall.lzsa\"" >> ending_graphics.inc
-	echo "jhonka_lzsa: .incbin \"jhonka.lzsa\"" >> ending_graphics.inc
-	echo "cottage_lzsa: .incbin \"cottage.lzsa\"" >> ending_graphics.inc
-	echo "the_end_lzsa: .incbin \"the_end.lzsa\"" >> ending_graphics.inc
+	lake_e_boat.zx02 \
+	waterfall.zx02 \
+	jhonka.zx02 \
+	cottage.zx02 \
+	the_end.zx02
+	echo "lake_e_boat_zx02: .incbin \"lake_e_boat.zx02\"" > ending_graphics.inc
+	echo "waterfall_zx02: .incbin \"waterfall.zx02\"" >> ending_graphics.inc
+	echo "jhonka_zx02: .incbin \"jhonka.zx02\"" >> ending_graphics.inc
+	echo "cottage_zx02: .incbin \"cottage.zx02\"" >> ending_graphics.inc
+	echo "the_end_zx02: .incbin \"the_end.zx02\"" >> ending_graphics.inc
 
 ###
 
-lake_e_boat.lzsa:	lake_e_boat.hgr
-	$(LZSA) -r -f2 lake_e_boat.hgr lake_e_boat.lzsa
+lake_e_boat.zx02:	lake_e_boat.hgr
+	$(ZX02) -f lake_e_boat.hgr lake_e_boat.zx02
 
 lake_e_boat.hgr:	lake_e_boat.png
 	$(PNG2HGR) lake_e_boat.png > lake_e_boat.hgr
 
 ###
 
-waterfall.lzsa:	waterfall.hgr
-	$(LZSA) -r -f2 waterfall.hgr waterfall.lzsa
+waterfall.zx02:	waterfall.hgr
+	$(ZX02) -f waterfall.hgr waterfall.zx02
 
 waterfall.hgr:	waterfall.png
 	$(PNG2HGR) waterfall.png > waterfall.hgr
 
 ###
 
-jhonka.lzsa:	jhonka.hgr
-	$(LZSA) -r -f2 jhonka.hgr jhonka.lzsa
+jhonka.zx02:	jhonka.hgr
+	$(ZX02) -f jhonka.hgr jhonka.zx02
 
 jhonka.hgr:	jhonka.png
 	$(PNG2HGR) jhonka.png > jhonka.hgr
 
 ###
 
-cottage.lzsa:	cottage.hgr
-	$(LZSA) -r -f2 cottage.hgr cottage.lzsa
+cottage.zx02:	cottage.hgr
+	$(ZX02) -f cottage.hgr cottage.zx02
 
 cottage.hgr:	cottage.png
 	$(PNG2HGR) cottage.png > cottage.hgr
@@ -55,8 +56,8 @@ cottage.hgr:	cottage.png
 
 ###
 
-the_end.lzsa:	the_end.hgr
-	$(LZSA) -r -f2 the_end.hgr the_end.lzsa
+the_end.zx02:	the_end.hgr
+	$(ZX02) -f the_end.hgr the_end.zx02
 
 the_end.hgr:	the_end.png
 	$(PNG2HGR) the_end.png > the_end.hgr
@@ -68,5 +69,5 @@ the_end.hgr:	the_end.png
 
 
 clean:	
-	rm -f *~ ending_graphics.inc *.lzsa *.gr *.hgr
+	rm -f *~ ending_graphics.inc *.zx02 *.gr *.hgr
 

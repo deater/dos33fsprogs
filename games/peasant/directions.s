@@ -3,14 +3,14 @@
 	; Tips
 	;************************
 directions:
-	lda	#<(tips_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(tips_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(tips_zx02)
+	sta	zx_src_l+1
+	lda	#>(tips_zx02)
+	sta	zx_src_h+1
 
 	lda	#$40
 
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp
 
 	lda     #<directions_text
 	sta	OUTL
