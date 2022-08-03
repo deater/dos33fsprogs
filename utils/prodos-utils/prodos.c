@@ -1076,9 +1076,10 @@ int main(int argc, char **argv) {
 
 	int command,file_exists;
 	char temp_string[BUFSIZ];
-	char apple_filename[31],new_filename[31];
-	char apple_path[BUFSIZ];
-	char local_filename[BUFSIZ];
+	char apple_filename[31] = {};
+	char new_filename[31] = {};
+	char apple_path[BUFSIZ] = {};
+	char local_filename[BUFSIZ] = {};
 	char *result_string;
 	int always_yes=0;
 	char *temp,*endptr;
