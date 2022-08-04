@@ -1,0 +1,16 @@
+Planet
+-
+227-byte BASIC Intro for Appple II
+Lovebyte Turbo 2022
+by Deater / dSr
+
+The BBC Micro people were having fun with
+planetscapes generated from a book they
+found.
+
+This was roughly based on some they posted.
+Had to be completely re-written for 
+Applesoft, as well as to fit in the 280
+char twitter limit.  The main clever thing
+I stole was the circle drawing code that
+uses SQRT.
