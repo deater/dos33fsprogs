@@ -45,6 +45,7 @@ hires_jiskey.dsk:	HELLO HIRES_JISKEY \
 	$(DOS33) -y hires_jiskey.dsk BSAVE -a 0xa000 ./jiskey/witch.hgr.zx02 WITCH.ZX02
 	$(DOS33) -y hires_jiskey.dsk BSAVE -a 0xa000 ./jiskey/mona.hgr.zx02 MONA.ZX02
 	$(DOS33) -y hires_jiskey.dsk BSAVE -a 0xa000 ./jiskey/gw.hgr.zx02 GW.ZX02
+	$(DOS33) -y hires_jiskey.dsk BSAVE -a 0xa000 ./jiskey/skull.hgr.zx02 SKULL.ZX02
 
 
 ####

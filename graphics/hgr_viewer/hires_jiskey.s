@@ -77,6 +77,22 @@ load_loop:
 
 	jsr	wait_until_keypress
 
+
+
+	;=============================
+
+	;=============================
+
+	lda	#<skull_filename
+	sta	OUTL
+	lda	#>skull_filename
+	sta	OUTH
+
+	jsr	load_image
+
+	jsr	wait_until_keypress
+
+
 	;=============================
 
 
@@ -124,5 +140,9 @@ mona_filename:	; .byte "MONA.ZX02",0
 
 gw_filename:	; .byte "GW.ZX02",0
 	.byte 'G'|$80,'W'|$80
+	.byte '.'|$80,'Z'|$80,'X'|$80,'0'|$80,'2'|$80,$00
+
+skull_filename:	; .byte "SKULL.ZX02",0
+	.byte 'S'|$80,'K'|$80,'U'|$80,'L'|$80,'L'|$80
 	.byte '.'|$80,'Z'|$80,'X'|$80,'0'|$80,'2'|$80,$00
 
