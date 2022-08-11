@@ -172,6 +172,24 @@ not_end:
 	sta	speech_playing
 
 
+	; IS THIS NEEDED?
+
+	lda	#$E8
+	ldx	#SSI263_F		; duration/phoneme
+	jsr	ssi263_write_chip
+
+	lda	#$7F
+	ldx	#SSI263_CAA		; duration/phoneme
+	jsr	ssi263_write_chip
+
+	lda	#$A8
+	ldx	#SSI263_RI		; duration/phoneme
+	jsr	ssi263_write_chip
+
+	lda	#$6F
+	ldx	#SSI263_I		; duration/phoneme
+	jsr	ssi263_write_chip
+
 	ldy	#$00
 	; Get the next data
 	lda	(SPEECH_PTRL),Y
