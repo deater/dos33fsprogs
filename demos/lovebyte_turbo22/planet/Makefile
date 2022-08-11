@@ -15,7 +15,7 @@ submit:	planet256.zip
 planet256.zip:	PLANET.BAS planet.bas file_id.diz planet.dsk
 	mkdir -p lovebyte_turbo_planet
 	cp PLANET.BAS ./lovebyte_turbo_planet
-	cp *.s ./lovebyte_turbo_planet
+	cp planet.bas ./lovebyte_turbo_planet
 	cp file_id.diz ./lovebyte_turbo_planet
 	cp planet.dsk ./lovebyte_turbo_planet
 #	cp cometsong_720p.mp4 ./lovebyte_turbo_planet
