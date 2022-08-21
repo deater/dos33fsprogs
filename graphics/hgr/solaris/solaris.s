@@ -34,8 +34,8 @@ YY	= $FD
 MASK	= $FE
 FRAME	= $FF
 
-surtb3	=	$1000
-surtb4	=	$1083
+;surtb3	=	$1000
+;surtb4	=	$1083
 
 ;  0 1  2  3  4  5  6  7
 ; 01 02 04 08 10 20 40 80
@@ -58,7 +58,6 @@ set_sur4:
 set_sur3:
 	lda	#<surtb3
 done_sur:
-
 	sta	turb3_smc+1
 
 
@@ -67,7 +66,7 @@ done_sur:
 	tax
 ;	lda	log2,X
 
-	sec
+	sec			; 1
 	lda	#0		; 2
 log2_loop:
 	rol			; 1
@@ -87,12 +86,13 @@ inner_loop:
 	ldx	HGR_X
 
 turb3_smc:
-	lda	surtb3,X
-	and	MASK
+	lda	surtb3,X		; get line lookup
+	and	MASK			; and with current MASK
 	beq	skip_color
 	lda	#$FF
 skip_color:
-	ldy	#39
+
+	ldy	#39			; draw horizontal line at GBASL
 inner_inner_loop:
 	sta	(GBASL),Y
 	dey
@@ -106,7 +106,7 @@ inner_inner_loop:
 	beq	outer_loop
 
 
-
+.if 0
 offsets:
 	.byte $00,$00,$00,$00,$00,$00,$00,$00
 	.byte $00,$00,$00,$00,$00,$00,$00,$00
@@ -125,8 +125,8 @@ values2:
 	.byte $df,$bf,$7f,$fe,$f9,$f7,$cf,$3f,$fc
 	.byte $e3,$9f,$7f,$fc,$c3,$3f,$fe,$e1
 	.byte $1f
+.endif
 
-.if 0
 	;64 + 21 = 76 vs 160
 surtb3:
        .byte $FF,$FF,$FE,$FF,$FF,$FD,$FF,$FF
@@ -142,8 +142,6 @@ surtb3:
        .byte $1F,$FF,$FF
 
 
-
-
 surtb4:
        .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
        .byte $FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
@@ -156,4 +154,4 @@ surtb4:
        .byte $CF,$3F,$FF,$FF,$FF,$FF,$FC,$E3
        .byte $9F,$7F,$FF,$FF,$FC,$C3,$3F,$FF
        .byte $FE,$E1,$1F,$FF
-.endif
+
