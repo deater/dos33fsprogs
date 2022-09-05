@@ -224,12 +224,12 @@ int main(int argc, char **argv) {
 	vtoc_buffer[VTOC_BYTES_PER_SH]=(sector_size>>8)&0xff;
 
 	/* Set sector bitmap so whole disk is free */
-	for(i=VTOC_FREE_BITMAPS;i<sector_size;i+=4) {
-		vtoc_buffer[i]=0xff;
-		vtoc_buffer[i+1]=0xff;
+	for(i=0;i<num_tracks;i++) {
+		vtoc_buffer[VTOC_FREE_BITMAPS+(i*4)]=0xff;
+		vtoc_buffer[VTOC_FREE_BITMAPS+(i*4)+1]=0xff;
 		if (num_sectors>16) {
-			vtoc_buffer[i+2]=0xff;
-			vtoc_buffer[i+3]=0xff;
+			vtoc_buffer[VTOC_FREE_BITMAPS+(i*4)+2]=0xff;
+			vtoc_buffer[VTOC_FREE_BITMAPS+(i*4)+3]=0xff;
 		}
 	}
 
@@ -265,10 +265,15 @@ int main(int argc, char **argv) {
 		/* if copying dos reserve tracks 1 and 2 as well */
 		for(i=0;i<num_sectors;i++) {
 			dos33_vtoc_reserve_sector(vtoc_buffer, 1, i);
-			dos33_vtoc_reserve_sector(vtoc_buffer, 2, i);
 		}
-		/* FIXME: free some room as DOS doesn't use all */
-		/* of track 2*/
+		/* free some room as DOS doesn't use all */
+		/* of track 2, only sectors 0-4 */
+		dos33_vtoc_reserve_sector(vtoc_buffer, 2, 0);
+		dos33_vtoc_reserve_sector(vtoc_buffer, 2, 1);
+		dos33_vtoc_reserve_sector(vtoc_buffer, 2, 2);
+		dos33_vtoc_reserve_sector(vtoc_buffer, 2, 3);
+		dos33_vtoc_reserve_sector(vtoc_buffer, 2, 4);
+
 	}
 
 
