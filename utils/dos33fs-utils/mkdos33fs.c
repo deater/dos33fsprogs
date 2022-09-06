@@ -345,7 +345,7 @@ int main(int argc, char **argv) {
 		sector_buffer[1]=next_track;
 		sector_buffer[2]=next_sector;
 
-		lseek(fd,((catalog_track*num_sectors)+current_sector)*
+		lseek(fd,((current_track*num_sectors)+current_sector)*
 			sector_size,SEEK_SET);
 		result=write(fd,sector_buffer,sector_size);
 		if (result!=sector_size) {
