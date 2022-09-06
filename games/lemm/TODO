@@ -1,3 +1,6 @@
+
+be sure that clicking on digger twice doesn't decrement twice
+
 Improve explosions
 + offset the frames when nuking so not simultaneous
 + on explosion, start with invisible 6 so we always get a full 5s

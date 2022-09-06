@@ -6,6 +6,8 @@
 ; 156 bytes = BIT trick
 ; 154 bytes = set offsets properly
 ; 151 bytes = redo init
+; 145 bytes = leave OFFSET_POINTER in X
+; 136 bytes = get rid of end offsets
 
 GBASL		= $26
 GBASH		= $27
@@ -45,8 +47,8 @@ horiz:
 
 forever_loop:
 
-	lda	#$0		; offset into the length pointers
-	sta	OFFSET_POINTER
+	lda	#$0
+	tax			; X = OFFSET_POINTER into length pointers
 				; A = screen line, 0..24
 big_loop:
 
@@ -55,7 +57,6 @@ big_loop:
 	jsr	BASCALC		; calculate address of line in BASL/BASH
 
 	ldy	#39		; draw 40 pixels on screen
-	ldx	OFFSET_POINTER	; get pointer to the offsets
 hlin:
 	tya
 
@@ -71,7 +72,8 @@ gurg:
 
 	tya
 	clc
-	sbc	endoffsets,X
+	sbc	offsets,X
+	sbc	#30
 	bvs	gurg2
 	eor	#$80
 gurg2:
@@ -103,10 +105,12 @@ blah:
 	adc	offsets,X
 	sta	BASL
 
-	ldx	LINE		; which line of bitmap to use
+	ldy	LINE		; which line of bitmap to use
+
+	lda	star_bitmap-1,Y	; get low bit of bitmap into carry
 
 	ldy	#7              ; 8-bits wide
-	lda	star_bitmap-1,X	; get low bit of bitmap into carry
+
 draw_line_loop:
 	lsr
 
@@ -125,10 +129,6 @@ its_transparent:
 
 skip_star:
 
-
-
-	ldx	OFFSET_POINTER
-
 	; see if new offset (meaning, we've gone three lines)
 
 	dec	LINE
@@ -142,10 +142,15 @@ skip_star:
 	lda	#$b3
 	sta	color_smc+1		; add shadow to (top?) of line
 
-	dec	offsets,X		; scroll the line length
-	dec	endoffsets,X
 
-	inc	OFFSET_POINTER		; point to next set of offsets
+	dec	offsets,X		; scroll the line length
+
+;	lda	offsets,X
+;	and	#$7f
+;	sta	offsets,X
+
+
+	inx				; point to next set of offsets
 
 	lda	#3			; reset line vlue
 	sta	LINE
@@ -156,12 +161,9 @@ not3:
 
 	pla				; restore line count
 	clc
-	adc	#1
-	cmp	#24
-;	tax
+	adc	#1			; increment
 
-;	inx
-;	cpx	#24			; see if reached bottom
+	cmp	#24			; see if reached bottom
 	bne	big_loop
 
 
@@ -179,8 +181,8 @@ not3:
 offsets:
 	.byte	30,29,31,38,31,34,32,35
 
-endoffsets:
-	.byte	60,50,61,68,61,64,62,65
+;endoffsets:
+;	.byte	60,50,61,68,61,64,62,65
 
 
 ; 76543210

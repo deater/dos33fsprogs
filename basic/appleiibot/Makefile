@@ -26,8 +26,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS STAR_BOUNCE.BAS\
 	OOZE.BAS HORIZ_STAR.BAS SECRET_COLLECT.BAS PLANET.BAS PLANET_GR.BAS \
 	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS ASPLODE.BAS SOLARIS3.BAS \
-	TARGET.BAS
-	cp $(EMPTY_DISK)/empty.dsk  appleiibot.dsk
+	TARGET.BAS ELITE.BAS
+	cp $(EMPTY_DISK)/empty_lots_of_dirents.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
 	$(DOS33) -y appleiibot.dsk SAVE A HELLO
@@ -132,16 +132,12 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PLANET_GR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A BOXES.BAS
-#	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS.BAS
-#	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS2.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A ASPLODE.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A SOLARIS3.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A TARGET.BAS
-
-#appleiibot2.dsk:	BOXES.BAS HELLO
-#	cp empty.dsk appleiibot2.dsk
-#	$(DOS33) -y appleiibot2.dsk SAVE A HELLO
-#	$(DOS33) -y appleiibot2.dsk SAVE A BOXES.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A ELITE.BAS
 
 
 ####
@@ -772,6 +768,11 @@ ASPLODE.BAS:	asplode.bas
 
 TARGET.BAS:	target.bas
 	$(TOKENIZE) < target.bas > TARGET.BAS
+
+####
+
+ELITE.BAS:	elite.bas
+	$(TOKENIZE) < elite.bas > ELITE.BAS
 
 
 
