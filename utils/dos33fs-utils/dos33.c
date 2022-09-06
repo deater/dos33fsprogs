@@ -429,17 +429,19 @@ continue_parsing_catalog:
 		i++;
 	}
 
-	if ((catalog_track=0x11) && (catalog_sector==1)) {
-		/* in theory can only have 105 files */
+	catalog_track=catalog_buffer[CATALOG_NEXT_T];
+	catalog_sector=catalog_buffer[CATALOG_NEXT_S];
+
+	if ((catalog_track==0x0) && (catalog_sector==0)) {
+		/* FIXME: should really check this before we */
+		/* allocate space for the file, we leak */
+
 		/* if full, we have no recourse!     */
-		/* can we allocate new catalog sectors */
+		/* can we auto-allocate new catalog sectors? */
 		/* and point to them?? */
 		fprintf(stderr,"Error!  No more room for files!\n");
 		return -ERROR_CATALOG_FULL;
 	}
-
-	catalog_track=catalog_buffer[CATALOG_NEXT_T];
-	catalog_sector=catalog_buffer[CATALOG_NEXT_S];
 
 	goto continue_parsing_catalog;
 
