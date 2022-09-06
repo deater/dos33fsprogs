@@ -139,7 +139,7 @@ static int dos33_allocate_sector(int fd, unsigned char *vtoc) {
 	int result;
 
 	/* Find an empty sector */
-	result=dos33_vtoc_find_free_sector(vtoc,&found_track,&found_sector);
+	result=dos33_vtoc_find_free_sector(vtoc,&found_track,&found_sector,0);
 
 	if (result<0) {
 		fprintf(stderr,"ERROR: dos33_allocate_sector: Disk full!\n");

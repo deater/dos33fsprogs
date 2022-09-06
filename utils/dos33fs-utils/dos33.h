@@ -76,7 +76,7 @@ void dos33_vtoc_free_sector(unsigned char *vtoc, int track, int sector);
 void dos33_vtoc_reserve_sector(unsigned char *vtoc, int track, int sector);
 void dos33_vtoc_dump_bitmap(unsigned char *vtoc, int num_tracks);
 int dos33_vtoc_find_free_sector(unsigned char *vtoc,
-	int *found_track, int *found_sector);
+	int *found_track, int *found_sector, int is_catalog);
 
 /* dos33_catalog.c */
 unsigned char dos33_char_to_type(char type, int lock);

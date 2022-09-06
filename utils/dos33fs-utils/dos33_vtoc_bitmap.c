@@ -38,6 +38,19 @@ static int find_first_one(unsigned char byte) {
 	return i;
 }
 
+static int find_last_one(unsigned char byte) {
+
+	int i=7;
+
+	if (byte==0) return -1;
+
+	while((byte & (0x1<<i))==0) {
+		i--;
+	}
+	return i;
+}
+
+
 
 /* Return how many bytes free in the filesystem */
 /* by reading the VTOC_FREE_BITMAP */
@@ -142,7 +155,7 @@ void dos33_vtoc_dump_bitmap(unsigned char *vtoc, int num_tracks) {
 
 /* reserve a sector in the sector bitmap */
 int dos33_vtoc_find_free_sector(unsigned char *vtoc,
-	int *found_track, int *found_sector) {
+	int *found_track, int *found_sector, int is_catalog) {
 
 	int start_track,track_dir,i;
 	int bitmap;
@@ -168,22 +181,44 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 	i=start_track;
 	do {
 
-		/* i+1 = sector 0..7 */
-		bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)+1];
-		if (bitmap!=0x00) {
-			*found_sector=find_first_one(bitmap);
-			*found_track=i;
-			found++;
-			break;
-		}
+		/* catalog tracks allocated backwards for some reason */
+		if (is_catalog) {
+			/* i+0 = sector 8..15 */
+			bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)];
+			if (bitmap!=0x00) {
+				*found_sector=find_last_one(bitmap)+8;
+				*found_track=i;
+				found++;
+				break;
+			}
 
-		/* i+0 = sector 8..15 */
-		bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)];
-		if (bitmap!=0x00) {
-			*found_sector=find_first_one(bitmap)+8;
-			*found_track=i;
-			found++;
-			break;
+			/* i+1 = sector 0..7 */
+			bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)+1];
+			if (bitmap!=0x00) {
+				*found_sector=find_last_one(bitmap);
+				*found_track=i;
+				found++;
+				break;
+			}
+		}
+		else {
+			/* i+1 = sector 0..7 */
+			bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)+1];
+			if (bitmap!=0x00) {
+				*found_sector=find_first_one(bitmap);
+				*found_track=i;
+				found++;
+				break;
+			}
+
+			/* i+0 = sector 8..15 */
+			bitmap=vtoc[VTOC_FREE_BITMAPS+(i*4)];
+			if (bitmap!=0x00) {
+				*found_sector=find_first_one(bitmap)+8;
+				*found_track=i;
+				found++;
+				break;
+			}
 		}
 
 		/* Move to next track, handling overflows */
@@ -202,10 +237,14 @@ int dos33_vtoc_find_free_sector(unsigned char *vtoc,
 		/* clear bit indicating in use */
 		dos33_vtoc_reserve_sector(vtoc, *found_track, *found_sector);
 
+		/* update last track used and direction */
+		vtoc[VTOC_LAST_ALLOC_T]=*found_track;
+		vtoc[VTOC_ALLOC_DIRECT]=track_dir;
+
 		return 0;
 	}
 
 	/* no room */
-        return -1;
+        return ERROR_NO_SPACE;
 
 }

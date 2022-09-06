@@ -17,12 +17,12 @@ static void usage(char *binary,int help) {
 	printf("\tby Vince Weaver <vince@deater.net>\n");
 	printf("\thttp://www.deater.net/weave/vmwprod/apple/\n\n");
 	if (help) {
-		printf("Usage:\t%s [-t track] [-s sector] [-b size] "
-			"[-d filename] [-f filename] device_name\n\n",binary);
+		printf("Usage:\t%s [-d debug] [-t track] [-s sector] [-b size] "
+			"[-i filename] [-f filename] device_name\n\n",binary);
 		printf("\t-t tracks    : number of tracks (default is 35)\n");
 		printf("\t-s sectors   : number of sectors (default is 16)\n");
 		printf("\t-b blocksize : size of sector, in bytes (default is 256)\n");
-		printf("\t-d filename  : file to copy first 3 tracks over from\n");
+		printf("\t-i filename  : file to copy first 3 tracks over from\n");
 		printf("\t-f filename  : name of BASIC file to autoboot.  Default is HELLO\n");
 		printf("\t-m maxfiles  : maximum files in CATALOG (default is 105)\n");
 		printf("\t-n volume    : volume number (default is 254)\n");
@@ -36,7 +36,8 @@ int main(int argc, char **argv) {
 
 	int num_tracks=35,num_sectors=16,sector_size=256;
 	int max_files=105,catalog_track=17,vtoc_track=17,volume_number=254;
-	int catalog_sectors,current_sector;
+	int catalog_sectors,current_sector,current_track;
+	int next_track,next_sector;
 	int max_ts_pairs=255;
 	int fd,dos_fd;
 	char device[BUFSIZ],dos_src[BUFSIZ];
@@ -49,9 +50,12 @@ int main(int argc, char **argv) {
 
 	/* Parse Command Line Arguments */
 
-	while ((c = getopt (argc, argv,"t:s:b:d:f:m:n:hv"))!=-1) {
+	while ((c = getopt (argc, argv,"t:s:b:df:i:m:n:hv"))!=-1) {
 		switch (c) {
 
+			case 'd':
+				debug=1;
+				break;
 			case 't':
 				num_tracks=strtol(optarg,&endptr,10);
 				if ( endptr == optarg ) usage(argv[0], 1);
@@ -77,7 +81,7 @@ int main(int argc, char **argv) {
 				if ( endptr == optarg ) usage(argv[0], 1);
 				break;
 
-			case 'd':
+			case 'i':
 				copy_dos=1;
 				strncpy(dos_src,optarg,BUFSIZ-1);
 				break;
@@ -186,11 +190,11 @@ int main(int argc, char **argv) {
 		max_ts_pairs=255;
 	}
 
+	/* default is 105 files (15 catalog sectors) */
 	catalog_sectors=max_files/7;
 	if (max_files%7) catalog_sectors++;
 	if (catalog_sectors>num_sectors-1) {
-		printf("Warning! num_files leads to too many sectors %d, max is %d\n",catalog_sectors,num_sectors-1);
-		catalog_sectors=num_sectors-1;
+		printf("Warning! num_files higher than normal %d sectors, ususal is %d\n",catalog_sectors,num_sectors-1);
 	}
 
 	/***************/
@@ -297,30 +301,49 @@ int main(int argc, char **argv) {
 	memset(sector_buffer,0,sector_size);
 
 	/* Set catalog next pointers */
+
+
+	/* start at T17S15 */
+	vtoc_buffer[VTOC_LAST_ALLOC_T]=17;
+	vtoc_buffer[VTOC_ALLOC_DIRECT]=255;	/* -1 direction */
+
+	/* Get first catalog sector */
+
+	if (dos33_vtoc_find_free_sector(vtoc_buffer,
+				&current_track,&current_sector,1)) {
+
+		return ERROR_NO_SPACE;
+	}
+
+
 	for(i=0;i<catalog_sectors;i++) {
 		/* point to next */
 		/* for first sector_size-1 walk backwards from T17S15 */
-		/* if more, allocate room on disk??? */
+		/* if more, allocate room on disk */
 		/* Max on 140k disk is 280 or so */
-
-		current_sector=num_sectors-i-1;
 
 		if (i==catalog_sectors-1) {
 			/* last one, pointer is to 0,0 */
-			sector_buffer[1]=0;
-			sector_buffer[2]=0;
+			next_track=0;
+			next_sector=0;
 		}
 		else {
-			printf("Writing $%02X,$%02X=%d,%d\n",
-				catalog_track,current_sector,
-				catalog_track,current_sector-1);
-			sector_buffer[1]=catalog_track;
-			sector_buffer[2]=current_sector-1;
+			if (dos33_vtoc_find_free_sector(vtoc_buffer,
+				&next_track,&next_sector,1)) {
+
+				return ERROR_NO_SPACE;
+			}
 		}
 
-		/* reserve */
-		dos33_vtoc_reserve_sector(vtoc_buffer,
-			catalog_track, current_sector);
+		if (debug) {
+			printf("Writing catalog track %d at "
+					"T$%02X:S$%02X, next=T$%02X:S$%02X\n",
+				i,current_track,current_sector,
+				next_track,next_sector);
+		}
+
+		sector_buffer[1]=next_track;
+		sector_buffer[2]=next_sector;
 
 		lseek(fd,((catalog_track*num_sectors)+current_sector)*
 			sector_size,SEEK_SET);
@@ -330,6 +353,8 @@ int main(int argc, char **argv) {
 				current_sector,strerror(errno));
 
 		}
+		current_track=next_track;
+		current_sector=next_sector;
 	}
 
 	/**************************/
