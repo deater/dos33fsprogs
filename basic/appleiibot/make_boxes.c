@@ -19,8 +19,10 @@ int main(int argc, char **argv) {
 		ptr=fgets(buffer,1024,stdin);
 		if (ptr==NULL) break;
 
-		sscanf(buffer,"%d %d %d %d %d",
-			&color,&x1,&x2,&y1,&y2);
+		if (buffer[0]==';') continue;
+
+		if (sscanf(buffer,"%d %d %d %d %d",
+			&color,&x1,&x2,&y1,&y2)!=5) continue;
 
 		output[out_ptr]=color+add;
 		output[out_ptr+1]=x1+add;
