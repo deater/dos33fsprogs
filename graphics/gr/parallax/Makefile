@@ -8,11 +8,13 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	paralax.dsk
 
-paralax.dsk:	HELLO BOXES BOXES_BOT
+paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT
 	cp $(EMPTY_DISK) paralax.dsk
 	$(DOS33) -y paralax.dsk SAVE A HELLO
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 BOXES
 	$(DOS33) -y paralax.dsk BSAVE -a 0x3B7 BOXES_BOT
+	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 LARGE
+	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
 
 ###
 
@@ -24,12 +26,29 @@ boxes.o:	boxes.s
 
 ###
 
+LARGE: large.o
+	ld65 -o LARGE large.o -C $(LINKER_DIR)/apple2_c00.inc
+
+large.o:	large.s
+	ca65 -o large.o large.s -l large.lst
+
+
+###
+
 BOXES_BOT: boxes_bot.o
 	ld65 -o BOXES_BOT boxes_bot.o -C $(LINKER_DIR)/apple2_3b7.inc
 
 boxes_bot.o:	boxes_bot.s
 	ca65 -o boxes_bot.o boxes_bot.s -l boxes_bot.lst
 
+
+###
+
+LARGE_BOT: large_bot.o
+	ld65 -o LARGE_BOT large_bot.o -C $(LINKER_DIR)/apple2_386.inc
+
+large_bot.o:	large_bot.s
+	ca65 -o large_bot.o large_bot.s -l large_bot.lst
 
 ###
 

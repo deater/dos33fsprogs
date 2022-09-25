@@ -26,7 +26,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	PARTICLE_HGR.BAS DIAMOND_SCROLL.BAS RANDOM_SCROLL.BAS STAR_BOUNCE.BAS\
 	OOZE.BAS HORIZ_STAR.BAS PLANET.BAS SECRET_COLLECT.BAS PLANET_GR.BAS \
 	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS ASPLODE.BAS SOLARIS3.BAS \
-	TARGET.BAS ELITE.BAS MYSTERY.BAS OFFICE.BAS GR_XOR.BAS
+	TARGET.BAS ELITE.BAS MYSTERY.BAS OFFICE.BAS GR_XOR.BAS \
+	LARGE_XOR.BAS
 	cp $(EMPTY_DISK)/empty_lots_of_dirents.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -141,6 +142,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A MYSTERY.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A OFFICE.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A GR_XOR.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A LARGE_XOR.BAS
 
 
 ####
@@ -792,6 +794,11 @@ OFFICE.BAS:	office.bas
 
 GR_XOR.BAS:	gr_xor.bas
 	$(TOKENIZE) < gr_xor.bas > GR_XOR.BAS
+
+####
+
+LARGE_XOR.BAS:	large_xor.bas
+	$(TOKENIZE) < large_xor.bas > LARGE_XOR.BAS
 
 
 
