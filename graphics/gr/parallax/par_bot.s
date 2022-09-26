@@ -6,8 +6,6 @@
 ; Zero Page
 GBASL		= $26
 GBASH		= $27
-H2		= $2C
-COLOR		= $30
 
 FRAME		= $EA
 FRAME2		= $EB
@@ -19,8 +17,6 @@ COLORS		= $FC
 PAGE		= $FD
 
 ; Soft Switches
-KEYPRESS= $C000
-KEYRESET= $C010
 SET_GR	= $C050 ; Enable graphics
 FULLGR	= $C052	; Full screen, no text
 PAGE1	= $C054 ; Page1
@@ -29,94 +25,74 @@ LORES	= $C056	; Enable LORES graphics
 
 ; ROM routines
 
-PLOT	= $F800	; plot, horiz=y, vert=A (A trashed, XY Saved)
-SETCOL	= $F864
-GBASCALC= $F847         ;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+GBASCALC= $F847         ; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 
 SETGR	= $FB40
-HOME	= $FC58				;; Clear the text screen
 WAIT	= $FCA8				;; delay 1/2(26+27A+5A^2) us
-HLINE	= $F819
-
 
 
 parallax:
 
 	;===================
 	; init screen
-	jsr	SETGR				; 3
-	bit	FULLGR				; 3
+	jsr	SETGR				; lores graphics
+	bit	FULLGR				; full screen
 
-	lda	#$0
+	lda	#$0				; start on page1
 	sta	PAGE
 
 parallax_forever:
 
-	inc	FRAME				; 2
-	lda	FRAME
+	inc	FRAME				; increment frame
+
+	lda	FRAME				; also have frame/2 and frame/4
 	lsr
 	sta	FRAME2
 	lsr
 	sta	FRAME4
 
-	;========================
-	; update color
-
-	lda	FRAME
-
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;	and	#$3
-
-;	tax
-;	lda	colors,X
-;	sta	COLORS
-
-
 	;==========================
 	; flip page
 
-	lda	PAGE
-	pha
+	lda	PAGE				; get current page
+	pha					; save for later
 
-	lsr
+	lsr					; switch visible page
 	lsr
 	tay
 	lda	PAGE1,Y
 
-	pla
+	pla					; save old draw page
 
-	eor	#$4
+	eor	#$4				; toggle to other draw page
 	sta	PAGE
 
 
 	;========================
 	; setup for 23 lines
 
-	ldx	#23				; 2
+	ldx	#23				; 23 lines (double high)
 
 yloop:
 
 	;==============
 	; point GBASL/GBSAH to current line
 
-	txa
+	txa					; get line addr in GBASL/H
 	jsr	GBASCALC
 	lda	GBASH
+
 	clc
-	adc	PAGE
+	adc	PAGE				; adjust for page
 	sta	GBASH
 
 	;==============
 	; current column (work backwards)
 
-	ldy	#39				; 2
+	ldy	#39
 xloop:
 
-	lda	#0
+	lda	#0				; default color black
 	sta	COLORS
 
 	; calculate colors
@@ -126,7 +102,7 @@ xloop:
 	;===========================
 	; SMALL
 
-	sec			; subtract frame from Y
+	sec					; subtract frame from Y
 	tya
 
 	sbc	FRAME4
@@ -196,30 +172,20 @@ skip_color_large:
 	; actually draw color
 
 
-	lda	COLORS
+	lda	COLORS				; store out pixel
 	sta	(GBASL),Y
 
 
-	dey					; 1
-	bpl	xloop				; 2
+	dey					; loop for X-coord
+	bpl	xloop				;
 
-	dex					; 1
+	dex					; loop for Y-coord
 
-	bpl	yloop				; 2
+	bpl	yloop				;
 
-	bmi	parallax_forever		; 2
-
-	; 00 = right
-	; 01 = up
-	; 10 = left
-	; 11 = down
-	; adc = $65
-	; sbc = $E5
-
-
-
+	bmi	parallax_forever		; bra
 
 ; for bot
-	; $3F5 - 127 + 3  = $379
+	; $3F5 - 125 + 3  = $37B
 
 	jmp	parallax

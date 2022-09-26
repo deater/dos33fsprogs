@@ -16,7 +16,7 @@ paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 LARGE
 	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 PAR
-	$(DOS33) -y paralax.dsk BSAVE -a 0x379 PAR_BOT
+	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
 
 ###
 
@@ -64,7 +64,7 @@ large_bot.o:	large_bot.s
 ###
 
 PAR_BOT: par_bot.o
-	ld65 -o PAR_BOT par_bot.o -C $(LINKER_DIR)/apple2_379.inc
+	ld65 -o PAR_BOT par_bot.o -C $(LINKER_DIR)/apple2_37b.inc
 
 par_bot.o:	par_bot.s
 	ca65 -o par_bot.o par_bot.s -l par_bot.lst
