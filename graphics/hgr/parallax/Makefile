@@ -8,7 +8,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	paralax.dsk
 
-paralax.dsk:	HELLO BOXES PAR WEIRD
+paralax.dsk:	HELLO BOXES PAR WEIRD SIER
 	cp $(EMPTY_DISK) paralax.dsk
 	$(DOS33) -y paralax.dsk SAVE A HELLO
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 BOXES
@@ -18,6 +18,7 @@ paralax.dsk:	HELLO BOXES PAR WEIRD
 	$(DOS33) -y paralax.dsk BSAVE -a 0x3f5 PAR
 #	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD
+	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 SIER
 
 ###
 
@@ -51,6 +52,15 @@ WEIRD: weird.o
 
 weird.o:	weird.s
 	ca65 -o weird.o weird.s -l weird.lst
+
+###
+
+SIER: sier.o
+	ld65 -o SIER sier.o -C $(LINKER_DIR)/apple2_c00.inc
+
+sier.o:	sier.s
+	ca65 -o sier.o sier.s -l sier.lst
+
 
 
 
