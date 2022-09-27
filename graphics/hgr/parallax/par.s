@@ -44,6 +44,7 @@ parallax:
 
 	;===================
 	; init screen
+	jsr	HGR
 	jsr	HGR2
 
 	;===================
@@ -59,8 +60,7 @@ init_loop:
         lda     GBASL
         sta     hgr_lookup_l,X
         lda     GBASH
-        sec
-        sbc     #$40
+	and	#$1F				; 20 30    001X 40 50  010X
         sta     hgr_lookup_h,X
         dex
         cpx     #$ff
@@ -72,45 +72,45 @@ parallax_forever:
 	inc	FRAME				; 2
 	lda	FRAME
 	lsr
-	sta	FRAME2
+;	sta	FRAME2
+	sta	frame2_smc+1
 	lsr
-	sta	FRAME4
+;	sta	FRAME4
+	sta	frame4_smc+1
 
 	;========================
 	; flip page
 
-        lda     HGR_PAGE                ; $40 or $20
-        pha
-        asl
-        asl
-        rol
-        tay
-        lda     PAGE1,Y
-        pla
+	lda	HGR_PAGE                ; $40 or $20
 
-        eor     #$60                    ; flip draw_page
-        sta     HGR_PAGE
+	eor	#$60                    ; flip draw_page
+	sta	HGR_PAGE
+
+	asl
+	asl
+	rol
+	eor	#$1
+	tay
+	lda     PAGE1,Y
 
 
-        ldx     #191                    ; init Y
-
+        ldx     #100                    ; init Y
 
 yloop:
 
 	;==============
-	; point GBASL/GBSAH to current line
+	; point output to current line
 
 	lda     hgr_lookup_l,X
         sta     out_smc+1
         lda     hgr_lookup_h,X
-        clc
-        adc     HGR_PAGE
+	ora	HGR_PAGE
         sta     out_smc+2
 
 	;==============
 	; current column (work backwards)
 
-	ldy	#39				; 2
+	ldy	#29				; 2
 xloop:
 
 	;==============
@@ -130,7 +130,8 @@ xloop:
 
 	txa
 
-	sec			; subtract frame from Y
+; carry always clear here?
+;	sec			; subtract frame from Y
 	sbc	FRAME
 
 	eor	X2
@@ -138,7 +139,7 @@ xloop:
 
 	beq	skip_color_large
 	lda	#$ff
-	jmp	draw_color
+	bne	draw_color
 skip_color_large:
 
 	;===========================
@@ -147,14 +148,15 @@ skip_color_large:
 	txa
 
 	sec			; subtract frame from Y
-	sbc	FRAME2
+frame2_smc:
+	sbc	#0
 
 	eor	X2
 	and	#$20
 
 	beq	skip_color_medium
 	lda	#$55
-	jmp	draw_color
+	bne	draw_color
 skip_color_medium:
 
 
@@ -164,7 +166,8 @@ skip_color_medium:
 	txa
 
 	sec			; subtract frame from YY
-	sbc	FRAME4
+frame4_smc:
+	sbc	#0
 
 	eor	X2
 	and	#$10
@@ -172,15 +175,10 @@ skip_color_medium:
 	beq	skip_color_small
 	lda	#$aa
 
-	jmp	draw_color
+	bne	draw_color
 skip_color_small:
 
 	lda	#$00
-
-
-
-
-
 
 
 	;========================
@@ -192,18 +190,19 @@ out_smc:
 
 
 	dey					; 1
-	bpl	xloop				; 2
+	cpy	#10
+	bne	xloop				; 2
 
 	dex					; 1
 
-	cpx	#$FF
+;	cpx	#$FF
 
-	bne	yloop				; 2
+	bpl	yloop				; 2
 
-	beq	parallax_forever		; 2
+	bmi	parallax_forever		; 2
 
 
 ; for bot
 	; $3F5 - 127 + 3  = $379
 
-	jmp	parallax
+;	jmp	parallax

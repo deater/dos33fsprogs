@@ -37,6 +37,8 @@ WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 HPOSN          = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 
+hgr_lookup_h	=	$1000
+hgr_lookup_l	=	$1100
 
 
 
@@ -45,6 +47,28 @@ parallax:
 	;===================
 	; init screen
 	jsr	HGR2
+
+	;===================
+	; int tables
+
+        ldx	#191
+init_loop:
+	txa
+        pha
+        jsr     HPOSN
+        pla
+	tax
+	lda	GBASL
+	sta	hgr_lookup_l,X
+	lda	GBASH
+	sec
+	sbc	#$40
+	sta	hgr_lookup_h,X
+	dex
+	cpx	#$ff
+	bne	init_loop
+
+        tax
 
 parallax_forever:
 
@@ -83,13 +107,13 @@ yloop:
 	;==============
 	; point GBASL/GBSAH to current line
 
-        txa
+	lda	hgr_lookup_l,X
+	sta	GBASL
+	lda	hgr_lookup_h,X
+	clc
+	adc	HGR_PAGE
+	sta	GBASH
 
-        pha
-        jsr     HPOSN
-        pla
-
-        tax
 
 	;==============
 	; current column (work backwards)
@@ -191,15 +215,6 @@ skip_color_large:
 	bne	yloop				; 2
 
 	beq	parallax_forever		; 2
-
-	; 00 = right
-	; 01 = up
-	; 10 = left
-	; 11 = down
-	; adc = $65
-	; sbc = $E5
-
-
 
 
 ; for bot

@@ -8,15 +8,15 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	paralax.dsk
 
-paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT WEIRD
+paralax.dsk:	HELLO BOXES PAR WEIRD
 	cp $(EMPTY_DISK) paralax.dsk
 	$(DOS33) -y paralax.dsk SAVE A HELLO
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 BOXES
-	$(DOS33) -y paralax.dsk BSAVE -a 0x3B7 BOXES_BOT
-	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 LARGE
-	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
-	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 PAR
-	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
+#	$(DOS33) -y paralax.dsk BSAVE -a 0x3B7 BOXES_BOT
+#	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 LARGE
+#	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
+	$(DOS33) -y paralax.dsk BSAVE -a 0x3f5 PAR
+#	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD
 
 ###
@@ -38,7 +38,7 @@ large.o:	large.s
 ###
 
 PAR: par.o
-	ld65 -o PAR par.o -C $(LINKER_DIR)/apple2_c00.inc
+	ld65 -o PAR par.o -C $(LINKER_DIR)/apple2_3f5.inc
 
 par.o:	par.s
 	ca65 -o par.o par.s -l par.lst
