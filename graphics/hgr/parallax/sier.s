@@ -39,6 +39,7 @@ HPOSN          = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 hgr_lookup_h    =       $1000
 hgr_lookup_l    =       $1100
+div4_lookup	=	$1200
 
 parallax:
 
@@ -62,6 +63,12 @@ init_loop:
         lda     GBASH
 	and	#$1F				; 20 30    001X 40 50  010X
         sta     hgr_lookup_h,X
+
+	txa
+	asl
+	asl
+	sta	div4_lookup,X
+
         dex
         cpx     #$ff
         bne     init_loop
@@ -69,14 +76,7 @@ init_loop:
 
 parallax_forever:
 
-	inc	FRAME				; 2
-	lda	FRAME
-	lsr
-;	sta	FRAME2
-	sta	frame2_smc+1
-	lsr
-;	sta	FRAME4
-	sta	frame4_smc+1
+	inc	FRAME							; 5
 
 	;========================
 	; flip page
@@ -94,7 +94,7 @@ parallax_forever:
 	lda     PAGE1,Y
 
 
-        ldx     #100                    ; init Y
+        ldx     #127                    ; init Y
 
 yloop:
 
@@ -110,74 +110,44 @@ yloop:
 	;==============
 	; current column (work backwards)
 
-	ldy	#29				; 2
+	ldy	#39						; 2
 xloop:
 
-	;==============
-	; precalc X2
-
-	tya
-	asl
-	asl
-	sta	X2
-
-	; calculate colors
-	; color = (XX-FRAME)^(YY)
-
+;	lda	div4_lookup,Y					; 4+
+;	sta	X2						; 3
 
 	;===========================
 	; LARGE
 
-	txa
+	txa							; 2
 
 ; carry always clear here?
 ;	sec			; subtract frame from Y
-	sbc	FRAME
+	sbc	FRAME						; 3
 
-	eor	X2
-	and	#$40
+	eor	div4_lookup,Y					; 4+
+	and	#$40						; 2
 
-	beq	skip_color_large
-	lda	#$ff
-	bne	draw_color
+	beq	skip_color_large				; 2/3
+	lda	#$ff						; 2
+	bne	draw_color					; 2/3
 skip_color_large:
 
 	;===========================
 	; MEDIUM
 
-	txa
+	txa							; 2
 
-	sec			; subtract frame from Y
-frame2_smc:
-	sbc	#0
+	sec			; subtract frame from Y		; 2
 
-	eor	X2
-	and	#$20
+	adc	FRAME		; go other way			; 3
 
-	beq	skip_color_medium
+	and	div4_lookup,Y	; sierpinski			; 4+
+
+	bne	skip_color_medium
 	lda	#$55
 	bne	draw_color
 skip_color_medium:
-
-
-	;===========================
-	; SMALL
-
-	txa								; 2
-
-	sec			; subtract frame from YY		; 2
-frame4_smc:
-	sbc	#0							; 2
-
-	eor	X2							; 3
-	and	#$10							; 2
-
-	beq	skip_color_small					; 2/3
-	lda	#$aa							; 2
-
-	bne	draw_color						; 2/3
-skip_color_small:
-
 
 	; fallthrough is black
 
@@ -192,12 +162,9 @@ out_smc:
 	sta	$2000,Y							; 5
 
 	dey								; 2
-	cpy	#10							; 2
-	bne	xloop							; 2/3
+	bpl	xloop							; 2/3
 
 	dex								; 2
-
-;	cpx	#$FF
 
 	bpl	yloop							; 2/3
 
