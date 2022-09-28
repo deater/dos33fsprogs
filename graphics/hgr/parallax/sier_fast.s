@@ -1,13 +1,16 @@
 ; Parallax Sierpinski/xor boxes HGR
 
+; not really faster, actually slower
+
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Already heavily optimized:
-
-; only 128 lines
 ;	frame 0: 27c78	= 162,936 cycles  = roughly 6.1 fps
-; full 192 lines
-;	frame 0: 3bf5f	= 245,599 cycles  = roughly 4 fps
+;	frame 1: 27ba8
+
+; fast (full screen)
+;	frame 0: 46cbc  = 289,980 cycles = roughly 3.4 fps
+
 
 
 ; Zero Page
@@ -44,9 +47,10 @@ WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
 HPOSN          = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 
-hgr_lookup_h    =       $1000
-hgr_lookup_l    =       $1100
-div4_lookup	=	$90
+
+y_lookup	=	$6000
+
+div4_lookup	=	$1000
 
 
 parallax:
@@ -57,25 +61,34 @@ parallax:
 	jsr	HGR2
 
 	;===================
-        ; int tables
-
-        ldx     #191
-init_loop:
-        txa
-        pha
-        jsr     HPOSN
-        pla
-        tax
-        lda     GBASL
-        sta     hgr_lookup_l,X
-        lda     GBASH
-	and	#$1F				; 20 30    001X 40 50  010X
-        sta     hgr_lookup_h,X
+        ; int table
 
 
-        dex
-        cpx     #$ff
-        bne     init_loop
+	ldx	#191
+outer_loop:
+	txa
+	pha
+	jsr	HPOSN
+	pla
+	tax
+
+	lda	GBASH
+	ora	#$20		; update $6000+
+	sta	GBASH
+
+
+	ldy	#39
+inner_loop:
+	txa
+	sta	(GBASL),Y
+
+	dey
+	bpl	inner_loop
+
+	dex
+	cpx	#$ff
+	bne	outer_loop
+
 
 	ldx	#39
 div4_loop:
@@ -83,6 +96,12 @@ div4_loop:
 	asl
 	asl
 	sta	div4_lookup,X
+	sta	div4_lookup+40,X
+	sta	div4_lookup+80,X
+	sta	div4_lookup+128,X
+	sta	div4_lookup+168,X
+	sta	div4_lookup+208,X
+
 	dex
 	bpl	div4_loop
 
@@ -97,10 +116,16 @@ parallax_forever:
 	;========================
 	; flip page
 
-	lda	HGR_PAGE                ; $40 or $20
+	lda	#$60
+	sta	a_smc+2
+	sta	b_smc+2
 
-	eor	#$60                    ; flip draw_page
+
+	eor	HGR_PAGE                ; $40 or $20
+
+;	eor	#$60                    ; flip draw_page
 	sta	HGR_PAGE
+	sta	out_smc+2
 
 	asl
 	asl
@@ -110,29 +135,23 @@ parallax_forever:
 	lda     PAGE1,X			; flip show_page
 
 
-	ldy	#159			; init Y
+	; 32 of em
+
+	ldy	#31			; init Y
 
 yloop:
 
 	;==============
-	; point output to current line
-
-	lda     hgr_lookup_l,Y						; 4+
-        sta     out_smc+1						; 4
-        lda     hgr_lookup_h,Y						; 4+
-	ora	HGR_PAGE						; 3
-        sta     out_smc+2						; 4
-
-	;==============
 	; current column (work backwards)
 
-	ldx	#39							; 2
+	ldx	#248						; 2
 xloop:
 
 	;===========================
 	; Boxes
 
-	tya								; 2
+a_smc:
+	lda	y_lookup,X						; 4+
 
 	; carry always clear here?
 large_smc:
@@ -149,7 +168,8 @@ skip_color_large:
 	;===========================
 	; Sierpinski
 
-	tya								; 2
+b_smc:
+	lda	y_lookup,X						; 4+
 medium_smc:
 	adc	#$DD			; go other way			; 2
 	and	div4_lookup,X		; sierpinski			; 4
@@ -175,12 +195,16 @@ out_smc:
 	sta	$2000,X							; 5
 
 	dex								; 2
-	bpl	xloop							; 2/3
+	cpx	#$FF
+	bne	xloop							; 2/3
+
+	inc	out_smc+2
+	inc	a_smc+2
+	inc	b_smc+2
 
 	dey								; 2
-	cpy	#32							; 2
-	bne	yloop							; 2/3
+	bpl	yloop							; 2/3
 
-	beq	parallax_forever					; 2/3
+	bmi	parallax_forever					; 2/3
 
 

@@ -8,17 +8,15 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	paralax.dsk
 
-paralax.dsk:	HELLO BOXES PAR WEIRD SIER
+paralax.dsk:	HELLO BOXES PAR WEIRD WEIRD2 SIER SIER_FAST
 	cp $(EMPTY_DISK) paralax.dsk
 	$(DOS33) -y paralax.dsk SAVE A HELLO
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 BOXES
-#	$(DOS33) -y paralax.dsk BSAVE -a 0x3B7 BOXES_BOT
-#	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 LARGE
-#	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0x3f5 PAR
-#	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD
+	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD2
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 SIER
+	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 SIER_FAST
 
 ###
 
@@ -28,13 +26,6 @@ BOXES: boxes.o
 boxes.o:	boxes.s
 	ca65 -o boxes.o boxes.s -l boxes.lst
 
-###
-
-LARGE: large.o
-	ld65 -o LARGE large.o -C $(LINKER_DIR)/apple2_c00.inc
-
-large.o:	large.s
-	ca65 -o large.o large.s -l large.lst
 
 ###
 
@@ -55,6 +46,15 @@ weird.o:	weird.s
 
 ###
 
+WEIRD2: weird2.o
+	ld65 -o WEIRD2 weird2.o -C $(LINKER_DIR)/apple2_c00.inc
+
+weird2.o:	weird2.s
+	ca65 -o weird2.o weird2.s -l weird2.lst
+
+
+###
+
 SIER: sier.o
 	ld65 -o SIER sier.o -C $(LINKER_DIR)/apple2_c00.inc
 
@@ -65,31 +65,14 @@ sier.o:	sier.s
 
 
 
-###
-
-BOXES_BOT: boxes_bot.o
-	ld65 -o BOXES_BOT boxes_bot.o -C $(LINKER_DIR)/apple2_3b7.inc
-
-boxes_bot.o:	boxes_bot.s
-	ca65 -o boxes_bot.o boxes_bot.s -l boxes_bot.lst
-
 
 ###
 
-LARGE_BOT: large_bot.o
-	ld65 -o LARGE_BOT large_bot.o -C $(LINKER_DIR)/apple2_386.inc
+SIER_FAST: sier_fast.o
+	ld65 -o SIER_FAST sier_fast.o -C $(LINKER_DIR)/apple2_c00.inc
 
-large_bot.o:	large_bot.s
-	ca65 -o large_bot.o large_bot.s -l large_bot.lst
-
-###
-
-PAR_BOT: par_bot.o
-	ld65 -o PAR_BOT par_bot.o -C $(LINKER_DIR)/apple2_37b.inc
-
-par_bot.o:	par_bot.s
-	ca65 -o par_bot.o par_bot.s -l par_bot.lst
-
+sier_fast.o:	sier_fast.s
+	ca65 -o sier_fast.o sier_fast.s -l sier_fast.lst
 
 ###
 

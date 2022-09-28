@@ -1,9 +1,12 @@
-; Parallax HGR
+; Parallax Sierpinski/xor boxes HGR
+
+; fast?
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
-; fullscreen:
-;       frame0: $59396 = 365,462 cycles = roughly 2.7 fps
+; Already heavily optimized:
+;	frame 0: 27c78	= 162,936 cycles  = roughly 6.1 fps
+;	frame 1: 27ba8
 
 ; Zero Page
 GBASL           = $26
@@ -41,6 +44,8 @@ HPOSN          = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 hgr_lookup_h    =       $1000
 hgr_lookup_l    =       $1100
+div4_lookup	=	$90
+
 
 parallax:
 
@@ -64,21 +69,28 @@ init_loop:
         lda     GBASH
 	and	#$1F				; 20 30    001X 40 50  010X
         sta     hgr_lookup_h,X
+
+
         dex
         cpx     #$ff
         bne     init_loop
 
+	ldx	#39
+div4_loop:
+	txa
+	asl
+	asl
+	sta	div4_lookup,X
+	dex
+	bpl	div4_loop
+
 
 parallax_forever:
 
-	inc	FRAME				; 2
-	lda	FRAME
-	lsr
-;	sta	FRAME2
-	sta	frame2_smc+1
-	lsr
-;	sta	FRAME4
-	sta	frame4_smc+1
+	; increment offsets
+
+	inc	large_smc+1						; 6
+	inc	medium_smc+1						; 6
 
 	;========================
 	; flip page
@@ -92,121 +104,82 @@ parallax_forever:
 	asl
 	rol
 	eor	#$1
-	tay
-	lda     PAGE1,Y
+	tax
+	lda     PAGE1,X			; flip show_page
 
 
-        ldx     #100                    ; init Y
+	; 16 of em
+
+	ldy	#15			; init Y
 
 yloop:
 
 	;==============
 	; point output to current line
 
-	lda     hgr_lookup_l,X
-        sta     out_smc+1
-        lda     hgr_lookup_h,X
-	ora	HGR_PAGE
-        sta     out_smc+2
+	lda     hgr_lookup_l,Y					; 4+
+        sta     out_smc+1					; 4
+        lda     hgr_lookup_h,Y					; 4+
+	ora	HGR_PAGE					; 3
+        sta     out_smc+2					; 4
 
 	;==============
 	; current column (work backwards)
 
-	ldy	#29				; 2
+	ldx	#0						; 2
 xloop:
 
-	;==============
-	; precalc X2
-
-	tya
-	asl
-	asl
-	sta	X2
-
-	; calculate colors
-	; color = (XX-FRAME)^(YY)
-
-
 	;===========================
-	; LARGE
+	; Boxes
 
-	txa
+	tya								; 2
 
-; carry always clear here?
-;	sec			; subtract frame from Y
-	sbc	FRAME
+	; carry always clear here?
+large_smc:
+	sbc	#$DD							; 2
+	eor	div4_lookup,X						; 4
+	and	#$40							; 2
 
-	eor	X2
-	and	#$40
+	bne	draw_white						; 2/3
 
-	beq	skip_color_large
-	lda	#$ff
-	bne	draw_color
+	; 0 means transparent
+
 skip_color_large:
 
 	;===========================
-	; MEDIUM
+	; Sierpinski
 
-	txa
+	tya								; 2
+medium_smc:
+	adc	#$DD			; go other way			; 2
+	and	div4_lookup,X		; sierpinski			; 4
 
-	sec			; subtract frame from Y
-frame2_smc:
-	sbc	#0
+	bne	draw_black		; draw black			; 2/3
 
-	eor	X2
-	and	#$20
-
-	beq	skip_color_medium
-	lda	#$55
-	bne	draw_color
-skip_color_medium:
-
-
-	;===========================
-	; SMALL
-
-	txa								; 2
-
-	sec			; subtract frame from YY		; 2
-frame4_smc:
-	sbc	#0							; 2
-
-	eor	X2							; 3
-	and	#$10							; 2
-
-	beq	skip_color_small					; 2/3
-	lda	#$aa							; 2
-
-	bne	draw_color						; 2/3
-skip_color_small:
-
-
-	; fallthrough is black
-
+draw_purple:
+	lda	#$55			; purple/green			; 2
+	bne	draw_color		; bra				; 3
+draw_black:
 	lda	#$00							; 2
+	beq	draw_color		; bra				; 3
 
+	; white block
+draw_white:
+	lda	#$7f							; 2
 
 	;========================
 	; actually draw color
 
 draw_color:
 out_smc:
-	sta	$2000,Y							; 5
-
-	dey								; 2
-	cpy	#10							; 2
-	bne	xloop							; 2/3
+	sta	$2000,X							; 5
 
 	dex								; 2
+	bne	xloop							; 2/3
 
-;	cpx	#$FF
+	dey								; 2
+	bne	yloop							; 2/3
 
-	bpl	yloop							; 2/3
-
-	bmi	parallax_forever					; 2/3
+	beq	parallax_forever					; 2/3
 
 
-; for bot
-	; $3F5 - 127 + 3  = $379
-
-;	jmp	parallax
