@@ -39,6 +39,7 @@ HPOSN	= $F411		; (Y,X),(A)  (valued stores in HGRX,XH,Y)
 hgr_lookup_h    =       $1000
 hgr_lookup_l    =       $1100
 div4_lookup	=	$90
+color_lookup	=	$1200
 
 parallax:
 
@@ -129,8 +130,10 @@ xloop:
 	; carry always clear here?
 large_smc:
 	sbc	#$DD							; 2
-	eor	div4_lookup,X						; 4
-	and	#$40							; 2
+;	eor	div4_lookup,X						; 4
+;	and	#$40							; 2
+
+	and	div4_lookup,X						; 4
 
 	bne	draw_white						; 2/3
 
