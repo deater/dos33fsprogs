@@ -15,7 +15,7 @@ paralax.dsk:	HELLO BOXES PAR WEIRD WEIRD2 SIER SIER_FAST
 	$(DOS33) -y paralax.dsk BSAVE -a 0x3f5 PAR
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 WEIRD2
-	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 SIER
+	$(DOS33) -y paralax.dsk BSAVE -a 0x3f5 SIER
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 SIER_FAST
 
 ###
@@ -56,7 +56,7 @@ weird2.o:	weird2.s
 ###
 
 SIER: sier.o
-	ld65 -o SIER sier.o -C $(LINKER_DIR)/apple2_c00.inc
+	ld65 -o SIER sier.o -C $(LINKER_DIR)/apple2_3f5.inc
 
 sier.o:	sier.s
 	ca65 -o sier.o sier.s -l sier.lst

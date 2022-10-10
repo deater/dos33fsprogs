@@ -7,16 +7,18 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	gear.dsk
 
-gear.dsk:	HELLO APPLE.BAS GEAR.BAS APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO
+gear.dsk:	HELLO APPLE.BAS GEAR.BAS \
+	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE
 	cp $(EMPTYDISK) gear.dsk
 	$(DOS33) -y gear.dsk SAVE A HELLO
 	$(DOS33) -y gear.dsk SAVE A GEAR.BAS
 	$(DOS33) -y gear.dsk SAVE A APPLE.BAS
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 GEAR
+	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 GEAR
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 LINE32
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 PATTERN
 	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 PATTERN_LOGO
+	$(DOS33) -y gear.dsk BSAVE -a 0xc00 SQUARE_WAVE
 
 ###
 
@@ -37,10 +39,19 @@ APPLE.BAS:	apple.bas
 ###
 
 GEAR:	gear.o
-	ld65 -o GEAR gear.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o GEAR gear.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
 gear.o:	gear.s
 	ca65 -o gear.o gear.s -l gear.lst
+
+###
+
+SQUARE_WAVE:	square_wave.o
+	ld65 -o SQUARE_WAVE square_wave.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+square_wave.o:	square_wave.s
+	ca65 -o square_wave.o square_wave.s -l square_wave.lst
+
 
 ###
 

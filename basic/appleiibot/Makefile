@@ -27,7 +27,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	OOZE.BAS HORIZ_STAR.BAS PLANET.BAS SECRET_COLLECT.BAS PLANET_GR.BAS \
 	BOXES.BAS SOLARIS.BAS SOLARIS2.BAS ASPLODE.BAS SOLARIS3.BAS \
 	TARGET.BAS ELITE.BAS MYSTERY.BAS OFFICE.BAS GR_XOR.BAS \
-	LARGE_XOR.BAS PAR_XOR.BAS PAR_HGR.BAS SIER_XOR.BAS PATTERN_LOGO.BAS
+	LARGE_XOR.BAS PAR_XOR.BAS PAR_HGR.BAS SIER_XOR.BAS PATTERN_LOGO.BAS \
+	GEARS.BAS DSR_LORES.BAS
 	cp $(EMPTY_DISK)/empty_lots_of_dirents.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -147,6 +148,8 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A PAR_HGR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A SIER_XOR.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PATTERN_LOGO.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A GEARS.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A DSR_LORES.BAS
 
 
 ####
@@ -823,6 +826,16 @@ SIER_XOR.BAS:	sier_xor.bas
 
 PATTERN_LOGO.BAS:	pattern_logo.bas
 	$(TOKENIZE) < pattern_logo.bas > PATTERN_LOGO.BAS
+
+####
+
+GEARS.BAS:	gears.bas
+	$(TOKENIZE) < gears.bas > GEARS.BAS
+
+####
+
+DSR_LORES.BAS:	dsr_lores.bas
+	$(TOKENIZE) < dsr_lores.bas > DSR_LORES.BAS
 
 
 
