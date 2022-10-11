@@ -8,10 +8,11 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	both.dsk
 
-both.dsk:	HELLO DSR_LORES PROOF PROOF2
+both.dsk:	HELLO DSR_BOT DSR_LORES PROOF PROOF2
 	cp $(EMPTY_DISK) both.dsk
 	$(DOS33) -y both.dsk SAVE A HELLO
-	$(DOS33) -y both.dsk BSAVE -a 0x373 DSR_LORES
+	$(DOS33) -y both.dsk BSAVE -a 0xC00 DSR_LORES
+	$(DOS33) -y both.dsk BSAVE -a 0x373 DSR_BOT
 	$(DOS33) -y both.dsk BSAVE -a 0xC00 PROOF
 	$(DOS33) -y both.dsk BSAVE -a 0xC00 PROOF2
 
@@ -19,10 +20,18 @@ both.dsk:	HELLO DSR_LORES PROOF PROOF2
 ###
 
 DSR_LORES: dsr_lores.o
-	ld65 -o DSR_LORES dsr_lores.o -C $(LINKER_DIR)/apple2_373.inc
+	ld65 -o DSR_LORES dsr_lores.o -C $(LINKER_DIR)/apple2_c00.inc
 
 dsr_lores.o:	dsr_lores.s
 	ca65 -o dsr_lores.o dsr_lores.s -l dsr_lores.lst
+
+###
+
+DSR_BOT: dsr_bot.o
+	ld65 -o DSR_BOT dsr_bot.o -C $(LINKER_DIR)/apple2_373.inc
+
+dsr_bot.o:	dsr_bot.s
+	ca65 -o dsr_bot.o dsr_bot.s -l dsr_bot.lst
 
 ###
 

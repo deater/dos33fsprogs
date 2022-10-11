@@ -1,9 +1,16 @@
-; ][ rotate lores
+; dsr rotate lores
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
-; 144 bytes (close)
-; 143 bytes -> jmp to bne
+; 147 bytes -- original attempt
+; 145 bytes -- hires address tables in zero page
+; 143 bytes -- optimize table init some more
+; 138 bytes -- swap X and Y in lores code
+; 136 bytes -- remove unnecessary compare
+; 135 bytes -- realize with shift, hclr is unneccesary
+; 134 bytes -- optimize Y usage in inner loop
+; 132 bytes -- don't need to init rotate?
+; 135 bytes -- bot jump
 
 ; Zero Page
 GBASL           = $26
@@ -16,7 +23,6 @@ HGR_COLOR       = $E4
 HGR_HORIZ       = $E5
 HGR_PAGE        = $E6
 HGR_SCALE	= $E7
-FRAME		= $F9
 ROTATION	= $FA
 COUNT		= $FC
 YY		= $FD
@@ -45,14 +51,15 @@ HPLOT0  = $F457		; plot at (Y,X), (A)
 WAIT    = $FCA8		; delay 1/2(26+27A+5A^2) us
 HPOSN	= $F411		; (Y,X),(A)  (valued stores in HGRX,XH,Y)
 PLOT    = $F800                 ;; PLOT AT Y,A
-PLOT1   = $F80E                 ;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
-
 SETCOL  = $F864                 ;; COLOR=A
 XDRAW0          =       $F65D
 
 
 hgr_lookup_h    =       $40		; $40-$70
 hgr_lookup_l    =       $70		; $70-$A0
+
+;hgr_lookup_h    =       $1000
+;hgr_lookup_l    =       $1100
 
 
 dsr_rotate:
@@ -64,10 +71,11 @@ dsr_rotate:
 					; A,Y are 0?
 	bit	FULLGR
 
-	bit	LORES
-
 	;===================
 	; init vars
+
+;	sta	ROTATION		; start at 0
+					; not needed if don't care start?
 
 	ldx	#4
 	stx	HGR_SCALE
@@ -88,17 +96,18 @@ init_loop:
 	bpl	init_loop
 
 
+	bit	LORES
 
 
 big_loop:
 
 ;=====================================
-; draw ][
-draw_II:
+; draw dsr
+draw_dsr:
 
-	ldy	#0		; Y
-	ldx	#20
-	lda	#24
+	ldy	#0		; Y 0 here from HCLR
+	ldx	#15
+	lda	#20
 	jsr     HPOSN           ; set screen position to X= (y,x) Y=(a)
                                 ; saves X,Y,A to zero page
                                 ; after Y= orig X/7
@@ -128,16 +137,8 @@ lsier_outer:
 	lda	hgr_lookup_h,X
 	sta	hgr_scrn_smc+2
 
-	txa
+	ldx	#0
 	ldy	#0			; COUNT
-
-	jsr	PLOT			; plot at Y,A
-					; this sets up GBASL for us
-					; 	does create slight glitch
-					; 	on left side of screen
-
-	ldx	#0			; X = hires x-coord
-
 
 lsier_inner:
 
@@ -149,21 +150,16 @@ lsier_inner_inner:
 hgr_scrn_smc:
 	lsr	$2000,X			; note this also clears screen
 	lda	#0
-
-	; bcc = $90, bcs = $b0
-	;	1001        1011
-flip_smc:
 	bcs	no_color
 
-	lda	YY			; use Y-coord for color
-	adc	ROTATION		; rotate colors
+	lda	YY			; get Y-coord into A
 no_color:
 	jsr	SETCOL
 
+	lda	YY			; y-coord in A
 					; x-coord already in Y
 
-	jsr	PLOT1			; plot at (GBASL),Y
-					; GBASL/H set earlier with PLOT
+	jsr	PLOT			; plot at Y,A
 
 	iny				; increment count
 	cpy	#40			; if hit 40, done
@@ -182,30 +178,13 @@ done_line:
 end:
 	inc	ROTATION
 	inc	ROTATION
-
-
-	lda	ROTATION
-
-	and	#$20
-	clc
-	adc	#$90			; flip bcs/bcc
-	sta	flip_smc
-
-	bne	big_loop		; bra
+	jmp	big_loop
 
 shape_dsr:
-;.byte   $2d,$36,$ff,$3f
-;.byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
-;.byte   $91,$3f,$36,$00
+.byte   $2d,$36,$ff,$3f
+.byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
+.byte   $91,$3f,$36,$00
 
-;.byte	$01,$00,$04,$00
-;.byte 	$36,$ff,$3f,$24
-;.byte	$2d,$12,$24,$40,$ad,$12,$24,$4c
-;.byte	$39,$37,$36,$2e,$05,$00
-
-.byte	$d2,$1b,$2d,$24
-.byte	$24,$7f,$49,$09,$3f,$36,$36,$2d
-.byte	$00
 
 
 	; $3F5 - 130 = $373
