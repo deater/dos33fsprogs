@@ -1,13 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-//#define LINE_VALUE	279
-//#define STOP_VALUE	0
-//#define MODE_VALUE	3
+#if 1
+
+#define LINE_VALUE	279
+#define STOP_VALUE	0
+#define MODE_VALUE	3
+
+#else
 
 #define LINE_VALUE	3
 #define STOP_VALUE	6
 #define MODE_VALUE	9
+
+#endif
 
 
 static int debug=1;
