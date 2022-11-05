@@ -13,7 +13,7 @@ both.dsk:	HELLO DSR_BOT A2_BOT DSR_LORES PROOF PROOF2
 	$(DOS33) -y both.dsk SAVE A HELLO
 	$(DOS33) -y both.dsk BSAVE -a 0xC00 DSR_LORES
 	$(DOS33) -y both.dsk BSAVE -a 0x36C DSR_BOT
-	$(DOS33) -y both.dsk BSAVE -a 0xC00 A2_BOT
+	$(DOS33) -y both.dsk BSAVE -a 0x36c A2_BOT
 	$(DOS33) -y both.dsk BSAVE -a 0xC00 PROOF
 	$(DOS33) -y both.dsk BSAVE -a 0xC00 PROOF2
 
@@ -29,7 +29,7 @@ dsr_lores.o:	dsr_lores.s
 ###
 
 DSR_BOT: dsr_bot.o
-	ld65 -o DSR_BOT dsr_bot.o -C $(LINKER_DIR)/apple2_373.inc
+	ld65 -o DSR_BOT dsr_bot.o -C $(LINKER_DIR)/apple2_36c.inc
 
 dsr_bot.o:	dsr_bot.s
 	ca65 -o dsr_bot.o dsr_bot.s -l dsr_bot.lst
