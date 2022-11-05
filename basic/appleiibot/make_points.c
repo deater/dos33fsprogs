@@ -37,6 +37,8 @@ int main(int argc, char **argv) {
 	int out_ptr=0;
 	int add=33;
 	int xadjust=0;
+//	int xadjust=-3;
+	int yadjust=0;
 	int div=3;
 
 	if (argc>1) {
@@ -63,9 +65,9 @@ int main(int argc, char **argv) {
 		if (a1==LINE_VALUE) {
 			output[out_ptr]=((a1-xadjust)/div)+add;
 			output[out_ptr+1]=((a2-xadjust)/div)+add;
-			output[out_ptr+2]=((a3-xadjust)/div)+add;
+			output[out_ptr+2]=((a3-yadjust)/div)+add;
 			output[out_ptr+3]=((a4-xadjust)/div)+add;
-			output[out_ptr+4]=((a5-xadjust)/div)+add;
+			output[out_ptr+4]=((a5-yadjust)/div)+add;
 			out_ptr+=5;
 		}
 		else if (a1==MODE_VALUE) {
@@ -79,7 +81,7 @@ int main(int argc, char **argv) {
 		}
 		else {
 			output[out_ptr]=((a1-xadjust)/div)+add;
-			output[out_ptr+1]=((a2-xadjust)/div)+add;
+			output[out_ptr+1]=((a2-yadjust)/div)+add;
 			out_ptr+=2;
 		}
 	}

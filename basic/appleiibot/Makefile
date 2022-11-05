@@ -29,7 +29,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	TARGET.BAS ELITE.BAS MYSTERY.BAS OFFICE.BAS GR_XOR.BAS \
 	LARGE_XOR.BAS PAR_XOR.BAS PAR_HGR.BAS SIER_XOR.BAS PATTERN_LOGO.BAS \
 	GEARS.BAS DSR_LORES.BAS A2_LORES.BAS MAGIC_CUBE.BAS MOON.BAS \
-	PUMPKIN2.BAS
+	PUMPKIN2.BAS TWITTER.BAS
 	cp $(EMPTY_DISK)/empty_lots_of_dirents.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -155,6 +155,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A MAGIC_CUBE.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A MOON.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A PUMPKIN2.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A TWITTER.BAS
 
 
 ####
@@ -856,6 +857,11 @@ MOON.BAS:	moon.bas
 
 PUMPKIN2.BAS:	pumpkin2.bas
 	$(TOKENIZE) < pumpkin2.bas > PUMPKIN2.BAS
+
+####
+
+TWITTER.BAS:	twitter.bas
+	$(TOKENIZE) < twitter.bas > TWITTER.BAS
 
 
 ####
