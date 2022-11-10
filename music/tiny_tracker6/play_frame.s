@@ -32,7 +32,8 @@ set_notes_loop:
 	; load next byte
 
 	ldy	SONG_OFFSET
-	lda	tracker_song,Y
+track_smc:
+	lda	track4,Y
 
 	;==================
 	; see if hit end
@@ -43,9 +44,22 @@ set_notes_loop:
 	;====================================
 	; if at end, loop back to beginning
 
-	asl			; reset song offset to 0
+	inc	WHICH_TRACK
+	ldy	WHICH_TRACK
+	cpy	#5
+	bne	no_wrap
+	ldy	#1
+	sty	WHICH_TRACK
+no_wrap:
+	lda	tracks_l,Y
+	sta	track_smc+1
+	lda	tracks_h,Y
+	sta	track_smc+2
+
+	lda	#0
 	sta	SONG_OFFSET
-	beq	set_notes_loop
+
+	beq	set_notes_loop	; bra
 
 not_end:
 
@@ -104,5 +118,11 @@ done_update_song:
 
 channel_a_volume:
 	.byte 14,14,14,14,11,11,10,10
+
+	tracks_l:
+		.byte <track4,<track0,<track1,<track2,<track3
+	tracks_h:
+		.byte >track4,>track0,>track1,>track2,>track3
+
 
 skip_data:

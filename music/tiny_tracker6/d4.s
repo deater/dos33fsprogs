@@ -13,6 +13,7 @@ d4:
 
 	lda	#0
 	sta	FRAME
+	sta	WHICH_TRACK
 
 	;===================
 	; music Player Setup
