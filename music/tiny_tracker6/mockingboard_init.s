@@ -66,12 +66,54 @@ mockingboard_init:
 	; Reset Left AY-3-8910
 	;===========================
 
-	ldx	#$FF
-	stx	MOCK_6522_DDRB1
-	stx	MOCK_6522_DDRA1
+;	ldx	#$FF
+;	stx	MOCK_6522_DDRB1
+;	stx	MOCK_6522_DDRA1
 
-	inx				;	#MOCK_AY_RESET $0
-	stx	MOCK_6522_ORB1
-	ldx	#MOCK_AY_INACTIVE	;	$4
-	stx	MOCK_6522_ORB1
+;	inx				;	#MOCK_AY_RESET $0
+;	stx	MOCK_6522_ORB1
+;	ldx	#MOCK_AY_INACTIVE	;	$4
+;	stx	MOCK_6522_ORB1
 
+
+;	sei			; disable interrupts, is this necessary?
+
+	;=========================
+	; Setup Interrupt Handler
+	;=========================
+
+	; NOTE: we don't support IIc as it's a hack
+	;	traditionally Mockingboard on IIc was rare
+
+	;========================
+	; set up interrupt
+	; Vector address goes to 0x3fe/0x3ff
+
+	; can save 10 bytes if we load in memory so this
+	; is in the right place automatically
+
+	lda	#<interrupt_handler	; 2
+	sta	$03fe			; 3
+	lda	#>interrupt_handler	; 2
+	sta	$03ff			; 3
+					;=========
+					; 10
+	;=========================
+	; Initialize the 6522s
+	; Reset Left AY-3-8910
+	;===========================
+
+	; entries=10
+	; 14 + 2*entries = 34 bytes
+
+;	assume Y=0 on entry?
+
+	ldy	#0			; 2
+init_it_loop:
+	lda	init_values,Y		; 3
+	ldx	init_addresses,Y	; 3
+	bmi	doneit			; 2
+	iny				; 1
+	sta	$c400,X			; 3
+	bne	init_it_loop		; 2
+doneit:
