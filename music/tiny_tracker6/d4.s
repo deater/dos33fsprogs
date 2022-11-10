@@ -8,6 +8,11 @@
 
 
 d4:
+	;=================
+	; init vars
+
+	lda	#0
+	sta	FRAME
 
 	;===================
 	; music Player Setup

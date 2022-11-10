@@ -210,30 +210,40 @@ static void print_help(int just_version, char *exec_name) {
 
 static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 
-	// NNNNNNEC
+	// NNNNNEEC
 
 	unsigned char temp_value;
+	unsigned char length=0;
 
 	if (*a_last>=0) {
-		temp_value=(*a_last<<2)|0;
+		/* note is shifted left by 3, channel 0 */
+		temp_value=(*a_last<<3)|0;
+		/* if no note b, use the passed in length */
 		if ((*b_last<0) && (*c_last<0)) {
-			 temp_value|=2;
+			length=(*total_len<<1);
+			temp_value|=length;
 		}
 		printf("\t.byte $%02X ; A=%d L=%d\n",
 			temp_value,
-			*a_last,(*b_last<0)||(*c_last<0));
-		(*total_len)++;
+			*a_last,length>>1);//(*b_last<0)||(*c_last<0));
+//		(*total_len)++;
 		*a_last=-1;
 	}
 
 	if (*b_last>=0) {
-		temp_value=(*b_last<<2)|1;
-		if (*c_last<0) temp_value|=2;
+		/* note is shifted left by 3, channel 1 */
+		temp_value=(*b_last<<3)|1;
+		length=(*total_len<<1);
+		temp_value|=length;
+		if (*c_last<0) {
+//			temp_value|=2;
+			fprintf(stderr,"Error, shouldn't have C\n");
+		}
 
 		printf("\t.byte $%02X ; B=%d L=%d\n",
 			temp_value,
-			*b_last,(*c_last<0));
-		(*total_len)++;
+			*b_last,length>>1);
+//		(*total_len)++;
 		*b_last=-1;
 	}
 
@@ -416,12 +426,12 @@ printf("\n");
 		}
 
 		if ((a.ed_freq>=0)||(b.ed_freq>=0)||(c.ed_freq>=0)) {
-			printf("; none: a=%d c=%d len=%d\n",a_last,c_last,current_length);
+			printf("; none: a=%d b=%d len=%d\n",a_last,b_last,current_length);
 
 			// now NNNNNNEC
 
 			if (!first) {
-				write_note(&a_last,&b_last,&c_last,&total_len);
+				write_note(&a_last,&b_last,&c_last,&current_length);
 			}
 			current_length=0;
 
@@ -455,12 +465,12 @@ printf("\n");
 
 
 	printf("; last: a=%d c=%d len=%d\n",a_last,c_last,current_length);
-	write_note(&a_last,&b_last,&c_last,&total_len);
+	write_note(&a_last,&b_last,&c_last,&current_length);
 
 //	printf("\t.byte $FF ; end\n");
 
 	/* assume 32 notes or fewer */
-	printf("\t.byte $80 ; end\n");
+	printf("\t.byte $FF ; end\n");
 	total_len++;
 
 	int o,n;

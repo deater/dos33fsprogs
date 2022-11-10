@@ -1,16 +1,27 @@
 play_frame:
 
-	;============================
-	; see if still counting down
+	;===============================
+	;===============================
+	; things that happen every frame
+	;===============================
+	;===============================
 
-	lda	SONG_COUNTDOWN
+	;=================================
+	; inc frame counter
+
+	inc	FRAME
+
+	;=================================
 	; rotate through channel A volume
 
-	tya
+	lda	FRAME
 	and	#$7
 	tay
 	lda	channel_a_volume,Y
 	sta	AY_REGS+8
+
+	;============================
+	; see if still counting down
 
 	lda	SONG_COUNTDOWN
 	bpl	done_update_song
@@ -39,14 +50,14 @@ set_notes_loop:
 not_end:
 
 
-	; NNNNNNEC -- c=channel, e=end, n=note
+	; NNNNNEEC -- c=channel, e=end, n=note
 
 	pha				; save note
 
 	and	#1
-;	tax
-;	ldy	#$0E
-;	sty	AY_REGS+8,X		; $08 set volume A,B
+	tax
+	ldy	#$0E
+	sty	AY_REGS+8,X		; $08 set volume A,B
 
 	asl
 	tax				; put channel offset in X
@@ -54,13 +65,14 @@ not_end:
 
 	pla				; restore note
 	tay
-	and	#$2
+	and	#$6
+;	asl
 	asl
 	asl
-	asl
-	sta	SONG_COUNTDOWN		; always 2 long?
+	sta	SONG_COUNTDOWN		;
 
 	tya
+	lsr
 	lsr
 	lsr				; get note in A
 
