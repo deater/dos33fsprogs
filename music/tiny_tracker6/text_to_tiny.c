@@ -219,7 +219,12 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 		temp_value=(*a_last<<3)|0;
 		/* if no note b, use the passed in length */
 		if ((*b_last<0) && (*c_last<0)) {
-			length=(*total_len<<1);
+			if (*total_len==4) {
+				length=3<<1;
+			}
+			else {
+				length=(*total_len<<1);
+			}
 			temp_value|=length;
 		}
 		printf("\t.byte $%02X ; A=%d L=%d\n",
@@ -232,9 +237,14 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 	if (*b_last>=0) {
 		/* note is shifted left by 3, channel 1 */
 		temp_value=(*b_last<<3)|1;
-		length=(*total_len<<1);
+		if (*total_len==4) {
+			length=3<<1;
+		}
+		else {
+			length=(*total_len<<1);
+		}
 		temp_value|=length;
-		if (*c_last<0) {
+		if (*c_last>=0) {
 //			temp_value|=2;
 			fprintf(stderr,"Error, shouldn't have C\n");
 		}

@@ -78,14 +78,15 @@ not_end:
 
 
 	pla				; restore note
-	tay
+	pha
+
 	and	#$6
-;	asl
-	asl
-	asl
+	lsr
+	tay
+	lda	lengths,Y
 	sta	SONG_COUNTDOWN		;
 
-	tya
+	pla
 	lsr
 	lsr
 	lsr				; get note in A
@@ -118,6 +119,9 @@ done_update_song:
 
 channel_a_volume:
 	.byte 14,14,14,14,11,11,10,10
+
+	lengths:
+	.byte 0*8,1*8,2*8,4*8
 
 	tracks_l:
 		.byte <track4,<track0,<track1,<track2,<track3
