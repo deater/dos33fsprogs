@@ -4,6 +4,9 @@
 
 ; 908 bytes -- first display
 ; 916 bytes -- scroll down
+; 914 bytes -- assume < 256 co-ords
+; 908 bytes -- assume first co-oord is an HPLOT
+; 906 bytes -- save value on stack rather than ZP
 
 show_logo:
 
@@ -74,6 +77,7 @@ logo_done:
 	jmp	skip_it
 
 
+
 	;========================
 	; draw letter
 	;========================
@@ -82,16 +86,14 @@ logo_done:
 
 draw_letter:
 
-	ldy	#0			; iterator
+	ldy	#$FF			; iterator
 letter_loop:
-	lda	(INL),Y
 
-	cmp	#$FF
-	beq	letter_done
 
-	cmp	#$8D
-	bne	hplot_to
 hplot:
+
+	; setup X value
+
 	iny
 
 	lda	(INL),Y			; get X value
@@ -100,10 +102,11 @@ hplot:
 	adc	LETTER_X
 	tax				; put in X
 
+	; setup Y value
+
 	iny				; point to Y value
 
-	tya				; save Y value on stack for later
-	pha
+	sty	SAVE_Y			; save Y value on stack for later
 
 	lda	(INL),Y			; get Y value
 	clc
@@ -113,43 +116,53 @@ hplot:
 
 	jsr     HPLOT0  	        ; plot at (Y,X), (A)
 
-	pla				; restore pointer
-	tay
+	ldy	SAVE_Y			; restore pointer
 
 	iny
 
 hplot_to:
 
-	lda	(INL),Y
-	asl
-	clc
-	adc	LETTER_X
-	sta	TEMP
+	; get X value
 
-	lda	#0
+	lda	(INL),Y			; get next value
+	asl				; mul by 2
+	clc
+	adc	LETTER_X		; add in offset
+	pha				; save for later
+
+	lda	#0			; wrap if > 256
 	adc	#0
 	tax
 
+	; get Y value
+
 	iny
 
-	tya
-	pha
+	sty	SAVE_Y			; save Y value
 
-	lda	(INL),Y
-	clc
+	lda	(INL),Y			; get next value
+	clc				; add Y offset
 	adc	LETTER_Y
-	tay
+	tay				; put into Y
 
-	lda	TEMP
+	pla				; restore X value
 
-	jsr	HGLIN		; line to (X,A),(Y)
+	jsr	HGLIN			; line to (X,A),(Y)
 
-	pla
-	tay
+	ldy	SAVE_Y
 
 	iny
 
-	jmp	letter_loop
+	; see if at end of line or of whole thing
+
+	lda	(INL),Y			; get next value
+
+	bmi	letter_done		; if negative, we are done
+
+	cmp	#$7F
+	beq	hplot
+	bne	hplot_to
+
 letter_done:
 	rts
 

@@ -7,18 +7,18 @@
 	.include "hardware.inc"
 
 
-d4:
+apple2_desire:
+
 	;=================
 	; init vars
 
-	lda	#0
+	lda	#0			; TODO: move to ay init
 	sta	FRAME
 	sta	WHICH_TRACK
+	sta	BAMP_COUNTDOWN
 
 	;===================
 	; music Player Setup
-
-tracker_song = peasant_song
 
 	; assume mockingboard in slot#4
 

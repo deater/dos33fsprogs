@@ -27,7 +27,7 @@ interrupt_handler:
 	tya
 	pha			; save Y
 
-	inc	$0404		; debug (flashes char onscreen)
+;	inc	$0404		; debug (flashes char onscreen)
 
 
 ay3_irq_handler:
@@ -59,10 +59,4 @@ interrupt_smc:
 								;============
 								; typical
 								; ???? cycles
-
-
-
-
-
-
 

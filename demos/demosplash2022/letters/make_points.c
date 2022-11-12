@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define LINE_VALUE	282
+#define LINE_VALUE	254
 #define STOP_VALUE	0
 #define MODE_VALUE	3
 
@@ -20,6 +20,7 @@ int main(int argc, char **argv) {
 	int xdiv=2;
 	int ydiv=1;
 	int i;
+	int first_line=1;
 
 	if (argc>1) {
 		xadjust=atoi(argv[1]);
@@ -43,12 +44,18 @@ int main(int argc, char **argv) {
 			&a1,&a2,&a3,&a4,&a5);
 		if (debug) fprintf(stderr,"%d %d %d %d %d\n",a1,a2,a3,a4,a5);
 		if (a1==LINE_VALUE) {
-			output[out_ptr]=((a1)/xdiv)+add;
-			output[out_ptr+1]=((a2-xadjust)/xdiv)+add;
-			output[out_ptr+2]=((a3-yadjust)/ydiv)+add;
-			output[out_ptr+3]=((a4-xadjust)/xdiv)+add;
-			output[out_ptr+4]=((a5-yadjust)/ydiv)+add;
-			out_ptr+=5;
+			if (first_line) {
+				first_line=0;
+			}
+			else {
+				output[out_ptr]=((a1)/xdiv)+add;
+				out_ptr+=1;
+			}
+			output[out_ptr+0]=((a2-xadjust)/xdiv)+add;
+			output[out_ptr+1]=((a3-yadjust)/ydiv)+add;
+			output[out_ptr+2]=((a4-xadjust)/xdiv)+add;
+			output[out_ptr+3]=((a5-yadjust)/ydiv)+add;
+			out_ptr+=4;
 		}
 		else if (a1==MODE_VALUE) {
 			output[out_ptr]=((a1-xadjust)/xdiv)+add;

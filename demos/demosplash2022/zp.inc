@@ -27,6 +27,8 @@ HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 HGR_SCALE	= $E7
 
+BAMP_COUNTDOWN	= $F6
+SAVE_Y		= $F7
 LETTER_X	= $F8
 LETTER_Y	= $F9
 COUNT		= $FA

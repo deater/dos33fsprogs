@@ -6,19 +6,17 @@ play_frame:
 	;===============================
 	;===============================
 
-	;=================================
-	; inc frame counter
-
-	inc	FRAME
 
 	;=================================
 	; rotate through channel A volume
 
-	lda	FRAME
+	lda	FRAME				; repeating 8-long pattern
 	and	#$7
 	tay
 	lda	channel_a_volume,Y
-	sta	AY_REGS+8
+	sta	AY_REGS+8				; A volume
+
+
 
 	;============================
 	; see if still counting down
@@ -27,6 +25,7 @@ play_frame:
 	bpl	done_update_song
 
 set_notes_loop:
+
 
 	;==================
 	; load next byte
@@ -56,6 +55,11 @@ no_wrap:
 	lda	tracks_h,Y
 	sta	track_smc+2
 
+	lda	bamps_l,Y
+	sta	bamp_smc+1
+	lda	bamps_h,Y
+	sta	bamp_smc+2
+
 	lda	#0
 	sta	SONG_OFFSET
 
@@ -69,9 +73,9 @@ not_end:
 	pha				; save note
 
 	and	#1
-	tax
-	ldy	#$0E
-	sty	AY_REGS+8,X		; $08 set volume A,B
+;	tax
+;	ldy	#$0E
+;	sty	AY_REGS+8,X		; $08 set volume A,B
 
 	asl
 	tax				; put channel offset in X
@@ -101,9 +105,9 @@ not_end:
 	sta	AY_REGS,X		; set proper register value
 
 	; visualization
-blah_urgh:
-	sta	$400,Y
-	inc	blah_urgh+1
+;blah_urgh:
+;	sta	$400,Y
+;	inc	blah_urgh+1
 
 
 	;============================
@@ -112,7 +116,13 @@ blah_urgh:
 	; assume less than 256 bytes
 	inc	SONG_OFFSET
 
+
 done_update_song:
+
+
+	;=================================
+	; coundown song
+
 	dec	SONG_COUNTDOWN
 	bmi	set_notes_loop
 	bpl	skip_data
@@ -128,5 +138,48 @@ channel_a_volume:
 	tracks_h:
 		.byte >track4,>track0,>track1,>track2,>track3
 
+	bamps_l:
+		.byte <bamps4,<bamps0,<bamps1,<bamps2,<bamps3
+	bamps_h:
+		.byte >bamps4,>bamps0,>bamps1,>bamps2,>bamps3
+
+
+.include "amp.s"
 
 skip_data:
+
+	;=================================
+	; handle channel B volume
+chanb:
+	lda	FRAME
+	and	#$7
+	bne	bamps_skip
+
+	lda	BAMP_COUNTDOWN
+	bne	bamps_good
+
+bamp_smc:
+	lda	bamps4
+	pha
+	and	#$f
+	sta	AY_REGS+9				; B volume
+	pla
+
+	lsr
+	lsr
+	lsr
+	lsr
+;	clc
+;	adc	#1
+	sta	BAMP_COUNTDOWN
+
+	inc	bamp_smc+1
+
+bamps_good:
+	dec	BAMP_COUNTDOWN
+bamps_skip:
+
+	;=================================
+	; inc frame counter
+
+	inc	FRAME

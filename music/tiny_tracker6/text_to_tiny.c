@@ -71,7 +71,7 @@ static int debug=0;
 static int line=0;
 
 static int header_version=0;
-
+static int current_frame=0;
 
 struct note_type {
 	unsigned char which;
@@ -207,7 +207,7 @@ static void print_help(int just_version, char *exec_name) {
 }
 
 
-static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
+static int write_note(int *a_last,int *b_last,int *c_last,int total_len) {
 
 	// NNNNNEEC
 
@@ -219,29 +219,30 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 		temp_value=(*a_last<<3)|0;
 		/* if no note b, use the passed in length */
 		if ((*b_last<0) && (*c_last<0)) {
-			if (*total_len==4) {
+			if (total_len==4) {
 				length=3<<1;
 			}
 			else {
-				length=(*total_len<<1);
+				length=(total_len<<1);
 			}
 			temp_value|=length;
 		}
-		printf("\t.byte $%02X ; A=%d L=%d\n",
+		printf("\t.byte $%02X ; frame=%d A=%d L=%d\n",
 			temp_value,
+			current_frame,
 			*a_last,length>>1);//(*b_last<0)||(*c_last<0));
-//		(*total_len)++;
+//		(total_len)++;
 		*a_last=-1;
 	}
 
 	if (*b_last>=0) {
 		/* note is shifted left by 3, channel 1 */
 		temp_value=(*b_last<<3)|1;
-		if (*total_len==4) {
+		if (total_len==4) {
 			length=3<<1;
 		}
 		else {
-			length=(*total_len<<1);
+			length=(total_len<<1);
 		}
 		temp_value|=length;
 		if (*c_last>=0) {
@@ -249,10 +250,11 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 			fprintf(stderr,"Error, shouldn't have C\n");
 		}
 
-		printf("\t.byte $%02X ; B=%d L=%d\n",
+		printf("\t.byte $%02X ; frame=%d B=%d L=%d\n",
 			temp_value,
+			current_frame,
 			*b_last,length>>1);
-//		(*total_len)++;
+//		(total_len)++;
 		*b_last=-1;
 	}
 
@@ -261,7 +263,7 @@ static int write_note(int *a_last,int *b_last,int *c_last,int *total_len) {
 //		printf("\t.byte $%02X ; C=%d L=%d\n",
 //			(unsigned char)(*c_last<<3)|4|2,
 //			*c_last,1);
-//		(*total_len)++;
+//		(total_len)++;
 //		*c_last=-1;
 	}
 
@@ -281,6 +283,7 @@ int main(int argc, char **argv) {
 	int sp,external_frequency,irq;
 	struct note_type a,b,c;
 	int copt;
+	int total_length=0;
 
 	char song_name[BUFSIZ];
 	char author_name[BUFSIZ];
@@ -408,9 +411,16 @@ printf("\n");
 		if (string[0]=='\'') continue;
 		if (string[0]=='-') continue;
 		if (string[0]=='*') continue;
-		if (string[0]=='t') {
-			if (!first) printf(".byte $ff\n");
+		if (string[0]=='t') {		/* track */
+			if (!first) {
+				printf("; last: a=%d b=%d len=%d\n",a_last,b_last,current_length);
+				write_note(&a_last,&b_last,&c_last,current_length);
+				printf(".byte $ff\n");
+			}
 			printf("%s\n",string);
+			total_length=0;
+			current_frame=0;
+			current_length=0;
 			continue;
 		}
 
@@ -440,13 +450,16 @@ printf("\n");
 		}
 
 		if ((a.ed_freq>=0)||(b.ed_freq>=0)||(c.ed_freq>=0)) {
-			printf("; none: a=%d b=%d len=%d\n",a_last,b_last,current_length);
+
 
 			// now NNNNNNEC
 
 			if (!first) {
-				write_note(&a_last,&b_last,&c_last,&current_length);
+				write_note(&a_last,&b_last,&c_last,current_length);
 			}
+//			printf("; frame %d: a=%d b=%d len=%d\n",
+//				total_length,a_last,b_last,current_length);
+			total_length+=current_length;
 			current_length=0;
 
 			//if (!first) {
@@ -473,13 +486,13 @@ printf("\n");
 		}
 
 		current_length++;
-
+		current_frame++;
 
 	}
 
 
-	printf("; last: a=%d c=%d len=%d\n",a_last,c_last,current_length);
-	write_note(&a_last,&b_last,&c_last,&current_length);
+	printf("; last: a=%d b=%d len=%d\n",a_last,b_last,current_length);
+	write_note(&a_last,&b_last,&c_last,current_length);
 
 //	printf("\t.byte $FF ; end\n");
 
