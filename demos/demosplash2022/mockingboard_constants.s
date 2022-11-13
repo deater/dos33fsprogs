@@ -11,7 +11,7 @@ init_values:
 	.byte $ff,$ff	; set the data direction for all pins of PortA/PortB to be output
 	.byte $40,$7f
 	.byte $C0,$C0
-	.byte $e7,$4f	; c7ce / 1.023e6 = .050s, 20Hz
+	.byte $e7,$4f	; 50Hz
 	.byte MOCK_AY_RESET,MOCK_AY_INACTIVE
 
 	; c7ce / 1.023e6 = .050s, 20Hz

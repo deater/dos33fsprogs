@@ -1,22 +1,5 @@
 play_frame:
 
-	;===============================
-	;===============================
-	; things that happen every frame
-	;===============================
-	;===============================
-
-
-	;=================================
-	; rotate through channel A volume
-
-	lda	FRAME				; repeating 8-long pattern
-	and	#$7
-	tay
-	lda	channel_a_volume,Y
-	sta	AY_REGS+8				; A volume
-
-
 
 	;============================
 	; see if still counting down
@@ -52,13 +35,13 @@ track_smc:
 no_wrap:
 	lda	tracks_l,Y
 	sta	track_smc+1
-	lda	tracks_h,Y
-	sta	track_smc+2
+;	lda	tracks_h,Y
+;	sta	track_smc+2
 
 	lda	bamps_l,Y
 	sta	bamp_smc+1
-	lda	bamps_h,Y
-	sta	bamp_smc+2
+;	lda	bamps_h,Y
+;	sta	bamp_smc+2
 
 	lda	#0
 	sta	SONG_OFFSET
@@ -125,34 +108,33 @@ done_update_song:
 
 	dec	SONG_COUNTDOWN
 	bmi	set_notes_loop
-	bpl	skip_data
-
-channel_a_volume:
-	.byte 14,14,14,14,11,11,10,10
-
-	lengths:
-	.byte 0*8,1*8,2*8,4*8
-
-	tracks_l:
-		.byte <track4,<track0,<track1,<track2,<track3
-	tracks_h:
-		.byte >track4,>track0,>track1,>track2,>track3
-
-	bamps_l:
-		.byte <bamps4,<bamps0,<bamps1,<bamps2,<bamps3
-	bamps_h:
-		.byte >bamps4,>bamps0,>bamps1,>bamps2,>bamps3
 
 
-.include "amp.s"
 
-skip_data:
+
+	;===============================
+	;===============================
+	; things that happen every frame
+	;===============================
+	;===============================
+
+
+	;=================================
+	; rotate through channel A volume
+
+	lda	FRAME				; repeating 8-long pattern
+	and	#$7
+	tay
+	lda	channel_a_volume,Y
+	sta	AY_REGS+8				; A volume
+
 
 	;=================================
 	; handle channel B volume
 chanb:
-	lda	FRAME
-	and	#$7
+;	lda	FRAME
+;	and	#$7
+	tya
 	bne	bamps_skip
 
 	lda	BAMP_COUNTDOWN

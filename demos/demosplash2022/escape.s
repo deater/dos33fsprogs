@@ -42,9 +42,6 @@ game_loop:
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
 
-; music
-.include	"mA2E_4.s"
-
 ; logo
 letter_d:
 .include	"./letters/d.inc"
@@ -56,3 +53,8 @@ letter_i:
 .include	"./letters/i.inc"
 letter_r:
 .include	"./letters/r.inc"
+
+; music
+.include	"mA2E_4.s"
+
+
