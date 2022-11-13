@@ -2,6 +2,8 @@
 
 ; pre-defined applesoft vars
 
+HGR_BITS	= $1C
+
 CH      = $24
 CV      = $25
 GBASL   = $26

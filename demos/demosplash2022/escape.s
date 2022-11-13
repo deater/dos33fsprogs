@@ -10,8 +10,11 @@
 apple2_desire:
 
 	; clear both pages of graphics
-	jsr	HGR
 	jsr	HGR2
+	lda	#$ff
+	sta	HGR_BITS
+	lda	#$20
+	jsr	BKGND+2
 
 	; A and Y are 0 now?
 

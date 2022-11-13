@@ -24,7 +24,7 @@ draw_apple:
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
 	pla			; ROT
-	jmp	DRAW0		; XDRAW 1 AT X,Y
+	jmp	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 				; Y varies

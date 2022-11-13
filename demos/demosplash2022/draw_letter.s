@@ -1,12 +1,47 @@
+	;===============================
+	; draw desire letters, in order
+	;===============================
+	; X has color
+
+draw_logo:
+	jsr	HCOLOR1
+
+	ldx	#5					; draw 5 letters
+letter_time:
+	lda	letters_l,X				; get address
+	sta	INL
+
+	lda	#>letter_d				; assume on same page
+	sta	INH
+
+	ldy	letters_x,X				; get X offset
+
+	txa						; save X
+	pha
+
+	jsr	draw_letter
+
+	pla
+	tax
+
+	dex
+	bpl	letter_time
+	rts
+
+
+
+
+
 	;========================
 	; draw letter
 	;========================
 	; so inefficient
 	; letter to draw in INL:INH
-	; A is X offset
+	; Y is X offset
 
 draw_letter:
-	sty	LETTER_X
+	sty	LETTER_X		; store X-coord
+
 	ldy	#$FF			; iterator
 letter_loop:
 
@@ -99,4 +134,6 @@ get_y:
 	adc	LETTER_Y
 
 	rts
+
+
 

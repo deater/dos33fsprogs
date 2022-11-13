@@ -25,17 +25,18 @@ PTRIG		=	$C070
 
 ;; BASIC ROUTINES
 
-NORMAL	= $F273
-HGR	= $F3E2
-HGR2    = $F3D8
-HCLR	= $F3F2
-HPOSN   = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
+NORMAL		= $F273
+HGR		= $F3E2
+HGR2		= $F3D8
+HCLR		= $F3F2
+BKGND		= $F3F6
+HPOSN		= $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
 HPLOT0          = $F457         ; plot at (Y,X), (A)
 HCOLOR1         = $F6F0         ; set HGR_COLOR to value in X       
-HGLIN          = $F53A         ; line to (X,A),(Y)
-DRAW0           =       $F601
-XDRAW0          =       $F65D
-XDRAW1          =       $F661
+HGLIN		= $F53A         ; line to (X,A),(Y)
+DRAW0		= $F601
+XDRAW0		= $F65D
+XDRAW1		= $F661
 
 
 ;; MONITOR ROUTINES
