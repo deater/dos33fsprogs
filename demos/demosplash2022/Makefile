@@ -42,7 +42,8 @@ ESCAPE:	escape.o
 escape.o:	escape.s \
 	logo_intro.s zp.inc \
 	ay3_write_regs.s escape.s interrupt_handler.s \
-	play_frame.s \
+	play_frame.s draw_letter.s freq.s freq_h.s bamps.s \
+	apple_logo.s \
 	mA2E_4.s mockingboard_constants.s mockingboard_init.s tracker_init.s
 	ca65 -o escape.o escape.s -l escape.lst
 

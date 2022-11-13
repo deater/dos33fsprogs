@@ -10,13 +10,13 @@ BASL    = $28
 BASH    = $29
 
 AY_REGS		= $70
+;	through = $7D
 
-SONG_L		= $80
-SONG_H		= $81
-;SONG_OFFSET	= $82
+FRAME		= $80
+BAMP_COUNTDOWN	= $81
+WHICH_TRACK	= $82
 SONG_COUNTDOWN	= $83
-OCTAVE		= $84
-REGISTER	= $85
+
 
 OUR_ROT		= $A5
 
@@ -27,13 +27,11 @@ HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 HGR_SCALE	= $E7
 
-BAMP_COUNTDOWN	= $F6
+
 SAVE_Y		= $F7
 LETTER_X	= $F8
 LETTER_Y	= $F9
 COUNT		= $FA
-FRAME		= $FB
-WHICH_TRACK	= $FC
 INL		= $FD
 INH		= $FE
 TEMP		= $FF

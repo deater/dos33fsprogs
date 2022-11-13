@@ -9,13 +9,11 @@
 
 apple2_desire:
 
-	;=================
-	; init vars
+	; clear both pages of graphics
+	jsr	HGR
+	jsr	HGR2
 
-	lda	#0			; TODO: move to ay init
-	sta	FRAME
-	sta	WHICH_TRACK
-	sta	BAMP_COUNTDOWN
+	; A and Y are 0 now?
 
 	;===================
 	; music Player Setup
@@ -28,19 +26,47 @@ apple2_desire:
 
 .include "tracker_init.s"
 
-	jsr	HGR			; enable lo-res graphics
+
 
 	cli				; enable music
 
 
 .include "logo_intro.s"
 
-game_loop:
-	jmp	game_loop
+	;========================
+	; flip pages forever
+main_loop:
+	lda	FRAME
+	and	#$80
+	clc
+	rol
+	rol
+	tax
+	lda	PAGE1,X
+	jmp	main_loop
 
 
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
+
+.include "apple_logo.s"
+
+.include "draw_letter.s"
+
+.include "freq.s"
+
+letters_x:
+        .byte 14,62,110,154,176,220
+letters_l:
+        .byte <letter_d,<letter_e,<letter_s,<letter_i,<letter_r,<letter_e
+;letters_h:
+;       .byte >letter_d,>letter_e,>letter_s,>letter_i,>letter_r,>letter_e
+
+.include "bamps.s"
+
+.align $100
+
+.include "freq_h.s"
 
 ; logo
 letter_d:
@@ -56,5 +82,5 @@ letter_r:
 
 ; music
 .include	"mA2E_4.s"
-
+.include	"apple_shape.s"
 

@@ -3,9 +3,10 @@
 	;========================
 	; so inefficient
 	; letter to draw in INL:INH
+	; A is X offset
 
 draw_letter:
-
+	sty	LETTER_X
 	ldy	#$FF			; iterator
 letter_loop:
 
@@ -13,7 +14,7 @@ letter_loop:
 hplot:
 	; setup X value
 
-	iny
+	iny				; skip the new-line indicator
 
 	jsr	get_x			; get adjusted x-coord in A
 
@@ -21,7 +22,7 @@ hplot:
 
 	; setup Y value
 
-	jsr	get_y
+	jsr	get_y			; get adjusted y-coord in A
 
 	ldy	#0			; set top of X value (FIXME)
 

@@ -2,8 +2,9 @@ tracker_init:
 
 	; setup initial ay-3-8910 values (this depends on song)
 
+	; claer out $70-$90
 init_registers_to_zero:
-	ldx	#$13			; init registers to zero
+	ldx	#$20			; init registers to zero
 	lda	#0
 init_loop:
 	sta	AY_REGS,X

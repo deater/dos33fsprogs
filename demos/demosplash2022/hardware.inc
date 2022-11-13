@@ -30,10 +30,13 @@ HGR	= $F3E2
 HGR2    = $F3D8
 HCLR	= $F3F2
 HPOSN   = $F411         ; (Y,X),(A)  (values stores in HGRX,XH,Y)
-XDRAW0	= $F65D
 HPLOT0          = $F457         ; plot at (Y,X), (A)
 HCOLOR1         = $F6F0         ; set HGR_COLOR to value in X       
 HGLIN          = $F53A         ; line to (X,A),(Y)
+DRAW0           =       $F601
+XDRAW0          =       $F65D
+XDRAW1          =       $F661
+
 
 ;; MONITOR ROUTINES
 
@@ -55,7 +58,7 @@ SETINV	= $FE80			;; INVERSE
 SETNORM	= $FE84			;; NORMAL
 COUT	= $FDED			;; output A to screen
 COUT1	= $FDF0			;; output A to screen
-
+RESTORE         =       $FF3F
 
 
 
