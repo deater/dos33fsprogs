@@ -13,40 +13,42 @@ set_notes_loop:
 	;==================
 	; load next byte
 
-	ldy	SONG_OFFSET
+	ldy	SONG_OFFSET			; Y = offset into song
 track_smc:
-	lda	track4,Y
+	lda	track4,Y			; get next byte into A
 
 	;==================
 	; see if hit end
 
-	cmp	#$ff
+	cmp	#$ff				; FF means we hit end
 	bne	not_end
 
 	;====================================
 	; if at end, loop back to beginning
 
-	inc	WHICH_TRACK
-	ldy	WHICH_TRACK
-	cpy	#5
+	ldy	WHICH_TRACK			; get current track in Y
+	iny					; increment track
+
+	cpy	#5				; see if off end
 	bne	no_wrap
-	ldy	#1
-	sty	WHICH_TRACK
+	ldy	#1				; loop to track 1
 no_wrap:
-	lda	tracks_l,Y
+	sty	WHICH_TRACK
+
+	lda	tracks_l,Y			; self-modify track
 	sta	track_smc+1
-;	lda	tracks_h,Y
+;	lda	tracks_h,Y			; enforce in same page
 ;	sta	track_smc+2
 
-	lda	bamps_l,Y
+	lda	bamps_l,Y			; self modify B-amplitude
 	sta	bamp_smc+1
-;	lda	bamps_h,Y
+;	lda	bamps_h,Y			; enforce in same page
 ;	sta	bamp_smc+2
 
-	lda	#0
+	lda	#0				; reset song offset
 	sta	SONG_OFFSET
 
-	beq	set_notes_loop	; bra
+	beq	set_notes_loop	; bra		; try again in new track
 
 not_end:
 
@@ -56,21 +58,17 @@ not_end:
 	pha				; save note
 
 	and	#1
-;	tax
-;	ldy	#$0E
-;	sty	AY_REGS+8,X		; $08 set volume A,B
-
 	asl
-	tax				; put channel offset in X
+	tax				; put channel offset*2 in X
 
 
 	pla				; restore note
 	pha
 
-	and	#$6
+	and	#$6			; get note length
 	lsr
 	tay
-	lda	lengths,Y
+	lda	lengths,Y		; lookup in table
 	sta	SONG_COUNTDOWN		;
 
 	pla
