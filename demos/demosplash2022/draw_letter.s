@@ -4,7 +4,9 @@
 	; X has color
 
 draw_logo:
-	jsr	HCOLOR1
+	pha
+
+	jsr	HCOLOR1					; set color to X
 
 	ldx	#5					; draw 5 letters
 letter_time:
@@ -26,7 +28,9 @@ letter_time:
 
 	dex
 	bpl	letter_time
-	rts
+
+	pla
+	jmp	draw_apple
 
 
 
@@ -41,6 +45,10 @@ letter_time:
 
 draw_letter:
 	sty	LETTER_X		; store X-coord
+
+	lda	LETTER_Y		; alternate up/down
+	eor	#$8
+	sta	LETTER_Y
 
 	ldy	#$FF			; iterator
 letter_loop:

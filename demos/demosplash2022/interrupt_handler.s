@@ -20,7 +20,7 @@
 interrupt_handler:
 	php			; save status flags
 	cld			; clear decimal mode
-	pha			; save A				; 3
+;	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
 	pha			; save X
@@ -47,7 +47,7 @@ done_ay3_irq_handler:
 	tay			; restore Y
 	pla
 	tax			; restore X
-	pla			; restore a				; 4
+;	pla			; restore a				; 4
 
 	; on II+/IIe (but not IIc) we need to do this?
 interrupt_smc:

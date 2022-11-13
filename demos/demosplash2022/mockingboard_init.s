@@ -85,19 +85,8 @@ mockingboard_init:
 	; NOTE: we don't support IIc as it's a hack
 	;	traditionally Mockingboard on IIc was rare
 
-	;========================
-	; set up interrupt
-	; Vector address goes to 0x3fe/0x3ff
 
-	; can save 10 bytes if we load in memory so this
-	; is in the right place automatically
 
-	lda	#<interrupt_handler	; 2
-	sta	$03fe			; 3
-	lda	#>interrupt_handler	; 2
-	sta	$03ff			; 3
-					;=========
-					; 10
 	;=========================
 	; Initialize the 6522s
 	; Reset Left AY-3-8910
@@ -108,7 +97,7 @@ mockingboard_init:
 
 ;	assume Y=0 on entry?
 
-	ldy	#0			; 2
+;	ldy	#0			; 2
 init_it_loop:
 	lda	init_values,Y		; 3
 	ldx	init_addresses,Y	; 3
@@ -117,3 +106,15 @@ init_it_loop:
 	sta	$c400,X			; 3
 	bne	init_it_loop		; 2
 doneit:
+
+	;========================
+	; set up interrupt
+	; Vector address goes to 0x3fe/0x3ff
+
+
+	lda	#<interrupt_handler	; 2
+	sta	$03fe			; 3
+	lda	#>interrupt_handler	; 2
+	sta	$03ff			; 3
+					;=========
+					; 10

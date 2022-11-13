@@ -10,12 +10,11 @@ draw_apple:
 	sta	HGR_SCALE
 
 	ldy	#0
-	ldx	#70
-	lda	#60
+	ldx	#60
+	txa
+;	lda	#60
 
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
-
-
 
 	ldx	#<apple_table	; point to bottom byte of shape address
 	ldy	#>apple_table	; point to top byte of shape address
