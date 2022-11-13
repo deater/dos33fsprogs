@@ -40,7 +40,7 @@ ESCAPE:	escape.o
 	ld65 -o ESCAPE escape.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
 escape.o:	escape.s \
-	logo_intro.s \
+	logo_intro.s zp.inc \
 	ay3_write_regs.s escape.s interrupt_handler.s \
 	play_frame.s \
 	mA2E_4.s mockingboard_constants.s mockingboard_init.s tracker_init.s

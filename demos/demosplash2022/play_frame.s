@@ -13,9 +13,9 @@ set_notes_loop:
 	;==================
 	; load next byte
 
-	ldy	SONG_OFFSET			; Y = offset into song
+;	ldy	SONG_OFFSET			; Y = offset into song
 track_smc:
-	lda	track4,Y			; get next byte into A
+	lda	track4;,Y			; get next byte into A
 
 	;==================
 	; see if hit end
@@ -45,10 +45,10 @@ no_wrap:
 ;	lda	bamps_h,Y			; enforce in same page
 ;	sta	bamp_smc+2
 
-	lda	#0				; reset song offset
-	sta	SONG_OFFSET
+;	lda	#0				; reset song offset
+;	sta	SONG_OFFSET
 
-	beq	set_notes_loop	; bra		; try again in new track
+	jmp	set_notes_loop	; bra		; try again in new track
 
 not_end:
 
@@ -78,24 +78,18 @@ not_end:
 
 	tay				; lookup in table
 
-	lda	frequencies_high,Y
-	sta	AY_REGS+1,X
-;	sta	$500,X
+	lda	frequencies_high,Y	; get high frequency
+	sta	AY_REGS+1,X		; put in AY register
 
-	lda	frequencies_low,Y
-	sta	AY_REGS,X		; set proper register value
-
-	; visualization
-;blah_urgh:
-;	sta	$400,Y
-;	inc	blah_urgh+1
+	lda	frequencies_low,Y	; get low frequency
+	sta	AY_REGS,X		; also put in AY register
 
 
 	;============================
 	; point to next
 
 	; assume less than 256 bytes
-	inc	SONG_OFFSET
+	inc	track_smc+1		; SONG_OFFSET
 
 
 done_update_song:
@@ -104,7 +98,9 @@ done_update_song:
 	;=================================
 	; coundown song
 
-	dec	SONG_COUNTDOWN
+	dec	SONG_COUNTDOWN		; if length was 0, means there
+					; was another note starting at same
+					; time, so go back and play that too
 	bmi	set_notes_loop
 
 
@@ -135,28 +131,28 @@ chanb:
 	tya
 	bne	bamps_skip
 
-	lda	BAMP_COUNTDOWN
+	lda	BAMP_COUNTDOWN			; b-amp conutdown
 	bne	bamps_good
 
 bamp_smc:
-	lda	bamps4
+	lda	bamps4				; get new value
 	pha
-	and	#$f
-	sta	AY_REGS+9				; B volume
+	and	#$f				; bottom 4 its is ampllitude
+	sta	AY_REGS+9			; B volume
 	pla
 
+	lsr					; top 4 bits are length
 	lsr
 	lsr
 	lsr
-	lsr
-;	clc
-;	adc	#1
 	sta	BAMP_COUNTDOWN
 
-	inc	bamp_smc+1
-
+	inc	bamp_smc+1			; increment to next location
+						; assumes on same page
+						; and less than 256
 bamps_good:
-	dec	BAMP_COUNTDOWN
+	dec	BAMP_COUNTDOWN			; countdown
+
 bamps_skip:
 
 	;=================================
