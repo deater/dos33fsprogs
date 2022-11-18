@@ -29,6 +29,9 @@ HGR_COLOR       = $E4
 HGR_PAGE        = $E6
 HGR_SCALE	= $E7
 
+OUTL		= $F4
+OUTH		= $F5
+LINE		= $F6
 
 SAVE_Y		= $F7
 LETTER_X	= $F8

@@ -6,6 +6,7 @@ draw_apple:
 	; rotation in A
 
 	pha
+scale_smc:
 	lda	#10
 	sta	HGR_SCALE
 

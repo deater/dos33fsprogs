@@ -11,9 +11,13 @@ apple2_desire:
 
 	; clear both pages of graphics
 	jsr	HGR2
-	lda	#$ff
-	sta	HGR_BITS
-	lda	#$20
+
+	; Y is 0 here
+
+	dey				; color = $FF
+	sty	HGR_BITS
+
+	lda	#$20			; clear page1
 	jsr	BKGND+2
 
 	; A and Y are 0 now?
@@ -32,6 +36,38 @@ apple2_desire:
 
 
 	cli				; enable music
+.if 0
+forever:
+	sta	OUTL
+	sta	LINE
+
+	lda	#$d0
+	sta	OUTH
+
+line_loop:
+	lda	LINE
+	jsr	HPOSN           ; (Y,X),(A)  (values stores in HGRX,XH,Y)
+
+	; first top right
+	ldy	#0
+out_loop:
+        lda	(OUTL),Y
+        sta	(GBASL),Y
+
+        dey
+        bne	out_loop
+
+        inc	LINE
+        bne	line_loop
+
+end:
+	lda	WHICH_TRACK
+	beq	forever
+.endif
+
+
+
+
 
 
 .include "logo_intro.s"
@@ -41,17 +77,36 @@ apple2_desire:
 main_loop:
 	lda	FRAME
 	and	#$80
-	clc
-	rol
+;	clc
+;	rol
+	asl
 	rol
 	tax
 	lda	PAGE1,X
 
-;	lda	AY_REGS+7
-;	sta	$5000
-;	sta	$3000
+	lda	WHICH_TRACK
+	beq	main_loop
 
-	jmp	main_loop
+rot_rot_rot:
+	lda	#$0
+	jsr	draw_apple
+	inc	rot_rot_rot+1
+
+	bne	blah
+	dec	scale_smc
+blah:
+;	beq	main_loop
+;	lda	AY_REGS+8
+;	sta	HGR_SCALE
+
+
+
+
+	lda	HGR_PAGE
+	eor	#$60
+	sta	HGR_PAGE
+
+	bne	main_loop
 
 
 .include "interrupt_handler.s"
@@ -63,6 +118,10 @@ main_loop:
 
 .include "freq.s"
 
+
+
+.include "bamps.s"
+
 letters_x:
         .byte 14,62,110,154,176,220
 letters_l:
@@ -70,9 +129,7 @@ letters_l:
 ;letters_h:
 ;       .byte >letter_d,>letter_e,>letter_s,>letter_i,>letter_r,>letter_e
 
-.include "bamps.s"
-
-.align $100
+;.align $100
 
 .include "freq_h.s"
 

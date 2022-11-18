@@ -1,9 +1,9 @@
 
 
+.align $100
+
 channel_a_volume:
         .byte 14,14,14,14,11,11,10,10
-
-.align $100
 
         lengths:
         .byte 0*8,1*8,2*8,4*8

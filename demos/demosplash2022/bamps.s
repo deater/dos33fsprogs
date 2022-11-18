@@ -1,4 +1,5 @@
 
+
 ; pattern 0
 ; 0 -> F
 ; 48-> C
@@ -85,10 +86,13 @@ bamps3:
 ; 62->F
 ; 63->C
 
+; needs to immediately follow bamps3 for some reason?
+
 bamps4:
 ;       0  15  30  45  60  61  62  63
 .byte $F0,$F0,$F0,$F0,$1F,$1C,$1F,$1C
 
+.align $100
 
-
+deater_string:
 
