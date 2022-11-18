@@ -46,6 +46,11 @@ main_loop:
 	rol
 	tax
 	lda	PAGE1,X
+
+;	lda	AY_REGS+7
+;	sta	$5000
+;	sta	$3000
+
 	jmp	main_loop
 
 

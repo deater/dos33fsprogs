@@ -9,16 +9,16 @@ channel_a_volume:
         .byte 0*8,1*8,2*8,4*8
 
         tracks_l:
-                .byte <track4,<track0,<track1,<track2,<track3
+                .byte <track4,<track0 ;,<track1,<track2,<track3
 
 ; assume all on same page
 ;       tracks_h:
-;               .byte >track4,>track0,>track1,>track2,>track3
+;               .byte >track4,>track0 ;,>track1,>track2,>track3
 
         bamps_l:
-                .byte <bamps4,<bamps0,<bamps1,<bamps2,<bamps3
+                .byte <bamps4,<bamps0 ;,<bamps1,<bamps2,<bamps3
 ;        bamps_h:
-;                .byte >bamps4,>bamps0,>bamps1,>bamps2,>bamps3
+;                .byte >bamps4,>bamps0 ;,>bamps1,>bamps2,>bamps3
 
 
 
@@ -113,7 +113,7 @@ track0:
 	.byte $14 ; frame=62 A=2 L=2
 ; last: a=10 b=-1 len=2
 	.byte $54 ; frame=64 A=10 L=2
-.byte $ff
+;.byte $ff
 track1:
 
 ; A: 12
@@ -203,7 +203,7 @@ track1:
 	.byte $14 ; frame=62 A=2 L=2
 ; last: a=10 b=-1 len=2
 	.byte $54 ; frame=64 A=10 L=2
-.byte $ff
+;.byte $ff
 track2:
 
 ; A: 15
@@ -289,7 +289,7 @@ track2:
 	.byte $26 ; frame=56 A=4 L=3
 ; last: a=0 b=-1 len=8
 	.byte $10 ; frame=64 A=0 L=8
-.byte $ff
+;.byte $ff
 track3:
 
 ; A: 15

@@ -26,11 +26,11 @@ track_smc:
 	;====================================
 	; if at end, loop back to beginning
 
-	ldy	WHICH_TRACK			; get current track in Y
-	iny					; increment track
+;	ldy	WHICH_TRACK			; get current track in Y
+;	iny					; increment track
 
-	cpy	#5				; see if off end
-	bne	no_wrap
+;	cpy	#5				; see if off end
+;	bne	no_wrap
 	ldy	#1				; loop to track 1
 no_wrap:
 	sty	WHICH_TRACK
