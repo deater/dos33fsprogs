@@ -21,18 +21,19 @@ HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
 
-#submit:	apple_desire512.zip
+submit:	apple2_desire.zip
 
-#apple_desire512.zip:	APPLE_DESIRE apple_desire.s file_id.diz apple_desire_512.dsk
-#	mkdir -p lovebyte2021_apple_desire_512
-#	cp APPLE_DESIRE ./lovebyte2021_apple_desire_512
-#	cp *.s ./lovebyte2021_apple_desire_512
-#	cp file_id.diz ./lovebyte2021_apple_desire_512
-#	cp apple_desire_512.dsk ./lovebyte2021_apple_desire_512
-#	cp apple_desire_512.woz ./lovebyte2021_apple_desire_512
-#	cp apple_desire_720p.mp4 ./lovebyte2021_apple_desire_512
-#	cp desire2.png ./lovebyte2021_apple_desire_512
-#	zip -r apple_desire512.zip lovebyte2021_apple_desire_512
+apple2_desire.zip:	APPLE_DESIRE apple_desire.dsk
+	mkdir -p demosplash2022_apple2_desire
+	mkdir -p demosplash2022_apple2_desire/src
+	cp APPLE_DESIRE ./demosplash2022_apple2_desire
+	cp *.s ./demosplash2022_apple2_desire/src
+	cp *.inc ./demosplash2022_apple2_desire/src
+	cp file_id.diz ./demosplash2022_apple2_desire
+	cp apple_desire.dsk ./demosplash2022_apple2_desire
+	cp apple2_desire.mkv ./demosplash2022_apple2_desire
+	cp a2_desire_screen.png ./demosplash2022_apple2_desire
+	zip -r apple2_desire.zip demosplash2022_apple2_desire
 
 ####
 
