@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
 
-all:	cats.hgr.zx02 captain.hgr.zx02 operator.hgr.zx02
+all:	cats.hgr.zx02 captain.hgr.zx02 operator.hgr.zx02 ship.hgr.zx02
 
 ####
 
@@ -28,6 +28,14 @@ operator.hgr.zx02:	operator.hgr
 
 operator.hgr:	operator.png
 	$(PNG_TO_HGR) operator.png > operator.hgr
+
+####
+
+ship.hgr.zx02:	ship.hgr
+	$(ZX02) ship.hgr ship.hgr.zx02
+
+ship.hgr:	ship.png
+	$(PNG_TO_HGR) ship.png > ship.hgr
 
 
 
