@@ -1,9 +1,9 @@
-include ../../../Makefile.inc
+include ../../../../Makefile.inc
 
-DOS33 = ../../../utils/dos33fs-utils/dos33
-TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
-LINKER_SCRIPTS = ../../../linker_scripts
-EMPTY_DISK = ../../../empty_disk
+DOS33 = ../../../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
+LINKER_SCRIPTS = ../../../../linker_scripts
+EMPTY_DISK = ../../../../empty_disk
 
 all:	budge3d.dsk
 

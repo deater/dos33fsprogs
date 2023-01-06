@@ -14,47 +14,52 @@
 ; "edges".  For consistency the same nomenclature is used here.
 ;
 ; Two shapes are defined: the space shuttle model from the manual, and a
-; simple cube 11 units on a side.  The module is configured for XOR drawing
-
+; simple cube 11 units on a side.  The module is configured for XOR drawing,
+; Applesoft BASIC interface, and includes the hi-res character generator.
+;
 ; This makes extensive use of self-modifying code.  Labels that begin with an
 ; underscore indicate self-modification targets.
-
-; Note from Vince Weaver
-; + I've taken the disassembly and am converting it to assembly language
-;   I guess it might make more sense to get an assembly language kernel
-;   from the program, but I'm going to modify the BASIC anyway
-
-
-
 ;===========================================================================
+; Code interacts with the module by setting values in arrays and calling known
+; entry points.  The basic setup for Applesoft BASIC is:
+;
+;  1  DIM CODE%(15), X%(15), Y%(15), SCALE%(15), XROT%(15), YROT%(15),
+; ZROT%(15), SX%(15), SY%(15)
+;  2 RESET% = 7932:CLR% = 7951:HIRES% = 7983:CRNCH% = 7737:TXTGEN% = 768
 ;
 ; You can define up to 16 shapes.  Their parameters are stored in the various
 ; arrays:
 ;
-; CODE_arr+N: 0 (do nothing), 1 (transform & draw), 2 (erase previous,
+; CODE%(n): 0 (do nothing), 1 (transform & draw), 2 (erase previous,
 ; transform, draw new), 3 (erase).
-;   X_arr+N:      X coordinate of center (0-255).
-;   Y_arr+N:      Y coordinate of center (0-191).
-;   SCALE_arr+N:  scale factor, 0-15.  15 is full size, 0 is 1/16th.
-;   XROT_arr+N:   rotation about X axis, 0-27.  0 is no rotation, 27 is just shy
-;                 of 360 degrees.
-;   YROT_arr+N:   rotation about Y axis.
-;   ZROT_arr+N:   rotation about Z axis.
-;   SX_arr+N:     (output) X coordinate of last point drawn.
-;   SY_arr+N:     (output) Y coordinate of last point drawn.
+;   X%(n): X coordinate of center (0-255).
+;   Y%(n): Y coordinate of center (0-191).
+;   SCALE%(n): scale factor, 0-15.  15 is full size, 0 is 1/16th.
+;   XROT%(n): rotation about X axis, 0-27.  0 is no rotation, 27 is just shy
+; of 360 degrees.
+;   YROT%(n): rotation about Y axis.
+;   ZROT%(n): rotation about Z axis.
+;   SX%(n): (output) X coordinate of last point drawn.
+;   SY%(n): (output) Y coordinate of last point drawn.
 ;
 ; The code entry points are:
-;   RESET: initializes graphics module, clears the screen, switches display
+;   RESET%: initializes graphics module, clears the screen, switches display
 ; to primary hi-res page.
-;   CLR: clears both hi-res screens and switches to primary hi-res page.
-;   HIRES: turns on primary hi-res page.
-;   CRUNCH: primary animation function.
+;   CLR%: clears both hi-res screens and switches to primary hi-res page.
+;   HIRES%: turns on primary hi-res page.
+;   CRNCH%: primary animation function.
 ;
 ; The "CRUNCH" function:
 ;  - erases objects whose CODE value is 2 or 3
 ;  - computes new transformations for objects whose CODE value is 1 or 2
 ;  - draws objects whose CODE value is 1 or 2
 ;  - flips the display to the other page
+;
+; When configured for Integer BASIC, some of the array management is simpler,
+; and an additional "missile" facility is available.
+;
+; When configured for use with assembly language, the various arrays live at
+; fixed offsets starting around $6000.
 ;============================================================================
 
 .include "zp.inc"
@@ -63,84 +68,7 @@
 
 ; org  $0300
 
-entry:
-	jsr	RESET
-
-	; CODE[0]=1	-> transform and draw
-	; CODE[1]=1	-> transform and draw
-
-	lda	#1
-	sta	CODE_arr
-	sta	CODE_arr+1
-
-	; X[0]=127 Y[0]=96:X[1]=20:Y[1]=30  -> co-ord of center
-
-	lda	#127
-	sta	X_arr
-	lda	#96
-	sta	Y_arr
-
-	lda	#20
-	sta	X_arr+1
-	lda	#30
-	sta	Y_arr+1
-
-	; SCALE[0]=15:XROT[0]=2:YROT[0]=5:ZROT[0]=0
-	; SCALE[1]=15:XROT[1]=2:YROT[1]=5:ZROT[1]=0
-
-	lda	#15
-	sta	SCALE_arr
-	sta	SCALE_arr+1
-
-	lda	#2
-	sta	XROT_arr
-	sta	XROT_arr+1
-
-	lda	#5
-	sta	YROT_arr
-	sta	YROT_arr+1
-
-	lda	#0
-	sta	ZROT_arr
-	sta	ZROT_arr+1
-
-	jsr	CRUNCH
-	jsr	CRUNCH
-
-	; CODE[0]=2:CODE[1]=2	-> erase and draw new
-
-	lda	#2
-	sta	CODE_arr
-	sta	CODE_arr+1
-
-loop:
-	; ZROT[0]+=1: IF ZEROT[0]==28 THEN ZROT[0]=0
-	; YROT[1]=ZROT[0]
-
-	inc	ZROT_arr
-	lda	ZROT_arr
-	cmp	#28
-	bne	zrot_ok
-	lda	#0
-	sta	ZROT_arr
-zrot_ok:
-	sta	YROT_arr+1
-
-	jsr	CRUNCH
-
-	jmp	loop
-
-	nop
-.align $100		; 400
-	nop
-.align $100		; 500
-	nop
-.align $100		; 600
-	nop
-.align $100		; 700
-	nop
-.align $100		; 700
-
+.include "hgr_textgen.s"
 
 ;===========================================================
 ; If configured without the HRCG, the module starts here.  *
@@ -950,17 +878,17 @@ SavedShapeIndex:
 ;LAST_LINE	= $46
 
 CRUNCH:
-;	jsr	Setup		; 6  find Applesoft arrays
+	jsr	Setup		; 6  find Applesoft arrays
 
 	;==============================
 	; First pass: erase old shapes
 	;==============================
 
 	lda	NumObjects	; 4  number of defined objects
-;	asl			; 2  * 2
+	asl			; 2  * 2
 	tax			; 2  use as index
 ShapeLoop:
-;	dex			; 2
+	dex			; 2
 	dex			; 2
 	bmi	Transform	; 2+ done
 _codeAR1:
@@ -968,9 +896,9 @@ _codeAR1:
 	cmp	#$02		; 2  2 or 3?
 	bcc	ShapeLoop	; 2+ no, move on
 	stx	SavedShapeIndex	; 4
-;	txa			; 2
-;	lsr			; 2
-;	tax			; 2
+	txa			; 2
+	lsr			; 2
+	tax			; 2
 	lda	FirstLineIndex,X; 4+
 	sta	FIRST_LINE	; 3
 	lda	LastLineIndex,X	; 4+
@@ -988,10 +916,10 @@ NoLines1:
 	;===============================
 Transform:
 	lda	NumObjects	; 4
-;	asl			; 2
+	asl			; 2
 	tax			; 2
 TransLoop:
-;	dex			; 2
+	dex			; 2
 	dex			; 2
 	bmi	DrawNew		; 2+
 _codeAR2:
@@ -1022,9 +950,9 @@ _xrotAR:
 	lda	XROT_arr,X	; 4+
 	sta	xrot		; 3
 	stx	SavedShapeIndex	; 4  save this off
-;	txa			; 2
-;	lsr			; 2  convert to 1x index
-;	tax			; 2
+	txa			; 2
+	lsr			; 2  convert to 1x index
+	tax			; 2
 	lda	FirstPointIndex,X; 4+
 	sta	FIRST_LINE	; 3  (actually first_point)
 	lda	LastPointIndex,X; 4+
@@ -1053,10 +981,10 @@ _syAR:
 
 DrawNew:
 	lda	NumObjects	; 4
-;	asl			; 2
+	asl			; 2
 	tax			; 2
 L1ECE:
-;	dex			; 2
+	dex			; 2
 	dex			; 2
 	bmi	L1EF9		; 2+
 _codeAR3:
@@ -1065,9 +993,9 @@ _codeAR3:
 	cmp	#$03		; 2
 	beq	L1ECE		; 2+ yup, no draw
 	stx	SavedShapeIndex	; 4  save index
-;	txa			; 2
-;	lsr			; 2  convert it back to 1x index
-;	tax			; 2
+	txa			; 2
+	lsr			; 2  convert it back to 1x index
+	tax			; 2
 	lda	FirstLineIndex,X; 4+ draw all the lines in the shape
 	sta	FIRST_LINE	; 3
 	lda	LastLineIndex,X	; 4+
@@ -1092,9 +1020,7 @@ L1EF9:
 ;*******************************************************************************
 
 RESET:
-;	jsr	Setup		; 6  sets A=0, Y=$1E
-	lda	#$0
-	ldy	#$F
+	jsr	Setup		; 6  sets A=0, Y=$1E
 _codeAR4:
 	sta	CODE_arr,y	; 5  zero out CODE%
 	dey			; 2
@@ -1155,30 +1081,6 @@ HI_RES:
 ;
 ; If you generate the module for Integer BASIC, this is the entry point for
 ; MISSILE (7993).
-
-
-CODE_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-X_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-Y_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-XROT_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-YROT_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-ZROT_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-SCALE_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-SX_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-SY_arr:
-	.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-
-
-
-.if 0
 
 Setup:
 	lda	BAS_ARYTAB	; 3  CODE% is at +$0008
@@ -1262,7 +1164,6 @@ Setup:
 	ldy	#$1e		; 2  Set A and Y for RESET
 	lda	#$00		; 2
 	rts			; 6
-.endif
 
 	; Junk; pads binary to end of page.
 .align  $0100
