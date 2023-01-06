@@ -6,7 +6,7 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	fire.dsk
 
-fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT RASTER
+fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT RASTER FIRE_ELSEWHERE
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
@@ -15,7 +15,7 @@ fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFEC
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_QKUMBA
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 RASTER
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 COOL_EFFECT
-
+	$(DOS33) -y fire.dsk BSAVE -a 0xC0 FIRE_ELSEWHERE
 ####
 
 FIRE:	fire.o
@@ -42,6 +42,9 @@ fire_firmware.o:	fire_firmware.s
 	ca65 -o fire_firmware.o fire_firmware.s -l fire_firmware.lst
 
 ####
+
+FIRE_ELSEWHERE:	fire_extreme.o
+	ld65 -o FIRE_ELSEWHERE fire_extreme.o -C ../../linker_scripts/apple2_c0.inc
 
 FIRE_EXTREME:	fire_extreme.o
 	ld65 -o FIRE_EXTREME fire_extreme.o -C ../../linker_scripts/apple2_70.inc
@@ -95,7 +98,7 @@ HELLO:  hello.bas
 #####
 
 clean:		
-		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA RASTER idiot_control
+		rm -f *~ *.o *.lst FIRE FIRE_TINY FIRE_FIRMWARE COOL_EFFECT HELLO FIRE_EXTREME FIRE_QKUMBA RASTER idiot_control FIRE_ELSEWHERE
 
 
 
