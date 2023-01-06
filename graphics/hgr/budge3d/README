@@ -1,0 +1,6 @@
+7424 bytes: initial
+5304 bytes: move empty data structs to uninitialized RAM
+5040 bytes: remove un-used OR drawing code
+3760 bytes: remove excess padding from the shape data
+3621 bytes: clear out more unused stuff
+3604 bytes: optimize code a bit

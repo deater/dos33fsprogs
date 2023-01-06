@@ -10,7 +10,7 @@ all:	budge3d.dsk
 budge3d.dsk:	HELLO SHIP_CUBE
 	cp $(EMPTY_DISK)/empty.dsk budge3d.dsk
 	$(DOS33) -y budge3d.dsk SAVE A HELLO
-	$(DOS33) -y budge3d.dsk BSAVE -a 0x300 SHIP_CUBE
+	$(DOS33) -y budge3d.dsk BSAVE -a 0x800 SHIP_CUBE
 
 
 ###
@@ -22,7 +22,7 @@ HELLO:	hello.bas
 ####
 
 SHIP_CUBE:	ship_cube.o
-	ld65 -o SHIP_CUBE ship_cube.o -C $(LINKER_SCRIPTS)/apple2_300.inc
+	ld65 -o SHIP_CUBE ship_cube.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
 ship_cube.o:	ship_cube.s \
 	zp.inc hardware.inc \
