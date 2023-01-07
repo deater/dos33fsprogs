@@ -64,7 +64,6 @@
 
 entry:
 	jsr	reset
-	jsr	make_tables
 
 	; CODE[0]=1	-> transform and draw
 	; CODE[1]=1	-> transform and draw
@@ -112,71 +111,9 @@ zrot_ok:
 
 .include "math_constants.s"
 
+.include "hgr_tables.s"
+
 .include "scale_constants.s"
-
-
-make_tables:
-
-	; Make hires row lookup table using HPOSN
-	; From the Applesoft ROM
-
-	ldx	#0
-hgr_table_loop:
-	ldy	#0
-	txa
-        jsr     HPOSN           ; (Y,X),(A)  (values stores in HGRX,XH,Y)
-	ldx	HGR_X
-	lda	GBASL
-	sta	YTableLo,X
-	lda	GBASH
-	sta	YTableHi,X
-	inx
-	cpx	#192
-	bne	hgr_table_loop
-
-	;=====================
-	; Make Div7 table
-
-	lda	#0
-	tax
-	tay
-div7_table_loop:
-	sta	Div7Tab,X
-	iny
-	cpy	#7
-	bne	not_7
-	ldy	#0
-	clc
-	adc	#1
-not_7:
-	inx
-	bne	div7_table_loop
-
-
-;
-; Hi-res bit table.  Converts the X coordinate (0-255) into a bit position
-; within a byte.  (Essentially 2 to the power of the remainder of the coordinate
-; divided by 7.)
-;
-
-	lda	#1
-	ldx	#0
-	ldy	#0
-bittab_table_loop:
-	sta	HiResBitTab,X
-	asl
-
-	iny
-	cpy	#7
-	bne	again_not_7
-	ldy	#0
-	lda	#1
-again_not_7:
-	inx
-	bne	bittab_table_loop
-
-
-	rts
 
 
 ;====================================
@@ -983,9 +920,3 @@ XCoord1_10 = $6200
 ; Computed Y coordinate, set 1.
 YCoord1_11 = $6300
 
-; hgr lookup
-
-YTableLo	= $6400
-YTableHi	= $6500
-Div7Tab		= $6600
-HiResBitTab	= $6700

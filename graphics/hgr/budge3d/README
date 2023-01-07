@@ -4,3 +4,6 @@
 3760 bytes: remove excess padding from the shape data
 3621 bytes: clear out more unused stuff
 3604 bytes: optimize code a bit
+3118 bytes: build HGR tables at start
+2882 bytes: build div7 table at start
+2648 bytes: build hiresbit table at start

@@ -24,8 +24,6 @@ MON_WNDTOP	=	$22	; top of scroll window
 MON_WNDBTM	=	$23	; bottom of scroll window
 MON_CH		=	$24	; cursor horizontal displacement
 MON_CV		=	$25	; cursor vertical displacement
-GBASL		=	$26
-GBASH		=	$27
 
 MON_CSWL	=	$36	; character output hook (lo)
 MON_CSWH	=	$37	; character output hook (hi)
@@ -40,7 +38,6 @@ LAST_LINE	=	$46
 
 BAS_ARYTAB	=	$6b	; pointer to start of Applesoft array space (2b)
 
-HGR_X		=	$E0
 
 
 ; Clear variables
