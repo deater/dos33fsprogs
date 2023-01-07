@@ -110,6 +110,8 @@ zrot_ok:
 
 .include "shapes.s"
 
+.align $100
+
 .include "math_constants.s"
 
 .include "scale_constants.s"
