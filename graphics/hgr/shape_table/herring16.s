@@ -1,4 +1,6 @@
-; 32B weird line pattern
+; 16B herringbone pattern
+
+; FIXME: depends on memory init
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -45,46 +47,40 @@ tiny_xdraw:
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
 
-	lda	#10
-	sta	HGR_SCALE
+;	lda	#10
+;	sta	HGR_SCALE
 
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
 
 
-	ldy	#0
-	ldx	#100
-	lda	#100
+;	ldy	#0
+;	ldx	#100
+;	lda	#100
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
 				; after Y= orig X/7
 				; A and X are ??
 tiny_loop:
 
-	; values for shape table
-	;	Y	X
-	;	00	E7 = neat
-	;	00	EB = OK
-	;	00	EF = good
-	;	F0	01 = cool, let's go with it
-
-	ldx	#<shape_table	; point to bottom byte of shape address
-	ldy	#>shape_table	; point to top byte of shape address
+;	ldx	#<shape_table	; point to bottom byte of shape address
+;	ldy	#>shape_table	; point to top byte of shape address
 
 	; ROT in A
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
-	lda	#1		; ROT=0
+;	lda	#1		; ROT=1
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 				; Y varies
 
-	beq	tiny_loop	; bra
+	inx	; X=1
+	txa	; A=1
+	tay	; Y=1
 
+	bne	tiny_loop	; bra
 
+; be sure this is at address $0101, easy to set address
 shape_table:
-;	.byte	 $01,$00,
-	.byte	$04,$00,$25,$35,$00
-
-
+	.byte	$04,$00

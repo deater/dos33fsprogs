@@ -8,7 +8,8 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 all:	gear.dsk
 
 gear.dsk:	HELLO APPLE.BAS GEAR.BAS \
-	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE
+	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
+	LINE16 HERRING16 STRIPE17
 	cp $(EMPTYDISK) gear.dsk
 	$(DOS33) -y gear.dsk SAVE A HELLO
 	$(DOS33) -y gear.dsk SAVE A GEAR.BAS
@@ -16,6 +17,9 @@ gear.dsk:	HELLO APPLE.BAS GEAR.BAS \
 	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 GEAR
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 LINE32
+	$(DOS33) -y gear.dsk BSAVE -a 0xe7 LINE16
+	$(DOS33) -y gear.dsk BSAVE -a 0xe7 STRIPE17
+	$(DOS33) -y gear.dsk BSAVE -a 0xc00 HERRING16
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 PATTERN
 	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 PATTERN_LOGO
 	$(DOS33) -y gear.dsk BSAVE -a 0xc00 SQUARE_WAVE
@@ -68,6 +72,33 @@ LINE32:	line32.o
 
 line32.o:	line32.s
 	ca65 -o line32.o line32.s -l line32.lst
+
+###
+
+LINE16:	line16.o
+	ld65 -o LINE16 line16.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+line16.o:	line16.s
+	ca65 -o line16.o line16.s -l line16.lst
+
+###
+
+STRIPE17:	stripe17.o
+	ld65 -o STRIPE17 stripe17.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+stripe17.o:	stripe17.s
+	ca65 -o stripe17.o stripe17.s -l stripe17.lst
+
+
+###
+
+HERRING16:	herring16.o
+	ld65 -o HERRING16 herring16.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+herring16.o:	herring16.s
+	ca65 -o herring16.o herring16.s -l herring16.lst
+
+
 
 ###
 
