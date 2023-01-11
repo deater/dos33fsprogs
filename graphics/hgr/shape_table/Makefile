@@ -5,24 +5,24 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	gear.dsk
+all:	shape_table.dsk
 
-gear.dsk:	HELLO APPLE.BAS GEAR.BAS \
+shape_table.dsk:	HELLO APPLE.BAS GEAR.BAS \
 	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
 	LINE16 HERRING16 STRIPE17
-	cp $(EMPTYDISK) gear.dsk
-	$(DOS33) -y gear.dsk SAVE A HELLO
-	$(DOS33) -y gear.dsk SAVE A GEAR.BAS
-	$(DOS33) -y gear.dsk SAVE A APPLE.BAS
-	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 GEAR
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 APPLE2
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 LINE32
-	$(DOS33) -y gear.dsk BSAVE -a 0xe7 LINE16
-	$(DOS33) -y gear.dsk BSAVE -a 0xe7 STRIPE17
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 HERRING16
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 PATTERN
-	$(DOS33) -y gear.dsk BSAVE -a 0x3f5 PATTERN_LOGO
-	$(DOS33) -y gear.dsk BSAVE -a 0xc00 SQUARE_WAVE
+	cp $(EMPTYDISK) shape_table.dsk
+	$(DOS33) -y shape_table.dsk SAVE A HELLO
+	$(DOS33) -y shape_table.dsk SAVE A GEAR.BAS
+	$(DOS33) -y shape_table.dsk SAVE A APPLE.BAS
+	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 GEAR
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 APPLE2
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 LINE32
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 LINE16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 STRIPE17
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 HERRING16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 PATTERN
+	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 PATTERN_LOGO
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 SQUARE_WAVE
 
 ###
 
