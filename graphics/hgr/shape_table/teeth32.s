@@ -92,20 +92,16 @@ rot_smc:
 
 	inc	HGR_BITS
 
-;	inc	HGR_COLLISIONS
+;	lda	HGR_COLLISIONS
 	bne	pattern_loop
 
 	inc	rot_smc+1
 
-;	ldx	HGR_COLLISIONS
-	lda	$F6F6,Y
-	sta	HGR_BITS
+
 
 	jsr	$F3F6		; clear screen to HGR_BITS
 
-;	jmp	pattern_loop
-
-	beq	pattern_loop	; bra
+	jmp	pattern_loop
 
 
 

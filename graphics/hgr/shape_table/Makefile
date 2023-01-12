@@ -22,7 +22,7 @@ shape_table.dsk:	HELLO APPLE.BAS GEAR.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 HERRING16
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 PATTERN
 	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 PATTERN_LOGO
-	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 SQUARE_WAVE
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 SQUARE_WAVE
 
 ###
 
@@ -51,7 +51,7 @@ gear.o:	gear.s
 ###
 
 SQUARE_WAVE:	square_wave.o
-	ld65 -o SQUARE_WAVE square_wave.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o SQUARE_WAVE square_wave.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
 
 square_wave.o:	square_wave.s
 	ca65 -o square_wave.o square_wave.s -l square_wave.lst

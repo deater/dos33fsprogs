@@ -49,14 +49,11 @@ RESTORE		=	$FF3F
 
 square_wave:
 
-; $E7
 	.byte	$0A		; harmless ASL but also size of HGR_SCALE
 				; as we load this at $E7
 
 ;	lda	#10
 ;	sta	HGR_SCALE
-
-; $E8,$E9,$EA (HGR_COLLISIONS=$F3)
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
@@ -66,8 +63,10 @@ square_wave:
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
 
-;	tya
-;	tax			; load X with 0
+;	sty	HGR_COLLISIONS
+
+	tya
+	tax			; load X with 0
 ;	ldy	#0
 ;	ldx	#00
 ;	lda	#00
@@ -84,28 +83,18 @@ pattern_loop:
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
 rot_smc:
-	lda	#1		; rotation (ROT=)
+	lda	#1		; ROT=0
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 				; Y varies
 
-	inc	HGR_BITS
-
-;	inc	HGR_COLLISIONS
-	bne	pattern_loop
+;	lda	HGR_COLLISIONS
+;	bne	pattern_loop
 
 	inc	rot_smc+1
 
-;	ldx	HGR_COLLISIONS
-	lda	$F6F6,Y
-	sta	HGR_BITS
-
-	jsr	$F3F6		; clear screen to HGR_BITS
-
-;	jmp	pattern_loop
-
-	beq	pattern_loop	; bra
+	jmp	pattern_loop
 
 
 

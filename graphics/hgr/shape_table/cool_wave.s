@@ -97,8 +97,8 @@ rot_smc:
 
 	inc	rot_smc+1
 
-;	ldx	HGR_COLLISIONS
-	lda	$F6F6,Y
+	ldx	HGR_COLLISIONS
+	lda	$F6F6,X
 	sta	HGR_BITS
 
 	jsr	$F3F6		; clear screen to HGR_BITS

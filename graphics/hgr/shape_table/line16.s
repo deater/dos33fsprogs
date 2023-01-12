@@ -1,5 +1,11 @@
 ; 16B weird line pattern
 
+
+; note this depends on GBASL/GBASH and other values set by HPOSN
+;	being vaguely reasonable at boot(?)  could vary by system
+;	it also means some garbage on screen for first XDRAW but
+;		maybe that's OK as otherwise we are 18 bytes
+
 ; zero page locations
 HGR_SHAPE	=	$1A
 HGR_SHAPE2	=	$1B
