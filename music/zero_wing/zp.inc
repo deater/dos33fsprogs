@@ -7,6 +7,8 @@ ZX0_dst		= $02
 offset		= $04
 bitr		= $06
 pntr		= $07
+WHICH_LOAD	= $09
+CURRENT_DISK	= $0A
 
 ;; Zero page monitor routines addresses
 

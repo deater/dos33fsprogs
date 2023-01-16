@@ -204,4 +204,7 @@ operator_data:
 ship_data:
 	.incbin "graphics/ship.hgr.zx02"
 
+hands_data:
+	.incbin "graphics/hands.hgr.zx02"
+
 
