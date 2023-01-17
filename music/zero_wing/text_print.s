@@ -44,7 +44,7 @@ print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
 ps_smc1:
-	ora	#$80			; make sure we are not inverse
+	and	#$3f			; make sure we are inverse
 	sta	(BASL),Y
 	iny
 	bne	print_string_loop
@@ -60,4 +60,34 @@ done_print_string:
 
 	rts
 
+	; set normal text
+set_normal:
+	lda	#$80
+	sta	ps_smc1+1
 
+	lda	#09             ; ora
+	sta	ps_smc1
+
+	rts
+
+	; restore inverse text
+set_inverse:
+	lda	#$29
+	sta	ps_smc1
+	lda	#$3f
+	sta	ps_smc1+1
+
+	rts
+
+
+	;================================
+	; move and print a list of lines
+	;================================
+	; look for negative X meaning done
+move_and_print_list:
+	jsr     move_and_print
+	ldy     #0
+	lda     (OUTL),Y
+	bpl     move_and_print_list
+
+	rts

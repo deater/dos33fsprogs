@@ -1,4 +1,4 @@
-; Loader for MIST
+; Loader
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -15,7 +15,7 @@ qload_start:
 	; first time entry
 	; start by loading text title
 
-	lda	#0			; load LEMM engine
+	lda	#0			; load ZW engine
 	sta	WHICH_LOAD
 
 	lda	#1
@@ -23,7 +23,7 @@ qload_start:
 
 	jsr	load_file
 
-	jmp	$6000			; jump to LEMM
+	jmp	$6000			; jump to ZW
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -160,36 +160,24 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte 1,1,1,1		; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 1,1,1,1		; LEVEL8, LEVEL9, LEVEL10
+	.byte 1,1,1,1		; ZW, MUSIC, ?, ?
 
 load_address_array:
-        .byte $60,$90,$90,$90	; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte $90,$90,$90,$90	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte $90,$90,$90,$90	; LEVEL8, LEVEL9, LEVEL10
+        .byte $60,$D0,$90,$90	; ZW, MUSIC, ?, ?
 
 track_array:
-        .byte  3, 6, 9,12	; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte 15,18,21,24	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 27,30,33,33	; LEVEL8, LEVEL9, LEVEL10
+        .byte  5, 3, 9,12	; ZW, MUSIC, ?, ?
 
 sector_array:
-        .byte  0, 0, 0, 0	; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte  0, 0, 0, 0	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  0, 0, 0, 0	; LEVEL8, LEVEL9, LEVEL10
+        .byte  0, 0, 0, 0	; ZW, MUSIC, ?, ?
 
 length_array:
-        .byte  48, 46, 46, 46	; LEMM,   LEVEL1, LEVEL2, LEVEL3
-	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  46, 46, 32, 32	; LEVEL8, LEVEL9, LEVEL10
+        .byte  48, 32, 48, 48	; ZW, MUSIC, ?, ?
 
 .if 0
-	.include	"wait.s"
-	.include	"wait_a_bit.s"
+
 	.include	"audio.s"
 	.include	"decompress_fast_v2.s"
-	.include	"gr_offsets.s"
 	.include	"hgr_hlin.s"
 	.include	"hgr_vlin.s"
 	.include	"hgr_box.s"
@@ -197,16 +185,25 @@ length_array:
 	.include	"hgr_partial_restore.s"
 	.include	"hgr_14x14_sprite.s"
 	.include	"hgr_sprite.s"
+
+
+
+	.include	"simple_sounds.s"
+.endif
 	.include	"lc_detect.s"
+	.include	"wait.s"
+	.include	"wait_a_bit.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
-	.include	"simple_sounds.s"
+	.include	"gr_offsets.s"
+
+;	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"pt3_lib_detect_model.s"
+;	.include	"pt3_lib_core.s"
+;	.include	"pt3_lib_init.s"
+;	.include	"pt3_lib_mockingboard_setup.s"
+;	.include	"interrupt_handler.s"
 	.include	"pt3_lib_mockingboard_detect.s"
-	.include	"pt3_lib_mockingboard_setup.s"
-	.include	"interrupt_handler.s"
-	.include	"pt3_lib_mockingboard_patch.s"
-.endif
 
 qload_end:
 
