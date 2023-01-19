@@ -1,0 +1,17 @@
+some small shape table programs
+
+mostly trying to get something interesting in 16 bytes for Lovebyte
+
+apple2		-- 63 bytes -- just prints apple ][
+cool_wave	-- 37 bytes -- rotating square wave with backgrounds
+gear		-- 138 bytes -- rotating gears
+herring16	-- 16 bytes  -- sort of a herringbone pattern
+line16		-- 17 bytes -- fancy line pattern
+line32		-- 32 bytes -- line pattern, got it down to 18 bytes at one point
+pattern		-- 32 bytes -- like line32 but stops
+pattern_logo	-- 125 bytes -- fancy pattern with apple ][ logo on top
+square_wave	-- 35 bytes  -- another square wave w/ backgrounds
+stripe17	-- 17 bytes -- simple line drawing
+teeth32		-- 31 bytes -- rotating square waves (boring)
+tick_tock	-- 26 bytes -- gear teeth pattern
+

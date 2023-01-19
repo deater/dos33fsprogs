@@ -9,7 +9,7 @@ all:	shape_table.dsk
 
 shape_table.dsk:	HELLO APPLE.BAS GEAR.BAS \
 	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
-	LINE16 HERRING16 STRIPE17
+	LINE16 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
 	$(DOS33) -y shape_table.dsk SAVE A GEAR.BAS
@@ -23,6 +23,9 @@ shape_table.dsk:	HELLO APPLE.BAS GEAR.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 PATTERN
 	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 PATTERN_LOGO
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 SQUARE_WAVE
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 COOL_WAVE
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TEETH32
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TICK_TOCK
 
 ###
 
@@ -55,6 +58,34 @@ SQUARE_WAVE:	square_wave.o
 
 square_wave.o:	square_wave.s
 	ca65 -o square_wave.o square_wave.s -l square_wave.lst
+
+
+###
+
+COOL_WAVE:	cool_wave.o
+	ld65 -o COOL_WAVE cool_wave.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+cool_wave.o:	cool_wave.s
+	ca65 -o cool_wave.o cool_wave.s -l cool_wave.lst
+
+###
+
+TEETH32:	teeth32.o
+	ld65 -o TEETH32 teeth32.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+teeth32.o:	teeth32.s
+	ca65 -o teeth32.o teeth32.s -l teeth32.lst
+
+###
+
+TICK_TOCK:	tick_tock.o
+	ld65 -o TICK_TOCK tick_tock.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+tick_tock.o:	tick_tock.s
+	ca65 -o tick_tock.o tick_tock.s -l tick_tock.lst
+
+
+
 
 
 ###
@@ -119,4 +150,6 @@ pattern_logo.o:	pattern_logo.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO GEAR.BAS GEAR PATTERN APPLE.BAS PATTERN_LOGO
+	rm -f *~ *.o *.lst HELLO GEAR.BAS GEAR PATTERN APPLE.BAS \
+		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
+		HERRING16 STRIPE17 LINE16 LINE32 APPLE2
