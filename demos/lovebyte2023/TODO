@@ -1,0 +1,70 @@
+deadline: thurs 9 feb 6pm EDT
+
+128B and higher count disk header
+
+categories:
+	1k old/new
+	512B bootsector
+	256 old/high/fantasy
+	128 old/high/fantasy
+	64 old/high
+	32
+	16 actual
+	256B game
+	256B executable graphic
+	CGA 32x32
+
+
+
+Apple II:
+
+32:
+	hgr/transitions/ooze32		32-byte
+	hgr/shape_table/line32		32-byte	interesting pattern
+	hgr/shape_table/square_wave	33-byte (odd)
+
+64:
+	gr/parallax/boxes		62-byte (cool)
+	hgr/parallax/boxes.s		69-byte (boring)
+	hgr/shape_table/apple2.s	63-byte apple2 logo (so-so)
+
+128:
+	hgr/transitions/rectangle	139-byte (??)
+	gr/parallax/large		111-byte  dir-switching parallax
+	gr/parallax/par			127-byte  parallax scrolling
+	hgr/parallax/par		139-byte hires-parallax (boring)
+	hgr/parallax/wierd2		118-byte oddly compelling
+	hgr/parallax/sier		120-bytes sierpinski parallax
+	hgr/shape_table/pattern_logo.s	125-bytes (so-so)
+	hgr/shape_table/gear.s		138-byte gears (cool, good with music?)
+	gr/sprite/stars_128.s		133-byte bouncing stars (cool) (heart?)
+
+256
+	aiibot/lemm.bas			251-byte (cool) lemming animation
+
+
+
+	dsr logo	both/gears/dsr_bot.s	133-bytes (spinning dsr)
+	a2 bot		both/gears/a2_bot.s	140-bytes (][ with animated bg)
+
+	gr/particle/particle_bot		140-byte particle effect
+
+
+	targeting computer
+
+
+256 -- procedural graphics
+	planet_lores?
+
+
+TODO: image stuff but raw hex bytes instead of text
+
+
+ARM/Linux:
+	ray-marcher textmode
+
+Atari 2600:
+	parallax scroll?
+	game?
+
+

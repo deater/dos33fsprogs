@@ -48,7 +48,7 @@ RESTORE		=	$FF3F
 
 tiny_xdraw:
 
-	.byte	$0A		; scale at $E7 (also harmless asl)
+;	.byte	$0A		; scale at $E7 (also harmless asl)
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
@@ -63,7 +63,21 @@ tiny_xdraw:
 ;	ldy	#0
 ;	ldx	#100
 ;	lda	#100
-;	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
+
+	; we really have to call this, otherwise it won't run
+	; on some real hardware
+
+
+	; getting GBASH between $40-$5F might actually be enough
+	
+
+;	dey
+;	tya
+
+;	lda	#$40
+;	sta	GBASH
+
+	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
 				; after Y= orig X/7
 				; A and X are ??
@@ -75,10 +89,12 @@ tiny_loop:
 	ldy	#$e8
 	ldx	#$0e
 
+;	tay
+
 	; ROT in A
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
-	lda	#1		; ROT=1
+	lda	#2		; ROT=1
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
