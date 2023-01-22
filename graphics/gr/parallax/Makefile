@@ -8,7 +8,8 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	paralax.dsk
 
-paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT BOXES_TINY
+paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT BOXES_TINY \
+	PAR_TINY
 	cp $(EMPTY_DISK) paralax.dsk
 	$(DOS33) -y paralax.dsk SAVE A HELLO
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 BOXES
@@ -18,6 +19,7 @@ paralax.dsk:	HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT BOXES_TINY
 	$(DOS33) -y paralax.dsk BSAVE -a 0x386 LARGE_BOT
 	$(DOS33) -y paralax.dsk BSAVE -a 0xc00 PAR
 	$(DOS33) -y paralax.dsk BSAVE -a 0x37B PAR_BOT
+	$(DOS33) -y paralax.dsk BSAVE -a 0x80 PAR_TINY
 
 ###
 
@@ -78,6 +80,15 @@ PAR_BOT: par_bot.o
 par_bot.o:	par_bot.s
 	ca65 -o par_bot.o par_bot.s -l par_bot.lst
 
+###
+
+PAR_TINY: par_tiny.o
+	ld65 -o PAR_TINY par_tiny.o -C $(LINKER_DIR)/apple2_80_zp.inc
+
+par_tiny.o:	par_tiny.s
+	ca65 -o par_tiny.o par_tiny.s -l par_tiny.lst
+
+
 
 ###
 
@@ -89,5 +100,5 @@ HELLO:	hello.bas
 
 
 clean:		
-		rm -f *~ *.o *.lst HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT BOXES_TINY
+		rm -f *~ *.o *.lst HELLO BOXES BOXES_BOT LARGE LARGE_BOT PAR PAR_BOT BOXES_TINY PAR_TINY
 

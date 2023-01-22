@@ -59,23 +59,6 @@ parallax_forever:
 	lsr
 	sta	FRAME4
 
-	;========================
-	; update color
-
-	lda	FRAME
-
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;	and	#$3
-
-;	tax
-;	lda	colors,X
-;	sta	COLORS
-
-
 	;==========================
 	; flip page
 
@@ -209,17 +192,8 @@ skip_color_large:
 
 	bmi	parallax_forever		; 2
 
-	; 00 = right
-	; 01 = up
-	; 10 = left
-	; 11 = down
-	; adc = $65
-	; sbc = $E5
 
 
 
 
-; for bot
-	; $3F5 - 127 + 3  = $379
 
-	jmp	parallax
