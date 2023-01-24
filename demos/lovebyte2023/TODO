@@ -21,10 +21,11 @@ Apple II:
 32:
 	hgr/transitions/ooze32		32-byte
 	hgr/shape_table/line32		32-byte	interesting pattern
+*	hgr/shape_table/agony17		32-byte	interesting pattern
 	hgr/shape_table/square_wave	33-byte (odd)
 
 64:
-	gr/parallax/boxes		62-byte (cool)
+*	gr/parallax/boxes		62-byte (cool)
 	hgr/parallax/boxes.s		69-byte (boring)
 	hgr/shape_table/apple2.s	63-byte apple2 logo (so-so)
 
