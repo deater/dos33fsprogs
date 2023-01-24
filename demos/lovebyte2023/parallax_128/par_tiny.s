@@ -12,6 +12,7 @@
 ; 101 bytes -- overlap some constants
 ;  99 bytes -- merge frame
 ; 116 bytes -- code to change direction
+; 115 bytes -- forgot to use zero page for dir_horiz_lookup
 
 ; Zero Page
 GBASL		= $26
@@ -41,6 +42,7 @@ SETGR   = $FB40
 .globalzp offsets
 .globalzp page_smc
 .globalzp horiz_smc
+.globalzp dir_horiz_lookup
 
 parallax:
 

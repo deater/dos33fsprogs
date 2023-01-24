@@ -13,16 +13,16 @@ parallax128.dsk:	HELLO PAR_TINY
 
 ###
 
-submit:	pied.zip
+submit:	parallax128.zip
 
-pied32.zip:	PAR_TINY par_tiny.s file_id.diz parallax128.dsk
-	mkdir -p lovebyte2022_pied
-	cp PAR_TINY ./lovebyte2022_pied
-	cp par_tiny.s ./lovebyte2022_pied
-	cp file_id.diz ./lovebyte2022_pied
-	cp parallax128.dsk ./lovebyte2022_pied
-	cp pied_720p.mp4 ./lovebyte2022_pied
-	zip -r pied32.zip lovebyte2022_pied
+parallax128.zip:	PAR_TINY par_tiny.s file_id.diz parallax128.dsk
+	mkdir -p lovebyte2023_parallax
+	cp PAR_TINY ./lovebyte2023_parallax
+	cp par_tiny.s ./lovebyte2023_parallax
+	cp file_id.diz ./lovebyte2023_parallax
+	cp parallax128.dsk ./lovebyte2023_parallax
+	cp parallax_720p.mp4 ./lovebyte2023_parallax
+	zip -r parallax128.zip lovebyte2023_parallax
 
 ####
 
@@ -34,11 +34,11 @@ HELLO:	hello.bas
 
 ###
 
-PAR_TINY:	pied57.o
-	ld65 -o PAR_TINY pied57.o -C ./apple2_80_zp.inc
+PAR_TINY:	par_tiny.o
+	ld65 -o PAR_TINY par_tiny.o -C ./apple2_80_zp.inc
 
-pied57.o:	par_tiny.s
-	ca65 -o pied57.o par_tiny.s -l pied57.lst
+par_tiny.o:	par_tiny.s
+	ca65 -o par_tiny.o par_tiny.s -l par_tiny.lst
 
 ####
 
