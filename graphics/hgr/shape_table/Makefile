@@ -7,14 +7,14 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	shape_table.dsk
 
-shape_table.dsk:	HELLO APPLE.BAS GEAR.BAS \
-	APPLE2 GEAR LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
+shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
+	APPLE2 GEARS LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
 	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
-	$(DOS33) -y shape_table.dsk SAVE A GEAR.BAS
+	$(DOS33) -y shape_table.dsk SAVE A GEARS.BAS
 	$(DOS33) -y shape_table.dsk SAVE A APPLE.BAS
-	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 GEAR
+	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 GEARS
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 LINE32
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY17
@@ -34,8 +34,8 @@ HELLO:	hello.bas
 
 ###
 
-GEAR.BAS:	gear.bas
-	$(TOKENIZE) < gear.bas > GEAR.BAS
+GEARS.BAS:	gears.bas
+	$(TOKENIZE) < gears.bas > GEARS.BAS
 
 ###
 
@@ -45,11 +45,11 @@ APPLE.BAS:	apple.bas
 
 ###
 
-GEAR:	gear.o
-	ld65 -o GEAR gear.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
+GEARS:	gears.o
+	ld65 -o GEARS gears.o -C $(LINKERSCRIPTS)/apple2_3f5.inc
 
-gear.o:	gear.s
-	ca65 -o gear.o gear.s -l gear.lst
+gears.o:	gears.s
+	ca65 -o gears.o gears.s -l gears.lst
 
 ###
 
@@ -150,6 +150,6 @@ pattern_logo.o:	pattern_logo.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO GEAR.BAS GEAR PATTERN APPLE.BAS \
+	rm -f *~ *.o *.lst HELLO GEAR.BAS GEARS PATTERN APPLE.BAS \
 		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
 		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2

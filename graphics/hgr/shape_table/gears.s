@@ -1,4 +1,8 @@
-; Pattern Logo
+; Rotating Gears
+
+; 138 bytes -- original for Apple II bot
+; 134 bytes -- only set SCALE once
+; 131 bytes -- unecessary var set, change jmp to bra
 
 ; by Vince `deater` Weaver
 
@@ -42,11 +46,6 @@ PAGE1   = $C054 ; Page1
 PAGE2   = $C055 ; Page2
 
 
-
-
-
-
-
 ; ROM calls
 HGR2		=	$F3D8
 HGR		=	$F3E2
@@ -58,7 +57,7 @@ WAIT		=	$FCA8                 ;; delay 1/2(26+27A+5A^2) us
 RESTORE		=	$FF3F
 
 
-gear:
+gears:
 
 
 	jsr	HGR		; Hi-res, full screen		; 3
@@ -102,12 +101,9 @@ gear:
 	;===================
 	; scene2
 
-	jsr	HGR2
+	jsr	HGR2		; set to hires PAGE2, full screen
+				; Y=0, A=0 after
 
-	lda	#8
-	sta	HGR_SCALE
-
-	ldy	#0
 	ldx	#110
 	lda	#10
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
@@ -117,7 +113,6 @@ gear:
 
 	ldy	#32
 	jsr	draw_gear
-
 
 	ldy	#0
 	ldx	#235
@@ -136,8 +131,10 @@ gear:
 
 	;===================
 	; rotate
+	;
+	; just page flipping with a delay
 
-blah:
+rotate_it:
 	bit	PAGE1
 	lda	#255
 	jsr	WAIT
@@ -146,7 +143,7 @@ blah:
 	lda	#255
 	jsr	WAIT
 
-	jmp	blah
+	beq	rotate_it		; bra
 
 
 	;===============================
@@ -188,5 +185,4 @@ gear1_table:
 .byte	37,53,0
 gear2_table:
 .byte	$2c,$2e,$00
-;gear3_table:
-;.byte	$24,$2d,$36,$2d,$00
+
