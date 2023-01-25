@@ -6,6 +6,9 @@
 ; 106 bytes -- move to zero page
 ; 104 bytes -- use smaller_smc
 ; 103 bytes -- use which_smc
+; 102 bytes -- note register is zero
+;  99 bytes -- make rotate use adc instead of inc
+;  95 bytes -- fall through
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -70,8 +73,6 @@ gears_tiny:
 	lda	#8
 	sta	HGR_SCALE
 
-;	sty	SMALLER		; init to 0
-
 	jsr	draw_scene
 
 	;===================
@@ -112,17 +113,21 @@ rotate_it:
 
 draw_scene:
 
-				; Y is zero from HGR
+				; Y is zero from HGR/HGR2
 	ldx	#110
 	lda	#10
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
 				; after Y= orig X/7
 				; A and X are ??
-	ldy	#32
-	jsr	draw_gear
 
-	ldy	#0
+	ldy	#32		; Y = steps to draw
+	lda	#2		; A = rotation increment
+	jsr	draw_gear
+				; A and X zero on return
+
+
+	tay			; set Y to 0
 	ldx	#235
 	lda	#100
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
@@ -130,45 +135,34 @@ draw_scene:
 				; after Y= orig X/7
 				; A and X are ??
 
+	ldy	#16		; only 16 repeats
+	lda	#4		; A = rotation increment
 
-;	inc	SMALLER
-	inc	smaller_smc+1
-
-	ldy	#16
-	jsr	draw_gear
-
-;	dec	SMALLER
-	dec	smaller_smc+1
-
-	rts
+	; fall through
 
 	;===============================
 	;===============================
 	;===============================
 	;===============================
 draw_gear:
-	sty	ROTATION
+	sty	ROTATION	; set number of rotations
+	sta	smaller_smc+1	; set rotation increment
+
 gear1_loop:
 
-	inc	rot_smc+1
-	inc	rot_smc+1
-
+	clc
+	lda	rot_smc+1
 smaller_smc:
-	lda	#0
-	beq	not_smaller
-
-	inc	rot_smc+1
-	inc	rot_smc+1
+	adc	#2
+	sta	rot_smc+1
 
 not_smaller:
 
 which_smc:
 	ldx	#<gear1_table	; point to bottom byte of shape address
 	ldy	#>gear1_table	; point to top byte of shape address
+				; this is always 0 if in zero page
 
-	; ROT in A
-
-	; this will be 0 2nd time through loop, arbitrary otherwise
 rot_smc:
 	lda	#1		; ROT=1 at first
 

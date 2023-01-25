@@ -9,12 +9,14 @@ all:	shape_table.dsk
 
 shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	APPLE2 GEARS LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
-	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK
+	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK \
+	GEARS_TINY
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
 	$(DOS33) -y shape_table.dsk SAVE A GEARS.BAS
 	$(DOS33) -y shape_table.dsk SAVE A APPLE.BAS
 	$(DOS33) -y shape_table.dsk BSAVE -a 0x3f5 GEARS
+	$(DOS33) -y shape_table.dsk BSAVE -a 0x60 GEARS_TINY
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 LINE32
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY17
@@ -50,6 +52,15 @@ GEARS:	gears.o
 
 gears.o:	gears.s
 	ca65 -o gears.o gears.s -l gears.lst
+
+###
+
+GEARS_TINY:	gears_tiny.o
+	ld65 -o GEARS_TINY gears_tiny.o -C $(LINKERSCRIPTS)/apple2_60_zp.inc
+
+gears_tiny.o:	gears_tiny.s
+	ca65 -o gears_tiny.o gears_tiny.s -l gears_tiny.lst
+
 
 ###
 
@@ -152,4 +163,4 @@ pattern_logo.o:	pattern_logo.s
 clean:	
 	rm -f *~ *.o *.lst HELLO GEAR.BAS GEARS PATTERN APPLE.BAS \
 		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
-		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2
+		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY
