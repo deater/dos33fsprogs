@@ -11,6 +11,7 @@
 ; 102 bytes -- make page value self-modifying code
 ; 101 bytes -- overlap some constants
 ;  99 bytes -- merge frame
+; 115 bytes -- code to change direction
 
 ; Zero Page
 GBASL		= $26
@@ -39,17 +40,24 @@ SETGR   = $FB40
 .globalzp masks
 .globalzp offsets
 .globalzp page_smc
+.globalzp horiz_smc
+.globalzp dir_horiz_lookup
 
 parallax:
 
 	;===================
 	; init screen
 
-	jsr	HGR2		; set hires, full-screen
+;	jsr	HGR2		; set hires, full-screen
 				; A/Y are 0
 				; note!  Only can do this if $E6 is free
 
-	bit	LORES		; set lores
+;	bit	LORES		; set lores
+
+	; have to do it this way as above messes with $E7
+
+	jsr	SETGR
+	bit	FULLGR
 
 parallax_forever:
 
@@ -60,7 +68,15 @@ parallax_forever:
 	sta	frames+1			; frame/2
 	lsr
 	sta	frames+2			; frame/4
-
+	lsr
+	lsr
+	lsr
+	and	#$3
+	tax
+	lda	dir_horiz_lookup,X
+	sta	horiz_smc
+;	lda	dir_vert_lookup,X
+;	sta	vert_smc
 	;==========================
 	; flip page
 
@@ -112,16 +128,18 @@ xloop:
 
 color_loop:
 	;===========================
-	; SMALL
+	; vertical scroll
 
 	sec			; subtract frame from Y
 	tya
+horiz_smc:
 	sbc	frames,X
 	sta	X2		; store interim result
 
 	lda	YY		; get YY and adjust offset to look nicer
 	clc
 	adc	offsets,X
+	adc	frames,X
 	eor	X2
 
 	and	masks,X		; do the mask
@@ -133,6 +151,8 @@ color_loop:
 skip_color:
 	dex
 	bpl	color_loop
+
+
 
 	;========================
 	; actually draw color
@@ -153,5 +173,9 @@ skip_color:
 masks:	.byte $8,$4	;,$2	; overlap
 offsets:.byte $2,$1,$0
 colors:	.byte $1b,$26,$4c
+
+; ADC,X BIT,X SBC,X BIT,X
+dir_horiz_lookup:	.byte $75,$24,$F5,$24
+
 
 frames:
