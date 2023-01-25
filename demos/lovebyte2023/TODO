@@ -32,16 +32,16 @@ Apple II:
 128:
 	hgr/transitions/rectangle	139-byte (??)
 	gr/parallax/large		111-byte  dir-switching parallax
-	gr/parallax/par			127-byte  parallax scrolling
+*	gr/parallax/par			127-byte  parallax scrolling
 	hgr/parallax/par		139-byte hires-parallax (boring)
 	hgr/parallax/wierd2		118-byte oddly compelling
 	hgr/parallax/sier		120-bytes sierpinski parallax
 	hgr/shape_table/pattern_logo.s	125-bytes (so-so)
-	hgr/shape_table/gear.s		138-byte gears (cool, good with music?)
+*	hgr/shape_table/gears.s		138-byte gears (cool, good with music?)
 	gr/sprite/stars_128.s		133-byte bouncing stars (cool) (heart?)
 
 256
-	aiibot/lemm.bas			251-byte (cool) lemming animation
+*	aiibot/lemm.bas			251-byte (cool) lemming animation
 
 
 
@@ -57,6 +57,10 @@ Apple II:
 256 -- procedural graphics
 	planet_lores?
 
+1k -- keep working on budge3d
+
+	moon over water effect
+
 
 TODO: image stuff but raw hex bytes instead of text
 
@@ -67,5 +71,6 @@ ARM/Linux:
 Atari 2600:
 	parallax scroll?
 	game?
+	apple II logo.  Maybe with apple ii forever music?
 
 

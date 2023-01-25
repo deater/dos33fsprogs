@@ -1,12 +1,11 @@
-; Rotating Gears
+; Rotating Gears (Tiny)
 
 ; by Vince `deater` Weaver
 
-; 138 bytes -- original for Apple II bot
-; 134 bytes -- only set SCALE once
-; 131 bytes -- unecessary var set, change jmp to bra
-; 110 bytes -- move draw_scene to a function
-
+; 110 bytes -- original
+; 106 bytes -- move to zero page
+; 104 bytes -- use smaller_smc
+; 103 bytes -- use which_smc
 
 ; zero page locations
 HGR_SHAPE	=	$1A
@@ -36,7 +35,7 @@ HGR_SHAPE_TABLE2=	$E9
 HGR_COLLISIONS	=	$EA
 
 ROTATION	=	$FA
-SMALLER		=	$FB
+;SMALLER		=	$FB
 CURRENT_ROT	=	$FF
 
 ; Soft Switches
@@ -54,8 +53,12 @@ XDRAW1		=	$F661
 WAIT		=	$FCA8                 ;; delay 1/2(26+27A+5A^2) us
 RESTORE		=	$FF3F
 
+.zeropage
+.globalzp rot_smc
+.globalzp smaller_smc
+.globalzp which_smc
 
-gears:
+gears_tiny:
 
 	;============================
 	; scene 1
@@ -67,10 +70,7 @@ gears:
 	lda	#8
 	sta	HGR_SCALE
 
-	lda	#1
-	sta	CURRENT_ROT
-
-	sty	SMALLER		; init to 0
+;	sty	SMALLER		; init to 0
 
 	jsr	draw_scene
 
@@ -131,12 +131,14 @@ draw_scene:
 				; A and X are ??
 
 
-	inc	SMALLER
+;	inc	SMALLER
+	inc	smaller_smc+1
 
 	ldy	#16
 	jsr	draw_gear
 
-	dec	SMALLER
+;	dec	SMALLER
+	dec	smaller_smc+1
 
 	rts
 
@@ -148,18 +150,16 @@ draw_gear:
 	sty	ROTATION
 gear1_loop:
 
-	inc	CURRENT_ROT
-	inc	CURRENT_ROT
+	inc	rot_smc+1
+	inc	rot_smc+1
 
-;	inc	rot_smc+1
-;	inc	rot_smc+1
-	lda	SMALLER
+smaller_smc:
+	lda	#0
 	beq	not_smaller
 
-	inc	CURRENT_ROT
-	inc	CURRENT_ROT
-;	inc	rot_smc+1
-;	inc	rot_smc+1
+	inc	rot_smc+1
+	inc	rot_smc+1
+
 not_smaller:
 
 which_smc:
@@ -170,8 +170,8 @@ which_smc:
 
 	; this will be 0 2nd time through loop, arbitrary otherwise
 rot_smc:
-;	lda	#1		; ROT=0
-	lda	CURRENT_ROT
+	lda	#1		; ROT=1 at first
+
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit

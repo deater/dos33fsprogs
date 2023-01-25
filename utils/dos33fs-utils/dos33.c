@@ -1161,7 +1161,7 @@ int main(int argc, char **argv) {
 
 		truncate_filename(apple_filename,argv[optind]);
 
-		if (debug) printf("\tAhpple filename: %s\n",apple_filename);
+		if (debug) printf("\tApple filename: %s\n",apple_filename);
 
 		/* get output filename */
 		optind++;
