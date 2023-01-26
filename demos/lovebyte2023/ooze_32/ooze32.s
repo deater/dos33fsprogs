@@ -1,5 +1,10 @@
 ; Ooze32
 
+; interesting looking effect found accidentally
+; when trying to do something else
+
+; by Vince `deater` Weaver <vince@deater.net>
+
 ; zero page
 GBASL	= $26
 GBASH	= $27
@@ -27,7 +32,6 @@ HGR	= $F3E2
 HPOSN	= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
 
 WAIT    = $FCA8                 ;; delay 1/2(26+27A+5A^2) us
-
 
 	;================================
 	; Clear screen and setup graphics
