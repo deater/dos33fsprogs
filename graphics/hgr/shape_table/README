@@ -1,5 +1,26 @@
 some small shape table programs
 
+It's hard to get below 17 bytes.
+Found a way to get 15 bytes in some cases if the address or rotation
+	(mod64) are similar.
+
+Some to investigate:
+	A=$02 Y=$E8 X=$0E	(agony17)
+	A=$E2 Y=$E2 X=$E2	(agony2/weave15)
+	A=$02 Y=$E3 X=$01	(column TODO)
+	A=$02 Y=$DA X=$01	(????)
+TODO
+	A=$E7 Y=$E7 X=$E7
+	A=$F3 Y=$F3 X=$F3	(some of these might need a dex)
+	A=$F6 Y=$F6 X=$F6
+
+
+
+
+
+
+
+
 mostly trying to get something interesting in 16 bytes for Lovebyte
 
 apple2		-- 63 bytes -- just prints apple ][
