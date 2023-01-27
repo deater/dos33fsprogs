@@ -10,7 +10,7 @@ all:	shape_table.dsk
 shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	APPLE2 GEARS LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
 	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK \
-	GEARS_TINY
+	GEARS_TINY AGONY2
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
 	$(DOS33) -y shape_table.dsk SAVE A GEARS.BAS
@@ -20,6 +20,7 @@ shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 LINE32
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY17
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY2
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 STRIPE17
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 HERRING16
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 PATTERN
@@ -125,6 +126,15 @@ agony17.o:	agony17.s
 
 ###
 
+AGONY2:	agony2.o
+	ld65 -o AGONY2 agony2.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+agony2.o:	agony2.s
+	ca65 -o agony2.o agony2.s -l agony2.lst
+
+
+###
+
 STRIPE17:	stripe17.o
 	ld65 -o STRIPE17 stripe17.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
 
@@ -163,4 +173,4 @@ pattern_logo.o:	pattern_logo.s
 clean:	
 	rm -f *~ *.o *.lst HELLO GEAR.BAS GEARS PATTERN APPLE.BAS \
 		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
-		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY
+		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY AGONY2

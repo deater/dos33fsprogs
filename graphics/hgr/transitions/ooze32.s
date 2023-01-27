@@ -1,5 +1,10 @@
 ; Ooze32
 
+; interesting looking effect found accidentally
+; when trying to do something else
+
+; by Vince `deater` Weaver <vince@deater.net>
+
 ; zero page
 GBASL	= $26
 GBASH	= $27
