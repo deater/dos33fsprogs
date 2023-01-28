@@ -10,7 +10,7 @@ all:	shape_table.dsk
 shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	APPLE2 GEARS LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
 	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK \
-	GEARS_TINY AGONY2
+	GEARS_TINY WEAVE15 COLUMNS16 CATS16
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
 	$(DOS33) -y shape_table.dsk SAVE A GEARS.BAS
@@ -20,7 +20,7 @@ shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 APPLE2
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 LINE32
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY17
-	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 AGONY2
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 WEAVE15
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 STRIPE17
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 HERRING16
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xc00 PATTERN
@@ -29,6 +29,8 @@ shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 COOL_WAVE
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TEETH32
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TICK_TOCK
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 COLUMNS16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 CATS16
 
 ###
 
@@ -90,6 +92,23 @@ teeth32.o:	teeth32.s
 
 ###
 
+COLUMNS16:	columns16.o
+	ld65 -o COLUMNS16 columns16.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+columns16.o:	columns16.s
+	ca65 -o columns16.o columns16.s -l columns16.lst
+
+###
+
+CATS16:	cats16.o
+	ld65 -o CATS16 cats16.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+cats16.o:	cats16.s
+	ca65 -o cats16.o cats16.s -l cats16.lst
+
+
+###
+
 TICK_TOCK:	tick_tock.o
 	ld65 -o TICK_TOCK tick_tock.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
 
@@ -126,11 +145,11 @@ agony17.o:	agony17.s
 
 ###
 
-AGONY2:	agony2.o
-	ld65 -o AGONY2 agony2.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+WEAVE15:	weave15.o
+	ld65 -o WEAVE15 weave15.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
 
-agony2.o:	agony2.s
-	ca65 -o agony2.o agony2.s -l agony2.lst
+weave15.o:	weave15.s
+	ca65 -o weave15.o weave15.s -l weave15.lst
 
 
 ###
@@ -173,4 +192,6 @@ pattern_logo.o:	pattern_logo.s
 clean:	
 	rm -f *~ *.o *.lst HELLO GEAR.BAS GEARS PATTERN APPLE.BAS \
 		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
-		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY AGONY2
+		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY WEAVE15 \
+		COLUMNS16 CATS16
+

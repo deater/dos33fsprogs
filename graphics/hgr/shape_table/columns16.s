@@ -1,8 +1,8 @@
-; 16B herringbone pattern
-
-; FIXME: depends on memory init
+; 16B looks like columns
 
 ; zero page locations
+HGR_SHAPE	=	$1A
+HGR_SHAPE2	=	$1B
 GBASL		=	$26
 GBASH		=	$27
 
@@ -12,18 +12,19 @@ HGR		=	$F3E2
 HPOSN		=	$F411
 XDRAW0		=	$F65D
 XDRAW1		=	$F661
-RESTORE		=	$FF3F
 
 
-herring:
 
-	; $E7 HGR_SCALE is $00 from memory not initialized
+tiny_xdraw:
+
+	; loads at E7 (HGR_SCALE) which is $20 (jsr instruction)
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
 
-	; A and Y are 0 here.
-	; X is left behind by the boot process?
+	; we really have to call this, otherwise it won't run
+	; on some real hardware
+
 
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
@@ -31,19 +32,14 @@ herring:
 				; A and X are ??
 tiny_loop:
 
-	; this will be 0 2nd time through loop, arbitrary otherwise
-;	lda	#1		; ROT=1
+	ldy	#$e3
+	inx			; X is 1
+
+	lda	#2		; ROT=2
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 				; Y varies
 
-	inx	; X=1
-	txa	; A=1
-	tay	; Y=1
+	beq	tiny_loop	; bra
 
-	bne	tiny_loop	; bra
-
-; be sure this is at address $0101, easy to set address
-shape_table:
-	.byte	$04,$00
