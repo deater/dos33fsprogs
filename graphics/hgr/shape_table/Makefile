@@ -10,7 +10,8 @@ all:	shape_table.dsk
 shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	APPLE2 GEARS LINE32 PATTERN PATTERN_LOGO SQUARE_WAVE \
 	AGONY17 HERRING16 STRIPE17 COOL_WAVE TEETH32 TICK_TOCK \
-	GEARS_TINY WEAVE15 COLUMNS16 CATS16
+	GEARS_TINY WEAVE15 COLUMNS16 CATS16 TEST EGGS16 WAVY16 \
+	MIRROR15 FIELD15
 	cp $(EMPTYDISK) shape_table.dsk
 	$(DOS33) -y shape_table.dsk SAVE A HELLO
 	$(DOS33) -y shape_table.dsk SAVE A GEARS.BAS
@@ -31,6 +32,11 @@ shape_table.dsk:	HELLO APPLE.BAS GEARS.BAS \
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TICK_TOCK
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 COLUMNS16
 	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 CATS16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 TEST
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 EGGS16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 WAVY16
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 MIRROR15
+	$(DOS33) -y shape_table.dsk BSAVE -a 0xe7 FIELD15
 
 ###
 
@@ -106,6 +112,33 @@ CATS16:	cats16.o
 cats16.o:	cats16.s
 	ca65 -o cats16.o cats16.s -l cats16.lst
 
+###
+
+WAVY16:	wavy16.o
+	ld65 -o WAVY16 wavy16.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+wavy16.o:	wavy16.s
+	ca65 -o wavy16.o wavy16.s -l wavy16.lst
+
+
+###
+
+EGGS16:	eggs16.o
+	ld65 -o EGGS16 eggs16.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+eggs16.o:	eggs16.s
+	ca65 -o eggs16.o eggs16.s -l eggs16.lst
+
+
+###
+
+TEST:	test.o
+	ld65 -o TEST test.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+test.o:	test.s
+	ca65 -o test.o test.s -l test.lst
+
+
 
 ###
 
@@ -151,6 +184,24 @@ WEAVE15:	weave15.o
 weave15.o:	weave15.s
 	ca65 -o weave15.o weave15.s -l weave15.lst
 
+###
+
+MIRROR15:	mirror15.o
+	ld65 -o MIRROR15 mirror15.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+mirror15.o:	mirror15.s
+	ca65 -o mirror15.o mirror15.s -l mirror15.lst
+
+###
+
+FIELD15:	field15.o
+	ld65 -o FIELD15 field15.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
+
+field15.o:	field15.s
+	ca65 -o field15.o field15.s -l field15.lst
+
+
+
 
 ###
 
@@ -193,5 +244,5 @@ clean:
 	rm -f *~ *.o *.lst HELLO GEAR.BAS GEARS PATTERN APPLE.BAS \
 		PATTERN_LOGO COOL_WAVE SQUARE_WAVE TEETH32 TICK_TOCK \
 		HERRING16 STRIPE17 AGONY17 LINE32 APPLE2 GEARS_TINY WEAVE15 \
-		COLUMNS16 CATS16
+		COLUMNS16 CATS16 TEST EGGS16 WAVY16 MIRROR15 FIELD15
 

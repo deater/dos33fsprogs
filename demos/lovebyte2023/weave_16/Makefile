@@ -4,25 +4,25 @@ DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../../empty_disk/empty.dsk
 
-all:	agony17.dsk
+all:	weave15.dsk
 
-agony17.dsk:	HELLO AGONY17
-	cp $(EMPTYDISK) agony17.dsk
-	$(DOS33) -y agony17.dsk SAVE A HELLO
-	$(DOS33) -y agony17.dsk BSAVE -a 0xE7 AGONY17
+weave15.dsk:	HELLO WEAVE15
+	cp $(EMPTYDISK) weave15.dsk
+	$(DOS33) -y weave15.dsk SAVE A HELLO
+	$(DOS33) -y weave15.dsk BSAVE -a 0xE7 WEAVE15
 
 ###
 
-submit:	agony17.zip
+submit:	weave15.zip
 
-agony1732.zip:	AGONY17 agony17.s file_id.diz agony17.dsk
-	mkdir -p lovebyte2023_agony17
-	cp AGONY17 ./lovebyte2023_agony17
-	cp agony17.s ./lovebyte2023_agony17
-	cp file_id.diz ./lovebyte2023_agony17
-	cp agony17.dsk ./lovebyte2023_agony17
-	cp agony17_720p.mp4 ./lovebyte2023_agony17
-	zip -r agony1732.zip lovebyte2023_agony17
+weave1532.zip:	WEAVE15 weave15.s file_id.diz weave15.dsk
+	mkdir -p lovebyte2023_weave15
+	cp WEAVE15 ./lovebyte2023_weave15
+	cp weave15.s ./lovebyte2023_weave15
+	cp file_id.diz ./lovebyte2023_weave15
+	cp weave15.dsk ./lovebyte2023_weave15
+	cp weave15_720p.mp4 ./lovebyte2023_weave15
+	zip -r weave1532.zip lovebyte2023_weave15
 
 ####
 
@@ -34,13 +34,13 @@ HELLO:	hello.bas
 
 ###
 
-AGONY17:	agony17.o
-	ld65 -o AGONY17 agony17.o -C ./apple2_e7_zp.inc
+WEAVE15:	weave15.o
+	ld65 -o WEAVE15 weave15.o -C ./apple2_e7_zp.inc
 
-agony17.o:	agony17.s
-	ca65 -o agony17.o agony17.s -l agony17.lst
+weave15.o:	weave15.s
+	ca65 -o weave15.o weave15.s -l weave15.lst
 
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO AGONY17 *.zip
+	rm -f *~ *.o *.lst HELLO WEAVE15 *.zip

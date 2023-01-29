@@ -9,7 +9,7 @@ all:	ooze32.dsk
 ooze32.dsk:	HELLO OOZE32
 	cp $(EMPTYDISK) ooze32.dsk
 	$(DOS33) -y ooze32.dsk SAVE A HELLO
-	$(DOS33) -y ooze32.dsk BSAVE -a 0xE7 OOZE32
+	$(DOS33) -y ooze32.dsk BSAVE -a 0xC00 OOZE32
 
 ###
 
@@ -35,7 +35,7 @@ HELLO:	hello.bas
 ###
 
 OOZE32:	ooze32.o
-	ld65 -o OOZE32 ooze32.o -C ./apple2_e7_zp.inc
+	ld65 -o OOZE32 ooze32.o -C ./apple2_c00.inc
 
 ooze32.o:	ooze32.s
 	ca65 -o ooze32.o ooze32.s -l ooze32.lst

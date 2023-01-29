@@ -1,41 +1,46 @@
-; 17B sripe pattern
+; 17B weird line pattern
+
+; Really wanted this to be 16B :(
 
 ; zero page locations
 GBASL		=	$26
 GBASH		=	$27
+HGR_SCALE	=	$E7
+HGR_COLLISIONS	=	$EA
 
-; ROM calls
+; ROM locations
 HGR2		=	$F3D8
-HGR		=	$F3E2
 HPOSN		=	$F411
 XDRAW0		=	$F65D
 XDRAW1		=	$F661
-RESTORE		=	$FF3F
+HPLOT0          =       $F457
 
+agony17:
 
-stripe17:
+	; we load at zero page $E7 which is HGR_SCALE
+	; this means the scale is $20 (JSR)
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
 
-
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
 
+	; set GBASL/GBASH
+	; we really have to call this, otherwise it won't run
+	; on some real hardware depending on setup of zero page at boot
 
-	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
+	jsr	HPLOT0		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
 				; after Y= orig X/7
 				; A and X are ??
 tiny_loop:
 
-	ldy	#$e8
-	ldx	#$0e
+	lda	#$F6		; ROT=$F6
+	tay
+	tax
+	dex
 
-	; ROT in A
-
-	; this will be 0 2nd time through loop, arbitrary otherwise
-	lda	#1		; ROT=1
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
 				; Both A and X are 0 at exit
 				; Z flag set on exit
