@@ -1,10 +1,11 @@
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
- LEMM256
+ Gears 128
 -------------------------------------
-Animated Hi-res Lemming Walking Demo
+Hi-res gear animation with clicking
+
 by Deater / dSr
 
-251 byte BASIC program for Apple II
+124-byte Intro for Apple II
+(With 4-byte header)
 Lovebyte 2023
-
 
