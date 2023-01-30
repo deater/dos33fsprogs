@@ -1,0 +1,6 @@
+# Number of shapes
+1
+START
+LT UP UP RT RT NDN NDN NDN NDN LT LT UP UP
+STOP
+
