@@ -15,14 +15,16 @@ agony17.dsk:	HELLO AGONY17
 
 submit:	agony17.zip
 
-agony1732.zip:	AGONY17 agony17.s file_id.diz agony17.dsk
+agony17.zip:	AGONY17 agony17.s file_id.diz agony17.dsk
 	mkdir -p lovebyte2023_agony17
 	cp AGONY17 ./lovebyte2023_agony17
 	cp agony17.s ./lovebyte2023_agony17
 	cp file_id.diz ./lovebyte2023_agony17
 	cp agony17.dsk ./lovebyte2023_agony17
+	cp monitor.txt ./lovebyte2023_agony17
 	cp agony17_720p.mp4 ./lovebyte2023_agony17
-	zip -r agony1732.zip lovebyte2023_agony17
+	cp agony17_screen.png ./lovebyte2023_agony17
+	zip -r agony17.zip lovebyte2023_agony17
 
 ####
 

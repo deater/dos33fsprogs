@@ -15,13 +15,14 @@ lemm256.dsk:	HELLO LEMM
 
 submit:	lemm256.zip
 
-lemm256.zip:	PAR_TINY lemm.bas file_id.diz lemm256.dsk
+lemm256.zip:	LEMM lemm.bas file_id.diz lemm256.dsk
 	mkdir -p lovebyte2023_lemm256
 	cp LEMM ./lovebyte2023_lemm256
 	cp lemm.bas ./lovebyte2023_lemm256
 	cp file_id.diz ./lovebyte2023_lemm256
 	cp lemm256.dsk ./lovebyte2023_lemm256
-	cp lemm_720p.mp4 ./lovebyte2023_lemm256
+	cp lemm256_720p.mp4 ./lovebyte2023_lemm256
+	cp lemm256_screen.png ./lovebyte2023_lemm256
 	zip -r lemm256.zip lovebyte2023_lemm256
 
 ####

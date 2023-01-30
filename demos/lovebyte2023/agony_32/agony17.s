@@ -1,5 +1,7 @@
 ; 17B weird line pattern
 
+; by Vince `deater` Weaver / dSr
+
 ; Really wanted this to be 16B :(
 
 ; zero page locations

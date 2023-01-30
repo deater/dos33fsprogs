@@ -18,10 +18,15 @@ categories:
 
 Apple II:
 
+16:
+	hgr/shape_table/weave15
+	hgr/shape_table/field16
+
+
 32:
-	hgr/transitions/ooze32		32-byte
+*	hgr/transitions/ooze32		32-byte
 	hgr/shape_table/line32		32-byte	interesting pattern
-*	hgr/shape_table/agony17		32-byte	interesting pattern
+	hgr/shape_table/agony17		32-byte	interesting pattern
 	hgr/shape_table/square_wave	33-byte (odd)
 
 64:

@@ -1,4 +1,4 @@
-; 15B interesting XDRAW pattern
+; 16B interesting XDRAW pattern
 
 ; by Vince `deater` Weaver / dSr
 

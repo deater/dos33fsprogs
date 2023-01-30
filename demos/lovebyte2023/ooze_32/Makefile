@@ -15,14 +15,16 @@ ooze32.dsk:	HELLO OOZE32
 
 submit:	ooze32.zip
 
-ooze3232.zip:	OOZE32 ooze32.s file_id.diz ooze32.dsk
+ooze32.zip:	OOZE32 ooze32.s file_id.diz ooze32.dsk
 	mkdir -p lovebyte2023_ooze32
 	cp OOZE32 ./lovebyte2023_ooze32
 	cp ooze32.s ./lovebyte2023_ooze32
 	cp file_id.diz ./lovebyte2023_ooze32
 	cp ooze32.dsk ./lovebyte2023_ooze32
 	cp ooze32_720p.mp4 ./lovebyte2023_ooze32
-	zip -r ooze3232.zip lovebyte2023_ooze32
+	cp ooze32_screen.png ./lovebyte2023_ooze32
+	cp monitor.txt ./lovebyte2023_ooze32
+	zip -r ooze32.zip lovebyte2023_ooze32
 
 ####
 

@@ -21,7 +21,8 @@ parallax128.zip:	PAR_TINY par_tiny.s file_id.diz parallax128.dsk
 	cp par_tiny.s ./lovebyte2023_parallax
 	cp file_id.diz ./lovebyte2023_parallax
 	cp parallax128.dsk ./lovebyte2023_parallax
-	cp parallax_720p.mp4 ./lovebyte2023_parallax
+	cp parallax128_720p.mp4 ./lovebyte2023_parallax
+	cp parallax128_screen.png ./lovebyte2023_parallax
 	zip -r parallax128.zip lovebyte2023_parallax
 
 ####

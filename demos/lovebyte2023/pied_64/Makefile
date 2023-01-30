@@ -21,7 +21,8 @@ pied64.zip:	PIED57 pied57.s file_id.diz pied64.dsk
 	cp pied57.s ./lovebyte2023_pied
 	cp file_id.diz ./lovebyte2023_pied
 	cp pied64.dsk ./lovebyte2023_pied
-	cp pied_720p.mp4 ./lovebyte2023_pied
+	cp pied64_720p.mp4 ./lovebyte2023_pied
+	cp pied64_screen.png ./lovebyte2023_pied
 	zip -r pied64.zip lovebyte2023_pied
 
 ####

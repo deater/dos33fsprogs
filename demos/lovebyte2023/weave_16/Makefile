@@ -15,14 +15,16 @@ weave15.dsk:	HELLO WEAVE15
 
 submit:	weave15.zip
 
-weave1532.zip:	WEAVE15 weave15.s file_id.diz weave15.dsk
+weave15.zip:	WEAVE15 weave15.s file_id.diz weave15.dsk
 	mkdir -p lovebyte2023_weave15
 	cp WEAVE15 ./lovebyte2023_weave15
 	cp weave15.s ./lovebyte2023_weave15
 	cp file_id.diz ./lovebyte2023_weave15
 	cp weave15.dsk ./lovebyte2023_weave15
+	cp monitor.txt ./lovebyte2023_weave15
+	cp weave15_screen.png ./lovebyte2023_weave15
 	cp weave15_720p.mp4 ./lovebyte2023_weave15
-	zip -r weave1532.zip lovebyte2023_weave15
+	zip -r weave15.zip lovebyte2023_weave15
 
 ####
 
