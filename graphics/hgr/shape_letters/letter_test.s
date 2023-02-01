@@ -41,22 +41,90 @@ letter_test:
 	; SETUP
 	;=========================================
 
-
-	jsr	HGR
 	jsr	HGR2			; set/clear HGR page2 to black
 					; Hi-res graphics, no text at bottom
 					; Y=0, A=$60 after this call
 
-	lda	#5
-	sta	HGR_SCALE
 
 	lda	#0
 	sta	ROTATE
 	sta	WHICH
 
+	jsr	zoom_in
+
+	lda	#5
+	sta	HGR_SCALE
+
+;	jsr	slide_in
+
+end:
+	jmp	end
+
+
+	;=========================
+	; zoom in
+	;=========================
+
+zoom_in:
+
+outer_zoom_loop:
+
+	lda	#30
+	sta	HGR_SCALE
+
+	ldx	WHICH
+	lda	deater_ends,X
+	sta	XPOS
+
+	lda	#100
+	sta	YPOS
+
+inner_zoom_loop:
+	jsr	xdraw
+
+	lda	#100
+	jsr	WAIT
+	jsr	xdraw
+
+	dec	HGR_SCALE
+	dec	HGR_SCALE
+
+	lda	HGR_SCALE
+
+;	lsr
+;	and	#$f
+;	tax
+;	lda	rotate_pattern,X
+;	sta	ROTATE
+
+;	lda	XPOS
+;ends_smc:
+	cmp	#6
+	bcs	inner_zoom_loop
+
+	jsr	xdraw
+
+	inc	WHICH
+	lda	WHICH
+	tax
+;	lda	deater_ends,X
+;	sta	ends_smc+1
+;	lda	deater_offsets,X
+;	lda	ma2e_offsets,X
+
+	lda	desire_offsets,X
+	sta	xdraw_offset_smc+1
+
+	bpl	outer_zoom_loop
+
+	rts
+
+
 	;=========================
 	; slide in
 	;=========================
+
+slide_in:
 
 outer_slide_loop:
 	lda	#255
@@ -93,12 +161,15 @@ ends_smc:
 	tax
 	lda	deater_ends,X
 	sta	ends_smc+1
-	lda	deater_offsets,X
+;	lda	deater_offsets,X
+;	lda	ma2e_offsets,X
+	lda	desire_offsets,X
 	sta	xdraw_offset_smc+1
 	bpl	outer_slide_loop
 
-end:
-	jmp	end
+	rts
+
+
 
 
 	;=======================
@@ -165,18 +236,37 @@ deater_offsets:
 	.byte 30	; R
 	.byte $FF	; end
 
+ma2e_offsets:
+	.byte 39	; M
+	.byte 15	; A
+	.byte 47	; 2
+	.byte 8		; E
+	.byte $FF	; end
+
+
+desire_offsets:
+	.byte 0		; D
+	.byte 8		; E
+	.byte 54	; S
+	.byte 61	; I
+	.byte 30	; R
+	.byte 8		; E
+	.byte $FF	; end
+
 deater_ends:
 	.byte	65,90,115,140,165,190
 
+
+.align $100
 shape_table:
 
-shape_table_d:
-	.byte	$23,$2c,$2e,$36, $37,$27,$04,$00
-shape_table_e:
-	.byte	$27,$2c,$95,$12, $3f,$24,$00
-shape_table_a:
-	.byte	$23,$2c,$35,$96, $24,$3f,$36,$00
-shape_table_t:
-	.byte	$12,$24,$e4,$2b, $2d,$05,$00
-shape_table_r:
-	.byte	$97,$24,$24,$2d, $36,$37,$35,$06,$00
+shape_table_d:	.byte	$23,$2c,$2e,$36, $37,$27,$04,$00	; 0
+shape_table_e:	.byte	$27,$2c,$95,$12, $3f,$24,$00		; 8
+shape_table_a:	.byte	$23,$2c,$35,$96, $24,$3f,$36,$00	; 15
+shape_table_t:	.byte	$12,$24,$e4,$2b, $2d,$05,$00		; 23
+shape_table_r:	.byte	$97,$24,$24,$2d, $36,$37,$35,$06,$00	; 30
+shape_table_m:	.byte	$24,$37,$36,$4e, $24,$24,$07,$00	; 39
+shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
+shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
+shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
+shape_table_line:	.byte	$12,$24,$24,$00			; 67
