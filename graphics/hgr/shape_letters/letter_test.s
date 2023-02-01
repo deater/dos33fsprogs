@@ -1,5 +1,11 @@
 ; letter test
 
+; TODO:
+;	line border?
+;	flame demo
+;	DEMO OVER message, zooming from angle?
+
+
 ; zero page locations
 HGR_SHAPE	=	$1A
 SEEDL		=	$4E
@@ -269,4 +275,7 @@ shape_table_m:	.byte	$24,$37,$36,$4e, $24,$24,$07,$00	; 39
 shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
 shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
 shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
-shape_table_line:	.byte	$12,$24,$24,$00			; 67
+shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	; 67
+shape_table_b:	.byte	$18,$30,$36,$35, $28,$24,$04,$00	; 75
+shape_table_line:	.byte	$12,$24,$24,$00			; 83
+
