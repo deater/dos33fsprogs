@@ -15,7 +15,7 @@ set_notes_loop:
 
 ;	ldy	SONG_OFFSET			; Y = offset into song
 track_smc:
-	lda	track4;,Y			; get next byte into A
+	lda	track0;,Y			; get next byte into A
 
 	;==================
 	; see if hit end
@@ -26,12 +26,12 @@ track_smc:
 	;====================================
 	; if at end, loop back to beginning
 
-;	ldy	WHICH_TRACK			; get current track in Y
-;	iny					; increment track
+	ldy	WHICH_TRACK			; get current track in Y
+	iny					; increment track
 
-;	cpy	#5				; see if off end
-;	bne	no_wrap
-	ldy	#1				; loop to track 1
+	cpy	#6				; see if off end
+	bne	no_wrap
+	ldy	#2				; loop to track 1
 no_wrap:
 	sty	WHICH_TRACK
 
@@ -40,8 +40,8 @@ no_wrap:
 ;	lda	tracks_h,Y			; enforce in same page
 ;	sta	track_smc+2
 
-	lda	bamps_l,Y			; self modify B-amplitude
-	sta	bamp_smc+1
+;	lda	bamps_l,Y			; self modify B-amplitude
+;	sta	bamp_smc+1
 ;	lda	bamps_h,Y			; enforce in same page
 ;	sta	bamp_smc+2
 
@@ -126,34 +126,19 @@ done_update_song:
 	;=================================
 	; handle channel B volume
 chanb:
-;	lda	FRAME
-;	and	#$7
-	tya
-	bne	bamps_skip
-
-	lda	BAMP_COUNTDOWN			; b-amp conutdown
-	bne	bamps_good
-
-bamp_smc:
-	lda	bamps4				; get new value
-	pha
-	and	#$f				; bottom 4 its is ampllitude
-	sta	AY_REGS+9			; B volume
-	pla
-
-	lsr					; top 4 bits are length
-	lsr
-	lsr
-	lsr
-	sta	BAMP_COUNTDOWN
-
-	inc	bamp_smc+1			; increment to next location
-						; assumes on same page
-						; and less than 256
-bamps_good:
-	dec	BAMP_COUNTDOWN			; countdown
-
-bamps_skip:
+	lda	FRAME
+	and	#$7
+	tay
+; hack for specific song
+	lda	WHICH_TRACK
+	cmp	#2
+	bcc	b_lower
+	lda	channel_a_volume,Y
+	jmp	store_b
+b_lower:
+	lda	channel_b_volume,Y
+store_b:
+	sta	AY_REGS+9				; B volume
 
 	;=================================
 	; inc frame counter

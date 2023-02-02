@@ -7,15 +7,15 @@ PICTUREDSK = ~/research/picturedsk.git/picturedsk
 LINKER_SCRIPTS = ../../../linker_scripts/
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
-all:	apple_desire.dsk
+all:	blue_flame.dsk
 
 ###
 
-apple_desire.dsk:	HELLO APPLE_DESIRE AD
-	cp $(EMPTYDISK) apple_desire.dsk
-	$(DOS33) -y apple_desire.dsk SAVE A HELLO
-	$(DOS33) -y apple_desire.dsk BSAVE -a 0xc00 APPLE_DESIRE
-	$(DOS33) -y apple_desire.dsk BSAVE -a 0x6000 AD
+blue_flame.dsk:	HELLO BLUE_FLAME BF
+	cp $(EMPTYDISK) blue_flame.dsk
+	$(DOS33) -y blue_flame.dsk SAVE A HELLO
+	$(DOS33) -y blue_flame.dsk BSAVE -a 0x8000 BLUE_FLAME
+	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BF
 
 ###
 
@@ -25,54 +25,46 @@ HELLO:	hello.bas
 
 ###
 
-submit:	apple2_desire.zip
+submit:	blue_flame.zip
 
-apple2_desire.zip:	APPLE_DESIRE apple_desire.dsk
-	mkdir -p demosplash2022_apple2_desire
-	mkdir -p demosplash2022_apple2_desire/src
-	cp APPLE_DESIRE ./demosplash2022_apple2_desire
-	cp *.s ./demosplash2022_apple2_desire/src
-	cp *.inc ./demosplash2022_apple2_desire/src
-	cp file_id.diz ./demosplash2022_apple2_desire
-	cp apple_desire.dsk ./demosplash2022_apple2_desire
-	cp apple2_desire.mkv ./demosplash2022_apple2_desire
-	cp a2_desire_screen.png ./demosplash2022_apple2_desire
-	zip -r apple2_desire.zip demosplash2022_apple2_desire
-
-####
-
-APPLE_DESIRE:	apple_desire.o
-	ld65 -o APPLE_DESIRE apple_desire.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
-
-apple_desire.o:	apple_desire.s \
-	logo_intro.s zp.inc \
-	ay3_write_regs.s apple_desire.s interrupt_handler.s \
-	play_frame.s draw_letter.s freq.s freq_h.s bamps.s \
-	apple_logo.s \
-	mA2E_4.s mockingboard_constants.s mockingboard_init.s tracker_init.s
-	ca65 -o apple_desire.o apple_desire.s -l apple_desire.lst
+blue_flame.zip:	BLUE_FLAME blue_flame.dsk
+	mkdir -p lovebyte2023_blue_flame
+	mkdir -p lovebyte2023_blue_flame/src
+	cp BLUE_FLAME ./lovebyte2023_blue_flame
+	cp *.s ./lovebyte2023_blue_flame/src
+	cp *.inc ./lovebyte2023_blue_flame/src
+	cp file_id.diz ./lovebyte2023_blue_flame
+	cp blue_flame.dsk ./lovebyte2023_blue_flame
+	cp blue_flame.mkv ./lovebyte2023_blue_flame
+	cp a2_desire_screen.png ./lovebyte2023_blue_flame
+	zip -r blue_flame.zip lovebyte2023_blue_flame
 
 ####
 
-APPLE_DESIRE.ZX02:	APPLE_DESIRE
-	$(ZX02) -f APPLE_DESIRE APPLE_DESIRE.ZX02
+BLUE_FLAME:	blue_flame.o
+	ld65 -o BLUE_FLAME blue_flame.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
-AD:	ad.o
-	ld65 -o AD ad.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-ad.o:	ad.s APPLE_DESIRE.ZX02
-	ca65 -o ad.o ad.s -l ad.lst
+blue_flame.o:	blue_flame.s \
+	letters.s zp.inc \
+	ay3_write_regs.s interrupt_handler.s play_frame.s \
+	SmallLove2.s mockingboard_constants.s mockingboard_init.s \
+	tracker_init.s
+	ca65 -o blue_flame.o blue_flame.s -l blue_flame.lst
 
 ####
 
-make_points:	make_points.o
-	$(CC) -o make_points make_points.o
+BLUE_FLAME.ZX02:	BLUE_FLAME
+	$(ZX02) -f BLUE_FLAME BLUE_FLAME.ZX02
 
-make_points.o:	make_points.c
-	$(CC) $(CFLAGS) -c make_points.c
+BF:	bf.o
+	ld65 -o BF bf.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+bf.o:	bf.s BLUE_FLAME.ZX02
+	ca65 -o bf.o bf.s -l bf.lst
+
 
 ####
 
 clean:	
-	rm -f *~ *.o *.lst APPLE_DESIRE *.zip make_points
+	rm -f *~ *.o *.lst HELLO BLUE_FLAME BF *.ZX02 *.zip make_points
 

@@ -1,3 +1,4 @@
+; Compressed ZX02 wrapper
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -13,14 +14,14 @@ ad_start:
 	lda	#>src
 	sta	zx_src_h+1
 
-	lda	#$c
+	lda	#$80
 
 	jsr	zx02_full_decomp
 
-	jmp	$c00
+	jmp	$8000
 
 
 	.include	"zx02_optim.s"
 
 src:
-	.incbin		"APPLE_DESIRE.ZX02"
+	.incbin		"BLUE_FLAME.ZX02"

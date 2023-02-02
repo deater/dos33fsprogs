@@ -33,6 +33,13 @@ OUTL		= $F4
 OUTH		= $F5
 LINE		= $F6
 
+WHICH           =       $FB
+SCALE           =       $FC
+ROTATE          =       $FD
+XPOS            =       $FE
+YPOS            =       $FF
+
+.if 0
 SAVE_Y		= $F7
 LETTER_X	= $F8
 LETTER_Y	= $F9
@@ -40,3 +47,4 @@ COUNT		= $FA
 INL		= $FD
 INH		= $FE
 TEMP		= $FF
+.endif
