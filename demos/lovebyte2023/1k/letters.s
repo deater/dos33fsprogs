@@ -1,47 +1,5 @@
 
-; TODO:
-;	line border?
-;	flame demo
-;	DEMO OVER message, zooming from angle?
-
-
-; zero page locations
-.if 0
-HGR_SHAPE	=	$1A
-SEEDL		=	$4E
-FRAME		=	$A4
-OUR_ROT		=	$A5
-RND_EXP		=	$C9
-HGR_PAGE	=	$E6
-HGR_SCALE	=	$E7
-HGR_ROTATION	=	$F9
-WHICH		=	$FB
-SCALE		=	$FC
-ROTATE		=	$FD
-XPOS		=	$FE
-YPOS		=	$FF
-
-; Soft Switches
-KEYPRESS	=	$C000
-KEYRESET	=	$C010
-SPEAKER		=	$C030
-PAGE0           =       $C054
-PAGE1           =       $C055
-
-; ROM calls
-RND		=	$EFAE
-
-HGR2		=	$F3D8
-HGR		=	$F3E2
-HCLR		=	$F3F2
-HCLR_COLOR	=	$F3F4
-HPOSN		=	$F411
-XDRAW0		=	$F65D
-TEXT		=	$FB36	; Set text mode
-WAIT		=	$FCA8	; delay 1/2(26+27A+5A^2) us
-.endif
-
-letter_test:
+do_letters:
 
 	;=========================================
 	; SETUP
@@ -63,8 +21,7 @@ letter_test:
 
 ;	jsr	slide_in
 
-end:
-	jmp	end
+	rts
 
 
 	;=========================

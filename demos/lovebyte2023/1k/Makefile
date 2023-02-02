@@ -45,7 +45,7 @@ BLUE_FLAME:	blue_flame.o
 	ld65 -o BLUE_FLAME blue_flame.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 blue_flame.o:	blue_flame.s \
-	letters.s zp.inc \
+	letters.s flame.s zp.inc \
 	ay3_write_regs.s interrupt_handler.s play_frame.s \
 	SmallLove2.s mockingboard_constants.s mockingboard_init.s \
 	tracker_init.s
