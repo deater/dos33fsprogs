@@ -17,7 +17,7 @@ do_letters:
 	lda	#28			;
 	sta	YPOS
 
-	lda	#<deater_ends
+	lda	#<desire_ends+1
 	sta	type_smc+1
 
 	lda	#<deater_offsets
@@ -28,6 +28,12 @@ do_letters:
 
 	;==============================
 	; print maze
+
+	lda	#28
+	sta	start_smc+1
+
+	lda	#4
+	sta	add_smc+1
 
 	lda	#128			;
 	sta	YPOS
@@ -77,21 +83,15 @@ not_done2:
 	lda	#36			; start big
 	sta	HGR_SCALE
 
-	lda	deater_ends,X		; X Position
+	lda	desire_ends,X		; X Position
 	sta	XPOS
 
 	lda	#76			; Y position
 	sta	YPOS
 
 inner_zoom_loop:
-					; FIXME: common code?
 
-	jsr	xdraw			; draw
-
-	lda	#100			; wait a bit
-	jsr	WAIT
-
-	jsr	xdraw			; draw for good
+	jsr	draw_wait_erase
 
 	dec	HGR_SCALE		; zoom in
 	dec	HGR_SCALE
@@ -110,6 +110,15 @@ inner_zoom_loop:
 	rts
 
 
+draw_wait_erase:
+	jsr	xdraw			; draw
+
+	lda	#100			; wait a bit
+	jsr	WAIT
+
+	jmp	xdraw			; draw for good
+
+
 	;=========================
 	; slide in
 	;=========================
@@ -123,13 +132,15 @@ slide_in:
 	sta	WHICH
 
 outer_slide_loop:
-	lda	#255			; start position
+
+start_smc:
+	lda	#252			; start position
 	sta	XPOS			; 255 instead of 279 for size reasons
 
 	lda	WHICH
 	tax
 type_smc:
-	lda	deater_ends,X
+	lda	desire_ends+1,X
 	sta	ends_smc+1
 
 offsets_smc:
@@ -142,17 +153,16 @@ offsets_smc:
 not_done:
 
 slide_loop:
-	jsr	xdraw			; draw
 
-	lda	#100			; wait a bit
-	jsr	WAIT
+	jsr	draw_wait_erase
 
-	jsr	xdraw			; erase
+	clc
+	lda	XPOS
+add_smc:
+	adc	#$FC
+	sta	XPOS
 
-	dec	XPOS			; move left
-	dec	XPOS
-
-	lda	XPOS			; rotate
+	lsr
 	lsr
 	and	#$f
 	tax
@@ -162,16 +172,13 @@ slide_loop:
 	lda	XPOS			; see if hit end
 ends_smc:
 	cmp	#65
-	bcs	slide_loop
+	bne	slide_loop
 
 	jsr	xdraw			; one last draw so remains onscreen
 
 	inc	WHICH			; move to next letter
 
-	; FIXME: bpl	bra, WHICH always positive
-	jmp	outer_slide_loop	; loop
-
-;	rts				; done
+	bpl	outer_slide_loop	; bra (WHICH always positive)
 
 
 
@@ -181,23 +188,21 @@ ends_smc:
 	;=======================
 
 xdraw:
-	ldy	#0
+	ldy	#0		; guess we can't draw far right edge
 	ldx	XPOS
 	lda	YPOS
 	jsr	HPOSN		; X= (y,x) Y=(a)
 
-
-
-	clc
+	clc			; get shape table from offset
 	lda	#<shape_table_d
 xdraw_offset_smc:
 	adc	#0
 	tax
-	ldy	#>shape_table_d
+	ldy	#>shape_table_d		; assume always in same page
 
 	lda	ROTATE
 
-	jmp	XDRAW0
+	jmp	XDRAW0			; tail call
 
 .if 0
 	;=======================
@@ -228,8 +233,10 @@ flip_page:
 ;	bne	init_loop	; 2
 
 rotate_pattern:
-	.byte 0,3,6,9, 9,6,3,0, 0,$FD,$FA,$F7, $F7,$FA,$FD, 0
-
+	; offset by 3 to give original effect
+;	.byte 0,3,6
+	.byte 9, 9,6,3,0, 0,$FD,$FA,$F7, $F7,$FA,$FD, 0
+	.byte 0,3,6
 
 deater_offsets:
 	.byte 0		; D
@@ -241,30 +248,30 @@ deater_offsets:
 	.byte $FF	; end
 
 ma2e_offsets:
-	.byte 39	; M
-	.byte 15	; A
-	.byte 47	; 2
 	.byte 8		; E
+	.byte 47	; 2
+	.byte 15	; A
+	.byte 39	; M
 	.byte $FF	; end
 
 
 desire_offsets:
+	.byte 67	; -
 	.byte 0		; D
 	.byte 8		; E
 	.byte 54	; S
 	.byte 61	; I
 	.byte 30	; R
 	.byte 8		; E
+	.byte 67	; -
 	.byte $FF	; end
 
-deater_ends:
-	; center of screen is 140, offset by 12?
-	; want multiple of 24?
-	.byte	80,104,128,152,176,200
+desire_ends:
+	; center of screen is 140, offset by 16 each way
+	.byte	28,60,92,124,156,188,220,252
 
 ma2e_ends:
-	; center of screen is 140, offset by 12.5?
-	.byte	 104,128,152,176
+	.byte	 188,156,124,92
 
 
 .align $100
@@ -279,8 +286,9 @@ shape_table_m:	.byte	$24,$37,$36,$4e, $24,$24,$07,$00	; 39
 shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
 shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
 shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
-shape_table_line:	.byte	$12,$24,$24,$00			; 67
+shape_table_hline:	.byte	$2b,$05,$00			; 67
 
+;shape_table_vline:	.byte	$12,$24,$24,$00			; 67
 ;shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	;
 ;shape_table_v:	.byte	$18,$30,$36,$35, $28,$24,$04,$00	;
 
