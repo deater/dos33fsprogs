@@ -10,18 +10,44 @@ do_letters:
 					; Y=0, A=$60 after this call
 
 
-	lda	#0
-	sta	ROTATE
-	sta	WHICH
 
-	jsr	zoom_in
+	;==============================
+	; print deater
 
-	lda	#5
-	sta	HGR_SCALE
+	lda	#28			;
+	sta	YPOS
 
-;	jsr	slide_in
+	lda	#<deater_ends
+	sta	type_smc+1
 
-	rts
+	lda	#<deater_offsets
+	sta	offsets_smc+1
+
+	jsr	slide_in
+
+
+	;==============================
+	; print maze
+
+	lda	#128			;
+	sta	YPOS
+
+	lda	#<ma2e_ends
+	sta	type_smc+1
+
+	lda	#<ma2e_offsets
+	sta	offsets_smc+1
+
+	jsr	slide_in
+
+
+	; FIXME: tail call
+
+;	jsr	zoom_in
+
+
+
+;	rts
 
 
 	;=========================
@@ -30,53 +56,54 @@ do_letters:
 
 zoom_in:
 
+	lda	#0
+	sta	ROTATE
+	sta	WHICH
+
 outer_zoom_loop:
 
-	lda	#30
+	lda	WHICH
+	tax				; update offset
+
+	lda	desire_offsets,X	; get offsets in place
+	sta	xdraw_offset_smc+1	; setup xdraw
+
+	bpl	not_done2		; if not end, don't return
+
+	rts
+
+not_done2:
+
+	lda	#36			; start big
 	sta	HGR_SCALE
 
-	ldx	WHICH
-	lda	deater_ends,X
+	lda	deater_ends,X		; X Position
 	sta	XPOS
 
-	lda	#76		; 96 would be centered, but looks better higher?
+	lda	#76			; Y position
 	sta	YPOS
 
 inner_zoom_loop:
-	jsr	xdraw
+					; FIXME: common code?
 
-	lda	#100
+	jsr	xdraw			; draw
+
+	lda	#100			; wait a bit
 	jsr	WAIT
-	jsr	xdraw
 
-	dec	HGR_SCALE
+	jsr	xdraw			; draw for good
+
+	dec	HGR_SCALE		; zoom in
 	dec	HGR_SCALE
 
 	lda	HGR_SCALE
 
-;	lsr
-;	and	#$f
-;	tax
-;	lda	rotate_pattern,X
-;	sta	ROTATE
-
-;	lda	XPOS
-;ends_smc:
-	cmp	#6
+	cmp	#10			; stop if big enough
 	bcs	inner_zoom_loop
 
-	jsr	xdraw
+	jsr	xdraw			; leave it on screen
 
-	inc	WHICH
-	lda	WHICH
-	tax
-;	lda	deater_ends,X
-;	sta	ends_smc+1
-;	lda	deater_offsets,X
-;	lda	ma2e_offsets,X
-
-	lda	desire_offsets,X
-	sta	xdraw_offset_smc+1
+	inc	WHICH			; move to next letter
 
 	bpl	outer_zoom_loop
 
@@ -89,48 +116,62 @@ inner_zoom_loop:
 
 slide_in:
 
+	lda	#4
+	sta	HGR_SCALE
+
+	lda	#0
+	sta	WHICH
+
 outer_slide_loop:
-	lda	#255
-	sta	XPOS
-	lda	#100
-	sta	YPOS
+	lda	#255			; start position
+	sta	XPOS			; 255 instead of 279 for size reasons
+
+	lda	WHICH
+	tax
+type_smc:
+	lda	deater_ends,X
+	sta	ends_smc+1
+
+offsets_smc:
+	lda	deater_offsets,X	; point to next
+	sta	xdraw_offset_smc+1
+
+	bpl	not_done
+
+	rts
+not_done:
 
 slide_loop:
-	jsr	xdraw
+	jsr	xdraw			; draw
 
-	lda	#100
+	lda	#100			; wait a bit
 	jsr	WAIT
-	jsr	xdraw
 
-	dec	XPOS
+	jsr	xdraw			; erase
+
+	dec	XPOS			; move left
 	dec	XPOS
 
-	lda	XPOS
+	lda	XPOS			; rotate
 	lsr
 	and	#$f
 	tax
 	lda	rotate_pattern,X
 	sta	ROTATE
 
-	lda	XPOS
+	lda	XPOS			; see if hit end
 ends_smc:
 	cmp	#65
 	bcs	slide_loop
 
-	jsr	xdraw
+	jsr	xdraw			; one last draw so remains onscreen
 
-	inc	WHICH
-	lda	WHICH
-	tax
-	lda	deater_ends,X
-	sta	ends_smc+1
-;	lda	deater_offsets,X
-;	lda	ma2e_offsets,X
-	lda	desire_offsets,X
-	sta	xdraw_offset_smc+1
-	bpl	outer_slide_loop
+	inc	WHICH			; move to next letter
 
-	rts
+	; FIXME: bpl	bra, WHICH always positive
+	jmp	outer_slide_loop	; loop
+
+;	rts				; done
 
 
 
@@ -217,8 +258,13 @@ desire_offsets:
 	.byte $FF	; end
 
 deater_ends:
+	; center of screen is 140, offset by 12?
+	; want multiple of 24?
+	.byte	80,104,128,152,176,200
+
+ma2e_ends:
 	; center of screen is 140, offset by 12.5?
-	.byte	77,102,127,152,177,202
+	.byte	 104,128,152,176
 
 
 .align $100
@@ -233,7 +279,8 @@ shape_table_m:	.byte	$24,$37,$36,$4e, $24,$24,$07,$00	; 39
 shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
 shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
 shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
-shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	; 67
-shape_table_b:	.byte	$18,$30,$36,$35, $28,$24,$04,$00	; 75
-shape_table_line:	.byte	$12,$24,$24,$00			; 83
+shape_table_line:	.byte	$12,$24,$24,$00			; 67
+
+;shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	;
+;shape_table_v:	.byte	$18,$30,$36,$35, $28,$24,$04,$00	;
 
