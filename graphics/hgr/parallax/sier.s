@@ -52,12 +52,13 @@ parallax:
         ; int tables
 
         ldx     #191
-init_loop:
+hgr_table_loop:
         txa
-        pha
-        jsr     HPOSN
-        pla
-        tax
+;        pha
+        jsr     HPOSN			; X= (y,x) Y=(a), saves values
+ ;       pla
+  ;      tax
+	ldx	HGR_X
         lda     GBASL
         sta     hgr_lookup_l,X
         lda     GBASH
@@ -67,7 +68,7 @@ init_loop:
 
         dex
         cpx     #$ff
-        bne     init_loop
+        bne     hgr_table_loop
 
 	ldx	#39
 div4_loop:

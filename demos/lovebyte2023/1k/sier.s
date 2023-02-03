@@ -9,48 +9,20 @@
 ; full 192 lines
 ;	frame 0: 3bf5f	= 245,599 cycles  = roughly 4 fps
 
-
-.if 0
-; Zero Page
-GBASL           = $26
-GBASH           = $27
-
-HGR_X           = $E0
-HGR_Y           = $E2
-HGR_COLOR       = $E4
-HGR_HORIZ       = $E5
-HGR_PAGE        = $E6
-
-; Soft Switches
-
-PAGE1   = $C054 ; Page1
-PAGE2   = $C055 ; Page2
-
-
-; ROM routines
-
-HGR     = $F3E2
-HGR2    = $F3D8
-HCLR    = $F3F2
-HPLOT0  = $F457		; plot at (Y,X), (A)
-WAIT    = $FCA8		; delay 1/2(26+27A+5A^2) us
-HPOSN	= $F411		; (Y,X),(A)  (valued stores in HGRX,XH,Y)
-
-.endif
-
-hgr_lookup_h    =       $1000
-hgr_lookup_l    =       $1100
-div4_lookup	=	$90
-
-
+;hgr_lookup_h    =       $1000
+;hgr_lookup_l    =       $1100
+;div4_lookup	=	$90
 
 sier_parallax:
 
+.if 0
 	;===================
 	; init screen
 
-	jsr	HGR			; clear PAGE1
-	jsr	HGR2			; clear PAGE2
+; already done for us
+
+;	jsr	HGR			; clear PAGE1
+;	jsr	HGR2			; clear PAGE2
 
 	;===================
         ; int tables
@@ -82,6 +54,7 @@ div4_loop:
 	dex
 	bpl	div4_loop
 
+.endif
 
 parallax_forever:
 
@@ -177,6 +150,9 @@ out_smc:
 	cpy	#32							; 2
 	bne	yloop							; 2/3
 
+	; stop after 512 frames
+
 	lda	FRAMEH
 	cmp	#2
+
 	bne	parallax_forever		; bra			; 3

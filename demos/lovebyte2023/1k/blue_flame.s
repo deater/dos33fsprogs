@@ -8,17 +8,10 @@
 ;  914 bytes -- fallthrough into the flames code
 ;  887 bytes -- BF using compact zx02 code, inlined
 ; 1007 bytes -- merge in sier_parallax
+; 1006 bytes -- mildly optimzie hgr table gen
+; 1046 bytes (+26) -- add static_column
 
 ; TODO:
-;       line border?
-;       DEMO OVER message, zooming from angle?
-
-;	hgr/parallax/BOXES (68) ???
-
-;	COOL_PATTERN? (140)
-;	WEB?  (140)
-
-;	SIER/SIERFAST (140)
 ;	MIRROR (140)
 ;	THICK_LINES (88)
 ;	RAINBOW SQUARES (106)
@@ -29,6 +22,11 @@
 
 .include "zp.inc"
 .include "hardware.inc"
+
+
+hgr_lookup_h    =       $1000
+hgr_lookup_l    =       $1100
+div4_lookup	=	$90
 
 
 blue_flame:
@@ -42,6 +40,44 @@ blue_flame:
 	sty	FRAME			; init frame.  Maybe only H important?
 	sty	FRAMEH
 
+	;===================
+        ; int tables
+
+	; Y must be 0? actually might not matter
+
+	;====================================
+	; Make HGR row address lookup table
+
+	ldx	#191
+hgr_table_loop:
+	txa
+	jsr	HPOSN			; X= (y,x) Y=(a), saves incoming values
+
+	ldx	HGR_X			; restore X
+
+	lda	GBASL
+	sta	hgr_lookup_l,X
+	lda	GBASH
+	and	#$1F				; 20 30    001X 40 50  010X
+	sta	hgr_lookup_h,X
+
+
+	dex
+	cpx	#$ff			; can't bpl/bmi as start > 128
+	bne	hgr_table_loop		; though if never use address 0 can we?
+
+	; lookup table of 0..40 but divided by 4
+	; in $90 to $C0 or so
+
+	ldx	#39
+div4_loop:
+	txa
+	asl
+	asl
+	sta	div4_lookup,X
+	dex
+	bpl	div4_loop
+
 
 	;===================
 	; music Player Setup
@@ -50,6 +86,10 @@ blue_flame:
 
 	; inline mockingboard_init
 
+	; Y must be 0
+
+	ldy	#0
+
 .include "mockingboard_init.s"
 
 .include "tracker_init.s"
@@ -57,6 +97,8 @@ blue_flame:
 	cli				; enable music
 
 	.include "sier.s"
+
+	.include "static_column.s"
 
 	jsr	do_letters
 
@@ -71,6 +113,7 @@ blue_flame:
 .include "flame.s"
 
 .include "letters.s"
+
 
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"

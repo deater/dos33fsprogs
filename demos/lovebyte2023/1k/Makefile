@@ -48,7 +48,7 @@ blue_flame.o:	blue_flame.s \
 	letters.s flame.s sier.s zp.inc \
 	ay3_write_regs.s interrupt_handler.s play_frame.s \
 	SmallLove2.s mockingboard_constants.s mockingboard_init.s \
-	tracker_init.s
+	tracker_init.s static_column.s
 	ca65 -o blue_flame.o blue_flame.s -l blue_flame.lst
 
 ####
