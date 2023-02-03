@@ -11,6 +11,9 @@ GBASH   = $27
 BASL    = $28
 BASH    = $29
 
+; our init routine zeros $60-$90 at start
+
+
 AY_REGS		= $70
 ;	through = $7D
 
@@ -39,12 +42,4 @@ ROTATE          =       $FD
 XPOS            =       $FE
 YPOS            =       $FF
 
-.if 0
-SAVE_Y		= $F7
-LETTER_X	= $F8
-LETTER_Y	= $F9
-COUNT		= $FA
-INL		= $FD
-INH		= $FE
-TEMP		= $FF
-.endif
+

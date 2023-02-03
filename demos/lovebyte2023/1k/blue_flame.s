@@ -1,6 +1,6 @@
 ; Apple II graphics/music in 1k
 
-; by deater (Vince Weaver) <vince@deater.net>
+; by deater (Vince Weaver) <vince@deater.net>	/ DsR
 
 ; Lovebyte 2023
 
@@ -10,15 +10,10 @@
 ; 1007 bytes -- merge in sier_parallax
 ; 1006 bytes -- mildly optimzie hgr table gen
 ; 1046 bytes (+26) -- add static_column
-
-; TODO:
-;	MIRROR (140)
-;	THICK_LINES (88)
-;	RAINBOW SQUARES (106)
-;	THICK (113) ***
-;	WIRES (91)
-;	STAGGERED (60)
-;	STATIC_COLUMN (44) ***
+; 1044 bytes (+24) -- optimize hgr table gen
+; 1040 bytes (+20) -- no need to init FRAME/FRAMEH
+; 1038 bytes (+18) -- re-arrange sound init so don't have to set Y to 0
+; 1035 bytes (+15) -- combine memory zeroing functions
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -37,8 +32,24 @@ blue_flame:
 
 	; A and Y are 0 now?
 
-	sty	FRAME			; init frame.  Maybe only H important?
-	sty	FRAMEH
+
+	;===================
+	; music Player Setup
+
+	; assume mockingboard in slot#4
+
+	; inline mockingboard_init
+
+	; Y must be 0
+
+
+
+.include "mockingboard_init.s"
+
+	; frame is in init area so need to init
+
+;	sty	FRAME			; init frame.  Maybe only H important?
+;	sty	FRAMEH
 
 	;===================
         ; int tables
@@ -63,8 +74,9 @@ hgr_table_loop:
 
 
 	dex
-	cpx	#$ff			; can't bpl/bmi as start > 128
+;	cpx	#$ff			; can't bpl/bmi as start > 128
 	bne	hgr_table_loop		; though if never use address 0 can we?
+
 
 	; lookup table of 0..40 but divided by 4
 	; in $90 to $C0 or so
@@ -75,22 +87,12 @@ div4_loop:
 	asl
 	asl
 	sta	div4_lookup,X
+
+	lda	#0		; also clear out $60 - $87 (sound init, etc)
+	sta	$60,X
+
 	dex
 	bpl	div4_loop
-
-
-	;===================
-	; music Player Setup
-
-	; assume mockingboard in slot#4
-
-	; inline mockingboard_init
-
-	; Y must be 0
-
-	ldy	#0
-
-.include "mockingboard_init.s"
 
 .include "tracker_init.s"
 
@@ -113,7 +115,6 @@ div4_loop:
 .include "flame.s"
 
 .include "letters.s"
-
 
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
