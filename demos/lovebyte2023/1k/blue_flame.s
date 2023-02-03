@@ -14,6 +14,7 @@
 ; 1040 bytes (+20) -- no need to init FRAME/FRAMEH
 ; 1038 bytes (+18) -- re-arrange sound init so don't have to set Y to 0
 ; 1035 bytes (+15) -- combine memory zeroing functions
+; 1033 bytes (+13) -- inline letters code
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -98,24 +99,28 @@ div4_loop:
 
 	cli				; enable music
 
+	;=====================================
+	; inline the parallax sierpinski code
+
 	.include "sier.s"
+
+	;====================================
+	; inline the "static column" code
 
 	.include "static_column.s"
 
-	jsr	do_letters
+	;====================================
+	; inline the letters code
 
+	.include "letters.s"
+
+	;====================================
 	; fallthrough into flames
 
-;	jsr	flames
-;
-;end:
-;	jmp	end
+	.include "flame.s"
 
 
-.include "flame.s"
-
-.include "letters.s"
-
+.include "letters_routines.s"
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
 
