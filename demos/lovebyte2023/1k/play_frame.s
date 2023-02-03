@@ -144,3 +144,6 @@ store_b:
 	; inc frame counter
 
 	inc	FRAME
+	bne	noframe_oflo
+	inc	FRAMEH
+noframe_oflo:

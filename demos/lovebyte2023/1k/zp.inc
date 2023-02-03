@@ -15,7 +15,7 @@ AY_REGS		= $70
 ;	through = $7D
 
 FRAME		= $80
-BAMP_COUNTDOWN	= $81
+FRAMEH		= $81
 WHICH_TRACK	= $82
 SONG_COUNTDOWN	= $83
 

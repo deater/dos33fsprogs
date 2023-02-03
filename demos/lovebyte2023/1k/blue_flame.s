@@ -4,14 +4,20 @@
 
 ; Lovebyte 2023
 
+;  920 bytes -- (compressed) have letters/flame/music more or less going
+;  914 bytes -- fallthrough into the flames code
+;  887 bytes -- BF using compact zx02 code, inlined
+; 1007 bytes -- merge in sier_parallax
 
 ; TODO:
 ;       line border?
 ;       DEMO OVER message, zooming from angle?
 
+;	hgr/parallax/BOXES (68) ???
+
 ;	COOL_PATTERN? (140)
 ;	WEB?  (140)
-;	BOXES (68) ???
+
 ;	SIER/SIERFAST (140)
 ;	MIRROR (140)
 ;	THICK_LINES (88)
@@ -33,6 +39,10 @@ blue_flame:
 
 	; A and Y are 0 now?
 
+	sty	FRAME			; init frame.  Maybe only H important?
+	sty	FRAMEH
+
+
 	;===================
 	; music Player Setup
 
@@ -44,23 +54,27 @@ blue_flame:
 
 .include "tracker_init.s"
 
-
-
 	cli				; enable music
+
+	.include "sier.s"
 
 	jsr	do_letters
 
-	jsr	flames
+	; fallthrough into flames
 
-end:
-	jmp	end
+;	jsr	flames
+;
+;end:
+;	jmp	end
+
 
 .include "flame.s"
+
 .include "letters.s"
+
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
 
 ; music
 .include	"SmallLove2.s"
-
 

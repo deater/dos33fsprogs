@@ -20,13 +20,17 @@ bitr            = ZP+6
 pntr            = ZP+7
 
             ; Initial values for offset, source, destination and bitr
-zx0_ini_block:
-            .byte $00, $00, <comp_data, >comp_data, <out_addr, >out_addr, $80
+
+out_addr = $8000
+
+;zx0_ini_block:
+;           .byte $00, $00, <comp_data, >comp_data, <out_addr, >out_addr, $80
+
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
 
-full_decomp:
+zx02_full_decomp:
               ; Get initialization block
               ldy #7
 
@@ -131,7 +135,7 @@ get_byte:
               inc   ZX0_src
               bne   plus3
               inc   ZX0_src+1
-exit:
+;exit:
 plus3:             rts
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -142,4 +146,4 @@ put_byte:
               inc   ZX0_dst+1
 plus4:             dex
               rts
-
+exit:

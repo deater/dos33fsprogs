@@ -9,19 +9,23 @@ do_letters:
 					; Hi-res graphics, no text at bottom
 					; Y=0, A=$60 after this call
 
-
-
 	;==============================
 	; print deater
 
-	lda	#28			;
+	lda	#28			; y position
 	sta	YPOS
 
-	lda	#<desire_ends+1
-	sta	type_smc+1
+;	lda	#$ff			; start on right hand side
+;	sta	start_smc+1		; default
 
-	lda	#<deater_offsets
-	sta	offsets_smc+1
+;	lda	#$fc			; movement size to add
+;	sta	add_smc+1		;
+
+;	lda	#<desire_ends+1		; default
+;	sta	type_smc+1
+
+;	lda	#<deater_offsets	; default
+;	sta	offsets_smc+1
 
 	jsr	slide_in
 
@@ -29,32 +33,24 @@ do_letters:
 	;==============================
 	; print maze
 
-	lda	#28
+	lda	#28			; start on left hand side
 	sta	start_smc+1
 
-	lda	#4
+	lda	#4			; movement size to add
 	sta	add_smc+1
 
-	lda	#128			;
+	lda	#128			; Y location
 	sta	YPOS
 
-	lda	#<ma2e_ends
+	lda	#<ma2e_ends		; point to the end table
 	sta	type_smc+1
 
-	lda	#<ma2e_offsets
+	lda	#<ma2e_offsets		; point to the shape offset
 	sta	offsets_smc+1
 
-	jsr	slide_in
+	jsr	slide_in		; slide it
 
-
-	; FIXME: tail call
-
-;	jsr	zoom_in
-
-
-
-;	rts
-
+;	jsr	zoom_in			; just fall through
 
 	;=========================
 	; zoom in
@@ -62,7 +58,7 @@ do_letters:
 
 zoom_in:
 
-	lda	#0
+	lda	#0			; reset rotate and pointer
 	sta	ROTATE
 	sta	WHICH
 
@@ -135,7 +131,7 @@ outer_slide_loop:
 
 start_smc:
 	lda	#252			; start position
-	sta	XPOS			; 255 instead of 279 for size reasons
+	sta	XPOS			; 252 instead of 279 for size reasons
 
 	lda	WHICH
 	tax
@@ -162,7 +158,7 @@ add_smc:
 	adc	#$FC
 	sta	XPOS
 
-	lsr
+	lsr				; derive rotation from location
 	lsr
 	and	#$f
 	tax
@@ -223,6 +219,41 @@ flip_page:
 	rts
 .endif
 
+.if 0
+
+	; border pattern
+
+	lda	#4
+	sta	HGR_SCALE
+	lda	#67
+	sta	xdraw_offset_smc+1
+	lda	#8
+	sta	ROTATE
+	lda	#128
+	sta	YPOS
+loop:
+	lda	#8
+	sta	ROTATE
+	lsr
+	sta	XPOS
+	jsr	xdraw
+
+	lda	#$fc
+	sta	ROTATE
+	lda	#255
+	sta	XPOS
+	jsr	xdraw
+
+	dec	YPOS
+	dec	YPOS
+	dec	YPOS
+	dec	YPOS
+
+	bne	loop
+
+.endif
+
+
 ;	ldy	#3		; 2
 ;init_loop:
 ;	tya			; 1
@@ -231,6 +262,8 @@ flip_page:
 ;	sta	rotate_pattern,Y; 3
 ;	dey			; 1
 ;	bne	init_loop	; 2
+
+.align $100
 
 rotate_pattern:
 	; offset by 3 to give original effect
@@ -274,7 +307,7 @@ ma2e_ends:
 	.byte	 188,156,124,92
 
 
-.align $100
+
 shape_table:
 
 shape_table_d:	.byte	$23,$2c,$2e,$36, $37,$27,$04,$00	; 0
