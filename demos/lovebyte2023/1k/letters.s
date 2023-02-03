@@ -39,7 +39,7 @@ outer_zoom_loop:
 	lda	deater_ends,X
 	sta	XPOS
 
-	lda	#100
+	lda	#76		; 96 would be centered, but looks better higher?
 	sta	YPOS
 
 inner_zoom_loop:
@@ -217,7 +217,8 @@ desire_offsets:
 	.byte $FF	; end
 
 deater_ends:
-	.byte	65,90,115,140,165,190
+	; center of screen is 140, offset by 12.5?
+	.byte	77,102,127,152,177,202
 
 
 .align $100
