@@ -83,6 +83,7 @@ outer_zoom_loop:
 	lda	#76			; Y position
 	sta	YPOS
 
+
 inner_zoom_loop:
 
 	jsr	draw_wait_erase
@@ -102,6 +103,4 @@ inner_zoom_loop:
 	bpl	outer_zoom_loop		; bra
 
 done2:
-;	rts
-;
-;.include "letters_routines.s"
+

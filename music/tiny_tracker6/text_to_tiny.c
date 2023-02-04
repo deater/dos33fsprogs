@@ -154,7 +154,7 @@ static int get_note(char *string, int sp, struct note_type *n, int line) {
 
 		freq=note_to_ed(n->note,n->flat,n->sharp,
 					n->octave);
-
+		if (freq<0) fprintf(stderr,"Bad note line %d\n",line);
 		n->enabled=1;
 		n->length=0;
 		n->ed_freq=freq;
@@ -519,6 +519,8 @@ printf("\n");
 	printf("\n");
 
 	/* put these first as we use the high bit to end things? */
+
+	/* FIXME: sort these, helps with compression */
 	printf("frequencies_low:\n");
 	printf(".byte ");
 	for(n=0;n<notes_allocated;n++) {

@@ -29,7 +29,7 @@ track_smc:
 	ldy	WHICH_TRACK			; get current track in Y
 	iny					; increment track
 
-	cpy	#6				; see if off end
+	cpy	#5				; see if off end
 	bne	no_wrap
 	ldy	#2				; loop to track 1
 no_wrap:
@@ -37,16 +37,6 @@ no_wrap:
 
 	lda	tracks_l,Y			; self-modify track
 	sta	track_smc+1
-;	lda	tracks_h,Y			; enforce in same page
-;	sta	track_smc+2
-
-;	lda	bamps_l,Y			; self modify B-amplitude
-;	sta	bamp_smc+1
-;	lda	bamps_h,Y			; enforce in same page
-;	sta	bamp_smc+2
-
-;	lda	#0				; reset song offset
-;	sta	SONG_OFFSET
 
 	jmp	set_notes_loop	; bra		; try again in new track
 
@@ -96,7 +86,7 @@ done_update_song:
 
 
 	;=================================
-	; coundown song
+	; countdown song
 
 	dec	SONG_COUNTDOWN		; if length was 0, means there
 					; was another note starting at same

@@ -19,7 +19,6 @@ flames:
 	ldx	#39
 	lda	#$f
 white_line_loop:
-;	sta	$5FD0,X
 	sta	$3FD0,X
 	dex
 	bpl	white_line_loop

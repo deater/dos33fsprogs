@@ -17,6 +17,10 @@
 ; 1033 bytes (+13) -- inline letters code
 ; 1029 bytes (+9)  -- remove unecessary initialization in column code
 ; 1025 bytes (+5)  -- optimize page flip
+; 1022 bytes (+2)  -- optimize music, merge two tracks
+; 1019 bytes	-- optimize music
+;	note we could save another 3 bytes by sorting frequencies
+;	but that would have been a huge pain
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -79,6 +83,8 @@ hgr_table_loop:
 	dex
 ;	cpx	#$ff			; can't bpl/bmi as start > 128
 	bne	hgr_table_loop		; though if never use address 0 can we?
+
+
 
 
 	; lookup table of 0..40 but divided by 4
