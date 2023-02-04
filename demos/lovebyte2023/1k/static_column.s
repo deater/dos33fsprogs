@@ -1,11 +1,5 @@
 	; shimmery blue pattern
 
-INDEXL          = $F6
-INDEXH          = $F7
-
-;HGR2            = $F3D8         ; set hires page2 and clear $4000-$5fff
-;WAIT            = $FCA8         ; delay 1/2(26+27A+5A^2) us
-
 
 even_lookup=$f000
 odd_lookup=$f100
@@ -16,13 +10,13 @@ staggered:
 
 ;	tax					; init X to 0
 
-	ldx	#0
-	stx	INDEXL				; set INDEXL to 0
+; set earlier
+;	ldx	#0
+;	stx	INDEXL				; set INDEXL to 0
 
 	; pulse loop horizontal
 outer_loop:
-;	lda	#$40				; reset INDEXH to begin page2
-	lda	#$20				; reset INDEXH to begin page2
+	lda	#$20				; reset INDEXH to begin page1
 	sta	INDEXH
 
 inner_loop:
@@ -44,18 +38,20 @@ inner_loop:
 	and	#$7
 	tax
 
-;	lda	#$60				; see if done
 	lda	#$40				; see if done
 	cmp	INDEXH
 	bne	inner_loop
 
-;	lda	#100				; A is $60 here
+;	lda	#100				; A is $40 here
 	jsr	WAIT				; pause a bit
 
 	; A is 0 here
 
 	inx					; offset next FRAME
 
+	; if FRAMEH is 4 then done
+
 	lda	FRAMEH
 	cmp	#4
+
 	bne	outer_loop

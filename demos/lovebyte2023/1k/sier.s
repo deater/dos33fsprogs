@@ -15,46 +15,7 @@
 
 sier_parallax:
 
-.if 0
-	;===================
-	; init screen
-
-; already done for us
-
-;	jsr	HGR			; clear PAGE1
-;	jsr	HGR2			; clear PAGE2
-
-	;===================
-        ; int tables
-
-        ldx     #191
-sinit_loop:
-        txa
-        pha
-        jsr     HPOSN
-        pla
-        tax
-        lda     GBASL
-        sta     hgr_lookup_l,X
-        lda     GBASH
-	and	#$1F				; 20 30    001X 40 50  010X
-        sta     hgr_lookup_h,X
-
-
-        dex
-        cpx     #$ff
-        bne     sinit_loop
-
-	ldx	#39
-div4_loop:
-	txa
-	asl
-	asl
-	sta	div4_lookup,X
-	dex
-	bpl	div4_loop
-
-.endif
+	; table init moved to main routine
 
 parallax_forever:
 
@@ -71,10 +32,18 @@ parallax_forever:
 	eor	#$60                    ; flip draw_page
 	sta	HGR_PAGE
 
+	;              asl  asl       rol      eor
+	; want: $40 -> $80  C=1 $00  c=0  $01   $00 (page1)
+	;       $20 -> $40  C=0 $80  c=1, $00   $01 (page2)
+
+	; what if      asl     asl    asl   rol
+	;	$40 -> $80 -> $00 -> $00 -> $00
+	;	$20 -> $40 -> $80 -> C=1  -> $01
+	asl
 	asl
 	asl
 	rol
-	eor	#$1
+
 	tax
 	lda     PAGE1,X			; flip show_page
 

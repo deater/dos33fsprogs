@@ -91,24 +91,6 @@ xdraw_offset_smc:
 
 	jmp	XDRAW0			; tail call
 
-.if 0
-	;=======================
-	; flip page
-	;=======================
-
-flip_page:
-	lda	HGR_PAGE
-	eor	#$60
-	sta	HGR_PAGE
-
-	clc
-	rol
-	rol
-	tax
-	lda	PAGE1,X
-
-	rts
-.endif
 
 .if 0
 
@@ -156,11 +138,6 @@ loop:
 
 .align $100
 
-rotate_pattern:
-	; offset by 3 to give original effect
-;	.byte 0,3,6
-	.byte 9, 9,6,3,0, 0,$FD,$FA,$F7, $F7,$FA,$FD, 0
-	.byte 0,3,6
 
 deater_offsets:
 	.byte 0		; D
@@ -170,6 +147,7 @@ deater_offsets:
 	.byte 8		; E
 	.byte 30	; R
 	.byte $FF	; end
+
 
 ma2e_offsets:
 	.byte 8		; E
@@ -197,6 +175,11 @@ desire_ends:
 ma2e_ends:
 	.byte	 188,156,124,92
 
+rotate_pattern:
+	; offset by 3 to give original effect
+;	.byte 0,3,6
+	.byte 9, 9,6,3,0, 0,$FD,$FA,$F7, $F7,$FA,$FD, 0
+	.byte 0,3,6
 
 
 shape_table:
@@ -211,6 +194,9 @@ shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
 shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
 shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
 shape_table_hline:	.byte	$2b,$05,$00			; 67
+
+
+
 
 ;shape_table_vline:	.byte	$12,$24,$24,$00			; 67
 ;shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	;

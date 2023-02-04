@@ -15,6 +15,8 @@
 ; 1038 bytes (+18) -- re-arrange sound init so don't have to set Y to 0
 ; 1035 bytes (+15) -- combine memory zeroing functions
 ; 1033 bytes (+13) -- inline letters code
+; 1029 bytes (+9)  -- remove unecessary initialization in column code
+; 1025 bytes (+5)  -- optimize page flip
 
 .include "zp.inc"
 .include "hardware.inc"
