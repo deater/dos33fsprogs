@@ -14,7 +14,7 @@ all:	blue_flame.dsk
 blue_flame.dsk:	HELLO BLUE_FLAME BF
 	cp $(EMPTYDISK) blue_flame.dsk
 	$(DOS33) -y blue_flame.dsk SAVE A HELLO
-	$(DOS33) -y blue_flame.dsk BSAVE -a 0x8000 BLUE_FLAME
+#	$(DOS33) -y blue_flame.dsk BSAVE -a 0x8000 BLUE_FLAME
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BF
 
 ###
@@ -35,8 +35,8 @@ blue_flame.zip:	BLUE_FLAME blue_flame.dsk
 	cp *.inc ./lovebyte2023_blue_flame/src
 	cp file_id.diz ./lovebyte2023_blue_flame
 	cp blue_flame.dsk ./lovebyte2023_blue_flame
-	cp blue_flame.mkv ./lovebyte2023_blue_flame
-	cp a2_desire_screen.png ./lovebyte2023_blue_flame
+	cp blue_flame.mp4 ./lovebyte2023_blue_flame
+	cp blue_flame_screen.png ./lovebyte2023_blue_flame
 	zip -r blue_flame.zip lovebyte2023_blue_flame
 
 ####

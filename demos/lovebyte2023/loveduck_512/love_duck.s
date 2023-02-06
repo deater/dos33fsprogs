@@ -223,6 +223,7 @@ its_transparent:
 ;   @@@   ;
 ;    @    ;
 
+heart_bitmap:
 bitmap:
 	.byte $46
 	.byte $EF
@@ -232,6 +233,48 @@ bitmap:
 	.byte $3e
 	.byte $1c
 	.byte $08
+
+
+;012|456|
+; @@@@    ;
+;@@@@@@   ;
+;@@ @@@   ;
+;@@@@@@   ;
+;@@@@@@   ;
+;@@@@@@@@ ;
+;  @@@@@@ ;
+;  @@@@@@ ;
+
+duck_bitmap_left:
+	.byte $78
+	.byte $FC
+	.byte $DC
+	.byte $FC
+	.byte $FC
+	.byte $FF
+	.byte $3F
+	.byte $3F
+
+;012|456|
+;         ;
+;         ;
+;    @@   ;
+;      @@ ;
+;      @@ ;
+;    @@   ;
+;         ;
+;         ;
+duck_bitmap_left_beak:
+	.byte $00
+	.byte $00
+	.byte $0c
+	.byte $03
+	.byte $03
+	.byte $0c
+	.byte $00
+	.byte $00
+
+
 
 bounce:
 	.byte 10,11,12,13,13,12,11,10
