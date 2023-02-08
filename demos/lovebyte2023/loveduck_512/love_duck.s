@@ -6,6 +6,7 @@
 ; Lovebyte 2023
 
 
+; soft switches
 SPEAKER		= $C030
 SET_GR		= $C050
 SET_TEXT	= $C051
@@ -15,23 +16,50 @@ PAGE2		= $C055
 LORES		= $C056		; Enable LORES graphics
 
 HGR2		= $F3D8
+HGR		= $F3E2
+HPOSN		= $F411		; (Y,X),(A)  (valued stores in HGRX,XH,Y)
+XDRAW0		= $F65D
 PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
+PLOT1		= $F80E         ; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 GBASCALC	= $F847		; Y in A, put addr in GBASL/GBASH (what is C?)
+SETCOL		= $F864		; COLOR=A
 SETGR		= $FB40
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
+
 GBASL		= $26
 GBASH		= $27
+MASK		= $2E
+COLOR		= $30
+
+
+hgr_lookup_h    =       $40             ; $40-$70
+hgr_lookup_l    =       $70             ; $70-$A0
 
 YPOS		= $56
 XPOS		= $57
 PO		= $58
-FRAME		= $5D
-;PAGE		= $5E
+
+HGR_X           = $E0
+HGR_Y           = $E2
+HGR_COLOR       = $E4
+HGR_HORIZ       = $E5
+HGR_PAGE        = $E6
+HGR_SCALE       = $E7
+
+ROTATION	= $FA
+FRAME		= $FB
+FRAMEH		= $FC
+YY              = $FD
+BB              = $FE
+XX              = $FF
 
 
 
-stars:
+love_duck:
+	jsr	dsr_rotate
+
+
 	bit	SET_GR		; switch to lo-res mode
 	bit	FULLGR		; set full screen
 
@@ -280,3 +308,6 @@ bounce:
 	.byte 10,11,12,13,13,12,11,10
 
 
+.include "speaker_beeps.s"
+
+.include "dsr_lores.s"

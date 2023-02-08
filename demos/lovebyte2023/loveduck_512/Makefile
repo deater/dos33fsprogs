@@ -43,7 +43,7 @@ love_duck.zip:	LOVE_DUCK love_duck.dsk
 LOVE_DUCK:	love_duck.o
 	ld65 -o LOVE_DUCK love_duck.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
-love_duck.o:	love_duck.s
+love_duck.o:	love_duck.s speaker_beeps.s dsr_lores.s
 	ca65 -o love_duck.o love_duck.s -l love_duck.lst
 
 
