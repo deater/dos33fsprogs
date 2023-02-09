@@ -7,7 +7,7 @@
 
 ld_start:
 
-	.byte   2               ; number of sectors to load
+	.byte  	2               ; number of sectors to load
 	lda     $C088,X         ; turn off drive motor
 
 	ldy	#0

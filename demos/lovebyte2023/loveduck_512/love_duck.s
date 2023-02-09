@@ -47,6 +47,7 @@ HGR_SCALE       = $E7
 
 YPOS		= $F0
 XPOS		= $F1
+DRAW_PAGE	= $F2
 ROTATION	= $FA
 FRAME		= $FB
 FRAMEH		= $FC
@@ -58,11 +59,13 @@ XX              = $FF
 
 love_duck:
 
-;	jsr	dsr_rotate
+.include "dsr_lores.s"
 
+;	bit	SET_GR		; switch to lo-res mode
+;	bit	FULLGR		; set full screen
 
-	bit	SET_GR		; switch to lo-res mode
-	bit	FULLGR		; set full screen
+;	inc	FRAME		; want frame #0
+				; maybe not necessary
 
 main_loop:
 
@@ -71,25 +74,52 @@ main_loop:
 	; flip page
 	;======================
 
-page_smc:
-	lda	#0			; 0 or 1
+	jsr	flip_page
 
-	tax
-	ldy	PAGE1,X			; flip page
+	;===============
+	; handle duck
+	;===============
 
-	eor	#$1			; invert (leaving in A)
+	lda	FRAME
+	and	#$7f
+	bne	check_beep
 
-	sta	page_smc+1	; save PAGE value (PAGE in A here)
+	ldx	#NOTE_D3
+	ldy	#50
+	jsr	speaker_xy
 
+	ldx	#NOTE_E3
+	ldy	#50
+	jsr	speaker_xy
 
-	asl		; make OUTH $4 or $8 depending on value in PAGE
-			; which we have in A above or at end of loop
-	asl		; (this also sets C to 0)
-	adc	#4
+	ldx	#10
+long_wait:
+	lda	#200
+	jsr	WAIT
+	dex
+	bne	long_wait
 
-	sta	GBASH
+;	beq	no_beep
 
-	inc	FRAME	; increment frame #
+	;===================
+	; handle click
+	;===================
+check_beep:
+	and	#$3
+	bne	no_beep
+	; every 4th cycle beep
+
+	ldx	#NOTE_C4
+	ldy	#10
+	jsr	speaker_xy
+
+	; Y zero here?
+no_beep:
+
+	;=====================
+	; handle color cycle
+	;=====================
+
 	lda	FRAME
 	and	#$1f	; cycle colors ever 32 frames
 	bne	no_color_cycle
@@ -98,24 +128,21 @@ page_smc:
 
 no_color_cycle:
 
-
-	lda	FRAME
-	and	#$3
-	bne	no_beep
-	; every 4th cycle beep
-
-	lda	#NOTE_C3
-	sta	speaker_frequency
-	lda	#10
-	sta	speaker_duration
-
-	jsr	speaker_tone
-	; Y zero here?
-no_beep:
 	lda	#100	; pause a bit
 	jsr	WAIT
 
 	sta	GBASL	; A is 0
+
+	; increment frame
+
+	inc	FRAME	; increment frame #
+	bne	frame_noflo
+	inc	FRAMEH
+frame_noflo:
+
+; 0000 -> 0100
+; 0100 -> 1000
+
 
 
 	;=================================
@@ -126,6 +153,11 @@ no_beep:
 	; assume GBASL/GBASH already points to proper $400 or $800
 
 	ldx	#4		; lores is 1k, so 4 pages
+	txa
+	clc
+	adc	DRAW_PAGE
+	sta	GBASH
+
 full_loop:
 	ldy	#$00		; clear whole page
 bg_smc:
@@ -167,11 +199,11 @@ draw_heart:
 	lda	bounce,X
 	sta	YPOS
 
-	lda	#<heart_bitmap
-	sta	sprite_smc+1
+	ldx	#<heart_bitmap
+;	stx	sprite_smc+1
 
-	lda	#$11		; red
-	sta	color_smc+1
+	ldy	#$11		; red
+;	sty	color_smc+1
 
 	jsr	draw_sprite
 
@@ -190,30 +222,28 @@ draw_heart:
 	;===============
 	; draw duck
 
+	lda	FRAME
+	and	#$7f
+	bne	no_duck
+
 	lda	#32
 	sta	XPOS
 	lda	#1
 	sta	YPOS
 
-	lda	#$44		; green
-	sta	color_smc+1
-
-	lda	#<duck_bitmap_left
-	sta	sprite_smc+1
-
+	ldx	#<duck_bitmap_left
+	ldy	#$44		; green
 	jsr	draw_sprite
 
 	lda	#24
 	sta	XPOS
 
-	lda	#$99		; orange
-	sta	color_smc+1
-
-	lda	#<duck_bitmap_left_beak
-	sta	sprite_smc+1
-
+	ldx	#<duck_bitmap_left_beak
+	ldy	#$99		; orange
 	jsr	draw_sprite
 
+
+no_duck:
 
 	jmp	main_loop
 ;	bmi	main_loop		; bra
@@ -224,8 +254,11 @@ draw_heart:
 	;===========================
 	; draw_sprite
 	;===========================
+	; x is low byte of bitmap
+	; y is color
 draw_sprite:
-
+	stx	sprite_smc+1
+	sty	color_smc+1
 
 	ldx	#7		; draw 7 lines
 boxloop:
@@ -243,10 +276,8 @@ boxloop:
 
 	; adjust for proper page
 
-	lda	page_smc+1	; want to add 0 or 4 (not 0 or 1)
-	asl
-	asl			; this sets C to 0
-	adc	GBASH
+	lda	GBASH		 ;carry still set from above
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	;=================
@@ -264,7 +295,7 @@ draw_line_loop:
 	bcc	its_transparent
 
 color_smc:
-	lda	#$11		; red
+	lda	#$11		; redg
 	sta	(GBASL),Y	; draw on screen
 its_transparent:
 
@@ -279,36 +310,6 @@ its_transparent:
 	rts
 
 
-
-
-
-
-
-
-
-;=================
-; star bitmap
-;=================
-
-;012|456|
-;   @     ;
-;   @@    ;
-;   @@@@@ ;
-;@@@@@@@  ;
-; @@@@@   ;
-;  @@@@@  ;
-; @@  @@  ;
-;@@    @@ ;
-
-;bitmap:
-;	.byte $10
-;	.byte $18
-;	.byte $1f
-;	.byte $fe
-;	.byte $7c
-;	.byte $3e
-;	.byte $66
-;	.byte $C3
 
 ;012|456|
 ; @   @@  ;
@@ -379,4 +380,4 @@ bounce:
 
 .include "speaker_beeps.s"
 
-.include "dsr_lores.s"
+.include "dsr_extra.s"

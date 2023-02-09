@@ -13,8 +13,8 @@ dsr_rotate:
 	jsr	HGR			; clear PAGE1
 					; A,Y are 0?
 
-	sta	FRAME
-	sta	FRAMEH
+;	sta	FRAME
+;	sta	FRAMEH
 
 	bit	FULLGR			; full screen
 
@@ -54,12 +54,11 @@ init_gr_loop:
 	sta     gr_lookup_l,X
 	lda	GBASH
 	sta	gr_lookup_h,X
+	lda	#0
+	sta	$F0,X		; clear vars to 0
+
 	dex
 	bpl	init_gr_loop
-
-
-
-
 
 
 big_loop:
@@ -108,9 +107,9 @@ lsier_outer:
 	sta	GBASL
 
 	lda	gr_lookup_h,X
+
 	clc
-draw_page_smc:
-	adc	#$0
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	lda	YY
@@ -181,18 +180,7 @@ done_line:
 
 end:
 
-	;=================
-	; page flip
-
-	ldx	#0
-	lda     draw_page_smc+1 ; DRAW_PAGE
-        beq     done_page
-        inx
-done_page:
-        ldy     PAGE1,X         ; set display page to PAGE1 or PAGE2
-
-        eor     #$4             ; flip draw page between $400/$800
-        sta     draw_page_smc+1 ; DRAW_PAGE
+	jsr	flip_page
 
 
 
@@ -221,10 +209,6 @@ done_page:
 	jmp	big_loop
 
 done_this:
-	rts
 
-shape_dsr:
-.byte   $2d,$36,$ff,$3f
-.byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
-.byte   $91,$3f,$36,$00
+end_it:
 

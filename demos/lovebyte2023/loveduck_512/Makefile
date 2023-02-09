@@ -7,7 +7,7 @@ PICTUREDSK = ~/research/picturedsk.git/picturedsk
 LINKER_SCRIPTS = ../../../linker_scripts/
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
-all:	love_duck.dsk love_duck.woz love_duck_raw.dsk
+all:	love_duck.dsk love_duck.woz
 
 ###
 
@@ -71,7 +71,7 @@ love_duck.zip:	LOVE_DUCK love_duck.dsk
 LOVE_DUCK:	love_duck.o
 	ld65 -o LOVE_DUCK love_duck.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
-love_duck.o:	love_duck.s speaker_beeps.s dsr_lores.s
+love_duck.o:	love_duck.s speaker_beeps.s dsr_lores.s dsr_extra.s
 	ca65 -o love_duck.o love_duck.s -l love_duck.lst
 
 

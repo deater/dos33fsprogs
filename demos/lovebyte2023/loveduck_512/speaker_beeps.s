@@ -44,20 +44,29 @@ NOTE_ASHARP5	=	36
 NOTE_B5		=	34
 
 
+; need 20
+
+speaker_xy:
+	stx	speaker_frequency
+	sty	speaker_duration
+
 
 speaker_tone:
 	lda	$C030		; click speaker
+
 speaker_loop:
 	dey			; y never set?
 	bne	slabel1		; duration roughly 256*?
 	dec	speaker_duration	; (Duration)
 	beq	done_tone
 slabel1:
-	dex
-	bne	speaker_loop
-	ldx	speaker_frequency	; (Frequency)
-	jmp	speaker_tone
+	dex							; 2
+	jsr	delay_12_cycles
+	bne	speaker_loop					; 2/3
+	ldx	speaker_frequency	; (Frequency)		; 4
+	jmp	speaker_tone					; 3
 done_tone:
+delay_12_cycles:
 	rts
 
 speaker_duration:
