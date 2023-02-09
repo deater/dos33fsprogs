@@ -57,7 +57,11 @@ XX              = $FF
 
 
 love_duck:
-	jsr	dsr_rotate
+
+;	.byte	2		; number of sectors to load
+;	lda	$C088,X		; turn off drive motor
+
+;	jsr	dsr_rotate
 
 
 	bit	SET_GR		; switch to lo-res mode
@@ -129,16 +133,16 @@ inner_loop:
 	; A=color
 
 	;====================
-	; draw the stars
+	; draw the hearts
 	;====================
 
 	lda	#32		; start from right to save a byte
 
-	;======================
-	; draw 8x8 bitmap star
-	;======================
+	;=======================
+	; draw 8x8 bitmap hearts
+	;=======================
 	; A is XPOS on entry
-draw_star:
+draw_heart:
 
 	; calculate YPOS
 	sta	XPOS
@@ -151,6 +155,65 @@ draw_star:
 	tax
 	lda	bounce,X
 	sta	YPOS
+
+	lda	#<heart_bitmap
+	sta	sprite_smc+1
+
+	lda	#$11		; red
+	sta	color_smc+1
+
+	jsr	draw_sprite
+
+
+	lda	XPOS		; move to next position
+				; going right to left saves 2 bytes for cmp
+	sec
+	sbc	#16
+
+	; X is $FF here
+	; Y is $FF here
+	; A is -16 here
+
+	bpl	draw_heart
+
+	;===============
+	; draw duck
+
+	lda	#32
+	sta	XPOS
+	lda	#1
+	sta	YPOS
+
+	lda	#$44		; green
+	sta	color_smc+1
+
+	lda	#<duck_bitmap_left
+	sta	sprite_smc+1
+
+	jsr	draw_sprite
+
+	lda	#24
+	sta	XPOS
+
+	lda	#$99		; orange
+	sta	color_smc+1
+
+	lda	#<duck_bitmap_left_beak
+	sta	sprite_smc+1
+
+	jsr	draw_sprite
+
+
+	jmp	main_loop
+;	bmi	main_loop		; bra
+
+
+
+
+	;===========================
+	; draw_sprite
+	;===========================
+draw_sprite:
 
 
 	ldx	#7		; draw 7 lines
@@ -180,6 +243,7 @@ boxloop:
 
 
 	ldy	#7		; 8-bits wide
+sprite_smc:
 	lda	bitmap,X	; get low bit of bitmap into carry
 draw_line_loop:
 	lsr
@@ -188,6 +252,7 @@ draw_line_loop:
 
 	bcc	its_transparent
 
+color_smc:
 	lda	#$11		; red
 	sta	(GBASL),Y	; draw on screen
 its_transparent:
@@ -200,17 +265,10 @@ its_transparent:
 	dex
 	bpl	boxloop
 
-	lda	XPOS		; move to next position
-				; going right to left saves 2 bytes for cmp
-	sec
-	sbc	#16
+	rts
 
-	; X is $FF here
-	; Y is $FF here
-	; A is -16 here
 
-	bpl	draw_star
-	bmi	main_loop
+
 
 
 

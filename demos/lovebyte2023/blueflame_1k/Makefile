@@ -27,15 +27,15 @@ HELLO:	hello.bas
 
 submit:	blue_flame.zip
 
-blue_flame.zip:	BLUE_FLAME blue_flame.dsk
+blue_flame.zip:	BF blue_flame.dsk
 	mkdir -p lovebyte2023_blue_flame
 	mkdir -p lovebyte2023_blue_flame/src
-	cp BLUE_FLAME ./lovebyte2023_blue_flame
+	cp BF ./lovebyte2023_blue_flame
 	cp *.s ./lovebyte2023_blue_flame/src
 	cp *.inc ./lovebyte2023_blue_flame/src
 	cp file_id.diz ./lovebyte2023_blue_flame
 	cp blue_flame.dsk ./lovebyte2023_blue_flame
-	cp blue_flame.mp4 ./lovebyte2023_blue_flame
+	cp blue_flame_720p.mp4 ./lovebyte2023_blue_flame
 	cp blue_flame_screen.png ./lovebyte2023_blue_flame
 	zip -r blue_flame.zip lovebyte2023_blue_flame
 

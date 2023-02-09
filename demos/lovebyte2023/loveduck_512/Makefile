@@ -7,17 +7,45 @@ PICTUREDSK = ~/research/picturedsk.git/picturedsk
 LINKER_SCRIPTS = ../../../linker_scripts/
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
-all:	love_duck.dsk
+all:	love_duck.dsk love_duck.woz love_duck_raw.dsk
 
 ###
 
-love_duck.dsk:	HELLO LOVE_DUCK
-	cp $(EMPTYDISK) love_duck.dsk
-	$(DOS33) -y love_duck.dsk SAVE A HELLO
-	$(DOS33) -y love_duck.dsk BSAVE -a 0xc00 LOVE_DUCK
+
+love_duck.dsk:	LD
+	# 0, 7, 14, 6, 13, 5, 12, 4, 11, 3, 10, 2, 9, 1, 8, 15
+	dd if=/dev/zero of=love_duck.dsk bs=256 count=560
+	dd conv=notrunc if=LD of=love_duck.dsk bs=256 count=1
+	dd conv=notrunc if=LD of=love_duck.dsk bs=256 count=1 seek=7 skip=1
 
 ###
 
+love_duck.woz:	LD
+	$(PICTUREDSK) ./flux_image/duck.bmp love_duck.woz LD
+
+
+
+###
+
+love_duck_raw.dsk:	HELLO LOVE_DUCK LD
+	cp $(EMPTYDISK) love_duck_raw.dsk
+	$(DOS33) -y love_duck_raw.dsk SAVE A HELLO
+	$(DOS33) -y love_duck_raw.dsk BSAVE -a 0x1000 LOVE_DUCK
+
+###
+
+LOVE_DUCK.ZX02:	LOVE_DUCK
+	$(ZX02) -f LOVE_DUCK LOVE_DUCK.ZX02
+
+LD:	ld.o
+	ld65 -o LD ld.o -C $(LINKER_SCRIPTS)/apple2_800.inc
+
+ld.o:	ld.s zx02_small.s LOVE_DUCK.ZX02
+	ca65 -o ld.o ld.s -l ld.lst
+
+
+
+###
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
@@ -41,7 +69,7 @@ love_duck.zip:	LOVE_DUCK love_duck.dsk
 ####
 
 LOVE_DUCK:	love_duck.o
-	ld65 -o LOVE_DUCK love_duck.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+	ld65 -o LOVE_DUCK love_duck.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
 love_duck.o:	love_duck.s speaker_beeps.s dsr_lores.s
 	ca65 -o love_duck.o love_duck.s -l love_duck.lst
