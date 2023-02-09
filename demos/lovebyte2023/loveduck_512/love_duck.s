@@ -140,6 +140,17 @@ no_color_cycle:
 	inc	FRAMEH
 frame_noflo:
 
+	lda	FRAMEH
+	cmp	#3
+	bne	keep_going
+
+	jmp	big_loop	; back to beginning
+keep_going:
+
+
+
+
+
 ; 0000 -> 0100
 ; 0100 -> 1000
 
@@ -245,9 +256,9 @@ draw_heart:
 
 no_duck:
 
-	jmp	main_loop
-;	bmi	main_loop		; bra
 
+
+	jmp	main_loop
 
 
 
@@ -295,7 +306,7 @@ draw_line_loop:
 	bcc	its_transparent
 
 color_smc:
-	lda	#$11		; redg
+	lda	#$11		; color to draw
 	sta	(GBASL),Y	; draw on screen
 its_transparent:
 
@@ -306,6 +317,22 @@ its_transparent:
 
 	dex
 	bpl	boxloop
+
+	rts
+
+
+	;=================
+	; page flip
+flip_page:
+	ldx	#0
+	lda	DRAW_PAGE
+	beq	done_page
+	inx
+done_page:
+	ldy	PAGE1,X		; set display page to PAGE1 or PAGE2
+
+	eor	#$4		; flip draw page between $400/$800
+	sta	DRAW_PAGE
 
 	rts
 
@@ -353,6 +380,12 @@ duck_bitmap_left:
 	.byte $3F
 	.byte $3F
 
+
+shape_dsr:
+.byte   $2d,$36,$ff,$3f
+.byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
+.byte   $91,$3f,$36;,$00
+
 ;012|456|
 ;         ;
 ;         ;
@@ -380,4 +413,9 @@ bounce:
 
 .include "speaker_beeps.s"
 
-.include "dsr_extra.s"
+
+
+
+
+
+

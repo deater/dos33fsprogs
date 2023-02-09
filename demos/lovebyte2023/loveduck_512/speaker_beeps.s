@@ -69,8 +69,13 @@ done_tone:
 delay_12_cycles:
 	rts
 
-speaker_duration:
-	.byte	$00
-speaker_frequency:
-	.byte	$00
+
+speaker_duration	=	6000
+speaker_frequency	=	6001
+
+
+;speaker_duration:
+;	.byte	$00
+;speaker_frequency:
+;	.byte	$00
 

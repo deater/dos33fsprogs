@@ -13,9 +13,6 @@ dsr_rotate:
 	jsr	HGR			; clear PAGE1
 					; A,Y are 0?
 
-;	sta	FRAME
-;	sta	FRAMEH
-
 	bit	FULLGR			; full screen
 
 	bit	LORES			; switch to Lo-res
