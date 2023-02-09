@@ -40,7 +40,7 @@ LOVE_DUCK.ZX02:	LOVE_DUCK
 LD:	ld.o
 	ld65 -o LD ld.o -C $(LINKER_SCRIPTS)/apple2_800.inc
 
-ld.o:	ld.s zx02_small.s LOVE_DUCK.ZX02
+ld.o:	ld.s LOVE_DUCK
 	ca65 -o ld.o ld.s -l ld.lst
 
 

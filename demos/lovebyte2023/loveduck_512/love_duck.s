@@ -1,4 +1,4 @@
-; bouncing hearts
+; love duck + bouncing hearts
 
 ; by Vince `deater` Weaver <vince@deater.net>
 ; -- dSr--
@@ -35,10 +35,8 @@ COLOR		= $30
 
 hgr_lookup_h    =       $40             ; $40-$70
 hgr_lookup_l    =       $70             ; $70-$A0
-
-YPOS		= $56
-XPOS		= $57
-PO		= $58
+gr_lookup_l	=	$A0		; $A0-$B8
+gr_lookup_h	=	$B8		; $B8-$C0
 
 HGR_X           = $E0
 HGR_Y           = $E2
@@ -47,6 +45,8 @@ HGR_HORIZ       = $E5
 HGR_PAGE        = $E6
 HGR_SCALE       = $E7
 
+YPOS		= $F0
+XPOS		= $F1
 ROTATION	= $FA
 FRAME		= $FB
 FRAMEH		= $FC
@@ -57,9 +57,6 @@ XX              = $FF
 
 
 love_duck:
-
-;	.byte	2		; number of sectors to load
-;	lda	$C088,X		; turn off drive motor
 
 ;	jsr	dsr_rotate
 
@@ -101,6 +98,20 @@ page_smc:
 
 no_color_cycle:
 
+
+	lda	FRAME
+	and	#$3
+	bne	no_beep
+	; every 4th cycle beep
+
+	lda	#NOTE_C3
+	sta	speaker_frequency
+	lda	#10
+	sta	speaker_duration
+
+	jsr	speaker_tone
+	; Y zero here?
+no_beep:
 	lda	#100	; pause a bit
 	jsr	WAIT
 

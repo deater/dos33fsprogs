@@ -2,6 +2,7 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; 510h
 
 
 dsr_rotate:
@@ -26,7 +27,7 @@ dsr_rotate:
 	stx	HGR_SCALE		; scale of drawings
 
 	;===================
-        ; int tables
+	; init hgr tables
 	;	lookup for HGR lines 0..47 stored in zero page
 
 	ldx	#47
@@ -40,6 +41,23 @@ init_loop:
 	sta	hgr_lookup_h,X
 	dex
 	bpl	init_loop
+
+	;===================
+	; init gr tables
+	;	lookup for GR lines 0..23 stored in zero page
+
+	ldx	#23
+init_gr_loop:
+        txa
+        jsr	GBASCALC
+	lda	GBASL
+	sta     gr_lookup_l,X
+	lda	GBASH
+	sta	gr_lookup_h,X
+	dex
+	bpl	init_gr_loop
+
+
 
 
 
@@ -86,10 +104,10 @@ lsier_outer:
 	lsr
 	tax
 
-	lda	gr_offsets_l,X
+	lda	gr_lookup_l,X
 	sta	GBASL
 
-	lda	gr_offsets_h,X
+	lda	gr_lookup_h,X
 	clc
 draw_page_smc:
 	adc	#$0
@@ -195,11 +213,8 @@ done_page:
 ;	inc	FRAMEH
 ;no_frame_oflo:
 
-;	lda	FRAMEH
-;	cmp	#2
 
 	lda	FRAME
-;	bpl	big_loop
 	cmp	#66
 
 	beq	done_this
@@ -213,4 +228,3 @@ shape_dsr:
 .byte   $24,$ad,$22,$24,$94,$21,$2c,$4d
 .byte   $91,$3f,$36,$00
 
-.include "gr_offsets.s"
