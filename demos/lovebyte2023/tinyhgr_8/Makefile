@@ -19,8 +19,10 @@ tiny_hgr8.zip:	TINY_HGR tiny_hgr.s file_id.diz tiny_hgr8.dsk
 	cp TINY_HGR ./lovebyte2023_tiny_hgr8
 	cp tiny_hgr.s ./lovebyte2023_tiny_hgr8
 	cp file_id.diz ./lovebyte2023_tiny_hgr8
+	cp monitor.txt ./lovebyte2023_tiny_hgr8
 	cp tiny_hgr8.dsk ./lovebyte2023_tiny_hgr8
 	cp tiny_hgr8_720p.mp4 ./lovebyte2023_tiny_hgr8
+	cp tiny_hgr8_screen.png ./lovebyte2023_tiny_hgr8
 	zip -r tiny_hgr8.zip lovebyte2023_tiny_hgr8
 
 ####

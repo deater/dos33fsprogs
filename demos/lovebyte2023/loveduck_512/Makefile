@@ -54,15 +54,15 @@ HELLO:	hello.bas
 
 submit:	love_duck.zip
 
-love_duck.zip:	LOVE_DUCK love_duck.dsk
+love_duck.zip:	LD love_duck.dsk
 	mkdir -p lovebyte2023_love_duck
 	mkdir -p lovebyte2023_love_duck/src
-	cp LOVE_DUCK ./lovebyte2023_love_duck
+	cp LD ./lovebyte2023_love_duck
 	cp *.s ./lovebyte2023_love_duck/src
-	cp *.inc ./lovebyte2023_love_duck/src
 	cp file_id.diz ./lovebyte2023_love_duck
 	cp love_duck.dsk ./lovebyte2023_love_duck
-	cp love_duck.mp4 ./lovebyte2023_love_duck
+	cp love_duck.woz ./lovebyte2023_love_duck
+	cp love_duck_720p.mp4 ./lovebyte2023_love_duck
 	cp love_duck_screen.png ./lovebyte2023_love_duck
 	zip -r love_duck.zip lovebyte2023_love_duck
 
