@@ -1,0 +1,16 @@
+This is just some more Apple II Xdraw (firmware vector drawing).
+
+In this case I wanted to draw short lines, the value for the
+shapetable was $04 $00.  I tried various ways to point to this
+value in a short manner, but even putting it at address $0101 (an
+easy pointer to load into X/Y/A) didn't help with the size.
+
+Eventually I found $0400 in ROM and point to that instead.
+
+I really liked the effect but despite all the effort was not able
+to get it down to the 16-byte category.  If you're lucky you can
+remove the HPOSN call to save 3 bytes, but that depends on random
+RAM contents at boot.
+
+So anyway, in agony after weeks I just kept it at 17 bytes and
+submitted it as a 32-byte demo.

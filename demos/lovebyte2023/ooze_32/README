@@ -1,0 +1,10 @@
+This effect was found when trying to do a fancy screen
+wipe for the "Peasant's Quest" game.
+
+It was surprisingly popular when posted to the Apple II
+Twitter Bot (RIP) so I modified it into a Lovebyte entry.
+
+It's essentially just reading "random" data from the Applesoft ROM
+and drawing it row by row to the screen which looks a bit
+like glitched vertical columns.
+

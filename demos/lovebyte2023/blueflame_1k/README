@@ -1,0 +1,34 @@
+BlueFlame, 1k Apple II Hi-res demo presented at Lovebyte 2023
+
+Code by Deater
+Music by MA2E
+ZX02 compression by DMSC
+
+1k entries are difficult as it's so much bitter than 256 bytes so you
+feel like you should be able to do a lot, but at the same time it's
+a lot more work for not much better production.
+
+The shape-table letter motions were the first idea and turned out well.
+It's convenient DEATER and DESIRE share so many letters.  Also thought
+maybe A DEMO or DEMO OVER could be printed but that ended up not being
+necessary.
+
+The "blue flame" is essentially my attempt at the Doom Fire for hi-res.
+It's actually doing the effect on PAGE2 and copying to PAGE1 each frame.
+
+The "static column" effect was a 32-byte effect I had come up with a while
+ago.
+
+The parallax-sierpinski at the beginning was an attempt to do some sort
+of hi-res parallax effect on the Apple II.  Scrolling hi-res is slow at
+the best of times so I was using sierpinski (and) and boxes (xor) to
+make things simpler, and even then the framerate isn't that great.
+
+The music is by MA2E and uses a simple 2-track music tracker I have.
+
+This was compressed with ZX02 compression.  The small ZX02 decompressor
+is around 130 bytes of code, but the music especially compressed more than
+this so it was a win.  It did make size-optimizing difficult as optimizing
+for compression is dificult.  Shaving bytes off the uncompressed code can
+actually make the compressed image bigger.
+
