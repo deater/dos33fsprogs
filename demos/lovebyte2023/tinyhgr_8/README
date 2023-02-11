@@ -1,131 +1,358 @@
-tiny_hgr8
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+               tiny_hgr8
+    an 8-byte hi-res Apple II demo
 
-8-byte hi-res Apple II demo by Deater / dSr
+             by Deater / dSr
 
-Lovebyte 2023
+              Lovebyte 2023
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-I really wanted a hi-res 8-byte demo but that is trickier than you can think.
+TLDR: I wrote an Apple II graphics
+      demo that's only 8 bytes of
+      6502 assembly language
 
-On Apple II/6502 to enable graphics you need three bytes, either
+      LINK
+
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+I really wanted to make a hi-res 8-byte
+demo but that is trickier than you
+might think.
+
+=== THE CHALLENGE ===
+
+The Apple II has a 6502 processor in it.
+
+To enable hi-res graphics you need three
+bytes, typically a jump to the HGR
+routine in the Applesoft BASIC ROM:
 	JSR	HGR
-which takes 3 bytes to jump to the ROM and enable graphics, clear the screen,
-and set which PAGE is being viewed.
 
-You can also try setting the graphics "soft switches" yourself, something like
-	BIT	$C050
-which is also 3-bytes, but to get hi-res you need to also set the hi-res
-switch so too many bytes.
+The HGR routine will flip the proper
+soft-switches to enable graphics mode,
+enable split graphics/text mode, select
+viewing the 8K of graphics info in PAGE1
+and then clear the screen to black.
+(The nearby HGR2 call is similar but
+makes the graphics full-screen and
+uses PAGE2 instead).
 
-Once you set hi-res mode, you still need to draw to graphics memory.
-The various ways of doing this like calling HPLOT need setup in A,X and Y
-as well as the HCOLOR value so this can take a lot of bytes.
-My 16-byte entries use the shapetable/XDRAW interface but even when x-or
-drawing you usually still have to call HPOSN to set up some zero-page values
-like GBASL/GBASH first, and you can't trust on them having good values
-at boot.  You can try drawing directly to screen memory at $2000 or $4000,
-but that usually takes 3 bytes too and if you want to draw on the full screen
-(which is 8k) you need to increment two bytes of addresses.  In theory it's
-a byte smaller if you have a pointer in the zero page, but unfortunately
-that doesn't happen by default.
+Once you set hi-res mode you still
+need to draw some graphics.  It is
+hard to do this compactly.  The most
+obvious way is the ROM HPLOT call,
+but this depends on the A, X, and Y
+registers holding the screen
+co-ordinates as well as the desired
+color being set up at a zero page
+location.
 
-So in theory to do hi-res it takes 3 bytes to init and at least 3 to draw,
-and then finally if you want a loop that takes 2 bytes.  So we're at
-8 bytes and no room for demo effects like actually changing the color.
-So what can we do?
+When I create 16 byte demos I often
+use the built-in ROM vector drawing
+shapetable/XDRAW functionality which
+avoids the need for color setting
+because it just XORs pixels.
+However you still usually need to
+call the HPOSN routine to set up
+the co-ordinate values in the zero
+page such as GBASL/GBASH.  The default
+values from uninitialized RAM at boot
+usually aren't useful.
 
-One trick I used for a previous 8-byte lo-res entry is abuse some code put into
-the zero page by the Applesoft ROM (so on any Apple II from the Apple II+
-onward, which is most of them).  This is the CHRGET code for stepping
-through BASIC programs, which is put in the zero page by the ROM on boot
-so the address being loaded can be self-modified.  Part of this routine
-does a 16-bit increment into the self modified region, followed by 7 bytes
-of code ending in a branch instruction.  So if we can drop our 8 bytes
-of code into this area here (starting roughly at $B1) we can get the benefits
-of the increment as well as the branch, and have a few more bytes to work with.
+You can try drawing directly to screen
+memory at addresses $2000 (PAGE1)
+or $4000 (PAGE2), but that takes
+3 bytes and if you want to draw to
+all 8K of the screen you need to
+have a way to increment a 16-bit
+pointer.  If we were lucky at boot
+there'd be an indirect pointer in
+the zero page with a good address
+for this, but alas there isn't.
 
-So for this code to work we use two calls into the ROM.  One to clear
-the screen to full-screen hi-res.
-	jsr	HGR2
-As said before this sets the graphics modes, in this case full-screen hi-res
-displaying PAGE2 ($4000).  It does a linear clear of the screen to 0 (black),
-but on the Apple II due to the weird way Woz designed the graphics memory
-map this gives a horizontal venetian-blind effect which looks pretty neat.
+So to summarize, to do hi-res graphics
+it takes 3 bytes to init, at least 3
+to draw a pixel, and then 2 bytes for
+a loop.  We're at 8-bytes already and
+we haven't even done anything useful
+like increment the pixel location or
+change the color.
 
-The other thing we call into is
-	jsr	BKGND0
-this is a semi-unofficial entry point into the HGR2 code, the portion
-that does the screen clear.  It will clear the screen with the bit-pattern
-in the accumulator.
+So is all hope lost?
 
-So for this demo we just clear the screen to a random bit pattern (which
-gives a variety of colors) and then immediate re-clear the screen to zero
-over and over again.
+=== THE CHRGET TRICK ===
 
-You might say, doesn't that only take 6-bytes of code?  Well we need to
-set a random value in the accumulator.  Here we load so we over-write
-the CHRGET address being loaded with some values.  By default it is $800,
-the default load address of BASIC programs.  If we can point this value
-to somewhere more interesting, like into ROM, it will treat the code
-there as random values.  The problem is when we load our demo these bytes
-will be the first things executed so we have to make sure they get executed
-harmlessly as no-ops.  An obvious choice that points to rom would be
-$EAEA, or two NOPs.  We'll see in a minute though there are some
-complications here.
+We can use a trick I found in a
+previous lo-res graphics entry
+shown at Lovebyte 2022.
 
-So if we drop a call to BKGND0 followed by a call to HGR2 and have it 
-followed up by the existing CHRGET BEQ instruction we have what we need,
-as HGR2 always exits with Y=0 and the Zero flag set.
-Try and run this though and the text screen will go weird and your program
-will crash into the monitor (unhelpfully with the machine in graphics
-mode so hard to tell what's going on).
+We can abuse some code put into the
+zero page by the Applesoft ROM at
+boot (this is available on any 
+Apple II from the Apple II+  onward,
+which is to say most of them).
 
-The problem here is BKGND0 assumes the first page of graphics you want
-to write to are in zero-page location HGR_PAGE $E6.  On bootup this is likely
-$00 or $FF, so the routine happily writes your color across the first 8
-pages of RAM which is where the zero-page, stack, and your code live.
-So not good.  So we need a way to skip BKGND0 the first time through
-the loop.
+The ROM uses this code when parsing
+BASIC programs, and it is apparently
+put into the zero page so the address
+being loaded can be self-modified.
 
-If we were entering the code from the keyboard it would be fine, we could
-just specify the start after the BKGND0 code.  However we'd like this able
-to be BRUN from disk.  So what can we do?
+The code looks like this:
 
-Well there's one way to sneakily skip code on 6502.  This is the famous
-BIT instruction.  If you put the first byte of a BIT instruction in your
-code, it will treat the next 2 bytes as a value to check bits on which
-is (usually) harmless.  So if we load our code into the middle of
-the 16-bit LDA instruction in CHRGET, start on a bit instruction, it will
-skip the next 2 bytes the first time through, but when the loop happens
-this bit instruction will be part of the load address to LDA and so
-no skipping happens the rest of the executions.  This is good, as the
-call to HGR2 does properly set $E6 to the graphics page we want and
-BKGDN0 will work properly after that.
+CHRGET:
+00B1- E6 B8      INC $B8
+00B3- D0 02      BNE $00B7
+00B5- E6 B9      INC $B9
+00B7- AD 05 02   LDA $0205
+00BA- C9 3A      CMP #$3A
+00BC- B0 0A      BCS $00C8
+00BE- C9 20      CMP #$20
+00C0- F0 EF      BEQ 00B1
 
-There is a problem though, the code the first time through eats the two
-next bytes, avoiding the JSR to BKGND0.  But it means the following
-two bytes, the $F4F3 ($F3, $F4 in little endian) bytes get executed as
-code.  Will that be a problem?  It turns out those are un-specified
-opcodes on both 6502 and 65c02 but on both chips those apparently
-are treated as NOP and so our code works.  With the BIT in place
-the "random" memory values are pulled initially from 
-$EA2C (where 2c is the bit, and EA can be arbitrary but why not use
-a NOP.  In theory we could alter the colors we get by moving things around).
+What the code originally does is not
+important, what is interesting is that
+it does a 16-bit increment of the
+address of the load accumulator
+instruction at $B7, and there's
+a convenient BEQ (branch if equal)
+back to the beginning of the routine
+at $C0.  If we drop our code in
+between these two chunks of code we
+can just barely do some interesting
+graphics.
 
-The two values at the beginning are incremented in a self-modified way
-by the earlier unchanged CHRGET code so we walk through ROM getting
-random color patterns in the accumulator, writing them to the screen,
-and quickly clearning back to black again in a venetian-blind
-pattern.  It actually looks lovely, much nicer than some 16-byte
-demos I've done.
+=== THE PLAN ===
 
-You can try things out on your own Apple II with
-the following commands from the BASIC prompt
+The first thing we need to do is get
+into hi-res graphics mode.  As
+discussed earlier doing a 3-byte
+      jsr    HGR2
+will do this.  It uses soft-switches
+to enable graphics, switch to hi-res,
+set it to full-screen (no text), and
+finally to get the graphics from
+PAGE2 ($4000).  It then drops into
+a routine that does a linear clear of
+the screen to color 0 (black).  This
+might seem boring, but on the Apple II
+due to the weird (and clever) way Woz
+designed the DRAM/video refresh
+circuitry this gives a venetian-blind
+effect which looks pretty neat.
+
+This is great, but we want some pretty
+pixels on the screen too.  It turns
+out that if we jump into the middle
+of the previously mentioned routine
+we can hit the screen clearing
+code at a point where it is drawing
+the pattern in the A register to
+the screen.  So if we do a
+        jsr    BKGND0
+it will fill the screen with a nice
+pattern.  This is an unofficial entry
+point in the ROM, but for various
+complex reasons involving the license
+with Microsoft it turns out Apple never
+updated the Applesoft BASIC ROMs despite
+there being various known bugs.
+
+So now we in theory have 6 bytes of
+code we can drop into the middle of
+the CHRGET routine and theory have it
+repeatedly clear the screen to a color
+and then clear it to black, with a
+nice blinds effect between them.
+
+That's boring though, can we switch
+up the colors drawn?  It'd be nice
+to load a random value into the
+accumulator (A register) before the
+call to fill the screen.  The existing
+code does a load from an always-
+incrementing 16-bit address, let's
+point it into the ROM code and that
+can act as a random enough series
+of bytes.
+
+== LOAD ADDRESS CONSIDERATIONS ==
+
+By default the load address is $800, 
+the default load address of BASIC
+programs.  We want to point it to ROM
+which is at the top of the address
+space.  The easiest way to do this
+is just have some high address bytes
+at the start of the code and just load
+the program so it drops into the middle
+of the LDA instruction.
+
+If we were running code by entering
+it into the assembly language monitor
+that would be fine, we could load
+the bytes and then jump to an arbitrary
+memory offset.  However for the
+competition we are going to load from
+disk so we have to start executing
+from the start of our binary.  This
+means these address bytes also need
+to be valid code with no bad side
+effects.  An obvious choice would
+be the no-operation NOP instruction,
+which is $EA and $EAEA points nicely
+into the ROM.  It turns out there
+are some complications with doing
+this.
+
+=== WHEREIN WE GET A BEEP AND  ===
+====== A TEXT SCREEN OF Ws ======
+
+So we set our code to load in
+the middle of CHRGET, calling BKGND0
+first as the needed color pattern is
+in A.  We can't call HGR2 first as
+it always will reset A to be $60.
+
+We run this though, and you'll get
+a text screen filled with characters
+as it crashes to the monitor.
+
+The problem here is BKGND0 assumes the
+value of the first page of graphics
+you want to is in zero-page location 
+HGR_PAGE $E6.  On bootup this is 
+likely $00 or $FF, so when you call
+the routine it happily writes your 
+color pattern across the first 8k
+of RAM which unfortunately is where the 
+zero-page, stack, and your code live.
+Not Good.
+
+We need a way to skip BKGND0 the first 
+time through the loop.
+
+
+=== SKIPPING CHUNKS OF INSTRUCTIONS ===
+= SURPRISINGLY YOU DO THIS A LOT WHEN =
+======= WRITING 6502 ASSEMBLY  ========
+
+There's one famous way to skip ahead
+on the 6502.  This is to use the BIT
+instruction.  By putting a $2C byte
+in your code it will do a BIT 
+(logical AND to set bits but throw
+away the result) with the address
+being the two bytes after it you
+want to skip.  This is usually
+harmless (unless those address bits
+point to a soft-switch).  You can use
+this trick to compactly have code
+where you can jump into the middle
+of the BIT instruction to execute
+the two address bytes as code,
+or otherwise execute the code as sort
+of a 3-byte almost NOP.
+
+We can construct our code so the
+entry point is a BIT instruction
+that skips the first JSR, but later
+loop iterations branch earlier and
+instead the BIT is part of the address
+to the LDA instruction and the JSR
+happens as normal.
+
+So the first time through HGR2 gets
+called which usefully sets up the
+HGR_PAGE value in $E6 to a good
+value so the BKGND0 call works in
+all future loop iterations.
+
+=== ALMOST ON THE HOME STRETCH ===
+
+We should be just about there, right?
+
+There is a problem though, the first
+time through the loop the BIT consumes
+the next two bytes, avoiding the 
+JSR to BKGND0.  However it means
+the address of BKGND0, $F3F4,
+(actually $F4, $F3 as the 6502 is
+little-endian) get executed as code.
+Is this a problem?
+
+It turns out those two instructions
+are invalid opcodes on both 6502
+and 65c02 processors.  Luckily, though,
+instead of trapping like a modern
+processor would the processor tries
+to execute them anyway.  You can 
+look up the side effects for these
+invalid instructions online, on the
+NMOS 6502 at least you get behavior
+based on the don't care terms in the
+instruction PLA.  Happily though in
+our case the instructions are close
+enough to NOPs that our code will
+work.
+
+=== POINTING TO ROM ===
+
+So with the BIT in place the last
+step is to make sure we are pointing
+to ROM when we load the accumulator.
+
+If we load at address $B8 we can
+have $2C of the bit as the low
+byte of the LDA instruction, and
+the high byte can be anything we want.
+I arbitrarily put a NOP there even
+though the code never gets executed
+as $EA works to give a nice "random"
+set of color patterns starting
+at $EA2C (If you're curious, this is
+in the Floating Point addition routine).
+
+=== FINALLY, THE LOOP ===
+
+We can't forget we need to loop.
+If we load at $B8, this stops just
+short of the BEQ branch-if-equal
+instruction back to the beginning.
+BEQ checks the Zero flag, but luckily
+the HGR2 call always ends with the
+Zero flag set so this nicely turns
+the BEQ into a branch-always.
+
+=== ALL FINISHED ===
+
+The program loads, it skips the
+first color fill, inits the screen,
+then loops back alternately setting
+and clearing the screen based on
+a color pattern from an incrementing
+part of ROM, leading to a colorful
+animated venetian-blind pattern.
+
+It actually looks lovely, arguably
+nicer than many of the 16-byte intros
+I've done.
+
+
+=== TRY IT FOR YOURSELF ===
+
+On an Apple II (or emulator) get to
+the ']' BASIC prompt and enter
+these commands to run it for yourself:
 
 CALL -151
 B8: 2c ea 20 f4 f3 20 d8 f3 
 B8G
 
+=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
+by Vince `deater` Weaver
+   http://www.deater.net/weave
+   11 February 2023
 
-
-
+with apologies to 4AM for vaguely
+     stealing his writeup format
