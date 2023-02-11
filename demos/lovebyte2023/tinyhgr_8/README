@@ -21,7 +21,7 @@ might think.
 
 === THE CHALLENGE ===
 
-The Apple II has a 6502 processor in it.
+The Apple II has a 6502 processor.
 
 To enable hi-res graphics you need three
 bytes, typically a jump to the HGR
@@ -89,10 +89,10 @@ shown at Lovebyte 2022.
 We can abuse some code put into the
 zero page by the Applesoft ROM at
 boot (this is available on any 
-Apple II from the Apple II+  onward,
+Apple II from the Apple II+ onward,
 which is to say most of them).
 
-The ROM uses this code when parsing
+Applesoft uses this code when parsing
 BASIC programs, and it is apparently
 put into the zero page so the address
 being loaded can be self-modified.
@@ -112,7 +112,7 @@ CHRGET:
 What the code originally does is not
 important, what is interesting is that
 it does a 16-bit increment of the
-address of the load accumulator
+address of the LDA (load accumulator)
 instruction at $B7, and there's
 a convenient BEQ (branch if equal)
 back to the beginning of the routine
@@ -159,10 +159,10 @@ there being various known bugs.
 
 So now we in theory have 6 bytes of
 code we can drop into the middle of
-the CHRGET routine and theory have it
+the CHRGET routine and have it
 repeatedly clear the screen to a color
-and then clear it to black, with a
-nice blinds effect between them.
+and then clear it back to black, with a
+nice blinds effect.
 
 That's boring though, can we switch
 up the colors drawn?  It'd be nice
@@ -177,8 +177,8 @@ of bytes.
 
 == LOAD ADDRESS CONSIDERATIONS ==
 
-By default the load address is $800, 
-the default load address of BASIC
+The CHRGET load address starts at
+$800, the default load address of BASIC
 programs.  We want to point it to ROM
 which is at the top of the address
 space.  The easiest way to do this
@@ -199,31 +199,37 @@ means these address bytes also need
 to be valid code with no bad side
 effects.  An obvious choice would
 be the no-operation NOP instruction,
-which is $EA and $EAEA points nicely
-into the ROM.  It turns out there
-are some complications with doing
-this.
+which is $EA. Convenient, as $EAEA
+points nicely into the ROM.  It turns
+out there are some fun* complications
+with doing this.
+
+* As per 4am, no fun is actually
+	guaranteed in this process
 
 === WHEREIN WE GET A BEEP AND  ===
-====== A TEXT SCREEN OF Ws ======
+====== A TEXT SCREEN OF Ws =======
 
 So we set our code to load in
 the middle of CHRGET, calling BKGND0
-first as the needed color pattern is
-in A.  We can't call HGR2 first as
-it always will reset A to be $60.
+immediately after the LDA which
+puts the needed color pattern into
+the A register.  We can't call HGR2
+first as it will always reset A to
+be $60.
 
-We run this though, and you'll get
+Sadly, if you run this, you'll get
 a text screen filled with characters
-as it crashes to the monitor.
+before crashing into the monitor.
 
 The problem here is BKGND0 assumes the
 value of the first page of graphics
-you want to is in zero-page location 
-HGR_PAGE $E6.  On bootup this is 
-likely $00 or $FF, so when you call
-the routine it happily writes your 
-color pattern across the first 8k
+you want to fill is in zero-page
+location HGR_PAGE ($E6).  On bootup
+this is likely uninitialzed (it 
+often ends up $00 or $FF), so when
+you call the routine it happily writes
+your color pattern across the first 8k
 of RAM which unfortunately is where the 
 zero-page, stack, and your code live.
 Not Good.
@@ -241,16 +247,16 @@ on the 6502.  This is to use the BIT
 instruction.  By putting a $2C byte
 in your code it will do a BIT 
 (logical AND to set bits but throw
-away the result) with the address
-being the two bytes after it you
-want to skip.  This is usually
-harmless (unless those address bits
-point to a soft-switch).  You can use
-this trick to compactly have code
-where you can jump into the middle
-of the BIT instruction to execute
-the two address bytes as code,
-or otherwise execute the code as sort
+away the result) and it will use
+two bytes following (that you are
+trying to skip) as an address.
+This is usually harmless (unless those
+address bits point to a soft-switch).
+You can use this trick to compactly
+have code where you can jump into the
+middle of the BIT instruction to
+execute the two address bytes as code,
+but otherwise execute the BIT as sort
 of a 3-byte almost NOP.
 
 We can construct our code so the
@@ -261,9 +267,10 @@ instead the BIT is part of the address
 to the LDA instruction and the JSR
 happens as normal.
 
-So the first time through HGR2 gets
-called which usefully sets up the
-HGR_PAGE value in $E6 to a good
+So the first time through the loop
+BKGND0 is skipped and HGR2 gets
+called first.  HGR2 usefully sets
+up the HGR_PAGE value in $E6 to a good
 value so the BKGND0 call works in
 all future loop iterations.
 
@@ -287,7 +294,7 @@ instead of trapping like a modern
 processor would the processor tries
 to execute them anyway.  You can 
 look up the side effects for these
-invalid instructions online, on the
+invalid instructions online; on the
 NMOS 6502 at least you get behavior
 based on the don't care terms in the
 instruction PLA.  Happily though in
@@ -301,27 +308,30 @@ So with the BIT in place the last
 step is to make sure we are pointing
 to ROM when we load the accumulator.
 
-If we load at address $B8 we can
-have $2C of the bit as the low
-byte of the LDA instruction, and
-the high byte can be anything we want.
+If we load our 8-bytes of code at
+address $B8 we can have $2C of the
+BIT as the low byte of the LDA
+instruction address, and the high
+byte can be anything we want.
 I arbitrarily put a NOP there even
 though the code never gets executed
 as $EA works to give a nice "random"
 set of color patterns starting
 at $EA2C (If you're curious, this is
-in the Floating Point addition routine).
+in the middle of the ROM Floating
+Point addition routine).
 
 === FINALLY, THE LOOP ===
 
 We can't forget we need to loop.
-If we load at $B8, this stops just
-short of the BEQ branch-if-equal
-instruction back to the beginning.
-BEQ checks the Zero flag, but luckily
-the HGR2 call always ends with the
-Zero flag set so this nicely turns
-the BEQ into a branch-always.
+If we load our code at $B8, the
+8-bytes stop just short of the BEQ
+branch-if-equal instruction back to
+the beginning.  BEQ checks the Zero
+flag, but luckily the HGR2 call always
+ends with the Zero flag set so this
+nicely turns the BEQ into a
+branch-always.
 
 === ALL FINISHED ===
 
@@ -330,7 +340,7 @@ first color fill, inits the screen,
 then loops back alternately setting
 and clearing the screen based on
 a color pattern from an incrementing
-part of ROM, leading to a colorful
+pointer into ROM, leading to a colorful
 animated venetian-blind pattern.
 
 It actually looks lovely, arguably
