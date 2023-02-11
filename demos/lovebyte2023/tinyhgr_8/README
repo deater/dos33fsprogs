@@ -60,8 +60,8 @@ values from uninitialized RAM at boot
 usually aren't useful.
 
 You can try drawing directly to screen
-memory at addresses $2000 (PAGE1)
-or $4000 (PAGE2), but that takes
+memory at addresses $2000* (PAGE1)
+or $4000 (PAGE2) , but that takes
 3 bytes and if you want to draw to
 all 8K of the screen you need to
 have a way to increment a 16-bit
@@ -79,6 +79,10 @@ like increment the pixel location or
 change the color.
 
 So is all hope lost?
+
+* note a leading $ is how you 
+  traditionally indicate hexadecimal
+  numbers on 6502 computers
 
 === THE CHRGET TRICK ===
 
@@ -201,10 +205,10 @@ effects.  An obvious choice would
 be the no-operation NOP instruction,
 which is $EA. Convenient, as $EAEA
 points nicely into the ROM.  It turns
-out there are some fun* complications
+out there are some fun** complications
 with doing this.
 
-* As per 4am, no fun is actually
+** As per 4am, no fun is actually
 	guaranteed in this process
 
 === WHEREIN WE GET A BEEP AND  ===
@@ -226,7 +230,7 @@ The problem here is BKGND0 assumes the
 value of the first page of graphics
 you want to fill is in zero-page
 location HGR_PAGE ($E6).  On bootup
-this is likely uninitialzed (it 
+this is likely uninitialized (it 
 often ends up $00 or $FF), so when
 you call the routine it happily writes
 your color pattern across the first 8k
