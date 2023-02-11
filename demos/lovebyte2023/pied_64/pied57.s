@@ -1,4 +1,4 @@
-; scrolling boxes (62 bytes)
+; scrolling boxes (57 bytes)
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
