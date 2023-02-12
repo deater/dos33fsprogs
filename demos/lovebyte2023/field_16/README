@@ -1,0 +1,12 @@
+This is yet another tiny Apple II hires/shapetable intro.
+
+It loads at $E7 (HGR_SCALE) so that we set that value
+for free from the first instruction (in this case JSR so $20).
+
+I thought this result at times looked like a field of grain,
+hence the name.
+
+I found this one while doing a search of ROM values that were
+easy to load the address for, but the results looked nice.
+In this case the rotation and ROM address are $F6 and $F6F6
+which makes it easy to load them in a small amount of space.

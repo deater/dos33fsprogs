@@ -1,0 +1,22 @@
+512 byte bootsector demo for the Apple II
+
+I had more elaborate plans for this one, including having the duck 
+appear randomly over the screen. Ran out of time and also out of bytes.
+
+I also wanted a quacking noise, but couldn't figure out how to do that
+in the bytes available.
+
+This is an actual bootsector (well, Apple II has 256 byte disk sectors, 
+but the disk boot ROM will let you specify more than one to load). Apple 
+II loads the boot sector starting at $800, which is a problem for a 
+Lo-res demo as that's also the location of lo-res PAGE2 graphics. So I 
+had to waste a chunk of code to move the code out of the way before 
+running it.
+
+The spinning lo-res logo is actually using the hi-res shape table routines.
+How is that possible?  It draws a small rotating copy of the logo to
+the upper-left corner of the (not-displayed) hi-res screen. Then the code
+copies this (while adding more colors) to the lo-res screen.  It's hard
+to do this quickly, to save time and space it actually destroys the hi-res
+image by shifting it down to zero while reading it out,
+but this is actually good as then we don't have to clear the screen.
