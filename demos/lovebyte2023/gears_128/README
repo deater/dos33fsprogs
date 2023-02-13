@@ -1,0 +1,12 @@
+Some rotating gears.
+
+The gears are drawn with the shapetable vector graphics, we only
+have a definition for a single tooth but we then draw it multiple
+times while rotating.
+
+The catchment at the top happened accidentally, as I originally wanted
+to have a desire logo but didn't have enough room for the whole thing.
+The truncated logo ends up being exactly the shape that gets drawn.
+
+It's a fast animation because it draws two scenes to the two graphics
+PAGEs and is just page-flipping between them. 

@@ -1,0 +1,8 @@
+This one was written in Applesoft BASIC! 
+
+Tokenized on disk it's 251 bytes.
+
+For size reasons it starts page-flipping before it's done
+drawing the hi-res graphics on each page which is why it
+starts out a bit glitchy.
+

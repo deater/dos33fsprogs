@@ -1,0 +1,8 @@
+Three-level parallax scrolling on Apple II lores.
+
+I actually got this down to 90 bytes, then used the
+extra space to add the code to switch  directions.
+
+Apple II has no scrolling circuitry, there are some mildly 
+clever tricks going on to keep the frame rate up.
+

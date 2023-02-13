@@ -360,7 +360,7 @@ the ']' BASIC prompt and enter
 these commands to run it for yourself:
 
 CALL -151
-B8: 2c ea 20 f4 f3 20 d8 f3 
+B8: 2C EA 20 F4 F3 20 D8 F3 
 B8G
 
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

@@ -8,5 +8,6 @@ hence the name.
 
 I found this one while doing a search of ROM values that were
 easy to load the address for, but the results looked nice.
-In this case the rotation and ROM address are $F6 and $F6F6
-which makes it easy to load them in a small amount of space.
+In this case the rotation and ROM address are $F6 and $F6F5
+which makes it easy to load, though it is a byte bigger than
+the minimum because I need a DEX instruction to get the address right.
