@@ -14,43 +14,11 @@ color_green	= 2
 color_blue	= 3
 color_orange	= 4
 color_white	= 5
-
 work_buffer	= $7000		; work data area,$ from $7000-7fff
-
-
-pageflg		= $00
-xc		= $01
-yc		= $02
-back		= $03
-evenc		= $04
-oddc		= $05
-screen_bit	= $06
-hptr		= $07
-cflag		= $09
-match_color	= $10
-add_coord_lo	= $12
-plot_coord_lo	= $13
-add_coord_ptr	= $14	; new coords are added at this point
-plot_coord_ptr	= $16	; coords are read from this pointer and plotted
-tmp		= $18
-
-HGR2           = $F3D8
-HGR            = $F3E2
-
-flood_test:
-	jsr	HGR2
-	lda	#100
-	sta	xc
-	sta	yc
-	lda	#color_blue
-	sta	evenc
-	lda	#color_white
-	sta	oddc
-	jsr	FILL
-done:
-	jmp	done
-
-.align $100
+TXTCLR		= $c050
+MIXCLR		= $c052
+TXTPAGE1	= $c054
+LORES		= $c056
 
 ;*******************************************************************************
 ;* FILL - flood fill with dither pattern.                                      *
@@ -75,6 +43,17 @@ done:
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 
+xc		= $01
+yc		= $02
+back		= $03
+evenc		= $04
+oddc		= $05
+match_color	= $10
+add_coord_lo	= $12
+plot_coord_lo	= $13
+add_coord_ptr	= $14	; new coords are added at this point
+plot_coord_ptr	= $16	; coords are read from this pointer and plotted
+tmp		= $18
 
 FILL:
 	txa
@@ -208,7 +187,6 @@ DITHER:
 PLT:
 	jmp	 PLT1		; external entry point
 
-
 ;*******************************************************************************
 ;* DITHER - plot a point with dithered colors.                                 *
 ;*                                                                             *
@@ -223,8 +201,13 @@ PLT:
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 ;Clear variables
-
-
+pageflg		= $00
+;xc		= $01
+;yc		= $02
+;back		= $03
+;evenc		= $04
+;oddc		= $05
+hptr		= $07
 
 DITHER1:
 	txa
@@ -262,6 +245,8 @@ L691C:
 ;*                                                                             *
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
+screen_bit	= $06
+cflag		= $09
 
 PLT1:
 	txa
@@ -352,6 +337,10 @@ L69A3:
 	tax
 	rts
 
+;.junk   29
+.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+.byte	0,0,0,0,0,0,0,0,0,0,0,0,0
+
 ;
 ; Sets $07-08 as the hi-res base pointer for the row in "yc".
 ;
@@ -383,7 +372,6 @@ color_flag_0:
 
 color_flag_1:
 	.byte $00,$00,$7f,$00,$ff,$ff
-
 ;
 ; Converts a bit pattern to a color, 0-5.
 ;
@@ -405,6 +393,347 @@ bits_to_color:
 
 .align $100
 
+SCOPE:
+	jmp	SCOPE1		; entry point from Applesoft
+
+;*******************************************************************************
+;* INIT - initialize "micro" / "scope" mode                                    *
+;*                                                                             *
+;* Clears the lo-res screen and enables lo-res graphics mode.                  *
+;*                                                                             *
+;* Preserves X/Y registers.                                                    *
+;*******************************************************************************
+; Clear variables
+ptr		= $0e
+
+INIT:
+	txa
+	pha
+	tya
+	pha
+
+	; Clear lo-res screen to black.
+
+	ldx	#23		; X = row
+ClearLoLoop:
+	lda	lr_ytable_lo,X
+	sta	ptr
+	lda	lr_ytable_hi,X
+	sta	ptr+1
+	lda	#$00
+	ldy	#39		; Y = column
+L6A17:
+	sta	(ptr),Y
+	dey
+	bpl	L6A17
+	dex
+	bpl	ClearLoLoop
+
+	; Configure soft-switches for lo-res.
+	sta	TXTCLR
+	sta	MIXCLR
+	sta	TXTPAGE1
+	sta	LORES
+	pla
+	tay
+	pla
+	tax
+	rts
+
+;*******************************************************************************
+;* SCOPE - display part of the hi-res screen magnified on the lo-res screen.   *
+;*                                                                             *
+;* On entry:                                                                   *
+;*  $00 = X position [0,139]                                                   *
+;*  $01 = Y position [0,191]                                                   *
+;*                                                                             *
+;* Preserves X/Y registers.                                                    *
+;*******************************************************************************
+;Clear variables
+;xc		= $00
+;yc		= $01
+col_ctr		= $02
+row_ctr		= $03
+saved_byte_off	= $04
+work_ptr_lo	= $05
+first_bit	= $06
+hr_byte		= $07
+hi_in_lo	= $08
+start_x		= $09
+;hptr		= $0c
+work_ptr	= $0e
+
+SCOPE1:
+	txa
+	pha
+	tya
+	pha
+	sec			; left edge is XC - 9
+	lda	xc
+	sbc	#9
+	sta	xc
+	sta	start_x
+	sec
+	lda	yc		; top edge is YC - 11
+	sbc	#11
+	sta	yc
+	lda	#$00
+	sta	work_ptr_lo
+	sta	work_ptr
+	lda	#>work_buffer
+	sta	work_ptr+1	; out_ptr = work buffer
+
+;
+; Phase 1: convert hi-res pixels to values in the work buffer.
+;
+; Each hi-res pixel in our window gets two adjacent values in the work buffer,
+; one per bit.  The value is from 0-3, and reflects the state of one bit on the
+; pixel plus the high bit of the byte.
+;
+; Note: there's a 1-pixel black border on the left and right of the lo-res
+; display, presumably to allow the central 2x2 block to be centered on the
+; screen.  There's also a 2-pixel black border on the bottom of the screen.
+;
+
+	lda	#23
+	sta	row_ctr
+RowLoop:
+	lda	#38
+	sta	col_ctr
+	ldx	yc		; get the Y-coord
+	cpx	#192		; did we wrap off the top?
+	bcs	OffEdge		; yes, bail
+	lda	ytable_lo,X	; get the hi-res row base
+	sta	hptr
+	lda	ytable_hi,X
+	sta	hptr+1
+	ldx	xc		; get the X-coord
+	cpx	#140		; did we wrap around to the left when subtracting?
+	bcc	ScanPixel	; no, scan it
+
+; We're off the left edge, so just fill in black until we get on the screen.
+
+	ldy	work_ptr_lo
+	lda	#$00
+OffLeftLoop:
+	sta	(work_ptr),Y
+	iny
+	sta	(work_ptr),Y
+	iny
+	bne	L6A7A
+	inc	work_ptr+1
+L6A7A:
+	dec	col_ctr
+	dec	col_ctr
+	inx
+	bne	OffLeftLoop
+	sty	work_ptr_lo
+	clc
+
+; Get the color of a pixel.  X coordinate in X-reg, carry flag is clear.
+
+ScanPixel:
+	lda	bit_tab,X	; get first hi-res pixel bit
+	sta	first_bit
+	ldy	div7_tab,X	; get byte offset
+	ldx	col_ctr		; lo-res column counter
+L6A8E:
+	lda	(hptr),Y	; get hi-res byte
+	sta	hr_byte
+	and	#$80		; clear everything but the hi bit
+	rol			; roll it into the low bit
+	rol			; (note carry was clear)
+	sta	hi_in_lo
+	iny
+	sty	saved_byte_off
+	ldy	work_ptr_lo
+L6A9D:
+	lda	hr_byte		; get pixel byte
+	and	first_bit	; mask off everything but interesting bit
+	beq	L6AA5		; bit not set, branch
+	lda	#$02		; bit set, use $02 regardless of bit position
+L6AA5:
+	ora	hi_in_lo	; add high bit (so now value is 0-3)
+	sta	(work_ptr),Y	; save that off
+	iny			; advance work ptr
+	bne	L6AAE
+	inc	work_ptr+1
+L6AAE:
+	dex			; decrement column counter
+	beq	L6AD2		; bail when we reach column 0
+	asl	first_bit	; shift to the next bit in the pixel
+	bpl	L6A9D		; still in same byte, repeat
+	sty	work_ptr_lo
+	lda	#$01		; move to next byte, reset mask to bit 0
+	sta	first_bit
+	ldy	saved_byte_off
+	cpy	#40		; off right edge of hi-res screen?
+	bcc	L6A8E		; nope, keep going
+	stx	col_ctr		; yes, go into "off edge" code
+
+; We're off the edge, to the right or the bottom.  Fill out the row with black
+; pixels.
+
+OffEdge:
+	ldy	work_ptr_lo
+	lda	#$00
+L6AC7:
+	sta	(work_ptr),Y
+	iny
+	bne	L6ACE
+	inc	work_ptr+1
+L6ACE:
+	dec	col_ctr		; decrement the column counter
+	bne	L6AC7		; not end of row yet, branch
+L6AD2:
+	sty	work_ptr_lo
+	lda	start_x		; reset X-coord
+	sta	xc
+	inc	yc		; advance to next row
+	dec	row_ctr		; are we done?
+	beq	Scope2		; yes, move to rendering
+	jmp	RowLoop		; no, loop
+
+.align $100
+
+; Phase 2: render the contents of the work buffer on the lo-res screen.
+;
+; The values in the work buffer are from 0-3.  0/2 indicates that the
+; corresponding hi-res bit was set, +1 if the high bit in the byte was set.
+
+;work_ptr	= $0c
+lr_ptr		= $0e
+
+Scope2:
+	lda	#$01		; left edge; 1-pixel boundary at sides
+	sta xc
+	lda	#$00		; no border at top
+	sta	yc
+	sta	saved_byte_off
+	sta	work_ptr
+	lda	#>work_buffer
+	sta	work_ptr+1
+	ldx	yc		; get lo-res screen row base
+L6B12:
+	lda	lr_ytable_lo,X
+	sta	lr_ptr
+	lda	lr_ytable_hi,X
+	sta	lr_ptr+1
+DrawLoLoop:
+	ldy	saved_byte_off
+	lda	(work_ptr),Y	; get the first value
+	iny
+	asl			; shift it over
+	asl
+	ora	(work_ptr),Y	; add in the second value
+	iny			; advance work ptr
+	bne	L6B2A
+	inc	work_ptr+1
+L6B2A:
+	sty	saved_byte_off
+	tax			; put color value (0-15) in X
+	lda	lr_color_map,X 	; convert it to a lo-res color
+	ldy	xc
+	sta	(lr_ptr),Y	; plot 2x2 pixel (two bytes wide)
+	iny
+	sta	(lr_ptr),Y
+	iny
+	sty	xc
+	cpy	#39		; end of row?
+	bne	DrawLoLoop	; not yet, loop
+	lda	#$01		; reset X-coord
+	sta	xc
+	inc	yc		; advance to next row
+	ldx	yc
+	cpx	#23		; done? (leaves 1-pixel boundary at bottom)
+	bne	L6B12		; no, loop
+
+; Draw crosshairs.  It flickers a little because, on each loop, we draw the hi-
+; res colors and then slam the crosshairs down.
+
+	lda	#$dd		; two pixels, color=13 (yellow)
+	ldx	#$04
+L6B4E:
+	sta	$05b5,X		; hard-wired screen positions
+	sta	$05be,X
+	dex
+	bpl	L6B4E
+	ldx	#$01
+L6B59:
+	sta	$043b,X
+	sta	$04bb,X
+	sta	$06bb,X
+	sta	$073b,X
+	dex
+	bpl	L6B59
+
+; Add "half-pixel" crosshair gap.  The hi-res pixel at the center is a 2x2 lo-
+; res block.  We create a gap of 1 lo-res block between it and the crosshair.
+; For the vertical line, that means we're not writing a full byte, because each
+; text byte holds two lo-res blocks.
+
+	ldx	#$01
+L6B6A:
+	lda	$053b,X		; draw one pixel with color=13
+	and	#$f0		; leave other pixel alone
+	ora	#$0d
+	sta	$053b,X
+	lda	$063b,X
+	and	#$0f
+	ora	#$d0
+	sta	$063b,X
+	dex
+	bpl	L6B6A
+	pla
+	tay
+	pla
+	tax
+	rts
+
+; Low-res row address, low byte.
+
+lr_ytable_lo:
+.byte $00,$80,$00,$80,$00,$80,$00,$80
+.byte $28,$a8,$28,$a8,$28,$a8,$28,$a8
+.byte $50,$d0,$50,$d0,$50,$d0,$50,$d0
+
+; Low-res row address,$ high byte.
+
+lr_ytable_hi:
+.byte $04,$04,$05,$05,$06,$06,$07,$07
+.byte $04,$04,$05,$05,$06,$06,$07,$07
+.byte $04,$04,$05,$05,$06,$06,$07,$07
+
+;
+; Map hi-res pixel values to lo-res colors.
+;
+; Index is AHBH, where A and B are the hi-res pixel values, and H is the high
+; bit of the hi-res byte.  For example, green is 0010, purple is 1010, orange is
+; 0111, blue is 1101.
+;
+; Some pixels straddle two bytes and potentially have different values for the
+; high bit in each.  Each color thus has two entries.
+;
+lr_color_map:
+.byte $00	; 0000 lo-res color 0 = black
+.byte $00	; 0001
+.byte $cc	; 0010 12 = light green
+.byte $99	; 0011 9 = orange
+.byte $00	; 0100
+.byte $00	; 0101
+.byte $cc	; 0110
+.byte $99	; 0111
+.byte $33	; 1000 3 = purple
+.byte $33	; 1001
+.byte $ff	; 1010 15 = white
+.byte $ff	; 1011
+.byte $66	; 1100 6 = medium blue
+.byte $66	; 1101
+.byte $ff	; 1110
+.byte $ff	; 1111
+
+.align $100
+
 ; Hi-res row base address, low byte.
 ytable_lo:
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$80,$80,$80,$80,$80,$80,$80,$80
@@ -420,6 +749,50 @@ ytable_lo:
 .byte $50,$50,$50,$50,$50,$50,$50,$50,$d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
 .byte $50,$50,$50,$50,$50,$50,$50,$50,$d0,$d0,$d0,$d0,$d0,$d0,$d0,$d0
 
+;*******************************************************************************
+;* CLEAN -- set all non-white pixels to black.                                 *
+;*                                                                             *
+;* Preserves X/Y registers.                                                    *
+;*******************************************************************************
+
+; Clear variables
+
+;xc	= $01
+;yc	= $02
+;back	= $03
+
+CLEAN:
+	txa
+	pha
+	tya
+	pha
+	ldy	#$00
+L6CC6:
+	ldx	#$00
+L6CC8:
+	stx	xc
+	sty	yc
+	lda	#$80		; read only
+	sta	back
+	jsr	PLT		; get current pixel color
+	lda	back
+	cmp	#color_white	; is it a white pixel?
+	beq	L6CE0		; yes, leave it alone
+	lda	#color_black	; no, clear it
+	sta	back
+	jsr	PLT		; draw black pixel
+L6CE0:
+	inx
+	cpx	#140		; end of line?
+	bne	L6CC8		; no, continue
+	iny
+	cpy	#192		; end of screen?
+	bne	L6CC6		; no, continue
+	pla
+	tay
+	pla
+	tax
+	rts
 
 .align $100
 
@@ -439,7 +812,47 @@ ytable_hi:
 .byte $22,$26,$2a,$2e,$32,$36,$3a,$3e,$22,$26,$2a,$2e,$32,$36,$3a,$3e
 .byte $23,$27,$2b,$2f,$33,$37,$3b,$3f,$23,$27,$2b,$2f,$33,$37,$3b,$3f
 
-.align $100
+;*******************************************************************************
+;* NEG -- reverse colors on entire hi-res screen                               *
+;*                                                                             *
+;* Does a top-to-bottom operation to avoid the Venetian-blind look.            *
+;*******************************************************************************
+
+; Clear variables
+
+;xc	= $01
+;yc	= $02
+;hptr	= $07
+;hptr_h	= $08
+
+NEG:
+	txa
+	pha
+	tya
+	pha
+	ldx	#$00		; start at the top
+L6DC6:
+	stx	yc
+	jsr	SetRowBase	; get address in hptr
+	ldy	#39		; for each byte in the row
+L6DCD:
+	lda	(hptr),Y
+	eor	#$ff		; reverse colors
+	sta	(hptr),Y
+	dey
+	bpl	L6DCD
+	inx			; next row
+	cpx	#192		; done?
+	bne	L6DC6
+	pla
+	tay
+	pla
+	tax
+	rts
+
+
+
+.align  $100
 
 ; Maps X coordinate [0,139] to bit.
 
@@ -468,4 +881,3 @@ div7_tab:
 .byte $1b,$1b,$1c,$1c,$1c,$1c,$1d,$1d,$1d,$1e,$1e,$1e,$1e,$1f,$1f,$1f
 .byte $20,$20,$20,$20,$21,$21,$21,$22,$22,$22,$22,$23,$23,$23,$24,$24
 .byte $24,$24,$25,$25,$25,$26,$26,$26,$26,$27,$27,$27
-
