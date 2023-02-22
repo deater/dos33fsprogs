@@ -7,7 +7,18 @@ PNG_TO_RLE = ../../utils/gr-utils/png2rle
 EMPTY_DISK = ../../empty_disk/empty.dsk
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	hires_plain.dsk hires_jiskey.dsk
+all:	hires_plain.dsk make_hgr_viewer
+
+
+###
+
+make_hgr_viewer:	make_hgr_viewer.o
+	$(CC) $(LFLAGS) -o make_hgr_viewer make_hgr_viewer.o
+
+make_hgr_viewer.o:	make_hgr_viewer.c
+	$(CC) $(CFLAGS) -c make_hgr_viewer.c
+
+###
 
 hires_special.dsk:	HELLO HIRES_SPECIAL \
 		special/bbl.hgr.zx02 special/bbl2.hgr.zx02 \
@@ -84,41 +95,6 @@ hires_special.dsk:	HELLO HIRES_SPECIAL \
 
 ####
 
-hires_plain.dsk:	HELLO HIRES_PLAIN \
-		./plain/gp.hgr.zx02 ./plain/peddle.hgr.zx02 \
-		./plain/gp.hgr.zx02 ./plain/peddle3.hgr.zx02 \
-		./plain/45.hgr.zx02 ./plain/45b2d.hgr.zx02 \
-		./plain/45zoom.hgr.zx02 ./plain/zebra.hgr.zx02 \
-		./plain/Fm2JZOJWAAEVX0l_a2.hgr.zx02 \
-		./plain/FmH3w6vXwAAd1pF_a2.hgr.zx02 \
-		./plain/FULUd0EXEAgPCeG_a2.hgr.zx02 \
-		./plain/FllGu1OWIAAAG8O_a2.hgr.zx02 \
-		./plain/FpLVqVDaIAk9jtc_a2.hgr.zx02 \
-		./plain/FXeGzxKXgAEnsbj_a2.hgr.zx02 \
-		./plain/FmDIeJZXkAA4IiP_a2.hgr.zx02
-	cp $(EMPTY_DISK) hires_plain.dsk
-	$(DOS33) -y hires_plain.dsk SAVE A HELLO
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0x0c00 HIRES_PLAIN HIRES
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/gp.hgr.zx02 GP.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/peddle.hgr.zx02 PEDDLE.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/peddle3.hgr.zx02 PEDDLE3.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/45.hgr.zx02 FORTY5.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/45b2d.hgr.zx02 FORTY5B2D.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/45zoom.hgr.zx02 FORTY5Z.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/zebra.hgr.zx02 ZEB.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/Fm2JZOJWAAEVX0l_a2.hgr.zx02 FM2J.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FmH3w6vXwAAd1pF_a2.hgr.zx02 FMH3.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FULUd0EXEAgPCeG_a2.hgr.zx02 FULU.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FllGu1OWIAAAG8O_a2.hgr.zx02 FLLG.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FpLVqVDaIAk9jtc_a2.hgr.zx02 FPLV.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FXeGzxKXgAEnsbj_a2.hgr.zx02 FXEG.ZX02
-	$(DOS33) -y hires_plain.dsk BSAVE -a 0xa000 ./plain/FmDIeJZXkAA4IiP_a2.hgr.zx02 FMDI.ZX02
-
-
-
-
-####
-
 hires_jiskey.dsk:	HELLO HIRES_JISKEY \
 		jiskey/grl.hgr.zx02 jiskey/witch.hgr.zx02 \
 		jiskey/mona.hgr.zx02 jiskey/gw.hgr.zx02
@@ -145,15 +121,6 @@ hires_special.o:	hires_special.s hires_main.s zx02_optim.s \
 
 ####
 
-HIRES_PLAIN:	hires_plain.o
-	ld65 -o HIRES_PLAIN hires_plain.o -C ../../linker_scripts/apple2_c00.inc
-
-hires_plain.o:	hires_plain.s hires_main.s zx02_optim.s \
-	zp.inc hardware.inc
-	ca65 -o hires_plain.o hires_plain.s -l hires_plain.lst
-
-####
-
 HIRES_JISKEY:	hires_jiskey.o
 	ld65 -o HIRES_JISKEY hires_jiskey.o -C ../../linker_scripts/apple2_c00.inc
 
@@ -171,5 +138,5 @@ HELLO:	hello.bas
 
 
 clean:
-		rm -f *~ *.o *.lst HIRES_PLAIN HIRES_SPECIAL HIRES_JISKEY HELLO
+		rm -f *~ *.o *.lst HIRES_SPECIAL HIRES_JISKEY HELLO
 
