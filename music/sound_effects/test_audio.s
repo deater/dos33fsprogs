@@ -6,67 +6,48 @@ SPEAKER=  $C030
 WAIT   = $FCA8                 ; delay 1/2(26+27A+5A^2) us
 
 ; zero page use
-HALF_PERIOD = $FF
+BTC_L = $FE
+BTC_H = $FF
+SAVEL = $FC
+SAVEH = $FD
 
-test_sound:
-	jsr	tiny_sound_effect
+
+test_audio:
+;	lda	#$D0
+;	sta	SAVEH
+;	lda	#$00
+;	sta	SAVEL
+
+test_loop:
+;	lda	SAVEH
+;	sta	BTC_H
+;	lda	SAVEL
+;	sta	BTC_L
+
+	lda	#<duck_sound
+	sta	BTC_L
+	lda	#>duck_sound
+	sta	BTC_H
+
+	ldx	#3
+	jsr	play_audio
+
+	jsr	wait_until_keypress
+
+	inc	SAVEH
+	jmp	test_loop
+
+bob:
+	jmp	bob
 
 wait_until_keypress:
-	lda	KEYPRESS
-	bpl	wait_until_keypress
-	bit	KEYRESET
+        lda     KEYPRESS
+        bpl     wait_until_keypress
+        bit     KEYRESET
 
-	jmp	test_sound
-
-
-
-
-tiny_sound_effect:
-	ldy	#0
-
-freq_smc:
-	lda	#$40
-	sta	HALF_PERIOD
-
-play_note:
-
-loop_half_period:
-	lda	$C030			; 4 cycles
-	ldx	HALF_PERIOD		; 3 cycles
-loop_nops:
-	pha				; 4 cycles
-	plp				; 4 cycles
-
-	dex				; 2 cycles
-	bne	loop_nops		; 3 cycles
-
-	; Testing duration loop
-	dey				; 2 cycles
-	bne	loop_half_period	; 3 cycles
-
-
-	lsr	freq_smc+1
-
-	lsr	pattern
-	beq	end
-	bcc	skip_wait
-
-wait_smc:
-	lda	#80
-	jsr	WAIT
-skip_wait:
-
-	beq	tiny_sound_effect		; bra
-
-end:
 	rts
 
+.include "audio.s"
 
-
-
-
-
-
-
-pattern:
-	.byte	$13
+duck_sound:
+.incbin "duck.btc"

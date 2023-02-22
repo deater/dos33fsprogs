@@ -14,11 +14,31 @@ color_green	= 2
 color_blue	= 3
 color_orange	= 4
 color_white	= 5
+
 work_buffer	= $7000		; work data area,$ from $7000-7fff
+
 TXTCLR		= $c050
 MIXCLR		= $c052
 TXTPAGE1	= $c054
 LORES		= $c056
+
+pageflg		= $00
+xc		= $01
+yc		= $02
+back		= $03
+evenc		= $04
+oddc		= $05
+screen_bit	= $06
+hptr		= $07
+cflag		= $09
+ptr		= $0e
+match_color	= $10
+add_coord_lo	= $12
+plot_coord_lo	= $13
+add_coord_ptr	= $14	; new coords are added at this point
+plot_coord_ptr	= $16	; coords are read from this pointer and plotted
+tmp		= $18
+
 
 ;*******************************************************************************
 ;* FILL - flood fill with dither pattern.                                      *
@@ -43,17 +63,6 @@ LORES		= $c056
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 
-xc		= $01
-yc		= $02
-back		= $03
-evenc		= $04
-oddc		= $05
-match_color	= $10
-add_coord_lo	= $12
-plot_coord_lo	= $13
-add_coord_ptr	= $14	; new coords are added at this point
-plot_coord_ptr	= $16	; coords are read from this pointer and plotted
-tmp		= $18
 
 FILL:
 	txa
@@ -201,13 +210,8 @@ PLT:
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 ;Clear variables
-pageflg		= $00
-;xc		= $01
-;yc		= $02
-;back		= $03
-;evenc		= $04
-;oddc		= $05
-hptr		= $07
+
+
 
 DITHER1:
 	txa
@@ -245,8 +249,6 @@ L691C:
 ;*                                                                             *
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
-screen_bit	= $06
-cflag		= $09
 
 PLT1:
 	txa
@@ -404,7 +406,7 @@ SCOPE:
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 ; Clear variables
-ptr		= $0e
+
 
 INIT:
 	txa
@@ -450,8 +452,8 @@ L6A17:
 ;* Preserves X/Y registers.                                                    *
 ;*******************************************************************************
 ;Clear variables
-;xc		= $00
-;yc		= $01
+xc_scope	= $00
+yc_scope	= $01
 col_ctr		= $02
 row_ctr		= $03
 saved_byte_off	= $04
@@ -463,20 +465,23 @@ start_x		= $09
 ;hptr		= $0c
 work_ptr	= $0e
 
+
+
+
 SCOPE1:
 	txa
 	pha
 	tya
 	pha
 	sec			; left edge is XC - 9
-	lda	xc
+	lda	xc_scope
 	sbc	#9
-	sta	xc
+	sta	xc_scope
 	sta	start_x
 	sec
-	lda	yc		; top edge is YC - 11
+	lda	yc_scope	; top edge is YC - 11
 	sbc	#11
-	sta	yc
+	sta	yc_scope
 	lda	#$00
 	sta	work_ptr_lo
 	sta	work_ptr
@@ -500,14 +505,14 @@ SCOPE1:
 RowLoop:
 	lda	#38
 	sta	col_ctr
-	ldx	yc		; get the Y-coord
+	ldx	yc_scope	; get the Y-coord
 	cpx	#192		; did we wrap off the top?
 	bcs	OffEdge		; yes, bail
 	lda	ytable_lo,X	; get the hi-res row base
 	sta	hptr
 	lda	ytable_hi,X
 	sta	hptr+1
-	ldx	xc		; get the X-coord
+	ldx	xc_scope	; get the X-coord
 	cpx	#140		; did we wrap around to the left when subtracting?
 	bcc	ScanPixel	; no, scan it
 
@@ -588,8 +593,8 @@ L6ACE:
 L6AD2:
 	sty	work_ptr_lo
 	lda	start_x		; reset X-coord
-	sta	xc
-	inc	yc		; advance to next row
+	sta	xc_scope
+	inc	yc_scope	; advance to next row
 	dec	row_ctr		; are we done?
 	beq	Scope2		; yes, move to rendering
 	jmp	RowLoop		; no, loop
@@ -606,14 +611,14 @@ lr_ptr		= $0e
 
 Scope2:
 	lda	#$01		; left edge; 1-pixel boundary at sides
-	sta xc
+	sta	xc_scope
 	lda	#$00		; no border at top
-	sta	yc
+	sta	yc_scope
 	sta	saved_byte_off
 	sta	work_ptr
 	lda	#>work_buffer
 	sta	work_ptr+1
-	ldx	yc		; get lo-res screen row base
+	ldx	yc_scope	; get lo-res screen row base
 L6B12:
 	lda	lr_ytable_lo,X
 	sta	lr_ptr
@@ -633,18 +638,18 @@ L6B2A:
 	sty	saved_byte_off
 	tax			; put color value (0-15) in X
 	lda	lr_color_map,X 	; convert it to a lo-res color
-	ldy	xc
+	ldy	xc_scope
 	sta	(lr_ptr),Y	; plot 2x2 pixel (two bytes wide)
 	iny
 	sta	(lr_ptr),Y
 	iny
-	sty	xc
+	sty	xc_scope
 	cpy	#39		; end of row?
 	bne	DrawLoLoop	; not yet, loop
 	lda	#$01		; reset X-coord
-	sta	xc
-	inc	yc		; advance to next row
-	ldx	yc
+	sta	xc_scope
+	inc	yc_scope	; advance to next row
+	ldx	yc_scope
 	cpx	#23		; done? (leaves 1-pixel boundary at bottom)
 	bne	L6B12		; no, loop
 
@@ -757,10 +762,6 @@ ytable_lo:
 
 ; Clear variables
 
-;xc	= $01
-;yc	= $02
-;back	= $03
-
 CLEAN:
 	txa
 	pha
@@ -819,11 +820,6 @@ ytable_hi:
 ;*******************************************************************************
 
 ; Clear variables
-
-;xc	= $01
-;yc	= $02
-;hptr	= $07
-;hptr_h	= $08
 
 NEG:
 	txa

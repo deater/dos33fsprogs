@@ -94,7 +94,7 @@ water_line:
 
 	jsr	random
 
-;	adc	FRAME
+	adc	FRAME
 	adc	COUNT
 
 	and	#$1F

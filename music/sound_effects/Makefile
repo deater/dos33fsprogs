@@ -10,11 +10,12 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	sound.dsk
 
-sound.dsk:	HELLO SOUND TINY
+sound.dsk:	HELLO SOUND TINY TEST_AUDIO
 	cp $(EMPTY_DISK) sound.dsk
 	$(DOS33) -y sound.dsk SAVE A HELLO
 	$(DOS33) -y sound.dsk BSAVE -a 0x1000 SOUND
 	$(DOS33) -y sound.dsk BSAVE -a 0x1000 TINY
+	$(DOS33) -y sound.dsk BSAVE -a 0x1000 TEST_AUDIO
 
 ###
 
@@ -34,12 +35,21 @@ tiny.o:	tiny.s
 
 ###
 
+TEST_AUDIO: test_audio.o
+	ld65 -o TEST_AUDIO test_audio.o -C ../../linker_scripts/apple2_1000.inc
+
+test_audio.o:	test_audio.s audio.s
+	ca65 -o test_audio.o test_audio.s -l test_audio.lst
+
+
+###
+
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 clean:	
-		rm -f *~ *.o *.lst HELLO SOUND TINY
+		rm -f *~ *.o *.lst HELLO SOUND TINY TEST_AUDIO
 
 

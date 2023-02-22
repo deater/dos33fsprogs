@@ -2,128 +2,25 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "hires_main.s"
 
-hires_start:
+MAX_FILES = 6
 
-	;===================
-	; Init RTS disk code
-	;===================
+filenames_high:
+	.byte >grl_filename
+	.byte >witch_filename
+	.byte >mona_filename
+	.byte >gw_filename
+	.byte >skull_filename
+	.byte >uw_filename
 
-	jsr	rts_init
-
-	;===================
-	; set graphics mode
-	;===================
-	jsr	HOME
-
-	bit	HIRES
-	bit	FULLGR
-	bit	SET_GR
-	bit	PAGE0
-
-	;===================
-	; Load graphics
-	;===================
-load_loop:
-
-	;=============================
-
-	lda	#<grl_filename
-	sta	OUTL
-	lda	#>grl_filename
-	sta	OUTH
-
-	jsr	load_image
-
-	jsr	wait_until_keypress
-
-
-	;=============================
-
-	lda	#<witch_filename
-	sta	OUTL
-	lda	#>witch_filename
-	sta	OUTH
-
-	jsr	load_image
-
-	jsr	wait_until_keypress
-
-	;=============================
-
-	;=============================
-
-	lda	#<mona_filename
-	sta	OUTL
-	lda	#>mona_filename
-	sta	OUTH
-
-	jsr	load_image
-
-	jsr	wait_until_keypress
-
-	;=============================
-
-	;=============================
-
-	lda	#<gw_filename
-	sta	OUTL
-	lda	#>gw_filename
-	sta	OUTH
-
-	jsr	load_image
-
-	jsr	wait_until_keypress
-
-
-
-	;=============================
-
-	;=============================
-
-	lda	#<skull_filename
-	sta	OUTL
-	lda	#>skull_filename
-	sta	OUTH
-
-	jsr	load_image
-
-	jsr	wait_until_keypress
-
-
-	;=============================
-
-
-
-
-
-	jmp	load_loop
-
-
-	;==========================
-	; Load Image
-	;===========================
-
-load_image:
-	jsr	opendir_filename	; open and read entire file into memory
-
-	; size in ldsizeh:ldsizel (f1/f0)
-
-	comp_data	= $a000
-	out_addr	= $2000
-
-
-	jsr	full_decomp
-
-	rts
-
-.align $100
-	.include	"wait_keypress.s"
-	.include	"zx02_optim.s"
-	.include	"rts.s"
-
+filenames_low:
+	.byte <grl_filename
+	.byte <witch_filename
+	.byte <mona_filename
+	.byte <gw_filename
+	.byte <skull_filename
+	.byte <uw_filename
 
 ; filename to open is 30-character Apple text:
 grl_filename:	; .byte "GRL.ZX02",0
@@ -145,4 +42,9 @@ gw_filename:	; .byte "GW.ZX02",0
 skull_filename:	; .byte "SKULL.ZX02",0
 	.byte 'S'|$80,'K'|$80,'U'|$80,'L'|$80,'L'|$80
 	.byte '.'|$80,'Z'|$80,'X'|$80,'0'|$80,'2'|$80,$00
+
+uw_filename:	; .byte "UW.ZX02",0
+	.byte 'U'|$80,'W'|$80
+	.byte '.'|$80,'Z'|$80,'X'|$80,'0'|$80,'2'|$80,$00
+
 
