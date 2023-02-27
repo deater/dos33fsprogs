@@ -2,6 +2,9 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; todo help menu, timed slideshow mode
+;	move to being a bootsector
+
 .include "zp.inc"
 .include "hardware.inc"
 
