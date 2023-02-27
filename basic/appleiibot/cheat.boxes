@@ -1,0 +1,108 @@
+15	0	39	0	47	; 0 background  x1 x2 y1 y2
+7	1	23	0	4	; 1 tray
+7	6	14	5	6	; 2 tray
+5	1	1	0	0	; 3 tray top line
+5	6	18	0	0	; 4 tray top line
+5	0	1	0	2	; 5 tray line 2
+5	3	5	1	2	; 6 tray line 2
+5	19	21	1	2	; 7 tray line 2
+5	24	24	1	2	; 8 tray line 2
+5	1	1	3	4	; 9 tray line 3
+5	23	23	3	4	; 10 tray line 3
+5	2	5	5	6	; 11 tray line 4
+5	19	22	5	6	; 12 tray line 4
+5	6	15	7	8	; 13 tray line 4
+13	15	36	43	47	; 14 foot
+13	14	14	47	47	; 15 foot
+13	16	35	9	44	; 16 body
+13	35	36	5	32	; 17 right body
+13	14	14	47	47	; 18 left toe
+13	32	32	7	8	; 19 hair
+13	17	18	7	8	; 20 hair
+13	13	15	11	22	; 21 left
+13	11	13	10	16	; 22 left
+9	13	13	47	47	; 23 left toe
+9	14	17	45	46	; 24 left
+9	15	15	43	44	; 25 left
+9	19	19	43	44	; 26 left
+9	16	18	41	42	; 27 left
+9	16	16	37	40	; 28 left
+9	15	15	23	36	; 29 left
+9	14	14	25	26	; 30 left
+9	12	12	19	20	; 31 left
+9	11	11	15	16	; 32 left
+9	10	10	9	10	; 33 left
+9	15	18	5	6	; 34 left
+9	16	16	7	14	; 35 left
+9	14	14	9	10	; 36 left
+9	15	15	11	12	; 37 left
+9	17	17	13	18	; 38 left
+9	16	17	21	22	; 39 left
+9	18	23	19	20	; 40 left
+9	21	22	23	24	; 41 left
+9	20	20	25	26	; 42 left
+9	21	21	27	28	; 43 left
+9	24	25	21	22	; 44 left
+9	26	27	23	24	; 45 left
+9	24	26	27	28	; 46 left
+9	24	24	29	30	; 47 left
+9	26	26	33	34	; 48 left
+9	19	23	7	8	; 49 left
+9	25	30	9	10	; 50 left
+9	30	31	3	4	; 51 top
+9	36	38	3	4	; 52 top
+9	31	32	5	6	; 53 top
+9	31	31	7	8	; 54 top
+9	33	34	7	8	; 55 top
+9	35	35	5	6	; 56 top
+9	37	37	5	6	; 57 top
+9	36	36	7	8	; 58 top
+9	34	34	9	10	; 59 top
+9	36	36	15	24	; 60 right
+9	37	37	29	32	; 61 right
+9	36	36	35	36	; 62 right
+9	35	35	37	38	; 63 right
+9	36	36	39	39	; 64 right
+9	37	37	43	44	; 65 right
+9	33	33	25	26	; 66 right
+0	13	14	21	24	; 67 left
+0	11	12	11	12	; 68 left
+0	11	11	13	14	; 69 left
+0	12	12	17	19	; 70 left
+0	14	14	17	18	; 71 left
+0	25	25	29	32	; 72 middle
+0	32	32	47	47	; 73 bottom
+0	37	38	45	47	; 74 right bottom
+0	34	34	41	43	; 75 right
+0	36	36	41	42	; 76 right
+0	33	34	35	38	; 77 center
+0	34	35	31	32	; 78 right
+0	35	36	33	34	; 79 right
+0	36	37	27	28	; 80 right
+0	37	37	25	26	; 81 right
+0	33	33	23	24	; 82 right
+0	33	33	15	18	; 83 right
+0	35	36	17	20	; 84 right
+0	36	36	21	22	; 85 right
+0	32	33	11	12	; 86 right
+0	33	33	9	10	; 87 top righ
+0	36	36	9	12	; 88 top right
+0	37	38	11	14	; 89 right
+0	39	39	13	16	; 90 right
+0	20	21	11	14	; 91 left eye
+0	23	24	11	14	; 92 right eye
+0	21	21	9	10	; 93 left eye
+0	24	24	9	10	; 94 right eye
+15	21	21	11	12	; 95 right eye
+15	24	24	11	12	; 96 left eye
+5	27	32	27	44	; 95 arm thing
+5	28	32	25	26	; 96 arm thing
+15	28	31	27	42	; 97 arm thing
+5	33	33	39	44	; 98 arm thing
+5	28	28	45	36	; 99 arm thing
+5	30	30	45	36	; 100 arm thing
+5	32	32	45	36	; 101 arm thing
+0	19	20	19	20	; 102 left mustache
+0	20	21	17	18	; 103 left mustache
+0	23	24	17	18	; 104 right mustache
+0	24	25	19	20	; 105 right mustacne

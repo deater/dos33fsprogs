@@ -29,7 +29,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	TARGET.BAS ELITE.BAS MYSTERY.BAS OFFICE.BAS GR_XOR.BAS \
 	LARGE_XOR.BAS PAR_XOR.BAS PAR_HGR.BAS SIER_XOR.BAS PATTERN_LOGO.BAS \
 	GEARS.BAS DSR_LORES.BAS A2_LORES.BAS MAGIC_CUBE.BAS MOON.BAS \
-	PUMPKIN2.BAS TWITTER.BAS XTREE.BAS
+	PUMPKIN2.BAS TWITTER.BAS XTREE.BAS CHEAT.BAS
 	cp $(EMPTY_DISK)/empty_lots_of_dirents.dsk  appleiibot.dsk
 #	cp empty.dsk appleiibot.dsk
 #	$(DOS33) -y appleiibot.dsk BSAVE -a 0x0300 LOAD
@@ -157,6 +157,7 @@ appleiibot.dsk:	E2.BAS FLAME.BAS FLAME2.BAS HELLO \
 	$(DOS33) -y appleiibot.dsk SAVE A PUMPKIN2.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A TWITTER.BAS
 	$(DOS33) -y appleiibot.dsk SAVE A XTREE.BAS
+	$(DOS33) -y appleiibot.dsk SAVE A CHEAT.BAS
 
 
 ####
@@ -661,6 +662,11 @@ RECT.BAS:	rect.bas
 
 EDGAR.BAS:	edgar.bas
 	$(TOKENIZE) < edgar.bas > EDGAR.BAS
+
+####
+
+CHEAT.BAS:	cheat.bas
+	$(TOKENIZE) < cheat.bas > CHEAT.BAS
 
 ####
 

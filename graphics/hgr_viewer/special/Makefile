@@ -17,7 +17,8 @@ all:	bbl.hgr.zx02 bbl2.hgr.zx02 \
 	bar.hgr.zx02 ani.hgr.zx02 gld.hgr.zx02 \
 	rnu.hgr.zx02 ooh.hgr.zx02 two.hgr.zx02 \
 	rug.hgr.zx02 ndz.hgr.zx02 crd.hgr.zx02 \
-	gfa.hgr.zx02 sxy.hgr.zx02
+	gfa.hgr.zx02 sxy.hgr.zx02 sdw.hgr.zx02 \
+	sdw2.hgr.zx02
 
 ####
 
@@ -368,6 +369,23 @@ sxy.hgr.zx02:	sxy.hgr
 
 sxy.hgr:	sxy.png
 	$(PNG_TO_HGR) sxy.png > sxy.hgr
+
+####
+
+sdw.hgr.zx02:	sdw.hgr
+	$(ZX02) sdw.hgr sdw.hgr.zx02
+
+sdw.hgr:	sdw.png
+	$(PNG_TO_HGR) sdw.png > sdw.hgr
+
+####
+
+sdw2.hgr.zx02:	sdw2.hgr
+	$(ZX02) sdw2.hgr sdw2.hgr.zx02
+
+sdw2.hgr:	sdw2.png
+	$(PNG_TO_HGR) sdw2.png > sdw2.hgr
+
 
 
 
