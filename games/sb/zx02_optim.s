@@ -20,20 +20,36 @@ bitr            = ZP+6
 pntr            = ZP+7
 
             ; Initial values for offset, source, destination and bitr
-zx0_ini_block:
-            .byte $00, $00, <comp_data, >comp_data, <out_addr, >out_addr, $80
+;zx0_ini_block:
+;            .byte $00, $00
+;comp_data:
+;		.byte $0, $0
+;out_addr:
+;		.byte $0, $0
+;		.byte $80
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
 
+	; destination page in A
 full_decomp:
-              ; Get initialization block
-              ldy #7
+		sta	ZX0_dst+1
 
-copy_init:     lda zx0_ini_block-1, y
-              sta offset-1, y
-              dey
-              bne copy_init
+		lda	#0
+		sta	ZX0_dst
+		sta	offset
+		sta	offset+1
+
+		lda	#$80
+		sta	bitr
+
+              ; Get initialization block
+;              ldy #7
+
+;copy_init:     lda zx0_ini_block-1, y
+ ;             sta offset-1, y
+  ;            dey
+   ;           bne copy_init
 
 ; Decode literal: Ccopy next N bytes from compressed file
 ;    Elias(length)  byte[1]  byte[2]  ...  byte[N]

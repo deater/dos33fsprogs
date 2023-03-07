@@ -1,2 +1,2 @@
    5  HOME
- 105  PRINT  CHR$ (4)"BRUN SB"
+ 105  PRINT  CHR$ (4)"CATALOG"

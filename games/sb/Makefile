@@ -11,10 +11,11 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	HELLO SB
+sb.dsk:	HELLO SB DUCK_POND
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33) -y sb.dsk SAVE A HELLO
 	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
+	$(DOS33) -y sb.dsk BSAVE -a 0x1000 DUCK_POND
 
 ####
 
@@ -27,10 +28,20 @@ sb.o:	sb.s zx02_optim.s \
 
 ####
 
+DUCK_POND:	duck_pond.o
+	ld65 -o DUCK_POND duck_pond.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
+
+duck_pond.o:	duck_pond.s zx02_optim.s \
+		zp.inc hardware.inc
+	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst
+
+
+####
+
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
 ####
 
 clean:	
-	rm -f *.lst *.o SB *~
+	rm -f *.lst *.o SB DUCK_POND *~

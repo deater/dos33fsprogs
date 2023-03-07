@@ -1,20 +1,32 @@
-; Yet Another HR project
+; gr duck pond
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
+
+; todo
+;	videlectrix/ f to feed message
+;	F feeds
+;	A anvil (what happens when land on duck)
+;	Y drain pond
+;	ESC exit
+;	S spawn new duck
+;	N night (twilight?)
+;	J jump in pond
+
+;	how show score?
 
 .include "zp.inc"
 .include "hardware.inc"
 
 
-hires_start:
+duck_pond:
 
 	;===================
 	; set graphics mode
 	;===================
 	jsr	HOME
 
-	bit	HIRES
+	bit	LORES
 	bit	FULLGR
 	bit	SET_GR
 	bit	PAGE0
@@ -34,21 +46,14 @@ load_loop:
 
 load_image:
 
-	; size in ldsizeh:ldsizel (f1/f0)
-
-	lda	#<comp_data
+	lda	#<title_data
 	sta	ZX0_src
-	lda	#>comp_data
+	lda	#>title_data
 	sta	ZX0_src+1
 
-
-	lda	#$20
-
+	lda	#$4
 
 	jsr	full_decomp
-
-;	rts
-
 
 
 wait_until_keypress:
@@ -57,6 +62,22 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 
 which_ok:
+
+	lda	#<main_data
+	sta	ZX0_src
+	lda	#>main_data
+	sta	ZX0_src+1
+
+	lda	#$4
+
+	jsr	full_decomp
+
+
+wait_until_keypress2:
+	lda	KEYPRESS				; 4
+	bpl	wait_until_keypress2			; 3
+	bit	KEYRESET	; clear the keyboard buffer
+
 	jmp	load_loop
 
 
@@ -65,5 +86,8 @@ which_ok:
 	.include	"zx02_optim.s"
 
 
-comp_data:
-	.incbin "graphics/strongbad_sample.hgr.zx02"
+title_data:
+	.incbin "graphics/a2_duckpond_title.gr.zx02"
+
+main_data:
+	.incbin "graphics/a2_duckpond.gr.zx02"
