@@ -1,22 +1,14 @@
 ;; Zero Page
 
-FRAMEBUFFER     = $00   ; $00 - $0F
+;; ZX02 addresses
 
-;; LZ4 addresses
+ZP=$00
 
-FLAME_STATE	= $00
-FLAME1		= $01
-FLAME2		= $02
-FLAME3		= $03
-FLAME4		= $04
-FLAME5		= $05
-
-
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
-COUNT		= $06
-DELTA		= $08
+offset          = ZP+0
+ZX0_src         = ZP+2
+ZX0_dst         = ZP+4
+bitr            = ZP+6
+pntr            = ZP+7
 
 ;; Zero page monitor routines addresses
 

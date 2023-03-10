@@ -31,6 +31,9 @@ duck_pond:
 	bit	SET_GR
 	bit	PAGE0
 
+	lda	#$0
+	sta	DRAW_PAGE
+
 
 	;===================
 	; Load graphics
@@ -51,9 +54,11 @@ load_image:
 	lda	#>title_data
 	sta	ZX0_src+1
 
-	lda	#$4
+	lda	#$C			; load at $c00
 
 	jsr	full_decomp
+
+	jsr	gr_copy_to_current
 
 
 wait_until_keypress:
@@ -68,10 +73,11 @@ which_ok:
 	lda	#>main_data
 	sta	ZX0_src+1
 
-	lda	#$4
+	lda	#$C
 
 	jsr	full_decomp
 
+	jsr	gr_copy_to_current
 
 wait_until_keypress2:
 	lda	KEYPRESS				; 4
@@ -84,7 +90,8 @@ wait_until_keypress2:
 
 
 	.include	"zx02_optim.s"
-
+	.include	"gr_copy.s"
+	.include	"gr_offsets.s"
 
 title_data:
 	.incbin "graphics/a2_duckpond_title.gr.zx02"

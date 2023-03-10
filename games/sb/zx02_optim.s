@@ -11,22 +11,22 @@
 ; Code under MIT license, see LICENSE file.
 
 
-ZP=$80
+;ZP=$80
 
-offset          = ZP+0
-ZX0_src         = ZP+2
-ZX0_dst         = ZP+4
-bitr            = ZP+6
-pntr            = ZP+7
+;offset          = ZP+0
+;ZX0_src         = ZP+2
+;ZX0_dst         = ZP+4
+;bitr            = ZP+6
+;pntr            = ZP+7
 
             ; Initial values for offset, source, destination and bitr
 ;zx0_ini_block:
-;            .byte $00, $00
+;            .byte $00, $00	; offset
 ;comp_data:
-;		.byte $0, $0
+;		.byte $0, $0	; zx0_src
 ;out_addr:
-;		.byte $0, $0
-;		.byte $80
+;		.byte $0, $0	; zx0_dst
+;		.byte $80	; bitr
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
@@ -35,13 +35,16 @@ pntr            = ZP+7
 full_decomp:
 		sta	ZX0_dst+1
 
-		lda	#0
-		sta	ZX0_dst
-		sta	offset
-		sta	offset+1
+		ldy	#$80
+		sty	bitr
 
-		lda	#$80
-		sta	bitr
+		ldy	#0		; always on page boundary
+		sty	ZX0_dst
+
+		sty	offset
+		sty	offset+1
+
+		; Y needs to be 0 here
 
               ; Get initialization block
 ;              ldy #7

@@ -32,7 +32,8 @@ DUCK_POND:	duck_pond.o
 	ld65 -o DUCK_POND duck_pond.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
 duck_pond.o:	duck_pond.s zx02_optim.s \
-		zp.inc hardware.inc
+		zp.inc hardware.inc \
+		gr_copy.s
 	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst
 
 
