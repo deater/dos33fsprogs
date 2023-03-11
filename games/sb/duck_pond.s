@@ -15,6 +15,13 @@
 
 ;	how show score?
 
+
+;123456789012345678901234567890123456789
+;         *** VIDELECTRIX ***
+;
+;      PRESS "F"  TO THROW BREAD
+;       PRESS SPACEBAR TO START
+
 .include "zp.inc"
 .include "hardware.inc"
 
@@ -60,6 +67,7 @@ load_image:
 
 	jsr	gr_copy_to_current
 
+	bit	TEXTGR
 
 wait_until_keypress:
 	lda	KEYPRESS				; 4
@@ -78,6 +86,8 @@ which_ok:
 	jsr	full_decomp
 
 	jsr	gr_copy_to_current
+
+	bit	FULLGR
 
 wait_until_keypress2:
 	lda	KEYPRESS				; 4
