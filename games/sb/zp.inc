@@ -127,34 +127,23 @@ CURSOR		= $9D
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
-			;COLOR1		=	$E0
-			;COLOR2		=	$E1
-			;MATCH		=	$E2
-XX	=	$E3
-YY	=	$E4
-HGR_COLOR       = $E4
-			;SHIPY		=	$E4
-			;YADD		=	$E5
-			;LOOP		=	$E6
-			;MEMPTRL	=	$E7
-			;MEMPTRH	=	$E8
-			;NAMEL		=	$E9
-			;NAMEH		=	$EA
-			;NAMEX		=	$EB
-			;CHAR		=	$EC
+
+D1_SCORE	= $E0
+D1_SCORE_H	= $E1
+D2_SCORE	= $E2
+D2_SCORE_H	= $E3
+
+
 STATE           = $ED
 DISP_PAGE	= $ED
 DRAW_PAGE	= $EE
 OFFSET         = $EF
 
-				;FIRST		=	$F0
 
-LASTKEY         = $F1
-PADDLE_STATUS   = $F2
+XPOS		=	$F0
+YPOS		=	$F1
+XMAX		=	$F2
 
-SPRITETEMP	=	$F2
-XPOS		=	$F3
-YPOS		=	$F4
 TEMP		=	$FA
 TEMPY		=	$FB
 INL		=	$FC

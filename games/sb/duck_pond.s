@@ -43,18 +43,10 @@ duck_pond:
 
 
 	;===================
-	; Load graphics
+	; TITLE SCREEN
 	;===================
-load_loop:
 
-	;=============================
-
-
-	;==========================
-	; Load Image
-	;===========================
-
-load_image:
+title_screen:
 
 	lda	#<title_data
 	sta	ZX0_src
@@ -74,7 +66,18 @@ wait_until_keypress:
 	bpl	wait_until_keypress			; 3
 	bit	KEYRESET	; clear the keyboard buffer
 
-which_ok:
+
+	;===================
+	; INIT GAME
+	;===================
+init_game:
+
+	lda	#0
+	sta	D1_SCORE
+	sta	D1_SCORE_H
+	sta	D2_SCORE
+	sta	D2_SCORE_H
+
 
 	lda	#<main_data
 	sta	ZX0_src
@@ -89,22 +92,80 @@ which_ok:
 
 	bit	FULLGR
 
+	;===================
+	; MAIN LOOP
+	;===================
+
+
+main_loop:
+
+	; copy over background
+
+	; draw arm animation
+
+	; draw food
+
+	; draw duck1
+
+	; draw duck2
+
+	; draw anvil/splash
+
+	; draw score
+
+	jsr	draw_score
+
+	; move food
+
+	; move arm
+
+	; move anvil
+
+	; move ducks
+
+	; drain water
+
+	; check keyboard
+
 wait_until_keypress2:
 	lda	KEYPRESS				; 4
-	bpl	wait_until_keypress2			; 3
+	bpl	done_loop
+
 	bit	KEYRESET	; clear the keyboard buffer
 
-	jmp	load_loop
+	and	#$7f		; clear high bit
+	cmp	#' '		; don't lose space
+	beq	was_space
+	and	#$df		; convert lowercase to uppercase
+was_space:
+
+check_bracket:
+	cmp	#'S'
+	bne	done_keyboard
+
+	jsr	score_inc_d1
+
+done_keyboard:
+
+	; flip page
 
 
+done_loop:
 
+	jmp	main_loop
 
 	.include	"zx02_optim.s"
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
+
+	.include	"gr_putsprite.s"
+
+	.include	"duck_score.s"
 
 title_data:
 	.incbin "graphics/a2_duckpond_title.gr.zx02"
 
 main_data:
 	.incbin "graphics/a2_duckpond.gr.zx02"
+
+	.include "graphics/num_sprites.inc"
