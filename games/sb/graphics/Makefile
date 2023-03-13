@@ -38,18 +38,31 @@ num_sprites.inc:	lores_font.png
 
 duck_sprites.inc:	duck1_sprites_left.png duck1_sprites_right.png \
 			duck2_sprites_left.png duck2_sprites_right.png
-	$(PNG2SPRITES) duck1_sprites_left.png d1_left1_sprite   1  2 11 12 >  duck_sprites.inc
-	$(PNG2SPRITES) duck1_sprites_left.png d1_left2_sprite   1 16 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck1_sprites_left.png d1_left3_sprite   1 30 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck1_sprites_right.png d1_right1_sprite 1  2 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck1_sprites_right.png d1_right2_sprite 1 16 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck1_sprites_right.png d1_right3_sprite 1 30 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_left.png d2_left1_sprite   1  2 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_left.png d2_left2_sprite   1 16 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_left.png d2_left3_sprite   1 30 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_right.png d2_right1_sprite 1  2 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_right.png d2_right2_sprite 1 16 11 12 >>  duck_sprites.inc
-	$(PNG2SPRITES) duck2_sprites_right.png d2_right3_sprite 1 30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left1_sprite   1   2 11 12 >  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left2_sprite   1  16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left3_sprite   1  30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left1_mask     13  2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left2_mask     13 16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_left.png d1_left3_mask     13 30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right1_sprite 1   2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right2_sprite 1  16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right3_sprite 1  30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right1_mask   13  2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right2_mask   13 16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck1_sprites_right.png d1_right3_mask   13 30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left1_sprite   1   2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left2_sprite   1  16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left3_sprite   1  30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left1_mask     13  2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left2_mask     13 16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_left.png d2_left3_mask     13 30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right1_sprite 1   2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right2_sprite 1  16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right3_sprite 1  30 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right1_mask   13  2 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right2_mask   13 16 11 12 >>  duck_sprites.inc
+	$(PNG2SPRITES) duck2_sprites_right.png d2_right3_mask   13 30 11 12 >>  duck_sprites.inc
+
 
 
 
