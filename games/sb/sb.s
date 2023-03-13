@@ -17,7 +17,7 @@ hires_start:
 	bit	HIRES
 	bit	FULLGR
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 
 
 	;===================

@@ -13,7 +13,9 @@
 ;	N night (twilight?)
 ;	J jump in pond
 
-;	how show score?
+; D/G throw short vs long?
+
+;	replace "bread" with "food"
 
 
 ;123456789012345678901234567890123456789
@@ -36,7 +38,7 @@ duck_pond:
 	bit	LORES
 	bit	FULLGR
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 
 	lda	#$0
 	sta	DRAW_PAGE
@@ -78,6 +80,25 @@ init_game:
 	sta	D2_SCORE
 	sta	D2_SCORE_H
 
+	lda	#1
+	sta	D1_STATE
+	sta	D2_STATE
+
+	lda	#10
+	sta	D1_XPOS
+	sta	D1_YPOS
+
+	lda	#14
+	sta	D2_XPOS
+	sta	D2_YPOS
+
+	lda	#$FF
+	sta	D1_XSPEED
+	sta	D1_YSPEED
+	sta	D2_XSPEED
+	sta	D2_YSPEED
+
+	; load background
 
 	lda	#<main_data
 	sta	ZX0_src
@@ -98,6 +119,7 @@ init_game:
 
 
 main_loop:
+	jsr	gr_copy_to_current
 
 	; copy over background
 
@@ -105,15 +127,21 @@ main_loop:
 
 	; draw food
 
-	; draw duck1
+	; draw ducks
 
-	; draw duck2
+	jsr	draw_duck1
+	jsr	draw_duck2
 
 	; draw anvil/splash
 
 	; draw score
 
 	jsr	draw_score
+
+
+	; flip page
+
+	jsr	page_flip
 
 	; move food
 
@@ -122,6 +150,8 @@ main_loop:
 	; move anvil
 
 	; move ducks
+
+	jsr	move_ducks
 
 	; drain water
 
@@ -145,9 +175,11 @@ check_bracket:
 
 	jsr	score_inc_d1
 
+	lda	#$ff
+	sta	D1_XSPEED
+
 done_keyboard:
 
-	; flip page
 
 
 done_loop:
@@ -159,8 +191,11 @@ done_loop:
 	.include	"gr_offsets.s"
 
 	.include	"gr_putsprite.s"
+	.include	"gr_pageflip.s"
 
 	.include	"duck_score.s"
+	.include	"draw_ducks.s"
+	.include	"move_ducks.s"
 
 title_data:
 	.incbin "graphics/a2_duckpond_title.gr.zx02"
@@ -169,3 +204,4 @@ main_data:
 	.incbin "graphics/a2_duckpond.gr.zx02"
 
 	.include "graphics/num_sprites.inc"
+	.include "graphics/duck_sprites.inc"
