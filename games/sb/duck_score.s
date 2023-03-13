@@ -83,6 +83,9 @@ score_inc_d1:
 	cld				; back from decimal mode
 
 update_d1_score:
+
+	; update ones digit
+
 	lda	D1_SCORE
 	and	#$f
 	tay
@@ -90,6 +93,24 @@ update_d1_score:
 	sta	score1_l+4
 	lda	number_sprites_h,Y
 	sta	score1_h+4
+
+	; check if leading zero
+
+	lda	D1_SCORE_H
+	and	#$f
+	bne	d1_score_no_lead_zero
+
+	lda	D1_SCORE
+	and	#$f0
+	bne	d1_score_no_lead_zero
+
+	lda	#<space_sprite
+	sta	score1_l+3
+	lda	#>space_sprite
+	sta	score1_h+3
+	jmp	done_d1_score
+
+d1_score_no_lead_zero:
 
 	lda	D1_SCORE
 	lsr
@@ -101,6 +122,9 @@ update_d1_score:
 	sta	score1_l+3
 	lda	number_sprites_h,Y
 	sta	score1_h+3
+
+done_d1_score:
+
 
 	rts
 
