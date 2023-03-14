@@ -1,6 +1,6 @@
-	;===============
-	; gr_put_sprite
-	;===============
+	;====================
+	; gr_put_sprite_mask
+	;====================
 	; Sprite to display in INL/INH
 	; MASK (for transparency) on MASKL/MASH
 	; Location is XPOS,YPOS
@@ -8,7 +8,7 @@
 
 	; trashes A,X,Y
 
-gr_put_sprite:
+gr_put_sprite_mask:
 	ldy	#0
 
 	lda	(INL),Y			; xsize
@@ -34,6 +34,12 @@ gr_put_sprite:
 	lda	INH
 	sta	gps_src_smc+2
 
+	lda	MASKL
+	sta	gps_mask_smc+1
+	lda	MASKH
+	sta	gps_mask_smc+2
+
+
 gr_put_sprite_loop:
 	ldy	YPOS
 	lda	gr_offsets,Y
@@ -49,8 +55,16 @@ gr_put_sprite_row:
 	cpy	#40
 	bcs	gr_put_sprite_dont_draw		; don't draw if out of bounds
 
+
+	; put the pixel
+	; based on monitor plot code
+
+	lda	(OUTL),Y
 gps_src_smc:
-	lda	$f000,X
+	eor	$f000,X			; load sprite data
+gps_mask_smc:
+	and	$f000,X
+	eor	(OUTL),Y
 	sta	(OUTL),Y
 
 gr_put_sprite_dont_draw:

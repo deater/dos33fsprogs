@@ -2,12 +2,13 @@
 draw_score:
 	ldy	#0
 
-	lda	#42
-	sta	YPOS
 
 	ldx	#10
 
 draw_score_1_loop:
+
+	lda	#42
+	sta	YPOS
 
 	lda	score_xpos,Y
 	sta	XPOS
@@ -17,12 +18,18 @@ draw_score_1_loop:
 	lda	score1_h,Y
 	sta	INH
 
+	lda	mask1_l,Y
+	sta	MASKL
+	lda	mask1_h,Y
+	sta	MASKH
+
+
 	txa
 	pha
 	tya
 	pha
 
-	jsr	gr_put_sprite
+	jsr	gr_put_sprite_mask
 
 	pla
 	tay
@@ -62,6 +69,34 @@ score2_h:
 	.byte >four_sprite
 	.byte >zero_sprite
 
+
+mask1_l:
+	.byte <d_mask
+	.byte <one_mask
+	.byte <colon_mask
+	.byte <space_mask
+	.byte <zero_mask
+mask2_l:
+	.byte <d_mask
+	.byte <two_mask
+	.byte <colon_mask
+	.byte <four_mask
+	.byte <zero_mask
+
+mask1_h:
+	.byte >d_mask
+	.byte >one_mask
+	.byte >colon_mask
+	.byte >space_mask
+	.byte >zero_mask
+mask2_h:
+	.byte >d_mask
+	.byte >two_mask
+	.byte >colon_mask
+	.byte >four_mask
+	.byte >zero_mask
+
+
 score_xpos:
 	.byte  1, 5, 8,11,15
 	.byte 22,26,29,32,36
@@ -93,6 +128,10 @@ update_d1_score:
 	sta	score1_l+4
 	lda	number_sprites_h,Y
 	sta	score1_h+4
+	lda	number_masks_l,Y
+	sta	mask1_l+4
+	lda	number_masks_h,Y
+	sta	mask1_h+4
 
 	; check if leading zero
 
@@ -108,6 +147,12 @@ update_d1_score:
 	sta	score1_l+3
 	lda	#>space_sprite
 	sta	score1_h+3
+
+	lda	#<space_mask
+	sta	mask1_l+3
+	lda	#>space_mask
+	sta	mask1_h+3
+
 	jmp	done_d1_score
 
 d1_score_no_lead_zero:
@@ -122,6 +167,12 @@ d1_score_no_lead_zero:
 	sta	score1_l+3
 	lda	number_sprites_h,Y
 	sta	score1_h+3
+
+	lda	number_masks_l,Y
+	sta	mask1_l+3
+	lda	number_masks_h,Y
+	sta	mask1_h+3
+
 
 done_d1_score:
 
@@ -152,5 +203,30 @@ number_sprites_h:
 	.byte >seven_sprite
 	.byte >eight_sprite
 	.byte >nine_sprite
+
+number_masks_l:
+	.byte <zero_mask
+	.byte <one_mask
+	.byte <two_mask
+	.byte <three_mask
+	.byte <four_mask
+	.byte <five_mask
+	.byte <six_mask
+	.byte <seven_mask
+	.byte <eight_mask
+	.byte <nine_mask
+
+number_masks_h:
+	.byte >zero_mask
+	.byte >one_mask
+	.byte >two_mask
+	.byte >three_mask
+	.byte >four_mask
+	.byte >five_mask
+	.byte >six_mask
+	.byte >seven_mask
+	.byte >eight_mask
+	.byte >nine_mask
+
 
 

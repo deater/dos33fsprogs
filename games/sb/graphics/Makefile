@@ -33,6 +33,20 @@ num_sprites.inc:	lores_font.png
 	$(PNG2SPRITES) lores_font.png colon_sprite  8 6 3 6 >> num_sprites.inc
 	$(PNG2SPRITES) lores_font.png d_sprite     12 6 3 6 >> num_sprites.inc
 	$(PNG2SPRITES) lores_font.png space_sprite 16 6 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png zero_mask     0 14 3 6 >>  num_sprites.inc
+	$(PNG2SPRITES) lores_font.png one_mask      4 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png two_mask      8 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png three_mask   12 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png four_mask    16 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png five_mask    20 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png six_mask     24 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png seven_mask   28 14 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png eight_mask    0 20 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png nine_mask     4 20 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png colon_mask    8 20 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png d_mask       12 20 3 6 >> num_sprites.inc
+	$(PNG2SPRITES) lores_font.png space_mask   16 20 3 6 >> num_sprites.inc
+
 
 ####
 

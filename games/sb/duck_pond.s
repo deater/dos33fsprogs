@@ -190,7 +190,7 @@ done_loop:
 	.include	"gr_copy.s"
 	.include	"gr_offsets.s"
 
-	.include	"gr_putsprite.s"
+	.include	"gr_putsprite_mask.s"
 	.include	"gr_pageflip.s"
 
 	.include	"duck_score.s"

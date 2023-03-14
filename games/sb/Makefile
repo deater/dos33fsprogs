@@ -33,7 +33,7 @@ DUCK_POND:	duck_pond.o
 
 duck_pond.o:	duck_pond.s zx02_optim.s \
 		zp.inc hardware.inc \
-		gr_copy.s duck_score.s gr_putsprite.s \
+		gr_copy.s duck_score.s gr_putsprite_mask.s \
 		draw_ducks.s move_ducks.s \
 		graphics/duck_sprites.inc graphics/num_sprites.inc
 	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst

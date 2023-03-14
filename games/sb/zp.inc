@@ -162,8 +162,10 @@ XPOS		=	$F0
 YPOS		=	$F1
 XMAX		=	$F2
 
-TEMP		=	$FA
-TEMPY		=	$FB
+TEMP		=	$F8
+TEMPY		=	$F9
+MASKL		=	$FA
+MASKH		=	$FB
 INL		=	$FC
 INH		=	$FD
 OUTL		=	$FE
