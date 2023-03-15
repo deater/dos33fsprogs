@@ -40,9 +40,13 @@ duck_pond:
 	bit	SET_GR
 	bit	PAGE1
 
-	lda	#$0
+	lda	#$4
 	sta	DRAW_PAGE
 
+	lda	#$0
+	sta	FRAME
+	sta	FRAMEH
+	sta	DISP_PAGE
 
 	;===================
 	; TITLE SCREEN
@@ -62,6 +66,8 @@ title_screen:
 	jsr	gr_copy_to_current
 
 	bit	TEXTGR
+
+	jsr	page_flip
 
 wait_until_keypress:
 	lda	KEYPRESS				; 4
@@ -180,6 +186,12 @@ check_bracket:
 
 done_keyboard:
 
+	; increment frame
+
+	inc	FRAME
+	bne	frame_noflo
+	inc	FRAMEH
+frame_noflo:
 
 
 done_loop:
