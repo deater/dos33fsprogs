@@ -1,0 +1,21 @@
+GIMP Palette
+Name: Hires Gradient
+Columns: 0
+#
+  0   0   0 Black
+102  45   0 Darkest Orange
+144  64   0 Dark Orange
+177  78   0 LightDark Orange
+205  91   1 Orange
+218 149 127 Darklight Orange
+231 191 180 Light Orange
+243 225 220 Lightest Orange
+255 255 255 White
+ 13  77 127 Darkest Blue
+ 19 108 179 Dark Blue
+ 23 133 219 Lightdark Blue
+ 27 154 254 Blue
+181 210 254 Darlight Blue
+221 233 254 Light Blue
+221 233 254 Lightest Blue
+
