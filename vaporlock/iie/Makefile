@@ -7,16 +7,25 @@ EMPTYDISK = ../../empty_disk/empty.dsk
 
 all:	split.dsk
 
-split.dsk:	HELLO SPLIT NOTWORK
+split.dsk:	HELLO SPLIT NOTWORK DOUBLE
 	cp $(EMPTYDISK) split.dsk
 	$(DOS33) -y split.dsk SAVE A HELLO
 	$(DOS33) -y split.dsk BSAVE -a 0x384 SPLIT
+	$(DOS33) -y split.dsk BSAVE -a 0x1000 DOUBLE
 	$(DOS33) -y split.dsk BSAVE -a 0x384 NOTWORK
 
 ###
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
+
+###
+
+DOUBLE:	double.o
+	ld65 -o DOUBLE double.o -C $(LINKERSCRIPTS)/apple2_1000.inc
+
+double.o:	double.s
+	ca65 -o double.o double.s -l double.lst
 
 ###
 

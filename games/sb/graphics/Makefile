@@ -10,6 +10,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 
 all:	strongbad_sample.hgr.zx02 \
+	czmg4ap_title.hgr.zx02 \
 	a2_duckpond_title.gr.zx02 \
 	a2_duckpond.gr.zx02 \
 	a2_duckpond_twilight.gr.zx02 \
@@ -88,6 +89,15 @@ strongbad_sample.hgr.zx02:	strongbad_sample.hgr
 
 strongbad_sample.hgr:	strongbad_sample.png
 	$(PNG_TO_HGR) strongbad_sample.png > strongbad_sample.hgr
+
+####
+
+czmg4ap_title.hgr.zx02:	czmg4ap_title.hgr
+	$(ZX02) czmg4ap_title.hgr czmg4ap_title.hgr.zx02
+
+czmg4ap_title.hgr:	czmg4ap_title.png
+	$(PNG_TO_HGR) czmg4ap_title.png > czmg4ap_title.hgr
+
 
 ####
 
