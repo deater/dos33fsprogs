@@ -1,5 +1,6 @@
-; split screen?
-; double modes
+; Test mid-screen mode switch on Apple IIe double modes
+
+; TODO: detect iic/iigs and vblank properly there
 
 ; by Vince `deater` Weaver
 
@@ -7,18 +8,15 @@
 GBASL	= $26
 GBASH	= $27
 V2	= $2D
-MASK	= $2E
-COLOR	= $30
-;CTEMP	= $68
-YY	= $69
 
 HGRPAGE = $E6
-FRAME	= $FC
-SUM	= $FD
+
 YPOS	= $FE
 TCOLOR	= $FF
 
 ; soft-switches
+; yes, I know these aren't necessary the "official" names
+
 EIGHTYSTORE	=	$C001
 CLR80COL	=	$C00C
 SET80COL	=	$C00D
@@ -36,9 +34,9 @@ SETAN3	= $C05F
 VBLANK	= $C019		; *not* RDVBL (VBL signal low)
 
 ; ROM routines
-SETCOL  = $F864		;; COLOR=A*17
+SETCOL  = $F864		; COLOR=A*17
 SETGR	= $FB40
-VLINE	= $F828			;; VLINE A,$2D at Y
+VLINE	= $F828		; VLINE A,$2D at Y
 HGR	= $F3E2
 HPOSN	= $F411
 HPLOT0  = $F457		; plot at (Y,X), (A)
@@ -47,7 +45,7 @@ HGLIN	= $F53A		; line to (X,A),(Y)
 	;================================
 	; Clear screen and setup graphics
 	;================================
-split:
+double:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 
@@ -74,7 +72,8 @@ draw_lores_lines:
 	dex
 	bpl	draw_lores_lines
 
-	; copy to 800
+	; copy to 800 temporarily
+	; yes this is a bit of a hack
 
 	ldy	#0
 cp_loop:
@@ -95,9 +94,9 @@ cp_loop:
 
 	bit	PAGE1
 
-	; copy to AUX
+	; copy to $400 in AUX
 
-	bit	PAGE2	; $400 maps to AUX:$400
+	bit	PAGE2	; $400 now maps to AUX:$400
 
 	ldy	#0
 cp2_loop:
@@ -187,7 +186,7 @@ wait_vblank_done_iie:
 	bpl	wait_vblank_done_iie
 
 	;
-split_loop:
+double_loop:
 	;===========================
 	; text mode first 6*4 (24) lines
 	;	each line 65 cycles (25 hblank+40 bytes)
@@ -244,11 +243,13 @@ split_loop:
 
 	jsr	delay_1552
 
-	; hi-res for last 96 lines + horizontal blank
+
+
+	;==================================
 	; vblank = 4550 cycles
 
 	; Try X=226 Y=4 cycles=4545
-
+skip_vblank:
 	nop
 
 	ldy	#4							; 2
@@ -258,27 +259,13 @@ loop4:	dex								; 2
 	dey								; 2
 	bne	loop3							; 2nt/3
 
-	jmp	split_loop	; 3
+	jmp	double_loop	; 3
+
+;=======================================================
+; need to align because if we straddle a page boundary
+;	the time counts end up off
 
 .align $100
-
-	; actually want 3112-12 (6 each for jsr/rts)
-	; 3100
-	; Try X=6 Y=86 cycles=3097
-delay_3112:
-
-	lda	$0		; 3-cycle nop
-
-        ldy     #86                                                     ; 2
-loop1:  ldx     #6                                                      ; 2
-loop2:  dex                                                             ; 2
-        bne     loop2                                                   ; 2nt/3
-        dey                                                             ; 2
-        bne     loop1                                                   ; 2nt/3
-
-	rts
-
-
 
 	; actually want 1552-12 (6 each for jsr/rts)
 	; 1540
@@ -295,25 +282,28 @@ loop6:  dex								; 2
 	rts
 
 
-	;=========================
-	; draw line of color in COLOR
+	;==========================
+	; draw horizontal DHGR line
+	;==========================
+	; color is in TCOLOR
+	; Y position is in A
 	;=========================
 draw_line_color:
 	ldx	#0
 	ldy	#0
-	jsr	HPOSN
+	jsr	HPOSN		; setup GBASL/GBASH with Y position
 
 	ldy	#0
-loop_it:
+line_loop_it:
 	; set page2
-	sta	$C055
+	sta	PAGE2
 	lda	TCOLOR
 	sta	(GBASL),Y
 	cmp	#$80
 	rol	TCOLOR
 
 	; set page1
-	sta	$C054
+	sta	PAGE1
 	lda	TCOLOR
 	sta	(GBASL),Y
 	cmp	#$80
@@ -321,13 +311,6 @@ loop_it:
 	iny
 
 	cpy	#40
-	bne	loop_it
-
+	bne	line_loop_it
 
 	rts
-
-
-	; to run on bot, want this to be at $3F5
-	; so load at $384
-
-	jmp	split
