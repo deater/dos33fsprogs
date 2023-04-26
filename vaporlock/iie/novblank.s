@@ -1,6 +1,7 @@
-; split screen?
+; mid-screen changes but not waiting for VBLANK
 
-; apple ii bot $C019 doesn't work, so skip it and hope for best
+; on apple ii twitter bot emulator $C019 for detecting VBLANK doesn't work
+; so was seeing if still could modeswitch anyway (answer: no)
 
 ; by Vince `deater` Weaver
 

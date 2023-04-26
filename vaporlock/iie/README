@@ -1,3 +1,15 @@
-was trying some vaporlock for the AppleIIbot
-but forgot the emulator used there (linapple?)
-doesn't implement the VBLANK register, or mid-screen mode switching
+Some experiments with mid-screen mode switching on the Apple IIe.
+
+Was initially trying some vaporlock for the AppleIIbot but forgot the
+emulator used there (linapple?) doesn't implement the VBLANK register,
+or mid-screen mode switching.
+
+Further work in this directory is looking at more advanced switching
+of the double modes (80-column, double-lores, double-hires) as well as
+messing with the AN3 setting.
+
+
+SPLIT -- tiny apple IIe mode switch code
+NOVBLANK -- apple IIe mode switch that doesn't wait for VBLANK
+DOUBLE -- test of mid-screen switch of double modes
+

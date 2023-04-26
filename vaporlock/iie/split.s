@@ -1,4 +1,6 @@
-; split screen?
+; testing mid-screen mode switching in a small number of bytes on Apple IIe
+; originally intended for AppleII Twitter bot, but its emulator didn't
+;	support mid-screen mode switching
 
 ; by Vince `deater` Weaver
 

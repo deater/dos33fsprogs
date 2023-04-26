@@ -7,12 +7,12 @@ EMPTYDISK = ../../empty_disk/empty.dsk
 
 all:	split.dsk
 
-split.dsk:	HELLO SPLIT NOTWORK DOUBLE
+split.dsk:	HELLO SPLIT NOVBLANK DOUBLE
 	cp $(EMPTYDISK) split.dsk
 	$(DOS33) -y split.dsk SAVE A HELLO
 	$(DOS33) -y split.dsk BSAVE -a 0x384 SPLIT
 	$(DOS33) -y split.dsk BSAVE -a 0x1000 DOUBLE
-	$(DOS33) -y split.dsk BSAVE -a 0x384 NOTWORK
+	$(DOS33) -y split.dsk BSAVE -a 0x384 NOVBLANK
 
 ###
 
@@ -37,14 +37,14 @@ split.o:	split.s
 
 ###
 
-NOTWORK:	notwork.o
-	ld65 -o NOTWORK notwork.o -C $(LINKERSCRIPTS)/apple2_384.inc
+NOVBLANK:	novblank.o
+	ld65 -o NOVBLANK novblank.o -C $(LINKERSCRIPTS)/apple2_384.inc
 
-notwork.o:	notwork.s
-	ca65 -o notwork.o notwork.s -l notwork.lst
+novblank.o:	novblank.s
+	ca65 -o novblank.o novblank.s -l novblank.lst
 
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO SPLIT NOTWORK
+	rm -f *~ *.o *.lst HELLO SPLIT NOVBLANK
