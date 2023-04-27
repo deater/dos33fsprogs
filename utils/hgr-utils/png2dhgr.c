@@ -71,6 +71,7 @@ int loadpng(char *filename,
 	unsigned char *image,*out_ptr;
 	int width, height;
 	int a2_color;
+	int skip=1;
 
 	png_byte bit_depth;
 	png_structp png_ptr;
@@ -121,9 +122,13 @@ int loadpng(char *filename,
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-	if (width!=140) {
+	if ((width!=140) && (width!=280)) {
 		fprintf(stderr,"Unknown width %d\n",width);
 		return -1;
+	}
+
+	if (width==280) {
+		skip=2;
 	}
 
 	if (height!=192) {
@@ -183,7 +188,7 @@ int loadpng(char *filename,
 
 
 	for(y=0;y<height;y++) {
-		for(x=0;x<width;x++) {
+		for(x=0;x<width;x+=skip) {
 
 			color=	(row_pointers[y][x*bytes_per_pixel]<<16)+
 				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
