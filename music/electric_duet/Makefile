@@ -71,6 +71,13 @@ FORTNIGHT.ED:	fortnight.ed
 fortnight.ed:	$(TEXT_TO_ED) fortnight.txt
 	$(TEXT_TO_ED) -o 1 fortnight.txt fortnight
 
+###
+
+KORO.ED:	korobeiniki.ed
+	cp korobeiniki.ed KORO.ED
+
+korobeiniki.ed:	$(TEXT_TO_ED) korobeiniki.txt
+	$(TEXT_TO_ED) -o 0 korobeiniki.txt korobeiniki
 
 ###
 
