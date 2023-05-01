@@ -71,6 +71,8 @@ static int note_to_length(int length) {
 		case 11: len=(baselen*9)/8; break;	// ; = 9/8 dotted half + dotted quarter
 		case 12: len=(baselen*3)/2; break;	// < = 3/2 dotted whole
 		case 13: len=(baselen*2); break;	// = = 2   double whole
+		case 14: len=(baselen/32); break;	// > = 1/32
+		case 15: len=(baselen/32)*3; break;	// ? = 3/32 dotted sixteenth
 		default:
 			fprintf(stderr,"Unknown length %d, line %d\n",
 				length,line);
@@ -360,6 +362,9 @@ int main(int argc, char **argv) {
 	}
 	else if (bpm==160) {// 2.66Hz, 375ms, should be 60
 //		baselen=60;
+		baselen=64; // multiple of 16?
+	}
+	else if (bpm==180) {// 3.33Hz, 333ms, 
 		baselen=64; // multiple of 16?
 	}
 	else if (bpm==250) {

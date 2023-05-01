@@ -85,14 +85,24 @@ double note_to_freq(char note, int flat, int sharp, int octave, double sub) {
 
 */
 
+//static unsigned char ed_freqs[]={
+///*      A   A#  B   C   C#  D   D#  E   F   F#  G   G# */
+//	255,240,228,216,204,192,180,172,160,152,144,136,
+//	128,120,114,108,102,96, 90, 86, 80, 76, 72, 68,
+//	64, 60, 57, 54, 51, 48, 45, 43, 40, 38, 36, 34,
+//	32, 30, 28, 27, 25, 24, 22, 21, 20, 19, 18, 17,
+//	16, 15, 14, 13, 12, 12, 11, 10, 10, 9,  9,  8,
+//	8,  8,  7};
+
 static unsigned char ed_freqs[]={
-/*      A   A#  B   C   C#  D   D#  E   F   F#  G   G# */
-	255,240,228,216,204,192,180,172,160,152,144,136,
-	128,120,114,108,102,96, 90, 86, 80, 76, 72, 68,
-	64, 60, 57, 54, 51, 48, 45, 43, 40, 38, 36, 34,
-	32, 30, 28, 27, 25, 24, 22, 21, 20, 19, 18, 17,
-	16, 15, 14, 13, 12, 12, 11, 10, 10, 9,  9,  8,
-	8,  8,  7};
+/*      C   C#  D   D#  E   F   F#  G   G#   A   A#  B*/
+	0,  0,  0,  0,  0,  0,  0,  0,  0,  255,240,228,		/* 1 */
+	216,204,192,180,172,160,152,144,136,128,120,114,		/* 2 */
+	108,102,96, 90, 86, 80, 76, 72, 68, 64, 60, 57,			/* 3 */
+	54, 51, 48, 45, 43, 40, 38, 36, 34, 32, 30, 28,			/* 4 */
+	27, 25, 24, 22, 21, 20, 19, 18, 17, 16, 15, 14,			/* 5 */
+	13, 12, 12, 11, 10, 10, 9,  9,  8,  8,  8,  7};			/* 6 */
+
 
 /*	c1	c1
 	d1	d1
@@ -109,13 +119,14 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 	int offset;
 
 	switch(note) {
-		case 'A': offset=12; break;
-		case 'B': offset=14; break;
-		case 'C': offset=3; break;
-		case 'D': offset=5; break;
-		case 'E': offset=7; break;
-		case 'F': offset=8; break;
-		case 'G': offset=10; break;
+		case 'C': offset=0; break;
+		case 'D': offset=2; break;
+		case 'E': offset=4; break;
+		case 'F': offset=5; break;
+		case 'G': offset=7; break;
+		case 'A': offset=9; break;
+		case 'B': offset=11; break;
+
 		default:
 			fprintf(stderr,"Unknown note %c\n",note);
 			return -1;
@@ -126,7 +137,7 @@ int note_to_ed(char note, int flat, int sharp, int octave) {
 
 	offset+=((octave-1)*12);
 
-	if (offset>63) {
+	if (offset>72) {
 		fprintf(stderr,"Out of range offset %d\n",offset);
 		return 7;
 	}

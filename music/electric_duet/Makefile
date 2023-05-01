@@ -11,7 +11,7 @@ $(DOS33):
 	cd ../../utils/dos33fs-utils && make
 
 eduet.dsk:	$(DOS33) HELLO ED HIGHWIND.ED FIGHTING.ED SA.ED \
-		KERBAL.ED KORO.ED PEASANT.ED
+		KERBAL.ED KORO.ED PEASANT.ED FORTNIGHT.ED
 	cp $(EMPTY_DISK) eduet.dsk
 	$(DOS33) -y eduet.dsk SAVE A HELLO
 	$(DOS33) -y eduet.dsk BSAVE -a 0x0C00 ED
@@ -21,6 +21,7 @@ eduet.dsk:	$(DOS33) HELLO ED HIGHWIND.ED FIGHTING.ED SA.ED \
 	$(DOS33) -y eduet.dsk BSAVE -a 0x2000 KERBAL.ED
 	$(DOS33) -y eduet.dsk BSAVE -a 0x2000 KORO.ED
 	$(DOS33) -y eduet.dsk BSAVE -a 0x2000 PEASANT.ED
+	$(DOS33) -y eduet.dsk BSAVE -a 0x2000 FORTNIGHT.ED
 
 
 ###
@@ -42,20 +43,34 @@ duet.o:	duet.s
 PEASANT.ED:	peasant.ed
 	cp peasant.ed PEASANT.ED
 
-###
-
 peasant.ed:	$(TEXT_TO_ED) peasant.txt
-	$(TEXT_TO_ED) peasant.txt peasant
+	$(TEXT_TO_ED) -o 1 peasant.txt peasant
 
 ###
 
 HIGHWIND.ED:	highwind.ed
 	cp highwind.ed HIGHWIND.ED
 
+highwind.ed:	$(TEXT_TO_ED) highwind.txt
+	$(TEXT_TO_ED) -o 0 highwind.txt highwind
+
 ###
 
-highwind.ed:	$(TEXT_TO_ED) highwind.txt
-	$(TEXT_TO_ED) -o -2 highwind.txt highwind
+FIGHTING.ED:	fighting.ed
+	cp fighting.ed FIGHTING.ED
+
+fighting.ed:	$(TEXT_TO_ED) fighting.txt
+	$(TEXT_TO_ED) -o 0 fighting.txt fighting
+
+
+###
+
+FORTNIGHT.ED:	fortnight.ed
+	cp fortnight.ed FORTNIGHT.ED
+
+fortnight.ed:	$(TEXT_TO_ED) fortnight.txt
+	$(TEXT_TO_ED) -o 1 fortnight.txt fortnight
+
 
 ###
 
@@ -72,6 +87,4 @@ notes.o:	notes.c notes.h
 
 clean:	
 	rm -f *~ *.o *.lst ED text_to_ed
-
-
 
