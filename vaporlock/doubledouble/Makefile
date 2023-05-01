@@ -23,7 +23,8 @@ DOUBLE:	double.o
 	ld65 -o DOUBLE double.o -C $(LINKERSCRIPTS)/apple2_1000.inc
 
 double.o:	double.s \
-	zp.inc
+	zp.inc hardware.inc pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard_setup.s pt3_lib_detect_model.s
 	ca65 -o double.o double.s -l double.lst
 
 ###

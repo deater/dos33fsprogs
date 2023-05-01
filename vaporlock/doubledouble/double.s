@@ -5,10 +5,55 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+
+double:
+
+	;================================
+	; detect model
+	;================================
+
+	jsr	detect_appleii_model
+
+
+	;===================
+	; machine workarounds
+	;===================
+	; mostly IIgs
+	;===================
+	; thanks to 4am who provided this code from Total Replay
+
+	lda	ROM_MACHINEID
+	cmp	#$06
+	bne	not_a_iigs
+	sec
+	jsr	$FE1F			; check for IIgs
+	bcs	not_a_iigs
+
+	; gr/text page2 handling broken on early IIgs models
+	; this enables the workaround
+
+	jsr	ROM_TEXT2COPY		; set alternate display mode on IIgs
+	cli				; enable VBL interrupts
+
+
+	; also set background color to black instead of blue
+	lda     NEWVIDEO
+	and     #%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
+				; bit 6 = 0 -> IIgs 128K memory map same as IIe
+				; bit 5 = 0 -> IIgs DHGR is color, not mono
+				; bits 0-4 unchanged
+	sta	NEWVIDEO
+	lda	#$F0
+	sta	TBCOLOR			; white text on black background
+	lda	#$00
+	sta	CLOCKCTL		; black border
+	sta	CLOCKCTL		; set twice for VidHD
+
+not_a_iigs:
+
 	;================================
 	; Clear screen and setup graphics
 	;================================
-double:
 
 	jsr	SETGR		; set lo-res 40x40 mode
 
@@ -277,3 +322,8 @@ line_loop_it:
 	bne	line_loop_it
 
 	rts
+
+
+	.include "pt3_lib_detect_model.s"
+;	.include "pt3_lib_mockingboard_setup.s"
+;	.include "pt3_lib_mockingboard_detect.s"

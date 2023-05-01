@@ -5,6 +5,10 @@ EIGHTYSTORE	=	$C001
 CLR80COL	=	$C00C
 SET80COL	=	$C00D
 
+TBCOLOR		=	$C022	; IIgs text foreground / background colors
+CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
+NEWVIDEO	=	$C029	; IIgs graphics modes
+
 SET_GR	= $C050
 SET_TEXT= $C051
 FULLGR	= $C052
@@ -26,3 +30,5 @@ HPOSN	= $F411
 HPLOT0  = $F457		; plot at (Y,X), (A)
 HGLIN	= $F53A		; line to (X,A),(Y)
 
+ROM_TEXT2COPY	= $F962		; iigs
+ROM_MACHINEID	= $FBB3		; iigs
