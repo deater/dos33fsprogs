@@ -66,4 +66,4 @@ which_ok:
 
 
 comp_data:
-	.incbin "graphics/strongbad_sample.hgr.zx02"
+	.incbin "graphics/czmg4ap_title.hgr.zx02"

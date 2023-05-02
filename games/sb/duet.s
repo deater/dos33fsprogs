@@ -1,3 +1,5 @@
+; hacked up to switch pages
+
 ; ***************************************************************************
 ; *   Copyright (C) 1979-2015 by Paul Lutus                                 *
 ; *   http://arachnoid.com/administration                                   *
@@ -33,9 +35,11 @@ MADDRL		=	$1E
 MADDRH		=	$1F
 LOC4E		=	$4E
 COUNT256	=	$4F
+WHICH_PAGE	=	$50
 
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
+	sta	WHICH_PAGE
 	STA	INSTRUMENT1	; 902: 85 09	; 3	set default
 	STA	INSTRUMENT2	; 904: 85 1D	; 3	 instruments
 	PHA			; 906: 48	; 3	1 on stack
@@ -44,12 +48,23 @@ play_ed:
 	BNE	load_triplet	; 909: D0 15	; 4 *!* start decoding
 
 change_instrmnt:
+
 	INY			; 90B: C8	; 2
 	LDA	(MADDRL),Y	; 90C: B1 1E	; 5 *!*	load next byte
+	bmi	switch_page
 	STA	INSTRUMENT1	; 90E: 85 09	; 3	save instrument
 	INY			; 910: C8	; 2
 	LDA	(MADDRL),Y	; 911: B1 1E	; 5 *!*	load next byte
 	STA	INSTRUMENT2	; 913: 85 1D	; 3	save instrument
+
+	jmp	triplet_loop
+switch_page:
+	lda	WHICH_PAGE
+	eor	#$1
+	sta	WHICH_PAGE
+	tax
+	lda	PAGE1,X
+
 
 triplet_loop:
 	LDA	MADDRL		; 915: A5 1E	; 3 *!*	increment pointer
@@ -130,8 +145,10 @@ label7:
 	BIT	$C030		; 96C: 2C 30C0	; 4		SPEAKER
 label9:
 	STA	LOC4E		; 96F: 85 4E	; 3
+
 	BIT	$C000		; 971: 2C 00C0	; 4	KEYBOARD DATA
 	BMI	exit_player	; 974: 30 C0	; 4 *!*	if keypress, exit
+
 	DEY			; 976: 88	; 2
 	BNE	selfmodify2	; 977: D0 02	; 4 *!*
 	BEQ	label11		; 979: F0 06	; 4 *!*

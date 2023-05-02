@@ -2,7 +2,7 @@ include ../../Makefile.inc
 
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 DOS33 = ../../utils/dos33fs-utils/dos33
-TEXT_TO_ED = ./text_to_ed
+TEXT_TO_ED = ../../utils/music/text_to_ed
 EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	eduet.dsk
@@ -81,17 +81,6 @@ korobeiniki.ed:	$(TEXT_TO_ED) korobeiniki.txt
 
 ###
 
-text_to_ed:	text_to_ed.o notes.o
-	$(CC) -o text_to_ed text_to_ed.o notes.o $(LFLAGS) -lm
-
-text_to_ed.o:	text_to_ed.c notes.h
-	$(CC) $(CFLAGS) -c text_to_ed.c
-
-notes.o:	notes.c notes.h
-	$(CC) $(CFLAGS) -c notes.c
-
-###
-
 clean:	
-	rm -f *~ *.o *.lst ED text_to_ed
+	rm -f *~ *.o *.lst ED
 

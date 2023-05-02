@@ -161,6 +161,9 @@ DRAW_PAGE	= $EF
 XPOS		=	$F0
 YPOS		=	$F1
 XMAX		=	$F2
+CURSOR_X	=	$F3
+CURSOR_Y	=	$F4
+HGR_PAGE	=	$F5
 
 TEMP		=	$F8
 TEMPY		=	$F9

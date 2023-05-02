@@ -26,6 +26,7 @@
 /*		byte1 = voice1 instrument */
 /*		byte2 = voice2 instrument */
 /*		Varies, bigger than 8 seem to make no difference */
+/*			custom hack, negative means do action */
 
 /* Otherwise,	byte0 = duration (20=quarter, 40=half) */
 /* 		byte1 = voice1 note */
@@ -101,7 +102,6 @@ static int get_note(char *string, int sp, struct note_type *n, int line) {
 	int freq;
 	int ch;
 
-//	fprintf(stderr,"VMW: Entering, sp=%d\n",sp);
 
 	/* Skip white space */
 	while((string[sp]==' ' || string[sp]=='\t')) sp++;
@@ -110,8 +110,6 @@ static int get_note(char *string, int sp, struct note_type *n, int line) {
 
 	/* return early if no change */
 	ch=string[sp];
-
-//	fprintf(stderr,"VMW: %d %d\n",ch,sp);
 
 	if (ch=='-') {
 		if (header_version==0) return sp+6;
@@ -198,6 +196,12 @@ static int get_string(char *string, char *key, char *output, int strip_linefeed)
 
 }
 
+static void update_voice(FILE *ed_file,int voice1,int voice2) {
+
+	fprintf(ed_file,"%c%c%c",1,voice1,voice2);
+
+}
+
 static void print_help(int just_version, char *exec_name) {
 
 	printf("\ntext_to_ed version %s by Vince Weaver <vince@deater.net>\n\n",VERSION);
@@ -206,13 +210,14 @@ static void print_help(int just_version, char *exec_name) {
 	printf("This created Electric Duet files\n\n");
 
 	printf("Usage:\n");
-	printf("\t%s [-h] [-v] [-d] [-o X] [-i X] textfile outbase\n\n",
+	printf("\t%s [-h] [-v] [-d] [-o X] [-i X] [-l] textfile outbase\n\n",
 		exec_name);
         printf("\t-h: this help message\n");
         printf("\t-v: version info\n");
         printf("\t-d: print debug messages\n");
         printf("\t-o: Offset octave by X\n");
 	printf("\t-i: set second instrument to X\n");
+	printf("\t-l: generate lyrics file\n");
 
 	exit(0);
 }
@@ -224,15 +229,17 @@ int main(int argc, char **argv) {
 	char *result;
 	char ed_filename[BUFSIZ],lyrics_filename[BUFSIZ],*in_filename;
 	char temp[BUFSIZ];
-	FILE *ed_file,*lyrics_file,*in_file=NULL;
+	FILE *ed_file,*lyrics_file=NULL,*in_file=NULL;
 	//int attributes=0;
 	int loop=0,i;
 	int sp,external_frequency,irq;
 	struct note_type a,b,c;
 	int copt;
+	int generate_lyrics=0;
 
 	// Instruments 0=square
 	int voice1=0,voice2=0;
+	int newvoice1,newvoice2;
 
 	char song_name[BUFSIZ];
 	char author_name[BUFSIZ];
@@ -264,6 +271,10 @@ int main(int argc, char **argv) {
 			case 'i':
 				/* instrument to use */
 				voice1=atoi(optarg);
+				break;
+			case 'l':
+				/* generate lyrics */
+				generate_lyrics=1;
 				break;
 			default:
 				print_help(0,argv[0]);
@@ -303,12 +314,13 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	lyrics_file=fopen(lyrics_filename,"w");
-	if (lyrics_file==NULL) {
-		fprintf(stderr,"Couldn't open %s\n",lyrics_filename);
-		return -1;
+	if (generate_lyrics) {
+		lyrics_file=fopen(lyrics_filename,"w");
+		if (lyrics_file==NULL) {
+			fprintf(stderr,"Couldn't open %s\n",lyrics_filename);
+			return -1;
+		}
 	}
-
 
 	/* Get the info for the header */
 
@@ -392,7 +404,7 @@ int main(int argc, char **argv) {
 	int frame=0,lyric=0;
 	int lyric_line=1;
 
-	fprintf(ed_file,"%c%c%c",1,voice1,voice2);
+	update_voice(ed_file,voice1,voice2);
 	offset+=3;
 
 	while(1) {
@@ -410,6 +422,38 @@ int main(int argc, char **argv) {
 		if (string[0]=='-') continue;
 		if (string[0]=='*') continue;
 
+		if (string[0]=='@') {
+			sscanf(string,"@%d %d",&newvoice1,&newvoice2);
+			/* special case */
+			if (newvoice1>128) {
+				update_voice(ed_file,0xff,0xff);
+			}
+			else {
+				voice1=newvoice1;
+				voice2=newvoice2;
+				update_voice(ed_file,voice1,voice2);
+			}
+
+			offset+=3;
+
+
+				/* Avoid changing instrument by accident */
+				/* Also keep lyrics in sync */
+				if (same_count<2) {
+					same_count=2;
+				}
+
+				fprintf(ed_file,"%c%c%c",same_count,a_last,b_last);
+				offset+=3;
+				if (debug) {
+					printf("%04X: %x %x %x\n",offset,same_count,a_last,b_last);
+				}
+				same_count=0;
+
+
+			continue;
+		}
+
 		sp=0;
 
 		/* Skip line number */
@@ -420,59 +464,58 @@ int main(int argc, char **argv) {
 		if (sp!=-1) sp=get_note(string,sp,&c,line);
 
 		/* handle lyrics */
-		if ((sp!=-1) && (string[sp]!='\n') && (string[sp]!=0)) {
-			fprintf(lyrics_file,"; %d: %s",frame,&string[sp]);
-			while((string[sp]==' ' || string[sp]=='\t')) sp++;
-			if (string[sp]!='\n') {
-				fprintf(lyrics_file,".byte\t$%02X",lyric_line&0xff);
+		if (generate_lyrics) {
+			if ((sp!=-1) && (string[sp]!='\n') && (string[sp]!=0)) {
+				fprintf(lyrics_file,"; %d: %s",frame,&string[sp]);
+				while((string[sp]==' ' || string[sp]=='\t')) sp++;
+				if (string[sp]!='\n') {
+					fprintf(lyrics_file,".byte\t$%02X",lyric_line&0xff);
 
-				/* get to first quote */
-				while(string[sp]!='\"') sp++;
-				sp++;
-
-				/* stop at second quote */
-				while(string[sp]!='\"') {
-					if (string[sp]=='\\') {
-						sp++;
-						/* Ignore if we have LED panel */
-						if (string[sp]=='i') {
-							//printf(",$%02X",10);
-						}
-						/* form feed */
-						else if (string[sp]=='f') {
-							fprintf(lyrics_file,",$%02X",12);
-						}
-						/* Vertical tab */
-						else if (string[sp]=='v') {
-							fprintf(lyrics_file,",$%02X",11);
-						}
-						else if (string[sp]=='n') {
-							fprintf(lyrics_file,",$%02X",13|0x80);
-						}
-						else if ((string[sp]>='0') &&
-							(string[sp]<=':')) {
-							fprintf(lyrics_file,",$%02X",string[sp]-'0');
-						}
-						else {
-							printf("UNKNOWN ESCAPE %d\n",string[sp]);
-					}
+					/* get to first quote */
+					while(string[sp]!='\"') sp++;
 					sp++;
-					continue;
+
+					/* stop at second quote */
+					while(string[sp]!='\"') {
+						if (string[sp]=='\\') {
+							sp++;
+							/* Ignore if we have LED panel */
+							if (string[sp]=='i') {
+								//printf(",$%02X",10);
+							}
+							/* form feed */
+							else if (string[sp]=='f') {
+								fprintf(lyrics_file,",$%02X",12);
+							}
+							/* Vertical tab */
+							else if (string[sp]=='v') {
+								fprintf(lyrics_file,",$%02X",11);
+							}
+							else if (string[sp]=='n') {
+								fprintf(lyrics_file,",$%02X",13|0x80);
+							}
+							else if ((string[sp]>='0') &&
+								(string[sp]<=':')) {
+								fprintf(lyrics_file,",$%02X",string[sp]-'0');
+							}
+							else {
+								printf("UNKNOWN ESCAPE %d\n",string[sp]);
+							}
+						sp++;
+						continue;
+					}
+					fprintf(lyrics_file,",$%02X",string[sp]|0x80);
+					sp++;
 				}
-				fprintf(lyrics_file,",$%02X",string[sp]|0x80);
-				sp++;
+				fprintf(lyrics_file,",$00\n");
+
+//					fprintf(lyrics_file," %s",&string[sp]);
+//					printf("%s",&string[sp]);
+				}
+				lyric=1;
+
 			}
-			fprintf(lyrics_file,",$00\n");
-
-
-
-//				fprintf(lyrics_file," %s",&string[sp]);
-//				printf("%s",&string[sp]);
-			}
-			lyric=1;
-
 		}
-
 
 		if ((a.ed_freq!=0)||(b.ed_freq!=0)) {
 			if (debug) {
@@ -564,7 +607,10 @@ int main(int argc, char **argv) {
 	fprintf(ed_file,"%c%c%c",0,0,0);	// EOF?
 
 	fclose(ed_file);
-	fclose(lyrics_file);
+
+	if (generate_lyrics) {
+		fclose(lyrics_file);
+	}
 
 	(void) irq;
 	(void) loop;
