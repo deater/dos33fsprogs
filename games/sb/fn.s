@@ -42,24 +42,35 @@ floppy_animation:
 
 	jsr	full_decomp
 
+reset_floppy_loop:
+	lda	#0
+	sta	XPOS
+floppy_loop:
+	ldx	XPOS
 
-	lda	#10
+	lda	floppy_x,X
 	sta	CURSOR_X
-	lda	#10
+	lda	#4
 	sta	CURSOR_Y
-	lda	#<disk_sprite0
+	lda	floppy_sprite_l,X
 	sta	INL
-	lda	#>disk_sprite0
+	lda	floppy_sprite_h,X
 	sta	INH
-	lda	#<disk_mask0
+	lda	floppy_mask_l,X
 	sta	MASKL
-	lda	#>disk_mask0
+	lda	floppy_mask_h,X
 	sta	MASKH
 
 	jsr	hgr_draw_sprite
 
-
 	jsr	wait_until_keypress
+
+	inc	XPOS
+	lda	XPOS
+	cmp	#17
+	bcc	floppy_loop
+	bcs	reset_floppy_loop
+
 
 
 	;==========================
@@ -133,3 +144,34 @@ rat2_image:
 	.incbin "fn_graphics/a2_fortnight_rat2.hgr.zx02"
 
 	.include "fn_graphics/disk_sprites.inc"
+
+floppy_x:
+	.byte	10,12,14,16
+	.byte	18,20,22,24
+	.byte	26,24,22,20,18
+	.byte	16,14,12,10
+
+floppy_sprite_l:
+	.byte	<disk_sprite0,<disk_sprite1,<disk_sprite2,<disk_sprite3
+	.byte	<disk_sprite4,<disk_sprite5,<disk_sprite6,<disk_sprite7
+	.byte	<disk_sprite0,<disk_sprite7,<disk_sprite6,<disk_sprite5
+	.byte	<disk_sprite4,<disk_sprite3,<disk_sprite2,<disk_sprite1
+	.byte	<disk_sprite0
+floppy_sprite_h:
+	.byte	>disk_sprite0,>disk_sprite1,>disk_sprite2,>disk_sprite3
+	.byte	>disk_sprite4,>disk_sprite5,>disk_sprite6,>disk_sprite7
+	.byte	>disk_sprite0,>disk_sprite7,>disk_sprite6,>disk_sprite5
+	.byte	>disk_sprite4,>disk_sprite3,>disk_sprite2,>disk_sprite1
+	.byte	>disk_sprite0
+
+floppy_mask_l:
+	.byte	<disk_mask0,<disk_mask1,<disk_mask2,<disk_mask3
+	.byte	<disk_mask4,<disk_mask5,<disk_mask6,<disk_mask7
+	.byte	<disk_mask6,<disk_mask5,<disk_mask4,<disk_mask3
+	.byte	<disk_mask2,<disk_mask1,<disk_mask0,<disk_mask0
+
+floppy_mask_h:
+	.byte	>disk_mask0,>disk_mask1,>disk_mask2,>disk_mask3
+	.byte	>disk_mask4,>disk_mask5,>disk_mask6,>disk_mask7
+	.byte	>disk_mask6,>disk_mask5,>disk_mask4,>disk_mask3
+	.byte	>disk_mask2,>disk_mask1,>disk_mask0,>disk_mask0
