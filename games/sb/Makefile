@@ -11,11 +11,13 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	HELLO SB DUCK_POND
+sb.dsk:	HELLO TITLE DUCK_POND SB FN
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33) -y sb.dsk SAVE A HELLO
-	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
+	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 TITLE
 	$(DOS33) -y sb.dsk BSAVE -a 0x1000 DUCK_POND
+	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
+	$(DOS33) -y sb.dsk BSAVE -a 0x6000 FN
 
 ####
 
@@ -25,6 +27,30 @@ SB:	sb.o
 sb.o:	sb.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o sb.o sb.s -l sb.lst
+
+
+####
+
+FN:	fn.o
+	ld65 -o FN fn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+fn.o:	fn.s zx02_optim.s \
+		zp.inc hardware.inc \
+		fn_graphics/a2_fortnight.hgr.zx02 \
+		fn_graphics/a2_fortnight_rat1.hgr.zx02 \
+		fn_graphics/a2_fortnight_rat2.hgr.zx02
+	ca65 -o fn.o fn.s -l fn.lst
+
+
+####
+
+TITLE:	title.o
+	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+title.o:	title.s zx02_optim.s \
+		zp.inc hardware.inc
+	ca65 -o title.o title.s -l title.lst
+
 
 ####
 
@@ -47,4 +73,4 @@ HELLO:	hello.bas
 ####
 
 clean:	
-	rm -f *.lst *.o SB DUCK_POND *~
+	rm -f *.lst *.o TITLE SB FN DUCK_POND *~
