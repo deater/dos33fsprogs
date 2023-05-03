@@ -42,6 +42,7 @@ fn.o:	fn.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
 		fn_graphics/a2_fortnight_100.hgr.zx02 \
 		fn_graphics/a2_fortnight_rat1.hgr.zx02 \
 		fn_graphics/a2_fortnight_rat2.hgr.zx02 \
+		fn_graphics/a2_break.hgr.zx02 \
 		fn_graphics/disk_sprites.inc
 	ca65 -o fn.o fn.s -l fn.lst
 

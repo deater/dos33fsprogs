@@ -303,16 +303,18 @@ play_music:
 	jsr	play_ed
 
 rat_loop:
-;	bit	PAGE1
-;	jsr	wait_until_keypress
 
 
+	lda	#<break_image
+	sta	ZX0_src
+	lda	#>break_image
+	sta	ZX0_src+1
+	lda	#$20
+	jsr	full_decomp
 
-;	bit	PAGE2
+	bit	PAGE1
+
 	jsr	wait_until_keypress
-
-
-;	jmp	rat_loop
 
 	jmp	fortnight_start
 
@@ -363,6 +365,8 @@ rat1_image:
 	.incbin "fn_graphics/a2_fortnight_rat1.hgr.zx02"
 rat2_image:
 	.incbin "fn_graphics/a2_fortnight_rat2.hgr.zx02"
+break_image:
+	.incbin "fn_graphics/a2_break.hgr.zx02"
 
 	.include "fn_graphics/disk_sprites.inc"
 

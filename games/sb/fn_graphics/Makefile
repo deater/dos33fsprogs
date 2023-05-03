@@ -15,6 +15,7 @@ all:	a2_fortnight.hgr.zx02 \
 	a2_fortnight_100.hgr.zx02 \
 	a2_fortnight_rat1.hgr.zx02 \
 	a2_fortnight_rat2.hgr.zx02 \
+	a2_break.hgr.zx02 \
 	disk_sprites.inc
 
 
@@ -39,6 +40,14 @@ disk_sprites.inc:	a2_fortnight_sprites.png
 	$(HGR_SPRITE) -s -l disk_mask7   a2_fortnight_sprites.png 140 112 167 139 >> disk_sprites.inc
 
 
+
+####
+
+a2_break.hgr.zx02:	a2_break.hgr
+	$(ZX02) a2_break.hgr a2_break.hgr.zx02
+
+a2_break.hgr:	a2_break.png
+	$(PNG_TO_HGR) a2_break.png > a2_break.hgr
 
 
 ####
