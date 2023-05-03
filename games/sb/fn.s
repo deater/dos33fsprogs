@@ -197,6 +197,80 @@ time_loop:
 done_floppy:
 	bit	KEYRESET	; clear the keyboard buffer
 
+
+	;==========================
+	; Show 99%
+	;==========================
+
+	bit	PAGE2
+
+	lda	#<fn_99_image
+	sta	ZX0_src
+	lda	#>fn_99_image
+	sta	ZX0_src+1
+	lda	#$20
+	jsr	full_decomp
+
+	lda	#24
+	sta	SPRITE_X
+
+	lda	#<disk_sprite7
+	sta	INL
+	lda	#>disk_sprite7
+	sta	INH
+
+	lda	#<disk_mask7
+	sta	MASKL
+	lda	#>disk_mask7
+	sta	MASKH
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite_mask_and_save
+
+
+	bit	PAGE1
+
+	jsr	long_wait
+
+
+	;==========================
+	; Show 100%
+	;==========================
+
+	lda	#<fn_100_image
+	sta	ZX0_src
+	lda	#>fn_100_image
+	sta	ZX0_src+1
+	lda	#$40
+
+	jsr	full_decomp
+
+	lda	#26
+	sta	SPRITE_X
+
+	lda	#<disk_sprite0
+	sta	INL
+	lda	#>disk_sprite0
+	sta	INH
+
+	lda	#<disk_mask0
+	sta	MASKL
+	lda	#>disk_mask0
+	sta	MASKH
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite_mask_and_save
+
+	bit	PAGE2
+
+	jsr	long_wait
+
+;	jsr	wait_until_keypress
+
 	;==========================
 	; "breakdancing" rat
 	;==========================
@@ -256,6 +330,15 @@ inc_frame:
 no_frame_oflo:
 	rts
 
+long_wait:
+	ldx	#10
+long_wait_loop:
+	lda	#255
+	jsr	WAIT
+	dex
+	bne	long_wait_loop
+	rts
+
 	.include	"zx02_optim.s"
 
 	.include	"hgr_sprite.s"
@@ -270,6 +353,12 @@ music:
 
 fn_image:
 	.incbin "fn_graphics/a2_fortnight.hgr.zx02"
+fn_99_image:
+	.incbin "fn_graphics/a2_fortnight_99.hgr.zx02"
+fn_100_image:
+	.incbin "fn_graphics/a2_fortnight_100.hgr.zx02"
+
+
 rat1_image:
 	.incbin "fn_graphics/a2_fortnight_rat1.hgr.zx02"
 rat2_image:

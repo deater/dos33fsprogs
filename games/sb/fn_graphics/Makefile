@@ -11,6 +11,8 @@ PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	a2_fortnight.hgr.zx02 \
+	a2_fortnight_99.hgr.zx02 \
+	a2_fortnight_100.hgr.zx02 \
 	a2_fortnight_rat1.hgr.zx02 \
 	a2_fortnight_rat2.hgr.zx02 \
 	disk_sprites.inc
@@ -41,11 +43,20 @@ disk_sprites.inc:	a2_fortnight_sprites.png
 
 ####
 
-a2_fortnight.hgr.zx02:	a2_fortnight.hgr
-	$(ZX02) a2_fortnight.hgr a2_fortnight.hgr.zx02
+a2_fortnight_99.hgr.zx02:	a2_fortnight_99.hgr
+	$(ZX02) a2_fortnight_99.hgr a2_fortnight_99.hgr.zx02
 
-a2_fortnight.hgr:	a2_fortnight.png
-	$(PNG_TO_HGR) a2_fortnight.png > a2_fortnight.hgr
+a2_fortnight_99.hgr:	a2_fortnight_99.png
+	$(PNG_TO_HGR) a2_fortnight_99.png > a2_fortnight_99.hgr
+
+####
+
+a2_fortnight_100.hgr.zx02:	a2_fortnight_100.hgr
+	$(ZX02) a2_fortnight_100.hgr a2_fortnight_100.hgr.zx02
+
+a2_fortnight_100.hgr:	a2_fortnight_100.png
+	$(PNG_TO_HGR) a2_fortnight_100.png > a2_fortnight_100.hgr
+
 
 ####
 
