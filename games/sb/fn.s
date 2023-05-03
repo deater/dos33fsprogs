@@ -25,6 +25,9 @@ fortnight_start:
 	bit	SET_GR
 	bit	PAGE1
 
+	ldx	#0
+	sta	FRAME
+	sta	FRAMEH
 
 	;==========================
 	; Floppy Animation
@@ -32,6 +35,7 @@ fortnight_start:
 
 floppy_animation:
 
+	; decompress background to page1
 
 	lda	#<fn_image
 	sta	ZX0_src
@@ -39,8 +43,19 @@ floppy_animation:
 	sta	ZX0_src+1
 	lda	#$20
 
+	jsr	full_decomp
+
+	; decompress background to page2
+	; would it be faster to copy?
+
+	lda	#<fn_image
+	sta	ZX0_src
+	lda	#>fn_image
+	sta	ZX0_src+1
+	lda	#$40
 
 	jsr	full_decomp
+
 
 reset_floppy_loop:
 	lda	#0
@@ -61,9 +76,43 @@ floppy_loop:
 	lda	floppy_mask_h,X
 	sta	MASKH
 
+	; draw sprite
+	jsr	hgr_draw_sprite_mask_and_save
+
+time_loop:
+
+	lda	KEYPRESS				; 4
+	bmi	done_floppy
+
+	lda	#160
+	jsr	WAIT
+
+
+;	jsr	wait_until_keypress
+
+	; see if end
+	inc	FRAME
+	bne	no_frame_oflo
+	inc	FRAMEH
+no_frame_oflo:
+
+	lda	FRAMEH
+	cmp	#3
+	beq	done_floppy
+
+	lda	FRAME
+	and	#$3
+	bne	time_loop
+
+	; erase sprite
+
+	lda	#<backup_sprite
+	sta	INL
+	lda	#>backup_sprite
+	sta	INH
 	jsr	hgr_draw_sprite
 
-	jsr	wait_until_keypress
+	; move sprite
 
 	inc	XPOS
 	lda	XPOS
@@ -71,7 +120,8 @@ floppy_loop:
 	bcc	floppy_loop
 	bcs	reset_floppy_loop
 
-
+done_floppy:
+	bit	KEYRESET	; clear the keyboard buffer
 
 	;==========================
 	; "breakdancing" rat
@@ -127,6 +177,7 @@ wait_until_keypress:
 
 	.include	"zx02_optim.s"
 
+	.include	"hgr_sprite.s"
 	.include	"hgr_sprite_mask.s"
 	.include	"hgr_tables.s"
 

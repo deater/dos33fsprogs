@@ -34,7 +34,7 @@ sb.o:	sb.s zx02_optim.s \
 FN:	fn.o
 	ld65 -o FN fn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-fn.o:	fn.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_tables.s \
+fn.o:	fn.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
 		zp.inc hardware.inc \
 		fn_sound/fortnight.ed \
 		fn_graphics/a2_fortnight.hgr.zx02 \
