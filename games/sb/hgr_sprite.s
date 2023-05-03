@@ -2,7 +2,7 @@
 	; hgr draw sprite (only at 7-bit boundaries)
 	;===========================================
 	; SPRITE in INL/INH
-	; Location at CURSOR_X CURSOR_Y
+	; Location at SPRITE_X SPRITE_Y
 
 	; xsize, ysize  in first two bytes
 
@@ -13,7 +13,7 @@ hgr_draw_sprite:
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc
-	adc	CURSOR_X
+	adc	SPRITE_X
 	sta	sprite_width_end_smc+1	; self modify for end of line
 
 	iny				; load ysize
@@ -37,7 +37,7 @@ hgr_sprite_yloop:
 	lda	CURRENT_ROW		; row
 
 	clc
-	adc	CURSOR_Y		; add in cursor_y
+	adc	SPRITE_Y		; add in cursor_y
 
 	; calc GBASL/GBASH
 
@@ -50,11 +50,13 @@ hgr_sprite_yloop:
 	; eor	#$60 draws on page1
 ;hgr_sprite_page_smc:
 ;	eor	#$00
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH
 ;	eor	#$60
 ;	sta	INH
 
-	ldy	CURSOR_X
+	ldy	SPRITE_X
 
 sprite_inner_loop:
 

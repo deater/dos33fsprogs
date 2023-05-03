@@ -11,7 +11,23 @@
 fortnight_start:
 
 	lda	#$20
-	sta	HGR_PAGE
+	sta	HGR_PAGE		; why?
+
+	lda	#$00			; will be $00/$20
+	sta	DRAW_PAGE
+
+	lda	#0
+	sta	WHICH_PAGE
+
+	; disp page1
+	; erase old page2
+	; save page2
+	; draw page2
+
+	; disp page2
+	; erase old page1
+	; save page1
+	; draw page1
 
 	jsr	hgr_make_tables
 
@@ -56,17 +72,86 @@ floppy_animation:
 
 	jsr	full_decomp
 
+	lda	#4
+	sta	SPRITE_Y
+
+	lda	#$FF
+	sta	backup_sprite1
+	sta	backup_sprite2
+
 
 reset_floppy_loop:
 	lda	#0
 	sta	XPOS
+
 floppy_loop:
+
+	;=========================
+	; switch visible page
+	;=========================
+
+	lda	WHICH_PAGE
+	tax
+	sta	PAGE1,X
+	eor	#$1
+	sta	WHICH_PAGE
+
+
+	;========================
+	; switch draw page
+	;========================
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+	;=======================
+	; erase sprite
+	;=======================
+
+	lda	OLDER_X
+	sta	SPRITE_X
+
+	lda	WHICH_PAGE
+;	eor	#$1
+	tax
+	lda	backup_sprites_l,X
+	sta	INL
+	lda	backup_sprites_h,X
+	sta	INH
+
+	ldy	#0
+	lda	(INL),Y
+	bmi	goog
+
+	jsr	hgr_draw_sprite
+
+goog:
+
+	lda	WHICH_PAGE
+;	eor	#$1
+	tax
+	lda	backup_sprites_l,X
+	sta	OUTL
+	lda	backup_sprites_h,X
+	sta	OUTH
+
+
+	;=======================
+	; save/draw
+	;=======================
+
 	ldx	XPOS
 
-	lda	floppy_x,X
-	sta	CURSOR_X
-	lda	#4
-	sta	CURSOR_Y
+	lda	OLD_X
+	sta	OLDER_X
+
+	lda	floppy_x,X		; save/draw offscreen
+	sta	SPRITE_X
+	sta	OLD_X
+;	lda	#4
+;	sta	SPRITE_Y
+;	sta	OLD_Y
 	lda	floppy_sprite_l,X
 	sta	INL
 	lda	floppy_sprite_h,X
@@ -81,20 +166,15 @@ floppy_loop:
 
 time_loop:
 
+	; check keypress
+
 	lda	KEYPRESS				; 4
 	bmi	done_floppy
 
 	lda	#160
 	jsr	WAIT
 
-
-;	jsr	wait_until_keypress
-
-	; see if end
-	inc	FRAME
-	bne	no_frame_oflo
-	inc	FRAMEH
-no_frame_oflo:
+	jsr	inc_frame
 
 	lda	FRAMEH
 	cmp	#3
@@ -104,21 +184,15 @@ no_frame_oflo:
 	and	#$3
 	bne	time_loop
 
-	; erase sprite
-
-	lda	#<backup_sprite
-	sta	INL
-	lda	#>backup_sprite
-	sta	INH
-	jsr	hgr_draw_sprite
-
 	; move sprite
 
 	inc	XPOS
+
 	lda	XPOS
 	cmp	#18
 	bcc	floppy_loop
-	bcs	reset_floppy_loop
+	jmp	reset_floppy_loop
+
 
 done_floppy:
 	bit	KEYRESET	; clear the keyboard buffer
@@ -175,6 +249,13 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 	rts
 
+inc_frame:
+	inc	FRAME
+	bne	no_frame_oflo
+	inc	FRAMEH
+no_frame_oflo:
+	rts
+
 	.include	"zx02_optim.s"
 
 	.include	"hgr_sprite.s"
@@ -229,4 +310,10 @@ floppy_mask_h:
 	.byte	>disk_mask5,>disk_mask4,>disk_mask3,>disk_mask2
 	.byte	>disk_mask1,>disk_mask0
 
+
+backup_sprites_l:
+	.byte <backup_sprite1,<backup_sprite2
+
+backup_sprites_h:
+	.byte >backup_sprite1,>backup_sprite2
 
