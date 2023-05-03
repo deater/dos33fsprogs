@@ -67,7 +67,7 @@ floppy_loop:
 
 	inc	XPOS
 	lda	XPOS
-	cmp	#17
+	cmp	#18
 	bcc	floppy_loop
 	bcs	reset_floppy_loop
 
@@ -148,30 +148,34 @@ rat2_image:
 floppy_x:
 	.byte	10,12,14,16
 	.byte	18,20,22,24
-	.byte	26,24,22,20,18
-	.byte	16,14,12,10
+	.byte	26,26,24,22
+	.byte   20,18,16,14,12,10
 
 floppy_sprite_l:
 	.byte	<disk_sprite0,<disk_sprite1,<disk_sprite2,<disk_sprite3
 	.byte	<disk_sprite4,<disk_sprite5,<disk_sprite6,<disk_sprite7
-	.byte	<disk_sprite0,<disk_sprite7,<disk_sprite6,<disk_sprite5
-	.byte	<disk_sprite4,<disk_sprite3,<disk_sprite2,<disk_sprite1
-	.byte	<disk_sprite0
+	.byte	<disk_sprite0,<disk_sprite0,<disk_sprite7,<disk_sprite6
+	.byte	<disk_sprite5,<disk_sprite4,<disk_sprite3,<disk_sprite2
+	.byte	<disk_sprite1,<disk_sprite0
 floppy_sprite_h:
 	.byte	>disk_sprite0,>disk_sprite1,>disk_sprite2,>disk_sprite3
 	.byte	>disk_sprite4,>disk_sprite5,>disk_sprite6,>disk_sprite7
-	.byte	>disk_sprite0,>disk_sprite7,>disk_sprite6,>disk_sprite5
-	.byte	>disk_sprite4,>disk_sprite3,>disk_sprite2,>disk_sprite1
-	.byte	>disk_sprite0
+	.byte	>disk_sprite0,>disk_sprite0,>disk_sprite7,>disk_sprite6
+	.byte	>disk_sprite5,>disk_sprite4,>disk_sprite3,>disk_sprite2
+	.byte	>disk_sprite1,>disk_sprite0
 
 floppy_mask_l:
 	.byte	<disk_mask0,<disk_mask1,<disk_mask2,<disk_mask3
 	.byte	<disk_mask4,<disk_mask5,<disk_mask6,<disk_mask7
-	.byte	<disk_mask6,<disk_mask5,<disk_mask4,<disk_mask3
-	.byte	<disk_mask2,<disk_mask1,<disk_mask0,<disk_mask0
+	.byte	<disk_mask0,<disk_mask0,<disk_mask7,<disk_mask6
+	.byte	<disk_mask5,<disk_mask4,<disk_mask3,<disk_mask2
+	.byte	<disk_mask1,<disk_mask0
 
 floppy_mask_h:
 	.byte	>disk_mask0,>disk_mask1,>disk_mask2,>disk_mask3
 	.byte	>disk_mask4,>disk_mask5,>disk_mask6,>disk_mask7
-	.byte	>disk_mask6,>disk_mask5,>disk_mask4,>disk_mask3
-	.byte	>disk_mask2,>disk_mask1,>disk_mask0,>disk_mask0
+	.byte	>disk_mask0,>disk_mask0,>disk_mask7,>disk_mask6
+	.byte	>disk_mask5,>disk_mask4,>disk_mask3,>disk_mask2
+	.byte	>disk_mask1,>disk_mask0
+
+

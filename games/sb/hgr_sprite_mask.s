@@ -20,22 +20,25 @@ hgr_draw_sprite:
 	lda	(INL),Y
 	sta	sprite_ysize_smc+1	; self modify
 
-	; skip the xsize/ysize and point to sprite
-	clc
+	; point smc to sprite
 	lda	INL			; 16-bit add
-	adc	#2
 	sta	sprite_smc1+1
 	lda	INH
-	adc	#0
 	sta	sprite_smc1+2
 
-	ldx	#0			; X is pointer offset
+	lda	MASKL
+	sta	mask_smc1+1
+	lda	MASKH
+	sta	mask_smc1+2
 
-	stx	MASK			; actual row
+	ldx	#0			; X is pointer offset
+	stx	CURRENT_ROW		; actual row
+
+	ldx	#2
 
 hgr_sprite_yloop:
 
-	lda	MASK			; row
+	lda	CURRENT_ROW		; row
 
 	clc
 	adc	CURSOR_Y		; add in cursor_y
@@ -57,30 +60,30 @@ hgr_sprite_page_smc:
 
 sprite_inner_loop:
 
+
+	lda     (GBASL),Y		; load bg
 sprite_smc1:
-	lda	$d000		; get sprite pattern
-	sta	(GBASL),Y	; store out
+        eor     $f000,X			; load sprite data
+mask_smc1:
+	and	$f000,X
+	eor	(GBASL),Y
+	sta	(GBASL),Y
 
-	inx
-	iny
+	inx				; increment sprite offset
+	iny				; increment output position
 
-
-	inc	sprite_smc1+1
-	bne	sprite_noflo
-	inc	sprite_smc1+2
-sprite_noflo:
 
 sprite_width_end_smc:
-	cpy	#6
-	bne	sprite_inner_loop
+	cpy	#6			; see if reached end of row
+	bne	sprite_inner_loop	; if not, loop
 
 
-	inc	MASK		; row
-	lda	MASK		; row
+	inc	CURRENT_ROW		; row
+	lda	CURRENT_ROW		; row
 
 sprite_ysize_smc:
-	cmp	#31
-	bne	hgr_sprite_yloop
+	cmp	#31			; see if at end
+	bne	hgr_sprite_yloop	; if not, loop
 
 	rts
 
