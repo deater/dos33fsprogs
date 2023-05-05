@@ -60,7 +60,7 @@ not_a_iigs:
 
 	; set 80-store mode
 
-	sta	EIGHTYSTORE	; PAGE2 selects AUX memory
+	sta	EIGHTYSTOREON	; PAGE2 selects AUX memory
 	bit	PAGE1
 
 	;===================
@@ -130,29 +130,19 @@ cp2_loop:
 	bit	PAGE1
 
 
-	;===================
-	; draw hi-res lines
+	;============================
+	; load hi-res image to PAGE2
+	;============================
 
-	jsr	HGR
-	bit	FULLGR		; make it 40x48
+	lda	#<image_hgr
+	sta	ZX0_src
+	lda	#>image_hgr
+	sta	ZX0_src+1
 
-	lda	#$FF
-	sta	$E4		; HCOLOR
+        lda	#$40
 
-	ldx	#0
-	ldy	#0
-	lda	#96
-	jsr	HPLOT0		; plot at (Y,X), (A)
+	jsr	full_decomp
 
-	ldx	#0
-	lda	#140
-	ldy	#191
-	jsr	HGLIN		; line to (X,A),(Y)
-
-	ldx	#1
-	lda	#23
-	ldy	#96
-	jsr	HGLIN		; line to (X,A),(Y)
 
 ; draw double-hires lines
 
@@ -182,6 +172,7 @@ color_loop:
 	cmp	#192
 	bne	color_loop
 
+	sta	EIGHTYSTOREOFF
 
 	; wait for vblank on IIe
 	; positive? during vblank
@@ -236,12 +227,12 @@ double_loop:
 
 ; 3 lines HIRES
 	sta	HIRES		; 4
-	sta	CLRAN3		; 4
+	sta	PAGE2		; 4
 	jsr	delay_1552
 
 ; 3 lines HIRES
 	sta	HIRES		; 4
-	sta	SETAN3		; 4
+	sta	PAGE1		; 4
 	jsr	delay_1552
 
 ; 3 line Double-HIRES
@@ -327,3 +318,8 @@ line_loop_it:
 	.include "pt3_lib_detect_model.s"
 ;	.include "pt3_lib_mockingboard_setup.s"
 ;	.include "pt3_lib_mockingboard_detect.s"
+
+	.include "zx02_optim.s"
+
+image_hgr:
+	.incbin "graphics/sworg_hgr.hgr.zx02"

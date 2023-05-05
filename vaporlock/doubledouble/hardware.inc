@@ -1,7 +1,9 @@
 ; soft-switches
 ; yes, I know these aren't necessary the "official" names
 
-EIGHTYSTORE	=	$C001
+KEYBOARD	=	$C000	; Read
+EIGHTYSTOREOFF	=	$C000	; Write (turns off 80store)
+EIGHTYSTOREON	=	$C001	; Write (page2 writes to AUX memory) 
 CLR80COL	=	$C00C
 SET80COL	=	$C00D
 
