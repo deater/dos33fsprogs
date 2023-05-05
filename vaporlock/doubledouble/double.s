@@ -130,9 +130,42 @@ cp2_loop:
 	bit	PAGE1
 
 
-	;============================
-	; load hi-res image to PAGE2
-	;============================
+	;=======================================
+	; load double hi-res image to MAIN:PAGE1
+	;=======================================
+
+	lda	#<image_dhgr_bin
+	sta	ZX0_src
+	lda	#>image_dhgr_bin
+	sta	ZX0_src+1
+
+        lda	#$20
+
+	jsr	full_decomp
+
+	;=======================================
+	; load double hi-res image to AUX:PAGE1
+	;=======================================
+
+	bit	PAGE2			; map in AUX (80store)
+
+	lda	#<image_dhgr_aux
+	sta	ZX0_src
+	lda	#>image_dhgr_aux
+	sta	ZX0_src+1
+
+        lda	#$20
+
+	jsr	full_decomp
+
+
+	;=================================
+	; load hi-res image to MAIN:PAGE2
+	;=================================
+
+	; turn off eightystore
+
+	sta	EIGHTYSTOREOFF
 
 	lda	#<image_hgr
 	sta	ZX0_src
@@ -144,35 +177,9 @@ cp2_loop:
 	jsr	full_decomp
 
 
-; draw double-hires lines
 
+	sta	FULLGR
 
-
-	lda	#$20		; draw to page0 (MAIN?)
-	sta	HGRPAGE
-
-	lda	#150		; start at 150
-	sta	YPOS
-color_loop:
-	lda	YPOS
-	and	#$f
-	sta	TCOLOR
-	asl
-	asl
-	asl
-	asl
-	ora	TCOLOR
-	sta	TCOLOR		; update color
-
-	lda	YPOS
-	jsr	draw_line_color
-
-	inc	YPOS
-	lda	YPOS
-	cmp	#192
-	bne	color_loop
-
-	sta	EIGHTYSTOREOFF
 
 	; wait for vblank on IIe
 	; positive? during vblank
@@ -225,21 +232,21 @@ double_loop:
 	sta	SETAN3		; 4	; doublehiresoff
 	jsr	delay_1552
 
-; 3 lines HIRES
+; 3 lines HIRES PAGE2
 	sta	HIRES		; 4
 	sta	PAGE2		; 4
 	jsr	delay_1552
 
-; 3 lines HIRES
-	sta	HIRES		; 4
-	sta	PAGE1		; 4
+; 3 lines Double-hires
+	sta	SET80COL	; 4	; set 80 column mode
+	sta	CLRAN3		; 4	; doublehireson
 	jsr	delay_1552
 
 ; 3 line Double-HIRES
 
-	sta	SET80COL	; 4
-	sta	CLRAN3		; 4
-
+;	sta	PAGE1		; 4
+	sta	SET_GR		; 4
+	sta	SET_GR		; 4
 	jsr	delay_1552
 
 
@@ -281,39 +288,6 @@ loop6:  dex								; 2
 	rts
 
 
-	;==========================
-	; draw horizontal DHGR line
-	;==========================
-	; color is in TCOLOR
-	; Y position is in A
-	;=========================
-draw_line_color:
-	ldx	#0
-	ldy	#0
-	jsr	HPOSN		; setup GBASL/GBASH with Y position
-
-	ldy	#0
-line_loop_it:
-	; set page2
-	sta	PAGE2
-	lda	TCOLOR
-	sta	(GBASL),Y
-	cmp	#$80
-	rol	TCOLOR
-
-	; set page1
-	sta	PAGE1
-	lda	TCOLOR
-	sta	(GBASL),Y
-	cmp	#$80
-	rol	TCOLOR
-	iny
-
-	cpy	#40
-	bne	line_loop_it
-
-	rts
-
 
 	.include "pt3_lib_detect_model.s"
 ;	.include "pt3_lib_mockingboard_setup.s"
@@ -323,3 +297,7 @@ line_loop_it:
 
 image_hgr:
 	.incbin "graphics/sworg_hgr.hgr.zx02"
+image_dhgr_aux:
+	.incbin "graphics/sworg_dhgr.aux.zx02"
+image_dhgr_bin:
+	.incbin "graphics/sworg_dhgr.bin.zx02"

@@ -10,7 +10,7 @@ all:	double.dsk
 double.dsk:	HELLO DOUBLE
 	cp $(EMPTYDISK) double.dsk
 	$(DOS33) -y double.dsk SAVE A HELLO
-	$(DOS33) -y double.dsk BSAVE -a 0x1000 DOUBLE
+	$(DOS33) -y double.dsk BSAVE -a 0x6000 DOUBLE
 
 ###
 
@@ -20,11 +20,15 @@ HELLO:	hello.bas
 ###
 
 DOUBLE:	double.o
-	ld65 -o DOUBLE double.o -C $(LINKERSCRIPTS)/apple2_1000.inc
+	ld65 -o DOUBLE double.o -C $(LINKERSCRIPTS)/apple2_6000.inc
 
 double.o:	double.s \
 	zp.inc hardware.inc pt3_lib_mockingboard_detect.s \
-	pt3_lib_mockingboard_setup.s pt3_lib_detect_model.s
+	pt3_lib_mockingboard_setup.s pt3_lib_detect_model.s \
+	zx02_optim.s \
+	graphics/sworg_hgr.hgr.zx02 \
+	graphics/sworg_dhgr.aux.zx02 \
+	graphics/sworg_dhgr.bin.zx02
 	ca65 -o double.o double.s -l double.lst
 
 ###

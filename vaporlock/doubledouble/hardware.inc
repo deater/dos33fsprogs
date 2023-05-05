@@ -19,8 +19,8 @@ PAGE1	= $C054
 PAGE2	= $C055
 LORES	= $C056
 HIRES	= $C057
-CLRAN3	= $C05E
-SETAN3	= $C05F
+CLRAN3	= $C05E		; in 80-col mode, enable double graphics
+SETAN3	= $C05F		; in 80-col mode, disable double graphics
 VBLANK	= $C019		; *not* RDVBL (VBL signal low)
 
 ; ROM routines
