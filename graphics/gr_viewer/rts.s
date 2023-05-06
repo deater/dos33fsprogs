@@ -1,168 +1,36 @@
-; Loader for GR-loader
-
-
-nibtbl =  $300	; nothing uses the bottom 128 bytes of $300, do they?
-bit2tbl = $380 	; bit2tbl:	.res 86			;	= nibtbl+128
-filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
-
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
-; modified to assembled with ca64 -- vmw
+; modified to assembled with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
+; USAGE:
+;	file to load in namlo:namhi
+;	Loads file contents to addr from filesystem
+;	also stores filesize in ldsizel:ldsizeh
 
-.include "hardware.inc"
-LZ4_SRC         = $00
-LZ4_DST         = $02
-LZ4_END         = $04
-COUNT           = $06
-DELTA           = $08
-WHICH		= $f0
-
-
-	adrlo	=	$26	; constant from boot prom
-	adrhi	=	$27	; constant from boot prom
-	tmpsec	=	$3c	; constant from boot prom
-	reqsec	=	$3d	; constant from boot prom
-	sizelo	=	$44
-	sizehi	=	$45
-	secsize	=	$46
-	TEMPY	=	$fa
-	namlo	=	$fb
-	namhi	=	$fc
-	step	=	$fd	; state for stepper motor
-	tmptrk	=	$fe	; temporary copy of current track
-	phase	=	$ff	; current phase for /seek
-	OUTL	=	$fe	; for picking filename
-	OUTH	=	$ff
-
-	dirbuf	=	$b000
+	dirbuf	=	$900
 				; note, don't put this immediately below
 				;   the value being read as destaddr-4
 				;   is temporarily overwritten during read
 				;   process
 
-
-	; note also, can't load file bigger than $8000 (32k) in size?
-	; seems to break things?
-
-start:
-	jsr	init	; unhook DOS, init nibble table
-
-	lda	#1
-	sta	WHICH
-
-	bit	SET_GR
-	bit	LORES
-	bit	FULLGR
-	bit	PAGE1
-
-clear_out_ram:
-	ldx	#$14
-	stx	OUTH
-	ldy	#0
-	sty	OUTL
-	lda	#$77
-clear_ram_outer:
-	ldy	#0
-clear_ram_inner:
-	dey
-	sta	(OUTL),Y
-	bne	clear_ram_inner
-
-	inx
-	stx	OUTH
-	cpx	#$c0
-	bne	clear_ram_outer
-
-;======================
-
-which_load_loop:
-	ldy	#0			; load first filename
-	lda	filenames_low,Y
-	sta	OUTL
-	lda	filenames_high,Y
-	sta	OUTH
-
-opendir_filename:
-
-	; clear out the filename with $A0 (space)
-
-	lda	#<filename
-	sta	namlo
-	lda	#>filename
-	sta	namhi
-
-	ldy	#29
-wipe_filename_loop:
-	lda	#$A0
-	sta	(namlo),Y
-	dey
-	bpl	wipe_filename_loop
-
-	ldy	#0
-copy_filename_loop:
-	lda	(OUTL),Y
-	beq	copy_filename_done
-	ora	#$80
-	sta	(namlo),Y
-	iny
-	bne	copy_filename_loop
-
-copy_filename_done:
-	jsr	opendir		; open and read entire file into memory
+	;======================
 
 
-	;==============================
-	;==============================
-	
 
-loop_forever:
-
-	; wait until keypressed
-
-	bit	KEYRESET
-
-wait_until_keypress:
-	lda	KEYPRESS                        ; check if keypressed
-	bpl	wait_until_keypress		; if not, loop
-	bit	KEYRESET
-
-	inc	WHICH
-	lda	WHICH
-	cmp	#10
-	bne	no_new
-	lda	#1
-	sta	WHICH
-
-no_new:
-	clc
-	adc	#'0'
-	sta	gr_filename+2
-
-	; hope they updated the WHICH_LOAD value
-
-	jmp	which_load_loop
-
-; filename to open is 30-character Apple text, must be padded with space ($A0)
+; filename to open is 30-character Apple text:
 filename:
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
-	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0,$A0,$A0
+	.byte $A0,$A0,$A0,$A0,$A0,$A0
 
-filenames_low:
-	.byte	<gr_filename
-
-filenames_high:
-	.byte	>gr_filename
-
-gr_filename:
-	.byte "F01.GR",0
-
+;=======================================================
+;=======================================================
+;=======================================================
                 ;unhook DOS and build nibble table
-
-init:
+rts_init:
 	; patch to use current drive
 
 	; locate input paramater list
@@ -229,6 +97,45 @@ L3:	inx			; increment x	x=4, a=0f
 	bpl	L1		; loop while high bit not set
 
 	rts
+
+
+;=======================================================
+;=======================================================
+;=======================================================
+
+	; filename in OUTL:OUTH
+
+opendir_filename:
+
+	; clear out the filename with $A0 (space)
+
+	lda	#<filename
+	sta	namlo
+	lda	#>filename
+	sta	namhi
+
+	ldy	#29
+wipe_filename_loop:
+	lda	#$A0
+	sta	(namlo),Y
+	dey
+	bpl	wipe_filename_loop
+
+	ldy	#0
+copy_filename_loop:
+	lda	(OUTL),Y
+	beq	copy_filename_done
+	sta	(namlo),Y
+	iny
+	bne	copy_filename_loop
+
+copy_filename_done:
+
+	; fallthrough
+
+;=======================================================
+;=======================================================
+;=======================================================
 
 	;===========================
 	; opendir
@@ -335,13 +242,18 @@ L5:
 	; increase load size by 4, to account for offst and length
 
 	lda	filbuf+2
+	sta	ldsizel				; store out raw size
+
 	adc	#3
 	sta	sizelo
 	sta	secsize
 
 	lda	filbuf+3
+	sta	ldsizeh				; store out raw size
+
 	adc	#0
 	sta	sizehi
+	sta	ldsizeh
 	beq	readfirst
 	lda	#0		; was **stz secsize**
 	sta	secsize
@@ -420,7 +332,6 @@ L7:
 	iny
 	dex
 	bpl	L7
-
 	rts
 
 
@@ -614,184 +525,6 @@ L26:
 	bne	copy_cur
 
 
-.if 0
-	;==============================
-	; old code
-
-
-	; [re-]read sector
-
-re_read_addr:
-	jsr	readadr
-
-repeat_until_right_sector:
-	cmp	reqsec
-	bne	re_read_addr
-
-	;==========================
-	; read sector data
-	;==========================
-	;
-
-readdata:
-mlsmc07:
-	ldy	$c0ec		; read data until valid
-	bpl	readdata
-find_D5:
-	cpy	#$d5		; if not D5, repeat
-	bne	readdata
-find_AA:
-mlsmc08:
-	ldy	$c0ec		; read data until valid, should be AA
-	bpl	find_AA
-	cpy	#$aa		; we need Y=#$AA later
-	bne	find_D5
-find_AD:
-mlsmc09:lda	$c0ec		; read data until high bit set (valid)
-	bpl	find_AD
-	eor	#$ad		; should match $ad
-	bne	*		; lock if didn't find $ad (failure)
-L12:
-mlsmc0A:ldx	$c0ec		; read data until high bit set (valid)
-	bpl	L12
-	eor	nibtbl-$80, x
-	sta	bit2tbl-$aa, y
-	iny
-	bne	L12
-L13:
-mlsmc0B:ldx	$c0ec		; read data until high bit set (valid)
-	bpl	L13
-	eor	nibtbl-$80, x
-	sta	(adrlo), y	; the real address
-	iny
-	cpy	secsize
-	bne 	L13
-	ldy	#0
-L14:
-	ldx	#$a9
-L15:
-	inx
-	beq	L14
-	lda	(adrlo), y
-	lsr	bit2tbl-$aa, x
-	rol
-	lsr	bit2tbl-$aa, x
-	rol
-	sta	(adrlo), y
-	iny
-	cpy	secsize
-	bne	L15
-	rts
-
-	; no tricks here, just the regular stuff
-
-	;=================
-	; readadr -- read address field
-	;=================
-	; Find address field, put track in cutrk, sector in tmpsec
-readadr:
-mlsmc0C:lda	$c0ec		; read data until we find a $D5
-	bpl	readadr
-adr_d5:
-	cmp	#$d5
-	bne	readadr
-
-adr_aa:
-mlsmc0D:lda	$c0ec		; read data until we find a $AA
-	bpl	adr_aa
-	cmp	#$aa
-	bne	adr_d5
-
-adr_96:
-mlsmc0E:lda	$c0ec		; read data until we find a $96
-	bpl	adr_96
-	cmp	#$96
-	bne	adr_d5
-
-	ldy	#3		; three?
-				; first read volume/volume
-				; then track/track
-				; then sector/sector?
-adr_read_two_bytes:
-	sta	curtrk		; store out current track
-	tax
-L20:
-mlsmc0F:lda	$c0ec		; read until full value
-	bpl	L20
-	rol
-	sta	tmpsec
-L21:
-mlsmc10:lda	$c0ec		; read until full value
-	bpl	L21		; sector value is (v1<<1)&v2????
-	and	tmpsec
-	dey			; loop 3 times
-	bne	adr_read_two_bytes
-
-seekret:
-	rts			; return
-
-	;================
-	; SEEK
-	;================
-	; current track in curtrk
-	; desired track in phase
-
-seek:
-	asl	curtrk		; multiply by 2
-	asl	phase		; multiply by 2
-	lda	#0
-	sta	step
-copy_cur:
-	lda	curtrk		; load current track
-	sta	tmptrk		; store as temptrk
-	sec			; calc current-desired
-	sbc	phase
-	beq	seekret		; if they match, we are done!
-
-	bcs	seek_neg	; if negative, skip ahead
-	eor	#$ff		; ones-complement the distance
-	inc	curtrk		; increment current (make it 2s comp?)
-	bcc	L114		; skip ahead
-seek_neg:
-	adc	#$fe
-	dec	curtrk
-L114:
-	cmp	step
-	bcc	L115
-	lda	step
-L115:
-	cmp	#8
-	bcs	L116
-	tay
-	sec
-L116:
-	lda	curtrk
-	ldx	step1, y
-	bne	L118
-L117:
-	clc
-	lda	tmptrk
-	ldx	step2, y
-L118:
-	stx	tmpsec
-	and	#3
-	rol
-	tax
-mlsmc11:sta	$c0e0, x
-L119:
-	ldx	#$13
-L120:
-	dex
-	bne	L120
-	dec	tmpsec
-	bne	L119
-	lsr
-	bcs	L117
-	inc	step
-	bne	copy_cur
-.endif
-
-
 step1:	.byte $01, $30, $28, $24, $20, $1e, $1d, $1c
 step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 
@@ -799,7 +532,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 
 ; From $BA96 of DOS33
-;nibtbl:	.res 128			;		= *
+nibtbl:	.res 128			;		= *
 ;	.byte	$00,$01,$98,$99,$02,$03,$9C,$04	; $BA96	; 00
 ;	.byte	$05,$06,$A0,$A1,$A2,$A4,$A4,$A5 ; $BA9E	; 08
 ;	.byte	$07,$08,$A8,$A9,$AA,$09,$0A,$0B ; $BAA6	; 10
@@ -818,8 +551,7 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 ;	.byte	$00,$00,$00,$00,$00,$00,$00,$00
 
 
-;bit2tbl:	.res 86			;	= nibtbl+128
-;filbuf:		.res 4			;	= bit2tbl+86
+bit2tbl:	.res 86			;	= nibtbl+128
+filbuf:		.res 4			;	= bit2tbl+86
 					;dataend         = filbuf+4
-
 

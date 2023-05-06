@@ -4,7 +4,19 @@ DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 PNG2DHGR = ../../utils/hgr-utils/png2dhgr
 
-all:	gr_viewer.dsk
+all:	make_gr_viewer
+
+###
+
+make_gr_viewer:	make_gr_viewer.o
+	$(CC) $(LFLAGS) -o make_gr_viewer make_gr_viewer.o
+
+make_gr_viewer.o:	make_gr_viewer.c
+	$(CC) $(CFLAGS) -c make_gr_viewer.c
+
+###
+
+
 
 gr_viewer.dsk:	HELLO LOADER
 	$(DOS33) -y gr_viewer.dsk SAVE A HELLO
@@ -29,4 +41,4 @@ loader.o:	loader.s
 
 
 clean:	
-	rm -f *~ *.o LOADER HELLO *.lst
+	rm -f *~ *.o LOADER HELLO *.lst make_gr_viewer
