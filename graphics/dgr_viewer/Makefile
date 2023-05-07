@@ -1,25 +1,21 @@
 include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
-PNG2GR = ../../utils/gr-utils/png2gr
-PNG2RLE = ../../utils/gr-utils/png2rle
+PNG2DGR = ../../utils/gr-utils/png2dgr
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	dgr_view.dsk
-
-
-dgr_view.dsk:	$(DOS33) DGR_VIEW
-	cp empty.dsk dgr_view.dsk
-	$(DOS33) -y dgr_view.dsk BSAVE -a 0x1000 DGR_VIEW
+all:	make_dgr_viewer
 
 ###
 
-DGR_VIEW:	dgr_view.o
-	ld65 -o DGR_VIEW dgr_view.o -C ../../linker_scripts/apple2_1000.inc
+make_dgr_viewer:	make_dgr_viewer.o
+	$(CC) $(LFLAGS) -o make_dgr_viewer make_dgr_viewer.o
 
-dgr_view.o:	dgr_view.s
-	ca65 -o dgr_view.o dgr_view.s -l dgr_view.lst
+make_dgr_viewer.o:	make_dgr_viewer.c
+	$(CC) $(CFLAGS) -c make_dgr_viewer.c
+
+###
 
 clean:	
-	rm -f *~ *.o DGR_VIEW *.lst
+	rm -f *~ *.o DGR_VIEW *.lst make_dgr_viewer
 

@@ -24,7 +24,7 @@ static int pal_rgb[6][3]={
 
 int main(int argc, char **argv) {
 
-	int which=4;
+	int which=3;
 	int c,x;
 
 	int r,g,b;
@@ -37,17 +37,17 @@ int main(int argc, char **argv) {
 			if (gradient[x][c]==0) {
 			}
 			if (gradient[x][c]==1) {
-				r=r+(pal_rgb[which][0]*pal_rgb[which][0]);
-				g=g+(pal_rgb[which][1]*pal_rgb[which][1]);
-				b=b+(pal_rgb[which][2]*pal_rgb[which][2]);
+				r=r+2*(pal_rgb[which][0]*pal_rgb[which][0]);
+				g=g+2*(pal_rgb[which][1]*pal_rgb[which][1]);
+				b=b+2*(pal_rgb[which][2]*pal_rgb[which][2]);
 			}
 			if (gradient[x][c]==2) {
-				r=r+(0xff*0xff);
-				g=g+(0xff*0xff);
-				b=b+(0xff*0xff);
+				r=r+2*(0xff*0xff);
+				g=g+2*(0xff*0xff);
+				b=b+2*(0xff*0xff);
 			}
 		}
-		printf("%d %d %d\n",(int)sqrt(r/16.0),(int)sqrt(g/16.0),(int)sqrt(b/16.0));
+		printf("%d %d %d\n",(int)sqrt(r/32.0),(int)sqrt(g/32.0),(int)sqrt(b/32.0));
 	}
 	return 0;
 }

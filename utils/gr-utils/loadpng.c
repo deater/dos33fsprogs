@@ -117,8 +117,14 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		yadd=1;
 	}
 	else if (width==80) {
-		*xsize=40;
-		xadd=2;
+		if (png_type==PNG_NO_ADJUST) {
+			*xsize=80;
+			xadd=1;
+		}
+		else {
+			*xsize=40;
+			xadd=2;
+		}
 		yadd=1;
 	}
 	else if (width==280) {
@@ -136,7 +142,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		return -1;
 	}
 
-	if (png_type==PNG_WHOLETHING) {
+	if ((png_type==PNG_WHOLETHING) || (png_type==PNG_NO_ADJUST)) {
 		*ysize=height;
 		ystart=0;
 		yadd*=2;

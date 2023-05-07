@@ -76,7 +76,7 @@ which_ok:
         ;===========================
 
 load_image:
-        bit     PAGE1
+        bit     PAGE2
 
         jsr     opendir_filename        ; open and read entire file into memory
 
