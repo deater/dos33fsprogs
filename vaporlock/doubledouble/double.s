@@ -15,9 +15,9 @@ double:
 	jsr	detect_appleii_model
 
 
-	;===================
+	;======================
 	; machine workarounds
-	;===================
+	;======================
 	; mostly IIgs
 	;===================
 	; thanks to 4am who provided this code from Total Replay
@@ -56,90 +56,58 @@ not_a_iigs:
 	;================================
 
 	jsr	SETGR		; set lo-res 40x40 mode
-
+	bit	LORES
 
 	; set 80-store mode
 
 	sta	EIGHTYSTOREON	; PAGE2 selects AUX memory
-	bit	PAGE1
 
-	;===================
-	; draw lo-res lines
-
-	ldx	#39
-draw_lores_lines:
-	txa
-	tay
-	jsr	SETCOL
-
-	lda	#47
-	sta	V2
-	lda	#0
-	jsr	VLINE	; VLINE A,$2D at Y
-
-	dex
-	bpl	draw_lores_lines
-
-	; copy to 800 temporarily
-	; yes this is a bit of a hack
-
-	ldy	#0
-cp_loop:
-	lda	$400,Y
-	sta	$800,Y
-
-	lda	$500,Y
-	sta	$900,Y
-
-	lda	$600,Y
-	sta	$A00,Y
-
-	lda	$700,Y
-	sta	$B00,Y
-
-	iny
-	bne	cp_loop
+	;=========================================================
+	; load double lo-res image to $C00 and copy to MAIN:PAGE1
+	;=========================================================
 
 	bit	PAGE1
 
-	; copy to $400 in AUX
+	lda	#<image_dgr_main
+	sta	ZX0_src
+	lda	#>image_dgr_main
+	sta	ZX0_src+1
 
-	bit	PAGE2	; $400 now maps to AUX:$400
+	lda	#$0c
 
-	ldy	#0
-cp2_loop:
-	lda	$800,Y
-	eor	#$FF
-	sta	$400,Y
+	jsr	full_decomp
 
-	lda	$900,Y
-	eor	#$FF
-	sta	$500,Y
+	jsr	copy_to_400
 
-	lda	$A00,Y
-	eor	#$FF
-	sta	$600,Y
+	;=========================================================
+	; load double lo-res image to $C00 and copy to AUX:PAGE1
+	;=========================================================
 
-	lda	$B00,Y
-	eor	#$FF
-	sta	$700,Y
+	bit	PAGE2			; map in AUX (80store)
 
-	iny
-	bne	cp2_loop
+	lda	#<image_dgr_aux
+	sta	ZX0_src
+	lda	#>image_dgr_aux
+	sta	ZX0_src+1
 
-	bit	PAGE1
+	lda	#$0c
 
+	jsr	full_decomp
+
+	jsr	copy_to_400
 
 	;=======================================
 	; load double hi-res image to MAIN:PAGE1
 	;=======================================
+	bit	HIRES			; need to do this for 80store to work
+	bit	PAGE1
 
 	lda	#<image_dhgr_bin
 	sta	ZX0_src
 	lda	#>image_dhgr_bin
 	sta	ZX0_src+1
 
-        lda	#$20
+	lda	#$20
 
 	jsr	full_decomp
 
@@ -198,8 +166,13 @@ double_loop:
 	;	each line 65 cycles (25 hblank+40 bytes)
 
 
-; 3 LINES 80-COL AN3
+; 3 LINES 80-COL TEXT AN3=0 PAGE=1
 
+	nop
+	nop
+
+	nop
+	nop
 	sta	SET80COL	; 4
 	bit	SET_TEXT	; 4
 
@@ -208,58 +181,110 @@ double_loop:
 
 	jsr	delay_1552
 
-; 3 LINES 40-COL AN3
+; 3 LINES 40-COL TEXT AN3=0 PAGE=1
 
+	nop
+	nop
+
+	nop
+	nop
 	sta	CLR80COL	; 4
 	bit	SET_TEXT	; 4
+
 	jsr	delay_1552
 
-; 3 LINES 40-col LORES AN3
+; 3 LINES 40-col LORES AN3=0 PAGE=1
 
-	lda	LORES		; 4
+	nop
+	nop
+
+	nop
+	nop
+	bit	PAGE1		; 4
 	bit	SET_GR		; 4
+
 	jsr	delay_1552
 
-; 3 LINES 80-col DLORES AN3
+; 3 LINES 80-col DLORES AN3=0 PAGE=1
 
+	nop
+	nop
+
+	sta	LORES
 	sta	SET80COL	; 4
 	sta	CLRAN3		; 4
+
 	jsr	delay_1552
 
-; 3 lines 40-col LORES
 
-	sta	CLR80COL	; 4
-	sta	SETAN3		; 4	; doublehiresoff
+; 3 LINES 80-col DLORES AN3=0 PAGE=1
+
+	nop
+	nop
+
+	nop
+	nop
+
+	nop
+	nop
+
+	nop
+	nop
+
 	jsr	delay_1552
 
-; 3 lines HIRES PAGE2
+; 3 lines HIRES 40-COL AN3=1 PAGE=2
+
+	sta	CLR80COL
 	sta	HIRES		; 4
 	sta	PAGE2		; 4
+	sta	SETAN3
+
 	jsr	delay_1552
 
-; 3 lines Double-hires
+; 3 lines Double-hires AN3=0 PAGE=1
+	sta	PAGE1
+	bit	HIRES
 	sta	SET80COL	; 4	; set 80 column mode
 	sta	CLRAN3		; 4	; doublehireson
+
 	jsr	delay_1552
 
 ; 3 line Double-HIRES
 
-;	sta	PAGE1		; 4
-	sta	SET_GR		; 4
-	sta	SET_GR		; 4
+	nop
+	nop
+
+	nop
+	nop
+
+	nop
+	nop
+
+	nop
+	nop
+
 	jsr	delay_1552
 
 
+	jmp	skip_vblank
+
+.align $100
 
 	;==================================
 	; vblank = 4550 cycles
-
+	; -6
+	; 4544
 	; Try X=226 Y=4 cycles=4545
+	; Try X=9 Y=89 cycles=4540
+
 skip_vblank:
+
+	nop
 	nop
 
-	ldy	#4							; 2
-loop3:	ldx	#226							; 2
+	ldy	#89							; 2
+loop3:	ldx	#9							; 2
 loop4:	dex								; 2
 	bne	loop4							; 2nt/3
 	dey								; 2
@@ -276,10 +301,17 @@ loop4:	dex								; 2
 	; actually want 1552-12 (6 each for jsr/rts)
 	; 1540
 	; Try X=15 Y=19 cycles=1540
+	; 1532
+	; Try X=1 Y=139 cycles=1530
+
 delay_1552:
 
-        ldy     #19							; 2
-loop5:  ldx     #15							; 2
+	nop
+
+
+
+        ldy     #139							; 2
+loop5:  ldx     #1							; 2
 loop6:  dex								; 2
         bne     loop6							; 2nt/3
         dey								; 2
@@ -295,9 +327,15 @@ loop6:  dex								; 2
 
 	.include "zx02_optim.s"
 
+	.include "copy_400.s"
+
 image_hgr:
 	.incbin "graphics/sworg_hgr.hgr.zx02"
 image_dhgr_aux:
 	.incbin "graphics/sworg_dhgr.aux.zx02"
 image_dhgr_bin:
 	.incbin "graphics/sworg_dhgr.bin.zx02"
+image_dgr_aux:
+	.incbin "graphics/sworg_dgr.aux.zx02"
+image_dgr_main:
+	.incbin "graphics/sworg_dgr.main.zx02"

@@ -25,10 +25,12 @@ DOUBLE:	double.o
 double.o:	double.s \
 	zp.inc hardware.inc pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s pt3_lib_detect_model.s \
-	zx02_optim.s \
+	zx02_optim.s copy_400.s \
 	graphics/sworg_hgr.hgr.zx02 \
 	graphics/sworg_dhgr.aux.zx02 \
-	graphics/sworg_dhgr.bin.zx02
+	graphics/sworg_dhgr.bin.zx02 \
+	graphics/sworg_dgr.main.zx02 \
+	graphics/sworg_dgr.aux.zx02
 	ca65 -o double.o double.s -l double.lst
 
 ###
