@@ -18,6 +18,25 @@ static int gr_offsets[24]={
         0x450-0x400,0x4D0-0x400,0x550-0x400,0x5D0-0x400,0x650-0x400,0x6D0-0x400,0x750-0x400,0x7D0-0x400,
 };
 
+/* rotate left by 1 to unconvert */
+static unsigned char aux_colors[]={
+	0,	/* 0000 -> 0000 */
+	2,	/* 0001 -> 0010 */
+	4,	/* 0010 -> 0100 */
+	6,	/* 0011 -> 0110 */
+	8,	/* 0100 -> 1000 */
+	10,	/* 0101 -> 1010 */
+	12,	/* 0110 -> 1100 */
+	14,	/* 0111 -> 1110 */
+	1,	/* 1000 -> 0001 */
+	3,	/* 1001 -> 0011 */
+	5,	/* 1010	-> 0101 */
+	7,	/* 1011 -> 0111 */
+	9,	/* 1100 -> 1001 */
+	11,	/* 1101 -> 1011 */
+	13,	/* 1110 -> 1101 */
+	15,	/* 1111 -> 1111 */
+};
 int main(int argc, char **argv) {
 
 	int fd;
@@ -158,13 +177,17 @@ int main(int argc, char **argv) {
 
 	for(y=0;y<height/2;y++) {
 		for(x=0;x<40;x++) {
+
+			/* note the aux colors are rotated right by 1 */
+
 			color1=(aux_screen[gr_offsets[y]+x])&0xf;
-			row_pointers[y*2][x*2]=color1;
+			row_pointers[y*2][x*2]=aux_colors[color1];
 			color2=(main_screen[gr_offsets[y]+x])&0xf;
 			row_pointers[y*2][(x*2)+1]=color2;
 
+
 			color1=((aux_screen[gr_offsets[y]+x])>>4)&0xf;
-			row_pointers[(y*2)+1][x*2]=color1;
+			row_pointers[(y*2)+1][x*2]=aux_colors[color1];
 			color2=((main_screen[gr_offsets[y]+x])>>4)&0xf;
 			row_pointers[(y*2)+1][(x*2)+1]=color2;
 		}
