@@ -58,6 +58,93 @@ not_a_iigs:
 	jsr	SETGR		; set lo-res 40x40 mode
 	bit	LORES
 
+
+	;====================================================
+	; setup text page2 screen of "Apple II Forever" text
+	;====================================================
+	; there are much better ways to accomplish this
+
+	sta	SETMOUSETEXT
+
+	ldy	#0
+	ldx	#0
+	sty	XX
+a24e_newy:
+	lda	gr_offsets_l,Y
+	sta	stringing_smc+1
+	lda	gr_offsets_h,Y
+	clc
+	adc	#4
+	sta	stringing_smc+2
+
+a24e_loop:
+
+	lda	a2_string,X
+	bne	keep_stringing
+
+	ldx	#0
+	lda	a2_string,X
+
+keep_stringing:
+
+	inx
+
+	eor	#$80
+
+stringing_smc:
+	sta	$d000
+
+	inc	stringing_smc+1
+
+	inc	XX
+	lda	XX
+	cmp	#40
+	bne	a24e_loop
+
+	lda	#0
+	sta	XX
+	iny
+	cpy	#24
+	bne	a24e_newy
+
+stringing_done:
+
+.if 0
+	lda	a2_string,X
+	eor	#$80
+
+	sta	$800,X
+	sta	$880+1,X
+	sta	$900+2,X
+	sta	$980+3,X
+	sta	$A00+4,X
+	sta	$A80+5,X
+	sta	$B00+6,X
+	sta	$B80+7,X
+
+	sta	$828+0,X
+	sta	$8A8+1,X
+	sta	$928+2,X
+	sta	$9A8+3,X
+	sta	$A28+4,X
+	sta	$AA8+5,X
+	sta	$B28+6,X
+	sta	$BA8+7,X
+
+	sta	$850+0,X
+	sta	$8D0+1,X
+	sta	$950+2,X
+	sta	$9D0+3,X
+	sta	$A50+4,X
+	sta	$AD0+5,X
+	sta	$B50+6,X
+	sta	$BD0+7,X
+
+	dex
+	bpl	a24e_loop
+.endif
+
+
 	; set 80-store mode
 
 	sta	EIGHTYSTOREON	; PAGE2 selects AUX memory
@@ -166,10 +253,9 @@ double_loop:
 	;	each line 65 cycles (25 hblank+40 bytes)
 
 
-; 3 LINES 80-COL TEXT AN3=0 PAGE=1
+; 3 LINES 80-COL TEXT AN3=0 PAGE=2
 
-	nop
-	nop
+	bit	PAGE2
 
 	nop
 	nop
@@ -181,7 +267,7 @@ double_loop:
 
 	jsr	delay_1552
 
-; 3 LINES 40-COL TEXT AN3=0 PAGE=1
+; 3 LINES 40-COL TEXT AN3=0 PAGE=2
 
 	nop
 	nop
@@ -339,3 +425,13 @@ image_dgr_aux:
 	.incbin "graphics/sworg_dgr.aux.zx02"
 image_dgr_main:
 	.incbin "graphics/sworg_dgr.main.zx02"
+
+a2_string:
+	;      012345678901234567   8       9
+	.byte "Apple II Forever!! ",'@'+$80," "
+	.byte "Apple II Forever! ",'@'+$80," ",0
+	.byte "Apple II Forever! ",'@'+$80," "
+	.byte "Apple II Forever! ",'@'+$80," "
+	.byte "Apple II Forever! ",'@'+$80," "
+
+.include "gr_offsets.s"

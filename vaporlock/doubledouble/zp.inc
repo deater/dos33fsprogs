@@ -21,6 +21,12 @@ APPLEII_MODEL	= $8B
 
 HGRPAGE = $E6
 
+TEMPY		= $F0
+XX		= $F1
+
+INL		= $F2
+INH		= $F3
+
 MB_VALUE	= $F5
 MB_ADDR_L	= $F6
 MB_ADDR_H	= $F7

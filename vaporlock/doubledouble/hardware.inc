@@ -6,6 +6,7 @@ EIGHTYSTOREOFF	=	$C000	; Write (turns off 80store)
 EIGHTYSTOREON	=	$C001	; Write (page2 writes to AUX memory) 
 CLR80COL	=	$C00C
 SET80COL	=	$C00D
+SETMOUSETEXT	=	$C00F	; (write) enable mouse text
 
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
