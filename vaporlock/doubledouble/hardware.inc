@@ -1,16 +1,20 @@
 ; soft-switches
 ; yes, I know these aren't necessary the "official" names
 
-KEYBOARD	=	$C000	; Read
-EIGHTYSTOREOFF	=	$C000	; Write (turns off 80store)
-EIGHTYSTOREON	=	$C001	; Write (page2 writes to AUX memory) 
-CLR80COL	=	$C00C
-SET80COL	=	$C00D
-SETMOUSETEXT	=	$C00F	; (write) enable mouse text
+KEYBOARD	= $C000	; Read keypress+128
+EIGHTYSTOREOFF	= $C000	; (write) turns off 80store
+EIGHTYSTOREON	= $C001	; (write) page2 writes to AUX memory 
+CLR80COL	= $C00C
+SET80COL	= $C00D
+SETMOUSETEXT	= $C00F	; (write) enable mouse text
 
-TBCOLOR		=	$C022	; IIgs text foreground / background colors
-CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
-NEWVIDEO	=	$C029	; IIgs graphics modes
+VBLANK		= $C019	; *not* RDVBL (VBL signal low) (iie, opposite iigs)
+RDVBLBAR	= $C019 ; iic
+
+TBCOLOR		= $C022	; IIgs text foreground / background colors
+CLOCKCTL	= $C034	; bits 0-3 are IIgs border color
+NEWVIDEO	= $C029	; IIgs graphics modes
+RDVBLMSK	= $C041 ; iic read vbl interrupt
 
 SET_GR	= $C050
 SET_TEXT= $C051
@@ -20,9 +24,13 @@ PAGE1	= $C054
 PAGE2	= $C055
 LORES	= $C056
 HIRES	= $C057
-CLRAN3	= $C05E		; in 80-col mode, enable double graphics
-SETAN3	= $C05F		; in 80-col mode, disable double graphics
-VBLANK	= $C019		; *not* RDVBL (VBL signal low)
+DISVBL		= $C05B ; (write) (iic) (ioudison) disable VBL interrupt
+ENVBL		= $C05B ; (write) (iic) (ioudison) enable VBL interrupt
+CLRAN3		= $C05E	; (write) in 80-col mode, enable double graphics
+SETAN3		= $C05F	; (write) in 80-col mode, disable double graphics
+PTRIG		= $C070 ; analog input reset / reset VBL interrupt (iic)
+IOUDISON	= $C07E ; (write) disable IOU
+IOUDISOFF	= $C07F ; (write) enable IOU
 
 ; ROM routines
 SETCOL  = $F864		; COLOR=A*17
