@@ -154,6 +154,41 @@ no_language_card:
 
 done_language_card:
 
+	;===================================
+        ; Detect Mockingboard
+        ;===================================
+
+PT3_ENABLE_APPLE_IIC = 1
+
+	; detect mockingboard
+	jsr	mockingboard_detect
+
+	bcc	mockingboard_notfound
+mockingboard_found:
+        ; print detected location
+
+        lda     #'S'+$80                ; change NO to slot
+        sta     $7d0+30
+
+        lda     MB_ADDR_H               ; $C4 = 4, want $B4 1100 -> 1011
+        and     #$87
+        ora     #$30
+
+        sta     $7d0+31                 ; 23,31
+
+        ; NOTE: in this game we need both language card && mockingboard
+        ;       to enable mockingboard music
+
+        lda     SOUND_STATUS
+        and     #SOUND_IN_LC
+        beq     dont_enable_mc
+
+        lda     SOUND_STATUS
+        ora     #SOUND_MOCKINGBOARD
+        sta     SOUND_STATUS
+
+dont_enable_mc:
+mockingboard_notfound:
 
 skip_all_checks:
 
@@ -500,8 +535,10 @@ wait_until_keypress:
 
 
 	.include "pt3_lib_detect_model.s"
-;	.include "pt3_lib_mockingboard_setup.s"
-;	.include "pt3_lib_mockingboard_detect.s"
+	.include "pt3_lib_mockingboard_detect.s"
+	.include "pt3_lib_mockingboard_setup.s"
+	.include "interrupt_handler.s"
+	.include "pt3_lib_mockingboard_patch.s"
 
 	.include "zx02_optim.s"
 

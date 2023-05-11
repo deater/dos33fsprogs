@@ -27,6 +27,7 @@ double.o:	double.s \
 	pt3_lib_mockingboard_setup.s pt3_lib_detect_model.s \
 	zx02_optim.s copy_400.s gr_offsets.s vblank.s \
 	lc_detect.s text_print.s title.s gr_fast_clear.s \
+	interrupt_handler.s pt3_lib_mockingboard_patch.s \
 	graphics/sworg_hgr.hgr.zx02 \
 	graphics/sworg_dhgr.aux.zx02 \
 	graphics/sworg_dhgr.bin.zx02 \
