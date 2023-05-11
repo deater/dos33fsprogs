@@ -52,6 +52,114 @@ double:
 not_a_iigs:
 
 	;================================
+	; setup vblank routine
+	;================================
+
+	lda	APPLEII_MODEL
+	cmp	#'G'
+	beq	setup_vblank_iigs
+	cmp	#'C'
+	beq	setup_vblank_iic
+setup_vblank_iie:
+	lda	#<wait_vblank_iie
+	sta	vblank_smc+1
+	lda	#>wait_vblank_iie
+	sta	vblank_smc+2
+	jmp	done_setup_vblank
+
+setup_vblank_iigs:
+	lda	#<wait_vblank_iigs
+	sta	vblank_smc+1
+	lda	#>wait_vblank_iigs
+	sta	vblank_smc+2
+	jmp	done_setup_vblank
+
+setup_vblank_iic:
+	lda	#<wait_vblank_iic
+	sta	vblank_smc+1
+	lda	#>wait_vblank_iic
+	sta	vblank_smc+2
+	jmp	done_setup_vblank
+done_setup_vblank:
+
+
+	;====================
+	; show title message
+	;====================
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	show_title
+
+	;===================
+	; print config
+	;===================
+
+	lda	#<config_string
+	sta	OUTL
+	lda	#>config_string
+	sta	OUTH
+
+	jsr	move_and_print
+
+	; print detected model
+
+	lda	APPLEII_MODEL
+	ora	#$80
+	sta	$7d0+8			; 23,8
+
+	; if GS print the extra S
+	cmp	#'G'|$80
+	bne	not_gs
+	lda	#'S'|$80
+	sta	$7d0+9
+
+not_gs:
+
+	;=========================================
+	; detect if we have a language card (64k)
+	; and load sound into it if possible
+	;=========================================
+
+	lda	#0
+	sta	SOUND_STATUS	; clear out, sound enabled
+
+	;===========================================
+	; skip checks if open-apple being held down
+
+	lda	$C061
+	and	#$80			; only bit 7 is affected
+	bne	skip_all_checks		; rest is floating bus
+
+
+	jsr	detect_language_card
+	bcs	no_language_card
+
+yes_language_card:
+	; update status
+	lda	#'6'|$80
+	sta	$7d0+11		; 23,11
+	lda	#'4'|$80
+	sta	$7d0+12		; 23,12
+
+	; update sound status
+	lda	SOUND_STATUS
+	ora	#SOUND_IN_LC
+	sta	SOUND_STATUS
+
+	jmp	done_language_card
+
+no_language_card:
+
+done_language_card:
+
+
+skip_all_checks:
+
+	jsr	wait_until_keypress
+
+	;================================
 	; Clear screen and setup graphics
 	;================================
 
@@ -236,30 +344,27 @@ stringing_done:
 	sta	FULLGR
 
 
-	; wait for vblank on IIe
-	; positive? during vblank
-
-wait_vblank_iie:
-	lda	VBLANK
-	bmi	wait_vblank_iie		; wait for positive (in vblank)
-wait_vblank_done_iie:
-	lda	VBLANK			; wait for negative (vlank done)
-	bpl	wait_vblank_done_iie
-
-	;
-double_loop:
-	;===========================
-	; text mode first 6*4 (24) lines
+	;=================================
+	; main static loop
+	;=================================
 	;	each line 65 cycles (25 hblank+40 bytes)
+
+double_loop:
+
+	; note, coming out of vblank routines might be
+	; 	8-12 cycles in already
+
+vblank_smc:
+	jsr	$ffff
 
 
 ; 3 LINES 80-COL TEXT AN3=0 PAGE=2
 
 	bit	PAGE2
 
-	nop
-	nop
-	sta	SET80COL	; 4
+;	nop
+;	nop
+;	sta	SET80COL	; 4
 	bit	SET_TEXT	; 4
 
 	; wait 6*4=24 lines
@@ -353,28 +458,7 @@ double_loop:
 	jsr	delay_1552
 
 
-	jmp	skip_vblank
 
-.align $100
-
-	;==================================
-	; vblank = 4550 cycles
-	; -6
-	; 4544
-	; Try X=226 Y=4 cycles=4545
-	; Try X=9 Y=89 cycles=4540
-
-skip_vblank:
-
-	nop
-	nop
-
-	ldy	#89							; 2
-loop3:	ldx	#9							; 2
-loop4:	dex								; 2
-	bne	loop4							; 2nt/3
-	dey								; 2
-	bne	loop3							; 2nt/3
 
 	jmp	double_loop	; 3
 
@@ -383,6 +467,8 @@ loop4:	dex								; 2
 ;	the time counts end up off
 
 .align $100
+
+.include "vblank.s"
 
 	; actually want 1552-12 (6 each for jsr/rts)
 	; 1540
@@ -405,6 +491,12 @@ loop6:  dex								; 2
 
 	rts
 
+
+wait_until_keypress:
+	lda	KEYBOARD
+	bpl	wait_until_keypress
+	bit	KEYRESET
+	rts
 
 
 	.include "pt3_lib_detect_model.s"
@@ -430,8 +522,19 @@ a2_string:
 	;      012345678901234567   8       9
 	.byte "Apple II Forever!! ",'@'+$80," "
 	.byte "Apple II Forever! ",'@'+$80," ",0
-	.byte "Apple II Forever! ",'@'+$80," "
-	.byte "Apple II Forever! ",'@'+$80," "
-	.byte "Apple II Forever! ",'@'+$80," "
+
+top_string:
+	.byte "DOUBLE DOUBLE by DEATER / DsR ",0
+	.byte "       Graphics based on art by @YYYYYYYYY  Music: N. OOOOOOO",0
+
+
+config_string:
+;             0123456789012345678901234567890123456789
+.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+
 
 .include "gr_offsets.s"
+.include "lc_detect.s"
+.include "text_print.s"
+.include "title.s"
+.include "gr_fast_clear.s"

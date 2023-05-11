@@ -8,6 +8,7 @@ CLR80COL	= $C00C
 SET80COL	= $C00D
 SETMOUSETEXT	= $C00F	; (write) enable mouse text
 
+KEYRESET	= $C010
 VBLANK		= $C019	; *not* RDVBL (VBL signal low) (iie, opposite iigs)
 RDVBLBAR	= $C019 ; iic
 
