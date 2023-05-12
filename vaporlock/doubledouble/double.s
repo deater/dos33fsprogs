@@ -192,7 +192,48 @@ mockingboard_notfound:
 
 skip_all_checks:
 
-	jsr	wait_until_keypress
+	;==================================
+        ; load music into the language card
+        ;       into $D000 set 2
+        ;==================================
+
+        ; switch in language card
+        ; read/write RAM, $d000 bank 2
+
+;	lda	$C08b
+;	lda	$C08b
+
+
+	jsr	mockingboard_patch      ; patch to work in slots other than 4?
+
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+	jsr	mockingboard_init
+	jsr	mockingboard_setup_interrupt
+
+
+zurg:
+
+	;============================
+	; Init the Mockingboard
+	;============================
+
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+
+        ;=======================
+        ; wait for keypress
+        ;=======================
+
+;       jsr     wait_until_keypress
+
+        lda     #25
+        jsr     wait_a_bit
+
+
+;	jsr	wait_until_keypress
 
 	;================================
 	; Clear screen and setup graphics
@@ -575,3 +616,5 @@ config_string:
 .include "text_print.s"
 .include "title.s"
 .include "gr_fast_clear.s"
+.include "wait_a_bit.s"
+.include "wait.s"
