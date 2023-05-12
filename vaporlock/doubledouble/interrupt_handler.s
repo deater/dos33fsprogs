@@ -18,6 +18,7 @@
 	;	to be sure status flag and accumulator set properly
 
 interrupt_handler:
+.if 0
 	php			; save status flags
 	cld			; clear decimal mode
 	pha			; save A				; 3
@@ -33,7 +34,9 @@ interrupt_handler:
 
 pt3_irq_smc1:
         bit     MOCK_6522_T1CL  ; clear 6522 interrupt by reading T1C-L ; 4
+.endif
 
+play_music:
         lda     DONE_PLAYING                                            ; 3
         beq     ym_play_music  ; if song done, don't play music        ; 3/2nt
         jmp     done_pt3_irq_handler                                    ; 3
@@ -108,6 +111,9 @@ go_next_chunk:
 
 not_oflo:
 
+	rts
+
+.if 0
 exit_interrupt:
 
 	pla
@@ -127,7 +133,7 @@ interrupt_smc:
 								; typical
 								; ???? cycles
 
-
+.endif
 
 
 
@@ -172,7 +178,7 @@ done_pt3_irq_handler:
 
 disable_music:
 
-	sei
+;	sei
 
 	ldx	#1
 	stx	DONE_PLAYING

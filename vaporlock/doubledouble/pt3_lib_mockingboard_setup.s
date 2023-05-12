@@ -182,9 +182,9 @@ mockingboard_setup_interrupt:
 
 	; nop out the "lda $45" since we are bypassing the ROM irq handler
 	; that puts A in $45
-	lda	#$EA
-	sta	interrupt_smc
-	sta	interrupt_smc+1
+;	lda	#$EA
+;	sta	interrupt_smc
+;	sta	interrupt_smc+1
 
 
 	;=========================

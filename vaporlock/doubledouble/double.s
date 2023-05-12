@@ -293,40 +293,6 @@ stringing_smc:
 
 stringing_done:
 
-.if 0
-	lda	a2_string,X
-	eor	#$80
-
-	sta	$800,X
-	sta	$880+1,X
-	sta	$900+2,X
-	sta	$980+3,X
-	sta	$A00+4,X
-	sta	$A80+5,X
-	sta	$B00+6,X
-	sta	$B80+7,X
-
-	sta	$828+0,X
-	sta	$8A8+1,X
-	sta	$928+2,X
-	sta	$9A8+3,X
-	sta	$A28+4,X
-	sta	$AA8+5,X
-	sta	$B28+6,X
-	sta	$BA8+7,X
-
-	sta	$850+0,X
-	sta	$8D0+1,X
-	sta	$950+2,X
-	sta	$9D0+3,X
-	sta	$A50+4,X
-	sta	$AD0+5,X
-	sta	$B50+6,X
-	sta	$BD0+7,X
-
-	dex
-	bpl	a24e_loop
-.endif
 
 
 	; set 80-store mode
@@ -420,12 +386,57 @@ stringing_done:
 	sta	FULLGR
 
 
+	;==============
+        ; set up music
+        ;==============
+
+        lda     #0
+        sta     CURRENT_CHUNK
+        sta     DONE_PLAYING
+        sta     BASE_FRAME_L
+
+        ; set up first song
+
+        lda     #<music_parts_l
+        sta     chunk_l_smc+1
+        lda     #>music_parts_l
+        sta     chunk_l_smc+2
+
+        lda     #<music_parts_h
+        sta     chunk_h_smc+1
+        lda     #>music_parts_h
+        sta     chunk_h_smc+2
+
+	lda     #$D0
+        sta     CHUNK_NEXT_LOAD         ; Load at $D0
+        jsr     load_song_chunk
+
+        lda     #$D0                    ; music starts at $d000
+        sta     CHUNK_NEXT_PLAY
+        sta     BASE_FRAME_H
+
+        lda     #1
+        sta     LOOP
+;        sta     CURRENT_CHUNK
+	sta	LOAD_NEXT_CHUNK
+
+        ; switch in language card
+        ; read/write RAM, $d000 bank 2
+
+	lda	$C08b
+	lda	$C08b
+
 	;=================================
 	; main static loop
 	;=================================
 	;	each line 65 cycles (25 hblank+40 bytes)
 
 double_loop:
+
+
+	jsr	load_music
+	jsr	play_music
+
 
 	; note, coming out of vblank routines might be
 	; 	8-12 cycles in already
@@ -618,3 +629,42 @@ config_string:
 .include "gr_fast_clear.s"
 .include "wait_a_bit.s"
 .include "wait.s"
+.include "load_music.s"
+
+music_parts_h:
+        .byte >fighting_part1_zx02,>fighting_part2_zx02,>fighting_part3_zx02
+        .byte >fighting_part4_zx02,>fighting_part5_zx02,>fighting_part6_zx02
+        .byte >fighting_part7_zx02,>fighting_part8_zx02,>fighting_part9_zx02
+	.byte >fighting_part10_zx02
+	.byte $00
+
+music_parts_l:
+        .byte <fighting_part1_zx02,<fighting_part2_zx02,<fighting_part3_zx02
+        .byte <fighting_part4_zx02,<fighting_part5_zx02,<fighting_part6_zx02
+        .byte <fighting_part7_zx02,<fighting_part8_zx02,<fighting_part9_zx02
+        .byte <fighting_part10_zx02
+
+fighting_part1_zx02:
+.incbin "music/fighting.part1.zx02"
+fighting_part2_zx02:
+.incbin "music/fighting.part2.zx02"
+fighting_part3_zx02:
+.incbin "music/fighting.part3.zx02"
+fighting_part4_zx02:
+.incbin "music/fighting.part4.zx02"
+fighting_part5_zx02:
+.incbin "music/fighting.part5.zx02"
+fighting_part6_zx02:
+.incbin "music/fighting.part6.zx02"
+fighting_part7_zx02:
+.incbin "music/fighting.part7.zx02"
+fighting_part8_zx02:
+.incbin "music/fighting.part8.zx02"
+fighting_part9_zx02:
+.incbin "music/fighting.part9.zx02"
+fighting_part10_zx02:
+.incbin "music/fighting.part10.zx02"
+
+
+
+
