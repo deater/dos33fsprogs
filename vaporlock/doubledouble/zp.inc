@@ -20,24 +20,45 @@ BASH	= $29
 V2	= $2D
 COLOR	= $30
 
-; ym player
-CURRENT_FRAME_L         = $70
-CURRENT_FRAME_H         = $71
-BASE_FRAME_L            = $72
-BASE_FRAME_H            = $73
-CURRENT_CHUNK           = $74
-TIME_MINUTES            = $75
-TIME_SECONDS            = $76
-CURSOR_X                = $77
+; pt3 player
 
-DRAW_PAGE	= $7A
+ORNAMENT_L      = $60
+ORNAMENT_H      = $61
+SAMPLE_L        = $62
+SAMPLE_H        = $63
 
-CHUNK_NEXT_LOAD         = $7D
-CHUNK_NEXT_PLAY         = $7E
-LOAD_NEXT_CHUNK         = $7F
-TIMER_COUNT             = $81
+LOOP            = $64
+MB_ADDR_L       = $65
+MB_ADDR_H       = $66
+MB_VALUE        = $67
+DONE_PLAYING    = $68
+DONE_SONG       = $69
+PT3_TEMP        = $6A
+APPLEII_MODEL   = $6B
 
-APPLEII_MODEL	= $8B
+
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
+
+DRAW_PAGE	= $8A
 
 SOUND_STATUS    =       $DE
         SOUND_DISABLED  = $80
@@ -55,12 +76,12 @@ TEMPY		= $F0
 XX		= $F1
 
 ; rest of pt3_player
-LOOP            = $F4
-MB_VALUE        = $F5
-MB_ADDR_L       = $F6
-MB_ADDR_H       = $F7
-DONE_PLAYING    = $F8
-DONE_SONG       = $F9
+;LOOP            = $F4
+;MB_VALUE        = $F5
+;MB_ADDR_L       = $F6
+;MB_ADDR_H       = $F7
+;DONE_PLAYING    = $F8
+;DONE_SONG       = $F9
 
 
 YPOS		= $FA

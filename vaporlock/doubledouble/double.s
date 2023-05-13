@@ -211,10 +211,7 @@ skip_all_checks:
 	;========================
 
 	jsr	mockingboard_init
-	jsr	mockingboard_setup_interrupt
-
-
-zurg:
+;	jsr	mockingboard_setup_interrupt
 
 	;============================
 	; Init the Mockingboard
@@ -385,46 +382,35 @@ stringing_done:
 
 	sta	FULLGR
 
-
 	;==============
         ; set up music
         ;==============
 
-        lda     #0
-        sta     CURRENT_CHUNK
-        sta     DONE_PLAYING
-        sta     BASE_FRAME_L
+	lda	#<fighting_zx02
+	sta	ZX0_src
 
-        ; set up first song
+	lda     #>fighting_zx02
+	sta	ZX0_src+1
 
-        lda     #<music_parts_l
-        sta     chunk_l_smc+1
-        lda     #>music_parts_l
-        sta     chunk_l_smc+2
+	lda     #$b0		; decompress at $b000
 
-        lda     #<music_parts_h
-        sta     chunk_h_smc+1
-        lda     #>music_parts_h
-        sta     chunk_h_smc+2
+	jsr	full_decomp
 
-	lda     #$D0
-        sta     CHUNK_NEXT_LOAD         ; Load at $D0
-        jsr     load_song_chunk
+PT3_LOC = $b000
 
-        lda     #$D0                    ; music starts at $d000
-        sta     CHUNK_NEXT_PLAY
-        sta     BASE_FRAME_H
+        ;==================
+        ; init song
+        ;==================
+
+        jsr     pt3_init_song
+
+
+	lda	#0
+	sta	DONE_PLAYING
 
         lda     #1
         sta     LOOP
-;        sta     CURRENT_CHUNK
-	sta	LOAD_NEXT_CHUNK
 
-        ; switch in language card
-        ; read/write RAM, $d000 bank 2
-
-	lda	$C08b
-	lda	$C08b
 
 	;=================================
 	; main static loop
@@ -433,10 +419,7 @@ stringing_done:
 
 double_loop:
 
-
-	jsr	load_music
-	jsr	play_music
-
+	jsr	fake_interrupt
 
 	; note, coming out of vblank routines might be
 	; 	8-12 cycles in already
@@ -587,9 +570,11 @@ wait_until_keypress:
 
 
 	.include "pt3_lib_detect_model.s"
-	.include "pt3_lib_mockingboard_detect.s"
+	.include "pt3_lib_core.s"
+	.include "pt3_lib_init.s"
 	.include "pt3_lib_mockingboard_setup.s"
 	.include "interrupt_handler.s"
+	.include "pt3_lib_mockingboard_detect.s"
 	.include "pt3_lib_mockingboard_patch.s"
 
 	.include "zx02_optim.s"
@@ -629,41 +614,11 @@ config_string:
 .include "gr_fast_clear.s"
 .include "wait_a_bit.s"
 .include "wait.s"
-.include "load_music.s"
+;.include "load_music.s"
 
-music_parts_h:
-        .byte >fighting_part1_zx02,>fighting_part2_zx02,>fighting_part3_zx02
-        .byte >fighting_part4_zx02,>fighting_part5_zx02,>fighting_part6_zx02
-        .byte >fighting_part7_zx02,>fighting_part8_zx02,>fighting_part9_zx02
-	.byte >fighting_part10_zx02
-	.byte $00
 
-music_parts_l:
-        .byte <fighting_part1_zx02,<fighting_part2_zx02,<fighting_part3_zx02
-        .byte <fighting_part4_zx02,<fighting_part5_zx02,<fighting_part6_zx02
-        .byte <fighting_part7_zx02,<fighting_part8_zx02,<fighting_part9_zx02
-        .byte <fighting_part10_zx02
-
-fighting_part1_zx02:
-.incbin "music/fighting.part1.zx02"
-fighting_part2_zx02:
-.incbin "music/fighting.part2.zx02"
-fighting_part3_zx02:
-.incbin "music/fighting.part3.zx02"
-fighting_part4_zx02:
-.incbin "music/fighting.part4.zx02"
-fighting_part5_zx02:
-.incbin "music/fighting.part5.zx02"
-fighting_part6_zx02:
-.incbin "music/fighting.part6.zx02"
-fighting_part7_zx02:
-.incbin "music/fighting.part7.zx02"
-fighting_part8_zx02:
-.incbin "music/fighting.part8.zx02"
-fighting_part9_zx02:
-.incbin "music/fighting.part9.zx02"
-fighting_part10_zx02:
-.incbin "music/fighting.part10.zx02"
+fighting_zx02:
+.incbin "music/fighting.zx02"
 
 
 
