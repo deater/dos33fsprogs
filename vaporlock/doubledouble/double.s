@@ -148,61 +148,66 @@ mockingboard_found:
 
         sta     $7d0+31                 ; 23,31
 
-        ; NOTE: in this game we need both language card && mockingboard
-        ;       to enable mockingboard music
-
-        lda     SOUND_STATUS
-        and     #SOUND_IN_LC
-        beq     dont_enable_mc
-
-        lda     SOUND_STATUS
+        lda     SOUND_STATUS		; indicate we have mockingboard
         ora     #SOUND_MOCKINGBOARD
         sta     SOUND_STATUS
 
-dont_enable_mc:
-mockingboard_notfound:
 
-skip_all_checks:
-
-	;==================================
-        ; load music into the language card
-        ;       into $D000 set 2
-        ;==================================
-
-        ; switch in language card
-        ; read/write RAM, $d000 bank 2
-
-;	lda	$C08b
-;	lda	$C08b
-
+	;===========================
+	; patch mockingboard
+	;===========================
 
 	jsr	mockingboard_patch      ; patch to work in slots other than 4?
-
-	;=======================
-	; Set up 50Hz interrupt
-	;========================
-
-	jsr	mockingboard_init
-;	jsr	mockingboard_setup_interrupt
 
 	;============================
 	; Init the Mockingboard
 	;============================
 
+	jsr	mockingboard_init
 	jsr	reset_ay_both
 	jsr	clear_ay_both
 
-        ;=======================
-        ; wait for keypress
-        ;=======================
+	;==============
+        ; set up music
+        ;==============
 
-;       jsr     wait_until_keypress
+	lda	#<fighting_zx02
+	sta	ZX0_src
+
+	lda     #>fighting_zx02
+	sta	ZX0_src+1
+
+	lda     #$b0		; decompress at $b000
+
+	jsr	full_decomp
+
+PT3_LOC = $b000
+
+        ;==================
+        ; init song
+        ;==================
+
+        jsr     pt3_init_song
+
+
+	lda	#0
+	sta	DONE_PLAYING
+
+        lda     #1
+        sta     LOOP
+
+mockingboard_notfound:
+
+skip_all_checks:
+
+
+        ;=======================
+        ; show title for a bit
+        ;=======================
+	; you can skip with keypress
 
         lda     #25
         jsr     wait_a_bit
-
-
-;	jsr	wait_until_keypress
 
 	;================================
 	; Clear screen and setup graphics
@@ -354,36 +359,6 @@ stringing_done:
 
 	sta	FULLGR
 
-	;==============
-        ; set up music
-        ;==============
-
-	lda	#<fighting_zx02
-	sta	ZX0_src
-
-	lda     #>fighting_zx02
-	sta	ZX0_src+1
-
-	lda     #$b0		; decompress at $b000
-
-	jsr	full_decomp
-
-PT3_LOC = $b000
-
-        ;==================
-        ; init song
-        ;==================
-
-        jsr     pt3_init_song
-
-
-	lda	#0
-	sta	DONE_PLAYING
-
-        lda     #1
-        sta     LOOP
-
-
 	;=================================
 	; main static loop
 	;=================================
@@ -391,7 +366,17 @@ PT3_LOC = $b000
 
 double_loop:
 
+	;====================
+	; play music
+	;  in theory should be less than the 4550 cycles we have
+
+	lda     SOUND_STATUS		; check if we have mockingboard
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music_for_you
+
 	jsr	fake_interrupt
+
+no_music_for_you:
 
 	; note, coming out of vblank routines might be
 	; 	8-12 cycles in already
