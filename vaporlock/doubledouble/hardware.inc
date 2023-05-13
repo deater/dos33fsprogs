@@ -4,6 +4,10 @@
 KEYBOARD	= $C000	; Read keypress+128
 EIGHTYSTOREOFF	= $C000	; (write) turns off 80store
 EIGHTYSTOREON	= $C001	; (write) page2 writes to AUX memory 
+
+WRMAINRAM	= $C004	; (write)
+WRAUXRAM	= $C005	; (write)
+
 CLR80COL	= $C00C
 SET80COL	= $C00D
 SETMOUSETEXT	= $C00F	; (write) enable mouse text
