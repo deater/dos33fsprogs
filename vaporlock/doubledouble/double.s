@@ -14,7 +14,6 @@ double:
 
 	jsr	detect_appleii_model
 
-
 	;======================
 	; machine workarounds
 	;======================
@@ -117,11 +116,6 @@ done_setup_vblank:
 
 not_gs:
 
-	;=========================================
-	; detect if we have a language card (64k)
-	; and load sound into it if possible
-	;=========================================
-
 	lda	#0
 	sta	SOUND_STATUS	; clear out, sound enabled
 
@@ -131,28 +125,6 @@ not_gs:
 	lda	$C061
 	and	#$80			; only bit 7 is affected
 	bne	skip_all_checks		; rest is floating bus
-
-
-	jsr	detect_language_card
-	bcs	no_language_card
-
-yes_language_card:
-	; update status
-	lda	#'6'|$80
-	sta	$7d0+11		; 23,11
-	lda	#'4'|$80
-	sta	$7d0+12		; 23,12
-
-	; update sound status
-	lda	SOUND_STATUS
-	ora	#SOUND_IN_LC
-	sta	SOUND_STATUS
-
-	jmp	done_language_card
-
-no_language_card:
-
-done_language_card:
 
 	;===================================
         ; Detect Mockingboard
@@ -608,7 +580,6 @@ config_string:
 
 
 .include "gr_offsets.s"
-.include "lc_detect.s"
 .include "text_print.s"
 .include "title.s"
 .include "gr_fast_clear.s"
