@@ -561,7 +561,7 @@ top_string:
 
 config_string:
 ;             0123456789012345678901234567890123456789
-.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+.byte   0,23,"APPLE II?       MOCKINGBOARD: NO        ",0
 
 
 .include "gr_offsets.s"
