@@ -434,7 +434,8 @@ vblank_smc:
 	jsr	$ffff
 
 
-	.include "effect_static.s"
+;	.include "effect_static.s"
+	.include "effect_slide.s"
 
 
 	jmp	double_loop	; 3
@@ -473,6 +474,7 @@ wait_until_keypress:
 	lda	KEYBOARD
 	bpl	wait_until_keypress
 	bit	KEYRESET
+delay_12:
 	rts
 
 

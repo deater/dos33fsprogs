@@ -31,7 +31,7 @@ double.o:	double.s \
 	interrupt_handler.s pt3_lib_mockingboard_patch.s \
 	wait_a_bit.s wait.s pt3_lib_init.s \
 	music/fighting.zx02 \
-	effect_static.s \
+	effect_static.s effect_slide.s \
 	graphics/sworg_hgr.hgr.zx02 \
 	graphics/sworg_dhgr.aux.zx02 \
 	graphics/sworg_dhgr.bin.zx02 \
