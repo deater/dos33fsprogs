@@ -12,6 +12,7 @@
 
 	; 2+ X*(12+2+3) - 1
 
+effect_top_smc:
 	ldx	#100		; 2
 aloop:
 	jsr	delay_12	; 12
@@ -38,6 +39,7 @@ bloop:
 
 
 	bit	HIRES
+effect_bottom_smc:
 	ldx	#60		; 2
 cloop:
 	jsr	delay_12	; 12
@@ -45,8 +47,9 @@ cloop:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
-	dex			; 2
-	bne	cloop		; 2/3
+	inx			; 2
+	cpx	#192
+	bcs	cloop		; 2/3
 
 
 

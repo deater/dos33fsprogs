@@ -32,6 +32,7 @@ double.o:	double.s \
 	wait_a_bit.s wait.s pt3_lib_init.s \
 	music/fighting.zx02 \
 	effect_static.s effect_slide.s \
+	table/sin.table \
 	graphics/sworg_hgr.hgr.zx02 \
 	graphics/sworg_dhgr.aux.zx02 \
 	graphics/sworg_dhgr.bin.zx02 \

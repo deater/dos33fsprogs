@@ -438,6 +438,15 @@ vblank_smc:
 	.include "effect_slide.s"
 
 
+	inc	FRAME
+	ldx	FRAME
+	lda	sin_table,X
+	sta	effect_top_smc+1
+
+	clc
+	adc	#32
+	sta	effect_bottom_smc+1
+
 	jmp	double_loop	; 3
 
 ;=======================================================
@@ -530,6 +539,8 @@ config_string:
 .include "wait.s"
 ;.include "load_music.s"
 
+sin_table:
+.incbin "table/sin.table"
 
 fighting_zx02:
 .incbin "music/fighting.zx02"
