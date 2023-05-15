@@ -187,6 +187,9 @@ PT3_LOC = $b000
         ; init song
         ;==================
 
+PT3_DISABLE_FREQ_CONVERSION = 1
+PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION = 1
+
         jsr     pt3_init_song
 
 

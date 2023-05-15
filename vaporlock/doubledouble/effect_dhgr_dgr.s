@@ -1,49 +1,98 @@
-; goal
-;
-;	192 lines
-;	window is 32 lines
-;		so 0...current
-;		current...current+32
-;		current+32...192
 ; double hi-res / double lo-res
 
-; test, 100 lines of double-hires
-;	100*65 = 6500
+; show dhgr image on page1
+;	show sliding 32-line window of dgr page 1
 
-	; 2+ X*(12+2+3) - 1
 
-effect_top_smc:
+; note come in at 6 (jsr) + 6 (rts from vblank) + vblank jitter
+
+effect_dhgr_dgr:
+
+	;==========================
+	; top
+	;==========================
+effect_top_smc:			; 12
 	ldx	#100		; 2
+	lda	$00 ; nop3	; 3
+	nop			; 2
+	nop			; 2
+	jmp	aloop_24	; 3
+
 aloop:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
+aloop_24:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
 	dex			; 2
 	bne	aloop		; 2/3
 
-	sta	LORES
-	sta	PAGE1
-	sta	SET80COL
-	sta	CLRAN3
+
+	;==========================
+	; middle (Switch mode)
+	;==========================
+				; -1
 	ldx	#32		; 2
+	sta	LORES		; 4
+	sta	PAGE1		; 4
+	sta	SET80COL	; 4
+	sta	CLRAN3		; 4
+; 17
+	nop
+	nop
+	jmp	bloop_24
+
 bloop:
+
+	; update the movement mid-way
+
+	ldy	FRAME				; 3
+        lda	sin_table,Y			; 4+
+        sta	effect_top_smc+1		; 4
+
+        clc					; 2
+        adc	#32	; should this be 31?	; 2
+        sta	effect_bottom_smc+1		; 4
+					;================
+					;	19
+; 19
+	nop
+	lda	$00	; nop3
+
+bloop_24:
+
+; 24
 	jsr	delay_12	; 12
+; 36
 	jsr	delay_12	; 12
+; 48
 	jsr	delay_12	; 12
-	jsr	delay_12	; 12
-	jsr	delay_12	; 12
+; 60
+
 	dex			; 2
 	bne	bloop		; 2/3
 
+	;============================================
+	; bottom (Switch back to double-hires page 1)
+	;============================================
 
-	bit	HIRES
-effect_bottom_smc:
+effect_bottom_smc:		; -1
 	ldx	#60		; 2
+
+	bit	HIRES		; 4
+	sta	CLRAN3		; 4
+	sta	SET80COL	; 4
+	bit	PAGE1		; 4
+; 17
+	nop			; 2
+	nop			; 2
+	jmp	cloop_plus_24	; 3
+
 cloop:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
+cloop_plus_24:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
@@ -51,11 +100,4 @@ cloop:
 	cpx	#192
 	bcs	cloop		; 2/3
 
-
-
-
-
-
-
-
-
+	rts

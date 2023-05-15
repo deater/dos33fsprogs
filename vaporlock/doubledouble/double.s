@@ -224,6 +224,13 @@ skip_all_checks:
 	;	each line 65 cycles (25 hblank+40 bytes)
 
 double_loop:
+	;====================
+	; update frame count
+
+	inc	FRAME
+	bne	frame_no_oflo
+	inc	FRAMEH
+frame_no_oflo:
 
 	;====================
 	; play music
@@ -245,19 +252,10 @@ vblank_smc:
 
 
 ;	.include "effect_static.s"
-;	.include "effect_dhgr_dgr.s"
 ;	.include "effect_dhgr_hgr.s"
-	.include "effect_midline.s"
+;	.include "effect_midline.s"
 
-
-	inc	FRAME
-	ldx	FRAME
-;	lda	sin_table,X
-;	sta	effect_top_smc+1
-
-;	clc
-;	adc	#32
-;	sta	effect_bottom_smc+1
+	jsr	effect_dhgr_dgr
 
 	jmp	double_loop	; 3
 
@@ -268,6 +266,8 @@ vblank_smc:
 .align $100
 
 .include "vblank.s"
+
+.include "effect_dhgr_dgr.s"
 
 	; actually want 1552-12 (6 each for jsr/rts)
 	; 1540
@@ -335,7 +335,7 @@ top_string_main:
 
 
 	.byte "DOUBLE DOUBLE by DEATER / DsR ",0
-;	.byte "       Graphics based on art by @YYYYYYYYY  Music: N. OOOOOOO",0
+;	.byte "       Graphics based on art by @helpcomputer0  Music: N. UEMATSU",0
 
 
 config_string:
@@ -343,12 +343,13 @@ config_string:
 .byte   0,23,"APPLE II?       MOCKINGBOARD: NO        ",0
 
 
-.include "gr_offsets.s"
+
 .include "text_print.s"
 .include "title.s"
 .include "gr_fast_clear.s"
 .include "wait_a_bit.s"
 .include "wait.s"
+.include "gr_offsets.s"
 ;.include "load_music.s"
 
 sin_table:
@@ -356,7 +357,3 @@ sin_table:
 
 fighting_zx02:
 .incbin "music/fighting.zx02"
-
-
-
-

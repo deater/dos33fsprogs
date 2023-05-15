@@ -75,7 +75,7 @@ HGRPAGE = $E6
 TEMPY		= $F0
 XX		= $F1
 FRAME		= $F2
-
+FRAMEH		= $F3
 
 YPOS		= $FA
 TCOLOR		= $FB
