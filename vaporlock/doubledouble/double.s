@@ -8,6 +8,11 @@
 
 double:
 
+	lda	#0
+	sta	FRAME
+	lda	#$ff
+	sta	FRAMEH
+
 	;================================
 	; detect model
 	;================================
@@ -230,6 +235,13 @@ double_loop:
 	inc	FRAME
 	bne	frame_no_oflo
 	inc	FRAMEH
+	bne	frame_no_oflo
+
+	lda	#<effect_dhgr_dgr
+	sta	effect_smc+1
+	lda	#>effect_dhgr_dgr
+	sta	effect_smc+2
+
 frame_no_oflo:
 
 	lda	FRAMEH
@@ -263,7 +275,9 @@ no_music_for_you:
 vblank_smc:
 	jsr	$ffff
 
+effect_smc:
 	jsr	effect_static
+
 
 ;	jsr	effect_dhgr_dgr
 
