@@ -1,10 +1,10 @@
-The PT3_player Library	version 0.3
+The PT3_player Library	version 0.4
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	by Vince "Deater" Weaver <vince@deater.net>
 	http://www.deater.net/weave/vmwprod/pt3_lib/
 
-	Last Update: 30 May 2021
+	Last Update: 15 May 2023
 
 	Plays Vortex Tracker II .pt3 files on the Apple II
 
@@ -53,7 +53,7 @@ To get a pt3 file playing:
 		the right code.
 	+ Be sure to either include the pt3 file as a binary, or load
 		it from disk to a buffer pointed to by PT3_LOC.
-		Not the beginning of the song needs to be aligned on
+		Note the beginning of the song needs to be aligned on
 		a page boundary (this makes the decode code a bit
 		more simple)
 	+ If you want to make the code more compact but use a lot of
@@ -124,6 +124,12 @@ is decode the pt3 files to memory during non-cycle-counted times,
 and then use a deterministic playback function to play back this music.
 Each frame of music decodes to 11bytes of register info, which means
 at 60Hz you can get roughly 4s of music per 3kB of RAM.
+
+For those using an Apple IIe or newer with VBLANK detection support,
+the player playing simple songs will usually (but sadly not always)
+finish in under 4550 cycles and thus can play music in the VBLANK handler
+without having to cycle-count everything.  Turning off the 1.77MHz
+frequency conversion helps here.
 
 
 Overhead:

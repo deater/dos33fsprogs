@@ -25,6 +25,24 @@ PT3_LOC = song
 
 PT3_ENABLE_APPLE_IIC = 1
 
+; The Vortex Tracker by default generates Atari-ST style pt3 files
+;	which assume there is a 1.77MHz clock frequency driving
+;	the AY-3-8910.  Apple II Mockingboards run at 1MHz, so unless
+;	you convert the frequency the music will sound pitched lower.
+; The 1.77MHz frequency conversion code can be in three states:
+;	Enabled (always convert)
+;		PT3_DISABLE_FREQ_CONVERSION commented out
+;		PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION = 1
+;	Disabled (don't convert)
+;		PT3_DISABLE_FREQ_CONVERSION = 1
+;		PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION = 1
+;	Switchable (can disable/enable on the fly)
+;		this is the default for historical reasons
+;		PT3_DISABLE_FREQ_CONVERSION commented out
+;		PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION commented out
+
+; PT3_DISABLE_FREQ_CONVERSION = 1
+; PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION = 1
 
 	;=============================
 	; Setup

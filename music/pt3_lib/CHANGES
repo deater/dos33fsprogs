@@ -1,0 +1,7 @@
+V0.4 (15 May 2023)
++ Changed so that you can disable the 1.77MHz frequency adjustment at compile
+	time.  This saves a few hundred cycles and also some binary size.
+
+	Default is left to have it enabled and switchable so hopefully
+	this won't break anything for anyone.
+
