@@ -294,6 +294,11 @@ effect_smc:
 
 .align $100
 
+sin_table:
+.incbin "table/sin.table"
+
+; sin_table is 256 bytes so this should still be aligned
+
 .include "vblank.s"
 
 	; actually want 1524-12 = 1512 (6 each for jsr/rts)
@@ -330,7 +335,7 @@ delay_12:
 	rts
 
 
-.include "effect_dhgr_dgr.s"
+.include "effect_sin_window.s"
 
 .include "effect_static.s"
 
@@ -397,8 +402,6 @@ config_string:
 .include "gr_offsets.s"
 ;.include "load_music.s"
 
-sin_table:
-.incbin "table/sin.table"
 
 fighting_zx02:
 .incbin "music/fighting.zx02"

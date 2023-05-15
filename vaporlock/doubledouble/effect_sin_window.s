@@ -25,9 +25,11 @@ aloop_24:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
+; 60
 	dex			; 2
+; 62
 	bne	aloop		; 2/3
-
+; 65
 
 	;==========================
 	; middle (Switch mode)
@@ -45,26 +47,26 @@ middle_smc4:
 
 
 ; 17
-	nop
-	nop
-	jmp	bloop_24
+	nop			; 2
+	nop			; 2
+	jmp	bloop_24	; 3
+; 24
 
 bloop:
 
 	; update the movement mid-way
 
 	ldy	FRAME				; 3
-        lda	sin_table,Y			; 4+
-        sta	effect_top_smc+1		; 4
+	lda	sin_table,Y			; 4 (aligned)
+	sta	effect_top_smc+1		; 4
+; 11
+	clc					; 2
+	adc	#32	; should this be 31?	; 2
+	sta	effect_bottom_smc+1		; 4
 
-        clc					; 2
-        adc	#32	; should this be 31?	; 2
-        sta	effect_bottom_smc+1		; 4
-					;================
-					;	19
 ; 19
-	nop
-	lda	$00	; nop3
+	nop					; 2
+	lda	$00	; nop3			; 3
 
 bloop_24:
 
@@ -100,9 +102,16 @@ cloop:
 cloop_plus_24:
 	jsr	delay_12	; 12
 	jsr	delay_12	; 12
-	jsr	delay_12	; 12
+; 48
+	nop			; 2
+	nop			; 2
+	nop			; 2
+	nop			; 2
+	nop			; 2
+; 58
 	inx			; 2
-	cpx	#192
+	cpx	#192		; 2
+; 62
 	bcs	cloop		; 2/3
 
 	rts

@@ -34,8 +34,7 @@ double.o:	double.s \
 	music/fighting.zx02 \
 	setup_graphics.s \
 	effect_static.s \
-	effect_dhgr_dgr.s \
-	effect_dhgr_hgr.s \
+	effect_sin_window.s \
 	effect_midline.s \
 	table/sin.table \
 	graphics/sworg_hgr.hgr.zx02 \
