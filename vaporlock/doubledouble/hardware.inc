@@ -8,8 +8,9 @@ EIGHTYSTOREON	= $C001	; (write) page2 writes to AUX memory
 WRMAINRAM	= $C004	; (write)
 WRAUXRAM	= $C005	; (write)
 
-CLR80COL	= $C00C
-SET80COL	= $C00D
+CLR80COL	= $C00C ; (write)
+SET80COL	= $C00D ; (write)
+CLRMOUSETET	= $C00E ; (write) disable moust text
 SETMOUSETEXT	= $C00F	; (write) enable mouse text
 
 KEYRESET	= $C010

@@ -435,17 +435,19 @@ vblank_smc:
 
 
 ;	.include "effect_static.s"
-	.include "effect_slide.s"
+;	.include "effect_dhgr_dgr.s"
+;	.include "effect_dhgr_hgr.s"
+	.include "effect_midline.s"
 
 
 	inc	FRAME
 	ldx	FRAME
-	lda	sin_table,X
-	sta	effect_top_smc+1
+;	lda	sin_table,X
+;	sta	effect_top_smc+1
 
-	clc
-	adc	#32
-	sta	effect_bottom_smc+1
+;	clc
+;	adc	#32
+;	sta	effect_bottom_smc+1
 
 	jmp	double_loop	; 3
 
