@@ -128,17 +128,14 @@ key_M:
 	bne	key_L			; set carry if true
 
 	ldx	#'0'+$80
-	lda	convert_177_smc1
-	eor	#$20
-	sta	convert_177_smc1
-	sta	convert_177_smc2
-	sta	convert_177_smc3
-	sta	convert_177_smc4
-	sta	convert_177_smc5
-	cmp	#$18
-	beq	at_MHz
+
+	jsr	pt3_toggle_freq_conversion
 
 	; update text on screen
+
+	lda	convert_177_smc1
+	cmp	#$18
+	beq	at_MHz
 
 	ldx	#'7'+$80
 

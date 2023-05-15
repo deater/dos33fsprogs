@@ -232,6 +232,29 @@ note_c:
 end_vars:
 .endif
 
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
+
+	; Set to 1MHz mode (no convert freq)
+	; this saves a few 100 cycles?
+pt3_toggle_freq_conversion:
+	lda	convert_177_smc1
+	eor	#$20
+	bne	pt3_freq_common
+pt3_enable_freq_conversion:
+	lda	#$38			; SEC
+	bne	pt3_freq_common		; bra
+pt3_disable_freq_conversion:
+	lda	#$18			; CLC
+pt3_freq_common:
+	sta	convert_177_smc1
+	sta	convert_177_smc2
+	sta	convert_177_smc3
+	sta	convert_177_smc4
+	sta	convert_177_smc5
+	rts
+.endif
+
 load_ornament0_sample1:
 	lda	#0							; 2
 	jsr	load_ornament						; 6
@@ -1692,9 +1715,6 @@ do_frame:
 	ldx	#(NOTE_STRUCT_SIZE*2)	; Note C			; 2
 	jsr	calculate_note						; 6+?
 
-convert_177_smc1:
-	sec								; 2
-
 	; Load up the Frequency Registers
 
 	lda	note_a+NOTE_TONE_L      ; Note A Period L               ; 4
@@ -1703,7 +1723,15 @@ convert_177_smc1:
 	lda	note_a+NOTE_TONE_H	; Note A Period H		; 4
 	sta	AY_REGISTERS+1		; into R1			; 3
 	lda	note_a+NOTE_TONE_L	; Note A Period L		; 4
+
+.ifndef PT3_DISABLE_FREQ_CONVERSION
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
+convert_177_smc1:
+
+	sec								; 2
 	bcc	no_scale_a						; 2/3
+.endif
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
@@ -1735,11 +1763,9 @@ convert_177_smc1:
 	ror	AY_REGISTERS+0						; 5
 	and	#$0f							; 2
 	sta	AY_REGISTERS+1						; 3
+.endif
 
 no_scale_a:
-
-convert_177_smc2:
-	sec								; 2
 
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
 	sta	AY_REGISTERS+2		; into R2			; 3
@@ -1747,8 +1773,15 @@ convert_177_smc2:
 	lda	note_b+NOTE_TONE_H	; Note B Period H		; 4
 	sta	AY_REGISTERS+3		; into R3			; 3
 	lda	note_b+NOTE_TONE_L	; Note B Period L		; 4
-	bcc	no_scale_b						; 2/3
 
+.ifndef PT3_DISABLE_FREQ_CONVERSION
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
+
+convert_177_smc2:
+	sec								; 2
+	bcc	no_scale_b						; 2/3
+.endif
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	; first multiply by 8
@@ -1777,18 +1810,23 @@ convert_177_smc2:
 	ror	AY_REGISTERS+2						; 5
 	and	#$0f							; 2
 	sta	AY_REGISTERS+3						; 3
+.endif
 
 no_scale_b:
-
-convert_177_smc3:
-	sec								; 2
 
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
 	sta	AY_REGISTERS+4		; into R4			; 3
 	lda	note_c+NOTE_TONE_H	; Note C Period H		; 4
 	sta	AY_REGISTERS+5		; into R5			; 3
 	lda	note_c+NOTE_TONE_L	; Note C Period L		; 4
+
+.ifndef PT3_DISABLE_FREQ_CONVERSION
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
+convert_177_smc3:
+	sec								; 2
 	bcc	no_scale_c						; 2/3
+.endif
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
@@ -1818,6 +1856,7 @@ convert_177_smc3:
 	ror	AY_REGISTERS+4						; 5
 	and	#$0f							; 2
 	sta	AY_REGISTERS+5						; 3
+.endif
 
 no_scale_c:
 
@@ -1830,11 +1869,17 @@ pt3_noise_period_smc:
 pt3_noise_add_smc:
 	adc	#$d1							; 2
 	and	#$1f							; 2
+
+.ifndef PT3_DISABLE_ENABLE_FREQ_CONVERSION
+
 	sta	AY_REGISTERS+6						; 3
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
 
 convert_177_smc4:
 	sec								; 2
 	bcc	no_scale_n						; 2/3
+.endif
 
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
@@ -1852,8 +1897,10 @@ convert_177_smc4:
 	ror								; 2
 	ror								; 2
 	and	#$1f							; 2
+.endif
 
 no_scale_n:
+
 	sta	AY_REGISTERS+6						; 3
 
 	;=======================
@@ -1895,10 +1942,15 @@ pt3_envelope_slide_h_smc:
 	adc	#$d1							; 2
 	sta	AY_REGISTERS+12						; 3
 
+
+.ifndef PT3_DISABLE_FREQ_CONVERSION
+
+.ifndef PT3_DISABLE_SWITCHABLE_FREQ_CONVERSION
+
 convert_177_smc5:
 	sec
 	bcc	no_scale_e						; 2/3
-
+.endif
 	; Convert from 1.77MHz to 1MHz by multiplying by 9/16
 
 	tay								; 2
@@ -1929,6 +1981,7 @@ convert_177_smc5:
 	ror	AY_REGISTERS+11						; 5
 	and	#$0f							; 2
 	sta	AY_REGISTERS+12						; 3
+.endif
 
 no_scale_e:
 
