@@ -263,7 +263,9 @@ no_music_for_you:
 vblank_smc:
 	jsr	$ffff
 
-	jsr	effect_dhgr_dgr
+	jsr	effect_static
+
+;	jsr	effect_dhgr_dgr
 
 	jmp	double_loop	; 3
 
@@ -275,19 +277,29 @@ vblank_smc:
 
 .include "vblank.s"
 
-.include "effect_dhgr_dgr.s"
+	; actually want 1524-12 = 1512 (6 each for jsr/rts)
 
-	; actually want 1552-12 (6 each for jsr/rts)
-	; 1540
-	; Try X=15 Y=19 cycles=1540
 	; 1532
 	; Try X=1 Y=139 cycles=1530
+	; 1524
+	; Try X=5 Y=49 cycles=1520
+	; 1512
+	; Try X=22 Y=13 cycles=1509
 
+delay_1560:
+	nop
+	nop
+	nop
+	nop
 delay_1552:
+	nop
+	nop
+delay_1548:
+	nop
+	nop
+delay_1544:
 
 	nop
-
-
 
         ldy     #139							; 2
 loop5:  ldx     #1							; 2
@@ -295,16 +307,23 @@ loop6:  dex								; 2
         bne     loop6							; 2nt/3
         dey								; 2
         bne     loop5							; 2nt/3
-
-	rts
-
-
-wait_until_keypress:
-	lda	KEYBOARD
-	bpl	wait_until_keypress
-	bit	KEYRESET
 delay_12:
 	rts
+
+
+.include "effect_dhgr_dgr.s"
+
+.include "effect_static.s"
+
+
+
+
+;wait_until_keypress:
+;	lda	KEYBOARD
+;	bpl	wait_until_keypress
+;	bit	KEYRESET
+;delay_12:
+;	rts
 
 
 	.include "pt3_lib_detect_model.s"
@@ -351,7 +370,6 @@ config_string:
 .byte   0,23,"APPLE II?       MOCKINGBOARD: NO        ",0
 
 
-
 .include "text_print.s"
 .include "title.s"
 .include "gr_fast_clear.s"
@@ -387,4 +405,3 @@ middle_table3:
 middle_table4:
 	.byte	<PAGE1,<PAGE2,<PAGE2,<PAGE1
 	.byte	<PAGE1,<PAGE1,<PAGE2,<PAGE1
-
