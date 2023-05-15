@@ -222,6 +222,11 @@ skip_all_checks:
 
 .include "setup_graphics.s"
 
+	;=================================
+	; midline first, no music
+	;=================================
+
+.include "effect_midline.s"
 
 	;=================================
 	; main static loop

@@ -20,7 +20,7 @@ show_title:
 
 	; print the text
 
-	ldx	#7
+	ldx	#10
 title_loop:
 
 	jsr	move_and_print
@@ -37,6 +37,9 @@ title_text:
 .byte  0, 3,"  ART  : BASED ON PIC BY @helpcomputer0",0
 .byte  0, 5,"  MUSIC: N. UEMATSU",0
 .byte  0, 8,"                     ",0
+.byte  0,12,"DON'T DESPAIR EMULATOR WRITERS",0
+.byte  0,13,"   THE STARTING MID-LINE EFFECT",0
+.byte  0,14,"   IS NON-DETERMINISTIC (VBLANK INEXACT)",0
 .byte  0,16,"        ______",0
 .byte  0,17,"      A \/\/\/ SOFTWARE PRODUCTION",0
 .byte  0,19,"  HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0
