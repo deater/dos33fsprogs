@@ -1,4 +1,4 @@
-; double hi-res / double lo-res
+; double hi-res with configuratble sliding window
 
 ; show dhgr image on page1
 ;	show sliding 32-line window of dgr page 1
@@ -34,10 +34,16 @@ aloop_24:
 	;==========================
 				; -1
 	ldx	#32		; 2
+middle_smc1:
 	sta	LORES		; 4
-	sta	PAGE1		; 4
+middle_smc2:
 	sta	SET80COL	; 4
+middle_smc3:
 	sta	CLRAN3		; 4
+middle_smc4:
+	sta	PAGE1		; 4
+
+
 ; 17
 	nop
 	nop
@@ -80,13 +86,12 @@ bloop_24:
 effect_bottom_smc:		; -1
 	ldx	#60		; 2
 
+	bit	SET_GR		; 4
 	bit	HIRES		; 4
 	sta	CLRAN3		; 4
 	sta	SET80COL	; 4
 	bit	PAGE1		; 4
-; 17
-	nop			; 2
-	nop			; 2
+; 21
 	jmp	cloop_plus_24	; 3
 
 cloop:

@@ -33,7 +33,7 @@ title_loop:
 	rts
 
 title_text:
-.byte  0, 0,"LOADING DOUBLE V1.00 (13 MAY 2023)",0
+.byte  0, 0,"LOADING DOUBLE V1.00 (15 MAY 2023)",0
 .byte  0, 3,"  ART  : BASED ON PIC BY @helpcomputer0",0
 .byte  0, 5,"  MUSIC: N. UEMATSU",0
 .byte  0, 8,"                     ",0

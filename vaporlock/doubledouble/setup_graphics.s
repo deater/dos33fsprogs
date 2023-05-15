@@ -152,8 +152,8 @@ stringing_done:
 eloop:
 	lda	#' '+$80
 	sta	$800,X		; line 0
-	sta	$880,X		; line 1
-	sta	$900,X		; line 2
+;	sta	$880,X		; line 1
+;	sta	$900,X		; line 2
 	dex
 	bpl	eloop
 

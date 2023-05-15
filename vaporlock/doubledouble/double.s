@@ -232,6 +232,19 @@ double_loop:
 	inc	FRAMEH
 frame_no_oflo:
 
+	lda	FRAMEH
+	lsr
+	and	#$7
+	tax
+	lda	middle_table1,X
+	sta	middle_smc1+1
+	lda	middle_table2,X
+	sta	middle_smc2+1
+	lda	middle_table3,X
+	sta	middle_smc3+1
+	lda	middle_table4,X
+	sta	middle_smc4+1
+
 	;====================
 	; play music
 	;  in theory should be less than the 4550 cycles we have
@@ -249,11 +262,6 @@ no_music_for_you:
 
 vblank_smc:
 	jsr	$ffff
-
-
-;	.include "effect_static.s"
-;	.include "effect_dhgr_hgr.s"
-;	.include "effect_midline.s"
 
 	jsr	effect_dhgr_dgr
 
@@ -357,3 +365,26 @@ sin_table:
 
 fighting_zx02:
 .incbin "music/fighting.zx02"
+
+; 0 = DGR page1
+; 1 = 40 Column TEXT page2
+; 2 = HGR page2
+; 3 = 80 Column TEXT page1
+; 4 = ?? page 1
+; 5 = LO-RES page1
+; 6 = ??
+; 7 = double hi-res
+
+middle_table1:
+	.byte	<LORES,<SET_TEXT,<HIRES,<SET_TEXT
+	.byte	<HIRES,<LORES,<HIRES,<HIRES
+middle_table2:
+	.byte	<SET80COL,<CLR80COL,<CLR80COL,<SET80COL
+	.byte	<SET80COL,<SET80COL,<CLR80COL,<SET80COL
+middle_table3:
+	.byte	<CLRAN3,<SETAN3,<SETAN3,<SETAN3
+	.byte	<SETAN3,<SETAN3,<CLRAN3,<CLRAN3
+middle_table4:
+	.byte	<PAGE1,<PAGE2,<PAGE2,<PAGE1
+	.byte	<PAGE1,<PAGE1,<PAGE2,<PAGE1
+
