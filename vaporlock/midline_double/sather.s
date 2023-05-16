@@ -20,6 +20,10 @@ LORES	= $C056
 HLINE	= $F819		; LORES HLINE SUBROUTINE
 
 ltw:
+	;==================================
+	; draw lo-res green screen
+	;==================================
+
 	sta	COL40		; Single-Res Display
 	lda	LORES
 	lda	#39		; Fill screen using HLINE
@@ -33,13 +37,24 @@ fill:
 	jsr	HLINE
 	dex
 	bpl	fill
+
+	;==================================
+	; insert text message
+	;==================================
+
 	ldx	#21		; Insert message
 msglp:
 	lda	MSG,X
-	ora	#$80
+	eor	#$80
 	sta	$5b1,X		; Message at line 11, position 10
 	dex
 	bpl	msglp
+
+
+	;==================================
+	; get exact vblank region
+	;==================================
+
 poll1:
 	lda	VBLOFF		; Find end of VBL
 	bmi	poll1		; Fall through at VBL
@@ -57,6 +72,10 @@ lp17029:
 	lda	VBLOFF		; Back to VBL yet?			; 4
 	nop			;					; 2
 	bmi	lp17029		; no, slew back				; 2/3
+
+	;==================================
+	; maintain window
+	;==================================
 
 	ldx	#5		; yes, end VBL is precisely located	; 2
 	jsr	waitx1k		; now wait 5755 cycles for text window	; 5000
@@ -119,6 +138,6 @@ rts1:
 	rts								; 6
 
 MSG:
-	.byte 0				; switch in the black
+	.byte $80			; switch in the black
 	.byte "*Little Text Window* "
 
