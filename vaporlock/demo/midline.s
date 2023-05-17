@@ -11,25 +11,16 @@
 
 midline:
 
-;	lda	#0
-;	sta	FRAME
-;	lda	#$ff
-;	sta	FRAMEH
-
 	;================================
 	; Clear screen and setup graphics
 	;================================
 
-;	jsr	SETGR		; set lo-res 40x40 mode
-;	bit	LORES
 	sta	FULLGR
-
-	;====================================================
-	; setup text page2 screen of "Apple II Forever" text
-	;====================================================
-	; there are much better ways to accomplish this
-
 	sta	SETMOUSETEXT
+
+	;====================================================
+	; setup text page1 screen of "Apple II Forever" text
+	;====================================================
 
 	ldy	#0
 restart:
@@ -43,6 +34,34 @@ print_loop:
 	inx
 	bne	print_loop
 print_done:
+
+
+
+	;==================================
+        ; get exact vblank region
+        ;==================================
+	; code by Sather
+	; "Understanding the Apple IIe"
+
+poll1:
+        lda     VBLANK          ; Find end of VBL
+        bmi     poll1           ; Fall through at VBL
+poll2:
+        lda     VBLANK
+        bpl     poll2           ; Fall through at VBL'                  ; 2
+
+        lda     $00             ; Now slew back in 17029 cycle loops    ; 3
+lp17029:
+        ldx     #17             ;                                       ; 2
+        jsr     waitx1k         ;                                       ; 17000
+        jsr     rts1            ;                                       ; 12
+        lda     $00             ; nop3                                  ; 3
+        lda     $00             ; nop3                                  ; 3
+        lda     VBLANK          ; Back to VBL yet?                      ; 4
+        nop                     ;                                       ; 2
+        bmi     lp17029         ; no, slew back                         ; 2/3
+
+
 
 	;==============================
 	; do the cycle counting
@@ -76,26 +95,6 @@ delay_16_settext:
 	rts
 
 
-.if 0
-
-				; -1
-
-	;==================================
-        ; vblank = 4550 cycles
-
-        ; Try X=226 Y=4 cycles=4545
-skip_vblank:
-	lda	$00	; nop3
-
-        ldy     #4                                                      ; 2
-loop3:  ldx     #226                                                    ; 2
-loop4:  dex                                                             ; 2
-        bne     loop4                                                   ; 2nt/3
-        dey                                                             ; 2
-        bne     loop3                                                   ; 2nt/3
-
-	jmp	midline_loop	; 3
-
 	;===================================
         ; wait y-reg times 10
         ;===================================
@@ -128,13 +127,6 @@ waitx1k:
         bne     loop1k                                                  ; 2/3
 rts1:
         rts                                                             ; 6
-
-
-
-.include "vblank.s"
-
-.endif
-
 
 a2_string:
 	;      012345678901234567   8       9
