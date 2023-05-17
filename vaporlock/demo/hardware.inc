@@ -49,3 +49,5 @@ HGLIN	= $F53A		; line to (X,A),(Y)
 
 ROM_TEXT2COPY	= $F962		; iigs
 ROM_MACHINEID	= $FBB3		; iigs
+
+COUT		= $FDED

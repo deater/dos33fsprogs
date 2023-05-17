@@ -6,19 +6,22 @@
 .include "hardware.inc"
 
 
-double:
+; 198 bytes -- proof of concept
+;  76 bytes -- optimize Apple II Forever printing code
 
-	lda	#0
-	sta	FRAME
-	lda	#$ff
-	sta	FRAMEH
+midline:
+
+;	lda	#0
+;	sta	FRAME
+;	lda	#$ff
+;	sta	FRAMEH
 
 	;================================
 	; Clear screen and setup graphics
 	;================================
 
-	jsr	SETGR		; set lo-res 40x40 mode
-	bit	LORES
+;	jsr	SETGR		; set lo-res 40x40 mode
+;	bit	LORES
 	sta	FULLGR
 
 	;====================================================
@@ -29,75 +32,49 @@ double:
 	sta	SETMOUSETEXT
 
 	ldy	#0
+restart:
 	ldx	#0
-	sty	XX
-a24e_newy:
-	lda	gr_offsets_l,Y
-	sta	stringing_smc+1
-	lda	gr_offsets_h,Y
-	clc
-	adc	#4
-	sta	stringing_smc+2
-
-a24e_loop:
-
-	lda	a2_string,X
-	bne	keep_stringing
-
-	ldx	#0
-	lda	a2_string,X
-
-keep_stringing:
-
-	inx
-
-	eor	#$80
-
-stringing_smc:
-	sta	$d000
-
-	inc	stringing_smc+1
-
-	inc	XX
-	lda	XX
-	cmp	#40
-	bne	a24e_loop
-
-	lda	#0
-	sta	XX
 	iny
-	cpy	#24
-	bne	a24e_newy
+	beq	print_done
+print_loop:
+	lda	a2_string,X
+	beq	restart
+	jsr	COUT		; output char in A to stdout
+	inx
+	bne	print_loop
+print_done:
 
-stringing_done:
-
-	bit	PAGE2
+	;==============================
+	; do the cycle counting
+	;==============================
 
 blog:
 
 	ldx	#255
 
 blog_loop:
-	jsr	delay_12	; 12
-	bit	SET_GR		; 4
+	jsr	delay_16_setgr		; 16
 ; 16
-	jsr	delay_12	; 12
-; 28
-	bit	SET_TEXT	; 4
+	jsr	delay_16_settext	; 16
 ; 32
-	jsr	delay_12	; 12
-; 44
-	bit	SET_GR		; 4
+	jsr	delay_16_setgr		; 16
 ; 48
-	jsr	delay_12	; 12
+	jsr	delay_12		; 12
 ; 60
-	dex			; 2
-;	bne	blog_loop	; 2/3
+	dex				; 2
+	jmp	blog_loop		; 3
 
-	jmp	blog_loop	; 3
 
+
+delay_16_setgr:
+	bit	SET_GR
 delay_12:
 	rts
+
+delay_16_settext:
+	bit	SET_TEXT
+	rts
+
 
 .if 0
 
@@ -118,8 +95,6 @@ loop4:  dex                                                             ; 2
         bne     loop3                                                   ; 2nt/3
 
 	jmp	midline_loop	; 3
-
-.align $100
 
 	;===================================
         ; wait y-reg times 10
@@ -160,16 +135,11 @@ rts1:
 
 .endif
 
-.include "gr_offsets.s"
 
 a2_string:
 	;      012345678901234567   8       9
-	.byte "Apple II Forever!! ",'@'+$80," "
-	.byte "Apple II Forever! ",'@'+$80," ",0
-
-
-
-
-
-
-
+;	.byte "Apple II Forever!! ",'@'+$80," ",0
+	.byte 'A'+$80,'p'+$80,'p'+$80,'l'+$80,'e'+$80,' '+$80
+	.byte 'I'+$80,'I'+$80,' '+$80,'F'+$80,'o'+$80,'r'+$80
+	.byte 'e'+$80,'v'+$80,'e'+$80,'r'+$80,'!'+$80,'!'+$80
+	.byte ' '+$80,'@'+$00,' '+$80,0
