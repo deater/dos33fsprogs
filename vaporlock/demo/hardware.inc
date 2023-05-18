@@ -46,8 +46,10 @@ HGR	= $F3E2
 HPOSN	= $F411
 HPLOT0  = $F457		; plot at (Y,X), (A)
 HGLIN	= $F53A		; line to (X,A),(Y)
+XDRAW0		=	$F65D
 
 ROM_TEXT2COPY	= $F962		; iigs
 ROM_MACHINEID	= $FBB3		; iigs
 
 COUT		= $FDED
+

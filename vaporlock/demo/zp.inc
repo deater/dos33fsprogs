@@ -67,7 +67,7 @@ SOUND_STATUS    =       $DE
 
 
 
-
+HGR_COLLISIONS = $EA
 HGRPAGE = $E6
 
 
@@ -76,6 +76,11 @@ TEMPY		= $F0
 XX		= $F1
 FRAME		= $F2
 FRAMEH		= $F3
+
+;VALUE		= $F4
+;VALUEH		= $F5
+DELTA		= $F6
+DELTAH		= $F7
 
 YPOS		= $FA
 TCOLOR		= $FB

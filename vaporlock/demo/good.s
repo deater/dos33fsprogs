@@ -21,13 +21,6 @@
 ; 226 bytes -- init some of zero page to zero
 ; 244 bytes -- switch to hires too
 ; 247 bytes -- clear HGR
-; 264 bytes -- add HGR
-; 263 bytes -- better nop
-; 263 bytes -- don't init zero page anymore
-; 259 bytes -- combine delay_49 routines
-; 258 bytes -- init discrete
-
-; GOAL = 256 (Outline 2023 says header doesn't count, is usually 4 on Apple II)
 
 sine = $c00	; location of sine table
 
@@ -38,18 +31,19 @@ midline:
 	; Clear screen and setup graphics
 	;================================
 
-	ldx	#0
-	stx	DELTA
-	stx	DELTAH
+	; init $F1-$FF to zero
+
+	lda	#0
+	ldx	#15
+init_loop:
+	sta	$F0,X
+	dex
+	bne	init_loop
 
 	; setup graphics
 
 	sta	SETMOUSETEXT		; enable mouse text for Apple char
 
-	;==============================
-	; set up sine table
-
-	; X must be 0 when calling
 	.include "sinetable.s"		; Y is FF after this
 					; A = 1, X = $40
 
@@ -71,33 +65,9 @@ print_loop:
 	bne	print_loop
 print_done:
 
-	;===================
-	; do graphics
-
 
 	jsr	HGR		; A and Y=0 now
 	sta	FULLGR
-
-
-	jsr     HPLOT0          ; set screen position to X= (y,x) Y=(a)
-                                ; saves X,Y,A to zero page
-                                ; after Y= orig X/7
-                                ; A and X are ??
-tiny_loop:
-
-        lda     #$F6            ; ROT=$F6
-        tay
-        tax
-        dex
-
-        jsr     XDRAW0          ; XDRAW 1 AT X,Y
-                                ; Both A and X are 0 at exit
-                                ; Z flag set on exit
-                                ; Y varies
-
-	dec	$0a		; is $4c due to basic
-        bne     tiny_loop       ;
-
 
 
 	;==================================
@@ -149,13 +119,12 @@ top_loop:
 	pla				; 4
 top7:
 ; 7
-;	lda	#0			; 2
-;	ldy	#3			; 2
+	lda	#0			; 2
+	ldy	#3			; 2
 ; 11
 	; want to delay 49
-	jsr	delay_49
 
-;	jsr	size_delay		; 47
+	jsr	size_delay		; 47
 ; 58
 	nop				; 2
 ; 60
@@ -175,7 +144,8 @@ middle_loop:
 	nop				; 2
 middle_4:
 ; 4
-	inc	$0		; nop5	; 5
+	nop				; 2
+	lda	$0		; nop3	; 3
 ; 9
 	jsr	delay_16_setgr		; 16
 ; 25
@@ -200,12 +170,12 @@ bottom_loop:
 ; 4
 bottom_4:
 ; 4
-;	lda	#0			; 2
-;	ldy	#3			; 2
+	lda	#0			; 2
+	ldy	#3			; 2
 ; 8
 	; want to delay 50
-	jsr	delay_49
-;	jsr	size_delay		; 47
+
+	jsr	size_delay		; 47
 ; 55
 	lda	$0		; nop3	; 3
 ; 58
@@ -269,27 +239,19 @@ screen_smc:
 
 ; want 4552 here
 
-
-delay_16_settext:
-	bit	SET_TEXT
-	rts
-
 delay_16_setgr:
 	bit	SET_GR
 	rts
 
-
-delay_49:
-	lda	#0			; 2
-	ldy	#3			; 2
+delay_16_settext:
+	bit	SET_TEXT
+	rts
 
 	;=====================================
 	; short delay by Bruce Clark
 	;   any delay between 8 to 589832 with res of 9
 	;=====================================
 	; 9*(256*A+Y)+8 + 12 for jsr/rts
-	; A and Y both $FF at the end
-
 size_delay:
 
 delay_loop:
