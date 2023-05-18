@@ -22,6 +22,9 @@ midline:
 
 	jsr	initSineTable
 
+	lda	#0
+	sta	FRAME
+
 	;====================================================
 	; setup text page1 screen of "Apple II Forever" text
 	;====================================================
@@ -79,37 +82,28 @@ cycle_start:
 	; how start in middle?
 
 
-; 1
+; 2
 
 top_smc:
-	ldx	#68			; 2
-	nop
-	bne	top8	; bra		; 3/2
+	ldx	#66			; 2
+	lda	$00	; nop3
+	bne	top10	; bra		; 3/2
 
 
 top_loop:
 	nop				; 2
 	nop				; 2
-;blog_loop:
-; 4
 	nop				; 2
 	nop				; 2
-; 8
+	nop				; 2
+top10:
 
-top8:
-	ldy	FRAME			; 3
-	lda	sine,Y			; 4 (aligned)
-	clc				; 2
-	adc	#4			; 2
-	sta	top_smc+1		; 4
-	adc	#56			; 2
-	sta	bottom_smc+1		; 4
-; 29
-	ldy	#2			; 2
-; 31
-	jsr	wait_y_x_10		; 20
-; 51
-	lda	$00		; nop3	; 3
+; 10
+	ldy	#4			; 2
+; 12
+	jsr	wait_y_x_10		; 40
+; 52
+	nop				; 2
 	nop				; 2
 ; 56
 	nop				; 2
@@ -118,6 +112,8 @@ top8:
 	dex				; 2
 	bne	top_loop		; 3/2
 
+
+	; middle
 
 
 					; -1
@@ -153,7 +149,7 @@ middle_8:
 	nop				; 2
 	nop				; 2
 bottom_smc:
-	ldx	#178			; 2
+	ldx	#118			; 2
 	bne	bottom_8	; bra	; 3/2
 
 bottom_loop:
@@ -188,15 +184,27 @@ bottom_8:
 	;======================================
 				; -1 from before
 vblank_start:
+					; -1
+	inc	FRAME			; 5
+; 4
+	ldy	FRAME			; 3
+	lda	sine,Y			; 4 (aligned)
+; 11
+	clc				; 2
+	adc	#2			; 2
+	sta	top_smc+1		; 4
+	adc	#56			; 2
+	sta	bottom_smc+1		; 4
+; 25
 	ldx	#4			; 2
 	jsr	wait_x_x_1k		; 4000
-	ldy	#54			; 2
-	jsr	wait_y_x_10		; 540
-;  4543
-	inc	FRAME			; 5
-; 4548
+; 4027
+	ldy	#52			; 2
+	jsr	wait_y_x_10		; 520
+; 4549
+
 	jmp	cycle_start
-; +1
+; +2
 
 delay_16_setgr:
 	bit	SET_GR
