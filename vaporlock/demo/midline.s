@@ -9,6 +9,7 @@
 ; 198 bytes -- proof of concept
 ;  76 bytes -- optimize Apple II Forever printing code
 ; 183 bytes -- stable window
+; 248 bytes -- sine code added
 
 midline:
 
@@ -56,7 +57,7 @@ poll2:
         lda     $00             ; Now slew back in 17029 cycle loops    ; 3
 lp17029:
         ldx     #17             ;                                       ; 2
-        jsr     waitx1k         ;                                       ; 17000
+        jsr     wait_x_x_1k	;                                       ; 17000
         jsr     rts1            ;                                       ; 12
         lda     $00             ; nop3                                  ; 3
         lda     $00             ; nop3                                  ; 3
@@ -71,8 +72,6 @@ lp17029:
 	;==============================
 
 blog:
-
-
 	; 192 + 70 (vblank) = 262
 	; if 42 high, then day 220 on, 42 off
 	; how start in middle?
@@ -80,39 +79,48 @@ blog:
 	;	.byte $A5
 
 	lda	$EA	; nop3		; 3
-;	nop				; 2
-	ldx	#20			; 2
+top_smc:
+	ldx	#90			; 2
 	bne	top8	; bra		; 3/2
 
 
 top_loop:
 	nop				; 2
 	nop				; 2
-blog_loop:
+;blog_loop:
+; 4
 	nop				; 2
 	nop				; 2
 ; 8
 
 top8:
-
-	jsr	delay_16_setgr		; 16
-; 24
-	jsr	delay_16_setgr		; 16
-; 40
-	jsr	delay_16_setgr		; 16
+	ldy	FRAME			; 3
+	lda	sine,Y			; 4 (aligned)
+	clc				; 2
+	adc	#4			; 2
+	sta	top_smc+1		; 4
+	adc	#56			; 2
+	sta	bottom_smc+1		; 4
+; 29
+	ldy	#2			; 2
+; 31
+	jsr	wait_y_x_10		; 20
+; 51
+	lda	$00		; nop3	; 3
+	nop				; 2
 ; 56
 	nop				; 2
 	nop				; 2
 ; 60
 	dex				; 2
-	bne	top_loop		; 3
+	bne	top_loop		; 3/2
 
 
 
 					; -1
 	nop				; 2
 	nop				; 2
-	ldx	#64			; 2
+	ldx	#56			; 2
 	bne	middle_8	; bra	; 3
 
 
@@ -135,11 +143,15 @@ middle_8:
 	dex				; 2
 	bne	middle_loop		; 3/2
 
+
+
+
 					; -1
 	nop				; 2
 	nop				; 2
+bottom_smc:
 	ldx	#178			; 2
-	bne	bottom_8		; 3/2
+	bne	bottom_8	; bra	; 3/2
 
 bottom_loop:
 
@@ -149,22 +161,35 @@ bottom_loop:
 	nop				; 2
 ; 8
 bottom_8:
-	jsr	delay_16_setgr		; 16
-; 24
-	jsr	delay_16_setgr		; 16
-; 40
-	jsr	delay_16_setgr		; 16
+	ldy	#4			; 2
+; 10
+	jsr	wait_y_x_10		; 40
+; 50
+	nop
+	nop
+	nop
+
 ; 56
-	nop				; 2
-	nop				; 2
-; 60
-	dex				; 2
+	nop
+
+
+; 58
+	inx				; 2
+	cpx	#192			; 2
 	bne	bottom_loop		; 3/2
 
 					; -1
-	ldx	#20			; 2
-	jmp	blog_loop		; 3
-
+	ldx	#4			; 2
+	jsr	wait_x_x_1k		; 4000
+	ldy	#54			; 2
+	jsr	wait_y_x_10		; 540
+;  4543
+	inc	FRAME			; 5
+; 4548 (-2)
+	nop				; 2
+; 0
+	jmp	top_smc
+; 3
 
 delay_16_setgr:
 	bit	SET_GR
@@ -182,7 +207,7 @@ delay_16_settext:
 
 loop10:
         bne     skip
-waitx10:
+wait_y_x_10:
         dey                     ; wait y-reg times 10                   ; 2
 skip:
         dey                                                             ; 2
@@ -200,9 +225,9 @@ loop1k:
         pla                                                             ; 4
         nop                                                             ; 2
         nop                                                             ; 2
-waitx1k:
+wait_x_x_1k:
         ldy     #98                     ; wait x-reg times 1000         ; 2
-        jsr     waitx10                                                 ; 980
+        jsr     wait_y_x_10						; 980
         nop                                                             ; 2
         dex                                                             ; 2
         bne     loop1k                                                  ; 2/3
