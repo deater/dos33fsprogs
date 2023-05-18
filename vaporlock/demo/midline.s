@@ -8,6 +8,7 @@
 
 ; 198 bytes -- proof of concept
 ;  76 bytes -- optimize Apple II Forever printing code
+; 183 bytes -- stable window
 
 midline:
 
@@ -17,6 +18,8 @@ midline:
 
 	sta	FULLGR
 	sta	SETMOUSETEXT
+
+	jsr	initSineTable
 
 	;====================================================
 	; setup text page1 screen of "Apple II Forever" text
@@ -69,20 +72,98 @@ lp17029:
 
 blog:
 
-	ldx	#255
 
+	; 192 + 70 (vblank) = 262
+	; if 42 high, then day 220 on, 42 off
+	; how start in middle?
+
+	;	.byte $A5
+
+	lda	$EA	; nop3		; 3
+;	nop				; 2
+	ldx	#20			; 2
+	bne	top8	; bra		; 3/2
+
+
+top_loop:
+	nop				; 2
+	nop				; 2
 blog_loop:
+	nop				; 2
+	nop				; 2
+; 8
+
+top8:
+
 	jsr	delay_16_setgr		; 16
-; 16
-	jsr	delay_16_settext	; 16
-; 32
+; 24
 	jsr	delay_16_setgr		; 16
-; 48
-	jsr	delay_12		; 12
+; 40
+	jsr	delay_16_setgr		; 16
+; 56
+	nop				; 2
+	nop				; 2
 ; 60
 	dex				; 2
-	jmp	blog_loop		; 3
+	bne	top_loop		; 3
 
+
+
+					; -1
+	nop				; 2
+	nop				; 2
+	ldx	#64			; 2
+	bne	middle_8	; bra	; 3
+
+
+middle_loop:
+	nop				; 2
+	nop				; 2
+	nop				; 2
+	nop				; 2
+; 8
+middle_8:
+	jsr	delay_16_setgr		; 16
+; 24
+	jsr	delay_16_settext	; 16
+; 40
+	jsr	delay_16_setgr		; 16
+; 56
+	nop				; 2
+	nop				; 2
+; 60
+	dex				; 2
+	bne	middle_loop		; 3/2
+
+					; -1
+	nop				; 2
+	nop				; 2
+	ldx	#178			; 2
+	bne	bottom_8		; 3/2
+
+bottom_loop:
+
+	nop				; 2
+	nop				; 2
+	nop				; 2
+	nop				; 2
+; 8
+bottom_8:
+	jsr	delay_16_setgr		; 16
+; 24
+	jsr	delay_16_setgr		; 16
+; 40
+	jsr	delay_16_setgr		; 16
+; 56
+	nop				; 2
+	nop				; 2
+; 60
+	dex				; 2
+	bne	bottom_loop		; 3/2
+
+					; -1
+	ldx	#20			; 2
+	jmp	blog_loop		; 3
 
 
 delay_16_setgr:
@@ -135,3 +216,49 @@ a2_string:
 	.byte 'I'+$80,'I'+$80,' '+$80,'F'+$80,'o'+$80,'r'+$80
 	.byte 'e'+$80,'v'+$80,'e'+$80,'r'+$80,'!'+$80,'!'+$80
 	.byte ' '+$80,'@'+$00,' '+$80,0
+
+
+
+initSineTable:
+
+	ldy	#$3f
+	ldx	#$00
+
+; Accumulate the delta (normal 16-bit addition)
+:
+	lda	value
+	clc
+	adc	delta
+	sta	value
+	lda	value+1
+	adc	delta+1
+	sta	value+1
+
+	; Reflect the value around for a sine wave
+	sta	sine+$c0,x
+	sta	sine+$80,y
+	eor	#$7f
+	sta	sine+$40,x
+	sta	sine+$00,y
+
+; Increase the delta, which creates the "acceleration" for a parabola
+	lda	delta
+;	adc	#$10   ; this value adds up to the proper amplitude
+	adc	#$08   ; this value adds up to the proper amplitude
+	sta	delta
+	bcc :+
+	inc	delta+1
+:
+
+	; Loop
+	inx
+	dey
+	bpl :--
+
+	rts
+
+value: .word 0
+delta: .word 0
+
+
+sine = $c00
