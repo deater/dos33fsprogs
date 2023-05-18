@@ -1,0 +1,12 @@
+Midline
+-
+256-byte Intro for Apple IIe, Outline 2023
+by Deater / dSr
+
+Cycle-count and midline mode switching 
+between text, hi-res, and lo-res midscreen.
+
+Only works on Apple IIe models of Apple II
+because it uses that model's specific way
+of VBLANK detection that doesn't work on
+other models
