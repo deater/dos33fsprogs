@@ -71,35 +71,19 @@ lp17029:
 	; do the cycle counting
 	;==============================
 
-blog:
-
-
-vblank_start:
-	;======================================
-	; wait 4550 for VBLANK
-	;======================================
-
-					; 2
-	ldx	#4			; 2
-	jsr	wait_x_x_1k		; 4000
-	ldy	#54			; 2
-	jsr	wait_y_x_10		; 540
-;  4543
-	inc	FRAME			; 5
-; 4548 (-2)
-;	nop				; 2
-; 0
+cycle_start:
 
 
 	; 192 + 70 (vblank) = 262
 	; if 42 high, then day 220 on, 42 off
 	; how start in middle?
 
-	;	.byte $A5
 
-	lda	$EA	; nop3		; 3
+; 1
+
 top_smc:
-	ldx	#4			; 2
+	ldx	#68			; 2
+	nop
 	bne	top8	; bra		; 3/2
 
 
@@ -198,8 +182,21 @@ bottom_8:
 	bcc	bottom_loop		; 3/2
 
 ; -1
-	jmp	vblank_start
-; 2
+
+	;======================================
+	; wait 4550 for VBLANK
+	;======================================
+				; -1 from before
+vblank_start:
+	ldx	#4			; 2
+	jsr	wait_x_x_1k		; 4000
+	ldy	#54			; 2
+	jsr	wait_y_x_10		; 540
+;  4543
+	inc	FRAME			; 5
+; 4548
+	jmp	cycle_start
+; +1
 
 delay_16_setgr:
 	bit	SET_GR
