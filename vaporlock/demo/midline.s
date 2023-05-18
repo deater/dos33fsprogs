@@ -72,6 +72,25 @@ lp17029:
 	;==============================
 
 blog:
+
+
+vblank_start:
+	;======================================
+	; wait 4550 for VBLANK
+	;======================================
+
+					; 2
+	ldx	#4			; 2
+	jsr	wait_x_x_1k		; 4000
+	ldy	#54			; 2
+	jsr	wait_y_x_10		; 540
+;  4543
+	inc	FRAME			; 5
+; 4548 (-2)
+;	nop				; 2
+; 0
+
+
 	; 192 + 70 (vblank) = 262
 	; if 42 high, then day 220 on, 42 off
 	; how start in middle?
@@ -80,7 +99,7 @@ blog:
 
 	lda	$EA	; nop3		; 3
 top_smc:
-	ldx	#90			; 2
+	ldx	#4			; 2
 	bne	top8	; bra		; 3/2
 
 
@@ -176,20 +195,11 @@ bottom_8:
 ; 58
 	inx				; 2
 	cpx	#192			; 2
-	bne	bottom_loop		; 3/2
+	bcc	bottom_loop		; 3/2
 
-					; -1
-	ldx	#4			; 2
-	jsr	wait_x_x_1k		; 4000
-	ldy	#54			; 2
-	jsr	wait_y_x_10		; 540
-;  4543
-	inc	FRAME			; 5
-; 4548 (-2)
-	nop				; 2
-; 0
-	jmp	top_smc
-; 3
+; -1
+	jmp	vblank_start
+; 2
 
 delay_16_setgr:
 	bit	SET_GR
