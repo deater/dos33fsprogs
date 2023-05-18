@@ -16,6 +16,8 @@
 ; 257 bytes -- inline sine generation
 ; 259 bytes -- fix sine generation initialization, shave some message print
 ; 247 bytes -- start replacing sather delays with something more compact
+; 229 bytes -- finish replacing sather delays
+; 228 bytes -- optimize and center the middle area
 
 sine = $c00	; location of sine table
 
@@ -89,62 +91,57 @@ lp17029:
 
 cycle_start:
 
+	;==============================
+	; top
+
 ; 2
 
 top_smc:
 	ldx	#66			; 2
-	lda	$00	; nop3		; 5
-	bne	top10	; bra		; 3/2
-
+	bne	top7	; bra		; 3/2
 
 top_loop:
-	nop				; 2
-	nop				; 2
-	nop				; 2
-	nop				; 2
-	nop				; 2
-top10:
+	pha				; 3
+	pla				; 4
+top7:
+; 7
+	lda	#0			; 2
+	ldy	#3			; 2
+; 11
+	; want to delay 49
 
-; 10
-	ldy	#4			; 2
-; 12
-	jsr	wait_y_x_10		; 40
-; 52
-	nop				; 2
-	nop				; 2
-; 56
-	nop				; 2
+	jsr	size_delay		; 47
+; 58
 	nop				; 2
 ; 60
 	dex				; 2
 	bne	top_loop		; 3/2
 
+	;===================================
 
 	; middle
-
-
 					; -1
-	nop				; 2
-	nop				; 2
 	ldx	#56			; 2
-	bne	middle_8	; bra	; 3
+	bne	middle_4	; bra	; 3
 
 
 middle_loop:
 	nop				; 2
 	nop				; 2
+middle_4:
 	nop				; 2
-	nop				; 2
+;	nop				; 2
+	lda	$0
 ; 8
-middle_8:
 	jsr	delay_16_setgr		; 16
 ; 24
 	jsr	delay_16_settext	; 16
 ; 40
 	jsr	delay_16_setgr		; 16
 ; 56
-	nop				; 2
-	nop				; 2
+	lda	$0
+;	nop				; 2
+;	nop				; 2
 ; 60
 	dex				; 2
 	bne	middle_loop		; 3/2
@@ -153,32 +150,25 @@ middle_8:
 
 
 					; -1
-	nop				; 2
-	nop				; 2
 bottom_smc:
 	ldx	#118			; 2
-	bne	bottom_8	; bra	; 3/2
+	bne	bottom_4	; bra	; 3
 
 bottom_loop:
 
 	nop				; 2
 	nop				; 2
-	nop				; 2
-	nop				; 2
+; 4
+bottom_4:
+; 4
+	lda	#0			; 2
+	ldy	#3			; 2
 ; 8
-bottom_8:
-	ldy	#4			; 2
-; 10
-	jsr	wait_y_x_10		; 40
-; 50
-	nop
-	nop
-	nop
+	; want to delay 50
 
-; 56
-	nop
-
-
+	jsr	size_delay		; 47
+; 55
+	lda	$0		; nop3	; 3
 ; 58
 	inx				; 2
 	cpx	#192			; 2
@@ -191,6 +181,9 @@ bottom_8:
 	;======================================
 				; -1 from before
 vblank_start:
+
+	; move window
+
 					; -1
 	inc	FRAME			; 5
 ; 4
@@ -202,6 +195,8 @@ vblank_start:
 	sta	top_smc+1		; 4
 	adc	#56			; 2
 	sta	bottom_smc+1		; 4
+
+	; finish delay
 
 ; 25
 	lda	#1			; 2
@@ -216,47 +211,12 @@ vblank_start:
 
 delay_16_setgr:
 	bit	SET_GR
-delay_12:
 	rts
 
 delay_16_settext:
 	bit	SET_TEXT
 	rts
 
-
-	;===================================
-        ; wait y-reg times 10
-        ;===================================
-
-loop10:
-        bne     skip
-wait_y_x_10:
-        dey                     ; wait y-reg times 10                   ; 2
-skip:
-        dey                                                             ; 2
-        nop                                                             ; 2
-        bne     loop10                                                  ; 2/3
-        rts                                                             ; 6
-
-.if 0
-	;===================================
-        ; wait x-reg times 1000
-        ;===================================
-
-loop1k:
-        pha                                                             ; 3
-        pla                                                             ; 4
-        nop                                                             ; 2
-        nop                                                             ; 2
-wait_X_x_1k:
-        ldy     #98                     ; wait x-reg times 1000         ; 2
-        jsr     wait_y_x_10						; 980
-        nop                                                             ; 2
-        dex                                                             ; 2
-        bne     loop1k                                                  ; 2/3
-rts1:
-        rts                                                             ; 6
-.endif
 	;=====================================
 	; short delay by Bruce Clark
 	;   any delay between 8 to 589832 with res of 9
@@ -269,6 +229,7 @@ delay_loop:
 	dey
 	sbc	#0
 	bcs	delay_loop
+delay_12:
 	rts
 
 a2_string:
