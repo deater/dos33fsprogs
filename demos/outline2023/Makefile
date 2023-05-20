@@ -14,7 +14,7 @@ midline.dsk:	HELLO MIDLINE
 
 ###
 
-submit:	midline.zip
+submit:	midline.zip midline_small.zip
 
 midline.zip:	MIDLINE midline.s file_id.diz midline.dsk
 	mkdir -p outline2023_midline
@@ -30,6 +30,20 @@ midline.zip:	MIDLINE midline.s file_id.diz midline.dsk
 	zip -r midline.zip outline2023_midline
 
 ###
+
+midline_small.zip:	MIDLINE midline.s file_id.diz midline.dsk
+	mkdir -p outline2023_midline_small
+	cp MIDLINE ./outline2023_midline_small
+	cp midline.s ./outline2023_midline_small
+	cp sinetable.s ./outline2023_midline_small
+	cp hardware.inc ./outline2023_midline_small
+	cp zp.inc ./outline2023_midline_small
+	cp file_id.diz ./outline2023_midline_small
+	cp midline.dsk ./outline2023_midline_small
+	zip -r midline_small.zip outline2023_midline_small
+
+###
+
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
