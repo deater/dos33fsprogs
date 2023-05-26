@@ -59,7 +59,7 @@ title_screen:
 	lda	#>title_data
 	sta	ZX0_src+1
 
-	lda	#$C			; load at $c00
+	lda	#$c			; load at $C00
 
 	jsr	full_decomp
 
@@ -111,7 +111,7 @@ init_game:
 	lda	#>main_data
 	sta	ZX0_src+1
 
-	lda	#$C
+	lda	#$c
 
 	jsr	full_decomp
 

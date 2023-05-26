@@ -56,11 +56,22 @@ wait_until_keypress:
 	bpl	wait_until_keypress			; 3
 	bit	KEYRESET	; clear the keyboard buffer
 
+	and	#$7f
+	cmp	#'1'
+	bcc	which_ok
+	cmp	#'4'
+	bcs	which_ok
+
+	jmp	done
+
 which_ok:
 	jmp	load_loop
 
 
-
+done:
+	and	#$f
+	sta	WHICH_LOAD
+	rts
 
 	.include	"zx02_optim.s"
 

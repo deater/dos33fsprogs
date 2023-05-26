@@ -10,6 +10,8 @@ ZX0_dst         = ZP+4
 bitr            = ZP+6
 pntr            = ZP+7
 
+WHICH_LOAD	= $09
+
 ;; Zero page monitor routines addresses
 
 WNDLFT	= $20
@@ -123,6 +125,8 @@ TIME_TAKEN	= $9A
 LYRICS_ACTIVE	= $9B
 ;FORTYCOL	= $9C
 CURSOR		= $9D
+
+CURRENT_DISK	= $DC
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

@@ -57,7 +57,10 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 
 which_ok:
-	jmp	load_loop
+	lda	#0
+	sta	WHICH_LOAD
+	rts
+
 
 
 
