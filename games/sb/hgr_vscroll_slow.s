@@ -12,7 +12,7 @@ hgr_vscroll:
 	stx	SCROLL		; SCROLL = 0			; 3
 
 vscroll_loop:
-.if 0
+
 	; for x=0 to SCROLL
 	; write 40 bytes of 00
 
@@ -45,56 +45,52 @@ vscroll_line:
 							; assume SCROLL=96
 							; 96*(14+443+7)-1
 							;
-.endif
-	; Original = 66629
-	; optimize = 58564
-
 
 	;====================
 	; draw bottom part
 
 	lda	#0						; 2
 	sta	SCROLL_OFFSET					; 3
-	ldx	SCROLL						; 3
 vscroll_bottom:
+	stx	XSAVE						; 3
 
-	ldy	SCROLL_OFFSET					; 3
-	lda	hposn_high,Y					; 4
-	ora	#$80			; $20->$A0		; 2
-	sta	vscroll_in_smc+2	; INH			; 4
-	lda	hposn_low,Y					; 4
-	sta	vscroll_in_smc+1	; INL			; 4
+	ldx	SCROLL_OFFSET					; 3
+	lda	hposn_high,X					; 4
+	clc							; 2
+	adc	#$80		; ora instead?			; 2
+	sta	INH						; 3
+	lda	hposn_low,X					; 4
+	sta	INL						; 3
 								;====
-								; 21
+								; 24
 
 	inc	SCROLL_OFFSET					; 5
 
+	ldx	XSAVE						; 3
+
 	lda	hposn_high,X					; 4
-	sta	vscroll_out_smc+2	; OUTH			; 4
+	sta	OUTH						; 3
 	lda	hposn_low,X					; 4
-	sta	vscroll_out_smc+1	; OUTL			; 4
+	sta	OUTL						; 3
 								;====
-								; 21
+								; 22
 
 	ldy	#39						; 2
 vscroll_bottom_line:
-
-vscroll_in_smc:
-	lda	$A000,Y						; 4
-vscroll_out_smc:
-	sta	$2000,Y						; 5
+	lda	(INL),Y						; 5
+	sta	(OUTL),Y					; 6
 	dey							; 2
 	bpl	vscroll_bottom_line				; 2/3
 								;=====
-								; 2+40*(14)-1
-								; 561
+								; 2+40*(16)-1
+								; 641
 
 	inx							; 2
 	cpx	#192						; 2
 	bne	vscroll_bottom					; 2/3
 							;==========
-							;5+96*(42+561+7)-1
-							; 58564
+							;5+96*(46+641+7)-1
+							; 66629
 
 	;=====================
 	; scroll whole screen
