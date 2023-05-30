@@ -34,26 +34,20 @@ COLOR	= $30
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
 
 
-; DOS33: Confirmed kills $68
-
-RWTSL		= $60
-RWTSH		= $61
-DOSBUFL		= $62
-DOSBUFH		= $63
-FILEML		= $64
-FILEMH		= $65
-
-
 FRAME           = $60
 FRAMEH		= $61
-WAITING         = $62
-LETTERL         = $63
-LETTERH         = $64
-LETTERX         = $65
-LETTERY         = $66
-LETTERD         = $67
-LETTER          = $68
-BLARGH          = $69
+SCROLL		= $62
+XSAVE		= $63
+SCROLL_OFFSET	= $64
+
+;WAITING         = $62
+;LETTERL         = $63
+;LETTERH         = $64
+;LETTERX         = $65
+;LETTERY         = $66
+;LETTERD         = $67
+;LETTER          = $68
+;BLARGH          = $69
 
 				;FACTOR_I	= $66
 				;FACTOR_F	= $67

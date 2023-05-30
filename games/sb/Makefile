@@ -77,7 +77,10 @@ TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 title.o:	title.s zx02_optim.s \
-		zp.inc hardware.inc
+		zp.inc hardware.inc \
+		hgr_vscroll.s \
+		graphics/czmg4ap_title.hgr.zx02 \
+		graphics/videlectrix_top.hgr.zx02
 	ca65 -o title.o title.s -l title.lst
 
 

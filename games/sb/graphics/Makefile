@@ -11,6 +11,7 @@ PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 
 all:	strongbad_sample.hgr.zx02 \
 	czmg4ap_title.hgr.zx02 \
+	videlectrix_top.hgr.zx02 \
 	a2_duckpond_title.gr.zx02 \
 	a2_duckpond.gr.zx02 \
 	a2_duckpond_twilight.gr.zx02 \
@@ -97,6 +98,15 @@ czmg4ap_title.hgr.zx02:	czmg4ap_title.hgr
 
 czmg4ap_title.hgr:	czmg4ap_title.png
 	$(PNG_TO_HGR) czmg4ap_title.png > czmg4ap_title.hgr
+
+####
+
+videlectrix_top.hgr.zx02:	videlectrix_top.hgr
+	$(ZX02) videlectrix_top.hgr videlectrix_top.hgr.zx02
+
+videlectrix_top.hgr:	videlectrix_top.png
+	$(PNG_TO_HGR) videlectrix_top.png > videlectrix_top.hgr
+
 
 
 ####

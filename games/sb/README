@@ -1,2 +1,19 @@
 FN: animation based on Strong Bad E-mail #152 "ISP"
 	It's a long download of a "break-dancing" rat
+
+
+
+
+MEMORY_MAP:
+	0000-00ff = zero page
+	0100-01ff = stack
+	0200-0369 = disk variables
+	036A-03ff = vectors and such
+	0400-07ff = text/gr page1
+	0800-0bff = text/gr page2
+	0c00-0fff = ????
+	1000-11ff = disk load code	
+	1200-1fff = QLOAD
+	2000-3FFF = hgr page1
+	4000-5fff = hgr page2
+	6000-bfff = program space
