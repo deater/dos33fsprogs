@@ -25,10 +25,9 @@ play_purple:
 	ldx	#PURPLE_LENGTH			; 28 pages long???
 	jsr	play_audio
 
-        ; read/write RAM, $d000 bank 2
+        ; read ROM/no-write
 
-	bit     $c08B
-	bit     $c08B
+	bit     $c082
 
 done_play_purple:
 	rts

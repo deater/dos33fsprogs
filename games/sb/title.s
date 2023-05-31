@@ -14,10 +14,11 @@ hires_start:
 	;===================
 	jsr	HOME
 
-	bit	HIRES
+	jsr	HGR
+;	bit	HIRES
 	bit	FULLGR
-	bit	SET_GR
-	bit	PAGE1
+;	bit	SET_GR
+;	bit	PAGE1
 
 	;====================
 	; set up tables
@@ -64,6 +65,9 @@ yes_language_card:
 
 	jsr	full_decomp
 
+	; read ROM/no-write
+	bit	$C082
+
 
 no_language_card:
 
@@ -86,7 +90,7 @@ scroll_logo:
 	sta	ZX0_src+1
 
 
-	lda	#$A0
+	lda	#$40
 
 	jsr	full_decomp
 
@@ -152,7 +156,7 @@ done:
 
 	.include	"zx02_optim.s"
 	.include	"hgr_tables.s"
-	.include	"hgr_vscroll.s"
+	.include	"hgr_logo_scroll.s"
 	.include	"audio.s"
 	.include	"purple.s"
 	.include	"lc_detect.s"

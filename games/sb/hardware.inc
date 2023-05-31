@@ -23,12 +23,13 @@ PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
 
-;; BASIC ROUTINES
+;=================
+; ROM ROUTINES
+;=================
+; note we can't use these if language card RAM switched in
 
-NORMAL	=	$F273
-
-;; MONITOR ROUTINES
-
+NORMAL	= $F273
+HGR	= $F3E2
 HLINE	= $F819			;; HLINE Y,$2C at A
 VLINE	= $F828			;; VLINE A,$2D at Y
 CLRSCR	= $F832			;; Clear low-res screen

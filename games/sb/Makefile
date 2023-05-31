@@ -78,7 +78,7 @@ TITLE:	title.o
 
 title.o:	title.s zx02_optim.s \
 		zp.inc hardware.inc \
-		hgr_vscroll.s audio.s \
+		hgr_logo_scroll.s audio.s \
 		purple.s lc_detect.s \
 		sound/purple.btc.zx02 \
 		graphics/czmg4ap_title.hgr.zx02 \
