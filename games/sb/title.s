@@ -27,6 +27,47 @@ hires_start:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
+
+	;=========================================
+	; detect if we have a language card (64k)
+	; and load sound into it if possible
+	;===================================
+
+	lda	#0
+	sta	SOUND_STATUS		; clear out, sound enabled
+
+	jsr	detect_language_card
+	bcs	no_language_card
+
+yes_language_card:
+
+	; update sound status
+	lda	SOUND_STATUS
+	ora	#SOUND_IN_LC
+	sta	SOUND_STATUS
+
+	;==================================
+	; load sound into the language card
+	;       into $D000 set 1
+	;==================================
+
+	; read/write RAM, use $d000 bank1
+	bit	$C083
+	bit	$C083
+
+	lda     #<purple_data
+        sta     ZX0_src
+        lda     #>purple_data
+        sta     ZX0_src+1
+
+        lda     #$D0    ; decompress to $D000
+
+	jsr	full_decomp
+
+
+no_language_card:
+
+
 	;===================
 	;===================
 	; scroll the logo
@@ -80,8 +121,11 @@ load_title_image:
 
 	jsr	full_decomp
 
-;	rts
+	;==========================
+	; Play sound
+	;===========================
 
+	jsr	play_purple
 
 
 wait_until_keypress:
@@ -109,8 +153,14 @@ done:
 	.include	"zx02_optim.s"
 	.include	"hgr_tables.s"
 	.include	"hgr_vscroll.s"
+	.include	"audio.s"
+	.include	"purple.s"
+	.include	"lc_detect.s"
 
 title_data:
 	.incbin "graphics/czmg4ap_title.hgr.zx02"
 vid_top:
 	.incbin "graphics/videlectrix_top.hgr.zx02"
+
+purple_data:
+	.incbin "sound/purple.btc.zx02"

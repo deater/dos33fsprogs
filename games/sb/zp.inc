@@ -39,6 +39,14 @@ FRAMEH		= $61
 SCROLL		= $62
 XSAVE		= $63
 SCROLL_OFFSET	= $64
+BTC_L		= $65
+BTC_H		= $66
+SOUND_STATUS	= $67
+	SOUND_DISABLED  = $80
+	SOUND_IN_LC     = $01 ; $01 sound effects in language card
+	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+
+
 
 ;WAITING         = $62
 ;LETTERL         = $63

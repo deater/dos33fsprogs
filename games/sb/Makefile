@@ -78,7 +78,9 @@ TITLE:	title.o
 
 title.o:	title.s zx02_optim.s \
 		zp.inc hardware.inc \
-		hgr_vscroll.s \
+		hgr_vscroll.s audio.s \
+		purple.s lc_detect.s \
+		sound/purple.btc.zx02 \
 		graphics/czmg4ap_title.hgr.zx02 \
 		graphics/videlectrix_top.hgr.zx02
 	ca65 -o title.o title.s -l title.lst

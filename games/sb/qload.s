@@ -183,7 +183,7 @@ sector_array:
 	.byte  0, 0, 0, 0	; LEVEL8, LEVEL9, LEVEL10
 
 length_array:
-        .byte  16, 16, 16, 32	; TITLE,  DUCK, SB, FN
+        .byte  32, 16, 16, 32	; TITLE,  DUCK, SB, FN
 	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
 	.byte  46, 46, 32, 32	; LEVEL8, LEVEL9, LEVEL10
 
