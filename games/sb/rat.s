@@ -306,6 +306,11 @@ play_music:
 
 rat_loop:
 
+	;============================
+	; print "not really" message
+	;============================
+
+	bit	KEYRESET
 
 	lda	#<break_image
 	sta	ZX0_src

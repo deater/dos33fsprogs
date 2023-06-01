@@ -15,10 +15,10 @@ hires_start:
 	jsr	HOME
 
 	jsr	HGR
-;	bit	HIRES
 	bit	FULLGR
-;	bit	SET_GR
-;	bit	PAGE1
+
+	lda	#0
+	sta	DRAW_PAGE
 
 	;====================
 	; set up tables
@@ -71,6 +71,12 @@ yes_language_card:
 
 no_language_card:
 
+	;====================
+	; see if skipping
+	;====================
+
+	lda	NOT_FIRST_TIME
+	bne	load_title_image
 
 	;===================
 	;===================
@@ -128,9 +134,14 @@ load_title_image:
 	;==========================
 	; Play sound
 	;===========================
+
+	lda	NOT_FIRST_TIME
+	bne	skip_purple
+
 say_purple:
 	jsr	play_purple
 
+skip_purple:
 	;==========================
 	; Update purple sprite
 	;===========================
@@ -148,6 +159,8 @@ say_purple:
 	lda	#0
 	sta	MENU_ITEM
 
+	lda	#1
+	sta	NOT_FIRST_TIME
 main_loop:
 	;==========================
 	; Draw arrow

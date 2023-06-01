@@ -17,6 +17,7 @@ qload_start:
 
 	lda	#0			; load LEMM engine
 	sta	WHICH_LOAD
+	sta	NOT_FIRST_TIME
 
 	lda	#1
 	sta	CURRENT_DISK		; current disk number
@@ -163,29 +164,28 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; TITLE,  DUCK, SB, FN
-	.byte 1,1,1,1		; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 1,1,1,1		; LEVEL8, LEVEL9, LEVEL10
+	.byte 1,1,1,1		; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte 1,1,1,1		; TARGET, CLIFF, RAT
 
 load_address_array:
-        .byte $60,$60,$60,$60	; TITLE,  DUCK, SB, FN
-	.byte $90,$90,$90,$90	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte $90,$90,$90,$90	; LEVEL8, LEVEL9, LEVEL10
+        .byte $60,$60,$60,$60	; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte $60,$60,$60,$60	; TARGET, CLIFF, RAT
+
 
 track_array:
-        .byte  2, 5, 8,11	; TITLE,  DUCK, SB, FN
-	.byte 15,18,21,24	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte 27,30,33,33	; LEVEL8, LEVEL9, LEVEL10
+        .byte  2, 5, 8,11	; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte 11,11,11,24	; TARGET, CLIFF, RAT
+
 
 sector_array:
-        .byte  0, 0, 0, 0	; TITLE,  DUCK, SB, FN
-	.byte  0, 0, 0, 0	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  0, 0, 0, 0	; LEVEL8, LEVEL9, LEVEL10
+        .byte  0, 0, 0, 0	; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte  0, 0, 0, 0	; TARGET, CLIFF, RAT
+
 
 length_array:
-        .byte  32, 16, 16, 32	; TITLE,  DUCK, SB, FN
-	.byte  46, 46, 46, 46	; LEVEL4, LEVEL5, LEVEL6, LEVEL7
-	.byte  46, 46, 32, 32	; LEVEL8, LEVEL9, LEVEL10
+        .byte  32, 16, 16, 32	; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte  32, 32, 32, 32	; TARGET, CLIFF, RAT
+
 
 qload_end:
 
