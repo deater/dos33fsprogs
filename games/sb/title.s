@@ -131,6 +131,34 @@ load_title_image:
 
 	jsr	play_purple
 
+	;==========================
+	; Update purple sprite
+	;===========================
+
+	lda	#<purple_sprite
+	sta	INL
+	lda	#>purple_sprite
+	sta	INH
+	lda	#(175/7)
+	sta	SPRITE_X
+	lda	#83
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite
+
+
+	;==========================
+	; Draw arrow
+	;===========================
+
+	lda	#<arrow_sprite
+	sta	INL
+	lda	#>arrow_sprite
+	sta	INH
+	lda	#(105/7)
+	sta	SPRITE_X
+	lda	#111
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite
 
 wait_until_keypress:
 	lda	KEYPRESS				; 4
@@ -160,6 +188,8 @@ done:
 	.include	"audio.s"
 	.include	"purple.s"
 	.include	"lc_detect.s"
+	.include	"graphics/title_sprites.inc"
+	.include	"hgr_sprite.s"
 
 title_data:
 	.incbin "graphics/czmg4ap_title.hgr.zx02"
