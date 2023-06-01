@@ -98,7 +98,7 @@ scroll_logo:
 	; scroll up vertically
 	;======================
 
-	jsr	hgr_vscroll
+	jsr	hgr_logo_vscroll
 
 
 	;===================

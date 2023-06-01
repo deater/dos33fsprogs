@@ -1,10 +1,10 @@
 	;================================
-	; HGR vscroll
+	; HGR logo vscroll
 	;================================
 	; image to scroll in is in $4000
 	;
 
-hgr_vscroll:
+hgr_logo_vscroll:
 
 	ldx	#191						; 2
 	stx	SCROLL		; SCROLL = 0			; 3
@@ -80,9 +80,18 @@ vscroll_out_smc:
 done_scroll:
 
 	;=====================
+	; exit early if keypress
+
+	lda	KEYPRESS
+	bmi	vscroll_early_exit
+
+	;=====================
 	; scroll whole screen
 
 	dec	SCROLL
 	bne	vscroll_loop
+
+vscroll_early_exit:
+	bit	KEYRESET
 
 	rts
