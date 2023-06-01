@@ -128,7 +128,7 @@ load_title_image:
 	;==========================
 	; Play sound
 	;===========================
-
+say_purple:
 	jsr	play_purple
 
 	;==========================
@@ -145,10 +145,16 @@ load_title_image:
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite
 
+	lda	#0
+	sta	MENU_ITEM
 
+main_loop:
 	;==========================
 	; Draw arrow
 	;===========================
+draw_arrow:
+	ldx	MENU_ITEM
+	stx	OLD_MENU_ITEM
 
 	lda	#<arrow_sprite
 	sta	INL
@@ -156,7 +162,7 @@ load_title_image:
 	sta	INH
 	lda	#(105/7)
 	sta	SPRITE_X
-	lda	#111
+	lda	arrow_y,X
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite
 
@@ -166,19 +172,78 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 
 	and	#$7f
+
+	;=========================
+	; see if number pressed
+
 	cmp	#'1'
-	bcc	which_ok
-	cmp	#'4'
-	bcs	which_ok
+	bcc	done_check_number		; blt
+	cmp	#'7'
+	bcs	done_check_number		; bge
 
-	jmp	done
+	; was a number
 
-which_ok:
-	jmp	load_loop
-
-
-done:
 	and	#$f
+	sta	MENU_ITEM
+	bne	load_new_program
+
+done_check_number:
+
+	cmp	#' '
+	beq	load_from_arrow
+	cmp	#13
+	beq	load_from_arrow
+
+	cmp	#'P'
+	beq	say_purple
+
+	cmp	#8		; left
+	beq	arrow_up
+	cmp	#$15
+	beq	arrow_down	; right
+	cmp	#$0B
+	beq	arrow_up	; up
+	cmp	#$0A
+	beq	arrow_down	; down
+
+
+done_arrow:
+	jmp	wait_until_keypress
+
+arrow_up:
+	lda	MENU_ITEM
+	beq	done_arrow
+	dec	MENU_ITEM
+	jmp	move_arrow
+
+arrow_down:
+	lda	MENU_ITEM
+	cmp	#5			; 0 indexed
+	bcs	done_arrow
+	inc	MENU_ITEM
+
+move_arrow:
+	; erase arrow
+
+	ldx	OLD_MENU_ITEM
+	lda	#<empty_sprite
+	sta	INL
+	lda	#>empty_sprite
+	sta	INH
+	lda	#(105/7)
+	sta	SPRITE_X
+	lda	arrow_y,X
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite
+
+	jmp	draw_arrow
+
+
+load_from_arrow:
+	inc	MENU_ITEM	; it's zero indexed
+
+load_new_program:
+	lda	MENU_ITEM
 	sta	WHICH_LOAD
 	rts
 
@@ -198,3 +263,7 @@ vid_top:
 
 purple_data:
 	.incbin "sound/purple.btc.zx02"
+
+	; offsets of arrow
+arrow_y:
+	.byte 111,121,131,141,151,161

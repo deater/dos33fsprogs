@@ -45,31 +45,12 @@ SOUND_STATUS	= $67
 	SOUND_DISABLED  = $80
 	SOUND_IN_LC     = $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+MENU_ITEM	= $68
+OLD_MENU_ITEM	= $69
 
 
 
-;WAITING         = $62
-;LETTERL         = $63
-;LETTERH         = $64
-;LETTERX         = $65
-;LETTERY         = $66
-;LETTERD         = $67
-;LETTER          = $68
-;BLARGH          = $69
-
-				;FACTOR_I	= $66
-				;FACTOR_F	= $67
-				;DX_I		= $68
-				;DX_F		= $69
-				;SPACEX_I	= $6A
-				;SPACEX_F	= $6B
-				;CX_I		= $6C
-				;CX_F		= $6D
-				;DY_I		= $6E
-				;DY_F		= $6F
-
-
-ZPOS		= $78
+;ZPOS		= $78
 
 REGISTER_DUMP	= $70
 A_FINE_TONE	= $70
