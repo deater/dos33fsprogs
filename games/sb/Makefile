@@ -12,7 +12,7 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND SB FN
+sb.dsk:	QBOOT QLOAD TITLE DUCK_POND SB RAT
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -21,10 +21,10 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND SB FN
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
 	$(DOS33_RAW) sb.dsk  8  0 SB         0   0
-	$(DOS33_RAW) sb.dsk 11  0 FN         0   0
+	$(DOS33_RAW) sb.dsk 11  0 RAT         0   0
 #	$(DOS33) -y sb.dsk BSAVE -a 0x1000 DUCK_POND
 #	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
-#	$(DOS33) -y sb.dsk BSAVE -a 0x6000 FN
+#	$(DOS33) -y sb.dsk BSAVE -a 0x6000 RAT
 
 ####
 
@@ -55,20 +55,20 @@ sb.o:	sb.s zx02_optim.s \
 
 ####
 
-FN:	fn.o
-	ld65 -o FN fn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+RAT:	rat.o
+	ld65 -o RAT rat.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-fn.o:	fn.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
+rat.o:	rat.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
 		zp.inc hardware.inc \
-		fn_sound/fortnight.ed \
-		fn_graphics/a2_fortnight.hgr.zx02 \
-		fn_graphics/a2_fortnight_99.hgr.zx02 \
-		fn_graphics/a2_fortnight_100.hgr.zx02 \
-		fn_graphics/a2_fortnight_rat1.hgr.zx02 \
-		fn_graphics/a2_fortnight_rat2.hgr.zx02 \
-		fn_graphics/a2_break.hgr.zx02 \
-		fn_graphics/disk_sprites.inc
-	ca65 -o fn.o fn.s -l fn.lst
+		rat_sound/fortnight.ed \
+		rat_graphics/a2_fortnight.hgr.zx02 \
+		rat_graphics/a2_fortnight_99.hgr.zx02 \
+		rat_graphics/a2_fortnight_100.hgr.zx02 \
+		rat_graphics/a2_fortnight_rat1.hgr.zx02 \
+		rat_graphics/a2_fortnight_rat2.hgr.zx02 \
+		rat_graphics/a2_break.hgr.zx02 \
+		rat_graphics/disk_sprites.inc
+	ca65 -o rat.o rat.s -l rat.lst
 
 
 ####
@@ -108,4 +108,4 @@ HELLO:	hello.bas
 ####
 
 clean:	
-	rm -f *.lst *.o TITLE SB FN DUCK_POND *~
+	rm -f *.lst *.o TITLE SB RAT DUCK_POND *~

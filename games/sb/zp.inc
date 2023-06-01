@@ -28,7 +28,21 @@ H2	= $2C
 V2	= $2D
 MASK	= $2E
 COLOR	= $30
-			;INVFLG	= $32
+
+
+; Electric Duet ZP usage
+FREQ1          =       $06
+FREQ2          =       $07
+DURATION       =       $08
+INSTRUMENT1    =       $09
+INSTRUMENT2    =       $1D
+MADDRL         =       $1E
+MADDRH         =       $1F
+LOC4E          =       $4E
+COUNT256       =       $4F
+WHICH_PAGE     =       $50
+
+
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 

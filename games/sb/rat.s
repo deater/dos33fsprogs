@@ -1,3 +1,5 @@
+; Breakdancing RAT
+;
 ; Animation from SBEMAIL #152
 ;
 ; Yet Another HR project
@@ -316,7 +318,13 @@ rat_loop:
 
 	jsr	wait_until_keypress
 
-	jmp	fortnight_start
+
+	lda	#0
+	sta	WHICH_LOAD
+
+	rts
+
+;	jmp	fortnight_start
 
 
 wait_until_keypress:
@@ -351,24 +359,24 @@ long_wait_loop:
 	.include	"duet.s"
 
 music:
-	.incbin "fn_sound/fortnight.ed"
+	.incbin "rat_sound/fortnight.ed"
 
 fn_image:
-	.incbin "fn_graphics/a2_fortnight.hgr.zx02"
+	.incbin "rat_graphics/a2_fortnight.hgr.zx02"
 fn_99_image:
-	.incbin "fn_graphics/a2_fortnight_99.hgr.zx02"
+	.incbin "rat_graphics/a2_fortnight_99.hgr.zx02"
 fn_100_image:
-	.incbin "fn_graphics/a2_fortnight_100.hgr.zx02"
+	.incbin "rat_graphics/a2_fortnight_100.hgr.zx02"
 
 
 rat1_image:
-	.incbin "fn_graphics/a2_fortnight_rat1.hgr.zx02"
+	.incbin "rat_graphics/a2_fortnight_rat1.hgr.zx02"
 rat2_image:
-	.incbin "fn_graphics/a2_fortnight_rat2.hgr.zx02"
+	.incbin "rat_graphics/a2_fortnight_rat2.hgr.zx02"
 break_image:
-	.incbin "fn_graphics/a2_break.hgr.zx02"
+	.incbin "rat_graphics/a2_break.hgr.zx02"
 
-	.include "fn_graphics/disk_sprites.inc"
+	.include "rat_graphics/disk_sprites.inc"
 
 floppy_x:
 	.byte	10,12,14,16

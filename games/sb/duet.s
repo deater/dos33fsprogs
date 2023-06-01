@@ -26,16 +26,16 @@
 
 
 ; These are all "Free" zero page locations
-FREQ1		=	$06
-FREQ2		=	$07
-DURATION	=	$08
-INSTRUMENT1	=	$09
-INSTRUMENT2	=	$1D
-MADDRL		=	$1E
-MADDRH		=	$1F
-LOC4E		=	$4E
-COUNT256	=	$4F
-WHICH_PAGE	=	$50
+;FREQ1		=	$06
+;FREQ2		=	$07
+;DURATION	=	$08
+;INSTRUMENT1	=	$09
+;INSTRUMENT2	=	$1D
+;MADDRL		=	$1E
+;MADDRH		=	$1F
+;LOC4E		=	$4E
+;COUNT256	=	$4F
+;WHICH_PAGE	=	$50
 
 play_ed:
 	LDA	#$01		; 900: A9 01	; 2 *!*
