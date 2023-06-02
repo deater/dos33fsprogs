@@ -61,7 +61,7 @@ asplode.o:	asplode.s zx02_optim.s \
 		asplode_graphics/sb_title.hgr.zx02 \
 		asplode_graphics/sb_zone.hgr.zx02 \
 		asplode_graphics/sb_sprites.inc \
-		hgr_sprite_big.s \
+		hgr_sprite_big.s cycle_colors.s \
 		zp.inc hardware.inc
 	ca65 -o asplode.o asplode.s -l asplode.lst
 

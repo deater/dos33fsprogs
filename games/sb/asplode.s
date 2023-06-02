@@ -43,7 +43,28 @@ load_title:
 
 	jsr	full_decomp
 
-	jsr	wait_until_keypress
+	; load to page2 for color cycle
+
+	lda	#<title_data
+	sta	ZX0_src
+	lda	#>title_data
+	sta	ZX0_src+1
+
+	lda	#$40
+
+	jsr	full_decomp
+
+title_cycle_loop:
+
+	jsr	cycle_colors
+	inc	FRAME
+
+
+	lda	KEYPRESS
+	bpl	title_cycle_loop
+
+	bit	KEYRESET
+
 
 	;===================
 	; setup game
@@ -166,6 +187,7 @@ wait_until_keypress:
 	.include	"hgr_tables.s"
 	.include	"zx02_optim.s"
 	.include	"hgr_sprite_big.s"
+	.include	"cycle_colors.s"
 
 	.include	"asplode_graphics/sb_sprites.inc"
 
