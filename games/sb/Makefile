@@ -20,11 +20,8 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF RAT
 	$(DOS33_RAW) sb.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
-	$(DOS33_RAW) sb.dsk  8  0 ROOF         0   0
-	$(DOS33_RAW) sb.dsk 11  0 RAT         0   0
-#	$(DOS33) -y sb.dsk BSAVE -a 0x1000 DUCK_POND
-#	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
-#	$(DOS33) -y sb.dsk BSAVE -a 0x6000 RAT
+	$(DOS33_RAW) sb.dsk  8  0 ROOF       0   0
+	$(DOS33_RAW) sb.dsk 11  0 RAT        0   0
 
 ####
 
@@ -83,6 +80,7 @@ title.o:	title.s zx02_optim.s \
 		title_sound/purple.btc.zx02 \
 		title_graphics/czmg4ap_title.hgr.zx02 \
 		title_graphics/videlectrix_top.hgr.zx02 \
+		title_graphics/the_cheat_loading.hgr.zx02 \
 		title_graphics/title_sprites.inc
 	ca65 -o title.o title.s -l title.lst
 

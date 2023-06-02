@@ -131,6 +131,9 @@ load_title_image:
 
 	jsr	full_decomp
 
+	lda	#0
+	sta	MENU_ITEM
+
 	;==========================
 	; Play sound
 	;===========================
@@ -155,9 +158,6 @@ skip_purple:
 	lda	#83
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite
-
-	lda	#0
-	sta	MENU_ITEM
 
 	lda	#1
 	sta	NOT_FIRST_TIME
@@ -256,6 +256,16 @@ load_from_arrow:
 	inc	MENU_ITEM	; it's zero indexed
 
 load_new_program:
+
+	lda     #<loading_data
+        sta     ZX0_src
+        lda     #>loading_data
+        sta     ZX0_src+1
+
+        lda     #$20    ; decompress to hgr page1
+
+	jsr	full_decomp
+
 	lda	MENU_ITEM
 	sta	WHICH_LOAD
 	rts
@@ -273,6 +283,8 @@ title_data:
 	.incbin "title_graphics/czmg4ap_title.hgr.zx02"
 vid_top:
 	.incbin "title_graphics/videlectrix_top.hgr.zx02"
+loading_data:
+	.incbin "title_graphics/the_cheat_loading.hgr.zx02"
 
 purple_data:
 	.incbin "title_sound/purple.btc.zx02"
