@@ -12,7 +12,7 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND SB RAT
+sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF RAT
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -20,7 +20,7 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND SB RAT
 	$(DOS33_RAW) sb.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
-	$(DOS33_RAW) sb.dsk  8  0 SB         0   0
+	$(DOS33_RAW) sb.dsk  8  0 ROOF         0   0
 	$(DOS33_RAW) sb.dsk 11  0 RAT         0   0
 #	$(DOS33) -y sb.dsk BSAVE -a 0x1000 DUCK_POND
 #	$(DOS33) -y sb.dsk BSAVE -a 0x0c00 SB
@@ -45,12 +45,12 @@ qload.o:	qload.s qboot.inc
 ####
 
 
-SB:	sb.o
-	ld65 -o SB sb.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+ROOF:	roof.o
+	ld65 -o ROOF roof.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-sb.o:	sb.s zx02_optim.s \
+roof.o:	roof.s zx02_optim.s \
 		zp.inc hardware.inc
-	ca65 -o sb.o sb.s -l sb.lst
+	ca65 -o roof.o roof.s -l roof.lst
 
 
 ####
@@ -80,10 +80,10 @@ title.o:	title.s zx02_optim.s \
 		zp.inc hardware.inc \
 		hgr_logo_scroll.s audio.s hgr_sprite.s \
 		purple.s lc_detect.s \
-		sound/purple.btc.zx02 \
-		graphics/czmg4ap_title.hgr.zx02 \
-		graphics/videlectrix_top.hgr.zx02 \
-		graphics/title_sprites.inc
+		title_sound/purple.btc.zx02 \
+		title_graphics/czmg4ap_title.hgr.zx02 \
+		title_graphics/videlectrix_top.hgr.zx02 \
+		title_graphics/title_sprites.inc
 	ca65 -o title.o title.s -l title.lst
 
 
@@ -96,7 +96,7 @@ duck_pond.o:	duck_pond.s zx02_optim.s \
 		zp.inc hardware.inc \
 		gr_copy.s duck_score.s gr_putsprite_mask.s \
 		draw_ducks.s move_ducks.s \
-		graphics/duck_sprites.inc graphics/num_sprites.inc
+		duck_graphics/duck_sprites.inc duck_graphics/num_sprites.inc
 	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst
 
 
@@ -108,4 +108,4 @@ HELLO:	hello.bas
 ####
 
 clean:	
-	rm -f *.lst *.o TITLE SB RAT DUCK_POND *~
+	rm -f *.lst *.o TITLE ROOF RAT DUCK_POND *~

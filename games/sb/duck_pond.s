@@ -210,10 +210,10 @@ done_loop:
 	.include	"move_ducks.s"
 
 title_data:
-	.incbin "graphics/a2_duckpond_title.gr.zx02"
+	.incbin "duck_graphics/a2_duckpond_title.gr.zx02"
 
 main_data:
-	.incbin "graphics/a2_duckpond.gr.zx02"
+	.incbin "duck_graphics/a2_duckpond.gr.zx02"
 
-	.include "graphics/num_sprites.inc"
-	.include "graphics/duck_sprites.inc"
+	.include "duck_graphics/num_sprites.inc"
+	.include "duck_graphics/duck_sprites.inc"

@@ -69,4 +69,4 @@ which_ok:
 
 
 comp_data:
-	.incbin "graphics/strongbad_sample.hgr.zx02"
+	.incbin "roof_graphics/strongbad_sample.hgr.zx02"

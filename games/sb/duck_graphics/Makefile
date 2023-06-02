@@ -10,11 +10,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	strongbad_sample.hgr.zx02 \
-	czmg4ap_title.hgr.zx02 \
-	title_sprites.inc \
-	videlectrix_top.hgr.zx02 \
-	a2_duckpond_title.gr.zx02 \
+all:	a2_duckpond_title.gr.zx02 \
 	a2_duckpond.gr.zx02 \
 	a2_duckpond_twilight.gr.zx02 \
 	a2_duckpond_night.gr.zx02 \
@@ -80,44 +76,6 @@ duck_sprites.inc:	duck1_sprites_left.png duck1_sprites_right.png \
 	$(PNG2SPRITES) duck2_sprites_right.png d2_right1_mask   13  2 11 12 >>  duck_sprites.inc
 	$(PNG2SPRITES) duck2_sprites_right.png d2_right2_mask   13 16 11 12 >>  duck_sprites.inc
 	$(PNG2SPRITES) duck2_sprites_right.png d2_right3_mask   13 30 11 12 >>  duck_sprites.inc
-
-
-
-
-
-####
-
-strongbad_sample.hgr.zx02:	strongbad_sample.hgr
-	$(ZX02) strongbad_sample.hgr strongbad_sample.hgr.zx02
-
-strongbad_sample.hgr:	strongbad_sample.png
-	$(PNG_TO_HGR) strongbad_sample.png > strongbad_sample.hgr
-
-####
-
-czmg4ap_title.hgr.zx02:	czmg4ap_title.hgr
-	$(ZX02) czmg4ap_title.hgr czmg4ap_title.hgr.zx02
-
-czmg4ap_title.hgr:	czmg4ap_title.png
-	$(PNG_TO_HGR) czmg4ap_title.png > czmg4ap_title.hgr
-
-####
-
-title_sprites.inc:	czmg4ap_title_sprites.png
-	$(HGR_SPRITE) -s -l empty_sprite czmg4ap_title_sprites.png  105 131 118 138 > title_sprites.inc
-	$(HGR_SPRITE) -s -l arrow_sprite czmg4ap_title_sprites.png  105 111 118  118 >> title_sprites.inc
-	$(HGR_SPRITE) -s -l purple_sprite czmg4ap_title_sprites.png 175  83 230 102 >> title_sprites.inc
-
-
-####
-
-videlectrix_top.hgr.zx02:	videlectrix_top.hgr
-	$(ZX02) videlectrix_top.hgr videlectrix_top.hgr.zx02
-
-videlectrix_top.hgr:	videlectrix_top.png
-	$(PNG_TO_HGR) videlectrix_top.png > videlectrix_top.hgr
-
-
 
 ####
 

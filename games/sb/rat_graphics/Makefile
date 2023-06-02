@@ -66,6 +66,15 @@ a2_fortnight_100.hgr.zx02:	a2_fortnight_100.hgr
 a2_fortnight_100.hgr:	a2_fortnight_100.png
 	$(PNG_TO_HGR) a2_fortnight_100.png > a2_fortnight_100.hgr
 
+####
+
+a2_fortnight.hgr.zx02:	a2_fortnight.hgr
+	$(ZX02) a2_fortnight.hgr a2_fortnight.hgr.zx02
+
+a2_fortnight.hgr:	a2_fortnight.png
+	$(PNG_TO_HGR) a2_fortnight.png > a2_fortnight.hgr
+
+
 
 ####
 

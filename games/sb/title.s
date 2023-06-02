@@ -266,16 +266,16 @@ load_new_program:
 	.include	"audio.s"
 	.include	"purple.s"
 	.include	"lc_detect.s"
-	.include	"graphics/title_sprites.inc"
+	.include	"title_graphics/title_sprites.inc"
 	.include	"hgr_sprite.s"
 
 title_data:
-	.incbin "graphics/czmg4ap_title.hgr.zx02"
+	.incbin "title_graphics/czmg4ap_title.hgr.zx02"
 vid_top:
-	.incbin "graphics/videlectrix_top.hgr.zx02"
+	.incbin "title_graphics/videlectrix_top.hgr.zx02"
 
 purple_data:
-	.incbin "sound/purple.btc.zx02"
+	.incbin "title_sound/purple.btc.zx02"
 
 	; offsets of arrow
 arrow_y:
