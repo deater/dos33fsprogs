@@ -12,7 +12,7 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF RAT
+sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF TARGET CLIFF RAT
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -20,8 +20,11 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF RAT
 	$(DOS33_RAW) sb.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
-	$(DOS33_RAW) sb.dsk  8  0 ROOF       0   0
-	$(DOS33_RAW) sb.dsk 11  0 RAT        0   0
+	$(DOS33_RAW) sb.dsk  10 0 ROOF       0   0
+#	$(DOS33_RAW) sb.dsk  15  0 ASPLODE   0   0
+	$(DOS33_RAW) sb.dsk  20  0 TARGET    0   0
+	$(DOS33_RAW) sb.dsk  25  0 CLIFF     0   0
+	$(DOS33_RAW) sb.dsk  30  0 RAT       0   0
 
 ####
 
@@ -41,13 +44,35 @@ qload.o:	qload.s qboot.inc
 
 ####
 
-
 ROOF:	roof.o
 	ld65 -o ROOF roof.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 roof.o:	roof.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o roof.o roof.s -l roof.lst
+
+
+####
+
+CLIFF:	cliff.o
+	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+cliff.o:	cliff.s zx02_optim.s \
+		cliff_graphics/cliff_base.hgr.zx02 \
+		zp.inc hardware.inc
+	ca65 -o cliff.o cliff.s -l cliff.lst
+
+####
+
+TARGET:	target.o
+	ld65 -o TARGET target.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+target.o:	target.s zx02_optim.s \
+		target_graphics/target.hgr.zx02 \
+		zp.inc hardware.inc
+	ca65 -o target.o target.s -l target.lst
+
+
 
 
 ####
@@ -106,4 +131,4 @@ HELLO:	hello.bas
 ####
 
 clean:	
-	rm -f *.lst *.o TITLE ROOF RAT DUCK_POND *~
+	rm -f *.lst *.o QBOOT QLOAD TITLE DUCK_POND ROOF TARGET CLIFF RAT *~
