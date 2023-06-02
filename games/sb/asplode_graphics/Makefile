@@ -10,7 +10,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	sb_zone.hgr.zx02 sb_title.hgr.zx02
+all:	sb_zone.hgr.zx02 sb_title.hgr.zx02 sb_sprites.inc
 
 ####
 
@@ -27,6 +27,15 @@ sb_title.hgr.zx02:	sb_title.hgr
 
 sb_title.hgr:	sb_title.png
 	$(PNG_TO_HGR) sb_title.png > sb_title.hgr
+
+
+####
+
+sb_sprites.inc:	sb_sprites.png
+	$(HGR_SPRITE) -s -l head_sprite sb_sprites.png   84 36 132 92 > sb_sprites.inc
+	$(HGR_SPRITE) -s -l player_sprite sb_sprites.png 112 138 167 192 >> sb_sprites.inc
+
+
 
 
 ####
