@@ -8,8 +8,13 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+div7_table     = $400
+mod7_table     = $500
+hposn_high     = $600
+hposn_low      = $700
 
-hires_start:
+
+strongbadzone_start:
 
 	;===================
 	; set graphics mode
@@ -84,7 +89,7 @@ load_background:
 	sta	ZX0_src+1
 
 
-	lda	#$20
+	lda	#$80
 
 
 	jsr	full_decomp
@@ -101,8 +106,33 @@ load_background:
 	;===========================
 main_loop:
 
-	inc	FRAME
+	;==========
+	; flip page
+	;==========
 
+	lda	DRAW_PAGE
+	beq	draw_page2
+draw_page1:
+	bit	PAGE2
+	lda	#0
+
+	beq	done_flip
+
+draw_page2:
+	bit	PAGE1
+	lda	#$20
+
+done_flip:
+	sta	DRAW_PAGE
+
+	;========================
+	; copy over backgrund
+	;========================
+
+	jsr	hgr_copy
+
+
+	inc	FRAME
 
 	;===========================
 	; move head
@@ -113,7 +143,7 @@ main_loop:
 	bne	no_move_head
 
 	lda	STRONGBAD_X
-	cmp	#22
+	cmp	#21
 	bcs	reverse_head_dir
 	cmp	#12
 	bcs	no_reverse_head_dir
@@ -164,7 +194,6 @@ no_move_head:
 
 check_keypress:
 	lda     KEYPRESS
-;	bpl	check_keypress
 	bpl	done_keyboard_check
 
 	bit     KEYRESET		; clear the keyboard strobe
@@ -194,11 +223,18 @@ done_keyboard_check:
 	jmp	main_loop
 
 move_left:
+	lda	PLAYER_X
+	beq	no_more_left
 	dec	PLAYER_X
+no_more_left:
 	jmp	main_loop
 
 move_right:
+	lda	PLAYER_X
+	cmp	#29			; bge
+	bcs	no_more_right
 	inc	PLAYER_X
+no_more_right:
 	jmp	main_loop
 
 
@@ -226,6 +262,7 @@ wait_until_keypress:
 	.include	"zx02_optim.s"
 	.include	"hgr_sprite_big.s"
 	.include	"cycle_colors.s"
+	.include	"hgr_copy_fast.s"
 
 	.include	"asplode_graphics/sb_sprites.inc"
 

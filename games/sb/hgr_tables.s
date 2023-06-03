@@ -1,7 +1,7 @@
-div7_table	= $9C00
-mod7_table	= $9D00
-hposn_high	= $9E00
-hposn_low	= $9F00
+;div7_table	= $9C00
+;mod7_table	= $9D00
+;hposn_high	= $9E00
+;hposn_low	= $9F00
 
 
 

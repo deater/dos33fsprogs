@@ -29,6 +29,7 @@ title_sprites.inc:	czmg4ap_title_sprites.png
 	$(HGR_SPRITE) -s -l empty_sprite czmg4ap_title_sprites.png  105 131 118 138 > title_sprites.inc
 	$(HGR_SPRITE) -s -l arrow_sprite czmg4ap_title_sprites.png  105 111 118  118 >> title_sprites.inc
 	$(HGR_SPRITE) -s -l purple_sprite czmg4ap_title_sprites.png 175  83 230 102 >> title_sprites.inc
+	$(HGR_SPRITE) -s -l edga_jr_sprite czmg4ap_title_sprites.png 0  0 69 71 >> title_sprites.inc
 
 
 ####

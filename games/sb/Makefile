@@ -116,8 +116,8 @@ TITLE:	title.o
 title.o:	title.s zx02_optim.s \
 		zp.inc hardware.inc \
 		hgr_logo_scroll.s audio.s hgr_sprite.s \
-		hgr_sprite_big.s \
-		purple.s lc_detect.s \
+		hgr_sprite_big.s hgr_copy_fast.s \
+		purple.s lc_detect.s hgr_tables.s \
 		title_sound/purple.btc.zx02 \
 		title_graphics/czmg4ap_title.hgr.zx02 \
 		title_graphics/videlectrix_top.hgr.zx02 \
