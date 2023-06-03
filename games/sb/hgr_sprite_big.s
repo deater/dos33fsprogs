@@ -13,27 +13,27 @@
 
 	; orange = color5  1 101 0101   1 010 1010
 
-hgr_draw_sprite:
+hgr_draw_sprite_big:
 	lda	SPRITE_X
 	ror
-	bcs	hgr_draw_sprite_odd
+	bcs	hgr_draw_sprite_big_odd
 
-hgr_draw_sprite_even:
+hgr_draw_sprite_big_even:
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc
 	adc	SPRITE_X
-	sta	sprite_width_end_smc+1	; self modify for end of line
+	sta	big_sprite_width_end_smc+1	; self modify for end of line
 
 	iny				; load ysize
 	lda	(INL),Y
-	sta	sprite_ysize_smc+1	; self modify
+	sta	big_sprite_ysize_smc+1	; self modify
 
 	; point smc to sprite
 	lda	INL			; 16-bit add
-	sta	sprite_smc1+1
+	sta	big_sprite_smc1+1
 	lda	INH
-	sta	sprite_smc1+2
+	sta	big_sprite_smc1+2
 
 
 	ldx	#0			; X is pointer offset
@@ -41,7 +41,7 @@ hgr_draw_sprite_even:
 
 	ldx	#2
 
-hgr_sprite_yloop:
+hgr_big_sprite_yloop:
 
 	lda	CURRENT_ROW		; row
 
@@ -55,52 +55,46 @@ hgr_sprite_yloop:
 	sta	GBASL
 	lda	hposn_high,Y
 
-	; eor	#$00 draws on page2
-	; eor	#$60 draws on page1
-;hgr_sprite_page_smc:
-;	eor	#$00
 	clc
 	adc	DRAW_PAGE
 	sta	GBASH
-;	eor	#$60
-;	sta	INH
 
 	ldy	SPRITE_X
 
-sprite_inner_loop:
+big_sprite_inner_loop:
 
 
-sprite_smc1:
+big_sprite_smc1:
         lda	$f000,X			; load sprite data
 	sta	(GBASL),Y		; store to screen
 
 	inx				; increment sprite offset
 
 	; if > 1 page
-	bne	sprite_no_page_cross
-	inc	sprite_smc1+2
+	bne	big_sprite_no_page_cross
+	inc	big_sprite_smc1+2
 
-sprite_no_page_cross:
+big_sprite_no_page_cross:
 	iny				; increment output position
 
 
-sprite_width_end_smc:
+big_sprite_width_end_smc:
 	cpy	#6			; see if reached end of row
-	bne	sprite_inner_loop	; if not, loop
+	bne	big_sprite_inner_loop	; if not, loop
 
 
 	inc	CURRENT_ROW		; row
 	lda	CURRENT_ROW		; row
 
-sprite_ysize_smc:
+big_sprite_ysize_smc:
 	cmp	#31			; see if at end
-	bne	hgr_sprite_yloop	; if not, loop
+	bne	hgr_big_sprite_yloop	; if not, loop
 
 	rts
 
 
 
-hgr_draw_sprite_odd:
+hgr_draw_sprite_big_odd:
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc

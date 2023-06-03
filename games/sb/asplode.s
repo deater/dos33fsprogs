@@ -146,7 +146,7 @@ no_move_head:
 	sta	SPRITE_X
 	lda	#36
 	sta	SPRITE_Y
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_big
 
 	;==========================
 	; draw player
@@ -160,7 +160,7 @@ no_move_head:
 	sta	SPRITE_X
 	lda	#138
 	sta	SPRITE_Y
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_big
 
 check_keypress:
 	lda     KEYPRESS

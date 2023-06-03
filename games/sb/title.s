@@ -189,10 +189,14 @@ wait_until_keypress:
 	;=========================
 	; see if number pressed
 
+	cmp	#'7'
+	beq	draw_edga_jr
+
 	cmp	#'1'
 	bcc	done_check_number		; blt
 	cmp	#'7'
 	bcs	done_check_number		; bge
+
 
 	; was a number
 
@@ -251,6 +255,21 @@ move_arrow:
 
 	jmp	draw_arrow
 
+draw_edga_jr:
+
+	lda	#<edga_jr_sprite
+	sta	INL
+	lda	#>edga_jr_sprite
+	sta	INH
+	lda	#(105/7)
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	jmp	draw_arrow
+
+
 
 load_from_arrow:
 	inc	MENU_ITEM	; it's zero indexed
@@ -278,6 +297,7 @@ load_new_program:
 	.include	"lc_detect.s"
 	.include	"title_graphics/title_sprites.inc"
 	.include	"hgr_sprite.s"
+	.include	"hgr_sprite_big.s"
 
 title_data:
 	.incbin "title_graphics/czmg4ap_title.hgr.zx02"
