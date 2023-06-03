@@ -93,10 +93,46 @@ load_background:
 	sta	STRONGBAD_X
 	sta	PLAYER_X
 
+	lda	#1
+	sta	STRONGBAD_DIR
+
 	;==========================
 	; main loop
 	;===========================
 main_loop:
+
+	inc	FRAME
+
+
+	;===========================
+	; move head
+	;===========================
+
+	lda	FRAME
+	and	#$3
+	bne	no_move_head
+
+	lda	STRONGBAD_X
+	cmp	#22
+	bcs	reverse_head_dir
+	cmp	#12
+	bcs	no_reverse_head_dir
+reverse_head_dir:
+	lda	STRONGBAD_DIR
+	eor	#$FF
+	sta	STRONGBAD_DIR
+	inc	STRONGBAD_DIR
+
+no_reverse_head_dir:
+
+	clc
+	lda	STRONGBAD_X
+	adc	STRONGBAD_DIR
+	sta	STRONGBAD_X
+
+no_move_head:
+
+
 
 	;==========================
 	; draw head
@@ -128,7 +164,9 @@ main_loop:
 
 check_keypress:
 	lda     KEYPRESS
-	bpl	check_keypress
+;	bpl	check_keypress
+	bpl	done_keyboard_check
+
 	bit     KEYRESET		; clear the keyboard strobe
 
 	; clear high bit
@@ -153,7 +191,7 @@ check_keypress:
 
 
 done_keyboard_check:
-	jmp	check_keypress
+	jmp	main_loop
 
 move_left:
 	dec	PLAYER_X

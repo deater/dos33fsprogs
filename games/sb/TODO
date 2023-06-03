@@ -10,8 +10,17 @@ Duck:
 Rat:
 + Exit back to main title
 
-Asplode:
-+ Lots
+Strongbadzone:
++ Get audio
++ Draw Your Head A Splode
++ Create sprites for ball (24 of them?)
++ Ball movement logic.  Is actually just 2D
++ Check bounds on person
++ Sprites for shield positions
++ Sprites with mask?
++ Animate side walls
++ Move head
+
 
 Cliff:
 + Lots
