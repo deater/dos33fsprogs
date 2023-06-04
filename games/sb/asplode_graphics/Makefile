@@ -33,7 +33,12 @@ sb_title.hgr:	sb_title.png
 
 sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l head_sprite sb_sprites.png   84 36 132 92 > sb_sprites.inc
-	$(HGR_SPRITE) -s -l player_sprite sb_sprites.png 112 138 167 192 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l player_sprite sb_sprites.png 98 138 181 192 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l shield_left_sprite sb_sprites.png 0 138 83 192 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l shield_center_sprite sb_sprites.png 196 83 279 137 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l shield_right_sprite sb_sprites.png 196 138 279 192 >> sb_sprites.inc
+
+
 
 
 

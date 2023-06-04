@@ -101,6 +101,9 @@ load_background:
 	lda	#1
 	sta	STRONGBAD_DIR
 
+	lda	#SHIELD_DOWN
+	sta	SHIELD_POSITION
+
 	;==========================
 	; main loop
 	;===========================
@@ -126,7 +129,7 @@ done_flip:
 	sta	DRAW_PAGE
 
 	;========================
-	; copy over backgrund
+	; copy over background
 	;========================
 
 	jsr	hgr_copy
@@ -182,9 +185,10 @@ no_move_head:
 	; draw player
 	;===========================
 
-	lda	#<player_sprite
+	ldx	SHIELD_POSITION
+	lda	shield_sprites_l,X
 	sta	INL
-	lda	#>player_sprite
+	lda	shield_sprites_h,X
 	sta	INH
 	lda	PLAYER_X
 	sta	SPRITE_X
@@ -209,8 +213,11 @@ check_keypress:
 	beq	done_game
 
 	cmp	#'A'		; shield left
+	beq	shield_left
 	cmp	#'S'		; shield center
+	beq	shield_center
 	cmp	#'D'		; shield right
+	beq	shield_right
 
 	cmp	#8		; left
 	beq	move_left
@@ -231,12 +238,23 @@ no_more_left:
 
 move_right:
 	lda	PLAYER_X
-	cmp	#29			; bge
+	cmp	#28			; bge
 	bcs	no_more_right
 	inc	PLAYER_X
 no_more_right:
 	jmp	main_loop
 
+shield_left:
+	lda	#SHIELD_UP_LEFT
+	bne	adjust_shield
+shield_center:
+	lda	#SHIELD_UP_CENTER
+	bne	adjust_shield
+shield_right:
+	lda	#SHIELD_UP_RIGHT
+adjust_shield:
+	sta	SHIELD_POSITION
+	jmp	main_loop
 
 
 
@@ -273,3 +291,10 @@ comp_data:
 	.incbin "asplode_graphics/sb_zone.hgr.zx02"
 
 
+shield_sprites_l:
+	.byte <player_sprite,<shield_left_sprite
+	.byte <shield_center_sprite,<shield_right_sprite
+
+shield_sprites_h:
+	.byte >player_sprite,>shield_left_sprite
+	.byte >shield_center_sprite,>shield_right_sprite
