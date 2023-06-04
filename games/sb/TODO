@@ -14,10 +14,8 @@ Strongbadzone:
 + Create sprites for ball (24 of them?)
 + Ball movement logic.  Is actually just 2D
 + Check bounds on person
-+ Sprites for shield positions
-+ Sprites with mask?
++ Do the color mask (different blacks)
 + Animate side walls
-+ Move head
 + Faster hgr copy?
 
 Cliff:

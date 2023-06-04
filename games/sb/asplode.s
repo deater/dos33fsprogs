@@ -103,6 +103,7 @@ load_background:
 
 	lda	#SHIELD_DOWN
 	sta	SHIELD_POSITION
+	sta	SHIELD_COUNT
 
 	;==========================
 	; main loop
@@ -136,6 +137,21 @@ done_flip:
 
 
 	inc	FRAME
+
+	;==========================
+	; adjust shield
+	;==========================
+
+	lda	SHIELD_COUNT
+	beq	done_shield_count
+
+	dec	SHIELD_COUNT
+	bne	done_shield_count
+
+	lda	#SHIELD_DOWN		; put shield down if timeout
+	sta	SHIELD_POSITION
+
+done_shield_count:
 
 	;===========================
 	; move head
@@ -254,6 +270,8 @@ shield_right:
 	lda	#SHIELD_UP_RIGHT
 adjust_shield:
 	sta	SHIELD_POSITION
+	lda	#5
+	sta	SHIELD_COUNT
 	jmp	main_loop
 
 
