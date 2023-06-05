@@ -61,6 +61,8 @@ asplode.o:	asplode.s zx02_optim.s \
 		asplode_graphics/sb_title.hgr.zx02 \
 		asplode_graphics/sb_zone.hgr.zx02 \
 		asplode_graphics/sb_sprites.inc \
+		asplode_sound/asplode.btc.zx02 \
+		audio.s play_asplode.s \
 		hgr_sprite_big.s cycle_colors.s \
 		zp.inc hardware.inc
 	ca65 -o asplode.o asplode.s -l asplode.lst
@@ -117,7 +119,7 @@ title.o:	title.s zx02_optim.s \
 		zp.inc hardware.inc \
 		hgr_logo_scroll.s audio.s hgr_sprite.s \
 		hgr_sprite_big.s hgr_copy_fast.s \
-		purple.s lc_detect.s hgr_tables.s \
+		play_purple.s lc_detect.s hgr_tables.s \
 		title_sound/purple.btc.zx02 \
 		title_graphics/czmg4ap_title.hgr.zx02 \
 		title_graphics/videlectrix_top.hgr.zx02 \

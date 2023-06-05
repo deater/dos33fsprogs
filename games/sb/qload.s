@@ -183,7 +183,7 @@ sector_array:
 
 
 length_array:
-        .byte  40, 16, 16, 40	; TITLE,  DUCK,  ROOF, ASPLODE
+        .byte  40, 16, 16, 48	; TITLE,  DUCK,  ROOF, ASPLODE
 	.byte  32, 32, 32	; TARGET, CLIFF, RAT
 
 

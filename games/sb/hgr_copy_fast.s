@@ -13,7 +13,7 @@
 hgr_copy:
 
 	ldx	#0				; 2
-	lda	#$80				; 2
+	lda	#$A0				; 2
 	sta	hgr_copy_smc+2			; 4
 
 	lda	DRAW_PAGE
@@ -37,7 +37,7 @@ hgr_copy_smc:
 	inc	hgr_copy_smc+5			; 6
 
 	lda	hgr_copy_smc+2			; 4
-	cmp	#$A0				; 2
+	cmp	#$C0				; 2
 	bne	hgr_copy_column			; 2/3
 
 	rts					; 6

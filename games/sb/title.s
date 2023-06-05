@@ -300,7 +300,7 @@ load_new_program:
 	.include	"hgr_tables.s"
 	.include	"hgr_logo_scroll.s"
 	.include	"audio.s"
-	.include	"purple.s"
+	.include	"play_purple.s"
 	.include	"lc_detect.s"
 	.include	"title_graphics/title_sprites.inc"
 	.include	"hgr_sprite.s"

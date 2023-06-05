@@ -34,6 +34,33 @@ strongbadzone_start:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
+
+	;==========================
+	; Load Sound
+	;===========================
+
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	done_load_sound
+
+	; read/write RAM, use $d000 bank1
+	bit	$C083
+	bit	$C083
+
+	lda	#<sound_data
+	sta	ZX0_src
+	lda	#>sound_data
+	sta	ZX0_src+1
+
+	lda	#$D0
+
+	jsr	full_decomp
+
+	; read ROM/no-write
+	bit	$C082
+
+
+done_load_sound:
 	;==========================
 	; Load Title
 	;===========================
@@ -89,7 +116,7 @@ load_background:
 	sta	ZX0_src+1
 
 
-	lda	#$80
+	lda	#$A0
 
 
 	jsr	full_decomp
@@ -270,6 +297,9 @@ check_keypress:
 	cmp	#'D'		; shield right
 	beq	shield_right
 
+	cmp	#'X'
+	beq	asplode_asplode
+
 	cmp	#8		; left
 	beq	move_left
 
@@ -309,7 +339,11 @@ adjust_shield:
 	sta	SHIELD_COUNT
 	jmp	main_loop
 
+asplode_asplode:
 
+	jsr	play_asplode
+
+	jmp	main_loop
 
 	;==========================
 	; done game
@@ -334,6 +368,8 @@ wait_until_keypress:
 	.include	"hgr_sprite_big.s"
 	.include	"cycle_colors.s"
 	.include	"hgr_copy_fast.s"
+	.include	"audio.s"
+	.include	"play_asplode.s"
 
 	.include	"asplode_graphics/sb_sprites.inc"
 
@@ -343,6 +379,8 @@ title_data:
 comp_data:
 	.incbin "asplode_graphics/sb_zone.hgr.zx02"
 
+sound_data:
+	.incbin "asplode_sound/asplode.btc.zx02"
 
 shield_sprites_l:
 	.byte <player_sprite,<shield_left_sprite
