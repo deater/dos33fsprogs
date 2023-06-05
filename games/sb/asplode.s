@@ -105,6 +105,11 @@ load_background:
 	sta	SHIELD_POSITION
 	sta	SHIELD_COUNT
 
+	lda	#20
+	sta	BULLET_X
+	lda	#90
+	sta	BULLET_Y
+
 	;==========================
 	; main loop
 	;===========================
@@ -194,6 +199,36 @@ no_move_head:
 	lda	STRONGBAD_X
 	sta	SPRITE_X
 	lda	#36
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	;==========================
+	; move bullet
+	;===========================
+
+	inc	BULLET_Y
+	lda	BULLET_Y
+	cmp	#150
+	bcc	bullet_still_good
+
+	; new bullet position
+	; FIXME: better
+
+	lda	#90
+	sta	BULLET_Y
+bullet_still_good:
+
+	;==========================
+	; draw bullet
+	;===========================
+
+	lda	#<bullet0_sprite
+	sta	INL
+	lda	#>bullet0_sprite
+	sta	INH
+	lda	BULLET_X
+	sta	SPRITE_X
+	lda	BULLET_Y
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite_big
 

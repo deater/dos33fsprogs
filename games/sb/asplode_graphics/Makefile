@@ -37,6 +37,8 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l shield_left_sprite sb_sprites.png 0 138 83 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_center_sprite sb_sprites.png 196 83 279 137 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_right_sprite sb_sprites.png 196 138 279 192 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet0_sprite sb_sprites.png 210 9 223 14 >> sb_sprites.inc
+
 
 
 
