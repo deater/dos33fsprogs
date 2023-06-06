@@ -37,7 +37,23 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l shield_left_sprite sb_sprites.png 0 138 83 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_center_sprite sb_sprites.png 196 83 279 137 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_right_sprite sb_sprites.png 196 138 279 192 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l bullet0_sprite sb_sprites.png 210 9 223 14 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet0_sprite sb_sprites.png 168 1 181 7 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet1_sprite sb_sprites.png 168 8 181 14 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet2_sprite sb_sprites.png 168 15 181 21 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet3_sprite sb_sprites.png 168 22 181 28 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet4_sprite sb_sprites.png 168 29 181 35 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet5_sprite sb_sprites.png 168 36 181 42 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet6_sprite sb_sprites.png 168 43 181 49 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet7_sprite sb_sprites.png 168 50 181 56 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet8_sprite sb_sprites.png 168 57 181 63 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet9_sprite sb_sprites.png 168 64 181 70 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet10_sprite sb_sprites.png 168 71 181 77 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet11_sprite sb_sprites.png 168 78 181 84 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet12_sprite sb_sprites.png 168 85 181 91 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet13_sprite sb_sprites.png 168 92 181 98 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet14_sprite sb_sprites.png 168 99 181 105 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l bullet15_sprite sb_sprites.png 168 106 181 112 >> sb_sprites.inc
+
 
 
 

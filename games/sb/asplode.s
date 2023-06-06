@@ -4,6 +4,18 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; some notes on the engine from the original
+;	bullet moving is not 3d in any way, it's just 2D
+;	there are distinct Y locations with different sized sprites
+;	X velocity starts at 3
+;		hitting shield left, subs random 0..5
+;		hitting shield right, adds random 0..5
+;		hitting shield center, adds random -0.5 .. 0.5
+;	bounces off side walls roughly at same X as back walls
+;		doesn't even try to adjust for Y
+;	if it hits back wall, it reflects back
+;	if it misses you, makes small explosion, starts again at far wall
+;		with same X as it went off screen with
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -132,9 +144,13 @@ load_background:
 	sta	SHIELD_POSITION
 	sta	SHIELD_COUNT
 
+	lda	#0
+	sta	BULLET_X_L
+	sta	BULLET_X_VEL
+
 	lda	#20
 	sta	BULLET_X
-	lda	#90
+	lda	#0
 	sta	BULLET_Y
 
 	;==========================
@@ -233,15 +249,27 @@ no_move_head:
 	; move bullet
 	;===========================
 
+	; 16 bit add
+
+	clc
+	lda	BULLET_X_L
+	adc	BULLET_X_VEL
+	sta	BULLET_X_L
+	lda	BULLET_X
+	adc	#0
+	sta	BULLET_X
+
+	; TODO: bounce off walls
+
 	inc	BULLET_Y
 	lda	BULLET_Y
-	cmp	#150
+	cmp	#15
 	bcc	bullet_still_good
 
 	; new bullet position
 	; FIXME: better
 
-	lda	#90
+	lda	#0
 	sta	BULLET_Y
 bullet_still_good:
 
@@ -249,13 +277,16 @@ bullet_still_good:
 	; draw bullet
 	;===========================
 
-	lda	#<bullet0_sprite
+	ldy	BULLET_Y
+	lda	bullet_sprite_l,Y
 	sta	INL
-	lda	#>bullet0_sprite
+	lda	bullet_sprite_h,Y
 	sta	INH
+
 	lda	BULLET_X
 	sta	SPRITE_X
-	lda	BULLET_Y
+
+	lda	bullet_sprite_y,Y
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite_big
 
@@ -389,3 +420,50 @@ shield_sprites_l:
 shield_sprites_h:
 	.byte >player_sprite,>shield_left_sprite
 	.byte >shield_center_sprite,>shield_right_sprite
+
+
+y_positions:
+; 90 to 160 roughly?  Let's say 64?
+; have 16 positions?  4 each?
+
+; can probably optimize this
+
+bullet_sprite_l:
+.byte  <bullet0_sprite, <bullet1_sprite, <bullet2_sprite, <bullet3_sprite
+.byte  <bullet4_sprite, <bullet5_sprite, <bullet6_sprite, <bullet7_sprite
+.byte  <bullet8_sprite, <bullet9_sprite,<bullet10_sprite,<bullet11_sprite
+.byte <bullet12_sprite,<bullet13_sprite,<bullet14_sprite,<bullet15_sprite
+
+bullet_sprite_h:
+.byte  >bullet0_sprite, >bullet1_sprite, >bullet2_sprite, >bullet3_sprite
+.byte  >bullet4_sprite, >bullet5_sprite, >bullet6_sprite, >bullet7_sprite
+.byte  >bullet8_sprite, >bullet9_sprite,>bullet10_sprite,>bullet11_sprite
+.byte >bullet12_sprite,>bullet13_sprite,>bullet14_sprite,>bullet15_sprite
+
+bullet_sprite_y:
+.byte 90,94,98,102
+.byte 106,110,114,118
+.byte 122,126,130,134
+.byte 138,142,146,150
+
+; original
+; 1 =  6
+; 2 = 12
+; 3 = 18
+; 4 = 25
+; 5 = 32
+; 6 = 38
+; 7 = 44
+; 8 = 50
+; 9 = 57
+; 10= 63
+; 11= 70
+; 12= 77
+; 13= 82
+; 14= 89
+; 15= 95
+; 27= 167 (peak)
+; 30= 148
+; 31= 139
+
+; 9,5 -> 22,14 = 12x9 roughly.  3 times smaller, 4x3?  2x6?
