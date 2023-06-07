@@ -4,3 +4,6 @@ all:	asplode.btc.zx02
 
 asplode.btc.zx02:	asplode.btc
 	$(ZX02) asplode.btc asplode.btc.zx02
+
+clean:	
+	rm -f *~

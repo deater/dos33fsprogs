@@ -48,9 +48,12 @@ ROOF:	roof.o
 	ld65 -o ROOF roof.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 roof.o:	roof.s zx02_optim.s \
+		roof_graphics/strongbad_sample.hgr.zx02 \
 		zp.inc hardware.inc
 	ca65 -o roof.o roof.s -l roof.lst
 
+roof_graphics/strongbad_sample.hgr.zx02:	
+	cd roof_graphics && make
 
 ####
 
@@ -67,7 +70,11 @@ asplode.o:	asplode.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o asplode.o asplode.s -l asplode.lst
 
+asplode_graphics/sb_title.hgr.zx02:	
+	cd asplode_graphics && make
 
+asplode_sound/asplode.btc.zx02:	
+	cd asplode_sound && make
 
 ####
 
@@ -79,6 +86,9 @@ cliff.o:	cliff.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
+cliff_graphics/cliff_base.hgr.zx02:	
+	cd cliff_graphics && make
+
 ####
 
 TARGET:	target.o
@@ -89,7 +99,8 @@ target.o:	target.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o target.o target.s -l target.lst
 
-
+target_graphics/target.hgr.zx02:	
+	cd target_graphics && make
 
 
 ####
@@ -109,6 +120,11 @@ rat.o:	rat.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
 		rat_graphics/disk_sprites.inc
 	ca65 -o rat.o rat.s -l rat.lst
 
+rat_sound/fortnight.ed:	
+	cd rat_sound && make
+
+rat_graphics/a2_fortnight.hgr.zx02:	
+	cd rat_graphics && make
 
 ####
 
@@ -127,6 +143,11 @@ title.o:	title.s zx02_optim.s \
 		title_graphics/title_sprites.inc
 	ca65 -o title.o title.s -l title.lst
 
+title_sound/purple.btc.zx02:
+	cd title_sound && make
+
+title_graphics/czmg4ap_title.hgr.zx02:	
+	cd title_graphics && make
 
 ####
 
@@ -140,6 +161,9 @@ duck_pond.o:	duck_pond.s zx02_optim.s \
 		duck_graphics/duck_sprites.inc duck_graphics/num_sprites.inc
 	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst
 
+duck_graphics/duck_sprites.inc:	
+	cd duck_graphics && make
+
 
 ####
 
@@ -150,3 +174,13 @@ HELLO:	hello.bas
 
 clean:	
 	rm -f *.lst *.o QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE TARGET CLIFF RAT *~
+	cd asplode_sound && make clean
+	cd rat_sound && make clean
+	cd title_sound && make clean
+	cd asplode_graphics && make clean
+	cd cliff_graphics && make clean
+	cd duck_graphics && make clean
+	cd rat_graphics && make clean
+	cd roof_graphics && make clean
+	cd target_graphics && make clean
+	cd title_graphics && make clean
