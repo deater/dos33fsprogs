@@ -382,8 +382,8 @@ wait_until_keypress:
 	; do the asplode routine
 	;==============================
 	; should move head to center
+	; player explosion happens
 	; do the "YOUR HEAD A SPLODE" animation
-	;	meanwhile the player should explode
 	; try to interleave the sound
 	; in theory the background should pulse too but
 	;	that might be too much
