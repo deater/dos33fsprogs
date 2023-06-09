@@ -158,24 +158,7 @@ load_background:
 	;===========================
 main_loop:
 
-	;==========
-	; flip page
-	;==========
-
-	lda	DRAW_PAGE
-	beq	draw_page2
-draw_page1:
-	bit	PAGE2
-	lda	#0
-
-	beq	done_flip
-
-draw_page2:
-	bit	PAGE1
-	lda	#$20
-
-done_flip:
-	sta	DRAW_PAGE
+	jsr	flip_page
 
 	;========================
 	; copy over background
@@ -235,9 +218,9 @@ no_move_head:
 	; draw head
 	;===========================
 
-	lda	#<head_sprite
+	lda	#<big_head_sprite
 	sta	INL
-	lda	#>head_sprite
+	lda	#>big_head_sprite
 	sta	INH
 	lda	STRONGBAD_X
 	sta	SPRITE_X
@@ -372,7 +355,7 @@ adjust_shield:
 
 asplode_asplode:
 
-	jsr	play_asplode
+	jsr	do_asplode
 
 	jmp	main_loop
 
@@ -393,6 +376,128 @@ wait_until_keypress:
 	bpl	wait_until_keypress			; 3
 	bit	KEYRESET	; clear the keyboard buffer
 	rts
+
+
+	;==============================
+	; do the asplode routine
+	;==============================
+	; should move head to center
+	; do the "YOUR HEAD A SPLODE" animation
+	;	meanwhile the player should explode
+	; try to interleave the sound
+	; in theory the background should pulse too but
+	;	that might be too much
+do_asplode:
+
+	;===================
+	; copy background
+	;===================
+
+	jsr	hgr_copy
+
+	;==========================
+	; draw head
+	;==========================
+
+	lda	#<big_head_sprite
+	sta	INL
+	lda	#>big_head_sprite
+	sta	INH
+	lda	#16				; center
+	sta	SPRITE_X
+	lda	#36
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+
+	;==========================
+	; draw your
+	;==========================
+
+	lda	#<your_sprite
+	sta	INL
+	lda	#>your_sprite
+	sta	INH
+	lda	#8
+	sta	SPRITE_X
+	lda	#133
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	;==========================
+	; draw head
+	;==========================
+
+	lda	#<head_sprite
+	sta	INL
+	lda	#>head_sprite
+	sta	INH
+	lda	#15
+	sta	SPRITE_X
+	lda	#133
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	;==========================
+	; draw A
+	;==========================
+
+	lda	#<a_sprite
+	sta	INL
+	lda	#>a_sprite
+	sta	INH
+	lda	#21
+	sta	SPRITE_X
+	lda	#133
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	;==========================
+	; draw SPLODE
+	;==========================
+
+	lda	#<splode_sprite
+	sta	INL
+	lda	#>splode_sprite
+	sta	INH
+	lda	#23
+	sta	SPRITE_X
+	lda	#133
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
+	; play sound
+;	jsr	play_asplode
+
+	jsr	flip_page
+
+	jsr	wait_until_keypress
+
+	rts
+
+
+	;==========
+	; flip page
+	;==========
+flip_page:
+	lda	DRAW_PAGE
+	beq	draw_page2
+draw_page1:
+	bit	PAGE2
+	lda	#0
+
+	beq	done_flip
+
+draw_page2:
+	bit	PAGE1
+	lda	#$20
+
+done_flip:
+	sta	DRAW_PAGE
+
+	rts
+
+
 
 	.include	"hgr_tables.s"
 	.include	"zx02_optim.s"

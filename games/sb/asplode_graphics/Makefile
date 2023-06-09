@@ -32,7 +32,7 @@ sb_title.hgr:	sb_title.png
 ####
 
 sb_sprites.inc:	sb_sprites.png
-	$(HGR_SPRITE) -s -l head_sprite sb_sprites.png   84 36 132 92 > sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head_sprite sb_sprites.png   84 36 132 92 > sb_sprites.inc
 	$(HGR_SPRITE) -s -l player_sprite sb_sprites.png 98 138 181 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_left_sprite sb_sprites.png 0 138 83 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_center_sprite sb_sprites.png 196 83 279 137 >> sb_sprites.inc
@@ -53,16 +53,13 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l bullet13_sprite sb_sprites.png 168 92 181 98 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l bullet14_sprite sb_sprites.png 168 99 181 105 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l bullet15_sprite sb_sprites.png 168 106 181 112 >> sb_sprites.inc
-
-
-
-
-
-
-
+	$(HGR_SPRITE) -s -l your_sprite sb_sprites.png 0 0 41 19 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l head_sprite sb_sprites.png 56 0 90 19 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l a_sprite sb_sprites.png 98 0 104 19 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l splode_sprite sb_sprites.png 112 0 166 19 >> sb_sprites.inc
 
 ####
 
 clean:
-	rm -f *~ *.o *.lst
+	rm -f *~ *.o *.lst sb_sprites.inc
 
