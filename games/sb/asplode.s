@@ -163,7 +163,7 @@ main_loop:
 	;========================
 	; copy over background
 	;========================
-
+reset_loop:
 	jsr	hgr_copy
 
 
@@ -357,7 +357,7 @@ asplode_asplode:
 
 	jsr	do_asplode
 
-	jmp	main_loop
+	jmp	reset_loop
 
 	;==========================
 	; done game
@@ -378,103 +378,7 @@ wait_until_keypress:
 	rts
 
 
-	;==============================
-	; do the asplode routine
-	;==============================
-	; should move head to center
-	; player explosion happens
-	; do the "YOUR HEAD A SPLODE" animation
-	; try to interleave the sound
-	; in theory the background should pulse too but
-	;	that might be too much
-do_asplode:
-
-	;===================
-	; copy background
-	;===================
-
-	jsr	hgr_copy
-
-	;==========================
-	; draw head
-	;==========================
-
-	lda	#<big_head0_sprite
-	sta	INL
-	lda	#>big_head0_sprite
-	sta	INH
-	lda	#16				; center
-	sta	SPRITE_X
-	lda	#36
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-
-	;==========================
-	; draw your
-	;==========================
-
-	lda	#<your_sprite
-	sta	INL
-	lda	#>your_sprite
-	sta	INH
-	lda	#8
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	;==========================
-	; draw head
-	;==========================
-
-	lda	#<head_sprite
-	sta	INL
-	lda	#>head_sprite
-	sta	INH
-	lda	#15
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	;==========================
-	; draw A
-	;==========================
-
-	lda	#<a_sprite
-	sta	INL
-	lda	#>a_sprite
-	sta	INH
-	lda	#21
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	;==========================
-	; draw SPLODE
-	;==========================
-
-	lda	#<splode_sprite
-	sta	INL
-	lda	#>splode_sprite
-	sta	INH
-	lda	#23
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	; play sound
-;	jsr	play_asplode
-
-	jsr	flip_page
-
-	jsr	wait_until_keypress
-
-	rts
-
+.include "asplode_head.s"
 
 	;==========
 	; flip page

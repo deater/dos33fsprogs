@@ -64,13 +64,13 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l a_sprite sb_sprites.png 98 0 104 20 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l splode_sprite sb_sprites.png 112 0 166 20 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l your_med_sprite sb_sprites.png 0 22 33 31 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l head_med_sprite sb_sprites.png 42 22 69 31 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l a_med_sprite sb_sprites.png 84 22 89 31 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l splode_med_sprite sb_sprites.png 98 22 138 31 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l your_sm_sprite sb_sprites.png 0 32 19 37 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l head_sm_sprite sb_sprites.png 28 32 47 37 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l a_sm_sprite sb_sprites.png 0 38 5 43 >> sb_sprites.inc
-	$(HGR_SPRITE) -s -l splode_sm_sprite sb_sprites.png 14 38 33 43 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l head_med_sprite sb_sprites.png 0 32 26 41 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l a_med_sprite sb_sprites.png 42 32 47 41 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l splode_med_sprite sb_sprites.png 0 42 40 51 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l your_sm_sprite sb_sprites.png 0 52 19 57 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l head_sm_sprite sb_sprites.png 28 52 47 57 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l a_sm_sprite sb_sprites.png 0 58 5 63 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l splode_sm_sprite sb_sprites.png 14 58 33 63 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l bullet_done_sprite sb_sprites.png 168 114 180 123 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l asploding1_sprite sb_sprites.png 196 27 222 52 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l asploding2_sprite sb_sprites.png 238 27 264 52 >> sb_sprites.inc
