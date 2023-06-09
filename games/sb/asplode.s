@@ -133,6 +133,9 @@ load_background:
 
 	jsr	full_decomp
 
+	;===================
+	; set up variables
+
 	lda	#16
 	sta	STRONGBAD_X
 	sta	PLAYER_X
@@ -147,6 +150,7 @@ load_background:
 	lda	#0
 	sta	BULLET_X_L
 	sta	BULLET_X_VEL
+	sta	HEAD_DAMAGE
 
 	lda	#20
 	sta	BULLET_X
@@ -218,9 +222,10 @@ no_move_head:
 	; draw head
 	;===========================
 
-	lda	#<big_head0_sprite
+	ldx	HEAD_DAMAGE
+	lda	head_sprites_l,X
 	sta	INL
-	lda	#>big_head0_sprite
+	lda	head_sprites_h,X
 	sta	INH
 	lda	STRONGBAD_X
 	sta	SPRITE_X
@@ -430,6 +435,14 @@ shield_sprites_h:
 	.byte >player_sprite,>shield_left_sprite
 	.byte >shield_center_sprite,>shield_right_sprite
 
+
+head_sprites_l:
+	.byte <big_head0_sprite,<big_head1_sprite,<big_head2_sprite
+	.byte <big_head3_sprite,<big_head4_sprite
+
+head_sprites_h:
+	.byte >big_head0_sprite,>big_head1_sprite,>big_head2_sprite
+	.byte >big_head3_sprite,>big_head4_sprite
 
 y_positions:
 ; 90 to 160 roughly?  Let's say 64?

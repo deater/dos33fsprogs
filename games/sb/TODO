@@ -1,5 +1,5 @@
 Title
-+
++ ?
 
 Duck:
 + Implement throwing
@@ -9,18 +9,17 @@ Duck:
 + Exit back to main title
 
 Rat:
-+
++ ?
 
 Strongbadzone:
 + Get audio
-+ Draw Your Head A Splode
-+ Create sprites for ball (24 of them?)
 + Ball movement logic.  Is actually just 2D
 + Check bounds on person
 + Do the color mask (different blacks)
 + Animate side walls
 + Faster hgr copy?
 + Optimize sprite size
++ Allow lowercase keyboard (see duck code)
 
 Cliff:
 + Everything
