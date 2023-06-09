@@ -107,26 +107,39 @@ asplode_loop:
 
 done_extra_sprites:
 
-.if 0
-	;==========================
-	; draw SPLODE
-	;==========================
 
-	lda	#<splode_sprite
-	sta	INL
-	lda	#>splode_sprite
-	sta	INH
-	lda	#23
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-.endif
-
-	; play sound
-;	jsr	play_asplode
 
 	jsr	flip_page
+
+
+	ldx	FRAME
+	cpx	#17
+	bne	sound_check_head
+sound_check_your:
+	; play sound
+	ldy	#0
+	beq	do_play_asplode
+
+sound_check_head:
+	cpx	#23
+	bne	sound_check_a
+	ldy	#1
+	bne	do_play_asplode
+sound_check_a:
+	cpx	#29
+	bne	sound_check_splode
+	ldy	#2
+	bne	do_play_asplode
+
+sound_check_splode:
+	cpx	#34
+	bne	sound_check_done
+	ldy	#3
+
+do_play_asplode:
+	jsr	play_asplode
+
+sound_check_done:
 
 	inc	FRAME
 	lda	FRAME

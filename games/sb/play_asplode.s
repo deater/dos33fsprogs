@@ -1,5 +1,5 @@
 ASPLODE_SAMPLE = $D000
-ASPLODE_LENGTH = 28
+ASPLODE_LENGTH = 28	; $1C
 
 play_asplode:
 	; only avail if language card
@@ -19,10 +19,13 @@ play_asplode:
 
 	lda	#<ASPLODE_SAMPLE
 	sta	BTC_L
-	lda	#>ASPLODE_SAMPLE
+
+	lda	sound_parts,Y		; #>ASPLODE_SAMPLE
 	sta	BTC_H
 
-	ldx	#ASPLODE_LENGTH		; 28 pages long???
+	lda	sound_len,Y
+	tax
+	;ldx	#ASPLODE_LENGTH		; 28 pages long???
 	jsr	play_audio
 
         ; read ROM/no-write
@@ -32,3 +35,18 @@ play_asplode:
 done_play_asplode:
 	rts
 
+
+
+sound_parts:
+	.byte	$D0		; your
+	.byte	$D8		; head
+	.byte	$E0		; a
+	.byte	$E1		; splode
+	.byte	$D0		; whole thing
+
+sound_len:
+	.byte	$8
+	.byte	$8
+	.byte	$6
+	.byte	$10
+	.byte	28

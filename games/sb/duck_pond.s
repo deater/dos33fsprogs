@@ -177,12 +177,21 @@ was_space:
 
 check_bracket:
 	cmp	#'S'
-	bne	done_keyboard
+	bne	check_escape
 
 	jsr	score_inc_d1
 
 	lda	#$ff
 	sta	D1_XSPEED
+	jmp	done_keyboard
+
+check_escape:
+	cmp	#27
+	bne	done_keyboard
+
+	lda	#0
+	sta	WHICH_LOAD
+	rts
 
 done_keyboard:
 
