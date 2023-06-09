@@ -1,12 +1,15 @@
 Title
-+ Out of bounds show Edgar Jr. "Outta Bounds"
++
 
 Duck:
-+ Lots
-+ move graphics files
++ Implement throwing
++ Implement duck movement
++ Implement score
++ Implement easter eggs
++ Exit back to main title
 
 Rat:
-+ Exit back to main title
++
 
 Strongbadzone:
 + Get audio
@@ -17,9 +20,10 @@ Strongbadzone:
 + Do the color mask (different blacks)
 + Animate side walls
 + Faster hgr copy?
++ Optimize sprite size
 
 Cliff:
-+ Lots
++ Everything
 
 Jump
-+ Lots
++ Everything

@@ -31,8 +31,14 @@ sb_title.hgr:	sb_title.png
 
 ####
 
+# TODO: optimize these a bit
+
 sb_sprites.inc:	sb_sprites.png
-	$(HGR_SPRITE) -s -l big_head_sprite sb_sprites.png   84 36 132 92 > sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head0_sprite sb_sprites.png   0 78  47 134 > sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head1_sprite sb_sprites.png  56 78 103 134 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head2_sprite sb_sprites.png 112 78 159 134 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head3_sprite sb_sprites.png  56 21 103  77 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l big_head4_sprite sb_sprites.png 112 21 159  77 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l player_sprite sb_sprites.png 98 138 181 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_left_sprite sb_sprites.png 0 138 83 192 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l shield_center_sprite sb_sprites.png 196 83 279 137 >> sb_sprites.inc
@@ -65,7 +71,11 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l head_sm_sprite sb_sprites.png 28 32 47 37 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l a_sm_sprite sb_sprites.png 0 38 5 43 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l splode_sm_sprite sb_sprites.png 14 38 33 43 >> sb_sprites.inc
-
+	$(HGR_SPRITE) -s -l bullet_done_sprite sb_sprites.png 168 114 180 123 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l asploding1_sprite sb_sprites.png 196 27 222 52 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l asploding2_sprite sb_sprites.png 238 27 264 52 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l asploding3_sprite sb_sprites.png 196 53 222 78 >> sb_sprites.inc
+	$(HGR_SPRITE) -s -l asploding4_sprite sb_sprites.png 238 53 264 78 >> sb_sprites.inc
 
 ####
 

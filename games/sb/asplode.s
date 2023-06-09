@@ -218,9 +218,9 @@ no_move_head:
 	; draw head
 	;===========================
 
-	lda	#<big_head_sprite
+	lda	#<big_head0_sprite
 	sta	INL
-	lda	#>big_head_sprite
+	lda	#>big_head0_sprite
 	sta	INH
 	lda	STRONGBAD_X
 	sta	SPRITE_X
@@ -399,9 +399,9 @@ do_asplode:
 	; draw head
 	;==========================
 
-	lda	#<big_head_sprite
+	lda	#<big_head0_sprite
 	sta	INL
-	lda	#>big_head_sprite
+	lda	#>big_head0_sprite
 	sta	INH
 	lda	#16				; center
 	sta	SPRITE_X

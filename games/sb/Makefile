@@ -70,6 +70,9 @@ asplode.o:	asplode.s zx02_optim.s \
 		zp.inc hardware.inc
 	ca65 -o asplode.o asplode.s -l asplode.lst
 
+asplode_graphics/sb_sprites.inc:	
+	cd asplode_graphics && make
+
 asplode_graphics/sb_title.hgr.zx02:	
 	cd asplode_graphics && make
 
