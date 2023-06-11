@@ -142,6 +142,7 @@ load_background:
 
 	lda	#1
 	sta	STRONGBAD_DIR
+	sta	BULLET_YDIR
 
 	lda	#SHIELD_DOWN
 	sta	SHIELD_POSITION
@@ -274,10 +275,27 @@ walls_out:
 
 
 walls_good:
+
+	; move bullet Y
+
+	lda	BULLET_YDIR
+	bne	bullet_down
+
+bullet_up:
+	dec	BULLET_Y
+	jmp	bullet_y_done
+
+bullet_down:
 	inc	BULLET_Y
+bullet_y_done:
+
+	; see if off end
+
 	lda	BULLET_Y
 	cmp	#17
 	bcc	bullet_still_good
+
+	; reset to top
 
 	lda	#0
 	sta	BULLET_Y
@@ -291,7 +309,7 @@ bullet_still_good:
 	; check player
 	;   if (bullet_x > player_x+2) &&
 	;	(bullet_x<player_x+6)
-	; if 2 < px - bx < 6 ???
+	; if 2 < bx - px < 6 ???
 
 	; 012345678
 	; b-p
@@ -319,6 +337,64 @@ check_player_collide:
 	jmp	asplode_asplode
 
 skip_check_player_collide:
+
+	;===========================
+	; check shield
+
+	; only if Y=15 and YDIR=1
+check_shield_collide:
+	lda	BULLET_Y
+	cmp	#15
+	bne	skip_check_shield_collide
+
+	lda	SHIELD_POSITION
+	beq	skip_check_shield_collide	; 0 means DOWN
+
+	; flip dir
+
+	; TODO: sound
+
+	lda	#0
+	sta	BULLET_YDIR
+
+skip_check_shield_collide:
+
+	;===========================
+	; check head
+
+	; only if Y=0 and YDIR=0
+
+	lda	BULLET_Y
+	bne	done_check_head
+
+	lda	BULLET_YDIR
+	bne	done_check_head
+
+check_head_collide:
+
+	sec
+	lda	BULLET_X
+	sbc	STRONGBAD_X
+	cmp	#0
+	bcc	skip_check_head_collide		; blt
+	cmp	#6
+	bcs	skip_check_head_collide
+
+	inc	HEAD_DAMAGE			; increase head damage
+	lda	HEAD_DAMAGE
+	cmp	#5
+	bcc	skip_check_head_collide
+
+	lda	#0				; reset
+	sta	HEAD_DAMAGE
+
+skip_check_head_collide:
+	lda	#1
+	sta	BULLET_YDIR	; bounce
+
+
+done_check_head:
+
 
 	;==========================
 	; draw bullet
@@ -363,8 +439,8 @@ check_keypress:
 
 	and	#$df			; convert lowercase to upper
 
-	cmp	#'Q'
-	beq	done_game
+;	cmp	#'Q'
+;	beq	done_game
 
 	cmp	#27		; escape
 	beq	done_game
@@ -376,8 +452,8 @@ check_keypress:
 	cmp	#'D'		; shield right
 	beq	shield_right
 
-	cmp	#'X'
-	beq	asplode_asplode
+;	cmp	#'X'
+;	beq	asplode_asplode
 
 	cmp	#8		; left
 	beq	move_left
@@ -525,8 +601,8 @@ bullet_sprite_h:
 .byte >bullet_done_sprite
 
 bullet_sprite_y:
-.byte 90,94,98,102
-.byte 106,110,114,118
+.byte 83,88,93,98
+.byte 103,108,113,118
 .byte 123,128,133,138
 .byte 143,148,153,158
 .byte 163
