@@ -128,12 +128,21 @@ done_extra_sprites:
 
 
 	ldx	FRAME
+
+
+sound_check_explode:
+	cpx	#2
+	bne	sound_check_your
+	; play sound
+	ldy	#7
+	bne	do_play_asplode		; bra
+
+sound_check_your:
 	cpx	#16
 	bne	sound_check_head
-sound_check_your:
 	; play sound
 	ldy	#0
-	beq	do_play_asplode
+	beq	do_play_asplode		; bra
 
 sound_check_head:
 	cpx	#22

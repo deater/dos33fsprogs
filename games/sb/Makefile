@@ -64,7 +64,7 @@ asplode.o:	asplode.s zx02_optim.s \
 		asplode_graphics/sb_title.hgr.zx02 \
 		asplode_graphics/sb_zone.hgr.zx02 \
 		asplode_graphics/sb_sprites.inc \
-		asplode_sound/asplode.btc.zx02 \
+		asplode_sound/asplode_sound.btc.zx02 \
 		audio.s play_asplode.s asplode_head.s \
 		hgr_sprite_big.s cycle_colors.s \
 		zp.inc hardware.inc

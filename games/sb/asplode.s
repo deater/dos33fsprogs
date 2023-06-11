@@ -474,7 +474,11 @@ done_hit_shield:
 	lda	#0
 	sta	BULLET_YDIR
 
-	; TODO: sound
+	; play sound
+
+	ldy	#5
+	jsr	play_asplode
+
 
 
 skip_check_shield_collide:
@@ -515,6 +519,23 @@ skip_check_head_collide:
 
 done_check_head:
 
+
+	;=====================
+	; play bullet sound
+
+
+	; if Y=1 and YDIR=1
+
+	lda	BULLET_Y
+	cmp	#1
+	bne	no_ysound
+
+	lda	BULLET_YDIR
+	beq	no_ysound
+
+	ldy	#6
+	jsr	play_asplode
+no_ysound:
 
 	;==========================
 	; draw bullet
@@ -688,7 +709,7 @@ comp_data:
 	.incbin "asplode_graphics/sb_zone.hgr.zx02"
 
 sound_data:
-	.incbin "asplode_sound/asplode.btc.zx02"
+	.incbin "asplode_sound/asplode_sound.btc.zx02"
 
 shield_sprites_l:
 	.byte <player_sprite,<shield_left_sprite

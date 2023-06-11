@@ -35,7 +35,10 @@ play_asplode:
 done_play_asplode:
 	rts
 
-
+; in the game
+;  bim	: bullet launch
+;  boom : bullet hit
+;  twang : while asploding
 
 sound_parts:
 	.byte	$D0		; your
@@ -43,6 +46,9 @@ sound_parts:
 	.byte	$E0		; a
 	.byte	$E1		; splode
 	.byte	$D0		; whole thing
+	.byte	$F0		; bim
+	.byte	$F4		; boom
+	.byte	$F8		; twang
 
 sound_len:
 	.byte	$8
@@ -50,3 +56,6 @@ sound_len:
 	.byte	$6
 	.byte	$10
 	.byte	28
+	.byte	$4
+	.byte	$4
+	.byte	$8
