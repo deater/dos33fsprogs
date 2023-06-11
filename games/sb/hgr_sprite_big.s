@@ -3,6 +3,9 @@
 	;===========================================
 	; can handle sprites bigger than a 256 byte page
 
+	; Note this is optimized for blue/orange sprites
+	;   it treats black0 as transparent
+
 	; SPRITE in INL/INH
 	; Location at SPRITE_X SPRITE_Y
 
@@ -66,8 +69,10 @@ big_sprite_inner_loop:
 
 big_sprite_smc1:
         lda	$f000,X			; load sprite data
+	beq	big_sprite_transparent
 	sta	(GBASL),Y		; store to screen
 
+big_sprite_transparent:
 	inx				; increment sprite offset
 
 	; if > 1 page
@@ -146,7 +151,20 @@ osprite_inner_loop:
 osprite_smc1:
         lda	$f000,X			; load sprite data
 
+	bne	osprite_not_transparent
+
+	; we can't just skip if 0 because we might shift a bit in
+	; from previous byte
+
+	plp
+	bcs	osprite_oops
+	clc
+	php
+	bcc	osprite_transparent_done
+
+osprite_not_transparent:
 	plp				; restore carry from last
+osprite_oops:
 	rol				; rotate in carry
 	asl				; one more time, bit6 in carry
 	php				; save on stack
@@ -155,6 +173,8 @@ osprite_smc1:
 
 	sta	(GBASL),Y		; store to screen
 
+
+osprite_transparent_done:
 	inx				; increment sprite offset
 
 	; if > 1 page

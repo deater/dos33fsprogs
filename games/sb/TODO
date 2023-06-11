@@ -1,5 +1,14 @@
-Title
-+ ?
+Strongbadzone:
++ Implement rest of audio
++ Ball movement logic.  Is actually just 2D
+  -> Collision detect with head.  Decrement count, play sound
+  -> Collision detect with player
++ Do the color mask (different blacks)
++ Animate side walls
+  -> This is going to involve fancy memory management
++ Faster hgr copy?
++ Optimize sprite size
++ Allow lowercase keyboard (see duck code)
 
 Duck:
 + Implement throwing
@@ -8,21 +17,18 @@ Duck:
 + Implement easter eggs
 + Exit back to main title
 
-Rat:
-+ ?
 
-Strongbadzone:
-+ Get audio
-+ Ball movement logic.  Is actually just 2D
-+ Check bounds on person
-+ Do the color mask (different blacks)
-+ Animate side walls
-+ Faster hgr copy?
-+ Optimize sprite size
-+ Allow lowercase keyboard (see duck code)
 
 Cliff:
 + Everything
 
 Jump
 + Everything
+
+Rat:
++ Done?
+
+Title
++ Done?
+
+
