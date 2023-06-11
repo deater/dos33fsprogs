@@ -25,6 +25,7 @@ qload_start:
 forever_loop:
 	jsr	load_file
 
+load_entry_smc:
 	jsr	$6000			; jump to loaded file
 
 	jmp	forever_loop
@@ -42,6 +43,7 @@ load_file:
 load_file_no_diskcheck:
 	lda	load_address_array,X
 	sta	load_address
+	sta	load_entry_smc+2
 
 	lda	track_array,X
 	sta	load_track
@@ -168,7 +170,7 @@ which_disk_array:
 	.byte 1,1,1		; TARGET, CLIFF, RAT
 
 load_address_array:
-        .byte $60,$60,$60,$60	; TITLE,  DUCK,  ROOF, ASPLODE
+        .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF, ASPLODE
 	.byte $60,$60,$60	; TARGET, CLIFF, RAT
 
 

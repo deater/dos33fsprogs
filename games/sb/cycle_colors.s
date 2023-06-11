@@ -26,7 +26,7 @@ color_loop:
 
 	lda	hposn_high,X
 	sta	OUTH
-	eor	#$60
+	eor	#$80
 	sta	INH
 
 	lda	hposn_low,X

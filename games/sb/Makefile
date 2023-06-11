@@ -58,7 +58,7 @@ roof_graphics/strongbad_sample.hgr.zx02:
 ####
 
 ASPLODE:	asplode.o
-	ld65 -o ASPLODE asplode.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o ASPLODE asplode.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 asplode.o:	asplode.s zx02_optim.s \
 		asplode_graphics/sb_title.hgr.zx02 \

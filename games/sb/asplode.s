@@ -113,7 +113,7 @@ load_title:
 	lda	#>title_data
 	sta	ZX0_src+1
 
-	lda	#$40
+	lda	#$A0
 
 	jsr	full_decomp
 
