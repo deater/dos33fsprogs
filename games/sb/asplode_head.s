@@ -173,9 +173,12 @@ done_asplode_head:
 	lda	#0
 	sta	SHIELD_POSITION
 	sta	BULLET_Y
+	sta	SHIELD_COUNT
 
 	lda	#1
 	sta	BULLET_YDIR
+
+	bit	KEYRESET	; clear any keypresses during asplode
 
 	rts
 

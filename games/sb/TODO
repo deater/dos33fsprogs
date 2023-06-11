@@ -1,14 +1,10 @@
 Strongbadzone:
 + Implement rest of audio
-+ Ball movement logic.  Is actually just 2D
-  -> Collision detect with head.  Decrement count, play sound
-  -> Collision detect with player
-+ Do the color mask (different blacks)
 + Animate side walls
   -> This is going to involve fancy memory management
 + Faster hgr copy?
 + Optimize sprite size
-+ Allow lowercase keyboard (see duck code)
++ Can't continually hold shield up
 
 Duck:
 + Implement throwing

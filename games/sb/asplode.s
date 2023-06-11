@@ -601,17 +601,24 @@ no_more_right:
 	jmp	main_loop
 
 shield_left:
+	lda	SHIELD_POSITION
+	bne	done_adjust_shield
 	lda	#SHIELD_UP_LEFT
 	bne	adjust_shield
 shield_center:
+	lda	SHIELD_POSITION
+	bne	done_adjust_shield
 	lda	#SHIELD_UP_CENTER
 	bne	adjust_shield
 shield_right:
+	lda	SHIELD_POSITION
+	bne	done_adjust_shield
 	lda	#SHIELD_UP_RIGHT
 adjust_shield:
 	sta	SHIELD_POSITION
-	lda	#5
+	lda	#4
 	sta	SHIELD_COUNT
+done_adjust_shield:
 	jmp	main_loop
 
 asplode_asplode:
