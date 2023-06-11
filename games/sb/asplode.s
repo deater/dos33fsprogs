@@ -91,6 +91,7 @@ strongbadzone_start:
 
 
 done_load_sound:
+
 	;==========================
 	; Load Title
 	;===========================
@@ -178,6 +179,23 @@ load_background:
 	sta	BULLET_X
 	lda	#0
 	sta	BULLET_Y
+
+	jmp	main_loop
+
+
+title_data:
+	.incbin "asplode_graphics/sb_title.hgr.zx02"
+
+comp_data:
+	.incbin "asplode_graphics/sb_zone.hgr.zx02"
+
+sound_data:
+	.incbin "asplode_sound/asplode_sound.btc.zx02"
+
+	.include	"hgr_tables.s"
+	.include	"zx02_optim.s"
+
+	; start at least 8k in?
 
 	;==========================
 	; main loop
@@ -692,8 +710,6 @@ done_flip:
 
 
 
-	.include	"hgr_tables.s"
-	.include	"zx02_optim.s"
 	.include	"hgr_sprite_big.s"
 	.include	"cycle_colors.s"
 	.include	"hgr_copy_fast.s"
@@ -702,14 +718,6 @@ done_flip:
 
 	.include	"asplode_graphics/sb_sprites.inc"
 
-title_data:
-	.incbin "asplode_graphics/sb_title.hgr.zx02"
-
-comp_data:
-	.incbin "asplode_graphics/sb_zone.hgr.zx02"
-
-sound_data:
-	.incbin "asplode_sound/asplode_sound.btc.zx02"
 
 shield_sprites_l:
 	.byte <player_sprite,<shield_left_sprite
