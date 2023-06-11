@@ -17,6 +17,24 @@
 ;	if it misses you, makes small explosion, starts again at far wall
 ;		with same X as it went off screen with
 
+; things missing from real game
+;    some of the animations (both of player and head being destroyed)
+;    there are some pauses after things happen
+;
+
+; Notes
+;   collision detection on shield should really be 16 bit, some things
+;	get past the shield check but then collide on the next frame
+;   sprite routines cheat in a lot of ways. assume blue/orange
+;       assume X only in 3.5 pixel offsets
+;       do minimal transparency using black0
+
+; Challenges:
+;   moving such huge sprites
+;   fitting all in RAM
+;   sound
+
+
 .include "zp.inc"
 .include "hardware.inc"
 
@@ -331,7 +349,7 @@ check_player_collide:
 	sbc	PLAYER_X
 	cmp	#2
 	bcc	skip_check_player_collide	; blt
-	cmp	#6
+	cmp	#8
 	bcs	skip_check_player_collide
 
 	jmp	asplode_asplode
@@ -339,23 +357,125 @@ check_player_collide:
 skip_check_player_collide:
 
 	;===========================
-	; check shield
+	; check shield collide
 
 	; only if Y=15 and YDIR=1
 check_shield_collide:
 	lda	BULLET_Y
 	cmp	#15
-	bne	skip_check_shield_collide
+	beq	do_check_shields
+	jmp	skip_check_shield_collide
+
+do_check_shields:
+	; sorta-random number in X
+	ldx	FRAME
+	lda	$6000,X		; from source code
+	and	#$3
+	tax
 
 	lda	SHIELD_POSITION
 	beq	skip_check_shield_collide	; 0 means DOWN
 
-	; flip dir
+shields_up:
+	; our rules
+	;  SHIELD_X_VEL maxes at 1/-1
+	;    hitting shield left subs random $10/$20/$20/$40
+	;    hitting shield right adds random $10/$20/$20/$40
+	;    hitting shield center adds/subs random $10/$20
 
-	; TODO: sound
+	cmp	#SHIELD_UP_RIGHT
+	beq	check_hit_shield_right
+	cmp	#SHIELD_UP_CENTER
+	beq	check_hit_shield_center
+
+check_hit_shield_left:
+
+	sec
+	lda	BULLET_X
+	sbc	PLAYER_X
+	cmp	#1
+	bcc	skip_check_shield_collide	; blt
+	cmp	#7
+	bcs	skip_check_shield_collide	; bge
+
+hit_shield_left:
+	sec
+	lda	BULLET_X_VEL_L
+	sbc	bullet_vals,X
+	sta	BULLET_X_VEL_L
+	lda	BULLET_X_VEL
+	sbc	#0
+	sta	BULLET_X_VEL
+	jmp	done_hit_shield
+
+
+check_hit_shield_right:
+
+	sec
+	lda	BULLET_X
+	sbc	PLAYER_X
+	cmp	#4
+	bcc	skip_check_shield_collide	; blt
+	cmp	#10
+	bcs	skip_check_shield_collide
+
+
+hit_shield_right:
+	clc
+	lda	BULLET_X_VEL_L
+	adc	bullet_vals,X
+	sta	BULLET_X_VEL_L
+	lda	BULLET_X_VEL
+	adc	#0
+	sta	BULLET_X_VEL
+	jmp	done_hit_shield
+
+check_hit_shield_center:
+
+	sec
+	lda	BULLET_X
+	sbc	PLAYER_X
+	cmp	#2
+	bcc	skip_check_shield_collide	; blt
+	cmp	#8
+	bcs	skip_check_shield_collide	; bge
+
+hit_shield_center:
+
+	cpx	#1
+	bcs	center_left
+
+	clc
+	lda	BULLET_X_VEL_L
+	adc	bullet_vals_center,X
+	sta	BULLET_X_VEL_L
+	lda	BULLET_X_VEL
+	adc	#0
+	sta	BULLET_X_VEL
+	jmp	done_hit_shield
+
+center_left:
+	sec
+	lda	BULLET_X_VEL_L
+	sbc	bullet_vals_center,X
+	sta	BULLET_X_VEL_L
+	lda	BULLET_X_VEL
+	sbc	#0
+	sta	BULLET_X_VEL
+;	jmp	done_hit_shield
+
+
+done_hit_shield:
+	; max at $1/$00 or $FF/$00
+
+
+	; flip ydir
 
 	lda	#0
 	sta	BULLET_YDIR
+
+	; TODO: sound
+
 
 skip_check_shield_collide:
 
@@ -606,6 +726,12 @@ bullet_sprite_y:
 .byte 123,128,133,138
 .byte 143,148,153,158
 .byte 163
+
+bullet_vals:
+.byte $10,$20,$20,$40
+
+bullet_vals_center:
+.byte $20,$00,$00,$20
 
 ; original
 ; 1 =  6

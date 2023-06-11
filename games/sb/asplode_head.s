@@ -23,12 +23,13 @@ asplode_loop:
 	jsr	hgr_copy
 
 	;==========================
-	; draw head
+	; draw big head
 	;==========================
 
-	lda	#<big_head0_sprite
+	ldx	HEAD_DAMAGE
+	lda	head_sprites_l,X
 	sta	INL
-	lda	#>big_head0_sprite
+	lda	head_sprites_h,X
 	sta	INH
 	lda	#16				; center
 	sta	SPRITE_X
@@ -45,8 +46,22 @@ asplode_loop:
 	sta	INL
 	lda	asplode_sprite_h,X
 	sta	INH
+
+
+	cpx	#11
+	bcs	use_hardcoded_x
+
+	ldy	BULLET_X
+	dey
+	tya
+
+	jmp	asplode_it_x
+
+use_hardcoded_x:
 	lda	asplode_sprite_x,X
+asplode_it_x:
 	sta	SPRITE_X
+
 	lda	asplode_sprite_y,X
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite_big
@@ -152,6 +167,15 @@ done_asplode_head:
 
 	lda	#20
 	jsr	long_wait	; tail call
+
+	; reset things
+
+	lda	#0
+	sta	SHIELD_POSITION
+	sta	BULLET_Y
+
+	lda	#1
+	sta	BULLET_YDIR
 
 	rts
 
