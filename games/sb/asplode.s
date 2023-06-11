@@ -152,6 +152,9 @@ load_background:
 	sta	BULLET_X_VEL
 	sta	HEAD_DAMAGE
 
+	lda	#$80
+	sta	BULLET_X_VEL_L
+
 	lda	#20
 	sta	BULLET_X
 	lda	#0
@@ -241,17 +244,39 @@ no_move_head:
 
 	clc
 	lda	BULLET_X_L
-	adc	BULLET_X_VEL
+	adc	BULLET_X_VEL_L
 	sta	BULLET_X_L
 	lda	BULLET_X
-	adc	#0
+	adc	BULLET_X_VEL
 	sta	BULLET_X
 
-	; TODO: bounce off walls
+	;========================
+	; bounce off "walls"
+	; in reality just bounce if <9 or > 29?
 
+	lda	BULLET_X
+	cmp	#29
+	bcs	walls_out	; bge
+	cmp	#9
+	bcs	walls_good	; bge
+
+walls_out:
+
+	; flip X direction
+
+	sec
+	lda	#0
+	sbc	BULLET_X_VEL_L
+	sta	BULLET_X_VEL_L
+	lda	#0
+	sbc	BULLET_X_VEL
+	sta	BULLET_X_VEL
+
+
+walls_good:
 	inc	BULLET_Y
 	lda	BULLET_Y
-	cmp	#15
+	cmp	#17
 	bcc	bullet_still_good
 
 	; new bullet position
@@ -455,18 +480,21 @@ bullet_sprite_l:
 .byte  <bullet4_sprite, <bullet5_sprite, <bullet6_sprite, <bullet7_sprite
 .byte  <bullet8_sprite, <bullet9_sprite,<bullet10_sprite,<bullet11_sprite
 .byte <bullet12_sprite,<bullet13_sprite,<bullet14_sprite,<bullet15_sprite
+.byte <bullet_done_sprite
 
 bullet_sprite_h:
 .byte  >bullet0_sprite, >bullet1_sprite, >bullet2_sprite, >bullet3_sprite
 .byte  >bullet4_sprite, >bullet5_sprite, >bullet6_sprite, >bullet7_sprite
 .byte  >bullet8_sprite, >bullet9_sprite,>bullet10_sprite,>bullet11_sprite
 .byte >bullet12_sprite,>bullet13_sprite,>bullet14_sprite,>bullet15_sprite
+.byte >bullet_done_sprite
 
 bullet_sprite_y:
 .byte 90,94,98,102
 .byte 106,110,114,118
 .byte 122,126,130,134
-.byte 138,142,146,150
+.byte 139,144,149,154
+.byte 159
 
 ; original
 ; 1 =  6
