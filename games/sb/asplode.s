@@ -279,12 +279,46 @@ walls_good:
 	cmp	#17
 	bcc	bullet_still_good
 
-	; new bullet position
-	; FIXME: better
-
 	lda	#0
 	sta	BULLET_Y
 bullet_still_good:
+
+	;==========================
+	; check bullet collisions
+	;===========================
+
+	;===========================
+	; check player
+	;   if (bullet_x > player_x+2) &&
+	;	(bullet_x<player_x+6)
+	; if 2 < px - bx < 6 ???
+
+	; 012345678
+	; b-p
+	; --------
+	; 8765432101234567890123456
+	; p-b      ----------------
+	; 8765432101234567890123456
+	; NNNNNNNNNNYYYYNNNNNNNNNNN
+	; XXXXXXXXPPOOOOPPXXXXXXXXX
+
+	; only if BULLET_Y=16?
+
+	lda	BULLET_Y
+	cmp	#16
+	bne	skip_check_player_collide
+check_player_collide:
+	sec
+	lda	BULLET_X
+	sbc	PLAYER_X
+	cmp	#2
+	bcc	skip_check_player_collide	; blt
+	cmp	#6
+	bcs	skip_check_player_collide
+
+	jmp	asplode_asplode
+
+skip_check_player_collide:
 
 	;==========================
 	; draw bullet
@@ -327,7 +361,8 @@ check_keypress:
 	; clear high bit
 	and	#$7f
 
-	; FIXME: adjust for lowercase too
+	and	#$df			; convert lowercase to upper
+
 	cmp	#'Q'
 	beq	done_game
 
@@ -492,9 +527,9 @@ bullet_sprite_h:
 bullet_sprite_y:
 .byte 90,94,98,102
 .byte 106,110,114,118
-.byte 122,126,130,134
-.byte 139,144,149,154
-.byte 159
+.byte 123,128,133,138
+.byte 143,148,153,158
+.byte 163
 
 ; original
 ; 1 =  6
