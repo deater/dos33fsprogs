@@ -10,7 +10,19 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	sb_zone.hgr.zx02 sb_title.hgr.zx02 sb_sprites.inc
+all:	sb_zone.hgr.zx02 sb_zone2.hgr.zx02 \
+	sb_combined.hgr.zx02 \
+	sb_title.hgr.zx02 sb_sprites.inc
+
+####
+
+sb_combined.hgr.zx02:	sb_zone.hgr sb_zone2.hgr
+	cat sb_zone.hgr > sb_combined.hgr
+	cat sb_zone2.hgr >> sb_combined.hgr
+	$(ZX02) sb_combined.hgr sb_combined.hgr.zx02
+
+sb_zone.hgr:	sb_zone.png
+	$(PNG_TO_HGR) sb_zone.png > sb_zone.hgr
 
 ####
 
@@ -19,6 +31,15 @@ sb_zone.hgr.zx02:	sb_zone.hgr
 
 sb_zone.hgr:	sb_zone.png
 	$(PNG_TO_HGR) sb_zone.png > sb_zone.hgr
+
+####
+
+sb_zone2.hgr.zx02:	sb_zone2.hgr
+	$(ZX02) sb_zone2.hgr sb_zone2.hgr.zx02
+
+sb_zone2.hgr:	sb_zone2.png
+	$(PNG_TO_HGR) sb_zone2.png > sb_zone2.hgr
+
 
 ####
 

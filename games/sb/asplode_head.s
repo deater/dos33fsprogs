@@ -20,6 +20,7 @@ asplode_loop:
 	; copy background
 	;===================
 
+	lda	#$a0
 	jsr	hgr_copy
 
 	;==========================

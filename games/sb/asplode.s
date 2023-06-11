@@ -134,23 +134,31 @@ title_cycle_loop:
 	;===================
 
 	;==========================
-	; Load Background
+	; Load Backgrounds
 	;===========================
+	; this is tricky as there's not enough room
+	; so we are over-writing stuff carefully
 
-load_background:
+load_backgrounds:
 
-	; size in ldsizeh:ldsizel (f1/f0)
-
-	lda	#<comp_data
+	lda	#<bg2_data
 	sta	ZX0_src
-	lda	#>comp_data
+	lda	#>bg2_data
 	sta	ZX0_src+1
-
 
 	lda	#$A0
 
+	jsr	full_decomp
+
+	lda	#<bg1_data
+	sta	ZX0_src
+	lda	#>bg1_data
+	sta	ZX0_src+1
+
+	lda	#$80
 
 	jsr	full_decomp
+
 
 	;===================
 	; set up variables
@@ -186,7 +194,7 @@ load_background:
 title_data:
 	.incbin "asplode_graphics/sb_title.hgr.zx02"
 
-comp_data:
+bg1_data:
 	.incbin "asplode_graphics/sb_zone.hgr.zx02"
 
 sound_data:
@@ -208,6 +216,16 @@ main_loop:
 	; copy over background
 	;========================
 reset_loop:
+
+	lda	FRAME
+	and	#$2
+	beq	odd_bg
+even_bg:
+	lda	#$A0
+	bne	do_bg
+odd_bg:
+	lda	#$80
+do_bg:
 	jsr	hgr_copy
 
 
@@ -790,3 +808,6 @@ bullet_vals_center:
 ; 31= 139
 
 ; 9,5 -> 22,14 = 12x9 roughly.  3 times smaller, 4x3?  2x6?
+
+bg2_data:
+	.incbin "asplode_graphics/sb_zone2.hgr.zx02"
