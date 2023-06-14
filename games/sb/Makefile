@@ -12,7 +12,7 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE TARGET CLIFF RAT
+sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF TARGET CLIFF RAT
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -78,6 +78,21 @@ asplode_graphics/sb_title.hgr.zx02:
 
 asplode_sound/asplode.btc.zx02:	
 	cd asplode_sound && make
+
+
+####
+
+BACK_OFF:	back_off.o
+	ld65 -o BACK_OFF back_off.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+back_off.o:	back_off.s zx02_optim.s \
+		asplode_graphics/bob_bg.hgr.zx02 \
+		asplode_graphics/sb_sprites.inc \
+		asplode_sound/back_off.btc.zx02 \
+		audio.s play_asplode.s asplode_head.s \
+		hgr_sprite_big.s cycle_colors.s \
+		zp.inc hardware.inc
+	ca65 -o back_off.o back_off.s -l back_off.lst
 
 ####
 

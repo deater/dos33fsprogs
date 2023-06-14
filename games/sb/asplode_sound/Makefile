@@ -1,6 +1,6 @@
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 
-all:	asplode.btc.zx02 asplode_sound.btc.zx02
+all:	asplode.btc.zx02 asplode_sound.btc.zx02 back_off.btc.zx02
 
 asplode.btc.zx02:	asplode.btc
 	$(ZX02) asplode.btc asplode.btc.zx02
@@ -16,6 +16,11 @@ asplode_sound.btc:	asplode.btc bim.btc boom.btc twang.btc
 	dd if=bim.btc bs=1 count=1024 >> asplode_sound.btc
 	dd if=boom.btc bs=1 count=1024 >> asplode_sound.btc
 	dd if=twang.btc bs=1 count=2048 >> asplode_sound.btc
+
+
+back_off.btc.zx02:	back_off.btc
+	$(ZX02) back_off.btc back_off.btc.zx02
+
 
 
 clean:	
