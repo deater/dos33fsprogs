@@ -629,8 +629,8 @@ check_keypress:
 	cmp	#'D'		; shield right
 	beq	shield_right
 
-;	cmp	#'X'
-;	beq	asplode_asplode
+	cmp	#'O'
+	beq	back_off
 
 	cmp	#8		; left
 	beq	move_left
@@ -684,12 +684,18 @@ asplode_asplode:
 
 	jmp	reset_loop
 
+
+back_off:
+	lda	#7
+	bne	really_done_game	; bra
+
 	;==========================
 	; done game
 	;==========================
 
 done_game:
 	lda	#0
+really_done_game:
 	sta	WHICH_LOAD
 	rts
 
