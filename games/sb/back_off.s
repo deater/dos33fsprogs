@@ -76,33 +76,10 @@ load_backgrounds:
 
 	;===================
 	; set up variables
-.if 0
-	lda	#16
-	sta	STRONGBAD_X
-	sta	PLAYER_X
 
-	lda	#1
-	sta	STRONGBAD_DIR
-	sta	BULLET_YDIR
 
-	lda	#SHIELD_DOWN
-	sta	SHIELD_POSITION
-	sta	SHIELD_COUNT
-
-	lda	#0
-	sta	BULLET_X_L
-	sta	BULLET_X_VEL
-	sta	HEAD_DAMAGE
-
-	lda	#$80
-	sta	BULLET_X_VEL_L
-
-	lda	#20
-	sta	BULLET_X
-	lda	#0
-	sta	BULLET_Y
-.endif
-
+	;===================
+	; inline this?
 
 	jsr	do_back_off
 
@@ -226,7 +203,7 @@ sound_check_off:
 sound_check_baby:
 	cpx	#17
 	bne	sound_check_done
-	ldy	#3
+	ldy	#2
 
 do_play_asplode:
 	jsr	play_back_off
@@ -248,6 +225,11 @@ done_back_off:
 	; reset things
 
 	bit	KEYRESET	; clear any keypresses during asplode
+
+	lda	#$A0
+	jsr	hgr_copy
+
+	jsr	flip_page
 
 	rts
 
