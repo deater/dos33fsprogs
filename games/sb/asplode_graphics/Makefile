@@ -13,7 +13,7 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 all:	sb_zone.hgr.zx02 sb_zone2.hgr.zx02 \
 	sb_combined.hgr.zx02 \
 	sb_title.hgr.zx02 sb_sprites.inc \
-	bob_bg.hgr.zx02
+	bob_bg.hgr.zx02 bob_sprites.inc
 
 
 ####
@@ -23,8 +23,8 @@ sb_combined.hgr.zx02:	sb_zone.hgr sb_zone2.hgr
 	cat sb_zone2.hgr >> sb_combined.hgr
 	$(ZX02) sb_combined.hgr sb_combined.hgr.zx02
 
-sb_zone.hgr:	sb_zone.png
-	$(PNG_TO_HGR) sb_zone.png > sb_zone.hgr
+#sb_zone.hgr:	sb_zone.png
+#	$(PNG_TO_HGR) sb_zone.png > sb_zone.hgr
 
 
 ####
@@ -109,8 +109,21 @@ sb_sprites.inc:	sb_sprites.png
 	$(HGR_SPRITE) -s -l asploding3_sprite sb_sprites.png 196 53 222 78 >> sb_sprites.inc
 	$(HGR_SPRITE) -s -l asploding4_sprite sb_sprites.png 238 53 264 78 >> sb_sprites.inc
 
+###
+
+bob_sprites.inc:	bob_sprites.png Makefile
+	$(HGR_SPRITE) -s -l back_sprite bob_sprites.png 0 0 41 20 > bob_sprites.inc
+	$(HGR_SPRITE) -s -l off_sprite bob_sprites.png 56 0 90 20 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l baby_sprite bob_sprites.png 98 0 131 20 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l back_med_sprite bob_sprites.png 0 22 33 31 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l off_med_sprite bob_sprites.png 0 32 26 41 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l baby_med_sprite bob_sprites.png 0 42 40 51 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l back_sm_sprite bob_sprites.png 0 52 19 57 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l off_sm_sprite bob_sprites.png 28 52 47 57 >> bob_sprites.inc
+	$(HGR_SPRITE) -s -l baby_sm_sprite bob_sprites.png 14 58 33 63 >> bob_sprites.inc
+
 ####
 
 clean:
-	rm -f *~ *.o *.lst sb_sprites.inc
+	rm -f *~ *.o *.lst *.zx02 *.hgr sb_sprites.inc bob_sprites.inc
 

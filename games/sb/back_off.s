@@ -111,11 +111,12 @@ load_backgrounds:
 	;==========================
 
 done_game:
+	bit	KEYRESET
+	jsr	wait_until_keypress
+
 	lda	#0
 	sta	WHICH_LOAD
 	rts
-
-
 
 
 wait_until_keypress:
@@ -126,14 +127,9 @@ wait_until_keypress:
 
 
 	;==============================
-	; do the asplode routine
+	; do the backoff routine
 	;==============================
 	; should move head to center
-	; player explosion happens
-	; do the "YOUR HEAD A SPLODE" animation
-	; try to interleave the sound
-	; in theory the background should pulse too but
-	;	that might be too much
 do_back_off:
 
 	lda	#0
@@ -142,7 +138,7 @@ do_back_off:
 	lda	#16
 	sta	STRONGBAD_X
 
-asplode_loop:
+back_off_loop:
 	;===================
 	; copy background
 	;===================
@@ -150,20 +146,6 @@ asplode_loop:
 	lda	#$a0
 	jsr	hgr_copy
 
-	;==========================
-	; draw big head
-	;==========================
-
-	ldx	HEAD_DAMAGE
-	lda	head_sprites_l,X
-	sta	INL
-	lda	head_sprites_h,X
-	sta	INH
-	lda	#16				; center
-	sta	SPRITE_X
-	lda	#36
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
 
 	;==========================
 	; draw new sprite
@@ -175,19 +157,8 @@ asplode_loop:
 	lda	asplode_sprite_h,X
 	sta	INH
 
-
-	cpx	#11
-	bcs	use_hardcoded_x
-
-	ldy	BULLET_X
-	dey
-	tya
-
-	jmp	asplode_it_x
-
 use_hardcoded_x:
 	lda	asplode_sprite_x,X
-asplode_it_x:
 	sta	SPRITE_X
 
 	lda	asplode_sprite_y,X
@@ -195,54 +166,36 @@ asplode_it_x:
 	jsr	hgr_draw_sprite_big
 
 	ldx	FRAME
-	cpx	#17
+	cpx	#6
 	bcc	done_extra_sprites
 
 	;==========================
-	; draw your
+	; draw back
 	;==========================
 
-	lda	#<your_sprite
+	lda	#<back_sprite
 	sta	INL
-	lda	#>your_sprite
+	lda	#>back_sprite
 	sta	INH
-	lda	#8
+	lda	#11
 	sta	SPRITE_X
 	lda	#133
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite_big
 
 	ldx	FRAME
-	cpx	#23
+	cpx	#12
 	bcc	done_extra_sprites
 
 	;==========================
-	; draw head
+	; draw off
 	;==========================
 
-	lda	#<head_sprite
+	lda	#<off_sprite
 	sta	INL
-	lda	#>head_sprite
+	lda	#>off_sprite
 	sta	INH
-	lda	#16
-	sta	SPRITE_X
-	lda	#133
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	ldx	FRAME
-	cpx	#29
-	bcc	done_extra_sprites
-
-	;==========================
-	; draw A
-	;==========================
-
-	lda	#<a_sprite
-	sta	INL
-	lda	#>a_sprite
-	sta	INH
-	lda	#22
+	lda	#18
 	sta	SPRITE_X
 	lda	#133
 	sta	SPRITE_Y
@@ -257,63 +210,42 @@ done_extra_sprites:
 
 	ldx	FRAME
 
-
-sound_check_explode:
-	cpx	#2
-	bne	sound_check_your
-	; play sound
-	ldy	#7
-	bne	do_play_asplode		; bra
-
-sound_check_your:
-	cpx	#16
-	bne	sound_check_head
+sound_check_back:
+	cpx	#5
+	bne	sound_check_off
 	; play sound
 	ldy	#0
 	beq	do_play_asplode		; bra
 
-sound_check_head:
-	cpx	#22
-	bne	sound_check_a
+sound_check_off:
+	cpx	#11
+	bne	sound_check_baby
 	ldy	#1
 	bne	do_play_asplode
-sound_check_a:
-	cpx	#28
-	bne	sound_check_splode
-	ldy	#2
-	bne	do_play_asplode
 
-sound_check_splode:
-	cpx	#34
+sound_check_baby:
+	cpx	#17
 	bne	sound_check_done
 	ldy	#3
 
 do_play_asplode:
-	jsr	play_asplode
+	jsr	play_back_off
 
 sound_check_done:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#35
-	bcs	done_asplode_head
+	cmp	#18
+	bcs	done_back_off
 
-	jmp	asplode_loop
+	jmp	back_off_loop
 
-done_asplode_head:
+done_back_off:
 
 	lda	#20
-	jsr	long_wait	; tail call
+	jsr	long_wait
 
 	; reset things
-
-	lda	#0
-	sta	SHIELD_POSITION
-	sta	BULLET_Y
-	sta	SHIELD_COUNT
-
-	lda	#1
-	sta	BULLET_YDIR
 
 	bit	KEYRESET	; clear any keypresses during asplode
 
@@ -321,163 +253,90 @@ done_asplode_head:
 
 
 asplode_sprite_l:
-	; begining explosion
-	.byte	<asploding1_sprite	; 0
-	.byte	<asploding1_sprite	; 1
-	.byte	<asploding2_sprite	; 2
-	.byte	<asploding3_sprite	; 3
-	.byte	<asploding4_sprite	; 4
-	.byte	<asploding2_sprite	; 5
-	.byte	<asploding3_sprite	; 6
-	.byte	<asploding4_sprite	; 7
-	.byte	<asploding2_sprite	; 8
-	.byte	<asploding3_sprite	; 9
-	.byte	<asploding4_sprite	; 10
-	; your
-	.byte	<your_sm_sprite		; 11
-	.byte	<your_sm_sprite		; 12
-	.byte	<your_med_sprite	; 13
-	.byte	<your_med_sprite	; 14
-	.byte	<your_sprite		; 15
-	.byte	<your_sprite		; 16
-	; head
-	.byte	<head_sm_sprite		; 17
-	.byte	<head_sm_sprite		; 18
-	.byte	<head_med_sprite	; 19
-	.byte	<head_med_sprite	; 20
-	.byte	<head_sprite		; 21
-	.byte	<head_sprite		; 22
-	; a
-	.byte	<a_sm_sprite		; 23
-	.byte	<a_sm_sprite		; 24
-	.byte	<a_med_sprite		; 25
-	.byte	<a_med_sprite		; 26
-	.byte	<a_sprite		; 27
-	.byte	<a_sprite		; 28
-	; splode
-	.byte	<splode_sm_sprite	; 29
-	.byte	<splode_sm_sprite	; 30
-	.byte	<splode_med_sprite	; 31
-	.byte	<splode_med_sprite	; 32
-	.byte	<splode_sprite		; 33
-	.byte	<splode_sprite		; 34
+	; back
+	.byte	<back_sm_sprite		; 11
+	.byte	<back_sm_sprite		; 12
+	.byte	<back_med_sprite	; 13
+	.byte	<back_med_sprite	; 14
+	.byte	<back_sprite		; 15
+	.byte	<back_sprite		; 16
+	; off
+	.byte	<off_sm_sprite		; 17
+	.byte	<off_sm_sprite		; 18
+	.byte	<off_med_sprite		; 19
+	.byte	<off_med_sprite		; 20
+	.byte	<off_sprite		; 21
+	.byte	<off_sprite		; 22
+	; baby
+	.byte	<baby_sm_sprite		; 29
+	.byte	<baby_sm_sprite		; 30
+	.byte	<baby_med_sprite	; 31
+	.byte	<baby_med_sprite	; 32
+	.byte	<baby_sprite		; 33
+	.byte	<baby_sprite		; 34
 
 asplode_sprite_h:
-	.byte	>asploding1_sprite
-	.byte	>asploding1_sprite
-	.byte	>asploding2_sprite
-	.byte	>asploding3_sprite
-	.byte	>asploding4_sprite
-	.byte	>asploding2_sprite
-	.byte	>asploding3_sprite
-	.byte	>asploding4_sprite
-	.byte	>asploding2_sprite
-	.byte	>asploding3_sprite
-	.byte	>asploding4_sprite
-	; your
-	.byte	>your_sm_sprite
-	.byte	>your_sm_sprite
-	.byte	>your_med_sprite
-	.byte	>your_med_sprite
-	.byte	>your_sprite
-	.byte	>your_sprite
-	; head
-	.byte	>head_sm_sprite
-	.byte	>head_sm_sprite
-	.byte	>head_med_sprite
-	.byte	>head_med_sprite
-	.byte	>head_sprite
-	.byte	>head_sprite
-	; a
-	.byte	>a_sm_sprite
-	.byte	>a_sm_sprite
-	.byte	>a_med_sprite
-	.byte	>a_med_sprite
-	.byte	>a_sprite
-	.byte	>a_sprite
-	; splode
-	.byte	>splode_sm_sprite
-	.byte	>splode_sm_sprite
-	.byte	>splode_med_sprite
-	.byte	>splode_med_sprite
-	.byte	>splode_sprite
-	.byte	>splode_sprite
+	; back
+	.byte	>back_sm_sprite
+	.byte	>back_sm_sprite
+	.byte	>back_med_sprite
+	.byte	>back_med_sprite
+	.byte	>back_sprite
+	.byte	>back_sprite
+	; off
+	.byte	>off_sm_sprite
+	.byte	>off_sm_sprite
+	.byte	>off_med_sprite
+	.byte	>off_med_sprite
+	.byte	>off_sprite
+	.byte	>off_sprite
+	; baby
+	.byte	>baby_sm_sprite
+	.byte	>baby_sm_sprite
+	.byte	>baby_med_sprite
+	.byte	>baby_med_sprite
+	.byte	>baby_sprite
+	.byte	>baby_sprite
 
 asplode_sprite_x:
-	.byte	19		; FIXME: adjust for current pos
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	.byte	19
-	; your
+	; back
 	.byte	18
 	.byte	17
+	.byte	15
 	.byte	14
 	.byte	12
-	.byte	9
-	.byte	8
-	; head
+	.byte	11
+	; off
 	.byte	18
 	.byte	18
-	.byte	17
-	.byte	17
-	.byte	16
-	.byte	16
-	; a
+	.byte	18
+	.byte	18
+	.byte	18
+	.byte	18
+	; baby
+	.byte	18
 	.byte	19
 	.byte	20
-	.byte	20
-	.byte	21
-	.byte	22
-	.byte	22
-	; splode
-	.byte	18
-	.byte	20
-	.byte	20
-	.byte	21
-	.byte	22
+	.byte	21	;
+	.byte	23
 	.byte	24
 
 asplode_sprite_y:
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	.byte	150
-	; your
+	; back
 	.byte 80
 	.byte 90
 	.byte 100
 	.byte 111
 	.byte 122
 	.byte 133
-	; head
+	; off
 	.byte 80
 	.byte 90
 	.byte 100
 	.byte 111
 	.byte 122
 	.byte 133
-	; a
-	.byte 80
-	.byte 90
-	.byte 100
-	.byte 111
-	.byte 122
-	.byte 133
-	; splode
+	; baby
 	.byte 80
 	.byte 90
 	.byte 100
@@ -522,36 +381,16 @@ done_flip:
 	.include	"hgr_sprite_big.s"
 	.include	"hgr_copy_fast.s"
 	.include	"audio.s"
-	.include	"play_asplode.s"
+	.include	"play_back_off.s"
 
-	.include	"asplode_graphics/sb_sprites.inc"
-
-
-shield_sprites_l:
-	.byte <player_sprite,<shield_left_sprite
-	.byte <shield_center_sprite,<shield_right_sprite
-
-shield_sprites_h:
-	.byte >player_sprite,>shield_left_sprite
-	.byte >shield_center_sprite,>shield_right_sprite
-
-
-head_sprites_l:
-	.byte <big_head0_sprite,<big_head1_sprite,<big_head2_sprite
-	.byte <big_head3_sprite,<big_head4_sprite
-
-head_sprites_h:
-	.byte >big_head0_sprite,>big_head1_sprite,>big_head2_sprite
-	.byte >big_head3_sprite,>big_head4_sprite
-
+	.include	"asplode_graphics/bob_sprites.inc"
 
 bg1_data:
-	.incbin "asplode_graphics/bob_bg.hgr.zx02"
+	.incbin		"asplode_graphics/bob_bg.hgr.zx02"
 
 sound_data:
-	.incbin "asplode_sound/back_off.btc.zx02"
+	.incbin		"asplode_sound/back_off.btc.zx02"
 
 	.include	"zx02_optim.s"
 
-	; start at least 8k in?
 

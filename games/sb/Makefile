@@ -88,10 +88,10 @@ BACK_OFF:	back_off.o
 
 back_off.o:	back_off.s zx02_optim.s \
 		asplode_graphics/bob_bg.hgr.zx02 \
-		asplode_graphics/sb_sprites.inc \
+		asplode_graphics/bob_sprites.inc \
 		asplode_sound/back_off.btc.zx02 \
-		audio.s play_asplode.s asplode_head.s \
-		hgr_sprite_big.s cycle_colors.s \
+		audio.s play_back_off.s \
+		hgr_sprite_big.s \
 		zp.inc hardware.inc
 	ca65 -o back_off.o back_off.s -l back_off.lst
 
