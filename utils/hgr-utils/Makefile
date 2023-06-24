@@ -1,6 +1,7 @@
 include ../../Makefile.inc
 
-CFLAGS = -O2 -Wall -g
+CFLAGS = -g -Wall -O2 $(shell pkg-config --cflags libpng)
+LDFLAGS = $(shell pkg-config --libs libpng)
 
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table hgr2png hgr_make_sprite
 
@@ -25,7 +26,7 @@ pcx2hgr.o:		pcx2hgr.c
 ###
 
 png2hgr:		png2hgr.o
-			$(CC) -o png2hgr png2hgr.o $(LFLAGS) -lpng
+			$(CC) -o png2hgr png2hgr.o $(LFLAGS) $(LDFLAGS) -lpng
 
 png2hgr.o:		png2hgr.c
 			$(CC) $(CFLAGS) -c png2hgr.c
@@ -33,7 +34,7 @@ png2hgr.o:		png2hgr.c
 ###
 
 hgr_make_sprite:		hgr_make_sprite.o
-			$(CC) -o hgr_make_sprite hgr_make_sprite.o $(LFLAGS) -lpng
+			$(CC) -o hgr_make_sprite hgr_make_sprite.o $(LFLAGS) $(LDFLAGS) -lpng
 
 hgr_make_sprite.o:		hgr_make_sprite.c
 			$(CC) $(CFLAGS) -c hgr_make_sprite.c
@@ -42,7 +43,7 @@ hgr_make_sprite.o:		hgr_make_sprite.c
 ###
 
 hgr2png:		hgr2png.o
-			$(CC) -o hgr2png hgr2png.o $(LFLAGS) -lpng
+			$(CC) -o hgr2png hgr2png.o $(LFLAGS) $(LDFLAGS) -lpng
 
 hgr2png.o:		hgr2png.c
 			$(CC) $(CFLAGS) -c hgr2png.c
@@ -50,7 +51,7 @@ hgr2png.o:		hgr2png.c
 ###
 
 png2dhgr:		png2dhgr.o
-			$(CC) -o png2dhgr png2dhgr.o $(LFLAGS) -lpng
+			$(CC) -o png2dhgr png2dhgr.o $(LFLAGS) $(LDFLAGS) -lpng
 
 png2dhgr.o:		png2dhgr.c
 			$(CC) $(CFLAGS) -c png2dhgr.c
