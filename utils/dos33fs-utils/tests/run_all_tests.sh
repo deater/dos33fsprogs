@@ -9,3 +9,4 @@
 ./test.sh
 ./test_undelete2.sh
 ./test_undelete.sh
+./test_bsave.sh
