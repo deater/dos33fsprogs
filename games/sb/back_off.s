@@ -91,6 +91,12 @@ done_game:
 	bit	KEYRESET
 	jsr	wait_until_keypress
 
+	lda	#$A0
+	jsr	hgr_copy
+
+	jsr	flip_page
+
+
 	lda	#0
 	sta	WHICH_LOAD
 	rts
@@ -225,11 +231,6 @@ done_back_off:
 	; reset things
 
 	bit	KEYRESET	; clear any keypresses during asplode
-
-	lda	#$A0
-	jsr	hgr_copy
-
-	jsr	flip_page
 
 	rts
 
