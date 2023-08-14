@@ -6,9 +6,9 @@
 	; intentionally slow for the miniblind effect
 
 hgr_copy:
-	lda	#0	; blurgh
-	sta	INL
-	sta	OUTL
+	ldy	#0	; blurgh
+	sty	INL
+	sty	OUTL
 
 	lda	#$20
 	sta	INH
@@ -16,7 +16,7 @@ hgr_copy:
 	sta	OUTH
 
 
-	ldy	#0
+;	ldy	#0
 hgr_copy_outer:
 
 hgr_copy_inner:
