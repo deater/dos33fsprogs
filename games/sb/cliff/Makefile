@@ -16,7 +16,7 @@ CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 cliff.o:	cliff.s ../zx02_optim.s \
-		hgr_copy.s \
+		hgr_copy.s hgr_partial_save.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
 		zp.inc hardware.inc
 	ca65 -o cliff.o cliff.s -l cliff.lst

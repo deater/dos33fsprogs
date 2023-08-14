@@ -33,14 +33,19 @@ cliff_base:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	sta	PEASANT_DIR	; 0 = up
 
 	lda	#10
 	sta	PEASANT_X
 	lda	#100
 	sta	PEASANT_Y
 
+	; default for peasant quest is the tables are for page2
+	lda	#$40
+	sta	HGR_PAGE
 	jsr	hgr_make_tables
-
 
 	;===================
 	; Load graphics
@@ -82,7 +87,9 @@ load_image:
 
 	jsr	full_decomp
 
-	jsr	hgr_copy
+	jsr	hgr_copy			; copy to page2
+
+	bit	PAGE2
 
 
 

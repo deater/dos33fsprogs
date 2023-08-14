@@ -9,6 +9,10 @@
 	; make /7 %7 tables
 	;=====================
 
+
+	; HGR_PAGE should be $20/$40 to select if default for hposn
+	;	is page1 or page2
+
 hgr_make_tables:
 
 	ldy	#0
@@ -124,6 +128,7 @@ hposn:
 	and	#$1F
 
 	ora	HGR_PAGE	; default is $40 in this game
+
 	sta	GBASH
 
 ;	txa
