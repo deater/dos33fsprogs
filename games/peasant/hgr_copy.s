@@ -6,9 +6,9 @@
 	; intentionally slow for the miniblind effect
 
 hgr_copy:
-	lda	$0
-	sta	INL
-	sta	OUTL
+	ldy	#0		; start at beginning
+	sty	INL
+	sty	OUTL
 
 	lda	#$20
 	sta	INH
@@ -16,11 +16,11 @@ hgr_copy:
 	sta	OUTH
 
 
-	ldy	#0
+;	ldy	#0
 hgr_copy_outer:
 
 hgr_copy_inner:
-	lda	#1
+	lda	#1			; artificial slowdown
 	jsr	wait
 
 	lda	(INL),Y
@@ -35,6 +35,4 @@ hgr_copy_inner:
 	bne	hgr_copy_outer
 
 	rts
-
-
 
