@@ -60,6 +60,7 @@ second.o:	second.s zx02_optim.s \
 	graphics/icekngdm.hgr.zx02 \
 	graphics/final3.hgr.zx02 \
 	graphics/mntscrl3.hgr.zx02 \
+	roto.s rotozoom.s \
 	zp.inc hardware.inc qload.inc music.inc
 	ca65 -o second.o second.s -l second.lst
 
@@ -77,6 +78,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_bottom qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
 
 #	./generate_common -a 0x1200 -s mockingboard_patch qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s mockingboard_init qload.lst >> qload.inc

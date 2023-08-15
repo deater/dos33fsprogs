@@ -206,6 +206,8 @@ images:
 	.word	shipup_lzsa
 	.word	monkey_lzsa
 
+shipup_lzsa:
+monkey_lzsa:
 title_lzsa:	.incbin "title.lzsa"
-shipup_lzsa:	.incbin	"tree1_shipup_n.lzsa"
-monkey_lzsa:	.incbin "monkey.lzsa"
+;shipup_lzsa:	.incbin	"tree1_shipup_n.lzsa"
+;monkey_lzsa:	.incbin "monkey.lzsa"

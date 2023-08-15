@@ -3,11 +3,12 @@ include ../../../Makefile.inc
 DOS33 = ../../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
+EMPTY = ../../../empty_disk/empty.dsk
 
 all:	roto.dsk make_sine_table
 
 roto.dsk:	HELLO ROTO ROTOPLASMA ROTOPLASMA_TINY
-	cp empty.dsk roto.dsk
+	cp $(EMPTY) roto.dsk
 	$(DOS33) -y roto.dsk SAVE A HELLO
 	$(DOS33) -y roto.dsk BSAVE -a 0x1000 ROTO
 	$(DOS33) -y roto.dsk BSAVE -a 0x1000 ROTOPLASMA

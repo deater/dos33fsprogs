@@ -43,6 +43,7 @@ FILEMH		= $65
 
 
 FRAME           = $60
+FRAMEL		= $60
 FRAMEH		= $61
 WAITING         = $62
 LETTERL         = $63
@@ -120,6 +121,14 @@ DRAW_PAGE	= $8E
 ;WHICH_SLOT      = $88
 
 
+NUM1L	= $90
+NUM1H	= $91
+NUM2L	= $92
+NUM2H	= $93
+RESULT	= $94	; 95,96,97
+SCALE_I	= $98
+SCALE_F	= $99
+ANGLE	= $9A
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

@@ -259,6 +259,16 @@ load_loop:
 	jsr	wait_until_keypress
 
 
+	;================================
+	; ROTO
+	;================================
+
+	jsr	do_rotozoom
+
+
+	bit	HIRES
+	bit	FULLGR
+	bit	PAGE0
 
 	;================================
 	; MNTSCRL3 (gorilla looking guy)
@@ -349,6 +359,8 @@ fc_sr_logo_data:
 
 
 .include "title.s"
+
+.include "roto.s"
 
 config_string:
 ;             0123456789012345678901234567890123456789
