@@ -260,17 +260,6 @@ load_loop:
 
 
 	;================================
-	; ROTO
-	;================================
-
-	jsr	do_rotozoom
-
-
-	bit	HIRES
-	bit	FULLGR
-	bit	PAGE0
-
-	;================================
 	; MNTSCRL3 (gorilla looking guy)
 	;================================
 
@@ -287,6 +276,18 @@ load_loop:
 	jsr	zx02_full_decomp
 
 	jsr	wait_until_keypress
+
+
+	;================================
+	; ROTO
+	;================================
+
+	jsr	do_rotozoom
+
+
+	bit	HIRES
+	bit	FULLGR
+	bit	PAGE0
 
 
 	;================================
