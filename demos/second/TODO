@@ -1,0 +1,85 @@
+music:
+	good ay-3-8910 track from ZX, though missing the rumble of
+	opening credits.  Full thing annoyingly just above 8k
+	(x compressed) though I've been sticking it in the language card
+	(16k expansion)
+
+opening space scroll/credits
+	theoretically possible though horizontal scrolling on an Apple II
+	is next to impossible to do smoothly.
+	the spaceships can be done with hires software sprites
+	explosion?
+title card
+	I think the ii-pix version turned out really nice
+		though as always highly dithered stuff like this
+		doesn't compress well (8k down to ?)
+chess board transition
+	probably possible?
+transparent polyhedron bouncing
+	no idea
+dot tunnel
+	something similar probably possible
+moire circles
+	probably not at that framerate
+falling block transition
+	yes
+moire lines
+	probably not
+gorilla looking guy
+	decent dithered version.  horizontal slide transition
+		is harder
+fading tv transition
+	yes possible
+leaves with message
+	leaves look OK.  mapping text...?
+head
+	ok in lo-res
+bouncing sphere/lens
+	something can probably be approximated
+rotozoom
+	do have rotozoom code but currently wrapping not implemented,
+	that really needs to be a power of 2 not 40x48 as current lores
+	pre-existing fine tune code with complicated fixed point multiply
+plasma
+	never have had much luck with good plasma effect on Apple II
+plasma cube
+	ha
+bouncing dot string
+	hmmmm
+trnasmission
+	should try art.  weird pixelated sprite might be possible
+3d plasma
+	urgh
+polar bear
+	OK graphics, vertical bounce effect might be harder
+3d town
+	blah
+nuts picture
+	probably possible
+credits
+
+
+c64:
+	intro, scrolling OK
+	they actually managed bouncing polyhedron
+	they did the particle tunnel
+	
+	limited sort of circles, I prob have code that does that
+	
+	tree, they manage the message
+
+	lens, rotozoom, plasma
+
+	even manage the spinning cube
+
+	and the string
+
+	their transmission, the sword is black and white
+
+	3d plasma is less impressive
+
+	bouncing polar bear black+white
+
+	3d is more limited/black white
+
+	
