@@ -1231,7 +1231,7 @@ int main(int argc, char **argv) {
 			//
 			// This is necessary because BSD and Linux getopt(3) differs, linux
 			// will process '-a' and '-l' options and mutate argv for the value
-			// of optind to point to remaining arguments, "local_filename //
+			// of optind to point to remaining arguments, "local_filename
 			// [apple_file]".
 			//
 			// While BSD does not mutate argv, leaving optind at the position of
