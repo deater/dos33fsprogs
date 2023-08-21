@@ -1,26 +1,34 @@
 include ../../Makefile.inc
 
+TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 DOS33 = ../../utils/dos33fs-utils/dos33
 B2D = ../../utils/bmp2dhr/b2d
 PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
 PNG_TO_RLE = ../../utils/gr-utils/png2rle
+EMPTY = ../../empty_disk/empty.dsk
+LINKER_SCRIPTS = ../../linker_scripts
+PNG_TO_HGR = ../../utils/hgr-utils/png2hgr
+
+
 
 all:	xmas2018.dsk
 
 xmas2018.dsk:	HELLO XMAS2018 wreath.img.lz4t ball.img.lz4 merry.img.lz4t MUSIC.lz4t
+	cp $(EMPTY) xmas2018.dsk
 	$(DOS33) -y xmas2018.dsk SAVE A HELLO
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x0c00 XMAS2018
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 wreath.img.lz4t WREATH.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0xa000 ball.img.lz4 BALL.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 merry.img.lz4t MERRY.LZ4
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 MUSIC.lz4t MUSIC.LZ4
-#	$(DOS33) -y xmas2018.dsk BSAVE -a 0x2000 wreath.img WREATH.IMG
 	$(DOS33) -y xmas2018.dsk BSAVE -a 0x4000 ball.img BALL.IMG
+
+
 
 ####
 
 XMAS2018:	xmas2018.o
-	ld65 -o XMAS2018 xmas2018.o -C ../../linker_scripts/apple2_c00.inc
+	ld65 -o XMAS2018 xmas2018.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
 xmas2018.o:	xmas2018.s \
 	zp.inc hardware.inc \
@@ -48,7 +56,7 @@ MUSIC.lz4:	MUSIC
 	lz4 -16 -f MUSIC
 
 MUSIC:	music.o
-	ld65 -o MUSIC music.o -C ../../linker_scripts/apple2_1000.inc
+	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
 music.o:	music.s
 	ca65 -o music.o music.s -l music.lst
@@ -68,7 +76,7 @@ merry.img.lz4:	merry.img
 	lz4 -f -16 merry.img
 
 merry.img:	merry_christmas.png
-	../hgr-utils/png2hgr merry_christmas.png > merry.img
+	$(PNG_TO_HGR) merry_christmas.png > merry.img
 
 ####
 
@@ -97,5 +105,5 @@ BALLC.BIN:	ball.bmp
 	$(B2D) ball.bmp HGR -d
 
 clean:
-		rm -f *~ *.o *.lst XMAS2018 wreath.img ball.img BALLC.BIN WREATHC.BIN HELLO
+		rm -f *~ *.o *.lst XMAS2018 wreath.img ball.img BALLC.BIN WREATHC.BIN MERRY merry.img merry.img.lz4 HELLO
 
