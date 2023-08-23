@@ -1,0 +1,39 @@
+; zx02 code
+offset  = $10
+offseth = $11
+ZX0_src = $12
+ZX0_dst = $14
+ZX0_srch= $15
+bitr    = $16
+pntr    = $17
+pntrh   = $18
+
+
+;TEMP0	= $10
+;TEMP1	= $11
+;TEMP2	= $12
+;TEMP3	= $13
+;TEMP4	= $14
+;TEMP5	= $15
+
+
+HGR_BITS = $1C
+
+GBASL	= $26
+GBASH	= $27
+CURSOR_X	= $62
+CURSOR_Y	= $63
+HGR_COLOR	= $E4
+P0	= $F1
+P1	= $F2
+P2	= $F3
+P3	= $F4
+P4	= $F5
+P5	= $F6
+
+INL	= $FC
+INH	= $FD
+OUTL	= $FE
+OUTH	= $FF
+
+
