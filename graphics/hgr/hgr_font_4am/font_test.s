@@ -1,35 +1,27 @@
-; Fake BIOS screen
+; test the 4am fonts
+
 ;  for another project
 
 .include "zp.inc"
 .include "hardware.inc"
 
 
-bios_test:
+font_test:
 	;===================
 	; set graphics mode
 	;===================
 	jsr	HOME
 
-	bit	HIRES
-	bit	FULLGR
-	bit	SET_GR
-	bit	PAGE1
+	jsr	HGR
+
+;	bit	HIRES
+;	bit	FULLGR
+;	bit	SET_GR
+;	bit	PAGE1
+
+
 
 	jsr	build_tables
-
-	;===================
-	; Load graphics
-	;===================
-
-	lda	#<graphics_data
-	sta	ZX0_src
-	lda	#>graphics_data
-	sta	ZX0_src+1
-
-	lda	#$20			; temporarily load to $2000
-
-	jsr	full_decomp
 
 	; test 1
 
@@ -41,6 +33,8 @@ bios_test:
 
 	ldx	#0
 
+	jsr	DrawCondensedString
+
 	; test 2
 
 	lda	#<test2
@@ -50,6 +44,8 @@ bios_test:
 	stx	VTAB
 
 	ldx	#0
+
+	jsr	DrawCondensedString
 
 	; test 3
 
@@ -105,12 +101,6 @@ test5:
 
 	.include "font_condensed.s"
 	.include "font_condensed_data.s"
-
-	.include "zx02_optim.s"
-
-graphics_data:
-	.incbin "graphics/a2_energy.hgr.zx02"
-
 
 
 ; .hgrlo, .hgr1hi will each be filled with $C0 bytes
