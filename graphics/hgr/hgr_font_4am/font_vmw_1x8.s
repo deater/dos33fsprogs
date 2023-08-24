@@ -110,24 +110,6 @@ DrawCondensedString:
 	sta	dcb_row7+4
 	lda	hposn_high, Y
 	sta	dcb_row7+5
-	iny
-
-	; row8
-
-	lda	hposn_low, Y
-	adc	CH
-	sta	dcb_row8+4
-	lda	hposn_high, Y
-	sta	dcb_row8+5
-	iny
-
-	; row9
-
-	lda	hposn_low, Y
-	adc	CH
-	sta	dcb_row9+4
-	lda	hposn_high, Y
-	sta	dcb_row9+5
 
 	ldx	#0
 dcb_loop:
@@ -160,12 +142,6 @@ dcb_row6:
 	sta	$FDFD, X
 dcb_row7:
 	lda	CondensedRow7-$19, Y
-	sta	$FDFD, X
-dcb_row8:
-	lda	CondensedRow8-$19, Y
-	sta	$FDFD, X
-dcb_row9:
-	lda	CondensedRow9-$19, Y
 	sta	$FDFD, X
 
 	inx				; move to next

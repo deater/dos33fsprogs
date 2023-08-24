@@ -22,11 +22,11 @@ static int print_fancy_byte(int value) {
 
 	int i,reversed;
 
-	/* 0001 0111 -> X011 1010 */
-	/* 7654 3210 ->   01 2345 */
+	/* 001 01110 -> X011 1010 */
+	/* 7654 3210 ->  012 3456 */
 	reversed=0;
 	for(i=0;i<8;i++) {
-		reversed|=(1<<(i-2))*(!!(value&(1<<(7-i))));
+		reversed|=(1<<(i-1))*(!!(value&(1<<(7-i))));
 	}
 
 	printf("\t.byte $%02X\t; ",reversed);
@@ -52,7 +52,7 @@ static int print_interleave_byte(int value,int y) {
 	/* 7654 3210 ->   01 2345 */
 	reversed=0;
 	for(i=0;i<8;i++) {
-		reversed|=(1<<(i-2))*(!!(value&(1<<(7-i))));
+		reversed|=(1<<(i-1))*(!!(value&(1<<(7-i))));
 	}
 
 	printf("\t.byte $%02X\t ; ",reversed);

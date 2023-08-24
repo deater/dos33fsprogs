@@ -19,8 +19,8 @@ pntrh   = $18
 
 HGR_BITS = $1C
 
-HTAB	= $24
-VTAB	= $25
+CH	= $24
+CV	= $25
 GBASL	= $26
 GBASH	= $27
 CURSOR_X	= $62
