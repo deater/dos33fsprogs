@@ -2,14 +2,17 @@ include ../../Makefile.inc
 
 CFLAGS = -O2 -Wall -g
 
-all:	pcx2hgr png2hgr png2dhgr shape_table dump_table hgr2png hgr_make_sprite
+all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
+	hgr2png hgr_make_sprite png2font
+
+###
 
 dump_table:		dump_table.o
 			$(CC) -o dump_table dump_table.o $(LFLAGS)
 
 dump_table.o:		dump_table.c
 			$(CC) $(CFLAGS) -c dump_table.c
-
+###
 
 shape_table:		shape_table.o
 			$(CC) -o shape_table shape_table.o $(LFLAGS)
@@ -29,6 +32,15 @@ png2hgr:		png2hgr.o
 
 png2hgr.o:		png2hgr.c
 			$(CC) $(CFLAGS) -c png2hgr.c
+
+###
+
+png2font:		png2font.o
+			$(CC) -o png2font png2font.o $(LFLAGS) -lpng
+
+png2font.o:		png2font.c
+			$(CC) $(CFLAGS) -c png2font.c
+
 
 ###
 
@@ -58,8 +70,8 @@ png2dhgr.o:		png2dhgr.c
 
 
 install:	
-		cp pcx2hgr shape_table png2hgr hgr2png hgr_make_sprite $(INSTALL_LOC)
+		cp pcx2hgr shape_table png2hgr hgr2png hgr_make_sprite png2font $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o pcx2hgr shape_table dump_table png2hgr png2dhgr hgr2png hgr_make_sprite
+		rm -f *~ *.o pcx2hgr shape_table dump_table png2hgr png2dhgr hgr2png hgr_make_sprite png2font
 

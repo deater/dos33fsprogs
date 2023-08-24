@@ -45,8 +45,18 @@ FONT_VMW_10_TEST:	font_vmw_10_test.o
 	ld65 -o FONT_VMW_10_TEST font_vmw_10_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 font_vmw_10_test.o:	font_vmw_10_test.s \
-	font_4am_condensed.s font_4am_condensed_data.s
+	font_vmw_condensed.s font_vmw_condensed_data.s
 	ca65 -o font_vmw_10_test.o font_vmw_10_test.s -l font_vmw_10_test.lst
+
+###
+
+FONT_VMW_8_TEST:	font_vmw_8_test.o
+	ld65 -o FONT_VMW_8_TEST font_vmw_8_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+font_vmw_8_test.o:	font_vmw_8_test.s \
+	font_4am_condensed.s font_4am_condensed_data.s
+	ca65 -o font_vmw_8_test.o font_vmw_8_test.s -l font_vmw_8_test.lst
+
 
 
 
@@ -54,5 +64,5 @@ font_vmw_10_test.o:	font_vmw_10_test.s \
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO BIOS_TEST FONT_4AM_TEST
+	rm -f *~ *.o *.lst HELLO BIOS_TEST FONT_4AM_TEST FONT_VMW_10_TEST FONT_VMW_8_TEST
 
