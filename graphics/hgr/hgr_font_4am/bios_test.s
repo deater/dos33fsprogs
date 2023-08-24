@@ -111,41 +111,9 @@ test5:
 graphics_data:
 	.incbin "graphics/a2_energy.hgr.zx02"
 
+hposn_low	= $1713	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
+hposn_high	= $1800	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
 
+	.include "hgr_table.s"
 
-; .hgrlo, .hgr1hi will each be filled with $C0 bytes
-; based on routine by John Brooks
-; posted on comp.sys.apple2 on 2018-07-11
-; https://groups.google.com/d/msg/comp.sys.apple2/v2HOfHOmeNQ/zD76fJg_BAAJ
-; clobbers A,X
-; preserves Y
-
-
-build_tables:
-         ldx   #0
-btmi:
-        txa
-         and   #$F8
-         bpl   btpl1
-         ora   #5
-btpl1:
-         asl
-         bpl   btpl2
-         ora   #5
-btpl2:
-         asl
-         asl
-         sta   HGRLO, X
-         txa
-         and   #7
-         rol
-         asl   HGRLO, X
-         rol
-         ora   #$20
-         sta   HGRHI, X
-         inx
-         cpx   #$C0
-         bne   btmi
-
-	rts
 

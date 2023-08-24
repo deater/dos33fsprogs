@@ -13,11 +13,6 @@ tmpx                      = $FE      ; byte (used by DrawLargeCharacter, FindVal
 tmpy                      = $FF      ; byte (used by DrawLargeCharacter, FindValidMove)
 
 
-HGRLO                     = $1713    ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
-read_buffer               = $17D3    ; 0x2D bytes (used by nth, free before and after)
-HGRHI                     = $1800    ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
-
-
 CondensedHGRTops:
          .byte 7,18,29,40,51,62,73,84,95,106,117,128,139,150,161,172
 
@@ -73,65 +68,65 @@ dcs1:
          ldy   VTAB
          lda   CondensedHGRTops, y
          tay
-         lda   HGRLO, y
+         lda   hposn_low, y
          clc
          adc   HTAB
          sta   @row0+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row0+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row1+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row1+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row2+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row2+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row3+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row3+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row4+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row4+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row5+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row5+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row6+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row6+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row7+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row7+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row8+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row8+2
          iny
-         lda   HGRLO, y
+         lda   hposn_low, y
          adc   HTAB
          sta   @row9+1
-         lda   HGRHI, y
+         lda   hposn_high, y
          sta   @row9+2
 @loop:    ldy   $FDFD, x
          lda   CondensedRow0-$19, y
