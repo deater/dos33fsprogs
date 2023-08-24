@@ -9,8 +9,6 @@
 
 ; VMW: commented, reformatted, minor changes, ca65 assembly
 
-string_ptr                = $FC      ; word (used by DrawLargeString)
-
 ;------------------------------------------------------------------------------
 ; DrawCondensedString
 ;
@@ -21,24 +19,24 @@ DrawCondensedString:
 
 	; store the string location
 
-	sta	string_ptr
-	sty	string_ptr+1
+	sta	OUTL
+	sty	OUTH
 
 	ldy	#0
-	lda	(string_ptr), Y		; get xpos
+	lda	(OUTL), Y		; get xpos
 	sta	CH			; save the X column offset
 	iny
 
-	lda	(string_ptr),Y		; get ypos
+	lda	(OUTL),Y		; get ypos
 	tay
 
 	; add two to string pointer
 	clc
-	lda	string_ptr
+	lda	OUTL
 	adc	#2
 	sta	dcb_loop+1
 	lda	#0
-	adc	string_ptr+1
+	adc	OUTH
 	sta	dcb_loop+2
 
 	; row0
@@ -80,56 +78,56 @@ DrawCondensedString:
 
 	; row4
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row4+4
-	lda   hposn_high, Y
-	sta   dcb_row4+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row4+4
+	lda	hposn_high, Y
+	sta	dcb_row4+5
 	iny
 
 	; row5
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row5+4
-	lda   hposn_high, Y
-	sta   dcb_row5+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row5+4
+	lda	hposn_high, Y
+	sta	dcb_row5+5
 	iny
 
 	; row6
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row6+4
-	lda   hposn_high, Y
-	sta   dcb_row6+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row6+4
+	lda	hposn_high, Y
+	sta	dcb_row6+5
 	iny
 
 	; row7
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row7+4
-	lda   hposn_high, Y
-	sta   dcb_row7+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row7+4
+	lda	hposn_high, Y
+	sta	dcb_row7+5
 	iny
 
 	; row8
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row8+4
-	lda   hposn_high, Y
-	sta   dcb_row8+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row8+4
+	lda	hposn_high, Y
+	sta	dcb_row8+5
 	iny
 
 	; row9
 
-	lda   hposn_low, Y
-	adc   CH
-	sta   dcb_row9+4
-	lda   hposn_high, Y
-	sta   dcb_row9+5
+	lda	hposn_low, Y
+	adc	CH
+	sta	dcb_row9+4
+	lda	hposn_high, Y
+	sta	dcb_row9+5
 
 	ldx	#0
 dcb_loop:
@@ -140,35 +138,35 @@ dcb_loop_smc:
 	; unrolled loop to write out each line
 
 dcb_row0:
-	lda   CondensedRow0-$19, Y		; get 1-byte font row
-	sta   $FDFD, X				; write out to graphics mem
+	lda	CondensedRow0-$19, Y	; get 1-byte font row
+	sta	$FDFD, X		; write out to graphics mem
 dcb_row1:
-	lda   CondensedRow1-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow1-$19, Y
+	sta	$FDFD, X
 dcb_row2:
-	lda   CondensedRow2-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow2-$19, Y
+	sta	$FDFD, X
 dcb_row3:
-	lda   CondensedRow3-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow3-$19, Y
+	sta	$FDFD, X
 dcb_row4:
-	lda   CondensedRow4-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow4-$19, Y
+	sta	$FDFD, X
 dcb_row5:
-	lda   CondensedRow5-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow5-$19, Y
+	sta	$FDFD, X
 dcb_row6:
-	lda   CondensedRow6-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow6-$19, Y
+	sta	$FDFD, X
 dcb_row7:
-	lda   CondensedRow7-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow7-$19, Y
+	sta	$FDFD, X
 dcb_row8:
-	lda   CondensedRow8-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow8-$19, Y
+	sta	$FDFD, X
 dcb_row9:
-	lda   CondensedRow9-$19, Y
-	sta   $FDFD, X
+	lda	CondensedRow9-$19, Y
+	sta	$FDFD, X
 
 	inx				; move to next
 	bpl   dcb_loop
