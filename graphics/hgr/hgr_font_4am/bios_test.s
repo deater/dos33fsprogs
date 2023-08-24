@@ -37,7 +37,7 @@ bios_test:
 	ldy	#>test1
 
 	ldx	#1
-	stx	VTAB
+	stx	CV
 
 	ldx	#0
 
@@ -47,7 +47,7 @@ bios_test:
 	ldy	#>test2
 
 	ldx	#3
-	stx	VTAB
+	stx	CV
 
 	ldx	#0
 
@@ -57,7 +57,7 @@ bios_test:
 	ldy	#>test3
 
 	ldx	#5
-	stx	VTAB
+	stx	CV
 
 	ldx	#0
 
@@ -69,7 +69,7 @@ bios_test:
 	ldy	#>test4
 
 	ldx	#7
-	stx	VTAB
+	stx	CV
 	ldx	#0
 
 	jsr	DrawCondensedString
@@ -80,7 +80,7 @@ bios_test:
 	ldy	#>test5
 
 	ldx	#9
-	stx	VTAB
+	stx	CV
 	ldx	#0
 
 	jsr	DrawCondensedString
@@ -103,8 +103,8 @@ test4:
 test5:
 	.byte 17,"@/\/\/\/\______ |"
 
-	.include "font_condensed.s"
-	.include "font_condensed_data.s"
+	.include "font_4am_condensed.s"
+	.include "font_4am_condensed_data.s"
 
 	.include "zx02_optim.s"
 
