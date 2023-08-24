@@ -1,11 +1,9 @@
-; Fake BIOS screen
-;  for another project
+; VMW 5x7 (well, 5x8) font test
 
 .include "zp.inc"
 .include "hardware.inc"
 
-
-bios_test:
+vmw_8_test:
 	;===================
 	; set graphics mode
 	;===================
@@ -16,20 +14,10 @@ bios_test:
 	bit	SET_GR
 	bit	PAGE1
 
+	jsr	HGR
+
 	jsr	build_tables
 
-	;===================
-	; Load graphics
-	;===================
-
-	lda	#<graphics_data
-	sta	ZX0_src
-	lda	#>graphics_data
-	sta	ZX0_src+1
-
-	lda	#$20			; temporarily load to $2000
-
-	jsr	full_decomp
 
 	; test 1
 
@@ -69,27 +57,20 @@ end:
 
 test1:
 	;         0123456789012345678901234567890123456789
-	.byte 0,100,"PACK MY BOX WITH FIVE DOZEN LIQUOR JUGS!",0
+	.byte 0,10,"PACK MY BOX WITH FIVE DOZEN LIQUOR JUGS!",0
 test2:
-	.byte 0,150,"pack my box with five dozen liquor jugs?",0
+	.byte 0,30,"pack my box with five dozen liquor jugs?",0
 test3:
-	.byte 9,80,"This is a HGR font test.",0
+	.byte 9,50,"This is a HGR font test.",0
 test4:
-	.byte 0,170,"0123456789)(*&^%$#@!`~<>,./';:[]{}\|_+=",0
+	.byte 0,100,"0123456789)(*&^%$#@!`~<>,./';:[]{}\|_+=",0
 test5:
-	.byte 0,180,"@/\/\/\/\______ |",0
+	.byte 0,120,"@/\/\/\/\______ |",0
 
-	.include "font_vmw_condensed.s"
-	.include "font_vmw_condensed_data.s"
-
-	.include "zx02_optim.s"
-
-graphics_data:
-	.incbin "graphics/a2_energy.hgr.zx02"
+	.include "font_vmw_1x8.s"
+	.include "fonts/a2_lowercase_font.inc"
 
 hposn_low	= $1713	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
 hposn_high	= $1800	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
 
 	.include "hgr_table.s"
-
-

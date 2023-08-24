@@ -8,12 +8,13 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	hgr_font4.dsk
 
-hgr_font4.dsk:	HELLO BIOS_TEST FONT_4AM_TEST FONT_VMW_10_TEST
+hgr_font4.dsk:	HELLO BIOS_TEST FONT_4AM_TEST FONT_VMW_10_TEST FONT_VMW_8_TEST
 	cp $(EMPTY_DISK)/empty.dsk hgr_font4.dsk
 	$(DOS33) -y hgr_font4.dsk SAVE A HELLO
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 BIOS_TEST
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_4AM_TEST
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_VMW_10_TEST
+	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_VMW_8_TEST
 
 ###
 
@@ -54,7 +55,8 @@ FONT_VMW_8_TEST:	font_vmw_8_test.o
 	ld65 -o FONT_VMW_8_TEST font_vmw_8_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 font_vmw_8_test.o:	font_vmw_8_test.s \
-	font_4am_condensed.s font_4am_condensed_data.s
+	font_vmw_1x8.s \
+	fonts/a2_lowercase_font.inc
 	ca65 -o font_vmw_8_test.o font_vmw_8_test.s -l font_vmw_8_test.lst
 
 
