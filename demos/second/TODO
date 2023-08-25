@@ -1,3 +1,14 @@
+TODO: timing for each section
+
+BIOS intro
+
+disk:
+	read 1 bit/4us
+	Investigate qkumba's Spareboot
+	https://ia804502.us.archive.org/30/items/SpareChange4amCrack/Spare%20Change%20%284am%20%26%20san%20inc%20crack%29.txt	
+
+
+
 music:
 	good ay-3-8910 track from ZX, though missing the rumble of
 	opening credits.  Full thing annoyingly just above 8k
