@@ -79,8 +79,8 @@ test4:
 test5:
 	.byte 0,180,"@/\/\/\/\______ |",0
 
-	.include "font_vmw_condensed.s"
-	.include "font_vmw_condensed_data.s"
+	.include "font_vmw_1x8.s"
+	.include "fonts/a2_cga_thin.inc"
 
 	.include "zx02_optim.s"
 
