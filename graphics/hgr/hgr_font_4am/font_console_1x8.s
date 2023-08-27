@@ -25,22 +25,13 @@ DrawCondensedString:
 
 DrawCondensedStringAgain:
 
-	ldy	#0
-	lda	(OUTL), Y		; get xpos
-	sta	CH			; save the X column offset
-	iny
-
-	lda	(OUTL),Y		; get ypos
-	tay
-
-	; add two to string pointer
-	clc
 	lda	OUTL
-	adc	#2
-	sta	dcb_loop+1
-	lda	#0
-	adc	OUTH
-	sta	dcb_loop+2
+	sta	dcb_loop_smc+1
+	lda	OUTH
+	sta	dcb_loop_smc+2
+
+
+	ldy	CV
 
 	; row0
 
@@ -120,6 +111,20 @@ dcb_loop_smc:
 	ldy	$FDFD, X		; load next char into Y
 	beq	dcb_done
 
+	cpy	#13
+	bne	not_linefeed
+
+	lda	#0
+	sta	CH
+	clc
+	lda	CV
+	adc	#8
+	sta	CV
+	inx
+	jmp	dcb_loop
+
+
+not_linefeed:
 	; unrolled loop to write out each line
 
 dcb_row0:
@@ -147,6 +152,7 @@ dcb_row7:
 	lda	CondensedRow7-$19, Y
 	sta	$FDFD, X
 
+	inc	CH
 	inx				; move to next
 
 	bne	dcb_loop		; bra (well, as long as string
@@ -155,9 +161,6 @@ dcb_row7:
 dcb_done:
 
 	; point to location after
-	; need to be +3 currently as OUTL not updated earlier
-	inx
-	inx
 	sec		; always add 1
 	txa
 	adc	OUTL
