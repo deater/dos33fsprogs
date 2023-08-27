@@ -10,6 +10,9 @@
 ; VMW: commented, reformatted, minor changes, ca65 assembly
 ;	hacked up some more
 
+FONT_OFFSET = $13
+
+
 ;------------------------------------------------------------------------------
 ; DrawCondensedString
 ;
@@ -121,6 +124,18 @@ dcb_loop_smc:
 	adc	#8
 	sta	CV
 	inx
+
+	lda	CV
+	cmp	#192
+	bcc	dcb_loop
+
+	lda	#184
+	sta	CV
+
+	stx	XSAVE
+	jsr	scroll_screen
+	ldx	XSAVE
+
 	jmp	dcb_loop
 
 
@@ -128,28 +143,28 @@ not_linefeed:
 	; unrolled loop to write out each line
 
 dcb_row0:
-	lda	CondensedRow0-$19, Y	; get 1-byte font row
+	lda	CondensedRow0-FONT_OFFSET, Y	; get 1-byte font row
 	sta	$FDFD, X		; write out to graphics mem
 dcb_row1:
-	lda	CondensedRow1-$19, Y
+	lda	CondensedRow1-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row2:
-	lda	CondensedRow2-$19, Y
+	lda	CondensedRow2-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row3:
-	lda	CondensedRow3-$19, Y
+	lda	CondensedRow3-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row4:
-	lda	CondensedRow4-$19, Y
+	lda	CondensedRow4-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row5:
-	lda	CondensedRow5-$19, Y
+	lda	CondensedRow5-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row6:
-	lda	CondensedRow6-$19, Y
+	lda	CondensedRow6-FONT_OFFSET, Y
 	sta	$FDFD, X
 dcb_row7:
-	lda	CondensedRow7-$19, Y
+	lda	CondensedRow7-FONT_OFFSET, Y
 	sta	$FDFD, X
 
 	inc	CH
@@ -168,6 +183,69 @@ dcb_done:
 	lda	#0
 	adc	OUTH
 	sta	OUTH
+
+	rts
+
+
+	;================================
+	;================================
+	; scroll_screen
+	;================================
+	;================================
+	; scrolls hgr page1 up by 8, filling with empty space at bottom
+	;	trashes A,X,Y
+
+scroll_screen:
+	ldx	#8
+	stx	SCROLL_IN
+	ldx	#0
+	stx	SCROLL_OUT
+
+scroll_yloop:
+	ldx	SCROLL_IN
+	lda	hposn_low,X
+	sta	xloop_smc1+1
+	lda	hposn_high,X
+	sta	xloop_smc1+2
+
+	ldx	SCROLL_OUT
+	lda	hposn_low,X
+	sta	xloop_smc2+1
+	lda	hposn_high,X
+	sta	xloop_smc2+2
+
+	ldy	#39
+scroll_xloop:
+xloop_smc1:
+	lda	$2000,Y
+xloop_smc2:
+	sta	$2000,Y
+	dey
+	bpl	scroll_xloop
+
+	inc	SCROLL_IN
+	inc	SCROLL_OUT
+
+	lda	SCROLL_IN
+	cmp	#192
+	bne	scroll_yloop
+
+	; blank bottom line
+
+
+	lda	#$00
+	ldy	#39
+scroll_hline_xloop:
+	sta	$23D0,Y
+	sta	$27D0,Y
+	sta	$2BD0,Y
+	sta	$2FD0,Y
+	sta	$33D0,Y
+	sta	$37D0,Y
+	sta	$3BD0,Y
+	sta	$3FD0,Y
+	dey
+	bpl	scroll_hline_xloop
 
 	rts
 

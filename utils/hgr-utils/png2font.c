@@ -276,10 +276,11 @@ int main(int argc, char **argv) {
 
 	char *filename;
 	int output_type=OUTPUT_ORIGINAL;
+	int start_offset=0x20;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvdib") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdibo:") ) != -1) {
 
 		switch(c) {
 
@@ -295,9 +296,12 @@ int main(int argc, char **argv) {
                         case 'i':
 				output_type=OUTPUT_INTERLEAVE;
 				break;
-                        case 'b':
+			case 'b':
 				output_type=OUTPUT_BINARY;
 				break;
+			case 'o':
+				start_offset=strtod(optarg,NULL);
+                                break;
 			default:
 				print_help(argv[0],0);
 				break;
@@ -319,6 +323,7 @@ int main(int argc, char **argv) {
 	}
 
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+	fprintf(stderr,"Using font offset of 0x%x\n",start_offset);
 
 	/* for now, assume 5x8 font starting at 14,8 */
 	for(row=0;row<4;row++) {
@@ -340,7 +345,7 @@ int main(int argc, char **argv) {
 	/* old-fashioned output */
 	if (output_type==OUTPUT_ORIGINAL) {
 		printf("hgr_font:\n");
-		for(c=0x20;c<0x80;c++) {
+		for(c=start_offset;c<0x80;c++) {
 			printf("; %c $%02X\n",c,c);
 			for(y=0;y<8;y++) {
 				print_fancy_byte(font_data[c][y]);
@@ -350,7 +355,7 @@ int main(int argc, char **argv) {
 	else if (output_type==OUTPUT_INTERLEAVE) {
 		for(row=0;row<8;row++) {
 			printf("CondensedRow%d:\n",row);
-			for(y=0x19;y<0x80;y++) {
+			for(y=start_offset;y<0x80;y++) {
 				print_interleave_byte(font_data[y][row],y);
 			}
 		}

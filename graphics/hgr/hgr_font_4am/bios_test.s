@@ -83,8 +83,32 @@ done_memcount:
 	; clear/fade the energy star logo first
 	; clear offscreen so no blinds effect
 
+	lda	#$cc
+	jsr	fade_logo_mask
+
+	lda	#200
+	jsr	WAIT
+
+	lda	#$33
+	jsr	fade_logo_mask
+
+	lda	#200
+	jsr	WAIT
+
+	; clear screen while offscreen
+	; avoid blinds effect
+	jsr	hgr_page2_clearscreen
+	bit	PAGE2
+	jsr	hgr_page1_clearscreen
+	bit	PAGE1
+
 	jsr	HGR
 	bit	FULLGR
+
+	lda	#10
+	sta	CH
+	lda	#0
+	sta	CV
 
 	lda	#<bios_message_2
 	ldy	#>bios_message_2
@@ -128,11 +152,6 @@ done_memcount:
 	; type the LEMM command
 	;=======================
 
-	jsr	scroll_screen
-
-	jsr	wait_until_keypress
-
-
 	ldx	#5
 	jsr	draw_dos_command
 
@@ -154,88 +173,90 @@ bios_message_1a:
 	.byte "02/13/78-6502-564D57",0
 
 bios_message_2:
-	.byte 10,0,"System Configuration",0
-	.byte 0,8,  $1D
+
+	.byte "System Configuration",13,0
+
+	.byte $1D	; 0,8
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$15,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1C, 13,0
+	.byte $1F," CPU Type: 65C02  ",$14," Base Memory: 48K  ",$1F,13,0 ; 16
+	.byte $1F," Co-Proc:   NONE  ",$14," Lang Card:   16K  ",$1F,13,0  ; 24
+	.byte $1F," Clock:  1.023MHz ",$14," AUX Memory:  64K  ",$1F,13,0  ; 32
+
+	.byte $19 ; 40
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$13,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
+	.byte $1E,$1E,$1E,$1E,$1E,$1E
+	.byte $18, 13, 0
+
+	.byte $1F," Slot 6 Disk 1: Disk II 140K          ",$1F,13,0 ; 48
+	.byte $1F," Slot 6 Disk 2: Disk II 140K          ",$1F,13,0 ; 56
+	.byte $1F," Slot 4       : VIA 6522/Mockingboard ",$1F,13,0 ; 64
+	.byte $1F," Slot 1       : Super Serial Card     ",$1F,13,0 ; 72
+
+
+	.byte $1B ; 80
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1C, 0
-	.byte 0,16, $1F," CPU Type: 65C02    Base Memory: 48K  ",$1F,0
-	.byte 0,24,$1F," Co-Proc:   NONE    Lang Card:   16K  ",$1F,0
-	.byte 0,32,$1F," Clock:  1.023MHz   AUX Memory:  64K  ",$1F,0
-
-	.byte 0,40,$19
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E
-	.byte $18, 0
-
-	.byte 0,48,$1F," Slot 6 Disk 1: Disk II 140K          ",$1F,0
-	.byte 0,56,$1F," Slot 6 Disk 2: Disk II 140K          ",$1F,0
-	.byte 0,64,$1F," Slot 4       : VIA 6522/Mockingboard ",$1F,0
-	.byte 0,72,$1F," Slot 1       : Super Serial Card     ",$1F,0
-
-
-	.byte 0,80,$1B
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1E,$1E,$1E,$1E,$1E,$1E
-	.byte $1A, 0
+	.byte $1A, 13,0
 
 bios_message3:
-	.byte 0,88,"Starting DOS 3.3...",0
+	.byte "Starting DOS 3.3...",13,13,0 ; 88
 
 
 bios_message4:
-	.byte 0,104,"S6D1>",0
-	.byte 5,104,"c",0
-	.byte 6,104,"d",0
-	.byte 7,104," ",0
-	.byte 8,104,"g",0
-	.byte 9,104,"a",0
-	.byte 10,104,"m",0
-	.byte 11,104,"e",0
-	.byte 12,104,"s",0
-	.byte 13,104,"\",0
-	.byte 14,104,"l",0
-	.byte 15,104,"e",0
-	.byte 16,104,"m",0
-	.byte 17,104,"m",0
-	.byte 18,104,"i",0
-	.byte 19,104,"n",0
-	.byte 20,104,"g",0
-	.byte 21,104,"s",0
+	.byte "S6D1>",0	; 104
+	.byte "c",0
+	.byte "d",0
+	.byte " ",0
+	.byte "g",0
+	.byte "a",0
+	.byte "m",0
+	.byte "e",0
+	.byte "s",0
+	.byte "\",0
+	.byte "l",0
+	.byte "e",0
+	.byte "m",0
+	.byte "m",0
+	.byte "i",0
+	.byte "n",0
+	.byte "g",0
+	.byte "s",13,13,0
 
 bios_message5:
-	.byte 0,112,"S6D1>",0
-	.byte 5,112,"d",0
-	.byte 6,112,"i",0
-	.byte 7,112,"r",0
-	.byte 8,112," ",0
-	.byte 9,112,"/",0
-	.byte 10,112,"w",0
+	.byte "S6D1>",0		; 112
+	.byte "d",0
+	.byte "i",0
+	.byte "r",0
+	.byte " ",0
+	.byte "/",0
+	.byte "w",13,0
 
 bios_message_6:
-	.byte 0,128,"Directory of s6d1:\games\lemmings\.",0
-	.byte 0,136,"[.]       [..]     QBOOT    QLOAD",0
-	.byte 0,144,"LEVEL1    LEVEL2   LEVEL3   LEVEL4",0
-	.byte 0,152,"LEVEL5    LEVEL6   LEVEL7   LEVEL8",0
-	.byte 0,160,"LEVEL9    LEVEL10  LEMM",0
-	.byte 0,168,"13 File(s)        90,624 Bytes.",0
-	.byte 0,176," 2 Dir(s)         52,736 Bytes free.",0
+	.byte "Directory of s6d1:\games\lemmings\.",13,0	; 128
+	.byte "[.]       [..]     QBOOT    QLOAD",13,0
+	.byte "LEVEL1    LEVEL2   LEVEL3   LEVEL4",13,0
+	.byte "LEVEL5    LEVEL6   LEVEL7   LEVEL8",13,0
+	.byte "LEVEL9    LEVEL10  LEMM",13,0
+	.byte "   13 File(s)        90,624 Bytes.",13,0
+	.byte "    2 Dir(s)         52,736 Bytes free.",13,13,0
 
 bios_message7:
-	.byte 0,184,"S6D1>",0
-	.byte 5,184,"l",0
-	.byte 6,184,"e",0
-	.byte 7,184,"m",0
-	.byte 8,184,"m",0
+	.byte "S6D1>",0		; 184
+	.byte "l",0
+	.byte "e",0
+	.byte "m",0
+	.byte "m",0
 
 	.include "font_console_1x8.s"
 	.include "fonts/a2_cga_thin.inc"
@@ -378,75 +399,83 @@ draw_dos_command:
 dos_command_loop:
 	jsr	DrawCondensedStringAgain
 
+	lda	OUTL
+	pha
+	lda	OUTH
+	pha
+
 dos_command_inner:
 	; draw curosr
+	lda	#<dos_cursor
+	ldy	#>dos_cursor
+	jsr	DrawCondensedString
+	dec	CH
+	lda	#200
+	jsr	WAIT
 
-	; erase cursor
+	lda	KEYPRESS
+	bmi	dos_keypress
 
+	jsr	DrawCondensedStringAgain
+	dec	CH
+	lda	#200
+	jsr	WAIT
 
-	jsr	wait_until_keypress
+	lda	KEYPRESS
+	bmi	dos_keypress
+
+	jmp	dos_command_inner
+dos_keypress:
+	bit	KEYRESET
+
+	pla
+	sta	OUTH
+	pla
+	sta	OUTL
 
 	dec	STRING_COUNT
 	bne	dos_command_loop
 
 	rts
 
+dos_cursor:
+	.byte "_",0
+	.byte " ",0
 
-	;================================
-	;================================
-	;================================
-	;================================
-scroll_screen:
-	ldx	#8
-	stx	INL
-	ldx	#0
-	stx	OUTL
 
-scroll_yloop:
-	ldx	INL
+	;=======================
+	;=======================
+	;=======================
+	; 210,0 to 210,64
+fade_logo_mask:
+	sta	mask_smc+1
+
+fade_logo:
+	ldx	#63
+outer_loop:
+
 	lda	hposn_low,X
-	sta	xloop_smc1+1
+	sta	inner_loop_smc1+1
+	sta	inner_loop_smc2+1
 	lda	hposn_high,X
-	sta	xloop_smc1+2
-
-	ldx	OUTL
-	lda	hposn_low,X
-	sta	xloop_smc2+1
-	lda	hposn_high,X
-	sta	xloop_smc2+2
+	sta	inner_loop_smc1+2
+	sta	inner_loop_smc2+2
 
 	ldy	#39
-scroll_xloop:
-xloop_smc1:
+inner_loop:
+inner_loop_smc1:
 	lda	$2000,Y
-xloop_smc2:
+mask_smc:
+	and	#$CC
+inner_loop_smc2:
 	sta	$2000,Y
 	dey
-	bpl	scroll_xloop
+	cpy	#29
+	bne	inner_loop
 
-	inc	INL
-	inc	OUTL
-
-	lda	INL
-	cmp	#192
-	bne	scroll_yloop
-
-	; blank bottom line
-
-
-	lda	#$00
-	ldy	#39
-scroll_hline_xloop:
-	sta	$23D0,Y
-	sta	$27D0,Y
-	sta	$2BD0,Y
-	sta	$2FD0,Y
-	sta	$33D0,Y
-	sta	$37D0,Y
-	sta	$3BD0,Y
-	sta	$3FD0,Y
-	dey
-	bpl	scroll_hline_xloop
+	dex
+	bpl	outer_loop
 
 	rts
 
+.include "hgr_clear_screen.s"

@@ -27,6 +27,7 @@ BIOS_TEST:	bios_test.o
 	ld65 -o BIOS_TEST bios_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 bios_test.o:	bios_test.s \
+	hgr_clear_screen.s \
 	font_console_1x8.s fonts/a2_cga_thin.inc \
 	zx02_optim.s graphics/a2_energy.hgr.zx02
 	ca65 -o bios_test.o bios_test.s -l bios_test.lst
