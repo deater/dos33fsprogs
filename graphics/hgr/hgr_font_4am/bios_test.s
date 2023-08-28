@@ -73,7 +73,15 @@ done_memcount:
 
 	bit	KEYRESET	; clear the keyboard buffer
 
-	jsr	wait_until_keypress
+	bit	$C0E9			; turn on drive motor (slot6)
+
+	; TODO: drive2 as well?
+
+	ldx	#100
+	jsr	long_wait
+
+	bit	$C0E8			; turn off drive motor (slot6)
+
 
 	;==============================
 	; print system config screen
@@ -102,8 +110,8 @@ done_memcount:
 	jsr	hgr_page1_clearscreen
 	bit	PAGE1
 
-	jsr	HGR
-	bit	FULLGR
+	jsr	BELL
+
 
 	lda	#10
 	sta	CH
@@ -115,7 +123,8 @@ done_memcount:
 	ldx	#11
 	jsr	draw_multiple_strings
 
-	jsr	wait_until_keypress
+	ldx	#10
+	jsr	long_wait
 
 	;====================
 	; print DOS string
@@ -123,30 +132,40 @@ done_memcount:
 
 	jsr	DrawCondensedStringAgain
 
-	jsr	wait_until_keypress
+	ldx	#10
+	jsr	long_wait
 
 	;====================
 	; type the CD command
 	;====================
 
-	ldx	#18
+	ldx	#17
 	jsr	draw_dos_command
+
+	jsr	DrawCondensedStringAgain
 
 	;====================
 	; type the DIR command
 	;====================
 
-	ldx	#7
+	jsr	DrawCondensedStringAgain
+	ldx	#6
 	jsr	draw_dos_command
+
+	jsr	DrawCondensedStringAgain
 
 	;====================
 	; show DIR
 	;====================
 
+	bit	$C0E9			; turn on drive motor (slot6)
+
 	lda	#<bios_message_6
 	ldy	#>bios_message_6
 	ldx	#7
 	jsr	draw_multiple_strings
+
+	bit	$C0E8			; turn off drive motor (slot6)
 
 	;=======================
 	; type the LEMM command
@@ -231,9 +250,10 @@ bios_message4:
 	.byte "i",0
 	.byte "n",0
 	.byte "g",0
-	.byte "s",13,13,0
+	.byte "s",13,0
 
 bios_message5:
+	.byte 13,0
 	.byte "S6D1>",0		; 112
 	.byte "d",0
 	.byte "i",0
@@ -428,6 +448,12 @@ dos_command_inner:
 dos_keypress:
 	bit	KEYRESET
 
+	lda	#<dos_space
+	ldy	#>dos_space
+	jsr	DrawCondensedString
+
+	dec	CH
+
 	pla
 	sta	OUTH
 	pla
@@ -440,6 +466,7 @@ dos_keypress:
 
 dos_cursor:
 	.byte "_",0
+dos_space:
 	.byte " ",0
 
 
@@ -477,5 +504,23 @@ inner_loop_smc2:
 	bpl	outer_loop
 
 	rts
+
+
+	; in X
+long_wait:
+	lda	#200
+	jsr	WAIT
+
+	lda	KEYPRESS
+	bmi	early_out
+
+	dex
+	bne	long_wait
+early_out:
+	bit	KEYRESET
+
+	rts
+
+
 
 .include "hgr_clear_screen.s"
