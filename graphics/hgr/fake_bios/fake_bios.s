@@ -257,7 +257,7 @@ memcount_loop:
 	bmi	done_memcount				; 3
 
 	lda	#100
-	jsr	WAIT
+	jsr	wait
 
 	jsr	increment_memory
 	dec	MEMCOUNT
@@ -289,13 +289,13 @@ done_memcount:
 	jsr	fade_logo_mask
 
 	lda	#200
-	jsr	WAIT
+	jsr	wait
 
 	lda	#$33
 	jsr	fade_logo_mask
 
 	lda	#200
-	jsr	WAIT
+	jsr	wait
 
 	; clear screen while offscreen
 	; avoid blinds effect
@@ -658,7 +658,7 @@ dos_command_inner:
 	jsr	DrawCondensedString
 	dec	CH
 	lda	#200
-	jsr	WAIT
+	jsr	wait
 
 	lda	KEYPRESS
 	bmi	dos_keypress
@@ -666,7 +666,7 @@ dos_command_inner:
 	jsr	DrawCondensedStringAgain
 	dec	CH
 	lda	#200
-	jsr	WAIT
+	jsr	wait
 
 	lda	KEYPRESS
 	bmi	dos_keypress
@@ -736,7 +736,7 @@ inner_loop_smc2:
 	; in X
 long_wait:
 	lda	#200
-	jsr	WAIT
+	jsr	wait
 
 	lda	KEYPRESS
 	bmi	early_out
@@ -758,3 +758,7 @@ early_out:
 .include "65c02_detect.s"
 .include "pt3_lib_mockingboard_setup.s"
 .include "pt3_lib_mockingboard_detect.s"
+
+
+.include "wait.s"
+
