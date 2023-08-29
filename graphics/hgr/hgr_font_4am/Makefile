@@ -8,10 +8,9 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	hgr_font4.dsk
 
-hgr_font4.dsk:	HELLO BIOS_TEST FONT_4AM_TEST FONT_VMW_10_TEST FONT_VMW_8_TEST
+hgr_font4.dsk:	HELLO FONT_4AM_TEST FONT_VMW_10_TEST FONT_VMW_8_TEST
 	cp $(EMPTY_DISK)/empty.dsk hgr_font4.dsk
 	$(DOS33) -y hgr_font4.dsk SAVE A HELLO
-	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 BIOS_TEST
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_4AM_TEST
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_VMW_10_TEST
 	$(DOS33) -y hgr_font4.dsk BSAVE -a 0x6000 FONT_VMW_8_TEST
@@ -20,17 +19,6 @@ hgr_font4.dsk:	HELLO BIOS_TEST FONT_4AM_TEST FONT_VMW_10_TEST FONT_VMW_8_TEST
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
-
-###
-
-BIOS_TEST:	bios_test.o
-	ld65 -o BIOS_TEST bios_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-bios_test.o:	bios_test.s \
-	hgr_clear_screen.s \
-	font_console_1x8.s fonts/a2_cga_thin.inc \
-	zx02_optim.s graphics/a2_energy.hgr.zx02
-	ca65 -o bios_test.o bios_test.s -l bios_test.lst
 
 ###
 
