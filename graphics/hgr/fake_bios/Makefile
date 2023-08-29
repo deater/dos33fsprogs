@@ -26,7 +26,9 @@ FAKE_BIOS:	fake_bios.o
 fake_bios.o:	fake_bios.s \
 	hgr_clear_screen.s \
 	font_console_1x8.s fonts/a2_cga_thin.inc \
-	pt3_lib_detect_model.s lc_detect.s \
+	pt3_lib_detect_model.s lc_detect.s aux_detect.s \
+	65c02_detect.s pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard_setup.s \
 	zx02_optim.s graphics/a2_energy.hgr.zx02
 	ca65 -o fake_bios.o fake_bios.s -l fake_bios.lst
 

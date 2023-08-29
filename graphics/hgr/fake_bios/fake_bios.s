@@ -21,6 +21,7 @@ bios_test:
 	;=======================
 	; Hardware Detect Model
 	;=======================
+	; Yes Michaelangel007 I will eventually update linux_logo 6502
 
 	jsr	detect_appleii_model
 
@@ -42,12 +43,36 @@ is_a_iigs:
 	sta	CLOCKCTL	; black border
 	sta	CLOCKCTL	; set twice for VidHD
 
-	lda	's'
+	lda	#'s'
 	sta	model_patch_1+9
 
+	lda	#'C'
+	sta	cpu_patch_1+14
+	sta	cpu_patch_2+2
+	lda	#'8'
+	sta	cpu_patch_1+15
+	sta	cpu_patch_2+3
+	lda	#'1'
+	sta	cpu_patch_1+16
+	sta	cpu_patch_2+4
+	lda	#'6'
+	sta	cpu_patch_1+17
+	sta	cpu_patch_2+5
 not_iigs:
 
 	; update text printed
+
+	lda	APPLEII_MODEL
+	cmp	#'3'
+	bne	no_not_a_iii
+
+	lda	#'/'			; 3 slashes
+	sta	model_patch_1+6
+	sta	model_patch_1+7
+	sta	model_patch_1+8
+	bne	hardware_detect_ram	; bra
+
+no_not_a_iii:
 
 	lda	APPLEII_MODEL
 	sta	model_patch_1+8	; patch to ' ' '+' 'e' 'c' or 'g'
@@ -55,9 +80,18 @@ not_iigs:
 	;=======================
 	; Hardware Detect RAM
 	;=======================
+hardware_detect_ram:
+
+	;=================================================
+	; assume 48k for base model (not necessarily true)
 
 	lda	#48		; FIXME: detect less on earlier models?
 	sta	TOTAL_RAM
+
+	;================================================
+	; detect language card 16k
+	; could cheat and just make it 64k in this case
+	; can you have a language card on a 4k system?
 
 	jsr	detect_language_card
 	bcs	ram_no_lc
@@ -73,10 +107,110 @@ ram_yes_lc:
 	lda	#'6'
 	sta	lang_card_patch+35
 
-
 ram_no_lc:
 
+	;================================================
+	; detect aux memory
+	;	iigs we're lazy and say 64k
+	;	iic always 64k AUX
+	;	iie we have to probe
+	;		in theory can have 0k, 1k or 64k of it
 
+	jsr	detect_aux_ram
+
+	cmp	#0
+	beq	ram_no_aux
+
+	cmp	#1
+	beq	ram_1k_aux
+ram_64k_aux:
+	clc
+	lda	TOTAL_RAM
+	adc	#64
+	sta	TOTAL_RAM
+
+	lda	#'6'
+	sta	aux_mem_patch+34
+	lda	#'4'
+	sta	aux_mem_patch+35
+
+
+
+	bne	ram_done_aux	; bra
+
+ram_1k_aux:
+	inc	TOTAL_RAM
+	lda	#'1'
+	sta	aux_mem_patch+35
+
+ram_no_aux:
+ram_done_aux:
+	;====================
+	; detect CPU
+	;====================
+
+	lda	APPLEII_MODEL
+	cmp	#'g'		; already handled IIgs
+	beq	done_detect_cpu
+
+	jsr	detect_65c02
+	bne	was_not_65c02
+
+	lda	#'C'
+	sta	cpu_patch_1+14
+	sta	cpu_patch_2+2
+	lda	#'0'
+	sta	cpu_patch_1+15
+	sta	cpu_patch_2+3
+	lda	#'2'
+	sta	cpu_patch_1+16
+	sta	cpu_patch_2+4
+
+was_not_65c02:
+
+done_detect_cpu:
+
+	;====================
+	; detect disk slot
+	;====================
+	; this depends on DOS3.3 loading
+
+	lda	$B5F7			; slot*16
+	lsr
+	lsr
+	lsr
+	lsr
+	adc	#'0'
+	sta	slot_patch1+1
+	sta	slot_patch2+1
+	sta	slot_patch3+1
+	sta	slot_patch5+7
+	sta	slot_patch6+7
+
+	;=====================
+	; Detect mockingboard
+	;=====================
+
+	lda	#0
+	sta	SOUND_STATUS
+
+PT3_ENABLE_APPLE_IIC = 1
+
+	jsr	mockingboard_detect
+	bcc	mockingboard_notfound
+
+mockingboard_found:
+	lda	MB_ADDR_H
+	and	#$7
+	ora	#$30
+
+	sta	mock_slot_patch+7
+
+	lda	SOUND_STATUS
+	ora	#SOUND_MOCKINGBOARD
+	sta	SOUND_STATUS
+
+mockingboard_notfound:
 
 	;===================
 	; Load graphics
@@ -172,6 +306,7 @@ done_memcount:
 
 	jsr	BELL
 
+	; print first part of message
 
 	lda	#10
 	sta	CH
@@ -180,8 +315,25 @@ done_memcount:
 
 	lda	#<bios_message_2
 	ldy	#>bios_message_2
-	ldx	#11
+	ldx	#8
 	jsr	draw_multiple_strings
+
+	; optionally print mockingboard text
+
+	lda	SOUND_STATUS
+	beq	print_rest
+
+	jsr	DrawCondensedStringAgain
+
+print_rest:
+
+	; print rest
+	lda	#<super_serial_text
+	ldy	#>super_serial_text
+	ldx	#2
+	jsr	draw_multiple_strings
+
+
 
 	ldx	#10
 	jsr	long_wait
@@ -244,9 +396,10 @@ end:
 bios_message_1:
 	.byte "Apple II Modular BIOS",13,0
 	.byte "Copyright (C) 1977-1991",13,13,0
-model_patch_1: ;+8
+model_patch_1:	; +8
 	.byte "Apple II  ",13,13,0
-	.byte "65C02 CPU at 1.023MHz",13,0
+cpu_patch_2:	; +2
+	.byte "6502   CPU at 1.023MHz",13,0
 	.byte "Memory Test:      0B OK",13,0
 bios_message_1a:
 	.byte "Press ",$17,"-D to enter SETUP",13,0
@@ -263,9 +416,10 @@ bios_message_2:
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1C, 13,0
-	.byte $1F," CPU Type:  6502  ",$14," Base Memory: 48K  ",$1F,13,0 ; 16
+cpu_patch_1:	; +14
+	.byte $1F," CPU Type: 6502   ",$14," Base Memory: 48K  ",$1F,13,0 ; 16
 lang_card_patch:  ; +34
-	.byte $1F," Co-Proc:   NONE  ",$14," Lang Card:    0K  ",$1F,13,0  ; 24
+	.byte $1F," Co-Proc:  NONE   ",$14," Lang Card:    0K  ",$1F,13,0  ; 24
 aux_mem_patch:	; +34
 	.byte $1F," Clock:  1.023MHz ",$14," AUX Memory:   0K  ",$1F,13,0  ; 32
 
@@ -277,9 +431,16 @@ aux_mem_patch:	; +34
 	.byte $1E,$1E,$1E,$1E,$1E,$1E
 	.byte $18, 13, 0
 
+disk_text:
+slot_patch5:	;+7
 	.byte $1F," Slot 6 Disk 1: Disk II 140K          ",$1F,13,0 ; 48
+slot_patch6:
 	.byte $1F," Slot 6 Disk 2: Disk II 140K          ",$1F,13,0 ; 56
+
+mockingboard_text:
+mock_slot_patch:	; +7
 	.byte $1F," Slot 4       : VIA 6522/Mockingboard ",$1F,13,0 ; 64
+super_serial_text:
 	.byte $1F," Slot 1       : Super Serial Card     ",$1F,13,0 ; 72
 
 
@@ -296,6 +457,7 @@ bios_message3:
 
 
 bios_message4:
+slot_patch1:
 	.byte "S6D1>",0	; 104
 	.byte "c",0
 	.byte "d",0
@@ -317,6 +479,7 @@ bios_message4:
 
 bios_message5:
 	.byte 13,0
+slot_patch2:
 	.byte "S6D1>",0		; 112
 	.byte "d",0
 	.byte "i",0
@@ -335,6 +498,7 @@ bios_message_6:
 	.byte "    2 Dir(s)         52,736 Bytes free.",13,13,0
 
 bios_message7:
+slot_patch3:
 	.byte "S6D1>",0		; 184
 	.byte "l",0
 	.byte "e",0
@@ -590,3 +754,7 @@ early_out:
 
 .include "pt3_lib_detect_model.s"
 .include "lc_detect.s"
+.include "aux_detect.s"
+.include "65c02_detect.s"
+.include "pt3_lib_mockingboard_setup.s"
+.include "pt3_lib_mockingboard_detect.s"
