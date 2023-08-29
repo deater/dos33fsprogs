@@ -18,9 +18,9 @@ bios_test:
 
 	jsr	build_tables
 
-	;===================
-	; Hardware Detect
-	;===================
+	;=======================
+	; Hardware Detect Model
+	;=======================
 
 	jsr	detect_appleii_model
 
@@ -51,6 +51,31 @@ not_iigs:
 
 	lda	APPLEII_MODEL
 	sta	model_patch_1+8	; patch to ' ' '+' 'e' 'c' or 'g'
+
+	;=======================
+	; Hardware Detect RAM
+	;=======================
+
+	lda	#48		; FIXME: detect less on earlier models?
+	sta	TOTAL_RAM
+
+	jsr	detect_language_card
+	bcs	ram_no_lc
+ram_yes_lc:
+	; carry clear here
+	lda	#16
+	adc	TOTAL_RAM
+	sta	TOTAL_RAM
+
+	; update text string
+	lda	#'1'
+	sta	lang_card_patch+34
+	lda	#'6'
+	sta	lang_card_patch+35
+
+
+ram_no_lc:
+
 
 
 	;===================
@@ -91,7 +116,7 @@ not_iigs:
 	;=========================
 	; do fake memory count
 
-	lda	#128
+	lda	TOTAL_RAM
 	sta	MEMCOUNT
 memcount_loop:
 	lda	KEYPRESS				; 4
@@ -102,7 +127,7 @@ memcount_loop:
 
 	jsr	increment_memory
 	dec	MEMCOUNT
-	bpl	memcount_loop
+	bne	memcount_loop
 
 done_memcount:
 
@@ -238,9 +263,11 @@ bios_message_2:
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1E,$1E,$1E,$1E,$1E,$1E
 	.byte $1C, 13,0
-	.byte $1F," CPU Type: 65C02  ",$14," Base Memory: 48K  ",$1F,13,0 ; 16
-	.byte $1F," Co-Proc:   NONE  ",$14," Lang Card:   16K  ",$1F,13,0  ; 24
-	.byte $1F," Clock:  1.023MHz ",$14," AUX Memory:  64K  ",$1F,13,0  ; 32
+	.byte $1F," CPU Type:  6502  ",$14," Base Memory: 48K  ",$1F,13,0 ; 16
+lang_card_patch:  ; +34
+	.byte $1F," Co-Proc:   NONE  ",$14," Lang Card:    0K  ",$1F,13,0  ; 24
+aux_mem_patch:	; +34
+	.byte $1F," Clock:  1.023MHz ",$14," AUX Memory:   0K  ",$1F,13,0  ; 32
 
 	.byte $19 ; 40
 	.byte $1E,$1E,$1E,$1E,$1E,$1E,$1E,$1E
@@ -562,3 +589,4 @@ early_out:
 .include "hgr_clear_screen.s"
 
 .include "pt3_lib_detect_model.s"
+.include "lc_detect.s"
