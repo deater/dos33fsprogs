@@ -19,6 +19,41 @@ bios_test:
 	jsr	build_tables
 
 	;===================
+	; Hardware Detect
+	;===================
+
+	jsr	detect_appleii_model
+
+	lda	APPLEII_MODEL
+	cmp	'g'
+	bne	not_iigs
+
+is_a_iigs:
+	; set background color to black instead of blue
+	lda     NEWVIDEO
+	and	#%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
+				; bit 6 = 0 -> IIgs 128K memory map same as IIe
+				; bit 5 = 0 -> IIgs DHGR is color, not mono
+				; bits 0-4 unchanged
+	sta	NEWVIDEO
+	lda	#$F0
+	sta	TBCOLOR		; white text on black background
+	lda	#$00
+	sta	CLOCKCTL	; black border
+	sta	CLOCKCTL	; set twice for VidHD
+
+	lda	's'
+	sta	model_patch_1+9
+
+not_iigs:
+
+	; update text printed
+
+	lda	APPLEII_MODEL
+	sta	model_patch_1+8	; patch to ' ' '+' 'e' 'c' or 'g'
+
+
+	;===================
 	; Load graphics
 	;===================
 
@@ -77,7 +112,7 @@ done_memcount:
 
 	; TODO: drive2 as well?
 
-	ldx	#100
+	ldx	#200
 	jsr	long_wait
 
 	bit	$C0E8			; turn off drive motor (slot6)
@@ -184,7 +219,8 @@ end:
 bios_message_1:
 	.byte "Apple II Modular BIOS",13,0
 	.byte "Copyright (C) 1977-1991",13,13,0
-	.byte "Apple IIe ",13,13,0
+model_patch_1: ;+8
+	.byte "Apple II  ",13,13,0
 	.byte "65C02 CPU at 1.023MHz",13,0
 	.byte "Memory Test:      0B OK",13,0
 bios_message_1a:
@@ -524,3 +560,5 @@ early_out:
 
 
 .include "hgr_clear_screen.s"
+
+.include "pt3_lib_detect_model.s"
