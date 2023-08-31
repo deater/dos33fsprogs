@@ -1,24 +1,24 @@
 ; PLASMAGORIA
 
+; by French Touch
+
+; just the graphics, no music
+
 .include "hardware.inc"
 
-; -----------------------------------------------------------------------------
-;INTPLAYERYM		= $F39C
-;VBLANK			= $F103
-; -----------------------------------------------------------------------------
-; Page Zéro
-bMocking		= $08	; Mockingboard (00 - NOP / 01 - OK)
-bRefresh		= $0B	; byte type NTSC/60Hz - PAL/50Hz (00 = 50HZ | 01 = 60 HZ)
+; Page Zero
+;bMocking		= $08	; Mockingboard (00 - NOP / 01 - OK)
+;bRefresh		= $0B	; byte type NTSC/60Hz - PAL/50Hz
+				; (00 = 50HZ | 01 = 60 HZ)
 ;
 OUT1			= $20 ; +$21
 OUT2			= $22 ; +$23
 
-; compteur si pas MOCKING
+; counter if not MOCKING
 COMPT1			= $30
 COMPT2			= $31
 
 ;
- 
 PARAM1			= $60
 PARAM2			= $61
 PARAM3			= $62
@@ -35,316 +35,36 @@ Beat			= $FA
 Mark			= $FB
 
 ; =============================================================================
-;RoutINTGS:
-;
-;		LDA $C083
-;		LDA $C083
-;		JMP INTPLAYERYM
-; =============================================================================
 ; ROUTINE MAIN
 ; =============================================================================
 PLASMA_DEBUT:
-			bit PAGE1
-			bit SET_GR
-			BIT $C056		; LORES
-			LDA bRefresh
-			BNE pd_s1
-			; si 50HZ on modifie le délai d'attente final
-			LDA #>FADE_OUT2
-			STA OFFFADE+2
-			LDA #<FADE_OUT2
-			STA OFFFADE+1
-
-pd_s1:
-			LDA bMocking
-			BNE MSTEP0
-			JMP NO_MOCKING
-; --------------------------------------------------------
-
-
-; -------------------------------------
-MSTEP0:
-; init
-			CLI				; interrupt ON ! (début music)
-			LDA #00
-			STA Mark
-			LDA #$4C
-			STA PARAM1
-			LDA #$99
-			STA PARAM2
-			LDA #$4
-			STA count
-; boucle
-MBP0:
-	 		JSR PRECALC2
-			JSR AFFICH_IN_MH
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP0
-; -------------------------------------
-MSTEP1:
-; init
-			LDA #00
-			STA Mark
-
-; boucle
-MBP1:
-			JSR PRECALC2
-			JSR AFFICH_NOR
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP1
-
-; -------------------------------------
-MSTEP2:
-; init
-			LDA #00
-			STA Mark
-			STA Beat
-
-; boucle
-MBP2:
-			JSR PRECALC2_BEAT
-			JSR AFFICH_BEAT
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP2
-
-; -------------------------------------
-MSTEP3:
-; init
-			LDA #00
-			STA Mark
-			STA Beat
-			STA PARAM1
-			STA PARAM2
-			STA PARAM3
-			STA PARAM4
-
-MBP3:			JSR PRECALC1
-			JSR AFFICH_NOR2
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP3
-
-; -------------------------------------
-MSTEP4:
- ; init
-			LDA #00
-			STA Mark
-			LDA #10
-			STA count2
-			LDA #$FE
-			STA OFF1PR2+1
-			LDA #$03
-			STA OFF2PR2+1
-			LDA #$05
-			STA OFF3PR2+1
-			LDA #<MaskP
-			STA OFF1MASK+1
-			LDA #>MaskP
-			STA OFF2MASK+1
-			LDA #14
-			STA count
-; boucle
-MBP4:
-			JSR PRECALC2
-			JSR AFFICH_MASK
-			JSR VBLANK
-			JSR DUMP
-			DEC count
-			BNE Ms4
-			LDA #14
-			STA count
-			DEC count2
-			BMI MSTEP5
-Ms5:
-			LDX count2
-			LDA TableIndexMaskB,X
-			STA OFF1MASK+1
-			LDA TableIndexMaskH,X
-			STA OFF2MASK+1
-Ms4:
-			LDA Mark
-			BEQ MBP4
-
-; -------------------------------------
-MSTEP5:
-; init
-			LDA #>TLORES2
-			STA OFFNOR2+2
-; boucle
-MBP5:
-			JSR PRECALC2
-			JSR AFFICH_NOR2
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP5
-
-; -------------------------------------
-MSTEP6:
-; init
-			LDA #00
-			STA Mark
-			LDA #04
-			STA count
-; boucle
-MBP6:
-			JSR PRECALC2
-			JSR AFFICH_OUT_HM
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP6
-
-; -------------------------------------
-MSTEP7:
-			BIT $C057 ; HGR1/PAGE1
-			LDA #00
-			STA Mark
-			TAX
-			LDA #$A0
-mbCleanTXT:
-			STA $800,X
-			STA $900,X
-			STA $A00,X
-			STA $B00,X
-			DEX
-			BNE mbCleanTXT
-			JSR DUMP
-			BIT $C051 ; TXT/PAGE1
-
-MBP7:
-			LDA Mark
-			BEQ MBP7
-
-; -------------------------------------
-MSTEP8:
-
-			LDA #00
-			STA Mark
-			STA PARAM1
-			STA PARAM2
-			STA PARAM3
-			STA PARAM4
-
-			LDX #11
-mbaffcred1:
-		LDA Text1,X
-			STA $A50+11,X
-			LDA Text2,X
-			STA $B50+11,X
-			DEX
-			BPL mbaffcred1
-
-MBP8:
-		JSR PRECALC1
-			JSR AFFICH_MASK1
-			JSR VBLANK
-			JSR DUMP
-
-			LDA Mark
-			BEQ MBP8
-; -------------------------------------
-MSTEP9:
-
-			LDA #00
-			STA Mark
-
-			LDX #11
-mbaffcred2:
-			LDA Text3,X
-			STA $A50+11,X
-			LDA Text4,X
-			STA $B50+11,X
-			DEX
-			BPL mbaffcred2
-
-MBP9:
-			JSR PRECALC1
-			JSR AFFICH_MASK1
-			JSR VBLANK
-			JSR DUMP
-
-			LDA Mark
-			BEQ MBP9
-; -------------------------------------
-MSTEP10:
-; init
-			LDA #00
-			STA Mark
-
-			LDX #11
-			LDA #$A0
-mbaffcred3:
-			STA $A50+11,X
-			STA $B50+11,X
-			DEX
-			BPL mbaffcred3
-; boucle
-MBP10:
-			JSR PRECALC1
-OFFFADE:
-			JSR FADE_OUT
-			JSR AFFICH_MASK1
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ MBP10
-; -------------------------------------
-			; fin - nettoyage
-			SEI
-			LDA		#00
-			STA 	OUT2			; pour qu'on soit sûr que OUT2 = 0
-
-			; TIMER/INT off
-			LDA 	#%00000000		;
-			LDY 	#$0D
-			STA 	(OUT2),Y 		; STA $C40D			; interrupt flag register	(Clear ALL Interrupt)
-			INY
-			STA 	(OUT2),Y		; STA $C40E			; interrupt Enable register (Disable Timer)
-
-			; reset MB
-			LDA 	#$00		; Set fct "Reset"
-			LDY 	#$00
-			STA 	(OUT2),Y	; STA $C400
-			LDY 	#$80
-			STA		(OUT2),Y	; STA $C480
-			LDA 	#$04		; Set fct "Inactive"
-			LDY 	#$00
-			STA 	(OUT2),Y	; STA $C400
-			LDY 	#$80
-			STA		(OUT2),Y	; STA $C480
-
-			LDA $C082			; ROM utilisable entre $D000/$FFFF
-			JMP $FA62
+	bit	PAGE1		; set page 1
+	bit	SET_TEXT	; set text
+	bit	LORES		; set lo-res
 
 ; ============================================================================
-NO_MOCKING:
+
 STEP0:
 ; init
-			LDA #00
-			STA Mark
+			lda	#00
+			sta	Mark			; ?
 
-			LDA #$4C
-			STA PARAM1
-			LDA #$99
-			STA PARAM2
-			LDA #$4
-			STA count
-; boucle
-BP0:
-	 		JSR PRECALC2
-			JSR AFFICH_IN_MH
-			JSR VBLANK
-			JSR DUMP
-			LDA Mark
-			BEQ BP0
+			lda	#$4C
+			sta	PARAM1
+			lda	#$99
+			sta	PARAM2			; Middle of TCAR1??
+
+			lda	#$4
+			sta	count			; ?
+; boucle (loop)
+step0_loop:
+	 		jsr	PRECALC2
+			jsr	AFFICH_IN_MH
+			jsr	VBLANK
+			jsr	DUMP			; copy PAGE2 to PAGE1
+			lda	Mark
+			beq	step0_loop
+
 ; -------------------------------------
 STEP1:
 ; init
@@ -589,6 +309,7 @@ BP10:
 
 			LDA $C082			; ROM utilisable entre $D000/$FFFF
 			JMP $FA62
+
 ; ============================================================================
 ; ROUTINES PRE CALCUL
 ; ============================================================================
@@ -3277,4 +2998,5 @@ DUMP:
 ; =============================================================================
 
 VBLANK:
+	inc	Mark
 	rts
