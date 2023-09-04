@@ -1,3 +1,4 @@
+CC = gcc
 CFLAGS = -O2 -Wall
 LFLAGS =
 MATH_LFLAGS = -lm

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <math.h>
 
 #define PI 3.14159265358979323846264338327950
@@ -75,18 +76,54 @@ int main(int argc, char **argv) {
 
 	int i;
 
-	int ours[256];
+	int ours[256],current=0;
 	int diff=0;
+	int which=0;
+
+	if (argc>1) {
+		which=atoi(argv[1]);
+	}
 
 	for(i=0;i<256;i++) {
-		/* start 46, peak=88, 21 */
-		ours[i]=round(47.0+
-			32.0*sin(i*(PI*2.0/256.0))+
-			16.0*sin(i*(PI*2.0/128.0)));
-		//printf("%d %d\n",i,sin1[i]);
-			printf("%d: %d %d\n",i,sin1[i],ours[i]);
-		if (ours[i]!=sin1[i]) {
-//			printf("%d: %d %d\n",i,sin1[i],ours[i]);
+
+		if (which==0) {
+			/* start 46, peak=88 */
+			ours[i]=round(47.0+
+				32.0*sin(i*(PI*2.0/256.0))+
+				16.0*sin(2.0*i*(PI*2.0/256.0)));
+				printf("%d: %d\n",i,sin1[i]-ours[i]);
+			current=sin1[i];
+		}
+
+
+		if (which==1) {
+			ours[i]=round(47.0+
+				32.0*sin(4.0*i*(PI*2.0/256.0))+
+				16.0*sin(3.0*i*(PI*2.0/256.0)));
+				printf("%d: %d\n",i,sin2[i]-ours[i]);
+			current=sin2[i];
+		}
+
+		if (which==2) {
+			ours[i]=round(38.0+
+				24.0*sin(3.0*i*(PI*2.0/256.0))+
+				16.0*sin(8.0*i*(PI*2.0/256.0)));
+				printf("%d: %d (%d %d)\n",i,
+					sin3[i]-ours[i],sin3[i],ours[i]);
+			current=sin3[i];
+		}
+
+		if (which==3) {
+			/* start 46, peak=88, 21 */
+			ours[i]=round(64.0+
+				64.0*sin(i*(PI*2.0/256.0)));
+				printf("%d: %d (%d %d)\n",
+					i,sin4[i]-ours[i],sin4[i],ours[i]);
+			current=sin4[i];
+		}
+
+
+		if (ours[i]!=current) {
 			diff++;
 		}
 	}

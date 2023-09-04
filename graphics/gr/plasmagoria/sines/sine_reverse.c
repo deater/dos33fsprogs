@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 static int sin1[256]={
 0x2E,0x30,0x32,0x34,0x35,0x36,0x38,0x3A,
@@ -71,10 +72,18 @@ static int sin4[256]={
 int main(int argc, char **argv) {
 
 	int i;
+	int which=0;
+
+	if (argc>1) {
+		which=atoi(argv[1]);
+	}
 
 	for(i=0;i<256;i++) {
 		//printf("%d %d\n",i,sin1[i]);
-		printf("%d,",sin1[i]);
+		if (which==0) printf("%d,",sin1[i]);
+		if (which==1) printf("%d,",sin2[i]);
+		if (which==2) printf("%d,",sin3[i]);
+		if (which==3) printf("%d,",sin4[i]);
 	}
 	printf("\n");
 
