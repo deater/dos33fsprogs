@@ -24,7 +24,7 @@ count			= $64
 count2			= $65
 ;
 
-Page1			= $F0	; +$F1
+GRLINE			= $F0	; +$F1
 IndexMask		= $F2
 Mask			= $F3
 
@@ -35,11 +35,12 @@ Mark			= $FB
 ; ROUTINE MAIN
 ; =============================================================================
 PLASMA_DEBUT:
-	bit	PAGE1		; set page 1
+	bit	PAGE2		; set page 2
 	bit	SET_TEXT	; set text
 	bit	LORES		; set lo-res
 
-	jsr	setup_dump
+
+;	jsr	setup_dump
 
 ; ============================================================================
 
@@ -58,8 +59,8 @@ STEP3:
 	sta	PARAM4
 
 BP3:
-	jsr	PRECALC1	; pre-calc
-	jsr	AFFICH_NOR2	; display normal
+	jsr	precalc		; pre-calc
+	jsr	display_normal	; display normal
 	jsr	VBLANK
 ;	jsr	DUMP
 
@@ -75,7 +76,7 @@ BP3:
 ; Precalculate some values
 ; ROUTINES PRE CALCUL
 ; ============================================================================
-PRECALC1:
+precalc:
 	lda	PARAM1		; self modify various parts
 	sta	pc_off1+1
 	lda	PARAM2
@@ -125,61 +126,50 @@ pc_off4:
 ; Display "Normal"
 ; AFFICHAGE "NORMAL"
 
+display_normal:
+	bit	SET_GR			; gfx (lores)	why needed?
 
-AFFICH_NOR2:
-	bit	$C050		; gfx (lores)
-	ldx	#23		; lines 0-23	lignes 0-23
-afn2_bORD:
-	lda	TTB,X
-	sta	Page1
-	lda	TTH,X
-	sta	Page1+1
+	ldx	#23			; lines 0-23	lignes 0-23
 
-	ldy	#39		; col 0-39
-	lda	Table2,X
-	sta	afn2_off1+1
-afn2_bABS:
-	lda	Table1,Y
-afn2_off1:
-	adc	#00
-	sta	afn2_off2+1
-OFFNOR2:
-afn2_off2:
-	lda	TLORES		; attention doit être alignée
-	sta	(Page1),Y
+display_line_loop:
+	lda	gr_lookup_low,X		; setup pointers for line
+	sta	GRLINE
+	lda	gr_lookup_high,X
+	sta	GRLINE+1
+
+	ldy	#39			; col 0-39
+
+	lda	Table2,X		; setup base sine value for row
+	sta	display_row_sin_smc+1
+display_col_loop:
+	lda	Table1,Y		; load in column sine value
+display_row_sin_smc:
+	adc	#00			; add in row value
+	sta	display_lookup_smc+1	; patch in low byte of lookup
+display_lookup_smc:
+	lda	lores_colors_fine	; attention: must be aligned
+	sta	(GRLINE),Y
 	dey
-	bpl	afn2_bABS
+	bpl	display_col_loop
 	dex
-	bpl	afn2_bORD
+	bpl	display_line_loop
 
 	rts
 
+VBLANK:
+	inc	Mark
+	rts
 
-.align 256
 
-Table1:	; !fill 64,0
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-Table2: ; !fill 64,0
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
+;.align 256
 
-TTB:	.byte $00,$80,$00,$80,$00,$80,$00,$80
+gr_lookup_low:
+	.byte $00,$80,$00,$80,$00,$80,$00,$80
 	.byte $28,$A8,$28,$A8,$28,$A8,$28,$A8
 	.byte $50,$D0,$50,$D0,$50,$D0,$50,$D0
-TTH:	.byte $08,$08,$09,$09,$0A,$0A,$0B,$0B
+
+gr_lookup_high:
+	.byte $08,$08,$09,$09,$0A,$0A,$0B,$0B
 	.byte $08,$08,$09,$09,$0A,$0A,$0B,$0B
 	.byte $08,$08,$09,$09,$0A,$0A,$0B,$0B
 
@@ -234,69 +224,14 @@ sin4: ; 256
 .byte $13,$14,$15,$16,$17,$18,$1A,$1B,$1C,$1E,$1F,$20,$22,$23,$24,$26,$27,$29,$2A,$2C,$2D,$2F,$30,$32,$33,$35,$36,$38,$39,$3B,$3C,$3E
 .endif
 
-TCAR1: ; 256
-.byte $c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$cD,$cD,$cD,$cD,$cD,$cD,$cD,$cD
-.byte $a3,$a3,$a3,$a3,$a3,$a3,$a3,$a3,$aA,$aA,$aA,$aA,$aA,$aA,$aA,$aA
-.byte $c7,$c7,$c7,$c7,$c7,$c7,$c7,$c7,$cF,$cF,$cF,$cF,$cF,$cF,$cF,$cF
-.byte $aB,$aB,$aB,$aB,$aB,$aB,$ab,$aB,$a9,$a9,$a9,$a9,$a9,$a9,$a9,$a9
-.byte $a8,$a8,$a8,$a8,$a8,$a8,$a8,$a8,$a1,$a1,$a1,$a1,$a1,$a1,$a1,$a1
-.byte $bD,$bD,$bD,$bD,$bD,$bd,$bD,$bD,$aD,$aD,$aD,$aD,$aD,$aD,$aD,$aD
-.byte $bB,$bB,$bB,$bB,$bB,$bB,$bB,$bB,$bA,$bA,$bA,$bA,$bA,$bA,$bA,$bA
-.byte $aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
 
-.byte $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE
-.byte $bA,$bA,$bA,$bA,$bA,$bA,$bA,$bA,$bB,$bB,$bB,$bB,$bB,$bB,$bB,$bB
-.byte $aD,$aD,$aD,$aD,$aD,$aD,$aD,$aD,$bD,$bD,$bD,$bD,$bD,$bd,$bD,$bD
-.byte $a1,$a1,$a1,$a1,$a1,$a1,$a1,$a1,$a8,$a8,$a8,$a8,$a8,$a8,$a8,$a8
-.byte $a9,$a9,$a9,$a9,$a9,$a9,$a9,$a9,$aB,$aB,$aB,$aB,$aB,$aB,$ab,$aB
-.byte $cF,$cF,$cF,$cF,$cF,$cF,$cF,$cF,$c7,$c7,$c7,$c7,$c7,$c7,$c7,$c7
-.byte $aA,$aA,$aA,$aA,$aA,$aA,$aA,$aA,$a3,$a3,$a3,$a3,$a3,$a3,$a3,$a3
-.byte $cD,$cD,$cD,$cD,$cD,$cD,$cD,$cD,$c0,$c0,$c0,$c0,$c0,$c0,$c0,$c0
+; Lookup table for colors
+; Note the sine tables point roughly to the middle and go to the edges
 
 
-TCAR2: ; 256
-.byte $d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4
-.byte $c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6
-.byte $af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af
-.byte $AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB
-.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
-.byte $ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba
-.byte $aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE
-.byte $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
-.byte $d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4,$d4
-.byte $c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6,$c6
-.byte $af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af,$af
-.byte $AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB,$AB
-.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
-.byte $ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba
-.byte $aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE
-.byte $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
-
-TLORES: ; 256
-.byte $00,$00,$00,$00,$88,$88,$88,$88
-.byte $55,$55,$55,$55,$99,$99,$99,$99
-.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
-.byte $33,$33,$33,$33,$22,$22,$22,$22
-.byte $66,$66,$66,$66,$77,$77,$77,$77
-.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
-.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
-.byte $99,$99,$99,$99,$11,$11,$11,$11
-.byte $00,$00,$00,$00,$88,$88,$88,$88
-.byte $55,$55,$55,$55,$99,$99,$99,$99
-.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
-.byte $33,$33,$33,$33,$22,$22,$22,$22
-.byte $66,$66,$66,$66,$77,$77,$77,$77
-.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
-.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
-.byte $99,$99,$99,$99,$11,$11,$11,$11
-.byte $00,$00,$00,$00,$88,$88,$88,$88
-.byte $55,$55,$55,$55,$99,$99,$99,$99
-.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
-.byte $33,$33,$33,$33,$22,$22,$22,$22
-.byte $66,$66,$66,$66,$77,$77,$77,$77
-.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
-.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
-.byte $99,$99,$99,$99,$11,$11,$11,$11
+; This table has relatively fine color bands
+lores_colors_fine: ; 256
+.if 1
 .byte $00,$00,$00,$00,$88,$88,$88,$88
 .byte $55,$55,$55,$55,$99,$99,$99,$99
 .byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
@@ -306,60 +241,95 @@ TLORES: ; 256
 .byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
 .byte $99,$99,$99,$99,$11,$11,$11,$11
 
-TLORES2: ; 256
-.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88,$88
-.byte $55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$55,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22
-.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
-.byte $33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$33,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22,$22
-.byte $66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$66,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77,$77
-.byte $44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$44,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc
-.byte $ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
-.byte $99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$99,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11,$11
+.byte $00,$00,$00,$00,$88,$88,$88,$88
+.byte $55,$55,$55,$55,$99,$99,$99,$99
+.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$22,$22,$22,$22
+.byte $66,$66,$66,$66,$77,$77,$77,$77
+.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
+.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
+.byte $99,$99,$99,$99,$11,$11,$11,$11
 
-TCAR3: ; 256
-.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
-.byte $C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7
-.byte $CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF
-.byte $EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF
-.byte $BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB
-.byte $ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba
-.byte $aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE
-.byte $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
-.byte $C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$C0
-.byte $C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7,$C7
-.byte $CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF,$CF
-.byte $EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF,$EF
-.byte $BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB,$BB
-.byte $ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba,$ba
-.byte $aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE,$aE
-.byte $a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0,$a0
+.byte $00,$00,$00,$00,$88,$88,$88,$88
+.byte $55,$55,$55,$55,$99,$99,$99,$99
+.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$22,$22,$22,$22
+.byte $66,$66,$66,$66,$77,$77,$77,$77
+.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
+.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
+.byte $99,$99,$99,$99,$11,$11,$11,$11
 
-; =============================================================================
+.byte $00,$00,$00,$00,$88,$88,$88,$88
+.byte $55,$55,$55,$55,$99,$99,$99,$99
+.byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$22,$22,$22,$22
+.byte $66,$66,$66,$66,$77,$77,$77,$77
+.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
+.byte $ee,$ee,$ee,$ee,$dd,$dd,$dd,$dd
+.byte $99,$99,$99,$99,$11,$11,$11,$11
+.else
+; This table has relatively wide color bands
+lores_colors_wide: ; 256
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $88,$88,$88,$88,$88,$88,$88,$88
+.byte $88,$88,$88,$88,$88,$88,$88,$88
+.byte $55,$55,$55,$55,$55,$55,$55,$55
+.byte $55,$55,$55,$55,$55,$55,$55,$55
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
+.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$33,$33,$33,$33
+.byte $33,$33,$33,$33,$33,$33,$33,$33
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+.byte $66,$66,$66,$66,$66,$66,$66,$66
+.byte $66,$66,$66,$66,$66,$66,$66,$66
+.byte $77,$77,$77,$77,$77,$77,$77,$77
+.byte $77,$77,$77,$77,$77,$77,$77,$77
+.byte $44,$44,$44,$44,$44,$44,$44,$44
+.byte $44,$44,$44,$44,$44,$44,$44,$44
+.byte $cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc
+.byte $cc,$cc,$cc,$cc,$cc,$cc,$cc,$cc
+.byte $ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee
+.byte $ee,$ee,$ee,$ee,$ee,$ee,$ee,$ee
+.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+.byte $99,$99,$99,$99,$99,$99,$99,$99
+.byte $99,$99,$99,$99,$99,$99,$99,$99
+.byte $11,$11,$11,$11,$11,$11,$11,$11
+.byte $11,$11,$11,$11,$11,$11,$11,$11
+.endif
 
 
-	; Copy data from GR PAGE2 ($800) to GR PAGE1 ($400)
-	; roughly 1k
-	; annoyingly skips screen holes and goes in proper order
-
-	; originally roughly 6k in size
-
-DUMP=$8000
-
-setup_dump:
-	rts
-
-	; 400-427 first
-	; 480-4A7 next
-	; 500-527
-	; etc
-
-	; AD 00 08	lda $800
-	; 8D 00 04	sta $400
-	; 60		rts
 
 
-; =============================================================================
 
-VBLANK:
-	inc	Mark
-	rts
+
+
+Table1	=	$8000
+Table2	=	$8000+64
+
+.if 0
+Table1:	; !fill 64,0
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+Table2: ; !fill 64,0
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+	.byte $00,$00,$00,$00,$00,$00,$00,$00
+.endif
