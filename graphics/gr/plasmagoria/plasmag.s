@@ -5,6 +5,10 @@
 ; this is just part3 and size optimized
 ; just the graphics, no music
 
+
+; Note: look into modifying color lookup table
+;	there's a wide setting that gives a slightly different effect
+
 .include "hardware.inc"
 
 ; Page Zero
