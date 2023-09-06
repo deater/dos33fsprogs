@@ -7,10 +7,10 @@ EMPTYDISK = ../empty_disk/empty.dsk
 
 all:	fac.dsk
 
-fac.dsk:	HELLO ADD
+fac.dsk:	HELLO SIN3
 	cp $(EMPTYDISK) fac.dsk
 	$(DOS33) -y fac.dsk SAVE A HELLO
-	$(DOS33) -y fac.dsk BSAVE -a 0xC00 ADD
+	$(DOS33) -y fac.dsk BSAVE -a 0xC00 SIN3
 
 
 ###
@@ -20,13 +20,13 @@ HELLO:	hello.bas
 
 ###
 
-ADD:	add.o
-	ld65 -o ADD add.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+SIN3:	sin3.o
+	ld65 -o SIN3 sin3.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-add.o:	add.s
-	ca65 -o add.o add.s -l add.lst
+sin3.o:	sin3.s
+	ca65 -o sin3.o sin3.s -l sin3.lst
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst ADD HELLO
+	rm -f *~ *.o *.lst SIN3 HELLO
