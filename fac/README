@@ -1,0 +1,7 @@
+Code attempting to use the floating point routines from the
+Applesoft ROMs
+
+In theory could help create lookuptables in not much code
+
+Best reference for this seems to be Wagner's Assembly Lines book?
+
