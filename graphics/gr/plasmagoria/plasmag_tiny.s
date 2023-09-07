@@ -32,16 +32,14 @@ PARAM4			= $63
 ; =============================================================================
 
 plasma_debut:
-	jsr	HGR
+	jsr	HGR		; have table gen appear on hgr page1
 	bit	FULLGR
 
 	jsr	make_tables
 
-;	bit	PAGE1		; set page 1
-;	bit	SET_GR		; set graphics
-	bit	LORES		; set lo-res
+	bit	LORES			; set lo-res
 
-	jsr	init_lores_colors
+	jsr	init_lores_colors	; FIXME: inline?
 
 do_plasma:
 	; init
@@ -155,6 +153,7 @@ init_lores_colors:
 	ldx	#0
 	ldy	#0
 ; 347
+
 init_lores_colors_loop:
 	lda	lores_colors_lookup,X
 	sta	lores_colors_fine,Y
@@ -171,6 +170,27 @@ init_lores_colors_loop:
 	and	#$f
 	tax
 	jmp	init_lores_colors_loop
+
+.if 0
+init_lores_colors_loop:
+	lda	lores_colors_lookup,X
+	ldy	#3
+lol:
+	sta	lores_colors_fine,Y
+	dey
+	bne	lol
+	clc
+	lda	#4
+	adc	lol+1
+	sta	lol+1
+
+	beq	done_init_lores_colors
+	inx
+	txa
+	and	#$f
+	tax
+	jmp	init_lores_colors_loop
+.endif
 done_init_lores_colors:
 	rts
 

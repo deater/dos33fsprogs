@@ -85,7 +85,7 @@ make_tables:
 	lda	#$40
 	sta	thirty_two+1
 
-	; ideally, convert 4->3
+	; ideally, convert input4->input3
 	; load 3 input (assume on same page)
 	lda	#<three_input
 	sta	sin_table_input1_smc+1
