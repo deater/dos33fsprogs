@@ -43,7 +43,7 @@ tan	=	$F03A
 atn	=	$F09E
 
 ; constants
-; one
+const_one	=	$E926	; one
 ; poly coefficients?
 ; sqrt(.5)
 ; sqrt(2)
@@ -56,7 +56,7 @@ const_10=	$EA50	; 10
 ; 99,999,999.9
 ; log(e) to base(2)
 ; polynomials for log
-; one
+; one again
 ; table of 32-bit powers of 10 +/- for some reason
 ; pi/2
 pi_doub	=	$F06E	; 2*pi
@@ -90,39 +90,126 @@ FAC = $9D
 
 OURX	=	$FF
 
-sin3	=	$8000
+sin1	=	$2000
+sin2	=	$2100
+sin3	=	$2200
+save	=	$2300
+
+HGR	=	$F3E2
+FULLGR	=	$C052
 
 add_debut:
+	jsr	HGR
+	bit	FULLGR
+
+	;	sin1[i]=round(47.0+
+	;		32.0*sin(i*(PI*2.0/256.0))+
+	;		16.0*sin(2.0*i*(PI*2.0/256.0)));
+
+	; already set up for this one
+
+	jsr	make_sin_table
+
+	;	sin2[i]=round(47.0+
+	;		32.0*sin(4.0*i*(PI*2.0/256.0))+
+	;		16.0*sin(3.0*i*(PI*2.0/256.0)));
+
+	lda	#<sin2
+	sta	sin_table_dest_smc+1
+	lda	#>sin2
+	sta	sin_table_dest_smc+2
+
+	; 47 is same
+	; 32 is same
+	; 16 is same
+
+	lda	#<four_input
+	sta	sin_table_input1_smc+1
+	lda	#>four_input
+	sta	sin_table_input2_smc+1
+
+	lda	#<three_input
+	sta	sin_table_input3_smc+1
+	lda	#>three_input
+	sta	sin_table_input4_smc+1
+
+	jsr	make_sin_table
+
+	;	sin3[i]=round(38.0+
+        ;		24.0*sin(3.0*i*(PI*2.0/256.0))+
+        ;		16.0*sin(8.0*i*(PI*2.0/256.0)));
+
+	lda	#<sin3
+	sta	sin_table_dest_smc+1
+	lda	#>sin3
+	sta	sin_table_dest_smc+2
+
+	lda	#<thirty_eight
+	sta	sin_table_add_smc1+1
+	lda	#>thirty_eight
+	sta	sin_table_add_smc2+1
+
+	lda	#<twenty_four
+	sta	sin_table_scale1_smc+1
+	lda	#>twenty_four
+	sta	sin_table_scale2_smc+1
+
+	lda	#<three_input
+	sta	sin_table_input1_smc+1
+	lda	#>three_input
+	sta	sin_table_input2_smc+1
+
+	lda	#<eight_input
+	sta	sin_table_input3_smc+1
+	lda	#>eight_input
+	sta	sin_table_input4_smc+1
+
+
+
+	jsr	make_sin_table
+
+end:
+	jmp	end
+
+
+	;===============================
+	;===============================
+	;===============================
+	;===============================
+	;===============================
+
+make_sin_table:
 
 	lda	#0
 	sta	OURX
 
-sin3_loop:
-	; 38+24*sin(3x)+16*sin(8x)
-	;     ours[i]=round(38.0+
-        ;                       24.0*sin(3.0*i*(PI*2.0/256.0))+
-        ;                       16.0*sin(8.0*i*(PI*2.0/256.0)));
-
+sin_loop:
 
 	lda	OURX
 	jsr	float		; FAC = X
 
-	lda	#<three_input
-	ldy	#>three_input
+sin_table_input1_smc:
+	lda	#<one_input
+sin_table_input2_smc:
+	ldy	#>one_input
 	jsr	fmult
 	jsr	sin
-	lda	#<twenty_four
-	ldy	#>twenty_four
+sin_table_scale1_smc:
+	lda	#<thirty_two
+sin_table_scale2_smc:
+	ldy	#>thirty_two
 	jsr	fmult
 
-	ldx	#<$8100
-	ldy	#>$8100
+	ldx	#<save
+	ldy	#>save
 	jsr	movmf			; save FAC to mem
 
 	lda	OURX
 	jsr	float		; FAC = X
-	lda	#<eight_input
-	ldy	#>eight_input
+sin_table_input3_smc:
+	lda	#<two_input
+sin_table_input4_smc:
+	ldy	#>two_input
 	jsr	fmult
 	jsr	sin
 
@@ -131,28 +218,31 @@ sin3_loop:
 	jsr	fmult
 
 	; add first sine
-	lda	#<$8100
-	ldy	#>$8100
+	lda	#<save
+	ldy	#>save
 	jsr	fadd
 
 	; add 38
-	lda	#<thirty_eight
-	ldy	#>thirty_eight
+sin_table_add_smc1:
+	lda	#<forty_seven
+sin_table_add_smc2:
+	ldy	#>forty_seven
 	jsr	fadd
-
 
 	jsr	qint
 
 	lda	FAC+4
 
 	ldx	OURX
-	sta	sin3,X
+
+sin_table_dest_smc:
+	sta	sin1,X
 
 	inc	OURX
-	bne	sin3_loop
+	bne	sin_loop
 
-end:
-	jmp	end
+	rts
+
 
 sixteen:
 	.byte	$85,$00,$00,$00,$00
@@ -160,15 +250,34 @@ sixteen:
 twenty_four:
 	.byte	$85,$40,$00,$00,$00
 
+thirty_two:
+	.byte	$86,$00,$00,$00,$00
+
 thirty_eight:
-	.byte $86,$18,$00,$00,$00
+	.byte	$86,$18,$00,$00,$00
 	; 2^5 = 32, 1.0011 0000 = 1/8+1/16
+
+forty_seven:
+	.byte	$86,$3C,$00,$00,$00
+	; 32 * 1.0111 10000 = 1/4+1/8+1/16+1/32
+
+one_input:
+	; 1*2*pi/256 = .0736310778
+	.byte $7b,$49,$0F,$da,$a2
+
+two_input:
+	; 2*2*pi/256 = .0736310778
+	.byte $7c,$49,$0F,$da,$a2
 
 three_input:
 	; 3*2*pi/256 = .0736310778
 	.byte $7d,$16,$cb,$e3,$f9
 
+four_input:
+	; 4*2*pi/256 = .0736310778
+	.byte $7d,$49,$0F,$da,$a2
+
 eight_input:
 	; 8*2*pi/256 = .196349541
-	.byte $7E,$49,$0F,$DA,$9E
+	.byte $7E,$49,$0F,$da,$a2
 
