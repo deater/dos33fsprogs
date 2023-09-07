@@ -11,6 +11,7 @@
 ; 171 bytes = optimize save/load of loop index
 ; 169 bytes = optimize multiply by 8
 ; 166 bytes = separate common sin code
+; 164 bytes = move more to common sin code
 
 qint	=	$EBF2		; convert FAC to 32-bit int?
 fadd	=	$E7BE		; FAC = (Y:A)+FAC
@@ -26,7 +27,7 @@ FAC = $9D	; 9D-A2
 ;	uses ARG (A5-AA) for argument
 ;	uses FAC (9D-A2)
 
-
+TEMP1	=	$FE
 OURX	=	$FF
 
 sin1	=	$2000
@@ -120,16 +121,12 @@ sin_loop:
 
 sin_table_input1_smc:
 	lda	#<one_input
+	; thirtytwo or twentyfour
+	ldx	#<thirty_two
 
 	jsr	sin_common
 
-	; thirtytwo or twentyfour
-	lda	#<thirty_two
-	jsr	fmult			; FAC=constant*FAC
-
-
-	ldx	#<save
-	ldy	#>save
+;	ldx	#<save
 	jsr	movmf			; save FAC to mem
 
 	lda	OURX
@@ -137,16 +134,14 @@ sin_table_input1_smc:
 
 sin_table_input3_smc:
 	lda	#<two_input
+	; always 16
+	ldx	#<sixteen
 
 	jsr	sin_common
 
-	; always 16
-	lda	#<sixteen
-	jsr	fmult			; FAC=constant*FAC
-
 	; add first sine
-	lda	#<save
-	ldy	#>save
+	txa
+;	lda	#<save
 	jsr	fadd			; FAC=FAC+(previous result)
 
 	; add constant 47 or 38
@@ -176,15 +171,22 @@ sin_table_dest_smc:
 	; sin_common
 	;==============================
 	; A = low byte for input multiplier
+	; X = low byte for result multiplier
 sin_common:
+	stx	TEMP1
+	ldy	#>one_input		; high byte, assume always same
 
-	ldy	#>one_input
 	jsr	fmult			; FAC=FAC*(constant from RAM)
 
 	jsr	sin			; FAC=sin(FAC)
 
-	; 32 or 24
-	ldy	#>thirty_two
+	ldy	#>thirty_two		; high byte, assume always same
+	lda	TEMP1
+
+	jsr	fmult			; FAC=constant*FAC
+
+	ldy	#>save
+	ldx	#<save
 
 	rts
 
