@@ -12,6 +12,7 @@
 ; 169 bytes = optimize multiply by 8
 ; 166 bytes = separate common sin code
 ; 164 bytes = move more to common sin code
+; 162 bytes = move more to common sin code
 
 qint	=	$EBF2		; convert FAC to 32-bit int?
 fadd	=	$E7BE		; FAC = (Y:A)+FAC
@@ -115,9 +116,6 @@ make_sin_table:
 	ldx	#0
 sin_loop:
 	stx	OURX
-	txa
-
-	jsr	float			; FAC = float(OURX)
 
 sin_table_input1_smc:
 	lda	#<one_input
@@ -126,11 +124,7 @@ sin_table_input1_smc:
 
 	jsr	sin_common
 
-;	ldx	#<save
 	jsr	movmf			; save FAC to mem
-
-	lda	OURX
-	jsr	float			; FAC = float(OURX)	(again)
 
 sin_table_input3_smc:
 	lda	#<two_input
@@ -141,7 +135,6 @@ sin_table_input3_smc:
 
 	; add first sine
 	txa
-;	lda	#<save
 	jsr	fadd			; FAC=FAC+(previous result)
 
 	; add constant 47 or 38
@@ -174,6 +167,11 @@ sin_table_dest_smc:
 	; X = low byte for result multiplier
 sin_common:
 	stx	TEMP1
+	pha
+	lda	OURX
+	jsr	float			; FAC = float(OURX)	(again)
+	pla
+
 	ldy	#>one_input		; high byte, assume always same
 
 	jsr	fmult			; FAC=FAC*(constant from RAM)
