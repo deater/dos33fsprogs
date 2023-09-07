@@ -7,6 +7,9 @@
 ; 205 bytes = make page increment common code
 ; 198 bytes = convert thirty-two to twenty-four on fly
 ; 188 bytes = convert forty-seven to thirty-eight with one byte
+; 173 bytes = assume constants on same page
+; 171 bytes = optimize save/load of loop index
+; 169 bytes = optimize multiply by 8
 
 qint	=	$EBF2		; convert FAC to 32-bit int?
 fadd	=	$E7BE		; FAC = (Y:A)+FAC
@@ -42,6 +45,11 @@ add_debut:
 	;		32.0*sin(i*(PI*2.0/256.0))+
 	;		16.0*sin(2.0*i*(PI*2.0/256.0)));
 
+	;	sin1[i]=round(47.0+
+	;		16*(2.0*sin(i*(PI*2.0/256.0))+
+	;		    sin(2.0*i*(PI*2.0/256.0)));
+
+
 	; already set up for this one
 
 	jsr	make_sin_table
@@ -57,11 +65,9 @@ add_debut:
 	lda	#$7d		; only one byte different
 	sta	one_input
 
-	; load 3 instead of 2
+	; load 3 instead of 2 (assume on same page)
 	lda	#<three_input
 	sta	sin_table_input3_smc+1
-	lda	#>three_input
-	sta	sin_table_input4_smc+1
 
 	jsr	make_sin_table
 
@@ -74,27 +80,21 @@ add_debut:
 	lda	#$18
 	sta	forty_seven+1
 
-;	lda	#<thirty_eight
-;	sta	sin_table_add_smc1+1
-;	lda	#>thirty_eight
-;	sta	sin_table_add_smc2+1
-
 	; convert 32 to 24
 	dec	thirty_two
 	lda	#$40
 	sta	thirty_two+1
 
-	; load 3 input
+	; ideally, convert 4->3
+	; load 3 input (assume on same page)
 	lda	#<three_input
 	sta	sin_table_input1_smc+1
-	lda	#>three_input
-	sta	sin_table_input2_smc+1
 
-	; load 8 input
-	lda	#<eight_input
+	; convert four to eight
+	inc	one_input		; increment power of two
+	; load 8 input (assume on same page)
+	lda	#<one_input
 	sta	sin_table_input3_smc+1
-	lda	#>eight_input
-	sta	sin_table_input4_smc+1
 
 	jsr	make_sin_table
 
@@ -110,27 +110,26 @@ end:
 
 make_sin_table:
 
-	lda	#0
-	sta	OURX
-
+	ldx	#0
 sin_loop:
+	stx	OURX
+	txa
 
-	lda	OURX
 	jsr	float			; FAC = float(OURX)
 
 sin_table_input1_smc:
 	lda	#<one_input
-sin_table_input2_smc:
+
 	ldy	#>one_input
 	jsr	fmult			; FAC=FAC*(constant from RAM)
 
 	jsr	sin			; FAC=sin(FAC)
 
-;sin_table_scale1_smc:
+	; 32 or 24
 	lda	#<thirty_two
-;sin_table_scale2_smc:
 	ldy	#>thirty_two
 	jsr	fmult			; FAC=constant*FAC
+
 
 	ldx	#<save
 	ldy	#>save
@@ -141,12 +140,12 @@ sin_table_input2_smc:
 
 sin_table_input3_smc:
 	lda	#<two_input
-sin_table_input4_smc:
 	ldy	#>two_input
 	jsr	fmult			; FAC=FAC*(constant from RAM)
 
 	jsr	sin			; FAC=sin(FAC)
 
+	; always 16
 	lda	#<sixteen
 	ldy	#>sixteen
 	jsr	fmult			; FAC=constant*FAC
@@ -156,10 +155,8 @@ sin_table_input4_smc:
 	ldy	#>save
 	jsr	fadd			; FAC=FAC+(previous result)
 
-	; add constant
-sin_table_add_smc1:
+	; add constant 47 or 38
 	lda	#<forty_seven
-sin_table_add_smc2:
 	ldy	#>forty_seven
 	jsr	fadd			; FAC=FAC+constant
 
@@ -172,13 +169,37 @@ sin_table_add_smc2:
 sin_table_dest_smc:
 	sta	sin1,X			; save to memory
 
-	inc	OURX			; move to next
+	inx				; move to next
+
 	bne	sin_loop		; loop until done
 
 	inc	sin_table_dest_smc+2	; point to next location
 
 	rts
 
+.if 0
+sin_common:
+	lda	OURX
+	jsr	float			; FAC = float(OURX)
+
+	; 1, 2, 4, 3, 3, 8
+sin_table_input1_smc:
+	lda	#<one_input
+sin_table_input2_smc:
+	ldy	#>one_input
+	jsr	fmult			; FAC=FAC*(constant from RAM)
+
+	jsr	sin			; FAC=sin(FAC)
+
+	; 32, 16, 32, 16, 32, 24
+
+	; 32 or 24
+	lda	#<thirty_two
+	ldy	#>thirty_two
+	jmp	fmult			; FAC=constant*FAC
+
+	; tail call
+.endif
 
 sixteen:
 	.byte	$85,$00,$00,$00,$00
@@ -213,7 +234,7 @@ three_input:
 ;	; 4*2*pi/256 = .0736310778
 ;	.byte $7d,$49,$0F,$da,$a2
 
-eight_input:
-	; 8*2*pi/256 = .196349541
-	.byte $7E,$49,$0F,$da,$a2
+;eight_input:
+;	; 8*2*pi/256 = .196349541
+;	.byte $7E,$49,$0F,$da,$a2
 
