@@ -13,6 +13,7 @@
 ; 166 bytes = separate common sin code
 ; 164 bytes = move more to common sin code
 ; 162 bytes = move more to common sin code
+; 159 bytes = fallthrough at end
 
 qint	=	$EBF2		; convert FAC to 32-bit int?
 fadd	=	$E7BE		; FAC = (Y:A)+FAC
@@ -96,8 +97,9 @@ make_tables:
 	lda	#<one_input
 	sta	sin_table_input3_smc+1
 
-	jmp	make_sin_table
+;	jsr	make_sin_table
 
+	; fallthrough
 
 	;===============================
 	;===============================

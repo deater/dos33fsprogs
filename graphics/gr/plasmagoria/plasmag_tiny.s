@@ -8,24 +8,35 @@
 ; note can use $F000 (or similar) for color lookup to get passable
 ;	effect on fewer bytes
 
+; 347 bytes -- initial with FAC
+; 343 bytes -- optimize init
+; 340 bytes -- move Table1 + Table2 to zero page
+; 331 bytes -- init not necessary
+; 319 bytes -- inline precalc + display + init lores colors
+; 316 bytes -- fallthrough in make_tiny
+
 .include "hardware.inc"
 
 
-Table1	=	$8000
-Table2	=	$8000+64
+;Table1	=	$8000
+;Table2	=	$8000+64
 
 ; Page Zero
 
-GBASL			= $26
-GBASH			= $27
+GBASL	= $26
+GBASH	= $27
 
-COMPT1			= $30
-COMPT2			= $31
+COMPT1	= $30
+COMPT2	= $31
 
-PARAM1			= $60
-PARAM2			= $61
-PARAM3			= $62
-PARAM4			= $63
+PARAM1	= $60
+PARAM2	= $61
+PARAM3	= $62
+PARAM4	= $63
+
+Table1	= $A0	; 40 bytes
+Table2	= $D0	; 40 bytes
+
 
 ; =============================================================================
 ; ROUTINE MAIN
@@ -39,33 +50,54 @@ plasma_debut:
 
 	bit	LORES			; set lo-res
 
-	jsr	init_lores_colors	; FIXME: inline?
+
+lores_colors_fine=$8100
+
+; ============================================================================
+; init lores colors (inline)
+; ============================================================================
+
+init_lores_colors:
+	ldx	#0
+	ldy	#0
+; 347
+
+init_lores_colors_loop:
+	lda	lores_colors_lookup,X
+	sta	lores_colors_fine,Y
+	iny
+	sta	lores_colors_fine,Y
+	iny
+	sta	lores_colors_fine,Y
+	iny
+	sta	lores_colors_fine,Y
+	iny
+	beq	done_init_lores_colors
+
+	inx
+	txa
+	and	#$f
+	tax
+	jmp	init_lores_colors_loop
+
+done_init_lores_colors:
+
+; ============================================================================
 
 do_plasma:
 	; init
 
-	lda	#02
-	sta	COMPT2
-	sta	PARAM1
-	sta	PARAM2
-	sta	PARAM3
-	sta	PARAM4
+;	lda	#02
+;	ldx	#5
+;init_loop:
+;	sta	COMPT1,X
+;	dex
+;	bne	init_loop
 
 BP3:
-	jsr	precalc			; pre-calc
-	jsr	display_normal		; display normal
-
-	inc	COMPT1
-	bne	BP3
-
-	dec	COMPT2
-	bne	BP3
-
-	jmp	do_plasma
-
 
 ; ============================================================================
-; Precalculate some values
+; Precalculate some values (inlined)
 ; ROUTINES PRE CALCUL
 ; ============================================================================
 precalc:
@@ -108,8 +140,6 @@ pc_off4:
  	inc	PARAM3
 	dec	PARAM4
 
- 	rts
-
 ; ============================================================================
 ; Display Routines
 ; ROUTINES AFFICHAGES
@@ -144,55 +174,19 @@ display_lookup_smc:
 	dex
 	bpl	display_line_loop
 
-	rts
+; ============================================================================
+
+	inc	COMPT1
+	bne	BP3
+
+	dec	COMPT2
+	bne	BP3
+
+	beq	do_plasma	; bra
 
 
 
-lores_colors_fine=$8100
-init_lores_colors:
-	ldx	#0
-	ldy	#0
-; 347
 
-init_lores_colors_loop:
-	lda	lores_colors_lookup,X
-	sta	lores_colors_fine,Y
-	iny
-	sta	lores_colors_fine,Y
-	iny
-	sta	lores_colors_fine,Y
-	iny
-	sta	lores_colors_fine,Y
-	iny
-	beq	done_init_lores_colors
-	inx
-	txa
-	and	#$f
-	tax
-	jmp	init_lores_colors_loop
-
-.if 0
-init_lores_colors_loop:
-	lda	lores_colors_lookup,X
-	ldy	#3
-lol:
-	sta	lores_colors_fine,Y
-	dey
-	bne	lol
-	clc
-	lda	#4
-	adc	lol+1
-	sta	lol+1
-
-	beq	done_init_lores_colors
-	inx
-	txa
-	and	#$f
-	tax
-	jmp	init_lores_colors_loop
-.endif
-done_init_lores_colors:
-	rts
 
 lores_colors_lookup:
 .byte $00,$88,$55,$99,$ff,$bb,$33,$22,$66,$77,$44,$cc,$ee,$dd,$99,$11
