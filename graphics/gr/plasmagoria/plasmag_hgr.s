@@ -79,6 +79,8 @@ div8_loop:
 
 init_hires_colors:
 
+;==============================================
+
 init_hires_colors_even_l0:
 	ldx	#0
 	ldy	#0
@@ -130,6 +132,61 @@ init_hires_colors_odd_l0_loop:
 	jmp	init_hires_colors_odd_l0_loop
 
 done_init_hires_colors_odd_l0:
+
+;==============================================
+
+init_hires_colors_even_l1:
+	ldx	#0
+	ldy	#0
+; 347
+
+init_hires_colors_even_l1_loop:
+	lda	hires_colors_even_lookup_l1,X
+	sta	hires_colors_even_l1,Y
+	iny
+	sta	hires_colors_even_l1,Y
+	iny
+	sta	hires_colors_even_l1,Y
+	iny
+	sta	hires_colors_even_l1,Y
+	iny
+	beq	done_init_hires_colors_even_l1
+
+	inx
+	txa
+	and	#$f
+	tax
+	jmp	init_hires_colors_even_l1_loop
+
+done_init_hires_colors_even_l1:
+
+;============================
+
+init_hires_colors_odd_l1:
+	ldx	#0
+	ldy	#0
+; 347
+
+init_hires_colors_odd_l1_loop:
+	lda	hires_colors_odd_lookup_l1,X
+	sta	hires_colors_odd_l1,Y
+	iny
+	sta	hires_colors_odd_l1,Y
+	iny
+	sta	hires_colors_odd_l1,Y
+	iny
+	sta	hires_colors_odd_l1,Y
+	iny
+	beq	done_init_hires_colors_odd_l1
+
+	inx
+	txa
+	and	#$f
+	tax
+	jmp	init_hires_colors_odd_l1_loop
+
+done_init_hires_colors_odd_l1:
+
 
 
 ; ============================================================================
@@ -217,13 +274,19 @@ display_row_sin_smc:
 	adc	#00			; add in row value
 	sta	display_lookup_smc+1	; patch in low byte of lookup
 
+	; pick 0/1 for odd even
 	lda	display_lookup_smc+2
 	eor	#$01
 	sta	display_lookup_smc+2
 
-display_lookup_smc:
-	lda	hires_colors_even_l0	; attention: must be aligned
-	sta	color_smc+1
+
+
+
+
+
+
+;	lda	hires_colors_even_l0	; attention: must be aligned
+;	sta	color_smc+1
 
 	lda	hposn_high_div8,X
 	clc
@@ -234,7 +297,14 @@ display_lookup_smc:
 	sta	COUNT
 store_loop:
 color_smc:
-	lda	#$fe
+
+	lda	display_lookup_smc+2
+	eor	#$02
+	sta	display_lookup_smc+2
+
+display_lookup_smc:
+	lda	hires_colors_even_l0	; attention: must be aligned
+;	lda	#$fe
 	sta	(GBASL),Y
 	clc
 	lda	#$4
@@ -279,80 +349,77 @@ display_done:
 ;	beq	do_plasma	; bra
 
 
-
-
-
 hires_colors_even_lookup_l0:
 .byte $00						; black
 .byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; dark orange
 .byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; med orange
-.byte $88	; 00 01 00 0 -> 1 00 01 00 0 = $88	; light orange
+.byte $88	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; light orange
 .byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; solid orange
-.byte $BB	; 11 01 11 0 -> 1 01 11 01 1 = $BB	; white orange
+.byte $EE	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; white orange
 .byte $EE	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; med white/o
 .byte $EE 	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; wwo
 .byte $FF	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; white
 .byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; white/blue
 .byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; med white/blue
-.byte $F7	; 11 10 11 1 -> 1 11 10 11 1 = $F7	; blue/white
+.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; blue/white
 .byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; blue
-.byte $C4	; 00 10 00 1 -> 1 10 00 10 0 = $C4	; black/blue
-.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med
-.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med/dark
+.byte $91	; 10 00 10 0 -> 1 00 10 00 1 = $91	; black/blue
+.byte $91	; 10 00 10 0 -> 1 00 10 00 1 = $91	; med
+.byte $91	; 10 00 10 0 -> 1 00 10 00 1 = $91	; med/dark
 
 hires_colors_odd_lookup_l0:
 .byte $00						; black
-.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; dark orange
-.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; med orange
+.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; dark orange
+.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; med orange
 .byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; light orange
 .byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; solid orange
 .byte $DD	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; white orange
-.byte $F7	; 1 11 01 11 -> 1 11 10 11 1 = $F7	; med white/o
-.byte $F7 	; 1 11 01 11 -> 1 11 10 11 1 = $F7
+.byte $DD	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; med white/o
+.byte $DD 	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; wwo
 .byte $FF	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; white
 .byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; white/blue
 .byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; med white/blue
-.byte $EE	; 0 11 10 11 -> 1 11 01 11 0 = $EE	; blue/white
+.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; blue/white
 .byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; blue
-.byte $88	; 0 00 10 00 -> 1 00 01 00 0 = $88	; black/blue
+.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; black/blue
 .byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med
 .byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med/dark
 
 hires_colors_even_lookup_l1:
 .byte $00						; black
-.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; dark orange
-.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; med orange
-.byte $88	; 00 01 00 0 -> 1 00 01 00 0 = $88	; light orange
+.byte $00						; dark orange
+.byte $88	; 00 01 00 0 -> 1 00 01 00 0 = $88	; med orange
+.byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; light orange
 .byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; solid orange
-.byte $BB	; 11 01 11 0 -> 1 01 11 01 1 = $BB	; white orange
-.byte $EE	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; med white/o
-.byte $EE 	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; wwo
+.byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; white orange
+.byte $BB	; 11 01 11 0 -> 1 01 11 01 1 = $BB	; med white/o
+.byte $FF 	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; wwo
 .byte $FF	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; white
-.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; white/blue
-.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; med white/blue
-.byte $F7	; 11 10 11 1 -> 1 11 10 11 1 = $F7	; blue/white
+.byte $FF	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; white/blue
+.byte $F7	; 11 10 11 1 -> 1 11 10 11 1 = $F7	; med white/blue
+.byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; blue/white
 .byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; blue
-.byte $C4	; 00 10 00 1 -> 1 10 00 10 0 = $C4	; black/blue
-.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med
-.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med/dark
+.byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; black/blue
+.byte $C4	; 00 10 00 1 -> 1 10 00 10 0 = $C4	; med
+.byte $00						; med/dark
 
 hires_colors_odd_lookup_l1:
 .byte $00						; black
-.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; dark orange
-.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; med orange
-.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; light orange
+.byte $00						; dark orange
+.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; med orange
+.byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; light orange
 .byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; solid orange
-.byte $DD	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; white orange
+.byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; white orange
 .byte $F7	; 1 11 01 11 -> 1 11 10 11 1 = $F7	; med white/o
-.byte $F7 	; 1 11 01 11 -> 1 11 10 11 1 = $F7
+.byte $FF 	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; wwo
 .byte $FF	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; white
-.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; white/blue
-.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; med white/blue
-.byte $EE	; 0 11 10 11 -> 1 11 01 11 0 = $EE	; blue/white
+.byte $FF	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; white/blue
+.byte $EE	; 0 11 10 11 -> 1 11 01 11 0 = $EE	; med white/blue
+.byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; blue/white
 .byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; blue
-.byte $88	; 0 00 10 00 -> 1 00 01 00 0 = $88	; black/blue
+.byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; black/blue
 .byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med
-.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med/dark
+.byte $00						; med/dark
 
 
 
