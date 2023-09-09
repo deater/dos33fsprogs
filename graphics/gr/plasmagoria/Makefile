@@ -7,12 +7,13 @@ EMPTYDISK = ../../../empty_disk/empty.dsk
 
 all:	plasmag.dsk
 
-plasmag.dsk:	HELLO PLASMAG PLASMAG_FULL PLASMAG_TINY
+plasmag.dsk:	HELLO PLASMAG PLASMAG_FULL PLASMAG_TINY PLASMAG_HGR
 	cp $(EMPTYDISK) plasmag.dsk
 	$(DOS33) -y plasmag.dsk SAVE A HELLO
 	$(DOS33) -y plasmag.dsk BSAVE -a 0x4000 PLASMAG
 	$(DOS33) -y plasmag.dsk BSAVE -a 0x4000 PLASMAG_FULL
 	$(DOS33) -y plasmag.dsk BSAVE -a 0x4000 PLASMAG_TINY
+	$(DOS33) -y plasmag.dsk BSAVE -a 0xc00 PLASMAG_HGR
 
 ###
 
@@ -37,6 +38,15 @@ plasmag_tiny.o:	plasmag_tiny.s gr_gbascalc.s make_tables.s
 
 ###
 
+PLASMAG_HGR:	plasmag_hgr.o
+	ld65 -o PLASMAG_HGR plasmag_hgr.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+plasmag_hgr.o:	plasmag_hgr.s gr_gbascalc.s make_tables.s
+	ca65 -o plasmag_hgr.o plasmag_hgr.s -l plasmag_hgr.lst
+
+
+###
+
 PLASMAG_FULL:	plasmag_full.o
 	ld65 -o PLASMAG_FULL plasmag_full.o -C $(LINKERSCRIPTS)/apple2_4000.inc
 
@@ -47,4 +57,4 @@ plasmag_full.o:	plasmag_full.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst PLASMAG HELLO
+	rm -f *~ *.o *.lst PLASMAG HELLO PLASMAG_TINY PLASMAG_HGR

@@ -1,25 +1,19 @@
-; PLASMAGORIA, Tiny version
+; PLASMAGORIA, hi-res version
 
 ; original code by French Touch
 
-; trying to see how small I can get it
-
-
-; note can use $F000 (or similar) for color lookup to get passable
-;	effect on fewer bytes
-
-; 347 bytes -- initial with FAC
-; 343 bytes -- optimize init
-; 340 bytes -- move Table1 + Table2 to zero page
-; 331 bytes -- init not necessary
-; 319 bytes -- inline precalc + display + init lores colors
-; 316 bytes -- fallthrough in make_tiny
 
 .include "hardware.inc"
 
+hposn_high=$6000
+hposn_low =$6100
+hposn_high_div8=$6200
+hposn_low_div8 =$6300
 
 ;Table1	=	$8000
 ;Table2	=	$8000+64
+
+HGR     =       $F3E2
 
 ; Page Zero
 
@@ -37,6 +31,9 @@ PARAM4	= $63
 Table1	= $A0	; 40 bytes
 Table2	= $D0	; 40 bytes
 
+PAGE	= $FC
+COUNT	= $FD
+GBASH_SAVE = $FE
 
 ; =============================================================================
 ; ROUTINE MAIN
@@ -46,10 +43,28 @@ plasma_debut:
 	jsr	HGR		; have table gen appear on hgr page1
 	bit	FULLGR
 
-	jsr	make_tables
+	jsr	build_tables
 
-	bit	LORES			; set lo-res
+	ldx	#23
+	ldy	#184
+div8_loop:
+	lda	hposn_low,Y
+	sta	hposn_low_div8,X
+	lda	hposn_high,Y
+	sta	hposn_high_div8,X
+	dey
+	dey
+	dey
+	dey
+	dey
+	dey
+	dey
+	dey
+	dex
+	bpl	div8_loop
 
+	lda	#0
+	sta	PAGE
 
 lores_colors_fine=$8100
 
@@ -154,8 +169,8 @@ display_normal:
 
 display_line_loop:
 
-	txa
-	jsr	GBASCALC
+	lda	hposn_low_div8,X
+	sta	GBASL
 
 	ldy	#39			; col 0-39
 
@@ -168,7 +183,26 @@ display_row_sin_smc:
 	sta	display_lookup_smc+1	; patch in low byte of lookup
 display_lookup_smc:
 	lda	lores_colors_fine	; attention: must be aligned
+	sta	color_smc+1
+
+	lda	hposn_high_div8,X
+	clc
+	adc	PAGE
+	sta	GBASH
+
+	lda	#7
+	sta	COUNT
+store_loop:
+color_smc:
+	lda	#$fe
 	sta	(GBASL),Y
+	clc
+	lda	#$4
+	adc	GBASH
+	sta	GBASH
+	dec	COUNT
+	bpl	store_loop
+
 	dey
 	bpl	display_col_loop
 	dex
@@ -176,13 +210,33 @@ display_lookup_smc:
 
 ; ============================================================================
 
+	lda	PAGE
+	beq	was_page1
+was_page2:
+	bit	PAGE2
+	lda	#0
+	beq	done_pageflip
+was_page1:
+	bit	PAGE1
+	lda	#$20
+done_pageflip:
+	sta	PAGE
+
 	inc	COMPT1
-	bne	BP3
+	beq	display_done2
+;	bne	BP3
+	jmp	BP3
+
+display_done2:
 
 	dec	COMPT2
-	bne	BP3
+	beq	display_done
+;	bne	BP3
+	jmp	BP3
+display_done:
 
-	beq	do_plasma	; bra
+	jmp	do_plasma
+;	beq	do_plasma	; bra
 
 
 
@@ -191,7 +245,10 @@ display_lookup_smc:
 lores_colors_lookup:
 .byte $00,$88,$55,$99,$ff,$bb,$33,$22,$66,$77,$44,$cc,$ee,$dd,$99,$11
 
+.include "hgr_table.s"
 
-.include "make_tables.s"
-
-
+.align 256
+sin1:
+.incbin "tables"
+sin2=sin1+256
+sin3=sin2+256
