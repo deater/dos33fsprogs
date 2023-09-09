@@ -13,9 +13,10 @@ $(DOS33):
 	cd ../../../utils/dos33fs-utils && make
 
 starfield.dsk:	$(DOS33) HELLO STARFIELD_DEMO STARFIELD_1K STARFIELD.BAS \
-	STARSMALL STARBOT STARBOT_LOOKUP
+	STARSMALL STARBOT STARBOT_LOOKUP STAR_HORIZ.BAS
 	cp $(EMPTY_DISK)/empty.dsk starfield.dsk
 	$(DOS33) -y starfield.dsk SAVE A HELLO
+	$(DOS33) -y starfield.dsk SAVE A STAR_HORIZ.BAS
 	$(DOS33) -y starfield.dsk SAVE A STARFIELD.BAS
 	$(DOS33) -y starfield.dsk BSAVE -a 0x1000 STARFIELD_DEMO
 	$(DOS33) -y starfield.dsk BSAVE -a 0x1000 STARFIELD_1K
@@ -32,6 +33,11 @@ HELLO:	hello.bas
 
 STARFIELD.BAS:	starfield.bas
 	$(TOKENIZE) < starfield.bas > STARFIELD.BAS
+
+###
+
+STAR_HORIZ.BAS:	star_horiz.bas
+	$(TOKENIZE) < star_horiz.bas > STAR_HORIZ.BAS
 
 
 ###
