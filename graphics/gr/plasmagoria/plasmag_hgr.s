@@ -10,6 +10,11 @@ hposn_low =$6100
 hposn_high_div8=$6200
 hposn_low_div8 =$6300
 
+hires_colors_even_l0=$8000
+hires_colors_odd_l0 =$8100
+hires_colors_even_l1=$8200
+hires_colors_odd_l1 =$8300
+
 ;Table1	=	$8000
 ;Table2	=	$8000+64
 
@@ -66,36 +71,66 @@ div8_loop:
 	lda	#0
 	sta	PAGE
 
-lores_colors_fine=$8100
+
 
 ; ============================================================================
 ; init lores colors (inline)
 ; ============================================================================
 
-init_lores_colors:
+init_hires_colors:
+
+init_hires_colors_even_l0:
 	ldx	#0
 	ldy	#0
 ; 347
 
-init_lores_colors_loop:
-	lda	lores_colors_lookup,X
-	sta	lores_colors_fine,Y
+init_hires_colors_even_l0_loop:
+	lda	hires_colors_even_lookup_l0,X
+	sta	hires_colors_even_l0,Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	hires_colors_even_l0,Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	hires_colors_even_l0,Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	hires_colors_even_l0,Y
 	iny
-	beq	done_init_lores_colors
+	beq	done_init_hires_colors_even_l0
 
 	inx
 	txa
 	and	#$f
 	tax
-	jmp	init_lores_colors_loop
+	jmp	init_hires_colors_even_l0_loop
 
-done_init_lores_colors:
+done_init_hires_colors_even_l0:
+
+;============================
+
+init_hires_colors_odd_l0:
+	ldx	#0
+	ldy	#0
+; 347
+
+init_hires_colors_odd_l0_loop:
+	lda	hires_colors_odd_lookup_l0,X
+	sta	hires_colors_odd_l0,Y
+	iny
+	sta	hires_colors_odd_l0,Y
+	iny
+	sta	hires_colors_odd_l0,Y
+	iny
+	sta	hires_colors_odd_l0,Y
+	iny
+	beq	done_init_hires_colors_odd_l0
+
+	inx
+	txa
+	and	#$f
+	tax
+	jmp	init_hires_colors_odd_l0_loop
+
+done_init_hires_colors_odd_l0:
+
 
 ; ============================================================================
 
@@ -181,8 +216,13 @@ display_col_loop:
 display_row_sin_smc:
 	adc	#00			; add in row value
 	sta	display_lookup_smc+1	; patch in low byte of lookup
+
+	lda	display_lookup_smc+2
+	eor	#$01
+	sta	display_lookup_smc+2
+
 display_lookup_smc:
-	lda	lores_colors_fine	; attention: must be aligned
+	lda	hires_colors_even_l0	; attention: must be aligned
 	sta	color_smc+1
 
 	lda	hposn_high_div8,X
@@ -202,9 +242,9 @@ color_smc:
 	sta	GBASH
 	dec	COUNT
 	bpl	store_loop
-
 	dey
 	bpl	display_col_loop
+
 	dex
 	bpl	display_line_loop
 
@@ -242,8 +282,80 @@ display_done:
 
 
 
-lores_colors_lookup:
-.byte $00,$88,$55,$99,$ff,$bb,$33,$22,$66,$77,$44,$cc,$ee,$dd,$99,$11
+hires_colors_even_lookup_l0:
+.byte $00						; black
+.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; dark orange
+.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; med orange
+.byte $88	; 00 01 00 0 -> 1 00 01 00 0 = $88	; light orange
+.byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; solid orange
+.byte $BB	; 11 01 11 0 -> 1 01 11 01 1 = $BB	; white orange
+.byte $EE	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; med white/o
+.byte $EE 	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; wwo
+.byte $FF	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; white
+.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; white/blue
+.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; med white/blue
+.byte $F7	; 11 10 11 1 -> 1 11 10 11 1 = $F7	; blue/white
+.byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; blue
+.byte $C4	; 00 10 00 1 -> 1 10 00 10 0 = $C4	; black/blue
+.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med
+.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med/dark
+
+hires_colors_odd_lookup_l0:
+.byte $00						; black
+.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; dark orange
+.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; med orange
+.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; light orange
+.byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; solid orange
+.byte $DD	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; white orange
+.byte $F7	; 1 11 01 11 -> 1 11 10 11 1 = $F7	; med white/o
+.byte $F7 	; 1 11 01 11 -> 1 11 10 11 1 = $F7
+.byte $FF	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; white
+.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; white/blue
+.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; med white/blue
+.byte $EE	; 0 11 10 11 -> 1 11 01 11 0 = $EE	; blue/white
+.byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; blue
+.byte $88	; 0 00 10 00 -> 1 00 01 00 0 = $88	; black/blue
+.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med
+.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med/dark
+
+hires_colors_even_lookup_l1:
+.byte $00						; black
+.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; dark orange
+.byte $A2	; 01 00 01 0 -> 1 01 00 01 0 = $A2	; med orange
+.byte $88	; 00 01 00 0 -> 1 00 01 00 0 = $88	; light orange
+.byte $AA	; 01 01 01 0 -> 1 01 01 01 0 = $AA	; solid orange
+.byte $BB	; 11 01 11 0 -> 1 01 11 01 1 = $BB	; white orange
+.byte $EE	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; med white/o
+.byte $EE 	; 01 11 01 1 -> 1 11 01 11 0 = $EE	; wwo
+.byte $FF	; 11 11 11 1 -> 1 11 11 11 1 = $FF	; white
+.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; white/blue
+.byte $DD	; 10 11 10 1 -> 1 10 11 10 1 = $DD	; med white/blue
+.byte $F7	; 11 10 11 1 -> 1 11 10 11 1 = $F7	; blue/white
+.byte $D5	; 10 10 10 1 -> 1 10 10 10 1 = $D5	; blue
+.byte $C4	; 00 10 00 1 -> 1 10 00 10 0 = $C4	; black/blue
+.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med
+.byte $D1	; 10 00 10 1 -> 1 10 10 00 1 = $D1	; med/dark
+
+hires_colors_odd_lookup_l1:
+.byte $00						; black
+.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; dark orange
+.byte $C5	; 1 01 00 01 -> 1 10 00 10 1 = $C5	; med orange
+.byte $91	; 1 00 01 00 -> 1 00 10 00 1 = $91	; light orange
+.byte $D5	; 1 01 01 01 -> 1 10 10 10 1 = $D5	; solid orange
+.byte $DD	; 1 01 11 01 -> 1 10 11 10 1 = $DD	; white orange
+.byte $F7	; 1 11 01 11 -> 1 11 10 11 1 = $F7	; med white/o
+.byte $F7 	; 1 11 01 11 -> 1 11 10 11 1 = $F7
+.byte $FF	; 1 11 11 11 -> 1 11 11 11 1 = $FF	; white
+.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; white/blue
+.byte $BB	; 1 10 11 10 -> 1 01 11 01 1 = $BB	; med white/blue
+.byte $EE	; 0 11 10 11 -> 1 11 01 11 0 = $EE	; blue/white
+.byte $AA	; 0 10 10 10 -> 1 01 01 01 0 = $AA	; blue
+.byte $88	; 0 00 10 00 -> 1 00 01 00 0 = $88	; black/blue
+.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med
+.byte $A2	; 0 10 00 10 -> 1 01 00 01 0 = $A2	; med/dark
+
+
+
 
 .include "hgr_table.s"
 
