@@ -295,7 +295,7 @@ display_row_sin_smc:
 	adc	PAGE
 	sta	GBASH
 
-	lda	#3
+	lda	#1
 	sta	COUNT
 store_loop:
 color_smc:
@@ -309,7 +309,7 @@ display_lookup_smc:
 ;	lda	#$fe
 	sta	(GBASL),Y
 	clc
-	lda	#$8
+	lda	#$10
 	adc	GBASH
 	sta	GBASH
 	dec	COUNT
