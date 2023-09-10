@@ -19,7 +19,6 @@ hires_colors_odd_l1 =$8300
 ;Table2	=	$8000+64
 
 HGR     =       $F3E2
-HGR2           = $F3D8
 
 ; Page Zero
 
@@ -46,7 +45,6 @@ GBASH_SAVE = $FE
 ; =============================================================================
 
 plasma_debut:
-	jsr	HGR2
 	jsr	HGR		; have table gen appear on hgr page1
 	bit	FULLGR
 
@@ -295,7 +293,7 @@ display_row_sin_smc:
 	adc	PAGE
 	sta	GBASH
 
-	lda	#3
+	lda	#7
 	sta	COUNT
 store_loop:
 color_smc:
@@ -309,7 +307,7 @@ display_lookup_smc:
 ;	lda	#$fe
 	sta	(GBASL),Y
 	clc
-	lda	#$8
+	lda	#$4
 	adc	GBASH
 	sta	GBASH
 	dec	COUNT
