@@ -1,0 +1,35 @@
+Apple II display is 65 cycles per row
+	65*192=12480(screen)+ 4550 more for vblank = 17030 cycles
+
+	17030/1023000 = 60fps
+
+Theory maximum screen update
+	completely unrolled 192*40*4 cycles = 30720  cycles
+
+	30720 / 1023000 = 33 fps
+
+
+
+
+
+17030 cycles
+
+   ;       Total of 12480 cycles to draw screen
+        ; Vertical blank = 4550 cycles (70 scan lines)
+        ; Total of 17030 cycles to get back to where was
+
+to fill the hi-res screen with a single color you need to update 7680 
+bytes.  If you completely unroll the loop this takes 30720 cycles, or 
+roughly 33fps.
+
+This plasma algorithm if drawing the whole screen (192 lines) manages 
+only 3fps.  The video here I am skipping half the lines which gives 
+5.5fps.  I have a version drawing every 4th line which still looks OK 
+that can do 9fps.
+
+The code is already heavily optimized with lots of self modifying code 
+and table lookups.  I'm losing some cycles to doing page flipping, and 
+part of the problem is the Apple II's bizzarre framebuffer layout.  I 
+also waste cycles because I'm doing table lookups to get the dithered 
+patterns, and again due to Apple II oddness (3.5 colored pixels per 
+byte) I need separate lookups for odd/even columns
