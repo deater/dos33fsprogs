@@ -160,19 +160,19 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; ZW, MUSIC, ?, ?
+	.byte 1,1,1,1		; SECOND, MUSIC, ?, ?
 
 load_address_array:
-        .byte $60,$D0,$90,$90	; ZW, MUSIC, ?, ?
+        .byte $60,$D0,$90,$90	; SECOND, MUSIC, ?, ?
 
 track_array:
-        .byte  5, 3, 9,12	; ZW, MUSIC, ?, ?
+        .byte  5, 3, 9,12	; SECOND, MUSIC, ?, ?
 
 sector_array:
-        .byte  0, 0, 0, 0	; ZW, MUSIC, ?, ?
+        .byte  0, 0, 0, 0	; SECOND, MUSIC, ?, ?
 
 length_array:
-        .byte  84, 32, 48, 48	; ZW, MUSIC, ?, ?
+        .byte  84, 32, 48, 48	; SECOND, MUSIC, ?, ?
 
 	.include	"lc_detect.s"
 	.include	"wait.s"

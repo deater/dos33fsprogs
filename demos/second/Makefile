@@ -13,14 +13,16 @@ all:	second.dsk
 #	$(DOS33) -y second.dsk SAVE A HELLO
 #	$(DOS33) -y second.dsk BSAVE -a 0x6000 ZW
 
-second.dsk:	QBOOT QLOAD SECOND MUSIC
+second.dsk:	QBOOT QLOAD SECOND MUSIC \
+	./part18_3d/THREED
 	cp $(EMPTY_DISK) second.dsk
 	$(DOS33_RAW) second.dsk 0 0 QBOOT	0 1
 	$(DOS33_RAW) second.dsk 0 2 QBOOT	1 1
 	$(DOS33_RAW) second.dsk 0 4 QBOOT	2 1
 	$(DOS33_RAW) second.dsk 1 0 QLOAD	0 0
 	$(DOS33_RAW) second.dsk 3 0 MUSIC	0 0
-	$(DOS33_RAW) second.dsk 5 0 SECOND	0 0
+#	$(DOS33_RAW) second.dsk 5 0 SECOND	0 0
+	$(DOS33_RAW) second.dsk 5 0 ./part18_3d/THREED	0 0
 
 ####
 

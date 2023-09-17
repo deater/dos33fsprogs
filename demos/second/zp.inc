@@ -148,6 +148,13 @@ HGR_COLOR       = $E4
 			;NAMEH		=	$EA
 			;NAMEX		=	$EB
 			;CHAR		=	$EC
+
+X1	= $E8
+X2	= $E9
+Y1	= $EA
+Y2	= $EB
+SCENE_COUNT = $EC
+
 STATE           = $ED
 OFFSET         = $EF
 
