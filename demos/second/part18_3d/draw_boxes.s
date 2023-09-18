@@ -16,6 +16,7 @@ CLEAR	=	$01
 BOX	=	$02
 HLIN	=	$03
 VLIN	=	$04
+PLOT	=	$05
 
 BLACK		= $00
 RED		= $01
@@ -111,6 +112,17 @@ clear_screen:
 	; draw box
 	;=================================
 	;=================================
+
+	; blurgh.  Cases
+	;	Y1=EVEN, Y2=ODD ->       loop Y1/2 to Y2/2, inclusive
+	;	Y1=ODD,  Y2=ODD -> HLIN, loop (Y1/2)+1 to Y2/2 inclusive
+	;	Y1=EVEN, Y2=EVEN->       loop Y1/2 to (Y2/2)-1, HLIN
+	;	Y1=ODD, Y2=EVEN -> HLIN, loop (Y1/2)+1 to (Y2/2)-1, HLIN
+	; 2/3 case, 1 to 1
+	; 3/5 case, (>1) 2 to 2
+	; 2/4 case, 1 to 1 (<2)
+	; 3/4 case, 2 to 1 (!)
+	; 3/6 case, 2 to 2
 draw_box:
 	iny
 	lda	(INL),Y
@@ -154,6 +166,14 @@ odd_bottom_draw_box:
 even_draw_box_start:
 
 draw_box_yloop:
+
+draw_box_yend_smc:
+	cpy	#0
+	bcc	bbbb
+	beq	bbbb
+	jmp	done_draw_box_yloop		; bge
+
+bbbb:
 	lda	gr_offsets_l,Y
 	sta	draw_box_xloop_smc+1
 
@@ -172,11 +192,14 @@ draw_box_xloop_smc:
 	bcs	draw_box_xloop	; bge
 
 	iny
-draw_box_yend_smc:
-	cpy	#0
-	bcc	draw_box_yloop		; less than
-	beq	draw_box_yloop		; equal
+;draw_box_yend_smc:
+;	cpy	#0
+;	bcc	draw_box_yloop		; less than
+;	beq	draw_box_yloop		; equal
 
+	jmp	draw_box_yloop
+
+done_draw_box_yloop:
 	; done
 
 	; if Y2 was even we need to fixup and draw one more line
@@ -272,6 +295,14 @@ odd_bottom_vlin:
 even_vlin_start:
 
 vlin_yloop:
+vlin_yend_smc:
+	cpy	#0
+	bcc	cccc
+	beq	cccc
+	jmp	done_vlin_yloop		;
+
+cccc:
+
 	lda	gr_offsets_l,Y
 	sta	vlin_xloop_smc+1
 
@@ -287,12 +318,15 @@ vlin_xloop_smc:
 	sta	$400,X
 
 	iny
-vlin_yend_smc:
-	cpy	#0
-	bcc	vlin_yloop		; less than
-	beq	vlin_yloop		; equal
+;vlin_yend_smc:
+;	cpy	#0
+;	bcc	vlin_yloop		; less than
+;	beq	vlin_yloop		; equal
+
+	jmp	vlin_yloop
 
 	; done
+done_vlin_yloop:
 
 	; if Y2 was even we need to fixup and draw one more line
 
