@@ -232,6 +232,77 @@ hlin_done:
 	;=================================
 	;=================================
 draw_vlin:
+	iny
+	lda	(INL),Y
+	sta	Y1
+	iny
+	lda	(INL),Y
+	sta	Y2
+	iny
+	lda	(INL),Y
+	sta	X1
+
+
+	lda	Y2
+	lsr
+	; if even, go to one less
+	; else, fine
+	bcs	odd_bottom_vlin
+even_bottom_vlin:
+	sec
+	sbc	#1
+
+odd_bottom_vlin:
+
+	sta	vlin_yend_smc+1
+
+	; see if we start at multiple of two
+
+	lda	Y1
+	lsr
+	tay
+	bcc	even_vlin_start
+
+	; we're odd, need to call PLOT
+
+	jsr	plot_mask_odd
+	iny
+
+
+even_vlin_start:
+
+vlin_yloop:
+	lda	gr_offsets_l,Y
+	sta	vlin_xloop_smc+1
+
+	lda	gr_offsets_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	vlin_xloop_smc+2
+
+	lda	COLOR
+	ldx	X1
+
+vlin_xloop_smc:
+	sta	$400,X
+
+	iny
+vlin_yend_smc:
+	cpy	#0
+	bcc	vlin_yloop		; less than
+	beq	vlin_yloop		; equal
+
+	; done
+
+	; if Y2 was even we need to fixup and draw one more line
+
+	lda	Y2
+	lsr
+	bcs	definitely_odd_vlin
+
+	jsr	plot_mask_even
+
+definitely_odd_vlin:
 	; done
 
 	lda	#4
@@ -246,15 +317,24 @@ draw_vlin:
 draw_plot:
 	iny
 	lda	(INL),Y
-	tax
+	sta	X1
 
 	iny
 	lda	(INL),Y
+
+;	sta	Y1
+;	lda	Y1
+
+
+	lsr
 	tay
+	bcs	do_plot_mask_odd
+	jsr	plot_mask_even
+	jmp	plot_done
+do_plot_mask_odd:
+	jsr	plot_mask_odd
 
-draw_plot_smc:
-	sta	$400
-
+plot_done:
 
 	; done
 
@@ -303,6 +383,46 @@ draw_hlin_s_xloop_smc:
 	dex
 	cpx	X1
 	bpl	draw_hlin_xloop	; bge
+
+	rts
+
+	;===================================
+	;===================================
+	; plot common code
+	;===================================
+	;===================================
+	; X1, set up
+	; Y/2 is in Y
+	; call the proper entry point
+	; Y untouched
+
+plot_mask_odd:
+	lda	#$0F
+	.byte	$2C		; bit trick
+plot_mask_even:
+	lda	#$F0
+	sta	MASK
+	eor	#$FF
+	and	COLOR
+	sta	COLOR2
+
+	lda	gr_offsets_l,Y
+	sta	plot_l_smc+1
+	sta	plot_s_smc+1
+
+	lda	gr_offsets_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	plot_l_smc+2
+	sta	plot_s_smc+2
+
+	ldx	X1
+plot_l_smc:
+	lda	$400,X
+	and	MASK
+	ora	COLOR2
+plot_s_smc:
+	sta	$400,X
 
 	rts
 

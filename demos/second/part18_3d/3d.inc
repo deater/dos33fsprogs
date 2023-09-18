@@ -16,21 +16,21 @@ frame15:
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4, 6, 35,41
 
-	.byte	SET_COLOR | RED
-	.byte	HLIN,0,39,2
-	.byte	SET_COLOR | DARK_BLUE
-	.byte	HLIN,0,39,3
+;	.byte	SET_COLOR | RED
+;	.byte	HLIN,0,39,2
+;	.byte	SET_COLOR | DARK_BLUE
+;	.byte	HLIN,0,39,3
 
-	.byte	SET_COLOR | RED
-	.byte	HLIN,0,39,12
-	.byte	SET_COLOR | DARK_BLUE
-	.byte	HLIN,0,39,13
+;	.byte	SET_COLOR | RED
+;	.byte	HLIN,0,39,12
+;	.byte	SET_COLOR | DARK_BLUE
+;	.byte	HLIN,0,39,13
 
-	.byte	SET_COLOR | GREEN
-	.byte	BOX,  2,2,10,12		; goes to 6 only top
-	.byte	BOX, 12,3,20,12
-	.byte	BOX, 22,2,30,13		; goes to 6 full
-	.byte	BOX, 32,3,39,13
+;	.byte	SET_COLOR | GREEN
+;	.byte	BOX,  2,2,10,12		; goes to 6 only top
+;	.byte	BOX, 12,3,20,12
+;	.byte	BOX, 22,2,30,13		; goes to 6 full
+;	.byte	BOX, 32,3,39,13
 
 
 
