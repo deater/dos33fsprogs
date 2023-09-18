@@ -127,11 +127,31 @@ draw_box:
 
 	lda	Y2
 	lsr
+	; if even, go to one less
+	; else, fine
+	bcs	odd_bottom_draw_box
+even_bottom_draw_box:
+	sec
+	sbc	#1
+
+odd_bottom_draw_box:
+
 	sta	draw_box_yend_smc+1
+
+	; see if we start at multiple of two
 
 	lda	Y1
 	lsr
 	tay
+	bcc	even_draw_box_start
+
+	; we're odd, need to call HLIN
+
+	jsr	hlin_mask_odd
+	iny
+
+
+even_draw_box_start:
 
 draw_box_yloop:
 	lda	gr_offsets_l,Y
@@ -154,8 +174,20 @@ draw_box_xloop_smc:
 	iny
 draw_box_yend_smc:
 	cpy	#0
-	bcc	draw_box_yloop
+	bcc	draw_box_yloop		; less than
+	beq	draw_box_yloop		; equal
 
+	; done
+
+	; if Y2 was even we need to fixup and draw one more line
+
+	lda	Y2
+	lsr
+	bcs	definitely_odd_bottom
+
+	jsr	hlin_mask_even
+
+definitely_odd_bottom:
 	; done
 
 	lda	#5
@@ -177,32 +209,20 @@ draw_hlin:
 	sta	X2
 	iny
 	lda	(INL),Y
-	sta	Y1
 
+;	sta	Y1
+;	lda	Y1
 
-	lda	Y1
 	lsr
 	tay
-
-	lda	gr_offsets_l,Y
-	sta	draw_hlin_xloop_smc+1
-
-	lda	gr_offsets_h,Y
-	clc
-	adc	DRAW_PAGE
-	sta	draw_hlin_xloop_smc+2
-
-	lda	COLOR
-	ldx	X2
-draw_hlin_xloop:
-draw_hlin_xloop_smc:
-	sta	$400,X
-	dex
-	cpx	X1
-	bcs	draw_hlin_xloop	; bge
+	bcs	do_hlin_mask_odd
+	jsr	hlin_mask_even
+	jmp	hlin_done
+do_hlin_mask_odd:
+	jsr	hlin_mask_odd
 
 	; done
-
+hlin_done:
 	lda	#4
 	jmp	update_pointer
 
@@ -242,6 +262,49 @@ draw_plot_smc:
 	jmp	update_pointer
 
 
+	;===================================
+	;===================================
+	; hlin common code
+	;===================================
+	;===================================
+	; X1, X2 set up
+	; Y/2 is in Y
+	; call the proper entry point
+	; Y untouched
+
+hlin_mask_odd:
+	lda	#$0F
+	.byte	$2C		; bit trick
+hlin_mask_even:
+	lda	#$F0
+	sta	MASK
+	eor	#$FF
+	and	COLOR
+	sta	COLOR2
+
+	lda	gr_offsets_l,Y
+	sta	draw_hlin_l_xloop_smc+1
+	sta	draw_hlin_s_xloop_smc+1
+
+	lda	gr_offsets_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	draw_hlin_l_xloop_smc+2
+	sta	draw_hlin_s_xloop_smc+2
+
+	ldx	X2
+draw_hlin_xloop:
+draw_hlin_l_xloop_smc:
+	lda	$400,X
+	and	MASK
+	ora	COLOR2
+draw_hlin_s_xloop_smc:
+	sta	$400,X
+	dex
+	cpx	X1
+	bpl	draw_hlin_xloop	; bge
+
+	rts
 
 
 .include "gr_fast_clear.s"
