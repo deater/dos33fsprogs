@@ -91,9 +91,10 @@ update_pointer:
 
 draw_table_l:
 	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
+	.byte	<(draw_plot-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-
+	.byte	>(draw_plot-1)
 
 	;=================================
 	;=================================
@@ -153,7 +154,7 @@ draw_box_xloop_smc:
 	iny
 draw_box_yend_smc:
 	cpy	#0
-	bne	draw_box_yloop
+	bcc	draw_box_yloop
 
 	; done
 
@@ -167,6 +168,39 @@ draw_box_yend_smc:
 	;=================================
 	;=================================
 draw_hlin:
+
+	iny			; FIXME: move to common code
+	lda	(INL),Y
+	sta	X1
+	iny
+	lda	(INL),Y
+	sta	X2
+	iny
+	lda	(INL),Y
+	sta	Y1
+
+
+	lda	Y1
+	lsr
+	tay
+
+	lda	gr_offsets_l,Y
+	sta	draw_hlin_xloop_smc+1
+
+	lda	gr_offsets_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	draw_hlin_xloop_smc+2
+
+	lda	COLOR
+	ldx	X2
+draw_hlin_xloop:
+draw_hlin_xloop_smc:
+	sta	$400,X
+	dex
+	cpx	X1
+	bcs	draw_hlin_xloop	; bge
+
 	; done
 
 	lda	#4
@@ -182,6 +216,31 @@ draw_vlin:
 
 	lda	#4
 	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw plot
+	;=================================
+	;=================================
+draw_plot:
+	iny
+	lda	(INL),Y
+	tax
+
+	iny
+	lda	(INL),Y
+	tay
+
+draw_plot_smc:
+	sta	$400
+
+
+	; done
+
+	lda	#3
+	jmp	update_pointer
+
 
 
 

@@ -5,7 +5,7 @@ do_rotozoom:
 	; Clear screen and setup graphics
 	;================================
 
-	bit	PAGE0			; set page 0
+	bit	PAGE1			; set page 1
 	bit	LORES			; Lo-res graphics
 
 	lda	#0

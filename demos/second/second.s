@@ -232,7 +232,7 @@ load_loop:
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
-	bit	PAGE0
+	bit	PAGE1
 
 	;=======================
 	; start music
@@ -287,7 +287,7 @@ load_loop:
 
 	bit	HIRES
 	bit	FULLGR
-	bit	PAGE0
+	bit	PAGE1
 
 
 	;================================
