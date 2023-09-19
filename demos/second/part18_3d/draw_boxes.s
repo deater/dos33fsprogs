@@ -17,6 +17,7 @@ BOX	=	$02
 HLIN	=	$03
 VLIN	=	$04
 PLOT	=	$05
+HLIN_ADD=	$06
 
 BLACK		= $00
 RED		= $01
@@ -92,10 +93,10 @@ update_pointer:
 
 draw_table_l:
 	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
-	.byte	<(draw_plot-1)
+	.byte	<(draw_plot-1),<(draw_hlin_add-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-	.byte	>(draw_plot-1)
+	.byte	>(draw_plot-1),>(draw_hlin_add-1)
 
 	;=================================
 	;=================================
@@ -233,7 +234,7 @@ draw_hlin:
 	iny
 	lda	(INL),Y
 
-;	sta	Y1
+	sta	Y1		; needed for HLIN_ADD
 ;	lda	Y1
 
 	lsr
@@ -248,6 +249,43 @@ do_hlin_mask_odd:
 hlin_done:
 	lda	#4
 	jmp	update_pointer
+
+
+
+	;=================================
+	;=================================
+	; draw hlin add
+	;=================================
+	;=================================
+	; increment Y1
+draw_hlin_add:
+
+	iny			; FIXME: move to common code
+	lda	(INL),Y
+	sta	X1
+	iny
+	lda	(INL),Y
+	sta	X2
+
+	inc	Y1
+	lda	Y1
+
+;	sta	Y1
+;	lda	Y1
+
+	lsr
+	tay
+	bcs	do_hlin_add_mask_odd
+	jsr	hlin_mask_even
+	jmp	hlin_add_done
+do_hlin_add_mask_odd:
+	jsr	hlin_mask_odd
+
+	; done
+hlin_add_done:
+	lda	#3
+	jmp	update_pointer
+
 
 	;=================================
 	;=================================
@@ -356,7 +394,7 @@ draw_plot:
 	iny
 	lda	(INL),Y
 
-;	sta	Y1
+	sta	Y1		; needed for HLIN_ADD
 ;	lda	Y1
 
 
