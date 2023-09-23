@@ -11,13 +11,11 @@
 
 ; Optimization at frame 45:
 ; 4543 = original
-;
+; 4490 = move clear to common code
 
 
 
 frame15:
-;	.byte	SET_COLOR | BLACK
-;	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4, 6, 35,41
 
@@ -56,8 +54,6 @@ frame15:
 
 	.byte	END
 frame16:
-;	.byte	SET_COLOR | BLACK
-;	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4, 6, 27,41
 	.byte	SET_COLOR | BROWN
@@ -75,8 +71,6 @@ frame16:
 	.byte	HLIN_ADD, 28, 30	; 23
 	.byte	END
 frame17:
-	.byte	SET_COLOR | BLACK					; 1
-	.byte	CLEAR							; 2
 	.byte	SET_COLOR | WHITE					; 3
 	.byte	BOX, 4, 6, 23,41					; 8
 	.byte	SET_COLOR | BROWN					; 9
@@ -96,8 +90,6 @@ frame17:
 	.byte	HLIN_ADD, 27, 31	; 24				; 58
 	.byte END							; 59
 frame18:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4, 6, 18,41
 	.byte	SET_COLOR | BROWN
@@ -118,8 +110,6 @@ frame18:
 	.byte	HLIN_ADD, 28, 33	; 26
 	.byte END
 frame19:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4, 6, 12,41
 	.byte	SET_COLOR | BROWN
@@ -146,8 +136,6 @@ frame19:
 	.byte END
 
 frame20:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4, 6, 35,41
 	.byte	SET_COLOR | MEDIUM_BLUE
@@ -174,8 +162,6 @@ frame20:
 	.byte END
 
 frame21:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4, 6, 35, 41
 	.byte	SET_COLOR | MEDIUM_BLUE
@@ -200,8 +186,6 @@ frame21:
 	.byte END
 
 frame22:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | GREY1
 	.byte	BOX, 4,6,31,41
 	.byte	SET_COLOR | BROWN
@@ -239,8 +223,6 @@ frame22:
 
 
 frame23:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | GREY1
 	.byte	BOX, 4,6,18,41
 	.byte	SET_COLOR | BROWN
@@ -283,8 +265,6 @@ frame23:
 	.byte END
 
 frame24:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,10,41
 	.byte	BOX, 28,6,35,24
@@ -337,8 +317,6 @@ frame24:
 	.byte END
 
 frame25:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,7,41
 	.byte	BOX, 25,6,35,33
@@ -392,8 +370,6 @@ frame25:
 	.byte END
 
 frame26:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,5,41
 	.byte	BOX, 24,6,34,34
@@ -452,8 +428,6 @@ frame26:
 	.byte END
 
 frame27:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 25,6,34,30
 	.byte	BOX, 25,31,32,38
@@ -506,8 +480,6 @@ frame27:
 	.byte END
 
 frame28:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 26,6,35,25
 	.byte	BOX, 25,26,35,40
@@ -562,8 +534,6 @@ frame28:
 	.byte END
 
 frame29:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 27,6,35,41
 	.byte	SET_COLOR | BROWN
@@ -611,8 +581,6 @@ frame29:
 	.byte END
 
 frame30:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 28,6,35,41
 	.byte	BOX, 4,17,5,31
@@ -645,8 +613,6 @@ frame30:
 	.byte END
 
 frame31:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,30,39
 	.byte	BOX, 16,40,30,41
@@ -671,8 +637,6 @@ frame31:
 	.byte END
 
 frame32:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,33,39
 	.byte	BOX, 16,40,33,41
@@ -697,8 +661,6 @@ frame32:
 	.byte END
 
 frame33:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,35,32
 	.byte	BOX, 13,33,35,41
@@ -731,8 +693,6 @@ frame33:
 	.byte END
 
 frame34:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,35,31
 	.byte	BOX, 16,32,35,41
@@ -781,8 +741,6 @@ frame34:
 	.byte END
 
 frame35:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 7,6,18,33
 	.byte	BOX, 19,6,35,41
@@ -839,8 +797,6 @@ frame35:
 	.byte END
 
 frame36:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 10,6,35,32
 	.byte	BOX, 21,33,35,41
@@ -891,8 +847,6 @@ frame36:
 	.byte END
 
 frame37:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 12,6,35,32
 	.byte	BOX, 23,33,35,41
@@ -944,8 +898,6 @@ frame37:
 	.byte END
 
 frame38:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 12,6,35,41
 	.byte	SET_COLOR | WHITE
@@ -999,8 +951,6 @@ frame38:
 	.byte END
 
 frame39:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 9,6,35,35
 	.byte	BOX, 24,36,35,41
@@ -1051,8 +1001,6 @@ frame39:
 	.byte END
 
 frame40:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,35,41
 	.byte	SET_COLOR | WHITE
@@ -1098,8 +1046,6 @@ frame40:
 	.byte END
 
 frame41:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | BROWN
 	.byte	BOX, 4,6,35,41
 	.byte	SET_COLOR | GREY1
@@ -1125,8 +1071,6 @@ frame41:
 	.byte END
 
 frame42:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,22,24
 	.byte	SET_COLOR | BROWN
@@ -1164,8 +1108,6 @@ frame42:
 	.byte END
 
 frame43:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,22,22
 	.byte	SET_COLOR | BROWN
@@ -1258,8 +1200,6 @@ frame43:
 	.byte END
 
 frame44:
-	.byte	SET_COLOR | BLACK
-	.byte	CLEAR
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,21,21
 	.byte	SET_COLOR | BROWN
