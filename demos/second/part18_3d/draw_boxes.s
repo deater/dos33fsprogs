@@ -18,7 +18,8 @@ HLIN	=	$03
 VLIN	=	$04
 PLOT	=	$05
 HLIN_ADD=	$06
-HLIN_ADD_R=	$07
+HLIN_ADD_LSAME=	$07
+HLIN_ADD_RSAME=	$08
 
 BLACK		= $00
 RED		= $01
@@ -99,10 +100,12 @@ update_pointer:
 
 draw_table_l:
 	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
-	.byte	<(draw_plot-1),<(draw_hlin_add-1),<(draw_hlin_add_r-1)
+	.byte	<(draw_plot-1),<(draw_hlin_add-1)
+	.byte	<(draw_hlin_add_lsame-1),<(draw_hlin_add_rsame-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-	.byte	>(draw_plot-1),>(draw_hlin_add-1),>(draw_hlin_add_r-1)
+	.byte	>(draw_plot-1),>(draw_hlin_add-1)
+	.byte	>(draw_hlin_add_lsame-1),>(draw_hlin_add_rsame-1)
 
 	;=================================
 	;=================================
@@ -295,12 +298,12 @@ hlin_add_done:
 
 	;=================================
 	;=================================
-	; draw hlin add_r
+	; draw hlin add_lsame
 	;=================================
 	;=================================
 	; increment Y1
 	; use old left value
-draw_hlin_add_r:
+draw_hlin_add_lsame:
 
 	iny			; FIXME: move to common code
 	lda	(INL),Y
@@ -314,16 +317,50 @@ draw_hlin_add_r:
 
 	lsr
 	tay
-	bcs	do_hlin_add_r_mask_odd
+	bcs	do_hlin_add_lsame_mask_odd
 	jsr	hlin_mask_even
-	jmp	hlin_add_r_done
-do_hlin_add_r_mask_odd:
+	jmp	hlin_add_lsame_done
+do_hlin_add_lsame_mask_odd:
 	jsr	hlin_mask_odd
 
 	; done
-hlin_add_r_done:
+hlin_add_lsame_done:
 	lda	#2
 	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw hlin add_rsame
+	;=================================
+	;=================================
+	; increment Y1
+	; use old right value
+draw_hlin_add_rsame:
+
+	iny			; FIXME: move to common code
+	lda	(INL),Y
+	sta	X1
+
+	inc	Y1
+	lda	Y1
+
+;	sta	Y1
+;	lda	Y1
+
+	lsr
+	tay
+	bcs	do_hlin_add_rsame_mask_odd
+	jsr	hlin_mask_even
+	jmp	hlin_add_rsame_done
+do_hlin_add_rsame_mask_odd:
+	jsr	hlin_mask_odd
+
+	; done
+hlin_add_rsame_done:
+	lda	#2
+	jmp	update_pointer
+
 
 
 
