@@ -18,6 +18,7 @@ HLIN	=	$03
 VLIN	=	$04
 PLOT	=	$05
 HLIN_ADD=	$06
+HLIN_ADD_R=	$07
 
 BLACK		= $00
 RED		= $01
@@ -40,6 +41,11 @@ WHITE		= $0f
 
 draw_scene:
 
+	lda	#0	; always clear to black
+	sta	COLOR
+	jsr	clear_fullgr
+
+draw_scene_loop:
 	ldy	#0
 
 	lda	(INL),Y
@@ -87,16 +93,16 @@ update_pointer:
 	lda	#0
 	adc	INH
 	sta	INH
-	jmp	draw_scene
+	jmp	draw_scene_loop
 
 
 
 draw_table_l:
 	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
-	.byte	<(draw_plot-1),<(draw_hlin_add-1)
+	.byte	<(draw_plot-1),<(draw_hlin_add-1),<(draw_hlin_add_r-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-	.byte	>(draw_plot-1),>(draw_hlin_add-1)
+	.byte	>(draw_plot-1),>(draw_hlin_add-1),>(draw_hlin_add_r-1)
 
 	;=================================
 	;=================================
@@ -285,6 +291,40 @@ do_hlin_add_mask_odd:
 hlin_add_done:
 	lda	#3
 	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw hlin add_r
+	;=================================
+	;=================================
+	; increment Y1
+	; use old left value
+draw_hlin_add_r:
+
+	iny			; FIXME: move to common code
+	lda	(INL),Y
+	sta	X2
+
+	inc	Y1
+	lda	Y1
+
+;	sta	Y1
+;	lda	Y1
+
+	lsr
+	tay
+	bcs	do_hlin_add_r_mask_odd
+	jsr	hlin_mask_even
+	jmp	hlin_add_r_done
+do_hlin_add_r_mask_odd:
+	jsr	hlin_mask_odd
+
+	; done
+hlin_add_r_done:
+	lda	#2
+	jmp	update_pointer
+
 
 
 	;=================================
