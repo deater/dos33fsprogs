@@ -38,7 +38,8 @@ YELLOW		= $0D
 AQUA		= $0E
 WHITE		= $0f
 
-
+; top bit not set, command
+; top bit set, repeat last command
 
 draw_scene:
 
