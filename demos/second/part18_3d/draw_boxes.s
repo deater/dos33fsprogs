@@ -10,16 +10,16 @@
 
 ; data in INL/INH
 
-SET_COLOR = $80
-END	=	$00
-CLEAR	=	$01
-BOX	=	$02
-HLIN	=	$03
-VLIN	=	$04
-PLOT	=	$05
-HLIN_ADD=	$06
-HLIN_ADD_LSAME=	$07
-HLIN_ADD_RSAME=	$08
+SET_COLOR = $C0
+END	=	$80
+CLEAR	=	$81
+BOX	=	$82
+HLIN	=	$83
+VLIN	=	$84
+PLOT	=	$85
+HLIN_ADD=	$86
+HLIN_ADD_LSAME=	$87
+HLIN_ADD_RSAME=	$88
 
 BLACK		= $00
 RED		= $01
@@ -41,6 +41,13 @@ WHITE		= $0f
 ; top bit not set, command
 ; top bit set, repeat last command
 
+
+; 11xx xxxx
+
+; 00 = co-ord
+; 10 = new command
+; 11 = new-color
+
 draw_scene:
 
 	lda	#0	; always clear to black
@@ -49,13 +56,27 @@ draw_scene:
 
 draw_scene_loop:
 	ldy	#0
+	lda	(INL),Y				; load next byte
 
-	lda	(INL),Y
-	bmi	set_color
-	beq	done_scene
+	bpl	repeat_last			; if top bit 0, repeat last
+						; command
+
+	asl					; clear top bit
+	beq	done_scene			; if 0, END
+	bmi	set_color			; if negative, color
+	lsr					; shift back down
+
+	sta	LAST_TYPE			; store last type
+
+	jsr	inc_inl
+
+repeat_last:
+	lda	LAST_TYPE
+
+;	iny					; point to next byte
 
 	; use jump table for rest
-	and	#$7f
+	and	#$3f
 	tax
 	dex				; types start at 1
 	lda	draw_table_h,X
@@ -74,6 +95,7 @@ really_done_scene:
 set_color:
 	; make top and bottom byte the same
 
+	lsr					; shift back down
 	and	#$f
 	sta	COLOR
 	asl
@@ -84,7 +106,7 @@ set_color:
 	sta	COLOR
 
 	lda	#1		; we were one byte long
-	bne	update_pointer
+;	bne	update_pointer
 
 
 	; adds A to input pointer and continues
@@ -115,7 +137,7 @@ draw_table_h:
 	;=================================
 clear_screen:
 	jsr	clear_fullgr
-	lda	#1
+	lda	#0
 	jmp	update_pointer
 
 	;=================================
@@ -135,7 +157,7 @@ clear_screen:
 	; 3/4 case, 2 to 1 (!)
 	; 3/6 case, 2 to 2
 draw_box:
-	iny
+;	iny
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -224,7 +246,7 @@ done_draw_box_yloop:
 definitely_odd_bottom:
 	; done
 
-	lda	#5
+	lda	#4
 	jmp	update_pointer
 
 
@@ -235,7 +257,7 @@ definitely_odd_bottom:
 	;=================================
 draw_hlin:
 
-	iny			; FIXME: move to common code
+;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -257,7 +279,7 @@ do_hlin_mask_odd:
 
 	; done
 hlin_done:
-	lda	#4
+	lda	#3
 	jmp	update_pointer
 
 
@@ -270,7 +292,7 @@ hlin_done:
 	; increment Y1
 draw_hlin_add:
 
-	iny			; FIXME: move to common code
+;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -293,7 +315,7 @@ do_hlin_add_mask_odd:
 
 	; done
 hlin_add_done:
-	lda	#3
+	lda	#2
 	jmp	update_pointer
 
 
@@ -306,7 +328,7 @@ hlin_add_done:
 	; use old left value
 draw_hlin_add_lsame:
 
-	iny			; FIXME: move to common code
+;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X2
 
@@ -326,7 +348,7 @@ do_hlin_add_lsame_mask_odd:
 
 	; done
 hlin_add_lsame_done:
-	lda	#2
+	lda	#1
 	jmp	update_pointer
 
 
@@ -339,7 +361,7 @@ hlin_add_lsame_done:
 	; use old right value
 draw_hlin_add_rsame:
 
-	iny			; FIXME: move to common code
+;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 
@@ -359,7 +381,7 @@ do_hlin_add_rsame_mask_odd:
 
 	; done
 hlin_add_rsame_done:
-	lda	#2
+	lda	#1
 	jmp	update_pointer
 
 
@@ -371,7 +393,7 @@ hlin_add_rsame_done:
 	;=================================
 	;=================================
 draw_vlin:
-	iny
+;	iny
 	lda	(INL),Y
 	sta	Y1
 	iny
@@ -455,7 +477,7 @@ done_vlin_yloop:
 definitely_odd_vlin:
 	; done
 
-	lda	#4
+	lda	#3
 	jmp	update_pointer
 
 
@@ -465,7 +487,7 @@ definitely_odd_vlin:
 	;=================================
 	;=================================
 draw_plot:
-	iny
+;	iny
 	lda	(INL),Y
 	sta	X1
 
@@ -488,7 +510,7 @@ plot_done:
 
 	; done
 
-	lda	#3
+	lda	#2
 	jmp	update_pointer
 
 
@@ -576,6 +598,14 @@ plot_s_smc:
 
 	rts
 
+
+	; inline this?
+inc_inl:
+	inc	INL
+	bne	done_inc_inl
+	inc	INH
+done_inc_inl:
+	rts
 
 .include "gr_fast_clear.s"
 

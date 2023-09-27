@@ -149,6 +149,7 @@ HGR_COLOR       = $E4
 			;NAMEX		=	$EB
 			;CHAR		=	$EC
 
+LAST_TYPE = $E6
 COLOR2	= $E7
 X1	= $E8
 X2	= $E9
