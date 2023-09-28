@@ -931,6 +931,7 @@ frame38:
 	.byte	HLIN_ADD_RSAME,17	; 22
 	.byte	17			; 23
 	.byte	HLIN_ADD,17,18		; 24
+	.byte	BOX,20,22,21,23
 	.byte	PLOT,22,25
 	.byte	20,26			; PLOT
 	.byte	HLIN_ADD,20,22	; 27
@@ -1140,7 +1141,7 @@ frame43:
 	.byte	SET_COLOR | GREEN
 	.byte	PLOT,31,20
 	.byte	HLIN_ADD,29,31	; 21
-	.byte	6,31	; 22 ; 26?
+	.byte	26,31	; 22
 	.byte	24,31	; 23
 	.byte	22,31	; 24
 	.byte	22,30	; 25
@@ -1170,8 +1171,7 @@ frame43:
 	.byte	HLIN,27,29,6
 	.byte	SET_COLOR | LIGHT_BLUE
 	.byte	VLIN,7,13,29
-	.byte	PLOT,26,15
-	.byte	24,11
+	.byte	PLOT,24,11
 	.byte	HLIN_ADD,24,27	; 12
 	.byte	PLOT,24,13
 	.byte	SET_COLOR | YELLOW
@@ -1194,6 +1194,7 @@ frame43:
 	.byte	HLIN_ADD,23,27	; 20
 	.byte	22,25	; 21
 	.byte	22,23	; 22
+	.byte	PLOT,25,15
 	.byte END
 
 frame44:
@@ -1278,90 +1279,317 @@ frame44:
 	.byte	HLIN,25,26,6
 	.byte END
 
-.if 0
 frame45:
 	.byte	SET_COLOR | WHITE
 	.byte	BOX, 4,6,21,20
-
-	.byte	SET_COLOR | BROWN
-	.byte	BOX,22,6,31,11
-	.byte	BOX,20,11,32,15
-	.byte	HLIN,20,31,16
-	.byte	HLIN_ADD,20,29	; 17
-	.byte	HLIN_ADD,21,27	; 18	set left 21
-	.byte	HLIN_ADD_LSAME,26	; 19
-	.byte	HLIN_ADD_LSAME,24	; 20
-	.byte	HLIN_ADD_LSAME,22	; 21
 	.byte	SET_COLOR | GREY1
-	.byte	BOX,33,12,34,14
-	.byte	BOX,25,6,27,7
-	.byte	PLOT,28,6
-	.byte	HLIN,34,35,23		; set right 35
+	.byte	19,29,35,41
+	.byte	HLIN,34,35,23
 	.byte	HLIN_ADD_RSAME,32	; 24
-	.byte	HLIN_ADD_RSAME,30	; 25
-	.byte	HLIN_ADD_RSAME,28	; 26
-	.byte	HLIN_ADD_RSAME,26	; 27
-	.byte	HLIN_ADD_RSAME,24	; 28
-	.byte	BOX,17,29,35,41
-	.byte	SET_COLOR | LIGHT_BLUE
-	.byte	HLIN,30,31,6
-	.byte	BOX,25,8,27,9
-	.byte	HLIN,18,19,15
-	.byte	HLIN_ADD,16,19		; 16	set right 19
-	.byte	HLIN_ADD_RSAME,14	; 17
-	.byte	HLIN_ADD,12,20		; 18	set right 20
-	.byte	HLIN_ADD_RSAME,9	; 19
-	.byte	HLIN_ADD_RSAME,7	; 20
-	.byte	HLIN_ADD_RSAME,5	; 21
-	.byte	BOX,4,22,21,28
-	.byte	HLIN,4h,22,29	; Set left 4
-	.byte	HLIN_ADD_LSAME,22	; 30
-	.byte	HLIN_ADD_LSAME,22	; 31
-	.byte	HLIN_ADD_LSAME,21	; 32
-	.byte	HLIN_ADD_LSAME,21	; 33
-	.byte	HLIN_ADD_LSAME,20	; 34
-	.byte	HLIN_ADD_LSAME,20	; 35
-	.byte	HLIN_ADD_LSAME,19	; 36
-	.byte	HLIN_ADD_LSAME,19	; 37
-	.byte	HLIN_ADD_LSAME,18	; 38
-	.byte	HLIN_ADD_LSAME,17	; 39
-	.byte	HLIN_ADD_LSAME,17	; 40
-	.byte	HLIN_ADD_LSAME,16	; 41
+	.byte	30	; 25
+	.byte	29	; 26
+	.byte	27	; 27
+	.byte	25	; 28
 	.byte	SET_COLOR | GREEN
-	.byte	BOX,22,23,24,26
-	.byte	BOX,24,22,26,25
-	.byte	BOX,25,21,27,24
-	.byte	BOX,27,20,29,23
-	.byte	BOX,28,19,31,22
-	.byte	BOX,30,18,33,21
-	.byte	BOX,33,16,34,17
-	.byte	PLOT,32,17
-	.byte	PLOT,23,8
-	.byte	VLIN,6,12,24
+	.byte	PLOT,33,16
+	.byte	HLIN_ADD,32,33	; 17
+	.byte	HLIN_ADD_RSAME,30	; 18
+	.byte	28		; 19
+	.byte	HLIN_ADD,27,32	; 20
+	.byte	26,32		; 21
+	.byte	24,31		; 22
+	.byte	22,30		; 23
+	.byte	22,28		; 24
+	.byte	22,26		; 25
+	.byte	23,24		; 26
+	.byte	SET_COLOR | LIGHT_BLUE
+	.byte	HLIN,18,20,15
+	.byte	HLIN_ADD_RSAME,15	; 16
+	.byte	13
+	.byte	10
+	.byte	8
+	.byte	6			; 20
+	.byte	BOX,4,21,21,35
+	.byte	4,36,20,37
+	.byte	4,38,19,39
+	.byte	4,40,18,41
+	.byte	VLIN,26,33,22
+	.byte	SET_COLOR | BROWN
+	.byte	BOX,22,6,29,8
+	.byte	21,9,31,16
+	.byte	HLIN,21,29,17
+	.byte	HLIN_ADD,21,27
+	.byte	21,25
+	.byte	21,23
+	.byte	22,23
 	.byte	SET_COLOR | DARK_BLUE
-	.byte	BOX,32,6,35,11
-	.byte	HLIN,32,33,12
-	.byte	SET_COLOR | ORANGE
-	.byte	VLIN,12,14,26
-	.byte	VLIN,15,18,27
-	.byte	SET_COLOR | MEDIUM_BLUE
-	.byte	VLIN,9,11,21
-	.byte	VLIN,8,10,22
-	.byte	VLIN,15,18,22
-	.byte	VLIN,14,17,23
-	.byte	SET_COLOR | PINK
-	.byte	VLIN,6,7,23
-	.byte	VLIN,13,14,24
-	.byte	VLIN,15,19,25
+	.byte	BOX,31,6,35,11
+	.byte	PLOT,32,12
+	.byte	SET_COLOR | GREEN
+	.byte	HLIN,23,26,6
+	.byte	BOX,22,7,23,10
 	.byte	SET_COLOR | LIGHT_GREEN
-	.byte	BOX,25,10,27,11
-	.byte	PLOT,25,12
-	.byte	SET_COLOR | YELLOW
-	.byte	PLOT,29,6
-	.byte	SET_COLOR | RED
-	.byte	HLIN,25,26,6
+	.byte	24,7,26,11
+	.byte	PLOT,23,13
+	.byte	BOX,23,9,24,12
+	.byte	SET_COLOR | LIGHT_BLUE
+	.byte	HLIN,27,28,6
+	.byte	SET_COLOR | MEDIUM_BLUE
+	.byte	VLIN,10,11,21
+	.byte	15,18,21
+	.byte	SET_COLOR | PINK
+	.byte	11,14,22
+	.byte	14,18,23
+	.byte	19,20,24
+	.byte	6,9,30
+	.byte	10,14,31
+	.byte	SET_COLOR | ORANGE
+	.byte	12,16,25
+	.byte	17,19,26
+	.byte	SET_COLOR | GREY1
+	.byte	13,15,32
+	.byte	12,14,33
+	.byte	PLOT,34,12
+	.byte	35,11
 	.byte END
 
-.endif
+frame46:
+	.byte	SET_COLOR | WHITE
+	.byte	BOX,4,6,21,21
+	.byte	SET_COLOR | GREY1
+	.byte	21,33,35,41
+	.byte	PLOT,35,26
+	.byte	HLIN_ADD,33,35		; 27
+	.byte	HLIN_ADD_RSAME,31	; 28
+	.byte	29			; 29
+	.byte	27			; 30
+	.byte	26			; 31
+	.byte	24			; 32
+	.byte	SET_COLOR | MEDIUM_BLUE
+	.byte	BOX,34,6,35,13
+	.byte	SET_COLOR | BROWN
+	.byte	22,6,28,8
+	.byte	21,9,28,10
+	.byte	26,11,29,12
+	.byte	20,13,29,14
+	.byte	20,15,30,24
+	.byte	SET_COLOR | DARK_BLUE
+	.byte	29,6,33,10
+	.byte	30,11,33,14
+	.byte	31,15,33,16
+	.byte	31,17,32,18
+	.byte	VLIN,12,14,34
+	.byte	SET_COLOR | PINK
+	.byte	13,19,21
+	.byte	20,24,22
+	.byte	SET_COLOR | ORANGE
+	.byte	15,19,24
+	.byte	20,22,25
+	.byte	SET_COLOR | GREEN
+	.byte	HLIN,23,24,7
+	.byte	HLIN_ADD,22,24	; 8
+	.byte	22,25		; 9
+	.byte	BOX,21,10,22,12
+	.byte	HLIN,31,32,19
+	.byte	HLIN_ADD_RSAME,29	; 20
+	.byte	27			; 21
+	.byte	26			; 22
+	.byte	24			; 23
+	.byte	23			; 24
+	.byte	HLIN_ADD,21,31		; 25
+	.byte	HLIN_ADD_LSAME,29	; 26
+	.byte	27			; 27
+	.byte	26			; 28
+	.byte	24			; 29
+	.byte	22			; 30
+	.byte	SET_COLOR | GREY1
+	.byte	HLIN,26,27,6
+	.byte	SET_COLOR|LIGHT_BLUE
+	.byte	PLOT,28,6
+	.byte	PLOT,26,7
+	.byte	HLIN,18,19,17		; 17
+	.byte	HLIN_ADD,14,19		; 18
+	.byte	12,19			; 19
+	.byte	9,19			; 20
+	.byte	6,20			; 21
+	.byte	BOX,4,22,20,26
+	.byte	4,27,21,39
+	.byte	4,40,20,41
+	.byte	SET_COLOR|LIGHT_GREEN
+	.byte	PLOT,23,15
+	.byte	24,9
+	.byte	HLIN_ADD,23,25
+	.byte	BOX,22,11,25,14
+	.byte END
 
-num_scenes=30
+frame47:
+	.byte	SET_COLOR | WHITE
+	.byte	BOX,4,6,21,24
+	.byte	SET_COLOR | LIGHT_BLUE
+	.byte	PLOT,19,19
+	.byte	HLIN_ADD,16,19	; 20
+	.byte	14,19		; 21
+	.byte	11,20		; 22
+	.byte	8,20		; 23
+	.byte	6,20		; 24
+	.byte	BOX,4,25,20,31
+	.byte	4,32,21,38
+	.byte	4,39,22,41
+	.byte	SET_COLOR | GREY1
+	.byte	PLOT,35,32
+	.byte	HLIN_ADD,33,35	; 33
+	.byte	HLIN_ADD_RSAME,31	; 34
+	.byte	29			; 35
+	.byte	28			; 36
+	.byte	26			; 37
+	.byte	24			; 38
+	.byte	BOX,23,39,35,41
+	.byte	SET_COLOR | GREEN
+	.byte	PLOT,34,28
+	.byte	HLIN,32,33,23
+	.byte	HLIN_ADD_RSAME,30
+	.byte	28
+	.byte	26	; 26
+	.byte	25	; 27
+	.byte	23	; 28
+	.byte	22	; 29
+	.byte	HLIN_ADD,21,31
+	.byte	21,29	; 31
+	.byte	22,27	; 32
+	.byte	22,26	; 33
+	.byte	22,24	; 34
+	.byte	PLOT,22,35
+	.byte	SET_COLOR | BROWN
+	.byte	BOX,22,6,28,10
+	.byte	21,11,29,15
+	.byte	20,16,30,21
+	.byte	21,22,30,23
+	.byte	HLIN,21,28,24
+	.byte	HLIN_ADD_LSAME,25
+	.byte	24		; 26
+	.byte	23		; 27
+	.byte	21		; 28	PLOT INSTEAD?
+	.byte	SET_COLOR | DARK_BLUE
+	.byte	BOX,29,6,33,11
+	.byte	30,12,35,17
+	.byte	31,18,32,21
+	.byte	PLOT,35,17
+	.byte	31,22
+	.byte	SET_COLOR | MEDIUM_BLUE
+	.byte	33,6
+	.byte	VLIN,6,12,34
+	.byte	6,16,35
+	.byte	SET_COLOR | PINK
+	.byte	17,22,21
+	.byte	23,27,22
+	.byte	SET_COLOR | ORANGE
+	.byte	19,21,24
+	.byte	22,26,25
+	.byte	SET_COLOR | GREEN
+	.byte	12,16,21
+	.byte	BOX,22,11,25,12
+	.byte	23,9,24,10
+	.byte	SET_COLOR | LIGHT_GREEN
+	.byte	24,12,25,17
+	.byte	22,13,24,18
+	.byte	PLOT,22,19
+	.byte	SET_COLOR | WHITE
+	.byte	27,7
+	.byte	SET_COLOR | LIGHT_BLUE
+	.byte	26,7
+	.byte	HLIN,27,28,6
+	.byte	SET_COLOR | GREY1
+	.byte	25,26,6
+	.byte	END
+
+frame48:
+	.byte	SET_COLOR | LIGHT_BLUE
+	.byte	BOX,4,36,21,41
+	.byte	4,30,20,35
+	.byte	4,23,19,29
+	.byte	SET_COLOR | BROWN
+	.byte	19,6,32,23
+	.byte	HLIN,20,31,24
+	.byte	HLIN_ADD_LSAME,30	; 25
+	.byte	29	; 26
+	.byte	28	; 27
+	.byte	25	; 28
+	.byte	25	; 29
+	.byte	HLIN,21,22,30
+	.byte	PLOT,21,31
+	.byte	SET_COLOR | WHITE
+	.byte	BOX,4,6,22,7
+	.byte	4,8,21,17
+	.byte	4,18,19,21
+	.byte	HLIN,4,18,22
+	.byte	HLIN_ADD_LSAME,15
+	.byte	12
+	.byte	9
+	.byte	7
+	.byte	4
+	.byte	SET_COLOR | DARK_BLUE
+	.byte	BOX,30,6,34,9
+	.byte	31,10,35,15
+	.byte	32,16,35,19
+	.byte	HLIN,32,34,20
+	.byte	PLOT,32,21
+	.byte	SET_COLOR | GREY1
+	.byte	HLIN,26,27,6
+	.byte	PLOT,33,21
+	.byte	HLIN_ADD,32,34
+	.byte	HLIN_ADD,33,34
+	.byte	HLIN_ADD,32,33
+	.byte	PLOT,31,25
+	.byte	35,38
+	.byte	HLIN_ADD,33,35
+	.byte	HLIN_ADD_RSAME,31
+	.byte	29
+	.byte	SET_COLOR|GREEN
+	.byte	HLIN,33,34,25
+	.byte	HLIN_ADD,32,35	; 26
+	.byte	HLIN_ADD_RSAME,30	; 27
+	.byte	29	; 28
+	.byte	27	; 29
+	.byte	25	; 30
+	.byte	24	; 31
+	.byte	22	; 32
+	.byte	HLIN_ADD,21,34	; 33
+	.byte	HLIN_ADD,21,33	; 34
+	.byte	HLIN_ADD,21,31	; 35
+	.byte	HLIN_ADD,22,29	; 36
+	.byte	HLIN_ADD_LSAME,27 ; 37
+	.byte	25
+	.byte	24
+	.byte	22
+	.byte	HLIN,24,25,11
+	.byte	BOX,23,12,26,13
+	.byte	21,14,25,18
+	.byte	SET_COLOR|LIGHT_GREEN
+	.byte	23,18,24,21
+	.byte	24,16,25,20
+	.byte	25,15,26,19
+	.byte	VLIN,13,14,26
+	.byte	SET_COLOR|MEDIUM_BLUE
+	.byte	18,20,20
+	.byte	25,28,20
+	.byte	25,27,21
+	.byte	6,10,35
+	.byte	SET_COLOR|ORANGE
+	.byte	21,25,25
+	.byte	26,28,26
+	.byte	SET_COLOR|PINK
+	.byte	13,16,21
+	.byte	19,24,22
+	.byte	25,30,23
+	.byte	PLOT,21,18
+	.byte	SET_COLOR|WHITE
+	.byte	27,7
+	.byte	SET_COLOR|LIGHT_BLUE
+	.byte	28,6
+	.byte	HLIN,25,26,7
+	.byte	SET_COLOR|GREY1
+	.byte	26,27,6
+	.byte	END
+	
+num_scenes=34
+
