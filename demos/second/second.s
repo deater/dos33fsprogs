@@ -279,20 +279,13 @@ load_loop:
 
 
 	;================================
-	; ROTO
+	; FINAL3 (leaves)
 	;================================
-
-	jsr	do_rotozoom
-
 
 	bit	HIRES
 	bit	FULLGR
 	bit	PAGE1
 
-
-	;================================
-	; FINAL3 (leaves)
-	;================================
 
 	jsr	clear_bottom
 
@@ -360,8 +353,6 @@ fc_sr_logo_data:
 
 
 .include "title.s"
-
-.include "roto.s"
 
 config_string:
 ;             0123456789012345678901234567890123456789
