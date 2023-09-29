@@ -168,15 +168,15 @@ scaleaddh:	.byte	$00
 
 .include "rotozoom.s"
 
-.include "gr_pageflip.s"
-;.include "gr_fast_clear.s"
-.include "gr_copy.s"
+.include "../gr_pageflip.s"
+.include "../gr_fast_clear.s"
+.include "../gr_copy.s"
 
-.include "gr_offsets.s"
-.include "c00_scrn_offsets.s"
+.include "../gr_offsets.s"
+.include "../c00_scrn_offsets.s"
 
 
-.include "multiply_fast.s"
+.include "../multiply_fast.s"
 
 ;===============================================
 ; Data
