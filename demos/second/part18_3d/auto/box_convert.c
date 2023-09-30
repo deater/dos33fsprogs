@@ -60,7 +60,7 @@ static struct {
 } primitive_list[4096];
 
 static int framebuffer[40][48];
-
+static int background_color=0;
 
 int create_using_plots(void) {
 
@@ -81,6 +81,81 @@ int create_using_plots(void) {
 	}
 	return current_primitive;
 }
+
+
+int create_using_hlins(void) {
+
+	int current_primitive=0;
+	int row,col,start_x;
+	int current_color,prev_color;
+	int len;
+
+	/* Initial Implementation, All Plots */
+
+	for(row=0;row<48;row++) {
+		prev_color=framebuffer[0][row]; len=0; start_x=0;
+		for(col=0;col<40;col++) {
+			if (framebuffer[col][row]!=prev_color) {
+				primitive_list[current_primitive].color=
+					prev_color;
+				primitive_list[current_primitive].x1=start_x;
+				primitive_list[current_primitive].x2=start_x+len;
+				primitive_list[current_primitive].y1=row;
+				primitive_list[current_primitive].type=ACTION_HLIN;
+				current_primitive++;
+				len=0;
+				prev_color=framebuffer[col][row];
+				start_x=col;
+			}
+			else {
+				len++;
+			}
+
+		}
+	}
+	return current_primitive;
+}
+
+int create_using_hlins_by_color(void) {
+
+	int current_primitive=0;
+	int row,col,start_x;
+	int current_color,prev_color;
+	int len;
+
+	/* Initial Implementation, All Plots */
+	for(current_color=0;current_color<16;current_color++) {
+
+	if (current_color==background_color) continue;
+
+	for(row=0;row<48;row++) {
+		prev_color=framebuffer[0][row]; len=0; start_x=0;
+		for(col=0;col<40;col++) {
+			if (framebuffer[col][row]!=prev_color) {
+				if (prev_color==current_color) {
+				primitive_list[current_primitive].color=
+					prev_color;
+				primitive_list[current_primitive].x1=start_x;
+				primitive_list[current_primitive].x2=start_x+len;
+				primitive_list[current_primitive].y1=row;
+				primitive_list[current_primitive].type=ACTION_HLIN;
+				current_primitive++;
+				}
+				len=0;
+				prev_color=framebuffer[col][row];
+				start_x=col;
+			}
+			else {
+				len++;
+			}
+
+		}
+	}
+	}
+	return current_primitive;
+}
+
+
 
 int main(int argc, char **argv) {
 
@@ -151,7 +226,8 @@ int main(int argc, char **argv) {
 		printf("; $%02X %s: %d\n",i,color_names[i],color_count[i]);
 	}
 
-	create_using_plots();
+//	max_primitive=create_using_hlins();
+	max_primitive=create_using_hlins_by_color();
 
 	/* Dump results */
 	for(i=0;i<max_primitive;i++) {
@@ -172,6 +248,22 @@ int main(int argc, char **argv) {
 			case ACTION_BOX:
 					break;
 			case ACTION_HLIN:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d,%d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y1);
+					total_size+=3;
+				}
+				else {
+					printf("\t.byte HLIN,%d,%d,%d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y1);
+					total_size+=4;
+					previous_primitive=ACTION_HLIN;
+
+				}
 					break;
 			case ACTION_VLIN:
 					break;

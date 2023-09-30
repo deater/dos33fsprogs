@@ -62,7 +62,6 @@ second.o:	second.s zx02_optim.s \
 	graphics/icekngdm.hgr.zx02 \
 	graphics/final3.hgr.zx02 \
 	graphics/mntscrl3.hgr.zx02 \
-	roto.s rotozoom.s \
 	zp.inc hardware.inc qload.inc music.inc
 	ca65 -o second.o second.s -l second.lst
 
