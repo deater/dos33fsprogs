@@ -166,6 +166,36 @@ int create_using_hlins_by_color(void) {
 	return current_primitive;
 }
 
+int find_max_color_extent(int current_color,int *color_minx,int *color_miny,
+			int *color_maxx,int *color_maxy) {
+
+
+	int xx,yy;
+
+	*color_minx=39;
+	*color_miny=47;
+	*color_maxx=0;
+	*color_maxy=0;
+
+	/* Find maximum extent of color */
+	for(yy=0;yy<48;yy++) {
+		for(xx=0;xx<40;xx++) {
+			if (current_color==framebuffer[xx][yy]) {
+				if (xx<*color_minx) *color_minx=xx;
+				if (xx>*color_maxx) *color_maxx=xx;
+				if (yy<*color_miny) *color_miny=yy;
+				if (yy>*color_maxy) *color_maxy=yy;
+			}
+		}
+	}
+	if (debug) fprintf(stderr,"Color %d: range %d,%d to %d,%d\n",
+			current_color,*color_minx,*color_miny,
+			*color_maxx,*color_maxy);
+
+
+	return 0;
+
+}
 
 int create_using_boxes(void) {
 
@@ -173,24 +203,33 @@ int create_using_boxes(void) {
 	int row,col,box;
 	int current_color;
 	int color;
+	int color_minx,color_maxx,color_miny,color_maxy;
 
 	for(color=0;color<16;color++) {
 	current_color=color_lookup[color].color;
 
 	if (current_color==background_color) continue;
 
+
+	find_max_color_extent(current_color,
+					&color_minx,&color_miny,
+					&color_maxx,&color_maxy);
+
 	for(box=0;box<NUM_BOX_SIZES;box++) {
 
-	int xx,yy,box_found,color_found;
+	int xx,yy,box_found,color_found,color_found2;
 
 	for(row=0;row<48-box_sizes[box].y;row++) {
 		for(col=0;col<40-box_sizes[box].x;col++) {
 			box_found=1;
 			color_found=0;
+			color_found2=0;
+
 			for(yy=0;yy<box_sizes[box].y;yy++) {
 			for(xx=0;xx<box_sizes[box].x;xx++) {
 
 
+//			only counts if color found
 			if (framebuffer[xx+col][yy+row]==current_color) {
 				color_found=1;
 			}
@@ -205,7 +244,13 @@ int create_using_boxes(void) {
 			if (!box_found) break;
 			} // yy
 
-			if ((box_found)&&(color_found)) {
+			if (( (col)>=color_minx)&&((col+box_sizes[box].x-1)<=color_maxx)&&
+				((row)>=color_miny)&&((row+box_sizes[box].y-1)<=color_maxy)) {
+				color_found2=1;
+			}
+
+
+			if ((box_found)&&(color_found)&&(color_found2)) {
 				if (debug) fprintf(stderr,"Found box c=%d %d,%d to %d,%d\n",
 					current_color,col,row,col+box_sizes[box].x-1,
 						row+box_sizes[box].y-1);
@@ -230,6 +275,9 @@ int create_using_boxes(void) {
 					}
 				}
 				}
+	find_max_color_extent(current_color,
+					&color_minx,&color_miny,
+					&color_maxx,&color_maxy);
 
 			}
 

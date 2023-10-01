@@ -21,6 +21,7 @@ todo, compressed:
  498 bytes: try11: sort HLIN by Y1
  431 bytes: try12: with don't cares
  336 bytes: try13: sort colors by popularity
+ 299 bytes: try14: shrink the window for finding colors to only include colors
 
 TODO:
 	Only use don't care result if not wider than max X or longer than
@@ -28,7 +29,9 @@ TODO:
 	sort BOX and do optimizations like HLIN
 
 
-	Try all color combos?  Not possible?
+	Try all color combos?
+	K-permutations.  For K=16 it's literally billions+?
+	Maybe try just top 4?  Only 24 combos then?
 
 	MOVE PLOTS one line before HLIN?
 
