@@ -20,14 +20,15 @@ todo, compressed:
  506 bytes: try10: sort types per color
  498 bytes: try11: sort HLIN by Y1
  431 bytes: try12: with don't cares
+ 336 bytes: try13: sort colors by popularity
 
 TODO:
-	Add don't cares
-	Try all color combos
-	MOVE PLOTS one line before HLIN
+	Only use don't care result if not wider than max X or longer than
+		max Y
+	sort BOX and do optimizations like HLIN
 
 
+	Try all color combos?  Not possible?
 
-
-
+	MOVE PLOTS one line before HLIN?
 

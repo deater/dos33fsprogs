@@ -15,6 +15,7 @@
 
 #include "box_sizes.c"
 
+static int debug=0;
 
 static char color_names[16][16]={
 	"BLACK",	/* $00 */
@@ -85,6 +86,15 @@ int create_using_plots(void) {
 	return current_primitive;
 }
 
+static unsigned char *image;
+
+static struct color_lookup_t {
+	int color;
+	int count;
+} color_lookup[16]={
+	{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},
+	{9,0},{10,0},{11,0},{12,0},{13,0},{14,0},{15,0}
+};
 
 int create_using_hlins(void) {
 
@@ -122,9 +132,10 @@ int create_using_hlins_by_color(void) {
 	int current_primitive=0;
 	int row,col,start_x;
 	int current_color,prev_color;
-	int len;
+	int len,color;
 
-	for(current_color=0;current_color<16;current_color++) {
+	for(color=0;color<16;color++) {
+	current_color=color_lookup[color].color;
 
 	if (current_color==background_color) continue;
 
@@ -161,8 +172,10 @@ int create_using_boxes(void) {
 	int current_primitive=0;
 	int row,col,box;
 	int current_color;
+	int color;
 
-	for(current_color=0;current_color<16;current_color++) {
+	for(color=0;color<16;color++) {
+	current_color=color_lookup[color].color;
 
 	if (current_color==background_color) continue;
 
@@ -193,7 +206,7 @@ int create_using_boxes(void) {
 			} // yy
 
 			if ((box_found)&&(color_found)) {
-				fprintf(stderr,"Found box c=%d %d,%d to %d,%d\n",
+				if (debug) fprintf(stderr,"Found box c=%d %d,%d to %d,%d\n",
 					current_color,col,row,col+box_sizes[box].x-1,
 						row+box_sizes[box].y-1);
 				primitive_list[current_primitive].color=
@@ -250,78 +263,31 @@ static int compare_y1(const void *p1, const void *p2) {
 
 }
 
+static int compare_color(const void *p1, const void *p2) {
+
+	struct color_lookup_t *first,*second;
+
+	first=(struct color_lookup_t *)p1;
+	second=(struct color_lookup_t *)p2;
+
+	return (first->count < second->count);
+
+}
 
 
 
 
-int main(int argc, char **argv) {
+int generate_frame(int print_results) {
 
-	int row=0;
-	int col=0;
-	int pixel;
 	int i;
 
-	unsigned char *image;
-	int xsize,ysize;
-
-	if (argc<1) {
-		fprintf(stderr,"Usage:\t%s INFILE\n",argv[0]);
-		exit(-1);
-	}
-
-	if (loadpng(argv[1],&image,&xsize,&ysize,PNG_WHOLETHING)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
-	}
-
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
-
-	if (ysize!=48) {
-		fprintf(stderr,"Error!  Ysize must be 48!\n");
-		exit(1);
-	}
-
-	if (xsize==40) {
-
-	}
-	else if (xsize==80) {
-
-	}
-	else {
-		fprintf(stderr,"Error!  Improper xsize %d!\n",xsize);
-		exit(1);
-	}
-
-
-
-
-	int color_count[16];
-
 	int current_color=0;
-
-
 
 	int max_primitive=0;
 	int previous_primitive=0;
 	int total_size=0;
 
-	memset(color_count,0,16*sizeof(int));
 
-	for(row=0;row<24;row++) {
-		for(col=0;col<40;col++) {
-			pixel=(image[row*40+col]);
-			color_count[pixel&0xf]++;
-			color_count[(pixel>>4)&0xf]++;
-			framebuffer[col][row*2]=pixel&0xf;
-			framebuffer[col][(row*2)+1]=(pixel>>4)&0xf;
-		}
-	}
-
-	/* TODO: sort */
-	printf("; Histogram\n");
-	for(i=0;i<16;i++) {
-		printf("; $%02X %s: %d\n",i,color_names[i],color_count[i]);
-	}
 
 //	max_primitive=create_using_hlins();
 //	max_primitive=create_using_hlins_by_color();
@@ -350,7 +316,7 @@ int main(int argc, char **argv) {
 	old_color=primitive_list[0].color;
 	for(i=0;i<max_primitive;i++) {
 		if ((primitive_list[i].color!=old_color)||(i==max_primitive-1)) {
-			fprintf(stderr,"Sorting color %d from %d to %d\n",
+			if (debug) fprintf(stderr,"Sorting color %d from %d to %d\n",
 				old_color,last_color_start,i);
 			qsort(&(primitive_list[last_color_start]),i-last_color_start,
 				sizeof(struct primitive_list_t),compare_type);
@@ -379,7 +345,7 @@ int main(int argc, char **argv) {
 				}
 			}
 			if (hlin_found) {
-				fprintf(stderr,"Sorting color %d HLIN Y1 from %d to %d\n",
+				if (debug) fprintf(stderr,"Sorting color %d HLIN Y1 from %d to %d\n",
 					old_color,first_hlin,last_hlin);
 				// qsort(base, num_members,size_members,compare func
 				qsort(&(primitive_list[first_hlin]),last_hlin-first_hlin,
@@ -576,6 +542,67 @@ int main(int argc, char **argv) {
 	printf("\t.byte END\n");
 	total_size++;
 	printf("; total size = %d\n",total_size);
+
+	return total_size;
+}
+
+int main(int argc, char **argv) {
+
+	int xsize,ysize;
+	int row,col,pixel,i;
+
+	if (argc<1) {
+		fprintf(stderr,"Usage:\t%s INFILE\n",argv[0]);
+		exit(-1);
+	}
+
+	if (loadpng(argv[1],&image,&xsize,&ysize,PNG_WHOLETHING)<0) {
+		fprintf(stderr,"Error loading png!\n");
+		exit(-1);
+	}
+
+	if (debug) fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+	if (ysize!=48) {
+		fprintf(stderr,"Error!  Ysize must be 48!\n");
+		exit(1);
+	}
+
+	if (xsize==40) {
+
+	}
+	else if (xsize==80) {
+
+	}
+	else {
+		fprintf(stderr,"Error!  Improper xsize %d!\n",xsize);
+		exit(1);
+	}
+
+	for(row=0;row<24;row++) {
+		for(col=0;col<40;col++) {
+			pixel=(image[row*40+col]);
+			color_lookup[pixel&0xf].count++;
+			color_lookup[(pixel>>4)&0xf].count++;
+			framebuffer[col][row*2]=pixel&0xf;
+			framebuffer[col][(row*2)+1]=(pixel>>4)&0xf;
+		}
+	}
+
+	qsort(&(color_lookup[1]),15,
+			sizeof(struct color_lookup_t),compare_color);
+
+
+	/* TODO: sort */
+	printf("; Histogram\n");
+	for(i=0;i<16;i++) {
+		printf("; $%02X %s: %d\n",color_lookup[i].color,color_names[color_lookup[i].color],color_lookup[i].count);
+	}
+
+
+
+	generate_frame(1);
+
 
 	return 0;
 }
