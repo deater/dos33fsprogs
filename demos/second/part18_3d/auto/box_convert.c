@@ -13,6 +13,8 @@
 
 #include "loadpng.h"
 
+#include "box_sizes.c"
+
 
 static char color_names[16][16]={
 	"BLACK",	/* $00 */
@@ -53,11 +55,12 @@ static char action_names[9][16]={
 };
 #endif
 
+#define MAX_PRIMITIVES	4096
 static struct {
 	int type;
 	int color;
 	int x1,y1,x2,y2;
-} primitive_list[4096];
+} primitive_list[MAX_PRIMITIVES];
 
 static int framebuffer[40][48];
 static int background_color=0;
@@ -87,10 +90,8 @@ int create_using_hlins(void) {
 
 	int current_primitive=0;
 	int row,col,start_x;
-	int current_color,prev_color;
+	int prev_color;
 	int len;
-
-	/* Initial Implementation, All Plots */
 
 	for(row=0;row<48;row++) {
 		prev_color=framebuffer[0][row]; len=0; start_x=0;
@@ -123,7 +124,6 @@ int create_using_hlins_by_color(void) {
 	int current_color,prev_color;
 	int len;
 
-	/* Initial Implementation, All Plots */
 	for(current_color=0;current_color<16;current_color++) {
 
 	if (current_color==background_color) continue;
@@ -154,6 +154,67 @@ int create_using_hlins_by_color(void) {
 	}
 	return current_primitive;
 }
+
+
+int create_using_boxes(void) {
+
+	int current_primitive=0;
+	int row,col,box;
+	int current_color;
+
+	for(current_color=0;current_color<16;current_color++) {
+
+	if (current_color==background_color) continue;
+
+	for(box=0;box<NUM_BOX_SIZES;box++) {
+
+	int xx,yy,box_found;
+
+	for(row=0;row<48-box_sizes[box].y;row++) {
+		for(col=0;col<40-box_sizes[box].x;col++) {
+			box_found=1;
+			for(yy=0;yy<box_sizes[box].y;yy++) {
+			for(xx=0;xx<box_sizes[box].x;xx++) {
+
+			if (framebuffer[xx+col][yy+row]!=current_color) {
+				box_found=0;
+				break;
+			}
+			} // xx
+			if (!box_found) break;
+			} // yy
+
+			if (box_found) {
+				primitive_list[current_primitive].color=
+					current_color;
+				primitive_list[current_primitive].x1=col;
+				primitive_list[current_primitive].x2=col+
+					box_sizes[box].x-1;
+				primitive_list[current_primitive].y1=row;
+				primitive_list[current_primitive].y2=row+
+					box_sizes[box].y-1;
+				primitive_list[current_primitive].type=ACTION_BOX;
+				current_primitive++;
+				if (current_primitive>=MAX_PRIMITIVES) {
+					fprintf(stderr,"Error!  Too many primitives: %d\n",current_primitive);
+					exit(1);
+				}
+				for(yy=0;yy<box_sizes[box].y;yy++) {
+				for(xx=0;xx<box_sizes[box].x;xx++) {
+				framebuffer[xx+col][yy+row]=0xff;
+				}
+				}
+
+			}
+
+
+		} // col
+	}	// row
+	}	// box
+	}	// current_color
+	return current_primitive;
+}
+
 
 
 
@@ -227,7 +288,49 @@ int main(int argc, char **argv) {
 	}
 
 //	max_primitive=create_using_hlins();
-	max_primitive=create_using_hlins_by_color();
+//	max_primitive=create_using_hlins_by_color();
+	max_primitive=create_using_boxes();
+
+
+	/* Optimize boxes to PLOT/VLIN/HLIN*/
+	for(i=0;i<max_primitive;i++) {
+		if (primitive_list[i].type==ACTION_BOX) {
+			if ((primitive_list[i].x1==primitive_list[i].x2) &&
+				(primitive_list[i].y1==primitive_list[i].y2)) {
+				primitive_list[i].type=ACTION_PLOT;
+			} else
+			if (primitive_list[i].x1==primitive_list[i].x2) {
+				primitive_list[i].type=ACTION_VLIN;
+			} else
+			if (primitive_list[i].y1==primitive_list[i].y2) {
+				primitive_list[i].type=ACTION_HLIN;
+			}
+		}
+	}
+
+	/* Optimize HLIN */
+	int previous_entry=0,previous_y=0;
+	for(i=0;i<max_primitive;i++) {
+		if (primitive_list[i].type==ACTION_HLIN) {
+			if ((previous_entry==ACTION_HLIN) &&
+				(previous_y==primitive_list[i].y1-1)) {
+				primitive_list[i].type=ACTION_HLIN_ADD;
+			}
+			else
+			if ((previous_entry==ACTION_HLIN_ADD) &&
+				(previous_y==primitive_list[i].y1-1)) {
+				primitive_list[i].type=ACTION_HLIN_ADD;
+			}
+			else
+			if ((previous_entry==ACTION_PLOT) &&
+				(previous_y==primitive_list[i].y1-1)) {
+				primitive_list[i].type=ACTION_HLIN_ADD;
+			}
+		}
+		previous_entry=primitive_list[i].type;
+		previous_y=primitive_list[i].y1;
+	}
+
 
 	/* Dump results */
 	for(i=0;i<max_primitive;i++) {
@@ -246,6 +349,23 @@ int main(int argc, char **argv) {
 			case ACTION_CLEAR:
 					break;
 			case ACTION_BOX:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d,%d,%d\n",
+						primitive_list[i].x1,
+						primitive_list[i].y1,
+						primitive_list[i].x2,
+						primitive_list[i].y2);
+					total_size+=4;
+				}
+				else {
+					printf("\t.byte BOX,%d,%d,%d,%d\n",
+						primitive_list[i].x1,
+						primitive_list[i].y1,
+						primitive_list[i].x2,
+						primitive_list[i].y2);
+					total_size+=5;
+					previous_primitive=ACTION_BOX;
+				}
 					break;
 			case ACTION_HLIN:
 				if (primitive_list[i].type==previous_primitive) {
@@ -266,6 +386,22 @@ int main(int argc, char **argv) {
 				}
 					break;
 			case ACTION_VLIN:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d,%d\n",
+						primitive_list[i].y1,
+						primitive_list[i].y2,
+						primitive_list[i].x1);
+					total_size+=3;
+				}
+				else {
+					printf("\t.byte VLIN,%d,%d,%d\n",
+						primitive_list[i].y1,
+						primitive_list[i].y2,
+						primitive_list[i].x1);
+					total_size+=4;
+					previous_primitive=ACTION_VLIN;
+
+				}
 					break;
 			case ACTION_PLOT:
 				if (primitive_list[i].type==previous_primitive) {
@@ -284,10 +420,50 @@ int main(int argc, char **argv) {
 				}
 					break;
 			case ACTION_HLIN_ADD:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d\t; %d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y1);
+					total_size+=2;
+				}
+				else {
+					printf("\t.byte HLIN_ADD,%d,%d\t; %d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y1);
+					total_size+=3;
+					previous_primitive=ACTION_HLIN_ADD;
+
+				}
 					break;
 			case ACTION_HLIN_ADD_LSAME:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d\n",
+						primitive_list[i].x2);
+					total_size+=1;
+				}
+				else {
+					printf("\t.byte HLIN_ADD_LSAME,%d\n",
+						primitive_list[i].x2);
+					total_size+=2;
+					previous_primitive=ACTION_HLIN_ADD_LSAME;
+
+				}
 					break;
 			case ACTION_HLIN_ADD_RSAME:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d\n",
+						primitive_list[i].x1);
+					total_size+=1;
+				}
+				else {
+					printf("\t.byte HLIN_ADD_RSAME,%d\n",
+						primitive_list[i].x1);
+					total_size+=2;
+					previous_primitive=ACTION_HLIN_ADD_RSAME;
+
+				}
 					break;
 			default:
 				fprintf(stderr,"Error unknown type!\n");
@@ -304,3 +480,6 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
+
+
+

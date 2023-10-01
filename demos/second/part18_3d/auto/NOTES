@@ -14,3 +14,20 @@ todo, compressed:
 2568 bytes: try4: use compact form (only change type if changed)
 1194 bytes: try5: use hlin (essentially RLE)
  906 bytes: try6: sort by color first
+ 628 bytes: try7: initial use boxes
+ 526 bytes: try8: boxes that optimize to HLIN/VLIN/PLOT
+
+TODO:
+	If HLIN and previous same x1/x2 do box
+	If HLIN only one wide, switch to VLIN?
+	IF HLIN and next line HLIN at +1, use HLIN_ADD
+	If HLIN and next line HLIN at +1 and R same, HLIN_ADD_RSAME
+	If HLIN and next line HLIN at +1 and R same, HLIN_ADD_LSAME
+
+	MOVE PLOTS one line before HLIN
+
+Possible size boxes
+	48x40,39,38....1
+
+
+
