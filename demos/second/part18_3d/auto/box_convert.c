@@ -168,15 +168,23 @@ int create_using_boxes(void) {
 
 	for(box=0;box<NUM_BOX_SIZES;box++) {
 
-	int xx,yy,box_found;
+	int xx,yy,box_found,color_found;
 
 	for(row=0;row<48-box_sizes[box].y;row++) {
 		for(col=0;col<40-box_sizes[box].x;col++) {
 			box_found=1;
+			color_found=0;
 			for(yy=0;yy<box_sizes[box].y;yy++) {
 			for(xx=0;xx<box_sizes[box].x;xx++) {
 
-			if (framebuffer[xx+col][yy+row]!=current_color) {
+
+			if (framebuffer[xx+col][yy+row]==current_color) {
+				color_found=1;
+			}
+
+			if ((framebuffer[xx+col][yy+row]==background_color)||
+				(framebuffer[xx+col][yy+row]==0xff))
+				 {
 				box_found=0;
 				break;
 			}
@@ -184,7 +192,10 @@ int create_using_boxes(void) {
 			if (!box_found) break;
 			} // yy
 
-			if (box_found) {
+			if ((box_found)&&(color_found)) {
+				fprintf(stderr,"Found box c=%d %d,%d to %d,%d\n",
+					current_color,col,row,col+box_sizes[box].x-1,
+						row+box_sizes[box].y-1);
 				primitive_list[current_primitive].color=
 					current_color;
 				primitive_list[current_primitive].x1=col;
@@ -201,7 +212,9 @@ int create_using_boxes(void) {
 				}
 				for(yy=0;yy<box_sizes[box].y;yy++) {
 				for(xx=0;xx<box_sizes[box].x;xx++) {
-				framebuffer[xx+col][yy+row]=0xff;
+					if(framebuffer[xx+col][yy+row]==current_color) {
+					framebuffer[xx+col][yy+row]=0xff;
+					}
 				}
 				}
 
