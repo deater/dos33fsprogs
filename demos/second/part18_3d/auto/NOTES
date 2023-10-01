@@ -16,14 +16,14 @@ todo, compressed:
  906 bytes: try6: sort by color first
  628 bytes: try7: initial use boxes
  526 bytes: try8: boxes that optimize to HLIN/VLIN/PLOT
+ 522 bytes: try9: optimize HLIN to HLIN_ADD variants
+ 506 bytes: try10: sort types per color
+ 498 bytes: try11: sort HLIN by Y1
 
 TODO:
-	If HLIN and previous same x1/x2 do box
-	If HLIN only one wide, switch to VLIN?
-	IF HLIN and next line HLIN at +1, use HLIN_ADD
-	If HLIN and next line HLIN at +1 and R same, HLIN_ADD_RSAME
-	If HLIN and next line HLIN at +1 and R same, HLIN_ADD_LSAME
-
+	Add don't cares
+	Try all color combos
+	Sort the color results to have consecutive HLINs together
 	MOVE PLOTS one line before HLIN
 
 Possible size boxes
