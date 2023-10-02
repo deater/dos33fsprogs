@@ -48,6 +48,10 @@ static char color_names[16][16]={
 #define ACTION_HLIN_ADD		0x6
 #define ACTION_HLIN_ADD_LSAME	0x7
 #define ACTION_HLIN_ADD_RSAME	0x8
+#define ACTION_BOX_ADD		0x9
+#define ACTION_BOX_ADD_LSAME	0xA
+#define ACTION_BOX_ADD_RSAME	0xB
+
 
 #if 0
 static char action_names[9][16]={
@@ -407,33 +411,99 @@ int generate_frame(int print_results) {
 		old_color=primitive_list[i].color;
 	}
 
+	/* Sort BOX by Y1 */
+	int first_box=0,last_box=0,box_found;
+
+	old_color=primitive_list[0].color;
+	for(i=0;i<max_primitive;i++) {
+		if ((primitive_list[i].color!=old_color)||(i==max_primitive-1))  {
+			box_found=0;
+			first_box=0; last_box=0;
+//			fprintf(stderr,"Searching for BOX in color %d from %d to %d\n",
+//				old_color,last_color_start,i);
+			for(j=last_color_start;j<i;j++) {
+				if (primitive_list[j].type==ACTION_BOX) {
+					if (!box_found) {
+						first_box=j;
+						box_found=1;
+					}
+					last_box=j;
+				}
+			}
+			if (box_found) {
+				if (debug) fprintf(stderr,"Sorting color %d BOX Y1 from %d to %d\n",
+					old_color,first_box,last_box);
+				// qsort(base, num_members,size_members,compare func
+				qsort(&(primitive_list[first_box]),last_box-first_box,
+					sizeof(struct primitive_list_t),compare_y1);
+			}
+			else {
+//				fprintf(stderr,"No BOX in color %d\n",old_color);
+			}
+			last_color_start=i;
+		}
+		old_color=primitive_list[i].color;
+	}
+
+
 	/* Optimize HLIN */
-	int previous_entry=0,previous_y=0,previous_x1=0,previous_x2=0;
+	int previous_entry=0,previous_y1=0,previous_x1=0,previous_x2=0,previous_y2=0;
 	for(i=0;i<max_primitive;i++) {
 		if (primitive_list[i].type==ACTION_HLIN) {
 
 			if ( ((previous_entry==ACTION_HLIN)||(previous_entry==ACTION_HLIN_ADD) ||(previous_entry==ACTION_HLIN_ADD_LSAME)) &&
-				(previous_y==primitive_list[i].y1-1) &&
+				(previous_y1==primitive_list[i].y1-1) &&
 				(previous_x1==primitive_list[i].x1)) {
 				primitive_list[i].type=ACTION_HLIN_ADD_LSAME;
 			}
 			else
 			if ( ((previous_entry==ACTION_HLIN)||(previous_entry==ACTION_HLIN_ADD) ||(previous_entry==ACTION_HLIN_ADD_RSAME)) &&
-				(previous_y==primitive_list[i].y1-1) &&
+				(previous_y1==primitive_list[i].y1-1) &&
 				(previous_x2==primitive_list[i].x2)) {
 				primitive_list[i].type=ACTION_HLIN_ADD_RSAME;
 			}
 			else
 			if ( ((previous_entry==ACTION_HLIN) || (previous_entry==ACTION_HLIN_ADD) || (previous_entry==ACTION_PLOT)) &&
-				(previous_y==primitive_list[i].y1-1)) {
+				(previous_y1==primitive_list[i].y1-1)) {
 				primitive_list[i].type=ACTION_HLIN_ADD;
 			}
 		}
 		previous_entry=primitive_list[i].type;
-		previous_y=primitive_list[i].y1;
+		previous_y1=primitive_list[i].y1;
 		previous_x1=primitive_list[i].x1;
 		previous_x2=primitive_list[i].x2;
 	}
+
+
+	/* Optimize BOX */
+	previous_entry=0,previous_y1=0,previous_y2=0,previous_x1=0,previous_x2=0;
+	for(i=0;i<max_primitive;i++) {
+		if (primitive_list[i].type==ACTION_BOX) {
+
+			if ( ((previous_entry==ACTION_BOX)||(previous_entry==ACTION_BOX_ADD) ||(previous_entry==ACTION_BOX_ADD_LSAME)) &&
+				(previous_y2==primitive_list[i].y1-1) &&
+				(previous_x1==primitive_list[i].x1)) {
+				primitive_list[i].type=ACTION_BOX_ADD_LSAME;
+			}
+			else
+			if ( ((previous_entry==ACTION_BOX)||(previous_entry==ACTION_BOX_ADD) ||(previous_entry==ACTION_BOX_ADD_RSAME)) &&
+				(previous_y2==primitive_list[i].y1-1) &&
+				(previous_x2==primitive_list[i].x2)) {
+				primitive_list[i].type=ACTION_BOX_ADD_RSAME;
+			}
+			else
+			if ( ((previous_entry==ACTION_BOX) || (previous_entry==ACTION_BOX_ADD)) &&
+				(previous_y2==primitive_list[i].y1-1)) {
+				primitive_list[i].type=ACTION_BOX_ADD;
+			}
+		}
+		previous_entry=primitive_list[i].type;
+		previous_x1=primitive_list[i].x1;
+		previous_y1=primitive_list[i].y1;
+		previous_x2=primitive_list[i].x2;
+		previous_y2=primitive_list[i].y2;
+	}
+
 
 
 	/* Dump results */
@@ -578,6 +648,63 @@ int generate_frame(int print_results) {
 
 				}
 					break;
+			case ACTION_BOX_ADD:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d,%d\t; %d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y2,
+						primitive_list[i].y1);
+					total_size+=3;
+				}
+				else {
+					printf("\t.byte BOX_ADD,%d,%d,%d\t; %d\n",
+						primitive_list[i].x1,
+						primitive_list[i].x2,
+						primitive_list[i].y2,
+						primitive_list[i].y1);
+					total_size+=4;
+					previous_primitive=ACTION_BOX_ADD;
+
+				}
+					break;
+			case ACTION_BOX_ADD_LSAME:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d\n",
+						primitive_list[i].x2,
+						primitive_list[i].y2);
+					total_size+=2;
+				}
+				else {
+					printf("\t.byte BOX_ADD_LSAME,%d,%d ; %d, %d\n",
+						primitive_list[i].x2,
+						primitive_list[i].y2,
+						primitive_list[i].x1,
+						primitive_list[i].y1);
+					total_size+=3;
+					previous_primitive=ACTION_BOX_ADD_LSAME;
+
+				}
+					break;
+			case ACTION_BOX_ADD_RSAME:
+				if (primitive_list[i].type==previous_primitive) {
+					printf("\t.byte %d,%d\t; %d %d\n",
+						primitive_list[i].x1,
+						primitive_list[i].y2,
+						primitive_list[i].x2,
+						primitive_list[i].y1);
+					total_size+=2;
+				}
+				else {
+					printf("\t.byte BOX_ADD_RSAME,%d,%d\n",
+						primitive_list[i].x1,
+						primitive_list[i].y2);
+					total_size+=3;
+					previous_primitive=ACTION_BOX_ADD_RSAME;
+
+				}
+					break;
+
 			default:
 				fprintf(stderr,"Error unknown type!\n");
 				exit(1);

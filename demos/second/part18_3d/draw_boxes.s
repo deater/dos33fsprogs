@@ -20,6 +20,9 @@ PLOT	=	$85
 HLIN_ADD=	$86
 HLIN_ADD_LSAME=	$87
 HLIN_ADD_RSAME=	$88
+BOX_ADD=	$89
+BOX_ADD_LSAME=	$8A
+BOX_ADD_RSAME=	$8B
 
 BLACK		= $00
 RED		= $01
@@ -123,12 +126,14 @@ update_pointer:
 
 draw_table_l:
 	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
-	.byte	<(draw_plot-1),<(draw_hlin_add-1)
-	.byte	<(draw_hlin_add_lsame-1),<(draw_hlin_add_rsame-1)
+	.byte	<(draw_plot-1)
+	.byte	<(draw_hlin_add-1),<(draw_hlin_add_lsame-1),<(draw_hlin_add_rsame-1)
+	.byte	<(draw_box_add-1),<(draw_box_add_lsame-1),<(draw_box_add_rsame-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-	.byte	>(draw_plot-1),>(draw_hlin_add-1)
-	.byte	>(draw_hlin_add_lsame-1),>(draw_hlin_add_rsame-1)
+	.byte	>(draw_plot-1)
+	.byte	>(draw_hlin_add-1),>(draw_hlin_add_lsame-1),>(draw_hlin_add_rsame-1)
+	.byte	>(draw_box_add-1),>(draw_box_add_lsame-1),>(draw_box_add_rsame-1)
 
 	;=================================
 	;=================================
@@ -170,6 +175,17 @@ draw_box:
 	lda	(INL),Y
 	sta	Y2
 
+	jsr	draw_box_common
+
+done_draw_box:
+	lda	#4
+	jmp	update_pointer
+
+
+	;==================================
+	; draw box common
+	;==================================
+draw_box_common:
 	lda	Y2
 	lsr
 	; if even, go to one less
@@ -246,8 +262,8 @@ done_draw_box_yloop:
 definitely_odd_bottom:
 	; done
 
-	lda	#4
-	jmp	update_pointer
+	rts
+
 
 
 	;=================================
@@ -257,7 +273,6 @@ definitely_odd_bottom:
 	;=================================
 draw_hlin:
 
-;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -292,7 +307,6 @@ hlin_done:
 	; increment Y1
 draw_hlin_add:
 
-;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -328,7 +342,6 @@ hlin_add_done:
 	; use old left value
 draw_hlin_add_lsame:
 
-;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X2
 
@@ -361,7 +374,6 @@ hlin_add_lsame_done:
 	; use old right value
 draw_hlin_add_rsame:
 
-;	iny			; FIXME: move to common code
 	lda	(INL),Y
 	sta	X1
 
@@ -383,6 +395,83 @@ do_hlin_add_rsame_mask_odd:
 hlin_add_rsame_done:
 	lda	#1
 	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw box add
+	;=================================
+	;=================================
+	; increment Y2, put into Y1
+draw_box_add:
+	lda	Y2
+	sta	Y1
+	inc	Y1
+
+	lda	(INL),Y
+	sta	X1
+	iny
+	lda	(INL),Y
+	sta	X2
+	iny
+	lda	(INL),Y
+	sta	Y2
+
+	jsr	draw_box_common
+
+	lda	#3
+	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw box add_lsame
+	;=================================
+	;=================================
+	; increment Y2, store in Y1
+	; use old X1 value
+draw_box_add_lsame:
+
+	lda	Y2
+	sta	Y1
+	inc	Y1
+
+	lda	(INL),Y
+	sta	X2
+	iny
+	lda	(INL),Y
+	sta	Y2
+
+	jsr	draw_box_common
+
+	lda	#2
+	jmp	update_pointer
+
+
+	;=================================
+	;=================================
+	; draw box add_rsame
+	;=================================
+	;=================================
+	; increment Y2, put in Y1
+	; use old right value X2
+draw_box_add_rsame:
+
+	lda	Y2
+	sta	Y1
+	inc	Y1
+
+	lda	(INL),Y
+	sta	X1
+	iny
+	lda	(INL),Y
+	sta	Y2
+
+	jsr	draw_box_common
+
+	lda	#2
+	jmp	update_pointer
+
 
 
 

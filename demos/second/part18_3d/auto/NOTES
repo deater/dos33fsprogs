@@ -22,6 +22,8 @@ todo, compressed:
  431 bytes: try12: with don't cares
  336 bytes: try13: sort colors by popularity
  299 bytes: try14: shrink the window for finding colors to only include colors
+ 299 bytes: try15: sort BOX (not expected to be smaller)
+ 293 bytes: try16: add BOX_ADD types
 
 TODO:
 	Only use don't care result if not wider than max X or longer than
