@@ -814,10 +814,10 @@ int main(int argc, char **argv) {
 	qsort(&(color_lookup[1]),15,
 			sizeof(struct color_lookup_t),compare_color);
 
-	printf("; Histogram\n");
-	for(i=0;i<16;i++) {
-		printf("; $%02X %s: %d\n",color_lookup[i].color,color_names[color_lookup[i].color],color_lookup[i].count);
-	}
+//	printf("; Histogram\n");
+//	for(i=0;i<16;i++) {
+//		printf("; $%02X %s: %d\n",color_lookup[i].color,color_names[color_lookup[i].color],color_lookup[i].count);
+//	}
 
 
 	memcpy(color_backup,color_lookup,16*sizeof(struct color_lookup_t));
