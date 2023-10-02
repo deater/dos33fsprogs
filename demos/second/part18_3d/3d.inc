@@ -35,8 +35,21 @@ frame15:
 	.include "handmade/frame048.inc"	; handmade 15 bytes smaller
 	.include "handmade/frame049.inc"	; handmade 18 bytes smaller
 	.include "handmade/frame050.inc"	; handmade 28 bytes smaller
+	.include "auto/frame051.inc"	;
+	.include "auto/frame052.inc"	;
+	.include "auto/frame053.inc"	;
+	.include "auto/frame054.inc"	;
+	.include "auto/frame055.inc"	;
+	.include "auto/frame056.inc"	;
+	.include "auto/frame057.inc"	;
+	.include "auto/frame058.inc"	;
+	.include "auto/frame059.inc"	;
+	.include "auto/frame060.inc"	;
+	.include "auto/frame061.inc"	;
+	.include "auto/frame062.inc"	;
+	.include "auto/frame063.inc"	;
+	.include "auto/frame064.inc"	;
+	.include "auto/frame065.inc"	;
 
-
-
-num_scenes=(50-15)+1
+num_scenes=(65-15)+1
 
