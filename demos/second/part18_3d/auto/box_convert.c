@@ -36,6 +36,33 @@ static char color_names[16][16]={
 	"WHITE",	/* $0F */
 };
 
+static int permutations[24][4]={
+{1,2,3,4},
+{2,1,3,4},
+{3,1,2,4},
+{1,3,2,4},
+{2,3,1,4},
+{3,2,1,4},
+{3,2,4,1},
+{2,3,4,1},
+{4,3,2,1},
+{3,4,2,1},
+{2,4,3,1},
+{4,2,3,1},
+{4,1,3,2},
+{1,4,3,2},
+{3,4,1,2},
+{4,3,1,2},
+{1,3,4,2},
+{3,1,4,2},
+{2,1,4,3},
+{1,2,4,3},
+{4,2,1,3},
+{2,4,1,3},
+{1,4,2,3},
+{4,1,2,3},
+};
+
 
 /* SET_COLOR = $C0 */
 
@@ -68,6 +95,7 @@ static struct primitive_list_t {
 } primitive_list[MAX_PRIMITIVES];
 
 static int framebuffer[40][48];
+static int framebuffer_saved[40][48];
 static int background_color=0;
 
 int create_using_plots(void) {
@@ -99,6 +127,21 @@ static struct color_lookup_t {
 	{0,0},{1,0},{2,0},{3,0},{4,0},{5,0},{6,0},{7,0},{8,0},
 	{9,0},{10,0},{11,0},{12,0},{13,0},{14,0},{15,0}
 };
+
+static struct color_lookup_t color_backup[16];
+
+static void permute_colors(int which) {
+
+	int i;
+
+	for(i=0;i<4;i++) {
+
+		color_lookup[i+1].color=color_backup[permutations[which][i]].color;
+		color_lookup[i+1].count=color_backup[permutations[which][i]].count;
+
+	}
+}
+
 
 int create_using_hlins(void) {
 
@@ -511,7 +554,7 @@ int generate_frame(int print_results) {
 		if (primitive_list[i].color==0) continue;
 
 		if (current_color!=primitive_list[i].color) {
-			printf("\t.byte SET_COLOR | %s\n",
+			if (print_results) printf("\t.byte SET_COLOR | %s\n",
 				color_names[primitive_list[i].color]);
 			current_color=primitive_list[i].color;
 			total_size+=1;
@@ -524,7 +567,7 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_BOX:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d,%d,%d\n",
+					if (print_results) printf("\t.byte %d,%d,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y1,
 						primitive_list[i].x2,
@@ -532,7 +575,7 @@ int generate_frame(int print_results) {
 					total_size+=4;
 				}
 				else {
-					printf("\t.byte BOX,%d,%d,%d,%d\n",
+					if (print_results) printf("\t.byte BOX,%d,%d,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y1,
 						primitive_list[i].x2,
@@ -543,14 +586,14 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_HLIN:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d,%d\n",
+					if (print_results) printf("\t.byte %d,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y1);
 					total_size+=3;
 				}
 				else {
-					printf("\t.byte HLIN,%d,%d,%d\n",
+					if (print_results) printf("\t.byte HLIN,%d,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y1);
@@ -561,14 +604,14 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_VLIN:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d,%d\n",
+					if (print_results) printf("\t.byte %d,%d,%d\n",
 						primitive_list[i].y1,
 						primitive_list[i].y2,
 						primitive_list[i].x1);
 					total_size+=3;
 				}
 				else {
-					printf("\t.byte VLIN,%d,%d,%d\n",
+					if (print_results) printf("\t.byte VLIN,%d,%d,%d\n",
 						primitive_list[i].y1,
 						primitive_list[i].y2,
 						primitive_list[i].x1);
@@ -579,13 +622,13 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_PLOT:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d\n",
+					if (print_results) printf("\t.byte %d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y1);
 					total_size+=2;
 				}
 				else {
-					printf("\t.byte PLOT,%d,%d\n",
+					if (print_results) printf("\t.byte PLOT,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y1);
 					total_size+=3;
@@ -595,14 +638,14 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_HLIN_ADD:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d\t; %d\n",
+					if (print_results) printf("\t.byte %d,%d\t; %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y1);
 					total_size+=2;
 				}
 				else {
-					printf("\t.byte HLIN_ADD,%d,%d\t; %d\n",
+					if (print_results) printf("\t.byte HLIN_ADD,%d,%d\t; %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y1);
@@ -613,12 +656,12 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_HLIN_ADD_LSAME:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d\n",
+					if (print_results) printf("\t.byte %d\n",
 						primitive_list[i].x2);
 					total_size+=1;
 				}
 				else {
-					printf("\t.byte HLIN_ADD_LSAME,%d ; %d, %d, %d\n",
+					if (print_results) printf("\t.byte HLIN_ADD_LSAME,%d ; %d, %d, %d\n",
 						primitive_list[i].x2,
 						primitive_list[i].x1,
 						primitive_list[i].x2,
@@ -630,7 +673,7 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_HLIN_ADD_RSAME:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d\t; %d %d %d\n",
+					if (print_results) printf("\t.byte %d\t; %d %d %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x1,
 						primitive_list[i].x2,
@@ -638,7 +681,7 @@ int generate_frame(int print_results) {
 					total_size+=1;
 				}
 				else {
-					printf("\t.byte HLIN_ADD_RSAME,%d\t; %d %d %d\n",
+					if (print_results) printf("\t.byte HLIN_ADD_RSAME,%d\t; %d %d %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x1,
 						primitive_list[i].x2,
@@ -650,7 +693,7 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_BOX_ADD:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d,%d\t; %d\n",
+					if (print_results) printf("\t.byte %d,%d,%d\t; %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y2,
@@ -658,7 +701,7 @@ int generate_frame(int print_results) {
 					total_size+=3;
 				}
 				else {
-					printf("\t.byte BOX_ADD,%d,%d,%d\t; %d\n",
+					if (print_results) printf("\t.byte BOX_ADD,%d,%d,%d\t; %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].x2,
 						primitive_list[i].y2,
@@ -670,13 +713,13 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_BOX_ADD_LSAME:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d\n",
+					if (print_results) printf("\t.byte %d,%d\n",
 						primitive_list[i].x2,
 						primitive_list[i].y2);
 					total_size+=2;
 				}
 				else {
-					printf("\t.byte BOX_ADD_LSAME,%d,%d ; %d, %d\n",
+					if (print_results) printf("\t.byte BOX_ADD_LSAME,%d,%d ; %d, %d\n",
 						primitive_list[i].x2,
 						primitive_list[i].y2,
 						primitive_list[i].x1,
@@ -688,7 +731,7 @@ int generate_frame(int print_results) {
 					break;
 			case ACTION_BOX_ADD_RSAME:
 				if (primitive_list[i].type==previous_primitive) {
-					printf("\t.byte %d,%d\t; %d %d\n",
+					if (print_results) printf("\t.byte %d,%d\t; %d %d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y2,
 						primitive_list[i].x2,
@@ -696,7 +739,7 @@ int generate_frame(int print_results) {
 					total_size+=2;
 				}
 				else {
-					printf("\t.byte BOX_ADD_RSAME,%d,%d\n",
+					if (print_results) printf("\t.byte BOX_ADD_RSAME,%d,%d\n",
 						primitive_list[i].x1,
 						primitive_list[i].y2);
 					total_size+=3;
@@ -714,9 +757,10 @@ int generate_frame(int print_results) {
 
 
 	}
-	printf("\t.byte END\n");
+	if (print_results) printf("\t.byte END\n");
 	total_size++;
-	printf("; total size = %d\n",total_size);
+
+	if (print_results) printf("; total size = %d\n",total_size);
 
 	return total_size;
 }
@@ -725,6 +769,7 @@ int main(int argc, char **argv) {
 
 	int xsize,ysize;
 	int row,col,pixel,i;
+	int minimal_size,minimal_which=0;
 
 	if (argc<1) {
 		fprintf(stderr,"Usage:\t%s INFILE\n",argv[0]);
@@ -764,20 +809,36 @@ int main(int argc, char **argv) {
 		}
 	}
 
+	memcpy(framebuffer_saved,framebuffer,40*48*sizeof(int));
+
 	qsort(&(color_lookup[1]),15,
 			sizeof(struct color_lookup_t),compare_color);
 
-
-	/* TODO: sort */
 	printf("; Histogram\n");
 	for(i=0;i<16;i++) {
 		printf("; $%02X %s: %d\n",color_lookup[i].color,color_names[color_lookup[i].color],color_lookup[i].count);
 	}
 
 
+	memcpy(color_backup,color_lookup,16*sizeof(struct color_lookup_t));
 
+	int result;
+	minimal_size=2096;
+	for(i=0;i<24;i++) {
+		permute_colors(i);
+		result=generate_frame(0);
+		fprintf(stderr,"%d: %d bytes\n",i,result);
+		if (result<minimal_size) {
+			minimal_size=result;
+			minimal_which=i;
+		}
+
+		/* reset for next attempt */
+		memcpy(framebuffer,framebuffer_saved,40*48*sizeof(int));
+	}
+	fprintf(stderr,"minimum = %d, %d bytes\n",minimal_which,minimal_size);
+	permute_colors(minimal_which);
 	generate_frame(1);
-
 
 	return 0;
 }

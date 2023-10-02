@@ -24,6 +24,7 @@ todo, compressed:
  299 bytes: try14: shrink the window for finding colors to only include colors
  299 bytes: try15: sort BOX (not expected to be smaller)
  293 bytes: try16: add BOX_ADD types
+ 293 bytes: try17: permutate the top 4 colors to see if it improves
 
 TODO:
 	Only use don't care result if not wider than max X or longer than
