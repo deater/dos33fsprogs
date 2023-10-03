@@ -50,6 +50,41 @@ frame15:
 	.include "auto/frame063.inc"	;
 	.include "auto/frame064.inc"	;
 	.include "auto/frame065.inc"	;
+	.include "auto/frame066.inc"	;
+	.include "auto/frame067.inc"	;
+	.include "auto/frame068.inc"	;
+	.include "auto/frame069.inc"	;
+	.include "auto/frame070.inc"	;
+	.include "auto/frame071.inc"	;
+	.include "auto/frame072.inc"	;
+	.include "auto/frame073.inc"	;
+	.include "auto/frame074.inc"	;
+	.include "auto/frame075.inc"	;
+	.include "auto/frame076.inc"	;
+	.include "auto/frame077.inc"	;
+	.include "auto/frame078.inc"	;
+	.include "auto/frame079.inc"	;
+	.include "auto/frame080.inc"	;
+	.include "auto/frame081.inc"	;
+	.include "auto/frame082.inc"	;
+	.include "auto/frame083.inc"	;
+	.include "auto/frame084.inc"	;
+	.include "auto/frame085.inc"	;
+	.include "auto/frame086.inc"	;
+	.include "auto/frame087.inc"	;
+	.include "auto/frame088.inc"	;
+	.include "auto/frame089.inc"	;
+	.include "auto/frame090.inc"	;
+	.include "auto/frame091.inc"	;
+	.include "auto/frame092.inc"	;
+	.include "auto/frame093.inc"	;
+	.include "auto/frame094.inc"	;
+	.include "auto/frame095.inc"	;
+	.include "auto/frame096.inc"	;
+	.include "auto/frame097.inc"	;
+	.include "auto/frame098.inc"	;
+	.include "auto/frame099.inc"	;
+	.include "auto/frame100.inc"	;
 
-num_scenes=(65-15)+1
+num_scenes=(100-15)+1
 
