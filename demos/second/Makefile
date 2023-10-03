@@ -13,7 +13,7 @@ all:	second.dsk
 #	$(DOS33) -y second.dsk SAVE A HELLO
 #	$(DOS33) -y second.dsk BSAVE -a 0x6000 ZW
 
-second.dsk:	QBOOT QLOAD SECOND MUSIC \
+second.dsk:	QBOOT QLOAD SECOND MUSIC START \
 	./part18_3d/THREED
 	cp $(EMPTY_DISK) second.dsk
 	$(DOS33_RAW) second.dsk 0 0 QBOOT	0 1
@@ -22,7 +22,8 @@ second.dsk:	QBOOT QLOAD SECOND MUSIC \
 	$(DOS33_RAW) second.dsk 1 0 QLOAD	0 0
 	$(DOS33_RAW) second.dsk 3 0 MUSIC	0 0
 #	$(DOS33_RAW) second.dsk 5 0 SECOND	0 0
-	$(DOS33_RAW) second.dsk 5 0 ./part18_3d/THREED	0 0
+	$(DOS33_RAW) second.dsk 5 0 START	0 0
+	$(DOS33_RAW) second.dsk 8 0 ./part18_3d/THREED	0 0
 
 ####
 
@@ -64,6 +65,17 @@ second.o:	second.s zx02_optim.s \
 	graphics/mntscrl3.hgr.zx02 \
 	zp.inc hardware.inc qload.inc music.inc
 	ca65 -o second.o second.s -l second.lst
+
+####
+
+START:	start.o
+	ld65 -o START start.o -C ../../linker_scripts/apple2_4000.inc
+
+start.o:	start.s zx02_optim.s \
+	text_print.s title.s \
+	zp.inc hardware.inc qload.inc music.inc
+	ca65 -o start.o start.s -l start.lst
+
 
 ####
 
@@ -130,4 +142,4 @@ generate_common.o:	generate_common.c
 
 
 clean:
-		rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC
+		rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
