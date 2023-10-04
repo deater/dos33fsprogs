@@ -5,6 +5,8 @@
 /* For input assumes a 40x48 (or 80x48, double wide) PNG file */
 /* with the Apple II palette */
 
+/* Output is ca65 6502 assembler for including in project */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -431,6 +433,10 @@ static int compare_color(const void *p1, const void *p2) {
 
 
 
+/* generate data for a frame */
+/* returns how many bytes it takes up */
+/* we call this many times when iterating to see best color combo */
+/* only set print_results on final run to output the data */
 
 int generate_frame(int print_results) {
 
@@ -449,7 +455,10 @@ int generate_frame(int print_results) {
 	max_primitive=create_using_boxes();
 
 
-	/* Optimize boxes to PLOT/VLIN/HLIN*/
+	/* Optimize boxes to PLOT/VLIN/HLIN */
+	/* if 1x1, single pixel plot */
+	/* if xwidth = 1, then vertical line */
+	/* if ywidth = 1, then horizontal line */
 	for(i=0;i<max_primitive;i++) {
 		if (primitive_list[i].type==ACTION_BOX) {
 			if ((primitive_list[i].x1==primitive_list[i].x2) &&
@@ -466,6 +475,12 @@ int generate_frame(int print_results) {
 	}
 
 	/* Sort each color by BOX/HLIN/ETC */
+
+	/* This lets us use more compact encoding where consecutive */
+	/* types don't have to specify (since we max out at 40x48 we */
+	/* can use the high bit of the first co-ord to specify whether */
+	/* we are a number or else starting a new type */
+
 	int old_color,last_color_start=0;
 
 	old_color=primitive_list[0].color;
@@ -481,6 +496,10 @@ int generate_frame(int print_results) {
 	}
 
 	/* Sort HLIN by Y1 */
+	/* This lets us use more compact encoding where consecutive */
+	/* horizontal lines don't specify the Y value but just increment */
+	/* the previous one */
+
 	int first_hlin=0,last_hlin=0,j,hlin_found;
 
 	old_color=primitive_list[0].color;
@@ -515,6 +534,7 @@ int generate_frame(int print_results) {
 	}
 
 	/* Sort BOX by Y1 */
+	/* This lets us do optimizations similar to HLIN above */
 	int first_box=0,last_box=0,box_found;
 
 	old_color=primitive_list[0].color;
@@ -550,6 +570,10 @@ int generate_frame(int print_results) {
 
 
 	/* Optimize HLIN */
+	/* If Y is same as prev+1, then ACTION_HLIN_ADD */
+	/* If Y is same as prev+1 and x1 (left) same, then ACTION_HLIN_ADD_LSAME */
+	/* If Y is same as prev+1 and x2 (right) same, then ACTION_HLIN_ADD_RSAME */
+
 	int previous_entry=0,previous_y1=0,previous_x1=0,previous_x2=0,previous_y2=0;
 	for(i=0;i<max_primitive;i++) {
 		if (primitive_list[i].type==ACTION_HLIN) {
@@ -902,6 +926,3 @@ int main(int argc, char **argv) {
 
 	return 0;
 }
-
-
-
