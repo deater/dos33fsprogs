@@ -883,18 +883,25 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	/* convert "packed" lo-res data to easier to use 40x48 array */
+	/* (on Apple II two rows of colors are combined in hi/lo nybble) */
 	for(row=0;row<24;row++) {
 		for(col=0;col<40;col++) {
+			/* get packed color */
 			pixel=(image[row*40+col]);
+			/* Update histogram data */
 			color_lookup[pixel&0xf].count++;
 			color_lookup[(pixel>>4)&0xf].count++;
+			/* unpack color */
 			framebuffer[col][row*2]=pixel&0xf;
 			framebuffer[col][(row*2)+1]=(pixel>>4)&0xf;
 		}
 	}
 
+	/* save copy of framebuffer data as getting boxes is destructive */
 	memcpy(framebuffer_saved,framebuffer,40*48*sizeof(int));
 
+	/* sort histogram data */
 	qsort(&(color_lookup[1]),15,
 			sizeof(struct color_lookup_t),compare_color);
 
@@ -903,11 +910,11 @@ int main(int argc, char **argv) {
 //		printf("; $%02X %s: %d\n",color_lookup[i].color,color_names[color_lookup[i].color],color_lookup[i].count);
 //	}
 
-
+	/* backup color data as well */
 	memcpy(color_backup,color_lookup,16*sizeof(struct color_lookup_t));
 
 	int result;
-	minimal_size=2096;
+	minimal_size=4096;
 	for(i=0;i<24;i++) {
 		permute_colors(i);
 		result=generate_frame(0);
