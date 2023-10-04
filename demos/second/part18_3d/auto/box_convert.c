@@ -271,65 +271,89 @@ int create_using_boxes(void) {
 	int color;
 	int color_minx,color_maxx,color_miny,color_maxy;
 
+	/* Do one color at a time */
+	/* The color order is picked in advance */
 	for(color=0;color<16;color++) {
-	current_color=color_lookup[color].color;
+		current_color=color_lookup[color].color;
 
-	if (current_color==background_color) continue;
+		/* To save space the Apple II implementation */
+		/* always clears screen to the background color */
+		/* for each frame so we assume we don't have to draw it */
+		if (current_color==background_color) continue;
 
 
-	/* calculate maximum color extent */
-	find_max_color_extent(current_color,
+		/* calculate maximum color extent */
+		/* we don't want rectangles bigger than the region with */
+		/* that color */
+		/* Note we have to re-calc this after drawing a box */
+		find_max_color_extent(current_color,
 					&color_minx,&color_miny,
 					&color_maxx,&color_maxy);
 
-	/* Try all possible box sizes. */
-	/* Can be exhaustive as there are only 40x48 possibilities */
-	/* Table is pre-sorted by size */
-	for(box=0;box<NUM_BOX_SIZES;box++) {
+		/* Try all possible box sizes. */
+		/* We can be exhaustive as there are only 40x48 possibilities */
+		/* Table is pre-sorted by size */
+		for(box=0;box<NUM_BOX_SIZES;box++) {
 
-	int xx,yy,box_found,color_found,color_found2;
+			int xx,yy,box_found,color_found,color_found2;
 
-	/* check to see if this box size is best fit for color */
-	for(row=0;row<48-box_sizes[box].y;row++) {
-		for(col=0;col<40-box_sizes[box].x;col++) {
-			box_found=1;
-			color_found=0;
-			color_found2=0;
+			/* check to see if this box size is */
+			/* the best fit for this color */
+			for(row=0;row<48-box_sizes[box].y;row++) {
+			for(col=0;col<40-box_sizes[box].x;col++) {
+				box_found=1;
+				color_found=0;
+				color_found2=0;
 
-			for(yy=0;yy<box_sizes[box].y;yy++) {
-			for(xx=0;xx<box_sizes[box].x;xx++) {
+				/* check to see if box is suitable */
+				for(yy=0;yy<box_sizes[box].y;yy++) {
+				for(xx=0;xx<box_sizes[box].x;xx++) {
 
-			/* Only a fit if color is included */
-			/* i.e. don't have one that's all don't cares */
-			if (framebuffer[xx+col][yy+row]==current_color) {
-				color_found=1;
-			}
+				/* Only a fit if color is included */
+				/* i.e. don't have one that's all don't cares */
+				if (framebuffer[xx+col][yy+row]==current_color) {
+					color_found=1;
+				}
 
-			/* If there's a color that is wrong, early exit */
-			if ((framebuffer[xx+col][yy+row]==background_color)||
-				(framebuffer[xx+col][yy+row]==0xff))
-				 {
-				box_found=0;
-				break;
-			}
-			} // xx
+				/* If there's a background color */
+				/* or else a previously drawn box (0xff)  */
+				/* then early exit */
+				if ((framebuffer[xx+col][yy+row]==
+						background_color) ||
+					(framebuffer[xx+col][yy+row]==0xff)) {
+					box_found=0;
+					break;
+				}
 
-			/* early exit */
-			if (!box_found) break;
-			} // yy
+				} // xx
+				/* propogate early exit */
+				if (!box_found) break;
+				} // yy
 
-			/* This isn't a good fit if rectangle is bigger */
-			/* Than the minimal rectangle containing the colors */
-			if (( (col)>=color_minx)&&((col+box_sizes[box].x-1)<=color_maxx)&&
-				((row)>=color_miny)&&((row+box_sizes[box].y-1)<=color_maxy)) {
-				color_found2=1;
-			}
+				/* This isn't a good fit if rectangle is */
+				/* bigger than the minimal rectangle */
+				/* containing the colors */
+				if (( (col)>=color_minx) &&
+					((col+box_sizes[box].x-1)<=color_maxx) &&
+					((row)>=color_miny) &&
+					((row+box_sizes[box].y-1)<=color_maxy)) {
 
+					color_found2=1;
+				}
 
-			if ((box_found)&&(color_found)&&(color_found2)) {
+				/* We found a rectangle! */
+				/* Box was found, included the color */
+				/* 	and not too big */
+				if ((box_found) &&
+					(color_found) &&
+						(color_found2)) {
+
+				/* Urgh tab depth too deep */
+
 				if (debug) fprintf(stderr,"Found box c=%d %d,%d to %d,%d\n",
 					current_color,col,row,col+box_sizes[box].x-1,
-						row+box_sizes[box].y-1);
+					row+box_sizes[box].y-1);
+
 				primitive_list[current_primitive].color=
 					current_color;
 				primitive_list[current_primitive].x1=col;
@@ -344,23 +368,28 @@ int create_using_boxes(void) {
 					fprintf(stderr,"Error!  Too many primitives: %d\n",current_primitive);
 					exit(1);
 				}
+
+				/* mark the area we've drawn */
+				/* use 0xff to indicate */
 				for(yy=0;yy<box_sizes[box].y;yy++) {
 				for(xx=0;xx<box_sizes[box].x;xx++) {
 					if(framebuffer[xx+col][yy+row]==current_color) {
-					framebuffer[xx+col][yy+row]=0xff;
+						framebuffer[xx+col][yy+row]=0xff;
 					}
 				}
 				}
-	find_max_color_extent(current_color,
+
+				/* re-calculate max extent */
+				find_max_color_extent(current_color,
 					&color_minx,&color_miny,
 					&color_maxx,&color_maxy);
 
-			}
+				}
 
 
-		} // col
-	}	// row
-	}	// box
+			} // col
+			} // row
+		} // box
 	}	// current_color
 	return current_primitive;
 }
