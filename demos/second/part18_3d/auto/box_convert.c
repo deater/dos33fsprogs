@@ -1,6 +1,6 @@
 /* box_convert */
 
-/* Try to automate the loser conversion process */
+/* Try to automate part of the annoyingly tedious rotoscoping process */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,6 +36,9 @@ static char color_names[16][16]={
 	"WHITE",	/* $0F */
 };
 
+/* There's probably an algorithmic way of generating this at run time */
+/* but I was too lazy to implement it */
+/* We only do 4.  All 16 would be prohibitive.  Maybe a happy medium? */
 static int permutations[24][4]={
 {1,2,3,4},
 {2,1,3,4},
@@ -98,6 +101,7 @@ static int framebuffer[40][48];
 static int framebuffer_saved[40][48];
 static int background_color=0;
 
+/* Not used anymore, included for historical reasons */
 int create_using_plots(void) {
 
 	int current_primitive=0;
@@ -142,7 +146,7 @@ static void permute_colors(int which) {
 	}
 }
 
-
+/* Not used anymore, included for historical reasons */
 int create_using_hlins(void) {
 
 	int current_primitive=0;
@@ -174,6 +178,7 @@ int create_using_hlins(void) {
 	return current_primitive;
 }
 
+/* Not used anymore, included for historical reasons */
 int create_using_hlins_by_color(void) {
 
 	int current_primitive=0;
