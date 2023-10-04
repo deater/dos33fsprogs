@@ -85,6 +85,11 @@ frame15:
 	.include "auto/frame098.inc"	;
 	.include "auto/frame099.inc"	;
 	.include "auto/frame100.inc"	;
+	.include "auto/frame101.inc"	;
+	.include "auto/frame102.inc"	;
+	.include "auto/frame103.inc"	;
+	.include "auto/frame104.inc"	;
+	.include "auto/frame105.inc"	;
 
-num_scenes=(100-15)+1
+num_scenes=(105-15)+1
 

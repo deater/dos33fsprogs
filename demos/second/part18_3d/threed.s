@@ -65,8 +65,14 @@ was_page1:
 done_pageflip:
 	sta	DRAW_PAGE						; 3
 
+	lda	#12
+	sta	IRQ_COUNTDOWN
 
-	jsr	wait_until_keypress
+wait_for_irq:
+	lda	IRQ_COUNTDOWN
+	bne	wait_for_irq
+
+;	jsr	wait_until_keypress
 
 
 

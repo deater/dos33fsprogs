@@ -160,7 +160,7 @@ SCENE_COUNT = $EC
 STATE           = $ED
 OFFSET         = $EF
 
-				;FIRST		=	$F0
+IRQ_COUNTDOWN	= $F0
 
 LASTKEY         = $F1
 PADDLE_STATUS   = $F2
