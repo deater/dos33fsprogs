@@ -2,6 +2,9 @@
 
 /* Try to automate part of the annoyingly tedious rotoscoping process */
 
+/* For input assumes a 40x48 (or 80x48, double wide) PNG file */
+/* with the Apple II palette */
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -134,6 +137,10 @@ static struct color_lookup_t {
 
 static struct color_lookup_t color_backup[16];
 
+/* Permute the top 4 colors in the color list histogram */
+/* We do this to see if the resulting data is more compact */
+/* We skip the black background, it might be interesting to include that */
+/* as a normal color */
 static void permute_colors(int which) {
 
 	int i;
@@ -218,6 +225,12 @@ int create_using_hlins_by_color(void) {
 	return current_primitive;
 }
 
+/* Find the smallest rectangle that includes all of a certain color */
+/* We calculate this because if we don't track and this and include */
+/* Don't Cares, then the algorithm will make overly-huge rectangles */
+/* that are bigger than needed and make subsequent rectangles */
+/* pessimistic */
+
 int find_max_color_extent(int current_color,int *color_minx,int *color_miny,
 			int *color_maxx,int *color_maxy) {
 
@@ -249,6 +262,7 @@ int find_max_color_extent(int current_color,int *color_minx,int *color_miny,
 
 }
 
+/* The main routine */
 int create_using_boxes(void) {
 
 	int current_primitive=0;
@@ -263,14 +277,19 @@ int create_using_boxes(void) {
 	if (current_color==background_color) continue;
 
 
+	/* calculate maximum color extent */
 	find_max_color_extent(current_color,
 					&color_minx,&color_miny,
 					&color_maxx,&color_maxy);
 
+	/* Try all possible box sizes. */
+	/* Can be exhaustive as there are only 40x48 possibilities */
+	/* Table is pre-sorted by size */
 	for(box=0;box<NUM_BOX_SIZES;box++) {
 
 	int xx,yy,box_found,color_found,color_found2;
 
+	/* check to see if this box size is best fit for color */
 	for(row=0;row<48-box_sizes[box].y;row++) {
 		for(col=0;col<40-box_sizes[box].x;col++) {
 			box_found=1;
@@ -280,12 +299,13 @@ int create_using_boxes(void) {
 			for(yy=0;yy<box_sizes[box].y;yy++) {
 			for(xx=0;xx<box_sizes[box].x;xx++) {
 
-
-//			only counts if color found
+			/* Only a fit if color is included */
+			/* i.e. don't have one that's all don't cares */
 			if (framebuffer[xx+col][yy+row]==current_color) {
 				color_found=1;
 			}
 
+			/* If there's a color that is wrong, early exit */
 			if ((framebuffer[xx+col][yy+row]==background_color)||
 				(framebuffer[xx+col][yy+row]==0xff))
 				 {
@@ -293,9 +313,13 @@ int create_using_boxes(void) {
 				break;
 			}
 			} // xx
+
+			/* early exit */
 			if (!box_found) break;
 			} // yy
 
+			/* This isn't a good fit if rectangle is bigger */
+			/* Than the minimal rectangle containing the colors */
 			if (( (col)>=color_minx)&&((col+box_sizes[box].x-1)<=color_maxx)&&
 				((row)>=color_miny)&&((row+box_sizes[box].y-1)<=color_maxy)) {
 				color_found2=1;
@@ -340,6 +364,8 @@ int create_using_boxes(void) {
 	}	// current_color
 	return current_primitive;
 }
+
+/* Comparison routines for the qsort()s */
 
 static int compare_type(const void *p1, const void *p2) {
 
