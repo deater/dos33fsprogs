@@ -14,6 +14,7 @@ all:	second.dsk
 #	$(DOS33) -y second.dsk BSAVE -a 0x6000 ZW
 
 second.dsk:	QBOOT QLOAD SECOND MUSIC START \
+	./part01_intropan/INTRO \
 	./part18_3d/THREED
 	cp $(EMPTY_DISK) second.dsk
 	$(DOS33_RAW) second.dsk 0 0 QBOOT	0 1
@@ -23,7 +24,9 @@ second.dsk:	QBOOT QLOAD SECOND MUSIC START \
 	$(DOS33_RAW) second.dsk 3 0 MUSIC	0 0
 #	$(DOS33_RAW) second.dsk 5 0 SECOND	0 0
 	$(DOS33_RAW) second.dsk 5 0 START	0 0
-	$(DOS33_RAW) second.dsk 8 0 ./part18_3d/THREED	0 0
+	$(DOS33_RAW) second.dsk 8 0 ./part01_intropan/INTRO	0 0
+	$(DOS33_RAW) second.dsk 11 0 ./part18_3d/THREED	0 0
+
 
 ####
 

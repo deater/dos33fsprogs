@@ -160,13 +160,13 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; SECOND, MUSIC, 3D , ?
+	.byte 1,1,1,1		; SECOND, MUSIC, INTRO, 3D
 
 load_address_array:
-        .byte $40,$D0,$60,$90	; SECOND, MUSIC, ?, ?
+        .byte $40,$D0,$60,$60	; SECOND, MUSIC, INTRO, 3D
 
 track_array:
-        .byte  5, 3, 8,12	; SECOND, MUSIC, ?, ?
+        .byte  5, 3, 8,11	; SECOND, MUSIC, ?, ?
 
 sector_array:
         .byte  0, 0, 0, 0	; SECOND, MUSIC, ?, ?

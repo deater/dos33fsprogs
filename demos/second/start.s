@@ -239,6 +239,7 @@ load_loop:
 	;=======================
 
 	lda	#2
+
 	sta	WHICH_LOAD
 
 	jsr	load_file
