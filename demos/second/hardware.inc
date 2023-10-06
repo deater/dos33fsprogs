@@ -1,14 +1,14 @@
-;; HARDWARE LOCATIONS
+; HARDWARE LOCATIONS
 
 KEYPRESS	=	$C000
 KEYRESET	=	$C010
 
-;; SOFT SWITCHES
+; SOFT SWITCHES
 CLR80COL	=	$C000	; PAGE1/PAGE1 normal
 SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
-TBCOLOR		=	$C022	; IIgs fg/bg colors
+TBCOLOR		=	$C022	; IIgs text fg/bg colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
@@ -26,32 +26,40 @@ PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
 
-;; BASIC ROUTINES
+; APPLESOFT BASIC ROUTINES
 
-NORMAL	=	$F273
+NORMAL		= $F273
+HGR2		= $F3D8
+HGR		= $F3E2
+BKGND0		= $F3F4		; clear current page to A
+HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+HPLOT0		= $F457		; plot at (Y,X), (A)
+COLOR_SHIFT	= $F47E
+HLINRL		= $F530		; (X,A),(Y)
+HGLIN		= $F53A		; line to (X,A),(Y)
+COLORTBL	= $F6F6
 
-;; MONITOR ROUTINES
+; MONITOR ROUTINES
 
-HLINE	= $F819			;; HLINE Y,$2C at A
-VLINE	= $F828			;; VLINE A,$2D at Y
-CLRSCR	= $F832			;; Clear low-res screen
-CLRTOP	= $F836			;; clear only top of low-res screen
-SETCOL	= $F864			;; COLOR=A
-ROM_TEXT2COPY = $F962		;; iigs
+HLINE	= $F819			; HLINE Y,$2C at A
+VLINE	= $F828			; VLINE A,$2D at Y
+CLRSCR	= $F832			; Clear low-res screen
+CLRTOP	= $F836			; clear only top of low-res screen
+SETCOL	= $F864			; COLOR=A
+ROM_TEXT2COPY = $F962		; iigs
 TEXT	= $FB36
-TABV	= $FB5B			;; VTAB to A
-ROM_MACHINEID = $FBB3		;; iigs
-BASCALC	= $FBC1			;;
-VTAB	= $FC22			;; VTAB to CV
-HOME	= $FC58			;; Clear the text screen
-WAIT	= $FCA8			;; delay 1/2(26+27A+5A^2) us
-SETINV	= $FE80			;; INVERSE
-SETNORM	= $FE84			;; NORMAL
-COUT	= $FDED			;; output A to screen
-COUT1	= $FDF0			;; output A to screen
+TABV	= $FB5B			; VTAB to A
+ROM_MACHINEID = $FBB3		; iigs
+BASCALC	= $FBC1			;
+BELL	= $FBDD			; ring the bell
+VTAB	= $FC22			; VTAB to CV
+HOME	= $FC58			; Clear the text screen
+WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
+SETINV	= $FE80			; INVERSE
+SETNORM	= $FE84			; NORMAL
+COUT	= $FDED			; output A to screen
+COUT1	= $FDF0			; output A to screen
 
-HGR2	= $F3D8
-HGR	= $F3E2
 
 
 
