@@ -90,15 +90,14 @@
 	.byte SET_COLOR | GREY1
 	.byte BOX,10,13,13,15
 	.byte 30,28,31,33
+	.byte 4,38,5,39
 	.byte HLIN,11,12,12
-	.byte VLIN,24,27,30
-	.byte PLOT,11,11
-	.byte 11,16
-	.byte SET_COLOR | GREY2
-	.byte BOX,4,38,5,39
 	.byte VLIN,31,37,4
 	.byte 15,18,31
+	.byte 24,27,30
+	.byte PLOT,11,11
+	.byte 11,16
 	.byte SET_COLOR | YELLOW
-	.byte PLOT,12,15
+	.byte 12,15
 	.byte END
-; total size = 347
+; total size = 343

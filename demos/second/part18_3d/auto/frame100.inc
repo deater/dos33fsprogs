@@ -7,7 +7,7 @@
 	.byte 17
 	.byte 11
 	.byte PLOT,4,19
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,6,6,13,10
 	.byte 34,17,35,23
 	.byte 23,18,26,22

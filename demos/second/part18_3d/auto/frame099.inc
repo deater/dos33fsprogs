@@ -1,6 +1,6 @@
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,4,6,35,41
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte 20,6,22,41
 	.byte 11,6,13,12
 	.byte 30,6,32,10

@@ -11,7 +11,7 @@
 	.byte 33,40,34,41
 	.byte VLIN,12,26,35
 	.byte 8,20,4
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,13,6,14,22
 	.byte 19,6,20,22
 	.byte 25,6,26,22
@@ -22,7 +22,5 @@
 	.byte SET_COLOR | WHITE
 	.byte 35,41,15
 	.byte 35,41,25
-	.byte SET_COLOR | GREY1
-	.byte 6,7,25
 	.byte END
-; total size = 89
+; total size = 85

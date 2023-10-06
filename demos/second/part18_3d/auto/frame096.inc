@@ -26,9 +26,8 @@
 	.byte 27,31,34
 	.byte 36,39,34
 	.byte 38,41,4
-	.byte PLOT,4,24
+	.byte PLOT,35,23
+	.byte 4,24
 	.byte 35,26
-	.byte SET_COLOR | GREY2
-	.byte 35,23
 	.byte END
-; total size = 112
+; total size = 111

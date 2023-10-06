@@ -1,7 +1,7 @@
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,4,6,29,24
 	.byte BOX_ADD_RSAME,8,33
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,14,6,15,11
 	.byte 18,6,19,11
 	.byte 22,6,23,11

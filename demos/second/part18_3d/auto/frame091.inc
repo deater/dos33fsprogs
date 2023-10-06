@@ -6,7 +6,7 @@
 	.byte 10,6,26,27
 	.byte 30,6,34,15
 	.byte BOX_ADD_LSAME,33,32 ; 30, 16
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,14,9,23,12
 	.byte BOX_ADD,15,16,26	; 13
 	.byte BOX,21,13,22,26

@@ -4,7 +4,7 @@
 	.byte 34,41	; 35 32
 	.byte SET_COLOR | GREEN
 	.byte BOX,29,6,33,41
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte 13,10,25,13
 	.byte 7,13,8,23
 	.byte 15,14,16,30
