@@ -516,7 +516,7 @@ graphics_data:
 hposn_low	= $1713	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
 hposn_high	= $1800	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
 
-	.include "hgr_table.s"
+	.include "../hgr_table.s"
 
 
 wait_until_keypress:
@@ -750,7 +750,7 @@ early_out:
 
 
 
-.include "hgr_clear_screen.s"
+.include "../hgr_clear_screen.s"
 
 .include "pt3_lib_detect_model.s"
 .include "../lc_detect.s"

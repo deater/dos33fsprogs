@@ -7,6 +7,9 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 
+hposn_low       = $1713 ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
+hposn_high      = $1800 ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
+
 intro_start:
 	;=====================
 	; initializations
@@ -21,6 +24,20 @@ load_loop:
 	bit	HIRES
 	bit	FULLGR
 	bit	PAGE1
+
+	lda	#0
+	jsr	hgr_page1_clearscreen
+
+	jsr	build_tables
+
+
+; for pan
+; code at $6000
+;	left page for $2000 at top, we can overwrite
+;	right page at $a000
+; uncompress to $2000 at first
+;	then algorithm alternating pages
+
 
 	; left logo
 
@@ -74,6 +91,8 @@ blah:
 .align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
+	.include	"../hgr_table.s"
+	.include	"../hgr_clear_screen.s"
 
 intro_left_data:
 	.incbin "graphics/igl.hgr.zx02"

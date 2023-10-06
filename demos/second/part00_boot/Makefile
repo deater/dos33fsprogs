@@ -14,7 +14,7 @@ FAKE_BIOS:	fake_bios.o
 	ld65 -o FAKE_BIOS fake_bios.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 fake_bios.o:	fake_bios.s \
-	hgr_clear_screen.s \
+	../hgr_clear_screen.s ../hgr_table.s \
 	font_console_1x8.s fonts/a2_cga_thin.inc \
 	pt3_lib_detect_model.s ../lc_detect.s aux_detect.s \
 	65c02_detect.s ../pt3_lib_mockingboard_detect.s \
