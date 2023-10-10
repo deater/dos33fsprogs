@@ -1,4 +1,4 @@
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,10,6,32,13
 	.byte BOX_ADD_LSAME,29,15 ; 10, 14
 	.byte 28,17

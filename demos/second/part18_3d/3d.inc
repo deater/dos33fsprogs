@@ -1,20 +1,20 @@
-frame15:
+frame15:					; handmade / auto
 	.include "auto/frame015.inc"
 	.include "auto/frame016.inc"
-	.include "handmade/frame017.inc"	; handmade 1 byte smaller
-	.include "handmade/frame018.inc"	; handmade 2 bytes smaller
-	.include "handmade/frame019.inc"	; handmade 12 bytes smaller
-	.include "handmade/frame020.inc"	; handmade 7 bytes smaller
-	.include "handmade/frame021.inc"	; handmade 1 byte smaller
-	.include "handmade/frame022.inc"	; handmade 12 bytes smaller
-	.include "handmade/frame023.inc"	; handmade 40 bytes smaller
-	.include "handmade/frame024.inc"	; handmade 42 bytes smaller
-	.include "handmade/frame025.inc"	; handmade 50 bytes smaller
-	.include "handmade/frame026.inc"	; handmade 26 bytes smaller
-	.include "handmade/frame027.inc"	; handmade 17 bytes smaller
-	.include "handmade/frame028.inc"	; handmade 27 bytes smaller
-	.include "handmade/frame029.inc"	; handmade 30 bytes smaller
-	.include "handmade/frame030.inc"	; handmade 5 bytes smaller
+	.include "handmade/frame017.inc"	; 51 / 52 (1 byte)
+	.include "auto/frame018.inc"		; 54 / 52
+	.include "handmade/frame019.inc"	; 65 / 73 (8 byte)
+	.include "handmade/frame020.inc"	; 71 / 78 (7 bytes)
+	.include "handmade/frame021.inc"	; 68 / 69 (1 byte)
+	.include "handmade/frame022.inc"	; 103 / 106 (3 bytes)
+	.include "handmade/frame023.inc"	; 127 / 136 (9 bytes)
+	.include "handmade/frame024.inc"	; 139 / 167 (28 bytes)
+	.include "handmade/frame025.inc"	; 143 / 167 (24 bytes)
+	.include "handmade/frame026.inc"	; 151 / 158 (7 bytes)
+	.include "handmade/frame027.inc"	; 131 / 146 (15 bytes)
+	.include "handmade/frame028.inc"	; 134 / 161 (27 bytes)
+	.include "handmade/frame029.inc"	; 109 / 123 (14 bytes)
+	.include "handmade/frame030.inc"	; 81 / 86 (5 bytes)
 	.include "handmade/frame031.inc"	; handmade 7 bytes smaller
 	.include "auto/frame032.inc"		; handmade -4 bytes smaller
 	.include "auto/frame033.inc"		; handmade -3 bytes smaller
@@ -90,6 +90,27 @@ frame15:
 	.include "auto/frame103.inc"	;
 	.include "auto/frame104.inc"	;
 	.include "auto/frame105.inc"	;
+	.include "auto/frame106.inc"	;
+	.include "auto/frame107.inc"	;
+	.include "auto/frame108.inc"	;
+	.include "auto/frame109.inc"	;
+	.include "auto/frame110.inc"	;
+	.include "auto/frame111.inc"	;
+	.include "auto/frame112.inc"	;
+	.include "auto/frame113.inc"	;
+	.include "auto/frame114.inc"	;
+	.include "auto/frame115.inc"	;
+	.include "auto/frame116.inc"	;
+	.include "auto/frame117.inc"	;
+	.include "auto/frame118.inc"	;
+	.include "auto/frame119.inc"	;
+	.include "auto/frame120.inc"	;
+	.include "auto/frame121.inc"	;
+	.include "auto/frame122.inc"	;
+	.include "auto/frame123.inc"	;
+	.include "auto/frame124.inc"	;
+	.include "auto/frame125.inc"	;
 
-num_scenes=(105-15)+1
+
+num_scenes=(125-15)+1
 

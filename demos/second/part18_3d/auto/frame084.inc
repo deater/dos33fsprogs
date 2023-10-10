@@ -15,7 +15,7 @@
 	.byte 25,35,25
 	.byte 15,18,13
 	.byte PLOT,26,6
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,23,12,27,14
 	.byte 15,16,19,22
 	.byte 24,19,29,20
@@ -80,9 +80,7 @@
 	.byte BOX,20,26,21,27
 	.byte SET_COLOR | RED
 	.byte PLOT,22,24
-	.byte SET_COLOR | GREY1
-	.byte 23,15
 	.byte SET_COLOR | ORANGE
 	.byte 20,25
 	.byte END
-; total size = 243
+; total size = 240

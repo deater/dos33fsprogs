@@ -62,7 +62,9 @@
 	.byte HLIN_ADD_RSAME,31	; 31 35 40
 	.byte 29	; 29 35 41
 	.byte HLIN,32,33,24
-	.byte PLOT,35,38
+	.byte PLOT,33,21
+	.byte 31,25
+	.byte 35,38
 	.byte SET_COLOR | LIGHT_GREEN
 	.byte BOX,24,16,26,17
 	.byte BOX_ADD_RSAME,23,19
@@ -82,9 +84,5 @@
 	.byte SET_COLOR | ORANGE
 	.byte VLIN,21,25,25
 	.byte 26,28,26
-	.byte SET_COLOR | GREY2
-	.byte PLOT,33,21
-	.byte 33,23
-	.byte 31,25
 	.byte END
-; total size = 234
+; total size = 230

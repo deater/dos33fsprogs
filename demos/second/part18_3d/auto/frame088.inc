@@ -36,7 +36,5 @@
 	.byte 10,22,21
 	.byte PLOT,19,19
 	.byte 19,22
-	.byte SET_COLOR | GREY2
-	.byte 10,39
 	.byte END
-; total size = 123
+; total size = 120

@@ -24,12 +24,12 @@
 	.byte 12,28
 	.byte 11,32
 	.byte 10,36
-	.byte 9,40
+	.byte 9,39
+	.byte 8,41
 	.byte HLIN,4,21,10
 	.byte 4,19,13
 	.byte 4,17,16
 	.byte HLIN_ADD_LSAME,16 ; 4, 16, 17
-	.byte HLIN,4,8,41
 	.byte SET_COLOR | BROWN
 	.byte BOX,28,6,35,13
 	.byte BOX_ADD_RSAME,29,21
@@ -49,12 +49,9 @@
 	.byte BOX,16,19,17,20
 	.byte PLOT,17,18
 	.byte 16,22
-	.byte SET_COLOR | GREY2
-	.byte 24,6
-	.byte 9,40
 	.byte SET_COLOR | RED
 	.byte 20,22
 	.byte SET_COLOR | ORANGE
 	.byte 17,23
 	.byte END
-; total size = 159
+; total size = 152

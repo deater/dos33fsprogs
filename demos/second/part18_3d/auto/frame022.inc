@@ -27,11 +27,8 @@
 	.byte VLIN,19,21,29
 	.byte 24,26,29
 	.byte PLOT,32,22
-	.byte SET_COLOR | GREY2
-	.byte BOX,31,38,34,39
-	.byte HLIN,32,33,33
 	.byte SET_COLOR | ORANGE
-	.byte 33,34,24
+	.byte HLIN,33,34,24
 	.byte PLOT,33,23
 	.byte END
-; total size = 115
+; total size = 106

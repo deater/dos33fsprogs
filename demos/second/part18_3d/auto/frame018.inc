@@ -11,12 +11,10 @@
 	.byte HLIN,19,23,37
 	.byte HLIN_ADD_LSAME,28 ; 19, 28, 38
 	.byte HLIN,28,31,20
-	.byte SET_COLOR | GREY2
-	.byte 19,34,40
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte 27,34,25
 	.byte HLIN_ADD,28,33	; 26
 	.byte SET_COLOR | RED
 	.byte HLIN,27,34,24
 	.byte END
-; total size = 56
+; total size = 52

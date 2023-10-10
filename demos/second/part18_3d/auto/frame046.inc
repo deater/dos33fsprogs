@@ -53,11 +53,6 @@
 	.byte HLIN,23,25,10
 	.byte 23,24,15
 	.byte PLOT,24,9
-	.byte SET_COLOR | GREY2
-	.byte VLIN,29,41,35
-	.byte PLOT,35,27
-	.byte 25,32
-	.byte 22,38
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,34,6,35,11
 	.byte VLIN,12,13,35
@@ -68,4 +63,4 @@
 	.byte 15,19,24
 	.byte 20,22,25
 	.byte END
-; total size = 190
+; total size = 178

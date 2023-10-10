@@ -4,3 +4,14 @@ no I really don't think I'm going to do this whole thing,
 I found a pt3 version of the music and was messing around
 with Kris Kennaway's conversion tool
 	https://github.com/KrisKennaway/ii-pix
+
+apt-get install pip
+
+python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+    
+~/research/pix-ii/bin/python
+
+~/research/ii-pix/bin/python convert.py hgr /home/vince/research/dos33fsprogs.git/demos/second/part01_intropan/extracted/intro_left.png out2.hgr
+

@@ -1,4 +1,4 @@
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,4,24,35,39
 	.byte HLIN,6,35,40
 	.byte HLIN_ADD_RSAME,7	; 7 35 41

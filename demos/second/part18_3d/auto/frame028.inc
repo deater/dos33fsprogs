@@ -8,7 +8,7 @@
 	.byte BOX_ADD_RSAME,17,40
 	.byte VLIN,6,19,32
 	.byte 20,33,31
-	.byte SET_COLOR | GREY2
+	.byte SET_COLOR | GREY1
 	.byte BOX,7,21,9,23
 	.byte 7,23,14,24
 	.byte 31,34,35,35
