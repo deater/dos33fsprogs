@@ -7,6 +7,20 @@
 
 /* Output is ca65 6502 assembler for including in project */
 
+/* TOOD:
+     have a VLIN_ADD like there is for HLIN and BOX
+     some way of detecting smaller foreground objects and drawing them
+	separately.  Tricky to do
+     sort PLOT in with HLIN so can use HLIN_ADD but only where appropriate
+	not sure how much that would save
+
+   Optimizations missed compared to by hand
+	sometimes there are two sets of auto-incremeting HLIN, like on
+		left and right side of screen.  auto can't capture that
+	action_type can cross color boundaries, can optimize what order
+		the actions are in to take advantage of this
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -265,13 +279,17 @@ int find_max_color_extent(int current_color,int *color_minx,int *color_miny,
 }
 
 /* The main routine */
-int create_using_boxes(void) {
+int create_using_boxes(int small_box_threshold) {
 
 	int current_primitive=0;
 	int row,col,box;
 	int current_color;
 	int color;
 	int color_minx,color_maxx,color_miny,color_maxy;
+	int which_threshold;
+
+//for(which_threshold=0;which_threshold<2;which_threshold++) {
+//	if (which_threshold==1) small_box_threshold=0;
 
 	/* Do one color at a time */
 	/* The color order is picked in advance */
@@ -298,6 +316,12 @@ int create_using_boxes(void) {
 		for(box=0;box<NUM_BOX_SIZES;box++) {
 
 			int xx,yy,box_found,color_found,color_found2;
+
+//			if ((box_sizes[box].x*box_sizes[box].y)
+//				< small_box_threshold) {
+//					fprintf(stderr,"Stopping color %d\n",current_color);
+//					break;
+//			}
 
 			/* check to see if this box size is */
 			/* the best fit for this color */
@@ -393,6 +417,8 @@ int create_using_boxes(void) {
 			} // row
 		} // box
 	}	// current_color
+//}
+
 	return current_primitive;
 }
 
@@ -452,7 +478,7 @@ int generate_frame(int print_results) {
 
 //	max_primitive=create_using_hlins();
 //	max_primitive=create_using_hlins_by_color();
-	max_primitive=create_using_boxes();
+	max_primitive=create_using_boxes(0);
 
 
 	/* Optimize boxes to PLOT/VLIN/HLIN */

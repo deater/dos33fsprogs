@@ -172,7 +172,7 @@ sector_array:
         .byte  0, 0, 0, 0	; SECOND, MUSIC, ?, ?
 
 length_array:
-        .byte  16, 32, 84, 48	; SECOND, MUSIC, ?, ?
+        .byte  16, 32, 84, 96	; SECOND, MUSIC, ?, ?
 
 	.include	"lc_detect.s"
 	.include	"wait.s"
