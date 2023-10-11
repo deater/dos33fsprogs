@@ -8,7 +8,7 @@
 /* Output is ca65 6502 assembler for including in project */
 
 /* TOOD:
-     have a VLIN_ADD like there is for HLIN and BOX
+     have a VLIN_SAME (would save enough bytes.  enough to matter?)
      some way of detecting smaller foreground objects and drawing them
 	separately.  Tricky to do
      sort PLOT in with HLIN so can use HLIN_ADD but only where appropriate
@@ -783,16 +783,16 @@ int generate_frame(int print_results) {
 			case ACTION_VLIN:
 				if (primitive_list[i].type==previous_primitive) {
 					if (print_results) printf("\t.byte %d,%d,%d\n",
+						primitive_list[i].x1,
 						primitive_list[i].y1,
-						primitive_list[i].y2,
-						primitive_list[i].x1);
+						primitive_list[i].y2);
 					total_size+=3;
 				}
 				else {
 					if (print_results) printf("\t.byte VLIN,%d,%d,%d\n",
+						primitive_list[i].x1,
 						primitive_list[i].y1,
-						primitive_list[i].y2,
-						primitive_list[i].x1);
+						primitive_list[i].y2);
 					total_size+=4;
 					previous_primitive=ACTION_VLIN;
 

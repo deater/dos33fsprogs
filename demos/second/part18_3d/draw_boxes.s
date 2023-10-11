@@ -104,11 +104,10 @@ update_pointer_already_in_a:
 	bcc	draw_scene_loop	; bra (would only be set if wrap $FFFF)
 
 
-
 	;============================
 	; done scene
 	;============================
-	; increment pointer and return
+	; return
 done_scene:
 	rts
 
@@ -143,8 +142,6 @@ bytes_used:
 	.byte 1,3,2,2	; HLIN_ADD_RSAME, BOX_ADD, BOX_ADD_LSAME
 	.byte 2,2	; BOX_ADD_RSAME, VLIN_ADD
 
-
-
 draw_table_l:
 	.byte	<(clear_screen),<(draw_box),<(draw_hlin),<(draw_vlin)
 	.byte	<(draw_plot)
@@ -165,7 +162,6 @@ draw_table_h:
 	;=================================
 clear_screen:
 	jmp	clear_fullgr		; tail call
-;	jmp	draw_scene_loop	; skip inc pointer
 
 	;=================================
 	;=================================
@@ -259,10 +255,6 @@ draw_box_xloop_smc:
 	bcs	draw_box_xloop	; bge
 
 	iny
-;draw_box_yend_smc:
-;	cpy	#0
-;	bcc	draw_box_yloop		; less than
-;	beq	draw_box_yloop		; equal
 
 	jmp	draw_box_yloop
 
@@ -279,8 +271,6 @@ done_draw_box_yloop:
 
 definitely_odd_bottom:
 	; done
-
-;	jmp	update_pointer
 
 	rts
 
@@ -301,7 +291,6 @@ draw_hlin:
 	lda	(INL),Y
 
 	sta	Y1		; needed for HLIN_ADD
-;	lda	Y1
 
 	lsr
 	tay
@@ -314,9 +303,6 @@ do_hlin_mask_odd:
 	; done
 hlin_done:
 	rts
-;	jmp	update_pointer
-
-
 
 	;=================================
 	;=================================
@@ -333,10 +319,8 @@ draw_hlin_add:
 	sta	X2
 
 	inc	Y1
-	lda	Y1
 
-;	sta	Y1
-;	lda	Y1
+	lda	Y1
 
 	lsr
 	tay
@@ -348,7 +332,6 @@ do_hlin_add_mask_odd:
 
 	; done
 hlin_add_done:
-;	jmp	update_pointer
 	rts
 
 	;=================================
@@ -366,9 +349,6 @@ draw_hlin_add_lsame:
 	inc	Y1
 	lda	Y1
 
-;	sta	Y1
-;	lda	Y1
-
 	lsr
 	tay
 	bcs	do_hlin_add_lsame_mask_odd
@@ -379,7 +359,6 @@ do_hlin_add_lsame_mask_odd:
 
 	; done
 hlin_add_lsame_done:
-;	jmp	update_pointer
 
 	rts
 
@@ -398,9 +377,6 @@ draw_hlin_add_rsame:
 	inc	Y1
 	lda	Y1
 
-;	sta	Y1
-;	lda	Y1
-
 	lsr
 	tay
 	bcs	do_hlin_add_rsame_mask_odd
@@ -411,7 +387,52 @@ do_hlin_add_rsame_mask_odd:
 
 	; done
 hlin_add_rsame_done:
-;	jmp	update_pointer
+	rts
+
+	;===================================
+	;===================================
+	; hlin common code
+	;===================================
+	;===================================
+	; X1, X2 set up
+	; Y/2 is in Y
+	; call the proper entry point
+	; Y untouched
+
+hlin_common:
+
+hlin_mask_odd:
+	lda	#$0F
+	.byte	$2C		; bit trick
+hlin_mask_even:
+	lda	#$F0
+	sta	MASK
+	eor	#$FF
+	and	COLOR
+	sta	COLOR2
+
+	lda	gr_offsets_l,Y
+	sta	draw_hlin_l_xloop_smc+1
+	sta	draw_hlin_s_xloop_smc+1
+
+	lda	gr_offsets_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	draw_hlin_l_xloop_smc+2
+	sta	draw_hlin_s_xloop_smc+2
+
+	ldx	X2
+draw_hlin_xloop:
+draw_hlin_l_xloop_smc:
+	lda	$400,X
+	and	MASK
+	ora	COLOR2
+draw_hlin_s_xloop_smc:
+	sta	$400,X
+	dex
+	cpx	X1
+	bpl	draw_hlin_xloop	; bge
+
 	rts
 
 	;=================================
@@ -487,18 +508,10 @@ draw_box_add_rsame:
 	;=================================
 	;=================================
 draw_vlin_add:
-	lda	(INL),Y
-	sta	Y1
-	iny
-	lda	(INL),Y
-	sta	Y2
+	inc	X1				; X1 is prev_X1+1
 
-	inc	X1
+	bne	draw_vlin_skip_x1		; bra
 
-	jsr	draw_vlin_common
-
-;	jmp	update_pointer
-	rts
 
 	;=================================
 	;=================================
@@ -506,19 +519,15 @@ draw_vlin_add:
 	;=================================
 	;=================================
 draw_vlin:
-;	iny
+	lda	(INL),Y
+	sta	X1
+	iny
+draw_vlin_skip_x1:
 	lda	(INL),Y
 	sta	Y1
 	iny
 	lda	(INL),Y
 	sta	Y2
-	iny
-	lda	(INL),Y
-	sta	X1
-	jsr	draw_vlin_common
-
-;	jmp	update_pointer
-	rts
 
 	;================================
 draw_vlin_common:
@@ -535,17 +544,20 @@ odd_bottom_vlin:
 
 	sta	vlin_yend_smc+1
 
+	; handle top
 	; see if we start at multiple of two
 
 	lda	Y1
 	lsr
-	tay
+	tay				; needed!  Sets Y for vlin_yloop
 	bcc	even_vlin_start
 
+odd_vlin_start:
 	; we're odd, need to call PLOT
+	lda	Y1
+	jsr	plot_common
 
-	jsr	plot_mask_odd
-	iny
+	iny				; update Y for vlin_yloop
 
 
 even_vlin_start:
@@ -574,10 +586,6 @@ vlin_xloop_smc:
 	sta	$400,X
 
 	iny
-;vlin_yend_smc:
-;	cpy	#0
-;	bcc	vlin_yloop		; less than
-;	beq	vlin_yloop		; equal
 
 	jmp	vlin_yloop
 
@@ -590,7 +598,8 @@ done_vlin_yloop:
 	lsr
 	bcs	definitely_odd_vlin
 
-	jsr	plot_mask_even
+	lda	Y2
+	jmp	plot_common	; plot_mask_even (tail call)
 
 definitely_odd_vlin:
 	; done
@@ -606,88 +615,30 @@ definitely_odd_vlin:
 	;=================================
 	;=================================
 draw_plot:
-;	iny
 	lda	(INL),Y
 	sta	X1
 
 	iny
 	lda	(INL),Y
-
 	sta	Y1		; needed for HLIN_ADD
-;	lda	Y1
 
 
-	lsr
-	tay
-	bcs	do_plot_mask_odd
-	jsr	plot_mask_even
-	jmp	plot_done
-do_plot_mask_odd:
-	jsr	plot_mask_odd
+	; fallthrough
 
-plot_done:
-
-	; done
-
-;	jmp	update_pointer
-	rts
-
-	;===================================
-	;===================================
-	; hlin common code
-	;===================================
-	;===================================
-	; X1, X2 set up
-	; Y/2 is in Y
-	; call the proper entry point
-	; Y untouched
-
-hlin_common:
-
-hlin_mask_odd:
-	lda	#$0F
-	.byte	$2C		; bit trick
-hlin_mask_even:
-	lda	#$F0
-	sta	MASK
-	eor	#$FF
-	and	COLOR
-	sta	COLOR2
-
-	lda	gr_offsets_l,Y
-	sta	draw_hlin_l_xloop_smc+1
-	sta	draw_hlin_s_xloop_smc+1
-
-	lda	gr_offsets_h,Y
-	clc
-	adc	DRAW_PAGE
-	sta	draw_hlin_l_xloop_smc+2
-	sta	draw_hlin_s_xloop_smc+2
-
-	ldx	X2
-draw_hlin_xloop:
-draw_hlin_l_xloop_smc:
-	lda	$400,X
-	and	MASK
-	ora	COLOR2
-draw_hlin_s_xloop_smc:
-	sta	$400,X
-	dex
-	cpx	X1
-	bpl	draw_hlin_xloop	; bge
-
-	rts
 
 	;===================================
 	;===================================
 	; plot common code
 	;===================================
 	;===================================
-	; X1, set up
-	; Y/2 is in Y
-	; call the proper entry point
-	; Y untouched
+	; X-coord in X1
+	; Y-coord in A
+	; Y is Y-coord/2 at end
+plot_common:
 
+	lsr	; need Y-coord/2 because 2 rows per byte
+	tay
+	bcc	plot_mask_even
 plot_mask_odd:
 	lda	#$0F
 	.byte	$2C		; bit trick

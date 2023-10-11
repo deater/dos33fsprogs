@@ -28,13 +28,13 @@ frame15:					; handmade / auto
 	.include "handmade/frame041.inc"	; 65  / 66 (1 byte)
 	.include "auto/frame042.inc"		; 92  / 78 (-14 bytes)
 	.include "handmade/frame043.inc"	; 233 / 273 (40 bytes)
-	.include "handmade/frame044.inc"	; 202 / 220 (18 bytes)
+	.include "handmade/frame044.inc"	; 199 / 220 (21 bytes)
 	.include "handmade/frame045.inc"	; 182 / 204 (22 bytes)
 	.include "handmade/frame046.inc"	; 172 / 174 (2 bytes)
 	.include "handmade/frame047.inc"	; 191 / 202 (11 bytes)
-	.include "handmade/frame048.inc"	; 219 / 226 (7 bytes)
-	.include "handmade/frame049.inc"	; 189 / 198 (9 bytes)
-	.include "handmade/frame050.inc"	; 264 / 288 (24 bytes)
+	.include "handmade/frame048.inc"	; 218 / 226 (8 bytes)
+	.include "handmade/frame049.inc"	; 186 / 198 (12 bytes)
+	.include "handmade/frame050.inc"	; 253 / 288 (35 bytes)
 	.include "auto/frame051.inc"	;
 	.include "auto/frame052.inc"	;
 	.include "auto/frame053.inc"	;
