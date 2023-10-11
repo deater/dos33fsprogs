@@ -28,8 +28,8 @@
 	.byte HLIN,23,28,22
 	.byte HLIN_ADD,20,22	; 23
 	.byte 27,28	; 24
-	.byte VLIN,22,23,26
-	.byte 19,23,28
+	.byte VLIN,26,22,23
+	.byte 28,19,23
 	.byte PLOT,22,19
 	.byte 22,21
 	.byte SET_COLOR | WHITE
@@ -44,7 +44,7 @@
 	.byte 27,31,33
 	.byte HLIN_ADD_LSAME,30 ; 27, 30, 34
 	.byte 28
-	.byte VLIN,6,15,35
+	.byte VLIN,35,6,15
 	.byte SET_COLOR | RED
 	.byte HLIN,20,21,20
 	.byte 26,28,22

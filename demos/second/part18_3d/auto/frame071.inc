@@ -35,7 +35,7 @@
 	.byte HLIN,22,34,31
 	.byte 24,35,34
 	.byte 26,35,37
-	.byte VLIN,10,24,10
+	.byte VLIN,10,10,24
 	.byte PLOT,30,24
 	.byte SET_COLOR | GREEN
 	.byte BOX,4,12,10,14
@@ -59,8 +59,8 @@
 	.byte HLIN_ADD_RSAME,6	; 6 14 31
 	.byte 5	; 5 14 32
 	.byte 4	; 4 14 33
-	.byte VLIN,15,16,11
-	.byte 23,24,13
+	.byte VLIN,11,15,16
+	.byte 13,23,24
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,13,8,16,12
 	.byte HLIN,12,14,6

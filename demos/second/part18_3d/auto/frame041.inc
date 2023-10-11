@@ -18,8 +18,8 @@
 	.byte HLIN_ADD_LSAME,12 ; 7, 12, 22
 	.byte 9
 	.byte SET_COLOR | DARK_BLUE
-	.byte VLIN,17,23,21
+	.byte VLIN,21,17,23
 	.byte SET_COLOR | MEDIUM_BLUE
-	.byte 30,35,4
+	.byte 4,30,35
 	.byte END
 ; total size = 66

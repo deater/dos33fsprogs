@@ -20,19 +20,19 @@
 	.byte HLIN,24,28,36
 	.byte HLIN_ADD,25,30	; 37
 	.byte HLIN,34,35,37
-	.byte VLIN,6,8,16
-	.byte 6,8,19
-	.byte 6,8,22
+	.byte VLIN,16,6,8
+	.byte 19,6,8
+	.byte 22,6,8
 	.byte PLOT,9,27
 	.byte SET_COLOR | BROWN
 	.byte HLIN,18,19,27
 	.byte 18,19,29
-	.byte VLIN,6,28,11
-	.byte 13,29,15
-	.byte 13,29,21
+	.byte VLIN,11,6,28
+	.byte 15,13,29
+	.byte 21,13,29
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,4,21,5,41
-	.byte VLIN,6,20,4
+	.byte VLIN,4,6,20
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,8,6,9,22
 	.byte PLOT,8,23

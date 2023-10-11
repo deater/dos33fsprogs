@@ -81,8 +81,8 @@
 	.byte 18,22,11
 	.byte 19,21,17
 	.byte HLIN_ADD_RSAME,20	; 20 21 18
-	.byte VLIN,19,20,21
-	.byte 6,24,35
+	.byte VLIN,21,19,20
+	.byte 35,6,24
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,12,6,17,10
 	.byte HLIN,12,15,11

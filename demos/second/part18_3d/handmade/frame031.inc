@@ -15,11 +15,11 @@ frame31:
 	.byte	5,15			; HLIN_ADD40
 	.byte	7,17			; HLIN_ADD 41
 	.byte	SET_COLOR | LIGHT_BLUE
-	.byte	VLIN,25,26,4
+	.byte	VLIN,4,25,26
 	.byte	SET_COLOR | RED
 	.byte	PLOT,4,27
 	.byte	SET_COLOR | WHITE
-	.byte	VLIN,28,29,4
+	.byte	VLIN,4,28,29
 	.byte END
 
 	; 8db - 917 = 60 bytes

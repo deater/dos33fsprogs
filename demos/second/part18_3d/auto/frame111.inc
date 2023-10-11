@@ -45,18 +45,18 @@
 	.byte BOX,11,13,17,14
 	.byte 7,34,8,39
 	.byte HLIN,14,17,15
-	.byte VLIN,24,33,7
+	.byte VLIN,7,24,33
 	.byte VLIN_ADD,40,41	; 8
-	.byte VLIN,16,17,17
+	.byte VLIN,17,16,17
 	.byte SET_COLOR | GREY1
 	.byte HLIN,15,16,11
 	.byte HLIN_ADD,13,14	; 12
 	.byte HLIN_ADD_LSAME,16 ; 13, 16, 13
 	.byte HLIN,11,14,14
 	.byte HLIN_ADD,14,16	; 15
-	.byte VLIN,11,13,11
+	.byte VLIN,11,11,13
 	.byte VLIN_ADD,14,16	; 12
-	.byte VLIN,9,10,12
+	.byte VLIN,12,9,10
 	.byte PLOT,15,10
 	.byte 16,12
 	.byte 16,14

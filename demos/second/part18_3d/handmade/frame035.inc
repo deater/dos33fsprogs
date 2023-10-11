@@ -8,14 +8,14 @@ frame35:
 	.byte	HLIN, 15,16,15
 	.byte	SET_COLOR | MEDIUM_BLUE
 	.byte	PLOT,12,6
-	.byte	VLIN,10,15,12
-	.byte	21,25,12		; VLIN
-	.byte	6,7,10			; VLIN
-	.byte	11,16,10		; VLIN
-	.byte	21,23,10		; VLIN
-	.byte	6,8,8			; VLIN
-	.byte	12,17,8			; VLIN
-	.byte	12,17,8			; VLIN
+	.byte	VLIN,12,10,15
+	.byte	12,21,25		; VLIN
+	.byte	10,6,7			; VLIN
+	.byte	10,11,16		; VLIN
+	.byte	10,21,23		; VLIN
+	.byte	8,6,8			; VLIN
+	.byte	8,12,17			; VLIN
+	.byte	8,12,17			; VLIN
 	.byte	PLOT,8,21
 	.byte	SET_COLOR | LIGHT_BLUE
 	.byte	BOX,4,39,5,41
@@ -46,7 +46,7 @@ frame35:
 	.byte	HLIN_ADD,10,19		; 40
 	.byte	11,20		; HLIN_ADD 41
 	.byte	SET_COLOR | ORANGE
-	.byte	VLIN,25,26,8
+	.byte	VLIN,8,25,26
 	.byte	SET_COLOR | RED
 	.byte	HLIN,9,12,27
 	.byte	SET_COLOR | WHITE

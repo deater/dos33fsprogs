@@ -49,26 +49,26 @@
 	.byte 29	; 29 35 39
 	.byte 28	; 28 35 40
 	.byte 27	; 27 35 41
-	.byte VLIN,32,33,35
+	.byte VLIN,35,32,33
 	.byte SET_COLOR | GREY1
 	.byte BOX,10,13,13,14
 	.byte BOX_ADD,12,16,17	; 15
 	.byte BOX_ADD_RSAME,15,19
 	.byte HLIN,10,11,12
 	.byte 15,16,14
-	.byte VLIN,13,16,10
-	.byte 9,11,10
-	.byte 12,13,15
-	.byte 20,21,15
+	.byte VLIN,10,13,16
+	.byte 10,9,11
+	.byte 15,12,13
+	.byte 15,20,21
 	.byte SET_COLOR | RED
-	.byte 13,15,10
+	.byte 10,13,15
 	.byte PLOT,16,19
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte HLIN,15,16,18
 	.byte PLOT,14,16
 	.byte 16,17
 	.byte SET_COLOR | YELLOW
-	.byte VLIN,16,17,13
+	.byte VLIN,13,16,17
 	.byte SET_COLOR | WHITE
 	.byte PLOT,16,18
 	.byte END

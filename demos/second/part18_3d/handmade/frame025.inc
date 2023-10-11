@@ -6,8 +6,8 @@ frame25:
 	.byte	SET_COLOR | BROWN
 	.byte	8,6,24,34		; BOX
 	.byte	20,35,24,36		; BOX
-	.byte	VLIN,6,24,31
-	.byte	25,32,30		; VLIN
+	.byte	VLIN,31,6,24
+	.byte	30,25,32		; VLIN
 	.byte	SET_COLOR | GREY1
 	.byte	HLIN,8,11,33
 	.byte	HLIN_ADD,8,15	; 34
@@ -37,7 +37,7 @@ frame25:
 	.byte	SET_COLOR | LIGHT_BLUE
 	.byte	BOX,18,22,19,23
 	.byte	21,22,22,23		; BOX
-	.byte	VLIN,20,23,25
+	.byte	VLIN,25,20,23
 	.byte	PLOT,17,22
 	.byte	20,21			; PLOT
 	.byte	23,21			; PLOT

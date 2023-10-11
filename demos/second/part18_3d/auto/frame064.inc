@@ -22,7 +22,7 @@
 	.byte 4,11,31
 	.byte 7,9,36
 	.byte 16,20,41
-	.byte VLIN,39,40,19
+	.byte VLIN,19,39,40
 	.byte PLOT,8,34
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,20,6,26,28
@@ -42,7 +42,7 @@
 	.byte 6,32
 	.byte HLIN,14,15,15
 	.byte 4,7,33
-	.byte VLIN,15,16,17
+	.byte VLIN,17,15,16
 	.byte PLOT,14,16
 	.byte SET_COLOR | GREY1
 	.byte BOX,8,8,12,9
@@ -66,11 +66,11 @@
 	.byte SET_COLOR | PINK
 	.byte BOX,11,7,12,12
 	.byte HLIN,10,17,6
-	.byte VLIN,13,15,11
+	.byte VLIN,11,13,15
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,11,8,12,10
 	.byte HLIN,8,10,7
-	.byte VLIN,8,9,8
+	.byte VLIN,8,8,9
 	.byte PLOT,8,6
 	.byte SET_COLOR | RED
 	.byte HLIN,11,12,9

@@ -44,7 +44,7 @@
 	.byte 20,21,23
 	.byte HLIN_ADD,15,17	; 24
 	.byte 20,21	; 25
-	.byte VLIN,21,22,22
+	.byte VLIN,22,21,22
 	.byte PLOT,17,20
 	.byte 17,23
 	.byte SET_COLOR | RED

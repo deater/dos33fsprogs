@@ -39,8 +39,8 @@
 	.byte BOX,11,12,12,16
 	.byte HLIN,11,12,6
 	.byte 11,12,21
-	.byte VLIN,10,15,14
-	.byte 21,23,14
+	.byte VLIN,14,10,15
+	.byte 14,21,23
 	.byte PLOT,11,7
 	.byte 12,11
 	.byte SET_COLOR | RED

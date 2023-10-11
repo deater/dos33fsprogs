@@ -5,7 +5,7 @@
 	.byte BOX_ADD_LSAME,30,41 ; 11, 36
 	.byte BOX,4,38,5,41
 	.byte HLIN,20,29,33
-	.byte VLIN,30,37,4
+	.byte VLIN,4,30,37
 	.byte SET_COLOR | GREY1
 	.byte BOX,19,6,21,20
 	.byte 27,6,29,8

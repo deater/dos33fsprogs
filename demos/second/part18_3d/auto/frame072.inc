@@ -70,7 +70,7 @@
 	.byte 9	; 9 14 32
 	.byte HLIN,6,15,37
 	.byte HLIN_ADD_RSAME,5	; 5 15 38
-	.byte VLIN,19,20,11
+	.byte VLIN,11,19,20
 	.byte PLOT,9,13
 	.byte 13,27
 	.byte SET_COLOR | DARK_BLUE

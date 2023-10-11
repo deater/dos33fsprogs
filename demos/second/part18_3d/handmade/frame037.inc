@@ -11,7 +11,7 @@ frame37:
 	.byte	PLOT,14,11
 	.byte	BOX,13,12,14,15
 	.byte	HLIN,14,16,21
-	.byte	VLIN,9,14,16
+	.byte	VLIN,16,9,14
 	.byte	SET_COLOR | GREY1
 	.byte	BOX,18,21,22,32
 	.byte	SET_COLOR | LIGHT_BLUE
@@ -40,13 +40,13 @@ frame37:
 	.byte	11,30,15,34		; BOX
 	.byte	12,32,16,38		; BOX
 	.byte	13,34,22,41		; BOX
-	.byte	VLIN,31,37,4
+	.byte	VLIN,4,31,37
 	.byte	SET_COLOR | ORANGE
-	.byte	24,25,16		; VLIN
+	.byte	16,24,25		; VLIN
 	.byte	SET_COLOR | RED
 	.byte	HLIN,17,19,26
 	.byte	SET_COLOR | WHITE
-	.byte	VLIN,26,27,20
+	.byte	VLIN,20,26,27
 	.byte END
 
 	; b4e - be8 = 154

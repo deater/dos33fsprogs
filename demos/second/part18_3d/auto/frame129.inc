@@ -32,7 +32,7 @@
 	.byte HLIN,19,35,6
 	.byte 23,35,30
 	.byte 25,33,41
-	.byte VLIN,23,25,9
+	.byte VLIN,9,23,25
 	.byte SET_COLOR | ORANGE
 	.byte BOX,27,14,35,18
 	.byte BOX_ADD_RSAME,26,28
@@ -72,8 +72,8 @@
 	.byte 7,22
 	.byte HLIN,6,8,23
 	.byte HLIN_ADD_RSAME,7	; 7 8 24
-	.byte VLIN,10,12,4
-	.byte 29,40,25
+	.byte VLIN,4,10,12
+	.byte 25,29,40
 	.byte VLIN_ADD,19,28	; 26
 	.byte SET_COLOR | YELLOW
 	.byte PLOT,16,31

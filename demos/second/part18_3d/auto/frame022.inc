@@ -24,8 +24,8 @@
 	.byte SET_COLOR | DARK_BLUE
 	.byte 29,30,22
 	.byte HLIN_ADD_LSAME,31 ; 29, 31, 23
-	.byte VLIN,19,21,29
-	.byte 24,26,29
+	.byte VLIN,29,19,21
+	.byte 29,24,26
 	.byte PLOT,32,22
 	.byte SET_COLOR | ORANGE
 	.byte HLIN,33,34,24

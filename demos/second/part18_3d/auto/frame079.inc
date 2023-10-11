@@ -24,7 +24,7 @@
 	.byte 25	; 25 35 12
 	.byte 23	; 23 35 13
 	.byte 25	; 25 35 14
-	.byte VLIN,15,28,35
+	.byte VLIN,35,15,28
 	.byte SET_COLOR | GREY1
 	.byte BOX,28,7,33,9
 	.byte 21,9,23,10
@@ -68,9 +68,9 @@
 	.byte 20
 	.byte HLIN,4,17,41
 	.byte 29,35,41
-	.byte VLIN,23,27,4
-	.byte 11,12,22
-	.byte 29,30,35
+	.byte VLIN,4,23,27
+	.byte 22,11,12
+	.byte 35,29,30
 	.byte PLOT,21,6
 	.byte 20,8
 	.byte 25,9

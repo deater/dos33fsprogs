@@ -9,7 +9,7 @@ END	=	$80	; 0 :
 CLEAR	=	$81	; 0 : clear screen to black (0)
 BOX	=	$82	; 4 : x1,y1 to x2,y2
 HLIN	=	$83	; 3 : x1,x2 at y1
-VLIN	=	$84	; 3 : y1,y2 at x1
+VLIN	=	$84	; 3 : at x1 from y1 to y2
 PLOT	=	$85	; 2 : x1,y1
 HLIN_ADD=	$86	; 2 : x1,x2 at prev_y1+1
 HLIN_ADD_LSAME=	$87	; 1 : prev_x1,x2 at prev_y1+1
@@ -17,7 +17,7 @@ HLIN_ADD_RSAME=	$88	; 1 : x1,prev_x2 at prev_y1+1
 BOX_ADD=	$89	; 3 : x1,prev_y1+1, x2, y2
 BOX_ADD_LSAME=	$8A	; 2 : prev_x1,prev_y1+1, x2, y2
 BOX_ADD_RSAME=	$8B	; 2 : x1,prev_y1+1, prev_x2, y2
-VLIN_ADD=	$8C	; 2 : y1,y2 at prev_x1+1
+VLIN_ADD=	$8C	; 2 : at prev_x1+1 from y1 to y2
 
 BLACK		= $00
 RED		= $01
@@ -186,21 +186,21 @@ draw_box:
 	lda	(INL),Y
 	sta	Y1
 	iny
+
+draw_box_common_x2:
+
 	lda	(INL),Y
 	sta	X2
-	iny
-	lda	(INL),Y
-	sta	Y2		; keep even though not necessary
-
-
-	; fall through
-
 
 	;==================================
 	; draw box common
 	;==================================
+
 draw_box_common:
-	lda	Y2
+	iny
+	lda	(INL),Y
+	sta	Y2		; keep even though not necessary
+
 	lsr
 	; if even, go to one less
 	; else, fine
@@ -222,7 +222,7 @@ odd_bottom_draw_box:
 
 	; we're odd, need to call HLIN
 
-	jsr	hlin_common
+	jsr	hlin_mask_odd
 	iny
 
 
@@ -292,102 +292,6 @@ draw_hlin:
 
 	sta	Y1		; needed for HLIN_ADD
 
-	lsr
-	tay
-	bcs	do_hlin_mask_odd
-	jsr	hlin_mask_even
-	jmp	hlin_done
-do_hlin_mask_odd:
-	jsr	hlin_common
-
-	; done
-hlin_done:
-	rts
-
-	;=================================
-	;=================================
-	; draw hlin add
-	;=================================
-	;=================================
-	; increment Y1
-draw_hlin_add:
-
-	lda	(INL),Y
-	sta	X1
-	iny
-	lda	(INL),Y
-	sta	X2
-
-	inc	Y1
-
-	lda	Y1
-
-	lsr
-	tay
-	bcs	do_hlin_add_mask_odd
-	jsr	hlin_mask_even
-	jmp	hlin_add_done
-do_hlin_add_mask_odd:
-	jsr	hlin_common
-
-	; done
-hlin_add_done:
-	rts
-
-	;=================================
-	;=================================
-	; draw hlin add_lsame
-	;=================================
-	;=================================
-	; increment Y1
-	; use old left value
-draw_hlin_add_lsame:
-
-	lda	(INL),Y
-	sta	X2
-
-	inc	Y1
-	lda	Y1
-
-	lsr
-	tay
-	bcs	do_hlin_add_lsame_mask_odd
-	jsr	hlin_mask_even
-	jmp	hlin_add_lsame_done
-do_hlin_add_lsame_mask_odd:
-	jsr	hlin_common
-
-	; done
-hlin_add_lsame_done:
-
-	rts
-
-	;=================================
-	;=================================
-	; draw hlin add_rsame
-	;=================================
-	;=================================
-	; increment Y1
-	; use old right value
-draw_hlin_add_rsame:
-
-	lda	(INL),Y
-	sta	X1
-
-	inc	Y1
-	lda	Y1
-
-	lsr
-	tay
-	bcs	do_hlin_add_rsame_mask_odd
-	jsr	hlin_mask_even
-	jmp	hlin_add_rsame_done
-do_hlin_add_rsame_mask_odd:
-	jsr	hlin_common
-
-	; done
-hlin_add_rsame_done:
-	rts
 
 	;===================================
 	;===================================
@@ -395,11 +299,14 @@ hlin_add_rsame_done:
 	;===================================
 	;===================================
 	; X1, X2 set up
-	; Y/2 is in Y
-	; call the proper entry point
-	; Y untouched
+	; Y-coord is in A
+	; Y is A/2
 
 hlin_common:
+
+	lsr
+	tay
+	bcc	hlin_mask_even
 
 hlin_mask_odd:
 	lda	#$0F
@@ -435,6 +342,61 @@ draw_hlin_s_xloop_smc:
 
 	rts
 
+
+
+	;=================================
+	;=================================
+	; draw hlin add
+	;=================================
+	;=================================
+	; increment Y1
+draw_hlin_add:
+
+	lda	(INL),Y
+	sta	X1
+	iny
+
+draw_hlin_add_lsame:
+	lda	(INL),Y
+	sta	X2
+
+hlin_inc_y1:
+	inc	Y1
+	lda	Y1
+
+	jmp	hlin_common
+
+
+	;=================================
+	;=================================
+	; draw hlin add_lsame
+	;=================================
+	;=================================
+	; increment Y1
+	; use old left value
+;draw_hlin_add_lsame:
+
+;	lda	(INL),Y
+;	sta	X2
+
+;	jmp	hlin_inc_y1
+
+
+	;=================================
+	;=================================
+	; draw hlin add_rsame
+	;=================================
+	;=================================
+	; increment Y1
+	; use old right value
+draw_hlin_add_rsame:
+
+	lda	(INL),Y
+	sta	X1
+
+	jmp	hlin_inc_y1
+
+
 	;=================================
 	;=================================
 	; draw box add
@@ -449,13 +411,8 @@ draw_box_add:
 	lda	(INL),Y
 	sta	X1
 	iny
-	lda	(INL),Y
-	sta	X2
-	iny
-	lda	(INL),Y
-	sta	Y2			; needed?
 
-	jmp	draw_box_common
+	jmp	draw_box_common_x2
 
 
 	;=================================
@@ -471,13 +428,7 @@ draw_box_add_lsame:
 	sta	Y1
 	inc	Y1
 
-	lda	(INL),Y
-	sta	X2
-	iny
-	lda	(INL),Y
-	sta	Y2		; needed?
-
-	jmp	draw_box_common
+	jmp	draw_box_common_x2
 
 
 	;=================================
@@ -495,9 +446,6 @@ draw_box_add_rsame:
 
 	lda	(INL),Y
 	sta	X1
-	iny
-	lda	(INL),Y
-	sta	Y2			; needed?
 
 	jmp	draw_box_common
 

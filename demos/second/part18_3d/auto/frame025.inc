@@ -11,7 +11,7 @@
 	.byte 24,34
 	.byte BOX,20,35,24,36
 	.byte HLIN,30,31,32
-	.byte VLIN,25,31,30
+	.byte VLIN,30,25,31
 	.byte VLIN_ADD,6,24	; 31
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,17,20,25,22

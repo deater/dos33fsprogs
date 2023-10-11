@@ -23,9 +23,9 @@
 	.byte HLIN_ADD_LSAME,12 ; 11, 12, 36
 	.byte HLIN,8,12,40
 	.byte HLIN_ADD_LSAME,11 ; 8, 11, 41
-	.byte VLIN,35,39,8
-	.byte 20,24,35
-	.byte 27,28,35
+	.byte VLIN,8,35,39
+	.byte 35,20,24
+	.byte 35,27,28
 	.byte PLOT,22,27
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,20,7,29,8
@@ -51,7 +51,7 @@
 	.byte 11,14,25
 	.byte 11,12,28
 	.byte 24,25,41
-	.byte VLIN,34,35,24
+	.byte VLIN,24,34,35
 	.byte PLOT,32,7
 	.byte 10,10
 	.byte 25,11

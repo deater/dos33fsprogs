@@ -8,8 +8,8 @@ frame36:
 	.byte	SET_COLOR | MEDIUM_BLUE
 	.byte	PLOT,11,7
 	.byte	HLIN,11,12,6
-	.byte	VLIN,10,15,14
-	.byte	21,23,14		; VLIN
+	.byte	VLIN,14,10,15
+	.byte	14,21,23		; VLIN
 	.byte	PLOT,12,11
 	.byte	BOX,11,12,12,16
 	.byte	HLIN,11,12,21

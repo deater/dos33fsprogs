@@ -59,10 +59,10 @@
 	.byte HLIN,14,15,6
 	.byte SET_COLOR | PINK
 	.byte BOX,8,6,9,8
-	.byte VLIN,9,10,9
+	.byte VLIN,9,9,10
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,12,7,13,8
-	.byte VLIN,6,7,12
+	.byte VLIN,12,6,7
 	.byte PLOT,13,9
 	.byte SET_COLOR | RED
 	.byte 12,7

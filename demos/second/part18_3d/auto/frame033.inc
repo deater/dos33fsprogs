@@ -20,8 +20,8 @@
 	.byte HLIN,8,12,19
 	.byte 4,5,29
 	.byte SET_COLOR | MEDIUM_BLUE
-	.byte VLIN,11,16,5
-	.byte 22,25,5
+	.byte VLIN,5,11,16
+	.byte 5,22,25
 	.byte PLOT,5,6
 	.byte SET_COLOR | RED
 	.byte HLIN,4,5,28

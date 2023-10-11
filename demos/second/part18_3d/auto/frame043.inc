@@ -71,21 +71,21 @@
 	.byte HLIN,26,29,6
 	.byte HLIN_ADD_LSAME,27 ; 26, 27, 7
 	.byte HLIN,21,22,14
-	.byte VLIN,15,16,21
-	.byte 8,9,26
+	.byte VLIN,21,15,16
+	.byte 26,8,9
 	.byte VLIN_ADD,13,16	; 27
 	.byte PLOT,21,13
 	.byte SET_COLOR | DARK_BLUE
-	.byte VLIN,6,16,30
+	.byte VLIN,30,6,16
 	.byte VLIN_ADD,17,18	; 31
 	.byte SET_COLOR | ORANGE
 	.byte HLIN,27,28,15
 	.byte 28,29,19
-	.byte VLIN,17,22,21
-	.byte 13,14,28
+	.byte VLIN,21,17,22
+	.byte 28,13,14
 	.byte VLIN_ADD,16,18	; 29
 	.byte SET_COLOR | PINK
-	.byte VLIN,15,18,27
+	.byte VLIN,27,15,18
 	.byte VLIN_ADD,19,20	; 28
 	.byte PLOT,26,6
 	.byte SET_COLOR | RED

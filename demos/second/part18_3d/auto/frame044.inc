@@ -69,7 +69,7 @@
 	.byte 23,14
 	.byte 22,18
 	.byte SET_COLOR | PINK
-	.byte VLIN,6,7,23
+	.byte VLIN,23,6,7
 	.byte VLIN_ADD,13,14	; 24
 	.byte 15,19	; 25
 	.byte SET_COLOR | ORANGE

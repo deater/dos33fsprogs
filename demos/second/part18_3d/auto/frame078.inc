@@ -62,7 +62,7 @@
 	.byte 12,17,38
 	.byte 27,35,41
 	.byte 14,15,41
-	.byte VLIN,29,30,35
+	.byte VLIN,35,29,30
 	.byte PLOT,21,9
 	.byte 8,14
 	.byte SET_COLOR | LIGHT_BLUE

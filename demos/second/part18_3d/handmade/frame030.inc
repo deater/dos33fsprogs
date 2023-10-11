@@ -23,7 +23,7 @@ frame30:
 	.byte	PLOT,5,24
 	.byte	SET_COLOR | LIGHT_BLUE
 	.byte	BOX,5,28,6,29
-	.byte	VLIN,24,26,6
+	.byte	VLIN,6,24,26
 	.byte	PLOT,4,26
 	.byte	5,25			; PLOT
 	.byte	SET_COLOR | RED

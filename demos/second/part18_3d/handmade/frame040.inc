@@ -15,13 +15,13 @@ frame40:
 	.byte	21,19,22,23
 	.byte	SET_COLOR | DARK_BLUE
 	.byte	PLOT,22,18
-	.byte	VLIN,19,21,21
+	.byte	VLIN,21,19,21
 	.byte	SET_COLOR | MEDIUM_BLUE
-	.byte	11,16,6
-	.byte	22,27,7
-	.byte	7,14,8
-	.byte	22,28,9
-	.byte	22,29,11
+	.byte	6,11,16
+	.byte	7,22,27
+	.byte	8,7,14
+	.byte	9,22,28
+	.byte	11,22,29
 	.byte	PLOT,10,14
 	.byte	BOX,10,6,11,13
 	.byte	SET_COLOR | GREY1

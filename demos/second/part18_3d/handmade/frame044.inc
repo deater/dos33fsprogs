@@ -55,22 +55,22 @@ frame44:
 	.byte	33,16,34,17
 	.byte	PLOT,32,17
 	.byte	23,8
-	.byte	VLIN,6,12,24
+	.byte	VLIN,24,6,12
 	.byte	SET_COLOR | DARK_BLUE
 	.byte	BOX,32,6,35,11
 	.byte	HLIN,32,33,12
 	.byte	SET_COLOR | ORANGE
-	.byte	VLIN,12,14,26
-	.byte	15,18,27
+	.byte	VLIN,26,12,14
+	.byte	27,15,18		; VLIN
 	.byte	SET_COLOR | MEDIUM_BLUE
-	.byte	9,11,21
-	.byte	8,10,22
-	.byte	15,18,22
-	.byte	14,17,23
+	.byte	22,15,18		; VLIN
+	.byte	23,14,17		; VLIN
+	.byte	21,9,11			; VLIN
+	.byte	VLIN_ADD,8,10		; VLIN_ADD 22
 	.byte	SET_COLOR | PINK
-	.byte	6,7,23
-	.byte	13,14,24
-	.byte	15,19,25
+	.byte	6,7			; VLIN_ADD 23
+	.byte	13,14			; VLIN_ADD 24
+	.byte	15,19			; VLIN_ADD 25
 	.byte	SET_COLOR | LIGHT_GREEN
 	.byte	BOX,25,10,27,11
 	.byte	PLOT,25,12
@@ -80,4 +80,4 @@ frame44:
 	.byte	HLIN,25,26,6
 	.byte END
 
-	; ee9 - fb3 = 202 bytes
+	; ee9 - fb3 = 199 bytes

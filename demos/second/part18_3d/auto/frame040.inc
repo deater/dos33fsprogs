@@ -23,17 +23,17 @@
 	.byte HLIN,14,21,14
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,10,6,11,13
-	.byte VLIN,11,16,6
+	.byte VLIN,6,11,16
 	.byte VLIN_ADD,22,27	; 7
 	.byte 7,14	; 8
 	.byte 22,28	; 9
-	.byte VLIN,22,29,11
+	.byte VLIN,11,22,29
 	.byte PLOT,10,14
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,21,19,22,23
 	.byte SET_COLOR | DARK_BLUE
 	.byte HLIN,21,22,21
-	.byte VLIN,19,20,21
+	.byte VLIN,21,19,20
 	.byte PLOT,22,18
 	.byte SET_COLOR | RED
 	.byte 22,21

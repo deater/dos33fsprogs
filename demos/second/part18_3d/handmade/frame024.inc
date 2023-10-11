@@ -8,8 +8,8 @@ frame24:
 	.byte	11,19,26,31				; BOX
 	.byte	15,32,26,34				; BOX
 	.byte	HLIN,25,26,35
-	.byte	VLIN,6,15,34
-	.byte	16,32,33				; VLIN
+	.byte	VLIN,34,6,15
+	.byte	33,16,32				; VLIN
 	.byte	SET_COLOR | GREY1
 	.byte	HLIN,11,14,32
 	.byte	HLIN_ADD,11,18	; 33
@@ -37,8 +37,8 @@ frame24:
 	.byte	HLIN,23,25,22
 	.byte	HLIN_ADD,20,22	; 23
 	.byte	27,28		; HLIN_ADD 24
-	.byte	VLIN,19,21,22
-	.byte	20,23,28	; VLIN
+	.byte	VLIN,22,19,21
+	.byte	28,20,23	; VLIN
 	.byte	PLOT,27,19
 	.byte	26,23		; PLOT
 	.byte	SET_COLOR | ORANGE

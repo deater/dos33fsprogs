@@ -51,14 +51,14 @@
 	.byte HLIN,13,16,6
 	.byte 12,16,9
 	.byte 14,16,14
-	.byte VLIN,6,13,4
+	.byte VLIN,4,6,13
 	.byte PLOT,14,15
 	.byte 16,15
 	.byte SET_COLOR | PINK
 	.byte BOX,9,6,10,10
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte 11,7,12,8
-	.byte VLIN,6,7,11
+	.byte VLIN,11,6,7
 	.byte PLOT,12,9
 	.byte SET_COLOR | RED
 	.byte 11,7

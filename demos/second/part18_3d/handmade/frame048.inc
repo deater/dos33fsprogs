@@ -64,19 +64,19 @@ frame48:
 	.byte	23,18,24,21
 	.byte	24,16,25,20
 	.byte	25,15,26,19
-	.byte	VLIN,13,14,26
+	.byte	VLIN,26,13,14
 	.byte	SET_COLOR|MEDIUM_BLUE
-	.byte	18,20,20
-	.byte	25,28,20
-	.byte	25,27,21
-	.byte	6,10,35
+	.byte	20,18,20		; VLIN
+	.byte	20,25,28		; VLIN
+	.byte	21,25,27		; VLIN
+	.byte	35,6,10			; VLIN
 	.byte	SET_COLOR|ORANGE
-	.byte	21,25,25
-	.byte	26,28,26
+	.byte	25,21,25		; VLIN
+	.byte	26,26,28		; VLIN
 	.byte	SET_COLOR|PINK
-	.byte	13,16,21
-	.byte	19,24,22
-	.byte	25,30,23
+	.byte	21,13,16		; VLIN
+	.byte	VLIN_ADD,19,24		; VLIN_ADD 22
+	.byte	25,30			; VLIN_ADD 23
 	.byte	PLOT,21,18
 	.byte	SET_COLOR|WHITE
 	.byte	27,7
@@ -87,4 +87,4 @@ frame48:
 	.byte	26,27,6
 	.byte	END
 
-	; 11d4 - 12af = 219
+	; 11d4 - 12af = 218

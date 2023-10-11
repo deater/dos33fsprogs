@@ -10,7 +10,7 @@ todo, compressed:
 
 Before VLIN_ADD (at frame 130):		23488 bytes
 After:					23330 bytes (not worth it?)
-
+Bunch more optimizations		23164 bytes
 
 
 7680 bytes: try1: all plots, even zeros (4 bytes each pixel)

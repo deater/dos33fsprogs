@@ -17,25 +17,25 @@
 	.byte 4,24,5,25
 	.byte BOX_ADD_LSAME,8,27 ; 4, 26
 	.byte BOX,5,27,7,29
-	.byte VLIN,39,41,4
+	.byte VLIN,4,39,41
 	.byte PLOT,4,23
 	.byte SET_COLOR | WHITE
 	.byte BOX,11,16,14,19
 	.byte BOX_ADD,10,15,21	; 20
 	.byte HLIN,6,8,28
 	.byte SET_COLOR | MEDIUM_BLUE
-	.byte VLIN,13,16,4
-	.byte 21,22,4
+	.byte VLIN,4,13,16
+	.byte 4,21,22
 	.byte VLIN_ADD,6,7	; 5
 	.byte 12,16	; 6
-	.byte VLIN,21,25,6
-	.byte 11,16,8
-	.byte 22,25,8
+	.byte VLIN,6,21,25
+	.byte 8,11,16
+	.byte 8,22,25
 	.byte PLOT,7,6
 	.byte SET_COLOR | RED
 	.byte HLIN,5,8,27
 	.byte SET_COLOR | DARK_BLUE
-	.byte VLIN,25,27,4
+	.byte VLIN,4,25,27
 	.byte SET_COLOR | ORANGE
 	.byte PLOT,4,26
 	.byte END

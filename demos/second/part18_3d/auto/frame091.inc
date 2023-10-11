@@ -20,19 +20,19 @@
 	.byte 23,26,29
 	.byte 24,27,32
 	.byte 33,34,32
-	.byte VLIN,6,23,9
-	.byte 6,8,16
-	.byte 6,8,19
-	.byte 6,8,22
-	.byte 30,31,34
+	.byte VLIN,9,6,23
+	.byte 16,6,8
+	.byte 19,6,8
+	.byte 22,6,8
+	.byte 34,30,31
 	.byte PLOT,9,26
 	.byte SET_COLOR | BROWN
 	.byte HLIN,18,19,25
 	.byte 18,19,27
-	.byte VLIN,6,26,11
-	.byte 13,27,15
-	.byte 13,27,21
+	.byte VLIN,11,6,26
+	.byte 15,13,27
+	.byte 21,13,27
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte 6,22,9
+	.byte 9,6,22
 	.byte END
 ; total size = 118

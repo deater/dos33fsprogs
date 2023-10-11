@@ -34,13 +34,13 @@
 	.byte 17,20,20
 	.byte PLOT,23,20
 	.byte SET_COLOR | MEDIUM_BLUE
-	.byte VLIN,10,15,11
-	.byte 20,25,11
-	.byte 8,14,13
-	.byte 21,27,13
-	.byte 6,13,15
-	.byte 21,28,15
+	.byte VLIN,11,10,15
+	.byte 11,20,25
+	.byte 13,8,14
+	.byte 13,21,27
+	.byte 15,6,13
+	.byte 15,21,28
 	.byte SET_COLOR | ORANGE
-	.byte 23,24,22
+	.byte 22,23,24
 	.byte END
 ; total size = 139

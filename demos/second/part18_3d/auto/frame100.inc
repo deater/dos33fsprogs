@@ -28,12 +28,12 @@
 	.byte HLIN_ADD,23,24	; 18
 	.byte 13,14	; 19
 	.byte 11,12	; 20
-	.byte VLIN,36,41,31
+	.byte VLIN,31,36,41
 	.byte VLIN_ADD,30,35	; 32
 	.byte 24,29	; 33
 	.byte 17,23	; 34
 	.byte PLOT,35,16
 	.byte SET_COLOR | WHITE
-	.byte VLIN,6,10,13
+	.byte VLIN,13,6,10
 	.byte END
 ; total size = 113

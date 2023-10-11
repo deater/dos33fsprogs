@@ -70,19 +70,19 @@
 	.byte BOX_ADD_RSAME,23,19
 	.byte BOX,23,20,25,21
 	.byte HLIN,25,26,15
-	.byte VLIN,13,14,26
+	.byte VLIN,26,13,14
 	.byte SET_COLOR | PINK
-	.byte 13,16,21
+	.byte 21,13,16
 	.byte VLIN_ADD,19,24	; 22
 	.byte 25,30	; 23
 	.byte PLOT,21,18
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,20,25,21,27
-	.byte VLIN,18,20,20
-	.byte 6,10,35
+	.byte VLIN,20,18,20
+	.byte 35,6,10
 	.byte PLOT,20,28
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,21,25,25
+	.byte VLIN,25,21,25
 	.byte VLIN_ADD,26,28	; 26
 	.byte END
 ; total size = 226

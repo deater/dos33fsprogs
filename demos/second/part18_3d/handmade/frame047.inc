@@ -53,16 +53,16 @@ frame47:
 	.byte	31,22
 	.byte	SET_COLOR | MEDIUM_BLUE
 	.byte	33,6
-	.byte	VLIN,6,12,34
-	.byte	6,16,35
+	.byte	VLIN,34,6,12
+	.byte	35,6,16			; VLIN
 	.byte	SET_COLOR | PINK
-	.byte	17,22,21
-	.byte	23,27,22
+	.byte	21,17,22		; VLIN
+	.byte	22,23,27		; VLIN
 	.byte	SET_COLOR | ORANGE
-	.byte	19,21,24
-	.byte	22,26,25
+	.byte	24,19,21		; VLIN
+	.byte	25,22,26		; VLIN
 	.byte	SET_COLOR | GREEN
-	.byte	12,16,21
+	.byte	21,12,16		; VLIN
 	.byte	BOX,22,11,25,12
 	.byte	23,9,24,10
 	.byte	SET_COLOR | LIGHT_GREEN

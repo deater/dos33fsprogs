@@ -21,11 +21,11 @@
 	.byte BOX_ADD,11,27,25	; 22
 	.byte BOX,18,32,20,40
 	.byte 34,40,35,41
-	.byte VLIN,38,41,4
-	.byte 26,41,15
-	.byte 26,41,25
-	.byte 27,31,34
-	.byte 36,39,34
+	.byte VLIN,4,38,41
+	.byte 15,26,41
+	.byte 25,26,41
+	.byte 34,27,31
+	.byte 34,36,39
 	.byte PLOT,35,23
 	.byte 4,24
 	.byte 35,26

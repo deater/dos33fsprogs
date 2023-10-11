@@ -12,16 +12,16 @@ frame23:
 	.byte	26,34,29,41			; BOX
 	.byte	30,35,32,41			; BOX
 	.byte	33,36,35,41			; BOX
-	.byte	VLIN, 20,41,19
-	.byte	26,35,34			; VLIN
-	.byte	6,35,35				; VLIN
+	.byte	VLIN, 19,20,41
+	.byte	34,26,35			; VLIN
+	.byte	35,6,35				; VLIN
 	.byte	SET_COLOR | LIGHT_BLUE
 	.byte	BOX, 24,19,25,24
 	.byte	31,20,33,25			; BOX
-	.byte	VLIN, 21,22,26
+	.byte	VLIN, 26,21,22
 	.byte	PLOT, 32,19
 	.byte	SET_COLOR | GREY1
-	.byte	VLIN, 17,23,24
+	.byte	VLIN, 24,17,23
 	.byte	BOX, 27,21, 31,23
 	.byte	PLOT, 24,17
 	.byte	31,20				; PLOT

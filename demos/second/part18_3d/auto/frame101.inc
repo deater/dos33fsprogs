@@ -43,7 +43,7 @@
 	.byte 14,15,39
 	.byte HLIN_ADD_RSAME,9	; 9 15 40
 	.byte 8	; 8 15 41
-	.byte VLIN,13,20,7
-	.byte 25,28,15
+	.byte VLIN,7,13,20
+	.byte 15,25,28
 	.byte END
 ; total size = 156

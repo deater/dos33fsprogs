@@ -21,7 +21,7 @@
 	.byte SET_COLOR | PINK
 	.byte BOX,22,22,35,23
 	.byte BOX_ADD_LSAME,32,41 ; 22, 24
-	.byte VLIN,6,21,35
+	.byte VLIN,35,6,21
 	.byte SET_COLOR | ORANGE
 	.byte BOX,24,7,28,8
 	.byte BOX_ADD_RSAME,25,10
@@ -49,18 +49,18 @@
 	.byte BOX_ADD_RSAME,15,11
 	.byte HLIN,12,14,7
 	.byte 16,17,7
-	.byte VLIN,6,11,12
-	.byte 9,14,17
+	.byte VLIN,12,6,11
+	.byte 17,9,14
 	.byte PLOT,16,6
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte HLIN,14,17,10
-	.byte VLIN,6,9,12
-	.byte 11,13,17
+	.byte VLIN,12,6,9
+	.byte 17,11,13
 	.byte PLOT,15,9
 	.byte 17,9
 	.byte 12,11
 	.byte SET_COLOR | RED
-	.byte VLIN,6,7,11
+	.byte VLIN,11,6,7
 	.byte VLIN_ADD,8,9	; 12
 	.byte PLOT,17,12
 	.byte SET_COLOR | YELLOW

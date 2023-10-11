@@ -23,7 +23,7 @@ frame22:
 	.byte	HLIN, 33,34,24
 	.byte	PLOT, 33,23
 	.byte	SET_COLOR | DARK_BLUE
-	.byte	VLIN, 19,26,29
+	.byte	VLIN, 29,19,26
 	.byte	HLIN, 30,32,22
 	.byte	HLIN_ADD, 30,31		; 23
 	.byte	SET_COLOR | LIGHT_BLUE

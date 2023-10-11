@@ -50,7 +50,7 @@
 	.byte HLIN,19,20,35
 	.byte HLIN_ADD_RSAME,16	; 16 20 36
 	.byte HLIN,16,17,37
-	.byte VLIN,31,32,35
+	.byte VLIN,35,31,32
 	.byte PLOT,26,28
 	.byte 28,29
 	.byte 27,33
@@ -58,6 +58,6 @@
 	.byte SET_COLOR | GREY1
 	.byte BOX,4,11,5,15
 	.byte 4,21,5,28
-	.byte VLIN,6,10,4
+	.byte VLIN,4,6,10
 	.byte END
 ; total size = 190

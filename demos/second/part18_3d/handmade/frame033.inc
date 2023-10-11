@@ -22,8 +22,8 @@ frame33:
 	.byte	8,17		; HLIN_ADD 41
 	.byte	SET_COLOR | MEDIUM_BLUE
 	.byte	PLOT,5,6
-	.byte	VLIN,11,16,5
-	.byte	22,25,5		; VLIN
+	.byte	VLIN,5,11,16
+	.byte	5,22,25		; VLIN
 	.byte	SET_COLOR | RED
 	.byte	HLIN,4,5,28
 	.byte	SET_COLOR | WHITE

@@ -51,7 +51,7 @@
 	.byte BOX_ADD_LSAME,17,17 ; 11, 12
 	.byte BOX,12,18,17,23
 	.byte HLIN,12,13,24
-	.byte VLIN,25,28,12
+	.byte VLIN,12,25,28
 	.byte SET_COLOR | LIGHT_GREEN
 	.byte BOX,18,29,19,31
 	.byte 16,33,20,34
@@ -67,7 +67,7 @@
 	.byte HLIN,9,13,16
 	.byte 24,26,40
 	.byte HLIN_ADD,22,25	; 41
-	.byte VLIN,13,14,8
+	.byte VLIN,8,13,14
 	.byte PLOT,26,39
 	.byte 20,41
 	.byte SET_COLOR | LIGHT_BLUE

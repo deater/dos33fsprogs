@@ -30,23 +30,23 @@
 	.byte BOX_ADD_LSAME,24,41 ; 19, 40
 	.byte HLIN,13,15,21
 	.byte HLIN_ADD_RSAME,14	; 14 15 22
-	.byte VLIN,6,20,15
-	.byte 26,29,15
+	.byte VLIN,15,6,20
+	.byte 15,26,29
 	.byte VLIN_ADD,39,41	; 16
-	.byte VLIN,35,36,16
-	.byte 6,15,18
-	.byte 20,25,18
+	.byte VLIN,16,35,36
+	.byte 18,6,15
+	.byte 18,20,25
 	.byte VLIN_ADD,35,36	; 19
 	.byte SET_COLOR | BROWN
 	.byte BOX,27,6,29,10
 	.byte BOX_ADD_LSAME,28,17 ; 27, 11
 	.byte BOX,26,32,27,37
 	.byte BOX_ADD_RSAME,25,41
-	.byte VLIN,18,22,27
-	.byte 28,31,27
+	.byte VLIN,27,18,22
+	.byte 27,28,31
 	.byte PLOT,25,6
 	.byte SET_COLOR | RED
-	.byte VLIN,38,39,15
+	.byte VLIN,15,38,39
 	.byte SET_COLOR | YELLOW
 	.byte PLOT,16,39
 	.byte END

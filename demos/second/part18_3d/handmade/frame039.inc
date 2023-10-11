@@ -14,12 +14,12 @@ frame39:
 	.byte	SET_COLOR | DARK_BLUE
 	.byte	6,6,8,24
 	.byte	SET_COLOR | MEDIUM_BLUE
-	.byte	VLIN,10,15,11
-	.byte	20,25,11
-	.byte	8,14,13
-	.byte	21,27,13
-	.byte	6,13,15
-	.byte	21,28,15
+	.byte	VLIN,11,10,15
+	.byte	11,20,25
+	.byte	13,8,14
+	.byte	13,21,27
+	.byte	15,6,13
+	.byte	15,21,28
 	.byte	SET_COLOR | GREY1
 	.byte	BOX,17,21,23,35
 	.byte	10,36,23,41
@@ -40,12 +40,12 @@ frame39:
 	.byte	21,22,20
 	.byte	HLIN_ADD,20,23	; 21
 	.byte	HLIN,20,23,24
-	.byte	VLIN,21,24,20
-	.byte	24,26,23
+	.byte	VLIN,20,21,24
+	.byte	23,24,26
 	.byte	SET_COLOR | DARK_BLUE
 	.byte	BOX,21,22,23,23
 	.byte	SET_COLOR | ORANGE
-	.byte	VLIN,23,24,22
+	.byte	VLIN,22,23,24
 	.byte END
 
 	; c75 - cfd = 136

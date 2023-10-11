@@ -63,12 +63,12 @@
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte BOX,34,7,35,12
 	.byte HLIN,33,35,6
-	.byte VLIN,13,16,35
+	.byte VLIN,35,13,16
 	.byte SET_COLOR | PINK
-	.byte 17,22,21
+	.byte 21,17,22
 	.byte VLIN_ADD,23,27	; 22
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,22,26,25
-	.byte 19,21,24
+	.byte VLIN,25,22,26
+	.byte 24,19,21
 	.byte END
 ; total size = 202

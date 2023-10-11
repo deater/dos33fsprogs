@@ -14,7 +14,7 @@
 	.byte BOX,4,40,18,41
 	.byte 25,40,30,41
 	.byte HLIN,4,7,24
-	.byte VLIN,30,31,7
+	.byte VLIN,7,30,31
 	.byte SET_COLOR | GREEN
 	.byte BOX,31,6,35,41
 	.byte SET_COLOR | BROWN
@@ -24,10 +24,10 @@
 	.byte 18,20,32
 	.byte 18,20,34
 	.byte 18,20,36
-	.byte VLIN,6,22,8
+	.byte VLIN,8,6,22
 	.byte VLIN_ADD,23,34	; 9
-	.byte VLIN,6,34,30
+	.byte VLIN,30,6,34
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte 6,23,6
+	.byte 6,6,23
 	.byte END
 ; total size = 109

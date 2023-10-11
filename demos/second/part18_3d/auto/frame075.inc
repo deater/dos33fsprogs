@@ -69,7 +69,7 @@
 	.byte 25
 	.byte 24
 	.byte 23
-	.byte VLIN,10,11,4
+	.byte VLIN,4,10,11
 	.byte PLOT,22,21
 	.byte SET_COLOR | LIGHT_GREEN
 	.byte BOX,6,32,10,33

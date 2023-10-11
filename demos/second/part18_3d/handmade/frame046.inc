@@ -23,13 +23,13 @@ frame46:
 	.byte	30,11,33,14
 	.byte	31,15,33,16
 	.byte	31,17,32,18
-	.byte	VLIN,12,14,34
+	.byte	VLIN,34,12,14
 	.byte	SET_COLOR | PINK
-	.byte	13,19,21
-	.byte	20,24,22
+	.byte	21,13,19		; VLIN
+	.byte	22,20,24		; VLIN
 	.byte	SET_COLOR | ORANGE
-	.byte	15,19,24
-	.byte	20,22,25
+	.byte	24,15,19		; VLIN
+	.byte	25,20,22		; VLIN
 	.byte	SET_COLOR | GREEN
 	.byte	HLIN,23,24,7
 	.byte	HLIN_ADD,22,24	; 8

@@ -62,16 +62,16 @@
 	.byte PLOT,23,13
 	.byte SET_COLOR | PINK
 	.byte HLIN_ADD,22,23	; 14
-	.byte VLIN,11,13,22
+	.byte VLIN,22,11,13
 	.byte VLIN_ADD,15,18	; 23
 	.byte 19,20	; 24
-	.byte VLIN,6,9,30
+	.byte VLIN,30,6,9
 	.byte VLIN_ADD,10,14	; 31
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,12,16,25
+	.byte VLIN,25,12,16
 	.byte VLIN_ADD,17,19	; 26
 	.byte SET_COLOR | MEDIUM_BLUE
-	.byte VLIN,15,18,21
-	.byte 10,11,21
+	.byte VLIN,21,15,18
+	.byte 21,10,11
 	.byte END
 ; total size = 204

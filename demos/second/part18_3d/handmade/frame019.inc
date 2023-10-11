@@ -21,7 +21,7 @@ frame19:
 	.byte	HLIN_ADD, 28, 35	; 26
 	.byte	29, 35			; HLIN_ADD 27
 	.byte	30, 35			; HLIN_ADD 28
-	.byte	VLIN, 21, 26, 28
+	.byte	VLIN, 28, 21, 26
 	.byte END
 
 	; 65 bytes

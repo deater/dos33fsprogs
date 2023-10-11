@@ -12,9 +12,9 @@
 	.byte BOX,31,6,35,41
 	.byte 4,17,6,18
 	.byte BOX_ADD_LSAME,7,22 ; 4, 19
-	.byte VLIN,28,29,4
+	.byte VLIN,4,28,29
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte 25,26,4
+	.byte 4,25,26
 	.byte SET_COLOR | RED
 	.byte PLOT,4,27
 	.byte END

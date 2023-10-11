@@ -40,9 +40,9 @@
 	.byte BOX_ADD,20,21,28	; 27
 	.byte HLIN,17,19,24
 	.byte 16,21,26
-	.byte VLIN,25,28,16
+	.byte VLIN,16,25,28
 	.byte VLIN_ADD,22,23	; 17
-	.byte VLIN,24,25,21
+	.byte VLIN,21,24,25
 	.byte PLOT,20,29
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,18,24,19,25

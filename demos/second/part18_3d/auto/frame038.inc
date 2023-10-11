@@ -15,7 +15,7 @@
 	.byte HLIN_ADD_RSAME,9	; 9 12 26
 	.byte HLIN,10,14,29
 	.byte 11,17,34
-	.byte VLIN,29,32,4
+	.byte VLIN,4,29,32
 	.byte PLOT,9,23
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,4,6,11,22

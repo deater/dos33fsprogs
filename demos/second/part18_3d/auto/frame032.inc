@@ -15,9 +15,9 @@
 	.byte 15	; 15 33 39
 	.byte 16	; 16 33 40
 	.byte 17	; 17 33 41
-	.byte VLIN,17,19,4
+	.byte VLIN,4,17,19
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte 25,29,4
+	.byte 4,25,29
 	.byte SET_COLOR | RED
 	.byte PLOT,4,28
 	.byte END

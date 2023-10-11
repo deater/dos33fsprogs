@@ -18,6 +18,6 @@
 	.byte HLIN_ADD_RSAME,31	; 31 35 22
 	.byte HLIN,32,35,27
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,24,26,35
+	.byte VLIN,35,24,26
 	.byte END
 ; total size = 68

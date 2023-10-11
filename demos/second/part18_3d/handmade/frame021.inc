@@ -19,7 +19,7 @@ frame21:
 	.byte	SET_COLOR | GREY1
 	.byte	BOX, 33,23,35,24
 	.byte	SET_COLOR | ORANGE
-	.byte	VLIN, 24,26,35
+	.byte	VLIN, 35,24,26
 	.byte END
 
 	; 68 bytes

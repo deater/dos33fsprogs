@@ -22,13 +22,13 @@
 	.byte 30,31,27
 	.byte 11,17,40
 	.byte HLIN_ADD_RSAME,10	; 10 17 41
-	.byte VLIN,6,7,16
-	.byte 17,22,19
-	.byte 6,7,19
-	.byte 6,7,22
+	.byte VLIN,16,6,7
+	.byte 19,17,22
+	.byte 19,6,7
+	.byte 22,6,7
 	.byte SET_COLOR | BROWN
-	.byte 11,23,16
-	.byte 11,23,21
+	.byte 16,11,23
+	.byte 21,11,23
 	.byte PLOT,19,21
 	.byte 19,23
 	.byte END

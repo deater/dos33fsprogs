@@ -21,14 +21,14 @@
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte 8,10,23
 	.byte 8,12,25
-	.byte VLIN,12,17,8
-	.byte 6,8,8
-	.byte 21,22,8
-	.byte 11,16,10
-	.byte 6,7,10
-	.byte 21,22,10
-	.byte 10,15,12
-	.byte 21,24,12
+	.byte VLIN,8,12,17
+	.byte 8,6,8
+	.byte 8,21,22
+	.byte 10,11,16
+	.byte 10,6,7
+	.byte 10,21,22
+	.byte 12,10,15
+	.byte 12,21,24
 	.byte PLOT,12,6
 	.byte SET_COLOR | WHITE
 	.byte BOX,14,16,17,19
@@ -47,6 +47,6 @@
 	.byte SET_COLOR | RED
 	.byte HLIN,9,12,27
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,25,26,8
+	.byte VLIN,8,25,26
 	.byte END
 ; total size = 156
