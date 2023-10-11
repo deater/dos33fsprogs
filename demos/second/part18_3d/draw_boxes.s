@@ -1,29 +1,23 @@
-;
-;
-; optional color, x1,y1 x2,y2
-;
-;	HLIN	x1,x2 at y1
-;	VLIN	y1,y2 at X1
-;	PLOT	x1,y1
-;	BOX	x1,y1 to x2,y2
-;	CLEAR	-
-
+;==========================
+; draw box scene
+;==========================
 ; data in INL/INH
 
-SET_COLOR = $C0
-END	=	$80
-CLEAR	=	$81
-BOX	=	$82
-HLIN	=	$83
-VLIN	=	$84
-PLOT	=	$85
-HLIN_ADD=	$86
-HLIN_ADD_LSAME=	$87
-HLIN_ADD_RSAME=	$88
-BOX_ADD=	$89
-BOX_ADD_LSAME=	$8A
-BOX_ADD_RSAME=	$8B
-VLIN_ADD=	$8C
+SET_COLOR = $C0		; special case, color 0..15 in bottom nybble
+
+END	=	$80	; 0 :
+CLEAR	=	$81	; 0 : clear screen to black (0)
+BOX	=	$82	; 4 : x1,y1 to x2,y2
+HLIN	=	$83	; 3 : x1,x2 at y1
+VLIN	=	$84	; 3 : y1,y2 at x1
+PLOT	=	$85	; 2 : x1,y1
+HLIN_ADD=	$86	; 2 : x1,x2 at prev_y1+1
+HLIN_ADD_LSAME=	$87	; 1 : prev_x1,x2 at prev_y1+1
+HLIN_ADD_RSAME=	$88	; 1 : x1,prev_x2 at prev_y1+1
+BOX_ADD=	$89	; 3 : x1,prev_y1+1, x2, y2
+BOX_ADD_LSAME=	$8A	; 2 : prev_x1,prev_y1+1, x2, y2
+BOX_ADD_RSAME=	$8B	; 2 : x1,prev_y1+1, prev_x2, y2
+VLIN_ADD=	$8C	; 2 : y1,y2 at prev_x1+1
 
 BLACK		= $00
 RED		= $01
@@ -46,11 +40,12 @@ WHITE		= $0f
 ; top bit set, repeat last command
 
 
-; 11xx xxxx
+; ??xx xxxx
 
 ; 00 = co-ord
 ; 10 = new command
 ; 11 = new-color
+
 
 draw_scene:
 
@@ -66,35 +61,62 @@ draw_scene_loop:
 						; command
 
 	asl					; clear top bit
-	beq	done_scene			; if 0, END
 	bmi	set_color			; if negative, color
 	lsr					; shift back down
 
 	sta	LAST_TYPE			; store last type
 
-	jsr	inc_inl
+	jsr	inc_inl				; 16 bit increment
 
 repeat_last:
 	lda	LAST_TYPE
 
-;	iny					; point to next byte
+	beq	done_scene			; if 0, END
+
 
 	; use jump table for rest
 	and	#$3f
 	tax
 	dex				; types start at 1
 	lda	draw_table_h,X
-	pha
+	sta	table_jsr_smc+2
+;	pha
 	lda     draw_table_l,X
-	pha
-	rts				; jump to it
+;	pha
+	sta	table_jsr_smc+1
 
+table_jsr_smc:
+	jsr	$FFFF
+
+	;========================================
+	; adds A to input pointer and continues
+update_pointer:
+	ldx	LAST_TYPE
+	lda	bytes_used,X
+
+update_pointer_already_in_a:
+	clc
+	adc	INL
+	sta	INL
+	lda	#0
+	adc	INH
+	sta	INH
+	bcc	draw_scene_loop	; bra (would only be set if wrap $FFFF)
+
+
+
+	;============================
+	; done scene
+	;============================
+	; increment pointer and return
 done_scene:
-	inc	INL
-	bne	really_done_scene
-	inc	INH
-really_done_scene:
 	rts
+
+
+	;============================
+	; set color
+	;============================
+	; color is A*2h
 
 set_color:
 	; make top and bottom byte the same
@@ -109,34 +131,32 @@ set_color:
 	adc	COLOR
 	sta	COLOR
 
-	lda	#1		; we were one byte long
-;	bne	update_pointer
+	; special case as we are encoded differently from
+	; the actions
 
+	lda	#1				; we were one byte long
+	bne	update_pointer_already_in_a	; bra
 
-	; adds A to input pointer and continues
-update_pointer:
-	clc
-	adc	INL
-	sta	INL
-	lda	#0
-	adc	INH
-	sta	INH
-	jmp	draw_scene_loop
+bytes_used:
+	.byte 0,0,4,3	; END, CLEAR, BOX, HLIN
+	.byte 3,2,2,1	; VLIN, PLOT, HLIN_ADD, HLIN_ADD_LSAME
+	.byte 1,3,2,2	; HLIN_ADD_RSAME, BOX_ADD, BOX_ADD_LSAME
+	.byte 2,2	; BOX_ADD_RSAME, VLIN_ADD
 
 
 
 draw_table_l:
-	.byte	<(clear_screen-1),<(draw_box-1),<(draw_hlin-1),<(draw_vlin-1)
-	.byte	<(draw_plot-1)
-	.byte	<(draw_hlin_add-1),<(draw_hlin_add_lsame-1),<(draw_hlin_add_rsame-1)
-	.byte	<(draw_box_add-1),<(draw_box_add_lsame-1),<(draw_box_add_rsame-1)
-	.byte	<(draw_vlin_add-1)
+	.byte	<(clear_screen),<(draw_box),<(draw_hlin),<(draw_vlin)
+	.byte	<(draw_plot)
+	.byte	<(draw_hlin_add),<(draw_hlin_add_lsame),<(draw_hlin_add_rsame)
+	.byte	<(draw_box_add),<(draw_box_add_lsame),<(draw_box_add_rsame)
+	.byte	<(draw_vlin_add)
 draw_table_h:
-	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
-	.byte	>(draw_plot-1)
-	.byte	>(draw_hlin_add-1),>(draw_hlin_add_lsame-1),>(draw_hlin_add_rsame-1)
-	.byte	>(draw_box_add-1),>(draw_box_add_lsame-1),>(draw_box_add_rsame-1)
-	.byte	>(draw_vlin_add-1)
+	.byte	>(clear_screen),>(draw_box),>(draw_hlin),>(draw_vlin)
+	.byte	>(draw_plot)
+	.byte	>(draw_hlin_add),>(draw_hlin_add_lsame),>(draw_hlin_add_rsame)
+	.byte	>(draw_box_add),>(draw_box_add_lsame),>(draw_box_add_rsame)
+	.byte	>(draw_vlin_add)
 
 	;=================================
 	;=================================
@@ -144,9 +164,8 @@ draw_table_h:
 	;=================================
 	;=================================
 clear_screen:
-	jsr	clear_fullgr
-	lda	#0
-	jmp	update_pointer
+	jmp	clear_fullgr		; tail call
+;	jmp	draw_scene_loop	; skip inc pointer
 
 	;=================================
 	;=================================
@@ -165,7 +184,6 @@ clear_screen:
 	; 3/4 case, 2 to 1 (!)
 	; 3/6 case, 2 to 2
 draw_box:
-;	iny
 	lda	(INL),Y
 	sta	X1
 	iny
@@ -176,13 +194,10 @@ draw_box:
 	sta	X2
 	iny
 	lda	(INL),Y
-	sta	Y2
+	sta	Y2		; keep even though not necessary
 
-	jsr	draw_box_common
 
-done_draw_box:
-	lda	#4
-	jmp	update_pointer
+	; fall through
 
 
 	;==================================
@@ -211,7 +226,7 @@ odd_bottom_draw_box:
 
 	; we're odd, need to call HLIN
 
-	jsr	hlin_mask_odd
+	jsr	hlin_common
 	iny
 
 
@@ -265,8 +280,9 @@ done_draw_box_yloop:
 definitely_odd_bottom:
 	; done
 
-	rts
+;	jmp	update_pointer
 
+	rts
 
 
 	;=================================
@@ -293,12 +309,12 @@ draw_hlin:
 	jsr	hlin_mask_even
 	jmp	hlin_done
 do_hlin_mask_odd:
-	jsr	hlin_mask_odd
+	jsr	hlin_common
 
 	; done
 hlin_done:
-	lda	#3
-	jmp	update_pointer
+	rts
+;	jmp	update_pointer
 
 
 
@@ -328,13 +344,12 @@ draw_hlin_add:
 	jsr	hlin_mask_even
 	jmp	hlin_add_done
 do_hlin_add_mask_odd:
-	jsr	hlin_mask_odd
+	jsr	hlin_common
 
 	; done
 hlin_add_done:
-	lda	#2
-	jmp	update_pointer
-
+;	jmp	update_pointer
+	rts
 
 	;=================================
 	;=================================
@@ -360,13 +375,13 @@ draw_hlin_add_lsame:
 	jsr	hlin_mask_even
 	jmp	hlin_add_lsame_done
 do_hlin_add_lsame_mask_odd:
-	jsr	hlin_mask_odd
+	jsr	hlin_common
 
 	; done
 hlin_add_lsame_done:
-	lda	#1
-	jmp	update_pointer
+;	jmp	update_pointer
 
+	rts
 
 	;=================================
 	;=================================
@@ -392,13 +407,12 @@ draw_hlin_add_rsame:
 	jsr	hlin_mask_even
 	jmp	hlin_add_rsame_done
 do_hlin_add_rsame_mask_odd:
-	jsr	hlin_mask_odd
+	jsr	hlin_common
 
 	; done
 hlin_add_rsame_done:
-	lda	#1
-	jmp	update_pointer
-
+;	jmp	update_pointer
+	rts
 
 	;=================================
 	;=================================
@@ -418,12 +432,9 @@ draw_box_add:
 	sta	X2
 	iny
 	lda	(INL),Y
-	sta	Y2
+	sta	Y2			; needed?
 
-	jsr	draw_box_common
-
-	lda	#3
-	jmp	update_pointer
+	jmp	draw_box_common
 
 
 	;=================================
@@ -443,12 +454,9 @@ draw_box_add_lsame:
 	sta	X2
 	iny
 	lda	(INL),Y
-	sta	Y2
+	sta	Y2		; needed?
 
-	jsr	draw_box_common
-
-	lda	#2
-	jmp	update_pointer
+	jmp	draw_box_common
 
 
 	;=================================
@@ -468,12 +476,9 @@ draw_box_add_rsame:
 	sta	X1
 	iny
 	lda	(INL),Y
-	sta	Y2
+	sta	Y2			; needed?
 
-	jsr	draw_box_common
-
-	lda	#2
-	jmp	update_pointer
+	jmp	draw_box_common
 
 
 	;=================================
@@ -492,8 +497,8 @@ draw_vlin_add:
 
 	jsr	draw_vlin_common
 
-	lda	#2
-	jmp	update_pointer
+;	jmp	update_pointer
+	rts
 
 	;=================================
 	;=================================
@@ -512,9 +517,8 @@ draw_vlin:
 	sta	X1
 	jsr	draw_vlin_common
 
-	lda	#3
-	jmp	update_pointer
-
+;	jmp	update_pointer
+	rts
 
 	;================================
 draw_vlin_common:
@@ -625,9 +629,8 @@ plot_done:
 
 	; done
 
-	lda	#2
-	jmp	update_pointer
-
+;	jmp	update_pointer
+	rts
 
 	;===================================
 	;===================================
@@ -638,6 +641,8 @@ plot_done:
 	; Y/2 is in Y
 	; call the proper entry point
 	; Y untouched
+
+hlin_common:
 
 hlin_mask_odd:
 	lda	#$0F
@@ -713,7 +718,8 @@ plot_s_smc:
 
 	rts
 
-
+	;===========================
+	; 16-bit increment of INL
 	; inline this?
 inc_inl:
 	inc	INL
