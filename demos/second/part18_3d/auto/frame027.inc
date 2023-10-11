@@ -3,14 +3,15 @@
 	.byte BOX_ADD,18,24,39	; 37
 	.byte SET_COLOR | GREY1
 	.byte BOX,31,19,35,28
-	.byte 10,22,18,24
-	.byte 31,30,35,33
+	.byte 10,20,13,21
+	.byte BOX_ADD_LSAME,18,24 ; 10, 22
+	.byte BOX,31,30,35,33
 	.byte 25,35,34,36
 	.byte 25,38,32,39
-	.byte 10,20,13,21
 	.byte HLIN,11,13,19
 	.byte 15,18,25
-	.byte 25,35,34
+	.byte HLIN_ADD,16,17	; 26
+	.byte HLIN,25,35,34
 	.byte 4,7,34
 	.byte HLIN_ADD_LSAME,10 ; 4, 10, 35
 	.byte 14
@@ -20,7 +21,6 @@
 	.byte 12,23	; 39
 	.byte 16,31	; 40
 	.byte HLIN_ADD_RSAME,18	; 18 31 41
-	.byte HLIN,16,17,26
 	.byte VLIN,31,33,4
 	.byte PLOT,4,41
 	.byte SET_COLOR | DARK_BLUE

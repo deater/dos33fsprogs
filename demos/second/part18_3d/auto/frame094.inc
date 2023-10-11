@@ -9,10 +9,10 @@
 	.byte BOX_ADD,14,16,33	; 16
 	.byte BOX,22,16,24,33
 	.byte 18,24,20,33
+	.byte 6,32,7,33
 	.byte BOX_ADD,5,30,35	; 34
 	.byte BOX,4,40,18,41
 	.byte 25,40,30,41
-	.byte 6,32,7,33
 	.byte HLIN,4,7,24
 	.byte VLIN,30,31,7
 	.byte SET_COLOR | GREEN
@@ -24,10 +24,10 @@
 	.byte 18,20,32
 	.byte 18,20,34
 	.byte 18,20,36
+	.byte VLIN,6,22,8
+	.byte VLIN_ADD,23,34	; 9
 	.byte VLIN,6,34,30
-	.byte 6,22,8
-	.byte 23,34,9
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte 6,23,6
 	.byte END
-; total size = 108
+; total size = 109

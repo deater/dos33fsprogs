@@ -44,13 +44,13 @@
 	.byte 20,22,16
 	.byte HLIN_ADD_RSAME,17	; 17 22 17
 	.byte HLIN,17,18,18
-	.byte VLIN,13,16,22
-	.byte 14,15,20
+	.byte VLIN,14,15,20
 	.byte 19,20,20
+	.byte 13,16,22
 	.byte PLOT,17,16
 	.byte SET_COLOR | RED
-	.byte VLIN,15,16,22
-	.byte 17,18,21
+	.byte VLIN,17,18,21
+	.byte VLIN_ADD,15,16	; 22
 	.byte PLOT,20,19
 	.byte SET_COLOR | WHITE
 	.byte 19,13

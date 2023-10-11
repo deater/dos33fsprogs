@@ -100,7 +100,7 @@ static int permutations[24][4]={
 #define ACTION_BOX_ADD		0x9
 #define ACTION_BOX_ADD_LSAME	0xA
 #define ACTION_BOX_ADD_RSAME	0xB
-
+#define ACTION_VLIN_ADD		0xC
 
 #if 0
 static char action_names[9][16]={
@@ -446,6 +446,17 @@ static int compare_y1(const void *p1, const void *p2) {
 
 }
 
+static int compare_x1(const void *p1, const void *p2) {
+
+	struct primitive_list_t *first,*second;
+
+	first=(struct primitive_list_t *)p1;
+	second=(struct primitive_list_t *)p2;
+
+	return (first->x1 > second->x1);
+
+}
+
 static int compare_color(const void *p1, const void *p2) {
 
 	struct color_lookup_t *first,*second;
@@ -548,7 +559,7 @@ int generate_frame(int print_results) {
 				if (debug) fprintf(stderr,"Sorting color %d HLIN Y1 from %d to %d\n",
 					old_color,first_hlin,last_hlin);
 				// qsort(base, num_members,size_members,compare func
-				qsort(&(primitive_list[first_hlin]),last_hlin-first_hlin,
+				qsort(&(primitive_list[first_hlin]),(last_hlin-first_hlin)+1,
 					sizeof(struct primitive_list_t),compare_y1);
 			}
 			else {
@@ -558,6 +569,45 @@ int generate_frame(int print_results) {
 		}
 		old_color=primitive_list[i].color;
 	}
+
+	/* Sort VLIN by X1 */
+	/* This lets us use more compact encoding where consecutive */
+	/* horizontal lines don't specify the X value but just increment */
+	/* the previous one */
+
+	int first_vlin=0,last_vlin=0,vlin_found;
+
+	old_color=primitive_list[0].color;
+	for(i=0;i<max_primitive;i++) {
+		if ((primitive_list[i].color!=old_color)||(i==max_primitive-1))  {
+			vlin_found=0;
+			first_vlin=0; last_vlin=0;
+//			fprintf(stderr,"Searching for VLIN in color %d from %d to %d\n",
+//				old_color,last_color_start,i);
+			for(j=last_color_start;j<i;j++) {
+				if (primitive_list[j].type==ACTION_VLIN) {
+					if (!vlin_found) {
+						first_vlin=j;
+						vlin_found=1;
+					}
+					last_vlin=j;
+				}
+			}
+			if (vlin_found) {
+				if (debug) fprintf(stderr,"Sorting color %d VLIN Y1 from %d to %d\n",
+					old_color,first_vlin,last_vlin);
+				// qsort(base, num_members,size_members,compare func
+				qsort(&(primitive_list[first_vlin]),(last_vlin-first_vlin)+1,
+					sizeof(struct primitive_list_t),compare_x1);
+			}
+			else {
+//				fprintf(stderr,"No HLIN in color %d\n",old_color);
+			}
+			last_color_start=i;
+		}
+		old_color=primitive_list[i].color;
+	}
+
 
 	/* Sort BOX by Y1 */
 	/* This lets us do optimizations similar to HLIN above */
@@ -583,7 +633,7 @@ int generate_frame(int print_results) {
 				if (debug) fprintf(stderr,"Sorting color %d BOX Y1 from %d to %d\n",
 					old_color,first_box,last_box);
 				// qsort(base, num_members,size_members,compare func
-				qsort(&(primitive_list[first_box]),last_box-first_box,
+				qsort(&(primitive_list[first_box]),(last_box-first_box)+1,
 					sizeof(struct primitive_list_t),compare_y1);
 			}
 			else {
@@ -619,6 +669,24 @@ int generate_frame(int print_results) {
 			if ( ((previous_entry==ACTION_HLIN) || (previous_entry==ACTION_HLIN_ADD) || (previous_entry==ACTION_PLOT)) &&
 				(previous_y1==primitive_list[i].y1-1)) {
 				primitive_list[i].type=ACTION_HLIN_ADD;
+			}
+		}
+		previous_entry=primitive_list[i].type;
+		previous_y1=primitive_list[i].y1;
+		previous_x1=primitive_list[i].x1;
+		previous_x2=primitive_list[i].x2;
+	}
+
+	/* Optimize VLIN */
+	/* If X is same as prev+1, then ACTION_VLIN_ADD */
+
+	previous_entry=0,previous_y1=0,previous_x1=0,previous_x2=0,previous_y2=0;
+	for(i=0;i<max_primitive;i++) {
+		if (primitive_list[i].type==ACTION_VLIN) {
+
+			if ( ((previous_entry==ACTION_VLIN) || (previous_entry==ACTION_VLIN_ADD)) &&
+				(previous_x1==primitive_list[i].x1-1)) {
+				primitive_list[i].type=ACTION_VLIN_ADD;
 			}
 		}
 		previous_entry=primitive_list[i].type;
@@ -730,6 +798,25 @@ int generate_frame(int print_results) {
 
 				}
 					break;
+			case ACTION_VLIN_ADD:
+				if (primitive_list[i].type==previous_primitive) {
+					if (print_results) printf("\t.byte %d,%d\t; %d\n",
+						primitive_list[i].y1,
+						primitive_list[i].y2,
+						primitive_list[i].x1);
+					total_size+=2;
+				}
+				else {
+					if (print_results) printf("\t.byte VLIN_ADD,%d,%d\t; %d\n",
+						primitive_list[i].y1,
+						primitive_list[i].y2,
+						primitive_list[i].x1);
+					total_size+=3;
+					previous_primitive=ACTION_VLIN_ADD;
+
+				}
+					break;
+
 			case ACTION_PLOT:
 				if (primitive_list[i].type==previous_primitive) {
 					if (print_results) printf("\t.byte %d,%d\n",

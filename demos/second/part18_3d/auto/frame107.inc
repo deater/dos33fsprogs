@@ -11,21 +11,21 @@
 	.byte 16,35,24
 	.byte SET_COLOR | BROWN
 	.byte BOX,9,6,27,21
-	.byte 21,33,26,34
 	.byte 13,26,14,27
+	.byte 21,33,26,34
 	.byte HLIN,9,25,22
 	.byte 21,24,24
 	.byte HLIN_ADD_RSAME,18	; 18 24 25
 	.byte HLIN,9,14,27
+	.byte 25,26,31
 	.byte 13,16,35
 	.byte HLIN_ADD,11,17	; 36
-	.byte HLIN,25,26,31
 	.byte VLIN,28,38,9
 	.byte 25,34,16
-	.byte 26,30,25
-	.byte 37,41,17
-	.byte 37,41,27
-	.byte 35,36,26
+	.byte VLIN_ADD,37,41	; 17
+	.byte VLIN,26,30,25
+	.byte VLIN_ADD,35,36	; 26
+	.byte 37,41	; 27
 	.byte PLOT,26,32
 	.byte SET_COLOR | PINK
 	.byte BOX,9,6,20,22
@@ -40,8 +40,8 @@
 	.byte 12,14	; 27
 	.byte 9,12	; 28
 	.byte HLIN,23,25,34
-	.byte 11,15,37
-	.byte 21,22,35
+	.byte HLIN_ADD,21,22	; 35
+	.byte HLIN,11,15,37
 	.byte VLIN,25,27,32
 	.byte PLOT,15,36
 	.byte 9,38
@@ -51,8 +51,8 @@
 	.byte BOX_ADD_LSAME,7,25 ; 4, 24
 	.byte 6,30
 	.byte 5,41
-	.byte HLIN,6,14,7
-	.byte 7,14,6
+	.byte HLIN,7,14,6
+	.byte HLIN_ADD_RSAME,6	; 6 14 7
 	.byte SET_COLOR | GREY1
 	.byte BOX,6,7,8,9
 	.byte BOX_ADD_RSAME,7,17
@@ -62,17 +62,17 @@
 	.byte BOX_ADD_LSAME,9,25 ; 8, 24
 	.byte HLIN,7,9,18
 	.byte VLIN,26,29,33
-	.byte 33,36,35
-	.byte 30,32,34
+	.byte VLIN_ADD,30,32	; 34
+	.byte 33,36	; 35
 	.byte PLOT,7,6
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte VLIN,19,24,15
-	.byte 19,22,10
-	.byte 23,25,11
-	.byte 17,18,14
+	.byte VLIN,19,22,10
+	.byte VLIN_ADD,23,25	; 11
+	.byte VLIN,17,18,14
+	.byte VLIN_ADD,19,24	; 15
 	.byte SET_COLOR | RED
 	.byte PLOT,11,24
 	.byte SET_COLOR | YELLOW
 	.byte 13,23
 	.byte END
-; total size = 244
+; total size = 243

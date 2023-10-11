@@ -20,7 +20,8 @@
 	.byte HLIN_ADD,15,27	; 21
 	.byte HLIN_ADD_LSAME,25 ; 15, 25, 22
 	.byte HLIN,16,21,23
-	.byte 25,27,25
+	.byte HLIN_ADD,17,18	; 24
+	.byte 25,27	; 25
 	.byte HLIN_ADD_RSAME,22	; 22 27 26
 	.byte HLIN,19,28,27
 	.byte HLIN_ADD,20,29	; 28
@@ -31,18 +32,17 @@
 	.byte HLIN_ADD_RSAME,26	; 26 31 37
 	.byte HLIN,28,32,40
 	.byte HLIN_ADD_LSAME,33 ; 28, 33, 41
-	.byte HLIN,17,18,24
 	.byte SET_COLOR | GREEN
-	.byte BOX,4,12,10,13
-	.byte BOX_ADD_LSAME,11,15 ; 4, 14
+	.byte BOX,4,10,9,11
+	.byte BOX_ADD_LSAME,10,13 ; 4, 12
+	.byte 11,15
 	.byte 12,23
 	.byte 14,27
 	.byte 16,41
-	.byte BOX,4,10,9,11
 	.byte PLOT,8,9
 	.byte SET_COLOR | LIGHT_GREEN
-	.byte BOX,15,39,18,41
-	.byte 16,32,18,38
+	.byte BOX,16,32,18,38
+	.byte BOX_ADD_RSAME,15,41
 	.byte HLIN,10,12,22
 	.byte HLIN_ADD,9,13	; 23
 	.byte 8,12	; 24
@@ -68,4 +68,4 @@
 	.byte 12,7
 	.byte 13,8
 	.byte END
-; total size = 208
+; total size = 202

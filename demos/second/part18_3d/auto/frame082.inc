@@ -38,11 +38,11 @@
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,16,25,19,26
 	.byte BOX_ADD,20,21,28	; 27
-	.byte HLIN,16,21,26
-	.byte 17,19,24
+	.byte HLIN,17,19,24
+	.byte 16,21,26
 	.byte VLIN,25,28,16
-	.byte 22,23,17
-	.byte 24,25,21
+	.byte VLIN_ADD,22,23	; 17
+	.byte VLIN,24,25,21
 	.byte PLOT,20,29
 	.byte SET_COLOR | DARK_BLUE
 	.byte BOX,18,24,19,25
@@ -57,4 +57,4 @@
 	.byte SET_COLOR | ORANGE
 	.byte 18,27
 	.byte END
-; total size = 166
+; total size = 167

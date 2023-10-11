@@ -6,19 +6,19 @@
 	.byte 16,23,24	; 18
 	.byte 17,19,28	; 25
 	.byte SET_COLOR | DARK_BLUE
-	.byte BOX,4,10,8,17
-	.byte 4,6,7,9
+	.byte BOX,4,6,7,9
+	.byte BOX_ADD_LSAME,8,17 ; 4, 10
 	.byte SET_COLOR | GREY1
-	.byte 32,6,35,7
+	.byte BOX,32,6,35,7
 	.byte 30,9,35,10
 	.byte 28,12,35,13
 	.byte 26,15,35,16
 	.byte 4,18,9,21
 	.byte BOX_ADD_LSAME,10,23 ; 4, 22
-	.byte BOX,30,36,35,37
+	.byte BOX,33,32,35,33
+	.byte 30,36,35,37
 	.byte 28,39,35,40
 	.byte 13,39,16,40
-	.byte 33,32,35,33
 	.byte HLIN,22,25,7
 	.byte HLIN_ADD,21,27	; 8
 	.byte HLIN,31,35,8

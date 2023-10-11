@@ -4,7 +4,8 @@
 	.byte HLIN_ADD_LSAME,31 ; 10, 31, 40
 	.byte 30
 	.byte SET_COLOR | GREEN
-	.byte BOX,30,16,35,19
+	.byte BOX,32,14,34,15
+	.byte BOX_ADD,30,35,19	; 16
 	.byte BOX_ADD_RSAME,29,21
 	.byte BOX,27,23,35,24
 	.byte 13,24,22,26
@@ -12,7 +13,6 @@
 	.byte BOX,12,31,21,32
 	.byte 4,32,9,41
 	.byte 4,34,21,35
-	.byte 32,14,34,15
 	.byte HLIN,17,19,20
 	.byte HLIN_ADD,16,20	; 21
 	.byte 28,35	; 22
@@ -29,7 +29,8 @@
 	.byte BOX,24,6,30,7
 	.byte BOX_ADD,21,22,11	; 8
 	.byte 4,6,14	; 12
-	.byte BOX,26,13,27,16
+	.byte BOX,17,12,18,14
+	.byte 26,13,27,16
 	.byte 4,15,7,22
 	.byte 22,17,23,20
 	.byte 4,23,8,31
@@ -42,11 +43,10 @@
 	.byte 21,37,22,40
 	.byte 18,38,19,41
 	.byte 6,40,9,41
-	.byte 17,12,18,14
 	.byte HLIN,25,29,8
-	.byte VLIN,14,18,15
-	.byte 7,10,14
-	.byte 6,7,17
+	.byte VLIN,7,10,14
+	.byte VLIN_ADD,14,18	; 15
+	.byte VLIN,6,7,17
 	.byte PLOT,22,7
 	.byte 21,12
 	.byte 27,12
@@ -58,15 +58,15 @@
 	.byte 25,24
 	.byte 25,38
 	.byte SET_COLOR | LIGHT_GREEN
-	.byte BOX,33,21,35,22
-	.byte 31,24,35,27
+	.byte BOX,34,18,35,20
+	.byte BOX_ADD_RSAME,33,22
+	.byte BOX,31,24,35,27
 	.byte 17,27,21,28
 	.byte BOX_ADD_RSAME,15,31
 	.byte BOX,19,33,21,35
 	.byte 11,35,13,37
 	.byte BOX_ADD,12,14,39	; 38
 	.byte 6,8,41	; 40
-	.byte BOX,34,18,35,20
 	.byte HLIN,32,35,23
 	.byte HLIN_ADD,20,22	; 24
 	.byte HLIN_ADD_RSAME,19	; 19 22 25
@@ -82,21 +82,21 @@
 	.byte 15,32
 	.byte 8,38
 	.byte SET_COLOR | PINK
-	.byte BOX,32,32,34,33
-	.byte 29,13,30,15
+	.byte BOX,29,13,30,15
+	.byte 32,32,34,33
 	.byte HLIN,29,31,7
 	.byte 32,33,34
 	.byte 33,34,38
 	.byte VLIN,8,12,29
-	.byte 35,37,33
-	.byte 16,17,30
-	.byte 30,31,32
+	.byte VLIN_ADD,16,17	; 30
+	.byte VLIN,30,31,32
+	.byte VLIN_ADD,35,37	; 33
 	.byte PLOT,33,39
 	.byte SET_COLOR | ORANGE
-	.byte VLIN,34,40,35
-	.byte 28,33,34
+	.byte VLIN,40,41,14
 	.byte 37,41,19
-	.byte 40,41,14
+	.byte 28,33,34
+	.byte VLIN_ADD,34,40	; 35
 	.byte SET_COLOR | LIGHT_BLUE
 	.byte BOX,26,7,28,8
 	.byte HLIN,26,32,6
@@ -111,4 +111,4 @@
 	.byte SET_COLOR | GREY1
 	.byte HLIN,29,30,6
 	.byte END
-; total size = 361
+; total size = 362

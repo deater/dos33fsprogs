@@ -9,11 +9,11 @@
 	.byte 13,9,24,12
 	.byte BOX_ADD,15,16,28	; 13
 	.byte BOX,21,13,22,28
+	.byte 18,21,19,29
 	.byte 6,32,18,39
 	.byte 24,32,27,35
 	.byte 25,38,35,41
 	.byte 6,40,17,41
-	.byte 18,21,19,29
 	.byte HLIN,6,9,24
 	.byte 8,9,28
 	.byte HLIN_ADD,7,27	; 29

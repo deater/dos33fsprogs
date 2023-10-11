@@ -5,10 +5,10 @@
 	.byte BOX_ADD_LSAME,22,37 ; 7, 34
 	.byte BOX,8,38,22,41
 	.byte SET_COLOR | LIGHT_BLUE
-	.byte 8,13,20,14
-	.byte BOX_ADD_LSAME,21,16 ; 8, 15
-	.byte BOX,7,17,21,20
 	.byte 8,11,19,12
+	.byte BOX_ADD_LSAME,20,14 ; 8, 13
+	.byte 21,16
+	.byte BOX,7,17,21,20
 	.byte HLIN,13,16,6
 	.byte HLIN_ADD,12,17	; 7
 	.byte HLIN_ADD_RSAME,11	; 11 17 8
@@ -22,4 +22,4 @@
 	.byte SET_COLOR | MEDIUM_BLUE
 	.byte 30,35,4
 	.byte END
-; total size = 68
+; total size = 66

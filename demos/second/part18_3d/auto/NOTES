@@ -8,6 +8,11 @@ todo, compressed:
 	+ ???
 
 
+Before VLIN_ADD (at frame 130):		23488 bytes
+After:					23330 bytes (not worth it?)
+
+
+
 7680 bytes: try1: all plots, even zeros (4 bytes each pixel)
 4537 bytes: try2: all plots, don't write black pixels
 3701 bytes: try3: only do color if it changes

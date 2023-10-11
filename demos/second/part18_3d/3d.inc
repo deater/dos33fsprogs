@@ -3,38 +3,38 @@ frame15:					; handmade / auto
 	.include "auto/frame016.inc"
 	.include "handmade/frame017.inc"	; 51 / 52 (1 byte)
 	.include "auto/frame018.inc"		; 54 / 52
-	.include "handmade/frame019.inc"	; 65 / 73 (8 byte)
-	.include "handmade/frame020.inc"	; 71 / 78 (7 bytes)
-	.include "handmade/frame021.inc"	; 68 / 69 (1 byte)
-	.include "handmade/frame022.inc"	; 103 / 106 (3 bytes)
-	.include "handmade/frame023.inc"	; 127 / 136 (9 bytes)
-	.include "handmade/frame024.inc"	; 139 / 167 (28 bytes)
-	.include "handmade/frame025.inc"	; 143 / 167 (24 bytes)
-	.include "handmade/frame026.inc"	; 151 / 158 (7 bytes)
+	.include "handmade/frame019.inc"	; 65 / 70 (5 bytes)
+	.include "handmade/frame020.inc"	; 71 / 76 (5 bytes)
+	.include "auto/frame021.inc"		; 68 / 68
+	.include "auto/frame022.inc"		; 103 / 103
+	.include "handmade/frame023.inc"	; 127 / 135 (8 bytes)
+	.include "handmade/frame024.inc"	; 139 / 166 (27 bytes)
+	.include "handmade/frame025.inc"	; 143 / 166 (23 bytes)
+	.include "handmade/frame026.inc"	; 151 / 156 (5 bytes)
 	.include "handmade/frame027.inc"	; 131 / 146 (15 bytes)
-	.include "handmade/frame028.inc"	; 134 / 161 (27 bytes)
-	.include "handmade/frame029.inc"	; 109 / 123 (14 bytes)
+	.include "handmade/frame028.inc"	; 134 / 160 (26 bytes)
+	.include "handmade/frame029.inc"	; 109 / 115 (6 bytes)
 	.include "handmade/frame030.inc"	; 81 / 86 (5 bytes)
-	.include "handmade/frame031.inc"	; handmade 7 bytes smaller
-	.include "auto/frame032.inc"		; handmade -4 bytes smaller
-	.include "auto/frame033.inc"		; handmade -3 bytes smaller
-	.include "handmade/frame034.inc"	; handmade 16 bytes smaller
-	.include "handmade/frame035.inc"	; handmade 11 bytes smaller
-	.include "handmade/frame036.inc"	; handmade  6 bytes smaller
-	.include "handmade/frame037.inc"	; handmade 32 bytes smaller
-	.include "handmade/frame038.inc"	; handmade 54 bytes smaller
-	.include "handmade/frame039.inc"	; handmade 18 bytes smaller
-	.include "handmade/frame040.inc"	; handmade 8 bytes smaller
-	.include "handmade/frame041.inc"	; handmade 3 bytes smaller
-	.include "auto/frame042.inc"		; handmade -11 bytes smaller
-	.include "handmade/frame043.inc"	; handmade 63 bytes smaller
-	.include "handmade/frame044.inc"	; handmade 35 bytes smaller
-	.include "handmade/frame045.inc"	; handmade 26 bytes smaller
-	.include "handmade/frame046.inc"	; handmade 18 bytes smaller
-	.include "handmade/frame047.inc"	; handmade 18 bytes smaller
-	.include "handmade/frame048.inc"	; handmade 15 bytes smaller
-	.include "handmade/frame049.inc"	; handmade 18 bytes smaller
-	.include "handmade/frame050.inc"	; handmade 28 bytes smaller
+	.include "auto/frame031.inc"		; 60 / 55 (-5 bytes)
+	.include "auto/frame032.inc"		; 62 / 57 (-5 bytes)
+	.include "auto/frame033.inc"		; 87 / 83 (-4 bytes)
+	.include "handmade/frame034.inc"	; 116 / 123 (7 bytes)
+	.include "handmade/frame035.inc"	; 147 / 156 (9 bytes)
+	.include "handmade/frame036.inc"	; 155 / 156 (1 byte)
+	.include "handmade/frame037.inc"	; 154 / 179 (25 bytes)
+	.include "handmade/frame038.inc"	; 148 / 166 (18 bytes)
+	.include "handmade/frame039.inc"	; 136 / 139 ( 3 bytes)
+	.include "handmade/frame040.inc"	; 102 / 104 (3 bytes)
+	.include "handmade/frame041.inc"	; 65  / 66 (1 byte)
+	.include "auto/frame042.inc"		; 92  / 78 (-14 bytes)
+	.include "handmade/frame043.inc"	; 233 / 273 (40 bytes)
+	.include "handmade/frame044.inc"	; 202 / 220 (18 bytes)
+	.include "handmade/frame045.inc"	; 182 / 204 (22 bytes)
+	.include "handmade/frame046.inc"	; 172 / 174 (2 bytes)
+	.include "handmade/frame047.inc"	; 191 / 202 (11 bytes)
+	.include "handmade/frame048.inc"	; 219 / 226 (7 bytes)
+	.include "handmade/frame049.inc"	; 189 / 198 (9 bytes)
+	.include "handmade/frame050.inc"	; 264 / 288 (24 bytes)
 	.include "auto/frame051.inc"	;
 	.include "auto/frame052.inc"	;
 	.include "auto/frame053.inc"	;
@@ -110,7 +110,17 @@ frame15:					; handmade / auto
 	.include "auto/frame123.inc"	;
 	.include "auto/frame124.inc"	;
 	.include "auto/frame125.inc"	;
+	.include "auto/frame126.inc"	;
+	.include "auto/frame127.inc"	;
+	.include "auto/frame128.inc"	;
+	.include "auto/frame129.inc"	;
+	.include "auto/frame130.inc"	;
+;	.include "auto/frame131.inc"	;
+;	.include "auto/frame132.inc"	;
+;	.include "auto/frame133.inc"	;
+;	.include "auto/frame134.inc"	;
+;	.include "auto/frame135.inc"	;
 
 
-num_scenes=(125-15)+1
+num_scenes=(130-15)+1
 

@@ -23,6 +23,7 @@ HLIN_ADD_RSAME=	$88
 BOX_ADD=	$89
 BOX_ADD_LSAME=	$8A
 BOX_ADD_RSAME=	$8B
+VLIN_ADD=	$8C
 
 BLACK		= $00
 RED		= $01
@@ -129,11 +130,13 @@ draw_table_l:
 	.byte	<(draw_plot-1)
 	.byte	<(draw_hlin_add-1),<(draw_hlin_add_lsame-1),<(draw_hlin_add_rsame-1)
 	.byte	<(draw_box_add-1),<(draw_box_add_lsame-1),<(draw_box_add_rsame-1)
+	.byte	<(draw_vlin_add-1)
 draw_table_h:
 	.byte	>(clear_screen-1),>(draw_box-1),>(draw_hlin-1),>(draw_vlin-1)
 	.byte	>(draw_plot-1)
 	.byte	>(draw_hlin_add-1),>(draw_hlin_add_lsame-1),>(draw_hlin_add_rsame-1)
 	.byte	>(draw_box_add-1),>(draw_box_add_lsame-1),>(draw_box_add_rsame-1)
+	.byte	>(draw_vlin_add-1)
 
 	;=================================
 	;=================================
@@ -473,8 +476,24 @@ draw_box_add_rsame:
 	jmp	update_pointer
 
 
+	;=================================
+	;=================================
+	; draw vlin add
+	;=================================
+	;=================================
+draw_vlin_add:
+	lda	(INL),Y
+	sta	Y1
+	iny
+	lda	(INL),Y
+	sta	Y2
 
+	inc	X1
 
+	jsr	draw_vlin_common
+
+	lda	#2
+	jmp	update_pointer
 
 	;=================================
 	;=================================
@@ -491,8 +510,14 @@ draw_vlin:
 	iny
 	lda	(INL),Y
 	sta	X1
+	jsr	draw_vlin_common
+
+	lda	#3
+	jmp	update_pointer
 
 
+	;================================
+draw_vlin_common:
 	lda	Y2
 	lsr
 	; if even, go to one less
@@ -566,8 +591,9 @@ done_vlin_yloop:
 definitely_odd_vlin:
 	; done
 
-	lda	#3
-	jmp	update_pointer
+	rts
+
+
 
 
 	;=================================
