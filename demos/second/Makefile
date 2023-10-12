@@ -72,7 +72,7 @@ second.o:	second.s zx02_optim.s \
 ####
 
 START:	start.o
-	ld65 -o START start.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o START start.o -C ../../linker_scripts/apple2_2000.inc
 
 start.o:	start.s zx02_optim.s \
 	text_print.s title.s \

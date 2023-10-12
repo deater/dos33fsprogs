@@ -238,7 +238,8 @@ load_loop:
 	; start music
 	;=======================
 
-	lda	#2
+	lda	#3
+;	lda	#2
 
 	sta	WHICH_LOAD
 
@@ -247,7 +248,7 @@ load_loop:
 
 	cli
 
-	jmp	$6000
+	jmp	$4000
 
 forever:
 	jmp	forever

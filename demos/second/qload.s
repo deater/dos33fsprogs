@@ -23,7 +23,7 @@ qload_start:
 
 	jsr	load_file
 
-	jmp	$4000			; jump to ZW
+	jmp	$2000			; jump to ZW
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -163,7 +163,7 @@ which_disk_array:
 	.byte 1,1,1,1		; SECOND, MUSIC, INTRO, 3D
 
 load_address_array:
-        .byte $40,$D0,$60,$60	; SECOND, MUSIC, INTRO, 3D
+        .byte $20,$D0,$60,$40	; SECOND, MUSIC, INTRO, 3D
 
 track_array:
         .byte  5, 3, 8,11	; SECOND, MUSIC, ?, ?
@@ -172,7 +172,7 @@ sector_array:
         .byte  0, 0, 0, 0	; SECOND, MUSIC, ?, ?
 
 length_array:
-        .byte  16, 32, 84, 96	; SECOND, MUSIC, ?, ?
+        .byte  16, 32, 84, 128	; SECOND, MUSIC, ?, ?
 
 	.include	"lc_detect.s"
 	.include	"wait.s"

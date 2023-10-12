@@ -115,12 +115,22 @@ frame15:					; handmade / auto
 	.include "auto/frame128.inc"	;
 	.include "auto/frame129.inc"	;
 	.include "auto/frame130.inc"	;
-;	.include "auto/frame131.inc"	;
-;	.include "auto/frame132.inc"	;
-;	.include "auto/frame133.inc"	;
-;	.include "auto/frame134.inc"	;
-;	.include "auto/frame135.inc"	;
+	.include "auto/frame131.inc"	;
+	.include "auto/frame132.inc"	;
+	.include "auto/frame133.inc"	;
+	.include "auto/frame134.inc"	;
+	.include "auto/frame135.inc"	;
+	.include "auto/frame136.inc"	;
+	.include "auto/frame137.inc"	;
+	.include "auto/frame138.inc"	;
+	.include "auto/frame139.inc"	;
+	.include "auto/frame140.inc"	;
+	.include "auto/frame141.inc"	;
+	.include "auto/frame142.inc"	;
+	.include "auto/frame143.inc"	;
+	.include "auto/frame144.inc"	;
+	.include "auto/frame145.inc"	;
 
 
-num_scenes=(130-15)+1
+num_scenes=(145-15)+1
 
