@@ -160,19 +160,24 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; SECOND, MUSIC, INTRO, 3D
+	.byte 1,1,1,1		; SECOND, MUSIC, INTRO, TUNNEL
+	.byte 1,1		; 3D, OCEAN
 
 load_address_array:
-        .byte $20,$D0,$60,$40	; SECOND, MUSIC, INTRO, 3D
+        .byte $20,$D0,$60,$60	; SECOND, MUSIC, INTRO, TUNNEL
+	.byte $40,$60		; 3D, OCEAN
 
 track_array:
-        .byte  5, 3, 8,11	; SECOND, MUSIC, ?, ?
+        .byte  5, 3, 8, 11	; SECOND, MUSIC, INTRO, TUNNEL
+	.byte 20,13		; 3D, OCEAN
 
 sector_array:
-        .byte  0, 0, 0, 0	; SECOND, MUSIC, ?, ?
+        .byte  0, 0, 0, 0	; SECOND, MUSIC, INTRO, TUNNEL
+	.byte  0, 0		; 3D, OCEAN
 
 length_array:
-        .byte  16, 32, 84, 128	; SECOND, MUSIC, ?, ?
+        .byte  16, 32, 84, 16	; SECOND, MUSIC, INTRO, TUNNEL
+	.byte  128,64		; 3D, OCEAN
 
 	.include	"lc_detect.s"
 	.include	"wait.s"

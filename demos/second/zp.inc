@@ -139,8 +139,7 @@ ANGLE	= $9A
 			;COLOR1		=	$E0
 			;COLOR2		=	$E1
 			;MATCH		=	$E2
-XX	=	$E3
-YY	=	$E4
+
 HGR_COLOR       = $E4
 			;SHIPY		=	$E4
 			;YADD		=	$E5
@@ -165,25 +164,45 @@ OFFSET         = $EF
 
 IRQ_COUNTDOWN	= $F0
 
-LASTKEY         = $F1
-PADDLE_STATUS   = $F2
+;LASTKEY         = $F1
+;PADDLE_STATUS   = $F2
 
 SPRITETEMP	=	$F2
 XPOS		=	$F3
 YPOS		=	$F4
+XSAVE		=	$F6
+SCROLL_IN	=	$F7
+SCROLL_OUT	=	$F8
+STRING_COUNT	=	$F9
 TEMP		=	$FA
+MEMCOUNT	=	$FA
 TEMPY		=	$FB
+LEAD0		=	$FB
 INL		=	$FC
 INH		=	$FD
 OUTL		=	$FE
 OUTH		=	$FF
 
-XSAVE   = $F6
-SCROLL_IN=$F7
-SCROLL_OUT=$F8
-STRING_COUNT = $F9
-MEMCOUNT= $FA
-LEAD0   = $FB
+; tunnel
+
+RR              = $F0
+COUNT           = $F1
+XX		= $F2
+MINUSXX         = $F3
+YY		= $F4
+MINUSYY         = $F5
+D               = $F6
+R               = $F7
+CX              = $F8
+CY              = $F9
+
+
+
+
+
+
+
+
 
 
 

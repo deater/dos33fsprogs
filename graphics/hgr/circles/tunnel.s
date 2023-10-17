@@ -1,64 +1,65 @@
-; Intro
+; tunnel
 
-;
-; by deater (Vince Weaver) <vince@deater.net>
+; D0+ used by HGR routines
 
-.include "../zp.inc"
-.include "../hardware.inc"
-.include "../qload.inc"
+HGR_COLOR	= $E4
+HGR_PAGE	= $E6
 
-div7_table     = $b800
-mod7_table     = $b900
-hposn_high     = $ba00
-hposn_low      = $bb00
-
-
-
-.if 0
-R		= $FC
 RR		= $F5
+COUNT		= $F6
+
+
+
+XX		= $F7
+MINUSXX		= $F8
+YY		= $F9
+MINUSYY		= $FA
+
 D		= $FB
+R		= $FC
 CX		= $FD
 CY		= $FE
-COUNT		= $F6
-MINUSXX		= $F8
-MINUSYY		= $FA
-.endif
+FRAME		= $FF
+
+; soft-switches
+
+KEYPRESS	= $C000
+KEYRESET	= $C010
+
+; ROM routines
+
+HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
+HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
+HPLOT0		= $F457		; plot at (Y,X), (A)
+HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
+COLORTBL	= $F6F6
+PLOT		= $F800		; PLOT AT Y,A (A colors output, Y preserved)
+NEXTCOL		= $F85F		; COLOR=COLOR+3
+SETCOL		= $F864		; COLOR=A
+SETGR		= $FB40		; set graphics and clear LO-RES screen
+BELL2		= $FBE4
+WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 tunnel:
-
-	;=====================
-	; initializations
-	;=====================
-
-setup_graphics:
-
-	sei
-
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
-	bit	PAGE1
-
-	lda	#0
-	jsr	hgr_page1_clearscreen
-
-	jsr	hgr_make_tables
-
-
 	; from R=12 to R=256 or so
 
-tunnel_again:
-	lda	#0
+
+	jsr	HGR2
+
+	lda	#10
 	sta	RR
 
 draw_next:
 
 	ldx	RR
-	lda	star_z,X
-	tax
 	lda	radii,X
 	sta	R
+
+
+;	lda	KEYPRESS
+;	bpl	draw_next
+
+;	bit	KEYRESET
 
 
 	lda	#128
@@ -125,11 +126,6 @@ store_D:
 	sta	D
 
 do_plots:
-	lda	XX
-	and	#$3
-	bne	done2
-
-
 	; setup constants
 
 	lda	XX
@@ -180,20 +176,16 @@ xnoc:
 
 	lda	CY
 	clc
-	adc	XX,Y		; A has Y-coord
+	adc	XX,Y
 
 	ldy	#0
 
-	; want X/7 into X
-	; want A looked up into OUTL
-
-	jsr	hplot		; plot at (Y,X), (A)
+	jsr	HPLOT0		; plot at (Y,X), (A)
 
 	dec	COUNT
 	bpl	pos_loop
 
 
-done2:
 	; IFY>=XTHEN4
 	lda	YY
 	cmp	XX
@@ -204,24 +196,13 @@ done:
 	clc
 	adc	#1
 	sta	RR
-
-	cmp	#19
-	beq	done_frame
+stop:
+	cmp	#250
+	beq	stop
 
 	; GOTO1
 	jmp	draw_next
 
-done_frame:
-	lda	#0
-	jsr	hgr_page1_clearscreen
-
-	ldx	#19
-move_circles:
-	dec	star_z,X
-	dex
-	bpl	move_circles
-
-	jmp	tunnel_again
 
 radii:
 	.byte <4000, <3200, <1600, <1066, <800, <640, <533, <457
@@ -256,35 +237,3 @@ radii:
 	.byte  13, 13, 13, 13, 13, 13, 13, 13
 	.byte  13, 13, 13, 13, 13, 13, 13, 12
 	.byte  12, 12, 12, 12, 12, 12, 12, 12
-
-; num-stars = 20
-
-star_z:
-	.byte 15,26,38,50,63,75,78,100,112,125,137
-	.byte 150,162,175,187,200,212,224,237
-
-
-
-
-
-	.include	"../wait_keypress.s"
-	.include	"../hgr_table.s"
-	.include	"../hgr_clear_screen.s"
-
-
-	; A is Ycoord value
-	; X is Xcoord value
-hplot:
-	tay
-	lda	hposn_low,Y
-	sta	OUTL
-	lda	hposn_high,Y
-	sta	OUTH
-
-	ldy	div7_table,X
-
-	lda	mod7_table,X
-
-	sta	(OUTL),Y
-
-	rts

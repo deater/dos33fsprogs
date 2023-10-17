@@ -130,7 +130,17 @@ frame15:					; handmade / auto
 	.include "auto/frame143.inc"	;
 	.include "auto/frame144.inc"	;
 	.include "auto/frame145.inc"	;
+	.include "auto/frame146.inc"	;
+	.include "auto/frame147.inc"	;
+	.include "auto/frame148.inc"	;
+	.include "auto/frame149.inc"	;
+	.include "auto/frame150.inc"	;
+	.include "auto/frame151.inc"	;
+	.include "auto/frame152.inc"	;
+	.include "auto/frame153.inc"	;
+	.include "auto/frame154.inc"	;
+	.include "auto/frame155.inc"	;
 
 
-num_scenes=(145-15)+1
+num_scenes=(155-15)+1
 

@@ -238,8 +238,11 @@ load_loop:
 	; start music
 	;=======================
 
-	lda	#3
-;	lda	#2
+	lda	#5		; OCEAN
+
+;	lda	#4		; THREED
+;	lda	#3		; TUNNEL
+;	lda	#2		; INTRO
 
 	sta	WHICH_LOAD
 
@@ -248,7 +251,9 @@ load_loop:
 
 	cli
 
-	jmp	$4000
+;	jmp	$4000
+
+	jmp	$6000
 
 forever:
 	jmp	forever
