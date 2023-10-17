@@ -14,6 +14,12 @@ OCEAN:	ocean.o
 	ld65 -o OCEAN ocean.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 ocean.o:	ocean.s ../zx02_optim.s \
+	graphics/frame00000002.hgr.zx02 \
+	graphics/frame00000003.hgr.zx02 \
+	graphics/frame00000004.hgr.zx02 \
+	graphics/frame00000005.hgr.zx02 \
+	graphics/frame00000006.hgr.zx02 \
+	graphics/frame00000007.hgr.zx02 \
 	graphics/frame00000024.hgr.zx02 \
 	graphics/frame00000025.hgr.zx02 \
 	graphics/frame00000026.hgr.zx02 \

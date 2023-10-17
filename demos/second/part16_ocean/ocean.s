@@ -62,10 +62,10 @@ ocean_loop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#14
+	cmp	#20
 	bne	no_count_oflo
 
-	lda	#0
+	lda	#6
 	sta	COUNT
 no_count_oflo:
 
@@ -76,6 +76,9 @@ no_count_oflo:
 	.include	"../zx02_optim.s"
 
 frame_data_l:
+	.byte <frame02_data,<frame03_data,<frame04_data,<frame05_data
+	.byte <frame06_data,<frame07_data
+
 	.byte <frame24_data,<frame25_data,<frame26_data,<frame27_data
 	.byte <frame28_data,<frame29_data,<frame30_data,<frame31_data
 
@@ -83,11 +86,28 @@ frame_data_l:
 	.byte <frame27_data,<frame26_data,<frame25_data;,<frame28_data
 
 frame_data_h:
+	.byte >frame02_data,>frame03_data,>frame04_data,>frame05_data
+	.byte >frame06_data,>frame07_data
+
 	.byte >frame24_data,>frame25_data,>frame26_data,>frame27_data
 	.byte >frame28_data,>frame29_data,>frame30_data,>frame31_data
 
 	.byte >frame30_data,>frame29_data,>frame28_data
 	.byte >frame27_data,>frame26_data,>frame25_data;,>frame24_data
+
+frame02_data:
+	.incbin "graphics/frame00000002.hgr.zx02"
+frame03_data:
+	.incbin "graphics/frame00000003.hgr.zx02"
+frame04_data:
+	.incbin "graphics/frame00000004.hgr.zx02"
+frame05_data:
+	.incbin "graphics/frame00000005.hgr.zx02"
+frame06_data:
+	.incbin "graphics/frame00000006.hgr.zx02"
+frame07_data:
+	.incbin "graphics/frame00000007.hgr.zx02"
+
 
 frame24_data:
 	.incbin "graphics/frame00000024.hgr.zx02"

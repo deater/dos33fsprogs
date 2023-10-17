@@ -4,10 +4,63 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
 
-all:	frame00000024.hgr.zx02 frame00000025.hgr.zx02 \
+all:	frame00000002.hgr.zx02 frame00000003.hgr.zx02 \
+	frame00000004.hgr.zx02 frame00000005.hgr.zx02 \
+	frame00000006.hgr.zx02 frame00000007.hgr.zx02 \
+	frame00000024.hgr.zx02 frame00000025.hgr.zx02 \
 	frame00000026.hgr.zx02 frame00000027.hgr.zx02 \
 	frame00000028.hgr.zx02 frame00000029.hgr.zx02 \
 	frame00000030.hgr.zx02 frame00000031.hgr.zx02
+
+####
+
+frame00000002.hgr.zx02:	frame00000002.hgr
+	$(ZX02) frame00000002.hgr frame00000002.hgr.zx02
+
+frame00000002.hgr:	frame00000002.png
+	$(PNG_TO_HGR) frame00000002.png > frame00000002.hgr
+
+####
+
+frame00000003.hgr.zx02:	frame00000003.hgr
+	$(ZX02) frame00000003.hgr frame00000003.hgr.zx02
+
+frame00000003.hgr:	frame00000003.png
+	$(PNG_TO_HGR) frame00000003.png > frame00000003.hgr
+
+####
+
+frame00000004.hgr.zx02:	frame00000004.hgr
+	$(ZX02) frame00000004.hgr frame00000004.hgr.zx02
+
+frame00000004.hgr:	frame00000004.png
+
+	$(PNG_TO_HGR) frame00000004.png > frame00000004.hgr
+
+####
+
+frame00000005.hgr.zx02:	frame00000005.hgr
+	$(ZX02) frame00000005.hgr frame00000005.hgr.zx02
+
+frame00000005.hgr:	frame00000005.png
+	$(PNG_TO_HGR) frame00000005.png > frame00000005.hgr
+
+####
+
+frame00000006.hgr.zx02:	frame00000006.hgr
+	$(ZX02) frame00000006.hgr frame00000006.hgr.zx02
+
+frame00000006.hgr:	frame00000006.png
+	$(PNG_TO_HGR) frame00000006.png > frame00000006.hgr
+
+####
+
+frame00000007.hgr.zx02:	frame00000007.hgr
+	$(ZX02) frame00000007.hgr frame00000007.hgr.zx02
+
+frame00000007.hgr:	frame00000007.png
+	$(PNG_TO_HGR) frame00000007.png > frame00000007.hgr
+
 
 ####
 
