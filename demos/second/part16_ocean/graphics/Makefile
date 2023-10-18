@@ -7,6 +7,9 @@ PNG2GR = ../../../../utils/gr-utils/png2gr
 all:	frame00000002.hgr.zx02 frame00000003.hgr.zx02 \
 	frame00000004.hgr.zx02 frame00000005.hgr.zx02 \
 	frame00000006.hgr.zx02 frame00000007.hgr.zx02 \
+	frame00000018.hgr.zx02 frame00000019.hgr.zx02 \
+	frame00000020.hgr.zx02 frame00000021.hgr.zx02 \
+	frame00000022.hgr.zx02 frame00000023.hgr.zx02 \
 	frame00000024.hgr.zx02 frame00000025.hgr.zx02 \
 	frame00000026.hgr.zx02 frame00000027.hgr.zx02 \
 	frame00000028.hgr.zx02 frame00000029.hgr.zx02 \
@@ -61,6 +64,53 @@ frame00000007.hgr.zx02:	frame00000007.hgr
 frame00000007.hgr:	frame00000007.png
 	$(PNG_TO_HGR) frame00000007.png > frame00000007.hgr
 
+####
+
+frame00000018.hgr.zx02:	frame00000018.hgr
+	$(ZX02) frame00000018.hgr frame00000018.hgr.zx02
+
+frame00000018.hgr:	frame00000018.png
+	$(PNG_TO_HGR) frame00000018.png > frame00000018.hgr
+
+####
+
+frame00000019.hgr.zx02:	frame00000019.hgr
+	$(ZX02) frame00000019.hgr frame00000019.hgr.zx02
+
+frame00000019.hgr:	frame00000019.png
+	$(PNG_TO_HGR) frame00000019.png > frame00000019.hgr
+
+####
+
+frame00000020.hgr.zx02:	frame00000020.hgr
+	$(ZX02) frame00000020.hgr frame00000020.hgr.zx02
+
+frame00000020.hgr:	frame00000020.png
+	$(PNG_TO_HGR) frame00000020.png > frame00000020.hgr
+
+####
+
+frame00000021.hgr.zx02:	frame00000021.hgr
+	$(ZX02) frame00000021.hgr frame00000021.hgr.zx02
+
+frame00000021.hgr:	frame00000021.png
+	$(PNG_TO_HGR) frame00000021.png > frame00000021.hgr
+
+####
+
+frame00000022.hgr.zx02:	frame00000022.hgr
+	$(ZX02) frame00000022.hgr frame00000022.hgr.zx02
+
+frame00000022.hgr:	frame00000022.png
+	$(PNG_TO_HGR) frame00000022.png > frame00000022.hgr
+
+####
+
+frame00000023.hgr.zx02:	frame00000023.hgr
+	$(ZX02) frame00000023.hgr frame00000023.hgr.zx02
+
+frame00000023.hgr:	frame00000023.png
+	$(PNG_TO_HGR) frame00000023.png > frame00000023.hgr
 
 ####
 

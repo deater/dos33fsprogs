@@ -62,7 +62,7 @@ ocean_loop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#20
+	cmp	#32
 	bne	no_count_oflo
 
 	lda	#6
@@ -79,21 +79,29 @@ frame_data_l:
 	.byte <frame02_data,<frame03_data,<frame04_data,<frame05_data
 	.byte <frame06_data,<frame07_data
 
+	.byte <frame18_data,<frame19_data
+	.byte <frame20_data,<frame21_data,<frame22_data,<frame23_data
 	.byte <frame24_data,<frame25_data,<frame26_data,<frame27_data
 	.byte <frame28_data,<frame29_data,<frame30_data,<frame31_data
 
-	.byte <frame30_data,<frame29_data,<frame28_data
-	.byte <frame27_data,<frame26_data,<frame25_data;,<frame28_data
+	.byte <frame30_data,<frame29_data
+	.byte <frame28_data,<frame27_data,<frame26_data,<frame25_data
+	.byte <frame24_data,<frame23_data,<frame22_data,<frame21_data
+	.byte <frame20_data,<frame19_data
 
 frame_data_h:
 	.byte >frame02_data,>frame03_data,>frame04_data,>frame05_data
 	.byte >frame06_data,>frame07_data
 
+	.byte >frame18_data,>frame19_data
+	.byte >frame20_data,>frame21_data,>frame22_data,>frame23_data
 	.byte >frame24_data,>frame25_data,>frame26_data,>frame27_data
 	.byte >frame28_data,>frame29_data,>frame30_data,>frame31_data
 
-	.byte >frame30_data,>frame29_data,>frame28_data
-	.byte >frame27_data,>frame26_data,>frame25_data;,>frame24_data
+	.byte >frame30_data,>frame29_data
+	.byte >frame28_data,>frame27_data,>frame26_data,>frame25_data
+	.byte >frame24_data,>frame23_data,>frame22_data,>frame21_data
+	.byte >frame20_data,>frame19_data
 
 frame02_data:
 	.incbin "graphics/frame00000002.hgr.zx02"
@@ -108,7 +116,18 @@ frame06_data:
 frame07_data:
 	.incbin "graphics/frame00000007.hgr.zx02"
 
-
+frame18_data:
+	.incbin "graphics/frame00000018.hgr.zx02"
+frame19_data:
+	.incbin "graphics/frame00000019.hgr.zx02"
+frame20_data:
+	.incbin "graphics/frame00000020.hgr.zx02"
+frame21_data:
+	.incbin "graphics/frame00000021.hgr.zx02"
+frame22_data:
+	.incbin "graphics/frame00000022.hgr.zx02"
+frame23_data:
+	.incbin "graphics/frame00000023.hgr.zx02"
 frame24_data:
 	.incbin "graphics/frame00000024.hgr.zx02"
 frame25_data:

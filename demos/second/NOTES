@@ -1,0 +1,39 @@
+Disk Usage:
+
+fake_bios:	4k	90%
+intro_pan:	10k	33%
+chess_shapes:	12k	5%
+tunnel:		1k	25%
+circles/lines:	4k?	0%
+gorilla:	5k	50%
+leaves:		5k	25%
+lens/rotozoom:	4k	50%
+plasma:		4k?	25%
+plasmacube:	4k?	10%
+dotbounce:	4k?	0%
+transmission:	8k?	0%
+ocean:		24k	90%
+polar:		5k	50%
+3d:		32k	75%
+nuts:		5k	90%
+credits:	8k	0%
+	==============
+		139k
+
+
+RAM usage:
+	MAIN		AUX
+	----		---
+$00	ZP		ZP
+$01	Stack		Stack
+$02-$03
+$04-$07	Lores page1	???	1k
+$08-$0B	Lores page2	???	1k
+$0C-$0F	??		???	1k
+$10-$1F	library code	???	4k
+$20-$3F	hires page1	???	8k
+$40-$5F	hires page2	???	8k
+$60-$BF	current code	???	24k
+$C0-$CF	I/O		I/O
+$D0-$FF	music		???	12k
+$D0-$DF	??		???	4k

@@ -177,7 +177,7 @@ sector_array:
 
 length_array:
         .byte  16, 32, 84, 16	; SECOND, MUSIC, INTRO, TUNNEL
-	.byte  128,64		; 3D, OCEAN
+	.byte  128,96		; 3D, OCEAN
 
 	.include	"lc_detect.s"
 	.include	"wait.s"

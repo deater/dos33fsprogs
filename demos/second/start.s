@@ -249,6 +249,13 @@ load_loop:
 	jsr	load_file
 
 
+	; setup music
+	; ocean=pattern24 (3:07) pattern#43
+
+	lda	#43
+	sta	$55A+$D000		;current_pattern_smc+1
+	jsr	$559+$D000		; pt3_set_pattern
+
 	cli
 
 ;	jmp	$4000
