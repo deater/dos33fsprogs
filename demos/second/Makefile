@@ -6,29 +6,35 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts/
 
-all:	second.dsk
+all:	second_d1.dsk second_d2.dsk
 
-#second.dsk:	HELLO ZW
-#	cp $(EMPTY_DISK) second.dsk
-#	$(DOS33) -y second.dsk SAVE A HELLO
-#	$(DOS33) -y second.dsk BSAVE -a 0x6000 ZW
-
-second.dsk:	QBOOT QLOAD SECOND MUSIC START \
+second_d1.dsk:	QBOOT QLOAD MUSIC START \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
 	./part16_ocean/OCEAN \
 	./part18_3d/THREED
-	cp $(EMPTY_DISK) second.dsk
-	$(DOS33_RAW) second.dsk 0 0 QBOOT	0 1
-	$(DOS33_RAW) second.dsk 0 2 QBOOT	1 1
-	$(DOS33_RAW) second.dsk 0 4 QBOOT	2 1
-	$(DOS33_RAW) second.dsk 1 0 QLOAD	0 0
-	$(DOS33_RAW) second.dsk 3 0 MUSIC	0 0
-	$(DOS33_RAW) second.dsk 5 0 START	0 0
-	$(DOS33_RAW) second.dsk 8 0 ./part01_intropan/INTRO	0 0
-	$(DOS33_RAW) second.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
-	$(DOS33_RAW) second.dsk 13 0 ./part16_ocean/OCEAN	0 0
-	$(DOS33_RAW) second.dsk 20 0 ./part18_3d/THREED	0 0
+	cp $(EMPTY_DISK) second_d1.dsk
+	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT	0 1
+	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT	1 1
+	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT	2 1
+	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD	0 0
+	$(DOS33_RAW) second_d1.dsk 3 0 MUSIC	0 0
+	$(DOS33_RAW) second_d1.dsk 5 0 START	0 0
+	$(DOS33_RAW) second_d1.dsk 8 0 ./part01_intropan/INTRO	0 0
+	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
+	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
+
+second_d2.dsk:	QBOOT QLOAD2 MUSIC2 START \
+	./part18_3d/THREED
+	cp $(EMPTY_DISK) second_d2.dsk
+	$(DOS33_RAW) second_d2.dsk 0 0 QBOOT	0 1
+	$(DOS33_RAW) second_d2.dsk 0 2 QBOOT	1 1
+	$(DOS33_RAW) second_d2.dsk 0 4 QBOOT	2 1
+	$(DOS33_RAW) second_d2.dsk 1 0 QLOAD2	0 0
+	$(DOS33_RAW) second_d2.dsk 3 0 MUSIC2	0 0
+	$(DOS33_RAW) second_d2.dsk 5 0 START	0 0
+	$(DOS33_RAW) second_d2.dsk 20 0 ./part18_3d/THREED	0 0
+
 
 
 ####
@@ -53,11 +59,24 @@ qload.o:	qload.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
-#        hgr.inc simple_sounds.s \
-#       audio.s decompress_fast_v2.s
-#        hgr_hlin.s hgr_vlin.s hgr_box.s hgr_tables.s hgr_14x14_sprite.s \
-#        hgr_sprite.s hgr_partial_restore.s
-	ca65 -o qload.o qload.s -l qload.lst
+	ca65 -o qload.o qload.s -l qload2.lst
+
+####
+
+QLOAD2:	qload2.o
+	ld65 -o QLOAD2 qload2.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
+
+qload2.o:	qload2.s \
+	gr_offsets.s \
+	wait.s wait_a_bit.s \
+	lc_detect.s gr_fast_clear.s \
+	text_print.s start2.s \
+	hardware_detect.s \
+	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard_setup.s interrupt_handler.s \
+	pt3_lib_mockingboard_patch.s
+	ca65 -o qload2.o qload2.s -l qload2.lst
+
 
 ####
 
@@ -81,7 +100,6 @@ start.o:	start.s zx02_optim.s \
 	text_print.s title.s \
 	zp.inc hardware.inc qload.inc music.inc
 	ca65 -o start.o start.s -l start.lst
-
 
 ####
 
@@ -109,6 +127,23 @@ qload.inc:	generate_common QLOAD
 
 ####
 
+qload2.inc:	generate_common QLOAD2
+	./generate_common -a 0x1200 -s load_file qload2.lst > qload2.inc
+	./generate_common -a 0x1200 -s detect_appleii_model qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s clear_all qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s set_normal qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s set_inverse qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s wait qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s wait_a_bit qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s move_and_print qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s detect_language_card qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s mockingboard_detect qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s clear_bottom qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s clear_bottoms qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s clear_screens qload2.lst >> qload2.inc
+
+####
+
 music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s pt3_init_song music.lst > music.inc
 	./generate_common -a 0xd000 -s mockingboard_init music.lst >> music.inc
@@ -121,7 +156,7 @@ music.inc:	generate_common MUSIC
 
 ####
 
-MUSIC:	music.o
+MUSIC:	music.o qload.inc
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
@@ -133,6 +168,21 @@ music.o:	music.s zp.inc \
 	pt3_lib_mockingboard_setup.s \
 	pt3_lib_irq_handler.s
 	ca65 -o music.o music.s -l music.lst
+
+####
+
+MUSIC2:	music2.o qload2.inc
+	ld65 -o MUSIC2 music2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+music2.o:	music2.s zp.inc \
+	music/second_3d.pt3 \
+	pt3_lib_core.s \
+	pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard.inc \
+	pt3_lib_init.s \
+	pt3_lib_mockingboard_setup.s \
+	pt3_lib_irq_handler.s
+	ca65 -o music2.o music2.s -l music2.lst
 
 
 

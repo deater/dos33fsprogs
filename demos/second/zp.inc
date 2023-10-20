@@ -74,28 +74,6 @@ ENVELOPE_SHAPE  = $7D
 PATTERN_L       = $7E
 PATTERN_H       = $7F
 
-
-.if 0
-; ym player
-CURRENT_FRAME_L         = $70
-CURRENT_FRAME_H         = $71
-BASE_FRAME_L            = $72
-BASE_FRAME_H            = $73
-CURRENT_CHUNK           = $74
-TIME_MINUTES            = $75
-TIME_SECONDS            = $76
-CURSOR_X                = $77
-CURSOR_Y                = $78
-LEVEL_OVER              = $7B
-        LEVEL_FAIL      = 1
-        LEVEL_WIN       = 2
-DOOR_OPEN               = $7C
-CHUNK_NEXT_LOAD         = $7D
-CHUNK_NEXT_PLAY         = $7E
-LOAD_NEXT_CHUNK         = $7F
-.endif
-
-
 ; rest of pt3_player
 ; rest of pt3_player
 PT3_TEMP        = $80
