@@ -85,14 +85,16 @@ load_loop:
 	; load
 	;=======================
 
-	lda	#1		; THREED
+;	lda	#1		; THREED
+	lda	#2		; CREDITS
 	sta	WHICH_LOAD
 
 	jsr	load_file
 
 	cli			; start music
 
-	jmp	$4000		; TODO: paramaterize
+;	jmp	$4000		; TODO: paramaterize
+	jmp	$6000		; TODO: paramaterize
 
 
 forever:

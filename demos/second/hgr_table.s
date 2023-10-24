@@ -82,4 +82,16 @@ btpl2:
 	cpx	#$C0
 	bne	btmi
 
+; go 16 beyond, which allows our text scrolling routine
+
+	ldx	#16
+extra_table_loop:
+	lda	hposn_low,X
+	sta	hposn_low+192,X
+	lda	hposn_high,X
+	eor	#$60
+	sta	hposn_high+192,X
+	dex
+	bpl	extra_table_loop
+
 	rts

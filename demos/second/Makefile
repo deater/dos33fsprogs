@@ -24,15 +24,17 @@ second_d1.dsk:	QBOOT QLOAD MUSIC START \
 	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
 	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
 
-second_d2.dsk:	QBOOT QLOAD2 MUSIC2 START \
-	./part18_3d/THREED
+second_d2.dsk:	QBOOT QLOAD2 MUSIC2 \
+	./part18_3d/THREED \
+	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) second_d2.dsk
 	$(DOS33_RAW) second_d2.dsk 0 0 QBOOT	0 1
 	$(DOS33_RAW) second_d2.dsk 0 2 QBOOT	1 1
 	$(DOS33_RAW) second_d2.dsk 0 4 QBOOT	2 1
 	$(DOS33_RAW) second_d2.dsk 1 0 QLOAD2	0 0
 	$(DOS33_RAW) second_d2.dsk 3 0 MUSIC2	0 0
-	$(DOS33_RAW) second_d2.dsk 5 0 START	0 0
+#	$(DOS33_RAW) second_d2.dsk 5 0 START	0 0
+	$(DOS33_RAW) second_d2.dsk 10 0 ./part20_credits/CREDITS	0 0
 	$(DOS33_RAW) second_d2.dsk 20 0 ./part18_3d/THREED	0 0
 
 
@@ -59,7 +61,7 @@ qload.o:	qload.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
-	ca65 -o qload.o qload.s -l qload2.lst
+	ca65 -o qload.o qload.s -l qload.lst
 
 ####
 

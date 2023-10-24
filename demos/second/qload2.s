@@ -158,20 +158,19 @@ error_string:
 
 
 which_disk_array:
-	.byte 1,1		; MUSIC2, THREED
-
+	.byte 1,1,1		; MUSIC2, THREED, CREDITS
 
 load_address_array:
-        .byte $D0,$40		; MUSIC2, THREED
+	.byte $D0,$40,$60	; MUSIC2, THREED, CREDITS
 
 track_array:
-        .byte  3, 20		; MUSIC2, THREED
+	.byte  3, 20, 10	; MUSIC2, THREED, CREDITS
 
 sector_array:
-        .byte  0, 0		; MUSIC2, THREED
+	.byte  0, 0, 0		; MUSIC2, THREED, CREDITS
 
 length_array:
-        .byte  32, 128		; MUSIC2, THREED
+	.byte  32, 128, 64	; MUSIC2, THREED, CREDITS
 
 	.include	"wait.s"
 
