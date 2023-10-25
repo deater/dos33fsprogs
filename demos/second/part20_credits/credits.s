@@ -67,45 +67,102 @@ load_loop:
 	jsr	zx02_full_decomp
 	jsr	wait_until_keypress
 
-	; nuts4 logo
 
-	lda	#<nuts_pg_data
+	;=====================
+	;=====================
+	; do credits
+	;=====================
+	;=====================
+
+
+	; load the logos
+
+	lda	#<summary1_data
 	sta	zx_src_l+1
-	lda	#>nuts_pg_data
+	lda	#>summary1_data
 	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
-
-	; nuts4 logo
-
-	lda	#<nuts_blue_data
-	sta	zx_src_l+1
-	lda	#>nuts_blue_data
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
-
-
-	; sample logo
-
-	lda	#<sample_data
-	sta	zx_src_l+1
-
-	lda	#>sample_data
-	sta	zx_src_h+1
-
-	lda	#$20
-
+	lda	#$40
 	jsr	zx02_full_decomp
 
+	lda	#0
+	jsr	hgr_page1_clearscreen
+
+
+	lda	#0
+	sta	COUNT
+
+credits_logo_outer_outer:
+	ldx	COUNT
+	lda	logo_x_offsets,X
+	sta	clo_smc1+1
+	lda	logo_y_offsets,X
+	sta	clo_smc2+1
+
+	ldx	#63
+credits_logo_outer:
+
+	lda	hposn_low+16,X
+	clc
+	adc	#15
+	sta	OUTL
+
+	; setup high
+
+	lda	hposn_high+16,X
+	sta	OUTH
+
+	stx	XSAVE
+	txa
+	clc
+clo_smc2:
+	adc	#0
+	tax
+
+	lda	hposn_low,X
+	clc
+clo_smc1:
+	adc	#0
+	sta	INL
+
+	lda	hposn_high,X
+	eor	#$60
+	sta	INH
+	ldx	XSAVE
+
+	ldy	#9
+credits_logo_inner:
+	lda	(INL),Y
+	sta	(OUTL),Y
+	dey
+	bpl	credits_logo_inner
+
+	dex
+	bpl	credits_logo_outer
+
+
 	jsr	wait_until_keypress
 
+	inc	COUNT
+	lda	COUNT
+
+	cmp	#12
+	bne	skip_summary2
+
+	lda	#<summary2_data
+	sta	zx_src_l+1
+	lda	#>summary2_data
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+	lda	#0
+skip_summary2:
+	cmp	#21
+	bne	credits_logo_outer_outer
 
 
-
-	jsr	wait_until_keypress
+	;=======================
+	; scroll job
+	;=======================
 
 	ldx	#0
 	stx	FRAME
@@ -152,11 +209,26 @@ no_update_message:
 
 	jsr	hgr_vertical_scroll
 
-
-
-
-
 	jmp	do_scroll
+
+
+
+logo_y_offsets:
+	.byte	0,0,0,0
+	.byte	64,64,64,64
+	.byte	128,128,128,128
+	.byte	0,0,0,0
+	.byte	64,64,64,64
+	.byte	128
+
+logo_x_offsets:
+	.byte	0,10,20,30
+	.byte	0,10,20,30
+	.byte	0,10,20,30
+	.byte	0,10,20,30
+	.byte	0,10,20,30
+	.byte	0
+
 
 .align $100
 	.include	"../wait_keypress.s"
@@ -175,13 +247,13 @@ fc_iipix_data:
 
 nuts4_data:
 	.incbin "graphics/nuts4.hgr.zx02"
-nuts_pg_data:
-	.incbin "graphics/nuts_pg.hgr.zx02"
-nuts_blue_data:
-	.incbin "graphics/nuts_blue.hgr.zx02"
+summary1_data:
+	.incbin "graphics/summary1_invert.hgr.zx02"
+summary2_data:
+	.incbin "graphics/summary2_invert.hgr.zx02"
 
-sample_data:
-	.incbin "graphics/credits_2.hgr.zx02"
+;sample_data:
+;	.incbin "graphics/credits_2.hgr.zx02"
 
 apple_message:
 	.byte "Apple ][ Forever"

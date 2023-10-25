@@ -170,7 +170,7 @@ sector_array:
 	.byte  0, 0, 0		; MUSIC2, THREED, CREDITS
 
 length_array:
-	.byte  32, 128, 64	; MUSIC2, THREED, CREDITS
+	.byte  32, 128, 80	; MUSIC2, THREED, CREDITS
 
 	.include	"wait.s"
 
