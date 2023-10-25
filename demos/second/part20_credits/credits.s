@@ -75,7 +75,7 @@ load_loop:
 	;=====================
 
 
-	; load the logos
+	; load the logo set 1
 
 	lda	#<summary1_data
 	sta	zx_src_l+1
@@ -84,15 +84,16 @@ load_loop:
 	lda	#$40
 	jsr	zx02_full_decomp
 
-	lda	#0
-	jsr	hgr_page1_clearscreen
-
 
 	lda	#0
 	sta	COUNT
 
 credits_logo_outer_outer:
-	ldx	COUNT
+
+	lda	#0				; clear screen
+	jsr	hgr_page1_clearscreen
+
+	ldx	COUNT				; patch the source offsets
 	lda	logo_x_offsets,X
 	sta	clo_smc1+1
 	lda	logo_y_offsets,X
@@ -101,15 +102,20 @@ credits_logo_outer_outer:
 	ldx	#63
 credits_logo_outer:
 
-	lda	hposn_low+16,X
+	; setup output pointer
+
+	lda	hposn_low+32,X			; adjust X
 	clc
-	adc	#15
+	adc	#15				; center on screen
 	sta	OUTL
 
 	; setup high
 
-	lda	hposn_high+16,X
+	lda	hposn_high+32,X
 	sta	OUTH
+
+
+	; setup input pointers
 
 	stx	XSAVE
 	txa
@@ -147,6 +153,8 @@ credits_logo_inner:
 
 	cmp	#12
 	bne	skip_summary2
+
+	; reload logos when we hit 12
 
 	lda	#<summary2_data
 	sta	zx_src_l+1
@@ -251,9 +259,6 @@ summary1_data:
 	.incbin "graphics/summary1_invert.hgr.zx02"
 summary2_data:
 	.incbin "graphics/summary2_invert.hgr.zx02"
-
-;sample_data:
-;	.incbin "graphics/credits_2.hgr.zx02"
 
 apple_message:
 	.byte "Apple ][ Forever"
