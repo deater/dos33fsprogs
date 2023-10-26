@@ -14,6 +14,7 @@ CREDITS:	credits.o
 	ld65 -o CREDITS credits.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 credits.o:	credits.s vertical_scroll.s ../zx02_optim.s \
+	thumbnail_credits.s \
 	font_4am_1x8.s font_4am_1x10.s \
 	graphics/summary1_invert.hgr.zx02 \
 	../zp.inc ../hardware.inc ../qload.inc
