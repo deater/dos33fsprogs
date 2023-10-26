@@ -35,39 +35,6 @@ load_loop:
 
 	jsr	hgr_make_tables
 
-
-	; fc logo
-
-	lda	#<fc_grey_data
-	sta	zx_src_l+1
-	lda	#>fc_grey_data
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
-
-	; fc logo
-
-	lda	#<fc_iipix_data
-	sta	zx_src_l+1
-	lda	#>fc_iipix_data
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
-
-
-	; nuts4 logo
-
-	lda	#<nuts4_data
-	sta	zx_src_l+1
-	lda	#>nuts4_data
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
-
-
 	;=====================
 	;=====================
 	; do credits
@@ -92,6 +59,31 @@ credits_logo_outer_outer:
 
 	lda	#0				; clear screen
 	jsr	hgr_page1_clearscreen
+
+
+        lda     #12
+        sta     CH
+        lda     #192
+        sta     CV
+
+	pha
+	txa
+	pha
+	tya
+	pha
+
+        lda     #<credit_message
+        ldy     #>credit_message
+
+	jsr	draw_font_1x10
+
+	pla
+	tay
+	pla
+	tax
+	pla
+
+
 
 	ldx	COUNT				; patch the source offsets
 	lda	logo_x_offsets,X
@@ -209,7 +201,7 @@ cl_inner_loop:
         lda     #<apple_message
         ldy     #>apple_message
 
-	jsr	DrawCondensedString
+	jsr	draw_condensed_1x8
 
 no_update_message:
 
@@ -244,21 +236,21 @@ logo_x_offsets:
 	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"vertical_scroll.s"
-	.include	"font_console_1x8.s"
 
-	.include	"../part00_boot/fonts/a2_cga_thin.inc"
+	.include	"font_4am_1x8.s"
+	.include	"fonts/font_4am_1x8_data.s"
 
-fc_grey_data:
-	.incbin "graphics/fc_grey.hgr.zx02"
-fc_iipix_data:
-	.incbin "graphics/fc_iipix.hgr.zx02"
+	.include	"font_4am_1x10.s"
+	.include	"fonts/font_4am_1x10_data.s"
 
-nuts4_data:
-	.incbin "graphics/nuts4.hgr.zx02"
+
 summary1_data:
 	.incbin "graphics/summary1_invert.hgr.zx02"
 summary2_data:
 	.incbin "graphics/summary2_invert.hgr.zx02"
 
+credit_message:
+	.byte 14,100,"Deater / DsR",0
+
 apple_message:
-	.byte "Apple ][ Forever"
+	.byte "Apple ][ Forever",0
