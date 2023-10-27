@@ -49,48 +49,76 @@ load_loop:
 	;=======================
 	;=======================
 
-	ldx	#0
+	ldx	#8
 	stx	FRAME
+
+	; print message
+
+	lda	#192			; top of $4000 PAGE2
+	sta	CV
+
+	lda	#<final_credits
+	sta	BACKUP_OUTL
+	lda	#>final_credits
+	sta	BACKUP_OUTH
 
 do_scroll:
 
+	inc	FRAME
+
 	lda	FRAME
-	and	#$7
+	cmp	#9
 	bne	no_update_message
 
-	; clear lines
+;	and	#$7
+;	bne	no_update_message
+
+	lda	#0
+	sta	FRAME
+
+
+
+
+	; clear lines on Page2
+
+	; we cheat and setup 192-200 to map to top of page2
+
 	ldx	#200
 cl_outer_loop:
 	lda	hposn_low,X
-	sta	OUTL
+	sta	INL
 	lda	hposn_high,X
-	sta	OUTH
+	sta	INH
 	ldy	#39
 	lda	#0
 cl_inner_loop:
-	sta	(OUTL),Y
+	sta	(INL),Y
 	dey
 	bpl	cl_inner_loop
 	dex
 	cpx	#191
 	bne	cl_outer_loop
 
+urgh:
+	lda	BACKUP_OUTL
+	sta	OUTL
+	lda	BACKUP_OUTH
+	sta	OUTH
 
-	; print message
+	jsr	draw_condensed_1x8_again
 
-        lda     #12
-        sta     CH
-        lda     #192
-        sta     CV
+			; point to location after
+	sec		; always add 1
+;	inx
+	txa
+	adc	OUTL
+	sta	BACKUP_OUTL
+	lda	#0
+	adc	OUTH
+	sta	BACKUP_OUTH
 
-        lda     #<apple_message
-        ldy     #>apple_message
-
-	jsr	draw_condensed_1x8
 
 no_update_message:
-
-	inc	FRAME
 
 	jsr	hgr_vertical_scroll
 
@@ -118,5 +146,54 @@ summary2_data:
 	.incbin "graphics/summary2_invert.hgr.zx02"
 
 
-apple_message:
-	.byte "Apple ][ Forever",0
+final_credits:
+	.byte 12,"Apple ][ Reality",0
+	.byte 20," ",0
+	.byte 11,"by Deater / Desire",0
+	.byte 20," ",0
+	.byte 4 ,"This demo was at Demosplash 2023",0
+	.byte 8,"held in Pittsburgh, PA,",0
+	.byte 12,"in November 2023.",0
+	.byte 20," ",0
+	.byte 15,"Greets to:",0
+	.byte 14,"French Touch",0
+	.byte 18,"4am",0
+	.byte 17,"Qkumba",0
+	.byte 17,"Grouik",0
+	.byte 14,"Fenarinarsa",0
+	.byte 15,"T. Greene",0
+	.byte 15,"K. Savetz",0
+	.byte 17,"wiz21b",0
+	.byte 17,"Trixter",0
+	.byte 18,"LGR",0
+	.byte 16,"Hellmood",0
+	.byte 17,"Foone",0
+	.byte 12,"Utopia BBS (410)",0
+	.byte 10,"Weave's World Talker",0
+
+	; end
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 12,"Apple II Forever",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte $FF

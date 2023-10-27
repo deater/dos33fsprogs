@@ -174,7 +174,9 @@ R               = $F7
 CX              = $F8
 CY              = $F9
 
-
+; Credits
+BACKUP_OUTL	= $F1
+BACKUP_OUTH	= $F2
 
 
 

@@ -28,9 +28,27 @@ draw_condensed_1x8:
 
 draw_condensed_1x8_again:
 
-	lda	OUTL
+	ldy	#0
+	lda	(OUTL),Y
+	sta	CH
+	bpl	still_good
+
+demo_demo_done:
+	; FIXME: stop music?
+
+	jmp	demo_demo_done
+
+
+still_good:
+	clc
+	lda	#1
+	adc	OUTL
+	sta	OUTL
 	sta	dcb_loop_1x8_smc+1
-	lda	OUTH
+
+	lda	#0
+	adc	OUTH
+	sta	OUTH
 	sta	dcb_loop_1x8_smc+2
 
 
@@ -114,16 +132,16 @@ dcb_loop_1x8_smc:
 	ldy	$FDFD, X		; load next char into Y
 	beq	dcb_done_1x8
 
-	cpy	#13
-	bne	not_linefeed
+;	cpy	#13
+;	bne	not_linefeed
 
-	lda	#0
-	sta	CH
-	clc
-	lda	CV
-	adc	#8
-	sta	CV
-	inx
+;	lda	#0
+;	sta	CH
+;	clc
+;	lda	CV
+;	adc	#8
+;	sta	CV
+;	inx
 
 ;	lda	CV
 ;	cmp	#192
@@ -136,7 +154,7 @@ dcb_loop_1x8_smc:
 ;	jsr	scroll_screen
 ;	ldx	XSAVE
 
-	jmp	dcb_loop_1x8
+;	jmp	dcb_loop_1x8
 
 
 not_linefeed:
@@ -174,15 +192,6 @@ dcb_row_1x8_7:
 					;	is less than 255 chars)
 
 dcb_done_1x8:
-
-	; point to location after
-	sec		; always add 1
-	txa
-	adc	OUTL
-	sta	OUTL
-	lda	#0
-	adc	OUTH
-	sta	OUTH
 
 	rts
 
