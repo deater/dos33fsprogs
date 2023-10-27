@@ -14,7 +14,7 @@ div7_table	= $1d00
 hposn_low	= $1e00
 hposn_high	= $1f00
 
-intro_start:
+nuts_start:
 	;=====================
 	; initializations
 	;=====================
@@ -57,7 +57,7 @@ load_loop:
 	jsr	wait_until_keypress
 
 nuts_done:
-	jmp	nuts_done
+	rts
 
 
 .align $100

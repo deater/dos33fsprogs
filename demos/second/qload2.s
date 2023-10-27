@@ -174,7 +174,7 @@ length_array:
 	.byte  32, 128, 64, 32	; MUSIC2, THREED, CREDITS, NUTS
 
 aux_address_array:
-	.byte $FF,$FF,$20,$40	; MUSIC2, THREED, CREDITS, NUTS
+	.byte $FF,$FF,$60,$20	; MUSIC2, THREED, CREDITS, NUTS
 
 	.include	"wait.s"
 

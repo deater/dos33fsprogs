@@ -95,14 +95,14 @@ load_loop:
 	jsr	load_file
 
 	;======================
-	; copy NUTS to AUX $4000
+	; copy NUTS to AUX $2000
 
-	lda	#$20		; AUX dest $20
-	ldy	#$40		; MAIN src
+	lda	#$20		; AUX dest $4000
+	ldy	#$60		; MAIN src $6000
 	ldx	#32		; 64 pages
 	jsr	copy_main_aux
 
-	;====================
+	;=====================
 	; load CREDITS to $6000
 
 	lda	#2		; CREDITS
@@ -110,9 +110,9 @@ load_loop:
 	jsr	load_file
 
 	;===========================
-	; copy CREDITS to AUX $2000
+	; copy CREDITS to AUX $6000
 
-	lda	#$20		; AUX dest $20
+	lda	#$60		; AUX dest $60
 	ldy	#$60		; MAIN src
 	ldx	#64		; 64 pages
 	jsr	copy_main_aux
@@ -133,16 +133,25 @@ load_loop:
 
 	;=======================
 	; run NUTS
-	;=======================
+	;============================================
+	; copy NUTS from AUX $2000 to MAIN $6000
+
+	lda	#$20		; AUX src $2000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#32		; 32 pages
+	jsr	copy_aux_main
+
+	; run nuts
+
+	jsr	$6000
+
 
 	;=======================
 	; run CREDITS
-	;=======================
-
 	;============================================
-	; copy CREDITS from AUX $2000 to MAIN $8000
+	; copy CREDITS from AUX $6000 to MAIN $8000
 
-	lda	#$20		; AUX src $2000
+	lda	#$60		; AUX src $6000
 	ldy	#$80		; MAIN dest $8000
 	ldx	#64		; 64 pages
 	jsr	copy_aux_main

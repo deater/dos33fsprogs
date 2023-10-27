@@ -16,10 +16,10 @@ ocean:		24k	90%
 polar:		5k	50%
 	=========================
 
-DISK2:				Track	Sectors
-~~~~~~				~~~	~~~~~~
-nuts:		8k		8	32	(2T)
-credits:	16k		12	64	(4T)
+DISK2:				Track	Sectors		AUX
+~~~~~~				~~~	~~~~~~		~~~~
+nuts:		8k		8	32	(2T)	$2000
+credits:	16k		12	64	(4T)	$6000
 3d:		32k		20	128	(8T)
 	==============
 		56k
