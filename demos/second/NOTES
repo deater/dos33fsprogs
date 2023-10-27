@@ -14,11 +14,15 @@ dotbounce:	4k?	0%
 transmission:	8k?	0%
 ocean:		24k	90%
 polar:		5k	50%
-3d:		32k	75%
-nuts:		5k	90%
-credits:	8k	0%
+	=========================
+
+DISK2:				Track	Sectors
+~~~~~~				~~~	~~~~~~
+nuts:		8k		8	32	(2T)
+credits:	16k		12	64	(4T)
+3d:		32k		20	128	(8T)
 	==============
-		139k
+		56k
 
 
 RAM usage:

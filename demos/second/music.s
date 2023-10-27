@@ -7,6 +7,9 @@
 
 ;.include "qload.inc"
 
+memcpy_routines:
+        .include "aux_memcopy.s"
+
 music_lib:
 
 PT3_ENABLE_APPLE_IIC = 1

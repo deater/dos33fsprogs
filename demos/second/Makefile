@@ -8,7 +8,7 @@ LINKER_SCRIPTS = ../../linker_scripts/
 
 all:	second_d1.dsk second_d2.dsk
 
-second_d1.dsk:	QBOOT QLOAD MUSIC START \
+second_d1.dsk:	QBOOT QLOAD MUSIC START music.inc \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
 	./part16_ocean/OCEAN \
@@ -24,8 +24,9 @@ second_d1.dsk:	QBOOT QLOAD MUSIC START \
 	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
 	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
 
-second_d2.dsk:	QBOOT QLOAD2 MUSIC2 \
+second_d2.dsk:	QBOOT QLOAD2 MUSIC2 music2.inc \
 	./part18_3d/THREED \
+	./part19_nuts/NUTS \
 	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) second_d2.dsk
 	$(DOS33_RAW) second_d2.dsk 0 0 QBOOT	0 1
@@ -33,11 +34,20 @@ second_d2.dsk:	QBOOT QLOAD2 MUSIC2 \
 	$(DOS33_RAW) second_d2.dsk 0 4 QBOOT	2 1
 	$(DOS33_RAW) second_d2.dsk 1 0 QLOAD2	0 0
 	$(DOS33_RAW) second_d2.dsk 3 0 MUSIC2	0 0
-#	$(DOS33_RAW) second_d2.dsk 5 0 START	0 0
-	$(DOS33_RAW) second_d2.dsk 10 0 ./part20_credits/CREDITS	0 0
-	$(DOS33_RAW) second_d2.dsk 20 0 ./part18_3d/THREED	0 0
+	$(DOS33_RAW) second_d2.dsk  8 0 ./part19_nuts/NUTS		0 0
+	$(DOS33_RAW) second_d2.dsk 12 0 ./part20_credits/CREDITS	0 0
+	$(DOS33_RAW) second_d2.dsk 20 0 ./part18_3d/THREED		0 0
 
+####
 
+part18_3d/THREED:	
+	cd part18_3d && make
+
+part19_nuts/NUTS:	
+	cd part19_nuts && make
+
+part20_credits/CREDITS:	
+	cd part20_credits && make
 
 ####
 
@@ -69,6 +79,7 @@ QLOAD2:	qload2.o
 	ld65 -o QLOAD2 qload2.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
 qload2.o:	qload2.s \
+	music2.inc \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
@@ -155,6 +166,20 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
 	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
+	./generate_common -a 0xd000 -s copy_main_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s copy_aux_main music.lst >> music.inc
+
+music2.inc:	generate_common MUSIC2
+	./generate_common -a 0xd000 -s pt3_init_song music2.lst > music2.inc
+	./generate_common -a 0xd000 -s mockingboard_init music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s reset_ay_both music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s clear_ay_both music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s done_pt3_irq_handler music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s PT3_LOC music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s copy_main_aux music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s copy_aux_main music2.lst >> music2.inc
 
 ####
 
@@ -162,6 +187,7 @@ MUSIC:	music.o qload.inc
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
+	aux_memcopy.s \
 	music/z00m_unreal2_part1.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
@@ -173,10 +199,11 @@ music.o:	music.s zp.inc \
 
 ####
 
-MUSIC2:	music2.o qload2.inc
+MUSIC2:	music2.o
 	ld65 -o MUSIC2 music2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music2.o:	music2.s zp.inc \
+	aux_memcopy.s \
 	music/second_3d.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
@@ -188,7 +215,7 @@ music2.o:	music2.s zp.inc \
 
 
 
-
+###
 
 generate_common:	generate_common.o
 	$(CC) $(LFLAGS) -o generate_common generate_common.o
@@ -200,4 +227,7 @@ generate_common.o:	generate_common.c
 
 
 clean:
-		rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part18_3d && make clean
+	cd part19_nuts && make clean
+	cd part20_credits && make clean

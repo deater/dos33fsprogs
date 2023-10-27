@@ -2,6 +2,7 @@
 
 .include "zp.inc"
 .include "hardware.inc"
+.include "music2.inc"
 
 ;.include "common_defines.inc"
 .include "qboot.inc"
@@ -158,19 +159,22 @@ error_string:
 
 
 which_disk_array:
-	.byte 1,1,1		; MUSIC2, THREED, CREDITS
+	.byte 1,1,1,1		; MUSIC2, THREED, CREDITS, NUTS
 
 load_address_array:
-	.byte $D0,$40,$60	; MUSIC2, THREED, CREDITS
+	.byte $D0,$40,$60,$60	; MUSIC2, THREED, CREDITS, NUTS
 
 track_array:
-	.byte  3, 20, 10	; MUSIC2, THREED, CREDITS
+	.byte  3, 20, 12, 8	; MUSIC2, THREED, CREDITS, NUTS
 
 sector_array:
-	.byte  0, 0, 0		; MUSIC2, THREED, CREDITS
+	.byte  0, 0, 0, 0	; MUSIC2, THREED, CREDITS, NUTS
 
 length_array:
-	.byte  32, 128, 80	; MUSIC2, THREED, CREDITS
+	.byte  32, 128, 64, 32	; MUSIC2, THREED, CREDITS, NUTS
+
+aux_address_array:
+	.byte $FF,$FF,$20,$40	; MUSIC2, THREED, CREDITS, NUTS
 
 	.include	"wait.s"
 

@@ -11,15 +11,20 @@ DISK II
 
   - finish the whole thing if possible
 
++ nuts
+
+  - sprite animation of ship
+
 + credits
 
   - scroll logos in from right, then out to left
-  - add double height printing with credits
   - scroll the text in
 
-  - add credits
+  - smoother scrolling.  Only need to scroll middle 20 bytes or so?
+	wait on vblank?
 
-
++ after-credits
+	RR?
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

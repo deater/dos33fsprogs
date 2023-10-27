@@ -5,8 +5,8 @@
 
 ;.include "zp.inc"
 ;.include "hardware.inc"
-;.include "qload.inc"
-.include "music.inc"
+;.include "qload2.inc"
+;.include "music.inc"
 
 second_start:
 	;=====================
@@ -82,20 +82,79 @@ load_loop:
 	bit	PAGE1
 
 	;=======================
-	; load
+	; load, copy to AUXMEM
 	;=======================
 
-;	lda	#1		; THREED
+	sta	$C008		; use MAIN zero-page/stack/language card
+
+	;====================
+	; load nuts to $6000
+
+	lda	#3		; NUTS
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	;======================
+	; copy NUTS to AUX $4000
+
+	lda	#$20		; AUX dest $20
+	ldy	#$40		; MAIN src
+	ldx	#32		; 64 pages
+	jsr	copy_main_aux
+
+	;====================
+	; load CREDITS to $6000
+
 	lda	#2		; CREDITS
 	sta	WHICH_LOAD
-
 	jsr	load_file
+
+	;===========================
+	; copy CREDITS to AUX $2000
+
+	lda	#$20		; AUX dest $20
+	ldy	#$60		; MAIN src
+	ldx	#64		; 64 pages
+	jsr	copy_main_aux
+
+
+;	lda	#1		; THREED
+;	sta	WHICH_LOAD
+;	jsr	load_file
+
+
+
+
+	;=======================
+	; run THREED
+	;=======================
 
 	cli			; start music
 
-;	jmp	$4000		; TODO: paramaterize
-	jmp	$6000		; TODO: paramaterize
+	;=======================
+	; run NUTS
+	;=======================
 
+	;=======================
+	; run CREDITS
+	;=======================
+
+	;============================================
+	; copy CREDITS from AUX $2000 to MAIN $6000
+
+	lda	#$20		; AUX src $2000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#64		; 64 pages
+	jsr	copy_aux_main
+
+	; run credits
+
+	jsr	$6000
+
+
+
+
+	; TODO: RR?
 
 forever:
 	jmp	forever
