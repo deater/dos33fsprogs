@@ -164,6 +164,8 @@ final_credits:
 	.byte 15,"T. Greene",0
 	.byte 15,"K. Savetz",0
 	.byte 14,"K. Kennaway",0
+	.byte 15,"O. Schmidt",0
+	.byte 18,"DMSC",0
 	.byte 15,"textfiles",0
 	.byte 17,"wiz21b",0
 	.byte 17,"Trixter",0

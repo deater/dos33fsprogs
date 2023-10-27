@@ -42,6 +42,9 @@ thumbnail_credits:
 
 credits_logo_outer_outer:
 
+	lda	#200		; 4 seconds?  actual is 5ish
+	sta	IRQ_COUNTDOWN
+
 	lda	DRAW_PAGE
 	and	#$20
 	bne	cloo_page2
@@ -156,7 +159,18 @@ cloo_disp_page1:
 
 cloo_done_flip:
 
-	jsr	wait_until_keypress
+	;======================================
+	; wait until IRQ countdown or keypress
+
+cloo_check_again:
+	lda	KEYPRESS
+	bmi	cloo_check_done
+
+	lda	IRQ_COUNTDOWN
+	bne	cloo_check_again
+
+cloo_check_done:
+	bit	KEYRESET
 
 	inc	COUNT
 	lda	COUNT
