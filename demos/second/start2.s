@@ -15,6 +15,8 @@ second_start:
 
 	jsr	hardware_detect
 
+	jsr	hgr_make_tables
+
 	;===================
 	; restart?
 	;===================

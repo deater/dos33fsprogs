@@ -68,6 +68,7 @@ qload.o:	qload.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s \
+	hgr_table.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
@@ -85,6 +86,7 @@ qload2.o:	qload2.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start2.s \
 	hardware_detect.s \
+	hgr_table.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
@@ -154,6 +156,7 @@ qload2.inc:	generate_common QLOAD2
 	./generate_common -a 0x1200 -s clear_bottom qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s clear_bottoms qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s clear_screens qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s hgr_make_tables qload2.lst >> qload2.inc
 
 ####
 

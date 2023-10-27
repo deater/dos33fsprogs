@@ -8,7 +8,7 @@
 
 .include "../zp.inc"
 .include "../hardware.inc"
-.include "../qload.inc"
+.include "../qload2.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -33,7 +33,7 @@ load_loop:
 	lda	#0
 	jsr	hgr_page1_clearscreen
 
-	jsr	hgr_make_tables
+;	jsr	hgr_make_tables
 
 	;=====================
 	;=====================
@@ -127,7 +127,7 @@ no_update_message:
 .align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
-	.include	"../hgr_table.s"
+;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"vertical_scroll.s"
 

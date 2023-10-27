@@ -190,6 +190,13 @@ aux_address_array:
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 
+mod7_table      = $1c00
+div7_table      = $1d00
+hposn_low       = $1e00
+hposn_high      = $1f00
+
+	.include	"hgr_table.s"
+
 qload_end:
 
 .assert (>qload_end - >qload_start) < $e , error, "loader too big"
