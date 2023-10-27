@@ -9,7 +9,20 @@
 ;=====================
 ;=====================
 
+; $2000-$3FFF = hires page1
+; $4000-$5FFF = hires page2
+; $6000-$7FFF = temp graphics
+; $8000-$BFFF = code
+
+
 thumbnail_credits:
+
+	lda	#0				; clear screen
+	jsr	hgr_page1_clearscreen
+	lda	#0				; clear screen
+	jsr	hgr_page2_clearscreen
+
+	bit	PAGE2				; start viewing page2
 
 	; load the logo set 1
 
@@ -17,18 +30,33 @@ thumbnail_credits:
 	sta	zx_src_l+1
 	lda	#>summary1_data
 	sta	zx_src_h+1
-	lda	#$40
+	lda	#$60
 	jsr	zx02_full_decomp
 
 
 	lda	#0
 	sta	COUNT
 
+	lda	#$0		; draw to PAGE1 to start (so end credits)
+	sta	DRAW_PAGE	; ends on PAGE1
+
 credits_logo_outer_outer:
 
+	lda	DRAW_PAGE
+	and	#$20
+	bne	cloo_page2
+
+cloo_page1:
 	lda	#0				; clear screen
 	jsr	hgr_page1_clearscreen
+	jmp	cloo_write_text
 
+cloo_page2:
+	lda	#0				; clear screen
+	jsr	hgr_page2_clearscreen
+
+
+cloo_write_text:
 
         lda     #12
         sta     CH
@@ -54,6 +82,9 @@ credits_logo_outer_outer:
 	tax
 	pla
 
+	;========================
+	; draw the thumbnail
+	;  TODO: scroll it in
 
 
 	ldx	COUNT				; patch the source offsets
@@ -74,7 +105,9 @@ credits_logo_outer:
 
 	; setup high
 
+	clc
 	lda	hposn_high+16,X
+	adc	DRAW_PAGE
 	sta	OUTH
 
 
@@ -94,7 +127,7 @@ clo_smc1:
 	sta	INL
 
 	lda	hposn_high,X
-	eor	#$60
+	eor	#$40			; $2000 -> $6000  0010 -> 0110
 	sta	INH
 	ldx	XSAVE
 
@@ -108,6 +141,20 @@ credits_logo_inner:
 	dex
 	bpl	credits_logo_outer
 
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+	bne	cloo_disp_page1
+
+cloo_disp_page2:
+	bit	PAGE2
+	jmp	cloo_done_flip
+
+cloo_disp_page1:
+	bit	PAGE1
+
+cloo_done_flip:
 
 	jsr	wait_until_keypress
 
@@ -123,7 +170,7 @@ credits_logo_inner:
 	sta	zx_src_l+1
 	lda	#>summary2_data
 	sta	zx_src_h+1
-	lda	#$40
+	lda	#$60
 	jsr	zx02_full_decomp
 	lda	#0
 skip_summary2:
