@@ -133,37 +133,54 @@ load_loop:
 
 	jsr     $8000
 
+	;=============================
+	; ask for side2
+	;=============================
 
+	sei		; disable music
 
+	bit	PAGE1
+	bit	TEXTGR
+	bit	KEYRESET	; clear keyboard
 
-	;=======================
-	; start music
-	;=======================
+	; clear text screen
 
-;	lda	#5		; POLAR
-;	lda	#4		; OCEAN
-;	lda	#3		; THREED
-;	lda	#2		; TUNNEL
-;	lda	#1		; INTRO
+	jsr	clear_all
 
-;	sta	WHICH_LOAD
-;	jsr	load_file
+	; print non-inverse
 
+	jsr	set_normal
 
-	; setup music
-	; ocean=pattern24 (3:07) pattern#43
+	; print messages
+	lda	#<disk_change_string
+	sta	OUTL
+	lda	#>disk_change_string
+	sta	OUTH
 
-;	lda	#43
-;	sta	$55A+$D000		;current_pattern_smc+1
-;	jsr	$559+$D000		; pt3_set_pattern
+	; print the text
 
-;	cli
+	jsr	move_and_print
 
-;	jmp	$4000
+	jsr	wait_until_keypress
 
-;	jmp	$6000
+	;==================
+	; reboot
+	;==================
 
+	; swap back in ROM
 
+	lda	$C08A	; read rom, no write
+
+	lda	WHICH_SLOT
+	lsr
+	lsr
+	lsr
+	lsr
+	ora	#$C0
+	sta	reboot_smc+2
+
+reboot_smc:
+	jmp	$C600
 
 forever:
 	jmp	forever
@@ -174,9 +191,9 @@ forever:
 
 .include "title.s"
 
-config_string:
+disk_change_string:
 ;             0123456789012345678901234567890123456789
-.byte   0,23,"APPLE II?, 48K, MOCKINGBOARD: NO, SSI: N",0
+.byte   5,22,"INSERT DISK 2 AND PRESS ANY KEY",0
 
 .include "pt3_lib_mockingboard_patch.s"
 

@@ -111,6 +111,9 @@ SCALE_I	= $98
 SCALE_F	= $99
 ANGLE	= $9A
 
+
+WHICH_SLOT = $DA		; from boot sector
+
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
