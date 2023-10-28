@@ -78,9 +78,9 @@ skip_all_checks:
 	;===================
 load_loop:
 
-	bit	SET_GR
+;	bit	SET_GR
 ;	bit	HIRES
-	bit	FULLGR
+;	bit	FULLGR
 	bit	PAGE1
 
 	;=======================
