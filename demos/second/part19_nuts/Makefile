@@ -11,12 +11,13 @@ all:	NUTS
 ####
 
 NUTS:	nuts.o
-	ld65 -o NUTS nuts.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o NUTS nuts.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 nuts.o:	nuts.s \
 	../zx02_optim.s \
 	../zp.inc ../hardware.inc ../qload2.inc \
-	graphics/fc_iipix.hgr.zx02
+	graphics/fc_iipix.hgr.zx02 \
+	graphics/ship_sprites.inc
 	ca65 -o nuts.o nuts.s -l nuts.lst
 
 ###

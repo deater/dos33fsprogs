@@ -3,9 +3,20 @@ include ../../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
+HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	nuts4.hgr.zx02 nuts_pg.hgr.zx02 nuts_blue.hgr.zx02 \
-	fc_grey.hgr.zx02 fc_iipix.hgr.zx02
+	fc_grey.hgr.zx02 fc_iipix.hgr.zx02 ship_sprites.inc
+
+####
+
+ship_sprites.inc: ship_sprites.png
+	$(HGR_SPRITE) -s -l small_ship_sprite ship_sprites.png   14 7  27 13 > ship_sprites.inc
+	$(HGR_SPRITE) -s -l medium_ship_sprite ship_sprites.png  14 21 41 36 >> ship_sprites.inc
+	$(HGR_SPRITE) -s -l large_ship_sprite ship_sprites.png   14 49 69 81 >> ship_sprites.inc
+
+
+
 
 ####
 

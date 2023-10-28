@@ -140,10 +140,11 @@ SCENE_COUNT = $EC
 STATE           = $ED
 OFFSET         = $EF
 
-IRQ_COUNTDOWN	= $F0
 
-;LASTKEY         = $F1
-;PADDLE_STATUS   = $F2
+; COMMON DON'T USE
+IRQ_COUNTDOWN	= $F0
+COUNT           = $F1
+
 
 SPRITETEMP	=	$F2
 XPOS		=	$F3
@@ -163,8 +164,7 @@ OUTH		=	$FF
 
 ; tunnel
 
-RR              = $F0
-COUNT           = $F1
+
 XX		= $F2
 MINUSXX         = $F3
 YY		= $F4
@@ -173,12 +173,17 @@ D               = $F6
 R               = $F7
 CX              = $F8
 CY              = $F9
+RR              = $FA
 
 ; Credits
-BACKUP_OUTL	= $F1
-BACKUP_OUTH	= $F2
+BACKUP_OUTL	= $F2
+BACKUP_OUTH	= $F3
 
+; Nuts/ operner
 
+SPRITE_Y	= $F2
+SPRITE_X	= $F3
+CURRENT_ROW	= $F4
 
 
 
