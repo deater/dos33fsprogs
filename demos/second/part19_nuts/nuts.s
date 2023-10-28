@@ -98,6 +98,17 @@ done_ship_sprite_loop:
 
 	bit	PAGE1
 
+	lda	#50
+	jsr	wait_irq
+
+	; clear to white
+
+	lda	#$ff
+	jsr	hgr_page1_clearscreen
+
+	lda	#50
+	jsr	wait_irq
+
 	; nuts4 logo
 
 	lda	#<nuts4_data
@@ -106,7 +117,11 @@ done_ship_sprite_loop:
 	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
-	jsr	wait_until_keypress
+
+	lda	#150		; 3s
+	jsr	wait_irq
+	lda	#150		; 3s
+	jsr	wait_irq
 
 nuts_done:
 	rts
@@ -120,12 +135,21 @@ nuts_done:
 	.include	"hgr_sprite_big.s"
 	.include	"hgr_copy_fast.s"
 
+
+	; wait A * 1/50s
+wait_irq:
+;	lda	#50
+	sta	IRQ_COUNTDOWN
+wait_irq_loop:
+	lda	IRQ_COUNTDOWN
+	bne	wait_irq_loop
+	rts
+
 fc_iipix_data:
 	.incbin "graphics/fc_iipix.hgr.zx02"
 
 nuts4_data:
 	.incbin "graphics/nuts4.hgr.zx02"
-
 
 	.include "graphics/ship_sprites.inc"
 
@@ -136,8 +160,10 @@ ship_coords_x:
 
 ship_coords_y:
 	.byte	91, 97 ,103,109,111,112,112
-	.byte   108,113,110,108,107,106
-	.byte	102,101, 95, 85, 77, 68,59
+	.byte   109,109,109,108,107,106
+;	.byte   112,113,110,108,107,106
+	.byte	 96, 96, 92, 85, 77, 68,59
+;	.byte	102,101, 95, 85, 77, 68,59
 
 ship_size:
 	.byte	0,0,0,0,0,0,0
