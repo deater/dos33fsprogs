@@ -120,9 +120,12 @@ load_loop:
 	jsr	copy_main_aux
 
 
-;	lda	#1		; THREED
-;	sta	WHICH_LOAD
-;	jsr	load_file
+	;=====================
+	; load THREED to $4000
+
+	lda	#1		; THREED
+	sta	WHICH_LOAD
+	jsr	load_file
 
 
 
@@ -132,6 +135,8 @@ load_loop:
 	;=======================
 
 	cli			; start music
+
+	jsr	$4000
 
 	;=======================
 	; run NUTS

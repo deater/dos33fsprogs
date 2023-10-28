@@ -79,7 +79,9 @@ wait_for_irq:
 	dec	SCENE_COUNT
 	bne	scene_loop
 
-	jmp	forever
+;	jmp	forever
+
+	rts
 
 	.include	"../wait_keypress.s"
 
