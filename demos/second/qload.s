@@ -2,6 +2,7 @@
 
 .include "zp.inc"
 .include "hardware.inc"
+.include "music.inc"
 
 ;.include "common_defines.inc"
 .include "qboot.inc"
@@ -15,15 +16,17 @@ qload_start:
 	; first time entry
 	; start by loading text title
 
-	lda	#0			; load ZW engine
-	sta	WHICH_LOAD
+;	lda	#0			; load ZW engine
+;	sta	WHICH_LOAD
 
 	lda	#1
 	sta	CURRENT_DISK		; current disk number
 
-	jsr	load_file
+;	jsr	load_file
 
-	jmp	$2000			; jump to ZW
+	jmp	second_start
+
+;	jmp	$2000			; jump to ZW
 
 	;====================================
 	; loads file specified by WHICH_LOAD
@@ -160,39 +163,45 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; SECOND, MUSIC, INTRO, TUNNEL
-	.byte 1,1		; 3D, OCEAN
+	.byte 1,1,1,1		; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte 1			; POLAR
 
 load_address_array:
-        .byte $20,$D0,$60,$60	; SECOND, MUSIC, INTRO, TUNNEL
-	.byte $40,$60		; 3D, OCEAN
+        .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte $60		; POLAR
 
 track_array:
-        .byte  5, 3, 8, 11	; SECOND, MUSIC, INTRO, TUNNEL
-	.byte 20,13		; 3D, OCEAN
+        .byte  3, 8, 11, 20	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte 34		; POLAR
 
 sector_array:
-        .byte  0, 0, 0, 0	; SECOND, MUSIC, INTRO, TUNNEL
-	.byte  0, 0		; 3D, OCEAN
+        .byte  0, 0, 0, 0	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte  0		; POLAR
 
 length_array:
-        .byte  16, 32, 84, 16	; SECOND, MUSIC, INTRO, TUNNEL
-	.byte  128,96		; 3D, OCEAN
+        .byte  32, 84, 16, 96	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte  16		; POLAR
+
+	.include	"wait.s"
+
+	.include	"start.s"
 
 	.include	"lc_detect.s"
-	.include	"wait.s"
+
 	.include	"wait_a_bit.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 
-;	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"pt3_lib_detect_model.s"
-;	.include	"pt3_lib_core.s"
-;	.include	"pt3_lib_init.s"
-;	.include	"pt3_lib_mockingboard_setup.s"
-;	.include	"interrupt_handler.s"
 	.include	"pt3_lib_mockingboard_detect.s"
+
+mod7_table      = $1c00
+div7_table      = $1d00
+hposn_low       = $1e00
+hposn_high      = $1f00
+
+        .include        "hgr_table.s"
 
 qload_end:
 

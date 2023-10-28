@@ -133,7 +133,7 @@ nuts_done:
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"hgr_sprite_big.s"
-	.include	"hgr_copy_fast.s"
+	.include	"../hgr_copy_fast.s"
 
 
 	; wait A * 1/50s

@@ -1,57 +1,21 @@
-; Unwisely messing with Second Reality
+; Apple ][ Second Reality, Startup for Disk1
 
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
-.include "qload.inc"
-.include "music.inc"
+;.include "zp.inc"
+;.include "hardware.inc"
+;.include "qload.inc"
+;.include "music.inc"
 
 second_start:
 	;=====================
 	; initializations
 	;=====================
 
-	;=====================
-	; detect model
-	;=====================
+	jsr	hardware_detect		; FIXME: remove when hook up part00
 
-	jsr	detect_appleii_model
-
-	;=====================
-	; Machine workarounds
-	;=====================
-	; mostly IIgs
-	; thanks to 4am for this code from total replay
-
-	lda	ROM_MACHINEID
-	cmp	#$06
-	bne     not_a_iigs
-	sec
-	jsr	$FE1F		; check for IIgs
-	bcs	not_a_iigs
-
-	; gr/text page2 handling broken on early IIgs models
-	; this enables the workaround
-
-	jsr     ROM_TEXT2COPY		; set alternate display mode on IIgs
-	cli				; enable VBL interrupts
-
-	; also set background color to black instead of blue
-	lda	NEWVIDEO
-	and	#%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
-				; bit 6 = 0 -> IIgs 128K memory map same as IIe
-				; bit 5 = 0 -> IIgs DHGR is color, not mono
-				; bits 0-4 unchanged
-	sta	NEWVIDEO
-	lda	#$F0
-	sta	TBCOLOR		; white text on black background
-	lda	#$00
-	sta	CLOCKCTL	; black border
-	sta	CLOCKCTL	; set twice for VidHD
-
-not_a_iigs:
+	jsr	hgr_make_tables
 
 
 	;===================
@@ -60,102 +24,6 @@ not_a_iigs:
 restart:
 	lda	#0
 	sta	DRAW_PAGE
-
-	;===================
-	; show title screen
-	;===================
-
-	jsr	show_title
-
-
-	;===================
-	; print config
-	;===================
-
-	jsr	set_normal
-
-	lda	#<config_string
-	sta	OUTL
-	lda	#>config_string
-	sta	OUTH
-
-	jsr	move_and_print
-
-	; print detected model
-
-	lda	APPLEII_MODEL
-	ora	#$80
-	sta	$7d0+8                  ; 23,8
-
-	; if GS print the extra S
-	cmp	#'G'|$80
-	bne	not_gs
-	lda	#'S'|$80
-	sta	$7d0+9
-
-not_gs:
-
-	;=========================================
-	; detect if we have a language card (64k)
-	;===================================
-	; we might want to later load sound high,
-	;	for now always enable sound
-
-
-	lda	#0
-	sta	SOUND_STATUS	; clear out, sound enabled
-
-	jsr	detect_language_card
-	bcs	no_language_card
-
-yes_language_card:
-	; update status on title screen
-	lda	#'6'|$80
-	sta	$7d0+11         ; 23,11
-	lda	#'4'|$80
-	sta	$7d0+12		; 23,12
-
-	; update sound status
-	lda	SOUND_STATUS
-	ora	#SOUND_IN_LC
-	sta	SOUND_STATUS
-
-;	jmp	done_language_card
-
-no_language_card:
-
-done_language_card:
-
-	;===================================
-	; Detect Mockingboard
-	;===================================
-
-	; detect mockingboard
-	jsr	mockingboard_detect
-
-	bcc	mockingboard_notfound
-
-mockingboard_found:
-	; print detected location
-
-	lda	#'S'+$80		; change NO to slot
-	sta	$7d0+30
-
-	lda	MB_ADDR_H		; $C4 = 4, want $B4 1100 -> 1011
-	and	#$87
-	ora	#$30
-
-	sta     $7d0+31                 ; 23,31
-
-
-	; for now, don't require language card
-	lda	SOUND_STATUS
-	and	#SOUND_IN_LC
-	beq	dont_enable_mc
-
-	lda	SOUND_STATUS
-	ora	#SOUND_MOCKINGBOARD
-	sta	SOUND_STATUS
 
 	;==================================
 	; load sound into the language card
@@ -166,7 +34,7 @@ mockingboard_found:
 	bit	$C083
 	bit	$C083
 
-	lda	#1
+	lda	#0
 	sta	WHICH_LOAD
 
 	jsr	load_file
@@ -201,26 +69,9 @@ mockingboard_found:
 
 	jsr	pt3_init_song
 
-
-
-
-
 dont_enable_mc:
 
-mockingboard_notfound:
-
 skip_all_checks:
-
-
-	;=======================
-	; wait for keypress
-	;=======================
-
-;	jsr	wait_until_keypress
-
-	lda	#25
-	jsr	wait_a_bit
-
 
 
 	;===================
@@ -229,38 +80,90 @@ skip_all_checks:
 load_loop:
 
 ;	jsr	HGR
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
+;	bit	SET_GR
+;	bit	HIRES
+;	bit	FULLGR
 	bit	PAGE1
 
+
 	;=======================
-	; start music
+	; Load, copy to AUXMEM
 	;=======================
 
-	lda	#5		; OCEAN
+	sta	$C008		; use MAIN zero-page/stack/language card
 
-;	lda	#4		; THREED
-;	lda	#3		; TUNNEL
-;	lda	#2		; INTRO
 
-	sta	WHICH_LOAD
 
-	jsr	load_file
+	;====================
+	; load POLAR to $6000
 
+	lda     #4		; POLAR
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	;======================
+	; copy POLAR to AUX $1000
+
+	lda	#$10		; AUX dest $1000
+	ldy	#$60		; MAIN src $6000
+	ldx	#16		; 16 pages
+	jsr	copy_main_aux
+
+
+	;=======================
+	; run POLAR
+	;============================================
+	; copy POLAR from AUX $1000 to MAIN $8000
+
+	lda	#$10            ; AUX src $1000
+	ldy	#$80            ; MAIN dest $8000
+	ldx	#16             ; 16 pages
+	jsr	copy_aux_main
 
 	; setup music
 	; ocean=pattern24 (3:07) pattern#43
 
 	lda	#43
-	sta	$55A+$D000		;current_pattern_smc+1
-	jsr	$559+$D000		; pt3_set_pattern
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
 
 	cli
 
+        ; run polar
+
+	jsr     $8000
+
+
+
+
+	;=======================
+	; start music
+	;=======================
+
+;	lda	#5		; POLAR
+;	lda	#4		; OCEAN
+;	lda	#3		; THREED
+;	lda	#2		; TUNNEL
+;	lda	#1		; INTRO
+
+;	sta	WHICH_LOAD
+;	jsr	load_file
+
+
+	; setup music
+	; ocean=pattern24 (3:07) pattern#43
+
+;	lda	#43
+;	sta	$55A+$D000		;current_pattern_smc+1
+;	jsr	$559+$D000		; pt3_set_pattern
+
+;	cli
+
 ;	jmp	$4000
 
-	jmp	$6000
+;	jmp	$6000
+
+
 
 forever:
 	jmp	forever
@@ -277,3 +180,4 @@ config_string:
 
 .include "pt3_lib_mockingboard_patch.s"
 
+.include "hardware_detect.s"

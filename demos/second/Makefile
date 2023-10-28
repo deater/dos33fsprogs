@@ -8,21 +8,21 @@ LINKER_SCRIPTS = ../../linker_scripts/
 
 all:	second_d1.dsk second_d2.dsk
 
-second_d1.dsk:	QBOOT QLOAD MUSIC START music.inc \
+second_d1.dsk:	QBOOT QLOAD MUSIC music.inc \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
 	./part16_ocean/OCEAN \
-	./part18_3d/THREED
+	./part17_polar/POLAR
 	cp $(EMPTY_DISK) second_d1.dsk
 	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT	0 1
 	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT	1 1
 	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT	2 1
 	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD	0 0
 	$(DOS33_RAW) second_d1.dsk 3 0 MUSIC	0 0
-	$(DOS33_RAW) second_d1.dsk 5 0 START	0 0
 	$(DOS33_RAW) second_d1.dsk 8 0 ./part01_intropan/INTRO	0 0
 	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
 	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
+	$(DOS33_RAW) second_d1.dsk 34 0 ./part17_polar/POLAR	0 0
 
 second_d2.dsk:	QBOOT QLOAD2 MUSIC2 music2.inc \
 	./part18_3d/THREED \
@@ -67,7 +67,7 @@ qload.o:	qload.s \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
-	text_print.s \
+	text_print.s start.s \
 	hgr_table.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
@@ -169,6 +169,8 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
 	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
+	./generate_common -a 0xd000 -s current_pattern_smc music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_set_pattern music.lst >> music.inc
 	./generate_common -a 0xd000 -s copy_main_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s copy_aux_main music.lst >> music.inc
 
