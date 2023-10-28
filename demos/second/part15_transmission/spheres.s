@@ -1,6 +1,4 @@
-; Polar Bear
-
-; do the animated bounce if possible
+; Transmission
 
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
@@ -14,7 +12,7 @@ div7_table	= $1d00
 hposn_low	= $1e00
 hposn_high	= $1f00
 
-polar_start:
+spheres_start:
 	;=====================
 	; initializations
 	;=====================
@@ -37,9 +35,9 @@ load_loop:
 
 	; load image offscreen $6000
 
-	lda	#<polar_data
+	lda	#<spheres_data
 	sta	zx_src_l+1
-	lda	#>polar_data
+	lda	#>spheres_data
 	sta	zx_src_h+1
 	lda	#$60
 	jsr	zx02_full_decomp
@@ -49,7 +47,9 @@ load_loop:
 	sta	COUNT
 	sta	DRAW_PAGE
 
-ship_sprite_loop:
+
+	; copy to main
+
 
 	lda	#$60
 	jsr	hgr_copy
@@ -58,28 +58,16 @@ ship_sprite_loop:
 
 	jsr	wait_until_keypress
 
-polar_done:
+spheres_done:
 	rts
 
 
-.align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 
-
-
-	; wait A * 1/50s
-wait_irq:
-;	lda	#50
-	sta	IRQ_COUNTDOWN
-wait_irq_loop:
-	lda	IRQ_COUNTDOWN
-	bne	wait_irq_loop
-	rts
-
-polar_data:
-	.incbin "graphics/polar2.hgr.zx02"
+spheres_data:
+	.incbin "graphics/spheres.hgr.zx02"
 

@@ -69,8 +69,12 @@ ocean_loop:
 	sta	COUNT
 no_count_oflo:
 
-	jmp	ocean_loop
+	lda	KEYPRESS
+	bmi	done_ocean
 
+	jmp	ocean_loop
+done_ocean:
+	rts
 
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"

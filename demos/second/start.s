@@ -74,25 +74,50 @@ dont_enable_mc:
 skip_all_checks:
 
 
-	;===================
-	; Load graphics
-	;===================
-load_loop:
-
-;	jsr	HGR
-;	bit	SET_GR
-;	bit	HIRES
-;	bit	FULLGR
-	bit	PAGE1
-
-
-	;=======================
-	; Load, copy to AUXMEM
-	;=======================
+	;============================
+	; Load programs into AUXMEM
+	;============================
 
 	sta	$C008		; use MAIN zero-page/stack/language card
 
 
+	;=============================
+	; want to load 2..MAX
+	;	0 = MUSIC, 1 = INTRO
+
+	lda	#2
+	sta	COUNT
+
+load_program_loop:
+	;============================
+	; load next program to MAIN $6000
+
+	; load from disk
+
+	lda     COUNT		; which one
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	; copy to proper AUX location
+
+	ldx	COUNT
+	lda	aux_dest,X	; load AUX dest
+	pha
+
+	ldy	#$60		; MAIN src $6000
+
+	lda	length_array,X	; number of pages
+	tax			; in X
+	pla			; restore AUX dest to A
+
+	jsr	copy_main_aux
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#7
+	bne	load_program_loop
+
+.if 0
 
 	;====================
 	; load POLAR to $6000
@@ -110,6 +135,49 @@ load_loop:
 	jsr	copy_main_aux
 
 
+	;====================
+	; load SPHERES to $6000
+
+	lda     #5		; SPHERES
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	;======================
+	; copy SPHERES to AUX $2000
+
+	lda	#$20		; AUX dest $1000
+	ldy	#$60		; MAIN src $6000
+	ldx	#16		; 16 pages
+	jsr	copy_main_aux
+
+.endif
+
+
+;	cli	; start music
+
+	;=======================
+	; run DOTS
+	;============================================
+	; copy DOTS from AUX $3000 to MAIN $8000
+
+	lda	#$30		; AUX src $1000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
+
+	;=======================
+	; run SPHERES
+	;============================================
+	; copy SPHERES from AUX $2000 to MAIN $8000
+
+	lda	#$20		; AUX src $1000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
+
+
 	;=======================
 	; run POLAR
 	;============================================
@@ -120,17 +188,11 @@ load_loop:
 	ldx	#16             ; 16 pages
 	jsr	copy_aux_main
 
-	; setup music
-	; ocean=pattern24 (3:07) pattern#43
-
-	lda	#43
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-
-	cli
-
+	; setup music ocean=pattern24 (3:07) pattern#43
+;	lda	#43
+;	sta	current_pattern_smc+1
+;	jsr	pt3_set_pattern
         ; run polar
-
 	jsr     $8000
 
 	;=============================

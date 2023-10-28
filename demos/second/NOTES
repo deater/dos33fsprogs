@@ -12,7 +12,7 @@ leaves:		5k	25%
 lens/rotozoom:	4k	50%
 plasma:		4k?	25%
 plasmacube:	4k?	10%
-dotbounce:	4k?	0%
+dotbounce:	4k		32	16		$3000-$3FFF
 transmission:	4k?	0%	33	16		$2000-$2FFF
 ocean:		24k		XX	96		???
 polar:		4k		34	16		$1000-$1FFF

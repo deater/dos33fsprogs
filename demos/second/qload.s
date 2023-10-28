@@ -164,23 +164,33 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte 1			; POLAR
+	.byte 1,1,1		; POLAR, SPHERES
 
 load_address_array:
         .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte $60		; POLAR
+	.byte $60,$60,$60	; POLAR, SPHERES, DOTS
+
+start_address:
+        .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte $80,$80,$80	; POLAR, SPHERES, DOTS
+
+
+aux_dest:			;
+        .byte $D0,$FF,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte $10,$20,$30	; POLAR, SPHERES, DOTS
+
 
 track_array:
         .byte  3, 8, 11, 20	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte 34		; POLAR
+	.byte 34,33,32		; POLAR, SPHERES, DOTS
 
 sector_array:
         .byte  0, 0, 0, 0	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte  0		; POLAR
+	.byte  0, 0, 0		; POLAR, SPHERES, DOTS
 
 length_array:
-        .byte  32, 84, 16, 96	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte  16		; POLAR
+        .byte  32, 84, 16, 16	; MUSIC, INTRO, TUNNEL, OCEAN
+	.byte  16, 16, 16	; POLAR, SPHERES, DOTS
 
 	.include	"wait.s"
 
