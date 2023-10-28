@@ -21,8 +21,19 @@ second_d1.dsk:	QBOOT QLOAD MUSIC music.inc \
 	$(DOS33_RAW) second_d1.dsk 3 0 MUSIC	0 0
 	$(DOS33_RAW) second_d1.dsk 8 0 ./part01_intropan/INTRO	0 0
 	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
-	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
+#	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN	0 0
+	$(DOS33_RAW) second_d1.dsk 33 0 ./part15_transmission/SPHERES	0 0
 	$(DOS33_RAW) second_d1.dsk 34 0 ./part17_polar/POLAR	0 0
+
+
+####
+
+part15_transmission/SPHERES:	
+	cd part15_transmission && make
+
+part17_polar/POLAR:	
+	cd part17_polar && make
+
 
 second_d2.dsk:	QBOOT QLOAD2 MUSIC2 music2.inc \
 	./part18_3d/THREED \
@@ -233,6 +244,8 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part15_transmission && make clean
+	cd part17_polar && make clean
 	cd part18_3d && make clean
 	cd part19_nuts && make clean
 	cd part20_credits && make clean

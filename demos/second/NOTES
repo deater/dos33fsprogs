@@ -1,5 +1,7 @@
 Disk Usage:
 
+DISK1				Track	Sectors		AUX
+~~~~~~
 fake_bios:	4k	90%
 intro_pan:	10k	33%
 chess_shapes:	12k	5%
@@ -11,9 +13,9 @@ lens/rotozoom:	4k	50%
 plasma:		4k?	25%
 plasmacube:	4k?	10%
 dotbounce:	4k?	0%
-transmission:	8k?	0%
-ocean:		24k	90%
-polar:		5k	50%
+transmission:	4k?	0%	33	16		$2000-$2FFF
+ocean:		24k		XX	96		???
+polar:		4k		34	16		$1000-$1FFF
 	=========================
 
 DISK2:				Track	Sectors		AUX
