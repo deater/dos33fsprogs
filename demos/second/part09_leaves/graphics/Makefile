@@ -8,6 +8,9 @@ all:	final3.hgr.zx02
 
 ####
 
+final3.hgr:	final3.png
+	$(PNG_TO_HGR) final3.png > final3.hgr
+
 final3.hgr.zx02:	final3.hgr
 	$(ZX02) final3.hgr final3.hgr.zx02
 

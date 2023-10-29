@@ -1,6 +1,14 @@
+TODO CREDITS
++ credit french touch for plasma
++ credit ZX02
+
 
 DISK I
 
++ Lens / Rotozoom
+  - add lo-res LENS sprite to bounce around
+  - for rotozoom, wrap around
+    note, this might mean 32x32
 
 + Plasma
   - switch to purple green

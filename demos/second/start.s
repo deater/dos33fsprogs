@@ -159,6 +159,18 @@ load_program_loop:
 	;==========================
 
 	;=======================
+	; run LEAVES (#5)
+	;=======================
+	; copy LEAVES from AUX $5000 to MAIN $8000
+
+	lda	#$50		; AUX src $5000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#32		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
+
+
+	;=======================
 	; run LENS/ROTOZOOM (#6)
 	;=======================
 	; copy LENS from AUX $4000 to MAIN $6000
