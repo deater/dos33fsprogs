@@ -104,7 +104,7 @@ flip_pages:
 	beq	done_page
 	inx
 done_page:
-	ldy	PAGE0,X		; set display page to PAGE1 or PAGE2
+	ldy	PAGE1,X		; set display page to PAGE1 or PAGE2
 
 	eor	#$4		; flip draw page between $400/$800
 	sta	draw_page_smc+1 ; DRAW_PAGE

@@ -46,12 +46,15 @@ tunnel:
 
 	jsr	HGR2
 
-	lda	#10
+tunnel_again:
+	lda	#0
 	sta	RR
 
 draw_next:
 
 	ldx	RR
+	lda	star_z,X
+	tax
 	lda	radii,X
 	sta	R
 
@@ -126,6 +129,11 @@ store_D:
 	sta	D
 
 do_plots:
+	lda	XX
+	and	#$3
+	bne	done2
+
+
 	; setup constants
 
 	lda	XX
@@ -186,6 +194,7 @@ xnoc:
 	bpl	pos_loop
 
 
+done2:
 	; IFY>=XTHEN4
 	lda	YY
 	cmp	XX
@@ -196,13 +205,23 @@ done:
 	clc
 	adc	#1
 	sta	RR
-stop:
-	cmp	#250
-	beq	stop
+
+	cmp	#19
+	beq	done_frame
 
 	; GOTO1
 	jmp	draw_next
 
+done_frame:
+	jsr	HGR2
+
+	ldx	#19
+move_circles:
+	dec	star_z,X
+	dex
+	bpl	move_circles
+
+	jmp	tunnel_again
 
 radii:
 	.byte <4000, <3200, <1600, <1066, <800, <640, <533, <457
@@ -237,3 +256,11 @@ radii:
 	.byte  13, 13, 13, 13, 13, 13, 13, 13
 	.byte  13, 13, 13, 13, 13, 13, 13, 12
 	.byte  12, 12, 12, 12, 12, 12, 12, 12
+
+; num-stars = 20
+
+star_z:
+	.byte 15,26,38,50,63,75,78,100,112,125,137
+	.byte 150,162,175,187,200,212,224,237
+
+

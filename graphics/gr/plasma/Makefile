@@ -10,7 +10,7 @@ all:	plasma.dsk
 plasma.dsk:	HELLO PLASMA PLASMA2 \
 	DIAMONDS STATIC STATIC_BOT \
 	PLASMA_128 PLASMA_TINY PLASMA_BOT WIRES WIRES_BOT \
-	SMALLCIRCS STAR OVAL OVAL_BOT
+	SMALLCIRCS STAR OVAL OVAL_BOT INTERFERENCE INTERFERENCE2
 	cp $(EMPTYDISK) plasma.dsk
 	$(DOS33) -y plasma.dsk SAVE A HELLO
 	$(DOS33) -y plasma.dsk BSAVE -a 0x70 PLASMA
@@ -26,6 +26,8 @@ plasma.dsk:	HELLO PLASMA PLASMA2 \
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 SMALLCIRCS
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 STAR
 	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 OVAL
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 INTERFERENCE
+	$(DOS33) -y plasma.dsk BSAVE -a 0xc00 INTERFERENCE2
 	$(DOS33) -y plasma.dsk BSAVE -a 0x375 OVAL_BOT
 
 ###
@@ -73,6 +75,23 @@ OVAL:	oval.o
 
 oval.o:	oval.s
 	ca65 -o oval.o oval.s -l oval.lst
+
+###
+
+INTERFERENCE:	interference.o
+	ld65 -o INTERFERENCE interference.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+interference.o:	interference.s
+	ca65 -o interference.o interference.s -l interference.lst
+
+###
+
+INTERFERENCE2:	interference2.o
+	ld65 -o INTERFERENCE2 interference2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+interference2.o:	interference2.s
+	ca65 -o interference2.o interference2.s -l interference2.lst
+
 
 ###
 
