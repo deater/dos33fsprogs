@@ -12,6 +12,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 	MUSIC_INTRO \
 	MUSIC \
 	./part01_intropan/INTRO \
+	./part04_chess_shapes/CHESS \
 	./part05_dot_tunnel/TUNNEL \
 	./part08_gorilla/GORILLA \
 	./part09_leaves/LEAVES \
@@ -30,7 +31,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 	$(DOS33_RAW) second_d1.dsk 2 0 MUSIC_INTRO	0 0
 	$(DOS33_RAW) second_d1.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) second_d1.dsk 10 0 ./part01_intropan/INTRO	0 0
-#	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
+	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
 #	$(DOS33_RAW) second_d1.dsk 16 0 ./part05_dot_tunnel/TUNNEL	0 0
 	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
 	$(DOS33_RAW) second_d1.dsk 21 0 ./part09_leaves/LEAVES		0 0
@@ -44,6 +45,9 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 
 
 ####
+
+part04_chess/CHESS:	
+	cd part04_chess && make
 
 part08_gorilla/GORILLA:	
 	cd part08_gorilla && make
@@ -65,6 +69,9 @@ part14_dotbounce/DOTS:
 
 part15_transmission/SPHERES:	
 	cd part15_transmission && make
+
+part16_ocean/OCEAN:	
+	cd part16_ocean && make
 
 part17_polar/POLAR:	
 	cd part17_polar && make
@@ -297,6 +304,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part04_chess && make clean
 	cd part08_gorilla && make clean
 	cd part09_leaves && make clean
 	cd part10_lens_rotozoom && make clean
@@ -304,6 +312,7 @@ clean:
 	cd part13_plasmacube && make clean
 	cd part14_dotbounce && make clean
 	cd part15_transmission && make clean
+	cd part16_ocean && make clean
 	cd part17_polar && make clean
 	cd part18_3d && make clean
 	cd part19_nuts && make clean

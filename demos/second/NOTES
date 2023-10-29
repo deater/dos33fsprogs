@@ -8,10 +8,10 @@ qload		4k		1	16
 
 02 fake_bios:	4k		10	16
 02 intro_pan:	16k		11-14	64
+02 title:	4k
 	
 ; pause to load new music
 ; and these into primary RAM
-03 title:		4k
 03 chess_shapes:	4k		15-16	32
 03 tunnel:		4k		16-17	32
 03 circles/lines:	4k		18	16
