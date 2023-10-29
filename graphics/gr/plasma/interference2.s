@@ -3,12 +3,8 @@
 .include "hardware.inc"
 
 ; zero page
-YY	= $69
 
-COLOR_MASK=$F8
-XPOS = $F9
-YPOS = $FA
-
+COLOR_MASK=$FA
 DRAW_PAGE=$FB
 FRAME	= $FC
 SUM	= $FD
@@ -25,6 +21,9 @@ oval:
 	bit	FULLGR		; make it 40x48
 	bit	PAGE1
 
+	lda	#0
+	sta	FRAME
+
 	lda	#4
 	sta	DRAW_PAGE
 
@@ -36,7 +35,48 @@ draw_oval_loop:
 create_yloop:
 
 	txa
-	jsr	plot_setup
+;	jsr	plot_setup
+
+
+
+	;================================
+	; plot_setup
+	;================================
+
+plot_setup:
+
+	lsr			; shift bottom bit into carry		; 2
+	tay
+
+	bcc	plot_even						; 2nt/3
+plot_odd:
+	lda	#$f0							; 2
+	bcs	plot_c_done						; 2nt/3
+plot_even:
+	lda	#$0f							; 2
+plot_c_done:
+	sta	mask_smc2+1						;
+	eor	#$FF							; 2
+	sta	mask_invert_smc1+1					;
+
+
+	lda	gr_offsets_l,Y	; lookup low-res memory address		; 4
+	sta	gbasl_smc1+1
+	sta	gbasl_smc2+1
+
+
+        lda	gr_offsets_h,Y						; 4
+	clc
+        adc	DRAW_PAGE	; add in draw page offset		; 3
+	sta	gbasl_smc1+2
+	sta	gbasl_smc2+2
+
+	;==========================================
+
+
+
+	;===========================
+	; calculate for each XPOS (Y) on ROW (X)
 
 	ldy	#39
 
@@ -50,15 +90,27 @@ create_xloop:
 	jsr	calcsine_div2
 
 	txa			; YY
+
+	adc	FRAME				; ADDED
+
 	jsr	calcsine
 
 	; X (YY) is in SAVEX
 
 	clc
-;	sty	SAVEY		; XX
+
+	sty	SAVEY		; XX
+
 	tya
+
+; PATCH?
 	adc	SAVEX		; XX + YY
+
+	adc	FRAME				; ADDED
+
 	jsr	calcsine_div2
+;	jsr	calcsine
+
 
 ;	clc
 ;	adc	FRAME
@@ -70,8 +122,8 @@ create_xloop:
 
 	sta	color_smc+1
 
-	tya
-	pha
+;	tya
+;	pha
 
 
 	;================================
@@ -94,9 +146,10 @@ gbasl_smc2:
 
 	;=================================
 
-	pla
-	tay
+;	pla
+;	tay
 
+	ldy	SAVEY
 	ldx	SAVEX
 
 	dey
@@ -121,14 +174,35 @@ done_flip:
 	sta	DRAW_PAGE
 
 
-	; X and Y both $FF
+	;===================================
+	;===================================
+	;===================================
+	; try patching
+
+	lda	FRAME
+	and	#$10
+	bne	do_patch1
+undo_patch1:
+	lda	#$EA		; nop
+	bne	done_patch1	; bra
+do_patch1:
+	lda	#$4A		; lsr
+done_patch1:
+	sta	patch1
+	;===================================
 
 	jmp	draw_oval_loop		; bra
 
 
+	;=============================
+	;=============================
 
 calcsine_div2:
-	lsr
+			; no LSR = zoomed out
+	lsr		; one LSR = zoomed in on oval
+patch1:
+	nop		; two LSR = more zoomed in
+
 calcsine:
 	stx	SAVEX
 
@@ -148,6 +222,8 @@ sinsub:
 	jmp	sindone
 
 sinadd:
+;	ldx	FRAME
+
 	lda	SUM
 	clc
 	adc	sinetable,X
@@ -184,43 +260,6 @@ sinetable:
 
 
 
-	;================================
-	; plot_setup
-	;================================
-	; sets up GBASL/GBASH and MASK
-	; Ycoord in A
-	; trashes Y/A
-
-plot_setup:
-
-	lsr			; shift bottom bit into carry		; 2
-	tay
-
-	bcc	plot_even						; 2nt/3
-plot_odd:
-	lda	#$f0							; 2
-	bcs	plot_c_done						; 2nt/3
-plot_even:
-	lda	#$0f							; 2
-plot_c_done:
-	sta	mask_smc2+1						;
-	eor	#$FF							; 2
-	sta	mask_invert_smc1+1					;
-
-
-	lda	gr_offsets_l,Y	; lookup low-res memory address		; 4
-	sta	gbasl_smc1+1
-	sta	gbasl_smc2+1
-
-
-        lda	gr_offsets_h,Y					; 4
-	clc
-        adc	DRAW_PAGE	; add in draw page offset		; 3
-	sta	gbasl_smc1+2
-	sta	gbasl_smc2+2
-
-
-	rts
 
 
 gr_offsets_l:
