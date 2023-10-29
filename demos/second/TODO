@@ -13,6 +13,26 @@ TODO MUSIC
 
 DISK I
 
++BIOS
+
+  - get it working
+  - if it is, remove other detection code
+
++ Intro
+  - title cards
+  - scrolling
+  - credits at bottom?
+
+  - Sprites / explosion
+
++ chessboard
+
+  - falling effect
+  - moving / bouncing object
+  - tunnel
+  - cirles
+  - interference pattern
+
 + Lens / Rotozoom
   - add lo-res LENS sprite to bounce around
   - for rotozoom, wrap around
