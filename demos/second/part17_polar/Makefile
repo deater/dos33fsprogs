@@ -23,7 +23,7 @@ polar.o:	polar.s \
 
 ###
 
-graphics/fc_iipix.hgr.zx02:	
+graphics/polar2.hgr.zx02:	
 	cd graphics && make
 
 ###

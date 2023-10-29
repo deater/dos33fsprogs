@@ -14,11 +14,17 @@ LENS:	lens.o
 
 lens.o:	lens.s ../zx02_optim.s \
 	roto.s rotozoom.s \
+	graphics/lenspic.gr.zx02 \
 	../zp.inc ../hardware.inc
 	ca65 -o lens.o lens.s -l lens.lst
 
 ###
 
+
+graphics/lenspic.gr.zx02:	
+	cd graphics && make
+
+####
 
 clean:
 	rm -f *~ *.o *.lst LENS

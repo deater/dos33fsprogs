@@ -23,7 +23,7 @@ spheres.o:	spheres.s \
 
 ###
 
-graphics/fc_iipix.hgr.zx02:	
+graphics/spheres.hgr.zx02:	
 	cd graphics && make
 
 ###

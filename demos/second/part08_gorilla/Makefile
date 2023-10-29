@@ -23,7 +23,7 @@ gorilla.o:	gorilla.s \
 
 ###
 
-graphics/final3.hgr.zx02:	
+graphics/mntscrl3.hgr.zx02:	
 	cd graphics && make
 
 ###
