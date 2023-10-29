@@ -56,6 +56,32 @@ ship_sprite_loop:
 	jsr	wait_until_keypress
 
 chess_done:
+
+	;==================
+	;==================
+	;==================
+	; DO TUNNEL HERE
+	;==================
+	;==================
+	;==================
+
+main_tunnel_done:
+
+	;==================
+	;==================
+	;==================
+	; DO INTERFERENCE HERE
+	;==================
+	;==================
+	;==================
+
+
+	jsr	interference
+
+
+main_interference_done:
+
+
 	rts
 
 
@@ -66,6 +92,7 @@ chess_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 
+	.include	"interference.s"
 
 
 	; wait A * 1/50s

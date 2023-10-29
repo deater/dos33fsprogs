@@ -215,9 +215,12 @@ GRLINEH		= $F3
 PAGE		= $F2
 
 
+; CUBE
 
-
-
+;COLOR_MASK	= $F2
+SAVEX		= $F3
+SAVEY		= $F4
+SUM		= $F5
 
 
 ; read any file slot 6 version
