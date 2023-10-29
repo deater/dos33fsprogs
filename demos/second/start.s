@@ -159,6 +159,17 @@ load_program_loop:
 	;==========================
 
 	;=======================
+	; run GORILLA (#4)
+	;=======================
+	; copy GORILLA from AUX $7000 to MAIN $8000
+
+	lda	#$70		; AUX src $7000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#32		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
+
+	;=======================
 	; run LEAVES (#5)
 	;=======================
 	; copy LEAVES from AUX $5000 to MAIN $8000

@@ -13,6 +13,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 	MUSIC \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
+	./part08_gorilla/GORILLA \
 	./part09_leaves/LEAVES \
 	./part10_lens_rotozoom/LENS \
 	./part12_plasma/PLASMA \
@@ -31,7 +32,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 	$(DOS33_RAW) second_d1.dsk 10 0 ./part01_intropan/INTRO	0 0
 #	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
 #	$(DOS33_RAW) second_d1.dsk 16 0 ./part05_dot_tunnel/TUNNEL	0 0
-#	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
+	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
 	$(DOS33_RAW) second_d1.dsk 21 0 ./part09_leaves/LEAVES		0 0
 	$(DOS33_RAW) second_d1.dsk 23 0 ./part10_lens_rotozoom/LENS		0 0
 	$(DOS33_RAW) second_d1.dsk 24 0 ./part12_plasma/PLASMA		0 0
@@ -43,6 +44,9 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 
 
 ####
+
+part08_gorilla/GORILLA:	
+	cd part08_gorilla && make
 
 part09_leaves/LEAVES:	
 	cd part09_leaves && make
@@ -293,6 +297,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part08_gorilla && make clean
 	cd part09_leaves && make clean
 	cd part10_lens_rotozoom && make clean
 	cd part12_plasma && make clean

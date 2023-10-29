@@ -8,6 +8,9 @@ all:	mntscrl3.hgr.zx02
 
 ####
 
+mntscrl3.hgr:	mntscrl3.png
+	$(PNG_TO_HGR) mntscrl3.png > mntscrl3.hgr
+
 mntscrl3.hgr.zx02:	mntscrl3.hgr
 	$(ZX02) mntscrl3.hgr mntscrl3.hgr.zx02
 
