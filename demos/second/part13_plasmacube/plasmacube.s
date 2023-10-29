@@ -1,59 +1,25 @@
 ; PLASMAGORIA
 
-; original code by French Touch
-
-; this is just part3 and size optimized
-; just the graphics, no music
-
-
-; Note: look into modifying color lookup table
-;	there's a wide setting that gives a slightly different effect
+; based on original code by French Touch
 
 .include "../hardware.inc"
+.include "../zp.inc"
 
-; Page Zero
-OUT1			= $20 ; +$21
-OUT2			= $22 ; +$23
-
-; counter if not MOCKING
-COMPT1			= $30
-COMPT2			= $31
-
-;
-PARAM1			= $60
-PARAM2			= $61
-PARAM3			= $62
-PARAM4			= $63
-count			= $64
-count2			= $65
-;
-
-GRLINE			= $F0	; +$F1
-IndexMask		= $F2
-Mask			= $F3
-
-Beat			= $FA
-Mark			= $FB
 
 ; =============================================================================
 ; ROUTINE MAIN
 ; =============================================================================
-PLASMA_DEBUT:
+
+plasma_main:
+
 	bit	PAGE2		; set page 2
-	bit	SET_TEXT	; set text
+;	bit	SET_TEXT	; set text
 	bit	LORES		; set lo-res
 
 
-;	jsr	setup_dump
+step3:
 
-; ============================================================================
-
-; -------------------------------------
-STEP3:
 	; init
-
-;	lda	#00
-;	sta	Beat
 
 	lda	#02
 	sta	COMPT2
@@ -62,18 +28,26 @@ STEP3:
 	sta	PARAM3
 	sta	PARAM4
 
-BP3:
+bp3:
 	jsr	precalc		; pre-calc
 	jsr	display_normal	; display normal
 	jsr	VBLANK
-;	jsr	DUMP
+
+	lda	KEYPRESS
+	bpl	keep_making_plasma
+
+	jmp	done_plasmacube
+
+
+keep_making_plasma:
+
 
 	inc	COMPT1
-	bne	BP3
+	bne	bp3
 	dec	COMPT2
-	bne	BP3
+	bne	bp3
 
-	jmp	STEP3
+	jmp	step3
 
 
 ; ============================================================================
@@ -160,10 +134,16 @@ display_lookup_smc:
 
 	rts
 
+
 VBLANK:
-	inc	Mark
+	inc	FRAME
+
 	rts
 
+done_plasmacube:
+	bit	KEYRESET
+
+	rts
 
 ;.align 256
 
@@ -214,19 +194,6 @@ sin3: ; 256
 .byte $15,$1B,$1F,$23,$27,$2B,$2D,$30,$32,$33,$34,$35,$35,$33,$33,$32,$30,$2E,$2D,$2C,$2B,$2A,$2A,$2A,$2B,$2C,$2E,$30,$32,$36,$38,$3B
 .byte $3E,$42,$45,$47,$49,$4B,$4B,$4B,$4A,$49,$47,$45,$42,$3D,$3A,$35,$30,$2B,$26,$22,$1E,$1A,$17,$14,$13,$11,$10,$10,$10,$12,$12,$14
 .byte $15,$18,$1A,$1B,$1D,$1E,$1F,$1F,$1F,$1F,$1E,$1D,$1B,$18,$16,$14,$10,$0E,$0C,$0B,$09,$08,$08,$09,$0A,$0C,$0E,$11,$14,$19,$1D,$22
-
-.if 0
-; This appears to be roughly 64+64*sin(x)
-sin4: ; 256
-.byte $40,$41,$43,$44,$46,$47,$49,$4A,$4C,$4D,$4F,$50,$52,$53,$55,$56,$58,$59,$5B,$5C,$5D,$5F,$60,$61,$63,$64,$65,$67,$68,$69,$6A,$6B
-.byte $6C,$6D,$6F,$70,$71,$72,$73,$73,$74,$75,$76,$77,$78,$78,$79,$7A,$7A,$7B,$7B,$7C,$7C,$7D,$7D,$7D,$7E,$7E,$7E,$7F,$7F,$7F,$7F,$7F
-.byte $7F,$7F,$7F,$7F,$7F,$7F,$7E,$7E,$7E,$7D,$7D,$7D,$7C,$7C,$7B,$7B,$7A,$7A,$79,$78,$78,$77,$76,$75,$74,$73,$73,$72,$71,$70,$6F,$6D
-.byte $6C,$6B,$6A,$69,$68,$67,$65,$64,$63,$61,$60,$5F,$5D,$5C,$5B,$59,$58,$56,$55,$53,$52,$50,$4F,$4D,$4C,$4A,$49,$47,$46,$44,$43,$41
-.byte $3F,$3E,$3C,$3B,$39,$38,$36,$35,$33,$32,$30,$2F,$2D,$2C,$2A,$29,$27,$26,$24,$23,$22,$20,$1F,$1E,$1C,$1B,$1A,$18,$17,$16,$15,$14
-.byte $13,$12,$10,$0F,$0E,$0D,$0C,$0C,$0B,$0A,$09,$08,$07,$07,$06,$05,$05,$04,$04,$03,$03,$02,$02,$02,$01,$01,$01,$00,$00,$00,$00,$00
-.byte $00,$00,$00,$00,$00,$00,$01,$01,$01,$02,$02,$02,$03,$03,$04,$04,$05,$05,$06,$07,$07,$08,$09,$0A,$0B,$0C,$0C,$0D,$0E,$0F,$10,$12
-.byte $13,$14,$15,$16,$17,$18,$1A,$1B,$1C,$1E,$1F,$20,$22,$23,$24,$26,$27,$29,$2A,$2C,$2D,$2F,$30,$32,$33,$35,$36,$38,$39,$3B,$3C,$3E
-.endif
 
 
 ; Lookup table for colors
@@ -308,32 +275,9 @@ lores_colors_wide: ; 256
 .byte $11,$11,$11,$11,$11,$11,$11,$11
 .endif
 
+Table1	=	$6000
+Table2	=	$6000+64
 
 
 
-
-
-
-Table1	=	$8000
-Table2	=	$8000+64
-
-.if 0
-Table1:	; !fill 64,0
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-Table2: ; !fill 64,0
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-	.byte $00,$00,$00,$00,$00,$00,$00,$00
-.endif
+.include "../wait_keypress.s"

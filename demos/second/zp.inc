@@ -188,7 +188,31 @@ SPRITE_Y	= $F2
 SPRITE_X	= $F3
 CURRENT_ROW	= $F4
 
+; DOTS
+
 COLOR_MASK = $F2
+
+; PLASMACUBE
+
+OUT1		= $20
+OUT1H		= $21
+OUT2		= $22
+OUT2H		= $23
+COMPT1		= $30
+COMPT2		= $31
+
+PARAM1		= $60
+PARAM2		= $61
+PARAM3		= $62
+PARAM4		= $63
+;count		= $64
+;count2		= $65
+
+GRLINE                  = $F2
+GRLINEH			= $F3
+;IndexMask               = $F4
+;Mask                    = $F5
+
 
 
 

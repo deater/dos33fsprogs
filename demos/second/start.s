@@ -158,6 +158,16 @@ load_program_loop:
 	;==========================
 	;==========================
 
+	;=======================
+	; run PLASMACUBE (#9)
+	;=======================
+	; copy PLASMACUBE from AUX $2000 to MAIN $8000
+
+	lda	#$20		; AUX src $1000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
 
 	;=======================
 	; run DOTS (#9)
