@@ -30,6 +30,38 @@ intro_start:
 	jsr	hgr_page1_clearscreen
 
 
+	; demosplash
+
+	lda	#<demosplash_data
+	sta	zx_src_l+1
+
+	lda	#>demosplash_data
+	sta	zx_src_h+1
+
+	lda	#$20
+
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
+
+
+	; mockingboard
+
+	lda	#<mockingboard_data
+	sta	zx_src_l+1
+
+	lda	#>mockingboard_data
+	sta	zx_src_h+1
+
+	lda	#$20
+
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
+
+
+
+
 ; for pan
 ; code at $6000
 ;	left page for $2000 at top, we can overwrite
@@ -92,6 +124,11 @@ done_intro:
 	.include	"../zx02_optim.s"
 	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
+
+demosplash_data:
+	.incbin "graphics/demosplash.hgr.zx02"
+mockingboard_data:
+	.incbin "graphics/mockingboard.hgr.zx02"
 
 intro_left_data:
 	.incbin "graphics/igl.hgr.zx02"

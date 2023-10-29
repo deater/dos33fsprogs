@@ -4,7 +4,8 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
 
-all:	igl.hgr.zx02 igr.hgr.zx02 fc_sr_logo.hgr.zx02
+all:	igl.hgr.zx02 igr.hgr.zx02 fc_sr_logo.hgr.zx02 \
+	demosplash.hgr.zx02 mockingboard.hgr.zx02
 
 ####
 
@@ -21,6 +22,24 @@ igl.hgr.zx02:	igl.hgr
 
 igl.hgr:	igl.png
 	$(PNG_TO_HGR) igl.png > igl.hgr
+
+####
+
+mockingboard.hgr.zx02:	mockingboard.hgr
+	$(ZX02) mockingboard.hgr mockingboard.hgr.zx02
+
+mockingboard.hgr:	mockingboard.png
+	$(PNG_TO_HGR) mockingboard.png > mockingboard.hgr
+
+####
+
+demosplash.hgr.zx02:	demosplash.hgr
+	$(ZX02) demosplash.hgr demosplash.hgr.zx02
+
+demosplash.hgr:	demosplash.png
+	$(PNG_TO_HGR) demosplash.png > demosplash.hgr
+
+
 
 ####
 
