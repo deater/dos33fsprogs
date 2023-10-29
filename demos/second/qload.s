@@ -174,7 +174,6 @@ start_address:
         .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
 	.byte $80,$80,$80	; POLAR, SPHERES, DOTS
 
-
 aux_dest:			;
         .byte $D0,$FF,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
 	.byte $10,$20,$30	; POLAR, SPHERES, DOTS

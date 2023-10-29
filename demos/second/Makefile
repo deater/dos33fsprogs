@@ -149,6 +149,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_top qload.lst >> qload.inc
 
 #	./generate_common -a 0x1200 -s mockingboard_patch qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s mockingboard_init qload.lst >> qload.inc

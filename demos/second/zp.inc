@@ -182,12 +182,13 @@ RR              = $FA
 BACKUP_OUTL	= $F2
 BACKUP_OUTH	= $F3
 
-; Nuts/ operner
+; Nuts/ opener
 
 SPRITE_Y	= $F2
 SPRITE_X	= $F3
 CURRENT_ROW	= $F4
 
+COLOR_MASK = $F2
 
 
 
