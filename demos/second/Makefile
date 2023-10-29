@@ -13,6 +13,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 	MUSIC \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
+	./part12_plasma/PLASMA \
 	./part13_plasmacube/PLASMACUBE	\
 	./part14_dotbounce/DOTS	\
 	./part15_transmission/SPHERES \
@@ -31,7 +32,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 #	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
 #	$(DOS33_RAW) second_d1.dsk 21 0 ./part09_leaves_rotozoom/LEAVES		0 0
 #	$(DOS33_RAW) second_d1.dsk 23 0 ./part10_lens_rotozoom/LENS		0 0
-#	$(DOS33_RAW) second_d1.dsk 24 0 ./part12_plasma/PLASMA		0 0
+	$(DOS33_RAW) second_d1.dsk 24 0 ./part12_plasma/PLASMA		0 0
 	$(DOS33_RAW) second_d1.dsk 25 0 ./part13_plasmacube/PLASMACUBE	0 0
 	$(DOS33_RAW) second_d1.dsk 26 0 ./part14_dotbounce/DOTS	0 0
 	$(DOS33_RAW) second_d1.dsk 27 0 ./part15_transmission/SPHERES	0 0
@@ -40,6 +41,9 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 
 
 ####
+
+part12_plasma/PLASMA:	
+	cd part12_plasma && make
 
 part13_plasmacube/PLASMACUBE:	
 	cd part13_plasmacube && make
@@ -281,6 +285,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part12_plasma && make clean
 	cd part13_plasmacube && make clean
 	cd part14_dotbounce && make clean
 	cd part15_transmission && make clean

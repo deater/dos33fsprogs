@@ -205,15 +205,14 @@ PARAM1		= $60
 PARAM2		= $61
 PARAM3		= $62
 PARAM4		= $63
-;count		= $64
-;count2		= $65
 
-GRLINE                  = $F2
-GRLINEH			= $F3
-;IndexMask               = $F4
-;Mask                    = $F5
+GRLINE		= $F2
+GRLINEH		= $F3
 
 
+; PLASMA
+
+PAGE		= $F2
 
 
 
