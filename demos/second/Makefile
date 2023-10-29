@@ -8,28 +8,41 @@ LINKER_SCRIPTS = ../../linker_scripts/
 
 all:	second_d1.dsk second_d2.dsk
 
-second_d1.dsk:	QBOOT QLOAD MUSIC music.inc \
+second_d1.dsk:	QBOOT QLOAD music.inc \
+	MUSIC_INTRO \
+	MUSIC \
 	./part01_intropan/INTRO \
 	./part05_dot_tunnel/TUNNEL \
+	./part13_plasmacube/PLASMACUBE	\
 	./part14_dotbounce/DOTS	\
 	./part15_transmission/SPHERES \
 	./part16_ocean/OCEAN \
 	./part17_polar/POLAR
 	cp $(EMPTY_DISK) second_d1.dsk
-	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT	0 1
-	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT	1 1
-	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT	2 1
-	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD	0 0
-	$(DOS33_RAW) second_d1.dsk 3 0 MUSIC	0 0
-	$(DOS33_RAW) second_d1.dsk 8 0 ./part01_intropan/INTRO	0 0
-	$(DOS33_RAW) second_d1.dsk 11 0 ./part05_dot_tunnel/TUNNEL	0 0
-	$(DOS33_RAW) second_d1.dsk 32 0 ./part14_dotbounce/DOTS	0 0
-	$(DOS33_RAW) second_d1.dsk 33 0 ./part15_transmission/SPHERES	0 0
-#	$(DOS33_RAW) second_d1.dsk 13 0 ./part16_ocean/OCEAN 0 0
+	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) second_d1.dsk 2 0 MUSIC_INTRO	0 0
+	$(DOS33_RAW) second_d1.dsk 4 0 MUSIC		0 0
+	$(DOS33_RAW) second_d1.dsk 10 0 ./part01_intropan/INTRO	0 0
+#	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
+#	$(DOS33_RAW) second_d1.dsk 16 0 ./part05_dot_tunnel/TUNNEL	0 0
+#	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
+#	$(DOS33_RAW) second_d1.dsk 21 0 ./part09_leaves_rotozoom/LEAVES		0 0
+#	$(DOS33_RAW) second_d1.dsk 23 0 ./part10_lens_rotozoom/LENS		0 0
+#	$(DOS33_RAW) second_d1.dsk 24 0 ./part12_plasma/PLASMA		0 0
+	$(DOS33_RAW) second_d1.dsk 25 0 ./part13_plasmacube/PLASMACUBE	0 0
+	$(DOS33_RAW) second_d1.dsk 26 0 ./part14_dotbounce/DOTS	0 0
+	$(DOS33_RAW) second_d1.dsk 27 0 ./part15_transmission/SPHERES	0 0
+	$(DOS33_RAW) second_d1.dsk 28 0 ./part16_ocean/OCEAN 0 0
 	$(DOS33_RAW) second_d1.dsk 34 0 ./part17_polar/POLAR	0 0
 
 
 ####
+
+part13_plasmacube/PLASMACUBE:	
+	cd part13_plasmacube && make
 
 part14_dotbounce/DOTS:	
 	cd part14_dotbounce && make
@@ -222,6 +235,23 @@ music.o:	music.s zp.inc \
 
 ####
 
+MUSIC_INTRO:	music_intro.o qload.inc
+	ld65 -o MUSIC_INTRO music_intro.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+music_intro.o:	music_intro.s zp.inc \
+	aux_memcopy.s \
+	music/z00m_unreal2_part1.pt3 \
+	pt3_lib_core.s \
+	pt3_lib_mockingboard_detect.s \
+	pt3_lib_mockingboard.inc \
+	pt3_lib_init.s \
+	pt3_lib_mockingboard_setup.s \
+	pt3_lib_irq_handler.s
+	ca65 -o music_intro.o music_intro.s -l music_intro.lst
+
+
+####
+
 MUSIC2:	music2.o
 	ld65 -o MUSIC2 music2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
@@ -251,6 +281,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	cd part13_plasmacube && make clean
 	cd part14_dotbounce && make clean
 	cd part15_transmission && make clean
 	cd part17_polar && make clean

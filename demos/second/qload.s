@@ -163,33 +163,48 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte 1,1,1		; POLAR, SPHERES
+	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte 1,1,1,1		; GORILLA,LEAVES,LENS,PLASMA
+	.byte 1,1,1,1		; CUBE,DOTS,SPHERES,OCEAN
+	.byte 1			; POLAR
 
 load_address_array:
-        .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte $60,$60,$60	; POLAR, SPHERES, DOTS
+	.byte $D0,$D0,$60,$60	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte $60,$60,$60,$60	; GORILLA,LEAVES,LENS,PLASMA
+	.byte $60,$60,$60,$60	; CUBE,DOTS,SPHERES,OCEAN
+	.byte $60		; POLAR
 
 start_address:
-        .byte $D0,$60,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte $80,$80,$80	; POLAR, SPHERES, DOTS
+	.byte $D0,$D0,$60,$60	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte $60,$60,$60,$60	; GORILLA,LEAVES,LENS,PLASMA
+	.byte $60,$80,$80,$60	; CUBE,DOTS,SPHERES,OCEAN
+	.byte $80		; POLAR
 
-aux_dest:			;
-        .byte $D0,$FF,$60,$60	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte $10,$20,$30	; POLAR, SPHERES, DOTS
-
+aux_dest:
+	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte $70,$50,$40,$30	; GORILLA,LEAVES,LENS,PLASMA
+	.byte $20,$10,$80,$A0	; CUBE,DOTS,SPHERES,OCEAN
+	.byte $A0		; POLAR
 
 track_array:
-        .byte  3, 8, 11, 20	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte 34,33,32		; POLAR, SPHERES, DOTS
+	.byte 2,4,10,15		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte 19,21,23,24	; GORILLA,LEAVES,LENS,PLASMA
+	.byte 25,26,27,28	; CUBE,DOTS,SPHERES,OCEAN
+	.byte 34		; POLAR
 
 sector_array:
-        .byte  0, 0, 0, 0	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte  0, 0, 0		; POLAR, SPHERES, DOTS
+	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte 0,0,0,0		; GORILLA,LEAVES,LENS,PLASMA
+	.byte 0,0,0,0		; CUBE,DOTS,SPHERES,OCEAN
+	.byte 0			; POLAR
+
 
 length_array:
-        .byte  32, 84, 16, 16	; MUSIC, INTRO, TUNNEL, OCEAN
-	.byte  16, 16, 16	; POLAR, SPHERES, DOTS
+	.byte 32,48,80,80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
+	.byte 32,32,16,16	; GORILLA,LEAVES,LENS,PLASMA
+	.byte 16,16,16,96	; CUBE,DOTS,SPHERES,OCEAN
+	.byte 16		; POLAR
+
 
 	.include	"wait.s"
 

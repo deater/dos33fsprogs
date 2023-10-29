@@ -32,6 +32,5 @@ PT3_ENABLE_APPLE_IIC = 1
 PT3_LOC:
 ;.incbin "music/z00m_unreal2_part1.pt3"
 ;.incbin "music/z00m_unreal2_part2.pt3"
-;.incbin "music/second_3d.pt3"
-
-.incbin "music/z00m_unreal2_complete.pt3"
+.incbin "music/second_3d.pt3"
+;.incbin "music/z00m_unreal2_complete.pt3"

@@ -24,4 +24,4 @@ dots.o:	dots.s \
 
 clean:
 	rm -f *~ *.o *.lst DOTS
-	cd graphics && make clean
+#	cd graphics && make clean

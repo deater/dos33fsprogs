@@ -4,6 +4,8 @@
 
 ; TODO:
 ;	16 of them?  Start by falling in, bouncing when hit bottom
+;	slowly spool out at first
+;	have 24 of them, increase part way?
 
 ;	wide, sine wave it up
 ;	narrow, sine wave it up

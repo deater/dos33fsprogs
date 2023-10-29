@@ -2,21 +2,34 @@ Disk Usage:
 
 DISK1				Track	Sectors		AUX
 ~~~~~~
-fake_bios:	4k	90%
-intro_pan:	10k	33%
-chess_shapes:	12k	5%
-tunnel:		1k	25%
-circles/lines:	4k?	0%
-gorilla:	5k	50%
-leaves:		5k	25%
-lens/rotozoom:	4k	50%
-plasma:		4k?	25%
-plasmacube:	4k?	10%
-dotbounce:	4k		32	16		$3000-$3FFF
-transmission:	4k?	0%	33	16		$2000-$2FFF
-ocean:		24k		XX	96		???
-polar:		4k		34	16		$1000-$1FFF
+qload		4k		1	16
+00 music_intro	??		2-3	32
+01 music_main	??		4-7	48
+
+02 fake_bios:	4k		10	16
+02 intro_pan:	16k		11-14	64
+	
+; pause to load new music
+; and these into primary RAM
+03 title:		4k
+03 chess_shapes:	4k		15-16	32
+03 tunnel:		4k		16-17	32
+03 circles/lines:	4k		18	16
+
+04 gorilla:		8k		19-20	32		$7000-$8FFF
+05 leaves:		8k		21-22	32		$5000-$6FFF
+06 lens/rotozoom:	4k?		23	16		$4000-$4FFF
+07 plasma:		4k?		24	16		$3000-$3FFF
+08 plasmacube:		4k		25	16 (8?)		$2000-$2FFF
+09 dotbounce:		4k		26	16		$1000-$1FFF
+
+; pause to load again?
+
+10 transmission:	4k?		27	16		$2000-$2FFF
+11 ocean:		24k		28	96		???
+12 polar:		4k		34	16		$1000-$1FFF
 	=========================
+
 
 DISK2:				Track	Sectors		AUX
 ~~~~~~				~~~	~~~~~~		~~~~

@@ -74,18 +74,19 @@ dont_enable_mc:
 skip_all_checks:
 
 
-	;============================
-	; Load programs into AUXMEM
-	;============================
+	;====================================
+	;====================================
+	; Pre-Load some programs into AUX MEM
+	;====================================
+	;====================================
+	; 4 - 9
 
 	sta	$C008		; use MAIN zero-page/stack/language card
 
-
 	;=============================
-	; want to load 2..MAX
-	;	0 = MUSIC, 1 = INTRO
+	; want to load 4..9
 
-	lda	#2
+	lda	#4
 	sta	COUNT
 
 load_program_loop:
@@ -114,79 +115,88 @@ load_program_loop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#7
+	cmp	#10
 	bne	load_program_loop
 
-.if 0
-
-	;====================
-	; load POLAR to $6000
-
-	lda     #4		; POLAR
-	sta     WHICH_LOAD
-	jsr     load_file
-
-	;======================
-	; copy POLAR to AUX $1000
-
-	lda	#$10		; AUX dest $1000
-	ldy	#$60		; MAIN src $6000
-	ldx	#16		; 16 pages
-	jsr	copy_main_aux
-
-
-	;====================
-	; load SPHERES to $6000
-
-	lda     #5		; SPHERES
-	sta     WHICH_LOAD
-	jsr     load_file
-
-	;======================
-	; copy SPHERES to AUX $2000
-
-	lda	#$20		; AUX dest $1000
-	ldy	#$60		; MAIN src $6000
-	ldx	#16		; 16 pages
-	jsr	copy_main_aux
-
-.endif
-
-
-;	cli	; start music
 
 	;=======================
-	; run DOTS
-	;============================================
-	; copy DOTS from AUX $3000 to MAIN $8000
+	;=======================
+	; Load intro
+	;=======================
+	;=======================
 
-	lda	#$30		; AUX src $1000
+	; TODO
+
+	;=======================
+	;=======================
+	; Run intro
+	;=======================
+	;=======================
+
+	; TODO
+
+
+	;=======================
+	;=======================
+	; Load music / chess
+	;=======================
+	;=======================
+
+	; TODO
+
+	;=======================
+	;=======================
+	; Run Chess
+	;=======================
+	;=======================
+
+	; TODO
+
+	;==========================
+	;==========================
+	; Run 4-9, copy from AUX
+	;==========================
+	;==========================
+
+
+	;=======================
+	; run DOTS (#9)
+	;=======================
+	; copy DOTS from AUX $1000 to MAIN $8000
+
+	lda	#$10		; AUX src $1000
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 	jsr	$8000
+
+
+	;=======================
+	;=======================
+	; Load 10-12 to RAM
+	;=======================
+	;=======================
+
+	; TODO
+
+	;==========================
+	;==========================
+	; Run 10-12
+	;==========================
+	;==========================
 
 	;=======================
 	; run SPHERES
 	;============================================
-	; copy SPHERES from AUX $2000 to MAIN $8000
 
-	lda	#$20		; AUX src $1000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-	jsr	$8000
+	; TODO
 
 
 	;=======================
 	; run POLAR
 	;============================================
-	; copy POLAR from AUX $1000 to MAIN $8000
 
-	lda	#$10            ; AUX src $1000
-	ldy	#$80            ; MAIN dest $8000
-	ldx	#16             ; 16 pages
-	jsr	copy_aux_main
+	; TODO
 
 	; setup music ocean=pattern24 (3:07) pattern#43
 ;	lda	#43
