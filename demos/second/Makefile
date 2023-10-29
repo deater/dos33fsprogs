@@ -46,8 +46,8 @@ second_d1.dsk:	QBOOT QLOAD music.inc \
 
 ####
 
-part04_chess/CHESS:	
-	cd part04_chess && make
+part04_chess_shapes/CHESS:	
+	cd part04_chess_shapes && make
 
 part08_gorilla/GORILLA:	
 	cd part08_gorilla && make
@@ -304,7 +304,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
-	cd part04_chess && make clean
+	cd part04_chess_shapes && make clean
 	cd part08_gorilla && make clean
 	cd part09_leaves && make clean
 	cd part10_lens_rotozoom && make clean
