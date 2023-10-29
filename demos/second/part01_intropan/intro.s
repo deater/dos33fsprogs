@@ -7,8 +7,10 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 
-hposn_low       = $1713 ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
-hposn_high      = $1800 ; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
+mod7_table      = $1c00
+div7_table      = $1d00
+hposn_low       = $1e00
+hposn_high      = $1f00
 
 intro_start:
 	;=====================
@@ -18,7 +20,6 @@ intro_start:
 	;===================
 	; Load graphics
 	;===================
-load_loop:
 
 	bit	SET_GR
 	bit	HIRES
@@ -27,8 +28,6 @@ load_loop:
 
 	lda	#0
 	jsr	hgr_page1_clearscreen
-
-	jsr	build_tables
 
 
 ; for pan
@@ -85,8 +84,8 @@ load_loop:
 
 	jsr	wait_until_keypress
 
-blah:
-	jmp	blah
+done_intro:
+	rts
 
 .align $100
 	.include	"../wait_keypress.s"
