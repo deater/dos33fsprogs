@@ -159,6 +159,18 @@ load_program_loop:
 	;==========================
 
 	;=======================
+	; run LENS/ROTOZOOM (#6)
+	;=======================
+	; copy LENS from AUX $4000 to MAIN $6000
+
+	lda	#$40		; AUX src $4000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$6000
+
+
+	;=======================
 	; run PLASMACUBE (#7)
 	;=======================
 	; copy PLASMACUBE from AUX $3000 to MAIN $8000

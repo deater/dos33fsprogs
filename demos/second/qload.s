@@ -176,8 +176,8 @@ load_address_array:
 
 start_address:
 	.byte $D0,$D0,$60,$60	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte $60,$60,$60,$60	; GORILLA,LEAVES,LENS,PLASMA
-	.byte $60,$80,$80,$60	; CUBE,DOTS,SPHERES,OCEAN
+	.byte $60,$60,$60,$80	; GORILLA,LEAVES,LENS,PLASMA
+	.byte $80,$80,$80,$60	; CUBE,DOTS,SPHERES,OCEAN
 	.byte $80		; POLAR
 
 aux_dest:
