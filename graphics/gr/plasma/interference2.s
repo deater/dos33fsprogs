@@ -3,7 +3,6 @@
 .include "hardware.inc"
 
 ; zero page
-COLOR	= $30
 YY	= $69
 
 COLOR_MASK=$F8
@@ -30,7 +29,7 @@ oval:
 	sta	DRAW_PAGE
 
 draw_oval_loop:
-	inc	FRAME				; increment frame
+	inc	FRAME		; increment frame
 
 	ldx	#47		; YY from 47 downto zero
 
@@ -69,23 +68,34 @@ create_xloop:
 	tax
 	lda	colorlookup,X
 
-;	jsr	SETCOL
+	sta	color_smc+1
 
-	sta	COLOR
-
-	txa
-	pha
 	tya
 	pha
 
-	jsr	plot1
+
+	;================================
+	; plot1
+	;================================
+
+plot1:
+mask_invert_smc1:
+	lda	#$ff		; load mask				; 2
+gbasl_smc1:
+	and	$400,Y		; mask to preserve on-screen color	; 4+
+	sta	COLOR_MASK	; save temporarily			; 3
+color_smc:
+	lda	#$FF		; load color				; 2
+mask_smc2:
+	and	#$FF		; mask so only hi/lo we want		; 2
+	ora	COLOR_MASK	; combine with on-screen color		; 3
+gbasl_smc2:
+	sta	$400,Y		; save back out				; 5
+
+	;=================================
 
 	pla
 	tay
-	pla
-	tax
-
-;	jsr	PLOT1		; PLOT (GBASL),Y
 
 	ldx	SAVEX
 
@@ -193,8 +203,10 @@ plot_odd:
 plot_even:
 	lda	#$0f							; 2
 plot_c_done:
-	sta	mask_smc1+1						;
 	sta	mask_smc2+1						;
+	eor	#$FF							; 2
+	sta	mask_invert_smc1+1					;
+
 
 	lda	gr_offsets_l,Y	; lookup low-res memory address		; 4
 	sta	gbasl_smc1+1
@@ -210,30 +222,6 @@ plot_c_done:
 
 	rts
 
-
-	;================================
-	; plot1
-	;================================
-	; plots pixel of COLOR at GBASL/GBASH:Y
-	; Xcoord in Y
-
-plot1:
-mask_smc1:
-	lda	#$ff							; 2
-	eor	#$ff							; 2
-
-gbasl_smc1:
-	and	$400,Y							; 4+
-	sta	COLOR_MASK						; 3
-
-	lda	COLOR							; 3
-mask_smc2:
-	and	#$FF							; 2
-	ora	COLOR_MASK						; 3
-gbasl_smc2:
-	sta	$400,Y							; 5
-
-	rts								; 6
 
 gr_offsets_l:
 	.byte	<$400,<$480,<$500,<$580,<$600,<$680,<$700,<$780
