@@ -25,8 +25,8 @@ qload		4k		1	16
 
 ; pause to load again?
 
-10 transmission:	4k?		27	16		$2000-$2FFF
-11 ocean:		24k		28	96		???
+10 transmission:	4k?		27	16		$8000-$8FFF
+11 ocean:		24k		28	96		$2000-$7FFF
 12 polar:		4k		34	16		$1000-$1FFF
 	=========================
 

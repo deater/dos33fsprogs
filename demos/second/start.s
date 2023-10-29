@@ -233,7 +233,46 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	; TODO
+	; disable music
+
+	sei
+
+
+	;=============================
+	; want to load 10..12
+
+	lda	#10
+	sta	COUNT
+
+load_program_loop2:
+	;============================
+	; load next program to MAIN $6000
+
+	; load from disk
+
+	lda     COUNT		; which one
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	; copy to proper AUX location
+
+	ldx	COUNT
+	lda	aux_dest,X	; load AUX dest
+	pha
+
+	ldy	#$60		; MAIN src $6000
+
+	lda	length_array,X	; number of pages
+	tax			; in X
+	pla			; restore AUX dest to A
+
+	jsr	copy_main_aux
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#13
+	bne	load_program_loop2
+
 
 	;==========================
 	;==========================
@@ -244,15 +283,35 @@ load_program_loop:
 	;=======================
 	; run SPHERES
 	;============================================
+	; copy SPHERES from AUX $8000 to MAIN $8000
 
-	; TODO
+	lda	#$80		; AUX src $8000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
 
+	;=======================
+	; run OCEAN
+	;=======================
+	; copy OCEAN from AUX $2000 to MAIN $6000
+
+	lda	#$20		; AUX src $1000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#96		; 16 pages
+	jsr	copy_aux_main
+	jsr	$6000
 
 	;=======================
 	; run POLAR
-	;============================================
+	;=======================
+	; copy POLAR from AUX $1000 to MAIN $8000
 
-	; TODO
+	lda	#$10		; AUX src $1000
+	ldy	#$80		; MAIN dest $8000
+	ldx	#16		; 16 pages
+	jsr	copy_aux_main
+	jsr	$8000
 
 	; setup music ocean=pattern24 (3:07) pattern#43
 ;	lda	#43

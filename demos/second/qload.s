@@ -183,8 +183,8 @@ start_address:
 aux_dest:
 	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte $70,$50,$40,$30	; GORILLA,LEAVES,LENS,PLASMA
-	.byte $20,$10,$80,$A0	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $A0		; POLAR
+	.byte $20,$10,$80,$20	; CUBE,DOTS,SPHERES,OCEAN
+	.byte $10		; POLAR
 
 track_array:
 	.byte 2,4,10,15		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
