@@ -16,6 +16,8 @@ plasma_main:
 ;	bit	SET_TEXT	; set text
 	bit	LORES		; set lo-res
 
+	lda	#0
+	sta	FRAME
 
 	; load image offscreen $7000
 
@@ -25,6 +27,35 @@ plasma_main:
 	sta	zx_src_h+1
 	lda	#$70
 	jsr	zx02_full_decomp
+
+	; load image offscreen $7400
+
+	lda	#<mask2_data
+	sta	zx_src_l+1
+	lda	#>mask2_data
+	sta	zx_src_h+1
+	lda	#$74
+	jsr	zx02_full_decomp
+
+	; load image offscreen $7800
+
+	lda	#<mask3_data
+	sta	zx_src_l+1
+	lda	#>mask3_data
+	sta	zx_src_h+1
+	lda	#$78
+	jsr	zx02_full_decomp
+
+	; load image offscreen $7C00
+
+	lda	#<mask4_data
+	sta	zx_src_l+1
+	lda	#>mask4_data
+	sta	zx_src_h+1
+	lda	#$7C
+	jsr	zx02_full_decomp
+
+
 
 	; remap the masks
 	; $00->$00
@@ -48,7 +79,7 @@ remap_mask:
 
 	inc	OUTH
 	lda	OUTH
-	cmp	#$74
+	cmp	#$80
 	bne	remap_mask
 
 
@@ -154,6 +185,7 @@ display_line_loop:
 	sta	INL
 	lda	gr_lookup_high,X
 	clc
+mask_src_smc:
 	adc	#($70-$8)
 	sta	INH
 
@@ -185,6 +217,15 @@ display_lookup_smc:
 
 VBLANK:
 	inc	FRAME
+
+	lda	FRAME
+	lsr
+	lsr
+	lsr
+	and	#7
+	tax
+	lda	mask_src_table,X
+	sta	mask_src_smc+1
 
 	rts
 
@@ -381,8 +422,17 @@ Table2	=	$6000+64
 remap_table:
 	.byte $00,$40,$80,$00,$C0
 
+mask_src_table:
+	.byte	$70-8,$74-8,$78-8,$7C-8,$7C-8,$78-8,$74-8,$70-8
+
 .include "../wait_keypress.s"
 .include "../zx02_optim.s"
 
 mask1_data:
 .incbin "graphics/cube_mask1.gr.zx02"
+mask2_data:
+.incbin "graphics/cube_mask2.gr.zx02"
+mask3_data:
+.incbin "graphics/cube_mask3.gr.zx02"
+mask4_data:
+.incbin "graphics/cube_mask4.gr.zx02"
