@@ -36,13 +36,14 @@ pan_outer_loop:
 
 
 	ldy	#0
-pan_inner_loop:
 
 	; original: 36*39 = ??
 	; updated:  34*39
 
 pil_smc1:
 	ldx	$2000,Y					; 4+
+pan_inner_loop:
+
 	lda	left_lookup_main,X			; 4+
 	sta	TEMPY					; 3
 
