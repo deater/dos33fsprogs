@@ -17,6 +17,41 @@ plasma_main:
 	bit	LORES		; set lo-res
 
 
+	; load image offscreen $7000
+
+	lda	#<mask1_data
+	sta	zx_src_l+1
+	lda	#>mask1_data
+	sta	zx_src_h+1
+	lda	#$70
+	jsr	zx02_full_decomp
+
+	; remap the masks
+	; $00->$00
+	; $11->$40
+	; $22->$80
+	; $44->$C0
+
+
+	ldy	#0
+	sty	OUTL
+	lda	#$70
+	sta	OUTH
+remap_mask:
+	lda	(OUTL),Y
+	and	#$7
+	tax
+	lda	remap_table,X
+	sta	(OUTL),Y
+	dey
+	bne	remap_mask
+
+	inc	OUTH
+	lda	OUTH
+	cmp	#$74
+	bne	remap_mask
+
+
 step3:
 
 	; init
@@ -115,6 +150,14 @@ display_line_loop:
 	lda	gr_lookup_high,X
 	sta	GRLINE+1
 
+	lda	gr_lookup_low,X		; setup pointers for mask
+	sta	INL
+	lda	gr_lookup_high,X
+	clc
+	adc	#($70-$8)
+	sta	INH
+
+
 	ldy	#39			; col 0-39
 
 	lda	Table2,X		; setup base sine value for row
@@ -123,9 +166,14 @@ display_col_loop:
 	lda	Table1,Y		; load in column sine value
 display_row_sin_smc:
 	adc	#00			; add in row value
+
+	and	#$3f
+	ora	(INL),Y
+
 	sta	display_lookup_smc+1	; patch in low byte of lookup
 display_lookup_smc:
-	lda	lores_colors_fine	; attention: must be aligned
+	lda	lores_colors_rgb	; attention: must be aligned
+
 	sta	(GRLINE),Y
 	dey
 	bpl	display_col_loop
@@ -200,9 +248,61 @@ sin3: ; 256
 ; Note the sine tables point roughly to the middle and go to the edges
 
 
+
+lores_colors_rgb: ; 256
+
+; black
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+
+
+; red gradient
+; $00, $11, $33, $BB, $FF, $BB, $33, $11
+
+; red
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $11,$11,$11,$11,$11,$11,$11,$11
+.byte $33,$33,$33,$33,$33,$33,$33,$33
+.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$33,$33,$33,$33
+.byte $11,$11,$11,$11,$11,$11,$11,$11
+
+; $00, $22, $66, $77, $FF, $77, $66, $22
+
+; blue
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+.byte $66,$66,$66,$66,$66,$66,$66,$66
+.byte $77,$77,$77,$77,$77,$77,$77,$77
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $77,$77,$77,$77,$77,$77,$77,$77
+.byte $66,$66,$66,$66,$66,$66,$66,$66
+.byte $22,$22,$22,$22,$22,$22,$22,$22
+
+; $00, $44, $CC, $DD, $FF, $DD, $CC, $44
+
+; green
+.byte $00,$00,$00,$00,$00,$00,$00,$00
+.byte $44,$44,$44,$44,$44,$44,$44,$44
+.byte $CC,$CC,$CC,$CC,$CC,$CC,$CC,$CC
+.byte $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
+.byte $ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
+.byte $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
+.byte $CC,$CC,$CC,$CC,$CC,$CC,$CC,$CC
+.byte $44,$44,$44,$44,$44,$44,$44,$44
+
+
 ; This table has relatively fine color bands
+.if 0
 lores_colors_fine: ; 256
-.if 1
 .byte $00,$00,$00,$00,$88,$88,$88,$88
 .byte $55,$55,$55,$55,$99,$99,$99,$99
 .byte $ff,$ff,$ff,$ff,$bb,$bb,$bb,$bb
@@ -278,6 +378,11 @@ lores_colors_wide: ; 256
 Table1	=	$6000
 Table2	=	$6000+64
 
-
+remap_table:
+	.byte $00,$40,$80,$00,$C0
 
 .include "../wait_keypress.s"
+.include "../zx02_optim.s"
+
+mask1_data:
+.incbin "graphics/cube_mask1.gr.zx02"

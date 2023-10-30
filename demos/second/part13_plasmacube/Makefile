@@ -15,13 +15,19 @@ PLASMACUBE:	plasmacube.o
 	ld65 -o PLASMACUBE plasmacube.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 plasmacube.o:	plasmacube.s \
-	../zp.inc ../hardware.inc ../qload.inc
+	../zp.inc ../hardware.inc ../qload.inc \
+	graphics/cube_mask1.gr.zx02
 	ca65 -o plasmacube.o plasmacube.s -l plasmacube.lst
 
+
+###
+
+graphics/cube_mask1.gr.zx02:	
+	cd graphics && make
 
 ###
 
 
 clean:
 	rm -f *~ *.o *.lst PLASMACUBE
-#	cd graphics && make clean
+	cd graphics && make clean
