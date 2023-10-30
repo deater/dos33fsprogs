@@ -1,5 +1,7 @@
 ; Chess board, polyhedrons, circles, interference
 
+; o/~ One night in Bangkok makes a hard man humble... o/~
+
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -26,9 +28,85 @@ chess_start:
 	bit	FULLGR
 	bit	PAGE1
 
-	lda	#0
+	lda	#$FF
 	jsr	hgr_page1_clearscreen
+	lda	#$00
 	jsr	hgr_page2_clearscreen
+
+	;==========================
+	; Falling board animation
+	;==========================
+
+	; TODO
+
+	; 148-192 = full = 44
+
+	; 0 frames in = 0 high,			bottom=125+13	Y=125
+	; 4 frames in, 130-138 = 8 high		bottom=138+17	Y=130
+	; 8 frames in, from 135-155 = 20	bottom=155+25	Y=135
+	;12 frames in, from 145-180 = 35	bottom=180	Y=145
+
+
+	; first collapse down, top to 125 bottom up to 133
+	;	so 125 whie other 60
+
+	ldx	#0
+	lda	#191
+	sta	COUNT
+compact_loop:
+
+	txa
+	lsr
+	bcc	compact_not_even
+
+	stx	SAVEX
+
+	ldx	COUNT
+
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
+
+	lda	#0
+	ldy	#39
+compact_inner_loop2:
+	sta	(GBASL),Y
+	dey
+	bpl	compact_inner_loop2
+
+	dec	COUNT
+
+	ldx	SAVEX
+
+compact_not_even:
+
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	sta	GBASH
+
+	lda	#0
+	ldy	#39
+compact_inner_loop:
+	sta	(GBASL),Y
+	dey
+	bpl	compact_inner_loop
+
+	lda	#50
+	jsr	wait
+
+	inx
+	cpx	#122
+	bne	compact_loop
+
+
+
+
+
+	;=============================
+	; Bouncing on board animation
+	;=============================
 
 	bit	PAGE2
 
@@ -45,14 +123,48 @@ chess_start:
 	lda	#0
 	sta	COUNT
 	sta	DRAW_PAGE
+chess_bounce_loop:
 
 	lda	#$60				; copy to screen
 	jsr	hgr_copy
 
-	bit	PAGE1
+	ldx     COUNT
 
-	jsr	wait_until_keypress
+	lda     object_coords_x,X
+	cmp	#$FF
+	beq	done_orange_loop
 
+	sta     SPRITE_X
+	lda     object_coords_y,X
+	sta     SPRITE_Y
+
+        lda     #<object_data
+	sta     INL
+	lda     #>object_data
+	sta     INH
+
+	jsr     hgr_draw_sprite_big
+
+	jsr	hgr_page_flip
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#48
+	bne	no_chess_bounce_oflo
+	lda	#0
+	sta	COUNT
+
+no_chess_bounce_oflo:
+
+	lda	KEYPRESS
+	bpl	chess_bounce_loop
+
+done_chess_bount_loop:
+	bit	KEYRESET
+
+	;=============================
+	; Orange Blob Animation
+	;=============================
 
 
 	; load image offscreen $6000
@@ -189,7 +301,7 @@ wait_irq_loop:
 	rts
 
 chess_data:
-	.incbin "graphics/chess_object2.hgr.zx02"
+	.incbin "graphics/chessboard.hgr.zx02"
 orange_data:
 	.incbin "graphics/orange_bg.hgr.zx02"
 
@@ -219,4 +331,21 @@ object_coords_y:
 	.byte	82,82,82,82,82,82,82,82,82,82,82,82
 	.byte	82,82,82,82,82,82,82,82,82,82,82,82
 	.byte	75,68,62,55,49,43,36,30,23,16,10, 5
+
+
+
+
+	; 12*4 = 48
+bounce_coords_x:
+	.byte	13,12,11,10, 9, 8, 7, 6, 5, 4, 3, 2
+	.byte	 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12
+	.byte	13,14,15,16,17,18,19,20,21,22,23,24
+	.byte	25,24,23,22,21,20,19,18,17,16,15,14
+
+bounce_coords_y:
+	.byte	 5,10,16,23,30,36,43,49,55,62,68,75
+	.byte	82,82,82,82,82,82,82,82,82,82,82,82
+	.byte	82,82,82,82,82,82,82,82,82,82,82,82
+	.byte	75,68,62,55,49,43,36,30,23,16,10, 5
+
 

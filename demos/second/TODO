@@ -29,14 +29,15 @@ DISK I
 
   - falling effect
   - moving / bouncing object
-  - tunnel
-  - cirles
-  - interference pattern
+     have it reverse course?
+  - tunnel (for real)
+  - cirles / interference pattern (for real)
 
 + Lens / Rotozoom
   - add lo-res LENS sprite to bounce around
   - for rotozoom, wrap around
     note, this might mean 32x32
+  - sound file
 
 + Plasma
   - switch to purple green
@@ -54,6 +55,7 @@ DISK I
 
   - the audio (put in language card of AUX?)
   - the actual transmission
+     45 degree sprite?
 
 + ocean / voxels
 

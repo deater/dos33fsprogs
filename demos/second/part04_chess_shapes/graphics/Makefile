@@ -9,7 +9,8 @@ HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 all:	chess_object.hgr.zx02 chess_object2.hgr.zx02 \
 	orange_bg.hgr.zx02 object.inc \
 	tunnel1.hgr.zx02 tunnel2.hgr.zx02 \
-	tunnel1_cropped.hgr.zx02 tunnel2_cropped.hgr.zx02
+	tunnel1_cropped.hgr.zx02 tunnel2_cropped.hgr.zx02 \
+	chessboard.hgr.zx02
 
 ####
 
@@ -75,6 +76,15 @@ orange_bg.hgr:	orange_bg.png
 
 orange_bg.hgr.zx02:	orange_bg.hgr
 	$(ZX02) orange_bg.hgr orange_bg.hgr.zx02
+
+####
+
+chessboard.hgr:	chessboard.png
+	$(PNG_TO_HGR) chessboard.png > chessboard.hgr
+
+chessboard.hgr.zx02:	chessboard.hgr
+	$(ZX02) chessboard.hgr chessboard.hgr.zx02
+
 
 
 ####

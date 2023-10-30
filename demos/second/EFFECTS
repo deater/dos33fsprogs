@@ -1,0 +1,53 @@
+General Note:
+	require an Apple IIe with 128k.  I don't use any advanced IIe 
+	effects (no 65c02, no double-graphics modes).  I mostly just
+	need the 128k of RAM for use as a RAM disk as it's next
+	to impossible to load data while music is playing.
+
+	Aside about the Disk II, Woz had an amazing design but it's
+	controlled with cycle-accurae assembly bitbanging the hardware
+	and is essentially hard real-time.  Interrupts or running other
+	code while loading likely would make the disk fail.  I'm only
+	aware of two demos that do this, X by French Touch and
+	X by Y.  Haven't had a chance to look at what they did.
+
+	Music is using my PT3 player that can play .pt3 tracker files.
+
+	Disk code is by Qkumba.  It's super fast.  I'm using that with
+	raw disk sector reads, there's no filesystem on the disk (no AppleDOS
+	or ProDOS).
+
+
+Intro
+	horizontal scroll, a bit of a pain
+
+
+Chessboard
+	various ways to do this.
+	cheating and using a sprite as didn't have time to hack up
+	a 3d-render or else some sort of triangle-drawing code
+	re-using existing sprite code, you can see artifacts on edges
+	because the code is working at byte-granularity for speed
+	but each byte holds 3.5 pixels.  One way to fix this is to
+	have a separate mask sprite and oring things but that would
+	severely reduce the frame rate and take up a lot more space
+
+Tunnel
+	I wasted a week trying to get a good tunnel effect and gave
+	up (after some very interesting chunks of buggy code).
+	Drawing circles is a pain on 6502.  So for this I just
+	took 2 screenshots and page flip
+	The real effect here is a bit more interesting that a plain
+	tunnel as it wiggles the camera around too.
+
+
+Interference
+	This one is I think just interference between two circles.
+	This one I used some existing code I had that was doing something
+	vaguely similar with sine waves.  I didn't have time to try
+	to do the proper effect.  Even with table lookups and self-modifying
+	code and using lo-res the frame rate isn't high and it would probably
+	be worse if I was doing the proper effect.  This effect does
+	go on forever though.
+
+
