@@ -10,9 +10,10 @@
 interference:
 
 	bit	SET_GR
-	bit	LORES
 	bit	FULLGR		; make it 40x48
 	bit	PAGE1
+;	bit	LORES		; put this off so draw before flip
+
 
 	lda	#0
 	sta	FRAME
@@ -162,6 +163,8 @@ flip_to_2:
 	lda	#4
 done_flip:
 	sta	DRAW_PAGE
+
+	bit	LORES	; here so first flip happens after having drawn
 
 
 	;===================================

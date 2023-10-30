@@ -132,7 +132,7 @@ nuts_done:
 	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
-	.include	"hgr_sprite_big.s"
+	.include	"../hgr_sprite_big.s"
 	.include	"../hgr_copy_fast.s"
 
 

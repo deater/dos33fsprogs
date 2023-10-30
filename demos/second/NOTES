@@ -12,9 +12,14 @@ qload		4k		1	16
 	
 ; pause to load new music
 ; and these into primary RAM
-03 chess_shapes:	4k		15-16	32
-03 tunnel:		4k		16-17	32
-03 circles/lines:	4k		18	16
+03 chess_shapes:	12k		15-17	48		
+
+	03 chess_shapes:	8k		15-18	32
+	03 tunnel:		4k		16-17	32
+	03 circles/lines:4	k		18	16
+
+
+18 is free!
 
 04 gorilla:		8k		19-20	32		$7000-$8FFF
 05 leaves:		8k		21-22	32		$5000-$6FFF
