@@ -22,6 +22,9 @@ intro.o:	intro.s ../zx02_optim.s \
 
 ###
 
+graphics/igl.hgr.zx02:	
+	cd graphics && make
 
 clean:
-		rm -f *~ *.o *.lst INTRO
+	rm -f *~ *.o *.lst INTRO
+	cd graphics && make clean
