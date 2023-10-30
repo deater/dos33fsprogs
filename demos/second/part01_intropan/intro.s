@@ -60,15 +60,16 @@ intro_start:
 	jsr	wait_until_keypress
 
 
+	;======================================
+	;======================================
+	; Pan
+	;======================================
+	;======================================
+	; do we have room to do page flipping?
 
 
-; for pan
-; code at $6000
-;	left page for $2000 at top, we can overwrite
-;	right page at $a000
-; uncompress to $2000 at first
-;	then algorithm alternating pages
-
+	;===========================================
+	; load left logo to $2000 and right to $4000
 
 	; left logo
 
@@ -82,9 +83,6 @@ intro_start:
 
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
-
-
 	; right logo
 
 	lda	#<intro_right_data
@@ -93,16 +91,90 @@ intro_start:
 	lda	#>intro_right_data
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$40
 
 	jsr	zx02_full_decomp
 
 	jsr	wait_until_keypress
 
+	;============================
+	; do the pan
+
+pan_loop:
+
+	lda	#0
+	sta	COUNT
+
+pan_outer_outer_loop:
+
+	ldx	#191
+pan_outer_loop:
+
+	lda	hposn_high,X
+	sta	pil_smc1+2
+	sta	pil_smc2+2
+	sta	pil_smc4+2
+	eor	#$60
+	sta	pil_smc3+2
+
+	lda	hposn_low,X
+	sta	pil_smc2+1
+	sta	pil_smc4+1
+
+	sta	pil_smc1+1
+	inc	pil_smc1+1
+	clc
+	adc	COUNT
+	sta	pil_smc3+1
 
 
+	ldy	#0
+pan_inner_loop:
 
-	; fc logo
+pil_smc1:
+	lda	$2000+1,Y
+pil_smc2:
+	sta	$2000,Y
+
+	iny
+	cpy	#39
+	bne	pan_inner_loop
+
+pil_smc3:
+	lda	$4000
+pil_smc4:
+	sta	$2000,Y
+
+	dex
+	cpx	#$ff
+	bne	pan_outer_loop
+
+;	jsr	wait_until_keypress
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#39
+
+	bne	pan_outer_outer_loop
+
+	jsr	wait_until_keypress
+
+	;============================
+	; draw sprites
+	;============================
+
+	; TODO
+
+	;============================
+	; draw explosion
+	;============================
+
+	; TODO
+
+
+	;============================
+	; draw fc logo
+	;============================
 
 	lda	#<fc_sr_logo_data
 	sta	zx_src_l+1
