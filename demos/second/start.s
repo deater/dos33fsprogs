@@ -34,7 +34,7 @@ restart:
 	bit	$C083
 	bit	$C083
 
-	lda	#0
+	lda	#0			; load MUSIC_INTRO from disk
 	sta	WHICH_LOAD
 
 	jsr	load_file
@@ -148,11 +148,62 @@ load_program_loop:
 	;=======================
 	;=======================
 
+	sei				; stop music interrupts
+
+	jsr	clear_ay_both		; stop from making noise
+
+	; load music
+
+	lda	#1		; MUSIC_MAIN
+	sta	WHICH_LOAD
+	jsr	load_file
+
 	; load from disk
 
-	lda     #3		; chess
+	lda     #3		; CHESS
 	sta     WHICH_LOAD
 	jsr     load_file
+
+
+	; restart music
+
+
+	;============================
+	; Re-Init the Mockingboard
+	;============================
+
+	; NOTE: I don't know how much of this is actually necessary
+	;	wasted a lot of time debugging, leaving it as-is
+	;	as it seems to be working
+
+	lda	#0
+	sta	DONE_PLAYING
+
+	lda	#1
+
+	sta	LOOP
+
+	;========================
+	; patch mockingboard
+
+        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+	jsr	mockingboard_init
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+
+	jsr	mockingboard_setup_interrupt
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+
+	;==================
+	; init song
+	;==================
+
+	jsr	pt3_init_song
+
+	cli		; start interrupts
 
 	;=======================
 	;=======================

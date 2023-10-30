@@ -202,7 +202,7 @@ tunnel2_data:
 	.incbin "graphics/tunnel2_cropped.hgr.zx02"
 
 
-; object is 15 wide
+; object is roughly 15 wide?
 
 ; this is a triangle pattern
 ; we could reverse at some point

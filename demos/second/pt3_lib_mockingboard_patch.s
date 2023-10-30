@@ -116,5 +116,6 @@ mb_patch_oflo:
 	bne	mb_patch_loop
 
 mb_patch_done:
+	stx	MB_ADDR_H	; restore slot for later
 	rts
 
