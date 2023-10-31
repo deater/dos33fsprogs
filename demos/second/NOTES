@@ -1,3 +1,75 @@
+Music/Time cues:
+~~~~~~~~~~~~~~~~
+Intro
+	title1	= 0:16 - 0:22
+	title2  = 0:24 - 0:29
+	title3  = 0:30 - 0:35
+	bgscroll	= 0:40 -0:80
+	ship	= 0:94
+	explosion = 104
+	title	= 107
+Title				= pattern offset 0 (L1)
+Board				= pattern offset 2 (2)
+	object appear 124
+	orange background 134
+Tunnel				= pattern offset 10 (53)
+	tunnel start 153	
+	tunnel stop 168
+Circles (blue):			= pattern offset 13 (49) (?)
+	172 fade to white
+Interference (pink)
+	184 fade to white
+	Three falling bars	= pattern offset 18 (14)
+More interference
+	217 side wipe
+gorilla slide			= pattern offset 25 (17) ??
+	226 TV shutoff
+				= pattern offset 29 (20)
+	bit of pause
+Leaves				= pattern offset 30 (21)
+	232 start
+	260 end
+face:				= pattern offset 34 (24)
+	260 start
+	268 lens start
+	276 I am not atomic
+	277 start rotozoom
+	306 fade white
+plasma:				= pattern offset 47 (29)
+	307 start blue
+	321 first drop
+	322 green
+	336 next drop
+	337 grey
+	342 next drop
+plasmacube:			= pattern offset 52 (33)
+	343 start
+	374 stop
+blue dots			= pattern offset 60 (52) ?
+	374 start
+	389 tornado start
+	395 outside gone
+	400 lots everywhere
+	409 fade to white
+transmission			= pattern offset 68 (40)
+	410 start
+	412 10 seconds to transmission
+	420 transmission / start
+	440 fade to black
+ocean				= pattern offset 72 (43)
+	467 ocean stop
+polar				= pattern offset 76 (47)
+	469
+fade white
+	480
+	
+	
+	
+
+
+
+
+
 Disk Usage:
 
 DISK1				Track	Sectors		AUX
