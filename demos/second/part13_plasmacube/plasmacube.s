@@ -259,6 +259,7 @@ VBLANK:
 	lsr
 	lsr
 	lsr
+	lsr
 	and	#$f
 	tax
 	lda	mask_src_table,X
@@ -344,6 +345,16 @@ lores_colors_rgb: ; 256
 ; $00, $11, $33, $BB, $FF, $BB, $33, $11
 
 ; red
+.byte $11,$11,$11,$11,$11,$33,$33,$33
+.byte $33,$33,$bb,$bb,$bb,$bb,$bb,$ff
+.byte $ff,$ff,$ff,$ff,$ff,$bb,$bb,$bb
+.byte $bb,$bb,$33,$33,$33,$33,$33,$11
+.byte $11,$11,$11,$11,$33,$33,$33,$33
+.byte $bb,$bb,$bb,$bb,$bb,$ff,$ff,$ff
+.byte $ff,$ff,$ff,$bb,$bb,$bb,$bb,$bb
+.byte $33,$33,$33,$33,$33,$33,$11,$11
+.if 0
+
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $11,$11,$11,$11,$11,$11,$11,$11
 .byte $33,$33,$33,$33,$33,$33,$33,$33
@@ -352,10 +363,24 @@ lores_colors_rgb: ; 256
 .byte $bb,$bb,$bb,$bb,$bb,$bb,$bb,$bb
 .byte $33,$33,$33,$33,$33,$33,$33,$33
 .byte $11,$11,$11,$11,$11,$11,$11,$11
+.endif
 
 ; $00, $22, $66, $77, $FF, $77, $66, $22
 
+; 22 66 77 ff 77 66
+
 ; blue
+
+.byte $22,$22,$22,$22,$22,$66,$66,$66
+.byte $66,$66,$77,$77,$77,$77,$77,$ff
+.byte $ff,$ff,$ff,$ff,$ff,$77,$77,$77
+.byte $77,$77,$66,$66,$66,$66,$66,$22
+.byte $22,$22,$22,$22,$66,$66,$66,$66
+.byte $77,$77,$77,$77,$77,$ff,$ff,$ff
+.byte $ff,$ff,$ff,$77,$77,$77,$77,$77
+.byte $66,$66,$66,$66,$66,$66,$22,$22
+
+.if 0
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $22,$22,$22,$22,$22,$22,$22,$22
 .byte $66,$66,$66,$66,$66,$66,$66,$66
@@ -364,10 +389,21 @@ lores_colors_rgb: ; 256
 .byte $77,$77,$77,$77,$77,$77,$77,$77
 .byte $66,$66,$66,$66,$66,$66,$66,$66
 .byte $22,$22,$22,$22,$22,$22,$22,$22
+.endif
+
 
 ; $00, $44, $CC, $DD, $FF, $DD, $CC, $44
 
 ; green
+.byte $44,$44,$44,$44,$44,$cc,$cc,$cc
+.byte $cc,$cc,$dd,$dd,$dd,$dd,$dd,$ff
+.byte $ff,$ff,$ff,$ff,$ff,$dd,$dd,$dd
+.byte $dd,$dd,$cc,$cc,$cc,$cc,$cc,$44
+.byte $44,$44,$44,$44,$cc,$cc,$cc,$cc
+.byte $dd,$dd,$dd,$dd,$dd,$ff,$ff,$ff
+.byte $ff,$ff,$ff,$dd,$dd,$dd,$dd,$dd
+.byte $cc,$cc,$cc,$cc,$cc,$cc,$44,$44
+.if 0
 .byte $00,$00,$00,$00,$00,$00,$00,$00
 .byte $44,$44,$44,$44,$44,$44,$44,$44
 .byte $CC,$CC,$CC,$CC,$CC,$CC,$CC,$CC
@@ -376,7 +412,7 @@ lores_colors_rgb: ; 256
 .byte $DD,$DD,$DD,$DD,$DD,$DD,$DD,$DD
 .byte $CC,$CC,$CC,$CC,$CC,$CC,$CC,$CC
 .byte $44,$44,$44,$44,$44,$44,$44,$44
-
+.endif
 
 ; This table has relatively fine color bands
 .if 0

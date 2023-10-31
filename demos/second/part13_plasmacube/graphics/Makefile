@@ -1,6 +1,6 @@
 include ../../../../Makefile.inc
 
-ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
 
@@ -114,4 +114,4 @@ cube2_mask8.gr:	cube2_mask8.png
 ####
 
 clean:
-	rm -f *~
+	rm -f *~ *.zx02
