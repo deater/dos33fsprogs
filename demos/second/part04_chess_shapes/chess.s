@@ -266,10 +266,23 @@ main_tunnel_done:
 	;==================
 	;==================
 	;==================
+	; DO circles HERE
+	;==================
+	;==================
+	;==================
+
+	jsr	zooming_circles
+
+	; todo, fade to white
+
+	;==================
+	;==================
+	;==================
 	; DO INTERFERENCE HERE
 	;==================
 	;==================
 	;==================
+
 
 	jsr	interference
 
@@ -289,6 +302,7 @@ main_interference_done:
 	.include	"../hgr_sprite_big.s"
 
 	.include	"interference.s"
+	.include	"circles.s"
 	.include	"../hgr_page_flip.s"
 
 	; wait A * 1/50s

@@ -6,13 +6,13 @@ PNG_TO_40x48D = ../../utils/gr-utils/png_to_40x48d
 PNG2RLE = ../../utils/gr-utils/png2rle
 B2D = ../../utils/bmp2dhr/b2d
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-
+EMPTY = ../../empty_disk/
 
 all:	memories.dsk
 
 memories.dsk:	HELLO CIRCLES.BAS CIRCLES CHECKERS CHECKERS_SMALL PLANE \
 		SIER TUNNEL TNM CIRCLES_NORMAL
-	cp empty.dsk memories.dsk
+	cp $(EMPTY)empty.dsk memories.dsk
 	$(DOS33) -y memories.dsk SAVE A HELLO
 	$(DOS33) -y memories.dsk SAVE A CIRCLES.BAS
 	$(DOS33) -y memories.dsk BSAVE -a 0x070 CIRCLES

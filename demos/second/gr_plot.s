@@ -1,3 +1,9 @@
+
+	; monitor, horizontal=Y	vert=a
+plot_compat:
+	sty	XPOS
+	sta	YPOS
+
 	;================================
 	; plot routine
 	;================================

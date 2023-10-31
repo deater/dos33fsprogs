@@ -72,13 +72,17 @@ pil_smc2:
 	cpx	#$ff
 	bne	pan_outer_loop
 
-;	jsr	wait_until_keypress
+	lda	KEYPRESS
+	bmi	done_pan
 
 	inc	COUNT
 	lda	COUNT
 	cmp	#139
 
 	bne	pan_outer_outer_loop
+
+done_pan:
+	bit	KEYRESET
 
 	rts
 

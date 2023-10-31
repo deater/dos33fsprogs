@@ -39,13 +39,13 @@ plot_setup:
 	lsr			; shift bottom bit into carry		; 2
 	tay
 
-	bcc	plot_even						; 2nt/3
-plot_odd:
+	bcc	do_plot_even						; 2nt/3
+do_plot_odd:
 	lda	#$f0							; 2
-	bcs	plot_c_done						; 2nt/3
-plot_even:
+	bcs	do_plot_c_done						; 2nt/3
+do_plot_even:
 	lda	#$0f							; 2
-plot_c_done:
+do_plot_c_done:
 	sta	mask_smc2+1						;
 	eor	#$FF							; 2
 	sta	mask_invert_smc1+1					;
