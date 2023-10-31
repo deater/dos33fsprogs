@@ -19,41 +19,78 @@ plasma_main:
 	lda	#0
 	sta	FRAME
 
-	; load image offscreen $7000
+	; load image offscreen $6000
 
 	lda	#<mask1_data
 	sta	zx_src_l+1
 	lda	#>mask1_data
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	; load image offscreen $6400
+
+	lda	#<mask2_data
+	sta	zx_src_l+1
+	lda	#>mask2_data
+	sta	zx_src_h+1
+	lda	#$64
+	jsr	zx02_full_decomp
+
+	; load image offscreen $6800
+
+	lda	#<mask3_data
+	sta	zx_src_l+1
+	lda	#>mask3_data
+	sta	zx_src_h+1
+	lda	#$68
+	jsr	zx02_full_decomp
+
+	; load image offscreen $6C00
+
+	lda	#<mask4_data
+	sta	zx_src_l+1
+	lda	#>mask4_data
+	sta	zx_src_h+1
+	lda	#$6C
+	jsr	zx02_full_decomp
+
+	; load image offscreen $7000
+
+	lda	#<mask5_data
+	sta	zx_src_l+1
+	lda	#>mask5_data
 	sta	zx_src_h+1
 	lda	#$70
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7400
 
-	lda	#<mask2_data
+	lda	#<mask6_data
 	sta	zx_src_l+1
-	lda	#>mask2_data
+	lda	#>mask6_data
 	sta	zx_src_h+1
 	lda	#$74
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7800
 
-	lda	#<mask3_data
+	lda	#<mask7_data
 	sta	zx_src_l+1
-	lda	#>mask3_data
+	lda	#>mask7_data
 	sta	zx_src_h+1
 	lda	#$78
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7C00
 
-	lda	#<mask4_data
+	lda	#<mask8_data
 	sta	zx_src_l+1
-	lda	#>mask4_data
+	lda	#>mask8_data
 	sta	zx_src_h+1
 	lda	#$7C
 	jsr	zx02_full_decomp
+
 
 
 
@@ -66,7 +103,7 @@ plasma_main:
 
 	ldy	#0
 	sty	OUTL
-	lda	#$70
+	lda	#$60
 	sta	OUTH
 remap_mask:
 	lda	(OUTL),Y
@@ -222,7 +259,7 @@ VBLANK:
 	lsr
 	lsr
 	lsr
-	and	#7
+	and	#$f
 	tax
 	lda	mask_src_table,X
 	sta	mask_src_smc+1
@@ -416,23 +453,32 @@ lores_colors_wide: ; 256
 .byte $11,$11,$11,$11,$11,$11,$11,$11
 .endif
 
-Table1	=	$6000
-Table2	=	$6000+64
+Table1	=	$5000
+Table2	=	$5000+64
 
 remap_table:
 	.byte $00,$40,$80,$00,$C0
 
 mask_src_table:
-	.byte	$70-8,$74-8,$78-8,$7C-8,$7C-8,$78-8,$74-8,$70-8
+	.byte	$60-8,$64-8,$68-8,$6C-8,$70-8,$74-8,$78-8,$7C-8
+	.byte	$7C-8,$78-8,$74-8,$70-8,$6C-8,$68-8,$64-8,$60-8
 
 .include "../wait_keypress.s"
 .include "../zx02_optim.s"
 
 mask1_data:
-.incbin "graphics/cube_mask1.gr.zx02"
+.incbin "graphics/cube2_mask1.gr.zx02"
 mask2_data:
-.incbin "graphics/cube_mask2.gr.zx02"
+.incbin "graphics/cube2_mask2.gr.zx02"
 mask3_data:
-.incbin "graphics/cube_mask3.gr.zx02"
+.incbin "graphics/cube2_mask3.gr.zx02"
 mask4_data:
-.incbin "graphics/cube_mask4.gr.zx02"
+.incbin "graphics/cube2_mask4.gr.zx02"
+mask5_data:
+.incbin "graphics/cube2_mask5.gr.zx02"
+mask6_data:
+.incbin "graphics/cube2_mask6.gr.zx02"
+mask7_data:
+.incbin "graphics/cube2_mask7.gr.zx02"
+mask8_data:
+.incbin "graphics/cube2_mask8.gr.zx02"
