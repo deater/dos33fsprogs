@@ -184,6 +184,9 @@ SCALE_I		= $F8
 SCALE_F		= $F9
 ANGLE		= $FA
 
+; credits
+SCROLL_X	= $F0
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================

@@ -9,6 +9,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload2.inc"
+.include "../music2.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -19,6 +20,8 @@ intro_start:
 	;=====================
 	; initializations
 	;=====================
+
+	bit	KEYRESET		; clear just in case
 
 	;===================
 	; Load graphics
@@ -138,6 +141,8 @@ no_update_message:
 	.include	"fonts/font_4am_1x10_data.s"
 
 	.include	"thumbnail_credits.s"
+
+	.include	"../irq_wait.s"
 
 
 summary1_data:

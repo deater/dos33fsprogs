@@ -15,6 +15,7 @@ CREDITS:	credits.o
 
 credits.o:	credits.s vertical_scroll.s ../zx02_optim.s \
 	thumbnail_credits.s \
+	horiz_scroll_simple.s \
 	font_4am_1x8.s font_4am_1x10.s \
 	graphics/summary1_invert.hgr.zx02 \
 	../zp.inc ../hardware.inc ../qload.inc

@@ -242,6 +242,7 @@ music2.inc:	generate_common MUSIC2
 	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s done_pt3_irq_handler music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s PT3_LOC music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s current_pattern_smc music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s copy_main_aux music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s copy_aux_main music2.lst >> music2.inc
 

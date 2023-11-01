@@ -71,13 +71,18 @@ DISK II
 
   - sprite animation of ship
 
-+ credits
++ credits (thumbnail)
 
-  - scroll logos in from right, then out to left
-  - scroll the text in
+  - smoother scroll the text in
+    maybe skip ever other X to avoid palette shift
+    properly come in from off screen
+    use page flipping
 
-  - smoother scrolling.  Only need to scroll middle 20 bytes or so?
++ final credits
+  - smoother scrolling
 	wait on vblank?
+	use page flipping, alternate scrolling by two?
+	probably doable but don't have time
 
 + after-credits
 	RR?

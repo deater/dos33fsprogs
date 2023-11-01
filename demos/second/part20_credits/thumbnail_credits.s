@@ -42,8 +42,8 @@ thumbnail_credits:
 
 credits_logo_outer_outer:
 
-	lda	#200		; 4 seconds?  actual is 5ish
-	sta	IRQ_COUNTDOWN
+;	lda	#200		; 4 seconds?  actual is 5ish
+;	sta	IRQ_COUNTDOWN
 
 	lda	DRAW_PAGE
 	and	#$20
@@ -86,9 +86,11 @@ cloo_write_text:
 	pla
 
 	;========================
+	;========================
 	; draw the thumbnail
 	;  TODO: scroll it in
-
+	;========================
+	;========================
 
 	ldx	COUNT				; patch the source offsets
 	lda	logo_x_offsets,X
@@ -101,15 +103,15 @@ credits_logo_outer:
 
 	; setup output pointer
 
-	lda	hposn_low+16,X			; adjust X
+	lda	hposn_low+16,X			; adjust Y position
 	clc
-	adc	#15				; center on screen
+	adc	#0				; (was 15 to center on screen)
 	sta	OUTL
 
 	; setup high
 
 	clc
-	lda	hposn_high+16,X
+	lda	hposn_high+16,X			; adjust Y position
 	adc	DRAW_PAGE
 	sta	OUTH
 
@@ -159,15 +161,67 @@ cloo_disp_page1:
 
 cloo_done_flip:
 
+	; done drawing...
+
+	;======================================
+	; scroll it right
+	;======================================
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE		; do it on visible page
+
+	lda	#0
+	sta	SCROLL_X
+
+scroll_right_loop:
+	jsr	horiz_scroll_right
+
+	; sleep?
+
+	inc	SCROLL_X
+	lda	SCROLL_X
+	cmp	#15
+	bne	scroll_right_loop
+
+	;======================================
+	; pause a bit
+	;======================================
+
+	lda	#3
+	jsr	wait_seconds
+
+	;======================================
+	; scroll it left
+	;======================================
+
+	lda	#0
+	sta	SCROLL_X
+scroll_left_loop:
+	jsr	horiz_scroll_left
+
+	; sleep?
+
+	inc	SCROLL_X
+	lda	SCROLL_X
+	cmp	#25
+	bne	scroll_left_loop
+
+
+	; flip back to off-screen
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
 	;======================================
 	; wait until IRQ countdown or keypress
+	;======================================
+;cloo_check_again:
+;	lda	KEYPRESS
+;	bmi	cloo_check_done
 
-cloo_check_again:
-	lda	KEYPRESS
-	bmi	cloo_check_done
-
-	lda	IRQ_COUNTDOWN
-	bne	cloo_check_again
+;	lda	IRQ_COUNTDOWN
+;	bne	cloo_check_again
 
 cloo_check_done:
 	bit	KEYRESET
@@ -196,6 +250,9 @@ skip_summary2:
 done_credits_logo:
 
 	rts
+
+
+.include "horiz_scroll_simple.s"
 
 
 logo_y_offsets:
