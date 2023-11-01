@@ -180,7 +180,6 @@ load_program_loop:
 	sta	DONE_PLAYING
 
 	lda	#1
-
 	sta	LOOP
 
 	;========================

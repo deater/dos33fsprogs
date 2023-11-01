@@ -178,6 +178,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s load_file qload.lst > qload.inc
 	./generate_common -a 0x1200 -s detect_appleii_model qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_all qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_all_color qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s set_normal qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait qload.lst >> qload.inc

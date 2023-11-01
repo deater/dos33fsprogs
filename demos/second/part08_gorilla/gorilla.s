@@ -8,6 +8,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -23,14 +24,20 @@ gorilla_start:
 	; Load graphics
 	;===================
 
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
-	bit	PAGE1
+; DEBUG
+	lda	#25
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
 
 	lda	#0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
+
+	; switch to HIRES (previous screen was lores)
+
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
 
 	bit	PAGE2
 
@@ -48,14 +55,28 @@ gorilla_start:
 	sta	COUNT
 	sta	DRAW_PAGE
 
-ship_sprite_loop:
-
 	lda	#$60
 	jsr	hgr_copy
 
 	bit	PAGE1
 
-	jsr	wait_until_keypress
+gorilla_wait:
+	lda	#29
+	jsr	wait_for_pattern
+	bcc	gorilla_wait
+
+
+	; TODO: TV_shutoff effect
+
+	lda	#0
+	jsr	hgr_page1_clearscreen
+
+gorilla_wait2:
+	lda	#30
+	jsr	wait_for_pattern
+	bcc	gorilla_wait2
+
+
 
 gorilla_done:
 	rts
@@ -78,6 +99,8 @@ wait_irq_loop:
 	lda	IRQ_COUNTDOWN
 	bne	wait_irq_loop
 	rts
+
+	.include "../irq_wait.s"
 
 gorilla_data:
 	.incbin "graphics/mntscrl3.hgr.zx02"

@@ -36,15 +36,15 @@ chess_start:
 	;===================
 
 	; wait until pattern1
-;pattern1_loop:
-;	lda	#1
-;	jsr	wait_for_pattern
-;	bcc	pattern2_loop
+pattern2_loop:
+	lda	#2
+	jsr	wait_for_pattern
+	bcc	pattern2_loop
 
 	; technically the above, but we're not fast enough
 
-	lda	#175
-	jsr	wait_ticks
+;	lda	#175
+;	jsr	wait_ticks
 
 ;	lda	#$FF
 ;	jsr	hgr_page1_clearscreen
@@ -282,11 +282,12 @@ tunnel_loop:
 	lda	#8
 	jsr	wait_irq
 
-	lda	KEYPRESS
-	bpl	tunnel_loop
+	; finish at music pattern #13 or keypress
+	lda	#13
+	jsr	wait_for_pattern
+	bcc	tunnel_loop
 
 main_tunnel_done:
-	bit	KEYRESET
 
 	;==================
 	;==================
@@ -298,6 +299,11 @@ main_tunnel_done:
 
 	jsr	zooming_circles
 
+
+	lda	#$ff
+	sta	clear_all_color+1
+	jsr	clear_all
+
 	; todo, fade to white
 
 	;==================
@@ -308,12 +314,26 @@ main_tunnel_done:
 	;==================
 	;==================
 
+	; first until pattern 18
 
+	lda	#18
+	sta	interference_end_smc+1
+	jsr	interference
+
+	; TODO: falling bars
+	jsr	clear_all
+	lda	#50
+	jsr	wait_ticks
+
+
+	; again until pattern 25
+
+	lda	#25
+	sta	interference_end_smc+1
 	jsr	interference
 
 
 main_interference_done:
-
 
 	rts
 

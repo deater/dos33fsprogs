@@ -11,6 +11,9 @@
 
 zooming_circles:
 
+	lda	#5
+	jsr	setup_timeout
+
 	;===================
 	; init screen
 
@@ -85,13 +88,17 @@ xloop:
 	dex					; 1
 	bpl	yloop				; 2
 
-	lda	KEYPRESS
-	bmi	done_circles
+	jsr	check_timeout
+	bcs	done_circles
+	bcc	circle_forever
 
-	bpl	circle_forever		; bra
+;	lda	KEYPRESS
+;	bmi	done_circles
+
+;	bpl	circle_forever		; bra
 
 done_circles:
-	bit	KEYRESET
+;	bit	KEYRESET
 	rts
 
 

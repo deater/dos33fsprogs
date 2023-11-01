@@ -184,13 +184,18 @@ done_patch1:
 	sta	patch1
 	;===================================
 
-	lda	KEYPRESS
-	bmi	done_interference
+interference_end_smc:
+	lda	#18
+	jsr	wait_for_pattern
+	bcs	done_interference
+
+;	lda	KEYPRESS
+;	bmi	done_interference
 
 	jmp	draw_oval_loop		; bra
 
 done_interference:
-	bit	KEYRESET
+;	bit	KEYRESET
 	rts
 
 
