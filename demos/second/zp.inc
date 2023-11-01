@@ -187,6 +187,19 @@ ANGLE		= $FA
 ; credits
 SCROLL_X	= $F0
 
+; sierzoom
+;XX     =       $F0
+XX_TH   =       $F1
+XX_TL   =       $F2
+;YY     =       $F3
+YY_TH   =       $F4
+YY_TL   =       $F5
+T_L     =       $F6
+T_H     =       $F7
+SAVED   =       $F8
+
+
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================

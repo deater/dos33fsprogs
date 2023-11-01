@@ -309,7 +309,7 @@ main_tunnel_done:
 	;==================
 	;==================
 	;==================
-	; DO INTERFERENCE HERE
+	; DO INTERFERENCE #1 HERE
 	;==================
 	;==================
 	;==================
@@ -326,12 +326,21 @@ main_tunnel_done:
 	jsr	wait_ticks
 
 
+	;==================
+	;==================
+	;==================
+	; DO INTERFERENCE #2 HERE
+	;==================
+	;==================
+	;==================
+
 	; again until pattern 25
 
-	lda	#25
-	sta	interference_end_smc+1
-	jsr	interference
+;	lda	#25
+;	sta	interference_end_smc+1
+;	jsr	interference
 
+	jsr	sier_zoom
 
 main_interference_done:
 
@@ -349,6 +358,7 @@ main_interference_done:
 
 	.include	"interference.s"
 	.include	"circles.s"
+	.include	"sierzoom.s"
 	.include	"../hgr_page_flip.s"
 
 	; wait A * 1/50s
