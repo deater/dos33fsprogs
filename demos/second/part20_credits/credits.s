@@ -151,30 +151,45 @@ final_credits:
 	.byte 20," ",0
 	.byte 11,"by Deater / Desire",0
 	.byte 20," ",0
-	.byte 4 ,"This demo was at Demosplash 2023",0
+	.byte 1 ,"This demo was shown at Demosplash 2023",0
 	.byte 8,"held in Pittsburgh, PA,",0
 	.byte 12,"in November 2023.",0
 	.byte 20," ",0
+	.byte 13,"Apologies to:",0
+	.byte 14,"Future Crew",0
+	.byte 20," ",0
+
+	.byte 15,"Code used:",0
+	.byte  9,"French Touch -- Plasma",0
+	.byte  7,"DMSC -- ZX02 decompression",0
+	.byte  7,"qkumba -- fast disk loader",0
+	.byte 15,"4am - font",0
+	.byte  2,"K. Kennaway -- iipix image converter",0
+	.byte  3,"O. Schmidt -- sampled audio player",0
+	.byte 11,"Hellmood - circles",0
+	.byte 20," ",0
+
 	.byte 15,"Greets to:",0
 	.byte 14,"French Touch",0
 	.byte 18,"4am",0
-	.byte 17,"Qkumba",0
+	.byte 17,"qkumba",0
 	.byte 17,"Grouik",0
 	.byte 14,"Fenarinarsa",0
+	.byte 14,"Ninjaforce",0
 	.byte 15,"T. Greene",0
 	.byte 15,"K. Savetz",0
-	.byte 14,"K. Kennaway",0
-	.byte 15,"O. Schmidt",0
-	.byte 18,"DMSC",0
+	.byte 15,"Boo Atari",0
 	.byte 15,"textfiles",0
 	.byte 17,"wiz21b",0
 	.byte 17,"Trixter",0
 	.byte 18,"LGR",0
 	.byte 16,"Hellmood",0
 	.byte 17,"Foone",0
+	.byte 20," ",0
+	.byte 14,"Talbot 0101",0
 	.byte 12,"Utopia BBS (410)",0
 	.byte 10,"Weave's World Talker",0
-
+	.byte 8,"Tell 'em Deater sent ya",0
 	; end
 	.byte 20," ",0
 	.byte 20," ",0
