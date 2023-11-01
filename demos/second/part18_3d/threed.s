@@ -8,8 +8,8 @@
 
 .include "../zp.inc"
 .include "../hardware.inc"
-.include "../qload.inc"
-;.include "music.inc"
+.include "../qload2.inc"
+;.include "music2.inc"
 
 threed_start:
 

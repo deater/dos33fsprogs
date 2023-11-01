@@ -8,7 +8,7 @@ LINKER_SCRIPTS = ../../linker_scripts/
 
 all:	second_d1.dsk second_d2.dsk
 
-second_d1.dsk:	QBOOT QLOAD music.inc \
+second_d1.dsk:	QBOOT QLOAD music.inc qload.inc \
 	MUSIC_INTRO \
 	MUSIC \
 	./part01_intropan/INTRO \
@@ -80,7 +80,7 @@ part17_polar/POLAR:
 	cd part17_polar && make
 
 
-second_d2.dsk:	QBOOT QLOAD2 MUSIC2 music2.inc \
+second_d2.dsk:	QBOOT QLOAD2 MUSIC2 music2.inc qload2.inc \
 	./part18_3d/THREED \
 	./part19_nuts/NUTS \
 	./part20_credits/CREDITS
@@ -119,7 +119,7 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
-qload.o:	qload.s \
+qload.o:	zp.inc hardware.inc music.inc qload.s \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
@@ -136,7 +136,7 @@ QLOAD2:	qload2.o
 	ld65 -o QLOAD2 qload2.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
 qload2.o:	qload2.s \
-	music2.inc \
+	zp.inc hardware.inc music2.inc \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
@@ -151,26 +151,26 @@ qload2.o:	qload2.s \
 
 ####
 
-SECOND:	second.o
-	ld65 -o SECOND second.o -C ../../linker_scripts/apple2_6000.inc
-
-second.o:	second.s zx02_optim.s \
-	text_print.s title.s \
-	graphics/icekngdm.hgr.zx02 \
-	graphics/final3.hgr.zx02 \
-	graphics/mntscrl3.hgr.zx02 \
-	zp.inc hardware.inc qload.inc music.inc
-	ca65 -o second.o second.s -l second.lst
+#SECOND:	second.o
+#	ld65 -o SECOND second.o -C ../../linker_scripts/apple2_6000.inc
+#
+#second.o:	second.s zx02_optim.s \
+#	text_print.s title.s \
+#	graphics/icekngdm.hgr.zx02 \
+#	graphics/final3.hgr.zx02 \
+#	graphics/mntscrl3.hgr.zx02 \
+#	zp.inc hardware.inc qload.inc music.inc
+#	ca65 -o second.o second.s -l second.lst
 
 ####
 
-START:	start.o
-	ld65 -o START start.o -C ../../linker_scripts/apple2_2000.inc
+#START:	start.o
+#	ld65 -o START start.o -C ../../linker_scripts/apple2_2000.inc
 
-start.o:	start.s zx02_optim.s \
-	text_print.s title.s \
-	zp.inc hardware.inc qload.inc music.inc
-	ca65 -o start.o start.s -l start.lst
+#start.o:	start.s zx02_optim.s \
+#	text_print.s title.s \
+#	zp.inc hardware.inc qload.inc music.inc
+#	ca65 -o start.o start.s -l start.lst
 
 ####
 
@@ -204,6 +204,7 @@ qload2.inc:	generate_common QLOAD2
 	./generate_common -a 0x1200 -s load_file qload2.lst > qload2.inc
 	./generate_common -a 0x1200 -s detect_appleii_model qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s clear_all qload2.lst >> qload2.inc
+	./generate_common -a 0x1200 -s clear_all_color qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s set_normal qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s set_inverse qload2.lst >> qload2.inc
 	./generate_common -a 0x1200 -s wait qload2.lst >> qload2.inc
@@ -246,7 +247,7 @@ music2.inc:	generate_common MUSIC2
 
 ####
 
-MUSIC:	music.o qload.inc
+MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
@@ -262,7 +263,7 @@ music.o:	music.s zp.inc \
 
 ####
 
-MUSIC_INTRO:	music_intro.o qload.inc
+MUSIC_INTRO:	music_intro.o
 	ld65 -o MUSIC_INTRO music_intro.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music_intro.o:	music_intro.s zp.inc \
@@ -308,6 +309,7 @@ generate_common.o:	generate_common.c
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd part01_intropan && make clean
 	cd part04_chess_shapes && make clean
 	cd part08_gorilla && make clean

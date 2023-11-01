@@ -50,8 +50,9 @@ WHITE		= $0f
 draw_scene:
 
 	lda	#0	; always clear to black
-	sta	COLOR
-	jsr	clear_fullgr
+;	sta	COLOR
+	sta	clear_all_color+1
+	jsr	clear_all
 
 draw_scene_loop:
 	ldy	#0
@@ -161,7 +162,9 @@ draw_table_h:
 	;=================================
 	;=================================
 clear_screen:
-	jmp	clear_fullgr		; tail call
+	lda	COLOR
+	sta	clear_all_color+1
+	jmp	clear_all		; tail call
 
 	;=================================
 	;=================================
@@ -627,7 +630,7 @@ inc_inl:
 done_inc_inl:
 	rts
 
-.include "gr_fast_clear.s"
+;.include "gr_fast_clear.s"
 
 gr_offsets_l:
 	.byte	<$400,<$480,<$500,<$580,<$600,<$680,<$700,<$780

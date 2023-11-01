@@ -13,7 +13,9 @@ all:	THREED
 THREED:	threed.o
 	ld65 -o THREED threed.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-threed.o:	threed.s draw_boxes.s 3d.inc
+threed.o:	threed.s \
+	../qload2.inc \
+	draw_boxes.s 3d.inc
 	ca65 -o threed.o threed.s -l threed.lst
 
 ####
