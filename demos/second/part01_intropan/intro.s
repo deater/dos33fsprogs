@@ -136,17 +136,12 @@ intro_start:
 
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
-
 	;==============================
 	; do the pan
 	;==============================
 
 	jsr	horiz_pan
 
-
-
-	jsr	wait_until_keypress
 
 	;============================
 	; draw sprites
@@ -167,15 +162,12 @@ intro_start:
 
 	lda	#<fc_sr_logo_data
 	sta	zx_src_l+1
-
 	lda	#>fc_sr_logo_data
 	sta	zx_src_h+1
-
 	lda	#$20
-
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	; return, handle waiting on other side
 
 done_intro:
 	rts

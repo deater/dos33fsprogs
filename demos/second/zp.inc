@@ -1,6 +1,10 @@
-;; Zero Page
+;==================
+;==================
+; Zero Page Usage
+;==================
+;==================
 
-;; ZX0 addresses
+; ZX0 decompression addresses
 
 ZX0_src		= $00
 ZX0_dst		= $02
@@ -10,7 +14,8 @@ pntr		= $07
 WHICH_LOAD	= $09
 CURRENT_DISK	= $0A
 
-;; Zero page monitor routines addresses
+; Zero page monitor routines addresses
+; We don't use the monitor but we use some of these anyway
 
 WNDLFT	= $20
 WNDWDTH	= $21
@@ -26,35 +31,17 @@ H2	= $2C
 V2	= $2D
 MASK	= $2E
 COLOR	= $30
-			;INVFLG	= $32
+;INVFLG	= $32
 
-; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
-; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
-
-
-; DOS33: Confirmed kills $68
-
-RWTSL		= $60
-RWTSH		= $61
-DOSBUFL		= $62
-DOSBUFH		= $63
-FILEML		= $64
-FILEMH		= $65
+;==========================
+; $60-$6F unused currently
+;==========================
 
 
-FRAME           = $60
-FRAMEL		= $60
-FRAMEH		= $61
-WAITING         = $62
-LETTERL         = $63
-LETTERH         = $64
-LETTERX         = $65
-LETTERY         = $66
-LETTERD         = $67
-LETTER          = $68
-BLARGH          = $69
+;==========================
+; $70-$7F for PT3 Player
+;==========================
 
-; pt3 player registers
 AY_REGISTERS    = $70
 A_FINE_TONE     = $70
 A_COARSE_TONE   = $71
@@ -74,8 +61,10 @@ ENVELOPE_SHAPE  = $7D
 PATTERN_L       = $7E
 PATTERN_H       = $7F
 
-; rest of pt3_player
-; rest of pt3_player
+;============================
+; $80-$8D rest of pt3_player
+;============================
+
 PT3_TEMP        = $80
 ORNAMENT_L      = $81
 ORNAMENT_H      = $82
@@ -92,82 +81,47 @@ SOUND_STATUS    = $8C
         SOUND_DISABLED  = $80
         SOUND_IN_LC     = $01 ; $01 sound effects in language card
         SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+
+;=============================
+; not sure why these are here
+;=============================
+
 DISP_PAGE	= $8D
 DRAW_PAGE	= $8E
-
 TOTAL_RAM       = $8F
 
-;TIMER_COUNT	= $86
-;WHICH_SLOT      = $88
+;=============================
+; $90-$CF currently free
+;=============================
 
-
-
-NUM1L	= $90
-NUM1H	= $91
-NUM2L	= $92
-NUM2H	= $93
-RESULT	= $94	; 95,96,97
-SCALE_I	= $98
-SCALE_F	= $99
-ANGLE	= $9A
+;=============================
+; $D0-$DA = ?
+;=============================
 
 
 WHICH_SLOT = $DA		; from boot sector
 
-; More zero-page addresses
-; we try not to conflict with anything DOS, MONITOR or BASIC related
 
-			;COLOR1		=	$E0
-			;COLOR2		=	$E1
-			;MATCH		=	$E2
+;==============================================
+; $E0-$EF use for common things, don't re-use
+;==============================================
+IRQ_COUNTDOWN	= $E0
+SECOND_COUNTDOWN= $E1
+COUNT           = $E2
+XSAVE		= $E3
+TEMPY		= $E4
+XPOS		= $E5	; gr_plot
+YPOS		= $E6	; gr_plot
+COLOR_MASK	= $E7	; gr_plot
+FRAME           = $E8
+FRAMEL		= $E8
+FRAMEH		= $E9
 
-HGR_COLOR       = $E4
-			;SHIPY		=	$E4
-			;YADD		=	$E5
-			;LOOP		=	$E6
-			;MEMPTRL	=	$E7
-			;MEMPTRH	=	$E8
-			;NAMEL		=	$E9
-			;NAMEH		=	$EA
-			;NAMEX		=	$EB
-			;CHAR		=	$EC
-
-LAST_TYPE = $E6
-COLOR2	= $E7
-X1	= $E8
-X2	= $E9
-Y1	= $EA
-Y2	= $EB
-SCENE_COUNT = $EC
-
-STATE           = $ED
-OFFSET         = $EF
-
-
-; COMMON DON'T USE
-IRQ_COUNTDOWN	= $F0
-COUNT           = $F1
-
-
-SPRITETEMP	=	$F2
-XPOS		=	$F3
-YPOS		=	$F4
-XSAVE		=	$F6
-SCROLL_IN	=	$F7
-SCROLL_OUT	=	$F8
-STRING_COUNT	=	$F9
-TEMP		=	$FA
-MEMCOUNT	=	$FA
-TEMPY		=	$FB
-LEAD0		=	$FB
-INL		=	$FC
-INH		=	$FD
-OUTL		=	$FE
-OUTH		=	$FF
+;==============================================
+; $F0-$FB can re-use in each file
+;==============================================
 
 ; tunnel
-
-
 XX		= $F2
 MINUSXX         = $F3
 YY		= $F4
@@ -188,39 +142,56 @@ SPRITE_Y	= $F2
 SPRITE_X	= $F3
 CURRENT_ROW	= $F4
 
-; DOTS
-
-COLOR_MASK = $F2
-
 ; PLASMACUBE
-
-OUT1		= $20
-OUT1H		= $21
-OUT2		= $22
-OUT2H		= $23
-COMPT1		= $30
-COMPT2		= $31
-
-PARAM1		= $60
-PARAM2		= $61
-PARAM3		= $62
-PARAM4		= $63
-
-GRLINE		= $F2
-GRLINEH		= $F3
-
+OUT1		= $F0
+OUT1H		= $F1
+OUT2		= $F2
+OUT2H		= $F3
+COMPT1		= $F4
+COMPT2		= $F5
+PARAM1		= $F6
+PARAM2		= $F7
+PARAM3		= $F8
+PARAM4		= $F9
+GRLINE		= $FA
+GRLINEH		= $FB
 
 ; PLASMA
 
 PAGE		= $F2
 
-
 ; CUBE
-
-;COLOR_MASK	= $F2
 SAVEX		= $F3
 SAVEY		= $F4
 SUM		= $F5
+
+; CIRCLES/DRAW_BOXES
+COLOR2		= $F3
+X1		= $F4
+X2		= $F5
+Y1		= $F6
+Y2		= $F7
+SCENE_COUNT	= $F8
+LAST_TYPE	= $F9
+
+; rotozoom
+NUM1L		= $F0
+NUM1H		= $F1
+NUM2L		= $F2
+NUM2H		= $F3
+RESULT		= $F4	; F5,F6,F7
+SCALE_I		= $F8
+SCALE_F		= $F9
+ANGLE		= $FA
+
+;==============================================
+; $FC-$FF we use for in/out pointers
+;==============================================
+
+INL		=	$FC
+INH		=	$FD
+OUTL		=	$FE
+OUTH		=	$FF
 
 
 ; read any file slot 6 version
