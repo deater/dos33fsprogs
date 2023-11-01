@@ -6,6 +6,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -16,6 +17,12 @@ spheres_start:
 	;=====================
 	; initializations
 	;=====================
+
+	; debug
+	lda     #68
+        sta     current_pattern_smc+1
+        jsr     pt3_set_pattern
+
 
 	;===================
 	; Load graphics
@@ -56,7 +63,10 @@ load_loop:
 
 	bit	PAGE1
 
-	jsr	wait_until_keypress
+spheres_loop:
+	lda	#72
+	jsr	wait_for_pattern
+	bcc	spheres_loop
 
 spheres_done:
 	rts
@@ -67,6 +77,7 @@ spheres_done:
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
+	.include	"../irq_wait.s"
 
 spheres_data:
 	.incbin "graphics/spheres.hgr.zx02"

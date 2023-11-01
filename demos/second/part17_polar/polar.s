@@ -8,6 +8,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -56,19 +57,24 @@ ship_sprite_loop:
 
 	bit	PAGE1
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+polar_loop:
+	lda	#76
+	jsr	wait_for_pattern
+	bcc	polar_loop
 
 polar_done:
 	rts
 
 
-.align $100
+;.align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
-
+	.include	"../irq_wait.s"
 
 
 	; wait A * 1/50s

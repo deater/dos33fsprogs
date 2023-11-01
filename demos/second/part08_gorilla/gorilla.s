@@ -89,18 +89,7 @@ gorilla_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 
-
-
-	; wait A * 1/50s
-wait_irq:
-;	lda	#50
-	sta	IRQ_COUNTDOWN
-wait_irq_loop:
-	lda	IRQ_COUNTDOWN
-	bne	wait_irq_loop
-	rts
-
-	.include "../irq_wait.s"
+	.include	"../irq_wait.s"
 
 gorilla_data:
 	.incbin "graphics/mntscrl3.hgr.zx02"

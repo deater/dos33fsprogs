@@ -6,6 +6,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -16,6 +17,15 @@ leaves_start:
 	;=====================
 	; initializations
 	;=====================
+
+; debug
+	; force right location in music
+
+	lda	#30
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+
 
 	;===================
 	; Load graphics
@@ -53,7 +63,15 @@ ship_sprite_loop:
 
 	bit	PAGE1
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+leaves_loop:
+	lda	#34
+        jsr     wait_for_pattern
+        bcc     leaves_loop
+
+
+
 
 leaves_done:
 	rts
@@ -66,17 +84,7 @@ leaves_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 
-
-
-	; wait A * 1/50s
-wait_irq:
-;	lda	#50
-	sta	IRQ_COUNTDOWN
-wait_irq_loop:
-	lda	IRQ_COUNTDOWN
-	bne	wait_irq_loop
-	rts
-
 leaves_data:
 	.incbin "graphics/final3.hgr.zx02"
 
+	.include "../irq_wait.s"

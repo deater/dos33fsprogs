@@ -17,11 +17,18 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
-spheres_start:
+dots_start:
 	;=====================
 	; initializations
 	;=====================
+
+	; debug
+	lda     #60
+        sta     current_pattern_smc+1
+        jsr     pt3_set_pattern
+
 
 	;===================
 	; Load graphics
@@ -109,14 +116,13 @@ dot_good:
 	bpl	move_dot_loop
 
 
-
-	lda	KEYPRESS
-	bmi	dots_done
+	lda	#68
+	jsr	wait_for_pattern
+	bcs	dots_done
 
 	jmp	dots_loop
 
 dots_done:
-	bit	KEYRESET
 	rts
 
 
@@ -134,6 +140,8 @@ dots_done:
 ;	.include	"../hgr_table.s"
 ;	.include	"../hgr_clear_screen.s"
 ;	.include	"../hgr_copy_fast.s"
+
+	.include	"../irq_wait.s"
 
 
 wide_points_x:

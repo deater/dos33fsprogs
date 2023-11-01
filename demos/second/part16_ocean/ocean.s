@@ -6,11 +6,18 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 ocean_start:
 	;=====================
 	; initializations
 	;=====================
+
+	; debug
+	lda     #72
+        sta     current_pattern_smc+1
+        jsr     pt3_set_pattern
+
 
 	;===================
 	; Load graphics
@@ -69,8 +76,12 @@ ocean_loop:
 	sta	COUNT
 no_count_oflo:
 
-	lda	KEYPRESS
-	bmi	done_ocean
+	lda	#76
+	jsr	wait_for_pattern
+	bcs	done_ocean
+
+;	lda	KEYPRESS
+;	bmi	done_ocean
 
 	jmp	ocean_loop
 done_ocean:
@@ -78,6 +89,8 @@ done_ocean:
 
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
+
+	.include	"../irq_wait.s"
 
 frame_data_l:
 	.byte <frame02_data,<frame03_data,<frame04_data,<frame05_data

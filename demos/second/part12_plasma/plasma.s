@@ -6,6 +6,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table      = $1c00
 div7_table      = $1d00
@@ -32,6 +33,14 @@ Table2	= $74D0	; 40 bytes
 ; =============================================================================
 
 plasma_debut:
+
+	; debug
+	lda     #47
+        sta     current_pattern_smc+1
+        jsr     pt3_set_pattern
+
+
+
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
@@ -357,8 +366,10 @@ was_page1:
 done_pageflip:
 	sta	PAGE							; 3
 
-	lda	KEYPRESS
-	bpl	wasnt_keypress
+	lda	#52
+	jsr	wait_for_pattern
+
+	bcc	wasnt_keypress
 
 	jmp	done_plasma
 
@@ -463,6 +474,7 @@ hires_colors_odd_lookup_l1:
 
 
 .include "../hgr_clear_screen.s"
+.include "../irq_wait.s"
 
 ;.include "hgr_table.s"
 

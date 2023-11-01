@@ -390,6 +390,7 @@ load_program_loop2:
 	;=============================
 
 	sei		; disable music
+	jsr	clear_ay_both		; stop from making noise
 
 	bit	PAGE1
 	bit	TEXTGR

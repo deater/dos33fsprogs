@@ -1,6 +1,8 @@
+
 ; do a (hopefully fast) roto-zoom
 
 do_rotozoom:
+
 	;================================
 	; Clear screen and setup graphics
 	;================================
@@ -61,7 +63,12 @@ load_background:
 	jsr	page_flip
 	jsr	gr_copy_to_current
 
-	jsr	wait_until_keypress
+	; wait
+	; TODO: draw lens
+
+	lda	#15
+	jsr	wait_seconds
+
 
 
 	;=================================
@@ -81,11 +88,15 @@ main_loop:
 
 	jsr	page_flip
 
+	; wait for end
 
-        lda     KEYPRESS                                ; 4
-        bpl	no_keypress
-        bit     KEYRESET        ; clear the keyboard buffer
+	lda	#47
+	jsr	wait_for_pattern
+
+	bcc	no_keypress
+
         rts
+
 no_keypress:
 
 	clc
@@ -169,7 +180,7 @@ scaleaddh:	.byte	$00
 .include "rotozoom.s"
 
 .include "../gr_pageflip.s"
-.include "../gr_fast_clear.s"
+;.include "../gr_fast_clear.s"
 .include "../gr_copy.s"
 
 .include "../gr_offsets.s"

@@ -4,13 +4,20 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
-
+.include "../music.inc"
 
 ; =============================================================================
 ; ROUTINE MAIN
 ; =============================================================================
 
 plasma_main:
+	; debug
+
+	lda     #52
+        sta     current_pattern_smc+1
+        jsr     pt3_set_pattern
+
+
 
 	bit	PAGE2		; set page 2
 ;	bit	SET_TEXT	; set text
@@ -136,8 +143,9 @@ bp3:
 	jsr	display_normal	; display normal
 	jsr	VBLANK
 
-	lda	KEYPRESS
-	bpl	keep_making_plasma
+	lda	#60
+	jsr	wait_for_pattern
+	bcc	keep_making_plasma
 
 	jmp	done_plasmacube
 
@@ -268,7 +276,6 @@ VBLANK:
 	rts
 
 done_plasmacube:
-	bit	KEYRESET
 
 	rts
 
@@ -504,6 +511,7 @@ mask_src_table:
 
 .include "../wait_keypress.s"
 .include "../zx02_optim.s"
+.include "../irq_wait.s"
 
 mask1_data:
 .incbin "graphics/cube2_mask1.gr.zx02"
