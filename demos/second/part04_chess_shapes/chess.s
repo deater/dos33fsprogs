@@ -320,9 +320,45 @@ main_tunnel_done:
 	sta	interference_end_smc+1
 	jsr	interference
 
+	;======================
 	; TODO: falling bars
+	;======================
+	lda	#0
+	sta	DRAW_PAGE
+	bit	PAGE1
 	jsr	clear_all
-	lda	#50
+
+	; left
+
+	lda	#$FF
+	sta	BAR_X1
+	lda	#13
+	sta	BAR_X2
+	jsr	falling_bars
+
+	lda	#3
+	jsr	wait_ticks
+
+	; middle
+
+	lda	#13
+	sta	BAR_X1
+	lda	#27
+	sta	BAR_X2
+	jsr	falling_bars
+
+	lda	#3
+	jsr	wait_ticks
+
+	; right
+
+	lda	#27
+	sta	BAR_X1
+	lda	#39
+	sta	BAR_X2
+	jsr	falling_bars
+
+	lda	#5
 	jsr	wait_ticks
 
 
@@ -360,6 +396,7 @@ main_interference_done:
 	.include	"circles.s"
 	.include	"sierzoom.s"
 	.include	"../hgr_page_flip.s"
+	.include	"falling_bars.s"
 
 	; wait A * 1/50s
 wait_irq:

@@ -198,7 +198,8 @@ T_L     =       $F6
 T_H     =       $F7
 SAVED   =       $F8
 
-
+BAR_X1 =	$F0
+BAR_X2	=	$F1
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers

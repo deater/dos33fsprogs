@@ -19,6 +19,7 @@ chess.o:	chess.s \
 	../hgr_copy_fast.s \
 	interference.s \
 	circles.s \
+	falling_bars.s \
 	sierzoom.s \
 	../irq_wait.s \
 	../zp.inc ../hardware.inc ../qload.inc \
