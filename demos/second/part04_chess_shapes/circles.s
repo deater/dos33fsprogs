@@ -13,6 +13,7 @@ zooming_circles:
 
 	;===================
 	; init screen
+
 	bit	LORES
 	bit	FULLGR
 	bit	PAGE1
@@ -61,15 +62,18 @@ xloop:
 
 	ldy	X2	; Y==X2			; 2
 	txa		; A==Y1			; 1
-	jsr	plot_compat	; (X2,Y1)		; 3
+	jsr	plot_compat	; (X2,Y1)	; 3
+	ldy	X2
 	lda	Y2	; A==Y2			; 2
-	jsr	plot_compat	; (X2,Y2)		; 3
+	jsr	plot_compat	; (X2,Y2)	; 3
 
 	ldy	TEMPY	; Y==X1			; 2
 	txa		; A==Y1			; 1
 	jsr	plot_compat	; (X1,Y1)		; 3
+	ldy	TEMPY
 	lda	Y2	; A==Y2			; 2
 	jsr	plot_compat	; (X1,Y2)		; 3
+	ldy	TEMPY
 
 	inc	X2				; 2
 

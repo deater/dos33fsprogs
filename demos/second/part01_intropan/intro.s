@@ -29,36 +29,77 @@ intro_start:
 	lda	#0
 	jsr	hgr_page1_clearscreen
 
+	;=========================
+	; wait 15s doing nothing
+	;=========================
 
-	; demosplash
+	lda	#15
+	jsr	wait_seconds
+
+	; pre-load vmw message
+
+	lda	#<vmw_data
+	sta	zx_src_l+1
+	lda	#>vmw_data
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
+	;========================
+	; vmw message for 5s
+	;========================
+
+	bit	PAGE2
+	lda	#5
+	jsr	wait_seconds
+
+	; switch back, wait 2 seconds
+
+	bit	PAGE1
+	lda	#2
+	jsr	wait_seconds
+
+	; preload demosplash message
 
 	lda	#<demosplash_data
 	sta	zx_src_l+1
-
 	lda	#>demosplash_data
 	sta	zx_src_h+1
-
-	lda	#$20
-
+	lda	#$40
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	;===================
+	; demosplash for 5s
+	;===================
 
+	bit	PAGE2
+	lda	#5
+	jsr	wait_seconds
 
-	; mockingboard
+	; switch back, wait 2 seconds
+
+	bit	PAGE1
+	lda	#2
+	jsr	wait_seconds
+
+	; pre-load mockingboard
 
 	lda	#<mockingboard_data
 	sta	zx_src_l+1
-
 	lda	#>mockingboard_data
 	sta	zx_src_h+1
-
-	lda	#$20
-
+	lda	#$40
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	;=======================
+	; mockingboard for 5s
+	;=======================
 
+	bit	PAGE2
+	lda	#5
+	jsr	wait_seconds
+
+	bit	PAGE1
 
 	;======================================
 	;======================================
@@ -139,12 +180,14 @@ intro_start:
 done_intro:
 	rts
 
-.align $100
+;.align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
 	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"horiz_scroll.s"
+
+	.include	"../irq_wait.s"
 
 demosplash_data:
 	.incbin "graphics/demosplash.hgr.zx02"
@@ -157,4 +200,5 @@ intro_right_data:
 	.incbin "graphics/igr.hgr.zx02"
 fc_sr_logo_data:
 	.incbin "graphics/fc_sr_logo.hgr.zx02"
-
+vmw_data:
+	.incbin "graphics/vmw.hgr.zx02"

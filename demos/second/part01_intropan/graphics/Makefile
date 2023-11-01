@@ -5,7 +5,8 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
 
 all:	igl.hgr.zx02 igr.hgr.zx02 fc_sr_logo.hgr.zx02 \
-	demosplash.hgr.zx02 mockingboard.hgr.zx02
+	demosplash.hgr.zx02 mockingboard.hgr.zx02 \
+	vmw.hgr.zx02
 
 ####
 
@@ -51,9 +52,18 @@ igr.hgr:	igr.png
 
 ####
 
+vmw.hgr.zx02:	vmw.hgr
+	$(ZX02) vmw.hgr vmw.hgr.zx02
+
+vmw.hgr:	vmw.png
+	$(PNG_TO_HGR) vmw.png > vmw.hgr
+
+
+####
+
 
 
 ####
 
 clean:
-	rm -f *~
+	rm -f *~ *.zx02

@@ -17,12 +17,12 @@ plot:
 
 	bcc	plot_even						; 2nt/3
 plot_odd:
-	ldx	#$f0							; 2
+	ldy	#$f0							; 2
 	bcs	plot_c_done						; 2nt/3
 plot_even:
-	ldx	#$0f							; 2
+	ldy	#$0f							; 2
 plot_c_done:
-	stx	MASK							; 3
+	sty	MASK							; 3
 
 	asl			; shift back (now even)			; 2
 	tay								; 2

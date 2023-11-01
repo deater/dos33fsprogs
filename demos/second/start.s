@@ -298,6 +298,7 @@ load_program_loop:
 
 	sei
 
+	jsr	clear_ay_both		; stop from making noise
 
 	;=============================
 	; want to load 10..12
@@ -340,6 +341,10 @@ load_program_loop2:
 	; Run 10-12
 	;==========================
 	;==========================
+
+	; restart music
+
+	cli
 
 	;=======================
 	; run SPHERES
