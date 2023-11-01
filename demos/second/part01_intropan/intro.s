@@ -6,6 +6,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table      = $1c00
 div7_table      = $1d00

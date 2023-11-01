@@ -8,6 +8,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../music.inc"
 
 mod7_table	= $1c00
 div7_table	= $1d00
@@ -19,19 +20,35 @@ chess_start:
 	; initializations
 	;=====================
 
-	;===================
-	; Load graphics
-	;===================
+	; some of this not necessary as we come in in HGR
 
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
 	bit	PAGE1
+	bit	KEYRESET
 
-	lda	#$FF
-	jsr	hgr_page1_clearscreen
 	lda	#$00
 	jsr	hgr_page2_clearscreen
+
+	;===================
+	; Load graphics
+	;===================
+
+	; wait until pattern1
+;pattern1_loop:
+;	lda	#1
+;	jsr	wait_for_pattern
+;	bcc	pattern2_loop
+
+	; technically the above, but we're not fast enough
+
+	lda	#175
+	jsr	wait_ticks
+
+;	lda	#$FF
+;	jsr	hgr_page1_clearscreen
+
 
 	;==========================
 	; Falling board animation
@@ -93,7 +110,7 @@ compact_inner_loop:
 	dey
 	bpl	compact_inner_loop
 
-	lda	#50
+	lda	#30
 	jsr	wait
 
 	inx
@@ -107,6 +124,9 @@ compact_inner_loop:
 	;=============================
 	; Bouncing on board animation
 	;=============================
+
+	lda	#10
+	jsr	setup_timeout
 
 	bit	PAGE2
 
@@ -131,8 +151,8 @@ chess_bounce_loop:
 	ldx     COUNT
 
 	lda     object_coords_x,X
-	cmp	#$FF
-	beq	done_orange_loop
+;	cmp	#$FF
+;	beq	done_orange_loop
 
 	sta     SPRITE_X
 	lda     object_coords_y,X
@@ -156,11 +176,11 @@ chess_bounce_loop:
 
 no_chess_bounce_oflo:
 
-	lda	KEYPRESS
-	bpl	chess_bounce_loop
+	jsr	check_timeout
+	bcc	chess_bounce_loop	; clear if not timed out
 
-done_chess_bount_loop:
-	bit	KEYRESET
+done_chess_bounce_loop:
+
 
 	;=============================
 	; Orange Blob Animation
@@ -187,8 +207,8 @@ orange_loop:
 	ldx     COUNT
 
 	lda     object_coords_x,X
-	cmp	#$FF
-	beq	done_orange_loop
+;	cmp	#$FF			; needed?
+;	beq	done_orange_loop
 
 	sta     SPRITE_X
 	lda     object_coords_y,X
@@ -212,11 +232,16 @@ orange_loop:
 
 no_orange_oflo:
 
-	lda	KEYPRESS
-	bpl	orange_loop
+	; finish at music pattern #10 or keypress
+	lda	#10
+	jsr	wait_for_pattern
+	bcc	orange_loop
 
-done_orange_loop:
-	bit	KEYRESET
+;	lda	KEYPRESS
+;	bpl	orange_loop
+
+;done_orange_loop:
+;	bit	KEYRESET
 
 chess_done:
 
@@ -300,6 +325,7 @@ main_interference_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 	.include	"../hgr_sprite_big.s"
+	.include	"../irq_wait.s"
 
 	.include	"interference.s"
 	.include	"circles.s"
