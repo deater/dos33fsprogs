@@ -1541,17 +1541,43 @@ not_done:
 
 	; set up the three pattern address pointers
 
-	asl		; mul pattern offset by two, as word sized	; 2
-	tay								; 2
+	; BUG BUG BUG
+	;  pattern offset can be bigger than 128, and if we multiply
+	;	by two to get word size it will overflow
+	;  for example I have a .pt3 where pattern #48 ($30*3=$90) is used
+
+;	asl		; mul pattern offset by two, as word sized	; 2
+;	tay								; 2
 
 	; point PATTERN_H/PATTERN_L to the pattern address table
 
-	clc								; 2
-	lda	PT3_LOC+PT3_PATTERN_LOC_L				; 4
-	sta	PATTERN_L						; 3
+;	clc								; 2
+;	lda	PT3_LOC+PT3_PATTERN_LOC_L				; 4
+;	sta	PATTERN_L						; 3
+;	lda	PT3_LOC+PT3_PATTERN_LOC_H				; 4
+;	adc	#>PT3_LOC		; assume page boundary		; 2
+;	sta	PATTERN_H						; 3
+
+	clc
+	sta	PATTERN_L
+	adc	PT3_LOC+PT3_PATTERN_LOC_L
+	adc	PATTERN_L
+	sta	PATTERN_L
+
 	lda	PT3_LOC+PT3_PATTERN_LOC_H				; 4
 	adc	#>PT3_LOC		; assume page boundary		; 2
 	sta	PATTERN_H						; 3
+
+;	clc
+;	tya
+;	adc	PATTERN_L
+;	adc	PATTERN_L
+;	sta	PATTERN_L
+;	lda	#0
+;	adc	PATTERN_H
+;	sta	PATTERN_H
+
+	ldy	#0
 
 	; First 16-bits points to the Channel A address
 	lda	(PATTERN_L),Y						; 5+
