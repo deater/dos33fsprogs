@@ -23,6 +23,29 @@ spheres_start:
         sta     current_pattern_smc+1
         jsr     pt3_set_pattern
 
+	; decompress audio to $6000
+
+	lda	#<transmission_data
+	sta	zx_src_l+1
+	lda	#>transmission_data
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	; play audio
+
+	lda	#$00
+	sta	BTC_L
+	lda	#$60
+	sta	BTC_H
+
+	sei			; stop music
+
+	ldx	#11
+	jsr	play_audio
+
+
+	cli
 
 	;===================
 	; Load graphics
@@ -77,8 +100,11 @@ spheres_done:
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
+	.include	"../audio.s"
 	.include	"../irq_wait.s"
 
 spheres_data:
 	.incbin "graphics/spheres.hgr.zx02"
 
+transmission_data:
+	.incbin "audio/transmission.btc.zx02"

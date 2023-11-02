@@ -116,6 +116,8 @@ COLOR_MASK	= $E7	; gr_plot
 FRAME           = $E8
 FRAMEL		= $E8
 FRAMEH		= $E9
+BTC_L		= $EA	; audio
+BTC_H		= $EB	; audio
 
 ;==============================================
 ; $F0-$FB can re-use in each file

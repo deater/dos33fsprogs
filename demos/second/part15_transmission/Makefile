@@ -17,6 +17,7 @@ SPHERES:	spheres.o
 spheres.o:	spheres.s \
 	../zx02_optim.s \
 	../hgr_copy_fast.s \
+	../audio.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	graphics/spheres.hgr.zx02
 	ca65 -o spheres.o spheres.s -l spheres.lst
