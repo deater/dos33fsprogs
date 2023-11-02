@@ -32,15 +32,14 @@ Table2	= $74D0	; 40 bytes
 
 plasma_debut:
 
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
-	bit	PAGE1
-
 	lda     #0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
 
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+	bit	PAGE1
 
 	;=========================================
 	; init div8
