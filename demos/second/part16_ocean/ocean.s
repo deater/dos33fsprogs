@@ -14,8 +14,9 @@ ocean_start:
 	;=====================
 
 	; in case we re-run for some reason
-	lda	#$E6			; INC =$E6, DEC=$C6
-	sta	direction_smc
+;	lda	#$E6			; INC =$E6, DEC=$C6
+;	sta	direction_smc
+;	sta	direction2_smc
 
 	;===================
 	; Load graphics
@@ -47,6 +48,7 @@ ocean_loop:
 
 
 	bit	PAGE2
+direction2_smc:
 	inc	COUNT
 
 	; right logo
@@ -70,7 +72,7 @@ direction_smc:
 	inc	COUNT
 
 	lda	COUNT
-	beq	ocean_zero
+	beq	really_done_ocean
 
 	cmp	#32
 	bne	no_count_oflo
@@ -79,6 +81,7 @@ direction_smc:
 	sta	COUNT
 no_count_oflo:
 
+end_smc:
 	lda	#75			; really 76, finish one early
 	jsr	wait_for_pattern
 	bcs	done_ocean		; bge
@@ -90,24 +93,35 @@ no_count_oflo:
 	; reverse flow so we back out
 
 done_ocean:
+	lda	#76
+	sta	end_smc+1
+
 	lda	#$C6			; INC =$E6, DEC=$C6
 	sta	direction_smc
-	jmp	restart_ocean
+	sta	direction2_smc
+
+	lda	#6
+	sta	COUNT
+
+	jmp	ocean_loop
 
 	; here once we've gone backwards to end
 
-ocean_zero:
+really_done_ocean:
+
+	lda     #0
+	jsr     hgr_page1_clearscreen
+	jsr     hgr_page2_clearscreen
+
 	lda	#76
 	jsr	wait_for_pattern
 	bcs	really_done_ocean
 
-	jmp	ocean_zero
-
-really_done_ocean:
 	rts
 
 	.include	"../wait_keypress.s"
 ;	.include	"../zx02_optim.s"
+	.include	"../hgr_clear_screen.s"
 
 	.include	"../irq_wait.s"
 
