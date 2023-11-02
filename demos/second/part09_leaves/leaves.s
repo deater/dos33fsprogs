@@ -48,30 +48,36 @@ leaves_start:
 	sta	zx_src_l+1
 	lda	#>leaves_data
 	sta	zx_src_h+1
-	lda	#$60
+	lda	#$20
 	jsr	zx02_full_decomp
 
 
-	lda	#0
-	sta	COUNT
-	sta	DRAW_PAGE
+;	lda	#0
+;	sta	COUNT
+;	sta	DRAW_PAGE
 
-ship_sprite_loop:
 
-	lda	#$60
-	jsr	hgr_copy
+;	lda	#$60
+;	jsr	hgr_copy
 
-	bit	PAGE1
+;	bit	PAGE1
 
 ;	jsr	wait_until_keypress
 
 leaves_loop:
+	bit	PAGE1
+
+	lda	#25
+	jsr	wait_ticks
+
+	bit	PAGE2
+
+	lda	#25
+	jsr	wait_ticks
+
 	lda	#34
         jsr     wait_for_pattern
         bcc     leaves_loop
-
-
-
 
 leaves_done:
 	rts
@@ -85,6 +91,6 @@ leaves_done:
 	.include	"../hgr_copy_fast.s"
 
 leaves_data:
-	.incbin "graphics/final3.hgr.zx02"
+	.incbin "graphics/leaves_combined.hgr.zx02"
 
 	.include "../irq_wait.s"
