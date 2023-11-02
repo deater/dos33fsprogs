@@ -112,12 +112,34 @@ load_background:
 
 
 	;===============================
-	; draw lens
+	; draw/move lens
 	;===============================
 
-	lda     #10
-	sta	XPOS
 	lda	#10
+	jsr	setup_timeout
+
+
+	lda	#10
+	sta	LENS_X
+	lda	#2
+	sta	LENS_Y
+
+	lda	#1
+	sta	XADD
+	lda	#2
+	sta	YADD
+
+	lda	#0
+	sta	COUNT
+
+lens_move_loop:
+
+	jsr	gr_copy_to_current
+
+	ldx	COUNT
+	lda	LENS_X
+	sta	XPOS
+	lda	LENS_Y
 	sta	YPOS
 
 	lda	#<lens_mask
@@ -132,9 +154,58 @@ load_background:
 
 	jsr	gr_put_sprite_mask
 
-	lda	#15
-	jsr	wait_seconds
+	jsr	page_flip
 
+	; move lens
+
+	; move x
+move_x:
+	clc
+	lda	LENS_X
+	adc	XADD
+	sta	LENS_X
+	cmp	#2
+	bcc	reverse_x
+	cmp	#28
+	bcc	no_reverse_x
+reverse_x:
+	lda	XADD
+	eor	#$FF
+	sta	XADD
+	inc	XADD
+
+no_reverse_x:
+
+move_y:
+	clc
+	lda	LENS_Y
+	adc	YADD
+	sta	LENS_Y
+	cmp	#2
+	bcc	reverse_y
+	cmp	#22
+	bcc	no_reverse_y
+reverse_y:
+	lda	YADD
+	eor	#$FF
+	sta	YADD
+	inc	YADD
+
+no_reverse_y:
+
+
+
+
+	; wait a bit
+
+	lda	#200
+	jsr	wait
+
+no_lens_bounce_oflo:
+	jsr	check_timeout
+	bcc	lens_move_loop		; clear if not timed out
+
+done_lens_bounce_loop:
 
 	;=================================
 	;=================================
@@ -179,3 +250,18 @@ lens_zx02:
 
 
 .include "graphics/lens_sprites.inc"
+
+.if 0
+
+lens_coords_x:
+	.byte 10,11,12,13,14,15,16,17
+	.byte 18,19,20,21,22,23,24,25
+	.byte 26,27,28,28,27,26,25,24
+	.byte 23,22,21,20,19,18,17,16
+
+lens_coords_y:
+	.byte  2, 4, 6, 8,10,12,14,16
+	.byte 18,20,22,22,20,18,16,14
+	.byte 12,10, 8, 6, 4, 2, 2, 4
+	.byte  6, 8,10,12,14,16,18,20
+.endif

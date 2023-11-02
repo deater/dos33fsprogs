@@ -176,6 +176,13 @@ Y2		= $F7
 SCENE_COUNT	= $F8
 LAST_TYPE	= $F9
 
+
+; lens
+LENS_X		= $F0
+LENS_Y		= $F1
+XADD		= $F2
+YADD		= $F3
+
 ; rotozoom
 NUM1L		= $F0
 NUM1H		= $F1
