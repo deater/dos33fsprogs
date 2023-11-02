@@ -18,28 +18,6 @@ spheres_start:
 	; initializations
 	;=====================
 
-	; decompress audio to $6000
-
-	lda	#<transmission_data
-	sta	zx_src_l+1
-	lda	#>transmission_data
-	sta	zx_src_h+1
-	lda	#$60
-	jsr	zx02_full_decomp
-
-	; play audio
-
-	lda	#$00
-	sta	BTC_L
-	lda	#$60
-	sta	BTC_H
-
-	sei			; stop music
-
-	ldx	#11
-	jsr	play_audio
-
-	cli
 
 	;===================
 	; Load graphics
@@ -76,6 +54,36 @@ spheres_start:
         jsr     gr_copy_to_current
         jsr     page_flip
         jsr     gr_copy_to_current
+
+
+	;===================================
+	; Play "transmission" audio
+	;===================================
+
+
+	; decompress audio to $6000
+
+	lda	#<transmission_data
+	sta	zx_src_l+1
+	lda	#>transmission_data
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	; play audio
+
+	lda	#$00
+	sta	BTC_L
+	lda	#$60
+	sta	BTC_H
+
+	sei			; stop music
+
+	ldx	#11
+	jsr	play_audio
+
+	cli
+
 
 
 
