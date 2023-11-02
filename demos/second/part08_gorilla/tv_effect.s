@@ -1,3 +1,5 @@
+; TODO: dot in the middle for a bit
+
 
 	;===========================
 	; tv turning off effect
@@ -106,6 +108,31 @@ zappo_inner_loop:
 	iny
 	cpy	#20
 	bne	zappo_outer_loop
+
+	; point in middle
+
+	ldy	#19
+
+	lda	#$40
+	sta	(OUTL),Y
+	sta	(GBASL),Y
+
+	iny
+	lda	#$01
+	sta	(OUTL),Y
+	sta	(GBASL),Y
+
+	lda	#150
+	jsr	wait
+
+	ldy	#19
+
+	lda	$00
+	sta	(OUTL),Y
+	sta	(GBASL),Y
+	iny
+	sta	(OUTL),Y
+	sta	(GBASL),Y
 
 	rts
 
