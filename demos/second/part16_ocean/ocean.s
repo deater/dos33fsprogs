@@ -110,12 +110,15 @@ done_ocean:
 really_done_ocean:
 
 	lda     #0
-	jsr     hgr_page1_clearscreen
 	jsr     hgr_page2_clearscreen
+	bit	PAGE2
+
+	jsr     hgr_page1_clearscreen
+	bit	PAGE1
 
 	lda	#76
 	jsr	wait_for_pattern
-	bcs	really_done_ocean
+	bcs	really_done_ocean	; bge
 
 	rts
 

@@ -50,22 +50,79 @@ load_loop:
 	lda	#$60
 	jsr	zx02_full_decomp
 
-
+	;===============================
+	;===============================
+	;===============================
 	; TODO
 	;	scroll in and bounce
+	;===============================
+	;===============================
 
-polar_scroll_loop:
 
 
 	lda	#0
-	sta	COUNT
 	sta	DRAW_PAGE		; draw to PAGE1
 
-	lda	#$60
-	jsr	hgr_copy
+	lda	#188
+	sta	SCROLL_START
 
-	bit	PAGE1			; look at PAGE1
+polar_outer_loop:
 
+	lda	SCROLL_START
+	sta	COUNT
+
+	lda	#0
+	sta	YDEST
+
+polar_scroll_loop:
+
+	; setup source
+	ldx	COUNT
+	lda	hposn_low,X
+	sta	polar_load_smc+1
+	lda	hposn_high,X
+	clc
+	adc	#$40			; load from $6000
+	sta	polar_load_smc+2
+
+	; setup destination
+	ldx	YDEST
+	lda	hposn_low,X
+	sta	polar_store_smc+1
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE		; store to $2000/$4000
+	sta	polar_store_smc+2
+
+	ldy	#39
+polar_scroll_inner:
+
+polar_load_smc:
+	lda	$6000,Y
+polar_store_smc:
+	sta	$2000,Y
+	dey
+	bne	polar_scroll_inner
+
+	inc	YDEST
+	inc	COUNT
+	lda	COUNT
+	cmp	#192
+	bne	polar_scroll_loop
+
+	; flip pages
+
+	jsr	hgr_page_flip
+
+	lda	SCROLL_START
+	beq	done_polar_scroll
+
+	sec
+	sbc	#4
+	sta	SCROLL_START
+	jmp	polar_outer_loop
+
+done_polar_scroll:
 
 
 polar_loop:
@@ -85,7 +142,7 @@ polar_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 	.include	"../irq_wait.s"
-
+	.include	"../hgr_page_flip.s"
 
 
 polar_data:
