@@ -65,6 +65,7 @@ ocean_loop:
 
 	bit	PAGE1
 
+restart_ocean:
 direction_smc:
 	inc	COUNT
 
@@ -74,15 +75,15 @@ direction_smc:
 	cmp	#32
 	bne	no_count_oflo
 
-	lda	#6
+	lda	#6			; reset to 6
 	sta	COUNT
 no_count_oflo:
 
 	lda	#75			; really 76, finish one early
 	jsr	wait_for_pattern
-	bcs	done_ocean
+	bcs	done_ocean		; bge
 
-	jmp	ocean_loop
+	jmp	ocean_loop		; loop
 
 
 	; here done one early
@@ -91,7 +92,7 @@ no_count_oflo:
 done_ocean:
 	lda	#$C6			; INC =$E6, DEC=$C6
 	sta	direction_smc
-	rts
+	jmp	restart_ocean
 
 	; here once we've gone backwards to end
 
@@ -106,7 +107,7 @@ really_done_ocean:
 	rts
 
 	.include	"../wait_keypress.s"
-	.include	"../zx02_optim.s"
+;	.include	"../zx02_optim.s"
 
 	.include	"../irq_wait.s"
 
