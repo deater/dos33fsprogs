@@ -158,8 +158,6 @@ GRLINEH		= $FB
 
 ; PLASMA
 
-PAGE		= $F2
-
 ; CUBE
 SAVEX		= $F3
 SAVEY		= $F4

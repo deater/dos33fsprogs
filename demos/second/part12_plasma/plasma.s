@@ -74,18 +74,62 @@ div8_loop:
 	;=========================================
 
 	lda	#0
-	sta	PAGE
+	sta	DRAW_PAGE
+
+	;=============================
+	; do blue/orange
+
+	lda	#49
+	sta	plasma_end_smc+1
+
+	jsr	init_plasma_colors
+	jsr	do_plasma
+
+	; drop
+
+
+	;=============================
+	; do purple/green
+
+	ldx	#63
+change_purple:
+	lda	hires_colors_even_lookup_l0,X
+	and	#$7f
+	sta	hires_colors_even_lookup_l0,X
+	dex
+	bpl	change_purple
+
 
 	jsr	init_plasma_colors
 
-; ============================================================================
-
-; 26+( 24*(11+(40*(39+(38*2))) = 110,690 +2174 = 112,864 = 9fps
-; 26+( 24*(11+(40*(39+(38*4))) = 183,650 +2174 = 185,824 = 5.5fps
-; 26+( 24*(11+(40*(39+(38*8))) = 329,570 +2174 = 	 = 3fps
-
+	lda	#50
+	sta	plasma_end_smc+1
 
 	jsr	do_plasma
+
+	; drop
+
+
+
+	;=============================
+	; do black/white?
+
+	ldx	#63
+change_mono:
+	lda	hires_colors_even_lookup_l0,X
+	ora	#$aa
+	sta	hires_colors_even_lookup_l0,X
+	dex
+	bpl	change_mono
+
+	jsr	init_plasma_colors
+
+	lda	#52
+	sta	plasma_end_smc+1
+
+	jsr	do_plasma
+
+
 
 	rts
 

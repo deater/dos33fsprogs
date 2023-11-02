@@ -108,7 +108,7 @@ display_row_sin_smc:
 
 	lda	hposn_high_div8,X					; 4
 	clc								; 2
-	adc	PAGE							; 3
+	adc	DRAW_PAGE						; 3
 	sta	GBASH							; 3
 ; 30
 	lda	#1							; 2
@@ -142,7 +142,7 @@ display_lookup_smc:
 
 ; ============================================================================
 
-	lda	PAGE							; 3
+	lda	DRAW_PAGE						; 3
 	beq	was_page1						; 2/3
 was_page2:
 	bit	PAGE2							; 4
@@ -152,8 +152,9 @@ was_page1:
 	bit	PAGE1							; 4
 	lda	#$20							; 2
 done_pageflip:
-	sta	PAGE							; 3
+	sta	DRAW_PAGE						; 3
 
+plasma_end_smc:
 	lda	#52
 	jsr	wait_for_pattern
 

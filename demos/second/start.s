@@ -397,6 +397,8 @@ load_program_loop2:
 	bit	KEYRESET	; clear keyboard
 
 	; clear text screen
+	lda	#$A0
+	sta	clear_all_color+1
 
 	jsr	clear_all
 

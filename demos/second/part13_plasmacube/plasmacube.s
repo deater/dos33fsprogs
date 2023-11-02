@@ -4,6 +4,7 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../qload.inc"
 .include "../music.inc"
 
 ; =============================================================================
@@ -17,6 +18,14 @@ plasma_main:
         sta     current_pattern_smc+1
         jsr     pt3_set_pattern
 
+
+	lda	#$00
+	sta	DRAW_PAGE
+	sta	clear_all_color+1
+
+	lda	#$04
+	sta	DRAW_PAGE
+	jsr	clear_all
 
 
 	bit	PAGE2		; set page 2
