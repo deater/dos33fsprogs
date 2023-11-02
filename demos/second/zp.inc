@@ -196,6 +196,10 @@ ANGLE		= $FA
 ; credits
 SCROLL_X	= $F0
 
+; polar
+SCROLL_START	= $F0
+YDEST		= $F1
+
 ; sierzoom
 ;XX     =       $F0
 XX_TH   =       $F1

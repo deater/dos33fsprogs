@@ -126,7 +126,7 @@ done_polar_scroll:
 
 
 polar_loop:
-	lda	#5
+	lda	#8
 	jsr	wait_seconds
 
 ;	lda	#76

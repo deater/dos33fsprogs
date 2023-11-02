@@ -457,6 +457,9 @@ load_program_loop2:
 	sei				; disable music
 	jsr	clear_ay_both		; stop from making noise
 
+	lda	#0
+	sta	DRAW_PAGE
+
 	bit	PAGE1			; be sure we're on PAGE1
 
 	; clear text screen
