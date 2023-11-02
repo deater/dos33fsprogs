@@ -39,47 +39,50 @@ spheres_start:
 	ldx	#11
 	jsr	play_audio
 
-
 	cli
 
 	;===================
 	; Load graphics
 	;===================
-load_loop:
 
 	bit	SET_GR
-	bit	HIRES
 	bit	FULLGR
 	bit	PAGE1
+	bit	LORES
 
 	lda	#0
-	jsr	hgr_page1_clearscreen
-	jsr	hgr_page2_clearscreen
+	sta	DISP_PAGE
+	lda	#4
+	sta	DRAW_PAGE
 
-	bit	PAGE2
+	;===================================
+	; Clear top/bottom of page 0 and 1
+	;===================================
 
-	; load image offscreen $6000
+	jsr	clear_screens
+
+	; load image offscreen $4000
 
 	lda	#<spheres_data
 	sta	zx_src_l+1
 	lda	#>spheres_data
 	sta	zx_src_h+1
-	lda	#$60
+	lda	#$40
 	jsr	zx02_full_decomp
 
+	;=================================
+        ; copy to both pages
 
-	lda	#0
-	sta	COUNT
-	sta	DRAW_PAGE
+        jsr     gr_copy_to_current
+        jsr     page_flip
+        jsr     gr_copy_to_current
 
 
-	; copy to main
 
+;	lda	#0
+;	sta	COUNT
+;	sta	DRAW_PAGE
 
-	lda	#$60
-	jsr	hgr_copy
-
-	bit	PAGE1
 
 spheres_loop:
 	lda	#72
@@ -91,15 +94,22 @@ spheres_done:
 
 
 	.include	"../wait_keypress.s"
-	.include	"../zx02_optim.s"
+;	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
-	.include	"../hgr_clear_screen.s"
-	.include	"../hgr_copy_fast.s"
+;	.include	"../hgr_clear_screen.s"
+;	.include	"../hgr_copy_fast.s"
+
+	.include	"../gr_pageflip.s"
+	.include	"../gr_copy.s"
+
+	.include	"../gr_offsets.s"
+
 	.include	"../audio.s"
 	.include	"../irq_wait.s"
 
 spheres_data:
-	.incbin "graphics/spheres.hgr.zx02"
+;	.incbin "graphics/spheres.hgr.zx02"
+	.incbin "graphics/spheres.gr.zx02"
 
 transmission_data:
 	.incbin "audio/transmission.btc.zx02"
