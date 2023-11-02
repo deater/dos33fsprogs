@@ -14,6 +14,7 @@ LENS:	lens.o
 
 lens.o:	lens.s ../zx02_optim.s \
 	roto.s rotozoom.s \
+	graphics/lens_sprites.inc \
 	graphics/lenspic.gr.zx02 \
 	../zp.inc ../hardware.inc
 	ca65 -o lens.o lens.s -l lens.lst

@@ -79,8 +79,58 @@ load_background:
 	jsr	page_flip
 	jsr	gr_copy_to_current
 
-	; wait
-	; TODO: draw lens
+	;=================================
+	;TODO: wait 5s?
+	;
+
+	;=================================
+	;TODO: play sound sample?
+	;=================================
+
+	; decompress audio to $6000
+
+;	lda	#<transmission_data
+;	sta	zx_src_l+1
+;	lda	#>transmission_data
+;	sta	zx_src_h+1
+;	lda	#$60
+;	jsr	zx02_full_decomp
+
+	; play audio
+
+;	lda	#$00
+;	sta	BTC_L
+;	lda	#$60
+;	sta	BTC_H
+
+;	sei                     ; stop music
+
+;	ldx	#11
+;	jsr	play_audio
+
+;	cli
+
+
+	;===============================
+	; draw lens
+	;===============================
+
+	lda     #10
+	sta	XPOS
+	lda	#10
+	sta	YPOS
+
+	lda	#<lens_mask
+	sta	MASKL
+	lda	#>lens_mask
+	sta	MASKH
+
+	lda	#<lens_sprite
+	sta	INL
+	lda	#>lens_sprite
+	sta	INH
+
+	jsr	gr_put_sprite_mask
 
 	lda	#15
 	jsr	wait_seconds
@@ -117,6 +167,8 @@ lens_end:
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
 	.include	"../irq_wait.s"
+	.include	"gr_putsprite_mask.s"
+	.include	"../audio.s"
 
 ;===============================================
 ; Data
@@ -125,3 +177,5 @@ lens_end:
 lens_zx02:
 	.incbin "graphics/lenspic.gr.zx02"
 
+
+.include "graphics/lens_sprites.inc"
