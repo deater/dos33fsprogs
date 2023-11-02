@@ -61,7 +61,8 @@ ocean				= pattern offset 72 (43)
 	467 ocean stop
 polar				= pattern offset 76 (47)
 	469
-fade white
+
+fade white			= ?
 	480
 	
 	

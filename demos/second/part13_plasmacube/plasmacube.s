@@ -12,12 +12,6 @@
 ; =============================================================================
 
 plasma_main:
-	; debug
-
-	lda     #52
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
-
 
 	lda	#$00
 	sta	DRAW_PAGE

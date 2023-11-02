@@ -12,12 +12,6 @@ lens_start:
 	; initializations
 	;=====================
 
-        ; debug
-        ; force right location in music
-
-        lda     #34
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
 
 	;================================
 	; Clear screen and setup graphics

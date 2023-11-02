@@ -13,11 +13,9 @@ ocean_start:
 	; initializations
 	;=====================
 
-	; debug
-	lda     #72
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
-
+	; in case we re-run for some reason
+	lda	#$E6			; INC =$E6, DEC=$C6
+	sta	direction_smc
 
 	;===================
 	; Load graphics
@@ -67,8 +65,12 @@ ocean_loop:
 
 	bit	PAGE1
 
+direction_smc:
 	inc	COUNT
+
 	lda	COUNT
+	beq	ocean_zero
+
 	cmp	#32
 	bne	no_count_oflo
 
@@ -76,15 +78,31 @@ ocean_loop:
 	sta	COUNT
 no_count_oflo:
 
-	lda	#76
+	lda	#75			; really 76, finish one early
 	jsr	wait_for_pattern
 	bcs	done_ocean
 
-;	lda	KEYPRESS
-;	bmi	done_ocean
-
 	jmp	ocean_loop
+
+
+	; here done one early
+	; reverse flow so we back out
+
 done_ocean:
+	lda	#$C6			; INC =$E6, DEC=$C6
+	sta	direction_smc
+	rts
+
+	; here once we've gone backwards to end
+
+ocean_zero:
+	lda	#76
+	jsr	wait_for_pattern
+	bcs	really_done_ocean
+
+	jmp	ocean_zero
+
+really_done_ocean:
 	rts
 
 	.include	"../wait_keypress.s"

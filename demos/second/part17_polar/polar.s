@@ -25,16 +25,21 @@ polar_start:
 	;===================
 load_loop:
 
+	; already in hires when we come in?
+
+	bit	KEYRESET
+
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
-	bit	PAGE1
+;	bit	PAGE1
 
 	lda	#0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
 
-	bit	PAGE2
+	bit	PAGE2			; look at page2
+
 
 	; load image offscreen $6000
 
@@ -46,45 +51,42 @@ load_loop:
 	jsr	zx02_full_decomp
 
 
+	; TODO
+	;	scroll in and bounce
+
+polar_scroll_loop:
+
+
 	lda	#0
 	sta	COUNT
-	sta	DRAW_PAGE
-
-ship_sprite_loop:
+	sta	DRAW_PAGE		; draw to PAGE1
 
 	lda	#$60
 	jsr	hgr_copy
 
-	bit	PAGE1
+	bit	PAGE1			; look at PAGE1
 
-;	jsr	wait_until_keypress
+
 
 polar_loop:
-	lda	#76
-	jsr	wait_for_pattern
-	bcc	polar_loop
+	lda	#5
+	jsr	wait_seconds
+
+;	lda	#76
+;	jsr	wait_for_pattern
+;	bcc	polar_loop
 
 polar_done:
 	rts
 
 
-;.align $100
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
-;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 	.include	"../irq_wait.s"
 
 
-	; wait A * 1/50s
-wait_irq:
-;	lda	#50
-	sta	IRQ_COUNTDOWN
-wait_irq_loop:
-	lda	IRQ_COUNTDOWN
-	bne	wait_irq_loop
-	rts
 
 polar_data:
 	.incbin "graphics/polar2.hgr.zx02"

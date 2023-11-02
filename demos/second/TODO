@@ -36,13 +36,16 @@ DISK I
 	better animation?
 
 + Lens / Rotozoom
-  - add lo-res LENS sprite to bounce around
+  - make lens do actual light bending effect
+	my idea was in the mask have different values tell the drawing
+	code to offset when loading the background pixels.  Probably
+	not enough time to do that before release
   - for rotozoom, wrap around
     note, this might mean 32x32
-  - sound file
+
+  - hook up sound file
 
 + Plasma
-  - switch to purple green
   - do the weird vertical wipe while still running
 
 + Plasmacube
@@ -55,13 +58,12 @@ DISK I
 
 + Transmission / Spheres
 
-  - the audio (put in language card of AUX?)
+  - switch to lo-res version even though it doesn't look as good
   - the actual transmission
      45 degree sprite?
 
 + ocean / voxels
 
-  - probably too big, reduce the size
   - at end, scroll back off screen
 
 + polar

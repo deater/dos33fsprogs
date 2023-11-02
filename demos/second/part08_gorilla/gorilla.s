@@ -24,11 +24,6 @@ gorilla_start:
 	; Load graphics
 	;===================
 
-; DEBUG
-	lda	#25
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-
 	lda	#0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen

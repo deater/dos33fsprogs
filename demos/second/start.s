@@ -227,6 +227,14 @@ load_program_loop:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#32		; 16 pages
 	jsr	copy_aux_main
+
+	; debug gorilla music
+	lda     #25
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run gorilla
+
 	jsr	$8000
 
 	;=======================
@@ -238,6 +246,14 @@ load_program_loop:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#32		; 16 pages
 	jsr	copy_aux_main
+
+	; debug leaves music
+	lda     #30
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run leaves
+
 	jsr	$8000
 
 
@@ -250,18 +266,34 @@ load_program_loop:
 	ldy	#$60		; MAIN dest $6000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
+
+	; debug lens music
+	lda     #34
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run lens
+
 	jsr	$6000
 
 
 	;=======================
-	; run PLASMACUBE (#7)
+	; run PLASMA (#7)
 	;=======================
-	; copy PLASMACUBE from AUX $3000 to MAIN $8000
+	; copy PLASMA from AUX $3000 to MAIN $8000
 
 	lda	#$30		; AUX src $3000
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
+
+	; debug plasma music
+	lda     #47
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run plasma
+
 	jsr	$8000
 
 	;=======================
@@ -273,6 +305,15 @@ load_program_loop:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
+
+
+	; debug plasmacube music
+	lda     #52
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run plasmacube
+
 	jsr	$8000
 
 	;=======================
@@ -284,6 +325,15 @@ load_program_loop:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
+
+
+	; debug dots music
+	lda     #60
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+	; run dots
+
 	jsr	$8000
 
 
@@ -354,6 +404,13 @@ load_program_loop2:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
+
+
+	; debug spheres music
+	lda     #68
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
 	jsr	$8000
 
 	;=======================
@@ -365,6 +422,13 @@ load_program_loop2:
 	ldy	#$60		; MAIN dest $6000
 	ldx	#96		; 16 pages
 	jsr	copy_aux_main
+
+	; debug ocean music
+	lda     #72
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+
+
 	jsr	$6000
 
 	;=======================
@@ -376,31 +440,32 @@ load_program_loop2:
 	ldy	#$80		; MAIN dest $8000
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
-	jsr	$8000
 
-	; setup music ocean=pattern24 (3:07) pattern#43
-;	lda	#43
+	; setup music ocean=pattern24 (3:07) pattern#47
+;	lda	#76
 ;	sta	current_pattern_smc+1
 ;	jsr	pt3_set_pattern
-        ; run polar
-	jsr     $8000
+
+	; run polar
+
+	jsr	$8000
 
 	;=============================
 	; ask for side2
 	;=============================
 
-	sei		; disable music
+	sei				; disable music
 	jsr	clear_ay_both		; stop from making noise
 
-	bit	PAGE1
-	bit	TEXTGR
-	bit	KEYRESET	; clear keyboard
+	bit	PAGE1			; be sure we're on PAGE1
 
 	; clear text screen
 	lda	#$A0
 	sta	clear_all_color+1
-
 	jsr	clear_all
+
+	; switch to text/gr
+	bit	TEXTGR
 
 	; print non-inverse
 
@@ -416,6 +481,7 @@ load_program_loop2:
 
 	jsr	move_and_print
 
+	bit	KEYRESET			; just to be safe
 	jsr	wait_until_keypress
 
 	;==================
@@ -440,11 +506,11 @@ reboot_smc:
 forever:
 	jmp	forever
 
-.align $100
+;.align $100
 	.include	"wait_keypress.s"
 	.include	"zx02_optim.s"
 
-.include "title.s"
+;.include "title.s"
 
 disk_change_string:
 ;             0123456789012345678901234567890123456789

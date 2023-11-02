@@ -18,11 +18,6 @@ spheres_start:
 	; initializations
 	;=====================
 
-	; debug
-	lda     #68
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
-
 	; decompress audio to $6000
 
 	lda	#<transmission_data

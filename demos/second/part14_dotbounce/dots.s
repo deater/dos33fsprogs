@@ -24,12 +24,6 @@ dots_start:
 	; initializations
 	;=====================
 
-	; debug
-	lda     #60
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
-
-
 	;===================
 	; Load graphics
 	;===================

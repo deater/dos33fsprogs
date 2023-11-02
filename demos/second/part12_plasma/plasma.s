@@ -32,13 +32,6 @@ Table2	= $74D0	; 40 bytes
 
 plasma_debut:
 
-	; debug
-	lda     #47
-        sta     current_pattern_smc+1
-        jsr     pt3_set_pattern
-
-
-
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
