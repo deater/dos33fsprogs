@@ -68,8 +68,10 @@ gorilla_wait:
 
 	; TODO: TV_shutoff effect
 
-	lda	#0
-	jsr	hgr_page1_clearscreen
+;	lda	#0
+;	jsr	hgr_page1_clearscreen
+
+	jsr	tv_effect
 
 gorilla_wait2:
 	lda	#30
@@ -89,6 +91,7 @@ gorilla_done:
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
 
+	.include	"tv_effect.s"
 	.include	"../irq_wait.s"
 
 gorilla_data:

@@ -17,6 +17,7 @@ GORILLA:	gorilla.o
 gorilla.o:	gorilla.s \
 	../zx02_optim.s \
 	../hgr_copy_fast.s \
+	tv_effect.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	graphics/mntscrl3.hgr.zx02
 	ca65 -o gorilla.o gorilla.s -l gorilla.lst
