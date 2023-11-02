@@ -385,7 +385,7 @@ main_interference_done:
 
 ;.align $100
 	.include	"../wait_keypress.s"
-	.include	"../zx02_optim.s"
+;	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"

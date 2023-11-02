@@ -513,7 +513,7 @@ mask_src_table:
 	.byte	$7C-8,$78-8,$74-8,$70-8,$6C-8,$68-8,$64-8,$60-8
 
 .include "../wait_keypress.s"
-.include "../zx02_optim.s"
+;.include "../zx02_optim.s"
 .include "../irq_wait.s"
 
 mask1_data:

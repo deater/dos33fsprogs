@@ -230,7 +230,7 @@ lens_end:
 .include "../multiply_fast.s"
 
 	.include	"../wait_keypress.s"
-	.include	"../zx02_optim.s"
+;	.include	"../zx02_optim.s"
 	.include	"../irq_wait.s"
 	.include	"gr_putsprite_mask.s"
 	.include	"../audio.s"

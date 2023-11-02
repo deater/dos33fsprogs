@@ -190,6 +190,10 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_top qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
+
 
 #	./generate_common -a 0x1200 -s mockingboard_patch qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s mockingboard_init qload.lst >> qload.inc

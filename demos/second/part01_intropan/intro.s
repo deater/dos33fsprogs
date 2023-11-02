@@ -175,7 +175,7 @@ done_intro:
 
 ;.align $100
 	.include	"../wait_keypress.s"
-	.include	"../zx02_optim.s"
+;	.include	"../zx02_optim.s"
 	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"horiz_scroll.s"
