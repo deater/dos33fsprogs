@@ -1,3 +1,6 @@
+TODO OVERALL
++ See if can squeeze into 64k RAM
+
 
 TODO MUSIC
 + be sure to mute channels when pausing
@@ -24,6 +27,13 @@ DISK I
      have it reverse course?
   - tunnel (for real)
   - cirles / interference pattern (for real)
+	scroll off to right at end
+
++ gorilla
+	scroll on, better TV effect
+
++ leaves
+	better animation?
 
 + Lens / Rotozoom
   - add lo-res LENS sprite to bounce around
@@ -33,10 +43,10 @@ DISK I
 
 + Plasma
   - switch to purple green
-  - do the weird vertical wipe
+  - do the weird vertical wipe while still running
 
 + Plasmacube
-  - have cube mask with different color sides
+  + bump up to 16 frames instead of just 8
 
 + Dot Bounce
 
@@ -52,6 +62,7 @@ DISK I
 + ocean / voxels
 
   - probably too big, reduce the size
+  - at end, scroll back off screen
 
 + polar
 

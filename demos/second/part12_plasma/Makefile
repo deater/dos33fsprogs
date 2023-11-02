@@ -15,7 +15,7 @@ PLASMA:	plasma.o
 	ld65 -o PLASMA plasma.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 plasma.o:	plasma.s \
-	do_plasma.s init_plasma.s \
+	do_plasma.s init_plasma.s scroll_off.s \
 	../zp.inc ../hardware.inc ../qload.inc
 	ca65 -o plasma.o plasma.s -l plasma.lst
 

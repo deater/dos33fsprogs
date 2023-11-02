@@ -86,7 +86,14 @@ div8_loop:
 	jsr	do_plasma
 
 	; drop
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
 
+	jsr	scroll_off
+
+	lda	#25
+	jsr	wait_ticks
 
 	;=============================
 	; do purple/green
@@ -108,7 +115,14 @@ change_purple:
 	jsr	do_plasma
 
 	; drop
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
 
+	jsr	scroll_off
+
+	lda	#25
+	jsr	wait_ticks
 
 
 	;=============================
@@ -129,13 +143,19 @@ change_mono:
 
 	jsr	do_plasma
 
+	; drop
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
 
+	jsr	scroll_off
 
 	rts
 
 .include "init_plasma.s"
 .include "do_plasma.s"
 .include "../hgr_clear_screen.s"
+.include "scroll_off.s"
 .include "../irq_wait.s"
 
 ;.include "hgr_table.s"

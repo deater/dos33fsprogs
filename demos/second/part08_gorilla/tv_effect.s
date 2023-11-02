@@ -122,12 +122,12 @@ zappo_inner_loop:
 	sta	(OUTL),Y
 	sta	(GBASL),Y
 
-	lda	#150
+	lda	#250
 	jsr	wait
 
 	ldy	#19
 
-	lda	$00
+	lda	#$00
 	sta	(OUTL),Y
 	sta	(GBASL),Y
 	iny
