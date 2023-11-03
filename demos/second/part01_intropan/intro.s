@@ -129,12 +129,9 @@ intro_start:
 
 	lda	#<intro_right_data
 	sta	zx_src_l+1
-
 	lda	#>intro_right_data
 	sta	zx_src_h+1
-
 	lda	#$40
-
 	jsr	zx02_full_decomp
 
 	;==============================
@@ -143,15 +140,85 @@ intro_start:
 
 	jsr	horiz_pan
 
+	; wait a bit
+
 	lda	#5
 	jsr	wait_seconds
+
+
+	;============================
+	; load sprites at $6000
+	;============================
+
+	lda	#<sprite_data
+	sta	zx_src_l+1
+	lda	#>sprite_data
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
 
 
 	;============================
 	; draw sprites
 	;============================
 
-	; TODO
+	; currently we're viewing PAGE1
+	lda	#$20
+	sta	DRAW_PAGE	; draw PAGE2
+
+
+	ldx     #0
+        stx     BOARD_COUNT
+
+draw_sprites_loop:
+
+	; right logo
+
+	lda	#<intro_right_data
+	sta	zx_src_l+1
+	lda	#>intro_right_data
+	sta	zx_src_h+1
+	lda	#$20
+	clc
+	adc	DRAW_PAGE
+	jsr	zx02_full_decomp
+
+        ldx     BOARD_COUNT
+        lda     board_desty,X
+        sta     HGR_DEST
+
+        lda     board_y_start,X
+        sta     HGR_Y1
+
+        lda     #0
+        sta     HGR_X1
+        lda     #40
+        sta     HGR_X2
+        lda     board_y_end,X
+        sta     HGR_Y2
+
+        jsr     hgr_partial
+
+	bit	PAGE2
+
+	jsr	hgr_page_flip
+
+;	jsr	wait_until_keypress
+
+	lda	#10
+	jsr	wait_ticks
+
+	inc	BOARD_COUNT
+	lda	BOARD_COUNT
+	cmp	#4
+	bne	draw_sprites_loop
+
+
+	; wait a bit
+
+	lda	#5
+	jsr	wait_seconds
+
 
 	;============================
 	; draw explosion
@@ -159,6 +226,15 @@ intro_start:
 
 	; TODO
 
+	lda	#1
+	jsr	wait_seconds
+
+	lda	#$FF
+	jsr	hgr_page1_clearscreen
+	jsr	hgr_page2_clearscreen
+
+	lda	#1
+	jsr	wait_seconds
 
 	;============================
 	; draw fc logo
@@ -183,6 +259,7 @@ done_intro:
 	.include	"../hgr_clear_screen.s"
 	.include	"horiz_scroll.s"
 	.include	"hgr_partial.s"
+	.include	"../hgr_page_flip.s"
 
 	.include	"../irq_wait.s"
 
@@ -201,3 +278,10 @@ vmw_data:
 	.incbin "graphics/vmw.hgr.zx02"
 sprite_data:
 	.incbin "graphics/ship_sprites.hgr.zx02"
+
+board_desty:
+	.byte	17,17,71,33
+board_y_start:
+	.byte	0,38,93,110
+board_y_end:
+	.byte	36,92,108,176
