@@ -24,6 +24,14 @@ fake_bios.o:	fake_bios.s \
 
 ###
 
+fonts/a2_cga_thin.inc:	
+	cd fonts && make
+
+graphics/a2_energy.hgr.zx02:	
+	cd graphics && make
+###
+
 clean:	
 	rm -f *~ *.o *.lst FAKE_BIOS
-
+	cd graphics && make clean
+	cd fonts && make clean

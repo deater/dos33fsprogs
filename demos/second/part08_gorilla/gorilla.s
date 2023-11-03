@@ -68,6 +68,37 @@ gorilla_wait:
 
 	jsr	tv_effect
 
+
+	;============================
+	; decompress sound for later
+	;============================
+
+	; decompress audio to $D000
+
+	lda	#<transmission_data
+	sta	zx_src_l+1
+	lda	#>transmission_data
+	sta	zx_src_h+1
+
+	sei				; disable interrupts
+	jsr	mute_ay_both
+
+	; swap in language card Page1
+
+	lda	$C08B
+	lda	$C08B
+
+	lda	#$D0
+	jsr	zx02_full_decomp
+
+	; swap back language card Page2
+
+	lda	$C083
+	lda	$C083
+
+	jsr	unmute_ay_both
+	cli				; re-enable interrupts
+
 gorilla_wait2:
 	lda	#30
 	jsr	wait_for_pattern
@@ -92,3 +123,5 @@ gorilla_done:
 gorilla_data:
 	.incbin "graphics/mntscrl3.hgr.zx02"
 
+transmission_data:
+	.incbin "audio/a_pboy.btc.zx02"

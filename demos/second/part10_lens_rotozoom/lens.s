@@ -92,17 +92,37 @@ load_background:
 
 	; play audio
 
-;	lda	#$00
-;	sta	BTC_L
-;	lda	#$60
-;	sta	BTC_H
+	lda	#$00
+	sta	BTC_L
+	lda	#$D0
+	sta	BTC_H
 
-;	sei                     ; stop music
+	sei                     	; stop music
+	jsr	mute_ay_both		; disable audio
 
-;	ldx	#11
-;	jsr	play_audio
+	; switch to language card  Page 1
 
-;	cli
+	lda	$C08B
+	lda	$C08B
+
+
+	ldy	#0
+	lda	(BTC_L),Y
+	cmp	#$AA			; check if our audio was loaded
+	bne	skip_audio
+
+	ldx	#14
+	jsr	play_audio
+
+skip_audio:
+
+	; switch back to language card Page 2
+
+	lda	$C083
+	lda	$C083
+
+	jsr	unmute_ay_both		; re-enable audio
+	cli				; re-enable music
 
 
 	;===============================
