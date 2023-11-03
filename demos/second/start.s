@@ -137,7 +137,7 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	cli
+	cli			; start music
 
 	jsr	$6000
 
@@ -149,7 +149,7 @@ load_program_loop:
 	;=======================
 
 	sei				; stop music interrupts
-
+	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
 
 	; load music
@@ -202,7 +202,7 @@ load_program_loop:
 
 	jsr	pt3_init_song
 
-	cli		; start interrupts
+	cli		; start interrupts (music)
 
 	;=======================
 	;=======================
@@ -347,7 +347,7 @@ load_program_loop:
 
 	sei
 
-	jsr	clear_ay_both		; stop from making noise
+	jsr	mute_ay_both		; stop from making noise
 
 	;=============================
 	; want to load 10..12
@@ -393,6 +393,7 @@ load_program_loop2:
 
 	; restart music
 
+	jsr	unmute_ay_both		; restart
 	cli
 
 	;=======================

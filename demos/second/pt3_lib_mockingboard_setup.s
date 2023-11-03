@@ -162,6 +162,38 @@ clear_ay_left_loop:
 						; -1
 	rts					; 6
 
+
+
+	;=======================================
+	; mute AY -- just turn off all 3 channels
+	; should silence the card
+	;
+	;=======================================
+mute_ay_both:
+	ldx	#7				;
+	lda	#$FF				;
+	sta	MB_VALUE			;
+mute_ay_left_loop:
+	jsr	write_ay_both			;
+
+	rts					;
+
+	;=======================================
+	; unmute AY
+	;	restore to value we had before muting
+	;=======================================
+unmute_ay_both:
+	ldx	#7				;
+	lda	ENABLE				;
+	sta	MB_VALUE			;
+unmute_ay_left_loop:
+	jsr	write_ay_both			;
+
+	rts					;
+
+
+
+
 clear_ay_end:
 ;.assert >clear_ay_both = >clear_ay_end, error, "clear_ay_both crosses page"
 

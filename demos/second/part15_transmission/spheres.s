@@ -78,10 +78,12 @@ spheres_start:
 	sta	BTC_H
 
 	sei			; stop music
+	jsr	mute_ay_both
 
 	ldx	#11
 	jsr	play_audio
 
+	jsr	unmute_ay_both
 	cli
 
 
