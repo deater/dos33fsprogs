@@ -8,6 +8,8 @@
 ;.include "qload.inc"
 ;.include "music.inc"
 
+DEBUG=1
+
 second_start:
 	;=====================
 	; initializations
@@ -241,10 +243,12 @@ load_program_loop:
 	ldx	#32		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; debug gorilla music
 	lda     #25
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	; run gorilla
 
@@ -260,10 +264,12 @@ load_program_loop:
 	ldx	#32		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; debug leaves music
 	lda     #30
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	; run leaves
 
@@ -280,10 +286,12 @@ load_program_loop:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; debug lens music
 	lda     #34
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	; run lens
 
@@ -300,10 +308,12 @@ load_program_loop:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; debug plasma music
 	lda     #47
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	; run plasma
 
@@ -319,11 +329,12 @@ load_program_loop:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
-
+.if DEBUG=1
 	; debug plasmacube music
 	lda     #52
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	; run plasmacube
 
@@ -339,12 +350,12 @@ load_program_loop:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
-
+.if DEBUG=1
 	; debug dots music
 	lda     #60
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
-
+.endif
 	; run dots
 
 	jsr	$8000
@@ -419,11 +430,12 @@ load_program_loop2:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
-
+.if DEBUG=1
 	; debug spheres music
 	lda     #68
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
+.endif
 
 	jsr	$8000
 
@@ -437,11 +449,12 @@ load_program_loop2:
 	ldx	#96		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; debug ocean music
 	lda     #72
 	sta	current_pattern_smc+1
 	jsr	pt3_set_pattern
-
+.endif
 
 	jsr	$6000
 
@@ -455,10 +468,12 @@ load_program_loop2:
 	ldx	#16		; 16 pages
 	jsr	copy_aux_main
 
+.if DEBUG=1
 	; setup music ocean=pattern24 (3:07) pattern#47
 ;	lda	#76
 ;	sta	current_pattern_smc+1
 ;	jsr	pt3_set_pattern
+.endif
 
 	; run polar
 
