@@ -226,6 +226,14 @@ REF2L		= $F7
 REF2H		= $F8
 REFCOUNT	= $F9
 
+; BIOS
+STRING_COUNT	= $F0
+LEAD0		= $F1
+SCROLL_OUT	= $F2
+SCROLL_IN	= $F3
+MEMCOUNT	= $F4
+FAKE_KEY_COUNT	= $F5
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================

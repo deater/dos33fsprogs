@@ -25,8 +25,21 @@ restart:
 	lda	#0
 	sta	DRAW_PAGE
 
+	;========================
+	; fake BIOS
+	;========================
+
+	lda	#13			; load FAKE_BIOS
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	; run it
+
+	jsr	$6000
+
 	;==================================
-	; load sound into the language card
+	; load music into the language card
 	;       into $D000 set 1
 	;==================================
 

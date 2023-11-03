@@ -166,44 +166,44 @@ which_disk_array:
 	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte 1,1,1,1		; GORILLA,LEAVES,LENS,PLASMA
 	.byte 1,1,1,1		; CUBE,DOTS,SPHERES,OCEAN
-	.byte 1			; POLAR
+	.byte 1,1		; POLAR,FAKE_BIOS
 
 load_address_array:
 	.byte $D0,$D0,$60,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte $60,$60,$60,$60	; GORILLA,LEAVES,LENS,PLASMA
 	.byte $60,$60,$60,$60	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $60		; POLAR
+	.byte $60,$60		; POLAR,FAKE_BIOS
 
 start_address:
 	.byte $D0,$D0,$60,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte $60,$60,$60,$80	; GORILLA,LEAVES,LENS,PLASMA
 	.byte $80,$80,$80,$60	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $80		; POLAR
+	.byte $80,$60		; POLAR,FAKE_BIOS
 
 aux_dest:
 	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte $70,$50,$40,$30	; GORILLA,LEAVES,LENS,PLASMA
 	.byte $20,$10,$80,$20	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $10		; POLAR
+	.byte $10,$A0		; POLAR,FAKE_BIOS
 
 track_array:
 	.byte 2,4,10,15		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte 19,21,23,24	; GORILLA,LEAVES,LENS,PLASMA
 	.byte 25,26,27,28	; CUBE,DOTS,SPHERES,OCEAN
-	.byte 34		; POLAR
+	.byte 34,9		; POLAR,FAKE_BIOS
 
 sector_array:
 	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte 0,0,0,0		; GORILLA,LEAVES,LENS,PLASMA
 	.byte 0,0,0,0		; CUBE,DOTS,SPHERES,OCEAN
-	.byte 0			; POLAR
+	.byte 0,0		; POLAR,FAKE_BIOS
 
 
 length_array:
 	.byte 32,48,80,48	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
 	.byte 32,32,16,16	; GORILLA,LEAVES,LENS,PLASMA
 	.byte 16,16,16,96	; CUBE,DOTS,SPHERES,OCEAN
-	.byte 16		; POLAR
+	.byte 16,16		; POLAR,FAKE_BIOS
 
 
 	.include	"wait.s"

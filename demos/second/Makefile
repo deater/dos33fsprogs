@@ -11,6 +11,7 @@ all:	second_d1.dsk second_d2.dsk
 second_d1.dsk:	QBOOT QLOAD music.inc qload.inc \
 	MUSIC_INTRO \
 	MUSIC \
+	./part00_boot/FAKE_BIOS \
 	./part01_intropan/INTRO \
 	./part04_chess_shapes/CHESS \
 	./part05_dot_tunnel/TUNNEL \
@@ -30,6 +31,7 @@ second_d1.dsk:	QBOOT QLOAD music.inc qload.inc \
 	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) second_d1.dsk 2 0 MUSIC_INTRO	0 0
 	$(DOS33_RAW) second_d1.dsk 4 0 MUSIC		0 0
+	$(DOS33_RAW) second_d1.dsk  9 0 ./part00_boot/FAKE_BIOS 0 0
 	$(DOS33_RAW) second_d1.dsk 10 0 ./part01_intropan/INTRO	0 0
 	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
 #	$(DOS33_RAW) second_d1.dsk 16 0 ./part05_dot_tunnel/TUNNEL	0 0
@@ -45,6 +47,9 @@ second_d1.dsk:	QBOOT QLOAD music.inc qload.inc \
 
 
 ####
+
+part00_boot/FAKE_BIOS:	
+	cd part00_boot && make
 
 part01_intropan/INTRO:	
 	cd part01_intropan && make
@@ -319,6 +324,7 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
+	cd part00_boot && make clean
 	cd part01_intropan && make clean
 	cd part04_chess_shapes && make clean
 	cd part08_gorilla && make clean

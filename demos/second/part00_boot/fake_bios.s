@@ -3,20 +3,27 @@
 
 .include "../zp.inc"
 .include "../hardware.inc"
+.include "../qload.inc"
 
+mod7_table      = $1c00
+div7_table      = $1d00
+hposn_low       = $1e00
+hposn_high      = $1f00
 
 bios_test:
 	;===================
 	; set graphics mode
 	;===================
-	jsr	HOME
 
 	bit	HIRES
 	bit	FULLGR
 	bit	SET_GR
 	bit	PAGE1
 
-	jsr	build_tables
+	lda	#0
+	sta	FAKE_KEY_COUNT
+
+;	jsr	build_tables
 
 	;=======================
 	; Hardware Detect Model
@@ -173,16 +180,18 @@ done_detect_cpu:
 	;====================
 	; detect disk slot
 	;====================
-	; this depends on DOS3.3 loading
 
-	lda	$B5F7			; slot*16
+;	lda	$B5F7			; slot*16
+
+	lda	WHICH_SLOT
+
 	lsr
 	lsr
 	lsr
 	lsr
 	adc	#'0'
 	sta	slot_patch1+1
-	sta	slot_patch2+1
+;	sta	slot_patch2+1
 	sta	slot_patch3+1
 	sta	slot_patch5+7
 	sta	slot_patch6+7
@@ -212,14 +221,15 @@ mockingboard_found:
 
 mockingboard_notfound:
 
+
 	;===================
 	; Load graphics
 	;===================
 
 	lda	#<graphics_data
-	sta	ZX0_src
+	sta	zx_src_l+1
 	lda	#>graphics_data
-	sta	ZX0_src+1
+	sta	zx_src_h+1
 
 	lda	#$20			; temporarily load to $2000
 
@@ -351,7 +361,7 @@ print_rest:
 	; type the CD command
 	;====================
 
-	ldx	#17
+	ldx	#15
 	jsr	draw_dos_command
 
 	jsr	DrawCondensedStringAgain
@@ -360,36 +370,58 @@ print_rest:
 	; type the DIR command
 	;====================
 
-	jsr	DrawCondensedStringAgain
-	ldx	#6
-	jsr	draw_dos_command
+;	jsr	DrawCondensedStringAgain
+;	ldx	#6
+;	jsr	draw_dos_command
 
-	jsr	DrawCondensedStringAgain
+;	jsr	DrawCondensedStringAgain
 
 	;====================
 	; show DIR
 	;====================
 
-	bit	$C0E9			; turn on drive motor (slot6)
+;	bit	$C0E9			; turn on drive motor (slot6)
 
-	lda	#<bios_message_6
-	ldy	#>bios_message_6
-	ldx	#7
-	jsr	draw_multiple_strings
+;	lda	#<bios_message_6
+;	ldy	#>bios_message_6
+;	ldx	#7
+;	jsr	draw_multiple_strings
 
-	bit	$C0E8			; turn off drive motor (slot6)
+;	bit	$C0E8			; turn off drive motor (slot6)
 
 	;=======================
-	; type the LEMM command
+	; type the A2 command
 	;=======================
 
-	ldx	#5
+	ldx	#4
 	jsr	draw_dos_command
 
 
 
 end:
-	jmp	end
+	ldx	#5
+	jsr	long_wait
+
+	rts
+
+
+fake_keypress:
+	inc	FAKE_KEY_COUNT
+
+	lda	FAKE_KEY_COUNT
+	and	#$1
+	beq	do_fake_key
+
+no_fake_key:
+	clc
+	rts
+
+do_fake_key:
+	sec
+	rts
+
+
+;	jmp	end
 
 
 	;     0123456789012345678901234567890123456789
@@ -462,21 +494,20 @@ slot_patch1:
 	.byte "c",0
 	.byte "d",0
 	.byte " ",0
-	.byte "g",0
-	.byte "a",0
-	.byte "m",0
+	.byte "d",0
 	.byte "e",0
+	.byte "m",0
+	.byte "o",0
 	.byte "s",0
 	.byte "\",0
-	.byte "l",0
+	.byte "a",0
+	.byte "2",0
+	.byte "r",0
 	.byte "e",0
-	.byte "m",0
-	.byte "m",0
-	.byte "i",0
-	.byte "n",0
-	.byte "g",0
-	.byte "s",13,0
+	.byte "a",0
+	.byte "l",13,0
 
+.if 0
 bios_message5:
 	.byte 13,0
 slot_patch2:
@@ -496,34 +527,28 @@ bios_message_6:
 	.byte "LEVEL9    LEVEL10  LEMM",13,0
 	.byte "   13 File(s)        90,624 Bytes.",13,0
 	.byte "    2 Dir(s)         52,736 Bytes free.",13,13,0
+.endif
 
 bios_message7:
 slot_patch3:
 	.byte "S6D1>",0		; 184
-	.byte "l",0
-	.byte "e",0
-	.byte "m",0
-	.byte "m",0
+	.byte "a",0
+	.byte "2",0
+	.byte "r",0
 
 	.include "font_console_1x8.s"
 	.include "fonts/a2_cga_thin.inc"
 
-	.include "../zx02_optim.s"
-
 graphics_data:
 	.incbin "graphics/a2_energy.hgr.zx02"
 
-hposn_low	= $1713	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
-hposn_high	= $1800	; 0xC0 bytes (lifetime, used by DrawLargeCharacter)
+	.include "../wait_keypress.s"
 
-	.include "../hgr_table.s"
-
-
-wait_until_keypress:
-	lda	KEYPRESS				; 4
-	bpl	wait_until_keypress			; 3
-	bit	KEYRESET	; clear the keyboard buffer
-	rts						; 6
+;wait_until_keypress:
+;	lda	KEYPRESS				; 4
+;	bpl	wait_until_keypress			; 3
+;	bit	KEYRESET	; clear the keyboard buffer
+;	rts						; 6
 
 
 memcount:
@@ -660,16 +685,19 @@ dos_command_inner:
 	lda	#200
 	jsr	wait
 
-	lda	KEYPRESS
-	bmi	dos_keypress
+	jsr	fake_keypress
+;	lda	KEYPRESS
+	bcs	dos_keypress
 
 	jsr	DrawCondensedStringAgain
 	dec	CH
 	lda	#200
 	jsr	wait
 
-	lda	KEYPRESS
-	bmi	dos_keypress
+	jsr	fake_keypress
+
+;	lda	KEYPRESS
+	bcs	dos_keypress
 
 	jmp	dos_command_inner
 dos_keypress:
@@ -752,13 +780,13 @@ early_out:
 
 .include "../hgr_clear_screen.s"
 
-.include "pt3_lib_detect_model.s"
-.include "../lc_detect.s"
+;.include "pt3_lib_detect_model.s"
+
 .include "aux_detect.s"
 .include "65c02_detect.s"
 .include "pt3_lib_mockingboard_setup.s"
-.include "../pt3_lib_mockingboard_detect.s"
 
-
-.include "../wait.s"
+;.include "../lc_detect.s"
+;.include "../pt3_lib_mockingboard_detect.s"
+;.include "../wait.s"
 

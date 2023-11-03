@@ -80,8 +80,8 @@ qload		4k		1	16
 00 music_intro	??		2-3	32
 01 music_main	??		4-7	48
 
-02 fake_bios:	4k		10	16
-02 intro_pan:	16k		11-14	64
+02 fake_bios:	4k		9	16
+02 intro_pan:	16k		10-14	64
 02 title:	4k
 	
 ; pause to load new music
