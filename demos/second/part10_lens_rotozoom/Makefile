@@ -25,8 +25,12 @@ lens.o:	lens.s ../zx02_optim.s \
 graphics/lenspic.gr.zx02:	
 	cd graphics && make
 
+graphics/lens_sprites.inc:	
+	cd graphics && make
+
 ####
 
 clean:
 	rm -f *~ *.o *.lst LENS
 	cd graphics && make clean
+	cd audio && make clean

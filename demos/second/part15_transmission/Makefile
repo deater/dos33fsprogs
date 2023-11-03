@@ -20,12 +20,15 @@ spheres.o:	spheres.s \
 	../audio.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	audio/transmission.btc.zx02 \
-	graphics/spheres.hgr.zx02
+	graphics/spheres.gr.zx02
 	ca65 -o spheres.o spheres.s -l spheres.lst
 
 ###
 
 graphics/spheres.hgr.zx02:	
+	cd graphics && make
+
+graphics/spheres.gr.zx02:	
 	cd graphics && make
 
 audio/transmission.btc.zx02:

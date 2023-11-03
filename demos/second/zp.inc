@@ -214,6 +214,14 @@ SAVED   =       $F8
 BAR_X1 =	$F0
 BAR_X2	=	$F1
 
+; spheres
+BASE_SPRITEL	= $F0
+BASE_SPRITEH	= $F1
+CURRENT_SPRITEL	= $F2
+CURRENT_SPRITEH	= $F3
+XMISSION_COUNT	= $F4
+
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================
