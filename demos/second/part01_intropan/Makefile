@@ -11,13 +11,13 @@ all:	INTRO
 ####
 
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 intro.o:	intro.s ../zx02_optim.s \
 	graphics/igl.hgr.zx02 \
 	graphics/igr.hgr.zx02 \
 	graphics/fc_sr_logo.hgr.zx02 \
-	horiz_scroll.s \
+	horiz_scroll.s hgr_partial.s \
 	../zp.inc ../hardware.inc ../qload.inc
 	ca65 -o intro.o intro.s -l intro.lst
 

@@ -154,7 +154,7 @@ load_program_loop:
 
 	cli			; start music
 
-	jsr	$6000
+	jsr	$8000
 
 
 	;=======================

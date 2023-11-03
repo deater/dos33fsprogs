@@ -33,4 +33,4 @@ graphics/lens_sprites.inc:
 clean:
 	rm -f *~ *.o *.lst LENS
 	cd graphics && make clean
-	cd audio && make clean
+

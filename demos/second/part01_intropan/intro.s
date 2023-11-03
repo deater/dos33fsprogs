@@ -182,6 +182,7 @@ done_intro:
 	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"horiz_scroll.s"
+	.include	"hgr_partial.s"
 
 	.include	"../irq_wait.s"
 
@@ -198,3 +199,5 @@ fc_sr_logo_data:
 	.incbin "graphics/fc_sr_logo.hgr.zx02"
 vmw_data:
 	.incbin "graphics/vmw.hgr.zx02"
+sprite_data:
+	.incbin "graphics/ship_sprites.hgr.zx02"

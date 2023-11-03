@@ -6,7 +6,7 @@ PNG2GR = ../../../../utils/gr-utils/png2gr
 
 all:	igl.hgr.zx02 igr.hgr.zx02 fc_sr_logo.hgr.zx02 \
 	demosplash.hgr.zx02 mockingboard.hgr.zx02 \
-	vmw.hgr.zx02
+	vmw.hgr.zx02 ship_sprites.hgr.zx02
 
 ####
 
@@ -23,6 +23,14 @@ igl.hgr.zx02:	igl.hgr
 
 igl.hgr:	igl.png
 	$(PNG_TO_HGR) igl.png > igl.hgr
+
+####
+
+ship_sprites.hgr.zx02:	ship_sprites.hgr
+	$(ZX02) ship_sprites.hgr ship_sprites.hgr.zx02
+
+ship_sprites.hgr:	ship_sprites.png
+	$(PNG_TO_HGR) ship_sprites.png > ship_sprites.hgr
 
 ####
 
