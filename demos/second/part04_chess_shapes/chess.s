@@ -342,7 +342,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#7
+	lda	#15
 	jsr	wait_ticks
 
 	; middle
@@ -353,7 +353,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#7
+	lda	#15
 	jsr	wait_ticks
 
 	; right
@@ -364,7 +364,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#7
+	lda	#15
 	jsr	wait_ticks
 
 
