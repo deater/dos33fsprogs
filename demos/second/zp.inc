@@ -220,7 +220,11 @@ BASE_SPRITEH	= $F1
 CURRENT_SPRITEL	= $F2
 CURRENT_SPRITEH	= $F3
 XMISSION_COUNT	= $F4
-
+REF1L		= $F5
+REF1H		= $F6
+REF2L		= $F7
+REF2H		= $F8
+REFCOUNT	= $F9
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers

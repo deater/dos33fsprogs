@@ -343,7 +343,7 @@ main_tunnel_done:
 
 	lda	#13
 	sta	BAR_X1
-	lda	#27
+	lda	#26
 	sta	BAR_X2
 	jsr	falling_bars
 
@@ -352,7 +352,7 @@ main_tunnel_done:
 
 	; right
 
-	lda	#27
+	lda	#26
 	sta	BAR_X1
 	lda	#39
 	sta	BAR_X2

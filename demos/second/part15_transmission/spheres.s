@@ -91,7 +91,7 @@ spheres_start:
 	; "10 seconds to transmission"
 	; do we wait 10s?
 
-	lda	#4
+	lda	#2
 	jsr	wait_seconds
 
 
@@ -114,7 +114,7 @@ move_sword_loop:
 
 	jsr	page_flip
 
-	lda	#25
+	lda	#16
 	jsr	wait_ticks
 
 	lda	KEYPRESS
@@ -152,6 +152,7 @@ draw_sword:
 	sta	CURRENT_SPRITEH		; copy start for sprite
 
 	ldx	#0
+	stx	REFCOUNT
 
 	lda	#3
 	sta	COUNT
@@ -173,9 +174,44 @@ sword_inner_loop:
 	beq	skip_pixel
 	sta	(GBASL),Y
 skip_pixel:
+	;====================================
+
 	dey
 	bpl	sword_inner_loop
 
+	; handle reflections
+
+	lda	REFCOUNT
+	lsr
+	bcs	pixel_odd
+
+	tay
+	lda	reflect1_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	REF1H
+	lda	reflect1_l,Y
+	sta	REF1L
+
+	lda	reflect2_h,Y
+	clc
+	adc	DRAW_PAGE
+	sta	REF2H
+	lda	reflect2_l,Y
+	sta	REF2L
+
+	ldy	#3
+	lda	(CURRENT_SPRITEL),Y
+	beq	pixel_odd		; skip if black
+
+	ldy	#0
+	sta	(REF1L),Y
+	sta	(REF2L),Y
+
+pixel_odd:
+	;============================
+
+	inc	REFCOUNT
 	inc	COUNT
 
 	clc
@@ -224,6 +260,23 @@ page_flip_show_1:
 	lda	#4
 	sta	DRAW_PAGE
 	rts
+
+reflect1_h:
+	; 46,44,42,40,38,36,34
+	.byte	>$7d0,>$750,>$6d0,>$650,>$5d0,>$550,>$4d0
+	; 39, 38, 37, 36, 36, 34, 33
+reflect1_l:
+	.byte	<$7d0+39,<$750+38,<$6d0+37,<$650+36,<$5d0+35,<$550+34,<$4d0+33
+
+
+reflect2_h:
+	; 4,6,8,10,12,14,16
+	.byte	>$500,>$580,>$600,>$680,>$700,>$780,>$428
+reflect2_l:
+	.byte	<$500+32,<$580+31,<$600+30,<$680+29,<$700+28,<$780+27,<$428+26
+
+
+
 
 
 	.include	"../wait_keypress.s"

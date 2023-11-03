@@ -142,6 +142,10 @@ change_mono:
 
 	jsr	scroll_off
 
+	lda     #0
+	jsr	hgr_page1_clearscreen
+	jsr	hgr_page2_clearscreen
+
 	rts
 
 .include "init_plasma.s"

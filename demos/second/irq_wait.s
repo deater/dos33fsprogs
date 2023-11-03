@@ -5,7 +5,8 @@
 	; pattern # in A
 wait_for_pattern:
 	cmp	current_pattern_smc+1
-	beq	done_check_pattern_done
+	bcc	done_check_pattern_done		; blt
+	beq	done_check_pattern_done		; ble
 
 	lda	KEYPRESS
 	bpl	done_check_pattern_notdone
