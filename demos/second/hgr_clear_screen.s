@@ -1,3 +1,8 @@
+hgr_clear_screen:
+	lda	DRAW_PAGE
+	beq	hgr_page1_clearscreen
+	lda	#0
+	beq	hgr_page2_clearscreen
 
 hgr_page1_clearscreen:
 

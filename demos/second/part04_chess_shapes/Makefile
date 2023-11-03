@@ -21,6 +21,7 @@ chess.o:	chess.s \
 	circles.s \
 	falling_bars.s \
 	sierzoom.s \
+	hgr_partial.s \
 	../irq_wait.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	graphics/chess_object2.hgr.zx02 \

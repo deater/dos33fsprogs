@@ -95,8 +95,14 @@ TOTAL_RAM       = $8F
 ;=============================
 
 ;=============================
-; $D0-$DA = ?
+; $D0-$D9 = hgr move
 ;=============================
+HGR_X1	= $D0
+HGR_X2	= $D1
+HGR_Y1	= $D2
+HGR_Y2	= $D3
+HGR_DEST= $D4
+BOARD_COUNT	= $D5
 
 
 WHICH_SLOT = $DA		; from boot sector
@@ -175,7 +181,6 @@ Y1		= $F6
 Y2		= $F7
 SCENE_COUNT	= $F8
 LAST_TYPE	= $F9
-
 
 ; lens
 LENS_X		= $F0

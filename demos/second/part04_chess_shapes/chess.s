@@ -35,6 +35,22 @@ chess_start:
 	; Load graphics
 	;===================
 
+
+
+	;=============================
+	; load chessboard image offscreen $6000
+	;=============================
+
+	lda	#<chess_data
+	sta	zx_src_l+1
+	lda	#>chess_data
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+
+
+
 	; wait until pattern1
 pattern2_loop:
 	lda	#2
@@ -118,7 +134,43 @@ compact_inner_loop:
 	bne	compact_loop
 
 
+	;=============================
+	; dropping board
+	;=============================
 
+	ldx	#0
+	stx	BOARD_COUNT
+
+drop_board_loop:
+	jsr	hgr_clear_screen
+
+	ldx	BOARD_COUNT
+	lda	board_y,X
+	sta	HGR_DEST
+
+	lda	board_starty,X
+	sta	HGR_Y1
+
+	lda	#0
+	sta	HGR_X1
+	lda	#40
+	sta	HGR_X2
+	lda	#192
+	sta	HGR_Y2
+
+	jsr	hgr_partial
+
+	jsr	hgr_page_flip
+
+;	jsr	wait_until_keypress
+
+	lda	#10
+	jsr	wait_ticks
+
+	inc	BOARD_COUNT
+	lda	BOARD_COUNT
+	cmp	#7
+	bne	drop_board_loop
 
 
 	;=============================
@@ -129,16 +181,6 @@ compact_inner_loop:
 	jsr	setup_timeout
 
 	bit	PAGE2
-
-	; load image offscreen $6000
-
-	lda	#<chess_data
-	sta	zx_src_l+1
-	lda	#>chess_data
-	sta	zx_src_h+1
-	lda	#$60
-	jsr	zx02_full_decomp
-
 
 	lda	#0
 	sta	COUNT
@@ -403,6 +445,7 @@ main_interference_done:
 	.include	"sierzoom.s"
 	.include	"../hgr_page_flip.s"
 	.include	"falling_bars.s"
+	.include	"hgr_partial.s"
 
 	; wait A * 1/50s
 wait_irq:
@@ -461,5 +504,15 @@ bounce_coords_y:
 	.byte	4, 20, 35, 45, 60, 70, 82, 102, 115
 	.byte 115,102, 82, 70, 60, 45, 35,  20,   4
 
+	; 148-192 = full = 44
 
+	; 0 frames in = 0 high,			bottom=125+13	Y=125
+	; 4 frames in, 130-138 = 8 high		bottom=138+17	Y=130
+	; 8 frames in, from 135-155 = 20	bottom=155+25	Y=135
+	;12 frames in, from 145-180 = 35	bottom=180	Y=145
 
+board_y:
+	.byte 125,130,135,145,139,145,139
+
+board_starty:
+	.byte 184,184,172,157,139,157,139
