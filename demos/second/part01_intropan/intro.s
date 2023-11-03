@@ -143,6 +143,9 @@ intro_start:
 
 	jsr	horiz_pan
 
+	lda	#5
+	jsr	wait_seconds
+
 
 	;============================
 	; draw sprites

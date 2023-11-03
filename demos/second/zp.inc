@@ -234,6 +234,10 @@ SCROLL_IN	= $F3
 MEMCOUNT	= $F4
 FAKE_KEY_COUNT	= $F5
 
+; OPENER
+TICKER		= $F1
+P2_OFFSET	= $F2
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================
