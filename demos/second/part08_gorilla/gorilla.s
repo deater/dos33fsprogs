@@ -50,18 +50,33 @@ gorilla_start:
 	sta	COUNT
 	sta	DRAW_PAGE
 
-	lda	#$60
-	jsr	hgr_copy
+	;=======================
+	; scroll in from right
+	;=======================
 
-	bit	PAGE1
+	bit	PAGE1			; draw on visible page
+					; flipping while scrolling is hard
+
+	jsr	horiz_scroll_left
+
+;	lda	#$60
+;	jsr	hgr_copy
+
+;	bit	PAGE1
+
+
+	;==============================
+	; todo, possibly flash at end?
+	;==============================
 
 gorilla_wait:
 	lda	#29
 	jsr	wait_for_pattern
 	bcc	gorilla_wait
 
-
-	; TODO: TV_shutoff effect
+	;======================
+	; TV_shutoff effect
+	;======================
 
 ;	lda	#0
 ;	jsr	hgr_page1_clearscreen
@@ -110,15 +125,17 @@ gorilla_done:
 	rts
 
 
-.align $100
+;.align $100
 	.include	"../wait_keypress.s"
 ;	.include	"../zx02_optim.s"
 ;	.include	"../hgr_table.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"../hgr_copy_fast.s"
+	.include	"../hgr_page_flip.s"
 
 	.include	"tv_effect.s"
 	.include	"../irq_wait.s"
+	.include	"horiz_scroll_simple.s"
 
 gorilla_data:
 	.incbin "graphics/mntscrl3.hgr.zx02"

@@ -17,7 +17,7 @@ GORILLA:	gorilla.o
 gorilla.o:	gorilla.s \
 	../zx02_optim.s \
 	../hgr_copy_fast.s \
-	tv_effect.s \
+	tv_effect.s horiz_scroll_simple.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	audio/a_pboy.btc.zx02 \
 	graphics/mntscrl3.hgr.zx02
