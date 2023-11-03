@@ -238,6 +238,10 @@ FAKE_KEY_COUNT	= $F5
 TICKER		= $F1
 P2_OFFSET	= $F2
 
+; dots
+MAX_DOTS	= $F1
+Y_OFFSET	= $F2
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================

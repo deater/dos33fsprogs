@@ -24,6 +24,11 @@ dots_start:
 	; initializations
 	;=====================
 
+	lda	#0
+	sta	MAX_DOTS
+	sta	FRAME
+	sta	Y_OFFSET
+
 	;===================
 	; Load graphics
 	;===================
@@ -40,8 +45,11 @@ dots_start:
 
 dots_loop:
 	jsr	clear_top
-	jsr	clear_bottom
+	jsr	clear_bottom		; not necessary as we over-write?
 
+	;============================
+	; draw the grey background
+	;============================
 
 	ldx	#12
 horizon_loop:
@@ -63,16 +71,34 @@ horizon_inner:
 	cpx	#24
 	bne	horizon_loop
 
-	lda	#15
+
+	;==========================
+	; draw the dots
+	;==========================
+
+
+	lda	MAX_DOTS
 	sta	COUNT
 dot_loop:
 	; Xcoord in XPOS
         ; Ycoord in YPOS
         ; color in COLOR
 
-	ldx	COUNT
+	lda	COUNT
+	clc
+	adc	Y_OFFSET
+	and	#31
+	tax
+;	ldx	COUNT
 	lda	wide_points_x,X
 	sta	XPOS
+
+;	lda	COUNT
+;	clc
+;	adc	Y_OFFSET
+;	and	#31
+;	tax
+	ldx	COUNT
 	lda	wide_points_y,X
 	sta	YPOS
 	lda	#$66			; light blue
@@ -86,9 +112,10 @@ dot_loop:
 	jsr	page_flip
 
 
+	;============================
 	; move dots
 
-	ldx	#15
+	ldx	MAX_DOTS
 move_dot_loop:
 	lda	wide_points_y,X
 	clc
@@ -109,6 +136,63 @@ dot_good:
 	dex
 	bpl	move_dot_loop
 
+	;============================
+	; see if hit end
+	;============================
+	; runs from #60-68
+
+	;=============================
+	; let dots out one by one
+	inc	FRAME
+
+	lda	FRAME
+	and	#$7
+	bne	dots_good
+
+	lda	MAX_DOTS
+	cmp	#15
+	bcs	dots_good
+
+	inc	MAX_DOTS
+
+dots_good:
+
+	;=======================
+	; increase dots at 64
+
+	lda	#64
+	cmp	current_pattern_smc+1
+	bne	dot_count_good64
+
+	lda	#23
+	sta	MAX_DOTS
+
+dot_count_good64:
+
+	;=======================
+	; increase dots at 66
+
+	lda	#66
+	cmp	current_pattern_smc+1
+	bne	dot_count_good66
+
+	lda	#31
+	sta	MAX_DOTS
+
+dot_count_good66:
+
+	lda	#31
+	cmp	MAX_DOTS
+	bne	not_31
+
+	lda	FRAME
+	and	#$f
+	bne	not_31
+	inc	Y_OFFSET
+
+not_31:
+	;======================
+	; check for end
 
 	lda	#68
 	jsr	wait_for_pattern
@@ -117,6 +201,12 @@ dot_good:
 	jmp	dots_loop
 
 dots_done:
+	jsr	clear_top
+	jsr	clear_bottom
+
+;	lda	#50
+;	jsr	wait
+
 	rts
 
 
@@ -135,15 +225,22 @@ dots_done:
 
 
 wide_points_x:
-	.byte	8,11,17,25,30,28,20,13
-	.byte	9,14,21,28,30,24,17,11
+	.byte	 8,11,17,25,30,28,20,13
+	.byte	 9,14,21,28,30,24,17,11
+	.byte	14,16,19,22,25,24,20,17
+	.byte	15,17,20,21,24,23,20,18
+
 wide_points_y:
 ;	.byte	19,16,12,11,14,18,20,21
 ;	.byte	18,13,11,12,16,19,20,20
 
 	.byte	 9, 6 ,2,1,4,8,10,11
 	.byte	15,12, 8,7,10,14,16,17
+	.byte	 1, 3 ,5,7,9,11,13,15
+	.byte	 2, 6,10,14,14,10,6,2
 
 dot_direction:
+	.byte	 1, 1, 1, 1, 1, 1, 1, 1
+	.byte	 1, 1, 1, 1, 1, 1, 1, 1
 	.byte	 1, 1, 1, 1, 1, 1, 1, 1
 	.byte	 1, 1, 1, 1, 1, 1, 1, 1
