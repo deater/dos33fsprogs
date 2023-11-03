@@ -171,7 +171,12 @@ final_credits:
 	.byte 15,"4am - font",0
 	.byte  2,"K. Kennaway -- iipix image converter",0
 	.byte  3,"O. Schmidt -- sampled audio player",0
-	.byte 11,"Hellmood - circles",0
+	.byte  6,"Hellmood -- circles/sierzoom",0
+	.byte 20," ",0
+
+	.byte 11,"Special Thanks to:",0
+	.byte 5,"mA2E for providing intro music",0
+	.byte 7,"at the extreme-last minute",0
 	.byte 20," ",0
 
 	.byte 15,"Greets to:",0

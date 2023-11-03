@@ -298,7 +298,7 @@ credit_message3:	; intro explosion
 	.byte 11, 96,"GRAPHICS -- MARVEL",13
 	.byte 14,108,"A2 -- DEATER",13
 	.byte 13,128,"MUSIC - SKAVEN",13
-	.byte 14,140,"AY - DEATER",13
+	.byte 15,140,"AY -- MA2E",13
 	.byte 13,160,"CODE -- DEATER",0
 ;credit_message2:	; intro ships
 ;	.byte 11, 96,"GRAPHICS -- MARVEL",13
