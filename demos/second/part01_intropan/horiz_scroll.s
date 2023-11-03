@@ -12,7 +12,7 @@ pan_loop:
 
 pan_outer_outer_loop:
 
-	ldx	#191
+	ldx	#175
 pan_outer_loop:
 
 	; $2000					; 0010 -> 0100 0011 -> 0101
@@ -121,7 +121,7 @@ pil_smc9:
 	ldx	XSAVE
 
 	dex
-	cpx	#$ff
+	cpx	#15				; #$ff
 ;	bne	pan_outer_loop
 	beq	done_pan_outer_loop
 	jmp	pan_outer_loop
