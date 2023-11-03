@@ -16,6 +16,7 @@ all:	chess_object.hgr.zx02 chess_object2.hgr.zx02 \
 
 object.inc:	chess3.png
 	$(HGR_SPRITE) -s -l object chess3.png   84 11 188 118 > object.inc
+	$(HGR_SPRITE) -s -l squished chess3.png 70 120 195 190 >> object.inc
 
 
 ####

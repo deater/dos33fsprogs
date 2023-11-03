@@ -150,18 +150,24 @@ chess_bounce_loop:
 
 	ldx     COUNT
 
-	lda     object_coords_x,X
-;	cmp	#$FF
-;	beq	done_orange_loop
-
+	lda     bounce_coords_x,X
 	sta     SPRITE_X
-	lda     object_coords_y,X
+	lda     bounce_coords_y,X
 	sta     SPRITE_Y
+	cmp	#100
+	bcs	do_squashed
 
         lda     #<object_data
 	sta     INL
 	lda     #>object_data
+	jmp	done_pick_object
+do_squashed:
+        lda     #<squished
+	sta     INL
+	lda     #>squished
+done_pick_object:
 	sta     INH
+
 
 	jsr     hgr_draw_sprite_big
 
@@ -169,7 +175,7 @@ chess_bounce_loop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#48
+	cmp	#36
 	bne	no_chess_bounce_oflo
 	lda	#0
 	sta	COUNT
@@ -336,7 +342,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#3
+	lda	#7
 	jsr	wait_ticks
 
 	; middle
@@ -347,7 +353,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#3
+	lda	#7
 	jsr	wait_ticks
 
 	; right
@@ -358,7 +364,7 @@ main_tunnel_done:
 	sta	BAR_X2
 	jsr	falling_bars
 
-	lda	#5
+	lda	#7
 	jsr	wait_ticks
 
 
@@ -442,17 +448,18 @@ object_coords_y:
 
 
 
-	; 12*4 = 48
+	; 9*4=36
 bounce_coords_x:
-	.byte	13,12,11,10, 9, 8, 7, 6, 5, 4, 3, 2
-	.byte	 1, 2, 3, 4, 5, 6, 7, 8, 9,10,11,12
-	.byte	13,14,15,16,17,18,19,20,21,22,23,24
-	.byte	25,24,23,22,21,20,19,18,17,16,15,14
+	.byte 12, 12, 12, 12, 12, 12, 12, 10, 10
+	.byte 10, 10, 12, 12, 12, 12, 12, 12, 12
+	.byte 12, 12, 12, 12, 12, 12, 12, 10, 10
+	.byte 10, 10, 12, 12, 12, 12, 12, 12, 12
 
 bounce_coords_y:
-	.byte	 5,10,16,23,30,36,43,49,55,62,68,75
-	.byte	82,82,82,82,82,82,82,82,82,82,82,82
-	.byte	82,82,82,82,82,82,82,82,82,82,82,82
-	.byte	75,68,62,55,49,43,36,30,23,16,10, 5
+	.byte	4, 20, 35, 45, 60, 70, 82, 102, 115
+	.byte 115,102, 82, 70, 60, 45, 35,  20,   4
+	.byte	4, 20, 35, 45, 60, 70, 82, 102, 115
+	.byte 115,102, 82, 70, 60, 45, 35,  20,   4
+
 
 

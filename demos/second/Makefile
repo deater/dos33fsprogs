@@ -339,3 +339,20 @@ clean:
 	cd part18_3d && make clean
 	cd part19_nuts && make clean
 	cd part20_credits && make clean
+
+
+
+###
+
+submit:	a2_reality.zip
+
+a2_reality.zip:	second_d1.dsk second_d2.dsk file_id.diz ooze32.dsk
+	mkdir -p demosplash2023_a2r
+	cp file_id.diz ./demosplash2023_a2r
+	cp second_d1.dsk ./demosplash2023_a2r
+	cp second_d2.dsk ./demosplash2023_a2r
+#	cp a2r_720p.mp4 ./demosplash2023_a2r
+	cp a2r_screen.png ./demosplash2023_a2r
+	zip -r a2_reality.zip demosplash2023_a2r
+
+####

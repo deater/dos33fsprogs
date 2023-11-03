@@ -23,7 +23,8 @@ chess.o:	chess.s \
 	sierzoom.s \
 	../irq_wait.s \
 	../zp.inc ../hardware.inc ../qload.inc \
-	graphics/chess_object2.hgr.zx02
+	graphics/chess_object2.hgr.zx02 \
+	graphics/object.inc
 	ca65 -o chess.o chess.s -l chess.lst
 
 ###

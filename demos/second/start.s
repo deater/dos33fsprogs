@@ -36,9 +36,9 @@ restart:
 
 	jsr	load_file
 
-	; run it
+	; run fake boot / fake bios
 
-	jsr	$6000
+;	jsr	$6000
 
 	;==================================
 	; load music into the language card
