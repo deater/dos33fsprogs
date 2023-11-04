@@ -210,8 +210,27 @@ draw_sprites_loop:
 
 	inc	BOARD_COUNT
 	lda	BOARD_COUNT
-	cmp	#4
+	cmp	#5
 	bne	draw_sprites_loop
+
+
+	; load empty screen
+
+	lda	#<intro_right_data
+	sta	zx_src_l+1
+	lda	#>intro_right_data
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	; load empty screen
+
+	lda	#<intro_right_data
+	sta	zx_src_l+1
+	lda	#>intro_right_data
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
 
 
 	; wait a bit
@@ -224,10 +243,96 @@ draw_sprites_loop:
 	; draw explosion
 	;============================
 
-	; TODO
+	; draw orange square
+
+	bit	PAGE1
+
+	ldx	#87
+orange_loop:
+	lda	hposn_low,X
+	sta	OUTL
+	lda	hposn_high,X
+	sta	OUTH
+
+	lda	#$D5
+	ldy	#19
+	sta	(OUTL),Y
+	iny
+	lda	#$AA
+	sta	(OUTL),Y
+
+	inx
+	cpx	#105
+	bne	orange_loop
+
 
 	lda	#1
 	jsr	wait_seconds
+
+	; draw white explosion
+
+	lda	#96
+	sta	HGR_Y1
+	lda	#96
+	sta	HGR_Y2
+
+	lda	#0
+	sta	HGR_X1
+	lda	#39
+	sta	HGR_X2
+
+	ldx	#40
+explosion_loop:
+	stx	SAVEX
+
+	ldx	HGR_Y1
+	lda	hposn_low,X
+	sta	OUTL
+	lda	hposn_high,X
+	sta	OUTH
+
+	ldx	HGR_Y2
+	lda	hposn_low,X
+	sta	INL
+	lda	hposn_high,X
+	sta	INH
+
+	lda	#$ff
+	ldy	HGR_X1
+explosion_inner_loop:
+	sta	(OUTL),Y
+	sta	(INL),Y
+	iny
+	cpy	HGR_X2
+	bcc	explosion_inner_loop
+
+	ldx	SAVEX
+
+	txa
+	and	#$3
+	bne	no_shrink
+
+	inc	HGR_X1
+	dec	HGR_X2
+
+no_shrink:
+
+	dec	HGR_Y1
+	dec	HGR_Y1
+	inc	HGR_Y2
+	inc	HGR_Y2
+
+	lda	#15
+	jsr	wait_ticks
+
+	dex
+	dex
+	bne	explosion_loop
+
+
+
+
+
 
 	lda	#$FF
 	jsr	hgr_page1_clearscreen
@@ -280,8 +385,8 @@ sprite_data:
 	.incbin "graphics/ship_sprites.hgr.zx02"
 
 board_desty:
-	.byte	17,17,71,33
+	.byte	17,17,71,33,84
 board_y_start:
-	.byte	0,38,93,110
+	.byte	0,38,93,110,177
 board_y_end:
-	.byte	36,92,108,176
+	.byte	36,92,108,176,191
