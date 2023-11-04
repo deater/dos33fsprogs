@@ -346,7 +346,7 @@ clean:
 
 submit:	a2_reality.zip
 
-a2_reality.zip:	second_d1.dsk second_d2.dsk file_id.diz ooze32.dsk
+a2_reality.zip:	second_d1.dsk second_d2.dsk file_id.diz
 	mkdir -p demosplash2023_a2r
 	cp file_id.diz ./demosplash2023_a2r
 	cp second_d1.dsk ./demosplash2023_a2r

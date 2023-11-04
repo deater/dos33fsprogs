@@ -33,7 +33,7 @@ restart:
 	bit	$C083
 	bit	$C083
 
-	lda	#0
+	lda	#0		; load music
 	sta	WHICH_LOAD
 
 	jsr	load_file
