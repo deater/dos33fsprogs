@@ -1561,11 +1561,15 @@ not_done:
 	clc
 	sta	PATTERN_L
 	adc	PT3_LOC+PT3_PATTERN_LOC_L
+	php	; save carry as we might generate two
+	clc
 	adc	PATTERN_L
 	sta	PATTERN_L
 
 	lda	PT3_LOC+PT3_PATTERN_LOC_H				; 4
 	adc	#>PT3_LOC		; assume page boundary		; 2
+	plp	; restore carry
+	adc	#0
 	sta	PATTERN_H						; 3
 
 ;	clc
