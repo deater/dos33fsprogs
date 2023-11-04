@@ -8,7 +8,7 @@
 ;.include "qload.inc"
 ;.include "music.inc"
 
-DEBUG=1
+DEBUG=0
 
 second_start:
 	;=====================
@@ -38,7 +38,7 @@ restart:
 
 	; run fake boot / fake bios
 
-;	jsr	$6000
+	jsr	$6000
 
 	;==================================
 	; load music into the language card
