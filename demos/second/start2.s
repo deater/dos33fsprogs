@@ -121,13 +121,18 @@ load_loop:
 
 
 	;=====================
+	; clear both pages
+
+	lda	#0
+	jsr	hgr_page1_clearscreen
+
+
+	;=====================
 	; load THREED to $4000
 
 	lda	#1		; THREED
 	sta	WHICH_LOAD
 	jsr	load_file
-
-
 
 
 	;=======================
@@ -179,3 +184,4 @@ forever:
 .include "pt3_lib_mockingboard_patch.s"
 
 .include "hardware_detect.s"
+.include "hgr_clear_screen.s"
