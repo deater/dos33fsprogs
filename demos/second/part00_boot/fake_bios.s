@@ -277,14 +277,14 @@ done_memcount:
 
 	bit	KEYRESET	; clear the keyboard buffer
 
-	bit	$C0E9			; turn on drive motor (slot6)
+;	bit	$C0E9			; turn on drive motor (slot6)
 
 	; TODO: drive2 as well?
 
-	ldx	#200
+	ldx	#35
 	jsr	long_wait
 
-	bit	$C0E8			; turn off drive motor (slot6)
+;	bit	$C0E8			; turn off drive motor (slot6)
 
 
 	;==============================
