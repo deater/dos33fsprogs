@@ -1,39 +1,34 @@
 TODO OVERALL
 + See if can squeeze into 64k RAM
 
-
-TODO MUSIC
-+ be sure to mute channels when pausing
-
-
 DISK I
 
 +BIOS
-
-  - get it working
   - if it is, remove other detection code
+  - fix detection code (AUXMEM?)
 
 + Intro
-  - title cards
-  - scrolling
-  - credits at bottom?
-
-  - Sprites / explosion
+  - title cards somehow?
+  - scrolling with page flipping?
+  - better Sprites / explosion
+  - better sound sync
 
 + chessboard
 
-  - falling effect
+  - better falling effect
   - moving / bouncing object
      have it reverse course?
+
   - tunnel (for real)
+
   - cirles / interference pattern (for real)
 	scroll off to right at end
 
 + gorilla
-	scroll on, better TV effect
-
+	better scroll on
+	
 + leaves
-	better animation?
+	better animation
 
 + Lens / Rotozoom
   - make lens do actual light bending effect
@@ -42,8 +37,6 @@ DISK I
 	not enough time to do that before release
   - for rotozoom, wrap around
     note, this might mean 32x32
-
-  - hook up sound file
 
 + Plasma
   - do the weird vertical wipe while still running
@@ -58,13 +51,12 @@ DISK I
 
 + Transmission / Spheres
 
-  - switch to lo-res version even though it doesn't look as good
-  - the actual transmission
-     45 degree sprite?
+  - fix pause on disk load
+  - switch back to hi-res
 
 + ocean / voxels
 
-  - at end, scroll back off screen
+  - maybe better scroll off at end
 
 + polar
 
@@ -82,7 +74,7 @@ DISK II
 
 + nuts
 
-  - sprite animation of ship
+  - better sprite animation of ship
 
 + credits (thumbnail)
 

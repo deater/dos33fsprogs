@@ -23,17 +23,16 @@ bios_test:
 	lda	#0
 	sta	FAKE_KEY_COUNT
 
-;	jsr	build_tables
-
 	;=======================
 	; Hardware Detect Model
 	;=======================
 	; Yes Michaelangel007 I will eventually update linux_logo 6502
 
-	jsr	detect_appleii_model
+	; we did this earlier?
+;	jsr	detect_appleii_model
 
 	lda	APPLEII_MODEL
-	cmp	'g'
+	cmp	#'g'
 	bne	not_iigs
 
 is_a_iigs:
@@ -435,7 +434,7 @@ cpu_patch_2:	; +2
 	.byte "Memory Test:      0B OK",13,0
 bios_message_1a:
 	.byte "Press ",$17,"-D to enter SETUP",13,0
-	.byte "02/13/78-6502-564D57",0
+	.byte "02/13/78-6502-564D57 V1.1",0
 
 bios_message_2:
 
@@ -507,28 +506,6 @@ slot_patch1:
 	.byte "a",0
 	.byte "l",13,0
 
-.if 0
-bios_message5:
-	.byte 13,0
-slot_patch2:
-	.byte "S6D1>",0		; 112
-	.byte "d",0
-	.byte "i",0
-	.byte "r",0
-	.byte " ",0
-	.byte "/",0
-	.byte "w",13,0
-
-bios_message_6:
-	.byte "Directory of s6d1:\games\lemmings\.",13,0	; 128
-	.byte "[.]       [..]     QBOOT    QLOAD",13,0
-	.byte "LEVEL1    LEVEL2   LEVEL3   LEVEL4",13,0
-	.byte "LEVEL5    LEVEL6   LEVEL7   LEVEL8",13,0
-	.byte "LEVEL9    LEVEL10  LEMM",13,0
-	.byte "   13 File(s)        90,624 Bytes.",13,0
-	.byte "    2 Dir(s)         52,736 Bytes free.",13,13,0
-.endif
-
 bios_message7:
 slot_patch3:
 	.byte "S6D1>",0		; 184
@@ -536,6 +513,8 @@ slot_patch3:
 	.byte "2",0
 	.byte "r",0
 
+
+font_data:
 	.include "font_console_1x8.s"
 	.include "fonts/a2_cga_thin.inc"
 
@@ -543,12 +522,6 @@ graphics_data:
 	.incbin "graphics/a2_energy.hgr.zx02"
 
 	.include "../wait_keypress.s"
-
-;wait_until_keypress:
-;	lda	KEYPRESS				; 4
-;	bpl	wait_until_keypress			; 3
-;	bit	KEYRESET	; clear the keyboard buffer
-;	rts						; 6
 
 
 memcount:
@@ -780,12 +753,12 @@ early_out:
 
 .include "../hgr_clear_screen.s"
 
-;.include "pt3_lib_detect_model.s"
 
 .include "aux_detect.s"
 .include "65c02_detect.s"
 .include "pt3_lib_mockingboard_setup.s"
 
+;.include "pt3_lib_detect_model.s"
 ;.include "../lc_detect.s"
 ;.include "../pt3_lib_mockingboard_detect.s"
 ;.include "../wait.s"
