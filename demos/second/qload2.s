@@ -191,6 +191,7 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
+	.include	"gs_interrupt.s"
 
 mod7_table      = $1c00
 div7_table      = $1d00

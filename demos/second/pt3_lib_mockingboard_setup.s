@@ -212,6 +212,8 @@ mockingboard_setup_interrupt:
 	lda	#>interrupt_handler
 	sta	$ffff
 
+	; note elsewhere we put gs_interrupt_handler in $3FE/$3FF
+
 	; nop out the "lda $45" since we are bypassing the ROM irq handler
 	; that puts A in $45
 	lda	#$EA

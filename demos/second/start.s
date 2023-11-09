@@ -15,7 +15,7 @@ second_start:
 	; initializations
 	;=====================
 
-	jsr	hardware_detect		; FIXME: remove when hook up part00
+	jsr	hardware_detect
 
 	jsr	hgr_make_tables
 
@@ -62,7 +62,12 @@ restart:
 
 	; patch mockingboard
 
+	lda	SOUND_STATUS
+	beq	skip_mbp1
+
         jsr     mockingboard_patch      ; patch to work in slots other than 4?
+
+skip_mbp1:
 
 	;=======================
 	; Set up 50Hz interrupt
@@ -200,7 +205,11 @@ load_program_loop:
 	;========================
 	; patch mockingboard
 
+	lda	SOUND_STATUS
+	beq	skip_mbp2
         jsr     mockingboard_patch      ; patch to work in slots other than 4?
+skip_mbp2:
+
 	jsr	mockingboard_init
 	;=======================
 	; Set up 50Hz interrupt
@@ -541,6 +550,8 @@ forever:
 ;.align $100
 	.include	"wait_keypress.s"
 	.include	"zx02_optim.s"
+
+	.include	"gs_interrupt.s"
 
 ;.include "title.s"
 

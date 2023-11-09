@@ -243,6 +243,7 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s copy_aux_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s mute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
+	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
 
 music2.inc:	generate_common MUSIC2
 	./generate_common -a 0xd000 -s pt3_init_song music2.lst > music2.inc
@@ -258,6 +259,7 @@ music2.inc:	generate_common MUSIC2
 	./generate_common -a 0xd000 -s copy_aux_main music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s mute_ay_both music2.lst >> music2.inc
 	./generate_common -a 0xd000 -s unmute_ay_both music2.lst >> music2.inc
+	./generate_common -a 0xd000 -s interrupt_handler music2.lst >> music2.inc
 
 ####
 

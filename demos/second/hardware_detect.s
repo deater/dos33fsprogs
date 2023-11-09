@@ -1,7 +1,10 @@
 ;====================
 ; Hardware Detect
+;	called for disk1 and disk2
 
-; simplified version for disk2
+; simplified version that just detects model and mockingboard
+;	for the fake BIOS we do a bit more, but we do rely
+;	on this being run first
 
 hardware_detect:
 
@@ -13,10 +16,24 @@ hardware_detect:
 	jsr	detect_appleii_model
 
 	lda	APPLEII_MODEL
-	cmp	'g'
+	cmp	#'g'
 	bne	not_iigs
 
 is_a_iigs:
+
+	; enable 1MHz mode
+	; see hw.accel.a in 4cade
+setspeed:
+	lda	CYAREG
+	and	#$7f
+	sta	CYAREG
+
+	; gr/text page2 handling broken on early IIgs models
+	; this enables the workaround
+
+	jsr	ROM_TEXT2COPY           ; set alternate display mode on IIgs
+
+
 	; set background color to black instead of blue
 	lda     NEWVIDEO
 	and	#%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
@@ -29,6 +46,12 @@ is_a_iigs:
 	lda	#$00
 	sta	CLOCKCTL	; black border
 	sta	CLOCKCTL	; set twice for VidHD
+
+        ; gs always swaps in RAM
+        lda     #<gs_interrupt_handler
+        sta     $3FE
+        lda     #>gs_interrupt_handler
+        sta     $3FF
 
 not_iigs:
 

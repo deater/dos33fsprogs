@@ -12,6 +12,7 @@ TBCOLOR		=	$C022	; IIgs text fg/bg colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
+CYAREG		=	$C036	; iigs motor detect and clock speed
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052

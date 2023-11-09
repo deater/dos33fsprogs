@@ -36,6 +36,17 @@ bios_test:
 	bne	not_iigs
 
 is_a_iigs:
+
+	; we do this earlier in detect_hardware
+.if 0
+	; enable 1MHz mode
+	; see hw.accel.a in 4cade
+setspeed:
+	lda	CYAREG
+	and	#$7f
+	sta	CYAREG
+
+
 	; set background color to black instead of blue
 	lda     NEWVIDEO
 	and	#%00011111	; bit 7 = 0 -> IIgs Apple II-compat video modes
@@ -48,6 +59,7 @@ is_a_iigs:
 	lda	#$00
 	sta	CLOCKCTL	; black border
 	sta	CLOCKCTL	; set twice for VidHD
+.endif
 
 	lda	#'s'
 	sta	model_patch_1+9
@@ -198,14 +210,24 @@ done_detect_cpu:
 	;=====================
 	; Detect mockingboard
 	;=====================
-
+	; did this earlier too
+.if 0
 	lda	#0
 	sta	SOUND_STATUS
 
+
 PT3_ENABLE_APPLE_IIC = 1
+
 
 	jsr	mockingboard_detect
 	bcc	mockingboard_notfound
+.endif
+
+	; patch if necessary
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	mockingboard_notfound
 
 mockingboard_found:
 	lda	MB_ADDR_H
@@ -214,12 +236,11 @@ mockingboard_found:
 
 	sta	mock_slot_patch+7
 
-	lda	SOUND_STATUS
-	ora	#SOUND_MOCKINGBOARD
-	sta	SOUND_STATUS
+;	lda	SOUND_STATUS
+;	ora	#SOUND_MOCKINGBOARD
+;	sta	SOUND_STATUS
 
 mockingboard_notfound:
-
 
 	;===================
 	; Load graphics
