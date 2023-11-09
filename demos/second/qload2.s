@@ -187,6 +187,8 @@ aux_address_array:
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 
+PT3_ENABLE_APPLE_IIC = 1
+
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 

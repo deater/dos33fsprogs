@@ -39,7 +39,7 @@ not_iigs:
 	lda	#0
 	sta	SOUND_STATUS
 
-PT3_ENABLE_APPLE_IIC = 1
+;PT3_ENABLE_APPLE_IIC = 1		; we set this earlier
 
 	jsr	mockingboard_detect
 	bcc	mockingboard_notfound

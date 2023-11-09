@@ -205,6 +205,7 @@ length_array:
 	.byte 16,16,16,96	; CUBE,DOTS,SPHERES,OCEAN
 	.byte 16,16		; POLAR,FAKE_BIOS
 
+PT3_ENABLE_APPLE_IIC = 1
 
 	.include	"wait.s"
 

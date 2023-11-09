@@ -756,7 +756,7 @@ early_out:
 
 .include "aux_detect.s"
 .include "65c02_detect.s"
-.include "pt3_lib_mockingboard_setup.s"
+;.include "pt3_lib_mockingboard_setup.s"
 
 ;.include "pt3_lib_detect_model.s"
 ;.include "../lc_detect.s"

@@ -47,7 +47,7 @@ mockingboard_detect:
 
 .ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
-	cmp	#'C'
+	cmp	#'c'
 	bne	not_iic
 
 	lda	#$ff
