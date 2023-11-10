@@ -1288,7 +1288,7 @@ done_color:
 
 	inc	XX
 	ldy	XX
-	cpy	#80
+	cpy	#79
 	beq	done_xloop
 	jmp	xloop
 
@@ -1326,33 +1326,332 @@ done_xloop:
 done_yloop:
 
 rotate:
-.if 0
+
 	; rotate sines, cosines, and products thereof
 	; this animates the torus rotation about two axes
 
-	cA-=(sA>>5);
-	sA+=(cA>>5);
+	;===============
+	; cA-=(sA>>5);
 
-	cAsB-=(sAsB>>5);
-	sAsB+=(cAsB>>5);
+	lda	sA_l
+	sta	TEMP1_L
+	lda	sA_h
+	sta	TEMP1_H
 
-	cAcB-=(sAcB>>5);
-	sAcB+=(cAcB>>5);
+	ldx	#5
+zp1:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp1
 
-	cB-=(sB>>6);
-	sB+=(cB>>6);
+	sec
+	lda	cA_l
+	sbc	TEMP1_L
+	sta	cA_l
+	lda	cA_h
+	sbc	TEMP1_H
+	sta	cA_h
 
-	cAcB-=(cAsB>>6);
-	cAsB+=(cAcB>>6);
+	;==============
+	; sA+=(cA>>5);
 
-	sAcB-=(sAsB>>6);
-	sAsB+=(sAcB>>6);
+	lda	cA_l
+	sta	TEMP1_L
+	lda	cA_h
+	sta	TEMP1_H
+
+	ldx	#5
+zp2:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp2
+
+	clc
+	lda	sA_l
+	adc	TEMP1_L
+	sta	sA_l
+	lda	sA_h
+	adc	TEMP1_H
+	sta	sA_h
+
+	;==================
+	; cAsB-=(sAsB>>5);
+
+	lda	sAsB_l
+	sta	TEMP1_L
+	lda	sAsB_h
+	sta	TEMP1_H
+
+	ldx	#5
+zp3:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp3
+
+	sec
+	lda	cAsB_l
+	sbc	TEMP1_L
+	sta	cAsB_l
+	lda	cAsB_h
+	sbc	TEMP1_H
+	sta	cAsB_h
+
+	;===================
+	; sAsB+=(cAsB>>5);
+
+	lda	cAsB_l
+	sta	TEMP1_L
+	lda	cAsB_h
+	sta	TEMP1_H
+
+	ldx	#5
+zp4:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp4
+
+	clc
+	lda	sAsB_l
+	adc	TEMP1_L
+	sta	sAsB_l
+	lda	sAsB_h
+	adc	TEMP1_H
+	sta	sAsB_h
+
+
+	;==================
+	; cAcB-=(sAcB>>5);
+
+	lda	sAcB_l
+	sta	TEMP1_L
+	lda	sAcB_h
+	sta	TEMP1_H
+
+	ldx	#5
+zp5:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp5
+
+	sec
+	lda	cAcB_l
+	sbc	TEMP1_L
+	sta	cAcB_l
+	lda	cAcB_h
+	sbc	TEMP1_H
+	sta	cAcB_h
+
+
+	;=====================
+	; sAcB+=(cAcB>>5);
+
+	lda	cAcB_l
+	sta	TEMP1_L
+	lda	cAcB_h
+	sta	TEMP1_H
+
+	ldx	#5
+zp6:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp6
+
+	clc
+	lda	sAcB_l
+	adc	TEMP1_L
+	sta	sAcB_l
+	lda	sAcB_h
+	adc	TEMP1_H
+	sta	sAcB_h
+
+
+	;================
+	; cB-=(sB>>6);
+
+	lda	sB_l
+	sta	TEMP1_L
+	lda	sB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp7:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp7
+
+	sec
+	lda	cB_l
+	sbc	TEMP1_L
+	sta	cB_l
+	lda	cB_h
+	sbc	TEMP1_H
+	sta	cB_h
+
+	;================
+	; sB+=(cB>>6);
+
+	lda	cB_l
+	sta	TEMP1_L
+	lda	cB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp8:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp8
+
+	clc
+	lda	sB_l
+	adc	TEMP1_L
+	sta	sB_l
+	lda	sB_h
+	adc	TEMP1_H
+	sta	sB_h
+
+
+	;====================
+	; cAcB-=(cAsB>>6);
+
+	lda	cAsB_l
+	sta	TEMP1_L
+	lda	cAsB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp9:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp9
+
+	sec
+	lda	cAcB_l
+	sbc	TEMP1_L
+	sta	cAcB_l
+	lda	cAcB_h
+	sbc	TEMP1_H
+	sta	cAcB_h
+
+
+	;===================
+	; cAsB+=(cAcB>>6);
+
+	lda	cAcB_l
+	sta	TEMP1_L
+	lda	cAcB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp10:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp10
+
+	clc
+	lda	cAsB_l
+	adc	TEMP1_L
+	sta	cAsB_l
+	lda	cAsB_h
+	adc	TEMP1_H
+	sta	cAsB_h
+
+	;===================
+	; sAcB-=(sAsB>>6);
+
+	lda	sAsB_l
+	sta	TEMP1_L
+	lda	sAsB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp11:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp11
+
+	sec
+	lda	sAcB_l
+	sbc	TEMP1_L
+	sta	sAcB_l
+	lda	sAcB_h
+	sbc	TEMP1_H
+	sta	sAcB_h
+
+
+	; sAsB+=(sAcB>>6);
+
+	lda	sAcB_l
+	sta	TEMP1_L
+	lda	sAcB_h
+	sta	TEMP1_H
+
+	ldx	#6
+zp12:
+	lda	TEMP1_H
+	cmp	#$80
+	ror
+	sta	TEMP1_H
+	ror	TEMP1_L
+	dex
+	bne	zp12
+
+	clc
+	lda	sAsB_l
+	adc	TEMP1_L
+	sta	sAsB_l
+	lda	sAsB_h
+	adc	TEMP1_H
+	sta	sAsB_h
+
 
 	; flip pages?
 
-	; usleep(15000);
 
-.endif
+
 
 	jmp	main_loop
 
