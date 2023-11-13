@@ -156,7 +156,8 @@ final_credits:
 	.byte 20," ",0
 	.byte 11,"by Deater / Desire",0
 	.byte 20," ",0
-	.byte 1 ,"This demo was shown at Demosplash 2023",0
+	.byte 4,"This demo won the oldskool demo",0
+	.byte 5,"competition at Demosplash 2023",0
 	.byte 8,"held in Pittsburgh, PA,",0
 	.byte 12,"in November 2023.",0
 	.byte 20," ",0
