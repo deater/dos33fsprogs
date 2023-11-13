@@ -140,7 +140,56 @@ frame15:					; handmade / auto
 	.include "auto/frame153.inc"	;
 	.include "auto/frame154.inc"	;
 	.include "auto/frame155.inc"	;
+	.include "auto/frame156.inc"	;
+	.include "auto/frame157.inc"	;
+	.include "auto/frame158.inc"	;
+	.include "auto/frame159.inc"	;
+	.include "auto/frame160.inc"	;
+	.include "auto/frame161.inc"	;
+	.include "auto/frame162.inc"	;
+	.include "auto/frame163.inc"	;
+	.include "auto/frame164.inc"	;
+	.include "auto/frame165.inc"	;
+	.include "auto/frame166.inc"	;
+	.include "auto/frame167.inc"	;
+	.include "auto/frame168.inc"	;
+	.include "auto/frame169.inc"	;
+	.include "auto/frame170.inc"	;
+	.include "auto/frame171.inc"	;
+	.include "auto/frame172.inc"	;
+	.include "auto/frame173.inc"	;
+	.include "auto/frame174.inc"	;
+	.include "auto/frame175.inc"	;
+	.include "auto/frame176.inc"	;
+	.include "auto/frame177.inc"	;
+	.include "auto/frame178.inc"	;
+	.include "auto/frame179.inc"	;
+	.include "auto/frame180.inc"	;
+	.include "auto/frame181.inc"	;
+	.include "auto/frame182.inc"	;
+	.include "auto/frame183.inc"	;
+	.include "auto/frame184.inc"	;
+	.include "auto/frame185.inc"	;
+	.include "auto/frame186.inc"	;
+	.include "auto/frame187.inc"	;
+	.include "auto/frame188.inc"	;
+	.include "auto/frame189.inc"	;
+	.include "auto/frame190.inc"	;
+	.include "auto/frame191.inc"	;
+	.include "auto/frame192.inc"	;
+	.include "auto/frame193.inc"	;
+	.include "auto/frame194.inc"	;
+	.include "auto/frame195.inc"	;
+	.include "auto/frame196.inc"	;
+	.include "auto/frame197.inc"	;
+	.include "auto/frame198.inc"	;
+	.include "auto/frame199.inc"	;
+	.include "auto/frame200.inc"	;
+	.include "auto/frame201.inc"	;
+	.include "auto/frame202.inc"	;
+	.include "auto/frame203.inc"	;
+	.include "auto/frame204.inc"	;
+	.include "auto/frame205.inc"	;
 
-
-num_scenes=(155-15)+1
+num_scenes=(205-15)+1
 

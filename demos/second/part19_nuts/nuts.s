@@ -24,16 +24,16 @@ nuts_start:
 	;===================
 load_loop:
 
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
-	bit	PAGE1
+;	bit	SET_GR
+;	bit	HIRES
+;	bit	FULLGR
+;	bit	PAGE1
 
 	lda	#0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
 
-	bit	PAGE2
+;	bit	PAGE2
 
 	; fc logo
 
@@ -53,6 +53,8 @@ ship_sprite_loop:
 
 	lda	#$60
 	jsr	hgr_copy
+
+	bit	HIRES
 
 	ldx	COUNT
 

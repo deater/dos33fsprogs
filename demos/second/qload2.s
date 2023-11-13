@@ -162,7 +162,7 @@ which_disk_array:
 	.byte 1,1,1,1		; MUSIC2, THREED, CREDITS, NUTS
 
 load_address_array:
-	.byte $D0,$40,$60,$60	; MUSIC2, THREED, CREDITS, NUTS
+	.byte $D0,$20,$60,$60	; MUSIC2, THREED, CREDITS, NUTS
 
 track_array:
 	.byte  3, 20, 12, 8	; MUSIC2, THREED, CREDITS, NUTS
@@ -171,7 +171,7 @@ sector_array:
 	.byte  0, 0, 0, 0	; MUSIC2, THREED, CREDITS, NUTS
 
 length_array:
-	.byte  32, 128, 64, 32	; MUSIC2, THREED, CREDITS, NUTS
+	.byte  32, 152, 64, 32	; MUSIC2, THREED, CREDITS, NUTS
 
 aux_address_array:
 	.byte $FF,$FF,$60,$20	; MUSIC2, THREED, CREDITS, NUTS

@@ -78,10 +78,22 @@ skip_all_checks:
 	;===================
 load_loop:
 
-;	bit	SET_GR
-;	bit	HIRES
-;	bit	FULLGR
+	bit	SET_GR
+	bit	FULLGR
 	bit	PAGE1
+
+	lda	#0
+	sta	clear_all_color+1
+	sta	DRAW_PAGE
+	jsr	clear_all
+
+	lda	#4
+	sta	DRAW_PAGE
+	jsr	clear_all
+
+	lda	#0
+	sta	DRAW_PAGE
+
 
 	;=======================
 	; load, copy to AUXMEM
@@ -123,12 +135,12 @@ load_loop:
 	;=====================
 	; clear both pages
 
-	lda	#0
-	jsr	hgr_page1_clearscreen
+;	lda	#0
+;	jsr	hgr_page1_clearscreen
 
 
 	;=====================
-	; load THREED to $4000
+	; load THREED to $2000
 
 	lda	#1		; THREED
 	sta	WHICH_LOAD
@@ -141,7 +153,7 @@ load_loop:
 
 	cli			; start music
 
-	jsr	$4000
+	jsr	$2000
 
 	;=======================
 	; run NUTS

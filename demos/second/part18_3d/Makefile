@@ -11,7 +11,7 @@ all:	THREED
 ####
 
 THREED:	threed.o
-	ld65 -o THREED threed.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+	ld65 -o THREED threed.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 threed.o:	threed.s \
 	../qload2.inc \

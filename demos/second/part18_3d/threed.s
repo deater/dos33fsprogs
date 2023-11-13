@@ -13,21 +13,11 @@
 
 threed_start:
 
-	;=======================
-	; wait for keypress
-	;=======================
-
-;	jsr	wait_until_keypress
-
-;	lda	#25
-;	jsr	wait_a_bit
-
-
 
 	;===================
-	; Load graphics
+	; Setup graphics
 	;===================
-load_loop:
+
 	bit	SET_GR
 	bit	LORES
 	bit	FULLGR
@@ -36,8 +26,7 @@ load_loop:
 	lda	#0
 	sta	DRAW_PAGE
 
-
-forever:
+	bit	KEYRESET
 
 	lda	#num_scenes
 	sta	SCENE_COUNT
@@ -72,18 +61,21 @@ wait_for_irq:
 	lda	IRQ_COUNTDOWN
 	bne	wait_for_irq
 
-;	jsr	wait_until_keypress
-
-
+	lda	KEYPRESS
+	bmi	done_threed
 
 	dec	SCENE_COUNT
 	bne	scene_loop
 
-;	jmp	forever
+done_threed:
+	bit	KEYRESET
 
 	rts
 
-	.include	"../wait_keypress.s"
+
+;===================================
+
+;	.include	"../wait_keypress.s"
 
 	.include	"draw_boxes.s"
 	.include	"3d.inc"
