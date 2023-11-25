@@ -30,10 +30,6 @@ static struct {
 	short	x;	// 0
 	short	y;	// 2
 	short	z;	// 4
-	short	old1;	// 6 oldpos shadow
-	short	old2;	// 8 oldpos
-	short	old3;	// 10
-	short	old4;	// 12
 	short	yadd;	// 14
 } dot[MAXDOTS];
 
@@ -44,11 +40,11 @@ static void drawdots(void) {
 	int temp32;
 	int yy;
 
-	cx=dotnum;			// mov	cx,cs:_dotnum
-	si=0;				// mov	si,OFFSET dot
+//	cx=dotnum;			// mov	cx,cs:_dotnum
+//	si=0;				// mov	si,OFFSET dot
 
-label1:
-	push(cx);			// push	cx
+	for(si=0;si<512;si+=SKIP) {
+//	push(cx);			// push	cx
 	ax=dot[si].x;			// mov	ax,ds:[si+0] ;X
 	imul_16(rotsin);		// imul	ds:_rotsin
 	ax=ax;				// mov	ax,ax
@@ -117,7 +113,7 @@ label1:
 	push(ax);			// push	ax
 
 
-	/* draw new shadow (?) */
+	/* draw shadow */
 
 //	bx/320 -> 200     200->48  *48/200
 
@@ -166,6 +162,7 @@ label4:
 	bx=rows[bx];			// mov	bx,ds:_rows[bx]
 
 	ax=pop();			// pop	ax
+	push(ax);
 	bx=bx+ax;			// add	bx,ax
 	bp=bp>>6;		// shr	bp,6
 	bp=bp&(~3L);		// and	bp,not 3
@@ -185,32 +182,12 @@ label_t2:
 	yy=((bx/320)*48)/200;
 	color_equals(6);
 	plot( (bx%320)/8,yy);
-	cx=pop();		// pop	cx
-	si=si+SKIP;		// add	si,16	point to next dot
-	cx=cx-SKIP;
-	if (cx!=0) goto label1;	// loop	@@1
-label0:
-	return;
-				// @@0:	CEND
-
 label2:
-	/* This is called when we are off the screen */
-	/* erases old but didn't draw new */
-	bx=pop();			// pop	bx
-	cx=pop();			// pop	cx
-	si=si+SKIP;			// add	si,16
-	cx=cx-SKIP;			// loop	@@1
-	if (cx!=0) goto label1;
-	goto label0;			// jmp	@@0
-
 label3:
-
 	bx=pop();			// pop	bx
-	cx=pop();			// pop	cx
-	si=si+SKIP;			// add	si,16
-	cx=cx-SKIP;			// loop	@@1
-	if (cx!=0) goto label1;
-	goto label0;			// jmp	@@0
+
+	}
+	return;
 
 }
 
@@ -224,9 +201,6 @@ static short dis_waitb(void) {
 	return 1;
 }
 
-
-static char pal[768];
-static char pal2[768];
 
 static short isin(short deg) {
 	return(sin1024[deg&1023]);
@@ -299,8 +273,9 @@ int main(int argc,char **argv) {
 
 	ram[DRAW_PAGE]=0;
 
-	while(frame<2450) {
+	while(frame<2360) {
 
+		/* re-draw background */
 		color_equals(0);
 		for(a=0;a<24;a++) hlin(0,0,40,a);
 		color_equals(5);
@@ -308,6 +283,7 @@ int main(int argc,char **argv) {
 
 		frame++;
 		if(frame==500) f=0;
+
 		i=dottaul[j];
 		j++; j%=dotnum;
 
@@ -341,32 +317,7 @@ int main(int argc,char **argv) {
 			dot[i].yadd=0;
 			if(frame>1900 && !(frame&31) && grav>0) grav--;
 		}
-		/* palette to white */
-		else if(frame<2400) {
-			a=frame-2360;
-			for(b=0;b<768;b+=3) {
-				c=pal[b+0]+a*3;
-				if(c>63) c=63;
-				pal2[b+0]=c;
-				c=pal[b+1]+a*3;
-				if(c>63) c=63;
-				pal2[b+1]=c;
-				c=pal[b+2]+a*4;
-				if(c>63) c=63;
-				pal2[b+2]=c;
-			}
-		}
-		/* palette to black */
-		else if(frame<2440) {
-			a=frame-2400;
-			for(b=0;b<768;b+=3) {
-				c=63-a*2;
-				if(c<0) c=0;
-				pal2[b+0]=c;
-				pal2[b+1]=c;
-				pal2[b+2]=c;
-			}
-		}
+
 		if(dropper>4000) dropper-=100;
 
 		rotcos=icos(rot)*64; rotsin=isin(rot)*64;
@@ -381,7 +332,6 @@ int main(int argc,char **argv) {
 		f++;
 		gravity=grav;
 		gravityd=gravd;
-
 
 		drawdots();
 
