@@ -4,7 +4,23 @@ CFLAGS = -O2 -Wall -g
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	dots
+all:	dots dots_dump dots_play
+
+###
+
+dots_play:	dots_play.o vga_emulator.o 8086_emulator.o ../gr-sim.a
+	$(CC) -o dots_play dots_play.o vga_emulator.o 8086_emulator.o ../gr-sim.a $(LFLAGS) $(SDL_LIBS)
+
+dots_play.o:	dots_play.c vga_emulator.h
+	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c dots_play.c
+
+###
+
+dots_dump:	dots_dump.o vga_emulator.o 8086_emulator.o ../gr-sim.a
+	$(CC) -o dots_dump dots_dump.o vga_emulator.o 8086_emulator.o ../gr-sim.a $(LFLAGS) $(SDL_LIBS)
+
+dots_dump.o:	dots_dump.c vga_emulator.h
+	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c dots_dump.c
 
 ###
 
@@ -27,4 +43,4 @@ vga_emulator.o:	vga_emulator.c vga_emulator.h
 ###
 
 clean:	
-	rm -f *~ *.o dots hellmood_memories
+	rm -f *~ *.o dots dots_dump dots_play
