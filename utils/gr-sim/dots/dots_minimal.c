@@ -38,41 +38,28 @@ static short rotcos=0;
 
 static void drawdots(void) {
 	int temp32;
+	int transx,transz;
 	int yy;
-
-//	cx=dotnum;			// mov	cx,cs:_dotnum
-//	si=0;				// mov	si,OFFSET dot
+	unsigned short our_x,our_y;
 
 	for(si=0;si<512;si+=SKIP) {
-//	push(cx);			// push	cx
-	ax=dot[si].x;			// mov	ax,ds:[si+0] ;X
-	imul_16(rotsin);		// imul	ds:_rotsin
-	ax=ax;				// mov	ax,ax
-	cx=dx;				// mov	cx,dx
-	ax=dot[si].z;			// mov	ax,ds:[si+4] ;Z
-	imul_16(rotcos);		// imul	ds:_rotcos
-	ax=ax-bx;			// sub	ax,bx
-	dx=dx-cx;			// sub	dx,cx
-	bp=dx;				// mov	bp,dx
-	bp=bp+9000;			// add	bp,9000
 
-	ax=dot[si].x;			// mov	ax,ds:[si+0] ;X
-	imul_16(rotcos);		// imul	ds:_rotcos
-	bx=ax;				// mov	bx,ax
-	cx=dx;				// mov	cx,dx
-	ax=dot[si].z;			// mov	ax,ds:[si+4] ;Z
-	imul_16(rotsin);		// imul	ds:_rotsin
+		transx=dot[si].x*rotsin;
+		transz=dot[si].z*rotcos;
+		temp32=transz-transx;
+		bp=(temp32>>16)+9000;
 
-	temp32=ax+bx;			// add	ax,bx
-	ax=ax+bx;			//
-	dx=dx+cx;			// adc	dx,cx
-	if (temp32&(1<<16)) dx=dx+1;
+		transx=dot[si].x*rotcos;
+		transz=dot[si].z*rotsin;
+		temp32=transx+transz;
+		temp32>>=8;
 
-	ax=(ax>>8)|(dx<<8);		// shrd	ax,dx,8
-	dx=sar(dx,8);			// sar	dx,8
+		ax=temp32&0xffff;
+		dx=(temp32>>16)&0xffff;
 
 	bx=ax;				// mov	bx,ax
 	cx=dx;				// mov	cx,dx
+
 	ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
 
 	dx=sar(dx,3);			// sar	dx,3
@@ -83,14 +70,12 @@ static void drawdots(void) {
 
 	temp32=(dx<<16)|(ax&0xfffff);
 	idiv_16(bp);			// idiv bp
-	ax=ax+160;			// add	ax,160
-	push(ax);			// push	ax
+	our_x=ax+160;			// add	ax,160
 
 	/* if off end of screen, no need for shadow */
 
-	if (ax>319) goto label2;	// cmp	ax,319
+	if (our_x>319) continue;
 
-					// ja	@@2
 	/**********/
 	/* shadow */
 	/**********/
@@ -101,17 +86,13 @@ static void drawdots(void) {
 	ax=ax+100;			// add	ax,100
 
 	/* if shadow off screen, don't draw */
-	if (ax>199) goto label2;	// cmp	ax,199
+	if (ax>199) continue;	// cmp	ax,199
 					// ja	@@2
 	bx=ax;				// mov	bx,ax
 
 	// not needed, it's a C array
-	//bx=bx<<1;			// shl	bx,1
 	bx=rows[bx];			// mov	bx,ds:_rows[bx]
-	ax=pop();			// pop	ax
-	bx=bx+ax;			// add	bx,ax
-	push(ax);			// push	ax
-
+	bx=bx+our_x;			// add	bx,ax
 
 	/* draw shadow */
 
@@ -121,70 +102,57 @@ static void drawdots(void) {
 	color_equals(0);
 	plot( (bx%320)/8,yy);
 
-	/********/
-	/* ball */
-	/********/
+		/********/
+		/* ball */
+		/********/
 
-	dot[si].yadd+=gravity;
-	ax=dot[si].y+dot[si].yadd;
+		dot[si].yadd+=gravity;
+		ax=dot[si].y+dot[si].yadd;
 
-	temp32=ax;
-	if (temp32&0x8000) temp32|=0xffff0000;
-	if (temp32<gravitybottom) goto label4; //cmp	ax,ds:_gravitybottom
-					// jl	@@4
+		temp32=ax;
+		if (temp32&0x8000) temp32|=0xffff0000;
+		if (temp32>=gravitybottom) {
+			push(ax);			// push	ax
+			ax=-dot[si].yadd;
+			imul_16(gravityd);		// imul	cs:_gravityd
+			ax=sar(ax,4);			// sar	ax,4
+			dot[si].yadd=ax;		// mov	ds:[si+14],ax
+			ax=pop();			// pop	ax
+			ax+=dot[si].yadd;		// add	ax,ds:[si+14]
+		}
 
-	push(ax);			// push	ax
-	ax=-dot[si].yadd;
-	imul_16(gravityd);		// imul	cs:_gravityd
-	ax=sar(ax,4);			// sar	ax,4
-	dot[si].yadd=ax;		// mov	ds:[si+14],ax
-	ax=pop();			// pop	ax
-	ax+=dot[si].yadd;		// add	ax,ds:[si+14]
+		dot[si].y=ax;			// mov	ds:[si+2],ax
+		if (ax&0x8000) {		// cwd
+			dx=0xffff;
+		}
+		else {
+			dx=0;
+		}
+		dx=(dx<<6)|(ax>>10);		// shld	dx,ax,6
+		ax=ax<<6;			// shl	ax,6
+		idiv_16(bp);			// idiv	bp
+		our_y=ax+100;			// add	ax,100
+		if (our_y>199) continue;	// cmp	ax,199
 
-label4:
-	dot[si].y=ax;			// mov	ds:[si+2],ax
-	if (ax&0x8000) {		// cwd
-		dx=0xffff;
-	}
-	else {
-		dx=0;
-	}
-	dx=(dx<<6)|(ax>>10);		// shld	dx,ax,6
-	ax=ax<<6;			// shl	ax,6
-	idiv_16(bp);			// idiv	bp
-	ax=ax+100;			// add	ax,100
-	if (ax>199) goto label3;	// cmp	ax,199
-					// ja	@@3
-	bx=ax;				// mov	bx,ax
+		bp=bp>>6;		// shr	bp,6
+		bp=bp&(~3L);		// and	bp,not 3
 
-	// not needed, C array
-	//bx=bx<<1;			// shl	bx,1
-	bx=rows[bx];			// mov	bx,ds:_rows[bx]
+		temp32=bp;
+		if (temp32&0x8000) temp32|=0xffff0000;
+		if (temp32<bpmin) {
+			bpmin=bp;
+		}
 
-	ax=pop();			// pop	ax
-	push(ax);
-	bx=bx+ax;			// add	bx,ax
-	bp=bp>>6;		// shr	bp,6
-	bp=bp&(~3L);		// and	bp,not 3
+		temp32=bp;
+		if (temp32&0x8000) temp32|=0xffff0000;
+		if (temp32>bpmax) {
+			bpmax=bp;
+		}
 
-	temp32=bp;
-	if (temp32&0x8000) temp32|=0xffff0000;
-	if (temp32>=bpmin) goto label_t1;	// cmp	bp,cs:_bpmin
-					// jge	@@t1
-	bpmin=bp;			// mov	cs:_bpmin,bp
-label_t1:
-	temp32=bp;
-	if (temp32&0x8000) temp32|=0xffff0000;
-	if (temp32<=bpmax) goto label_t2;	// cmp	bp,cs:_bpmax
-					// jle	@@t2
-	bpmax=bp;			// mov	cs:_bpmax,bp
-label_t2:
-	yy=((bx/320)*48)/200;
-	color_equals(6);
-	plot( (bx%320)/8,yy);
-label2:
-label3:
-	bx=pop();			// pop	bx
+		/* plot ball */
+		yy=(our_y*48)/200;
+		color_equals(6);
+		plot(our_x/8,yy);
 
 	}
 	return;
