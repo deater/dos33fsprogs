@@ -902,7 +902,7 @@ int main(int argc,char **argv) {
 		}
 #endif
 
-again:
+//again:
 		ch=grsim_input();
 		if (ch==27) {
 			return 0;

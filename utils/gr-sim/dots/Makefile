@@ -4,7 +4,7 @@ CFLAGS = -O2 -Wall -g
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	dots dots_dump dots_play dots_minimal
+all:	dots dots_dump dots_play dots_minimal dots_6502
 
 ###
 
@@ -38,6 +38,15 @@ dots_minimal:	dots_minimal.o ../gr-sim.a
 dots_minimal.o:	dots_minimal.c
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c dots_minimal.c
 
+###
+
+dots_6502:	dots_6502.o ../gr-sim.a
+	$(CC) -o dots_6502 dots_6502.o ../gr-sim.a $(LFLAGS) $(SDL_LIBS)
+
+dots_6502.o:	dots_6502.c
+	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c dots_6502.c
+
+
 
 ###
 
@@ -52,4 +61,4 @@ vga_emulator.o:	vga_emulator.c vga_emulator.h
 ###
 
 clean:	
-	rm -f *~ *.o dots dots_dump dots_play dots_minimal
+	rm -f *~ *.o dots dots_dump dots_play dots_minimal dots_6502
