@@ -17,7 +17,11 @@
 
 #define BOTTOM 8000
 
-#define SKIP	2
+#define SKIP		4
+
+#define FRAME_SKIP	10
+
+static int write_frame=-1;
 
 static short gravitybottom=BOTTOM;
 
@@ -52,13 +56,14 @@ static char *bgpic;
 static int depthtable1[128];
 static int depthtable2[128];
 static int depthtable3[128];
-//static int depthtable4[128];
 
 static unsigned char depthtable1_bytes[512];
 static unsigned char depthtable2_bytes[512];
 static unsigned char depthtable3_bytes[512];
-//static unsigned char depthtable4_bytes[512];
 
+static int shadow[40][48];
+static int ball[40][48];
+FILE *output;
 
 static void drawdots(void) {
 	int temp32;
@@ -183,6 +188,9 @@ label1:
 	yy=((bx/320)*48)/200;
 	color_equals(0);
 	plot( (bx%320)/8,yy);
+
+	shadow[(bx%320)/8][yy]=1;
+
 //	printf("0,%d,%d\n",(bx%320)/8,yy);
 
 //	printf("Plotting at %d,%d\n",(bx%320)/8,(bx/320)/5);
@@ -354,6 +362,9 @@ label_t2:
 	yy=((bx/320)*48)/200;
 	color_equals(6);
 	plot( (bx%320)/8,yy);
+
+	ball[(bx%320)/8][yy]=1;
+
 //	printf("6,%d,%d\n",(bx%320)/8,yy);
 
 	framebuffer[bx+1]=depthtable1_bytes[bp];
@@ -602,6 +613,14 @@ int main(int argc,char **argv) {
 	short grav,gravd;
 	short f=0;
 	int ch;
+	int xx,yy;
+	unsigned char buffer[10];
+
+	output=fopen("out","w");
+	if (output==NULL) {
+		fprintf(stderr,"error opening\n");
+		exit(1);
+	}
 
 	//dis_partstart();
 
@@ -779,6 +798,13 @@ int main(int argc,char **argv) {
 
 	while(!dis_exit() && frame<2450) {
 
+		for(xx=0;xx<40;xx++) {
+			for(yy=0;yy<48;yy++) {
+				shadow[xx][yy]=0;
+				ball[xx][yy]=0;
+			}
+		}
+
 		/* code sets border color */
 		/* then waits for it to end, as a timing thing? */
 		setborder(0);
@@ -895,14 +921,59 @@ int main(int argc,char **argv) {
 
 		grsim_update();
 
-#if 0
-		for(i=0;i<dotnum;i++) {
-			printf("%d: %d,%d,%d  %d\n",i,
-				dot[i].x,dot[i].y,dot[i].z,dot[i].yadd);
-		}
-#endif
 
-again:
+//		fprintf(output,"Frame %d\n",frame);
+//		fprintf(output,"\tShadow\n");
+
+		write_frame++;
+		if (write_frame==FRAME_SKIP ) {
+			write_frame=0;
+		}
+
+		if (write_frame==0) {
+
+		int new_row=1;
+
+		/* Shadow */
+		buffer[0]=0xfe;
+		fwrite(buffer,1,sizeof(char),output);
+		for(yy=0;yy<48;yy++) {
+			new_row=1;
+			for(xx=0;xx<40;xx++) {
+				if ((!ball[xx][yy]) && (shadow[xx][yy])) {
+					if (new_row) {
+						buffer[0]=(yy|0x40);
+						fwrite(buffer,1,sizeof(char),output);
+						new_row=0;
+					}
+					buffer[0]=(xx);
+					fwrite(buffer,1,sizeof(char),output);
+				}
+			}
+		}
+		/* Balls */
+		buffer[0]=0xfd;
+		fwrite(buffer,1,sizeof(char),output);
+		for(yy=0;yy<48;yy++) {
+			new_row=1;
+			for(xx=0;xx<40;xx++) {
+				if (ball[xx][yy]) {
+					if (new_row) {
+						buffer[0]=(yy|0x40);
+						fwrite(buffer,1,sizeof(char),output);
+						new_row=0;
+					}
+					buffer[0]=xx;
+					fwrite(buffer,1,sizeof(char),output);
+
+				}
+			}
+		}
+
+
+		}
+
+//again:
 		ch=grsim_input();
 		if (ch==27) {
 			return 0;
@@ -911,10 +982,10 @@ again:
 
 	}
 
-//	restores 80x25 color text mode
-//	if (!dis_indemo()) {
-//		_asm mov ax,3h
-//		_asm int 10h
-//	}
+	buffer[0]=0xff;
+	fwrite(buffer,1,sizeof(char),output);
+
+	fclose(output);
+
 	return 0;
 }

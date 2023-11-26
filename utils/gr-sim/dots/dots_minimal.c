@@ -5,21 +5,18 @@
 #include <malloc.h>
 #include <math.h>
 
-#include "8086_emulator.h"
-#include "vga_emulator.h"
-
 #include "../gr-sim.h"
 #include "../tfv_zp.h"
 
 #include "sin1024.h"
 
-#define	MAXDOTS	1024
+#define	MAXDOTS	512
 
 #define SKIP	2
 
 static short gravitybottom;
-static short bpmin=30000;
-static short bpmax=-30000;
+//static short bpmin=30000;
+//static short bpmax=-30000;
 static short gravity=0;
 static short dotnum=0;
 static short gravityd=16;
@@ -40,121 +37,120 @@ static void drawdots(void) {
 	int temp32;
 	int transx,transz;
 	int yy;
-	unsigned short our_x,our_y;
+	unsigned short ball_x,ball_y,shadow_y;
+	unsigned short d,sc,newy;
+	unsigned short ax,bx,cx,dx;
+	short signed_ax;
 
-	for(si=0;si<512;si+=SKIP) {
+	for(d=0;d<512;d+=SKIP) {
 
-		transx=dot[si].x*rotsin;
-		transz=dot[si].z*rotcos;
+		transx=dot[d].x*rotsin;
+		transz=dot[d].z*rotcos;
 		temp32=transz-transx;
-		bp=(temp32>>16)+9000;
+		sc=(temp32>>16)+9000;
+		if (sc==0) sc=1;
 
-		transx=dot[si].x*rotcos;
-		transz=dot[si].z*rotsin;
+		transx=dot[d].x*rotcos;
+		transz=dot[d].z*rotsin;
 		temp32=transx+transz;
 		temp32>>=8;
 
 		ax=temp32&0xffff;
 		dx=(temp32>>16)&0xffff;
 
-	bx=ax;				// mov	bx,ax
-	cx=dx;				// mov	cx,dx
+		bx=ax;				// mov	bx,ax
+		cx=dx;				// mov	cx,dx
 
-	ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
+		ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
 
-	dx=sar(dx,3);			// sar	dx,3
-	temp32=ax+bx;			// add	ax,bx
-	ax=ax+bx;
-	dx=dx+cx;			// adc	dx,cx
-	if (temp32&(1<<16)) dx=dx+1;
+//		dx=sar(dx,3);			// sar	dx,3
+		signed_ax=dx;
+		dx=signed_ax>>3;
 
-	temp32=(dx<<16)|(ax&0xfffff);
-	idiv_16(bp);			// idiv bp
-	our_x=ax+160;			// add	ax,160
+		temp32=ax+bx;			// add	ax,bx
+		ax=ax+bx;
+		dx=dx+cx;			// adc	dx,cx
+		if (temp32&(1<<16)) dx=dx+1;
 
-	/* if off end of screen, no need for shadow */
+		temp32=(dx<<16)|(ax&0xffff);
+		if (sc) ball_x=(temp32/sc)&0xffff;
+		else ball_x=0;
 
-	if (our_x>319) continue;
+		ball_x+=160;
 
-	/**********/
-	/* shadow */
-	/**********/
+		/* if off end of screen, no need for shadow */
 
-	ax=0;				// xor	ax,ax
-	dx=8;				// mov	dx,8
-	idiv_16(bp);			// idiv	bp
-	ax=ax+100;			// add	ax,100
+		if (ball_x>319) continue;
 
-	/* if shadow off screen, don't draw */
-	if (ax>199) continue;	// cmp	ax,199
-					// ja	@@2
-	bx=ax;				// mov	bx,ax
+		/**********/
+		/* shadow */
+		/**********/
 
-	// not needed, it's a C array
-	bx=rows[bx];			// mov	bx,ds:_rows[bx]
-	bx=bx+our_x;			// add	bx,ax
+		shadow_y=0x80000/sc;
 
-	/* draw shadow */
+		/* center it */
+		shadow_y+=100;
 
-//	bx/320 -> 200     200->48  *48/200
+		/* if shadow off screen, don't draw */
+		if (shadow_y>199) continue;
 
-	yy=((bx/320)*48)/200;
-	color_equals(0);
-	plot( (bx%320)/8,yy);
+		/* draw shadow */
+		yy=(shadow_y*48)/200;
+		color_equals(0);
+		plot( (ball_x)/8,yy);
 
 		/********/
 		/* ball */
 		/********/
 
-		dot[si].yadd+=gravity;
-		ax=dot[si].y+dot[si].yadd;
+		dot[d].yadd+=gravity;
+		newy=dot[d].y+dot[d].yadd;
 
-		temp32=ax;
+		temp32=newy;
 		if (temp32&0x8000) temp32|=0xffff0000;
 		if (temp32>=gravitybottom) {
-			push(ax);			// push	ax
-			ax=-dot[si].yadd;
-			imul_16(gravityd);		// imul	cs:_gravityd
-			ax=sar(ax,4);			// sar	ax,4
-			dot[si].yadd=ax;		// mov	ds:[si+14],ax
-			ax=pop();			// pop	ax
-			ax+=dot[si].yadd;		// add	ax,ds:[si+14]
+			ax=-dot[d].yadd;
+			temp32=(-dot[d].yadd)*gravityd;
+			ax=temp32&0xffff;
+
+//			ax=sar(ax,4);
+			signed_ax=ax;
+			ax=signed_ax>>4;
+
+			dot[d].yadd=ax;
+			newy+=dot[d].yadd;
 		}
 
-		dot[si].y=ax;			// mov	ds:[si+2],ax
-		if (ax&0x8000) {		// cwd
-			dx=0xffff;
-		}
-		else {
-			dx=0;
-		}
-		dx=(dx<<6)|(ax>>10);		// shld	dx,ax,6
-		ax=ax<<6;			// shl	ax,6
-		idiv_16(bp);			// idiv	bp
-		our_y=ax+100;			// add	ax,100
-		if (our_y>199) continue;	// cmp	ax,199
+		dot[d].y=newy;
 
-		bp=bp>>6;		// shr	bp,6
-		bp=bp&(~3L);		// and	bp,not 3
-
-		temp32=bp;
-		if (temp32&0x8000) temp32|=0xffff0000;
-		if (temp32<bpmin) {
-			bpmin=bp;
+		/* sign extend */
+		temp32=newy;
+		if (temp32&0x8000) {
+			temp32|=0xffff0000;
 		}
 
-		temp32=bp;
-		if (temp32&0x8000) temp32|=0xffff0000;
-		if (temp32>bpmax) {
-			bpmax=bp;
-		}
+		temp32<<=6;
+//		dx=(dx<<6)|(newy>>10);		// shld	dx,ax,6
+//		newy=newy<<6;			// shl	ax,6
+//		ax=newy;
+//		idiv_16(sc);			// idiv	sc
+
+		if (sc) newy=temp32/sc;
+
+		/* center */
+		ball_y=newy+100;		// add	ax,100
+
+		/* don't draw if off screen */
+		if (ball_y>199) continue;
 
 		/* plot ball */
-		yy=(our_y*48)/200;
+		/* convert from 320x200 to 40x48 */
+		yy=(ball_y*48)/200;
 		color_equals(6);
-		plot(our_x/8,yy);
+		plot(ball_x/8,yy);
 
 	}
+
 	return;
 
 }

@@ -17,6 +17,8 @@
 
 #define BOTTOM 8000
 
+#define SKIP	2
+
 static short gravitybottom=BOTTOM;
 
 static short bpmin=30000;
@@ -181,6 +183,7 @@ label1:
 	yy=((bx/320)*48)/200;
 	color_equals(0);
 	plot( (bx%320)/8,yy);
+//	printf("0,%d,%d\n",(bx%320)/8,yy);
 
 //	printf("Plotting at %d,%d\n",(bx%320)/8,(bx/320)/5);
 
@@ -351,6 +354,7 @@ label_t2:
 	yy=((bx/320)*48)/200;
 	color_equals(6);
 	plot( (bx%320)/8,yy);
+//	printf("6,%d,%d\n",(bx%320)/8,yy);
 
 	framebuffer[bx+1]=depthtable1_bytes[bp];
 	framebuffer[bx+2]=depthtable1_bytes[bp+1];
@@ -371,8 +375,8 @@ label_t2:
 
 //labelz:
 	cx=pop();		// pop	cx
-	si=si+1;		// add	si,16	point to next dot
-	cx=cx-1;
+	si=si+SKIP;		// add	si,16	point to next dot
+	cx=cx-SKIP;
 	if (cx!=0) goto label1;	// loop	@@1
 label0:
 	return;
@@ -422,8 +426,8 @@ label2:
 
 	bx=pop();			// pop	bx
 	cx=pop();			// pop	cx
-	si=si+1;			// add	si,16
-	cx=cx-1;			// loop	@@1
+	si=si+SKIP;			// add	si,16
+	cx=cx-SKIP;			// loop	@@1
 	if (cx!=0) goto label1;
 	goto label0;			// jmp	@@0
 
@@ -457,8 +461,8 @@ label3:
 
 	bx=pop();			// pop	bx
 	cx=pop();			// pop	cx
-	si=si+1;			// add	si,16
-	cx=cx-1;			// loop	@@1
+	si=si+SKIP;			// add	si,16
+	cx=cx-SKIP;			// loop	@@1
 	if (cx!=0) goto label1;
 	goto label0;			// jmp	@@0
 
