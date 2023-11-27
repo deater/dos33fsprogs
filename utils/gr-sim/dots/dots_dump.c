@@ -17,9 +17,9 @@
 
 #define BOTTOM 8000
 
-#define SKIP		4
+#define SKIP		2
 
-#define FRAME_SKIP	10
+#define FRAME_SKIP	7
 
 static int write_frame=-1;
 
@@ -932,6 +932,7 @@ int main(int argc,char **argv) {
 
 		if (write_frame==0) {
 
+#if 0
 		int new_row=1;
 
 		/* Shadow */
@@ -967,6 +968,212 @@ int main(int argc,char **argv) {
 					fwrite(buffer,1,sizeof(char),output);
 
 				}
+			}
+		}
+
+#endif
+
+		int new_row=1;
+
+		/* Shadow */
+		buffer[0]=0xfe;
+		fwrite(buffer,1,sizeof(char),output);
+		for(yy=0;yy<24;yy++) {
+			new_row=1;
+			for(xx=0;xx<40;xx++) {
+				/* cases: */
+				/*   shadow        ball        action */
+				/*  top bottom	top bottom            */
+				/*   0    0      0    0          none */
+				/*   0    0      0    1          none */
+				/*   0    0      1    0          none */
+				/*   0    0      1    1          none */
+				/*   0    1      0    0          bot  1 */
+				/*   0    1      0    1          none */
+				/*   0    1      1    0          both 4 */
+				/*   0    1      1    1          none */
+				/*   1    0      0    0          top  2 */
+				/*   1    0      0    1          both 5 */
+				/*   1    0      1    0          none */
+				/*   1    0      1    1          none */
+				/*   1    1      0    0          both 3 */
+				/*   1    1      0    1          both 3 */
+				/*   1    1      1    0          both 3 */
+				/*   1    1      1    1          none */
+
+				/* case 1/4 */
+				if ( (shadow[xx][yy*2]==0) &&
+					(shadow[xx][(yy*2)+1]==1) ) {
+
+					/* case 1 -- bottom */
+					if ( (ball[xx][(yy*2)]==0) &&
+						(ball[xx][(yy*2)+1]==0)) {
+
+						if (new_row) {
+							buffer[0]=yy;
+							fwrite(buffer,1,
+								sizeof(char),
+								output);
+							new_row=0;
+						}
+
+						buffer[0]=(xx|0x40);
+						fwrite(buffer,1,sizeof(char),
+							output);
+
+					}
+
+					/* case 4 -- both */
+					if ( (ball[xx][(yy*2)]==1) &&
+						(ball[xx][(yy*2)+1]==0) ) {
+
+						if (new_row) {
+							buffer[0]=yy;
+							fwrite(buffer,1,
+								sizeof(char),
+								output);
+							new_row=0;
+						}
+
+						buffer[0]=(xx|0xC0);
+						fwrite(buffer,1,sizeof(char),
+							output);
+
+					}
+
+				}
+				/* case 2/5 */
+				else if ( (shadow[xx][yy*2]==1) &&
+					(shadow[xx][(yy*2)+1]==0) ) {
+
+					/* case 2 -- top */
+					if ( (ball[xx][(yy*2)]==0) &&
+						(ball[xx][(yy*2)+1]==0) ) {
+
+						if (new_row) {
+							buffer[0]=yy;
+							fwrite(buffer,1,
+								sizeof(char),
+								output);
+							new_row=0;
+						}
+
+						buffer[0]=(xx|0x80);
+						fwrite(buffer,1,sizeof(char),
+							output);
+
+					}
+
+					/* case 5 -- both */
+					if ( (ball[xx][(yy*2)]==0) &&
+						(ball[xx][(yy*2)+1]==1) ) {
+
+						if (new_row) {
+							buffer[0]=yy;
+							fwrite(buffer,1,
+								sizeof(char),
+								output);
+							new_row=0;
+						}
+
+						buffer[0]=(xx|0xC0);
+						fwrite(buffer,1,sizeof(char),
+							output);
+
+					}
+
+				}
+				/* case 3 */
+				else if ( (shadow[xx][yy*2]==1) &&
+					(shadow[xx][(yy*2)+1]==1) ) {
+
+					/* case 2 -- top */
+					if ( (ball[xx][(yy*2)]==1) &&
+						(ball[xx][(yy*2)+1]==1) ) {
+					}
+					else {
+						if (new_row) {
+							buffer[0]=yy;
+							fwrite(buffer,1,
+								sizeof(char),
+								output);
+							new_row=0;
+						}
+
+						buffer[0]=(xx|0xc0);
+						fwrite(buffer,1,sizeof(char),
+							output);
+
+					}
+
+				}
+
+
+			}
+		}
+
+		/* Balls */
+		buffer[0]=0xfd;
+		fwrite(buffer,1,sizeof(char),output);
+		for(yy=0;yy<24;yy++) {
+			new_row=1;
+			for(xx=0;xx<40;xx++) {
+				/* cases: */
+				/*   shadow        ball        action */
+				/*  top bottom	top bottom            */
+				/*   X    X      0    0          none */
+				/*   X    X      0    1          bot  1 */
+				/*   X    X      1    0          top  2 */
+				/*   X    X      1    1          both 3 */
+
+				/* case 1 -- bottom */
+				if ( (ball[xx][(yy*2)]==0) &&
+					(ball[xx][(yy*2)+1]==1)) {
+
+					if (new_row) {
+						buffer[0]=yy;
+						fwrite(buffer,1,sizeof(char),
+								output);
+						new_row=0;
+					}
+
+					buffer[0]=(xx|0x40);
+					fwrite(buffer,1,sizeof(char),
+							output);
+
+				}
+				/* case 2 -- top */
+				else if ( (ball[xx][(yy*2)]==1) &&
+						(ball[xx][(yy*2)+1]==0) ) {
+
+					if (new_row) {
+						buffer[0]=yy;
+						fwrite(buffer,1,sizeof(char),
+								output);
+						new_row=0;
+					}
+
+					buffer[0]=(xx|0x80);
+					fwrite(buffer,1,sizeof(char),
+							output);
+
+				}
+				/* case 3 */
+				else if ( (ball[xx][(yy*2)]==1) &&
+						(ball[xx][(yy*2)+1]==1) ) {
+					if (new_row) {
+						buffer[0]=yy;
+						fwrite(buffer,1,sizeof(char),
+								output);
+						new_row=0;
+					}
+
+					buffer[0]=(xx|0xc0);
+					fwrite(buffer,1,sizeof(char),
+							output);
+
+				}
+
 			}
 		}
 
