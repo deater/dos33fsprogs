@@ -12,8 +12,6 @@
 
 #define	MAXDOTS	256
 
-//#define SKIP	2
-
 static short gravitybottom;
 static short gravity=0;
 static short gravityd=16;
@@ -26,15 +24,20 @@ static short dot_yadd[MAXDOTS];
 static short rotsin=0;
 static short rotcos=0;
 
+
+
 static void drawdots(void) {
 	int temp32;
 	int transx,transz;
 	unsigned short ball_x,ball_y,shadow_y;
 	unsigned short d,sc,newy;
-	unsigned short ax,bx,cx,dx;
+	unsigned short ax;
 	short signed_ax;
 
 	for(d=0;d<MAXDOTS;d++) {
+
+
+		/* https://en.wikipedia.org/wiki/3D_projection */
 
 		transx=dot_x[d]*rotsin;
 		transz=dot_z[d]*rotcos;
@@ -46,35 +49,13 @@ static void drawdots(void) {
 		transz=dot_z[d]*rotsin;
 		temp32=transx+transz;
 		temp32>>=8;
-#if 1
-		ax=temp32&0xffff;
-		dx=(temp32>>16)&0xffff;
 
-		bx=ax;
-		cx=dx;				// mov	cx,dx
-
-		ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
-
-		signed_ax=dx;
-		dx=signed_ax>>3;
-
-		temp32=temp32>>3;
-		ax=temp32&0xffff;
-		dx=(temp32>>16)&0xffff;
-
-		temp32=ax+bx;			// add	ax,bx
-		ax=ax+bx;
-		dx=dx+cx;			// adc	dx,cx
-		if (temp32&(1<<16)) dx=dx+1;
-
-		temp32=(dx<<16)|(ax&0xffff);
-#else
 		temp32=temp32+(temp32>>3);
-#endif
+
 		ball_x=(temp32/sc)/8;
 
+		/* center */
 		ball_x+=20;
-
 
 		/* if off end of screen, no need for shadow */
 
