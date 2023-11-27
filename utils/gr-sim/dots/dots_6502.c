@@ -18,12 +18,10 @@ static short gravitybottom;
 static short gravity=0;
 static short gravityd=16;
 
-static struct {
-	short	x;	// 0
-	short	y;	// 2
-	short	z;	// 4
-	short	yadd;	// 14
-} dot[MAXDOTS];
+static short dot_x[MAXDOTS];
+static short dot_y[MAXDOTS];
+static short dot_z[MAXDOTS];
+static short dot_yadd[MAXDOTS];
 
 static short rotsin=0;
 static short rotcos=0;
@@ -38,21 +36,21 @@ static void drawdots(void) {
 
 	for(d=0;d<MAXDOTS;d++) {
 
-		transx=dot[d].x*rotsin;
-		transz=dot[d].z*rotcos;
+		transx=dot_x[d]*rotsin;
+		transz=dot_z[d]*rotcos;
 		temp32=transz-transx;
 		sc=(temp32>>16)+9000;
 		if (sc==0) sc=1;
 
-		transx=dot[d].x*rotcos;
-		transz=dot[d].z*rotsin;
+		transx=dot_x[d]*rotcos;
+		transz=dot_z[d]*rotsin;
 		temp32=transx+transz;
 		temp32>>=8;
-
+#if 1
 		ax=temp32&0xffff;
 		dx=(temp32>>16)&0xffff;
 
-		bx=ax;				// mov	bx,ax
+		bx=ax;
 		cx=dx;				// mov	cx,dx
 
 		ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
@@ -60,15 +58,23 @@ static void drawdots(void) {
 		signed_ax=dx;
 		dx=signed_ax>>3;
 
+		temp32=temp32>>3;
+		ax=temp32&0xffff;
+		dx=(temp32>>16)&0xffff;
+
 		temp32=ax+bx;			// add	ax,bx
 		ax=ax+bx;
 		dx=dx+cx;			// adc	dx,cx
 		if (temp32&(1<<16)) dx=dx+1;
 
 		temp32=(dx<<16)|(ax&0xffff);
+#else
+		temp32=temp32+(temp32>>3);
+#endif
 		ball_x=(temp32/sc)/8;
 
 		ball_x+=20;
+
 
 		/* if off end of screen, no need for shadow */
 
@@ -94,24 +100,24 @@ static void drawdots(void) {
 		/* ball */
 		/********/
 
-		dot[d].yadd+=gravity;
-		newy=dot[d].y+dot[d].yadd;
+		dot_yadd[d]+=gravity;
+		newy=dot_y[d]+dot_yadd[d];
 
 		temp32=newy;
 		if (temp32&0x8000) temp32|=0xffff0000;
 		if (temp32>=gravitybottom) {
-			ax=-dot[d].yadd;
-			temp32=(-dot[d].yadd)*gravityd;
+			//ax=-dot_yadd[d];
+			temp32=(-dot_yadd[d])*gravityd;
 			ax=temp32&0xffff;
 
 			signed_ax=ax;
 			ax=signed_ax>>4;
 
-			dot[d].yadd=ax;
-			newy+=dot[d].yadd;
+			dot_yadd[d]=ax;
+			newy+=dot_yadd[d];
 		}
 
-		dot[d].y=newy;
+		dot_y[d]=newy;
 
 		/* sign extend */
 		temp32=newy;
@@ -181,18 +187,18 @@ int main(int argc,char **argv) {
 	}
 
 	for(a=0;a<MAXDOTS;a++) {
-		dot[a].x=0;
-		dot[a].y=2560-dropper;
-		dot[a].z=0;
-		dot[a].yadd=0;
+		dot_x[a]=0;
+		dot_y[a]=2560-dropper;
+		dot_z[a]=0;
+		dot_yadd[a]=0;
 	}
 
 	for(a=0;a<(MAXDOTS-12);a++) { // scramble
 		b=rand()%MAXDOTS;
 		c=rand()%MAXDOTS;
-		d=dot[b].x; dot[b].x=dot[c].x; dot[c].x=d;
-		d=dot[b].y; dot[b].y=dot[c].y; dot[c].y=d;
-		d=dot[b].z; dot[b].z=dot[c].z; dot[c].z=d;
+		d=dot_x[b]; dot_x[b]=dot_x[c]; dot_x[c]=d;
+		d=dot_y[b]; dot_y[b]=dot_y[c]; dot_y[c]=d;
+		d=dot_z[b]; dot_z[b]=dot_z[c]; dot_z[c]=d;
 	}
 
 
@@ -224,10 +230,10 @@ int main(int argc,char **argv) {
 //			dot[i].x=isin(f*11)*40;
 //			dot[i].y=icos(f*13)*10-dropper;
 //			dot[i].z=isin(f*17)*40;
-			dot[i].x=isin(f*8)*32;
-			dot[i].y=icos(f*16)*8-dropper;
-			dot[i].z=isin(f*16)*32;
-			dot[i].yadd=0;
+			dot_x[i]=isin(f*8)*32;
+			dot_y[i]=icos(f*16)*8-dropper;
+			dot_z[i]=isin(f*16)*32;
+			dot_yadd[i]=0;
 		}
 		/* bouncing ring */
 		else if(frame<643) {
@@ -235,10 +241,10 @@ int main(int argc,char **argv) {
 //			dot[i].y=dropper;
 //			dot[i].z=isin(f*15)*55;
 //			dot[i].yadd=-260;
-			dot[i].x=icos(f*16)*48;
-			dot[i].y=dropper;
-			dot[i].z=isin(f*16)*48;
-			dot[i].yadd=-260;
+			dot_x[i]=icos(f*16)*48;
+			dot_y[i]=dropper;
+			dot_z[i]=isin(f*16)*48;
+			dot_yadd[i]=-260;
 		}
 		/* fountain */
 		else if(frame<1214) {
@@ -248,17 +254,17 @@ int main(int argc,char **argv) {
 //			dot[i].z=isin(f*66)*a;
 //			dot[i].yadd=-300;
 			a=sin1024[frame&1023]/8;
-			dot[i].x=icos(f*64)*a;
-			dot[i].y=8000;
-			dot[i].z=isin(f*64)*a;
-			dot[i].yadd=-300;
+			dot_x[i]=icos(f*64)*a;
+			dot_y[i]=8000;
+			dot_z[i]=isin(f*64)*a;
+			dot_yadd[i]=-300;
 		}
 		/* swirling */
 		else if(frame<1686) {
-			dot[i].x=rand()-16384;
-			dot[i].y=8000-rand()/2;
-			dot[i].z=rand()-16384;
-			dot[i].yadd=0;
+			dot_x[i]=rand()-16384;
+			dot_y[i]=8000-rand()/2;
+			dot_z[i]=rand()-16384;
+			dot_yadd[i]=0;
 			if(frame>1357 && !(frame&31) && grav>0) grav--;
 		}
 
