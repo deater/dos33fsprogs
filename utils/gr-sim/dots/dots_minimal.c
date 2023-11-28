@@ -35,58 +35,36 @@ static short rotcos=0;
 
 static void drawdots(void) {
 	int temp32;
-	int transx,transz;
 	int yy;
 	unsigned short ball_x,ball_y,shadow_y;
-	unsigned short d,sc,newy;
-	unsigned short ax,bx,cx,dx;
+	unsigned short d,distance,newy;
+	unsigned short ax;
 	short signed_ax;
 
 	for(d=0;d<512;d+=SKIP) {
 
-		transx=dot[d].x*rotsin;
-		transz=dot[d].z*rotcos;
-		temp32=transz-transx;
-		sc=(temp32>>16)+9000;
-		if (sc==0) sc=1;
+		temp32=(dot[d].z*rotcos)-(dot[d].x*rotsin);
+		distance=(temp32>>16)+9000;
+		if (distance==0) distance=1;
 
-		transx=dot[d].x*rotcos;
-		transz=dot[d].z*rotsin;
-		temp32=transx+transz;
+		temp32=((dot[d].x*rotcos)+(dot[d].z*rotsin));
 		temp32>>=8;
 
-		ax=temp32&0xffff;
-		dx=(temp32>>16)&0xffff;
+                temp32=temp32+(temp32>>3);
 
-		bx=ax;				// mov	bx,ax
-		cx=dx;				// mov	cx,dx
+                ball_x=(temp32/distance);
 
-		ax=(ax>>3)|(dx<<13);		// shrd	ax,dx,3
-
-//		dx=sar(dx,3);			// sar	dx,3
-		signed_ax=dx;
-		dx=signed_ax>>3;
-
-		temp32=ax+bx;			// add	ax,bx
-		ax=ax+bx;
-		dx=dx+cx;			// adc	dx,cx
-		if (temp32&(1<<16)) dx=dx+1;
-
-		temp32=(dx<<16)|(ax&0xffff);
-		if (sc) ball_x=(temp32/sc)&0xffff;
-		else ball_x=0;
-
+		/* center */
 		ball_x+=160;
 
 		/* if off end of screen, no need for shadow */
-
 		if (ball_x>319) continue;
 
 		/**********/
 		/* shadow */
 		/**********/
 
-		shadow_y=0x80000/sc;
+		shadow_y=0x80000/distance;
 
 		/* center it */
 		shadow_y+=100;
@@ -109,11 +87,9 @@ static void drawdots(void) {
 		temp32=newy;
 		if (temp32&0x8000) temp32|=0xffff0000;
 		if (temp32>=gravitybottom) {
-			ax=-dot[d].yadd;
 			temp32=(-dot[d].yadd)*gravityd;
 			ax=temp32&0xffff;
 
-//			ax=sar(ax,4);
 			signed_ax=ax;
 			ax=signed_ax>>4;
 
@@ -130,12 +106,8 @@ static void drawdots(void) {
 		}
 
 		temp32<<=6;
-//		dx=(dx<<6)|(newy>>10);		// shld	dx,ax,6
-//		newy=newy<<6;			// shl	ax,6
-//		ax=newy;
-//		idiv_16(sc);			// idiv	sc
 
-		if (sc) newy=temp32/sc;
+		newy=temp32/distance;
 
 		/* center */
 		ball_y=newy+100;		// add	ax,100

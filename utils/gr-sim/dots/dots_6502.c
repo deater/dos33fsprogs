@@ -28,9 +28,8 @@ static short rotcos=0;
 
 static void drawdots(void) {
 	int temp32;
-//	int transx,transz;
 	unsigned short ball_x,ball_y,shadow_y;
-	unsigned short d,sc,newy;
+	unsigned short d,distance,newy;
 	unsigned short ax;
 	short signed_ax;
 
@@ -43,9 +42,10 @@ static void drawdots(void) {
 		/* by= (ez/dz)*dy + ey */
 
 		temp32=((dot_z[d]*rotcos)-(dot_x[d]*rotsin));
-		sc=(temp32>>16)+9000;
-		if (sc==0) sc=1;
-//		printf("%d\n",sc-9000);
+		distance=(temp32>>16)+9000;
+		if (distance==0) distance=1;
+
+//		printf("%d\n",distance-9000);
 
 
 		temp32=((dot_x[d]*rotcos)+(dot_z[d]*rotsin));
@@ -53,9 +53,9 @@ static void drawdots(void) {
 
 		temp32=temp32+(temp32>>3);
 
-		ball_x=(temp32/sc)/8;
+		ball_x=(temp32/distance)/8;
 
-//		printf("%x/%x/8=%x\n",temp32,sc,ball_x);
+//		printf("%x/%x/8=%x\n",temp32,distance,ball_x);
 
 		/* center */
 		ball_x+=20;
@@ -67,7 +67,7 @@ static void drawdots(void) {
 		/* shadow */
 		/**********/
 
-		shadow_y=0x80000/sc/4;
+		shadow_y=0x80000/distance/4;
 
 		/* center it */
 		shadow_y+=24;
@@ -110,7 +110,7 @@ static void drawdots(void) {
 
 		temp32<<=6;
 
-		newy=temp32/sc/4;
+		newy=temp32/distance/4;
 
 		/* center */
 		ball_y=newy+24;
