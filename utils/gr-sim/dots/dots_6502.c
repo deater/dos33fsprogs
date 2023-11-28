@@ -28,7 +28,7 @@ static short rotcos=0;
 
 static void drawdots(void) {
 	int temp32;
-	int transx,transz;
+//	int transx,transz;
 	unsigned short ball_x,ball_y,shadow_y;
 	unsigned short d,sc,newy;
 	unsigned short ax;
@@ -39,26 +39,28 @@ static void drawdots(void) {
 
 		/* https://en.wikipedia.org/wiki/3D_projection */
 
-		transx=dot_x[d]*rotsin;
-		transz=dot_z[d]*rotcos;
-		temp32=transz-transx;
+		/* bx= (ez/dz)*dx + ex */
+		/* by= (ez/dz)*dy + ey */
+
+		temp32=((dot_z[d]*rotcos)-(dot_x[d]*rotsin));
 		sc=(temp32>>16)+9000;
 		if (sc==0) sc=1;
+//		printf("%d\n",sc-9000);
 
-		transx=dot_x[d]*rotcos;
-		transz=dot_z[d]*rotsin;
-		temp32=transx+transz;
+
+		temp32=((dot_x[d]*rotcos)+(dot_z[d]*rotsin));
 		temp32>>=8;
 
 		temp32=temp32+(temp32>>3);
 
 		ball_x=(temp32/sc)/8;
 
+//		printf("%x/%x/8=%x\n",temp32,sc,ball_x);
+
 		/* center */
 		ball_x+=20;
 
 		/* if off end of screen, no need for shadow */
-
 		if (ball_x>39) continue;
 
 		/**********/

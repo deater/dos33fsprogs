@@ -1,0 +1,94 @@
+Look reasonably well want at least 128 dots at 25Hz or so.
+Hard to do.  Each dot has 4 muls and 2 divides which is expensive on 6502.
+Lookup tables?  At some point they are so large you might as well just
+do a movie.
+
+Note even C64 version isn't accurate to the original.
+
+
+
+Initial implementation:
+	512 dots, 2450 frames (35s when run at 70Hz which is what VGA does)
+
+	256 dots, 2450 frames is ~1MB of data
+
+With this setup:
+
+$FF = all done
+$FE = new frame shadow
+$FD = new frame balls
+
+For X:
+$0..$27 (0..39)  00XX XXXX
+
+both
+	1100 0000 - 1110 0111
+	$C0-$E7
+top	1000 0000 - 1010 0111
+	$80-$A7
+bottom
+	0100 0000 - 0110 0111
+	$40-$67
+new row
+	0000 0000 - 0001 0111
+	$00-$17
+
+
+For Y:
+$0..$17 (0..23)  000X XXXX
+         01XX XXXX = new row
+
+specify top/bottom/both
+	
+
+	
+	256 dots/2450 frames = 709,134 bytes
+
+
+	skip factor 1 (none) = 41s
+	skip factor 2 OK     = 37s
+
+
+2450 frames @70Hz = 350 frames at 10Hz
+
+	
+70=7*5*2
+
+without dot removal
+		70fps	35fps	14fps	10fps	7fps	5fps
+256 dots:	709134			101304	70913	50652
+128 dots:	462169			66024	46216	33012
+64  dots:	290877			41533	29087	20776
+
+with dot removal
+		70fps	35fps	14fps	10fps	7fps	5fps
+256 dots:	677907	
+128 dots:	448966				44767
+64  dots:	285486			40694
+
+new compact format
+		70fps	35fps	14fps	10fps	7fps	5fps
+256 dots:				76516	53447	38227
+128 dots:				52456	36632
+64  dots:		120183		34299
+
+
+
+
+
+40k
+
+zx02 version:
+
+		70fps	10fps	7fps	5fps
+256 dots:		1.4MB
+128 dots:		1.4MB
+
+
+
+
+actual version:
+	requires 4 multiplies and 2 divides for each point
+
+	have a routine 250 cycles for multiply
+	250x6x256 = 384000 = 2 fps
