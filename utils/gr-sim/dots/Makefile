@@ -4,7 +4,16 @@ CFLAGS = -O2 -Wall -g
 SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 
-all:	dots dots_dump dots_play dots_play2 dots_minimal dots_6502
+all:	generate_sines \
+	dots dots_dump dots_play dots_play2 dots_minimal dots_6502
+
+###
+
+generate_sines:	generate_sines.o
+	$(CC) -o generate_sines generate_sines.o $(LFLAGS) -lm
+
+generate_sines.o:	generate_sines.c
+	$(CC) $(CFLAGS) -c generate_sines.c
 
 ###
 

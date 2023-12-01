@@ -8,7 +8,7 @@
 #include "../gr-sim.h"
 #include "../tfv_zp.h"
 
-#include "sin1024.h"
+#include "sin256.h"
 
 #define	MAXDOTS	256
 
@@ -41,11 +41,16 @@ static void drawdots(void) {
 		/* bx= (ez/dz)*dx + ex */
 		/* by= (ez/dz)*dy + ey */
 
+		//printf("%x %x\n",dot_z[d],dot_x[d]);
+
 		temp32=((dot_z[d]*rotcos)-(dot_x[d]*rotsin));
 		distance=(temp32>>16)+9000;
+
+//		distance=distance<<2;
 		if (distance==0) distance=1;
 
-//		printf("%d\n",distance-9000);
+//		printf("%x\n",distance);
+
 
 
 		temp32=((dot_x[d]*rotcos)+(dot_z[d]*rotsin));
@@ -132,22 +137,23 @@ static void drawdots(void) {
 
 
 static short isin(short deg) {
-	return(sin1024[deg&1023]);
+	return(sin256[deg&255]);
 }
 
 static short icos(short deg) {
-	return(sin1024[(deg+256)&1023]);
+	return(sin256[(deg+64)&255]);
 }
 
-static short dottaul[1024];
+//static short dottaul[1024];
 
 int main(int argc,char **argv) {
 
 	short dropper;
 	short frame=0;
-	short rota=-1*64;
+	short rota=-1*64*4;
 	short rot=0,rots=0;
-	short a,b,c,d,i,j=0;
+	short a,i;
+//	short b,c,d;
 	short grav,gravd;
 	short f=0;
 	int ch;
@@ -158,9 +164,10 @@ int main(int argc,char **argv) {
 	gravitybottom=8105;
 
 	for(a=0;a<MAXDOTS;a++) {
-		dottaul[a]=a;
+//		dottaul[a]=a;
+		dot_y[a]=2560-dropper;
 	}
-
+#if 0
 	for(a=0;a<MAXDOTS-12;a++) {
 		b=rand()%MAXDOTS;
 		c=rand()%MAXDOTS;
@@ -183,7 +190,7 @@ int main(int argc,char **argv) {
 		d=dot_y[b]; dot_y[b]=dot_y[c]; dot_y[c]=d;
 		d=dot_z[b]; dot_z[b]=dot_z[c]; dot_z[c]=d;
 	}
-
+#endif
 
 	grsim_init();
 
@@ -194,7 +201,7 @@ int main(int argc,char **argv) {
 
 	ram[DRAW_PAGE]=0;
 
-	while(frame<1686) {
+	while(1) {//frame<1686) {
 
 		/* re-draw background */
 		color_equals(0);
@@ -205,17 +212,17 @@ int main(int argc,char **argv) {
 		frame++;
 		if(frame==355) f=0;
 
-		i=dottaul[j];
-		j++; j%=MAXDOTS;
+		i=frame%MAXDOTS; //dotgtaul[frame%MAXDOTS];
+//		j++; j%=MAXDOTS;
 
 		/* initial spin */
 		if(frame<355) {
 //			dot[i].x=isin(f*11)*40;
 //			dot[i].y=icos(f*13)*10-dropper;
 //			dot[i].z=isin(f*17)*40;
-			dot_x[i]=isin(f*8)*32;
-			dot_y[i]=icos(f*16)*8-dropper;
-			dot_z[i]=isin(f*16)*32;
+			dot_x[i]=isin(f*2)*32;		// 8
+			dot_y[i]=icos(f*4)*8-dropper;	// 16
+			dot_z[i]=isin(f*4)*32;		// 16
 			dot_yadd[i]=0;
 		}
 		/* bouncing ring */
@@ -224,9 +231,9 @@ int main(int argc,char **argv) {
 //			dot[i].y=dropper;
 //			dot[i].z=isin(f*15)*55;
 //			dot[i].yadd=-260;
-			dot_x[i]=icos(f*16)*48;
+			dot_x[i]=icos(f*4)*48;		// 16
 			dot_y[i]=dropper;
-			dot_z[i]=isin(f*16)*48;
+			dot_z[i]=isin(f*4)*48;		// 16
 			dot_yadd[i]=-260;
 		}
 		/* fountain */
@@ -236,10 +243,10 @@ int main(int argc,char **argv) {
 //			dot[i].y=8000;
 //			dot[i].z=isin(f*66)*a;
 //			dot[i].yadd=-300;
-			a=sin1024[frame&1023]/8;
-			dot_x[i]=icos(f*64)*a;
+			a=sin256[(frame>>2)&255]/8;
+			dot_x[i]=icos(f*16)*a;		// 64
 			dot_y[i]=8000;
-			dot_z[i]=isin(f*64)*a;
+			dot_z[i]=isin(f*16)*a;		// 64
 			dot_yadd[i]=-300;
 		}
 		/* swirling */
@@ -252,15 +259,16 @@ int main(int argc,char **argv) {
 		}
 
 		if(dropper>4000) dropper-=100;
-//rotsin=0; rotcos=64;
+
+		printf("rot=%d\n",rot);
+
 		rotcos=icos(rot)*64; rotsin=isin(rot)*64;
-		rots+=2;
+		rots+=1;
 
 		if(frame>1357) {
-			rot+=rota/64;
+			rot+=rota/64/4;
 			rota--;
-		}
-		else rot=isin(rots);
+		} else rot=isin(rots>>2);
 
 		f++;
 		gravity=grav;
@@ -270,7 +278,7 @@ int main(int argc,char **argv) {
 
 		grsim_update();
 
-		/* approximate by 50Hz sleep */
+		/* approximate 50Hz sleep */
 		usleep(20000);
 
 		ch=grsim_input();
