@@ -61,7 +61,7 @@ dots_minimal.o:	dots_minimal.c
 dots_6502:	dots_6502.o ../gr-sim.a
 	$(CC) -o dots_6502 dots_6502.o ../gr-sim.a $(LFLAGS) $(SDL_LIBS)
 
-dots_6502.o:	dots_6502.c
+dots_6502.o:	dots_6502.c sin256.h
 	$(CC) $(CFLAGS) $(SDL_INCLUDE) -c dots_6502.c
 
 

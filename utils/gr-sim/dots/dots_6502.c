@@ -220,9 +220,9 @@ int main(int argc,char **argv) {
 //			dot[i].x=isin(f*11)*40;
 //			dot[i].y=icos(f*13)*10-dropper;
 //			dot[i].z=isin(f*17)*40;
-			dot_x[i]=isin(f*2)*32;		// 8
-			dot_y[i]=icos(f*4)*8-dropper;	// 16
-			dot_z[i]=isin(f*4)*32;		// 16
+			dot_x[i]=isin(f*2)*32*2;		// 8
+			dot_y[i]=icos(f*4)*8*2-dropper;		// 16
+			dot_z[i]=isin(f*4)*32*2;		// 16
 			dot_yadd[i]=0;
 		}
 		/* bouncing ring */
@@ -231,9 +231,9 @@ int main(int argc,char **argv) {
 //			dot[i].y=dropper;
 //			dot[i].z=isin(f*15)*55;
 //			dot[i].yadd=-260;
-			dot_x[i]=icos(f*4)*48;		// 16
+			dot_x[i]=icos(f*4)*48*2;	// 16
 			dot_y[i]=dropper;
-			dot_z[i]=isin(f*4)*48;		// 16
+			dot_z[i]=isin(f*4)*48*2;	// 16
 			dot_yadd[i]=-260;
 		}
 		/* fountain */
@@ -243,10 +243,10 @@ int main(int argc,char **argv) {
 //			dot[i].y=8000;
 //			dot[i].z=isin(f*66)*a;
 //			dot[i].yadd=-300;
-			a=sin256[(frame>>2)&255]/8;
-			dot_x[i]=icos(f*16)*a;		// 64
+			a=sin256[(frame>>2)&255]*2/8;
+			dot_x[i]=icos(f*16)*2*a;		// 64
 			dot_y[i]=8000;
-			dot_z[i]=isin(f*16)*a;		// 64
+			dot_z[i]=isin(f*16)*2*a;		// 64
 			dot_yadd[i]=-300;
 		}
 		/* swirling */
@@ -262,13 +262,13 @@ int main(int argc,char **argv) {
 
 		printf("rot=%d\n",rot);
 
-		rotcos=icos(rot)*64; rotsin=isin(rot)*64;
+		rotcos=icos(rot)*128; rotsin=isin(rot)*128;
 		rots+=1;
 
 		if(frame>1357) {
 			rot+=rota/64/4;
 			rota--;
-		} else rot=isin(rots>>2);
+		} else rot=isin(rots>>2)*2;
 
 		f++;
 		gravity=grav;
