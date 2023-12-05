@@ -9,16 +9,14 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	xmas_2023.dsk
 
 xmas_2023.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC \
-	XMAS
+	MUSIC XMAS
 	cp $(EMPTY_DISK) xmas_2023.dsk
-	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT		0 1
-	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT		1 1
-	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT		2 1
-	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD		0 0
-#	$(DOS33_RAW) second_d1.dsk 2 0 MUSIC_INTRO	0 0
-#	$(DOS33_RAW) second_d1.dsk 4 0 MUSIC		0 0
-	$(DOS33_RAW) second_d1.dsk 12 0 XMAS	0 0
+	$(DOS33_RAW) xmas_2023.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) xmas_2023.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) xmas_2023.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) xmas_2023.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) xmas_2023.dsk 4 0 MUSIC		0 0
+	$(DOS33_RAW) xmas_2023.dsk 12 0 XMAS		0 0
 
 
 ####

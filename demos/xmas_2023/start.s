@@ -6,7 +6,6 @@
 
 
 xmas_start:
-	jmp	xmas_start
 
 	;=====================
 	; initializations
@@ -21,6 +20,7 @@ xmas_start:
 	; restart?
 	;===================
 restart:
+
 	lda	#0
 	sta	DRAW_PAGE
 
@@ -81,9 +81,10 @@ skip_all_checks:
 
 	;=======================
 	;=======================
-	; Load intro
+	; Load xmas
 	;=======================
 	;=======================
+load_xmas:
 
 	; load from disk
 
