@@ -129,6 +129,30 @@ static int get_line_num(int *linenum, int *custom_offset) {
 	return num;
 }
 
+/* Applesoft ignores spaces */
+/* so  HCOLOR=0			*/
+/*     HCOLOR          = 0 	*/
+/*     H C O L O R = 0 		*/
+/* are all equivalent */
+
+static int strncmp_ignore_spaces(char *line, char *token,
+	int size, char **token_end) {
+
+	unsigned char u1, u2;
+
+	while (size-- > 0) {
+		do {
+			u1 = (unsigned char) *line++;
+			*token_end=line;
+		} while (u1==' ');
+		u2 = (unsigned char) *token++;
+		if (u1 != u2) return u1 - u2;
+		if (u1 == '\0') return 0;
+	}
+	return 0;
+}
+
+
 static int in_quotes=0,in_rem=0;
 
 /* note: try to find longest possible token */
@@ -136,6 +160,7 @@ static int in_quotes=0,in_rem=0;
 static int find_token(void) {
 
 	int ch,i;
+	char *token_end=NULL;
 
 	ch=*line_ptr;
 
@@ -187,8 +212,9 @@ static int find_token(void) {
 
 //		fprintf(stderr,"%s",line_ptr);
 		for(i=0;i<NUM_TOKENS;i++) {
-			if (!strncmp(line_ptr,applesoft_tokens[i],
-					strlen(applesoft_tokens[i]))) {
+			if (!strncmp_ignore_spaces(line_ptr,applesoft_tokens[i],
+					strlen(applesoft_tokens[i]),
+					&token_end)) {
 
 				/* HACK: special case to avoid AT/ATN problem */
 				/* Update, apparently actual applesoft uses   */
@@ -200,7 +226,8 @@ static int find_token(void) {
 //						"Found token %x (%s) %d\n",0x80+i,
 //						applesoft_tokens[i],i);
 
-				line_ptr+=strlen(applesoft_tokens[i]);
+				//line_ptr+=strlen(applesoft_tokens[i]);
+				line_ptr=token_end;
 
 				/* REM is 0x32 (0xB2) */
 				if (i==0x32) in_rem=1;
