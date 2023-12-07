@@ -9,10 +9,11 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	twister.dsk
 
-twister.dsk:	$(DOS33) HELLO TWISTER.BAS
+twister.dsk:	$(DOS33) HELLO TWISTER.BAS LORES.BAS
 	cp $(EMPTY_DISK)/empty.dsk twister.dsk
 	$(DOS33) -y twister.dsk SAVE A HELLO
 	$(DOS33) -y twister.dsk SAVE A TWISTER.BAS
+	$(DOS33) -y twister.dsk SAVE A LORES.BAS
 
 ###
 
@@ -24,9 +25,15 @@ HELLO:	hello.bas
 TWISTER.BAS:	twister.bas
 	$(TOKENIZE) < twister.bas > TWISTER.BAS
 
+###
+
+LORES.BAS:	lores.bas
+	$(TOKENIZE) < lores.bas > LORES.BAS
+
+
 
 ###
 
 clean:	
-	rm -f *~ *.o HELLO TWISTER.BAS *.lst
+	rm -f *~ *.o HELLO TWISTER.BAS LORES.BAS *.lst
 
