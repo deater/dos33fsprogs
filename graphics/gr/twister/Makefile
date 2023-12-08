@@ -42,5 +42,5 @@ TINY.BAS:	tiny.bas
 ###
 
 clean:	
-	rm -f *~ *.o HELLO TWISTER.BAS LORES.BAS *.lst
+	rm -f *~ *.o HELLO TWISTER.BAS LORES.BAS TINY.BAS *.lst
 
