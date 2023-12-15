@@ -255,7 +255,7 @@ draw_box_xloop_smc:
 	sta	$400,X
 	dex
 	cpx	X1
-	bcs	draw_box_xloop	; bge
+	bpl	draw_box_xloop	; bge (signed)
 
 	iny
 

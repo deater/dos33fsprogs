@@ -1,5 +1,15 @@
 fireplace:
 
+	bit     SET_GR
+        bit     LORES
+        bit     FULLGR
+        bit     PAGE1
+
+        lda     #0
+        sta     DRAW_PAGE
+
+        bit     KEYRESET
+
 	lda	#<fireplace_data
 	sta	INL
 	lda	#>fireplace_data
@@ -7,54 +17,56 @@ fireplace:
 
 	jsr	draw_scene
 
+	jsr	wait_until_keypress
+
 	rts
 
 fireplace_data:
 
 .byte SET_COLOR | YELLOW
-.byte BOX, 0,39,0,29			; wall
+.byte BOX, 0,0,39,29			; wall
 .byte SET_COLOR | BROWN
-.byte BOX,0,39,30,39	; monitor back
-.byte BOX,1,9,0,20	; window
+.byte BOX,0,30,39,39	; monitor back
+.byte BOX,1,0,9,20	; window
 .byte SET_COLOR | BLACK
-.byte BOX,2,8,0,9	; upper
+.byte BOX,2,0,8,9	; upper
 .byte SET_COLOR | WHITE
-.byte BOX,2,8,12,18	; bottom snow
+.byte BOX,2,12,8,18	; bottom snow
 .byte SET_COLOR | RED
-.byte	27,39,12,30	; fireplace
+.byte	27,12,39,30	; fireplace
 .byte SET_COLOR | BLACK
-.byte	30,39,17,30	; hearth
+.byte	30,17,39,30	; hearth
 .byte SET_COLOR | BROWN
-.byte	32,38,27,29	; wood
+.byte	32,27,38,29	; wood
 .byte SET_COLOR | WHITE
-.byte	26,39,10,11	; mantle
+.byte	26,10,39,11	; mantle
 .byte SET_COLOR | GREEN
-.byte	15,17,0,39	; tree center
-.byte	13,19,5,39	; tree middle
-.byte	12,20,15,39	; tree wider
-.byte	10,22,23,39	; tree wide
+.byte	15,0,17,39	; tree center
+.byte	13,5,19,39	; tree middle
+.byte	12,15,20,39	; tree wider
+.byte	10,23,22,39	; tree wide
 .byte SET_COLOR | LIGHT_BLUE
-.byte	13,16,11,12	; garland top
-.byte	17,19,13,14	; garland top
-.byte	12,15,23,24	; garland middle
-.byte	16,19,25,26	; garland middle
-.byte	20,22,27,28	; garland middle
-.byte	10,14,36,37	; garland bottom
-.byte	15,18,38,39	; garland bottom
-.byte SET_COLOR | WHITE
-.byte	14,15,7,9	; ball1
-.byte	18,19,17,19	; ball2
-.byte	11,12,31,33	; ball3
-.byte	20,21,34,36	; ball4
+.byte	13,11,16,12	; garland top
+.byte	17,13,19,14	; garland top
+.byte	12,23,15,24	; garland middle
+.byte	16,25,19,26	; garland middle
+.byte	20,27,22,28	; garland middle
+.byte	10,36,14,37	; garland bottom
+.byte	15,38,18,39	; garland bottom
+.byte SET_COLOR | RED
+.byte	14,7,15,9	; ball1
+.byte	18,17,19,19	; ball2
+.byte	11,31,12,33	; ball3
+.byte	20,34,21,36	; ball4
 .byte SET_COLOR | YELLOW
-.byte	34,36,22,26	; fire
+.byte	34,22,36,26	; fire
 .byte SET_COLOR | ORANGE
-.byte	35,35,24,26	; fire
+.byte	35,24,35,26	; fire
 .byte SET_COLOR | BLACK
-.byte	34,35,22,22	; flicker
+.byte	34,22,35,22	; flicker
 .byte SET_COLOR | YELLOW
-.byte	BOX,34,35,22,22	; flicker
-
+.byte	BOX,34,22,35,22	; flicker
+.byte	END
 
 
 
@@ -117,6 +129,10 @@ draw_scene:
 	jsr	clear_all
 
 draw_scene_loop:
+
+	lda	#200
+	jsr	wait
+
 	ldy	#0
 	lda	(INL),Y				; load next byte
 
@@ -317,7 +333,7 @@ draw_box_xloop_smc:
 	sta	$400,X
 	dex
 	cpx	X1
-	bcs	draw_box_xloop	; bge
+	bpl	draw_box_xloop	; bge (signed)
 
 	iny
 
@@ -404,7 +420,7 @@ draw_hlin_s_xloop_smc:
 	dex
 	cpx	X1
 	bpl	draw_hlin_xloop	; bge
-
+done_hlin_xloop:
 	rts
 
 
