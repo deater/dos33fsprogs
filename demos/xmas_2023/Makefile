@@ -123,7 +123,7 @@ music.o:	music.s zp.inc \
 XMAS:	xmas.o
 	ld65 -o XMAS xmas.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
-xmas.o:	xmas.s plasma_tree.s \
+xmas.o:	xmas.s plasma_tree.s fireplace.s \
 	zp.inc hardware.inc qload.inc \
 	graphics/tree01.gr.zx02
 	ca65 -o xmas.o xmas.s -l xmas.lst

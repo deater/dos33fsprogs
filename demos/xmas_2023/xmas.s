@@ -24,6 +24,7 @@ xmas_main:
 	; draw opening scene
 	;======================================
 
+	jsr	fireplace
 
 	;======================================
 	; plasma tree
@@ -40,3 +41,4 @@ finished:
 .include "irq_wait.s"
 
 .include "plasma_tree.s"
+.include "fireplace.s"
