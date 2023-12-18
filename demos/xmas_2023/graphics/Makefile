@@ -8,7 +8,15 @@ all:	tree01.gr.zx02 tree03.gr.zx02 \
 	tree05.gr.zx02 tree07.gr.zx02 \
 	tree09.gr.zx02 tree11.gr.zx02 \
 	tree13.gr.zx02 tree15.gr.zx02 \
+	merry.hgr.zx02
 
+####
+
+merry.hgr.zx02:	merry.hgr
+	$(ZX02) merry.hgr merry.hgr.zx02
+
+merry.hgr:	merry.png
+	$(PNG_TO_HGR) merry.png > merry.hgr
 
 ####
 

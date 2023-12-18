@@ -78,6 +78,46 @@ dont_enable_mc:
 
 skip_all_checks:
 
+	;=======================
+	;=======================
+	; Print message
+	;=======================
+	;=======================
+
+	; print non-inverse
+
+	jsr	set_normal
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	print_no_mock
+
+print_mock:
+	lda	MB_ADDR_H
+	and	#$7
+	clc
+	adc	#$B0
+	sta	mockingboard_string+29
+
+	lda	#<mockingboard_string
+	sta	OUTL
+	lda	#>mockingboard_string
+	jmp	done_set_message
+
+print_no_mock:
+	lda	#<no_mockingboard_string
+	sta	OUTL
+	lda	#>no_mockingboard_string
+
+done_set_message:
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print
+
+
+
 
 	;=======================
 	;=======================
@@ -98,7 +138,7 @@ load_xmas:
 	;=======================
 	;=======================
 
-	cli			; start music
+;	cli			; start music
 
 	jsr	$8000
 
@@ -144,9 +184,13 @@ forever:
 
 ;.include "title.s"
 
-disk_change_string:
+
 ;             0123456789012345678901234567890123456789
-;.byte   5,22,"INSERT DISK 2 AND PRESS ANY KEY",0
+mockingboard_string:
+.byte   6,22,"MOCKINGBOARD DETECTED SLOT 4",0
+
+no_mockingboard_string:
+.byte   3,22,"NO MOCKINGBOARD, CONTINUING ANYWAY",0
 
 .include "pt3_lib_mockingboard_patch.s"
 

@@ -1,6 +1,21 @@
 fireplace:
 
 	bit     SET_GR
+        bit     HIRES
+        bit     FULLGR
+        bit     PAGE1
+
+	lda	#<merry_graphics
+	sta	zx_src_l+1
+	lda	#>merry_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
+
+
+	bit     SET_GR
         bit     LORES
         bit     FULLGR
         bit     PAGE1
@@ -720,3 +735,6 @@ gr_offsets_h:
 	.byte	>$428,>$4a8,>$528,>$5a8,>$628,>$6a8,>$728,>$7a8
 	.byte	>$450,>$4d0,>$550,>$5d0,>$650,>$6d0,>$750,>$7d0
 
+
+merry_graphics:
+.incbin "graphics/merry.hgr.zx02"
