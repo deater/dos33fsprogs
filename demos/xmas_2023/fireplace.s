@@ -1,7 +1,7 @@
 fireplace:
 
 	bit     SET_GR
-        bit     HIRES
+        bit     LORES
         bit     FULLGR
         bit     PAGE1
 
@@ -12,15 +12,15 @@ fireplace:
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 	bit     SET_GR
         bit     LORES
         bit     FULLGR
-        bit     PAGE1
+        bit     PAGE2
 
-        lda     #0
+        lda     #4
         sta     DRAW_PAGE
 
         bit     KEYRESET
@@ -32,7 +32,60 @@ fireplace:
 
 	jsr	draw_scene
 
+	bit	PAGE1
+
+	jsr	vapor_lock
+
+	bit	PAGE2
+
+	; vapor lock returns with us at beginning of hsync in line
+	; 114 (7410 cycles), so with 5070 lines to go to vblank
+	; then we want another 4550 cycles to end, so 9620
+
+loop_forever:
+	;================================================
+        ; each scan line 65 cycles
+        ;       1 cycle each byte (40cycles) + 25 for horizontal
+        ;       Total of 12480 cycles to draw screen
+        ; Vertical blank = 4550 cycles (70 scan lines)
+        ; Total of 17030 cycles to get back to where was
+
+	; 8515 cycles as lores
+	;	 -4
+	bit	LORES							; 4
+	; Try X=8 Y=185 cycles=8511
+
+	ldy	#185							; 2
+loop1:	ldx	#8							; 2
+loop2:	dex								; 2
+        bne	loop2							; 2nt/3
+        dey								; 2
+        bne	loop1							; 2nt/3
+
+	; Try X=15 Y=105 cycles=8506
+
+	bit	HIRES							; 4
+
+	nop
+
+	ldy	#105							; 2
+loop3:	ldx	#15							; 2
+loop4:	dex								; 2
+        bne	loop4							; 2nt/3
+        dey								; 2
+        bne	loop3							; 2nt/3
+
+
+
+	jmp	loop_forever						; 3
+
+
+
+
+
 	jsr	wait_until_keypress
+
+	cli	; enable sound: FIXME check if mockingboard there
 
 	rts
 
@@ -738,3 +791,6 @@ gr_offsets_h:
 
 merry_graphics:
 .incbin "graphics/merry.hgr.zx02"
+
+.include "vapor_lock.s"
+.include "delay_a.s"

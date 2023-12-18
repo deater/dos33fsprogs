@@ -125,6 +125,7 @@ XMAS:	xmas.o
 
 xmas.o:	xmas.s plasma_tree.s fireplace.s \
 	zp.inc hardware.inc qload.inc \
+	vapor_lock.s \
 	graphics/merry.hgr.zx02 \
 	graphics/tree01.gr.zx02
 	ca65 -o xmas.o xmas.s -l xmas.lst
