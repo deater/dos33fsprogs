@@ -1,3 +1,9 @@
+
+mod7_table      = $1c00
+div7_table      = $1d00
+hposn_low       = $1e00
+hposn_high      = $1f00
+
 	;=============================
 	; draw the fireplace scene
 	;=============================
@@ -5,6 +11,11 @@ fireplace:
 	lda	#0
 	sta	FRAMEL
 	sta	FRAMEH
+
+	lda	#120
+	sta	HGR_COPY_Y1
+	lda	#160
+	sta	HGR_COPY_Y2
 
 	bit     SET_GR
         bit     LORES
@@ -168,6 +179,46 @@ frame_inc_done:
 	;==================
 	; do the action
 
+	; 4 paths?
+	;	nothing
+	;	draw fire1
+	;	draw fire2
+	;	copy hgr line
+
+do_action:
+
+	ldx	HGR_COPY_Y1					; 3
+	lda	hposn_high,X					; 4
+	clc							; 2
+	adc	#$20						; 2
+	sta	INH						; 3
+	lda	hposn_low,X					; 4
+	sta	INL						; 3
+; 21
+
+	ldx	HGR_COPY_Y2					; 3
+	lda	hposn_high,X					; 4
+	clc							; 2
+	adc	#$20						; 2
+	sta	OUTH						; 3
+	lda	hposn_low,X					; 4
+	sta	OUTL						; 3
+; 21
+
+
+	ldy	#39						; 2
+copy_hgr_line_loop:
+	lda	(INL),Y						; 5
+	sta	(OUTL),Y					; 6
+	dey							; 2
+	bpl	copy_hgr_line_loop				; 2/3
+
+	; 2+(40*16)-1 = 641
+
+	inc	HGR_COPY_Y1					; 5
+	inc	HGR_COPY_Y2					; 5
+
+
 
 
 	; do the lores screen, 160 lines
@@ -175,15 +226,14 @@ frame_inc_done:
 	;  -4 (bit LORES)
 	; -15 (inc FRAME)
 	;  -3 (jmp)
+	; -693
 	;=======
-	;10378
+	; 9685
 
-	; Try X=17 Y=114 cycles=10375
+	; Try X=214 Y=9 cycles=9685
 
-	lda	$0	; nop3
-
-	ldy	#114							; 2
-loop3:	ldx	#17							; 2
+	ldy	#9							; 2
+loop3:	ldx	#214							; 2
 loop4:	dex								; 2
         bne	loop4							; 2nt/3
         dey								; 2
