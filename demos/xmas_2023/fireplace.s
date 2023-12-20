@@ -1,4 +1,10 @@
+	;=============================
+	; draw the fireplace scene
+	;=============================
 fireplace:
+	lda	#0
+	sta	FRAMEL
+	sta	FRAMEH
 
 	bit     SET_GR
         bit     LORES
@@ -9,7 +15,7 @@ fireplace:
 	sta	zx_src_l+1
 	lda	#>merry_graphics
 	sta	zx_src_h+1
-	lda	#$20
+	lda	#$40
 	jsr	zx02_full_decomp
 
 ;	jsr	wait_until_keypress
@@ -32,15 +38,61 @@ fireplace:
 
 	jsr	draw_scene
 
+	; write text to page2
+	; this is inefficient at best
+
+	lda	#<merry_text
+	sta	INL
+	lda	#>merry_text
+	sta	INH
+
+	ldy	#39
+text_loop:
+	lda	(INL),Y
+	ora	#$80
+	sta	$A50,Y
+	cpy	#38
+	bcs	early_out
+	sta	$AD0+2,Y
+	cpy	#36
+	bcs	early_out
+	sta	$B50+4,Y
+	cpy	#34
+	bcs	early_out
+	sta	$BD0+6,Y
+early_out:
+	dey
+	bpl	text_loop
+
+
+
 	bit	PAGE1
 
+	; attempt vapor lock
+
+	jmp	pad_skip
+.align $100
+pad_skip:
 	jsr	vapor_lock
 
 	bit	PAGE2
 
 	; vapor lock returns with us at beginning of hsync in line
-	; 114 (7410 cycles), so with 5070 lines to go to vblank
-	; then we want another 4550 cycles to end, so 9620
+	; 114 (7410 cycles)
+
+
+	; we want to do the split at line 160, so 46 more lines, or
+	; 2990 cycles
+
+	; Try X=11 Y=49 cycles=2990
+
+	ldy	#49							; 2
+loop11:	ldx	#11							; 2
+loop22:	dex								; 2
+        bne	loop22							; 2nt/3
+        dey								; 2
+        bne	loop11							; 2nt/3
+
 
 loop_forever:
 	;================================================
@@ -50,26 +102,88 @@ loop_forever:
         ; Vertical blank = 4550 cycles (70 scan lines)
         ; Total of 17030 cycles to get back to where was
 
-	; 8515 cycles as lores
-	;	 -4
-	bit	LORES							; 4
-	; Try X=8 Y=185 cycles=8511
+	; want 32 lines of lores, which will take us into VBLANK
+	; 2080 cycles - 4 = 2076
 
-	ldy	#185							; 2
-loop1:	ldx	#8							; 2
+	;	 -4
+	bit	HIRES							; 4
+
+	; Try X=137 Y=3 cycles=2074
+
+	nop	; 2
+
+	ldy	#3							; 2
+loop1:	ldx	#137							; 2
 loop2:	dex								; 2
         bne	loop2							; 2nt/3
         dey								; 2
         bne	loop1							; 2nt/3
 
-	; Try X=15 Y=105 cycles=8506
+	; do the VBLANK
+	; 4550 cycles
 
-	bit	HIRES							; 4
+	; Try X=19 Y=45 cycles=4546
 
 	nop
+	nop
 
-	ldy	#105							; 2
-loop3:	ldx	#15							; 2
+	ldy	#45							; 2
+loop10:	ldx	#19							; 2
+loop20:	dex								; 2
+        bne	loop20							; 2nt/3
+        dey								; 2
+        bne	loop10							; 2nt/3
+
+	;===================================
+	; LORES SCREEN
+
+	; DO THINGS
+	;  count FRAMES
+	;	every 1/2 second flicker fireplace
+	;	show for 1s
+	;	copy over text, 32 lines, 10 frames each = 3.2s
+
+	;=================
+	; set LORES
+
+	bit	LORES							; 4
+
+	;==================
+	; frame increment
+
+	inc	FRAMEL							; 5
+	bne	frame_noflo						; 2/3
+	inc	FRAMEH							; 5
+
+	jmp	frame_inc_done						; 3
+; 15
+frame_noflo:
+; 8
+	lda	$0	; nop3						; 3
+	nop								; 2
+	nop								; 2
+frame_inc_done:
+	; 15 / 15
+
+	;==================
+	; do the action
+
+
+
+	; do the lores screen, 160 lines
+	; 10400
+	;  -4 (bit LORES)
+	; -15 (inc FRAME)
+	;  -3 (jmp)
+	;=======
+	;10378
+
+	; Try X=17 Y=114 cycles=10375
+
+	lda	$0	; nop3
+
+	ldy	#114							; 2
+loop3:	ldx	#17							; 2
 loop4:	dex								; 2
         bne	loop4							; 2nt/3
         dey								; 2
@@ -79,13 +193,16 @@ loop4:	dex								; 2
 
 	jmp	loop_forever						; 3
 
-
-
-
-
-	jsr	wait_until_keypress
+stop_cycle_count:
+	bit	TEXTGR
 
 	cli	; enable sound: FIXME check if mockingboard there
+
+
+	; TODO: flicker fire a bit
+	;	start scrolling text
+
+	jsr	wait_until_keypress
 
 	rts
 
@@ -787,6 +904,11 @@ gr_offsets_h:
 	.byte	>$400,>$480,>$500,>$580,>$600,>$680,>$700,>$780
 	.byte	>$428,>$4a8,>$528,>$5a8,>$628,>$6a8,>$728,>$7a8
 	.byte	>$450,>$4d0,>$550,>$5d0,>$650,>$6d0,>$750,>$7d0
+
+               ;0123456789012345678901234567890123456789
+merry_text:
+       .byte   "MERRY CHRISTMAS!!! MERRY CHRISTMAS!!! ME"
+
 
 
 merry_graphics:
