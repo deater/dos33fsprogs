@@ -113,7 +113,7 @@ loop_forever:
         ; Vertical blank = 4550 cycles (70 scan lines)
         ; Total of 17030 cycles to get back to where was
 
-	; want 32 lines of lores, which will take us into VBLANK
+	; want 32 lines of hires, which will take us into VBLANK
 	; 2080 cycles - 4 = 2076
 
 	;	 -4
@@ -163,29 +163,57 @@ loop20:	dex								; 2
 	; frame increment
 
 	inc	FRAMEL							; 5
+	lda	FRAMEL							; 3
+	and	#$3f							; 2
+	sta	FRAMEL							; 3
+
 	bne	frame_noflo						; 2/3
+
 	inc	FRAMEH							; 5
 
 	jmp	frame_inc_done						; 3
-; 15
+; 23
 frame_noflo:
-; 8
+; 16
 	lda	$0	; nop3						; 3
 	nop								; 2
 	nop								; 2
 frame_inc_done:
-	; 15 / 15
+	; 23 / 23
+
+
 
 	;==================
 	; do the action
 
-	; 4 paths?
-	;	nothing
-	;	draw fire1
-	;	draw fire2
-	;	copy hgr line
+	; FRAMEH = 0/1 do nothing
+	; FRAMEH = 2 every other line do copy
+	; FRAMEH = 3 exit
+	; FRAMEL = 1 exactly, flicker
 
-do_action:
+check_action:
+
+; 0
+	lda	FRAMEL				; 3
+	cmp	#1				; 2
+	beq	do_flicker			; 2/3
+; 7
+	and	#1				; 2
+	bne	do_nothing_odd			; 2/3
+; 11
+	lda	FRAMEH				; 3
+	cmp	#3				; 2
+	beq	done_cycle_count		; 2/3
+; 18
+	cmp	#2				; 2
+	bcc	do_nothing_less_than_2	; blt	; 2/3
+; 22
+
+
+	;========================
+	; copy text
+
+copy_text:
 
 	ldx	HGR_COPY_Y1					; 3
 	lda	hposn_high,X					; 4
@@ -218,22 +246,69 @@ copy_hgr_line_loop:
 	inc	HGR_COPY_Y1					; 5
 	inc	HGR_COPY_Y2					; 5
 
+	jmp	done_action					; 3
 
+	; 22 + 21 + 21 + 641 + 10 + 3 = 718
+
+do_flicker:
+; 8
+	; 718-11 = 707
+	; Try X=2 Y=44 cycles=705
+
+	nop
+
+	ldy	#44							; 2
+loop5:	ldx	#2							; 2
+loop6:	dex								; 2
+        bne	loop6							; 2nt/3
+        dey								; 2
+        bne	loop5							; 2nt/3
+
+	jmp	done_action						; 3
+
+do_nothing_odd:
+	; 12 if from odd
+	lda	$0	; nop3
+	lda	$0	; nop3
+	lda	$0	; nop3
+	nop		; 2
+
+do_nothing_less_than_2:
+	; 23 if from less than 2
+
+	; 718-23=695
+	; Try X=68 Y=2 cycles=693
+
+	nop
+
+	ldy	#2							; 2
+loop7:	ldx	#68							; 2
+loop8:	dex								; 2
+        bne	loop8							; 2nt/3
+        dey								; 2
+        bne	loop7							; 2nt/3
+
+
+done_action:
+
+	; 718 from copy_text
 
 
 	; do the lores screen, 160 lines
 	; 10400
 	;  -4 (bit LORES)
-	; -15 (inc FRAME)
+	; -23 (inc FRAME)
 	;  -3 (jmp)
-	; -693
+	; -718 actions
 	;=======
-	; 9685
+	; 9652
 
-	; Try X=214 Y=9 cycles=9685
+	; Try X=39 Y=48 cycles=9649
 
-	ldy	#9							; 2
-loop3:	ldx	#214							; 2
+	lda	$0	; nop3
+
+	ldy	#48							; 2
+loop3:	ldx	#39							; 2
 loop4:	dex								; 2
         bne	loop4							; 2nt/3
         dey								; 2
@@ -243,11 +318,21 @@ loop4:	dex								; 2
 
 	jmp	loop_forever						; 3
 
-stop_cycle_count:
+
+
+
+done_cycle_count:
 	bit	TEXTGR
 
-	cli	; enable sound: FIXME check if mockingboard there
 
+	;==========================
+	; start music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music
+	cli	; enable sound
+no_music:
 
 	; TODO: flicker fire a bit
 	;	start scrolling text
