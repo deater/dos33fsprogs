@@ -17,6 +17,9 @@ fireplace:
 	lda	#160
 	sta	HGR_COPY_Y2
 
+	lda	#$DD
+	sta	FIRE_COLOR
+
 	bit     SET_GR
         bit     LORES
         bit     FULLGR
@@ -52,25 +55,23 @@ fireplace:
 	; write text to page2
 	; this is inefficient at best
 
-	lda	#<merry_text
-	sta	INL
-	lda	#>merry_text
-	sta	INH
-
 	ldy	#39
 text_loop:
-	lda	(INL),Y
+	lda	merry_text+6,Y
 	ora	#$80
 	sta	$A50,Y
-	cpy	#38
-	bcs	early_out
-	sta	$AD0+2,Y
-	cpy	#36
-	bcs	early_out
-	sta	$B50+4,Y
-	cpy	#34
-	bcs	early_out
-	sta	$BD0+6,Y
+
+	lda	merry_text+4,Y
+	ora	#$80
+	sta	$AD0,Y
+
+	lda	merry_text+2,Y
+	ora	#$80
+	sta	$B50,Y
+
+	lda	merry_text,Y
+	ora	#$80
+	sta	$BD0,Y
 early_out:
 	dey
 	bpl	text_loop
@@ -252,13 +253,21 @@ copy_hgr_line_loop:
 
 do_flicker:
 ; 8
-	; 718-11 = 707
-	; Try X=2 Y=44 cycles=705
 
-	nop
+	lda	FIRE_COLOR			; 3
+	eor	#$00				; 2
+	sta	FIRE_COLOR			; 3
+	sta	$9A8+34				; 4
+	sta	$9A8+35				; 4
+; 24
 
-	ldy	#44							; 2
-loop5:	ldx	#2							; 2
+
+
+	; 718-27 = 691
+	; Try X=8 Y=15 cycles=691
+
+	ldy	#15							; 2
+loop5:	ldx	#8							; 2
 loop6:	dex								; 2
         bne	loop6							; 2nt/3
         dey								; 2
@@ -334,10 +343,33 @@ done_cycle_count:
 	cli	; enable sound
 no_music:
 
-	; TODO: flicker fire a bit
-	;	start scrolling text
 
-	jsr	wait_until_keypress
+new_loop:
+	; bring in wait_until_interrupt
+
+	inc	FRAMEL							; 5
+	lda	FRAMEL							; 3
+	and	#$3f							; 2
+	sta	FRAMEL							; 3
+	bne	frame_noflo2						; 2/3
+	inc	FRAMEH							; 5
+frame_noflo2:
+
+	lda	#255
+	jsr	wait
+
+	lda	FIRE_COLOR			; 3
+	eor	#$0D				; 2
+	sta	FIRE_COLOR			; 3
+	sta	$9A8+34				; 4
+	sta	$9A8+35				; 4
+
+	lda	KEYPRESS
+	bmi	totally_done_fireplace
+	jmp	new_loop
+
+totally_done_fireplace:
+	bit	KEYRESET
 
 	rts
 
@@ -1042,7 +1074,7 @@ gr_offsets_h:
 
                ;0123456789012345678901234567890123456789
 merry_text:
-       .byte   "MERRY CHRISTMAS!!! MERRY CHRISTMAS!!! ME"
+	.byte   "      MERRY CHRISTMAS!!! MERRY CHRISTMAS!!! ME"
 
 
 
