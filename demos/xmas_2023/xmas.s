@@ -24,7 +24,7 @@ xmas_main:
 	; draw opening scene
 	;======================================
 
-	jsr	fireplace
+	jsr	fireplace_opener
 
 repeat:
 
@@ -40,6 +40,13 @@ repeat:
 
 	jsr	plasma_tree
 
+
+	;======================================
+	; fireplace without vapor lock
+	;======================================
+
+
+	jsr	fireplace_restart
 
 finished:
 	jmp	repeat

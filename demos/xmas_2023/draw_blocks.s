@@ -62,6 +62,7 @@ draw_scene:
 
 draw_scene_loop:
 
+wait_delay_smc:
 	lda	#200
 	jsr	wait
 

@@ -1,9 +1,40 @@
 
+	;=============================
+	; draw the fireplace scene
+	;=============================
+fireplace_restart:
+	lda	#0
+	sta	FRAMEL
+	sta	FRAMEH
+
+        bit     PAGE2
+
+        lda     #4
+        sta     DRAW_PAGE
+
+	lda	#<fireplace_data
+	sta	INL
+	lda	#>fireplace_data
+	sta	INH
+
+	; speed up for second time
+	lda	#1
+	sta	wait_delay_smc+1
+
+	jsr	draw_scene
+
+	lda	#$DD
+	sta	FIRE_COLOR
+
+	bit	KEYRESET
+
+	jmp	fireplace_scroller
+
 
 	;=============================
 	; draw the fireplace scene
 	;=============================
-fireplace:
+fireplace_opener:
 	lda	#0
 	sta	FRAMEL
 	sta	FRAMEH
@@ -24,9 +55,6 @@ fireplace:
 	sta	zx_src_h+1
 	lda	#$40
 	jsr	zx02_full_decomp
-
-;	jsr	wait_until_keypress
-
 
 	bit     SET_GR
         bit     LORES
@@ -385,7 +413,7 @@ frame_noflo2:
 
 	lda	#1
 	cmp	current_pattern_smc+1
-	bcc	totally_done_fireplace
+;	bcc	totally_done_fireplace
 	beq	totally_done_fireplace
 	jmp	done_music2
 
@@ -411,7 +439,7 @@ totally_done_fireplace:
 	;=================================
 	;=================================
 	;=================================
-
+fireplace_scroller:
 
 	lda	#0
 	sta	OFFSET
@@ -458,11 +486,11 @@ frame_noflo3:
 	and	#SOUND_MOCKINGBOARD
 	beq	no_music3
 
-	lda	#3
-	cmp	current_pattern_smc+1
-	bcc	totally_done_scroll
-	beq	totally_done_scroll
-	jmp	done_music3
+;	lda	#3
+;	cmp	current_pattern_smc+1
+;	bcc	totally_done_scroll
+;	beq	totally_done_scroll
+;	jmp	done_music3
 
 no_music3:
 	lda	FRAMEH

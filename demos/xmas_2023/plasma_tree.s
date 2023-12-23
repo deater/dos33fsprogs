@@ -11,6 +11,10 @@ plasma_tree:
 	lda	#0
 	sta	FRAME
 
+	lda	#4
+	sta	DRAW_PAGE
+
+	bit	PAGE2
 
 	; remap the masks
 	; $00->$00
@@ -57,7 +61,7 @@ bp3:
 ;	lda	#40
 ;	jsr	wait_for_pattern
 ;	bcc	keep_making_plasma
-;	jmp	done_plasmacube
+;	jmp	done_making_plasma
 
 ; update frame count
 
@@ -222,9 +226,6 @@ VBLANK:
 
 	rts
 
-done_plasmacube:
-
-	rts
 
 ;.align 256
 
