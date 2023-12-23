@@ -119,13 +119,13 @@ TEMPY		= $E4
 XPOS		= $E5	; gr_plot
 YPOS		= $E6	; gr_plot
 COLOR_MASK	= $E7	; gr_plot
-FRAME           = $E8
 FRAMEL		= $E8
 FRAMEH		= $E9
 BTC_L		= $EA	; audio
 BTC_H		= $EB	; audio
 MASKL		= $EC	; gr_putsprite_mask
 MASKH		= $ED
+FRAME           = $EE
 
 ;==============================================
 ; $F0-$FB can re-use in each file

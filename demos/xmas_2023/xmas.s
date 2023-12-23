@@ -26,6 +26,8 @@ xmas_main:
 
 	jsr	fireplace
 
+repeat:
+
 	;======================================
 	; 3D tree
 	;======================================
@@ -40,7 +42,7 @@ xmas_main:
 
 
 finished:
-	jmp	finished
+	jmp	repeat
 
 
 .include "wait_keypress.s"

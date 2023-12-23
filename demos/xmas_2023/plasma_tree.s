@@ -8,95 +8,8 @@
 
 plasma_tree:
 
-	lda	#$00
-	sta	DRAW_PAGE
-	sta	clear_all_color+1
-
-	lda	#$04
-	sta	DRAW_PAGE
-	jsr	clear_all
-
-
-	bit	PAGE2		; set page 2
-;	bit	SET_TEXT	; set text
-	bit	LORES		; set lo-res
-
 	lda	#0
 	sta	FRAME
-
-	; load image offscreen $6000
-
-	lda	#<mask01_data
-	sta	zx_src_l+1
-	lda	#>mask01_data
-	sta	zx_src_h+1
-	lda	#$60
-	jsr	zx02_full_decomp
-
-	; load image offscreen $6400
-
-	lda	#<mask02_data
-	sta	zx_src_l+1
-	lda	#>mask02_data
-	sta	zx_src_h+1
-	lda	#$64
-	jsr	zx02_full_decomp
-
-	; load image offscreen $6800
-
-	lda	#<mask03_data
-	sta	zx_src_l+1
-	lda	#>mask03_data
-	sta	zx_src_h+1
-	lda	#$68
-	jsr	zx02_full_decomp
-
-	; load image offscreen $6C00
-
-	lda	#<mask04_data
-	sta	zx_src_l+1
-	lda	#>mask04_data
-	sta	zx_src_h+1
-	lda	#$6C
-	jsr	zx02_full_decomp
-
-	; load image offscreen $7000
-
-	lda	#<mask05_data
-	sta	zx_src_l+1
-	lda	#>mask05_data
-	sta	zx_src_h+1
-	lda	#$70
-	jsr	zx02_full_decomp
-
-	; load image offscreen $7400
-
-	lda	#<mask06_data
-	sta	zx_src_l+1
-	lda	#>mask06_data
-	sta	zx_src_h+1
-	lda	#$74
-	jsr	zx02_full_decomp
-
-	; load image offscreen $7800
-
-	lda	#<mask07_data
-	sta	zx_src_l+1
-	lda	#>mask07_data
-	sta	zx_src_h+1
-	lda	#$78
-	jsr	zx02_full_decomp
-
-	; load image offscreen $7C00
-
-	lda	#<mask08_data
-	sta	zx_src_l+1
-	lda	#>mask08_data
-	sta	zx_src_h+1
-	lda	#$7C
-	jsr	zx02_full_decomp
-
-
 
 
 	; remap the masks
@@ -108,7 +21,7 @@ plasma_tree:
 
 	ldy	#0
 	sty	OUTL
-	lda	#$60
+	lda	#$40
 	sta	OUTH
 remap_mask:
 	lda	(OUTL),Y
@@ -141,11 +54,43 @@ bp3:
 	jsr	display_normal	; display normal
 	jsr	VBLANK
 
-	lda	#60
-	jsr	wait_for_pattern
-	bcc	keep_making_plasma
+;	lda	#40
+;	jsr	wait_for_pattern
+;	bcc	keep_making_plasma
+;	jmp	done_plasmacube
 
-	jmp	done_plasmacube
+; update frame count
+
+	inc	FRAMEL                                                  ; 5
+	lda	FRAMEL                                                  ; 3
+	and	#$3f                                                    ; 2
+	sta	FRAMEL                                                  ; 3
+	bne	frame_noflo5                                            ; 2/3
+	inc	FRAMEH                                                  ; 5
+frame_noflo5:
+
+
+        lda	KEYPRESS
+        bmi	done_making_plasma
+
+        ; wait for_pattern / end
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music5
+
+;       lda     #1
+;       cmp     current_pattern_smc+1
+;       bcc     done_making_plasma
+;       beq     done_making_plasma
+;       jmp     done_music5
+
+no_music5:
+	lda	FRAMEH
+	cmp	#6
+	beq	done_making_plasma
+
+done_music5:
 
 
 keep_making_plasma:
@@ -157,6 +102,10 @@ keep_making_plasma:
 	bne	bp3
 
 	jmp	step3
+
+done_making_plasma:
+	bit	KEYRESET
+	rts
 
 
 ; ============================================================================
@@ -264,8 +213,8 @@ VBLANK:
 	lda	FRAME
 	lsr
 	lsr
-	lsr
-	lsr
+;	lsr
+;	lsr
 	and	#$f
 	tax
 	lda	mask_src_table,X
@@ -497,15 +446,16 @@ lores_colors_wide: ; 256
 .byte $11,$11,$11,$11,$11,$11,$11,$11
 .endif
 
-Table1	=	$5000
-Table2	=	$5000+64
+Table1	=	$2000
+Table2	=	$2000+64
 
 remap_table:
 	.byte $00,$40,$80,$00,$C0
 
 mask_src_table:
+	.byte	$40-8,$44-8,$48-8,$4C-8,$50-8,$54-8,$58-8,$5C-8
 	.byte	$60-8,$64-8,$68-8,$6C-8,$70-8,$74-8,$78-8,$7C-8
-	.byte	$7C-8,$78-8,$74-8,$70-8,$6C-8,$68-8,$64-8,$60-8
+;	.byte	$7C-8,$78-8,$74-8,$70-8,$6C-8,$68-8,$64-8,$60-8
 
 
 mask01_data:

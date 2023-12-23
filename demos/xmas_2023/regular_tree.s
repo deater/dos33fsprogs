@@ -217,7 +217,7 @@ frame_noflo4:
 
 no_music4:
 	lda     FRAMEH
-	cmp     #6
+	cmp     #7
 	beq     done_regular_tree
 
 done_music4:
