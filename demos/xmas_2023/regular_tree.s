@@ -14,6 +14,14 @@ regular_tree:
 	sta	DRAW_PAGE
 	jsr	clear_all
 
+	; decompress credits
+	lda     #<credits_raw_zx02
+        sta     zx_src_l+1
+        lda     #>credits_raw_zx02
+        sta     zx_src_h+1
+        lda     #$20
+        jsr     zx02_full_decomp
+
 
 	bit	PAGE2		; set page 2
 ;	bit	SET_TEXT	; set text
@@ -217,7 +225,7 @@ frame_noflo4:
 
 no_music4:
 	lda     FRAMEH
-	cmp     #7
+	cmp     #4
 	beq     done_regular_tree
 
 done_music4:

@@ -494,8 +494,8 @@ frame_noflo3:
 
 no_music3:
 	lda	FRAMEH
-	cmp	#2
-	beq	totally_done_fireplace
+	cmp	#4
+	beq	totally_done_scroll
 
 done_music3:
 
@@ -528,6 +528,8 @@ toggle_flame:
 
 greets_raw_zx02:
 .incbin "graphics/greets.raw.zx02"
+credits_raw_zx02:
+.incbin "graphics/credits.raw.zx02"
 
 fireplace_data:
 

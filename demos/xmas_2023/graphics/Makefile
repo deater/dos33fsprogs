@@ -12,12 +12,18 @@ all:	tree01.gr.zx02 tree03.gr.zx02 \
 	tree06.gr.zx02 tree08.gr.zx02 \
 	tree10.gr.zx02 tree12.gr.zx02 \
 	tree14.gr.zx02 tree16.gr.zx02 \
-	merry.hgr.zx02 greets.raw.zx02
+	merry.hgr.zx02 \
+	greets.raw.zx02 credits.raw.zx02
 
 ####
 
 greets.raw.zx02:	greets.raw
 	$(ZX02) greets.raw greets.raw.zx02
+
+####
+
+credits.raw.zx02:	credits.raw
+	$(ZX02) credits.raw credits.raw.zx02
 
 ####
 
