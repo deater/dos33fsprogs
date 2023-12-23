@@ -27,6 +27,12 @@ xmas_main:
 	jsr	fireplace
 
 	;======================================
+	; 3D tree
+	;======================================
+
+	jsr	regular_tree
+
+	;======================================
 	; plasma tree
 	;======================================
 
@@ -42,3 +48,5 @@ finished:
 
 .include "plasma_tree.s"
 .include "fireplace.s"
+.include "regular_tree.s"
+
