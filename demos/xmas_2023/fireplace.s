@@ -341,15 +341,25 @@ done_cycle_count:
 	cli	; enable sound
 no_music:
 
-
-	;=========================
+	;=================================
+	;=================================
+	;=================================
 	; main fireplace loop
+	;=================================
+	;=================================
+	;=================================
 
 	lda	#$DD
 	sta	FIRE_COLOR
 
+	lda	#0
+	sta	FRAMEL
+	sta	FRAMEH
+
+
 new_loop:
-	; bring in wait_until_interrupt
+
+	; update frame count
 
 	inc	FRAMEL							; 5
 	lda	FRAMEL							; 3
@@ -362,21 +372,29 @@ frame_noflo2:
 	lda	#255
 	jsr	wait
 
-	lda	FIRE_COLOR			; 3
-	eor	#$0D				; 2
-	sta	FIRE_COLOR			; 3
-	sta	$9A8+34				; 4
-	sta	$9A8+35				; 4
+	jsr	toggle_flame
 
 	lda	KEYPRESS
 	bmi	totally_done_fireplace
 
-	; wait for_pattern
+	; wait for_pattern / end
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music2
 
 	lda	#1
 	cmp	current_pattern_smc+1
 	bcc	totally_done_fireplace
 	beq	totally_done_fireplace
+	jmp	done_music2
+
+no_music2:
+	lda	FRAMEH
+	cmp	#2
+	beq	totally_done_fireplace
+
+done_music2:
 
 
 	jmp	new_loop
@@ -387,10 +405,18 @@ totally_done_fireplace:
 
 
 	;=================================
+	;=================================
+	;=================================
 	; scroller
+	;=================================
+	;=================================
+	;=================================
+
 
 	lda	#0
 	sta	OFFSET
+	sta	FRAMEL
+	sta	FRAMEH
 
 	lda	#<greets_raw_zx02
 	sta	zx_src_l+1
@@ -402,15 +428,69 @@ totally_done_fireplace:
 	bit	FULLGR
 do_scroll:
 
+	; update frame count
+
+	inc	FRAMEL							; 5
+	lda	FRAMEL							; 3
+	and	#$3f							; 2
+	sta	FRAMEL							; 3
+	bne	frame_noflo3						; 2/3
+	inc	FRAMEH							; 5
+frame_noflo3:
+
+	jsr	toggle_flame
+
 	jsr	scroll_loop
 
 	lda	#128
 	jsr	wait
 
+
+	lda	KEYPRESS
+	bmi	totally_done_scroll
+
+	; wait for_pattern / end
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music3
+
+	lda	#3
+	cmp	current_pattern_smc+1
+	bcc	totally_done_scroll
+	beq	totally_done_scroll
+	jmp	done_music3
+
+no_music3:
+	lda	FRAMEH
+	cmp	#2
+	beq	totally_done_fireplace
+
+done_music3:
+
+
+
+
 	jmp	do_scroll
+
+done_scroll:
+totally_done_scroll:
 
 	rts
 
+
+	;=========================
+	; toggle flame
+	;=========================
+
+toggle_flame:
+	lda	FIRE_COLOR			; 3
+	eor	#$0D				; 2
+	sta	FIRE_COLOR			; 3
+	sta	$9A8+34				; 4
+	sta	$9A8+35				; 4
+
+	rts
 
 .include "gr_scroll.s"
 
