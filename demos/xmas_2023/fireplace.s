@@ -374,6 +374,15 @@ frame_noflo2:
 
 	lda	KEYPRESS
 	bmi	totally_done_fireplace
+
+	; wait for_pattern
+
+	lda	#1
+	cmp	current_pattern_smc+1
+	bcc	totally_done_fireplace
+	beq	totally_done_fireplace
+
+
 	jmp	new_loop
 
 totally_done_fireplace:
@@ -399,7 +408,7 @@ do_scroll:
 
 	jsr	scroll_loop
 
-	lda	#255
+	lda	#128
 	jsr	wait
 
 	jmp	do_scroll
