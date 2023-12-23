@@ -478,6 +478,7 @@ done_music3:
 
 done_scroll:
 totally_done_scroll:
+	bit	KEYRESET
 
 	rts
 

@@ -174,6 +174,8 @@ regular_tree:
 
 	lda	#0
 	sta	OFFSET
+	sta	FRAMEL
+	sta	FRAMEH
 
 
 reset_tree_loop:
@@ -184,11 +186,44 @@ regular_tree_loop:
 	ldx	TREE_COUNT
 	jsr	gr_fast_copy
 
-;	jsr	wait_until_keypress
-
 	jsr	scroll_loop
 
 	jsr	page_flip
+
+	; update frame count
+
+	inc	FRAMEL                                                  ; 5
+	lda	FRAMEL                                                  ; 3
+	and	#$3f                                                    ; 2
+	sta	FRAMEL                                                  ; 3
+	bne	frame_noflo4                                            ; 2/3
+	inc	FRAMEH                                                  ; 5
+frame_noflo4:
+
+	lda	KEYPRESS
+	bmi	done_regular_tree
+
+	; wait for_pattern / end
+
+	lda     SOUND_STATUS
+	and     #SOUND_MOCKINGBOARD
+	beq     no_music4
+
+;	lda     #1
+;	cmp     current_pattern_smc+1
+;	bcc     totally_done_fireplace
+;	beq     totally_done_fireplace
+;	jmp     done_music4
+
+no_music4:
+	lda     FRAMEH
+	cmp     #6
+	beq     done_regular_tree
+
+done_music4:
+
+
+
 
 	lda	#128
 	jsr	wait
@@ -200,12 +235,16 @@ regular_tree_loop:
 
 	lda	TREE_COUNT
 	cmp	#$80
-	bne	done_regular_tree
+	bne	done_tree_count
 	jmp	reset_tree_loop
-
-done_regular_tree:
+done_tree_count:
 	jmp	regular_tree_loop
 
+
+done_regular_tree:
+	bit	KEYRESET
+
+	rts
 
 
 	;==========================
