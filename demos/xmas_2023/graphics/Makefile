@@ -8,7 +8,12 @@ all:	tree01.gr.zx02 tree03.gr.zx02 \
 	tree05.gr.zx02 tree07.gr.zx02 \
 	tree09.gr.zx02 tree11.gr.zx02 \
 	tree13.gr.zx02 tree15.gr.zx02 \
-	merry.hgr.zx02
+	merry.hgr.zx02 greets.raw.zx02
+
+####
+
+greets.raw.zx02:	greets.raw
+	$(ZX02) greets.raw greets.raw.zx02
 
 ####
 

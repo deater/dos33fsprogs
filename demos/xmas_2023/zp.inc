@@ -248,6 +248,11 @@ HGR_COPY_Y1	= $F1
 HGR_COPY_Y2	= $F2
 FIRE_COLOR	= $F3
 
+SCROLL_LENGTH	= $F4
+OFFSET		= $F5
+
+
+
 ;==============================================
 ; $FC-$FF we use for in/out pointers
 ;==============================================

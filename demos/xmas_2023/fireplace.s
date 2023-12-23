@@ -17,9 +17,6 @@ fireplace:
 	lda	#160
 	sta	HGR_COPY_Y2
 
-	lda	#$DD
-	sta	FIRE_COLOR
-
 	bit     SET_GR
         bit     LORES
         bit     FULLGR
@@ -79,6 +76,11 @@ early_out:
 
 
 	bit	PAGE1
+
+	lda	#$DD
+	sta	FIRE_COLOR
+
+
 
 	; attempt vapor lock
 
@@ -255,7 +257,7 @@ do_flicker:
 ; 8
 
 	lda	FIRE_COLOR			; 3
-	eor	#$00				; 2
+	eor	#$0D				; 2
 	sta	FIRE_COLOR			; 3
 	sta	$9A8+34				; 4
 	sta	$9A8+35				; 4
@@ -344,6 +346,12 @@ done_cycle_count:
 no_music:
 
 
+	;=========================
+	; main fireplace loop
+
+	lda	#$DD
+	sta	FIRE_COLOR
+
 new_loop:
 	; bring in wait_until_interrupt
 
@@ -371,7 +379,38 @@ frame_noflo2:
 totally_done_fireplace:
 	bit	KEYRESET
 
+
+
+	;=================================
+	; scroller
+
+	lda	#0
+	sta	OFFSET
+
+	lda	#<greets_raw_zx02
+	sta	zx_src_l+1
+	lda	#>greets_raw_zx02
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	bit	FULLGR
+do_scroll:
+
+	jsr	scroll_loop
+
+	lda	#255
+	jsr	wait
+
+	jmp	do_scroll
+
 	rts
+
+
+.include "gr_scroll.s"
+
+greets_raw_zx02:
+.incbin "graphics/greets.raw.zx02"
 
 fireplace_data:
 

@@ -104,28 +104,27 @@ static unsigned char font[256][9]={
 		0x80,	// **
 		0xe0,	// ******
 	},
-
+	{4,
+		0x00,
+		0xC0, // ****
+		0x20, //     **
+		0x20, //     **
+		0x40, //   **
+		0x20, //     **
+		0x20, //     **
+		0xC0, // ****
+	},
 /*
-****    **  **  ******    ****  ******
-    **  **  **  **      **          **
-    **  **  **  **      **          **
-  **    ******  ****    ****      **  
-    **      **      **  **  **    **  
-    **      **      **  **  **    **  
-****        **  ****      **      **  
+**  **  ******    ****  ******
+**  **  **      **          **
+**  **  **      **          **
+******  ****    ****      **  
+    **      **  **  **    **  
+    **      **  **  **    **  
+    **  ****      **      **  
 */
 
 
-	{4,
-		0x00,
-		0x00,
-		0x00,
-		0x00,
-		0x00,
-		0x00,
-		0x00,
-		0x00,
-	},
 	{4,0,0,0,0,0,0,0,0},
 	{4,0,0,0,0,0,0,0,0},
 	{4,0,0,0,0,0,0,0,0},
@@ -541,7 +540,8 @@ int main(int argc, char **argv) {
 //	char string[]="         \001DEATER \002WAS \003HERE!!!         ";
 //	char string[]="         \001BY DEATER... \002A \010 PRODUCTION         ";
 //	char string[]="           \003\011APPLE ][ FOREVER\011           ";
-	char string[]="           \012 \001MERRY XMAS 2018 \003FROM DEATER \013           ";
+//	char string[]="           \012 \001MERRY XMAS 2018 \003FROM DEATER \013           ";
+	char string[]="           \012 \001MERRY XMAS 2023 \003FROM DESIRE \013           ";
 	int length=0,width=0,x,y,i,j;
 	int color,color1,color2;
 	int which_color=0;
