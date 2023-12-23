@@ -418,6 +418,9 @@ totally_done_fireplace:
 	sta	FRAMEL
 	sta	FRAMEH
 
+	lda	#4
+	sta	DRAW_PAGE
+
 	lda	#<greets_raw_zx02
 	sta	zx_src_l+1
 	lda	#>greets_raw_zx02

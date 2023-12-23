@@ -26,72 +26,72 @@ plasma_tree:
 
 	; load image offscreen $6000
 
-	lda	#<mask1_data
+	lda	#<mask01_data
 	sta	zx_src_l+1
-	lda	#>mask1_data
+	lda	#>mask01_data
 	sta	zx_src_h+1
 	lda	#$60
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6400
 
-	lda	#<mask2_data
+	lda	#<mask02_data
 	sta	zx_src_l+1
-	lda	#>mask2_data
+	lda	#>mask02_data
 	sta	zx_src_h+1
 	lda	#$64
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6800
 
-	lda	#<mask3_data
+	lda	#<mask03_data
 	sta	zx_src_l+1
-	lda	#>mask3_data
+	lda	#>mask03_data
 	sta	zx_src_h+1
 	lda	#$68
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6C00
 
-	lda	#<mask4_data
+	lda	#<mask04_data
 	sta	zx_src_l+1
-	lda	#>mask4_data
+	lda	#>mask04_data
 	sta	zx_src_h+1
 	lda	#$6C
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7000
 
-	lda	#<mask5_data
+	lda	#<mask05_data
 	sta	zx_src_l+1
-	lda	#>mask5_data
+	lda	#>mask05_data
 	sta	zx_src_h+1
 	lda	#$70
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7400
 
-	lda	#<mask6_data
+	lda	#<mask06_data
 	sta	zx_src_l+1
-	lda	#>mask6_data
+	lda	#>mask06_data
 	sta	zx_src_h+1
 	lda	#$74
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7800
 
-	lda	#<mask7_data
+	lda	#<mask07_data
 	sta	zx_src_l+1
-	lda	#>mask7_data
+	lda	#>mask07_data
 	sta	zx_src_h+1
 	lda	#$78
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7C00
 
-	lda	#<mask8_data
+	lda	#<mask08_data
 	sta	zx_src_l+1
-	lda	#>mask8_data
+	lda	#>mask08_data
 	sta	zx_src_h+1
 	lda	#$7C
 	jsr	zx02_full_decomp
@@ -508,19 +508,35 @@ mask_src_table:
 	.byte	$7C-8,$78-8,$74-8,$70-8,$6C-8,$68-8,$64-8,$60-8
 
 
-mask1_data:
+mask01_data:
 .incbin "graphics/tree01.gr.zx02"
-mask2_data:
+mask02_data:
+.incbin "graphics/tree02.gr.zx02"
+mask03_data:
 .incbin "graphics/tree03.gr.zx02"
-mask3_data:
+mask04_data:
+.incbin "graphics/tree04.gr.zx02"
+mask05_data:
 .incbin "graphics/tree05.gr.zx02"
-mask4_data:
+mask06_data:
+.incbin "graphics/tree06.gr.zx02"
+mask07_data:
 .incbin "graphics/tree07.gr.zx02"
-mask5_data:
+mask08_data:
+.incbin "graphics/tree08.gr.zx02"
+mask09_data:
 .incbin "graphics/tree09.gr.zx02"
-mask6_data:
+mask10_data:
+.incbin "graphics/tree10.gr.zx02"
+mask11_data:
 .incbin "graphics/tree11.gr.zx02"
-mask7_data:
+mask12_data:
+.incbin "graphics/tree12.gr.zx02"
+mask13_data:
 .incbin "graphics/tree13.gr.zx02"
-mask8_data:
+mask14_data:
+.incbin "graphics/tree14.gr.zx02"
+mask15_data:
 .incbin "graphics/tree15.gr.zx02"
+mask16_data:
+.incbin "graphics/tree16.gr.zx02"

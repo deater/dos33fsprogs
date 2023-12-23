@@ -14,15 +14,28 @@ scroll_loop:
 	ldx	#0						; 2
 	ldy	OFFSET						; 3
 
+	lda	DRAW_PAGE
+	clc
+	adc	#$6
+	sta	scl_smc1+2
+	sta	scl_smc2+2
+	adc	#$1
+	sta	scl_smc3+2
+	sta	scl_smc4+2
+
 draw_loop:
 
 	lda	scroll_row1,Y					; 4
+scl_smc1:
 	sta	$A50,X						; 5
 	lda	scroll_row2,Y					; 4
+scl_smc2:
 	sta	$Ad0,X						; 5
 	lda	scroll_row3,Y					; 4
+scl_smc3:
 	sta	$B50,X						; 5
 	lda	scroll_row4,Y					; 4
+scl_smc4:
 	sta	$Bd0,X						; 5
 
 	iny							; 2

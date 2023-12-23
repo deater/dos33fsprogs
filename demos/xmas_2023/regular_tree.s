@@ -22,74 +22,151 @@ regular_tree:
 	lda	#0
 	sta	FRAME
 
+
+	;===================================
+	; load images offscreen $4000-$6000
+
+	; load image offscreen $4000
+
+	lda	#<mask01_data
+	sta	zx_src_l+1
+	lda	#>mask01_data
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
+	; load image offscreen $4400
+
+	lda	#<mask02_data
+	sta	zx_src_l+1
+	lda	#>mask02_data
+	sta	zx_src_h+1
+	lda	#$44
+	jsr	zx02_full_decomp
+
+	; load image offscreen $4800
+
+	lda	#<mask03_data
+	sta	zx_src_l+1
+	lda	#>mask03_data
+	sta	zx_src_h+1
+	lda	#$48
+	jsr	zx02_full_decomp
+
+	; load image offscreen $5000
+
+	lda	#<mask04_data
+	sta	zx_src_l+1
+	lda	#>mask04_data
+	sta	zx_src_h+1
+	lda	#$4C
+	jsr	zx02_full_decomp
+
+	; load image offscreen $5000
+
+	lda	#<mask05_data
+	sta	zx_src_l+1
+	lda	#>mask05_data
+	sta	zx_src_h+1
+	lda	#$50
+	jsr	zx02_full_decomp
+
+	; load image offscreen $5400
+
+	lda	#<mask06_data
+	sta	zx_src_l+1
+	lda	#>mask06_data
+	sta	zx_src_h+1
+	lda	#$54
+	jsr	zx02_full_decomp
+
+	; load image offscreen $5800
+
+	lda	#<mask07_data
+	sta	zx_src_l+1
+	lda	#>mask07_data
+	sta	zx_src_h+1
+	lda	#$58
+	jsr	zx02_full_decomp
+
+	; load image offscreen $5C00
+
+	lda	#<mask08_data
+	sta	zx_src_l+1
+	lda	#>mask08_data
+	sta	zx_src_h+1
+	lda	#$5C
+	jsr	zx02_full_decomp
+
+
 	; load image offscreen $6000
 
-	lda	#<mask1_data
+	lda	#<mask09_data
 	sta	zx_src_l+1
-	lda	#>mask1_data
+	lda	#>mask09_data
 	sta	zx_src_h+1
 	lda	#$60
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6400
 
-	lda	#<mask2_data
+	lda	#<mask10_data
 	sta	zx_src_l+1
-	lda	#>mask2_data
+	lda	#>mask10_data
 	sta	zx_src_h+1
 	lda	#$64
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6800
 
-	lda	#<mask3_data
+	lda	#<mask11_data
 	sta	zx_src_l+1
-	lda	#>mask3_data
+	lda	#>mask11_data
 	sta	zx_src_h+1
 	lda	#$68
 	jsr	zx02_full_decomp
 
 	; load image offscreen $6C00
 
-	lda	#<mask4_data
+	lda	#<mask12_data
 	sta	zx_src_l+1
-	lda	#>mask4_data
+	lda	#>mask12_data
 	sta	zx_src_h+1
 	lda	#$6C
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7000
 
-	lda	#<mask5_data
+	lda	#<mask13_data
 	sta	zx_src_l+1
-	lda	#>mask5_data
+	lda	#>mask13_data
 	sta	zx_src_h+1
 	lda	#$70
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7400
 
-	lda	#<mask6_data
+	lda	#<mask14_data
 	sta	zx_src_l+1
-	lda	#>mask6_data
+	lda	#>mask14_data
 	sta	zx_src_h+1
 	lda	#$74
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7800
 
-	lda	#<mask7_data
+	lda	#<mask15_data
 	sta	zx_src_l+1
-	lda	#>mask7_data
+	lda	#>mask15_data
 	sta	zx_src_h+1
 	lda	#$78
 	jsr	zx02_full_decomp
 
 	; load image offscreen $7C00
 
-	lda	#<mask8_data
+	lda	#<mask16_data
 	sta	zx_src_l+1
-	lda	#>mask8_data
+	lda	#>mask16_data
 	sta	zx_src_h+1
 	lda	#$7C
 	jsr	zx02_full_decomp
@@ -100,7 +177,7 @@ regular_tree:
 
 
 reset_tree_loop:
-	lda	#$60
+	lda	#$40
 	sta	TREE_COUNT
 
 regular_tree_loop:
