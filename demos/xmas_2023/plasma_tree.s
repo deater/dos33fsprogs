@@ -91,7 +91,7 @@ frame_noflo5:
 
 no_music5:
 	lda	FRAMEH
-	cmp	#6
+	cmp	#8
 	beq	done_making_plasma
 
 done_music5:

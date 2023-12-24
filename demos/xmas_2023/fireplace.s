@@ -469,7 +469,12 @@ do_scroll:
 	inc	FRAMEH							; 5
 frame_noflo3:
 
+	lda	FRAMEL
+	and	#$3
+	bne	no_scroll_flame
+
 	jsr	toggle_flame
+no_scroll_flame:
 
 	jsr	scroll_loop
 
