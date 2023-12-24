@@ -7,6 +7,8 @@ fireplace_restart:
 	sta	FRAMEL
 	sta	FRAMEH
 
+	bit	LORES
+
         bit     PAGE2
 
         lda     #4
@@ -419,7 +421,7 @@ frame_noflo2:
 
 no_music2:
 	lda	FRAMEH
-	cmp	#2
+	cmp	#1
 	beq	totally_done_fireplace
 
 done_music2:

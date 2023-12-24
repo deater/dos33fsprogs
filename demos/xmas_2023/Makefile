@@ -126,7 +126,7 @@ XMAS:	xmas.o
 xmas.o:	xmas.s plasma_tree.s fireplace.s \
 	zp.inc hardware.inc qload.inc \
 	vapor_lock.s gr_scroll.s draw_blocks.s \
-	regular_tree.s \
+	regular_tree.s snowflakes.s \
 	graphics/merry.hgr.zx02 \
 	graphics/tree01.gr.zx02 \
 	graphics/greets.raw.zx02

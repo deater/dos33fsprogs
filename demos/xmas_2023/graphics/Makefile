@@ -3,6 +3,7 @@ include ../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../utils/gr-utils/png2gr
+HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	tree01.gr.zx02 tree03.gr.zx02 \
 	tree05.gr.zx02 tree07.gr.zx02 \
@@ -12,11 +13,17 @@ all:	tree01.gr.zx02 tree03.gr.zx02 \
 	tree06.gr.zx02 tree08.gr.zx02 \
 	tree10.gr.zx02 tree12.gr.zx02 \
 	tree14.gr.zx02 tree16.gr.zx02 \
-	merry.hgr.zx02 \
+	merry.hgr.zx02 snow.inc \
 	greets.raw.zx02 credits.raw.zx02
 
 ####
 
+snow.inc:	snow_sprite.png
+	$(HGR_SPRITE) -s -l snow_sprite snow_sprite.png   0 0 41 23 > snow.inc
+
+
+
+###
 greets.raw.zx02:	greets.raw
 	$(ZX02) greets.raw greets.raw.zx02
 

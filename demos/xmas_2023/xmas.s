@@ -40,6 +40,12 @@ repeat:
 
 	jsr	plasma_tree
 
+	;======================================
+	; snowflakes
+	;======================================
+
+	jsr	do_snow
+
 
 	;======================================
 	; fireplace without vapor lock
@@ -58,4 +64,4 @@ finished:
 .include "plasma_tree.s"
 .include "fireplace.s"
 .include "regular_tree.s"
-
+.include "snowflakes.s"
