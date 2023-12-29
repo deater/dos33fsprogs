@@ -1,8 +1,8 @@
 #define RAMSIZE	128*1024
 extern unsigned char ram[RAMSIZE];
-extern unsigned char a,y,x;
-extern unsigned short sp;
-extern unsigned int n,z,c,v;
+extern unsigned char A,Y,X;
+extern unsigned short SP;
+extern unsigned int N,Z,C,V;
 
 unsigned short y_indirect(unsigned char base, unsigned char y);
 int init_6502(void);

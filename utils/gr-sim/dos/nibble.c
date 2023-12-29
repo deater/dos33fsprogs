@@ -20,28 +20,28 @@ int main(int argc, char **argv) {
 	yy=0;
 	printf("****yy=%d\n",yy);
 
-	y=yy;			// ldy	   #0
-	x=3;			// ldx     #3
+	Y=yy;			// ldy	   #0
+	X=3;			// ldx     #3
 L1:
-	ram[0x3c]=x;		// stx     $3c
-	a=x;			// txa
+	ram[0x3c]=X;		// stx     $3c
+	A=X;			// txa
 	asl();			// asl
 	bit_mem(0x3c);		// bit     $3c
-	if (z==1) goto L3;	// beq     L3
+	if (Z==1) goto L3;	// beq     L3
 	ora_mem(0x3c);		// ora     $3c
 	eor(0xff);		// eor     #$ff
 	and(0x7e);		// and     #$7e
 L2:
-	if (c==1) goto L3;	// bcs     L3
+	if (C==1) goto L3;	// bcs     L3
 	lsr();			// lsr
-	if (z==0) goto L2;	// bne     L2
+	if (Z==0) goto L2;	// bne     L2
 
-	a=y;			// tya
-	printf("%x=%x\n",x,a);	// sta     nibtbl, x
-	y++;			// iny
+	A=Y;			// tya
+	printf("%x=%x\n",X,A);	// sta     nibtbl, x
+	Y++;			// iny
 L3:
-	x++;			// inx
-	if (!(x&0x80)) goto L1;	// bpl     L1
+	X++;			// inx
+	if (!(X&0x80)) goto L1;	// bpl     L1
 
 
 

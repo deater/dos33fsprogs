@@ -27,7 +27,7 @@ static int cycles;
 
 static void getsrc(void) {
 //getsrc:
-	a=ram[y_indirect(LZ4_SRC,y)];	cycles+=5;	// lda 	(LZ4_SRC), y
+	A=ram[y_indirect(LZ4_SRC,Y)];	cycles+=5;	// lda 	(LZ4_SRC), y
 	ram[LZ4_SRC]++;			cycles+=5;	//inc	LZ4_SRC
 					cycles+=2;
 	if (ram[LZ4_SRC]!=0) {
@@ -42,29 +42,29 @@ done_getsrc:
 
 void buildcount(void) {
 //buildcount:
-	x=1;		cycles+=2;		// ??		// ldx	#1
-	ram[COUNT+1]=x; cycles+=3;		// ??		// stx	COUNT+1
+	X=1;		cycles+=2;		// ??		// ldx	#1
+	ram[COUNT+1]=X; cycles+=3;		// ??		// stx	COUNT+1
 	cmp(0xf);	cycles+=2;		// if 15, more complicated // cmp	#$0f
 	cycles+=2;
-	if (z==0) {
+	if (Z==0) {
 		cycles+=1;
 		goto done_buildcount;		// otherwise A is count // bne	++
 	}
 buildcount_loop:
-	ram[COUNT]=a;	cycles+=3;		//-	sta	count
+	ram[COUNT]=A;	cycles+=3;		//-	sta	count
 	getsrc();	cycles+=6;		//jsr	getsrc
-	x=a;		cycles+=2;		//tax
-	c=0;		cycles+=2;		//clc
+	X=A;		cycles+=2;		//tax
+	C=0;		cycles+=2;		//clc
 	adc(ram[COUNT]);cycles+=3;		//adc	COUNT
 	cycles+=2;
-	if (c==0) {
+	if (C==0) {
 		cycles+=1;
 		goto skip_buildcount;		// bcc	+
 	}
 	ram[COUNT+1]++;	cycles+=5;		//inc	COUNT+1
 skip_buildcount:
-	x++;		cycles+=2;		// check if x is 255	//+	inx
-	if (x==0) {
+	X++;		cycles+=2;		// check if x is 255	//+	inx
+	if (X==0) {
 		cycles+=1;
 		goto buildcount_loop;		// if so, add in next byte //beq	-
 	}
@@ -76,7 +76,7 @@ done_buildcount:
 
 static void putdst(void) {
 							// putdst:
-	ram[y_indirect(LZ4_DST,y)]=a; cycles+=6;	//	sta 	(LZ4_DST), y
+	ram[y_indirect(LZ4_DST,Y)]=A; cycles+=6;	//	sta 	(LZ4_DST), y
 	ram[LZ4_DST]++;		cycles+=5;		//	inc	LZ4_DST
 	cycles+=2;
 	if (ram[LZ4_DST]!=0) {
@@ -102,9 +102,9 @@ static void docopy(void) {
 						// docopy:
 docopy_label:
 	getput();	cycles+=6;		// jsr	getput
-	x--;		cycles+=2;		// dex
+	X--;		cycles+=2;		// dex
 	cycles+=2;
-	if (x!=0) {
+	if (X!=0) {
 		cycles+=1;
 		goto docopy_label;		// bne	docopy
 	}
@@ -132,18 +132,18 @@ int lz4_decode(void) {
 	//Peter Ferrie (peter.ferrie@gmail.com)
 // lz4_decode:
 
-	a=ram[LZ4_SRC];		cycles+=3;	// lda     LZ4_SRC
-	c=0;			cycles+=2;	// clc
+	A=ram[LZ4_SRC];		cycles+=3;	// lda     LZ4_SRC
+	C=0;			cycles+=2;	// clc
 	adc(ram[LZ4_END]);	cycles+=3;	// adc     LZ4_END
-	ram[LZ4_END]=a;		cycles+=3;	// sta     LZ4_END
-        a=ram[LZ4_SRC+1];	cycles+=3;	// lda     LZ4_SRC+1
+	ram[LZ4_END]=A;		cycles+=3;	// sta     LZ4_END
+        A=ram[LZ4_SRC+1];	cycles+=3;	// lda     LZ4_SRC+1
 	adc(ram[LZ4_END+1]);	cycles+=3;	// adc     LZ4_END+1
-	ram[LZ4_END+1]=a;	cycles+=3;	// sta     LZ4_END+1
+	ram[LZ4_END+1]=A;	cycles+=3;	// sta     LZ4_END+1
 
-	a=high(orgoff);		cycles+=2;	// lda     #>orgoff                ; original unpacked data offset
-        ram[LZ4_DST+1]=a;	cycles+=3;	// sta     LZ4_DST+1
-	a=low(orgoff);		cycles+=2;	// lda     #<orgoff
-	ram[LZ4_DST]=a;		cycles+=3;	// sta     LZ4_DST
+	A=high(orgoff);		cycles+=2;	// lda     #>orgoff                ; original unpacked data offset
+        ram[LZ4_DST+1]=A;	cycles+=3;	// sta     LZ4_DST+1
+	A=low(orgoff);		cycles+=2;	// lda     #<orgoff
+	ram[LZ4_DST]=A;		cycles+=3;	// sta     LZ4_DST
 
 //	printf("packed size: raw=%x, adj=%x\n",size,paksize);
 	printf("packed addr: %02X%02X\n",ram[LZ4_SRC+1],ram[LZ4_SRC]);
@@ -151,7 +151,7 @@ int lz4_decode(void) {
 	printf("dest addr  : %02X%02X\n",ram[LZ4_DST+1],ram[LZ4_DST]);
 
 //unpmain:
-	y=0;		cycles+=2;	// used for offset	//ldy	#0
+	Y=0;		cycles+=2;	// used for offset	//ldy	#0
 
 parsetoken:
 	getsrc();	cycles+=6;	// jsr	getsrc
@@ -162,22 +162,22 @@ parsetoken:
 	lsr();		cycles+=2;				// lsr
 	lsr();		cycles+=2;				// lsr
 	cycles+=2;
-	if (a==0) {
+	if (A==0) {
 		cycles+=1;
 		goto copymatches; 	// if zero, no literals // beq	copymatches
 	}
 
 	buildcount();	cycles+=6;	// otherwise, build the count // jsr	buildcount
 
-	x=a;			cycles+=2;	// tax
+	X=A;			cycles+=2;	// tax
 	docopy();		cycles+=6;	// jsr	docopy
-	a=ram[LZ4_SRC];		cycles+=3;	// lda	LZ4_SRC
+	A=ram[LZ4_SRC];		cycles+=3;	// lda	LZ4_SRC
 	cmp(ram[end]);		cycles+=3;	// cmp	end
-	a=ram[LZ4_SRC+1];	cycles+=3;	// lda	LZ4_SRC+1
+	A=ram[LZ4_SRC+1];	cycles+=3;	// lda	LZ4_SRC+1
 
 	sbc(ram[end+1]);	cycles+=3;	// sbc	end+1
 	cycles+=2;
-	if (c) {
+	if (C) {
 		printf("Done!\n");
 		printf("src        : %02X%02X\n",ram[LZ4_SRC+1],ram[LZ4_SRC]);
 		printf("packed end : %02X%02X\n",ram[end+1],ram[end]);
@@ -187,45 +187,45 @@ parsetoken:
 
 copymatches:
 	getsrc();		cycles+=6;	// jsr	getsrc
-	ram[DELTA]=a;		cycles+=3;	// sta	DELTA
+	ram[DELTA]=A;		cycles+=3;	// sta	DELTA
 	getsrc();		cycles+=6;	// jsr	getsrc
-	ram[DELTA+1]=a;		cycles+=3;	// sta	DELTA+1
+	ram[DELTA+1]=A;		cycles+=3;	// sta	DELTA+1
 	pla();			cycles+=3;	// restore token	// pla
-	a=a&0xf;		cycles+=2;	// get bottom 4 bits	// and	#$0f
+	A=A&0xf;		cycles+=2;	// get bottom 4 bits	// and	#$0f
 	buildcount();		cycles+=6;	// jsr	buildcount
 
-	c=0;			cycles+=2;	// clc
+	C=0;			cycles+=2;	// clc
 	adc(4);			cycles+=2;	// adc	#4
-	x=a;			cycles+=2;	// tax
+	X=A;			cycles+=2;	// tax
 	cycles+=2;
-	if (x==0) {
+	if (X==0) {
 		cycles+=1;
 		goto copy_skip;	//BUGFIX // beq  +
 	}
 	cycles+=2;
-	if (c==0) {
+	if (C==0) {
 		cycles+=1;
 		goto copy_skip;	// bcc	+
 	}
 	ram[COUNT+1]++;		cycles+=5;	// inc	count+1
 copy_skip:
-	a=ram[LZ4_SRC+1];	cycles+=3;	//+	lda	src+1
+	A=ram[LZ4_SRC+1];	cycles+=3;	//+	lda	src+1
 	pha();			cycles+=3;	// pha
-	a=ram[LZ4_SRC];		cycles+=3;	// lda	src
+	A=ram[LZ4_SRC];		cycles+=3;	// lda	src
 	pha();			cycles+=3;	// pha
-	c=1;			cycles+=2;	// sec
-	a=ram[LZ4_DST];		cycles+=3;	// lda	LZ4_DST
+	C=1;			cycles+=2;	// sec
+	A=ram[LZ4_DST];		cycles+=3;	// lda	LZ4_DST
 	sbc(ram[DELTA]);	cycles+=3;	// sbc	DELTA
-	ram[LZ4_SRC]=a;		cycles+=3;	// sta	LZ4_SRC
-	a=ram[LZ4_DST+1];	cycles+=3;	// lda	LZ4_DST+1
+	ram[LZ4_SRC]=A;		cycles+=3;	// sta	LZ4_SRC
+	A=ram[LZ4_DST+1];	cycles+=3;	// lda	LZ4_DST+1
 	sbc(ram[DELTA+1]);	cycles+=3;	// sbc	DELTA+1
-	ram[LZ4_SRC+1]=a;	cycles+=3;	// sta	LZ4_SRC+1
+	ram[LZ4_SRC+1]=A;	cycles+=3;	// sta	LZ4_SRC+1
 
 	docopy();		cycles+=6;	// jsr	docopy
 	pla();			cycles+=3;	// pla
-	ram[LZ4_SRC]=a;		cycles+=3;	// sta	LZ4_SRC
+	ram[LZ4_SRC]=A;		cycles+=3;	// sta	LZ4_SRC
 	pla();			cycles+=3;	// pla
-	ram[LZ4_SRC+1]=a;	cycles+=3;	// sta	LZ4_SRC+1
+	ram[LZ4_SRC+1]=A;	cycles+=3;	// sta	LZ4_SRC+1
 	cycles+=3;
 	goto parsetoken;		// jmp	parsetoken
 
@@ -262,13 +262,13 @@ static void print_both_pages(void) {
 
 	for(i=0;i<ram[CH];i++) printf(" ");
 
-	y=0;
+	Y=0;
 
 	while(1) {
-		a=ram[y_indirect(OUTL,y)];
-		if (a==0) break;
-		printf("%c",a);
-		y++;
+		A=ram[y_indirect(OUTL,Y)];
+		if (A==0) break;
+		printf("%c",A);
+		Y++;
 	}
 	printf("\n");
 }
@@ -276,20 +276,20 @@ static void print_both_pages(void) {
 
 static void print_header_info(void) {
 
-	ram[CV]=a;
+	ram[CV]=A;
 
-	y++;
-	a=y;
-	y=0;
-	c=0;
+	Y++;
+	A=Y;
+	Y=0;
+	C=0;
 	adc(ram[OUTL]);
-	ram[OUTL]=a;
-	a=ram[OUTH];
+	ram[OUTL]=A;
+	A=ram[OUTH];
 	adc(0);
-	ram[OUTH]=a;
+	ram[OUTH]=A;
 
-	a=ram[y_indirect(OUTL,y)];
-	ram[CH]=a;
+	A=ram[y_indirect(OUTL,Y)];
+	ram[CH]=A;
 
 	ram[OUTL]++;
 	if (ram[OUTL]==0) ram[OUTH]++;
@@ -321,55 +321,55 @@ int main(int argc, char **argv) {
 
 	memcpy(&ram[LZ4_BUFFER],input,size);
 
-	a=high(LZ4_BUFFER);
-	ram[OUTH]=a;
-	a=low(LZ4_BUFFER);
-	ram[OUTL]=a;
+	A=high(LZ4_BUFFER);
+	ram[OUTH]=A;
+	A=low(LZ4_BUFFER);
+	ram[OUTL]=A;
 
-	y=3;
+	Y=3;
 
-	a=20;
+	A=20;
 	print_header_info();
 
-	a=21;
+	A=21;
 	print_header_info();
 	printf("\n");
 
-	a=23;
+	A=23;
 	print_header_info();
 
-	y=0;
-	a=high(LZ4_BUFFER+3);
-	ram[LZ4_SRC+1]=a;
-	a=low(LZ4_BUFFER+3);
-	ram[LZ4_SRC]=a;
+	Y=0;
+	A=high(LZ4_BUFFER+3);
+	ram[LZ4_SRC+1]=A;
+	A=low(LZ4_BUFFER+3);
+	ram[LZ4_SRC]=A;
 
-	a=ram[y_indirect(LZ4_SRC,y)];
-	c=0;
+	A=ram[y_indirect(LZ4_SRC,Y)];
+	C=0;
 	adc(ram[LZ4_SRC]);
-	ram[LZ4_SRC]=a;
-	a=ram[LZ4_SRC+1];
+	ram[LZ4_SRC]=A;
+	A=ram[LZ4_SRC+1];
 	adc(0);
-	ram[LZ4_SRC+1]=a;
+	ram[LZ4_SRC+1]=A;
 
 // next_subsong:
 
-	y=0;
+	Y=0;
 
-	a=ram[y_indirect(LZ4_SRC,y)];
-	ram[LZ4_END]=a;
-	y++;
-	a=ram[y_indirect(LZ4_SRC,y)];
-	ram[LZ4_END+1]=a;
-	y++;
+	A=ram[y_indirect(LZ4_SRC,Y)];
+	ram[LZ4_END]=A;
+	Y++;
+	A=ram[y_indirect(LZ4_SRC,Y)];
+	ram[LZ4_END+1]=A;
+	Y++;
 
-	a=2;
-	c=0;
+	A=2;
+	C=0;
 	adc(ram[LZ4_SRC]);
-	ram[LZ4_SRC]=a;
-	a=(ram[LZ4_SRC+1]);
+	ram[LZ4_SRC]=A;
+	A=(ram[LZ4_SRC+1]);
 	adc(0);
-	ram[LZ4_SRC+1]=a;
+	ram[LZ4_SRC+1]=A;
 
 	lz4_decode();
 

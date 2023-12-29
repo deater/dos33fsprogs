@@ -686,14 +686,14 @@ static void draw_background_mode7(void) {
 
 	do {
 //screeny_loop:
-		y=0;
+		Y=0;
 
 		/* actual code does even/odd stuff here */
 
 							cycles.mode7+=27;
 //setup_gr_addr:
 
-		hlin_setup(ram[DRAW_PAGE],y,0,ram[SCREEN_Y]);
+		hlin_setup(ram[DRAW_PAGE],Y,0,ram[SCREEN_Y]);
 							cycles.mode7+=21;
 
 //calc_horizontal_scale:
@@ -836,14 +836,14 @@ match:
 			ram[COLOR]=(map_color&0xf);
 //			ram[COLOR]|=map_color<<4;
 
-			y=0;
+			Y=0;
 			if ((ram[SCREEN_Y]&1)==0) {
-				ram[y_indirect(GBASL,y)]=ram[COLOR];
+				ram[y_indirect(GBASL,Y)]=ram[COLOR];
 							cycles.mode7+=18;
 			}
 			else {
-				a=ram[COLOR];
-				ram[y_indirect(GBASL,y)]|=(a<<4);
+				A=ram[COLOR];
+				ram[y_indirect(GBASL,Y)]|=(A<<4);
 							cycles.mode7+=22;
 
 			}

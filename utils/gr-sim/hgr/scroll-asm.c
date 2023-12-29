@@ -96,38 +96,38 @@ scroll_loop:
 left_one_loop:
 //	printf("%d %02x:%02x\n",count,ram[OUTH],ram[OUTL]);
 
-	for(y=0;y<40;y++) {
-		ram[CURRENT]=ram[y_indirect(OUTL,y)];
-		ram[NEXT]=ram[y_indirect(OUTL,y+1)];
+	for(Y=0;Y<40;Y++) {
+		ram[CURRENT]=ram[y_indirect(OUTL,Y)];
+		ram[NEXT]=ram[y_indirect(OUTL,Y+1)];
 		if ((count%7==2) || (count%7==6)) {
 			ram[HIGH]=ram[NEXT]&0x80;
 		}
 		else {
 			ram[HIGH]=ram[CURRENT]&0x80;
 		}
-		if (y==39) ram[NEXT]=ram[y_indirect(INL,0)];
+		if (Y==39) ram[NEXT]=ram[y_indirect(INL,0)];
 
-		a=ram[NEXT];
+		A=ram[NEXT];
 		and(0x3);
 		asl();
 		asl();
 		asl();
 		asl();
 		asl();
-		ram[NEXT]=a;
+		ram[NEXT]=A;
 
-		a=ram[CURRENT];
+		A=ram[CURRENT];
 		lsr();
 		lsr();			// current>>=2;
 		and(0x1f);		// current&=0x1f;
 		ora_mem(HIGH);
 		ora_mem(NEXT);
-		ram[y_indirect(OUTL,y)]=a;
+		ram[y_indirect(OUTL,Y)]=A;
 	}
 
-	for(y=0;y<40;y++) {
-		ram[CURRENT]=ram[y_indirect(INL,y)];
-		ram[NEXT]=ram[y_indirect(INL,y+1)];
+	for(Y=0;Y<40;Y++) {
+		ram[CURRENT]=ram[y_indirect(INL,Y)];
+		ram[NEXT]=ram[y_indirect(INL,Y+1)];
 		if ((count%7==2) ||(count%7==6)) {
 			ram[HIGH]=ram[NEXT]&0x80;
 		}
@@ -135,43 +135,43 @@ left_one_loop:
 			ram[HIGH]=ram[CURRENT]&0x80;
 		}
 
-		a=ram[NEXT];
+		A=ram[NEXT];
 		and(0x3);
 		asl();
 		asl();
 		asl();
 		asl();
 		asl();
-		ram[NEXT]=a;
+		ram[NEXT]=A;
 
-		a=ram[CURRENT];
+		A=ram[CURRENT];
 		lsr();
 		lsr();			// current>>=2;
 		and(0x1f);		// current&=0x1f;
 		ora_mem(HIGH);
 		ora_mem(NEXT);
-		ram[y_indirect(INL,y)]=a;
+		ram[y_indirect(INL,Y)]=A;
 	}
 
 
 
 	clc();
-	a=ram[INL];
+	A=ram[INL];
 	adc(0x80);
-	ram[INL]=a;
-	a=ram[INH];
+	ram[INL]=A;
+	A=ram[INH];
 	adc(0x0);
-	ram[INH]=a;
+	ram[INH]=A;
 
 	clc();
-	a=ram[OUTL];
+	A=ram[OUTL];
 	adc(0x80);
-	ram[OUTL]=a;
-	a=ram[OUTH];
+	ram[OUTL]=A;
+	A=ram[OUTH];
 	adc(0x0);
-	ram[OUTH]=a;
+	ram[OUTH]=A;
 
-	if (a!=0x60) goto left_one_loop;
+	if (A!=0x60) goto left_one_loop;
 
 	grsim_update();
 	ch=grsim_input();

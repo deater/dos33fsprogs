@@ -1,5 +1,5 @@
 extern unsigned char ram[128*1024];
-extern unsigned char a,y,x;
+extern unsigned char A,Y,X;
 
 int grsim_input(void);
 int grsim_update(void);
@@ -120,8 +120,12 @@ void clear_bottom(void);
 void clear_screens_notext(void);
 void clear_all(void);
 
+/* hgr-sim.c */
 int hgr(void);
 int hplot(int xx, int yy);
 int hplot_to(int xx, int yy);
 int hcolor_equals(int color);
-
+void bkgnd(void);
+void hclr(void);
+void hposn(void);
+int hplot(int xx, int yy);

@@ -10,39 +10,39 @@ static void color_shift(void) {
 	asl();
 	cmp(0xc0);
 
-	if (!n) goto done_color_shift;
+	if (!N) goto done_color_shift;
 
-	a=ram[HGR_BITS];
-	a=a^0x7f;
-	ram[HGR_BITS]=a;
+	A=ram[HGR_BITS];
+	A=A^0x7f;
+	ram[HGR_BITS]=A;
 
 done_color_shift:
 	;	// rts
 }
 
-static void bkgnd(void) {
+void bkgnd(void) {
 	// F3F6
-	a=ram[HGR_PAGE];
-	ram[HGR_SHAPE+1]=a;
-	y=0;
-	ram[HGR_SHAPE]=y;
+	A=ram[HGR_PAGE];
+	ram[HGR_SHAPE+1]=A;
+	Y=0;
+	ram[HGR_SHAPE]=Y;
 bkgnd_loop:
-	a=ram[HGR_BITS];
+	A=ram[HGR_BITS];
 
-	ram[y_indirect(HGR_SHAPE,y)]=a;
+	ram[y_indirect(HGR_SHAPE,Y)]=A;
 
 	color_shift();
 
-	y++;
-	if (y==0) {
+	Y++;
+	if (Y==0) {
 	}
 	else {
 		goto bkgnd_loop;
 	}
 	ram[HGR_SHAPE+1]+=1;
-	a=ram[HGR_SHAPE+1];
-	a&=0x1f;			// see if $40 or $60
-	if (a!=0) {
+	A=ram[HGR_SHAPE+1];
+	A&=0x1f;			// see if $40 or $60
+	if (A!=0) {
 		goto bkgnd_loop;
 	}
 	// rts
@@ -50,15 +50,15 @@ bkgnd_loop:
 
 void hclr(void) {
 	// F3F2
-	a=0;			// black background
-	ram[HGR_BITS]=a;
+	A=0;			// black background
+	ram[HGR_BITS]=A;
 	bkgnd();
 
 }
 
 static void sethpg(void) {
 	// F3EA
-	ram[HGR_PAGE]=a;
+	ram[HGR_PAGE]=A;
 	soft_switch(HIRES);	// LDA SW.HIRES
 	soft_switch(TXTCLR);	// LDA SW.TXTCLR
 
@@ -69,7 +69,7 @@ static void sethpg(void) {
 int hgr(void) {
 
 	// F3E2
-	a=0x20;			// HIRES Page 1 at $2000
+	A=0x20;			// HIRES Page 1 at $2000
 	soft_switch(LOWSCR);	// BIT SW.LOWSCR Use PAGE1 ($C054)
         soft_switch(MIXSET);    // BIT SW.MIXSET (Mixed text)
 	sethpg();
@@ -82,30 +82,30 @@ int hgr2(void) {
 	// F3D8
 	soft_switch(HISCR);	// BIT SW.HISCR Use PAGE2 ($C055)
 	soft_switch(MIXCLR);	// BIT SW.MIXCLR
-	a=0x40;			// HIRES Page 2 at $4000
+	A=0x40;			// HIRES Page 2 at $4000
 	sethpg();
 
         return 0;
 }
 
-static void hposn(void) {
+void hposn(void) {
 
 	unsigned char msktbl[]={0x81,0x82,0x84,0x88,0x90,0xA0,0xC0};
 
 	// F411
-	ram[HGR_Y]=a;
-	ram[HGR_X]=x;
-	ram[HGR_X+1]=y;
+	ram[HGR_Y]=A;
+	ram[HGR_X]=X;
+	ram[HGR_X+1]=Y;
 	pha();
-	a=a&0xC0;
-	ram[GBASL]=a;
+	A=A&0xC0;
+	ram[GBASL]=A;
 	lsr();
 	lsr();
-	a=a|ram[GBASL];
-	ram[GBASL]=a;
+	A=A|ram[GBASL];
+	ram[GBASL]=A;
 	pla();
 	// F423
-	ram[GBASH]=a;
+	ram[GBASH]=A;
 	asl();
 	asl();
 	asl();
@@ -115,43 +115,43 @@ static void hposn(void) {
 	asl();
 	ror_mem(GBASL);
 	lda(GBASH);
-	a=a&0x1f;
-	a=a|ram[HGR_PAGE];
-	ram[GBASH]=a;
+	A=A&0x1f;
+	A=A|ram[HGR_PAGE];
+	ram[GBASH]=A;
 
 	// F438
-	a=x;
+	A=X;
 	cpy(0);
-	if (z==1) goto hposn_2;
+	if (Z==1) goto hposn_2;
 
-	y=35;
+	Y=35;
 	adc(4);
 hposn_1:
 	iny();
 	// f442
 hposn_2:
 	sbc(7);
-	if (c==1) goto hposn_1;
-	ram[HGR_HORIZ]=y;
-	x=a;
-	a=msktbl[(x-0x100)+7];		// LDA MSKTBL-$100+7,X  BIT MASK
+	if (C==1) goto hposn_1;
+	ram[HGR_HORIZ]=Y;
+	X=A;
+	A=msktbl[(X-0x100)+7];		// LDA MSKTBL-$100+7,X  BIT MASK
 					// MSKTBL=F5B8
-	ram[HMASK]=a;
-	a=y;
+	ram[HMASK]=A;
+	A=Y;
 	lsr();
-	a=ram[HGR_COLOR];
-	ram[HGR_BITS]=a;
-	if (c) color_shift();
+	A=ram[HGR_COLOR];
+	ram[HGR_BITS]=A;
+	if (C) color_shift();
 }
 
 static void hplot0(void) {
 	// F457
 	hposn();
-	a=ram[HGR_BITS];
-	a=a^ram[y_indirect(GBASL,y)];
-	a=a&ram[HMASK];
-	a=a^ram[y_indirect(GBASL,y)];
-	ram[y_indirect(GBASL,y)]=a;
+	A=ram[HGR_BITS];
+	A=A^ram[y_indirect(GBASL,Y)];
+	A=A&ram[HMASK];
+	A=A^ram[y_indirect(GBASL,Y)];
+	ram[y_indirect(GBASL,Y)]=A;
 }
 
 static void hfns(int xx, int yy) {
@@ -167,9 +167,9 @@ static void hfns(int xx, int yy) {
 		return;
 	}
 
-	x=(xx&0xff);
-	y=(xx>>8);
-	a=yy;
+	X=(xx&0xff);
+	Y=(xx>>8);
+	A=yy;
 
 }
 
@@ -185,56 +185,56 @@ int hplot(int xx, int yy) {
 
 static void move_left_or_right(void) {
 	// F465
-	if (n==0) goto move_right;
+	if (N==0) goto move_right;
 
-	a=ram[HMASK];
+	A=ram[HMASK];
 	lsr();
-	if (c==1) goto lr_2;
-	a=a^0xc0;
+	if (C==1) goto lr_2;
+	A=A^0xc0;
 lr_1:
-	ram[HMASK]=a;
+	ram[HMASK]=A;
 	return;
 lr_2:
 	dey();
-	if (n==0) goto lr_3;
-	y=39;
+	if (N==0) goto lr_3;
+	Y=39;
 lr_3:
-	a=0xc0;
+	A=0xc0;
 lr_4:
-	ram[HMASK]=a;
-	ram[HGR_HORIZ]=y;
-	a=ram[HGR_BITS];
+	ram[HMASK]=A;
+	ram[HGR_HORIZ]=Y;
+	A=ram[HGR_BITS];
 	color_shift();
 	return;
 
 move_right:
-	a=ram[HMASK];
+	A=ram[HMASK];
 	asl();
-	a=a^0x80;
-	if (a&0x80) goto lr_1;
-	a=0x81;
+	A=A^0x80;
+	if (A&0x80) goto lr_1;
+	A=0x81;
 	iny();
 	cpy(40);
-	if (c==0) goto lr_4;
-	y=0;
+	if (C==0) goto lr_4;
+	Y=0;
 	goto lr_4;
 
 }
 
 static void move_up_or_down(void) {
 	// F4D3
-	if (n==1) goto move_down;
+	if (N==1) goto move_down;
 
-	c=0;
+	C=0;
 	lda(GBASH);
 	bit(0x1c);		// CON.1C
-	if (z!=1) goto mu_5;
+	if (Z!=1) goto mu_5;
 	asl_mem(GBASL);
-	if (c==1) goto mu_3;
+	if (C==1) goto mu_3;
 	bit(0x03);		// CON.03
-	if (z==1) goto mu_1;
+	if (Z==1) goto mu_1;
 	adc(0x1f);
-	c=1;
+	C=1;
 	goto mu_4;
 	// F4Eb
 mu_1:
@@ -242,11 +242,11 @@ mu_1:
 	pha();
 	lda(GBASL);
 	adc(0xb0);
-	if (c==1) goto mu_2;
+	if (C==1) goto mu_2;
 	adc(0xf0);
 	// f4f6
 mu_2:
-	ram[GBASL]=a;
+	ram[GBASL]=A;
 	pla();
 	goto mu_4;
 mu_3:
@@ -256,7 +256,7 @@ mu_4:
 mu_5:
 	adc(0xfc);
 ud_1:
-	ram[GBASH]=a;
+	ram[GBASH]=A;
 	return;
 
 	// f505
@@ -264,20 +264,20 @@ move_down:
 	lda(GBASH);
 	adc(4);
 	bit(0x1c);
-	if (z!=1) goto ud_1;
+	if (Z!=1) goto ud_1;
 	asl_mem(GBASL);
-	if (c==0) goto md_2;
+	if (C==0) goto md_2;
 	adc(0xe0);
-	c=0;
+	C=0;
 	bit(0x4);
-	if (z==1) goto md_3;
+	if (Z==1) goto md_3;
 	lda(GBASL);
 	adc(0x50);
-	a=a^0xf0;
-	if (a==0) goto md_1;
-	a=a^0xf0;
+	A=A^0xf0;
+	if (A==0) goto md_1;
+	A=A^0xf0;
 md_1:
-	ram[GBASL]=a;
+	ram[GBASL]=A;
 	lda(HGR_PAGE);
 	goto md_3;
 md_2:
@@ -292,82 +292,82 @@ static void hglin(void) {
 
 	// F53A
 	pha();
-	c=1;
+	C=1;
 	sbc(ram[HGR_X]);
 	pha();
-	a=x;
+	A=X;
 	sbc(ram[HGR_X+1]);
-	ram[HGR_QUADRANT]=a;
+	ram[HGR_QUADRANT]=A;
 	// F544
-	if (c==1) goto hglin_1;
+	if (C==1) goto hglin_1;
 	pla();
-	a=a^0xff;
+	A=A^0xff;
 	adc(1);
 	pha();
 	lda_const(0);
 	sbc(ram[HGR_QUADRANT]);
 	// F550
 hglin_1:
-	ram[HGR_DX+1]=a;
-	ram[HGR_E+1]=a;
+	ram[HGR_DX+1]=A;
+	ram[HGR_E+1]=A;
 	pla();
-	ram[HGR_DX]=a;
-	ram[HGR_E]=a;
+	ram[HGR_DX]=A;
+	ram[HGR_E]=A;
 	pla();
-	ram[HGR_X]=a;
-	ram[HGR_X+1]=x;
-	a=y;
-	c=0;
+	ram[HGR_X]=A;
+	ram[HGR_X+1]=X;
+	A=Y;
+	C=0;
 	sbc(ram[HGR_Y]);
-	if (c==0) goto hglin_2;
-	a=a^0xff;
+	if (C==0) goto hglin_2;
+	A=A^0xff;
 	adc(0xfe);
 hglin_2:
 	// F568
-	ram[HGR_DY]=a;
-	ram[HGR_Y]=y;
+	ram[HGR_DY]=A;
+	ram[HGR_Y]=Y;
 	ror_mem(HGR_QUADRANT);
-	c=1;
+	C=1;
 	sbc(ram[HGR_DX]);
-	x=a;
+	X=A;
 	lda_const(0xff);
 	sbc(ram[HGR_DX+1]);
-	ram[HGR_COUNT]=a;
+	ram[HGR_COUNT]=A;
 	ldy(HGR_HORIZ);
 	goto movex2;	// always?
 	// f57c
 movex:
 	asl();
 	move_left_or_right();
-	c=1;
+	C=1;
 
 	// f581
 movex2:
 	lda(HGR_E);
 	adc(ram[HGR_DY]);
-	ram[HGR_E]=a;
+	ram[HGR_E]=A;
 	lda(HGR_E+1);
 	sbc(0);
 movex2_1:
-	ram[HGR_E+1]=a;
-	lda(y_indirect(GBASL,y));
-	a=a^ram[HGR_BITS];
-	a=a&ram[HMASK];
-	a=a^ram[y_indirect(GBASL,y)];
-	ram[y_indirect(GBASL,y)]=a;
+	ram[HGR_E+1]=A;
+	lda(y_indirect(GBASL,Y));
+	A=A^ram[HGR_BITS];
+	A=A&ram[HMASK];
+	A=A^ram[y_indirect(GBASL,Y)];
+	ram[y_indirect(GBASL,Y)]=A;
 	inx();
-	if (z!=1) goto movex2_2;
+	if (Z!=1) goto movex2_2;
 	ram[HGR_COUNT]++;
 	if (ram[HGR_COUNT]==0) return;
 	// F59e
 movex2_2:
 	lda(HGR_QUADRANT);
-	if (c==1) goto movex;
+	if (C==1) goto movex;
 	move_up_or_down();
-	c=0;
+	C=0;
 	lda(HGR_E);
 	adc(ram[HGR_DX]);
-	ram[HGR_E]=a;
+	ram[HGR_E]=A;
 	lda(HGR_E+1);
 	adc(ram[HGR_DX+1]);
 	goto movex2_1;
@@ -377,10 +377,10 @@ int hplot_to(int xx, int yy) {
 
 	// F712
 	hfns(xx,yy);
-	ram[DSCTMP]=y;
-	y=a;
-	a=x;
-	x=ram[DSCTMP];
+	ram[DSCTMP]=Y;
+	Y=A;
+	A=X;
+	X=ram[DSCTMP];
 	hglin();
 
 	return 0;
@@ -391,14 +391,14 @@ int hcolor_equals(int color) {
 	unsigned char colortbl[8]={0x00,0x2A,0x55,0x7F,0x80,0xAA,0xD5,0xFF};
 
 	// F6E9
-	x=color;
-	if (x>7) {
+	X=color;
+	if (X>7) {
 		printf("HCOLOR out of range!\n");
 		return -1;
 	}
 
-	a=colortbl[x];
-	ram[HGR_COLOR]=a;
+	A=colortbl[X];
+	ram[HGR_COLOR]=A;
 
 	return 0;
 }

@@ -32,7 +32,7 @@ unsigned short random16(void) {
 	path|=PATH_R16;
 
 	lda(SEEDL);	cycles+=3;
-	if (a==0) {
+	if (A==0) {
 		cycles+=3;
 		goto low_zero;
 	}
@@ -43,12 +43,12 @@ unsigned short random16(void) {
 	asl_mem(SEEDL);	cycles+=5;
 	lda(SEEDH);	cycles+=3;
 	rol();		cycles+=2;
-	if (c==1) {
+	if (C==1) {
 		cycles+=3;
 		goto five_cycle_do_eor;
 	}
 	cycles+=2;
-	if (c==0) {
+	if (C==0) {
 		cycles+=3;
 		goto two_cycle_no_eor;
 	}
@@ -63,10 +63,10 @@ three_cycle_do_eor:
 
 //do_eor:
 	path|=PATH_DEO;
-	a=a^0x76;	cycles+=2;
+	A=A^0x76;	cycles+=2;
 	sta(SEEDH);	cycles+=3;
 	lda(SEEDL);	cycles+=3;
-	a=a^0x57;	cycles+=2;
+	A=A^0x57;	cycles+=2;
 	sta(SEEDL);	cycles+=3;
 eor_rts:
 	cycles+=6;
@@ -91,7 +91,7 @@ two_cycle_no_eor:
 low_zero:
 	path|=PATH_LOZ;
 	lda(SEEDH);	cycles+=3;
-	if (a==0) {
+	if (A==0) {
 		cycles+=3;
 		goto eleven_cycle_do_eor;
 	}
@@ -100,7 +100,7 @@ low_zero:
 //ceo:
 	path|=PATH_CEO;
 	asl();	cycles+=2;
-	if (a==0) {
+	if (A==0) {
 		cycles+=3;
 		goto six_cycles_no_eor;
 	}
@@ -108,12 +108,12 @@ low_zero:
 
 //cep:
 	path|=PATH_CEP;
-	if (c==0) {
+	if (C==0) {
 		cycles+=3;
 		goto four_cycle_no_eor;
 	}
 	cycles+=2;
-	if (c==1) {
+	if (C==1) {
 		cycles+=3;
 		goto three_cycle_do_eor;
 	}

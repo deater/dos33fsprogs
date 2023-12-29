@@ -8,7 +8,10 @@ SDL_INCLUDE= `sdl-config --cflags`
 
 all:	gr-sim.a
 	make -C 6502_test
+	make -C bubble
+	make -C donut
 	make -C dos
+	make -C dots
 	make -C drops
 	make -C fade
 	make -C fire
@@ -21,12 +24,14 @@ all:	gr-sim.a
 	make -C mode7_demo
 	make -C plasma
 	make -C rasterbars
+	make -C raytrace
 	make -C rotate_wipe
 	make -C split_screen
 	make -C starfield
 	make -C text
 	make -C tfv
 	make -C tunnel
+	make -C twister
 	make -C water
 
 #### Library
@@ -58,7 +63,10 @@ hgr-sim.o:	hgr-sim.c gr-sim.h
 clean:	
 	rm -f *~ *.o *.a
 	make -C 6502_test clean
+	make -C bubble clean
+	make -C donut clean
 	make -C dos clean
+	make -C dots clean
 	make -C drops clean
 	make -C fade clean
 	make -C fire clean
@@ -71,10 +79,12 @@ clean:
 	make -C mode7_demo clean
 	make -C plasma clean
 	make -C rasterbars clean
+	make -C raytrace clean
 	make -C rotate_wipe clean
 	make -C split_screen clean
 	make -C starfield clean
 	make -C text clean
 	make -C tfv clean
 	make -C tunnel clean
+	make -C twister clean
 	make -C water clean

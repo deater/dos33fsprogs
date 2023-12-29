@@ -60,39 +60,39 @@ struct star_type {
 void random_6502(void) {
 
 	lda(SEED);			// lda seed
-	if (a==0) goto lowZero;		// beq lowZero ; $0000 and $8000 are special values to test for
+	if (A==0) goto lowZero;		// beq lowZero ; $0000 and $8000 are special values to test for
 					// ; Do a normal shift
 	asl_mem(SEED);			// asl seed
 	lda(SEED+1);			// lda seed+1
 	rol();				//  rol
-	if (c==0) goto noEor;		// bcc noEor
+	if (C==0) goto noEor;		// bcc noEor
 
 doEor:
 					// ; high byte is in .A
-	a=a^0x76;			// eor #>magic
-	ram[SEED+1]=a;			// sta seed+1
+	A=A^0x76;			// eor #>magic
+	ram[SEED+1]=A;			// sta seed+1
 	lda(SEED);			// lda seed
-	a=a^0x57;			// eor #<magic
-	ram[SEED]=a;			// sta seed
+	A=A^0x57;			// eor #<magic
+	ram[SEED]=A;			// sta seed
 	return;				//  rts
 
 
 lowZero:
 	lda(SEED+1);	// lda seed+1
-	if (a==0) goto doEor;
+	if (A==0) goto doEor;
 			// beq doEor ; High byte is also zero, so apply the EOR
 			// ; For speed, you could store 'magic' into 'seed' directly
 			// ; instead of running the EORs
 
 			//  ; wasn't zero, check for $8000
 	asl();		//  asl
-	if (a==0) goto noEor;
+	if (A==0) goto noEor;
 			//  beq noEor ; if $00 is left after the shift, then it was $80
-	if (c==1) goto doEor;
+	if (C==1) goto doEor;
 			// bcs doEor ; else, do the EOR based on the carry bit as usual
 
 noEor:
-	ram[SEED+1]=a;	// sta seed+1
+	ram[SEED+1]=A;	// sta seed+1
 
 	return;		// rts
 }

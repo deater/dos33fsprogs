@@ -535,8 +535,8 @@ int grsim_update(void) {
 
 void setnorm(void) {
 
-	y=0xff;
-	ram[INVFLG]=y;
+	Y=0xff;
+	ram[INVFLG]=Y;
 
 }
 
@@ -576,7 +576,7 @@ int grsim_init(void) {
 	ram[WNDTOP]=0x00;
 	ram[WNDBTM]=0x18;
 
-	a=0; y=0; x=0;
+	A=0; Y=0; X=0;
 
 	//FA62 RESET
 
@@ -601,9 +601,9 @@ static void monitor_plot(void) {
 
 	/* Call into Monitor $F800 */
 
-	c=a&1;	/* save LSB in carry	*/
-	a=a>>1;	/* lsr A */
-	gbascalc(a);
+	c=A&1;	/* save LSB in carry	*/
+	A=A>>1;	/* lsr A */
+	gbascalc(A);
 
 	if (c) {
 		/* If odd, mask is 0xf0 */
@@ -614,15 +614,15 @@ static void monitor_plot(void) {
 		ram[MASK]=0x0f;
 	}
 
-	a=ram[y_indirect(GBASL,y)];
+	A=ram[y_indirect(GBASL,Y)];
 
-	a=a^ram[COLOR];
+	A=A^ram[COLOR];
 
-	a=a&ram[MASK];
+	A=A&ram[MASK];
 
-	a=a^ram[y_indirect(GBASL,y)];
+	A=A^ram[y_indirect(GBASL,Y)];
 
-	ram[y_indirect(GBASL,y)]=a;
+	ram[y_indirect(GBASL,Y)]=A;
 
 }
 
@@ -639,11 +639,11 @@ int basic_plot(unsigned char xcoord, unsigned char ycoord) {
 	/* Y-coord in A			*/
 	/* X-coord in Y			*/
 	/* Check that X-coord<40	*/
-	a=ycoord;
-	y=xcoord;
+	A=ycoord;
+	Y=xcoord;
 
-	if (y>=40) {
-		printf("X too big %d\n",y);
+	if (Y>=40) {
+		printf("X too big %d\n",Y);
 		return -1;
 	}
 
@@ -668,23 +668,23 @@ static void bascalc(void) {
 
 	unsigned char s,c;
 
-	s=a;
-	c=a&0x1;
+	s=A;
+	c=A&0x1;
 
-	a=a>>1;
-	a=a&0x3;
-	a=a|0x4;
-	ram[BASH]=a;
-	a=s;
-	a=a&0x18;
+	A=A>>1;
+	A=A&0x3;
+	A=A|0x4;
+	ram[BASH]=A;
+	A=s;
+	A=A&0x18;
 	if (c!=0) {
-		a=a+0x80;
+		A=A+0x80;
 	}
 // BSCLC2
-	ram[BASL]=a;
-	a=a<<2;
-	a=a|ram[BASL];
-	ram[BASL]=a;
+	ram[BASL]=A;
+	A=A<<2;
+	A=A|ram[BASL];
+	ram[BASL]=A;
 
 }
 
@@ -692,29 +692,29 @@ static void vtabz(void) {
 
 	bascalc();
 
-	a+=ram[WNDLFT];
-	ram[BASL]=a;
+	A+=ram[WNDLFT];
+	ram[BASL]=A;
 
 }
 
 static void rom_vtab(void) {
 	/* fb5b */
-	a=ram[CV];
+	A=ram[CV];
 	vtabz();
 }
 
 static void setwnd(void) {
 
-	ram[WNDTOP]=a;
-	a=0x0;
-	ram[WNDLFT]=a;
-	a=0x28;
-	ram[WNDWDTH]=a;
-	a=0x18;
-	ram[WNDBTM]=a;
-	a=0x17;
+	ram[WNDTOP]=A;
+	A=0x0;
+	ram[WNDLFT]=A;
+	A=0x28;
+	ram[WNDWDTH]=A;
+	A=0x18;
+	ram[WNDBTM]=A;
+	A=0x17;
 // TABV
-	ram[CV]=a;
+	ram[CV]=A;
 	rom_vtab();
 }
 
@@ -724,11 +724,11 @@ static void vline(void) {
 
 	// f828
 vline_loop:
-	s=a;
+	s=A;
 	monitor_plot();
-	a=s;
-	if (a<ram[V2]) {
-		a++;
+	A=s;
+	if (A<ram[V2]) {
+		A++;
 		goto vline_loop;
 	}
 }
@@ -736,15 +736,15 @@ vline_loop:
 static void clrtop(void) {
 
 	// f836
-	y=0x27;
-	ram[V2]=y;
-	y=0x27;
+	Y=0x27;
+	ram[V2]=Y;
+	Y=0x27;
 clrsc3:
-	a=0x0;
-	ram[COLOR]=a;
+	A=0x0;
+	ram[COLOR]=A;
 	vline();
-	y--;
-	if (y<=0x80) goto clrsc3;
+	Y--;
+	if (Y<=0x80) goto clrsc3;
 }
 
 static void setgr(void) {
@@ -756,7 +756,7 @@ static void setgr(void) {
 
 	clrtop();
 
-	a=0x14;
+	A=0x14;
 	setwnd();
 
 }
@@ -807,12 +807,12 @@ int bload(char *filename, int address) {
 static int cleolz(void) {
 	// FC9E
 
-	a=0xa0;
+	A=0xa0;
 clreol2:
-	ram[y_indirect(BASL,y)]=a;
-	y++;
+	ram[y_indirect(BASL,Y)]=A;
+	Y++;
 
-	if (y<ram[WNDWDTH]) goto clreol2;
+	if (Y<ram[WNDWDTH]) goto clreol2;
 
 	return 0;
 }
@@ -822,13 +822,13 @@ static int cleop1(void) {
 	unsigned char s;
 
 cleop1_begin:
-	s=a;
+	s=A;
 	vtabz();
 	cleolz();
-	y=0x00;
-	a=s;
-	a++;
-	if (a<=ram[WNDBTM]) goto cleop1_begin;
+	Y=0x00;
+	A=s;
+	A++;
+	if (A<=ram[WNDBTM]) goto cleop1_begin;
 	rom_vtab();
 
 	return 0;
@@ -837,10 +837,10 @@ cleop1_begin:
 int home(void) {
 
 	/* FC58 */
-	a=ram[WNDTOP];
-	ram[CV]=a;
-	y=0x00;
-	ram[CH]=y;
+	A=ram[WNDTOP];
+	ram[CV]=A;
+	Y=0x00;
+	ram[CH]=Y;
 	cleop1();
 
 	return 0;
@@ -853,8 +853,8 @@ int grsim_unrle_original(unsigned char *rle_data, int address) {
 	ram[GBASL]=0;			/* input address */
 	ram[GBASH]=0;			/* we fake this in this environment */
 
-	x=0;				/* Set X and Y registers to 0 */
-	y=0;
+	X=0;				/* Set X and Y registers to 0 */
+	Y=0;
 
 	ram[BASL]=address&0xff;		/* output address? */
 	ram[BASH]=(address>>8)&0xff;
@@ -862,51 +862,51 @@ int grsim_unrle_original(unsigned char *rle_data, int address) {
 	ram[CV]=0;
 
 	/* Read xsize, put in CH */
-	ram[CH]=rle_data[y_indirect(GBASL,y)];
-	y++;
+	ram[CH]=rle_data[y_indirect(GBASL,Y)];
+	Y++;
 
 	/* Skip ysize, we won't need it */
-	y++;
+	Y++;
 
 	while(1) {
 		/* Get run length into a */
-		a=rle_data[y_indirect(GBASL,y)];
+		A=rle_data[y_indirect(GBASL,Y)];
 
 		/* 0xff is a special value meaning end */
-		if (a==0xff) break;
+		if (A==0xff) break;
 
 		/* Store run length into TEMP */
-		ram[TEMP]=a;
+		ram[TEMP]=A;
 
 		/* 16-bit increment of GBASL:GBASH */
-		y++;
-		if (y==0) ram[GBASH]++;
+		Y++;
+		if (Y==0) ram[GBASH]++;
 
 		/* Get the color into A */
 
-		a=rle_data[y_indirect(GBASL,y)];
+		A=rle_data[y_indirect(GBASL,Y)];
 
 		/* 16-bit increment of GBASL:GBASH */
-		y++;
-		if (y==0) ram[GBASH]++;
+		Y++;
+		if (Y==0) ram[GBASH]++;
 
 		/* Push y on stack */
-		s=y;
-		y=0;
+		s=Y;
+		Y=0;
 
 		while(1) {
 			/* store out color */
-			ram[y_indirect(BASL,y)]=a;
+			ram[y_indirect(BASL,Y)]=A;
 
 			/* 16-bit increment of output pointer */
 			ram[BASL]++;
 			if (ram[BASL]==0) ram[BASH]++;
 
 			/* increment size */
-			x++;
+			X++;
 
 			/* if size longer than width, adjust */
-			if (x>=ram[CH]) {
+			if (X>=ram[CH]) {
 				if (ram[BASL]>0xa7) ram[BASH]++;
 				ram[BASL]+=0x58;
 				ram[CV]+=2;
@@ -921,7 +921,7 @@ int grsim_unrle_original(unsigned char *rle_data, int address) {
 						ram[BASH]=ram[BASH]-0x3;
 					}
 				}
-				x=0;
+				X=0;
 			}
 
 			/* repeat until use up all of run length */
@@ -929,7 +929,7 @@ int grsim_unrle_original(unsigned char *rle_data, int address) {
 			if (ram[TEMP]==0) break;
 		}
 		/* restore y from stack */
-		y=s;
+		Y=s;
 	}
 
 	return 0;
@@ -942,8 +942,8 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 	ram[GBASL]=0;			/* input address */
 	ram[GBASH]=0;			/* we fake this in this environment */
 
-	x=0;				/* Set X and Y registers to 0 */
-	y=0;
+	X=0;				/* Set X and Y registers to 0 */
+	Y=0;
 
 	ram[BASL]=address&0xff;		/* output address? */
 	ram[BASH]=(address>>8)&0xff;
@@ -951,41 +951,40 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 	ram[CV]=0;
 
 	/* Read xsize, put in CH */
-	ram[CH]=rle_data[y_indirect(GBASL,y)];
-	y++;
+	ram[CH]=rle_data[y_indirect(GBASL,Y)];
+	Y++;
 
 	/* Skip ysize, we won't need it */
-//	y++;
+//	Y++;
 
 	while(1) {
 
 		/* Get byte into A */
-		a=rle_data[y_indirect(GBASL,y)];
+		A=rle_data[y_indirect(GBASL,Y)];
 
 		/* 0xa1 is a special value meaning end */
-		if (a==0xa1) break;
+		if (A==0xa1) break;
 
 		/* Store run length into TEMP */
-		if ((a&0xf0)==0xa0) {
-			if ((a&0xf)==0) {
+		if ((A&0xf0)==0xa0) {
+			if ((A&0xf)==0) {
 				/* 16-bit increment of GBASL:GBASH */
-				y++;
-				if (y==0) ram[GBASH]++;
+				Y++;
+				if (Y==0) ram[GBASH]++;
 
-				a=rle_data[y_indirect(GBASL,y)];
-				ram[TEMP]=a;
-
+				A=rle_data[y_indirect(GBASL,Y)];
+				ram[TEMP]=A;
 			}
 			else {
-				ram[TEMP]=a&0xf;
+				ram[TEMP]=A&0xf;
 			}
 
 			/* 16-bit increment of GBASL:GBASH */
-			y++;
-			if (y==0) ram[GBASH]++;
+			Y++;
+			if (Y==0) ram[GBASH]++;
 
 			/* Get the color into A */
-			a=rle_data[y_indirect(GBASL,y)];
+			A=rle_data[y_indirect(GBASL,Y)];
 
 		}
 		else {
@@ -993,31 +992,31 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 		}
 
 		/* 16-bit increment of GBASL:GBASH */
-		y++;
-		if (y==0) ram[GBASH]++;
+		Y++;
+		if (Y==0) ram[GBASH]++;
 
 		/* Push y on stack */
-		s=y;
-		y=0;
+		s=Y;
+		Y=0;
 
 #if 0
 	{
-		printf("Run=%d Color=%x\n",ram[TEMP],a);
+		printf("Run=%d Color=%x\n",ram[TEMP],A);
 	}
 #endif
 		while(1) {
 			/* store out color */
-			ram[y_indirect(BASL,y)]=a;
+			ram[y_indirect(BASL,Y)]=A;
 
 			/* 16-bit increment of output pointer */
 			ram[BASL]++;
 			if (ram[BASL]==0) ram[BASH]++;
 
 			/* increment size */
-			x++;
+			X++;
 
 			/* if size longer than width, adjust */
-			if (x>=ram[CH]) {
+			if (X>=ram[CH]) {
 				if (ram[BASL]>0xa7) ram[BASH]++;
 				ram[BASL]+=0x58;
 				ram[CV]+=2;
@@ -1032,7 +1031,7 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 						ram[BASH]=ram[BASH]-0x3;
 					}
 				}
-				x=0;
+				X=0;
 			}
 
 			/* repeat until use up all of run length */
@@ -1040,7 +1039,7 @@ int grsim_unrle(unsigned char *rle_data, int address) {
 			if (ram[TEMP]==0) break;
 		}
 		/* restore y from stack */
-		y=s;
+		Y=s;
 
 #if 0
 	{
@@ -1070,10 +1069,10 @@ int basic_vlin(int y1, int y2, int at) {
 
 	if (y1>y2) { ram[H2]=y1; ram[V2]=y1; ram[FIRST]=y2; }
 	else       { ram[H2]=y2; ram[V2]=y2; ram[FIRST]=y1; }
-	x=at;
+	X=at;
 
-	if (x>40) {
-		fprintf(stderr,"Error!  AT too large %d!\n",x);
+	if (X>40) {
+		fprintf(stderr,"Error!  AT too large %d!\n",X);
 	}
 
 //VLIN  JSR LINCOOR
@@ -1084,12 +1083,12 @@ int basic_vlin(int y1, int y2, int at) {
 //F24A- A5 F0    2090        LDA FIRST    TOP END OF LINE IN A-REG
 //F24C- 4C 28 F8 2100        JMP MON.VLINE     LET MONITOR DRAW LINE
 
-	y=x;
-	if (y>=40) {
-		fprintf(stderr,"X value to big in vline %d\n",y);
+	Y=X;
+	if (Y>=40) {
+		fprintf(stderr,"X value to big in vline %d\n",Y);
 		return -1;
 	}
-	a=ram[FIRST];
+	A=ram[FIRST];
 
 	vline();
 
@@ -1108,7 +1107,7 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 	int cycles=0;
 
 	ptr=sprite_data;
-	x=*ptr;
+	X=*ptr;
 	ptr++;
 	ram[CV]=*ptr;
 	ptr++;
@@ -1122,29 +1121,29 @@ int grsim_put_sprite_page(int page, unsigned char *sprite_data, int xpos, int yp
 		address+=(page)<<8;
 		address+=xpos;
 							cycles+=36;
-		for(i=0;i<x;i++) {
-			a=*ptr;
+		for(i=0;i<X;i++) {
+			A=*ptr;
 							cycles+=17;
 			// all transparent, skip
-			if (a==0xaa) {
+			if (A==0xaa) {
 			}
 			// bottom transparent
-			else if ((a&0xf0)==0xa0) {
+			else if ((A&0xf0)==0xa0) {
 							cycles+=8;
 				ram[address]&=0xf0;
-				ram[address]|=(a&0xf);
+				ram[address]|=(A&0xf);
 							cycles+=19;
 			}
 			// top transparent
-			else if ((a&0x0f)==0xa) {
+			else if ((A&0x0f)==0xa) {
 							cycles+=8;
 				ram[address]&=0x0f;
-				ram[address]|=(a&0xf0);
+				ram[address]|=(A&0xf0);
 							cycles+=19;
 			}
 			else {
 							cycles+=8;
-				ram[address]=a;
+				ram[address]=A;
 							cycles+=19;
 			}
 			ptr++;
@@ -1235,7 +1234,7 @@ int text(void) {
 
 	soft_switch(LOWSCR);	// LDA LOWSCR ($c054)
 	soft_switch(TXTSET);	// LDA TXTSET ($c051);
-	a=0;
+	A=0;
 
 	setwnd();
 
@@ -1247,42 +1246,42 @@ static void scroll(void) {
 
 	// fc70
 
-	a=ram[WNDTOP];
-	s=a;
+	A=ram[WNDTOP];
+	s=A;
 	vtabz();
 
 	// SCRL1
 scrl1:
-	a=ram[BASL];
-	ram[BAS2L]=a;
-	a=ram[BASH];
-	ram[BAS2H]=a;
-	y=ram[WNDWDTH];
-	y--;
-	a=s;
-	a+=1;
-	if (a>=ram[WNDBTM]) {
+	A=ram[BASL];
+	ram[BAS2L]=A;
+	A=ram[BASH];
+	ram[BAS2H]=A;
+	Y=ram[WNDWDTH];
+	Y--;
+	A=s;
+	A+=1;
+	if (A>=ram[WNDBTM]) {
 		// SCRL3
-		y=0;
+		Y=0;
 		cleolz();
 		rom_vtab();
 		return;
 	}
-	s=a;
+	s=A;
 	vtabz();
 	// SCRL2
 scrl2:
-	a=ram[y_indirect(BASL,y)];
-	ram[y_indirect(BAS2L,y)]=a;
-	y--;
-	if (y<0x80) goto scrl2;
+	A=ram[y_indirect(BASL,Y)];
+	ram[y_indirect(BAS2L,Y)]=A;
+	Y--;
+	if (Y<0x80) goto scrl2;
 	goto scrl1;
 }
 
 static void lf(void) {
 	ram[CV]=ram[CV]+1;
-	a=ram[CV];
-	if (a<ram[WNDBTM]) {
+	A=ram[CV];
+	if (A<ram[WNDBTM]) {
 		vtabz();
 		return;
 	}
@@ -1291,8 +1290,8 @@ static void lf(void) {
 }
 
 static void cr(void) {
-	a=0x00;
-	ram[CH]=a;
+	A=0x00;
+	ram[CH]=A;
 	lf();
 }
 
@@ -1303,8 +1302,8 @@ static void bell1(void) {
 
 static void up(void) {
 
-	a=ram[WNDTOP];
-	if (a>ram[CV]) return;
+	A=ram[WNDTOP];
+	if (A>ram[CV]) return;
 
 	ram[CV]=ram[CV]-1;
 	rom_vtab();
@@ -1317,8 +1316,8 @@ static void bs(void) {
 	/* still positive */
 	if (ram[CH]<0x80) return;
 
-	a=ram[WNDWDTH];
-	ram[CH]=a;
+	A=ram[WNDWDTH];
+	ram[CH]=A;
 	ram[CH]=ram[CH]-1;
 
 	up();
@@ -1328,14 +1327,14 @@ static void storadv(void) {
 
 	// fbf0
 
-	y=ram[CH];
-	ram[y_indirect(BASL,y)]=a;
+	Y=ram[CH];
+	ram[y_indirect(BASL,Y)]=A;
 
 	// advance
 
 	ram[CH]=ram[CH]+1;
-	a=ram[CH];
-	if (a>=ram[WNDWDTH]) {
+	A=ram[CH];
+	if (A>=ram[WNDWDTH]) {
 		cr();
 	}
 
@@ -1344,34 +1343,34 @@ static void storadv(void) {
 static void vidout(void) {
 	// fbfd
 
-	if (a>=0xa0) {
+	if (A>=0xa0) {
 		storadv();
 		return;
 	}
 
 	/* Control Characters */
-	y=a;
+	Y=A;
 	// if bit 7 is set then we set negative flag
 	// BPL storadv
-	if (a<0x80) {
+	if (A<0x80) {
 		storadv();
 		return;
 	}
 
 	/* carriage return */
-	if (a==0x8d) {
+	if (A==0x8d) {
 		cr();
 		return;
 	}
 
 	/* linefeed */
-	if (a==0x8a) {
+	if (A==0x8a) {
 		lf();
 		return;
 	}
 
 	/* backspace */
-	if (a==0x88) {
+	if (A==0x88) {
 		bs();
 		return;
 	}
@@ -1392,19 +1391,19 @@ static void cout1(void) {
 
 	unsigned char s;
 
-	if (a<0xa0) {
+	if (A<0xa0) {
 	}
 	else {
-		a=a&ram[INVFLG];
+		A=A&ram[INVFLG];
 	}
 	// coutz
-	ram[YSAV1]=y;
-	s=a;
+	ram[YSAV1]=Y;
+	s=A;
 
 	vidwait();
 
-	a=s;
-	y=ram[YSAV1];
+	A=s;
+	Y=ram[YSAV1];
 
 }
 
@@ -1422,26 +1421,26 @@ static void outdo(void) {
 	unsigned char s;
 
 	/* Print char in the accumulator */
-	a=a|0x80;		/* raw ascii has high bit on Apple II */
-	if (a<0xa0) {
+	A=A|0x80;		/* raw ascii has high bit on Apple II */
+	if (A<0xa0) {
 		/* skip if control char? */
 	}
 	else {
-		a=a|ram[FLASH];
+		A=A|ram[FLASH];
 	}
 	cout();
-	a=a&0x7f;	// ?
-	s=a;		// pha
-	a=ram[SPEEDZ];
+	A=A&0x7f;	// ?
+	s=A;		// pha
+	A=ram[SPEEDZ];
 	wait(); 	// this is BASIC, slow down if speed set
-	a=s;
+	A=s;
 }
 
 static void crdo(void) {
 	// DAFB
-	a=13;	// carriage return
+	A=13;	// carriage return
 	outdo();
-	a=a^0xff;		/* negate for some reason? */
+	A=A^0xff;		/* negate for some reason? */
 }
 
 void basic_htab(int xpos) {
@@ -1451,16 +1450,16 @@ void basic_htab(int xpos) {
 	// F7E7
 
 
-	x=xpos;	// JSR GETBYT
-	x--;	// DEX
-	a=x;	// TXA
-	while(a>=40) {
-		s=a;	// PHA
+	X=xpos;	// JSR GETBYT
+	X--;	// DEX
+	A=X;	// TXA
+	while(A>=40) {
+		s=A;	// PHA
 		crdo();
-		a=s;	// PLA
-		a-=40;
+		A=s;	// PLA
+		A-=40;
 	}
-	ram[CH]=a;	// STA MON.CH
+	ram[CH]=A;	// STA MON.CH
 
 	// KRW for the win!
 
@@ -1470,17 +1469,17 @@ static void tabv(void) {
 
 	// TABV
 	// fb5b
-	ram[CV]=a;
+	ram[CV]=A;
 	rom_vtab();
 }
 
 void basic_vtab(int ypos) {
 	// f256
-	x=ypos;
-	x--;		/* base on zero */
-	a=x;
+	X=ypos;
+	X--;		/* base on zero */
+	A=X;
 
-	if (a>23) {
+	if (A>23) {
 		fprintf(stderr,"Error, vtab %d too big\n",ypos);
 		return;
 	}
@@ -1492,7 +1491,7 @@ void basic_print(char *string) {
 	int i;
 
 	for(i=0;i<strlen(string);i++) {
-		a=string[i];
+		A=string[i];
 		outdo();
 	}
 
@@ -1500,20 +1499,20 @@ void basic_print(char *string) {
 
 void basic_inverse(void) {
 	// F277
-	a=0x3f;
-	x=0;
-	ram[INVFLG]=a;
-	ram[FLASH]=x;
+	A=0x3f;
+	X=0;
+	ram[INVFLG]=A;
+	ram[FLASH]=X;
 
 	return;
 }
 
 void basic_normal(void) {
 	// F273
-	a=0xff;
-	x=0;
-	ram[INVFLG]=a;
-	ram[FLASH]=x;
+	A=0xff;
+	X=0;
+	ram[INVFLG]=A;
+	ram[FLASH]=X;
 
 	return;
 }
@@ -1591,50 +1590,50 @@ static unsigned short vlin_hi;
 
 int vlin(int y1, int y2, int at) {
 
-	x=y1;
+	X=y1;
 	ram[V2]=y2;
-	y=at;
+	Y=at;
 
 vlin_loop:
 //	for(a=y1;a<y2;a++) {
 
-		ram[TEMPY]=y;
-		a=x;
-		y=a/2;
+		ram[TEMPY]=Y;
+		A=X;
+		Y=A/2;
 
-		ram[OUTL]=gr_addr_lookup[y]&0xff;
-		ram[OUTH]=(gr_addr_lookup[y]>>8)&0xff;
+		ram[OUTL]=gr_addr_lookup[Y]&0xff;
+		ram[OUTH]=(gr_addr_lookup[Y]>>8)&0xff;
 
 		ram[OUTH]+=ram[DRAW_PAGE];
 
-		vlin_hi=x&1;
+		vlin_hi=X&1;
 
-		y=ram[TEMPY];	// y=at;
+		Y=ram[TEMPY];	// y=at;
 
 		if (vlin_hi) {
-			ram[y_indirect(OUTL,y)]=ram[y_indirect(OUTL,y)]&0x0f;
-			ram[y_indirect(OUTL,y)]|=ram[COLOR]&0xf0;
+			ram[y_indirect(OUTL,Y)]=ram[y_indirect(OUTL,Y)]&0x0f;
+			ram[y_indirect(OUTL,Y)]|=ram[COLOR]&0xf0;
 		}
 		else {
-			ram[y_indirect(OUTL,y)]=ram[y_indirect(OUTL,y)]&0xf0;
-			ram[y_indirect(OUTL,y)]|=ram[COLOR]&0x0f;
+			ram[y_indirect(OUTL,Y)]=ram[y_indirect(OUTL,Y)]&0xf0;
+			ram[y_indirect(OUTL,Y)]|=ram[COLOR]&0x0f;
 		}
-	x++;
-	if (x<ram[V2]) goto vlin_loop;
+	X++;
+	if (X<ram[V2]) goto vlin_loop;
 
 	return 0;
 }
 
 int hlin_double_continue(int width) {
 
-	x=width;
+	X=width;
 
 hlin_loop:
-	y=0;
-	ram[y_indirect(GBASL,y)]=ram[COLOR];
+	Y=0;
+	ram[y_indirect(GBASL,Y)]=ram[COLOR];
 	ram[GBASL]++;
-	x--;
-	if (x!=0) goto hlin_loop;
+	X--;
+	if (X!=0) goto hlin_loop;
 
 //	ram[GBASL]+=width;
 
@@ -1646,11 +1645,11 @@ hlin_loop:
 int hlin_setup(int page, int x1, int x2, int at) {
 
 	// page, y, V2, A
-	a=at;
-	y=at/2;
+	A=at;
+	Y=at/2;
 
-	ram[GBASL]=(gr_addr_lookup[y])&0xff;
-	ram[GBASH]=(gr_addr_lookup[y]>>8);
+	ram[GBASL]=(gr_addr_lookup[Y])&0xff;
+	ram[GBASH]=(gr_addr_lookup[Y]>>8);
 
 	ram[GBASH]+=(page);
 
@@ -1797,32 +1796,38 @@ void move_and_print(char *string) {
 
 void print(char *string) {
 
+	int y;
+
 	for(y=0;y<strlen(string);y++) {
-		a=string[y];
-		a=a|0x80;
-		ram[y_indirect(BASL,y)]=a;
+		A=string[y];
+		A=A|0x80;
+		ram[y_indirect(BASL,y)]=A;
 	}
 	ram[BASL]+=strlen(string);
 }
 
 void print_inverse(char *string) {
 
-	for(y=0;y<strlen(string);y++) {
-		a=string[y];
-		if ((a>='a') && (a<='z')) a&=~0x20;	// convert to uppercase
-		a=(a&0x3f);
+	int y;
 
-		ram[y_indirect(BASL,y)]=a;
+	for(y=0;y<strlen(string);y++) {
+		A=string[y];
+		if ((A>='a') && (A<='z')) A&=~0x20;	// convert to uppercase
+		A=(A&0x3f);
+
+		ram[y_indirect(BASL,y)]=A;
 	}
 	ram[BASL]+=strlen(string);
 }
 
 void print_flash(char *string) {
 
+	int y;
+
 	for(y=0;y<strlen(string);y++) {
-		a=string[y];
-		a=(a&0x3f)|0x40;
-		ram[y_indirect(BASL,y)]=a;
+		A=string[y];
+		A=(A&0x3f)|0x40;
+		ram[y_indirect(BASL,y)]=A;
 	}
 	ram[BASL]+=strlen(string);
 }

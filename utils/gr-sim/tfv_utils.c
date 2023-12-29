@@ -59,14 +59,14 @@ int select_menu(int x, int y, int num, char **items) {
 
 void apple_memset(unsigned char *ptr, int value, int length) {
 
-	a=value;
-	x=length;
-	y=0;
+	A=value;
+	X=length;
+	Y=0;
 
-	while(x>0) {
-		ptr[y]=a;
-		y++;
-		x--;
+	while(X>0) {
+		ptr[Y]=A;
+		Y++;
+		X--;
 	}
 }
 

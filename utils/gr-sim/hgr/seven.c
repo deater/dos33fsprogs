@@ -17,14 +17,14 @@ static void fancy_div(int d, int *q, int *r) {
 	// y=xhigh x=xlow a=??
 	// q in y, r in a
 
-	y=(d>>8)&0xff;
-	x=d&0xff;
+	Y=(d>>8)&0xff;
+	X=d&0xff;
 
-	a=x;
+	A=X;
 
 	sta(TEMP_R);
 
-	c=0;
+	C=0;
 	sta(HGR_HORIZ);		// 0
 	lsr();			// 0
 	lsr();			// 0
@@ -40,7 +40,7 @@ static void fancy_div(int d, int *q, int *r) {
 
 	// calc remainder
 
-	c=0;
+	C=0;
 	sta(HGR_HORIZ);
 	asl();
 	adc_mem(HGR_HORIZ);
@@ -49,7 +49,7 @@ static void fancy_div(int d, int *q, int *r) {
 	// HGR_HORIZ=x/7, A=HGR_HORIZ*7
 
 
-	c=1;
+	C=1;
 	eor(0xff);
 //	printf("%d+%d=",d&0xff,a);
 	adc(d&0xff);
@@ -61,8 +61,8 @@ static void fancy_div(int d, int *q, int *r) {
 //	sbc_mem(TEMP_R);
 //	tax();
 
-	if (y) {
-		c=0;
+	if (Y) {
+		C=0;
 		adc(4);
 		pha();
 		lda(HGR_HORIZ);
@@ -71,16 +71,16 @@ static void fancy_div(int d, int *q, int *r) {
 		pla();
 	}
 
-	if (a>6) {
-		c=1;
+	if (A>6) {
+		C=1;
 		sbc(7);
 		ram[HGR_HORIZ]++;
 	}
 
-	y=ram[HGR_HORIZ];
+	Y=ram[HGR_HORIZ];
 
-	*q=y;
-	*r=a;
+	*q=Y;
+	*r=A;
 }
 
 

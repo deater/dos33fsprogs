@@ -9,21 +9,21 @@
 unsigned char ram[RAMSIZE];
 
 /* Registers */
-unsigned char a,y,x;
-unsigned short sp;
+unsigned char A,Y,X;
+unsigned short SP;
 
 /* Flags */
-unsigned int n,z,c,v;
+unsigned int N,Z,C,V;
 
 int init_6502(void) {
 
-	a=0;
-	y=0;
-	x=0;
+	A=0;
+	Y=0;
+	X=0;
 
-	sp=0x1ff;
+	SP=0x1ff;
 
-	n=0; z=0; c=0; v=0;
+	N=0; Z=0; C=0; V=0;
 
 	return 0;
 
@@ -42,7 +42,7 @@ unsigned short y_indirect(unsigned char base, unsigned char y) {
 }
 
 void clc(void) {
-	c=0;
+	C=0;
 }
 
 void adc(int value) {
@@ -51,18 +51,18 @@ void adc(int value) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=value&0xff;
 
-	result=(temp_a+temp_value+c);
+	result=(temp_a+temp_value+C);
 
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
+	C=(result&0x100)>>8;
+	N=(result&0x80)>>7;
 
-	v=!!((a^result)&(value^result)&0x80);
+	V=!!((A^result)&(value^result)&0x80);
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 
@@ -72,18 +72,18 @@ void adc_mem(int addr) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=ram[addr]&0xff;
 
-	result=(temp_a+temp_value+c);
+	result=(temp_a+temp_value+C);
 
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
+	C=(result&0x100)>>8;
+	N=(result&0x80)>>7;
 
-	v=!!((a^result)&(temp_value^result)&0x80);
+	V=!!((A^result)&(temp_value^result)&0x80);
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 
@@ -92,20 +92,20 @@ void sbc(int value) {
 	int result;
 	int temp_value;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=(~value)&0xff;
 
-	result=temp_a+temp_value+c;
+	result=temp_a+temp_value+C;
 
-//	printf("SBC: %x - %x (%x) = %x\n",a,value,c,result);
+//	printf("SBC: %x - %x (%x) = %x\n",A,value,C,result);
 
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
+	C=(result&0x100)>>8;
+	N=(result&0x80)>>7;
 
-	v=!!((a^result)&((255-value)^result)&0x80);
+	V=!!((A^result)&((255-value)^result)&0x80);
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 
 }
@@ -115,20 +115,20 @@ void sbc_mem(int addr) {
 	int result;
 	int temp_value;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=(~ram[addr])&0xff;
 
-	result=temp_a+temp_value+c;
+	result=temp_a+temp_value+C;
 
-//	printf("SBC: %x - %x (%x) = %x\n",a,value,c,result);
+//	printf("SBC: %x - %x (%x) = %x\n",A,value,C,result);
 
-	c=(result&0x100)>>8;
-	n=(result&0x80)>>7;
+	C=(result&0x100)>>8;
+	N=(result&0x80)>>7;
 
-	v=!!((a^result)&((255-ram[addr])^result)&0x80);
+	V=!!((A^result)&((255-ram[addr])^result)&0x80);
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 
 }
@@ -139,17 +139,17 @@ void cmp(int value) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=(~value)&0xff;
 
 	result=temp_a+temp_value+1;
 
-	c=(result&0x100)>>8;
+	C=(result&0x100)>>8;
 
 	result&=0xff;
 
-	n=(result&0x80)>>7;
-	z=(result==0);
+	N=(result&0x80)>>7;
+	Z=(result==0);
 }
 
 void cpy(int value) {
@@ -158,17 +158,17 @@ void cpy(int value) {
 	int temp_value;
 	int result;
 
-	temp_y=y&0xff;
+	temp_y=Y&0xff;
 	temp_value=(~value)&0xff;
 
 	result=temp_y+temp_value+1;
 
-	c=(result&0x100)>>8;
+	C=(result&0x100)>>8;
 
 	result&=0xff;
 
-	n=(result&0x80)>>7;
-	z=(result==0);
+	N=(result&0x80)>>7;
+	Z=(result==0);
 }
 
 void cpx(int value) {
@@ -177,59 +177,59 @@ void cpx(int value) {
 	int temp_value;
 	int result;
 
-	temp_x=x&0xff;
+	temp_x=X&0xff;
 	temp_value=(~value)&0xff;
 
 	result=temp_x+temp_value+1;
 
-	c=(result&0x100)>>8;
+	C=(result&0x100)>>8;
 
 	result&=0xff;
 
-	n=(result&0x80)>>7;
-	z=(result==0);
+	N=(result&0x80)>>7;
+	Z=(result==0);
 }
 
 
 void pha(void) {
 
-	sp--;
-	ram[sp]=a;
+	SP--;
+	ram[SP]=A;
 }
 
 void pla(void) {
 
-	a=ram[sp];
-	sp++;
+	A=ram[SP];
+	SP++;
 }
 
 void lsr(void) {
 	int temp_a;
 
-	temp_a=a;
+	temp_a=A;
 	temp_a&=0xff;
 
-	c=temp_a&0x1;
+	C=temp_a&0x1;
 	temp_a=temp_a>>1;
-	a=(temp_a&0x7f);	// always shift 0 into top
-	z=(a==0);
-	n=!!(a&0x80);		// can this ever be 1?  no?
-//	printf("LSR A=%x\n",a);
+	A=(temp_a&0x7f);	// always shift 0 into top
+	Z=(A==0);
+	N=!!(A&0x80);		// can this ever be 1?  no?
+//	printf("LSR A=%x\n",A);
 }
 
 void asl(void) {
 	int temp_a;
 
-	temp_a=a;
+	temp_a=A;
 	temp_a&=0xff;
 
-	c=!!(temp_a&0x80);
+	C=!!(temp_a&0x80);
 
 	temp_a=temp_a<<1;
-	a=(temp_a&0xff);
-	z=(a==0);
-	n=!!(a&0x80);
-//	printf("ASL A=%x\n",a);
+	A=(temp_a&0xff);
+	Z=(A==0);
+	N=!!(A&0x80);
+//	printf("ASL A=%x\n",A);
 }
 
 void asl_mem(int addr) {
@@ -238,12 +238,12 @@ void asl_mem(int addr) {
 	temp_a=ram[addr];
 	temp_a&=0xff;
 
-	c=!!(temp_a&0x80);
+	C=!!(temp_a&0x80);
 
 	temp_a=temp_a<<1;
 	ram[addr]=(temp_a&0xff);
-	z=(ram[addr]==0);
-	n=!!(ram[addr]&0x80);
+	Z=(ram[addr]==0);
+	N=!!(ram[addr]&0x80);
 //	printf("ASL %x=%x\n",addr,ram[addr]);
 }
 
@@ -252,37 +252,37 @@ void ror(void) {
 	int temp_a;
 	int old_c;
 
-	old_c=c;
-	temp_a=a;
+	old_c=C;
+	temp_a=A;
 	temp_a&=0xff;
 
-	c=temp_a&0x1;
+	C=temp_a&0x1;
 	temp_a=temp_a>>1;
-	a=(temp_a&0xff);
-	a|=old_c<<7;
+	A=(temp_a&0xff);
+	A|=old_c<<7;
 
-	z=(a==0);
-	n=!!(a&0x80);
-//	printf("ROR A=%x\n",a);
+	Z=(A==0);
+	N=!!(A&0x80);
+//	printf("ROR A=%x\n",A);
 }
 
 void rol(void) {
 	int temp_a;
 	int old_c;
 
-	old_c=c;
-	temp_a=a;
+	old_c=C;
+	temp_a=A;
 	temp_a&=0xff;
 
-	c=!!(temp_a&0x80);
+	C=!!(temp_a&0x80);
 
 	temp_a=temp_a<<1;
-	a=(temp_a&0xff);
-	a|=old_c;
+	A=(temp_a&0xff);
+	A|=old_c;
 
-	z=(a==0);
-	n=!!(a&0x80);
-//	printf("ROL A=%x\n",a);
+	Z=(A==0);
+	N=!!(A&0x80);
+//	printf("ROL A=%x\n",A);
 }
 
 
@@ -291,17 +291,17 @@ void ror_mem(int addr) {
 	int temp_a;
 	int old_c;
 
-	old_c=c;
+	old_c=C;
 	temp_a=ram[addr];
 	temp_a&=0xff;
 
-	c=temp_a&0x1;
+	C=temp_a&0x1;
 	temp_a=temp_a>>1;
 	ram[addr]=(temp_a&0xff);
 	ram[addr]|=old_c<<7;
 
-	z=(ram[addr]==0);
-	n=!!(ram[addr]&0x80);
+	Z=(ram[addr]==0);
+	N=!!(ram[addr]&0x80);
 //	printf("ROR %x=%x\n",addr,ram[addr]);
 }
 
@@ -309,60 +309,60 @@ void rol_mem(int addr) {
 	int temp_a;
 	int old_c;
 
-	old_c=c;
+	old_c=C;
 	temp_a=ram[addr];
 	temp_a&=0xff;
 
-	c=!!(temp_a&0x80);
+	C=!!(temp_a&0x80);
 
 	temp_a=temp_a<<1;
 	ram[addr]=(temp_a&0xff);
 	ram[addr]|=old_c;
 
-	z=(ram[addr]==0);
-	n=!!(ram[addr]&0x80);
+	Z=(ram[addr]==0);
+	N=!!(ram[addr]&0x80);
 //	printf("ROL %x=%x\n",addr,ram[addr]);
 }
 
 
 void dex(void) {
-	x--;
+	X--;
 
-	z=(x==0);
-	n=!!(x&0x80);
+	Z=(X==0);
+	N=!!(X&0x80);
 }
 
 void dey(void) {
-	y--;
+	Y--;
 
-	z=(y==0);
-	n=!!(y&0x80);
+	Z=(Y==0);
+	N=!!(Y&0x80);
 }
 
 void inx(void) {
-	x++;
+	X++;
 
-	z=(x==0);
-	n=!!(x&0x80);
+	Z=(X==0);
+	N=!!(X&0x80);
 }
 
 void iny(void) {
-	y++;
+	Y++;
 
-	z=(y==0);
-	n=!!(y&0x80);
+	Z=(Y==0);
+	N=!!(Y&0x80);
 }
 
 void bit(int value) {
 	int temp_a;
 
-	temp_a=a&value;
+	temp_a=A&value;
 	temp_a&=0xff;
 
-	z=(temp_a==0);
+	Z=(temp_a==0);
 
-	n=(value&0x80);
-	v=(value&0x40);
+	N=(value&0x80);
+	V=(value&0x40);
 
 }
 
@@ -370,76 +370,76 @@ void bit(int value) {
 void bit_mem(int addr) {
 	int temp_a;
 
-	temp_a=a&ram[addr];
+	temp_a=A&ram[addr];
 	temp_a&=0xff;
 
-	z=(temp_a==0);
+	Z=(temp_a==0);
 
-	n=(ram[addr]&0x80);
-	v=(ram[addr]&0x40);
+	N=(ram[addr]&0x80);
+	V=(ram[addr]&0x40);
 
 }
 
 
 void lda(int addr) {
 
-	a=ram[addr];
+	A=ram[addr];
 
-	z=(a==0);
-	n=!!(a&0x80);
+	Z=(A==0);
+	N=!!(A&0x80);
 }
 
 void lda_const(int value) {
 
-	a=value;
+	A=value;
 
-	z=(a==0);
-	n=!!(a&0x80);
+	Z=(A==0);
+	N=!!(A&0x80);
 }
 
 void ldx(int addr) {
 
-	x=ram[addr];
+	X=ram[addr];
 
-	z=(x==0);
-	n=!!(x&0x80);
+	Z=(X==0);
+	N=!!(X&0x80);
 }
 
 void ldx_const(int value) {
 
-	x=value;
+	X=value;
 
-	z=(x==0);
-	n=!!(x&0x80);
+	Z=(X==0);
+	N=!!(X&0x80);
 }
 
 void ldy(int addr) {
 
-	y=ram[addr];
+	Y=ram[addr];
 
-	z=(y==0);
-	n=!!(y&0x80);
+	Z=(Y==0);
+	N=!!(Y&0x80);
 }
 
 void ldy_const(int value) {
 
-	y=value;
+	Y=value;
 
-	z=(y==0);
-	n=!!(y&0x80);
+	Z=(Y==0);
+	N=!!(Y&0x80);
 }
 
 void sta(int addr) {
 
-	ram[addr]=a;
+	ram[addr]=A;
 }
 
 void tax(void) {
-	x=a;
+	X=A;
 }
 
 void txa(void) {
-	a=x;
+	A=X;
 }
 
 void eor(int value) {
@@ -448,15 +448,15 @@ void eor(int value) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=value&0xff;
 
 	result=(temp_a^temp_value);
 
-	n=(result&0x80)>>7;
+	N=(result&0x80)>>7;
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 
@@ -466,15 +466,15 @@ void ora(int value) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=value&0xff;
 
 	result=(temp_a|temp_value);
 
-	n=(result&0x80)>>7;
+	N=(result&0x80)>>7;
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 
@@ -484,15 +484,15 @@ void ora_mem(int addr) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=ram[addr]&0xff;
 
 	result=(temp_a|temp_value);
 
-	n=(result&0x80)>>7;
+	N=(result&0x80)>>7;
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 
@@ -502,15 +502,15 @@ void and(int value) {
 	int temp_value;
 	int result;
 
-	temp_a=a&0xff;
+	temp_a=A&0xff;
 	temp_value=value&0xff;
 
 	result=(temp_a&temp_value);
 
-	n=(result&0x80)>>7;
+	N=(result&0x80)>>7;
 
-	a=result&0xff;
-	z=(a==0);
+	A=result&0xff;
+	Z=(A==0);
 
 }
 

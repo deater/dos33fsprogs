@@ -37,4 +37,4 @@ twist_dump.o:	twist_dump.c
 ###
 
 clean:	
-	rm -f *~ *.o twist_6502 twist_dump
+	rm -f *~ *.o twist_6502 twist_dump generate_sines

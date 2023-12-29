@@ -4,7 +4,7 @@
 #include "8086_emulator.h"
 
 unsigned short stack[4096];
-unsigned short ax,bx,cx,dx,si,di,bp,cs,ds,es,fs;
+unsigned short ax,bx,cx,dx,si,di,bp,cs,ds,es,fs,sp;
 int cf=0,of=0,zf=0,sf=0;
 //int sp=0;
 

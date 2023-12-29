@@ -9,17 +9,17 @@ static void test_adc(void) {
 	/* carry in 0 */
 	for(i=0;i<256;i++) {
 		for(j=0;j<256;j++) {
-			c=0;
-			a=i;
+			C=0;
+			A=i;
 			adc(j);
-			if (a!=((i+j)&0xff)) {
-				printf("ADC: Error!  %d+%d should be %d, not %d\n",i,j,i+j,a);
+			if (A!=((i+j)&0xff)) {
+				printf("ADC: Error!  %d+%d should be %d, not %d\n",i,j,i+j,A);
 			}
-			if (c!=(((i+j)>>8)&0x1)) {
-				printf("ADC: Error!  Carry should be %d, not %d\n",((i+j)>>8)&0x1,c);
+			if (C!=(((i+j)>>8)&0x1)) {
+				printf("ADC: Error!  Carry should be %d, not %d\n",((i+j)>>8)&0x1,C);
 			}
-			if ((a==0) && (z!=1)) printf("ADC error, zflag wrong\n");
-			if ((a!=0) && (z!=0)) printf("ADC error, zflag wrong\n");
+			if ((A==0) && (Z!=1)) printf("ADC error, zflag wrong\n");
+			if ((A!=0) && (Z!=0)) printf("ADC error, zflag wrong\n");
 
 		}
 	}
@@ -27,17 +27,17 @@ static void test_adc(void) {
 	/* carry in 1 */
 	for(i=0;i<256;i++) {
 		for(j=0;j<256;j++) {
-			c=1;
-			a=i;
+			C=1;
+			A=i;
 			adc(j);
-			if (a!=((i+j+1)&0xff)) {
-				printf("ADC: Error!  %d+%d should be %d, not %d\n",i,j,i+j+1,a);
+			if (A!=((i+j+1)&0xff)) {
+				printf("ADC: Error!  %d+%d should be %d, not %d\n",i,j,i+j+1,A);
 			}
-			if (c!=(((i+j+1)>>8)&0x1)) {
-				printf("ADC: Error!  Carry should be %d, not %d\n",((i+j+1)>>8)&0x1,c);
+			if (C!=(((i+j+1)>>8)&0x1)) {
+				printf("ADC: Error!  Carry should be %d, not %d\n",((i+j+1)>>8)&0x1,C);
 			}
-			if ((a==0) && (z!=1)) printf("ADC error, zflag wrong\n");
-			if ((a!=0) && (z!=0)) printf("ADC error, zflag wrong\n");
+			if ((A==0) && (Z!=1)) printf("ADC error, zflag wrong\n");
+			if ((A!=0) && (Z!=0)) printf("ADC error, zflag wrong\n");
 		}
 	}
 }
@@ -48,34 +48,34 @@ static void test_sbc(void) {
 	/* carry in 1 */
 	for(i=0;i<256;i++) {
 		for(j=0;j<256;j++) {
-			c=1;
-			a=i;
+			C=1;
+			A=i;
 			sbc(j);
-			if (a!=((i-j-0)&0xff)) {
-				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-0,a);
+			if (A!=((i-j-0)&0xff)) {
+				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-0,A);
 			}
-			if (c==(((i-j-0)>>8)&0x1)) {
-				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-0)>>8)&0x1,c);
+			if (C==(((i-j-0)>>8)&0x1)) {
+				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-0)>>8)&0x1,C);
 			}
-			if ((a==0) && (z!=1)) printf("SBC error, zflag wrong\n");
-			if ((a!=0) && (z!=0)) printf("SBC error, zflag wrong\n");
+			if ((A==0) && (Z!=1)) printf("SBC error, zflag wrong\n");
+			if ((A!=0) && (Z!=0)) printf("SBC error, zflag wrong\n");
 		}
 	}
 
 	/* carry in 0 */
 	for(i=0;i<256;i++) {
 		for(j=0;j<256;j++) {
-			c=0;
-			a=i;
+			C=0;
+			A=i;
 			sbc(j);
-			if (a!=((i-j-1)&0xff)) {
-				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-1,a);
+			if (A!=((i-j-1)&0xff)) {
+				printf("SBC: Error!  %d-%d should be %d, not %d\n",i,j,i-j-1,A);
 			}
-			if (c==(((i-j-1)>>8)&0x1)) {
-				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-1)>>8)&0x1,c);
+			if (C==(((i-j-1)>>8)&0x1)) {
+				printf("SBC: Error!  Carry should be %d, not %d\n",((i-j-1)>>8)&0x1,C);
 			}
-			if ((a==0) && (z!=1)) printf("SBC error, zflag wrong\n");
-			if ((a!=0) && (z!=0)) printf("SBC error, zflag wrong\n");
+			if ((A==0) && (Z!=1)) printf("SBC error, zflag wrong\n");
+			if ((A!=0) && (Z!=0)) printf("SBC error, zflag wrong\n");
 		}
 	}
 
