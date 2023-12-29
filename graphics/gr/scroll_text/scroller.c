@@ -149,7 +149,16 @@ static unsigned char font[256][9]={
 		0x20,	//	 **
 		0x20,	//       **
 	},
-	{0,0,0,0,0,0,0,0,0},
+	{3,
+		0x00,
+		0x00,	//
+		0x80,	//     **
+		0x80,	//     **
+		0x00,	//
+		0x80,	//     **
+		0x80,	//     **
+		0x00,	//
+	},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
 	{0,0,0,0,0,0,0,0,0},
@@ -541,7 +550,8 @@ int main(int argc, char **argv) {
 //	char string[]="         \001BY DEATER... \002A \010 PRODUCTION         ";
 //	char string[]="           \003\011APPLE ][ FOREVER\011           ";
 //	char string[]="           \012 \001MERRY XMAS 2018 \003FROM DEATER \013           ";
-	char string[]="           \012 \001MERRY XMAS 2023 \003FROM DESIRE \013           ";
+//	char string[]="           \012 \001MERRY XMAS 2023 \003FROM \004DESIRE \013           ";
+	char string[]="           \013 \001CODE: DEATER  \002MUSIC: MA2E \012           ";
 	int length=0,width=0,x,y,i,j;
 	int color,color1,color2;
 	int which_color=0;
