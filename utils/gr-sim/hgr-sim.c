@@ -48,7 +48,7 @@ bkgnd_loop:
 	// rts
 }
 
-static void hclr(void) {
+void hclr(void) {
 	// F3F2
 	a=0;			// black background
 	ram[HGR_BITS]=a;
