@@ -53,107 +53,17 @@ static void fixed_add(int8_t add1h,uint8_t add1l,
 
 }
 
-int8_t fsinh[256];
 
-double sine(int8_t fh, uint8_t fl) {
-
-	double f;
-	int i;
-	int i1,i2;
-	int8_t sh;
-	uint8_t sl;
-
-//	f=(fh<<8)|fl;
-//	f=f/256.0;
-
-//	i=f;
-
-	i=(fh<<8)|fl;
-
-	// /6.28,  0=0, 6.28=0xff
-
-	// .035
-	//		 = .5 .25 .125 .0625 .03125
-	// 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-
-	//	8.8 * 8.8 = 16.16
-
-//	i=(i/6.28);
-
-//	i=(i/8.0);
-
-//	i=i*0.15625;
-
-//	i=(i*0x28)>>8;
-
-	i1=i<<5;
-	i2=i<<3;
-
-	i=(i1+i2)>>8;
-
-	i=i&0xff;
-
-//	i=i&0xff;
-
-//	f=(fsinh[i]/128.0);
-
-	sl=fsinh[i];
-	if (sl&0x80) sh=0xff;
-	else sh=0x00;
-	sl=sl<<1;
-
-	f=fixed_to_float(sh,sl);
-
-	return f;
-
-//	f=fixed_to_float(fh,fl);
-//	return sin(f);
-
-
-}
-
-double cose(int8_t fh, uint8_t fl) {
-
-	int8_t temph;
-	uint8_t templ;
-
-//	double f;
-//	int i;
-
-//	i=(fh<<8)|fl;
-
-//	i=((i>>4)+64)&0xff;
-
-//	f=(fh<<8)|fl;
-//	f=f/256.0;
-//	i=f/6.28;
-
-//	i=(i+64)&0xff;
-
-//	f=(fsinh[i]/128.0);
-
-//	return f;
-
-//	1.57 is roughly 0x0192 in 8.8
-
-	fixed_add(fh,fl,0x1,0x92,&temph,&templ);
-
-	return sine(temph,templ);
-
-
-}
 
 
 int main(int argc, char **argv) {
 
 	int ch;
 	int i,j;
-	double r;
+	double r,u=0;
 
 	int8_t  th,xh,rxh,ivh,vh,uh,rh[NUM];
 	uint8_t tl,xl,rxl,ivl,vl,ul,rl[NUM];
-
-
 
 	grsim_init();
 
@@ -167,11 +77,6 @@ int main(int argc, char **argv) {
 	vh=0; vl=0;
 	xh=0; xl=0;
 	rxh=0; rxl=0;
-
-	for(i=0;i<256;i++) {
-		fsinh[i]=(128*sin(6.28*i/256.0));
-	}
-//	for(i=0;i<256;i++) printf("%d\n",fsinh[i]);
 
 	for(i=0;i<NUM;i++) {
 		float_to_fixed(r*i,&rh[i],&rl[i]);
@@ -192,15 +97,12 @@ int main(int argc, char **argv) {
 				fixed_add(i,0,vh,vl,&ivh,&ivl);
 
 				//U=SIN(I+V)+SIN(RR+X)
-				float_to_fixed(
-					sine(ivh,ivl) +
-					sine(rxh,rxl),
-					&uh,&ul);
-
+				u=sin(fixed_to_float(ivh,ivl)) +
+					sin(fixed_to_float(rxh,rxl));
 				//V=COS(I+V)+COS(RR+X)
 				float_to_fixed(
-					cose(ivh,ivl) +
-					cose(rxh,rxl),
+					(cos(fixed_to_float(ivh,ivl)) +
+					cos(fixed_to_float(rxh,rxl))),
 					&vh,&vl);
 
 				// X=U+T
@@ -209,8 +111,7 @@ int main(int argc, char **argv) {
 				fixed_add(uh,ul,th,tl,&xh,&xl);
 
 				//HPLOT 32*U+140,32*V+96
-				hplot(48*fixed_to_float(uh,ul)+140,
-					48*fixed_to_float(vh,vl)+96);
+				hplot(48*u+140,48*fixed_to_float(vh,vl)+96);
 			}
 
 
@@ -224,9 +125,8 @@ int main(int argc, char **argv) {
 
 		//t=t+(1.0/32.0);
 		// 1/2 1/4 1/8 1/16 | 1/32 1/64 1/128 1/256
-
-		fixed_add(th,tl,0,0x8,&th,&tl);
-
+		if (tl>=0xf8) th=th+1;
+		tl=tl+0x08;
 //		printf("%x %x\n",th,tl);
 	}
 

@@ -7,15 +7,24 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	bubble.dsk
 
-bubble.dsk:	HELLO BUBBLE.BAS
+bubble.dsk:	HELLO BUBBLE.BAS BUBBLE
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
 	$(DOS33) -y bubble.dsk SAVE A HELLO
 	$(DOS33) -y bubble.dsk SAVE A BUBBLE.BAS
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE
 
 ###
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
+
+###
+
+BUBBLE:	bubble.o
+	ld65 -o BUBBLE bubble.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble.o:	bubble.s
+	ca65 -o bubble.o bubble.s -l bubble.lst
 
 ###
 
@@ -26,5 +35,4 @@ BUBBLE.BAS:	bubble.bas
 ###
 
 clean:	
-	rm -f *~ *.o *.lst BUBBLE.BAS HELLO
-
+	rm -f *~ *.o *.lst BUBBLE.BAS HELLO BUBBLE
