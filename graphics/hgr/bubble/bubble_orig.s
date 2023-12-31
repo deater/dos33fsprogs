@@ -1,25 +1,11 @@
 ; bubble universe -- Apple II Hires
 
-; original = 612 bytes
-; clear screen:
-;	bkgnd0 = $44198 = 278936 cycles = max ~4fps
-;	new: $A616 = 42518 = max ~22fps
-; hplot
-;	hplot0 = ($14E-$15C) $14E = 334 * 1024 = 342016 = max ~3fps
-;	lookup = 46 * 1024 = 47104 = max ~21fps
-
-
-; after fast graphics
-;	D7E77 = 884343 = 1.1fps
-;	DD06E = ?? (made J countdown, why longer?)
-;	DB584 = destructive U when plotting
-
 ; soft-switches
 
 KEYPRESS	= $C000
 KEYRESET	= $C010
-PAGE1		= $C054
-PAGE2		= $C055
+PAGE1           =       $C054
+PAGE2           =       $C055
 
 ; ROM routines
 
@@ -33,10 +19,6 @@ COLORTBL	= $F6F6
 WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 ; zero page
-
-GBASL		= $26
-GBASH		= $27
-
 
 HPLOTXL		= $90
 HPLOTXH		= $91
@@ -74,18 +56,10 @@ NUM		= 32
 
 bubble:
 
-	;========================
-	; setup lookup tables
-
-	jsr	hgr_make_tables
-
-	;=======================
-	; init graphics
-
 	jsr	HGR2
 
-	;=======================
-	; init variables
+	ldx	#7
+	jsr	HCOLOR1
 
 	lda	#0
 	sta	XL
@@ -95,64 +69,45 @@ bubble:
 	sta	TL
 	sta	TH
 
-	;=========================
-	;=========================
-	; main loop
-	;=========================
-	;=========================
-
 next_frame:
 
-	;===========================
-	; "fast" clear screen
-	; inline to save 12 cycles
+	lda	#0
+	jsr	BKGND0
 
-	jsr	hgr_clear_screen
+main_loop:
 
-	ldx	#0							; 2
-	stx	I							; 3
+	; clear screen: TODO
 
+	ldx	#0
+	stx	I
 outer_loop:
 
-	; setup R*I to inner loop
-	;	save NUM*4 (128) cycles at expense of 11 cycles
-
-	ldx	I							; 3
-	lda	rl,X							; 4
-	sta	rl_smc+1						; 4
-
-	ldx	#NUM							; 2
-	stx	J							; 3
+	ldx	#0
+	stx	J
 
 inner_loop:
 
 	; fixed_add(rh[i],rl[i],xh,xl,&rxh,&rxl);
-	; note: rh is always 0
-
-	; pre-calc (R*I)+X for later use
-
+	ldx	I							; 3
 	clc								; 2
-rl_smc:
-	lda	#0		; R*I					; 2
+	lda	rl,X
 	adc	XL							; 3
 	sta	RXL							; 3
-	lda	#0							; 2
+	lda	rh,X
 	adc	XH							; 3
 	sta	RXH							; 3
 
 	; fixed_add(i,0,vh,vl,&ivh,&ivl);
-
-	; precalc I+V for later use
-	;	this is 8.8 fixed point so bottom byte of I is 0
-
-;	clc			; C should be 0 from prev		;
-	lda	VL							; 3
-	sta	IVL							; 3
-	lda	I							; 3
-	adc	VH							; 3
-	sta	IVH							; 3
+	clc
+	lda	#0
+	adc	VL
+	sta	IVL
+	lda	I
+	adc	VH
+	sta	IVH
 
 	; U=SIN(I+V)+SIN(RR+X)
+	; float_to_fixed(sin(ivh,ivl) + sin(rxh,rxl), &uh,&ul);
 
 	ldy	#0
 	jsr	sin
@@ -168,6 +123,7 @@ rl_smc:
 	sta	UH
 
 	; V=COS(I+V)+COS(RR+X)
+	; float_to_fixed(cos(ivh,ivl) + cos(rxh,rxl), &vh,&vl);
 
 	ldy	#0
 	jsr	cos
@@ -184,52 +140,37 @@ rl_smc:
 
 
 	; X=U+T
-	clc								; 2
-	lda	UL							; 3
-	adc	TL							; 3
-	sta	XL							; 3
-	lda	UH							; 3
-	adc	TH							; 3
-	sta	XH							; 3
+	; fixed_add(uh,ul,th,tl,&xh,&xl);
+	clc
+	lda	UL
+	adc	TL
+	sta	XL
+	lda	UH
+	adc	TH
+	sta	XH
 
 	; HPLOT 32*U+140,32*V+96
+	; hplot(48*fixed_to_float(uh,ul)+140,
+	;	48*fixed_to_float(vh,vl)+96);
 
-	; U can be destroyed as we don't use it again?
+	; HPLOT0 plot at (Y,X), (A)
 
-	; 01234567 89ABCDEF
+	lda	UL
+	sta	HPLOTYL
 
-	; 56789ABC DEF00000
-
-	; we want 56789ABC, rotate right by 3 is two iterations faster?
-
-;	lda	UL
-;	sta	HPLOTYL
-
-	lda	UL							; 3
-
-	lsr	UH							; 5
-	ror								; 2
-
-	lsr	UH							; 5
-	ror								; 2
-
-	lsr	UH							; 5
-	ror								; 2
-
-.if 0
 	lda	UH
 
-	asl	UL
+	asl	HPLOTYL
 	rol
-	asl	UL
+	asl	HPLOTYL
 	rol
-	asl	UL
+	asl	HPLOTYL
 	rol
-	asl	UL
+	asl	HPLOTYL
 	rol
-	asl	UL
+	asl	HPLOTYL
 	rol
-.endif
+
 	clc
 	adc	#140
 	tax
@@ -253,31 +194,17 @@ rl_smc:
 	clc
 	adc	#96
 
-	; "fast" hplot, Xpos in X, Ypos in A
 
-	tay								; 2
-	lda	hposn_low,Y						; 4
-	sta	GBASL							; 3
-	clc								; 2
-	lda	hposn_high,Y						; 4
-	adc	HGR_PAGE						; 3
-	sta	GBASH							; 3
-; 21
+	ldy	#0		; never bigger than 140+48 = 188
+;	ldx	#140
+;	lda	#96
+	jsr	HPLOT0
 
-	ldy	div7_table,X						; 4
-
-	lda	mod7_table,X						; 4
-	tax								; 2
-; 31
-	lda	(GBASL),Y						; 5
-	ora	log_lookup,X						; 4
-	sta	(GBASL),Y						; 6
-; 46
-
-	dec	J							; 5
-	bmi	done_j							; 2/3
-	jmp	inner_loop						; 3
-;	bpl	inner_loop
+	inc	J
+	lda	J
+	cmp	#NUM
+	beq	done_j
+	jmp	inner_loop
 done_j:
 
 	inc	I
@@ -401,6 +328,12 @@ cos:
 	jmp	already_loaded
 
 
+rh:
+.byte	$00,$00,$00,$00,$00,$00,$00,$00
+.byte	$00,$00,$00,$00,$00,$00,$00,$00
+.byte	$00,$00,$00,$00,$00,$00,$00,$00
+.byte	$00,$00,$00,$00,$00,$00,$00,$00
+
 rl:
 .byte	$00,$06,$0C,$12,$19,$1F,$25,$2B
 .byte	$32,$38,$3E,$45,$4B,$51,$57,$5E
@@ -425,8 +358,3 @@ sin_lookup:
 .byte	$A6,$A8,$AA,$AD,$AF,$B1,$B4,$B6,$B9,$BC,$BE,$C1,$C4,$C7,$C9,$CC
 .byte	$CF,$D2,$D5,$D8,$DB,$DE,$E1,$E4,$E7,$EA,$ED,$F0,$F4,$F7,$FA,$FD
 
-log_lookup:
-	.byte $81,$82,$84,$88,$90,$A0,$C0,$80
-
-.include "hgr_clear_screen.s"
-.include "hgr_table.s"
