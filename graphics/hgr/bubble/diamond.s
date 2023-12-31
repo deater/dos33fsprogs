@@ -303,7 +303,7 @@ already_loaded:
 	asl
 	sta	OUT1L,Y
 
-	bcs	sin_negative
+	bcc	sin_negative
 sin_positive:
 	lda	#$0
 	beq	set_sin_sign
