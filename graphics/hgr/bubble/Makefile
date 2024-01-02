@@ -7,12 +7,13 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	bubble.dsk make_table
 
-bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_ORIG DIAMOND
+bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_ORIG BUBBLE_ROLLED DIAMOND
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
 	$(DOS33) -y bubble.dsk SAVE A HELLO
 	$(DOS33) -y bubble.dsk SAVE A BUBBLE.BAS
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_ORIG
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_ROLLED
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 DIAMOND
 
 ###
@@ -25,7 +26,7 @@ HELLO:	hello.bas
 BUBBLE:	bubble.o
 	ld65 -o BUBBLE bubble.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
-bubble.o:	bubble.s hgr_clear_screen.s
+bubble.o:	bubble.s hgr_clear_part.s sin_unrolled.s
 	ca65 -o bubble.o bubble.s -l bubble.lst
 
 ###
@@ -35,6 +36,15 @@ BUBBLE_ORIG:	bubble_orig.o
 
 bubble_orig.o:	bubble_orig.s
 	ca65 -o bubble_orig.o bubble_orig.s -l bubble_orig.lst
+
+###
+
+BUBBLE_ROLLED:	bubble_rolled.o
+	ld65 -o BUBBLE_ROLLED bubble_rolled.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble_rolled.o:	bubble_rolled.s
+	ca65 -o bubble_rolled.o bubble_rolled.s -l bubble_rolled.lst
+
 
 
 ###
@@ -63,4 +73,5 @@ make_table.o:	make_table.c
 ###
 
 clean:	
-	rm -f *~ *.o *.lst BUBBLE.BAS HELLO BUBBLE DIAMOND BUBBLE_ORIG
+	rm -f *~ *.o *.lst BUBBLE.BAS HELLO BUBBLE \
+		DIAMOND BUBBLE_ORIG BUBBLE_ROLLED

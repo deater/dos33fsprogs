@@ -21,7 +21,6 @@
 ;	A50BF = use lookup table for sine sign (takes 256 more bytes)
 ;	9F673 = clear screen, only clear X region we use
 ;	9DD73 = clear screen, only clear Y region we use
-;	906FE = inline/unroll the sines
 ;		TODO: inline/unroll sine/cosine calls
 
 
@@ -178,45 +177,17 @@ no_rl_carry:
 
 	; U=SIN(I+V)+SIN(RR+X)
 
-;	ldy	#0
-	lda	IVL							; 3
-	sta	STEMP1L							; 3
-	lda	IVH							; 3
-
-;	jsr	sin
-.include "sin_unrolled.s"
-
-	lda	sin_table_low,X						; 4
-	sta	OUT1L							; 3
-	lda	sin_table_high,X					; 4
-	sta	OUT1H							; 3
-
-
-
-
-
-
-
-;	ldy	#2
-	lda	RXL							; 3
-	sta	STEMP1L							; 3
-	lda	RXH							; 3
-
-;	jsr	sin
-
-.include "sin_unrolled.s"
-
-;	lda	sin_table_low,X						; 4
-;	sta	OUT1L							; 3
-;	lda	sin_table_high,X					; 4
-;	sta	OUT1H							; 3
+	ldy	#0
+	jsr	sin
+	ldy	#2
+	jsr	sin
 
 	clc
 	lda	OUT1L
-	adc	sin_table_low,X
+	adc	OUT2L
 	sta	UL
 	lda	OUT1H
-	adc	sin_table_high,X
+	adc	OUT2H
 	sta	UH
 
 	; V=COS(I+V)+COS(RR+X)
