@@ -406,6 +406,8 @@ cos:
 
 
 .include "hgr_clear_part.s"
+	rts
+
 .include "hgr_table.s"
 
 .align $100

@@ -243,7 +243,7 @@ hgr_page1_cls_loop:
 
 hgr_page1_cls_done:
 
-	rts
+	jmp	hgr_page2_cls_done
 
 
 hgr_page2_clearscreen:
@@ -473,8 +473,8 @@ hgr_page2_cls_loop:
 .endif
 	iny
 	cpy	#30
-	beq	done_hgr_page2_cls
+	beq	hgr_page2_cls_done
 	jmp	hgr_page2_cls_loop
-done_hgr_page2_cls:
-	rts
+hgr_page2_cls_done:
+;	rts
 
