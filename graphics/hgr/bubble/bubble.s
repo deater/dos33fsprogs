@@ -22,7 +22,7 @@
 ;	9F673 = clear screen, only clear X region we use
 ;	9DD73 = clear screen, only clear Y region we use
 ;	906FE = inline/unroll the sines
-;		TODO: inline/unroll sine/cosine calls
+;	817BE = inline/unroll the cosines
 
 
 ; soft-switches
@@ -178,7 +178,6 @@ no_rl_carry:
 
 	; U=SIN(I+V)+SIN(RR+X)
 
-;	ldy	#0
 	lda	IVL							; 3
 	sta	STEMP1L							; 3
 	lda	IVH							; 3
@@ -191,25 +190,12 @@ no_rl_carry:
 	lda	sin_table_high,X					; 4
 	sta	OUT1H							; 3
 
-
-
-
-
-
-
-;	ldy	#2
 	lda	RXL							; 3
 	sta	STEMP1L							; 3
 	lda	RXH							; 3
 
 ;	jsr	sin
-
 .include "sin_unrolled.s"
-
-;	lda	sin_table_low,X						; 4
-;	sta	OUT1L							; 3
-;	lda	sin_table_high,X					; 4
-;	sta	OUT1H							; 3
 
 	clc
 	lda	OUT1L
@@ -221,17 +207,39 @@ no_rl_carry:
 
 	; V=COS(I+V)+COS(RR+X)
 
-	ldy	#0
-	jsr	cos
-	ldy	#2
-	jsr	cos
+	; 1.57 is roughly 0x0192 in 8.8
+	clc								; 2
+	lda	IVL							; 3
+	adc	#$92							; 2
+	sta	STEMP1L							; 3
+
+	lda	IVH							; 4
+	adc	#1							; 2
+
+;	jsr	sin
+.include "sin_unrolled.s"
+	lda	sin_table_low,X						; 4
+	sta	OUT1L							; 3
+	lda	sin_table_high,X					; 4
+	sta	OUT1H							; 3
+
+
+	; 1.57 is roughly 0x0192 in 8.8
+	clc								; 2
+	lda	RXL							; 3
+	adc	#$92							; 2
+	sta	STEMP1L							; 3
+	lda	RXH							; 3
+	adc	#1							; 2
+;	jsr	cos
+.include "sin_unrolled.s"
 
 	clc
 	lda	OUT1L
-	adc	OUT2L
+	adc	sin_table_low,X
 	sta	VL
 	lda	OUT1H
-	adc	OUT2H
+	adc	sin_table_high,X
 	sta	VH
 
 
@@ -359,7 +367,7 @@ flip2:
 
 
 
-
+.if 0
 	;=======================
 sin:
 
@@ -421,7 +429,6 @@ already_loaded:
 	;=============================
 cos:
 	; 1.57 is roughly 0x0192 in 8.8
-
 	clc								; 2
 	lda	IVL,Y							; 4
 	adc	#$92							; 2
@@ -432,7 +439,7 @@ cos:
 ;	sta	STEMP1H							; 3
 
 	jmp	already_loaded						; 3
-
+.endif
 
 .include "hgr_clear_part.s"
 .include "hgr_table.s"
