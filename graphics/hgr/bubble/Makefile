@@ -25,7 +25,7 @@ HELLO:	hello.bas
 BUBBLE:	bubble.o
 	ld65 -o BUBBLE bubble.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
-bubble.o:	bubble.s
+bubble.o:	bubble.s hgr_clear_screen.s
 	ca65 -o bubble.o bubble.s -l bubble.lst
 
 ###

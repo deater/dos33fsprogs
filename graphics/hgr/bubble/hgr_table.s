@@ -1,7 +1,7 @@
-;div7_table	= $b800
-;mod7_table	= $b900
-;hposn_high	= $ba00
-;hposn_low	= $bb00
+div7_table	= $6800
+mod7_table	= $6900
+hposn_high	= $6a00
+hposn_low	= $6b00
 
 
 hgr_make_tables:
@@ -76,7 +76,7 @@ btpl2:
 	rol
 	asl	hposn_low, X
 	rol
-	ora	#$20
+;	ora	#$20
 	sta	hposn_high, X
 	inx
 	cpx	#$C0
@@ -84,14 +84,14 @@ btpl2:
 
 ; go 16 beyond, which allows our text scrolling routine
 
-	ldx	#16
-extra_table_loop:
-	lda	hposn_low,X
-	sta	hposn_low+192,X
-	lda	hposn_high,X
-	eor	#$60
-	sta	hposn_high+192,X
-	dex
-	bpl	extra_table_loop
+;	ldx	#16
+;extra_table_loop:
+;	lda	hposn_low,X
+;	sta	hposn_low+192,X
+;	lda	hposn_high,X
+;	eor	#$60
+;	sta	hposn_high+192,X
+;	dex
+;	bpl	extra_table_loop
 
 	rts
