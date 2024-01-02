@@ -24,8 +24,8 @@
 ;	906FE = inline/unroll the sines
 ;	817BE = inline/unroll the cosines
 ;	817A7 = inline clear screen (now no stack usage)
-;		TODO: re-arrange order of U calculation
 ;		TODO: use X for J counter (no stack so can use TXS/TSX)
+;		TODO: calc COS by wrapping X not adding again
 
 ; soft-switches
 
