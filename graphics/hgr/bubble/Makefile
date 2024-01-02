@@ -5,7 +5,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts
 EMPTY_DISK = ../../../empty_disk
 
-all:	bubble.dsk
+all:	bubble.dsk make_table
 
 bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_ORIG DIAMOND
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
@@ -51,6 +51,14 @@ diamond.o:	diamond.s
 BUBBLE.BAS:	bubble.bas
 	$(TOKENIZE) < bubble.bas > BUBBLE.BAS
 
+
+###
+
+make_table:	make_table.o
+	$(CC) -o make_table make_table.o -lm
+
+make_table.o:	make_table.c
+	$(CC) $(CFLAGS) -c make_table.c
 
 ###
 

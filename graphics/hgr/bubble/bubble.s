@@ -18,7 +18,7 @@
 ;	C2679 = optimize sine, don't care about bottom byte in addition
 ;	AB2FC = optimize sine, keep H value in accumulator = 1.4fps
 ;	A9A38 = optimize cosine slightly
-;		TODO: separate lookup table for sign
+;	A50BF = use lookup table for sine sign (takes 256 more bytes)
 ;		TODO: inline/unroll sine/cosine calls
 
 ; soft-switches
@@ -363,6 +363,13 @@ already_loaded:
 	; TODO: tradeoff size for speed by having lookup
 	;	table for sign bits
 
+	lda	sin_table_low,X
+	sta	OUT1L,Y
+	lda	sin_table_high,X
+	sta	OUT1H,Y
+
+.if 0
+
 	lda	sin_lookup,X						; 4+
 	asl								; 2
 	sta	OUT1L,Y							; 5
@@ -375,6 +382,7 @@ sin_negative:
 	lda	#$FF							; 2
 set_sin_sign:
 	sta	OUT1H,Y							; 5
+.endif
 
 	rts								; 6
 
@@ -400,6 +408,7 @@ rl:
 .byte	$64,$6A,$71,$77,$7D,$83,$8A,$90
 .byte	$96,$9D,$A3,$A9,$AF,$B6,$BC,$C2
 
+.if 0
 sin_lookup:
 .byte	$00,$03,$06,$09,$0C,$0F,$12,$15,$18,$1C,$1F,$22,$25,$28,$2B,$2E
 .byte	$30,$33,$36,$39,$3C,$3F,$41,$44,$47,$49,$4C,$4E,$51,$53,$55,$58
@@ -417,9 +426,46 @@ sin_lookup:
 .byte	$8A,$8B,$8D,$8E,$8F,$91,$93,$94,$96,$98,$99,$9B,$9D,$9F,$A1,$A4
 .byte	$A6,$A8,$AA,$AD,$AF,$B1,$B4,$B6,$B9,$BC,$BE,$C1,$C4,$C7,$C9,$CC
 .byte	$CF,$D2,$D5,$D8,$DB,$DE,$E1,$E4,$E7,$EA,$ED,$F0,$F4,$F7,$FA,$FD
+.endif
 
 log_lookup:
 	.byte $81,$82,$84,$88,$90,$A0,$C0,$80
 
 .include "hgr_clear_screen.s"
 .include "hgr_table.s"
+
+.align $100
+sin_table_low:
+	.byte	$00,$06,$0C,$12,$19,$1F,$25,$2B,$31,$38,$3E,$44,$4A,$50,$56,$5C
+	.byte	$61,$67,$6D,$73,$78,$7E,$83,$88,$8E,$93,$98,$9D,$A2,$A7,$AB,$B0
+	.byte	$B4,$B9,$BD,$C1,$C5,$C9,$CD,$D1,$D4,$D8,$DB,$DE,$E1,$E4,$E7,$E9
+	.byte	$EC,$EE,$F0,$F3,$F4,$F6,$F8,$F9,$FB,$FC,$FD,$FE,$FE,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FE,$FE,$FD,$FC,$FB,$F9,$F8,$F6,$F5,$F3,$F1,$EE
+	.byte	$EC,$EA,$E7,$E4,$E1,$DE,$DB,$D8,$D5,$D1,$CD,$C9,$C6,$C2,$BD,$B9
+	.byte	$B5,$B0,$AC,$A7,$A2,$9D,$98,$93,$8E,$89,$83,$7E,$78,$73,$6D,$68
+	.byte	$62,$5C,$56,$50,$4A,$44,$3E,$38,$32,$2C,$25,$1F,$19,$13,$0C,$06
+	.byte	$00,$FB,$F4,$EE,$E8,$E2,$DB,$D5,$CF,$C9,$C3,$BD,$B7,$B1,$AB,$A5
+	.byte	$9F,$99,$93,$8E,$88,$83,$7D,$78,$73,$6D,$68,$63,$5E,$5A,$55,$50
+	.byte	$4C,$47,$43,$3F,$3B,$37,$33,$30,$2C,$29,$25,$22,$1F,$1C,$19,$17
+	.byte	$14,$12,$10,$0E,$0C,$0A,$08,$07,$06,$04,$03,$02,$02,$01,$01,$01
+	.byte	$01,$01,$01,$01,$02,$02,$03,$04,$05,$07,$08,$0A,$0B,$0D,$0F,$11
+	.byte	$14,$16,$19,$1C,$1E,$21,$25,$28,$2B,$2F,$32,$36,$3A,$3E,$42,$47
+	.byte	$4B,$4F,$54,$59,$5E,$62,$67,$6C,$72,$77,$7C,$82,$87,$8D,$92,$98
+	.byte	$9E,$A4,$AA,$AF,$B5,$BB,$C2,$C8,$CE,$D4,$DA,$E0,$E7,$ED,$F3,$F9
+sin_table_high:
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
