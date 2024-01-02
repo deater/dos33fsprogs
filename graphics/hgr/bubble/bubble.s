@@ -16,6 +16,10 @@
 ;	D57A2 = rotate right instead of left for HPLOT *32 (U)
 ;	D1D53 = same byt for V
 ;	C2679 = optimize sine, don't care about bottom byte in addition
+;	AB2FC = optimize sine, keep H value in accumulator = 1.4fps
+;	A9A38 = optimize cosine slightly
+;		TODO: separate lookup table for sign
+;		TODO: inline/unroll sine/cosine calls
 
 ; soft-switches
 
@@ -235,25 +239,6 @@ rl_smc:
 	lsr	HPLOTYL
 	ror
 
-.if 0
-	lda	VL
-	sta	HPLOTYL
-
-	lda	VH
-
-
-	asl	HPLOTYL
-	rol
-	asl	HPLOTYL
-	rol
-	asl	HPLOTYL
-	rol
-	asl	HPLOTYL
-	rol
-	asl	HPLOTYL
-	rol
-.endif
-
 	clc
 	adc	#96
 
@@ -295,13 +280,16 @@ done_i:
 	;  1/2 1/4 1/8 1/16 | 1/32 1/64 1/128 1/256
 	;	$0x08
 
-	clc
-	lda	TL
-	adc	#$8
-	sta	TL
-	lda	#0
-	adc	TH
-	sta	TH
+	; TODO: is CLC necessary? (bcs=bge, bcc=blt)
+	;	carry always set here
+
+	clc								; 2
+	lda	TL							; 3
+	adc	#$8							; 2
+	sta	TL							; 3
+	lda	#0							; 2
+	adc	TH							; 3
+	sta	TH							; 3
 
 end:
 	; flip pages
@@ -334,53 +322,46 @@ sin:
 
 	; i=(i*0x28)>>8;
 
-	lda	IVL,Y		; note, uses absolute as no ZP equiv	; 5
+	lda	IVL,Y		; note, uses absolute as no ZP equiv	; 4
 	sta	STEMP1L							; 3
-	lda	IVH,Y							; 5
-;	sta	STEMP1H							; 3
+	lda	IVH,Y							; 4
 already_loaded:
+	; A has STEMP1H
 
 	; i2=i<<3;
 
-	; TODO: keep part in accumulator
 
 	asl	STEMP1L							; 5
-;	rol	STEMP1H							; 5
-	rol
+	rol								; 2
 	asl	STEMP1L							; 5
-;	rol	STEMP1H							; 5
-	rol
+	rol								; 2
 	asl	STEMP1L							; 5
-;	rol	STEMP1H							; 5
-	rol
+	rol								; 2
 
 	; i1=i<<5;
 
 	ldx	STEMP1L							; 3
 	stx	STEMP2L							; 3
 
-;	lda	STEMP1H							; 3
-;	sta	STEMP2H							; 3
-	sta	STEMP1H
+	sta	STEMP1H							; 3
 
 	asl	STEMP2L							; 5
-;	rol	STEMP2H							; 5
-	rol
+	rol								; 2
 	asl	STEMP2L							; 5
-;	rol	STEMP2H							; 5
-	rol
+	rol								; 2
 
 	; i=(i1+i2)>>8;
 
 	; We ignore the low byte as we don't need it
 	; possibly inaccurate as we don't clear carry?
 
-	adc	STEMP1H
-;	lda	STEMP1H							; 3
-;	adc	STEMP2H							; 3
+	adc	STEMP1H							; 2
 	tax								; 2
 
 	; sl=fsinh[i];
+
+	; TODO: tradeoff size for speed by having lookup
+	;	table for sign bits
 
 	lda	sin_lookup,X						; 4+
 	asl								; 2
@@ -401,15 +382,16 @@ set_sin_sign:
 cos:
 	; 1.57 is roughly 0x0192 in 8.8
 
-	clc
-	lda	IVL,Y
-	adc	#$92
-	sta	STEMP1L
-	lda	IVH,Y
-	adc	#1
-	sta	STEMP1H
+	clc								; 2
+	lda	IVL,Y							; 4
+	adc	#$92							; 2
+	sta	STEMP1L							; 3
 
-	jmp	already_loaded
+	lda	IVH,Y							; 4
+	adc	#1							; 2
+;	sta	STEMP1H							; 3
+
+	jmp	already_loaded						; 3
 
 
 rl:
