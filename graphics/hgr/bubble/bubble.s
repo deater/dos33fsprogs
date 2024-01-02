@@ -13,6 +13,9 @@
 ;	D7E77 = 884343 = 1.1fps
 ;	DD06E = ?? (made J countdown, why longer?)
 ;	DB584 = destructive U when plotting
+;	D57A2 = rotate right instead of left for HPLOT *32 (U)
+;	D1D53 = same byt for V
+;	C2679 = optimize sine, don't care about bottom byte in addition
 
 ; soft-switches
 
@@ -202,9 +205,6 @@ rl_smc:
 
 	; we want 56789ABC, rotate right by 3 is two iterations faster?
 
-;	lda	UL
-;	sta	HPLOTYL
-
 	lda	UL							; 3
 
 	lsr	UH							; 5
@@ -216,29 +216,32 @@ rl_smc:
 	lsr	UH							; 5
 	ror								; 2
 
+	clc								; 2
+	adc	#140							; 2
+	tax								; 2
+
+	; calculate Ypos
+
+	lda	VH
+	sta	HPLOTYL
+	lda	VL
+
+	lsr	HPLOTYL
+	ror
+
+	lsr	HPLOTYL
+	ror
+
+	lsr	HPLOTYL
+	ror
+
 .if 0
-	lda	UH
-
-	asl	UL
-	rol
-	asl	UL
-	rol
-	asl	UL
-	rol
-	asl	UL
-	rol
-	asl	UL
-	rol
-.endif
-	clc
-	adc	#140
-	tax
-
 	lda	VL
 	sta	HPLOTYL
 
 	lda	VH
 
+
 	asl	HPLOTYL
 	rol
 	asl	HPLOTYL
@@ -249,6 +252,7 @@ rl_smc:
 	rol
 	asl	HPLOTYL
 	rol
+.endif
 
 	clc
 	adc	#96
@@ -330,61 +334,68 @@ sin:
 
 	; i=(i*0x28)>>8;
 
-	lda	IVL,Y
-	sta	STEMP1L
-	lda	IVH,Y
-	sta	STEMP1H
+	lda	IVL,Y		; note, uses absolute as no ZP equiv	; 5
+	sta	STEMP1L							; 3
+	lda	IVH,Y							; 5
+;	sta	STEMP1H							; 3
 already_loaded:
+
 	; i2=i<<3;
 
-	asl	STEMP1L
-	rol	STEMP1H
-	asl	STEMP1L
-	rol	STEMP1H
-	asl	STEMP1L
-	rol	STEMP1H
+	; TODO: keep part in accumulator
+
+	asl	STEMP1L							; 5
+;	rol	STEMP1H							; 5
+	rol
+	asl	STEMP1L							; 5
+;	rol	STEMP1H							; 5
+	rol
+	asl	STEMP1L							; 5
+;	rol	STEMP1H							; 5
+	rol
 
 	; i1=i<<5;
 
-	lda	STEMP1L
-	sta	STEMP2L
-	lda	STEMP1H
-	sta	STEMP2H
+	ldx	STEMP1L							; 3
+	stx	STEMP2L							; 3
 
-	asl	STEMP2L
-	rol	STEMP2H
-	asl	STEMP2L
-	rol	STEMP2H
+;	lda	STEMP1H							; 3
+;	sta	STEMP2H							; 3
+	sta	STEMP1H
+
+	asl	STEMP2L							; 5
+;	rol	STEMP2H							; 5
+	rol
+	asl	STEMP2L							; 5
+;	rol	STEMP2H							; 5
+	rol
 
 	; i=(i1+i2)>>8;
 
-	clc
-	lda	STEMP1L
-	adc	STEMP2L
-	sta	STEMP1L
+	; We ignore the low byte as we don't need it
+	; possibly inaccurate as we don't clear carry?
 
-	lda	STEMP1H
-	adc	STEMP2H
-	sta	STEMP1H
-
-	ldx	STEMP1H
+	adc	STEMP1H
+;	lda	STEMP1H							; 3
+;	adc	STEMP2H							; 3
+	tax								; 2
 
 	; sl=fsinh[i];
 
-	lda	sin_lookup,X
-	asl
-	sta	OUT1L,Y
+	lda	sin_lookup,X						; 4+
+	asl								; 2
+	sta	OUT1L,Y							; 5
 
-	bcs	sin_negative
+	bcs	sin_negative						; 2/3
 sin_positive:
-	lda	#$0
-	beq	set_sin_sign
+	lda	#$0							; 2
+	beq	set_sin_sign			; bra			; 3
 sin_negative:
-	lda	#$FF
+	lda	#$FF							; 2
 set_sin_sign:
-	sta	OUT1H,Y
+	sta	OUT1H,Y							; 5
 
-	rts
+	rts								; 6
 
 	;=============================
 cos:
