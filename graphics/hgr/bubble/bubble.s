@@ -24,8 +24,8 @@
 ;	906FE = inline/unroll the sines
 ;	817BE = inline/unroll the cosines
 ;	817A7 = inline clear screen (now no stack usage)
-;		TODO: use X for J counter (no stack so can use TXS/TSX)
-;		TODO: calc COS by wrapping X not adding again
+;	64987 = calc sine and cosine at same time = 2.5fps
+
 
 ; soft-switches
 
@@ -178,7 +178,9 @@ no_rl_carry:
 	adc	VH							; 3
 	sta	IVH							; 3
 
+	;=========================
 	; U=SIN(I+V)+SIN(RR+X)
+	; V=COS(I+V)+COS(RR+X)
 
 	lda	IVL							; 3
 	sta	STEMP1L							; 3
@@ -187,9 +189,20 @@ no_rl_carry:
 .include "sin_unrolled.s"
 
 	lda	sin_table_low,X						; 4
-	sta	OUT1L							; 3
+	sta	UL							; 3
 	lda	sin_table_high,X					; 4
-	sta	OUT1H							; 3
+	sta	UH							; 3
+
+	txa
+	clc
+	adc	#64
+	tax
+
+	lda	sin_table_low,X						; 4
+	sta	VL							; 3
+	lda	sin_table_high,X					; 4
+	sta	VH							; 3
+
 
 	lda	RXL							; 3
 	sta	STEMP1L							; 3
@@ -198,15 +211,19 @@ no_rl_carry:
 .include "sin_unrolled.s"
 
 	clc
-	lda	OUT1L
+	lda	UL
 	adc	sin_table_low,X
 	sta	UL
-	lda	OUT1H
+	lda	UH
 	adc	sin_table_high,X
 	sta	UH
 
-	; V=COS(I+V)+COS(RR+X)
+	txa
+	clc
+	adc	#64
+	tax
 
+.if 0
 	; 1.57 is roughly 0x0192 in 8.8
 	clc								; 2
 	lda	IVL							; 3
@@ -232,12 +249,13 @@ no_rl_carry:
 	adc	#1							; 2
 
 .include "sin_unrolled.s"
+.endif
 
 	clc
-	lda	OUT1L
+	lda	VL
 	adc	sin_table_low,X
 	sta	VL
-	lda	OUT1H
+	lda	VH
 	adc	sin_table_high,X
 	sta	VH
 
