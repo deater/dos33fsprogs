@@ -25,7 +25,13 @@
 ;	817BE = inline/unroll the cosines
 ;	817A7 = inline clear screen (now no stack usage)
 ;	64987 = calc sine and cosine at same time = 2.5fps
+;	61827 = remove unnecessary stores
+;	5D7EF = add a cosine table
+;	5CFBE = move TL/TH out of zero page
+;	5C353 = put UL in Y = ~2.6fps
 
+; NUM=24	35CD3 = ~4.5fps
+; NUM=16	1A2DD = ~9 fps
 
 ; soft-switches
 
@@ -51,39 +57,32 @@ GBASL		= $26
 GBASH		= $27
 
 
-HPLOTXL		= $90
-HPLOTXH		= $91
 HPLOTYL		= $92
-HPLOTYH		= $93
-IVL		= $94
-IVH		= $95
+
 RXL		= $96
 RXH		= $97
-OUT1L		= $98
-OUT1H		= $99
-OUT2L		= $9A
-OUT2H		= $9B
-STEMP1L		= $9C
-STEMP1H		= $9D
-STEMP2L		= $9E
-STEMP2H		= $9F
+STEMP1L		= $98
+STEMP1H		= $99
+STEMP2L		= $9A
+
 
 I		= $D0
 J		= $D1
-XL		= $D4
-XH		= $D5
-VL		= $D6
-VH		= $D7
-TL		= $DA
-TH		= $DB
-UL		= $DC
-UH		= $DD
+XL		= $D2
+XH		= $D3
+VL		= $D4
+VH		= $D5
+;TL		= $D6
+;TH		= $D7
+UL		= $D8
+UH		= $D9
 
 HGR_PAGE	= $E6
 
 ; const
 
-NUM		= 32
+;NUM		= 32
+NUM		= 24
 
 bubble:
 
@@ -106,8 +105,8 @@ bubble:
 	sta	XH
 	sta	VL
 	sta	VH
-	sta	TL
-	sta	TH
+;	sta	TL
+;	sta	TH
 
 	;=========================
 	;=========================
@@ -164,114 +163,133 @@ rl_smc:
 	adc	XH							; 3
 	sta	RXH							; 3
 
-no_rl_carry:
-
-	; fixed_add(i,0,vh,vl,&ivh,&ivl);
-
+	;=======================================
 	; precalc I+V for later use
+	; IV=I+V
 	;	this is 8.8 fixed point so bottom byte of I is 0
 
 ;	clc			; C should be 0 from prev		;
 	lda	VL							; 3
-	sta	IVL							; 3
+	sta	STEMP1L		; store IVL directly in sine input	; 3
 	lda	I							; 3
-	adc	VH							; 3
-	sta	IVH							; 3
+	adc	VH		; IVH is in A for sine			; 3
 
 	;=========================
 	; U=SIN(I+V)+SIN(RR+X)
 	; V=COS(I+V)+COS(RR+X)
 
-	lda	IVL							; 3
-	sta	STEMP1L							; 3
-	lda	IVH							; 3
+	; calc SIN(I+V)	in STEMP1L/A
 
-.include "sin_unrolled.s"
+	; / 6.28	is roughly the same as *0.16
+	;               = .5 .25 .125 .0625 .03125
+	; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
+
+	; i=(i*0x28)>>8;
+
+	; A has STEMP1H
+
+
+	; 01234567 89ABCDEF
+
+	;   3456789A
+	; + 56789ABC
+	;=============
+
+	; i2=i<<3;
+
+	asl	STEMP1L							; 5
+	rol								; 2
+	asl	STEMP1L							; 5
+	rol								; 2
+	asl	STEMP1L							; 5
+	rol								; 2
+
+	; i1=i<<5;
+
+	ldx	STEMP1L							; 3
+	stx	STEMP2L							; 3
+	sta	STEMP1H							; 3
+
+
+	asl	STEMP2L							; 5
+	rol								; 2
+	asl	STEMP2L							; 5
+	rol								; 2
+
+	; i=(i1+i2)>>8;
+
+	; We ignore the low byte as we don't need it
+	; possibly inaccurate as we don't clear carry?
+
+	adc	STEMP1H							; 2
+	tax								; 2
+
+	; tradeoff size for speed by having lookup
+	;	table for sign bits
+	;	the sign lookup only saves like 2 cycles
+
+
+	;==========================
+	; U=sin(IV)
 
 	lda	sin_table_low,X						; 4
 	sta	UL							; 3
 	lda	sin_table_high,X					; 4
 	sta	UH							; 3
 
-	txa
-	clc
-	adc	#64
-	tax
+	;===========================
+	; V=sin(IV)
 
-	lda	sin_table_low,X						; 4
+	lda	cos_table_low,X						; 4
 	sta	VL							; 3
-	lda	sin_table_high,X					; 4
+	lda	cos_table_high,X					; 4
 	sta	VH							; 3
 
-
 	lda	RXL							; 3
 	sta	STEMP1L							; 3
 	lda	RXH							; 3
 
 .include "sin_unrolled.s"
 
-	clc
-	lda	UL
-	adc	sin_table_low,X
-	sta	UL
-	lda	UH
-	adc	sin_table_high,X
-	sta	UH
+	;=====================
+	; U+=sin(RX)
 
-	txa
-	clc
-	adc	#64
-	tax
-
-.if 0
-	; 1.57 is roughly 0x0192 in 8.8
 	clc								; 2
-	lda	IVL							; 3
-	adc	#$92							; 2
-	sta	STEMP1L							; 3
+	lda	UL							; 3
+	adc	sin_table_low,X						; 4
+	tay			; UL in Y				; 2
+;	sta	UL							; 3
+	lda	UH							; 3
+	adc	sin_table_high,X					; 4
+	sta	UH							; 3
 
-	lda	IVH							; 4
-	adc	#1							; 2
+	;================
+	; V+=cos(RX)
 
-.include "sin_unrolled.s"
-	lda	sin_table_low,X						; 4
-	sta	OUT1L							; 3
-	lda	sin_table_high,X					; 4
-	sta	OUT1H							; 3
-
-
-	; 1.57 is roughly 0x0192 in 8.8
 	clc								; 2
-	lda	RXL							; 3
-	adc	#$92							; 2
-	sta	STEMP1L							; 3
-	lda	RXH							; 3
-	adc	#1							; 2
-
-.include "sin_unrolled.s"
-.endif
-
-	clc
-	lda	VL
-	adc	sin_table_low,X
-	sta	VL
-	lda	VH
-	adc	sin_table_high,X
-	sta	VH
-
+	lda	VL							; 3
+	adc	cos_table_low,X						; 4+
+	sta	VL							; 3
+	lda	VH							; 3
+	adc	cos_table_high,X					; 4+
+	sta	VH							; 3
 
 	; X=U+T
 	clc								; 2
-	lda	UL							; 3
-	adc	TL							; 3
+;	lda	UL							; 3
+	tya		; UL in Y					; 2
+tl_smc:
+	adc	#0							; 2
 	sta	XL							; 3
 	lda	UH							; 3
-	adc	TH							; 3
+th_smc:
+	adc	#0							; 2
 	sta	XH							; 3
 
+	;===========================================================
 	; HPLOT 32*U+140,32*V+96
 
-	; U can be destroyed as we don't use it again?
+	; U can be destroyed as we don't use it again
 
 	; 01234567 89ABCDEF
 
@@ -279,7 +297,9 @@ no_rl_carry:
 
 	; we want 56789ABC, rotate right by 3 is two iterations faster?
 
-	lda	UL							; 3
+	tya		; UL in Y					; 2
+
+;	lda	UL							; 3
 
 	lsr	UH							; 5
 	ror								; 2
@@ -353,12 +373,12 @@ done_i:
 	; carry always set here as we got here from a BEQ
 	; 	(bcs=bge, bcc=blt)
 
-	lda	TL							; 3
+	lda	tl_smc+1						; 4
 	adc	#$7	; really 8, carry always set			; 2
-	sta	TL							; 3
+	sta	tl_smc+1						; 4
 	lda	#0							; 2
-	adc	TH							; 3
-	sta	TH							; 3
+	adc	th_smc+1						; 4
+	sta	th_smc+1						; 4
 
 end:
 	; flip pages
@@ -388,6 +408,7 @@ sin_table_low:
 	.byte	$61,$67,$6D,$73,$78,$7E,$83,$88,$8E,$93,$98,$9D,$A2,$A7,$AB,$B0
 	.byte	$B4,$B9,$BD,$C1,$C5,$C9,$CD,$D1,$D4,$D8,$DB,$DE,$E1,$E4,$E7,$E9
 	.byte	$EC,$EE,$F0,$F3,$F4,$F6,$F8,$F9,$FB,$FC,$FD,$FE,$FE,$FF,$FF,$FF
+cos_table_low:
 	.byte	$FF,$FF,$FF,$FF,$FE,$FE,$FD,$FC,$FB,$F9,$F8,$F6,$F5,$F3,$F1,$EE
 	.byte	$EC,$EA,$E7,$E4,$E1,$DE,$DB,$D8,$D5,$D1,$CD,$C9,$C6,$C2,$BD,$B9
 	.byte	$B5,$B0,$AC,$A7,$A2,$9D,$98,$93,$8E,$89,$83,$7E,$78,$73,$6D,$68
@@ -400,11 +421,20 @@ sin_table_low:
 	.byte	$14,$16,$19,$1C,$1E,$21,$25,$28,$2B,$2F,$32,$36,$3A,$3E,$42,$47
 	.byte	$4B,$4F,$54,$59,$5E,$62,$67,$6C,$72,$77,$7C,$82,$87,$8D,$92,$98
 	.byte	$9E,$A4,$AA,$AF,$B5,$BB,$C2,$C8,$CE,$D4,$DA,$E0,$E7,$ED,$F3,$F9
+cos_table_low_tail:
+	.byte	$00,$06,$0C,$12,$19,$1F,$25,$2B,$31,$38,$3E,$44,$4A,$50,$56,$5C
+	.byte	$61,$67,$6D,$73,$78,$7E,$83,$88,$8E,$93,$98,$9D,$A2,$A7,$AB,$B0
+	.byte	$B4,$B9,$BD,$C1,$C5,$C9,$CD,$D1,$D4,$D8,$DB,$DE,$E1,$E4,$E7,$E9
+	.byte	$EC,$EE,$F0,$F3,$F4,$F6,$F8,$F9,$FB,$FC,$FD,$FE,$FE,$FF,$FF,$FF
+
+.align $100
+
 sin_table_high:
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+cos_table_high:
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
@@ -417,6 +447,11 @@ sin_table_high:
 	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
 	.byte	$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF,$FF
+cos_table_high_tail:
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 rl:
 .byte	$00,$06,$0C,$12,$19,$1F,$25,$2B
