@@ -1,15 +1,23 @@
 ; bubble universe -- Apple II Hires
 
-; original = 612 bytes
-; clear screen:
-;	bkgnd0 = $44198 = 278936 cycles = max ~4fps
-;	new: $A616 = 42518 = max ~22fps
-; hplot
-;	hplot0 = ($14E-$15C) $14E = 334 * 1024 = 342016 = max ~3fps
-;	lookup = 46 * 1024 = 47104 = max ~21fps
+; by Vince `deater` Weaver
+; based roughly on the BASIC code posted on the pouet forum
+; original effect by yuruyrau on twitter
+
+; original implementation = 612 bytes
+
+; Fast hi-res pixel notes (Apple II hi-res graphics pain is
+;	a bit much to get into here)
+
+; clear screen routine:
+;	ROM built-in:    BKGND0 = $44198 = 278936 cycles = max ~4fps
+;	hand-optimized:           $A616  =  42518 cycles = max ~22fps
+; hplot (plot pixel) routine, plot 32x32=1024 points
+;	ROM HPLOT0 = ($14E-$15C) $14E = 334 * 1024 = 342016 = max ~3fps
+;	hand-optimized                =  46 * 1024 =  47104 = max ~21fps
 
 
-; after fast graphics
+; after fast graphics, for I=32,J=32
 ;	D7E77(??) = 884343 = 1.1fps
 ;	DD06E = (made J countdown, why longer?)
 ;	DB584 = destructive U when plotting
@@ -30,13 +38,13 @@
 ;	5CFBE = move TL/TH out of zero page
 ;	5C353 = put UL in Y = ~2.6fps
 
-; NUM=24	35CD3 = ~4.5fps
-; NUM=16	1A2DD = ~9 fps
+; NUM (I,J)=24	35CD3 = ~4.5fps
+; NUM (I,J)=16	1A2DD = ~9 fps
 
 ; soft-switches
 
-KEYPRESS	= $C000
-KEYRESET	= $C010
+;KEYPRESS	= $C000
+;KEYRESET	= $C010
 PAGE1		= $C054
 PAGE2		= $C055
 
@@ -46,10 +54,10 @@ BKGND0		= $F3F4         ; clear current page to A
 HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
 HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
 HPLOT0		= $F457		; plot at (Y,X), (A)
-HLINRL		= $F530		; line to (X,A), (Y)
-HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
-COLORTBL	= $F6F6
-WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+;HLINRL		= $F530		; line to (X,A), (Y)
+;HCOLOR1	= $F6F0		; set HGR_COLOR to value in X
+;COLORTBL	= $F6F6
+;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 ; zero page
 
@@ -122,7 +130,7 @@ next_frame:
 .include "hgr_clear_part.s"
 
 
-	; FIXME: see value of X/Y/A after clear
+	; TODO: see if value of X/Y/A useful after clear
 
 	ldx	#0							; 2
 	stx	I							; 3
