@@ -389,6 +389,22 @@ th_smc:
 
 	; "fast" hplot, Xpos in X, Ypos in A
 
+	; Apple II hi-res is more-or-less 280x192
+	;	two consecutive pixels on are white
+	;	single pixels are colored based on palette
+	;	we treat things as a monochrome display, on a color
+	;	display odd/even pixels will have different colors
+
+	; The Y memory offset is a horrible interleaved mess, so we use
+	;	a lookup table we generated at start.  We also add in
+	;	the proper value for page-flipping
+
+	; Apple II hi-res is 7 pixels/byte, so we also pre-generate
+	;	div and mod by 7 tables at start and use those
+	;	instead of dividing by 7
+	;	We cheat and don't worry about the X positions larger
+	;	than 256 because our algorithm only goes up to 208
+
 	tay								; 2
 	lda	hposn_low,Y						; 4
 	sta	GBASL							; 3
@@ -403,6 +419,8 @@ th_smc:
 	lda	mod7_table,X						; 4
 	tax								; 2
 ; 31
+	; get current 7-bit pixel range, OR in to set new pixel
+
 	lda	(GBASL),Y						; 5
 	ora	log_lookup,X						; 4
 	sta	(GBASL),Y						; 6
@@ -454,9 +472,14 @@ flip2:
 	bit	PAGE2
 	jmp	next_frame
 
-;.include "hgr_clear_part.s"
 .include "hgr_table.s"
 
+	; we could calculate these, or else build them from
+	;	a 0..pi/2 table to save a lot of space
+
+	; the alignment was there to potentially save cycles on page
+	;	crossing.  Maybe not as useful that the cosine
+	;	goes off the page
 .align $100
 sin_table_low:
 	.byte	$00,$06,$0C,$12,$19,$1F,$25,$2B,$31,$38,$3E,$44,$4A,$50,$56,$5C
@@ -508,12 +531,18 @@ cos_table_high_tail:
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
+	; pre-calc table for R*I
+	; note this would be easy to calculate at startup
+	; to save space
 rl:
 .byte	$00,$06,$0C,$12,$19,$1F,$25,$2B
 .byte	$32,$38,$3E,$45,$4B,$51,$57,$5E
 .byte	$64,$6A,$71,$77,$7D,$83,$8A,$90
 .byte	$96,$9D,$A3,$A9,$AF,$B6,$BC,$C2
 
+	; which of 7 pixels to draw
+	; note high bit is set to pick blue/orange palette
+	; clear to get purple/green instead
 log_lookup:
 	.byte $81,$82,$84,$88,$90,$A0,$C0,$80
 
