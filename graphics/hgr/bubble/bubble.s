@@ -21,11 +21,13 @@
 
 
 ; after fast graphics, for I=32,J=32
+;	cycle count (for frame0, from Applewin)
+;	~~~~~~~~~~~~
 ;	D7E77(??) = 884343 = 1.1fps
 ;	DD06E = (made J countdown, why longer?)
 ;	DB584 = destructive U when plotting
 ;	D57A2 = rotate right instead of left for HPLOT *32 (U)
-;	D1D53 = same byt for V
+;	D1D53 = same but for V
 ;	C2679 = optimize sine, don't care about bottom byte in addition
 ;	AB2FC = optimize sine, keep H value in accumulator = 1.4fps
 ;	A9A38 = optimize cosine slightly
