@@ -4,14 +4,17 @@
 ; based roughly on the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-; original implementation = 612 bytes
+; original, unoptimized implementation = 612 bytes
+; fast version = 2152 bytes (could probably fit in 2k if we generate SINE table)
 
 ; Fast hi-res pixel notes (Apple II hi-res graphics pain is
 ;	a bit much to get into here)
 
 ; clear screen routine:
 ;	ROM built-in:    BKGND0 = $44198 = 278936 cycles = max ~4fps
-;	hand-optimized:           $A616  =  42518 cycles = max ~22fps
+;	hand-optimized:            $A616 =  42518 cycles = max ~22fps
+;       final version faster, only clears the 128x128 part of the screen we use
+
 ; hplot (plot pixel) routine, plot 32x32=1024 points
 ;	ROM HPLOT0 = ($14E-$15C) $14E = 334 * 1024 = 342016 = max ~3fps
 ;	hand-optimized                =  46 * 1024 =  47104 = max ~21fps
