@@ -24,7 +24,7 @@ qload_start:
 
 ;	jsr	load_file
 
-	jmp	xmas_start
+	jmp	trogdor_start
 
 ;	jmp	$2000			; jump to ZW
 
@@ -163,22 +163,22 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1		; MUSIC, XMAS
+	.byte 1,1,1		; MUSIC, TROGDOR, TITLE
 
 load_address_array:
-	.byte $D0,$80		; MUSIC, XMAS
+	.byte $D0,$80,$40	; MUSIC, TROGDOR, TITLE
 
 start_address:
-	.byte $D0,$80		; MUSIC, XMAS
+	.byte $D0,$80,$40	; MUSIC, TROGDOR, TITLE
 
 track_array:
-	.byte 4,12		; MUSIC, XMAS
+	.byte 4,12,11		; MUSIC, TROGDOR, TITLE
 
 sector_array:
-	.byte 0,0		; MUSIC, XMAS
+	.byte 0,0,0		; MUSIC, TROGDOR, TITLE
 
 length_array:
-	.byte 32,32		; MUSIC, XMAS
+	.byte 32,32		; MUSIC, TROGDOR, TITLE
 
 PT3_ENABLE_APPLE_IIC = 1
 

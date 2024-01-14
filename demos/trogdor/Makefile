@@ -9,13 +9,14 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	trogdor.dsk
 
 trogdor.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC TROGDOR
+	MUSIC TROGDOR TITLE
 	cp $(EMPTY_DISK) trogdor.dsk
 	$(DOS33_RAW) trogdor.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) trogdor.dsk 0 2 QBOOT		1 1
 	$(DOS33_RAW) trogdor.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) trogdor.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) trogdor.dsk 4 0 MUSIC		0 0
+	$(DOS33_RAW) trogdor.dsk 11 0 TITLE		0 0
 	$(DOS33_RAW) trogdor.dsk 12 0 TROGDOR		0 0
 
 
@@ -109,6 +110,7 @@ MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
+	music/trogdor.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard.inc \
@@ -116,6 +118,16 @@ music.o:	music.s zp.inc \
 	pt3_lib_mockingboard_setup.s \
 	pt3_lib_irq_handler.s
 	ca65 -o music.o music.s -l music.lst
+
+###
+
+TITLE:	title.o
+	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title.o:	title.s \
+	zp.inc hardware.inc qload.inc \
+	graphics/trogdor.hgr.zx02
+	ca65 -o title.o title.s -l title.lst
 
 ###
 

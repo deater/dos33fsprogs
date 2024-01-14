@@ -16,7 +16,25 @@ all:	\
 	trog08_close1.hgr.zx02 \
 	trog09_close.hgr.zx02 \
 	trog10_peasants.hgr.zx02 \
-	trog11_cottage.hgr.zx02
+	trog11_cottage.hgr.zx02 \
+	a2_strongbad.hgr.zx02 \
+	trogdor.hgr.zx02
+
+####
+
+trogdor.hgr.zx02:	trogdor.hgr
+	$(ZX02) trogdor.hgr trogdor.hgr.zx02
+
+trogdor.hgr:	trogdor.png
+	$(PNG_TO_HGR) trogdor.png > trogdor.hgr
+
+####
+
+a2_strongbad.hgr.zx02:	a2_strongbad.hgr
+	$(ZX02) a2_strongbad.hgr a2_strongbad.hgr.zx02
+
+a2_strongbad.hgr:	a2_strongbad.png
+	$(PNG_TO_HGR) a2_strongbad.png > a2_strongbad.hgr
 
 ####
 

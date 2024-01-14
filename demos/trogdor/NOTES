@@ -1,32 +1,130 @@
 Crop to 635x472
 	Levels: middle to 0.40
-	Scale to: 280x208
-	Levels: to 0.35
+	Scale to: 280x208 (none)
+	Levels: to 0.35 
 	Indexed, B+W, Floyd Steinberg
 	Crop to 280x192 with top at 8 pixels down
 	
 
+"A possibly legal program for your Apple II"
 
-+ zoom trogdor right to left
-+ blank screen with flames
-+ trogdor zoom up from bottom
+Play again? Y/N
+
+Excellent!
+Trogdor demands you watch again anyway.
+
+Scene 1:  "TROGDOR!"
++ zoom trogdor scrolls right to left
++ Left / Right / Left Flame
++   trog05 / flames
+
+Scene 2:  "TROGDOR!"
++ main trogdor scroll  up from bottom
++    trog00
+
+Scene 3:
 + village scroll from right to left
++ trog01 / trog02
+
+Scene 4: "TROGDOR WAS A MAN!"
 + Man
-+ Flames appear
-+ Dragon man
-+ Dragon
-+ Zoom in/out
-+ Scroll Down
-+ Flames on Dragon Man again
-+ Flip rapidly between dragon/man
-+ Back to village
-+ Flames over village
-+ Burning peasant scrolls
++ flames left/right/left
++ "he was a.."
++ trog03
+
+Scene 5: "DRAGON MAN"
++ dragonman
++ "maybe just a..."
++ trog04
+
+Scene 6: "Dragon"
++ dragon again
++ trog00 (trog06?)
++ "but he was still..."
+
+Scene 7: "TROGDOR"
++ Zoom in/out rapidly
++ trog05/trog00
++ Scroll Down off sreen
+
+Scene 8: "TROGDOR"
++ Dragonman
++ Flames on left and right, animated
++ Then rapidly shift trog04/trog05
++ trog04
+
+Scene 9: "Burninating the countryside"
++ Village
++ on "countrside" two flames
++ Burninating the...
+
+Scene 10: "Pesants"
++ Burning peasant scrolls rigt/left
+
+Scene 11: "Burninatng "
 + dragon up/down
-+ Lots of peasants
++ trog08/trog09
+
+Scene 12: "All the people "
++ Lots of peasants, appear one by one
++
+    2   4  5
+      3   1
++ trog10
+
+Scece 13: "Thatched roof cottages"
 + cottage scrolls up
-+ back/forth dragon/cottage
-+ cottags scrolls in upside down from top? with flames?
-+ rapid cut between tilted man/peasant/few others
+
+Scene 14: "Thatched roof cottages"
++ alternates
+	trog09
+	cottage
+	trog08
+	cottage
+	trog09
+	cottage
+	trog08
+	cottage
+	trog09
+	cottage
+	white screen, twin flames low
+Scene 15: "Thatched root cottages"
+	two flames, cottage scrolls in upside down
+	
+Scene 16:
+	Rapid cuts:
+	+ trog down
+	+ man
+	+ peasant
+	+ countryside
+	+ cottage
+	+ trog zoom out
+	+ trog zoom out 2 flames
+
+Scene 17: "Trogdor comes in the night!"
+	+ Strongbad at computer?
 
 
+
+Space:
+	$2000-$3FFF = page1 (8k)
+	$4000-$5fff = page2 (8k)
+	$6000-$BFFF = 24k
+
+	Language card = 12k (5k by music) so 7k
+
+
+	1499 trog00_trogdor.hgr.zx02
+	4839 trog01_countryside.hgr.zx02
+	1174 trog02_countryside.hgr.zx02
+	1973 trog03_man.hgr.zx02
+	1982 trog04_dragonman.hgr.zx02
+	3525 trog05_zoom.hgr.zx02
+	1665 trog07_peasant.hgr.zx02
+	2814 trog08_close1.hgr.zx02
+	3313 trog09_close.hgr.zx02
+	2817 trog10_peasants.hgr.zx02
+	2680 trog11_cottage.hgr.zx02
+	=====
+	28281 = 28k or so
+	

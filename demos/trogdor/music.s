@@ -27,4 +27,4 @@ PT3_ENABLE_APPLE_IIC = 1
 
 .align $100
 PT3_LOC:
-;.incbin "music/Walking_In_The_Air_mA2E.pt3"
+.incbin "music/trogdor.pt3"

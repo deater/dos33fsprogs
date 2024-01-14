@@ -1,11 +1,10 @@
-; XMAS 2023
+; Trogdor
 
-;
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
 
-xmas_start:
+trogdor_start:
 
 	;=====================
 	; initializations
@@ -14,7 +13,6 @@ xmas_start:
 	jsr	hardware_detect
 
 	jsr	hgr_make_tables
-
 
 	;===================
 	; restart?
@@ -78,6 +76,34 @@ dont_enable_mc:
 
 skip_all_checks:
 
+	;============================
+	;============================
+	; load title image from disk
+	;============================
+	;============================
+
+	; load from disk
+
+        bit     SET_GR
+        bit     HIRES
+        bit     TEXTGR
+        bit     PAGE2
+
+	lda     #2		; TITLE
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	bit	PAGE1
+
+	; decompress
+
+	lda     #<$4000
+        sta     zx_src_l+1
+        lda     #>$4000
+        sta     zx_src_h+1
+        lda     #$20
+        jsr     zx02_full_decomp
+
 	;=======================
 	;=======================
 	; Print message
@@ -116,15 +142,47 @@ done_set_message:
 
 	jsr	move_and_print
 
+	; print title messages
+
+	lda	#<title_string
+	sta	OUTL
+	lda	#>title_string
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print
+	jsr	move_and_print
+
+	; wait a bit, then change to credits
+
+	lda	#50
+	jsr	wait_a_bit
+
+	lda	#<bottom_string1
+	sta	OUTL
+	lda	#>bottom_string1
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print
+
+	lda	#50
+	jsr	wait_a_bit
 
 
+	jsr	move_and_print
+
+	jsr	wait_until_keypress
+
 
 	;=======================
 	;=======================
-	; Load xmas
+	; Load TROGDOR
 	;=======================
 	;=======================
-load_xmas:
+load_trogdor:
 
 	; load from disk
 
@@ -138,7 +196,7 @@ load_xmas:
 	;=======================
 	;=======================
 
-;	cli			; start music
+	cli			; start music
 
 	jsr	$8000
 
@@ -182,15 +240,24 @@ forever:
 
 	.include	"gs_interrupt.s"
 
-;.include "title.s"
 
+
+title_string:
+.byte	1,20,"NEW FROM VIDELECTRIX: A POSSIBLY LEGAL",0
+.byte	7,21,"PROGRAM FOR YOUR APPLE II!",0
+
+
+bottom_string1:
+.byte	3,23," CODE BY DEATER, MUSIC BY TOM_FJM",0
+bottom_string2:
+.byte	3,23,"    = PRESS ANY KEY TO START =    ",0
 
 ;             0123456789012345678901234567890123456789
 mockingboard_string:
-.byte   6,22,"MOCKINGBOARD DETECTED SLOT 4",0
+.byte   6,23,"MOCKINGBOARD DETECTED SLOT 4",0
 
 no_mockingboard_string:
-.byte   3,22,"NO MOCKINGBOARD, CONTINUING ANYWAY",0
+.byte   3,23,"NO MOCKINGBOARD, CONTINUING ANYWAY",0
 
 .include "pt3_lib_mockingboard_patch.s"
 
