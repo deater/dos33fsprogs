@@ -24,6 +24,9 @@ trogdor_main:
 	; draw opening scene
 	;======================================
 
+	lda	#$0
+	sta	DRAW_PAGE
+
 	lda	#<trog00_graphics
 	sta	zx_src_l+1
 	lda	#>trog00_graphics
@@ -35,6 +38,48 @@ trogdor_main:
         bit     HIRES
         bit     FULLGR
         bit     PAGE1
+
+	jsr	wait_until_keypress
+
+	; draw left flame
+
+	lda	#<left_flame_small
+	sta	INL
+	lda	#>left_flame_small
+	sta	INH
+	lda	#<left_flame_small_mask
+	sta	MASKL
+	lda	#>left_flame_small_mask
+	sta	MASKH
+
+	lda	#8
+	sta	SPRITE_X
+
+	lda	#152
+	sta	SPRITE_Y
+
+	jsr	hgr_draw_sprite_big_mask
+
+	; draw right flame
+
+	lda	#<right_flame_big
+	sta	INL
+	lda	#>right_flame_big
+	sta	INH
+	lda	#<right_flame_big_mask
+	sta	MASKL
+	lda	#>right_flame_big_mask
+	sta	MASKH
+
+	lda	#24
+	sta	SPRITE_X
+
+	lda	#54
+	sta	SPRITE_Y
+
+	jsr	hgr_draw_sprite_big_mask
+
+
 
 	jsr	wait_until_keypress
 
@@ -83,3 +128,9 @@ trog03_graphics:
 .include "irq_wait.s"
 
 
+hposn_low       = $1e00
+hposn_high      = $1f00
+
+.include "hgr_sprite_big_mask.s"
+
+.include "graphics/flame_sprites.inc"

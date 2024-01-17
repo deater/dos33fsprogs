@@ -136,7 +136,8 @@ TROGDOR:	trogdor.o
 
 trogdor.o:	trogdor.s \
 	zp.inc hardware.inc qload.inc \
-	graphics/trog00_trogdor.hgr.zx02
+	graphics/trog00_trogdor.hgr.zx02 \
+	hgr_sprite_big_mask.s
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
 

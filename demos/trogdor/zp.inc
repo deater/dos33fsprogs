@@ -127,93 +127,11 @@ MASKL		= $EC	; gr_putsprite_mask
 MASKH		= $ED
 FRAME           = $EE
 
-;==============================================
-; $F0-$FB can re-use in each file
-;==============================================
-
-; tunnel
-XX		= $F2
-MINUSXX         = $F3
-YY		= $F4
-MINUSYY         = $F5
-D               = $F6
-R               = $F7
-CX              = $F8
-CY              = $F9
-RR              = $FA
-
-; Credits
-BACKUP_OUTL	= $F2
-BACKUP_OUTH	= $F3
-
-; Nuts/ opener
+; local
 
 SPRITE_Y	= $F2
 SPRITE_X	= $F3
 CURRENT_ROW	= $F4
-
-; PLASMACUBE
-OUT1		= $F0
-OUT1H		= $F1
-OUT2		= $F2
-OUT2H		= $F3
-COMPT1		= $F4
-COMPT2		= $F5
-PARAM1		= $F6
-PARAM2		= $F7
-PARAM3		= $F8
-PARAM4		= $F9
-GRLINE		= $FA
-GRLINEH		= $FB
-
-; PLASMA
-
-; CUBE
-SAVEX		= $F3
-SAVEY		= $F4
-SUM		= $F5
-
-; CIRCLES/DRAW_BOXES
-COLOR2		= $F3
-X1		= $F4
-X2		= $F5
-Y1		= $F6
-Y2		= $F7
-SCENE_COUNT	= $F8
-LAST_TYPE	= $F9
-
-; lens
-LENS_X		= $F0
-LENS_Y		= $F1
-XADD		= $F2
-YADD		= $F3
-
-; rotozoom
-NUM1L		= $F0
-NUM1H		= $F1
-NUM2L		= $F2
-NUM2H		= $F3
-RESULT		= $F4	; F5,F6,F7
-SCALE_I		= $F8
-SCALE_F		= $F9
-ANGLE		= $FA
-
-; credits
-SCROLL_X	= $F0
-
-; polar
-SCROLL_START	= $F0
-YDEST		= $F1
-
-
-; hgr_copy
-HGR_COPY_Y1	= $F1
-HGR_COPY_Y2	= $F2
-FIRE_COLOR	= $F3
-
-SCROLL_LENGTH	= $F4
-OFFSET		= $F5
-TREE_COUNT	= $F6
 
 
 ;==============================================

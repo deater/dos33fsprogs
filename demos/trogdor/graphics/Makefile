@@ -18,7 +18,21 @@ all:	\
 	trog10_peasants.hgr.zx02 \
 	trog11_cottage.hgr.zx02 \
 	a2_strongbad.hgr.zx02 \
-	trogdor.hgr.zx02
+	trogdor.hgr.zx02 \
+	flame_sprites.inc
+
+####
+
+flame_sprites.inc:	compact_flames.png
+	$(HGR_SPRITE) -s -l left_flame_small ./compact_flames.png 0 8 55 48  > flame_sprites.inc
+	$(HGR_SPRITE) -s -l right_flame_small ./compact_flames.png 56 8 111 48  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l left_flame_big ./compact_flames.png 0 54 55 192  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l right_flame_big ./compact_flames.png 56 54 111 192  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l left_flame_small_mask ./compact_flames.png 112 8 167 48  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l right_flame_small_mask ./compact_flames.png 168 8 223 48  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l left_flame_big_mask ./compact_flames.png 112 54 167 192  >> flame_sprites.inc
+	$(HGR_SPRITE) -s -l right_flame_big_mask ./compact_flames.png 168 54 223 192  >> flame_sprites.inc
+
 
 ####
 

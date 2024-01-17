@@ -178,7 +178,7 @@ sector_array:
 	.byte 0,0,0		; MUSIC, TROGDOR, TITLE
 
 length_array:
-	.byte 32,32		; MUSIC, TROGDOR, TITLE
+	.byte 32,64,32		; MUSIC, TROGDOR, TITLE
 
 PT3_ENABLE_APPLE_IIC = 1
 
