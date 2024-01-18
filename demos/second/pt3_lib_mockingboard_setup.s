@@ -203,9 +203,14 @@ clear_ay_end:
 mockingboard_setup_interrupt:
 
 
-	; for this game with things in language card including
-	; irq handler, always force IIc mode (where RAM swapped in
-	; and we put the irq handler address directly up at $FFFE)
+	; for this demo we assume we are using the language card RAM
+	; so we force things to be in "IIc" mode which means
+	; we have ROM swapped out and can directly point the
+	; interrupt vector at $FFFE to here
+
+	; we also nop out the load from $45 in the interrupt handler
+	; because we aren't running the ROM handler that saves A
+	; to there on IIe/II+ systems
 
 	lda	#<interrupt_handler
 	sta	$fffe

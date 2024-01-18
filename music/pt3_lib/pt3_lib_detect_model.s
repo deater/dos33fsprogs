@@ -1,33 +1,60 @@
 	;===========================
 	; Check Apple II model
 	;===========================
-	; this is mostly for IIc support
-	; as it does interrupts differently
+	; this is mostly for IIc and IIgs support
+	; as they do interrupts differently
 
-	; ' ' ($20) = Apple II
-	; '+' ($2B) = Apple II+
-	; 'E' ($45) = Apple IIe
-	; 'C' ($43) = Apple IIc
-	; 'G' ($47) = Apple IIgs
+	; some of this info from the document:
+	; Apple II Family Identification Routines 2.2
+	;
+	; note the more obscure are not well tested
 
+	; Returns one of the following in A
+
+	; ' ' = Apple II
+	; '+' = Apple II+
+	; 'e' = Apple IIe
+	; 'c' = Apple IIc
+	; 'g' = Apple IIgs
+	; 'm' = mac L/C with board
+	; 'j' = jplus
+	; '3' = Apple III
 
 detect_appleii_model:
 	lda	#' '
 
 	ldx	$FBB3
+
 				; II is $38
 				; J-plus is $C9
 				; II+ is $EA (so is III)
 				; IIe and newer is $06
 
-	cpx	#$38
+	cpx	#$38			; ii
 	beq	done_apple_detect
 
-	lda	#'+'
+
+					; ii+ is EA FB1E=AD
+					; iii is EA FB1E=8A 00
+
 	cpx	#$EA
+	bne	not_ii_iii
+ii_or_iii:
+
+	lda	#'+'			; ii+/iii
+
+	ldx	$FB1E
+	cpx	#$AD
+	beq	done_apple_detect	; ii+
+
+	lda	#'3'
+	bne	done_apple_detect 	; bra iii
+
+not_ii_iii:
+	lda	#'j'			; jplus
+	cpx	#$C9
 	beq	done_apple_detect
 
-	; TODO: check for J-plus or III?
 
 	cpx	#$06
 	bne	done_apple_detect
@@ -44,19 +71,27 @@ apple_iie_or_newer:
 
 	beq	apple_iic
 
-	lda	#'E'
+	lda	#'e'
 	cpx	#$EA
 	beq	done_apple_detect
-	cpx	#$E0
-	beq	done_apple_detect
+;	cpx	#$E0
+;	beq	done_apple_detect
 
-	; assume GS?
+	; should do something if not $E0
 
-	lda	#'G'
+	; GS and IIe enhanced are the same, need to check
+
+	sec				; set carry
+	jsr	$FE1F
+	bcs	done_apple_detect	;If carry then IIe enhanced
+
+	; get here we're a IIgs?
+
+	lda	#'g'
 	bne	done_apple_detect
 
 apple_iic:
-	lda	#'C'
+	lda	#'c'
 
 done_apple_detect:
 	sta	APPLEII_MODEL

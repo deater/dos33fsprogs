@@ -1,10 +1,10 @@
-The PT3_player Library	version 0.4
+The PT3_player Library	version 0.5
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 	by Vince "Deater" Weaver <vince@deater.net>
 	http://www.deater.net/weave/vmwprod/pt3_lib/
 
-	Last Update: 15 May 2023
+	Last Update: 17 January 2024
 
 	Plays Vortex Tracker II .pt3 files on the Apple II
 
@@ -73,6 +73,14 @@ To get a pt3 file playing:
 	+ If you want the music to Loop then set the LOOP value to 1.
 	
 
+Notes on having player code in Language Card
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On IIgs interrupts reset language card settings.
+
+You'll have to call the gs_interrupt.s code or similar
+to switch the language card back on before calling the irq handler.
+
+
 Notes on Using on a IIc
 ~~~~~~~~~~~~~~~~~~~~~~~
 I usually test this code mostly on a II+ and IIe.
@@ -86,18 +94,23 @@ which does increase the size a bit.
 
 Things that are different on IIc:
 	+ For the board to get detected you have to touch the slot4
-		registers for some reason
+		registers, this will disable the mouse firmware
+		which normally lives in slot4
+
 	+ IRQ support is much more complex on the IIc.  We support things
 		by switching out the default ROM IRQ handler with
 		language-card RAM and place our own handler where the
 		stock handler would be.
 
-		This does mean if you use ROM routines they will break,
+		This does mean if you use ROM routines they will break.
+
+		If you need these, enable PT3_IIC_COPY_ROM as well
 		so the code also copies the $D000-$F000 ROM into the
 		language card too.  If your code doesn't use ROM routines
 		you can skip this.  The ROM copy hack uses $400 (text page 1)
 		as a temporary buffer for the copy, feel free to use something
-		else if that's a problem.
+		else if that's a problem.  (It might be a bad as it
+		over-writes the screen holes)
 
 		Finally we patch out loading the A register from $45 at
 		the end of the IRQ handler.
@@ -107,8 +120,16 @@ Things that are different on IIc:
 
 Notes on Using on a IIgs
 ~~~~~~~~~~~~~~~~~~~~~~~~
-I have not tested this on a IIgs with Mockingboard, I'm guessing it probably
-doesn't work.
+The code in theory works on a IIgs though it's mostly tested on
+MAME.  For some reason detection doesn't work (I feel like someone
+told me why but I forget) but if you force it to play in slot4 it
+will work if you configure a mockingboard in that slot.
+
+Note that if your code uses text/gr PAGE2 and you enable the workaround
+on ROM0 machines it can slow things down a lot.
+
+Also note the previous commentary on how to have the music player
+in the language card area on a IIgs.
 
 
 Cycle-counted version (not finished):
@@ -145,3 +166,12 @@ can be generated if you're willing to sacrifice 128+ zero page locations.
 
 
 
+It Doesn't Work!
+~~~~~~~~~~~~~~~~
+
+There are a lot of places things can go wrong.
+
+One, if you're using the default fast patching code and by bad luck
+the value $C4 appears smewhere and you aren't in slot4 this will patch
+the value with disastrous results.  I'm often lazy and just add nops
+(it's usually a branch causing the problem) until it is fixed.

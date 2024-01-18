@@ -1,3 +1,17 @@
+V0.5 (17 January 2024)
++ Fixes problem when pt3 file has more than 42 patterns.
+	Apparently this is a common failure mode, the Demosplash people also
+	hit it on their 6809 player but for different reasons.
++ Changes the value return by processor detect to lowercase.
+	(so Apple IIe returns 'e' instead of 'E')
+	Yes, I shouldn't make a change like this but it simplifies a lot
+	of my use cases and it was a pain carrying around the diff 
++ add mute/unmute functions.  Just disables/re-enables the channels
+	This is less destructive than using the clear function which
+	zeros all registers and is harder/slower to recover from
+
+
+
 V0.4 (15 May 2023)
 + Changed so that you can disable the 1.77MHz frequency adjustment at compile
 	time.  This saves a few hundred cycles and also some binary size.

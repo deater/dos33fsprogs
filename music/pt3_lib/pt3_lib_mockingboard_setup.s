@@ -1,8 +1,8 @@
 ; Mockingboad programming:
 ; + Has two 6522 I/O chips connected to two AY-3-8910 chips
 ; + Optionally has some speech chips controlled via the outport on the AY
-; + Often in slot 4
-;	TODO: how to auto-detect?
+; + Often in slot 4.  We autodetect and patch
+
 ; References used:
 ;	http://macgui.com/usenet/?group=2&id=8366
 ;	6522 Data Sheet
@@ -162,6 +162,36 @@ clear_ay_left_loop:
 						; -1
 	rts					; 6
 
+	;=======================================
+	; mute AY -- just turn off all 3 channels
+	; should silence the card
+	;
+	;=======================================
+mute_ay_both:
+	ldx	#7				;
+	lda	#$FF				;
+	sta	MB_VALUE			;
+mute_ay_left_loop:
+	jsr	write_ay_both			;
+
+	rts
+
+	;=======================================
+	; unmute AY
+	;       restore to value we had before muting
+	;=======================================
+unmute_ay_both:
+	ldx	#7				;
+	lda	ENABLE				;
+	sta	MB_VALUE			;
+unmute_ay_left_loop:
+        jsr	write_ay_both			;
+
+	rts					;
+
+
+
+
 clear_ay_end:
 ;.assert >clear_ay_both = >clear_ay_end, error, "clear_ay_both crosses page"
 
@@ -172,17 +202,28 @@ mockingboard_setup_interrupt:
 
 .ifdef PT3_ENABLE_APPLE_IIC
 	lda	APPLEII_MODEL
-	cmp	#'C'
+	cmp	#'c'
 	bne	done_iic_hack
 
-	; bypass the firmware interrupt handler
-	; should we do this on IIe too? probably faster
+	;==================================================
+	; On IIc we use a hack and swap RAM into the langauge
+	; card and replace the interrupt vectors
+	; (should we do this on IIe too? probably faster)
 
+	; This does mean you can't use any ROM routines when
+	; playing music
+
+	;====================================================
+	; If we need the ROM routines we need to copy them
 	; first we have to copy the ROM to the language card
+
 
 	sei				; disable interrupts
 
+	lda	$c08B			; read/write RAM1
+	lda	$c08B			;
 
+.ifdef PT3_ENABLE_IIC_COPY_ROM
 
 copy_rom_loop:
 	lda	$c089			; read ROM, write RAM1
@@ -199,6 +240,9 @@ read_rom_loop:
 	lda	$c08B			; read/write RAM1
 	lda	$c08B			;
 
+	; should probably use $800 instead of $400
+	; as we over-write screen holes here
+
 write_rom_loop:
 	lda	$400,Y
 	sta	$D000,Y
@@ -208,13 +252,15 @@ write_rom_loop:
 	inc	read_rom_loop+2
 	inc	write_rom_loop+5
 	bne	copy_rom_loop
+.endif
 
 	lda	#<interrupt_handler
 	sta	$fffe
 	lda	#>interrupt_handler
 	sta	$ffff
 
-	lda	#$EA			; nop out the "lda $45" in the irq handler
+	lda	#$EA	; nop out the "lda $45" in the irq handler
+			; as it's not needed on IIc (and maybe others?)
 	sta	interrupt_smc
 	sta	interrupt_smc+1
 .endif

@@ -25,6 +25,11 @@ PT3_LOC = song
 
 PT3_ENABLE_APPLE_IIC = 1
 
+; Enable ROM copying on IIc
+
+;PT3_ENABLE_IIC_COPY_ROM = 1
+
+
 ; The Vortex Tracker by default generates Atari-ST style pt3 files
 ;	which assume there is a 1.77MHz clock frequency driving
 ;	the AY-3-8910.  Apple II Mockingboards run at 1MHz, so unless
