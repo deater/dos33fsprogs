@@ -5,15 +5,15 @@ PNG2GR = ../../utils/gr-utils/png2gr
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk
 
-all:	pt3_lib.dsk
+all:	pt3_lib_ch6.dsk
 
 $(DOS33):
 	cd ../../utils/dos33fs-utils && make
 
-pt3_lib.dsk:	PT3_TEST HELLO
-	cp $(EMPTY_DISK)/empty.dsk pt3_lib.dsk
-	$(DOS33) -y pt3_lib.dsk SAVE A HELLO
-	$(DOS33) -y pt3_lib.dsk BSAVE -a 0x1000 PT3_TEST
+pt3_lib_ch6.dsk:	PT3_TEST HELLO
+	cp $(EMPTY_DISK)/empty.dsk pt3_lib_ch6.dsk
+	$(DOS33) -y pt3_lib_ch6.dsk SAVE A HELLO
+	$(DOS33) -y pt3_lib_ch6.dsk BSAVE -a 0x1000 PT3_TEST
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO

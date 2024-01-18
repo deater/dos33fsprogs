@@ -6,10 +6,12 @@ pt3_irq_smc1:
 	bit	MOCK_6522_T1CL	; clear 6522 interrupt by reading T1C-L	; 4
 
 	lda	DONE_PLAYING						; 3
-	beq	pt3_play_music_2	; if song done, don't play music	; 3/2nt
+	beq	pt3_play_music_2	; if song done, don't play music; 3/2nt
 	jmp	done_pt3_irq_handler					; 3
 								;============
-								;	13
+
+	;==================================
+	; play song2
 
 pt3_play_music_2:
 
@@ -19,9 +21,9 @@ pt3_play_music_2:
 
 	; handle song over condition
 	lda	DONE_SONG_2
-	beq	pt3_play_music		; if not done, continue
+	beq	pt3_play_music		; if not done, continue to other song
 
-	lda	LOOP_2			; see if looping
+	lda	LOOP_2			; see if looping, if so continue(?)
 	beq	pt3_play_music
 
 pt3_loop_smc_2:
@@ -32,22 +34,15 @@ pt3_loop_smc_2:
 	lda	#$0
 	sta	current_line_smc_2+1
 	sta	current_subframe_smc_2+1
-	sta	DONE_SONG_2		; undo the next song
+	sta	DONE_SONG_2		; undo the done song
 
 ;	beq	done_pt3_irq_handler_2	; branch always
 	beq	pt3_play_music_2	; branch always
 
-;move_to_next:
-;	; same as "press right"
-;	ldx	#$20
-;	jmp	quiet_exit
-
 
 pt3_play_music:
-.if 0
 
 	jsr	pt3_make_frame
-
 
 	; handle song over condition
 	lda	DONE_SONG
@@ -74,7 +69,7 @@ move_to_next:
 	; same as "press right"
 	ldx	#$20
 	jmp	quiet_exit
-.endif
+
 	;======================================
 	; Write frames to Mockingboard
 	;======================================
@@ -82,7 +77,7 @@ move_to_next:
 	; the decode code
 mb_write_frame:
 
-.if 0
+
 
 
 
@@ -135,7 +130,6 @@ mb_no_write:
 								;============
 								; 	7
 mb_skip_13:
-.endif
 
 	;==================================
 	; do 6522 #2

@@ -1,13 +1,11 @@
 ;; Zero page addresses
 
-.if 0
 ORNAMENT_L	= $60
 ORNAMENT_H	= $61
 SAMPLE_L	= $62
 SAMPLE_H	= $63
 LOOP		= $64
 DONE_SONG	= $69
-.endif
 
 
 MB_ADDR_L	= $65
@@ -22,7 +20,6 @@ ORNAMENT_H_2	= $6D
 SAMPLE_L_2	= $6E
 SAMPLE_H_2	= $6F
 
-.if 0
 AY_REGISTERS	= $70
 A_FINE_TONE	= $70
 A_COARSE_TONE	= $71
@@ -42,7 +39,7 @@ ENVELOPE_SHAPE  = $7D
 
 PATTERN_L	= $7E
 PATTERN_H	= $7F
-.endif
+
 
 AY_REGISTERS_2	= $80
 A_FINE_TONE_2	= $80

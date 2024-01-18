@@ -73,7 +73,6 @@ zero_song_structs_loop_2:
 	lda	PT3_LOC_2+PT3_LOOP					; 4
 	sta	pt3_loop_smc_2+1						; 4
 
-.if 0
 	;===============================
 	;
 pt3_init_song_first:
@@ -136,8 +135,6 @@ zero_song_structs_loop:
 
 	lda	PT3_LOC+PT3_LOOP					; 4
 	sta	pt3_loop_smc+1						; 4
-
-.endif
 
 
 	;========================
@@ -290,6 +287,7 @@ not_ascii_number:
 	adc	#$20		; BIT->JMP  2C->4C			; 2
 version_greater_than_or_equal_6:
 	sta	version_smc_2						; 4
+	sta	version_smc						; 4
 
 pick_volume_table:
 

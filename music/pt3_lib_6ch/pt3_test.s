@@ -12,7 +12,7 @@
 ; Location the files load at.
 ; If you change this, you need to update the Makefile
 
-;PT3_LOC = song
+PT3_LOC = song
 PT3_LOC_2 = song2
 
 ; the below will make for more compact code, at the expense
@@ -248,6 +248,7 @@ found_message:		.asciiz "FOUND SLOT#4"
 .endif
 
 .include	"pt3_lib_common.s"
+.include	"pt3_lib_core.s"
 .include	"pt3_lib_core2.s"
 .include	"pt3_lib_init.s"
 .include	"pt3_lib_mockingboard_setup.s"
@@ -262,10 +263,10 @@ found_message:		.asciiz "FOUND SLOT#4"
 			; this can be fixed but some changes would have
 			; to be made throughout the player code
 song:
-;.incbin "music/dya_dance_1.pt3"
-.incbin "../pt3_player/music/EA.PT3"
+.incbin "music/dya_dance_1.pt3"
+;.incbin "../pt3_player/music/EA.PT3"
 
 .align	256
 song2:
-;.incbin "music/dya_dance_2.pt3"
-.incbin "../pt3_player/music/EA.PT3"
+.incbin "music/dya_dance_2.pt3"
+;.incbin "../pt3_player/music/EA.PT3"
