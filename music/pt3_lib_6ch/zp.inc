@@ -63,3 +63,17 @@ PATTERN_H_2	= $8F
 
 LOOP_2		= $90
 DONE_SONG_2	= $91
+
+
+; visualization
+
+X1	= $F0
+Y1	= $F1
+X2	= $F2
+Y2	= $F3
+YY	= $F4
+
+COLOR	= $30
+GBASL	= $26
+GBASH	= $27
+

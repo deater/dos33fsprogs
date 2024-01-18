@@ -109,6 +109,8 @@ mockingboard_found:
 
 	jsr	print_mocking_found
 
+	jsr	print_artist_message
+
 	;==================================================
 	; patch the playing code with the proper slot value
 	;==================================================
@@ -147,7 +149,14 @@ start_interrupts:
 	;============================
 	; Loop forever
 	;============================
+	bit	SET_GR
+	bit	LORES
+	bit	TEXTGR
+	bit	PAGE1
 forever_loop:
+
+	jsr	visualization
+
 	jmp	forever_loop
 
 
@@ -222,6 +231,24 @@ done_found_message:
 
 	rts
 
+
+
+print_artist_message:
+	jsr	CROUT1
+
+	ldy	#0
+print_artist_message_loop:
+	lda	artist_message,Y		; load loading message
+	beq	done_artist_message
+	ora	#$80
+	jsr	COUT
+	iny
+	jmp	print_artist_message_loop
+done_artist_message:
+
+	rts
+
+
 ;=========
 ; strings
 ;=========
@@ -231,6 +258,7 @@ mocking_message:	.asciiz "LOOKING FOR MOCKINGBOARD: "
 not_message:		.byte "NOT "
 found_message:		.asciiz "FOUND SLOT#4"
 
+artist_message:		.asciiz "PLAYING: 'DANCE OF THE DEAD' BY DYA"
 
 
 ;=========
@@ -253,6 +281,8 @@ found_message:		.asciiz "FOUND SLOT#4"
 .include	"interrupt_handler.s"
 ; if you're self patching, detect has to be after interrupt_handler.s
 .include	"pt3_lib_mockingboard_detect.s"
+
+.include	"visual.s"
 
 ;=============
 ; include song

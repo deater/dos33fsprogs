@@ -26,7 +26,7 @@ PT3_TEST:	pt3_test.o
 pt3_test.o:	pt3_test.s \
 	pt3_lib_detect_model.s \
 	pt3_lib_init.s pt3_lib_core.s pt3_lib_irq_handler.s \
-	pt3_lib_common.s pt3_lib_core2.s \
+	pt3_lib_common.s pt3_lib_core2.s visual.s \
 	pt3_lib_mockingboard_detect.s pt3_lib_mockingboard_setup.s \
 	interrupt_handler.s zp.inc
 	ca65 -o pt3_test.o pt3_test.s -l pt3_test.lst
