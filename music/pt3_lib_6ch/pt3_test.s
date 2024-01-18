@@ -142,6 +142,11 @@ setup_interrupt:
 	;============================
 	; Enable 6502 interrupts
 	;============================
+
+	jsr	pt3_toggle_freq_conversion
+	jsr	pt3_toggle_freq_conversion_2
+
+
 start_interrupts:
 	cli		; clear interrupt mask
 
