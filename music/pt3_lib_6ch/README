@@ -1,0 +1,11 @@
+pt3_lib, but playing 6 channels (on both AY-3-8910) of the Mockingboard
+
+Vortex Tracker supports this, essentially just playing two pt3 files at once
+
+this is a hack, just duplicating all the player code.
+
+It would probably be possible to share more common code.
+
+Note: it assumes the songs you are playing are similar.  While it would
+	be possible to set it up so they could use separate note tables,
+	it seems odd and we currently don't support it.
