@@ -63,11 +63,9 @@ pt3_setup:
 
 	lda	#0
 	sta	DONE_PLAYING
-;	lda	#1
 
-.if 0
-	sta	LOOP		; change to 1 to loop forever
-.endif
+	lda	#1		; change to 0 to not loop
+	sta	LOOP
 	sta	LOOP_2
 
 	;=======================
