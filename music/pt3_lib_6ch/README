@@ -9,3 +9,6 @@ It would probably be possible to share more common code.
 Note: it assumes the songs you are playing are similar.  While it would
 	be possible to set it up so they could use separate note tables,
 	it seems odd and we currently don't support it.
+
+also note:
+	looping on song2 is broken currently?
