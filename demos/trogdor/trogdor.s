@@ -16,8 +16,8 @@ trogdor_main:
 
 	lda	#$0
 	sta	DRAW_PAGE
-;	sta	FRAME
-;	sta	SECONDS
+
+	; clear PAGE1 to white
 
 	ldy	#$7f
 	jsr	hgr_clear_screen
@@ -29,6 +29,9 @@ trogdor_main:
         bit     FULLGR
         bit     PAGE1
 
+	lda	#$20
+	sta	DRAW_PAGE
+
 	;======================================
 	; draw SCENE 1
 	;======================================
@@ -36,7 +39,7 @@ trogdor_main:
 	; scroll in zoomed in trogdor from right to left
 	; for 60 frames (roughly 2s)
 
-	; decompress trogdor screen to offscreen $6000
+	; decompress trogdor to $6000
 
 	lda	#<trog00_graphics
 	sta	zx_src_l+1
@@ -45,16 +48,12 @@ trogdor_main:
 	lda	#$60
 	jsr	zx02_full_decomp
 
+	; copy+magnify to PAGE2
+
 	lda	#$60
-	jsr	hgr_copy_fast
+	jsr	hgr_copy_magnify
 
-	jsr	wait_until_keypress
-
-; TODO: can remove these?
-
-	; current, DRAW_PAGE=0, active page=1
-	lda	#$20
-	sta	DRAW_PAGE
+	jsr	horiz_pan
 
 	; clear to white
 	ldy	#$7f
@@ -281,7 +280,7 @@ finished:
 
 
 trog00_graphics:
-.incbin "graphics/trog00_trogdor.hgr.zx02"
+.incbin "graphics/actual00_trog_cottage.hgr.zx02"
 
 trog03_graphics:
 .incbin "graphics/trog03_man.hgr.zx02"
@@ -294,9 +293,8 @@ hposn_low       = $1e00
 hposn_high      = $1f00
 
 .include "hgr_sprite_big_mask.s"
-
-;.include "graphics/flame_sprites.inc"
-
+.include "horiz_scroll_simple.s"
+.include "hgr_copy_magnify.s"
 
 	;===============================
 	; draw_flame_small

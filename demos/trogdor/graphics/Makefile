@@ -6,6 +6,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	\
+	actual00_trog_cottage.hgr.zx02 \
 	trog00_trogdor.hgr.zx02 \
 	trog01_countryside.hgr.zx02 \
 	trog02_countryside.hgr.zx02 \
@@ -50,6 +51,14 @@ a2_strongbad.hgr.zx02:	a2_strongbad.hgr
 a2_strongbad.hgr:	a2_strongbad.png
 	$(PNG_TO_HGR) a2_strongbad.png > a2_strongbad.hgr
 
+
+####
+
+actual00_trog_cottage.hgr.zx02:	actual00_trog_cottage.hgr
+	$(ZX02) actual00_trog_cottage.hgr actual00_trog_cottage.hgr.zx02
+
+actual00_trog_cottage.hgr:	actual00_trog_cottage.png
+	$(PNG_TO_HGR) actual00_trog_cottage.png > actual00_trog_cottage.hgr
 ####
 
 trog00_trogdor.hgr.zx02:	trog00_trogdor.hgr
