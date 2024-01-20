@@ -4,7 +4,7 @@
 .include "zp.inc"
 .include "qload.inc"
 .include "music.inc"
-
+.include "flames.inc"
 
 trogdor_main:
 
@@ -133,4 +133,4 @@ hposn_high      = $1f00
 
 .include "hgr_sprite_big_mask.s"
 
-.include "graphics/flame_sprites.inc"
+;.include "graphics/flame_sprites.inc"

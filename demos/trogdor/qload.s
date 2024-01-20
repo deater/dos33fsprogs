@@ -163,22 +163,22 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1		; MUSIC, TROGDOR, TITLE
+	.byte 1,1,1,1		; MUSIC, TROGDOR, TITLE, FLAMES
 
 load_address_array:
-	.byte $D0,$80,$40	; MUSIC, TROGDOR, TITLE
+	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
 
 start_address:
-	.byte $D0,$80,$40	; MUSIC, TROGDOR, TITLE
+	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
 
 track_array:
-	.byte 4,12,11		; MUSIC, TROGDOR, TITLE
+	.byte 4,12,11,6		; MUSIC, TROGDOR, TITLE, FLAMES
 
 sector_array:
-	.byte 0,0,0		; MUSIC, TROGDOR, TITLE
+	.byte 0,0,0,0		; MUSIC, TROGDOR, TITLE, FLAMES
 
 length_array:
-	.byte 32,64,32		; MUSIC, TROGDOR, TITLE
+	.byte 32,64,32,24	; MUSIC, TROGDOR, TITLE, FLAMES
 
 PT3_ENABLE_APPLE_IIC = 1
 

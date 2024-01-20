@@ -128,3 +128,7 @@ Space:
 	=====
 	28281 = 28k or so
 	
+
+
+	$D000 - $E2FF	= MUSIC  ($12DF in size)	4831
+	$E300 - $FA00   = FLAMES ($1650 in size)	5712

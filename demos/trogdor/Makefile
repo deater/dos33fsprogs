@@ -9,13 +9,14 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	trogdor.dsk
 
 trogdor.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC TROGDOR TITLE
+	MUSIC TROGDOR TITLE FLAMES
 	cp $(EMPTY_DISK) trogdor.dsk
 	$(DOS33_RAW) trogdor.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) trogdor.dsk 0 2 QBOOT		1 1
 	$(DOS33_RAW) trogdor.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) trogdor.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) trogdor.dsk 4 0 MUSIC		0 0
+	$(DOS33_RAW) trogdor.dsk 6 0 FLAMES		0 0
 	$(DOS33_RAW) trogdor.dsk 11 0 TITLE		0 0
 	$(DOS33_RAW) trogdor.dsk 12 0 TROGDOR		0 0
 
@@ -121,6 +122,27 @@ music.o:	music.s zp.inc \
 
 ###
 
+flames.inc:	generate_common FLAMES
+	./generate_common -a 0xe300 -s left_flame_small flames.lst > flames.inc
+	./generate_common -a 0xe300 -s right_flame_small flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s left_flame_big flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s right_flame_big flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s left_flame_small_mask flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s right_flame_small_mask flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s left_flame_big_mask flames.lst >> flames.inc
+	./generate_common -a 0xe300 -s right_flame_big_mask flames.lst >> flames.inc
+
+
+
+FLAMES:	flames.o
+	ld65 -o FLAMES flames.o -C $(LINKER_SCRIPTS)/apple2_e300.inc
+
+flames.o:	flames.s \
+	graphics/flame_sprites.inc
+	ca65 -o flames.o flames.s -l flames.lst
+
+###
+
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -129,12 +151,14 @@ title.o:	title.s \
 	graphics/trogdor.hgr.zx02
 	ca65 -o title.o title.s -l title.lst
 
+
 ###
 
 TROGDOR:	trogdor.o
 	ld65 -o TROGDOR trogdor.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 trogdor.o:	trogdor.s \
+	flames.inc \
 	zp.inc hardware.inc qload.inc \
 	graphics/trog00_trogdor.hgr.zx02 \
 	hgr_sprite_big_mask.s

@@ -176,6 +176,19 @@ done_set_message:
 
 	jsr	wait_until_keypress
 
+	;=======================
+	;=======================
+	; Load FLAMES
+	;=======================
+	;=======================
+load_flames:
+
+	; load from disk
+
+	lda     #3		; FLAMES
+	sta     WHICH_LOAD
+	jsr     load_file
+
 
 	;=======================
 	;=======================
@@ -186,7 +199,7 @@ load_trogdor:
 
 	; load from disk
 
-	lda     #1		; XMAS
+	lda     #1		; TROGDOR
 	sta     WHICH_LOAD
 	jsr     load_file
 
