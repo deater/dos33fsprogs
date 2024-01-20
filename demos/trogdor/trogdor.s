@@ -59,6 +59,8 @@ trogdor_main:
 	ldy	#$7f
 	jsr	hgr_clear_screen
 
+	jsr	horiz_pan
+
 	jsr	hgr_page_flip
 
 	;======================================
