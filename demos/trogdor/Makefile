@@ -39,8 +39,9 @@ qload.o:	zp.inc hardware.inc music.inc qload.s \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s \
+	hgr_clear_screen.s hgr_copy_fast.s \
 	text_print.s start.s \
-	hgr_table.s gs_interrupt.s \
+	hgr_table.s gs_interrupt.s hgr_page_flip.s \
 	zx02_optim.s wait_keypress.s hardware_detect.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
@@ -87,6 +88,9 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_copy_fast qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
 
 ####
 

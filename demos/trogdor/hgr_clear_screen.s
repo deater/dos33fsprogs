@@ -1,11 +1,18 @@
+
+hgr_clear_screen_black:
+	ldy	#0
+
 hgr_clear_screen:
+
 	lda	DRAW_PAGE
 	beq	hgr_page1_clearscreen
+
 	lda	#0
 	beq	hgr_page2_clearscreen
 
 hgr_page1_clearscreen:
 
+	tya
 	ldy	#0
 hgr_page1_cls_loop:
 	sta	$2000,Y
@@ -47,7 +54,7 @@ hgr_page1_cls_loop:
 
 
 hgr_page2_clearscreen:
-
+	tya
 	ldy	#0
 hgr_page2_cls_loop:
 	sta	$4000,Y

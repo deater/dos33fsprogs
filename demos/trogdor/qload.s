@@ -192,6 +192,9 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
+	.include	"hgr_clear_screen.s"
+	.include	"hgr_copy_fast.s"
+	.include	"hgr_page_flip.s"
 
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
