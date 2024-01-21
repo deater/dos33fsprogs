@@ -209,7 +209,7 @@ load_trogdor:
 	;=======================
 	;=======================
 
-	cli			; start music
+;	cli			; start music
 
 	jsr	$8000
 

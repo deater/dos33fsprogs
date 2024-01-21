@@ -32,6 +32,15 @@ trogdor_main:
 	lda	#$20
 	sta	DRAW_PAGE
 
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	trog_no_music
+
+	cli			; start music
+trog_no_music:
+
+
 	;======================================
 	; draw SCENE 1
 	;======================================
@@ -53,13 +62,13 @@ trogdor_main:
 	lda	#$60
 	jsr	hgr_copy_magnify
 
-	jsr	horiz_pan
+	jsr	horiz_pan_skip
 
 	; clear to white
 	ldy	#$7f
 	jsr	hgr_clear_screen
 
-	jsr	horiz_pan
+	jsr	horiz_pan_skip
 
 	jsr	hgr_page_flip
 
@@ -244,6 +253,49 @@ left_flame_animate2:
 	jsr	hgr_clear_screen
 	jsr	hgr_page_flip
 
+
+
+	;======================================
+	; draw SCENE 2
+	;======================================
+	; scroll trogdor intro place
+
+	; takes rougly 90 frames (3s) to scroll in
+	; 	remains there 10 frames (almost .5s)
+
+	; orignal: 28s, want 9 times faster???
+	; can easily do 8 times...
+
+	; now should be on PAGE1??
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_page_flip
+
+;	lda	#24			; 192/8
+;	sta	ANIMATE_COUNT
+
+	lda	#0
+	sta	COUNT
+
+scroll_in_loop:
+
+	jsr	hgr_vertical_scroll
+
+	lda	COUNT
+	clc
+	adc	#8
+
+	cmp	#192
+	bne	scroll_in_loop
+
+	lda	#10
+	jsr	wait_ticks
+
+
+
+	;=======================================
+
 	jsr	wait_until_keypress
 
 	; second
@@ -295,8 +347,9 @@ hposn_low       = $1e00
 hposn_high      = $1f00
 
 .include "hgr_sprite_big_mask.s"
-.include "horiz_scroll_simple.s"
+.include "horiz_scroll_skip.s"
 .include "hgr_copy_magnify.s"
+.include "vertical_scroll.s"
 
 	;===============================
 	; draw_flame_small

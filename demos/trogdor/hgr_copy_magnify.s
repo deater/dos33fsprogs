@@ -49,7 +49,7 @@ magnify_outer_loop:
 	sta	GBASH
 
 
-	ldy	#0
+	ldy	#0						; 2
 magnify_inner_loop:
 	lda	(INL),Y					 	; 5
 	and	#$f						; 2

@@ -165,7 +165,8 @@ trogdor.o:	trogdor.s \
 	flames.inc \
 	zp.inc hardware.inc qload.inc \
 	graphics/trog00_trogdor.hgr.zx02 \
-	hgr_sprite_big_mask.s horiz_scroll_simple.s hgr_copy_magnify.s
+	hgr_sprite_big_mask.s horiz_scroll_simple.s hgr_copy_magnify.s \
+	horiz_scroll_skip.s vertical_scroll.s
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
 
