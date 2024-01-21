@@ -256,7 +256,7 @@ left_flame_animate2:
 
 
 	;======================================
-	; draw SCENE 2
+	; draw SCENE 3
 	;======================================
 	; scroll trogdor intro place
 
@@ -293,6 +293,50 @@ scroll_in_loop:
 	jsr	wait_ticks
 
 
+	;======================================
+	; draw SCENE 4
+	;======================================
+	; countrside scrolls in
+	;	roughly 45 frames?  1.5s?
+	; only 9 bytes wide
+
+	; decompress countryside to $2000
+
+	lda	#<trog01_graphics
+	sta	zx_src_l+1
+	lda	#>trog01_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	lda	#9
+	sta	ANIMATE_COUNT
+countryside_pan_loop:
+	jsr	horiz_pan_skip
+
+	dec	ANIMATE_COUNT
+	bne	countryside_pan_loop
+
+
+	;======================================
+	; draw SCENE 5
+	;======================================
+	; 	trogdor man:	42 frames
+	;	flames: left: llll1122
+	;	flames: bb
+	;	flames: right 22112211ss
+	;	flames: left  ss11221122ss
+	;	flames gone:	30 frames (roughly 1s)
+	;	dragon man:	160 frames (roughly 5s)
+	;	dragon:		150 frames (roughly 5s)
+	;	dragon zoom:	5 frames
+
+	;	dragon:		5 frames \
+	;	dragon zoom:	5 frames / repeat 6 times
+	; 	dragon zoom scroll off screen: 30 frames
+	;	white screen:	20 frames
+
+	; 916
 
 	;=======================================
 
@@ -300,12 +344,12 @@ scroll_in_loop:
 
 	; second
 
-	lda	#<trog03_graphics
-	sta	zx_src_l+1
-	lda	#>trog03_graphics
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
+;	lda	#<trog03_graphics
+;	sta	zx_src_l+1
+;	lda	#>trog03_graphics
+;	sta	zx_src_h+1
+;	lda	#$20
+;	jsr	zx02_full_decomp
 
 
 
@@ -336,8 +380,11 @@ finished:
 trog00_graphics:
 .incbin "graphics/actual00_trog_cottage.hgr.zx02"
 
-trog03_graphics:
-.incbin "graphics/trog03_man.hgr.zx02"
+trog01_graphics:
+.incbin "graphics/trog01_countryside.hgr.zx02"
+
+;trog03_graphics:
+;.incbin "graphics/trog03_man.hgr.zx02"
 
 .include "wait_keypress.s"
 .include "irq_wait.s"

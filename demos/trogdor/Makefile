@@ -9,7 +9,7 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	trogdor.dsk
 
 trogdor.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC TROGDOR TITLE FLAMES
+	MUSIC TROGDOR TITLE FLAMES COUNTRYSIDE
 	cp $(EMPTY_DISK) trogdor.dsk
 	$(DOS33_RAW) trogdor.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) trogdor.dsk 0 2 QBOOT		1 1
@@ -17,6 +17,7 @@ trogdor.dsk:	QBOOT QLOAD music.inc qload.inc \
 	$(DOS33_RAW) trogdor.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) trogdor.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) trogdor.dsk 6 0 FLAMES		0 0
+	$(DOS33_RAW) trogdor.dsk 8 0 COUNTRYSIDE		0 0
 	$(DOS33_RAW) trogdor.dsk 11 0 TITLE		0 0
 	$(DOS33_RAW) trogdor.dsk 12 0 TROGDOR		0 0
 
@@ -136,7 +137,7 @@ flames.inc:	generate_common FLAMES
 	./generate_common -a 0xe300 -s left_flame_big_mask flames.lst >> flames.inc
 	./generate_common -a 0xe300 -s right_flame_big_mask flames.lst >> flames.inc
 
-
+####
 
 FLAMES:	flames.o
 	ld65 -o FLAMES flames.o -C $(LINKER_SCRIPTS)/apple2_e300.inc
@@ -144,6 +145,15 @@ FLAMES:	flames.o
 flames.o:	flames.s \
 	graphics/flame_sprites.inc
 	ca65 -o flames.o flames.s -l flames.lst
+
+####
+
+COUNTRYSIDE:	countryside.o
+	ld65 -o COUNTRYSIDE countryside.o -C $(LINKER_SCRIPTS)/apple2_fa00.inc
+
+countryside.o:	countryside.s \
+	graphics/flame_sprites.inc
+	ca65 -o countryside.o countryside.s -l countryside.lst
 
 ###
 

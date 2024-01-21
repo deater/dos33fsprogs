@@ -127,8 +127,30 @@ Space:
 	2680 trog11_cottage.hgr.zx02
 	=====
 	28281 = 28k or so
-	
 
+	$0000-$00ff = zero page
+	$0100-$01ff = stack
+	$0200-$02ff = group table
+	$0300-$0369 = preshift table
+	$0400-$07FF = text/lores PAGE1
+	$0800-$08ff = QBOOT (can be over-written)
+	$0900-$0BFF = text/lores PAGE2 (empty)
+	$0C00-$0FFF = appears empty?
+	$1000-$11FF = QBOOT_STAGE2
+	$1200-$188A = QLOAD			($68A, 1676)
+	
+	$1C00-$1CFF = mod7_table
+	$1D00-$1DFF = div7_table
+	$1E00-$1EFF = hposn_low
+	$1F00-$2000 = hposn_high
+
+	$2000-$3FFF = page1 (8k)
+	$4000-$5fff = page2 (8k)
+	$6000-$7fff = off-screen draw (8k)
+	$8000-$BFFF = 16k for TROGDOR
+
+	$C000-$CFFF = I/O
 
 	$D000 - $E2FF	= MUSIC  ($12DF in size)	4831
-	$E300 - $FA00   = FLAMES ($1650 in size)	5712
+	$E300 - $F9FF   = FLAMES ($1650 in size)	5712
+	$FA00 - $FEFF	= COUNTRYSIDE ($498 in side)	1176

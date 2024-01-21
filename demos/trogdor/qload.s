@@ -164,21 +164,27 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte 1			; COUNTRYSIDE
 
 load_address_array:
 	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte $FA		; COUNTRYSIDE
 
 start_address:
 	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte $FA		; COUNTRYSIDE
 
 track_array:
 	.byte 4,12,11,6		; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte 8			; COUNTRYSIDE
 
 sector_array:
 	.byte 0,0,0,0		; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte 0			; COUNTRYSIDE
 
 length_array:
 	.byte 32,64,32,24	; MUSIC, TROGDOR, TITLE, FLAMES
+	.byte 5			; COUNTRYSIDE
 
 PT3_ENABLE_APPLE_IIC = 1
 

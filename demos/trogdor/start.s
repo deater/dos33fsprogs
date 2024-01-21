@@ -189,6 +189,20 @@ load_flames:
 	sta     WHICH_LOAD
 	jsr     load_file
 
+	;=======================
+	;=======================
+	; Load COUNTRYSIDE
+	;=======================
+	;=======================
+load_countryside:
+
+	; load from disk
+
+	lda     #4		; COUNTRYSIDE
+	sta     WHICH_LOAD
+	jsr     load_file
+
+
 
 	;=======================
 	;=======================
