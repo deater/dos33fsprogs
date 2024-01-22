@@ -3,8 +3,11 @@
 	;======================================
 	; screens to pan in $2000/$4000 to left
 
+	; A is times to scroll
+
 
 horiz_pan:
+	sta	pan_count_smc+1
 
 pan_loop:
 
@@ -80,6 +83,7 @@ pil_smc4:
 
 	inc	COUNT
 	lda	COUNT
+pan_count_smc:
 	cmp	#39
 
 	bne	pan_outer_outer_loop

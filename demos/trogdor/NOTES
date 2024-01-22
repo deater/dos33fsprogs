@@ -154,3 +154,9 @@ Space:
 	$D000 - $E2FF	= MUSIC  ($12DF in size)	4831
 	$E300 - $F9FF   = FLAMES ($1650 in size)	5712
 	$FA00 - $FEFF	= COUNTRYSIDE ($498 in side)	1176
+
+
+dragonman:
+	original	man=1973 dragonman=1982 = 3955 bytes
+	combined				= 3669 bytes
+	optimize so bases same:			= 3191 bytes

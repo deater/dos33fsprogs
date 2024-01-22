@@ -309,14 +309,20 @@ scroll_in_loop:
 	lda	#$20
 	jsr	zx02_full_decomp
 
+	; decompress second part to $4000
+
+	lda	#<$FA00
+	sta	zx_src_l+1
+	lda	#>$FA00
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
+	; pan 9 times
+	; FIXME: update timing
+
 	lda	#9
-	sta	ANIMATE_COUNT
-countryside_pan_loop:
-	jsr	horiz_pan_skip
-
-	dec	ANIMATE_COUNT
-	bne	countryside_pan_loop
-
+	jsr	horiz_pan
 
 	;======================================
 	; draw SCENE 5
@@ -340,18 +346,41 @@ countryside_pan_loop:
 
 	;=======================================
 
+
+	;======================================
+	; man
+
+	lda	#<trog03_graphics
+	sta	zx_src_l+1
+	lda	#>trog03_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	; FIXME: make a "copy left" routine
+
+	lda	#0
+	sta	COPY_X1
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jsr	hgr_copy_part
+
+	jsr	hgr_page_flip
+
+	lda	#42
+	jsr	wait_ticks
+
 	jsr	wait_until_keypress
-
-	; second
-
-;	lda	#<trog03_graphics
-;	sta	zx_src_l+1
-;	lda	#>trog03_graphics
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
-
-
 
 finished:
 	jmp	finished
@@ -383,8 +412,8 @@ trog00_graphics:
 trog01_graphics:
 .incbin "graphics/trog01_countryside.hgr.zx02"
 
-;trog03_graphics:
-;.incbin "graphics/trog03_man.hgr.zx02"
+trog03_graphics:
+.incbin "graphics/actual01_dragonman.hgr.zx02"
 
 .include "wait_keypress.s"
 .include "irq_wait.s"
@@ -394,9 +423,11 @@ hposn_low       = $1e00
 hposn_high      = $1f00
 
 .include "hgr_sprite_big_mask.s"
+.include "horiz_scroll_simple.s"
 .include "horiz_scroll_skip.s"
 .include "hgr_copy_magnify.s"
 .include "vertical_scroll.s"
+.include "hgr_copy_part.s"
 
 	;===============================
 	; draw_flame_small

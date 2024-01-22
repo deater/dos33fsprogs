@@ -11,18 +11,18 @@
 
 horiz_pan_skip:
 
-pan_loop:
+pan_skip_loop:
 
 	; how many times to scroll
 
 	lda	#0
 	sta	COUNT
 
-pan_outer_outer_loop:
+pan_skip_outer_outer_loop:
 
 
 	ldx	#191
-pan_outer_loop:
+pan_skip_outer_loop:
 
 	txa
 	pha
@@ -75,7 +75,7 @@ pan_outer_loop:
 	; inner loop, from 0-36
 
 	ldy	#0
-pan_inner_loop:
+pan_skip_inner_loop:
 
 	; load in+1, store to in
 
@@ -92,7 +92,7 @@ pil_out_smc2:
 
 	iny							; 2
 	cpy	#36						; 2
-	bne	pan_inner_loop					; 2/3
+	bne	pan_skip_inner_loop				; 2/3
 
 	; for right edge, scroll in from PAGE2
 
@@ -118,7 +118,7 @@ pil_out_smc5:
 	dex
 	dex
 	cpx	#$ff
-	bne	pan_outer_loop
+	bne	pan_skip_outer_loop
 
 	inc	COUNT
 	inc	COUNT
@@ -128,6 +128,6 @@ pil_out_smc5:
 	lda	COUNT
 	cmp	#36
 
-	bne	pan_outer_outer_loop
+	bne	pan_skip_outer_outer_loop
 
 	rts

@@ -7,6 +7,7 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	\
 	actual00_trog_cottage.hgr.zx02 \
+	actual01_dragonman.hgr.zx02 \
 	trog00_trogdor.hgr.zx02 \
 	trog01_countryside.hgr.zx02 \
 	trog02_countryside.hgr.zx02 \
@@ -59,6 +60,15 @@ actual00_trog_cottage.hgr.zx02:	actual00_trog_cottage.hgr
 
 actual00_trog_cottage.hgr:	actual00_trog_cottage.png
 	$(PNG_TO_HGR) actual00_trog_cottage.png > actual00_trog_cottage.hgr
+
+####
+
+actual01_dragonman.hgr.zx02:	actual01_dragonman.hgr
+	$(ZX02) actual01_dragonman.hgr actual01_dragonman.hgr.zx02
+
+actual01_dragonman.hgr:	actual01_dragonman.png
+	$(PNG_TO_HGR) actual01_dragonman.png > actual01_dragonman.hgr
+
 ####
 
 trog00_trogdor.hgr.zx02:	trog00_trogdor.hgr

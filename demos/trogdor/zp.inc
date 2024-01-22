@@ -116,17 +116,14 @@ SECOND_COUNTDOWN= $E1
 COUNT           = $E2
 XSAVE		= $E3
 TEMPY		= $E4
-XPOS		= $E5	; gr_plot
-YPOS		= $E6	; gr_plot
-COLOR_MASK	= $E7	; gr_plot
-;FRAMEL		= $E8
-;FRAMEH		= $E9
-FRAME		= $E8
-SECONDS		= $E9
+FRAME		= $E5
+SECONDS		= $E6
+COPY_X1		= $E7
+COPY_Y1		= $E8
+COPY_WIDTH	= $E9
+COPY_Y2		= $EA
 
-BTC_L		= $EA	; audio
-BTC_H		= $EB	; audio
-MASKL		= $EC	; gr_putsprite_mask
+MASKL		= $EC
 MASKH		= $ED
 
 
