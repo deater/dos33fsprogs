@@ -334,17 +334,7 @@ scroll_in_loop:
 	;	flames: left  ss11221122ss
 	;	flames gone:	30 frames (roughly 1s)
 	;	dragon man:	160 frames (roughly 5s)
-	;	dragon:		150 frames (roughly 5s)
-	;	dragon zoom:	5 frames
 
-	;	dragon:		5 frames \
-	;	dragon zoom:	5 frames / repeat 6 times
-	; 	dragon zoom scroll off screen: 30 frames
-	;	white screen:	20 frames
-
-	; 916
-
-	;=======================================
 
 
 	;======================================
@@ -380,30 +370,58 @@ scroll_in_loop:
 	lda	#42
 	jsr	wait_ticks
 
-	jsr	wait_until_keypress
+
+	;======================================
+	; dragon man
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	; FIXME: make a "copy left" routine
+
+	lda	#0
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_X1
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jsr	hgr_copy_part
+
+	jsr	hgr_page_flip
+
+	lda	#160
+	jsr	wait_ticks
+
+
+
+	;======================================
+	; draw SCENE 6
+	;======================================
+	;	dragon:		150 frames (roughly 5s)
+	;	dragon zoom:	5 frames
+	;
+	;	dragon:		5 frames \
+	;	dragon zoom:	5 frames / repeat 6 times
+	; 	dragon zoom scroll off screen: 30 frames
+	;	white screen:	20 frames
+
+	; 916
+
+	;=======================================
+
+
 
 finished:
+	jsr	wait_until_keypress
+	jsr	hgr_page_flip
+
 	jmp	finished
-
-
-
-	; start music
-
-;	lda	SOUND_STATUS
-;	and	#SOUND_MOCKINGBOARD
-;	beq	no_music
-;	cli	; enable sound
-;no_music:
-
-
-               ;0123456789012345678901234567890123456789
-;merry_text:
-;	.byte   "      MERRY CHRISTMAS!!! MERRY CHRISTMAS!!! ME"
-
-
-
-
-
 
 
 trog00_graphics:

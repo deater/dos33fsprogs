@@ -31,6 +31,7 @@ hgr_copy_outer_loop:
 
 
 	ldy	COPY_WIDTH
+	dey
 hgr_copy_inner_loop:
 	lda	(INL),Y
 	sta	(OUTL),Y
