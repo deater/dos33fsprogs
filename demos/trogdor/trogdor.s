@@ -336,7 +336,6 @@ scroll_in_loop:
 	;	dragon man:	160 frames (roughly 5s)
 
 
-
 	;======================================
 	; man
 
@@ -416,6 +415,95 @@ scroll_in_loop:
 	;=======================================
 
 
+	;======================================
+	; draw SCENE 7
+	;======================================
+	; dragonman, flames both low than high
+	;		ll1122
+	;	10 times
+	; then full man 1122
+	; dragonman 1122
+	; man		1122
+	; dragonman 1122
+	; man 		1122
+	; dragonmna 1122
+	; man 	1122
+	; dragonman low, off 4 frames
+
+
+	;======================================
+	; draw SCENE 8
+	;======================================
+	; countryside for 75 frames
+	; then flames in middle low
+	;	flames high 12 * 16
+
+
+	;======================================
+	; draw SCENE 9
+	;======================================
+	; big peasant head scrolling in right to left (also going down?)
+	;	roughly 60 frames
+
+
+	;======================================
+	; draw SCENE 10
+	;======================================
+
+	; zoom trogdor down 5 frames
+	; zoom trogdor up 5 frames
+	; reapeat total of 6 times
+
+	;======================================
+	; draw SCENE 11
+	;======================================
+	; Uncover peasants, 5 frames each
+	;    R2    R4      L5
+	;      L3        L1
+	; then wait 25 frames
+
+	;======================================
+	; draw SCENE 12
+	;======================================
+	; white screen
+	; scroll up cottage, takes roughly 90 frames (3s)
+
+	;======================================
+	; draw SCENE 13
+	;======================================
+	; trog down, 5 frames
+	; cottage , 5 frames
+	; trog up, 5 frames
+	; cottage, 5 frames
+	; overall: DCUC DCUC DC
+
+	;======================================
+	; draw SCENE 14
+	;======================================
+	; low flames, tall flames at edges
+	;	60 frames as cottage comes in upside down from top
+	; 6 frames of that
+
+	;======================================
+	; draw SCENE 15
+	;======================================
+	; zoom down 5
+	; man 7
+	; peasant 5
+	; countryside 5
+	; cottage 5
+	; trogdor really zoom 
+	; trogdor normal zoom
+	; trogdor intermediate zoom
+	; trogdor regular
+	;   low flames
+	;   high flames 1/2
+
+	;======================================
+	; draw SCENE 16
+	;======================================
+	; strongbad at computer
+
 
 finished:
 	jsr	wait_until_keypress
@@ -425,13 +513,17 @@ finished:
 
 
 trog00_graphics:
-.incbin "graphics/actual00_trog_cottage.hgr.zx02"
+.incbin "graphics/actual00_trog_peasant.hgr.zx02"
 
 trog01_graphics:
 .incbin "graphics/trog01_countryside.hgr.zx02"
 
 trog03_graphics:
 .incbin "graphics/actual01_dragonman.hgr.zx02"
+
+trog04_graphics:
+.incbin "graphics/actual02_updown_cottage.hgr.zx02"
+
 
 .include "wait_keypress.s"
 .include "irq_wait.s"

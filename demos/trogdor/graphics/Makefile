@@ -6,8 +6,9 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	\
-	actual00_trog_cottage.hgr.zx02 \
+	actual00_trog_peasant.hgr.zx02 \
 	actual01_dragonman.hgr.zx02 \
+	actual02_updown_cottage.hgr.zx02 \
 	trog00_trogdor.hgr.zx02 \
 	trog01_countryside.hgr.zx02 \
 	trog02_countryside.hgr.zx02 \
@@ -55,11 +56,11 @@ a2_strongbad.hgr:	a2_strongbad.png
 
 ####
 
-actual00_trog_cottage.hgr.zx02:	actual00_trog_cottage.hgr
-	$(ZX02) actual00_trog_cottage.hgr actual00_trog_cottage.hgr.zx02
+actual00_trog_peasant.hgr.zx02:	actual00_trog_peasant.hgr
+	$(ZX02) actual00_trog_peasant.hgr actual00_trog_peasant.hgr.zx02
 
-actual00_trog_cottage.hgr:	actual00_trog_cottage.png
-	$(PNG_TO_HGR) actual00_trog_cottage.png > actual00_trog_cottage.hgr
+actual00_trog_peasant.hgr:	actual00_trog_peasant.png
+	$(PNG_TO_HGR) actual00_trog_peasant.png > actual00_trog_peasant.hgr
 
 ####
 
@@ -68,6 +69,15 @@ actual01_dragonman.hgr.zx02:	actual01_dragonman.hgr
 
 actual01_dragonman.hgr:	actual01_dragonman.png
 	$(PNG_TO_HGR) actual01_dragonman.png > actual01_dragonman.hgr
+
+####
+
+actual02_updown_cottage.hgr.zx02:	actual02_updown_cottage.hgr
+	$(ZX02) actual02_updown_cottage.hgr actual02_updown_cottage.hgr.zx02
+
+actual02_updown_cottage.hgr:	actual02_updown_cottage.png
+	$(PNG_TO_HGR) actual02_updown_cottage.png > actual02_updown_cottage.hgr
+
 
 ####
 
