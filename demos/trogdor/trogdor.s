@@ -349,20 +349,7 @@ scroll_in_loop:
 	ldy	#$7f
 	jsr	hgr_clear_screen
 
-	; FIXME: make a "copy left" routine
-
-	lda	#0
-	sta	COPY_X1
-	sta	COPY_Y1
-	sta	SPRITE_Y
-	lda	#10
-	sta	SPRITE_X
-	lda	#20
-	sta	COPY_WIDTH
-	lda	#191
-	sta	COPY_Y2
-
-	jsr	hgr_copy_part
+	jsr	hgr_copy_left
 
 	jsr	hgr_page_flip
 
@@ -376,21 +363,7 @@ scroll_in_loop:
 	ldy	#$7f
 	jsr	hgr_clear_screen
 
-	; FIXME: make a "copy left" routine
-
-	lda	#0
-	sta	COPY_Y1
-	sta	SPRITE_Y
-	lda	#10
-	sta	SPRITE_X
-	lda	#20
-	sta	COPY_X1
-	lda	#20
-	sta	COPY_WIDTH
-	lda	#191
-	sta	COPY_Y2
-
-	jsr	hgr_copy_part
+	jsr	hgr_copy_right
 
 	jsr	hgr_page_flip
 
@@ -402,6 +375,7 @@ scroll_in_loop:
 	;======================================
 	; draw SCENE 6
 	;======================================
+	; 634
 	;	dragon:		150 frames (roughly 5s)
 	;	dragon zoom:	5 frames
 	;
@@ -410,14 +384,56 @@ scroll_in_loop:
 	; 	dragon zoom scroll off screen: 30 frames
 	;	white screen:	20 frames
 
-	; 916
-
 	;=======================================
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	lda	#<trog00_graphics
+	sta	zx_src_l+1
+	lda	#>trog00_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	jsr	hgr_copy_left
+
+	jsr	hgr_page_flip
+
+	lda	#50		; should be 250?
+	jsr	wait_ticks
+
+	;==========================
+
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	lda	#12
+	sta	ANIMATE_COUNT
+rapid_switch:
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	dec	ANIMATE_COUNT
+	bne	rapid_switch
+
+	; clear to white screen
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_page_flip
+
+	lda	#20
+	jsr	wait_ticks
 
 
 	;======================================
 	; draw SCENE 7
 	;======================================
+	; 916
 	; dragonman, flames both low than high
 	;		ll1122
 	;	10 times
@@ -430,18 +446,47 @@ scroll_in_loop:
 	; man 	1122
 	; dragonman low, off 4 frames
 
+	lda	#<trog03_graphics
+	sta	zx_src_l+1
+	lda	#>trog03_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	jsr	hgr_copy_right
+
+	jsr	hgr_page_flip
+
+	lda	#20
+	jsr	wait_ticks
 
 	;======================================
 	; draw SCENE 8
 	;======================================
+	; 1009
 	; countryside for 75 frames
 	; then flames in middle low
 	;	flames high 12 * 16
 
+	lda	#<trog01_graphics
+	sta	zx_src_l+1
+	lda	#>trog01_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
+	jsr	hgr_page_flip
+
+	lda	#20
+	jsr	wait_ticks
 
 	;======================================
 	; draw SCENE 9
 	;======================================
+	; 1171
 	; big peasant head scrolling in right to left (also going down?)
 	;	roughly 60 frames
 
@@ -449,10 +494,34 @@ scroll_in_loop:
 	;======================================
 	; draw SCENE 10
 	;======================================
-
+	; 1229
 	; zoom trogdor down 5 frames
 	; zoom trogdor up 5 frames
-	; reapeat total of 6 times
+	; repeat total of 6 times
+
+	lda	#<trog04_graphics
+	sta	zx_src_l+1
+	lda	#>trog04_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	lda	#12
+	sta	ANIMATE_COUNT
+up_down_animate:
+	jsr	hgr_page_flip
+	lda	#10
+	jsr	wait_ticks
+	dec	ANIMATE_COUNT
+	bne	up_down_animate
 
 	;======================================
 	; draw SCENE 11
@@ -620,4 +689,43 @@ draw_left_flame_common:
 	jsr	hgr_draw_sprite_big_mask
 
 	rts
+
+
+	;=========================================
+	; hgr_copy_right
+	;=========================================
+	; copy right side of $6000 to current page
+hgr_copy_right:
+	lda	#0
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_X1
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jmp	hgr_copy_part		; tail call
+
+
+	;=========================================
+	; hgr_copy_left
+	;=========================================
+	; copy left side of $6000 to current page
+hgr_copy_left:
+	lda	#0
+	sta	COPY_X1
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jmp	hgr_copy_part		; tail call
 
