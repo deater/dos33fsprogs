@@ -22,7 +22,7 @@ lovebyte15.zip:	LOVEBYTE_15 lovebyte_15.s file_id.diz lovebyte_15.dsk
 	cp lovebyte_15.s ./lovebyte_15
 	cp file_id.diz ./lovebyte_15
 	cp lovebyte_15.dsk ./lovebyte_15
-	cp dsr_720p.mp4 ./lovebyte_15
+#	cp dsr_720p.mp4 ./lovebyte_15
 	zip -r lovebyte15.zip lovebyte_15
 
 ###

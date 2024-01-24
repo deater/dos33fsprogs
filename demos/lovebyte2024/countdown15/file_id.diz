@@ -1,0 +1,16 @@
+.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.
+8                                   8
+8  Lovebyte Countdown 2024 --- #15  8 
+8                                   8
+'oOo'oOo'oOo'oOo'oOo'oOo'oOo'oOo'oOo'
+
+250-byte Intro for Apple II
+by Deater / dSr
+
+Some speaker sound, some shapetables
+(ROM vector drawing), some lores/text
+scrolling through system memory to
+make pretty background patterns.
+
+This is based off of the intro
+ "dsr scroll" from Outline 2022
