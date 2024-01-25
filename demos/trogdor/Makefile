@@ -37,6 +37,12 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
 qload.o:	zp.inc hardware.inc music.inc qload.s \
+	hgr_sprite_big_mask.s \
+	horiz_scroll_simple.s \
+	horiz_scroll_skip.s \
+	hgr_copy_magnify.s \
+	vertical_scroll.s \
+	hgr_copy_part.s \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s \
@@ -92,6 +98,13 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_copy_fast qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_copy_part qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite_big_mask qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s horiz_pan qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vertical_scroll_right qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vertical_scroll_left qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s horiz_pan_skip qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_copy_magnify qload.lst >> qload.inc
 
 ####
 

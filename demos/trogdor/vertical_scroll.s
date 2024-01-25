@@ -1,20 +1,31 @@
 
 	;=======================================
-	; scrolls to PAGE1
-	;	relies on going off the edge...
+	; hgr_vertical scroll
 	;=======================================
+	; scrolls from $6000 to page1
+	; 	jumps increments of 8 for speed
+	;=======================================
+	; offset line in $6000 to copy in from in COUNT
+
+hgr_vertical_scroll_left:
+	lda	#0
+	beq	hgr_vertical_scroll_common
+hgr_vertical_scroll_right:
+	lda	#20
+hgr_vertical_scroll_common:
+	sta	vscroll_offset_smc+1
 
 hgr_vertical_scroll:
-	ldx	#0
+	ldx	#0				; start at top
 
 outer_vscroll_loop:
-	lda	hposn_low,X
-	sta	OUTL
+	lda	hposn_low,X			; get page1 address
+	sta	OUTL				; set as output
 	lda	hposn_high,X
 	sta	OUTH
 
-	txa
-	clc
+	txa					; get address of X+8
+	clc					; and set as input
 	adc	#8
 	tay
 	lda	hposn_low,y
@@ -22,7 +33,7 @@ outer_vscroll_loop:
 	lda	hposn_high,Y
 	sta	INH
 
-	ldy	#29
+	ldy	#29				; only scroll from 9..29
 inner_vscroll_loop:
 	lda	(INL),Y
 	sta	(OUTL),Y
@@ -41,12 +52,12 @@ inner_vscroll_loop:
 	; for now from 0..19
 
 hgr_vertical_scroll2:
-	ldx	#184
+	ldx	#184			; start 8 from bottom
 
 outer_vscroll_loop2:
 	lda	hposn_low,X
 	clc
-	adc	#10
+	adc	#10			; copy to middle of screen
 	sta	OUTL
 
 	lda	hposn_high,X
@@ -54,6 +65,9 @@ outer_vscroll_loop2:
 
 	ldy	COUNT
 	lda	hposn_low,Y
+	clc
+vscroll_offset_smc:
+	adc	#$0
 	sta	INL
 	lda	hposn_high,Y
 	clc
@@ -72,8 +86,6 @@ inner_vscroll_loop2:
 	inx
 	cpx	#192
 	bne	outer_vscroll_loop2
-
-
 
 	rts
 

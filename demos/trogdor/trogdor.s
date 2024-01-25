@@ -280,13 +280,13 @@ left_flame_animate2:
 
 scroll_in_loop:
 
-	jsr	hgr_vertical_scroll
+	jsr	hgr_vertical_scroll_left
 
 	lda	COUNT
 	clc
 	adc	#8
 
-	cmp	#192
+	cmp	#200
 	bne	scroll_in_loop
 
 	lda	#10
@@ -537,6 +537,35 @@ up_down_animate:
 	; white screen
 	; scroll up cottage, takes roughly 90 frames (3s)
 
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_page_flip
+
+	lda	#<trog04_graphics
+	sta	zx_src_l+1
+	lda	#>trog04_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	lda	#0
+	sta	COUNT
+
+scroll_in_loop2:
+
+	jsr	hgr_vertical_scroll_right
+
+	lda	COUNT
+	clc
+	adc	#8
+
+	cmp	#200
+	bne	scroll_in_loop2
+
+	lda	#10
+	jsr	wait_ticks
+
+
 	;======================================
 	; draw SCENE 13
 	;======================================
@@ -598,15 +627,15 @@ trog04_graphics:
 .include "irq_wait.s"
 
 
-hposn_low       = $1e00
-hposn_high      = $1f00
+;hposn_low       = $1e00
+;hposn_high      = $1f00
 
-.include "hgr_sprite_big_mask.s"
-.include "horiz_scroll_simple.s"
-.include "horiz_scroll_skip.s"
-.include "hgr_copy_magnify.s"
-.include "vertical_scroll.s"
-.include "hgr_copy_part.s"
+;.include "hgr_sprite_big_mask.s"
+;.include "horiz_scroll_simple.s"
+;.include "horiz_scroll_skip.s"
+;.include "hgr_copy_magnify.s"
+;.include "vertical_scroll.s"
+;.include "hgr_copy_part.s"
 
 	;===============================
 	; draw_flame_small

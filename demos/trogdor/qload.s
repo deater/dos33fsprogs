@@ -211,6 +211,12 @@ hposn_low       = $1e00
 hposn_high      = $1f00
 
         .include        "hgr_table.s"
+	.include "hgr_sprite_big_mask.s"
+	.include "horiz_scroll_simple.s"
+	.include "horiz_scroll_skip.s"
+	.include "hgr_copy_magnify.s"
+	.include "vertical_scroll.s"
+	.include "hgr_copy_part.s"
 
 qload_end:
 
