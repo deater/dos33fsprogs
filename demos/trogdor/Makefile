@@ -185,7 +185,7 @@ TROGDOR:	trogdor.o
 	ld65 -o TROGDOR trogdor.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 trogdor.o:	trogdor.s \
-	flames.inc \
+	flames.inc do_flames.s \
 	zp.inc hardware.inc qload.inc \
 	graphics/trog00_trogdor.hgr.zx02 \
 	hgr_sprite_big_mask.s horiz_scroll_simple.s hgr_copy_magnify.s \

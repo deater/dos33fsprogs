@@ -75,8 +75,9 @@ trog_no_music:
 	;======================================
 	; draw SCENE 2
 	;======================================
-
-	; draw flames
+	; 156
+	;
+	; draw flames on white background
 	;	left flame short 2 frames
 	;	left tall 1212 roughly 10 frames (1/2 s)
 	;	both short 2 frames
@@ -92,158 +93,22 @@ trog_no_music:
 	; clear to white
 	ldy	#$7f
 	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_small_1
 	jsr	hgr_page_flip
-
-	lda	#2
-	jsr	wait_ticks
-
-
-	;=================================================
-	;	left tall 1212 roughly 10 frames (1/2 s)
-
-	lda	#2
-	sta	ANIMATE_COUNT
-left_flame_animate1:
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_tall_1
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
 
 	ldy	#$7f
 	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_tall_2
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
-
-	dec	ANIMATE_COUNT
-	bne	left_flame_animate1
-
-	;==============================
-	;	both short 2 frames
-
-	; clear to white
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_small_1
-
-	ldx	#24
-	jsr	draw_flame_small_1
-
 	jsr	hgr_page_flip
 
-	lda	#2
-	jsr	wait_ticks
 
+	lda	#0
+	sta	FLAME_BG
 
-	;===========================================
-	;	right tall 1212 roughly 10 frames
+	lda	#8
+	sta	FLAME_L
+	lda	#24
+	sta	FLAME_R
 
-	lda	#2
-	sta	ANIMATE_COUNT
-
-right_flame_animate1:
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#24
-	jsr	draw_flame_tall_2
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
-
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#24
-	jsr	draw_flame_tall_1
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
-
-	dec	ANIMATE_COUNT
-	bne	right_flame_animate1
-
-	;=============================
-	;	right short 2 frames
-
-	; clear to white
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#24
-	jsr	draw_flame_small_2
-	jsr	hgr_page_flip
-
-	lda	#2
-	jsr	wait_ticks
-
-	;=============================
-	;	left short 2 frames
-
-	; clear to white
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_small_1
-	jsr	hgr_page_flip
-
-	lda	#2
-	jsr	wait_ticks
-
-	;================================================
-	;	left tall 1212 roughly 10 frames (1/2 s)
-
-	lda	#2
-	sta	ANIMATE_COUNT
-left_flame_animate2:
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_tall_1
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
-
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_tall_2
-	jsr	hgr_page_flip
-	lda	#2
-	jsr	wait_ticks
-
-	dec	ANIMATE_COUNT
-	bne	left_flame_animate2
-
-
-	;=============================
-	;	left short 2 frames
-
-	; clear to white
-	ldy	#$7f
-	jsr	hgr_clear_screen
-
-	ldx	#8
-	jsr	draw_flame_small_1
-	jsr	hgr_page_flip
-
-	lda	#2
-	jsr	wait_ticks
+	jsr	do_flames
 
 	;=============================
 	;	blank screen
@@ -327,6 +192,7 @@ scroll_in_loop:
 	;======================================
 	; draw SCENE 5
 	;======================================
+	; 359
 	; 	trogdor man:	42 frames
 	;	flames: left: llll1122
 	;	flames: bb
@@ -337,7 +203,7 @@ scroll_in_loop:
 
 
 	;======================================
-	; man
+	; man for 42 frames
 
 	lda	#<trog03_graphics
 	sta	zx_src_l+1
@@ -355,6 +221,10 @@ scroll_in_loop:
 
 	lda	#42
 	jsr	wait_ticks
+
+	lda	#1
+	sta	FLAME_BG
+	jsr	do_flames
 
 
 	;======================================
@@ -537,6 +407,12 @@ up_down_animate:
 	; white screen
 	; scroll up cottage, takes roughly 90 frames (3s)
 
+	; must be at PAGE1 here
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_page_flip
+
 	ldy	#$7f
 	jsr	hgr_clear_screen
 	jsr	hgr_page_flip
@@ -637,88 +513,7 @@ trog04_graphics:
 ;.include "vertical_scroll.s"
 ;.include "hgr_copy_part.s"
 
-	;===============================
-	; draw_flame_small
-	;===============================
-	; x location in X
-
-draw_flame_small_1:
-	lda	#<left_flame_small
-	sta	INL
-	lda	#>left_flame_small
-	sta	INH
-	lda	#<left_flame_small_mask
-	sta	MASKL
-	lda	#>left_flame_small_mask
-	bne	draw_flame_small_common		; bra
-
-draw_flame_small_2:
-	lda	#<left_flame_small
-	sta	INL
-	lda	#>left_flame_small
-	sta	INH
-	lda	#<left_flame_small_mask
-	sta	MASKL
-	lda	#>left_flame_small_mask
-
-draw_flame_small_common:
-	sta	MASKH
-
-	txa
-;	lda	#8
-	sta	SPRITE_X
-
-	lda	#152
-	sta	SPRITE_Y
-
-	jsr	hgr_draw_sprite_big_mask
-
-	rts
-
-	;===============================
-	; draw_flame_tall
-	;===============================
-	; X location in X
-
-draw_flame_tall_1:
-
-	lda	#<left_flame_big
-	sta	INL
-	lda	#>left_flame_big
-	sta	INH
-	lda	#<left_flame_big_mask
-	sta	MASKL
-	lda	#>left_flame_big_mask
-	sta	MASKH
-
-	bne	draw_left_flame_common	; bra
-
-draw_flame_tall_2:
-
-	; draw right flame
-
-	lda	#<right_flame_big
-	sta	INL
-	lda	#>right_flame_big
-	sta	INH
-	lda	#<right_flame_big_mask
-	sta	MASKL
-	lda	#>right_flame_big_mask
-	sta	MASKH
-
-draw_left_flame_common:
-
-;	lda	#8
-	txa
-	sta	SPRITE_X
-
-	lda	#54
-	sta	SPRITE_Y
-
-	jsr	hgr_draw_sprite_big_mask
-
-	rts
-
+	.include "do_flames.s"
 
 	;=========================================
 	; hgr_copy_right

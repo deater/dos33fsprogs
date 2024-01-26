@@ -131,6 +131,9 @@ SPRITE_Y	= $F2
 SPRITE_X	= $F3
 CURRENT_ROW	= $F4
 ANIMATE_COUNT	= $F5
+FLAME_L		= $F6
+FLAME_R		= $F7
+FLAME_BG	= $F8
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers

@@ -94,3 +94,51 @@ hgr_page2_cls_loop:
 
 	rts
 
+.if 0
+
+	;====================================
+	; clear $6000 off-screen buffer
+	;====================================
+
+hgr_page3_clearscreen:
+
+	tya
+	ldy	#0
+hgr_page3_cls_loop:
+	sta	$6000,Y
+	sta	$6100,Y
+	sta	$6200,Y
+	sta	$6300,Y
+	sta	$6400,Y
+	sta	$6500,Y
+	sta	$6600,Y
+	sta	$6700,Y
+	sta	$6800,Y
+	sta	$6900,Y
+	sta	$6A00,Y
+	sta	$6B00,Y
+	sta	$6C00,Y
+	sta	$6D00,Y
+	sta	$6E00,Y
+	sta	$6F00,Y
+	sta	$7000,Y
+	sta	$7100,Y
+	sta	$7200,Y
+	sta	$7300,Y
+	sta	$7400,Y
+	sta	$7500,Y
+	sta	$7600,Y
+	sta	$7700,Y
+	sta	$7800,Y
+	sta	$7900,Y
+	sta	$7A00,Y
+	sta	$7B00,Y
+	sta	$7C00,Y
+	sta	$7D00,Y
+	sta	$7E00,Y
+	sta	$7F00,Y
+	iny
+	bne	hgr_page3_cls_loop
+
+	rts
+.endif
