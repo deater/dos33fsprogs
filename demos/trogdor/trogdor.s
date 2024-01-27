@@ -87,9 +87,6 @@ trog_no_music:
 	;	left tall 1212 roughly 10 frames (1/2 s)
 	;	left short 2 frames
 
-	;======================================
-	;	left flame short 2 frames
-
 	; clear to white
 	ldy	#$7f
 	jsr	hgr_clear_screen
@@ -100,10 +97,10 @@ trog_no_music:
 	jsr	hgr_page_flip
 
 
-	lda	#0
+	lda	#0			; blank bg
 	sta	FLAME_BG
 
-	lda	#8
+	lda	#8			; x-coords for two flames
 	sta	FLAME_L
 	lda	#24
 	sta	FLAME_R
@@ -136,9 +133,6 @@ trog_no_music:
 	ldy	#$7f
 	jsr	hgr_clear_screen
 	jsr	hgr_page_flip
-
-;	lda	#24			; 192/8
-;	sta	ANIMATE_COUNT
 
 	lda	#0
 	sta	COUNT
@@ -222,9 +216,25 @@ scroll_in_loop:
 	lda	#42
 	jsr	wait_ticks
 
+	;=====================
+	; do flames
+
 	lda	#1
 	sta	FLAME_BG
 	jsr	do_flames
+
+	;=====================
+	; done flames
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_left
+
+	jsr	hgr_page_flip
+
+	lda	#30
+	jsr	wait_ticks
 
 
 	;======================================
@@ -274,9 +284,14 @@ scroll_in_loop:
 	jsr	wait_ticks
 
 	;==========================
+	; dragon zoom
 
 	lda	#$60
 	jsr	hgr_copy_magnify
+
+	;===========================
+	; rapidly switch
+
 
 	lda	#12
 	sta	ANIMATE_COUNT
@@ -289,6 +304,32 @@ rapid_switch:
 	dec	ANIMATE_COUNT
 	bne	rapid_switch
 
+
+	;===h========================
+	; scroll off screen
+
+	; switch to page1
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_copy_left
+	jsr	hgr_page_flip
+
+	lda	#0
+	sta	COUNT
+
+scroll_down_in_loop:
+
+	jsr	hgr_vertical_scroll_down_left
+
+	lda	COUNT
+	clc
+	adc	#8
+	sta	COUNT
+
+	cmp	#200
+	bne	scroll_down_in_loop
+
+	;=========================
 	; clear to white screen
 
 	ldy	#$7f
@@ -503,8 +544,8 @@ trog04_graphics:
 .include "irq_wait.s"
 
 
-;hposn_low       = $1e00
-;hposn_high      = $1f00
+hposn_low       = $1e00
+hposn_high      = $1f00
 
 ;.include "hgr_sprite_big_mask.s"
 ;.include "horiz_scroll_simple.s"
@@ -513,6 +554,7 @@ trog04_graphics:
 ;.include "vertical_scroll.s"
 ;.include "hgr_copy_part.s"
 
+	.include "vertical_scroll_down.s"
 	.include "do_flames.s"
 
 	;=========================================

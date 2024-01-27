@@ -189,7 +189,7 @@ trogdor.o:	trogdor.s \
 	zp.inc hardware.inc qload.inc \
 	graphics/trog00_trogdor.hgr.zx02 \
 	hgr_sprite_big_mask.s horiz_scroll_simple.s hgr_copy_magnify.s \
-	horiz_scroll_skip.s vertical_scroll.s hgr_copy_part.s
+	horiz_scroll_skip.s vertical_scroll_down.s hgr_copy_part.s
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
 
