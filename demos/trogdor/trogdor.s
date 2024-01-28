@@ -742,11 +742,27 @@ scroll_in_loop2:
 	;======================================
 	; draw SCENE 13
 	;======================================
+	; 1429
 	; trog down, 5 frames
 	; cottage , 5 frames
 	; trog up, 5 frames
 	; cottage, 5 frames
 	; overall: DCUC DCUC DC
+
+	lda	#<trog04_graphics
+	sta	zx_src_l+1
+	lda	#>trog04_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	jsr	down_cottage
+	jsr	up_cottage
+	jsr	down_cottage
+	jsr	up_cottage
+	jsr	down_cottage
+
+
 
 ; TODO
 
@@ -908,6 +924,50 @@ dman_flames_common:
 	jsr	hgr_page_flip
 
 	lda	#2
+	jsr	wait_ticks
+
+	rts
+
+
+
+
+down_cottage:
+	lda	#0
+	sta	SPRITE_X
+	lda	#96
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	jmp	common_cottage
+
+up_cottage:
+	lda	#0
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+common_cottage:
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+	jsr	hgr_page_flip
+
+	lda	#5
 	jsr	wait_ticks
 
 	rts
