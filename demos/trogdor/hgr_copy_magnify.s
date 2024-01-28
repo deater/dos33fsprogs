@@ -1,17 +1,24 @@
 	;=============================================================
 	; hgr copy from page in A to current DRAW_PAGE but magnify 2x
 	;=========================================================
+	; SPRITE_X, SPRITE_Y = offset to load from
 
 hgr_copy_magnify:
 
-INPUT_OFFSET = 20
+	lda	SPRITE_X
+	sta	hcm_smc1+1
+	clc
+	adc	#20
+	sta	hcm_smc2+1
 
-	ldx	#0
+	ldx	#0				; start at top
+
 magnify_outer_loop:
 	txa
-	pha
-	clc
-	adc	#INPUT_OFFSET
+	pha				; store X on stack
+
+	clc				; offset IN to our sprite
+	adc	SPRITE_Y
 	tax
 
 	lda	hposn_low,X
@@ -19,14 +26,13 @@ magnify_outer_loop:
 
 	lda	hposn_high,X
 	clc
-	adc	#$40		; hardcode at $60
+	adc	#$40			; hardcode at $60
 	sta	INH
 
-	pla
-
+	pla				; get X off stack again
 	pha
 
-	asl
+	asl				; multiply by 2
 	tax
 
 	lda	hposn_low,X
@@ -34,32 +40,31 @@ magnify_outer_loop:
 
 	lda	hposn_high,X
 	clc
-	adc	DRAW_PAGE
+	adc	DRAW_PAGE		; adjust for draw page
 	sta	OUTH
 
-	inx
+	inx				; calculate (x*2)+1
 
 	lda	hposn_low,X
 	sta	GBASL
-
 
 	lda	hposn_high,X
 	clc
 	adc	DRAW_PAGE
 	sta	GBASH
 
-
+hcm_smc1:
 	ldy	#0						; 2
 magnify_inner_loop:
 	lda	(INL),Y					 	; 5
 	and	#$f						; 2
 	tax							; 2
 	lda	magnify_table_low,X				; 4
-	sta	(OUTL),Y					; 6
-	sta	(GBASL),Y					; 6
+	sta	(OUTL),Y		; output at 2*X		; 6
+	sta	(GBASL),Y		; output at (2*X)+1	; 6
 
-	inc	OUTL						; 5
-	inc	GBASL						; 5
+	inc	OUTL			; point to next xpos	; 5
+	inc	GBASL			; "			; 5
 
 	lda	(INL),Y						; 5
 	lsr							; 2
@@ -71,13 +76,14 @@ magnify_inner_loop:
 	sta	(GBASL),Y					; 6
 
 	iny							; 2
+hcm_smc2:
 	cpy	#20						; 2
 	bne	magnify_inner_loop				; 2/3
 
-	pla
+	pla				; get X off stack
 	tax
 
-	inx
+	inx				; increment
 	cpx	#96
 	bne	magnify_outer_loop
 

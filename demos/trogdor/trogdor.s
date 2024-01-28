@@ -59,6 +59,11 @@ trog_no_music:
 
 	; copy+magnify to PAGE2
 
+	lda	#20
+	sta	SPRITE_Y
+	lda	#0
+	sta	SPRITE_X
+
 	lda	#$60
 	jsr	hgr_copy_magnify
 
@@ -287,6 +292,11 @@ scroll_in_loop:
 	;==========================
 	; dragon zoom
 
+	lda	#0
+	sta	SPRITE_X
+	lda	#20
+	sta	SPRITE_Y
+
 	lda	#$60
 	jsr	hgr_copy_magnify
 
@@ -340,7 +350,7 @@ scroll_down_in_loop:
 
 	lda	#20
 	jsr	wait_ticks
-.endif
+
 
 	;======================================
 	; draw SCENE 7
@@ -527,8 +537,7 @@ country_flames:
 
 	dec	ANIMATE_COUNT
 	bne	country_flames
-
-
+.endif
 
 	;======================================
 	; draw SCENE 9
@@ -537,7 +546,46 @@ country_flames:
 	; big peasant head scrolling in right to left (also going down?)
 	;	roughly 60 frames
 
-; TODO: big peasant head
+	; decompress trogdor+peasant to $6000
+
+	lda	#<trog00_graphics
+	sta	zx_src_l+1
+	lda	#>trog00_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	; clear screen
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_page_flip
+
+; URGH
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_page_flip
+
+	; copy+magnify to PAGE2
+
+	lda	#20
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
+
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	horiz_pan_skip
+
+	; clear to white
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	horiz_pan_skip
+
+	jsr	hgr_page_flip
 
 	;======================================
 	; draw SCENE 10
@@ -554,15 +602,28 @@ country_flames:
 	lda	#$60
 	jsr	zx02_full_decomp
 
-; TODO: fix copy
 
+	lda	#00
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
 	lda	#$60
 	jsr	hgr_copy_magnify
 
 	jsr	hgr_page_flip
 
+	lda	#0
+	sta	SPRITE_X
+	lda	#96
+	sta	SPRITE_Y
 	lda	#$60
 	jsr	hgr_copy_magnify
+
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	;======================
+	; animate
 
 	lda	#12
 	sta	ANIMATE_COUNT
@@ -576,12 +637,66 @@ up_down_animate:
 	;======================================
 	; draw SCENE 11
 	;======================================
+	; 1284
+	;
 	; Uncover peasants, 5 frames each
 	;    R2    R4      L5
 	;      L3        L1
 	; then wait 25 frames
 
-; TODO: peasant drawing
+	lda	#<trog00_graphics
+	sta	zx_src_l+1
+	lda	#>trog00_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+
+	lda	#1
+	sta	COUNT
+peasant_outer_loop:
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	ldx	#0
+peasant_inner_loop:
+	stx	ANIMATE_COUNT
+
+	lda	peasant_data_x1,X
+	sta	COPY_X1
+	lda	peasant_data_width,X
+	sta	COPY_WIDTH
+	lda	peasant_data_y1,X
+	sta	COPY_Y1
+	lda	peasant_data_y2,X
+	sta	COPY_Y2
+	lda	peasant_data_sprite_x,X
+	sta	SPRITE_X
+	lda	peasant_data_sprite_y,X
+	sta	SPRITE_Y
+
+	jsr	hgr_copy_part
+
+	ldx	ANIMATE_COUNT
+	inx
+
+	cpx	COUNT
+	bne	peasant_inner_loop
+
+	jsr	hgr_page_flip
+
+	lda	#20
+	jsr	wait_ticks
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#6
+	bne	peasant_outer_loop
+
+	lda	#25
+	jsr	wait_ticks
+
 
 	;======================================
 	; draw SCENE 12
@@ -688,6 +803,19 @@ trog04_graphics:
 .include "wait_keypress.s"
 .include "irq_wait.s"
 
+
+peasant_data_x1:
+	.byte	20, 20, 20, 20, 20
+peasant_data_width:
+	.byte	 9,  8,	 9,  8,  9
+peasant_data_y1:
+	.byte	 0, 98,  0, 98,	 0
+peasant_data_y2:
+	.byte	96,176,	96,176, 96
+peasant_data_sprite_x:
+	.byte	22,  4, 12, 16, 28
+peasant_data_sprite_y:
+	.byte	92, 30, 91,  2,  8
 
 hposn_low       = $1e00
 hposn_high      = $1f00
