@@ -160,3 +160,6 @@ dragonman:
 	original	man=1973 dragonman=1982 = 3955 bytes
 	combined				= 3669 bytes
 	optimize so bases same:			= 3132 bytes
+
+TODO:
+	always call clear screen before left/right copy?

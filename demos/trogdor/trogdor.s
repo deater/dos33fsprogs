@@ -72,6 +72,7 @@ trog_no_music:
 
 	jsr	hgr_page_flip
 
+.if 0
 	;======================================
 	; draw SCENE 2
 	;======================================
@@ -305,7 +306,7 @@ rapid_switch:
 	bne	rapid_switch
 
 
-	;===h========================
+	;===========================
 	; scroll off screen
 
 	; switch to page1
@@ -339,7 +340,7 @@ scroll_down_in_loop:
 
 	lda	#20
 	jsr	wait_ticks
-
+.endif
 
 	;======================================
 	; draw SCENE 7
@@ -348,6 +349,7 @@ scroll_down_in_loop:
 	; dragonman, flames both low than high
 	;		ll1122
 	;	10 times
+
 	; then full man 1122
 	; dragonman 1122
 	; man		1122
@@ -355,7 +357,12 @@ scroll_down_in_loop:
 	; man 		1122
 	; dragonmna 1122
 	; man 	1122
+
 	; dragonman low, off 4 frames
+
+
+	;=========================
+	; load dragonman graphics
 
 	lda	#<trog03_graphics
 	sta	zx_src_l+1
@@ -364,13 +371,103 @@ scroll_down_in_loop:
 	lda	#$60
 	jsr	zx02_full_decomp
 
+	;===============================
+	; dragonman with twin low flames
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+	jsr	draw_twin_flames_low
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	;===============================
+	; dragonman 1122 10 times
+
+	lda	#10
+	sta	ANIMATE_COUNT
+long_tall:
+
+	jsr	dman_flames
+
+;	ldy	#$7f
+;	jsr	hgr_clear_screen
+
+;	jsr	hgr_copy_right
+
+;	jsr	draw_twin_flames_tall_1
+
+;	jsr	hgr_page_flip
+
+;	lda	#2
+;	jsr	wait_ticks
+
+;	ldy	#$7f
+;	jsr	hgr_clear_screen
+
+;	jsr	hgr_copy_right
+
+;	jsr	draw_twin_flames_tall_2
+
+;	jsr	hgr_page_flip
+
+;	lda	#2
+;	jsr	wait_ticks
+
+	dec	ANIMATE_COUNT
+	bne	long_tall
+
+	;========================
+	; then full man 1122
+	; dragonman 1122
+	; man		1122
+	; dragonman 1122
+	; man 		1122
+	; dragonmna 1122
+	; man 	1122
+
+	jsr	man_flames
+	jsr	dman_flames
+	jsr	man_flames
+	jsr	dman_flames
+	jsr	man_flames
+	jsr	dman_flames
+	jsr	man_flames
+
+	;===============================
+	; dragonman low, 2 frames
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+	jsr	draw_twin_flames_low
+
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	;================================
+	; dragonman off, 4 frames
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
 	jsr	hgr_copy_right
 
 	jsr	hgr_page_flip
 
-	lda	#20
+	lda	#2
 	jsr	wait_ticks
-; TODO
+
+
 	;======================================
 	; draw SCENE 8
 	;======================================
@@ -605,3 +702,46 @@ hgr_copy_left:
 
 	jmp	hgr_copy_part		; tail call
 
+
+	;==========================
+	; man flames
+
+man_flames:
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_left
+
+	jmp	dman_flames_common
+
+	;==========================
+	; dragonman flames
+
+dman_flames:
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+
+dman_flames_common:
+	jsr	draw_twin_flames_tall_1
+
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+	jsr	draw_twin_flames_tall_2
+
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	rts

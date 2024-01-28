@@ -16,6 +16,7 @@
 	; FLAME_BG = type of background
 	;	0 = blank white
 	;	1 = blank_white + left_copy
+	;	2 = blank_white + right_copy
 
 do_flames:
 
@@ -190,20 +191,30 @@ left_flame_animate2:
 
 draw_flame_bg:
 
-	lda	FLAME_BG
-	beq	flame_bg_clear
-flame_bg_left:
+	; clear no matter what
+
 	ldy	#$7f
 	jsr	hgr_clear_screen
+
+	lda	FLAME_BG
+	beq	flame_bg_clear
+
+	cmp	#2
+	bne	flame_bg_left
+
+flame_bg_right:
+
+	jsr	hgr_copy_right
+
+	rts
+
+flame_bg_left:
 
 	jsr	hgr_copy_left
 
 	rts
 
 flame_bg_clear:
-
-	ldy	#$7f
-	jsr	hgr_clear_screen
 
 	rts
 
@@ -292,3 +303,32 @@ draw_left_flame_common:
 
 	rts
 
+
+	;===================================
+	; twin flames tall
+draw_twin_flames_tall_1:
+
+	ldx	#4
+	jsr	draw_flame_tall_1
+	ldx	#28
+	jsr	draw_flame_tall_2
+	rts
+
+draw_twin_flames_tall_2:
+
+	ldx	#4
+	jsr	draw_flame_tall_2
+	ldx	#28
+	jsr	draw_flame_tall_1
+	rts
+
+
+	;===================================
+	; twin flames low
+draw_twin_flames_low:
+
+	ldx	#4
+	jsr	draw_flame_small_1
+	ldx	#28
+	jsr	draw_flame_small_2
+	rts
