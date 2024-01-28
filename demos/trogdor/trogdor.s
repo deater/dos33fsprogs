@@ -490,7 +490,45 @@ long_tall:
 
 	lda	#20
 	jsr	wait_ticks
-; TODO: flames
+
+; 12 and 20?
+
+
+	lda	#16
+	sta	ANIMATE_COUNT
+country_flames:
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
+	ldx	#11
+	jsr	draw_flame_tall_1
+	ldx	#21
+	jsr	draw_flame_tall_2
+
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
+
+	ldx	#11
+	jsr	draw_flame_tall_2
+	ldx	#21
+	jsr	draw_flame_tall_1
+
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	dec	ANIMATE_COUNT
+	bne	country_flames
+
+
 
 	;======================================
 	; draw SCENE 9
