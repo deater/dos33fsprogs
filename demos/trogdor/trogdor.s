@@ -619,8 +619,9 @@ country_flames:
 	lda	#$60
 	jsr	hgr_copy_magnify
 
-	lda	#$60
-	jsr	hgr_copy_magnify
+; ?h
+;	lda	#$60
+;	jsr	hgr_copy_magnify
 
 	;======================
 	; animate
@@ -762,13 +763,10 @@ scroll_in_loop2:
 	jsr	up_cottage
 	jsr	down_cottage
 
-
-
-; TODO
-
 	;======================================
 	; draw SCENE 14
 	;======================================
+	; 1479
 	; low flames, tall flames at edges
 	;	60 frames as cottage comes in upside down from top
 	; 6 frames of that
@@ -778,9 +776,10 @@ scroll_in_loop2:
 	;======================================
 	; draw SCENE 15
 	;======================================
+	; 1561
 	; zoom down 5
 	; man 7
-	; peasant 5
+	; peasant 5g
 	; countryside 5
 	; cottage 5
 	; trogdor really zoom
@@ -789,14 +788,198 @@ scroll_in_loop2:
 	; trogdor regular
 	;   low flames
 	;   high flames 1/2
-; TODO
+
+	;==========================
+	; trog down
+
+	lda	#0
+	sta	SPRITE_X
+	lda	#96
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	;==========================
+	; man
+
+	lda	#<trog03_graphics
+	sta	zx_src_l+1
+	lda	#>trog03_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	lda	#0
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	;===========================
+	; peasant
+
+	lda	#<trog00_graphics
+	sta	zx_src_l+1
+	lda	#>trog00_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	; clear screen
+
+;	ldy	#$7f
+;	jsr	hgr_clear_screen
+
+	lda	#20
+	sta	SPRITE_X
+	lda	#0
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+
+	jsr	hgr_page_flip
+
+	;===========================
+	; countryside
+
+	lda	#<trog01_graphics
+	sta	zx_src_l+1
+	lda	#>trog01_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	jsr	hgr_page_flip
+
+	;===========================
+	; cottage
+
+	lda	#<trog04_graphics
+	sta	zx_src_l+1
+	lda	#>trog04_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_right
+
+	jsr	hgr_page_flip
+
+	;======================================
+	; trog pan up (supposed to be zoom out)
+
+	lda	#<trog00_graphics
+	sta	zx_src_l+1
+	lda	#>trog00_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+	;==========================
+	; pan 1
+
+	lda	#0
+	sta	SPRITE_X
+	lda	#90
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+	jsr	hgr_page_flip
+
+	;==========================
+	; pan 2
+
+	lda	#0
+	sta	SPRITE_X
+	lda	#60
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+	jsr	hgr_page_flip
+
+	;==========================
+	; pan 3
+
+	lda	#0
+	sta	SPRITE_X
+	lda	#30
+	sta	SPRITE_Y
+	lda	#$60
+	jsr	hgr_copy_magnify
+	jsr	hgr_page_flip
+
+
+	;==========================
+	; full size
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	hgr_copy_left
+
+	jsr	draw_twin_flames_low
+
+	jsr	hgr_page_flip
+
+	lda	#5
+	jsr	wait_ticks
+
+	;=======================
+	; 1
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_copy_left
+	jsr	draw_twin_flames_tall_1
+	jsr	hgr_page_flip
+	lda	#5
+	jsr	wait_ticks
+
+	;=======================
+	; 2
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_copy_left
+	jsr	draw_twin_flames_tall_2
+	jsr	hgr_page_flip
+	lda	#5
+	jsr	wait_ticks
+
+	;=======================
+	; 1
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+	jsr	hgr_copy_left
+	jsr	draw_twin_flames_tall_1
+	jsr	hgr_page_flip
+	lda	#5
+	jsr	wait_ticks
+
+
 	;======================================
 	; draw SCENE 16
 	;======================================
 	; strongbad at computer
 
+; TODO
 
 finished:
+	bit	KEYRESET
 	jsr	wait_until_keypress
 	jsr	hgr_page_flip
 
