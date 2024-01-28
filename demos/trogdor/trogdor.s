@@ -370,7 +370,7 @@ scroll_down_in_loop:
 
 	lda	#20
 	jsr	wait_ticks
-
+; TODO
 	;======================================
 	; draw SCENE 8
 	;======================================
@@ -393,6 +393,7 @@ scroll_down_in_loop:
 
 	lda	#20
 	jsr	wait_ticks
+; TODO: flames
 
 	;======================================
 	; draw SCENE 9
@@ -401,6 +402,7 @@ scroll_down_in_loop:
 	; big peasant head scrolling in right to left (also going down?)
 	;	roughly 60 frames
 
+; TODO: big peasant head
 
 	;======================================
 	; draw SCENE 10
@@ -416,6 +418,8 @@ scroll_down_in_loop:
 	sta	zx_src_h+1
 	lda	#$60
 	jsr	zx02_full_decomp
+
+; TODO: fix copy
 
 	lda	#$60
 	jsr	hgr_copy_magnify
@@ -441,6 +445,8 @@ up_down_animate:
 	;    R2    R4      L5
 	;      L3        L1
 	; then wait 25 frames
+
+; TODO: peasant drawing
 
 	;======================================
 	; draw SCENE 12
@@ -492,12 +498,16 @@ scroll_in_loop2:
 	; cottage, 5 frames
 	; overall: DCUC DCUC DC
 
+; TODO
+
 	;======================================
 	; draw SCENE 14
 	;======================================
 	; low flames, tall flames at edges
 	;	60 frames as cottage comes in upside down from top
 	; 6 frames of that
+
+; TODO
 
 	;======================================
 	; draw SCENE 15
@@ -507,13 +517,13 @@ scroll_in_loop2:
 	; peasant 5
 	; countryside 5
 	; cottage 5
-	; trogdor really zoom 
+	; trogdor really zoom
 	; trogdor normal zoom
 	; trogdor intermediate zoom
 	; trogdor regular
 	;   low flames
 	;   high flames 1/2
-
+; TODO
 	;======================================
 	; draw SCENE 16
 	;======================================
