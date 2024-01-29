@@ -156,7 +156,7 @@ scroll_in_loop:
 	cmp	#200
 	bne	scroll_in_loop
 
-	lda	#10
+	lda	#30
 	jsr	wait_ticks
 
 
@@ -186,7 +186,6 @@ scroll_in_loop:
 	jsr	zx02_full_decomp
 
 	; pan 9 times
-	; FIXME: update timing
 
 	lda	#9
 	jsr	horiz_pan
@@ -221,7 +220,7 @@ scroll_in_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#42
+	lda	#20
 	jsr	wait_ticks
 
 	;=====================
@@ -241,7 +240,7 @@ scroll_in_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#30
+	lda	#10
 	jsr	wait_ticks
 
 
@@ -256,6 +255,9 @@ scroll_in_loop:
 	jsr	hgr_page_flip
 
 	lda	#160
+	jsr	wait_ticks
+
+	lda	#120
 	jsr	wait_ticks
 
 
@@ -288,7 +290,9 @@ scroll_in_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#50		; should be 250?
+	lda	#160
+	jsr	wait_ticks
+	lda	#90
 	jsr	wait_ticks
 
 	;==========================

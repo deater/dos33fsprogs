@@ -20,6 +20,11 @@
 
 do_flames:
 
+	; this gets set to 1 if bg being copied
+
+	lda	#2
+	sta	FLAME_DELAY
+
 
 	;======================================
 	;	left flame short 2 frames
@@ -30,7 +35,7 @@ do_flames:
 	jsr	draw_flame_small_1
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 
@@ -48,7 +53,8 @@ left_flame_animate1:
 	ldx	FLAME_L
 	jsr	draw_flame_tall_1
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	; 2
@@ -58,7 +64,8 @@ left_flame_animate1:
 	ldx	FLAME_L
 	jsr	draw_flame_tall_2
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
@@ -77,7 +84,7 @@ left_flame_animate1:
 
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 
@@ -96,7 +103,8 @@ right_flame_animate1:
 	ldx	FLAME_R
 	jsr	draw_flame_tall_2
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	; 1
@@ -106,7 +114,8 @@ right_flame_animate1:
 	ldx	FLAME_R
 	jsr	draw_flame_tall_1
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
@@ -121,7 +130,7 @@ right_flame_animate1:
 	jsr	draw_flame_small_2
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	;=============================
@@ -133,7 +142,7 @@ right_flame_animate1:
 	jsr	draw_flame_small_1
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	;================================================
@@ -150,7 +159,8 @@ left_flame_animate2:
 	ldx	FLAME_L
 	jsr	draw_flame_tall_1
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	; 2
@@ -160,7 +170,8 @@ left_flame_animate2:
 	ldx	FLAME_L
 	jsr	draw_flame_tall_2
 	jsr	hgr_page_flip
-	lda	#2
+
+	lda	FLAME_DELAY
 	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
@@ -176,13 +187,8 @@ left_flame_animate2:
 	jsr	draw_flame_small_1
 	jsr	hgr_page_flip
 
-	lda	#2
-
+	lda	FLAME_DELAY
 	jmp	wait_ticks	; tail call
-
-;	jsr	wait_ticks
-
-;	rts
 
 
 	;===============================
@@ -204,15 +210,15 @@ draw_flame_bg:
 
 flame_bg_right:
 
-	jsr	hgr_copy_right
-
-	rts
+	lda	#1
+	sta	FLAME_DELAY
+	jmp	hgr_copy_right		; tail call
 
 flame_bg_left:
 
-	jsr	hgr_copy_left
-
-	rts
+	lda	#1
+	sta	FLAME_DELAY
+	jmp	hgr_copy_left		; tail call
 
 flame_bg_clear:
 
@@ -249,15 +255,13 @@ draw_flame_small_common:
 	sta	MASKH
 
 	txa
-;	lda	#8
 	sta	SPRITE_X
 
 	lda	#152
 	sta	SPRITE_Y
 
-	jsr	hgr_draw_sprite_big_mask
+	jmp	hgr_draw_sprite_big_mask	; tail call
 
-	rts
 
 	;===============================
 	; draw_flame_tall
@@ -292,16 +296,13 @@ draw_flame_tall_2:
 
 draw_left_flame_common:
 
-;	lda	#8
 	txa
 	sta	SPRITE_X
 
 	lda	#54
 	sta	SPRITE_Y
 
-	jsr	hgr_draw_sprite_big_mask
-
-	rts
+	jmp	hgr_draw_sprite_big_mask	; tail call
 
 
 	;===================================
@@ -311,16 +312,16 @@ draw_twin_flames_tall_1:
 	ldx	#4
 	jsr	draw_flame_tall_1
 	ldx	#28
-	jsr	draw_flame_tall_2
-	rts
+	jmp	draw_flame_tall_2	; tail call
+
 
 draw_twin_flames_tall_2:
 
 	ldx	#4
 	jsr	draw_flame_tall_2
 	ldx	#28
-	jsr	draw_flame_tall_1
-	rts
+	jmp	draw_flame_tall_1	; tail call
+
 
 
 	;===================================
@@ -330,5 +331,5 @@ draw_twin_flames_low:
 	ldx	#4
 	jsr	draw_flame_small_1
 	ldx	#28
-	jsr	draw_flame_small_2
-	rts
+	jmp	draw_flame_small_2	; tail call
+

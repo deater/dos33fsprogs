@@ -134,6 +134,7 @@ ANIMATE_COUNT	= $F5
 FLAME_L		= $F6
 FLAME_R		= $F7
 FLAME_BG	= $F8
+FLAME_DELAY	= $F9
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers
