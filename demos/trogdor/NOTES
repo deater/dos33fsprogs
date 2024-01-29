@@ -134,18 +134,13 @@ Space:
 	$0300-$0369 = preshift table
 	$0400-$07FF = text/lores PAGE1
 	$0800-$08ff = QBOOT (can be over-written)
+					; need 1623 for strongbad ($657)
 	$0900-$0BFF = text/lores PAGE2 (empty)
 	$0C00-$0FFF = appears empty?
 	$1000-$11FF = QBOOT_STAGE2
-	$1200-$188A = QLOAD			($68A, 1676)
-						($b12, 2834)
-	$1200-$1D12 = QLOAD
-					; need 1623 for strongbad ($657)
-	$1C00-$1CFF = mod7_table
-	$1D00-$1DFF = div7_table
+	$1200-$1D12 = QLOAD		($b12, 2834)
 	$1E00-$1EFF = hposn_low
 	$1F00-$2000 = hposn_high
-
 	$2000-$3FFF = page1 (8k)
 	$4000-$5fff = page2 (8k)
 	$6000-$7fff = off-screen draw (8k)

@@ -164,27 +164,27 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte 1			; COUNTRYSIDE
+	.byte 1,1		; COUNTRYSIDE, STRONGBAD
 
 load_address_array:
 	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte $FA		; COUNTRYSIDE
+	.byte $FA,$09		; COUNTRYSIDE, STRONGBAD
 
 start_address:
 	.byte $D0,$80,$40,$E3	; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte $FA		; COUNTRYSIDE
+	.byte $FA,$09		; COUNTRYSIDE, STRONGBAD
 
 track_array:
 	.byte 4,12,11,6		; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte 8			; COUNTRYSIDE
+	.byte 8, 9		; COUNTRYSIDE, STRONGBAD
 
 sector_array:
 	.byte 0,0,0,0		; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte 0			; COUNTRYSIDE
+	.byte 0,0		; COUNTRYSIDE, STRONGBAD
 
 length_array:
 	.byte 32,64,32,24	; MUSIC, TROGDOR, TITLE, FLAMES
-	.byte 5			; COUNTRYSIDE
+	.byte 5, 7		; COUNTRYSIDE, STRONGBAD
 
 PT3_ENABLE_APPLE_IIC = 1
 
@@ -205,12 +205,10 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 
-mod7_table      = $1c00
-div7_table      = $1d00
 hposn_low       = $1e00
 hposn_high      = $1f00
 
-        .include        "hgr_table.s"
+        .include "hgr_table.s"
 	.include "hgr_sprite_big_mask.s"
 	.include "horiz_scroll_simple.s"
 	.include "horiz_scroll_skip.s"

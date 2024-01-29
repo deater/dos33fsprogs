@@ -203,6 +203,19 @@ load_countryside:
 	jsr     load_file
 
 
+	;=======================
+	;=======================
+	; Load STRONGBAD
+	;=======================
+	;=======================
+load_strongbad:
+
+	; load from disk
+
+	lda     #5		; COUNTRYSIDE
+	sta     WHICH_LOAD
+	jsr     load_file
+
 
 	;=======================
 	;=======================
