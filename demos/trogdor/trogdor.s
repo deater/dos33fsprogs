@@ -537,7 +537,7 @@ country_flames:
 
 	dec	ANIMATE_COUNT
 	bne	country_flames
-.endif
+
 
 	;======================================
 	; draw SCENE 9
@@ -634,6 +634,8 @@ up_down_animate:
 	jsr	wait_ticks
 	dec	ANIMATE_COUNT
 	bne	up_down_animate
+
+
 
 	;======================================
 	; draw SCENE 11
@@ -739,7 +741,7 @@ scroll_in_loop2:
 	lda	#10
 	jsr	wait_ticks
 
-
+.endif
 	;======================================
 	; draw SCENE 13
 	;======================================
@@ -770,6 +772,126 @@ scroll_in_loop2:
 	; low flames, tall flames at edges
 	;	60 frames as cottage comes in upside down from top
 	; 6 frames of that
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	jsr	draw_twin_flames_low
+	jsr	hgr_page_flip
+
+	lda	#2
+	jsr	wait_ticks
+
+	;======================
+	; scroll in upside down
+
+
+	lda	#0
+	sta	COUNT
+scroll_down_loop:
+
+	ldy	#$7f
+	jsr	hgr_clear_screen
+
+	;============================
+	; draw COUNT...0 ($6000) to 0...COUNT (DRAW_PAGE)
+	;	IN			OUT
+
+	ldx	COUNT			; in ptr
+	ldy	#0			; out ptr
+scroll_down_cottage_outer:
+
+	lda	hposn_low,Y
+	sta	OUTL
+	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	lda	hposn_low,X
+	clc
+	adc	#10			; right side
+	sta	INL
+	lda	hposn_high,X
+	clc
+	adc	#$40			; $6000
+	sta	INH
+
+	tya
+	pha
+
+	ldy	#29
+scroll_down_cottage_inner:
+	lda	(INL),Y
+	sta	(OUTL),Y
+	dey
+	cpy	#9
+	bne	scroll_down_cottage_inner
+
+	pla
+	tay
+
+	iny
+	dex
+	cpx	#$FF
+	bne	scroll_down_cottage_outer
+
+.if 0
+	;============================
+	; draw COUNT...192 as white (not needed? keeps frame rate const?)
+
+	ldx	COUNT
+scroll_down_white_outer:
+
+	lda	hposn_low,X
+	sta	OUTL
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	lda	#$7f
+	ldy	#29
+scroll_down_white_inner:
+	sta	(OUTL),Y
+	dey
+	cpy	#9
+	bne	scroll_down_white_inner
+
+	inx
+	cpx	#192
+	bne	scroll_down_white_outer
+.endif
+	;============================
+	; draw flames
+
+	lda	COUNT		; 0x08
+	and	#$08
+	bne	upside_down_flame_2
+
+upside_down_flame_1:
+	jsr	draw_twin_flames_tall_1
+	jmp	done_upside_down_flame
+upside_down_flame_2:
+	jsr	draw_twin_flames_tall_2
+done_upside_down_flame:
+
+	jsr	hgr_page_flip
+	lda	COUNT
+	clc
+	adc	#8
+	sta	COUNT
+
+	cmp	#192
+	bne	scroll_down_loop
+
+	;================================
+	; done
+
+	lda	#10
+	jsr	wait_ticks
+
+
 
 ; TODO
 
