@@ -217,6 +217,11 @@ hposn_high      = $1f00
 	.include "hgr_copy_magnify.s"
 	.include "vertical_scroll.s"
 	.include "hgr_copy_part.s"
+	.include "vertical_scroll_down.s"
+
+	.include "flames.inc"
+	.include "do_flames.s"
+	.include "irq_wait.s"
 
 qload_end:
 

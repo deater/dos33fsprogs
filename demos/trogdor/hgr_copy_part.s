@@ -46,3 +46,42 @@ hgr_copy_inner_loop:
 
 	rts					; 6
 
+
+	;=========================================
+	; hgr_copy_right
+	;=========================================
+	; copy right side of $6000 to current page
+hgr_copy_right:
+	lda	#0
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_X1
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jmp	hgr_copy_part		; tail call
+
+
+	;=========================================
+	; hgr_copy_left
+	;=========================================
+	; copy left side of $6000 to current page
+hgr_copy_left:
+	lda	#0
+	sta	COPY_X1
+	sta	COPY_Y1
+	sta	SPRITE_Y
+	lda	#10
+	sta	SPRITE_X
+	lda	#20
+	sta	COPY_WIDTH
+	lda	#191
+	sta	COPY_Y2
+
+	jmp	hgr_copy_part		; tail call
+

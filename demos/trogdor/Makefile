@@ -43,8 +43,8 @@ qload.o:	zp.inc hardware.inc music.inc qload.s \
 	hgr_copy_magnify.s \
 	vertical_scroll.s \
 	hgr_copy_part.s \
-	gr_offsets.s \
-	wait.s wait_a_bit.s \
+	gr_offsets.s vertical_scroll_down.s \
+	wait.s wait_a_bit.s do_flames.s \
 	lc_detect.s \
 	hgr_clear_screen.s hgr_copy_fast.s \
 	text_print.s start.s \
@@ -54,25 +54,6 @@ qload.o:	zp.inc hardware.inc music.inc qload.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
 	ca65 -o qload.o qload.s -l qload.lst
-
-####
-
-QLOAD2:	qload2.o
-	ld65 -o QLOAD2 qload2.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
-
-qload2.o:	qload2.s \
-	zp.inc hardware.inc music2.inc \
-	gr_offsets.s \
-	wait.s wait_a_bit.s \
-	lc_detect.s gr_fast_clear.s \
-	text_print.s start2.s \
-	hardware_detect.s \
-	hgr_table.s \
-	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
-	pt3_lib_mockingboard_setup.s interrupt_handler.s \
-	pt3_lib_mockingboard_patch.s
-	ca65 -o qload2.o qload2.s -l qload2.lst
-
 
 ####
 
@@ -105,6 +86,16 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_vertical_scroll_left qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s horiz_pan_skip qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_copy_magnify qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vertical_scroll_down_left qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_copy_right qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_copy_left qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s do_flames qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_twin_flames_tall_2 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_twin_flames_tall_1 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_twin_flames_low qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_flame_tall_1 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_flame_tall_2 qload.lst >> qload.inc
 
 ####
 

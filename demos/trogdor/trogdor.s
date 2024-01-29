@@ -6,6 +6,9 @@
 .include "music.inc"
 .include "flames.inc"
 
+hposn_low       = $1e00
+hposn_high      = $1f00
+
 trogdor_main:
 
 	;======================================
@@ -77,7 +80,6 @@ trog_no_music:
 
 	jsr	hgr_page_flip
 
-.if 0
 	;======================================
 	; draw SCENE 2
 	;======================================
@@ -741,7 +743,7 @@ scroll_in_loop2:
 	lda	#10
 	jsr	wait_ticks
 
-.endif
+
 	;======================================
 	; draw SCENE 13
 	;======================================
@@ -891,9 +893,6 @@ done_upside_down_flame:
 	lda	#10
 	jsr	wait_ticks
 
-
-
-; TODO
 
 	;======================================
 	; draw SCENE 15
@@ -1122,7 +1121,7 @@ trog04_graphics:
 
 
 .include "wait_keypress.s"
-.include "irq_wait.s"
+;.include "irq_wait.s"
 
 
 peasant_data_x1:
@@ -1138,18 +1137,9 @@ peasant_data_sprite_x:
 peasant_data_sprite_y:
 	.byte	92, 30, 91,  2,  8
 
-hposn_low       = $1e00
-hposn_high      = $1f00
+;	.include "do_flames.s"
 
-;.include "hgr_sprite_big_mask.s"
-;.include "horiz_scroll_simple.s"
-;.include "horiz_scroll_skip.s"
-;.include "hgr_copy_magnify.s"
-;.include "vertical_scroll.s"
-;.include "hgr_copy_part.s"
-
-	.include "vertical_scroll_down.s"
-	.include "do_flames.s"
+.if 0
 
 	;=========================================
 	; hgr_copy_right
@@ -1189,7 +1179,7 @@ hgr_copy_left:
 
 	jmp	hgr_copy_part		; tail call
 
-
+.endif
 	;==========================
 	; man flames
 

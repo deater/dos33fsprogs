@@ -138,7 +138,9 @@ Space:
 	$0C00-$0FFF = appears empty?
 	$1000-$11FF = QBOOT_STAGE2
 	$1200-$188A = QLOAD			($68A, 1676)
-	
+						($b12, 2834)
+	$1200-$1D12 = QLOAD
+					; need 1623 for strongbad ($657)
 	$1C00-$1CFF = mod7_table
 	$1D00-$1DFF = div7_table
 	$1E00-$1EFF = hposn_low
