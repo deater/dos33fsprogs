@@ -115,6 +115,33 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s mute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
+	./generate_common -a 0xd000 -s disable_irq_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s disable_irq_smc1 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc6 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc5 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc4 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc3 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s setup_irq_smc1 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc6 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc5 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc4 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc3 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s write_ay_smc1 music.lst >> music.inc
+	./generate_common -a 0xd000 -s reset_ay_smc4 music.lst >> music.inc
+	./generate_common -a 0xd000 -s reset_ay_smc3 music.lst >> music.inc
+	./generate_common -a 0xd000 -s reset_ay_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s reset_ay_smc1 music.lst >> music.inc
+	./generate_common -a 0xd000 -s mock_init_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s mock_init_smc1 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc7 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc6 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc5 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc4 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc3 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc2 music.lst >> music.inc
+	./generate_common -a 0xd000 -s pt3_irq_smc1 music.lst >> music.inc
 
 ####
 

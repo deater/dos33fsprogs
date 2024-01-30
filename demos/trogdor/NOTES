@@ -160,3 +160,9 @@ dragonman:
 
 TODO:
 	always call clear screen before left/right copy?
+
+
+
+patcher:
+	mockingboard_init
+	to done_pt3_irq_handler

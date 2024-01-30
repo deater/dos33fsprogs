@@ -48,7 +48,7 @@ restart:
 	lda	SOUND_STATUS
 	beq	skip_mbp1
 
-        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+	jsr	mockingboard_patch      ; patch to work in slots other than 4?
 
 skip_mbp1:
 

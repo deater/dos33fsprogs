@@ -21,6 +21,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include "pt3_lib_mockingboard_setup.s"
 	.include "interrupt_handler.s"
 	.include "pt3_lib_mockingboard_detect.s"
+;	.include "pt3_lib_mockingboard_patch.s"
 
 
 ; only load one music track, self modify to make other

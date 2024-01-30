@@ -5,70 +5,74 @@
 ; this is the brute force version, we have to patch 39 locations
 ; see further below if you want to try a smaller, more dangerous, patch
 
-.if 0
+
 mockingboard_patch:
 
 	lda	MB_ADDR_H
 
-	sta	pt3_irq_smc1+2		; 1
+	sta	pt3_irq_smc1+2		; 1 *
 
-	sta	pt3_irq_smc2+2		; 2
-	sta	pt3_irq_smc2+5		; 3
+	sta	pt3_irq_smc2+2		; 2 *
+	sta	pt3_irq_smc2+5		; 3 *
 
-	sta	pt3_irq_smc3+2		; 4
-	sta	pt3_irq_smc3+5		; 5
+	sta	pt3_irq_smc3+2		; 4 *
+	sta	pt3_irq_smc3+5		; 5 *
 
-	sta	pt3_irq_smc4+2		; 6
-	sta	pt3_irq_smc4+5		; 7
+	sta	pt3_irq_smc4+2		; 6 *
+	sta	pt3_irq_smc4+5		; 7 *
 
-	sta	pt3_irq_smc5+2		; 8
-	sta	pt3_irq_smc5+5		; 9
+	sta	pt3_irq_smc5+2		; 8 *
+	sta	pt3_irq_smc5+5		; 9 *
 
-	sta	pt3_irq_smc6+2		; 10
-	sta	pt3_irq_smc6+5		; 11
+	sta	pt3_irq_smc6+2		; 10 *
+	sta	pt3_irq_smc6+5		; 11 *
 
-	sta	pt3_irq_smc7+2		; 12
-	sta	pt3_irq_smc7+5		; 13
+	sta	pt3_irq_smc7+2		; 12 *
+	sta	pt3_irq_smc7+5		; 13 *
 
-	sta	mock_init_smc1+2	; 14
-	sta	mock_init_smc1+5	; 15
+	sta	mock_init_smc1+2	; 14 *
+	sta	mock_init_smc1+5	; 15 *
 
-	sta	mock_init_smc2+2	; 16
-	sta	mock_init_smc2+5	; 17
+	sta	mock_init_smc2+2	; 16 *
+	sta	mock_init_smc2+5	; 17 *
 
-	sta	reset_ay_smc1+2		; 18
-	sta	reset_ay_smc2+2		; 19
-	sta	reset_ay_smc3+2		; 20
-	sta	reset_ay_smc4+2		; 21
+	sta	reset_ay_smc1+2		; 18 *
+	sta	reset_ay_smc2+2		; 19 *
+	sta	reset_ay_smc3+2		; 20 *
+	sta	reset_ay_smc4+2		; 21 *
 
-	sta	write_ay_smc1+2		; 22
-	sta	write_ay_smc1+5		; 23
+	sta	write_ay_smc1+2		; 22 *
+	sta	write_ay_smc1+5		; 23 *
 
-	sta	write_ay_smc2+2		; 24
-	sta	write_ay_smc2+5		; 25
+	sta	write_ay_smc2+2		; 24 *
+	sta	write_ay_smc2+5		; 25 *
 
-	sta	write_ay_smc3+2		; 26
-	sta	write_ay_smc3+5		; 27
+	sta	write_ay_smc3+2		; 26 *
+	sta	write_ay_smc3+5		; 27 *
 
-	sta	write_ay_smc4+2		; 28
-	sta	write_ay_smc4+5		; 29
+	sta	write_ay_smc4+2		; 28 *
+	sta	write_ay_smc4+5		; 29 *
 
-	sta	write_ay_smc5+2		; 30
-	sta	write_ay_smc5+5		; 31
+	sta	write_ay_smc5+2		; 30 *
+	sta	write_ay_smc5+5		; 31 *
 
-	sta	write_ay_smc6+2		; 32
-	sta	write_ay_smc6+5		; 33
+	sta	write_ay_smc6+2		; 32 *
+	sta	write_ay_smc6+5		; 33 *
 
-	sta	setup_irq_smc1+2	; 34
-	sta	setup_irq_smc2+2	; 35
-	sta	setup_irq_smc3+2	; 36
-	sta	setup_irq_smc4+2	; 37
-	sta	setup_irq_smc5+2	; 38
-	sta	setup_irq_smc6+2	; 39
+	sta	setup_irq_smc1+2	; 34 *
+	sta	setup_irq_smc2+2	; 35 *
+	sta	setup_irq_smc3+2	; 36 *
+	sta	setup_irq_smc4+2	; 37 *
+	sta	setup_irq_smc5+2	; 38 *
+	sta	setup_irq_smc6+2	; 39 *
+
+	sta	disable_irq_smc1+2	; 40 *
+	sta	disable_irq_smc2+2	; 41 *
 
 	rts
-.endif
 
+
+.if 0
 ;===================================================================
 ; dangerous code to patch mockingboard if not in slot#4
 ;===================================================================
@@ -119,3 +123,4 @@ mb_patch_done:
 	stx	MB_ADDR_H	; restore slot for later
 	rts
 
+.endif
