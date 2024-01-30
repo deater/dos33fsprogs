@@ -197,11 +197,11 @@ load_trogdor:
 
 	jsr	move_and_print
 
+	; do blue flames
 
-	jsr	wait_until_keypress
+	bit	KEYRESET
 
-
-
+	jsr	flames
 
 
 	;===================
@@ -216,6 +216,7 @@ restart:
 
 	lda	#0
 	sta	DONE_PLAYING
+	sta	DRAW_PAGE
 
 	lda	#0
 	sta	LOOP
@@ -342,3 +343,4 @@ trog_message2:
 .include "pt3_lib_mockingboard_patch.s"
 
 .include "hardware_detect.s"
+.include "flame.s"

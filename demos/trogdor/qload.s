@@ -213,7 +213,7 @@ hposn_high      = $1f00
 	.include "horiz_scroll_simple.s"
 	.include "horiz_scroll_skip.s"
 	.include "hgr_copy_magnify.s"
-	.include "vertical_scroll.s"
+;	.include "vertical_scroll.s"
 	.include "hgr_copy_part.s"
 	.include "vertical_scroll_down.s"
 
@@ -223,4 +223,4 @@ hposn_high      = $1f00
 
 qload_end:
 
-.assert (>qload_end - >qload_start) < $e , error, "loader too big"
+.assert (>qload_end - >qload_start) < $c , error, "loader too big"

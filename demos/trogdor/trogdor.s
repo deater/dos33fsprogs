@@ -1132,9 +1132,13 @@ finished:
 	jsr	wait_ticks
 
 wait_till_done:
+	lda	SOUND_STATUS
+	beq	finished_no_mb
+
 	lda	DONE_PLAYING
 	beq	wait_till_done
 
+finished_no_mb:
 	rts
 
 
@@ -1150,8 +1154,6 @@ trog03_graphics:
 trog04_graphics:
 .incbin "graphics/actual02_updown_cottage.hgr.zx02"
 
-
-.include "wait_keypress.s"
 
 
 
@@ -1255,3 +1257,9 @@ common_cottage:
 	jsr	wait_ticks
 
 	rts
+
+
+;.include "wait_keypress.s"
+
+;.include "hgr_copy_part.s"
+.include "vertical_scroll.s"

@@ -1,3 +1,4 @@
+.if 0
 clear_screens:
 	;===================================
 	; Clear top/bottom of page 0
@@ -18,7 +19,7 @@ clear_screens:
 	jsr	clear_bottom
 
 	rts
-
+.endif
 
 
 

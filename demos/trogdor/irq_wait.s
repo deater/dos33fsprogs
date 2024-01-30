@@ -1,3 +1,4 @@
+.if 0
 	;============================
 	; wait for music pattern
 	; also check for keypress
@@ -58,13 +59,19 @@ done_check_pattern_done:
 done_check_timeout_done:
 	sec
 	rts
-
+.endif
 
 	;==========================
 	; busy wait A * 1 50Hz tick
 	;==========================
 wait_ticks:
-        sta     IRQ_COUNTDOWN
+	ldx	SOUND_STATUS
+	bne	mockingboard_wait
+
+	jmp	wait
+
+mockingboard_wait:
+	sta     IRQ_COUNTDOWN
 wait_tick_loop:
 	lda	IRQ_COUNTDOWN
 	bne	wait_tick_loop
@@ -72,6 +79,7 @@ wait_tick_done:
 	rts
 
 
+.if 0
 	;====================
 	; busy wait A seconds
 	;====================
@@ -92,3 +100,4 @@ wait_seconds_loop:
 wait_seconds_done:
 	bit	KEYRESET
 	rts
+.endif
