@@ -8,8 +8,14 @@
 
 	; screens to pan in $2000/$4000 to left
 
+horiz_pan_skip_short:
+	; value in A
+	jmp	horiz_pan_skip_common
 
 horiz_pan_skip:
+	lda	#36
+horiz_pan_skip_common:
+	sta	horiz_pan_end_smc+1
 
 pan_skip_loop:
 
@@ -126,6 +132,7 @@ pil_out_smc5:
 	inc	COUNT
 
 	lda	COUNT
+horiz_pan_end_smc:
 	cmp	#36
 
 	bne	pan_skip_outer_outer_loop

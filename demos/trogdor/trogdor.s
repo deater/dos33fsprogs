@@ -513,7 +513,7 @@ long_tall:
 	; o/~ Burninating the... o/~
 
 
-	lda	#7
+	lda	#6
 	sta	ANIMATE_COUNT
 country_flames:
 
@@ -590,11 +590,13 @@ country_flames:
 
 	jsr	horiz_pan_skip
 
+
 	; clear to white
 	ldy	#$7f
 	jsr	hgr_clear_screen
 
-	jsr	horiz_pan_skip
+	lda	#20
+	jsr	horiz_pan_skip_short
 
 	jsr	hgr_page_flip
 
@@ -638,11 +640,11 @@ country_flames:
 	;======================
 	; animate
 
-	lda	#12
+	lda	#8
 	sta	ANIMATE_COUNT
 up_down_animate:
 	jsr	hgr_page_flip
-	lda	#10
+	lda	#7
 	jsr	wait_ticks
 	dec	ANIMATE_COUNT
 	bne	up_down_animate
@@ -702,7 +704,7 @@ peasant_inner_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#20
+	lda	#10
 	jsr	wait_ticks
 
 	inc	COUNT
@@ -710,7 +712,7 @@ peasant_inner_loop:
 	cmp	#6
 	bne	peasant_outer_loop
 
-	lda	#25
+	lda	#10
 	jsr	wait_ticks
 
 
@@ -727,9 +729,9 @@ peasant_inner_loop:
 	jsr	hgr_clear_screen
 	jsr	hgr_page_flip
 
-	ldy	#$7f
-	jsr	hgr_clear_screen
-	jsr	hgr_page_flip
+;	ldy	#$7f
+;	jsr	hgr_clear_screen
+;	jsr	hgr_page_flip
 
 	lda	#<trog04_graphics
 	sta	zx_src_l+1
@@ -752,8 +754,8 @@ scroll_in_loop2:
 	cmp	#200
 	bne	scroll_in_loop2
 
-	lda	#10
-	jsr	wait_ticks
+;	lda	#10
+;	jsr	wait_ticks
 
 
 	;======================================
@@ -777,13 +779,13 @@ scroll_in_loop2:
 	jsr	down_cottage
 	jsr	up_cottage
 	jsr	down_cottage
-	jsr	up_cottage
-	jsr	down_cottage
+;	jsr	up_cottage
+;	jsr	down_cottage
 
 	;======================================
 	; draw SCENE 14
 	;======================================
-	; o/~ Thached roof cottages o/~
+	; o/~ Thatched roof cottages o/~
 	; 1479
 	; low flames, tall flames at edges
 	;	60 frames as cottage comes in upside down from top
@@ -795,7 +797,7 @@ scroll_in_loop2:
 	jsr	draw_twin_flames_low
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	#1
 	jsr	wait_ticks
 
 	;======================
@@ -898,14 +900,14 @@ done_upside_down_flame:
 	adc	#8
 	sta	COUNT
 
-	cmp	#192
+	cmp	#176
 	bne	scroll_down_loop
 
 	;================================
 	; done
 
-	lda	#10
-	jsr	wait_ticks
+;	lda	#10
+;	jsr	wait_ticks
 
 
 	;======================================
@@ -937,8 +939,8 @@ done_upside_down_flame:
 
 	jsr	hgr_page_flip
 
-	lda	#5
-	jsr	wait_ticks
+;	lda	#2
+;	jsr	wait_ticks
 
 	;==========================
 	; man
@@ -959,8 +961,8 @@ done_upside_down_flame:
 
 	jsr	hgr_page_flip
 
-	lda	#5
-	jsr	wait_ticks
+;	lda	#2
+;	jsr	wait_ticks
 
 	;===========================
 	; peasant
@@ -1070,7 +1072,7 @@ done_upside_down_flame:
 
 	jsr	hgr_page_flip
 
-	lda	#5
+	lda	#1
 	jsr	wait_ticks
 
 	;=======================
@@ -1081,7 +1083,7 @@ done_upside_down_flame:
 	jsr	hgr_copy_left
 	jsr	draw_twin_flames_tall_1
 	jsr	hgr_page_flip
-	lda	#5
+	lda	#2
 	jsr	wait_ticks
 
 	;=======================
@@ -1092,7 +1094,7 @@ done_upside_down_flame:
 	jsr	hgr_copy_left
 	jsr	draw_twin_flames_tall_2
 	jsr	hgr_page_flip
-	lda	#5
+	lda	#2
 	jsr	wait_ticks
 
 	;=======================
@@ -1103,7 +1105,7 @@ done_upside_down_flame:
 	jsr	hgr_copy_left
 	jsr	draw_twin_flames_tall_1
 	jsr	hgr_page_flip
-	lda	#5
+	lda	#2
 	jsr	wait_ticks
 
 
