@@ -3,7 +3,6 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
-
 trogdor_start:
 
 	;=====================
@@ -14,14 +13,8 @@ trogdor_start:
 
 	jsr	hgr_make_tables
 
-	;===================
-	; restart?
-	;===================
-restart:
-
 	lda	#0
 	sta	DRAW_PAGE
-
 
 	;==================================
 	; load music into the language card
@@ -37,44 +30,6 @@ restart:
 
 	jsr	load_file
 
-	lda	#0
-	sta	DONE_PLAYING
-
-	lda	#1
-	sta	LOOP
-
-	; patch mockingboard
-
-	lda	SOUND_STATUS
-	beq	skip_mbp1
-
-	jsr	mockingboard_patch      ; patch to work in slots other than 4?
-
-skip_mbp1:
-
-	;=======================
-	; Set up 50Hz interrupt
-	;========================
-
-	jsr	mockingboard_init
-	jsr	mockingboard_setup_interrupt
-
-	;============================
-	; Init the Mockingboard
-	;============================
-
-	jsr	reset_ay_both
-	jsr	clear_ay_both
-
-	;==================
-	; init song
-	;==================
-
-	jsr	pt3_init_song
-
-dont_enable_mc:
-
-skip_all_checks:
 
 	;============================
 	;============================
@@ -154,27 +109,11 @@ done_set_message:
 	jsr	move_and_print
 	jsr	move_and_print
 
-	; wait a bit, then change to credits
+	; wait a bit
 
-	lda	#50
-	jsr	wait_a_bit
+;	lda	#50
+;	jsr	wait_a_bit
 
-	lda	#<bottom_string1
-	sta	OUTL
-	lda	#>bottom_string1
-	sta	OUTH
-
-	; print the text
-
-	jsr	move_and_print
-
-	lda	#50
-	jsr	wait_a_bit
-
-
-	jsr	move_and_print
-
-	jsr	wait_until_keypress
 
 	;=======================
 	;=======================
@@ -201,6 +140,21 @@ load_countryside:
 	lda     #4		; COUNTRYSIDE
 	sta     WHICH_LOAD
 	jsr     load_file
+
+
+	;=============================
+	; change to credits
+	;=============================
+
+	lda	#<bottom_string1
+	sta	OUTL
+	lda	#>bottom_string1
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print
+
 
 
 	;=======================
@@ -230,49 +184,129 @@ load_trogdor:
 	sta     WHICH_LOAD
 	jsr     load_file
 
-	;=======================
-	;=======================
-	; Run intro
-	;=======================
-	;=======================
 
-;	cli			; start music
+
+
+;	lda	#50
+;	jsr	wait_a_bit
+
+
+	;============================================
+	; print the "press any key"
+
+
+	jsr	move_and_print
+
+
+	jsr	wait_until_keypress
+
+
+
+
+
+	;===================
+	; restart?
+	;===================
+restart:
+
+
+	;==========================
+	; setup music
+	;==========================
+
+	lda	#0
+	sta	DONE_PLAYING
+
+	lda	#0
+	sta	LOOP
+
+	; patch mockingboard
+
+	lda	SOUND_STATUS
+	beq	skip_mbp1
+
+	jsr	mockingboard_patch      ; patch to work in slots other than 4?
+
+skip_mbp1:
+
+	;=======================
+	; Set up 50Hz interrupt
+	;========================
+
+	jsr	mockingboard_init
+	jsr	mockingboard_setup_interrupt
+
+	;============================
+	; Init the Mockingboard
+	;============================
+
+	jsr	reset_ay_both
+	jsr	clear_ay_both
+
+	;==================
+	; init song
+	;==================
+
+	jsr	pt3_init_song
+
+dont_enable_mc:
+
+skip_all_checks:
+
+
+
+
+
+	;=======================
+	;=======================
+	; Run TROGDOR
+	;=======================
+	;=======================
 
 	jsr	$8000
 
+	;=======================
+	;=======================
+	; Print Message about Re-running
+	;=======================
+	;=======================
 
-
-
-;	bit	PAGE1			; be sure we're on PAGE1
+	bit	PAGE1			; be sure we're on PAGE1
+	lda	#0
+	sta	DRAW_PAGE
 
 	; clear text screen
-;	lda	#$A0
-;	sta	clear_all_color+1
-;	jsr	clear_all
+	lda	#$A0
+	sta	clear_all_color+1
+	jsr	clear_all
 
 	; switch to text/gr
-;	bit	TEXTGR
+	bit	TEXTGR
 
 	; print non-inverse
 
-;	jsr	set_normal
+	jsr	set_normal
 
-	; print messages
-;	lda	#<disk_change_string
-;	sta	OUTL
-;	lda	#>disk_change_string
-;	sta	OUTH
+	; print trog message
+	lda	#<trog_message
+	sta	OUTL
+	lda	#>trog_message
+	sta	OUTH
 
 	; print the text
 
-;	jsr	move_and_print
+	jsr	move_and_print
 
-;	bit	KEYRESET			; just to be safe
-;	jsr	wait_until_keypress
+	bit	KEYRESET			; just to be safe
+	jsr	wait_until_keypress
 
+	jsr	move_and_print
+
+	lda	#50
+	jsr	wait_a_bit
 
 forever:
-	jmp	forever
+	jmp	restart
 
 
 	.include	"wait_keypress.s"
@@ -288,9 +322,9 @@ title_string:
 
 
 bottom_string1:
-.byte	3,23," CODE BY DEATER, MUSIC BY TOM_FJM",0
+.byte	1,23,"CODE BY DEATER, MUSIC SCORE BY TOM_FJM",0
 bottom_string2:
-.byte	3,23,"    = PRESS ANY KEY TO START =    ",0
+.byte	1,23,"      = PRESS ANY KEY TO START =      ",0
 
 ;             0123456789012345678901234567890123456789
 mockingboard_string:
@@ -298,6 +332,12 @@ mockingboard_string:
 
 no_mockingboard_string:
 .byte   3,23,"NO MOCKINGBOARD, CONTINUING ANYWAY",0
+
+trog_message:
+.byte   11,20,"WATCH AGAIN (Y/N)?",0
+
+trog_message2:
+.byte   3,23,"TROGDOR CARES NOT FOR YOUR INPUT!!",0
 
 .include "pt3_lib_mockingboard_patch.s"
 

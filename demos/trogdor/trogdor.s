@@ -1126,11 +1126,16 @@ done_upside_down_flame:
 
 
 finished:
-	bit	KEYRESET
-	jsr	wait_until_keypress
-	jsr	hgr_page_flip
+	lda	#150
+	jsr	wait_ticks
+	lda	#150
+	jsr	wait_ticks
 
-	jmp	finished
+wait_till_done:
+	lda	DONE_PLAYING
+	beq	wait_till_done
+
+	rts
 
 
 trog00_graphics:
