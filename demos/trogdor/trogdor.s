@@ -393,7 +393,7 @@ scroll_down_in_loop:
 	; draw SCENE 7
 	;======================================
 	; o/~ Trogdor! o/~
-	
+
 	; 916
 	; dragonman, flames both low than high
 	;		ll1122
@@ -409,6 +409,7 @@ scroll_down_in_loop:
 
 	; dragonman low, off 4 frames
 
+	; in practice we can't draw this as fast as the original
 
 	;===============================
 	; dragonman with twin low flames
@@ -422,13 +423,13 @@ scroll_down_in_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#5
+	lda	#1
 	jsr	wait_ticks
 
 	;===============================
 	; dragonman 1122 10 times
 
-	lda	#10
+	lda	#2
 	sta	ANIMATE_COUNT
 long_tall:
 
@@ -449,10 +450,10 @@ long_tall:
 	jsr	man_flames
 	jsr	dman_flames
 	jsr	man_flames
-	jsr	dman_flames
-	jsr	man_flames
-	jsr	dman_flames
-	jsr	man_flames
+;	jsr	dman_flames
+;	jsr	man_flames
+;	jsr	dman_flames
+;	jsr	man_flames
 
 	;===============================
 	; dragonman low, 2 frames
@@ -466,7 +467,7 @@ long_tall:
 
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	#1
 	jsr	wait_ticks
 
 	;================================
@@ -479,8 +480,8 @@ long_tall:
 
 	jsr	hgr_page_flip
 
-	lda	#2
-	jsr	wait_ticks
+;	lda	#2
+;	jsr	wait_ticks
 
 
 	;======================================
@@ -504,13 +505,15 @@ long_tall:
 
 	jsr	hgr_page_flip
 
-	lda	#20
+	lda	#100
 	jsr	wait_ticks
 
-; 12 and 20?
+
+	;===============================
+	; o/~ Burninating the... o/~
 
 
-	lda	#16
+	lda	#7
 	sta	ANIMATE_COUNT
 country_flames:
 
@@ -524,8 +527,8 @@ country_flames:
 
 	jsr	hgr_page_flip
 
-	lda	#2
-	jsr	wait_ticks
+;	lda	#2
+;	jsr	wait_ticks
 
 	lda	#$60
 	jsr	hgr_copy_fast
@@ -538,8 +541,8 @@ country_flames:
 
 	jsr	hgr_page_flip
 
-	lda	#2
-	jsr	wait_ticks
+;	lda	#2
+;	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
 	bne	country_flames
@@ -548,6 +551,7 @@ country_flames:
 	;======================================
 	; draw SCENE 9
 	;======================================
+	; o/~ peasants o/~
 	; 1171
 	; big peasant head scrolling in right to left (also going down?)
 	;	roughly 60 frames
@@ -567,11 +571,12 @@ country_flames:
 	jsr	hgr_clear_screen
 	jsr	hgr_page_flip
 
-; URGH
 	ldy	#$7f
 	jsr	hgr_clear_screen
+;	jsr	hgr_page_flip
 
-	jsr	hgr_page_flip
+	; want to be on PAGE2 here, how to force?
+
 
 	; copy+magnify to PAGE2
 
@@ -596,6 +601,7 @@ country_flames:
 	;======================================
 	; draw SCENE 10
 	;======================================
+	; o/~ Burninating all the o/~
 	; 1229
 	; zoom trogdor down 5 frames
 	; zoom trogdor up 5 frames
@@ -646,6 +652,7 @@ up_down_animate:
 	;======================================
 	; draw SCENE 11
 	;======================================
+	; o/~ People in their o/~
 	; 1284
 	;
 	; Uncover peasants, 5 frames each
@@ -710,6 +717,7 @@ peasant_inner_loop:
 	;======================================
 	; draw SCENE 12
 	;======================================
+	; o/~ thatched roof cot... o/~
 	; white screen
 	; scroll up cottage, takes roughly 90 frames (3s)
 
@@ -751,6 +759,7 @@ scroll_in_loop2:
 	;======================================
 	; draw SCENE 13
 	;======================================
+	; o/~ ...tages o/~
 	; 1429
 	; trog down, 5 frames
 	; cottage , 5 frames
@@ -774,6 +783,7 @@ scroll_in_loop2:
 	;======================================
 	; draw SCENE 14
 	;======================================
+	; o/~ Thached roof cottages o/~
 	; 1479
 	; low flames, tall flames at edges
 	;	60 frames as cottage comes in upside down from top
@@ -901,6 +911,7 @@ done_upside_down_flame:
 	;======================================
 	; draw SCENE 15
 	;======================================
+	; o/~ ... o/~
 	; 1561
 	; zoom down 5
 	; man 7
@@ -1099,6 +1110,7 @@ done_upside_down_flame:
 	;======================================
 	; draw SCENE 16
 	;======================================
+	; o/~ and the trogdor comes in the night o/~
 	; strongbad at computer
 
 	lda	#<$900
@@ -1176,8 +1188,8 @@ dman_flames_common:
 
 	jsr	hgr_page_flip
 
-	lda	#1
-	jsr	wait_ticks
+;	lda	#1
+;	jsr	wait_ticks
 
 	ldy	#$7f
 	jsr	hgr_clear_screen
@@ -1188,8 +1200,8 @@ dman_flames_common:
 
 	jsr	hgr_page_flip
 
-	lda	#1
-	jsr	wait_ticks
+;	lda	#1
+;	jsr	wait_ticks
 
 	rts
 
