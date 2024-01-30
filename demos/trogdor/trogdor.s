@@ -47,6 +47,7 @@ trog_no_music:
 	;======================================
 	; draw SCENE 1
 	;======================================
+	; o/~ TRODOR! o/~
 
 	; scroll in zoomed in trogdor from right to left
 	; for 60 frames (roughly 2s)
@@ -128,6 +129,8 @@ trog_no_music:
 	;======================================
 	; draw SCENE 3
 	;======================================
+	; o/~ TROGDOR! o/~
+
 	; scroll trogdor intro place
 
 	; takes rougly 90 frames (3s) to scroll in
@@ -156,17 +159,7 @@ scroll_in_loop:
 	cmp	#200
 	bne	scroll_in_loop
 
-	lda	#30
-	jsr	wait_ticks
-
-
-	;======================================
-	; draw SCENE 4
-	;======================================
-	; countrside scrolls in
-	;	roughly 45 frames?  1.5s?
-	; only 9 bytes wide
-
+	; do this in advance
 	; decompress countryside to $2000
 
 	lda	#<trog01_graphics
@@ -175,6 +168,22 @@ scroll_in_loop:
 	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
+
+
+	lda	#10
+	jsr	wait_ticks
+
+
+	;======================================
+	; draw SCENE 4
+	;======================================
+	; o/~ Trogdor was a o/~
+
+	; countrside scrolls in
+	;	roughly 45 frames?  1.5s?
+	; only 9 bytes wide
+
+
 
 	; decompress second part to $4000
 
@@ -193,6 +202,7 @@ scroll_in_loop:
 	;======================================
 	; draw SCENE 5
 	;======================================
+	; o/~ man ... o/~
 	; 359
 	; 	trogdor man:	42 frames
 	;	flames: left: llll1122
@@ -246,6 +256,8 @@ scroll_in_loop:
 
 	;======================================
 	; dragon man
+	; o/~ I mean he was a dragon man o/~
+	; o/~ Maybe he was just a ... o/~
 
 	ldy	#$7f
 	jsr	hgr_clear_screen
@@ -265,15 +277,10 @@ scroll_in_loop:
 	;======================================
 	; draw SCENE 6
 	;======================================
+	; o/~ dragon, eh, but he was still  o/~
+
 	; 634
 	;	dragon:		150 frames (roughly 5s)
-	;	dragon zoom:	5 frames
-	;
-	;	dragon:		5 frames \
-	;	dragon zoom:	5 frames / repeat 6 times
-	; 	dragon zoom scroll off screen: 30 frames
-	;	white screen:	20 frames
-
 	;=======================================
 
 	ldy	#$7f
@@ -292,11 +299,25 @@ scroll_in_loop:
 
 	lda	#160
 	jsr	wait_ticks
-	lda	#90
+	lda	#100
 	jsr	wait_ticks
 
+
+	;======================================
+	; draw SCENE 6a
+	;======================================
+	; o/~ Trogdor!  o/~
 	;==========================
+	;	dragon zoom:	5 frames
 	; dragon zoom
+	;
+	;	dragon:		5 frames \
+	;	dragon zoom:	5 frames / repeat 6 times
+	; 	dragon zoom scroll off screen: 30 frames
+	;	white screen:	20 frames
+	; zoomed off screen by end of the Trogdor
+	;=======================================
+
 
 	lda	#0
 	sta	SPRITE_X
@@ -315,7 +336,7 @@ scroll_in_loop:
 rapid_switch:
 	jsr	hgr_page_flip
 
-	lda	#5
+	lda	#7
 	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
@@ -354,13 +375,25 @@ scroll_down_in_loop:
 
 	jsr	hgr_page_flip
 
-	lda	#20
-	jsr	wait_ticks
+	;=========================
+	; pre-load dragonman graphics
+
+	lda	#<trog03_graphics
+	sta	zx_src_l+1
+	lda	#>trog03_graphics
+	sta	zx_src_h+1
+	lda	#$60
+	jsr	zx02_full_decomp
+
+;	lda	#10
+;	jsr	wait_ticks
 
 
 	;======================================
 	; draw SCENE 7
 	;======================================
+	; o/~ Trogdor! o/~
+	
 	; 916
 	; dragonman, flames both low than high
 	;		ll1122
@@ -376,16 +409,6 @@ scroll_down_in_loop:
 
 	; dragonman low, off 4 frames
 
-
-	;=========================
-	; load dragonman graphics
-
-	lda	#<trog03_graphics
-	sta	zx_src_l+1
-	lda	#>trog03_graphics
-	sta	zx_src_h+1
-	lda	#$60
-	jsr	zx02_full_decomp
 
 	;===============================
 	; dragonman with twin low flames
@@ -410,30 +433,6 @@ scroll_down_in_loop:
 long_tall:
 
 	jsr	dman_flames
-
-;	ldy	#$7f
-;	jsr	hgr_clear_screen
-
-;	jsr	hgr_copy_right
-
-;	jsr	draw_twin_flames_tall_1
-
-;	jsr	hgr_page_flip
-
-;	lda	#2
-;	jsr	wait_ticks
-
-;	ldy	#$7f
-;	jsr	hgr_clear_screen
-
-;	jsr	hgr_copy_right
-
-;	jsr	draw_twin_flames_tall_2
-
-;	jsr	hgr_page_flip
-
-;	lda	#2
-;	jsr	wait_ticks
 
 	dec	ANIMATE_COUNT
 	bne	long_tall
@@ -487,6 +486,7 @@ long_tall:
 	;======================================
 	; draw SCENE 8
 	;======================================
+	; o/~ Burninating the countryside o/~
 	; 1009
 	; countryside for 75 frames
 	; then flames in middle low
@@ -1176,7 +1176,7 @@ dman_flames_common:
 
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	#1
 	jsr	wait_ticks
 
 	ldy	#$7f
@@ -1188,7 +1188,7 @@ dman_flames_common:
 
 	jsr	hgr_page_flip
 
-	lda	#2
+	lda	#1
 	jsr	wait_ticks
 
 	rts
