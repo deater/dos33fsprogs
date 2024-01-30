@@ -213,7 +213,7 @@ hposn_high      = $1f00
 	.include "horiz_scroll_simple.s"
 	.include "horiz_scroll_skip.s"
 	.include "hgr_copy_magnify.s"
-;	.include "vertical_scroll.s"
+	.include "vertical_scroll.s"
 	.include "hgr_copy_part.s"
 	.include "vertical_scroll_down.s"
 

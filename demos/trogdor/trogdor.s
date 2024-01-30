@@ -1262,4 +1262,4 @@ common_cottage:
 ;.include "wait_keypress.s"
 
 ;.include "hgr_copy_part.s"
-.include "vertical_scroll.s"
+;.include "vertical_scroll.s"

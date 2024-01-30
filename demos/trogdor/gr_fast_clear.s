@@ -19,7 +19,7 @@ clear_screens:
 	jsr	clear_bottom
 
 	rts
-.endif
+
 
 
 
@@ -75,7 +75,7 @@ no_draw_bottom:
 
 	rts								; 6
 
-
+.endif
 
 
 	;=========================================================

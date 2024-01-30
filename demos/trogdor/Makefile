@@ -83,8 +83,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_copy_part qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite_big_mask qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s horiz_pan qload.lst >> qload.inc
-#	./generate_common -a 0x1200 -s hgr_vertical_scroll_right qload.lst >> qload.inc
-#	./generate_common -a 0x1200 -s hgr_vertical_scroll_left qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vertical_scroll_right qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_vertical_scroll_left qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s horiz_pan_skip qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s horiz_pan_skip_short qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_copy_magnify qload.lst >> qload.inc
