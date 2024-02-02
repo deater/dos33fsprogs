@@ -71,9 +71,9 @@ draw_loop:
 	jsr	draw_sprite
 
 	ldx	#34
-	lda	#<companion_cube
+	lda	#<turret
 	sta	INL
-	lda	#>companion_cube
+	lda	#>turret
 	sta	INH
 	jsr	draw_sprite
 
@@ -81,9 +81,9 @@ draw_loop:
 	sta	draw_sprite_y_smc+1
 
 	ldx	#38
-	lda	#<companion_cube
+	lda	#<exit_sign
 	sta	INL
-	lda	#>companion_cube
+	lda	#>exit_sign
 	sta	INH
 	jsr	draw_sprite
 
@@ -156,6 +156,34 @@ companion_cube:
 	.byte	$07,$38			; .@@@.... ...@@@..
 	.byte	$6F,$3D			; .@@@@.@@ @.@@@@..
 	.byte	$00,$00
+
+turret:
+	.byte	$E0,$83			; .....@@ @@.....
+	.byte	$B0,$86			; ....@@. .@@....
+	.byte	$B0,$87			; ....@@= =@@....
+	.byte	$B0,$86			; ....@@. .@@....
+	.byte	$B0,$87			; ....@@= =@@....
+	.byte	$B0,$86			; ....@@. .@@....
+	.byte	$B0,$86			; ....@@. .@@....
+	.byte	$F0,$87			; ....@@@ @@@....
+	.byte	$8C,$98			; ..@@... ...@@..
+	.byte	$86,$B0			; .@@.... ....@@.
+	.byte	$86,$B0			; .@@.... ....@@.
+
+
+exit_sign:
+	.byte	$7F,$7F			; @@@@@@@ @@@@@@@
+	.byte	$1F,$7F			; @@@@@.. @@@@@@@
+	.byte	$3F,$7E			; @@@@@@. .@@@@@@
+	.byte	$7F,$7C			; @@@@@@@ ..@@@@@
+	.byte	$7F,$79			; @@@@@@@ @..@@@@
+	.byte	$03,$70			; @@..... ....@@@
+	.byte	$7F,$79			; @@@@@@@ @..@@@@
+	.byte	$7F,$7C			; @@@@@@@ ..@@@@@
+	.byte	$3F,$7E			; @@@@@@. .@@@@@@
+	.byte	$1F,$7F			; @@@@@.. @@@@@@@
+	.byte	$7F,$7F			; @@@@@@@@@@@@@@@
+
 
 
 	;==========================
