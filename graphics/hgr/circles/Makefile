@@ -10,7 +10,7 @@ all:	circles.dsk
 circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB ORB_TINY \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS HORROR \
 		MID.BAS MIDBOT.BAS MIDCOOL.BAS BRESTEST.BAS ARCS_BOT \
-		TUNNEL WEB2
+		TUNNEL SQUARES WEB2
 	cp $(EMPTY_DISK)/empty.dsk circles.dsk
 	$(DOS33) -y circles.dsk SAVE A HELLO
 	$(DOS33) -y circles.dsk SAVE A BRES.BAS
@@ -30,6 +30,7 @@ circles.dsk:	HELLO CIRCLES CIRCLES_FILL ARCS WEB PAC ORB ORB_TINY \
 	$(DOS33) -y circles.dsk BSAVE -a 0x03f5 HORROR
 	$(DOS33) -y circles.dsk BSAVE -a 0x9600 ARCS_BOT
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 TUNNEL
+	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 SQUARES
 	$(DOS33) -y circles.dsk BSAVE -a 0x0C00 WEB2
 
 ###
@@ -89,6 +90,15 @@ TUNNEL:	tunnel.o
 
 tunnel.o:	tunnel.s
 	ca65 -o tunnel.o tunnel.s -l tunnel.lst
+
+###
+
+SQUARES:	squares.o
+	ld65 -o SQUARES squares.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+squares.o:	squares.s
+	ca65 -o squares.o squares.s -l squares.lst
+
 
 ###
 
@@ -169,4 +179,5 @@ horror.o:	horror.s
 clean:	
 	rm -f *~ *.o *.lst CIRCLES ARCS WEB CIRCLES_FILL PAC ORB \
 		BRES.BAS BRESBOT.BAS BRESCOOL.BAS BRESTEST.BAS \
-		MID.BAS MIDBOT.BAS MIDCOOL.BAS ORB_TINY HORROR TUNNEL WEB2
+		MID.BAS MIDBOT.BAS MIDCOOL.BAS ORB_TINY HORROR TUNNEL \
+		SQUARES WEB2

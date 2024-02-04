@@ -1,0 +1,38 @@
+
+
+mockingboard_init.s
+	assume slot #4
+	only one channel
+	sets up interrupt handler
+tracker_init.s
+	clear mirror registers in ZP to 0
+	($70-$83?)
+	if any register always same, set it ($38 to mixer?)
+	
+
+play_frame.s
+	has amplitudes to rotate through on A/B channel
+	
+	; NNNNEEEC -- c=channel, e=end, n=note
+	; 16 notes, 8 lengths, 2 channels
+
+2024 Maze 02
+
+Volumes:
+
+Track0 
+	A:	D.C.A.9 if 4/8 long
+		D9 if 2 long
+
+	B:	9.5.4.3 if 4/8 long
+		95 if 2 long
+
+Track1:
+	A:	D.C.A.9 if 4/8 long
+		D9 if 2 long
+
+	B:	Either all F or
+
+		F.C.B.A if 4/8 long
+		FB if 2 long
+
