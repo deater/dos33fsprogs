@@ -1,29 +1,11 @@
-; this was a weird effect that turns out to be because we're linking
-; at the wrong address so it's just the effect when
-; TL/TH holds the values $A0 $A0
-
+; this is a pretty effect during sierpinski zoom
+; accidentally discovered when loading at the wrong address
+; so TL/TH was on text page1 and full of $a0 (space characters) in TL/TH
 
 ; sierpinski-like demo
 ; based on the code from Hellmood's Memories demo
 
 ; by Vince `deater` Weaver <vince@deater.net>
-
-; the simple sierpinski you more or less just plot
-;		X AND Y
-
-; Hellmood's you plot something more or less like
-; 	COLOR = ( (Y-(X*T)) & (X+(Y*T) ) & 0xf0
-; where T is an incrementing frame value
-
-; to get speed on 6502/Apple II we change the multiplies to
-; a series of 16-bit 8.8 fixed point adds
-
-; TODO:
-;	HPLOT timing
-;	MOVERIGHT timing
-;	MOVERIGHT MOVEDOWN timing
-;	LOOKUP TABLE timing
-
 
 ; zero page
 
@@ -59,21 +41,11 @@ PLOT1	= $F80E		;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 GBASCALC= $F847		;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 SETGR   = $FB40
 
-
-;.zeropage
-;h.globalzp T_L,T_H
-
 	;================================
 	; Clear screen and setup graphics
 	;================================
 sier:
 	jsr	HGR2		; set FULLGR, sets A=0
-
-
-;	lda	#$5b		; start with multiplier 0
-;	sta	T_L
-;	lda	#$41		; start with multiplier 0
-;	sta	T_H
 
 sier_outer:
 

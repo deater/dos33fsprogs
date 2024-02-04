@@ -1,0 +1,22 @@
+This was used for the blueflame music for demosplash2023
+
+mockingboard_init.s
+	assume slot #4
+	only one channel
+	sets up interrupt handler
+tracker_init.s
+	clear mirror registers in ZP to 0
+	($70-$83?)
+	if any register always same, set it ($38 to mixer?)
+	
+
+play_frame.s
+	has amplitudes to rotate through on A/B channel
+	
+	; NNNNNEEC -- c=channel, e=end, n=note
+	; 32 notes, 4 lengths, 2 channels
+
+
+Original tiny tracker6:
+	2 channels
+	
