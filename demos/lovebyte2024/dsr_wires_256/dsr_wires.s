@@ -8,7 +8,7 @@
 ; 247 bytes -- initial version
 ; 242 bytes -- optimize page flip
 ; 252 bytes -- add alternating logo/field
-
+;           -- inlining draw_box saves no bytes
 
 ; D0+ used by HGR routines
 
