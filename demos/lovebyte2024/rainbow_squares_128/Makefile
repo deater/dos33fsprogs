@@ -17,15 +17,14 @@ rainbow_squares.dsk:	HELLO RAINBOW_SQUARES
 submit:	rainbow_squares.zip
 
 rainbow_squares.zip:	RAINBOW_SQUARES rainbow_squares.s file_id.diz rainbow_squares.dsk
-	mkdir -p lovebyte2023_rainbow_squares
-	cp RAINBOW_SQUARES ./lovebyte2023_rainbow_squares
-	cp rainbow_squares.s ./lovebyte2023_rainbow_squares
-	cp file_id.diz ./lovebyte2023_rainbow_squares
-	cp rainbow_squares.dsk ./lovebyte2023_rainbow_squares
-	cp monitor.txt ./lovebyte2023_rainbow_squares
-	cp rainbow_squares_screen.png ./lovebyte2023_rainbow_squares
-	cp rainbow_squares_720p.mp4 ./lovebyte2023_rainbow_squares
-	zip -r rainbow_squares.zip lovebyte2023_rainbow_squares
+	mkdir -p lovebyte2024_rainbow_squares
+	cp RAINBOW_SQUARES ./lovebyte2024_rainbow_squares
+	cp rainbow_squares.s ./lovebyte2024_rainbow_squares
+	cp file_id.diz ./lovebyte2024_rainbow_squares
+	cp rainbow_squares.dsk ./lovebyte2024_rainbow_squares
+	cp rainbow_squares_screen.png ./lovebyte2024_rainbow_squares
+	cp rainbow_squares_720p.mp4 ./lovebyte2024_rainbow_squares
+	zip -r rainbow_squares.zip lovebyte2024_rainbow_squares
 
 ####
 

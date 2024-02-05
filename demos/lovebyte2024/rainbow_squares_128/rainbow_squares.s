@@ -16,6 +16,7 @@ COLOR		= $30
 HGR_X		= $E0
 HGR_Y		= $E2
 HGR_COLOR	= $E4
+HGR_PAGE	= $E6
 
 ;XX	=	$F7
 XX_TH	=	$F8
@@ -23,7 +24,7 @@ XX_TL	=	$F9
 ;YY	=	$FA
 YY_TH	=	$FB
 YY_TL	=	$FC
-FRAME	=	$FD
+WAIT_TIME=	$FD
 SAVED	=	$FF
 
 ; Soft switches
@@ -46,7 +47,6 @@ WAIT    = $FCA8                 ; delay 1/2(26+27A+5A^2) us
 	;================================
 rainbow_squares:
 	jsr	HGR		; set FULLGR, sets A=0,Y=0
-	sta	FRAME		; init frame
 
 rainbow_outer:
 	; Y=0 from both paths
@@ -109,7 +109,7 @@ rainbow_xloop:
 
 	beq	white
 black:
-	bit	$C030
+	bit	$C030			; make some noise
 	lda	#00	; black
 	.byte	$2C	; bit trick
 white:
@@ -132,7 +132,8 @@ white:
 	ldx	HGR_X
 
 	inx		; XX
-	cpx	#255
+;	cpx	#255
+;	bne	rainbow_xloop
 	bne	rainbow_xloop
 
 	iny		; YY
@@ -142,39 +143,39 @@ white:
 	; inc T
 	inc	T_L
 
-;	clc
-;	lda	T_L
-;blah_smc:
-;	adc	#1
-;	sta	T_L
-;	bcc	no_carry
-;	inc	T_H
-;no_carry:
-
 	; done frame
 
+	; only draw two frames
 
 
-	inc	FRAME
-	lda	FRAME
-	cmp	#2
-	beq	really_done
+
+	lda	HGR_PAGE	; see if on page2 yet
+	cmp	#$40
+	beq	really_done	; if so, skip to end
 
 	jsr	HGR2
+
 	; A/Y=0
 
-	beq	rainbow_outer	; what can we branch on?
+	beq	rainbow_outer	;
+
+reset_wait:
+	lda	#$D0
+	sta	WAIT_TIME
 
 really_done:
 
 	bit	PAGE1
 
-	lda	#200
+	lda	WAIT_TIME
 	jsr	WAIT
+
+	inc	WAIT_TIME
+	beq	reset_wait
 
 	bit	PAGE2
 
-	lda	#200
+	lda	WAIT_TIME
 	jsr	WAIT
 
 	beq	really_done	; bra
