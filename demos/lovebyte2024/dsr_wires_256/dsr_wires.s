@@ -5,6 +5,11 @@
 ; Lovebyte 2024
 
 
+; 247 bytes -- initial version
+; 242 bytes -- optimize page flip
+; 252 bytes -- add alternating logo/field
+
+
 ; D0+ used by HGR routines
 
 HGR_X		= $E0
@@ -41,11 +46,12 @@ hposn_high	= $8100
 
 wires:
 	jsr	HGR
+	sty	FRAME
 
 	;==========================
 	; make HGR lookup table
 
-	; Y=0 from before
+	; Y=0 from HGR
 table_loop:
         tya				; XPOS=(Y,X) YPOS=A
         jsr     HPOSN
@@ -57,24 +63,32 @@ table_loop:
 	sbc	#$20			; adjust to take off HGR_PAGE
         sta     hposn_high,Y
         iny
-;       cpy     #192                    ; what happens if we run 192..255?
-        bne     table_loop
+        bne     table_loop		; seems harmless to run 192..255?
+
 
 	jsr	HGR2		; clear screen PAGE2  A and Y 0 after
 
 reset_x:
+
+	; reset X
 	ldx	#$0
 
+
 switch_pages:
-	lda	HGR_PAGE
+
+	;==========================
+	; flip pages
+
+	lda	HGR_PAGE	; flip draw page
 	eor	#$60
 	sta	HGR_PAGE
-	cmp	#$40
-	bne	switch_page2
-	bit	PAGE1
-	jmp	outer_loop
-switch_page2:
-	bit	PAGE2
+
+	asl
+	asl
+	asl
+	rol
+	tay
+	lda	PAGE1,Y
 
 outer_loop:
 
@@ -155,11 +169,26 @@ noflo:
 
 	stx	TEMPX
 
+	inc	FRAME
+	lda	FRAME
+	and	#$10
+	beq	no_boxes
+
+	;====================
+	; draw box masks
+
+
 	ldx     #11
 draw_loop:
         jsr     draw_box
         dex
         bpl     draw_loop
+
+	;=====================
+	; done drawing boxes
+
+no_boxes:
+
 
 	ldx	TEMPX
 
@@ -175,10 +204,6 @@ odd_lookup:
 .byte	$AA,$AA,$AA, $AB,$AE,$BA,$EA
 
 
-;box_color_odd:
-;        .byte   $2A,$55,$AA,$7F,$7F,$7F,$60,$03,$E0
-;box_color_even:
-;        .byte   $55,$2A,$D5,$7F,$7F,$7F,$60,$03,$E0
 box_x1:
         .byte     0,  0,  3,  5, 11, 13, 13, 18, 16, 26, 31, 37
 box_y1:
