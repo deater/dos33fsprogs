@@ -1,14 +1,18 @@
-; Xdraw test
+; Spiraling Shape
 
-; use to prototype small xdraw effects
+; o/~ Down, Down, Down You Go o/~
 
 ; by Vince `deater` Weaver / DsR
+
+; Lovebyte 2024
 
 ; zero page locations
 GBASL		=	$26
 GBASH		=	$27
 HGR_SCALE	=	$E7
-HGR_ROTATION	=	$F9
+HGR_COLLISION	=	$EA
+
+HGR_ROTATION	=	$FE		; IMPORTANT! set this right!
 
 ; ROM locations
 HGR2		=	$F3D8
@@ -17,19 +21,15 @@ XDRAW0		=	$F65D
 XDRAW1		=	$F661
 HPLOT0		=	$F457
 
-xdraw_test:
-
+spiraling_shape:
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
-
-	iny
-;	sty	HGR_SCALE
-	sty	HGR_ROTATION
 
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
 
 tiny_loop:
+	bit	$C030
 	tay	; ldy #0		; A always 0 here
 	ldx	#140
 	lda	#96
@@ -41,8 +41,10 @@ tiny_loop:
 	ldx	#<our_shape		; load $E2DF
 	ldy	#>our_shape		;
 	inc	HGR_ROTATION
-	lda	HGR_ROTATION
-	and	#$7f
+
+	lda	#1		; HGR_ROTATION is HERE ($FE)
+
+	and	#$7f		; cut off before it gets too awful
 	sta	HGR_SCALE
 
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
@@ -55,5 +57,4 @@ tiny_loop:
 
 our_shape = $E2DF
 
-;our_shape:
-;.byte	$1a,$2d,$00
+

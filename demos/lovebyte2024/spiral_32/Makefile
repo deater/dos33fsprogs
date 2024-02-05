@@ -10,7 +10,7 @@ all:	spiral_32.dsk
 spiral_32.dsk:	HELLO SPIRAL_32
 	cp $(EMPTYDISK) spiral_32.dsk
 	$(DOS33) -y spiral_32.dsk SAVE A HELLO
-	$(DOS33) -y spiral_32.dsk BSAVE -a 0xc00 SPIRAL_32
+	$(DOS33) -y spiral_32.dsk BSAVE -a 0xe9 SPIRAL_32
 
 ###
 
@@ -38,7 +38,7 @@ HELLO:	hello.bas
 ###
 
 SPIRAL_32:	spiral_32.o
-	ld65 -o SPIRAL_32 spiral_32.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o SPIRAL_32 spiral_32.o -C $(LINKERSCRIPTS)/apple2_e7_zp.inc
 
 spiral_32.o:	spiral_32.s
 	ca65 -o spiral_32.o spiral_32.s -l spiral_32.lst
