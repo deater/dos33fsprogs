@@ -65,7 +65,7 @@ rainbow_yloop:
 	adc	T_L
 	sta	YY_TL
 	lda	YY_TH
-	adc	T_H
+	adc	#$A0		; T_H
 	sta	YY_TH
 
 	; reset XX to 0
@@ -92,7 +92,7 @@ rainbow_xloop:
 	adc	T_L
 	sta	XX_TL
 	lda	XX_TH
-	adc	T_H
+	adc	#$A0		; T_H
 	sta	XX_TH
 
 
@@ -163,12 +163,9 @@ white:
 	jsr	HGR2
 	; A/Y=0
 
-	jmp	rainbow_outer	; what can we branch on?
+	beq	rainbow_outer	; what can we branch on?
 
 really_done:
-
-	lda	#200
-	jsr	WAIT
 
 	bit	PAGE1
 
@@ -177,10 +174,13 @@ really_done:
 
 	bit	PAGE2
 
-	jmp	really_done
+	lda	#200
+	jsr	WAIT
+
+	beq	really_done	; bra
 
 
 
 T_L:	.byte $A0
-T_H:	.byte $A0
+
 
