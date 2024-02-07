@@ -2,7 +2,6 @@
 
 ; by Vince `deater` Weaver / DsR
 
-
 ; 147 bytes = initial block code
 ; 144 bytes = optimize color pick
 ; 137 bytes = optimize table generation
@@ -21,6 +20,19 @@ HGR_ROTATION	=	$F9
 
 INL		=	$FE
 INH		= 	$FF
+
+KEYPRESS        =       $C000
+KEYRESET        =       $C010
+
+SET_TEXT        =       $C051
+
+
+HOME    = $FC58                 ; Clear the text screen
+TEXT    = $FB36
+HLINE   = $F819                 ; HLINE Y,$2C at A
+VLINE   = $F828                 ; VLINE A,$2D at Y
+
+
 
 ; ROM locations
 HGR2		=	$F3D8
@@ -98,10 +110,15 @@ draw_loop:
 	sta	INH
 	jsr	draw_sprite
 
-;	jsr	do_xdraw
+	jsr	do_xdraw
 
-ending:
-	jmp	ending
+
+wait_for_it:
+	lda	KEYPRESS
+	bpl	wait_for_it
+	bit	KEYRESET
+
+	jmp	still
 
 
 box_color_odd:
@@ -295,10 +312,10 @@ do_xdraw:
 
 ; sideways portal
 
-.byte	$52,$0d
-.byte	$0d,$0d,$6c,$24,$1f,$fc,$1f,$1f
-.byte	$1f,$1f,$1f,$fe,$36,$0d,$6e,$0d
-.byte	$05,$00
+;.byte	$52,$0d
+;.byte	$0d,$0d,$6c,$24,$1f,$fc,$1f,$1f
+;.byte	$1f,$1f,$1f,$fe,$36,$0d,$6e,$0d
+;.byte	$05,$00
 
 ; chell right
 our_shape:
@@ -310,18 +327,21 @@ our_shape:
 
 ; chell left
 
-.byte	$09,$36,$36,$36,$1f,$4d,$09
-.byte	$24,$1c,$24,$24,$0c,$24,$e4,$fb
-.byte	$0e,$35,$3f,$0e,$f5,$fe,$27,$3f
-.byte	$3f,$77,$6d,$11,$3f,$3f,$3f,$00
+;.byte	$09,$36,$36,$36,$1f,$4d,$09
+;.byte	$24,$1c,$24,$24,$0c,$24,$e4,$fb
+;.byte	$0e,$35,$3f,$0e,$f5,$fe,$27,$3f
+;.byte	$3f,$77,$6d,$11,$3f,$3f,$3f,$00
 
 ; fireball
 
-.byte	$12,$0c,$0c,$1c,$1c,$1e,$1e,$0e
-.byte	$0e,$00
+;.byte	$12,$0c,$0c,$1c,$1c,$1e,$1e,$0e
+;.byte	$0e,$00
 
 ; blue core
-.byte	$fa,$24,$0d,$0d,$36,$9f
-.byte	$3a,$3f,$3c,$3c,$2c,$3c,$0c,$25
-.byte	$2d,$2d,$2d,$2e,$2e,$3e,$2e,$1e
-.byte	$37,$3f,$07,$00
+;.byte	$fa,$24,$0d,$0d,$36,$9f
+;.byte	$3a,$3f,$3c,$3c,$2c,$3c,$0c,$25
+;.byte	$2d,$2d,$2d,$2e,$2e,$3e,$2e,$1e
+;.byte	$37,$3f,$07,$00
+
+
+.include "still.s"

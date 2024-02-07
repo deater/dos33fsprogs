@@ -49,7 +49,7 @@ dont.o:	dont.s
 DONT2:	dont2.o
 	ld65 -o DONT2 dont2.o -C $(LINKERSCRIPTS)/apple2_c00.inc
 
-dont2.o:	dont2.s
+dont2.o:	dont2.s still.s
 	ca65 -o dont2.o dont2.s -l dont2.lst
 
 
