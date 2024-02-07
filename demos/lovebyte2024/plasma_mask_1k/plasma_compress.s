@@ -1,4 +1,4 @@
-; Plasma Mask
+; Plasma Mask (compressed)
 
 ; for Lovebyte 2024
 
@@ -7,6 +7,8 @@
 ; originally based on Plasmagoria (GPL3) code by French Touch
 
 ; 1135 -- initial
+; 1000 -- compressed
+;  997 -- minor optimization
 
 .include "hardware.inc"
 .include "zp.inc"
@@ -21,30 +23,14 @@ tracker_song = peasant_song
 plasma_mask:
 
 	jsr	HGR		; have table gen appear on hgr page1
-	bit	FULLGR
+;	bit	FULLGR
 
-	;===============================
-	; decompress graphics masks
-
-	ldx	#3
-load_graphics_loop:
-	lda	graphics_src_l,X
-	sta	zx_src_l+1
-	lda	graphics_src_h,X
-	sta	zx_src_h+1
-	lda	graphics_loc,X
-	clc
-	adc	#4
-	stx	XSAVE
-	jsr	zx02_full_decomp
-	ldx	XSAVE
-	dex
-	bpl	load_graphics_loop
 
 	;=================
         ; init music
 
-        lda     #0
+	; A and Y=0 from HGR
+;	lda	#0
         sta     FRAME
         sta     WHICH_TRACK
 
@@ -59,8 +45,6 @@ load_graphics_loop:
 .include "mockingboard_init.s"
 
 .include "tracker_init.s"
-
-
 
 	jsr	make_tables
 
@@ -236,7 +220,7 @@ display_lookup_smc:
 
 
 
-
+.align $100
 
 lores_colors_lookup:
 
@@ -254,38 +238,20 @@ lores_colors_lookup:
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
 
-.include "zx02_optim.s"
-
-graphics_src_l:
-	.byte	<dsr_empty,<dsr_small,<dsr_big,<dsr_big2
-graphics_src_h:
-	.byte	>dsr_empty,>dsr_small,>dsr_big,>dsr_big2
 
 graphics_loc:
-	.byte	$A0-4,$A4-4,$A8-4,$AC-4
+	.byte	>dsr_empty-4,>dsr_small-4,>dsr_big-4,>dsr_big2-4
 
+.align 	$100
 ; graphics
-dsr_big:
-.incbin		"graphics/dsr_big.gr.zx02"
-dsr_big2:
-.incbin		"graphics/dsr_big2.gr.zx02"
-dsr_small:
-.incbin		"graphics/dsr_small.gr.zx02"
 dsr_empty:
-.incbin		"graphics/dsr_empty.gr.zx02"
+.incbin		"graphics/dsr_empty.gr"
+dsr_small:
+.incbin		"graphics/dsr_small.gr"
+dsr_big:
+.incbin		"graphics/dsr_big.gr"
+dsr_big2:
+.incbin		"graphics/dsr_big2.gr"
 
 ; music
 .include        "mA2E_2.s"
-
-
-
-;sin1    =       $2000
-;sin2    =       $2100
-;sin3    =       $2200
-;save    =       $2300
-
-;.align $100
-;sin1:
-;	.incbin	"precalc/tables"
-;sin2=sin1+$100
-;sin3=sin1+$200

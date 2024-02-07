@@ -143,7 +143,8 @@ done_start_note:
 
 	tay				; lookup in table
 
-	lda	frequencies_high,Y
+	lda	#0			; always 0 with our song
+;	lda	frequencies_high,Y
 	sta	AY_REGS+1,X
 
 	lda	frequencies_low,Y
