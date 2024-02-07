@@ -10,7 +10,8 @@
 .include "hardware.inc"
 .include "zp.inc"
 
-lores_colors_fine=$8100
+lores_colors_fine=$8000
+tracker_song = peasant_song
 
 	;======================================
 	; start of code
@@ -21,20 +22,23 @@ plasma_mask:
 	jsr	HGR		; have table gen appear on hgr page1
 	bit	FULLGR
 
+	;===============================
+	; decompress graphics masks
 
-	ldx	#0
+	ldx	#3
 load_graphics_loop:
 	lda	graphics_src_l,X
 	sta	zx_src_l+1
 	lda	graphics_src_h,X
 	sta	zx_src_h+1
 	lda	graphics_loc,X
+	clc
+	adc	#4
 	stx	XSAVE
 	jsr	zx02_full_decomp
 	ldx	XSAVE
-	inx
-	cpx	#4
-	bne	load_graphics_loop
+	dex
+	bpl	load_graphics_loop
 
 	;=================
         ; init music
@@ -46,7 +50,6 @@ load_graphics_loop:
 	;===================
         ; music Player Setup
 
-tracker_song = peasant_song
 
 	; assume mockingboard in slot#4
 
@@ -66,19 +69,28 @@ tracker_song = peasant_song
 ; init lores colors (inline)
 ; ============================================================================
 
+	lda	#<lores_colors_fine
+	sta	INL
+	lda	#>lores_colors_fine
+	sta	INH
+multiple_init_lores_colors:
+
+
 init_lores_colors:
 	ldx	#0
 	ldy	#0
 
 init_lores_colors_loop:
+
+lcl_smc1:
 	lda	lores_colors_lookup,X
-	sta	lores_colors_fine,Y
+	sta	(INL),Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	(INL),Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	(INL),Y
 	iny
-	sta	lores_colors_fine,Y
+	sta	(INL),Y
 	iny
 	beq	done_init_lores_colors
 
@@ -89,6 +101,15 @@ init_lores_colors_loop:
 	jmp	init_lores_colors_loop
 
 done_init_lores_colors:
+	lda	lcl_smc1+1
+	clc
+	adc	#$10
+	sta	lcl_smc1+1
+
+	inc	INH
+	lda	INH
+	cmp	#$84
+	bne	multiple_init_lores_colors
 
 	;====================================
 	; do plasma
@@ -98,7 +119,13 @@ do_plasma:
 	; init
 
 
+
 BP3:
+	; adjust color
+	lda	WHICH_TRACK
+	clc
+	adc	#$80
+	sta	display_lookup_smc+2
 
 ; ============================================================================
 ; Precalculate some values (inlined)
@@ -168,8 +195,8 @@ display_line_loop:
 
 	clc
 	adc	graphics_loc,Y
-	sec				; blurgh
-	sbc	#4			;
+;	sec				; blurgh
+;	sbc	#4			;
         sta     INH
 
 	ldy	#39			; col 0-39
@@ -201,17 +228,23 @@ display_lookup_smc:
 	dec	COMPT2
 	bne	BP3
 
-	beq	do_plasma	; bra
+;	beq	do_plasma	; bra
+	jmp	do_plasma	; bra
 
 
 
 
-
-;lores_colors_lookup = $F000
 
 lores_colors_lookup:
-.byte $00,$88,$55,$99,$ff,$bb,$33,$22,$66,$77,$44,$cc,$ee,$dd,$99,$11
 
+; dark
+.byte $00,$88,$55,$99,$ff,$bb,$33,$22,$66,$77,$44,$cc,$ee,$dd,$99,$11
+; pink
+.byte $00,$11,$33,$BB,$FF,$BB,$33,$11,$00,$11,$33,$BB,$FF,$BB,$33,$11
+; blue
+.byte $00,$22,$66,$77,$FF,$77,$66,$22,$00,$22,$66,$77,$FF,$77,$66,$22
+; green
+.byte $00,$44,$CC,$DD,$FF,$DD,$CC,$44,$00,$44,$CC,$DD,$FF,$DD,$CC,$44
 
 ;.include "make_tables.s"
 
@@ -228,7 +261,7 @@ graphics_src_h:
 	.byte	>dsr_empty,>dsr_small,>dsr_big,>dsr_big2
 
 graphics_loc:
-	.byte	$A0,$A4,$A8,$AC
+	.byte	$A0-4,$A4-4,$A8-4,$AC-4
 
 ; graphics
 dsr_big:

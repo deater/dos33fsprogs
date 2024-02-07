@@ -150,9 +150,9 @@ done_start_note:
 	sta	AY_REGS,X		; set proper register value
 
 	; visualization
-blah_urgh:
-	sta	$400,Y
-	inc	blah_urgh+1
+;blah_urgh:
+;	sta	$400,Y
+;	inc	blah_urgh+1
 
 
 	;============================
