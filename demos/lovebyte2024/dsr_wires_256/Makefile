@@ -16,15 +16,14 @@ dsr_wires.dsk:	HELLO DSR_WIRES
 
 submit:	dsr_wires.zip
 
-dsr_wires.zip:	DSR_WIRES dsr_wires file_id.diz dsr_wires.dsk
+dsr_wires.zip:	DSR_WIRES dsr_wires.s file_id.diz dsr_wires.dsk
 	mkdir -p lovebyte2024_wires
 	cp DSR_WIRES ./lovebyte2024_wires
-	cp dsr_wires ./lovebyte2024_wires
+	cp dsr_wires.s ./lovebyte2024_wires
 	cp file_id.diz ./lovebyte2024_wires
 	cp dsr_wires.dsk ./lovebyte2024_wires
-	cp monitor.txt ./lovebyte2024_wires
-	cp wires_screen.png ./lovebyte2024_wires
-	cp wires_720p.mp4 ./lovebyte2024_wires
+	cp dsr_wires_screen.png ./lovebyte2024_wires
+	cp dsr_wires_720p.mp4 ./lovebyte2024_wires
 	zip -r dsr_wires.zip lovebyte2024_wires
 
 ####

@@ -22,7 +22,8 @@ HELLO:	hello.bas
 PLASMAG_TINY:	plasmag_tiny.o
 	ld65 -o PLASMAG_TINY plasmag_tiny.o -C $(LINKERSCRIPTS)/apple2_4000.inc
 
-plasmag_tiny.o:	plasmag_tiny.s gr_gbascalc.s make_tables.s
+plasmag_tiny.o:	plasmag_tiny.s gr_gbascalc.s make_tables.s \
+	graphics/dsr_big.gr.zx02
 	ca65 -o plasmag_tiny.o plasmag_tiny.s -l plasmag_tiny.lst
 
 ###

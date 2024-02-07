@@ -1,5 +1,13 @@
 ; zero page
 
+; zx02
+
+offset          = $00
+ZX0_src         = $02
+ZX0_dst         = $04
+bitr            = $06
+pntr            = $07
+
 ; pre-defined applesoft vars
 
 CH      = $24

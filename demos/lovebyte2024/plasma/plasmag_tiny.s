@@ -206,5 +206,11 @@ lores_colors_lookup:
 .include "interrupt_handler.s"
 .include "mockingboard_constants.s"
 
+.include "zx02_optim.s"
+
+; graphics
+dsr_big:
+.incbin		"graphics/dsr_big.gr.zx02"
+
 ; music
 .include        "mA2E_2.s"
