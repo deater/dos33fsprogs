@@ -21,6 +21,7 @@ HGR_SCALE	=	$E7
 TEMPY		=	$F0
 HGR_ROTATION	=	$F9
 
+SAVEY		=	$FA
 INL		=	$FE
 INH		= 	$FF
 
