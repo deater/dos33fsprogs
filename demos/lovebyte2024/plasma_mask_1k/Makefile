@@ -11,7 +11,6 @@ all:	plasma_mask.dsk
 plasma_mask.dsk:	HELLO PLASMA_MASK PLASMA_NEW
 	cp $(EMPTYDISK) plasma_mask.dsk
 	$(DOS33) -y plasma_mask.dsk SAVE A HELLO
-	$(DOS33) -y plasma_mask.dsk BSAVE -a 0x4000 PLASMA_MASK
 	$(DOS33) -y plasma_mask.dsk BSAVE -a 0x1000 PLASMA_NEW
 
 ###
