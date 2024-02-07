@@ -10,6 +10,9 @@
 ; zero page locations
 GBASL		=	$26
 GBASH		=	$27
+H2		=	$2C
+V2		=	$2D
+COLOR		=	$30
 
 HGR_X		=	$E0
 HGR_Y		=	$E2
@@ -27,14 +30,14 @@ KEYRESET        =       $C010
 SET_TEXT        =       $C051
 
 
+; ROM locations
+
 HOME    = $FC58                 ; Clear the text screen
 TEXT    = $FB36
 HLINE   = $F819                 ; HLINE Y,$2C at A
 VLINE   = $F828                 ; VLINE A,$2D at Y
 
 
-
-; ROM locations
 HGR2		=	$F3D8
 HGR		=	$F3E2
 BKGND0          =       $F3F4
@@ -42,7 +45,7 @@ HPOSN		=	$F411
 XDRAW0		=	$F65D
 XDRAW1		=	$F661
 HPLOT0		=	$F457
-
+COUT1		=	$FDF0
 
 hposn_low	=	$6000
 hposn_high	=	$6100

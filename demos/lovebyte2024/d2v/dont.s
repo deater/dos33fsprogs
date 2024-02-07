@@ -5,6 +5,9 @@
 ; zero page locations
 GBASL		=	$26
 GBASH		=	$27
+H2		=	$2C
+V2		=	$2D
+COLOR		=	$30
 HGR_SCALE	=	$E7
 HGR_ROTATION	=	$F9
 
