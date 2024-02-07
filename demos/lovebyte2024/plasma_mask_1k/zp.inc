@@ -37,18 +37,20 @@ REGISTER	= $85
 A_COUNTDOWN	= $86
 B_COUNTDOWN	= $87
 
-Table1	= $A0	; 40 bytes ($28)
-Table2	= $D0	; 40 bytes ($28)
+Table1	= $A0	; 40 bytes ($28) A0-C7
+Table2	= $C8	; 40 bytes ($28) C8-EF
 
-OUR_ROT		= $A5
+;OUR_ROT		= $A5
+;HGR_X           = $E0
+;HGR_XH          = $E1
+;HGR_Y           = $E2
+;HGR_COLOR       = $E4
+;HGR_PAGE        = $E6
+;HGR_SCALE	= $E7
 
-HGR_X           = $E0
-HGR_XH          = $E1
-HGR_Y           = $E2
-HGR_COLOR       = $E4
-HGR_PAGE        = $E6
-HGR_SCALE	= $E7
-
-COUNT	= $FB
-FRAME	= $FC
-WHICH_TRACK = $FD
+XSAVE		= $FA
+COUNT		= $FB
+FRAME		= $FC
+WHICH_TRACK	= $FD
+INL		= $FE
+INH		= $FF
