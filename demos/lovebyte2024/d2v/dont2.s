@@ -15,6 +15,20 @@ H2		=	$2C
 V2		=	$2D
 COLOR		=	$30
 
+; These are all "Free" zero page locations
+FREQ1           =     $06
+FREQ2           =     $07
+DURATION        =     $08
+INSTRUMENT1     =     $09
+INSTRUMENT2     =     $1D
+MADDRL          =     $1E
+MADDRH          =     $1F
+LOC4E           =     $4E
+COUNT256        =     $4F
+
+FRAME_COUNT     = $90
+
+
 HGR_X		=	$E0
 HGR_Y		=	$E2
 HGR_SCALE	=	$E7

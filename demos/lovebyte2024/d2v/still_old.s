@@ -89,22 +89,38 @@ play_music:
 	sta	CH
 	jsr	TABV
 
-
-	;==================
-        ; load song
-        ;==================
-	lda     #<music_data
-	sta     MADDRL
+	lda	#<music_data
+	sta	INL
 	lda	#>music_data
-	sta     MADDRH
-
-	jsr	play_ed
-
-done_music:
-	jmp	done_music
+	sta	INH
 
 
-display_lyrics_ed:
+	ldy	#0
+music_loop:
+	lda	(INL),Y
+	beq	done_music
+	sta	$300		; F
+	iny
+	lda	(INL),Y
+	sta	$301		; D
+	iny
+
+	sty	SAVEY
+
+play_tone:
+	lda	$C030		; click speaker
+duration_loop:
+	dey			; where is y set?
+	bne	ahead
+	dec	$0301		; $301=D
+	beq	done_tone
+ahead:
+	dex
+	bne	duration_loop
+	ldx	$0300		; $300=F
+	jmp	play_tone
+done_tone:
+
 	lda	#'@'|$80
 	jsr	COUT1
 	lda	#'@'|$80
@@ -113,8 +129,20 @@ display_lyrics_ed:
 	jsr	COUT1
 	lda	#' '|$80
 	jsr	COUT1
-	rts
 
+
+	ldy	SAVEY
+	jmp	music_loop
+
+done_music:
+	jmp	done_music
+
+;	.byte 173,48,192,136,208,5,206,1,3,240,9
+;	.byte 202,208,245,174,0,3,76,2,3,96
+
+
+done_still:
+	jmp	done_still
 
 opening:
 .byte	13
@@ -130,8 +158,10 @@ opening:
 .byte "    ,++ .MMMM= ",0
 
 
-.include "duet.s"
-
+	; F,D
 music_data:
-.incbin "SA.ED"
+	.byte 85,54, 91,54, 102,54, 102,54, 91,54, 1,54
+	.byte 152,54, 85,54, 91,54, 102,54, 102,108, 91,54, 1,54
+	.byte 114,108, 102,54, 152, 108, 1,108
+	.byte 0
 

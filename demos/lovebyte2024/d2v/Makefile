@@ -7,12 +7,12 @@ LINKERSCRIPTS = ../../../linker_scripts/
 
 all:	dont.dsk
 
-dont.dsk:	HELLO DONT DONT2 SA_ED
+dont.dsk:	HELLO DONT DONT2 #SA_ED
 	cp $(EMPTYDISK) dont.dsk
 	$(DOS33) -y dont.dsk SAVE A HELLO
 	$(DOS33) -y dont.dsk BSAVE -a 0xc00 DONT
 	$(DOS33) -y dont.dsk BSAVE -a 0xc00 DONT2
-	$(DOS33) -y dont.dsk BSAVE -a 0xc00 SA_ED
+#	$(DOS33) -y dont.dsk BSAVE -a 0xc00 SA_ED
 
 ###
 
