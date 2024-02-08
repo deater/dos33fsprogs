@@ -4,6 +4,9 @@
 
 dont_new:
 
+	.byte	4               ; number of sectors to load
+	lda	$C088,X         ; turn off drive motor
+
 ;	jsr	HGR
 
 ;	jsr	opener

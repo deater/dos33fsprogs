@@ -5,27 +5,45 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 EMPTYDISK = ../../../empty_disk/empty.dsk
 LINKERSCRIPTS = ../../../linker_scripts/
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+PICTUREDSK = ~/research/picturedsk.git/picturedsk
 
-all:	dont.dsk
+all:	dont.dsk dont.woz
 
-dont.dsk:	HELLO DONT_NEW DONT2 #SA_ED
-	cp $(EMPTYDISK) dont.dsk
-	$(DOS33) -y dont.dsk SAVE A HELLO
-	$(DOS33) -y dont.dsk BSAVE -a 0x800 DONT_NEW
+###
+#dont.dsk:	HELLO DONT_NEW DONT2 #SA_ED
+#	cp $(EMPTYDISK) dont.dsk
+#	$(DOS33) -y dont.dsk SAVE A HELLO
+#	$(DOS33) -y dont.dsk BSAVE -a 0x800 DONT_NEW
 #	$(DOS33) -y dont.dsk BSAVE -a 0xc00 DONT2
 #	$(DOS33) -y dont.dsk BSAVE -a 0xc00 SA_ED
 
 ###
 
+dont.dsk:  DONT_NEW
+	# 0, 7, 14, 6, 13, 5, 12, 4, 11, 3, 10, 2, 9, 1, 8, 15
+	dd if=/dev/zero of=dont.dsk bs=256 count=560
+	dd conv=notrunc if=DONT_NEW of=dont.dsk bs=256 count=1
+	dd conv=notrunc if=DONT_NEW of=dont.dsk bs=256 count=1 seek=7 skip=1
+	dd conv=notrunc if=DONT_NEW of=dont.dsk bs=256 count=1 seek=14 skip=2
+	dd conv=notrunc if=DONT_NEW of=dont.dsk bs=256 count=1 seek=6 skip=3
+
+###
+
+dont.woz:	DONT_NEW
+	$(PICTUREDSK) ./flux_image/apeture.bmp dont.woz DONT_NEW
+
+
+
+###
+
 submit:	dont.zip
 
-dont.zip:	DONT dont.s file_id.diz dont.dsk
+dont.zip:	DONT dont.s file_id.diz dont.woz
 	mkdir -p lovebyte2023_dont
 	cp DONT ./lovebyte2023_dont
 	cp dont.s ./lovebyte2023_dont
 	cp file_id.diz ./lovebyte2023_dont
-	cp dont.dsk ./lovebyte2023_dont
-	cp monitor.txt ./lovebyte2023_dont
+	cp dont.woz ./lovebyte2023_dont
 	cp dont_screen.png ./lovebyte2023_dont
 	cp dont_720p.mp4 ./lovebyte2023_dont
 	zip -r dont.zip lovebyte2023_dont

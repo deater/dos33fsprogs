@@ -6,6 +6,10 @@ Don't Tell Valve
 by Deater / dSr
 	Electric Duet Code: P. Lutus
 
+This is a raw boot-sector so
+  it can be the full 1024 bytes
+  (no header)
+
 Had to cut some stuff to fit in 1k
 
 Using ZX02 compression again which
