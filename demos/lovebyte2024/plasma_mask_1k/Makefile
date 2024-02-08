@@ -23,7 +23,7 @@ HELLO:	hello.bas
 PLASMA_MASK:	plasma_mask.o
 	ld65 -o PLASMA_MASK plasma_mask.o -C $(LINKERSCRIPTS)/apple2_4000.inc
 
-plasma_mask.o:	plasma_mask.s gr_gbascalc.s make_tables.s \
+plasma_mask.o:	plasma_mask.s make_tables.s \
 	zp.inc hardware.inc zx02_optim.s make_tables.s \
 	mA2E_2.s tracker_init.s play_frame.s \
 	graphics/dsr_big.gr.zx02
@@ -47,14 +47,31 @@ PLASMA_COMPRESS.zx02:	PLASMA_COMPRESS
 PLASMA_COMPRESS:	plasma_compress.o
 	ld65 -o PLASMA_COMPRESS plasma_compress.o -C $(LINKERSCRIPTS)/apple2_4000.inc
 
-plasma_compress.o:	plasma_compress.s gr_gbascalc.s make_tables.s \
+plasma_compress.o:	plasma_compress.s make_tables.s \
 	zp.inc hardware.inc zx02_optim.s make_tables.s \
 	mA2E_2.s tracker_init.s play_frame.s \
 	graphics/dsr_big.gr.zx02
 	ca65 -o plasma_compress.o plasma_compress.s -l plasma_compress.lst
+
+
+###
+
+submit:	plasma_mask_1k.zip
+
+plasma_mask_1k.zip:	PLASMA_NEW file_id.diz plasma_mask.dsk
+	mkdir -p lovebyte2024_plasma_mask
+	mkdir -p lovebyte2024_plasma_mask/code
+	cp PLASMA_NEW ./lovebyte2024_plasma_mask
+	cp ay3_write_regs.s hardware.inc interrupt_handler.s mA2E_2.s make_tables.s mockingboard_constants.s mockingboard_init.s plasma_compress.s plasma_new.s play_frame.s tracker_init.s zp.inc zx02_optim.s ./lovebyte2024_plasma_mask/code
+	cp file_id.diz ./lovebyte2024_plasma_mask
+	cp plasma_mask.dsk ./lovebyte2024_plasma_mask
+	cp dsr_plasma_mask_screen.png ./lovebyte2024_plasma_mask
+	cp dsr_plasma_mask_720p.mp4 ./lovebyte2024_plasma_mask
+	zip -r plasma_mask_1k.zip lovebyte2024_plasma_mask
 
 ###
 
 
 clean:	
 	rm -f *~ *.o *.lst HELLO PLASMA_MASK
+

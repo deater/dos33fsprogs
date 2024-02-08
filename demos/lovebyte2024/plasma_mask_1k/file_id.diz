@@ -1,10 +1,21 @@
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-
-Spiraling Shape
+Plasma Mask
 --------------------------------------
-Hi-res Xdraw Pattern
-with Sound!
-by Deater / dSr
+1k demo for Lovebyte 2024
 
-31-byte Intro for Apple II
-Lovebyte 2024
+by Deater / dSr
+	music by MA2E
+original plasma by GROUIK
+
+fast lo-res plasma with masks
+compressed with zx02 which was a pain
+
+Mockingboard music, slot#4
+	left channel sound only
+
+pre-calc is generating 768 bytes of
+	sine tables using the 
+	Applesoft (Microsoft) BASIC
+	FAC floating point routines
+	which are *slow*
 --------------------------------------

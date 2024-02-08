@@ -1,2 +1,0 @@
-optimize music code:
-	+ depending on alignment can hard-code the high value for track0/track1
