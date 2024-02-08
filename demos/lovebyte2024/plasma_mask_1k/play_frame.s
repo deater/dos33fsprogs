@@ -65,6 +65,9 @@ set_notes_loop:
 	; load next byte
 
 	ldy	SONG_OFFSET
+
+	; could move SONG_OFFSET to this bottom byte but wouldn't
+	; save any space
 track_smc:
 	lda	track0,Y
 
@@ -78,16 +81,27 @@ track_smc:
 	; if at end, loop back to beginning
 
 	inc	WHICH_TRACK
-	ldy	WHICH_TRACK
-	cpy	#4			; looping, hard coded
-	bne	no_wrap
-	ldy	#0
-	sty	WHICH_TRACK
+	lda	WHICH_TRACK
+	and	#$3
+	sta	WHICH_TRACK
+	tay
+
+	clc
+	adc	#$80
+	sta	display_lookup_smc+2
+
+;	ldy	WHICH_TRACK
+;	cpy	#4			; looping, hard coded
+;	bne	no_wrap
+;	ldy	#0
+;	sty	WHICH_TRACK
 no_wrap:
 	lda	tracks_l,Y
 	sta	track_smc+1
-	lda	tracks_h,Y
-	sta	track_smc+2
+;	lda	]tracks_h,Y
+;	sta	track_smc+2
+
+	lda	#>track0		; always on same page
 
 	lda	#0
 	sta	SONG_OFFSET
@@ -150,11 +164,6 @@ done_start_note:
 	lda	frequencies_low,Y
 	sta	AY_REGS,X		; set proper register value
 
-	; visualization
-;blah_urgh:
-;	sta	$400,Y
-;	inc	blah_urgh+1
-
 
 	;============================
 	; point to next
@@ -165,10 +174,10 @@ done_start_note:
 done_update_song:
 	dec	SONG_COUNTDOWN
 	bmi	set_notes_loop
-	bpl	skip_data
+	bpl	skip_data			; bra
 
 channel_a_volume:
-	.byte $D,$C,$A,$9
+	.byte $D,$C,$A;,$9
 channel_b0_volume:
 	.byte $9,$5,$4,$3
 channel_b1_volume:
@@ -176,8 +185,8 @@ channel_b1_volume:
 
 	tracks_l:
 		.byte <track0,<track0,<track1,<track1
-	tracks_h:
-		.byte >track0,>track0,>track1,>track1
+;	tracks_h:
+;		.byte >track0,>track0,>track1,>track1
 
 
 skip_data:

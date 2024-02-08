@@ -32,10 +32,13 @@ SONG_L		= $80
 SONG_H		= $81
 SONG_OFFSET	= $82
 SONG_COUNTDOWN	= $83
-OCTAVE		= $84
-REGISTER	= $85
-A_COUNTDOWN	= $86
-B_COUNTDOWN	= $87
+FRAME		= $84
+WHICH_TRACK	= $85
+
+OCTAVE		= $86
+REGISTER	= $87
+A_COUNTDOWN	= $88
+B_COUNTDOWN	= $89
 
 Table1	= $A0	; 40 bytes ($28) A0-C7
 Table2	= $C8	; 40 bytes ($28) C8-EF
@@ -50,7 +53,5 @@ Table2	= $C8	; 40 bytes ($28) C8-EF
 
 XSAVE		= $FA
 COUNT		= $FB
-FRAME		= $FC
-WHICH_TRACK	= $FD
 INL		= $FE
 INH		= $FF

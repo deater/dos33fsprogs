@@ -11,6 +11,15 @@
 ;  997 -- minor optimization
 ;  984 -- inline zx02 compress
 ;  988 -- fix fullscreen
+; 1020 -- add precalc countdown
+; 1015 -- optimize music (track_h always same)
+; 1012 -- optimize next track (4 is a nice power of 2)
+; 1011 -- overlap constants
+; 1023 -- add credits to precalc
+; 1018 -- optimize initializations
+; 1025 -- add one more credit
+; 1024 -- shrink main loop enough to use bne
+; 1020 -- re-arrange functions until smaller, remove a few spaces
 
 .include "hardware.inc"
 .include "zp.inc"
@@ -32,9 +41,10 @@ plasma_mask:
         ; init music
 
 	; A and Y=0 from HGR
-;	lda	#0
-        sta     FRAME
-        sta     WHICH_TRACK
+
+;	we set these when we init the rest of the ZP vars
+;	sta     FRAME
+;	sta     WHICH_TRACK
 
 	;===================
         ; music Player Setup
@@ -44,9 +54,11 @@ plasma_mask:
 
 	; inline mockingboard_init
 
+.include "tracker_init.s"
+
 .include "mockingboard_init.s"
 
-.include "tracker_init.s"
+
 
 	jsr	make_tables
 
@@ -111,11 +123,12 @@ do_plasma:
 
 
 BP3:
-	; adjust color
-	lda	WHICH_TRACK
-	clc
-	adc	#$80
-	sta	display_lookup_smc+2
+	;=============================
+	; adjust color palette
+;	lda	WHICH_TRACK
+;	clc
+;	adc	#$80
+;	sta	display_lookup_smc+2
 
 ; ============================================================================
 ; Precalculate some values (inlined)
@@ -185,8 +198,6 @@ display_line_loop:
 
 	clc
 	adc	graphics_loc,Y
-;	sec				; blurgh
-;	sbc	#4			;
         sta     INH
 
 	ldy	#39			; col 0-39
@@ -218,8 +229,8 @@ display_lookup_smc:
 	dec	COMPT2
 	bne	BP3
 
-;	beq	do_plasma	; bra
-	jmp	do_plasma	; bra
+	beq	do_plasma	; bra
+;	jmp	do_plasma	; bra
 
 
 
@@ -236,11 +247,13 @@ lores_colors_lookup:
 ; green
 .byte $00,$44,$CC,$DD,$FF,$DD,$CC,$44,$00,$44,$CC,$DD,$FF,$DD,$CC,$44
 
+
 .include "make_tables.s"
 
-.include "interrupt_handler.s"
-.include "mockingboard_constants.s"
 
+.include "interrupt_handler.s"
+
+.include "mockingboard_constants.s"
 
 graphics_loc:
 	.byte	>dsr_empty-4,>dsr_small-4,>dsr_big-4,>dsr_big2-4
@@ -258,3 +271,6 @@ dsr_big2:
 
 ; music
 .include        "mA2E_2.s"
+
+
+

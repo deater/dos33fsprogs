@@ -8,7 +8,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
 all:	plasma_mask.dsk
 
-plasma_mask.dsk:	HELLO PLASMA_MASK PLASMA_NEW
+plasma_mask.dsk:	HELLO PLASMA_NEW
 	cp $(EMPTYDISK) plasma_mask.dsk
 	$(DOS33) -y plasma_mask.dsk SAVE A HELLO
 	$(DOS33) -y plasma_mask.dsk BSAVE -a 0x1000 PLASMA_NEW
