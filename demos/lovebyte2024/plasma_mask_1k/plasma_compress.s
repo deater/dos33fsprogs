@@ -9,6 +9,8 @@
 ; 1135 -- initial
 ; 1000 -- compressed
 ;  997 -- minor optimization
+;  984 -- inline zx02 compress
+;  988 -- fix fullscreen
 
 .include "hardware.inc"
 .include "zp.inc"
@@ -23,7 +25,7 @@ tracker_song = peasant_song
 plasma_mask:
 
 	jsr	HGR		; have table gen appear on hgr page1
-;	bit	FULLGR
+
 
 
 	;=================
@@ -51,6 +53,7 @@ plasma_mask:
 	cli	; start music
 
 	bit	LORES			; set lo-res
+	bit	FULLGR
 
 ; ============================================================================
 ; init lores colors (inline)

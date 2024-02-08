@@ -39,6 +39,20 @@ save	=	$2300
 
 make_tables:
 
+	; print pre-calc string
+
+	ldx	#0
+write_string:
+	lda	precalc_string,X
+	beq	done_string
+;	ora	#$80
+	sta	$650,X
+	inx
+	bne	write_string
+done_string:
+
+
+
 	;====================================================
 	;	sin1[i]=round(47.0+
 	;		32.0*sin(i*(PI*2.0/256.0))+
@@ -106,6 +120,8 @@ make_tables:
 	;===============================
 
 make_sin_table:
+
+	dec	$659
 
 	ldx	#0
 sin_loop:
@@ -220,3 +236,6 @@ three_input:
 ;	; 8*2*pi/256 = .196349541
 ;	.byte $7E,$49,$0F,$da,$a2
 
+precalc_string:
+	.byte 'P'|$80,'R'|$80,'E'|$80,'C'|$80,'A'|$80,'L'|$80,'C'|$80,':'|$80,' '|$80,'4'
+	.byte ' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,'d'|$80,'S'|$80,'r'|$80,0
