@@ -46,7 +46,7 @@ DONT_COMPRESS.zx02:	DONT_COMPRESS
 DONT_COMPRESS:	dont_compress.o
 	ld65 -o DONT_COMPRESS dont_compress.o -C $(LINKERSCRIPTS)/apple2_2000.inc
 
-dont_compress.o:	dont_compress.s graphics/scene.hgr
+dont_compress.o:	dont_compress.s graphics/scene.hgr still.s
 	ca65 -o dont_compress.o dont_compress.s -l dont_compress.lst
 
 ###

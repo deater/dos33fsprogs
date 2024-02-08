@@ -4,9 +4,11 @@
 
 dont_new:
 
-	jsr	HGR
+;	jsr	HGR
 
-	jsr	opener
+;	jsr	opener
+
+	.include	"opener.s"
 
 	; inlined
 
@@ -176,4 +178,4 @@ exit:
 compressed_data:
 .incbin	"DONT_COMPRESS.zx02"
 
-.include "opener.s"
+

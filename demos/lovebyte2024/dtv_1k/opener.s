@@ -1,36 +1,21 @@
 ; draws a circle pattern
 
-; by Vince `deater` Weaver / DsR
-
-.if 0
-; zero page locations
-GBASL		=	$26
-GBASH		=	$27
-HGR_SCALE	=	$E7
-HGR_ROTATION	=	$F9
-
-; ROM locations
-HGR2		=	$F3D8
-HPOSN		=	$F411
-XDRAW0		=	$F65D
-XDRAW1		=	$F661
-HPLOT0		=	$F457
-.endif
-
 opener:
-	sta	HGR_ROTATION
+	; A=0 from HGR
+
+
 	lda	#$20
 	sta	HGR_SCALE
 
-
-;	jsr	HGR2		; Hi-res, full screen		; 3
-				; Y=0, A=0 after this call
+	jsr	HGR
+	sta	HGR_ROTATION
 
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
 
 tiny_loop:
-	ldy	#0
+	tay
+;	ldy	#0
 	ldx	#140
 	lda	#96
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
@@ -57,7 +42,7 @@ done_circle:
 	lda	#250
 	jsr	WAIT
 
-	rts
+;	rts
 
 our_shape = $E2E2
 

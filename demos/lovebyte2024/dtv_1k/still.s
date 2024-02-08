@@ -2,11 +2,10 @@
 ; still...
 
 still:
+
 	jsr	HOME
 	bit	SET_TEXT
 
-;	HLINE   = $F819                 ; HLINE Y,$2C at A
-;	VLINE   = $F828                 ; VLINE A,$2D at Y
 
 	lda	#'*'|$80
 	sta	COLOR
@@ -40,7 +39,7 @@ still:
 	lda	#1
 	ldy	#39
 	jsr	VLINE
-
+.if 0
 	;==============
 	; set screen for wrap
 
@@ -66,7 +65,7 @@ opening_loop:
 	jsr	COUT1
 	iny
 	bne	opening_loop	; bra
-
+.endif
 	;===========================
 	; play music and draw loop
 
@@ -98,10 +97,14 @@ play_music:
 	lda	#>music_data
 	sta     MADDRH
 
-	jsr	play_ed
+;	jsr	play_ed
 
-done_music:
-	jmp	done_music
+.include "duet.s"
+
+	; we crash!
+
+;done_music:
+;	jmp	done_music
 
 
 display_lyrics_ed:
@@ -116,6 +119,7 @@ display_lyrics_ed:
 	rts
 
 
+.if 0
 opening:
 .byte	13
 .byte "       ,:/;=",13
@@ -128,10 +132,11 @@ opening:
 .byte " .    .     -H @@M ",13
 .byte "  =MMM@MH +M@+ MX",13
 .byte "    ,++ .MMMM= ",0
+.endif
 
 
-.include "duet.s"
+;.include "duet.s"
 
 music_data:
-.incbin "SA.ED"
+.incbin "SA.ED",$0,$100
 
