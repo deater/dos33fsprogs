@@ -8,6 +8,7 @@
 ; 135 bytes = more optimization
 
 ; zero page locations
+CH		=	$24
 GBASL		=	$26
 GBASH		=	$27
 H2		=	$2C
@@ -37,6 +38,7 @@ HOME    = $FC58                 ; Clear the text screen
 TEXT    = $FB36
 HLINE   = $F819                 ; HLINE Y,$2C at A
 VLINE   = $F828                 ; VLINE A,$2D at Y
+TABV    = $FB5B			; go to A
 
 
 HGR2		=	$F3D8

@@ -46,7 +46,7 @@ still:
 
 	lda	#20
 	sta	$20		; left edge
-	sta	$21		; right edge
+	sta	$21		; width
 	lda	#2
 	sta	$22		; top edge
 
@@ -61,7 +61,7 @@ still:
 	ldy	#0
 opening_loop:
 	lda	(INL),Y
-	beq	done_still
+	beq	play_music
 	ora	#$80
 	jsr	COUT1
 	iny
@@ -69,6 +69,25 @@ opening_loop:
 
 	;===========================
 	; play music and draw loop
+
+play_music:
+
+
+	;==========================
+	; set screen for wrap again
+
+	lda	#1
+	sta	$20		; left edge
+	lda	#15		; width
+	sta	$21
+	lda	#2
+	sta	$22		; top edge
+	lda	#18
+	sta	$23
+
+	lda	#2
+	sta	CH
+	jsr	TABV
 
 	lda	#<music_data
 	sta	INL
@@ -102,6 +121,16 @@ ahead:
 	jmp	play_tone
 done_tone:
 
+	lda	#'@'|$80
+	jsr	COUT1
+	lda	#'@'|$80
+	jsr	COUT1
+	lda	#'@'|$80
+	jsr	COUT1
+	lda	#' '|$80
+	jsr	COUT1
+
+
 	ldy	SAVEY
 	jmp	music_loop
 
@@ -131,17 +160,8 @@ opening:
 
 	; F,D
 music_data:
-	.byte 85,54
-	.byte 91,54
-	.byte 102,54
-	.byte 102,54
-	.byte 91,54
+	.byte 85,54, 91,54, 102,54, 102,54, 91,54, 1,54
+	.byte 152,54, 85,54, 91,54, 102,54, 102,108, 91,54, 1,54
+	.byte 114,108, 102,54, 152, 108, 1,108
 	.byte 0
-;80 T$="This ":D=54:F=85:GOSUB 8
-;82 T$="was ":F=91:GOSUB 8
-;84 T$="a ":F=102:GOSUB 8
-;86 T$="tri":GOSUB 8
-;89 T$="umph."+C$:F=91:GOSUB 8
-;90 FOR I=1 TO 800:NEXT
-
 
