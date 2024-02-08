@@ -65,8 +65,8 @@ plasma_mask_1k.zip:	PLASMA_NEW file_id.diz plasma_mask.dsk
 	cp ay3_write_regs.s hardware.inc interrupt_handler.s mA2E_2.s make_tables.s mockingboard_constants.s mockingboard_init.s plasma_compress.s plasma_new.s play_frame.s tracker_init.s zp.inc zx02_optim.s ./lovebyte2024_plasma_mask/code
 	cp file_id.diz ./lovebyte2024_plasma_mask
 	cp plasma_mask.dsk ./lovebyte2024_plasma_mask
-	cp dsr_plasma_mask_screen.png ./lovebyte2024_plasma_mask
-	cp dsr_plasma_mask_720p.mp4 ./lovebyte2024_plasma_mask
+	cp plasma_mask_1k_screen.png ./lovebyte2024_plasma_mask
+	cp plasma_mask_1k_720p.mp4 ./lovebyte2024_plasma_mask
 	zip -r plasma_mask_1k.zip lovebyte2024_plasma_mask
 
 ###

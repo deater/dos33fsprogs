@@ -34,23 +34,6 @@ dont.woz:	DONT_NEW
 
 
 
-###
-
-submit:	dont.zip
-
-dont.zip:	DONT dont.s file_id.diz dont.woz
-	mkdir -p lovebyte2023_dont
-	cp DONT ./lovebyte2023_dont
-	cp dont.s ./lovebyte2023_dont
-	cp file_id.diz ./lovebyte2023_dont
-	cp dont.woz ./lovebyte2023_dont
-	cp dont_screen.png ./lovebyte2023_dont
-	cp dont_720p.mp4 ./lovebyte2023_dont
-	zip -r dont.zip lovebyte2023_dont
-
-####
-
-
 ####
 
 HELLO:	hello.bas
@@ -96,13 +79,14 @@ sa_ed.o:	sa_ed.s duet.s
 
 submit:	dtv_1k.zip
 
-dtv_1k.zip:	DONT_NEW file_id.diz dont.dsk
+dtv_1k.zip:	DONT_NEW file_id.diz dont.woz
 	mkdir -p lovebyte2024_dtv_1k
 	mkdir -p lovebyte2024_dtv_1k/code
 	cp DONT_NEW ./lovebyte2024_dtv_1k
-	cp dont_compress.s dont_new.s duet.s opener.s still.s zp.inc
+	cp dont_compress.s dont_new.s duet.s opener.s still.s zp.inc SA.ED lovebyte2024_dtv_1k/code
 	cp file_id.diz ./lovebyte2024_dtv_1k
-	cp dont.dsk ./lovebyte2024_dtv_1k
+	cp dont.woz ./lovebyte2024_dtv_1k
+	cp dtv_flux.png ./lovebyte2024_dtv_1k
 	cp dtv_1k_screen.png ./lovebyte2024_dtv_1k
 	cp dtv_1k_720p.mp4 ./lovebyte2024_dtv_1k
 	zip -r dtv_1k.zip lovebyte2024_dtv_1k
