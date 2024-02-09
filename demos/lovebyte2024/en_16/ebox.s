@@ -59,10 +59,11 @@ xloop:
 
 frame_smc:
 	lda	$D000		; 3	; also FRAME
-	cmp	#$f		; 2
+	eor	$E000,Y
+	cmp	#$7		; 2
 	lda	#$1
 	adc	#$0
-	asl
+	asl			; want 2 or 4 for scale
 	sta	HGR_SCALE
 
 	stx	AREG		; save X to be restored later into A
