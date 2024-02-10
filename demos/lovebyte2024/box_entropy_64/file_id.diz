@@ -1,0 +1,23 @@
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-==-
+box_entropy 64
+--------------------------------------
+Hi-res Xdraw Pattern
+by Deater / dSr
+
+I attempted this before as a 64-byter
+but managed to fit a more complete
+version this time.
+
+roughly based on:
+
+; Entropy
+; by Dave McKellar of Toronto
+; Two-line BASIC program
+; Found on Beagle Brother's Apple Mechanic Disk
+
+XORs a box pattern, but randomly doubles the
+size of the box.  It's hard to generate good
+random numbers on 6502 in 64 bytes.
+
+Lovebyte 2024
+--------------------------------------

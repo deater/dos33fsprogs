@@ -1,0 +1,24 @@
+# box
+2
+START
+NDN NDN
+LT  LT
+UP  UP 
+UP  UP 
+RT  RT 
+RT  RT 
+DN  DN 
+DN  DN 
+LT  LT
+STOP
+START
+NDN
+LT
+UP
+UP
+RT
+RT
+DN
+DN
+LT
+STOP

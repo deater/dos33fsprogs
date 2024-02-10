@@ -1,7 +1,7 @@
 ; Tiny Entropy Boxes
 ; by Vince `Deater` Weaver / dSr
 
-; based on:
+; roughly based on:
 
 ; Entropy
 ; by Dave McKellar of Toronto
@@ -117,6 +117,9 @@ shape_table:		;      C   B   A
 ;	.byte 54	; $36  00 110 110	DN  DN  nop
 ;	.byte 63	; $3F  00 111 111	LT  LT  nop
 ;	.byte 0
+
+; this is half the size but we have to scale *2
+
 	.byte 58
 	.byte 36
 	.byte 45
