@@ -1,0 +1,248 @@
+these are notes from the sizecoding Discord by serato_fig
+
+Render loop:
+
+render
+    lda t
+    sta it
+    lda #0
+    sta is
+    lda #24;200
+    sta j
+    lda #24;40
+    sta ic
+
+j_loop
+    lda is
+i_loop
+    clc
+    adc v
+    tax
+    lda it
+    clc
+    adc u
+    tay
+    lda sin_t,x
+    clc
+    adc sin_t,y
+    sta u
+    lda cos_t,x
+    clc
+    adc cos_t,y
+    sta v
+    tay
+
+    cpy frame    ;2
+    lax u        ;3
+    ror          ;2
+    cpy #88      ;2
+    arr #$fc     ;2
+    sta col_ref1 ;4
+    sta col_ref2 ;4
+    lda mask,x   ;4
+col_ref1 = *+1          
+    ora ($0),y   ;5+
+col_ref2 = *+1          
+    sta ($0),y   ;6
+
+    dec j
+    bne j_loop
+    lda #24;200
+    sta j
+    lda is
+    clc
+    adc #41
+    sta is
+    dec ic
+    bne i_loop
+
+    inc t
+    jmp new_frame
+
+
+
+
+; in other words, scaled to 46+/-256/2pi. and shifted by 2*46 
+; the shift is there to remove the offset from u and v 
+; being sums of 2 sins and 2 coses.
+; Building in the offset means my coordinates are all positive
+cos_t    .char    round(cos((range(256)-92)*2.0*pi/256)*256.0/2.0/pi+46)
+sin_t    .char    round(sin((range(256)-92)*2.0*pi/256)*256.0/2.0/pi+46)
+
+;===================================
+later code
+
+render
+    lda t
+    sta it1
+    sta it2
+    lda #0
+    sta is1
+    sta is2
+    lda #24;40
+    sta ic
+    ldx u
+i_loop
+    lda #24;200
+    sta j
+j_loop
+    ldy v           ;3            
+    clc             ;2            
+is1 = *+1                               
+    lda sin_t,y     ;4+            
+it1 = *+1                               
+    adc sin_t,x     ;4+            
+    sta u           ;3            
+is2 = *+1                               
+    lda cos_t,y     ;4+            
+it2 = *+1                               
+    adc cos_t,x     ;4+            
+    sta v           ;3            
+    tay             ;2 = 29-33 cycles    
+                                            
+    lax u           ;3            
+    ror             ;2            
+    cpy #88         ;2            
+    arr #$fc        ;2            
+    sta col_ref1    ;4            
+    sta col_ref2    ;4            
+    lda mask,x      ;4            
+col_ref1 = *+1                          
+    ora ($0),y      ;5+            
+col_ref2 = *+1                              
+    sta ($0),y      ;6 = 32-33 cycles    
+
+    dec j
+    bne j_loop
+    lda is1
+    clc
+    adc #41
+    sta is1
+    sta is2
+;    inc it1
+;    inc it2
+    dec ic
+    bne i_loop
+
+    inc t
+    jmp new_frame 
+
+
+;====================================
+; again
+; u and v are now held in X and Y rather than being reloaded each time
+render
+    lda t
+    sta it1
+    sta it2
+    lda #0
+    sta is1
+    sta is2
+    lda #24;40
+    sta ic
+    ldx u
+    ldy v
+i_loop
+    lda #24;200
+    sta j
+j_loop
+    clc           ;2            
+is1 = *+1                               
+    lda sin_t,y   ;4+            
+it1 = *+1                               
+    adc sin_t,x   ;4+            
+    sta u         ;3            
+is2 = *+1                               
+    lda cos_t,y   ;4+            
+it2 = *+1                               
+    adc cos_t,x   ;4+            
+    tay           ;2 = 23-27 cycles    
+                                            
+    lax u         ;3            
+    ror           ;2            
+    cpy #88       ;2            
+    arr #$fc      ;2            
+    sta col_ref1  ;4            
+    sta col_ref2  ;4            
+    lda mask,x    ;4            
+col_ref1 = *+1                          
+    ora ($0),y    ;5+            
+col_ref2 = *+1                              
+    sta ($0),y    ;6 = 32-33 cycles    
+
+    dec j
+    bne j_loop
+    lda is1
+    clc
+    adc #41
+    sta is1
+    sta is2
+;    inc it1
+;    inc it2
+    dec ic
+    bne i_loop
+    sty v
+
+    inc t
+    jmp new_frame
+
+;=========================
+; singen
+
+    lda #57
+    sta v
+    lda #39
+    ldx #63
+-   sta u
+    lsr
+    lsr
+    lsr
+    pha
+    adc #17
+    sta sin_t,x
+    eor #$ff
+    adc #43
+    sta sin_t+64,x
+    pla
+    lsr
+    lsr
+    lsr
+    adc v
+    sta v
+    lsr
+    lsr
+    lsr
+    sbc u
+    adc #240
+    eor #$ff
+    dex
+    bpl -
+    rts
+
+
+
+;==================================
+; TIC-80 version by serato_fig
+
+u,v,t=0,0,0
+s=41
+
+function SIN(x) return math.floor(s*math.sin((x-96)*math.pi*2/256)+48.5)end
+function COS(x) return math.floor(s*math.cos((x-96)*math.pi*2/256)+48.5)end
+function TIC()
+  cls(0)
+    
+  for i=0,20 do
+    for j=0,20 do
+      local a,b=i*s+v,i+t+u
+      u=SIN(a)+SIN(b)
+      v=COS(a)+COS(b)
+      pix(u,v,100)
+    end
+  end
+  t=t+1
+end
+
+
+; 42Bastian linked atari lynx verison
+https://github.com/42Bastian/misc_Processing/blob/main/bubble_lynx/bubble_universe_lynx.pde
