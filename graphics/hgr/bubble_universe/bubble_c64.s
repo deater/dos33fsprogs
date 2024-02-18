@@ -1,10 +1,15 @@
 ; bubble universe -- Apple II Hires
 
 ; by Vince `deater` Weaver
-; based roughly on the BASIC code posted on the pouet forum
+
+; this version based on fast c64 code by serato_fig
+;	as posted to the sizecoding discord
+;	based on his TIC-80 variant
+
+; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-; this version based on fast c64 code
+
 
 ; soft-switches
 
