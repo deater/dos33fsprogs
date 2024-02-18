@@ -13,7 +13,7 @@ hgr_clear_part:
 
 hgr_page1_clearscreen:
 
-	ldy	#10
+	ldy	#8
 hgr_page1_cls_loop:
 .if 0
 	sta	$2000,Y		; 0
@@ -30,6 +30,7 @@ hgr_page1_cls_loop:
 	sta	$2880,Y		; 10
 	sta	$2C80,Y		; 11
 	sta	$3080,Y		; 12
+.endif
 	sta	$3480,Y		; 13
 	sta	$3880,Y		; 14
 	sta	$3C80,Y		; 15
@@ -51,7 +52,7 @@ hgr_page1_cls_loop:
 	sta	$3580,Y		; 29
 	sta	$3980,Y		; 30
 	sta	$3D80,Y		; 31
-.endif
+
 	sta	$2200,Y		; 32
 	sta	$2600,Y		; 33
 	sta	$2A00,Y		; 34
@@ -199,7 +200,7 @@ hgr_page1_cls_loop:
 	sta	$35D0,Y		; 29
 	sta	$39D0,Y		; 30
 	sta	$3DD0,Y		; 31
-.if 0
+
 	sta	$2250,Y		; 160
 	sta	$2650,Y		; 33
 	sta	$2A50,Y		; 34
@@ -222,6 +223,7 @@ hgr_page1_cls_loop:
 	sta	$2750,Y		; 49
 	sta	$2B50,Y		; 50
 	sta	$2F50,Y		; 51
+.if 0
 	sta	$3350,Y		; 52
 	sta	$3750,Y		; 53
 	sta	$3B50,Y		; 54
@@ -237,7 +239,7 @@ hgr_page1_cls_loop:
 	sta	$3FD0,Y		; 63
 .endif
 	iny
-	cpy	#30
+	cpy	#32
 	beq	hgr_page1_cls_done
 	jmp	hgr_page1_cls_loop
 
@@ -248,7 +250,7 @@ hgr_page1_cls_done:
 
 hgr_page2_clearscreen:
 
-	ldy	#10
+	ldy	#8
 hgr_page2_cls_loop:
 .if 0
 	sta	$4000,Y		; 0
@@ -265,6 +267,7 @@ hgr_page2_cls_loop:
 	sta	$4880,Y		; 10
 	sta	$4C80,Y		; 11
 	sta	$5080,Y		; 12
+.endif
 	sta	$5480,Y		; 13
 	sta	$5880,Y		; 14
 	sta	$5C80,Y		; 15
@@ -286,7 +289,7 @@ hgr_page2_cls_loop:
 	sta	$5580,Y		; 29
 	sta	$5980,Y		; 30
 	sta	$5D80,Y		; 31
-.endif
+
 	sta	$4200,Y		; 32
 	sta	$4600,Y		; 33
 	sta	$4A00,Y		; 34
@@ -434,7 +437,7 @@ hgr_page2_cls_loop:
 	sta	$55D0,Y		; 29
 	sta	$59D0,Y		; 30
 	sta	$5DD0,Y		; 31
-.if 0
+
 	sta	$4250,Y		; 160
 	sta	$4650,Y		; 33
 	sta	$4A50,Y		; 34
@@ -456,6 +459,7 @@ hgr_page2_cls_loop:
 	sta	$4350,Y		; 176
 	sta	$4750,Y		; 49
 	sta	$4B50,Y		; 50
+.if 0
 	sta	$4F50,Y		; 51
 	sta	$5350,Y		; 52
 	sta	$5750,Y		; 53
@@ -472,7 +476,7 @@ hgr_page2_cls_loop:
 	sta	$5FD0,Y		; 63
 .endif
 	iny
-	cpy	#30
+	cpy	#32
 	beq	hgr_page2_cls_done
 	jmp	hgr_page2_cls_loop
 hgr_page2_cls_done:
