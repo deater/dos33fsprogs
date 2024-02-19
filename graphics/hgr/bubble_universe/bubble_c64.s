@@ -9,12 +9,13 @@
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
+; 2304 bytes -- first working version
 
 
 ; soft-switches
 
-;KEYPRESS	= $C000
-;KEYRESET	= $C010
+KEYPRESS	= $C000
+KEYRESET	= $C010
 PAGE1		= $C054
 PAGE2		= $C055
 
@@ -47,7 +48,7 @@ HGR_PAGE	= $E6
 ; const
 
 ;NUM		= 32
-NUM		= 24
+;NUM		= 24
 
 bubble:
 
@@ -98,11 +99,14 @@ next_frame:
 	sta	is1_smc+1
 	sta	is2_smc+1
 
+num1_smc:
 	lda	#24	; 40
 	sta	I
 
 i_loop:
+num2_smc:
 	lda	#24	; 200
+
 	sta	J
 j_loop:
 	ldx	U
@@ -203,6 +207,35 @@ done_i:
 	inc	T
 
 end:
+
+	lda	KEYPRESS
+	bpl	flip_pages
+	bit	KEYRESET
+				; 0110 -> 0100
+	and	#$5f		; to handle lowercase too...
+
+	cmp	#'A'
+	bne	check_z
+	inc	num1_smc+1
+	jmp	done_keys
+check_z:
+	cmp	#'Z'
+	bne	check_j
+	dec	num1_smc+1
+	jmp	done_keys
+check_j:
+	cmp	#'J'
+	bne	check_m
+	inc	num2_smc+1
+	jmp	done_keys
+check_m:
+	cmp	#'M'
+	bne	done_keys
+	dec	num2_smc+1
+
+done_keys:
+
+flip_pages:
 	; flip pages
 
 	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
