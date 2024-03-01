@@ -15,6 +15,7 @@
 ; 2560 bytes -- full version with keypress to adjust
 ; 2326 bytes -- alignment turned off
 ; 2311 bytes -- optimize mod table generation
+; 1447 bytes -- first attempt at hgr_clear codegen
 
 ; soft-switches
 
@@ -49,6 +50,11 @@ V		= $D9
 
 HGR_PAGE	= $E6
 
+INL		= $FC
+INH		= $FD
+OUTL		= $FE
+OUTH		= $FF
+
 ; const
 
 ;NUM		= 32
@@ -60,6 +66,8 @@ bubble:
 	; setup lookup tables
 
 	jsr	hgr_make_tables
+
+	jsr	hgr_clear_codegen
 
 	;=======================
 	; init graphics
@@ -90,7 +98,20 @@ next_frame:
 	; "fast" clear screen
 
 
-.include "hgr_clear_part.s"
+
+;.include "hgr_clear_part.s"
+
+
+	lda	#0		; color
+	ldy	HGR_PAGE
+	cpy	#$40
+	beq	do_clear_page2
+do_clear_page1:				; replace with jump table?
+	jsr	hgr_page1_clearscreen
+	jmp	done_clear_page
+do_clear_page2:
+	jsr	hgr_page2_clearscreen
+done_clear_page:
 
 	; reset I*T
 
@@ -365,6 +386,9 @@ log_lookup:
 
 
 ; floor(s*sin((x-96)*PI*2/256.0)+48.5);
+
+
+.include "hgr_clear_codegen.s"
 
 .align $100
 sines:
