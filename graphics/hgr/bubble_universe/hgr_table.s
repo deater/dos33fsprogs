@@ -12,11 +12,13 @@ hgr_make_tables:
 
 hgr_make_7_tables:
 
-	ldy	#0
-	lda	#0
-	ldx	#0
+	lda	#0		; load lots of zeros
+	tax
+	tay
 div7_loop:
 	sta	div7_table,Y
+mod7_smc:
+	stx	mod7_table
 
 	inx
 	cpx	#7
@@ -26,22 +28,23 @@ div7_loop:
 	adc	#1
 	ldx	#0
 div7_not7:
+	inc	mod7_smc+1	; assume starts on page boundary
 	iny
 	bne	div7_loop
 
 
-	ldy	#0
-	lda	#0
-mod7_loop:
-	sta	mod7_table,Y
-	clc
-	adc	#1
-	cmp	#7
-	bne	mod7_not7
-	lda	#0
-mod7_not7:
-	iny
-	bne	mod7_loop
+;	ldy	#0
+;	lda	#0
+;mod7_loop:
+;	sta	mod7_table,Y
+;	clc
+;	adc	#1
+;	cmp	#7
+;	bne	mod7_not7
+;	lda	#0
+;mod7_not7:
+;	iny
+;	bne	mod7_loop
 
 
 	; Hposn table
