@@ -16,6 +16,7 @@
 ; 2326 bytes -- alignment turned off
 ; 2311 bytes -- optimize mod table generation
 ; 1447 bytes -- first attempt at hgr_clear codegen
+; 1443 bytes -- tail call optimization
 
 ; soft-switches
 
@@ -290,7 +291,6 @@ hposn_low	= $6b00
 
 hgr_make_tables:
 
-
 	;=====================
 	; make /7 %7 tables
 	;=====================
@@ -300,10 +300,9 @@ hgr_make_7_tables:
 	lda	#0
 	tax
 	tay
-
 div7_loop:
 	sta	div7_table,Y
-mod_smc:
+mod7_smc:
 	stx	mod7_table
 
 	inx
@@ -315,23 +314,9 @@ mod_smc:
 	ldx	#0
 
 div7_not7:
-	inc	mod_smc+1	; assume on page boundary
+	inc	mod7_smc+1	; assume on page boundary
 	iny
 	bne	div7_loop
-
-
-;	ldy	#0
-;	lda	#0
-;mod7_loop:
-;	sta	mod7_table,Y
-;	clc
-;	adc	#1
-;	cmp	#7
-;	bne	mod7_not7
-;	lda	#0
-;mod7_not7:
-;	iny
-;	bne	mod7_loop
 
 
 	; Hposn table

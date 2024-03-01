@@ -39,7 +39,7 @@ bubble.o:	bubble.s hgr_clear_part.s sin_unrolled.s
 BUBBLE_TINY:	bubble_tiny.o
 	ld65 -o BUBBLE_TINY bubble_tiny.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
-bubble_tiny.o:	bubble_tiny.s hgr_clear_part.s sin_unrolled.s hgr_clear_codegen.s
+bubble_tiny.o:	bubble_tiny.s hgr_clear_codegen.s
 	ca65 -o bubble_tiny.o bubble_tiny.s -l bubble_tiny.lst
 
 ###

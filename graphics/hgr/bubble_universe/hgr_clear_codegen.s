@@ -6,7 +6,7 @@ hgr_clear_codegen:
 	;========================
 	; set up output pointers
 
-	lda	#<(hgr_page1_clearscreen)
+	lda	#<(hgr_page1_clearscreen)	; assume both start page boundary
 	sta	OUTL
 	sta	INL
 
@@ -29,7 +29,7 @@ hgr_clear_codegen_loop:
 	lda	#$99		; STA
 	jsr	write_both
 
-	lda	hposn_low,X
+	lda	hposn_low,X	; low is same both
 	jsr	write_both
 
 	lda	hposn_high,X
@@ -77,9 +77,11 @@ hgr_clear_codegen_loop:
 
 
 	lda	#$60			; RTS
-	jsr	write_both
+;	jsr	write_both
 
-	rts				; tail call
+;	rts				; tail call
+
+	; fallthrough
 
 
 	;=============================
