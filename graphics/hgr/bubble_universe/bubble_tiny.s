@@ -17,6 +17,8 @@
 ; 2311 bytes -- optimize mod table generation
 ; 1447 bytes -- first attempt at hgr_clear codegen
 ; 1443 bytes -- tail call optimization
+; 1436 bytes -- call clear screen from page flip code
+; 1434 bytes -- optimize HPLOT
 
 ; soft-switches
 
@@ -95,25 +97,6 @@ bubble:
 
 next_frame:
 
-	;===========================
-	; "fast" clear screen
-
-
-
-;.include "hgr_clear_part.s"
-
-
-	lda	#0		; color
-	ldy	HGR_PAGE
-	cpy	#$40
-	beq	do_clear_page2
-do_clear_page1:				; replace with jump table?
-	jsr	hgr_page1_clearscreen
-	jmp	done_clear_page
-do_clear_page2:
-	jsr	hgr_page2_clearscreen
-done_clear_page:
-
 	; reset I*T
 
 	lda	T
@@ -163,19 +146,16 @@ it1_smc:
 	sta	U		; 3
 
 	;===========================================================
-	; HPLOT 32*U+140,32*V+96
+	; HPLOT U+44,V+96
+	;	U is centered at 96, to get to center of 280 screen add 44
 
+	; U already in A
 
-;	lda	U
-;	clc								; 2
 	adc	#44							; 2
 	tax								; 2
 
 	; calculate Ypos
-
-	lda	V
-;	clc
-;	adc	#96
+	ldy	V
 
 	; "fast" hplot, Xpos in X, Ypos in A
 
@@ -195,12 +175,10 @@ it1_smc:
 	;	We cheat and don't worry about the X positions larger
 	;	than 256 because our algorithm only goes up to 208
 
-	tay								; 2
 	lda	hposn_low,Y						; 4
 	sta	GBASL							; 3
-	clc								; 2
 	lda	hposn_high,Y						; 4
-	adc	HGR_PAGE						; 3
+	ora	HGR_PAGE						; 3
 	sta	GBASH							; 3
 ; 21
 
@@ -276,11 +254,14 @@ flip_pages:
 	bne	flip2
 flip1:
 	bit	PAGE1
+	lda	#0
+	jsr	hgr_page2_clearscreen
 	jmp	next_frame
 flip2:
 	bit	PAGE2
+	lda	#0
+	jsr	hgr_page1_clearscreen
 	jmp	next_frame
-
 
 
 div7_table	= $6800
@@ -375,7 +356,7 @@ log_lookup:
 
 .include "hgr_clear_codegen.s"
 
-.align $100
+;.align $100
 sines:
 	.byte $13,$12,$12,$11,$10,$10,$0F,$0E,$0E,$0D,$0D,$0C,$0C,$0B,$0B,$0B
 	.byte $0A,$0A,$09,$09,$09,$08,$08,$08,$08,$08,$07,$07,$07,$07,$07,$07

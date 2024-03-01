@@ -136,19 +136,16 @@ it1_smc:
 	sta	U		; 3
 
 	;===========================================================
-	; HPLOT 32*U+140,32*V+96
+	; HPLOT U+44,V
+	;	output is centered at 96,96.  Add 44 to center at 140,96
 
-
-;	lda	U
-;	clc								; 2
+	; U in A already
 	adc	#44							; 2
 	tax								; 2
 
 	; calculate Ypos
 
-	lda	V
-;	clc
-;	adc	#96
+	ldy	V
 
 	; "fast" hplot, Xpos in X, Ypos in A
 
@@ -168,12 +165,13 @@ it1_smc:
 	;	We cheat and don't worry about the X positions larger
 	;	than 256 because our algorithm only goes up to 208
 
-	tay								; 2
+;	tay								; 2
 	lda	hposn_low,Y						; 4
 	sta	GBASL							; 3
-	clc								; 2
+;	clc								; 2
 	lda	hposn_high,Y						; 4
-	adc	HGR_PAGE						; 3
+;	adc	HGR_PAGE						; 3
+	ora	HGR_PAGE
 	sta	GBASH							; 3
 ; 21
 
