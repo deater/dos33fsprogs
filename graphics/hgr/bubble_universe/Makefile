@@ -5,7 +5,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts
 EMPTY_DISK = ../../../empty_disk
 
-all:	bubble.dsk make_table
+all:	bubble.dsk make_table make_table2 make_table3 compact_sine
 
 bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_C64 \
 		BUBBLE_ORIG BUBBLE_ROLLED DIAMOND FAST_DOTS \
@@ -103,6 +103,33 @@ make_table.o:	make_table.c
 
 ###
 
+make_table2:	make_table2.o
+	$(CC) -o make_table2 make_table2.o -lm
+
+make_table2.o:	make_table2.c
+	$(CC) $(CFLAGS) -c make_table2.c
+
+###
+
+make_table3:	make_table3.o
+	$(CC) -o make_table3 make_table3.o -lm
+
+make_table3.o:	make_table3.c
+	$(CC) $(CFLAGS) -c make_table3.c
+
+
+###
+
+compact_sine:	compact_sine.o
+	$(CC) -o compact_sine compact_sine.o -lm
+
+compact_sine.o:	compact_sine.c
+	$(CC) $(CFLAGS) -c compact_sine.c
+
+
+###
+
 clean:	
 	rm -f *~ *.o *.lst BUBBLE.BAS HELLO BUBBLE BUBBLE_C64 \
-		DIAMOND BUBBLE_ORIG BUBBLE_ROLLED FAST_DOTS
+		DIAMOND BUBBLE_ORIG BUBBLE_ROLLED FAST_DOTS \
+		make_table make_table2 make_table3 compact_sine
