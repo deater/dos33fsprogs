@@ -9,7 +9,7 @@ all:	bubble.dsk make_table make_table2 make_table3 compact_sine
 
 bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_C64 \
 		BUBBLE_ORIG BUBBLE_ROLLED DIAMOND FAST_DOTS \
-		BUBBLE_TINY
+		BUBBLE_TINY BUBBLE_ROM BUBBLE_XOR
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
 	$(DOS33) -y bubble.dsk SAVE A HELLO
 	$(DOS33) -y bubble.dsk SAVE A BUBBLE.BAS
@@ -20,6 +20,8 @@ bubble.dsk:	HELLO BUBBLE.BAS BUBBLE BUBBLE_C64 \
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 FAST_DOTS
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_C64
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_TINY
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_ROM
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_XOR
 
 ###
 
@@ -33,6 +35,22 @@ BUBBLE:	bubble.o
 
 bubble.o:	bubble.s hgr_clear_part.s sin_unrolled.s
 	ca65 -o bubble.o bubble.s -l bubble.lst
+
+###
+
+BUBBLE_XOR:	bubble_xor.o
+	ld65 -o BUBBLE_XOR bubble_xor.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble_xor.o:	bubble_xor.s hgr_clear_codegen.s
+	ca65 -o bubble_xor.o bubble_xor.s -l bubble_xor.lst
+
+###
+
+BUBBLE_ROM:	bubble_rom.o
+	ld65 -o BUBBLE_ROM bubble_rom.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble_rom.o:	bubble_rom.s hgr_clear_codegen.s
+	ca65 -o bubble_rom.o bubble_rom.s -l bubble_rom.lst
 
 ###
 
@@ -132,4 +150,5 @@ compact_sine.o:	compact_sine.c
 clean:	
 	rm -f *~ *.o *.lst BUBBLE.BAS HELLO BUBBLE BUBBLE_C64 \
 		DIAMOND BUBBLE_ORIG BUBBLE_ROLLED FAST_DOTS \
-		make_table make_table2 make_table3 compact_sine
+		make_table make_table2 make_table3 compact_sine \
+		BUBBLE_ROM BUBBLE_XOR

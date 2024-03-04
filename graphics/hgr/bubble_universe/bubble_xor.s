@@ -1,5 +1,7 @@
 ; bubble universe -- Apple II Hires
 
+; xor?
+
 ; size optimized version
 
 ; by Vince `deater` Weaver
@@ -73,7 +75,7 @@ bubble:
 
 	jsr	hgr_make_tables
 
-	jsr	hgr_clear_codegen
+;	jsr	hgr_clear_codegen
 
 	jsr	setup_sine_table
 
@@ -195,8 +197,8 @@ it1_smc:
 	; get current 7-bit pixel range, OR in to set new pixel
 
 	lda	(GBASL),Y						; 5
-	ora	log_lookup,X						; 4
-;	eor	log_lookup,X						; 4
+;	ora	log_lookup,X						; 4
+	eor	log_lookup,X						; 4
 	sta	(GBASL),Y						; 6
 ; 46
 
@@ -252,21 +254,21 @@ flip_pages:
 	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
 	; if $40 (draw PAGE2) draw PAGE1, SHOW page2
 
-	lda	HGR_PAGE
-	eor	#$60
-	sta	HGR_PAGE
+;	lda	HGR_PAGE
+;	eor	#$60
+;	sta	HGR_PAGE
 
-	cmp	#$40
-	bne	flip2
-flip1:
-	bit	PAGE1
-	lda	#0
-	jsr	hgr_page2_clearscreen
-	jmp	next_frame
-flip2:
-	bit	PAGE2
-	lda	#0
-	jsr	hgr_page1_clearscreen
+;	cmp	#$40
+;	bne	flip2
+;flip1:
+;	bit	PAGE1
+;	lda	#0
+;	jsr	hgr_page2_clearscreen
+;	jmp	next_frame
+;flip2:
+;	bit	PAGE2
+;	lda	#0
+;	jsr	hgr_page1_clearscreen
 	jmp	next_frame
 
 
@@ -360,7 +362,7 @@ log_lookup:
 ; floor(s*sin((x-96)*PI*2/256.0)+48.5);
 
 
-.include "hgr_clear_codegen.s"
+;.include "hgr_clear_codegen.s"
 
 
 ; note: min=7, around 32
