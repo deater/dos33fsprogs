@@ -96,5 +96,5 @@ a2_fortnight_rat2.hgr:	a2_fortnight_rat2.png
 ####
 
 clean:
-	rm -f *~ *.o *.lst disk_sprintes.inc *.zx02 *.hgr
+	rm -f *~ *.o *.lst disk_sprites.inc *.zx02 *.hgr
 

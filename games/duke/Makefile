@@ -6,12 +6,12 @@ B2D = ../../utils/bmp2dhr/b2d
 PNG2GR = ../../utils/gr-utils/png2gr
 LZSA = ~/research/lzsa/lzsa/lzsa
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-
+EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	duke.dsk
 
 duke.dsk:	HELLO LOADER DUKE_TITLE DUKE_LEVEL1 DUKE_LEVEL2
-	cp empty.dsk duke.dsk
+	cp $(EMPTY_DISK) duke.dsk
 	$(DOS33) -y duke.dsk SAVE A HELLO
 	$(DOS33) -y duke.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y duke.dsk BSAVE -a 0x4000 DUKE_TITLE
