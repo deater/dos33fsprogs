@@ -228,7 +228,7 @@ level1_bg_zx02:
 	.include	"level_end.s"
 
 	.include	"draw_keen.s"
-	.include	"keen_sprites.inc"
+	.include	"sprites/keen_sprites.inc"
 	.include	"move_keen.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"

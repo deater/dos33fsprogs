@@ -52,7 +52,7 @@ KEEN_LEVEL1:	keen_level1.o
 keen_level1.o:	keen_level1.s zp.inc hardware.inc \
 	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
 	enemies_level1.s actions_level1.s item_level1.s \
-	graphics/keen_graphics.inc \
+	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s \
@@ -85,6 +85,9 @@ graphics/keen1_title.hgr.zx02:
 graphics/keen_graphics.inc:
 	cd	graphics && make
 
+sprites/keen_sprites.inc:
+	cd	sprites && make
+
 maps/level1_map.lzsa:
 	cd	maps && make
 
@@ -95,4 +98,4 @@ clean:
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean
-
+	cd sprites && make clean
