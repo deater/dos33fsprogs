@@ -10,7 +10,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	keen1_title.hgr.zx02
+all:	keen1_title.hgr.zx02 level1_bg.gr.zx02
 
 ####
 
@@ -24,6 +24,15 @@ keen1_title.hgr.zx02:	keen1_title.hgr
 
 keen1_title.hgr:	keen1_title.png
 	$(PNG_TO_HGR) keen1_title.png > keen1_title.hgr
+
+####
+
+level1_bg.gr.zx02:	level1_bg.gr
+	$(ZX02) level1_bg.gr level1_bg.gr.zx02
+
+level1_bg.gr:	level1_bg.png
+	$(PNG2GR) level1_bg.png level1_bg.gr
+
 
 ####
 
