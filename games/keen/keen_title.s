@@ -186,7 +186,7 @@ done_intro:
 	;============================
 	; set up initial location
 
-	lda	#LOAD_KEEN1
+	lda	#LOAD_MARS
 	sta	WHICH_LOAD		; start at first level
 
 	rts

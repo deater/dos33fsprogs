@@ -11,12 +11,13 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	keen.dsk
 
-keen.dsk:	HELLO LOADER KEEN_TITLE KEEN_LEVEL1
+keen.dsk:	HELLO LOADER KEEN_TITLE KEEN_MARS KEEN_LEVEL1
 #KEEN_LEVEL2
 	cp $(EMPTY_DISK) keen.dsk
 	$(DOS33) -y keen.dsk SAVE A HELLO
 	$(DOS33) -y keen.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y keen.dsk BSAVE -a 0x4000 KEEN_TITLE
+	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_MARS
 	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_LEVEL1
 #	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_LEVEL2
 
@@ -43,6 +44,15 @@ keen_title.o:	keen_title.s zp.inc hardware.inc init_vars.s \
 		zx02_optim.s \
 		graphics/keen1_title.hgr.zx02
 	ca65 -o keen_title.o keen_title.s -l keen_title.lst
+
+####
+
+KEEN_MARS:	keen_mars.o
+	ld65 -o KEEN_MARS keen_mars.o -C ../../linker_scripts/apple2_2000.inc
+
+keen_mars.o:	keen_mars.s zp.inc hardware.inc \
+	maps/mars_map.gr.zx02
+	ca65 -o keen_mars.o keen_mars.s -l keen_mars.lst
 
 ####
 
@@ -94,7 +104,7 @@ maps/level1_map.lzsa:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO KEEN_TITLE KEEN_LEVEL1
+	rm -f *~ *.o *.lst HELLO KEEN_TITLE KEEN_MARS KEEN_LEVEL1
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean

@@ -157,7 +157,7 @@ check_up:
 	bne	check_down
 up_pressed:
 
-	jsr	up_action
+;	jsr	up_action
 
 done_up_pressed:
 	jmp	done_keypress

@@ -196,7 +196,7 @@ done_with_keen:
 	bit	KEYRESET	; clear keypress
 
 
-        lda     #LOAD_KEEN2
+        lda     #LOAD_TITLE
         sta     WHICH_LOAD
 
 	rts			; exit back

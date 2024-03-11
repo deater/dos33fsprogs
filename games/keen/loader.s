@@ -150,11 +150,14 @@ copy_filename_done:
 
 filenames:
 	.word title_filename
+	.word mars_filename
 	.word keen1_filename
 	.word keen2_filename
 
 title_filename:
 	.byte "KEEN_TITLE",0
+mars_filename:
+	.byte "KEEN_MARS",0
 keen1_filename:
 	.byte "KEEN_LEVEL1",0
 keen2_filename:

@@ -2,8 +2,10 @@ CC = gcc
 CFLAGS = -g -Wall -O2
 
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
+PNG2GR = ../../../utils/gr-utils/png2gr
 
-all:	level1_map.zx02 png2map
+
+all:	level1_map.zx02 png2map mars_map.gr.zx02
 
 ###
 
@@ -12,6 +14,17 @@ level1_map.zx02:	level1_map.inc
 
 level1_map.inc:	level1_map.png png2map
 	./png2map level1_map.png level1_map.inc
+
+
+###
+
+mars_map.gr.zx02:	mars_map.gr
+	$(ZX02) mars_map.gr mars_map.gr.zx02
+
+mars_map.gr:	mars_map.png
+	$(PNG2GR) mars_map.png mars_map.gr
+
+
 
 ###
 
