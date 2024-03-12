@@ -486,6 +486,17 @@ no_keypress:
 	; essentially if SCRN(Y,X+2)=9
 check_valid_feet:
 	txa
+	ror
+	bcc	feet_mask_odd
+feet_mask_even:
+	lda	#$F0
+	bne	feet_mask_done		; bra
+feet_mask_odd:
+	lda	#$0F
+feet_mask_done:
+	sta	feet_mask_smc+1
+
+	txa
 	clc
 	adc	#2
 	and	#$FE
@@ -498,8 +509,9 @@ check_valid_feet:
 	sta	OUTH
 
 	lda	(OUTL),Y
+	eor	#$99
+feet_mask_smc:
 	and	#$F0
-	cmp	#$90
 	beq	feet_valid
 	bne	feet_invalid
 
