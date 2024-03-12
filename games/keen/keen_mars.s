@@ -193,12 +193,12 @@ draw_keen:
 
 	lda	KEEN_Y
 	and	#1
-	bne	draw_keen_odd
+	beq	draw_keen_even
 
 draw_keen_odd:
 
+	; calculate address of KEEN_Y/2
 
-draw_keen_even:
 	lda	KEEN_Y
 	and	#$FE
 	tay
@@ -210,7 +210,66 @@ draw_keen_even:
 	sta	OUTH
 
 	ldy	KEEN_X
+
+	lda	(OUTL),Y
+	and	#$0f
+	ora	#$D0
+	sta	(OUTL),Y
+
+	lda	KEEN_Y
+	clc
+	adc	#2
+
+	and	#$FE
+	tay
+	lda	gr_offsets,Y
+	sta	OUTL
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	ldy	KEEN_X
+
+	lda	#$23
+	sta	(OUTL),Y
+
+	rts
+
+
+
+draw_keen_even:
+
+	lda	KEEN_Y
+;	and	#$FE		; no need to mask, know bottom bit is 0
+	tay
+	lda	gr_offsets,Y
+	sta	OUTL
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+	ldy	KEEN_X		; adjust with Xpos
+
 	lda	#$3D
+	sta	(OUTL),Y
+
+	lda	KEEN_Y
+	clc
+	adc	#2
+;	and	#$FE		; no need to mask
+	tay
+	lda	gr_offsets,Y
+	sta	OUTL
+	lda	gr_offsets+1,Y
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+	ldy	KEEN_X		; adjust with Xpos
+
+	lda	(OUTL),Y
+	and	#$F0
+	ora	#$02
 	sta	(OUTL),Y
 
 	rts
@@ -328,12 +387,11 @@ check_left:
 	bne	check_right
 
 left_pressed:
-;	lda	KEEN_DIRECTION
-;	cmp	#$ff			; check if facing left
-;	bne	face_left
-
-;	lda	#1
-;	sta	KEEN_WALKING
+	ldy	KEEN_X
+	dey
+	ldx	KEEN_Y
+	jsr	check_valid_feet
+	bcc	done_left_pressed
 	dec	KEEN_X
 done_left_pressed:
 	jmp	done_keypress
@@ -345,6 +403,11 @@ check_right:
 	bne	check_up
 
 right_pressed:
+	ldy	KEEN_X
+	iny
+	ldx	KEEN_Y
+	jsr	check_valid_feet
+	bcc	done_right_pressed
 	inc	KEEN_X
 done_right_pressed:
 	jmp	done_keypress
@@ -356,6 +419,11 @@ check_up:
 	bne	check_down
 
 up_pressed:
+	ldy	KEEN_X
+	ldx	KEEN_Y
+	dex
+	jsr	check_valid_feet
+	bcc	done_up_pressed
 	dec	KEEN_Y
 done_up_pressed:
 	jmp	done_keypress
@@ -366,7 +434,11 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down_pressed:
-
+	ldy	KEEN_X
+	ldx	KEEN_Y
+	inx
+	jsr	check_valid_feet
+	bcc	done_up_pressed
 	inc	KEEN_Y
 done_down_pressed:
 	jmp	done_keypress
@@ -408,3 +480,37 @@ done_keypress:
 no_keypress:
 	bit	KEYRESET
 	rts
+
+
+
+	; essentially if SCRN(Y,X+2)=9
+check_valid_feet:
+	txa
+	clc
+	adc	#2
+	and	#$FE
+	tax
+	lda	gr_offsets,X
+	sta	OUTL
+	lda	gr_offsets+1,X
+	clc
+	adc	#$8		; into $C00 page (bg lives here)
+	sta	OUTH
+
+	lda	(OUTL),Y
+	and	#$F0
+	cmp	#$90
+	beq	feet_valid
+	bne	feet_invalid
+
+feet_valid:
+	sec
+	rts
+feet_invalid:
+	clc
+	rts
+
+
+
+
+
