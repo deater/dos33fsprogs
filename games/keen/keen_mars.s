@@ -123,6 +123,15 @@ keen_loop:
 	inc	FRAMEH
 no_frame_oflo:
 
+	lda	FRAMEL
+	lsr
+	lsr
+	lsr
+	and	#$7
+	tay
+	lda	star_colors,Y
+	sta	$F28			; 0,28
+
 	;===========================
 	; check end of level
 	;===========================
@@ -599,3 +608,9 @@ maybe_exit:
 	inc	LEVEL_OVER
 
 	rts
+
+
+
+star_colors:
+	.byte $05,$07,$07,$0f
+	.byte $0f,$07,$05,$0a

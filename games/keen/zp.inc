@@ -151,6 +151,8 @@ LONG_FRAME	=	$E4	; nibel
 CURRENT_DISPLAY	=	$E4	; selena
 LAST_PLAYED	=	$E4	; selena
 
+STAR_CYCLE	=	$E5
+
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL
 
