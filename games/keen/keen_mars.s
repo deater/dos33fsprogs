@@ -162,6 +162,8 @@ done_with_keen:
 
 mars_zx02:
 	.incbin	"maps/mars_map.gr.zx02"
+parts_zx02:
+	.incbin	"graphics/parts.gr.zx02"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
@@ -448,11 +450,7 @@ check_space:
 	bne	check_return
 space_pressed:
 
-
-;	lda	KEEN_JUMPING
-;	bne	done_keypress	; don't jump if already jumping
-
-	inc	LEVEL_OVER
+	jsr	do_action
 
 	jmp	done_keypress
 
@@ -461,7 +459,9 @@ check_return:
 	bne	check_escape
 
 return_pressed:
-	inc	LEVEL_OVER
+	;inc	LEVEL_OVER
+
+	jsr	do_action
 
 done_return:
 	jmp	no_keypress
@@ -526,3 +526,76 @@ feet_invalid:
 
 
 
+	;====================================
+	; show parts screen
+	;====================================
+do_parts:
+	lda	#<parts_zx02
+	sta	ZX0_src
+	lda	#>parts_zx02
+	sta	ZX0_src+1
+
+	lda	#$c    ; load to page $c00
+
+	jsr	full_decomp
+
+	jsr	gr_copy_to_current
+
+	jsr	page_flip
+
+	bit	TEXTGR
+
+	bit	KEYRESET
+parts_loop:
+	lda	KEYPRESS
+	bpl	parts_loop
+
+done_parts:
+	bit	KEYRESET
+
+	bit	FULLGR
+
+	lda	#<mars_zx02
+	sta	ZX0_src
+	lda	#>mars_zx02
+	sta	ZX0_src+1
+
+	lda	#$c    ; load to page $c00
+
+	jsr	full_decomp	; tail call
+
+	rts
+
+
+do_action:
+
+	lda	KEEN_X
+	cmp	#15
+	bcc	do_nothing	; blt
+
+	cmp	#20
+	bcc	maybe_ship
+
+	cmp	#35
+	bcs	maybe_exit
+
+do_nothing:
+	; TODO: make sound?
+	rts
+
+maybe_ship:
+
+
+	lda	KEEN_Y
+	cmp	#16
+	bcc	do_nothing
+	cmp	#24
+	bcs	do_nothing
+
+	jmp	do_parts	; tail call
+
+maybe_exit:
+
+	inc	LEVEL_OVER
+
+	rts
