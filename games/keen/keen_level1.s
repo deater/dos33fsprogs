@@ -17,7 +17,7 @@ keen_start:
 	bit	SET_GR
 	bit	PAGE0
 	bit	LORES
-	bit	TEXTGR
+	bit	FULLGR
 
 	jsr	clear_top	; avoid grey stripes at load
 
@@ -61,8 +61,8 @@ keen_start:
 	lda	#1
 	sta	FIREPOWER
 
-	lda	#2			; draw twice (both pages)
-	sta	UPDATE_STATUS
+;	lda	#2			; draw twice (both pages)
+;	sta	UPDATE_STATUS
 
 	lda	#7
 	sta	HEALTH
@@ -78,7 +78,7 @@ keen_start:
 	sta	KEEN_DIRECTION
 
 
-	jsr	update_status_bar
+;	jsr	update_status_bar
 
 	;====================================
 	; load level1 background
@@ -108,6 +108,12 @@ keen_start:
 	;====================================
 	; copy in tilemap subset
 	;====================================
+	; copies local 16x10 tilemap to $bc00
+	;	we start out assuming position is 28,0
+
+	; note 16x10 is 32*40
+	;	if we want full screen it should be 40x48 = 20x12
+
 	lda	#28
 	sta	TILEMAP_X
 	lda	#0
@@ -117,7 +123,7 @@ keen_start:
 
 	;====================================
 	;====================================
-	; Main LOGO loop
+	; Main loop
 	;====================================
 	;====================================
 
@@ -125,7 +131,7 @@ keen_loop:
 
 	; copy over background
 
-	jsr	gr_copy_to_current
+;	jsr	gr_copy_to_current
 
 	; draw tilemap
 
@@ -145,11 +151,11 @@ keen_loop:
 
 	; handle door opening
 
-	jsr	check_open_door
+;	jsr	check_open_door
 
 	; draw a status bar
 
-	jsr	draw_status_bar
+;	jsr	draw_status_bar
 
 	jsr	page_flip
 

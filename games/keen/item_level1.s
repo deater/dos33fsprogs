@@ -7,7 +7,7 @@ check_item:
 
 
 check_red_key:
-	lda	TILEMAP,X
+	lda	tilemap,X
 	cmp	#31		; red key
 	bne	check_blue_key
 

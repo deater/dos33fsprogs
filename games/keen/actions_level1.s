@@ -58,7 +58,7 @@ no_red_key:
 	; there has to be a more efficient way of doing this
 open_the_wall:
 	; reset smc
-	lda	#>BIG_TILEMAP
+	lda	#>big_tilemap
 	sta	rwr_smc1+2
 	sta	rwr_smc2+2
 
@@ -66,12 +66,12 @@ remove_red_wall_outer:
 	ldx	#0
 remove_red_wall_loop:
 rwr_smc1:
-	lda	BIG_TILEMAP,X
+	lda	big_tilemap,X
 	cmp	#49			; red key tile
 	bne	not_red_tile
 	lda	#2			; lblue bg tile
 rwr_smc2:
-	sta	BIG_TILEMAP,X
+	sta	big_tilemap,X
 not_red_tile:
 	inx
 	bne	remove_red_wall_loop
@@ -80,7 +80,7 @@ not_red_tile:
 	inc	rwr_smc2+2
 
 	lda	rwr_smc1+2
-	cmp	#(>BIG_TILEMAP)+40
+	cmp	#(>big_tilemap)+40
 	bne	remove_red_wall_outer
 
 	; refresh local tilemap

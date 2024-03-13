@@ -37,7 +37,7 @@ laser_check_tiles:
 	sta	LASER_TILE
 
 	ldx	LASER_TILE
-	lda	TILEMAP,X
+	lda	tilemap,X
 	cmp	#HARD_TILES
 	bcs	destroy_laser
 

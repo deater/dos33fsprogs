@@ -129,7 +129,7 @@ keen_check_head:
 	sbc	#16			; above head is -2 rows
 	tax
 
-	lda	TILEMAP,X
+	lda	tilemap,X
 
 	; if tile# < HARD_TILES then we are fine
 	cmp	#HARD_TILES
@@ -158,7 +158,7 @@ check_right_collide:
 	adc	#1			; right is one to right
 
 	tax
-	lda	TILEMAP,X
+	lda	tilemap,X
 
 	; if tile# < HARD_TILES then we are fine
 	cmp	#HARD_TILES
@@ -175,7 +175,7 @@ check_left_collide:
 	sbc	#2			; left is one to left
 					; +1 fudge factor
 	tax
-	lda	TILEMAP,X
+	lda	tilemap,X
 
 	; if tile# < HARD_TILES then we are fine
 	cmp	#HARD_TILES
@@ -322,7 +322,7 @@ check_falling:
 	adc	#16			; underfoot is on next row (+16)
 
 	tax
-	lda	TILEMAP,X
+	lda	tilemap,X
 
 	; if tile# < HARD_TILES then we fall
 	cmp	#HARD_TILES

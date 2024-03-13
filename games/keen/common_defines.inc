@@ -4,7 +4,7 @@ LOAD_KEEN1      =       2
 LOAD_KEEN2      =       3
 
 
-TILES           = $9000
-BIG_TILEMAP     = $9400
-TILEMAP         = $BC00
+tiles		= $9000
+big_tilemap	= $9400
+tilemap		= $BC00
 

@@ -2,6 +2,8 @@
 	; draw local tilemap to screen
 	;================================
 
+	; tilemap is 20x12 grid with 2x4 (well, 2x2) tiles
+
 draw_tilemap:
 	ldy	#0			; Y on screen currently drawing
 	sty	tiley			; we draw two at a time
@@ -13,7 +15,7 @@ draw_tilemap:
 	sta	tile_odd
 
 tilemap_outer_loop:
-	ldy	tiley			; setup pointer to current Y
+	ldy	tiley			; setup output pointer to current Y
 	lda	gr_offsets,Y
 	sta	GBASL
 	lda	gr_offsets+1,Y
@@ -21,10 +23,12 @@ tilemap_outer_loop:
 	adc	DRAW_PAGE
 	sta	GBASH
 
-	ldy	#6			; we draw in window 6->34
+
+	ldy	#0
+;	ldy	#6			; we draw in window 6->34
 tilemap_loop:
 	ldx	tilemap_offset		; get actual tile
-	lda	TILEMAP,X
+	lda	tilemap,X
 
 	asl			; *4	; get offset in tile
 	asl
@@ -36,14 +40,14 @@ tilemap_loop:
 	inx
 not_odd_line:
 
-	lda	TILES,X			; draw two tiles
+	lda	tiles,X			; draw two tiles
 	cmp	#$AA			; transparency
 	beq	skip_tile1
 	sta	(GBASL),Y
 skip_tile1:
 
 	iny
-	lda	TILES+1,X
+	lda	tiles+1,X
 	cmp	#$AA
 	beq	skip_tile2
 	sta	(GBASL),Y
@@ -52,7 +56,8 @@ skip_tile2:
 
 	inc	tilemap_offset
 
-	cpy	#34			; until done
+	cpy	#40			; until done
+;	cpy	#34			; until done
 	bne	tilemap_loop
 
 	; move to next line
@@ -61,6 +66,7 @@ skip_tile2:
 	sta	tile_odd
 	bne	move_to_odd_line
 
+	; ????
 move_to_even_line:
 	lda	tilemap_offset
 	clc
@@ -75,12 +81,13 @@ move_to_odd_line:
 done_move_to_line:
 	sta	tilemap_offset
 
-	ldy	tiley				; move to next line
+	ldy	tiley				; move to next output line
 	iny
 	iny
 	sty	tiley
 
-	cpy	#40				; check if at end
+	cpy	#48				; check if at end
+;	cpy	#40				; check if at end
 	bne	tilemap_outer_loop
 
 	rts
@@ -96,21 +103,33 @@ tiley:		.byte $00
 	;===================================
 	; want to copy a 16x10 area from global tileset to local
 
-	; default at first we want to start at 128,88
-	;	which is 13, 20???
+	; originally 16x10				16x10 = 160 bytes
+	;	extend to 20x12 for full screen?	20x12 = 240 bytes
+
+	; big tilemap is 256*40
+	;	so each row is a page
+
+	; TILEMAP_X, TILEMAP_Y specify where in big
+
+	; copy to tilemap
+
+TILEMAP_X_COPY_SIZE = 20
+TILEMAP_Y_COPY_SIZE = 12
 
 copy_tilemap_subset:
 
 	; set start
 	lda	TILEMAP_Y
-	clc
-	adc	#>BIG_TILEMAP
+	clc				; set start
+	adc	#>big_tilemap		; each row is a page, so adding
+					; Y to top byte is indexing to row
+
 	sta	cptl1_smc+2		; set proper row in big tilemap
-	adc	#$10
-	sta	cptl3_smc+1		; set loop limit
+	adc	#TILEMAP_Y_COPY_SIZE
+	sta	cptl3_smc+1		; set loop limit (end)
 
 	; reset row
-	lda	#<TILEMAP
+	lda	#<tilemap
 	sta	cptl2_smc+1		; set small tilemap to row0
 
 cp_tilemap_outer_loop:
@@ -125,19 +144,19 @@ cptl2_smc:
 	sta	$BC00,Y
 	iny
 	inx
-	cpy	#16
+	cpy	#TILEMAP_X_COPY_SIZE
 	bne	cp_tilemap_inner_loop
 
 	; next line
 	inc	cptl1_smc+2		; incremement page
 	clc
 	lda	cptl2_smc+1		; increment row
-	adc	#$10
+	adc	#TILEMAP_X_COPY_SIZE
 	sta	cptl2_smc+1
 
 	lda	cptl1_smc+2
 cptl3_smc:
-	cmp	#$a
+	cmp	#TILEMAP_Y_COPY_SIZE
 	bne	cp_tilemap_outer_loop
 
 	rts
