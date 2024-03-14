@@ -5,19 +5,17 @@
 
 draw_tilemap:
 	ldy	#0			; current screen Ypos to draw at
-	sty	tiley			; (we draw two at a time as lores
+	sty	TILEY			; (we draw two at a time as lores
 					;	is two blocks per byte)
 
-	ldx	#1			; offset in current screen
-					; FIXME: why is this 1?
-
-	stx	tilemap_offset		; tilemap
+	ldx	#0			; offset in current tilemap
+	stx	TILEMAP_OFFSET		;
 
 	lda	#0			; init odd/even
-	sta	tile_odd		; (tiles are two rows tall)
+	sta	TILE_ODD		; (tiles are two rows tall)
 
 tilemap_outer_loop:
-	ldy	tiley			; setup output pointer to current Ypos
+	ldy	TILEY			; setup output pointer to current Ypos
 
 	lda	gr_offsets,Y		; get address of start of row
 	sta	GBASL
@@ -29,73 +27,70 @@ tilemap_outer_loop:
 
 	ldy	#0			; draw row from 0..40
 
-;	ldy	#6			; we draw in window 6->34
-
 tilemap_loop:
-	ldx	tilemap_offset		; get actual tile number
+	ldx	TILEMAP_OFFSET		; get actual tile number
 	lda	tilemap,X		; from tilemap
 
 	asl			; *4	; point to tile to draw (4 bytes each)
 	asl
 	tax
 
-	lda	tile_odd		;
+	lda	TILE_ODD		;
 	beq	not_odd_line
 	inx
 	inx
 not_odd_line:
 
-	lda	tiles,X			; draw two tiles
+	; draw two tiles
+	; note we don't handle transparency in the keen engine
 
-;	cmp	#$AA			; transparency
-;	beq	skip_tile1
-
+	lda	tiles,X
 	sta	(GBASL),Y		; draw upper right
 
-;skip_tile1:
-
 	iny
+
 	lda	tiles+1,X
-;	cmp	#$AA			; transparency
-;	beq	skip_tile2
 	sta	(GBASL),Y		; draw upper left
-;skip_tile2:
+
 	iny
 
-	inc	tilemap_offset
+	inc	TILEMAP_OFFSET
 
 	cpy	#40			; until done
-;	cpy	#34			; until done
 	bne	tilemap_loop
 
 
 	; row is done, move to next line
-	lda	tile_odd		; toggle odd/even
+	lda	TILE_ODD		; toggle odd/even
 	eor	#$1			; (should we just add/mask?)
-	sta	tile_odd
+	sta	TILE_ODD
 	bne	move_to_odd_line
 
 	; move ahead to next row
+
+	; for even line we're already pointing to next
 move_to_even_line:
-	lda	tilemap_offset
-	clc
-	adc	#0
+;	lda	TILEMAP_OFFSET
+;	clc
+;	adc	#0
 	jmp	done_move_to_line
+
+	; FIXME: skip this totally
 
 	; reset back to beginning of line to display it again
 move_to_odd_line:
-	lda	tilemap_offset
+	lda	TILEMAP_OFFSET
 	sec
-;	sbc	#14
-	sbc	#20			; ?
+	sbc	#TILE_COLS		; subtract off length of row
+	sta	TILEMAP_OFFSET
 
 done_move_to_line:
-	sta	tilemap_offset
 
-	ldy	tiley				; move to next output line
+
+	ldy	TILEY				; move to next output line
 	iny
 	iny
-	sty	tiley
+	sty	TILEY
 
 	cpy	#48				; check if at end
 ;	cpy	#40				; check if at end
@@ -104,9 +99,9 @@ done_move_to_line:
 	rts
 
 	; these should probably be in the zero page
-tilemap_offset:	.byte $00
-tile_odd:	.byte $00
-tiley:		.byte $00
+;tilemap_offset:	.byte $00
+;tile_odd:	.byte $00
+;tiley:		.byte $00
 
 
 	;===================================

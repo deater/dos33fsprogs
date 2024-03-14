@@ -126,6 +126,10 @@ DOOR_ACTIVATED		= $9B
 LASER_TILE		= $9C
 TILE_TEMP		= $9D
 
+TILEY			= $9E
+TILE_ODD		= $9F
+TILEMAP_OFFSET		= $A0
+
 ; done game puzzle state
 
 
