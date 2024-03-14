@@ -35,13 +35,13 @@ tilemap_loop:
 	asl
 	tax
 
-	lda	TILE_ODD		;
+	lda	TILE_ODD		; check to see if top or bottom
 	beq	not_odd_line
-	inx
+	inx				; point to bottom half of tile
 	inx
 not_odd_line:
 
-	; draw two tiles
+	; draw two blocks
 	; note we don't handle transparency in the keen engine
 
 	lda	tiles,X
@@ -54,28 +54,27 @@ not_odd_line:
 
 	iny
 
-	inc	TILEMAP_OFFSET
+	inc	TILEMAP_OFFSET		; point to next tile
 
 	cpy	#40			; until done
 	bne	tilemap_loop
+					; FIXME: countdown instead?
 
 
 	; row is done, move to next line
 	lda	TILE_ODD		; toggle odd/even
 	eor	#$1			; (should we just add/mask?)
 	sta	TILE_ODD
-	bne	move_to_odd_line
+	beq	move_to_even_line
 
 	; move ahead to next row
 
 	; for even line we're already pointing to next
-move_to_even_line:
+;move_to_even_line:
 ;	lda	TILEMAP_OFFSET
 ;	clc
 ;	adc	#0
-	jmp	done_move_to_line
-
-	; FIXME: skip this totally
+;	jmp	done_move_to_line
 
 	; reset back to beginning of line to display it again
 move_to_odd_line:
@@ -84,24 +83,21 @@ move_to_odd_line:
 	sbc	#TILE_COLS		; subtract off length of row
 	sta	TILEMAP_OFFSET
 
+move_to_even_line:			; no need, already points to
+					; right place
+
 done_move_to_line:
 
 
 	ldy	TILEY				; move to next output line
-	iny
+	iny					; each row is two lines
 	iny
 	sty	TILEY
 
 	cpy	#48				; check if at end
-;	cpy	#40				; check if at end
 	bne	tilemap_outer_loop
 
 	rts
-
-	; these should probably be in the zero page
-;tilemap_offset:	.byte $00
-;tile_odd:	.byte $00
-;tiley:		.byte $00
 
 
 	;===================================
