@@ -25,7 +25,9 @@ tilemap_outer_loop:
 	sta	GBASH
 
 
-	ldy	#0			; draw row from 0..40
+	ldy	#0			; draw row from 0..39
+					; might be faster to count backwards
+					; but would have to adjust a lot
 
 tilemap_loop:
 	ldx	TILEMAP_OFFSET		; get actual tile number
@@ -58,7 +60,7 @@ not_odd_line:
 
 	cpy	#40			; until done
 	bne	tilemap_loop
-					; FIXME: countdown instead?
+
 
 
 	; row is done, move to next line
@@ -103,17 +105,13 @@ done_move_to_line:
 	;===================================
 	; copy tilemap
 	;===================================
-	; want to copy a 16x10 area from global tileset to local
-
-	; originally 16x10				16x10 = 160 bytes
-	;	extend to 20x12 for full screen?	20x12 = 240 bytes
-
+	; local tilemap subset is 20x12 tiles = 240 bytes
+	;	nicely fits in one page
+	;
 	; big tilemap is 256*40
 	;	so each row is a page
 
 	; TILEMAP_X, TILEMAP_Y specify where in big
-
-	; copy to tilemap
 
 TILEMAP_X_COPY_SIZE = 20
 TILEMAP_Y_COPY_SIZE = 12

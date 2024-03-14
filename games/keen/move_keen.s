@@ -2,7 +2,8 @@ KEEN_SPEED	=	$80
 
 YDEFAULT	=	20
 
-HARD_TILES	=	32	; start at 32
+HARDTOP_TILES	=	32	; start at 32
+ALLHARD_TILES	=	40	; start at 40
 
 TILE_COLS	=	20
 
@@ -133,8 +134,8 @@ keen_check_head:
 
 	lda	tilemap,X
 
-	; if tile# < HARD_TILES then we are fine
-	cmp	#HARD_TILES
+	; if tile# < ALLHARD_TILES then we are fine
+	cmp	#ALLHARD_TILES
 	bcc	collide_left_right		; blt
 
 	lda	#0
@@ -162,8 +163,8 @@ check_right_collide:
 	tax
 	lda	tilemap,X
 
-	; if tile# < HARD_TILES then we are fine
-	cmp	#HARD_TILES
+	; if tile# < ALLHARD_TILES then we are fine
+	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide		; blt
 
 	lda	#1				;
@@ -179,8 +180,8 @@ check_left_collide:
 	tax
 	lda	tilemap,X
 
-	; if tile# < HARD_TILES then we are fine
-	cmp	#HARD_TILES
+	; if tile# < ALLHARD_TILES then we are fine
+	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide	; blt
 
 	lda	#1
@@ -328,8 +329,8 @@ check_falling:
 	tax
 	lda	tilemap,X
 
-	; if tile# < HARD_TILES then we fall
-	cmp	#HARD_TILES
+	; if tile# < HARDTOP_TILES then we fall
+	cmp	#HARDTOP_TILES
 	bcs	feet_on_ground		; bge
 
 	;=======================

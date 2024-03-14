@@ -15,9 +15,15 @@ Memory map:
 
 tiles are 2x4, or 4 bytes each
 	so in theory can have up to 256 of them
-	in 16x16 grid
+	but if we want data to fit in one page then 64 it the maximum
+
+tilemap:
 	tilemap is 256 wide by 40 tall = 10k
 
-Tiles:
-	hard tiles start at 32
+Tile types:
+	 0..26 transparent tiles
+	27..31 items
+	32..39 walkthrough tiles
+	40..63 hard tiles
+
 
