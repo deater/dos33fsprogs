@@ -1,9 +1,11 @@
-
 KEEN_SPEED	=	$80
 
 YDEFAULT	=	20
 
 HARD_TILES	=	32	; start at 32
+
+TILE_COLS	=	20
+
 
 	;=========================
 	; move keen
@@ -110,7 +112,7 @@ keen_collide:
 keen_check_item:
 	lda	KEEN_FOOT_OFFSET
 	sec
-	sbc	#16
+	sbc	#TILE_COLS		; look at body
 	tax
 
 	jsr	check_item
@@ -126,7 +128,7 @@ keen_check_head:
 
 	lda	KEEN_FOOT_OFFSET
 	sec
-	sbc	#16			; above head is -2 rows
+	sbc	#TILE_COLS			; above head is -2 rows
 	tax
 
 	lda	tilemap,X
@@ -247,7 +249,7 @@ keen_get_feet_location:
 
 	; + 1 is because sprite is 4 pixels wide?
 
-	; screen is 16 wide, but offset 4 in
+	; screen is TILE_COLS wide, but offset 4 in
 
 	; to get to feet add 6 to Y?
 
@@ -265,18 +267,20 @@ keen_get_feet_location:
 	; 6 = 48 (3)
 	; 7 = 48 (3)
 
-	lda	KEEN_Y
+;	lda	KEEN_Y
+;	clc
+;	adc	#4		; +4
 
-	clc
-	adc	#4		; +4
+;	lsr			; / 4 (INT)
+;	lsr
 
-	lsr			; / 4 (INT)
-	lsr
+;	asl			; *4
+;	asl
+;	asl
+;	asl
 
-	asl			; *4
-	asl
-	asl
-	asl
+	ldx	KEEN_Y
+	lda	feet_lookup,X
 
 	sta	KEEN_FOOT_OFFSET
 
@@ -299,8 +303,8 @@ foot_done:
 	lsr
 
 	; offset by two block at edge of screen
-	sec
-	sbc	#2
+;	sec
+;	sbc	#2
 
 	clc
 	adc	KEEN_FOOT_OFFSET
@@ -319,7 +323,7 @@ check_falling:
 
 	lda	KEEN_FOOT_OFFSET
 	clc
-	adc	#16			; underfoot is on next row (+16)
+	adc	#TILE_COLS		; underfoot is on next row (+16)
 
 	tax
 	lda	tilemap,X
@@ -392,3 +396,58 @@ done_check_falling:
 
 
 
+	; INT((y+4)/4)*20
+feet_lookup:
+	.byte	20	; 0
+	.byte	20	; 1
+	.byte	20	; 2
+	.byte	20	; 3
+	.byte	40	; 4
+	.byte	40	; 5
+	.byte	40	; 6
+	.byte	40	; 7
+
+	.byte	60	; 8
+	.byte	60	; 9
+	.byte	60	; 10
+	.byte	60	; 11
+	.byte	80	; 12
+	.byte	80	; 13
+	.byte	80	; 14
+	.byte	80	; 15
+
+	.byte	100	; 16
+	.byte	100	; 17
+	.byte	100	; 18
+	.byte	100	; 19
+	.byte	120	; 20
+	.byte	120	; 21
+	.byte	120	; 22
+	.byte	120	; 23
+
+	.byte	140	; 24
+	.byte	140	; 25
+	.byte	140	; 26
+	.byte	140	; 27
+	.byte	160	; 28
+	.byte	160	; 29
+	.byte	160	; 30
+	.byte	160	; 31
+
+	.byte	180	; 32
+	.byte	180	; 33
+	.byte	180	; 34
+	.byte	180	; 35
+	.byte	200	; 36
+	.byte	200	; 37
+	.byte	200	; 38
+	.byte	200	; 39
+
+	.byte	220	; 40
+	.byte	220	; 41
+	.byte	220	; 42
+	.byte	220	; 43
+	.byte	240	; 44
+	.byte	240	; 45
+	.byte	240	; 46
+	.byte	240	; 47

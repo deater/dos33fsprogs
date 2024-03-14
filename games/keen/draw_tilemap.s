@@ -1,57 +1,65 @@
 	;================================
 	; draw local tilemap to screen
 	;================================
-
 	; tilemap is 20x12 grid with 2x4 (well, 2x2) tiles
 
 draw_tilemap:
-	ldy	#0			; Y on screen currently drawing
-	sty	tiley			; we draw two at a time
+	ldy	#0			; current screen Ypos to draw at
+	sty	tiley			; (we draw two at a time as lores
+					;	is two blocks per byte)
 
 	ldx	#1			; offset in current screen
+					; FIXME: why is this 1?
+
 	stx	tilemap_offset		; tilemap
 
 	lda	#0			; init odd/even
-	sta	tile_odd
+	sta	tile_odd		; (tiles are two rows tall)
 
 tilemap_outer_loop:
-	ldy	tiley			; setup output pointer to current Y
-	lda	gr_offsets,Y
+	ldy	tiley			; setup output pointer to current Ypos
+
+	lda	gr_offsets,Y		; get address of start of row
 	sta	GBASL
 	lda	gr_offsets+1,Y
 	clc
-	adc	DRAW_PAGE
+	adc	DRAW_PAGE		; adjust for page
 	sta	GBASH
 
 
-	ldy	#0
-;	ldy	#6			; we draw in window 6->34
-tilemap_loop:
-	ldx	tilemap_offset		; get actual tile
-	lda	tilemap,X
+	ldy	#0			; draw row from 0..40
 
-	asl			; *4	; get offset in tile
+;	ldy	#6			; we draw in window 6->34
+
+tilemap_loop:
+	ldx	tilemap_offset		; get actual tile number
+	lda	tilemap,X		; from tilemap
+
+	asl			; *4	; point to tile to draw (4 bytes each)
 	asl
 	tax
 
-	lda	tile_odd
+	lda	tile_odd		;
 	beq	not_odd_line
 	inx
 	inx
 not_odd_line:
 
 	lda	tiles,X			; draw two tiles
-	cmp	#$AA			; transparency
-	beq	skip_tile1
-	sta	(GBASL),Y
-skip_tile1:
+
+;	cmp	#$AA			; transparency
+;	beq	skip_tile1
+
+	sta	(GBASL),Y		; draw upper right
+
+;skip_tile1:
 
 	iny
 	lda	tiles+1,X
-	cmp	#$AA
-	beq	skip_tile2
-	sta	(GBASL),Y
-skip_tile2:
+;	cmp	#$AA			; transparency
+;	beq	skip_tile2
+	sta	(GBASL),Y		; draw upper left
+;skip_tile2:
 	iny
 
 	inc	tilemap_offset
@@ -60,23 +68,26 @@ skip_tile2:
 ;	cpy	#34			; until done
 	bne	tilemap_loop
 
-	; move to next line
+
+	; row is done, move to next line
 	lda	tile_odd		; toggle odd/even
 	eor	#$1			; (should we just add/mask?)
 	sta	tile_odd
 	bne	move_to_odd_line
 
-	; ????
+	; move ahead to next row
 move_to_even_line:
 	lda	tilemap_offset
 	clc
-	adc	#2
+	adc	#0
 	jmp	done_move_to_line
 
+	; reset back to beginning of line to display it again
 move_to_odd_line:
 	lda	tilemap_offset
 	sec
-	sbc	#14
+;	sbc	#14
+	sbc	#20			; ?
 
 done_move_to_line:
 	sta	tilemap_offset
