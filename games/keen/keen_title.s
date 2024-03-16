@@ -19,7 +19,7 @@ keen_title_start:
 	bit	KEYRESET
 
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 	bit	HIRES
 	bit	FULLGR
 
@@ -253,7 +253,7 @@ done_keyloop:
 	bit	SET_TEXT
 	jsr	print_help
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 
 	ldx	#100
 

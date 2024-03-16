@@ -73,7 +73,7 @@ update_score:
 	;===========================
 
 update_health:
-
+.if 0
 	ldx	#0
 update_health_loop:
 	cpx	HEALTH
@@ -88,7 +88,7 @@ done_health:
 	inx
 	cpx	#8
 	bne	update_health_loop
-
+.endif
 	rts
 
 	;===========================
@@ -141,10 +141,14 @@ update_status_bar:
 	;===========================
 	; draw the status bar
 	;===========================
+	; only draw when ENTER pressed, not always
 draw_status_bar:
+	bit	TEXTGR
 
-	; to improve frame rate, only draw if update status set?
-	; not implemented yet
+	; draw to visible frame
+	lda	DRAW_PAGE
+	eor	#$4
+	sta	DRAW_PAGE
 
 	jsr	inverse_text	; print help node
 	lda	#<help_string
@@ -157,6 +161,23 @@ draw_status_bar:
 	jsr	move_and_print	; print explain text
 	jsr	raw_text
 	jsr	move_and_print	; print status line
+
+	; wait for keypress
+
+	bit	KEYRESET
+wait_status_bar:
+	lda	KEYPRESS
+	bpl	wait_status_bar
+	bit	KEYRESET
+
+	; back to original page
+
+	lda	DRAW_PAGE
+	eor	#$4
+	sta	DRAW_PAGE
+
+	bit	FULLGR
+
 	rts
 
 

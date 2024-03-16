@@ -15,7 +15,7 @@ keen_start:
 	bit	KEYRESET
 
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 	bit	LORES
 	bit	FULLGR
 
@@ -29,7 +29,6 @@ keen_start:
 	sta	ANIMATE_FRAME
 	sta	FRAMEL
 	sta	FRAMEH
-	sta	DISP_PAGE
 	sta	JOYSTICK_ENABLED
 	sta	KEEN_WALKING
 	sta	KEEN_JUMPING
@@ -64,8 +63,8 @@ keen_start:
 ;	lda	#2			; draw twice (both pages)
 ;	sta	UPDATE_STATUS
 
-	lda	#7
-	sta	HEALTH
+;	lda	#7
+;	sta	HEALTH
 
 	lda	#4
 	sta	DRAW_PAGE

@@ -7,7 +7,6 @@ init_vars:
 	sta	ANIMATE_FRAME
 	sta	FRAMEL
 	sta	FRAMEH
-	sta	DISP_PAGE
 	sta	JOYSTICK_ENABLED
 	sta	KEEN_WALKING
 	sta	KEEN_JUMPING
@@ -26,7 +25,7 @@ init_vars:
 	lda	#1
 	sta	FIREPOWER
 
-	lda	#7
-	sta	HEALTH
+	lda	#4
+	sta	KEENS
 
 	rts

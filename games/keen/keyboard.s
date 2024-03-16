@@ -174,7 +174,7 @@ done_down_pressed:
 
 check_space:
 	cmp	#' '
-	bne	check_return
+	bne	check_comma
 space_pressed:
 
 	; jump
@@ -191,15 +191,15 @@ space_pressed:
 
 	jmp	done_keypress
 
-check_return:
-	cmp	#13
-	bne	check_escape
+check_comma:
+	cmp	#'M'
+	bne	check_return
 
-return_pressed:
+comma_pressed:
 
 	; shoot
 	lda	LASER_OUT
-	bne	done_return
+	bne	done_comma
 
 	jsr	laser_noise
 
@@ -231,6 +231,18 @@ laser_assign:
 	sta	LASER_Y
 
 	inc	LASER_OUT
+
+done_comma:
+	jmp	no_keypress
+
+
+check_return:
+	cmp	#13
+	bne	check_escape
+
+return_pressed:
+
+	jsr	draw_status_bar
 
 done_return:
 	jmp	no_keypress
