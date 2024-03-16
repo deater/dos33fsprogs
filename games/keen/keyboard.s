@@ -110,19 +110,32 @@ check_left:
 	bne	check_right
 left_pressed:
 
+	;===============================
+	; left pressed
+	;	if facing left, walk left
+	;	if facing right and walking, stop
+	;	if facing right and not walking, face left
+
 	lda	KEEN_DIRECTION
 	cmp	#$ff			; check if facing left
-	bne	face_left
+	bne	left_facing_right
 
-	lda	#1
+	lda	#4
 	sta	KEEN_WALKING
 	jmp	done_left_pressed
 
-face_left:
-	lda	#$ff
-	sta	KEEN_DIRECTION
+left_facing_right:
+	lda	KEEN_WALKING
+	beq	left_not_walking
+
 	lda	#0
 	sta	KEEN_WALKING
+	beq	done_left_pressed	; bra
+
+left_not_walking:
+
+	lda	#$ff
+	sta	KEEN_DIRECTION
 
 done_left_pressed:
 	jmp	done_keypress
@@ -131,23 +144,63 @@ check_right:
 	cmp	#'D'
 	beq	right_pressed
 	cmp	#$15			; right key
-	bne	check_up
+	bne	check_jump_right
+
+
+	;===============================
+	; right pressed
+	;	if facing right, walk right
+	;	if facing left and walking, stop
+	;	if facing left and not walking, face right
+
 right_pressed:
 	lda	KEEN_DIRECTION
 	cmp	#$1			; check if facing right
-	bne	face_right
+	bne	right_facing_left
 
-	lda	#1
+	lda	#4
 	sta	KEEN_WALKING
 	jmp	done_left_pressed
 
-face_right:
-	lda	#$1
-	sta	KEEN_DIRECTION
+right_facing_left:
+	lda	KEEN_WALKING
+	beq	right_not_walking
+
 	lda	#0
 	sta	KEEN_WALKING
+	beq	done_right_pressed	; bra
+
+right_not_walking:
+	lda	#$1
+	sta	KEEN_DIRECTION
+
 
 done_right_pressed:
+	jmp	done_keypress
+
+check_jump_right:
+	cmp	#'E'
+	bne	check_up
+
+jump_right:
+
+	; jump
+	lda	KEEN_JUMPING
+	bne	done_right_pressed	; don't jump if already jumping
+
+	lda	KEEN_FALLING
+	bne	done_right_pressed	; don't jump if falling
+
+	lda	#JUMP_HEIGHT
+	sta	KEEN_JUMPING
+
+	jsr	jump_noise
+
+	lda	#1
+	sta	KEEN_DIRECTION
+	lda	#10
+	sta	KEEN_WALKING
+
 	jmp	done_keypress
 
 check_up:

@@ -14,7 +14,7 @@ TILE_COLS	=	20
 move_keen:
 
 	lda	#0
-	sta	SUPPRESS_WALK
+	sta	SUPPRESS_WALK		; ????
 
 	jsr	keen_get_feet_location	; get location of feet
 
@@ -24,60 +24,64 @@ move_keen:
 
 	jsr	handle_jumping		; handle jumping
 
-	lda	KEEN_WALKING
+
+	lda	KEEN_WALKING		; if not walking, we're done
 	beq	done_move_keen
 
-	lda	SUPPRESS_WALK
+	dec	KEEN_WALKING		; decrement walk count
+
+	lda	SUPPRESS_WALK		; why????
 	bne	done_move_keen
 
-	lda	KEEN_DIRECTION
+	lda	KEEN_DIRECTION		; check direction
 	bmi	move_left
 
-	lda	KEEN_X
-	cmp	#22
+	lda	KEEN_X			; if X more than 22
+	cmp	#22			; scroll screen rather than keen
 	bcc	keen_walk_right
 
 keen_scroll_right:
 
-	clc
+	clc					; location is 8:8 fixed point
 	lda	KEEN_XL
-	adc	#KEEN_SPEED
+	adc	#KEEN_SPEED			; add in speed
 	sta	KEEN_XL
-	bcc	skip_keen_scroll_right
+	bcc	skip_keen_scroll_right		; if carry out we scroll
 
-	inc	TILEMAP_X
+	inc	TILEMAP_X			; scroll screen to right
 
-	jsr	copy_tilemap_subset
+	jsr	copy_tilemap_subset		; update tilemap
 
 skip_keen_scroll_right:
 
 	jmp	done_move_keen
 
 keen_walk_right:
-	lda	KEEN_XL
+	lda	KEEN_XL				; get 8:8 fixed
 	clc
-	adc	#KEEN_SPEED
+	adc	#KEEN_SPEED			; add in speed
 	sta	KEEN_XL
-	bcc	dwr_noflo
-	inc	KEEN_X
+
+	bcc	dwr_noflo			; if no overflow
+	inc	KEEN_X				; otherwise update X
 dwr_noflo:
 	jmp	done_move_keen
 
 move_left:
 
-	lda	KEEN_X
+	lda	KEEN_X				; get current X
 	cmp	#14
-	bcs	keen_walk_left
+	bcs	keen_walk_left		; bge	; if >=14 walk
 
-keen_scroll_left:
+keen_scroll_left:				; otherwise scroll
 
-	sec
+	sec					; 8.8 fixed point
 	lda	KEEN_XL
 	sbc	#KEEN_SPEED
 	sta	KEEN_XL
 	bcs	skip_keen_scroll_left
 
-	dec	TILEMAP_X
+	dec	TILEMAP_X			; scroll left
 
 	jsr	copy_tilemap_subset
 
@@ -151,7 +155,7 @@ collide_left_right:
 	;===================
 
 	lda	KEEN_DIRECTION
-	beq	done_keen_collide
+	beq	done_keen_collide	; ?
 
 	bmi	check_left_collide
 

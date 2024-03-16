@@ -42,11 +42,13 @@ Status:
 * 11223344 *     20000 *   5     *  N  *
 
 
+Level1:
+	in png: X=80 to 543,	Y=12 to 80	(tiles 4x4)
+		x=0 to 116	Y=0..17
 
+	start position: in png 88,65
+		tile position = 0,5
+		keen position = 2,24 (remember, tiles 2 bytes high)
 
-
-
-
-
-
+	tilemap copies 
 

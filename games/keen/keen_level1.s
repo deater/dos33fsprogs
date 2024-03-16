@@ -60,24 +60,23 @@ keen_start:
 	lda	#1
 	sta	FIREPOWER
 
-;	lda	#2			; draw twice (both pages)
-;	sta	UPDATE_STATUS
-
 ;	lda	#7
 ;	sta	HEALTH
 
 	lda	#4
 	sta	DRAW_PAGE
 
-	lda	#18
+	; Level 1
+	; start at 2,24 (remember tiles 2 bytes high even though 4 pixels)
+	; 	but with reference to starting tilemap (0,5) should be
+	;		2,8?
+
+	lda	#2
 	sta	KEEN_X
-	lda	#0
+	lda	#24
 	sta	KEEN_Y
 	lda	#1
 	sta	KEEN_DIRECTION
-
-
-;	jsr	update_status_bar
 
 	;====================================
 	; load level1 background
@@ -107,15 +106,14 @@ keen_start:
 	;====================================
 	; copy in tilemap subset
 	;====================================
-	; copies local 16x10 tilemap to $bc00
-	;	we start out assuming position is 28,0
+	; we copy in full screen, 40x48 = 20x12 tiles
+	;	we start out assuming position is 0,5
 
-	; note 16x10 is 32*40
-	;	if we want full screen it should be 40x48 = 20x12
 
-	lda	#28
-	sta	TILEMAP_X
+
 	lda	#0
+	sta	TILEMAP_X
+	lda	#5
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
@@ -127,10 +125,6 @@ keen_start:
 	;====================================
 
 keen_loop:
-
-	; copy over background
-
-;	jsr	gr_copy_to_current
 
 	; draw tilemap
 
@@ -151,10 +145,6 @@ keen_loop:
 	; handle door opening
 
 ;	jsr	check_open_door
-
-	; draw a status bar
-
-;	jsr	draw_status_bar
 
 	jsr	page_flip
 
@@ -185,9 +175,6 @@ no_frame_oflo:
 
 	jmp	done_with_keen
 
-
-
-
 do_keen_loop:
 
 	; delay
@@ -201,7 +188,7 @@ done_with_keen:
 	bit	KEYRESET	; clear keypress
 
 
-        lda     #LOAD_TITLE
+        lda     #LOAD_MARS
         sta     WHICH_LOAD
 
 	rts			; exit back
