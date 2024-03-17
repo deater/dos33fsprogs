@@ -109,8 +109,6 @@ keen_start:
 	; we copy in full screen, 40x48 = 20x12 tiles
 	;	we start out assuming position is 0,5
 
-
-
 	lda	#0
 	sta	TILEMAP_X
 	lda	#5
@@ -205,7 +203,7 @@ level1_bg_zx02:
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 	.include	"gr_fast_clear.s"
-	.include	"gr_copy.s"
+;	.include	"gr_copy.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
 	.include	"zx02_optim.s"
@@ -225,7 +223,6 @@ level1_bg_zx02:
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
 	.include	"enemies_level1.s"
-	.include	"actions_level1.s"
 	.include	"item_level1.s"
 
 	.include	"sound_effects.s"

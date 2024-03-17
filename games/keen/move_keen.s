@@ -36,6 +36,12 @@ move_keen:
 	lda	KEEN_DIRECTION		; check direction
 	bmi	move_left
 
+	;==============================
+	; Move Keen Right
+	;==============================
+	; if (keen_x<22) || (tilemap_x>xmax-20) walk
+	;	otherwise, scroll
+
 	lda	KEEN_X			; if X more than 22
 	cmp	#22			; scroll screen rather than keen
 	bcc	keen_walk_right
@@ -68,6 +74,15 @@ dwr_noflo:
 	jmp	done_move_keen
 
 move_left:
+
+	;==============================
+	; Move Keen Right
+	;==============================
+	; if (keen_x>=14) || (tilemap_x=0) walk
+	;	otherwise, scroll
+
+	lda	TILEMAP_X
+	beq	keen_walk_left
 
 	lda	KEEN_X				; get current X
 	cmp	#14

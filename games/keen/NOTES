@@ -8,7 +8,8 @@ Memory map:
 	$0800-$0bff = lo-res page2
 	$0c00-$0fff = background image
 	$1000-$1fff = loader
-	$2000-????? = code
+	$2000-$3fff = code		(8k? currently 5k)
+
 	$9000-$93ff = tiles		(1k)
 	$9400-????? = big_tilemap	(10k)
 	$BC00-????? = tilemap		(1k) 10x16 
