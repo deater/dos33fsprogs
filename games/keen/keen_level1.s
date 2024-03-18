@@ -7,6 +7,10 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
+
+MAX_TILE_X = 96		; 116 - 20
+MAX_TILE_Y = 5		; (34 - 24)/2 (maybe?)
+
 keen_start:
 	;===================
 	; init screen

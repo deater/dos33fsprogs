@@ -76,7 +76,7 @@ dwr_noflo:
 move_left:
 
 	;==============================
-	; Move Keen Right
+	; Move Keen Left
 	;==============================
 	; if (keen_x>=14) || (tilemap_x=0) walk
 	;	otherwise, scroll
@@ -124,7 +124,6 @@ done_move_keen:
 	;=========================
 	; keen collide
 	;=========================
-
 keen_collide:
 	;==================
 	; check for item
@@ -213,22 +212,25 @@ done_keen_collide:
 
 
 	;=========================
-	; check_jumping
+	; handle_jumping
 	;=========================
 handle_jumping:
 
 	lda	KEEN_JUMPING
-	beq	done_handle_jumping
+	beq	done_handle_jumping	; skip if not actually jumping
 
-	lda	KEEN_Y
+	lda	KEEN_Y			; make sure not off screen
 	beq	dont_wrap_jump
 
-	dec	KEEN_Y
+	dec	KEEN_Y			; move up
 	dec	KEEN_Y
 
 dont_wrap_jump:
-	dec	KEEN_JUMPING
-	bne	done_handle_jumping
+
+	dec	KEEN_JUMPING		; slow jump
+	bne	done_handle_jumping	; if positive still going up
+
+					; otherwise hit peak, start falling
 	lda	#1			; avoid gap before falling triggered
 	sta	KEEN_FALLING
 
@@ -358,12 +360,19 @@ check_falling:
 	lda	#1
 	sta	KEEN_FALLING
 
-	; scroll but only if Y>=20 (YDEFAULT)
+	;===================================================
+	; scroll but only if KEEN_Y>=20 (YDEFAULT)
+	;	and TILEMAP_Y < MAX_TILE_Y
+
+	lda	TILEMAP_Y
+	cmp	#MAX_TILE_Y
+	bcs	keen_fall	; bge
 
 	lda	KEEN_Y
 	cmp	#YDEFAULT
 	bcs	scroll_fall	; bge
 
+keen_fall:
 	inc	KEEN_Y
 	inc	KEEN_Y
 	jmp	done_check_falling
