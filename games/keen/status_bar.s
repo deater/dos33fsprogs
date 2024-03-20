@@ -21,6 +21,7 @@ inc_score:
 	lda	SCORE2
 	adc	#0
 	sta	SCORE2
+
 	cld
 
 	rts
@@ -28,67 +29,103 @@ inc_score:
 	;===========================
 	; update score
 	;===========================
-
+	; remove leading zeros
+	; leftmost is score_string+4 (it's +2 due to x,y coord at begin)
 update_score:
+	lda	#0
+	sta	LEADING_ZERO
 
-	lda	SCORE0
-	and	#$f
-	ora	#$b0		; 0 -> $b0
-	sta	score_string+6
+update_score2_l:
+	lda	SCORE2
+	lsr
+	lsr
+	lsr
+	lsr
 
-	lda	SCORE0
-	lsr
-	lsr
-	lsr
-	lsr
-	ora	#$b0		; 0 -> $b0
-	sta	score_string+5
+	beq	update_score2_r
 
-	lda	SCORE1
-	and	#$f
-	ora	#$b0		; 0 -> $b0
-	sta	score_string+4
-
-	lda	SCORE1
-	lsr
-	lsr
-	lsr
-	lsr
 	ora	#$b0		; 0 -> $b0
 	sta	score_string+3
+	inc	LEADING_ZERO
+
+update_score2_r:
 
 	lda	SCORE2
 	and	#$f
+	bne	write_score2_r
+	ldx	LEADING_ZERO
+	beq	update_score_1_l
+
+write_score2_r:
 	ora	#$b0		; 0 -> $b0
-	sta	score_string+2
+	sta	score_string+4
+	inc	LEADING_ZERO
+
+update_score_1_l:
+	lda	SCORE1
+	lsr
+	lsr
+	lsr
+	lsr
+
+	bne	write_score1_l
+	ldx	LEADING_ZERO
+	beq	update_score_1_r
+
+write_score1_l:
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+5
+	inc	LEADING_ZERO
+
+update_score_1_r:
+	lda	SCORE1
+	and	#$f
+
+	bne	write_score1_r
+	ldx	LEADING_ZERO
+	beq	update_score_0_l
+write_score1_r:
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+6
+	inc	LEADING_ZERO
+
+update_score_0_l:
+	lda	SCORE0
+	lsr
+	lsr
+	lsr
+	lsr
+
+	bne	write_score0_l
+	ldx	LEADING_ZERO
+	beq	update_score_0_r
+
+write_score0_l:
+
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+7
+	inc	LEADING_ZERO
+
+update_score_0_r:
+	lda	SCORE0
+	and	#$f
+
+	bne	write_score0_r
+	ldx	LEADING_ZERO
+	beq	done_write_score
+write_score0_r:
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+8
+
+	lda	#$b0		; after first string, this digit always 0
+	sta	score_string+9
+
+done_write_score:
+
 
 	rts
 
 
-	;===========================
-	; update health
-	;===========================
-
-.if 0
-update_health:
-
-	ldx	#0
-update_health_loop:
-	cpx	HEALTH
-	bcc	health_on
-	lda	#'_'|$80
-	bne	done_health
-health_on:
-	lda	#' '
-done_health:
-	sta	score_string+9,X
-
-	inx
-	cpx	#8
-	bne	update_health_loop
-
-	rts
-.endif
 
 	;===========================
 	; update items
@@ -177,7 +214,21 @@ draw_box_inner:
 	bne	draw_box_loop
 
 
+	;============
 	; draw keens
+
+	ldx	KEENS
+	cpx	#7			; max out at 7
+	bcc	draw_keens
+	ldx	#7
+draw_keens:
+	dex
+	stx	TEMP_STATUS
+
+	beq	done_draw_keens		; if 0, don't draw any
+
+draw_keens_loop:
+
 
 	ldx	#<keen_sprite_stand_right
 	stx	INL
@@ -186,14 +237,22 @@ draw_box_inner:
 
 	; XPOS, YPOS
 
-	lda	#2
+	lda	TEMP_STATUS
+	asl
+	asl
+
+;	clc
+;	adc	#1
 	sta	XPOS
 	lda	#32
 	sta	YPOS
 
 	jsr	put_sprite_crop
 
+	dec	TEMP_STATUS
+	bpl	draw_keens_loop
 
+done_draw_keens:
 
 	; TODO: draw keycards
 
@@ -236,5 +295,5 @@ status_string:
 	.byte 0,21,"                                        ",0
 	.byte 0,22,"  SCORE     NEXT KEEN  RAYGUN   POGO    ",0
 score_string:
-	.byte 0,23," 00000000       20000    0       N      ",0
+	.byte 0,23,"        0       20000    0       N      ",0
 

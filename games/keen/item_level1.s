@@ -21,11 +21,21 @@ check_item:
 	; 4 = carbonated beverage	200 pts
 	; ? = bear			5000 pts
 
+	beq	get_laser_gun
+
+	; otherwise look up points and add it
+
+	tay
+	lda	score_lookup,Y
+	jsr	inc_score
+	jmp	done_item_pickup
+
+get_laser_gun:
+
 	; keycards go here too...
+get_keycard:
 
-	; use value to update score
-
-
+done_item_pickup:
 
 	; erase
 
@@ -104,3 +114,13 @@ check_blue_key:
 .endif
 done_check_item:
 	rts
+
+
+score_lookup:
+	.byte $00,$01,$10,$05,$02,$50		; BCD
+	; 0 = laser gun
+	; 1 = lollipop			100 pts
+	; 2 = book			1000 pts
+	; 3 = pizza			500 pts
+	; 4 = carbonated beverage	200 pts
+	; ? = bear			5000 pts
