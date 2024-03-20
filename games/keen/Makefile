@@ -40,7 +40,7 @@ loader.o:	loader.s
 KEEN_TITLE:	keen_title.o
 	ld65 -o KEEN_TITLE keen_title.o -C ../../linker_scripts/apple2_4000.inc
 
-keen_title.o:	keen_title.s zp.inc hardware.inc init_vars.s \
+keen_title.o:	keen_title.s zp.inc hardware.inc \
 		zx02_optim.s \
 		graphics/keen1_title.hgr.zx02
 	ca65 -o keen_title.o keen_title.s -l keen_title.lst

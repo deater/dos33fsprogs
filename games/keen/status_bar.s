@@ -1,15 +1,17 @@
 ; Draw Status Bar
 
 	;===========================
-	; inc_score_by_10
+	; inc_score
 	;===========================
-	; FIXME: make sure interrupt routine handles d flag properly
-inc_score_by_10:
+	; make sure any interrupt routine handles d flag properly
+	; value to add by in A (BCD/100)
+	; for Keen assume always a multiple of 100
+inc_score:
 
 	sed
-	lda	SCORE0
+
 	clc
-	adc	#$10
+	adc	SCORE0
 	sta	SCORE0
 
 	lda	SCORE1
@@ -20,8 +22,6 @@ inc_score_by_10:
 	adc	#0
 	sta	SCORE2
 	cld
-
-	jsr	update_score
 
 	rts
 
@@ -34,7 +34,7 @@ update_score:
 	lda	SCORE0
 	and	#$f
 	ora	#$b0		; 0 -> $b0
-	sta	status_string+6
+	sta	score_string+6
 
 	lda	SCORE0
 	lsr
@@ -42,12 +42,12 @@ update_score:
 	lsr
 	lsr
 	ora	#$b0		; 0 -> $b0
-	sta	status_string+5
+	sta	score_string+5
 
 	lda	SCORE1
 	and	#$f
 	ora	#$b0		; 0 -> $b0
-	sta	status_string+4
+	sta	score_string+4
 
 	lda	SCORE1
 	lsr
@@ -55,15 +55,12 @@ update_score:
 	lsr
 	lsr
 	ora	#$b0		; 0 -> $b0
-	sta	status_string+3
+	sta	score_string+3
 
 	lda	SCORE2
 	and	#$f
 	ora	#$b0		; 0 -> $b0
-	sta	status_string+2
-
-	lda	#2
-	sta	UPDATE_STATUS
+	sta	score_string+2
 
 	rts
 
@@ -72,8 +69,9 @@ update_score:
 	; update health
 	;===========================
 
-update_health:
 .if 0
+update_health:
+
 	ldx	#0
 update_health_loop:
 	cpx	HEALTH
@@ -83,13 +81,14 @@ update_health_loop:
 health_on:
 	lda	#' '
 done_health:
-	sta	status_string+9,X
+	sta	score_string+9,X
 
 	inx
 	cpx	#8
 	bne	update_health_loop
-.endif
+
 	rts
+.endif
 
 	;===========================
 	; update items
@@ -97,23 +96,23 @@ done_health:
 
 update_items:
 
-	lda	INVENTORY
+	lda	KEYCARDS
 
 	and	#INV_RED_KEY
 	beq	done_red_key
 
 	lda	#'R'&$3f
-	sta	status_string+33
+	sta	score_string+33
 
 done_red_key:
 
-	lda	INVENTORY
+	lda	KEYCARDS
 
 	and	#INV_BLUE_KEY
 	beq	done_blue_key
 
 	lda	#'B'&$3f
-	sta	status_string+35
+	sta	score_string+35
 
 done_blue_key:
 
@@ -125,42 +124,92 @@ done_blue_key:
 	;===========================
 	; update the status bar
 	;===========================
-update_status_bar:
-
-	jsr	update_score
-
-	jsr	update_health
-
-	jsr	update_items
-
-	lda	#2
-	sta	UPDATE_STATUS
-
-	rts
+;update_status_bar:
+;
+;	jsr	update_score
+;
+;	jsr	update_health
+;
+;	jsr	update_items
+;
+;	lda	#2
+;	sta	UPDATE_STATUS
+;
+;	rts
 
 	;===========================
 	; draw the status bar
 	;===========================
 	; only draw when ENTER pressed, not always
 draw_status_bar:
-	bit	TEXTGR
+
+	jsr	update_score
+
+
+	bit	TEXTGR			; split graphics/text
 
 	; draw to visible frame
 	lda	DRAW_PAGE
 	eor	#$4
 	sta	DRAW_PAGE
 
-	jsr	inverse_text	; print help node
-	lda	#<help_string
+	; draw white box
+
+	ldx	#30
+draw_box_loop:
+	lda	gr_offsets,X
 	sta	OUTL
-	lda	#>help_string
+	lda	gr_offsets+1,X
+	clc
+	adc	DRAW_PAGE
+	sta	OUTH
+
+	ldy	#39
+	lda	#$FF
+draw_box_inner:
+	sta	(OUTL),Y
+	dey
+	bpl	draw_box_inner
+
+	inx
+	inx
+	cpx	#40
+	bne	draw_box_loop
+
+
+	; draw keens
+
+	ldx	#<keen_sprite_stand_right
+	stx	INL
+	lda	#>keen_sprite_stand_right
+	sta	INH
+
+	; XPOS, YPOS
+
+	lda	#2
+	sta	XPOS
+	lda	#32
+	sta	YPOS
+
+	jsr	put_sprite_crop
+
+
+
+	; TODO: draw keycards
+
+	; TODO: draw parts
+
+	; draw text at bottom
+
+	jsr	inverse_text
+	lda	#<status_string
+	sta	OUTL
+	lda	#>status_string
 	sta	OUTH
 	jsr	move_and_print
-
-	jsr	normal_text	; (normal)
-	jsr	move_and_print	; print explain text
-	jsr	raw_text
-	jsr	move_and_print	; print status line
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	; wait for keypress
 
@@ -181,18 +230,11 @@ wait_status_bar:
 	rts
 
 
-help_string:
-	.byte 3,20,"        PRESS 'H' FOR HELP        ",0
-
-score_string:
-	;           012456789012345678901234567890123456789
-	.byte 0,22,"SCORE   HEALTH   FIREPOWER    INVENTORY",0
 status_string:
-;	.byte 0,23,"ZZZZZ  XXXXXXXX  =-                    ",0
-	.byte 0,23,"ZZZZZ"
-	.byte ' '|$80,' '|$80
-	.byte "XXXXXXXX"
-	.byte ' '|$80,' '|$80
-	.byte '='|$80,'-'|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80
-	.byte ' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,' '|$80,0
+	;           0123456789012345678901234567890123456789
+	.byte 0,20," KEENS             KEYCARDS    PARTS    ",0
+	.byte 0,21,"                                        ",0
+	.byte 0,22,"  SCORE     NEXT KEEN  RAYGUN   POGO    ",0
+score_string:
+	.byte 0,23," 00000000       20000    0       N      ",0
 

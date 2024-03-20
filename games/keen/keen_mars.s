@@ -31,42 +31,16 @@ keen_start:
 	sta	ANIMATE_FRAME
 	sta	FRAMEL
 	sta	FRAMEH
-	sta	JOYSTICK_ENABLED
+
 	sta	KEEN_WALKING
 	sta	KEEN_JUMPING
 	sta	LEVEL_OVER
 	sta	LASER_OUT
 	sta	KEEN_XL
-	sta	SCORE0
-	sta	SCORE1
-	sta	SCORE2
 	sta	KEEN_FALLING
 	sta	KEEN_SHOOTING
 	sta	KICK_UP_DUST
-	sta	DOOR_ACTIVATED
-	sta	INVENTORY
 
-;	lda	#<enemy_data
-;	sta	ENEMY_DATAL
-;	lda	#>enemy_data
-;	sta	ENEMY_DATAH
-
-	; FIXME: temporary
-;	lda	INVENTORY
-;	ora	#INV_RED_KEY
-;	sta	INVENTORY
-
-;	lda	#$10
-;	sta	SCORE0
-
-	lda	#1
-	sta	FIREPOWER
-
-	lda	#2			; draw twice (both pages)
-	sta	UPDATE_STATUS
-
-	lda	#4
-	sta	KEENS
 
 	lda	#4
 	sta	DRAW_PAGE

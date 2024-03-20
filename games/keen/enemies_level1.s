@@ -45,7 +45,7 @@ hit_something:
 
 	jsr	enemy_noise
 
-	jsr	inc_score_by_10
+;	jsr	inc_score_by_10
 
 	jmp	exit_laser_enemy
 

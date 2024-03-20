@@ -176,11 +176,28 @@ done_intro:
 	bit	FULLGR
 	bit	LORES
 
-	;============================
+	;=====================
 	; init vars
+	;=====================
+init_vars:
+	lda	#0
+	sta	ANIMATE_FRAME
+	sta	FRAMEL
+	sta	FRAMEH
+	sta	JOYSTICK_ENABLED
+	sta	LEVEL_OVER
 
-	jsr	init_vars
+	sta	SCORE0			; set score to 0
+	sta	SCORE1
+	sta	SCORE2
 
+	sta	RAYGUNS			; number of laser blasts
+	sta	KEYCARDS
+	sta	SHIP_PARTS
+	sta	POGO
+
+	lda	#4			; number of lives
+	sta	KEENS
 
 
 	;============================
@@ -206,7 +223,6 @@ done_intro:
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 
-	.include	"init_vars.s"
 ;	.include	"graphics_title/title_graphics.inc"
 ;	.include	"lc_detect.s"
 
