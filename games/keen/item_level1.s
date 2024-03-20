@@ -31,6 +31,14 @@ check_item:
 	jmp	done_item_pickup
 
 get_laser_gun:
+	lda	RAYGUNS
+	clc
+	sed
+	adc	#$05
+	sta	RAYGUNS
+	cld
+
+	jmp	done_item_pickup
 
 	; keycards go here too...
 get_keycard:

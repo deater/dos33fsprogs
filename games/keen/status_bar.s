@@ -26,6 +26,35 @@ inc_score:
 
 	rts
 
+
+	;===========================
+	; update rayguns
+	;===========================
+	; remove leading zeros
+	; leftmost is score_string+26
+update_rayguns:
+
+update_raygun_l:
+	lda	RAYGUNS
+	lsr
+	lsr
+	lsr
+	lsr
+
+	beq	update_raygun_r
+
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+26
+
+update_raygun_r:
+	lda	RAYGUNS
+	and	#$f
+
+	ora	#$b0		; 0 -> $b0
+	sta	score_string+27
+
+	rts
+
 	;===========================
 	; update score
 	;===========================
@@ -181,7 +210,7 @@ done_blue_key:
 draw_status_bar:
 
 	jsr	update_score
-
+	jsr	update_rayguns
 
 	bit	TEXTGR			; split graphics/text
 
