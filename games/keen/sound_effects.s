@@ -1,3 +1,96 @@
+	;=====================
+	; entry music
+entry_music:
+	lda	SOUND_STATUS
+	bmi	done_entry_music
+
+	; music from _mr_m_ on Commander Keen Forum, Jun 5 2009
+	; 4* D5 32
+	; 4* A4 32
+	; D5 A4 D5 G5 (all 8th)
+
+	lda	#0
+	sta	MUSIC_PTR
+entry_music_loop:
+	ldx	MUSIC_PTR
+	lda	entry_music_freq,X
+	beq	done_entry_music
+	sta	speaker_frequency
+	lda	entry_music_len,X
+	sta	speaker_duration
+	jsr	speaker_tone
+
+	lda	#100
+	jsr	WAIT	; FIXME: won't work if language card active
+
+	inc	MUSIC_PTR
+	jmp	entry_music_loop
+
+done_entry_music:
+	rts
+
+
+entry_music_freq:
+	.byte NOTE_D5,NOTE_D5,NOTE_D5,NOTE_D5
+	.byte NOTE_A4,NOTE_A4,NOTE_A4,NOTE_A4
+	.byte NOTE_D5,NOTE_A4,NOTE_D5,NOTE_G5
+	.byte 0
+
+entry_music_len:
+	.byte 16,16,16,16
+	.byte 16,16,16,16
+	.byte 64,64,64,64
+
+
+
+
+	;=====================
+	; exit music
+exit_music:
+	lda	SOUND_STATUS
+	bmi	done_exit_music
+
+	; all 16 notes
+	; F#4 A#4 C5 D5 D#5 F5
+	; G4 G4 G4
+
+	lda	#0
+	sta	MUSIC_PTR
+exit_music_loop:
+	ldx	MUSIC_PTR
+	lda	exit_music_freq,X
+	beq	done_exit_music
+	sta	speaker_frequency
+	lda	exit_music_len,X
+	sta	speaker_duration
+	jsr	speaker_tone
+
+	lda	#100
+	jsr	WAIT	; FIXME: won't work if language card active
+
+	inc	MUSIC_PTR
+	jmp	exit_music_loop
+
+done_exit_music:
+	rts
+
+	; all 16 notes
+	; F#4 A#4 C5 D5 D#5 F5
+	; G4 G4 G4
+
+exit_music_freq:
+	.byte NOTE_FSHARP4,NOTE_ASHARP4,NOTE_C5,NOTE_D5
+	.byte NOTE_DSHARP5,NOTE_F5,NOTE_G4,NOTE_G4
+	.byte NOTE_G4
+	.byte 0
+
+exit_music_len:
+	.byte 48,48,48,48
+	.byte 48,48,48,48
+	.byte 48
+
+
+
 	;======================
 	; noise when jump
 jump_noise:

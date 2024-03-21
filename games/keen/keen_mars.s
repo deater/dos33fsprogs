@@ -129,6 +129,10 @@ do_keen_loop:
 done_with_keen:
 	bit	KEYRESET	; clear keypress
 
+	; sound effect
+
+	jsr	entry_music
+;	jsr	exit_music
 
         lda     #LOAD_KEEN1
         sta     WHICH_LOAD

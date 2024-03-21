@@ -705,7 +705,6 @@ sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
 					;dataend         = filbuf+4
 
-	.include	"init_vars.s"
 
 loader_end:
 

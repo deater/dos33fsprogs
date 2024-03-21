@@ -186,7 +186,7 @@ SAMPLE_H        = $F3
 
 
 
-
+MUSIC_PTR	=	$F7
 LEADING_ZERO	=	$F8
 TEMP_STATUS	=	$F9
 TEMP		=	$FA
