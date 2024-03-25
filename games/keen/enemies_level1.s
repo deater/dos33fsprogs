@@ -66,44 +66,25 @@ exit_laser_enemy:
 	; move enemy
 	;=======================
 	; which one is in Y
+
+
+	; assume yorp for now
 move_enemy:
 
-	lda	enemy_data+ENEMY_DATA_TYPE,Y
-	and	#$fc
-
-	cmp	#ENEMY_CAMERA
-	beq	aim_camera
-
-	; FIXME: actually move them
-move_bot:
-move_crawler:
-	lda	FRAMEL
-	and	#$f
-	bne	done_move_enemy
-
-	lda	enemy_data+ENEMY_DATA_TYPE,Y
-	eor	#$2
-	sta	enemy_data+ENEMY_DATA_TYPE,Y
-	jmp	done_move_enemy
-
-aim_camera:
-	lda	KEEN_X
-	lsr
+	lda	enemy_data+ENEMY_DATA_X,Y
 	clc
-	adc	TILEMAP_X
+	adc	#1
+	sta	enemy_data+ENEMY_DATA_X,Y
 
-	cmp	enemy_data+ENEMY_DATA_TILEX,Y
-	bcc	aim_camera_left
+	cmp	#36
+	bcc	move_enemy_good
 
-aim_camera_right:
-	lda	#2
-	sta	enemy_data+ENEMY_DATA_TYPE,Y
-	jmp	done_move_enemy
-aim_camera_left:
 	lda	#0
-	sta	enemy_data+ENEMY_DATA_TYPE,Y
+	sta	enemy_data+ENEMY_DATA_OUT,Y
 
-done_move_enemy:
+
+move_enemy_good:
+
 	rts
 
 
@@ -123,80 +104,93 @@ draw_enemies_loop:
 
 	; check if on screen
 
-	lda	TILEMAP_X
-	cmp	enemy_data+ENEMY_DATA_TILEX,Y
-	bcs	done_draw_enemy
+;	lda	TILEMAP_X
+;	cmp	enemy_data+ENEMY_DATA_TILEX,Y
+;	bcs	done_draw_enemy
 
-	clc
-	adc	#14
-	cmp	enemy_data+ENEMY_DATA_TILEX,Y
-	bcc	done_draw_enemy
+;	clc
+;	adc	#14
+;	cmp	enemy_data+ENEMY_DATA_TILEX,Y
+;	bcc	done_draw_enemy
 
-	lda	TILEMAP_Y
-	cmp	enemy_data+ENEMY_DATA_TILEY,Y
-	bcs	done_draw_enemy
+;	lda	TILEMAP_Y
+;	cmp	enemy_data+ENEMY_DATA_TILEY,Y
+;	bcs	done_draw_enemy
 
-	clc
-	adc	#10
-	cmp	enemy_data+ENEMY_DATA_TILEY,Y
-	bcc	done_draw_enemy
+;	clc
+;	adc	#10
+;	cmp	enemy_data+ENEMY_DATA_TILEY,Y
+;	bcc	done_draw_enemy
 
 	; set X and Y value
 	; convert tile values to X,Y
 	; X = (ENEMY_TILE_X-TILEX)*2 + 6
-	lda	enemy_data+ENEMY_DATA_TILEX,Y
-	sec
-	sbc	TILEMAP_X
-	asl
-	clc
-	adc	#4
-	sta	XPOS
+;	lda	enemy_data+ENEMY_DATA_TILEX,Y
+;	sec
+;	sbc	TILEMAP_X
+;	asl
+;	clc
+;	adc	#4
+;	sta	XPOS
 
 	; Y = (ENEMY_TILE_Y-TILEY)*4
-	lda	enemy_data+ENEMY_DATA_TILEY,Y
-	sec
-	sbc	TILEMAP_Y
-	asl
-	asl
-	sta	YPOS
+;	lda	enemy_data+ENEMY_DATA_TILEY,Y
+;	sec
+;	sbc	TILEMAP_Y
+;	asl
+;	asl
+;	sta	YPOS
 
 	; see if exploding
-	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
-	beq	draw_proper_enemy
-draw_exploding_enemy:
-	asl
-	tax
-	lda	enemy_explosion_sprites,X
-	sta	INL
-	lda	enemy_explosion_sprites+1,X
-	sta	INH
+;	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
+;	beq	draw_proper_enemy
+;draw_exploding_enemy:
+;	asl
+;	tax
+;	lda	enemy_explosion_sprites,X
+;	sta	INL
+;	lda	enemy_explosion_sprites+1,X
+;	sta	INH
 
-	lda	FRAMEL
-	and	#$3
-	bne	done_exploding
+;	lda	FRAMEL
+;	and	#$3
+;	bne	done_exploding
 
 	; move to next frame
-	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
-	clc
-	adc	#1
-	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
+;	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
+;	clc
+;	adc	#1
+;	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
 
-	cmp	#4
-	bne	done_exploding
-	lda	#0
-	sta	enemy_data+ENEMY_DATA_OUT,Y
+;	cmp	#4
+;	bne	done_exploding
+;	lda	#0
+;	sta	enemy_data+ENEMY_DATA_OUT,Y
 
-done_exploding:
-	jmp	draw_enemy
+;done_exploding:
+;	jmp	draw_enemy
 
 	; otherwise draw proper sprite
 draw_proper_enemy:
-	lda	enemy_data+ENEMY_DATA_TYPE,Y
-	tax
-	lda	enemy_sprites,X
+;	lda	enemy_data+ENEMY_DATA_TYPE,Y
+;	tax
+;	lda	enemy_sprites,X
+;	sta	INL
+;	lda	enemy_sprites+1,X
+;	sta	INH
+
+	lda	#<yorp_sprite_walking_right
 	sta	INL
-	lda	enemy_sprites+1,X
+
+	lda	#>yorp_sprite_walking_right
 	sta	INH
+
+	lda	enemy_data+ENEMY_DATA_X,Y
+	sta	XPOS
+	lda	enemy_data+ENEMY_DATA_Y,Y
+	sta	YPOS
+
+
 
 draw_enemy:
 	tya
@@ -206,6 +200,8 @@ draw_enemy:
 
 	pla
 	tay
+
+	; also move enemy
 
 	jsr	move_enemy
 
@@ -222,6 +218,7 @@ done_draw_enemy:
 exit_draw_enemy:
 	rts
 
+.if 0
 enemy_sprites:
 	.word	enemy_camera_sprite1
 	.word	enemy_camera_sprite2
@@ -229,39 +226,7 @@ enemy_sprites:
 	.word	enemy_crawler_sprite2
 	.word	enemy_bot_sprite1
 	.word	enemy_bot_sprite2
-
-
-
-enemy_bot_sprite1:
-	.byte	2,2
-	.byte	$Ae,$e3
-	.byte	$6e,$0e
-
-enemy_bot_sprite2:
-	.byte	2,2
-	.byte	$e3,$Ae
-	.byte	$0e,$6e
-
-enemy_crawler_sprite1:
-	.byte 2,2
-	.byte $f5,$cA
-	.byte $f5,$Ac
-
-enemy_crawler_sprite2:
-	.byte 2,2
-	.byte $5f,$cA
-	.byte $5f,$Ac
-
-
-enemy_camera_sprite1:
-	.byte	2,2
-	.byte	$AA,$76
-	.byte	$f7,$A5
-
-enemy_camera_sprite2:
-	.byte	2,2
-	.byte	$76,$AA
-	.byte	$A5,$f7
+.endif
 
 enemy_explosion_sprites:
 	.word	enemy_explosion_sprite1
@@ -284,9 +249,11 @@ enemy_explosion_sprite3:
 	.byte	$7A,$5A
 	.byte	$A5,$A7
 
-ENEMY_CAMERA	= 0
-ENEMY_CRAWLER	= 4
-ENEMY_BOT	= 8
+;ENEMY_CAMERA	= 0
+;ENEMY_CRAWLER	= 4
+;ENEMY_BOT	= 8
+
+ENEMY_YORP	= 0
 
 ENEMY_DATA_OUT		= 0
 ENEMY_DATA_EXPLODING	= 1
@@ -304,36 +271,34 @@ enemy0:
 	; 156,92 (-80,-12) -> 76,80 -> (/4,/4) -> 19,20
 	.byte	1		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CAMERA	; type
+	.byte	ENEMY_YORP	; type
 	.byte	$ff		; direction
 	.byte	19,20		; tilex,tiley
-	.byte	0,0		; x,y
+	.byte	10,10		; x,y
 
 enemy1:
 	; 272,92 (-80,-12) -> 192,80 -> (/4,/4) -> 48,20
-	.byte	1		; out
+	.byte	0		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CAMERA	; type
+	.byte	ENEMY_YORP	; type
 	.byte	$ff		; direction
 	.byte	48,20		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy2:
 	; 156,112 (-80,-12) -> 76,100 -> (/4,/4) -> 19,25
-	.byte	1		; out
+	.byte	0		; out
 	.byte	0		; exploding
-	.byte	ENEMY_CRAWLER	; type
+	.byte	ENEMY_YORP	; type
 	.byte	$ff		; direction
 	.byte	19,25		; tilex,tiley
 	.byte	0,0		; x,y
 
 enemy3:
 	; 184,116 (-80,-12) -> 104,104 -> (/4,/4) -> 26,26
-	.byte	1		; out
+	.byte	0		; out
 	.byte	0		; exploding
-	.byte	ENEMY_BOT	; type
+	.byte	ENEMY_YORP	; type
 	.byte	$ff		; direction
 	.byte	26,26		; tilex,tiley
 	.byte	0,0		; x,y
-
-

@@ -53,10 +53,6 @@ keen_start:
 ;	ora	#INV_RED_KEY
 ;	sta	INVENTORY
 
-;	lda	#$10
-;	sta	SCORE0
-
-
 
 	lda	#4
 	sta	DRAW_PAGE

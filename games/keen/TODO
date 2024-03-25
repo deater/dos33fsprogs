@@ -1,12 +1,15 @@
 
-hi-res version
+
 
 + enemy movement
++ animate enemies?
 + check raygun count before shooting
 + fix background tile when get item
 + fix keybindings
 + play jingle entering/leaving level
 + implement leaving level
-+ animate enemies?
 + animate death
 
+hi-res version
+~~~~~~~~~~~~~~
++

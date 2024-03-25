@@ -25,6 +25,9 @@ keen_sprites.inc:	keen_sprites.png
 	$(PNG2SPRITES) keen_sprites.png keen_sprite_falling_left   6 32 4 8 >>  keen_sprites.inc
 	$(PNG2SPRITES) keen_sprites.png keen_sprite_shooting_right 11 2 4 8 >>  keen_sprites.inc
 	$(PNG2SPRITES) keen_sprites.png keen_sprite_shooting_left  16 2 4 8 >>  keen_sprites.inc
+	$(PNG2SPRITES) keen_sprites.png yorp_sprite_walking_left  16 22 4 8 >>  keen_sprites.inc
+	$(PNG2SPRITES) keen_sprites.png yorp_sprite_walking_right 11 22 4 8 >>  keen_sprites.inc
+	$(PNG2SPRITES) keen_sprites.png yorp_sprite_standing      11 32 4 8 >>  keen_sprites.inc
 
 
 ####

@@ -55,3 +55,22 @@ Level1:
 
 	tilemap copies 
 
+
+
+TILEMAP_X
+TILEMAP_Y
+KEEN_X / KEEN_XL
+KEEN_Y
+
+
+
+Enemy logic:
+	when update tilemap
+		detect if enemy on screen
+		if so mark active
+		give it current x/y value
+		
+	when move
+		same as keen move
+		if move off left/right side of screen mark inactive
+		
