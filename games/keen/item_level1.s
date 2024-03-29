@@ -2,10 +2,10 @@
 	;==================
 	; check for items
 	;==================
-	; X holds tile offset of feet?
+	; A holds tile value of head
 check_item:
 
-	lda	tilemap,X
+;	lda	tilemap,X
 	cmp	#27
 	bcc	done_check_item		; not an item
 	cmp	#32

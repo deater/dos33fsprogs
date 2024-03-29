@@ -40,7 +40,6 @@ keen_start:
 	sta	KEEN_XL
 	sta	KEEN_FALLING
 	sta	KEEN_SHOOTING
-	sta	KICK_UP_DUST
 	sta	KEYCARDS
 
 	lda	#<enemy_data

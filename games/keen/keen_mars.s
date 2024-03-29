@@ -39,7 +39,6 @@ keen_start:
 	sta	KEEN_XL
 	sta	KEEN_FALLING
 	sta	KEEN_SHOOTING
-	sta	KICK_UP_DUST
 
 
 	lda	#4

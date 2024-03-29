@@ -129,13 +129,11 @@ keen_collide:
 	; check for item
 	;==================
 keen_check_item:
-	lda	KEEN_FOOT_OFFSET
-	sec
-	sbc	#TILE_COLS		; look at body
-	tax
+	lda	KEEN_HEAD_TILE1
 
 	jsr	check_item
 
+	; TODO: do this again for KEEN_HEAD_TILE2?
 
 	;===================
 	; collide with head
@@ -145,12 +143,15 @@ keen_check_head:
 	lda	KEEN_JUMPING
 	beq	collide_left_right
 
-	lda	KEEN_FOOT_OFFSET
-	sec
-	sbc	#TILE_COLS			; above head is -2 rows
-	tax
+;	lda	KEEN_FOOT_OFFSET
+;	sec
+;	sbc	#TILE_COLS			; above head is -2 rows
+;	tax
 
-	lda	tilemap,X
+;	lda	tilemap,X
+
+	lda	KEEN_HEAD_TILE1
+	; TODO ALSO FOR TILE2
 
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
@@ -174,12 +175,12 @@ collide_left_right:
 	bmi	check_left_collide
 
 check_right_collide:
-	lda	KEEN_FOOT_OFFSET
-	clc
-	adc	#1			; right is one to right
+	lda	KEEN_WALK_TILE_R
+;	clc
+;	adc	#1			; right is one to right
 
-	tax
-	lda	tilemap,X
+;	tax
+;	lda	tilemap,X
 
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
@@ -191,12 +192,14 @@ check_right_collide:
 
 check_left_collide:
 
-	lda	KEEN_FOOT_OFFSET
-	sec
-	sbc	#2			; left is one to left
+;	lda	KEEN_FOOT_OFFSET
+;	sec
+;	sbc	#2			; left is one to left
 					; +1 fudge factor
-	tax
-	lda	tilemap,X
+;	tax
+;	lda	tilemap,X
+
+	lda	KEEN_WALK_TILE_L
 
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
@@ -219,17 +222,46 @@ handle_jumping:
 	lda	KEEN_JUMPING
 	beq	done_handle_jumping	; skip if not actually jumping
 
-	lda	KEEN_Y			; make sure not off screen
-	beq	dont_wrap_jump
+	;===================================================
+	; scroll but only if KEEN_Y<20 (YDEFAULT)
+	;	and TILEMAP_Y >0
 
-	dec	KEEN_Y			; move up
+	lda	TILEMAP_Y			; if tilemap=0, scroll keen
+	cmp	#0
+	beq	keen_rising
+
+	lda	KEEN_Y			;
+	cmp	#2			; if hit top of screen, start falling
+	bcc	start_falling
+
+	cmp	#YDEFAULT		; compare to middle of screen
+	bcc	scroll_rising		; blt
+
+keen_rising:
 	dec	KEEN_Y
+	dec	KEEN_Y
+	jmp	done_check_rising
 
-dont_wrap_jump:
+
+scroll_rising:
+	dec	TILEMAP_Y
+
+	jsr	copy_tilemap_subset
+	jmp	done_check_rising
+
+
+;	lda	KEEN_Y			; make sure not off screen
+;	beq	dont_wrap_jump
+
+;	dec	KEEN_Y			; move up
+;	dec	KEEN_Y
+
+done_check_rising:
 
 	dec	KEEN_JUMPING		; slow jump
 	bne	done_handle_jumping	; if positive still going up
 
+start_falling:
 					; otherwise hit peak, start falling
 	lda	#1			; avoid gap before falling triggered
 	sta	KEEN_FALLING
@@ -241,98 +273,6 @@ done_handle_jumping:
 
 
 
-	;=======================
-	; keen_get_feet_location
-	;=======================
-
-	;		xx	0
-	;		xx	1
-	;------		-----
-	; xx	0	xx	2
-	; xx	1	xx	3
-	; xx	2	xx	4
-	; xx	3	xx	5
-	;------		-------
-	; xx	4	xx	6
-	; xx	5	xx	7
-	; xx    6
-	; xx	7
-	;-----------------------
-
-
-	; YY = block
-	;========================
-	;     YYYY            YYYY
-	;        -XX-      -XX-
-	;         -XX-    -XX-
-	; left, foot = (X+1)/2
-	; right, foot = (X+2)/2
-keen_get_feet_location:
-
-	; + 1 is because sprite is 4 pixels wide?
-
-	; screen is TILE_COLS wide, but offset 4 in
-
-	; to get to feet add 6 to Y?
-
-	; block index of foot is (feet approximately 6 lower than Y)
-	; INT((y+4)/4)*16 + (x-4+1/2)
-
-	; FIXME: if 18,18 -> INT(26/4)*16 = 96 + 7 = 103 = 6R7
-
-	; 0 = 32 (2)
-	; 1 = 32 (2)
-	; 2 = 32 (2)
-	; 3 = 32 (2)
-	; 4 = 48 (3)
-	; 5 = 48 (3)
-	; 6 = 48 (3)
-	; 7 = 48 (3)
-
-;	lda	KEEN_Y
-;	clc
-;	adc	#4		; +4
-
-;	lsr			; / 4 (INT)
-;	lsr
-
-;	asl			; *4
-;	asl
-;	asl
-;	asl
-
-	ldx	KEEN_Y
-	lda	feet_lookup,X
-
-	sta	KEEN_FOOT_OFFSET
-
-;	lda	KEEN_DIRECTION
-;	bmi	foot_left
-
-foot_right:
-
-	lda	KEEN_X
-	clc
-	adc	#2
-;	jmp	foot_done
-
-;foot_left:
-;	lda	KEEN_X
-;	sec
-;	sbc	#1
-
-foot_done:
-	lsr
-
-	; offset by two block at edge of screen
-;	sec
-;	sbc	#2
-
-	clc
-	adc	KEEN_FOOT_OFFSET
-	sta	KEEN_FOOT_OFFSET
-
-	rts
 
 
 	;=========================
@@ -343,16 +283,18 @@ check_falling:
 	lda	KEEN_JUMPING
 	bne	done_check_falling	; don't check falling if jumping
 
-	lda	KEEN_FOOT_OFFSET
-	clc
-	adc	#TILE_COLS		; underfoot is on next row (+16)
-
-	tax
-	lda	tilemap,X
+	lda	KEEN_FOOT_BELOW1
 
 	; if tile# < HARDTOP_TILES then we fall
 	cmp	#HARDTOP_TILES
 	bcs	feet_on_ground		; bge
+
+	lda	KEEN_FOOT_BELOW2
+
+	; if tile# < HARDTOP_TILES then we fall
+	cmp	#HARDTOP_TILES
+	bcs	feet_on_ground		; bge
+
 
 	;=======================
 	; falling
@@ -388,7 +330,7 @@ feet_on_ground:
 
 	;===========================
 	; if had been falling
-	; kick up dust, make noise
+	; make noise
 	; stop walking?
 
 	lda	KEEN_FALLING
@@ -397,9 +339,6 @@ feet_on_ground:
 	; clear falling
 	lda	#0
 	sta	KEEN_FALLING
-
-	lda	#2
-	sta	KICK_UP_DUST
 
 	lda	#0
 	sta	KEEN_WALKING
@@ -425,58 +364,164 @@ done_check_falling:
 
 
 
+
+	;=======================
+	; keen_get_feet_location
+	;=======================
+	; sets ? values
+	;	they are actually the tile values, not offsets
+	;	KEEN_HEAD_TILE1, KEEN_HEAD_TILE2
+	;		tile values of row containing keen's head
+	;	KEEN_FOOT_TILE1, KEEN_FOOT_TILE2
+	;		tile values of row containing keen's feet
+	;	KEEN_FOOT_BELOW1, KEEN_FOOT_BELOW2
+	;		tile values of row below  keen's feet (he can span 2)
+	;	KEEN_WALK_TILE_L,KEEN_WALK_TILE_R
+	;		tile value of what walking into
+
+
+; keen sprite is 4 wide, but only the "core" is 2 wide
+
+; so in theory 2 possibilities
+
+;            EVEN      ODD       EVEN      ODD
+;             .KK.       .KK.       .KK.       .KK.
+;             001122    001122    001122    00112233
+;FOOT_BELOW    0/1       1/1         1/2       2/2
+;FOOT_WALK(R)  1          2           2        3
+;FOOT_WALK(L)  0          0           1        1
+
+
+	; if KEEN_X = even
+	; 	KEEN_FOOT_BELOW1 = (KEEN_X>>1)
+	;	KEEN_FOOT_BELOW2 = (KEEN_X>>1)+1)
+	;	KEEN_FOOT_WALK_R = (KEEN_X>>1)+1)
+	;	KEEN_FOOT_WALK_L = (KEEN_X>>1)
+	; if KEEN_X = odd
+	;	KEEN_FOOT_BELOW1 = ((KEEN_X>>1)+1)
+	;	KEEN_FOOT_BELOW2 = ((KEEN_X>>1)+1)
+	;	KEEN_FOOT_WALK_R = ((KEEN_X>>1)+2)
+	;	KEEN_FOOT_WALK_L = (KEEN_X>>1)
+keen_get_feet_location:
+
+	lda	KEEN_X
+	lsr
+
+	bcs	keen_get_feet_odd
+keen_get_feet_even:
+	; carry is clear
+	ldx	KEEN_Y
+	adc	head_lookup,X
+	tax				; X is now pointer to tile of head
+
+	lda	tilemap,X		; put tilemap value in place
+	sta	KEEN_HEAD_TILE1
+	lda	tilemap+1,X
+	sta	KEEN_HEAD_TILE2
+
+	txa				; restore pointer to tile of head
+	clc
+	adc	#TILE_COLS		; one row down, now at foot
+	tax
+
+	lda	tilemap,X		; put tilemap value in place
+	sta	KEEN_FOOT_TILE1
+	sta	KEEN_WALK_TILE_L
+	lda	tilemap+1,X
+	sta	KEEN_FOOT_TILE2
+	sta	KEEN_WALK_TILE_R
+
+	txa				; restore pointer to tile of foot
+	clc
+	adc	#TILE_COLS		; one row down
+	tax
+
+	lda	tilemap,X
+	sta	KEEN_FOOT_BELOW1
+	lda	tilemap+1,X
+	sta	KEEN_FOOT_BELOW2
+
+	rts
+
+
+keen_get_feet_odd:
+	; carry is set
+	clc
+	ldx	KEEN_Y
+	adc	head_lookup,X
+	tax				; X is now pointer to tilemap of head
+
+	lda	tilemap+1,X		; put tilemap value in place
+	sta	KEEN_HEAD_TILE1
+	sta	KEEN_HEAD_TILE2
+
+	txa
+	clc
+	adc	#TILE_COLS		; one row down
+	tax				; X is now pointer to tilemap of feet
+
+	lda	tilemap,X		; put tilemap value in place
+	sta	KEEN_WALK_TILE_L
+	lda	tilemap+1,X
+	sta	KEEN_FOOT_TILE1
+	sta	KEEN_FOOT_TILE2
+	lda	tilemap+2,X
+	sta	KEEN_WALK_TILE_R
+
+	txa
+	clc
+	adc	#TILE_COLS		; one row down
+	tax
+
+	lda	tilemap+1,X
+	sta	KEEN_FOOT_BELOW1
+	sta	KEEN_FOOT_BELOW2
+
+	rts
+
+
+	;		xx	0
+	;		xx	1
+	;------		-----
+	; xx	0	xx	2
+	; xx	1	xx	3
+	; xx	2	xx	4
+	; xx	3	xx	5
+	;------		-------
+	; xx	4	xx	6
+	; xx	5	xx	7
+	; xx    6
+	; xx	7
+	;-----------------------
+
+	; INT((y)/4)*20
+head_lookup:
+	.byte	0,0,0,0
+	.byte	20,20,20,20	; 3
+	.byte	40,40,40,40	; 7
+	.byte	60,60,60,60	; 11
+	.byte	80,80,80,80	; 15
+	.byte	100,100,100,100	; 19
+	.byte	120,120,120,120	; 23
+	.byte	140,140,140,140	; 27
+	.byte	160,160,160,160	; 31
+	.byte	180,180,180,180	; 35
+	.byte	200,200,200,200	; 39
+	.byte	220,220,220,220	; 43
+	.byte	240,240,240,240	; 47
+
+
 	; INT((y+4)/4)*20
-feet_lookup:
-	.byte	20	; 0
-	.byte	20	; 1
-	.byte	20	; 2
-	.byte	20	; 3
-	.byte	40	; 4
-	.byte	40	; 5
-	.byte	40	; 6
-	.byte	40	; 7
-
-	.byte	60	; 8
-	.byte	60	; 9
-	.byte	60	; 10
-	.byte	60	; 11
-	.byte	80	; 12
-	.byte	80	; 13
-	.byte	80	; 14
-	.byte	80	; 15
-
-	.byte	100	; 16
-	.byte	100	; 17
-	.byte	100	; 18
-	.byte	100	; 19
-	.byte	120	; 20
-	.byte	120	; 21
-	.byte	120	; 22
-	.byte	120	; 23
-
-	.byte	140	; 24
-	.byte	140	; 25
-	.byte	140	; 26
-	.byte	140	; 27
-	.byte	160	; 28
-	.byte	160	; 29
-	.byte	160	; 30
-	.byte	160	; 31
-
-	.byte	180	; 32
-	.byte	180	; 33
-	.byte	180	; 34
-	.byte	180	; 35
-	.byte	200	; 36
-	.byte	200	; 37
-	.byte	200	; 38
-	.byte	200	; 39
-
-	.byte	220	; 40
-	.byte	220	; 41
-	.byte	220	; 42
-	.byte	220	; 43
-	.byte	240	; 44
-	.byte	240	; 45
-	.byte	240	; 46
-	.byte	240	; 47
+;feet_lookup:
+;	.byte	20,20,20,20	; 3
+;	.byte	40,40,40,40	; 7
+;	.byte	60,60,60,60	; 11
+;	.byte	80,80,80,80	; 15
+;	.byte	100,100,100,100	; 19
+;	.byte	120,120,120,120	; 23
+;	.byte	140,140,140,140	; 27
+;	.byte	160,160,160,160	; 31
+;	.byte	180,180,180,180	; 35
+;	.byte	200,200,200,200	; 39
+;	.byte	220,220,220,220	; 43
+;	.byte	240,240,240,240	; 47
