@@ -2,10 +2,10 @@
 	;==================
 	; check for items
 	;==================
-	; A holds tile value of head
+	; A holds tile value to check
+
 check_item:
 
-;	lda	tilemap,X
 	cmp	#27
 	bcc	done_check_item		; not an item
 	cmp	#32

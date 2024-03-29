@@ -47,12 +47,6 @@ keen_start:
 	lda	#>enemy_data
 	sta	ENEMY_DATAH
 
-	; FIXME: temporary
-;	lda	INVENTORY
-;	ora	#INV_RED_KEY
-;	sta	INVENTORY
-
-
 	lda	#4
 	sta	DRAW_PAGE
 
@@ -193,7 +187,6 @@ level1_bg_zx02:
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 	.include	"gr_fast_clear.s"
-;	.include	"gr_copy.s"
 	.include	"gr_pageflip.s"
 	.include	"gr_putsprite_crop.s"
 	.include	"zx02_optim.s"
