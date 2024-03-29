@@ -42,6 +42,11 @@ move_keen:
 	; if (keen_x<22) || (tilemap_x>xmax-20) walk
 	;	otherwise, scroll
 
+	lda	TILEMAP_X
+	cmp	#96		; 540-80 = 460/4 = 115-20 = 95
+	bcs	keen_walk_right
+
+
 	lda	KEEN_X			; if X more than 22
 	cmp	#22			; scroll screen rather than keen
 	bcc	keen_walk_right
@@ -143,24 +148,27 @@ keen_check_head:
 	lda	KEEN_JUMPING
 	beq	collide_left_right
 
-;	lda	KEEN_FOOT_OFFSET
-;	sec
-;	sbc	#TILE_COLS			; above head is -2 rows
-;	tax
+	; if here we are jumping
 
-;	lda	tilemap,X
+	; check if left side of head hit hard tile
 
 	lda	KEEN_HEAD_TILE1
-	; TODO ALSO FOR TILE2
-
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	collide_left_right		; blt
 
+	lda	KEEN_HEAD_TILE2
+	; if tile# < ALLHARD_TILES then we are fine
+	cmp	#ALLHARD_TILES
+	bcc	collide_left_right		; blt
+
+	; o/~ I hit my head, I heard the phone ring o/~
+	; o/~ I was distracted by my friend Joe o/~
+
 	lda	#0
-	sta	KEEN_JUMPING
+	sta	KEEN_JUMPING		; no longer jumping
 	lda	#1
-	sta	KEEN_FALLING
+	sta	KEEN_FALLING		; now falling
 
 	jsr	head_noise
 
@@ -170,18 +178,12 @@ collide_left_right:
 	;===================
 
 	lda	KEEN_DIRECTION
-	beq	done_keen_collide	; ?
+	beq	done_keen_collide	; can this happen?
 
 	bmi	check_left_collide
 
 check_right_collide:
 	lda	KEEN_WALK_TILE_R
-;	clc
-;	adc	#1			; right is one to right
-
-;	tax
-;	lda	tilemap,X
-
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide		; blt
@@ -192,15 +194,7 @@ check_right_collide:
 
 check_left_collide:
 
-;	lda	KEEN_FOOT_OFFSET
-;	sec
-;	sbc	#2			; left is one to left
-					; +1 fudge factor
-;	tax
-;	lda	tilemap,X
-
 	lda	KEEN_WALK_TILE_L
-
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide	; blt
@@ -226,9 +220,11 @@ handle_jumping:
 	; scroll but only if KEEN_Y<20 (YDEFAULT)
 	;	and TILEMAP_Y >0
 
-	lda	TILEMAP_Y			; if tilemap=0, scroll keen
-	cmp	#0
+	lda	TILEMAP_Y		; if tilemap=0, scroll keen
+	cmp	#0			; instead of scrolling screen
 	beq	keen_rising
+
+	; check if hit top of screen
 
 	lda	KEEN_Y			;
 	cmp	#2			; if hit top of screen, start falling
@@ -237,6 +233,7 @@ handle_jumping:
 	cmp	#YDEFAULT		; compare to middle of screen
 	bcc	scroll_rising		; blt
 
+	; move keen
 keen_rising:
 	dec	KEEN_Y
 	dec	KEEN_Y
@@ -248,13 +245,6 @@ scroll_rising:
 
 	jsr	copy_tilemap_subset
 	jmp	done_check_rising
-
-
-;	lda	KEEN_Y			; make sure not off screen
-;	beq	dont_wrap_jump
-
-;	dec	KEEN_Y			; move up
-;	dec	KEEN_Y
 
 done_check_rising:
 
@@ -356,7 +346,7 @@ was_not_falling:
 
 	inc	KEEN_Y
 	inc	KEEN_Y
-	dec	TILEMAP_Y		; share w above?
+	inc	TILEMAP_Y		; share w above?
 	jsr	copy_tilemap_subset
 
 done_check_falling:
