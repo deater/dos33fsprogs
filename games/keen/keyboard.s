@@ -180,7 +180,7 @@ done_right_pressed:
 
 check_jump_right:
 	cmp	#'E'
-	bne	check_up
+	bne	check_jump_left
 
 jump_right:
 
@@ -202,6 +202,33 @@ jump_right:
 	sta	KEEN_WALKING
 
 	jmp	done_keypress
+
+
+check_jump_left:
+	cmp	#'Q'
+	bne	check_up
+
+jump_left:
+
+	; jump
+	lda	KEEN_JUMPING
+	bne	done_right_pressed	; don't jump if already jumping
+
+	lda	KEEN_FALLING
+	bne	done_right_pressed	; don't jump if falling
+
+	lda	#JUMP_HEIGHT
+	sta	KEEN_JUMPING
+
+	jsr	jump_noise
+
+	lda	#$FF
+	sta	KEEN_DIRECTION
+	lda	#10
+	sta	KEEN_WALKING
+
+	jmp	done_keypress
+
 
 check_up:
 	cmp	#'W'
