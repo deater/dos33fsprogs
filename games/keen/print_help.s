@@ -31,10 +31,13 @@ help_text:
 .byte 0, 5,"CONTROLS:",0
 .byte 3, 6,   "A OR <-      : MOVE LEFT",0
 .byte 3, 7,   "D OR ->      : MOVE RIGHT",0
-.byte 3, 8,   "P            : POGO",0
-.byte 3, 9,   "SPACEBAR     : ACTION/JUMP",0
-.byte 3,10,   "RETURN       : LASER",0
-.byte 3,12,   "ESC          : QUITS",0
-.byte 3,13,   "CONTROL-T    : TOGGLE SOUND",0
-.byte 3,14,   "J            : ENABLE JOYSTICK",0
+.byte 3, 8,   "Q            : JUMP LEFT",0
+.byte 3, 9,   "E            : JUMP RIGHT",0
+.byte 3,10,   "M            : FIRE LASERGUN",0
+.byte 3,11,   "P            : POGO",0
+.byte 3,13,   "SPACEBAR     : ACTION/JUMP",0
+.byte 3,13,   "RETURN       : STATUS BAR",0
+.byte 3,14,   "ESC          : QUITS",0
+.byte 3,15,   "CONTROL-T    : TOGGLE SOUND",0
+.byte 3,16,   "J            : ENABLE JOYSTICK",0
 .byte 255
