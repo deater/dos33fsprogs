@@ -50,7 +50,7 @@ keen_title.o:	keen_title.s zp.inc hardware.inc \
 KEEN_MARS:	keen_mars.o
 	ld65 -o KEEN_MARS keen_mars.o -C ../../linker_scripts/apple2_2000.inc
 
-keen_mars.o:	keen_mars.s zp.inc hardware.inc \
+keen_mars.o:	keen_mars.s zp.inc hardware.inc game_over.s \
 	sound_effects.s speaker_tone.s print_help.s \
 	maps/mars_map.gr.zx02 graphics/parts.gr.zx02
 	ca65 -o keen_mars.o keen_mars.s -l keen_mars.lst

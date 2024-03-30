@@ -1,6 +1,6 @@
 ; Keen MARS main map
 
-; TODO: should make it scrollable, etc
+; TODO: should make it scrollable, etc / tilemap
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -9,7 +9,7 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
-keen_start:
+mars_start:
 	;===================
 	; init screen
 	jsr	TEXT
@@ -22,6 +22,9 @@ keen_start:
 	bit	FULLGR
 
 	jsr	clear_all	; avoid grey stripes at load
+
+	lda	KEENS
+	bmi	return_to_title
 
 	;=====================
 	; init vars
@@ -126,17 +129,33 @@ do_keen_loop:
 
 
 done_with_keen:
+	cmp	#GAME_OVER
+	beq	return_to_title
+
+	; else, start level
+
 	bit	KEYRESET	; clear keypress
 
 	; sound effect
 
 	jsr	entry_music
-;	jsr	exit_music
 
         lda     #LOAD_KEEN1
         sta     WHICH_LOAD
 
 	rts			; exit back
+
+
+return_to_title:
+
+	jsr	game_over
+
+	lda	#LOAD_TITLE
+	sta	WHICH_LOAD
+
+	rts
+
+
 
 
 	;==========================
@@ -165,7 +184,8 @@ parts_zx02:
 	.include	"text_drawbox.s"
 	.include	"print_help.s"
 	.include	"quit_yn.s"
-;	.include	"level_end.s"
+	.include	"game_over.s"
+
 
 	.include	"sound_effects.s"
 	.include	"speaker_tone.s"
