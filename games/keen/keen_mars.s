@@ -44,10 +44,10 @@ keen_start:
 	lda	#4
 	sta	DRAW_PAGE
 
-	lda	#18
-	sta	KEEN_X
-	lda	#11
-	sta	KEEN_Y
+;	lda	#18
+;	sta	KEEN_X
+;	lda	#11
+;	sta	KEEN_Y
 
 	;====================================
 	; load mars background
@@ -178,15 +178,15 @@ parts_zx02:
 	; D32
 draw_keen:
 
-	lda	KEEN_Y
+	lda	MARS_Y
 	and	#1
 	beq	draw_keen_even
 
 draw_keen_odd:
 
-	; calculate address of KEEN_Y/2
+	; calculate address of MARS_Y/2
 
-	lda	KEEN_Y
+	lda	MARS_Y
 	and	#$FE
 	tay
 	lda	gr_offsets,Y
@@ -196,14 +196,14 @@ draw_keen_odd:
 	adc	DRAW_PAGE
 	sta	OUTH
 
-	ldy	KEEN_X
+	ldy	MARS_X
 
 	lda	(OUTL),Y
 	and	#$0f
 	ora	#$D0
 	sta	(OUTL),Y
 
-	lda	KEEN_Y
+	lda	MARS_Y
 	clc
 	adc	#2
 
@@ -216,7 +216,7 @@ draw_keen_odd:
 	adc	DRAW_PAGE
 	sta	OUTH
 
-	ldy	KEEN_X
+	ldy	MARS_X
 
 	lda	#$23
 	sta	(OUTL),Y
@@ -227,7 +227,7 @@ draw_keen_odd:
 
 draw_keen_even:
 
-	lda	KEEN_Y
+	lda	MARS_Y
 ;	and	#$FE		; no need to mask, know bottom bit is 0
 	tay
 	lda	gr_offsets,Y
@@ -236,12 +236,12 @@ draw_keen_even:
 	clc
 	adc	DRAW_PAGE
 	sta	OUTH
-	ldy	KEEN_X		; adjust with Xpos
+	ldy	MARS_X		; adjust with Xpos
 
 	lda	#$3D
 	sta	(OUTL),Y
 
-	lda	KEEN_Y
+	lda	MARS_Y
 	clc
 	adc	#2
 ;	and	#$FE		; no need to mask
@@ -252,7 +252,7 @@ draw_keen_even:
 	clc
 	adc	DRAW_PAGE
 	sta	OUTH
-	ldy	KEEN_X		; adjust with Xpos
+	ldy	MARS_X		; adjust with Xpos
 
 	lda	(OUTL),Y
 	and	#$F0
@@ -374,12 +374,12 @@ check_left:
 	bne	check_right
 
 left_pressed:
-	ldy	KEEN_X
+	ldy	MARS_X
 	dey
-	ldx	KEEN_Y
+	ldx	MARS_Y
 	jsr	check_valid_feet
 	bcc	done_left_pressed
-	dec	KEEN_X
+	dec	MARS_X
 done_left_pressed:
 	jmp	done_keypress
 
@@ -390,12 +390,12 @@ check_right:
 	bne	check_up
 
 right_pressed:
-	ldy	KEEN_X
+	ldy	MARS_X
 	iny
-	ldx	KEEN_Y
+	ldx	MARS_Y
 	jsr	check_valid_feet
 	bcc	done_right_pressed
-	inc	KEEN_X
+	inc	MARS_X
 done_right_pressed:
 	jmp	done_keypress
 
@@ -406,12 +406,12 @@ check_up:
 	bne	check_down
 
 up_pressed:
-	ldy	KEEN_X
-	ldx	KEEN_Y
+	ldy	MARS_X
+	ldx	MARS_Y
 	dex
 	jsr	check_valid_feet
 	bcc	done_up_pressed
-	dec	KEEN_Y
+	dec	MARS_Y
 done_up_pressed:
 	jmp	done_keypress
 
@@ -421,12 +421,12 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down_pressed:
-	ldy	KEEN_X
-	ldx	KEEN_Y
+	ldy	MARS_X
+	ldx	MARS_Y
 	inx
 	jsr	check_valid_feet
 	bcc	done_up_pressed
-	inc	KEEN_Y
+	inc	MARS_Y
 done_down_pressed:
 	jmp	done_keypress
 
@@ -554,7 +554,7 @@ done_parts:
 
 do_action:
 
-	lda	KEEN_X
+	lda	MARS_X
 	cmp	#15
 	bcc	do_nothing	; blt
 
@@ -571,7 +571,7 @@ do_nothing:
 maybe_ship:
 
 
-	lda	KEEN_Y
+	lda	MARS_Y
 	cmp	#16
 	bcc	do_nothing
 	cmp	#24

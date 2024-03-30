@@ -133,12 +133,9 @@ keen_collide:
 	;==================
 	; check for item
 	;==================
-keen_check_item:
-	lda	KEEN_HEAD_TILE1
+keen_check_items:
 
-	jsr	check_item
-
-	; TODO: do this again for KEEN_HEAD_TILE2?
+	jsr	check_items
 
 	;===================
 	; collide with head
@@ -408,6 +405,7 @@ keen_get_feet_even:
 	sta	KEEN_HEAD_TILE1
 	lda	tilemap+1,X
 	sta	KEEN_HEAD_TILE2
+	stx	KEEN_HEAD_POINTER
 
 	txa				; restore pointer to tile of head
 	clc
@@ -420,6 +418,7 @@ keen_get_feet_even:
 	lda	tilemap+1,X
 	sta	KEEN_FOOT_TILE2
 	sta	KEEN_WALK_TILE_R
+	stx	KEEN_FOOT_POINTER
 
 	txa				; restore pointer to tile of foot
 	clc
@@ -444,6 +443,7 @@ keen_get_feet_odd:
 	lda	tilemap+1,X		; put tilemap value in place
 	sta	KEEN_HEAD_TILE1
 	sta	KEEN_HEAD_TILE2
+	stx	KEEN_HEAD_POINTER
 
 	txa
 	clc
@@ -457,6 +457,7 @@ keen_get_feet_odd:
 	sta	KEEN_FOOT_TILE2
 	lda	tilemap+2,X
 	sta	KEEN_WALK_TILE_R
+	stx	KEEN_FOOT_POINTER
 
 	txa
 	clc

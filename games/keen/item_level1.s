@@ -1,11 +1,28 @@
+	;======================
+	; check touching things
+	;======================
+	; do head, than foot
+	; FIXME: should we check both head/feet?
+check_items:
+	jsr	check_door
+
+	ldx	KEEN_HEAD_POINTER
+	jsr	check_item
+
+	ldx	KEEN_FOOT_POINTER
+	; fallthrough
 
 	;==================
 	; check for items
 	;==================
-	; A holds tile value to check
 
 check_item:
+	lda	tilemap,X
 
+do_check_enemy:
+	
+
+do_check_item:
 	cmp	#27
 	bcc	done_check_item		; not an item
 	cmp	#32
@@ -45,16 +62,14 @@ get_keycard:
 
 done_item_pickup:
 
-	; erase
-
-	; FIXME: only erases small tilemap
-	;	also need to update big
+	; erase small tilemap
 
 	lda	#1			; plain tile
 	sta	tilemap,X
 
 	; big tilemap:
-	;	tilemap
+	;	to find... urgh
+	;	X is currently (KEEN_Y/4)*20)+(KEEN_X/2)
 
 	lda	KEEN_Y			; divide by 4 as tile 4 blocks tall
 	lsr
@@ -71,7 +86,7 @@ done_item_pickup:
 	lda	KEEN_X
 	lsr
 	tay
-	iny				; why add 1????
+;	iny				; why add 1????
 
 	lda	#0			; background tile
 btc_smc:
@@ -80,49 +95,27 @@ btc_smc:
 	; play sound
 	jsr	pickup_noise
 
-.if 0
-check_red_key:
-	lda	tilemap,X
-	cmp	#31		; red key
-	bne	check_blue_key
 
-	jsr	pickup_noise
-	lda	INVENTORY
-	ora	#INV_RED_KEY
-	sta	INVENTORY
-
-	; erase red key (304,96)
-	lda	#0
-	sta	$A938	; hack
-
-	jsr	copy_tilemap_subset
-
-	jsr	update_status_bar
-
-	jmp	done_check_item
-
-check_blue_key:
-	cmp	#30		; blue key
-	bne	done_check_item
-
-	jsr	pickup_noise
-	lda	INVENTORY
-	ora	#INV_BLUE_KEY
-	sta	INVENTORY
-
-	; erase blue key
-	lda	#0
-	sta	$970c	; hack
-
-	jsr	copy_tilemap_subset
-
-	jsr	update_status_bar
-
-	jmp	keen_check_head
-.endif
 done_check_item:
 	rts
 
+	;==========================
+	; check if feet at door
+	;==========================
+check_door:
+	lda	KEEN_FOOT_TILE1
+	cmp	#11			; door tile
+	beq	at_door
+	lda	KEEN_FOOT_TILE2
+	cmp	#11
+	bne	done_check_door
+
+at_door:
+	inc	LEVEL_OVER
+	; TODO: mark level complete somehow
+	jsr	exit_music
+done_check_door:
+	rts
 
 score_lookup:
 	.byte $00,$01,$10,$05,$02,$50		; BCD
