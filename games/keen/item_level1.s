@@ -4,10 +4,21 @@
 	; do head, than foot
 	; FIXME: should we check both head/feet?
 check_items:
+
+	; check if going out door
+
 	jsr	check_door
+
+	; check if touching enemy
+
+	jsr	check_enemy
+
+	; check head items
 
 	ldx	KEEN_HEAD_POINTER
 	jsr	check_item
+
+	; check feet items
 
 	ldx	KEEN_FOOT_POINTER
 	; fallthrough
@@ -116,6 +127,35 @@ at_door:
 	jsr	exit_music
 done_check_door:
 	rts
+
+
+
+	;=============================
+	; check if feet touching enemy
+	;=============================
+	; level1 at least you can't touch with head?
+check_enemy:
+	lda	KEEN_FOOT_TILE1
+	cmp	#21			; green tentacles
+	beq	touched_enemy
+	cmp	#22			; clam thing
+	beq	touched_enemy
+
+	lda	KEEN_FOOT_TILE2
+	cmp	#21			; green tentacles
+	beq	touched_enemy
+	cmp	#22			; clam thing
+	bne	done_check_enemy
+
+touched_enemy:
+	dec	KEENS
+	inc	LEVEL_OVER
+	; TODO: ANIMATION
+	; TODO: enemy music
+	;jsr	exit_music
+done_check_enemy:
+	rts
+
 
 score_lookup:
 	.byte $00,$01,$10,$05,$02,$50		; BCD
