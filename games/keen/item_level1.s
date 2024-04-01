@@ -2,7 +2,7 @@
 	; check touching things
 	;======================
 	; do head, than foot
-	; FIXME: should we check both head/feet?
+	; FIXME: should we check both left/right head/feet
 check_items:
 
 	; check if going out door
@@ -29,9 +29,6 @@ check_items:
 
 check_item:
 	lda	tilemap,X
-
-do_check_enemy:
-	
 
 do_check_item:
 	cmp	#27

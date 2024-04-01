@@ -276,6 +276,13 @@ check_comma:
 	bne	check_return
 
 comma_pressed:
+	; check if we have any shots left
+
+	lda	RAYGUNS
+	beq	done_comma
+
+	; use up a shot
+	dec	RAYGUNS
 
 	; shoot
 	lda	LASER_OUT
