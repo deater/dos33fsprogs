@@ -6,8 +6,8 @@ Based on dumped code by the "KeenFX" tool
 	Note: 65535-value = note freq
 
 3) WLDENTERSND
-	64155, 10
-	63495, 5
+	64155, 10	; 1380Hz F6?
+	63495, 5	; 
 	0,16
 	62355,2
 	62175,16
