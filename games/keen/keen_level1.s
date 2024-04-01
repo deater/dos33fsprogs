@@ -198,7 +198,7 @@ level1_bg_zx02:
 	.include	"text_drawbox.s"
 	.include	"print_help.s"
 	.include	"quit_yn.s"
-	.include	"level_end.s"
+;	.include	"level_end.s"
 
 	.include	"draw_keen.s"
 	.include	"sprites/keen_sprites.inc"

@@ -61,7 +61,7 @@ KEEN_LEVEL1:	keen_level1.o
 	ld65 -o KEEN_LEVEL1 keen_level1.o -C ../../linker_scripts/apple2_2000.inc
 
 keen_level1.o:	keen_level1.s zp.inc hardware.inc \
-	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
+	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s \
 	enemies_level1.s item_level1.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	maps/level1_map.lzsa \
@@ -77,7 +77,7 @@ KEEN_LEVEL2:	keen_level2.o
 	ld65 -o KEEN_LEVEL2 keen_level2.o -C ../../linker_scripts/apple2_2000.inc
 
 keen_level2.o:	keen_level2.s zp.inc hardware.inc \
-	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s level_end.s \
+	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s \
 	enemies_level2.s actions_level2.s item_level2.s \
 	graphics/keen_graphics.inc keen_sprites.inc \
 	maps/level2_map.lzsa \
