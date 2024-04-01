@@ -23,47 +23,44 @@
 ; but seems off a bit and also assumes 1MHz clock
 
 ;				1MHz			1.023MHz
-NOTE_C3		= 255	; G3=5217us = 192Hz (G3,  5218us = 196Hz	249)
-NOTE_CSHARP3	= 241	; 4931us = 203Hz (G#3, 4931us = 207Hz
-NOTE_D3		= 227	; 
-NOTE_DSHARP3	= 214
-NOTE_E3		= 202
-NOTE_F3		= 191
-NOTE_FSHARP3	= 180
-NOTE_G3		= 170
-NOTE_GSHARP3	= 161
-NOTE_A3		= 152
-NOTE_ASHARP3	= 143
-NOTE_B3		= 135	; 1350us = 740Hz (F#5)
+NOTE_C3		= 255	; G3  5217us = 192Hz (G3,  5218us = 196Hz	249)
+NOTE_CSHARP3	= 241	; G#3 4931us = 203Hz (G#3, 4931us = 207Hz
+NOTE_D3		= 227	; A3
+NOTE_DSHARP3	= 214   ; A#3
+NOTE_E3		= 202   ; B3
+NOTE_F3		= 191   ; C4
+NOTE_FSHARP3	= 180   ; C#4
+NOTE_G3		= 170   ; D4
+NOTE_GSHARP3	= 161   ; D#4
+NOTE_A3		= 152   ; E3
+NOTE_ASHARP3	= 143   ; F3
+NOTE_B3		= 135	; F#3
 
-NOTE_C4		=	128
-NOTE_CSHARP4	=	121
-NOTE_D4		=	114
-NOTE_DSHARP4	=	108
-NOTE_E4		=	102
-NOTE_F4		=	96
-NOTE_FSHARP4	=	91
-NOTE_G4		=	85
-NOTE_GSHARP4	=	81
-NOTE_A4		=	76
-NOTE_ASHARP4	=	72
-NOTE_B4		=	68
+NOTE_C4		= 128	; G
+NOTE_CSHARP4	= 121	; G#
+NOTE_D4		= 114	; A
+NOTE_DSHARP4	= 108	; A#
+NOTE_E4		= 102	; B3
+NOTE_F4		= 96	; C
+NOTE_FSHARP4	= 91	; C#
+NOTE_G4		= 85	; D
+NOTE_GSHARP4	= 81	; D#
+NOTE_A4		= 76	; E
+NOTE_ASHARP4	= 72	; F
+NOTE_B4		= 68	; F#
 
-NOTE_C5		=	64
-NOTE_CSHARP5	=	60
-NOTE_D5		=	57
-NOTE_DSHARP5	=	54
-NOTE_E5		=	51
-NOTE_F5		=	48
-NOTE_FSHARP5	=	45
-NOTE_G5		=	43
-NOTE_GSHARP5	=	40
-NOTE_A5		=	38
-NOTE_ASHARP5	=	36
-NOTE_B5		=	34
-
-; B5 = 988 Hz, 1021us
-
+NOTE_C5		= 64	; G
+NOTE_CSHARP5	= 60	; G#
+NOTE_D5		= 57	; A
+NOTE_DSHARP5	= 54	; A#
+NOTE_E5		= 51	; B3
+NOTE_F5		= 48	; C
+NOTE_FSHARP5	= 45	; C#
+NOTE_G5		= 43	; D
+NOTE_GSHARP5	= 40	; D#
+NOTE_A5		= 38	; E
+NOTE_ASHARP5	= 36	; F
+NOTE_B5		= 34	; F#
 
 ;=====================================================
 ; speaker tone
@@ -73,12 +70,16 @@ NOTE_B5		=	34
 
 ; this was designed by basic to be poked into 770 ($302)
 ;	on an Applesoft CALL, X=$9d, Y=$02  (A,Y = Address to call)
+
 ; it was originally designed for Integer BASIC where Y=0 on call
+;	and it was poked to $00 (zero page)
 
 	; the inner freq loop is roughly FREQ*10cycles
 	; so the square wave generated has a period of
 	;	freq*20*1.023us
 	; or a frequency of 1/(freq*20.46e-6)
+
+	; more exactly, it is (4+10F)+(13+10F) = 20F+17
 
 speaker_tone:
 	ldy	#0							; 3
