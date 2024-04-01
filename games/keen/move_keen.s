@@ -403,11 +403,13 @@ keen_get_feet_even:
 
 	lda	tilemap,X		; put tilemap value in place
 	sta	KEEN_HEAD_TILE1
+	stx	KEEN_HEAD_POINTER_L
 	lda	tilemap+1,X
 	sta	KEEN_HEAD_TILE2
-	stx	KEEN_HEAD_POINTER
-
-	txa				; restore pointer to tile of head
+	txa
+	inx
+	stx	KEEN_HEAD_POINTER_R
+					; restore pointer to tile of head
 	clc
 	adc	#TILE_COLS		; one row down, now at foot
 	tax
@@ -415,12 +417,15 @@ keen_get_feet_even:
 	lda	tilemap,X		; put tilemap value in place
 	sta	KEEN_FOOT_TILE1
 	sta	KEEN_WALK_TILE_L
+	stx	KEEN_FOOT_POINTER_L
+
 	lda	tilemap+1,X
 	sta	KEEN_FOOT_TILE2
 	sta	KEEN_WALK_TILE_R
-	stx	KEEN_FOOT_POINTER
-
-	txa				; restore pointer to tile of foot
+	txa
+	inx
+	stx	KEEN_FOOT_POINTER_R
+					; restore pointer to tile of foot
 	clc
 	adc	#TILE_COLS		; one row down
 	tax
@@ -443,7 +448,8 @@ keen_get_feet_odd:
 	lda	tilemap+1,X		; put tilemap value in place
 	sta	KEEN_HEAD_TILE1
 	sta	KEEN_HEAD_TILE2
-	stx	KEEN_HEAD_POINTER
+	stx	KEEN_HEAD_POINTER_L
+	stx	KEEN_HEAD_POINTER_R
 
 	txa
 	clc
@@ -457,7 +463,8 @@ keen_get_feet_odd:
 	sta	KEEN_FOOT_TILE2
 	lda	tilemap+2,X
 	sta	KEEN_WALK_TILE_R
-	stx	KEEN_FOOT_POINTER
+	stx	KEEN_FOOT_POINTER_L
+	stx	KEEN_FOOT_POINTER_R
 
 	txa
 	clc
