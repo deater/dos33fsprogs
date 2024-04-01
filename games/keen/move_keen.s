@@ -272,13 +272,13 @@ check_falling:
 
 	lda	KEEN_FOOT_BELOW1
 
-	; if tile# < HARDTOP_TILES then we fall
+	; if tile# > HARDTOP_TILES then we stop falling
 	cmp	#HARDTOP_TILES
 	bcs	feet_on_ground		; bge
 
 	lda	KEEN_FOOT_BELOW2
 
-	; if tile# < HARDTOP_TILES then we fall
+	; if tile# > HARDTOP_TILES then we stop falling
 	cmp	#HARDTOP_TILES
 	bcs	feet_on_ground		; bge
 
@@ -302,8 +302,8 @@ check_falling:
 	bcs	scroll_fall	; bge
 
 keen_fall:
-	inc	KEEN_Y
-	inc	KEEN_Y
+	inc	KEEN_Y			; this must be +2
+	inc	KEEN_Y			; as we only draw sprites on even lines
 	jmp	done_check_falling
 
 
@@ -311,6 +311,7 @@ scroll_fall:
 	inc	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
+
 	jmp	done_check_falling
 
 feet_on_ground:
@@ -326,25 +327,24 @@ feet_on_ground:
 	; clear falling
 	lda	#0
 	sta	KEEN_FALLING
-
-	lda	#0
 	sta	KEEN_WALKING
 
 	jsr	land_noise
 
+	rts
+
 was_not_falling:
 	; check to see if Y still hi, if so scroll back down
-
-	lda	KEEN_Y
-	cmp	#YDEFAULT
-	bcs	done_check_falling	; bge
+;	lda	KEEN_Y
+;	cmp	#YDEFAULT
+;	bcs	done_check_falling	; bge
 
 	; too high up on screen, adjust down and also adjust tilemap down
 
-	inc	KEEN_Y
-	inc	KEEN_Y
-	inc	TILEMAP_Y		; share w above?
-	jsr	copy_tilemap_subset
+;	inc	KEEN_Y
+;	inc	KEEN_Y
+;	inc	TILEMAP_Y		; share w above?
+;	jsr	copy_tilemap_subset
 
 done_check_falling:
 	rts
@@ -508,18 +508,3 @@ head_lookup:
 	.byte	220,220,220,220	; 43
 	.byte	240,240,240,240	; 47
 
-
-	; INT((y+4)/4)*20
-;feet_lookup:
-;	.byte	20,20,20,20	; 3
-;	.byte	40,40,40,40	; 7
-;	.byte	60,60,60,60	; 11
-;	.byte	80,80,80,80	; 15
-;	.byte	100,100,100,100	; 19
-;	.byte	120,120,120,120	; 23
-;	.byte	140,140,140,140	; 27
-;	.byte	160,160,160,160	; 31
-;	.byte	180,180,180,180	; 35
-;	.byte	200,200,200,200	; 39
-;	.byte	220,220,220,220	; 43
-;	.byte	240,240,240,240	; 47

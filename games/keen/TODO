@@ -1,10 +1,17 @@
+movement:
+~~~~~~~~~
+	+ jump one block too high
+	+ fall through upper platform
+
+enemies
+~~~~~~~
+	+ remove yorps from background tiles
+	+ enemy movement
+	+ animate enemies?
+
 lo-res version
 ~~~~~~~~~~~~~~
 + walk behind some sprites (columns on level1)
-+ enemy movement
-+ animate enemies?
-+ check raygun count before shooting
-+ fix background tile when get item
 + fix keybindings/help menu
 + better start/stop level music
 + implement leaving level
