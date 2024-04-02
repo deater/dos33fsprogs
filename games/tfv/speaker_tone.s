@@ -1,3 +1,7 @@
+; FIXME: obsolete
+;	use music/redbook_sound instead
+
+
 ; based on code from here
 ; http://eightbitsoundandfury.ld8.org/programming.html
 

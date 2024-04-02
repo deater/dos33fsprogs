@@ -1,5 +1,7 @@
-; FIXME: replace with updated version from music/redbook_sound
-;	the notes here aren't exactly right
+; OBSOLETE
+
+; use music/redbook_sound
+
 
 ; based on code from here
 ; http://eightbitsoundandfury.ld8.org/programming.html

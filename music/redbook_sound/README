@@ -1,0 +1,38 @@
+this code was widely shared for playing tones on Apple II
+	by POKEing the machine language and CALLing from BASIC
+
+it's originally by Paul Lutus, from the Apple II Red Book, p45
+
+this code is just toggling the speaker ($C030) on and off with cycle-counted
+frequncies.  
+
+There are fancier ways to get music out of the speaker, see Electric Duet
+(also by Paul Lutus), dac522 (by Michael Mahon), and play-btc and
+a2stream by Oliver Schmidt.
+
+using regular load/store/bit of $C030 is safe.  Some of the more
+	advanced addressing modes can double-toggle due to how some 6502
+	implementations run the address bus
+
+these was a table of notes floating around, but it seems the note values
+	were off a bit and also seems to have been calculated assuming
+	a 1MHz clock but the Apple II actually runs at roughly 1.023MHz
+
+	; the inner freq loop is roughly FREQ*10cycles
+	; so the square wave generated has a period of
+	;	freq*20*1.023us
+	; or a frequency of 1/(freq*20.46e-6)
+
+	; more exactly, it is (4+10F)+(13+10F) = 20F+17
+
+Note this probably will be a bit off on PAL Apple IIs
+
+The code was originally in the form of a machine language program that could
+be POKEd to address $00 of the zero page, and called from Integer Basic.
+
+Later this was adapted for Applesoft and loaded to $300 instead, although
+when doing this Y was never initialized properly (Integer BASIC had it at $00
+but Applesoft it would be $02).
+
+see ../../utils/asoft_sound for some routines that are related but
+have slightly different sounds to them

@@ -1,3 +1,7 @@
+; the sound here is not quite right, use
+;	music/redbook_audio instead
+
+
 ; based on code from here
 ; http://eightbitsoundandfury.ld8.org/programming.html
 

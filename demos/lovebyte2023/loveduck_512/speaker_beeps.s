@@ -1,3 +1,6 @@
+; note this is Paul Lutus' red book code
+; see music/redbook_sound for more details
+
 ; based on code from here
 ; http://eightbitsoundandfury.ld8.org/programming.html
 

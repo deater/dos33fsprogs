@@ -1,3 +1,8 @@
+FIXME:
++ use zx02 compression
++ use updated/proper audio in the speaker_beeps.s (from music/redbook_sound)
+
+
 KNOWN BUGS
 + The bounding box for the button in the fireplace should probably be at least
 	two pixels higher, it's hard to hit

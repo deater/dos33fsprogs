@@ -156,6 +156,7 @@ all_good:
 ;	inx
 ;	txa
 
+; old
 
 ;NOTE_A3		= $98	; 152
 ;NOTE_B3		= $87	; 135
@@ -163,6 +164,16 @@ all_good:
 ;NOTE_D4		= $72	; 114
 ;NOTE_E4		= $66	; 102
 ;NOTE_FSHARP4	= $5B	; 91
+
+; new
+
+;NOTE_A3		= 223
+;NOTE_B3		= 199
+;NOTE_CSHARP4		= 177
+;NOTE_D4		= 167
+;NOTE_E4		= 149
+;NOTE_FSHARP4		= 132
+
 
 NOTE_A3		= 0
 NOTE_B3		= 1
@@ -174,13 +185,13 @@ NOTE_FSHARP4	= 5
 
 
 
-; based on code from here
-; http://eightbitsoundandfury.ld8.org/programming.html
+; this is Paul Lutus's code from Apple II red book
 
 ; X,Y trashed
 ; duration also trashed
-
 speaker_tone:
+	ldy	#0
+speaker_tone_loop:
 	bit	$C030		; click speaker
 speaker_loop:
 	dey			; y never set?
@@ -191,7 +202,7 @@ slabel1:
 	dex
 	bne	speaker_loop
 	ldx	speaker_frequency	; (Frequency)
-	jmp	speaker_tone
+	jmp	speaker_tone_loop
 done_tone:
 	beq	play_music_loop
 
@@ -289,7 +300,9 @@ box_data:
 	.byte $FF
 
 
-note_freqs:	.byte $98,$87,$79,$72,$66,$5B
+;note_freqs:	.byte $98,$87,$79,$72,$66,$5B
+
+note_freqs:	.byte 223,199,177,167,149,132
 
 speaker_frequency:
 speaker_duration = speaker_frequency+1

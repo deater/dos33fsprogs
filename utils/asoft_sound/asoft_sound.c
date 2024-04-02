@@ -3,19 +3,12 @@
 
 static int line=0;
 
-
-static int get_freq(int note, int octave, int flat, int sharp) {
+/* frequencies from the eightbitsoundandfury webpage */
+static int get_freq_old(int note, int octave, int flat, int sharp) {
 
 	if (octave==0) {
 
 	switch(note) {
-		case 'A':
-			if (sharp) return 143;
-			if (flat) return 161;
-			return 152;
-		case 'B':
-			if (flat) return 143;
-			return 135;
 		case 'C':
 			if (sharp) return 241;
 			return 255;
@@ -33,6 +26,13 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 			if (sharp) return 161;
 			if (flat) return 180;
 			return 170;
+		case 'A':
+			if (sharp) return 143;
+			if (flat) return 161;
+			return 152;
+		case 'B':
+			if (flat) return 143;
+			return 135;
 		default: fprintf(stderr,"Unknown note %c Line %d\n",
 					note,line);
 	}
@@ -42,13 +42,6 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 	if (octave==1) {
 
 	switch(note) {
-		case 'A':
-			if (sharp) return 72;
-			if (flat) return 81;
-			return 76;
-		case 'B':
-			if (flat) return 72;
-			return 68;
 		case 'C':
 			if (sharp) return 121;
 			return 128;
@@ -66,6 +59,14 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 			if (sharp) return 81;
 			if (flat) return 91;
 			return 85;
+		case 'A':
+			if (sharp) return 72;
+			if (flat) return 81;
+			return 76;
+		case 'B':
+			if (flat) return 72;
+			return 68;
+
 		default: fprintf(stderr,"Unknown note %c\n",note);
 	}
 	} else
@@ -73,13 +74,6 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 	if (octave==2) {
 
 	switch(note) {
-		case 'A':
-			if (sharp) return 36;
-			if (flat) return 40;
-			return 38;
-		case 'B':
-			if (flat) return 36;
-			return 34;
 		case 'C':
 			if (sharp) return 60;
 			return 64;
@@ -97,6 +91,14 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 			if (sharp) return 40;
 			if (flat) return 45;
 			return 43;
+		case 'A':
+			if (sharp) return 36;
+			if (flat) return 40;
+			return 38;
+		case 'B':
+			if (flat) return 36;
+			return 34;
+
 		default: fprintf(stderr,"Unknown note %c\n",note);
 	}
 
@@ -106,6 +108,117 @@ static int get_freq(int note, int octave, int flat, int sharp) {
 
 	return 0;
 }
+
+/* proper frequencies */
+static int get_freq_new(int note, int octave, int flat, int sharp) {
+
+	if (octave==0) {
+
+	switch(note) {		// C3
+//		case 'C':
+//			if (sharp) return 241;
+//			return 255;
+//		case 'D':
+//			if (sharp) return 214;
+//			if (flat) return 241;
+//			return 227;
+//		case 'E':
+//			if (flat) return 214;
+//			return 202;
+//		case 'F':
+//			if (sharp) return 180;
+//			return 191;
+		case 'G':
+			if (sharp) return 236;
+			return 250;
+		case 'A':
+			if (sharp) return 210;
+			if (flat) return 236;
+			return 223;
+		case 'B':
+			if (flat) return 210;
+			return 199;
+
+		default: fprintf(stderr,"Unknown note %c Line %d\n",
+					note,line);
+	}
+
+	} else
+
+	if (octave==1) {
+
+	switch(note) {
+		case 'C':
+			if (sharp) return 177;
+			return 187;
+		case 'D':
+			if (sharp) return 158;
+			if (flat) return 177;
+			return 167;
+		case 'E':
+			if (flat) return 158;
+			return 149;
+		case 'F':
+			if (sharp) return 132;
+			return 140;
+		case 'G':
+			if (sharp) return 118;
+			if (flat) return 132;
+			return 125;
+		case 'A':
+			if (sharp) return 105;
+			if (flat) return 118;
+			return 111;
+		case 'B':
+			if (flat) return 105;
+			return 99;
+		default: fprintf(stderr,"Unknown note %c\n",note);
+	}
+	} else
+
+	if (octave==2) {
+
+	switch(note) {
+		case 'C':
+			if (sharp) return 88;
+			return 94;
+		case 'D':
+			if (sharp) return 79;
+			if (flat) return 88;
+			return 83;
+		case 'E':
+			if (flat) return 79;
+			return 74;
+		case 'F':
+			if (sharp) return 66;
+			return 70;
+		case 'G':
+			if (sharp) return 59;
+			if (flat) return 66;
+			return 62;
+		case 'A':
+			if (sharp) return 52;
+			if (flat) return 59;
+			return 56;
+		case 'B':
+			if (flat) return 52;
+			return 50;
+
+		default: fprintf(stderr,"Unknown note %c\n",note);
+	}
+
+	} else {
+		fprintf(stderr,"Unknown octave %d!\n",octave);
+	}
+
+	return 0;
+}
+
+static int get_freq(int note, int octave, int flat, int sharp) {
+
+	return get_freq_new(note,octave,flat,sharp);
+}
+
 
 static int get_duration(int length) {
 
