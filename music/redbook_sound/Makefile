@@ -2,17 +2,28 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
+LINKER_SCRIPTS = ../../linker_scripts/
+EMPTY_DISK = ../../empty_disk/empty.dsk
 
-all:	generate_frequencies
+all:	generate_frequencies redbook_sound.dsk
 
-#still_alive.dsk:	SA_COMPRESSED STILL_ALIVE TITLE.BAS ENDING
-#	$(DOS33) -y still_alive.dsk BSAVE -a 0x5900 SA_COMPRESSED
-#	$(DOS33) -y still_alive.dsk BSAVE -a 0x0800 STILL_ALIVE
-#	$(DOS33) -y still_alive.dsk BSAVE -a 0x1800 ENDING
-#	$(DOS33) -y still_alive.dsk SAVE A TITLE.BAS
+redbook_sound.dsk:	HELLO TEST_KEEN
+	cp $(EMPTY_DISK) redbook_sound.dsk
+	$(DOS33) -y redbook_sound.dsk SAVE A HELLO
+	$(DOS33) -y redbook_sound.dsk BSAVE -a 0xc00 TEST_KEEN
 
-STILL_ALIVE:	still_alive.o
-	ld65 -o STILL_ALIVE still_alive.o -C ../../linker_scripts/apple2_800.inc
+###
+
+HELLO:	hello.bas
+	$(TOKENIZE) < hello.bas > HELLO
+
+###
+
+TEST_KEEN:	test_keen.o
+	ld65 -o TEST_KEEN test_keen.o -C $(LINKER_SCRIPTS)apple2_c00.inc
+
+test_keen.o:	test_keen.s lvldone.inc redbook_sound.s
+	ca65 -o test_keen.o test_keen.s -l test_keen.lst
 
 
 ###
@@ -26,5 +37,5 @@ generate_frequencies.o:
 ###
 
 clean:	
-	rm -f *~ *.o generate_frequencies
+	rm -f *~ *.o generate_frequencies TEST_KEEN
 

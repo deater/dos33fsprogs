@@ -15,7 +15,8 @@ int main(int argc, char **argv) {
 
 	unsigned char header[16],info[16],temp_sample[2];
 	int fd,result,i,j;
-	int file_size,num_sounds,sample,last,count;
+	int file_size,num_sounds,sample,last,count,final;
+	double frequency;
 
 	char *filename;
 
@@ -106,7 +107,21 @@ int main(int argc, char **argv) {
 
 		if (last!=sample) {
 			if (last!=0xffff) {
-				printf("%d,%d\n",last,count);
+				if (last==0) {
+					frequency=0;
+					final=0;
+				}
+
+				else {
+					frequency=1193181.0/last;
+
+					final=(int)(1.0/(
+						(20.0*(1.023e-6)*frequency)-
+						17*1.023e-6));
+				}
+
+				printf(".byte %d,%d\t; %.1lf\n",
+					final/2,count,frequency);
 			}
 			count=0;
 			last=sample;
