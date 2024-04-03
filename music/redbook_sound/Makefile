@@ -22,7 +22,7 @@ HELLO:	hello.bas
 TEST_KEEN:	test_keen.o
 	ld65 -o TEST_KEEN test_keen.o -C $(LINKER_SCRIPTS)apple2_c00.inc
 
-test_keen.o:	test_keen.s lvldone.inc redbook_sound.s
+test_keen.o:	test_keen.s longer_sound.s ck1_sounds.inc
 	ca65 -o test_keen.o test_keen.s -l test_keen.lst
 
 

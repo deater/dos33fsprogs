@@ -89,8 +89,9 @@ int main(int argc, char **argv) {
 	}
 
 
-	i=14;
-	printf("Dump of %s\n",sound_info[i].name);
+	for(i=0;i<num_sounds;i++) {
+
+	printf("%s:\n",sound_info[i].name);
 	lseek(fd,sound_info[i].offset,SEEK_SET);
 
 	last=0xffff;
@@ -130,6 +131,9 @@ int main(int argc, char **argv) {
 
 		if (sample==0xffff) break;
 	}
+	printf(".byte 255,255\n");
+	}
+
 	/* close */
 	close(fd);
 
