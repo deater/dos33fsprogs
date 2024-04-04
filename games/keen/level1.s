@@ -134,7 +134,7 @@ keen_loop:
 
 	jsr	move_keen
 
-;	jsr	move_enemies
+	jsr	move_enemies
 
 	jsr	move_laser
 

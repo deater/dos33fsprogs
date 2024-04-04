@@ -1,89 +1,42 @@
 NUM_ENEMIES = 4
 
+
 	;=======================
-	; laser enemies
+	; move enemies
 	;=======================
-	; see if laser hits any enemies
-laser_enemies:
+
+move_enemies:
 
 	ldy	#0
-laser_enemies_loop:
 
-	; see if out
+move_enemies_loop:
+
+	; only move if out
 
 	lda	enemy_data+ENEMY_DATA_OUT,Y
-	beq	done_laser_enemy
+	beq	done_move_enemy
 
-	; get local tilemap co-ord
-	sec
-	lda	enemy_data+ENEMY_DATA_TILEX,Y
-	sbc	TILEMAP_X
+	; check if falling
 
-	sta	TILE_TEMP
 
-	sec
-	lda	enemy_data+ENEMY_DATA_TILEY,Y
-	sbc	TILEMAP_Y
-	asl
-	asl
-	asl
-	asl
-	clc
-	adc	TILE_TEMP
+	; check if moving right/left
 
-	cmp	LASER_TILE
-	bne	done_laser_enemy
+;	lda	enemy_data+ENEMY_DATA_X,Y
+;	clc
+;	adc	#1
+;	sta	enemy_data+ENEMY_DATA_X,Y
 
-; hit something
-hit_something:
-	lda	#0
-	sta	LASER_OUT
-	sta	FRAMEL
+;	cmp	#36
+;	bcc	done_move_enemy
+
+;	lda	#0
 ;	sta	enemy_data+ENEMY_DATA_OUT,Y
-	lda	#1
-	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
 
-;	jsr	enemy_noise
+done_move_enemy:
 
-;	jsr	inc_score_by_10
-
-	jmp	exit_laser_enemy
-
-done_laser_enemy:
-
-	tya
-	clc
-	adc	#8
-	tay
-	cpy	#(NUM_ENEMIES*8)
-	bne	laser_enemies_loop
-exit_laser_enemy:
-	rts
-
-
-
-	;=======================
-	; move enemy
-	;=======================
-	; which one is in Y
-
-
-	; assume yorp for now
-move_enemy:
-
-	lda	enemy_data+ENEMY_DATA_X,Y
-	clc
-	adc	#1
-	sta	enemy_data+ENEMY_DATA_X,Y
-
-	cmp	#36
-	bcc	move_enemy_good
-
-	lda	#0
-	sta	enemy_data+ENEMY_DATA_OUT,Y
-
-
-move_enemy_good:
+	iny
+	cpy	#NUM_ENEMIES
+	bne	move_enemies_loop
 
 	rts
 
@@ -201,10 +154,6 @@ draw_enemy:
 	pla
 	tay
 
-	; also move enemy
-
-	jsr	move_enemy
-
 done_draw_enemy:
 
 	tya
@@ -217,16 +166,6 @@ done_draw_enemy:
 
 exit_draw_enemy:
 	rts
-
-.if 0
-enemy_sprites:
-	.word	enemy_camera_sprite1
-	.word	enemy_camera_sprite2
-	.word	enemy_crawler_sprite1
-	.word	enemy_crawler_sprite2
-	.word	enemy_bot_sprite1
-	.word	enemy_bot_sprite2
-.endif
 
 enemy_explosion_sprites:
 	.word	enemy_explosion_sprite1
@@ -248,10 +187,6 @@ enemy_explosion_sprite3:
 	.byte	2,2
 	.byte	$7A,$5A
 	.byte	$A5,$A7
-
-;ENEMY_CAMERA	= 0
-;ENEMY_CRAWLER	= 4
-;ENEMY_BOT	= 8
 
 ENEMY_YORP	= 0
 

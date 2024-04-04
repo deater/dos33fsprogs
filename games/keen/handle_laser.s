@@ -98,3 +98,66 @@ laser_sideways_sprite:
 ;	.byte $3A,$cA,$3A,$cA
 	.byte $A3,$Ac,$A3,$Ac
 
+
+
+	;=======================
+	; laser enemies
+	;=======================
+	; see if laser hits any enemies
+laser_enemies:
+
+	ldy	#0
+laser_enemies_loop:
+
+	; see if out
+
+	lda	enemy_data+ENEMY_DATA_OUT,Y
+	beq	done_laser_enemy
+
+	; get local tilemap co-ord
+	sec
+	lda	enemy_data+ENEMY_DATA_TILEX,Y
+	sbc	TILEMAP_X
+
+	sta	TILE_TEMP
+
+	sec
+	lda	enemy_data+ENEMY_DATA_TILEY,Y
+	sbc	TILEMAP_Y
+	asl
+	asl
+	asl
+	asl
+	clc
+	adc	TILE_TEMP
+
+	cmp	LASER_TILE
+	bne	done_laser_enemy
+
+; hit something
+hit_something:
+	lda	#0
+	sta	LASER_OUT
+	sta	FRAMEL
+;	sta	enemy_data+ENEMY_DATA_OUT,Y
+	lda	#1
+	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
+
+;	jsr	enemy_noise
+
+;	jsr	inc_score_by_10
+
+	jmp	exit_laser_enemy
+
+done_laser_enemy:
+
+	tya
+	clc
+	adc	#8
+	tay
+	cpy	#(NUM_ENEMIES*8)
+	bne	laser_enemies_loop
+exit_laser_enemy:
+	rts
+
+
