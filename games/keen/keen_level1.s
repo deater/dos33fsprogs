@@ -205,8 +205,8 @@ level1_bg_zx02:
 	.include	"move_keen.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
-	.include	"enemies_level1.s"
-	.include	"item_level1.s"
+	.include	"level1_enemies.s"
+	.include	"level1_items.s"
 
 	.include	"level1_sfx.s"
 	.include	"longer_sound.s"
