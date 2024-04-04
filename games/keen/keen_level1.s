@@ -14,8 +14,8 @@ MAX_TILE_Y = 5		; (34 - 24)/2 (maybe?)
 keen_start:
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR

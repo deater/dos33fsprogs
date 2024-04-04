@@ -13,8 +13,8 @@
 mars_start:
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR
@@ -70,7 +70,7 @@ mars_start:
 	lda	#1
 	sta	INITIAL_SOUND
 
-
+	jsr	fade_in
 
 	;====================================
 	;====================================
@@ -155,6 +155,8 @@ done_with_keen:
 	ldy	#SFX_WLDENTRSND
 	jsr	play_sfx
 
+	jsr	fade_out
+
         lda     #LOAD_KEEN1
         sta     WHICH_LOAD
 
@@ -191,9 +193,8 @@ parts_zx02:
 	.include	"gr_pageflip.s"
 ;	.include	"gr_putsprite_crop.s"
 	.include	"zx02_optim.s"
+	.include	"gr_fade.s"
 
-;	.include	"status_bar.s"
-;	.include	"keyboard.s"
 	.include	"joystick.s"
 
 	.include	"text_drawbox.s"
