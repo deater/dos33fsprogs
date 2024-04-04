@@ -66,6 +66,10 @@ mars_start:
 	jsr	full_decomp
 
 
+	lda	#1
+	sta	INITIAL_SOUND
+
+
 
 	;====================================
 	;====================================
@@ -112,14 +116,23 @@ no_frame_oflo:
 	;===========================
 
 	lda	LEVEL_OVER
-	beq	do_keen_loop
-
-	jmp	done_with_keen
-
-
+	bne	done_with_keen
 
 
 do_keen_loop:
+
+	;=====================
+	; sound effect
+	;=====================
+
+	lda	INITIAL_SOUND
+	beq	skip_initial_sound
+
+	ldy	#SFX_KEENSLEFT
+	jsr	play_sfx
+	dec	INITIAL_SOUND
+
+skip_initial_sound:
 
 	; delay
 ;	lda	#200
@@ -138,7 +151,8 @@ done_with_keen:
 
 	; sound effect
 
-	jsr	entry_music
+	ldy	#SFX_WLDENTRSND
+	jsr	play_sfx
 
         lda     #LOAD_KEEN1
         sta     WHICH_LOAD
@@ -187,7 +201,7 @@ parts_zx02:
 	.include	"game_over.s"
 
 
-	.include	"sound_effects.s"
+	.include	"mars_sfx.s"
 	.include	"longer_sound.s"
 
 

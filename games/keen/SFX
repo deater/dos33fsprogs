@@ -1,20 +1,18 @@
-Start at mars (and after die and return to map):
-	Keensleft
+MARS sounds:
+	Start at mars (and after die and return to map):
+		Keensleft
+	Start level
+		WLDENTRSND
 
-Start level
-	WLDENTRSND
+Level sounds:
 
-Die
-	KEENDIESND
-
-Level Done
-	LVLDONESND
-
-Game over
-	GAMEOVERSND
-
-Get item
-	GOTITEMSND
-
-Shoot laser
-	GUNCLICK
+	Die
+		KEENDIESND
+	Level Done
+		LVLDONESND
+	Game over
+		GAMEOVERSND
+	Get item
+		GOTITEMSND
+	Shoot laser
+		GUNCLICK
