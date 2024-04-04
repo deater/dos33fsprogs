@@ -51,7 +51,7 @@ KEEN_MARS:	keen_mars.o
 	ld65 -o KEEN_MARS keen_mars.o -C ../../linker_scripts/apple2_2000.inc
 
 keen_mars.o:	keen_mars.s zp.inc hardware.inc game_over.s \
-	sound_effects.s speaker_tone.s print_help.s \
+	sound_effects.s longer_sound.s print_help.s \
 	maps/mars_map.gr.zx02 graphics/parts.gr.zx02
 	ca65 -o keen_mars.o keen_mars.s -l keen_mars.lst
 
@@ -67,7 +67,7 @@ keen_level1.o:	keen_level1.s zp.inc hardware.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s \
-	sound_effects.s speaker_tone.s \
+	sound_effects.s longer_sound.s \
 	keyboard.s handle_laser.s
 	ca65 -o keen_level1.o keen_level1.s -l keen_level1.lst
 
@@ -83,7 +83,7 @@ keen_level2.o:	keen_level2.s zp.inc hardware.inc \
 	maps/level2_map.lzsa \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s \
-	sound_effects.s speaker_tone.s \
+	sound_effects.s longer_sound.s \
 	keyboard.s handle_laser.s
 	ca65 -o keen_level2.o keen_level2.s -l keen_level2.lst
 

@@ -209,7 +209,7 @@ level1_bg_zx02:
 	.include	"item_level1.s"
 
 	.include	"sound_effects.s"
-	.include	"speaker_tone.s"
+	.include	"longer_sound.s"
 
 level1_data_zx02:
 	.incbin		"maps/level1_map.zx02"

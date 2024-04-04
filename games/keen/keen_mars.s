@@ -188,7 +188,7 @@ parts_zx02:
 
 
 	.include	"sound_effects.s"
-	.include	"speaker_tone.s"
+	.include	"longer_sound.s"
 
 
 
