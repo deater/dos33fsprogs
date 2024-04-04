@@ -1,4 +1,4 @@
-JUMP_HEIGHT	=	8
+JUMP_HEIGHT	=	6
 
 	;==============================
 	; Handle Keypress
