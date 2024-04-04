@@ -43,7 +43,7 @@ hit_something:
 	lda	#1
 	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
 
-	jsr	enemy_noise
+;	jsr	enemy_noise
 
 ;	jsr	inc_score_by_10
 

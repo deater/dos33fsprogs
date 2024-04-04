@@ -67,7 +67,7 @@ keen_level1.o:	keen_level1.s zp.inc hardware.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s \
-	sound_effects.s longer_sound.s \
+	level1_sfx.s longer_sound.s \
 	keyboard.s handle_laser.s
 	ca65 -o keen_level1.o keen_level1.s -l keen_level1.lst
 

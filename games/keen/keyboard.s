@@ -194,7 +194,7 @@ jump_right:
 	lda	#JUMP_HEIGHT
 	sta	KEEN_JUMPING
 
-	jsr	jump_noise
+;	jsr	jump_noise
 
 	lda	#1
 	sta	KEEN_DIRECTION
@@ -220,7 +220,7 @@ jump_left:
 	lda	#JUMP_HEIGHT
 	sta	KEEN_JUMPING
 
-	jsr	jump_noise
+;	jsr	jump_noise
 
 	lda	#$FF
 	sta	KEEN_DIRECTION
@@ -267,7 +267,7 @@ space_pressed:
 	lda	#JUMP_HEIGHT
 	sta	KEEN_JUMPING
 
-	jsr	jump_noise
+;	jsr	jump_noise
 
 	jmp	done_keypress
 
@@ -288,7 +288,10 @@ comma_pressed:
 	lda	LASER_OUT
 	bne	done_comma
 
-	jsr	laser_noise
+	ldy	#SFX_GUNCLICK
+	jsr	play_sfx
+
+;	jsr	laser_noise
 
 	lda	KEEN_DIRECTION
 	sta	LASER_DIRECTION

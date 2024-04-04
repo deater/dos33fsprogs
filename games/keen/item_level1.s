@@ -112,7 +112,8 @@ btc_smc:
 	sta	$b000,Y
 
 	; play sound
-	jsr	pickup_noise
+	ldy	#SFX_GOTITEMSND
+	jsr	play_sfx
 
 
 done_check_item:
@@ -132,7 +133,11 @@ check_door:
 at_door:
 	inc	LEVEL_OVER
 	; TODO: mark level complete somehow
-	jsr	exit_music
+
+	ldy	#SFX_LVLDONESND
+	jsr	play_sfx
+
+
 done_check_door:
 	rts
 
@@ -158,9 +163,23 @@ check_enemy:
 touched_enemy:
 	dec	KEENS
 	inc	LEVEL_OVER
+
+
+	ldy	#SFX_KEENDIESND
+	jsr	play_sfx
+
 	; TODO: ANIMATION
-	; TODO: enemy music
-	;jsr	exit_music
+	; keen turns to head, flies up screen
+
+	; play game over music if out of keens
+
+	lda	KEENS
+	bpl	done_check_enemy
+
+	ldy	#SFX_GAMEOVERSND
+	jsr	play_sfx
+
+
 done_check_enemy:
 	rts
 

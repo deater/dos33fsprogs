@@ -1,6 +1,7 @@
 ; Keen MARS main map
 
 ; TODO: should make it scrollable, etc / tilemap
+; TODO: fade in effect (from mode7 demo)
 
 ; by deater (Vince Weaver) <vince@deater.net>
 

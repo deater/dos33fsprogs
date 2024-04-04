@@ -167,7 +167,7 @@ keen_check_head:
 	lda	#1
 	sta	KEEN_FALLING		; now falling
 
-	jsr	head_noise
+;	jsr	head_noise
 
 collide_left_right:
 	;===================
@@ -329,7 +329,7 @@ feet_on_ground:
 	sta	KEEN_FALLING
 	sta	KEEN_WALKING
 
-	jsr	land_noise
+;	jsr	land_noise
 
 	rts
 

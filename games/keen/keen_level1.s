@@ -208,7 +208,7 @@ level1_bg_zx02:
 	.include	"enemies_level1.s"
 	.include	"item_level1.s"
 
-	.include	"sound_effects.s"
+	.include	"level1_sfx.s"
 	.include	"longer_sound.s"
 
 level1_data_zx02:
