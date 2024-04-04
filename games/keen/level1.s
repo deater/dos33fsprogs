@@ -196,9 +196,8 @@ level1_bg_zx02:
 	.include	"joystick.s"
 
 	.include	"text_drawbox.s"
-	.include	"print_help.s"
-	.include	"quit_yn.s"
-;	.include	"level_end.s"
+	.include	"text_help.s"
+	.include	"text_quit_yn.s"
 
 	.include	"draw_keen.s"
 	.include	"sprites/keen_sprites.inc"

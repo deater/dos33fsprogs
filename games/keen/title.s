@@ -224,11 +224,10 @@ init_vars:
 	.include	"gr_offsets.s"
 	.include	"zx02_optim.s"
 
-	.include	"print_help.s"
+	.include	"text_help.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 
-;	.include	"graphics_title/title_graphics.inc"
 ;	.include	"lc_detect.s"
 
 

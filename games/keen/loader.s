@@ -155,13 +155,13 @@ filenames:
 	.word keen2_filename
 
 title_filename:
-	.byte "KEEN_TITLE",0
+	.byte "TITLE",0
 mars_filename:
-	.byte "KEEN_MARS",0
+	.byte "MARS",0
 keen1_filename:
-	.byte "KEEN_LEVEL1",0
+	.byte "LEVEL1",0
 keen2_filename:
-	.byte "KEEN_LEVEL2",0
+	.byte "LEVEL2",0
 
 
 	;===================================================

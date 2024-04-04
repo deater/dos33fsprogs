@@ -9,17 +9,17 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk/empty.dsk
 
 
-all:	keen.dsk
+all:	keen1_lores.dsk
 
-keen.dsk:	HELLO LOADER KEEN_TITLE KEEN_MARS KEEN_LEVEL1
-#KEEN_LEVEL2
-	cp $(EMPTY_DISK) keen.dsk
-	$(DOS33) -y keen.dsk SAVE A HELLO
-	$(DOS33) -y keen.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y keen.dsk BSAVE -a 0x4000 KEEN_TITLE
-	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_MARS
-	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_LEVEL1
-#	$(DOS33) -y keen.dsk BSAVE -a 0x2000 KEEN_LEVEL2
+keen1_lores.dsk:	HELLO LOADER TITLE MARS LEVEL1
+#LEVEL2
+	cp $(EMPTY_DISK) keen1_lores.dsk
+	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 TITLE
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 MARS
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL1
+#	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
 
 
 ###
@@ -37,32 +37,33 @@ loader.o:	loader.s
 
 ####
 
-KEEN_TITLE:	keen_title.o
-	ld65 -o KEEN_TITLE keen_title.o -C ../../linker_scripts/apple2_4000.inc
+TITLE:	title.o
+	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_4000.inc
 
-keen_title.o:	keen_title.s zp.inc hardware.inc \
+title.o:	title.s zp.inc hardware.inc \
 		zx02_optim.s \
 		graphics/keen1_title.hgr.zx02
-	ca65 -o keen_title.o keen_title.s -l keen_title.lst
+	ca65 -o title.o title.s -l title.lst
 
 ####
 
-KEEN_MARS:	keen_mars.o
-	ld65 -o KEEN_MARS keen_mars.o -C ../../linker_scripts/apple2_2000.inc
+MARS:	mars.o
+	ld65 -o MARS mars.o -C ../../linker_scripts/apple2_2000.inc
 
-keen_mars.o:	keen_mars.s zp.inc hardware.inc game_over.s \
+mars.o:	mars.s zp.inc hardware.inc game_over.s \
 	gr_fade.s \
-	mars_sfx.s longer_sound.s print_help.s \
+	mars_sfx.s longer_sound.s \
+	text_help.s \
 	maps/mars_map.gr.zx02 graphics/parts.gr.zx02
-	ca65 -o keen_mars.o keen_mars.s -l keen_mars.lst
+	ca65 -o mars.o mars.s -l mars.lst
 
 ####
 
-KEEN_LEVEL1:	keen_level1.o
-	ld65 -o KEEN_LEVEL1 keen_level1.o -C ../../linker_scripts/apple2_2000.inc
+LEVEL1:	level1.o
+	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_2000.inc
 
-keen_level1.o:	keen_level1.s zp.inc hardware.inc \
-	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s \
+level1.o:	level1.s zp.inc hardware.inc \
+	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
 	level1_enemies.s level1_items.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	maps/level1_map.lzsa \
@@ -70,15 +71,15 @@ keen_level1.o:	keen_level1.s zp.inc hardware.inc \
 	draw_tilemap.s \
 	level1_sfx.s longer_sound.s \
 	keyboard.s handle_laser.s
-	ca65 -o keen_level1.o keen_level1.s -l keen_level1.lst
+	ca65 -o level1.o level1.s -l level1.lst
 
 ####
 
-KEEN_LEVEL2:	keen_level2.o
-	ld65 -o KEEN_LEVEL2 keen_level2.o -C ../../linker_scripts/apple2_2000.inc
+LEVEL2:	level2.o
+	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_2000.inc
 
-keen_level2.o:	keen_level2.s zp.inc hardware.inc \
-	print_help.s gr_fast_clear.s quit_yn.s text_drawbox.s \
+level2.o:	level2.s zp.inc hardware.inc \
+	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
 	enemies_level2.s actions_level2.s item_level2.s \
 	graphics/keen_graphics.inc keen_sprites.inc \
 	maps/level2_map.lzsa \
@@ -86,7 +87,7 @@ keen_level2.o:	keen_level2.s zp.inc hardware.inc \
 	draw_tilemap.s \
 	sound_effects.s longer_sound.s \
 	keyboard.s handle_laser.s
-	ca65 -o keen_level2.o keen_level2.s -l keen_level2.lst
+	ca65 -o level2.o level2.s -l level2.lst
 
 
 ####
@@ -106,7 +107,7 @@ maps/level1_map.lzsa:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO KEEN_TITLE KEEN_MARS KEEN_LEVEL1
+	rm -f *~ *.o *.lst HELLO LOADER TITLE MARS LEVEL1
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean
