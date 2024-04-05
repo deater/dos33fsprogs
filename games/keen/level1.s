@@ -205,5 +205,7 @@ level1_bg_zx02:
 	.include	"level1_sfx.s"
 	.include	"longer_sound.s"
 
+	.include	"random16.s"
+
 level1_data_zx02:
 	.incbin		"maps/level1_map.zx02"

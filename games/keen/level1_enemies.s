@@ -13,15 +13,15 @@ move_enemies_loop:
 
 	; only move if out
 
-	; only move every 4th frame
+	; only move every 4th frame to slow things down
 
 	lda	FRAMEL
 	and	#$3
-	bne	ergh
+	bne	move_enemy_frame_skip
 
 	lda	enemy_data_out,X
 	bne	enemy_is_out
-ergh:
+move_enemy_frame_skip:
 	jmp	done_move_enemy
 enemy_is_out:
 
@@ -42,19 +42,75 @@ enemy_is_out:
 load_foot1_smc:
 
 	lda	tilemap,Y
-	cmp	#ALLHARD_TILES
-	bcs	no_enemy_fall			; if hard tile, don't fall
+	cmp	#HARDTOP_TILES
+	bcs	no_enemy_fall			; if hardtop tile, don't fall
 
 	inc	enemy_data_tiley,X		; fall one tiles worth
 
-no_enemy_fall:
 
+
+no_enemy_fall:
+	;============================
+	; not falling, so do actions
+	;============================
+	; if walking, walk
+	;	if searching, search
+
+
+	dec	enemy_data_count,X
+	bne	enemy_action
+
+enemy_new_state:
+	jsr	random16
+	lda	SEEDL
+	and	#$3
+	sta	enemy_data_state,X
+
+	jsr	random16
+	lda	SEEDL
+	and	#$f
+	clc
+	adc	#4
+	sta	enemy_data_count,X
+
+
+enemy_action:
+	lda	enemy_data_state,X
+	cmp	#YORP_SEARCH
+	beq	enemy_search
+	cmp	#YORP_JUMP
+	beq	enemy_jump
+	bne	enemy_walk
+
+enemy_search:
+	lda	enemy_data_direction,X
+	eor	#$FF
+	clc
+	adc	#1
+	sta	enemy_data_direction,X
+
+	; TODO: face keen when done
+
+	jmp	done_move_enemy
+
+
+enemy_jump:
+	; make sure we don't jump for too long
+	; hack
+	lda	enemy_data_count,X
+	and	#$3
+	sta	enemy_data_count,X
+
+	; jump a bit
+	dec	enemy_data_tiley,X
+
+	; fallthrough
 
 	;=======================================
 	; move sideways
 	;	until you hit something
 	;=======================================
-
+enemy_walk:
 	; check if moving right/left
 
 	lda	enemy_data_direction,X
@@ -308,6 +364,11 @@ enemy_explosion_sprite3:
 	.byte	$A5,$A7
 
 YORP	= 0
+
+YORP_WALK   = 0
+YORP_JUMP   = 1
+YORP_SEARCH = 2
+
 LEFT	= $FF
 RIGHT	= $1
 
@@ -319,6 +380,8 @@ enemy_data_tilex:	.byte 5,     19,    38,   45,   69,   81,   89,  92,100
 enemy_data_tiley:	.byte 6,     13,    4,    4,    13,   4,    4,   13,10
 enemy_data_x:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
 enemy_data_y:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
+enemy_data_state:	.byte 0,     0,     0,    0,    0,    0,    0,   0,0
+enemy_data_count:	.byte 8,     8,     8,    8,    8,    8,    8,   8,8
 
 ; question: when do they activate?  When do they move when offscreen?
 
