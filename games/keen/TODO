@@ -1,20 +1,23 @@
+sound effects
+~~~~~~~~~~~~~
+	+ shorten item pickup noise
+	+ game over noise if you quit too?
+
 movement:
 ~~~~~~~~~
-	+ jump one block too high
-	+ fall through upper platform
+	+ scroll with sub-block movement?  might not work at hi-res?
 
 enemies
 ~~~~~~~
-	+ remove yorps from background tiles
-	+ enemy movement
-	+ animate enemies?
+	+ allow stepping on head
+	+ disable when not on screen?
+
 
 lo-res version
 ~~~~~~~~~~~~~~
 + walk behind some sprites (columns on level1)
 + fix keybindings/help menu
 + better start/stop level music
-+ implement leaving level
 + animate death
 + game over screen if out of lives
 

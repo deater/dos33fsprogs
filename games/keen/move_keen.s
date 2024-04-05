@@ -13,8 +13,8 @@ TILE_COLS	=	20
 	;=========================
 move_keen:
 
-;	lda	#0
-;	sta	SUPPRESS_WALK		; ????
+	lda	#0
+	sta	SUPPRESS_WALK		; if we collide we set this to stop walk
 
 ;	jsr	keen_get_feet_location	; get location of feet
 
@@ -26,26 +26,29 @@ move_keen:
 
 
 	lda	KEEN_WALKING		; if not walking, we're done
-	beq	done_move_keen
+	beq	move_keen_early_out
 
 	dec	KEEN_WALKING		; decrement walk count
 
-;	lda	SUPPRESS_WALK		; why????
-;	bne	done_move_keen
+	lda	SUPPRESS_WALK		; we hit somthing, don't walk
+	bne	move_keen_early_out
 
 	lda	KEEN_DIRECTION		; check direction
 	bmi	move_left
+	bpl	move_right
+
+move_keen_early_out:
+	jmp	done_move_keen
 
 	;==============================
 	; Move Keen Right
 	;==============================
 	; if (keen_tilex-tilemap_x<11) || (tilemap_x>96) walk
 	;	otherwise, scroll
-
+move_right:
 	lda	TILEMAP_X
 	cmp	#96		; 540-80 = 460/4 = 115-20 = 95
 	bcs	keen_walk_right
-
 
 	sec
 	lda	KEEN_TILEX
@@ -54,19 +57,14 @@ move_keen:
 	bcc	keen_walk_right
 
 keen_scroll_right:
+	clc                                     ; location is 8:8 fixed point
+	lda     KEEN_XL
+	adc     #KEEN_SPEED                     ; add in speed
+	sta     KEEN_XL
+	bcc     skip_keen_scroll_right          ; if carry out we scroll
 
-	clc					; location is 8:8 fixed point
-	lda	KEEN_XL
-	adc	#KEEN_SPEED			; add in speed
-	sta	KEEN_XL
-	bcc	skip_keen_scroll_right		; if carry out we scroll
-
-	inc	TILEMAP_X			; scroll screen to right
-
+	inc     TILEMAP_X                       ; scroll screen to right
 	inc	KEEN_TILEX
-
-
-
 
 	jsr	copy_tilemap_subset		; update tilemap
 
@@ -168,7 +166,7 @@ keen_collide:
 	;==================
 keen_check_items:
 
-;	jsr	check_items
+	jsr	check_items
 
 	;===================
 	; collide with head
@@ -218,11 +216,18 @@ collide_head_r:
 ;	jsr	head_noise
 
 collide_left_right:
-	rts
 
 	;===================
 	; collide left/right
 	;===================
+
+	clc
+	lda	KEEN_TILEY
+	adc	#1
+	adc	#>big_tilemap
+	sta	INH
+	lda	KEEN_TILEX
+	sta	INL
 
 	lda	KEEN_DIRECTION
 	beq	done_keen_collide	; can this happen?
@@ -230,7 +235,18 @@ collide_left_right:
 	bmi	check_left_collide
 
 check_right_collide:
-	lda	KEEN_WALK_TILE_R
+
+	; if KEEN_X=0, collide +1
+	; if KEEN_X=1, collide +2
+
+	ldy	#2
+	lda	KEEN_X
+	beq	right_collide_noextra
+
+;	iny
+right_collide_noextra:
+	lda	(INL),Y
+
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide		; blt
@@ -241,7 +257,10 @@ check_right_collide:
 
 check_left_collide:
 
-	lda	KEEN_WALK_TILE_L
+	ldy	#0
+	lda	(INL),Y
+
+;	lda	KEEN_WALK_TILE_L
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide	; blt

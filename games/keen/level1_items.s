@@ -2,38 +2,91 @@
 	; check touching things
 	;======================
 	; do head, than foot
-	; FIXME: should we check both left/right head/feet
+
 check_items:
 
-	; check if going out door
+	;===================
+	; check head first
+	;===================
+	; if X==0, check TILEX and TILEX+1
+	; if X==1, check TILEX+1
 
+	clc
+	lda	KEEN_TILEY
+	adc	#>big_tilemap
+	sta	INH
+	lda	KEEN_TILEX
+	sta	INL
+
+	lda	KEEN_X
+	bne	check_head_tilex1
+
+	;===================
+	; check head tilex
+
+check_head_tilex:
+	; don't check door, only leave if feet at door
+
+	; check if touching enemy
+	jsr	check_enemy
+
+	; check item
+	jsr	check_item
+
+check_head_tilex1:
+	inc	INL
+
+	; don't check door, only leave if feet at door
+
+	; check if touching enemy
+	jsr	check_enemy
+
+	; check items
+	jsr	check_item
+
+
+	;========================
+	; check feet
+check_feet:
+	inc	INH			; point to next row
+	dec	INL			; restore tile pointer
+
+	lda	KEEN_X
+	bne	check_feet_tilex1
+
+check_feet_tilex:
+	; check if going out door
 	jsr	check_door
 
 	; check if touching enemy
-
 	jsr	check_enemy
 
-	; check head items
-
-	ldx	KEEN_HEAD_POINTER_L
-	jsr	check_item
-	ldx	KEEN_HEAD_POINTER_R
+	; check item
 	jsr	check_item
 
-	; check feet items
+check_feet_tilex1:
+	inc	INL
 
-	ldx	KEEN_FOOT_POINTER_L
+	; check if going out door
+	jsr	check_door
+
+	; check if touching enemy
+	jsr	check_enemy
+
+	; check items
 	jsr	check_item
 
-	ldx	KEEN_FOOT_POINTER_R
-	; fallthrough
+	rts		; FIXME: fallthrough
+
+
 
 	;==================
 	; check for items
 	;==================
 
 check_item:
-	lda	tilemap,X
+	ldy	#0
+	lda	(INL),Y
 
 do_check_item:
 	cmp	#27
@@ -55,8 +108,8 @@ do_check_item:
 
 	; otherwise look up points and add it
 
-	tay
-	lda	score_lookup,Y
+	tax
+	lda	score_lookup,X
 	jsr	inc_score
 	jmp	done_item_pickup
 
@@ -75,41 +128,12 @@ get_keycard:
 
 done_item_pickup:
 
-	; erase small tilemap
+	; erase big tilemap
 
 	lda	#1			; plain tile
-	sta	tilemap,X
+	sta	(INL),Y
 
-	; big tilemap:
-	;	to find... urgh
-	;	X is currently (KEEN_Y/4)*20)+(KEEN_X/2)
-	;		(X mod 20) = KEEN_X/2
-	;		X/20 = KEEN_Y/4
-	;
-
-	lda	div20_table,X
-
-;	lda	KEEN_Y			; divide by 4 as tile 4 blocks tall
-;	lsr
-;	lsr
-
-	clc
-	adc	TILEMAP_Y		; add in tilemap Y (each row 256 bytes)
-	adc	#>big_tilemap		; add in offset of start
-	sta	btc_smc+2
-
-	lda	TILEMAP_X		; add in X offset of tilemap
-	sta	btc_smc+1
-
-	lda	mod20_table,X
-
-;	lda	KEEN_X
-;	lsr
-	tay
-
-	lda	#1			; background tile
-btc_smc:
-	sta	$b000,Y
+	jsr	copy_tilemap_subset
 
 	; play sound
 	ldy	#SFX_GOTITEMSND
@@ -123,11 +147,9 @@ done_check_item:
 	; check if feet at door
 	;==========================
 check_door:
-	lda	KEEN_FOOT_TILE1
+	ldy	#0
+	lda	(INL),Y
 	cmp	#11			; door tile
-	beq	at_door
-	lda	KEEN_FOOT_TILE2
-	cmp	#11
 	bne	done_check_door
 
 at_door:
@@ -148,13 +170,8 @@ done_check_door:
 	;=============================
 	; level1 at least you can't touch with head?
 check_enemy:
-	lda	KEEN_FOOT_TILE1
-	cmp	#21			; green tentacles
-	beq	touched_enemy
-	cmp	#22			; clam thing
-	beq	touched_enemy
-
-	lda	KEEN_FOOT_TILE2
+	ldy	#0
+	lda	(INL),Y
 	cmp	#21			; green tentacles
 	beq	touched_enemy
 	cmp	#22			; clam thing
@@ -193,7 +210,7 @@ score_lookup:
 	; 4 = carbonated beverage	200 pts
 	; ? = bear			5000 pts
 
-
+.if 0
 ; bit of a hack
 ; TODO: auto-generate at startup
 
@@ -229,3 +246,4 @@ mod20_table:
 .byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
 .byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
 
+.endif
