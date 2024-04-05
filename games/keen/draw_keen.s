@@ -4,9 +4,21 @@
 	;=========================
 draw_keen:
 
-	lda	KEEN_X
+	sec
+	lda	KEEN_TILEX
+	sbc	TILEMAP_X
+	asl
+	clc
+	adc	KEEN_X
 	sta	XPOS
-	lda	KEEN_Y
+
+	sec
+	lda	KEEN_TILEY
+	sbc	TILEMAP_Y
+	asl
+	asl
+	clc
+	adc	KEEN_Y
 	sta	YPOS
 
 	lda	KEEN_DIRECTION
@@ -116,5 +128,3 @@ actually_draw_keen:
 	jsr	put_sprite_crop
 
 	rts
-
-

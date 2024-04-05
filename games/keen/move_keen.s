@@ -13,14 +13,14 @@ TILE_COLS	=	20
 	;=========================
 move_keen:
 
-	lda	#0
-	sta	SUPPRESS_WALK		; ????
+;	lda	#0
+;	sta	SUPPRESS_WALK		; ????
 
-	jsr	keen_get_feet_location	; get location of feet
+;	jsr	keen_get_feet_location	; get location of feet
 
 	jsr	check_falling		; check for/handle falling
 
-	jsr	keen_collide		; check for right/left collision
+;	jsr	keen_collide		; check for right/left collision
 
 	jsr	handle_jumping		; handle jumping
 
@@ -30,8 +30,8 @@ move_keen:
 
 	dec	KEEN_WALKING		; decrement walk count
 
-	lda	SUPPRESS_WALK		; why????
-	bne	done_move_keen
+;	lda	SUPPRESS_WALK		; why????
+;	bne	done_move_keen
 
 	lda	KEEN_DIRECTION		; check direction
 	bmi	move_left
@@ -39,7 +39,7 @@ move_keen:
 	;==============================
 	; Move Keen Right
 	;==============================
-	; if (keen_x<22) || (tilemap_x>xmax-20) walk
+	; if (keen_tilex-tilemap_x<11) || (tilemap_x>96) walk
 	;	otherwise, scroll
 
 	lda	TILEMAP_X
@@ -47,8 +47,10 @@ move_keen:
 	bcs	keen_walk_right
 
 
-	lda	KEEN_X			; if X more than 22
-	cmp	#22			; scroll screen rather than keen
+	sec
+	lda	KEEN_TILEX
+	sbc	TILEMAP_X
+	cmp	#11
 	bcc	keen_walk_right
 
 keen_scroll_right:
@@ -61,7 +63,13 @@ keen_scroll_right:
 
 	inc	TILEMAP_X			; scroll screen to right
 
+	inc	KEEN_TILEX
+
+
+
+
 	jsr	copy_tilemap_subset		; update tilemap
+
 
 skip_keen_scroll_right:
 
@@ -74,7 +82,17 @@ keen_walk_right:
 	sta	KEEN_XL
 
 	bcc	dwr_noflo			; if no overflow
+
 	inc	KEEN_X				; otherwise update X
+	lda	KEEN_X
+	cmp	#2
+	bne	dwr_noflo
+
+	lda	#0
+	sta	KEEN_X
+
+	inc	KEEN_TILEX
+
 dwr_noflo:
 	jmp	done_move_keen
 
@@ -83,15 +101,17 @@ move_left:
 	;==============================
 	; Move Keen Left
 	;==============================
-	; if (keen_x>=14) || (tilemap_x=0) walk
+	; if (keen_tilex-tilemap_x>=7) || (tilemap_x=0) walk
 	;	otherwise, scroll
 
 	lda	TILEMAP_X
 	beq	keen_walk_left
 
-	lda	KEEN_X				; get current X
-	cmp	#14
-	bcs	keen_walk_left		; bge	; if >=14 walk
+	sec
+	lda	KEEN_TILEX
+	sbc	TILEMAP_X
+	cmp	#7
+	bcs	keen_walk_left
 
 keen_scroll_left:				; otherwise scroll
 
@@ -102,6 +122,7 @@ keen_scroll_left:				; otherwise scroll
 	bcs	skip_keen_scroll_left
 
 	dec	TILEMAP_X			; scroll left
+	dec	KEEN_TILEX
 
 	jsr	copy_tilemap_subset
 
@@ -116,8 +137,20 @@ keen_walk_left:
 	sbc	#KEEN_SPEED
 	sta	KEEN_XL
 	bcs	dwl_noflo
+
+
 	dec	KEEN_X
+	bpl	dwl_noflo
+
+	; adjust tile location
+	lda	#1
+	sta	KEEN_X
+
+	dec	KEEN_TILEX
+
+
 dwl_noflo:
+
 	jmp	done_move_keen
 
 done_move_keen:
@@ -213,32 +246,52 @@ handle_jumping:
 	lda	KEEN_JUMPING
 	beq	done_handle_jumping	; skip if not actually jumping
 
-	;===================================================
-	; scroll but only if KEEN_Y<20 (YDEFAULT)
-	;	and TILEMAP_Y >0
+actually_jumping:
 
-	lda	TILEMAP_Y		; if tilemap=0, scroll keen
+	;===================================================
+	; if more than 4 tiles down the screen
+	;	if (tilemap_y-keen_tiley)>4 then move keen
+	; otherwise, scroll screen, but only if tilemap_y>0
+
+	;=====================
+	; check if hit top of screen (shouldn't happen if collision working)
+
+	lda	KEEN_TILEY			;
+	cmp	#1			; if hit top of screen, start falling
+	bcc	start_falling
+
+	lda	TILEMAP_Y		; if tilemap==0, scroll keen
 	cmp	#0			; instead of scrolling screen
 	beq	keen_rising
 
-	; check if hit top of screen
+	sec
+	lda	TILEMAP_Y
+	sbc	KEEN_TILEY
 
-	lda	KEEN_Y			;
-	cmp	#2			; if hit top of screen, start falling
-	bcc	start_falling
-
-	cmp	#YDEFAULT		; compare to middle of screen
+	cmp	#4			; compare to middle of screen
 	bcc	scroll_rising		; blt
 
 	; move keen
 keen_rising:
-	dec	KEEN_Y
-	dec	KEEN_Y
+
+	lda	KEEN_Y
+	beq	keen_rising_not2
+keen_rising2:
+	lda	#0
+	sta	KEEN_Y
+	jmp	done_check_rising
+
+keen_rising_not2:
+	dec	KEEN_TILEY
+	lda	#2
+	sta	KEEN_Y
+
 	jmp	done_check_rising
 
 
 scroll_rising:
 	dec	TILEMAP_Y
+	dec	KEEN_TILEY
 
 	jsr	copy_tilemap_subset
 	jmp	done_check_rising
@@ -252,14 +305,11 @@ start_falling:
 					; otherwise hit peak, start falling
 	lda	#1			; avoid gap before falling triggered
 	sta	KEEN_FALLING
-
+	lda	#0
+	sta	KEEN_JUMPING
 
 done_handle_jumping:
 	rts
-
-
-
-
 
 
 	;=========================
@@ -270,46 +320,97 @@ check_falling:
 	lda	KEEN_JUMPING
 	bne	done_check_falling	; don't check falling if jumping
 
-	lda	KEEN_FOOT_BELOW1
+	;=========================
+	; check below feet
+	;	if KEEN_X=0 check below and below+1
+	;	if KEEN_X=1 check below+1
 
-	; if tile# > HARDTOP_TILES then we stop falling
-	cmp	#HARDTOP_TILES
-	bcs	feet_on_ground		; bge
+	clc
+	lda	KEEN_TILEY
+	adc	#2				; point below feet
 
-	lda	KEEN_FOOT_BELOW2
+	adc	#>big_tilemap
+	sta	INH
+	lda	#0
+	sta	INL
 
-	; if tile# > HARDTOP_TILES then we stop falling
-	cmp	#HARDTOP_TILES
-	bcs	feet_on_ground		; bge
+	ldy	KEEN_TILEX
+
+	lda	KEEN_X
+	bne	check_below_plus1
+
+check_below:
+	lda	(INL),Y
+        cmp     #HARDTOP_TILES
+        bcs     feet_on_ground			; if hardtop tile, don't fall
+
+check_below_plus1:
+	iny
+	lda	(INL),Y
+        cmp     #HARDTOP_TILES
+        bcs     feet_on_ground			; if hardtop tile, don't fall
 
 
 	;=======================
 	; falling
-
+no_ground_were_falling:
 	lda	#1
 	sta	KEEN_FALLING
 
+	; if y==0, just bump to 2, no need to check
+	; if y==2 need to check scrolling
+
+	lda	KEEN_Y
+	bne	do_full_falling_check
+
+keeny_was_zero:
+	lda	#2
+	sta	KEEN_Y
+	jmp	done_check_falling
+
+do_full_falling_check:
 	;===================================================
-	; scroll but only if KEEN_Y>=20 (YDEFAULT)
+	; if ((tilemap_y>max_tile_y) || ((keen_tiley-tilemap_y)<10) keen_fall
+	;	else scoll_fall
+	; scroll but only if (KEEN_TILEY-TILEMAP_Y)>=10 (YDEFAULT/2)
 	;	and TILEMAP_Y < MAX_TILE_Y
 
+
+	; if (keen_tiley-tilemap_y)<10, keen_fall
+	sec
+	lda	KEEN_TILEY
+	sbc	TILEMAP_Y
+	cmp	#8
+	bcc	keen_fall	; bge
+
+
+
+	; if tilemap_y >= max_tile, keen_fall
 	lda	TILEMAP_Y
 	cmp	#MAX_TILE_Y
 	bcs	keen_fall	; bge
 
-	lda	KEEN_Y
-	cmp	#YDEFAULT
-	bcs	scroll_fall	; bge
+
+	jmp	scroll_fall	; FIXME, rearrange logic so this falls through
 
 keen_fall:
-	inc	KEEN_Y			; this must be +2
-	inc	KEEN_Y			; as we only draw sprites on even lines
+	; KEEN_Y is known to be 2 here
+	; if KEEN_Y==2, KEEN_Y->0, INC KEEN_TILEY
+
+
+	lda	#0
+	sta	KEEN_Y
+	inc	KEEN_TILEY
 	jmp	done_check_falling
 
 
 scroll_fall:
+	; KEEN_Y is known to be 2 here
+	; if KEEN_Y==2, KEEN_Y->0, scroll
+	lda	#0
+	sta	KEEN_Y
 	inc	TILEMAP_Y
-
+	inc	KEEN_TILEY
 	jsr	copy_tilemap_subset
 
 	jmp	done_check_falling
@@ -334,24 +435,13 @@ feet_on_ground:
 	rts
 
 was_not_falling:
-	; check to see if Y still hi, if so scroll back down
-;	lda	KEEN_Y
-;	cmp	#YDEFAULT
-;	bcs	done_check_falling	; bge
-
-	; too high up on screen, adjust down and also adjust tilemap down
-
-;	inc	KEEN_Y
-;	inc	KEEN_Y
-;	inc	TILEMAP_Y		; share w above?
-;	jsr	copy_tilemap_subset
 
 done_check_falling:
 	rts
 
 
 
-
+.if 0
 	;=======================
 	; keen_get_feet_location
 	;=======================
@@ -508,3 +598,4 @@ head_lookup:
 	.byte	220,220,220,220	; 43
 	.byte	240,240,240,240	; 47
 
+.endif

@@ -50,11 +50,17 @@ keen_start:
 	; 	but with reference to starting tilemap (0,5) should be
 	;		2,8?
 
-	lda	#2
-	sta	KEEN_X
-	lda	#24
-	sta	KEEN_Y
 	lda	#1
+	sta	KEEN_TILEX
+	lda	#13
+	sta	KEEN_TILEY
+
+	lda	#0			; offset from tile location
+	sta	KEEN_X
+	lda	#0
+	sta	KEEN_Y
+
+	lda	#RIGHT			; direction
 	sta	KEEN_DIRECTION
 
 	;====================================
