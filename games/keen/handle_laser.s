@@ -111,18 +111,18 @@ laser_enemies_loop:
 
 	; see if out
 
-	lda	enemy_data+ENEMY_DATA_OUT,Y
+	lda	enemy_data_out,Y
 	beq	done_laser_enemy
 
 	; get local tilemap co-ord
 	sec
-	lda	enemy_data+ENEMY_DATA_TILEX,Y
+	lda	enemy_data_tilex,Y
 	sbc	TILEMAP_X
 
 	sta	TILE_TEMP
 
 	sec
-	lda	enemy_data+ENEMY_DATA_TILEY,Y
+	lda	enemy_data_tiley,Y
 	sbc	TILEMAP_Y
 	asl
 	asl
@@ -141,7 +141,7 @@ hit_something:
 	sta	FRAMEL
 ;	sta	enemy_data+ENEMY_DATA_OUT,Y
 	lda	#1
-	sta	enemy_data+ENEMY_DATA_EXPLODING,Y
+	sta	enemy_data_exploding,Y
 
 ;	jsr	enemy_noise
 

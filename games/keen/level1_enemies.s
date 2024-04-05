@@ -7,24 +7,50 @@ NUM_ENEMIES = 4
 
 move_enemies:
 
-	ldy	#0
+	ldx	#0
 
 move_enemies_loop:
 
 	; only move if out
 
-	lda	enemy_data+ENEMY_DATA_OUT,Y
+	lda	enemy_data_out,X
 	beq	done_move_enemy
 
+	;=======================================
 	; check if falling
+	;	i.e., if something under feet
+	;=======================================
 
+	clc
+	lda	enemy_data_tiley,X
+	adc	#2				; point to feet
+
+	adc	#>big_tilemap
+	sta	load_foot1_smc+2
+
+	ldy	enemy_data_tilex,X
+load_foot1_smc:
+
+	lda	tilemap,Y
+	cmp	#ALLHARD_TILES
+	bcs	no_enemy_fall			; if hard tile, don't fall
+
+	inc	enemy_data_tiley,X		; fall one tiles worth
+
+no_enemy_fall:
+
+
+	;=======================================
+	; move sideways
+	;	until you hit something
+	;=======================================
 
 	; check if moving right/left
 
-;	lda	enemy_data+ENEMY_DATA_X,Y
-;	clc
-;	adc	#1
-;	sta	enemy_data+ENEMY_DATA_X,Y
+	lda	enemy_data_tilex,X
+	clc
+	adc	#1
+	sta	enemy_data_tilex,X
 
 ;	cmp	#36
 ;	bcc	done_move_enemy
@@ -34,17 +60,17 @@ move_enemies_loop:
 
 done_move_enemy:
 
-	iny
-	cpy	#NUM_ENEMIES
+	inx
+	cpx	#NUM_ENEMIES
 	bne	move_enemies_loop
 
 	rts
 
 
 
-	;=======================
-	; draw and move enemies
-	;=======================
+	;=================
+	; draw enemies
+	;=================
 draw_enemies:
 
 	ldy	#0
@@ -52,7 +78,7 @@ draw_enemies_loop:
 
 	; see if out
 
-	lda	enemy_data+ENEMY_DATA_OUT,Y
+	lda	enemy_data_out,Y
 	beq	done_draw_enemy
 
 	; check if on screen
@@ -138,12 +164,26 @@ draw_proper_enemy:
 	lda	#>yorp_sprite_walking_right
 	sta	INH
 
-	lda	enemy_data+ENEMY_DATA_X,Y
+	;======================
+	; calculate X and Y
+	;	tiles are 2x4 in size
+
+	sec
+	lda	enemy_data_tilex,Y
+	sbc	TILEMAP_X
+	asl
+	clc
+	adc	enemy_data_x,Y		; Add in X offset
 	sta	XPOS
-	lda	enemy_data+ENEMY_DATA_Y,Y
+
+	sec
+	lda	enemy_data_tiley,Y
+	sbc	TILEMAP_Y
+	asl
+	asl
+	clc
+	adc	enemy_data_y,Y		; Add in Y offset
 	sta	YPOS
-
-
 
 draw_enemy:
 	tya
@@ -188,52 +228,15 @@ enemy_explosion_sprite3:
 	.byte	$7A,$5A
 	.byte	$A5,$A7
 
-ENEMY_YORP	= 0
-
-ENEMY_DATA_OUT		= 0
-ENEMY_DATA_EXPLODING	= 1
-ENEMY_DATA_TYPE		= 2
-ENEMY_DATA_DIRECTION	= 3
-ENEMY_DATA_TILEX	= 4
-ENEMY_DATA_TILEY	= 5
-ENEMY_DATA_X		= 6
-ENEMY_DATA_Y		= 7
+YORP	= 0
 
 
-enemy_data:
+enemy_data_out:		.byte	1,	0,	0,	0
+enemy_data_exploding:	.byte	0,	0,	0,	0
+enemy_data_type:	.byte	YORP,	YORP,	YORP,	YORP
+enemy_data_direction:	.byte	$FF,	$FF,	$FF,	$FF
+enemy_data_tilex:	.byte	5,	48,	19,	26
+enemy_data_tiley:	.byte	6,	20,	25,	26
+enemy_data_x:		.byte	0,	0,	0,	0
+enemy_data_y:		.byte	0,	0,	0,	0
 
-enemy0:
-	; 156,92 (-80,-12) -> 76,80 -> (/4,/4) -> 19,20
-	.byte	1		; out
-	.byte	0		; exploding
-	.byte	ENEMY_YORP	; type
-	.byte	$ff		; direction
-	.byte	19,20		; tilex,tiley
-	.byte	10,10		; x,y
-
-enemy1:
-	; 272,92 (-80,-12) -> 192,80 -> (/4,/4) -> 48,20
-	.byte	0		; out
-	.byte	0		; exploding
-	.byte	ENEMY_YORP	; type
-	.byte	$ff		; direction
-	.byte	48,20		; tilex,tiley
-	.byte	0,0		; x,y
-
-enemy2:
-	; 156,112 (-80,-12) -> 76,100 -> (/4,/4) -> 19,25
-	.byte	0		; out
-	.byte	0		; exploding
-	.byte	ENEMY_YORP	; type
-	.byte	$ff		; direction
-	.byte	19,25		; tilex,tiley
-	.byte	0,0		; x,y
-
-enemy3:
-	; 184,116 (-80,-12) -> 104,104 -> (/4,/4) -> 26,26
-	.byte	0		; out
-	.byte	0		; exploding
-	.byte	ENEMY_YORP	; type
-	.byte	$ff		; direction
-	.byte	26,26		; tilex,tiley
-	.byte	0,0		; x,y

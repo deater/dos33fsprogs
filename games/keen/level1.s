@@ -42,11 +42,6 @@ keen_start:
 	sta	KEEN_SHOOTING
 	sta	KEYCARDS
 
-	lda	#<enemy_data
-	sta	ENEMY_DATAL
-	lda	#>enemy_data
-	sta	ENEMY_DATAH
-
 	lda	#4
 	sta	DRAW_PAGE
 
