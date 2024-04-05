@@ -20,7 +20,7 @@ move_keen:
 
 	jsr	check_falling		; check for/handle falling
 
-;	jsr	keen_collide		; check for right/left collision
+	jsr	keen_collide		; check for right/left collision
 
 	jsr	handle_jumping		; handle jumping
 
@@ -168,7 +168,7 @@ keen_collide:
 	;==================
 keen_check_items:
 
-	jsr	check_items
+;	jsr	check_items
 
 	;===================
 	; collide with head
@@ -182,12 +182,27 @@ keen_check_head:
 
 	; check if left side of head hit hard tile
 
-	lda	KEEN_HEAD_TILE1
+	sec
+	lda	KEEN_TILEY
+	sbc	#1
+	adc	#>big_tilemap
+	sta	INH
+	lda	#0
+	sta	INL
+	ldy	KEEN_TILEX
+
+	bne	collide_head_r
+
+collide_head_l:
+
+	lda	(INL),Y
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	collide_left_right		; blt
 
-	lda	KEEN_HEAD_TILE2
+collide_head_r:
+	iny
+	lda	(INL),Y
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	collide_left_right		; blt
@@ -203,6 +218,8 @@ keen_check_head:
 ;	jsr	head_noise
 
 collide_left_right:
+	rts
+
 	;===================
 	; collide left/right
 	;===================
