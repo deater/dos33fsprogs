@@ -13,8 +13,18 @@ move_enemies_loop:
 
 	; only move if out
 
+	; only move every 4th frame
+
+	lda	FRAMEL
+	and	#$3
+	bne	ergh
+
 	lda	enemy_data_out,X
-	beq	done_move_enemy
+	bne	enemy_is_out
+ergh:
+	jmp	done_move_enemy
+enemy_is_out:
+
 
 	;=======================================
 	; check if falling
@@ -23,7 +33,7 @@ move_enemies_loop:
 
 	clc
 	lda	enemy_data_tiley,X
-	adc	#2				; point to feet
+	adc	#2				; point below feet
 
 	adc	#>big_tilemap
 	sta	load_foot1_smc+2
@@ -47,23 +57,122 @@ no_enemy_fall:
 
 	; check if moving right/left
 
+	lda	enemy_data_direction,X
+	bmi	enemy_facing_left
+enemy_facing_right:
+
+	;==============================
+	; check if barrier to the right
+
+	clc
+	lda	enemy_data_tiley,X
+	adc	#1				; point to feet
+
+	adc	#>big_tilemap
+	sta	load_right_foot_smc+2
+
+	ldy	enemy_data_tilex,X
+	iny	; to the right
+load_right_foot_smc:
+	lda	tilemap,Y
+	cmp	#ALLHARD_TILES
+	bcc	no_right_barrier		; skip if no right barrier
+
+	; hit right barrier
+
+	lda	enemy_data_direction,X
+	eor	#$ff				; ff->00, 01->fe
+	clc
+	adc	#1
+	sta	enemy_data_direction,X
+
+	jmp	done_move_enemy
+
+
+no_right_barrier:
+
+	; move to the right
+
+	lda	enemy_data_x,X
+	clc
+	adc	#1
+	sta	enemy_data_x,X
+	cmp	#2
+	bne	move_right_noflo
+
+	; moved to next tile
+	lda	#0
+	sta	enemy_data_x,X
+
 	lda	enemy_data_tilex,X
 	clc
 	adc	#1
 	sta	enemy_data_tilex,X
 
-;	cmp	#36
-;	bcc	done_move_enemy
+move_right_noflo:
+	jmp	done_move_enemy
 
-;	lda	#0
-;	sta	enemy_data+ENEMY_DATA_OUT,Y
+enemy_facing_left:
+
+	;==============================
+	; check if barrier to the left
+
+	clc
+	lda	enemy_data_tiley,X
+	adc	#1				; point to feet
+
+	adc	#>big_tilemap
+	sta	load_left_foot_smc+2
+
+	ldy	enemy_data_tilex,X
+	dey					; look to the left
+load_left_foot_smc:
+	lda	tilemap,Y
+	cmp	#ALLHARD_TILES
+	bcc	no_left_barrier			; skip if no right barrier
+
+	; hit left barrier
+
+	lda	enemy_data_direction,X
+	eor	#$ff				; ff->00, 01->fe
+	clc
+	adc	#1
+	sta	enemy_data_direction,X
+
+	jmp	done_move_enemy
+
+
+no_left_barrier:
+
+	; move to the left
+
+	sec
+	lda	enemy_data_x,X
+	sbc	#1
+	sta	enemy_data_x,X
+	bpl	move_left_noflo
+
+	; adjust tile
+
+	lda	#1
+	sta	enemy_data_x,X
+
+	lda	enemy_data_tilex,X
+	sec
+	sbc	#1
+	sta	enemy_data_tilex,X
+
+move_left_noflo:
+
 
 done_move_enemy:
 
 	inx
 	cpx	#NUM_ENEMIES
-	bne	move_enemies_loop
+	beq	totally_done_move_enemies
 
+	jmp	move_enemies_loop
+totally_done_move_enemies:
 	rts
 
 
@@ -81,48 +190,9 @@ draw_enemies_loop:
 	lda	enemy_data_out,Y
 	beq	done_draw_enemy
 
-	; check if on screen
-
-;	lda	TILEMAP_X
-;	cmp	enemy_data+ENEMY_DATA_TILEX,Y
-;	bcs	done_draw_enemy
-
-;	clc
-;	adc	#14
-;	cmp	enemy_data+ENEMY_DATA_TILEX,Y
-;	bcc	done_draw_enemy
-
-;	lda	TILEMAP_Y
-;	cmp	enemy_data+ENEMY_DATA_TILEY,Y
-;	bcs	done_draw_enemy
-
-;	clc
-;	adc	#10
-;	cmp	enemy_data+ENEMY_DATA_TILEY,Y
-;	bcc	done_draw_enemy
-
-	; set X and Y value
-	; convert tile values to X,Y
-	; X = (ENEMY_TILE_X-TILEX)*2 + 6
-;	lda	enemy_data+ENEMY_DATA_TILEX,Y
-;	sec
-;	sbc	TILEMAP_X
-;	asl
-;	clc
-;	adc	#4
-;	sta	XPOS
-
-	; Y = (ENEMY_TILE_Y-TILEY)*4
-;	lda	enemy_data+ENEMY_DATA_TILEY,Y
-;	sec
-;	sbc	TILEMAP_Y
-;	asl
-;	asl
-;	sta	YPOS
-
 	; see if exploding
-;	lda	enemy_data+ENEMY_DATA_EXPLODING,Y
-;	beq	draw_proper_enemy
+	lda	enemy_data_exploding,Y
+	beq	draw_proper_enemy
 ;draw_exploding_enemy:
 ;	asl
 ;	tax
@@ -158,10 +228,23 @@ draw_proper_enemy:
 ;	lda	enemy_sprites+1,X
 ;	sta	INH
 
+	lda	enemy_data_direction,Y
+	bmi	draw_enemy_left
+
+draw_enemy_right:
 	lda	#<yorp_sprite_walking_right
 	sta	INL
 
 	lda	#>yorp_sprite_walking_right
+	jmp	draw_enemy_common
+
+draw_enemy_left:
+	lda	#<yorp_sprite_walking_left
+	sta	INL
+
+	lda	#>yorp_sprite_walking_left
+
+draw_enemy_common:
 	sta	INH
 
 	;======================
@@ -195,12 +278,8 @@ draw_enemy:
 	tay
 
 done_draw_enemy:
-
-	tya
-	clc
-	adc	#8
-	tay
-	cpy	#(NUM_ENEMIES*8)
+	iny
+	cpy	#NUM_ENEMIES
 	beq	exit_draw_enemy
 	jmp	draw_enemies_loop
 
@@ -229,14 +308,24 @@ enemy_explosion_sprite3:
 	.byte	$A5,$A7
 
 YORP	= 0
+LEFT	= $FF
+RIGHT	= $1
 
+enemy_data_out:		.byte 1,     1,     0,	  0,    0,    0,    0,   0,0
+enemy_data_exploding:	.byte 0,     0,     0,	  0,    0,    0,    0,   0,0
+enemy_data_type:	.byte YORP,  YORP,  YORP, YORP, YORP, YORP, YORP,YORP,YORP
+enemy_data_direction:	.byte RIGHT, RIGHT, LEFT, LEFT, LEFT, LEFT, RIGHT,RIGHT,LEFT
+enemy_data_tilex:	.byte 5,     19,    38,   45,   69,   81,   89,  92,100
+enemy_data_tiley:	.byte 6,     13,    4,    4,    13,   4,    4,   13,10
+enemy_data_x:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
+enemy_data_y:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
 
-enemy_data_out:		.byte	1,	0,	0,	0
-enemy_data_exploding:	.byte	0,	0,	0,	0
-enemy_data_type:	.byte	YORP,	YORP,	YORP,	YORP
-enemy_data_direction:	.byte	$FF,	$FF,	$FF,	$FF
-enemy_data_tilex:	.byte	5,	48,	19,	26
-enemy_data_tiley:	.byte	6,	20,	25,	26
-enemy_data_x:		.byte	0,	0,	0,	0
-enemy_data_y:		.byte	0,	0,	0,	0
+; question: when do they activate?  When do they move when offscreen?
+
+; enemy behavior
+;	Yorp:
+;		two behaviors, walking with random jump
+;			walking, reverses direction if hits barrier
+;		stopping, looking left/right few times then walking at Keen
+
 
