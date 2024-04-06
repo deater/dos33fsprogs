@@ -184,12 +184,62 @@ done_with_keen:
 
 	; got here, touched enemy
 
+
+	;============================
+	; end animation
+	;============================
+
+	lda	#1
+	sta	PLAY_END_SOUND
+
+	inc	KEEN_TILEY		; move down
+
+	sec
+        lda     KEEN_TILEX
+        sbc     TILEMAP_X
+        asl
+        clc
+        adc     KEEN_X
+        sta     XPOS
+
+        sec
+        lda     KEEN_TILEY
+        sbc     TILEMAP_Y
+        asl
+        asl
+        clc
+        adc     KEEN_Y
+        sta     YPOS
+
+level_end_animation:
+	jsr	draw_tilemap
+
+	ldx	#<keen_sprite_squish
+	lda	#>keen_sprite_squish
+	stx	INL
+	sta	INH
+	jsr	put_sprite_crop
+
+	jsr	page_flip
+
+	lda	PLAY_END_SOUND
+	beq	skip_end_sound
+
 	ldy	#SFX_KEENDIESND
 	jsr	play_sfx
 
-	; TODO: ANIMATION
-	; keen turns to head, flies up screen
-	; play game over music if out of keens
+	dec	PLAY_END_SOUND
+skip_end_sound:
+
+
+	lda	#100
+	jsr	WAIT
+
+	dec	YPOS
+	dec	YPOS
+
+	bpl	level_end_animation
+
 
 	dec	KEENS
 	bpl	level1_levelover
