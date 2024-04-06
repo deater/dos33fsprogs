@@ -76,11 +76,16 @@ enemy_new_state:
 
 enemy_action:
 	lda	enemy_data_state,X
+	cmp	#YORP_STUNNED
+	beq	goto_done_move_enemy
 	cmp	#YORP_SEARCH
 	beq	enemy_search
 	cmp	#YORP_JUMP
 	beq	enemy_jump
 	bne	enemy_walk
+
+goto_done_move_enemy:
+	jmp	done_move_enemy
 
 enemy_search:
 	lda	enemy_data_direction,X
@@ -284,6 +289,18 @@ draw_proper_enemy:
 ;	lda	enemy_sprites+1,X
 ;	sta	INH
 
+	lda	enemy_data_state,Y
+	cmp	#YORP_STUNNED
+	bne	draw_enemy_walk
+
+	lda	#<yorp_sprite_stunned
+	sta	INL
+
+	lda	#>yorp_sprite_stunned
+	jmp	draw_enemy_common
+
+
+draw_enemy_walk:
 	lda	enemy_data_direction,Y
 	bmi	draw_enemy_left
 
@@ -368,6 +385,8 @@ YORP	= 0
 YORP_WALK   = 0
 YORP_JUMP   = 1
 YORP_SEARCH = 2
+YORP_WALK2  = 3
+YORP_STUNNED= 4
 
 LEFT	= $FF
 RIGHT	= $1

@@ -6,6 +6,7 @@ SFX_GUNCLICK   = 4
 SFX_KEENLANDSND= 5
 SFX_KEENJUMPSND= 6
 SFX_BUMPHEADSND= 7
+SFX_YORPBOPSND = 8
 	;==========================
 	; plays soundfx
 	;==========================
@@ -52,11 +53,11 @@ play_done:
 
 sounds_low:
 	.byte <KEENDIESND,<LVLDONESND, <GAMEOVERSND,<GOTITEMSND,<GUNCLICK
-	.byte <KEENLANDSND,<KEENJUMPSND,<BUMPHEADSND
+	.byte <KEENLANDSND,<KEENJUMPSND,<BUMPHEADSND,<YORPBOPSND
 
 sounds_high:
 	.byte >KEENDIESND,>LVLDONESND, >GAMEOVERSND,>GOTITEMSND,>GUNCLICK
-	.byte >KEENLANDSND,>KEENJUMPSND,>BUMPHEADSND
+	.byte >KEENLANDSND,>KEENJUMPSND,>BUMPHEADSND,>YORPBOPSND
 
 KEENDIESND:
 .byte 20,1	; 1169.8
@@ -475,4 +476,31 @@ BUMPHEADSND:
 .byte 204,1     ; 120.5
 .byte 184,1     ; 133.5
 .byte 186,1     ; 131.7
+.byte 255,255
+YORPBOPSND:
+.byte 102,1     ; 239.6
+.byte 104,1     ; 234.0
+.byte 106,3     ; 231.2
+.byte 107,2     ; 228.6
+.byte 104,1     ; 234.0
+.byte 103,1     ; 236.7
+.byte 101,1     ; 242.5
+.byte 99,1      ; 245.5
+.byte 97,1      ; 251.7
+.byte 94,1      ; 258.3
+.byte 92,3      ; 265.2
+.byte 0,14      ; 0.0
+.byte 8,3       ; 2840.9
+.byte 0,4       ; 0.0
+.byte 25,3      ; 947.0
+.byte 0,4       ; 0.0
+.byte 9,3       ; 2485.8
+.byte 0,5       ; 0.0
+.byte 24,3      ; 994.3
+.byte 0,4       ; 0.0
+.byte 9,3       ; 2485.8
+.byte 0,3       ; 0.0
+.byte 24,3      ; 994.3
+.byte 0,5       ; 0.0
+.byte 4,3       ; 4971.6
 .byte 255,255

@@ -5,6 +5,8 @@
 
 check_items:
 
+	jsr	check_yorp
+
 	;===================
 	; check head first
 	;===================
@@ -58,8 +60,11 @@ check_feet_tilex:
 	; check if going out door
 	jsr	check_door
 
-	; check if touching enemy
+	; check if touching fixed enemy
 	jsr	check_enemy
+
+	; check yorp
+;	jsr	check_yorp
 
 	; check item
 	jsr	check_item
@@ -70,13 +75,16 @@ check_feet_tilex1:
 	; check if going out door
 	jsr	check_door
 
-	; check if touching enemy
+	; check if touching fixed enemy
 	jsr	check_enemy
+
+	; check yorp
+;	jsr	check_yorp
 
 	; check items
 	jsr	check_item
 
-	rts		; FIXME: fallthrough
+;	rts		; FIXME: fallthrough
 
 
 
@@ -166,7 +174,7 @@ done_check_door:
 
 
 	;=============================
-	; check if feet touching enemy
+	; check if touching enemy
 	;=============================
 	; level1 at least you can't touch with head?
 check_enemy:
@@ -179,23 +187,71 @@ check_enemy:
 
 touched_enemy:
 
+	; actual level over handled elsewhere
+
 	lda	#TOUCHED_ENEMY
 	sta	LEVEL_OVER
 
-
-;	ldy	#SFX_KEENDIESND
-;	jsr	play_sfx
-;	; TODO: ANIMATION
-;	; keen turns to head, flies up screen
-;	; play game over music if out of keens
-;	lda	KEENS
-;	bpl	done_check_enemy
-;	ldy	#SFX_GAMEOVERSND
-;	jsr	play_sfx
-
-
 done_check_enemy:
 	rts
+
+
+	;==================================
+	; check if feet touching yorp head
+	;==================================
+check_yorp:
+
+	ldx	#0
+check_yorp_loop:
+	lda	enemy_data_out,X
+	beq	no_yorp_stomp
+
+	lda	enemy_data_state,X
+	cmp	#YORP_STUNNED
+	beq	no_yorp_stomp
+
+	lda	enemy_data_tilex,X
+	cmp	KEEN_TILEX
+	bne	no_yorp_stomp
+
+	;==================
+	; K       0+1=1
+	; K Y
+	;   Y
+	lda	enemy_data_tiley,X
+	sec
+	sbc	#1
+	cmp	KEEN_TILEY
+	bne	no_yorp_stomp
+
+yes_yorp_stomp:
+
+	; this trashes X,Y
+
+	txa
+	pha
+
+	ldy	#SFX_YORPBOPSND
+	jsr	play_sfx
+
+	pla
+	tax
+
+	lda	#YORP_STUNNED
+	sta	enemy_data_state,X
+
+	lda	#255
+	sta	enemy_data_count,X
+
+no_yorp_stomp:
+
+	inx
+	cpx	#NUM_ENEMIES
+	bne	check_yorp_loop
+
+done_check_yorp:
+	rts
+
 
 
 score_lookup:
@@ -207,40 +263,3 @@ score_lookup:
 	; 4 = carbonated beverage	200 pts
 	; ? = bear			5000 pts
 
-.if 0
-; bit of a hack
-; TODO: auto-generate at startup
-
-div20_table:
-.byte	0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0, 0,0,0,0,0
-.byte	1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1, 1,1,1,1,1
-.byte	2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2, 2,2,2,2,2
-.byte	3,3,3,3,3, 3,3,3,3,3, 3,3,3,3,3, 3,3,3,3,3
-.byte	4,4,4,4,4, 4,4,4,4,4, 4,4,4,4,4, 4,4,4,4,4
-.byte	5,5,5,5,5, 5,5,5,5,5, 5,5,5,5,5, 5,5,5,5,5
-.byte	6,6,6,6,6, 6,6,6,6,6, 6,6,6,6,6, 6,6,6,6,6
-.byte	7,7,7,7,7, 7,7,7,7,7, 7,7,7,7,7, 7,7,7,7,7
-.byte	8,8,8,8,8, 8,8,8,8,8, 8,8,8,8,8, 8,8,8,8,8
-.byte	9,9,9,9,9, 9,9,9,9,9, 9,9,9,9,9, 9,9,9,9,9
-.byte	10,10,10,10,10, 10,10,10,10,10, 10,10,10,10,10, 10,10,10,10,10
-.byte	11,11,11,11,11, 11,11,11,11,11, 11,11,11,11,11, 11,11,11,11,11
-.byte	12,12,12,12,12, 12,12,12,12,12, 12,12,12,12,12 ;, 12,12,12,12,12
-
-
-mod20_table:
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19
-.byte	0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-
-.endif
