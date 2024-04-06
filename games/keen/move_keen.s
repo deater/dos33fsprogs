@@ -16,14 +16,11 @@ move_keen:
 	lda	#0
 	sta	SUPPRESS_WALK		; if we collide we set this to stop walk
 
-;	jsr	keen_get_feet_location	; get location of feet
-
 	jsr	check_falling		; check for/handle falling
 
 	jsr	keen_collide		; check for right/left collision
 
 	jsr	handle_jumping		; handle jumping
-
 
 	lda	KEEN_WALKING		; if not walking, we're done
 	beq	move_keen_early_out

@@ -1,5 +1,7 @@
 JUMP_HEIGHT	=	6
 
+SIDE_JUMP_DISTANCE	= 14
+
 	;==============================
 	; Handle Keypress
 	;==============================
@@ -107,7 +109,7 @@ check_left:
 	cmp	#'A'
 	beq	left_pressed
 	cmp	#8			; left key
-	bne	check_right
+	bne	check_left_slight
 left_pressed:
 
 	;===============================
@@ -119,6 +121,10 @@ left_pressed:
 	lda	KEEN_DIRECTION
 	cmp	#$ff			; check if facing left
 	bne	left_facing_right
+
+	lda	KEEN_WALKING
+	cmp	#4
+	bcs	done_left_pressed	; don't shorten it
 
 	lda	#4
 	sta	KEEN_WALKING
@@ -144,11 +150,23 @@ done_left_pressed:
 
 	jmp	done_keypress
 
+check_left_slight:
+	cmp	#'Z'
+	bne	check_right
+
+	lda	#LEFT
+	sta	KEEN_DIRECTION
+
+	lda	#1
+	sta	KEEN_WALKING
+	jmp	done_right_pressed	; don't shorten it
+
+
 check_right:
 	cmp	#'D'
 	beq	right_pressed
 	cmp	#$15			; right key
-	bne	check_jump_right
+	bne	check_right_slight
 
 
 	;===============================
@@ -162,9 +180,18 @@ right_pressed:
 	cmp	#$1			; check if facing right
 	bne	right_facing_left
 
+	lda	KEEN_WALKING
+	cmp	#4
+	bcs	done_right_pressed	; don't shorten it
+
+;	clc
+;	lda	KEEN_WALKING
+;	adc	#4
+;	sta	KEEN_WALKING
+
 	lda	#4
 	sta	KEEN_WALKING
-	jmp	done_left_pressed
+	jmp	done_right_pressed
 
 right_facing_left:
 	lda	KEEN_WALKING
@@ -184,6 +211,17 @@ done_right_pressed:
 	sta	KEEN_SHOOTING
 
 	jmp	done_keypress
+
+check_right_slight:
+	cmp	#'C'
+	bne	check_jump_right
+
+	lda	#RIGHT
+	sta	KEEN_DIRECTION
+
+	lda	#1
+	sta	KEEN_WALKING
+	jmp	done_right_pressed	; don't shorten it
 
 check_jump_right:
 	cmp	#'E'
@@ -206,7 +244,7 @@ jump_right:
 
 	lda	#1
 	sta	KEEN_DIRECTION
-	lda	#10
+	lda	#SIDE_JUMP_DISTANCE
 	sta	KEEN_WALKING
 
 	jmp	done_keypress
@@ -233,7 +271,7 @@ jump_left:
 
 	lda	#$FF
 	sta	KEEN_DIRECTION
-	lda	#10
+	lda	#SIDE_JUMP_DISTANCE
 	sta	KEEN_WALKING
 
 	jmp	done_keypress
