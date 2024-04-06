@@ -178,23 +178,20 @@ check_enemy:
 	bne	done_check_enemy
 
 touched_enemy:
-	dec	KEENS
-	inc	LEVEL_OVER
+
+	lda	#TOUCHED_ENEMY
+	sta	LEVEL_OVER
 
 
-	ldy	#SFX_KEENDIESND
-	jsr	play_sfx
-
-	; TODO: ANIMATION
-	; keen turns to head, flies up screen
-
-	; play game over music if out of keens
-
-	lda	KEENS
-	bpl	done_check_enemy
-
-	ldy	#SFX_GAMEOVERSND
-	jsr	play_sfx
+;	ldy	#SFX_KEENDIESND
+;	jsr	play_sfx
+;	; TODO: ANIMATION
+;	; keen turns to head, flies up screen
+;	; play game over music if out of keens
+;	lda	KEENS
+;	bpl	done_check_enemy
+;	ldy	#SFX_GAMEOVERSND
+;	jsr	play_sfx
 
 
 done_check_enemy:

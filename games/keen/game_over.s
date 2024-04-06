@@ -28,6 +28,9 @@ game_over:
 
 	jsr	page_flip
 
+	ldy	#SFX_GAMEOVERSND
+	jsr	play_sfx
+
 query_game_over:
 	lda     KEYPRESS
 	bpl	query_game_over

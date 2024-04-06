@@ -154,15 +154,15 @@ no_frame_oflo:
 	;===========================
 
 	lda	LEVEL_OVER
-	beq	do_keen_loop
+	bne	done_with_keen
 
-	jmp	done_with_keen
-
-do_keen_loop:
-
+	;===========================
 	; delay
+	;===========================
+
 ;	lda	#200
 ;	jsr	WAIT
+
 
 	jmp	keen_loop
 
@@ -170,6 +170,41 @@ do_keen_loop:
 done_with_keen:
 	bit	KEYRESET	; clear keypress
 
+	; three reasons we could get here
+	;	NEXT_LEVEL    = finished level by exiting door
+	;	GAME_OVER     = hit ESC and said Y to QUIT
+	;	TOUCHED_ENEMY = touched an enemy
+
+	lda	LEVEL_OVER
+	cmp	#NEXT_LEVEL
+	beq	level1_levelover
+
+	cmp	#GAME_OVER
+	beq	level1_gameover
+
+	; got here, touched enemy
+
+	ldy	#SFX_KEENDIESND
+	jsr	play_sfx
+
+	; TODO: ANIMATION
+	; keen turns to head, flies up screen
+	; play game over music if out of keens
+
+	dec	KEENS
+	bpl	level1_levelover
+
+level1_gameover:
+
+	; mars plays this
+
+;	ldy	#SFX_GAMEOVERSND
+;	jsr	play_sfx
+
+	lda	#GAME_OVER
+	sta	LEVEL_OVER
+
+level1_levelover:
 
         lda     #LOAD_MARS
         sta     WHICH_LOAD

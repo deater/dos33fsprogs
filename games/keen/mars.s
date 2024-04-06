@@ -38,7 +38,7 @@ mars_start:
 
 	sta	KEEN_WALKING
 	sta	KEEN_JUMPING
-	sta	LEVEL_OVER
+;	sta	LEVEL_OVER
 	sta	LASER_OUT
 	sta	KEEN_XL
 	sta	KEEN_FALLING
@@ -52,6 +52,12 @@ mars_start:
 ;	sta	KEEN_X
 ;	lda	#11
 ;	sta	KEEN_Y
+
+	; see if returning and it game over
+
+	lda	LEVEL_OVER
+	cmp	#GAME_OVER
+	beq	return_to_title
 
 	;====================================
 	; load mars background
@@ -71,6 +77,9 @@ mars_start:
 	sta	INITIAL_SOUND
 
 	jsr	fade_in
+
+	lda	#0
+	sta	LEVEL_OVER
 
 	;====================================
 	;====================================
@@ -165,10 +174,12 @@ done_with_keen:
 
 return_to_title:
 
-	ldy	#SFX_GAMEOVERSND
-	jsr	play_sfx
-
 	jsr	game_over
+
+;	ldy	#SFX_GAMEOVERSND
+;	jsr	play_sfx
+
+
 
 	lda	#LOAD_TITLE
 	sta	WHICH_LOAD

@@ -372,16 +372,16 @@ YORP_SEARCH = 2
 LEFT	= $FF
 RIGHT	= $1
 
-enemy_data_out:		.byte 1,     1,     0,	  0,    0,    0,    0,   0,0
-enemy_data_exploding:	.byte 0,     0,     0,	  0,    0,    0,    0,   0,0
-enemy_data_type:	.byte YORP,  YORP,  YORP, YORP, YORP, YORP, YORP,YORP,YORP
-enemy_data_direction:	.byte RIGHT, RIGHT, LEFT, LEFT, LEFT, LEFT, RIGHT,RIGHT,LEFT
-enemy_data_tilex:	.byte 5,     19,    38,   45,   69,   81,   89,  92,100
-enemy_data_tiley:	.byte 6,     13,    4,    4,    13,   4,    4,   13,10
-enemy_data_x:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
-enemy_data_y:		.byte 0,     0,     0,    0,    0,    0,    0,   0,0
-enemy_data_state:	.byte 0,     0,     0,    0,    0,    0,    0,   0,0
-enemy_data_count:	.byte 8,     8,     8,    8,    8,    8,    8,   8,8
+enemy_data_out:		.byte 1,     0,	  0,    0,    0,    0,   0,    0
+enemy_data_exploding:	.byte 0,     0,	  0,    0,    0,    0,   0,    0
+enemy_data_type:	.byte YORP,  YORP, YORP, YORP, YORP, YORP,YORP,YORP
+enemy_data_direction:	.byte RIGHT, LEFT, LEFT, LEFT, LEFT, RIGHT,RIGHT,LEFT
+enemy_data_tilex:	.byte 19,    38,   45,   69,   81,   89,  92,  100
+enemy_data_tiley:	.byte 13,    4,    4,    13,   4,    4,   13,  10
+enemy_data_x:		.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_y:		.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_state:	.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_count:	.byte 8,     8,    8,    8,    8,    8,   8,   8
 
 ; question: when do they activate?  When do they move when offscreen?
 
