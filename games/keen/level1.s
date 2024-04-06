@@ -42,6 +42,11 @@ keen_start:
 	sta	KEEN_SHOOTING
 	sta	KEYCARDS
 
+	; debug
+
+;	lda	#9
+;	sta	RAYGUNS
+
 	lda	#4
 	sta	DRAW_PAGE
 

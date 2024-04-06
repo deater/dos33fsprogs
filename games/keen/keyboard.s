@@ -122,6 +122,7 @@ left_pressed:
 
 	lda	#4
 	sta	KEEN_WALKING
+
 	jmp	done_left_pressed
 
 left_facing_right:
@@ -138,6 +139,9 @@ left_not_walking:
 	sta	KEEN_DIRECTION
 
 done_left_pressed:
+	lda	#0
+	sta	KEEN_SHOOTING
+
 	jmp	done_keypress
 
 check_right:
@@ -176,6 +180,9 @@ right_not_walking:
 
 
 done_right_pressed:
+	lda	#0
+	sta	KEEN_SHOOTING
+
 	jmp	done_keypress
 
 check_jump_right:
@@ -282,6 +289,9 @@ check_comma:
 comma_pressed:
 	; check if we have any shots left
 
+	lda	#2		; draw us shooting even if out of ammo
+	sta	KEEN_SHOOTING
+
 	lda	RAYGUNS
 	beq	done_comma
 
@@ -295,34 +305,29 @@ comma_pressed:
 	ldy	#SFX_GUNCLICK
 	jsr	play_sfx
 
-;	jsr	laser_noise
-
 	lda	KEEN_DIRECTION
 	sta	LASER_DIRECTION
-
-	lda	#2
-	sta	KEEN_SHOOTING
 
 	cmp	#1
 	beq	laser_right
 laser_left:
-	lda	KEEN_X
+	lda	KEEN_TILEX
 	sec
 	sbc	#1
 	jmp	laser_assign
 
 laser_right:
-	lda	KEEN_X
+	lda	KEEN_TILEX
 	clc
 	adc	#2
 
 laser_assign:
-	sta	LASER_X
+	sta	LASER_TILEX
 
-	lda	KEEN_Y
+	lda	KEEN_TILEY
 	clc
-	adc	#4
-	sta	LASER_Y
+	adc	#1
+	sta	LASER_TILEY
 
 	inc	LASER_OUT
 

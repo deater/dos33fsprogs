@@ -51,7 +51,7 @@ check_shooting_right:
 draw_shooting_right:
 	ldx	#<keen_sprite_shooting_right
 	lda	#>keen_sprite_shooting_right
-	dec	KEEN_SHOOTING
+	;dec	KEEN_SHOOTING
 	jmp	actually_draw_keen
 
 check_walking_right:
@@ -98,7 +98,7 @@ check_shooting_left:
 draw_shooting_left:
 	ldx	#<keen_sprite_shooting_left
 	lda	#>keen_sprite_shooting_left
-	dec	KEEN_SHOOTING
+;	dec	KEEN_SHOOTING
 	jmp	actually_draw_keen
 
 check_walking_left:

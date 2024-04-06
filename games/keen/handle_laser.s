@@ -10,34 +10,25 @@ move_laser:
 	lda	LASER_OUT
 	beq	done_move_laser
 
-	lda	LASER_X
+
+	lda	LASER_TILEX
 	clc
 	adc	LASER_DIRECTION
-	sta	LASER_X
+	sta	LASER_TILEX
 
 laser_check_tiles:
+
 	; collision detect with tiles
 
-	; laser location is roughly
-        ; (y/4)*16 + (x/2) - 2
-	lda	LASER_Y
-	lsr
-	lsr
-	asl
-	asl
-	asl
-	asl
-	sta	LASER_TILE
-	lda	LASER_X
-	lsr
 	clc
-	adc	LASER_TILE
-	sec
-	sbc	#2
-	sta	LASER_TILE
+	lda	LASER_TILEY
+        adc	#>big_tilemap
+        sta	INH
+	lda	LASER_TILEX
+	sta	INL
 
-	ldx	LASER_TILE
-	lda	tilemap,X
+	ldy	#0
+	lda	(INL),Y
 	cmp	#ALLHARD_TILES
 	bcs	destroy_laser
 
@@ -45,20 +36,24 @@ laser_check_tiles:
 laser_check_enemies:
 	; collision detect with enemies
 
-	jsr laser_enemies
+;	jsr laser_enemies
 
 
 	; detect if off screen
 laser_check_right:
-	lda	LASER_X
-	cmp	#31
+	sec
+	lda	LASER_TILEX
+	sbc	TILEMAP_X
+	cmp	#21
 	bcc	laser_check_left	; not_too_far_right
 	bcs	destroy_laser
 
 laser_check_left:
-	cmp	#6
-	bcs	done_move_laser
-	bcc	destroy_laser
+	sec
+	lda	LASER_TILEX
+	sbc	TILEMAP_X
+	bpl	done_move_laser
+;	bmi	destroy_laser
 
 destroy_laser:
 	lda	#0
@@ -66,6 +61,7 @@ destroy_laser:
 
 done_move_laser:
 	rts
+
 
 	;====================
 	; draw laser
@@ -76,13 +72,18 @@ draw_laser:
 	lda	LASER_OUT
 	beq	done_draw_laser
 
-	lda	LASER_X
-	sta	XPOS
-	lda	LASER_Y
+	sec
+	lda	LASER_TILEY
+	sbc	TILEMAP_Y
+	asl
+	asl
 	sta	YPOS
 
-;	lda	LASER_DIRECTION
-
+	sec
+	lda	LASER_TILEX
+	sbc	TILEMAP_X
+	asl
+	sta	XPOS
 
 	lda	#<laser_sideways_sprite
 	sta	INL
