@@ -156,6 +156,8 @@ GOTITEMSND:
 .byte 49,1	; 497.2
 .byte 46,2	; 523.3
 .byte 0,5	; 0.0
+.byte	255,255
+.if 0
 .byte 24,1	; 994.3
 .byte 23,1	; 1046.7
 .byte 22,1	; 1104.8
@@ -199,6 +201,7 @@ GOTITEMSND:
 .byte 34,1	; 710.2
 .byte 33,1	; 736.5
 .byte 255,255
+.endif
 LVLDONESND:
 .byte 36,4	; 662.9
 .byte 0,9	; 0.0

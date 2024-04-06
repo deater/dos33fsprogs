@@ -1,5 +1,6 @@
 SFX_KEENSLEFT = 0
 SFX_WLDENTRSND = 1
+SFX_GAMEOVERSND = 2
 
 	;==========================
 	; plays soundfx
@@ -46,10 +47,10 @@ play_done:
 
 
 sounds_low:
-	.byte <keensleft,  <WLDENTERSND
+	.byte <keensleft,  <WLDENTERSND, <GAMEOVERSND
 
 sounds_high:
-	.byte >keensleft,  >WLDENTERSND
+	.byte >keensleft,  >WLDENTERSND, >GAMEOVERSND
 
 
 WLDENTERSND:
@@ -132,4 +133,123 @@ keensleft:
 .byte 23,7	; 1046.7
 .byte 0,19	; 0.0
 .byte 17,9	; 1420.5
+.byte 255,255
+GAMEOVERSND:
+.byte 1,1	; 19886.3
+.byte 3,1	; 6628.8
+.byte 6,1	; 3977.3
+.byte 8,1	; 2840.9
+.byte 12,1	; 1988.6
+.byte 17,1	; 1420.5
+.byte 22,1	; 1104.8
+.byte 25,1	; 947.0
+.byte 28,1	; 864.6
+.byte 31,1	; 764.9
+.byte 34,1	; 710.2
+.byte 38,1	; 641.5
+.byte 43,1	; 568.2
+.byte 46,1	; 523.3
+.byte 49,1	; 497.2
+.byte 55,1	; 441.9
+.byte 61,1	; 397.7
+.byte 64,1	; 382.4
+.byte 67,1	; 361.6
+.byte 71,1	; 342.9
+.byte 75,1	; 326.0
+.byte 78,1	; 310.7
+.byte 86,1	; 284.1
+.byte 89,1	; 272.4
+.byte 92,2	; 265.2
+.byte 97,1	; 251.7
+.byte 101,1	; 242.5
+.byte 99,1	; 245.5
+.byte 103,1	; 236.7
+.byte 107,1	; 228.6
+.byte 111,1	; 221.0
+.byte 118,1	; 207.1
+.byte 115,1	; 211.6
+.byte 120,1	; 202.9
+.byte 124,2	; 196.9
+.byte 128,1	; 191.2
+.byte 130,1	; 187.6
+.byte 134,1	; 182.4
+.byte 137,1	; 179.2
+.byte 139,1	; 176.0
+.byte 142,1	; 172.9
+.byte 146,1	; 167.1
+.byte 145,1	; 168.5
+.byte 149,1	; 164.3
+.byte 153,1	; 160.4
+.byte 158,1	; 155.4
+.byte 159,1	; 154.2
+.byte 164,1	; 149.5
+.byte 159,1	; 154.2
+.byte 166,1	; 147.3
+.byte 169,1	; 145.2
+.byte 171,1	; 143.1
+.byte 173,1	; 142.0
+.byte 176,1	; 139.1
+.byte 179,1	; 137.1
+.byte 181,1	; 135.3
+.byte 188,1	; 130.8
+.byte 186,1	; 131.7
+.byte 192,1	; 127.5
+.byte 194,1	; 126.7
+.byte 196,1	; 125.1
+.byte 199,1	; 123.5
+.byte 200,1	; 122.8
+.byte 202,3	; 121.3
+.byte 201,1	; 122.0
+.byte 202,5	; 121.3
+.byte 201,1	; 122.0
+.byte 200,1	; 122.8
+.byte 199,1	; 123.5
+.byte 197,1	; 124.3
+.byte 195,1	; 125.9
+.byte 194,2	; 126.7
+.byte 191,1	; 128.3
+.byte 186,1	; 131.7
+.byte 184,1	; 133.5
+.byte 179,1	; 137.1
+.byte 174,1	; 141.0
+.byte 173,1	; 142.0
+.byte 168,1	; 146.2
+.byte 163,1	; 150.7
+.byte 161,1	; 151.8
+.byte 159,1	; 154.2
+.byte 158,6	; 155.4
+.byte 161,1	; 151.8
+.byte 164,1	; 149.5
+.byte 165,1	; 148.4
+.byte 168,1	; 146.2
+.byte 170,1	; 144.1
+.byte 171,1	; 143.1
+.byte 175,1	; 140.0
+.byte 176,1	; 139.1
+.byte 179,1	; 137.1
+.byte 181,1	; 135.3
+.byte 184,1	; 133.5
+.byte 189,1	; 130.0
+.byte 192,1	; 127.5
+.byte 190,1	; 129.1
+.byte 195,2	; 125.9
+.byte 0,29	; 0.0
+.byte 34,5	; 710.2
+.byte 0,9	; 0.0
+.byte 33,5	; 736.5
+.byte 0,9	; 0.0
+.byte 31,5	; 764.9
+.byte 0,20	; 0.0
+.byte 62,5	; 389.9
+.byte 0,6	; 0.0
+.byte 65,6	; 375.2
+.byte 0,7	; 0.0
+.byte 60,4	; 405.8
+.byte 0,12	; 0.0
+.byte 137,1	; 179.2
+.byte 135,5	; 180.8
+.byte 0,10	; 0.0
+.byte 159,8	; 154.2
+.byte 0,11	; 0.0
+.byte 133,10	; 184.1
 .byte 255,255

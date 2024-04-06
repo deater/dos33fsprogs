@@ -165,6 +165,9 @@ done_with_keen:
 
 return_to_title:
 
+	ldy	#SFX_GAMEOVERSND
+	jsr	play_sfx
+
 	jsr	game_over
 
 	lda	#LOAD_TITLE
