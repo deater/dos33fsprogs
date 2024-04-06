@@ -213,7 +213,10 @@ collide_head_r:
 	lda	#1
 	sta	KEEN_FALLING		; now falling
 
-;	jsr	head_noise
+
+	ldy	#SFX_BUMPHEADSND
+	jsr	play_sfx
+
 
 collide_left_right:
 
@@ -466,7 +469,8 @@ feet_on_ground:
 	sta	KEEN_FALLING
 	sta	KEEN_WALKING
 
-;	jsr	land_noise
+	ldy	#SFX_KEENLANDSND
+	jsr	play_sfx
 
 	rts
 
