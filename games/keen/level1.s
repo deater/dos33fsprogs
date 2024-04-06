@@ -232,7 +232,7 @@ level_end_animation:
 skip_end_sound:
 
 
-	lda	#100
+	lda	#50
 	jsr	WAIT
 
 	dec	YPOS

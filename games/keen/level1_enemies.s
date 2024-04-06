@@ -1,4 +1,4 @@
-NUM_ENEMIES = 4
+NUM_ENEMIES = 8
 
 
 	;=======================

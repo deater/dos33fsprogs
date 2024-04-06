@@ -159,4 +159,30 @@ cptl3_smc:
 	cmp	#TILEMAP_Y_COPY_SIZE
 	bne	cp_tilemap_outer_loop
 
+done_tilemap_subset:
+
+	; activate yorps
+
+	ldx	#0
+
+	clc
+	lda	TILEMAP_X
+	adc	#22
+	sta	INL
+activate_yorp_loop:
+
+	; if TILEMAP_X+22>YORP_X
+
+	lda	INL
+	cmp	enemy_data_tilex,X
+	bcc	next_yorp
+
+	lda	#1
+	sta	enemy_data_out,X
+
+next_yorp:
+	inx
+	cpx	#NUM_ENEMIES
+	bne	activate_yorp_loop
+
 	rts
