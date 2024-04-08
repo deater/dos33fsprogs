@@ -1,0 +1,12 @@
+Apple II Keyboard Support
+
+Original Apple II / Apple II+
+
+
+Apple IIe
+	If you read $C010 (KEYRESET) bit #7 is "any key down" meaning
+	you can detect if a key is being held down
+
+Apple IIc / IIgs
+	Possibly have actual keyboard buffer you can enable, along
+	with interrupts?

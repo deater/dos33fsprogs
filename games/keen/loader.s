@@ -48,6 +48,37 @@ filbuf  = $3D6  ; filbuf:	.res 4			;	= bit2tbl+86
 
 loader_start:
 
+	jsr	hardware_detect
+
+	lda	#<model_string
+	sta	OUTL
+	lda	#>model_string
+	sta	OUTH
+
+	lda	APPLEII_MODEL
+	sta	model_string+17
+
+	cmp	#'g'
+	bne	go_print
+
+	lda	#'s'
+	sta	model_string+18
+
+go_print:
+
+	ldy	#0
+print_model:
+	lda	(OUTL),Y
+	beq	print_model_done
+	ora	#$80
+	sta	$7d0,Y
+	iny
+	jmp	print_model
+print_model_done:
+
+
+
+
 	lda	#LOAD_TITLE
 	sta	WHICH_LOAD
 
@@ -267,10 +298,10 @@ quick_print:
 	beq	quick_print_done
 	jsr	COUT1
 	iny
-	jmp	quick_print
+;	jmp	quick_print
 
 quick_print_done:
-;	rts
+	rts
 
 ;	jsr	quick_print
 
@@ -285,6 +316,8 @@ fnf_keypress:
 error_string:
 .byte "PLEASE INSERT DISK 1, PRESS RETURN",0
 
+model_string:
+.byte "DETECTED APPLE II",0,0,0
 
 
 
@@ -678,6 +711,8 @@ step2:	.byte $70, $2c, $26, $22, $1f, $1e, $1d, $1c
 
 sectbl:	.byte $00,$0d,$0b,$09,$07,$05,$03,$01,$0e,$0c,$0a,$08,$06,$04,$02,$0f
 
+
+.include "hardware_detect.s"
 
 ; From $BA96 of DOS33
 ;nibtbl:	.res 128			;		= *
