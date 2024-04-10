@@ -1,7 +1,4 @@
-/* Loads a 80x48 (or 40x48) PNG image into a 40x48 Apple II layout */
-/* It's not interleaved like an actual Apple II */
-/* But the top/bottom are pre-packed into a naive 40x24 array */
-
+/* loads png for png2map */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +43,7 @@ static int convert_color(int color, char *filename) {
 	return c;
 }
 
-/* expects a PNG where the xsize is either 1280x200 */
+/* expects a PNG that is 660x336 */
 
 int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	int png_type) {
@@ -102,8 +99,8 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	width = png_get_image_width(png_ptr, info_ptr);
 	height = png_get_image_height(png_ptr, info_ptr);
 
-	if (width==1280) {
-		*xsize=1280;
+	if (width==660) {
+		*xsize=660;
 		xadd=1;
 	}
 	else {

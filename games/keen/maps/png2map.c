@@ -9,15 +9,14 @@
 
 #include "loadpng.h"
 
+/* converts a png of map to format for our keen engine */
 
-/* converts a png of map to format by our duke engine */
-
-/* 1280x200 image */
+/* 660x336 image */
 /* 256 sprites of size 2x4 in a 16x16 grid at 8,4 */
 
 
 static unsigned char tiles[256][2][4];
-static unsigned char tilemap[256][40];
+static unsigned char tilemap[128][80];
 static unsigned char temp_tile[2][4];
 
 static int ascii_output=0;
@@ -30,6 +29,7 @@ int main(int argc, char **argv) {
 	unsigned char *image;
 	int xsize,ysize;
 	FILE *outfile;
+	int unknown_tiles=0;
 
 	if (argc<3) {
 		fprintf(stderr,"Usage:\t%s INFILE OUTFILE\n\n",argv[0]);
@@ -112,8 +112,10 @@ int main(int argc, char **argv) {
 
 	/* starts at 80,12 */
 
-	for(x=0;x<256;x++) {
-		for(y=0;y<40;y++) {
+	/* 128 * 80 */
+
+	for(x=0;x<128;x++) {
+		for(y=0;y<80;y++) {
 			/* get temp tile */
 			temp_tile[0][0]=image[((y*4+12)*xsize)+80+(x*4)];
 			temp_tile[1][0]=image[((y*4+12)*xsize)+80+(x*4)+2];
@@ -157,6 +159,7 @@ int main(int argc, char **argv) {
 			if (found_tile==-1) {
 				printf("Error!  Unknown tile at %d,%d\n",
 					80+(x*4),12+(y*4));
+				unknown_tiles++;
 			}
 		}
 	}
@@ -164,11 +167,11 @@ int main(int argc, char **argv) {
 	if (ascii_output) {
 		fprintf(outfile,"tilemap:\n");
 
-		for(j=0;j<40;j++) {
+		for(j=0;j<80;j++) {
 			fprintf(outfile,"\t.byte ");
-			for(i=0;i<256;i++) {
+			for(i=0;i<128;i++) {
 				fprintf(outfile,"$%02x",tilemap[i][j]);
-				if (i!=255) fprintf(outfile,",");
+				if (i!=127) fprintf(outfile,",");
 			}
 			fprintf(outfile,"\n");
 		}
@@ -176,13 +179,15 @@ int main(int argc, char **argv) {
 		fprintf(outfile,"\n");
 	}
 	else {
-		for(j=0;j<40;j++) {
-			for(i=0;i<256;i++) {
+		for(j=0;j<80;j++) {
+			for(i=0;i<128;i++) {
 				fputc(tilemap[i][j],outfile);
 			}
 		}
 	}
 	fclose(outfile);
+
+	fprintf(stderr,"%d Unknown tiles\n",unknown_tiles);
 
 	return 0;
 }
