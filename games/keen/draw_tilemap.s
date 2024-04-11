@@ -108,8 +108,9 @@ done_move_to_line:
 	; local tilemap subset is 20x12 tiles = 240 bytes
 	;	nicely fits in one page
 	;
-	; big tilemap is 256*40
-	;	so each row is a page
+
+	; big tilemap is 128x80
+	;	sad, was much cleaner to implement when 256x40
 
 	; TILEMAP_X, TILEMAP_Y specify where in big
 
@@ -118,25 +119,41 @@ TILEMAP_Y_COPY_SIZE = 12
 
 copy_tilemap_subset:
 
+	; TODO: lookup table?
+	; would be sorta big
+
+
+	lda	#0
+	sta	tilemap_count_smc+1
+
 	; set start
 	lda	TILEMAP_Y
+	lsr
+
+	; set odd/even
+	ldx	#0
+	bcc	skip_odd_row
+	ldx	#$80
+skip_odd_row:
+	stx	cptl1_smc+1
+
 	clc				; set start
-	adc	#>big_tilemap		; each row is a page, so adding
+	adc	#>big_tilemap		; each even row is a page, so adding
 					; Y to top byte is indexing to row
 
 	sta	cptl1_smc+2		; set proper row in big tilemap
-	adc	#TILEMAP_Y_COPY_SIZE
-	sta	cptl3_smc+1		; set loop limit (end)
 
-	; reset row
+
 	lda	#<tilemap
-	sta	cptl2_smc+1		; set small tilemap to row0
+	sta	cptl2_smc+1		; reset small tilemap to row0
 
 cp_tilemap_outer_loop:
 
 	ldx	TILEMAP_X
 	ldy	#0
 cp_tilemap_inner_loop:
+
+	; TODO: optimize, totally unroll?
 
 cptl1_smc:
 	lda	$9400,X
@@ -148,14 +165,23 @@ cptl2_smc:
 	bne	cp_tilemap_inner_loop
 
 	; next line
-	inc	cptl1_smc+2		; incremement page
+	clc
+	lda	cptl1_smc+1
+	adc	#$80
+	sta	cptl1_smc+1
+
+	lda	#$0
+	adc	cptl1_smc+2
+	sta	cptl1_smc+2
+
 	clc
 	lda	cptl2_smc+1		; increment row
 	adc	#TILEMAP_X_COPY_SIZE
 	sta	cptl2_smc+1
 
-	lda	cptl1_smc+2
-cptl3_smc:
+	inc	tilemap_count_smc+1
+tilemap_count_smc:
+	lda	#0
 	cmp	#TILEMAP_Y_COPY_SIZE
 	bne	cp_tilemap_outer_loop
 
@@ -163,7 +189,8 @@ done_tilemap_subset:
 
 	; activate yorps
 
-	ldx	#0
+	ldx	NUM_ENEMIES
+	beq	done_yorps
 
 	clc
 	lda	TILEMAP_X
@@ -181,8 +208,8 @@ activate_yorp_loop:
 	sta	enemy_data_out,X
 
 next_yorp:
-	inx
-	cpx	#NUM_ENEMIES
-	bne	activate_yorp_loop
+	dex
+	bpl	activate_yorp_loop
 
+done_yorps:
 	rts

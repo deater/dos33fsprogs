@@ -62,7 +62,6 @@ keen_start:
 
 	lda	#0			; offset from tile location
 	sta	KEEN_X
-	lda	#0
 	sta	KEEN_Y
 
 	lda	#RIGHT			; direction
@@ -72,14 +71,14 @@ keen_start:
 	; load level1 background
 	;====================================
 
-	lda	#<level1_bg_zx02
-	sta	ZX0_src
-	lda	#>level1_bg_zx02
-	sta	ZX0_src+1
+;	lda	#<level1_bg_zx02
+;	sta	ZX0_src
+;	lda	#>level1_bg_zx02
+;	sta	ZX0_src+1
 
-	lda	#$c    ; load to page $c00
+;	lda	#$c    ; load to page $c00
 
-	jsr	full_decomp
+;	jsr	full_decomp
 
 
 	;====================================

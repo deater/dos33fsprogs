@@ -1,14 +1,16 @@
 ; Keen MARS main map
-
-; TODO: should make it scrollable, etc / tilemap
-; TODO: fade in effect (from mode7 demo)
-
+;
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+
+
+; or are there?
+NUM_ENEMIES = 0
+TILE_COLS = 20		; define this elsewhere?
 
 mars_start:
 	;===================
@@ -25,7 +27,11 @@ mars_start:
 	jsr	clear_all	; avoid grey stripes at load
 
 	lda	KEENS
-	bmi	return_to_title
+	bpl	plenty_of_keens
+
+	jmp	return_to_title
+
+plenty_of_keens:
 
 	;=====================
 	; init vars
@@ -59,18 +65,44 @@ mars_start:
 	cmp	#GAME_OVER
 	beq	return_to_title
 
+
+	; TODO: get this from MARS_X and MARS_Y
+
+	lda	#1
+	sta	KEEN_TILEX
+	lda	#13
+	sta	KEEN_TILEY
+
+	lda	#0
+	sta	KEEN_X
+	sta	KEEN_Y
+
 	;====================================
-	; load mars background
+	; load mars tilemap
 	;====================================
 
-	lda	#<mars_zx02
+	lda	#<mars_data_zx02
 	sta	ZX0_src
-	lda	#>mars_zx02
+	lda	#>mars_data_zx02
 	sta	ZX0_src+1
-
-	lda	#$c    ; load to page $c00
-
+	lda	#$90			; load to page $9000
 	jsr	full_decomp
+
+
+	;====================================
+	; copy in tilemap subset
+	;====================================
+	; FIXME: start values
+	;	center around KEEN_X, KEEN_Y
+
+	lda	#0
+	sta	TILEMAP_X
+	lda	#5
+	sta	TILEMAP_Y
+
+	jsr	copy_tilemap_subset
+
+
 
 
 	lda	#1
@@ -87,11 +119,10 @@ mars_start:
 	;====================================
 	;====================================
 
-keen_loop:
+mars_loop:
+	; draw tilemap
 
-	; copy over background
-
-	jsr	gr_copy_to_current
+	jsr	draw_tilemap
 
 	; draw keen
 
@@ -129,7 +160,7 @@ no_frame_oflo:
 	bne	done_with_keen
 
 
-do_keen_loop:
+do_mars_loop:
 
 	;=====================
 	; sound effect
@@ -148,7 +179,7 @@ skip_initial_sound:
 ;	lda	#200
 ;	jsr	WAIT
 
-	jmp	keen_loop
+	jmp	mars_loop
 
 
 done_with_keen:
@@ -187,38 +218,6 @@ return_to_title:
 	rts
 
 
-
-
-	;==========================
-	; includes
-	;==========================
-
-	; level graphics
-
-mars_zx02:
-	.incbin	"maps/mars_map.gr.zx02"
-parts_zx02:
-	.incbin	"graphics/parts.gr.zx02"
-
-	.include	"text_print.s"
-	.include	"gr_offsets.s"
-	.include	"gr_fast_clear.s"
-	.include	"gr_copy.s"
-	.include	"gr_pageflip.s"
-;	.include	"gr_putsprite_crop.s"
-	.include	"zx02_optim.s"
-	.include	"gr_fade.s"
-
-	.include	"joystick.s"
-
-	.include	"text_drawbox.s"
-	.include	"text_help.s"
-	.include	"text_quit_yn.s"
-	.include	"game_over.s"
-
-
-	.include	"mars_sfx.s"
-	.include	"longer_sound.s"
 
 
 
@@ -312,212 +311,11 @@ draw_keen_even:
 	rts
 
 
-
-
-	;==============================
-	; Handle Keypress
-	;==============================
-handle_keypress:
-
-	; first handle joystick
-	lda	JOYSTICK_ENABLED
-	beq	actually_handle_keypress
-
-	; only check joystick every-other frame
-	lda	FRAMEL
-	and	#$1
-	beq	actually_handle_keypress
-
-check_button:
-        lda     PADDLE_BUTTON0
-        bpl     button_clear
-
-        lda     JS_BUTTON_STATE
-        bne     js_check
-
-        lda     #1
-        sta     JS_BUTTON_STATE
-        lda     #' '
-        jmp     check_sound
-
-button_clear:
-        lda     #0
-        sta     JS_BUTTON_STATE
-
-js_check:
-        jsr     handle_joystick
-
-js_check_left:
-        lda     value0
-        cmp     #$20
-        bcs     js_check_right  ; if less than 32, left
-        lda     #'A'
-        bne     check_sound
-
-js_check_right:
-        cmp     #$40
-        bcc     js_check_up
-        lda     #'D'
-        bne     check_sound
-
-js_check_up:
-        lda     value1
-        cmp     #$20
-        bcs     js_check_down
-        lda     #'W'
-
-        bne     check_sound
-
-js_check_down:
-        cmp     #$40
-        bcc     done_joystick
-        lda     #'S'
-        bne     check_sound
-
-
-done_joystick:
-
-
-
-actually_handle_keypress:
-	lda	KEYPRESS
-	bmi	keypress
-
-	jmp	no_keypress
-
-keypress:
-	and	#$7f			; clear high bit
-	cmp	#' '
-	beq	check_sound		; make sure not to lose space
-	and	#$df			; convert uppercase to lower case
-
-check_sound:
-	cmp	#$14			; control-T
-	bne	check_help
-
-	lda	SOUND_STATUS
-	eor	#SOUND_DISABLED
-	sta	SOUND_STATUS
-	jmp	done_keypress
-
-check_help:
-	cmp	#'H'			; H (^H is same as left)
-	bne	check_joystick
-
-	jsr	print_help
-	jmp	done_keypress
-
-	; can't be ^J as that's the same as down
-check_joystick:
-	cmp	#'J'			; J
-	bne	check_left
-
-	lda	JOYSTICK_ENABLED
-	eor	#1
-	sta	JOYSTICK_ENABLED
-	jmp	done_keypress
-
-check_left:
-	cmp	#'A'
-	beq	left_pressed
-	cmp	#8			; left key
-	bne	check_right
-
-left_pressed:
-	ldy	MARS_X
-	dey
-	ldx	MARS_Y
-	jsr	check_valid_feet
-	bcc	done_left_pressed
-	dec	MARS_X
-done_left_pressed:
-	jmp	done_keypress
-
-check_right:
-	cmp	#'D'
-	beq	right_pressed
-	cmp	#$15			; right key
-	bne	check_up
-
-right_pressed:
-	ldy	MARS_X
-	iny
-	ldx	MARS_Y
-	jsr	check_valid_feet
-	bcc	done_right_pressed
-	inc	MARS_X
-done_right_pressed:
-	jmp	done_keypress
-
-check_up:
-	cmp	#'W'
-	beq	up_pressed
-	cmp	#$0B			; up key
-	bne	check_down
-
-up_pressed:
-	ldy	MARS_X
-	ldx	MARS_Y
-	dex
-	jsr	check_valid_feet
-	bcc	done_up_pressed
-	dec	MARS_Y
-done_up_pressed:
-	jmp	done_keypress
-
-check_down:
-	cmp	#'S'
-	beq	down_pressed
-	cmp	#$0A
-	bne	check_space
-down_pressed:
-	ldy	MARS_X
-	ldx	MARS_Y
-	inx
-	jsr	check_valid_feet
-	bcc	done_up_pressed
-	inc	MARS_Y
-done_down_pressed:
-	jmp	done_keypress
-
-check_space:
-	cmp	#' '
-	bne	check_return
-space_pressed:
-
-	jsr	do_action
-
-	jmp	done_keypress
-
-check_return:
-	cmp	#13
-	bne	check_escape
-
-return_pressed:
-	;inc	LEVEL_OVER
-
-	jsr	do_action
-
-done_return:
-	jmp	no_keypress
-
-check_escape:
-	cmp	#27
-	bne	done_keypress
-
-	jsr	print_quit
-
-	jmp	done_keypress
-
-
-
-done_keypress:
-no_keypress:
-	bit	KEYRESET
-	rts
-
-
-
+	;=================================
+	;=================================
+	; check valid feet
+	;=================================
+	;=================================
 	; essentially if SCRN(Y,X+2)=9
 check_valid_feet:
 	txa
@@ -554,7 +352,8 @@ feet_valid:
 	sec
 	rts
 feet_invalid:
-	clc
+;	clc
+	sec
 	rts
 
 
@@ -562,8 +361,11 @@ feet_invalid:
 
 
 	;====================================
+	;====================================
 	; show parts screen
 	;====================================
+	;====================================
+	; TODO: color in if found
 do_parts:
 	lda	#<parts_zx02
 	sta	ZX0_src
@@ -590,18 +392,23 @@ done_parts:
 
 	bit	FULLGR
 
-	lda	#<mars_zx02
-	sta	ZX0_src
-	lda	#>mars_zx02
-	sta	ZX0_src+1
+;	lda	#<mars_zx02
+;	sta	ZX0_src
+;	lda	#>mars_zx02
+;	sta	ZX0_src+1
 
-	lda	#$c    ; load to page $c00
+;	lda	#$c    ; load to page $c00
 
-	jsr	full_decomp	; tail call
+;	jsr	full_decomp	; tail call
 
 	rts
 
-
+	;====================================
+	;====================================
+	; Mars action
+	;====================================
+	;====================================
+	; if enter pressed on map
 do_action:
 
 	lda	MARS_X
@@ -640,3 +447,46 @@ maybe_exit:
 star_colors:
 	.byte $05,$07,$07,$0f
 	.byte $0f,$07,$05,$0a
+
+
+
+
+	;==========================
+	; includes
+	;==========================
+
+	; level graphics
+
+mars_zx02:
+	.incbin	"maps/mars_map.gr.zx02"
+parts_zx02:
+	.incbin	"graphics/parts.gr.zx02"
+
+	.include	"text_print.s"
+	.include	"gr_offsets.s"
+	.include	"gr_fast_clear.s"
+	.include	"gr_copy.s"
+	.include	"gr_pageflip.s"
+;	.include	"gr_putsprite_crop.s"
+	.include	"zx02_optim.s"
+	.include	"gr_fade.s"
+
+	.include	"joystick.s"
+
+	.include	"text_drawbox.s"
+	.include	"text_help.s"
+	.include	"text_quit_yn.s"
+	.include	"game_over.s"
+	.include	"mars_keyboard.s"
+	.include	"draw_tilemap.s"
+
+	.include	"mars_sfx.s"
+	.include	"longer_sound.s"
+
+
+mars_data_zx02:
+	.incbin	"maps/mars_new.zx02"
+
+	; dummy
+enemy_data_out:
+enemy_data_tilex:
