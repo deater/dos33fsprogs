@@ -271,8 +271,8 @@ level1_levelover:
 	;==========================
 
 	; level graphics
-level1_bg_zx02:
-	.incbin	"graphics/level1_bg.gr.zx02"
+;level1_bg_zx02:
+;	.incbin	"graphics/level1_bg.gr.zx02"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"

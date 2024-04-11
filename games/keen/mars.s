@@ -66,16 +66,16 @@ plenty_of_keens:
 	beq	return_to_title
 
 
-	; TODO: get this from MARS_X and MARS_Y
+	; TODO: set this in title, don't over-write
 
 	lda	#1
-	sta	KEEN_TILEX
-	lda	#13
-	sta	KEEN_TILEY
+	sta	MARS_TILEX
+	lda	#6
+	sta	MARS_TILEY
 
 	lda	#0
-	sta	KEEN_X
-	sta	KEEN_Y
+	sta	MARS_X
+	sta	MARS_Y
 
 	;====================================
 	; load mars tilemap
@@ -93,11 +93,11 @@ plenty_of_keens:
 	; copy in tilemap subset
 	;====================================
 	; FIXME: start values
-	;	center around KEEN_X, KEEN_Y
+	;	center around MARS_TILEX, MARS_TILEY
 
-	lda	#0
+	lda	MARS_TILEX
 	sta	TILEMAP_X
-	lda	#5
+	lda	MARS_TILEY
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset

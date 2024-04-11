@@ -108,12 +108,37 @@ check_left:
 	bne	check_right
 
 left_pressed:
-	ldy	MARS_X
-	dey
-	ldx	MARS_Y
-	jsr	check_valid_feet
-	bcc	done_left_pressed
+
+	lda	TILEMAP_X
+	beq	keen_walk_left
+
+	sec
+	lda	MARS_TILEX
+	sbc	TILEMAP_X
+	cmp	#7
+	bcs	keen_walk_left
+
+keen_scroll_left:
+	dec	TILEMAP_X
+	dec	MARS_TILEX
+
+	jsr	copy_tilemap_subset
+	jmp	done_move_keen
+
+keen_walk_left:
 	dec	MARS_X
+	bpl	dwl_noflo
+	lda	#1
+	sta	MARS_X
+	dec	MARS_TILEX
+dwl_noflo:
+
+;	ldy	MARS_X
+;	dey
+;	ldx	MARS_Y
+;	jsr	check_valid_feet
+;	bcc	done_left_pressed
+;	dec	MARS_X
 done_left_pressed:
 	jmp	done_keypress
 
@@ -124,12 +149,47 @@ check_right:
 	bne	check_up
 
 right_pressed:
-	ldy	MARS_X
-	iny
-	ldx	MARS_Y
-	jsr	check_valid_feet
-	bcc	done_right_pressed
+
+
+move_right:
+	lda	TILEMAP_X
+	cmp	#50			; 70-20
+	bcs	keen_walk_right
+
+	sec
+	lda	MARS_TILEX
+	sbc	TILEMAP_X
+	cmp	#11
+	bcc	keen_walk_right
+
+keen_scroll_right:
+
+	inc	TILEMAP_X
+	inc	MARS_TILEX
+
+	jsr	copy_tilemap_subset
+
+	jmp	done_move_keen
+
+keen_walk_right:
 	inc	MARS_X
+	lda	MARS_X
+	cmp	#2
+	bne	dwr_noflo
+
+	lda	#0
+	sta	MARS_X
+
+	inc	MARS_TILEX
+
+dwr_noflo:
+
+;	ldy	MARS_X
+;	iny
+;	ldx	MARS_Y
+;	jsr	check_valid_feet
+;	bcc	done_right_pressed
+;	inc	MARS_X
 done_right_pressed:
 	jmp	done_keypress
 
@@ -194,7 +254,7 @@ check_escape:
 	jmp	done_keypress
 
 
-
+done_move_keen:
 done_keypress:
 no_keypress:
 	bit	KEYRESET
