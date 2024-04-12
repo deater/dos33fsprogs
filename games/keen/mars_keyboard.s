@@ -1,3 +1,5 @@
+MAX_TILE_Y = 57		; 69-12
+
 	;==============================
 	; Handle Keypress
 	;==============================
@@ -200,12 +202,45 @@ check_up:
 	bne	check_down
 
 up_pressed:
-	ldy	MARS_X
-	ldx	MARS_Y
-	dex
-	jsr	check_valid_feet
-	bcc	done_up_pressed
-	dec	MARS_Y
+	lda	MARS_TILEY
+	cmp	#0		; not needed
+	beq	move_keen_up
+
+	sec
+	lda	TILEMAP_Y
+	sbc	MARS_TILEY
+
+	cmp	#4
+	bcc	scroll_keen_up
+
+move_keen_up:
+
+	lda	MARS_Y
+	beq	keen_up_not2
+move_keen_up2:
+	lda	#0
+	sta	MARS_Y
+	jmp	done_check_up
+
+keen_up_not2:
+	dec	MARS_TILEY
+	lda	#2
+	sta	MARS_Y
+	jmp	done_check_up
+
+scroll_keen_up:
+	dec	TILEMAP_Y
+	dec	MARS_TILEY
+	jsr	copy_tilemap_subset
+
+
+;	ldy	MARS_X
+;	ldx	MARS_Y
+;	dex
+;	jsr	check_valid_feet
+;	bcc	done_up_pressed
+;	dec	MARS_Y
+done_check_up:
 done_up_pressed:
 	jmp	done_keypress
 
@@ -215,12 +250,41 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down_pressed:
-	ldy	MARS_X
-	ldx	MARS_Y
-	inx
-	jsr	check_valid_feet
-	bcc	done_up_pressed
-	inc	MARS_Y
+
+	sec
+	lda	MARS_TILEY
+	sbc	TILEMAP_Y
+	cmp	#8
+	bcc	move_keen_down
+
+	lda	TILEMAP_Y
+	cmp	#MAX_TILE_Y
+	bcs	move_keen_down
+
+	jmp	scroll_keen_down
+
+move_keen_down:
+
+	lda	#0
+	sta	MARS_Y
+	inc	MARS_TILEY
+	jmp	done_check_down
+
+scroll_keen_down:
+	lda	#0
+	sta	MARS_Y
+	inc	TILEMAP_Y
+	inc	MARS_TILEY
+	jsr	copy_tilemap_subset
+
+;	ldy	MARS_X
+;	ldx	MARS_Y
+;	inx
+;	jsr	check_valid_feet
+;	bcc	done_up_pressed
+;	inc	MARS_Y
+done_check_down:
+
 done_down_pressed:
 	jmp	done_keypress
 

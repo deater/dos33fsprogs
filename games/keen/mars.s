@@ -42,22 +42,8 @@ plenty_of_keens:
 	sta	FRAMEL
 	sta	FRAMEH
 
-	sta	KEEN_WALKING
-	sta	KEEN_JUMPING
-;	sta	LEVEL_OVER
-	sta	LASER_OUT
-	sta	KEEN_XL
-	sta	KEEN_FALLING
-	sta	KEEN_SHOOTING
-
-
 	lda	#4
 	sta	DRAW_PAGE
-
-;	lda	#18
-;	sta	KEEN_X
-;	lda	#11
-;	sta	KEEN_Y
 
 	; see if returning and it game over
 
@@ -224,53 +210,33 @@ return_to_title:
 	;=========================
 	; draw keen
 	;=========================
-	; D32
+
 draw_keen:
 
-	lda	MARS_Y
-	and	#1
-	beq	draw_keen_even
-
-draw_keen_odd:
-
-	; calculate address of MARS_Y/2
-
-	lda	MARS_Y
-	and	#$FE
-	tay
-	lda	gr_offsets,Y
-	sta	OUTL
-	lda	gr_offsets+1,Y
+	sec
+	lda	MARS_TILEX
+	sbc	TILEMAP_X
+	asl
 	clc
-	adc	DRAW_PAGE
-	sta	OUTH
+	adc	MARS_X
+	sta	XPOS
 
-	ldy	MARS_X
-
-	lda	(OUTL),Y
-	and	#$0f
-	ora	#$D0
-	sta	(OUTL),Y
-
-	lda	MARS_Y
+	sec
+	lda	MARS_TILEY
+	sbc	TILEMAP_Y
+	asl
+	asl
 	clc
-	adc	#2
+	adc	MARS_Y
+	sta	YPOS
 
-	and	#$FE
-	tay
-	lda	gr_offsets,Y
-	sta	OUTL
-	lda	gr_offsets+1,Y
-	clc
-	adc	DRAW_PAGE
-	sta	OUTH
+	ldx	#<keen_sprite_tiny
+	lda	#>keen_sprite_tiny
+	stx	INL
+	sta	INH
+	jsr	put_sprite_crop
 
-	ldy	MARS_X
-
-	lda	#$23
-	sta	(OUTL),Y
-
-	rts
+	rts				; tail call
 
 
 
@@ -482,7 +448,7 @@ parts_zx02:
 
 	.include	"mars_sfx.s"
 	.include	"longer_sound.s"
-
+	.include	"gr_putsprite_crop.s"
 
 mars_data_zx02:
 	.incbin	"maps/mars_new.zx02"
@@ -490,3 +456,9 @@ mars_data_zx02:
 	; dummy
 enemy_data_out:
 enemy_data_tilex:
+
+
+keen_sprite_tiny:
+	.byte	1,2
+	.byte	$DA
+	.byte	$23
