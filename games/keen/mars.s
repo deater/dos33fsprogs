@@ -144,14 +144,17 @@ mars_loop:
 	inc	FRAMEH
 no_frame_oflo:
 
-	lda	FRAMEL
-	lsr
-	lsr
-	lsr
-	and	#$7
-	tay
-	lda	star_colors,Y
-	sta	$F28			; 0,28
+
+	; rotate star colors
+
+;	lda	FRAMEL
+;	lsr
+;	lsr
+;	lsr
+;	and	#$7
+;	tay
+;	lda	star_colors,Y
+;	sta	$F28			; 0,28
 
 	;===========================
 	; check end of level
@@ -386,48 +389,177 @@ done_parts:
 
 	;====================================
 	;====================================
-	; Mars action
+	; Mars action (enter pressed on map)
 	;====================================
 	;====================================
 	; if enter pressed on map
+
+	; off by one so the levels can fit in a two byte bitmap
+	;
+	; 	location		tilex,tiley	size
+	; 0	level1 (Border Town)		19,37	2
+	; 1	level2 (First Shrine)		22,28	1
+	; 2	level3 (Treasury)		 9,21	2
+	; 3	level4 (Capital City)		22,23	2
+	; 4	level5 (Pogo Shrine)		13,16	1
+	; 5 	level6 (Second Shrine)		16,11	1
+	; 6	level7 (Emerald City)		25,8	2
+	; 7	level8 (Ice City)		38,3	2
+	; 8	level9 (Third Shrine)		36,13	1
+	; 9	level10 (Ice Shrine 1)		43,5	1
+	; 10	level11 (Fourth Shrine)		52,16	1
+	; 11	level12 (Fifth Shrine)		36,21	1
+	; 12	level13 (Red Maze City)		44,24	2
+	; 13	level14 (Secret City)		60,28	2
+	; 14	level15 (Ice Shrine 2)		38,60	1
+	; 15	level16 (Vorticon Castle)	29,59	2
+	; 16	spaceship			10,37	1
+	; 17	left transporter		26,4	1
+	; 18	right transporter		34,3	1
+	; 19	secret transporter		60,35	1
+
+NUM_LOCATIONS = 20
+
 do_action:
 
-	lda	MARS_X
-	cmp	#15
-	bcc	do_nothing	; blt
+	ldx	#NUM_LOCATIONS
 
-	cmp	#20
-	bcc	maybe_ship
+do_action_loop:
 
-	cmp	#35
-	bcs	maybe_exit
+	;  mtx-ltx
+	;   -1   0    1    2
+	;  1234 1234 1234 1234
+	;  XYY   XY   YX   YYX
+	;   YY   YY   YY   YY
 
-do_nothing:
-	; TODO: make sound?
+check_location_x:
+	sec
+	lda	MARS_TILEX
+	sbc	location_x,X
+	bmi	check_location_nomatch
+
+	cmp	location_size,X
+	bcs	check_location_nomatch
+
+check_location_y:
+
+	;  mty-lty
+	;      -2  -1    0    1    2
+
+	; 0    X
+	; 1    X    X
+	; 2   YY   YX   YX   YY   YY
+	; 3   YY   YY   YX   YX   YY
+	; 4                   X    X
+	; 5                        X
+
+	clc
+	lda	MARS_TILEY
+	adc	#1
+	sec
+	sbc	location_y,X
+	bmi	check_location_nomatch
+
+	cmp	location_size,X
+
+	bcc	check_location_match
+
+;	bcs	check_location_nomatch
+
+
+
+check_location_nomatch:
+	dex
+	bpl	do_action_loop
+
 	rts
 
-maybe_ship:
+check_location_match:
+
+	; jump table
+
+	lda	location_actions_high,X
+	pha
+	lda	location_actions_low,X
+	pha
+
+	rts	; jump
 
 
-	lda	MARS_Y
-	cmp	#16
-	bcc	do_nothing
-	cmp	#24
-	bcs	do_nothing
+;	lda	MARS_X
+;	cmp	#15
+;	bcc	do_nothing	; blt
+;	cmp	#20
+;	bcc	maybe_ship
+;	cmp	#35
+;	bcs	maybe_exit
+;do_nothing:
+;	; TODO: make sound?
+;	rts
+;maybe_ship:
+;	lda	MARS_Y
+;	cmp	#16
+;	bcc	do_nothing
+;	cmp	#24
+;	bcs	do_nothing
+;	jmp	do_parts	; tail call
+;maybe_exit:
+;	inc	LEVEL_OVER
+;	rts
 
-	jmp	do_parts	; tail call
 
-maybe_exit:
 
-	inc	LEVEL_OVER
 
+
+
+dummy_action:
 	rts
 
 
+location_x:
+	.byte 19,22, 9,22,13,16,25,38
+	.byte 36,43,52,36,44,60,38,29
+	.byte 10,26,34,60
 
-star_colors:
-	.byte $05,$07,$07,$0f
-	.byte $0f,$07,$05,$0a
+location_y:
+	.byte 37,28,21,23,16,11, 8, 3
+	.byte 13, 5,16,21,24,28,60,59
+	.byte 37, 4, 3,35
+
+location_size:
+	.byte 2,1,2,2,1,1,2,2
+	.byte 1,1,1,1,2,2,1,2
+	.byte 1,1,1,1
+
+location_actions_low:
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(do_parts-1),<(dummy_action-1)		; ship, l transport
+	.byte <(dummy_action-1),<(dummy_action-1)	; r trans, secret
+
+location_actions_high:
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(do_parts-1),>(dummy_action-1)		; ship, l transport
+	.byte >(dummy_action-1),>(dummy_action-1)	; r trans, secret
+
+
+
+;star_colors:
+;	.byte $05,$07,$07,$0f
+;	.byte $0f,$07,$05,$0a
 
 
 
