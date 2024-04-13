@@ -201,7 +201,11 @@ done_with_keen:
 
 	jsr	fade_out
 
-        lda     #LOAD_KEEN1
+	; set up proper level to load
+
+	clc
+	lda	CURRENT_LEVEL
+	adc	#2			; skip title and mars
         sta     WHICH_LOAD
 
 	rts			; exit back
@@ -509,10 +513,26 @@ check_location_match:
 
 
 
-
-
-
+	;=====================================
+	;=====================================
+	; placeholder until action imlpemented
+	;=====================================
+	;=====================================
 dummy_action:
+	rts
+
+	;=====================================
+	;=====================================
+	; enter level
+	;=====================================
+	;=====================================
+	; level number is in X
+enter_level:
+
+	stx	CURRENT_LEVEL
+
+	inc	LEVEL_OVER
+
 	rts
 
 
@@ -532,7 +552,7 @@ location_size:
 	.byte 1,1,1,1
 
 location_actions_low:
-	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(enter_level-1),<(dummy_action-1)	; level1, level2
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
@@ -544,7 +564,7 @@ location_actions_low:
 	.byte <(dummy_action-1),<(dummy_action-1)	; r trans, secret
 
 location_actions_high:
-	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(enter_level-1),>(dummy_action-1)	; level1, level2
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)
