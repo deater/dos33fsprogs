@@ -24,6 +24,8 @@ mars_start:
 	bit	LORES
 	bit	FULLGR
 
+	lda	#0
+	sta	clear_all_color+1
 	jsr	clear_all	; avoid grey stripes at load
 
 	lda	KEENS
@@ -45,12 +47,15 @@ plenty_of_keens:
 	lda	#4
 	sta	DRAW_PAGE
 
-	; see if returning and it game over
+	; see if returning and if game over
 
 	lda	LEVEL_OVER
 	cmp	#GAME_OVER
-	beq	return_to_title
 
+	bne	not_game_over
+	jmp	return_to_title
+
+not_game_over:
 
 	; TODO: set this in title, don't over-write
 
@@ -88,8 +93,18 @@ plenty_of_keens:
 
 	jsr	copy_tilemap_subset
 
+	; make a copy in $c00 for fade-in purposes
 
+	lda	DRAW_PAGE	; necssary
+	pha
 
+	lda	#8
+	sta	DRAW_PAGE
+
+	jsr	draw_tilemap
+
+	pla
+	sta	DRAW_PAGE
 
 	lda	#1
 	sta	INITIAL_SOUND
