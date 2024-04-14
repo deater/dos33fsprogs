@@ -55,17 +55,6 @@ plenty_of_keens:
 
 not_game_over:
 
-	; TODO: set this in title, don't over-write
-
-	lda	#10
-	sta	MARS_TILEX
-	lda	#34
-	sta	MARS_TILEY
-
-	lda	#0
-	sta	MARS_X
-	sta	MARS_Y
-
 	;====================================
 	; load mars tilemap
 	;====================================
@@ -82,28 +71,18 @@ not_game_over:
 	; copy in tilemap subset
 	;====================================
 
-
 	; first center map around current location
 
 	jsr	recenter_map
 
+	; copy mini tileset
+
 	jsr	copy_tilemap_subset
 
-	; make a copy in $c00 for fade-in purposes
 
-	lda	DRAW_PAGE	; necssary
-	pha
+	; snapshot current tileset for fade purposes
 
-	lda	#8
-	sta	DRAW_PAGE
-
-	jsr	draw_tilemap
-
-	pla
-	sta	DRAW_PAGE
-
-	lda	#1
-	sta	INITIAL_SOUND
+	jsr	snapshot_tilemap
 
 	jsr	fade_in
 
@@ -194,6 +173,8 @@ done_with_keen:
 
 	ldy	#SFX_WLDENTRSND
 	jsr	play_sfx
+
+	jsr	snapshot_tilemap
 
 	jsr	fade_out
 
@@ -387,6 +368,37 @@ done_parts:
 
 	rts
 
+
+	;===============================
+	;===============================
+	; snapshot tile map
+	;===============================
+	;===============================
+	;	copy currnet tilemap graphics
+	;	to $c00 for fade-in/fade-out
+
+snapshot_tilemap:
+
+	; make a copy in $c00 for fade-in purposes
+
+	lda	DRAW_PAGE	; necssary
+	pha
+
+	lda	#8
+	sta	DRAW_PAGE
+
+	jsr	draw_tilemap
+
+	pla
+	sta	DRAW_PAGE
+
+	lda	#1
+	sta	INITIAL_SOUND
+
+	rts
+
+
+
 	;====================================
 	;====================================
 	; Mars action (enter pressed on map)
@@ -545,6 +557,9 @@ transport_right:
 	lda	#3
 	sta	MARS_TILEY
 
+	ldy	#SFX_TELEPORTSND
+	jsr	play_sfx
+
 	jsr	recenter_map	; fallthrough?
 
 	jsr	copy_tilemap_subset
@@ -564,6 +579,9 @@ transport_left:
 	sta	MARS_TILEX
 	lda	#4
 	sta	MARS_TILEY
+
+	ldy	#SFX_TELEPORTSND
+	jsr	play_sfx
 
 	jsr	recenter_map	; fallthrough?
 
@@ -585,6 +603,9 @@ transport_secret:
 	sta	MARS_TILEX
 	lda	#24
 	sta	MARS_TILEY
+
+	ldy	#SFX_TELEPORTSND
+	jsr	play_sfx
 
 	jsr	recenter_map	; fallthrough?
 

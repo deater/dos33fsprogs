@@ -203,13 +203,17 @@ init_vars:
 	;============================
 	; set up initial location
 
-	lda	#18
+	lda	#10
+	sta	MARS_TILEX
+	lda	#34
+	sta	MARS_TILEY
+
+	lda	#0
 	sta	MARS_X
-	lda	#11
 	sta	MARS_Y
 
 	lda	#LOAD_MARS
-	sta	WHICH_LOAD		; start at first level
+	sta	WHICH_LOAD		; assume new game (mars map)
 
 	rts
 
