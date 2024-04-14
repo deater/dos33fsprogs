@@ -1,6 +1,7 @@
 SFX_KEENSLEFT = 0
 SFX_WLDENTRSND = 1
 SFX_GAMEOVERSND = 2
+SFX_TELEPORTSND = 3
 
 	;==========================
 	; plays soundfx
@@ -47,10 +48,10 @@ play_done:
 
 
 sounds_low:
-	.byte <keensleft,  <WLDENTERSND, <GAMEOVERSND
+	.byte <keensleft,  <WLDENTERSND, <GAMEOVERSND, <TELEPORTSND
 
 sounds_high:
-	.byte >keensleft,  >WLDENTERSND, >GAMEOVERSND
+	.byte >keensleft,  >WLDENTERSND, >GAMEOVERSND, >TELEPORTSND
 
 
 WLDENTERSND:
@@ -252,4 +253,187 @@ GAMEOVERSND:
 .byte 159,8	; 154.2
 .byte 0,11	; 0.0
 .byte 133,10	; 184.1
+.byte 255,255
+TELEPORTSND:
+.byte 165,1     ; 148.4
+.byte 82,1      ; 296.8
+.byte 159,1     ; 154.2
+.byte 28,1      ; 864.6
+.byte 163,1     ; 150.7
+.byte 166,1     ; 147.3
+.byte 40,2      ; 602.6
+.byte 186,1     ; 131.7
+.byte 185,1     ; 132.6
+.byte 0,1       ; 0.0
+.byte 30,1      ; 795.5
+.byte 86,1      ; 284.1
+.byte 191,1     ; 128.3
+.byte 66,1      ; 368.3
+.byte 67,1      ; 361.6
+.byte 88,1      ; 276.2
+.byte 0,1       ; 0.0
+.byte 88,1      ; 276.2
+.byte 0,1       ; 0.0
+.byte 189,1     ; 130.0
+.byte 89,2      ; 272.4
+.byte 0,1       ; 0.0
+.byte 89,1      ; 272.4
+.byte 22,1      ; 1104.8
+.byte 89,1      ; 272.4
+.byte 189,1     ; 130.0
+.byte 27,1      ; 903.9
+.byte 0,1       ; 0.0
+.byte 83,1      ; 292.4
+.byte 89,1      ; 272.4
+.byte 91,1      ; 268.7
+.byte 71,1      ; 342.9
+.byte 188,1     ; 130.8
+.byte 91,1      ; 268.7
+.byte 0,1       ; 0.0
+.byte 92,1      ; 265.2
+.byte 83,1      ; 292.4
+.byte 194,1     ; 126.7
+.byte 22,1      ; 1104.8
+.byte 0,1       ; 0.0
+.byte 83,1      ; 292.4
+.byte 59,1      ; 414.3
+.byte 92,1      ; 265.2
+.byte 60,1      ; 405.8
+.byte 0,1       ; 0.0
+.byte 51,1      ; 473.5
+.byte 89,2      ; 272.4
+.byte 0,1       ; 0.0
+.byte 89,1      ; 272.4
+.byte 38,1      ; 641.5
+.byte 0,3       ; 0.0
+.byte 89,1      ; 272.4
+.byte 188,1     ; 130.8
+.byte 89,1      ; 272.4
+.byte 186,1     ; 131.7
+.byte 190,1     ; 129.1
+.byte 186,1     ; 131.7
+.byte 0,1       ; 0.0
+.byte 185,1     ; 132.6
+.byte 83,1      ; 292.4
+.byte 89,1      ; 272.4
+.byte 0,1       ; 0.0
+.byte 83,1      ; 292.4
+.byte 89,2      ; 272.4
+.byte 188,1     ; 130.8
+.byte 0,1       ; 0.0
+.byte 71,1      ; 342.9
+.byte 188,1     ; 130.8
+.byte 81,1      ; 301.3
+.byte 189,2     ; 130.0
+.byte 92,1      ; 265.2
+.byte 89,1      ; 272.4
+.byte 86,1      ; 284.1
+.byte 91,1      ; 268.7
+.byte 89,2      ; 272.4
+.byte 86,1      ; 284.1
+.byte 0,2       ; 0.0
+.byte 72,1      ; 337.1
+.byte 91,1      ; 268.7
+.byte 92,1      ; 265.2
+.byte 0,1       ; 0.0
+.byte 94,1      ; 258.3
+.byte 188,1     ; 130.8
+.byte 194,1     ; 126.7
+.byte 87,2      ; 280.1
+.byte 0,1       ; 0.0
+.byte 87,1      ; 280.1
+.byte 188,1     ; 130.8
+.byte 88,1      ; 276.2
+.byte 0,1       ; 0.0
+.byte 88,1      ; 276.2
+.byte 188,1     ; 130.8
+.byte 36,1      ; 662.9
+.byte 197,2     ; 124.3
+.byte 127,1     ; 193.1
+.byte 0,1       ; 0.0
+.byte 88,1      ; 276.2
+.byte 0,2       ; 0.0
+.byte 66,1      ; 368.3
+.byte 0,2       ; 0.0
+.byte 57,1      ; 423.1
+.byte 78,1      ; 310.7
+.byte 88,2      ; 276.2
+.byte 189,1     ; 130.0
+.byte 43,1      ; 568.2
+.byte 166,1     ; 147.3
+.byte 0,1       ; 0.0
+.byte 188,1     ; 130.8
+.byte 88,2      ; 276.2
+.byte 194,1     ; 126.7
+.byte 186,1     ; 131.7
+.byte 0,1       ; 0.0
+.byte 52,1      ; 462.5
+.byte 89,1      ; 272.4
+.byte 186,1     ; 131.7
+.byte 91,2      ; 268.7
+.byte 73,1      ; 331.4
+.byte 91,3      ; 268.7
+.byte 0,1       ; 0.0
+.byte 91,1      ; 268.7
+.byte 0,3       ; 0.0
+.byte 33,1      ; 736.5
+.byte 0,2       ; 0.0
+.byte 59,1      ; 414.3
+.byte 78,1      ; 310.7
+.byte 0,1       ; 0.0
+.byte 49,1      ; 497.2
+.byte 48,1      ; 509.9
+.byte 46,1      ; 523.3
+.byte 12,3      ; 1988.6
+.byte 0,3       ; 0.0
+.byte 38,1      ; 641.5
+.byte 36,1      ; 662.9
+.byte 191,2     ; 128.3
+.byte 113,1     ; 216.2
+.byte 17,1      ; 1420.5
+.byte 191,1     ; 128.3
+.byte 0,1       ; 0.0
+.byte 96,1      ; 255.0
+.byte 27,1      ; 903.9
+.byte 25,2      ; 947.0
+.byte 13,1      ; 1807.8
+.byte 0,1       ; 0.0
+.byte 12,1      ; 1988.6
+.byte 9,1       ; 2485.8
+.byte 0,1       ; 0.0
+.byte 20,1      ; 1169.8
+.byte 123,1     ; 198.9
+.byte 19,1      ; 1242.9
+.byte 192,1     ; 127.5
+.byte 0,1       ; 0.0
+.byte 18,1      ; 1325.8
+.byte 138,1     ; 177.6
+.byte 17,1      ; 1420.5
+.byte 11,1      ; 2209.6
+.byte 0,2       ; 0.0
+.byte 67,1      ; 361.6
+.byte 153,1     ; 160.4
+.byte 0,1       ; 0.0
+.byte 11,1      ; 2209.6
+.byte 0,2       ; 0.0
+.byte 9,2       ; 2485.8
+.byte 8,1       ; 2840.9
+.byte 0,2       ; 0.0
+.byte 7,1       ; 3314.4
+.byte 0,2       ; 0.0
+.byte 195,2     ; 125.9
+.byte 0,3       ; 0.0
+.byte 2,1       ; 9943.2
+.byte 0,1       ; 0.0
+.byte 169,1     ; 145.2
+.byte 0,4       ; 0.0
+.byte 4,1       ; 4971.6
+.byte 186,1     ; 131.7
+.byte 190,2     ; 129.1
+.byte 0,1       ; 0.0
+.byte 50,1      ; 485.0
+.byte 190,1     ; 129.1
+.byte 0,2       ; 0.0
+.byte 101,1     ; 242.5
+.byte 109,1     ; 223.4
 .byte 255,255
