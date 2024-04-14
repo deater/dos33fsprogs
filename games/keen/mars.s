@@ -357,15 +357,6 @@ done_parts:
 
 	bit	FULLGR
 
-;	lda	#<mars_zx02
-;	sta	ZX0_src
-;	lda	#>mars_zx02
-;	sta	ZX0_src+1
-
-;	lda	#$c    ; load to page $c00
-
-;	jsr	full_decomp	; tail call
-
 	rts
 
 
@@ -498,28 +489,6 @@ check_location_match:
 	rts	; jump
 
 
-;	lda	MARS_X
-;	cmp	#15
-;	bcc	do_nothing	; blt
-;	cmp	#20
-;	bcc	maybe_ship
-;	cmp	#35
-;	bcs	maybe_exit
-;do_nothing:
-;	; TODO: make sound?
-;	rts
-;maybe_ship:
-;	lda	MARS_Y
-;	cmp	#16
-;	bcc	do_nothing
-;	cmp	#24
-;	bcs	do_nothing
-;	jmp	do_parts	; tail call
-;maybe_exit:
-;	inc	LEVEL_OVER
-;	rts
-
-
 
 	;=====================================
 	;=====================================
@@ -535,6 +504,9 @@ dummy_action:
 	;=====================================
 	;=====================================
 	; level number is in X
+
+	; FIXME: make sure level is not completed
+
 enter_level:
 
 	stx	CURRENT_LEVEL
@@ -550,17 +522,17 @@ enter_level:
 	;=====================================
 transport_right:
 
-	; TODO: play noise
-
 	lda	#34
 	sta	MARS_TILEX
 	lda	#3
+
+transport_common:
 	sta	MARS_TILEY
 
 	ldy	#SFX_TELEPORTSND
 	jsr	play_sfx
 
-	jsr	recenter_map	; fallthrough?
+	jsr	recenter_map
 
 	jsr	copy_tilemap_subset
 
@@ -573,21 +545,11 @@ transport_right:
 	;=====================================
 transport_left:
 
-	; TODO: play noise
-
 	lda	#26
 	sta	MARS_TILEX
 	lda	#4
-	sta	MARS_TILEY
 
-	ldy	#SFX_TELEPORTSND
-	jsr	play_sfx
-
-	jsr	recenter_map	; fallthrough?
-
-	jsr	copy_tilemap_subset
-
-	rts
+	bne	transport_common	; bra
 
 	;=====================================
 	;=====================================
@@ -597,23 +559,11 @@ transport_left:
 transport_secret:
 	; TODO: verify we are transporting back to the right place
 
-	; TODO: play noise
-
 	lda	#44
 	sta	MARS_TILEX
 	lda	#24
-	sta	MARS_TILEY
 
-	ldy	#SFX_TELEPORTSND
-	jsr	play_sfx
-
-	jsr	recenter_map	; fallthrough?
-
-	jsr	copy_tilemap_subset
-
-	rts
-
-
+	bne	transport_common	; bra
 
 
 
@@ -702,8 +652,6 @@ location_actions_high:
 
 	; level graphics
 
-mars_zx02:
-	.incbin	"maps/mars_map.gr.zx02"
 parts_zx02:
 	.incbin	"graphics/parts.gr.zx02"
 
@@ -712,7 +660,7 @@ parts_zx02:
 	.include	"gr_fast_clear.s"
 	.include	"gr_copy.s"
 	.include	"gr_pageflip.s"
-;	.include	"gr_putsprite_crop.s"
+	.include	"gr_putsprite_crop.s"
 	.include	"zx02_optim.s"
 	.include	"gr_fade.s"
 
@@ -727,10 +675,9 @@ parts_zx02:
 
 	.include	"mars_sfx.s"
 	.include	"longer_sound.s"
-	.include	"gr_putsprite_crop.s"
 
 mars_data_zx02:
-	.incbin	"maps/mars_new.zx02"
+	.incbin	"maps/mars_map.zx02"
 
 	; dummy
 enemy_data_out:
