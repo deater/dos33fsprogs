@@ -81,30 +81,11 @@ not_game_over:
 	;====================================
 	; copy in tilemap subset
 	;====================================
-	; FIXME: start values
-	;	center around MARS_TILEX, MARS_TILEY
 
-	lda	#0		; default at 0,0
-	sta	TILEMAP_X
-	sta	TILEMAP_Y
 
-	lda	MARS_TILEX
-	cmp	#10
-	bcc	mars_tilex_fine
-	sec
-	sbc	#10
-	sta	TILEMAP_X
+	; first center map around current location
 
-mars_tilex_fine:
-
-	lda	MARS_TILEY
-	cmp	#6
-	bcc	mars_tiley_fine
-	sec
-	sbc	#6
-	sta	TILEMAP_Y
-
-mars_tiley_fine:
+	jsr	recenter_map
 
 	jsr	copy_tilemap_subset
 
@@ -441,7 +422,7 @@ NUM_LOCATIONS = 20
 
 do_action:
 
-	ldx	#NUM_LOCATIONS
+	ldx	#(NUM_LOCATIONS-1)
 
 do_action_loop:
 
@@ -550,6 +531,101 @@ enter_level:
 
 	rts
 
+	;=====================================
+	;=====================================
+	; transport_to_right
+	;=====================================
+	;=====================================
+transport_right:
+
+	; TODO: play noise
+
+	lda	#34
+	sta	MARS_TILEX
+	lda	#3
+	sta	MARS_TILEY
+
+	jsr	recenter_map	; fallthrough?
+
+	jsr	copy_tilemap_subset
+
+	rts
+
+	;=====================================
+	;=====================================
+	; transport_to_left
+	;=====================================
+	;=====================================
+transport_left:
+
+	; TODO: play noise
+
+	lda	#26
+	sta	MARS_TILEX
+	lda	#4
+	sta	MARS_TILEY
+
+	jsr	recenter_map	; fallthrough?
+
+	jsr	copy_tilemap_subset
+
+	rts
+
+	;=====================================
+	;=====================================
+	; transport_to_secret
+	;=====================================
+	;=====================================
+transport_secret:
+	; TODO: verify we are transporting back to the right place
+
+	; TODO: play noise
+
+	lda	#44
+	sta	MARS_TILEX
+	lda	#24
+	sta	MARS_TILEY
+
+	jsr	recenter_map	; fallthrough?
+
+	jsr	copy_tilemap_subset
+
+	rts
+
+
+
+
+
+	;=====================================
+	; recenter map around current location
+	;=====================================
+	;	center around MARS_TILEX, MARS_TILEY
+
+recenter_map:
+	lda	#0		; default at 0,0
+	sta	TILEMAP_X
+	sta	TILEMAP_Y
+
+	lda	MARS_TILEX
+	cmp	#10
+	bcc	mars_tilex_fine
+	sec
+	sbc	#10
+	sta	TILEMAP_X
+
+mars_tilex_fine:
+
+	lda	MARS_TILEY
+	cmp	#6
+	bcc	mars_tiley_fine
+	sec
+	sbc	#6
+	sta	TILEMAP_Y
+
+mars_tiley_fine:
+
+	rts
+
 
 location_x:
 	.byte 19,22, 9,22,13,16,25,38
@@ -575,8 +651,8 @@ location_actions_low:
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(do_parts-1),<(dummy_action-1)		; ship, l transport
-	.byte <(dummy_action-1),<(dummy_action-1)	; r trans, secret
+	.byte <(do_parts-1),<(transport_right-1)	; ship, l transport
+	.byte <(transport_left-1),<(transport_secret-1)	; r trans, secret
 
 location_actions_high:
 	.byte >(enter_level-1),>(dummy_action-1)	; level1, level2
@@ -587,8 +663,8 @@ location_actions_high:
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(do_parts-1),>(dummy_action-1)		; ship, l transport
-	.byte >(dummy_action-1),>(dummy_action-1)	; r trans, secret
+	.byte >(do_parts-1),>(transport_right-1)	; ship, l transport
+	.byte >(transport_left-1),>(transport_secret-1)	; r trans, secret
 
 
 
