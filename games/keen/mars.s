@@ -15,8 +15,7 @@ TILE_COLS = 20		; define this elsewhere?
 mars_start:
 	;===================
 	; init screen
-;	jsr	TEXT
-;	jsr	HOME
+
 	bit	KEYRESET
 
 	bit	SET_GR
@@ -24,14 +23,14 @@ mars_start:
 	bit	LORES
 	bit	FULLGR
 
-	lda	#0
+	lda	#0			; clear screens
 	sta	clear_all_color+1
-	jsr	clear_all	; avoid grey stripes at load
+	jsr	clear_all
 
-	lda	KEENS
+	lda	KEENS			; check if out of lives
 	bpl	plenty_of_keens
 
-	jmp	return_to_title
+	jmp	return_to_title		; if none, game over
 
 plenty_of_keens:
 
@@ -40,7 +39,6 @@ plenty_of_keens:
 	;=====================
 
 	lda	#0
-	sta	ANIMATE_FRAME
 	sta	FRAMEL
 	sta	FRAMEH
 
@@ -59,9 +57,9 @@ not_game_over:
 
 	; TODO: set this in title, don't over-write
 
-	lda	#1
+	lda	#10
 	sta	MARS_TILEX
-	lda	#6
+	lda	#34
 	sta	MARS_TILEY
 
 	lda	#0
@@ -86,10 +84,27 @@ not_game_over:
 	; FIXME: start values
 	;	center around MARS_TILEX, MARS_TILEY
 
-	lda	MARS_TILEX
+	lda	#0		; default at 0,0
 	sta	TILEMAP_X
-	lda	MARS_TILEY
 	sta	TILEMAP_Y
+
+	lda	MARS_TILEX
+	cmp	#10
+	bcc	mars_tilex_fine
+	sec
+	sbc	#10
+	sta	TILEMAP_X
+
+mars_tilex_fine:
+
+	lda	MARS_TILEY
+	cmp	#6
+	bcc	mars_tiley_fine
+	sec
+	sbc	#6
+	sta	TILEMAP_Y
+
+mars_tiley_fine:
 
 	jsr	copy_tilemap_subset
 
