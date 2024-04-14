@@ -5,7 +5,9 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG2GR = ../../../utils/gr-utils/png2gr
 
 
-all:	level1_map.zx02 png2map mars_map.gr.zx02 mars_new.zx02
+all:	png2map \
+	level1_map.zx02 level2_map.zx02 \
+	mars_map.gr.zx02 mars_new.zx02
 
 ###
 
@@ -14,6 +16,15 @@ level1_map.zx02:	level1_map.inc
 
 level1_map.inc:	level1_map.png png2map
 	./png2map level1_map.png level1_map.inc
+
+###
+
+level2_map.zx02:	level2_map.inc
+	$(ZX02) level2_map.inc level2_map.zx02
+
+level2_map.inc:	level2_map.png png2map
+	./png2map level2_map.png level2_map.inc
+
 
 
 ###

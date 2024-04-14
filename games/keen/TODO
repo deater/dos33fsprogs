@@ -1,7 +1,25 @@
+title
+~~~~~
+	+ menu
+	+ load/save game
+	+ credits?
+
+mars map
+~~~~~~~~
+	+ enforce collision detection
+	+ proper smooth movement
+	+ transporters
+	+ start at starting point
+	+ show keens left at start, also when press ??
+	+ mark completed levels
+
+level1
+~~~~~~
+	+ fix so works again
+
 sound effects
 ~~~~~~~~~~~~~
-	+ shorten item pickup noise
-	+ game over noise if you quit too?
+	+ effect for transporter
 
 movement:
 ~~~~~~~~~
@@ -9,28 +27,27 @@ movement:
 
 enemies
 ~~~~~~~
-	+ allow stepping on head
 	+ disable when not on screen?
+	+ enemies besides yorps
+
+shooting
+~~~~~~~~
+	+ collision with enemies
+	+ shoot enemies
+
+pogo
+~~~~
+	+ implement
 
 
 lo-res version
 ~~~~~~~~~~~~~~
++ improve keyboard handling on Apple IIe
 + walk behind some sprites (columns on level1)
-+ fix keybindings/help menu
-+ better start/stop level music
-+ animate death
++ better animations
 + game over screen if out of lives
 
 hi-res version
 ~~~~~~~~~~~~~~
 +
-
-mars
-~~~~
-+ convert to full tilemap
-+ mark completed levels
-
-title
-~~~~~
-+ actual menu?
 
