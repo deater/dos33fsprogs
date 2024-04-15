@@ -14,13 +14,13 @@ mars map
 	+ mark completed levels
 		at start, over-write finished levels with blue tiles
 		check completed levels when action and not let you re-enter
-level1
-~~~~~~
-	+ fix so works again
+level engine
+~~~~~~~~~~~~~
+	+ make generic
 
 sound effects
 ~~~~~~~~~~~~~
-	+ effect for transporter
+
 
 movement:
 ~~~~~~~~~
@@ -33,7 +33,7 @@ enemies
 
 shooting
 ~~~~~~~~
-	+ collision with enemies
+	+ FIX collision with enemies
 	+ shoot enemies
 
 pogo

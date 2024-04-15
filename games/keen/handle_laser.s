@@ -22,10 +22,20 @@ laser_check_tiles:
 
 	clc
 	lda	LASER_TILEY
-        adc	#>big_tilemap
-        sta	INH
-	lda	LASER_TILEX
+	tay
+
+	lda	tilemap_lookup_high,Y
+	sta	INH
+	lda	tilemap_lookup_low,Y
+	clc
+	adc	LASTER_TILEX
 	sta	INL
+
+
+;        adc	#>big_tilemap
+ ;       sta	INH
+;	lda	LASER_TILEX
+;	sta	INL
 
 	ldy	#0
 	lda	(INL),Y
@@ -105,9 +115,12 @@ laser_sideways_sprite:
 	; laser enemies
 	;=======================
 	; see if laser hits any enemies
+
+	; FIXME: this is broken
+
 laser_enemies:
 
-	ldy	#0
+	ldy	#0				; which enemy
 laser_enemies_loop:
 
 	; see if out
@@ -118,7 +131,7 @@ laser_enemies_loop:
 	; get local tilemap co-ord
 	sec
 	lda	enemy_data_tilex,Y
-	sbc	TILEMAP_X
+	sbc	TILEMAP_X			; compare enemy size?
 
 	sta	TILE_TEMP
 
@@ -151,13 +164,10 @@ hit_something:
 	jmp	exit_laser_enemy
 
 done_laser_enemy:
-
-	tya
-	clc
-	adc	#8
-	tay
-	cpy	#(NUM_ENEMIES*8)
+	iny
+	cpy	#NUM_ENEMIES
 	bne	laser_enemies_loop
+
 exit_laser_enemy:
 	rts
 

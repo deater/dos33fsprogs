@@ -1,5 +1,3 @@
-NUM_ENEMIES = 8
-
 
 	;=======================
 	; move enemies

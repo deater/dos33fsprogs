@@ -7,11 +7,10 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
+	.include "level2_data.inc"
 
-MAX_TILE_X = 96		; 116 - 20
-MAX_TILE_Y = 5		; (34 - 24)/2 (maybe?)
 
-keen_start:
+level2_start:
 	;===================
 	; init screen
 
@@ -49,14 +48,11 @@ keen_start:
 	lda	#4
 	sta	DRAW_PAGE
 
-	; Level 1
-	; start at 2,24 (remember tiles 2 bytes high even though 4 pixels)
-	; 	but with reference to starting tilemap (0,5) should be
-	;		2,8?
+	; set starting location
 
-	lda	#1
+	lda	#START_KEEN_TILEX
 	sta	KEEN_TILEX
-	lda	#13
+	lda	#START_KEEN_TILEY
 	sta	KEEN_TILEY
 
 	lda	#0			; offset from tile location
@@ -84,9 +80,9 @@ keen_start:
 	; we copy in full screen, 40x48 = 20x12 tiles
 	;	we start out assuming position is 0,5
 
-	lda	#0
+	lda	#START_TILEMAP_X
 	sta	TILEMAP_X
-	lda	#5
+	lda	#START_TILEMAP_Y
 	sta	TILEMAP_Y
 
 	jsr	copy_tilemap_subset
@@ -232,10 +228,7 @@ skip_end_sound:
 
 level1_gameover:
 
-	; mars plays this
-
-;	ldy	#SFX_GAMEOVERSND
-;	jsr	play_sfx
+	; mars plays the sound
 
 	lda	#GAME_OVER
 	sta	LEVEL_OVER
@@ -251,10 +244,6 @@ level1_levelover:
 	;==========================
 	; includes
 	;==========================
-
-	; level graphics
-;level1_bg_zx02:
-;	.incbin	"graphics/level1_bg.gr.zx02"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"

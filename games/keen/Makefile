@@ -69,7 +69,7 @@ level1.o:	level1.s zp.inc hardware.inc \
 	maps/level1_map.zx02 \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \
-	level1_sfx.s longer_sound.s \
+	level1_sfx.s longer_sound.s level1_data.inc \
 	keyboard.s handle_laser.s
 	ca65 -o level1.o level1.s -l level1.lst
 
@@ -85,7 +85,7 @@ level2.o:	level2.s zp.inc hardware.inc \
 	maps/level2_map.zx02 \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \
-	level1_sfx.s longer_sound.s \
+	level1_sfx.s longer_sound.s level2_data.inc \
 	keyboard.s handle_laser.s
 	ca65 -o level2.o level2.s -l level2.lst
 
