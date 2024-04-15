@@ -232,10 +232,7 @@ skip_end_sound:
 
 level1_gameover:
 
-	; mars plays this
-
-;	ldy	#SFX_GAMEOVERSND
-;	jsr	play_sfx
+	; mars plays the sound
 
 	lda	#GAME_OVER
 	sta	LEVEL_OVER
@@ -251,10 +248,6 @@ level1_levelover:
 	;==========================
 	; includes
 	;==========================
-
-	; level graphics
-;level1_bg_zx02:
-;	.incbin	"graphics/level1_bg.gr.zx02"
 
 	.include	"text_print.s"
 	.include	"gr_offsets.s"

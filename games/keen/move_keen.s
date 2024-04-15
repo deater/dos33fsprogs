@@ -180,12 +180,21 @@ keen_check_head:
 	sec
 	lda	KEEN_TILEY
 	sbc	#1
-	adc	#>big_tilemap
+
+	tay
+	lda	tilemap_lookup_high,Y
 	sta	INH
-	lda	#0
+	lda	tilemap_lookup_low,Y
 	sta	INL
+
+;	adc	#>big_tilemap
+;	sta	INH
+;	lda	#0
+;	sta	INL
+
 	ldy	KEEN_TILEX
 
+	lda	KEEN_X
 	bne	collide_head_r
 
 collide_head_l:
@@ -223,11 +232,19 @@ collide_left_right:
 
 	clc
 	lda	KEEN_TILEY
-	adc	#1
-	adc	#>big_tilemap
+	adc	#1				; look at feet
+
+	tay
+	lda	tilemap_lookup_high,Y
 	sta	INH
-	lda	KEEN_TILEX
+	lda	tilemap_lookup_low,Y
+	ora	KEEN_TILEX
 	sta	INL
+
+;	adc	#>big_tilemap
+;	sta	INH
+;	lda	KEEN_TILEX
+;	sta	INL
 
 	lda	KEEN_DIRECTION
 	beq	done_keen_collide	; can this happen?
@@ -365,9 +382,14 @@ check_falling:
 	lda	KEEN_TILEY
 	adc	#2				; point below feet
 
-	adc	#>big_tilemap
+	tax
+	lda	tilemap_lookup_high,X
+
+;	adc	#>big_tilemap
 	sta	INH
-	lda	#0
+
+	lda	tilemap_lookup_low,X
+;	lda	#0
 	sta	INL
 
 	ldy	KEEN_TILEX

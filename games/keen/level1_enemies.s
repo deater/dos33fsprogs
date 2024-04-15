@@ -35,8 +35,13 @@ enemy_is_out:
 	lda	enemy_data_tiley,X
 	adc	#2				; point below feet
 
-	adc	#>big_tilemap
+	tay
+	lda	tilemap_lookup_high,Y
+;	adc	#>big_tilemap
 	sta	load_foot1_smc+2
+
+	lda	tilemap_lookup_low,Y
+	sta	load_foot1_smc+1
 
 	ldy	enemy_data_tilex,X
 load_foot1_smc:
@@ -128,9 +133,14 @@ enemy_facing_right:
 	clc
 	lda	enemy_data_tiley,X
 	adc	#1				; point to feet
+	tay
 
-	adc	#>big_tilemap
+;	adc	#>big_tilemap
+	lda	tilemap_lookup_high,Y
 	sta	load_right_foot_smc+2
+	lda	tilemap_lookup_low,Y
+	sta	load_right_foot_smc+1
+
 
 	ldy	enemy_data_tilex,X
 	iny	; to the right
@@ -182,8 +192,13 @@ enemy_facing_left:
 	lda	enemy_data_tiley,X
 	adc	#1				; point to feet
 
-	adc	#>big_tilemap
+	tay
+
+;	adc	#>big_tilemap
+	lda	tilemap_lookup_high,Y
 	sta	load_left_foot_smc+2
+	lda	tilemap_lookup_low,Y
+	sta	load_left_foot_smc+1
 
 	ldy	enemy_data_tilex,X
 	dey					; look to the left

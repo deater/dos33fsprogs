@@ -13,12 +13,19 @@ check_items:
 	; if X==0, check TILEX and TILEX+1
 	; if X==1, check TILEX+1
 
-	clc
-	lda	KEEN_TILEY
-	adc	#>big_tilemap
+	ldx	KEEN_TILEY
+
+	lda	tilemap_lookup_high,X
 	sta	INH
-	lda	KEEN_TILEX
+	lda	tilemap_lookup_low,X
+	ora	KEEN_TILEX
 	sta	INL
+
+;	clc
+;	adc	#>big_tilemap
+;	sta	INH
+;	lda	KEEN_TILEX
+;	sta	INL
 
 	lda	KEEN_X
 	bne	check_head_tilex1
@@ -50,7 +57,26 @@ check_head_tilex1:
 	;========================
 	; check feet
 check_feet:
-	inc	INH			; point to next row
+;	inc	INH			; point to next row
+
+	lda	INL			; blurgh much longer
+	clc
+	adc	#$80
+	sta	INL
+	lda	#$0
+	adc	INH
+	sta	INH
+
+
+; won't work, maybe not faster
+;	lda	INL
+;	eor	#$80
+;	sta	INL
+;	asl
+;	adc	INH
+;	sta	INH
+
+
 	dec	INL			; restore tile pointer
 
 	lda	KEEN_X
