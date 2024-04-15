@@ -302,5 +302,7 @@ level1_levelover:
 
 	.include	"random16.s"
 
+	.include	"tilemap_lookup.s"
+
 level1_data_zx02:
 	.incbin		"maps/level1_map.zx02"

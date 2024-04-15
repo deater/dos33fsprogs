@@ -69,7 +69,7 @@ level1.o:	level1.s zp.inc hardware.inc \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	maps/level1_map.lzsa \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
-	draw_tilemap.s \
+	draw_tilemap.s tilemap_lookup.s \
 	level1_sfx.s longer_sound.s \
 	keyboard.s handle_laser.s
 	ca65 -o level1.o level1.s -l level1.lst
