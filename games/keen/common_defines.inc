@@ -6,5 +6,5 @@ LOAD_KEEN2      =       3
 
 tiles		= $9000
 big_tilemap	= $9400
-tilemap		= $BC00
+small_tilemap	= $BC00
 

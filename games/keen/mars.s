@@ -676,6 +676,8 @@ parts_zx02:
 	.include	"mars_sfx.s"
 	.include	"longer_sound.s"
 
+	.include	"tilemap_lookup.s"
+
 mars_data_zx02:
 	.incbin	"maps/mars_map.zx02"
 

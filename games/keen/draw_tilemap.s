@@ -31,7 +31,7 @@ tilemap_outer_loop:
 
 tilemap_loop:
 	ldx	TILEMAP_OFFSET		; get actual tile number
-	lda	tilemap,X		; from tilemap
+	lda	small_tilemap,X		; from tilemap
 
 	asl			; *4	; point to tile to draw (4 bytes each)
 	asl
@@ -144,7 +144,7 @@ skip_odd_row:
 	sta	cptl1_smc+2		; set proper row in big tilemap
 
 
-	lda	#<tilemap
+	lda	#<small_tilemap
 	sta	cptl2_smc+1		; reset small tilemap to row0
 
 cp_tilemap_outer_loop:

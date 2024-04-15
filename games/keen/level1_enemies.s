@@ -41,7 +41,7 @@ enemy_is_out:
 	ldy	enemy_data_tilex,X
 load_foot1_smc:
 
-	lda	tilemap,Y
+	lda	small_tilemap,Y
 	cmp	#HARDTOP_TILES
 	bcs	no_enemy_fall			; if hardtop tile, don't fall
 
@@ -135,7 +135,7 @@ enemy_facing_right:
 	ldy	enemy_data_tilex,X
 	iny	; to the right
 load_right_foot_smc:
-	lda	tilemap,Y
+	lda	small_tilemap,Y
 	cmp	#ALLHARD_TILES
 	bcc	no_right_barrier		; skip if no right barrier
 
@@ -188,7 +188,7 @@ enemy_facing_left:
 	ldy	enemy_data_tilex,X
 	dey					; look to the left
 load_left_foot_smc:
-	lda	tilemap,Y
+	lda	small_tilemap,Y
 	cmp	#ALLHARD_TILES
 	bcc	no_left_barrier			; skip if no right barrier
 

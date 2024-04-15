@@ -111,6 +111,26 @@ check_left:
 
 left_pressed:
 
+	; check if allowed to move left
+
+	ldx	MARS_TILEY
+	dex				; look one up
+
+	lda	tilemap_lookup_high,X
+	sta	INH
+	lda	tilemap_lookup_low,X
+	sta	INL
+
+	ldy	MARS_TILEX
+	dey
+
+	lda	(INL),Y
+
+	cmp	#32
+	bcs	done_left_pressed
+
+
+
 	lda	TILEMAP_X
 	beq	keen_walk_left
 
@@ -151,6 +171,45 @@ check_right:
 	bne	check_up
 
 right_pressed:
+
+	; check if allowed to move right
+
+	ldx	MARS_TILEY
+	dex				; look one up
+
+	lda	tilemap_lookup_high,X
+	sta	INH
+	lda	tilemap_lookup_low,X
+	sta	INL
+
+	ldy	MARS_TILEX
+	iny
+
+	lda	(INL),Y
+
+	cmp	#32
+	bcs	done_right_pressed
+
+
+	lda	MARS_TILEY
+	sta	INH
+	lda	#$0
+	lsr	INH
+	ror
+	sta	INL
+
+	lda	INH
+	clc
+	adc	#>big_tilemap
+	sta	INH
+	ldy	MARS_TILEX
+	iny
+
+	lda	(INL),Y
+
+	cmp	#32
+	bcs	done_right_pressed
+
 
 
 move_right:
@@ -202,6 +261,26 @@ check_up:
 	bne	check_down
 
 up_pressed:
+
+	; check if allowed to move up
+
+	ldx	MARS_TILEY
+	dex				; look one up
+
+	lda	tilemap_lookup_high,X
+	sta	INH
+	lda	tilemap_lookup_low,X
+	sta	INL
+
+	ldy	MARS_TILEX
+
+	lda	(INL),Y
+
+	cmp	#32
+	bcs	done_up_pressed
+
+
+
 	lda	MARS_TILEY
 	cmp	#0		; not needed
 	beq	move_keen_up
@@ -250,6 +329,24 @@ check_down:
 	cmp	#$0A
 	bne	check_space
 down_pressed:
+
+	; check if allowed to move down
+
+	ldx	MARS_TILEY
+	inx				; look one down
+
+	lda	tilemap_lookup_high,X
+	sta	INH
+	lda	tilemap_lookup_low,X
+	sta	INL
+
+	ldy	MARS_TILEX
+
+	lda	(INL),Y
+
+	cmp	#32
+	bcs	done_down_pressed
+
 
 	sec
 	lda	MARS_TILEY
@@ -323,5 +420,4 @@ done_keypress:
 no_keypress:
 	bit	KEYRESET
 	rts
-
 

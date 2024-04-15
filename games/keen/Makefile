@@ -54,7 +54,7 @@ mars.o:	mars.s zp.inc hardware.inc game_over.s \
 	gr_fade.s \
 	mars_keyboard.s draw_tilemap.s \
 	mars_sfx.s longer_sound.s \
-	text_help.s \
+	text_help.s tilemap_lookup.s \
 	maps/mars_map.zx02 graphics/parts.gr.zx02
 	ca65 -o mars.o mars.s -l mars.lst
 

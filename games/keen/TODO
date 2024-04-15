@@ -6,6 +6,7 @@ title
 
 mars map
 ~~~~~~~~
+	+ make tiles for first level and green level impassable
 	+ animate stars
 	+ enforce collision detection
 	+ proper smooth movement
