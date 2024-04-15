@@ -28,7 +28,7 @@ laser_check_tiles:
 	sta	INH
 	lda	tilemap_lookup_low,Y
 	clc
-	adc	LASTER_TILEX
+	adc	LASER_TILEX
 	sta	INL
 
 

@@ -2,9 +2,6 @@ KEEN_SPEED	=	$80
 
 YDEFAULT	=	20
 
-HARDTOP_TILES	=	32	; start at 32
-ALLHARD_TILES	=	40	; start at 40
-
 TILE_COLS	=	20
 
 
@@ -40,11 +37,11 @@ move_keen_early_out:
 	;==============================
 	; Move Keen Right
 	;==============================
-	; if (keen_tilex-tilemap_x<11) || (tilemap_x>96) walk
+	; if (keen_tilex-tilemap_x<11) || (tilemap_x> (maxtile-20) ) walk
 	;	otherwise, scroll
 move_right:
 	lda	TILEMAP_X
-	cmp	#96		; 540-80 = 460/4 = 115-20 = 95
+	cmp	#(MAX_TILE_X-20)
 	bcs	keen_walk_right
 
 	sec
@@ -180,6 +177,7 @@ keen_check_head:
 	sec
 	lda	KEEN_TILEY
 	sbc	#1
+	; bmi	offscreen?
 
 	tay
 	lda	tilemap_lookup_high,Y
@@ -203,6 +201,8 @@ collide_head_l:
 	; if tile# < ALLHARD_TILES then we are fine
 	cmp	#ALLHARD_TILES
 	bcc	collide_left_right		; blt
+
+	; fallthrough to get other
 
 collide_head_r:
 	iny
@@ -230,6 +230,7 @@ collide_left_right:
 	; collide left/right
 	;===================
 
+
 	clc
 	lda	KEEN_TILEY
 	adc	#1				; look at feet
@@ -253,6 +254,12 @@ collide_left_right:
 
 check_right_collide:
 
+	lda	KEEN_TILEY
+	cmp	#(MAX_TILE_X-1)			; stop at right edge of screen
+	beq	keen_stop
+
+
+
 	; if KEEN_X=0, collide +1
 	; if KEEN_X=1, collide +2
 
@@ -268,11 +275,16 @@ right_collide_noextra:
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide		; blt
 
-	lda	#1				;
-	sta	SUPPRESS_WALK
-	jmp	done_keen_collide
+	bcs	keen_stop
+;	lda	#1				;
+;	sta	SUPPRESS_WALK
+;	jmp	done_keen_collide
 
 check_left_collide:
+
+	lda	KEEN_TILEX			; stop at left edge of screen
+	beq	keen_stop
+
 
 	ldy	#0
 	lda	(INL),Y
@@ -282,6 +294,7 @@ check_left_collide:
 	cmp	#ALLHARD_TILES
 	bcc	done_keen_collide	; blt
 
+keen_stop:
 	lda	#1
 	sta	SUPPRESS_WALK
 	jmp	done_keen_collide
@@ -310,16 +323,17 @@ actually_jumping:
 	; check if hit top of screen (shouldn't happen if collision working)
 
 	lda	KEEN_TILEY			;
-	cmp	#1			; if hit top of screen, start falling
-	bcc	start_falling
+	cmp	#0			; if hit top of screen, start falling
+	beq	start_falling
 
-	lda	TILEMAP_Y		; if tilemap==0, scroll keen
+	lda	TILEMAP_Y		; if tilemap==0, move keen
 	cmp	#0			; instead of scrolling screen
 	beq	keen_rising
 
 	sec
-	lda	TILEMAP_Y
-	sbc	KEEN_TILEY
+	lda	KEEN_TILEY
+	sbc	TILEMAP_Y
+
 
 	cmp	#4			; compare to middle of screen
 	bcc	scroll_rising		; blt
@@ -445,7 +459,7 @@ do_full_falling_check:
 
 	; if tilemap_y >= max_tile, keen_fall
 	lda	TILEMAP_Y
-	cmp	#MAX_TILE_Y
+	cmp	#(MAX_TILE_Y-6)
 	bcs	keen_fall	; bge
 
 
