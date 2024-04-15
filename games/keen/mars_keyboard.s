@@ -286,9 +286,8 @@ up_pressed:
 	beq	move_keen_up
 
 	sec
-	lda	TILEMAP_Y
-	sbc	MARS_TILEY
-
+	lda	MARS_TILEY
+	sbc	TILEMAP_Y
 	cmp	#4
 	bcc	scroll_keen_up
 

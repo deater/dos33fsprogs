@@ -365,7 +365,7 @@ done_parts:
 	; snapshot tile map
 	;===============================
 	;===============================
-	;	copy currnet tilemap graphics
+	;	copy current tilemap graphics
 	;	to $c00 for fade-in/fade-out
 
 snapshot_tilemap:
@@ -579,8 +579,9 @@ recenter_map:
 
 	lda	MARS_TILEX
 	cmp	#10
-	bcc	mars_tilex_fine
-	sec
+	bcc	mars_tilex_fine		; if MARS_TILEX < 10, leave tilemap 0
+
+	sec			; otherwise tilemap=mars_tilex-10
 	sbc	#10
 	sta	TILEMAP_X
 
@@ -588,15 +589,15 @@ mars_tilex_fine:
 
 	lda	MARS_TILEY
 	cmp	#6
-	bcc	mars_tiley_fine
-	sec
+	bcc	mars_tiley_fine	; if MARS_TILEY < 6 leave tilemap 0
+
+	sec			; otherwise tilemap_y=mars_tiley-6
 	sbc	#6
 	sta	TILEMAP_Y
 
 mars_tiley_fine:
 
 	rts
-
 
 location_x:
 	.byte 19,22, 9,22,13,16,25,38

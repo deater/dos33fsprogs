@@ -13,7 +13,7 @@ tilemap_lookup_high:
 .byte	(>big_tilemap)+ 7,(>big_tilemap)+ 7 	; 14,15
 .byte	(>big_tilemap)+ 8,(>big_tilemap)+ 8	; 16,17
 .byte	(>big_tilemap)+ 9,(>big_tilemap)+ 9	; 18,19
-.byte	(>big_tilemap)+10,(>big_tilemap)+ 0	; 20,21
+.byte	(>big_tilemap)+10,(>big_tilemap)+10	; 20,21
 .byte	(>big_tilemap)+11,(>big_tilemap)+11	; 22,23
 .byte	(>big_tilemap)+12,(>big_tilemap)+12	; 24,25
 .byte	(>big_tilemap)+13,(>big_tilemap)+13	; 26,27
