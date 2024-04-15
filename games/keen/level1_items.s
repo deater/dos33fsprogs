@@ -123,6 +123,9 @@ check_item:
 	lda	(INL),Y
 
 do_check_item:
+	cmp	#26
+	beq	was_oracle
+
 	cmp	#27
 	bcc	done_check_item		; not an item
 	cmp	#32
@@ -197,6 +200,37 @@ at_door:
 done_check_door:
 	rts
 
+was_oracle:
+	lda	ORACLE_SPOKEN
+	bne	done_oracle
+
+	inc	ORACLE_SPOKEN
+
+	bit	TEXTGR
+
+	jsr	clear_bottom
+
+	lda	#<oracle_message
+	sta	OUTL
+	lda	#>oracle_message
+	sta	OUTH
+
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
+
+	jsr	page_flip
+
+wait_oracle:
+	lda     KEYPRESS
+	bpl     wait_oracle
+	bit     KEYRESET
+
+	bit	FULLGR
+
+done_oracle:
+
+	rts
 
 
 	;=============================

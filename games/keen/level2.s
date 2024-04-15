@@ -39,6 +39,7 @@ level2_start:
 	sta	KEEN_FALLING
 	sta	KEEN_SHOOTING
 	sta	KEYCARDS
+	sta	ORACLE_SPOKEN
 
 	; debug
 
@@ -278,3 +279,9 @@ level1_levelover:
 level1_data_zx02:
 	.incbin		"maps/level2_map.zx02"
 
+
+oracle_message:
+	;      012345678901234567890123456789012345678
+	.byte 2,21,"YOU HEAR IN YOUR MIND:",0
+	.byte 2,22,"IT IS TOO BAD THAT YOU CANNOT READ",0
+	.byte 2,23,"THE STANDARD GALACTIC ALPHABET, HUMAN",0

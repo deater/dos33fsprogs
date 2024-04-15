@@ -277,3 +277,4 @@ level1_levelover:
 level1_data_zx02:
 	.incbin		"maps/level1_map.zx02"
 
+oracle_message:
