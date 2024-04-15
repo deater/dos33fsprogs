@@ -1,4 +1,4 @@
-; Keen PoC Level 1 (Border Town)
+; Keen PoC Level 2 (First Shrine)
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -287,5 +287,5 @@ level1_levelover:
 	.include	"tilemap_lookup.s"
 
 level1_data_zx02:
-	.incbin		"maps/level1_map.zx02"
+	.incbin		"maps/level2_map.zx02"
 

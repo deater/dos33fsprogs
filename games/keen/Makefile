@@ -11,15 +11,14 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	keen1_lores.dsk
 
-keen1_lores.dsk:	HELLO LOADER TITLE MARS LEVEL1
-#LEVEL2
+keen1_lores.dsk:	HELLO LOADER TITLE MARS LEVEL1 LEVEL2
 	cp $(EMPTY_DISK) keen1_lores.dsk
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 TITLE
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 MARS
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL1
-#	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
 
 
 ###
@@ -67,7 +66,7 @@ level1.o:	level1.s zp.inc hardware.inc \
 	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
 	level1_enemies.s level1_items.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
-	maps/level1_map.lzsa \
+	maps/level1_map.zx02 \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \
 	level1_sfx.s longer_sound.s \
@@ -81,15 +80,14 @@ LEVEL2:	level2.o
 
 level2.o:	level2.s zp.inc hardware.inc \
 	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
-	enemies_level2.s actions_level2.s item_level2.s \
-	graphics/keen_graphics.inc keen_sprites.inc \
-	maps/level2_map.lzsa \
+	level1_enemies.s level1_items.s \
+	graphics/keen_graphics.inc sprites/keen_sprites.inc \
+	maps/level2_map.zx02 \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
-	draw_tilemap.s \
-	sound_effects.s longer_sound.s \
+	draw_tilemap.s tilemap_lookup.s \
+	level1_sfx.s longer_sound.s \
 	keyboard.s handle_laser.s
 	ca65 -o level2.o level2.s -l level2.lst
-
 
 ####
 
@@ -108,7 +106,7 @@ maps/level1_map.lzsa:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LOADER TITLE MARS LEVEL1
+	rm -f *~ *.o *.lst HELLO LOADER TITLE MARS LEVEL1 LEVEL2
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean
