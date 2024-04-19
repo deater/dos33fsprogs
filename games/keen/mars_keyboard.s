@@ -1,4 +1,4 @@
-MAX_TILE_Y = 57		; 69-12
+MARS_MAX_TILE_Y = 57		; 69-12
 
 	;==============================
 	; Handle Keypress
@@ -354,7 +354,7 @@ down_pressed:
 	bcc	move_keen_down
 
 	lda	TILEMAP_Y
-	cmp	#MAX_TILE_Y
+	cmp	#MARS_MAX_TILE_Y
 	bcs	move_keen_down
 
 	jmp	scroll_keen_down

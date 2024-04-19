@@ -41,7 +41,8 @@ move_keen_early_out:
 	;	otherwise, scroll
 move_right:
 	lda	TILEMAP_X
-	cmp	#(MAX_TILE_X-20)
+max_tilex_minus_20_smc:
+	cmp	#$DD
 	bcs	keen_walk_right
 
 	sec
@@ -199,7 +200,7 @@ collide_head_l:
 
 	lda	(INL),Y
 	; if tile# < ALLHARD_TILES then we are fine
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	collide_left_right		; blt
 
 	; fallthrough to get other
@@ -208,7 +209,7 @@ collide_head_r:
 	iny
 	lda	(INL),Y
 	; if tile# < ALLHARD_TILES then we are fine
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	collide_left_right		; blt
 
 	; o/~ I hit my head, I heard the phone ring o/~
@@ -255,7 +256,8 @@ collide_left_right:
 check_right_collide:
 
 	lda	KEEN_TILEY
-	cmp	#(MAX_TILE_X-1)			; stop at right edge of screen
+max_tilex_minus_1_smc:
+	cmp	#$dd			; stop at right edge of screen
 	beq	keen_stop
 
 
@@ -272,7 +274,7 @@ right_collide_noextra:
 	lda	(INL),Y
 
 	; if tile# < ALLHARD_TILES then we are fine
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	done_keen_collide		; blt
 
 	bcs	keen_stop
@@ -291,7 +293,7 @@ check_left_collide:
 
 ;	lda	KEEN_WALK_TILE_L
 	; if tile# < ALLHARD_TILES then we are fine
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	done_keen_collide	; blt
 
 keen_stop:
@@ -413,13 +415,13 @@ check_falling:
 
 check_below:
 	lda	(INL),Y
-        cmp     #HARDTOP_TILES
+        cmp     HARDTOP_TILES
         bcs     feet_on_ground			; if hardtop tile, don't fall
 
 check_below_plus1:
 	iny
 	lda	(INL),Y
-        cmp     #HARDTOP_TILES
+        cmp     HARDTOP_TILES
         bcs     feet_on_ground			; if hardtop tile, don't fall
 
 
@@ -459,7 +461,8 @@ do_full_falling_check:
 
 	; if tilemap_y >= max_tile, keen_fall
 	lda	TILEMAP_Y
-	cmp	#(MAX_TILE_Y-6)
+max_tiley_minus_6_smc:
+	cmp	#$DD
 	bcs	keen_fall	; bge
 
 

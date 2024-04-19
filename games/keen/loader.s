@@ -93,13 +93,29 @@ print_model_done:
 
 which_load_loop:
 
-
-
 	; update the which-file error message
 ;	lda	WHICH_LOAD
 ;	tay
 ;	lda	which_disk,Y
 ;	sta	error_string+19
+
+	; 0 = TITLE
+	; 1 = MARS
+	; LEVEL = WHICH_LOAD-3
+
+	lda	WHICH_LOAD
+	cmp	#2
+	bcc	skip_engine_load
+engine_load:
+
+	lda	#<engine_filename
+	sta	OUTL
+	lda	#>engine_filename
+	sta	OUTH
+
+	jsr	opendir_filename
+
+skip_engine_load:
 
 	lda	WHICH_LOAD
 	asl
@@ -110,21 +126,21 @@ which_load_loop:
 	lda	filenames+1,Y
 	sta	OUTH
 
-	lda	WHICH_LOAD
-	bne	load_other
+;	lda	WHICH_LOAD
+;	bne	load_other
 
 load_intro:
 	lda	#<$4000
 	sta	entry_smc+1
 	lda	#>$4000
 	sta	entry_smc+2
-	jmp	actual_load
+;	jmp	actual_load
 
-load_other:
-	lda	#<$2000
-	sta	entry_smc+1
-	lda	#>$2000
-	sta	entry_smc+2
+;load_other:
+;	lda	#<$2000
+;	sta	entry_smc+1
+;	lda	#>$2000
+;	sta	entry_smc+2
 
 actual_load:
 
@@ -185,6 +201,8 @@ filenames:
 	.word keen1_filename
 	.word keen2_filename
 
+engine_filename:
+	.byte "ENGINE",0
 title_filename:
 	.byte "TITLE",0
 mars_filename:

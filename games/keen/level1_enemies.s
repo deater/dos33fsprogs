@@ -45,7 +45,7 @@ enemy_is_out:
 load_foot1_smc:
 
 	lda	small_tilemap,Y
-	cmp	#HARDTOP_TILES
+	cmp	HARDTOP_TILES
 	bcs	no_enemy_fall			; if hardtop tile, don't fall
 
 	inc	enemy_data_tiley,X		; fall one tiles worth
@@ -144,7 +144,7 @@ enemy_facing_right:
 	iny	; to the right
 load_right_foot_smc:
 	lda	small_tilemap,Y
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	no_right_barrier		; skip if no right barrier
 
 	; hit right barrier
@@ -202,7 +202,7 @@ enemy_facing_left:
 	dey					; look to the left
 load_left_foot_smc:
 	lda	small_tilemap,Y
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcc	no_left_barrier			; skip if no right barrier
 
 	; hit left barrier
@@ -242,7 +242,7 @@ move_left_noflo:
 done_move_enemy:
 
 	inx
-	cpx	#NUM_ENEMIES
+	cpx	NUM_ENEMIES
 	beq	totally_done_move_enemies
 
 	jmp	move_enemies_loop
@@ -365,7 +365,7 @@ draw_enemy:
 
 done_draw_enemy:
 	iny
-	cpy	#NUM_ENEMIES
+	cpy	NUM_ENEMIES
 	beq	exit_draw_enemy
 	jmp	draw_enemies_loop
 

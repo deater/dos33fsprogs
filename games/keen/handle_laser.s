@@ -39,7 +39,7 @@ laser_check_tiles:
 
 	ldy	#0
 	lda	(INL),Y
-	cmp	#ALLHARD_TILES
+	cmp	ALLHARD_TILES
 	bcs	destroy_laser
 
 
@@ -165,7 +165,7 @@ hit_something:
 
 done_laser_enemy:
 	iny
-	cpy	#NUM_ENEMIES
+	cpy	NUM_ENEMIES
 	bne	laser_enemies_loop
 
 exit_laser_enemy:

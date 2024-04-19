@@ -207,7 +207,7 @@ done_tilemap_subset:
 	; activate yorps
 	;==========================
 
-	ldx	#NUM_ENEMIES
+	ldx	NUM_ENEMIES
 	beq	done_yorps
 
 	clc

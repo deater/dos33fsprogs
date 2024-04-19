@@ -11,14 +11,15 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	keen1_lores.dsk
 
-keen1_lores.dsk:	HELLO LOADER TITLE MARS LEVEL1 LEVEL2
+keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS LEVEL1
 	cp $(EMPTY_DISK) keen1_lores.dsk
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 TITLE
-	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 MARS
-	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL1
-	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 ENGINE
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 MARS
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL1
+#	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
 
 
 ###
@@ -47,7 +48,7 @@ title.o:	title.s zp.inc hardware.inc \
 ####
 
 MARS:	mars.o
-	ld65 -o MARS mars.o -C ../../linker_scripts/apple2_2000.inc
+	ld65 -o MARS mars.o -C ../../linker_scripts/apple2_4000.inc
 
 mars.o:	mars.s zp.inc hardware.inc game_over.s \
 	gr_fade.s \
@@ -60,18 +61,27 @@ mars.o:	mars.s zp.inc hardware.inc game_over.s \
 ####
 
 LEVEL1:	level1.o
-	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_2000.inc
+	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_6000.inc
 
-level1.o:	level1.s zp.inc hardware.inc \
+level1.o:	level1.s \
+	maps/level1_map.zx02
+	ca65 -o level1.o level1.s -l level1.lst
+
+####
+
+ENGINE:	engine.o
+	ld65 -o ENGINE engine.o -C ../../linker_scripts/apple2_4000.inc
+
+engine.o:	engine.s zp.inc hardware.inc \
 	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
 	level1_enemies.s level1_items.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
-	maps/level1_map.zx02 \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \
-	level1_sfx.s longer_sound.s level1_data.inc \
+	level1_sfx.s longer_sound.s \
 	keyboard.s handle_laser.s
-	ca65 -o level1.o level1.s -l level1.lst
+	ca65 -o engine.o engine.s -l engine.lst
+
 
 ####
 
@@ -106,7 +116,7 @@ maps/level1_map.lzsa:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LOADER TITLE MARS LEVEL1 LEVEL2
+	rm -f *~ *.o *.lst HELLO LOADER TITLE ENGINE MARS LEVEL1 LEVEL2
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean

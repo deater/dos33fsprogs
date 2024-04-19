@@ -10,9 +10,18 @@ Memory map:
 	$1000-$1fff = loader
 	$2000-$3fff = code		(8k? currently 5k)
 
-	$9000-$93ff = tiles		(1k)
-	$9400-????? = big_tilemap	(10k)
-	$BC00-????? = tilemap		(1k) 10x16 
+	; MARS = 6k
+	; LEVEL1 = 6k
+	; TITLE  = 4k
+
+	; LOAD engine at $4000
+	; $4000 - $5fff = 8k worst case
+	; LOAD level data at $6000
+	; $6000 - $7fff = 8k worst case
+
+	$9000-$93FF = tiles		(1k)
+	$9400-$BBFF = big_tilemap	(10k)  128x80
+	$BC00-$BCFF = small tilemap	(256B) 20x12 
 
 tiles are 2x4, or 4 bytes each
 	so in theory can have up to 256 of them

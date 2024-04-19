@@ -306,7 +306,7 @@ yes_yorp_stomp:
 no_yorp_stomp:
 
 	inx
-	cpx	#NUM_ENEMIES
+	cpx	NUM_ENEMIES
 	bne	check_yorp_loop
 
 done_check_yorp:

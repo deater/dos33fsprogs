@@ -9,7 +9,7 @@
 
 
 ; or are there?
-NUM_ENEMIES = 0
+;NUM_ENEMIES = 0
 TILE_COLS = 20		; define this elsewhere?
 
 mars_start:
