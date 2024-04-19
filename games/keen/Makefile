@@ -11,7 +11,8 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	keen1_lores.dsk
 
-keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS LEVEL1
+keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
+	LEVEL1 LEVEL2 LEVEL3
 	cp $(EMPTY_DISK) keen1_lores.dsk
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
@@ -19,7 +20,8 @@ keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS LEVEL1
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 ENGINE
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 MARS
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL1
-#	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x2000 LEVEL2
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL2
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL3
 
 
 ###
@@ -69,6 +71,26 @@ level1.o:	level1.s \
 
 ####
 
+LEVEL2:	level2.o
+	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_6000.inc
+
+level2.o:	level2.s \
+	maps/level2_map.zx02
+	ca65 -o level2.o level2.s -l level2.lst
+
+####
+
+LEVEL3:	level3.o
+	ld65 -o LEVEL3 level3.o -C ../../linker_scripts/apple2_6000.inc
+
+level3.o:	level3.s \
+	maps/level3_map.zx02
+	ca65 -o level3.o level3.s -l level3.lst
+
+
+
+####
+
 ENGINE:	engine.o
 	ld65 -o ENGINE engine.o -C ../../linker_scripts/apple2_4000.inc
 
@@ -85,19 +107,19 @@ engine.o:	engine.s zp.inc hardware.inc \
 
 ####
 
-LEVEL2:	level2.o
-	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_2000.inc
-
-level2.o:	level2.s zp.inc hardware.inc \
-	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
-	level1_enemies.s level1_items.s \
-	graphics/keen_graphics.inc sprites/keen_sprites.inc \
-	maps/level2_map.zx02 \
-	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
-	draw_tilemap.s tilemap_lookup.s \
-	level1_sfx.s longer_sound.s level2_data.inc \
-	keyboard.s handle_laser.s
-	ca65 -o level2.o level2.s -l level2.lst
+#LEVEL2:	level2.o
+#	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_2000.inc
+#
+#level2.o:	level2.s zp.inc hardware.inc \
+#	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
+#	level1_enemies.s level1_items.s \
+#	graphics/keen_graphics.inc sprites/keen_sprites.inc \
+#	maps/level2_map.zx02 \
+#	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
+#	draw_tilemap.s tilemap_lookup.s \
+#	level1_sfx.s longer_sound.s level2_data.inc \
+#	keyboard.s handle_laser.s
+#	ca65 -o level2.o level2.s -l level2.lst
 
 ####
 

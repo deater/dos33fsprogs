@@ -616,7 +616,7 @@ location_size:
 
 location_actions_low:
 	.byte <(enter_level-1),<(enter_level-1)		; level1, level2
-	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(enter_level-1),<(dummy_action-1)	; level3, level4
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
 	.byte <(dummy_action-1),<(dummy_action-1)
@@ -628,7 +628,7 @@ location_actions_low:
 
 location_actions_high:
 	.byte >(enter_level-1),>(enter_level-1)		; level1, level2
-	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(enter_level-1),>(dummy_action-1)	; level3, level4
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)
 	.byte >(dummy_action-1),>(dummy_action-1)

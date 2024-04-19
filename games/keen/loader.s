@@ -211,6 +211,8 @@ keen1_filename:
 	.byte "LEVEL1",0
 keen2_filename:
 	.byte "LEVEL2",0
+keen3_filename:
+	.byte "LEVEL3",0
 
 
 	;===================================================
