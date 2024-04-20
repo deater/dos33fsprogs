@@ -65,7 +65,7 @@ mars.o:	mars.s zp.inc hardware.inc game_over.s \
 LEVEL1:	level1.o
 	ld65 -o LEVEL1 level1.o -C ../../linker_scripts/apple2_6000.inc
 
-level1.o:	level1.s \
+level1.o:	level1.s enemies.inc \
 	maps/level1_map.zx02
 	ca65 -o level1.o level1.s -l level1.lst
 
@@ -74,7 +74,7 @@ level1.o:	level1.s \
 LEVEL2:	level2.o
 	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_6000.inc
 
-level2.o:	level2.s \
+level2.o:	level2.s enemies.inc \
 	maps/level2_map.zx02
 	ca65 -o level2.o level2.s -l level2.lst
 
@@ -83,7 +83,7 @@ level2.o:	level2.s \
 LEVEL3:	level3.o
 	ld65 -o LEVEL3 level3.o -C ../../linker_scripts/apple2_6000.inc
 
-level3.o:	level3.s \
+level3.o:	level3.s enemies.inc \
 	maps/level3_map.zx02
 	ca65 -o level3.o level3.s -l level3.lst
 

@@ -1,5 +1,7 @@
 ; Level 1 (Border Town)
 
+.include "enemies.inc"
+
 ; at $6000
 
 level1_data:
@@ -22,11 +24,21 @@ level1_data:
 
 ; at $6100
 enemy_data:
-.byte $0
+
+enemy_data_out:		.byte 1,     0,	  0,    0,    0,    0,   0,    0
+enemy_data_exploding:	.byte 0,     0,	  0,    0,    0,    0,   0,    0
+enemy_data_type:	.byte YORP,  YORP, YORP, YORP, YORP, YORP,YORP,YORP
+enemy_data_direction:	.byte RIGHT, LEFT, LEFT, LEFT, LEFT, RIGHT,RIGHT,LEFT
+enemy_data_tilex:	.byte 19,    38,   45,   69,   81,   89,  92,  100
+enemy_data_tiley:	.byte 13,    4,    4,    13,   4,    4,   13,  10
+enemy_data_x:		.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_y:		.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_state:	.byte 0,     0,    0,    0,    0,    0,   0,   0
+enemy_data_count:	.byte 8,     8,    8,    8,    8,    8,   8,   8
 
 .align	$100
 
-; at $6200\
+; at $6200
 oracle_message:
 .byte $0
 
@@ -35,3 +47,6 @@ oracle_message:
 ; at $6300
 level1_data_zx02:
         .incbin         "maps/level1_map.zx02"
+
+
+

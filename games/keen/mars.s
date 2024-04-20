@@ -42,6 +42,8 @@ plenty_of_keens:
 	sta	FRAMEL
 	sta	FRAMEH
 
+	sta	NUM_ENEMIES
+
 	lda	#4
 	sta	DRAW_PAGE
 

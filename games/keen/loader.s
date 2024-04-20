@@ -200,6 +200,7 @@ filenames:
 	.word mars_filename
 	.word keen1_filename
 	.word keen2_filename
+	.word keen3_filename
 
 engine_filename:
 	.byte "ENGINE",0

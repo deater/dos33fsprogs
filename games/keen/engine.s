@@ -7,6 +7,8 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
+	.include "enemies.inc"
+
 ;	.include "level1_data.inc"
 
 level_data	= $6000
@@ -19,10 +21,18 @@ level_data	= $6000
 	num_enemies	= level_data+6
 	hardtop_tiles	= level_data+7
 	allhard_tiles	= level_data+8
+enemy_data	= $6100
+	enemy_data_out		= enemy_data+0
+	enemy_data_exploding	= enemy_data+8
+	enemy_data_type		= enemy_data+16
+	enemy_data_direction	= enemy_data+24
+	enemy_data_tilex	= enemy_data+32
+	enemy_data_tiley	= enemy_data+40
+	enemy_data_x		= enemy_data+48
+	enemy_data_y		= enemy_data+56
+	enemy_data_state	= enemy_data+64
+	enemy_data_count	= enemy_data+72
 
-
-
-;enemy_data	= $6100
 oracle_message	= $6200
 level_data_zx02 = $6300
 
