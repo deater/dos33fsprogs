@@ -8,6 +8,11 @@ move_enemies:
 	ldx	#0
 
 move_enemies_loop:
+	cpx	NUM_ENEMIES
+	bne	keep_on_moving
+
+	jmp	done_move_enemies_loop
+keep_on_moving:
 
 	; only move if out
 
@@ -242,10 +247,12 @@ move_left_noflo:
 done_move_enemy:
 
 	inx
-	cpx	NUM_ENEMIES
-	beq	totally_done_move_enemies
+;	cpx	NUM_ENEMIES
+;	beq	totally_done_move_enemies
 
 	jmp	move_enemies_loop
+
+done_move_enemies_loop:
 totally_done_move_enemies:
 	rts
 
@@ -258,6 +265,8 @@ draw_enemies:
 
 	ldy	#0
 draw_enemies_loop:
+	cpy	NUM_ENEMIES
+	beq	done_draw_enemies
 
 	; see if out
 
@@ -365,10 +374,11 @@ draw_enemy:
 
 done_draw_enemy:
 	iny
-	cpy	NUM_ENEMIES
-	beq	exit_draw_enemy
+;	cpy	NUM_ENEMIES
+;	beq	exit_draw_enemy
 	jmp	draw_enemies_loop
 
+done_draw_enemies:
 exit_draw_enemy:
 	rts
 

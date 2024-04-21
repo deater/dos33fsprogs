@@ -8,6 +8,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 all:	png2map \
 	level1_map.zx02 level2_map.zx02 \
 	level3_map.zx02 level4_map.zx02 \
+	level5_map.zx02 \
 	mars_map.zx02
 
 ###
@@ -41,6 +42,14 @@ level4_map.zx02:	level4_map.inc
 
 level4_map.inc:	level4_map.png png2map
 	./png2map level4_map.png level4_map.inc
+
+###
+
+level5_map.zx02:	level5_map.inc
+	$(ZX02) level5_map.inc level5_map.zx02
+
+level5_map.inc:	level5_map.png png2map
+	./png2map level5_map.png level5_map.inc
 
 
 

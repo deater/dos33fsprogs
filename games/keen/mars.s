@@ -618,25 +618,25 @@ location_size:
 
 location_actions_low:
 	.byte <(enter_level-1),<(enter_level-1)		; level1, level2
-	.byte <(enter_level-1),<(dummy_action-1)	; level3, level4
-	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(dummy_action-1),<(dummy_action-1)
-	.byte <(dummy_action-1),<(dummy_action-1)
+	.byte <(enter_level-1),<(enter_level-1)		; level3, level4
+	.byte <(enter_level-1),<(enter_level-1)		; level4, level6
+	.byte <(enter_level-1),<(enter_level-1)		; level7, level8
+	.byte <(enter_level-1),<(enter_level-1)		; level9, level10
+	.byte <(enter_level-1),<(enter_level-1)		; level11, level12
+	.byte <(enter_level-1),<(enter_level-1)		; level13, level14
+	.byte <(enter_level-1),<(enter_level-1)		; level15, level16
 	.byte <(do_parts-1),<(transport_right-1)	; ship, l transport
 	.byte <(transport_left-1),<(transport_secret-1)	; r trans, secret
 
 location_actions_high:
 	.byte >(enter_level-1),>(enter_level-1)		; level1, level2
-	.byte >(enter_level-1),>(dummy_action-1)	; level3, level4
-	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(dummy_action-1),>(dummy_action-1)
-	.byte >(dummy_action-1),>(dummy_action-1)
+	.byte >(enter_level-1),>(enter_level-1)		; level3, level4
+	.byte >(enter_level-1),>(enter_level-1)		; level5, level6
+	.byte >(enter_level-1),>(enter_level-1)		; level7, level8
+	.byte >(enter_level-1),>(enter_level-1)		; level9, level10
+	.byte >(enter_level-1),>(enter_level-1)		; level11, level12
+	.byte >(enter_level-1),>(enter_level-1)		; level13, level14
+	.byte >(enter_level-1),>(enter_level-1)		; level15, level16
 	.byte >(do_parts-1),>(transport_right-1)	; ship, l transport
 	.byte >(transport_left-1),>(transport_secret-1)	; r trans, secret
 

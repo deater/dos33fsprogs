@@ -4,7 +4,7 @@
 
 ; at $6000
 
-level3_data:
+level4_data:
 .byte	116	;MAX_TILE_X 		= 116	; 116 wide
 .byte	20	;MAX_TILE_Y 		= 16	; 20 tall
 
@@ -36,7 +36,7 @@ enemy_data_y:           .byte 0,     0,    0,    0,    0,    0,   0,   0
 enemy_data_state:       .byte 0,     0,    0,    0,    0,    0,   0,   0
 enemy_data_count:       .byte 8,     8,    8,    8,    8,    8,   8,   8
 
-
+; FIXME: this is not correct
 ; enemy1: yorp @16,9, right
 ; enemy2: yorp @19,9  left
 ; enemy3: yorp @23,9  left

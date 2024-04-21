@@ -122,6 +122,8 @@ laser_enemies:
 
 	ldy	#0				; which enemy
 laser_enemies_loop:
+	cpy	NUM_ENEMIES
+	beq	done_laser_enemies_loop
 
 	; see if out
 
@@ -164,9 +166,11 @@ hit_something:
 	jmp	exit_laser_enemy
 
 done_laser_enemy:
-	iny
-	cpy	NUM_ENEMIES
-	bne	laser_enemies_loop
+;	iny
+;	cpy	NUM_ENEMIES
+	jmp	laser_enemies_loop
+
+done_laser_enemies_loop:
 
 exit_laser_enemy:
 	rts

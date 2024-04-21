@@ -195,6 +195,8 @@ copy_filename_done:
 
 	rts
 
+; FIXME: probably smaler to build the level filename on the fly?
+
 filenames:
 	.word title_filename
 	.word mars_filename
@@ -202,6 +204,18 @@ filenames:
 	.word keen2_filename
 	.word keen3_filename
 	.word keen4_filename
+	.word keen5_filename
+	.word keen6_filename
+	.word keen7_filename
+	.word keen8_filename
+	.word keen9_filename
+	.word keen10_filename
+	.word keen11_filename
+	.word keen12_filename
+	.word keen13_filename
+	.word keen14_filename
+	.word keen15_filename
+	.word keen16_filename
 
 engine_filename:
 	.byte "ENGINE",0
@@ -217,6 +231,31 @@ keen3_filename:
 	.byte "LEVEL3",0
 keen4_filename:
 	.byte "LEVEL4",0
+keen5_filename:
+	.byte "LEVEL5",0
+keen6_filename:
+	.byte "LEVEL6",0
+keen7_filename:
+	.byte "LEVEL7",0
+keen8_filename:
+	.byte "LEVEL8",0
+keen9_filename:
+	.byte "LEVEL9",0
+keen10_filename:
+	.byte "LEVEL10",0
+keen11_filename:
+	.byte "LEVEL11",0
+keen12_filename:
+	.byte "LEVEL12",0
+keen13_filename:
+	.byte "LEVEL13",0
+keen14_filename:
+	.byte "LEVEL14",0
+keen15_filename:
+	.byte "LEVEL15",0
+keen16_filename:
+	.byte "LEVEL16",0
+
 
 
 	;===================================================
