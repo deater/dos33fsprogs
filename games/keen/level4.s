@@ -1,4 +1,4 @@
-; Level 3 (Treasury)
+; Level 4 (Capital City)
 
 .include "enemies.inc"
 
@@ -6,15 +6,15 @@
 
 level3_data:
 .byte	116	;MAX_TILE_X 		= 116	; 116 wide
-.byte	44	;MAX_TILE_Y 		= 16	; 44 tall
+.byte	20	;MAX_TILE_Y 		= 16	; 20 tall
 
-.byte	1	;START_KEEN_TILEX	= 1
-.byte	13	;START_KEEN_TILEY	= 13
+.byte	4	;START_KEEN_TILEX	= 4
+.byte	16	;START_KEEN_TILEY	= 16
 
 .byte	0	;START_TILEMAP_X	= 0
-.byte	5	;START_TILEMAP_Y	= 5
+.byte	8	;START_TILEMAP_Y	= 8
 
-.byte	8	;NUM_ENEMIES		= 8
+.byte	0	;NUM_ENEMIES		= 8
 
 .byte	32	;HARDTOP_TILES   	= 32	; start at 32
 .byte	40	;ALLHARD_TILES   	= 40	; start at 40
@@ -62,4 +62,4 @@ oracle_message:
 
 ; at $6300
 level1_data_zx02:
-        .incbin         "maps/level3_map.zx02"
+        .incbin         "maps/level4_map.zx02"

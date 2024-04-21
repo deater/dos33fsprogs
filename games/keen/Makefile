@@ -12,7 +12,7 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 all:	keen1_lores.dsk
 
 keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
-	LEVEL1 LEVEL2 LEVEL3
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4
 	cp $(EMPTY_DISK) keen1_lores.dsk
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
@@ -22,6 +22,7 @@ keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL1
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL2
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL3
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL4
 
 
 ###
@@ -86,6 +87,16 @@ LEVEL3:	level3.o
 level3.o:	level3.s enemies.inc \
 	maps/level3_map.zx02
 	ca65 -o level3.o level3.s -l level3.lst
+
+####
+
+LEVEL4:	level4.o
+	ld65 -o LEVEL4 level4.o -C ../../linker_scripts/apple2_6000.inc
+
+level4.o:	level4.s enemies.inc \
+	maps/level4_map.zx02
+	ca65 -o level4.o level4.s -l level4.lst
+
 
 
 

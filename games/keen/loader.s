@@ -201,6 +201,7 @@ filenames:
 	.word keen1_filename
 	.word keen2_filename
 	.word keen3_filename
+	.word keen4_filename
 
 engine_filename:
 	.byte "ENGINE",0
@@ -214,6 +215,8 @@ keen2_filename:
 	.byte "LEVEL2",0
 keen3_filename:
 	.byte "LEVEL3",0
+keen4_filename:
+	.byte "LEVEL4",0
 
 
 	;===================================================
