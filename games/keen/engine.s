@@ -9,8 +9,6 @@
 
 	.include "enemies.inc"
 
-;	.include "level1_data.inc"
-
 level_data	= $6000
 	max_tile_x	= level_data+0
 	max_tile_y	= level_data+1
@@ -97,6 +95,7 @@ level_start:
 	sta	KEEN_FALLING
 	sta	KEEN_SHOOTING
 	sta	KEYCARDS
+	sta	ORACLE_SPOKEN
 
 	; debug
 
@@ -324,7 +323,7 @@ level1_levelover:
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
 	.include	"level1_enemies.s"
-	.include	"level1_items.s"
+	.include	"engine_items.s"
 
 	.include	"level1_sfx.s"
 	.include	"longer_sound.s"

@@ -1,3 +1,26 @@
+ITEMS_START	=	24	; pogo is first?
+ITEMS_MAX	=	35	; green keycard is last
+
+ITEM_DOOR	=	11
+ITEM_POGO	=	24
+ITEM_SPECIAL	=	25
+
+ITEM_KEYCARD	=	32
+
+; POGO= 24
+; SPECIAL = 25 (ship part or oracle)
+; GUN = 26
+; LOLLIPOP = 27
+; SODA = 28
+; PIZZA = 29
+; BOOK = 30
+; BEAR = 31
+; YELLOW KEYCARD = 32
+; RED KEYCARD = 33
+; BLUE KEYCARD = 34
+; GREEN KEYCARD = 35
+
+
 	;======================
 	; check touching things
 	;======================
@@ -123,25 +146,33 @@ check_item:
 	lda	(INL),Y
 
 do_check_item:
-	cmp	#26
-	beq	was_oracle
 
-	cmp	#27
+	cmp	#ITEMS_START
 	bcc	done_check_item		; not an item
-	cmp	#32
+	cmp	#(ITEMS_MAX+1)
 	bcs	done_check_item		; not an item
 
+	cmp	#ITEM_POGO
+	beq	was_pogo		; if pogo, then pogo
+
+	cmp	#ITEM_SPECIAL		; if oracle/ship part skip ahead
+	beq	was_special
+
 	sec
-	sbc	#27			; subtract off to get index
+	sbc	#ITEMS_START		; subtract off to get index
 
 	; 0 = laser gun
 	; 1 = lollipop			100 pts
-	; 2 = book			1000 pts
+	; 2 = carbonated beverage	200 pts
 	; 3 = pizza			500 pts
-	; 4 = carbonated beverage	200 pts
-	; ? = bear			5000 pts
+	; 4 = book			1000 pts
+	; 5 = bear			5000 pts
+	; 6...9 = keycards
 
-	beq	get_laser_gun
+	beq	get_laser_gun		; if laser gun skip ahead
+
+	cmp	#6
+	bcs	get_keycard
 
 	; otherwise look up points and add it
 
@@ -162,6 +193,9 @@ get_laser_gun:
 
 	; keycards go here too...
 get_keycard:
+
+	; TODO
+
 
 done_item_pickup:
 
@@ -186,7 +220,7 @@ done_check_item:
 check_door:
 	ldy	#0
 	lda	(INL),Y
-	cmp	#11			; door tile
+	cmp	#ITEM_DOOR		; door tile
 	bne	done_check_door
 
 at_door:
@@ -200,9 +234,30 @@ at_door:
 done_check_door:
 	rts
 
+	;==================================
+	; item pogo
+	;==================================
+was_pogo:
+	lda	#$FF
+	sta	POGO			; pick up pogo
+	bne	done_item_pickup	; bra
+
+	;==================================
+	; item special
+	;==================================
+	; if oracle text, then oracle
+	; otherwise is ship part
+
+was_special:
+	lda	oracle_message
+	cmp	#$ff
+	beq	was_ship_part
+
 was_oracle:
 	lda	ORACLE_SPOKEN
 	bne	done_oracle
+
+	bit	KEYRESET
 
 	inc	ORACLE_SPOKEN
 
@@ -231,6 +286,13 @@ wait_oracle:
 done_oracle:
 
 	rts
+
+was_ship_part:
+	; TODO
+
+	; play sound effect
+
+	jmp	done_item_pickup
 
 
 	;=============================
@@ -318,8 +380,8 @@ score_lookup:
 	.byte $00,$01,$10,$05,$02,$50		; BCD
 	; 0 = laser gun
 	; 1 = lollipop			100 pts
-	; 2 = book			1000 pts
+	; 2 = carbonated beverage	200 pts
 	; 3 = pizza			500 pts
-	; 4 = carbonated beverage	200 pts
-	; ? = bear			5000 pts
+	; 4 = book			1000 pts
+	; 5 = bear			5000 pts
 

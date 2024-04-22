@@ -226,7 +226,7 @@ ENGINE:	engine.o
 
 engine.o:	engine.s zp.inc hardware.inc \
 	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
-	level1_enemies.s level1_items.s \
+	level1_enemies.s engine_items.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \
@@ -234,22 +234,6 @@ engine.o:	engine.s zp.inc hardware.inc \
 	keyboard.s handle_laser.s
 	ca65 -o engine.o engine.s -l engine.lst
 
-
-####
-
-#LEVEL2:	level2.o
-#	ld65 -o LEVEL2 level2.o -C ../../linker_scripts/apple2_2000.inc
-#
-#level2.o:	level2.s zp.inc hardware.inc \
-#	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
-#	level1_enemies.s level1_items.s \
-#	graphics/keen_graphics.inc sprites/keen_sprites.inc \
-#	maps/level2_map.zx02 \
-#	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
-#	draw_tilemap.s tilemap_lookup.s \
-#	level1_sfx.s longer_sound.s level2_data.inc \
-#	keyboard.s handle_laser.s
-#	ca65 -o level2.o level2.s -l level2.lst
 
 ####
 

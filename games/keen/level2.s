@@ -14,8 +14,8 @@ level2_data:
 
 .byte	0	;NUM_ENEMIES		= 8
 
-.byte	32	;HARDTOP_TILES   	= 32	; start at 32
-.byte	40	;ALLHARD_TILES   	= 40	; start at 40
+.byte	40	;HARDTOP_TILES   	= 40
+.byte	48	;ALLHARD_TILES   	= 48
 
 
 .align	$100

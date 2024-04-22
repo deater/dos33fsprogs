@@ -14,30 +14,30 @@ SFX_YORPBOPSND = 8
 play_sfx:
 
 	lda	sounds_low,Y
-	sta	INL
+	sta	SOUNDL
 	lda	sounds_high,Y
-	sta	INH
+	sta	SOUNDH
 
 	ldy	#0
 	sty	SOUND_OFFSET
 play_sfx_loop:
 	ldy	SOUND_OFFSET
-	lda	(INL),Y
+	lda	(SOUNDL),Y
 	sta	speaker_frequency
 
 	iny
-	lda	(INL),Y
+	lda	(SOUNDL),Y
 	cmp	#$FF
 	beq	play_done
 
 	asl
 ;	clc
-;	adc	(INL),Y
+;	adc	(SOUNDL),Y
 
 	sta	speaker_duration
 	iny
 	bne	no_wrap
-	inc	INH
+	inc	SOUNDH
 no_wrap:
 
 	sty	SOUND_OFFSET

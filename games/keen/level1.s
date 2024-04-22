@@ -16,8 +16,8 @@ level1_data:
 
 .byte	8	;NUM_ENEMIES		= 8
 
-.byte	32	;HARDTOP_TILES   	= 32	; start at 32
-.byte	40	;ALLHARD_TILES   	= 40	; start at 40
+.byte	40	;HARDTOP_TILES   	= 40
+.byte	48	;ALLHARD_TILES   	= 48
 
 
 .align	$100
@@ -40,7 +40,7 @@ enemy_data_count:	.byte 8,     8,    8,    8,    8,    8,   8,   8
 
 ; at $6200
 oracle_message:
-.byte $0
+.byte $FF		; no message
 
 .align $100
 
