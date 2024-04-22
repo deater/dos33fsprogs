@@ -12,7 +12,10 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 all:	keen1_lores.dsk
 
 keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
-	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 \
+	LEVEL5 LEVEL6 LEVEL7 LEVEL8 \
+	LEVEL9 LEVEL10 LEVEL11 LEVEL12 \
+	LEVEL13 LEVEL14 LEVEL15 LEVEL16
 	cp $(EMPTY_DISK) keen1_lores.dsk
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
@@ -24,7 +27,17 @@ keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL3
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL4
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL5
-
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL6
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL7
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL8
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL9
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL10
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL11
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL12
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL13
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL14
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL15
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL16
 
 ###
 
@@ -107,9 +120,104 @@ level5.o:	level5.s enemies.inc \
 	maps/level5_map.zx02
 	ca65 -o level5.o level5.s -l level5.lst
 
+####
 
+LEVEL6:	level6.o
+	ld65 -o LEVEL6 level6.o -C ../../linker_scripts/apple2_6000.inc
 
+level6.o:	level6.s enemies.inc \
+	maps/level6_map.zx02
+	ca65 -o level6.o level6.s -l level6.lst
 
+####
+
+LEVEL7:	level7.o
+	ld65 -o LEVEL7 level7.o -C ../../linker_scripts/apple2_6000.inc
+
+level7.o:	level7.s enemies.inc \
+	maps/level7_map.zx02
+	ca65 -o level7.o level7.s -l level7.lst
+
+####
+
+LEVEL8:	level8.o
+	ld65 -o LEVEL8 level8.o -C ../../linker_scripts/apple2_6000.inc
+
+level8.o:	level8.s enemies.inc \
+	maps/level8_map.zx02
+	ca65 -o level8.o level8.s -l level8.lst
+
+####
+
+LEVEL9:	level9.o
+	ld65 -o LEVEL9 level9.o -C ../../linker_scripts/apple2_6000.inc
+
+level9.o:	level9.s enemies.inc \
+	maps/level9_map.zx02
+	ca65 -o level9.o level9.s -l level9.lst
+
+####
+
+LEVEL10:	level10.o
+	ld65 -o LEVEL10 level10.o -C ../../linker_scripts/apple2_6000.inc
+
+level10.o:	level10.s enemies.inc \
+	maps/level10_map.zx02
+	ca65 -o level10.o level10.s -l level10.lst
+
+####
+
+LEVEL11:	level11.o
+	ld65 -o LEVEL11 level11.o -C ../../linker_scripts/apple2_6000.inc
+
+level11.o:	level11.s enemies.inc \
+	maps/level11_map.zx02
+	ca65 -o level11.o level11.s -l level11.lst
+
+####
+
+LEVEL12:	level12.o
+	ld65 -o LEVEL12 level12.o -C ../../linker_scripts/apple2_6000.inc
+
+level12.o:	level12.s enemies.inc \
+	maps/level12_map.zx02
+	ca65 -o level12.o level12.s -l level12.lst
+
+####
+
+LEVEL13:	level13.o
+	ld65 -o LEVEL13 level13.o -C ../../linker_scripts/apple2_6000.inc
+
+level13.o:	level13.s enemies.inc \
+	maps/level13_map.zx02
+	ca65 -o level13.o level13.s -l level13.lst
+
+####
+
+LEVEL14:	level14.o
+	ld65 -o LEVEL14 level14.o -C ../../linker_scripts/apple2_6000.inc
+
+level14.o:	level14.s enemies.inc \
+	maps/level14_map.zx02
+	ca65 -o level14.o level14.s -l level14.lst
+
+####
+
+LEVEL15:	level15.o
+	ld65 -o LEVEL15 level15.o -C ../../linker_scripts/apple2_6000.inc
+
+level15.o:	level15.s enemies.inc \
+	maps/level15_map.zx02
+	ca65 -o level15.o level15.s -l level15.lst
+
+####
+
+LEVEL16:	level16.o
+	ld65 -o LEVEL16 level16.o -C ../../linker_scripts/apple2_6000.inc
+
+level16.o:	level16.s enemies.inc \
+	maps/level16_map.zx02
+	ca65 -o level16.o level16.s -l level16.lst
 
 ####
 
