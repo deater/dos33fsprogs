@@ -5,19 +5,19 @@
 ; at $6000
 
 level7_data:
-.byte	116	;MAX_TILE_X 		= 116	; 116 wide
-.byte	20	;MAX_TILE_Y 		= 16	; 20 tall
+.byte	124	;MAX_TILE_X
+.byte	60	;MAX_TILE_Y
 
-.byte	4	;START_KEEN_TILEX	= 4
-.byte	16	;START_KEEN_TILEY	= 16
+.byte	2	;START_KEEN_TILEX
+.byte	48	;START_KEEN_TILEY
 
-.byte	0	;START_TILEMAP_X	= 0
-.byte	8	;START_TILEMAP_Y	= 8
+.byte	0	;START_TILEMAP_X
+.byte	40	;START_TILEMAP_Y
 
-.byte	0	;NUM_ENEMIES		= 8
+.byte	8	;NUM_ENEMIES
 
-.byte	32	;HARDTOP_TILES   	= 32	; start at 32
-.byte	40	;ALLHARD_TILES   	= 40	; start at 40
+.byte	40	;HARDTOP_TILES
+.byte	48	;ALLHARD_TILES
 
 
 .align	$100
@@ -28,29 +28,39 @@ enemy_data:
 enemy_data_out:         .byte 1,     0,   0,    0,    0,    0,   0,    0
 enemy_data_exploding:   .byte 0,     0,   0,    0,    0,    0,   0,    0
 enemy_data_type:        .byte YORP,  YORP, YORP, YORP, YORP, YORP,YORP,YORP
-enemy_data_direction:   .byte RIGHT, LEFT, LEFT, RIGHT, LEFT, RIGHT,LEFT,LEFT
-enemy_data_tilex:       .byte 16,    19,   23,   14,   14,   16,  42,  70
-enemy_data_tiley:       .byte 9,     9,    9,    45,   38,   43,  44,  34
+enemy_data_direction:   .byte LEFT, LEFT, LEFT, LEFT, LEFT, LEFT,RIGHT,LEFT
+enemy_data_tilex:       .byte 61,    78,   16,   63,   31,   28, 112,  36
+enemy_data_tiley:       .byte 4,     4,    15,   15,   28,   27,  54,  56
 enemy_data_x:           .byte 0,     0,    0,    0,    0,    0,   0,   0
 enemy_data_y:           .byte 0,     0,    0,    0,    0,    0,   0,   0
 enemy_data_state:       .byte 0,     0,    0,    0,    0,    0,   0,   0
 enemy_data_count:       .byte 8,     8,    8,    8,    8,    8,   8,   8
 
-; FIXME: this is not correct
-; enemy1: yorp @16,9, right
-; enemy2: yorp @19,9  left
-; enemy3: yorp @23,9  left
-; enemy4: yorp @14,45 right
-; enemy5: yorp @14,38 left
-; enemy6: yorp @16,43 right
-; enemy7: yorp @42,44 left
-; enemy8: yorp @70,34 left
+; enemy0: yorp @61,4, left
+; enemy1: yorp @78,4  left
+; enemy2: yorp @16,15 left
+; enemy3: yorp @63,15 left
+; enemy4: yorp @31,28 left
+; enemy5: yorp @28,27 left
+; enemy6: yorp @112,54 right
+; enemy7: yorp @36,56 left
 
-; enemy9: garg @50,31 right
-; enemy10: garg @63,45 right
+; enemy8: garg  @36,4 right
+; enemy9: garg @39,4 right
+; enemy10: garg @105,2 left
+; enemy11: garg @102,11 right
+; enemy12: garg @105,17 left
+; enemy13: garg @96,21 left
+; enemy14: garg @22,33 right
+; enemy15: garg @34,34 right
+; enemy16: garg @52,49 right
 
-; enemy?: butler robot@27,7 left
-; enemy?: vorticon  @53,8 right
+; enemy17: butler robot@91,39 right
+; enemy18: butler robot@86,39 right
+; enemy19: butler robot@31,39 left
+
+; enemy?: big robot@93,56 right
+
 
 .align	$100
 

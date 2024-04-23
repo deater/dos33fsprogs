@@ -226,7 +226,7 @@ ENGINE:	engine.o
 
 engine.o:	engine.s zp.inc hardware.inc \
 	text_help.s gr_fast_clear.s text_quit_yn.s text_drawbox.s \
-	level1_enemies.s engine_items.s \
+	engine_enemies.s engine_items.s \
 	graphics/keen_graphics.inc sprites/keen_sprites.inc \
 	status_bar.s draw_keen.s move_keen.s gr_putsprite_crop.s \
 	draw_tilemap.s tilemap_lookup.s \

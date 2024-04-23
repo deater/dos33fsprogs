@@ -7,6 +7,9 @@ ITEM_SPECIAL	=	25
 
 ITEM_KEYCARD	=	32
 
+FIRST_ENEMY	=	20
+LAST_ENEMY	=	23
+
 ; POGO= 24
 ; SPECIAL = 25 (ship part or oracle)
 ; GUN = 26
@@ -299,13 +302,15 @@ was_ship_part:
 	; check if touching enemy
 	;=============================
 	; level1 at least you can't touch with head?
+	; level7 you can...
 check_enemy:
 	ldy	#0
 	lda	(INL),Y
-	cmp	#21			; green tentacles
-	beq	touched_enemy
-	cmp	#22			; clam thing
-	bne	done_check_enemy
+
+	cmp	#FIRST_ENEMY		;
+	bcc	done_check_enemy	; if less then, not enemy
+	cmp	#LAST_ENEMY+1		;
+	bcs	done_check_enemy
 
 touched_enemy:
 

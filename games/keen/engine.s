@@ -121,7 +121,7 @@ level_start:
 
 
 	;====================================
-	; load level1 tilemap
+	; load tilemap
 	;====================================
 
         lda	#<level_data_zx02
@@ -216,10 +216,10 @@ done_with_keen:
 
 	lda	LEVEL_OVER
 	cmp	#NEXT_LEVEL
-	beq	level1_levelover
+	beq	level_over
 
 	cmp	#GAME_OVER
-	beq	level1_gameover
+	beq	game_over
 
 	; got here, touched enemy
 
@@ -281,16 +281,16 @@ skip_end_sound:
 
 
 	dec	KEENS
-	bpl	level1_levelover
+	bpl	level_over
 
-level1_gameover:
+game_over:
 
 	; mars plays the sound
 
 	lda	#GAME_OVER
 	sta	LEVEL_OVER
 
-level1_levelover:
+level_over:
 
         lda     #LOAD_MARS
         sta     WHICH_LOAD
@@ -322,7 +322,7 @@ level1_levelover:
 	.include	"move_keen.s"
 	.include	"handle_laser.s"
 	.include	"draw_tilemap.s"
-	.include	"level1_enemies.s"
+	.include	"engine_enemies.s"
 	.include	"engine_items.s"
 
 	.include	"level1_sfx.s"
@@ -331,8 +331,3 @@ level1_levelover:
 	.include	"random16.s"
 
 	.include	"tilemap_lookup.s"
-
-;level1_data_zx02:
-;	.incbin		"maps/level1_map.zx02"
-
-;oracle_message:
