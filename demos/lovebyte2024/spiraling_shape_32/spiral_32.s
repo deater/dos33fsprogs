@@ -6,6 +6,15 @@
 
 ; Lovebyte 2024
 
+; Spiral plus some bass notes in 31 bytes
+
+; You can enter it directly onto your Apple II with the following:
+; CALL -151
+; E9: 20 D8 F3 2C 30 C0 A8 A2  8C A9 60 20 11 F4 A2 DF
+; F9: A0 E2 E6 FE A9 01 29 7F  85 E7 20 5D F6 F0 E4
+; E9G
+
+
 ; zero page locations
 GBASL		=	$26
 GBASH		=	$27
