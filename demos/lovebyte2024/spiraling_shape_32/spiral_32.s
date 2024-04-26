@@ -31,6 +31,8 @@ XDRAW0		=	$F65D
 
 spiraling_shape:
 	jsr	HGR2		; Set Hi-resolution  (280x192) mode
+				; and clear screen to black0
+				;   (purple/green fringes)
 				; HGR2 means use PAGE2 ($4000)
 				; and no text at bottom
 
@@ -60,20 +62,22 @@ tiny_loop:
 
 	inc	HGR_ROTATION	; rotate the line, also make it larger
 
-	lda	#1		; HGR_ROTATION is HERE ($FE)
+	lda	#1		; HGR_ROTATION is HERE (zero page $FE)
 				; we also use it for scale
 
-	and	#$7f		; cut off before it gets too awful
+	and	#$7f		; cut off before it gets too awful (big)
 	sta	HGR_SCALE	; and save as SCALE size
 
-	jsr	XDRAW0		; similary to BASIC XDRAW 1 AT X,Y
+	jsr	XDRAW0		; similar to BASIC's XDRAW 1 AT X,Y
 
 				; XDRAW does an exclusive-or shape table
-				; draw, so it draws the spiral first, then
+				; draw (essentially in-ROM scaled vector
+				; drawing)
+				; XOR so it draws the spiral first, then
 				; undraws it on the second pass
 
 				; XDRAW0 entry point expects
-				;	shape poitner in X/Y
+				;	shape pointer in X/Y
 				;	and rotation in A
 
 				; Both A and X are 0 at exit
@@ -89,8 +93,25 @@ tiny_loop:
 
 our_shape = $E2DF		; location in the Applesoft ROM
 				; that holds $11,$F0,$03,$20,$00
-				; which makes a nice line when
+				; which makes a nice line-ish pattern when
 				; interpreted as a shape table
 				; (it points into the code for the FRE()
 				;  BASIC routine but that's not important)
+
+; For the curious, the patterns was found experimentally
+;	(looking for short ROM patterns with a convenient terminating 0)
+
+; NRT = no-draw, move right
+; DN  = draw, move down
+; etc.
+; NOP = do nothing (special case as top 2 bits not enough to hold
+;		a full complement of movements)
+
+; $11, $F0, $03, $20, $00 corresponds to
+
+; 0001 0001	=  00 010 001		NRT NDN NOP
+; 1111 0000	=  11 110 000		NUP DN  NLT
+; 0000 0011	=  00 000 011		NLT NUP NOP
+; 0010 0000     =  00 100 000		NUP UP  NOP
+; 0000 0000	= end of shape
 
