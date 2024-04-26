@@ -25,7 +25,8 @@ XDRAW1		=	$F661
 HPLOT0		=	$F457
 
 spiraling_shape:
-	jsr	HGR2		; Hi-res, full screen		; 3
+	jsr	HGR2		; Set Hi-resolution  (140x192) mode
+				; HGR2 means use PAGE2 and no text at bottom
 				; Y=0, A=0 after this call
 
 	; A and Y are 0 here.
@@ -73,7 +74,8 @@ tiny_loop:
 
 our_shape = $E2DF		; location in the Applesoft ROM
 				; that holds $11,$F0,$03,$20,$00
-				; which makes a nice line in shape table
+				; which makes a nice line when
+				; interpreted as a shape table
 				; (it points into the code for the FRE()
 				;  BASIC routine but that's not important)
 
