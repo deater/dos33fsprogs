@@ -1,0 +1,10 @@
+# reverse engineering what the pattern we picked actually looks like
+#
+# Number of shapes
+1
+START
+NRT NDN NOP
+NUP DN NLT
+NLT NUP NOP
+NUP UP NOP
+STOP

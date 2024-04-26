@@ -93,8 +93,8 @@ tiny_loop:
 
 our_shape = $E2DF		; location in the Applesoft ROM
 				; that holds $11,$F0,$03,$20,$00
-				; which makes an offset right-angle
-				; double line-ish pattern when
+				; which makes two offset lines,
+				; one up, one down, when
 				; interpreted as a shape table
 				; (it points into the code for the FRE()
 				;  BASIC routine but that's not important)
@@ -118,7 +118,7 @@ our_shape = $E2DF		; location in the Applesoft ROM
 
 ; x is the starting point, * are the two line segments drawn
 
-;                      .
+;                      ^
 ;                      *
 ;                      . x *
-;                      . . .
+;                      . . V
