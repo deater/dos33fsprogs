@@ -6,7 +6,7 @@
 
 ; Lovebyte 2024
 
-; Spiral plus some bass notes in 31 bytes
+; Spiral plus some bass notes in 31 bytes on Apple II
 
 ; You can enter it directly onto your Apple II with the following:
 ; CALL -151
@@ -16,8 +16,6 @@
 
 
 ; zero page locations
-GBASL		=	$26
-GBASH		=	$27
 HGR_SCALE	=	$E7
 HGR_COLLISION	=	$EA		; overlaps our code, but it's OK
 					; as it's modified after the HGR2
@@ -30,52 +28,60 @@ HGR_ROTATION	=	$FE		; IMPORTANT! set this right!
 HGR2		=	$F3D8
 HPOSN		=	$F411
 XDRAW0		=	$F65D
-XDRAW1		=	$F661
-HPLOT0		=	$F457
 
 spiraling_shape:
-	jsr	HGR2		; Set Hi-resolution  (140x192) mode
-				; HGR2 means use PAGE2 and no text at bottom
+	jsr	HGR2		; Set Hi-resolution  (280x192) mode
+				; HGR2 means use PAGE2 ($4000)
+				; and no text at bottom
+
 				; Y=0, A=0 after this call
 
-	; A and Y are 0 here.
-	; X is left behind by the boot process?
+	; A and Y are always 0 here.
+	; we can't rely on X (left behind by the boot process?)
 
 tiny_loop:
 	bit	$C030		; click the speaker for some sound
 
-	tay	; ldy #0		; A always 0 here
+	tay			; set Y to 0 (A always 0 here)
 
 	ldx	#140		; center spiral on the screen
 				; this is expensive
 	lda	#96		; but otherwise doesn't look right
 
-	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
-				; saves X,Y,A to zero page
-				; after Y= orig X/7
+	jsr	HPOSN		; set screen position to xpos= (Y,X) ypos=(A)
+				; so xpos = (Y*256)+X, ypos = (A)
+
+				; as side effect saves X,Y,A to zero page
+				; after returning Y = orig X/7
 				; A and X are ??
 
-	ldx	#<our_shape		; load $E2DF
-	ldy	#>our_shape		;
+	ldx	#<our_shape	; load pointer to $E2DF
+	ldy	#>our_shape	;
+
 	inc	HGR_ROTATION	; rotate the line, also make it larger
 
 	lda	#1		; HGR_ROTATION is HERE ($FE)
 				; we also use it for scale
 
 	and	#$7f		; cut off before it gets too awful
-	sta	HGR_SCALE
+	sta	HGR_SCALE	; and save as SCALE size
 
-	jsr	XDRAW0		; XDRAW 1 AT X,Y
+	jsr	XDRAW0		; similary to BASIC XDRAW 1 AT X,Y
 
 				; XDRAW does an exclusive-or shape table
 				; draw, so it draws the spiral first, then
 				; undraws it on the second pass
 
+				; XDRAW0 entry point expects
+				;	shape poitner in X/Y
+				;	and rotation in A
+
 				; Both A and X are 0 at exit
 				; Z flag set on exit
 				; Y varies
 
-	beq	tiny_loop	; bra
+	beq	tiny_loop	; bra (branch always)
+				; 1 byte shorter than a JMP
 
 	; o/~ No way to stop o/~
 
