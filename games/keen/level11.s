@@ -3,19 +3,19 @@
 ; at $6000
 
 level11_data:
-.byte	20	;MAX_TILE_X 		= 20	; 20 wide
-.byte	26	;MAX_TILE_Y 		= 26	; 26 tall
+.byte	40	;MAX_TILE_X
+.byte	36	;MAX_TILE_Y
 
-.byte	1	;START_KEEN_TILEX	= 1
-.byte	13	;START_KEEN_TILEY	= 13
+.byte	1	;START_KEEN_TILEX
+.byte	32	;START_KEEN_TILEY
 
-.byte	0	;START_TILEMAP_X	= 0
-.byte	5	;START_TILEMAP_Y	= 5
+.byte	0	;START_TILEMAP_X
+.byte	24	;START_TILEMAP_Y
 
-.byte	0	;NUM_ENEMIES		= 8
+.byte	0	;NUM_ENEMIES	1
 
-.byte	32	;HARDTOP_TILES   	= 32	; start at 32
-.byte	40	;ALLHARD_TILES   	= 40	; start at 40
+.byte	40	;HARDTOP_TILES
+.byte	48	;ALLHARD_TILES
 
 
 .align	$100
@@ -24,14 +24,16 @@ level11_data:
 enemy_data:
 .byte $0
 
+; garg @ 13,2
+
 .align	$100
 
 ; at $6200
 oracle_message:
 	;      012345678901234567890123456789012345678
 	.byte 2,21,"YOU HEAR IN YOUR MIND:",0
-	.byte 2,22,"IT IS TOO BAD THAT YOU CANNOT READ",0
-	.byte 2,23,"THE STANDARD GALACTIC ALPHABET, HUMAN",0
+	.byte 2,22,"GAAARRRRRGG!",0
+
 
 .align $100
 
