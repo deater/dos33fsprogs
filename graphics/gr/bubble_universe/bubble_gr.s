@@ -1,6 +1,4 @@
-; bubble universe -- Apple II Hires
-
-; size optimized version, using ROM (slower)
+; bubble universe -- Apple II Lores
 
 ; by Vince `deater` Weaver
 
@@ -11,32 +9,52 @@
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-;  534 bytes -- tiny version
-;  250 bytes -- strip out fast clear and hplot code and use ROM
-
-; 76d03 cycles = 486659 cycles = 2fps
-
 ; soft-switches
 
 KEYPRESS	= $C000
 KEYRESET	= $C010
+
+SET_GR		= $C050
+SET_TEXT	= $C051
+FULLGR		= $C052
+TEXTGR		= $C053
 PAGE1		= $C054
 PAGE2		= $C055
 
+
 ; ROM routines
 
-BKGND0		= $F3F4         ; clear current page to A
-HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
-HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
-HPLOT0		= $F457		; plot at (Y,X), (A)
-HCOLOR1	= $F6F0		; set HGR_COLOR to value in X
+;BKGND0		= $F3F4         ; clear current page to A
+;HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
+;HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
+;HPLOT0		= $F457		; plot at (Y,X), (A)
+;HCOLOR1	= $F6F0		; set HGR_COLOR to value in X
 ;COLORTBL	= $F6F6
 ;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+
+PLOT    = $F800                 ;; PLOT AT Y,A
+PLOT1   = $F80E                 ;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
+HLINE   = $F819                 ;; HLINE Y,$2C at A
+VLINE   = $F828                 ;; VLINE A,$2D at Y
+CLRSCR  = $F832                 ;; Clear low-res screen
+CLRTOP  = $F836                 ;; clear only top of low-res screen
+GBASCALC= $F847                 ;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+SETCOL  = $F864                 ;; COLOR=A
+ROM_TEXT2COPY = $F962           ;; iigs
+SETTXT  = $FB36
+SETGR   = $FB40
+
+
+
+
 
 ; zero page
 
 GBASL		= $26
 GBASH		= $27
+MASK    = $2E
+COLOR   = $30
+
 
 
 HPLOTYL		= $92
@@ -54,40 +72,32 @@ INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-; const
 
-;NUM		= 32
-;NUM		= 24
-
-bubble:
+bubble_gr:
 
 	;========================
 	; setup lookup tables
-
-;	jsr	hgr_make_tables
-
-;	jsr	hgr_clear_codegen
 
 	jsr	setup_sine_table
 
 	;=======================
 	; init graphics
 
-	jsr	HGR
-	jsr	HGR2
+	jsr	SETGR
+;	jsr	HGR
+;	jsr	HGR2
 
 	;=======================
 	; init variables
 
 	; HGR leaves A at 0
 
-;	lda	#0
+	lda	#0
 	sta	U
 	sta	V
 	sta	T
 
-	ldx	#7
-	jsr	HCOLOR1
+
 
 	;=========================
 	;=========================
@@ -96,6 +106,8 @@ bubble:
 	;=========================
 
 next_frame:
+	lda	#$FF
+	sta	COLOR
 
 	; reset I*T
 
@@ -147,22 +159,32 @@ it1_smc:
 
 	;===========================================================
 	; HPLOT U+44,V+96
+
+	; PLOT U+20,V+20
+
 	;	U is centered at 96, to get to center of 280 screen add 44
 
 	; U already in A
 
-	adc	#44							; 2
-	tax								; 2
+;	adc	#44							; 2
+	lsr
+	lsr
+	tay								; 2
 
 	; calculate Ypos
 	lda	V
+	lsr
+	lsr
 
 ;HPLOT0		= $F457		; plot at (Y,X), (A)
 
-	ldy	#0
+;	ldy	#0
 
-	jsr	HPLOT0
+;	jsr	HPLOT0
 
+;PLOT    = $F800                 ;; PLOT AT Y,A
+
+	jsr	PLOT
 
 	dec	J
 	bne	j_loop
@@ -211,29 +233,43 @@ check_m:
 .endif
 done_keys:
 
-flip_pages:
+;flip_pages:
 	; flip pages
 
 	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
 	; if $40 (draw PAGE2) draw PAGE1, SHOW page2
 
-	lda	HGR_PAGE
-	eor	#$60
-	sta	HGR_PAGE
+;	lda	HGR_PAGE
+;	eor	#$60
+;	sta	HGR_PAGE
 
-	cmp	#$40
-	bne	flip2
-flip1:
-	bit	PAGE1
-	lda	#0
-	jsr	BKGND0
+;	cmp	#$40
+;	bne	flip2
+;flip1:
+;	bit	PAGE1
+;	lda	#0
+;	jsr	BKGND0
 ;	jsr	hgr_page2_clearscreen
-	jmp	next_frame
-flip2:
-	bit	PAGE2
-	lda	#0
-	jsr	BKGND0
+;	jmp	next_frame
+;flip2:
+;	bit	PAGE2
+;	lda	#0
+;	jsr	BKGND0
 ;	jsr	hgr_page1_clearscreen
+
+;	jsr	SETGR
+
+	lda	#0
+	ldy	#$0
+clear_loop:
+	sta	$400,Y
+	sta	$500,Y
+	sta	$600,Y
+	sta	$700,Y
+	dey
+	bne	clear_loop
+
+
 	jmp	next_frame
 
 
