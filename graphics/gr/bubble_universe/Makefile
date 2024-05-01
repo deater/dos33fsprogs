@@ -5,7 +5,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts
 EMPTY_DISK = ../../../empty_disk
 
-all:	bubble_gr.dsk
+all:	bubble_gr.dsk make_table
 
 bubble_gr.dsk:	HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
 	cp $(EMPTY_DISK)/empty.dsk bubble_gr.dsk
@@ -43,10 +43,18 @@ BUBBLE_TINY:	bubble_tiny.o
 bubble_tiny.o:	bubble_tiny.s
 	ca65 -o bubble_tiny.o bubble_tiny.s -l bubble_tiny.lst
 
+###
 
+make_table:	make_table.o
+	$(CC) $(LFLAGS) -o make_table make_table.o
+
+make_table.o:	make_table.c
+	$(CC) $(CFLAGS) -c make_table.c
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
+	rm -f *~ *.o *.lst make_table \
+		HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
+
 
