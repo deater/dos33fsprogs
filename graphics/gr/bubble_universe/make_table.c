@@ -2,7 +2,7 @@
 
 int main(int argc, char **argv) {
 
-	int x;
+	int a,x,y;
 
 	unsigned char values[256];
 
@@ -37,11 +37,48 @@ int main(int argc, char **argv) {
 //	bpl	loop		; 2
 //done:
 
+#if 0
 	for(x=0;x<256;x++) {
 		values[x]=x-0x11;
 		if (x%16==0) values[x]=(values[x]&0xf0)+0x10;
 		if (x<16) values[x]&=0xf;
 	}
+#endif
+
+#if 0
+	y=0;
+loop2:
+	a=0;
+loop1:
+	values[y]=a;
+	y++;
+	for(x=0;x<15;x++) {
+		values[y]=a;
+		a+=16;
+		y++;
+
+	}
+	a+=17;
+	if (y==16) goto loop2;
+	if(y!=256) goto loop1;
+#endif
+
+	y=0;
+loop2:
+	a=0;
+loop1:
+//	values[y]=a;
+//	y++;
+	for(x=0;x<16;x++) {
+		values[y]=a;
+		if (x) a+=16;
+		y++;
+
+	}
+	a+=17;
+	if (y==16) goto loop2;
+	if(y!=256) goto loop1;
+
 
 	for(x=0;x<256;x++) {
 		if (x%16==0) printf("\n");

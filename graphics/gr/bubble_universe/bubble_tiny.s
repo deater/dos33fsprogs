@@ -13,6 +13,9 @@
 ; 531 bytes = remove keyboard code
 ; 527 bytes = inline sine gen
 ; 523 bytes = optimize init a bit
+; 301 bytes = generate color lookup table
+; 297 bytes = optimize color lookup table
+; 282 bytes = optimize color shift
 
 ; soft-switches
 
@@ -57,10 +60,8 @@ SETGR   = $FB40
 
 GBASL		= $26
 GBASH		= $27
-MASK    = $2E
-COLOR   = $30
-
-
+MASK		= $2E
+COLOR		= $30
 
 HPLOTYL		= $92
 
@@ -77,12 +78,13 @@ INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-
-
 sines	= $6c00
 sines2	= $6d00
 cosines = $6e00
 cosines2= $6f00
+
+color_map = $1000
+
 
 bubble_gr:
 
@@ -97,7 +99,68 @@ bubble_gr:
 	; setup lookup tables
 	;========================
 
+	;========================
+	; color lookup
+	;========================
+	; 34 bytes originally
+	; 30 updated
 
+	ldy	#0	; y=0;
+loop2:
+	lda	#0	; a=0;
+loop1:
+	sta	color_map,Y	; values[y]=a;
+	iny			; y++;
+
+	ldx	#15
+xloop:
+	sta	color_map,Y	; values[y]=a;
+	clc
+	adc	#$10		; a+=16
+	iny
+	dex
+	bne	xloop
+
+;	clc
+	adc	#$11
+
+	cpy	#16
+	beq	loop2
+	cpy	#0
+	bne	loop1
+
+.if 0
+	ldy	#0		; 2
+xloop:
+	ldx	#15		; 2
+loop:
+	tya			; 1
+	sec			; 1
+	sbc	#$11		; 2
+
+	cpx	#15		; 2
+	bne	skip2		; 2
+	and	#$f0		; 2
+	clc			; 1
+	adc	#$10		; 2
+
+skip2:
+
+	cpy	#16		; 2
+	bcs	skip		; 2
+	and	#$f		; 2
+skip:
+	sta	color_map,Y	; 3
+	iny			; 1
+	beq	done		; 2
+	dex			; 1
+	bmi	xloop		; 2
+	bpl	loop		; 2
+done:
+.endif
+	;==========================
+	; make sine/cosine tables
+	;==========================
 
 ; floor(s*sin((x-96)*PI*2/256.0)+48.5);
 
@@ -164,9 +227,9 @@ cosine_loop:
 	sty	U
 	sty	V
 	sty	T
+	sty	INL
 
-	dey
-;	lda	#$FF			; reset color to white, needed?
+	dey				; Y=FF (color white)
 	sty	COLOR
 
 	;=========================
@@ -231,9 +294,6 @@ it1_smc:
 
 	; U already in A
 
-;	adc	#44							; 2
-;	lsr
-;	lsr
 	sbc	#48
 	tay								; 2
 	bmi	no_plot
@@ -246,9 +306,6 @@ it1_smc:
 	bmi	no_plot
 	cmp	#48
 	bcs	no_plot
-;	lsr
-;	lsr
-
 
 ;PLOT    = $F800                 ;; PLOT AT Y,A
 
@@ -304,7 +361,22 @@ flip_pages:
 
 
 	ldy	#$0
+	lda	#4
+	sta	INH
 clear_loop:
+	lda	(INL),Y
+	tax
+	lda	color_map,X
+	sta	(INL),Y
+	iny
+	bne	clear_loop
+
+	inc	INH
+	lda	INH
+	cmp	#$8
+	bne	clear_loop
+
+.if 0
 	ldx	$400,Y
 	lda	color_map,X
 	sta	$400,Y
@@ -322,8 +394,9 @@ clear_loop:
 	sta	$700,Y
 	dey
 	bne	clear_loop
+.endif
 
-	jmp	next_frame		; just out of range...
+	beq	next_frame		; just out of range...
 
 
 
@@ -339,7 +412,7 @@ sines_base:
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
 
-
+.if 0
 color_map:
        ; 00  10  20  30  40  50  60  70  80  90  A0  B0  C0  D0  E0  F0
 .byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;0
@@ -358,5 +431,5 @@ color_map:
 .byte	$0C,$0C,$1C,$2C,$3C,$4C,$5C,$6C,$7C,$8C,$9C,$AC,$BC,$CC,$DC,$EC	;D
 .byte	$0D,$0D,$1D,$2D,$3D,$4D,$5D,$6D,$7D,$8D,$9D,$AD,$BD,$CD,$DD,$ED	;E
 .byte	$0E,$0E,$1E,$2E,$3E,$4E,$5E,$6E,$7E,$8E,$9E,$AE,$BE,$CE,$DE,$EE	;F
-
+.endif
 
