@@ -7,11 +7,12 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	bubble_gr.dsk make_table
 
-bubble_gr.dsk:	HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
+bubble_gr.dsk:	HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_SMALL BUBBLE_TINY
 	cp $(EMPTY_DISK)/empty.dsk bubble_gr.dsk
 	$(DOS33) -y bubble_gr.dsk SAVE A HELLO
 	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_GR
 	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_COLOR
+	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_SMALL
 	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_TINY
 
 ###
@@ -37,6 +38,14 @@ bubble_color.o:	bubble_color.s
 
 ###
 
+BUBBLE_SMALL:	bubble_small.o
+	ld65 -o BUBBLE_SMALL bubble_small.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
+
+bubble_small.o:	bubble_small.s
+	ca65 -o bubble_small.o bubble_small.s -l bubble_small.lst
+
+###
+
 BUBBLE_TINY:	bubble_tiny.o
 	ld65 -o BUBBLE_TINY bubble_tiny.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
@@ -55,6 +64,6 @@ make_table.o:	make_table.c
 
 clean:	
 	rm -f *~ *.o *.lst make_table \
-		HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
+		HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_SMALL BUBBLE_TINY
 
 

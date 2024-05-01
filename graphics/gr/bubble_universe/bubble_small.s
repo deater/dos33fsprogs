@@ -1,4 +1,6 @@
-; bubble universe tiny -- Apple II Lores
+; bubble universe small -- Apple II Lores
+
+; smallest I could get with original sine table
 
 ; by Vince `deater` Weaver
 
@@ -16,8 +18,6 @@
 ; 301 bytes = generate color lookup table
 ; 297 bytes = optimize color lookup table
 ; 282 bytes = optimize color shift
-; 266 bytes = reduce resolution of sine table x2
-; 260 bytes = shave off some bytes with unneeded compares
 
 ; soft-switches
 
@@ -80,8 +80,6 @@ INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-SINES_BASE	= $C0
-
 sines	= $6c00
 sines2	= $6d00
 cosines = $6e00
@@ -109,37 +107,71 @@ bubble_gr:
 	; 34 bytes originally
 	; 30 updated
 
-	ldx	#0	; x=0;			; 2
+	ldy	#0	; y=0;			; 2
 loop2:
 	lda	#0	; a=0;			; 2
 loop1:
-	ldy	#0				; 2
-yloop:
+	ldx	#0				; 2
+xloop:
 	clc					; 1
-	sta	color_map,X	; values[y]=a;	; 3
+	sta	color_map,Y	; values[y]=a;	; 3
 	beq	skip				; 2
 	adc	#$10		; a+=16		; 2
 skip:
-	inx					; 1
 	iny					; 1
-	cpy	#16				; 2
-	bne	yloop				; 2
+	inx					; 1
+	cpx	#16				; 2
+	bne	xloop				; 2
 
 ;	sec
 	adc	#$10		; carry set here	; 2
 
-	cpx	#16				; 2
+	cpy	#16				; 2
 	beq	loop2				; 2
-	cpx	#0				; 2
+	cpy	#0				; 2
 	bne	loop1				; 2
 
-	; X=0 here
+.if 0
+	ldy	#0		; 2
+xloop:
+	ldx	#15		; 2
+loop:
+	tya			; 1
+	sec			; 1
+	sbc	#$11		; 2
 
+	cpx	#15		; 2
+	bne	skip2		; 2
+	and	#$f0		; 2
+	clc			; 1
+	adc	#$10		; 2
+
+skip2:
+
+	cpy	#16		; 2
+	bcs	skip		; 2
+	and	#$f		; 2
+skip:
+	sta	color_map,Y	; 3
+	iny			; 1
+	beq	done		; 2
+	dex			; 1
+	bmi	xloop		; 2
+	bpl	loop		; 2
+done:
+.endif
 	;==========================
 	; make sine/cosine tables
 	;==========================
 
-	; floor(s*sin((x-96)*PI*2/256.0)+48.5);
+; floor(s*sin((x-96)*PI*2/256.0)+48.5);
+
+; note: min=7, around 32
+;       max=89 ($59), around 160
+;	subtract 7, so 0...82?  halfway = 41 = $29 + 7 = $30
+;       halfway= 6*16 = 96
+
+
 
 	;===================================
 	;
@@ -151,56 +183,42 @@ skip:
 
 setup_sine_table:
 
-	; spread sine table
-	ldy	#32
-;	ldx	#0
-spread_loop:
-	lda	sines_base,Y
-	sta	SINES_BASE,X
-	inx
-	sta	SINES_BASE,X
-	inx
-	dey
-	bne	spread_loop
-
-
-	ldx	#64
 	ldy	#64
+	ldx	#64
 setup_sine_loop:
 
-	lda	SINES_BASE,X
-
-	sta	sines,X
-	sta	sines2,X
+	lda	sines_base,Y
 	sta	sines,Y
 	sta	sines2,Y
+	sta	sines,X
+	sta	sines2,X
 
 	lda	#$60
 	sec
-	sbc	SINES_BASE,X
+	sbc	sines_base,Y
 
-	sta	sines+128,X
-	sta	sines2+128,X
 	sta	sines+128,Y
 	sta	sines2+128,Y
+	sta	sines+128,X
+	sta	sines2+128,X
 
-	iny
-	dex
+	inx
+	dey
 	bpl	setup_sine_loop
 
-	; X is $FF here?
+	; Y is $FF here?
 
-	inx
+	iny
 
-;	ldx	#0
+;	ldy	#0
 cosine_loop:
-	lda	sines+192,X
-	sta	cosines,X
-	sta	cosines2,X
-	inx
+	lda	sines+192,Y
+	sta	cosines,Y
+	sta	cosines2,Y
+	iny
 	bne	cosine_loop
 
-	; X is 0 here?
+	; Y is 0 here?
 
 	;=======================
 	; init variables
@@ -208,13 +226,13 @@ cosine_loop:
 	;
 
 ;	lda	#0
-	stx	U
-	stx	V
-	stx	T
-	stx	INL
+	sty	U
+	sty	V
+	sty	T
+	sty	INL
 
-	dex				; Y=$FF (color white)
-	stx	COLOR
+	dey				; Y=$FF (color white)
+	sty	COLOR
 
 	;=========================
 	;=========================
@@ -280,7 +298,7 @@ it1_smc:
 ;	sec
 	sbc	#48
 	tay								; 2
-;	bmi	no_plot
+	bmi	no_plot
 	cpy	#40
 	bcs	no_plot
 
@@ -288,7 +306,7 @@ it1_smc:
 	lda	V
 ;	sec
 	sbc	#48
-;	bmi	no_plot
+	bmi	no_plot
 	cmp	#48
 	bcs	no_plot
 
@@ -316,65 +334,98 @@ done_i:
 
 end:
 
-	;=================
-	; cycle colors
+
+
+flip_pages:
+	; flip pages
+
+	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
+	; if $40 (draw PAGE2) draw PAGE1, SHOW page2
+
+;	lda	HGR_PAGE
+;	eor	#$60
+;	sta	HGR_PAGE
+
+;	cmp	#$40
+;	bne	flip2
+;flip1:
+;	bit	PAGE1
+;	lda	#0
+;	jsr	BKGND0
+;	jsr	hgr_page2_clearscreen
+;	jmp	next_frame
+;flip2:
+;	bit	PAGE2
+;	lda	#0
+;	jsr	BKGND0
+;	jsr	hgr_page1_clearscreen
+
+;	jsr	SETGR
+
 
 	ldy	#$0
 	lda	#4
 	sta	INH
-cycle_color_loop:
+clear_loop:
 	lda	(INL),Y
 	tax
 	lda	color_map,X
 	sta	(INL),Y
 	iny
-	bne	cycle_color_loop
-
-	; need to do this for pages 4-7
+	bne	clear_loop
 
 	inc	INH
 	lda	INH
 	cmp	#$8
-	bne	cycle_color_loop
+	bne	clear_loop
+
+.if 0
+	ldx	$400,Y
+	lda	color_map,X
+	sta	$400,Y
+
+	ldx	$500,Y
+	lda	color_map,X
+	sta	$500,Y
+
+	ldx	$600,Y
+	lda	color_map,X
+	sta	$600,Y
+
+	ldx	$700,Y
+	lda	color_map,X
+	sta	$700,Y
+	dey
+	bne	clear_loop
+.endif
 
 	beq	next_frame		; just out of range...
 
 
-; original
-.if 0
+
 sines_base:
 	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 	.byte $40,$41,$42,$42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
 	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
 	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59
 	.byte $59
-.endif
 
-; half as many points
-.if 0
-sines_base:
-	.byte $30,$32,$34,$36,$38,$3A,$3C,$3E
-	.byte $40,$42,$43,$45,$47,$48,$4A,$4C
-	.byte $4D,$4E,$50,$51,$52,$53,$54,$55
-	.byte $56,$57,$57,$58,$58,$59,$59,$59
-	.byte $59
-.endif
-
-sines_base_reverse:
-sines_base:
-	.byte $59
-	.byte $59,$59,$59,$58, $58,$57,$57,$56
-	.byte $55,$54,$53,$52, $51,$50,$4E,$4D
-	.byte $4C,$4A,$48,$47, $45,$43,$42,$40
-	.byte $3E,$3C,$3A,$38, $36,$34,$32,$30
 
 .if 0
-; 26 - x^2/64+2x
 sines_base:
 	.byte $2F,$30,$31,$33,$34,$35,$36,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$40
 	.byte $41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$4A,$4B,$4C,$4D,$4D,$4E
 	.byte $4F,$4F,$50,$51,$51,$52,$52,$53,$53,$54,$54,$55,$55,$56,$56,$56
 	.byte $57,$57,$57,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59,$59,$59,$59
+	.byte $59
+.endif
+
+.if 0
+sines_base:
+	.byte $2F,$2f,$31,$31,$34,$34,$36,$36,$39,$39,$3B,$3B,$3D,$3D,$3F,$3F
+	.byte $41,$41,$43,$43,$45,$45,$47,$47,$49,$49,$4A,$4A,$4C,$4C,$4D,$4D
+	.byte $4F,$4F,$50,$50,$51,$51,$52,$52,$53,$53,$54,$54,$55,$55,$56,$56
+	.byte $57,$57,$58,$58,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59,$59,$59
 	.byte $59
 .endif
 
@@ -388,4 +439,25 @@ sines_base:
 .endif
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
+
+.if 0
+color_map:
+       ; 00  10  20  30  40  50  60  70  80  90  A0  B0  C0  D0  E0  F0
+.byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;0
+.byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;1
+.byte	$01,$01,$11,$21,$31,$41,$51,$61,$71,$81,$91,$A1,$B1,$C1,$D0,$E1	;2
+.byte	$02,$02,$12,$22,$32,$42,$52,$62,$72,$82,$92,$A2,$B2,$C2,$D2,$E2	;3
+.byte	$03,$03,$13,$23,$33,$43,$53,$63,$73,$83,$93,$A3,$B3,$C3,$D3,$E3	;4
+.byte	$04,$04,$14,$24,$34,$44,$54,$64,$74,$84,$94,$A4,$B4,$C4,$D4,$E4	;5
+.byte	$05,$05,$15,$25,$35,$45,$55,$65,$75,$85,$95,$A5,$B5,$C5,$D5,$E5	;6
+.byte	$06,$06,$16,$26,$36,$46,$56,$66,$76,$86,$96,$A6,$B6,$C6,$D6,$E6	;7
+.byte	$07,$07,$17,$27,$37,$47,$57,$67,$77,$87,$97,$A7,$B7,$C7,$D7,$E7	;8
+.byte	$08,$08,$18,$28,$38,$48,$58,$68,$78,$88,$98,$A8,$B8,$C8,$D8,$E8	;9
+.byte	$09,$09,$19,$29,$39,$49,$59,$69,$79,$89,$99,$A9,$B9,$C9,$D9,$E9	;A
+.byte	$0A,$0A,$1A,$2A,$3A,$4A,$5A,$6A,$7A,$8A,$9A,$AA,$BA,$CA,$DA,$EA	;B
+.byte	$0B,$0B,$1B,$2B,$3B,$4B,$5B,$6B,$7B,$8B,$9B,$AB,$BB,$CB,$DB,$EB	;C
+.byte	$0C,$0C,$1C,$2C,$3C,$4C,$5C,$6C,$7C,$8C,$9C,$AC,$BC,$CC,$DC,$EC	;D
+.byte	$0D,$0D,$1D,$2D,$3D,$4D,$5D,$6D,$7D,$8D,$9D,$AD,$BD,$CD,$DD,$ED	;E
+.byte	$0E,$0E,$1E,$2E,$3E,$4E,$5E,$6E,$7E,$8E,$9E,$AE,$BE,$CE,$DE,$EE	;F
+.endif
 

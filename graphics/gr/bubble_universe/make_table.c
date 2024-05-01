@@ -84,7 +84,18 @@ loop1:
 		if (x%16==0) printf("\n");
 		printf("$%02X ",values[x]);
 	}
-	printf("\n");
+	printf("\n\n");
+
+	int newx;
+	for(x=0;x<64;x++) {
+
+		newx=(x-64);
+		printf("$%02X,",89-(newx*newx)/96);
+//		printf("$%02X,",26-(x*x)/64+2*x);
+	}
+
+
+
 
 	return 0;
 }
