@@ -84,6 +84,8 @@ SINES_BASE	= $C0
 
 sines	= $6c00
 sines2	= $6d00
+
+; must be aligned :(
 cosines = $6e00
 cosines2= $6f00
 
@@ -97,6 +99,10 @@ bubble_gr:
 	;=======================
 
 	jsr	SETGR
+
+	; can't rely on registers after this as different on IIe
+	;	with 80 col card
+
 	bit	FULLGR
 
 	;========================
@@ -150,21 +156,54 @@ skip:
 	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
 
 setup_sine_table:
-
+.if 0
 	; spread sine table
 	ldy	#32
-;	ldx	#0
+;	ldx	#0		; set previously
 spread_loop:
+	tya
+	lsr
+	tax
+
 	lda	sines_base,Y
-	sta	SINES_BASE,X
-	inx
-	sta	SINES_BASE,X
-	inx
+
+	sta	SINES_BASE,X	; double the output
+;	inx
+;	sta	SINES_BASE,X
+;	inx
 	dey
+	bne	spread_loop
+.endif
+
+
+
+	; spread sine table
+
+	; load from sines_base,Y/2
+	;	store to SINES_BASE,Y
+
+;	ldy	#32
+;	ldx	#0		; set previously
+spread_loop:
+	txa
+	lsr
+	tay
+
+	lda	sines_base,Y
+
+	sta	SINES_BASE,X	; double the output
+;	inx
+;	sta	SINES_BASE,X
+;	inx
+;	dey
+	inx
+	cpx	#64
 	bne	spread_loop
 
 
-	ldx	#64
+
+
+;	ldx	#64
 	ldy	#64
 setup_sine_loop:
 
@@ -193,6 +232,7 @@ setup_sine_loop:
 	inx
 
 ;	ldx	#0
+
 cosine_loop:
 	lda	sines+192,X
 	sta	cosines,X
@@ -351,22 +391,23 @@ sines_base:
 .endif
 
 ; half as many points
-.if 0
+
 sines_base:
 	.byte $30,$32,$34,$36,$38,$3A,$3C,$3E
 	.byte $40,$42,$43,$45,$47,$48,$4A,$4C
 	.byte $4D,$4E,$50,$51,$52,$53,$54,$55
 	.byte $56,$57,$57,$58,$58,$59,$59,$59
 	.byte $59
-.endif
 
+
+.if 0
 sines_base_reverse:
-sines_base:
 	.byte $59
 	.byte $59,$59,$59,$58, $58,$57,$57,$56
 	.byte $55,$54,$53,$52, $51,$50,$4E,$4D
 	.byte $4C,$4A,$48,$47, $45,$43,$42,$40
 	.byte $3E,$3C,$3A,$38, $36,$34,$32,$30
+.endif
 
 .if 0
 ; 26 - x^2/64+2x
