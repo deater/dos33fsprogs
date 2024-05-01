@@ -5,7 +5,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts
 EMPTY_DISK = ../../../empty_disk
 
-all:	bubble_gr.dsk
+all:	bubble_gr.dsk make_table
 
 bubble_gr.dsk:	HELLO BUBBLE_GR
 	cp $(EMPTY_DISK)/empty.dsk bubble_gr.dsk
@@ -24,6 +24,14 @@ BUBBLE_GR:	bubble_gr.o
 
 bubble_gr.o:	bubble_gr.s
 	ca65 -o bubble_gr.o bubble_gr.s -l bubble_gr.lst
+
+###
+
+make_table:	make_table.o
+	$(CC) $(LFLAGS) -o make_table make_table.o
+
+make_table.o:	make_table.c
+	$(CC) $(CFLAGS) -c make_table.c
 
 ###
 
