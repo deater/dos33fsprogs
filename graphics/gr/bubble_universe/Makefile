@@ -7,10 +7,12 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	bubble_gr.dsk
 
-bubble_gr.dsk:	HELLO BUBBLE_GR
+bubble_gr.dsk:	HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
 	cp $(EMPTY_DISK)/empty.dsk bubble_gr.dsk
 	$(DOS33) -y bubble_gr.dsk SAVE A HELLO
 	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_GR
+	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_COLOR
+	$(DOS33) -y bubble_gr.dsk BSAVE -a 0x2000 BUBBLE_TINY
 
 ###
 
@@ -27,6 +29,24 @@ bubble_gr.o:	bubble_gr.s
 
 ###
 
+BUBBLE_COLOR:	bubble_color.o
+	ld65 -o BUBBLE_COLOR bubble_color.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
+
+bubble_color.o:	bubble_color.s
+	ca65 -o bubble_color.o bubble_color.s -l bubble_color.lst
+
+###
+
+BUBBLE_TINY:	bubble_tiny.o
+	ld65 -o BUBBLE_TINY bubble_tiny.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
+
+bubble_tiny.o:	bubble_tiny.s
+	ca65 -o bubble_tiny.o bubble_tiny.s -l bubble_tiny.lst
+
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO BUBBLE_GR
+	rm -f *~ *.o *.lst HELLO BUBBLE_GR BUBBLE_COLOR BUBBLE_TINY
 

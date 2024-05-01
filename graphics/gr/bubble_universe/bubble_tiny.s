@@ -1,4 +1,4 @@
-; bubble universe -- Apple II Lores
+; bubble universe tiny -- Apple II Lores
 
 ; by Vince `deater` Weaver
 
@@ -8,6 +8,11 @@
 
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
+
+; 578 bytes = original color
+; 531 bytes = remove keyboard code
+; 527 bytes = inline sine gen
+; 523 bytes = optimize init a bit
 
 ; soft-switches
 
@@ -73,210 +78,26 @@ OUTL		= $FE
 OUTH		= $FF
 
 
+
+sines	= $6c00
+sines2	= $6d00
+cosines = $6e00
+cosines2= $6f00
+
 bubble_gr:
-
-	;========================
-	; setup lookup tables
-
-	jsr	setup_sine_table
 
 	;=======================
 	; init graphics
+	;=======================
 
 	jsr	SETGR
-;	jsr	HGR
-;	jsr	HGR2
+	bit	FULLGR
 
-	;=======================
-	; init variables
-
-	; HGR leaves A at 0
-
-	lda	#0
-	sta	U
-	sta	V
-	sta	T
+	;========================
+	; setup lookup tables
+	;========================
 
 
-
-	;=========================
-	;=========================
-	; main loop
-	;=========================
-	;=========================
-
-next_frame:
-	lda	#$FF
-	sta	COLOR
-
-	; reset I*T
-
-	lda	T
-	sta	it1_smc+1
-	sta	it2_smc+1
-
-	; reset I*S
-
-	lda	#0
-	sta	is1_smc+1
-	sta	is2_smc+1
-
-num1_smc:
-	lda	#24	; 40
-	sta	I
-
-i_loop:
-num2_smc:
-	lda	#24	; 200
-
-	sta	J
-j_loop:
-	ldx	U
-	ldy	V
-
-
-	; where S=41 (approximately 1/6.28)
-
-	clc			; 2
-
-
-
-	; calc:	b=i+t+u;
-	; 	u=cosines[a]+cosines[b];
-is2_smc:
-	lda	cosines,Y	; 4+
-it2_smc:
-	adc	cosines,X	; 4+
-	sta	V
-
-	; calc:	a=i*s+v;
-	; 	u=sines[a]+sines[b];
-is1_smc:
-	lda	sines,Y		; 4+
-it1_smc:
-	adc	sines,X		; 4+
-	sta	U		; 3
-
-	;===========================================================
-	; HPLOT U+44,V+96
-
-	; PLOT U+20,V+20
-
-	;	U is centered at 96, to get to center of 280 screen add 44
-
-	; U already in A
-
-;	adc	#44							; 2
-	lsr
-	lsr
-	tay								; 2
-
-	; calculate Ypos
-	lda	V
-	lsr
-	lsr
-
-;HPLOT0		= $F457		; plot at (Y,X), (A)
-
-;	ldy	#0
-
-;	jsr	HPLOT0
-
-;PLOT    = $F800                 ;; PLOT AT Y,A
-
-	jsr	PLOT
-
-	dec	J
-	bne	j_loop
-
-done_j:
-
-	lda	is1_smc+1
-	clc
-	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-	sta	is1_smc+1
-	sta	is2_smc+1
-	dec	I
-	bne	i_loop
-done_i:
-
-;	sty	V
-	inc	T
-
-end:
-
-.if 0
-	lda	KEYPRESS
-	bpl	flip_pages
-	bit	KEYRESET
-				; 0110 -> 0100
-	and	#$5f		; to handle lowercase too...
-
-	cmp	#'A'
-	bne	check_z
-	inc	num1_smc+1
-	jmp	done_keys
-check_z:
-	cmp	#'Z'
-	bne	check_j
-	dec	num1_smc+1
-	jmp	done_keys
-check_j:
-	cmp	#'J'
-	bne	check_m
-	inc	num2_smc+1
-	jmp	done_keys
-check_m:
-	cmp	#'M'
-	bne	done_keys
-	dec	num2_smc+1
-.endif
-done_keys:
-
-;flip_pages:
-	; flip pages
-
-	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
-	; if $40 (draw PAGE2) draw PAGE1, SHOW page2
-
-;	lda	HGR_PAGE
-;	eor	#$60
-;	sta	HGR_PAGE
-
-;	cmp	#$40
-;	bne	flip2
-;flip1:
-;	bit	PAGE1
-;	lda	#0
-;	jsr	BKGND0
-;	jsr	hgr_page2_clearscreen
-;	jmp	next_frame
-;flip2:
-;	bit	PAGE2
-;	lda	#0
-;	jsr	BKGND0
-;	jsr	hgr_page1_clearscreen
-
-;	jsr	SETGR
-
-	lda	#0
-	ldy	#$0
-clear_loop:
-	sta	$400,Y
-	sta	$500,Y
-	sta	$600,Y
-	sta	$700,Y
-	dey
-	bne	clear_loop
-
-
-	jmp	next_frame
-
-; f e d c b a 9 8 7 6 5 4 3   2   1   0		;
-;			 02  01  00   00	; 00
-;	                 02  01  00   00	; 10
-;		         12  11  10   10        ; 20
-;	                 22  21  20   20        ; 30
 
 ; floor(s*sin((x-96)*PI*2/256.0)+48.5);
 
@@ -285,10 +106,7 @@ clear_loop:
 ;	subtract 7, so 0...82?  halfway = 41 = $29 + 7 = $30
 ;       halfway= 6*16 = 96
 
-sines	= $6c00
-sines2	= $6d00
-cosines = $6e00
-cosines2= $6f00
+
 
 	;===================================
 	;
@@ -323,8 +141,11 @@ setup_sine_loop:
 	dey
 	bpl	setup_sine_loop
 
+	; Y is $FF here?
 
-	ldy	#0
+	iny
+
+;	ldy	#0
 cosine_loop:
 	lda	sines+192,Y
 	sta	cosines,Y
@@ -332,7 +153,182 @@ cosine_loop:
 	iny
 	bne	cosine_loop
 
-	rts
+	; Y is 0 here?
+
+	;=======================
+	; init variables
+	;=======================
+	;
+
+;	lda	#0
+	sty	U
+	sty	V
+	sty	T
+
+	dey
+;	lda	#$FF			; reset color to white, needed?
+	sty	COLOR
+
+	;=========================
+	;=========================
+	; main loop
+	;=========================
+	;=========================
+
+next_frame:
+
+	; reset I*T
+
+	lda	T
+	sta	it1_smc+1
+	sta	it2_smc+1
+
+	; reset I*S
+
+	lda	#0
+	sta	is1_smc+1
+	sta	is2_smc+1
+
+num1_smc:
+	lda	#13	; 13
+	sta	I
+
+i_loop:
+num2_smc:
+	lda	#$18	; 24
+
+	sta	J
+j_loop:
+	ldx	U
+	ldy	V
+
+	; where S=41 (approximately 1/6.28)
+
+	clc			; 2
+
+	; calc:	b=i+t+u;
+	; 	u=cosines[a]+cosines[b];
+is2_smc:
+	lda	cosines,Y	; 4+
+it2_smc:
+	adc	cosines,X	; 4+
+	sta	V
+
+	; calc:	a=i*s+v;
+	; 	u=sines[a]+sines[b];
+is1_smc:
+	lda	sines,Y		; 4+
+it1_smc:
+	adc	sines,X		; 4+
+	sta	U		; 3
+
+	;===========================================================
+	; HPLOT U+44,V+96
+
+	; PLOT U+20,V+20
+
+	;	U is centered at 96, to get to center of 280 screen add 44
+
+	; U already in A
+
+;	adc	#44							; 2
+;	lsr
+;	lsr
+	sbc	#48
+	tay								; 2
+	bmi	no_plot
+	cpy	#40
+	bcs	no_plot
+
+	; calculate Ypos
+	lda	V
+	sbc	#48
+	bmi	no_plot
+	cmp	#48
+	bcs	no_plot
+;	lsr
+;	lsr
+
+
+;PLOT    = $F800                 ;; PLOT AT Y,A
+
+	jsr	PLOT
+
+no_plot:
+	dec	J
+	bne	j_loop
+
+done_j:
+
+	lda	is1_smc+1
+	clc
+	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
+	sta	is1_smc+1
+	sta	is2_smc+1
+	dec	I
+	bne	i_loop
+done_i:
+
+;	sty	V
+	inc	T
+
+end:
+
+
+
+flip_pages:
+	; flip pages
+
+	; if $20 (draw PAGE1) draw PAGE2, SHOW page1
+	; if $40 (draw PAGE2) draw PAGE1, SHOW page2
+
+;	lda	HGR_PAGE
+;	eor	#$60
+;	sta	HGR_PAGE
+
+;	cmp	#$40
+;	bne	flip2
+;flip1:
+;	bit	PAGE1
+;	lda	#0
+;	jsr	BKGND0
+;	jsr	hgr_page2_clearscreen
+;	jmp	next_frame
+;flip2:
+;	bit	PAGE2
+;	lda	#0
+;	jsr	BKGND0
+;	jsr	hgr_page1_clearscreen
+
+;	jsr	SETGR
+
+
+	ldy	#$0
+clear_loop:
+	ldx	$400,Y
+	lda	color_map,X
+	sta	$400,Y
+
+	ldx	$500,Y
+	lda	color_map,X
+	sta	$500,Y
+
+	ldx	$600,Y
+	lda	color_map,X
+	sta	$600,Y
+
+	ldx	$700,Y
+	lda	color_map,X
+	sta	$700,Y
+	dey
+	bne	clear_loop
+
+	jmp	next_frame		; just out of range...
+
+
+
+
+
 
 sines_base:
 	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
@@ -342,4 +338,25 @@ sines_base:
 	.byte $59
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
+
+
+color_map:
+       ; 00  10  20  30  40  50  60  70  80  90  A0  B0  C0  D0  E0  F0
+.byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;0
+.byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;1
+.byte	$01,$01,$11,$21,$31,$41,$51,$61,$71,$81,$91,$A1,$B1,$C1,$D0,$E1	;2
+.byte	$02,$02,$12,$22,$32,$42,$52,$62,$72,$82,$92,$A2,$B2,$C2,$D2,$E2	;3
+.byte	$03,$03,$13,$23,$33,$43,$53,$63,$73,$83,$93,$A3,$B3,$C3,$D3,$E3	;4
+.byte	$04,$04,$14,$24,$34,$44,$54,$64,$74,$84,$94,$A4,$B4,$C4,$D4,$E4	;5
+.byte	$05,$05,$15,$25,$35,$45,$55,$65,$75,$85,$95,$A5,$B5,$C5,$D5,$E5	;6
+.byte	$06,$06,$16,$26,$36,$46,$56,$66,$76,$86,$96,$A6,$B6,$C6,$D6,$E6	;7
+.byte	$07,$07,$17,$27,$37,$47,$57,$67,$77,$87,$97,$A7,$B7,$C7,$D7,$E7	;8
+.byte	$08,$08,$18,$28,$38,$48,$58,$68,$78,$88,$98,$A8,$B8,$C8,$D8,$E8	;9
+.byte	$09,$09,$19,$29,$39,$49,$59,$69,$79,$89,$99,$A9,$B9,$C9,$D9,$E9	;A
+.byte	$0A,$0A,$1A,$2A,$3A,$4A,$5A,$6A,$7A,$8A,$9A,$AA,$BA,$CA,$DA,$EA	;B
+.byte	$0B,$0B,$1B,$2B,$3B,$4B,$5B,$6B,$7B,$8B,$9B,$AB,$BB,$CB,$DB,$EB	;C
+.byte	$0C,$0C,$1C,$2C,$3C,$4C,$5C,$6C,$7C,$8C,$9C,$AC,$BC,$CC,$DC,$EC	;D
+.byte	$0D,$0D,$1D,$2D,$3D,$4D,$5D,$6D,$7D,$8D,$9D,$AD,$BD,$CD,$DD,$ED	;E
+.byte	$0E,$0E,$1E,$2E,$3E,$4E,$5E,$6E,$7E,$8E,$9E,$AE,$BE,$CE,$DE,$EE	;F
+
 
