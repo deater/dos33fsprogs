@@ -29,42 +29,15 @@
 ; soft-switches
 
 SPEAKER		= $C030
-
-;SET_GR		= $C050
-;SET_TEXT	= $C051
 FULLGR		= $C052
-;TEXTGR		= $C053]
-;PAGE1		= $C054
-;PAGE2		= $C055
-
 
 ; ROM routines
 
-;BKGND0		= $F3F4         ; clear current page to A
-;HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
-;HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
-;HPLOT0		= $F457		; plot at (Y,X), (A)
-;HCOLOR1	= $F6F0		; set HGR_COLOR to value in X
-;COLORTBL	= $F6F6
-;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
-
 PLOT    = $F800                 ;; PLOT AT Y,A
-;PLOT1   = $F80E                 ;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
-;HLINE   = $F819                 ;; HLINE Y,$2C at A
-;VLINE   = $F828                 ;; VLINE A,$2D at Y
-;CLRSCR  = $F832                 ;; Clear low-res screen
-;CLRTOP  = $F836                 ;; clear only top of low-res screen
-;GBASCALC= $F847                 ;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-;SETCOL  = $F864                 ;; COLOR=A
-;ROM_TEXT2COPY = $F962           ;; iigs
-;SETTXT  = $FB36
 SETGR   = $FB40
 
 ; zero page
 
-;GBASL		= $26
-;GBASH		= $27
-;MASK		= $2E
 COLOR		= $30
 
 SINES_BASE	= $C0
@@ -77,10 +50,6 @@ V		= $D9
 
 INL		= $FC
 INH		= $FD
-OUTL		= $FE
-OUTH		= $FF
-
-
 
 sines	= $6c00
 sines2	= $6d00
@@ -90,7 +59,6 @@ cosines = $6e00
 cosines2= $6f00
 
 color_map = $1000
-
 
 bubble_gr:
 
@@ -117,110 +85,6 @@ bubble_gr:
 	; 31 fixed
 	; 29 improved
 
-
-.if 0
-	ldx	#0	; init offset		; 2
-first_loop:
-	lda	#0	; a=0;			; 2
-	sta	smc+1
-loop1:
-	ldy	#0	; loop			; 2
-
-yloop:
-
-smc:
-	lda	#0					; 1
-	sta	color_map,X	; values[y]=a;		; 3
-	beq	skip		; don't add first col	; 2
-	inc	smc+1		; value+=1		; 3
-skip:
-	inx						; 1
-	beq	done					; 2
-	cpx	#16					; 2
-	beq	first_loop	; repeat first loop	; 2
-
-	iny						; 1
-	cpy	#16					; 2
-	bne	yloop					; 2
-
-	beq	loop1					; 2
-
-done:
-.endif
-
-.if 0
-	ldx	#0	; x=0;			; 2
-first_loop:
-	lda	#0	; a=0;			; 2
-loop1:
-	ldy	#0				; 2
-yloop:
-	clc						; 1
-	sta	color_map,X	; values[y]=a;		; 3
-	beq	skip		; don't add first col	; 2
-	adc	#$10		; a+=16			; 2
-skip:
-	inx						; 1
-	iny						; 1
-	cpy	#16					; 2
-	bne	yloop					; 2
-
-;	sec
-	adc	#$10		; carry set here	; 2
-
-	cpx	#16					; 2
-	beq	first_loop	; repeat first loop	; 2
-
-	cpx	#0					; 2
-	bne	loop1					; 2
-.endif
-
-.if 0
-	; 10
-	; 17
-
-	lda	#0
-	tax
-loop2:
-	ldy	#0			; 2
-loop:
-	beq	skip
-	clc
-	adc	#1
-skip:				; 2
-	sta	color_map,X		; 3
-
-	inx				; 1
-	beq	done			; 2
-
-	iny				; 1
-	cpy	#15
-	bne	loop			; 2
-	beq	loop2			; 2
-done:
-
-
-
-;loop:
-;	lda	smc+1			; 3
-;smc:
-;	sta	color_map		; 3
-;	inc	smc+1			; 3
-;	bne	loop			; 2
-
-
-;	ldx	#$EE
-;	ldy	#$FF
-;loop2:
-;	lda	color_map,X
-;	sta	color_map,Y
-;	dex
-;	dey
-;	cpx	#$11
-;	bne	loop2
-.endif
-
-.if 1
 
 	;================
 	; current best
@@ -254,7 +118,6 @@ yloop2:
 	jmp	yloop2					; 3
 
 done:
-.endif
 
 	; X=0 here
 
@@ -463,15 +326,6 @@ cycle_color_loop:
 	lda	color_map,X			; 3
 	sta	(INL),Y				; 2
 
-;	inc	INL				; 2
-;	bne	cycle_color_loop		; 2
-;	inc	INH				; 2
-;	lda	INH				; 2
-;	cmp	#8				; 2
-;	bne	cycle_color_loop		; 2
-;	beq	next_frame	; bra		; 2
-
-
 	iny					; 1
 	bne	cycle_color_loop		; 2
 
@@ -484,16 +338,6 @@ cycle_color_loop:
 	beq	next_frame	; bra		; 2
 
 
-; original
-.if 0
-sines_base:
-	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
-	.byte $40,$41,$42,$42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
-	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
-	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59
-	.byte $59
-.endif
-
 ; half as many points
 
 sines_base:
@@ -502,35 +346,6 @@ sines_base:
 	.byte $4D,$4E,$50,$51,$52,$53,$54,$55
 	.byte $56,$57,$57,$58,$58,$59,$59,$59
 	.byte $59
-
-
-.if 0
-sines_base_reverse:
-	.byte $59
-	.byte $59,$59,$59,$58, $58,$57,$57,$56
-	.byte $55,$54,$53,$52, $51,$50,$4E,$4D
-	.byte $4C,$4A,$48,$47, $45,$43,$42,$40
-	.byte $3E,$3C,$3A,$38, $36,$34,$32,$30
-.endif
-
-.if 0
-; 26 - x^2/64+2x
-sines_base:
-	.byte $2F,$30,$31,$33,$34,$35,$36,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F,$40
-	.byte $41,$42,$43,$44,$45,$46,$47,$48,$49,$4A,$4A,$4B,$4C,$4D,$4D,$4E
-	.byte $4F,$4F,$50,$51,$51,$52,$52,$53,$53,$54,$54,$55,$55,$56,$56,$56
-	.byte $57,$57,$57,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59,$59,$59,$59
-	.byte $59
-.endif
-
-.if 0
-sines_base:
-	.byte $1A,$1C,$1E,$20,$22,$24,$26,$28,$29,$2B,$2D,$2F,$30,$32,$33,$35
-	.byte $36,$38,$39,$3B,$3C,$3E,$3F,$40,$41,$43,$44,$45,$46,$47,$48,$49
-	.byte $4A,$4B,$4C,$4D,$4E,$4F,$50,$51,$51,$52,$53,$54,$54,$55,$55,$56
-	.byte $56,$57,$57,$58,$58,$59,$59,$59,$59,$5A,$5A,$5A,$5A,$5A,$5A,$5A
-	.byte $5A
-.endif
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
 
