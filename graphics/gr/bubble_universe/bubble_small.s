@@ -441,6 +441,7 @@ sines_base:
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
 
 .if 0
+; note this table is wrong
 color_map:
        ; 00  10  20  30  40  50  60  70  80  90  A0  B0  C0  D0  E0  F0
 .byte	$00,$00,$10,$20,$30,$40,$50,$60,$70,$80,$90,$A0,$B0,$C0,$D0,$E0	;0

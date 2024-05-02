@@ -1,5 +1,8 @@
 ; bubble universe tiny -- Apple II Lores
 
+; what if you zoom into a bubble universe and it's full of
+; angry bees
+
 ; by Vince `deater` Weaver
 
 ; this version based on fast c64 code by serato_fig
@@ -18,18 +21,21 @@
 ; 282 bytes = optimize color shift
 ; 266 bytes = reduce resolution of sine table x2
 ; 260 bytes = shave off some bytes with unneeded compares
+; 255 bytes = reoptimize the sine doubler
+; 264 bytes = add sound (urgh)
+; 265 bytes = fix colors
+; 263 bytes = waste a lot of time optimizing color lookup table
 
 ; soft-switches
 
-KEYPRESS	= $C000
-KEYRESET	= $C010
+SPEAKER		= $C030
 
-SET_GR		= $C050
-SET_TEXT	= $C051
+;SET_GR		= $C050
+;SET_TEXT	= $C051
 FULLGR		= $C052
-TEXTGR		= $C053
-PAGE1		= $C054
-PAGE2		= $C055
+;TEXTGR		= $C053]
+;PAGE1		= $C054
+;PAGE2		= $C055
 
 
 ; ROM routines
@@ -43,29 +49,25 @@ PAGE2		= $C055
 ;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 PLOT    = $F800                 ;; PLOT AT Y,A
-PLOT1   = $F80E                 ;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
-HLINE   = $F819                 ;; HLINE Y,$2C at A
-VLINE   = $F828                 ;; VLINE A,$2D at Y
-CLRSCR  = $F832                 ;; Clear low-res screen
-CLRTOP  = $F836                 ;; clear only top of low-res screen
-GBASCALC= $F847                 ;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
-SETCOL  = $F864                 ;; COLOR=A
-ROM_TEXT2COPY = $F962           ;; iigs
-SETTXT  = $FB36
+;PLOT1   = $F80E                 ;; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
+;HLINE   = $F819                 ;; HLINE Y,$2C at A
+;VLINE   = $F828                 ;; VLINE A,$2D at Y
+;CLRSCR  = $F832                 ;; Clear low-res screen
+;CLRTOP  = $F836                 ;; clear only top of low-res screen
+;GBASCALC= $F847                 ;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
+;SETCOL  = $F864                 ;; COLOR=A
+;ROM_TEXT2COPY = $F962           ;; iigs
+;SETTXT  = $FB36
 SETGR   = $FB40
-
-
-
-
 
 ; zero page
 
-GBASL		= $26
-GBASH		= $27
-MASK		= $2E
+;GBASL		= $26
+;GBASH		= $27
+;MASK		= $2E
 COLOR		= $30
 
-HPLOTYL		= $92
+SINES_BASE	= $C0
 
 I		= $D0
 J		= $D1
@@ -73,19 +75,17 @@ T		= $D7
 U		= $D8
 V		= $D9
 
-HGR_PAGE	= $E6
-
 INL		= $FC
 INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-SINES_BASE	= $C0
+
 
 sines	= $6c00
 sines2	= $6d00
 
-; must be aligned :(
+; must be page aligned :(
 cosines = $6e00
 cosines2= $6f00
 
@@ -112,32 +112,149 @@ bubble_gr:
 	;========================
 	; color lookup
 	;========================
-	; 34 bytes originally
+	; 34 original
 	; 30 updated
+	; 31 fixed
+	; 29 improved
 
+
+.if 0
+	ldx	#0	; init offset		; 2
+first_loop:
+	lda	#0	; a=0;			; 2
+	sta	smc+1
+loop1:
+	ldy	#0	; loop			; 2
+
+yloop:
+
+smc:
+	lda	#0					; 1
+	sta	color_map,X	; values[y]=a;		; 3
+	beq	skip		; don't add first col	; 2
+	inc	smc+1		; value+=1		; 3
+skip:
+	inx						; 1
+	beq	done					; 2
+	cpx	#16					; 2
+	beq	first_loop	; repeat first loop	; 2
+
+	iny						; 1
+	cpy	#16					; 2
+	bne	yloop					; 2
+
+	beq	loop1					; 2
+
+done:
+.endif
+
+.if 0
 	ldx	#0	; x=0;			; 2
-loop2:
+first_loop:
 	lda	#0	; a=0;			; 2
 loop1:
 	ldy	#0				; 2
 yloop:
-	clc					; 1
-	sta	color_map,X	; values[y]=a;	; 3
-	beq	skip				; 2
-	adc	#$10		; a+=16		; 2
+	clc						; 1
+	sta	color_map,X	; values[y]=a;		; 3
+	beq	skip		; don't add first col	; 2
+	adc	#$10		; a+=16			; 2
 skip:
-	inx					; 1
-	iny					; 1
-	cpy	#16				; 2
-	bne	yloop				; 2
+	inx						; 1
+	iny						; 1
+	cpy	#16					; 2
+	bne	yloop					; 2
 
 ;	sec
 	adc	#$10		; carry set here	; 2
 
-	cpx	#16				; 2
-	beq	loop2				; 2
-	cpx	#0				; 2
-	bne	loop1				; 2
+	cpx	#16					; 2
+	beq	first_loop	; repeat first loop	; 2
+
+	cpx	#0					; 2
+	bne	loop1					; 2
+.endif
+
+.if 0
+	; 10
+	; 17
+
+	lda	#0
+	tax
+loop2:
+	ldy	#0			; 2
+loop:
+	beq	skip
+	clc
+	adc	#1
+skip:				; 2
+	sta	color_map,X		; 3
+
+	inx				; 1
+	beq	done			; 2
+
+	iny				; 1
+	cpy	#15
+	bne	loop			; 2
+	beq	loop2			; 2
+done:
+
+
+
+;loop:
+;	lda	smc+1			; 3
+;smc:
+;	sta	color_map		; 3
+;	inc	smc+1			; 3
+;	bne	loop			; 2
+
+
+;	ldx	#$EE
+;	ldy	#$FF
+;loop2:
+;	lda	color_map,X
+;	sta	color_map,Y
+;	dex
+;	dey
+;	cpx	#$11
+;	bne	loop2
+.endif
+
+.if 1
+
+	;================
+	; current best
+
+	ldx	#0	; init output pointer		; 2
+first_loop:
+	ldy	#$ff	; reset current value		; 2
+loop1:
+yloop:
+	iny						; 1
+yloop2:
+	tya						; 1
+	sta	color_map,X	; values[y]=a;		; 3
+
+	iny						; 1
+	inx						; 1
+	beq	done					; 2
+	cpx	#16					; 2
+	beq	first_loop				; 2
+
+	txa						; 1
+	and	#$f					; 2
+
+	beq	yloop	; if nextcol==0, skip f->0	; 2
+
+	lsr						; 1
+
+	bne	yloop2	; if nextcol!=1, y=y+1		; 2
+
+	dey		; if nextcol==1, repeat y	; 1
+	jmp	yloop2					; 3
+
+done:
+.endif
 
 	; X=0 here
 
@@ -156,33 +273,12 @@ skip:
 	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
 
 setup_sine_table:
-.if 0
-	; spread sine table
-	ldy	#32
-;	ldx	#0		; set previously
-spread_loop:
-	tya
-	lsr
-	tax
-
-	lda	sines_base,Y
-
-	sta	SINES_BASE,X	; double the output
-;	inx
-;	sta	SINES_BASE,X
-;	inx
-	dey
-	bne	spread_loop
-.endif
-
-
 
 	; spread sine table
 
 	; load from sines_base,Y/2
 	;	store to SINES_BASE,Y
 
-;	ldy	#32
 ;	ldx	#0		; set previously
 spread_loop:
 	txa
@@ -192,10 +288,6 @@ spread_loop:
 	lda	sines_base,Y
 
 	sta	SINES_BASE,X	; double the output
-;	inx
-;	sta	SINES_BASE,X
-;	inx
-;	dey
 	inx
 	cpx	#64
 	bne	spread_loop
@@ -251,7 +343,6 @@ cosine_loop:
 	stx	U
 	stx	V
 	stx	T
-	stx	INL
 
 	dex				; Y=$FF (color white)
 	stx	COLOR
@@ -291,6 +382,8 @@ j_loop:
 
 	; where S=41 (approximately 1/6.28)
 
+	bit	SPEAKER		; click speaker
+
 	clc			; 2
 
 	; calc:	b=i+t+u;
@@ -309,6 +402,8 @@ it1_smc:
 	adc	sines,X		; 4+
 	sta	U		; 3
 
+	bit	SPEAKER		; click speaker
+
 	;===========================================================
 	; original code is centered at 96,96 (on hypothetical 192x192 screen)
 
@@ -320,7 +415,6 @@ it1_smc:
 ;	sec
 	sbc	#48
 	tay								; 2
-;	bmi	no_plot
 	cpy	#40
 	bcs	no_plot
 
@@ -328,13 +422,13 @@ it1_smc:
 	lda	V
 ;	sec
 	sbc	#48
-;	bmi	no_plot
 	cmp	#48
 	bcs	no_plot
 
-;PLOT    = $F800                 ;; PLOT AT Y,A
 
-	jsr	PLOT
+	bit	SPEAKER		; click speaker
+
+	jsr	PLOT		; PLOT AT Y,A
 
 no_plot:
 	dec	J
@@ -359,25 +453,35 @@ end:
 	;=================
 	; cycle colors
 
-	ldy	#$0
-	lda	#4
-	sta	INH
+	ldy	#$0				; 2
+	sty	INL				; 2
+	lda	#4				; 2
+	sta	INH				; 2
 cycle_color_loop:
-	lda	(INL),Y
-	tax
-	lda	color_map,X
-	sta	(INL),Y
-	iny
-	bne	cycle_color_loop
+	lda	(INL),Y				; 2
+	tax					; 1
+	lda	color_map,X			; 3
+	sta	(INL),Y				; 2
+
+;	inc	INL				; 2
+;	bne	cycle_color_loop		; 2
+;	inc	INH				; 2
+;	lda	INH				; 2
+;	cmp	#8				; 2
+;	bne	cycle_color_loop		; 2
+;	beq	next_frame	; bra		; 2
+
+
+	iny					; 1
+	bne	cycle_color_loop		; 2
 
 	; need to do this for pages 4-7
 
-	inc	INH
-	lda	INH
-	cmp	#$8
-	bne	cycle_color_loop
-
-	beq	next_frame		; just out of range...
+	inc	INH				; 2
+	lda	INH				; 2
+	cmp	#$8				; 2
+	bne	cycle_color_loop		; 2
+	beq	next_frame	; bra		; 2
 
 
 ; original
