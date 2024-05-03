@@ -25,6 +25,9 @@
 ; 264 bytes = add sound (urgh)
 ; 265 bytes = fix colors
 ; 263 bytes = waste a lot of time optimizing color lookup table
+; 259 bytes = undo self modifying code
+; 247 bytes = remove extra cosine table
+; 245 bytes = minor fixes
 
 ; soft-switches
 
@@ -56,9 +59,8 @@ INH		= $FD
 sines	= $6c00
 sines2	= $6d00
 
-; must be page aligned :(
-cosines = $6e00
-cosines2= $6f00
+cosines = $6cc0
+;cosines2= $6f00
 
 color_map = $1000
 
@@ -186,31 +188,29 @@ setup_sine_loop:
 
 	; X is $FF here?
 
-	inx
+	stx	COLOR			; $FF (color white)
 
-;	ldx	#0
-
-cosine_loop:
-	lda	sines+192,X
-	sta	cosines,X
-	sta	cosines2,X
 	inx
-	bne	cosine_loop
 
 	; X is 0 here?
 
 	;=======================
 	; init variables
 	;=======================
-	;
+	; 245
+
+	txa
+	ldx	#$30
+init_loop:
+	sta	$D0,X
+	dex
+	bne	init_loop
 
 ;	lda	#0
-	stx	U
-	stx	V
-	stx	T
-
-	dex				; Y=$FF (color white)
-	stx	COLOR
+;	stx	U
+;	stx	V
+;	stx	T
+;	stx	INL
 
 	;=========================
 	;=========================
@@ -218,41 +218,31 @@ cosine_loop:
 	;=========================
 	;=========================
 
+	; in theory Y=0 from previous loop, but not init above?
+
 next_frame:
 
 	; reset I*T
 
 	lda	T
-;	sta	it1_smc+1
-;	sta	it2_smc+1
 	sta	IT
 
 	; reset I*S
 
 	lda	#0
-;	sta	is1_smc+1
-;	sta	is2_smc+1
 	sta	IS
 
-num1_smc:
 	lda	#13	; 13
 	sta	I
 
 i_loop:
-num2_smc:
 	lda	#$18	; 24
-
 	sta	J
 j_loop:
-;	ldx	U
-;	ldy	V
-
-	; where S=41 (approximately 1/6.28)
 
 	bit	SPEAKER		; click speaker
 
-
-
+	; where S=41 (approximately 1/6.28)
 	; calc:	a=i*s+v;
 	; calc:	b=i+t+u;
 	; 	u=sines[a]+sines[b];
@@ -276,8 +266,6 @@ j_loop:
 	lda	sines,Y		; 4+
 	adc	sines,X		; 4+
 	sta	U		; 3
-
-
 
 	bit	SPEAKER		; click speaker
 
@@ -312,19 +300,13 @@ no_plot:
 	bne	j_loop
 
 done_j:
-
-;	lda	is1_smc+1
-	lda	IS
 	clc
+	lda	IS
 	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-;	sta	is1_smc+1
-;	sta	is2_smc+1
 	sta	IS
 	dec	I
 	bne	i_loop
 done_i:
-
-;	sty	V
 	inc	T
 
 end:
@@ -333,7 +315,6 @@ end:
 	; cycle colors
 
 	ldy	#$0				; 2
-	sty	INL				; 2
 	lda	#4				; 2
 	sta	INH				; 2
 cycle_color_loop:
@@ -351,8 +332,8 @@ cycle_color_loop:
 	lda	INH				; 2
 	cmp	#$8				; 2
 	bne	cycle_color_loop		; 2
-;	beq	next_frame	; bra		; 2
-	jmp	next_frame
+	beq	next_frame	; bra		; 2
+;	jmp	next_frame
 
 ; half as many points
 
