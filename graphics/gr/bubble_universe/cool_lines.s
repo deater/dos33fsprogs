@@ -47,8 +47,8 @@ J		= $D1
 T		= $D7
 U		= $D8
 V		= $D9
-IS		= $DA
-IT		= $DB
+IT		= $DA
+IS		= $DB
 
 INL		= $FC
 INH		= $FD
@@ -223,16 +223,16 @@ next_frame:
 	; reset I*T
 
 	lda	T
-;	sta	it1_smc+1
-;	sta	it2_smc+1
+	sta	it1_smc+1
 	sta	IT
+;	sta	it2_smc+1
 
 	; reset I*S
 
 	lda	#0
-;	sta	is1_smc+1
-;	sta	is2_smc+1
+	sta	is1_smc+1
 	sta	IS
+;	sta	is2_smc+1
 
 num1_smc:
 	lda	#13	; 13
@@ -244,40 +244,38 @@ num2_smc:
 
 	sta	J
 j_loop:
-;	ldx	U
-;	ldy	V
+	ldx	U
+	ldy	V
 
 	; where S=41 (approximately 1/6.28)
 
 	bit	SPEAKER		; click speaker
 
-
-
-	; calc:	a=i*s+v;
-	; calc:	b=i+t+u;
-	; 	u=sines[a]+sines[b];
-	; 	v=cosines[a]+cosines[b];
-
 	clc			; 2
+
+	; calc:	b=i+t+u;
+	; 	u=cosines[a]+cosines[b];
+
 	lda	IS
 	adc	V
 	tay
-
-	clc
 	lda	IT
 	adc	U
 	tax
-
-	clc
+;is2_smc:
 	lda	cosines,Y	; 4+
-	adc	cosines,X	; 4+
+
+;it2_smc:
+	adc	cosines,Y	; 4+
 	sta	V
 
+	; calc:	a=i*s+v;
+	; 	u=sines[a]+sines[b];
+is1_smc:
 	lda	sines,Y		; 4+
+it1_smc:
 	adc	sines,X		; 4+
 	sta	U		; 3
-
-
 
 	bit	SPEAKER		; click speaker
 
@@ -313,11 +311,10 @@ no_plot:
 
 done_j:
 
-;	lda	is1_smc+1
-	lda	IS
+	lda	is1_smc+1
 	clc
 	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-;	sta	is1_smc+1
+	sta	is1_smc+1
 ;	sta	is2_smc+1
 	sta	IS
 	dec	I
@@ -353,6 +350,7 @@ cycle_color_loop:
 	bne	cycle_color_loop		; 2
 ;	beq	next_frame	; bra		; 2
 	jmp	next_frame
+
 
 ; half as many points
 
