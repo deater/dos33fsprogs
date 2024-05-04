@@ -37,6 +37,8 @@
 ; 262 bytes = add in movement, reduce sound
 ; 255 bytes = rediculous code that moved table setup to be overwritten
 ;		and the linear parts and $59 of sine table generated
+; 260 bytes = modify panning to be more interesting
+; 258 bytes = make assumptions on value of Y
 
 ; soft-switches
 
@@ -61,6 +63,7 @@ U		= $D8
 V		= $D9
 IS		= $DA
 IT		= $DB
+PAN		= $DC
 
 INL		= $FC
 INH		= $FD
@@ -86,17 +89,15 @@ bubble_gr:
 
 	;========================
 	;========================
-	; setup lookup tables
+	; initialize lookup tables
 	;========================
 	;========================
 
-	;========================
-	; color lookup
-
-	; this one moved to the end (at expense of 4 bytes)
+	; these moved to the end (at expense of 4 bytes)
 	;	so we can over-write part of sine table on top of it
 
-	jsr	setup_color_lookup
+	jsr	init_code_to_be_destroyed
+
 
 
 	; X=0 here
@@ -121,9 +122,7 @@ bubble_gr:
 ;fifty_nines:
 ;	.byte $59,$59,$59,$59,$59,$59
 ;	.byte $59
-
-
-
+]
 
 	ldx	#$42		; want to write $42 downto $30
 looper:
@@ -197,7 +196,7 @@ init_loop:
 
 	sty	$D0,X		; clear zero page
 
-	lda	sines,X		; duplicate sine table
+	lda	sines,X		; duplicate sine table for cosine use
 	sta	sines2,X
 
 	dex
@@ -210,6 +209,7 @@ init_loop:
 ;	stx	INL
 
 	; X = 0 here
+	; Y = 0 here
 
 	dex
 	stx	COLOR			; $FF (color white)
@@ -221,7 +221,7 @@ init_loop:
 	;=========================
 	;=========================
 
-	; in theory Y=0 from previous loop, but not init above?
+	; in theory Y=0 from previous loop, and also from init?
 
 next_frame:
 
@@ -232,8 +232,9 @@ next_frame:
 
 	; reset I*S
 
-	lda	#0
-	sta	IS
+	; Y should always be 0 at this point...
+;	lda	#0
+	sty	IS
 
 i_smc:
 	lda	#13	; 13
@@ -269,6 +270,8 @@ j_loop:
 	adc	cosines,X	; 4+
 	sta	V
 
+	; max value for both is $60 so never sets carry
+
 	lda	sines,Y		; 4+
 	adc	sines,X		; 4+
 	sta	U		; 3
@@ -285,7 +288,7 @@ j_loop:
 	; U already in A
 ;	sec
 
-usmc:
+u_smc:
 	sbc	#48
 	tay								; 2
 	cpy	#40
@@ -318,41 +321,25 @@ done_j:
 done_i:
 	inc	T
 
-;	bne	ook
+	; no panning first 256 times
 
-;	sta	usmc+1
-;	eor	$20
-;	sta	usmc+1
-;ook:
+	bne	ook
 
-	;======================
-	; extra motion
-	;======================
-	; movex=cool
-	; movey=meh
-	; both=meh
-	; both, index with T/2?=meh
+	inc	PAN
+
+ook:
+	clc
+	lda	u_smc+1
+	adc	PAN
+	sta	u_smc+1
 
 
-	;=======================
-	; move X
-
-;	ldx	T
-;	lda	sines,X
-;	sta	usmc+1
-
-	;=======================
-	; move Y
-
-	ldx	T
-	lda	cosines,X
-	sta	vsmc+1
-
-
-end:
 
 	;=================
 	; cycle colors
+	;=================
+
+cycle_colors:
 
 	ldy	#$0				; 2
 	lda	#4				; 2
@@ -369,17 +356,17 @@ cycle_color_loop:
 	; need to do this for pages 4-7
 
 	inc	INH				; 2
-	lda	INH				; 2
+	lda	INH				; 2g
 	cmp	#$8				; 2
 	bne	cycle_color_loop		; 2
+
 	beq	next_frame	; bra		; 2
-;	jmp	next_frame	; bra		; 2
 
 
 
 
 
-
+init_code_to_be_destroyed:
 
 
 	;========================
@@ -399,7 +386,7 @@ first_loop:
 	ldy	#$ff	; reset current value		; 2
 loop1:
 yloop:
-	iny						; 1
+	iny		; current output value		; 1
 yloop2:
 	tya						; 1
 	sta	color_map,X	; values[y]=a;		; 3
@@ -423,8 +410,8 @@ yloop2:
 	jmp	yloop2					; 3
 
 done:
-	rts
 
+	rts
 
 
 ;	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
