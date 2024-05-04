@@ -1,5 +1,7 @@
 ; bubble universe tiny -- Apple II Lores
 
+; cosmic fish?
+
 ; what if you zoom into a bubble universe and it's full of
 ; angry bees
 
@@ -31,6 +33,10 @@
 ; 268 bytes = back to 64 byte lookup
 ; 264 bytes = optimize sine/cosine init
 ; 262 bytes = optimize var init
+; 259 bytes = use sine_base in place
+; 262 bytes = add in movement, reduce sound
+; 255 bytes = rediculous code that moved table setup to be overwritten
+;		and the linear parts and $59 of sine table generated
 
 ; soft-switches
 
@@ -59,11 +65,9 @@ IT		= $DB
 INL		= $FC
 INH		= $FD
 
-sines	= $6c00
-sines2	= $6d00
-
-cosines = $6cc0
-;cosines2= $6f00
+sines	= sines_base-$13	; overlaps some code
+sines2	= sines+$100		; duplicate so we can index cosine into it
+cosines = sines+$c0
 
 color_map = $1000
 
@@ -81,8 +85,302 @@ bubble_gr:
 	bit	FULLGR
 
 	;========================
+	;========================
 	; setup lookup tables
 	;========================
+	;========================
+
+	;========================
+	; color lookup
+
+	; this one moved to the end (at expense of 4 bytes)
+	;	so we can over-write part of sine table on top of it
+
+	jsr	setup_color_lookup
+
+
+	; X=0 here
+
+	;=========================
+	; reconstruct sine base
+	;=========================
+	; generate the linear $30..$42 part
+	; and also string of $59 on end
+	;	removes 26 bytes from table
+	; 	at expense of 16+4 bytes of code
+	;		(4 from jsr/rts of moving over-writable table code)
+
+;sines:
+;	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
+;	.byte $40,$41,$42
+;
+;sines_base:
+;	.byte $42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
+;	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
+;	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58
+;fifty_nines:
+;	.byte $59,$59,$59,$59,$59,$59
+;	.byte $59
+
+
+
+
+	ldx	#$42		; want to write $42 downto $30
+looper:
+	txa
+	sta	sines-$30,X	; sines+12 .... sines
+
+	lda	#$59
+	sta	fifty_nines-$30,X
+
+	dex
+	cpx	#$2F
+	bne	looper
+
+
+	;==========================
+	; make sine/cosine tables
+	;==========================
+
+	; floor(s*sin((x-96)*PI*2/256.0)+48.5);
+
+	;===================================
+	;
+	;
+	; final_sine[i]=quarter_sine[i];          // 0..64
+	; final_sine[128-i]=quarter_sine[i];      // 64..128
+	; final_sine[128+i]=0x60-quarter_sine[i]; // 128..192
+	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
+
+setup_sine_table:
+
+	ldx	#64
+	ldy	#64
+setup_sine_loop:
+
+	lda	sines,X
+
+;	sta	sines,X
+	sta	sines,Y
+
+	lda	#$60
+	sec
+	sbc	sines,X
+
+	sta	sines+128,X
+	sta	sines+128,Y
+
+	iny
+	dex
+	bpl	setup_sine_loop
+
+
+	; X is $ff here
+	; Y is $81?
+
+	;=======================
+	; init variables
+	;=======================
+	; wipe all of zero page but $FF
+	;	we only care about one value, the color at $30
+
+	; in theory we only need to clear/copy $00..$C0
+	;	but not sure how to use to our advantage
+
+	; X is $FF
+	inx		; X=0
+	ldy	#0	; Y=0
+init_loop:
+;	sta	a:$D0,X		; force 16-bit so doesn't wrap
+				; because I guess it's bad to wipe zero page?
+				; maybe it isn't?
+
+	sty	$D0,X		; clear zero page
+
+	lda	sines,X		; duplicate sine table
+	sta	sines2,X
+
+	dex
+	bne	init_loop
+
+;	lda	#0
+;	stx	U
+;	stx	V
+;	stx	T
+;	stx	INL
+
+	; X = 0 here
+
+	dex
+	stx	COLOR			; $FF (color white)
+
+
+	;=========================
+	;=========================
+	; main loop
+	;=========================
+	;=========================
+
+	; in theory Y=0 from previous loop, but not init above?
+
+next_frame:
+
+	; reset I*T
+
+	lda	T
+	sta	IT
+
+	; reset I*S
+
+	lda	#0
+	sta	IS
+
+i_smc:
+	lda	#13	; 13
+	sta	I
+
+i_loop:
+
+j_smc:
+	lda	#$18	; 24
+	sta	J
+j_loop:
+
+;	bit	SPEAKER		; click speaker
+
+	; where S=41 (approximately 1/6.28)
+	; calc:	a=i*s+v;
+	; calc:	b=i+t+u;
+	; 	u=sines[a]+sines[b];
+	; 	v=cosines[a]+cosines[b];
+
+	clc			; 2
+	lda	IS
+	adc	V
+	tay
+
+	clc
+	lda	IT
+	adc	U
+	tax
+
+	clc
+	lda	cosines,Y	; 4+
+	adc	cosines,X	; 4+
+	sta	V
+
+	lda	sines,Y		; 4+
+	adc	sines,X		; 4+
+	sta	U		; 3
+
+;	bit	SPEAKER		; click speaker
+
+	;===========================================================
+	; original code is centered at 96,96 (on hypothetical 192x192 screen)
+
+	; we adjust to be 40x48 window centered at 48,48
+
+	; PLOT U-48,V-48
+
+	; U already in A
+;	sec
+
+usmc:
+	sbc	#48
+	tay								; 2
+	cpy	#40
+	bcs	no_plot
+
+	; calculate Ypos
+	lda	V
+;	sec
+vsmc:
+	sbc	#48
+	cmp	#48
+	bcs	no_plot
+
+
+	bit	SPEAKER		; click speaker
+
+	jsr	PLOT		; PLOT AT Y,A
+
+no_plot:
+	dec	J
+	bne	j_loop
+
+done_j:
+	clc
+	lda	IS
+	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
+	sta	IS
+	dec	I
+	bne	i_loop
+done_i:
+	inc	T
+
+;	bne	ook
+
+;	sta	usmc+1
+;	eor	$20
+;	sta	usmc+1
+;ook:
+
+	;======================
+	; extra motion
+	;======================
+	; movex=cool
+	; movey=meh
+	; both=meh
+	; both, index with T/2?=meh
+
+
+	;=======================
+	; move X
+
+;	ldx	T
+;	lda	sines,X
+;	sta	usmc+1
+
+	;=======================
+	; move Y
+
+	ldx	T
+	lda	cosines,X
+	sta	vsmc+1
+
+
+end:
+
+	;=================
+	; cycle colors
+
+	ldy	#$0				; 2
+	lda	#4				; 2
+	sta	INH				; 2
+cycle_color_loop:
+	lda	(INL),Y				; 2
+	tax					; 1
+	lda	color_map,X			; 3
+	sta	(INL),Y				; 2
+
+	iny					; 1
+	bne	cycle_color_loop		; 2
+
+	; need to do this for pages 4-7
+
+	inc	INH				; 2
+	lda	INH				; 2
+	cmp	#$8				; 2
+	bne	cycle_color_loop		; 2
+	beq	next_frame	; bra		; 2
+;	jmp	next_frame	; bra		; 2
+
+
+
+
+
+
+
 
 	;========================
 	; color lookup
@@ -92,7 +390,7 @@ bubble_gr:
 	; 31 fixed
 	; 29 improved
 
-
+setup_color_lookup:
 	;================
 	; current best
 
@@ -125,226 +423,19 @@ yloop2:
 	jmp	yloop2					; 3
 
 done:
-
-	; X=0 here
-
-	;=======================
-	; init variables
-	;=======================
-	; actually clear all of $D0-$1D0
-	;	(clearing bottom of stack should be harmless?)
-	; only saves a byte
-
-	txa
-;	ldx	#$30
-init_loop:
-;	sta	a:$D0,X		; force 16-bit so doesn't wrap
-				; because I guess it's bad to wipe zero page?
-				; maybe it isn't?
-
-	sta	$D0,X
-	dex
-	bne	init_loop
-
-;	lda	#0
-;	stx	U
-;	stx	V
-;	stx	T
-;	stx	INL
-
-	; X = 0 here
-
-	;==========================
-	; make sine/cosine tables
-	;==========================
-
-	; floor(s*sin((x-96)*PI*2/256.0)+48.5);
-
-	;===================================
-	;
-	;
-	; final_sine[i]=quarter_sine[i];          // 0..64
-	; final_sine[128-i]=quarter_sine[i];      // 64..128
-	; final_sine[128+i]=0x60-quarter_sine[i]; // 128..192
-	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
-
-setup_sine_table:
-
-	ldx	#64
-	ldy	#64
-setup_sine_loop:
-
-	lda	sines_base,X
-
-	sta	sines,X
-;	sta	sines2,X
-	sta	sines,Y
-;	sta	sines2,Y
-
-	lda	#$60
-	sec
-	sbc	sines_base,X
-
-	sta	sines+128,X
-;	sta	sines2+128,X
-	sta	sines+128,Y
-;	sta	sines2+128,Y
-
-	iny
-	dex
-	bpl	setup_sine_loop
-
-	; X is $FF here?
-
-	stx	COLOR			; $FF (color white)
-
-
-	;=======================
-	; double the sine table
-	; used for cosine
-
-;	ldx	#0
-looper:
-	lda	sines,X
-	sta	sines2,X
-	dex
-	bne	looper
-
-	; X is 0 here?
+	rts
 
 
 
-	;=========================
-	;=========================
-	; main loop
-	;=========================
-	;=========================
-
-	; in theory Y=0 from previous loop, but not init above?
-
-next_frame:
-
-	; reset I*T
-
-	lda	T
-	sta	IT
-
-	; reset I*S
-
-	lda	#0
-	sta	IS
-
-	lda	#13	; 13
-	sta	I
-
-i_loop:
-	lda	#$18	; 24
-	sta	J
-j_loop:
-
-	bit	SPEAKER		; click speaker
-
-	; where S=41 (approximately 1/6.28)
-	; calc:	a=i*s+v;
-	; calc:	b=i+t+u;
-	; 	u=sines[a]+sines[b];
-	; 	v=cosines[a]+cosines[b];
-
-	clc			; 2
-	lda	IS
-	adc	V
-	tay
-
-	clc
-	lda	IT
-	adc	U
-	tax
-
-	clc
-	lda	cosines,Y	; 4+
-	adc	cosines,X	; 4+
-	sta	V
-
-	lda	sines,Y		; 4+
-	adc	sines,X		; 4+
-	sta	U		; 3
-
-	bit	SPEAKER		; click speaker
-
-	;===========================================================
-	; original code is centered at 96,96 (on hypothetical 192x192 screen)
-
-	; we adjust to be 40x48 window centered at 48,48
-
-	; PLOT U-48,V-48
-
-	; U already in A
-;	sec
-	sbc	#48
-	tay								; 2
-	cpy	#40
-	bcs	no_plot
-
-	; calculate Ypos
-	lda	V
-;	sec
-	sbc	#48
-	cmp	#48
-	bcs	no_plot
-
-
-	bit	SPEAKER		; click speaker
-
-	jsr	PLOT		; PLOT AT Y,A
-
-no_plot:
-	dec	J
-	bne	j_loop
-
-done_j:
-	clc
-	lda	IS
-	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-	sta	IS
-	dec	I
-	bne	i_loop
-done_i:
-	inc	T
-
-end:
-
-	;=================
-	; cycle colors
-
-	ldy	#$0				; 2
-	lda	#4				; 2
-	sta	INH				; 2
-cycle_color_loop:
-	lda	(INL),Y				; 2
-	tax					; 1
-	lda	color_map,X			; 3
-	sta	(INL),Y				; 2
-
-	iny					; 1
-	bne	cycle_color_loop		; 2
-
-	; need to do this for pages 4-7
-
-	inc	INH				; 2
-	lda	INH				; 2
-	cmp	#$8				; 2
-	bne	cycle_color_loop		; 2
-	beq	next_frame	; bra		; 2
-;	jmp	next_frame
-
-
-
+;	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
+;	.byte $40,$41,$42
 sines_base:
-        .byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
-        .byte $40,$41,$42,$42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
-        .byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
-        .byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59
-        .byte $59
+	.byte $42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
+	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
+	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58
+fifty_nines:
+;	.byte $59,$59,$59,$59,$59,$59
+;	.byte $59
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
 

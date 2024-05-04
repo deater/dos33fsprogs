@@ -28,6 +28,10 @@
 ; 259 bytes = undo self modifying code
 ; 247 bytes = remove extra cosine table
 ; 245 bytes = minor fixes
+; 268 bytes = back to 64 byte lookup
+; 264 bytes = optimize sine/cosine init
+; 262 bytes = optimize var init
+; 259 bytes = use sine_base in place
 
 ; soft-switches
 
@@ -56,11 +60,14 @@ IT		= $DB
 INL		= $FC
 INH		= $FD
 
-sines	= $6c00
-sines2	= $6d00
+;sines	= $6c00
+;sines2	= $6d00
+;cosines = $6cc0
 
-cosines = $6cc0
-;cosines2= $6f00
+sines	= sines_base
+sines2	= sines_base+$100
+cosines = sines_base+$c0
+
 
 color_map = $1000
 
@@ -125,6 +132,30 @@ done:
 
 	; X=0 here
 
+	;=======================
+	; init variables
+	;=======================
+	; wipe all of zero page
+	;	we only care about one value, the color at $30
+
+	txa
+init_loop:
+;	sta	a:$D0,X		; force 16-bit so doesn't wrap
+				; because I guess it's bad to wipe zero page?
+				; maybe it isn't?
+
+	sta	$D0,X
+	dex
+	bne	init_loop
+
+;	lda	#0
+;	stx	U
+;	stx	V
+;	stx	T
+;	stx	INL
+
+	; X = 0 here
+
 	;==========================
 	; make sine/cosine tables
 	;==========================
@@ -141,46 +172,21 @@ done:
 
 setup_sine_table:
 
-	; spread sine table
-
-	; load from sines_base,Y/2
-	;	store to SINES_BASE,Y
-
-;	ldx	#0		; set previously
-spread_loop:
-	txa
-	lsr
-	tay
-
-	lda	sines_base,Y
-
-	sta	SINES_BASE,X	; double the output
-	inx
-	cpx	#64
-	bne	spread_loop
-
-
-
-
-;	ldx	#64
+	ldx	#64
 	ldy	#64
 setup_sine_loop:
 
-	lda	SINES_BASE,X
+	lda	sines_base,X
 
-	sta	sines,X
-	sta	sines2,X
+;	sta	sines,X
 	sta	sines,Y
-	sta	sines2,Y
 
 	lda	#$60
 	sec
-	sbc	SINES_BASE,X
+	sbc	sines_base,X
 
 	sta	sines+128,X
-	sta	sines2+128,X
 	sta	sines+128,Y
-	sta	sines2+128,Y
 
 	iny
 	dex
@@ -190,27 +196,21 @@ setup_sine_loop:
 
 	stx	COLOR			; $FF (color white)
 
-	inx
+
+	;=======================
+	; double the sine table
+	; used for cosine
+
+;	ldx	#0
+looper:
+	lda	sines,X
+	sta	sines2,X
+	dex
+	bne	looper
 
 	; X is 0 here?
 
-	;=======================
-	; init variables
-	;=======================
-	; 245
 
-	txa
-	ldx	#$30
-init_loop:
-	sta	$D0,X
-	dex
-	bne	init_loop
-
-;	lda	#0
-;	stx	U
-;	stx	V
-;	stx	T
-;	stx	INL
 
 	;=========================
 	;=========================
@@ -333,16 +333,15 @@ cycle_color_loop:
 	cmp	#$8				; 2
 	bne	cycle_color_loop		; 2
 	beq	next_frame	; bra		; 2
-;	jmp	next_frame
 
-; half as many points
+
 
 sines_base:
-	.byte $30,$32,$34,$36,$38,$3A,$3C,$3E
-	.byte $40,$42,$43,$45,$47,$48,$4A,$4C
-	.byte $4D,$4E,$50,$51,$52,$53,$54,$55
-	.byte $56,$57,$57,$58,$58,$59,$59,$59
-	.byte $59
+        .byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
+        .byte $40,$41,$42,$42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
+        .byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
+        .byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58,$59,$59,$59,$59,$59,$59
+        .byte $59
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
 
