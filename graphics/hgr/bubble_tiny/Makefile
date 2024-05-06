@@ -7,10 +7,12 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	bubble.dsk
 
-bubble.dsk:	HELLO BUBBLE_TINY
+bubble.dsk:	HELLO BUBBLE_TINY BUBBLE_SQUARES BUBBLE_ROM
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
 	$(DOS33) -y bubble.dsk SAVE A HELLO
 	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_TINY
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_SQUARES
+	$(DOS33) -y bubble.dsk BSAVE -a 0x0C00 BUBBLE_ROM
 
 ###
 
@@ -27,6 +29,24 @@ bubble_tiny.o:	bubble_tiny.s
 
 ###
 
+BUBBLE_SQUARES:	bubble_squares.o
+	ld65 -o BUBBLE_SQUARES bubble_squares.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble_squares.o:	bubble_squares.s hgr_clear_codegen.s
+	ca65 -o bubble_squares.o bubble_squares.s -l bubble_squares.lst
+
+###
+
+BUBBLE_ROM:	bubble_rom.o
+	ld65 -o BUBBLE_ROM bubble_rom.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+
+bubble_rom.o:	bubble_rom.s
+	ca65 -o bubble_rom.o bubble_rom.s -l bubble_rom.lst
+
+
+
+###
+
 clean:	
-	rm -f *~ *.o *.lst HELLO BUBBLE_TINY
+	rm -f *~ *.o *.lst HELLO BUBBLE_TINY BUBBLE_ROM
 

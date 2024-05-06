@@ -11,19 +11,8 @@
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-; 2304 bytes -- first working version
-; 2560 bytes -- full version with keypress to adjust
-; 2326 bytes -- alignment turned off
-; 2311 bytes -- optimize mod table generation
-; 1447 bytes -- first attempt at hgr_clear codegen
-; 1443 bytes -- tail call optimization
-; 1436 bytes -- call clear screen from page flip code
-; 1434 bytes -- optimize HPLOT
-; 1131 bytes -- generate SINE table from 65 entry lookup
-;  633 bytes -- generate COSINE table from SINE table
-;  534 bytes -- alignment was left on for some reason
+;  534 bytes -- original tiny version
 ;  529 bytes -- back out self modifying U/V code (allows more compact tables)
-;  492 bytes -- more compact sine table generator
 
 ; soft-switches
 
@@ -65,81 +54,27 @@ INH		= $FD
 OUTL		= $FE
 OUTH		= $FF
 
-sines   = sines_base-$1A        ; overlaps some code
-sines2  = sines+$100            ; duplicate so we can index cosine into it
-cosines = sines+$c0
+; const
 
+;NUM		= 32
+;NUM		= 24
 
 bubble:
 
-	;==========================
+	;========================
 	; setup lookup tables
-	;==========================
+
 	jsr	hgr_make_tables
 
 	jsr	hgr_clear_codegen
 
+	jsr	setup_sine_table
 
-	;=========================
-	; reconstruct sine base
-	;=========================
-	; generate the linear $30..$42 part
-	; and also string of $59 on end
-	;       removes 26 bytes from table
-	;       at expense of 16+4 bytes of code
-	;               (4 from jsr/rts of moving over-writable table code)
+	;=======================
+	; init graphics
 
-	ldy	#$19		; offset
-	ldx	#$48		; want to write $48 downto $30
-				; with $42 doubled
-looper:
-	txa
-	sta	sines,Y		; sines+12 .... sines
-
-	lda	#$59		; also write $59 off the top
-	sta	fifty_nines,Y
-
-	cpy	#$13		; we could save more bytes if we didn't
-	beq	skipper		; bother trying to be exact
-	dex
-skipper:
-	dey
-	bpl	looper
-
-
-	;==========================
-	; make sine/cosine tables
-	;==========================
-
-	; floor(s*sin((x-96)*PI*2/256.0)+48.5);
-
-	;===================================
-	; final_sine[i]=quarter_sine[i];          // 0..64
-	; final_sine[128-i]=quarter_sine[i];      // 64..128
-	; final_sine[128+i]=0x60-quarter_sine[i]; // 128..192
-	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
-
-setup_sine_table:
-	ldx	#64
-	ldy	#64
-setup_sine_loop:
-
-	lda	sines,X
-
-;	sta	sines,X
-	sta	sines,Y
-
-	lda	#$60
-	sec
-	sbc	sines,X
-
-	sta	sines+128,X
-	sta	sines+128,Y
-
-	iny
-	dex
-	bpl	setup_sine_loop
-
+	jsr	HGR
+	jsr	HGR2
 
 	;=======================
 	; init variables
@@ -147,39 +82,9 @@ setup_sine_loop:
 	; HGR leaves A at 0
 
 ;	lda	#0
-;	sta	U
-;	sta	V
-;	sta	T
-
-
-	;=======================
-	; init variables
-	;=======================
-	; wipe all of zero page but $FF
-
-	; in theory we only need to clear/copy $00..$C0
-	;       but not sure how to use to our advantage
-
-        inx             ; X=0
-        ldy     #0      ; Y=0
-init_loop:
-;       sta     a:$D0,X         ; force 16-bit so doesn't wrap
-                                ; because I guess it's bad to wipe zero page?
-                                ; maybe it isn't?
-
-        sty     $D0,X           ; clear zero page
-
-        lda     sines,X         ; duplicate sine table for cosine use
-        sta     sines2,X
-
-        dex
-        bne     init_loop
-
-	;=======================
-	; init graphics
-
-	jsr	HGR
-	jsr	HGR2
+	sta	U
+	sta	V
+	sta	T
 
 
 	;=========================
@@ -448,6 +353,61 @@ log_lookup:
 
 
 .include "hgr_clear_codegen.s"
+
+
+; note: min=7, around 32
+;       max=89 ($59), around 160
+;	subtract 7, so 0...82?  halfway = 41 = $29 + 7 = $30
+;       halfway= 6*16 = 96
+
+sines	= $6c00
+sines2	= $6d00
+cosines = $6e00
+cosines2= $6f00
+
+	;===================================
+	;
+	;
+	; final_sine[i]=quarter_sine[i];          // 0..64
+	; final_sine[128-i]=quarter_sine[i];      // 64..128
+	; final_sine[128+i]=0x60-quarter_sine[i]; // 128..192
+	; final_sine[256-i]=0x60-quarter_sine[i]; // 192..256
+
+setup_sine_table:
+
+	ldy	#64
+	ldx	#64
+setup_sine_loop:
+
+	lda	sines_base,Y
+	sta	sines,Y
+	sta	sines2,Y
+	sta	sines,X
+	sta	sines2,X
+
+	lda	#$60
+	sec
+	sbc	sines_base,Y
+
+	sta	sines+128,Y
+	sta	sines2+128,Y
+	sta	sines+128,X
+	sta	sines2+128,X
+
+	inx
+	dey
+	bpl	setup_sine_loop
+
+
+	ldy	#0
+cosine_loop:
+	lda	sines+192,Y
+	sta	cosines,Y
+	sta	cosines2,Y
+	iny
+	bne	cosine_loop
+
+	rts
 
 
 ;       .byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F

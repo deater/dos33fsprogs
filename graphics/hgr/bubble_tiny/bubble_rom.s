@@ -11,19 +11,12 @@
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-; 2304 bytes -- first working version
-; 2560 bytes -- full version with keypress to adjust
-; 2326 bytes -- alignment turned off
-; 2311 bytes -- optimize mod table generation
-; 1447 bytes -- first attempt at hgr_clear codegen
-; 1443 bytes -- tail call optimization
-; 1436 bytes -- call clear screen from page flip code
-; 1434 bytes -- optimize HPLOT
-; 1131 bytes -- generate SINE table from 65 entry lookup
-;  633 bytes -- generate COSINE table from SINE table
-;  534 bytes -- alignment was left on for some reason
+;  534 bytes -- original tiny version
 ;  529 bytes -- back out self modifying U/V code (allows more compact tables)
-;  492 bytes -- more compact sine table generator
+;  492 bytes -- hook up compact sine generation
+;  445 bytes -- strip out keyboard code
+;  208 bytes -- use ROM routines
+;  203 bytes -- optimize page flip
 
 ; soft-switches
 
@@ -34,11 +27,12 @@ PAGE2		= $C055
 
 ; ROM routines
 
-BKGND0		= $F3F4         ; clear current page to A
+BKGNDZ		= $F3F2		; clear current page to 0
+BKGND0		= $F3F4		; clear current page to A
 HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
 HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
 HPLOT0		= $F457		; plot at (Y,X), (A)
-;HCOLOR1	= $F6F0		; set HGR_COLOR to value in X
+HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
 ;COLORTBL	= $F6F6
 ;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
@@ -60,24 +54,21 @@ IS		= $DB
 
 HGR_PAGE	= $E6
 
-INL		= $FC
-INH		= $FD
-OUTL		= $FE
-OUTH		= $FF
+OUTL		= $FC
+OUTH		= $FD
 
 sines   = sines_base-$1A        ; overlaps some code
 sines2  = sines+$100            ; duplicate so we can index cosine into it
 cosines = sines+$c0
-
 
 bubble:
 
 	;==========================
 	; setup lookup tables
 	;==========================
-	jsr	hgr_make_tables
+;	jsr	hgr_make_tables
 
-	jsr	hgr_clear_codegen
+;	jsr	hgr_clear_codegen
 
 
 	;=========================
@@ -178,9 +169,11 @@ init_loop:
 	;=======================
 	; init graphics
 
-	jsr	HGR
+	jsr	HGR		; why both?
 	jsr	HGR2
 
+	ldx	#7
+	jsr	HCOLOR1
 
 	;=========================
 	;=========================
@@ -201,7 +194,7 @@ next_frame:
 	sta	IS
 
 i_smc:
-	lda	#24	; 40
+	lda	#1	; 40
 	sta	I
 
 i_loop:
@@ -251,45 +244,13 @@ j_loop:
 	tax								; 2
 
 	; calculate Ypos
-	ldy	V
+	lda	V
 
-	; "fast" hplot, Xpos in X, Ypos in A
+; HPLOT0         = $F457         ; plot at (Y,X), (A)
 
-	; Apple II hi-res is more-or-less 280x192
-	;	two consecutive pixels on are white
-	;	single pixels are colored based on palette
-	;	we treat things as a monochrome display, on a color
-	;	display odd/even pixels will have different colors
+	ldy	#0
 
-	; The Y memory offset is a horrible interleaved mess, so we use
-	;	a lookup table we generated at start.  We also add in
-	;	the proper value for page-flipping
-
-	; Apple II hi-res is 7 pixels/byte, so we also pre-generate
-	;	div and mod by 7 tables at start and use those
-	;	instead of dividing by 7
-	;	We cheat and don't worry about the X positions larger
-	;	than 256 because our algorithm only goes up to 208
-
-	lda	hposn_low,Y						; 4
-	sta	GBASL							; 3
-	lda	hposn_high,Y						; 4
-	ora	HGR_PAGE						; 3
-	sta	GBASH							; 3
-; 21
-
-	ldy	div7_table,X						; 4
-
-	lda	mod7_table,X						; 4
-	tax								; 2
-; 31
-	; get current 7-bit pixel range, OR in to set new pixel
-
-	lda	(GBASL),Y						; 5
-	ora	log_lookup,X						; 4
-;	eor	log_lookup,X						; 4
-	sta	(GBASL),Y						; 6
-; 46
+	jsr	HPLOT0
 
 	dec	J
 	bne	j_loop
@@ -306,33 +267,6 @@ done_i:
 
 end:
 
-	lda	KEYPRESS
-	bpl	flip_pages
-	bit	KEYRESET
-				; 0110 -> 0100
-	and	#$5f		; to handle lowercase too...
-
-	cmp	#'A'
-	bne	check_z
-	inc	i_smc+1
-	jmp	done_keys
-check_z:
-	cmp	#'Z'
-	bne	check_j
-	dec	i_smc+1
-	jmp	done_keys
-check_j:
-	cmp	#'J'
-	bne	check_m
-	inc	j_smc+1
-	jmp	done_keys
-check_m:
-	cmp	#'M'
-	bne	done_keys
-	dec	j_smc+1
-
-done_keys:
-
 flip_pages:
 	; flip pages
 
@@ -346,109 +280,46 @@ flip_pages:
 	cmp	#$40
 	bne	flip2
 flip1:
-	bit	PAGE1
-	lda	#0
-	jsr	hgr_page2_clearscreen
-	jmp	next_frame
+	sta	PAGE1
+	beq	done_flip
+
 flip2:
-	bit	PAGE2
-	lda	#0
-	jsr	hgr_page1_clearscreen
-	jmp	next_frame
+	sta	PAGE2
+done_flip:
 
 
-div7_table	= $6800
-mod7_table	= $6900
-hposn_high	= $6a00
-hposn_low	= $6b00
-
-
-hgr_make_tables:
-
-	;=====================
-	; make /7 %7 tables
-	;=====================
-
-hgr_make_7_tables:
-
-	lda	#0
-	tax
+;	lda	HGR_PAGE
+	sta	OUTH
+clear_loop_fix:
+	lda	#$00
 	tay
-div7_loop:
-	sta	div7_table,Y
-mod7_smc:
-	stx	mod7_table
-
-	inx
-	cpx	#7
-	bne	div7_not7
-
-	clc
-	adc	#1
-	ldx	#0
-
-div7_not7:
-	inc	mod7_smc+1	; assume on page boundary
+	; assume INL starts at 0 from clearing earlier
+clear_loop:
+	sta	(OUTL),Y
 	iny
-	bne	div7_loop
+	bne	clear_loop
+
+	inc	OUTH
+	lda	OUTH
+	and	#$1f
+	bne	clear_loop_fix
+
+;	jsr	BKGNDZ		; clear screen to black
+
+	beq	next_frame	; bra
 
 
-	; Hposn table
-
-; hposn_low, hposn_high will each be filled with $C0 bytes
-; based on routine by John Brooks
-; posted on comp.sys.apple2 on 2018-07-11
-; https://groups.google.com/d/msg/comp.sys.apple2/v2HOfHOmeNQ/zD76fJg_BAAJ
-; clobbers A,X
-; preserves Y
-
-; vmw note: version I was using based on applesoft HPOSN was ~64 bytes
-;	this one is 37 bytes
-
-build_hposn_tables:
-	ldx	#0
-btmi:
-	txa
-	and	#$F8
-	bpl	btpl1
-	ora	#5
-btpl1:
-	asl
-	bpl	btpl2
-	ora	#5
-btpl2:
-	asl
-	asl
-	sta	hposn_low, X
-	txa
-	and	#7
-	rol
-	asl	hposn_low, X
-	rol
-;	ora	#$20
-	sta	hposn_high, X
-	inx
-	cpx	#$C0
-	bne	btmi
-
-	rts
-
-	; which of 7 pixels to draw
-	; note high bit is set to pick blue/orange palette
-	; clear to get purple/green instead
-log_lookup:
-	.byte $81,$82,$84,$88,$90,$A0,$C0,$80
-
-	; the current "fast" code expects to be aligned on boundary
-	; also have to double things up as the code can go up to 255 off
-	;	end for speed reasons
 
 
-; floor(s*sin((x-96)*PI*2/256.0)+48.5);
+;.include "hgr_clear_codegen.s"
 
 
-.include "hgr_clear_codegen.s"
+.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
+
+; need 26 bytes of destroyable area?
+; alternately, need code to copy 26 bytes
 
 ;       .byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 ;       .byte $40,$41,$42

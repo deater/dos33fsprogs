@@ -13,6 +13,8 @@
 
 ;  534 bytes -- tiny version
 ;  250 bytes -- strip out fast clear and hplot code and use ROM
+;  NOTE: see code in bubble_tiny, this can be easily taken down to 200 bytes
+;	with better sine table generation and optimized page flip
 
 ; 76d03 cycles = 486659 cycles = 2fps
 
