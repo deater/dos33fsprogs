@@ -42,19 +42,20 @@
 
 ; soft-switches
 
-SPEAKER		= $C030
-FULLGR		= $C052
+SPEAKER	= $C030
+FULLGR	= $C052
 
 ; ROM routines
 
-PLOT    = $F800                 ;; PLOT AT Y,A
-SETGR   = $FB40
+PLOT    = $F800                 ; PLOT AT Y,A
+SETGR   = $FB40			; enable lores 40x48 mode, split text screen
+				; and clear top of screen
 
 ; zero page
 
-COLOR		= $30
+COLOR		= $30		; used by PLOT
 
-SINES_BASE	= $C0
+;SINES_BASE	= $C0
 
 I		= $D0
 J		= $D1
@@ -68,7 +69,7 @@ PAN		= $DC
 INL		= $FC
 INH		= $FD
 
-sines	= sines_base-$13	; overlaps some code
+sines	= sines_base-$1A	; overlaps some code
 sines2	= sines+$100		; duplicate so we can index cosine into it
 cosines = sines+$c0
 
@@ -115,26 +116,39 @@ bubble_gr:
 ;	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 ;	.byte $40,$41,$42
 ;
+;old_sines_base:
+;	.byte $42,$43,$44,$45,$46,$47,$48,
 ;sines_base:
-;	.byte $42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
+;	.byte $48,$49,$4A,$4B,$4C,$4C
 ;	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
 ;	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58
 ;fifty_nines:
 ;	.byte $59,$59,$59,$59,$59,$59
 ;	.byte $59
-]
 
-	ldx	#$42		; want to write $42 downto $30
+
+	ldy	#$19		; offset
+	ldx	#$48		; want to write $42 downto $30
+
+;	ldy	#$12		; offset
+;	ldx	#$42		; want to write $42 downto $30
+
 looper:
 	txa
-	sta	sines-$30,X	; sines+12 .... sines
+;	sta	sines-$30,X	; sines+12 .... sines
+	sta	sines,Y		; sines+12 .... sines
 
 	lda	#$59
-	sta	fifty_nines-$30,X
+;	sta	fifty_nines-$30,X
+	sta	fifty_nines,Y
 
+	cpy	#$13		; we could save more bytes if we didn't
+	beq	skipper		; bother trying to be exact
 	dex
-	cpx	#$2F
-	bne	looper
+skipper:
+	dey
+;	cpx	#$2F
+	bpl	looper
 
 
 	;==========================
@@ -323,11 +337,12 @@ done_i:
 
 	; no panning first 256 times
 
-	bne	ook
+	bne	no_t_oflo
 
 	inc	PAN
 
-ook:
+no_t_oflo:
+
 	clc
 	lda	u_smc+1
 	adc	PAN
@@ -356,7 +371,7 @@ cycle_color_loop:
 	; need to do this for pages 4-7
 
 	inc	INH				; 2
-	lda	INH				; 2g
+	lda	INH				; 2
 	cmp	#$8				; 2
 	bne	cycle_color_loop		; 2
 
@@ -416,8 +431,10 @@ done:
 
 ;	.byte $30,$31,$32,$33,$34,$35,$36,$37,$38,$39,$3A,$3B,$3C,$3D,$3E,$3F
 ;	.byte $40,$41,$42
+;old_sines_base:
+;	.byte $42,$43,$44,$45,$46,$47,$48,
 sines_base:
-	.byte $42,$43,$44,$45,$46,$47,$48,$48,$49,$4A,$4B,$4C,$4C
+	.byte $48,$49,$4A,$4B,$4C,$4C
 	.byte $4D,$4E,$4E,$4F,$50,$50,$51,$52,$52,$53,$53,$54,$54,$55,$55,$55
 	.byte $56,$56,$57,$57,$57,$58,$58,$58,$58,$58
 fifty_nines:
@@ -425,4 +442,5 @@ fifty_nines:
 ;	.byte $59
 
 ; floor(s*cos((x-96)*PI*2/256.0)+48.5);
+
 
