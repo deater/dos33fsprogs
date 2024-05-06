@@ -11,16 +11,11 @@
 ; originally was working off the BASIC code posted on the pouet forum
 ; original effect by yuruyrau on twitter
 
-;  534 bytes -- original tiny version
-;  529 bytes -- back out self modifying U/V code (allows more compact tables)
-;  492 bytes -- hook up compact sine generation
-;  445 bytes -- strip out keyboard code
-;  208 bytes -- use ROM routines
-;  200 bytes -- optimize page flip
-;  226 bytes -- don't have room to over-write with sine table
-;  240 bytes -- use custom, faster, clear screen
-;  237 bytes -- remove redundant HGR
-;  217 bytes -- update to not over-write code for sine base generation
+; for this code I always is 1
+
+;  217 bytes -- original bubble_rom code
+;  202 bytes -- remove unnecessary code if I==1
+;  231 bytes -- add palette swap every 256 frames
 
 ; soft-switches
 
@@ -47,6 +42,7 @@ U		= $D8
 V		= $D9
 IT		= $DA
 IS		= $DB
+FRAMEH		= $DC
 
 HGR_PAGE	= $E6
 
@@ -182,14 +178,14 @@ next_frame:
 	lda	#0		; Y should be 0 here?
 	sta	IS
 
-i_smc:
-	lda	#1	; 40
-	sta	I
+;i_smc:
+;	lda	#1	; 40
+;	sta	I
 
-i_loop:
+;i_loop:
 
 j_smc:
-	lda	#24	; 200
+	lda	#$80
 	sta	J
 
 j_loop:
@@ -245,16 +241,46 @@ j_loop:
 	bne	j_loop
 
 done_j:
-	clc
-	lda	IS
-	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-	sta	IS
-	dec	I
-	bne	i_loop
+
+;	clc
+;	lda	IS
+;	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
+;	sta	IS
+;	dec	I
+;	bne	i_loop
 done_i:
+
 	inc	T
 
-end:
+	bne	done_frame
+
+	inc	FRAMEH
+
+	lda	FRAMEH
+
+	ror
+
+	bcc	frame_odd
+frame_even:
+	ldx	#0
+	jsr	HCOLOR1
+	lda	#$ff
+	bne	done_frame_related
+
+frame_odd:
+	ldx	#7
+	jsr	HCOLOR1
+	lda	#$0
+
+done_frame_related:
+	sta	bg_color_smc+1
+
+
+
+done_frame:
+
+
+
 
 flip_pages:
 	; flip pages
@@ -283,9 +309,14 @@ done_flip:
 
 ;	lda	HGR_PAGE
 	sta	OUTH
+
+	ldy	#$0
+
 clear_loop_fix:
+
+bg_color_smc:
 	lda	#$00		; set color to black
-	tay
+
 	; assume OUTL starts at 0 from clearing earlier
 clear_loop:
 	sta	(OUTL),Y
@@ -297,12 +328,6 @@ clear_loop:
 	and	#$1f
 	bne	clear_loop_fix
 	beq	next_frame	; bra
-
-
-
-;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-
 
 ; need 26 bytes of destroyable area?
 ; alternately, need code to copy 26 bytes
