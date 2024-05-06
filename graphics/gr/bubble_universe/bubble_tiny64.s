@@ -1,9 +1,9 @@
-; bubble universe tiny -- Apple II Lores
+; cosmic fish
 
-; cosmic fish?
+; a variation on bubble universe tiny -- Apple II Lores
 
 ; what if you zoom into a bubble universe and it's full of
-; angry bees
+; space fish?
 
 ; by Vince `deater` Weaver
 
@@ -39,6 +39,7 @@
 ;		and the linear parts and $59 of sine table generated
 ; 260 bytes = modify panning to be more interesting
 ; 258 bytes = make assumptions on value of Y
+; 256 bytes = extend linear adjust of sine table
 
 ; soft-switches
 
@@ -128,18 +129,13 @@ bubble_gr:
 
 
 	ldy	#$19		; offset
-	ldx	#$48		; want to write $42 downto $30
-
-;	ldy	#$12		; offset
-;	ldx	#$42		; want to write $42 downto $30
-
+	ldx	#$48		; want to write $48 downto $30
+				; with $42 doubled
 looper:
 	txa
-;	sta	sines-$30,X	; sines+12 .... sines
 	sta	sines,Y		; sines+12 .... sines
 
-	lda	#$59
-;	sta	fifty_nines-$30,X
+	lda	#$59		; also write $59 off the top
 	sta	fifty_nines,Y
 
 	cpy	#$13		; we could save more bytes if we didn't
@@ -147,7 +143,6 @@ looper:
 	dex
 skipper:
 	dey
-;	cpx	#$2F
 	bpl	looper
 
 
