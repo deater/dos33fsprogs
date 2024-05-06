@@ -12,6 +12,7 @@
 ; original effect by yuruyrau on twitter
 
 ;  534 bytes -- original tiny version
+;  529 bytes -- back out self modifying U/V code (allows more compact tables)
 
 ; soft-switches
 
@@ -43,6 +44,8 @@ J		= $D1
 T		= $D7
 U		= $D8
 V		= $D9
+IT		= $DA
+IS		= $DB
 
 HGR_PAGE	= $E6
 
@@ -95,48 +98,51 @@ next_frame:
 	; reset I*T
 
 	lda	T
-	sta	it1_smc+1
-	sta	it2_smc+1
+	sta	IT
 
 	; reset I*S
 
-	lda	#0
-	sta	is1_smc+1
-	sta	is2_smc+1
+	lda	#0		; Y should be 0 here?
+	sta	IS
 
-num1_smc:
+i_smc:
 	lda	#24	; 40
 	sta	I
 
 i_loop:
-num2_smc:
+
+j_smc:
 	lda	#24	; 200
-
 	sta	J
-j_loop:
-	ldx	U
-	ldy	V
 
+j_loop:
 
 	; where S=41 (approximately 1/6.28)
+	; calc:	a=i*s+v;
+	; calc:	b=i+t+u;
+	; 	u=sines[a]+sines[b];
+	; 	v=cosines[a]+cosines[b];
+
+
+
+	clc
+	lda	IS
+	adc	V
+	tay
+
+	clc
+	lda	IT
+	adc	U
+	tax
 
 	clc			; 2
-
-
-
-	; calc:	b=i+t+u;
-	; 	u=cosines[a]+cosines[b];
-is2_smc:
 	lda	cosines,Y	; 4+
-it2_smc:
 	adc	cosines,X	; 4+
 	sta	V
 
-	; calc:	a=i*s+v;
-	; 	u=sines[a]+sines[b];
-is1_smc:
+	; max value for both $60 so carry not set
+
 	lda	sines,Y		; 4+
-it1_smc:
 	adc	sines,X		; 4+
 	sta	U		; 3
 
@@ -194,17 +200,13 @@ it1_smc:
 	bne	j_loop
 
 done_j:
-
-	lda	is1_smc+1
 	clc
+	lda	IS
 	adc	#41		; 1/6.28 = 0.16 =  0 0    1   0       1 0 0 0 = 0x28
-	sta	is1_smc+1
-	sta	is2_smc+1
+	sta	IS
 	dec	I
 	bne	i_loop
 done_i:
-
-;	sty	V
 	inc	T
 
 end:
@@ -217,22 +219,22 @@ end:
 
 	cmp	#'A'
 	bne	check_z
-	inc	num1_smc+1
+	inc	i_smc+1
 	jmp	done_keys
 check_z:
 	cmp	#'Z'
 	bne	check_j
-	dec	num1_smc+1
+	dec	i_smc+1
 	jmp	done_keys
 check_j:
 	cmp	#'J'
 	bne	check_m
-	inc	num2_smc+1
+	inc	j_smc+1
 	jmp	done_keys
 check_m:
 	cmp	#'M'
 	bne	done_keys
-	dec	num2_smc+1
+	dec	j_smc+1
 
 done_keys:
 

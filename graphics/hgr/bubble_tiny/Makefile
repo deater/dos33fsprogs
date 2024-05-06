@@ -5,7 +5,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts
 EMPTY_DISK = ../../../empty_disk
 
-all:	bubble.dsk make_table make_table2 make_table3 compact_sine
+all:	bubble.dsk
 
 bubble.dsk:	HELLO BUBBLE_TINY
 	cp $(EMPTY_DISK)/empty.dsk bubble.dsk
