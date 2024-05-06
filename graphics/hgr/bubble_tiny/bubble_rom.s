@@ -16,7 +16,10 @@
 ;  492 bytes -- hook up compact sine generation
 ;  445 bytes -- strip out keyboard code
 ;  208 bytes -- use ROM routines
-;  203 bytes -- optimize page flip
+;  200 bytes -- optimize page flip
+;  226 bytes -- don't have room to over-write with sine table
+;  240 bytes -- use custom, faster, clear screen
+;  237 bytes -- remove redundant HGR
 
 ; soft-switches
 
@@ -33,16 +36,8 @@ HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
 HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
 HPLOT0		= $F457		; plot at (Y,X), (A)
 HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
-;COLORTBL	= $F6F6
-;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
 ; zero page
-
-GBASL		= $26
-GBASH		= $27
-
-
-HPLOTYL		= $92
 
 I		= $D0
 J		= $D1
@@ -61,15 +56,7 @@ sines   = sines_base-$1A        ; overlaps some code
 sines2  = sines+$100            ; duplicate so we can index cosine into it
 cosines = sines+$c0
 
-bubble:
-
-	;==========================
-	; setup lookup tables
-	;==========================
-;	jsr	hgr_make_tables
-
-;	jsr	hgr_clear_codegen
-
+bubble_rom:
 
 	;=========================
 	; reconstruct sine base
@@ -134,17 +121,6 @@ setup_sine_loop:
 
 	;=======================
 	; init variables
-
-	; HGR leaves A at 0
-
-;	lda	#0
-;	sta	U
-;	sta	V
-;	sta	T
-
-
-	;=======================
-	; init variables
 	;=======================
 	; wipe all of zero page but $FF
 
@@ -169,7 +145,6 @@ init_loop:
 	;=======================
 	; init graphics
 
-	jsr	HGR		; why both?
 	jsr	HGR2
 
 	ldx	#7
@@ -246,7 +221,7 @@ j_loop:
 	; calculate Ypos
 	lda	V
 
-; HPLOT0         = $F457         ; plot at (Y,X), (A)
+	; HPLOT0 -- plot at (Y,X), (A)
 
 	ldy	#0
 
@@ -287,13 +262,17 @@ flip2:
 	sta	PAGE2
 done_flip:
 
+	;=======================
+	; clear screen
+	;	note can be ~8192 cycles faster at expense of few bytes
+	;	if we use self-modifying code instead of indirect-Y
 
 ;	lda	HGR_PAGE
 	sta	OUTH
 clear_loop_fix:
-	lda	#$00
+	lda	#$00		; set color to black
 	tay
-	; assume INL starts at 0 from clearing earlier
+	; assume OUTL starts at 0 from clearing earlier
 clear_loop:
 	sta	(OUTL),Y
 	iny
@@ -303,15 +282,8 @@ clear_loop:
 	lda	OUTH
 	and	#$1f
 	bne	clear_loop_fix
-
-;	jsr	BKGNDZ		; clear screen to black
-
 	beq	next_frame	; bra
 
-
-
-
-;.include "hgr_clear_codegen.s"
 
 
 .byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
