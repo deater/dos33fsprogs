@@ -1,0 +1,23 @@
+Cosmic Fish
+-
+256-byte Intro for Apple II, Outline 2024
+by Deater / dSr
+
+If you zoom in on the bubble universe
+you may find cosmic fish.
+
+Apple II 'lo-res' 40x48 15 color mode
+
+Core routine based on serato_fig's
+C64 version
+
+A lot of the fun was generating
+256-entry sine and cosine tables
+
+Also a 256 entry color-fade table
+(complicated as two pixels are in the
+top/bottom of a byte and they fade
+independently)
+
+There is sound but admittedly it
+isn't the best.
