@@ -311,8 +311,9 @@ vsmc:
 	cmp	#48
 	bcs	no_plot
 
-
+.ifndef QUIET
 	bit	SPEAKER		; click speaker
+.endif
 
 	jsr	PLOT		; PLOT AT Y,A
 

@@ -1,16 +1,17 @@
-include ../../Makefile.inc
+include ../../../Makefile.inc
 
-DOS33 = ../../utils/dos33fs-utils/dos33
-TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-EMPTYDISK = ../../empty_disk/empty.dsk
-LINKERSCRIPTS = ../../linker_scripts/
+DOS33 = ../../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
+EMPTYDISK = ../../../empty_disk/empty.dsk
+LINKERSCRIPTS = ../../../linker_scripts/
 
 all:	cosmic_fish.dsk
 
-cosmic_fish.dsk:	HELLO COSMIC_FISH
+cosmic_fish.dsk:	HELLO COSMIC_FISH COSMIC_FISH_QUIET
 	cp $(EMPTYDISK) cosmic_fish.dsk
 	$(DOS33) -y cosmic_fish.dsk SAVE A HELLO
 	$(DOS33) -y cosmic_fish.dsk BSAVE -a 0x2000 COSMIC_FISH
+	$(DOS33) -y cosmic_fish.dsk BSAVE -a 0x2000 COSMIC_FISH_QUIET
 
 ###
 
@@ -50,7 +51,16 @@ COSMIC_FISH:	cosmic_fish.o
 cosmic_fish.o:	cosmic_fish.s
 	ca65 -o cosmic_fish.o cosmic_fish.s -l cosmic_fish.lst
 
+###
+
+COSMIC_FISH_QUIET:	cosmic_fish_quiet.o
+	ld65 -o COSMIC_FISH_QUIET cosmic_fish_quiet.o -C $(LINKERSCRIPTS)/apple2_2000.inc
+
+cosmic_fish_quiet.o:	cosmic_fish.s
+	ca65 -o cosmic_fish_quiet.o cosmic_fish.s -DQUIET=1 -l cosmic_fish_quiet.lst
+
+
 ####
 
 clean:	
-	rm -f *~ *.o *.lst HELLO COSMIC_FISH *.zip
+	rm -f *~ *.o *.lst HELLO COSMIC_FISH COSMIC_FISH_QUIET *.zip
