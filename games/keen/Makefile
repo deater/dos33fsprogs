@@ -11,7 +11,7 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	keen1_lores.dsk
 
-keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
+keen1_lores.dsk:	HELLO LOADER TITLE STORY ENGINE MARS \
 	LEVEL1 LEVEL2 LEVEL3 LEVEL4 \
 	LEVEL5 LEVEL6 LEVEL7 LEVEL8 \
 	LEVEL9 LEVEL10 LEVEL11 LEVEL12 \
@@ -20,6 +20,7 @@ keen1_lores.dsk:	HELLO LOADER TITLE ENGINE MARS \
 	$(DOS33) -y keen1_lores.dsk SAVE A HELLO
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 TITLE
+	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 STORY
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 ENGINE
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x4000 MARS
 	$(DOS33) -y keen1_lores.dsk BSAVE -a 0x6000 LEVEL1
@@ -61,6 +62,18 @@ title.o:	title.s zp.inc hardware.inc \
 		zx02_optim.s \
 		graphics/keen1_title.hgr.zx02
 	ca65 -o title.o title.s -l title.lst
+
+####
+
+STORY:	story.o
+	ld65 -o STORY story.o -C ../../linker_scripts/apple2_4000.inc
+
+story.o:	story.s zp.inc hardware.inc \
+		zx02_optim.s \
+		graphics/keen1_story.hgr.zx02 \
+		story/story_data.zx02
+	ca65 -o story.o story.s -l story.lst
+
 
 ####
 
@@ -252,7 +265,9 @@ maps/level1_map.lzsa:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LOADER TITLE ENGINE MARS LEVEL1 LEVEL2
+	rm -f *~ *.o *.lst HELLO LOADER TITLE ENGINE MARS STORY \
+	LEVEL1 LEVEL2 LEVEL3 LEVEL4 LEVEL5 LEVEL6 LEVEL7 LEVEL8 \
+	LEVEL9 LEVEL10 LEVEL11 LEVEL12 LEVEL13 LEVEL14 LEVEL15 LEVEL16
 	cd graphics && make clean
 	cd maps && make clean
 #	cd title && make clean
