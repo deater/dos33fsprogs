@@ -1,0 +1,25 @@
+Bubble Blob
+-
+256-byte Intro for Apple II, Outline 2024
+by Deater / dSr
+
+Bubble universe has two paramaters, I and J.
+If you set I to 1 you get a much more restrained
+set of shapes.
+
+Apple II 'hi-res' 280x192 6 color mode
+
+Core routine based on serato_fig's
+C64 version
+
+Using ROM routines for plot (which are slow).
+ROM clear-screen routing way too slow so 
+spending some bytes on a moderately fast
+clear screen.
+
+I was hoping to get this down to 128 bytes but
+can't seem to get it below 200 bytes, so added
+in some extra effects.
+
+There is sound but admittedly it
+isn't the best.
