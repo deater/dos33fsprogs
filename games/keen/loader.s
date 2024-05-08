@@ -216,6 +216,7 @@ filenames:
 	.word keen14_filename
 	.word keen15_filename
 	.word keen16_filename
+	.word story_filename
 
 engine_filename:
 	.byte "ENGINE",0
@@ -255,7 +256,8 @@ keen15_filename:
 	.byte "LEVEL15",0
 keen16_filename:
 	.byte "LEVEL16",0
-
+story_filename:
+	.byte "STORY",0
 
 
 	;===================================================

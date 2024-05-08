@@ -51,11 +51,32 @@ load_background:
 	jsr	full_decomp
 
 
-wait_until_keypress:
-	lda	KEYPRESS
-	bpl	wait_until_keypress
+	jsr	wait_until_keypress
 
-	bit	KEYRESET
+
+	bit	SET_TEXT
+	bit	PAGE1
+
+	ldy	#0
+	lda	gr_offsets,Y
+	sta	INL
+	iny
+	lda	gr_offsets,Y
+	sta	INH
+
+	lda	#<story_data
+	sta	OUTL
+	lda	#>story_data
+	sta	OUTH
+
+	ldy	#39
+inner_text_loop:
+	lda	(OUTL),Y
+	sta	(INL),Y
+	dey
+	bpl	inner_text_loop
+
+	jsr	wait_until_keypress
 
 
 	lda	#LOAD_TITLE
@@ -128,5 +149,11 @@ really_done_keyloop:
 
 	rts
 
+
+wait_until_keypress:
+	lda	KEYPRESS
+	bpl	wait_until_keypress
+	bit	KEYRESET
+	rts
 
 

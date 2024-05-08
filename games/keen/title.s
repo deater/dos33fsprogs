@@ -212,7 +212,9 @@ init_vars:
 	sta	MARS_X
 	sta	MARS_Y
 
-	lda	#LOAD_MARS
+	lda	#LOAD_STORY
+
+;	lda	#LOAD_MARS
 	sta	WHICH_LOAD		; assume new game (mars map)
 
 	rts
