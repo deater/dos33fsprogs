@@ -57,26 +57,111 @@ load_background:
 	bit	SET_TEXT
 	bit	PAGE1
 
-	ldy	#0
-	lda	gr_offsets,Y
-	sta	INL
-	iny
-	lda	gr_offsets,Y
-	sta	INH
 
 	lda	#<story_data
-	sta	OUTL
+	sta	START_LINE_L
 	lda	#>story_data
+	sta	START_LINE_H
+
+redraw_text:
+
+	ldx	#0
+
+	lda	START_LINE_L
+	sta	INL
+	lda	START_LINE_H
+	sta	INH
+
+outer_text_loop:
+
+	lda	gr_offsets_low,X
+	sta	OUTL
+	lda	gr_offsets_high,X
 	sta	OUTH
+
 
 	ldy	#39
 inner_text_loop:
-	lda	(OUTL),Y
-	sta	(INL),Y
+	lda	(INL),Y
+	sta	(OUTL),Y
 	dey
 	bpl	inner_text_loop
 
+	clc
+	lda	INL
+	adc	#40
+	sta	INL
+	lda	INH
+	adc	#0
+	sta	INH
+
+	inx
+	cpx	#17
+	bne	outer_text_loop
+
+	;==================
+	; draw message
+	;==================
+
+	ldx	#18
+	lda	gr_offsets_low,X
+	sta	OUTL
+	lda	gr_offsets_high,X
+	sta	OUTH
+
+	ldy	#39
+message_text_loop:
+	lda	message,Y
+	and	#$3f
+	sta	(OUTL),Y
+	dey
+	bpl	message_text_loop
+
+
 	jsr	wait_until_keypress
+
+	and	#$7f		; clear high bit
+	and	#$df		; change lower to upper
+
+	cmp	#13
+	beq	done_with_story
+	cmp	#27
+	beq	done_with_story
+
+	cmp	#'W'
+	beq	do_up
+	cmp	#$0B
+	beq	do_up
+
+	cmp	#'S'
+	beq	do_down
+	cmp	#$0A
+	beq	do_down
+
+	jmp	redraw_text
+
+do_up:
+	sec
+	lda	START_LINE_L
+	sbc	#40
+	sta	START_LINE_L
+	lda	START_LINE_H
+	sbc	#0
+	sta	START_LINE_H
+	jmp	redraw_text
+
+do_down:
+	clc
+	lda	START_LINE_L
+	adc	#40
+	sta	START_LINE_L
+	lda	START_LINE_H
+	adc	#0
+	sta	START_LINE_H
+	jmp	redraw_text
+
+
+done_with_story:
 
 
 	lda	#LOAD_TITLE
@@ -93,9 +178,9 @@ inner_text_loop:
 	.include	"gr_copy.s"
 ;	.include	"wait_a_bit.s"
 	.include	"gr_offsets.s"
+	.include	"gr_offsets_split.s"
 	.include	"zx02_optim.s"
 
-	.include	"text_help.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 
@@ -108,46 +193,6 @@ story_bg:
 compressed_story_data:
 .incbin "story/story_data.zx02"
 
-	;====================================
-	; wait for keypress or a few seconds
-	;====================================
-
-wait_a_bit:
-
-	bit	KEYRESET
-	tax
-
-keyloop:
-	lda	#200			; delay a bit
-	jsr	WAIT
-
-	lda	KEYPRESS
-	bmi	done_keyloop
-
-;	bmi	keypress_exit
-
-	dex
-	bne	keyloop
-
-done_keyloop:
-	bit	KEYRESET
-
-	cmp	#'H'|$80
-	bne	really_done_keyloop
-
-	bit	SET_TEXT
-	jsr	print_help
-	bit	SET_GR
-	bit	PAGE1
-
-	ldx	#100
-
-	jmp	keyloop
-
-really_done_keyloop:
-
-
-	rts
 
 
 wait_until_keypress:
@@ -157,3 +202,5 @@ wait_until_keypress:
 	rts
 
 
+message:
+	.byte "      ESC TO EXIT / ARROWS TO READ      ",0
