@@ -1,6 +1,6 @@
-; bubble universe -- Apple II Hires
+; dancing blobs -- Apple II Hires
 
-; even more size optimized version
+; exploring bubble universe with I=1
 
 ; by Vince `deater` Weaver
 
