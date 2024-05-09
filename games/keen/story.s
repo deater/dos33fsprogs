@@ -138,9 +138,19 @@ message_text_loop:
 	cmp	#$0A
 	beq	do_down
 
+done_key:
 	jmp	redraw_text
 
 do_up:
+	lda	START_LINE_H
+	cmp	#>story_data
+	bne	up_ok
+
+	lda	START_LINE_L
+	cmp	#<story_data
+	beq	done_key
+
+up_ok:
 	sec
 	lda	START_LINE_L
 	sbc	#40
@@ -151,6 +161,17 @@ do_up:
 	jmp	redraw_text
 
 do_down:
+
+	lda	START_LINE_H
+	cmp	#$82
+	bne	down_ok
+
+	lda	START_LINE_L
+	cmp	#$48
+	beq	done_key
+
+down_ok:
+
 	clc
 	lda	START_LINE_L
 	adc	#40
