@@ -65,54 +65,78 @@ load_background:
 	;===========================
 	; main loop
 	;===========================
-	; 16 + 16 * (16 + 40*(39) +7) + 17 + 17*40
-	; 16 + 16*(1583) + 17 + 680
-	;	16 + 25328 + 17 + 680
-	; 26041 = 400 lines :(  we're on 16*8=128
+	; 14 + 16 * (16 + 40*(16) + 19 + 7) + 17 + 17*40
+	; 14 + 16 * (  682                ) + 697
+	;	14 + 10912 + 697
+	; 11623 / 65 = 179 lines
 
-redraw_text:
+draw_loop:
 
-	ldx	#0							; 2
+	ldx	#0			; line counter			; 2
 
-	lda	START_LINE_L						; 3
-	sta	input_smc+1						; 4
+	lda	START_LINE_L		; load up input pointers	; 3
+	sta	INL							; 3
 	lda	START_LINE_H						; 3
-	sta	input_smc+2						; 4
+	sta	INH							; 3
 								;===========
-								;	16
+								;	14
 
 outer_text_loop:
+
+	; set up lo-res output pointers
+	;	page aligned so no page-crossing issues
 
 	lda	gr_offsets_low,X					; 4+
 	sta	OUTL							; 3
 	lda	gr_offsets_high,X					; 4+
 	sta	OUTH							; 3
 
-	ldy	#0							; 2
+	ldy	#39		; line offset pointer			; 2
 								;============
 								;	16
 
 inner_text_loop:
 
 input_smc:
-	lda	story_bg						; 4
+	lda	(INL),Y							; 5+
 	sta	(OUTL),Y						; 6
 
-	clc								; 2
-	lda	input_smc+1						; 4
-	adc	#1							; 2
-	sta	input_smc+1						; 4
-	lda	input_smc+2						; 4
-	adc	#0							; 2
-	sta	input_smc+2						; 4
+	dey								; 2
+	bpl	inner_text_loop						; 2/3
 
-	iny								; 2
-	cpy	#40							; 2
-	bne	inner_text_loop						; 2/3
 								;============
-								;	39
+								;	16
 
 									; -1
+
+	; increment
+	; we don't want to cross a page so if we are
+	;	200 then skip to next page
+
+; -1
+	lda	INL							; 3
+	cmp	#200							; 2
+	beq	in_next_page						; 2/3
+; 6
+	ldy	$0		; nop3					; 3
+	clc								; 2
+	adc	#40							; 2
+	bne	in_done		; bra					; 3
+; 16
+
+in_next_page:
+; 7
+	inc	INH							; 5
+	lda	#0							; 2
+	nop
+; 16
+
+in_done:
+	sta	INL							; 3
+								;============
+								;	19
+
+
 
 
 	inx								; 2
@@ -148,9 +172,15 @@ message_text_loop:
 
 							;		-1
 
+
+; 11623
 	;===================================
 	; can we do this constant time?
 	;===================================
+	; no keys pressed     = 41
+	; invalid key pressed = 41
+	; up pressed          =
+	; down pressed        =
 
 check_keypress:
 	lda	KEYPRESS						; 4
@@ -168,10 +198,10 @@ check_keypress:
 	beq	done_with_story						; 2/3
 ; 22
 	cmp	#'W'							; 2
-	beq	do_up							; 2/3
+	beq	do_up_w							; 2/3
 ; 26
 	cmp	#$0B							; 2
-	beq	do_up							; 2/3
+	beq	do_up_up						; 2/3
 ; 30
 	cmp	#'S'							; 2
 	beq	do_down							; 2/3
@@ -180,6 +210,9 @@ check_keypress:
 	beq	do_down							; 2/3
 ; 38
 	bne	done_key41		; bra				; 3
+
+done_with_story:
+	jmp	real_done_with_story
 
 done_key7:
 	; need to waste 34 cycles
@@ -222,49 +255,88 @@ done_key41:
 
 done_key:
 
-	jmp	check_keypress						; 3
+	jmp	draw_loop						; 3
 
-do_up:
-	lda	START_LINE_H
-	cmp	#>story_data
-	bne	up_ok
-
-	lda	START_LINE_L
-	cmp	#<story_data
-	beq	done_key
+do_up_w:
+; 27
+	nop
+	nop
+do_up_up:
+; 31
+	lda	START_LINE_H						; 3
+	cmp	#>story_data						; 2
+	bne	up_ok							; 2/3
+; 38
+	lda	START_LINE_L						; 3
+	cmp	#<story_data						; 2
+	beq	up_done							; 2/3
+	bne	up_ok_ok	; bra					; 3
+; 48
 
 up_ok:
-	sec
-	lda	START_LINE_L
+; 39
+	inc	$0	; nop5
+	nop		; nop2
+	nop		; nop2
+
+; 48
+up_ok_ok:
+	sec								; 2
+	lda	START_LINE_L						; 3
+	beq	to_prev_page
 	sbc	#40
-	sta	START_LINE_L
-	lda	START_LINE_H
-	sbc	#0
-	sta	START_LINE_H
-	jmp	redraw_text
+	jmp	up_done
+
+to_prev_page:
+	dec	START_LINE_H
+	lda	#200
+up_done:
+	sta	START_LINE_L						; 3
+
+; 61
+
+
+; 46
+	jmp	done_key
+
 
 do_down:
 
-	lda	START_LINE_H
-	cmp	#$82
-	bne	down_ok
+	lda	START_LINE_H						; 3
+	cmp	#$82							; 2
+	bne	down_ok							; 2/3
 
-	lda	START_LINE_L
-	cmp	#$48
-	beq	done_key
+	lda	START_LINE_L						; 3
+	cmp	#$48							; 2
+	beq	done_key						; 2/3
 
 down_ok:
-	clc
-	lda	START_LINE_L
-	adc	#40
-	sta	START_LINE_L
-	lda	START_LINE_H
-	adc	#0
-	sta	START_LINE_H
-	jmp	redraw_text
+	; increment input row
+	; we don't want to cross a page so if we are
+	;	200 then skip to next page
 
-done_with_story:
+; -1
+	lda	START_LINE_L						; 3
+	cmp	#200							; 2
+	beq	to_next_page						; 2/3
+; 6
+	ldy	$0		; nop3					; 3
+	clc								; 2
+	adc	#40							; 2
+	bne	down_done	; bra					; 3
+; 16
 
+to_next_page:
+; 7
+	inc	START_LINE_H						; 5
+	lda	#0							; 2
+	nop
+; 16
+down_done:
+	sta	START_LINE_L						; 3
+	jmp	draw_loop						; 3
+
+real_done_with_story:
 
 	lda	#LOAD_TITLE
 	sta	WHICH_LOAD
