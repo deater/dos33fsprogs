@@ -206,10 +206,10 @@ check_keypress:
 	beq	do_up_up						; 2/3
 ; 30
 	cmp	#'S'							; 2
-	beq	do_down							; 2/3
+	beq	do_down_s						; 2/3
 ; 34
 	cmp	#$0A							; 2
-	beq	do_down							; 2/3
+	beq	do_down_down						; 2/3
 ; 38
 	bne	done_key41		; bra				; 3
 
@@ -228,16 +228,34 @@ done_key7:
 	nop
 	nop
 done_key41:
-	inc	$00
+	inc	$00	; nop5
+	lda	$00	; nop3
+done_key_49:
+	inc	$00	; nop5
+	lda	$00	; nop3
+done_key_57:
+	inc	$00	; nop5
+	inc	$00	; nop5
 	nop
+done_key_69:
+	inc	$00	; nop5
+	nop
+done_key_76:
 
-	; 18*8*65= 9360
-	; want to delay 9360 - 41 - 7 - 4 = 9308 - 20 = 9288/9 = 1032
-	;	1032/256= 4 r 8
+; 11623+76 = 11699
+
+	; want to delay total of 144+70 lines, 214
+	; 214*65 = 13910
+	;	  -11699
+	;	=========
+	;	    2211
+
+	; want to delay 2211 - 4 = 2207 - 20 = 2187/9 = 243
+	;	243/256= 0 r 243
 	;
 
-	lda	#4							; 2
-	ldy	#8							; 2
+	lda	#0							; 2
+	ldy	#243							; 2
 	jsr	delay_loop
 
 	; want to delay 6*8*65 = 3120+4550 = 7670
@@ -255,9 +273,13 @@ done_key41:
 	jsr	delay_loop
 	bit	SET_TEXT						; 4
 
-done_key:
+;done_key:
 
 	jmp	draw_loop						; 3
+
+	;=================================
+	; handle up pressed
+	;=================================
 
 do_up_w:
 ; 27
@@ -271,7 +293,7 @@ do_up_up:
 ; 38
 	lda	START_LINE_L						; 3
 	cmp	#<story_data						; 2
-	beq	up_done							; 2/3
+	beq	up_done_46							; 2/3
 	bne	up_ok_ok	; bra					; 3
 ; 48
 
@@ -285,58 +307,83 @@ up_ok:
 up_ok_ok:
 	sec								; 2
 	lda	START_LINE_L						; 3
-	beq	to_prev_page
-	sbc	#40
-	jmp	up_done
+	beq	to_prev_page						; 2/3
+; 55
+	ldy	$0	; nop3						; 3
+	sbc	#40							; 2
+	jmp	up_done							; 3
+; 63
 
 to_prev_page:
-	dec	START_LINE_H
-	lda	#200
+; 56
+	dec	START_LINE_H						; 5
+	lda	#200							; 2
 up_done:
+; 63 / 63
 	sta	START_LINE_L						; 3
+	jmp	done_key_69						; 3
 
-; 61
+up_done_46:
+	jmp	done_key_49						; 3
 
+	;=================================
+	; handle down pressed
+	;=================================
 
-; 46
-	jmp	done_key
-
-
-do_down:
-
+do_down_s:
+; 35
+	nop
+	nop
+do_down_down:
+; 39
 	lda	START_LINE_H						; 3
 	cmp	#>story_end						; 2
 	bne	down_ok							; 2/3
 
+; 46
 	lda	START_LINE_L						; 3
 	cmp	#<story_end						; 2
-	beq	done_key						; 2/3
+	beq	down_done						; 2/3
+; 53
+	bne	down_ok_ok			; bra			; 3
 
+; 47
 down_ok:
+	lda	$0	; nop5
+	nop		; nop2
+	nop		; nop2
+
+
+down_ok_ok:
+; 56
 	; increment input row
 	; we don't want to cross a page so if we are
 	;	200 then skip to next page
 
-; -1
 	lda	START_LINE_L						; 3
 	cmp	#200							; 2
 	beq	to_next_page						; 2/3
-; 6
+; 63
 	ldy	$0		; nop3					; 3
 	clc								; 2
 	adc	#40							; 2
 	bne	down_done	; bra					; 3
-; 16
+; 73
 
 to_next_page:
-; 7
+; 64
 	inc	START_LINE_H						; 5
 	lda	#0							; 2
-	nop
-; 16
+	nop								; 2
+
+; 73 / 73
 down_done:
 	sta	START_LINE_L						; 3
-	jmp	draw_loop						; 3
+	jmp	done_key_76						; 3
+
+early_down_done:
+; 54
+	jmp	done_key_57						; 3
 
 real_done_with_story:
 
