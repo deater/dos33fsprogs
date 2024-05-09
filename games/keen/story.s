@@ -9,6 +9,8 @@
 
 story_data	=	$7000
 
+story_end	=	$83A0
+
 keen_story_start:
 	;===================
 	; init screen
@@ -303,11 +305,11 @@ up_done:
 do_down:
 
 	lda	START_LINE_H						; 3
-	cmp	#$82							; 2
+	cmp	#>story_end						; 2
 	bne	down_ok							; 2/3
 
 	lda	START_LINE_L						; 3
-	cmp	#$48							; 2
+	cmp	#<story_end						; 2
 	beq	done_key						; 2/3
 
 down_ok:
