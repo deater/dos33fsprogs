@@ -67,11 +67,12 @@ load_background:
 	;===========================
 	; main loop
 	;===========================
-	; 14 + 16 * (16 + 40*(16) + 19 + 7) + 17 + 17*40
-	; 14 + 16 * (  682                ) + 697
-	;	14 + 10912 + 697
-	; 11623 / 65 = 179 lines
+	; 14 + 16 * (16 + 40*(16) + 19 + 7) + 17 + 17*40 -1
+	; 14 + 16 * (  682                ) + 696
+	;	14 + 10912 + 696
+	; 11622 / 65 = ~179 lines
 
+test1:
 draw_loop:
 
 	ldx	#0			; line counter			; 2
@@ -130,7 +131,7 @@ in_next_page:
 ; 7
 	inc	INH							; 5
 	lda	#0							; 2
-	nop
+	nop								; 2
 ; 16
 
 in_done:
@@ -151,7 +152,7 @@ in_done:
 	;==================
 	; draw message
 	;==================
-
+; -1
 	ldx	#17							; 2
 	lda	gr_offsets_low,X					; 4+
 	sta	OUTL							; 3
@@ -175,14 +176,11 @@ message_text_loop:
 							;		-1
 
 
-; 11623
-	;===================================
-	; can we do this constant time?
-	;===================================
-	; no keys pressed     = 41
-	; invalid key pressed = 41
-	; up pressed          =
-	; down pressed        =
+; 11622
+
+	;==============================================
+	; let's do the keyboard stuff in constant time
+	;==============================================
 
 check_keypress:
 	lda	KEYPRESS						; 4
@@ -242,38 +240,75 @@ done_key_69:
 	nop
 done_key_76:
 
-; 11623+76 = 11699
+
+test2:
+
+; 11622+76 = 11698
+
+	;==========================
+	; measured: 2DB2 = 11698
+	;==========================
+
 
 	; want to delay total of 144+70 lines, 214
 	; 214*65 = 13910
-	;	  -11699
+	;	  -11698
 	;	=========
-	;	    2211
+	;	    2212
 
-	; want to delay 2211 - 4 = 2207 - 20 = 2187/9 = 243
-	;	243/256= 0 r 243
+
+
+	; want to delay 2212 - 4 = 2208 - 20 = 2188
+
+	; need multiple of 9
+
+	inc	$0	; nop5
+	inc	$0	; nop5
+
+
+	;	2178/9=242
+
+	;	242/256= 0 r 242
 	;
 
+
 	lda	#0							; 2
-	ldy	#243							; 2
+	ldy	#242							; 2
 	jsr	delay_loop
 
-	; want to delay 6*8*65 = 3120+4550 = 7670
-	; want to delay 7670 - 15 - 12 = 7643 - 20 = 7623/9  = 847
-	; 905/256=3 r 79
+test3:
+	;================================
+	; should be: 2212
+	; measured:  $8A4 = 2212
+	;================================
 
-	inc	$00	; nop5
-	inc	$00	; nop5
+at_set_gr:
+
+
+
+	;=======================================
+	; want to delay 6*8*65 = 3120
+	; want to delay 3120 - 15 - 7 = 3098 - 20 = 3078/9  = 342
+	; 342/256=1 r 86
+
+	inc	$0	; nop5
 	nop		; nop2
 
 	bit	SET_GR							; 4
 
-	lda	#3							; 2
-	ldy	#79							; 2
+	lda	#1							; 2
+	ldy	#86							; 2
 	jsr	delay_loop
+
+
+
 	bit	SET_TEXT						; 4
 
-;done_key:
+	;=======================
+	; measured $c2f = 3117
+	; expected = 3120-3 = 3117
+test4:
+
 
 	jmp	draw_loop						; 3
 
@@ -296,6 +331,8 @@ do_up_up:
 	beq	up_done_46							; 2/3
 	bne	up_ok_ok	; bra					; 3
 ; 48
+
+.align $100
 
 up_ok:
 ; 39
