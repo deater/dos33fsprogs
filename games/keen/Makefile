@@ -60,7 +60,9 @@ TITLE:	title.o
 
 title.o:	title.s zp.inc hardware.inc \
 		zx02_optim.s \
-		graphics/keen1_title.hgr.zx02
+		hgr_sprite.s hgr_tables.s \
+		graphics/keen1_title.hgr.zx02 \
+		graphics/title_sprites.inc
 	ca65 -o title.o title.s -l title.lst
 
 ####

@@ -159,6 +159,10 @@ SOUNDL			= $B2
 SOUNDH			= $B3
 START_LINE_L		= $B4	; story
 START_LINE_H		= $B5	; story
+SPRITE_Y		= $B6	; title
+CURRENT_ROW		= $B7	; title
+SPRITE_X		= $B8	; title
+HGR_PAGE		= $B9	; title
 
 WHICH_SLOT	=	$DA
 JS_BUTTON_STATE	=	$DB

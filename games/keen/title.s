@@ -9,6 +9,11 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
+div7_table     = $9C00
+mod7_table     = $9D00
+hposn_high     = $9E00
+hposn_low      = $9F00
+
 keen_title_start:
 	;===================
 	; init screen
@@ -158,6 +163,13 @@ mockingboard_notfound:
 done_setup_sound:
 
 
+	;===================================
+	; init
+	;===================================
+
+	lda	#$0
+	sta	HGR_PAGE
+	jsr	hgr_make_tables
 
 	;===================================
 	; Do Intro Sequence
@@ -168,6 +180,25 @@ done_setup_sound:
 	lda	#100
 	jsr	wait_a_bit
 
+	lda	#<title_sprite
+	sta	INL
+	lda	#>title_sprite
+	sta	INH
+
+	lda	#8
+	sta	SPRITE_X
+
+	lda	#48
+	sta	SPRITE_Y
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite
+
+
+	lda	#100
+	jsr	wait_a_bit
 
 done_intro:
 
@@ -233,6 +264,8 @@ init_vars:
 	.include	"text_help.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
+	.include	"hgr_sprite.s"
+	.include	"hgr_tables.s"
 
 ;	.include	"lc_detect.s"
 
@@ -247,6 +280,7 @@ init_vars:
 new_title:
 .incbin "graphics/keen1_title.hgr.zx02"
 
+.include "graphics/title_sprites.inc"
 
 
 	;====================================

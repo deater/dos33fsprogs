@@ -11,12 +11,12 @@ PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	keen1_title.hgr.zx02 level1_bg.gr.zx02 parts.gr.zx02 \
-	keen1_story.hgr.zx02
+	keen1_story.hgr.zx02 title_sprites.inc
 
 ####
 
-#disk_sprites.inc:	a2_fortnight_sprites.png
-#	$(HGR_SPRITE) -s -l disk_sprite0 a2_fortnight_sprites.png  14   7 41  34 > disk_sprites.inc
+title_sprites.inc:	title_sprites.png
+	$(HGR_SPRITE) -s -l title_sprite title_sprites.png  0   0 167  95 > title_sprites.inc
 
 ####
 
