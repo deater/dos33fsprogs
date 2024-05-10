@@ -258,42 +258,41 @@ done_key41:
 	nop
 done_key_50:
 	inc	$00	; nop5
-	nop
-done_key_57:
-	inc	$00	; nop5
-	inc	$00	; nop5
 	lda	$00	; nop3
+done_key_58:
+	inc	$00	; nop5
+	inc	$00	; nop5
+	nop
 done_key_70:
-	nop
-	nop
-	nop
-done_key_76:
+	inc	$00	; nop5
+	inc	$00	; nop5
+done_key_80:
 
 
 test2:
 
-; 11622+76 = 11698
+; 11622+80 = 11702
 
 	;==========================
-	; measured: 2DB2 = 11698
+	; measured: ???? = 11702
 	;==========================
 
 
 	; want to delay total of 144+70 lines, 214
 	; 214*65 = 13910
-	;	  -11698
+	;	  -11702
 	;	=========
-	;	    2212
+	;	    2208
 
 
 
-	; want to delay 2212 - 4 = 2208 - 20 = 2188
+	; want to delay 2208 - 4 = 2204 - 20 = 2184
 
 	; need multiple of 9
 
-	inc	$0	; nop5
-	inc	$0	; nop5
-
+	nop
+	nop
+	nop
 
 	;	2178/9=242
 
@@ -399,31 +398,33 @@ up_done_47:
 	;=================================
 
 do_down_s:
-; 35
+; 35+1 (page cross)
 	nop
 	nop
 do_down_down:
-; 39
+; 39+1 (page cross)
+; 40
 	lda	START_LINE_H						; 3
 	cmp	#>story_end						; 2
 	bne	down_ok							; 2/3
 
-; 46
+; 47
 	lda	START_LINE_L						; 3
 	cmp	#<story_end						; 2
-	beq	down_done						; 2/3
-; 53
+	beq	early_down_done						; 2/3
+; 54
 	bne	down_ok_ok			; bra			; 3
 
-; 47
+
 down_ok:
-	lda	$0	; nop5
+; 48
+	inc	$0	; nop5
 	nop		; nop2
 	nop		; nop2
 
 
 down_ok_ok:
-; 56
+; 57
 	; increment input row
 	; we don't want to cross a page so if we are
 	;	200 then skip to next page
@@ -431,27 +432,27 @@ down_ok_ok:
 	lda	START_LINE_L						; 3
 	cmp	#200							; 2
 	beq	to_next_page						; 2/3
-; 63
+; 64
 	ldy	$0		; nop3					; 3
 	clc								; 2
 	adc	#40							; 2
 	bne	down_done	; bra					; 3
-; 73
+; 74
 
 to_next_page:
-; 64
+; 65
 	inc	START_LINE_H						; 5
 	lda	#0							; 2
 	nop								; 2
 
-; 73 / 73
 down_done:
+; 74 / 74
 	sta	START_LINE_L						; 3
-	jmp	done_key_76						; 3
+	jmp	done_key_80						; 3
 
 early_down_done:
-; 54
-	jmp	done_key_57						; 3
+; 55
+	jmp	done_key_58						; 3
 
 real_done_with_story:
 
