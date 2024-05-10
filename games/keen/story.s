@@ -18,10 +18,14 @@ keen_story_start:
 
 	bit	KEYRESET
 
-	bit	SET_GR
+	bit	SET_TEXT
 	bit	PAGE1
-	bit	HIRES
 	bit	FULLGR
+
+;	bit	SET_GR
+;	bit	PAGE1
+;	bit	HIRES
+;	bit	FULLGR
 
 	;===================
 	; Load story data
@@ -53,16 +57,39 @@ load_background:
 	jsr	full_decomp
 
 
-	jsr	wait_until_keypress
-
-
-	bit	SET_TEXT
-	bit	PAGE1
+;	bit	SET_TEXT
+;	bit	PAGE1
 
 	lda	#<story_data
 	sta	START_LINE_L
 	lda	#>story_data
 	sta	START_LINE_H
+
+	jsr	vapor_lock
+
+	; in theory at roughly 7410 cycles here (line 114)
+	; we want to be at line 192 (12480)
+
+	; 12480 - 7410 = 5070
+
+	; want to delay 5070 cycles
+
+	; experimentally want about 9 less?
+
+	; 5070 - 4 - 8 = 5058/9 = 562 -(9) = 561
+	; 561 / 256 = 2 r 49
+
+	nop
+	nop
+	nop
+	nop
+
+
+	lda	#2							; 2
+	ldy	#49							; 2
+	jsr	delay_loop
+
+
 
 	;===========================
 	; main loop
@@ -227,16 +254,18 @@ done_key7:
 	nop
 done_key41:
 	inc	$00	; nop5
-	lda	$00	; nop3
-done_key_49:
+	nop
+	nop
+done_key_50:
 	inc	$00	; nop5
-	lda	$00	; nop3
+	nop
 done_key_57:
 	inc	$00	; nop5
 	inc	$00	; nop5
+	lda	$00	; nop3
+done_key_70:
 	nop
-done_key_69:
-	inc	$00	; nop5
+	nop
 	nop
 done_key_76:
 
@@ -318,8 +347,8 @@ test4:
 
 do_up_w:
 ; 27
-	nop
-	nop
+	nop								; 2
+	nop								; 2
 do_up_up:
 ; 31
 	lda	START_LINE_H						; 3
@@ -328,40 +357,42 @@ do_up_up:
 ; 38
 	lda	START_LINE_L						; 3
 	cmp	#<story_data						; 2
-	beq	up_done_46							; 2/3
+	beq	up_done_47						; 2/3
 	bne	up_ok_ok	; bra					; 3
 ; 48
 
 .align $100
 
 up_ok:
-; 39
+; 39+1 cross page = 40
 	inc	$0	; nop5
-	nop		; nop2
-	nop		; nop2
+	nop
+	nop
 
-; 48
+; 48+1 cross page = 49
 up_ok_ok:
+; 49
 	sec								; 2
 	lda	START_LINE_L						; 3
 	beq	to_prev_page						; 2/3
-; 55
+; 56
 	ldy	$0	; nop3						; 3
 	sbc	#40							; 2
 	jmp	up_done							; 3
-; 63
+; 64
 
 to_prev_page:
-; 56
+; 57
 	dec	START_LINE_H						; 5
 	lda	#200							; 2
 up_done:
-; 63 / 63
+; 64 / 64
 	sta	START_LINE_L						; 3
-	jmp	done_key_69						; 3
+	jmp	done_key_70						; 3
 
-up_done_46:
-	jmp	done_key_49						; 3
+up_done_47:
+; 47 (crossed page)
+	jmp	done_key_50						; 3
 
 	;=================================
 	; handle down pressed
@@ -444,6 +475,8 @@ real_done_with_story:
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 
+	.include	"vapor_lock.s"
+
 ;	.include	"lc_detect.s"
 
 
@@ -485,3 +518,6 @@ delay_loop:
 	bcs	delay_loop
 delay_12:
 	rts
+
+
+.include "delay_a.s"
