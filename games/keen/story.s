@@ -20,12 +20,8 @@ keen_story_start:
 
 	bit	SET_TEXT
 	bit	PAGE1
-	bit	FULLGR
-
-;	bit	SET_GR
-;	bit	PAGE1
-;	bit	HIRES
 ;	bit	FULLGR
+	bit	HIRES
 
 	;===================
 	; Load story data
@@ -55,10 +51,6 @@ load_background:
 	lda	#$20	; decompress to hgr page1
 
 	jsr	full_decomp
-
-
-;	bit	SET_TEXT
-;	bit	PAGE1
 
 	lda	#<story_data
 	sta	START_LINE_L
@@ -498,6 +490,7 @@ wait_until_keypress:
 .align $100
 
 message:
+;	.byte "                                        ",0
 	.byte "      ESC TO EXIT / ARROWS TO READ      ",0
 
 	.include	"gr_offsets_split.s"
