@@ -180,6 +180,11 @@ done_setup_sound:
 	lda	#100
 	jsr	wait_a_bit
 
+
+	;===================================
+	; Draw title message
+	;===================================
+
 	lda	#<title_sprite
 	sta	INL
 	lda	#>title_sprite
@@ -196,21 +201,142 @@ done_setup_sound:
 
 	jsr	hgr_draw_sprite
 
+	;===========================
+	; title loop
+	;==========================
 
-	lda	#100
-	jsr	wait_a_bit
+	lda	#0
+	sta	WHICH_CURSOR
+	sta	FRAMEL
+	sta	FRAMEH
+	sta	MENU_OPTION
+title_loop:
+
+	lda	KEYPRESS
+	bpl	done_title_keyboard
+
+	bit	KEYRESET
+
+	and	#$7f		; clear high bit
+	and	#$df		; convert to uppercase
+
+	cmp	#13		; exit if enter pressed
+	beq	done_intro
+
+	cmp	#'H'
+	bne	not_help
+
+	jsr	print_help
+not_help:
+
+check_up:
+	cmp	#'W'
+	beq	up_pressed
+	cmp	#$0B		; up key
+	bne	check_down
+up_pressed:
+
+	lda	MENU_OPTION
+	beq	done_title_keyboard
+
+	jsr	erase_marker
+
+	dec	MENU_OPTION
+
+	jsr	draw_marker
+
+	jmp	done_title_keyboard
+
+check_down:
+	cmp	#'S'
+	beq	down_pressed
+	cmp	#$0A		; down key
+	bne	done_title_keyboard
+
+down_pressed:
+
+	lda	MENU_OPTION
+	cmp	#7
+	beq	done_title_keyboard
+
+	jsr	erase_marker
+
+	inc	MENU_OPTION
+
+	jsr	draw_marker
+
+	jmp	done_title_keyboard
+
+
+done_title_keyboard:
+	inc	FRAMEL
+	bne	noframeoflo
+	inc	FRAMEH
+noframeoflo:
+	lda	FRAMEL
+	bne	no_adjust_cursor
+
+	lda	FRAMEH
+	and	#$0f
+	bne	no_adjust_cursor
+
+	clc
+	lda	WHICH_CURSOR
+	adc	#1
+	cmp	#3
+	bne	no_cursor_oflo
+	lda	#0
+
+no_cursor_oflo:
+	sta	WHICH_CURSOR
+
+	jsr	draw_marker
+
+no_adjust_cursor:
+	jmp	title_loop
 
 done_intro:
 
 	; restore to full screen (no text)
 
+	lda	MENU_OPTION
+	cmp	#0
+	beq	new_game	; new game
+	cmp	#1
+	beq	nothing		; continue game
+	cmp	#2
+	beq	do_story
+
+nothing:
+	jmp	title_loop
+
+	;=====================
+	;=====================
+	; do story
+	;=====================
+	;=====================
+do_story:
 	bit	FULLGR
 	bit	LORES
 
+	lda	#LOAD_STORY
+	sta	WHICH_LOAD		; assume new game (mars map)
+
+	rts
+
 	;=====================
-	; init vars
 	;=====================
+	; new game
+	;=====================
+	;=====================
+new_game:
 init_vars:
+	bit	FULLGR
+	bit	LORES
+
+
+
+
 	lda	#0
 	sta	ANIMATE_FRAME
 	sta	FRAMEL
@@ -243,9 +369,7 @@ init_vars:
 	sta	MARS_X
 	sta	MARS_Y
 
-	lda	#LOAD_STORY
-
-;	lda	#LOAD_MARS
+	lda	#LOAD_MARS
 	sta	WHICH_LOAD		; assume new game (mars map)
 
 	rts
@@ -310,9 +434,13 @@ done_keyloop:
 	cmp	#'H'|$80
 	bne	really_done_keyloop
 
-	bit	SET_TEXT
+
+	lda	#$04
+	sta	DRAW_PAGE
 	jsr	print_help
 	bit	SET_GR
+	lda	#$20
+	sta	DRAW_PAGE
 	bit	PAGE1
 
 	ldx	#100
@@ -324,9 +452,67 @@ really_done_keyloop:
 
 	rts
 
+	;=============================
+	; erase
+	;=============================
+erase_marker:
+	lda	#<ball_bg
+	sta	INL
+	lda	#>ball_bg
+	sta	INH
+
+	lda	#12
+	sta	SPRITE_X
+
+	lda	MENU_OPTION
+	asl
+	asl
+	asl
+	clc
+	adc	#55
+	sta	SPRITE_Y
+
+;	lda	#$20
+;	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite
+
+	rts
 
 
 
+	;=============================
+	; draw
+	;=============================
+draw_marker:
+	ldx	WHICH_CURSOR
+	lda	cursor_lookup_l,X
+	sta	INL
+	lda	cursor_lookup_h,X
+	sta	INH
+
+	lda	#12
+	sta	SPRITE_X
+
+	lda	MENU_OPTION
+	asl
+	asl
+	asl
+	clc
+	adc	#55
+	sta	SPRITE_Y
+
+;	lda	#$20
+;	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite
+
+	rts
+
+cursor_lookup_h:
+	.byte	>ball0,>ball1,>ball2
+cursor_lookup_l:
+	.byte	<ball0,<ball1,<ball2
 
 
 ;PT3_LOC = theme_music

@@ -164,6 +164,7 @@ CURRENT_ROW		= $B7	; title
 SPRITE_X		= $B8	; title
 HGR_PAGE		= $B9	; title
 MENU_OPTION		= $BA	; title
+WHICH_CURSOR		= $BB	; title
 
 WHICH_SLOT	=	$DA
 JS_BUTTON_STATE	=	$DB
