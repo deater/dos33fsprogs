@@ -114,7 +114,7 @@ left_pressed:
 	; check if allowed to move left
 
 	ldx	MARS_TILEY
-	dex				; look one up
+	;dex				; look one up
 
 	lda	tilemap_lookup_high,X
 	sta	INH
@@ -175,7 +175,7 @@ right_pressed:
 	; check if allowed to move right
 
 	ldx	MARS_TILEY
-	dex				; look one up
+;	dex				; look one up
 
 	lda	tilemap_lookup_high,X
 	sta	INH
@@ -265,7 +265,7 @@ up_pressed:
 	; check if allowed to move up
 
 	ldx	MARS_TILEY
-	dex				; look one up
+;	dex				; look one up
 
 	lda	tilemap_lookup_high,X
 	sta	INH
