@@ -39,6 +39,8 @@ MAIN:	main.o
 main.o:	main.s zp.inc hardware.inc \
 		zx02_optim.s \
 		hgr_sprite.s hgr_tables.s \
+		keyboard.s \
+		hgr_14x14_sprite.s \
 		graphics/maglev1.hgr.zx02
 	ca65 -o main.o main.s -l main.lst
 

@@ -166,11 +166,41 @@ done_setup_sound:
 	; init
 	;===================================
 
-	lda	#$0
+	lda	#$20
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
+	lda	#0
+	sta	JOYSTICK_ENABLED
+	sta	UPDATE_POINTER
+
+	lda	#20
+	sta	CURSOR_X
+	sta	CURSOR_Y
+
+	jsr     save_bg_14x14           ; save old bg
+
 blah:
+
+	jsr	handle_keypress
+
+	lda	UPDATE_POINTER
+	beq	no_draw_pointer
+
+	lda	#0
+	sta	UPDATE_POINTER
+
+	jsr     save_bg_14x14           ; save old bg
+
+
+	lda	#<finger_point_sprite
+	sta	INL
+	lda	#>finger_point_sprite
+	sta	INH
+	jsr	hgr_draw_sprite_14x14
+
+no_draw_pointer:
+
 	jmp	blah
 
 .if 0
@@ -397,10 +427,14 @@ init_vars:
 
 ;	.include	"lc_detect.s"
 
+	.include	"keyboard.s"
 
+	.include	"hgr_14x14_sprite.s"
 
 new_title:
 .incbin "graphics/maglev1.hgr.zx02"
+
+.include "common_sprites.inc"
 
 .if 0
 
