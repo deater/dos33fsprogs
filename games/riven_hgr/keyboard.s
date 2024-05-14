@@ -34,10 +34,10 @@ js_check:
 
 js_check_left:
 ;        lda     value0
- ;       cmp     #$20
-  ;      bcs     js_check_right  ; if less than 32, left
-   ;     lda     #'A'
-    ;    bne     handle_input
+        cmp     #$20
+        bcs     js_check_right  ; if less than 32, left
+        lda     #'A'
+        bne     handle_input
 
 js_check_right:
         cmp     #$40
@@ -47,9 +47,9 @@ js_check_right:
 
 js_check_up:
 ;        lda     value1
- ;       cmp     #$20
-  ;      bcs     js_check_down
-   ;     lda     #'W'
+        cmp     #$20
+        bcs     js_check_down
+        lda     #'W'
 
         bne     handle_input
 
@@ -84,39 +84,39 @@ handle_input:
 	inc	UPDATE_POINTER
 	pla
 
-;check_sound:
-;	cmp	#$14			; control-T
-;	bne	check_joystick
-;
-;	lda	SOUND_STATUS
-;	eor	#SOUND_DISABLED
-;	sta	SOUND_STATUS
-;	jmp	done_keypress
+check_sound:
+	cmp	#$14			; control-T
+	bne	check_joystick
+
+	lda	SOUND_STATUS
+	eor	#SOUND_DISABLED
+	sta	SOUND_STATUS
+	jmp	done_keypress
 
 	; can't be ^J as that's the same as down
-;check_joystick:
+check_joystick:
 ;	cmp	#$10			; control-P
-;	cmp	#'J'
-;	bne	check_load
+	cmp	#'J'
+	bne	check_load
 
-;	lda	JOYSTICK_ENABLED
-;	eor	#1
-;	sta	JOYSTICK_ENABLED
-;	jmp	done_keypress
+	lda	JOYSTICK_ENABLED
+	eor	#1
+	sta	JOYSTICK_ENABLED
+	jmp	done_keypress
 
-;check_load:
-;	cmp	#$C			; control-L
-;	bne	check_save
+check_load:
+	cmp	#$C			; control-L
+	bne	check_save
 
 ;	jsr	load_game
-;	jmp	done_keypress
+	jmp	done_keypress
 
-;check_save:
-;	cmp	#$13			; control-S
-;	bne	check_left
+check_save:
+	cmp	#$13			; control-S
+	bne	check_left
 
 ;	jsr	save_game
-;	jmp	done_keypress
+	jmp	done_keypress
 
 check_left:
 	cmp	#'A'
@@ -205,29 +205,49 @@ check_return:
 
 return_pressed:
 
-;	lda	IN_SPECIAL
-;	beq	not_special_return
+	lda	IN_SPECIAL
+	beq	not_special_return
 
-;special_return:
-;	jsr	handle_special
+special_return:
+	jsr	handle_special
 
 	; special case, don't make cursor visible
-;	jmp	no_keypress
+	jmp	no_keypress
 
-;not_special_return:
+not_special_return:
 
-;	lda	IN_RIGHT
-;	beq	not_right_return
+	lda	IN_RIGHT
+	beq	not_right_return
 
-;	cmp	#1
-;	beq	right_return
+	cmp	#1
+	beq	right_return
 
-;right_uturn:
-;	jsr	uturn
-;	jmp	no_keypress
+right_uturn:
+	jsr	uturn
+	jmp	no_keypress
 
-;right_return:
-;	jsr	turn_right
+right_return:
+	jsr	turn_right
+	jmp	no_keypress
+
+not_right_return:
+
+	lda	IN_LEFT
+	beq	not_left_return
+
+	cmp	#1
+	beq	left_return
+left_uturn:
+	jsr	uturn
+	jmp	no_keypress
+
+left_return:
+	jsr	turn_left
+	jmp	no_keypress
+
+not_left_return:
+
+	jsr	go_forward
 	jmp	no_keypress
 
 done_keypress:
@@ -238,4 +258,205 @@ no_keypress:
 	bit	KEYRESET
 	rts
 
+	;============================
+	; handle_special
+	;===========================
 
+	; set up jump table fakery
+handle_special:
+	ldy	#LOCATION_SPECIAL_FUNC+1
+	lda	(LOCATION_STRUCT_L),Y
+	pha
+	dey
+	lda	(LOCATION_STRUCT_L),Y
+	pha
+	rts
+
+
+	;=============================
+	; change direction
+	;=============================
+change_direction:
+
+	; load background
+	lda	DIRECTION
+	bpl	no_split
+
+	; split text/graphics
+	bit	TEXTGR
+
+	; also change sprite cutoff
+	; not needed for HGR
+
+;	ldx	#40
+;	stx	psc_smc1+1
+;;	stx	psc_smc2+1
+
+	jmp	done_split
+no_split:
+	bit	FULLGR
+
+	; also change sprite cutoff
+;	ldx	#48
+;	stx	psc_smc1+1
+;;	stx	psc_smc2+1
+
+done_split:
+	and	#$f			; mask off special flags
+	tay
+	lda	log2_table,Y
+	asl
+	clc
+	adc	#LOCATION_NORTH_BG
+	tay
+
+	lda	(LOCATION_STRUCT_L),Y
+        sta     ZX0_src
+	iny
+	lda	(LOCATION_STRUCT_L),Y
+	sta	ZX0_src+1
+
+	lda	#$20			; decompress to hgr page1
+
+	jsr	full_decomp
+
+
+	rts
+
+
+	;=============================
+	; change location
+	;=============================
+change_location:
+	; reset graphics
+	bit	SET_GR
+
+	; clear IN_SPECIAL
+	lda	#0
+	sta	IN_SPECIAL
+	sta	IN_RIGHT
+	sta	IN_LEFT
+
+	; reset pointer to not visible, centered
+
+	sta	ANIMATE_FRAME
+	sta	CURSOR_VISIBLE
+	lda	#20
+	sta	CURSOR_X
+	lda	#89
+	sta	CURSOR_Y
+
+	lda	LOCATION
+	asl
+	tay
+
+	lda	(LOCATIONS_L),Y
+	sta	LOCATION_STRUCT_L
+	iny
+	lda	(LOCATIONS_L),Y
+	sta	LOCATION_STRUCT_H
+
+	jsr	change_direction
+
+	rts
+
+	;==========================
+	; go forward
+	;===========================
+go_forward:
+
+	; update new location
+
+	lda	DIRECTION
+	and	#$f
+	tay
+	lda	log2_table,Y
+	clc
+	adc	#LOCATION_NORTH_EXIT
+	tay
+	lda	(LOCATION_STRUCT_L),Y
+
+	cmp	#$ff
+	beq	cant_go_forward
+
+	sta	LOCATION
+
+	; update new direction
+
+	lda	DIRECTION
+	and	#$f
+	tay
+	lda	log2_table,Y
+	clc
+	adc	#LOCATION_NORTH_EXIT_DIR
+	tay
+	lda	(LOCATION_STRUCT_L),Y
+	sta	DIRECTION
+
+	jsr	change_location
+cant_go_forward:
+	rts
+
+	;==========================
+	; turn left
+	;===========================
+turn_left:
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	go_west
+	cmp	#DIRECTION_W
+	beq	go_south
+	cmp	#DIRECTION_S
+	beq	go_east
+	bne	go_north
+
+	;==========================
+	; turn right
+	;===========================
+turn_right:
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	go_east
+	cmp	#DIRECTION_E
+	beq	go_south
+	cmp	#DIRECTION_S
+	beq	go_west
+	bne	go_north
+
+	;==========================
+	; uturn
+	;===========================
+uturn:
+
+	lda	DIRECTION
+	and	#$f
+	cmp	#DIRECTION_N
+	beq	go_south
+	cmp	#DIRECTION_W
+	beq	go_east
+	cmp	#DIRECTION_S
+	beq	go_north
+	bne	go_west
+
+go_north:
+	lda	#DIRECTION_N
+	jmp	done_turning
+go_east:
+	lda	#DIRECTION_E
+	jmp	done_turning
+go_south:
+	lda	#DIRECTION_S
+	jmp	done_turning
+go_west:
+	lda	#DIRECTION_W
+	jmp	done_turning
+
+
+done_turning:
+	sta	DIRECTION
+	jsr	change_direction
+
+	rts

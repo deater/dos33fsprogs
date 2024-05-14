@@ -10,10 +10,7 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	riven_title.hgr.zx02 \
-	maglev1_n.hgr.zx02 maglev1_s.hgr.zx02 maglev1_e.hgr.zx02 maglev1_w.hgr.zx02 \
-	maglev2_n.hgr.zx02 \
-	maglev3_n.hgr.zx02
+all:	riven_title.hgr.zx02
 
 ####
 

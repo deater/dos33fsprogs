@@ -11,12 +11,12 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 
 all:	riven_hgr.dsk
 
-riven_hgr.dsk:	HELLO LOADER MAIN
+riven_hgr.dsk:	HELLO LOADER TITLE DOME
 	cp $(EMPTY_DISK) riven_hgr.dsk
 	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MAIN
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MARS
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 TITLE
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 DOME
 
 ###
 
@@ -33,34 +33,32 @@ loader.o:	loader.s hardware_detect.s
 
 ####
 
-MAIN:	main.o
-	ld65 -o MAIN main.o -C ../../linker_scripts/apple2_4000.inc
+TITLE:	title.o
+	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_4000.inc
 
-main.o:	main.s zp.inc hardware.inc \
+title.o:	title.s zp.inc hardware.inc \
+		zx02_optim.s wait_a_bit.s \
+		hgr_sprite.s hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title.o title.s -l title.lst
+
+####
+
+DOME:	dome.o
+	ld65 -o DOME dome.o -C ../../linker_scripts/apple2_4000.inc
+
+dome.o:	dome.s zp.inc hardware.inc \
 		zx02_optim.s \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		graphics/maglev1.hgr.zx02
-	ca65 -o main.o main.s -l main.lst
-
-####
-
-#MARS:	mars.o
-#	ld65 -o MARS mars.o -C ../../linker_scripts/apple2_4000.inc
-
-#mars.o:	mars.s zp.inc hardware.inc game_over.s \
-#	gr_fade.s \
-#	mars_keyboard.s draw_tilemap.s \
-#	mars_sfx.s longer_sound.s \
-#	text_help.s tilemap_lookup.s \
-#	maps/mars_map.zx02 graphics/parts.gr.zx02
-#	ca65 -o mars.o mars.s -l mars.lst
+		graphics_dome/dome_graphics.inc
+	ca65 -o dome.o dome.s -l dome.lst
 
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LOADER MAIN
+	rm -f *~ *.o *.lst HELLO LOADER TITLE DOME
 #	cd graphics && make clean
 #	cd maps && make clean
 #	cd title && make clean

@@ -193,11 +193,13 @@ copy_filename_done:
 	rts
 
 filenames:
-	.word main_filename
+	.word title_filename
+	.word dome_filename
 
-main_filename:
-	.byte "MAIN",0
-
+title_filename:
+	.byte "TITLE",0
+dome_filename:
+	.byte "DOME",0
 
 	;===================================================
 	;===================================================
