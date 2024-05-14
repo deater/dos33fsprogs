@@ -10,7 +10,10 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	maglev1.hgr.zx02
+all:	riven_title.hgr.zx02 \
+	maglev1_n.hgr.zx02 maglev1_s.hgr.zx02 maglev1_e.hgr.zx02 maglev1_w.hgr.zx02 \
+	maglev2_n.hgr.zx02 \
+	maglev3_n.hgr.zx02
 
 ####
 
@@ -23,11 +26,62 @@ all:	maglev1.hgr.zx02
 
 ####
 
-maglev1.hgr.zx02:	maglev1.hgr
-	$(ZX02) maglev1.hgr maglev1.hgr.zx02
+maglev1_n.hgr.zx02:	maglev1_n.hgr
+	$(ZX02) maglev1_n.hgr maglev1_n.hgr.zx02
 
-maglev1.hgr:	maglev1.png
-	$(PNG_TO_HGR) maglev1.png > maglev1.hgr
+maglev1_n.hgr:	maglev1_n.png
+	$(PNG_TO_HGR) maglev1_n.png > maglev1_n.hgr
+
+####
+
+maglev1_s.hgr.zx02:	maglev1_s.hgr
+	$(ZX02) maglev1_s.hgr maglev1_s.hgr.zx02
+
+maglev1_s.hgr:	maglev1_s.png
+	$(PNG_TO_HGR) maglev1_s.png > maglev1_s.hgr
+
+####
+
+maglev1_e.hgr.zx02:	maglev1_e.hgr
+	$(ZX02) maglev1_e.hgr maglev1_e.hgr.zx02
+
+maglev1_e.hgr:	maglev1_e.png
+	$(PNG_TO_HGR) maglev1_e.png > maglev1_e.hgr
+
+####
+
+maglev1_w.hgr.zx02:	maglev1_w.hgr
+	$(ZX02) maglev1_w.hgr maglev1_w.hgr.zx02
+
+maglev1_w.hgr:	maglev1_w.png
+	$(PNG_TO_HGR) maglev1_w.png > maglev1_w.hgr
+
+
+####
+
+maglev2_n.hgr.zx02:	maglev2_n.hgr
+	$(ZX02) maglev2_n.hgr maglev2_n.hgr.zx02
+
+maglev2_n.hgr:	maglev2_n.png
+	$(PNG_TO_HGR) maglev2_n.png > maglev2_n.hgr
+
+####
+
+maglev3_n.hgr.zx02:	maglev3_n.hgr
+	$(ZX02) maglev3_n.hgr maglev3_n.hgr.zx02
+
+maglev3_n.hgr:	maglev3_n.png
+	$(PNG_TO_HGR) maglev3_n.png > maglev3_n.hgr
+
+####
+
+riven_title.hgr.zx02:	riven_title.hgr
+	$(ZX02) riven_title.hgr riven_title.hgr.zx02
+
+riven_title.hgr:	riven_title.png
+	$(PNG_TO_HGR) riven_title.png > riven_title.hgr
+
+
 
 ####
 
