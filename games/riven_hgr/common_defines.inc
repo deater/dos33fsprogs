@@ -1,5 +1,6 @@
 LOAD_TITLE      =       0
 LOAD_DOME	=	1
+LOAD_PROJECTOR	=	2
 
 
 div7_table     = $BC00
@@ -51,3 +52,9 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 RIVEN_MAGLEV1	=	0
 RIVEN_MAGLEV2	=	1
 RIVEN_MAGLEV3	=	2
+
+; Projector
+
+RIVEN_PROJECTOR	=	0
+RIVEN_PROJ_DOOR	=	1
+
