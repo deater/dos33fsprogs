@@ -54,6 +54,7 @@ dome.o:	dome.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
+		leveldata_dome.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_dome/dome_graphics.inc
 	ca65 -o dome.o dome.s -l dome.lst
@@ -68,6 +69,7 @@ level_projector.o:	level_projector.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
+		leveldata_projector.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_projector/projector_graphics.inc
 	ca65 -o level_projector.o level_projector.s -l level_projector.lst

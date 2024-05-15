@@ -98,7 +98,7 @@ frame_no_oflo:
 
 really_exit:
 
-	jmp	really_exit
+	rts
 
 
 	;==========================

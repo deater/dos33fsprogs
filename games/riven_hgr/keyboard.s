@@ -124,11 +124,11 @@ check_left:
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
-	lda	CURSOR_X		; if 41<x<$FE don't decrement
-	cmp	#41
-	bcc	do_dec_cursor_x
-	cmp	#$FE
-	bcc	done_left_pressed
+	lda	CURSOR_X		; if x>0
+;	cmp	#41
+;	bcc	do_dec_cursor_x
+;	cmp	#$FE
+	beq	done_left_pressed
 do_dec_cursor_x:
 	dec	CURSOR_X
 done_left_pressed:
@@ -141,7 +141,7 @@ check_right:
 	bne	check_up
 right_pressed:
 	lda	CURSOR_X		; if 40<x<$FE don't increment
-	cmp	#40
+	cmp	#38
 	bcc	do_inc_cursor_x
 	cmp	#$FE
 	bcc	done_right_pressed
@@ -156,11 +156,11 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
-	lda	CURSOR_Y		; if 191<y<$F0 don't decrement
-	cmp	#191
-	bcc	do_dec_cursor_y
-	cmp	#$F0
-	bcc	done_up_pressed
+	lda	CURSOR_Y		; if > 4 then decrement
+	cmp	#4
+;	bcs	do_dec_cursor_y		; bge
+;	cmp	#$F0
+	bcc	done_up_pressed		; blt
 do_dec_cursor_y:
 	dec	CURSOR_Y
 	dec	CURSOR_Y
@@ -176,11 +176,11 @@ check_down:
 	cmp	#$0A
 	bne	check_return
 down_pressed:
-	lda	CURSOR_Y		; if 191<y<$EE don't decrement
-	cmp	#191
-	bcc	do_inc_cursor_y
-	cmp	#$EE
-	bcc	done_down_pressed
+	lda	CURSOR_Y		; if y<177 (14 high)
+	cmp	#177
+;	bcc	do_inc_cursor_y
+;	cmp	#$EE
+	bcs	done_down_pressed
 do_inc_cursor_y:
 	inc	CURSOR_Y
 	inc	CURSOR_Y
@@ -327,6 +327,7 @@ done_split:
 	;=============================
 	; change location
 	;=============================
+	;
 change_location:
 	; reset graphics
 	bit	SET_GR
@@ -376,9 +377,19 @@ go_forward:
 	tay
 	lda	(LOCATION_STRUCT_L),Y
 
+	; A has new destination
+
+	; FF = can't go forward
+	; otherwise if top 4 bits set, new level
+	; otherwise, in current
+
 	cmp	#$ff
 	beq	cant_go_forward
 
+	cmp	#$10
+	bcs	new_level
+
+same_level:
 	sta	LOCATION
 
 	; update new direction
@@ -396,6 +407,39 @@ go_forward:
 	jsr	change_location
 cant_go_forward:
 	rts
+
+
+new_level:
+	pha
+	lsr
+	lsr
+	lsr
+	lsr
+
+	sta	WHICH_LOAD
+
+	pla
+	and	#$0f
+
+	sta	LOCATION
+
+	; update new direction
+
+	lda	DIRECTION
+	and	#$f
+	tay
+	lda	log2_table,Y
+	clc
+	adc	#LOCATION_NORTH_EXIT_DIR
+	tay
+	lda	(LOCATION_STRUCT_L),Y
+	sta	DIRECTION
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	rts
+
 
 	;==========================
 	; turn left
