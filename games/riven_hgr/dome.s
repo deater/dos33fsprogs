@@ -116,6 +116,8 @@ really_exit:
 
 .include "graphics_dome/dome_graphics.inc"
 
-.include "common_sprites.inc"
+;.include "common_sprites.inc"
+
+.include "graphics_sprites/pointer_sprites.inc"
 
 .include "leveldata_dome.inc"

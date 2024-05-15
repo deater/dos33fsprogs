@@ -5,87 +5,71 @@
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y
 
-	; left sprite AT INL/INH
-	; right sprite at INL/INH + 14
-	; left mask at INL/INH + 28
-	; right mask at INL/INH + 42
+	; sprite at INL/INH
+	; mask at INL/INH + 28
 
 hgr_draw_sprite_14x14:
 
-	; set up pointers
+	; set up pointers for sprite
 	lda	INL
 	sta	hds_smc1+1
-	lda	INH
-	sta	hds_smc1+2
-
-	clc
-	lda	INL
-	adc	#14
 	sta	hds_smc2+1
 	lda	INH
-	adc	#0
+	sta	hds_smc1+2
 	sta	hds_smc2+2
+
+	; setup pointers for mask
 
 	clc
 	lda	INL
 	adc	#28
 	sta	hds_smc3+1
-	lda	INH
-	adc	#0
-	sta	hds_smc3+2
-
-	clc
-	lda	INL
-	adc	#42
 	sta	hds_smc4+1
 	lda	INH
 	adc	#0
+	sta	hds_smc3+2
 	sta	hds_smc4+2
 
 
 	ldx	#0
 hgr_14x14_sprite_yloop:
 	txa
-	pha
+
+	lsr			; get Ypos from X
 
 	clc
 	adc	CURSOR_Y
 
-	tax
-	lda	hposn_high,X
+	tay			; point GBASL/GBASH to Ypos row
+	lda	hposn_high,Y
 	sta	GBASH
-	lda	hposn_low,X
+	lda	hposn_low,Y
 	sta	GBASL
 
-;	ldx	#0
-;	ldy	#0
+;	pla
+;	tax
 
-	; calc GBASL/GBASH
-;	jsr	HPOSN	; (Y,X),(A)  (values stored in HGRX,XH,Y)
+	ldy	CURSOR_X		; point to Xpos
 
-	pla
-	tax
-
-	ldy	CURSOR_X
-
-	lda	(GBASL),Y
+	lda	(GBASL),Y		; load background color
 hds_smc3:
-	and	point_mask_l,X
+	and	point_mask,X
 hds_smc1:
-	ora	point_sprite_l,X
+	ora	point_sprite,X
 	sta	(GBASL),Y
 
 	iny
+	inx
 
 	lda	(GBASL),Y
 hds_smc4:
-	and	point_mask_r,X
+	and	point_mask,X
 hds_smc2:
-	ora	point_sprite_r,X
+	ora	point_sprite,X
 	sta	(GBASL),Y
 
 	inx
-	cpx	#14
+	cpx	#28
 	bne	hgr_14x14_sprite_yloop
 
 	rts

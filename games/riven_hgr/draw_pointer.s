@@ -80,9 +80,9 @@ really_draw_grab:
 	and	#DIRECTION_ONLY_POINT
 	bne	special_but_point
 
-	lda     #<finger_grab_sprite
+	lda     #<grab_sprite
 	sta	INL
-	lda     #>finger_grab_sprite
+	lda     #>grab_sprite
 	jmp	finger_draw
 
 special_but_point:
@@ -110,7 +110,9 @@ really_not_special:
 
 	; otherwise, finger_point
 
+
 finger_point:
+.if 0
 	; holding item takes precednce
 	lda	HOLDING_ITEM
 	cmp	#HOLDING_MATCH
@@ -168,11 +170,12 @@ white_finger:
 	sta	INL
 	lda     #>finger_white_page_sprite
 	jmp	finger_draw
+.endif
 
 real_finger_point:
-	lda     #<finger_point_sprite
+	lda     #<point_sprite
 	sta	INL
-	lda     #>finger_point_sprite
+	lda     #>point_sprite
 	jmp	finger_draw
 
 check_cursor_left:
@@ -217,17 +220,17 @@ finger_left:
 	lda	#1
 	sta	IN_LEFT
 
-	lda     #<finger_left_sprite
+	lda     #<left_sprite
 	sta	INL
-	lda     #>finger_left_sprite
+	lda     #>left_sprite
 	jmp	finger_draw
 
 finger_right:
 	lda	#1
 	sta	IN_RIGHT
-	lda     #<finger_right_sprite
+	lda     #<right_sprite
 	sta	INL
-	lda     #>finger_right_sprite
+	lda     #>right_sprite
 	jmp	finger_draw
 
 finger_uturn_left:
@@ -235,9 +238,9 @@ finger_uturn_left:
 	lda	#2
 	sta	IN_LEFT
 
-	lda     #<finger_turn_left_sprite
+	lda     #<uturn_left_sprite
 	sta	INL
-	lda     #>finger_turn_left_sprite
+	lda     #>uturn_left_sprite
 	jmp	finger_draw
 
 finger_uturn_right:
@@ -245,9 +248,9 @@ finger_uturn_right:
 	lda	#2
 	sta	IN_RIGHT
 
-	lda     #<finger_turn_right_sprite
+	lda     #<uturn_right_sprite
 	sta	INL
-	lda     #>finger_turn_right_sprite
+	lda     #>uturn_right_sprite
 	jmp	finger_draw
 
 finger_draw:
