@@ -1,0 +1,11 @@
+
+
+
+goes step3_n to lookin_w
+
+	lookin_w look left goes to inseat_s
+	inseat_s right goes to lookin_w
+	
+lookin_w forward goes to inseat_w
+	instead_w left goes to inseat_s
+	
