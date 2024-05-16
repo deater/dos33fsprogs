@@ -2,26 +2,17 @@ include ../../../Makefile.inc
 
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
-LINKER_SCRIPTS = ../../../linker_scripts
-DOS33 = ../../../utils/dos33fs-utils/dos33
-EMPTY_DISK = ../../../empty_disk/empty.dsk
-TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
-PNG2GR = ../../../utils/gr-utils/png2gr
-PNG2SPRITES = ../../../utils/gr-utils/png2sprites
-HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	dome_graphics.inc
+all:	magsteps_graphics.inc
 
-dome_graphics.inc:	\
-	maglev1_n.hgr.zx02 maglev1_s.hgr.zx02 maglev1_e.hgr.zx02 maglev1_w.hgr.zx02 \
-	maglev2_n.hgr.zx02 \
-	maglev3_n.hgr.zx02
-	echo "maglev1_n_zx02: .incbin \"maglev1_n.hgr.zx02\"" > dome_graphics.inc
-	echo "maglev1_s_zx02: .incbin \"maglev1_s.hgr.zx02\"" >> dome_graphics.inc
-	echo "maglev1_e_zx02: .incbin \"maglev1_e.hgr.zx02\"" >> dome_graphics.inc
-	echo "maglev1_w_zx02: .incbin \"maglev1_w.hgr.zx02\"" >> dome_graphics.inc
-	echo "maglev2_n_zx02: .incbin \"maglev2_n.hgr.zx02\"" >> dome_graphics.inc
-	echo "maglev3_n_zx02: .incbin \"maglev3_n.hgr.zx02\"" >> dome_graphics.inc
+magsteps_graphics.inc:	\
+	magsteps2_n.hgr.zx02 magsteps2_s.hgr.zx02 \
+	magsteps3_n.hgr.zx02 magsteps3_s.hgr.zx02
+	echo "magsteps2_n_zx02: .incbin \"magsteps2_n.hgr.zx02\"" > magsteps_graphics.inc
+	echo "magsteps2_s_zx02: .incbin \"magsteps2_s.hgr.zx02\"" >> magsteps_graphics.inc
+	echo "magsteps3_n_zx02: .incbin \"magsteps3_n.hgr.zx02\"" >> magsteps_graphics.inc
+	echo "magsteps3_s_zx02: .incbin \"magsteps3_s.hgr.zx02\"" >> magsteps_graphics.inc
+
 
 
 ####
@@ -35,5 +26,5 @@ dome_graphics.inc:	\
 ####
 
 clean:
-	rm -f *~ *.o *.lst  *.zx02 *.hgr dome_graphics.inc
+	rm -f *~ *.o *.lst  *.zx02 *.hgr magsteps_graphics.inc
 

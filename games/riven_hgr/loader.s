@@ -196,6 +196,7 @@ filenames:
 	.word title_filename
 	.word dome_filename
 	.word projector_filename
+	.word magsteps_filename
 
 title_filename:
 	.byte "TITLE",0
@@ -203,6 +204,8 @@ dome_filename:
 	.byte "DOME",0
 projector_filename:
 	.byte "LEVEL_PROJECTOR",0
+magsteps_filename:
+	.byte "LEVEL_MAGSTEPS",0
 
 	;===================================================
 	;===================================================

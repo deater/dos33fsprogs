@@ -1,6 +1,7 @@
 LOAD_TITLE      =       0
 LOAD_DOME	=	1
 LOAD_PROJECTOR	=	2
+LOAD_MAGSTEPS	=	3
 
 
 div7_table     = $BC00
@@ -50,11 +51,14 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 ; Dome
 
 RIVEN_MAGLEV1	=	0
-RIVEN_MAGLEV2	=	1
-RIVEN_MAGLEV3	=	2
 
 ; Projector
 
 RIVEN_PROJECTOR	=	0
 RIVEN_PROJ_DOOR	=	1
+
+; Magsteps
+
+RIVEN_MAGSTEPS2	=	0
+RIVEN_MAGSTEPS3	=	1
 
