@@ -2,9 +2,6 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
-#B2D = ../../utils/bmp2dhr/b2d
-#PNG2GR = ../../utils/gr-utils/png2gr
-#LZSA = ~/research/lzsa/lzsa/lzsa
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk/empty.dsk
 LINKER_SCRIPTS = ../../linker_scripts/
@@ -13,7 +10,7 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	riven_hgr.dsk
 
 riven_hgr.dsk:	HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME MOVIE1
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE MOVIE1
 	cp $(EMPTY_DISK) riven_hgr.dsk
 	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
@@ -21,7 +18,7 @@ riven_hgr.dsk:	HELLO LOADER TITLE \
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_PROJECTOR
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 DOME
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_OUTSIDE
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
 
 ###
@@ -50,18 +47,18 @@ title.o:	title.s zp.inc hardware.inc \
 
 ####
 
-DOME:	dome.o
-	ld65 -o DOME dome.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+LEVEL_OUTSIDE:	level_outside.o
+	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-dome.o:	dome.s zp.inc hardware.inc \
+level_outside.o:	level_outside.s zp.inc hardware.inc \
 		zx02_optim.s \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		leveldata_dome.inc \
+		leveldata_outside.inc \
 		graphics_sprites/pointer_sprites.inc \
-		graphics_dome/dome_graphics.inc
-	ca65 -o dome.o dome.s -l dome.lst
+		graphics_outside/outside_graphics.inc
+	ca65 -o level_outside.o level_outside.s -l level_outside.lst
 
 ####
 
@@ -126,7 +123,7 @@ movie1.o:	movie1.s \
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE
 #	cd graphics && make clean
 #	cd maps && make clean
 #	cd title && make clean

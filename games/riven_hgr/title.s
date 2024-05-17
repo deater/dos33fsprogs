@@ -184,15 +184,16 @@ done_setup_sound:
 	lda	#100
 	jsr	wait_a_bit
 
-;	lda	#LOAD_DOME
-;	sta	WHICH_LOAD		; assume new game (dome island)
+	lda	#LOAD_OUTSIDE
+	sta	WHICH_LOAD		; assume new game (dome island)
 
-;	lda	#RIVEN_MAGLEV1
-;	sta	LOCATION
+	lda	#RIVEN_MAGLEV1
+	sta	LOCATION
 
-;	lda	#DIRECTION_N
-;	sta	DIRECTION
+	lda	#DIRECTION_N
+	sta	DIRECTION
 
+.if 0
 	lda	#LOAD_PROJECTOR
 	sta	WHICH_LOAD		; assume new game (dome island)
 
@@ -201,7 +202,7 @@ done_setup_sound:
 
 	lda	#DIRECTION_S
 	sta	DIRECTION
-
+.endif
 
 
 	rts

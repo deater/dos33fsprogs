@@ -1,8 +1,10 @@
 LOAD_TITLE      =       0
-LOAD_DOME	=	1
+LOAD_OUTSIDE	=	1
 LOAD_PROJECTOR	=	2
 LOAD_MAGSTEPS	=	3
 LOAD_MAGLEV	=	4
+LOAD_MOVIE1	=	5
+LOAD_MOVIE2	=	6
 
 div7_table     = $BC00
 mod7_table     = $BD00
@@ -48,7 +50,7 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 ;================================
 ; Level definitions
 
-; Dome
+; Outside
 
 RIVEN_MAGLEV1	=	0
 

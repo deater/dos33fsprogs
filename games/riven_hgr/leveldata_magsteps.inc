@@ -8,7 +8,7 @@ locations:
 ; RIVEN_MAGSTEPS2	-- meglev steps middle
 location0:
 	.byte	RIVEN_MAGSTEPS3		; north exit
-	.byte	LOAD_DOME<<4|RIVEN_MAGLEV1	; south exit
+	.byte	LOAD_OUTSIDE<<4|RIVEN_MAGLEV1	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir

@@ -1,4 +1,4 @@
-; Riven -- Dome Island
+; Riven -- Dome Island -- Outside in the Quad
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,7 +7,7 @@
 	.include "hardware.inc"
 	.include "common_defines.inc"
 
-riven_dome:
+riven_outside:
 
 	;===================
 	; init screen
@@ -114,10 +114,10 @@ really_exit:
 
 	.include	"log_table.s"
 
-.include "graphics_dome/dome_graphics.inc"
+.include "graphics_outside/outside_graphics.inc"
 
 ;.include "common_sprites.inc"
 
 .include "graphics_sprites/pointer_sprites.inc"
 
-.include "leveldata_dome.inc"
+.include "leveldata_outside.inc"

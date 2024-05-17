@@ -194,21 +194,27 @@ copy_filename_done:
 
 filenames:
 	.word title_filename
-	.word dome_filename
+	.word outside_filename
 	.word projector_filename
 	.word magsteps_filename
 	.word maglev_filename
+	.word movie1_filename
+	.word movie2_filename
 
 title_filename:
 	.byte "TITLE",0
-dome_filename:
-	.byte "DOME",0
+outside_filename:
+	.byte "LEVEL_OUTSIDE",0
 projector_filename:
 	.byte "LEVEL_PROJECTOR",0
 magsteps_filename:
 	.byte "LEVEL_MAGSTEPS",0
 maglev_filename:
 	.byte "LEVEL_MAGLEV",0
+movie1_filename:
+	.byte "MOVIE1",0
+movie2_filename:
+	.byte "MOVIE2",0
 
 	;===================================================
 	;===================================================
