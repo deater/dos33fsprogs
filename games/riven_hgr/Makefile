@@ -12,13 +12,14 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 all:	riven_hgr.dsk
 
 riven_hgr.dsk:	HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS DOME
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME
 	cp $(EMPTY_DISK) riven_hgr.dsk
 	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 TITLE
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_PROJECTOR
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 DOME
 
 ###
@@ -90,13 +91,29 @@ level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
 		graphics_magsteps/magsteps_graphics.inc
 	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
 
+####
+
+LEVEL_MAGLEV:	level_maglev.o
+	ld65 -o LEVEL_MAGLEV level_maglev.o -C ../../linker_scripts/apple2_4000.inc
+
+level_maglev.o:	level_maglev.s zp.inc hardware.inc \
+		zx02_optim.s \
+		hgr_sprite.s hgr_tables.s \
+		keyboard.s \
+		hgr_14x14_sprite.s \
+		leveldata_maglev.inc \
+		graphics_sprites/pointer_sprites.inc \
+		graphics_maglev/maglev_graphics.inc
+	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
+
+
 
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS DOME
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME
 #	cd graphics && make clean
 #	cd maps && make clean
 #	cd title && make clean

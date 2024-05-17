@@ -2,7 +2,7 @@ LOAD_TITLE      =       0
 LOAD_DOME	=	1
 LOAD_PROJECTOR	=	2
 LOAD_MAGSTEPS	=	3
-
+LOAD_MAGLEV	=	4
 
 div7_table     = $BC00
 mod7_table     = $BD00
@@ -62,3 +62,7 @@ RIVEN_PROJ_DOOR	=	1
 RIVEN_MAGSTEPS2	=	0
 RIVEN_MAGSTEPS3	=	1
 
+; Maglev
+
+RIVEN_LOOKIN	=	0
+RIVEN_INSEAT	=	1

@@ -1,0 +1,46 @@
+;===============================================
+; level data for inside the maglev
+;===============================================
+
+locations:
+	.word location0,location1
+
+; RIVEN_LOOKIN	-- looking into the maglev
+location0:
+	.byte	$FF			; north exit
+	.byte	LOAD_MAGSTEPS<<4|RIVEN_MAGSTEPS3	; south exit
+	.byte	$ff			; east exit
+	.byte	RIVEN_INSEAT		; west exit
+	.byte	$FF		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000		; north bg
+	.word	inseat_s_zx02	; south bg
+	.word	$0000		; east bg
+	.word	lookin_w_zx02	; west bg
+	.byte	BG_WEST|BG_SOUTH
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	location0-1			; FIXME
+
+; RIVEN_INSEAT	-- when sitting in seat
+location1:
+	.byte	$FF			; north exit
+	.byte	LOAD_MAGSTEPS<<4|RIVEN_MAGSTEPS3	; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$FF		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000		; north bg
+	.word	inseat_s_zx02	; south bg
+	.word	$0000		; east bg
+	.word	inseat_w_zx02	; west bg
+	.byte	BG_WEST|BG_SOUTH
+	.byte	DIRECTION_E	; special exit
+	.byte	9,29		; special x
+	.byte	2,46		; special y
+	.word	location1-1	; special function FIXME
