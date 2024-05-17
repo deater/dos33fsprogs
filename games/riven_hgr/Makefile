@@ -2,17 +2,18 @@ include ../../Makefile.inc
 
 DOS33 = ../../utils/dos33fs-utils/dos33
 DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
-B2D = ../../utils/bmp2dhr/b2d
-PNG2GR = ../../utils/gr-utils/png2gr
-LZSA = ~/research/lzsa/lzsa/lzsa
+#B2D = ../../utils/bmp2dhr/b2d
+#PNG2GR = ../../utils/gr-utils/png2gr
+#LZSA = ~/research/lzsa/lzsa/lzsa
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk/empty.dsk
+LINKER_SCRIPTS = ../../linker_scripts/
 
 
 all:	riven_hgr.dsk
 
 riven_hgr.dsk:	HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV DOME MOVIE1
 	cp $(EMPTY_DISK) riven_hgr.dsk
 	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
@@ -21,6 +22,7 @@ riven_hgr.dsk:	HELLO LOADER TITLE \
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 DOME
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
 
 ###
 
@@ -30,7 +32,7 @@ HELLO:	hello.bas
 ####
 
 LOADER:	loader.o
-	ld65 -o LOADER loader.o -C ../../linker_scripts/apple2_1000.inc
+	ld65 -o LOADER loader.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
 loader.o:	loader.s hardware_detect.s
 	ca65 -o loader.o loader.s -l loader.lst
@@ -38,7 +40,7 @@ loader.o:	loader.s hardware_detect.s
 ####
 
 TITLE:	title.o
-	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title.o:	title.s zp.inc hardware.inc \
 		zx02_optim.s wait_a_bit.s \
@@ -49,7 +51,7 @@ title.o:	title.s zp.inc hardware.inc \
 ####
 
 DOME:	dome.o
-	ld65 -o DOME dome.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o DOME dome.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 dome.o:	dome.s zp.inc hardware.inc \
 		zx02_optim.s \
@@ -64,7 +66,7 @@ dome.o:	dome.s zp.inc hardware.inc \
 ####
 
 LEVEL_PROJECTOR:	level_projector.o
-	ld65 -o LEVEL_PROJECTOR level_projector.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o LEVEL_PROJECTOR level_projector.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_projector.o:	level_projector.s zp.inc hardware.inc \
 		zx02_optim.s \
@@ -79,7 +81,7 @@ level_projector.o:	level_projector.s zp.inc hardware.inc \
 ####
 
 LEVEL_MAGSTEPS:	level_magsteps.o
-	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
 		zx02_optim.s \
@@ -94,7 +96,7 @@ level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
 ####
 
 LEVEL_MAGLEV:	level_maglev.o
-	ld65 -o LEVEL_MAGLEV level_maglev.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o LEVEL_MAGLEV level_maglev.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_maglev.o:	level_maglev.s zp.inc hardware.inc \
 		zx02_optim.s \
@@ -105,6 +107,17 @@ level_maglev.o:	level_maglev.s zp.inc hardware.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_maglev/maglev_graphics.inc
 	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
+
+####
+
+MOVIE1:	movie1.o
+	ld65 -o MOVIE1 movie1.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+movie1.o:	movie1.s \
+	movie1/movie1.inc
+	ca65 -o movie1.o movie1.s -l movie1.lst
+
+
 
 
 
