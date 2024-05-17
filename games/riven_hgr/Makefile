@@ -115,16 +115,41 @@ movie1.o:	movie1.s \
 	ca65 -o movie1.o movie1.s -l movie1.lst
 
 
+####
 
+graphics_sprites/pointer_sprites.inc:
+	cd graphics_sprites && make
 
+graphics_title/riven_title.hgr.zx02:	
+	cd graphics_title && make
 
+graphics_maglev/maglev_graphics.inc:
+	cd graphics_maglev && make
+
+graphics_magsteps/magsteps_graphics.inc:
+	cd graphics_magsteps && make
+
+graphics_outside/outside_graphics.inc:
+	cd graphics_outside && make
+
+graphics_projector/projector_graphics.inc:
+	cd graphics_projector && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE
-#	cd graphics && make clean
-#	cd maps && make clean
-#	cd title && make clean
-#	cd sprites && make clean
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
+		MOVIE1
+####
+
+distclean:
+	rm -f *~ *.o *.lst HELLO LOADER TITLE \
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
+		MOVIE1
+	cd graphics_title && make clean
+	cd graphics_projector && make clean
+	cd graphics_outside && make clean
+	cd graphics_magsteps && make clean
+	cd graphics_maglev && make clean
+	cd graphics_sprites && make clean
