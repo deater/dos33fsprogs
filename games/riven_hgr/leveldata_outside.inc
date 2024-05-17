@@ -20,9 +20,9 @@ location0:
 	.word	maglev1_e_zx02	; east bg
 	.word	maglev1_w_zx02	; west bg
 	.byte	BG_EAST|BG_NORTH|BG_SOUTH|BG_WEST	; all bgs
-	.byte	DIRECTION_E	; special exit
-	.byte	9,29		; special x
-	.byte	2,46		; special y
-	.word	location0-1			; FIXME
+	.byte	DIRECTION_N	; special exit
+	.byte	32,34		; special x
+	.byte	136,154		; special y
+	.word	call_button_clicked-1
 
 

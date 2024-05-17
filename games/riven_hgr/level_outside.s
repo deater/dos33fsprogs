@@ -100,6 +100,15 @@ really_exit:
 
 	rts
 
+	;==================================
+	; call button clicked
+	;==================================
+	; just ignore this
+
+call_button_clicked:
+	bit	SPEAKER
+	rts
+
 
 	;==========================
 	; includes

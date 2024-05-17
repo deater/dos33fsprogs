@@ -40,7 +40,7 @@ location1:
 	.word	$0000		; east bg
 	.word	inseat_w_zx02	; west bg
 	.byte	BG_WEST|BG_SOUTH
-	.byte	DIRECTION_E	; special exit
-	.byte	9,29		; special x
-	.byte	2,46		; special y
-	.word	location1-1	; special function FIXME
+	.byte	DIRECTION_W	; special exit
+	.byte	11,14		; special x
+	.byte	119,145		; special y
+	.word	handle1_clicked-1	; special function

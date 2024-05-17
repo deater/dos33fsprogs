@@ -101,6 +101,25 @@ really_exit:
 	rts
 
 
+	;=====================================
+	; handle1 clicked
+	;=====================================
+	; flip us to the east
+	; go lores and play the movie
+handle1_clicked:
+
+	bit	SPEAKER
+
+	lda	#LOAD_MOVIE1
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	bit	SPEAKER
+
+	rts
+
 	;==========================
 	; includes
 	;==========================
