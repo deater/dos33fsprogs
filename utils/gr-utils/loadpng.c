@@ -3,6 +3,8 @@
 /* It's not interleaved like an actual Apple II */
 /* But the top/bottom are pre-packed into a naive 40x24 array */
 
+/* Note there's a hack to treat color 17 (0xf5ff00) as an alias for color 10 */
+/*	for transparency reasons */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,6 +39,7 @@ static int convert_color(int color, char *filename) {
 		case 0xd0dd8d:	c=13; break;	/* yellow */
 		case 0x72ffd0:	c=14; break;	/* aqua */
 		case 0xffffff:	c=15; break;	/* white */
+		case 0xf5ff00:	c=10; break;	/* transparent */
 		default:
 			fprintf(stderr,"Unknown color %x, file %s\n",
 				color,filename);
@@ -237,9 +240,21 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 				if (bit_depth==8) {
 					/* top color */
 					a2_color=row_pointers[y][x];
+					if (a2_color==16) {
+						a2_color=10;
+					}
+					if (a2_color>16) {
+						fprintf(stderr,"Error color %d\n",a2_color);
+					}
 
 					/* bottom color */
 					color=row_pointers[y+(yadd/2)][x];
+					if (color==16) {
+						color=10;
+					}
+					if (color>16) {
+						fprintf(stderr,"Error color %d\n",color);
+					}
 
 					a2_color|=(color<<4);
 
