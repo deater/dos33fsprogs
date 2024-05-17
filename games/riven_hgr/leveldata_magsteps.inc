@@ -27,11 +27,11 @@ location0:
 
 ; RIVEN_MAGSTEPS3	-- maglev steps top
 location1:
-	.byte	RIVEN_MAGSTEPS3		; north exit
+	.byte	LOAD_MAGLEV<<4|RIVEN_LOOKIN		; north exit
 	.byte	RIVEN_MAGSTEPS2		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_W	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
