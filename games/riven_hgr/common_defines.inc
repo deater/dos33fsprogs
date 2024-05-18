@@ -53,6 +53,7 @@ LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 ; Outside
 
 RIVEN_MAGLEV1	=	0
+RIVEN_MAGPATH	=	1
 
 ; Projector
 

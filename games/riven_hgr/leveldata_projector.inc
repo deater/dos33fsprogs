@@ -24,7 +24,7 @@ location0:
 
 ; RIVEN_PROJ_DOOR	-- doorway to projector room
 location1:
-	.byte	LOAD_OUTSIDE<<4 | RIVEN_MAGLEV1	; north exit
+	.byte	LOAD_OUTSIDE<<4 | RIVEN_MAGPATH	; north exit
 	.byte	RIVEN_PROJECTOR		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit

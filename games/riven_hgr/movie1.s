@@ -33,6 +33,18 @@ movie1_start:
 	jsr	full_decomp
 
 
+	lda	#<overlay
+	sta	ZX0_src
+	lda	#>overlay
+        sta	ZX0_src+1
+
+	lda	#$0c
+
+	jsr	full_decomp
+
+	jsr	do_overlay
+
+
 
 .if 0
 	lda	#num_scenes
@@ -88,11 +100,51 @@ done_movie1:
 	rts
 
 
+	;===============================
+do_overlay:
+	lda	#$c
+	sta	overlayin_smc+2
+	lda	#$4
+	sta	overlayout_smc+2
+
+do_overlay_outer:
+
+	ldy	#0
+do_overlay_inner:
+
+overlayin_smc:
+	lda	$c00,Y
+
+	cmp	#$AA		; both pixels transparent
+	beq	skip_write
+
+overlayout_smc:
+	sta	$400,Y
+
+skip_write:
+	dey
+	bne	do_overlay_inner
+
+	inc	overlayin_smc+2
+	inc	overlayout_smc+2
+	lda	overlayin_smc+2
+	cmp	#$10
+	bne	do_overlay_inner
+
+	rts
+
+
 ;===================================
 
 ;	.include	"../wait_keypress.s"
 
 ;	.include	"draw_boxes.s"
-	.include	"movie1/movie1.inc"
+
 
 	.include	"zx02_optim.s"
+
+
+	.include	"movie1/movie1.inc"
+
+overlay:
+	.incbin		"movie1/overlays/maglev_overlay.gr.zx02"
