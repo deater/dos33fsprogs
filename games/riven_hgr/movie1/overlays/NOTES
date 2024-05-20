@@ -1,0 +1,12 @@
+
+have to draw from 11,27 to 29,41
+	assume even for sprite
+		11,26 to 29,41
+		18x16
+
+		18x8 bytes each = 144 bytes
+		zxcompressed = 189 bytes
+
+		might be cheaper to just have compressed overlays
+
+
