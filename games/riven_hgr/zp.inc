@@ -125,7 +125,7 @@ SOUND_STATUS	=	$DE
 	SOUND_IN_LC	= $01 ; $01 sound effects in language card
 	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
 
-GRID_PAGE	=	$DF
+SCENE_COUNT	=	$DF
 ANIMATE_FRAME	=	$E0
 LEVEL_OVER	=	$E1
 	GAME_OVER	=	$FF
@@ -144,31 +144,11 @@ STAR_CYCLE	=	$E5
 DISP_PAGE	=	$ED	; ALL
 DRAW_PAGE	=	$EE	; ALL
 
-; rest of pt3_player
-MB_DETECTED	= $EF
-WHICH_CHUNK	= $F0
-MB_CHUNK_OFFSET	= $F1
-LOOP		= $F4
-MB_VALUE	= $F5
-MB_ADDR_L	= $F6
-MB_ADDR_H	= $F7
-DONE_PLAYING	= $F8
-DONE_SONG	= $F9
-
-; rest of pt3_player
-PT3_TEMP        = $EF
-ORNAMENT_L      = $F0
-ORNAMENT_H      = $F1
-SAMPLE_L        = $F2
-SAMPLE_H        = $F3
-
-
-
-MUSIC_PTR	=	$F7
-LEADING_ZERO	=	$F8
-TEMP_STATUS	=	$F9
-TEMP		=	$FA
-TEMPY		=	$FB
+WHICH_OVERLAY	=	$F8
+TEMP		=	$F9
+;TEMPY		=	$FB
+MASKL		=	$FA
+MASKH		=	$FB
 INL		=	$FC
 INH		=	$FD
 OUTL		=	$FE
