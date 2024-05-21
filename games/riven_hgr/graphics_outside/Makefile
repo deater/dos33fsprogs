@@ -10,7 +10,7 @@ all:	outside_graphics.inc
 outside_graphics.inc:	\
 	maglev1_n.hgr.zx02 maglev1_s.hgr.zx02 maglev1_e.hgr.zx02 maglev1_w.hgr.zx02 \
 	magpath_n.hgr.zx02 magpath_s.hgr.zx02 \
-	overlook_n.hgr.zx02
+	overlook_n.hgr.zx02 overlook_s.hgr.zx02
 	echo "maglev1_n_zx02: .incbin \"maglev1_n.hgr.zx02\"" > outside_graphics.inc
 	echo "maglev1_s_zx02: .incbin \"maglev1_s.hgr.zx02\"" >> outside_graphics.inc
 	echo "maglev1_e_zx02: .incbin \"maglev1_e.hgr.zx02\"" >> outside_graphics.inc
