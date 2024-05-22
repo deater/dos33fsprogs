@@ -151,7 +151,6 @@ overlay_good:
 	ldx	#2
 	jsr	wait_50xms
 
-	inc	SCENE_COUNT
 	jmp	move_handle_loop
 
 
@@ -166,6 +165,40 @@ done_move_handle:
 	jsr	wait_50xms
 
 
+	;===============================
+	;===============================
+	; play the move
+	;===============================
+	;===============================
+
+	lda	#1
+	sta	SCENE_COUNT
+
+movie1_loop:
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	inc	SCENE_COUNT
+	lda	SCENE_COUNT
+	cmp	#11
+	beq	done_play_movie1
+
+	ldx	#2
+	jsr	wait_50xms
+
+	jmp	movie1_loop
+
+
+done_play_movie1:
+
+	;===============================
+	; wait 9 frames (1.8s?)
+
+	ldx	#36
+	jsr	wait_50xms
+
 
 done_movie1:
 	bit	KEYRESET
@@ -178,6 +211,10 @@ done_movie1:
 
 	;===============================
 	;===============================
+	; draw_scene
+	;===============================
+	;===============================
+
 draw_scene:
 
 
@@ -186,9 +223,11 @@ draw_scene:
 	;===============================
 
 before:
-	lda	#<img025_bg_zx02
+	ldx	SCENE_COUNT
+
+	lda	frames_l,X
 	sta	ZX0_src
-	lda	#>img025_bg_zx02
+	lda	frames_h,X
         sta	ZX0_src+1
 
 	clc
