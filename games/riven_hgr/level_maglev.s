@@ -120,6 +120,27 @@ handle1_clicked:
 
 	rts
 
+
+	;=====================================
+	; handle2 clicked
+	;=====================================
+	; go for maglev ride
+
+handle2_clicked:
+
+	bit	SPEAKER
+
+	lda	#LOAD_MOVIE2
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	bit	SPEAKER
+
+	rts
+
+
 	;==========================
 	; includes
 	;==========================

@@ -3,7 +3,8 @@
 ;===============================================
 
 locations:
-	.word location0,location1
+	.word location0,location1,location2
+
 
 ; RIVEN_LOOKIN	-- looking into the maglev
 location0:
@@ -44,3 +45,24 @@ location1:
 	.byte	11,14		; special x
 	.byte	119,145		; special y
 	.word	handle1_clicked-1	; special function
+
+; RIVEN_READY2GO	-- ready for maglev ride
+location2:
+	.byte	$FF			; north exit
+	.byte	$FF			; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$FF		; north exit_dir
+	.byte	$FF		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	inseat_e_zx02	; east bg
+	.word	$0000		; west bg
+	.byte	BG_EAST
+	.byte	DIRECTION_E	; special exit
+	.byte	11,14		; special x
+	.byte	119,145		; special y
+	.word	handle2_clicked-1	; special function
+
