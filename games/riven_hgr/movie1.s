@@ -12,7 +12,7 @@ overlays	=	$2000
 	; so, movie.  each frame is 1/5 second (200ms)
 	;	25..28 displays initial for 4 frames
 	;	29..35 displays handle moving (8 frames)
-	;	36..52 sits there
+	;	36..52 sits there	; 16 frames
 	;	53..87 rotates
 	;	88..97 sits there
 	;	98 control returns to user
@@ -48,7 +48,6 @@ movie1_start:
 	bit	PAGE1
 
 	lda	#0
-;	sta	DRAW_PAGE
 	sta	SCENE_COUNT
 
 	lda	#4
@@ -76,28 +75,6 @@ movie1_start:
 	jsr	full_decomp
 
 
-	;===============================
-	;===============================
-	; move the handle
-	;===============================
-	;===============================
-
-.if 0
-	;===============================
-	; decompress initial background
-	;===============================
-
-before:
-	lda	#<img025_bg_zx02
-	sta	ZX0_src
-	lda	#>img025_bg_zx02
-        sta	ZX0_src+1
-
-	lda	#$04			; decompress page1 (dangerous? holes?)
-
-	jsr	full_decomp
-after:
-.endif
 	;=============================
 	; load overlays to $2000-$2FFF
 	;=============================
@@ -125,41 +102,49 @@ load_overlay_loop:
 	cmp	#8
 	bne	load_overlay_loop
 
+
+	;===============================
+	;===============================
+	; initial screen
+	;===============================
+	;===============================
+
+	lda	#0
+	sta	WHICH_OVERLAY
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	;===============================
+	; wait 4 frames (800ms)
+
+	ldx	#16
+	jsr	wait_50xms
+
+	;===============================
+	;===============================
+	; move the handle
+	;===============================
+	;===============================
+
 	; could save bytes going backwards?
 	lda	#0
 	sta	WHICH_OVERLAY
 
-scene_loop:
-
+move_handle_loop:
 
 	jsr	draw_scene
 
-	;============================
-	; flip pages
-	;============================
-	lda	DRAW_PAGE						; 3
-	beq	was_page1						; 2/3
-was_page2:
-	bit     PAGE2							; 4
-	lda	#$0							; 2
-	beq	done_pageflip						; 2/3
-was_page1:
-	bit	PAGE1							; 4
-	lda	#$4							; 2
-done_pageflip:
-	sta	DRAW_PAGE						; 3
+	jsr	flip_pages
 
-
-	lda	KEYPRESS
-	bmi	done_movie1
+;	lda	KEYPRESS
+;	bmi	done_movie1
 
 	inc	WHICH_OVERLAY
 	lda	WHICH_OVERLAY
 	cmp	#8
-	bne	overlay_good
-
-	lda	#0
-	sta	WHICH_OVERLAY
+	beq	done_move_handle
 
 overlay_good:
 
@@ -167,8 +152,20 @@ overlay_good:
 	jsr	wait_50xms
 
 	inc	SCENE_COUNT
-;	bne	scene_loop
-	jmp	scene_loop
+	jmp	move_handle_loop
+
+
+done_move_handle:
+	lda	#7			; point to last one
+	sta	WHICH_OVERLAY
+
+	;===============================
+	; wait 16 frames (3.2s?)
+
+	ldx	#64
+	jsr	wait_50xms
+
+
 
 done_movie1:
 	bit	KEYRESET
@@ -176,6 +173,35 @@ done_movie1:
 	jmp	movie1_start
 
 	rts
+
+
+
+	;===============================
+	;===============================
+draw_scene:
+
+
+	;===============================
+	; decompress background
+	;===============================
+
+before:
+	lda	#<img025_bg_zx02
+	sta	ZX0_src
+	lda	#>img025_bg_zx02
+        sta	ZX0_src+1
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$4
+
+	jsr	full_decomp
+after:
+
+;	jmp	do_overlay
+
+	; fallthrough
+
 
 	;===============================
 	; do overlay
@@ -235,29 +261,26 @@ skip_write:
 	rts
 
 
-	;===============================
-	;===============================
-draw_scene:
+
+	;============================
+	; flip pages
+	;============================
+flip_pages:
+	lda	DRAW_PAGE						; 3
+	beq	was_page1						; 2/3
+was_page2:
+	bit     PAGE2							; 4
+	lda	#$0							; 2
+	beq	done_pageflip						; 2/3
+was_page1:
+	bit	PAGE1							; 4
+	lda	#$4							; 2
+done_pageflip:
+	sta	DRAW_PAGE						; 3
+
+	rts
 
 
-	;===============================
-	; decompress background
-	;===============================
-
-before:
-	lda	#<img025_bg_zx02
-	sta	ZX0_src
-	lda	#>img025_bg_zx02
-        sta	ZX0_src+1
-
-	clc
-	lda	DRAW_PAGE
-	adc	#$4
-
-	jsr	full_decomp
-after:
-
-	jmp	do_overlay
 
 ;===================================
 
@@ -271,6 +294,35 @@ after:
 	.include	"wait.s"
 
 	.include	"movie1/movie1.inc"
+
+frames_l:
+	.byte	<img025_bg_zx02
+	.byte	<img055_bg_zx02
+	.byte	<img056_bg_zx02
+	.byte	<img057_bg_zx02
+	.byte	<img058_bg_zx02
+	.byte	<img059_bg_zx02
+	.byte	<img060_bg_zx02
+	.byte	<img061_bg_zx02
+	.byte	<img062_bg_zx02
+	.byte	<img063_bg_zx02
+	.byte	<img064_bg_zx02
+
+frames_h:
+	.byte	>img025_bg_zx02
+	.byte	>img055_bg_zx02
+	.byte	>img056_bg_zx02
+	.byte	>img057_bg_zx02
+	.byte	>img058_bg_zx02
+	.byte	>img059_bg_zx02
+	.byte	>img060_bg_zx02
+	.byte	>img061_bg_zx02
+	.byte	>img062_bg_zx02
+	.byte	>img063_bg_zx02
+	.byte	>img064_bg_zx02
+
+
+
 
 overlays_l:
 	.byte <overlay25,<overlay29,<overlay30
