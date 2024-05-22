@@ -167,7 +167,7 @@ done_move_handle:
 
 	;===============================
 	;===============================
-	; play the move
+	; play the movie
 	;===============================
 	;===============================
 
@@ -182,7 +182,7 @@ movie1_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#11
+	cmp	#16
 	beq	done_play_movie1
 
 	ldx	#2
@@ -346,6 +346,11 @@ frames_l:
 	.byte	<img062_bg_zx02
 	.byte	<img063_bg_zx02
 	.byte	<img064_bg_zx02
+	.byte	<img065_bg_zx02
+	.byte	<img066_bg_zx02
+	.byte	<img067_bg_zx02
+	.byte	<img068_bg_zx02
+	.byte	<img069_bg_zx02
 
 frames_h:
 	.byte	>img025_bg_zx02
@@ -359,6 +364,12 @@ frames_h:
 	.byte	>img062_bg_zx02
 	.byte	>img063_bg_zx02
 	.byte	>img064_bg_zx02
+	.byte	>img065_bg_zx02
+	.byte	>img066_bg_zx02
+	.byte	>img067_bg_zx02
+	.byte	>img068_bg_zx02
+	.byte	>img069_bg_zx02
+
 
 
 
