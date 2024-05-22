@@ -182,7 +182,7 @@ movie1_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#16
+	cmp	#21
 	beq	done_play_movie1
 
 	ldx	#2
@@ -351,6 +351,11 @@ frames_l:
 	.byte	<img067_bg_zx02
 	.byte	<img068_bg_zx02
 	.byte	<img069_bg_zx02
+	.byte	<img070_bg_zx02
+	.byte	<img071_bg_zx02
+	.byte	<img072_bg_zx02
+	.byte	<img073_bg_zx02
+	.byte	<img074_bg_zx02
 
 frames_h:
 	.byte	>img025_bg_zx02
@@ -369,7 +374,11 @@ frames_h:
 	.byte	>img067_bg_zx02
 	.byte	>img068_bg_zx02
 	.byte	>img069_bg_zx02
-
+	.byte	>img070_bg_zx02
+	.byte	>img071_bg_zx02
+	.byte	>img072_bg_zx02
+	.byte	>img073_bg_zx02
+	.byte	>img074_bg_zx02
 
 
 

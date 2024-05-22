@@ -11,7 +11,8 @@ movie1.inc:	\
 	img058_bg.gr.zx02 img059_bg.gr.zx02 img060_bg.gr.zx02 \
 	img061_bg.gr.zx02 img062_bg.gr.zx02 img063_bg.gr.zx02 \
 	img064_bg.gr.zx02 img065_bg.gr.zx02 img066_bg.gr.zx02 \
-	img067_bg.gr.zx02 img068_bg.gr.zx02 img069_bg.gr.zx02
+	img070_bg.gr.zx02 img071_bg.gr.zx02 img072_bg.gr.zx02 \
+	img073_bg.gr.zx02 img074_bg.gr.zx02
 	echo "img025_bg_zx02: .incbin \"img025_bg.gr.zx02\"" > movie1.inc
 	echo "img055_bg_zx02: .incbin \"img055_bg.gr.zx02\"" >> movie1.inc
 	echo "img056_bg_zx02: .incbin \"img056_bg.gr.zx02\"" >> movie1.inc
@@ -28,7 +29,11 @@ movie1.inc:	\
 	echo "img067_bg_zx02: .incbin \"img067_bg.gr.zx02\"" >> movie1.inc
 	echo "img068_bg_zx02: .incbin \"img068_bg.gr.zx02\"" >> movie1.inc
 	echo "img069_bg_zx02: .incbin \"img069_bg.gr.zx02\"" >> movie1.inc
-
+	echo "img070_bg_zx02: .incbin \"img070_bg.gr.zx02\"" >> movie1.inc
+	echo "img071_bg_zx02: .incbin \"img071_bg.gr.zx02\"" >> movie1.inc
+	echo "img072_bg_zx02: .incbin \"img072_bg.gr.zx02\"" >> movie1.inc
+	echo "img073_bg_zx02: .incbin \"img073_bg.gr.zx02\"" >> movie1.inc
+	echo "img074_bg_zx02: .incbin \"img074_bg.gr.zx02\"" >> movie1.inc
 
 
 ####
