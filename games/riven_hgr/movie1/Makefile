@@ -11,6 +11,7 @@ movie1.inc:	\
 	img058_bg.gr.zx02 img059_bg.gr.zx02 img060_bg.gr.zx02 \
 	img061_bg.gr.zx02 img062_bg.gr.zx02 img063_bg.gr.zx02 \
 	img064_bg.gr.zx02 img065_bg.gr.zx02 img066_bg.gr.zx02 \
+	img067_bg.gr.zx02 img068_bg.gr.zx02 img069_bg.gr.zx02 \
 	img070_bg.gr.zx02 img071_bg.gr.zx02 img072_bg.gr.zx02 \
 	img073_bg.gr.zx02 img074_bg.gr.zx02 img075_bg.gr.zx02 \
 	img076_bg.gr.zx02 img077_bg.gr.zx02 img078_bg.gr.zx02 \
@@ -60,5 +61,5 @@ movie1.inc:	\
 ####
 
 clean:
-	rm -f *~ *.o *.lst  *.zx02 *.gr
+	rm -f *~ *.o *.lst  *.zx02 *.gr movie1.inc
 

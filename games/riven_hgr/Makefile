@@ -10,7 +10,8 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	riven_hgr.dsk
 
 riven_hgr.dsk:	HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE MOVIE1
+		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
+		MOVIE1 MOVIE2
 	cp $(EMPTY_DISK) riven_hgr.dsk
 	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
@@ -20,6 +21,7 @@ riven_hgr.dsk:	HELLO LOADER TITLE \
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_OUTSIDE
 	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
+	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE2
 
 ###
 
@@ -114,6 +116,16 @@ movie1.o:	movie1.s \
 	movie1/movie1.inc
 	ca65 -o movie1.o movie1.s -l movie1.lst
 
+####
+
+MOVIE2:	movie2.o
+	ld65 -o MOVIE2 movie2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+movie2.o:	movie2.s \
+	movie1/movie1.inc
+	ca65 -o movie2.o movie2.s -l movie2.lst
+
+
 
 ####
 
@@ -135,21 +147,28 @@ graphics_outside/outside_graphics.inc:
 graphics_projector/projector_graphics.inc:
 	cd graphics_projector && make
 
+movie1/movie1.inc:	
+	cd movie1 && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE1
+		MOVIE1 MOVIE2
+
 ####
 
 distclean:
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE1
+		MOVIE1 MOVIE2
 	cd graphics_title && make clean
 	cd graphics_projector && make clean
 	cd graphics_outside && make clean
 	cd graphics_magsteps && make clean
 	cd graphics_maglev && make clean
 	cd graphics_sprites && make clean
+	cd movie1 && make clean
+#	cd movie2 && make clean
+
