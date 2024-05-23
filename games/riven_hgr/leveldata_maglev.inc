@@ -62,7 +62,7 @@ location2:
 	.word	$0000		; west bg
 	.byte	BG_EAST
 	.byte	DIRECTION_E	; special exit
-	.byte	11,14		; special x
-	.byte	119,145		; special y
+	.byte	17,23		; special x
+	.byte	155,168		; special y
 	.word	handle2_clicked-1	; special function
 

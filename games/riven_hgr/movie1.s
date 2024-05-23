@@ -4,7 +4,7 @@
 
 .include "zp.inc"
 .include "hardware.inc"
-
+.include "common_defines.inc"
 
 overlays	=	$2000
 
@@ -203,7 +203,25 @@ done_play_movie1:
 done_movie1:
 	bit	KEYRESET
 
-	jmp	movie1_start
+
+	;=============================
+	; return back to game
+
+	lda	#LOAD_MAGLEV
+	sta	WHICH_LOAD
+
+	lda	#DIRECTION_E
+	sta	DIRECTION
+
+	lda	#RIVEN_READY2GO
+	sta	LOCATION
+
+	; needed?
+
+        lda     #1
+        sta     LEVEL_OVER
+
+;	jmp	movie1_start
 
 	rts
 
@@ -322,10 +340,6 @@ done_pageflip:
 
 
 ;===================================
-
-;	.include	"../wait_keypress.s"
-
-;	.include	"draw_boxes.s"
 
 
 	.include	"zx02_optim.s"
