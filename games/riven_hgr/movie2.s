@@ -157,7 +157,7 @@ movie2_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#1
+	cmp	#5
 	beq	done_play_movie2
 
 	ldx	#2
@@ -315,9 +315,17 @@ done_pageflip:
 
 frames_l:
 	.byte	<img096_bg_zx02
+	.byte	<img114_bg_zx02
+	.byte	<img115_bg_zx02
+	.byte	<img116_bg_zx02
+	.byte	<img117_bg_zx02
 
 frames_h:
 	.byte	>img096_bg_zx02
+	.byte	>img114_bg_zx02
+	.byte	>img115_bg_zx02
+	.byte	>img116_bg_zx02
+	.byte	>img117_bg_zx02
 
 overlay_mask_zx02:
 	.incbin		"movie2/overlays/maglev_overlay_mask.gr.zx02"
