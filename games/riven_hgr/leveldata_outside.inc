@@ -28,7 +28,7 @@ location0:
 ; RIVEN_MAGPATH	-- path to maglev
 location1:
 	.byte	RIVEN_MAGLEV1	; north exit
-	.byte	LOAD_PROJECTOR<<4|RIVEN_PROJ_DOOR	; south exit
+	.byte	LOAD_PROJECTOR<<4|RIVEN_PROJ_STEPS	; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
