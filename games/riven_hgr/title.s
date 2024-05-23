@@ -184,6 +184,17 @@ done_setup_sound:
 	lda	#100
 	jsr	wait_a_bit
 
+	; debug: ready2go for animation test
+
+	lda	#LOAD_MAGLEV
+	sta	WHICH_LOAD		; inside maglev
+
+	lda	#RIVEN_READY2GO		; ready to go
+	sta	LOCATION
+
+	lda	#DIRECTION_E		; facing east
+	sta	DIRECTION
+.if 0
 	lda	#LOAD_OUTSIDE
 	sta	WHICH_LOAD		; assume new game (dome island)
 
@@ -192,6 +203,7 @@ done_setup_sound:
 
 	lda	#DIRECTION_N
 	sta	DIRECTION
+.endif
 
 .if 0
 	lda	#LOAD_PROJECTOR

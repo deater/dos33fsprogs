@@ -122,7 +122,7 @@ MOVIE2:	movie2.o
 	ld65 -o MOVIE2 movie2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 movie2.o:	movie2.s \
-	movie1/movie1.inc
+	movie2/movie2.inc
 	ca65 -o movie2.o movie2.s -l movie2.lst
 
 

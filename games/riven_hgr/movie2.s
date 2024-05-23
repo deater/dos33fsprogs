@@ -1,5 +1,7 @@
 ; Lo-res movie player of sorts
 
+; This is for the big movie, the maglev ride
+
 ; by deater (Vince Weaver) <vince@deater.net>
 
 .include "zp.inc"
@@ -8,17 +10,6 @@
 
 overlays	=	$2000
 
-	;=================================
-	; so, movie.  each frame is 1/5 second (200ms)
-	;	25..28 displays initial for 4 frames
-	;	29..35 displays handle moving (8 frames)
-	;	36..52 sits there	; 16 frames
-	;	53..87 rotates
-	;	88..97 sits there
-	;	98 control returns to user
-	; space?
-	;	188*8=overlays (1.5k)
-	;	 35 rotations * 188 = (7k) not so bad?
 	;===================
 	; notes for movie2
 	;	103..109 = overlay animation
@@ -35,7 +26,7 @@ overlays	=	$2000
 	; do_overlay:
 	;	9c78 = 40,056 cycles
 
-movie1_start:
+movie2_start:
 
 
 	;===================
@@ -79,29 +70,14 @@ movie1_start:
 	; load overlays to $2000-$2FFF
 	;=============================
 
-	lda	#0
-	sta	WHICH_OVERLAY
-
-load_overlay_loop:
-	ldx	WHICH_OVERLAY
-	lda	overlays_l,X
+	lda	#<overlays_combined_zx02
 	sta	ZX0_src
-	lda	overlays_h,X
+	lda	#>overlays_combined_zx02
         sta	ZX0_src+1
 
-	lda	WHICH_OVERLAY
-	asl
-	asl
-	clc
-	adc	#>overlays
+	lda	#$20
 
 	jsr	full_decomp
-
-	inc	WHICH_OVERLAY
-	lda	WHICH_OVERLAY
-	cmp	#8
-	bne	load_overlay_loop
-
 
 	;===============================
 	;===============================
@@ -117,9 +93,12 @@ load_overlay_loop:
 	jsr	flip_pages
 
 	;===============================
-	; wait 4 frames (800ms)
+	; wait 2 frames (400ms)
 
-	ldx	#16
+	; needed?
+	; could overlay with sound effect or decompress of overlay?
+
+	ldx	#8
 	jsr	wait_50xms
 
 	;===============================
@@ -128,7 +107,6 @@ load_overlay_loop:
 	;===============================
 	;===============================
 
-	; could save bytes going backwards?
 	lda	#0
 	sta	WHICH_OVERLAY
 
@@ -138,12 +116,9 @@ move_handle_loop:
 
 	jsr	flip_pages
 
-;	lda	KEYPRESS
-;	bmi	done_movie1
-
 	inc	WHICH_OVERLAY
 	lda	WHICH_OVERLAY
-	cmp	#8
+	cmp	#7
 	beq	done_move_handle
 
 overlay_good:
@@ -155,13 +130,13 @@ overlay_good:
 
 
 done_move_handle:
-	lda	#7			; point to last one
+	lda	#6			; point to last one
 	sta	WHICH_OVERLAY
 
 	;===============================
-	; wait 16 frames (3.2s?)
+	; wait 4 frames (800ms)
 
-	ldx	#64
+	ldx	#16
 	jsr	wait_50xms
 
 
@@ -174,7 +149,7 @@ done_move_handle:
 	lda	#1
 	sta	SCENE_COUNT
 
-movie1_loop:
+movie2_loop:
 
 	jsr	draw_scene
 
@@ -182,16 +157,20 @@ movie1_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#31
-	beq	done_play_movie1
+	cmp	#1
+	beq	done_play_movie2
 
 	ldx	#2
 	jsr	wait_50xms
 
-	jmp	movie1_loop
+	jmp	movie2_loop
 
 
-done_play_movie1:
+done_play_movie2:
+
+	; TODO: complex handle movement at end
+
+	; TODO: end with message
 
 	;===============================
 	; wait 9 frames (1.8s?)
@@ -200,10 +179,10 @@ done_play_movie1:
 	jsr	wait_50xms
 
 
-done_movie1:
+done_movie2:
 	bit	KEYRESET
 
-	jmp	movie1_start
+	jmp	movie2_start
 
 	rts
 
@@ -332,105 +311,19 @@ done_pageflip:
 
 	.include	"wait.s"
 
-	.include	"movie1/movie1.inc"
+	.include	"movie2/movie2.inc"
 
 frames_l:
-	.byte	<img025_bg_zx02
-	.byte	<img055_bg_zx02
-	.byte	<img056_bg_zx02
-	.byte	<img057_bg_zx02
-	.byte	<img058_bg_zx02
-	.byte	<img059_bg_zx02
-	.byte	<img060_bg_zx02
-	.byte	<img061_bg_zx02
-	.byte	<img062_bg_zx02
-	.byte	<img063_bg_zx02
-	.byte	<img064_bg_zx02
-	.byte	<img065_bg_zx02
-	.byte	<img066_bg_zx02
-	.byte	<img067_bg_zx02
-	.byte	<img068_bg_zx02
-	.byte	<img069_bg_zx02
-	.byte	<img070_bg_zx02
-	.byte	<img071_bg_zx02
-	.byte	<img072_bg_zx02
-	.byte	<img073_bg_zx02
-	.byte	<img074_bg_zx02
-	.byte	<img075_bg_zx02
-	.byte	<img076_bg_zx02
-	.byte	<img077_bg_zx02
-	.byte	<img078_bg_zx02
-	.byte	<img079_bg_zx02
-	.byte	<img080_bg_zx02
-	.byte	<img081_bg_zx02
-	.byte	<img082_bg_zx02
-	.byte	<img083_bg_zx02
-	.byte	<img084_bg_zx02
+	.byte	<img096_bg_zx02
 
 frames_h:
-	.byte	>img025_bg_zx02
-	.byte	>img055_bg_zx02
-	.byte	>img056_bg_zx02
-	.byte	>img057_bg_zx02
-	.byte	>img058_bg_zx02
-	.byte	>img059_bg_zx02
-	.byte	>img060_bg_zx02
-	.byte	>img061_bg_zx02
-	.byte	>img062_bg_zx02
-	.byte	>img063_bg_zx02
-	.byte	>img064_bg_zx02
-	.byte	>img065_bg_zx02
-	.byte	>img066_bg_zx02
-	.byte	>img067_bg_zx02
-	.byte	>img068_bg_zx02
-	.byte	>img069_bg_zx02
-	.byte	>img070_bg_zx02
-	.byte	>img071_bg_zx02
-	.byte	>img072_bg_zx02
-	.byte	>img073_bg_zx02
-	.byte	>img074_bg_zx02
-	.byte	>img075_bg_zx02
-	.byte	>img076_bg_zx02
-	.byte	>img077_bg_zx02
-	.byte	>img078_bg_zx02
-	.byte	>img079_bg_zx02
-	.byte	>img080_bg_zx02
-	.byte	>img081_bg_zx02
-	.byte	>img082_bg_zx02
-	.byte	>img083_bg_zx02
-	.byte	>img084_bg_zx02
-
-
-
-
-overlays_l:
-	.byte <overlay25,<overlay29,<overlay30
-	.byte <overlay31,<overlay32,<overlay33
-	.byte <overlay34,<overlay35
-
-overlays_h:
-	.byte >overlay25,>overlay29,>overlay30
-	.byte >overlay31,>overlay32,>overlay33
-	.byte >overlay34,>overlay35
+	.byte	>img096_bg_zx02
 
 overlay_mask_zx02:
-	.incbin		"movie1/overlays/maglev_overlay_mask.gr.zx02"
+	.incbin		"movie2/overlays/maglev_overlay_mask.gr.zx02"
 
-overlay25:
-	.incbin		"movie1/overlays/overlay25.gr.zx02"
-overlay29:
-	.incbin		"movie1/overlays/overlay29.gr.zx02"
-overlay30:
-	.incbin		"movie1/overlays/overlay30.gr.zx02"
-overlay31:
-	.incbin		"movie1/overlays/overlay31.gr.zx02"
-overlay32:
-	.incbin		"movie1/overlays/overlay32.gr.zx02"
-overlay33:
-	.incbin		"movie1/overlays/overlay33.gr.zx02"
-overlay34:
-	.incbin		"movie1/overlays/overlay34.gr.zx02"
-overlay35:
-	.incbin		"movie1/overlays/overlay35.gr.zx02"
+overlays_combined_zx02:
+	.incbin		"movie2/overlays/overlay_combined.zx02"
+
 
 
