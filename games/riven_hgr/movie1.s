@@ -79,6 +79,16 @@ movie1_start:
 	; load overlays to $2000-$2FFF
 	;=============================
 
+	lda	#<combined_overlays_zx02
+	sta	ZX0_src
+	lda	#>combined_overlays_zx02
+        sta	ZX0_src+1
+
+	lda	#$20
+
+	jsr	full_decomp
+
+.if 0
 	lda	#0
 	sta	WHICH_OVERLAY
 
@@ -101,7 +111,7 @@ load_overlay_loop:
 	lda	WHICH_OVERLAY
 	cmp	#8
 	bne	load_overlay_loop
-
+.endif
 
 	;===============================
 	;===============================
@@ -417,6 +427,15 @@ frames_h:
 
 
 
+
+overlay_mask_zx02:
+	.incbin		"movie1/overlays/maglev_overlay_mask.gr.zx02"
+
+combined_overlays_zx02:
+	.incbin		"movie1/overlays/combined_overlays.zx02"
+
+
+.if 0
 overlays_l:
 	.byte <overlay25,<overlay29,<overlay30
 	.byte <overlay31,<overlay32,<overlay33
@@ -427,8 +446,6 @@ overlays_h:
 	.byte >overlay31,>overlay32,>overlay33
 	.byte >overlay34,>overlay35
 
-overlay_mask_zx02:
-	.incbin		"movie1/overlays/maglev_overlay_mask.gr.zx02"
 
 overlay25:
 	.incbin		"movie1/overlays/overlay25.gr.zx02"
@@ -448,3 +465,4 @@ overlay35:
 	.incbin		"movie1/overlays/overlay35.gr.zx02"
 
 
+.endif

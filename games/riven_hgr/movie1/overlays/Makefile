@@ -4,14 +4,31 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2GR = ../../../../utils/gr-utils/png2gr
 
 all:	maglev_overlay.gr.zx02 maglev_overlay_mask.gr.zx02 \
-	overlay25.gr.zx02 \
-	overlay29.gr.zx02 \
-	overlay30.gr.zx02 \
-	overlay31.gr.zx02 \
-	overlay32.gr.zx02 \
-	overlay33.gr.zx02 \
-	overlay34.gr.zx02 \
-	overlay35.gr.zx02
+	combined_overlays.zx02
+
+
+combined_overlays.zx02:	combined_overlays
+	$(ZX02) -f combined_overlays combined_overlays.zx02
+
+combined_overlays: \
+	overlay25.gr \
+	overlay29.gr \
+	overlay30.gr \
+	overlay31.gr \
+	overlay32.gr \
+	overlay33.gr \
+	overlay34.gr \
+	overlay35.gr
+	cat overlay25.gr > combined_overlays
+	cat overlay29.gr >> combined_overlays
+	cat overlay30.gr >> combined_overlays
+	cat overlay31.gr >> combined_overlays
+	cat overlay32.gr >> combined_overlays
+	cat overlay33.gr >> combined_overlays
+	cat overlay34.gr >> combined_overlays
+	cat overlay35.gr >> combined_overlays
+
+
 
 ####
 
@@ -24,5 +41,5 @@ all:	maglev_overlay.gr.zx02 maglev_overlay_mask.gr.zx02 \
 ####
 
 clean:
-	rm -f *~ *.o *.lst  *.zx02 *.gr
+	rm -f *~ *.o *.lst  *.zx02 *.gr combined_overlays
 
