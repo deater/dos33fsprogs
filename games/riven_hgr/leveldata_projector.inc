@@ -3,7 +3,7 @@
 ;===============================================
 
 locations:
-	.word location0,location1
+	.word location0,location1,location2
 
 ; RIVEN_PROJECTOR	-- looking at projector
 location0:
@@ -24,7 +24,7 @@ location0:
 
 ; RIVEN_PROJ_DOOR	-- doorway to projector room
 location1:
-	.byte	LOAD_OUTSIDE<<4 | RIVEN_MAGPATH	; north exit
+	.byte	RIVEN_PROJ_STEPS	; north exit
 	.byte	RIVEN_PROJECTOR		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
@@ -37,7 +37,23 @@ location1:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_NORTH|BG_SOUTH
-	.byte	DIRECTION_E	; special exit
-	.byte	9,29		; special x
-	.byte	2,46		; special y
-	.word	location1-1	; special function FIXME
+	.byte	$FF		; special exit
+
+; RIVEN_PROJ_STEPS	-- doorway to projector room
+location2:
+	.byte	LOAD_OUTSIDE<<4 | RIVEN_MAGPATH	; north exit
+	.byte	RIVEN_PROJ_DOOR		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	steps_n_zx02	; north bg
+	.word	steps_s_zx02	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	BG_NORTH|BG_SOUTH
+	.byte	$FF		; special exit
+
+
