@@ -7,6 +7,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+NUM_SCENES	=	27
 
 overlays	=	$2000
 
@@ -157,7 +158,7 @@ movie2_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#5
+	cmp	#NUM_SCENES
 	beq	done_play_movie2
 
 	ldx	#2
@@ -319,6 +320,29 @@ frames_l:
 	.byte	<img115_bg_zx02
 	.byte	<img116_bg_zx02
 	.byte	<img117_bg_zx02
+	.byte	<img118_bg_zx02
+	.byte	<img119_bg_zx02
+	.byte	<img120_bg_zx02
+	.byte	<img121_bg_zx02
+	.byte	<img122_bg_zx02
+	.byte	<img123_bg_zx02
+	.byte	<img124_bg_zx02
+	.byte	<img125_bg_zx02
+	.byte	<img126_bg_zx02
+	.byte	<img127_bg_zx02
+	.byte	<img128_bg_zx02
+	.byte	<img129_bg_zx02
+	.byte	<img130_bg_zx02
+	.byte	<img131_bg_zx02
+	.byte	<img132_bg_zx02
+	.byte	<img133_bg_zx02
+	.byte	<img134_bg_zx02
+	.byte	<img135_bg_zx02
+	.byte	<img136_bg_zx02
+	.byte	<img137_bg_zx02
+	.byte	<img138_bg_zx02
+	.byte	<img139_bg_zx02
+
 
 frames_h:
 	.byte	>img096_bg_zx02
@@ -326,6 +350,29 @@ frames_h:
 	.byte	>img115_bg_zx02
 	.byte	>img116_bg_zx02
 	.byte	>img117_bg_zx02
+	.byte	>img118_bg_zx02
+	.byte	>img119_bg_zx02
+	.byte	>img120_bg_zx02
+	.byte	>img121_bg_zx02
+	.byte	>img122_bg_zx02
+	.byte	>img123_bg_zx02
+	.byte	>img124_bg_zx02
+	.byte	>img125_bg_zx02
+	.byte	>img126_bg_zx02
+	.byte	>img127_bg_zx02
+	.byte	>img128_bg_zx02
+	.byte	>img129_bg_zx02
+	.byte	>img130_bg_zx02
+	.byte	>img131_bg_zx02
+	.byte	>img132_bg_zx02
+	.byte	>img133_bg_zx02
+	.byte	>img134_bg_zx02
+	.byte	>img135_bg_zx02
+	.byte	>img136_bg_zx02
+	.byte	>img137_bg_zx02
+	.byte	>img138_bg_zx02
+	.byte	>img139_bg_zx02
+
 
 overlay_mask_zx02:
 	.incbin		"movie2/overlays/maglev_overlay_mask.gr.zx02"
