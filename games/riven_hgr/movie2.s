@@ -7,7 +7,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-NUM_SCENES	=	27
+NUM_SCENES	=	37
 
 overlays	=	$2000
 
@@ -342,6 +342,16 @@ frames_l:
 	.byte	<img137_bg_zx02
 	.byte	<img138_bg_zx02
 	.byte	<img139_bg_zx02
+	.byte	<img140_bg_zx02
+	.byte	<img141_bg_zx02
+	.byte	<img142_bg_zx02
+	.byte	<img143_bg_zx02
+	.byte	<img144_bg_zx02
+	.byte	<img145_bg_zx02
+	.byte	<img146_bg_zx02
+	.byte	<img147_bg_zx02
+	.byte	<img148_bg_zx02
+	.byte	<img149_bg_zx02
 
 
 frames_h:
@@ -372,6 +382,16 @@ frames_h:
 	.byte	>img137_bg_zx02
 	.byte	>img138_bg_zx02
 	.byte	>img139_bg_zx02
+	.byte	>img140_bg_zx02
+	.byte	>img141_bg_zx02
+	.byte	>img142_bg_zx02
+	.byte	>img143_bg_zx02
+	.byte	>img144_bg_zx02
+	.byte	>img145_bg_zx02
+	.byte	>img146_bg_zx02
+	.byte	>img147_bg_zx02
+	.byte	>img148_bg_zx02
+	.byte	>img149_bg_zx02
 
 
 overlay_mask_zx02:
