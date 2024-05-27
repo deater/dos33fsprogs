@@ -32,7 +32,10 @@ movie2.inc:	\
 	img180_bg.gr.zx02 img181_bg.gr.zx02 img182_bg.gr.zx02 \
 	img183_bg.gr.zx02 img184_bg.gr.zx02 img185_bg.gr.zx02 \
 	img186_bg.gr.zx02 img187_bg.gr.zx02 img188_bg.gr.zx02 \
-	img189_bg.gr.zx02
+	img189_bg.gr.zx02 img190_bg.gr.zx02 img191_bg.gr.zx02 \
+	img192_bg.gr.zx02 img193_bg.gr.zx02 img194_bg.gr.zx02 \
+	img195_bg.gr.zx02 img196_bg.gr.zx02 img197_bg.gr.zx02 \
+	img198_bg.gr.zx02 img199_bg.gr.zx02
 	echo "img096_bg_zx02: .incbin \"img096_bg.gr.zx02\"" > movie2.inc
 	echo "img114_bg_zx02: .incbin \"img114_bg.gr.zx02\"" >> movie2.inc
 	echo "img115_bg_zx02: .incbin \"img115_bg.gr.zx02\"" >> movie2.inc
@@ -110,6 +113,17 @@ movie2.inc:	\
 	echo "img187_bg_zx02: .incbin \"img187_bg.gr.zx02\"" >> movie2.inc
 	echo "img188_bg_zx02: .incbin \"img188_bg.gr.zx02\"" >> movie2.inc
 	echo "img189_bg_zx02: .incbin \"img189_bg.gr.zx02\"" >> movie2.inc
+	echo "img190_bg_zx02: .incbin \"img190_bg.gr.zx02\"" >> movie2.inc
+	echo "img191_bg_zx02: .incbin \"img191_bg.gr.zx02\"" >> movie2.inc
+	echo "img192_bg_zx02: .incbin \"img192_bg.gr.zx02\"" >> movie2.inc
+	echo "img193_bg_zx02: .incbin \"img193_bg.gr.zx02\"" >> movie2.inc
+	echo "img194_bg_zx02: .incbin \"img194_bg.gr.zx02\"" >> movie2.inc
+	echo "img195_bg_zx02: .incbin \"img195_bg.gr.zx02\"" >> movie2.inc
+	echo "img196_bg_zx02: .incbin \"img196_bg.gr.zx02\"" >> movie2.inc
+	echo "img197_bg_zx02: .incbin \"img197_bg.gr.zx02\"" >> movie2.inc
+	echo "img198_bg_zx02: .incbin \"img198_bg.gr.zx02\"" >> movie2.inc
+	echo "img199_bg_zx02: .incbin \"img199_bg.gr.zx02\"" >> movie2.inc
+
 
 ####
 
