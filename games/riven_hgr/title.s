@@ -161,15 +161,27 @@ done_setup_sound:
 	; init
 	;===================================
 
+
+	; clear out zero page values to 0
+	;	clear everything from $80 .. $A0?
+
+	lda	#0
+	ldx	#$20
+clear_loop:
+	sta	$80,X
+	dex
+	bpl	clear_loop
+
 	lda	#$20
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-	lda	#0
-	sta	JOYSTICK_ENABLED
-	sta	UPDATE_POINTER
-	sta	HOLDING_ITEM
-	sta	HOLDING_PAGE
+
+;	lda	#0
+;	sta	JOYSTICK_ENABLED
+;	sta	UPDATE_POINTER
+;	sta	HOLDING_ITEM
+;	sta	HOLDING_PAGE
 
 	lda	#20
 	sta	CURSOR_X

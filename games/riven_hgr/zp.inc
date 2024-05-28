@@ -36,52 +36,7 @@ SEEDH	= $4f
 XMAX	= $50
 
 
-
-; MIST zero page addresses
-
-FRAMEL			= $60
-FRAMEH			= $61
-;CURSOR_X		= $62
-;CURSOR_Y		= $63
-XPOS			= $64
-YPOS			= $65
-LOCATION_STRUCT_L	= $66
-LOCATION_STRUCT_H	= $67
-IN_SPECIAL		= $68
-CURSOR_VISIBLE		= $69
-IN_LEFT			= $6A
-IN_RIGHT		= $6B
-BTC_L			= $6C
-BTC_H			= $6D
-
-; pt3 player registers
-REGISTER_DUMP   = $70
-AY_REGISTERS    = $70
-A_FINE_TONE     = $70
-A_COARSE_TONE   = $71
-B_FINE_TONE     = $72
-B_COARSE_TONE   = $73
-C_FINE_TONE     = $74
-C_COARSE_TONE   = $75
-NOISE           = $76
-ENABLE          = $77
-PT3_MIXER_VAL   = $77
-A_VOLUME        = $78
-B_VOLUME        = $79
-C_VOLUME        = $7A
-ENVELOPE_FINE   = $7B
-ENVELOPE_COARSE = $7C
-ENVELOPE_SHAPE  = $7D
-COPY_OFFSET     = $7E
-DECODER_STATE   = $7F
-
-PATTERN_L       = $7E
-PATTERN_H       = $7F
-
-
-; note 70-7f also used by disk code
-
-; note: rest are up at $f0
+; note 70-7f used by disk code (?) do we need to preserve?
 
 ; We have to save/restore the following values
 ; when loading/storing from disk
@@ -99,54 +54,62 @@ DIRECTION		= $81
 
 LOCATION		= $82
 
-HOLDING_PAGE		= $90
-	HOLDING_RED_PAGE        = $80
-	HOLDING_BLUE_PAGE       = $40
-	HOLDING_WHITE_PAGE      = $C0
-HOLDING_ITEM            = $91
-        HOLDING_KEY             = $04
-        HOLDING_LIT_MATCH       = $02
-        HOLDING_MATCH           = $01
+JS_BUTTON_STATE		= $83
+CURRENT_DISK		= $84
+JOYSTICK_ENABLED	= $85
+SOUND_STATUS		= $86
+		SOUND_DISABLED	= $80
+		SOUND_IN_LC	= $01 ; $01 sound effects in language card
+		SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+
+SCENE_COUNT		= $87
+ANIMATE_FRAME		= $88
+LEVEL_OVER		= $89
+		GAME_OVER	= $FF
+		TOUCHED_ENEMY	= $80
+		NEXT_LEVEL	= $01
+LOCATIONS_L		= $8A
+LOCATIONS_H		= $8B
+
+DISP_PAGE		= $8C
+DRAW_PAGE		= $8D
+
+WHICH_OVERLAY		= $8E
+
+;HOLDING_PAGE		= $90
+;	HOLDING_RED_PAGE        = $80
+;	HOLDING_BLUE_PAGE       = $40
+;	HOLDING_WHITE_PAGE      = $C0
+;HOLDING_ITEM            = $91
+;	HOLDING_KEY             = $04
+;	HOLDING_LIT_MATCH       = $02
+;	HOLDING_MATCH           = $01
 
 
 
-CURSOR_X		= $BC
-CURSOR_Y		= $BD
-UPDATE_POINTER		= $BE
 
-APPLEII_MODEL	=	$D8
-HGR_PAGE	=	$D9
-WHICH_SLOT	=	$DA
-JS_BUTTON_STATE	=	$DB
-CURRENT_DISK	=	$DC
-JOYSTICK_ENABLED=	$DD
-SOUND_STATUS	=	$DE
-	SOUND_DISABLED	= $80
-	SOUND_IN_LC	= $01 ; $01 sound effects in language card
-	SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+; Riven zero page addresses
 
-SCENE_COUNT	=	$DF
-ANIMATE_FRAME	=	$E0
-LEVEL_OVER	=	$E1
-	GAME_OVER	=	$FF
-	TOUCHED_ENEMY	=	$80
-	NEXT_LEVEL	=	$01
-LOCATIONS_L	=	$E2
-LOCATIONS_H	=	$E3
+FRAMEL			= $90
+FRAMEH			= $91
+CURSOR_X		= $92
+CURSOR_Y		= $93
+XPOS			= $94
+YPOS			= $95
+LOCATION_STRUCT_L	= $96
+LOCATION_STRUCT_H	= $97
+IN_SPECIAL		= $98
+CURSOR_VISIBLE		= $99
+IN_LEFT			= $9A
+IN_RIGHT		= $9B
 
-; temp var per-world define
-LONG_FRAME	=	$E4	; nibel
-CURRENT_DISPLAY	=	$E4	; selena
-LAST_PLAYED	=	$E4	; selena
+UPDATE_POINTER		= $9C
+APPLEII_MODEL		= $9D
+HGR_PAGE		= $9E
 
-STAR_CYCLE	=	$E5
 
-DISP_PAGE	=	$ED	; ALL
-DRAW_PAGE	=	$EE	; ALL
 
-WHICH_OVERLAY	=	$F8
 TEMP		=	$F9
-;TEMPY		=	$FB
 MASKL		=	$FA
 MASKH		=	$FB
 INL		=	$FC

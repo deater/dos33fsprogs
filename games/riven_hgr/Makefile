@@ -113,6 +113,7 @@ MOVIE1:	movie1.o
 	ld65 -o MOVIE1 movie1.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 movie1.o:	movie1.s \
+	zp.inc hardware.inc \
 	movie1/movie1.inc
 	ca65 -o movie1.o movie1.s -l movie1.lst
 
@@ -122,6 +123,7 @@ MOVIE2:	movie2.o
 	ld65 -o MOVIE2 movie2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 movie2.o:	movie2.s \
+	zp.inc hardware.inc \
 	movie2/movie2.inc
 	ca65 -o movie2.o movie2.s -l movie2.lst
 

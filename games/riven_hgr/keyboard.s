@@ -79,10 +79,13 @@ keypress:
 
 handle_input:
 
-	pha
+	pha				; save keypress info
+
 	jsr	restore_bg_14x14	; restore old background
-	inc	UPDATE_POINTER
-	pla
+
+	inc	UPDATE_POINTER		; keypress so assume need move pointer
+
+	pla				; restore keypress info
 
 check_sound:
 	cmp	#$14			; control-T
@@ -97,26 +100,26 @@ check_sound:
 check_joystick:
 ;	cmp	#$10			; control-P
 	cmp	#'J'
-	bne	check_load
+	bne	check_left
 
 	lda	JOYSTICK_ENABLED
 	eor	#1
 	sta	JOYSTICK_ENABLED
 	jmp	done_keypress
 
-check_load:
-	cmp	#$C			; control-L
-	bne	check_save
+;check_load:
+;	cmp	#$C			; control-L
+;	bne	check_save
 
 ;	jsr	load_game
-	jmp	done_keypress
+;	jmp	done_keypress
 
-check_save:
-	cmp	#$13			; control-S
-	bne	check_left
+;check_save:
+;	cmp	#$13			; control-S
+;	bne	check_left
 
 ;	jsr	save_game
-	jmp	done_keypress
+;	jmp	done_keypress
 
 check_left:
 	cmp	#'A'
@@ -124,15 +127,13 @@ check_left:
 	cmp	#8			; left key
 	bne	check_right
 left_pressed:
-	lda	CURSOR_X		; if x>0
-;	cmp	#41
-;	bcc	do_dec_cursor_x
-;	cmp	#$FE
-	beq	done_left_pressed
+	lda	CURSOR_X		; check Xpos
+	beq	done_left_pressed	; if Xpos==0 don't move left
+
 do_dec_cursor_x:
-	dec	CURSOR_X
+	dec	CURSOR_X		; move left one 3.5 pixel column
 done_left_pressed:
-	jmp	done_keypress
+	jmp	done_keypress		; done checking input
 
 check_right:
 	cmp	#'D'
@@ -140,15 +141,15 @@ check_right:
 	cmp	#$15			; right key
 	bne	check_up
 right_pressed:
-	lda	CURSOR_X		; if 40<x<$FE don't increment
-	cmp	#38
-	bcc	do_inc_cursor_x
-	cmp	#$FE
-	bcc	done_right_pressed
+	lda	CURSOR_X		; load Xpos
+	cmp	#38			; if Xpos > 38 don't increment
+	bcc	do_inc_cursor_x		; blt
+;	cmp	#$FE
+;	bcc	done_right_pressed
 do_inc_cursor_x:
-	inc	CURSOR_X
+	inc	CURSOR_X		; move right one 3.5 pixel column
 done_right_pressed:
-	jmp	done_keypress
+	jmp	done_keypress		; done checking input
 
 check_up:
 	cmp	#'W'
@@ -156,19 +157,17 @@ check_up:
 	cmp	#$0B			; up key
 	bne	check_down
 up_pressed:
-	lda	CURSOR_Y		; if > 4 then decrement
-	cmp	#4
-;	bcs	do_dec_cursor_y		; bge
-;	cmp	#$F0
+	lda	CURSOR_Y		; load YPos
+	cmp	#4			; is YPos>4 then we can decrement
 	bcc	done_up_pressed		; blt
 do_dec_cursor_y:
-	dec	CURSOR_Y
-	dec	CURSOR_Y
+	dec	CURSOR_Y		; subtract 4
+	dec	CURSOR_Y		; 1 byte shorter to sec/lda/sbc/sta?
 	dec	CURSOR_Y
 	dec	CURSOR_Y
 
 done_up_pressed:
-	jmp	done_keypress
+	jmp	done_keypress		; done checking input
 
 check_down:
 	cmp	#'S'
@@ -178,16 +177,14 @@ check_down:
 down_pressed:
 	lda	CURSOR_Y		; if y<177 (14 high)
 	cmp	#177
-;	bcc	do_inc_cursor_y
-;	cmp	#$EE
 	bcs	done_down_pressed
 do_inc_cursor_y:
-	inc	CURSOR_Y
+	inc	CURSOR_Y		; add 4
 	inc	CURSOR_Y
 	inc	CURSOR_Y
 	inc	CURSOR_Y
 done_down_pressed:
-	jmp	done_keypress
+	jmp	done_keypress		; done checking input
 
 ;check_escape:
 ;	cmp	#27
