@@ -180,10 +180,25 @@ done_play_movie2:
 	jsr	wait_50xms
 
 
+	lda	#<end_message
+	sta	ZX0_src
+	lda	#>end_message
+        sta	ZX0_src+1
+
+	lda	#$04
+
+	jsr	full_decomp
+
+	bit	PAGE1
+	bit	SET_TEXT
+
+
 done_movie2:
 	bit	KEYRESET
 
-	jmp	movie2_start
+forever_and_ever:
+	jmp	forever_and_ever
+;	jmp	movie2_start
 
 	rts
 
@@ -571,4 +586,5 @@ overlays_combined_zx02:
 	.incbin		"movie2/overlays/overlay_combined.zx02"
 
 
-
+end_message:
+	.incbin		"end_message/end_message.gr.zx02"

@@ -160,6 +160,7 @@ MOVIE2:	movie2.o
 
 movie2.o:	movie2.s \
 	zp.inc hardware.inc \
+	end_message/end_message.gr.zx02 \
 	movie2/movie2.inc
 	ca65 -o movie2.o movie2.s -l movie2.lst
 
