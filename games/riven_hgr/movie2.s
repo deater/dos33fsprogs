@@ -7,7 +7,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-NUM_SCENES	=	97
+NUM_SCENES	=	117
 
 overlays	=	$2000
 
@@ -412,6 +412,26 @@ frames_l:
 	.byte	<img207_bg_zx02
 	.byte	<img208_bg_zx02
 	.byte	<img209_bg_zx02
+	.byte	<img210_bg_zx02
+	.byte	<img211_bg_zx02
+	.byte	<img212_bg_zx02
+	.byte	<img213_bg_zx02
+	.byte	<img214_bg_zx02
+	.byte	<img215_bg_zx02
+	.byte	<img216_bg_zx02
+	.byte	<img217_bg_zx02
+	.byte	<img218_bg_zx02
+	.byte	<img219_bg_zx02
+	.byte	<img220_bg_zx02
+	.byte	<img221_bg_zx02
+	.byte	<img222_bg_zx02
+	.byte	<img223_bg_zx02
+	.byte	<img224_bg_zx02
+	.byte	<img225_bg_zx02
+	.byte	<img226_bg_zx02
+	.byte	<img227_bg_zx02
+	.byte	<img228_bg_zx02
+	.byte	<img229_bg_zx02
 
 
 frames_h:
@@ -512,6 +532,26 @@ frames_h:
 	.byte	>img207_bg_zx02
 	.byte	>img208_bg_zx02
 	.byte	>img209_bg_zx02
+	.byte	>img210_bg_zx02
+	.byte	>img211_bg_zx02
+	.byte	>img212_bg_zx02
+	.byte	>img213_bg_zx02
+	.byte	>img214_bg_zx02
+	.byte	>img215_bg_zx02
+	.byte	>img216_bg_zx02
+	.byte	>img217_bg_zx02
+	.byte	>img218_bg_zx02
+	.byte	>img219_bg_zx02
+	.byte	>img220_bg_zx02
+	.byte	>img221_bg_zx02
+	.byte	>img222_bg_zx02
+	.byte	>img223_bg_zx02
+	.byte	>img224_bg_zx02
+	.byte	>img225_bg_zx02
+	.byte	>img226_bg_zx02
+	.byte	>img227_bg_zx02
+	.byte	>img228_bg_zx02
+	.byte	>img229_bg_zx02
 
 
 
