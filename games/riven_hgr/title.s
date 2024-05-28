@@ -9,6 +9,46 @@
 
 riven_title:
 
+	;===========================
+	; print the title message that used to be
+	;	in hello.bas
+
+
+	;===================
+	; init screen
+	;===================
+
+	jsr	TEXT
+	jsr	HOME
+	bit	KEYRESET
+
+	; clear text screen
+
+;	jsr	clear_all
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	; print non-inverse
+
+	jsr	set_normal
+
+	; print messages
+	lda	#<title_text
+	sta	OUTL
+	lda	#>title_text
+	sta	OUTH
+
+	; print the text
+
+	ldx	#7
+title_loop:
+
+	jsr	move_and_print
+
+	dex
+	bne	title_loop
+
 
 loader_start:
 
@@ -40,13 +80,20 @@ print_model:
 	jmp	print_model
 print_model_done:
 
-	;===================
-	; init screen
-	;===================
 
-	jsr	TEXT
-	jsr	HOME
-	bit	KEYRESET
+	;==========================
+	; wait a bit
+	;==========================
+
+
+	lda	#50
+	jsr	wait_a_bit
+
+
+	;==========================
+	; start graphics
+	;==========================
+
 
 	bit	SET_GR
 	bit	PAGE1
@@ -276,6 +323,10 @@ clear_loop:
 
 	.include	"hardware_detect.s"
 
+	.include	"text_print.s"
+
+	.include	"gr_offsets.s"
+
 ;	.include	"lc_detect.s"
 
 model_string:
@@ -286,3 +337,19 @@ model_string:
 
 riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"
+
+title_text:
+.byte 0, 0,"LOADING RIVEN SUBSET V0.03",0
+;
+;
+.byte 0, 3,"BASED ON RIVEN BY CYAN",0
+;
+;
+.byte 0, 6,"APPLE II PORT: VINCE WEAVER",0
+.byte 0, 7,"DISK CODE    : QKUMBA",0
+;
+.byte 0, 9,"       ______",0
+.byte 0,10,"     A \/\/\/ SOFTWARE PRODUCTION",0
+;
+.byte 0,11," HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0
+
