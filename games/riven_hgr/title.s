@@ -9,6 +9,37 @@
 
 riven_title:
 
+
+loader_start:
+
+	jsr	hardware_detect
+
+	lda	#<model_string
+	sta	OUTL
+	lda	#>model_string
+	sta	OUTH
+
+	lda	APPLEII_MODEL
+	sta	model_string+17
+
+	cmp	#'g'
+	bne	go_print
+
+	lda	#'s'
+	sta	model_string+18
+
+go_print:
+
+	ldy	#0
+print_model:
+	lda	(OUTL),Y
+	beq	print_model_done
+	ora	#$80
+	sta	$7d0,Y
+	iny
+	jmp	print_model
+print_model_done:
+
 	;===================
 	; init screen
 	;===================
@@ -197,7 +228,7 @@ clear_loop:
 	jsr	wait_a_bit
 
 	; debug: ready2go for animation test
-.if 1
+.if 0
 	lda	#LOAD_MAGLEV
 	sta	WHICH_LOAD		; inside maglev
 
@@ -208,7 +239,7 @@ clear_loop:
 	sta	DIRECTION
 .endif
 
-.if 0
+.if 1
 	lda	#LOAD_OUTSIDE
 	sta	WHICH_LOAD		; assume new game (dome island)
 
@@ -241,9 +272,17 @@ clear_loop:
 	.include	"hgr_tables.s"
 
 	.include	"wait_a_bit.s"
+	.include	"wait.s"
 
+	.include	"hardware_detect.s"
 
 ;	.include	"lc_detect.s"
+
+model_string:
+.byte "DETECTED APPLE II",0,0,0
+
+
+
 
 riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"

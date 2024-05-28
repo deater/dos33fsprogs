@@ -1,0 +1,54 @@
+What would QBOOT look like:
+	
+Disk1 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD       255 bytes     ??S = 1T0S	3k free
+T         2 = TITLE	 1315 bytes	??S = 1T0S	2k free
+T         3 = PROJECTOR 23713 bytes     96S = 6T0S	1k free
+T         9 = OUTSIDE   30825 bytes    128S = 8T0S	2k free
+T	 17 = MAGSTEPS  13027 bytes	64S = 4T0S	3k free
+T        21 = MAGLEV    15349 bytes     64S = 4T0S	1k free
+T        25 = MOVIE1     7837 bytes     32S = 2T0S	~
+T	 27 = MOVIE2    32000 bytes    128S = 8T0S	~
+
+
+MEMORY
+$0000-$00FF = zero page
+$0100-$01FF = stack
+$0200-$02FF = disk stuff
+$0300-$03ff = disk/interrupts
+$0400-$07ff = lores graphics page1
+$0800-$08ff = lores graphics page2 (qboot initial sector)
+$1000-$11ff = qboot_stage2 (disk code)
+$1200-$17FF = FREE?????
+$1800-$1FFF = QLOAD = loader code
+$2000-$3FFF = HGR Page1, lores movie overlays
+$4000-$B7FF = our code
+$B800-$BFFF = hires lookup tables?
+$C000-$CFFF = I/O
+$D000-$FFFF = ROM
+
+
+
+
+
+
+
+
+HELLO	=		318	= 2
+TITLE	=		1130	= 5
+LEVEL_PROJECTOR	=	15648	= 62
+LEVEL_OUTSIDE	=	26351	= 103
+LEVEL_MAGSTEPS	=	13045	= 51
+LEVEL_MAGLEV	=	12012	= 47
+			=====
+			68k
+
+
+todo:
+	move "magpath" from outside (8k) to projector?
+			then what about steps?
+
+
+$4000 - $B800 = 30k??

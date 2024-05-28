@@ -3,25 +3,61 @@ include ../../Makefile.inc
 DOS33 = ../../utils/dos33fs-utils/dos33
 DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-EMPTY_DISK = ../../empty_disk/empty.dsk
+EMPTY_DISK = ../../empty_disk/
 LINKER_SCRIPTS = ../../linker_scripts/
 
 
 all:	riven_hgr.dsk
 
-riven_hgr.dsk:	HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE1 MOVIE2
-	cp $(EMPTY_DISK) riven_hgr.dsk
-	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 TITLE
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_PROJECTOR
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_OUTSIDE
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
-	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE2
+riven_hgr.dsk:	QBOOT QLOAD TITLE \
+	LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
+	MOVIE1 MOVIE2
+	cp $(EMPTY_DISK)/empty.dsk riven_hgr.dsk
+	$(DOS33_RAW) riven_hgr.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_hgr.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_hgr.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_hgr.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_hgr.dsk  2  0 TITLE		      0   0
+	$(DOS33_RAW) riven_hgr.dsk  3  0 LEVEL_PROJECTOR      0   0
+	$(DOS33_RAW) riven_hgr.dsk  9  0 LEVEL_OUTSIDE        0   0
+	$(DOS33_RAW) riven_hgr.dsk  17 0 LEVEL_MAGSTEPS       0   0
+	$(DOS33_RAW) riven_hgr.dsk  21 0 LEVEL_MAGLEV         0   0
+	$(DOS33_RAW) riven_hgr.dsk  25 0 MOVIE1               0   0
+	$(DOS33_RAW) riven_hgr.dsk  27 0 MOVIE2               0   0
+
+#riven_hgr.dsk:	HELLO LOADER TITLE \
+#		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
+#		MOVIE1 MOVIE2
+#	cp $(EMPTY_DISK) riven_hgr.dsk
+#	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 TITLE
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_PROJECTOR
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_OUTSIDE
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
+#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE2
+
+
+###
+
+QBOOT:	qboot_sector.o
+	ld65 -o QBOOT qboot_sector.o -C $(LINKER_SCRIPTS)/apple2_800.inc
+
+qboot_sector.o:	qboot_sector.s  qboot_stage2.s
+	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
+
+###
+
+###
+
+QLOAD:	qload.o
+	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
+
+qload.o:	qload.s qboot.inc
+	ca65 -o qload.o qload.s -l qload.lst
+
 
 ###
 

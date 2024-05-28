@@ -175,9 +175,9 @@ check_down:
 	cmp	#$0A
 	bne	check_return
 down_pressed:
-	lda	CURSOR_Y		; if y<177 (14 high)
-	cmp	#177
-	bcs	done_down_pressed
+	lda	CURSOR_Y		; load Ypos
+	cmp	#177			; if Ypos<177 move down (pointer 14 high)
+	bcs	done_down_pressed	; bge
 do_inc_cursor_y:
 	inc	CURSOR_Y		; add 4
 	inc	CURSOR_Y

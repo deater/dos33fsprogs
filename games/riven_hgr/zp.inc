@@ -10,6 +10,15 @@ ZX0_dst         = ZP+4
 bitr            = ZP+6
 pntr            = ZP+7
 
+; disk code
+
+NIBCOUNT        = $09
+CURRENT_DRIVE   = $0A
+DRIVE1_DISK     = $0B
+DRIVE2_DISK     = $0C
+DRIVE1_TRACK    = $0D
+DRIVE2_TRACK    = $0E
+
 
 
 ;; Zero page monitor routines addresses
@@ -106,7 +115,7 @@ IN_RIGHT		= $9B
 UPDATE_POINTER		= $9C
 APPLEII_MODEL		= $9D
 HGR_PAGE		= $9E
-
+WHICH_SLOT		= $9F
 
 
 TEMP		=	$F9
@@ -123,6 +132,7 @@ OUTH		=	$FF
 ; modified to assemble with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
+.if 0
 
         adrlo   =       $26     ; constant from boot prom
         adrhi   =       $27     ; constant from boot prom
@@ -140,3 +150,4 @@ OUTH		=	$FF
         tmptrk  =       $7e     ; temporary copy of current track
         phase   =       $7f     ; current phase for /seek
 
+.endif

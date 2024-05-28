@@ -1,0 +1,21 @@
+Riven on a Floppy Disk
+~~~~~~~~~~~~~~~~~~~~~~
+
+AKA how much of the 5-CD-ROM game RIVEN will fit on a 140k Apple II Floppy
+
+by Vince `deater' Weaver <vince@deater.net>
+
+
+Just as it says, how much "hi-res" Riven can you fit on a floppy disk.
+Hand converted locations packed with ZX02 compression.
+
+Maglev scene (the real reason I did this) was rotoscoped in 40x48 "lores".
+	
+The website probably has a more complete rundown on everything going on here
+	http://www.deater.net/weave/vmwprod/riven/
+
+Building this assumes you have zx02, the ca65 assembler, and various of
+	my dos33fsutils in proper places.  Sorry.
+
+28 May 2024
+
