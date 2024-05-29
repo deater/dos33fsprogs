@@ -6,10 +6,10 @@ LOAD_MAGLEV	=	4
 LOAD_MOVIE1	=	5
 LOAD_MOVIE2	=	6
 
-div7_table     = $BC00
-mod7_table     = $BD00
-hposn_high     = $BE00
-hposn_low      = $BF00
+div7_table     = $1300
+mod7_table     = $1400
+hposn_high     = $1500
+hposn_low      = $1600
 
 
 ;=============================
@@ -61,6 +61,7 @@ RIVEN_OVERLOOK	=	2
 RIVEN_PROJECTOR	=	0
 RIVEN_PROJ_DOOR	=	1
 RIVEN_PROJ_STEPS=	2
+RIVEN_WAHRK	=	3
 
 ; Magsteps
 

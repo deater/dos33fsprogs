@@ -17,8 +17,8 @@ riven_hgr.dsk:	QBOOT QLOAD TITLE \
 	$(DOS33_RAW) riven_hgr.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_hgr.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_hgr.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_hgr.dsk  2  0 TITLE		      0   0
-	$(DOS33_RAW) riven_hgr.dsk  3  0 LEVEL_PROJECTOR      0   0
+	$(DOS33_RAW) riven_hgr.dsk  1  8 TITLE		      0   0
+	$(DOS33_RAW) riven_hgr.dsk  2  0 LEVEL_PROJECTOR      0   0
 	$(DOS33_RAW) riven_hgr.dsk  9  0 LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_hgr.dsk  17 0 LEVEL_MAGSTEPS       0   0
 	$(DOS33_RAW) riven_hgr.dsk  21 0 LEVEL_MAGLEV         0   0

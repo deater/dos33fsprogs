@@ -3,23 +3,23 @@
 ;===============================================
 
 locations:
-	.word location0,location1,location2
+	.word location0,location1,location2,location3
 
 ; RIVEN_PROJECTOR	-- looking at projector
 location0:
 	.byte	RIVEN_PROJ_DOOR		; north exit
-	.byte	$ff			; south exit
+	.byte	RIVEN_WAHRK		; south exit
 	.byte	$ff			; east exit
 	.byte	$ff			; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	projector_n_zx02	; north bg
 	.word	projector_s_zx02	; south bg
-	.word	$0000			; east bg
-	.word	$0000			; west bg
-	.byte	BG_NORTH|BG_SOUTH
+	.word	projector_e_zx02	; east bg
+	.word	projector_w_zx02	; west bg
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
 	.byte	$FF		; special exit (none)
 
 ; RIVEN_PROJ_DOOR	-- doorway to projector room
@@ -55,5 +55,23 @@ location2:
 	.word	$0000		; west bg
 	.byte	BG_NORTH|BG_SOUTH
 	.byte	$FF		; special exit
+
+; RIVEN_WAHRK	-- big fish
+location3:
+	.byte	$ff			; north exit
+	.byte	RIVEN_PROJECTOR		; south exit
+	.byte	$ff			; east exit
+	.byte	$ff			; west exit
+	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_S	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	$ff		; west exit_dir
+	.word	$ff		; north bg
+	.word	wahrk_s_zx02	; south bg
+	.word	$0000		; east bg
+	.word	$0000		; west bg
+	.byte	BG_SOUTH
+	.byte	$FF		; special exit
+
 
 

@@ -1,11 +1,12 @@
 What would QBOOT look like:
 	
+
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
 T         1 = QLOAD       255 bytes     ??S = 1T0S	3k free
-T         2 = TITLE	 1315 bytes	??S = 1T0S	2k free
-T         3 = PROJECTOR 23713 bytes     96S = 6T0S	1k free
+T       1.5 = TITLE	 1688 bytes	??S = 1T0S	2k free
+T         2 = PROJECTOR 32000 bytes    128S = 6T0S	6k free
 T         9 = OUTSIDE   30825 bytes    128S = 8T0S	2k free
 T	 17 = MAGSTEPS  13027 bytes	64S = 4T0S	3k free
 T        21 = MAGLEV    15349 bytes     64S = 4T0S	1k free
@@ -21,7 +22,7 @@ $0300-$03ff = disk/interrupts
 $0400-$07ff = lores graphics page1
 $0800-$08ff = lores graphics page2 (qboot initial sector)
 $1000-$11ff = qboot_stage2 (disk code)
-$1200-$17FF = FREE?????
+$1200-$17FF = HGR lookup tables
 $1800-$1FFF = QLOAD = loader code
 $2000-$3FFF = HGR Page1, lores movie overlays
 $4000-$B7FF = our code
