@@ -17,9 +17,9 @@ location0:
 	.byte	$ff		; west exit_dir
 	.word	projector_n_zx02	; north bg
 	.word	projector_s_zx02	; south bg
-	.word	projector_e_zx02	; east bg
+	.word	$FFFF			; .word	projector_e_zx02	; east bg
 	.word	projector_w_zx02	; west bg
-	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
+	.byte	BG_NORTH|BG_SOUTH|BG_WEST
 	.byte	$FF		; special exit (none)
 
 ; RIVEN_PROJ_DOOR	-- doorway to projector room
