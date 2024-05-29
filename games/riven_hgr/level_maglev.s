@@ -14,7 +14,7 @@ riven_maglev:
 	;===================
 
 ;	jsr	TEXT
-;	jsr	HOME
+	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR
