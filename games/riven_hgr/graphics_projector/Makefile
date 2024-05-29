@@ -14,7 +14,7 @@ projector_graphics.inc:	\
 	echo "projector_n_zx02: .incbin \"projector_n.hgr.zx02\"" > projector_graphics.inc
 	echo "projector_s_zx02: .incbin \"projector_s.hgr.zx02\"" >> projector_graphics.inc
 	echo "projector_w_zx02: .incbin \"projector_w.hgr.zx02\"" >> projector_graphics.inc
-	echo "projector_e_zx02: .incbin \"projector_e.hgr.zx02\"" >> projector_graphics.inc
+#	echo "projector_e_zx02: .incbin \"projector_e.hgr.zx02\"" >> projector_graphics.inc
 	echo "doorway_n_zx02: .incbin \"doorway_n.hgr.zx02\"" >> projector_graphics.inc
 	echo "doorway_s_zx02: .incbin \"doorway_s.hgr.zx02\"" >> projector_graphics.inc
 	echo "steps_n_zx02: .incbin \"steps_n.hgr.zx02\"" >> projector_graphics.inc

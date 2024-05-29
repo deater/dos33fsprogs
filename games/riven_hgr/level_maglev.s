@@ -13,8 +13,8 @@ riven_maglev:
 	; init screen
 	;===================
 
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR
