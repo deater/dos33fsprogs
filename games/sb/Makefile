@@ -12,7 +12,8 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF TARGET ./cliff/CLIFF RAT
+sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF TARGET \
+	./fish/FISH ./cliff/CLIFF RAT
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -20,7 +21,7 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF TARGET ./cliff/CLIFF R
 	$(DOS33_RAW) sb.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
-	$(DOS33_RAW) sb.dsk  10 0 ROOF       0   0
+	$(DOS33_RAW) sb.dsk  10 0 ./fish/FISH       0   0
 	$(DOS33_RAW) sb.dsk  15 0 ASPLODE    0   0
 	$(DOS33_RAW) sb.dsk  20 0 TARGET     0   0
 	$(DOS33_RAW) sb.dsk  25 0 ./cliff/CLIFF      0   0
@@ -99,6 +100,12 @@ back_off.o:	back_off.s zx02_optim.s \
 
 ./cliff/CLIFF:	
 	cd cliff && make
+
+####
+
+./fish/FISH:	
+	cd fish && make
+
 
 #CLIFF:	cliff.o
 #	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
