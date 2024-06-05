@@ -166,27 +166,27 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte 1,1,1,1		; TARGET, CLIFF, RAT, BACK_OFF
+	.byte 1,1,1,1		; TITLE,  DUCK,   ROOF,  ASPLODE
+	.byte 1,1,1,1		; ?,      FISH,   RAT,   BACK_OFF
 
 load_address_array:
-        .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte $60,$60,$60,$60	; TARGET, CLIFF, RAT, BACK_OFF
+        .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF,  ASPLODE
+	.byte $60,$60,$60,$60	; ?,      FISH,  RAT,   BACK_OFF
 
 
 track_array:
         .byte  2, 5,10,15	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte 20,25,30,32	; TARGET, CLIFF, RAT, BACK_OFF
+	.byte 20,25,30,32	; ?,      FISH,  RAT,  BACK_OFF
 
 
 sector_array:
         .byte  0, 0, 0, 0	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  0, 0, 0, 0	; TARGET, CLIFF, RAT, BACK_OFF
+	.byte  0, 0, 0, 0	; ?,      FISH,  RAT,  BACK_OFF
 
 
 length_array:
         .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  32, 32, 32, 24	; TARGET, CLIFF, RAT, BACK_OFF
+	.byte  32, 70, 32, 24	; ?,      FISH,  RAT,  BACK_OFF
 
 
 qload_end:
