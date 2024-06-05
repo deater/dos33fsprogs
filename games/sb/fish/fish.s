@@ -1,11 +1,19 @@
 ; Fishing Challenge '91
 ;
+; "Are you asking for some sort of early-90s fishing challenge????"
+;
 ; Yet Another HR project
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
 .include "zp.inc"
 .include "hardware.inc"
+
+
+; NOTES
+;	page1= $2000-$5fff
+;	code = $6000-$bfff
+
 
 div7_table     = $400
 mod7_table     = $500
@@ -33,7 +41,6 @@ fish_start:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-.if 0
 	;==========================
 	; Load Sound
 	;===========================
@@ -46,21 +53,31 @@ fish_start:
 	bit	$C083
 	bit	$C083
 
-	lda	#<sound_data
+	; fish = 4225 bytes  load at $D000 - $E0FF
+	; boat = 4966 bytes  load at $E100 - $F4FF
+
+	lda	#<sound_data_fish
 	sta	ZX0_src
-	lda	#>sound_data
+	lda	#>sound_data_fish
 	sta	ZX0_src+1
 
 	lda	#$D0
 
 	jsr	full_decomp
 
+	lda	#<sound_data_boat
+	sta	ZX0_src
+	lda	#>sound_data_boat
+	sta	ZX0_src+1
+
+	lda	#$E1
+
+	jsr	full_decomp
+
 	; read ROM/no-write
 	bit	$C082
 
-
 done_load_sound:
-.endif
 
 	;==========================
 	; Load Title
@@ -83,41 +100,40 @@ wait_at_tile:
 
 	bit	KEYRESET
 
-.if 0
+	;===================
+	; print directions
+	;===================
+
+
 	;===================
 	; setup game
 	;===================
 
 	;==========================
-	; Load Backgrounds
+	; Load Background
 	;===========================
-	; this is tricky as there's not enough room
-	; so we are over-writing stuff carefully
 
-load_backgrounds:
+load_background:
 
-	lda	#<bg2_data
+	lda	#<bg_data
 	sta	ZX0_src
-	lda	#>bg2_data
+	lda	#>bg_data
 	sta	ZX0_src+1
 
-	lda	#$A0
+	lda	#$20
 
 	jsr	full_decomp
 
-	lda	#<bg1_data
+	lda	#<bg_data
 	sta	ZX0_src
-	lda	#>bg1_data
+	lda	#>bg_data
 	sta	ZX0_src+1
 
-	lda	#$80
-
-	jsr	full_decomp
-
+	lda	#$40
 
 	;===================
 	; set up variables
-
+.if 0
 	lda	#16
 	sta	STRONGBAD_X
 	sta	PLAYER_X
@@ -143,7 +159,18 @@ load_backgrounds:
 	lda	#0
 	sta	BULLET_Y
 
+.endif
+
 	jmp	main_loop
+
+
+title_data:
+	.incbin "graphics/fish_title.hgr.zx02"
+
+sound_data_fish:
+	.incbin "sounds/fish.btc.zx02"
+sound_data_boat:
+	.incbin "sounds/get_in_boat.btc.zx02"
 
 
 	; start at least 8k in?
@@ -153,7 +180,11 @@ load_backgrounds:
 	;===========================
 main_loop:
 
+.if 0
+
 	jsr	flip_page
+
+
 
 	;========================
 	; copy over background
@@ -170,29 +201,18 @@ odd_bg:
 	lda	#$80
 do_bg:
 	jsr	hgr_copy
-
+.endif
 
 	inc	FRAME
 
 	;==========================
-	; adjust shield
+	; copy over proper boat
 	;==========================
 
-	lda	SHIELD_COUNT
-	beq	done_shield_count
-
-	dec	SHIELD_COUNT
-	bne	done_shield_count
-
-	lda	#SHIELD_DOWN		; put shield down if timeout
-	sta	SHIELD_POSITION
-
-done_shield_count:
-
 	;===========================
-	; move head
+	; draw strong bad
 	;===========================
-
+.if 0
 	lda	FRAME
 	and	#$3
 	bne	no_move_head
@@ -233,320 +253,28 @@ no_move_head:
 	lda	#36
 	sta	SPRITE_Y
 	jsr	hgr_draw_sprite_big
+.endif
 
 	;==========================
-	; move bullet
+	; update score?
 	;===========================
 
-	; 16 bit add
 
-	clc
-	lda	BULLET_X_L
-	adc	BULLET_X_VEL_L
-	sta	BULLET_X_L
-	lda	BULLET_X
-	adc	BULLET_X_VEL
-	sta	BULLET_X
+	;============================
+	; draw fish
+	;============================
 
-	;========================
-	; bounce off "walls"
-	; in reality just bounce if <9 or > 29?
-
-	lda	BULLET_X
-	cmp	#29
-	bcs	walls_out	; bge
-	cmp	#9
-	bcs	walls_good	; bge
-
-walls_out:
-
-	; flip X direction
-
-	sec
-	lda	#0
-	sbc	BULLET_X_VEL_L
-	sta	BULLET_X_VEL_L
-	lda	#0
-	sbc	BULLET_X_VEL
-	sta	BULLET_X_VEL
-
-
-walls_good:
-
-	; move bullet Y
-
-	lda	BULLET_YDIR
-	bne	bullet_down
-
-bullet_up:
-	dec	BULLET_Y
-	jmp	bullet_y_done
-
-bullet_down:
-	inc	BULLET_Y
-bullet_y_done:
-
-	; see if off end
-
-	lda	BULLET_Y
-	cmp	#17
-	bcc	bullet_still_good
-
-	; reset to top
-
-	lda	#0
-	sta	BULLET_Y
-bullet_still_good:
-
-	;==========================
-	; check bullet collisions
-	;===========================
-
-	;===========================
-	; check player
-	;   if (bullet_x > player_x+2) &&
-	;	(bullet_x<player_x+6)
-	; if 2 < bx - px < 6 ???
-
-	; 012345678
-	; b-p
-	; --------
-	; 8765432101234567890123456
-	; p-b      ----------------
-	; 8765432101234567890123456
-	; NNNNNNNNNNYYYYNNNNNNNNNNN
-	; XXXXXXXXPPOOOOPPXXXXXXXXX
-
-	; only if BULLET_Y=16?
-
-	lda	BULLET_Y
-	cmp	#16
-	bne	skip_check_player_collide
-check_player_collide:
-	sec
-	lda	BULLET_X
-	sbc	PLAYER_X
-	cmp	#2
-	bcc	skip_check_player_collide	; blt
-	cmp	#8
-	bcs	skip_check_player_collide
-
-	jmp	asplode_asplode
-
-skip_check_player_collide:
-
-	;===========================
-	; check shield collide
-
-	; only if Y=15 and YDIR=1
-check_shield_collide:
-	lda	BULLET_Y
-	cmp	#15
-	beq	do_check_shields
-	jmp	skip_check_shield_collide
-
-do_check_shields:
-	; sorta-random number in X
-	ldx	FRAME
-	lda	$6000,X		; from source code
-	and	#$3
-	tax
-
-	lda	SHIELD_POSITION
-	beq	skip_check_shield_collide	; 0 means DOWN
-
-shields_up:
-	; our rules
-	;  SHIELD_X_VEL maxes at 1/-1
-	;    hitting shield left subs random $10/$20/$20/$40
-	;    hitting shield right adds random $10/$20/$20/$40
-	;    hitting shield center adds/subs random $10/$20
-
-	cmp	#SHIELD_UP_RIGHT
-	beq	check_hit_shield_right
-	cmp	#SHIELD_UP_CENTER
-	beq	check_hit_shield_center
-
-check_hit_shield_left:
-
-	sec
-	lda	BULLET_X
-	sbc	PLAYER_X
-	cmp	#1
-	bcc	skip_check_shield_collide	; blt
-	cmp	#7
-	bcs	skip_check_shield_collide	; bge
-
-hit_shield_left:
-	sec
-	lda	BULLET_X_VEL_L
-	sbc	bullet_vals,X
-	sta	BULLET_X_VEL_L
-	lda	BULLET_X_VEL
-	sbc	#0
-	sta	BULLET_X_VEL
-	jmp	done_hit_shield
-
-
-check_hit_shield_right:
-
-	sec
-	lda	BULLET_X
-	sbc	PLAYER_X
-	cmp	#4
-	bcc	skip_check_shield_collide	; blt
-	cmp	#10
-	bcs	skip_check_shield_collide
-
-
-hit_shield_right:
-	clc
-	lda	BULLET_X_VEL_L
-	adc	bullet_vals,X
-	sta	BULLET_X_VEL_L
-	lda	BULLET_X_VEL
-	adc	#0
-	sta	BULLET_X_VEL
-	jmp	done_hit_shield
-
-check_hit_shield_center:
-
-	sec
-	lda	BULLET_X
-	sbc	PLAYER_X
-	cmp	#2
-	bcc	skip_check_shield_collide	; blt
-	cmp	#8
-	bcs	skip_check_shield_collide	; bge
-
-hit_shield_center:
-
-	cpx	#1
-	bcs	center_left
-
-	clc
-	lda	BULLET_X_VEL_L
-	adc	bullet_vals_center,X
-	sta	BULLET_X_VEL_L
-	lda	BULLET_X_VEL
-	adc	#0
-	sta	BULLET_X_VEL
-	jmp	done_hit_shield
-
-center_left:
-	sec
-	lda	BULLET_X_VEL_L
-	sbc	bullet_vals_center,X
-	sta	BULLET_X_VEL_L
-	lda	BULLET_X_VEL
-	sbc	#0
-	sta	BULLET_X_VEL
-;	jmp	done_hit_shield
-
-
-done_hit_shield:
-	; max at $1/$00 or $FF/$00
-
-
-	; flip ydir
-
-	lda	#0
-	sta	BULLET_YDIR
-
+	;============================
 	; play sound
+	;============================
 
-	ldy	#5
-	jsr	play_asplode
+;	ldy	#5
+;	jsr	play_asplode
 
-
-
-skip_check_shield_collide:
 
 	;===========================
-	; check head
-
-	; only if Y=0 and YDIR=0
-
-	lda	BULLET_Y
-	bne	done_check_head
-
-	lda	BULLET_YDIR
-	bne	done_check_head
-
-check_head_collide:
-
-	sec
-	lda	BULLET_X
-	sbc	STRONGBAD_X
-	cmp	#0
-	bcc	skip_check_head_collide		; blt
-	cmp	#6
-	bcs	skip_check_head_collide
-
-	inc	HEAD_DAMAGE			; increase head damage
-	lda	HEAD_DAMAGE
-	cmp	#5
-	bcc	skip_check_head_collide
-
-	lda	#0				; reset
-	sta	HEAD_DAMAGE
-
-skip_check_head_collide:
-	lda	#1
-	sta	BULLET_YDIR	; bounce
-
-
-done_check_head:
-
-
-	;=====================
-	; play bullet sound
-
-
-	; if Y=1 and YDIR=1
-
-	lda	BULLET_Y
-	cmp	#1
-	bne	no_ysound
-
-	lda	BULLET_YDIR
-	beq	no_ysound
-
-	ldy	#6
-	jsr	play_asplode
-no_ysound:
-
-	;==========================
-	; draw bullet
+	; check keypress
 	;===========================
-
-	ldy	BULLET_Y
-	lda	bullet_sprite_l,Y
-	sta	INL
-	lda	bullet_sprite_h,Y
-	sta	INH
-
-	lda	BULLET_X
-	sta	SPRITE_X
-
-	lda	bullet_sprite_y,Y
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
-
-	;==========================
-	; draw player
-	;===========================
-
-	ldx	SHIELD_POSITION
-	lda	shield_sprites_l,X
-	sta	INL
-	lda	shield_sprites_h,X
-	sta	INH
-	lda	PLAYER_X
-	sta	SPRITE_X
-	lda	#138
-	sta	SPRITE_Y
-	jsr	hgr_draw_sprite_big
 
 check_keypress:
 	lda     KEYPRESS
@@ -559,78 +287,34 @@ check_keypress:
 
 	and	#$df			; convert lowercase to upper
 
-;	cmp	#'Q'
-;	beq	done_game
-
 	cmp	#27		; escape
 	beq	done_game
 
-	cmp	#'A'		; shield left
-	beq	shield_left
-	cmp	#'S'		; shield center
-	beq	shield_center
-	cmp	#'D'		; shield right
-	beq	shield_right
-
-	cmp	#'O'
-	beq	back_off
-
-	cmp	#8		; left
-	beq	move_left
-
-        cmp	#$15
-        beq	move_right	; right
-
+	cmp	#'J'		; jig
+	beq	do_jig
+	cmp	#'L'		; lure
+	beq	do_lure
 
 done_keyboard_check:
 	jmp	main_loop
 
-move_left:
-	lda	PLAYER_X
-	beq	no_more_left
-	dec	PLAYER_X
-no_more_left:
+
+do_jig:
+	jsr	play_boat		; `come on and get in the boat'
+;	lda	PLAYER_X
+;	beq	no_more_left
+;	dec	PLAYER_X
+no_more_gire:
 	jmp	main_loop
 
-move_right:
-	lda	PLAYER_X
-	cmp	#28			; bge
-	bcs	no_more_right
-	inc	PLAYER_X
-no_more_right:
+do_lure:
+	jsr	play_fish		; 'fish'
+;	lda	PLAYER_X
+;	cmp	#28			; bge
+;	bcs	no_more_right
+;	inc	PLAYER_X
+no_more_lure:
 	jmp	main_loop
-
-shield_left:
-	lda	SHIELD_POSITION
-	bne	done_adjust_shield
-	lda	#SHIELD_UP_LEFT
-	bne	adjust_shield
-shield_center:
-	lda	SHIELD_POSITION
-	bne	done_adjust_shield
-	lda	#SHIELD_UP_CENTER
-	bne	adjust_shield
-shield_right:
-	lda	SHIELD_POSITION
-	bne	done_adjust_shield
-	lda	#SHIELD_UP_RIGHT
-adjust_shield:
-	sta	SHIELD_POSITION
-	lda	#4
-	sta	SHIELD_COUNT
-done_adjust_shield:
-	jmp	main_loop
-
-asplode_asplode:
-
-	jsr	do_asplode
-
-	jmp	reset_loop
-
-
-back_off:
-	lda	#7
-	bne	really_done_game	; bra
 
 	;==========================
 	; done game
@@ -643,7 +327,7 @@ really_done_game:
 	rts
 
 
-
+.if 0
 
 wait_until_keypress:
 	lda	KEYPRESS				; 4
@@ -676,23 +360,17 @@ done_flip:
 	rts
 .endif
 
-title_data:
-	.incbin "graphics/fish_title.hgr.zx02"
 
-;bg1_data:
-;	.incbin "asplode_graphics/sb_zone.hgr.zx02"
-
-;sound_data:
-;	.incbin "asplode_sound/asplode_sound.btc.zx02"
-
+bg_data:
+	.incbin "graphics/fish_bg.hgr.zx02"
 
 	.include	"hgr_tables.s"
 	.include	"zx02_optim.s"
 
 	.include	"hgr_sprite_big.s"
 	.include	"hgr_copy_fast.s"
-;	.include	"audio.s"
-;	.include	"play_asplode.s"
+	.include	"audio.s"
+	.include	"play_sounds.s"
 
 ;	.include	"asplode_graphics/sb_sprites.inc"
 
@@ -769,7 +447,5 @@ bullet_vals_center:
 
 ; 9,5 -> 22,14 = 12x9 roughly.  3 times smaller, 4x3?  2x6?
 
-bg2_data:
-	.incbin "asplode_graphics/sb_zone2.hgr.zx02"
 
 .endif

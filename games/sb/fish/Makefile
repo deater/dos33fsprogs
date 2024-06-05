@@ -9,19 +9,19 @@ all:	FISH
 ####
 
 FISH:	fish.o
-	ld65 -o FISH fish.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o FISH fish.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 fish.o:	fish.s zx02_optim.s \
+		graphics/fish_title.hgr.zx02 \
+		graphics/fish_bg.hgr.zx02 \
+		sounds/fish.btc.zx02 \
+		sounds/get_in_boat.btc.zx02 \
+		hgr_sprite_big.s \
+		audio.s play_sounds.s \
 		zp.inc hardware.inc
 	ca65 -o fish.o fish.s -l fish.lst
 
 
-#		fish_graphics/sb_title.hgr.zx02 \
-#		fish_graphics/sb_zone.hgr.zx02 \
-#		fish_graphics/sb_sprites.inc \
-#		fish_sound/fish_sound.btc.zx02 \
-#		audio.s play_fish.s fish_head.s \
-#		hgr_sprite_big.s cycle_colors.s \
 
 
 #graphics/sb_sprites.inc:	

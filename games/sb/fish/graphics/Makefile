@@ -4,7 +4,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	fish_title.hgr.zx02
+all:	fish_title.hgr.zx02 fish_bg.hgr.zx02
 
 # sb_sprites.inc
 
@@ -16,6 +16,15 @@ fish_title.hgr.zx02:	fish_title.hgr
 
 fish_title.hgr:	fish_title.png
 	$(PNG_TO_HGR) fish_title.png > fish_title.hgr
+
+####
+
+fish_bg.hgr.zx02:	fish_bg.hgr
+	$(ZX02) fish_bg.hgr fish_bg.hgr.zx02
+
+fish_bg.hgr:	fish_bg.png
+	$(PNG_TO_HGR) fish_bg.png > fish_bg.hgr
+
 
 
 ####

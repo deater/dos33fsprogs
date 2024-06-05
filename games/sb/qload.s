@@ -171,7 +171,7 @@ which_disk_array:
 
 load_address_array:
         .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF,  ASPLODE
-	.byte $60,$60,$60,$60	; ?,      FISH,  RAT,   BACK_OFF
+	.byte $60,$40,$60,$60	; ?,      FISH,  RAT,   BACK_OFF
 
 
 track_array:
