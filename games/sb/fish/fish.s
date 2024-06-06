@@ -9,6 +9,13 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+; NOTES FROM WIKI
+; green fish 50 or 100
+; grey fish 100 points
+; red fish 400 or 500
+; bubbles easier to catch?
+; grey = lures, red green = jigs
+
 
 ; NOTES
 ;	page1= $2000-$5fff
@@ -362,7 +369,8 @@ done_flip:
 
 
 bg_data:
-	.incbin "graphics/fish_bg.hgr.zx02"
+;	.incbin "graphics/fish_bg.hgr.zx02"
+	.incbin "graphics/boat2_sb.hgr.zx02"
 
 	.include	"hgr_tables.s"
 	.include	"zx02_optim.s"
