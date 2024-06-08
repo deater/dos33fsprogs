@@ -176,7 +176,7 @@ load_address_array:
 
 track_array:
         .byte  2, 5,10,15	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte 20,25,30,32	; ?,      FISH,  RAT,  BACK_OFF
+	.byte 20,20,30,32	; ?,      FISH,  RAT,  BACK_OFF
 
 
 sector_array:
@@ -186,7 +186,7 @@ sector_array:
 
 length_array:
         .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  32, 70, 32, 24	; ?,      FISH,  RAT,  BACK_OFF
+	.byte  32, 90, 32, 24	; ?,      FISH,  RAT,  BACK_OFF
 
 
 qload_end:

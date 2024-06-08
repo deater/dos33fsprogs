@@ -24,7 +24,7 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF \
 	$(DOS33_RAW) sb.dsk  10 0 ROOF       0   0
 	$(DOS33_RAW) sb.dsk  15 0 ASPLODE    0   0
 #	$(DOS33_RAW) sb.dsk  20 0 TARGET     0   0
-	$(DOS33_RAW) sb.dsk  25 0 ./fish/FISH      0   0
+	$(DOS33_RAW) sb.dsk  20 0 ./fish/FISH      0   0
 	$(DOS33_RAW) sb.dsk  30 0 RAT        0   0
 	$(DOS33_RAW) sb.dsk  32 0 BACK_OFF   0   0
 

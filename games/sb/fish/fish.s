@@ -170,14 +170,14 @@ load_background:
 
 	jmp	main_loop
 
-
-title_data:
-	.incbin "graphics/fish_title.hgr.zx02"
-
 sound_data_fish:
 	.incbin "sounds/fish.btc.zx02"
 sound_data_boat:
 	.incbin "sounds/get_in_boat.btc.zx02"
+
+title_data:
+	.incbin "graphics/fish_title.hgr.zx02"
+
 
 
 	; start at least 8k in?
@@ -187,11 +187,11 @@ sound_data_boat:
 	;===========================
 main_loop:
 
-.if 0
+
 
 	jsr	flip_page
 
-
+.if 0
 
 	;========================
 	; copy over background
@@ -210,57 +210,109 @@ do_bg:
 	jsr	hgr_copy
 .endif
 
+	lda	#<bg_data
+	sta	ZX0_src
+	lda	#>bg_data
+	sta	ZX0_src+1
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
+
+	jsr	full_decomp
+
 	inc	FRAME
 
 	;==========================
 	; copy over proper boat
 	;==========================
 
+	lda	FRAME
+;	lsr
+;	lsr
+	and	#$3
+	tax
+
+	lda	boat_offsets,X
+	sta	BOAT_OFFSET
+
+
+	lda	boat_sprites_l,X
+	sta	INL
+	lda	boat_sprites_h,X
+	sta	INH
+	lda	#8
+	sta	SPRITE_X
+	lda	#94
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite_big
+
 	;===========================
 	; draw strong bad
 	;===========================
-.if 0
-	lda	FRAME
-	and	#$3
-	bne	no_move_head
 
-	lda	STRONGBAD_X
-	cmp	#21
-	bcs	reverse_head_dir
-	cmp	#12
-	bcs	no_reverse_head_dir
-reverse_head_dir:
-	lda	STRONGBAD_DIR
-	eor	#$FF
-	sta	STRONGBAD_DIR
-	inc	STRONGBAD_DIR
+draw_strong_bad:
 
-no_reverse_head_dir:
+	lda	ANIMATION_TYPE
+	cmp	#ANIMATION_LURE
+	beq	draw_lure_animation
+	cmp	#ANIMATION_JIG
+	beq	draw_jig_animation
 
-	clc
-	lda	STRONGBAD_X
-	adc	STRONGBAD_DIR
-	sta	STRONGBAD_X
-
-no_move_head:
-
-
-
-	;==========================
-	; draw head
-	;===========================
-
-	ldx	HEAD_DAMAGE
-	lda	head_sprites_l,X
+draw_regular_animation:
+	lda	#<sb_sprite
 	sta	INL
-	lda	head_sprites_h,X
+	lda	#>sb_sprite
 	sta	INH
-	lda	STRONGBAD_X
+
+	lda	#23
 	sta	SPRITE_X
-	lda	#36
+	lda	#42
 	sta	SPRITE_Y
+
+	jmp	draw_common_animation
+
+draw_lure_animation:
+	ldx	ANIMATION_COUNT
+	lda	lure_sprites_l,X
+	sta	INL
+	lda	lure_sprites_h,X
+	sta	INH
+
+	lda	#23
+	sta	SPRITE_X
+	lda	#42
+	sta	SPRITE_Y
+	jmp	draw_common_animation
+
+draw_jig_animation:
+	ldx	ANIMATION_COUNT
+	lda	jig_sprites_l,X
+	sta	INL
+	lda	jig_sprites_h,X
+	sta	INH
+
+	lda	#22
+	sta	SPRITE_X
+	lda	#27
+	sta	SPRITE_Y
+
+update_animation:
+	dec	ANIMATION_COUNT
+	bpl	draw_common_animation
+
+	; done
+
+	lda	#ANIMATION_NONE
+	sta	ANIMATION_TYPE
+
+draw_common_animation:
+	lda	SPRITE_Y
+	clc
+	adc	BOAT_OFFSET
+	sta	SPRITE_Y
+
 	jsr	hgr_draw_sprite_big
-.endif
 
 	;==========================
 	; update score?
@@ -308,19 +360,19 @@ done_keyboard_check:
 
 do_jig:
 	jsr	play_boat		; `come on and get in the boat'
-;	lda	PLAYER_X
-;	beq	no_more_left
-;	dec	PLAYER_X
-no_more_gire:
+	lda	#ANIMATION_JIG
+	sta	ANIMATION_TYPE
+	lda	#10
+	sta	ANIMATION_COUNT
+
 	jmp	main_loop
 
 do_lure:
 	jsr	play_fish		; 'fish'
-;	lda	PLAYER_X
-;	cmp	#28			; bge
-;	bcs	no_more_right
-;	inc	PLAYER_X
-no_more_lure:
+	lda	#ANIMATION_LURE
+	sta	ANIMATION_TYPE
+	lda	#10
+	sta	ANIMATION_COUNT
 	jmp	main_loop
 
 	;==========================
@@ -342,9 +394,7 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 	rts
 
-
-.include "asplode_head.s"
-
+.endif
 	;==========
 	; flip page
 	;==========
@@ -365,95 +415,66 @@ done_flip:
 	sta	DRAW_PAGE
 
 	rts
-.endif
+
+boat_sprites_l:
+	.byte <boat2_sprite,<boat1_sprite,<boat3_sprite,<boat1_sprite
+
+boat_sprites_h:
+	.byte >boat2_sprite,>boat1_sprite,>boat3_sprite,>boat1_sprite
+
+	; add to Y to account for boat moving
+	; 1   2   3
+	; 18, 15, 19
+boat_offsets:
+	.byte 0,3,4,3
+
+	; 2 3 2 1 2 3 2 1 2 3 2
+	; c r c l c r c l c r c
+jig_sprites_l:
+	.byte <sb_boat2_sprite,<sb_boat3_sprite
+	.byte <sb_boat2_sprite,<sb_boat1_sprite
+	.byte <sb_boat2_sprite,<sb_boat3_sprite
+	.byte <sb_boat2_sprite,<sb_boat1_sprite
+	.byte <sb_boat2_sprite,<sb_boat3_sprite
+	.byte <sb_boat2_sprite
+jig_sprites_h:
+	.byte >sb_boat2_sprite,>sb_boat3_sprite
+	.byte >sb_boat2_sprite,>sb_boat1_sprite
+	.byte >sb_boat2_sprite,>sb_boat3_sprite
+	.byte >sb_boat2_sprite,>sb_boat1_sprite
+	.byte >sb_boat2_sprite,>sb_boat3_sprite
+	.byte >sb_boat2_sprite
+
+	; 0 1 0 2 0 1 0 2 0 1 0
+	; m u m d m u m d m u m
+lure_sprites_l:
+	.byte <sb_sprite,<sb_fish1_sprite
+	.byte <sb_sprite,<sb_fish2_sprite
+	.byte <sb_sprite,<sb_fish1_sprite
+	.byte <sb_sprite,<sb_fish2_sprite
+	.byte <sb_sprite,<sb_fish1_sprite
+	.byte <sb_sprite
+lure_sprites_h:
+	.byte >sb_sprite,>sb_fish1_sprite
+	.byte >sb_sprite,>sb_fish2_sprite
+	.byte >sb_sprite,>sb_fish1_sprite
+	.byte >sb_sprite,>sb_fish2_sprite
+	.byte >sb_sprite,>sb_fish1_sprite
+	.byte >sb_sprite
 
 
 bg_data:
-;	.incbin "graphics/fish_bg.hgr.zx02"
-	.incbin "graphics/boat2_sb.hgr.zx02"
+	.incbin "graphics/fish_bg.hgr.zx02"
 
-	.include	"hgr_tables.s"
+
 	.include	"zx02_optim.s"
 
+	.include	"hgr_tables.s"
 	.include	"hgr_sprite_big.s"
 	.include	"hgr_copy_fast.s"
 	.include	"audio.s"
 	.include	"play_sounds.s"
 
-;	.include	"asplode_graphics/sb_sprites.inc"
+	.include	"graphics/boat_sprites.inc"
+	.include	"graphics/strongbad_sprites.inc"
 
-.if 0
-shield_sprites_l:
-	.byte <player_sprite,<shield_left_sprite
-	.byte <shield_center_sprite,<shield_right_sprite
-
-shield_sprites_h:
-	.byte >player_sprite,>shield_left_sprite
-	.byte >shield_center_sprite,>shield_right_sprite
-
-
-head_sprites_l:
-	.byte <big_head0_sprite,<big_head1_sprite,<big_head2_sprite
-	.byte <big_head3_sprite,<big_head4_sprite
-
-head_sprites_h:
-	.byte >big_head0_sprite,>big_head1_sprite,>big_head2_sprite
-	.byte >big_head3_sprite,>big_head4_sprite
-
-y_positions:
-; 90 to 160 roughly?  Let's say 64?
-; have 16 positions?  4 each?
-
-; can probably optimize this
-
-bullet_sprite_l:
-.byte  <bullet0_sprite, <bullet1_sprite, <bullet2_sprite, <bullet3_sprite
-.byte  <bullet4_sprite, <bullet5_sprite, <bullet6_sprite, <bullet7_sprite
-.byte  <bullet8_sprite, <bullet9_sprite,<bullet10_sprite,<bullet11_sprite
-.byte <bullet12_sprite,<bullet13_sprite,<bullet14_sprite,<bullet15_sprite
-.byte <bullet_done_sprite
-
-bullet_sprite_h:
-.byte  >bullet0_sprite, >bullet1_sprite, >bullet2_sprite, >bullet3_sprite
-.byte  >bullet4_sprite, >bullet5_sprite, >bullet6_sprite, >bullet7_sprite
-.byte  >bullet8_sprite, >bullet9_sprite,>bullet10_sprite,>bullet11_sprite
-.byte >bullet12_sprite,>bullet13_sprite,>bullet14_sprite,>bullet15_sprite
-.byte >bullet_done_sprite
-
-bullet_sprite_y:
-.byte 83,88,93,98
-.byte 103,108,113,118
-.byte 123,128,133,138
-.byte 143,148,153,158
-.byte 163
-
-bullet_vals:
-.byte $10,$20,$20,$40
-
-bullet_vals_center:
-.byte $20,$00,$00,$20
-
-; original
-; 1 =  6
-; 2 = 12
-; 3 = 18
-; 4 = 25
-; 5 = 32
-; 6 = 38
-; 7 = 44
-; 8 = 50
-; 9 = 57
-; 10= 63
-; 11= 70
-; 12= 77
-; 13= 82
-; 14= 89
-; 15= 95
-; 27= 167 (peak)
-; 30= 148
-; 31= 139
-
-; 9,5 -> 22,14 = 12x9 roughly.  3 times smaller, 4x3?  2x6?
-
-
-.endif
