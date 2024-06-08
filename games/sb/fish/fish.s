@@ -110,11 +110,69 @@ wait_at_tile:
 	;===================
 	; print directions
 	;===================
+	; in the actual game this is overlay ontop of the faded gameplay
+	; that would be a pain so we're not going to do it
 
+	lda	#$0
+	sta	DRAW_PAGE
+
+	jsr	clear_all
+
+	bit	LORES
+	bit	FULLGR
+	bit	SET_TEXT
+	bit	PAGE1
+
+	lda	#<help_text
+	sta	OUTL
+	lda	#>help_text
+	sta	OUTH
+
+	jsr	set_normal		; normal text
+
+	ldx	#9
+print_help:
+	jsr	move_and_print
+	dex
+	bne	print_help
+
+wait_at_directions:
+	lda	KEYPRESS
+	bpl	wait_at_directions
+
+	bit	KEYRESET
 
 	;===================
 	; setup game
 	;===================
+
+;	lda	#0
+;	sta	DRAW_PAGE
+
+
+	jmp	skip_ahead
+
+
+help_text:
+	.byte 0,0,"INSTRUCTIONS:",0
+	.byte 5,3,"- PRESS 'J' TO JIG",0
+	.byte 5,4,"- PRESS 'L' TO LURE",0
+	.byte 5,7,"SOME FISH RESPOND TO LURES,",0
+	.byte 5,8,"OTHERS TO JIGS.",0
+	.byte 5,11,"CATCH MORE FISH FOR MAXIMUM",0
+	.byte 5,12,"FUNTIME!",0
+	.byte 13,20,"PRESS SPACEBAR!",0		; note, flash?
+
+sound_data_fish:
+	.incbin "sounds/fish.btc.zx02"
+sound_data_boat:
+	.incbin "sounds/get_in_boat.btc.zx02"
+
+title_data:
+	.incbin "graphics/fish_title.hgr.zx02"
+
+
+skip_ahead:
 
 	;==========================
 	; Load Background
@@ -140,43 +198,18 @@ load_background:
 
 	;===================
 	; set up variables
-.if 0
-	lda	#16
-	sta	STRONGBAD_X
-	sta	PLAYER_X
 
-	lda	#1
-	sta	STRONGBAD_DIR
-	sta	BULLET_YDIR
 
-	lda	#SHIELD_DOWN
-	sta	SHIELD_POSITION
-	sta	SHIELD_COUNT
+	bit	HIRES
+	bit	FULLGR
+	bit	SET_GR
+	bit	PAGE1
 
-	lda	#0
-	sta	BULLET_X_L
-	sta	BULLET_X_VEL
-	sta	HEAD_DAMAGE
+	; re-set up hgr tables
 
-	lda	#$80
-	sta	BULLET_X_VEL_L
-
-	lda	#20
-	sta	BULLET_X
-	lda	#0
-	sta	BULLET_Y
-
-.endif
-
-	jmp	main_loop
-
-sound_data_fish:
-	.incbin "sounds/fish.btc.zx02"
-sound_data_boat:
-	.incbin "sounds/get_in_boat.btc.zx02"
-
-title_data:
-	.incbin "graphics/fish_title.hgr.zx02"
+	lda	#$20
+	sta	HGR_PAGE
+	jsr	hgr_make_tables
 
 
 
@@ -468,12 +501,15 @@ bg_data:
 
 
 	.include	"zx02_optim.s"
+	.include	"gr_fast_clear.s"
 
 	.include	"hgr_tables.s"
 	.include	"hgr_sprite_big.s"
-	.include	"hgr_copy_fast.s"
+;	.include	"hgr_copy_fast.s"
 	.include	"audio.s"
 	.include	"play_sounds.s"
+	.include	"text_print.s"
+	.include	"gr_offsets.s"
 
 	.include	"graphics/boat_sprites.inc"
 	.include	"graphics/strongbad_sprites.inc"
