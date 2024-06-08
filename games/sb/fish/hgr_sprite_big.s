@@ -3,16 +3,16 @@
 	;===========================================
 	; can handle sprites bigger than a 256 byte page
 
-	; Note this is optimized for blue/orange sprites
+	; Note this version can handle both palettes on odd columns
+
 	;   it treats black0 as transparent
+
+	;   it also tries to auto-shift for even/odd?  but poorly?
 
 	; SPRITE in INL/INH
 	; Location at SPRITE_X SPRITE_Y
 
 	; xsize, ysize  in first two bytes
-
-	; sprite AT INL/INH
-
 
 	; orange = color5  1 101 0101   1 010 1010
 
@@ -98,8 +98,13 @@ big_sprite_ysize_smc:
 	rts
 
 
+	;=======================================
+	; odd
+	;	attempt to adjust colors with shift
+
 
 hgr_draw_sprite_big_odd:
+
 	ldy	#0
 	lda	(INL),Y			; load xsize
 	clc
@@ -120,7 +125,7 @@ hgr_draw_sprite_big_odd:
 	ldx	#0			; X is pointer offset
 	stx	CURRENT_ROW		; actual row
 
-	ldx	#2
+	ldx	#2			; skip size values
 
 ohgr_sprite_yloop:
 
@@ -142,7 +147,8 @@ ohgr_sprite_yloop:
 
 	ldy	SPRITE_X
 
-	clc
+	clc				; assume 0 for start
+
 	php				; store 0 carry on stack
 
 osprite_inner_loop:
@@ -165,10 +171,26 @@ osprite_smc1:
 osprite_not_transparent:
 	plp				; restore carry from last
 osprite_oops:
-	rol				; rotate in carry
+
+	rol				; rotate carry into low bit
+					; rotate palette bit into carry
+
+	bcs	osprite_blue_orange
+osprite_purple_green:
 	asl				; one more time, bit6 in carry
 	php				; save on stack
-	sec				; assume blur/orange
+
+	clc				; assume purple/green
+	bcc	osprite_done_pal	; bra
+
+
+osprite_blue_orange:
+	asl				; one more time, bit6 in carry
+	php				; save on stack
+
+	sec				; assume blue/orange
+
+osprite_done_pal:
 	ror				; rotate it back down
 
 	sta	(GBASL),Y		; store to screen
