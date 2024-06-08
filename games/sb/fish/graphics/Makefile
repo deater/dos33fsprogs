@@ -49,7 +49,7 @@ strongbad_sprites.inc:	strongbad_sprites.png
 	$(HGR_SPRITE) -s -l sb_fish2_sprite strongbad_sprites.png   140  0 195 66 >> strongbad_sprites.inc
 	$(HGR_SPRITE) -s -l sb_boat1_sprite strongbad_sprites.png   0 112 69 192 >> strongbad_sprites.inc
 	$(HGR_SPRITE) -s -l sb_boat2_sprite strongbad_sprites.png   84 112 153 192 >> strongbad_sprites.inc
-	$(HGR_SPRITE) -s -l sb_boat3_sprite strongbad_sprites.png   161 112 230 192 >> strongbad_sprites.inc
+	$(HGR_SPRITE) -s -l sb_boat3_sprite strongbad_sprites.png   168 112 237 192 >> strongbad_sprites.inc
 
 
 
