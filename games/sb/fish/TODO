@@ -1,9 +1,10 @@
++ make spacebar message blink
++ do the ripple marks on either side of the boat
++ do we bother animating the fish?
+
 + Try to make sprites color clash look better
 
 + Add lure animation
-
-+ Add text to title screen
-+ Add help text
 + Add moving fishes
 +
 + Add score to game
