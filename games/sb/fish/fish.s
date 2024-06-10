@@ -513,4 +513,5 @@ bg_data:
 
 	.include	"graphics/boat_sprites.inc"
 	.include	"graphics/strongbad_sprites.inc"
+	.include	"graphics/fish_sprites.inc"
 

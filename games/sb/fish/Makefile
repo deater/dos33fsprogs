@@ -16,6 +16,7 @@ fish.o:	fish.s zx02_optim.s \
 		graphics/fish_bg.hgr.zx02 \
 		graphics/boat_sprites.inc \
 		graphics/strongbad_sprites.inc \
+		graphics/fish_sprites.inc \
 		sounds/fish.btc.zx02 \
 		sounds/get_in_boat.btc.zx02 \
 		hgr_sprite_big.s \
