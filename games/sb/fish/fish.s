@@ -354,6 +354,27 @@ draw_common_animation:
 	;============================
 	; draw fish
 
+	lda	#<left_fish_sprite
+	sta	INL
+	lda	#>left_fish_sprite
+	sta	INH
+
+	lda	#<grey_fish_mask
+	sta	MASKL
+	lda	#>grey_fish_mask
+	sta	MASKH
+
+
+	lda	#18
+	sta	SPRITE_X
+
+	lda	#150
+	sta	SPRITE_Y
+
+	jsr	hgr_draw_sprite_mask
+
+
+
 	;============================
 	; draw reed (over fish)
 
