@@ -137,11 +137,13 @@ CURRENT_DISK	= $DC
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
 
+SCORE_L		= $E0
+SCORE_H		= $E1
 
-D1_SCORE	= $E0
-D1_SCORE_H	= $E1
-D2_SCORE	= $E2
-D2_SCORE_H	= $E3
+;D1_SCORE	= $E0
+;D1_SCORE_H	= $E1
+;D2_SCORE	= $E2
+;D2_SCORE_H	= $E3
 
 D1_STATE	= $E4
 	DUCK_MISSING	= $00

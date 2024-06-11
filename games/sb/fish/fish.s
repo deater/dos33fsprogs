@@ -216,6 +216,12 @@ load_background:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
+	; testing
+	lda	#$12
+	sta	SCORE_L
+	lda	#$78
+	sta	SCORE_H
+
 
 
 	; start at least 8k in?
@@ -229,24 +235,16 @@ main_loop:
 
 	jsr	flip_page
 
-.if 0
 
 	;========================
-	; copy over background
 	;========================
-reset_loop:
+	; draw the scene
+	;========================
+	;========================
 
-	lda	FRAME
-	and	#$2
-	beq	odd_bg
-even_bg:
-	lda	#$A0
-	bne	do_bg
-odd_bg:
-	lda	#$80
-do_bg:
-	jsr	hgr_copy
-.endif
+
+	;==================================
+	; copy over (erase) old background
 
 	lda	#<bg_data
 	sta	ZX0_src
@@ -262,8 +260,7 @@ do_bg:
 	inc	FRAME
 
 	;==========================
-	; copy over proper boat
-	;==========================
+	; draw boat
 
 	lda	FRAME
 ;	lsr
@@ -286,8 +283,10 @@ do_bg:
 	jsr	hgr_draw_sprite_big
 
 	;===========================
-	; draw strong bad
+	; draw ripples
+
 	;===========================
+	; draw strong bad
 
 draw_strong_bad:
 
@@ -352,14 +351,19 @@ draw_common_animation:
 
 	jsr	hgr_draw_sprite_big
 
-	;==========================
-	; update score?
-	;===========================
-
-
 	;============================
 	; draw fish
+
 	;============================
+	; draw reed (over fish)
+
+	;==========================
+	; draw score
+
+	jsr	draw_score
+
+
+
 
 	;============================
 	; play sound
@@ -402,6 +406,9 @@ do_jig:
 	sta	ANIMATION_TYPE
 	lda	#10
 	sta	ANIMATION_COUNT
+
+	ldx	#0
+	jsr	update_score
 
 	jmp	main_loop
 
@@ -454,6 +461,83 @@ done_flip:
 
 	rts
 
+
+	;===================================
+	; draw score
+	;===================================
+	; score is at 6,7,8,9,10.  10 is always 0
+draw_score:
+	lda	SCORE_L
+	and	#$f
+	tax
+	lda	#9
+	jsr	actual_draw_score
+
+	lda	SCORE_L
+	lsr
+	lsr
+	lsr
+	lsr
+	tax
+	lda	#8
+	jsr	actual_draw_score
+
+	lda	SCORE_H
+	and	#$f
+	tax
+	lda	#7
+	jsr	actual_draw_score
+
+	lda	SCORE_H
+	lsr
+	lsr
+	lsr
+	lsr
+	tax
+	lda	#6
+
+;	jsr	actual_draw_score
+;	rts
+
+
+actual_draw_score:
+	sta	SPRITE_X
+
+	lda	numbers_l,X
+	sta	INL
+	lda	numbers_h,X
+	sta	INH
+
+	lda	#177
+	sta	SPRITE_Y
+
+	jmp	hgr_draw_sprite
+
+;	rts
+
+
+	;====================================
+	; update score
+	;====================================
+	; offset of update value in X
+	; score is BCD and in SCORE_H,SCORE_L
+update_score:
+	sed
+	lda	score_values,X
+	clc
+	adc	SCORE_L
+	sta	SCORE_L
+	lda	#0
+	adc	SCORE_H
+	sta	SCORE_H
+	cld
+	rts
+
+score_values:
+	;       50  100  400  500
+	.byte $05, $10, $40, $50
+
+
 boat_sprites_l:
 	.byte <boat2_sprite,<boat1_sprite,<boat3_sprite,<boat1_sprite
 
@@ -500,6 +584,18 @@ lure_sprites_h:
 	.byte >sb_sprite,>sb_fish1_sprite
 	.byte >sb_sprite
 
+numbers_h:
+	.byte >zero_sprite,>one_sprite,>two_sprite
+	.byte >three_sprite,>four_sprite,>five_sprite
+	.byte >six_sprite,>seven_sprite,>eight_sprite
+	.byte >nine_sprite
+
+numbers_l:
+	.byte <zero_sprite,<one_sprite,<two_sprite
+	.byte <three_sprite,<four_sprite,<five_sprite
+	.byte <six_sprite,<seven_sprite,<eight_sprite
+	.byte <nine_sprite
+
 
 bg_data:
 	.incbin "graphics/fish_bg.hgr.zx02"
@@ -510,6 +606,10 @@ bg_data:
 
 	.include	"hgr_tables.s"
 	.include	"hgr_sprite_big.s"
+	.include	"hgr_sprite_mask.s"
+	.include	"hgr_sprite.s"
+
+
 ;	.include	"hgr_copy_fast.s"
 	.include	"audio.s"
 	.include	"play_sounds.s"
