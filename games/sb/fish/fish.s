@@ -18,9 +18,11 @@
 
 
 ; NOTES
-;	page1= $2000-$5fff
-;	code = $6000-$bfff
-
+;	hgr page1= $2000-$3fff
+;	hgr page2= $4000-$5fff
+;	code     = $4000-$bfff
+;		note we have to be done with the code in page2 before
+;		we over-write it by playing the game
 
 div7_table     = $400
 mod7_table     = $500
@@ -130,11 +132,14 @@ wait_at_tile:
 
 	jsr	set_normal		; normal text
 
-	ldx	#9
+	ldx	#7
 print_help:
 	jsr	move_and_print
 	dex
 	bne	print_help
+
+	jsr	set_flash		; have the "press spacebar" flash
+	jsr	move_and_print
 
 wait_at_directions:
 	lda	KEYPRESS

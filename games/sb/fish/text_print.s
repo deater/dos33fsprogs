@@ -60,24 +60,35 @@ done_print_string:
 
 	rts
 
-	; set normal text
+	; set normal text ($80-$ff)
 set_normal:
 	lda	#$80
 	sta	ps_smc1+1
 
-	lda	#09             ; ora
+	lda	#$09		; ora
 	sta	ps_smc1
 
 	rts
 
-	; restore inverse text
+	; restore inverse text ($00-$3f)
 set_inverse:
-	lda	#$29
+	lda	#$29		; and
 	sta	ps_smc1
 	lda	#$3f
 	sta	ps_smc1+1
 
 	rts
+
+	; set flashing text ($40-$7f)
+set_flash:
+	lda	#$40
+	sta	ps_smc1+1
+
+	lda	#$09		; ora
+	sta	ps_smc1
+
+	rts
+
 
 
 	;================================
