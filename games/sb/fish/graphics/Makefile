@@ -55,11 +55,11 @@ strongbad_sprites.inc:	strongbad_sprites.png
 
 fish_sprites.inc:	fish_sprites.png
 	$(HGR_SPRITE) -s -l grey_fish_sprite  fish_sprites.png   0   0  20  7 > fish_sprites.inc
-	$(HGR_SPRITE) -s -l red_fish_sprite   fish_sprites.png   0   9  20 16 >> fish_sprites.inc
-	$(HGR_SPRITE) -s -l green_fish_sprite fish_sprites.png   0  18  27 25 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l green_fish_sprite fish_sprites.png   0   9  20 16 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l red_fish_sprite   fish_sprites.png   0  18  27 25 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l grey_fish_mask    fish_sprites.png   42 29  62 36 >> fish_sprites.inc
-	$(HGR_SPRITE) -s -l red_fish_mask     fish_sprites.png   42 38  62 45 >> fish_sprites.inc
-	$(HGR_SPRITE) -s -l green_fish_mask   fish_sprites.png   42 47  69 54 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l green_fish_mask   fish_sprites.png   42 38  62 45 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l red_fish_mask     fish_sprites.png   42 47  69 54 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l left_fish_sprite  fish_sprites.png   0  29  20 36 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l right_fish_sprite fish_sprites.png   0  38  20 45 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l big_fish_sprite   fish_sprites.png   0  47  27 54 >> fish_sprites.inc
