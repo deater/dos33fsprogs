@@ -222,10 +222,10 @@ load_background:
 	sta	SCORE_H
 
 	; init fish
-	lda	#$FF
-	sta	RED_FISH_STATE
-	sta	GREY_FISH_STATE
-	sta	GREEN_FISH_STATE
+	lda	#FISH_NONE
+	sta	RED_FISH_STATE_PTR
+	sta	GREY_FISH_STATE_PTR
+	sta	GREEN_FISH_STATE_PTR
 
 
 	; start at least 8k in?
@@ -363,12 +363,17 @@ draw_common_animation:
 handle_fish:
 
 handle_red_fish:
-	lda	RED_FISH_STATE
+	lda	RED_FISH_STATE_PTR
 	bpl	done_handle_fish	; positive means fish is active
 
 	; create new red fish
 	lda	#0
-	sta	RED_FISH_STATE
+	sta	RED_FISH_STATE_PTR
+
+	lda	#17
+	sta	RED_FISH_X
+	lda	#180
+	sta	RED_FISH_Y
 
 done_handle_fish:
 
@@ -376,51 +381,17 @@ done_handle_fish:
 	; draw red fish
 
 draw_red_fish:
-	ldx	RED_FISH_STATE
+
+	ldx	RED_FISH_STATE_PTR
 	bmi	draw_grey_fish		; negative means no fish
 
-	lda	#<big_fish_sprite
-	sta	INL
-	lda	#>big_fish_sprite
-	sta	INH
+	ldy	red_fish_behavior,X
 
-	lda	#<red_fish_mask
-	sta	MASKL
-	lda	#>red_fish_mask
-	sta	MASKH
+	ldx	#0			; which fish
 
-	lda	red_fish_x,X
-	sta	SPRITE_X
-
-	lda	red_fish_y,X
-	bne	red_fish_still_good
-
-	; red fish done
-
-	lda	#$ff			; disable fish
-	sta	RED_FISH_STATE
-	bmi	done_draw_red_fish	; bra
-
-
-red_fish_still_good:
-	sta	SPRITE_Y
-
-	jsr	hgr_draw_sprite_mask
-
-	inc	RED_FISH_STATE
-
-done_draw_red_fish:
-
-; red fish
-;  120,183? (bottom)
-;	u 14? to maybe 160?  pause 5?
-;	r 8?  blow bubble?   pause 8?
-;	r quickly through reeds, off screen
-;
+	jsr	draw_fish
 
 draw_grey_fish:
-
-draw_green_fish:
 
 .if 0
 
@@ -629,6 +600,97 @@ score_values:
 	.byte $05, $10, $40, $50
 
 
+	;============================
+	;============================
+	; draw_fish
+	;============================
+	;============================
+	; X=which fish
+	; Y=current fish behavior
+
+draw_fish:
+
+	; update fish state, use jump table
+update_fish:
+	lda	fish_state_dest_h,Y
+	pha
+	lda	fish_state_dest_l,Y
+	pha
+	rts
+done_update_fish:
+	inc	RED_FISH_STATE_PTR,X	; point to next
+
+	; set up sprite
+
+	lda	#<big_fish_sprite
+	sta	INL
+	lda	#>big_fish_sprite
+	sta	INH
+
+	; set up mask
+
+	lda	#<red_fish_mask
+	sta	MASKL
+	lda	#>red_fish_mask
+	sta	MASKH
+
+	lda	RED_FISH_X,X
+	sta	SPRITE_X
+
+	lda	RED_FISH_Y,X
+	sta	SPRITE_Y
+
+	jsr	hgr_draw_sprite_mask
+
+	inc	RED_FISH_STATE_PTR,X
+
+no_draw_fish:
+	rts
+
+fish_state_dest_l:
+	.byte <(move_fish_pause-1),<(move_fish_up-1),<(move_fish_bubble-1)
+	.byte <(move_fish_right-1),<(move_fish_fast_right-1)
+	.byte <(move_fish_left_up-1),<(move_fish_left_down-1)
+	.byte <(move_fish_flip-1)
+	.byte <(move_fish_done-1)
+
+fish_state_dest_h:
+	.byte >(move_fish_pause-1),>(move_fish_up-1),>(move_fish_bubble-1)
+	.byte >(move_fish_right-1),>(move_fish_fast_right-1)
+	.byte >(move_fish_left_up-1),>(move_fish_left_down-1)
+	.byte >(move_fish_flip-1)
+	.byte >(move_fish_done-1)
+
+move_fish_done:
+	lda	#FISH_NONE		; disable fish
+	sta	RED_FISH_STATE_PTR,X
+	jmp	no_draw_fish
+
+move_fish_up:
+	dec	RED_FISH_Y,X		; move up by two
+	dec	RED_FISH_Y,X
+	jmp	done_update_fish
+
+move_fish_right:
+	inc	RED_FISH_X,X
+	jmp	done_update_fish
+
+
+move_fish_fast_right:
+move_fish_left_up:
+move_fish_left_down:
+move_fish_bubble:
+move_fish_flip:
+move_fish_pause:
+	jmp	done_update_fish
+
+
+
+
+
+
+
+
 boat_sprites_l:
 	.byte <boat2_sprite,<boat1_sprite,<boat3_sprite,<boat1_sprite
 
@@ -722,12 +784,27 @@ bg_data:
 ;	r quickly through reeds, off screen
 ;
 
-red_fish_x:
-	.byte 17
-	.byte 17,17,17,17,17,17,17,17,17,17,17,17,17,17
-red_fish_y:
-	.byte 184
-	.byte 182,180,178,176,174,172,170,168,166,164,162,160,158,156,0
+red_fish_behavior:
+	; up 14
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP
+	; pause 5
+	.byte FISH_PAUSE,FISH_PAUSE,FISH_PAUSE,FISH_PAUSE,FISH_PAUSE
+	; slow right 4
+	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
+	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
+	; bubble
+	.byte FISH_BUBBLE
+	; pause 8
+	.byte FISH_PAUSE,FISH_PAUSE,FISH_PAUSE,FISH_PAUSE
+	.byte FISH_PAUSE,FISH_PAUSE,FISH_PAUSE,FISH_PAUSE
+	; fast right 12
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_DONE
 
 ; left fish, (grey) appears in reeds
 ;	218,170 or so
