@@ -216,12 +216,16 @@ load_background:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-	; testing
-	lda	#$12
+	; init score
+	lda	#$00
 	sta	SCORE_L
-	lda	#$78
 	sta	SCORE_H
 
+	; init fish
+	lda	#$FF
+	sta	RED_FISH_STATE
+	sta	GREY_FISH_STATE
+	sta	GREEN_FISH_STATE
 
 
 	; start at least 8k in?
@@ -352,7 +356,73 @@ draw_common_animation:
 	jsr	hgr_draw_sprite_big
 
 	;============================
-	; draw fish
+	; handle fish
+	;============================
+
+	; TODO: if fish not out, randomly start one?
+handle_fish:
+
+handle_red_fish:
+	lda	RED_FISH_STATE
+	bpl	done_handle_fish	; positive means fish is active
+
+	; create new red fish
+	lda	#0
+	sta	RED_FISH_STATE
+
+done_handle_fish:
+
+
+	; draw red fish
+
+draw_red_fish:
+	ldx	RED_FISH_STATE
+	bmi	draw_grey_fish		; negative means no fish
+
+	lda	#<big_fish_sprite
+	sta	INL
+	lda	#>big_fish_sprite
+	sta	INH
+
+	lda	#<red_fish_mask
+	sta	MASKL
+	lda	#>red_fish_mask
+	sta	MASKH
+
+	lda	red_fish_x,X
+	sta	SPRITE_X
+
+	lda	red_fish_y,X
+	bne	red_fish_still_good
+
+	; red fish done
+
+	lda	#$ff			; disable fish
+	sta	RED_FISH_STATE
+	bmi	done_draw_red_fish	; bra
+
+
+red_fish_still_good:
+	sta	SPRITE_Y
+
+	jsr	hgr_draw_sprite_mask
+
+	inc	RED_FISH_STATE
+
+done_draw_red_fish:
+
+; red fish
+;  120,183? (bottom)
+;	u 14? to maybe 160?  pause 5?
+;	r 8?  blow bubble?   pause 8?
+;	r quickly through reeds, off screen
+;
+
+draw_grey_fish:
+
+draw_green_fish:
+
+.if 0
 
 	lda	#<left_fish_sprite
 	sta	INL
@@ -372,7 +442,7 @@ draw_common_animation:
 	sta	SPRITE_Y
 
 	jsr	hgr_draw_sprite_mask
-
+.endif
 
 
 	;============================
@@ -605,11 +675,6 @@ lure_sprites_h:
 	.byte >sb_sprite,>sb_fish1_sprite
 	.byte >sb_sprite
 
-numbers_h:
-	.byte >zero_sprite,>one_sprite,>two_sprite
-	.byte >three_sprite,>four_sprite,>five_sprite
-	.byte >six_sprite,>seven_sprite,>eight_sprite
-	.byte >nine_sprite
 
 numbers_l:
 	.byte <zero_sprite,<one_sprite,<two_sprite
@@ -617,6 +682,11 @@ numbers_l:
 	.byte <six_sprite,<seven_sprite,<eight_sprite
 	.byte <nine_sprite
 
+numbers_h:
+	.byte >zero_sprite,>one_sprite,>two_sprite
+	.byte >three_sprite,>four_sprite,>five_sprite
+	.byte >six_sprite,>seven_sprite,>eight_sprite
+	.byte >nine_sprite
 
 bg_data:
 	.incbin "graphics/fish_bg.hgr.zx02"
@@ -651,6 +721,13 @@ bg_data:
 ;	r 8?  blow bubble?   pause 8?
 ;	r quickly through reeds, off screen
 ;
+
+red_fish_x:
+	.byte 17
+	.byte 17,17,17,17,17,17,17,17,17,17,17,17,17,17
+red_fish_y:
+	.byte 184
+	.byte 182,180,178,176,174,172,170,168,166,164,162,160,158,156,0
 
 ; left fish, (grey) appears in reeds
 ;	218,170 or so

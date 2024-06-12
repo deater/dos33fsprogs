@@ -63,7 +63,7 @@ fish_sprites.inc:	fish_sprites.png
 	$(HGR_SPRITE) -s -l left_fish_sprite  fish_sprites.png   0  29  20 36 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l right_fish_sprite fish_sprites.png   0  38  20 45 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l big_fish_sprite   fish_sprites.png   0  47  27 54 >> fish_sprites.inc
-	$(HGR_SPRITE) -s -l zero_sprite  fish_sprites.png   0  0  6 79 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l zero_sprite  fish_sprites.png   0 72  6 79 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l one_sprite   fish_sprites.png  14 72 20 79 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l two_sprite   fish_sprites.png  28 72 34 79 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l three_sprite fish_sprites.png  42 72 48 79 >> fish_sprites.inc
