@@ -641,3 +641,29 @@ bg_data:
 	.include	"graphics/strongbad_sprites.inc"
 	.include	"graphics/fish_sprites.inc"
 
+
+
+; Fish behavior
+
+; red fish
+;  120,183? (bottom)
+;	u 14? to maybe 160?  pause 5?
+;	r 8?  blow bubble?   pause 8?
+;	r quickly through reeds, off screen
+;
+
+; left fish, (grey) appears in reeds
+;	218,170 or so
+;	left 8 to center of boat gradually up, blows bubble
+;	left 12, gradually down, blow bubble
+;	3 frames to turn right
+;	5 frames right (center of boat) blows bubble
+;	15 frames to move off right side
+
+; right fish (green) appears in left reeds approx 76, 146
+; 	blows bubble
+;	right 12 off screen
+
+; bubbles
+;	go medium/large/medium
+;	some go mostly up, some wiggle left right
