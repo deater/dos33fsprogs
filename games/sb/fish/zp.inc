@@ -38,11 +38,12 @@ INSTRUMENT1    =       $09
 INSTRUMENT2    =       $1D
 MADDRL         =       $1E
 MADDRH         =       $1F
-LOC4E          =       $4E
-COUNT256       =       $4F
+;LOC4E          =       $4E
+;COUNT256       =       $4F
 WHICH_PAGE     =       $50
 
-
+SEEDL		= $4E
+SEEDH		= $4F
 
 ; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
 ; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 

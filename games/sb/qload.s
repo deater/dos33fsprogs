@@ -186,7 +186,7 @@ sector_array:
 
 length_array:
         .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  32, 90, 32, 24	; ?,      FISH,  RAT,  BACK_OFF
+	.byte  32, 92, 32, 24	; ?,      FISH,  RAT,  BACK_OFF
 
 
 qload_end:

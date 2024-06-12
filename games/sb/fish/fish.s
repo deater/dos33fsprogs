@@ -289,6 +289,38 @@ main_loop:
 
 	;===========================
 	; draw ripples
+	;	should we do this last?
+
+	lda	FRAME
+	and	#$3
+	tax
+
+	lda	ripple_l_sprites_l,X
+	sta	INL
+	lda	ripple_l_sprites_h,X
+	sta	INH
+
+	lda	#8
+	sta	SPRITE_X
+	lda	#136
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite
+
+	lda	FRAME
+	and	#$3
+	tax
+
+	lda	ripple_r_sprites_l,X
+	sta	INL
+	lda	ripple_r_sprites_h,X
+	sta	INH
+
+	lda	#32
+	sta	SPRITE_X
+	lda	#139
+	sta	SPRITE_Y
+	jsr	hgr_draw_sprite
+
 
 	;===========================
 	; draw strong bad
@@ -896,6 +928,7 @@ bg_data:
 	.include	"play_sounds.s"
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
+	.include	"random16.s"
 
 	.include	"graphics/boat_sprites.inc"
 	.include	"graphics/strongbad_sprites.inc"
@@ -1012,4 +1045,14 @@ bubble_mask_table_h:
 	.byte >med1_bubble_mask,>med1_bubble_mask
 	.byte >big_bubble_mask,>big_bubble_mask
 	.byte >med2_bubble_mask,>med2_bubble_mask
+
+ripple_l_sprites_l:
+	.byte <ripple_l1_sprite,<ripple_l2_sprite,<ripple_l3_sprite,<ripple_none_sprite
+ripple_l_sprites_h:
+	.byte >ripple_l1_sprite,>ripple_l2_sprite,>ripple_l3_sprite,>ripple_none_sprite
+
+ripple_r_sprites_l:
+	.byte <ripple_r1_sprite,<ripple_r2_sprite,<ripple_r3_sprite,<ripple_none_sprite
+ripple_r_sprites_h:
+	.byte >ripple_r1_sprite,>ripple_r2_sprite,>ripple_r3_sprite,>ripple_none_sprite
 

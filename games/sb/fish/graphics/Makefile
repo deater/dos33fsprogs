@@ -40,6 +40,13 @@ boat_sprites.inc:	boat_sprites.png
 	$(HGR_SPRITE) -s -l boat1_sprite boat_sprites.png   0  0 188 45 > boat_sprites.inc
 	$(HGR_SPRITE) -s -l boat2_sprite boat_sprites.png   0  46 188 91 >> boat_sprites.inc
 	$(HGR_SPRITE) -s -l boat3_sprite boat_sprites.png   0  92 188 137 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_l1_sprite boat_sprites.png   0 142 13 146 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_l2_sprite boat_sprites.png   0 156 13 160 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_l3_sprite boat_sprites.png   0 171 13 175 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_r1_sprite boat_sprites.png 168 144 181 148 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_r2_sprite boat_sprites.png 168 159 181 163 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_r3_sprite boat_sprites.png 168 174 181 178 >> boat_sprites.inc
+	$(HGR_SPRITE) -s -l ripple_none_sprite boat_sprites.png 0 168 6 169 >> boat_sprites.inc
 
 ####
 
@@ -82,12 +89,6 @@ fish_sprites.inc:	fish_sprites.png
 	$(HGR_SPRITE) -s -l med1_bubble_mask fish_sprites.png  0 105 6 107 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l big_bubble_mask  fish_sprites.png  0 101 6 104 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l med2_bubble_mask fish_sprites.png  0 108 6 110 >> fish_sprites.inc
-
-
-
-
-
-
 
 ####
 
