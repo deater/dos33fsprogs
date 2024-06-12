@@ -1,13 +1,11 @@
-+ make spacebar message blink
-+ do the ripple marks on either side of the boat
-+ do we bother animating the fish?
-
++ Do we bother having multiple frames for the fish (animate them slightly)
 + Try to make sprites color clash look better
 
 + Add lure animation
-+ Add moving fishes
-+
-+ Add score to game
 
 + Compress sprites?
+
++ speed up and rebalance
+
++ fix odd/even for sprites
 

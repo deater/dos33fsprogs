@@ -403,11 +403,12 @@ handle_fish:
 
 handle_red_fish:
 	lda	RED_FISH_STATE_PTR
-	bpl	handle_grey_fish	; positive means fish is active
+	cmp	#$ff
+	bne	handle_grey_fish	; #$ff means fish is not active
 
 	; create new red/big fish
-;	lda	#0
-;	sta	RED_FISH_STATE_PTR
+	lda	#0
+	sta	RED_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LONG
 	sta	RED_FISH_SPRITE
@@ -419,11 +420,12 @@ handle_red_fish:
 
 handle_grey_fish:
 	lda	GREY_FISH_STATE_PTR
-	bpl	handle_green_fish	; positive means fish is active
+	cmp	#$ff
+	bne	handle_green_fish	; $FF means fish is not active
 
 	; create new grey/left fish
-	lda	#0
-	sta	GREY_FISH_STATE_PTR
+;	lda	#0
+;	sta	GREY_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LEFT
 	sta	GREY_FISH_SPRITE
@@ -435,7 +437,8 @@ handle_grey_fish:
 
 handle_green_fish:
 	lda	GREEN_FISH_STATE_PTR
-	bpl	done_handle_fish	; positive means fish is active
+	cmp	#$FF
+	bne	done_handle_fish	; $FF means fish is not active
 
 	; create new green/right fish
 ;	lda	#0
@@ -457,7 +460,8 @@ done_handle_fish:
 draw_red_fish:
 
 	ldx	RED_FISH_STATE_PTR
-	bmi	draw_grey_fish		; negative means no fish
+	cpx	#$FF
+	beq	draw_grey_fish		; $FF means no fish
 
 	ldy	red_fish_behavior,X
 
@@ -468,7 +472,8 @@ draw_red_fish:
 draw_grey_fish:
 
 	ldx	GREY_FISH_STATE_PTR	; negative means no fish
-	bmi	draw_green_fish
+	cpx	#$FF
+	beq	draw_green_fish
 
 	ldy	grey_fish_behavior,X
 
@@ -479,7 +484,8 @@ draw_grey_fish:
 draw_green_fish:
 
 	ldx	GREEN_FISH_STATE_PTR	; negative means no fish
-	bmi	done_draw_fish
+	cmp	#$ff
+	beq	done_draw_fish
 
 	ldy	green_fish_behavior,X
 
@@ -598,7 +604,13 @@ do_jig:
 
 	; FIXME: make fish visible
 
+	ldx	#FISH_SPRITE_RED
+	stx	RED_FISH_SPRITE
+
 	; FIXME: start fish on catch path
+
+	lda	#<(catch_fish_behavior-red_fish_behavior)
+	sta	RED_FISH_STATE_PTR
 
 	; FIXME: update proper score
 
@@ -844,6 +856,7 @@ move_fish_bubble:
 	sta	BUBBLE_STATE_PTR
 	lda	RED_FISH_X,X
 	sta	BUBBLE_X
+	inc	BUBBLE_X	; more likely to be from head
 	lda	RED_FISH_Y,X
 	sta	BUBBLE_Y
 	jmp	done_update_fish
@@ -1045,9 +1058,9 @@ green_fish_behavior:
 catch_fish_behavior:
 	; up+to right 20 times?
 	; then down+right 5 times?
-	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
-	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
-	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
+	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
 
 	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
 	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
