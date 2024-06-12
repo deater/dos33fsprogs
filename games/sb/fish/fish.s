@@ -585,6 +585,8 @@ done_keyboard_check:
 	jmp	main_loop
 
 
+	;======================
+	; "get in boat"/jig
 do_jig:
 	jsr	play_boat		; `come on and get in the boat'
 	lda	#ANIMATION_JIG
@@ -592,11 +594,21 @@ do_jig:
 	lda	#10
 	sta	ANIMATION_COUNT
 
+	; FIXME: see if valid fish
+
+	; FIXME: make fish visible
+
+	; FIXME: start fish on catch path
+
+	; FIXME: update proper score
+
 	ldx	#0
 	jsr	update_score
 
 	jmp	main_loop
 
+	;======================
+	; "fish fish"/lure
 do_lure:
 	jsr	play_fish		; 'fish'
 	lda	#ANIMATION_LURE
@@ -781,6 +793,7 @@ fish_state_dest_l:
 	.byte <(move_fish_left_up-1),<(move_fish_left_down-1)
 	.byte <(move_fish_flip-1)
 	.byte <(move_fish_done-1)
+	.byte <(move_fish_catch_up-1),<(move_fish_catch_down-1)
 
 fish_state_dest_h:
 	.byte >(move_fish_pause-1),>(move_fish_up-1),>(move_fish_bubble-1)
@@ -788,17 +801,23 @@ fish_state_dest_h:
 	.byte >(move_fish_left_up-1),>(move_fish_left_down-1)
 	.byte >(move_fish_flip-1)
 	.byte >(move_fish_done-1)
+	.byte >(move_fish_catch_up-1),>(move_fish_catch_down-1)
 
 move_fish_done:
 	lda	#FISH_NONE		; disable fish
 	sta	RED_FISH_STATE_PTR,X
 	jmp	no_draw_fish
 
+move_fish_catch_up:
+	inc	RED_FISH_X,X		; move right
 move_fish_up:
 	dec	RED_FISH_Y,X		; move up by two
 	dec	RED_FISH_Y,X
 	jmp	done_update_fish
 
+move_fish_catch_down:
+	inc	RED_FISH_Y,X		; move down by two
+	inc	RED_FISH_Y,X
 move_fish_right:
 	inc	RED_FISH_X,X		; move right
 	jmp	done_update_fish
@@ -1021,6 +1040,21 @@ green_fish_behavior:
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_DONE
+
+
+catch_fish_behavior:
+	; up+to right 20 times?
+	; then down+right 5 times?
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP,FISH_CATCH_UP
+
+	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
+	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
+	.byte FISH_DONE
+
+
+
 
 ; bubbles
 ;	go medium/large/medium
