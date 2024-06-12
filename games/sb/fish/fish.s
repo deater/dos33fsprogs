@@ -372,9 +372,9 @@ handle_red_fish:
 	lda	RED_FISH_STATE_PTR
 	bpl	handle_grey_fish	; positive means fish is active
 
-	; create new red fish
-	lda	#0
-	sta	RED_FISH_STATE_PTR
+	; create new red/big fish
+;	lda	#0
+;	sta	RED_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LONG
 	sta	RED_FISH_SPRITE
@@ -388,9 +388,9 @@ handle_grey_fish:
 	lda	GREY_FISH_STATE_PTR
 	bpl	handle_green_fish	; positive means fish is active
 
-	; create new grey fish
-;	lda	#0
-;	sta	GREY_FISH_STATE_PTR
+	; create new grey/left fish
+	lda	#0
+	sta	GREY_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LEFT
 	sta	GREY_FISH_SPRITE
@@ -404,7 +404,7 @@ handle_green_fish:
 	lda	GREEN_FISH_STATE_PTR
 	bpl	done_handle_fish	; positive means fish is active
 
-	; create new green fish
+	; create new green/right fish
 ;	lda	#0
 ;	sta	GREEN_FISH_STATE_PTR
 
@@ -672,7 +672,8 @@ done_update_fish:
 
 	; set up sprite
 
-	ldx	#0
+	lda	RED_FISH_SPRITE,X
+	tax
 
 	lda	fish_sprite_table_l,X
 	sta	INL
@@ -751,10 +752,10 @@ fish_sprite_table_h:
 	.byte >big_fish_sprite,>left_fish_sprite,>right_fish_sprite
 	.byte >red_fish_sprite,>grey_fish_sprite,>green_fish_sprite
 fish_mask_table_l:
-	.byte <red_fish_mask,<grey_fish_mask,<green_fish_mask
+	.byte <big_fish_mask,<left_fish_mask,<right_fish_mask
 	.byte <red_fish_mask,<grey_fish_mask,<green_fish_mask
 fish_mask_table_h:
-	.byte >red_fish_mask,>grey_fish_mask,>green_fish_mask
+	.byte >big_fish_mask,>left_fish_mask,>right_fish_mask
 	.byte >red_fish_mask,>grey_fish_mask,>green_fish_mask
 
 
