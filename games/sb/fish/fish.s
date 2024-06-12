@@ -356,24 +356,65 @@ draw_common_animation:
 	jsr	hgr_draw_sprite_big
 
 	;============================
+	;============================
 	; handle fish
 	;============================
+	;============================
 
+
+	;============================
+	; deploy fish
+	;============================
 	; TODO: if fish not out, randomly start one?
 handle_fish:
 
 handle_red_fish:
 	lda	RED_FISH_STATE_PTR
-	bpl	done_handle_fish	; positive means fish is active
+	bpl	handle_grey_fish	; positive means fish is active
 
 	; create new red fish
 	lda	#0
 	sta	RED_FISH_STATE_PTR
 
+	lda	#FISH_SPRITE_LONG
+	sta	RED_FISH_SPRITE
+
 	lda	#17
 	sta	RED_FISH_X
 	lda	#180
 	sta	RED_FISH_Y
+
+handle_grey_fish:
+	lda	GREY_FISH_STATE_PTR
+	bpl	handle_green_fish	; positive means fish is active
+
+	; create new grey fish
+;	lda	#0
+;	sta	GREY_FISH_STATE_PTR
+
+	lda	#FISH_SPRITE_LEFT
+	sta	GREY_FISH_SPRITE
+
+	lda	#31
+	sta	GREY_FISH_X
+	lda	#170
+	sta	GREY_FISH_Y
+
+handle_green_fish:
+	lda	GREEN_FISH_STATE_PTR
+	bpl	done_handle_fish	; positive means fish is active
+
+	; create new green fish
+;	lda	#0
+;	sta	GREEN_FISH_STATE_PTR
+
+	lda	#FISH_SPRITE_RIGHT
+	sta	GREEN_FISH_SPRITE
+
+	lda	#11
+	sta	GREEN_FISH_X
+	lda	#146
+	sta	GREEN_FISH_Y
 
 done_handle_fish:
 
@@ -393,31 +434,30 @@ draw_red_fish:
 
 draw_grey_fish:
 
-.if 0
+	ldx	GREY_FISH_STATE_PTR	; negative means no fish
+	bmi	draw_green_fish
 
-	lda	#<left_fish_sprite
-	sta	INL
-	lda	#>left_fish_sprite
-	sta	INH
+	ldy	grey_fish_behavior,X
 
-	lda	#<grey_fish_mask
-	sta	MASKL
-	lda	#>grey_fish_mask
-	sta	MASKH
+	ldx	#1			; which fish
 
+	jsr	draw_fish
 
-	lda	#18
-	sta	SPRITE_X
+draw_green_fish:
 
-	lda	#150
-	sta	SPRITE_Y
+	ldx	GREEN_FISH_STATE_PTR	; negative means no fish
+	bmi	done_draw_fish
 
-	jsr	hgr_draw_sprite_mask
-.endif
+	ldy	green_fish_behavior,X
 
+	ldx	#2			; which fish
+
+	jsr	draw_fish
+
+done_draw_fish:
 
 	;============================
-	; draw reed (over fish)
+	; draw bubbles
 
 	;==========================
 	; draw score
@@ -618,21 +658,10 @@ update_fish:
 	pha
 	rts
 done_update_fish:
-	inc	RED_FISH_STATE_PTR,X	; point to next
 
-	; set up sprite
+	inc	RED_FISH_STATE_PTR,X	; point to next state
 
-	lda	#<big_fish_sprite
-	sta	INL
-	lda	#>big_fish_sprite
-	sta	INH
-
-	; set up mask
-
-	lda	#<red_fish_mask
-	sta	MASKL
-	lda	#>red_fish_mask
-	sta	MASKH
+	; set up co-ords
 
 	lda	RED_FISH_X,X
 	sta	SPRITE_X
@@ -640,9 +669,24 @@ done_update_fish:
 	lda	RED_FISH_Y,X
 	sta	SPRITE_Y
 
-	jsr	hgr_draw_sprite_mask
 
-	inc	RED_FISH_STATE_PTR,X
+	; set up sprite
+
+	ldx	#0
+
+	lda	fish_sprite_table_l,X
+	sta	INL
+	lda	fish_sprite_table_h,X
+	sta	INH
+
+	; set up mask
+
+	lda	fish_mask_table_l,X
+	sta	MASKL
+	lda	fish_mask_table_h,X
+	sta	MASKH
+
+	jsr	hgr_draw_sprite_mask
 
 no_draw_fish:
 	rts
@@ -672,22 +716,46 @@ move_fish_up:
 	jmp	done_update_fish
 
 move_fish_right:
-	inc	RED_FISH_X,X
+	inc	RED_FISH_X,X		; move right
 	jmp	done_update_fish
 
+move_fish_left_up:
+	dec	RED_FISH_Y,X		; move up by one
+;	dec	RED_FISH_Y,X
+	dec	RED_FISH_X,X		; move left
+	jmp	done_update_fish
+
+move_fish_left_down:
+	inc	RED_FISH_Y,X		; move down by one
+;	inc	RED_FISH_Y,X
+	dec	RED_FISH_X,X		; move left
+	jmp	done_update_fish
+
+move_fish_flip:
+	lda	#FISH_SPRITE_RIGHT
+	sta	RED_FISH_SPRITE,X
+	jmp	done_update_fish
 
 move_fish_fast_right:
-move_fish_left_up:
-move_fish_left_down:
 move_fish_bubble:
-move_fish_flip:
 move_fish_pause:
 	jmp	done_update_fish
 
 
 
 
-
+fish_sprite_table_l:
+	.byte <big_fish_sprite,<left_fish_sprite,<right_fish_sprite
+	.byte <red_fish_sprite,<grey_fish_sprite,<green_fish_sprite
+fish_sprite_table_h:
+	.byte >big_fish_sprite,>left_fish_sprite,>right_fish_sprite
+	.byte >red_fish_sprite,>grey_fish_sprite,>green_fish_sprite
+fish_mask_table_l:
+	.byte <red_fish_mask,<grey_fish_mask,<green_fish_mask
+	.byte <red_fish_mask,<grey_fish_mask,<green_fish_mask
+fish_mask_table_h:
+	.byte >red_fish_mask,>grey_fish_mask,>green_fish_mask
+	.byte >red_fish_mask,>grey_fish_mask,>green_fish_mask
 
 
 
@@ -814,9 +882,52 @@ red_fish_behavior:
 ;	5 frames right (center of boat) blows bubble
 ;	15 frames to move off right side
 
+grey_fish_behavior:
+	; LEFT UP 8, gradually
+	.byte FISH_LEFT_UP,FISH_PAUSE,FISH_LEFT_UP,FISH_PAUSE
+	.byte FISH_LEFT_UP,FISH_PAUSE,FISH_LEFT_UP,FISH_PAUSE
+	.byte FISH_LEFT_UP,FISH_PAUSE,FISH_LEFT_UP,FISH_PAUSE
+	.byte FISH_LEFT_UP,FISH_PAUSE,FISH_LEFT_UP,FISH_PAUSE
+	; bubble
+	.byte FISH_BUBBLE
+	; LEFT DOWN 12, gradually
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	; turn right
+	.byte FISH_PAUSE
+	.byte FISH_FLIP
+	.byte FISH_PAUSE
+	; slow right 5
+	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
+	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
+	.byte FISH_RIGHT,FISH_PAUSE
+	; bubble
+	.byte FISH_BUBBLE
+	; fast right 15
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_DONE
+
+
 ; right fish (green) appears in left reeds approx 76, 146
 ; 	blows bubble
 ;	right 12 off screen
+
+green_fish_behavior:
+	; bubble
+	.byte FISH_BUBBLE
+	; fast right 15
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_DONE
 
 ; bubbles
 ;	go medium/large/medium
