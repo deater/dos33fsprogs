@@ -129,13 +129,19 @@ COPY_TIME	= $98
 DECOMPRESS_TIME	= $99
 TIME_TAKEN	= $9A
 LYRICS_ACTIVE	= $9B
-;FORTYCOL	= $9C
+FORTYCOL	= $9C
 CURSOR		= $9D
 
-CURRENT_DISK	= $DC
+
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related
+
+BUBBLE_STATE_PTR	= $D0
+BUBBLE_X		= $D1
+BUBBLE_Y		= $D2
+
+CURRENT_DISK	= $DC
 
 SCORE_L		= $E0
 SCORE_H		= $E1

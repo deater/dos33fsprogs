@@ -76,6 +76,15 @@ fish_sprites.inc:	fish_sprites.png
 	$(HGR_SPRITE) -s -l seven_sprite fish_sprites.png  28 80 34 87 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l eight_sprite fish_sprites.png  42 80 48 87 >> fish_sprites.inc
 	$(HGR_SPRITE) -s -l nine_sprite  fish_sprites.png  56 80 62 87 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l med1_bubble_sprite fish_sprites.png  0 93 6 95 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l big_bubble_sprite  fish_sprites.png  0 89 6 92 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l med2_bubble_sprite fish_sprites.png  0 96 6 98 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l med1_bubble_mask fish_sprites.png  0 105 6 107 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l big_bubble_mask  fish_sprites.png  0 101 6 104 >> fish_sprites.inc
+	$(HGR_SPRITE) -s -l med2_bubble_mask fish_sprites.png  0 108 6 110 >> fish_sprites.inc
+
+
+
 
 
 

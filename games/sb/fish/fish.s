@@ -226,6 +226,7 @@ load_background:
 	sta	RED_FISH_STATE_PTR
 	sta	GREY_FISH_STATE_PTR
 	sta	GREEN_FISH_STATE_PTR
+	sta	BUBBLE_STATE_PTR		; init bubble too
 
 
 	; start at least 8k in?
@@ -457,10 +458,60 @@ draw_green_fish:
 done_draw_fish:
 
 	;============================
-	; draw bubbles
+	; draw bubble
+	;============================
+	; yes there should be multiple bubbles possible at same time
+	; but I got lazy
+draw_bubble:
+	ldx	BUBBLE_STATE_PTR
+	bmi	done_draw_bubble
+
+	cpx	#6
+	bcc	bubble_not_done
+
+	; disable bubble and don't draw
+
+	ldx	#$FF
+	stx	BUBBLE_STATE_PTR
+	bmi	done_draw_bubble
+
+bubble_not_done:
+
+	; set up co-ords
+
+	lda	BUBBLE_X
+	sta	SPRITE_X
+
+	lda	BUBBLE_Y
+	sta	SPRITE_Y
+
+	; set up sprite
+
+	lda	bubble_sprite_table_l,X
+	sta	INL
+	lda	bubble_sprite_table_h,X
+	sta	INH
+
+	; set up mask
+
+	lda	bubble_mask_table_l,X
+	sta	MASKL
+	lda	bubble_mask_table_h,X
+	sta	MASKH
+
+	jsr	hgr_draw_sprite_mask
+
+	inc	BUBBLE_STATE_PTR	; point to next state
+
+	dec	BUBBLE_Y		; have bubble float up a bit
+;	dec	BUBBLE_Y
+
+done_draw_bubble:
+
 
 	;==========================
 	; draw score
+	;==========================
 
 	jsr	draw_score
 
@@ -737,8 +788,16 @@ move_fish_flip:
 	sta	RED_FISH_SPRITE,X
 	jmp	done_update_fish
 
-move_fish_fast_right:
 move_fish_bubble:
+	lda	#0
+	sta	BUBBLE_STATE_PTR
+	lda	RED_FISH_X,X
+	sta	BUBBLE_X
+	lda	RED_FISH_Y,X
+	sta	BUBBLE_Y
+	jmp	done_update_fish
+
+move_fish_fast_right:
 move_fish_pause:
 	jmp	done_update_fish
 
@@ -933,3 +992,24 @@ green_fish_behavior:
 ; bubbles
 ;	go medium/large/medium
 ;	some go mostly up, some wiggle left right
+
+bubble_sprite_table_l:
+	.byte <med1_bubble_sprite,<med1_bubble_sprite
+	.byte <big_bubble_sprite,<big_bubble_sprite
+	.byte <med2_bubble_sprite,<med2_bubble_sprite
+
+bubble_sprite_table_h:
+	.byte >med1_bubble_sprite,>med1_bubble_sprite
+	.byte >big_bubble_sprite,>big_bubble_sprite
+	.byte >med2_bubble_sprite,>med2_bubble_sprite
+
+bubble_mask_table_l:
+	.byte <med1_bubble_mask,<med1_bubble_mask
+	.byte <big_bubble_mask,<big_bubble_mask
+	.byte <med2_bubble_mask,<med2_bubble_mask
+
+bubble_mask_table_h:
+	.byte >med1_bubble_mask,>med1_bubble_mask
+	.byte >big_bubble_mask,>big_bubble_mask
+	.byte >med2_bubble_mask,>med2_bubble_mask
+
