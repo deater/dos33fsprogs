@@ -621,8 +621,10 @@ check_keypress:
 	and	#$7f
 
 	cmp	#27		; escape
-	beq	done_game
+	bne	not_done_game
 
+	jmp	done_game
+not_done_game:
 	; do this after or else '/' counts as escape
 
 	and	#$df			; convert lowercase to upper
@@ -639,6 +641,10 @@ done_keyboard_check:
 
 	;======================
 	; "get in boat"/jig
+
+	; red+green like jigs
+	; red fish 400 or 500
+	; green fish 50 or 100
 do_jig:
 	jsr	play_boat		; `come on and get in the boat'
 	lda	#ANIMATION_JIG
@@ -646,33 +652,140 @@ do_jig:
 	lda	#10
 	sta	ANIMATION_COUNT
 
-	; FIXME: see if valid fish
+	;========================
+	; see if fish in range
 
-	; FIXME: make fish visible
+	; red first
+
+jig_check_red:
+	lda	RED_FISH_STATE_PTR
+	cmp	#$ff
+	beq	jig_check_green
+
+	; ok we have a red fish, check range
+
+	lda	RED_FISH_Y
+	cmp	#156
+	bcs	jig_check_green		; not in range
+
+	lda	RED_FISH_X
+	cmp	#30
+	bcs	jig_check_green		; not in range
+
+	; we caught one!
+
+	; make fish visible
 
 	ldx	#FISH_SPRITE_RED
 	stx	RED_FISH_SPRITE
 
-	; FIXME: start fish on catch path
+	; start fish on catch path
 
 	lda	#<(catch_fish_behavior-red_fish_behavior)
 	sta	RED_FISH_STATE_PTR
 
-	; FIXME: update proper score
+	; update proper score
+	;	2 or 3 is 400 or 500
 
-	ldx	#0
+	lda	RED_FISH_X
+	and	#$1
+	clc
+	adc	#2
+	tax
 	jsr	update_score
 
+	jmp	done_do_jig
+
+	;=====================
+	; now green
+
+jig_check_green:
+	lda	GREEN_FISH_STATE_PTR
+	cmp	#$ff
+	beq	done_do_jig
+
+	; ok we have a green fish, check range
+
+	lda	GREEN_FISH_Y
+	cmp	#156
+	bcs	done_do_jig		; not in range
+
+	lda	GREEN_FISH_X
+	cmp	#30
+	bcs	done_do_jig		; not in range
+
+	; we caught one!
+
+	; make fish visible
+
+	ldx	#FISH_SPRITE_GREEN
+	stx	GREEN_FISH_SPRITE
+
+	; start fish on catch path
+
+	lda	#<(catch_fish_behavior-green_fish_behavior)
+	sta	GREEN_FISH_STATE_PTR
+
+	; update proper score
+	;	0 or 1 is 50 or 100
+
+	lda	GREEN_FISH_X
+	and	#$1
+	tax
+	jsr	update_score
+
+done_do_jig:
 	jmp	main_loop
 
 	;======================
 	; "fish fish"/lure
+
+	; catches grey fish
 do_lure:
 	jsr	play_fish		; 'fish'
 	lda	#ANIMATION_LURE
 	sta	ANIMATION_TYPE
 	lda	#10
 	sta	ANIMATION_COUNT
+
+	;========================
+	; see if fish in range
+
+jig_check_grey:
+	lda	GREY_FISH_STATE_PTR
+	cmp	#$ff
+	beq	done_do_lure
+
+	; ok we have a grey fish, check range
+
+	lda	GREY_FISH_Y
+	cmp	#160
+	bcs	done_do_lure		; not in range
+
+	lda	GREY_FISH_X
+	cmp	#30
+	bcs	done_do_lure		; not in range
+
+	; we caught one!
+
+	; make fish visible
+
+	ldx	#FISH_SPRITE_GREY
+	stx	GREY_FISH_SPRITE
+
+	; start fish on catch path
+
+	lda	#<(catch_fish_behavior-grey_fish_behavior)
+	sta	GREY_FISH_STATE_PTR
+
+	; update proper score
+	;	1 is 100
+
+	ldx	#1
+	jsr	update_score
+
+done_do_lure:
+
 	jmp	main_loop
 
 	;==========================
@@ -852,6 +965,7 @@ fish_state_dest_l:
 	.byte <(move_fish_flip-1)
 	.byte <(move_fish_done-1)
 	.byte <(move_fish_right_up-1),<(move_fish_right_down-1)
+	.byte <(move_fish_fast_up-1),<(move_fish_fast_down-1)
 	.byte <(move_fish_catch_up-1),<(move_fish_catch_down-1)
 
 fish_state_dest_h:
@@ -861,6 +975,7 @@ fish_state_dest_h:
 	.byte >(move_fish_flip-1)
 	.byte >(move_fish_done-1)
 	.byte >(move_fish_right_up-1),>(move_fish_right_down-1)
+	.byte >(move_fish_fast_up-1),>(move_fish_fast_down-1)
 	.byte >(move_fish_catch_up-1),>(move_fish_catch_down-1)
 
 move_fish_done:
@@ -869,13 +984,27 @@ move_fish_done:
 	jmp	no_draw_fish
 
 move_fish_catch_up:
+	dec	RED_FISH_Y,X		; move up by five
+	dec	RED_FISH_Y,X
+	dec	RED_FISH_Y,X
+	dec	RED_FISH_Y,X
+	dec	RED_FISH_Y,X
+	jmp	done_update_fish
+
+move_fish_catch_down:
+	inc	RED_FISH_Y,X		; move down by three
+	inc	RED_FISH_Y,X
+	inc	RED_FISH_Y,X
+	jmp	done_update_fish
+
+move_fish_fast_up:
 	inc	RED_FISH_X,X		; move right
 move_fish_up:
 	dec	RED_FISH_Y,X		; move up by two
 	dec	RED_FISH_Y,X
 	jmp	done_update_fish
 
-move_fish_catch_down:
+move_fish_fast_down:
 	inc	RED_FISH_Y,X		; move down by two
 	inc	RED_FISH_Y,X
 move_fish_right:
@@ -1090,9 +1219,9 @@ grey_fish_behavior:
 	.byte FISH_FLIP
 	.byte FISH_PAUSE
 	; slow right up 6
-	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
-	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
-	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
+	.byte FISH_FAST_UP,FISH_PAUSE,FISH_FAST_UP,FISH_PAUSE
+	.byte FISH_FAST_UP,FISH_PAUSE,FISH_FAST_UP,FISH_PAUSE
+	.byte FISH_FAST_UP,FISH_PAUSE,FISH_FAST_UP,FISH_PAUSE
 	; bubble
 	.byte FISH_BUBBLE
 	; slow right down 5
@@ -1125,11 +1254,12 @@ green_fish_behavior:
 catch_fish_behavior:
 	; up+to right 20 times?
 	; then down+right 5 times?
-	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
-	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
-	.byte FISH_UP,FISH_UP,FISH_UP,FISH_CATCH_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_FAST_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_FAST_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_FAST_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_FAST_UP
+	.byte FISH_CATCH_UP,FISH_CATCH_UP,FISH_FAST_UP
 
-	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
 	.byte FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN,FISH_CATCH_DOWN
 	.byte FISH_DONE
 
