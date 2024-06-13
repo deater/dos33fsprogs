@@ -20,7 +20,9 @@
 ; NOTES
 ;	hgr page1= $2000-$3fff
 ;	hgr page2= $4000-$5fff
-;	code     = $4000-$bfff
+;	code     = $4000-$9fff (24k) code
+;	saved bg = $a000-$bfff
+
 ;		note we have to be done with the code in page2 before
 ;		we over-write it by playing the game
 
@@ -190,16 +192,16 @@ load_background:
 	lda	#>bg_data
 	sta	ZX0_src+1
 
-	lda	#$20
+	lda	#$a0		; background copy at $a000
 
 	jsr	full_decomp
 
-	lda	#<bg_data
-	sta	ZX0_src
-	lda	#>bg_data
-	sta	ZX0_src+1
+;	lda	#<bg_data
+;	sta	ZX0_src
+;	lda	#>bg_data
+;	sta	ZX0_src+1
 
-	lda	#$40
+;	lda	#$40
 
 	;===================
 	; set up variables
@@ -247,20 +249,48 @@ main_loop:
 	;========================
 	;========================
 
-
 	;==================================
 	; copy over (erase) old background
 
-	lda	#<bg_data
-	sta	ZX0_src
-	lda	#>bg_data
-	sta	ZX0_src+1
+	; this isn't fast, but much faster than decompressing
+	;	we could be faster if we unrolled, or only
+	;	did part of the screen
+
+	lda	#$a0
+	sta	INH
 
 	clc
 	lda	DRAW_PAGE
 	adc	#$20
+	sta	OUTH
 
-	jsr	full_decomp
+	lda	#$0
+	sta	INL
+	sta	OUTL
+
+	ldy	#0
+bg_copy_loop:
+	lda	(INL),Y
+	sta	(OUTL),Y
+	dey
+	bne	bg_copy_loop
+	inc	INH
+	inc	OUTH
+	lda	INH
+	cmp	#$C0
+	bne	bg_copy_loop
+
+
+;	lda	#<bg_data
+;	sta	ZX0_src
+;	lda	#>bg_data
+;	sta	ZX0_src+1
+
+;	clc
+;	lda	DRAW_PAGE
+;	adc	#$20
+
+;	jsr	full_decomp
 
 	inc	FRAME
 
@@ -268,7 +298,7 @@ main_loop:
 	; draw boat
 
 	lda	FRAME
-;	lsr
+	lsr
 ;	lsr
 	and	#$3
 	tax
