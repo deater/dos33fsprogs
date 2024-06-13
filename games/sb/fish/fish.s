@@ -196,21 +196,21 @@ load_background:
 
 	jsr	full_decomp
 
-;	lda	#<bg_data
-;	sta	ZX0_src
-;	lda	#>bg_data
-;	sta	ZX0_src+1
-
-;	lda	#$40
 
 	;===================
 	; set up variables
 
+	; have it show garbage on page2 briefly
+	; this is better than re-showing title
+	; ideally we'd just clear the screen I guess
 
+	bit	PAGE2
 	bit	HIRES
 	bit	FULLGR
 	bit	SET_GR
-	bit	PAGE1
+	lda	#$20
+	sta	DRAW_PAGE
+
 
 	; re-set up hgr tables
 
@@ -449,6 +449,7 @@ deploy_red_fish:
 	sta	RED_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LONG
+;	lda	#FISH_SPRITE_RED
 	sta	RED_FISH_SPRITE
 
 	lda	#17
@@ -619,10 +620,13 @@ check_keypress:
 	; clear high bit
 	and	#$7f
 
-	and	#$df			; convert lowercase to upper
-
 	cmp	#27		; escape
 	beq	done_game
+
+	; do this after or else '/' counts as escape
+
+	and	#$df			; convert lowercase to upper
+
 
 	cmp	#'J'		; jig
 	beq	do_jig
