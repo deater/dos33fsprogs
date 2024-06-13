@@ -412,18 +412,37 @@ draw_common_animation:
 	; handle fish
 	;============================
 	;============================
-
+handle_fish:
 
 	;============================
 	; deploy fish
 	;============================
-	; TODO: if fish not out, randomly start one?
-handle_fish:
+	; if fish not out, randomly start one
+	; not sure how the actual game does it
+	; we're going to only do this every 8th frame
+	;	pick random number
+	;	  0..79 try red
+	;	 80..159 try green
+	;	160..240 try grey
 
-handle_red_fish:
+deploy_fish:
+	lda	FRAME
+	and	#$f
+	bne	done_deploy_fish
+
+	jsr	random16
+	cmp	#80
+	bcc	deploy_red_fish
+	cmp	#160
+	bcc	deploy_green_fish
+	cmp	#240
+	bcc	deploy_grey_fish
+	bcs	done_deploy_fish
+
+deploy_red_fish:
 	lda	RED_FISH_STATE_PTR
 	cmp	#$ff
-	bne	handle_grey_fish	; #$ff means fish is not active
+	bne	done_deploy_fish	; #$ff means fish is not active
 
 	; create new red/big fish
 	lda	#0
@@ -437,31 +456,35 @@ handle_red_fish:
 	lda	#180
 	sta	RED_FISH_Y
 
-handle_grey_fish:
+	jmp	done_deploy_fish
+
+deploy_grey_fish:
 	lda	GREY_FISH_STATE_PTR
 	cmp	#$ff
-	bne	handle_green_fish	; $FF means fish is not active
+	bne	done_deploy_fish	; $FF means fish is not active
 
 	; create new grey/left fish
-;	lda	#0
-;	sta	GREY_FISH_STATE_PTR
+	lda	#0
+	sta	GREY_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_LEFT
 	sta	GREY_FISH_SPRITE
 
 	lda	#31
 	sta	GREY_FISH_X
-	lda	#170
+	lda	#164
 	sta	GREY_FISH_Y
 
-handle_green_fish:
+	jmp	done_deploy_fish
+
+deploy_green_fish:
 	lda	GREEN_FISH_STATE_PTR
 	cmp	#$FF
-	bne	done_handle_fish	; $FF means fish is not active
+	bne	done_deploy_fish	; $FF means fish is not active
 
 	; create new green/right fish
-;	lda	#0
-;	sta	GREEN_FISH_STATE_PTR
+	lda	#0
+	sta	GREEN_FISH_STATE_PTR
 
 	lda	#FISH_SPRITE_RIGHT
 	sta	GREEN_FISH_SPRITE
@@ -471,7 +494,7 @@ handle_green_fish:
 	lda	#146
 	sta	GREEN_FISH_Y
 
-done_handle_fish:
+done_deploy_fish:
 
 
 	; draw red fish
@@ -503,7 +526,7 @@ draw_grey_fish:
 draw_green_fish:
 
 	ldx	GREEN_FISH_STATE_PTR	; negative means no fish
-	cmp	#$ff
+	cpx	#$ff
 	beq	done_draw_fish
 
 	ldy	green_fish_behavior,X
@@ -561,7 +584,7 @@ bubble_not_done:
 	inc	BUBBLE_STATE_PTR	; point to next state
 
 	dec	BUBBLE_Y		; have bubble float up a bit
-;	dec	BUBBLE_Y
+	dec	BUBBLE_Y
 
 done_draw_bubble:
 
@@ -820,18 +843,20 @@ no_draw_fish:
 
 fish_state_dest_l:
 	.byte <(move_fish_pause-1),<(move_fish_up-1),<(move_fish_bubble-1)
-	.byte <(move_fish_right-1),<(move_fish_fast_right-1)
+	.byte <(move_fish_right-1),<(move_fish_left-1)
 	.byte <(move_fish_left_up-1),<(move_fish_left_down-1)
 	.byte <(move_fish_flip-1)
 	.byte <(move_fish_done-1)
+	.byte <(move_fish_right_up-1),<(move_fish_right_down-1)
 	.byte <(move_fish_catch_up-1),<(move_fish_catch_down-1)
 
 fish_state_dest_h:
 	.byte >(move_fish_pause-1),>(move_fish_up-1),>(move_fish_bubble-1)
-	.byte >(move_fish_right-1),>(move_fish_fast_right-1)
+	.byte >(move_fish_right-1),>(move_fish_left-1)
 	.byte >(move_fish_left_up-1),>(move_fish_left_down-1)
 	.byte >(move_fish_flip-1)
 	.byte >(move_fish_done-1)
+	.byte >(move_fish_right_up-1),>(move_fish_right_down-1)
 	.byte >(move_fish_catch_up-1),>(move_fish_catch_down-1)
 
 move_fish_done:
@@ -853,11 +878,24 @@ move_fish_right:
 	inc	RED_FISH_X,X		; move right
 	jmp	done_update_fish
 
+move_fish_right_up:
+	dec	RED_FISH_Y,X		; move up by one
+	inc	RED_FISH_X,X		; move right
+	jmp	done_update_fish
+
+move_fish_right_down:
+	inc	RED_FISH_Y,X		; move down by one
+	inc	RED_FISH_X,X		; move right
+	jmp	done_update_fish
+
 move_fish_left_up:
 	dec	RED_FISH_Y,X		; move up by one
 ;	dec	RED_FISH_Y,X
+
+move_fish_left:
 	dec	RED_FISH_X,X		; move left
 	jmp	done_update_fish
+
 
 move_fish_left_down:
 	inc	RED_FISH_Y,X		; move down by one
@@ -876,11 +914,12 @@ move_fish_bubble:
 	lda	RED_FISH_X,X
 	sta	BUBBLE_X
 	inc	BUBBLE_X	; more likely to be from head
+	inc	BUBBLE_X	; more likely to be from head
 	lda	RED_FISH_Y,X
 	sta	BUBBLE_Y
 	jmp	done_update_fish
 
-move_fish_fast_right:
+
 move_fish_pause:
 	jmp	done_update_fish
 
@@ -1023,7 +1062,8 @@ red_fish_behavior:
 ;	left 8 to center of boat gradually up, blows bubble
 ;	left 12, gradually down, blow bubble
 ;	3 frames to turn right
-;	5 frames right (center of boat) blows bubble
+;	5 frames right up (center of boat) blows bubble
+;	5 frames right down
 ;	15 frames to move off right side
 
 grey_fish_behavior:
@@ -1034,34 +1074,37 @@ grey_fish_behavior:
 	.byte FISH_LEFT_UP,FISH_PAUSE,FISH_LEFT_UP,FISH_PAUSE
 	; bubble
 	.byte FISH_BUBBLE
-	; LEFT DOWN 12, gradually
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
-	.byte FISH_LEFT_DOWN,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	; LEFT DOWN 10, gradually
+	.byte FISH_LEFT,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT,FISH_PAUSE,FISH_LEFT_DOWN,FISH_PAUSE
+	.byte FISH_LEFT,FISH_PAUSE
 	; turn right
 	.byte FISH_PAUSE
 	.byte FISH_FLIP
 	.byte FISH_PAUSE
-	; slow right 5
-	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
-	.byte FISH_RIGHT,FISH_PAUSE,FISH_RIGHT,FISH_PAUSE
-	.byte FISH_RIGHT,FISH_PAUSE
+	; slow right up 6
+	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
+	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
+	.byte FISH_CATCH_UP,FISH_PAUSE,FISH_CATCH_UP,FISH_PAUSE
 	; bubble
 	.byte FISH_BUBBLE
-	; fast right 15
+	; slow right down 5
+	.byte FISH_RIGHT_DOWN,FISH_PAUSE,FISH_RIGHT_DOWN,FISH_PAUSE
+	.byte FISH_RIGHT_DOWN,FISH_PAUSE,FISH_RIGHT_DOWN,FISH_PAUSE
+	.byte FISH_RIGHT_DOWN,FISH_PAUSE
+	; fast right 12
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
-	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_DONE
 
 
 ; right fish (green) appears in left reeds approx 76, 146
 ; 	blows bubble
-;	right 12 off screen
+;	right 18 off screen
 
 green_fish_behavior:
 	; bubble
@@ -1070,7 +1113,8 @@ green_fish_behavior:
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
 	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
-	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT,FISH_RIGHT,FISH_RIGHT
+	.byte FISH_RIGHT,FISH_RIGHT
 	.byte FISH_DONE
 
 
