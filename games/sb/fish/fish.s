@@ -257,40 +257,28 @@ main_loop:
 	;	did part of the screen
 
 	lda	#$a0
-	sta	INH
+	sta	bg_copy_in_smc+2
 
 	clc
 	lda	DRAW_PAGE
 	adc	#$20
-	sta	OUTH
-
-	lda	#$0
-	sta	INL
-	sta	OUTL
+	sta	bg_copy_out_smc+2
 
 	ldy	#0
 bg_copy_loop:
-	lda	(INL),Y
-	sta	(OUTL),Y
+
+bg_copy_in_smc:
+	lda	$A000,Y
+bg_copy_out_smc:
+	sta	$2000,Y
 	dey
 	bne	bg_copy_loop
-	inc	INH
-	inc	OUTH
-	lda	INH
+
+	inc	bg_copy_in_smc+2
+	inc	bg_copy_out_smc+2
+	lda	bg_copy_in_smc+2
 	cmp	#$C0
 	bne	bg_copy_loop
-
-
-;	lda	#<bg_data
-;	sta	ZX0_src
-;	lda	#>bg_data
-;	sta	ZX0_src+1
-
-;	clc
-;	lda	DRAW_PAGE
-;	adc	#$20
-
-;	jsr	full_decomp
 
 	inc	FRAME
 
@@ -298,7 +286,7 @@ bg_copy_loop:
 	; draw boat
 
 	lda	FRAME
-	lsr
+	lsr				; half the frame rate of rest
 ;	lsr
 	and	#$3
 	tax
@@ -387,7 +375,8 @@ draw_lure_animation:
 	sta	SPRITE_X
 	lda	#42
 	sta	SPRITE_Y
-	jmp	draw_common_animation
+
+	jmp	update_animation
 
 draw_jig_animation:
 	ldx	ANIMATION_COUNT
