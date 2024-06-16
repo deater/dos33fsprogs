@@ -247,6 +247,11 @@ insert_disk_string:
 .byte "PLEASE INSERT DISK 1",13
 .byte " THEN PRESS RETURN",0
 
+; common includes used by everyone
+
+.include "zx02_optim.s"
+
+
 
 which_disk_array:
 	.byte 1,1,1,1		; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
@@ -267,35 +272,6 @@ sector_array:
 length_array:
         .byte  16, 123,123, 64	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  64, 32, 128	; MAGLEV, MOVIE1, MOVIE2
-
-.if 0
-.include "qkumba_popwr.s"
-
-.include "drive2.s"
-
-.include "zx02_optim.s"
-;.include "decompress_fast_v2.s"
-
-.include "hgr_font.s"
-.include "draw_box.s"
-.include "hgr_rectangle.s"
-.include "hgr_1x28_sprite_mask.s"
-.include "hgr_partial_save.s"
-.include "hgr_input.s"
-.include "hgr_tables.s"
-.include "hgr_text_box.s"
-.include "clear_bottom.s"
-.include "hgr_hgr2.s"		; this one is maybe only needed once?
-.include "gr_offsets.s"
-.include "loadsave_menu.s"
-.include "wait_keypress.s"
-.include "random16.s"
-.include "score.s"
-.include "speaker_beeps.s"
-
-peasant_text:
-	.byte 25,2,"Peasant's Quest",0
-.endif
 
 qload_end:
 

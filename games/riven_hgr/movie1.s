@@ -5,6 +5,7 @@
 .include "zp.inc"
 .include "hardware.inc"
 .include "common_defines.inc"
+.include "qload.inc"
 
 overlays	=	$2000
 
@@ -352,11 +353,13 @@ done_pageflip:
 ;===================================
 
 
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 
-	.include	"wait.s"
+
 
 	.include	"movie1/movie1.inc"
+
+	.include	"wait.s"
 
 frames_l:
 	.byte	<img025_bg_zx02

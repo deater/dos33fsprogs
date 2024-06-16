@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "qload.inc"
 
 riven_maglev:
 
@@ -139,7 +140,7 @@ handle2_clicked:
 	; includes
 	;==========================
 
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 
 	.include	"keyboard.s"
 

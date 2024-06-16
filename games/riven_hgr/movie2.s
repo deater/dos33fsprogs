@@ -6,6 +6,7 @@
 
 .include "zp.inc"
 .include "hardware.inc"
+.include "qload.inc"
 
 NUM_SCENES	=	137
 
@@ -318,12 +319,7 @@ done_pageflip:
 
 ;===================================
 
-;	.include	"../wait_keypress.s"
-
-;	.include	"draw_boxes.s"
-
-
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 
 	.include	"wait.s"
 

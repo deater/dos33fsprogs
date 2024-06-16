@@ -41,7 +41,8 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
-qload.o:	qload.s qboot.inc
+qload.o:	qload.s qboot.inc \
+		zx02_optim.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 
@@ -64,7 +65,7 @@ TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title.o:	title.s zp.inc hardware.inc \
-		zx02_optim.s wait_a_bit.s \
+		qload.inc wait_a_bit.s \
 		hgr_sprite.s hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title.o title.s -l title.lst
@@ -75,7 +76,7 @@ LEVEL_OUTSIDE:	level_outside.o
 	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_outside.o:	level_outside.s zp.inc hardware.inc \
-		zx02_optim.s \
+		qload.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
@@ -90,7 +91,7 @@ LEVEL_PROJECTOR:	level_projector.o
 	ld65 -o LEVEL_PROJECTOR level_projector.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_projector.o:	level_projector.s zp.inc hardware.inc \
-		zx02_optim.s \
+		qload.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
@@ -105,7 +106,7 @@ LEVEL_MAGSTEPS:	level_magsteps.o
 	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
-		zx02_optim.s \
+		qload.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
@@ -120,7 +121,7 @@ LEVEL_MAGLEV:	level_maglev.o
 	ld65 -o LEVEL_MAGLEV level_maglev.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 level_maglev.o:	level_maglev.s zp.inc hardware.inc \
-		zx02_optim.s \
+		qload.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
@@ -136,6 +137,7 @@ MOVIE1:	movie1.o
 
 movie1.o:	movie1.s \
 	zp.inc hardware.inc \
+	qload.inc \
 	movie1/movie1.inc
 	ca65 -o movie1.o movie1.s -l movie1.lst
 
@@ -146,6 +148,7 @@ MOVIE2:	movie2.o
 
 movie2.o:	movie2.s \
 	zp.inc hardware.inc \
+	qload.inc \
 	end_message/end_message.gr.zx02 \
 	movie2/movie2.inc
 	ca65 -o movie2.o movie2.s -l movie2.lst

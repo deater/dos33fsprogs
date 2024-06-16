@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "qload.inc"
 
 riven_title:
 
@@ -315,7 +316,7 @@ clear_loop:
 	; includes
 	;==========================
 
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 	.include	"hgr_tables.s"
 
 	.include	"wait_a_bit.s"

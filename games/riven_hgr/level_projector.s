@@ -6,6 +6,7 @@
 	.include "zp.inc"
 	.include "hardware.inc"
 	.include "common_defines.inc"
+	.include "qload.inc"
 
 riven_projector:
 
@@ -99,7 +100,7 @@ really_exit:
 	; includes
 	;==========================
 
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 
 	.include	"keyboard.s"
 
