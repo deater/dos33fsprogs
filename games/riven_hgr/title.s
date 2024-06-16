@@ -8,6 +8,15 @@
 	.include "common_defines.inc"
 	.include "qload.inc"
 
+.if DISK=39
+	.include "disk39_files/disk39_defines.inc"
+.endif
+
+.if DISK=40
+	.include "disk40_files/disk40_defines.inc"
+.endif
+
+
 riven_title:
 
 	;===========================
@@ -22,6 +31,15 @@ riven_title:
 	jsr	TEXT
 	jsr	HOME
 	bit	KEYRESET
+
+	; set disk#
+
+	lda	#48+(DISK/10)
+	sta	title_text+28
+	lda	#48+(DISK-((DISK/10)*10))
+	sta	title_text+29
+
+
 
 	; clear text screen
 
@@ -275,19 +293,7 @@ clear_loop:
 	lda	#100
 	jsr	wait_a_bit
 
-	; debug: ready2go for animation test
-.if 0
-	lda	#LOAD_MAGLEV
-	sta	WHICH_LOAD		; inside maglev
-
-	lda	#RIVEN_READY2GO		; ready to go
-	sta	LOCATION
-
-	lda	#DIRECTION_E		; facing east
-	sta	DIRECTION
-.endif
-
-.if 1
+.if DISK=39
 	lda	#LOAD_OUTSIDE
 	sta	WHICH_LOAD		; assume new game (dome island)
 
@@ -298,11 +304,11 @@ clear_loop:
 	sta	DIRECTION
 .endif
 
-.if 0
-	lda	#LOAD_PROJECTOR
-	sta	WHICH_LOAD		; assume new game (dome island)
+.if DISK=40
+	lda	#LOAD_CART
+	sta	WHICH_LOAD
 
-	lda	#RIVEN_PROJECTOR
+	lda	#RIVEN_OUTSIDE_CART
 	sta	LOCATION
 
 	lda	#DIRECTION_S
@@ -340,7 +346,7 @@ riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"
 
 title_text:
-.byte 0, 0,"LOADING RIVEN SUBSET V0.03",0
+.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.04",0
 ;
 ;
 .byte 0, 3,"BASED ON RIVEN BY CYAN",0

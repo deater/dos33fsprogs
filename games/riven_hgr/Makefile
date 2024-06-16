@@ -7,9 +7,9 @@ EMPTY_DISK = ../../empty_disk/
 LINKER_SCRIPTS = ../../linker_scripts/
 
 
-all:	riven_disk39.dsk
+all:	riven_disk39.dsk riven_disk40.dsk
 
-riven_disk39.dsk:	QBOOT QLOAD TITLE \
+riven_disk39.dsk:	QBOOT QLOAD_39 TITLE_39 \
 	disk39_files/LEVEL_MAGSTEPS \
 	disk39_files/LEVEL_MAGLEV \
 	disk39_files/LEVEL_OUTSIDE \
@@ -20,8 +20,8 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE \
 	$(DOS33_RAW) riven_disk39.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk39.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk39.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk39.dsk  1  8 TITLE		      0   0
+	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD_39             0   0
+	$(DOS33_RAW) riven_disk39.dsk  1  8 TITLE_39		 0   0
 	$(DOS33_RAW) riven_disk39.dsk  2  0 disk39_files/LEVEL_PROJECTOR      0   0
 	$(DOS33_RAW) riven_disk39.dsk  9  0 disk39_files/LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_disk39.dsk  17 0 disk39_files/LEVEL_MAGSTEPS       0   0
@@ -29,6 +29,15 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE \
 	$(DOS33_RAW) riven_disk39.dsk  25 0 disk39_files/MOVIE_MAGLEV_FLIP               0   0
 	$(DOS33_RAW) riven_disk39.dsk  27 0 disk39_files/MOVIE_MAGLEV_RIDE               0   0
 
+riven_disk40.dsk:	QBOOT QLOAD_40 TITLE_40 \
+	disk40_files/LEVEL_CART
+	cp $(EMPTY_DISK)/empty.dsk riven_disk40.dsk
+	$(DOS33_RAW) riven_disk40.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk40.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk40.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD_40             0   0
+	$(DOS33_RAW) riven_disk40.dsk  1  8 TITLE_40		 0   0
+	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_CART      0   0
 
 ###
 
@@ -40,29 +49,56 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 
 ###
 
-###
+QLOAD_39:	qload_39.o
+	ld65 -o QLOAD_39 qload_39.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
-QLOAD:	qload.o
-	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
-
-qload.o:	qload.s qboot.inc \
+qload_39.o:	qload.s qboot.inc \
 		zx02_optim.s wait.s \
 		draw_pointer.s log_table.s \
+		disk39_files/disk39_qload.inc \
+		disk39_files/disk39_defines.inc \
 		graphics_sprites/pointer_sprites.inc \
 		hgr_14x14_sprite.s \
 		keyboard.s
-	ca65 -o qload.o qload.s -l qload.lst
+	ca65 -o qload_39.o qload.s -DDISK=39 -l qload_39.lst
 
 ####
 
-TITLE:	title.o
-	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+QLOAD_40:	qload_40.o
+	ld65 -o QLOAD_40 qload_40.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
-title.o:	title.s zp.inc hardware.inc \
+qload_40.o:	qload.s qboot.inc \
+		zx02_optim.s wait.s \
+		draw_pointer.s log_table.s \
+		disk40_files/disk40_qload.inc \
+		disk40_files/disk40_defines.inc \
+		graphics_sprites/pointer_sprites.inc \
+		hgr_14x14_sprite.s \
+		keyboard.s
+	ca65 -o qload_40.o qload.s -DDISK=40 -l qload_40.lst
+
+####
+
+TITLE_39:	title_39.o
+	ld65 -o TITLE_39 title_39.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_39.o:	title.s zp.inc hardware.inc \
 		qload.inc wait_a_bit.s \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
-	ca65 -o title.o title.s -l title.lst
+	ca65 -o title_39.o title.s -DDISK=39 -l title_39.lst
+
+####
+
+TITLE_40:	title_40.o
+	ld65 -o TITLE_40 title_40.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_40.o:	title.s zp.inc hardware.inc \
+		qload.inc wait_a_bit.s \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_40.o title.s -DDISK=40 -l title_40.lst
+
 
 ####
 
@@ -84,71 +120,10 @@ disk39_files/MOVIE_MAGLEV_FLIP:
 disk39_files/MOVIE_MAGLEV_RIDE:
 	cd disk39_files && make
 
-#LEVEL_OUTSIDE:	level_outside.o
-#	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#level_outside.o:	level_outside.s zp.inc hardware.inc \
-#		qload.inc \
-#		disk39_files/leveldata_outside.inc \
-#		graphics_outside/outside_graphics.inc
-#	ca65 -o level_outside.o level_outside.s -l level_outside.lst
-
 ####
 
-#LEVEL_PROJECTOR:	level_projector.o
-#	ld65 -o LEVEL_PROJECTOR level_projector.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#level_projector.o:	level_projector.s zp.inc hardware.inc \
-#		qload.inc \
-#		disk39_files/leveldata_projector.inc \
-#		graphics_projector/projector_graphics.inc
-#	ca65 -o level_projector.o level_projector.s -l level_projector.lst
-
-####
-
-#LEVEL_MAGSTEPS:	level_magsteps.o
-#	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
-#		qload.inc \
-#		disk39_files/leveldata_magsteps.inc \
-#		graphics_magsteps/magsteps_graphics.inc
-#	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
-
-####
-
-#LEVEL_MAGLEV:	level_maglev.o
-#	ld65 -o LEVEL_MAGLEV level_maglev.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#level_maglev.o:	level_maglev.s zp.inc hardware.inc \
-#		qload.inc \
-#		disk39_files/leveldata_maglev.inc \
-#		graphics_maglev/maglev_graphics.inc
-#	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
-
-####
-
-#MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
-#	ld65 -o MOVIE_MAGLEV_FLIP movie_maglev_flip.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#movie_maglev_flip.o:	movie_maglev_flip.s \
-#	zp.inc hardware.inc \
-#	qload.inc \
-#	movie_maglev_flip/movie_maglev_flip.inc
-#	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
-
-####
-
-#MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
-#	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-#movie_maglev_ride.o:	movie_maglev_ride.s \
-#	zp.inc hardware.inc \
-#	qload.inc \
-#	end_message/end_message.gr.zx02 \
-#	movie_maglev_ride/movie_maglev_ride.inc
-#	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
-
+disk40_files/LEVEL_CART:
+	cd disk40_files && make
 
 
 ####
@@ -164,6 +139,7 @@ graphics_title/riven_title.hgr.zx02:
 clean:		
 	rm -f *~ *.o *.lst QLOAD QBOOT TITLE
 	cd disk39_files && make clean
+	cd disk40_files && make clean
 
 ####
 
@@ -172,4 +148,5 @@ distclean:
 	cd graphics_title && make clean
 	cd graphics_sprites && make clean
 	cd disk39_files && make distclean
+	cd disk40_files && make distclean
 

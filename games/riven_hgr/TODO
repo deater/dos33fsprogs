@@ -1,3 +1,7 @@
++ common
+	move change-disk message to be in TITLE?
+	how to handle if multiple exits to level?
+
 
 + Keyboard handling
 	- still buggy, especially when clicking on something???

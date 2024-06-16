@@ -2,6 +2,18 @@
 
 .include "zp.inc"
 
+.include "hardware.inc"
+
+.include "common_defines.inc"
+
+.include "qboot.inc"
+
+.if DISK=39
+.include "disk39_files/disk39_defines.inc"
+.endif
+.if DISK=40
+.include "disk40_files/disk40_defines.inc"
+.endif
 
 LOAD_FIRST_SECTOR = 22 ; ???
 
@@ -12,11 +24,6 @@ tmpsec = $3C
 ;OUTL = $FE
 ;OUTH = $FF
 
-.include "hardware.inc"
-
-.include "common_defines.inc"
-
-.include "qboot.inc"
 
 qload_start:
 
@@ -257,27 +264,14 @@ insert_disk_string:
 .include "hgr_14x14_sprite.s"
 .include "keyboard.s"
 
-which_disk_array:
-	.byte 1,1,1,1		; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte 1,1,1,1		; MAGLEV, MOVIE1, MOVIE2
+.if DISK=39
+.include "disk39_files/disk39_qload.inc"
+.endif
 
-load_address_array:
-	.byte $40,$40,$40,$40	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte $40,$40,$40	; MAGLEV, MOVIE1, MOVIE2
-
-track_array:
-        .byte  1, 9, 2,17	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte  21,25,27		; MAGLEV, MOVIE1, MOVIE2
-
-sector_array:
-        .byte  8, 0, 0, 0	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte  0, 0, 0		; MAGLEV, MOVIE1, MOVIE2
-
-length_array:
-        .byte  16, 123,123, 64	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte  64, 32, 128	; MAGLEV, MOVIE1, MOVIE2
+.if DISK=40
+.include "disk40_files/disk40_qload.inc"
+.endif
 
 qload_end:
 
-;.assert (>qload_end - >qload_start) < $e , error, "loader too big"
-.assert (>qload_end - >qload_start) < $15 , error, "loader too big"
+.assert (>qload_end - >qload_start) < $8 , error, "loader too big"
