@@ -1,11 +1,3 @@
-LOAD_TITLE      =       0
-LOAD_OUTSIDE	=	1
-LOAD_PROJECTOR	=	2
-LOAD_MAGSTEPS	=	3
-LOAD_MAGLEV	=	4
-LOAD_MOVIE1	=	5
-LOAD_MOVIE2	=	6
-
 div7_table     = $1300
 mod7_table     = $1400
 hposn_high     = $1500
@@ -47,29 +39,3 @@ LOCATION_SPECIAL_Y2=21
 LOCATION_SPECIAL_FUNC=22		; pointer-1 of function to call on click
 
 
-;================================
-; Level definitions
-
-; Outside
-
-RIVEN_MAGLEV1	=	0
-RIVEN_MAGPATH	=	1
-RIVEN_OVERLOOK	=	2
-
-; Projector
-
-RIVEN_PROJECTOR	=	0
-RIVEN_PROJ_DOOR	=	1
-RIVEN_PROJ_STEPS=	2
-RIVEN_WAHRK	=	3
-
-; Magsteps
-
-RIVEN_MAGSTEPS2	=	0
-RIVEN_MAGSTEPS3	=	1
-
-; Maglev
-
-RIVEN_LOOKIN	=	0
-RIVEN_INSEAT	=	1
-RIVEN_READY2GO	=	2

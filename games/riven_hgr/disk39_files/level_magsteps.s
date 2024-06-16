@@ -7,6 +7,7 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
+	.include "disk39_defines.inc"
 
 riven_magsteps:
 

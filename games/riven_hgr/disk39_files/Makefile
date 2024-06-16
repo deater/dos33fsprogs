@@ -12,7 +12,7 @@ LEVEL_OUTSIDE:	level_outside.o
 
 level_outside.o:	level_outside.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		../common_defines.inc \
+		../common_defines.inc disk39_defines.inc \
 		leveldata_outside.inc \
 		graphics_outside/outside_graphics.inc
 	ca65 -o level_outside.o level_outside.s -l level_outside.lst
@@ -24,7 +24,7 @@ LEVEL_PROJECTOR:	level_projector.o
 
 level_projector.o:	level_projector.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		../common_defines.inc \
+		../common_defines.inc disk39_defines.inc \
 		leveldata_projector.inc \
 		graphics_projector/projector_graphics.inc
 	ca65 -o level_projector.o level_projector.s -l level_projector.lst
@@ -36,7 +36,7 @@ LEVEL_MAGSTEPS:	level_magsteps.o
 
 level_magsteps.o:	level_magsteps.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		../common_defines.inc \
+		../common_defines.inc disk39_defines.inc \
 		leveldata_magsteps.inc \
 		graphics_magsteps/magsteps_graphics.inc
 	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
@@ -48,7 +48,7 @@ LEVEL_MAGLEV:	level_maglev.o
 
 level_maglev.o:	level_maglev.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		../common_defines.inc \
+		../common_defines.inc disk39_defines.inc \
 		leveldata_maglev.inc \
 		graphics_maglev/maglev_graphics.inc
 	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
@@ -60,7 +60,7 @@ MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
 
 movie_maglev_flip.o:	movie_maglev_flip.s \
 	../zp.inc ../hardware.inc ../qload.inc \
-	../common_defines.inc \
+	../common_defines.inc disk39_defines.inc \
 	movie_maglev_flip/movie_maglev_flip.inc
 	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
 
@@ -71,7 +71,7 @@ MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
 
 movie_maglev_ride.o:	movie_maglev_ride.s \
 	../zp.inc ../hardware.inc ../qload.inc \
-	../common_defines.inc \
+	../common_defines.inc disk39_defines.inc \
 	end_message/end_message.gr.zx02 \
 	movie_maglev_ride/movie_maglev_ride.inc
 	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
