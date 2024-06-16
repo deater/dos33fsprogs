@@ -1,26 +1,16 @@
-+ Correctness
-	-> do I need to save screen holes?
+share code in QLOAD to free up room in levels
 
-+ Finish maglev sequence
-	-> should we optimize graphics better? unlikely to be more than 
-		1k or so there
-	-> do the handle animation at end?
-	-> sound effects?
-	-> if out of room in RAM (but not disk) optionally load tail end
-		to language card on machines that have it?
 
-+ Main sequence
-	-> try to fit more locations in.  two overlook scenes,
-		turning around in projector room
+disk39:
+	-> try to fit more locations
+		have one already done that didn't fit (overlook otherway)
+	-> try to fit last little bit of maglev sequence
+		+ do the handle animation at end?
+		+ sound effects?
+		+ if out of room in RAM (but not disk)
+			optionally load tail end
+			to language card on machines that have it?
 
 + Better keyboard handling on IIe
 	-> was actually one of the main reasons I started working on this
-
-+ Use QBOOT instead of QLOAD
-	-> would free up disk space
-		catalog track, T/S sectors, two tracks of DOS?
-	-> would have to manually pack levels
-	-> would be faster in theory?
-
-+ Add in "switch disk" message
 

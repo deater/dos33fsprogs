@@ -129,4 +129,4 @@ call_button_clicked:
 
 .include "graphics_sprites/pointer_sprites.inc"
 
-.include "leveldata_outside.inc"
+.include "disk39_files/leveldata_outside.inc"

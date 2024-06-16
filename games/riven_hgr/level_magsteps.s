@@ -53,12 +53,6 @@ riven_magsteps:
 	; init
 	;===================================
 
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
-
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
@@ -120,4 +114,4 @@ really_exit:
 
 .include "graphics_sprites/pointer_sprites.inc"
 
-.include "leveldata_magsteps.inc"
+.include "disk39_files/leveldata_magsteps.inc"

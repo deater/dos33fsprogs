@@ -53,12 +53,6 @@ riven_maglev:
 	; init
 	;===================================
 
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
-
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
@@ -160,4 +154,4 @@ handle2_clicked:
 
 .include "graphics_sprites/pointer_sprites.inc"
 
-.include "leveldata_maglev.inc"
+.include "disk39_files/leveldata_maglev.inc"

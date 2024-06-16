@@ -7,37 +7,23 @@ EMPTY_DISK = ../../empty_disk/
 LINKER_SCRIPTS = ../../linker_scripts/
 
 
-all:	riven_hgr.dsk
+all:	riven_disk39.dsk
 
-riven_hgr.dsk:	QBOOT QLOAD TITLE \
+riven_disk39.dsk:	QBOOT QLOAD TITLE \
 	LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
 	MOVIE1 MOVIE2
-	cp $(EMPTY_DISK)/empty.dsk riven_hgr.dsk
-	$(DOS33_RAW) riven_hgr.dsk  0  0 QBOOT                0   1
-	$(DOS33_RAW) riven_hgr.dsk  0  2 QBOOT                1   1
-	$(DOS33_RAW) riven_hgr.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_hgr.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_hgr.dsk  1  8 TITLE		      0   0
-	$(DOS33_RAW) riven_hgr.dsk  2  0 LEVEL_PROJECTOR      0   0
-	$(DOS33_RAW) riven_hgr.dsk  9  0 LEVEL_OUTSIDE        0   0
-	$(DOS33_RAW) riven_hgr.dsk  17 0 LEVEL_MAGSTEPS       0   0
-	$(DOS33_RAW) riven_hgr.dsk  21 0 LEVEL_MAGLEV         0   0
-	$(DOS33_RAW) riven_hgr.dsk  25 0 MOVIE1               0   0
-	$(DOS33_RAW) riven_hgr.dsk  27 0 MOVIE2               0   0
-
-#riven_hgr.dsk:	HELLO LOADER TITLE \
-#		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-#		MOVIE1 MOVIE2
-#	cp $(EMPTY_DISK) riven_hgr.dsk
-#	$(DOS33) -y riven_hgr.dsk SAVE A HELLO
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x1000 LOADER
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 TITLE
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_PROJECTOR
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGSTEPS
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_MAGLEV
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 LEVEL_OUTSIDE
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE1
-#	$(DOS33) -y riven_hgr.dsk BSAVE -a 0x4000 MOVIE2
+	cp $(EMPTY_DISK)/empty.dsk riven_disk39.dsk
+	$(DOS33_RAW) riven_disk39.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk39.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk39.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk39.dsk  1  8 TITLE		      0   0
+	$(DOS33_RAW) riven_disk39.dsk  2  0 LEVEL_PROJECTOR      0   0
+	$(DOS33_RAW) riven_disk39.dsk  9  0 LEVEL_OUTSIDE        0   0
+	$(DOS33_RAW) riven_disk39.dsk  17 0 LEVEL_MAGSTEPS       0   0
+	$(DOS33_RAW) riven_disk39.dsk  21 0 LEVEL_MAGLEV         0   0
+	$(DOS33_RAW) riven_disk39.dsk  25 0 MOVIE1               0   0
+	$(DOS33_RAW) riven_disk39.dsk  27 0 MOVIE2               0   0
 
 
 ###
@@ -66,11 +52,11 @@ HELLO:	hello.bas
 
 ####
 
-LOADER:	loader.o
-	ld65 -o LOADER loader.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
+#LOADER:	loader.o
+#	ld65 -o LOADER loader.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
-loader.o:	loader.s hardware_detect.s
-	ca65 -o loader.o loader.s -l loader.lst
+#loader.o:	loader.s hardware_detect.s
+#	ca65 -o loader.o loader.s -l loader.lst
 
 ####
 
@@ -93,7 +79,7 @@ level_outside.o:	level_outside.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		leveldata_outside.inc \
+		disk39_files/leveldata_outside.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_outside/outside_graphics.inc
 	ca65 -o level_outside.o level_outside.s -l level_outside.lst
@@ -108,7 +94,7 @@ level_projector.o:	level_projector.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		leveldata_projector.inc \
+		disk39_files/leveldata_projector.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_projector/projector_graphics.inc
 	ca65 -o level_projector.o level_projector.s -l level_projector.lst
@@ -123,7 +109,7 @@ level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		leveldata_magsteps.inc \
+		disk39_files/leveldata_magsteps.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_magsteps/magsteps_graphics.inc
 	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
@@ -138,7 +124,7 @@ level_maglev.o:	level_maglev.s zp.inc hardware.inc \
 		hgr_sprite.s hgr_tables.s \
 		keyboard.s \
 		hgr_14x14_sprite.s \
-		leveldata_maglev.inc \
+		disk39_files/leveldata_maglev.inc \
 		graphics_sprites/pointer_sprites.inc \
 		graphics_maglev/maglev_graphics.inc
 	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst

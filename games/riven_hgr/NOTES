@@ -14,19 +14,20 @@ T        25 = MOVIE1     7837 bytes     32S = 2T0S	~
 T	 27 = MOVIE2    32000 bytes    128S = 8T0S	~
 
 
-MEMORY
+MEMORY MAP
 $0000-$00FF = zero page
 $0100-$01FF = stack
 $0200-$02FF = disk stuff
 $0300-$03ff = disk/interrupts
 $0400-$07ff = lores graphics page1
-$0800-$08ff = lores graphics page2 (qboot initial sector)
+$0800-$0bff = lores graphics page2
+	$800-$8ff = (qboot initial sector)
 $1000-$11ff = qboot_stage2 (disk code)
-$1200-$17FF = HGR lookup tables
-$1800-$1FFF = QLOAD = loader code
+$1300-$16FF = HGR lookup tables
+$1700-$17FF = ????
+$1800-$1FFF = QLOAD = loader code (2k?)
 $2000-$3FFF = HGR Page1, lores movie overlays
-$4000-$B7FF = our code
-$B800-$BFFF = hires lookup tables?
+$4000-$BFFF = our code (up to 32k in theory)
 $C000-$CFFF = I/O
 $D000-$FFFF = ROM
 
