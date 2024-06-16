@@ -42,7 +42,11 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
 
 qload.o:	qload.s qboot.inc \
-		zx02_optim.s
+		zx02_optim.s wait.s \
+		draw_pointer.s log_table.s \
+		graphics_sprites/pointer_sprites.inc \
+		hgr_14x14_sprite.s \
+		keyboard.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 
@@ -53,20 +57,12 @@ HELLO:	hello.bas
 
 ####
 
-#LOADER:	loader.o
-#	ld65 -o LOADER loader.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
-
-#loader.o:	loader.s hardware_detect.s
-#	ca65 -o loader.o loader.s -l loader.lst
-
-####
-
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title.o:	title.s zp.inc hardware.inc \
 		qload.inc wait_a_bit.s \
-		hgr_sprite.s hgr_tables.s \
+		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title.o title.s -l title.lst
 
@@ -77,11 +73,7 @@ LEVEL_OUTSIDE:	level_outside.o
 
 level_outside.o:	level_outside.s zp.inc hardware.inc \
 		qload.inc \
-		hgr_sprite.s hgr_tables.s \
-		keyboard.s \
-		hgr_14x14_sprite.s \
 		disk39_files/leveldata_outside.inc \
-		graphics_sprites/pointer_sprites.inc \
 		graphics_outside/outside_graphics.inc
 	ca65 -o level_outside.o level_outside.s -l level_outside.lst
 
@@ -92,11 +84,7 @@ LEVEL_PROJECTOR:	level_projector.o
 
 level_projector.o:	level_projector.s zp.inc hardware.inc \
 		qload.inc \
-		hgr_sprite.s hgr_tables.s \
-		keyboard.s \
-		hgr_14x14_sprite.s \
 		disk39_files/leveldata_projector.inc \
-		graphics_sprites/pointer_sprites.inc \
 		graphics_projector/projector_graphics.inc
 	ca65 -o level_projector.o level_projector.s -l level_projector.lst
 
@@ -107,11 +95,7 @@ LEVEL_MAGSTEPS:	level_magsteps.o
 
 level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
 		qload.inc \
-		hgr_sprite.s hgr_tables.s \
-		keyboard.s \
-		hgr_14x14_sprite.s \
 		disk39_files/leveldata_magsteps.inc \
-		graphics_sprites/pointer_sprites.inc \
 		graphics_magsteps/magsteps_graphics.inc
 	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
 
@@ -122,11 +106,7 @@ LEVEL_MAGLEV:	level_maglev.o
 
 level_maglev.o:	level_maglev.s zp.inc hardware.inc \
 		qload.inc \
-		hgr_sprite.s hgr_tables.s \
-		keyboard.s \
-		hgr_14x14_sprite.s \
 		disk39_files/leveldata_maglev.inc \
-		graphics_sprites/pointer_sprites.inc \
 		graphics_maglev/maglev_graphics.inc
 	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
 

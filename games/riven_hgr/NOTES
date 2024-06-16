@@ -1,17 +1,4 @@
 
-Disk39 Map (disk has 35 tracks, each 4k in size)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-T         0 = Qboot
-T         1 = QLOAD       255 bytes     ??S = 1T0S	3k free
-T       1.5 = TITLE	 1688 bytes	??S = 1T0S	2k free
-T         2 = PROJECTOR 28220 bytes    128S = 6T0S	3k free
-T         9 = OUTSIDE   30839 bytes    128S = 8T0S	2k free
-T	 17 = MAGSTEPS  13021 bytes	64S = 4T0S	3k free
-T        21 = MAGLEV    15346 bytes     64S = 4T0S	1k free
-T        25 = MOVIE1     7837 bytes     32S = 2T0S	~
-T	 27 = MOVIE2    32432 bytes    128S = 8T0S	~
-
-
 MEMORY MAP
 $0000-$00FF = zero page
 $0100-$01FF = stack
@@ -52,4 +39,20 @@ final movie roto procedure:
 	convert to indexed apple II palette
 	scale to 80x48
 	save
+
+
+
+Disk39 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
+T         2 = PROJECTOR 26736 bytes    112S = 7T0S	(28672)  2k free
+T         9 = OUTSIDE   29355 bytes    128S = 8T0S	(32768)  3k free
+T	 17 = MAGSTEPS  11537 bytes	64S = 4T0S	(16384)  5k free
+T        21 = MAGLEV    13862 bytes     64S = 4T0S	(16384)  3k free
+T        25 = MOVIE1     7680 bytes     32S = 2T0S	(8192) 500B free
+T	 27 = MOVIE2    32275 bytes    128S = 8T0S	(32768)500B free
+
+
 

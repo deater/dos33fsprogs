@@ -250,8 +250,12 @@ insert_disk_string:
 ; common includes used by everyone
 
 .include "zx02_optim.s"
-
-
+.include "wait.s"
+.include "draw_pointer.s"
+.include "log_table.s"
+.include "graphics_sprites/pointer_sprites.inc"
+.include "hgr_14x14_sprite.s"
+.include "keyboard.s"
 
 which_disk_array:
 	.byte 1,1,1,1		; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS

@@ -142,17 +142,15 @@ handle2_clicked:
 
 ;	.include	"zx02_optim.s"
 
-	.include	"keyboard.s"
+;	.include	"keyboard.s"
 
-	.include	"hgr_14x14_sprite.s"
-	.include	"draw_pointer.s"
+;	.include	"hgr_14x14_sprite.s"
+;	.include	"draw_pointer.s"
 
-	.include	"log_table.s"
+;	.include	"log_table.s"
 
 .include "graphics_maglev/maglev_graphics.inc"
 
-;.include "common_sprites.inc"
-
-.include "graphics_sprites/pointer_sprites.inc"
+;.include "graphics_sprites/pointer_sprites.inc"
 
 .include "disk39_files/leveldata_maglev.inc"

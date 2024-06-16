@@ -359,7 +359,7 @@ done_pageflip:
 
 	.include	"movie_maglev_flip/movie_maglev_flip.inc"
 
-	.include	"wait.s"
+;	.include	"wait.s"
 
 frames_l:
 	.byte	<img025_bg_zx02

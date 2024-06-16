@@ -321,7 +321,7 @@ done_pageflip:
 
 ;	.include	"zx02_optim.s"
 
-	.include	"wait.s"
+;	.include	"wait.s"
 
 	.include	"movie_maglev_ride/movie_maglev_ride.inc"
 

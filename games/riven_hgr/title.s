@@ -320,7 +320,7 @@ clear_loop:
 	.include	"hgr_tables.s"
 
 	.include	"wait_a_bit.s"
-	.include	"wait.s"
+;	.include	"wait.s"
 
 	.include	"hardware_detect.s"
 
