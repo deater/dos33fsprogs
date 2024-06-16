@@ -18,6 +18,7 @@ outside_graphics.inc:	\
 	echo "magpath_n_zx02: .incbin \"magpath_n.hgr.zx02\"" >> outside_graphics.inc
 	echo "magpath_s_zx02: .incbin \"magpath_s.hgr.zx02\"" >> outside_graphics.inc
 	echo "overlook_n_zx02: .incbin \"overlook_n.hgr.zx02\"" >> outside_graphics.inc
+#	echo "overlook_s_zx02: .incbin \"overlook_n.hgr.zx02\"" >> outside_graphics.inc
 
 
 
