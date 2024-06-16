@@ -1,14 +1,14 @@
-; Riven -- Dome Island, Projector Room area
+; Riven -- Dome Island, Steps to Maglev
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-	.include "zp.inc"
-	.include "hardware.inc"
-	.include "common_defines.inc"
-	.include "qload.inc"
+	.include "../zp.inc"
+	.include "../hardware.inc"
+	.include "../common_defines.inc"
+	.include "../qload.inc"
 
-riven_projector:
+riven_magsteps:
 
 	;===================
 	; init screen
@@ -100,17 +100,6 @@ really_exit:
 	; includes
 	;==========================
 
-;	.include	"zx02_optim.s"
+.include "graphics_magsteps/magsteps_graphics.inc"
 
-;	.include	"keyboard.s"
-
-;	.include	"hgr_14x14_sprite.s"
-;	.include	"draw_pointer.s"
-
-;	.include	"log_table.s"
-
-.include "graphics_projector/projector_graphics.inc"
-
-;.include "graphics_sprites/pointer_sprites.inc"
-
-.include "disk39_files/leveldata_projector.inc"
+.include "leveldata_magsteps.inc"

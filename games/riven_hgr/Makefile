@@ -10,20 +10,24 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	riven_disk39.dsk
 
 riven_disk39.dsk:	QBOOT QLOAD TITLE \
-	LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-	MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
+	disk39_files/LEVEL_MAGSTEPS \
+	disk39_files/LEVEL_MAGLEV \
+	disk39_files/LEVEL_OUTSIDE \
+	disk39_files/LEVEL_PROJECTOR \
+	disk39_files/MOVIE_MAGLEV_FLIP \
+	disk39_files/MOVIE_MAGLEV_RIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk39.dsk
 	$(DOS33_RAW) riven_disk39.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk39.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk39.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk39.dsk  1  8 TITLE		      0   0
-	$(DOS33_RAW) riven_disk39.dsk  2  0 LEVEL_PROJECTOR      0   0
-	$(DOS33_RAW) riven_disk39.dsk  9  0 LEVEL_OUTSIDE        0   0
-	$(DOS33_RAW) riven_disk39.dsk  17 0 LEVEL_MAGSTEPS       0   0
-	$(DOS33_RAW) riven_disk39.dsk  21 0 LEVEL_MAGLEV         0   0
-	$(DOS33_RAW) riven_disk39.dsk  25 0 MOVIE_MAGLEV_FLIP               0   0
-	$(DOS33_RAW) riven_disk39.dsk  27 0 MOVIE_MAGLEV_RIDE               0   0
+	$(DOS33_RAW) riven_disk39.dsk  2  0 disk39_files/LEVEL_PROJECTOR      0   0
+	$(DOS33_RAW) riven_disk39.dsk  9  0 disk39_files/LEVEL_OUTSIDE        0   0
+	$(DOS33_RAW) riven_disk39.dsk  17 0 disk39_files/LEVEL_MAGSTEPS       0   0
+	$(DOS33_RAW) riven_disk39.dsk  21 0 disk39_files/LEVEL_MAGLEV         0   0
+	$(DOS33_RAW) riven_disk39.dsk  25 0 disk39_files/MOVIE_MAGLEV_FLIP               0   0
+	$(DOS33_RAW) riven_disk39.dsk  27 0 disk39_files/MOVIE_MAGLEV_RIDE               0   0
 
 
 ###
@@ -49,12 +53,6 @@ qload.o:	qload.s qboot.inc \
 		keyboard.s
 	ca65 -o qload.o qload.s -l qload.lst
 
-
-###
-
-HELLO:	hello.bas
-	$(TOKENIZE) < hello.bas > HELLO
-
 ####
 
 TITLE:	title.o
@@ -68,70 +66,88 @@ title.o:	title.s zp.inc hardware.inc \
 
 ####
 
-LEVEL_OUTSIDE:	level_outside.o
-	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+disk39_files/LEVEL_OUTSIDE:	
+	cd disk39_files && make
 
-level_outside.o:	level_outside.s zp.inc hardware.inc \
-		qload.inc \
-		disk39_files/leveldata_outside.inc \
-		graphics_outside/outside_graphics.inc
-	ca65 -o level_outside.o level_outside.s -l level_outside.lst
+disk39_files/LEVEL_PROJECTOR:	
+	cd disk39_files && make
 
-####
+disk39_files/LEVEL_MAGLEV:	
+	cd disk39_files && make
 
-LEVEL_PROJECTOR:	level_projector.o
-	ld65 -o LEVEL_PROJECTOR level_projector.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+disk39_files/LEVEL_MAGSTEPS:	
+	cd disk39_files && make
 
-level_projector.o:	level_projector.s zp.inc hardware.inc \
-		qload.inc \
-		disk39_files/leveldata_projector.inc \
-		graphics_projector/projector_graphics.inc
-	ca65 -o level_projector.o level_projector.s -l level_projector.lst
+disk39_files/MOVIE_MAGLEV_FLIP:
+	cd disk39_files && make
 
-####
+disk39_files/MOVIE_MAGLEV_RIDE:
+	cd disk39_files && make
 
-LEVEL_MAGSTEPS:	level_magsteps.o
-	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+#LEVEL_OUTSIDE:	level_outside.o
+#	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
-		qload.inc \
-		disk39_files/leveldata_magsteps.inc \
-		graphics_magsteps/magsteps_graphics.inc
-	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
+#level_outside.o:	level_outside.s zp.inc hardware.inc \
+#		qload.inc \
+#		disk39_files/leveldata_outside.inc \
+#		graphics_outside/outside_graphics.inc
+#	ca65 -o level_outside.o level_outside.s -l level_outside.lst
 
 ####
 
-LEVEL_MAGLEV:	level_maglev.o
-	ld65 -o LEVEL_MAGLEV level_maglev.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+#LEVEL_PROJECTOR:	level_projector.o
+#	ld65 -o LEVEL_PROJECTOR level_projector.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-level_maglev.o:	level_maglev.s zp.inc hardware.inc \
-		qload.inc \
-		disk39_files/leveldata_maglev.inc \
-		graphics_maglev/maglev_graphics.inc
-	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
-
-####
-
-MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
-	ld65 -o MOVIE_MAGLEV_FLIP movie_maglev_flip.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-movie_maglev_flip.o:	movie_maglev_flip.s \
-	zp.inc hardware.inc \
-	qload.inc \
-	movie_maglev_flip/movie_maglev_flip.inc
-	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
+#level_projector.o:	level_projector.s zp.inc hardware.inc \
+#		qload.inc \
+#		disk39_files/leveldata_projector.inc \
+#		graphics_projector/projector_graphics.inc
+#	ca65 -o level_projector.o level_projector.s -l level_projector.lst
 
 ####
 
-MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
-	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+#LEVEL_MAGSTEPS:	level_magsteps.o
+#	ld65 -o LEVEL_MAGSTEPS level_magsteps.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-movie_maglev_ride.o:	movie_maglev_ride.s \
-	zp.inc hardware.inc \
-	qload.inc \
-	end_message/end_message.gr.zx02 \
-	movie_maglev_ride/movie_maglev_ride.inc
-	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
+#level_magsteps.o:	level_magsteps.s zp.inc hardware.inc \
+#		qload.inc \
+#		disk39_files/leveldata_magsteps.inc \
+#		graphics_magsteps/magsteps_graphics.inc
+#	ca65 -o level_magsteps.o level_magsteps.s -l level_magsteps.lst
+
+####
+
+#LEVEL_MAGLEV:	level_maglev.o
+#	ld65 -o LEVEL_MAGLEV level_maglev.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+#level_maglev.o:	level_maglev.s zp.inc hardware.inc \
+#		qload.inc \
+#		disk39_files/leveldata_maglev.inc \
+#		graphics_maglev/maglev_graphics.inc
+#	ca65 -o level_maglev.o level_maglev.s -l level_maglev.lst
+
+####
+
+#MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
+#	ld65 -o MOVIE_MAGLEV_FLIP movie_maglev_flip.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+#movie_maglev_flip.o:	movie_maglev_flip.s \
+#	zp.inc hardware.inc \
+#	qload.inc \
+#	movie_maglev_flip/movie_maglev_flip.inc
+#	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
+
+####
+
+#MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
+#	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+#movie_maglev_ride.o:	movie_maglev_ride.s \
+#	zp.inc hardware.inc \
+#	qload.inc \
+#	end_message/end_message.gr.zx02 \
+#	movie_maglev_ride/movie_maglev_ride.inc
+#	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
 
 
 
@@ -143,40 +159,17 @@ graphics_sprites/pointer_sprites.inc:
 graphics_title/riven_title.hgr.zx02:	
 	cd graphics_title && make
 
-graphics_maglev/maglev_graphics.inc:
-	cd graphics_maglev && make
-
-graphics_magsteps/magsteps_graphics.inc:
-	cd graphics_magsteps && make
-
-graphics_outside/outside_graphics.inc:
-	cd graphics_outside && make
-
-graphics_projector/projector_graphics.inc:
-	cd graphics_projector && make
-
-movie_maglev_flip/movie_maglev_flip.inc:	
-	cd movie_maglev_flip && make
-
 ####
 
 clean:		
-	rm -f *~ *.o *.lst HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
+	rm -f *~ *.o *.lst QLOAD QBOOT TITLE
+	cd disk39_files && make clean
 
 ####
 
 distclean:
-	rm -f *~ *.o *.lst HELLO LOADER TITLE \
-		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
+	rm -f *~ *.o *.lst QLOAD QBOOT TITLE
 	cd graphics_title && make clean
-	cd graphics_projector && make clean
-	cd graphics_outside && make clean
-	cd graphics_magsteps && make clean
-	cd graphics_maglev && make clean
 	cd graphics_sprites && make clean
-	cd movie_maglev_flip && make clean
-#	cd movie_maglev_ride && make clean
+	cd disk39_files && make distclean
 

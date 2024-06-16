@@ -2,10 +2,10 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
-.include "common_defines.inc"
-.include "qload.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
+.include "../common_defines.inc"
+.include "../qload.inc"
 
 overlays	=	$2000
 
@@ -354,8 +354,6 @@ done_pageflip:
 
 
 ;	.include	"zx02_optim.s"
-
-
 
 	.include	"movie_maglev_flip/movie_maglev_flip.inc"
 

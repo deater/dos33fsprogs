@@ -1,9 +1,16 @@
-share code in QLOAD to free up room in levels
+
++ Keyboard handling
+	- still buggy, especially when clicking on something???
+	- Better keyboard handling on IIe
+	-> was actually one of the main reasons I started working on this
 
 
 disk39:
 	-> try to fit more locations
-		have one already done that didn't fit (overlook otherway)
+		+ outside/overlook_s is there but won't fit
+		+ projector_e also there, prob will fit
+		+ re-arrange disk so projector gets the extra 4k
+
 	-> try to fit last little bit of maglev sequence
 		+ do the handle animation at end?
 		+ sound effects?
@@ -11,6 +18,6 @@ disk39:
 			optionally load tail end
 			to language card on machines that have it?
 
-+ Better keyboard handling on IIe
-	-> was actually one of the main reasons I started working on this
+
+disk40:
 

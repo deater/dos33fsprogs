@@ -1,21 +1,21 @@
-; Riven -- Dome Island, Inside Maglev
+; Riven -- Dome Island, Projector Room area
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-	.include "zp.inc"
-	.include "hardware.inc"
-	.include "common_defines.inc"
-	.include "qload.inc"
+	.include "../zp.inc"
+	.include "../hardware.inc"
+	.include "../common_defines.inc"
+	.include "../qload.inc"
 
-riven_maglev:
+riven_projector:
 
 	;===================
 	; init screen
 	;===================
 
 ;	jsr	TEXT
-	jsr	HOME
+;	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR
@@ -96,61 +96,10 @@ really_exit:
 	rts
 
 
-	;=====================================
-	; handle1 clicked
-	;=====================================
-	; flip us to the east
-	; go lores and play the movie
-handle1_clicked:
-
-	bit	SPEAKER
-
-	lda	#LOAD_MOVIE1
-	sta	WHICH_LOAD
-
-	lda	#1
-	sta	LEVEL_OVER
-
-	bit	SPEAKER
-
-	rts
-
-
-	;=====================================
-	; handle2 clicked
-	;=====================================
-	; go for maglev ride
-
-handle2_clicked:
-
-	bit	SPEAKER
-
-	lda	#LOAD_MOVIE2
-	sta	WHICH_LOAD
-
-	lda	#1
-	sta	LEVEL_OVER
-
-	bit	SPEAKER
-
-	rts
-
-
 	;==========================
 	; includes
 	;==========================
 
-;	.include	"zx02_optim.s"
+.include "graphics_projector/projector_graphics.inc"
 
-;	.include	"keyboard.s"
-
-;	.include	"hgr_14x14_sprite.s"
-;	.include	"draw_pointer.s"
-
-;	.include	"log_table.s"
-
-.include "graphics_maglev/maglev_graphics.inc"
-
-;.include "graphics_sprites/pointer_sprites.inc"
-
-.include "disk39_files/leveldata_maglev.inc"
+.include "leveldata_projector.inc"

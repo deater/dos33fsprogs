@@ -1,9 +1,9 @@
-include ../../../Makefile.inc
+include ../../../../Makefile.inc
 
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
-PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
-LINKER_SCRIPTS = ../../../linker_scripts
-HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
+PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
+#LINKER_SCRIPTS = ../../../linker_scripts
+#HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
 all:	outside_graphics.inc
 

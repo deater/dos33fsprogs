@@ -1,7 +1,7 @@
-include ../../../Makefile.inc
+include ../../../../Makefile.inc
 
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
-PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
+PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 
 all:	magsteps_graphics.inc
 

@@ -1,21 +1,21 @@
-; Riven -- Dome Island -- Outside in the Quad
+; Riven -- Dome Island, Inside Maglev
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-	.include "zp.inc"
-	.include "hardware.inc"
-	.include "common_defines.inc"
-	.include "qload.inc"
+	.include "../zp.inc"
+	.include "../hardware.inc"
+	.include "../common_defines.inc"
+	.include "../qload.inc"
 
-riven_outside:
+riven_maglev:
 
 	;===================
 	; init screen
 	;===================
 
 ;	jsr	TEXT
-;	jsr	HOME
+	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR
@@ -53,12 +53,6 @@ riven_outside:
 	;===================================
 	; init
 	;===================================
-
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
 
 	jsr	change_location
 
@@ -101,13 +95,44 @@ really_exit:
 
 	rts
 
-	;==================================
-	; call button clicked
-	;==================================
-	; just ignore this
 
-call_button_clicked:
+	;=====================================
+	; handle1 clicked
+	;=====================================
+	; flip us to the east
+	; go lores and play the movie
+handle1_clicked:
+
 	bit	SPEAKER
+
+	lda	#LOAD_MOVIE1
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	bit	SPEAKER
+
+	rts
+
+
+	;=====================================
+	; handle2 clicked
+	;=====================================
+	; go for maglev ride
+
+handle2_clicked:
+
+	bit	SPEAKER
+
+	lda	#LOAD_MOVIE2
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	bit	SPEAKER
+
 	rts
 
 
@@ -115,17 +140,6 @@ call_button_clicked:
 	; includes
 	;==========================
 
-;	.include	"zx02_optim.s"
+.include "graphics_maglev/maglev_graphics.inc"
 
-;	.include	"keyboard.s"
-
-;	.include	"hgr_14x14_sprite.s"
-;	.include	"draw_pointer.s"
-
-;	.include	"log_table.s"
-
-.include "graphics_outside/outside_graphics.inc"
-
-;.include "graphics_sprites/pointer_sprites.inc"
-
-.include "disk39_files/leveldata_outside.inc"
+.include "leveldata_maglev.inc"

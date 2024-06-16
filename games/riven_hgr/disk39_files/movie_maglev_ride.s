@@ -4,9 +4,9 @@
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
-.include "qload.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
+.include "../qload.inc"
 
 NUM_SCENES	=	137
 

@@ -1,14 +1,14 @@
-; Riven -- Dome Island, Steps to Maglev
+; Riven -- Dome Island -- Outside in the Quad
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
 ; Zero Page
-	.include "zp.inc"
-	.include "hardware.inc"
-	.include "common_defines.inc"
-	.include "qload.inc"
+	.include "../zp.inc"
+	.include "../hardware.inc"
+	.include "../common_defines.inc"
+	.include "../qload.inc"
 
-riven_magsteps:
+riven_outside:
 
 	;===================
 	; init screen
@@ -54,6 +54,12 @@ riven_magsteps:
 	; init
 	;===================================
 
+; done in title
+
+;	lda	#$20
+;	sta	HGR_PAGE
+;	jsr	hgr_make_tables
+
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
@@ -95,22 +101,21 @@ really_exit:
 
 	rts
 
+	;==================================
+	; call button clicked
+	;==================================
+	; just ignore this
+
+call_button_clicked:
+	bit	SPEAKER
+	rts
+
 
 	;==========================
 	; includes
 	;==========================
 
-;	.include	"zx02_optim.s"
 
-;	.include	"keyboard.s"
+.include "graphics_outside/outside_graphics.inc"
 
-;	.include	"hgr_14x14_sprite.s"
-;	.include	"draw_pointer.s"
-
-;	.include	"log_table.s"
-
-.include "graphics_magsteps/magsteps_graphics.inc"
-
-;.include "graphics_sprites/pointer_sprites.inc"
-
-.include "disk39_files/leveldata_magsteps.inc"
+.include "leveldata_outside.inc"
