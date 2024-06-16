@@ -11,7 +11,7 @@ all:	riven_disk39.dsk
 
 riven_disk39.dsk:	QBOOT QLOAD TITLE \
 	LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-	MOVIE1 MOVIE2
+	MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk39.dsk
 	$(DOS33_RAW) riven_disk39.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk39.dsk  0  2 QBOOT                1   1
@@ -22,8 +22,8 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE \
 	$(DOS33_RAW) riven_disk39.dsk  9  0 LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_disk39.dsk  17 0 LEVEL_MAGSTEPS       0   0
 	$(DOS33_RAW) riven_disk39.dsk  21 0 LEVEL_MAGLEV         0   0
-	$(DOS33_RAW) riven_disk39.dsk  25 0 MOVIE1               0   0
-	$(DOS33_RAW) riven_disk39.dsk  27 0 MOVIE2               0   0
+	$(DOS33_RAW) riven_disk39.dsk  25 0 MOVIE_MAGLEV_FLIP               0   0
+	$(DOS33_RAW) riven_disk39.dsk  27 0 MOVIE_MAGLEV_RIDE               0   0
 
 
 ###
@@ -132,26 +132,26 @@ level_maglev.o:	level_maglev.s zp.inc hardware.inc \
 
 ####
 
-MOVIE1:	movie1.o
-	ld65 -o MOVIE1 movie1.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
+	ld65 -o MOVIE_MAGLEV_FLIP movie_maglev_flip.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-movie1.o:	movie1.s \
+movie_maglev_flip.o:	movie_maglev_flip.s \
 	zp.inc hardware.inc \
 	qload.inc \
-	movie1/movie1.inc
-	ca65 -o movie1.o movie1.s -l movie1.lst
+	movie_maglev_flip/movie_maglev_flip.inc
+	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
 
 ####
 
-MOVIE2:	movie2.o
-	ld65 -o MOVIE2 movie2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
+	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-movie2.o:	movie2.s \
+movie_maglev_ride.o:	movie_maglev_ride.s \
 	zp.inc hardware.inc \
 	qload.inc \
 	end_message/end_message.gr.zx02 \
-	movie2/movie2.inc
-	ca65 -o movie2.o movie2.s -l movie2.lst
+	movie_maglev_ride/movie_maglev_ride.inc
+	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
 
 
 
@@ -175,28 +175,28 @@ graphics_outside/outside_graphics.inc:
 graphics_projector/projector_graphics.inc:
 	cd graphics_projector && make
 
-movie1/movie1.inc:	
-	cd movie1 && make
+movie_maglev_flip/movie_maglev_flip.inc:	
+	cd movie_maglev_flip && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE1 MOVIE2
+		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst HELLO LOADER TITLE \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
-		MOVIE1 MOVIE2
+		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 	cd graphics_title && make clean
 	cd graphics_projector && make clean
 	cd graphics_outside && make clean
 	cd graphics_magsteps && make clean
 	cd graphics_maglev && make clean
 	cd graphics_sprites && make clean
-	cd movie1 && make clean
-#	cd movie2 && make clean
+	cd movie_maglev_flip && make clean
+#	cd movie_maglev_ride && make clean
 

@@ -36,7 +36,7 @@ overlays	=	$2000
 	; do_overlay:
 	;	9c78 = 40,056 cycles
 
-movie1_start:
+movie_maglev_flip_start:
 
 
 	;===================
@@ -357,7 +357,7 @@ done_pageflip:
 
 
 
-	.include	"movie1/movie1.inc"
+	.include	"movie_maglev_flip/movie_maglev_flip.inc"
 
 	.include	"wait.s"
 
@@ -432,10 +432,10 @@ frames_h:
 
 
 overlay_mask_zx02:
-	.incbin		"movie1/overlays/maglev_overlay_mask.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/maglev_overlay_mask.gr.zx02"
 
 combined_overlays_zx02:
-	.incbin		"movie1/overlays/combined_overlays.zx02"
+	.incbin		"movie_maglev_flip/overlays/combined_overlays.zx02"
 
 
 .if 0
@@ -451,21 +451,21 @@ overlays_h:
 
 
 overlay25:
-	.incbin		"movie1/overlays/overlay25.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay25.gr.zx02"
 overlay29:
-	.incbin		"movie1/overlays/overlay29.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay29.gr.zx02"
 overlay30:
-	.incbin		"movie1/overlays/overlay30.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay30.gr.zx02"
 overlay31:
-	.incbin		"movie1/overlays/overlay31.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay31.gr.zx02"
 overlay32:
-	.incbin		"movie1/overlays/overlay32.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay32.gr.zx02"
 overlay33:
-	.incbin		"movie1/overlays/overlay33.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay33.gr.zx02"
 overlay34:
-	.incbin		"movie1/overlays/overlay34.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay34.gr.zx02"
 overlay35:
-	.incbin		"movie1/overlays/overlay35.gr.zx02"
+	.incbin		"movie_maglev_flip/overlays/overlay35.gr.zx02"
 
 
 .endif

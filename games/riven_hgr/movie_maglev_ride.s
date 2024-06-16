@@ -13,7 +13,7 @@ NUM_SCENES	=	137
 overlays	=	$2000
 
 	;===================
-	; notes for movie2
+	; notes for movie_maglev_ride
 	;	103..109 = overlay animation
 	;	110..112 = sit there
 	;	113..270 = fun animation	157! = 30k???
@@ -28,7 +28,7 @@ overlays	=	$2000
 	; do_overlay:
 	;	9c78 = 40,056 cycles
 
-movie2_start:
+movie_maglev_ride_start:
 
 
 	;===================
@@ -323,7 +323,7 @@ done_pageflip:
 
 	.include	"wait.s"
 
-	.include	"movie2/movie2.inc"
+	.include	"movie_maglev_ride/movie_maglev_ride.inc"
 
 frames_l:
 	.byte	<img096_bg_zx02
@@ -608,10 +608,10 @@ frames_h:
 
 
 overlay_mask_zx02:
-	.incbin		"movie2/overlays/maglev_overlay_mask.gr.zx02"
+	.incbin		"movie_maglev_ride/overlays/maglev_overlay_mask.gr.zx02"
 
 overlays_combined_zx02:
-	.incbin		"movie2/overlays/overlay_combined.zx02"
+	.incbin		"movie_maglev_ride/overlays/overlay_combined.zx02"
 
 
 end_message:
