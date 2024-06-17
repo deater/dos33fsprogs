@@ -7,7 +7,7 @@ EMPTY_DISK = ../../empty_disk/
 LINKER_SCRIPTS = ../../linker_scripts/
 
 
-all:	riven_disk39.dsk riven_disk43.dsk
+all:	riven_disk39.dsk riven_disk40.dsk riven_disk43.dsk
 
 riven_disk39.dsk:	QBOOT QLOAD_39 TITLE_39 \
 	disk39_files/LEVEL_MAGSTEPS \
@@ -28,6 +28,16 @@ riven_disk39.dsk:	QBOOT QLOAD_39 TITLE_39 \
 	$(DOS33_RAW) riven_disk39.dsk  21 0 disk39_files/LEVEL_MAGLEV         0   0
 	$(DOS33_RAW) riven_disk39.dsk  25 0 disk39_files/MOVIE_MAGLEV_FLIP               0   0
 	$(DOS33_RAW) riven_disk39.dsk  27 0 disk39_files/MOVIE_MAGLEV_RIDE               0   0
+
+riven_disk40.dsk:	QBOOT QLOAD_40 TITLE_40 \
+	disk40_files/LEVEL_MAGLEV
+	cp $(EMPTY_DISK)/empty.dsk riven_disk40.dsk
+	$(DOS33_RAW) riven_disk40.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk40.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk40.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD_40             0   0
+	$(DOS33_RAW) riven_disk40.dsk  1  8 TITLE_40		 0   0
+	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV      0   0
 
 riven_disk43.dsk:	QBOOT QLOAD_43 TITLE_43 \
 	disk43_files/LEVEL_CART
@@ -62,6 +72,22 @@ qload_39.o:	qload.s qboot.inc \
 		keyboard.s
 	ca65 -o qload_39.o qload.s -DDISK=39 -l qload_39.lst
 
+###
+
+QLOAD_40:	qload_40.o
+	ld65 -o QLOAD_40 qload_40.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
+
+qload_40.o:	qload.s qboot.inc \
+		zx02_optim.s wait.s \
+		draw_pointer.s log_table.s \
+		disk40_files/disk40_qload.inc \
+		disk40_files/disk40_defines.inc \
+		graphics_sprites/pointer_sprites.inc \
+		hgr_14x14_sprite.s \
+		keyboard.s
+	ca65 -o qload_40.o qload.s -DDISK=40 -l qload_40.lst
+
+
 ####
 
 QLOAD_43:	qload_43.o
@@ -87,6 +113,18 @@ title_39.o:	title.s zp.inc hardware.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_39.o title.s -DDISK=39 -l title_39.lst
+
+####
+
+TITLE_40:	title_40.o
+	ld65 -o TITLE_40 title_40.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_40.o:	title.s zp.inc hardware.inc \
+		qload.inc wait_a_bit.s \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_40.o title.s -DDISK=40 -l title_40.lst
+
 
 ####
 
@@ -122,6 +160,11 @@ disk39_files/MOVIE_MAGLEV_RIDE:
 
 ####
 
+disk40_files/LEVEL_MAGLEV:
+	cd disk40_files && make
+
+####
+
 disk43_files/LEVEL_CART:
 	cd disk43_files && make
 
@@ -137,16 +180,22 @@ graphics_title/riven_title.hgr.zx02:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst QLOAD QBOOT TITLE
+	rm -f *~ *.o *.lst QLOAD \
+	QBOOT_39 QBOOT_40 QBOOT_43 \
+	TITLE_39 TITLE_40 TITLE_43
 	cd disk39_files && make clean
+	cd disk40_files && make clean
 	cd disk43_files && make clean
 
 ####
 
 distclean:
-	rm -f *~ *.o *.lst QLOAD QBOOT TITLE
+	rm -f *~ *.o *.lst QLOAD \
+	QBOOT_39 QBOOT_40 QBOOT_43 \
+	TITLE_39 TITLE_40 TITLE_43
 	cd graphics_title && make clean
 	cd graphics_sprites && make clean
 	cd disk39_files && make distclean
+	cd disk40_files && make distclean
 	cd disk43_files && make distclean
 

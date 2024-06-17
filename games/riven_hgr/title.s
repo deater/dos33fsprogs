@@ -12,6 +12,10 @@
 	.include "disk39_files/disk39_defines.inc"
 .endif
 
+.if DISK=40
+	.include "disk40_files/disk40_defines.inc"
+.endif
+
 .if DISK=43
 	.include "disk43_files/disk43_defines.inc"
 .endif
@@ -301,6 +305,17 @@ clear_loop:
 	sta	LOCATION
 
 	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+.if DISK=40
+	lda	#LOAD_MAGLEV
+	sta	WHICH_LOAD		; assume new game (dome island)
+
+	lda	#RIVEN_MAGLEV_SIT
+	sta	LOCATION
+
+	lda	#DIRECTION_S
 	sta	DIRECTION
 .endif
 
