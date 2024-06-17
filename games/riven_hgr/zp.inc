@@ -85,18 +85,6 @@ DRAW_PAGE		= $8D
 
 WHICH_OVERLAY		= $8E
 
-;HOLDING_PAGE		= $90
-;	HOLDING_RED_PAGE        = $80
-;	HOLDING_BLUE_PAGE       = $40
-;	HOLDING_WHITE_PAGE      = $C0
-;HOLDING_ITEM            = $91
-;	HOLDING_KEY             = $04
-;	HOLDING_LIT_MATCH       = $02
-;	HOLDING_MATCH           = $01
-
-
-
-
 ; Riven zero page addresses
 
 FRAMEL			= $90
@@ -117,6 +105,8 @@ APPLEII_MODEL		= $9D
 HGR_PAGE		= $9E
 WHICH_SLOT		= $9F
 
+MAGLEV_FLIP_DIRECTION	= $A0
+BEACH_ANIMALS_SEEN	= $A1
 
 TEMP		=	$F9
 MASKL		=	$FA
@@ -126,28 +116,3 @@ INH		=	$FD
 OUTL		=	$FE
 OUTH		=	$FF
 
-; read any file slot 6 version
-; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
-
-; modified to assemble with ca65 -- vmw
-; added code to patch it to run from current disk slot -- vmw
-
-.if 0
-
-        adrlo   =       $26     ; constant from boot prom
-        adrhi   =       $27     ; constant from boot prom
-        tmpsec  =       $3c     ; constant from boot prom
-        reqsec  =       $3d     ; constant from boot prom
-        sizelo  =       $44
-        sizehi  =       $45
-        secsize =       $46
-
-        ldsizel =       $70
-        ldsizeh =       $71
-        namlo   =       $7b
-        namhi   =       $7c
-        step    =       $7d     ; state for stepper motor
-        tmptrk  =       $7e     ; temporary copy of current track
-        phase   =       $7f     ; current phase for /seek
-
-.endif

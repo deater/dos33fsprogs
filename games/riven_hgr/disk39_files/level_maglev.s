@@ -98,13 +98,17 @@ really_exit:
 
 
 	;=====================================
-	; handle1 clicked
+	; handle clicked facing west
 	;=====================================
+	; all we can do here is flip
 	; flip us to the east
 	; go lores and play the movie
 handle1_clicked:
 
 	bit	SPEAKER
+
+	lda	#0
+	sta	MAGLEV_FLIP_DIRECTION
 
 	lda	#LOAD_MOVIE1
 	sta	WHICH_LOAD
@@ -118,15 +122,29 @@ handle1_clicked:
 
 
 	;=====================================
-	; handle2 clicked
+	; handle clicked facing east
 	;=====================================
-	; go for maglev ride
-
+	; if x<27, go for maglev ride
+	; else, flip back west
 handle2_clicked:
 
 	bit	SPEAKER
 
+	lda	CURSOR_X
+	cmp	#27
+	bcc	go_for_maglev
+
+	lda	#1
+	sta	MAGLEV_FLIP_DIRECTION
+
+	lda	#LOAD_MOVIE1
+	jmp	common_handle2
+
+
+go_for_maglev:
 	lda	#LOAD_MOVIE2
+
+common_handle2:
 	sta	WHICH_LOAD
 
 	lda	#1

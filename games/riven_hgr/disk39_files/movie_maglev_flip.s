@@ -21,14 +21,6 @@ overlays	=	$2000
 	; space?
 	;	188*8=overlays (1.5k)
 	;	 35 rotations * 188 = (7k) not so bad?
-	;===================
-	; notes for movie2
-	;	103..109 = overlay animation
-	;	110..112 = sit there
-	;	113..270 = fun animation	157! = 30k???
-	;	271..285 = handle rotate
-	;	286..306 = sit there
-
 
 	; timing, want whole thing to finish in 200ms or so
 	;
@@ -90,35 +82,144 @@ movie_maglev_flip_start:
 
 	jsr	full_decomp
 
-.if 0
-	lda	#0
-	sta	WHICH_OVERLAY
 
-load_overlay_loop:
-	ldx	WHICH_OVERLAY
-	lda	overlays_l,X
-	sta	ZX0_src
-	lda	overlays_h,X
-        sta	ZX0_src+1
+	lda	MAGLEV_FLIP_DIRECTION
+	beq	maglev_forward_flip
 
-	lda	WHICH_OVERLAY
-	asl
-	asl
-	clc
-	adc	#>overlays
-
-	jsr	full_decomp
-
-	inc	WHICH_OVERLAY
-	lda	WHICH_OVERLAY
-	cmp	#8
-	bne	load_overlay_loop
-.endif
 
 	;===============================
+	;===============================
+	; Backward flip (face west)
+	;===============================
+	;===============================
+maglev_backward_flip:
+
 	;===============================
 	; initial screen
 	;===============================
+
+	lda	#30
+	sta	SCENE_COUNT
+
+	lda	#7				; start at end
+	sta	WHICH_OVERLAY
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	;===============================
+	; wait 4 frames (800ms)
+
+	ldx	#16
+	jsr	wait_50xms
+
+	;===============================
+	;===============================
+	; move the handle
+	;===============================
+	;===============================
+
+	lda	#7
+	sta	WHICH_OVERLAY
+
+move_handle_backward_loop:
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	dec	WHICH_OVERLAY
+	bmi	done_move_handle_backward
+
+backward_overlay_good:
+
+	ldx	#2
+	jsr	wait_50xms
+
+	jmp	move_handle_backward_loop
+
+
+done_move_handle_backward:
+	lda	#0			; point to first one
+	sta	WHICH_OVERLAY
+
+	;===============================
+	; wait 16 frames (3.2s?)
+
+	ldx	#64
+	jsr	wait_50xms
+
+
+	;===============================
+	;===============================
+	; play the movie
+	;===============================
+	;===============================
+
+	lda	#30
+	sta	SCENE_COUNT
+
+movie1_backward_loop:
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	dec	SCENE_COUNT
+	lda	SCENE_COUNT
+;	cmp	#0
+	bmi	done_play_movie1_backward
+
+	ldx	#2
+	jsr	wait_50xms
+
+	jmp	movie1_backward_loop
+
+
+done_play_movie1_backward:
+
+	;===============================
+	; wait 9 frames (1.8s?)
+
+	ldx	#36
+	jsr	wait_50xms
+
+
+done_movie1_bacward:
+	bit	KEYRESET
+
+
+	;=============================
+	; return back to game
+
+	lda	#LOAD_MAGLEV
+	sta	WHICH_LOAD
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+
+	lda	#RIVEN_INSEAT
+	sta	LOCATION
+
+	; needed?
+
+        lda     #1
+        sta     LEVEL_OVER
+
+	rts
+
+
+
+	;===============================
+	;===============================
+	; Forward flip (face east)
+	;===============================
+	;===============================
+maglev_forward_flip:
+
+	;===============================
+	; initial screen
 	;===============================
 
 	lda	#0
@@ -353,12 +454,8 @@ done_pageflip:
 
 ;===================================
 
-
-;	.include	"zx02_optim.s"
-
 	.include	"movie_maglev_flip/movie_maglev_flip.inc"
 
-;	.include	"wait.s"
 
 frames_l:
 	.byte	<img025_bg_zx02
