@@ -11,8 +11,8 @@
 .if DISK=39
 .include "disk39_files/disk39_defines.inc"
 .endif
-.if DISK=40
-.include "disk40_files/disk40_defines.inc"
+.if DISK=43
+.include "disk43_files/disk43_defines.inc"
 .endif
 
 LOAD_FIRST_SECTOR = 22 ; ???
@@ -268,8 +268,8 @@ insert_disk_string:
 .include "disk39_files/disk39_qload.inc"
 .endif
 
-.if DISK=40
-.include "disk40_files/disk40_qload.inc"
+.if DISK=43
+.include "disk43_files/disk43_qload.inc"
 .endif
 
 qload_end:

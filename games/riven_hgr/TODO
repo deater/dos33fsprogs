@@ -1,7 +1,10 @@
 + common
-	move change-disk message to be in TITLE?
-	how to handle if multiple exits to level?
-
+	+ move change-disk message to be in TITLE?
+	  how to handle if multiple exits to level?
+        + add code to actually detect if disk changed and skip
+		title screen in that case
+	+ add language card/sound detection in case we add sound effects
+	
 
 + Keyboard handling
 	- still buggy, especially when clicking on something???
@@ -10,6 +13,9 @@
 
 
 disk39:
+	-> allow flipping maglev back.  Should just be a matter of
+		playing movie in reverse
+
 	-> try to fit more locations
 		+ outside/overlook_s is there but won't fit
 		+ projector_e also there, prob will fit

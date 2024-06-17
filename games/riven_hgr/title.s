@@ -12,8 +12,8 @@
 	.include "disk39_files/disk39_defines.inc"
 .endif
 
-.if DISK=40
-	.include "disk40_files/disk40_defines.inc"
+.if DISK=43
+	.include "disk43_files/disk43_defines.inc"
 .endif
 
 
@@ -304,7 +304,7 @@ clear_loop:
 	sta	DIRECTION
 .endif
 
-.if DISK=40
+.if DISK=43
 	lda	#LOAD_CART
 	sta	WHICH_LOAD
 

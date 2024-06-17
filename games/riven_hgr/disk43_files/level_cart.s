@@ -7,7 +7,7 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
-	.include "disk40_defines.inc"
+	.include "disk43_defines.inc"
 
 riven_cart:
 
