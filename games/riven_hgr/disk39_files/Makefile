@@ -61,7 +61,8 @@ MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
 movie_maglev_flip.o:	movie_maglev_flip.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	../common_defines.inc disk39_defines.inc \
-	movie_maglev_flip/movie_maglev_flip.inc
+	movie_maglev_flip/movie_maglev_flip.inc \
+	movie_maglev_flip/overlays/combined_overlays.zx02
 	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
 
 ####
@@ -73,7 +74,8 @@ movie_maglev_ride.o:	movie_maglev_ride.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	../common_defines.inc disk39_defines.inc \
 	end_message/end_message.gr.zx02 \
-	movie_maglev_ride/movie_maglev_ride.inc
+	movie_maglev_ride/movie_maglev_ride.inc \
+	movie_maglev_ride/overlays/overlay_combined.zx02
 	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
 
 
@@ -101,8 +103,14 @@ graphics_projector/projector_graphics.inc:
 movie_maglev_flip/movie_maglev_flip.inc:	
 	cd movie_maglev_flip && make
 
+movie_maglev_flip/overlays/combined_overlays.zx02:	
+	cd movie_maglev_flip/overlays && make
+
 movie_maglev_ride/movie_maglev_ride.inc:	
 	cd movie_maglev_ride && make
+
+movie_maglev_ride/overlays/overlay_combined.zx02:	
+	cd movie_maglev_ride/overlays && make
 
 ####
 

@@ -1,7 +1,7 @@
-include ../../../../Makefile.inc
+include ../../../../../Makefile.inc
 
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
-PNG2GR = ../../../../utils/gr-utils/png2gr
+PNG2GR = ../../../../../utils/gr-utils/png2gr
 
 all:	maglev_overlay.gr.zx02 maglev_overlay_mask.gr.zx02 \
 	combined_overlays.zx02

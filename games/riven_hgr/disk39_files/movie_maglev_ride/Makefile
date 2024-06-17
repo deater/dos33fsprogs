@@ -205,3 +205,7 @@ movie_maglev_ride.inc:	\
 clean:
 	rm -f *~ *.o *.lst  *.zx02 *.gr movie_maglev_ride.inc
 
+distclean:
+	rm -f *~ *.o *.lst  *.zx02 *.gr movie_maglev_ride.inc
+	cd overlays && make clean
+

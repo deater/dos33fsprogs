@@ -63,3 +63,6 @@ movie_maglev_flip.inc:	\
 clean:
 	rm -f *~ *.o *.lst  *.zx02 *.gr movie_maglev_flip.inc
 
+distclean:
+	rm -f *~ *.o *.lst  *.zx02 *.gr movie_maglev_flip.inc
+	cd overlays && make clean
