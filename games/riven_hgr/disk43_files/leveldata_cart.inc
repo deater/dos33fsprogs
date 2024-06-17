@@ -26,19 +26,19 @@ location0:
 location1:
 	.byte	$ff			; north exit
 	.byte	$ff			; south exit
-	.byte	$ff			; east exit
-	.byte	$ff			; west exit
+	.byte	RIVEN_OUTSIDE_CART	; east exit
+	.byte	RIVEN_OUTSIDE_CART	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
-	.byte	$ff		; east exit_dir
-	.byte	$ff		; west exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_N	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
 	.word	in_cart_e_zx02	; east bg
-	.word	$0000		; west bg
-	.byte	BG_EAST		; all bgs
+	.word	in_cart_w_zx02	; west bg
+	.byte	BG_EAST|BG_WEST	; which bgs
 	.byte	DIRECTION_E	; special exit
-	.byte	32,34		; special x
-	.byte	136,154		; special y
-	.word	call_button_clicked-1
+	.byte	3,5		; special x
+	.byte	107,130		; special y
+	.word	cart_button_clicked-1
 

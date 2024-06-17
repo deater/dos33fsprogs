@@ -103,11 +103,11 @@ really_exit:
 	rts
 
 	;==================================
-	; call button clicked
+	; cart button clicked
 	;==================================
-	; just ignore this
+	; TODO: call cart code
 
-call_button_clicked:
+cart_button_clicked:
 	bit	SPEAKER
 	rts
 
