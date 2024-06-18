@@ -8,6 +8,10 @@
 	.include "common_defines.inc"
 	.include "qload.inc"
 
+.if DISK=01
+	.include "disk01_files/disk01_defines.inc"
+.endif
+
 .if DISK=39
 	.include "disk39_files/disk39_defines.inc"
 .endif
@@ -296,6 +300,17 @@ clear_loop:
 
 	lda	#100
 	jsr	wait_a_bit
+
+.if DISK=01
+	lda	#LOAD_ARRIVAL
+	sta	WHICH_LOAD		; assume new game (dome island)
+
+	lda	#RIVEN_ARRIVAL
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
 
 .if DISK=39
 	lda	#LOAD_OUTSIDE

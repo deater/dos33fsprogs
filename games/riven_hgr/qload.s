@@ -8,6 +8,9 @@
 
 .include "qboot.inc"
 
+.if DISK=01
+.include "disk01_files/disk01_defines.inc"
+.endif
 .if DISK=39
 .include "disk39_files/disk39_defines.inc"
 .endif
@@ -266,6 +269,10 @@ insert_disk_string:
 .include "graphics_sprites/pointer_sprites.inc"
 .include "hgr_14x14_sprite.s"
 .include "keyboard.s"
+
+.if DISK=01
+.include "disk01_files/disk01_qload.inc"
+.endif
 
 .if DISK=39
 .include "disk39_files/disk39_qload.inc"
