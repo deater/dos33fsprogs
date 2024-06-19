@@ -40,12 +40,57 @@ MASK	= $2E
 COLOR_MASK = $2F
 COLOR	= $30
 
+COMPT1	= $30
+COMPT2	= $31
+
 SEEDL	= $4e
 SEEDH	= $4f
-XMAX	= $50
+;XMAX	= $50
+
+PARAM1  = $50
+PARAM2  = $51
+PARAM3  = $52
+PARAM4  = $53
+WHICH_TRACK = $54
+
+ORNAMENT_L      = $60
+ORNAMENT_H      = $61
+SAMPLE_L        = $62
+SAMPLE_H        = $63
+
+LOOP            = $64
+MB_ADDR_L       = $65
+MB_ADDR_H       = $66
+MB_VALUE        = $67
+DONE_PLAYING    = $68
+DONE_SONG       = $69
+PT3_TEMP        = $6A
+APPLEII_MODEL   = $6B
 
 
-; note 70-7f used by disk code (?) do we need to preserve?
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
+
+
+
 
 ; We have to save/restore the following values
 ; when loading/storing from disk
@@ -101,14 +146,15 @@ IN_LEFT			= $9A
 IN_RIGHT		= $9B
 
 UPDATE_POINTER		= $9C
-APPLEII_MODEL		= $9D
+;APPLEII_MODEL		= $9D
 HGR_PAGE		= $9E
 WHICH_SLOT		= $9F
 
-MAGLEV_FLIP_DIRECTION	= $A0
-BEACH_ANIMALS_SEEN	= $A1
+Table1  = $A0   ; 40 bytes ($28) A0-C7
+Table2  = $C8   ; 40 bytes ($28) C8-EF
 
-LEADING_ZERO	=	$F2
+
+SIN_COUNT	=	$F2
 DRAW_NUMBER	=	$F3
 NUMBER_HIGH	=	$F4
 NUMBER_LOW	=	$F5

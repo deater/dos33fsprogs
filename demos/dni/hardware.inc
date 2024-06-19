@@ -36,6 +36,7 @@ PTRIG		=	$C070
 ;; BASIC ROUTINES
 
 NORMAL	=	$F273
+HGR	=	$F3E2
 
 ;; MONITOR ROUTINES
 
@@ -43,6 +44,7 @@ HLINE	= $F819			;; HLINE Y,$2C at A
 VLINE	= $F828			;; VLINE A,$2D at Y
 CLRSCR	= $F832			;; Clear low-res screen
 CLRTOP	= $F836			;; clear only top of low-res screen
+GBASCALC= $F847			;; take Y-coord/2 in A, put address in GBASL/H ( a trashed, C clear)
 SETCOL	= $F864			;; COLOR=A
 ROM_TEXT2COPY = $F962		;; iigs
 TEXT	= $FB36
