@@ -250,3 +250,33 @@ distclean:
 	cd disk40_files && make distclean
 	cd disk43_files && make distclean
 
+###
+
+generate_common:	generate_common.o
+	$(CC) $(LFLAGS) -o generate_common generate_common.o
+
+generate_common.o:	generate_common.c
+	$(CC) $(CFLAGS) -c generate_common.c
+
+####
+
+#qload_start	=	$1800
+
+#full_decomp	=	qload_start+$DB
+#wait		=	qload_start+$161
+#wait_50xms	=	qload_start+$16f
+#draw_pointer	=	qload_start+$178
+#save_bg_14x14	=	qload_start+$44f
+#handle_keypress	=	qload_start+$4b9
+#change_location	=	qload_start+$5f9
+
+
+qload.inc:	generate_common QLOAD_01
+	./generate_common -a 0x1800 -s full_decomp qload_01.lst > qload.inc
+	./generate_common -a 0x1800 -s wait qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s wait_50xms qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s draw_pointer qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s save_bg_14x14 qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s handle_keypress qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s change_location qload_01.lst >> qload.inc
+
