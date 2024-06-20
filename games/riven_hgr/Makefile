@@ -279,4 +279,7 @@ qload.inc:	generate_common QLOAD_01
 	./generate_common -a 0x1800 -s save_bg_14x14 qload_01.lst >> qload.inc
 	./generate_common -a 0x1800 -s handle_keypress qload_01.lst >> qload.inc
 	./generate_common -a 0x1800 -s change_location qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s move_and_print qload_01.lst >> qload.inc
+	./generate_common -a 0x1800 -s set_normal qload_01.lst >> qload.inc
+
 

@@ -406,6 +406,17 @@ cant_go_forward:
 	rts
 
 
+	;=========================================
+	; need to load new "level"/area from disk
+	;=========================================
+	; level from disk = top 4 bits
+	; location = bottom 4 bits
+	;	12 possible levels per disk. 1..13
+	;		$0 special, means same level
+	;		$E special, means "new disk"
+	;			bottom 4 bits = exit info
+	;		$F special, means "can't go here" when clicked
+
 new_level:
 	pha
 	lsr
@@ -413,7 +424,10 @@ new_level:
 	lsr
 	lsr
 
-	sta	WHICH_LOAD
+	cmp	#$E
+	beq	new_disk
+
+	sta	WHICH_LOAD		; which level to load from disk
 
 	pla
 	and	#$0f
@@ -437,6 +451,13 @@ new_level:
 
 	rts
 
+new_disk:
+	pla
+	and	#$f
+	ora	#$80
+	sta	LEVEL_OVER
+
+	rts
 
 	;==========================
 	; turn left

@@ -27,6 +27,18 @@
 
 riven_title:
 
+	;============================
+	; check to see if new game
+	;	if so print title screen
+	;	otherwise we get here after flipping disks
+	;	so skip all the init
+
+;	lda	NEW_GAME
+;	bne	new_game
+
+;	jmp	disk_change
+
+new_game:
 	;===========================
 	; print the title message that used to be
 	;	in hello.bas
@@ -277,6 +289,9 @@ clear_loop:
 	dex
 	bpl	clear_loop
 
+
+	; init hi-res graphics
+
 	lda	#$20
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
@@ -352,17 +367,15 @@ clear_loop:
 	; includes
 	;==========================
 
-;	.include	"zx02_optim.s"
 	.include	"hgr_tables.s"
 
 	.include	"wait_a_bit.s"
-;	.include	"wait.s"
 
 	.include	"hardware_detect.s"
 
-	.include	"text_print.s"
+;	.include	"text_print.s"
 
-	.include	"gr_offsets.s"
+;	.include	"gr_offsets.s"
 
 ;	.include	"lc_detect.s"
 

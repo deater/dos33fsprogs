@@ -1,6 +1,3 @@
-which_disk_array:
-	.byte 1,1,1,1		; TITLE, ARRIVAL
-
 load_address_array:
 	.byte $40,$40,$40,$40	; TITLE, ARRIVAL
 
@@ -12,3 +9,11 @@ sector_array:
 
 length_array:
         .byte  16, 128,123, 64	; TITLE, ARRIVAL
+
+
+disk_exit_disk: ; note: BCD (yes I'm lazy)
+disk_exit_dni_h:
+disk_exit_dni_l:
+disk_exit_load:
+disk_exit_level:
+disk_exit_direction:

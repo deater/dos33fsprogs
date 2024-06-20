@@ -1,5 +1,10 @@
 ; Loader for Riven
 
+; Based on QLOAD by qkumba which loads raw tracks off of disks
+
+; This particular version only supports using a single disk drive
+;	(I have other versions that can look for disks across two drives)
+
 .include "zp.inc"
 
 .include "hardware.inc"
@@ -21,79 +26,44 @@
 .include "disk43_files/disk43_defines.inc"
 .endif
 
-LOAD_FIRST_SECTOR = 22 ; ???
-
-tmpsec = $3C
-;WHICH_LOAD=$80
-;WHICH_SLOT=$DA
-;CURRENT_DISK=$DC
-;OUTL = $FE
-;OUTH = $FF
-
 
 qload_start:
-
-
-
-	; 0..$10?
-	; 0  1  2  3  4  5  6  7  8  9   a b  c  d  e  f  10
-	; AA AA AA AA AA 07 05 40 20 01 01 01 00 0A 00 AA AA
-	; 00 C6 00 00 ff 07 05 40 20 00 01 01 00 0a 00 00 AA
-
-
-	; $300
-	;	80+OK,	40 bad, 60 bad, 70 good, 68=bad
-
-	;        0  1  2  3  4  5  6  7  8  9  A  B  C  D
-	; $360 = DC E0 00 E4 E8 EC F0 F4 00 00 00 00   = bad
-	; $360 = dc e0 00 e4 e8 ec f0 f4 f8 fc 00 00 00 01 00 00 02 03 = good
-	; boot = ff ff 00 00 ff ff 00 00 ff ff 00 00 00 01 00 00 02 03
-
 	; preshift table is $300 - $369
-
 	; $36C to $3D5 is used as decode table by disk II drive
 
-.if 0
-	ldy	WHICH_SLOT		; temporarily save
-	lda	#$AA
-	ldx	#$2
-zp_clear_loop:
-	sta	$00,X
-	inx
-	bne	zp_clear_loop
-	sty	WHICH_SLOT
-.endif
-
-	; init the write code
+	; init the write code if needed
 	lda	WHICH_SLOT
 ;	jsr	popwr_init
 
 	; first time entry
-	; start by loading text title
+	; start by loading the title screen
+	; also set value indicating this is a warm boot, not disk change
+
+	lda	#1
+	sta	NEW_GAME
 
 	lda	#LOAD_TITLE		; load title
 	sta	WHICH_LOAD
 
 	lda	#1
-	sta	CURRENT_DISK		; current disk number
-	sta	DRIVE1_DISK		; it's in drive1
-	sta	CURRENT_DRIVE		; and currently using drive 1
+	sta	CURRENT_DRIVE		; not needed for single drive code?
 
 	lda	#$FF
-	sta	DRIVE1_TRACK
-	sta	DRIVE2_TRACK
+	sta	DRIVE1_TRACK		; not needed for single drive code?
+					; need to modify qboot in that case
 
-;	jsr	load_file		; actually load intro
-
-;	jsr	$1000			; run intro
-
-;	lda	#LOAD_TITLE		; next load title
-;	sta	WHICH_LOAD
 
 main_game_loop:
 	jsr	load_file
 
 	jsr	$4000			; all entry points currently $4000
+
+	; CHECK LEVEL_OVER
+	;	if high bit set, jump to change_disk
+
+	lda	LEVEL_OVER
+	bmi	change_disk
+
 	jmp	main_game_loop
 
 
@@ -103,11 +73,6 @@ main_game_loop:
 load_file:
 	ldx	WHICH_LOAD
 
-	lda	which_disk_array,X		; get disk# for file to load
-	cmp	CURRENT_DISK			; if not currently using
-	bne	change_disk			; need to change disk
-
-load_file_no_diskcheck:
 	lda	load_address_array,X
 	sta	load_address
 
@@ -129,65 +94,69 @@ load_file_no_diskcheck:
 	; change disk
 	;===================================================
 	;===================================================
-	; WHICH_LOAD is still in X?
+	; LEVEL_OVER bottom 4 bits hold which exit
 
 change_disk:
 
-	; see if disk we want is in drive1
-check_drive1:
-	lda	which_disk_array,X
-	cmp	DRIVE1_DISK
-	bne	check_drive2
+	lda	LEVEL_OVER
+	and	#$f
+	sta	LEVEL_OVER
+	tax
 
-;	jsr	switch_drive1		; switch to drive1
-	jmp	update_disk
+	; set up locations
 
-check_drive2:
-	cmp	DRIVE2_DISK
-	bne	disk_not_found
+	lda	disk_exit_load,X
+	sta	WHICH_LOAD
+	lda	disk_exit_level,X
+	sta	LOCATION
+	lda	disk_exit_direction,X
+	sta	DIRECTION
 
-;	jsr	switch_drive2		; switch to drive2
-	jmp	update_disk
+	; see if disk we want is in drive
 
-disk_not_found:
-
-	; check if disk in drive2
-	; carry clear if not
-
-;	jsr	check_floppy_in_drive2
-
-;	bcc	nothing_in_drive2
-
-	; a disk is in drive2, try to use it
-
-;	bcs	verify_disk
-
-
-nothing_in_drive2:
-
-	; switch back to drive1
-;	jsr	switch_drive1
-
+	; TODO: load TITLE
+	;	check disk number
+	;	if no match, wait again
+	;	if escape pressed, go back somehow?
 
 	;==============================
 	; print "insert disk" message
+
+	; TODO: switch to GR and print D'NI number too
+
+	jsr	GR
+	jsr	HOME
+
+	bit	LORES
 
 	lda	#<insert_disk_string
 	sta	OUTL
 	lda	#>insert_disk_string
 	sta	OUTH
 
-	ldx	WHICH_LOAD
-	lda	which_disk_array,X
-	clc
-	adc	#48
-
 	; patch error string to say correct disk to insert
 
-	ldy	#27
+	ldy	#21
+
+	lda	disk_exit_disk,X
+	lsr
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#$30
 	sta	(OUTL),Y
 
-;	jsr	hgr_text_box
+	iny
+
+	lda	disk_exit_disk,X
+	and	#$f
+	clc
+	adc	#$30
+	sta	(OUTL),Y
+
+	jsr	move_and_print
+	jsr	move_and_print
 
 fnf_keypress:
 	lda	KEYPRESS
@@ -198,6 +167,7 @@ fnf_keypress:
 	; actually verify proper disk is there
 	; read T0:S0 and verify proper disk
 verify_disk:
+.if 0
 	lda	WHICH_LOAD
 	pha
 
@@ -239,26 +209,24 @@ is_disk3:
 disk_compare:
 	cmp	which_disk_array,X
 	bne	change_disk		; disk mismatch
-
+.endif
 	;==============================================
 	; all good, retry original load
 update_disk:
 
-	ldx	WHICH_LOAD
-	lda	which_disk_array,X
-	sta	CURRENT_DISK
+;	ldx	WHICH_LOAD
+;	lda	disk_edit_disk,X
+;	sta	CURRENT_DISK
 
-	ldx	CURRENT_DRIVE
-	sta	DRIVE1_DISK-1,X		; indexed from 1
+;	ldx	CURRENT_DRIVE
+;	sta	DRIVE1_DISK-1,X		; indexed from 1
 
 	jmp	load_file
 
-; offset for disk number is 27
+
 insert_disk_string:
-.byte   0,43,24, 0,240,74
-.byte   10,41
-.byte "PLEASE INSERT DISK 1",13
-.byte " THEN PRESS RETURN",0
+.byte 9,20,"PLEASE INSERT DISK 01.",0	; 21+22 location of disk number
+.byte 11,21,"THEN PRESS ANY KEY",0
 
 ; common includes used by everyone
 
@@ -269,6 +237,9 @@ insert_disk_string:
 .include "graphics_sprites/pointer_sprites.inc"
 .include "hgr_14x14_sprite.s"
 .include "keyboard.s"
+.include "text_print.s"
+.include "gr_offsets.s"
+
 
 .if DISK=01
 .include "disk01_files/disk01_qload.inc"

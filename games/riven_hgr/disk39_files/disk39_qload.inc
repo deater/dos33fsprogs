@@ -1,7 +1,3 @@
-which_disk_array:
-	.byte 1,1,1,1		; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte 1,1,1,1		; MAGLEV, MOVIE1, MOVIE2
-
 load_address_array:
 	.byte $40,$40,$40,$40	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte $40,$40,$40	; MAGLEV, MOVIE1, MOVIE2
@@ -17,3 +13,10 @@ sector_array:
 length_array:
         .byte  16, 123,123, 64	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  64, 32, 128	; MAGLEV, MOVIE1, MOVIE2
+
+disk_exit_disk: ; note: BCD (yes I'm lazy)
+disk_exit_dni_h:
+disk_exit_dni_l:
+disk_exit_load:
+disk_exit_level:
+disk_exit_direction:

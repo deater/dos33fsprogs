@@ -46,6 +46,7 @@ CLRTOP	= $F836			;; clear only top of low-res screen
 SETCOL	= $F864			;; COLOR=A
 ROM_TEXT2COPY = $F962		;; iigs
 TEXT	= $FB36
+GR	= $FB40
 TABV	= $FB5B			;; VTAB to A
 ROM_MACHINEID = $FBB3		;; iigs
 BELL	= $FBDD			;; ring the bell
