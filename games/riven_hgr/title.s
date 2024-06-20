@@ -325,12 +325,12 @@ clear_loop:
 
 .if DISK=40
 	lda	#LOAD_MAGLEV
-	sta	WHICH_LOAD		; assume new game (dome island)
+	sta	WHICH_LOAD		; sitting in maglev
 
-	lda	#RIVEN_MAGLEV_SIT
+	lda	#RIVEN_INSEAT
 	sta	LOCATION
 
-	lda	#DIRECTION_S
+	lda	#DIRECTION_W
 	sta	DIRECTION
 .endif
 

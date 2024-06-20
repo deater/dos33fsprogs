@@ -45,14 +45,16 @@ riven_disk39.dsk:	QBOOT QLOAD_39 TITLE_39 \
 	$(DOS33_RAW) riven_disk39.dsk  27 0 disk39_files/MOVIE_MAGLEV_RIDE               0   0
 
 riven_disk40.dsk:	QBOOT QLOAD_40 TITLE_40 \
-	disk40_files/LEVEL_MAGLEV
+	disk40_files/LEVEL_MAGLEV \
+	disk40_files/LEVEL_OUTSIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk40.dsk
 	$(DOS33_RAW) riven_disk40.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk40.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk40.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD_40             0   0
 	$(DOS33_RAW) riven_disk40.dsk  1  8 TITLE_40		 0   0
-	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV      0   0
+	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV    0   0
+	$(DOS33_RAW) riven_disk40.dsk  9  0 disk40_files/LEVEL_OUTSIDE   0   0
 
 riven_disk43.dsk:	QBOOT QLOAD_43 TITLE_43 \
 	disk43_files/LEVEL_CART
@@ -181,6 +183,11 @@ title_43.o:	title.s zp.inc hardware.inc \
 
 ####
 
+disk01_files/LEVEL_ARRIVAL:	
+	cd disk01_files && make
+
+####
+
 disk39_files/LEVEL_OUTSIDE:	
 	cd disk39_files && make
 
@@ -202,6 +209,9 @@ disk39_files/MOVIE_MAGLEV_RIDE:
 ####
 
 disk40_files/LEVEL_MAGLEV:
+	cd disk40_files && make
+
+disk40_files/LEVEL_OUTSIDE:
 	cd disk40_files && make
 
 ####

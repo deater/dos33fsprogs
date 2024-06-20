@@ -8,40 +8,40 @@ locations:
 
 ; RIVEN_LOOKIN  -- looking into the maglev
 location0:
-        .byte   $FF                     ; north exit
-        .byte   $ff		        ; south exit
-        .byte   $ff                     ; east exit
-        .byte   RIVEN_INSEAT            ; west exit
-        .byte   $FF             ; north exit_dir
-        .byte   DIRECTION_S     ; south exit_dir
-        .byte   $ff             ; east exit_dir
-        .byte   DIRECTION_W     ; west exit_dir
-        .word   $0000           ; north bg
-        .word   inseat_s_zx02   ; south bg
-        .word   $0000           ; east bg
-        .word   lookin_w_zx02   ; west bg
-        .byte   BG_WEST|BG_SOUTH
-        .byte   $ff		; special exit
+	.byte	$FF			; north exit
+	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE	; south exit
+	.byte	$ff			; east exit
+	.byte	RIVEN_INSEAT	; west exit
+	.byte	$FF		; north exit_dir
+	.byte	DIRECTION_W	; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000		; north bg
+	.word	inseat_s_zx02	; south bg
+	.word	$0000		; east bg
+	.word	lookin_w_zx02	; west bg
+	.byte	BG_WEST|BG_SOUTH
+	.byte	$ff		; special exit
 
 ; RIVEN_INSEAT  -- when sitting in seat
 location1:
-        .byte   $FF                     ; north exit
-        .byte   $ff			; south exit
-        .byte   $ff                     ; east exit
-        .byte   $ff                     ; west exit
-        .byte   $FF             ; north exit_dir
-        .byte   DIRECTION_S     ; south exit_dir
-        .byte   $ff             ; east exit_dir
-        .byte   $ff             ; west exit_dir
-        .word   $0000           ; north bg
-        .word   inseat_s_zx02   ; south bg
-        .word   $0000           ; east bg
-        .word   inseat_w_zx02   ; west bg
-        .byte   BG_WEST|BG_SOUTH
-        .byte   DIRECTION_W     ; special exit
-        .byte   11,14           ; special x
-        .byte   119,145         ; special y
-        .word   handle1_clicked-1       ; special function
+	.byte   $FF                     ; north exit
+	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE	; south exit
+	.byte   $ff		; east exit
+	.byte	$ff		; west exit
+	.byte   $FF             ; north exit_dir
+	.byte   DIRECTION_W	; south exit_dir
+	.byte   $ff             ; east exit_dir
+	.byte   $ff             ; west exit_dir
+	.word   $0000           ; north bg
+	.word   inseat_s_zx02   ; south bg
+	.word   $0000           ; east bg
+	.word   inseat_w_zx02   ; west bg
+	.byte   BG_WEST|BG_SOUTH
+	.byte   DIRECTION_W     ; special exit
+	.byte   11,14           ; special x
+	.byte   119,145         ; special y
+	.word   handle1_clicked-1       ; special function
 
 
 ; RIVEN_READY2GO        -- ready for maglev ride
