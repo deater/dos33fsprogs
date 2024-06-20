@@ -55,12 +55,6 @@ riven_jungle_maglev:
 	; init
 	;===================================
 
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
-
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
@@ -102,14 +96,62 @@ really_exit:
 
 	rts
 
-	;==================================
-	; cart button clicked
-	;==================================
-	; TODO: call cart code
+	;=====================================
+	; handle clicked facing west
+	;=====================================
+	; all we can do here is flip
+	; flip us to the east
+	; go lores and play the movie
+handle1_clicked:
 
-cart_button_clicked:
 	bit	SPEAKER
+.if 0
+	lda	#0
+	sta	MAGLEV_FLIP_DIRECTION
+
+	lda	#LOAD_MOVIE1
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+.endif
+	bit	SPEAKER
+
 	rts
+
+	;=====================================
+	; handle clicked facing east
+	;=====================================
+	; if x<27, go for maglev ride
+	; else, flip back west
+handle2_clicked:
+
+	bit	SPEAKER
+.if 0
+	lda	CURSOR_X
+	cmp	#27
+	bcc	go_for_maglev
+
+	lda	#1
+	sta	MAGLEV_FLIP_DIRECTION
+
+	lda	#LOAD_MOVIE1
+	jmp	common_handle2
+
+go_for_maglev:
+	lda	#LOAD_MOVIE2
+
+common_handle2:
+	sta	WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+.endif
+	bit	SPEAKER
+
+	rts
+
+
 
 
 	;==========================

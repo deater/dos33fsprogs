@@ -20,10 +20,7 @@ location0:
 	.word	maglev1_e_zx02	; east bg
 	.word	maglev1_w_zx02	; west bg
 	.byte	BG_EAST|BG_NORTH|BG_SOUTH|BG_WEST	; all bgs
-	.byte	DIRECTION_N	; special exit
-	.byte	32,34		; special x
-	.byte	136,154		; special y
-	.word	call_button_clicked-1
+	.byte	$ff		; special exit
 
 ; RIVEN_MAGPATH	-- path to maglev
 location1:
