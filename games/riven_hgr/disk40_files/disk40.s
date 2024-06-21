@@ -16,7 +16,7 @@ sector_array:
 	.byte	0,0,0,0
 
 length_array:
-	.byte	8, 96,96, 64	; TITLE, MAGLEV, OUTSIDE
+	.byte	8, 96,112, 64	; TITLE, MAGLEV, OUTSIDE
 	.byte	0,0,0,0
 
 disk_exit_disk:	; note: BCD (yes I'm lazy)
