@@ -3,7 +3,15 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	LEVEL_CART
+all:	DISK43 LEVEL_CART
+
+####
+
+DISK43:	disk43.o
+	ld65 -o DISK43 disk43.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+disk43.o:	disk43.s ../zp.inc
+	ca65 -o disk43.o disk43.s -l disk43.lst
 
 ####
 

@@ -3,9 +3,21 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	LEVEL_OUTSIDE LEVEL_PROJECTOR \
+all:	DISK39 \
+	LEVEL_OUTSIDE LEVEL_PROJECTOR \
 	LEVEL_MAGLEV LEVEL_MAGSTEPS \
 	MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
+
+####
+
+DISK39:	disk39.o
+	ld65 -o DISK39 disk39.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+disk39.o:	disk39.s ../zp.inc
+	ca65 -o disk39.o disk39.s -l disk39.lst
+
+
+###
 
 LEVEL_OUTSIDE:	level_outside.o
 	ld65 -o LEVEL_OUTSIDE level_outside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc

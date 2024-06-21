@@ -18,7 +18,7 @@ DRIVE1_DISK     = $0B
 DRIVE2_DISK     = $0C
 DRIVE1_TRACK    = $0D
 DRIVE2_TRACK    = $0E
-
+NEW_DISK	= $0F
 
 
 ;; Zero page monitor routines addresses
@@ -45,7 +45,6 @@ SEEDH	= $4f
 XMAX	= $50
 
 
-; note 70-7f used by disk code (?) do we need to preserve?
 
 ; We have to save/restore the following values
 ; when loading/storing from disk

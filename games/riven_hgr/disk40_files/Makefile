@@ -3,7 +3,15 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	LEVEL_MAGLEV LEVEL_OUTSIDE
+all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE
+
+###
+
+DISK40:	disk40.o
+	ld65 -o DISK40 disk40.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+disk40.o:	disk40.s ../zp.inc
+	ca65 -o disk40.o disk40.s -l disk40.lst
 
 ####
 

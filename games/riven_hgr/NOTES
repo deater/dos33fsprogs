@@ -8,7 +8,7 @@ $0400-$07ff = lores graphics page1
 $0800-$0bff = lores graphics page2
 	$800-$8ff = (qboot initial sector)
 $1000-$11ff = qboot_stage2 (disk code)
-$1200-$12ff = ????
+$1200-$12ff = QLOAD tables
 $1300-$16FF = HGR lookup tables
 $1700-$17FF = ????
 $1800-$1FFF = QLOAD = loader code (2k?)

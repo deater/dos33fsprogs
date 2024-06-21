@@ -3,8 +3,17 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	LEVEL_ARRIVAL
+all:	DISK01 LEVEL_ARRIVAL
 
+####
+
+DISK01:	disk01.o
+	ld65 -o DISK01 disk01.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+disk01.o:	disk01.s ../zp.inc
+	ca65 -o disk01.o disk01.s -l disk01.lst
+
+####
 
 LEVEL_ARRIVAL:	level_arrival.o
 	ld65 -o LEVEL_ARRIVAL level_arrival.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
