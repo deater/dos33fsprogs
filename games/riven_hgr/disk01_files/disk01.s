@@ -12,10 +12,10 @@ track_array:
 	.byte	0,0,0,0
 
 sector_array:
-        .byte	8, 0, 0, 0	; TITLE, ARRIVAL
+        .byte	9, 0, 0, 0	; TITLE, ARRIVAL
 	.byte	0,0,0,0
 length_array:
-        .byte	16, 128,123, 64	; TITLE, ARRIVAL
+        .byte	8, 128,123, 64	; TITLE, ARRIVAL
 	.byte	0,0,0,0
 
 

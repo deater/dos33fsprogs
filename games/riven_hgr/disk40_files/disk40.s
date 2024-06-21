@@ -12,11 +12,11 @@ track_array:
 	.byte	0, 0, 0, 0
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE
+	.byte	9, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE
 	.byte	0,0,0,0
 
 length_array:
-	.byte	16, 96,96, 64	; TITLE, MAGLEV, OUTSIDE
+	.byte	8, 96,96, 64	; TITLE, MAGLEV, OUTSIDE
 	.byte	0,0,0,0
 
 disk_exit_disk:	; note: BCD (yes I'm lazy)
@@ -26,13 +26,13 @@ disk_exit_disk:	; note: BCD (yes I'm lazy)
 	.byte	$00
 
 disk_exit_dni_h:
-	.byte	$01
+	.byte	$01	; 43 = 25 + 15 + 3
 	.byte	$00
 	.byte	$00
 	.byte	$00
 
 disk_exit_dni_l:
-	.byte	$24
+	.byte	$33
 	.byte	$00
 	.byte	$00
 	.byte	$00

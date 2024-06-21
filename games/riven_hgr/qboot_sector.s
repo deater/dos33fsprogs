@@ -5,13 +5,13 @@
 
 	; Paramaters for loading QLOAD
 
-	sectors   = 8		; user-defined
+	sectors   = 9		; user-defined
 	firsttrk  = 1		; user-defined, first track to read
 	firstsec  = 0		; user-defined, first sector to read
 ;	address   = $0B		; user-defined
 ;	entry     = $B00	; user-defined
-	address   = $18		; user-defined
-	entry     = $1800	; user-defined
+	address   = $17		; user-defined
+	entry     = $1700	; user-defined
 	version   = 1
 
         ;memory usage:

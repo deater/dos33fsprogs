@@ -21,7 +21,7 @@ riven_disk01.dsk:	QBOOT QLOAD TITLE_01 \
 	$(DOS33_RAW) riven_disk01.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk01.dsk  0  8 disk01_files/DISK01  0   0
 	$(DOS33_RAW) riven_disk01.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk01.dsk  1  8 TITLE_01		 0   0
+	$(DOS33_RAW) riven_disk01.dsk  1  9 TITLE_01		 0   0
 	$(DOS33_RAW) riven_disk01.dsk  2  0 disk01_files/LEVEL_ARRIVAL      0   0
 
 ###
@@ -40,7 +40,7 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE_39 \
 	$(DOS33_RAW) riven_disk39.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk39.dsk  0  8 disk39_files/DISK39  0   0
 	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk39.dsk  1  8 TITLE_39		 0   0
+	$(DOS33_RAW) riven_disk39.dsk  1  9 TITLE_39		 0   0
 	$(DOS33_RAW) riven_disk39.dsk  2  0 disk39_files/LEVEL_PROJECTOR      0   0
 	$(DOS33_RAW) riven_disk39.dsk  9  0 disk39_files/LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_disk39.dsk  17 0 disk39_files/LEVEL_MAGSTEPS       0   0
@@ -58,7 +58,7 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	$(DOS33_RAW) riven_disk40.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk40.dsk  0  8 disk40_files/DISK40  0   0
 	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk40.dsk  1  8 TITLE_40		 0   0
+	$(DOS33_RAW) riven_disk40.dsk  1  9 TITLE_40		 0   0
 	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV    0   0
 	$(DOS33_RAW) riven_disk40.dsk  9  0 disk40_files/LEVEL_OUTSIDE   0   0
 
@@ -71,7 +71,7 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  0  4 QBOOT                2   1
 	$(DOS33_RAW) riven_disk43.dsk  0  8 disk43_files/DISK43  0   0
 	$(DOS33_RAW) riven_disk43.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk43.dsk  1  8 TITLE_43		 0   0
+	$(DOS33_RAW) riven_disk43.dsk  1  9 TITLE_43		 0   0
 	$(DOS33_RAW) riven_disk43.dsk  2  0 disk43_files/LEVEL_CART      0   0
 
 ###
@@ -85,7 +85,7 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 ###
 
 QLOAD:	qload.o
-	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1800.inc
+	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1700.inc
 
 qload.o:	qload.s qboot.inc \
 		zx02_optim.s wait.s \
@@ -222,7 +222,7 @@ generate_common.o:	generate_common.c
 
 ####
 
-#qload_start	=	$1800
+#qload_start	=	$1700
 
 #full_decomp	=	qload_start+$DB
 #wait		=	qload_start+$161
@@ -234,14 +234,14 @@ generate_common.o:	generate_common.c
 
 
 qload.inc:	generate_common QLOAD
-	./generate_common -a 0x1800 -s full_decomp qload.lst > qload.inc
-	./generate_common -a 0x1800 -s wait qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s wait_50xms qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s draw_pointer qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s save_bg_14x14 qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s handle_keypress qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s change_location qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s move_and_print qload.lst >> qload.inc
-	./generate_common -a 0x1800 -s set_normal qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s full_decomp qload.lst > qload.inc
+	./generate_common -a 0x1700 -s wait qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s wait_50xms qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s draw_pointer qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s save_bg_14x14 qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s handle_keypress qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s change_location qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s move_and_print qload.lst >> qload.inc
+	./generate_common -a 0x1700 -s set_normal qload.lst >> qload.inc
 
 

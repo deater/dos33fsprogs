@@ -13,11 +13,11 @@ track_array:
 	.byte	0,0,0,0
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, CART
+	.byte	9, 0, 0, 0	; TITLE, CART
 	.byte	0,0,0,0
 
 length_array:
-	.byte	16, 96,123, 64	; TITLE, CART
+	.byte	8, 96,123, 64	; TITLE, CART
 	.byte	0,0,0,0
 
 disk_exit_disk: ; note: BCD (yes I'm lazy)

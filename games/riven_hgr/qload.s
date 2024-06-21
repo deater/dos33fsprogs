@@ -29,26 +29,13 @@ DISK_EXIT_DIRECTION = QLOAD_TABLE+53
 
 .include "qboot.inc"
 
-;.if DISK=01
-;.include "disk01_files/disk01_defines.inc"
-;.endif
-;.if DISK=39
-;.include "disk39_files/disk39_defines.inc"
-;.endif
-;.if DISK=40
-;.include "disk40_files/disk40_defines.inc"
-;.endif
-;.if DISK=43
-;.include "disk43_files/disk43_defines.inc"
-;.endif
-
 
 qload_start:
 	; preshift table is $300 - $369
 	; $36C to $3D5 is used as decode table by disk II drive
 
 	; init the write code if needed
-	lda	WHICH_SLOT
+;	lda	WHICH_SLOT
 ;	jsr	popwr_init
 
 	; first time entry
@@ -66,11 +53,11 @@ qload_start:
 	lda	#0			; load title, always 0th
 	sta	WHICH_LOAD
 
-	lda	#1
-	sta	CURRENT_DRIVE		; not needed for single drive code?
+;	lda	#1
+;	sta	CURRENT_DRIVE		; not needed for single drive code?
 
-	lda	#$FF
-	sta	DRIVE1_TRACK		; not needed for single drive code?
+;	lda	#$FF
+;	sta	DRIVE1_TRACK		; not needed for single drive code?
 					; need to modify qboot in that case
 
 
@@ -136,12 +123,13 @@ change_disk:
 	lda	DISK_EXIT_DIRECTION,X
 	sta	DIRECTION
 
-	; see if disk we want is in drive
+	lda	DISK_EXIT_DNI_H,X
+	sta	NUMBER_HIGH
+	lda	DISK_EXIT_DNI_L,X
+	sta	NUMBER_LOW
 
-	; TODO: load TITLE
-	;	check disk number
-	;	if no match, wait again
-	;	if escape pressed, go back somehow?
+
+	; see if disk we want is in drive
 
 	;==============================
 	; print "insert disk" message
@@ -181,6 +169,14 @@ change_disk:
 
 	jsr	move_and_print
 	jsr	move_and_print
+
+	lda	#4
+	sta	XPOS
+	lda	#5
+	sta	YPOS
+
+	jsr	draw_full_dni_number
+
 
 fnf_keypress:
 	lda	KEYPRESS
@@ -241,23 +237,9 @@ load_qload_offsets:
 .include "text_print.s"
 .include "gr_offsets.s"
 
-
-;.if DISK=01
-;.include "disk01_files/disk01_qload.inc"
-;.endif
-
-;.if DISK=39
-;.include "disk39_files/disk39_qload.inc"
-;.endif
-
-;.if DISK=40
-;.include "disk40_files/disk40_qload.inc"
-;.endif
-
-;.if DISK=43
-;.include "disk43_files/disk43_qload.inc"
-;.endif
+.include "print_dni_numbers.s"
+.include "number_sprites.inc"
 
 qload_end:
 
-.assert (>qload_end - >qload_start) < $8 , error, "loader too big"
+.assert (>qload_end - >qload_start) < $9 , error, "loader too big"
