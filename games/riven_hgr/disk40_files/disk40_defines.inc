@@ -1,8 +1,9 @@
 LOAD_TITLE      =       0
 LOAD_MAGLEV	=	1
 LOAD_OUTSIDE	=	2
-LOAD_MOVIE1	=	3
-LOAD_MOVIE2	=	4
+LOAD_ORB	=	3
+LOAD_MOVIE1	=	4
+LOAD_MOVIE2	=	5
 
 ;================================
 ; Level definitions
@@ -19,4 +20,8 @@ RIVEN_OUTSIDE		=	3
 RIVEN_OUTSIDE_PATH	=	0
 RIVEN_OUTSIDE_PLAZA	=	1
 RIVEN_CAVE_ENTRANCE	=	2
+
+; Orb
+
+RIVEN_ORB1		=	0
 

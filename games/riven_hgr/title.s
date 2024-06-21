@@ -27,18 +27,7 @@
 
 riven_title:
 
-	;============================
-	; check to see if new game
-	;	if so print title screen
-	;	otherwise we get here after flipping disks
-	;	so skip all the init
 
-;	lda	NEW_GAME
-;	bne	new_game
-
-;	jmp	disk_change
-
-new_game:
 	;===========================
 	; print the title message that used to be
 	;	in hello.bas
@@ -193,16 +182,16 @@ reload_everything:
 	; and load sound into it if possible
 	;===================================
 
-;	lda	#0
-;	sta	SOUND_STATUS		; clear out, sound enabled
+	lda	#0
+	sta	SOUND_STATUS		; clear out, sound enabled
 
-;	jsr	detect_language_card
-;	bcs	no_language_card
+	jsr	detect_language_card
+	bcs	no_language_card
 
 	; update sound status
-;	lda	SOUND_STATUS
-;	ora	#SOUND_IN_LC
-;	sta	SOUND_STATUS
+	lda	SOUND_STATUS
+	ora	#SOUND_IN_LC
+	sta	SOUND_STATUS
 
 	; load sounds into LC
 
@@ -282,13 +271,16 @@ done_setup_sound:
 	; clear out zero page values to 0
 	;	clear everything from $80 .. $A0?
 
-	lda	#0
-	ldx	#$20
-clear_loop:
-	sta	$80,X
-	dex
-	bpl	clear_loop
+;	lda	#0
+;	ldx	#$20
+;clear_loop:
+;	sta	$80,X
+;	dex
+;	bpl	clear_loop
 
+	lda	#0
+	sta	LEVEL_OVER
+	
 
 	; init hi-res graphics
 
@@ -377,7 +369,7 @@ clear_loop:
 
 ;	.include	"gr_offsets.s"
 
-;	.include	"lc_detect.s"
+	.include	"lc_detect.s"
 
 model_string:
 .byte "DETECTED APPLE II",0,0,0

@@ -19,7 +19,8 @@ DRIVE2_DISK     = $0C
 DRIVE1_TRACK    = $0D
 DRIVE2_TRACK    = $0E
 NEW_DISK	= $0F
-
+BTC_L		= $10
+BTC_H		= $11
 
 ;; Zero page monitor routines addresses
 

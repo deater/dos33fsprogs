@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE
+all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB
 
 ###
 
@@ -38,6 +38,19 @@ level_outside.o:	level_outside.s \
 		graphics_outside/outside_graphics.inc
 	ca65 -o level_outside.o level_outside.s -l level_outside.lst
 
+####
+
+LEVEL_ORB:	level_orb.o
+	ld65 -o LEVEL_ORB level_orb.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_orb.o:	level_orb.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk40_defines.inc \
+		leveldata_orb.inc \
+		graphics_orb1/orb1_graphics.inc
+	ca65 -o level_orb.o level_orb.s -l level_orb.lst
+
+
 
 ####
 
@@ -46,11 +59,14 @@ graphics_maglev/maglev_graphics.inc:
 
 graphics_outside/outside_graphics.inc:
 	cd graphics_outside && make
+
+graphics_orb1/orb1_graphics.inc:
+	cd graphics_orb1 && make
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		LEVEL_MAGLEV LEVEL_OUTSIDE
+		LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB
 
 
 ####

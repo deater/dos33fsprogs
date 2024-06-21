@@ -25,7 +25,7 @@ location0:
 
 ; RIVEN_OUTSIDE_PLAZA  -- plaza near maglev
 location1:
-	.byte	$ff		; TODO: ball ; north exit
+	.byte	LOAD_ORB<<4|RIVEN_ORB1	; north exit
 	.byte	RIVEN_CAVE_ENTRANCE	; south exit
 	.byte	RIVEN_OUTSIDE_PATH	; east exit
 	.byte	$FF		; west exit
