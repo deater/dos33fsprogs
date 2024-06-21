@@ -3,14 +3,14 @@
 ;===============================================
 
 locations:
-	.word location0,location1,location2
+	.word location0,location1,location2,location3
 
 
 ; RIVEN_LOOKIN  -- looking into the maglev
 location0:
-	.byte	$FF			; north exit
-	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE	; south exit
-	.byte	$ff			; east exit
+	.byte	$FF		; north exit
+	.byte	RIVEN_OUTSIDE	; south exit
+	.byte	$ff		; east exit
 	.byte	RIVEN_INSEAT	; west exit
 	.byte	$FF		; north exit_dir
 	.byte	DIRECTION_W	; south exit_dir
@@ -26,7 +26,7 @@ location0:
 ; RIVEN_INSEAT  -- when sitting in seat
 location1:
 	.byte   $FF                     ; north exit
-	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE	; south exit
+	.byte	RIVEN_OUTSIDE	; south exit
 	.byte   $ff		; east exit
 	.byte	$ff		; west exit
 	.byte   $FF             ; north exit_dir
@@ -46,10 +46,10 @@ location1:
 
 ; RIVEN_READY2GO        -- ready for maglev ride
 location2:
-        .byte   $FF                     ; north exit
-        .byte   $FF                     ; south exit
-        .byte   $ff                     ; east exit
-        .byte   $ff                     ; west exit
+        .byte   $FF		; north exit
+        .byte   $FF		; south exit
+        .byte   $ff		; east exit
+        .byte   $ff		; west exit
         .byte   $FF             ; north exit_dir
         .byte   $FF             ; south exit_dir
         .byte   $ff             ; east exit_dir
@@ -64,3 +64,20 @@ location2:
         .byte   127,168         ; special y
         .word   handle2_clicked-1       ; special function
 
+
+; RIVEN_JUNGLE_OUTSIDE  -- just outside the maglev
+location3:
+	.byte	RIVEN_LOOKIN	; north exit
+	.byte	$FF		; south exit
+	.byte	$FF		; east exit
+	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE_PATH	; west exit
+	.byte	DIRECTION_W	; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	outside_n_zx02	; north bg
+	.word	$0000		; south bg
+	.word	$0000		; east bg
+	.word	outside_w_zx02	; west bg
+	.byte	BG_WEST|BG_NORTH
+	.byte	$ff		; special exit
