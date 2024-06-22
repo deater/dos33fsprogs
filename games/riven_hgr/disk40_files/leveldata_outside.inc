@@ -25,11 +25,11 @@ location0:
 ; RIVEN_CAVE_ENTRANCE  -- plaza near maglev
 location1:
 	.byte	RIVEN_OUTSIDE_PLAZA		; north exit
-	.byte	$E0|0		; change disk, exit 0	; south exit
+	.byte	LOAD_TUNNEL<<4|RIVEN_TUNNEL1	; south exit
 	.byte	$FF		; east exit
 	.byte	$FF		; west exit
 	.byte	DIRECTION_N	; north exit_dir
-	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	cave_n_zx02	; north bg
