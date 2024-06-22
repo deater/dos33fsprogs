@@ -16,7 +16,7 @@ sector_array:
 	.byte	0,0,0,0		; ORB
 
 length_array:
-	.byte	8, 128, 80, 64	; TITLE, MAGLEV, OUTSIDE, TUNNEL
+	.byte	8, 128, 80, 96	; TITLE, MAGLEV, OUTSIDE, TUNNEL
 	.byte	64,0,0,0	; ORB
 
 disk_exit_disk:	; note: BCD (yes I'm lazy)
