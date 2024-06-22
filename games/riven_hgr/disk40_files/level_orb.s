@@ -132,6 +132,19 @@ really_exit:
 
 orb_clicked:
 
+	; display number graphic
+
+	lda	#<orb2_n_zx02
+	sta	ZX0_src
+	lda	#>orb2_n_zx02
+	sta	ZX0_src+1
+
+	lda     #$20
+
+	jsr     full_decomp
+
+
+
 	; only play sound if language card
 
         lda     SOUND_STATUS
@@ -167,6 +180,19 @@ do_play_audio:
 	bit	$c08A		; restore language card
 
 done_play_audio:
+
+
+	; re-display original graphic
+
+	lda	#<orb_n_zx02
+	sta	ZX0_src
+	lda	#>orb_n_zx02
+	sta	ZX0_src+1
+
+	lda     #$20
+
+	jsr     full_decomp
+
 
 	rts
 

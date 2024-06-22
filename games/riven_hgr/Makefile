@@ -61,8 +61,9 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk40.dsk  1  9 TITLE_40		 0   0
 	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV    0   0
-	$(DOS33_RAW) riven_disk40.dsk  9  0 disk40_files/LEVEL_OUTSIDE   0   0
-	$(DOS33_RAW) riven_disk40.dsk  17 0 disk40_files/LEVEL_ORB   0   0
+	$(DOS33_RAW) riven_disk40.dsk  10  0 disk40_files/LEVEL_OUTSIDE   0   0
+#	$(DOS33_RAW) riven_disk40.dsk  15  0 disk40_files/LEVEL_TUNNEL   0   0
+	$(DOS33_RAW) riven_disk40.dsk  21  0 disk40_files/LEVEL_ORB   0   0
 
 riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/DISK43 \

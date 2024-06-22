@@ -3,7 +3,7 @@
 ;===============================================
 
 locations:
-	.word location0,location1,location2,location3
+	.word location0,location1,location2,location3,location4
 
 
 ; RIVEN_LOOKIN  -- looking into the maglev
@@ -70,7 +70,7 @@ location3:
 	.byte	RIVEN_LOOKIN	; north exit
 	.byte	$FF		; south exit
 	.byte	$FF		; east exit
-	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE_PATH	; west exit
+	.byte	RIVEN_OUTSIDE_PATH	; west exit
 	.byte	DIRECTION_W	; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -80,4 +80,21 @@ location3:
 	.word	$0000		; east bg
 	.word	outside_w_zx02	; west bg
 	.byte	BG_WEST|BG_NORTH
+	.byte	$ff		; special exit
+
+; RIVEN_OUTSIDE_PATH  -- path away from maglev
+location4:
+	.byte	$FF		; north exit
+	.byte	$FF		; south exit
+	.byte	RIVEN_OUTSIDE	; east exit
+	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE_PLAZA		; west exit
+	.byte	$FF		; north exit_dir
+	.byte	$ff		; south exit_dir
+	.byte	DIRECTION_N	; east exit_dir
+	.byte	DIRECTION_W	; west exit_dir
+	.word	$0000		; north bg
+	.word	$0000		; south bg
+	.word	out_path_e_zx02	; east bg
+	.word	out_path_w_zx02	; west bg
+	.byte	BG_WEST|BG_EAST
 	.byte	$ff		; special exit
