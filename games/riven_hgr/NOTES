@@ -65,6 +65,13 @@ T	 21 = ORB	13710 bytes	54S= 3T6S	(16384) 3k free
 T        25 = MOVIE_FLIP 7680 bytes     32S = 2T0S	(8192) 500B free
 T	 27 = MOVIE_MAG 32275 bytes    128S = 8T0S	(32768)500B free
 
+Disk41 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
+T	  2 = TUNNEL    30609 bytes         =  8T	(32768) 2k free
+
 
 Disk43 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

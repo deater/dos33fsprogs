@@ -20,39 +20,38 @@ length_array:
 	.byte	64,0,0,0	; ORB
 
 disk_exit_disk:	; note: BCD (yes I'm lazy)
-	.byte	$43		; CART (DISK43)
+	.byte	$41		; Tunnel (DISK41)
 	.byte	$00
 	.byte	$00
 	.byte	$00
 
 disk_exit_dni_h:
-	.byte	$01	; 43 = 25 + 15 + 3
+	.byte	$01	; 41 = 1*25 + 3*5 + 1
 	.byte	$00
 	.byte	$00
 	.byte	$00
 
 disk_exit_dni_l:
-	.byte	$33
+	.byte	$31
 	.byte	$00
 	.byte	$00
 	.byte	$00
 
-	; load_cart / outside_cart / s
+	; load_tunnel / tunnel5 / s
 disk_exit_load:
-	.byte	1			; LOAD_CART
-	.byte	0
+	.byte	1			; LOAD_TUNNEL
 	.byte	0
 	.byte	0
 	.byte	0
 
 disk_exit_level:
-	.byte	$00			; OUTSIDE_CART
+	.byte	$00			; Tunnel 5
 	.byte	$00
 	.byte	$00
 	.byte	$00
 
 disk_exit_direction:
-	.byte	DIRECTION_S		; CART
+	.byte	DIRECTION_S		; facing south
 	.byte	$00
 	.byte	$00
 	.byte	$00

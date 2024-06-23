@@ -20,14 +20,14 @@ length_array:
 	.byte  64, 32, 128, 0	; MAGLEV, MOVIE1, MOVIE2
 
 disk_exit_disk: ; note: BCD (yes I'm lazy)
-	.byte 0,0,0,0
+	.byte $40,0,0,0
 disk_exit_dni_h:
-	.byte 0,0,0,0
+	.byte $01,0,0,0	; 1*25+3*5+0*1
 disk_exit_dni_l:
-	.byte 0,0,0,0
-disk_exit_load:
-	.byte 0,0,0,0
+	.byte $30,0,0,0
+disk_exit_load:			; disk40, LOAD_MAGLEV, INSEAT, W
+	.byte 1,0,0,0		; LOAD_MAGLEV
 disk_exit_level:
-	.byte 0,0,0,0
+	.byte 1,0,0,0		; riven INSEAT
 disk_exit_direction:
-	.byte 0,0,0,0
+	.byte DIRECTION_W,0,0,0

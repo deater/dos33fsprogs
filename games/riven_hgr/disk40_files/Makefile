@@ -81,16 +81,17 @@ graphics_tunnel/tunnel_graphics.inc:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst DISK40 \
 		LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB LEVEL_TUNNEL
 
 
 ####
 
 distclean:
-	rm -f *~ *.o *.lst \
-		LEVEL_MAGLEV LEVEL_OUTSIDE
+	rm -f *~ *.o *.lst DISK40 \
+		LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB LEVEL_TUNNEL
 	cd graphics_maglev && make clean
 	cd graphics_outside && make clean
-
+	cd graphics_orb1 && make clean
+	cd graphics_tunnel && make clean
 

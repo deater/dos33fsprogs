@@ -20,6 +20,10 @@
 	.include "disk40_files/disk40_defines.inc"
 .endif
 
+.if DISK=41
+	.include "disk41_files/disk41_defines.inc"
+.endif
+
 .if DISK=43
 	.include "disk43_files/disk43_defines.inc"
 .endif
@@ -340,6 +344,18 @@ done_setup_sound:
 	lda	#DIRECTION_W
 	sta	DIRECTION
 .endif
+
+.if DISK=41
+	lda	#LOAD_TUNNEL2
+	sta	WHICH_LOAD		; south in tunnel
+
+	lda	#RIVEN_TUNNEL5
+	sta	LOCATION
+
+	lda	#DIRECTION_S
+	sta	DIRECTION
+.endif
+
 
 .if DISK=43
 	lda	#LOAD_CART

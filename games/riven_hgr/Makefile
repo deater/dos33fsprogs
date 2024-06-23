@@ -8,7 +8,8 @@ LINKER_SCRIPTS = ../../linker_scripts/
 
 
 all:	riven_disk01.dsk \
-	riven_disk39.dsk riven_disk40.dsk riven_disk43.dsk
+	riven_disk39.dsk riven_disk40.dsk riven_disk41.dsk \
+	riven_disk43.dsk
 
 ###
 
@@ -65,6 +66,18 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	$(DOS33_RAW) riven_disk40.dsk  10  0 disk40_files/LEVEL_OUTSIDE   0   0
 	$(DOS33_RAW) riven_disk40.dsk  15  0 disk40_files/LEVEL_TUNNEL   0   0
 	$(DOS33_RAW) riven_disk40.dsk  21  0 disk40_files/LEVEL_ORB   0   0
+
+riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
+	disk41_files/DISK41 \
+	disk41_files/LEVEL_TUNNEL
+	cp $(EMPTY_DISK)/empty.dsk riven_disk41.dsk
+	$(DOS33_RAW) riven_disk41.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk41.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk41.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk41.dsk  0  8 disk41_files/DISK41  0   0
+	$(DOS33_RAW) riven_disk41.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk41.dsk  1  9 TITLE_41		 0   0
+	$(DOS33_RAW) riven_disk41.dsk  2  0 disk41_files/LEVEL_TUNNEL   0   0
 
 riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/DISK43 \
@@ -134,6 +147,18 @@ title_40.o:	title.s zp.inc hardware.inc \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_40.o title.s -DDISK=40 -l title_40.lst
 
+####
+
+TITLE_41:	title_41.o
+	ld65 -o TITLE_41 title_41.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_41.o:	title.s zp.inc hardware.inc \
+		qload.inc wait_a_bit.s \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_41.o title.s -DDISK=41 -l title_41.lst
+
+
 
 ####
 
@@ -151,6 +176,23 @@ title_43.o:	title.s zp.inc hardware.inc \
 
 disk01_files/LEVEL_ARRIVAL:	
 	cd disk01_files && make
+
+####
+
+disk01_files/DISK01:	
+	cd disk01_files && make
+
+disk39_files/DISK39:	
+	cd disk39_files && make
+
+disk40_files/DISK40:	
+	cd disk40_files && make
+
+disk41_files/DISK41:	
+	cd disk41_files && make
+
+disk43_files/DISK43:	
+	cd disk43_files && make
 
 ####
 
