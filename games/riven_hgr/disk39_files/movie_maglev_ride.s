@@ -172,8 +172,6 @@ done_play_movie2:
 
 	; TODO: complex handle movement at end
 
-	; TODO: end with message
-
 	;===============================
 	; wait 9 frames (1.8s?)
 
@@ -181,27 +179,36 @@ done_play_movie2:
 	jsr	wait_50xms
 
 
-	lda	#<end_message
-	sta	ZX0_src
-	lda	#>end_message
-        sta	ZX0_src+1
+	;================================
+	; indicate level over and return
 
-	lda	#$04
-
-	jsr	full_decomp
-
+	lda	#$00
+	sta	DRAW_PAGE
 	bit	PAGE1
-	bit	SET_TEXT
+
+	lda	#$E0|$00
+	sta	LEVEL_OVER
+	rts
 
 
-done_movie2:
-	bit	KEYRESET
+;	lda	#<end_message
+;	sta	ZX0_src
+;	lda	#>end_message
+;	sta	ZX0_src+1
+;	lda	#$04
+;	jsr	full_decomp
+;	bit	PAGE1
+;	bit	SET_TEXT
 
-forever_and_ever:
-	jmp	forever_and_ever
+;done_movie2:
+;	bit	KEYRESET
+;
+;forever_and_ever:
+;	jmp	forever_and_ever
 ;	jmp	movie2_start
 
-	rts
+;	rts
+
 
 
 
@@ -614,5 +621,5 @@ overlays_combined_zx02:
 	.incbin		"movie_maglev_ride/overlays/overlay_combined.zx02"
 
 
-end_message:
-	.incbin		"end_message/end_message.gr.zx02"
+;end_message:
+;	.incbin		"end_message/end_message.gr.zx02"

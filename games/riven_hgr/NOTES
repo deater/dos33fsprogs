@@ -72,7 +72,8 @@ T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
 T	  2 = TUNNEL    30609 bytes         =  8T	(32768) 2k free
 T	 10 = STAIRS    25533           100S= 6T4S      (28672) 3k free
-T	 17 = COVE       9139               =  8T       (32768)
+T	 17 = COVE      18337               =  8T       (32768)
+T	 25 = STAIRS2	24965		    =  7T	(28672)
 
 Disk43 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

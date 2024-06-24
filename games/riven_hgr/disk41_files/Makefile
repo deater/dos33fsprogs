@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE
+all:	DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
 
 ###
 
@@ -39,6 +39,19 @@ level_stairs.o:	level_stairs.s \
 
 ####
 
+LEVEL_STAIRS2:	level_stairs2.o
+	ld65 -o LEVEL_STAIRS2 level_stairs2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_stairs2.o:	level_stairs2.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk41_defines.inc \
+		leveldata_stairs2.inc \
+		graphics_stairs2/stairs2_graphics.inc
+	ca65 -o level_stairs2.o level_stairs2.s -l level_stairs2.lst
+
+
+####
+
 LEVEL_COVE:	level_cove.o
 	ld65 -o LEVEL_COVE level_cove.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -59,6 +72,9 @@ graphics_tunnel/tunnel_graphics.inc:
 graphics_stairs/stairs_graphics.inc:
 	cd graphics_stairs && make
 
+graphics_stairs2/stairs2_graphics.inc:
+	cd graphics_stairs2 && make
+
 graphics_cove/cove_graphics.inc:
 	cd graphics_cove && make
 
@@ -66,15 +82,15 @@ graphics_cove/cove_graphics.inc:
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE
+		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
 
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE
+		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
 	cd graphics_tunnel && make clean
 	cd graphics_stairs && make clean
 	cd graphics_cove && make clean
-
+	cd graphics_stairs2 && make clean
