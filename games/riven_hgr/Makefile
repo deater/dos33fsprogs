@@ -72,7 +72,8 @@ riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 	disk41_files/LEVEL_TUNNEL \
 	disk41_files/LEVEL_STAIRS \
 	disk41_files/LEVEL_COVE \
-	disk41_files/LEVEL_STAIRS2
+	disk41_files/LEVEL_STAIRS2 \
+	disk41_files/MOVIE_COVE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk41.dsk
 	$(DOS33_RAW) riven_disk41.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk41.dsk  0  2 QBOOT                1   1
@@ -84,7 +85,7 @@ riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 	$(DOS33_RAW) riven_disk41.dsk 10  0 disk41_files/LEVEL_STAIRS   0   0
 	$(DOS33_RAW) riven_disk41.dsk 17  0 disk41_files/LEVEL_COVE     0   0
 	$(DOS33_RAW) riven_disk41.dsk 25  0 disk41_files/LEVEL_STAIRS2  0   0
-
+	$(DOS33_RAW) riven_disk41.dsk 32  0 disk41_files/MOVIE_COVE  0   0
 
 riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/DISK43 \

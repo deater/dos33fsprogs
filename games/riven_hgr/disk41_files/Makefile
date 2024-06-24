@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
+all:	DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2 \
+	MOVIE_COVE
 
 ###
 
@@ -63,6 +64,19 @@ level_cove.o:	level_cove.s \
 	ca65 -o level_cove.o level_cove.s -l level_cove.lst
 
 
+####
+
+####
+
+MOVIE_COVE:	movie_cove.o
+	ld65 -o MOVIE_COVE movie_cove.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
+
+movie_cove.o:	movie_cove.s \
+	../zp.inc ../hardware.inc ../qload.inc \
+	../common_defines.inc disk41_defines.inc \
+	movie_cove/combined_cove.zx02
+	ca65 -o movie_cove.o movie_cove.s -l movie_cove.lst
+
 
 ####
 
@@ -78,19 +92,25 @@ graphics_stairs2/stairs2_graphics.inc:
 graphics_cove/cove_graphics.inc:
 	cd graphics_cove && make
 
+movie_cove/combined_cove.zx02:
+	cd movie_cove && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
+		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE \
+		MOVIE_COVE LEVEL_STAIRS2
 
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE LEVEL_STAIRS2
+		DISK41 LEVEL_TUNNEL LEVEL_STAIRS LEVEL_COVE \
+		MOVIE_COVE LEVEL_STAIRS2
 	cd graphics_tunnel && make clean
 	cd graphics_stairs && make clean
 	cd graphics_cove && make clean
 	cd graphics_stairs2 && make clean
+	cd movie_cove && make clean

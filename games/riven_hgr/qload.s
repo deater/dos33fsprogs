@@ -64,6 +64,7 @@ qload_start:
 main_game_loop:
 	jsr	load_file
 
+entry_smc:
 	jsr	$4000			; all entry points currently $4000
 
 	; CHECK LEVEL_OVER
@@ -84,6 +85,7 @@ load_file:
 
 	lda	LOAD_ADDRESS_ARRAY,X
 	sta	load_address
+	sta	entry_smc+2
 
 	lda	TRACK_ARRAY,X
 	sta	load_track

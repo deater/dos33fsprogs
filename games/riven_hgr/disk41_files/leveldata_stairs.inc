@@ -26,7 +26,8 @@ location0:
 location1:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	LOAD_COVE<<4|RIVEN_DOWN2	; east exit
+	.byte	LOAD_MOVIE_COVE<<4
+;	.byte	LOAD_COVE<<4|RIVEN_DOWN2	; east exit
 	.byte	RIVEN_STAIRS	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir

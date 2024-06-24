@@ -8,13 +8,17 @@ all:	stairs2_graphics.inc
 stairs2_graphics.inc:	\
 	stairs_up1_e.hgr.zx02 stairs_up1_w.hgr.zx02 \
 	stairs_up2_e.hgr.zx02 stairs_up2_w.hgr.zx02 \
-	stairs_up3_e.hgr.zx02 stairs_up3_w.hgr.zx02
+	stairs_up3_e.hgr.zx02 stairs_up3_w.hgr.zx02 \
+	stairs_up4_e.hgr.zx02 stairs_up4_w.hgr.zx02
 	echo "stairs_up1_e_zx02: .incbin \"stairs_up1_e.hgr.zx02\"" > stairs2_graphics.inc
 	echo "stairs_up1_w_zx02: .incbin \"stairs_up1_w.hgr.zx02\"" >> stairs2_graphics.inc
 	echo "stairs_up2_e_zx02: .incbin \"stairs_up2_e.hgr.zx02\"" >> stairs2_graphics.inc
 	echo "stairs_up2_w_zx02: .incbin \"stairs_up2_w.hgr.zx02\"" >> stairs2_graphics.inc
 	echo "stairs_up3_e_zx02: .incbin \"stairs_up3_e.hgr.zx02\"" >> stairs2_graphics.inc
 	echo "stairs_up3_w_zx02: .incbin \"stairs_up3_w.hgr.zx02\"" >> stairs2_graphics.inc
+#	echo "stairs_up4_e_zx02: .incbin \"stairs_up4_e.hgr.zx02\"" >> stairs2_graphics.inc
+#	echo "stairs_up4_w_zx02: .incbin \"stairs_up4_w.hgr.zx02\"" >> stairs2_graphics.inc
+
 
 ####
 
