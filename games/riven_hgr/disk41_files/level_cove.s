@@ -28,6 +28,16 @@ riven_jungle_cove:
 	; set up location
 	;========================
 
+	lda	BEACH_ANIMALS_SEEN
+	beq	no_beach_patch
+
+	lda	#RIVEN_COVE
+	sta	location0+2
+
+no_beach_patch:
+
+
+
 	lda	#<locations
 	sta	LOCATIONS_L
 	lda	#>locations

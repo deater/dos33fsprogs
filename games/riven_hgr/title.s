@@ -284,7 +284,7 @@ done_setup_sound:
 
 	lda	#0
 	sta	LEVEL_OVER
-	
+	sta	BEACH_ANIMALS_SEEN
 
 	; init hi-res graphics
 

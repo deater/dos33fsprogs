@@ -128,6 +128,9 @@ done_movie:
 	lda	#RIVEN_COVE
 	sta	LOCATION
 
+	lda	#1
+	sta	BEACH_ANIMALS_SEEN
+
 	; needed?
 
 	lda     #1

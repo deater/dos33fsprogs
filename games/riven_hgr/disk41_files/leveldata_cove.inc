@@ -9,7 +9,8 @@ locations:
 location0:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	RIVEN_COVE	; east exit
+	.byte   LOAD_MOVIE_COVE<<4
+;	.byte	RIVEN_COVE	; east exit
 	.byte	LOAD_STAIRS<<4|RIVEN_DOWN1	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
