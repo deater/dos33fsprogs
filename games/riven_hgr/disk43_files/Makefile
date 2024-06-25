@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK43 LEVEL_CART LEVEL_BRIDGE
+all:	DISK43 LEVEL_CART LEVEL_BRIDGE LEVEL_LOGGED LEVEL_LOGGED2
 
 ####
 
@@ -37,6 +37,32 @@ level_bridge.o:	level_bridge.s \
 		graphics_bridge/bridge_graphics.inc
 	ca65 -o level_bridge.o level_bridge.s -l level_bridge.lst
 
+####
+
+LEVEL_LOGGED:	level_logged.o
+	ld65 -o LEVEL_LOGGED level_logged.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_logged.o:	level_logged.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk43_defines.inc \
+		leveldata_logged.inc \
+		graphics_logged/logged_graphics.inc
+	ca65 -o level_logged.o level_logged.s -l level_logged.lst
+
+####
+
+LEVEL_LOGGED2:	level_logged2.o
+	ld65 -o LEVEL_LOGGED2 level_logged2.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_logged2.o:	level_logged2.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk43_defines.inc \
+		leveldata_logged2.inc \
+		graphics_logged2/logged2_graphics.inc
+	ca65 -o level_logged2.o level_logged2.s -l level_logged2.lst
+
+
+
 
 ####
 
@@ -60,18 +86,26 @@ graphics_cart/cart_graphics.inc:
 graphics_bridge/bridge_graphics.inc:
 	cd graphics_bridge && make
 
+graphics_logged/logged_graphics.inc:
+	cd graphics_logged && make
+
+graphics_logged2/logged2_graphics.inc:
+	cd graphics_logged2 && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		LEVEL_CART LEVEL_BRIDGE
+		LEVEL_CART LEVEL_BRIDGE LEVEL_LOGGED
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		LEVEL_CART LEVEL_BRIDGE
+		LEVEL_CART LEVEL_BRIDGE LEVEL_LOGGED
 	cd graphics_cart && make clean
 	cd graphics_bridge && make clean
+	cd graphics_logged && make clean
+	cd graphics_logged2 && make clean
 
 

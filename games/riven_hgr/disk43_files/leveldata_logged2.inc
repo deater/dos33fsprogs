@@ -1,42 +1,40 @@
 ;===============================================
-; level data for Bridge
+; level data for Logged Area 2
 ;===============================================
 
 locations:
 	.word location0,location1
 
-; RIVEN_MID_BRIDGE	-- mid-bridge
+; RIVEN_LOGGED3		-- more logging
 location0:
 	.byte	$FF	; north exit
-	.byte	$ff		; south exit
-	.byte	$E0	; new disk		; east exit
-	.byte	RIVEN_FAR_BRIDGE		; west exit
+	.byte	$ff	; south exit
+	.byte	LOAD_LOGGED<<4|RIVEN_LOGGED2	; east exit
+	.byte	RIVEN_LOGGED4	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	bridge_e_zx02	; east bg
-	.word	bridge_w_zx02	; west bg
-	.byte	BG_EAST|BG_WEST	; bgs
+	.word	$0000		; east bg
+	.word	logged3_w_zx02	; west bg
+	.byte	BG_WEST		; bgs
 	.byte	$ff		; special exit
 
-; RIVEN_FAR_BRIDGE	-- far side of bridge
+; RIVEN_LOGGED4		-- fourth logged area
 location1:
-	.byte	$FF	; north exit
+	.byte	$FF		; north exit
 	.byte	$ff		; south exit
-	.byte	RIVEN_MID_BRIDGE	; east exit
-	.byte	LOAD_LOGGED<<4|RIVEN_LOGGED		; west exit
+	.byte	$ff		; east exit
+	.byte	LOAD_CART<<4|RIVEN_OUTSIDE_CART	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	bridge_far_e_zx02	; east bg
-	.word	bridge_far_w_zx02	; west bg
-	.byte	BG_EAST|BG_WEST	; bgs
+	.word	$0000		; east bg
+	.word	logged4_w_zx02	; west bg
+	.byte	BG_WEST		; bgs
 	.byte	$ff		; special exit
-
-

@@ -20,14 +20,23 @@ length_array:
 
 
 disk_exit_disk: ; note: BCD (yes I'm lazy)
-	.byte 0,0,0,0
+	.byte $39		; zap to temple for now
+	.byte 0,0,0
 disk_exit_dni_h:
-	.byte 0,0,0,0
+	.byte $01		; 39 = 1*25 + 2*5 + 4
+	.byte 0,0,0
 disk_exit_dni_l:
-	.byte 0,0,0,0
+	.byte $24
+	.byte 0,0,0
+
+	; want to go to disk39, LOAD_PROJECTOR, RIVEN_PROJECTOR, W
+
 disk_exit_load:
-	.byte 0,0,0,0
+	.byte 2			; LOAD_PROJECTOR
+	.byte 0,0,0
 disk_exit_level:
-	.byte 0,0,0,0
+	.byte 0			; RIVEN_PROJECTOR
+	.byte 0,0,0
 disk_exit_direction:
-	.byte 0,0,0,0
+	.byte DIRECTION_W
+	.byte 0,0,0

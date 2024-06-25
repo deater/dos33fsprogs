@@ -90,7 +90,9 @@ riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/DISK43 \
 	disk43_files/LEVEL_CART \
-	disk43_files/LEVEL_BRIDGE
+	disk43_files/LEVEL_BRIDGE \
+	disk43_files/LEVEL_LOGGED \
+	disk43_files/LEVEL_LOGGED2
 	cp $(EMPTY_DISK)/empty.dsk riven_disk43.dsk
 	$(DOS33_RAW) riven_disk43.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk43.dsk  0  2 QBOOT                1   1
@@ -100,6 +102,10 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  1  9 TITLE_43		 0   0
 	$(DOS33_RAW) riven_disk43.dsk  2  0 disk43_files/LEVEL_CART      0   0
 	$(DOS33_RAW) riven_disk43.dsk  9  0 disk43_files/LEVEL_BRIDGE      0   0
+	$(DOS33_RAW) riven_disk43.dsk  16 0 disk43_files/LEVEL_LOGGED      0   0
+	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2      0   0
+
+
 
 ###
 

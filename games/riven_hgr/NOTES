@@ -47,11 +47,11 @@ T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
 T         2 = PROJECTOR 26736 bytes    112S = 7T0S	(28672)  2k free
-T         9 = OUTSIDE   29355 bytes    128S = 8T0S	(32768)  3k free
+T         9 = OUTSIDE   29349 bytes    128S = 8T0S	(32768)  3k free
 T	 17 = MAGSTEPS  11537 bytes	64S = 4T0S	(16384)  5k free
-T        21 = MAGLEV    13862 bytes     64S = 4T0S	(16384)  3k free
-T        25 = MOVIE_FLIP 7680 bytes     32S = 2T0S	(8192) 500B free
-T	 27 = MOVIE_MAG 32275 bytes    128S = 8T0S	(32768)500B free
+T        21 = MAGLEV    13881 bytes     64S = 4T0S	(16384)  3k free
+T        25 = MOVIE_FLIP 7783 bytes     32S = 2T0S	(8192) 500B free
+T	 27 = MOVIE_MAG 32177 bytes    128S = 8T0S	(32768)500B free
 
 Disk40 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -82,7 +82,9 @@ T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
 T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
-T	  9 = BRIDGE	18609 bytes	    = 5T0S	(20480)  2k free
+T	  9 = BRIDGE	18609 bytes	    = 7T0S	(28672) 10k free
+T	 16 = LOGGED	11169 bytes	    = 6T0S	(24576) 13k free
+T	 22 = LOGGED2    9191 bytes         = 5T0S	(20480)
 T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32768)500B free
 
 

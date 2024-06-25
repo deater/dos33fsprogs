@@ -1,6 +1,8 @@
 LOAD_TITLE      =       0
 LOAD_CART	=	1
 LOAD_BRIDGE	=	2
+LOAD_LOGGED	=	3
+LOAD_LOGGED2	=	4
 
 ;================================
 ; Level definitions
@@ -14,4 +16,13 @@ RIVEN_IN_CART		=	1
 
 RIVEN_MID_BRIDGE	=	0
 RIVEN_FAR_BRIDGE	=	1
+
+; LOGGED
+RIVEN_LOGGED		=	0
+RIVEN_LOGGED2		=	1
+
+; LOGGED2
+RIVEN_LOGGED3		=	0
+RIVEN_LOGGED4		=	1
+
 
