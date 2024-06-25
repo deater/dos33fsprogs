@@ -44,7 +44,7 @@ location2:
 	.byte	$ff		; north exit
 	.byte	$FF		; south exit
 	.byte	RIVEN_UP3	; east exit
-	.byte	$FF		; west exit
+	.byte	$E0|1		; exit to cart (disk 43) ; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir

@@ -397,7 +397,7 @@ riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"
 
 title_text:
-.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.04",0
+.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.05",0
 ;
 ;
 .byte 0, 3,"BASED ON RIVEN BY CYAN",0

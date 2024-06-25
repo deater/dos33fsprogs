@@ -81,7 +81,8 @@ Disk43 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
-T         2 = CART      26736 bytes    112S = 7T0S	(28672)  2k free
+T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
+T	  9 = BRIDGE	18609 bytes	    = 5T0S	(20480)  2k free
 T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32768)500B free
 
 
