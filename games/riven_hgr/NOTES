@@ -70,17 +70,11 @@ Disk41 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
-T	  2 = TUNNEL    30609 bytes         =  8T	(32768) 2k free
-T	 10 = STAIRS    25533           100S= 6T4S      (28672) 3k free
-T	 17 = COVE      18337               =  5T       (20480) 2k free
-T	 25 = STAIRS2	24965		    =  7T	(28672)
-T	 32 = MOVIE_COVE 1272		    =  2T	(8192)
-
-	3400 4300
-	3600 5200	= 16500
-
-	3500 4500	= 17900
-	4800 5100
+T	  2 = TUNNEL    30669 bytes         =  8T	(32768) 2k free
+T	 10 = STAIRS    25624               =  7T       (28672) 3k free
+T	 17 = COVE      26422               =  7T       (28672) 2k free
+T	 24 = STAIRS2	27139		    =  7T	(28672) 1k free
+T	 31 = MOVIE_COVE 8299		    =  3T	(12288) 4k free
 
 Disk43 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -23,8 +23,10 @@ movie_cove_start:
 
 	bit	SET_GR
 	bit	LORES
-	bit	FULLGR
 	bit	PAGE1
+
+	jsr	GR
+	bit	FULLGR
 
 	lda	#0
 	sta	SCENE_COUNT
@@ -33,6 +35,43 @@ movie_cove_start:
 	sta	DRAW_PAGE
 
 	bit	KEYRESET
+
+
+
+	;===============================
+	; load audio
+	;===============================
+	; we do this fist as our program is long enough the audio
+	;	data loads up past $4000 and will get over-written
+	;	by the graphics data loaded later
+
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	do_not_load_audio
+
+	; load sounds into LC
+
+	; read ram, write ram, use $d000 bank1
+	bit	$C08B
+	bit	$C08B
+
+
+	lda	#<audio_data_zx02
+        sta	ZX0_src
+        lda	#>audio_data_zx02
+        sta	ZX0_src+1
+
+        lda	#$D0    ; decompress to $D000
+
+        jsr	full_decomp
+
+	; read rom, nowrite, use $d000 bank1
+        bit     $C08A
+
+do_not_load_audio:
+
+
+
 
 	;===============================
 	;===============================
@@ -47,7 +86,7 @@ movie_cove_start:
 	lda	#<movie_data_zx02
 	sta	ZX0_src
 	lda	#>movie_data_zx02
-        sta	ZX0_src+1
+	sta	ZX0_src+1
 
 	lda	#$40
 
@@ -73,11 +112,35 @@ movie_cove_start:
 
 
 	;===============================
-	; TODO: play audio
+	; play audio
 	;===============================
 
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	do_not_play_audio
 
+	; load sounds into LC
 
+	; read ram, write ram, use $d000 bank1
+	bit	$C08B
+	bit	$C08B
+
+	; call the btc player
+
+	lda	#$00
+	sta	BTC_L
+
+	lda	#$D0
+	sta	BTC_H
+
+	ldx	#45             ; length
+
+	jsr	play_audio
+
+	; read rom, nowrite, use $d000 bank1
+        bit     $C08A
+
+do_not_play_audio:
 
 
 	;===============================
@@ -205,11 +268,13 @@ done_pageflip:
 	rts
 
 
+.include	"../audio.s"
+
 
 ;===================================
 
 movie_data_zx02:
 	.incbin		"movie_cove/combined_cove.zx02"
 
-
-
+audio_data_zx02:
+	.incbin		"audio/cove.btc.zx02"

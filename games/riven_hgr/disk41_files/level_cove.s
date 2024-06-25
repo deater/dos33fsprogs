@@ -32,7 +32,7 @@ riven_jungle_cove:
 	beq	no_beach_patch
 
 	lda	#RIVEN_COVE
-	sta	location0+2
+	sta	location1+2
 
 no_beach_patch:
 
