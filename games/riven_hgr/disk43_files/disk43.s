@@ -18,7 +18,7 @@ sector_array:
 
 length_array:
 	.byte	8, 96,84, 96	; TITLE, CART, BRIDGE,LOGGED
-	.byte	64,0,0,0
+	.byte	80,0,0,0
 
 	; disk 41
 

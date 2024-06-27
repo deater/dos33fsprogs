@@ -17,16 +17,16 @@ location0:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	logged3_e_zx02	; east bg
 	.word	logged3_w_zx02	; west bg
-	.byte	BG_WEST		; bgs
+	.byte	BG_EAST|BG_WEST	; bgs
 	.byte	$ff		; special exit
 
 ; RIVEN_LOGGED4		-- fourth logged area
 location1:
 	.byte	$FF		; north exit
 	.byte	$ff		; south exit
-	.byte	$ff		; east exit
+	.byte	RIVEN_LOGGED3	; east exit
 	.byte	LOAD_CART<<4|RIVEN_OUTSIDE_CART	; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
@@ -34,7 +34,7 @@ location1:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	logged4_e_zx02	; east bg
 	.word	logged4_w_zx02	; west bg
-	.byte	BG_WEST		; bgs
+	.byte	BG_EAST|BG_WEST	; bgs
 	.byte	$ff		; special exit

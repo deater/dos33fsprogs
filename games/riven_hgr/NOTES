@@ -83,11 +83,15 @@ T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
 T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
 T	  9 = BRIDGE	18609 bytes	    = 7T0S	(28672) 10k free
-T	 16 = LOGGED	11169 bytes	    = 6T0S	(24576) 13k free
-T	 22 = LOGGED2    9191 bytes         = 5T0S	(20480)
+T	 16 = LOGGED	17570 bytes	    = 6T0S	(24576) 7k free
+T	 22 = LOGGED2   17584 bytes         = 5T0S	(20480) 3k free
 T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32768)500B free
 
 
+graphics notes:
+	in dark areas, use the shadow tool at 80 or so?
+
+	in bright areas, pumping contrast up to 30 - 40 can help?
 
 
 disk40: 80/67 in tunnel

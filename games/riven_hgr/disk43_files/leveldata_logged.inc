@@ -17,9 +17,9 @@ location0:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	logged_e_zx02	; east bg
 	.word	logged_w_zx02	; west bg
-	.byte	BG_WEST		; bgs
+	.byte	BG_EAST|BG_WEST	; bgs
 	.byte	$ff		; special exit
 
 ; RIVEN_LOGGED2		-- second logged area
@@ -34,9 +34,9 @@ location1:
 	.byte	DIRECTION_W	; west exit_dir
 	.word	$0000		; north bg
 	.word	$0000		; south bg
-	.word	$0000		; east bg
+	.word	logged2_e_zx02	; east bg
 	.word	logged2_w_zx02	; west bg
-	.byte	BG_WEST		; bgs
+	.byte	BG_EAST|BG_WEST	; bgs
 	.byte	$ff		; special exit
 
 

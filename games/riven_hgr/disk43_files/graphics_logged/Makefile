@@ -6,10 +6,13 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	logged_graphics.inc
 
 logged_graphics.inc:	\
-	logged_w.hgr.zx02 \
-	logged2_w.hgr.zx02
+	logged_w.hgr.zx02 logged_e.hgr.zx02 \
+	logged2_w.hgr.zx02 logged2_e.hgr.zx02
 	echo "logged_w_zx02: .incbin \"logged_w.hgr.zx02\"" > logged_graphics.inc
+	echo "logged_e_zx02: .incbin \"logged_e.hgr.zx02\"" >> logged_graphics.inc
 	echo "logged2_w_zx02: .incbin \"logged2_w.hgr.zx02\"" >> logged_graphics.inc
+	echo "logged2_e_zx02: .incbin \"logged2_e.hgr.zx02\"" >> logged_graphics.inc
+
 
 ####
 
