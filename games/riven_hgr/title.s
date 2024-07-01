@@ -116,6 +116,21 @@ print_model:
 	jmp	print_model
 print_model_done:
 
+	;===========================
+	; patch lowercase printing
+	;===========================
+	; urgh, II,+ patch, e/c/gs no?  there are other
+	;	corner cases we're going to miss here
+
+	lda	APPLEII_MODEL
+	cmp	#'+'
+	beq	patch_uppercase
+	cmp	#' '
+	bne	no_patch_uppercase
+
+patch_uppercase:
+	jsr	force_uppercase
+no_patch_uppercase:
 
 	;==========================
 	; wait a bit

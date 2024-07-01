@@ -163,6 +163,7 @@ QLOAD:	qload.o
 
 qload.o:	qload.s qboot.inc \
 		zx02_optim.s wait.s \
+		gr_offsets.s text_print.s \
 		draw_pointer.s log_table.s \
 		disk40_files/disk40_defines.inc \
 		graphics_sprites/pointer_sprites.inc \
@@ -364,7 +365,9 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1600 -s change_location qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s move_and_print qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s move_and_print_list qload.lst >> qload.inc
+	./generate_common -a 0x1600 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s set_normal qload.lst >> qload.inc
+	./generate_common -a 0x1600 -s force_uppercase qload.lst >> qload.inc
 
 
 

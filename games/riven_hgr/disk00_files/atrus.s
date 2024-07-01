@@ -35,6 +35,9 @@ atrus_start:
 	;===============================
 
 atrus_loop:
+	; clear bottom text
+
+	jsr	clear_bottom
 
 	; decompress graphics
 
@@ -111,26 +114,26 @@ atrus_graphics:
 	; cross a page boundary
 dialog_l:
 	.byte <dialog0	; nothing
-	.byte <dialog1	;
-	.byte <dialog0	; nothing
-	.byte <dialog0	; nothing
-	.byte <dialog0	; nothing
-	.byte <dialog0	; nothing
-	.byte <dialog0	; nothing
-	.byte <dialog0	; nothing
+	.byte <dialog1	; returned
+	.byte <dialog2	; history
+	.byte <dialog3	; nothing
+	.byte <dialog4	; nothing
+	.byte <dialog5	; nothing
+	.byte <dialog6	; nothing
+	.byte <dialog7	; nothing
 	.byte <dialog0	; nothing
 	.byte <dialog0	; nothing
 	.byte <dialog0	; nothing
 
 dialog_h:
 	.byte >dialog0	; nothing
-	.byte >dialog1	;
-	.byte >dialog0	; nothing
-	.byte >dialog0	; nothing
-	.byte >dialog0	; nothing
-	.byte >dialog0	; nothing
-	.byte >dialog0	; nothing
-	.byte >dialog0	; nothing
+	.byte >dialog1	; returned
+	.byte >dialog2	; history
+	.byte >dialog3	; nothing
+	.byte >dialog4	; nothing
+	.byte >dialog5	; nothing
+	.byte >dialog6	; nothing
+	.byte >dialog7	; nothing
 	.byte >dialog0	; nothing
 	.byte >dialog0	; nothing
 	.byte >dialog0	; nothing
@@ -142,44 +145,44 @@ dialog_h:
 dialog0:
 .byte 0,20," ",0,$ff
 
-dialog1:
+dialog1: 	; returned
 ; [welcoming player back]
-.byte 0,20,"Thank God you've returned.",0
-.byte 0,21,"I need your help.",0
+.byte 7,20,"Thank God you've returned.",0
+.byte 11,22,"I need your help.",0
 .byte $FF
 
-dialog2:
-.byte 0,20,"There's a great deal of history that",0
+dialog2:	; history
+.byte 2,20,"There's a great deal of history that",0
 .byte 0,21,"you should know, but I'm afraid that...",0
-.byte 0,22,"I must continue my writing. Here.",0
+.byte 6,22,"I must continue my writing.",0
 .byte $FF
 
 dialog3:
 ;[hands player his journal]
-.byte 0,20,"Most of what you'll need to know is in",0
-.byte 0,21,"there.",0
-.byte 0,22,"Keep it well hidden.",0
+.byte 3,20,"Here.  Most of what you'll need to",0
+.byte 11,21,"know is in there.",0
+.byte 10,23,"Keep it well hidden.",0
 .byte $FF
 
 dialog4:
 ;[picks up the book]
-.byte 0,20,"For reasons you'll discover, I can't",0
-.byte 0,21,"send you to Riven with a way out, but",0
-.byte 0,22,"I can give you this.",0
+.byte 2,20,"For reasons you'll discover, I can't",0
+.byte 1,21,"send you to Riven with a way out, but",0
+.byte 10,22,"I can give you this.",0
 .byte $FF
 
 dialog5:
-.byte 0,20,"It appears to be a Linking Book, back",0
-.byte 0,21,"here to D'ni, but it's actually a",0
-.byte 0,22,"one-man prison. You'll need it,",0
-.byte 0,23,"I'm afraid, to capture Gehn.",0
+.byte 1,20,"It appears to be a Linking Book, back",0
+.byte 3,21,"here to D'ni, but it's actually a",0
+.byte 4,22,"one-man prison.  You'll need it,",0
+.byte 6,23,"I'm afraid, to capture Gehn.",0
 ;[hands player the Prison book]
 .byte $FF
 
 dialog6:
 .byte 0,20,"Once you've found Catherine, signal me,",0
-.byte 0,21,"and I'll come with a Linking Book",0
-.byte 0,22,"to bring us back.",0
+.byte 3,21,"and I'll come with a Linking Book",0
+.byte 11,22,"to bring us back.",0
 .byte $FF
 
 dialog7:
@@ -188,7 +191,7 @@ dialog7:
 ; re-opens to the first page, holds it up,",0
 ; showing glitchy panel]
 
-.byte 0,20,"There's also a chance, if all goes",0
-.byte 0,21,"well, that I might be able to get you",0
-.byte 0,22,"back to the place that you came from.",0
+.byte 3,20,"There's also a chance, if all goes",0
+.byte 1,21,"well, that I might be able to get you",0
+.byte 1,22,"back to the place that you came from.",0
 .byte $FF

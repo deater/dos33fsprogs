@@ -43,6 +43,16 @@ print_string:
 print_string_loop:
 	lda	(OUTL),Y
 	beq	done_print_string
+
+	; adjust for upper/lowercase
+	cmp	#$60
+	bcc	not_lowercase
+ps_smc2:
+	and	#$ff
+
+not_lowercase:
+
+	; adjust for inverse/flash/normal
 ps_smc1:
 	and	#$3f			; make sure we are inverse
 	sta	(BASL),Y
@@ -60,6 +70,16 @@ done_print_string:
 
 	rts
 
+	; want $E1 -> $81
+	;	1110	1000
+	;	so and with $9f?
+force_uppercase:
+	lda	#$9f
+	sta	ps_smc2+1
+
+	rts
+
+
 	; set normal text
 set_normal:
 	lda	#$80
@@ -72,10 +92,11 @@ set_normal:
 
 	; restore inverse text
 set_inverse:
-	lda	#$29
-	sta	ps_smc1
-	lda	#$3f
+	lda	#$3f		;
 	sta	ps_smc1+1
+
+	lda	#$29		; and
+	sta	ps_smc1
 
 	rts
 
@@ -100,15 +121,16 @@ clear_bottom:
 clear_bottom_loop_outer:
 	txa
 	asl
-	lda	gr_offsets,X
+	tay
+	lda	gr_offsets,Y
 	sta	OUTL
-	inx
-	lda	gr_offsets,X
+	iny
+	lda	gr_offsets,Y
 	sta	OUTH
 
 	lda	#' '+$80
-clear_bottom_loop_inner:
 	ldy	#39
+clear_bottom_loop_inner:
 	sta	(OUTL),Y
 	dey
 	bpl	clear_bottom_loop_inner
