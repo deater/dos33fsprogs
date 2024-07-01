@@ -39,6 +39,14 @@ atrus_loop:
 
 	jsr	clear_bottom
 
+	; show full screen for last image (book)
+
+	lda	SCENE_COUNT
+	cmp	#10
+	bne	not_at_end
+	bit	FULLGR
+not_at_end:
+
 	; decompress graphics
 
 	ldx	SCENE_COUNT
