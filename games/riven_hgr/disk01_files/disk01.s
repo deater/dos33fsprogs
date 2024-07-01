@@ -4,18 +4,18 @@ which_disk:
 	.byte	$01		; BCD
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, ARRIVAL
+	.byte	$40,$40,$40,$40	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	$00,$00,$00,$00
 
 track_array:
-        .byte	1, 2, 2,17	; TITLE, ARRIVAL
+        .byte	1, 2, 2,17	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 
 sector_array:
-        .byte	9, 0, 0, 0	; TITLE, ARRIVAL
+        .byte	9, 0, 0, 0	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 length_array:
-        .byte	8, 128,123, 64	; TITLE, ARRIVAL
+        .byte	8, 128,123, 64	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 
 
