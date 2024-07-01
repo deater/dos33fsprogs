@@ -5,11 +5,35 @@ DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 EMPTY_DISK = ../../empty_disk/
 LINKER_SCRIPTS = ../../linker_scripts/
-
+CADIUS = ~/research/apple2/cadius/bin/release/cadius
+PRODOSDIR = ../../utils/prodos-utils/
+PRODOS = ../../utils/prodos-utils/prodos
 
 all:	riven_disk01.dsk \
 	riven_disk39.dsk riven_disk40.dsk riven_disk41.dsk \
-	riven_disk43.dsk
+	riven_disk43.dsk \
+	riven_hgr.po
+
+# Note: cadius, put #XXYYYY after filename for type/value
+
+riven_hgr.po:	disk01_files/LEVEL_ARRIVAL
+	$(PRODOSDIR)/mkprodosfs riven_hgr.po -n Riven
+
+###
+
+#riven_hgr.2mg:	\
+#	disk01_files/LEVEL_ARRIVAL
+#	$(CADIUS) CREATEVOLUME riven_hgr.2mg Riven 32MB
+#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK01
+#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK39
+#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK40
+#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK41
+#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK43
+#	$(CADIUS) ADDFILE  riven_hgr.2mg  /Riven/DISK01/ disk01_files/LEVEL_ARRIVAL
+
+
+
+
 
 ###
 
