@@ -50,13 +50,13 @@ graphics_telescope/telescope_graphics.inc:
 
 clean:		
 	rm -f *~ *.o *.lst \
-		LEVEL_ARRIVAL LEVEL_TELESCOPE
+		DISK01 LEVEL_ARRIVAL LEVEL_TELESCOPE
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		LEVEL_ARRIVAL LEVEL_TELESCOPE
+		DISK01 LEVEL_ARRIVAL LEVEL_TELESCOPE
 	cd graphics_arrival && make clean
 	cd graphics_telescope && make clean
 

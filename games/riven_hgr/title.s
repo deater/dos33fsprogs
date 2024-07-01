@@ -8,6 +8,10 @@
 	.include "common_defines.inc"
 	.include "qload.inc"
 
+.if DISK=00
+	.include "disk00_files/disk00_defines.inc"
+.endif
+
 .if DISK=01
 	.include "disk01_files/disk01_defines.inc"
 .endif
@@ -311,6 +315,17 @@ done_setup_sound:
 
 	lda	#100
 	jsr	wait_a_bit
+
+.if DISK=00
+	lda	#LOAD_ATRUS
+	sta	WHICH_LOAD		; assume ATRUS talking for now
+
+	lda	#0			; not needed...
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
 
 .if DISK=01
 	lda	#LOAD_ARRIVAL

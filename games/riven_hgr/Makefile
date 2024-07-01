@@ -9,7 +9,8 @@ CADIUS = ~/research/apple2/cadius/bin/release/cadius
 PRODOSDIR = ../../utils/prodos-utils/
 PRODOS = ../../utils/prodos-utils/prodos
 
-all:	riven_disk01.dsk \
+all:	riven_disk00.dsk \
+	riven_disk01.dsk \
 	riven_disk39.dsk riven_disk40.dsk riven_disk41.dsk \
 	riven_disk43.dsk \
 	riven_hgr.po
@@ -33,6 +34,22 @@ riven_hgr.po:	disk01_files/LEVEL_ARRIVAL
 
 
 
+
+
+###
+
+riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
+	disk00_files/DISK00 \
+	disk00_files/ATRUS
+	cp $(EMPTY_DISK)/empty.dsk riven_disk00.dsk
+	$(DOS33_RAW) riven_disk00.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk00.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk00.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk00.dsk  0  8 disk00_files/DISK00  0   0
+	$(DOS33_RAW) riven_disk00.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk00.dsk  1  9 TITLE_00		 0   0
+#	$(DOS33_RAW) riven_disk00.dsk  2  0 disk00_files/CYAN      0   0
+	$(DOS33_RAW) riven_disk00.dsk  10  0 disk00_files/ATRUS      0   0
 
 
 ###
@@ -153,6 +170,16 @@ qload.o:	qload.s qboot.inc \
 		keyboard.s
 	ca65 -o qload.o qload.s -l qload.lst
 
+####
+
+TITLE_00:	title_00.o
+	ld65 -o TITLE_00 title_00.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_00.o:	title.s zp.inc hardware.inc \
+		qload.inc wait_a_bit.s \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_00.o title.s -DDISK=00 -l title_00.lst
 
 ####
 
