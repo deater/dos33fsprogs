@@ -12,7 +12,7 @@ track_array:
 	.byte  21,25,27,0	; MAGLEV, MOVIE1, MOVIE2
 
 sector_array:
-        .byte  9, 0, 0, 0	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
+        .byte  10, 0, 0, 0	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  0, 0, 0, 0	; MAGLEV, MOVIE1, MOVIE2
 
 length_array:

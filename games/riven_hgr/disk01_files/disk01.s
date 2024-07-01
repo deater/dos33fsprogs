@@ -12,7 +12,7 @@ track_array:
 	.byte	0,0,0,0
 
 sector_array:
-        .byte	9, 0, 0, 0	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
+        .byte	10, 0, 0, 0	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 length_array:
         .byte	8, 128,123, 64	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE

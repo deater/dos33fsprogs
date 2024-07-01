@@ -12,7 +12,7 @@ track_array:
 	.byte	0,0,0,0
 
 sector_array:
-        .byte	9, 0, 0, 0	; TITLE, CYAN, ATRUS
+        .byte	10, 0, 0, 0	; TITLE, CYAN, ATRUS
 	.byte	0,0,0,0
 length_array:
         .byte	8, 128,128,128	; TITLE, CYAN, ATRUS

@@ -15,6 +15,9 @@
 
 hgr_make_tables:
 
+	; for riven we aren't drawing lines so don't need mod/div tables
+.if 0
+
 	ldy	#0
 	lda	#0
 	ldx	#0
@@ -45,7 +48,7 @@ mod7_loop:
 mod7_not7:
 	iny
 	bne	mod7_loop
-
+.endif
 
 	; Hposn table
 

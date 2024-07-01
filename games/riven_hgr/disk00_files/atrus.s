@@ -26,9 +26,6 @@ atrus_start:
 	lda	#0
 	sta	SCENE_COUNT
 
-	lda	#4
-	sta	DRAW_PAGE
-
 	bit	KEYRESET
 
 	;===============================
@@ -39,6 +36,8 @@ atrus_start:
 
 atrus_loop:
 
+	; decompress graphics
+
 	ldx	SCENE_COUNT
 	lda	frames_l,X
 	sta	ZX0_src
@@ -47,6 +46,20 @@ atrus_loop:
 
 	lda	#$20		; hgr page1
 	jsr	full_decomp
+
+	; write dialog
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	ldx	SCENE_COUNT
+
+	lda	dialog_l,X
+	sta	OUTL
+	lda	dialog_h,X
+	sta	OUTH
+
+	jsr	move_and_print_list
 
 wait_for_key:
 	lda	KEYPRESS
@@ -90,44 +103,92 @@ frames_h:
 	.byte	>atrus10_zx02
 	.byte	>atrus11_zx02
 
-
 atrus_graphics:
 	.include	"graphics_atrus/atrus_graphics.inc"
 
 
+	; could maybe optimize if we can guarantee we don't
+	; cross a page boundary
+dialog_l:
+	.byte <dialog0	; nothing
+	.byte <dialog1	;
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+	.byte <dialog0	; nothing
+
+dialog_h:
+	.byte >dialog0	; nothing
+	.byte >dialog1	;
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+	.byte >dialog0	; nothing
+
+
+; Dialog
+
+; [doesn't see you yet, writing in book]
+dialog0:
+.byte 0,20," ",0,$ff
+
+dialog1:
 ; [welcoming player back]
-.byte "Thank God you've returned.",0
-.byte "I need your help.",0
+.byte 0,20,"Thank God you've returned.",0
+.byte 0,21,"I need your help.",0
+.byte $FF
 
-.byte "There's a great deal of history that",0
-.byte "you should know, but I'm afraid that...",0
-.byte "I must continue my writing. Here.",0
+dialog2:
+.byte 0,20,"There's a great deal of history that",0
+.byte 0,21,"you should know, but I'm afraid that...",0
+.byte 0,22,"I must continue my writing. Here.",0
+.byte $FF
 
+dialog3:
 ;[hands player his journal]
-.byte "Most of what you'll need to know is in",0
-.byte "there.",0
-.byte "Keep it well hidden.",0
+.byte 0,20,"Most of what you'll need to know is in",0
+.byte 0,21,"there.",0
+.byte 0,22,"Keep it well hidden.",0
+.byte $FF
 
+dialog4:
 ;[picks up the book]
-.byte "For reasons you'll discover, I can't",0
-.byte "send you to Riven with a way out, but",0
-.byte "I can give you this.",0
+.byte 0,20,"For reasons you'll discover, I can't",0
+.byte 0,21,"send you to Riven with a way out, but",0
+.byte 0,22,"I can give you this.",0
+.byte $FF
 
-.byte "It appears to be a Linking Book, back",0
-.byte "here to D'ni, but it's actually a",0
-.byte "one-man prison. You'll need it,",0
-.byte "I'm afraid, to capture Gehn.",0
+dialog5:
+.byte 0,20,"It appears to be a Linking Book, back",0
+.byte 0,21,"here to D'ni, but it's actually a",0
+.byte 0,22,"one-man prison. You'll need it,",0
+.byte 0,23,"I'm afraid, to capture Gehn.",0
 ;[hands player the Prison book]
+.byte $FF
 
-.byte "Once you've found Catherine, signal me,",0
-.byte "and I'll come with a Linking Book",0
-.byte "to bring us back.",0
+dialog6:
+.byte 0,20,"Once you've found Catherine, signal me,",0
+.byte 0,21,"and I'll come with a Linking Book",0
+.byte 0,22,"to bring us back.",0
+.byte $FF
+
+dialog7:
 
 ;[writes in the Riven book, then closes it",0
 ; re-opens to the first page, holds it up,",0
 ; showing glitchy panel]
 
-.byte "There's also a chance, if all goes",0
-.byte "well, that I might be able to get you",0
-.byte "back to the place that you came from.",0
-
+.byte 0,20,"There's also a chance, if all goes",0
+.byte 0,21,"well, that I might be able to get you",0
+.byte 0,22,"back to the place that you came from.",0
+.byte $FF

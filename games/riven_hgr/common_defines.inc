@@ -1,7 +1,5 @@
-div7_table     = $1300
-mod7_table     = $1400
-hposn_high     = $1500
-hposn_low      = $1600
+hposn_high     = $1300
+hposn_low      = $1400
 
 
 ;=============================

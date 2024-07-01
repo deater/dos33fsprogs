@@ -13,7 +13,7 @@ track_array:
 	.byte	22,0,0,0	; LOGGED2
 
 sector_array:
-	.byte	9, 0, 0, 0	; TITLE, CART, BRIDGE,LOGGED
+	.byte	10, 0, 0, 0	; TITLE, CART, BRIDGE,LOGGED
 	.byte	0,0,0,0		; LOGGED2
 
 length_array:

@@ -12,7 +12,7 @@ track_array:
 	.byte	24, 31, 0, 0	; STAIRS2,MOVIE_COVE
 
 sector_array:
-	.byte	9, 0, 0, 0	; TITLE, TUNNEL, STAIRS, COVE
+	.byte	10, 0, 0, 0	; TITLE, TUNNEL, STAIRS, COVE
 	.byte	0,0,0,0		; STAIRS2,MOVIE_COVE
 
 length_array:

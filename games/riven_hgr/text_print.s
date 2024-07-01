@@ -91,3 +91,31 @@ move_and_print_list:
 	bpl     move_and_print_list
 
 	rts
+
+	;==============================
+	; clear bottom of text screen
+	;==============================
+clear_bottom:
+	ldx	#20
+clear_bottom_loop_outer:
+	txa
+	asl
+	lda	gr_offsets,X
+	sta	OUTL
+	inx
+	lda	gr_offsets,X
+	sta	OUTH
+
+	lda	#' '+$80
+clear_bottom_loop_inner:
+	ldy	#39
+	sta	(OUTL),Y
+	dey
+	bpl	clear_bottom_loop_inner
+
+	inx
+	cpx	#24
+
+	bne	clear_bottom_loop_outer
+
+	rts

@@ -9,8 +9,9 @@ $0800-$0bff = lores graphics page2
 	$800-$8ff = (qboot initial sector)
 $1000-$11ff = qboot_stage2 (disk code)
 $1200-$12ff = QLOAD tables
-$1300-$16FF = HGR lookup tables	(NOTE!  we probably don't need div7/mod7)
-$1700-$1FFF = QLOAD = loader code (2k?)
+$1300-$14FF = HGR lookup tables
+$1500-$15FF = UNUSED
+$1600-$1FFF = QLOAD = loader code (2k?)
 $2000-$3FFF = HGR Page1, lores movie overlays
 $4000-$BFFF = our code (up to 32k in theory)
 $C000-$CFFF = I/O
@@ -25,8 +26,14 @@ image conversion
 	convert
 	re-scale and crop to 280x192
 
-	contrast/bright 57/3	(note: not always or even often)
+	(old) map to 12 colors and eyeball which?
+	(old) contrast/bright 57/3	(note: not always or even often)
 
+	dark areas, crank shadow removal to 80?
+
+	on some hard to define areas crank contrast to 50?
+
+	on atrus movie go to color levels and hit "auto" before iipix
 
 final movie roto procedure:
 	scale to 40x50
@@ -39,6 +46,23 @@ final movie roto procedure:
 	scale to 80x48
 	save
 
+Disk00 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
+T         2 = CYAN            bytes         = 8T0S	(32768)  ?k free
+T        10 = ATRUS           bytes         = 8T0S	(30535)  2k free
+
+
+Disk01 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
+T         2 = ARRIVAL         bytes         = 7T0S	(28672)  ?k free
+T         ? = ARRIVAL2        bytes         = 7T0S	(28672)  ?k free
+T         ? = TELESCOPE       bytes         = 7T0S	(28672)  ?k free
 
 
 Disk39 Map (disk has 35 tracks, each 4k in size)
@@ -98,6 +122,8 @@ disk40: 80/67 in tunnel
 
 
 Disk notes:
+
+disk0: intro movies
 
 disk1: arrival and area around telescope
 

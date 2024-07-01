@@ -244,4 +244,4 @@ load_qload_offsets:
 
 qload_end:
 
-.assert (>qload_end - >qload_start) < $9 , error, "loader too big"
+.assert (>qload_end - >qload_start) < $10 , error, "loader too big"

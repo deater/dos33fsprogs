@@ -12,7 +12,7 @@ track_array:
 	.byte	21, 0, 0, 0	; ORB
 
 sector_array:
-	.byte	9, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE, TUNNEL
+	.byte	10, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE, TUNNEL
 	.byte	0,0,0,0		; ORB
 
 length_array:
