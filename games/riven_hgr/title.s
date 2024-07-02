@@ -332,8 +332,8 @@ done_setup_sound:
 	jsr	wait_a_bit
 
 .if DISK=00
-	lda	#LOAD_ATRUS
-	sta	WHICH_LOAD		; assume ATRUS talking for now
+	lda	#LOAD_CYAN
+	sta	WHICH_LOAD		; assume CYAN opener
 
 	lda	#0			; not needed...
 	sta	LOCATION
