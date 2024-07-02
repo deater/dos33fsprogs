@@ -17,8 +17,11 @@ all:	riven_disk00.dsk \
 
 # Note: cadius, put #XXYYYY after filename for type/value
 
-riven_hgr.po:	disk01_files/LEVEL_ARRIVAL
+riven_hgr.po:	disk01_files/LEVEL_ARRIVAL prorwts_ca65.o
 	$(PRODOSDIR)/mkprodosfs riven_hgr.po -n Riven
+
+prorwts_ca65.o:	prorwts_ca65.s
+	ca65 -o prorwts_ca65.o prorwts_ca65.s -l prorwts_ca65.lst
 
 ###
 
