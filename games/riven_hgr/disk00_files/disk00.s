@@ -8,11 +8,11 @@ load_address_array:
 	.byte	$00,$00,$00,$00
 
 track_array:
-        .byte	1, 2, 10,18	; TITLE, CYAN, ATRUS
+        .byte	0, 2, 10,18	; TITLE, CYAN, ATRUS
 	.byte	0,0,0,0
 
 sector_array:
-        .byte	10, 0, 0, 0	; TITLE, CYAN, ATRUS
+        .byte	8, 0, 0, 0	; TITLE, CYAN, ATRUS
 	.byte	0,0,0,0
 length_array:
         .byte	8, 127,127,178	; TITLE, CYAN, ATRUS

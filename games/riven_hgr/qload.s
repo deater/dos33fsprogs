@@ -218,7 +218,8 @@ load_qload_offsets:
 	lda	#$0
 	sta	load_track
 
-	lda	#$8
+;	lda	#$8
+	lda	#$01		; track 0 sector 1
 	sta	load_sector
 
 	lda	#$1

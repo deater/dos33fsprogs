@@ -9,11 +9,11 @@ load_address_array:
 	.byte	$40,$00,$00,$00 ; LOGGED2
 
 track_array:
-	.byte	1, 2, 9,16	; TITLE, CART, BRIDGE,LOGGED
+	.byte	0, 2, 9,16	; TITLE, CART, BRIDGE,LOGGED
 	.byte	22,0,0,0	; LOGGED2
 
 sector_array:
-	.byte	10, 0, 0, 0	; TITLE, CART, BRIDGE,LOGGED
+	.byte	8, 0, 0, 0	; TITLE, CART, BRIDGE,LOGGED
 	.byte	0,0,0,0		; LOGGED2
 
 length_array:

@@ -49,11 +49,11 @@ riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	$(DOS33_RAW) riven_disk00.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk00.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk00.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk00.dsk  0  8 disk00_files/DISK00  0   0
+	$(DOS33_RAW) riven_disk00.dsk  0  1 disk00_files/DISK00  0   0
+	$(DOS33_RAW) riven_disk00.dsk  0  8 TITLE_00		 0   0
 	$(DOS33_RAW) riven_disk00.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk00.dsk  1 10 TITLE_00		 0   0
-	$(DOS33_RAW) riven_disk00.dsk  2  0 disk00_files/CYAN      0   0
-	$(DOS33_RAW) riven_disk00.dsk  10  0 disk00_files/ATRUS      0   0
+	$(DOS33_RAW) riven_disk00.dsk  2  0 disk00_files/CYAN    0   0
+	$(DOS33_RAW) riven_disk00.dsk  10  0 disk00_files/ATRUS  0   0
 
 
 ###
@@ -65,9 +65,9 @@ riven_disk01.dsk:	QBOOT QLOAD TITLE_01 \
 	$(DOS33_RAW) riven_disk01.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk01.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk01.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk01.dsk  0  8 disk01_files/DISK01  0   0
+	$(DOS33_RAW) riven_disk01.dsk  0  1 disk01_files/DISK01  0   0
+	$(DOS33_RAW) riven_disk01.dsk  0  8 TITLE_01		 0   0
 	$(DOS33_RAW) riven_disk01.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk01.dsk  1 10 TITLE_01		 0   0
 	$(DOS33_RAW) riven_disk01.dsk  2  0 disk01_files/LEVEL_ARRIVAL      0   0
 
 ###
@@ -84,9 +84,9 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE_39 \
 	$(DOS33_RAW) riven_disk39.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk39.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk39.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk39.dsk  0  8 disk39_files/DISK39  0   0
+	$(DOS33_RAW) riven_disk39.dsk  0  1 disk39_files/DISK39  0   0
+	$(DOS33_RAW) riven_disk39.dsk  0  8 TITLE_39		 0   0
 	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk39.dsk  1 10 TITLE_39		 0   0
 	$(DOS33_RAW) riven_disk39.dsk  2  0 disk39_files/LEVEL_PROJECTOR      0   0
 	$(DOS33_RAW) riven_disk39.dsk  9  0 disk39_files/LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_disk39.dsk  17 0 disk39_files/LEVEL_MAGSTEPS       0   0
@@ -104,13 +104,13 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	$(DOS33_RAW) riven_disk40.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk40.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk40.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk40.dsk  0  8 disk40_files/DISK40  0   0
+	$(DOS33_RAW) riven_disk40.dsk  0  1 disk40_files/DISK40  0   0
+	$(DOS33_RAW) riven_disk40.dsk  0  8 TITLE_40		 0   0
 	$(DOS33_RAW) riven_disk40.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk40.dsk  1 10 TITLE_40		 0   0
 	$(DOS33_RAW) riven_disk40.dsk  2  0 disk40_files/LEVEL_MAGLEV    0   0
-	$(DOS33_RAW) riven_disk40.dsk  10  0 disk40_files/LEVEL_OUTSIDE   0   0
-	$(DOS33_RAW) riven_disk40.dsk  15  0 disk40_files/LEVEL_TUNNEL   0   0
-	$(DOS33_RAW) riven_disk40.dsk  21  0 disk40_files/LEVEL_ORB   0   0
+	$(DOS33_RAW) riven_disk40.dsk  10 0 disk40_files/LEVEL_OUTSIDE   0   0
+	$(DOS33_RAW) riven_disk40.dsk  15 0 disk40_files/LEVEL_TUNNEL   0   0
+	$(DOS33_RAW) riven_disk40.dsk  21 0 disk40_files/LEVEL_ORB   0   0
 
 riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 	disk41_files/DISK41 \
@@ -123,9 +123,9 @@ riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 	$(DOS33_RAW) riven_disk41.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk41.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk41.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk41.dsk  0  8 disk41_files/DISK41  0   0
+	$(DOS33_RAW) riven_disk41.dsk  0  1 disk41_files/DISK41  0   0
+	$(DOS33_RAW) riven_disk41.dsk  0  8 TITLE_41		 0   0
 	$(DOS33_RAW) riven_disk41.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk41.dsk  1 10 TITLE_41		 0   0
 	$(DOS33_RAW) riven_disk41.dsk  2  0 disk41_files/LEVEL_TUNNEL   0   0
 	$(DOS33_RAW) riven_disk41.dsk 10  0 disk41_files/LEVEL_STAIRS   0   0
 	$(DOS33_RAW) riven_disk41.dsk 17  0 disk41_files/LEVEL_COVE     0   0
@@ -142,13 +142,13 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk43.dsk  0  2 QBOOT                1   1
 	$(DOS33_RAW) riven_disk43.dsk  0  4 QBOOT                2   1
-	$(DOS33_RAW) riven_disk43.dsk  0  8 disk43_files/DISK43  0   0
+	$(DOS33_RAW) riven_disk43.dsk  0  1 disk43_files/DISK43  0   0
+	$(DOS33_RAW) riven_disk43.dsk  0  8 TITLE_43		 0   0
 	$(DOS33_RAW) riven_disk43.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk43.dsk  1 10 TITLE_43		 0   0
-	$(DOS33_RAW) riven_disk43.dsk  2  0 disk43_files/LEVEL_CART      0   0
-	$(DOS33_RAW) riven_disk43.dsk  9  0 disk43_files/LEVEL_BRIDGE      0   0
-	$(DOS33_RAW) riven_disk43.dsk  16 0 disk43_files/LEVEL_LOGGED      0   0
-	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2      0   0
+	$(DOS33_RAW) riven_disk43.dsk  2  0 disk43_files/LEVEL_CART     0   0
+	$(DOS33_RAW) riven_disk43.dsk  9  0 disk43_files/LEVEL_BRIDGE   0   0
+	$(DOS33_RAW) riven_disk43.dsk  16 0 disk43_files/LEVEL_LOGGED   0   0
+	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2  0   0
 
 
 

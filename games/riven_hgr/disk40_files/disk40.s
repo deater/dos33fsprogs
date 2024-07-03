@@ -8,11 +8,11 @@ load_address_array:
 	.byte	$40,$00,$00,$00 ; ORB
 
 track_array:
-	.byte	 1, 2,10,15	; TITLE, MAGLEV, OUTSIDE, TUNNEL
+	.byte	 0, 2,10,15	; TITLE, MAGLEV, OUTSIDE, TUNNEL
 	.byte	21, 0, 0, 0	; ORB
 
 sector_array:
-	.byte	10, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE, TUNNEL
+	.byte	8, 0, 0, 0	; TITLE, MAGLEV, OUTSIDE, TUNNEL
 	.byte	0,0,0,0		; ORB
 
 length_array:

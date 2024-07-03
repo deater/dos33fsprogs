@@ -77,13 +77,15 @@ riven_title:
 
 	; print the text
 
-	ldx	#7
-title_loop:
+	jsr	move_and_print_list
 
-	jsr	move_and_print
+;	ldx	#7
+;title_loop:
 
-	dex
-	bne	title_loop
+;	jsr	move_and_print
+
+;	dex
+;	bne	title_loop
 
 
 loader_start:
@@ -426,18 +428,29 @@ model_string:
 riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"
 
+          ;01234567890123456789012345678901234567890
 title_text:
 .byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.05",0
 ;
 ;
-.byte 0, 3,"BASED ON RIVEN BY CYAN",0
+
 ;
+.byte 0, 3,"APPLE II PORT: VINCE 'DEATER' WEAVER",0
+.byte 0, 4,"DISK CODE    : QKUMBA",0
+.byte 0, 5,"ZX02 CODE    : DMSC",0
+.byte 0, 6,"IIPIX        : KRIS KENNAWAY",0
+
+
+;.byte 0, 3,"BASED ON RIVEN BY CYAN",0
+.byte 0, 8,"THIS PRODUCT CONTAINS TRADEMARKS AND/OR",0
+.byte 0, 9,"COPYRIGHTED WORKS OF CYAN.",0
+.byte 0,10,"ALL RIGHTS RESERVED BY CYAN.",0
+.byte 0,11,"THIS PRODUCT IS NOT OFFICIAL AND IS NOT",0
+.byte 0,12,"ENDORSED BY CYAN.",0
+
 ;
-.byte 0, 6,"APPLE II PORT: VINCE WEAVER",0
-.byte 0, 7,"DISK CODE    : QKUMBA",0
+.byte 0,15,"       ______",0
+.byte 0,16,"     A \/\/\/ SOFTWARE PRODUCTION",0
 ;
-.byte 0, 9,"       ______",0
-.byte 0,10,"     A \/\/\/ SOFTWARE PRODUCTION",0
-;
-.byte 0,12," HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0
+.byte 0,18," HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0,$FF
 

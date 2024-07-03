@@ -8,11 +8,11 @@ load_address_array:
 	.byte $40,$40,$40,$00	; MAGLEV, MOVIE1, MOVIE2
 
 track_array:
-        .byte  1, 9, 2,17	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
+        .byte  0, 9, 2,17	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  21,25,27,0	; MAGLEV, MOVIE1, MOVIE2
 
 sector_array:
-        .byte  10, 0, 0, 0	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
+        .byte  8, 0, 0, 0	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  0, 0, 0, 0	; MAGLEV, MOVIE1, MOVIE2
 
 length_array:
