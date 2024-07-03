@@ -3,15 +3,6 @@
 		can put expected disk number at beginning of each thing
 		we load and compare against it
 
-
-+ common
-	+ move change-disk message to be in TITLE?
-	  how to handle if multiple exits to level?
-        + add code to actually detect if disk changed and skip
-		title screen in that case
-	+ add language card/sound detection in case we add sound effects
-	
-
 + Keyboard handling
 	- still buggy, especially when clicking on something???
 	- Better keyboard handling on IIe
@@ -22,15 +13,18 @@ title:
 	-> maybe have "new game / load game" shown?
 
 disk00:
-	-> cyan intro
-	-> opening movie
+	+ cyan intro
+		use page flipping on Apple IIe with auxmem?
+
+	+ atrus intro
+		have it auto progress
+
+	+ opening movie: implement it
 
 disk01:
+	+ maybe redo opening graphics
 
 disk39:
-	-> allow flipping maglev back.  Should just be a matter of
-		playing movie in reverse
-
 	-> try to fit more locations
 		+ outside/overlook_s is there but won't fit
 		+ projector_e also there, prob will fit
@@ -45,4 +39,11 @@ disk39:
 
 
 disk40:
+	-> implement maglev flip
+	-> implement maglev back
+
+disk41:
+
+disk43:
+	-> implement cart
 
