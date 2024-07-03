@@ -23,7 +23,10 @@ cyan_graphics.inc:	\
 	cyan15_iipix.hgr.zx02 \
 	cyan16_iipix.hgr.zx02 \
 	cyan17_iipix.hgr.zx02 \
-	cyan18_iipix.hgr.zx02
+	cyan18_iipix.hgr.zx02 \
+	cyan19_iipix.hgr.zx02 \
+	cyan20_iipix.hgr.zx02 \
+	cyan21_iipix.hgr.zx02
 	echo "cyan01_zx02: .incbin \"cyan01_iipix.hgr.zx02\"" > cyan_graphics.inc
 	echo "cyan02_zx02: .incbin \"cyan02_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan03_zx02: .incbin \"cyan03_iipix.hgr.zx02\"" >> cyan_graphics.inc
@@ -31,7 +34,7 @@ cyan_graphics.inc:	\
 	echo "cyan05_zx02: .incbin \"cyan05_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan06_zx02: .incbin \"cyan06_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan07_zx02: .incbin \"cyan07_iipix.hgr.zx02\"" >> cyan_graphics.inc
-	echo "cyan08_zx02: .incbin \"cyan08_iipix.hgr.zx02\"" >> cyan_graphics.inc
+#	echo "cyan08_zx02: .incbin \"cyan08_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan09_zx02: .incbin \"cyan09_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan10_zx02: .incbin \"cyan10_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan11_zx02: .incbin \"cyan11_iipix.hgr.zx02\"" >> cyan_graphics.inc
@@ -42,6 +45,10 @@ cyan_graphics.inc:	\
 	echo "cyan16_zx02: .incbin \"cyan16_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan17_zx02: .incbin \"cyan17_iipix.hgr.zx02\"" >> cyan_graphics.inc
 	echo "cyan18_zx02: .incbin \"cyan18_iipix.hgr.zx02\"" >> cyan_graphics.inc
+	echo "cyan19_zx02: .incbin \"cyan19_iipix.hgr.zx02\"" >> cyan_graphics.inc
+	echo "cyan20_zx02: .incbin \"cyan20_iipix.hgr.zx02\"" >> cyan_graphics.inc
+	echo "cyan21_zx02: .incbin \"cyan21_iipix.hgr.zx02\"" >> cyan_graphics.inc
+
 
 
 
