@@ -50,12 +50,12 @@ cyan_loop:
 	jsr	full_decomp
 
 	ldx	#10
-	jsr	wait_50xms
+	jsr	wait_a_bit
 
 	; exit early if keypress
 
-	lda	KEYPRESS
-	bmi	early_exit
+;	lda	KEYPRESS
+;	bmi	early_exit
 
 
 	inc	SCENE_COUNT
@@ -64,21 +64,13 @@ cyan_loop:
 
 	bne	cyan_loop
 
+	; lurk at logo for 2s?
 
-	ldy	#4
-lurk_at_logo:
+	ldx	#40
+	jsr	wait_a_bit
 
-	ldx	#10
-	jsr	wait_50xms
-
-	lda	KEYPRESS
-	bmi	really_exit
-
-	dey
-	bpl	lurk_at_logo
-
-early_exit:
-really_exit:
+;early_exit:
+;really_exit:
 	bit	KEYRESET
 
 	lda	#LOAD_ATRUS

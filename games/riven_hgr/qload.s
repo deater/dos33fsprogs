@@ -232,6 +232,7 @@ load_qload_offsets:
 
 .include "zx02_optim.s"
 .include "wait.s"
+.include "wait_a_bit.s"
 .include "draw_pointer.s"
 .include "log_table.s"
 .include "graphics_sprites/pointer_sprites.inc"

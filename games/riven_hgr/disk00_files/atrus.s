@@ -72,10 +72,14 @@ not_at_end:
 
 	jsr	move_and_print_list
 
-wait_for_key:
-	lda	KEYPRESS
-	bpl	wait_for_key
-	bit	KEYRESET
+	; wait a bit before continuing
+
+	ldx	SCENE_COUNT
+	lda	dialog_delay,X
+	tax
+
+	jsr	wait_a_bit
+
 
 
 	inc	SCENE_COUNT
@@ -145,6 +149,20 @@ dialog_h:
 	.byte >dialog0	; nothing
 	.byte >dialog0	; nothing
 	.byte >dialog0	; nothing
+
+dialog_delay:
+	.byte	40		; 2s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	100		; 5s
+	.byte	40		; 2s
+	.byte	40		; 2s
+	.byte	40		; 2s
+
 
 
 ; Dialog

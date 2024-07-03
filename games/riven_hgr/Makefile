@@ -166,7 +166,7 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1600.inc
 
 qload.o:	qload.s qboot.inc \
-		zx02_optim.s wait.s \
+		zx02_optim.s wait.s wait_a_bit.s \
 		gr_offsets.s text_print.s \
 		draw_pointer.s log_table.s \
 		disk40_files/disk40_defines.inc \
@@ -181,7 +181,7 @@ TITLE_00:	title_00.o
 	ld65 -o TITLE_00 title_00.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_00.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_00.o title.s -DDISK=00 -l title_00.lst
@@ -192,7 +192,7 @@ TITLE_01:	title_01.o
 	ld65 -o TITLE_01 title_01.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_01.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_01.o title.s -DDISK=01 -l title_01.lst
@@ -203,7 +203,7 @@ TITLE_39:	title_39.o
 	ld65 -o TITLE_39 title_39.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_39.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_39.o title.s -DDISK=39 -l title_39.lst
@@ -214,7 +214,7 @@ TITLE_40:	title_40.o
 	ld65 -o TITLE_40 title_40.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_40.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_40.o title.s -DDISK=40 -l title_40.lst
@@ -225,7 +225,7 @@ TITLE_41:	title_41.o
 	ld65 -o TITLE_41 title_41.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_41.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_41.o title.s -DDISK=41 -l title_41.lst
@@ -238,7 +238,7 @@ TITLE_43:	title_43.o
 	ld65 -o TITLE_43 title_43.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 title_43.o:	title.s zp.inc hardware.inc \
-		qload.inc wait_a_bit.s \
+		qload.inc \
 		hgr_tables.s \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_43.o title.s -DDISK=43 -l title_43.lst
@@ -348,21 +348,11 @@ generate_common.o:	generate_common.c
 
 ####
 
-#qload_start	=	$1700
-
-#full_decomp	=	qload_start+$DB
-#wait		=	qload_start+$161
-#wait_50xms	=	qload_start+$16f
-#draw_pointer	=	qload_start+$178
-#save_bg_14x14	=	qload_start+$44f
-#handle_keypress	=	qload_start+$4b9
-#change_location	=	qload_start+$5f9
-
-
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1600 -s full_decomp qload.lst > qload.inc
 	./generate_common -a 0x1600 -s wait qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s wait_50xms qload.lst >> qload.inc
+	./generate_common -a 0x1600 -s wait_a_bit qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s draw_pointer qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s save_bg_14x14 qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s handle_keypress qload.lst >> qload.inc
@@ -372,6 +362,3 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1600 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s set_normal qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s force_uppercase qload.lst >> qload.inc
-
-
-

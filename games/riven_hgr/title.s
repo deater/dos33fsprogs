@@ -79,15 +79,6 @@ riven_title:
 
 	jsr	move_and_print_list
 
-;	ldx	#7
-;title_loop:
-
-;	jsr	move_and_print
-
-;	dex
-;	bne	title_loop
-
-
 loader_start:
 
 	jsr	hardware_detect
@@ -139,7 +130,7 @@ no_patch_uppercase:
 	;==========================
 
 
-	lda	#50
+	ldx	#50
 	jsr	wait_a_bit
 
 
@@ -330,7 +321,7 @@ done_setup_sound:
 
 	; wait a bit at LOAD screen
 
-	lda	#100
+	ldx	#100
 	jsr	wait_a_bit
 
 .if DISK=00
@@ -409,13 +400,7 @@ done_setup_sound:
 
 	.include	"hgr_tables.s"
 
-	.include	"wait_a_bit.s"
-
 	.include	"hardware_detect.s"
-
-;	.include	"text_print.s"
-
-;	.include	"gr_offsets.s"
 
 	.include	"lc_detect.s"
 

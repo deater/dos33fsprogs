@@ -16,20 +16,4 @@ wait3:
 	rts
 wait_end:
 
-
-	; to wait 50ms its approximately 139?
-
-wait_50ms:
-	ldx	#1
-wait_50xms:
-
-wait_50_loop:
-	lda	#139
-	jsr	wait
-	dex
-	bne	wait_50_loop
-
-	rts
-
-
 .assert (>wait_end - >wait) < 1 , error, "wait crosses page boundary"
