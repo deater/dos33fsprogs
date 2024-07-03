@@ -15,7 +15,7 @@ sector_array:
         .byte	10, 0, 0, 0	; TITLE, CYAN, ATRUS
 	.byte	0,0,0,0
 length_array:
-        .byte	8, 128,128,128	; TITLE, CYAN, ATRUS
+        .byte	8, 127,127,178	; TITLE, CYAN, ATRUS
 	.byte	0,0,0,0
 
 

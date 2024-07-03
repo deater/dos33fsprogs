@@ -17,7 +17,7 @@ sector_array:
 
 length_array:
         .byte  8, 123,123, 64	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
-	.byte  64, 32, 128, 0	; MAGLEV, MOVIE1, MOVIE2
+	.byte  64, 32, 127, 0	; MAGLEV, MOVIE1, MOVIE2
 
 disk_exit_disk: ; note: BCD (yes I'm lazy)
 	.byte $40,0,0,0

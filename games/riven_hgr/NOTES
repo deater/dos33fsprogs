@@ -56,8 +56,8 @@ Disk00 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
-T         2 = CYAN            bytes         = 8T0S	(32768)  ?k free
-T        10 = ATRUS           bytes         = 8T0S	(30535)  2k free
+T         2 = CYAN            bytes         = 7T15S	(32512)  ?k free
+T        10 = ATRUS           bytes         = 7T15S	(32512)  2k free
 
 
 Disk01 Map (disk has 35 tracks, each 4k in size)
@@ -76,11 +76,11 @@ T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
 T         2 = PROJECTOR 26736 bytes    112S = 7T0S	(28672)  2k free
-T         9 = OUTSIDE   29349 bytes    128S = 8T0S	(32768)  3k free
+T         9 = OUTSIDE   29349 bytes    127S = 7T15S	(32512)  3k free
 T	 17 = MAGSTEPS  11537 bytes	64S = 4T0S	(16384)  5k free
 T        21 = MAGLEV    13881 bytes     64S = 4T0S	(16384)  3k free
 T        25 = MOVIE_FLIP 7783 bytes     32S = 2T0S	(8192) 500B free
-T	 27 = MOVIE_MAG 32177 bytes    128S = 8T0S	(32768)500B free
+T	 27 = MOVIE_MAG 32177 bytes    128S = 7T15S	(32512)300B free
 
 Disk40 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -92,14 +92,14 @@ T        10 = OUTSIDE	18917 bytes         =  5T	(20480) 2k free
 T	 15 = TUNNEL    20983 bytes         =  6T	(24576) 4k free
 T	 21 = ORB	13710 bytes	54S= 3T6S	(16384) 3k free
 T        25 = MOVIE_FLIP 7680 bytes     32S = 2T0S	(8192) 500B free
-T	 27 = MOVIE_MAG 32275 bytes    128S = 8T0S	(32768)500B free
+T	 27 = MOVIE_MAG 32275 bytes    127S = 7T15S	(32512)300B free
 
 Disk41 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
 T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
 T       1.5 = TITLE	 1531 bytes	 8S = 0T8S	(2048) 500B free
-T	  2 = TUNNEL    30669 bytes         =  8T	(32768) 2k free
+T	  2 = TUNNEL    30669 bytes      127S=  8T	(32512) 2k free
 T	 10 = STAIRS    25624               =  7T       (28672) 3k free
 T	 17 = COVE      26422               =  7T       (28672) 2k free
 T	 24 = STAIRS2	27139		    =  7T	(28672) 1k free
@@ -114,7 +114,7 @@ T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
 T	  9 = BRIDGE	18609 bytes	    = 7T0S	(28672) 10k free
 T	 16 = LOGGED	17570 bytes	    = 6T0S	(24576) 7k free
 T	 22 = LOGGED2   17584 bytes         = 5T0S	(20480) 3k free
-T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32768)500B free
+T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32512)500B free
 
 
 graphics notes:

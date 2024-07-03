@@ -64,24 +64,23 @@ cyan_loop:
 
 	bne	cyan_loop
 
-early_exit:
-	bit	KEYRESET
 
-;	ldy	#4
+	ldy	#4
 lurk_at_logo:
 
-;	ldx	#10
-;	jsr	wait_50xms
+	ldx	#10
+	jsr	wait_50xms
 
-;	lda	KEYPRESS
-;	bmi	really_exit
+	lda	KEYPRESS
+	bmi	really_exit
 
-;	dey
-;	bpl	lurk_at_logo
+	dey
+	bpl	lurk_at_logo
 
-;	bit	KEYRESET
-
+early_exit:
 really_exit:
+	bit	KEYRESET
+
 	lda	#LOAD_ATRUS
 	sta	WHICH_LOAD
 
