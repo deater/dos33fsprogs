@@ -1,4 +1,9 @@
 
+REMEMBER!  QLOAD actually trashes 2 bytes above the top of the load
+	for most of this we re-write those bytes and it doesn't matter
+	but it does mean we can't load right up against $C000 as that's
+	I/O memory and we'll get weird corruption issues.
+
 MEMORY MAP
 $0000-$00FF = zero page
 $0100-$01FF = stack
