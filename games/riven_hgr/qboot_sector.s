@@ -1,6 +1,8 @@
 ;	fast seek/multi-read
 ;	copyright (c) Peter Ferrie 2015-16
 
+; NOTE!!!!! Trashes the 2 bytes above the end of the load!
+
 .include "zp.inc"
 
 	; Paramaters for loading QLOAD
