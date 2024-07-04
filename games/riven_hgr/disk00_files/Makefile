@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK00 ATRUS CYAN
+all:	DISK00 ATRUS CYAN CAPTURED
 
 ####
 
@@ -23,6 +23,17 @@ atrus.o:	atrus.s \
 		graphics_atrus/atrus_graphics.inc
 	ca65 -o atrus.o atrus.s -l atrus.lst
 
+####
+
+CAPTURED:	captured.o
+	ld65 -o CAPTURED captured.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+captured.o:	captured.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		graphics_captured/captured_graphics.inc
+	ca65 -o captured.o captured.s -l captured.lst
+
+
 
 ####
 
@@ -40,6 +51,9 @@ cyan.o:	cyan.s \
 graphics_atrus/atrus_graphics.inc:
 	cd graphics_atrus && make
 
+graphics_captured/captured_graphics.inc:
+	cd graphics_captured && make
+
 graphics_cyan/cyan_graphics.inc:
 	cd graphics_cyan && make
 
@@ -47,7 +61,7 @@ graphics_cyan/cyan_graphics.inc:
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK00 ATRUS CYAN
+		DISK00 ATRUS CYAN CAPTURED
 
 ####
 
@@ -56,4 +70,5 @@ distclean:
 		DISK00 ATRUS CYAN
 	cd graphics_atrus && make clean
 	cd graphics_cyan && make clean
+	cd graphics_captured && make clean
 

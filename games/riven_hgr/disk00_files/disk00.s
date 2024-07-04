@@ -4,19 +4,19 @@ which_disk:
 	.byte	$00		; BCD
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, CYAN, ATRUS
-	.byte	$00,$00,$00,$00
+	.byte	$40,$40,$40,$40	; TITLE, CYAN, ATRUS, CAPTURED
+	.byte	$40,$00,$00,$00	; CHO
 
 track_array:
-        .byte	0, 2, 10,18	; TITLE, CYAN, ATRUS
-	.byte	0,0,0,0
+        .byte	0, 2, 10,18	; TITLE, CYAN, ATRUS, CAPTURED
+	.byte	26,0,0,0	; CHO
 
 sector_array:
-        .byte	8, 0, 0, 0	; TITLE, CYAN, ATRUS
-	.byte	0,0,0,0
+        .byte	8, 0, 0, 0	; TITLE, CYAN, ATRUS, CAPTURED
+	.byte	0,0,0,0		; CHO
 length_array:
-        .byte	8, 127,127,178	; TITLE, CYAN, ATRUS
-	.byte	0,0,0,0
+        .byte	8, 127,127,127	; TITLE, CYAN, ATRUS, CAPTURED
+	.byte	127,0,0,0	; CHO
 
 
 disk_exit_disk: ; note: BCD (yes I'm lazy)

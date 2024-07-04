@@ -109,7 +109,7 @@ page_loop:
 
 	bit     KEYRESET
 
-	lda     #LOAD_ATRUS
+	lda     #LOAD_CAPTURED
 	sta     WHICH_LOAD
 
 	lda     #$1

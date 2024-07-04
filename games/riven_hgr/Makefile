@@ -44,7 +44,8 @@ prorwts_ca65.o:	prorwts_ca65.s
 riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	disk00_files/DISK00 \
 	disk00_files/ATRUS \
-	disk00_files/CYAN
+	disk00_files/CYAN \
+	disk00_files/CAPTURED
 	cp $(EMPTY_DISK)/empty.dsk riven_disk00.dsk
 	$(DOS33_RAW) riven_disk00.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk00.dsk  0  2 QBOOT                1   1
@@ -54,6 +55,7 @@ riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	$(DOS33_RAW) riven_disk00.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk00.dsk  2  0 disk00_files/CYAN    0   0
 	$(DOS33_RAW) riven_disk00.dsk  10  0 disk00_files/ATRUS  0   0
+	$(DOS33_RAW) riven_disk00.dsk  18  0 disk00_files/CAPTURED  0   0
 
 
 ###
