@@ -16,7 +16,7 @@ atrus_graphics.inc:	\
 	atrus8_iipix.hgr.zx02 \
 	atrus9_iipix.hgr.zx02 \
 	atrus10_iipix.hgr.zx02 \
-	atrus11_iipix.hgr.zx02
+	book_combined.zx02
 	echo "atrus1_zx02: .incbin \"atrus1_iipix.hgr.zx02\"" > atrus_graphics.inc
 	echo "atrus2_zx02: .incbin \"atrus2_iipix.hgr.zx02\"" >> atrus_graphics.inc
 	echo "atrus3_zx02: .incbin \"atrus3_iipix.hgr.zx02\"" >> atrus_graphics.inc
@@ -27,8 +27,16 @@ atrus_graphics.inc:	\
 	echo "atrus8_zx02: .incbin \"atrus8_iipix.hgr.zx02\"" >> atrus_graphics.inc
 	echo "atrus9_zx02: .incbin \"atrus9_iipix.hgr.zx02\"" >> atrus_graphics.inc
 	echo "atrus10_zx02: .incbin \"atrus10_iipix.hgr.zx02\"" >> atrus_graphics.inc
-	echo "atrus11_zx02: .incbin \"atrus11_iipix.hgr.zx02\"" >> atrus_graphics.inc
+	echo "atrus11_zx02: .incbin \"book_combined.zx02\"" >> atrus_graphics.inc
+#	echo "atrus11_zx02: .incbin \"atrus11_iipix.hgr.zx02\"" >> atrus_graphics.inc
 
+
+####
+
+book_combined.zx02:	atrus11_iipix.hgr atrus15_iipix.hgr
+	cat atrus11_iipix.hgr > book_combined
+	cat atrus15_iipix.hgr >> book_combined
+	$(ZX02) -f book_combined book_combined.zx02
 
 ####
 
@@ -41,5 +49,5 @@ atrus_graphics.inc:	\
 ####
 
 clean:
-	rm -f *~ *.o *.lst  *.zx02 *.hgr atrus_graphics.inc
+	rm -f *~ *.o *.lst  *.zx02 *.hgr atrus_graphics.inc book_combined
 

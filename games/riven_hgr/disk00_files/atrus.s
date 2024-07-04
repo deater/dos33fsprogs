@@ -6,6 +6,8 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 
+.include "disk00_defines.inc"
+
 NUM_SCENES	=	11
 
 	;===================
@@ -13,6 +15,16 @@ NUM_SCENES	=	11
 
 
 atrus_start:
+
+	; we want to over-write page2 later on so important code
+	; should be higher than that
+
+	jmp	start_high
+
+atrus_graphics:
+	.include	"graphics_atrus/atrus_graphics.inc"
+
+start_high:
 
 	;===================
 	; Setup graphics
@@ -39,14 +51,6 @@ atrus_loop:
 
 	jsr	clear_bottom
 
-	; show full screen for last image (book)
-
-	lda	SCENE_COUNT
-	cmp	#10
-	bne	not_at_end
-	bit	FULLGR
-not_at_end:
-
 	; decompress graphics
 
 	ldx	SCENE_COUNT
@@ -60,14 +64,14 @@ not_at_end:
 
 	; write dialog
 
-	lda	#0
-	sta	DRAW_PAGE
+;	lda	#0
+;	sta	DRAW_PAGE
 
 	ldx	SCENE_COUNT
 
 	lda	dialog_l,X
 	sta	OUTL
-	lda	dialog_h,X
+	lda	dialog_h,X		; assume all on same page
 	sta	OUTH
 
 	jsr	move_and_print_list
@@ -80,14 +84,36 @@ not_at_end:
 
 	jsr	wait_a_bit
 
-
-
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
 	cmp	#NUM_SCENES
 
 	bne	atrus_loop
 
+	; done showing things, cycle page1/page2 for a bit
+
+	bit	FULLGR
+
+	ldy	#14
+page_loop:
+	tya
+	and	#$1
+	tax
+	lda	PAGE1,X
+	ldx	#10
+	jsr	wait_a_bit
+
+	dey
+	bpl	page_loop
+
+
+	bit     KEYRESET
+
+	lda     #LOAD_ATRUS
+	sta     WHICH_LOAD
+
+	lda     #$1
+	sta     LEVEL_OVER
 
 	rts
 
@@ -104,7 +130,6 @@ frames_l:
 	.byte	<atrus10_zx02
 	.byte	<atrus11_zx02
 
-
 frames_h:
 	.byte	>atrus1_zx02
 	.byte	>atrus2_zx02
@@ -118,8 +143,7 @@ frames_h:
 	.byte	>atrus10_zx02
 	.byte	>atrus11_zx02
 
-atrus_graphics:
-	.include	"graphics_atrus/atrus_graphics.inc"
+
 
 
 	; could maybe optimize if we can guarantee we don't
@@ -156,12 +180,12 @@ dialog_delay:
 	.byte	100		; 5s
 	.byte	100		; 5s
 	.byte	100		; 5s
-	.byte	100		; 5s
+	.byte	120		; 6s	longer message
 	.byte	100		; 5s
 	.byte	100		; 5s
 	.byte	40		; 2s
 	.byte	40		; 2s
-	.byte	40		; 2s
+	.byte	1		;
 
 
 
