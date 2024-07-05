@@ -364,6 +364,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1600 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s set_normal qload.lst >> qload.inc
 	./generate_common -a 0x1600 -s force_uppercase qload.lst >> qload.inc
+	./generate_common -a 0x1600 -s gr_offsets qload.lst >> qload.inc
 
 submit:	riven_disk00.dsk riven_disk01.dsk \
 	riven_disk39.dsk \

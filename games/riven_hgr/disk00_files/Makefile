@@ -29,7 +29,7 @@ CAPTURED:	captured.o
 	ld65 -o CAPTURED captured.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 captured.o:	captured.s \
-		flip_pages.s draw_scene.s \
+		flip_pages.s draw_scene.s gr_fade.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		graphics_captured/captured_graphics.inc \
 		audio/capture.btc.zx02

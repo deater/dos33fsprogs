@@ -79,6 +79,23 @@ riven_logo_loop:
 
         bit     KEYRESET
 
+	;======================
+	; fade in
+	;======================
+
+	; load bg
+
+	lda	#<captured_bg
+	sta	ZX0_src
+	lda	#>captured_bg
+	sta	ZX0_src+1
+
+	lda     #$0c    ; decompress to $c00
+
+	jsr     full_decomp
+
+	jsr	fade_in
+
 	;===============================
 	;===============================
 	; captured!
@@ -194,6 +211,8 @@ done_play_audio:
 	.include "flip_pages.s"
 	.include "draw_scene.s"
 	.include "../audio.s"
+
+	.include "gr_fade.s"
 
 captured_graphics:
 	.include	"graphics_captured/captured_graphics.inc"

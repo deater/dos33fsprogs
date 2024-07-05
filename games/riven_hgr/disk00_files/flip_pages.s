@@ -1,6 +1,7 @@
 	;============================
 	; flip pages
 	;============================
+page_flip:
 flip_pages:
 	lda	DRAW_PAGE						; 3
 	beq	was_page1						; 2/3
