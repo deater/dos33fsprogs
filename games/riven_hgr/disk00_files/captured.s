@@ -107,6 +107,76 @@ captured_loop:
 
 done_captured:
 
+	;===================
+	; play sound effect
+	;	if applicable
+
+	;===============================
+	; load sound into language card
+	;===============================
+
+	lda	SOUND_STATUS
+	and	#SOUND_IN_LC
+	beq	do_not_load_audio
+
+	; load sounds into LC
+
+	; read ram, write ram, use $d000 bank1
+	bit	$C08B
+	bit	$C08B
+
+	lda	#<capture_audio
+	sta	ZX0_src
+	lda	#>capture_audio
+	sta	ZX0_src+1
+
+	lda     #$D0    ; decompress to $D000
+
+	jsr     full_decomp
+
+        ; read rom, nowrite, use $d000 bank1
+	bit	$C08A
+
+
+do_not_load_audio:
+
+	; only play sound if language card
+
+        lda     SOUND_STATUS
+        and     #SOUND_IN_LC
+        bne	do_play_audio
+
+	; wait a bit instead
+
+	ldx	#20
+	jsr	wait_50xms
+
+do_play_audio:
+        ; switch in language card
+        ; read/write RAM $d000 bank 1
+
+         bit     $C08B
+         bit     $C08B
+
+        ; call the btc player
+
+	lda	#$00
+	sta	BTC_L
+
+	lda	#$D0
+	sta	BTC_H
+
+	ldx	#45		; length
+
+	jsr	play_audio
+
+	; read ROM/no-write
+
+	bit	$c08A		; restore language card
+
+done_play_audio:
+
+
 	;======================
 	; done, move on to next
 	;======================
@@ -123,6 +193,7 @@ done_captured:
 
 	.include "flip_pages.s"
 	.include "draw_scene.s"
+	.include "../audio.s"
 
 captured_graphics:
 	.include	"graphics_captured/captured_graphics.inc"
@@ -159,3 +230,5 @@ frames_h:
 
 
 
+capture_audio:
+.incbin "audio/capture.btc.zx02"

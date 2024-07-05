@@ -31,7 +31,8 @@ CAPTURED:	captured.o
 captured.o:	captured.s \
 		flip_pages.s draw_scene.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		graphics_captured/captured_graphics.inc
+		graphics_captured/captured_graphics.inc \
+		audio/capture.btc.zx02
 	ca65 -o captured.o captured.s -l captured.lst
 
 

@@ -19,11 +19,13 @@ title:
 disk00:
 	+ cyan intro
 		use page flipping on Apple IIe with auxmem?
-
 	+ atrus intro
-		have it auto progress
-
+	+ capture movie:
+		more frames for riven intro
+		sound effect
+		fade in effect
 	+ opening movie: implement it
+		ESC key... in wait_a_bit write to WAIT_KEYPRESS
 
 disk01:
 	+ maybe redo opening graphics
