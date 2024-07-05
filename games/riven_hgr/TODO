@@ -1,3 +1,7 @@
+
+move flip_pages.s into QLOAD?
+
+
 + disk handling code
 	+ on every load check to make sure disk hasn't been swapped?
 		can put expected disk number at beginning of each thing

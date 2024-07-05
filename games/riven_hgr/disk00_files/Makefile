@@ -29,6 +29,7 @@ CAPTURED:	captured.o
 	ld65 -o CAPTURED captured.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 captured.o:	captured.s \
+		flip_pages.s draw_scene.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		graphics_captured/captured_graphics.inc
 	ca65 -o captured.o captured.s -l captured.lst

@@ -8,7 +8,10 @@
 
 .include "disk00_defines.inc"
 
-NUM_SCENES	=	4
+
+RIVEN_FRAMES	=	4
+
+NUM_OVERLAYS	=	6
 
 
 captured_start:
@@ -19,7 +22,7 @@ captured_start:
 
 	bit	SET_GR
 	bit	HIRES
-	bit	TEXTGR
+	bit	FULLGR
 	bit	PAGE1
 
 	lda	#0
@@ -29,18 +32,18 @@ captured_start:
 
 	;===============================
 	;===============================
-	; main loop
+	; Riven Logo Loop
 	;===============================
 	;===============================
 
-riven_loop:
+riven_logo_loop:
 
 	; decompress graphics
 
 	ldx	SCENE_COUNT
-	lda	frames_l,X
+	lda	riven_l,X
 	sta	ZX0_src
-	lda	frames_h,X
+	lda	riven_h,X
 	sta	ZX0_src+1
 
 	lda	#$20		; hgr page1
@@ -53,9 +56,60 @@ riven_loop:
 
 	inc	SCENE_COUNT
 	lda	SCENE_COUNT
-	cmp	#NUM_SCENES
+	cmp	#RIVEN_FRAMES
 
-	bne	riven_loop
+	bne	riven_logo_loop
+
+
+
+	;===================
+        ; Setup lo-res graphics
+        ;===================
+
+        bit     SET_GR
+        bit     LORES
+        bit     FULLGR
+        bit     PAGE1
+
+        lda     #0
+        sta     SCENE_COUNT
+
+        lda     #4
+        sta     DRAW_PAGE
+
+        bit     KEYRESET
+
+	;===============================
+	;===============================
+	; captured!
+	;===============================
+	;===============================
+
+	lda	#0
+	sta	WHICH_OVERLAY
+
+captured_loop:
+
+	jsr	draw_scene
+
+	jsr	flip_pages
+
+	inc	WHICH_OVERLAY
+	lda	WHICH_OVERLAY
+	cmp	#NUM_OVERLAYS
+	beq	done_captured
+
+	ldx	#2
+	jsr	wait_a_bit
+
+	jmp	captured_loop
+
+
+done_captured:
+
+	;======================
+	; done, move on to next
+	;======================
 
 	bit     KEYRESET
 
@@ -67,19 +121,41 @@ riven_loop:
 
 	rts
 
+	.include "flip_pages.s"
+	.include "draw_scene.s"
 
 captured_graphics:
 	.include	"graphics_captured/captured_graphics.inc"
 
-frames_l:
+riven_l:
 	.byte <riven01_zx02
 	.byte <riven02_zx02
 	.byte <riven03_zx02
 	.byte <riven04_zx02
 
-frames_h:
+riven_h:
 	.byte >riven01_zx02
 	.byte >riven02_zx02
 	.byte >riven03_zx02
 	.byte >riven04_zx02
+
+
+
+frames_l:
+	.byte <trap_overlay0
+	.byte <trap_overlay1
+	.byte <trap_overlay2
+	.byte <trap_overlay3
+	.byte <trap_overlay4
+	.byte <trap_overlay5
+
+frames_h:
+	.byte >trap_overlay0
+	.byte >trap_overlay1
+	.byte >trap_overlay2
+	.byte >trap_overlay3
+	.byte >trap_overlay4
+	.byte >trap_overlay5
+
+
 
