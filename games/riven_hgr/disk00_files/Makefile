@@ -26,7 +26,7 @@ atrus.o:	atrus.s \
 ####
 
 CAPTURED:	captured.o
-	ld65 -o CAPTURED captured.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+	ld65 -o CAPTURED captured.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 captured.o:	captured.s \
 		flip_pages.s draw_scene.s gr_fade.s \

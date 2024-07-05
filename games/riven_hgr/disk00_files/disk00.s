@@ -4,7 +4,7 @@ which_disk:
 	.byte	$00		; BCD
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, CYAN, ATRUS, CAPTURED
+	.byte	$40,$40,$40,$60	; TITLE, CYAN, ATRUS, CAPTURED
 	.byte	$40,$00,$00,$00	; CHO
 
 track_array:
@@ -15,7 +15,7 @@ sector_array:
         .byte	8, 0, 0, 0	; TITLE, CYAN, ATRUS, CAPTURED
 	.byte	0,0,0,0		; CHO
 length_array:
-        .byte	8, 127,127,127	; TITLE, CYAN, ATRUS, CAPTURED
+        .byte	8, 127,127,80	; TITLE, CYAN, ATRUS, CAPTURED
 	.byte	127,0,0,0	; CHO
 
 

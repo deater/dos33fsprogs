@@ -113,10 +113,21 @@ move_and_print_list:
 
 	rts
 
+
 	;==============================
-	; clear bottom of text screen
+	; clear all of gr screen (page1)
 	;==============================
+clear_gr_all:
+	ldx	#0
+	stx	clear_value_smc+1
+	beq	clear_bottom_loop_outer		; bra
+
+	;====================================
+	; clear bottom of text screen (page1)
+	;====================================
 clear_bottom:
+	lda	#' '+$80
+	sta	clear_value_smc+1
 	ldx	#20
 clear_bottom_loop_outer:
 	txa
@@ -128,6 +139,7 @@ clear_bottom_loop_outer:
 	lda	gr_offsets,Y
 	sta	OUTH
 
+clear_value_smc:
 	lda	#' '+$80
 	ldy	#39
 clear_bottom_loop_inner:

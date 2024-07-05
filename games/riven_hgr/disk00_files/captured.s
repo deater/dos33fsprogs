@@ -9,7 +9,23 @@
 .include "disk00_defines.inc"
 
 
-RIVEN_FRAMES	=	4
+RIVEN_FRAMES	=	23
+
+; new
+; 1 = 163.5
+; 2 = 163.75
+; 3 = 164
+; 5 = 164.5
+; 7 = 165
+; 9 = 165.5
+;11 = 166
+;13 = 166.5
+;15 = 167
+;17 = 167.5
+;19 = 168
+;21 = 168.5
+;23 = 169 = end (empty)
+
 
 NUM_OVERLAYS	=	6
 
@@ -36,6 +52,9 @@ captured_start:
 	;===============================
 	;===============================
 
+	lda	#$20
+	sta	DRAW_PAGE
+
 riven_logo_loop:
 
 	; decompress graphics
@@ -46,12 +65,31 @@ riven_logo_loop:
 	lda	riven_h,X
 	sta	ZX0_src+1
 
-	lda	#$20		; hgr page1
+	lda	DRAW_PAGE
 	jsr	full_decomp
+
+	; flip pages
+
+	lda	DRAW_PAGE
+	cmp	#$20
+	beq	hgr_flip_page2
+
+hgr_flip_page1:
+	bit	PAGE2
+	lda	#$20
+	bne	done_hgr_flip
+
+hgr_flip_page2:
+
+	bit	PAGE1
+	lda	#$40
+done_hgr_flip:
+	sta	DRAW_PAGE
+
 
 	; wait a bit before continuing
 
-	ldx	#30
+	ldx	#2
 	jsr	wait_a_bit
 
 	inc	SCENE_COUNT
@@ -65,6 +103,10 @@ riven_logo_loop:
 	;===================
         ; Setup lo-res graphics
         ;===================
+
+	; clear it first
+
+	jsr	clear_gr_all
 
         bit     SET_GR
         bit     LORES
@@ -222,14 +264,52 @@ riven_l:
 	.byte <riven02_zx02
 	.byte <riven03_zx02
 	.byte <riven04_zx02
+	.byte <riven05_zx02
+	.byte <riven06_zx02
+	.byte <riven07_zx02
+	.byte <riven08_zx02
+	.byte <riven09_zx02
+	.byte <riven10_zx02
+	.byte <riven11_zx02
+	.byte <riven12_zx02
+	.byte <riven13_zx02
+	.byte <riven14_zx02
+	.byte <riven15_zx02
+	.byte <riven16_zx02
+	.byte <riven17_zx02
+	.byte <riven18_zx02
+	.byte <riven19_zx02
+	.byte <riven20_zx02
+	.byte <riven21_zx02
+	.byte <riven22_zx02
+	.byte <riven23_zx02
+
+
 
 riven_h:
 	.byte >riven01_zx02
 	.byte >riven02_zx02
 	.byte >riven03_zx02
 	.byte >riven04_zx02
-
-
+	.byte >riven05_zx02
+	.byte >riven06_zx02
+	.byte >riven07_zx02
+	.byte >riven08_zx02
+	.byte >riven09_zx02
+	.byte >riven10_zx02
+	.byte >riven11_zx02
+	.byte >riven12_zx02
+	.byte >riven13_zx02
+	.byte >riven14_zx02
+	.byte >riven15_zx02
+	.byte >riven16_zx02
+	.byte >riven17_zx02
+	.byte >riven18_zx02
+	.byte >riven19_zx02
+	.byte >riven20_zx02
+	.byte >riven21_zx02
+	.byte >riven22_zx02
+	.byte >riven23_zx02
 
 frames_l:
 	.byte <trap_overlay0
