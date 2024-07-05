@@ -1,3 +1,4 @@
+add audio to credits
 
 move flip_pages.s into QLOAD?
 
@@ -21,9 +22,6 @@ disk00:
 		use page flipping on Apple IIe with auxmem?
 	+ atrus intro
 	+ capture movie:
-		more frames for riven intro
-		sound effect
-		fade in effect
 	+ opening movie: implement it
 		ESC key... in wait_a_bit write to WAIT_KEYPRESS
 

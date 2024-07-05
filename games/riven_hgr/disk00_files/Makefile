@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK00 ATRUS CYAN CAPTURED
+all:	DISK00 ATRUS CYAN CAPTURED CHO
 
 ####
 
@@ -35,6 +35,19 @@ captured.o:	captured.s \
 		audio/capture.btc.zx02
 	ca65 -o captured.o captured.s -l captured.lst
 
+####
+
+CHO:	cho.o
+	ld65 -o CHO cho.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+cho.o:	cho.s \
+		flip_pages.s draw_scene.s gr_fade.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		graphics_cho/cho_graphics.inc \
+		audio/capture.btc.zx02
+	ca65 -o cho.o cho.s -l cho.lst
+
+
 
 
 ####
@@ -56,6 +69,9 @@ graphics_atrus/atrus_graphics.inc:
 graphics_captured/captured_graphics.inc:
 	cd graphics_captured && make
 
+graphics_cho/cho_graphics.inc:
+	cd graphics_cho && make
+
 graphics_cyan/cyan_graphics.inc:
 	cd graphics_cyan && make
 
@@ -63,14 +79,15 @@ graphics_cyan/cyan_graphics.inc:
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK00 ATRUS CYAN CAPTURED
+		DISK00 ATRUS CYAN CAPTURED CHO
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		DISK00 ATRUS CYAN
+		DISK00 ATRUS CYAN CHO
 	cd graphics_atrus && make clean
 	cd graphics_cyan && make clean
 	cd graphics_captured && make clean
+	cd graphics_cho && make clean
 

@@ -242,7 +242,7 @@ done_play_audio:
 
 	bit     KEYRESET
 
-	lda     #LOAD_CAPTURED
+	lda     #LOAD_CHO
 	sta     WHICH_LOAD
 
 	lda     #$1
