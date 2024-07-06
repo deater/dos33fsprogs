@@ -13,12 +13,11 @@ draw_scene:
 	;===============================
 
 before:
-;	ldx	SCENE_COUNT
 
-;	lda	frames_l,X
+scene_bg_l_smc:
 	lda	#<captured_bg
 	sta	ZX0_src
-;	lda	frames_h,X
+scene_bg_h_smc:
 	lda	#>captured_bg
         sta	ZX0_src+1
 

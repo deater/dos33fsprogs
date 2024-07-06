@@ -326,9 +326,11 @@ done_setup_sound:
 
 .if DISK=00
 
-;	lda	#LOAD_CYAN
-	lda	#LOAD_CAPTURED
 
+;	lda	#LOAD_CAPTURED
+	lda	#LOAD_CHO
+
+;	lda	#LOAD_CYAN
 	sta	WHICH_LOAD		; assume CYAN opener
 
 	lda	#0			; not needed...
