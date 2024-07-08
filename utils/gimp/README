@@ -1,0 +1,5 @@
+
+roto.scm:	script-fu for rotoscoping Riven files
+	copy to ~/.config/GIMP/2.10/scripts or equivalent
+
+
