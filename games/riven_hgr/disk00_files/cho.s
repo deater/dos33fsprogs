@@ -9,7 +9,7 @@
 .include "disk00_defines.inc"
 
 
-NUM_OVERLAYS	=	41
+NUM_OVERLAYS	=	61
 
 
 cho_start:
@@ -107,7 +107,14 @@ frames_l:
 	.byte <cho_overlay030,<cho_overlay031,<cho_overlay032	; 30,31,32
 	.byte <cho_overlay033,<cho_overlay034,<cho_overlay035	; 33,34,35
 	.byte <cho_overlay036,<cho_overlay037,<cho_overlay038	; 36,37,38
-	.byte <cho_overlay039,<cho_overlay040			; 39,40,41
+	.byte <cho_overlay039,<cho_overlay040,<cho_overlay041	; 39,40,41
+	.byte <cho_overlay042,<cho_overlay043,<cho_overlay044	; 42,43,44
+	.byte <cho_overlay045,<cho_overlay046,<cho_overlay047	; 45,46,47
+	.byte <cho_overlay048,<cho_overlay049,<cho_overlay050	; 48,49,50
+	.byte <cho_overlay051,<cho_overlay052,<cho_overlay053	; 51,52,53
+	.byte <cho_overlay054,<cho_overlay055,<cho_overlay056	; 54,55,56
+	.byte <cho_overlay057,<cho_overlay058,<cho_overlay059	; 57,58,59
+	.byte <cho_overlay060					; 60,61,62
 
 
 frames_h:
@@ -128,7 +135,15 @@ frames_h:
 	.byte >cho_overlay030,>cho_overlay031,>cho_overlay032	; 30,31,32
 	.byte >cho_overlay033,>cho_overlay034,>cho_overlay035	; 33,34,35
 	.byte >cho_overlay036,>cho_overlay037,>cho_overlay038	; 36,37,38
-	.byte >cho_overlay039,>cho_overlay040			; 39,40,41
+	.byte >cho_overlay039,>cho_overlay040,>cho_overlay041	; 39,40,41
+	.byte >cho_overlay042,>cho_overlay043,>cho_overlay044	; 42,43,44
+	.byte >cho_overlay045,>cho_overlay046,>cho_overlay047	; 45,46,47
+	.byte >cho_overlay048,>cho_overlay049,>cho_overlay050	; 48,49,50
+	.byte >cho_overlay051,>cho_overlay052,>cho_overlay053	; 51,52,53
+	.byte >cho_overlay054,>cho_overlay055,>cho_overlay056	; 54,55,56
+	.byte >cho_overlay057,>cho_overlay058,>cho_overlay059	; 57,58,59
+	.byte >cho_overlay060					; 60,61,62
+
 
 cho_graphics:
 	.include	"graphics_cho/cho_graphics.inc"

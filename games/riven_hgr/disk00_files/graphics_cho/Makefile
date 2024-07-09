@@ -27,7 +27,17 @@ cho_graphics.inc:	\
 	cho_overlay034.gr.zx02 cho_overlay035.gr.zx02 \
 	cho_overlay036.gr.zx02 cho_overlay037.gr.zx02 \
 	cho_overlay038.gr.zx02 cho_overlay039.gr.zx02 \
-	cho_overlay040.gr.zx02
+	cho_overlay040.gr.zx02 cho_overlay041.gr.zx02 \
+	cho_overlay042.gr.zx02 cho_overlay043.gr.zx02 \
+	cho_overlay044.gr.zx02 cho_overlay045.gr.zx02 \
+	cho_overlay046.gr.zx02 cho_overlay047.gr.zx02 \
+	cho_overlay048.gr.zx02 cho_overlay049.gr.zx02 \
+	cho_overlay050.gr.zx02 cho_overlay051.gr.zx02 \
+	cho_overlay052.gr.zx02 cho_overlay053.gr.zx02 \
+	cho_overlay054.gr.zx02 cho_overlay055.gr.zx02 \
+	cho_overlay056.gr.zx02 cho_overlay057.gr.zx02 \
+	cho_overlay058.gr.zx02 cho_overlay059.gr.zx02 \
+	cho_overlay060.gr.zx02
 	echo "captured_bg: .incbin \"captured_bg.gr.zx02\"" > cho_graphics.inc
 	echo "captured_cage_bg: .incbin \"captured_cage_bg.gr.zx02\"" >> cho_graphics.inc
 	echo "empty: .incbin \"empty.gr.zx02\"" >> cho_graphics.inc
@@ -66,10 +76,26 @@ cho_graphics.inc:	\
 	echo "cho_overlay038: .incbin \"cho_overlay038.gr.zx02\"" >> cho_graphics.inc
 	echo "cho_overlay039: .incbin \"cho_overlay039.gr.zx02\"" >> cho_graphics.inc
 	echo "cho_overlay040: .incbin \"cho_overlay040.gr.zx02\"" >> cho_graphics.inc
-
-
-
-
+	echo "cho_overlay041: .incbin \"cho_overlay041.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay042: .incbin \"cho_overlay042.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay043: .incbin \"cho_overlay043.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay044: .incbin \"cho_overlay044.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay045: .incbin \"cho_overlay045.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay046: .incbin \"cho_overlay046.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay047: .incbin \"cho_overlay047.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay048: .incbin \"cho_overlay048.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay049: .incbin \"cho_overlay049.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay050: .incbin \"cho_overlay050.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay051: .incbin \"cho_overlay051.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay052: .incbin \"cho_overlay052.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay053: .incbin \"cho_overlay053.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay054: .incbin \"cho_overlay054.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay055: .incbin \"cho_overlay055.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay056: .incbin \"cho_overlay056.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay057: .incbin \"cho_overlay057.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay058: .incbin \"cho_overlay058.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay059: .incbin \"cho_overlay059.gr.zx02\"" >> cho_graphics.inc
+	echo "cho_overlay060: .incbin \"cho_overlay060.gr.zx02\"" >> cho_graphics.inc
 
 
 
