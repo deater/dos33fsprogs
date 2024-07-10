@@ -9,7 +9,7 @@
 .include "disk00_defines.inc"
 
 
-NUM_OVERLAYS	=	61
+NUM_OVERLAYS	=	96
 
 
 cho_start:
@@ -114,7 +114,18 @@ frames_l:
 	.byte <cho_overlay051,<cho_overlay052,<cho_overlay053	; 51,52,53
 	.byte <cho_overlay054,<cho_overlay055,<cho_overlay056	; 54,55,56
 	.byte <cho_overlay057,<cho_overlay058,<cho_overlay059	; 57,58,59
-	.byte <cho_overlay060					; 60,61,62
+	.byte <cho_overlay060,<cho_overlay061,<cho_overlay062	; 60,61,62
+	.byte <cho_overlay063,<cho_overlay064,<cho_overlay065	; 63,64,65
+	.byte <cho_overlay066,<cho_overlay067,<cho_overlay068	; 66,67,68
+	.byte <cho_overlay069,<cho_overlay070,<cho_overlay071	; 69,70,71
+	.byte <cho_overlay072,<cho_overlay073,<cho_overlay074	; 72,73,74
+	.byte <cho_overlay075,<cho_overlay076,<cho_overlay077	; 75,76,77
+	.byte <cho_overlay078,<cho_overlay079,<cho_overlay080	; 78,79,80
+	.byte <cho_overlay081,<cho_overlay082,<cho_overlay083	; 81,82,83
+	.byte <cho_overlay084,<cho_overlay085,<cho_overlay086	; 84,85,86
+	.byte <cho_overlay087,<cho_overlay088,<cho_overlay089	; 87,88,89
+	.byte <cho_overlay090,<cho_overlay091,<cho_overlay092	; 90,91,92
+	.byte <cho_overlay093,<cho_overlay094,<cho_overlay095	; 93,94,95
 
 
 frames_h:
@@ -142,7 +153,18 @@ frames_h:
 	.byte >cho_overlay051,>cho_overlay052,>cho_overlay053	; 51,52,53
 	.byte >cho_overlay054,>cho_overlay055,>cho_overlay056	; 54,55,56
 	.byte >cho_overlay057,>cho_overlay058,>cho_overlay059	; 57,58,59
-	.byte >cho_overlay060					; 60,61,62
+	.byte >cho_overlay060,>cho_overlay061,>cho_overlay062	; 60,61,62
+	.byte >cho_overlay063,>cho_overlay064,>cho_overlay065	; 63,64,65
+	.byte >cho_overlay066,>cho_overlay067,>cho_overlay068	; 66,67,68
+	.byte >cho_overlay069,>cho_overlay070,>cho_overlay071	; 69,70,71
+	.byte >cho_overlay072,>cho_overlay073,>cho_overlay074	; 72,73,74
+	.byte >cho_overlay075,>cho_overlay076,>cho_overlay077	; 75,76,77
+	.byte >cho_overlay078,>cho_overlay079,>cho_overlay080	; 78,79,80
+	.byte >cho_overlay081,>cho_overlay082,>cho_overlay083	; 81,82,83
+	.byte >cho_overlay084,>cho_overlay085,>cho_overlay086	; 84,85,86
+	.byte >cho_overlay087,>cho_overlay088,>cho_overlay089	; 87,88,89
+	.byte >cho_overlay090,>cho_overlay091,>cho_overlay092	; 90,91,92
+	.byte >cho_overlay093,>cho_overlay094,>cho_overlay095	; 93,94,95
 
 
 cho_graphics:
