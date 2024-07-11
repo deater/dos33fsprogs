@@ -137,6 +137,8 @@ clear_bottom_loop_outer:
 	sta	OUTL
 	iny
 	lda	gr_offsets,Y
+	clc
+	adc	DRAW_PAGE
 	sta	OUTH
 
 clear_value_smc:
