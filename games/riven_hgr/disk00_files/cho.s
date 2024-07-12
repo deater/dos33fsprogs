@@ -8,8 +8,13 @@
 
 .include "disk00_defines.inc"
 
+; 145 initial run
+;  10 pause when on ground
+;   9 dragging
+;  20 empty
+;   1 off by one
 
-NUM_OVERLAYS	=	146
+NUM_OVERLAYS	=	185
 
 
 cho_start:
@@ -176,9 +181,27 @@ frames_l:
 	.byte <cho_overlay141,<cho_overlay142,<cho_overlay143	; 141,142,143
 	.byte <cho_overlay144,<cho_overlay145			; 144,145
 
+	; note: same image from 146 ... 160 or so (7s?)
+	; let's make it a bit shorter, maybe 5s? (10 frames)
 
+	.byte <cho_overlay145,<cho_overlay145,<cho_overlay145
+	.byte <cho_overlay145,<cho_overlay145,<cho_overlay145
+	.byte <cho_overlay145,<cho_overlay145,<cho_overlay145
+	.byte <cho_overlay145
 
+	; restart here with 163
 
+	.byte <cho_overlay163,<cho_overlay164,<cho_overlay165	; 163,164,165
+	.byte <cho_overlay166,<cho_overlay167,<cho_overlay168	; 166,167,168
+	.byte <cho_overlay169,<cho_overlay170,<cho_overlay171	; 169,170,171
+
+	; nothing 172 ... 206 or 17s (34 frames)
+	; maybe wait 10s this time? (20 frames)
+
+	.byte <empty,<empty,<empty,<empty,<empty
+	.byte <empty,<empty,<empty,<empty,<empty
+	.byte <empty,<empty,<empty,<empty,<empty
+	.byte <empty,<empty,<empty,<empty,<empty
 
 
 frames_h:
@@ -235,6 +258,22 @@ frames_h:
 	.byte >cho_overlay138,>cho_overlay139,>cho_overlay140	; 138,139,140
 	.byte >cho_overlay141,>cho_overlay142,>cho_overlay143	; 141,142,143
 	.byte >cho_overlay144,>cho_overlay145			; 144,145
+
+	.byte >cho_overlay145,>cho_overlay145,>cho_overlay145
+	.byte >cho_overlay145,>cho_overlay145,>cho_overlay145
+	.byte >cho_overlay145,>cho_overlay145,>cho_overlay145
+	.byte >cho_overlay145
+
+	.byte >cho_overlay163,>cho_overlay164,>cho_overlay165	; 163,164,165
+	.byte >cho_overlay166,>cho_overlay167,>cho_overlay168	; 166,167,168
+	.byte >cho_overlay169,>cho_overlay170,>cho_overlay171	; 169,170,171
+
+	.byte >empty,>empty,>empty,>empty,>empty
+	.byte >empty,>empty,>empty,>empty,>empty
+	.byte >empty,>empty,>empty,>empty,>empty
+	.byte >empty,>empty,>empty,>empty,>empty
+
+
 
 text_l:
 	.byte <empty_text,<empty_text,<empty_text		; 0,1,2
