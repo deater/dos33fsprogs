@@ -9,7 +9,7 @@
 .include "disk00_defines.inc"
 
 
-NUM_OVERLAYS	=	111
+NUM_OVERLAYS	=	131
 
 
 cho_start:
@@ -163,6 +163,14 @@ frames_l:
 	.byte <cho_overlay102,<cho_overlay103,<cho_overlay104	; 102,103,104
 	.byte <cho_overlay105,<cho_overlay106,<cho_overlay107	; 105,106,107
 	.byte <cho_overlay108,<cho_overlay109,<cho_overlay110	; 108,109,110
+	.byte <cho_overlay111,<cho_overlay112,<cho_overlay113	; 111,112,113
+	.byte <cho_overlay114,<cho_overlay115,<cho_overlay116	; 114,115,116
+	.byte <cho_overlay117,<cho_overlay118,<cho_overlay119	; 117,118,119
+	.byte <cho_overlay120,<cho_overlay121,<cho_overlay122	; 120,121,122
+	.byte <cho_overlay123,<cho_overlay124,<cho_overlay125	; 123,124,125
+	.byte <cho_overlay126,<cho_overlay127,<cho_overlay128	; 126,127,128
+	.byte <cho_overlay129,<cho_overlay130			; 129,130,131
+
 
 
 frames_h:
@@ -207,6 +215,14 @@ frames_h:
 	.byte >cho_overlay102,>cho_overlay103,>cho_overlay104	; 102,103,104
 	.byte >cho_overlay105,>cho_overlay106,>cho_overlay107	; 105,106,107
 	.byte >cho_overlay108,>cho_overlay109,>cho_overlay110	; 108,109,110
+	.byte >cho_overlay111,>cho_overlay112,>cho_overlay113	; 111,112,113
+	.byte >cho_overlay114,>cho_overlay115,>cho_overlay116	; 114,115,116
+	.byte >cho_overlay117,>cho_overlay118,>cho_overlay119	; 117,118,119
+	.byte >cho_overlay120,>cho_overlay121,>cho_overlay122	; 120,121,122
+	.byte >cho_overlay123,>cho_overlay124,>cho_overlay125	; 123,124,125
+	.byte >cho_overlay126,>cho_overlay127,>cho_overlay128	; 126,127,128
+	.byte >cho_overlay129,>cho_overlay130			; 129,130,131
+
 
 text_l:
 	.byte <empty_text,<empty_text,<empty_text		; 0,1,2
@@ -230,20 +246,20 @@ text_l:
 	.byte <tahg_text,<tahg_text,<tahg_text			; 54,55,56
 	.byte <tahg_text,<re_text,<re_text			; 57,58,59
 	.byte <re_text,<tah_text,<tah_text			; 60,61,62
-	.byte <tah_text,<tah_text,<empty_text			; 63,64,65
-	.byte <empty_text,<empty_text,<empty_text		; 66,67,68
-	.byte <empty_text,<empty_text,<empty_text		; 69,70,71
-	.byte <empty_text,<empty_text,<empty_text		; 72,73,74
-	.byte <empty_text,<empty_text,<empty_text		; 75,76,77
-	.byte <empty_text,<empty_text,<empty_text		; 78,79,80
-	.byte <empty_text,<empty_text,<empty_text		; 81,82,83
-	.byte <empty_text,<empty_text,<empty_text		; 84,85,86
-	.byte <empty_text,<empty_text,<empty_text		; 87,88,89
-	.byte <empty_text,<empty_text,<empty_text		; 90,91,92
-	.byte <empty_text,<empty_text,<empty_text		; 93,94,95
-	.byte <empty_text,<empty_text,<empty_text		; 96,97,98
-	.byte <empty_text,<empty_text,<empty_text		; 99,100,101
-	.byte <empty_text,<empty_text,<empty_text		; 102,103,104
+	.byte <tah_text,<tah_text,<tahg2_text			; 63,64,65
+	.byte <tahg2_text,<tahg2_text,<tahg2_text		; 66,67,68
+	.byte <tahg2_text,<empty_text,<empty_text		; 69,70,71
+	.byte <me_text,<me_text,<me_text			; 72,73,74
+	.byte <me_text,<me_text,<me_text			; 75,76,77
+	.byte <me_text,<me_text,<me_text			; 78,79,80
+	.byte <me_text,<me2_text,<me2_text			; 81,82,83
+	.byte <me2_text,<me2_text,<me2_text			; 84,85,86
+	.byte <me2_text,<me2_text,<me2_text			; 87,88,89
+	.byte <me2_text,<me2_text,<me2_text			; 90,91,92
+	.byte <empty_text,<me3_text,<me3_text			; 93,94,95
+	.byte <me3_text,<me3_text,<me3_text			; 96,97,98
+	.byte <boku_text,<boku_text,<boku_text			; 99,100,101
+	.byte <boku_text,<empty_text,<empty_text		; 102,103,104
 
 text_h:
 	.byte >empty_text,>empty_text,>empty_text		; 0,1,2
@@ -267,20 +283,20 @@ text_h:
 	.byte >tahg_text,>tahg_text,>tahg_text			; 54,55,56
 	.byte >tahg_text,>re_text,>re_text			; 57,58,59
 	.byte >re_text,>tah_text,>tah_text			; 60,61,62
-	.byte >tah_text,>tah_text,>empty_text			; 63,64,65
-	.byte >empty_text,>empty_text,>empty_text		; 66,67,68
-	.byte >empty_text,>empty_text,>empty_text		; 69,70,71
-	.byte >empty_text,>empty_text,>empty_text		; 72,73,74
-	.byte >empty_text,>empty_text,>empty_text		; 75,76,77
-	.byte >empty_text,>empty_text,>empty_text		; 78,79,80
-	.byte >empty_text,>empty_text,>empty_text		; 81,82,83
-	.byte >empty_text,>empty_text,>empty_text		; 84,85,86
-	.byte >empty_text,>empty_text,>empty_text		; 87,88,89
-	.byte >empty_text,>empty_text,>empty_text		; 90,91,92
-	.byte >empty_text,>empty_text,>empty_text		; 93,94,95
-	.byte >empty_text,>empty_text,>empty_text		; 96,97,98
-	.byte >empty_text,>empty_text,>empty_text		; 99,100,101
-	.byte >empty_text,>empty_text,>empty_text		; 102,103,104
+	.byte >tah_text,>tahg2_text,>tahg2_text			; 63,64,65
+	.byte >tahg2_text,>tahg2_text,>tahg2_text		; 66,67,68
+	.byte >tahg2_text,>empty_text,>empty_text		; 69,70,71
+	.byte >me_text,>me_text,>me_text			; 72,73,74
+	.byte >me_text,>me_text,>me_text			; 75,76,77
+	.byte >me_text,>me_text,>me_text			; 78,79,80
+	.byte >me_text,>me2_text,>me2_text			; 81,82,83
+	.byte >me2_text,>me2_text,>me2_text			; 84,85,86
+	.byte >me2_text,>me2_text,>me2_text			; 87,88,89
+	.byte >me2_text,>me2_text,>me2_text			; 90,91,92
+	.byte >empty_text,>me3_text,>me3_text			; 93,94,95
+	.byte >me3_text,>me3_text,>me3_text			; 96,97,98
+	.byte >boku_text,>boku_text,>boku_text			; 99,100,101
+	.byte >boku_text,>empty_text,>empty_text		; 102,103,104
 
 ; video 192s roughly frame 6
 ; 204s "Cho?"		  	+12 frames 30..35
@@ -337,26 +353,26 @@ re_text:
 .byte 25,21,"RE-KO-AH",0,$FF
 
 tah_text:
-.byte 21,21,"TAH... TAH... TAH...",0,$FF
+.byte 10,21,"TAH... TAH... TAH...",0,$FF
 
 tahg2_text:
-.byte 20,21,"TAHG-EM-AH B'SOO RE-KO-AH",0,$FF
+.byte 7,21,"TAHG-EM-AH B'SOO RE-KO-AH",0,$FF
 
 me_text:
-.byte 0,20,"  _          _  _       _  _      _   _",0
-.byte 0,21," ME SELAP.  ME SELAP.  MU TEKA BOKU ANA.",0,$FF
+.byte 0,20," _          _  _       _  _      _   _",0
+.byte 0,21,"ME SELAP.  ME SELAP.  MU TEKA BOKU ANA.",0,$FF
 
 me2_text:
-.byte 0,20,"  _          _  _      _   _      _   _",0
-.byte 0,21," ME SELAP.  MU TEKA BOKU ANA.  BOKU ANA.",0,$FF
+.byte 0,20," _          _  _      _   _      _   _",0
+.byte 0,21,"ME SELAP.  MU TEKA BOKU ANA.  BOKU ANA.",0,$FF
 
 me3_text:
-.byte 0,20,"  _               _   _      _   _",0
-.byte 0,21," ME SELAP.  IM BOKU ANA.  BOKU ANA.",0,$FF
+.byte 0,20," _               _   _      _   _",0
+.byte 0,21,"ME SELAP.  IM BOKU ANA.  BOKU ANA.",0,$FF
 
 boku_text:
-.byte 10,20,"    _   _     _   _",0
-.byte 10,21," BOKU ANA! BOKU ANA!",0,$FF
+.byte 10,20,"   _   _     _   _",0
+.byte 10,21,"BOKU ANA! BOKU ANA!",0,$FF
 
 cho_graphics:
 	.include	"graphics_cho/cho_graphics.inc"
