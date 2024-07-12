@@ -9,7 +9,7 @@
 .include "disk00_defines.inc"
 
 
-NUM_OVERLAYS	=	131
+NUM_OVERLAYS	=	146
 
 
 cho_start:
@@ -169,7 +169,15 @@ frames_l:
 	.byte <cho_overlay120,<cho_overlay121,<cho_overlay122	; 120,121,122
 	.byte <cho_overlay123,<cho_overlay124,<cho_overlay125	; 123,124,125
 	.byte <cho_overlay126,<cho_overlay127,<cho_overlay128	; 126,127,128
-	.byte <cho_overlay129,<cho_overlay130			; 129,130,131
+	.byte <cho_overlay129,<cho_overlay130,<cho_overlay131	; 129,130,131
+	.byte <cho_overlay132,<cho_overlay133,<cho_overlay134	; 132,133,134
+	.byte <cho_overlay135,<cho_overlay136,<cho_overlay137	; 135,136,137
+	.byte <cho_overlay138,<cho_overlay139,<cho_overlay140	; 138,139,140
+	.byte <cho_overlay141,<cho_overlay142,<cho_overlay143	; 141,142,143
+	.byte <cho_overlay144,<cho_overlay145			; 144,145
+
+
+
 
 
 
@@ -221,8 +229,12 @@ frames_h:
 	.byte >cho_overlay120,>cho_overlay121,>cho_overlay122	; 120,121,122
 	.byte >cho_overlay123,>cho_overlay124,>cho_overlay125	; 123,124,125
 	.byte >cho_overlay126,>cho_overlay127,>cho_overlay128	; 126,127,128
-	.byte >cho_overlay129,>cho_overlay130			; 129,130,131
-
+	.byte >cho_overlay129,>cho_overlay130,>cho_overlay131	; 129,130,131
+	.byte >cho_overlay132,>cho_overlay133,>cho_overlay134	; 132,133,134
+	.byte >cho_overlay135,>cho_overlay136,>cho_overlay137	; 135,136,137
+	.byte >cho_overlay138,>cho_overlay139,>cho_overlay140	; 138,139,140
+	.byte >cho_overlay141,>cho_overlay142,>cho_overlay143	; 141,142,143
+	.byte >cho_overlay144,>cho_overlay145			; 144,145
 
 text_l:
 	.byte <empty_text,<empty_text,<empty_text		; 0,1,2
