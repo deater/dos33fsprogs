@@ -130,7 +130,7 @@ done_cho:
 
 	bit     KEYRESET
 
-	lda     #LOAD_CHO
+	lda     #LOAD_START
 	sta     WHICH_LOAD
 
 	lda     #$1

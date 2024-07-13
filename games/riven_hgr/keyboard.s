@@ -145,7 +145,7 @@ right_pressed:
 	cmp	#38			; if Xpos > 38 don't increment
 	bcc	do_inc_cursor_x		; blt
 ;	cmp	#$FE
-;	bcc	done_right_pressed
+	bcs	done_right_pressed
 do_inc_cursor_x:
 	inc	CURSOR_X		; move right one 3.5 pixel column
 done_right_pressed:

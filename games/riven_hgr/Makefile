@@ -46,7 +46,8 @@ riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	disk00_files/ATRUS \
 	disk00_files/CYAN \
 	disk00_files/CAPTURED \
-	disk00_files/CHO
+	disk00_files/CHO \
+	disk00_files/LEVEL_START
 	cp $(EMPTY_DISK)/empty.dsk riven_disk00.dsk
 	$(DOS33_RAW) riven_disk00.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk00.dsk  0  2 QBOOT                1   1
@@ -58,7 +59,7 @@ riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	$(DOS33_RAW) riven_disk00.dsk  10  0 disk00_files/ATRUS    0   0
 	$(DOS33_RAW) riven_disk00.dsk  18  0 disk00_files/CAPTURED 0   0
 	$(DOS33_RAW) riven_disk00.dsk  26  0 disk00_files/CHO      0   0
-
+	$(DOS33_RAW) riven_disk00.dsk  31  0 disk00_files/LEVEL_START      0   0
 
 ###
 

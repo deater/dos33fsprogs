@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK00 ATRUS CYAN CAPTURED CHO
+all:	DISK00 ATRUS CYAN CAPTURED CHO LEVEL_START
 
 ####
 
@@ -48,7 +48,17 @@ cho.o:	cho.s \
 	ca65 -o cho.o cho.s -l cho.lst
 
 
+####
 
+LEVEL_START:	level_start.o
+	ld65 -o LEVEL_START level_start.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_start.o:	level_start.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk00_defines.inc \
+		leveldata_start.inc \
+		graphics_start/start_graphics.inc
+	ca65 -o level_start.o level_start.s -l level_start.lst
 
 ####
 
