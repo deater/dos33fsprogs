@@ -13,8 +13,10 @@
 ;   9 dragging
 ;  20 empty
 ;   1 off by one
+;  15 of moiety (switch background)
 
-NUM_OVERLAYS	=	185
+BACKGROUND_SWITCH = 199
+NUM_OVERLAYS	=	200
 
 
 cho_start:
@@ -56,7 +58,19 @@ cho_start:
 	sta	WHICH_OVERLAY
 
 cho_loop:
+	; switch background
 
+	lda	WHICH_OVERLAY
+	cmp	#BACKGROUND_SWITCH
+	bne	no_bg_switch
+
+	lda	#<flipped_bg
+	sta	scene_bg_l_smc+1
+
+	lda	#>flipped_bg
+	sta	scene_bg_h_smc+1
+
+no_bg_switch:
 	; draw scene with overlay
 
 	jsr	draw_scene
@@ -203,6 +217,14 @@ frames_l:
 	.byte <empty,<empty,<empty,<empty,<empty
 	.byte <empty,<empty,<empty,<empty,<empty
 
+	; 206 ... 220 until new background
+	.byte <cho_overlay206,<cho_overlay207			; 206,207
+	.byte <cho_overlay208,<cho_overlay209,<cho_overlay210	; 208,209,210
+	.byte <cho_overlay211,<cho_overlay212,<cho_overlay213	; 211,212,213
+	.byte <cho_overlay214,<cho_overlay215,<cho_overlay216	; 214,215,216
+	.byte <cho_overlay217,<cho_overlay218,<cho_overlay219	; 217,218,219
+	.byte <cho_overlay220					; 220
+
 
 frames_h:
 	.byte >empty			; 0
@@ -272,6 +294,13 @@ frames_h:
 	.byte >empty,>empty,>empty,>empty,>empty
 	.byte >empty,>empty,>empty,>empty,>empty
 	.byte >empty,>empty,>empty,>empty,>empty
+
+	.byte >cho_overlay206,>cho_overlay207			; 206,207
+	.byte >cho_overlay208,>cho_overlay209,>cho_overlay210	; 208,209,210
+	.byte >cho_overlay211,>cho_overlay212,>cho_overlay213	; 211,212,213
+	.byte >cho_overlay214,>cho_overlay215,>cho_overlay216	; 214,215,216
+	.byte >cho_overlay217,>cho_overlay218,>cho_overlay219	; 217,218,219
+	.byte >cho_overlay220					; 220
 
 
 
