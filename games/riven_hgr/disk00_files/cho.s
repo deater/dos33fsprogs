@@ -14,9 +14,10 @@
 ;  20 empty
 ;   1 off by one
 ;  15 of moiety (switch background)
+;  25 final part
 
-BACKGROUND_SWITCH = 199
-NUM_OVERLAYS	=	200
+BACKGROUND_SWITCH = 200
+NUM_OVERLAYS	=	225
 
 
 cho_start:
@@ -225,6 +226,16 @@ frames_l:
 	.byte <cho_overlay217,<cho_overlay218,<cho_overlay219	; 217,218,219
 	.byte <cho_overlay220					; 220
 
+	; 221 ... 244 + empty
+	.byte <cho_overlay221,<cho_overlay222,<cho_overlay223	; 221,222,223
+	.byte <cho_overlay224,<cho_overlay225,<cho_overlay226	; 224,225,226
+	.byte <cho_overlay227,<cho_overlay228,<cho_overlay229	; 227,228,229
+	.byte <cho_overlay230,<cho_overlay231,<cho_overlay232	; 230,231,232
+	.byte <cho_overlay233,<cho_overlay234,<cho_overlay235	; 233,234,235
+	.byte <cho_overlay236,<cho_overlay237,<cho_overlay238	; 236,237,238
+	.byte <cho_overlay239,<cho_overlay240,<cho_overlay241	; 239,240,241
+	.byte <cho_overlay242,<cho_overlay243,<cho_overlay244	; 242,243,244
+	.byte <empty
 
 frames_h:
 	.byte >empty			; 0
@@ -302,6 +313,15 @@ frames_h:
 	.byte >cho_overlay217,>cho_overlay218,>cho_overlay219	; 217,218,219
 	.byte >cho_overlay220					; 220
 
+	.byte >cho_overlay221,>cho_overlay222,>cho_overlay223	; 221,222,223
+	.byte >cho_overlay224,>cho_overlay225,>cho_overlay226	; 224,225,226
+	.byte >cho_overlay227,>cho_overlay228,>cho_overlay229	; 227,228,229
+	.byte >cho_overlay230,>cho_overlay231,>cho_overlay232	; 230,231,232
+	.byte >cho_overlay233,>cho_overlay234,>cho_overlay235	; 233,234,235
+	.byte >cho_overlay236,>cho_overlay237,>cho_overlay238	; 236,237,238
+	.byte >cho_overlay239,>cho_overlay240,>cho_overlay241	; 239,240,241
+	.byte >cho_overlay242,>cho_overlay243,>cho_overlay244	; 242,243,244
+	.byte >empty
 
 
 text_l:
@@ -439,15 +459,15 @@ tahg2_text:
 .byte 7,21,"TAHG-EM-AH B'SOO RE-KO-AH",0,$FF
 
 me_text:
-.byte 0,20," _          _  _       _  _      _   _",0
+.byte 0,20," _  _       _  _       _  _      _   _",0
 .byte 0,21,"ME SELAP.  ME SELAP.  MU TEKA BOKU ANA.",0,$FF
 
 me2_text:
-.byte 0,20," _          _  _      _   _      _   _",0
+.byte 0,20," _  _       _  _      _   _      _   _",0
 .byte 0,21,"ME SELAP.  MU TEKA BOKU ANA.  BOKU ANA.",0,$FF
 
 me3_text:
-.byte 0,20," _               _   _      _   _",0
+.byte 0,20," _  _            _   _      _   _",0
 .byte 0,21,"ME SELAP.  IM BOKU ANA.  BOKU ANA.",0,$FF
 
 boku_text:

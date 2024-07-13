@@ -103,8 +103,8 @@ cho_graphics.inc:	\
 	cho_overlay234.gr.zx02 cho_overlay235.gr.zx02 \
 	cho_overlay236.gr.zx02 cho_overlay237.gr.zx02 \
 	cho_overlay238.gr.zx02 cho_overlay239.gr.zx02 \
-	cho_overlay240.gr.zx02 cho_overlay2141.gr.zx02 \
-	cho_overlay242.gr.zx02 cho_overlay43.gr.zx02 \
+	cho_overlay240.gr.zx02 cho_overlay241.gr.zx02 \
+	cho_overlay242.gr.zx02 cho_overlay243.gr.zx02 \
 	cho_overlay244.gr.zx02
 	echo "captured_bg: .incbin \"captured_bg.gr.zx02\"" > cho_graphics.inc
 	echo "captured_cage_bg: .incbin \"captured_cage_bg.gr.zx02\"" >> cho_graphics.inc
