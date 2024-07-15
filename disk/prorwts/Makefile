@@ -19,15 +19,15 @@ prorwts_ca65.o:	prorwts_ca65.s
 ###
 
 prorwts_test.2mg:	\
-	PROBOOTHD
+	PROBOOTHD SEASONS
 	$(CADIUS) CREATEVOLUME prorwts_test.2mg Test 32MB
-	dd conv=notrunc if=PROBOOTHD of=prorwts_test.2mg bs=512 count=1
+	dd conv=notrunc if=PROBOOTHD of=prorwts_test.2mg bs=1 count=512 oseek=64
 #	$(CADIUS) CREATEFOLDER prorwts_test.2mg /Test/DISK01
 #	$(CADIUS) CREATEFOLDER prorwts_test.2mg /Test/DISK39
 #	$(CADIUS) CREATEFOLDER prorwts_test.2mg /Test/DISK40
 #	$(CADIUS) CREATEFOLDER prorwts_test.2mg /Test/DISK41
 #	$(CADIUS) CREATEFOLDER prorwts_test.2mg /Test/DISK43
-#	$(CADIUS) ADDFILE  prorwts_test.2mg  /Test/DISK01/ disk01_files/LEVEL_ARRIVAL
+	$(CADIUS) ADDFILE  prorwts_test.2mg  /Test/ SEASONS#061000
 
 
 ###
@@ -39,5 +39,14 @@ proboothd.o:	proboothd.s
 
 ####
 
+SEASONS:	seasons.o
+	ld65 -o SEASONS seasons.o -C ../../linker_scripts/apple2_1000.inc
+
+seasons.o:	seasons.s
+	ca65 -o seasons.o seasons.s -l seasons.lst
+
+
+####
+
 clean:		
-	rm -f *~ *.o *.lst
+	rm -f *~ *.o *.lst PROBOOTHD SEASONS
