@@ -328,9 +328,9 @@ done_setup_sound:
 
 
 ;	lda	#LOAD_CAPTURED
-	lda	#LOAD_CHO
+;	lda	#LOAD_CHO
 
-;	lda	#LOAD_CYAN
+	lda	#LOAD_CYAN
 	sta	WHICH_LOAD		; assume CYAN opener
 
 	lda	#0			; not needed...
@@ -420,7 +420,7 @@ riven_title_image:
 
           ;01234567890123456789012345678901234567890
 title_text:
-.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.05",0
+.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.06",0
 ;
 ;
 
@@ -429,7 +429,8 @@ title_text:
 .byte 0, 4,"+ APPLE II PORT: VINCE 'DEATER' WEAVER",0
 .byte 0, 5,"+ DISK CODE    : QKUMBA",0
 .byte 0, 6,"+ ZX02 CODE    : DMSC",0
-.byte 0, 7,"+ IIPIX        : KRIS KENNAWAY",0
+.byte 0, 7,"+ IIPIX        : K. KENNAWAY",0
+.byte 0, 8,"+ SOUND        : O. SCHMIDT",0
 
 .byte 12,10,"** DISCLAIMER **",0
 .byte 0,12,"THIS PRODUCT CONTAINS TRADEMARKS AND/OR",0

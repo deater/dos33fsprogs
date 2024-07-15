@@ -85,19 +85,23 @@ graphics_cho/cho_graphics.inc:
 graphics_cyan/cyan_graphics.inc:
 	cd graphics_cyan && make
 
+graphics_start/cyan_graphics.inc:
+	cd graphics_start && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK00 ATRUS CYAN CAPTURED CHO
+		DISK00 ATRUS CYAN CAPTURED CHO LEVEL_START
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		DISK00 ATRUS CYAN CHO
+		DISK00 ATRUS CYAN CHO LEVEL_START
 	cd graphics_atrus && make clean
 	cd graphics_cyan && make clean
 	cd graphics_captured && make clean
 	cd graphics_cho && make clean
+	cd graphics_start && make clean
 

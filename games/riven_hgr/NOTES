@@ -58,6 +58,9 @@ T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2346 bytes     16S = 1T00S	(4096)   2k free
 T         2 = CYAN            bytes         = 7T15S	(32512)  ?k free
 T        10 = ATRUS           bytes         = 7T15S	(32512)  2k free
+T	    = CAPTURED        bytes         =
+T        26 = CHO             bytes         = 5T	(32512)  ?k free
+T        31 = LEVEL_START     bytes         = ?T15S	(32512)  2k free
 
 
 Disk01 Map (disk has 35 tracks, each 4k in size)
