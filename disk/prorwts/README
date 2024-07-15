@@ -1,0 +1,10 @@
+
+some test code for using large 32MB prodos hard-drive images
+
+this is based on the prorwts code by qkumba, and also the
+	4cade/total-replay code by 4am and qkumba
+
+currently code here only work on hd image, and unlike 4cade
+won't work as double-clicking a disk image on a IIgs as that's not
+really a use case I would ever do
+
