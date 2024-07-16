@@ -382,7 +382,7 @@ submit:	riven_disk00.dsk riven_disk01.dsk \
 
 riven_hgr.2mg:	PROBOOTHD disk01_files/LEVEL_ARRIVAL
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
-	$(PRODOS_RAW) riven_hgr.2mg 0 0 PROBOOTHD
+	$(PRODOS_RAW) riven_hgr.2mg 0 PROBOOTHD 0 0
 
 ###
 
