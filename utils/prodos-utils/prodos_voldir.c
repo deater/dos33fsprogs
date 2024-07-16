@@ -31,7 +31,8 @@ int prodos_read_voldir(struct voldir_t *voldir) {
 	voldir->storage_type=(voldir_buffer[0x4]>>4)&0xf;
 	voldir->name_length=(voldir_buffer[0x4]&0xf);
 	if (voldir->storage_type!=0xf) {
-		fprintf(stderr,"ERROR! Expected storage type F\n");
+		fprintf(stderr,"ERROR! Expected storage type F, we found %x\n",
+			voldir->storage_type);
 	}
 
 	memcpy(voldir->volume_name,&voldir_buffer[0x5],voldir->name_length);

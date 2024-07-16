@@ -28,6 +28,7 @@ static void usage(char *binary,int help) {
 		printf("\t-i interleave : PRODOS (default) or DOS33\n");
 		printf("\t-s filename   : bootsector\n");
 		printf("\t-n volume     : volume name\n");
+		printf("\t-2 		: prepend a 2mg header\n");
 		printf("\n\n");
 	}
 	exit(0);
@@ -48,13 +49,15 @@ int main(int argc, char **argv) {
 	int volname_len;
 	int interleave=PRODOS_INTERLEAVE_PRODOS;
 	int num_voldirs=4,num_bitmaps,num_bitmap_blocks,ones_to_write;
+	int make_2mg_header=0;
+	char header_2mg[64];
 
 	strncpy(volname,"EMPTY",6);
 	volname_len=strlen(volname);
 
 	/* Parse Command Line Arguments */
 
-	while ((c = getopt (argc, argv,"b:i:s:n:hv"))!=-1) {
+	while ((c = getopt (argc, argv,"b:i:s:n:hv2"))!=-1) {
 		switch (c) {
 			case 'b':
 				num_blocks=strtol(optarg,&endptr,10);
@@ -83,8 +86,11 @@ int main(int argc, char **argv) {
 				}
 				memcpy(volname,optarg,volname_len);
 				break;
+			case '2': make_2mg_header=1;
+				break;
 			case 'v': usage(argv[0],0);
 			case 'h': usage(argv[0],1);
+
 		}
 	}
 
@@ -100,13 +106,13 @@ int main(int argc, char **argv) {
 	/***********************/
 
 	/* sectors: 2->32  (limited by 4-byte bitfields) */
-	if ((num_blocks<6) || (num_blocks>65536)) {
-		printf("Number of blocks must be >2 and <65536\n\n");
+	if ((num_blocks<6) || (num_blocks>65535)) {
+		printf("Number of blocks must be >6 and <65536\n\n");
 		goto end_of_program;
 	}
 
 	/* Open device */
-	fd=open(device,O_RDWR|O_CREAT,0666);
+	fd=open(device,O_RDWR|O_CREAT|O_TRUNC,0666);
 	if (fd<0) {
 		fprintf(stderr,"Error opening %s (%s)\n",
 			device,strerror(errno));
@@ -122,7 +128,63 @@ int main(int argc, char **argv) {
 
 	voldir.fd=fd;
 	voldir.interleave=interleave;
-	voldir.image_offset=0;
+
+	if (make_2mg_header) {
+		memset(header_2mg,0,64);
+
+		header_2mg[0]='2';
+		header_2mg[1]='I';
+		header_2mg[2]='M';
+		header_2mg[3]='G';
+
+		header_2mg[4]='V';
+		header_2mg[5]='M';
+		header_2mg[6]='W';
+		header_2mg[7]='!';
+
+		header_2mg[8]=0x40;	/* header size (64 bytes) */
+		header_2mg[9]=0x00;
+
+		header_2mg[10]=1;
+		header_2mg[11]=0;	/* version number */
+
+		header_2mg[12]=1;	/* prodos sector order */
+		header_2mg[13]=0;
+		header_2mg[14]=0;
+		header_2mg[15]=0;
+
+		header_2mg[16]=0;	/* flags */
+		header_2mg[17]=0;	/* flags */
+		header_2mg[18]=0;	/* flags */
+		header_2mg[19]=0;	/* flags */
+
+		header_2mg[20]=num_blocks%256;	/* prodos blocks */
+		header_2mg[21]=num_blocks/256;
+		header_2mg[22]=0;
+		header_2mg[23]=0;
+
+		header_2mg[24]=0x40;	/* offset to disk data */
+		header_2mg[25]=0;
+		header_2mg[26]=0;
+		header_2mg[27]=0;
+
+		int data_bytes=num_blocks*512;
+
+		/* bytes of disk data */
+		header_2mg[28]=(data_bytes&0xff);
+		header_2mg[29]=(data_bytes>>8)&0xff;
+		header_2mg[30]=(data_bytes>>16)&0xff;
+		header_2mg[31]=(data_bytes>>24)&0xff;
+
+		/* we don't set any of the additional fields */
+
+		write(fd,header_2mg,64);
+
+		voldir.image_offset=64;
+	}
+	else {
+		voldir.image_offset=0;
+	}
 	voldir.storage_type=PRODOS_FILE_VOLUME_HDR;
 	voldir.name_length=volname_len;
 	memcpy(voldir.volume_name,volname,volname_len);
@@ -154,9 +216,7 @@ int main(int argc, char **argv) {
 			fprintf(stderr,"Error writing!\n");
 			return -1;
 		}
-
 	}
-
 
 	/*********************************/
 	/* create the voldirs		 */

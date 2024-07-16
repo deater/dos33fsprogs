@@ -1166,7 +1166,7 @@ int main(int argc, char **argv) {
 		/* FIXME: detect this based on magic number */
 		else if (!strncmp(&image[strlen(image)-4],".2mg",4)) {
 
-			char header[64];
+			unsigned char header[64];
 			int image_format;
 
 			read(prodos_fd,header,64);
@@ -1217,11 +1217,14 @@ int main(int argc, char **argv) {
 					(header[18]<<16)|
 					(header[19]<<24));
 
-				printf("ProDOS blocks: $%X\n",
+				int prodos_blocks=
 					(header[20])|
 					(header[21]<<8)|
 					(header[22]<<16)|
-					(header[23]<<24));
+					(header[23]<<24);
+
+				printf("ProDOS blocks: $%X (%d)\n",
+					prodos_blocks,prodos_blocks);
 
 				printf("Image offset: $%X\n",image_offset);
 
