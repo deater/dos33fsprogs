@@ -1087,6 +1087,9 @@ int main(int argc, char **argv) {
 	int address=0, length=0;
 	struct voldir_t voldir;
 	int dir_block;
+	unsigned char header[64];
+	int result,num_blocks;
+
 
 	/* Check command line arguments */
 	while ((c = getopt (argc, argv,"a:i:l:t:dhvxy"))!=-1) {
@@ -1151,114 +1154,28 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 
-	if (debug) {
-		printf("checking extension: %s\n",&image[strlen(image)-4]);
-	}
+	/* Try to autodetect if 2mg format */
+	read(prodos_fd,header,64);
+	result=read_2mg_header(header,&num_blocks,&interleave,
+			&image_offset,debug);
+	if (result==PRODOS_ERROR_BAD_MAGIC) {
+		/* not 2mg, try to guess otherwise */
 
-	/* Try to autodetect interleave based on filename */
-	if (strlen(image)>4) {
-
-		if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
-			if (debug) printf("Detected DOS33 interleave\n");
-			interleave=PRODOS_INTERLEAVE_DOS33;
+		if (debug) {
+			printf("checking extension: %s\n",&image[strlen(image)-4]);
 		}
 
-		/* FIXME: detect this based on magic number */
-		else if (!strncmp(&image[strlen(image)-4],".2mg",4)) {
+		/* Try to autodetect interleave based on filename */
+		if (strlen(image)>4) {
 
-			unsigned char header[64];
-			int image_format;
-
-			read(prodos_fd,header,64);
-
-			image_offset=	(header[24])|
-					(header[25]<<8)|
-					(header[26]<<16)|
-					(header[27]<<24);
-
-			image_format=(header[12])|
-					(header[13]<<8)|
-					(header[14]<<16)|
-					(header[15]<<24);
-
-			if (image_format==0) {
+			if (!strncmp(&image[strlen(image)-4],".dsk",4)) {
+				if (debug) printf("Detected DOS33 interleave\n");
 				interleave=PRODOS_INTERLEAVE_DOS33;
 			}
-			else if (image_format==1) {
+
+			else if (!strncmp(&image[strlen(image)-3],".po",3)) {
+				if (debug) printf("Detected ProDOS interleave\n");
 				interleave=PRODOS_INTERLEAVE_PRODOS;
-			}
-			else {
-				fprintf(stderr,"Unsupported 2MG format\n");
-				return -1;
-			}
-
-			if (debug) {
-				char string[5];
-
-				printf("Detected 2MG format\n");
-
-				memcpy(string,header,4);
-				string[4]=0;
-				printf("magic: %s\n",string);
-
-				memcpy(string,header+4,4);
-				string[4]=0;
-				printf("creator: %s\n",string);
-
-				printf("Header size: %d\n",
-					(header[8]|(header[9]<<8)));
-
-				printf("Version: %d\n",
-						(header[10]|(header[11]<<8)));
-
-				printf("Flags: $%X\n",
-					(header[16])|
-					(header[17]<<8)|
-					(header[18]<<16)|
-					(header[19]<<24));
-
-				int prodos_blocks=
-					(header[20])|
-					(header[21]<<8)|
-					(header[22]<<16)|
-					(header[23]<<24);
-
-				printf("ProDOS blocks: $%X (%d)\n",
-					prodos_blocks,prodos_blocks);
-
-				printf("Image offset: $%X\n",image_offset);
-
-				printf("Bytes of data: %d\n",
-					(header[28])|
-					(header[29]<<8)|
-					(header[30]<<16)|
-					(header[31]<<24));
-
-				printf("Offset to comment: $%X\n",
-					(header[32])|
-					(header[33]<<8)|
-					(header[34]<<16)|
-					(header[35]<<24));
-
-				printf("Length of comment: %d\n",
-					(header[36])|
-					(header[37]<<8)|
-					(header[38]<<16)|
-					(header[39]<<24));
-
-				printf("Offset to creator comment: $%X\n",
-					(header[40])|
-					(header[41]<<8)|
-					(header[42]<<16)|
-					(header[43]<<24));
-
-				printf("Length of creator comment: %d\n",
-					(header[44])|
-					(header[45]<<8)|
-					(header[46]<<16)|
-					(header[47]<<24));
-
-
 			}
 		}
 	}

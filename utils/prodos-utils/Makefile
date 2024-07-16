@@ -7,19 +7,21 @@ all:	prodos mkprodosfs prodos_cat text_to_prodos
 ###
 
 prodos:			prodos.o \
-			prodos_read.o \
+			prodos_readwrite.o \
 			prodos_catalog.o \
 			prodos_dump.o \
 			prodos_volume_bitmap.o \
 			prodos_voldir.o \
-			prodos_time.o
+			prodos_time.o \
+			prodos_2mg.o
 			$(CC) -o prodos prodos.o \
-				prodos_read.o \
+				prodos_readwrite.o \
 				prodos_catalog.o \
 				prodos_dump.o \
 				prodos_volume_bitmap.o \
 				prodos_voldir.o \
-				prodos_time.o $(LFLAGS)
+				prodos_time.o \
+				prodos_2mg.o $(LFLAGS)
 
 prodos.o:		prodos.c prodos.h
 			$(CC) $(CFLAGS) -g -c prodos.c
@@ -50,14 +52,19 @@ text_to_prodos.o:	text_to_prodos.c
 
 ###
 
-mkprodosfs:		mkprodosfs.o prodos_read.o prodos_volume_bitmap.o \
-				prodos_voldir.o prodos_time.o
+mkprodosfs:		mkprodosfs.o prodos_readwrite.o prodos_volume_bitmap.o \
+				prodos_voldir.o prodos_time.o prodos_2mg.o
 			$(CC) $(LFLAGS) -o mkprodosfs mkprodosfs.o \
-				prodos_read.o prodos_volume_bitmap.o \
-				prodos_voldir.o prodos_time.o
+				prodos_readwrite.o prodos_volume_bitmap.o \
+				prodos_voldir.o prodos_time.o prodos_2mg.o
 
 mkprodosfs.o:		mkprodosfs.c prodos.h
 			$(CC) $(CFLAGS) -c mkprodosfs.c
+
+###
+
+prodos_2mg.o:	prodos_2mg.c prodos.h
+			$(CC) $(CFLAGS) -c prodos_2mg.c
 
 ###
 
@@ -76,8 +83,8 @@ prodos_dump.o:		prodos_dump.c prodos.h
 
 ###
 
-prodos_read.o:		prodos_read.c prodos.h
-			$(CC) $(CFLAGS) -c prodos_read.c
+prodos_readwrite.o:		prodos_readwrite.c prodos.h
+			$(CC) $(CFLAGS) -c prodos_readwrite.c
 
 ###
 

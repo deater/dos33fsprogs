@@ -8,20 +8,20 @@ LINKER_SCRIPTS = ../../linker_scripts/
 CADIUS = ~/research/apple2/cadius/bin/release/cadius
 PRODOSDIR = ../../utils/prodos-utils/
 PRODOS = ../../utils/prodos-utils/prodos
+PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 all:	riven_disk00.dsk \
 	riven_disk01.dsk \
 	riven_disk39.dsk riven_disk40.dsk riven_disk41.dsk \
 	riven_disk43.dsk \
-	riven_hgr.po
+	riven_hgr.2mg
 
-# Note: cadius, put #XXYYYY after filename for type/value
 
-riven_hgr.po:	disk01_files/LEVEL_ARRIVAL prorwts_ca65.o
-	$(PRODOSDIR)/mkprodosfs riven_hgr.po -n Riven
+####
 
-prorwts_ca65.o:	prorwts_ca65.s
-	ca65 -o prorwts_ca65.o prorwts_ca65.s -l prorwts_ca65.lst
+
+#prorwts_ca65.o:	prorwts_ca65.s
+#	ca65 -o prorwts_ca65.o prorwts_ca65.s -l prorwts_ca65.lst
 
 ###
 
@@ -376,3 +376,18 @@ submit:	riven_disk00.dsk riven_disk01.dsk \
 	zip riven_hgr.zip riven_disk00.dsk riven_disk01.dsk \
 			riven_disk39.dsk \
 		riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk
+
+
+####
+
+riven_hgr.2mg:	PROBOOTHD disk01_files/LEVEL_ARRIVAL
+	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
+	$(PRODOS_RAW) riven_hgr.2mg 0 0 PROBOOTHD
+
+###
+
+PROBOOTHD:	proboothd.o
+	ld65 -o PROBOOTHD proboothd.o -C $(LINKER_SCRIPTS)/apple2_800.inc
+
+proboothd.o:	proboothd.s
+	ca65 -o proboothd.o proboothd.s -l proboothd.lst

@@ -4,10 +4,16 @@ KEYPRESS	=	$C000
 KEYRESET	=	$C010
 
 ;; SOFT SWITCHES
-CLR80COL	=	$C000	; PAGE1/PAGE2 normal
-SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
-EIGHTYCOLOFF	=	$C00C
+CLR80COL	=	$C000	; (w) PAGE1/PAGE2 normal
+SET80COL	=	$C001	; (w) PAGE1/PAGE2 switches PAGE1 in Aux instead
+READMAINMEM	=	$C002	; (w) to read from main mem ($0200..$BFFF)
+READAUXMEM	=	$C003	; (w) to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM	=	$C004	; (w) to write to main mem ($0200..$BFFF)
+WRITEAUXMEM	=	$C005	; (w)to write to aux mem ($0200..$BFFF)
+SETSTDZP	=	$C008	; (w) to use main mem stack/zp ($00FF-$01FF)
+EIGHTYCOLOFF	=	$C00C	; (w) use 40 cols / exit DHGR
 EIGHTYCOLON	=	$C00D
+PRIMARYCHARSET	=	$C00E	; (w) to disable mousetext
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
@@ -23,48 +29,41 @@ LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
 AN3		=	$C05E	; Annunciator 3
 
-
-
-
-
-
-
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
 
-;; BASIC ROUTINES
+; $C081 for setting language card
+; $C082 for setting READ_ROM_NOWRITE
 
-NORMAL	=	$F273
+
+
 
 ;; MONITOR ROUTINES
 
-HLINE	= $F819			;; HLINE Y,$2C at A
-VLINE	= $F828			;; VLINE A,$2D at Y
-CLRSCR	= $F832			;; Clear low-res screen
-CLRTOP	= $F836			;; clear only top of low-res screen
-SETCOL	= $F864			;; COLOR=A
-ROM_TEXT2COPY = $F962		;; iigs
-TEXT	= $FB36
-GR	= $FB40
-TABV	= $FB5B			;; VTAB to A
-ROM_MACHINEID = $FBB3		;; iigs
-BELL	= $FBDD			;; ring the bell
-BASCALC	= $FBC1			;;
-VTAB	= $FC22			;; VTAB to CV
-HOME	= $FC58			;; Clear the text screen
-WAIT	= $FCA8			;; delay 1/2(26+27A+5A^2) us
-CROUT1	= $FD8B
-SETINV	= $FE80			;; INVERSE
-SETNORM	= $FE84			;; NORMAL
-COUT	= $FDED			;; output A to screen
-COUT1	= $FDF0			;; output A to screen
-
-
-
-
-
-
+HLINE		=	$F819	; HLINE Y,$2C at A
+VLINE		=	$F828	; VLINE A,$2D at Y
+CLRSCR		=	$F832	; Clear low-res screen
+CLRTOP		=	$F836	; clear only top of low-res screen
+SETCOL		=	$F864	; COLOR=A
+ROM_TEXT2COPY	=	$F962	; iigs
+INIT_TEXT	=	$FB2F	; set lo-res/page1 and call text
+TEXT		=	$FB36
+GR		=	$FB40
+TABV		=	$FB5B	; VTAB to A
+ROM_MACHINEID	=	$FBB3	; iigs
+BELL		=	$FBDD	; ring the bell
+BASCALC		=	$FBC1	;
+VTAB		=	$FC22	; VTAB to CV
+HOME		=	$FC58	; Clear the text screen
+WAIT		=	$FCA8	; delay 1/2(26+27A+5A^2) us
+CROUT1		=	$FD8B
+SETINV		=	$FE80	; INVERSE
+SETNORM		=	$FE84	; NORMAL
+COUT		=	$FDED	; output A to screen
+COUT1		=	$FDF0	; output A to screen
+SETKBD		=	$FE89	; set input to keyboard
+SETVID		=	$FE93	; set output to video screen
 
 COLOR_BLACK		=	0
 COLOR_RED		=	1

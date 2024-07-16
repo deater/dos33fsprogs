@@ -37,6 +37,11 @@
 #define PRODOS_ACCESS_WRITE	0x02
 #define PRODOS_ACCESS_READ	0x01
 
+/* error values */
+#define PRODOS_OK		0
+#define PRODOS_ERROR_BAD_MAGIC	1
+#define PRODOS_ERROR_INTERLEAVE	2
+
 struct voldir_t {
 	int fd;
 	int interleave;
@@ -126,3 +131,8 @@ int prodos_read_voldir(struct voldir_t *voldir);
 
 /* prodos_time.c */
 int prodos_time(time_t t);
+
+/* prodos_2mg.c */
+int create_2mg_header(unsigned char *header_2mg,int num_blocks);
+int read_2mg_header(unsigned char *header_2mg,int *num_blocks,
+	int *interleave,int *offset,int debug);

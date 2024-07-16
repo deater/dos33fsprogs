@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
 	int interleave=PRODOS_INTERLEAVE_PRODOS;
 	int num_voldirs=4,num_bitmaps,num_bitmap_blocks,ones_to_write;
 	int make_2mg_header=0;
-	char header_2mg[64];
+	unsigned char header_2mg[64];
 
 	strncpy(volname,"EMPTY",6);
 	volname_len=strlen(volname);
@@ -130,53 +130,8 @@ int main(int argc, char **argv) {
 	voldir.interleave=interleave;
 
 	if (make_2mg_header) {
-		memset(header_2mg,0,64);
 
-		header_2mg[0]='2';
-		header_2mg[1]='I';
-		header_2mg[2]='M';
-		header_2mg[3]='G';
-
-		header_2mg[4]='V';
-		header_2mg[5]='M';
-		header_2mg[6]='W';
-		header_2mg[7]='!';
-
-		header_2mg[8]=0x40;	/* header size (64 bytes) */
-		header_2mg[9]=0x00;
-
-		header_2mg[10]=1;
-		header_2mg[11]=0;	/* version number */
-
-		header_2mg[12]=1;	/* prodos sector order */
-		header_2mg[13]=0;
-		header_2mg[14]=0;
-		header_2mg[15]=0;
-
-		header_2mg[16]=0;	/* flags */
-		header_2mg[17]=0;	/* flags */
-		header_2mg[18]=0;	/* flags */
-		header_2mg[19]=0;	/* flags */
-
-		header_2mg[20]=num_blocks%256;	/* prodos blocks */
-		header_2mg[21]=num_blocks/256;
-		header_2mg[22]=0;
-		header_2mg[23]=0;
-
-		header_2mg[24]=0x40;	/* offset to disk data */
-		header_2mg[25]=0;
-		header_2mg[26]=0;
-		header_2mg[27]=0;
-
-		int data_bytes=num_blocks*512;
-
-		/* bytes of disk data */
-		header_2mg[28]=(data_bytes&0xff);
-		header_2mg[29]=(data_bytes>>8)&0xff;
-		header_2mg[30]=(data_bytes>>16)&0xff;
-		header_2mg[31]=(data_bytes>>24)&0xff;
-
-		/* we don't set any of the additional fields */
+		create_2mg_header(header_2mg,num_blocks);
 
 		write(fd,header_2mg,64);
 
