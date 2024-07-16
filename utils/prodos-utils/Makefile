@@ -2,7 +2,7 @@ include ../../Makefile.inc
 
 CFLAGS := $(CFLAGS) -g
 
-all:	prodos mkprodosfs prodos_cat text_to_prodos
+all:	prodos mkprodosfs prodos_cat text_to_prodos prodos_raw
 
 ###
 
@@ -32,10 +32,17 @@ prodos.o:		prodos.c prodos.h
 prodos_cat:	prodos_cat.o
 	$(CC) $(LFLAGS) -o prodos_cat prodos_cat.o
 
-####
-
 prodos_cat.o:	prodos_cat.c
 	$(CC) $(CFLAGS) -c prodos_cat.c
+
+###
+
+prodos_raw:	prodos_raw.o prodos_2mg.o
+	$(CC) $(LFLAGS) -o prodos_raw prodos_raw.o prodos_2mg.o
+
+prodos_raw.o:	prodos_raw.c
+	$(CC) $(CFLAGS) -c prodos_raw.c
+
 
 
 ###
