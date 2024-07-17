@@ -44,19 +44,14 @@ proboot_start:
 	; set up disk stuff?
 
 	pla			; restore slot
-	sta	UNIT		; save for later
+	sta	UNIT		; save for later (also has meaning)
 
 	tax
-	; X = boot slot x16
 
-	; Y = 0
 	; 4cade calls a print-title routine here that exits with Y=0
 
 
-
 	ldy	#0
-
-	; set up ProDOS shim
 
 	; from IIgs smartport firmware manual
 
@@ -86,7 +81,7 @@ slot_smc:
 	; we want to load 5 blocks from 1024 to $1600
 
 
-QLOAD_BLOCK	=	1024
+QLOAD_BLOCK	=	((0+1)*512)+(1*8)+(0)	; D0 T1 S0
 QLOAD_ADDR	=	$1600
 
 
@@ -98,15 +93,17 @@ QLOAD_ADDR	=	$1600
 	lda	#0
 	sta	ADRLO
 
+	lda	#5
+
 	jsr	seekread
 
 
 done:
-	jmp	done
+	jmp	QLOAD_ADDR
 
 
 	;================================
-	; seek read
+	; seek + read blocks
 	;================================
 	; this calls the smartport PRODOS entrypoint
 	;	command=1 READBLOCK
@@ -114,10 +111,14 @@ done:
 	;	but the paramaters are stored in the zero page
 	;================================
 	; Y:X = block number to load (???)
-	; ADRHI preserved
+	; A = num blocks
 seekread:
+	sta	COUNT
+
 	stx   BLOKLO
 	sty   BLOKHI
+
+seekread_loop:
 	lda   #1		; READBLOCK
 	sta   COMMAND
 	lda   ADRHI
@@ -126,4 +127,17 @@ entry_smc:
 	jsr	$d1d1
 	pla
 	sta	ADRHI
+
+	inc	ADRHI		; twice, as 512 byte chunks
+	inc	ADRHI
+
+	inc	BLOKLO		; increment block pointer
+	bne	no_blokloflo
+	inc	BLOKHI
+no_blokloflo:
+
+
+	dec	COUNT
+	bne	seekread_loop
+
 	rts

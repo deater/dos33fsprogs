@@ -1,5 +1,25 @@
 qload_hd:
 
+	; set up prodos entry
+
+	lda	UNIT		;
+	ldy	#0
+
+setup_loop:
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#7
+	ora	#$c0
+	sta	slot_smc+2
+	sta	entry_smc+2	; set up smartport/prodos entry point
+
+slot_smc:
+	lda	$cfff
+	sta	entry_smc+1	; set up rest of smartport/prodos entry
+
+
 	; init the write code if needed
 	; ???
 
@@ -7,6 +27,9 @@ qload_hd:
 
 	lda	#1
 	sta	NEW_GAME
+
+	lda	#0
+	sta	CURRENT_DISK
 
 	; load the QLOAD offsets file to $1200
 
@@ -21,7 +44,7 @@ qload_hd:
 main_game_loop:
 	jsr	load_file
 
-entry_smc:
+entry_point_smc:
 	jsr	$4000			; most entry points currently $4000
 
 	; CHECK LEVEL_OVER
@@ -40,21 +63,38 @@ load_file:
 	ldx	WHICH_LOAD
 
 	lda	LOAD_ADDRESS_ARRAY,X
-	sta	load_address
-	sta	entry_smc+2
+	sta	ADRHI
+	sta	entry_point_smc+2
 
-	lda	TRACK_ARRAY,X
-	sta	load_track
+;	lda	TRACK_ARRAY,X
+;	sta	load_track
 
-	lda	SECTOR_ARRAY,X
-	sta	load_sector
+;	lda	SECTOR_ARRAY,X
+;	sta	load_sector
+
+
+	lda	CURRENT_DISK
+	sta	BLOKHI
+	inc	BLOKHI		; off by one
+	lda	TRACK_ARRAY,X	; track
+	asl
+	asl
+	asl
+	rol	BLOKHI
+	sta	BLOKLO
+	lda	SECTOR_ARRAY,X	; sector
+	lsr
+	clc
+	adc	BLOKLO
+	sta	BLOKLO
+
 
 	lda	LENGTH_ARRAY,X
-	sta	load_length
+	sta	COUNT
 
-	jsr	load_new
+	jsr	seekread
 
-	rts
+	rts	; todo: tail call
 
 	;===================================================
 	;===================================================
@@ -89,58 +129,6 @@ change_disk:
 
 	; see if disk we want is in drive
 
-	;==============================
-	; print "insert disk" message
-
-	; TODO: switch to GR and print D'NI number too
-
-	jsr	GR
-	jsr	HOME
-
-	bit	LORES
-
-	lda	#<insert_disk_string
-	sta	OUTL
-	lda	#>insert_disk_string
-	sta	OUTH
-
-	; patch error string to say correct disk to insert
-
-	ldy	#21
-
-	lda	NEW_DISK
-	lsr
-	lsr
-	lsr
-	lsr
-	clc
-	adc	#$30
-	sta	(OUTL),Y
-
-	iny
-
-	lda	NEW_DISK
-	and	#$f
-	clc
-	adc	#$30
-	sta	(OUTL),Y
-
-	jsr	move_and_print
-	jsr	move_and_print
-
-	lda	#4
-	sta	XPOS
-	lda	#5
-	sta	YPOS
-
-	jsr	draw_full_dni_number
-
-
-fnf_keypress:
-	lda	KEYPRESS
-	bpl	fnf_keypress
-	bit	KEYRESET
-
 
 	;==========================
 	; load QLOAD table
@@ -148,10 +136,6 @@ fnf_keypress:
 verify_disk:
 
 	jsr	load_qload_offsets
-
-	lda	QLOAD_TABLE
-	cmp	NEW_DISK
-	bne	fnf_keypress
 
 
 
@@ -162,26 +146,71 @@ update_disk:
 	jmp	main_game_loop
 
 
-insert_disk_string:
-.byte 9,20,"PLEASE INSERT DISK 01.",0	; 21+22 location of disk number
-.byte 11,21,"THEN PRESS ANY KEY",0
 
 
 load_qload_offsets:
 	lda	#$12
-	sta	load_address
+	sta	ADRHI
 
-	lda	#$0
-	sta	load_track
+	lda	CURRENT_DISK
+	sta	BLOKHI
+	inc	BLOKHI		; off by one
+	lda	#0		; track
+	asl
+	asl
+	asl
+	rol	BLOKHI
+	sta	BLOKLO
+	lda	#$2		; sector
+	lsr
+	clc
+	adc	BLOKLO
+	sta	BLOKLO
 
-	lda	#$01		; track 0 sector 1
-	sta	load_sector
+;	lda	#$0
+;	sta	load_track
+
+;	lda	#$02		; track 0 sector 2
+;	sta	load_sector
 
 	lda	#$1
-	sta	load_length
+	sta	COUNT
 
-	jmp	load_new
-
-
+	jmp	seekread
 
 
+	;================================
+	; seek + read blocks
+	;================================
+	; this calls the smartport PRODOS entrypoint
+	;	command=1 READBLOCK
+	;	I can't find this documented anywhere
+	;	but the paramaters are stored in the zero page
+	;================================
+	; BLOKHI:BLOKLO = block number to load (???)
+	; COUNT = num blocks
+seekread:
+
+seekread_loop:
+	lda	#1		; READBLOCK
+	sta	COMMAND
+	lda	ADRHI
+	pha
+entry_smc:
+	jsr	$d1d1
+	pla
+	sta	ADRHI
+
+	inc	ADRHI		; twice, as 512 byte chunks
+	inc	ADRHI
+
+	inc	BLOKLO		; increment block pointer
+	bne	no_blokloflo
+	inc	BLOKHI
+no_blokloflo:
+
+
+	dec	COUNT
+	bne	seekread_loop
+
+	rts

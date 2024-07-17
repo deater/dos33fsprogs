@@ -46,9 +46,9 @@ $0400-$07ff = lores graphics page1
 $0800-$0bff = lores graphics page2
 	$800-$8ff = (qboot initial sector)
 $1000-$11ff = qboot_stage2 (disk code)
-$1200-$12ff = QLOAD tables
-$1300-$14FF = HGR lookup tables
-$1500-$15FF = UNUSED
+$1200-$13ff = QLOAD tables (only need 1 page, but prodos load is 2)
+		could in theory load to $1000 instead when using HD
+$1400-$15FF = HGR lookup tables
 $1600-$1FFF = QLOAD = loader code (2k?)
 $2000-$3FFF = HGR Page1, lores movie overlays
 $4000-$BFFF = our code (up to 32k in theory)

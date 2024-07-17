@@ -1,5 +1,5 @@
-hposn_high     = $1300
-hposn_low      = $1400
+hposn_high     = $1400
+hposn_low      = $1500
 
 
 ;=============================

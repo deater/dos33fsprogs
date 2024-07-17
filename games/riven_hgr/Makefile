@@ -163,7 +163,7 @@ qload.o:	qload.s qload_floppy.s qboot.inc \
 QLOAD_HD:	qload_hd.o
 	ld65 -o QLOAD_HD qload_hd.o -C $(LINKER_SCRIPTS)/apple2_1600.inc
 
-qload_hd.o:	qload.s qload_floppy.s qboot.inc \
+qload_hd.o:	qload.s qload_hd.s qboot.inc \
 		zx02_optim.s wait.s wait_a_bit.s \
 		gr_offsets.s text_print.s \
 		draw_pointer.s log_table.s \
@@ -171,7 +171,7 @@ qload_hd.o:	qload.s qload_floppy.s qboot.inc \
 		graphics_sprites/pointer_sprites.inc \
 		hgr_14x14_sprite.s \
 		keyboard.s
-	ca65 -o qload_hd.o qload.s -DFLOPPY=0 -l qload.lst
+	ca65 -o qload_hd.o qload.s -DFLOPPY=0 -l qload_hd.lst
 
 
 ####
