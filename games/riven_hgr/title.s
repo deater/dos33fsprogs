@@ -324,16 +324,106 @@ done_setup_sound:
 	ldx	#100
 	jsr	wait_a_bit
 
-.if DISK=00
 
+	;=============================
+	; show menu
+	;=============================
 
-;	lda	#LOAD_CAPTURED
-;	lda	#LOAD_CHO
+	jsr	clear_bottom
+	bit	TEXTGR
 
-	lda	#LOAD_CYAN
-	sta	WHICH_LOAD		; assume CYAN opener
+	; print messages
+	lda	#<menu_text
+	sta	OUTL
+	lda	#>menu_text
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print_list
+
+	lda	#0
+	sta	COUNT
+
+pointer_loop:
+
+	lda	COUNT
+	bne	show_pointer2
+
+show_pointer1:
+	; show pointer
+	lda	#<menu_pointer1
+	sta	OUTL
+	lda	#>menu_pointer1
+	jmp	show_pointer_common
+
+show_pointer2:
+	; show pointer
+	lda	#<menu_pointer2
+	sta	OUTL
+	lda	#>menu_pointer2
+
+show_pointer_common:
+	sta	OUTH
+
+	; print the text
+
+	jsr	move_and_print_list
+
+pointer_keyloop:
+	lda	KEYPRESS
+	bpl	pointer_keyloop
+
+	cmp	#$8d
+	beq	done_pointer_loop
+
+	lda	COUNT
+	eor	#$1
+	sta	COUNT
+
+	bit	KEYRESET
+
+	jmp	pointer_loop
+
+done_pointer_loop:
+
+	lda	COUNT
+	bne	game_continue
+
+	;==========================
+	; new game
+	;	start with disk0, the intro
+	;	should clear out variables too in case
+	;	we ever implement save game support
+game_new:
+
+	; FIXME: how to convince other disks to swap to DISK0
+	;	without wasting a disk-exit spot
+
+	lda	#1			; LOAD_CYAN
+	sta	WHICH_LOAD		; CYAN opener
 
 	lda	#0			; not needed...
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+
+;	lda	#$80
+;	sta	LEVEL_OVER
+
+	rts
+
+game_continue:
+
+.if DISK=00
+
+	; start at arrival
+
+	lda	#LOAD_START
+	sta	WHICH_LOAD
+
+	lda	#0
 	sta	LOCATION
 
 	lda	#DIRECTION_N
@@ -445,3 +535,15 @@ title_text:
 ;
 .byte 3,21, "HTTP://WWW.DEATER.NET/WEAVE/VMWPROD",0,$FF
 
+
+menu_text:
+.byte 10,21,"NEW GAME (SHOW INTRO)",0
+.byte 10,22,"CONTINUE GAME FROM THIS DISK",0,$FF
+
+menu_pointer1:
+.byte 4,21,"---> ",0
+.byte 4,22,"     ",0,$FF
+
+menu_pointer2:
+.byte 4,21,"     ",0
+.byte 4,22,"---> ",0,$FF

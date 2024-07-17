@@ -389,7 +389,32 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk00_files/CYAN \
 	disk00_files/CAPTURED \
 	disk00_files/CHO \
-	disk00_files/LEVEL_START
+	disk00_files/LEVEL_START \
+	disk01_files/DISK01 \
+	disk01_files/LEVEL_ARRIVAL \
+	disk39_files/DISK39 \
+	disk39_files/LEVEL_MAGSTEPS \
+	disk39_files/LEVEL_MAGLEV \
+	disk39_files/LEVEL_OUTSIDE \
+	disk39_files/LEVEL_PROJECTOR \
+	disk39_files/MOVIE_MAGLEV_FLIP \
+	disk39_files/MOVIE_MAGLEV_RIDE \
+	disk40_files/DISK40 \
+	disk40_files/LEVEL_MAGLEV \
+	disk40_files/LEVEL_OUTSIDE \
+	disk40_files/LEVEL_ORB \
+	disk40_files/LEVEL_TUNNEL \
+	disk41_files/DISK41 \
+	disk41_files/LEVEL_TUNNEL \
+	disk41_files/LEVEL_STAIRS \
+	disk41_files/LEVEL_COVE \
+	disk41_files/LEVEL_STAIRS2 \
+	disk41_files/MOVIE_COVE \
+	disk43_files/DISK43 \
+	disk43_files/LEVEL_CART \
+	disk43_files/LEVEL_BRIDGE \
+	disk43_files/LEVEL_LOGGED \
+	disk43_files/LEVEL_LOGGED2
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
 	$(PRODOS_RAW) riven_hgr.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -400,6 +425,31 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 18 0` disk00_files/CAPTURED 0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 26 0` disk00_files/CHO      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 31 0` disk00_files/LEVEL_START      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 0  2` disk01_files/DISK01  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 2  0` disk01_files/LEVEL_ARRIVAL      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 2  0` disk39_files/LEVEL_PROJECTOR      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 9  0` disk39_files/LEVEL_OUTSIDE        0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 17 0` disk39_files/LEVEL_MAGSTEPS       0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 21 0` disk39_files/LEVEL_MAGLEV         0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 25 0` disk39_files/MOVIE_MAGLEV_FLIP               0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 27 0` disk39_files/MOVIE_MAGLEV_RIDE               0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 0  2` disk40_files/DISK40  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 2  0` disk40_files/LEVEL_MAGLEV    0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 10 0` disk40_files/LEVEL_OUTSIDE   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 15 0` disk40_files/LEVEL_TUNNEL   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 21 0` disk40_files/LEVEL_ORB   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 0  2` disk41_files/DISK41  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 2  0` disk41_files/LEVEL_TUNNEL   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 10 0` disk41_files/LEVEL_STAIRS   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 17 0` disk41_files/LEVEL_COVE     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 24 0` disk41_files/LEVEL_STAIRS2  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 31 0` disk41_files/MOVIE_COVE  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 0  2` disk43_files/DISK43  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 2  0` disk43_files/LEVEL_CART     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 9  0` disk43_files/LEVEL_BRIDGE   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 16 0` disk43_files/LEVEL_LOGGED   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 22 0` disk43_files/LEVEL_LOGGED2  0   0
 
 ###
 

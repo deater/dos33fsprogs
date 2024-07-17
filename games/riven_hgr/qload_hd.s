@@ -66,13 +66,6 @@ load_file:
 	sta	ADRHI
 	sta	entry_point_smc+2
 
-;	lda	TRACK_ARRAY,X
-;	sta	load_track
-
-;	lda	SECTOR_ARRAY,X
-;	sta	load_sector
-
-
 	lda	CURRENT_DISK
 	sta	BLOKHI
 	inc	BLOKHI		; off by one
@@ -117,7 +110,7 @@ change_disk:
 
 	; set up locations
 	lda	DISK_EXIT_DISK,X
-	sta	NEW_DISK
+	sta	CURRENT_DISK
 
 	lda	DISK_EXIT_LOAD,X
 	sta	WHICH_LOAD
