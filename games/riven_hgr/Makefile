@@ -88,7 +88,7 @@ riven_disk39.dsk:	QBOOT QLOAD TITLE_39 \
 	$(DOS33_RAW) riven_disk39.dsk  0  8 TITLE_39		 0   0
 	$(DOS33_RAW) riven_disk39.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk39.dsk  2  0 disk39_files/LEVEL_PROJECTOR      0   0
-	$(DOS33_RAW) riven_disk39.dsk  9  0 disk39_files/LEVEL_OUTSIDE        0   0
+	$(DOS33_RAW) riven_disk39.dsk  8  0 disk39_files/LEVEL_OUTSIDE        0   0
 	$(DOS33_RAW) riven_disk39.dsk  17 0 disk39_files/LEVEL_MAGSTEPS       0   0
 	$(DOS33_RAW) riven_disk39.dsk  21 0 disk39_files/LEVEL_MAGLEV         0   0
 	$(DOS33_RAW) riven_disk39.dsk  25 0 disk39_files/MOVIE_MAGLEV_FLIP               0   0
@@ -288,7 +288,7 @@ disk00_files/DISK00:
 disk01_files/DISK01:	
 	cd disk01_files && make
 
-disk38_files/DISK39:	
+disk38_files/DISK38:	
 	cd disk38_files && make
 
 disk39_files/DISK39:	
@@ -480,7 +480,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 2  0` disk39_files/LEVEL_PROJECTOR      0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 9  0` disk39_files/LEVEL_OUTSIDE        0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 8  0` disk39_files/LEVEL_OUTSIDE        0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 17 0` disk39_files/LEVEL_MAGSTEPS       0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 21 0` disk39_files/LEVEL_MAGLEV         0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 25 0` disk39_files/MOVIE_MAGLEV_FLIP               0   0

@@ -125,8 +125,8 @@ Disk39 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2393 bytes     16S = 1T0S	(4096)   2k free
-T         2 = PROJECTOR 15895 bytes    112S = 7T0S	(28672) 13k free
-T         9 = OUTSIDE   29349 bytes    127S = 7T15S	(32512)  3k free
+T         2 = PROJECTOR 23707 bytes     96S = 6T0S	(24576)  1k free
+T         8 = OUTSIDE   26029 bytes    124S = 7T15S	(32512)  6k free
 T	 17 = MAGSTEPS  11537 bytes	64S = 4T0S	(16384)  5k free
 T        21 = MAGLEV    13881 bytes     64S = 4T0S	(16384)  3k free
 T        25 = MOVIE_FLIP 7790 bytes     32S = 2T0S	(8192) 500B free

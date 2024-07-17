@@ -1,6 +1,6 @@
 LOAD_TITLE_39   =       0
-LOAD_OUTSIDE	=	1
-LOAD_PROJECTOR	=	2
+LOAD_PROJECTOR	=	1
+LOAD_OUTSIDE	=	2
 LOAD_MAGSTEPS	=	3
 LOAD_MAGLEV	=	4
 LOAD_MOVIE1	=	5
@@ -9,16 +9,16 @@ LOAD_MOVIE2	=	6
 ;================================
 ; Level definitions
 
-; Outside
-
-RIVEN_MAGLEV1	=	0
-RIVEN_MAGPATH	=	1
-RIVEN_OVERLOOK	=	2
-
 ; Projector
 
 RIVEN_PROJ_DOOR	=	0
 RIVEN_PROJ_STEPS=	1
+RIVEN_MAGPATH	=	2
+
+; Outside
+
+RIVEN_MAGLEV1	=	0
+RIVEN_OVERLOOK	=	1
 
 ; Magsteps
 
