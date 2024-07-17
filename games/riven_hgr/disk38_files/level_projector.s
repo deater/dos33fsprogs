@@ -7,7 +7,7 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
-	.include "disk39_defines.inc"
+	.include "disk38_defines.inc"
 
 riven_projector:
 
@@ -15,6 +15,8 @@ riven_projector:
 	; init screen
 	;===================
 
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	bit	SET_GR

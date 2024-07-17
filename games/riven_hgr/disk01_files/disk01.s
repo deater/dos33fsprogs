@@ -1,4 +1,5 @@
 .include "../zp.inc"
+.include "../disk38_files/disk38_defines.inc"
 
 which_disk_bcd:
 	.byte	$01		; BCD
@@ -23,25 +24,29 @@ length_array:
 
 
 disk_exit_disk: ; note: not BCD anymore
-	.byte 39		; zap to temple for now
-	.byte 0,0,0
+	.byte 38		; zap to temple for now
+	.byte 0
+	.byte 0
+	.byte 0
 disk_exit_disk_bcd:
-	.byte $39		; zap to temple for now
-	.byte 0,0,0
+	.byte $38		; zap to temple for now
+	.byte 0
+	.byte 0
+	.byte 0
 disk_exit_dni_h:
-	.byte $01		; 39 = 1*25 + 2*5 + 4
+	.byte $01		; 38 = 1*25 + 2*5 + 3
 	.byte 0,0,0
 disk_exit_dni_l:
-	.byte $24
+	.byte $23
 	.byte 0,0,0
 
-	; want to go to disk39, LOAD_PROJECTOR, RIVEN_PROJECTOR, W
+	; want to go to disk38, LOAD_PROJECTOR, RIVEN_PROJECTOR, W
 
 disk_exit_load:
-	.byte 2			; LOAD_PROJECTOR
+	.byte LOAD_PROJECTOR	; LOAD_PROJECTOR
 	.byte 0,0,0
 disk_exit_level:
-	.byte 0			; RIVEN_PROJECTOR
+	.byte RIVEN_PROJECTOR	; RIVEN_PROJECTOR
 	.byte 0,0,0
 disk_exit_direction:
 	.byte DIRECTION_W

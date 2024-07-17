@@ -1,4 +1,6 @@
 .include "../zp.inc"
+.include "../disk38_files/disk38_defines.inc"
+.include "../disk40_files/disk40_defines.inc"
 
 which_disk_bcd:
 	.byte	$39		; BCD
@@ -24,23 +26,38 @@ length_array:
 
 disk_exit_disk: ; note: not BCD anymore
 	.byte 40
-	.byte 0
+	.byte 38
 	.byte 0
 	.byte 0
 
 disk_exit_disk_bcd:
 	.byte $40
-	.byte 0
+	.byte $38
 	.byte 0
 	.byte 0
 
 disk_exit_dni_h:
-	.byte $01,0,0,0	; 1*25+3*5+0*1
+	.byte $01	; 1*25+3*5+0*1
+	.byte $01	; 1*25+2*5+3*1
+	.byte 0
+	.byte 0
 disk_exit_dni_l:
-	.byte $30,0,0,0
+	.byte $30
+	.byte $23
+	.byte 0
+	.byte 0
 disk_exit_load:			; disk40, LOAD_MAGLEV, INSEAT, W
-	.byte 1,0,0,0		; LOAD_MAGLEV
+	.byte LOAD_MAGLEV			; LOAD_MAGLEV
+	.byte LOAD_PROJECTOR
+	.byte 0
+	.byte 0
 disk_exit_level:
-	.byte 1,0,0,0		; riven INSEAT
+	.byte RIVEN_INSEAT		; riven INSEAT
+	.byte RIVEN_PROJECTOR
+	.byte 0
+	.byte 0
 disk_exit_direction:
-	.byte DIRECTION_W,0,0,0
+	.byte DIRECTION_W
+	.byte DIRECTION_S
+	.byte 0
+	.byte 0

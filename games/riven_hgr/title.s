@@ -16,6 +16,10 @@
 	.include "disk01_files/disk01_defines.inc"
 .endif
 
+.if DISK=38
+	.include "disk38_files/disk38_defines.inc"
+.endif
+
 .if DISK=39
 	.include "disk39_files/disk39_defines.inc"
 .endif
@@ -438,6 +442,17 @@ game_continue:
 	sta	LOCATION
 
 	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+.if DISK=38
+	lda	#LOAD_PROJECTOR
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_PROJECTOR
+	sta	LOCATION
+
+	lda	#DIRECTION_S
 	sta	DIRECTION
 .endif
 

@@ -128,14 +128,14 @@ movie_maglev_ride/overlays/overlay_combined.zx02:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst DISK39 \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
 		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 
 ####
 
 distclean:
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst DISK39 \
 		LEVEL_PROJECTOR LEVEL_MAGSTEPS LEVEL_MAGLEV LEVEL_OUTSIDE \
 		MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 	cd graphics_projector && make clean

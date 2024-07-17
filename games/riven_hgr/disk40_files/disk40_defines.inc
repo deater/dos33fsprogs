@@ -1,4 +1,4 @@
-LOAD_TITLE      =       0
+LOAD_TITLE_40   =       0
 LOAD_MAGLEV	=	1
 LOAD_OUTSIDE	=	2
 LOAD_TUNNEL	=	3
