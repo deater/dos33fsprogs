@@ -36,6 +36,10 @@ movie_maglev_flip_start:
 	; Setup graphics
 	;===================
 
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	clear_gr_all
+
 	bit	SET_GR
 	bit	LORES
 	bit	FULLGR
