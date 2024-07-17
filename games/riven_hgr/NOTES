@@ -84,8 +84,14 @@ final movie roto procedure:
 	scale to 80x48
 	save
 
+;================================
+; NOTE: for hard-disk image we use 512-byte blocks (not 256-byte sectors)
+;	so be careful using odd-numbered block lengths!
+;	This is mostly an issue for the $7F long almost-32k files
+;	and the 1-block level info files, otherwise we mostly are even
+
 Disk00 Map (disk has 35 tracks, each 4k in size)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$~~~~~~~
 T         0 = Qboot
 T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2346 bytes     16S = 1T00S	(4096)   2k free

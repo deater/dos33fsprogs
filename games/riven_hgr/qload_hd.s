@@ -90,6 +90,11 @@ load_file:
 
 
 	lda	LENGTH_ARRAY,X
+	clc
+	adc	#1
+	lsr			; important! blocks=sectors/2
+				; need to round up if it was odd
+				; careful: this could over-write if not careful
 	sta	COUNT
 
 	jsr	seekread
