@@ -105,6 +105,8 @@ done_hgr_flip:
         ;===================
 
 	; clear it first
+	lda	#0
+	sta	DRAW_PAGE
 
 	jsr	clear_gr_all
 
