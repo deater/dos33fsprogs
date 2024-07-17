@@ -1,5 +1,6 @@
 .include "../zp.inc"
 .include "../disk41_files/disk41_defines.inc"
+.include "../disk00_files/disk00_defines.inc"
 
 which_disk_bcd:
 	.byte	$43		; BCD
@@ -54,7 +55,7 @@ disk_exit_load:
 	.byte	LOAD_STAIRS2
 	.byte	0
 	.byte	0
-	.byte	0
+	.byte	LOAD_CYAN
 disk_exit_level:
 	.byte	RIVEN_UP4
 	.byte	0

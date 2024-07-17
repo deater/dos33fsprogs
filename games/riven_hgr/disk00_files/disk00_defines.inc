@@ -1,4 +1,4 @@
-LOAD_TITLE      =       0
+LOAD_TITLE_00   =       0
 LOAD_CYAN	=	1
 LOAD_ATRUS	=	2
 LOAD_CAPTURED	=	3

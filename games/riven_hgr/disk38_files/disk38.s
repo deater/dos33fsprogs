@@ -1,6 +1,7 @@
 .include "../zp.inc"
 .include "../disk01_files/disk01_defines.inc"
 .include "../disk39_files/disk39_defines.inc"
+.include "../disk00_files/disk00_defines.inc"
 
 which_disk_bcd:
 	.byte	$38		; BCD
@@ -52,7 +53,8 @@ disk_exit_load:			; disk39, LOAD_PROJECTOR, PROJ_DOOR, N
 	.byte LOAD_PROJECTOR		; LOAD_PROJECTOR
 	.byte LOAD_ARRIVAL		; LOAD_ARRIVAL
 	.byte 0
-	.byte 0
+	.byte LOAD_CYAN
+
 disk_exit_level:
 	.byte RIVEN_PROJ_DOOR		; riven PROJ_DOOR
 	.byte RIVEN_ARRIVAL_NEAR	; riven_ARRIVAL_NEAR

@@ -404,17 +404,17 @@ game_new:
 	; FIXME: how to convince other disks to swap to DISK0
 	;	without wasting a disk-exit spot
 
-	lda	#1			; LOAD_CYAN
-	sta	WHICH_LOAD		; CYAN opener
+;	lda	#$E0|3			; LOAD_CYAN
+;	sta	WHICH_LOAD		; CYAN opener
 
-	lda	#0			; not needed...
-	sta	LOCATION
+;	lda	#0			; not needed...
+;	sta	LOCATION
 
-	lda	#DIRECTION_N
-	sta	DIRECTION
+;	lda	#DIRECTION_N
+;	sta	DIRECTION
 
-;	lda	#$80
-;	sta	LEVEL_OVER
+	lda	#$E0|3
+	sta	LEVEL_OVER
 
 	rts
 

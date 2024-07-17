@@ -117,6 +117,7 @@ T         0 = Qboot
 T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2393 bytes     16S = 1T0S	(4096)   2k free
 T         2 = PROJECTOR 12057 bytes         = 7T0S	(28672) 16k free
+; NOTE: save room for creepy animation, alternate door closed code
 
 
 Disk39 Map (disk has 35 tracks, each 4k in size)

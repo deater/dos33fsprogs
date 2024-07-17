@@ -1,6 +1,7 @@
 .include "../zp.inc"
 .include "../disk38_files/disk38_defines.inc"
 .include "../disk40_files/disk40_defines.inc"
+.include "../disk00_files/disk00_defines.inc"
 
 which_disk_bcd:
 	.byte	$39		; BCD
@@ -50,7 +51,7 @@ disk_exit_load:			; disk40, LOAD_MAGLEV, INSEAT, W
 	.byte LOAD_MAGLEV			; LOAD_MAGLEV
 	.byte LOAD_PROJECTOR
 	.byte 0
-	.byte 0
+	.byte LOAD_CYAN
 disk_exit_level:
 	.byte RIVEN_INSEAT		; riven INSEAT
 	.byte RIVEN_PROJECTOR

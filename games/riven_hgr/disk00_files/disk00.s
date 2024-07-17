@@ -1,4 +1,6 @@
 .include "../zp.inc"
+.include "../disk01_files/disk01_defines.inc"
+.include "disk00_defines.inc"
 
 which_disk_bcd:
 	.byte	$00		; BCD
@@ -38,11 +40,17 @@ disk_exit_dni_l:
 	; want to go to disk01, LOAD_ARRIVAL, RIVEN_ARRIVAL_NEAR, N
 
 disk_exit_load:
-	.byte 1			; LOAD_ARRIVAL
-	.byte 0,0,0
+	.byte LOAD_ARRIVAL	; LOAD_ARRIVAL
+	.byte 0
+	.byte 0
+	.byte LOAD_CYAN
 disk_exit_level:
 	.byte 1			; RIVEN_ARRIVAL_NEAR
-	.byte 0,0,0
+	.byte 0
+	.byte 0
+	.byte 0
 disk_exit_direction:
 	.byte DIRECTION_N
-	.byte 0,0,0
+	.byte 0
+	.byte 0
+	.byte 0
