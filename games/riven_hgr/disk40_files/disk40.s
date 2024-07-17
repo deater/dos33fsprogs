@@ -1,4 +1,6 @@
 .include "../zp.inc"
+.include "../disk39_files/disk39_defines.inc"
+.include "../disk41_files/disk41_defines.inc"
 
 which_disk_bcd:
 	.byte	$40		; BCD
@@ -46,16 +48,16 @@ disk_exit_dni_l:
 	.byte	$00
 	.byte	$00
 
-	; load_tunnel / tunnel5 / s
+	; load_tunnel2 / tunnel5 / s
 disk_exit_load:
-	.byte	1			; LOAD_TUNNEL
-	.byte	4			; LOAD_MAGLEV
+	.byte	LOAD_TUNNEL2		; LOAD_TUNNEL2
+	.byte	LOAD_MAGLEV		; LOAD_MAGLEV
 	.byte	0
 	.byte	0
 
 disk_exit_level:
-	.byte	$00			; Tunnel 5
-	.byte	1			; RIVEN_INSEAT
+	.byte	RIVEN_TUNNEL5		; Tunnel 5
+	.byte	RIVEN_INSEAT		; RIVEN_INSEAT
 	.byte	$00
 	.byte	$00
 

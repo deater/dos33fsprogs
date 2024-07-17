@@ -93,7 +93,7 @@ final movie roto procedure:
 Disk00 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2346 bytes     16S = 1T00S	(4096)   2k free
 T         2 = CYAN      32459 bytes         = 7T15S	(32512)  0k free
 T        10 = ATRUS     32493 bytes         = 7T15S	(32512)  0k free
@@ -105,30 +105,37 @@ T        31 = START      4107 bytes         = 4T	(16384) 12k free
 Disk01 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
-T         1 = QLOAD      1762 bytes      16S= 1T0S	(4096)   2k free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes      16S= 1T0S	(4096)   2k free
 T         2 = ARRIVAL   25512 bytes         = 7T0S	(28672)  3k free
 T         9 = ARRIVAL2  ? bytes             = 7T0S	(28672)  ?k free
 T        16 = TELESCOPE 19484 bytes         = 7T0S	(28672)  9k free
+
+Disk38 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes     16S = 1T0S	(4096)   2k free
+T         2 = PROJECTOR 12057 bytes         = 7T0S	(28672) 16k free
 
 
 Disk39 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
-T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
-T         2 = PROJECTOR 26736 bytes    112S = 7T0S	(28672)  2k free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes     16S = 1T0S	(4096)   2k free
+T         2 = PROJECTOR 15895 bytes    112S = 7T0S	(28672) 13k free
 T         9 = OUTSIDE   29349 bytes    127S = 7T15S	(32512)  3k free
 T	 17 = MAGSTEPS  11537 bytes	64S = 4T0S	(16384)  5k free
 T        21 = MAGLEV    13881 bytes     64S = 4T0S	(16384)  3k free
-T        25 = MOVIE_FLIP 7783 bytes     32S = 2T0S	(8192) 500B free
-T	 27 = MOVIE_MAG 32177 bytes    128S = 7T15S	(32512)300B free
+T        25 = MOVIE_FLIP 7790 bytes     32S = 2T0S	(8192) 500B free
+T	 27 = MOVIE_MAG 32184 bytes    128S = 7T15S	(32512)300B free
 
 Disk40 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
-T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes      8S = 0T8S	(2048) 300B free
 T         2 = MAGLEV    30502 bytes         = 8T11S	(32768) 2k free
 T        10 = OUTSIDE	18917 bytes         =  5T	(20480) 2k free
 T	 15 = TUNNEL    20983 bytes         =  6T	(24576) 4k free
@@ -139,8 +146,8 @@ T	 27 = MOVIE_MAG 32275 bytes    127S = 7T15S	(32512)300B free
 Disk41 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
-T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes      8S = 0T8S	(2048) 300B free
 T	  2 = TUNNEL    30669 bytes      127S=  8T	(32512) 2k free
 T	 10 = STAIRS    25624               =  7T       (28672) 3k free
 T	 17 = COVE      26422               =  7T       (28672) 2k free
@@ -150,8 +157,8 @@ T	 31 = MOVIE_COVE 8299		    =  3T	(12288) 4k free
 Disk43 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
-T         1 = QLOAD      1762 bytes      8S = 0T8S	(2048) 300B free
+T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2393 bytes      8S = 0T8S	(2048) 300B free
 T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
 T	  9 = BRIDGE	18609 bytes	    = 7T0S	(28672) 10k free
 T	 16 = LOGGED	17570 bytes	    = 6T0S	(24576) 7k free

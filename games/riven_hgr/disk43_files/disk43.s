@@ -1,4 +1,5 @@
 .include "../zp.inc"
+.include "../disk41_files/disk41_defines.inc"
 
 which_disk_bcd:
 	.byte	$43		; BCD
@@ -38,12 +39,29 @@ disk_exit_disk_bcd: ; note: not BCD anymore
 
 
 disk_exit_dni_h:
-	.byte	$01,0,0,0		; 41 = 1*25 + 3*5 + 1
+	.byte	$01		; 41 = 1*25 + 3*5 + 1
+	.byte	0
+	.byte	0
+	.byte	0
 disk_exit_dni_l:
-	.byte	$31,0,0,0
+	.byte	$31
+	.byte	0
+	.byte	0
+	.byte	0
+
+			; STAIRS2, RIVEN_UP4, E
 disk_exit_load:
-	.byte	4,0,0,0			; STAIRS2, RIVEN_UP4, E
+	.byte	LOAD_STAIRS2
+	.byte	0
+	.byte	0
+	.byte	0
 disk_exit_level:
-	.byte	2,0,0,0
+	.byte	RIVEN_UP4
+	.byte	0
+	.byte	0
+	.byte	0
 disk_exit_direction:
-	.byte	DIRECTION_E,0,0,0
+	.byte	DIRECTION_E
+	.byte	0
+	.byte	0
+	.byte	0
