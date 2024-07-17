@@ -1,3 +1,34 @@
+API for loading:
+
++ Disk based:
+	returns to ????? with LOCATION (no extra action needed)
+		LEVEL
+		DISK
+	set
+
+	the code looks up track/sector/length based on these,
+	changing disk if necessary
+
++ Prodos/HD based
+
+	+ proboothd boots disk
+		+ loads QLOAD equivalent to 1600
+
+	instead: block based
+		256k for each 140k disk, offset from there?
+		up to 128 disks
+		disk#*256k
+		disk#*512
+		top block# = disk*2+(top bit of track*16
+		bottom block# = (track*16)
+
+
+	only one copy of qload/title
+
+	if level/disk changes, convert to filename
+		DISK00/FILE00
+	and load it
+
 
 REMEMBER!  QLOAD actually trashes 2 bytes above the top of the load
 	for most of this we re-write those bytes and it doesn't matter
@@ -56,11 +87,11 @@ Disk00 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2346 bytes     16S = 1T00S	(4096)   2k free
-T         2 = CYAN            bytes         = 7T15S	(32512)  ?k free
-T        10 = ATRUS           bytes         = 7T15S	(32512)  2k free
-T	    = CAPTURED        bytes         =
-T        26 = CHO             bytes         = 5T	(32512)  ?k free
-T        31 = LEVEL_START     bytes         = ?T15S	(32512)  2k free
+T         2 = CYAN      32459 bytes         = 7T15S	(32512)  0k free
+T        10 = ATRUS     32493 bytes         = 7T15S	(32512)  0k free
+T	 18 = CAPTURED  16696 bytes         = 5T        (20480)  4k free
+T        26 = CHO       19839 bytes         = 5T	(20480)  0k free
+T        31 = START      4107 bytes         = 4T	(16384) 12k free
 
 
 Disk01 Map (disk has 35 tracks, each 4k in size)

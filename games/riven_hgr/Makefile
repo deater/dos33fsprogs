@@ -170,7 +170,7 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1600.inc
 
-qload.o:	qload.s qboot.inc \
+qload.o:	qload.s qload_floppy.s qboot.inc \
 		zx02_optim.s wait.s wait_a_bit.s \
 		gr_offsets.s text_print.s \
 		draw_pointer.s log_table.s \
@@ -178,7 +178,23 @@ qload.o:	qload.s qboot.inc \
 		graphics_sprites/pointer_sprites.inc \
 		hgr_14x14_sprite.s \
 		keyboard.s
-	ca65 -o qload.o qload.s -l qload.lst
+	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
+
+###
+
+QLOAD_HD:	qload_hd.o
+	ld65 -o QLOAD_HD qload_hd.o -C $(LINKER_SCRIPTS)/apple2_1600.inc
+
+qload_hd.o:	qload.s qload_floppy.s qboot.inc \
+		zx02_optim.s wait.s wait_a_bit.s \
+		gr_offsets.s text_print.s \
+		draw_pointer.s log_table.s \
+		disk40_files/disk40_defines.inc \
+		graphics_sprites/pointer_sprites.inc \
+		hgr_14x14_sprite.s \
+		keyboard.s
+	ca65 -o qload_hd.o qload.s -DFLOPPY=0 -l qload.lst
+
 
 ####
 
@@ -319,7 +335,7 @@ graphics_title/riven_title.hgr.zx02:
 
 clean:		
 	rm -f *~ *.o *.lst generate_common \
-	QBOOT QLOAD \
+	QBOOT QLOAD QLOAD_HD \
 	TITLE_00 TITLE_01 TITLE_39 TITLE_40 TITLE_41 TITLE_43
 	cd disk00_files && make clean
 	cd disk01_files && make clean
@@ -332,7 +348,7 @@ clean:
 
 distclean:
 	rm -f *~ *.o *.lst generate_common \
-	QBOOT QLOAD \
+	QBOOT QLOAD QLOAD_HD \
 	TITLE_00 TITLE_01 TITLE_39 TITLE_40 TITLE_41 TITLE_43
 	cd graphics_title && make clean
 	cd graphics_sprites && make clean
@@ -380,9 +396,10 @@ submit:	riven_disk00.dsk riven_disk01.dsk \
 
 ####
 
-riven_hgr.2mg:	PROBOOTHD disk01_files/LEVEL_ARRIVAL
+riven_hgr.2mg:	PROBOOTHD QLOAD_HD
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
 	$(PRODOS_RAW) riven_hgr.2mg 0 PROBOOTHD 0 0
+	$(PRODOS_RAW) riven_hgr.2mg 1024 QLOAD_HD 0 0
 
 ###
 
