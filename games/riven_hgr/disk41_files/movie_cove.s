@@ -21,11 +21,17 @@ movie_cove_start:
 	; Setup graphics
 	;===================
 
+	; clear lores before we flip to it
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	clear_gr_all
+
 	bit	SET_GR
 	bit	LORES
 	bit	PAGE1
 
-	jsr	GR
+;	jsr	GR
 	bit	FULLGR
 
 	lda	#0

@@ -32,7 +32,7 @@ entry_smc:
 	lda	LEVEL_OVER
 	bmi	change_disk
 
-	jmp	main_game_loop
+	bpl	main_game_loop		; bra
 
 
 	;====================================
@@ -54,9 +54,9 @@ load_file:
 	lda	LENGTH_ARRAY,X
 	sta	load_length
 
-	jsr	load_new
+	jmp	load_new		; tail call
 
-	rts
+;	rts
 
 	;===================================================
 	;===================================================
@@ -96,10 +96,16 @@ change_disk:
 
 	; switch to GR and print DNI number too
 
-	jsr	GR
-	jsr	HOME
+;	jsr	GR
+;	jsr	HOME
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	clear_gr_all
+	jsr	clear_bottom
 
 	bit	LORES
+	bit	TEXTGR
 
 	lda	#<insert_disk_string
 	sta	OUTL
