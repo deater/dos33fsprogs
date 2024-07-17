@@ -103,18 +103,18 @@ really_exit:
 	rts
 
 	;==================================
-	; big handle clicked
+	; manhole clicked
 	;==================================
 
-handle_clicked:
-;	bit	SPEAKER
+manhole_clicked:
+	bit	SPEAKER
 
-	lda	#DIRECTION_N
-	sta	DIRECTION
+;	lda	#DIRECTION_N
+;	sta	DIRECTION
 
-        lda     #RIVEN_ARRIVAL_HANDLE
-	sta	LOCATION
-	jsr	change_location
+;	lda     #RIVEN_ARRIVAL_HANDLE
+;	sta	LOCATION
+;	jsr	change_location
 
 	rts
 

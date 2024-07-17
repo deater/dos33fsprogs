@@ -8,7 +8,7 @@ locations:
 ; RIVEN_TELESCOPE -- near telescope
 location0:
 	.byte	$ff		; north exit
-	.byte	$ff		; south exit
+	.byte	LOAD_ARRIVAL<<4|RIVEN_ARRIVAL_NEAR	; south exit
 	.byte	$FF		; east exit
 	.byte	RIVEN_MANHOLE	; west exit
 	.byte	DIRECTION_N	; north exit_dir
@@ -38,8 +38,8 @@ location1:
 	.word	$0000		; east bg
 	.word	manhole_w_zx02	; west bg
 	.byte	BG_WEST		; backgrounds
-	.byte	$ff		; unimplemented for now
-;	.byte	DIRECTION_E	; special exit
-;	.byte	12,16		; special x
-;	.byte	100,161		; special y
-;	.word	handle_clicked-1
+	.byte	DIRECTION_W	; special exit
+	.byte	15,24		; special x
+	.byte	108,149		; special y
+	.word	manhole_clicked-1
+

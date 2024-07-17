@@ -107,9 +107,9 @@ Disk01 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1618 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      1762 bytes      16S= 1T0S	(4096)   2k free
-T         2 = ARRIVAL         bytes         = 7T0S	(28672)  ?k free
-T         ? = ARRIVAL2        bytes         = 7T0S	(28672)  ?k free
-T         ? = TELESCOPE       bytes         = 7T0S	(28672)  ?k free
+T         2 = ARRIVAL   25512 bytes         = 7T0S	(28672)  3k free
+T         9 = ARRIVAL2  ? bytes             = 7T0S	(28672)  ?k free
+T        16 = TELESCOPE 19484 bytes         = 7T0S	(28672)  9k free
 
 
 Disk39 Map (disk has 35 tracks, each 4k in size)

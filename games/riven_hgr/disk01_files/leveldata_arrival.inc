@@ -25,11 +25,11 @@ location0:
 
 ; RIVEN_ARRIVAL_NEAR	-- just outside the cage
 location1:
-	.byte	$ff		; north exit
+	.byte	LOAD_TELESCOPE<<4|RIVEN_TELESCOPE		; north exit
 	.byte	RIVEN_ARRIVAL	; south exit
 	.byte	$E0		; leave to disk39		; east exit
 	.byte	$ff		; west exit
-	.byte	$ff		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_N	; south exit_dir
 	.byte	DIRECTION_W	; east exit_dir
 	.byte	$ff		; west exit_dir

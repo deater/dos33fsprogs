@@ -11,14 +11,14 @@ load_address_array:
 	.byte	$00,$00,$00,$00
 
 track_array:
-        .byte	0, 2, 2,17	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
+        .byte	0, 2, 9,16	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 
 sector_array:
         .byte	8, 0, 0, 0	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 length_array:
-        .byte	8, 127,123, 64	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
+        .byte	8, 112,112, 112	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
 	.byte	0,0,0,0
 
 
