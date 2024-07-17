@@ -4,7 +4,7 @@ LINKER_SCRIPTS = ../../../linker_scripts/
 
 
 all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB LEVEL_TUNNEL \
-	MOVIE_MAGLEV_FLIP
+	MOVIE_MAGLEV_FLIP MOVIE_MAGLEV_RIDE
 
 ###
 
@@ -79,6 +79,15 @@ movie_maglev_flip.o:	movie_maglev_flip.s \
 
 ####
 
+MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
+	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+movie_maglev_ride.o:	movie_maglev_ride.s \
+	../zp.inc ../hardware.inc ../qload.inc \
+	../common_defines.inc disk40_defines.inc \
+	movie_maglev_ride/movie_maglev_ride.inc \
+	../disk39_files/movie_maglev_ride/overlays/overlay_combined.zx02
+	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
 
 ####
 

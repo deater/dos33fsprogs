@@ -55,7 +55,7 @@ disk_exit_load:
 
 disk_exit_level:
 	.byte	$00			; Tunnel 5
-	.byte	2			; RIVEN_INSEAT
+	.byte	1			; RIVEN_INSEAT
 	.byte	$00
 	.byte	$00
 

@@ -86,7 +86,8 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	disk40_files/LEVEL_OUTSIDE \
 	disk40_files/LEVEL_ORB \
 	disk40_files/LEVEL_TUNNEL \
-	disk40_files/MOVIE_MAGLEV_FLIP
+	disk40_files/MOVIE_MAGLEV_FLIP \
+	disk40_files/MOVIE_MAGLEV_RIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk40.dsk
 	$(DOS33_RAW) riven_disk40.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk40.dsk  0  2 QBOOT                1   1
@@ -99,6 +100,8 @@ riven_disk40.dsk:	QBOOT QLOAD TITLE_40 \
 	$(DOS33_RAW) riven_disk40.dsk  15 0 disk40_files/LEVEL_TUNNEL   0   0
 	$(DOS33_RAW) riven_disk40.dsk  21 0 disk40_files/LEVEL_ORB   0   0
 	$(DOS33_RAW) riven_disk40.dsk  25 0 disk40_files/MOVIE_MAGLEV_FLIP   0   0
+	$(DOS33_RAW) riven_disk40.dsk  27 0 disk40_files/MOVIE_MAGLEV_RIDE   0   0
+
 
 riven_disk41.dsk:	QBOOT QLOAD TITLE_41 \
 	disk41_files/DISK41 \
@@ -411,6 +414,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk40_files/LEVEL_ORB \
 	disk40_files/LEVEL_TUNNEL \
 	disk40_files/MOVIE_MAGLEV_FLIP \
+	disk40_files/MOVIE_MAGLEV_RIDE \
 	disk41_files/DISK41 \
 	disk41_files/LEVEL_TUNNEL \
 	disk41_files/LEVEL_STAIRS \
@@ -448,6 +452,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 15 0` disk40_files/LEVEL_TUNNEL   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 21 0` disk40_files/LEVEL_ORB   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 25 0` disk40_files/MOVIE_MAGLEV_FLIP   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 40 27 0` disk40_files/MOVIE_MAGLEV_RIDE   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 0  2` disk41_files/DISK41  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 2  0` disk41_files/LEVEL_TUNNEL   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 10 0` disk41_files/LEVEL_STAIRS   0   0
