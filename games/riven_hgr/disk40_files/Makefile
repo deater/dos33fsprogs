@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB LEVEL_TUNNEL
+all:	DISK40 LEVEL_MAGLEV LEVEL_OUTSIDE LEVEL_ORB LEVEL_TUNNEL \
+	MOVIE_MAGLEV_FLIP
 
 ###
 
@@ -63,6 +64,20 @@ level_tunnel.o:	level_tunnel.s \
 	ca65 -o level_tunnel.o level_tunnel.s -l level_tunnel.lst
 
 
+####
+
+MOVIE_MAGLEV_FLIP:	movie_maglev_flip.o
+	ld65 -o MOVIE_MAGLEV_FLIP movie_maglev_flip.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+movie_maglev_flip.o:	movie_maglev_flip.s \
+	flip_pages.s \
+	../zp.inc ../hardware.inc ../qload.inc \
+	../common_defines.inc disk40_defines.inc \
+	movie_maglev_flip/movie_maglev_flip.inc \
+	../disk39_files/movie_maglev_flip/overlays/combined_overlays.zx02
+	ca65 -o movie_maglev_flip.o movie_maglev_flip.s -l movie_maglev_flip.lst
+
+####
 
 
 ####

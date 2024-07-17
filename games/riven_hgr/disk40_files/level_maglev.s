@@ -105,7 +105,7 @@ really_exit:
 handle1_clicked:
 
 	bit	SPEAKER
-.if 0
+
 	lda	#0
 	sta	MAGLEV_FLIP_DIRECTION
 
@@ -114,7 +114,7 @@ handle1_clicked:
 
 	lda	#1
 	sta	LEVEL_OVER
-.endif
+
 	bit	SPEAKER
 
 	rts
@@ -127,7 +127,7 @@ handle1_clicked:
 handle2_clicked:
 
 	bit	SPEAKER
-.if 0
+
 	lda	CURSOR_X
 	cmp	#27
 	bcc	go_for_maglev
@@ -146,7 +146,7 @@ common_handle2:
 
 	lda	#1
 	sta	LEVEL_OVER
-.endif
+
 	bit	SPEAKER
 
 	rts
