@@ -1,7 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$41		; BCD
+
+which_disk_bin:
+	.byte	41
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, TUNNEL, STAIRS, COVE
@@ -19,7 +22,13 @@ length_array:
 	.byte	8, 128,128,116	; TITLE, TUNNEL, STAIRS, COVE
 	.byte	112,48,0,0	; STAIRS2,MOVIE_COVE
 
-disk_exit_disk:	; note: BCD (yes I'm lazy)
+disk_exit_disk:	; note: not BCD anymore
+	.byte	40		; TUNNEL (DISK40)
+	.byte	43		; CART   (DISK43)
+	.byte	$00
+	.byte	$00
+
+disk_exit_disk_bcd:
 	.byte	$40		; TUNNEL (DISK40)
 	.byte	$43		; CART   (DISK43)
 	.byte	$00

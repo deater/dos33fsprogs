@@ -35,7 +35,7 @@ slot_smc:
 
 	jsr	load_qload_offsets
 
-	lda	QLOAD_DISK		; get disk number (BCD)
+	lda	QLOAD_DISK_BIN		; get disk number (binary)
 	sta	CURRENT_DISK
 
 	lda	#0			; load title, always 0th

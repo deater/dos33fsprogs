@@ -1,7 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$39		; BCD
+
+which_disk_bin:
+	.byte	39
 
 load_address_array:
 	.byte $40,$40,$40,$40	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
@@ -19,8 +22,18 @@ length_array:
         .byte  8, 123,123, 64	; TITLE, OUTSIDE, PROJECTOR, MAGSTEPS
 	.byte  64, 32, 127, 0	; MAGLEV, MOVIE1, MOVIE2
 
-disk_exit_disk: ; note: BCD (yes I'm lazy)
-	.byte $40,0,0,0
+disk_exit_disk: ; note: not BCD anymore
+	.byte 40
+	.byte 0
+	.byte 0
+	.byte 0
+
+disk_exit_disk_bcd:
+	.byte $40
+	.byte 0
+	.byte 0
+	.byte 0
+
 disk_exit_dni_h:
 	.byte $01,0,0,0	; 1*25+3*5+0*1
 disk_exit_dni_l:

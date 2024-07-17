@@ -1,7 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$40		; BCD
+
+which_disk_bin:
+	.byte	40
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, MAGLEV, OUTSIDE, TUNNEL
@@ -19,7 +22,13 @@ length_array:
 	.byte	8, 128, 80, 96	; TITLE, MAGLEV, OUTSIDE, TUNNEL
 	.byte	64,0,0,0	; ORB
 
-disk_exit_disk:	; note: BCD (yes I'm lazy)
+disk_exit_disk:	; note: not BCD anymore
+	.byte	41		; Tunnel (DISK41)
+	.byte	$00
+	.byte	$00
+	.byte	$00
+
+disk_exit_disk_bcd:
 	.byte	$41		; Tunnel (DISK41)
 	.byte	$00
 	.byte	$00

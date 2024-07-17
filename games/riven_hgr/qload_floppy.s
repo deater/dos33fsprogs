@@ -14,7 +14,7 @@ qload_floppy:
 
 	jsr	load_qload_offsets
 
-	lda	QLOAD_DISK		; get disk number (BCD)
+	lda	QLOAD_DISK_BIN		; get disk number
 	sta	CURRENT_DISK
 
 	lda	#0			; load title, always 0th
@@ -73,8 +73,8 @@ change_disk:
 	tax
 
 	; set up locations
-	lda	DISK_EXIT_DISK,X
-	sta	NEW_DISK
+	lda	DISK_EXIT_DISK_BCD,X
+	sta	NEW_DISK_BCD
 
 	lda	DISK_EXIT_LOAD,X
 	sta	WHICH_LOAD
@@ -94,7 +94,7 @@ change_disk:
 	;==============================
 	; print "insert disk" message
 
-	; TODO: switch to GR and print D'NI number too
+	; switch to GR and print DNI number too
 
 	jsr	GR
 	jsr	HOME
@@ -110,7 +110,7 @@ change_disk:
 
 	ldy	#21
 
-	lda	NEW_DISK
+	lda	NEW_DISK_BCD
 	lsr
 	lsr
 	lsr
@@ -121,7 +121,7 @@ change_disk:
 
 	iny
 
-	lda	NEW_DISK
+	lda	NEW_DISK_BCD
 	and	#$f
 	clc
 	adc	#$30
@@ -151,10 +151,12 @@ verify_disk:
 
 	jsr	load_qload_offsets
 
-	lda	QLOAD_TABLE
-	cmp	NEW_DISK
+	lda	QLOAD_DISK_BCD
+	cmp	NEW_DISK_BCD
 	bne	fnf_keypress
 
+	lda	QLOAD_DISK_BIN
+	sta	CURRENT_DISK
 
 
 	;==============================================

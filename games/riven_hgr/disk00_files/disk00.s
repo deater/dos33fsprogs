@@ -1,7 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$00		; BCD
+
+which_disk_bin:
+	.byte	0
 
 load_address_array:
 	.byte	$40,$40,$40,$60	; TITLE, CYAN, ATRUS, CAPTURED
@@ -19,7 +22,10 @@ length_array:
 	.byte	80,64,0,0	; CHO. START
 
 
-disk_exit_disk: ; note: BCD (yes I'm lazy)
+disk_exit_disk: ; note: not BCD anymore
+	.byte 1		; start of game
+	.byte 0,0,0
+disk_exit_disk_bcd:
 	.byte $01		; start of game
 	.byte 0,0,0
 disk_exit_dni_h:

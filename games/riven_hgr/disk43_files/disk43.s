@@ -1,8 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$43		; BCD
 
+which_disk_bin:
+	.byte	43
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, CART, BRIDGE,LOGGED
@@ -22,8 +24,19 @@ length_array:
 
 	; disk 41
 
-disk_exit_disk: ; note: BCD (yes I'm lazy)
-	.byte	$41,0,0,0
+disk_exit_disk: ; note: not BCD anymore
+	.byte	41
+	.byte	0
+	.byte	0
+	.byte	0
+
+disk_exit_disk_bcd: ; note: not BCD anymore
+	.byte	$41
+	.byte	0
+	.byte	0
+	.byte	0
+
+
 disk_exit_dni_h:
 	.byte	$01,0,0,0		; 41 = 1*25 + 3*5 + 1
 disk_exit_dni_l:

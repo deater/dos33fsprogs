@@ -1,7 +1,10 @@
 .include "../zp.inc"
 
-which_disk:
+which_disk_bcd:
 	.byte	$01		; BCD
+
+which_disk_bin:
+	.byte	1
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
@@ -19,7 +22,10 @@ length_array:
 	.byte	0,0,0,0
 
 
-disk_exit_disk: ; note: BCD (yes I'm lazy)
+disk_exit_disk: ; note: not BCD anymore
+	.byte 39		; zap to temple for now
+	.byte 0,0,0
+disk_exit_disk_bcd:
 	.byte $39		; zap to temple for now
 	.byte 0,0,0
 disk_exit_dni_h:
