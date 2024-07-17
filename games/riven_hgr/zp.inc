@@ -41,6 +41,19 @@ MASK	= $2E
 COLOR_MASK = $2F
 COLOR	= $30
 
+
+	; this is the structure for a ProDOS smartport command, at least
+	; for a read (command=1)
+
+	COMMAND = $42		; ProDOS constant
+	UNIT    = $43		; ProDOS constant
+	ADRLO   = $44		; ProDOS constant
+	ADRHI   = $45		; ProDOS constant
+	BLOKLO  = $46		; ProDOS constant
+	BLOKHI  = $47		; ProDOS constant
+
+
+
 SEEDL	= $4e
 SEEDH	= $4f
 XMAX	= $50

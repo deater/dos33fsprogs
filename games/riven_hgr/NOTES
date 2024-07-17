@@ -12,15 +12,17 @@ API for loading:
 + Prodos/HD based
 
 	+ proboothd boots disk
-		+ loads QLOAD equivalent to 1600
+		+ loads QLOAD to 1600
 
-	instead: block based
+
+		DDDD DDDT | TTTT TSSS
+
+		((disk+1)<<9)+(T<<3)+(S>>1)
+
+		((disk*512) + (T*8) + (S/2)
+
 		256k for each 140k disk, offset from there?
 		up to 128 disks
-		disk#*256k
-		disk#*512
-		top block# = disk*2+(top bit of track*16
-		bottom block# = (track*16)
 
 
 	only one copy of qload/title

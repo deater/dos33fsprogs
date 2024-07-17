@@ -1,30 +1,13 @@
 ;license:BSD-3-Clause
 
-; based on minimal open/read binary file in ProDOS filesystem
+; vaguely based on the minimal open/read binary file in ProDOS filesystem
 ; from 4cade
 ;
 ;copyright (c) Peter Ferrie 2016-2019
 
 .include "hardware.inc"
+.include "zp.inc"
 
-
-
-; zpage usage, arbitrary selection except for the "ProDOS constant" ones
-
-	; this is the structure for a smartport command, at least
-	; for a read (command=1)
-
-
-	COMMAND	= $42		; ProDOS constant
-	UNIT	= $43		; ProDOS constant
-	ADRLO	= $44		; ProDOS constant
-	ADRHI	= $45		; ProDOS constant
-	BLOKLO	= $46		; ProDOS constant
-	BLOKHI	= $47		; ProDOS constant
-
-;	A2L       = $3e
-;	A2H       = $3f
-;	sizehi    = $53
 
 ; start of boot sector, presumably how many sectors to load
 ;	512 bytes on prodos/hard-disk(???)
@@ -73,8 +56,6 @@ proboot_start:
 
 	ldy	#0
 
-
-
 	; set up ProDOS shim
 
 	; from IIgs smartport firmware manual
@@ -92,7 +73,6 @@ setup_loop:
 	lsr
 	and	#7
 	ora	#$c0
-;	sta	$be30, Y	; ????
 	sta	slot_smc+2
 	sta	entry_smc+2	; set up smartport/prodos entry point
 
@@ -100,20 +80,8 @@ slot_smc:
 	lda	$cfff
 	sta	entry_smc+1	; set up rest of smartport/prodos entry
 
-;	lda	fakeMLI_e-$100, Y
-;	sta	$be00+fakeMLI_e-fakeMLI, Y
-;	iny
-;	bne	setup_loop	; ?????
 
-	; Y is 0 here
-;	ldy	#0
-;	sty	ADRLO
-;	stx	$bf30		; ?????
-;	sty	$200		; ?????
-
-opendir:
-
-
+;opendir:
 
 	; we want to load 5 blocks from 1024 to $1600
 

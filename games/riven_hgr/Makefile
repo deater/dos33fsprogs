@@ -19,28 +19,6 @@ all:	riven_disk00.dsk \
 
 ####
 
-
-#prorwts_ca65.o:	prorwts_ca65.s
-#	ca65 -o prorwts_ca65.o prorwts_ca65.s -l prorwts_ca65.lst
-
-###
-
-#riven_hgr.2mg:	\
-#	disk01_files/LEVEL_ARRIVAL
-#	$(CADIUS) CREATEVOLUME riven_hgr.2mg Riven 32MB
-#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK01
-#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK39
-#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK40
-#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK41
-#	$(CADIUS) CREATEFOLDER riven_hgr.2mg /Riven/DISK43
-#	$(CADIUS) ADDFILE  riven_hgr.2mg  /Riven/DISK01/ disk01_files/LEVEL_ARRIVAL
-
-
-
-
-
-###
-
 riven_disk00.dsk:	QBOOT QLOAD TITLE_00 \
 	disk00_files/DISK00 \
 	disk00_files/ATRUS \
@@ -334,7 +312,7 @@ graphics_title/riven_title.hgr.zx02:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst generate_common \
+	rm -f *~ *.o *.lst dts_block generate_common \
 	QBOOT QLOAD QLOAD_HD \
 	TITLE_00 TITLE_01 TITLE_39 TITLE_40 TITLE_41 TITLE_43
 	cd disk00_files && make clean
@@ -394,12 +372,34 @@ submit:	riven_disk00.dsk riven_disk01.dsk \
 		riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk
 
 
+###
+
+dts_block:	dts_block.o
+	$(CC) $(LFLAGS) -o dts_block dts_block.o
+
+dts_block.o:	dts_block.c
+	$(CC) $(CFLAGS) -c dts_block.c
+
 ####
 
-riven_hgr.2mg:	PROBOOTHD QLOAD_HD
+riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
+	TITLE_00 \
+	disk00_files/DISK00 \
+	disk00_files/ATRUS \
+	disk00_files/CYAN \
+	disk00_files/CAPTURED \
+	disk00_files/CHO \
+	disk00_files/LEVEL_START
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
 	$(PRODOS_RAW) riven_hgr.2mg 0 PROBOOTHD 0 0
-	$(PRODOS_RAW) riven_hgr.2mg 1024 QLOAD_HD 0 0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 0  2` disk00_files/DISK00  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 0  8` TITLE_00		 0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 2  0` disk00_files/CYAN      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 10 0` disk00_files/ATRUS    0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 18 0` disk00_files/CAPTURED 0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 26 0` disk00_files/CHO      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 31 0` disk00_files/LEVEL_START      0   0
 
 ###
 
