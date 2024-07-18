@@ -108,8 +108,8 @@ T         0 = Qboot
 T       0.5 = TITLE	 1823 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2393 bytes      16S= 1T0S	(4096)   2k free
 T         2 = ARRIVAL   25512 bytes         = 7T0S	(28672)  3k free
-T         9 = ARRIVAL2  ? bytes             = 7T0S	(28672)  ?k free
-T        16 = TELESCOPE 19484 bytes         = 7T0S	(28672)  9k free
+T         9 = ARRIVAL2  15920 bytes         = 4T0S	(16384) 400B free
+T        13 = TELESCOPE 19484 bytes         = 7T0S	(28672)  9k free
 
 Disk38 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
