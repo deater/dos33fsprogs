@@ -36,6 +36,10 @@
 	.include "disk43_files/disk43_defines.inc"
 .endif
 
+.if DISK=50
+	.include "disk50_files/disk50_defines.inc"
+.endif
+
 
 riven_title:
 
@@ -500,6 +504,18 @@ game_continue:
 	lda	#DIRECTION_S
 	sta	DIRECTION
 .endif
+
+.if DISK=50
+	lda	#LOAD_START
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_START_LOCATION
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
 
 
 	rts
