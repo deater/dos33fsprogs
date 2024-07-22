@@ -16,10 +16,10 @@ location0:
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	arrival_n_zx02	; north bg
-	.word	$0000		; south bg
+	.word	arrival_s_zx02	; south bg
 	.word	$0000		; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH
+	.byte	BG_NORTH|BG_SOUTH
 	.byte	$ff	; special exit
 
 

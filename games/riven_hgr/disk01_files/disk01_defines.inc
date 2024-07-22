@@ -2,6 +2,7 @@ LOAD_TITLE_01   =       0
 LOAD_ARRIVAL	=	1
 LOAD_ARRIVAL2	=	2
 LOAD_TELESCOPE	=	3
+LOAD_ARRIVAL3	=	4
 
 ;================================
 ; Level definitions
@@ -20,3 +21,9 @@ RIVEN_ARRIVAL2		=	0
 
 RIVEN_TELESCOPE		=	0
 RIVEN_MANHOLE		=	1
+
+; Arrival3
+RIVEN_ARRIVAL3		=	0
+RIVEN_ARRIVAL4		=	1
+RIVEN_ARRIVAL5		=	2
+

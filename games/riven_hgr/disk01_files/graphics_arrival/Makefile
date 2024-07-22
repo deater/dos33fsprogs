@@ -7,13 +7,14 @@ all:	arrival_graphics.inc
 
 arrival_graphics.inc:	\
 	arrival_near_n.hgr.zx02 arrival_near_s.hgr.zx02 arrival_near_e.hgr.zx02 arrival_near_w.hgr.zx02 \
-	arrival_n.hgr.zx02 \
+	arrival_n.hgr.zx02 arrival_s.hgr.zx02 \
 	arrival_handle_n.hgr.zx02
 	echo "arrival_near_n_zx02: .incbin \"arrival_near_n.hgr.zx02\"" > arrival_graphics.inc
 	echo "arrival_near_s_zx02: .incbin \"arrival_near_s.hgr.zx02\"" >> arrival_graphics.inc
 	echo "arrival_near_e_zx02: .incbin \"arrival_near_e.hgr.zx02\"" >> arrival_graphics.inc
 	echo "arrival_near_w_zx02: .incbin \"arrival_near_w.hgr.zx02\"" >> arrival_graphics.inc
 	echo "arrival_n_zx02: .incbin \"arrival_n.hgr.zx02\"" >> arrival_graphics.inc
+	echo "arrival_s_zx02: .incbin \"arrival_s.hgr.zx02\"" >> arrival_graphics.inc
 	echo "arrival_handle_n_zx02: .incbin \"arrival_handle_n.hgr.zx02\"" >> arrival_graphics.inc
 
 

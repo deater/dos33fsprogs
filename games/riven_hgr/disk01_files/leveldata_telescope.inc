@@ -7,7 +7,7 @@ locations:
 
 ; RIVEN_TELESCOPE -- near telescope
 location0:
-	.byte	$ff		; north exit
+	.byte	LOAD_ARRIVAL3<<4|RIVEN_ARRIVAL3	; north exit
 	.byte	LOAD_ARRIVAL2<<4|RIVEN_ARRIVAL2	; south exit
 	.byte	$FF		; east exit
 	.byte	RIVEN_MANHOLE	; west exit

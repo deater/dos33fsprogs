@@ -10,18 +10,18 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
-	.byte	$00,$00,$00,$00
+	.byte	$40,$00,$00,$00	; ARRIVAL3
 
 track_array:
         .byte	0, 2, 9,13	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
-	.byte	0,0,0,0
+	.byte	20,0,0,0	; ARRIVAL3
 
 sector_array:
         .byte	8, 0, 0, 0	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
-	.byte	0,0,0,0
+	.byte	0,0,0,0		; ARRIVAL3
 length_array:
         .byte	8, 112,64, 112	; TITLE, ARRIVAL, ARRIVAL2, TELESCOPE
-	.byte	0,0,0,0
+	.byte	127,0,0,0	; ARRIVAL3
 
 
 disk_exit_disk: ; note: not BCD anymore
