@@ -5,7 +5,7 @@
 locations:
 	.word location0
 
-; RIVEN_START_LOCATION	-- just arrived by cart
+; RIVEN_CHIPPER	-- just arrived by cart
 location0:
 	.byte	$FF		; north exit
 	.byte	$ff		; south exit
@@ -15,9 +15,9 @@ location0:
 	.byte	DIRECTION_E	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
-	.word	start_n_zx02	; north bg
-	.word	start_s_zx02	; south bg
-	.word	start_e_zx02	; east bg
-	.word	start_w_zx02	; west bg
+	.word	chipper_n_zx02	; north bg
+	.word	chipper_s_zx02	; south bg
+	.word	chipper_e_zx02	; east bg
+	.word	chipper_w_zx02	; west bg
 	.byte	BG_EAST|BG_NORTH|BG_SOUTH|BG_WEST	; all bgs
 	.byte	$ff		; special exit

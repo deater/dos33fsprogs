@@ -437,7 +437,7 @@ skip_write:
 	rts
 
 
-	.include "flip_pages.s"
+	.include "../flip_pages.s"
 
 
 ;===================================

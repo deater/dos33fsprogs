@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK43 LEVEL_CART LEVEL_BRIDGE LEVEL_LOGGED LEVEL_LOGGED2
+all:	DISK43 LEVEL_CART LEVEL_BRIDGE LEVEL_LOGGED LEVEL_LOGGED2 \
+	MOVIE_CART_RIDE
 
 ####
 
@@ -61,22 +62,17 @@ level_logged2.o:	level_logged2.s \
 		graphics_logged2/logged2_graphics.inc
 	ca65 -o level_logged2.o level_logged2.s -l level_logged2.lst
 
-
-
-
 ####
 
-MOVIE_MAGLEV_RIDE:	movie_maglev_ride.o
-	ld65 -o MOVIE_MAGLEV_RIDE movie_maglev_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+MOVIE_CART_RIDE:	movie_cart_ride.o
+	ld65 -o MOVIE_CART_RIDE movie_cart_ride.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-movie_maglev_ride.o:	movie_maglev_ride.s \
+movie_cart_ride.o:	movie_cart_ride.s \
 	../zp.inc ../hardware.inc ../qload.inc \
-	../common_defines.inc disk43_defines.inc \
-	end_message/end_message.gr.zx02 \
-	movie_maglev_ride/movie_maglev_ride.inc
-	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
-
-
+	../common_defines.inc ../flip_pages.s disk43_defines.inc \
+	movie_cart_ride/movie_cart_ride.inc \
+	../disk39_files/movie_maglev_ride/overlays/overlay_combined.zx02
+	ca65 -o movie_cart_ride.o movie_cart_ride.s -l movie_cart_ride.lst
 
 ####
 
@@ -91,6 +87,10 @@ graphics_logged/logged_graphics.inc:
 
 graphics_logged2/logged2_graphics.inc:
 	cd graphics_logged2 && make
+
+movie_cart_ride/movie_cart_ride.inc:
+	cd movie_cart_ride && make
+
 
 ####
 

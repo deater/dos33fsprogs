@@ -3,6 +3,7 @@ LOAD_CART	=	1
 LOAD_BRIDGE	=	2
 LOAD_LOGGED	=	3
 LOAD_LOGGED2	=	4
+LOAD_CART_MOVIE	=	5
 
 ;================================
 ; Level definitions

@@ -1,4 +1,4 @@
-; Riven -- Book Island, Arrival
+; Riven -- Book Island, Arrival on Chipper
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -9,7 +9,7 @@
 	.include "../qload.inc"
 	.include "disk50_defines.inc"
 
-riven_start:
+chipper_start:
 
 	;===================
 	; init screen
@@ -108,6 +108,6 @@ really_exit:
 	;==========================
 
 
-.include "graphics_start/start_graphics.inc"
+.include "graphics_chipper/chipper_graphics.inc"
 
-.include "leveldata_start.inc"
+.include "leveldata_chipper.inc"

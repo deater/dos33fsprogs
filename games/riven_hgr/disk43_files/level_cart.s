@@ -109,6 +109,13 @@ really_exit:
 
 cart_button_clicked:
 	bit	SPEAKER
+
+	lda     #LOAD_CART_MOVIE
+	sta     WHICH_LOAD
+
+	lda	#1
+	sta	LEVEL_OVER
+
 	rts
 
 

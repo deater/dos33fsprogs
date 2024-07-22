@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK50 LEVEL_START
+all:	DISK50 LEVEL_CHIPPER
 
 ####
 
@@ -15,33 +15,33 @@ disk50.o:	disk50.s ../zp.inc
 
 ####
 
-LEVEL_START:	level_start.o
-	ld65 -o LEVEL_START level_start.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+LEVEL_CHIPPER:	level_chipper.o
+	ld65 -o LEVEL_CHIPPER level_chipper.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-level_start.o:	level_start.s \
+level_chipper.o:	level_chipper.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk50_defines.inc \
-		leveldata_start.inc \
-		graphics_start/start_graphics.inc
-	ca65 -o level_start.o level_start.s -l level_start.lst
+		leveldata_chipper.inc \
+		graphics_chipper/chipper_graphics.inc
+	ca65 -o level_chipper.o level_chipper.s -l level_chipper.lst
 
 ####
 
-graphics_start/start_graphics.inc:
-	cd graphics_start && make
+graphics_chipper/start_graphics.inc:
+	cd graphics_chipper && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		LEVEL_START
+		LEVEL_CHIPPER
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		LEVEL_START
-	cd graphics_start && make clean
+		LEVEL_CHIPPER
+	cd graphics_chipper && make clean
 
 
 

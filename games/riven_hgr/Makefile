@@ -148,7 +148,8 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/LEVEL_CART \
 	disk43_files/LEVEL_BRIDGE \
 	disk43_files/LEVEL_LOGGED \
-	disk43_files/LEVEL_LOGGED2
+	disk43_files/LEVEL_LOGGED2 \
+	disk43_files/MOVIE_CART_RIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk43.dsk
 	$(DOS33_RAW) riven_disk43.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk43.dsk  0  2 QBOOT                1   1
@@ -160,10 +161,11 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  9  0 disk43_files/LEVEL_BRIDGE   0   0
 	$(DOS33_RAW) riven_disk43.dsk  16 0 disk43_files/LEVEL_LOGGED   0   0
 	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2  0   0
+	$(DOS33_RAW) riven_disk43.dsk  27 0 disk43_files/MOVIE_CART_RIDE  0   0
 
 riven_disk50.dsk:	QBOOT QLOAD TITLE_50 \
 	disk50_files/DISK50 \
-	disk50_files/LEVEL_START
+	disk50_files/LEVEL_CHIPPER
 	cp $(EMPTY_DISK)/empty.dsk riven_disk50.dsk
 	$(DOS33_RAW) riven_disk50.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk50.dsk  0  2 QBOOT                1   1
@@ -171,7 +173,7 @@ riven_disk50.dsk:	QBOOT QLOAD TITLE_50 \
 	$(DOS33_RAW) riven_disk50.dsk  0  1 disk50_files/DISK50  0   0
 	$(DOS33_RAW) riven_disk50.dsk  0  8 TITLE_50		 0   0
 	$(DOS33_RAW) riven_disk50.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk50.dsk  2  0 disk50_files/LEVEL_START     0   0
+	$(DOS33_RAW) riven_disk50.dsk  2  0 disk50_files/LEVEL_CHIPPER     0   0
 
 ###
 
@@ -380,7 +382,7 @@ disk43_files/LEVEL_CART:
 
 ####
 
-disk50_files/LEVEL_START:
+disk50_files/LEVEL_CHIPPER:
 	cd disk50_files && make
 
 
@@ -512,8 +514,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk43_files/LEVEL_BRIDGE \
 	disk43_files/LEVEL_LOGGED \
 	disk43_files/LEVEL_LOGGED2 \
+	disk43_files/MOVIE_CART_RIDE \
 	disk50_files/DISK50 \
-	disk50_files/LEVEL_START
+	disk50_files/LEVEL_CHIPPER
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
 	$(PRODOS_RAW) riven_hgr.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -556,8 +559,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 9  0` disk43_files/LEVEL_BRIDGE   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 16 0` disk43_files/LEVEL_LOGGED   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 22 0` disk43_files/LEVEL_LOGGED2  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 27 0` disk43_files/MOVIE_CART_RIDE  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 50 0  2` disk50_files/DISK50  0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 50 2  0` disk50_files/LEVEL_START     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 50 2  0` disk50_files/LEVEL_CHIPPER     0   0
 
 ###
 
