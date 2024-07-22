@@ -27,5 +27,5 @@ cove_graphics.inc:	\
 ####
 
 clean:
-	rm -f *~ *.o *.lst  *.zx02 *.hgr stairs_cove.inc
+	rm -f *~ *.o *.lst  *.zx02 *.hgr cove_graphics.inc
 

@@ -85,7 +85,7 @@ graphics_cho/cho_graphics.inc:
 graphics_cyan/cyan_graphics.inc:
 	cd graphics_cyan && make
 
-graphics_start/cyan_graphics.inc:
+graphics_start/start_graphics.inc:
 	cd graphics_start && make
 
 ####
