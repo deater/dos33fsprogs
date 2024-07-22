@@ -1,21 +1,77 @@
-add audio to credits
+disk01:
+	east (NEW)
+	east again (NEW) (can look down)
+		 base of steps (note both e and n go here)
+	look down
 
-move flip_pages.s into QLOAD?
+disk02:	(steps)
+	one	(nse)
+	two	(nse)
+
+	three	(nse)
+	four	(ns only)
+
+	five	(top, nsew)
+
+	bridge1	(nsew)
+	
+	
+
+disk03: (down other side)
+	one
+	two
+	three
+	four (by door)
+	under door
+	inside
+	up ladder
+	doorway
+	peephole
+	look inside
+	
+disk04: bridge
+	
+	bridge2 (nsew)
+	bridge3 (nsew)
+	bridge4 (nsew)
+	tunnel1 (ew)
+	tunnel2 (ew)
+	tunnel3 (new) door open)
+
+disk05: control room
+	in1
+	in2 (plays movie of opening)
+	in3
+	in4 seat
+	temple view
+	sub view
+	possibly animation of lowering when button pressed/pull handle
+
+disk06: more tunnel
+	tunnel4
+	tunnel5
+	tunnel6
+	tunnel7
+	tunnel8 (door)
+	tunnel9 (looking into temple)
+
 
 
 + disk handling code
 	+ on every load check to make sure disk hasn't been swapped?
 		can put expected disk number at beginning of each thing
 		we load and compare against it
+	+ allow pressing escape to back-out disk change?
 
 + Keyboard handling
 	- still buggy, especially when clicking on something???
 	- Better keyboard handling on IIe
 	-> was actually one of the main reasons I started working on this
 
+qload:
++ move flip_pages.s into QLOAD
 
 title:
-	-> maybe have "new game / load game" shown?
 
 disk00:
 	+ cyan intro
@@ -24,30 +80,35 @@ disk00:
 	+ capture movie:
 	+ opening movie: implement it
 		ESC key... in wait_a_bit write to WAIT_KEYPRESS
+		allow skipping chunks of it
 
 disk01:
 	+ maybe redo opening graphics
 
-disk39:
-	-> try to fit more locations
-		+ outside/overlook_s is there but won't fit
-		+ projector_e also there, prob will fit
-		+ re-arrange disk so projector gets the extra 4k
+disk38:
+	-> complete things
 
+disk39:
 	-> try to fit last little bit of maglev sequence
 		+ do the handle animation at end?
 		+ sound effects?
 		+ if out of room in RAM (but not disk)
 			optionally load tail end
 			to language card on machines that have it?
-
-
 disk40:
 	-> implement maglev flip
 	-> implement maglev back
 
 disk41:
+	-> see if we can implement left/straight right/straight
+		options for fork-in-road type situations
 
 disk43:
 	-> implement cart
+	-> fix up graphics
+	-> fix up path
+	-> again, figure out fork-in-road handling
+
+disk50:
+	-> implement reverse cart
 

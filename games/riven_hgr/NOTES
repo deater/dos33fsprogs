@@ -1,36 +1,3 @@
-API for loading:
-
-+ Disk based:
-	returns to ????? with LOCATION (no extra action needed)
-		LEVEL
-		DISK
-	set
-
-	the code looks up track/sector/length based on these,
-	changing disk if necessary
-
-+ Prodos/HD based
-
-	+ proboothd boots disk
-		+ loads QLOAD to 1600
-
-
-		DDDD DDDT | TTTT TSSS
-
-		((disk+1)<<9)+(T<<3)+(S>>1)
-
-		((disk*512) + (T*8) + (S/2)
-
-		256k for each 140k disk, offset from there?
-		up to 128 disks
-
-
-	only one copy of qload/title
-
-	if level/disk changes, convert to filename
-		DISK00/FILE00
-	and load it
-
 
 REMEMBER!  QLOAD actually trashes 2 bytes above the top of the load
 	for most of this we re-write those bytes and it doesn't matter
@@ -198,3 +165,38 @@ disk42: to left, including sea animal move
 disk43: to right, including cart ride
 	; it's 11 steps (22)
 	; 
+
+
+
+
+
+API for loading:
+
++ Disk based:
+	returns to ????? with LOCATION (no extra action needed)
+		LEVEL
+		DISK
+	set
+
+	the code looks up track/sector/length based on these,
+	changing disk if necessary
+
++ Prodos/HD based
+
+	+ proboothd boots disk
+		+ loads QLOAD to 1600
+
+
+		DDDD DDDT | TTTT TSSS
+
+		((disk+1)<<9)+(T<<3)+(S>>1)
+
+		((disk*512) + (T*8) + (S/2)
+
+		256k for each 140k disk, offset from there?
+		up to 128 disks
+
+
+	only one copy of qload/title
+
+
