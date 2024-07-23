@@ -3,6 +3,7 @@ LOAD_ARRIVAL	=	1
 LOAD_ARRIVAL2	=	2
 LOAD_TELESCOPE	=	3
 LOAD_ARRIVAL3	=	4
+LOAD_PATH	=	5
 
 ;================================
 ; Level definitions
@@ -26,4 +27,9 @@ RIVEN_MANHOLE		=	1
 RIVEN_ARRIVAL3		=	0
 RIVEN_ARRIVAL4		=	1
 RIVEN_ARRIVAL5		=	2
+
+; Path
+RIVEN_PATH		=	0
+RIVEN_STEPS_BASE	=	1
+RIVEN_CLIFF_BASE	=	2
 

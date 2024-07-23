@@ -27,11 +27,11 @@ location0:
 location1:
 	.byte	LOAD_ARRIVAL2<<4|RIVEN_ARRIVAL2		; north exit
 	.byte	RIVEN_ARRIVAL	; south exit
-	.byte	$E0		; leave to disk39		; east exit
+	.byte	LOAD_PATH<<4|RIVEN_PATH			; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_N	; south exit_dir
-	.byte	DIRECTION_W	; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	arrival_near_n_zx02	; north bg
 	.word	arrival_near_s_zx02	; south bg

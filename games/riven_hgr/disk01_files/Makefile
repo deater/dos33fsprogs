@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE LEVEL_ARRIVAL3
+all:	DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE LEVEL_ARRIVAL3 \
+	LEVEL_PATH
 
 ####
 
@@ -53,7 +54,6 @@ level_telescope.o:	level_telescope.s \
 
 ####
 
-
 LEVEL_ARRIVAL3:	level_arrival3.o
 	ld65 -o LEVEL_ARRIVAL3 level_arrival3.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -63,6 +63,19 @@ level_arrival3.o:	level_arrival3.s \
 		leveldata_arrival3.inc \
 		graphics_arrival3/arrival3_graphics.inc
 	ca65 -o level_arrival3.o level_arrival3.s -l level_arrival3.lst
+
+####
+
+LEVEL_PATH:	level_path.o
+	ld65 -o LEVEL_PATH level_path.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_path.o:	level_path.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk01_defines.inc \
+		leveldata_path.inc \
+		graphics_path/path_graphics.inc
+	ca65 -o level_path.o level_path.s -l level_path.lst
+
 
 ####
 
@@ -78,19 +91,24 @@ graphics_telescope/telescope_graphics.inc:
 graphics_arrival3/arrival3_graphics.inc:
 	cd graphics_arrival3 && make
 
+graphics_path/path_graphics.inc:
+	cd graphics_path && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE LEVEL_ARRIVAL3
+		DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE \
+		LEVEL_ARRIVAL3 LEVEL_PATH
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE LEVEL_ARRIVAL3
+		DISK01 LEVEL_ARRIVAL LEVEL_ARRIVAL2 LEVEL_TELESCOPE \
+		LEVEL_ARRIVAL3 LEVEL_PATH
 	cd graphics_arrival && make clean
 	cd graphics_arrival2 && make clean
 	cd graphics_telescope && make clean
 	cd graphics_arrival3 && make clean
-
+	cd graphcis_path && make clean

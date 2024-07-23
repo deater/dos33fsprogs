@@ -27,7 +27,7 @@ level_chipper.o:	level_chipper.s \
 
 ####
 
-graphics_chipper/start_graphics.inc:
+graphics_chipper/chipper_graphics.inc:
 	cd graphics_chipper && make
 
 ####

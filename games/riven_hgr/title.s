@@ -506,10 +506,10 @@ game_continue:
 .endif
 
 .if DISK=50
-	lda	#LOAD_START
+	lda	#LOAD_CHIPPER
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_START_LOCATION
+	lda	#RIVEN_CHIPPER
 	sta	LOCATION
 
 	lda	#DIRECTION_N
