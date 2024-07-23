@@ -13,7 +13,7 @@ PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 all:	riven_disk00.dsk \
 	riven_disk01.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
-	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk \
+	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk \
 	riven_hgr.2mg
 
@@ -166,6 +166,18 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2  0   0
 	$(DOS33_RAW) riven_disk43.dsk  27 0 disk43_files/MOVIE_CART_RIDE  0   0
 
+riven_disk44.dsk:	QBOOT QLOAD TITLE_44 \
+	disk44_files/DISK44 \
+	disk44_files/LEVEL_FISH
+	cp $(EMPTY_DISK)/empty.dsk riven_disk44.dsk
+	$(DOS33_RAW) riven_disk44.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk44.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk44.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk44.dsk  0  1 disk44_files/DISK44  0   0
+	$(DOS33_RAW) riven_disk44.dsk  0  8 TITLE_44		 0   0
+	$(DOS33_RAW) riven_disk44.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk44.dsk  2  0 disk44_files/LEVEL_FISH     0   0
+
 riven_disk50.dsk:	QBOOT QLOAD TITLE_50 \
 	disk50_files/DISK50 \
 	disk50_files/LEVEL_CHIPPER
@@ -298,6 +310,18 @@ title_43.o:	title.s zp.inc hardware.inc \
 
 ####
 
+TITLE_44:	title_44.o
+	ld65 -o TITLE_44 title_44.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_44.o:	title.s zp.inc hardware.inc \
+		qload.inc \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_44.o title.s -DDISK=44 -l title_44.lst
+
+
+####
+
 TITLE_50:	title_50.o
 	ld65 -o TITLE_50 title_50.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -345,6 +369,9 @@ disk41_files/DISK41:
 disk43_files/DISK43:	
 	cd disk43_files && make
 
+disk44_files/DISK44:	
+	cd disk44_files && make
+
 disk50_files/DISK50:	
 	cd disk50_files && make
 
@@ -388,6 +415,12 @@ disk43_files/LEVEL_CART:
 
 ####
 
+disk44_files/LEVEL_FISH:
+	cd disk44_files && make
+
+
+####
+
 disk50_files/LEVEL_CHIPPER:
 	cd disk50_files && make
 
@@ -405,7 +438,8 @@ graphics_title/riven_title.hgr.zx02:
 clean:		
 	rm -f *~ *.o *.lst dts_block generate_common \
 	QBOOT QLOAD QLOAD_HD \
-	TITLE_00 TITLE_01 TITLE_38 TITLE_39 TITLE_40 TITLE_41 TITLE_43 TITLE_50
+	TITLE_00 TITLE_01 TITLE_38 TITLE_39 \
+	TITLE_40 TITLE_41 TITLE_43 TITLE_44 TITLE_50
 	cd disk00_files && make clean
 	cd disk01_files && make clean
 	cd disk38_files && make clean
@@ -413,6 +447,7 @@ clean:
 	cd disk40_files && make clean
 	cd disk41_files && make clean
 	cd disk43_files && make clean
+	cd disk44_files && make clean
 	cd disk50_files && make clean
 
 ####
@@ -420,7 +455,8 @@ clean:
 distclean:
 	rm -f *~ *.o *.lst generate_common \
 	QBOOT QLOAD QLOAD_HD \
-	TITLE_00 TITLE_01 TITLE_38 TITLE_39 TITLE_40 TITLE_41 TITLE_43 TITLE_50
+	TITLE_00 TITLE_01 TITLE_38 TITLE_39 \
+	TITLE_40 TITLE_41 TITLE_43 TITLE_44 TITLE_50
 	cd graphics_title && make clean
 	cd graphics_sprites && make clean
 	cd disk00_files && make distclean
@@ -430,6 +466,7 @@ distclean:
 	cd disk40_files && make distclean
 	cd disk41_files && make distclean
 	cd disk43_files && make distclean
+	cd disk44_files && make distclean
 	cd disk50_files && make distclean
 
 ###
@@ -461,12 +498,13 @@ qload.inc:	generate_common QLOAD
 
 submit:	riven_disk00.dsk riven_disk01.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
-	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk \
+	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk
 	riven_hgr.2mg
 	zip riven_hgr.zip riven_disk00.dsk riven_disk01.dsk \
 		riven_disk38.dsk riven_disk39.dsk \
 		riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk \
+		riven_disk44.dsk \
 		riven_disk50.dsk
 	zip riven_hgr.2mg.zip riven_hgr.2mg
 
@@ -522,6 +560,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk43_files/LEVEL_LOGGED \
 	disk43_files/LEVEL_LOGGED2 \
 	disk43_files/MOVIE_CART_RIDE \
+	disk44_files/DISK44 \
+	disk44_files/LEVEL_FISH \
 	disk50_files/DISK50 \
 	disk50_files/LEVEL_CHIPPER
 	$(PRODOSDIR)/mkprodosfs riven_hgr.2mg -n Riven -b 65535 -2
@@ -568,6 +608,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 16 0` disk43_files/LEVEL_LOGGED   0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 22 0` disk43_files/LEVEL_LOGGED2  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 27 0` disk43_files/MOVIE_CART_RIDE  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 44 0  2` disk44_files/DISK44  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 44 2  0` disk44_files/LEVEL_FISH     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 50 0  2` disk50_files/DISK50  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 50 2  0` disk50_files/LEVEL_CHIPPER     0   0
 

@@ -36,6 +36,10 @@
 	.include "disk43_files/disk43_defines.inc"
 .endif
 
+.if DISK=44
+	.include "disk44_files/disk44_defines.inc"
+.endif
+
 .if DISK=50
 	.include "disk50_files/disk50_defines.inc"
 .endif
@@ -493,7 +497,6 @@ game_continue:
 	sta	DIRECTION
 .endif
 
-
 .if DISK=43
 	lda	#LOAD_CART
 	sta	WHICH_LOAD
@@ -502,6 +505,17 @@ game_continue:
 	sta	LOCATION
 
 	lda	#DIRECTION_S
+	sta	DIRECTION
+.endif
+
+.if DISK=44
+	lda	#LOAD_FISH
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_FISH
+	sta	LOCATION
+
+	lda	#DIRECTION_N
 	sta	DIRECTION
 .endif
 
