@@ -28,6 +28,10 @@
 	.include "disk04_files/disk04_defines.inc"
 .endif
 
+.if DISK=05
+	.include "disk05_files/disk05_defines.inc"
+.endif
+
 .if DISK=38
 	.include "disk38_files/disk38_defines.inc"
 .endif
@@ -498,6 +502,17 @@ game_continue:
 	sta	DIRECTION
 .endif
 
+.if DISK=05
+	lda	#LOAD_CHAIR
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_CHAIR
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
 
 .if DISK=38
 	lda	#LOAD_PROJECTOR
@@ -601,7 +616,7 @@ riven_title_image:
 
           ;01234567890123456789012345678901234567890
 title_text:
-.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.07",0
+.byte 0, 0,"LOADING RIVEN SUBSET DISK 00 V0.08",0
 ;
 ;
 
