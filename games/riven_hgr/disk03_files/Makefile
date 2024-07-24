@@ -33,13 +33,13 @@ graphics_outside/outside_graphics.inc:
 ####
 
 clean:		
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst DISK03 \
 		LEVEL_OUTSIDE
 
 ####
 
 distclean:
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst DISK03 \
 		LEVEL_OUTSIDE
 	cd graphics_outside && make clean
 

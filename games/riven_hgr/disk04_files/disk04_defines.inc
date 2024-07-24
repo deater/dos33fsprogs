@@ -1,0 +1,16 @@
+LOAD_TITLE_04	=	0
+LOAD_BRIDGE2	=	1
+LOAD_BRIDGE3	=	2
+LOAD_BRIDGE4	=	3
+LOAD_TUNNEL1	=	4
+LOAD_TUNNEL2	=	5
+LOAD_TUNNEL3	=	6
+
+;================================
+; Level definitions
+
+; TUNNEL3
+
+RIVEN_TUNNEL3		=	0
+RIVEN_TUNNEL3_OPEN	=	1
+
