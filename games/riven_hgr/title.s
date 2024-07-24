@@ -63,12 +63,6 @@
 
 riven_title:
 
-
-	;===========================
-	; print the title message that used to be
-	;	in hello.bas
-
-
 	;===================
 	; init screen
 	;===================
@@ -77,18 +71,14 @@ riven_title:
 	jsr	HOME
 	bit	KEYRESET
 
-	; set disk#
+	; set disk# (DISK provided at compile time)
 
 	lda	#48+(DISK/10)
 	sta	title_text+28
 	lda	#48+(DISK-((DISK/10)*10))
 	sta	title_text+29
 
-
-
-	; clear text screen
-
-;	jsr	clear_all
+	; setup text screen
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -97,19 +87,21 @@ riven_title:
 
 	jsr	set_normal
 
-	; print messages
+	; print the title screen text
 	lda	#<title_text
 	sta	OUTL
 	lda	#>title_text
 	sta	OUTH
-
-	; print the text
-
 	jsr	move_and_print_list
 
-loader_start:
+
+	;===================
+	; detect hardware
 
 	jsr	hardware_detect
+
+	;=============================
+	; set up model string to print
 
 	lda	#<model_string
 	sta	OUTL
@@ -117,25 +109,18 @@ loader_start:
 	sta	OUTH
 
 	lda	APPLEII_MODEL
-	sta	model_string+17
+	sta	model_string+19
 
+	; special case IIgs, need to print two characters
 	cmp	#'g'
 	bne	go_print
 
 	lda	#'s'
-	sta	model_string+18
+	sta	model_string+20
 
 go_print:
 
-	ldy	#0
-print_model:
-	lda	(OUTL),Y
-	beq	print_model_done
-	ora	#$80
-	sta	$7d0,Y
-	iny
-	jmp	print_model
-print_model_done:
+	jsr	move_and_print
 
 	;===========================
 	; patch lowercase printing
@@ -208,7 +193,7 @@ no_patch_uppercase:
 not_a_iigs:
 
 	;===================
-	; Load hires graphics
+	; Load title graphic
 	;===================
 reload_everything:
 
@@ -223,7 +208,7 @@ reload_everything:
 
 	;===================================
 	; detect if we have a language card
-	; and load sound into it if possible
+	; we will use it for sound later if detected
 	;===================================
 
 	lda	#0
@@ -237,27 +222,9 @@ reload_everything:
 	ora	#SOUND_IN_LC
 	sta	SOUND_STATUS
 
-	; load sounds into LC
-
-	; read ram, write ram, use $d000 bank1
-;	bit	$C08B
-;	bit	$C08B
-
-;	lda	#<linking_noise_compressed
-;	sta	getsrc_smc+1
-;	lda	#>linking_noise_compressed
-;	sta	getsrc_smc+2
-
-;	lda	#$D0	; decompress to $D000
-
-;	jsr	decompress_lzsa2_fast
-
-;blah:
-
-	; read rom, nowrite, use $d000 bank1
-;	bit	$C08A
-
 no_language_card:
+
+	; currently no music so no need for Mockingboard code
 
 	;===================================
 	; Setup Mockingboard
@@ -311,6 +278,9 @@ done_setup_sound:
 	; init
 	;===================================
 
+	; we currently don't do this as we were over-writing
+	;	things that shouldn't.  It is living dangerously
+	;	not clearing things out though
 
 	; clear out zero page values to 0
 	;	clear everything from $80 .. $A0?
@@ -325,6 +295,7 @@ done_setup_sound:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	BEACH_ANIMALS_SEEN
+;	sta	JOYSTICK_ENABLED
 
 	; init hi-res graphics
 
@@ -332,19 +303,14 @@ done_setup_sound:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-
-;	lda	#0
-;	sta	JOYSTICK_ENABLED
-;	sta	UPDATE_POINTER
-;	sta	HOLDING_ITEM
-;	sta	HOLDING_PAGE
+	; initial cursor location
 
 	lda	#20
 	sta	CURSOR_X
 	sta	CURSOR_Y
 
 	;===================================
-	; Do Intro Sequence
+	; Wait a bit
 	;===================================
 
 	; wait a bit at LOAD screen
@@ -360,14 +326,11 @@ done_setup_sound:
 	jsr	clear_bottom
 	bit	TEXTGR
 
-	; print messages
+	; print text
 	lda	#<menu_text
 	sta	OUTL
 	lda	#>menu_text
 	sta	OUTH
-
-	; print the text
-
 	jsr	move_and_print_list
 
 	lda	#0
@@ -425,17 +388,8 @@ done_pointer_loop:
 	;	we ever implement save game support
 game_new:
 
-	; FIXME: how to convince other disks to swap to DISK0
-	;	without wasting a disk-exit spot
-
-;	lda	#$E0|3			; LOAD_CYAN
-;	sta	WHICH_LOAD		; CYAN opener
-
-;	lda	#0			; not needed...
-;	sta	LOCATION
-
-;	lda	#DIRECTION_N
-;	sta	DIRECTION
+	; there must be a way to do this better, but for now waste
+	;	a disk change slot on each disk with the opener
 
 	lda	#$E0|3
 	sta	LEVEL_OVER
@@ -606,10 +560,7 @@ game_continue:
 	.include	"lc_detect.s"
 
 model_string:
-.byte "DETECTED APPLE II",0,0,0
-
-
-
+.byte 0,23,"DETECTED APPLE II",0,0,0
 
 riven_title_image:
 .incbin "graphics_title/riven_title.hgr.zx02"

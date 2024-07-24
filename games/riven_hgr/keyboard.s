@@ -4,6 +4,8 @@
 	;==============================
 handle_keypress:
 
+
+.if 0
 	; first handle joystick
 	lda	JOYSTICK_ENABLED
 	beq	actually_handle_keypress
@@ -61,16 +63,22 @@ js_check_down:
 
 
 done_joystick:
-
+.endif
 
 
 actually_handle_keypress:
+
+	; check for keypress
+
 	lda	KEYPRESS
 	bmi	keypress
 
 	jmp	no_keypress
 
 keypress:
+
+	; adjust weird Apple II stuff
+
 	and	#$7f			; clear high bit
 	cmp	#' '
 	beq	handle_input		; make sure not to lose space
@@ -78,6 +86,10 @@ keypress:
 
 
 handle_input:
+
+	;==============================
+	; assume pointer will be moved
+	; so restore background
 
 	pha				; save keypress info
 
@@ -88,8 +100,10 @@ handle_input:
 	pla				; restore keypress info
 
 check_sound:
-	cmp	#$14			; control-T
-	bne	check_joystick
+	cmp	#$13			; control-S
+	bne	check_left
+
+	; toggle sound
 
 	lda	SOUND_STATUS
 	eor	#SOUND_DISABLED
@@ -97,29 +111,15 @@ check_sound:
 	jmp	done_keypress
 
 	; can't be ^J as that's the same as down
-check_joystick:
-;	cmp	#$10			; control-P
-	cmp	#'J'
-	bne	check_left
-
-	lda	JOYSTICK_ENABLED
-	eor	#1
-	sta	JOYSTICK_ENABLED
-	jmp	done_keypress
-
-;check_load:
-;	cmp	#$C			; control-L
-;	bne	check_save
-
-;	jsr	load_game
-;	jmp	done_keypress
-
-;check_save:
-;	cmp	#$13			; control-S
+;check_joystick:
+;	cmp	#'J'
 ;	bne	check_left
 
-;	jsr	save_game
+;	lda	JOYSTICK_ENABLED
+;	eor	#1
+;	sta	JOYSTICK_ENABLED
 ;	jmp	done_keypress
+
 
 check_left:
 	cmp	#'A'
@@ -135,6 +135,8 @@ do_dec_cursor_x:
 done_left_pressed:
 	jmp	done_keypress		; done checking input
 
+
+
 check_right:
 	cmp	#'D'
 	beq	right_pressed
@@ -143,9 +145,8 @@ check_right:
 right_pressed:
 	lda	CURSOR_X		; load Xpos
 	cmp	#38			; if Xpos > 38 don't increment
-	bcc	do_inc_cursor_x		; blt
-;	cmp	#$FE
-	bcs	done_right_pressed
+;	bcc	do_inc_cursor_x		; blt
+	bcs	done_right_pressed	; bge
 do_inc_cursor_x:
 	inc	CURSOR_X		; move right one 3.5 pixel column
 done_right_pressed:
@@ -199,6 +200,11 @@ check_return:
 	beq	return_pressed
 	cmp	#13
 	bne	done_keypress
+
+
+	;======================================
+	; extra action if space/return pressed
+	;======================================
 
 return_pressed:
 
