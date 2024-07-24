@@ -24,7 +24,7 @@ location0:
 
 ; RIVEN_STEPS_BASE
 location1:
-	.byte	$E0	; disk1		; north exit
+	.byte	$E0	; disk2		; north exit
 	.byte	$ff			; south exit
 	.byte	RIVEN_CLIFF_BASE	; east exit
 	.byte	RIVEN_PATH		; west exit

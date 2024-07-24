@@ -11,7 +11,7 @@ PRODOS = ../../utils/prodos-utils/prodos
 PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 all:	riven_disk00.dsk \
-	riven_disk01.dsk \
+	riven_disk01.dsk riven_disk02.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
 	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk \
@@ -61,6 +61,23 @@ riven_disk01.dsk:	QBOOT QLOAD TITLE_01 \
 	$(DOS33_RAW) riven_disk01.dsk  13  0 disk01_files/LEVEL_TELESCOPE    0   0
 	$(DOS33_RAW) riven_disk01.dsk  19  0 disk01_files/LEVEL_ARRIVAL3    0   0
 	$(DOS33_RAW) riven_disk01.dsk  27  0 disk01_files/LEVEL_PATH        0   0
+
+###
+
+riven_disk02.dsk:	QBOOT QLOAD TITLE_02 \
+	disk02_files/DISK02 \
+	disk02_files/LEVEL_STEPS1 \
+	disk02_files/LEVEL_TOP
+	cp $(EMPTY_DISK)/empty.dsk riven_disk02.dsk
+	$(DOS33_RAW) riven_disk02.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk02.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk02.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk02.dsk  0  1 disk02_files/DISK02  0   0
+	$(DOS33_RAW) riven_disk02.dsk  0  8 TITLE_02		 0   0
+	$(DOS33_RAW) riven_disk02.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk02.dsk  2  0 disk02_files/LEVEL_STEPS1      0   0
+	$(DOS33_RAW) riven_disk02.dsk  22  0 disk02_files/LEVEL_TOP        0   0
+
 
 
 
@@ -253,6 +270,18 @@ title_01.o:	title.s zp.inc hardware.inc \
 
 ####
 
+TITLE_02:	title_02.o
+	ld65 -o TITLE_02 title_02.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_02.o:	title.s zp.inc hardware.inc \
+		qload.inc \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_02.o title.s -DDISK=02 -l title_02.lst
+
+
+####
+
 TITLE_38:	title_38.o
 	ld65 -o TITLE_38 title_38.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -333,26 +362,17 @@ title_50.o:	title.s zp.inc hardware.inc \
 
 
 
-####
-
-disk01_files/LEVEL_ARRIVAL:	
-	cd disk01_files && make
-
-disk01_files/LEVEL_ARRIVAL2:	
-	cd disk01_files && make
-
-disk01_files/LEVEL_ARRIVAL3:	
-	cd disk01_files && make
-
-disk01_files/LEVEL_PATH:	
-	cd disk01_files && make
 
 ####
+
 disk00_files/DISK00:	
 	cd disk00_files && make
 
 disk01_files/DISK01:	
 	cd disk01_files && make
+
+disk02_files/DISK02:	
+	cd disk02_files && make
 
 disk38_files/DISK38:	
 	cd disk38_files && make
@@ -374,6 +394,29 @@ disk44_files/DISK44:
 
 disk50_files/DISK50:	
 	cd disk50_files && make
+
+
+####
+
+disk01_files/LEVEL_ARRIVAL:	
+	cd disk01_files && make
+
+disk01_files/LEVEL_ARRIVAL2:	
+	cd disk01_files && make
+
+disk01_files/LEVEL_ARRIVAL3:	
+	cd disk01_files && make
+
+disk01_files/LEVEL_PATH:	
+	cd disk01_files && make
+
+####
+
+disk02_files/LEVEL_STEPS1:	
+	cd disk02_files && make
+
+disk02_files/LEVEL_TOP:	
+	cd disk02_files && make
 
 ####
 
@@ -532,6 +575,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk01_files/LEVEL_TELESCOPE \
 	disk01_files/LEVEL_ARRIVAL3 \
 	disk01_files/LEVEL_PATH \
+	disk02_files/DISK02 \
+	disk02_files/LEVEL_STEPS1 \
+	disk02_files/LEVEL_TOP \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
 	disk39_files/DISK39 \
@@ -580,6 +626,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 13 0` disk01_files/LEVEL_TELESCOPE    0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 19 0` disk01_files/LEVEL_ARRIVAL3      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 27 0` disk01_files/LEVEL_PATH      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 0  2` disk02_files/DISK02  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 2  0` disk02_files/LEVEL_STEPS1      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 22 0` disk02_files/LEVEL_TOP      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0
