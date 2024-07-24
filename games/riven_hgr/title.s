@@ -20,6 +20,9 @@
 	.include "disk02_files/disk02_defines.inc"
 .endif
 
+.if DISK=03
+	.include "disk03_files/disk03_defines.inc"
+.endif
 
 .if DISK=38
 	.include "disk38_files/disk38_defines.inc"
@@ -463,6 +466,17 @@ game_continue:
 	sta	WHICH_LOAD
 
 	lda	#RIVEN_STEPS1
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+.if DISK=03
+	lda	#LOAD_OUTSIDE
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_OUTSIDE
 	sta	LOCATION
 
 	lda	#DIRECTION_N
