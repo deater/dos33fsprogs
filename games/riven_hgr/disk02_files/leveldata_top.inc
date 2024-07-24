@@ -9,11 +9,11 @@ locations:
 location0:
 	.byte	$E1		; north exit
 	.byte	LOAD_STEPS1<<4|RIVEN_STEPS1		; south exit
-	.byte	$ff		; east exit
+	.byte	$E2		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	top_n_zx02	; north bg
 	.word	top_s_zx02	; south bg

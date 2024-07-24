@@ -1,5 +1,5 @@
 .include "../zp.inc"
-.include "../disk01_files/disk01_defines.inc"
+.include "../disk04_files/disk04_defines.inc"
 .include "../disk39_files/disk39_defines.inc"
 .include "../disk00_files/disk00_defines.inc"
 
@@ -27,13 +27,13 @@ length_array:
 
 disk_exit_disk: ; note: not BCD anymore
 	.byte 39		; outside maglev
-	.byte 1			; hallways
+	.byte 4			; hallways
 	.byte 0
 	.byte 0
 
 disk_exit_disk_bcd:
 	.byte $39
-	.byte $01
+	.byte $04
 	.byte 0
 	.byte 0
 
@@ -44,20 +44,19 @@ disk_exit_dni_h:
 	.byte 0
 disk_exit_dni_l:
 	.byte $24
-	.byte $01
+	.byte $04
 	.byte 0
 	.byte 0
 
 disk_exit_load:			; disk39, LOAD_PROJECTOR, PROJ_DOOR, N
-				; disk01, LOAD_ARRIVAL, ARRIVAL_NEAR, W
 	.byte LOAD_PROJECTOR		; LOAD_PROJECTOR
-	.byte LOAD_ARRIVAL		; LOAD_ARRIVAL
+	.byte LOAD_TUNNEL3		;
 	.byte 0
 	.byte LOAD_CYAN
 
 disk_exit_level:
 	.byte RIVEN_PROJ_DOOR		; riven PROJ_DOOR
-	.byte RIVEN_ARRIVAL_NEAR	; riven_ARRIVAL_NEAR
+	.byte RIVEN_TUNNEL3	;
 	.byte 0
 	.byte 0
 disk_exit_direction:

@@ -24,6 +24,10 @@
 	.include "disk03_files/disk03_defines.inc"
 .endif
 
+.if DISK=04
+	.include "disk04_files/disk04_defines.inc"
+.endif
+
 .if DISK=38
 	.include "disk38_files/disk38_defines.inc"
 .endif
@@ -480,6 +484,17 @@ game_continue:
 	sta	LOCATION
 
 	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+.if DISK=04
+	lda	#LOAD_TUNNEL3
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_TUNNEL3
+	sta	LOCATION
+
+	lda	#DIRECTION_E
 	sta	DIRECTION
 .endif
 

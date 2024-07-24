@@ -1,7 +1,7 @@
 .include "../zp.inc"
 .include "../disk01_files/disk01_defines.inc"
 .include "../disk03_files/disk03_defines.inc"
-;.include "../disk04_files/disk04_defines.inc"
+.include "../disk04_files/disk04_defines.inc"
 .include "../disk00_files/disk00_defines.inc"
 
 which_disk_bcd:
@@ -56,15 +56,15 @@ disk_exit_dni_l:
 disk_exit_load:
 	.byte	LOAD_PATH
 	.byte	LOAD_OUTSIDE
-	.byte	0
+	.byte	LOAD_TUNNEL3
 	.byte	LOAD_CYAN
 disk_exit_level:
 	.byte	RIVEN_STEPS_BASE
 	.byte	RIVEN_OUTSIDE
-	.byte	0
+	.byte	RIVEN_TUNNEL3
 	.byte	0
 disk_exit_direction:
 	.byte	DIRECTION_W
 	.byte	DIRECTION_N
-	.byte	0
+	.byte	DIRECTION_E
 	.byte	0

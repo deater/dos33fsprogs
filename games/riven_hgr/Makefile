@@ -12,6 +12,7 @@ PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 all:	riven_disk00.dsk \
 	riven_disk01.dsk riven_disk02.dsk riven_disk03.dsk \
+	riven_disk04.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
 	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk \
@@ -91,6 +92,21 @@ riven_disk03.dsk:	QBOOT QLOAD TITLE_03 \
 	$(DOS33_RAW) riven_disk03.dsk  0  8 TITLE_03		 0   0
 	$(DOS33_RAW) riven_disk03.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk03.dsk  16  0 disk03_files/LEVEL_OUTSIDE      0   0
+
+###
+
+riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
+	disk04_files/DISK04 \
+	disk04_files/LEVEL_TUNNEL3
+	cp $(EMPTY_DISK)/empty.dsk riven_disk04.dsk
+	$(DOS33_RAW) riven_disk04.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk04.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk04.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk04.dsk  0  1 disk04_files/DISK04  0   0
+	$(DOS33_RAW) riven_disk04.dsk  0  8 TITLE_04		 0   0
+	$(DOS33_RAW) riven_disk04.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk04.dsk  27  0 disk04_files/LEVEL_TUNNEL3      0   0
+
 
 ###
 
@@ -300,6 +316,18 @@ title_03.o:	title.s zp.inc hardware.inc \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_03.o title.s -DDISK=03 -l title_03.lst
 
+####
+
+TITLE_04:	title_04.o
+	ld65 -o TITLE_04 title_04.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_04.o:	title.s zp.inc hardware.inc \
+		qload.inc \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_04.o title.s -DDISK=04 -l title_04.lst
+
+
 
 
 ####
@@ -399,6 +427,9 @@ disk02_files/DISK02:
 disk03_files/DISK03:	
 	cd disk03_files && make
 
+disk04_files/DISK04:	
+	cd disk04_files && make
+
 disk38_files/DISK38:	
 	cd disk38_files && make
 
@@ -447,6 +478,11 @@ disk02_files/LEVEL_TOP:
 
 disk03_files/LEVEL_OUTSIDE:	
 	cd disk03_files && make
+
+####
+
+disk04_files/LEVEL_TUNNEL3:	
+	cd disk04_files && make
 
 ####
 
@@ -518,6 +554,7 @@ clean:
 	cd disk01_files && make clean
 	cd disk02_files && make clean
 	cd disk03_files && make clean
+	cd disk04_files && make clean
 	cd disk38_files && make clean
 	cd disk39_files && make clean
 	cd disk40_files && make clean
@@ -540,6 +577,7 @@ distclean:
 	cd disk01_files && make distclean
 	cd disk02_files && make distclean
 	cd disk03_files && make distclean
+	cd disk04_files && make distclean
 	cd disk38_files && make distclean
 	cd disk39_files && make distclean
 	cd disk40_files && make distclean
@@ -576,12 +614,13 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1600 -s clear_gr_all qload.lst >> qload.inc
 
 submit:	riven_disk00.dsk riven_disk01.dsk riven_disk02.dsk riven_disk03.dsk \
+	riven_disk04.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
 	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk
 	riven_hgr.2mg
 	zip riven_hgr.zip riven_disk00.dsk riven_disk01.dsk \
-		riven_disk02.dsk riven_disk03.dsk \
+		riven_disk02.dsk riven_disk03.dsk riven_disk04.dsk \
 		riven_disk38.dsk riven_disk39.dsk \
 		riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk \
 		riven_disk44.dsk \
@@ -617,6 +656,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk02_files/LEVEL_TOP \
 	disk03_files/DISK03 \
 	disk03_files/LEVEL_OUTSIDE \
+	disk04_files/DISK04 \
+	disk04_files/LEVEL_TUNNEL3 \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
 	disk39_files/DISK39 \
@@ -670,6 +711,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 22 0` disk02_files/LEVEL_TOP      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 0  2` disk03_files/DISK03  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 16 0` disk03_files/LEVEL_OUTSIDE     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 0  2` disk04_files/DISK04  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 27 0` disk04_files/LEVEL_TUNNEL3     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0
