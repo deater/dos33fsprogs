@@ -73,7 +73,12 @@ actually_handle_keypress:
 	lda	KEYPRESS
 	bmi	keypress
 
-	jmp	no_keypress
+	; no keypress, just exit
+
+	rts
+
+
+;	jmp	done_keypress
 
 keypress:
 
@@ -133,7 +138,7 @@ left_pressed:
 do_dec_cursor_x:
 	dec	CURSOR_X		; move left one 3.5 pixel column
 done_left_pressed:
-	jmp	done_keypress		; done checking input
+	jmp	done_keypress_moved	; done checking input
 
 
 
@@ -150,7 +155,7 @@ right_pressed:
 do_inc_cursor_x:
 	inc	CURSOR_X		; move right one 3.5 pixel column
 done_right_pressed:
-	jmp	done_keypress		; done checking input
+	jmp	done_keypress_moved	; done checking input
 
 check_up:
 	cmp	#'W'
@@ -168,7 +173,7 @@ do_dec_cursor_y:
 	dec	CURSOR_Y
 
 done_up_pressed:
-	jmp	done_keypress		; done checking input
+	jmp	done_keypress_moved	; done checking input
 
 check_down:
 	cmp	#'S'
@@ -185,7 +190,7 @@ do_inc_cursor_y:
 	inc	CURSOR_Y
 	inc	CURSOR_Y
 done_down_pressed:
-	jmp	done_keypress		; done checking input
+	jmp	done_keypress_moved	; done checking input
 
 ;check_escape:
 ;	cmp	#27
@@ -215,7 +220,7 @@ special_return:
 	jsr	handle_special
 
 	; special case, don't make cursor visible
-	jmp	no_keypress
+	jmp	done_keypress
 
 not_special_return:
 
@@ -227,11 +232,11 @@ not_special_return:
 
 right_uturn:
 	jsr	uturn
-	jmp	no_keypress
+	jmp	done_keypress
 
 right_return:
 	jsr	turn_right
-	jmp	no_keypress
+	jmp	done_keypress
 
 not_right_return:
 
@@ -242,22 +247,22 @@ not_right_return:
 	beq	left_return
 left_uturn:
 	jsr	uturn
-	jmp	no_keypress
+	jmp	done_keypress
 
 left_return:
 	jsr	turn_left
-	jmp	no_keypress
+	jmp	done_keypress
 
 not_left_return:
 
 	jsr	go_forward
-	jmp	no_keypress
+	jmp	done_keypress
 
-done_keypress:
+done_keypress_moved:
 	lda	#1			; make cursor visible
 	sta	CURSOR_VISIBLE
 
-no_keypress:
+done_keypress:
 	bit	KEYRESET
 	rts
 
