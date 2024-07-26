@@ -73,6 +73,9 @@ cyan.o:	cyan.s \
 
 ####
 
+audio/capture.btc.zx02:
+	cd audio && make
+
 graphics_atrus/atrus_graphics.inc:
 	cd graphics_atrus && make
 
@@ -104,4 +107,5 @@ distclean:
 	cd graphics_captured && make clean
 	cd graphics_cho && make clean
 	cd graphics_start && make clean
+	cd audio && make clean
 

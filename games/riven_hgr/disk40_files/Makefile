@@ -102,6 +102,13 @@ graphics_orb1/orb1_graphics.inc:
 
 graphics_tunnel/tunnel_graphics.inc:
 	cd graphics_tunnel && make
+
+movie_maglev_flip/movie_maglev_flip.inc:
+	cd movie_maglev_flip && make
+
+movie_maglev_ride/movie_maglev_ride.inc:
+	cd movie_maglev_ride && make
+
 ####
 
 clean:		
@@ -118,4 +125,5 @@ distclean:
 	cd graphics_outside && make clean
 	cd graphics_orb1 && make clean
 	cd graphics_tunnel && make clean
-
+	cd movie_maglev_flip && make clean
+	cd movie_maglev_ride && make clean
