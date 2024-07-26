@@ -83,6 +83,7 @@ riven_disk02.dsk:	QBOOT QLOAD TITLE_02 \
 
 riven_disk03.dsk:	QBOOT QLOAD TITLE_03 \
 	disk03_files/DISK03 \
+	disk03_files/LEVEL_DOWNSTEPS \
 	disk03_files/LEVEL_OUTSIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk03.dsk
 	$(DOS33_RAW) riven_disk03.dsk  0  0 QBOOT                0   1
@@ -91,6 +92,7 @@ riven_disk03.dsk:	QBOOT QLOAD TITLE_03 \
 	$(DOS33_RAW) riven_disk03.dsk  0  1 disk03_files/DISK03  0   0
 	$(DOS33_RAW) riven_disk03.dsk  0  8 TITLE_03		 0   0
 	$(DOS33_RAW) riven_disk03.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk03.dsk  2  0 disk03_files/LEVEL_DOWNSTEPS      0   0
 	$(DOS33_RAW) riven_disk03.dsk  16  0 disk03_files/LEVEL_OUTSIDE      0   0
 
 ###
@@ -505,6 +507,9 @@ disk02_files/LEVEL_TOP:
 
 ####
 
+disk03_files/LEVEL_DOWNSTEPS:	
+	cd disk03_files && make
+
 disk03_files/LEVEL_OUTSIDE:	
 	cd disk03_files && make
 
@@ -692,6 +697,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk02_files/LEVEL_STEPS1 \
 	disk02_files/LEVEL_TOP \
 	disk03_files/DISK03 \
+	disk03_files/LEVEL_DOWNSTEPS \
 	disk03_files/LEVEL_OUTSIDE \
 	disk04_files/DISK04 \
 	disk04_files/LEVEL_TUNNEL3 \
@@ -749,6 +755,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 2  0` disk02_files/LEVEL_STEPS1      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 22 0` disk02_files/LEVEL_TOP      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 0  2` disk03_files/DISK03  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 2  0` disk03_files/LEVEL_DOWNSTEPS     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 16 0` disk03_files/LEVEL_OUTSIDE     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 0  2` disk04_files/DISK04  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 27 0` disk04_files/LEVEL_TUNNEL3     0   0

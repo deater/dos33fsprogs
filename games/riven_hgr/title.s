@@ -435,10 +435,10 @@ game_continue:
 .endif
 
 .if DISK=03
-	lda	#LOAD_OUTSIDE
+	lda	#LOAD_DSTEPS1
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_OUTSIDE
+	lda	#RIVEN_DOWN1
 	sta	LOCATION
 
 	lda	#DIRECTION_N
