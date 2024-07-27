@@ -11,20 +11,20 @@ which_disk_bin:
 	.byte	2
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, STEPS1, STEPS3, STEPS5
-	.byte	$40,$00,$00,$00 ; TOP
+	.byte	$40,$40,$40,$40	; TITLE, STEPS1, STEPS3, TOP
+	.byte	$40,$40,$40,$40 ;
 
 track_array:
-	.byte	0, 2, 9,16	; TITLE, STEPS1, STEPS3, STEPS5
-	.byte	22,0,0,0	; TOP
+	.byte	0, 2, 8,14	; TITLE, STEPS1, STEPS3, TOP
+	.byte	20,0,0,0	;
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, STEPS1, STEPS3, STEPS5
-	.byte	0,0,0,0		; TOP
+	.byte	8, 0, 0, 0	; TITLE, STEPS1, STEPS3, TOP
+	.byte	0,0,0,0		;
 
 length_array:
-	.byte	8, 96,84, 96	; TITLE, STEPS1, STEPS3, STEPS5
-	.byte	80,0,0,0	; TOP
+	.byte	8, 96,96,96	; TITLE, STEPS1, STEPS3, TOP
+	.byte	80,0,0,0	;
 
 	; disk 1
 

@@ -1,17 +1,14 @@
 disk01:
-	east (NEW)
-	east again (NEW) (can look down)
-		 base of steps (note both e and n go here)
-	look down
+
 
 disk02:	(steps)
-	one	(nse)
-	two	(nse)
+	one	E
+	two	E
 
-	three	(nse)
-	four	(ns only)
+	three	E
+	four	E
 
-	five	(top, nsew)
+	five
 
 	bridge1	(nsew)
 	

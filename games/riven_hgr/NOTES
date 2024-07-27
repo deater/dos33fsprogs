@@ -85,10 +85,9 @@ Disk02 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
-T         2 = STEPS1     9172 bytes         = 6T0S	(24576) 15k free
-T         9 = STEPS3     ???? bytes         = 6T0S	(24576)  ?? free
-T        16 = STEPS5     ???? bytes         = 6T0S	(24576)  ?? free
-T	 22 = TOP	15658 bytes	    = 5T0S	(20480)  5k free
+T         2 = STEPS1    17611 bytes         = 6T0S	(24576)  7k free
+T         8 = STEPS3     ???? bytes         = 6T0S	(24576)  ?? free
+T	 14 = TOP	15658 bytes	    = 6T0S	(24576)  9k free
 
 Disk03 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -68,6 +68,7 @@ riven_disk01.dsk:	QBOOT QLOAD TITLE_01 \
 riven_disk02.dsk:	QBOOT QLOAD TITLE_02 \
 	disk02_files/DISK02 \
 	disk02_files/LEVEL_STEPS1 \
+	disk02_files/LEVEL_STEPS3 \
 	disk02_files/LEVEL_TOP
 	cp $(EMPTY_DISK)/empty.dsk riven_disk02.dsk
 	$(DOS33_RAW) riven_disk02.dsk  0  0 QBOOT                0   1
@@ -77,7 +78,8 @@ riven_disk02.dsk:	QBOOT QLOAD TITLE_02 \
 	$(DOS33_RAW) riven_disk02.dsk  0  8 TITLE_02		 0   0
 	$(DOS33_RAW) riven_disk02.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk02.dsk  2  0 disk02_files/LEVEL_STEPS1      0   0
-	$(DOS33_RAW) riven_disk02.dsk  22  0 disk02_files/LEVEL_TOP        0   0
+	$(DOS33_RAW) riven_disk02.dsk  8  0 disk02_files/LEVEL_STEPS3      0   0
+	$(DOS33_RAW) riven_disk02.dsk  14  0 disk02_files/LEVEL_TOP        0   0
 
 ###
 
@@ -502,6 +504,9 @@ disk01_files/LEVEL_PATH:
 disk02_files/LEVEL_STEPS1:	
 	cd disk02_files && make
 
+disk02_files/LEVEL_STEPS3:	
+	cd disk02_files && make
+
 disk02_files/LEVEL_TOP:	
 	cd disk02_files && make
 
@@ -695,6 +700,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk01_files/LEVEL_PATH \
 	disk02_files/DISK02 \
 	disk02_files/LEVEL_STEPS1 \
+	disk02_files/LEVEL_STEPS3 \
 	disk02_files/LEVEL_TOP \
 	disk03_files/DISK03 \
 	disk03_files/LEVEL_DOWNSTEPS \
@@ -753,7 +759,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 1 27 0` disk01_files/LEVEL_PATH      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 0  2` disk02_files/DISK02  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 2  0` disk02_files/LEVEL_STEPS1      0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 22 0` disk02_files/LEVEL_TOP      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 8  0` disk02_files/LEVEL_STEPS3      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 14 0` disk02_files/LEVEL_TOP      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 0  2` disk03_files/DISK03  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 2  0` disk03_files/LEVEL_DOWNSTEPS     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 16 0` disk03_files/LEVEL_OUTSIDE     0   0

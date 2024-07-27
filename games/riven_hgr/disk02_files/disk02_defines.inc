@@ -1,8 +1,7 @@
 LOAD_TITLE_02	=	0
 LOAD_STEPS1	=	1
 LOAD_STEPS3	=	2
-LOAD_STEPS5	=	3
-LOAD_TOP	=	4
+LOAD_TOP	=	3
 
 ;================================
 ; Level definitions
@@ -10,6 +9,12 @@ LOAD_TOP	=	4
 ; STEPS1
 
 RIVEN_STEPS1	=	0
+RIVEN_STEPS2	=	1
+
+; STEPS3
+
+RIVEN_STEPS3	=	0
+RIVEN_STEPS4	=	1
 
 ; TOP
 

@@ -6,9 +6,12 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	steps1_graphics.inc
 
 steps1_graphics.inc:	\
-	steps1_n.hgr.zx02 steps1_s.hgr.zx02
+	steps1_n.hgr.zx02 steps1_s.hgr.zx02 \
+	steps2_n.hgr.zx02 steps2_s.hgr.zx02
 	echo "steps1_n_zx02: .incbin \"steps1_n.hgr.zx02\"" > steps1_graphics.inc
 	echo "steps1_s_zx02: .incbin \"steps1_s.hgr.zx02\"" >> steps1_graphics.inc
+	echo "steps2_n_zx02: .incbin \"steps2_n.hgr.zx02\"" >> steps1_graphics.inc
+	echo "steps2_s_zx02: .incbin \"steps2_s.hgr.zx02\"" >> steps1_graphics.inc
 
 ####
 
