@@ -28,7 +28,7 @@ location1:
 	.byte	RIVEN_STEPS3	; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_N	; north exit_dir
+	.byte	DIRECTION_E	; north exit_dir	; yes, it turns you
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir

@@ -21,7 +21,7 @@ sector_array:
 	.byte	0,0,0,0		;
 
 length_array:
-	.byte	8, 96,84, 96	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
+	.byte	8, 96,96, 96	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
 	.byte	80,0,0,0
 
 

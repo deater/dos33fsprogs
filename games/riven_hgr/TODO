@@ -8,17 +8,17 @@ disk02:	(steps)
 	three	E
 	four	E
 
-	five
+	alcove (EW)?
 
 	bridge1	(nsew)
 	
 	
 
 disk03: (down other side)
-	one
-	two
-	three
-	four (by door)
+	one		E
+	two		E
+	three		E
+
 	under door
 	inside
 	up ladder
@@ -61,7 +61,6 @@ disk06: more tunnel
 	+ allow pressing escape to back-out disk change?
 
 + Keyboard handling
-	- still buggy, especially when clicking on something???
 	- Better keyboard handling on IIe
 	-> was actually one of the main reasons I started working on this
 

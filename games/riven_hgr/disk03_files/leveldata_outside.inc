@@ -8,7 +8,7 @@ locations:
 ; RIVEN_OUTSIDE	-- outside the door
 location0:
 	.byte	$FF		; north exit
-	.byte	LOAD_DSTEPS1<<4|RIVEN_DOWN1		; south exit
+	.byte	LOAD_DSTEPS1<<4|RIVEN_DOWN2		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	$FF		; north exit_dir
