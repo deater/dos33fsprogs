@@ -17,9 +17,9 @@ location0:
 	.byte	$ff		; west exit_dir
 	.word	steps1_n_zx02	; north bg
 	.word	steps1_s_zx02	; south bg
-	.word	$0000		; east bg
+	.word	steps1_e_zx02	; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH|BG_SOUTH	; all bgs
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff		; special exit
 
 ; RIVEN_STEPS2	-- second level of steps

@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK03 LEVEL_DOWNSTEPS LEVEL_OUTSIDE
+all:	DISK03 LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_OUTSIDE
 
 ####
 
@@ -39,25 +39,42 @@ level_downsteps.o:	level_downsteps.s \
 
 ####
 
+LEVEL_DOWNSTEPS3:	level_downsteps3.o
+	ld65 -o LEVEL_DOWNSTEPS3 level_downsteps3.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_downsteps3.o:	level_downsteps3.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk03_defines.inc \
+		leveldata_downsteps3.inc \
+		graphics_downsteps3/downsteps3_graphics.inc
+	ca65 -o level_downsteps3.o level_downsteps3.s -l level_downsteps3.lst
+
+
+####
+
 graphics_outside/outside_graphics.inc:
 	cd graphics_outside && make
 
 graphics_downsteps/downsteps_graphics.inc:
 	cd graphics_downsteps && make
 
+graphics_downsteps4/downsteps4_graphics.inc:
+	cd graphics_downsteps4 && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst DISK03 \
-		LEVEL_OUTSIDE LEVEL_DOWNSTEPS
+		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK03 \
-		LEVEL_OUTSIDE LEVEL_DOWNSTEPS
+		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3
 	cd graphics_outside && make clean
 	cd graphics_downsteps && make clean
+	cd graphics_downsteps3 && make clean
 
 
 

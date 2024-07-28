@@ -1,6 +1,6 @@
 LOAD_TITLE_03	=	0
 LOAD_DSTEPS1	=	1
-LOAD_DSTPES3	=	2
+LOAD_DSTEPS3	=	2
 LOAD_OUTSIDE	=	3
 
 ;================================
@@ -10,6 +10,10 @@ LOAD_OUTSIDE	=	3
 
 RIVEN_DOWN1	=	0
 RIVEN_DOWN2	=	1
+
+; DSTEPS3
+
+RIVEN_DOWN3	=	0
 
 ; OUTSIDE
 

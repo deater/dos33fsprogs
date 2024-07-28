@@ -24,11 +24,11 @@ location0:
 
 ; RIVEN_DOWN2	-- continuing down
 location1:
-	.byte	LOAD_OUTSIDE<<4|RIVEN_OUTSIDE		; north exit
+	.byte	LOAD_DSTEPS3<<4|RIVEN_DOWN3		; north exit
 	.byte	RIVEN_DOWN1	; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	DIRECTION_E	; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
