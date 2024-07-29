@@ -1,5 +1,6 @@
 LOAD_TITLE_50	=	0
 LOAD_FISH	=	1
+LOAD_PATH	=	2
 
 ;================================
 ; Level definitions
@@ -8,3 +9,6 @@ LOAD_FISH	=	1
 
 RIVEN_FISH	=	0
 
+; PATH
+
+RIVEN_PATH	=	0

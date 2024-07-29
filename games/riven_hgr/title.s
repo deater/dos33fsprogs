@@ -524,13 +524,13 @@ game_continue:
 .endif
 
 .if DISK=44
-	lda	#LOAD_FISH
+	lda	#LOAD_PATH
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_FISH
+	lda	#RIVEN_PATH
 	sta	LOCATION
 
-	lda	#DIRECTION_N
+	lda	#DIRECTION_E
 	sta	DIRECTION
 .endif
 
