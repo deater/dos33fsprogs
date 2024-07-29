@@ -6,13 +6,10 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	downsteps_graphics.inc
 
 downsteps_graphics.inc:	\
-	downsteps3_n.hgr.zx02 downsteps3_s.hgr.zx02
+	downsteps3_n.hgr.zx02 downsteps3_s.hgr.zx02 downsteps3_e.hgr.zx02
 	echo "downsteps3_n_zx02: .incbin \"downsteps3_n.hgr.zx02\"" > downsteps3_graphics.inc
 	echo "downsteps3_s_zx02: .incbin \"downsteps3_s.hgr.zx02\"" >> downsteps3_graphics.inc
-
-
-
-
+	echo "downsteps3_e_zx02: .incbin \"downsteps3_e.hgr.zx02\"" >> downsteps3_graphics.inc
 
 ####
 

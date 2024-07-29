@@ -17,8 +17,8 @@ location0:
 	.byte	$ff		; west exit_dir
 	.word	downsteps3_n_zx02	; north bg
 	.word	downsteps3_s_zx02	; south bg
-	.word	$0000		; east bg
+	.word	downsteps3_e_zx02	; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH|BG_SOUTH
+	.byte	BG_NORTH|BG_SOUTH|BG_EAST
 	.byte	$ff		; special exit
 
