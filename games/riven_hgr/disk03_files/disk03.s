@@ -10,19 +10,19 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	$40,$00,$00,$00 ; CAVE
+	.byte	$40,$40,$00,$00 ; CAVE, DOORWAY
 
 track_array:
 	.byte	0, 2, 8,14	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	20,0,0,0	; CAVE
+	.byte	21,27,0,0	; CAVE, DOORWAY
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	0,0,0,0		; CAVE
+	.byte	0,0,0,0		; CAVE, DOORWAY
 
 length_array:
-	.byte	8, 96,96, 96	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	96,0,0,0	; CAVE
+	.byte	8, 96,96,112	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
+	.byte	96,96,0,0	; CAVE, DOORWAY
 
 
 disk_exit_disk: ; note: not BCD anymore

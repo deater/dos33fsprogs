@@ -1,4 +1,4 @@
-; Riven -- Inside the Cave
+; Riven -- Cave doorway
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -9,7 +9,7 @@
 	.include "../qload.inc"
 	.include "disk03_defines.inc"
 
-outside_start:
+doorway_start:
 
 	;===================
 	; init screen
@@ -108,6 +108,6 @@ really_exit:
 	;==========================
 
 
-.include "graphics_cave/cave_graphics.inc"
+.include "graphics_doorway/doorway_graphics.inc"
 
-.include "leveldata_cave.inc"
+.include "leveldata_doorway.inc"

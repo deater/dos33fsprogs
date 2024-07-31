@@ -6,11 +6,13 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	outside_graphics.inc
 
 outside_graphics.inc:	\
-	outside_n.hgr.zx02 outside_s.hgr.zx02 outside_e.hgr.zx02 outside_w.hgr.zx02
+	outside_n.hgr.zx02 outside_s.hgr.zx02 outside_e.hgr.zx02 outside_w.hgr.zx02 \
+	underdoor_w.hgr.zx02
 	echo "outside_n_zx02: .incbin \"outside_n.hgr.zx02\"" > outside_graphics.inc
 	echo "outside_s_zx02: .incbin \"outside_s.hgr.zx02\"" >> outside_graphics.inc
 	echo "outside_e_zx02: .incbin \"outside_e.hgr.zx02\"" >> outside_graphics.inc
 	echo "outside_w_zx02: .incbin \"outside_w.hgr.zx02\"" >> outside_graphics.inc
+	echo "underdoor_w_zx02: .incbin \"underdoor_w.hgr.zx02\"" >> outside_graphics.inc
 
 
 ####

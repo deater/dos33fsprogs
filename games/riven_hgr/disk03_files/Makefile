@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK03 LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_OUTSIDE LEVEL_CAVE
+all:	DISK03 LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_OUTSIDE LEVEL_CAVE \
+	LEVEL_DOORWAY
 
 ####
 
@@ -36,6 +37,19 @@ level_cave.o:	level_cave.s \
 		leveldata_cave.inc \
 		graphics_cave/cave_graphics.inc
 	ca65 -o level_cave.o level_cave.s -l level_cave.lst
+
+####
+
+LEVEL_DOORWAY:	level_doorway.o
+	ld65 -o LEVEL_DOORWAY level_doorway.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_doorway.o:	level_doorway.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk03_defines.inc \
+		leveldata_doorway.inc \
+		graphics_doorway/doorway_graphics.inc
+	ca65 -o level_doorway.o level_doorway.s -l level_doorway.lst
+
 
 
 ####
@@ -71,6 +85,9 @@ graphics_outside/outside_graphics.inc:
 graphics_cave/cave_graphics.inc:
 	cd graphics_cave && make
 
+graphics_doorway/doorway_graphics.inc:
+	cd graphics_doorway && make
+
 graphics_downsteps/downsteps_graphics.inc:
 	cd graphics_downsteps && make
 
@@ -81,17 +98,20 @@ graphics_downsteps4/downsteps4_graphics.inc:
 
 clean:		
 	rm -f *~ *.o *.lst DISK03 \
-		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_CAVE
+		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_CAVE \
+		LEVEL_DOORWAY
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK03 \
-		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_CAVE
+		LEVEL_OUTSIDE LEVEL_DOWNSTEPS LEVEL_DOWNSTEPS3 LEVEL_CAVE \
+		LEVEL_DOORWAY
 	cd graphics_outside && make clean
 	cd graphics_downsteps && make clean
 	cd graphics_downsteps3 && make clean
 	cd graphics_cave && make clean
+	cd graphics_doorway && make clean
 
 
 
