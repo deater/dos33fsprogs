@@ -19,12 +19,12 @@ disk03: (down other side)
 	two		E
 	three		E
 
-	under door
-	inside
-	up ladder
-	doorway
-	peephole
-	look inside
+	audio sound when click on gate
+	hook up special gate action
+
+	doorway, hook up special action
+
+	different views depending on room rotation
 	
 disk04: bridge
 	
