@@ -9,6 +9,9 @@ disk02:	(steps)
 	four	E
 
 	alcove (EW)?
+	rotation noise / sorta animation?
+	different views/allowed to walk depending on rotation
+	
 
 	bridge1	(nsew)
 	
@@ -16,16 +19,10 @@ disk02:	(steps)
 
 disk03: (down other side)
 	one		E
-	two		E
-	three		E
 
-	audio sound when click on gate
-	hook up special gate action
+	different views through peephole depending on room rotation
+	allow walking through doorway depending on room rotation	
 
-	doorway, hook up special action
-
-	different views depending on room rotation
-	
 disk04: bridge
 	
 	bridge2 (nsew)

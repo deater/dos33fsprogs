@@ -295,6 +295,7 @@ done_setup_sound:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	BEACH_ANIMALS_SEEN
+	sta	ROOM_ROTATION
 ;	sta	JOYSTICK_ENABLED
 
 	; init hi-res graphics
