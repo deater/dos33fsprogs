@@ -27,7 +27,7 @@ location1:
 	.byte	$FF		; north exit
 	.byte	$ff		; south exit
 	.byte	$ff		; east exit
-	.byte	RIVEN_VIEW	; west exit
+	.byte	RIVEN_TOP	; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -37,7 +37,10 @@ location1:
 	.word	$0000		; east bg
 	.word	peephole_w_zx02	; west bg
 	.byte	BG_WEST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W		; special exit
+	.byte	15,22		; x
+	.byte	50,133		; y
+	.word	click_peephole-1
 
 ; note, change this based on rotation
 

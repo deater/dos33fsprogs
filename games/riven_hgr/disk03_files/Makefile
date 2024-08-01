@@ -36,7 +36,8 @@ level_cave.o:	level_cave.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk03_defines.inc \
 		leveldata_cave.inc \
-		graphics_cave/cave_graphics.inc
+		graphics_cave/cave_graphics.inc \
+		audio/gate_creak.btc.zx02
 	ca65 -o level_cave.o level_cave.s -l level_cave.lst
 
 ####
@@ -80,6 +81,9 @@ level_downsteps3.o:	level_downsteps3.s \
 
 ####
 
+audio/gate_creak.btc.zx02:
+	cd audio && make
+
 graphics_outside/outside_graphics.inc:
 	cd graphics_outside && make
 
@@ -113,6 +117,4 @@ distclean:
 	cd graphics_downsteps3 && make clean
 	cd graphics_cave && make clean
 	cd graphics_doorway && make clean
-
-
-
+	cd audio && make clean

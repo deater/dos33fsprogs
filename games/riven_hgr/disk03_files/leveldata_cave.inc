@@ -9,7 +9,7 @@ locations:
 location0:
 	.byte	$FF		; north exit
 	.byte	$FF		; south exit
-	.byte	RIVEN_UNDERDOOR2	; east exit
+	.byte	$ff		; east exit
 	.byte	RIVEN_MIDDLE	; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$FF		; south exit_dir
@@ -20,7 +20,10 @@ location0:
 	.word	ladder_e_zx02	; east bg
 	.word	ladder_w_zx02	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte	DIRECTION_E		; special exit
+	.byte	12,26			; X
+	.byte	28,180			; Y
+	.word	gate_clicked-1
 
 ; RIVEN_MIDDLE	-- outside the door
 location1:

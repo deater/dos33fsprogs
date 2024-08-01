@@ -102,6 +102,23 @@ really_exit:
 
 	rts
 
+	;=========================
+	; clicked on peephole
+	;=========================
+click_peephole:
+
+	lda	#RIVEN_VIEW
+	sta	LOCATION
+
+	; should we just jump to change_location instead?
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	rts
+
+
+
 
 	;==========================
 	; includes

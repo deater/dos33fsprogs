@@ -156,18 +156,6 @@ go_under_gate:
 	rts
 
 
-common_handle2:
-        sta     WHICH_LOAD
-
-        lda     #1
-        sta     LEVEL_OVER
-
-        bit     SPEAKER
-
-        rts
-
-
-
 play_gate_sound:
 	; only play sound if language card
 
