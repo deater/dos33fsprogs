@@ -23,7 +23,8 @@ level_outside.o:	level_outside.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk03_defines.inc \
 		leveldata_outside.inc \
-		graphics_outside/outside_graphics.inc
+		graphics_outside/outside_graphics.inc \
+		audio/gate_creak.btc.zx02
 	ca65 -o level_outside.o level_outside.s -l level_outside.lst
 
 ####

@@ -10,7 +10,7 @@ location0:
 	.byte	$FF		; north exit
 	.byte	LOAD_DSTEPS3<<4|RIVEN_DOWN3		; south exit
 	.byte	$ff		; east exit
-	.byte	RIVEN_UNDERDOOR		; west exit
+	.byte	$ff		; west exit
 	.byte	$FF		; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
@@ -20,7 +20,10 @@ location0:
 	.word	outside_e_zx02	; east bg
 	.word	outside_w_zx02	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST	; all bgs
-	.byte	$ff		; special exit
+	.byte	DIRECTION_W	; special exit
+	.byte	14,26		; special x
+	.byte	42,180		; special y
+	.word	gate_clicked-1	; special function
 
 ; RIVEN_UNDERDOOR	-- under the door
 location1:

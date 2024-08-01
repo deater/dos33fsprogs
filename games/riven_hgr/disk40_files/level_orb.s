@@ -156,6 +156,8 @@ orb_clicked:
 	ldx	#20
 	jsr	wait_50xms
 
+	jmp	done_play_audio
+
 do_play_audio:
         ; switch in language card
         ; read/write RAM $d000 bank 1
