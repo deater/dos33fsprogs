@@ -96,8 +96,8 @@ graphics_doorway/doorway_graphics.inc:
 graphics_downsteps/downsteps_graphics.inc:
 	cd graphics_downsteps && make
 
-graphics_downsteps4/downsteps4_graphics.inc:
-	cd graphics_downsteps4 && make
+graphics_downsteps3/downsteps3_graphics.inc:
+	cd graphics_downsteps3 && make
 
 ####
 

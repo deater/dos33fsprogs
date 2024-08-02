@@ -48,7 +48,8 @@ level_orb.o:	level_orb.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk40_defines.inc \
 		leveldata_orb.inc \
-		graphics_orb1/orb1_graphics.inc
+		graphics_orb1/orb1_graphics.inc \
+		audio/ball1.btc.zx02
 	ca65 -o level_orb.o level_orb.s -l level_orb.lst
 
 ####
@@ -90,6 +91,9 @@ movie_maglev_ride.o:	movie_maglev_ride.s \
 	ca65 -o movie_maglev_ride.o movie_maglev_ride.s -l movie_maglev_ride.lst
 
 ####
+
+audio/ball1.btc.zx02:
+	cd audio && make
 
 graphics_maglev/maglev_graphics.inc:
 	cd graphics_maglev && make
