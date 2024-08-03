@@ -11,20 +11,20 @@ which_disk_bin:
 	.byte	4
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, BRIDGE1, BRIDGE2, BRIDGE3
-	.byte	$40,$40,$40,$00 ; TUNNEL1, TUNNEL2, TUNNEL3
+	.byte	$40,$40,$40,$40	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
+	.byte	$40,$40,$40,$40 ; TUNNEL3
 
 track_array:
-	.byte	0, 2, 7,12	; TITLE, BRIDGE1, BRIDGE2, BRIDGE3
-	.byte	17,22,27,0	; TUNNEL1, TUNNEL1, TUNNEL3
+	.byte	0, 2, 7,12	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
+	.byte	17,22,27,0	; TUNNEL3
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, BRIDGE1, BRIDGE2, BRIDGE3
-	.byte	0,0,0,0		; TUNNEL1, TUNNEL1, TUNNEL3
+	.byte	8, 0, 0, 0	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
+	.byte	0,0,0,0		; TUNNEL3
 
 length_array:
-	.byte	8, 80,80,80	; TITLE, BRIDGE1, BRIDGE2, BRIDGE3
-	.byte	80,80,80,0	; TUNNEL1, TUNNEL1, TUNNEL3
+	.byte	8, 80,80,80	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
+	.byte	80,80,80,0	; TUNNEL3
 
 
 disk_exit_disk: ; note: not BCD anymore

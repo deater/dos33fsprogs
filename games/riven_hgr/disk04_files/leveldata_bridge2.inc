@@ -10,7 +10,7 @@ locations:
 location0:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	LOAD_TUNNEL3<<4|RIVEN_TUNNEL3		; east exit
+	.byte	LOAD_TUNNEL1<<4|RIVEN_TUNNEL1		; east exit
 	.byte	LOAD_BRIDGE1<<4|RIVEN_BRIDGE1		; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$FF		; south exit_dir

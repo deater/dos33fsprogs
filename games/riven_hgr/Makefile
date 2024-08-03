@@ -113,6 +113,7 @@ riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
 	disk04_files/DISK04 \
 	disk04_files/LEVEL_BRIDGE1 \
 	disk04_files/LEVEL_BRIDGE2 \
+	disk04_files/LEVEL_TUNNEL1 \
 	disk04_files/LEVEL_TUNNEL3
 	cp $(EMPTY_DISK)/empty.dsk riven_disk04.dsk
 	$(DOS33_RAW) riven_disk04.dsk  0  0 QBOOT                0   1
@@ -123,8 +124,8 @@ riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
 	$(DOS33_RAW) riven_disk04.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk04.dsk  2  0 disk04_files/LEVEL_BRIDGE1      0   0
 	$(DOS33_RAW) riven_disk04.dsk  7  0 disk04_files/LEVEL_BRIDGE2      0   0
-	$(DOS33_RAW) riven_disk04.dsk  27  0 disk04_files/LEVEL_TUNNEL3      0   0
-
+	$(DOS33_RAW) riven_disk04.dsk  12  0 disk04_files/LEVEL_TUNNEL1      0   0
+	$(DOS33_RAW) riven_disk04.dsk  17  0 disk04_files/LEVEL_TUNNEL3      0   0
 
 ###
 
@@ -555,6 +556,9 @@ disk04_files/LEVEL_BRIDGE1:
 disk04_files/LEVEL_BRIDGE2:	
 	cd disk04_files && make
 
+disk04_files/LEVEL_TUNNEL1:	
+	cd disk04_files && make
+
 disk04_files/LEVEL_TUNNEL3:	
 	cd disk04_files && make
 
@@ -750,6 +754,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk04_files/DISK04 \
 	disk04_files/LEVEL_BRIDGE1 \
 	disk04_files/LEVEL_BRIDGE2 \
+	disk04_files/LEVEL_TUNNEL1 \
 	disk04_files/LEVEL_TUNNEL3 \
 	disk05_files/DISK05 \
 	disk05_files/LEVEL_CHAIR \
@@ -816,7 +821,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 0  2` disk04_files/DISK04  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 2 0` disk04_files/LEVEL_BRIDGE1     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 7 0` disk04_files/LEVEL_BRIDGE2     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 27 0` disk04_files/LEVEL_TUNNEL3     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 12 0` disk04_files/LEVEL_TUNNEL1     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 17 0` disk04_files/LEVEL_TUNNEL3     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 0  2` disk05_files/DISK05  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 2  0` disk05_files/LEVEL_CHAIR     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0

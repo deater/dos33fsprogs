@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK04 LEVEL_BRIDGE1 LEVEL_BRIDGE2 LEVEL_TUNNEL3
+all:	DISK04 LEVEL_BRIDGE1 LEVEL_BRIDGE2 LEVEL_TUNNEL1 LEVEL_TUNNEL3
 
 ####
 
@@ -40,6 +40,18 @@ level_bridge2.o:	level_bridge2.s \
 
 ####
 
+LEVEL_TUNNEL1:	level_tunnel1.o
+	ld65 -o LEVEL_TUNNEL1 level_tunnel1.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_tunnel1.o:	level_tunnel1.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk04_defines.inc \
+		leveldata_tunnel1.inc \
+		graphics_tunnel1/tunnel1_graphics.inc
+	ca65 -o level_tunnel1.o level_tunnel1.s -l level_tunnel1.lst
+
+####
+
 LEVEL_TUNNEL3:	level_tunnel3.o
 	ld65 -o LEVEL_TUNNEL3 level_tunnel3.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -58,6 +70,9 @@ graphics_bridge1/bridge1_graphics.inc:
 graphics_bridge2/bridge2_graphics.inc:
 	cd graphics_bridge2 && make
 
+graphics_tunnel1/tunnel1_graphics.inc:
+	cd graphics_tunnel1 && make
+
 graphics_tunnel3/tunnel3_graphics.inc:
 	cd graphics_tunnel3 && make
 
@@ -66,16 +81,17 @@ graphics_tunnel3/tunnel3_graphics.inc:
 clean:		
 	rm -f *~ *.o *.lst DISK04 \
 		LEVEL_BRIDGE1 LEVEL_BRIDGE2 \
-		LEVEL_TUNNEL3
+		LEVEL_TUNNEL1 LEVEL_TUNNEL3
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK04 \
 		LEVEL_BRIDGE1 LEVEL_BRIDGE2 \
-		LEVEL_TUNNEL3
+		LEVEN_TUNNEL1 LEVEL_TUNNEL3
 	cd graphics_bridge1 && make clean
 	cd graphics_bridge2 && make clean
+	cd graphics_tunnel1 && make clean
 	cd graphics_tunnel3 && make clean
 
 
