@@ -30,10 +30,14 @@ disk_exit_disk: ; note: not BCD anymore
 	.byte 4			; hallways
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
 
 disk_exit_disk_bcd:
 	.byte $39
 	.byte $04
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte 0
 
@@ -42,15 +46,22 @@ disk_exit_dni_h:
 	.byte $00
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
+
 disk_exit_dni_l:
 	.byte $24
 	.byte $04
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte 0
 
 disk_exit_load:			; disk39, LOAD_PROJECTOR, PROJ_DOOR, N
 	.byte LOAD_PROJECTOR		; LOAD_PROJECTOR
 	.byte LOAD_TUNNEL3		;
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte LOAD_CYAN
 
@@ -59,8 +70,13 @@ disk_exit_level:
 	.byte RIVEN_TUNNEL3	;
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
+
 disk_exit_direction:
 	.byte DIRECTION_N
 	.byte DIRECTION_W
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte 0

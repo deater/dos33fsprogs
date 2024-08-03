@@ -30,9 +30,13 @@ disk_exit_disk: ; note: not BCD anymore
 	.byte	0
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
 
 disk_exit_disk_bcd:
 	.byte	$02
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0
@@ -43,8 +47,12 @@ disk_exit_dni_h:
 	.byte	0
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
 disk_exit_dni_l:
 	.byte	$02
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0
@@ -54,14 +62,20 @@ disk_exit_load:
 	.byte	LOAD_TOP
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
 	.byte	LOAD_CYAN
 disk_exit_level:
 	.byte	RIVEN_TOP
 	.byte	0
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
 disk_exit_direction:
 	.byte	DIRECTION_S
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0

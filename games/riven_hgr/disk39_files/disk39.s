@@ -30,10 +30,14 @@ disk_exit_disk: ; note: not BCD anymore
 	.byte 38
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
 
 disk_exit_disk_bcd:
 	.byte $40
 	.byte $38
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte 0
 
@@ -42,14 +46,22 @@ disk_exit_dni_h:
 	.byte $01	; 1*25+2*5+3*1
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
+
 disk_exit_dni_l:
 	.byte $30
 	.byte $23
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
+
 disk_exit_load:			; disk40, LOAD_MAGLEV, INSEAT, W
 	.byte LOAD_MAGLEV			; LOAD_MAGLEV
 	.byte LOAD_PROJECTOR
+	.byte 0
+	.byte 0
 	.byte 0
 	.byte LOAD_CYAN
 disk_exit_level:
@@ -57,8 +69,13 @@ disk_exit_level:
 	.byte RIVEN_PROJECTOR
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
 disk_exit_direction:
 	.byte DIRECTION_W
 	.byte DIRECTION_S
 	.byte 0
 	.byte 0
+	.byte 0
+	.byte 0
+

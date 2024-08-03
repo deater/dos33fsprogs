@@ -32,10 +32,14 @@ disk_exit_disk: ; note: not BCD anymore
 	.byte	50
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
 
 disk_exit_disk_bcd:
 	.byte	$41
 	.byte	$50
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 
@@ -45,9 +49,14 @@ disk_exit_dni_h:
 	.byte	$02		; 50 = 2*25 + 0
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
+
 disk_exit_dni_l:
 	.byte	$31
 	.byte	$00
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 
@@ -56,10 +65,14 @@ disk_exit_load:
 	.byte	LOAD_STAIRS2
 	.byte	LOAD_CHIPPER
 	.byte	0
+	.byte	0
+	.byte	0
 	.byte	LOAD_CYAN
 disk_exit_level:
 	.byte	RIVEN_UP4
 	.byte	RIVEN_CHIPPER
+	.byte	0
+	.byte	0
 	.byte	0
 	.byte	0
 disk_exit_direction:
@@ -67,3 +80,6 @@ disk_exit_direction:
 	.byte	DIRECTION_N
 	.byte	0
 	.byte	0
+	.byte	0
+	.byte	0
+

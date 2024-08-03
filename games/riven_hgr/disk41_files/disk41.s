@@ -30,10 +30,14 @@ disk_exit_disk:	; note: not BCD anymore
 	.byte	43		; CART   (DISK43)
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
 
 disk_exit_disk_bcd:
 	.byte	$40		; TUNNEL (DISK40)
 	.byte	$43		; CART   (DISK43)
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00
 
@@ -42,10 +46,14 @@ disk_exit_dni_h:
 	.byte	$01	; 43 = 24*1 + 3*5 + 3
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
 
 disk_exit_dni_l:
 	.byte	$30
 	.byte	$33
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00
 
@@ -55,11 +63,15 @@ disk_exit_load:
 	.byte	LOAD_TUNNEL		; LOAD_TUNNEL
 	.byte	LOAD_BRIDGE		; LOAD_BRIDGE
 	.byte	0
+	.byte	0
+	.byte	0
 	.byte	LOAD_CYAN
 
 disk_exit_level:
 	.byte	RIVEN_TUNNEL4		; TUNNEL_4
 	.byte	RIVEN_MID_BRIDGE	; MID_BRIDGE
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00
 
@@ -68,3 +80,6 @@ disk_exit_direction:
 	.byte	DIRECTION_W
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
+

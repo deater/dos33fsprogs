@@ -30,10 +30,14 @@ disk_exit_disk:	; note: not BCD anymore
 	.byte	39		; Temple Maglev (DISK39)
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
 
 disk_exit_disk_bcd:
 	.byte	$41		; Tunnel (DISK41)
 	.byte	$39		; Temple Maglev (DISK39)
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00
 
@@ -42,10 +46,14 @@ disk_exit_dni_h:
 	.byte	$01	; 38 = 1*25 + 2*5 + 3
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
 
 disk_exit_dni_l:
 	.byte	$31
 	.byte	$23
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00
 
@@ -54,6 +62,8 @@ disk_exit_load:
 	.byte	LOAD_TUNNEL2		; LOAD_TUNNEL2
 	.byte	LOAD_MAGLEV		; LOAD_MAGLEV
 	.byte	0
+	.byte	0
+	.byte	0
 	.byte	LOAD_CYAN
 
 disk_exit_level:
@@ -61,9 +71,13 @@ disk_exit_level:
 	.byte	RIVEN_INSEAT		; RIVEN_INSEAT
 	.byte	$00
 	.byte	$00
+	.byte	$00
+	.byte	$00
 
 disk_exit_direction:
 	.byte	DIRECTION_S		; facing south
 	.byte	DIRECTION_W		; facing west
+	.byte	$00
+	.byte	$00
 	.byte	$00
 	.byte	$00

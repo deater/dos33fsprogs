@@ -396,7 +396,7 @@ game_new:
 	; there must be a way to do this better, but for now waste
 	;	a disk change slot on each disk with the opener
 
-	lda	#$E0|3
+	lda	#$E0|5
 	sta	LEVEL_OVER
 
 	rts
