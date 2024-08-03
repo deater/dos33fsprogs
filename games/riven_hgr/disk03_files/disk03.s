@@ -10,18 +10,18 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	$40,$40,$00,$00 ; CAVE, DOORWAY
+	.byte	$40,$40,$40,$40 ; CAVE, DOORWAY
 
 track_array:
-	.byte	0, 2, 8,14	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
-	.byte	21,27,0,0	; CAVE, DOORWAY
+	.byte	0, 2, 9,15	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
+	.byte	22,28,0,0	; CAVE, DOORWAY
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
 	.byte	0,0,0,0		; CAVE, DOORWAY
 
 length_array:
-	.byte	8, 96,96,112	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
+	.byte	8, 112,96,112	; TITLE, DSTEPS1,DSTEPS3,OUTSIDE
 	.byte	96,96,0,0	; CAVE, DOORWAY
 
 

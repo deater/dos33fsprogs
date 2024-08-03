@@ -102,10 +102,10 @@ riven_disk03.dsk:	QBOOT QLOAD TITLE_03 \
 	$(DOS33_RAW) riven_disk03.dsk  0  8 TITLE_03		 0   0
 	$(DOS33_RAW) riven_disk03.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk03.dsk  2  0 disk03_files/LEVEL_DOWNSTEPS      0   0
-	$(DOS33_RAW) riven_disk03.dsk  8  0 disk03_files/LEVEL_DOWNSTEPS3      0   0
-	$(DOS33_RAW) riven_disk03.dsk  14  0 disk03_files/LEVEL_OUTSIDE      0   0
-	$(DOS33_RAW) riven_disk03.dsk  21  0 disk03_files/LEVEL_CAVE      0   0
-	$(DOS33_RAW) riven_disk03.dsk  27  0 disk03_files/LEVEL_DOORWAY      0   0
+	$(DOS33_RAW) riven_disk03.dsk  9  0 disk03_files/LEVEL_DOWNSTEPS3      0   0
+	$(DOS33_RAW) riven_disk03.dsk  15  0 disk03_files/LEVEL_OUTSIDE      0   0
+	$(DOS33_RAW) riven_disk03.dsk  22  0 disk03_files/LEVEL_CAVE      0   0
+	$(DOS33_RAW) riven_disk03.dsk  28  0 disk03_files/LEVEL_DOORWAY      0   0
 
 
 ###
@@ -854,10 +854,10 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 2 20 0` disk02_files/LEVEL_BRIDGE      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 0  2` disk03_files/DISK03  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 2  0` disk03_files/LEVEL_DOWNSTEPS     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 8  0` disk03_files/LEVEL_DOWNSTEPS3     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 14 0` disk03_files/LEVEL_OUTSIDE     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 21 0` disk03_files/LEVEL_CAVE     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 27 0` disk03_files/LEVEL_DOORWAY     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 9  0` disk03_files/LEVEL_DOWNSTEPS3     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 15 0` disk03_files/LEVEL_OUTSIDE     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 22 0` disk03_files/LEVEL_CAVE     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 3 28 0` disk03_files/LEVEL_DOORWAY     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 0  2` disk04_files/DISK04  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 2 0` disk04_files/LEVEL_BRIDGE1     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 7 0` disk04_files/LEVEL_BRIDGE2     0   0

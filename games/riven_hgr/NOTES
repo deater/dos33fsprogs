@@ -95,11 +95,11 @@ Disk03 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	  1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD       2314 bytes      16S= 1T0S	(4096)   2k free
-T         2 = DOWNSTEPS  21956 bytes         = 6T0S	(24576) 3k free
-T         8 = DOWNSTEPS3 12448 bytes         = 6T0S	(24576) 12k free
-T        14 = OUTSIDE    27100 bytes         = 7T0S	(28672) 1k free
-T	 21 = CAVE	 20269 bytes	     = 6T0S	(24576) 4k free
-T	 27 = DOORWAY	 11802 bytes         = 6T0S	(24576) 12k free
+T         2 = DOWNSTEPS  25875 bytes         = 7T0S	(28672) 3k free
+T         9 = DOWNSTEPS3 12448 bytes         = 6T0S	(24576) 12k free
+T        15 = OUTSIDE    27100 bytes         = 7T0S	(28672) 1k free
+T	 22 = CAVE	 20269 bytes	     = 6T0S	(24576) 4k free
+T	 28 = DOORWAY	 11802 bytes         = 6T0S	(24576) 12k free
 
 Disk04 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
