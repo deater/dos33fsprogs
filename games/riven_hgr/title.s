@@ -447,10 +447,10 @@ game_continue:
 .endif
 
 .if DISK=04
-	lda	#LOAD_TUNNEL3
+	lda	#LOAD_BRIDGE1
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_TUNNEL3
+	lda	#RIVEN_BRIDGE1
 	sta	LOCATION
 
 	lda	#DIRECTION_E
