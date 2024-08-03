@@ -13,6 +13,7 @@ PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 all:	riven_disk00.dsk \
 	riven_disk01.dsk riven_disk02.dsk riven_disk03.dsk \
 	riven_disk04.dsk riven_disk05.dsk \
+	riven_disk10.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
 	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk \
@@ -141,7 +142,18 @@ riven_disk05.dsk:	QBOOT QLOAD TITLE_05 \
 	$(DOS33_RAW) riven_disk05.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk05.dsk  2  0 disk05_files/LEVEL_CHAIR      0   0
 
+###
 
+riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
+	disk10_files/LEVEL_INSIDE
+	cp $(EMPTY_DISK)/empty.dsk riven_disk10.dsk
+	$(DOS33_RAW) riven_disk10.dsk  0  0 QBOOT                0   1
+	$(DOS33_RAW) riven_disk10.dsk  0  2 QBOOT                1   1
+	$(DOS33_RAW) riven_disk10.dsk  0  4 QBOOT                2   1
+	$(DOS33_RAW) riven_disk10.dsk  0  1 disk10_files/DISK10  0   0
+	$(DOS33_RAW) riven_disk10.dsk  0  8 TITLE_10		 0   0
+	$(DOS33_RAW) riven_disk10.dsk  1  0 QLOAD                0   0
+	$(DOS33_RAW) riven_disk10.dsk  2  0 disk10_files/LEVEL_INSIDE      0   0
 
 ###
 
@@ -375,6 +387,18 @@ title_05.o:	title.s zp.inc hardware.inc \
 		graphics_title/riven_title.hgr.zx02
 	ca65 -o title_05.o title.s -DDISK=05 -l title_05.lst
 
+####
+
+TITLE_10:	title_10.o
+	ld65 -o TITLE_10 title_10.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+title_10.o:	title.s zp.inc hardware.inc \
+		qload.inc \
+		hgr_tables.s \
+		graphics_title/riven_title.hgr.zx02
+	ca65 -o title_10.o title.s -DDISK=10 -l title_10.lst
+
+
 
 
 
@@ -481,6 +505,9 @@ disk04_files/DISK04:
 disk05_files/DISK05:	
 	cd disk05_files && make
 
+disk10_files/DISK10:	
+	cd disk10_files && make
+
 disk38_files/DISK38:	
 	cd disk38_files && make
 
@@ -569,6 +596,11 @@ disk05_files/LEVEL_CHAIR:
 
 ####
 
+disk10_files/LEVEL_INSIDE:	
+	cd disk10_files && make
+
+####
+
 disk38_files/LEVEL_PROJECTOR:	
 	cd disk38_files && make
 
@@ -634,6 +666,7 @@ clean:
 	rm -f *~ *.o *.lst dts_block generate_common \
 	QBOOT QLOAD QLOAD_HD \
 	TITLE_00 TITLE_01 TITLE_02 TITLE_03 TITLE_04 TITLE_05 \
+	TITLE_10 \
 	TITLE_38 TITLE_39 \
 	TITLE_40 TITLE_41 TITLE_43 TITLE_44 TITLE_50
 	cd disk00_files && make clean
@@ -642,6 +675,7 @@ clean:
 	cd disk03_files && make clean
 	cd disk04_files && make clean
 	cd disk05_files && make clean
+	cd disk10_files && make clean
 	cd disk38_files && make clean
 	cd disk39_files && make clean
 	cd disk40_files && make clean
@@ -656,6 +690,7 @@ distclean:
 	rm -f *~ *.o *.lst generate_common \
 	QBOOT QLOAD QLOAD_HD \
 	TITLE_00 TITLE_01 TITLE_02 TITLE_03 TITLE_04 TITLE_05 \
+	TITLE_10 \
 	TITLE_38 TITLE_39 \
 	TITLE_40 TITLE_41 TITLE_43 TITLE_44 TITLE_50
 	cd graphics_title && make clean
@@ -666,6 +701,7 @@ distclean:
 	cd disk03_files && make distclean
 	cd disk04_files && make distclean
 	cd disk05_files && make distclean
+	cd disk10_files && make distclean
 	cd disk38_files && make distclean
 	cd disk39_files && make distclean
 	cd disk40_files && make distclean
@@ -703,6 +739,7 @@ qload.inc:	generate_common QLOAD
 
 submit:	riven_disk00.dsk riven_disk01.dsk riven_disk02.dsk riven_disk03.dsk \
 	riven_disk04.dsk riven_disk05.dsk \
+	riven_disk10.dsk \
 	riven_disk38.dsk riven_disk39.dsk \
 	riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk riven_disk44.dsk \
 	riven_disk50.dsk \
@@ -710,6 +747,7 @@ submit:	riven_disk00.dsk riven_disk01.dsk riven_disk02.dsk riven_disk03.dsk \
 	zip riven_hgr.zip riven_disk00.dsk riven_disk01.dsk \
 		riven_disk02.dsk riven_disk03.dsk riven_disk04.dsk \
 		riven_disk05.dsk \
+		riven_disk10.dsk \
 		riven_disk38.dsk riven_disk39.dsk \
 		riven_disk40.dsk riven_disk41.dsk riven_disk43.dsk \
 		riven_disk44.dsk \
@@ -758,6 +796,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk04_files/LEVEL_TUNNEL3 \
 	disk05_files/DISK05 \
 	disk05_files/LEVEL_CHAIR \
+	disk10_files/DISK10 \
+	disk10_files/LEVEL_INSIDE \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
 	disk39_files/DISK39 \
@@ -825,6 +865,8 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 17 0` disk04_files/LEVEL_TUNNEL3     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 0  2` disk05_files/DISK05  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 2  0` disk05_files/LEVEL_CHAIR     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 0  2` disk10_files/DISK10  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 2  0` disk10_files/LEVEL_INSIDE     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0

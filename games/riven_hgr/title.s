@@ -32,6 +32,10 @@
 	.include "disk05_files/disk05_defines.inc"
 .endif
 
+.if DISK=10
+	.include "disk10_files/disk10_defines.inc"
+.endif
+
 .if DISK=38
 	.include "disk38_files/disk38_defines.inc"
 .endif
@@ -467,6 +471,18 @@ game_continue:
 	lda	#DIRECTION_N
 	sta	DIRECTION
 .endif
+
+.if DISK=10
+	lda	#LOAD_INSIDE
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_INSIDE
+	sta	LOCATION
+
+	lda	#DIRECTION_W
+	sta	DIRECTION
+.endif
+
 
 
 .if DISK=38
