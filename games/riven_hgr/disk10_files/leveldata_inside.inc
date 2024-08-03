@@ -10,7 +10,7 @@ locations:
 location0:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
-	.byte	$ff		; east exit
+	.byte	$E0		; east exit
 	.byte	$ff		; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$FF		; south exit_dir

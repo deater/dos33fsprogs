@@ -27,7 +27,7 @@ location1:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
 	.byte	RIVEN_TOP	; east exit
-	.byte	$ff		; west exit
+	.byte	$E3		; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$fF		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir
