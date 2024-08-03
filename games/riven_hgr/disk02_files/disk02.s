@@ -12,19 +12,19 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, STEPS1, STEPS3, TOP
-	.byte	$40,$40,$40,$40 ;
+	.byte	$40,$40,$40,$40 ; BRIDGE
 
 track_array:
 	.byte	0, 2, 8,14	; TITLE, STEPS1, STEPS3, TOP
-	.byte	20,0,0,0	;
+	.byte	20,0,0,0	; BRIDGE
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, STEPS1, STEPS3, TOP
-	.byte	0,0,0,0		;
+	.byte	0,0,0,0		; BRIDGE
 
 length_array:
 	.byte	8, 96,96,96	; TITLE, STEPS1, STEPS3, TOP
-	.byte	80,0,0,0	;
+	.byte	96,0,0,0	;
 
 	; disk 1
 

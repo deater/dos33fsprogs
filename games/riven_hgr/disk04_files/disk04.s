@@ -53,12 +53,12 @@ disk_exit_dni_l:
 
 			;
 disk_exit_load:
-	.byte	LOAD_TOP
+	.byte	LOAD_BRIDGE
 	.byte	LOAD_PROJECTOR
 	.byte	LOAD_CHAIR
 	.byte	LOAD_CYAN
 disk_exit_level:
-	.byte	RIVEN_TOP
+	.byte	RIVEN_BRIDGE
 	.byte	RIVEN_PROJECTOR
 	.byte	RIVEN_CHAIR
 	.byte	0

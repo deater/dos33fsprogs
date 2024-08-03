@@ -9,7 +9,7 @@ locations:
 location0:
 	.byte	$E1		; north exit
 	.byte	LOAD_STEPS3<<4|RIVEN_STEPS4		; south exit
-	.byte	$E2		; east exit
+	.byte	LOAD_BRIDGE<<4|RIVEN_BRIDGE		; east exit
 	.byte	RIVEN_ALCOVE	; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
