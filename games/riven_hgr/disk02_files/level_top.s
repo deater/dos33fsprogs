@@ -55,11 +55,6 @@ steps1_start:
 	; init
 	;===================================
 
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
 
 	jsr	change_location
 

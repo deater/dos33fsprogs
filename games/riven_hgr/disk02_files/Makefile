@@ -2,7 +2,7 @@ include ../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../linker_scripts/
 
-all:	DISK02 LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE
+all:	DISK02 LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE LEVEL_ALCOVE
 
 ####
 
@@ -51,6 +51,20 @@ level_top.o:	level_top.s \
 
 ####
 
+LEVEL_ALCOVE:	level_alcove.o
+	ld65 -o LEVEL_ALCOVE level_alcove.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_alcove.o:	level_alcove.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk02_defines.inc \
+		leveldata_alcove.inc \
+		audio/rotate.btc.zx02 \
+		graphics_alcove/alcove_graphics.inc
+	ca65 -o level_alcove.o level_alcove.s -l level_alcove.lst
+
+
+####
+
 LEVEL_BRIDGE:	level_bridge.o
 	ld65 -o LEVEL_BRIDGE level_bridge.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -76,21 +90,28 @@ graphics_top/top_graphics.inc:
 graphics_bridge/bridge_graphics.inc:
 	cd graphics_bridge && make
 
+graphics_alcove/alcove_graphics.inc:
+	cd graphics_alcove && make
+
+audio/rotate.btc.zx02:
+	cd audio && make
+
 ####
 
 clean:		
 	rm -f *~ *.o *.lst \
-		LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE
+		LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE LEVEL_ALCOVE
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst \
-		LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE
+		LEVEL_STEPS1 LEVEL_STEPS3 LEVEL_TOP LEVEL_BRIDGE LEVEL_ALCOVE
 	cd graphics_steps1 && make clean
 	cd graphics_steps3 && make clean
 	cd graphics_top && make clean
 	cd graphics_bridge && make clean
+	cd graphics_alcove && make clean
 
 
 

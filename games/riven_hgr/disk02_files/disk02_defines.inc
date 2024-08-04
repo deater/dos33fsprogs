@@ -3,6 +3,7 @@ LOAD_STEPS1	=	1
 LOAD_STEPS3	=	2
 LOAD_TOP	=	3
 LOAD_BRIDGE	=	4
+LOAD_ALCOVE	=	5
 
 ;================================
 ; Level definitions
@@ -18,10 +19,11 @@ RIVEN_STEPS3	=	0
 RIVEN_STEPS4	=	1
 
 ; TOP
-
 RIVEN_TOP	=	0
-RIVEN_ALCOVE	=	1
 
 ; BRIDGE
 RIVEN_BRIDGE	=	0
+
+; ALCOVE
+RIVEN_ALCOVE	=	0
 

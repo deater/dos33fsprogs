@@ -6,14 +6,11 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	top_graphics.inc
 
 top_graphics.inc:	\
-	top_n.hgr.zx02 top_s.hgr.zx02 top_e.hgr.zx02 top_w.hgr.zx02 \
-	alcove_e.hgr.zx02 alcove_w.hgr.zx02
+	top_n.hgr.zx02 top_s.hgr.zx02 top_e.hgr.zx02 top_w.hgr.zx02
 	echo "top_n_zx02: .incbin \"top_n.hgr.zx02\"" > top_graphics.inc
 	echo "top_s_zx02: .incbin \"top_s.hgr.zx02\"" >> top_graphics.inc
 	echo "top_e_zx02: .incbin \"top_e.hgr.zx02\"" >> top_graphics.inc
 	echo "top_w_zx02: .incbin \"top_w.hgr.zx02\"" >> top_graphics.inc
-	echo "alcove_e_zx02: .incbin \"alcove_e.hgr.zx02\"" >> top_graphics.inc
-	echo "alcove_w_zx02: .incbin \"alcove_w.hgr.zx02\"" >> top_graphics.inc
 
 ####
 

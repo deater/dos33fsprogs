@@ -17,9 +17,9 @@ location0:
 	.byte	$ff		; west exit_dir
 	.word	down1_n_zx02	; north bg
 	.word	down1_s_zx02	; south bg
-	.word	$0000		; east bg
+	.word	down1_e_zx02	; east bg
 	.word	$0000		; west bg
-	.byte	BG_NORTH|BG_SOUTH
+	.byte	BG_NORTH|BG_EAST|BG_SOUTH
 	.byte	$ff		; special exit
 
 ; RIVEN_DOWN2	-- continuing down
