@@ -111,6 +111,7 @@ T         2 = BRIDGE1    9027 bytes         = 5T0S	(20480) 11k free
 T         7 = BRIDGE2    8982 bytes         = 5T0S	(20480) 11k free
 T        12 = TUNNEL1   12632 bytes         = 5T0S	(20480)  8k free
 T        17 = TUNNEL3   17217 bytes         = 5T0S	(20480)  3k free
+T	 22 = TUNNEL4   13065 bytes	    = 5T0S	(20480)  7k free
 
 Disk05 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,7 +169,7 @@ Disk43 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      8S = 0T8S	(2048) 300B free
-T         2 = CART      23280 bytes         = 6T0S	(24576)  1k free
+T         2 = CART      23288 bytes         = 6T0S	(24576)  1k free
 T	  8 = BRIDGE	18609 bytes	    = 5T0S	(20480)  2k free
 T	 13 = LOGGED	17570 bytes	    = 5T0S	(20480)  3k free
 T	 18 = LOGGED3   18594 bytes         = 5T0S	(20480)  2k free

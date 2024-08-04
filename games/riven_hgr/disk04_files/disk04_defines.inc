@@ -3,6 +3,8 @@ LOAD_BRIDGE1	=	1
 LOAD_BRIDGE2	=	2
 LOAD_TUNNEL1	=	3
 LOAD_TUNNEL3	=	4
+LOAD_TUNNEL4	=	5
+
 
 ;================================
 ; Level definitions
@@ -20,3 +22,7 @@ RIVEN_TUNNEL2		=	1
 ; TUNNEL3
 RIVEN_TUNNEL3		=	0
 RIVEN_TUNNEL3_OPEN	=	1
+
+; TUNNEL4
+RIVEN_TUNNEL4		=	0
+RIVEN_TUNNEL5		=	1

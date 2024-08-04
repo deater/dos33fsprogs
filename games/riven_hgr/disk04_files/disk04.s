@@ -12,11 +12,11 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	$40,$40,$40,$40 ; TUNNEL3
+	.byte	$40,$40,$40,$40 ; TUNNEL3,TUNNEL4
 
 track_array:
 	.byte	0, 2, 7,12	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	17,22,27,0	; TUNNEL3
+	.byte	17,22,27,0	; TUNNEL3,TUNNEL4
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
