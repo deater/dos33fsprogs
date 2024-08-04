@@ -111,4 +111,4 @@ distclean:
 	cd graphics_arrival2 && make clean
 	cd graphics_telescope && make clean
 	cd graphics_arrival3 && make clean
-	cd graphcis_path && make clean
+	cd graphics_path && make clean
