@@ -20,7 +20,12 @@ location0:
 	.word	stairs_e_zx02	; east bg
 	.word	stairs_w_zx02	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte   DIRECTION_S|DIRECTION_ONLY_POINT        ; special exit
+        .byte   7,33
+        .byte   0,180
+        .word   handle_split_dir1-1
+
+
 
 
 ; RIVEN_UP1  -- going up
@@ -38,5 +43,9 @@ location1:
 	.word	stairs_up1_e_zx02	; east bg
 	.word	stairs_up1_w_zx02	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte   DIRECTION_E|DIRECTION_ONLY_POINT        ; special exit
+        .byte   7,33
+        .byte   0,180
+        .word   handle_split_dir2-1
+
 

@@ -28,7 +28,7 @@ length_array:
 
 disk_exit_disk: ; note: not BCD anymore
 	.byte	43
-	.byte	0
+	.byte	43
 	.byte	0
 	.byte	0
 	.byte	0
@@ -36,7 +36,7 @@ disk_exit_disk: ; note: not BCD anymore
 
 disk_exit_disk_bcd:
 	.byte	$43
-	.byte	0
+	.byte	$43
 	.byte	0
 	.byte	0
 	.byte	0
@@ -46,14 +46,14 @@ disk_exit_disk_bcd:
 
 disk_exit_dni_h:
 	.byte	$01		; 43 = 1*25 + 3*5 + 3
-	.byte	0
+	.byte	$01
 	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0
 disk_exit_dni_l:
 	.byte	$33
-	.byte	0
+	.byte	$33
 	.byte	0
 	.byte	0
 	.byte	0
@@ -61,22 +61,22 @@ disk_exit_dni_l:
 
 			;
 disk_exit_load:
-	.byte	LOAD_LOGGED
-	.byte	0
+	.byte	LOAD_LOGGED4
+	.byte	LOAD_LOGGED3
 	.byte	0
 	.byte	0
 	.byte	0
 	.byte	LOAD_CYAN
 disk_exit_level:
-	.byte	RIVEN_LOGGED
-	.byte	0
+	.byte	RIVEN_LOGGED4
+	.byte	RIVEN_LOGGED3
 	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0
 disk_exit_direction:
+	.byte	DIRECTION_W
 	.byte	DIRECTION_E
-	.byte	0
 	.byte	0
 	.byte	0
 	.byte	0

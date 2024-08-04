@@ -8,11 +8,11 @@ locations:
 ; RIVEN_OUTSIDE_CART	-- just outside cart
 location0:
 	.byte	RIVEN_IN_CART	; north exit
-	.byte	LOAD_LOGGED2<<4|RIVEN_LOGGED4		; south exit
+	.byte	LOAD_LOGGED5<<4|RIVEN_LOGGED4		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
 	.byte	DIRECTION_E	; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	cart_n_zx02	; north bg

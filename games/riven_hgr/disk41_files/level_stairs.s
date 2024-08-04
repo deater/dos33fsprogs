@@ -98,6 +98,94 @@ really_exit:
 
 
 	;==========================
+        ; handle split dir
+        ;==========================
+handle_split_dir1:
+
+	; if 19 or less, go E
+	; if 20, do nothing
+	; if 21 or more, go W
+
+	lda	CURSOR_X
+	cmp	#21
+	bcs	go_west
+
+	cmp	#19
+	bcc	go_east
+
+	rts
+
+go_west:
+	lda	#LOAD_STAIRS
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_UP1
+	sta	LOCATION
+
+
+	lda	#DIRECTION_W
+	bne	done_dir	; bra
+
+go_east:
+	lda	#LOAD_COVE
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_DOWN1
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+done_dir:
+	sta	DIRECTION
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	rts
+
+
+	;==========================
+        ; handle split dir2
+        ;==========================
+handle_split_dir2:
+
+	; if 14 or less, go N
+	; if 15 or more, go E
+
+	lda	CURSOR_X
+	cmp	#15
+	bcs	go_east2
+
+go_north2:
+	lda	#LOAD_STAIRS
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_STAIRS
+	sta	LOCATION
+
+
+	lda	#DIRECTION_N
+	bne	done_dir2	; bra
+
+go_east2:
+	lda	#LOAD_COVE
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_DOWN1
+	sta	LOCATION
+
+	lda	#DIRECTION_E
+done_dir2:
+	sta	DIRECTION
+
+	lda	#1
+	sta	LEVEL_OVER
+
+	rts
+
+
+
+
+	;==========================
 	; includes
 	;==========================
 

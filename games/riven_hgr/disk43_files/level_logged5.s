@@ -1,4 +1,4 @@
-; Riven -- Jungle Island, initial path
+; Riven -- Jungle Island -- Logging area 5
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,9 +7,9 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
-	.include "disk44_defines.inc"
+	.include "disk43_defines.inc"
 
-path_start:
+riven_logged5:
 
 	;===================
 	; init screen
@@ -102,40 +102,21 @@ really_exit:
 
 	rts
 
+	;==================================
+	; cart button clicked
+	;==================================
+	; TODO: call cart code
 
-	;==========================
-        ; handle split dir
-        ;==========================
-handle_split_dir1:
-
-	; if 19 or less, go to $E0
-	; if 20, do nothing
-	; if 21 or more, go to $E1
-
-	lda	CURSOR_X
-	cmp	#21
-	bcs	go_right
-
-	cmp	#19
-	bcc	go_left
-
-        rts
-
-go_left:
-	lda	#$E0
-	sta	LEVEL_OVER
+cart_button_clicked:
+	bit	SPEAKER
 	rts
 
-go_right:
-	lda	#$E1
-	sta	LEVEL_OVER
-	rts
 
 	;==========================
 	; includes
 	;==========================
 
 
-.include "graphics_path/path_graphics.inc"
+.include "graphics_logged5/logged5_graphics.inc"
 
-.include "leveldata_path.inc"
+.include "leveldata_logged5.inc"

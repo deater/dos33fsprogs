@@ -530,13 +530,13 @@ game_continue:
 .endif
 
 .if DISK=43
-	lda	#LOAD_CART
+	lda	#LOAD_BRIDGE
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_OUTSIDE_CART
+	lda	#RIVEN_MID_BRIDGE
 	sta	LOCATION
 
-	lda	#DIRECTION_S
+	lda	#DIRECTION_W
 	sta	DIRECTION
 .endif
 

@@ -243,7 +243,9 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	disk43_files/LEVEL_CART \
 	disk43_files/LEVEL_BRIDGE \
 	disk43_files/LEVEL_LOGGED \
-	disk43_files/LEVEL_LOGGED2 \
+	disk43_files/LEVEL_LOGGED3 \
+	disk43_files/LEVEL_LOGGED4 \
+	disk43_files/LEVEL_LOGGED5 \
 	disk43_files/MOVIE_CART_RIDE
 	cp $(EMPTY_DISK)/empty.dsk riven_disk43.dsk
 	$(DOS33_RAW) riven_disk43.dsk  0  0 QBOOT                0   1
@@ -253,10 +255,12 @@ riven_disk43.dsk:	QBOOT QLOAD TITLE_43 \
 	$(DOS33_RAW) riven_disk43.dsk  0  8 TITLE_43		 0   0
 	$(DOS33_RAW) riven_disk43.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk43.dsk  2  0 disk43_files/LEVEL_CART     0   0
-	$(DOS33_RAW) riven_disk43.dsk  9  0 disk43_files/LEVEL_BRIDGE   0   0
-	$(DOS33_RAW) riven_disk43.dsk  16 0 disk43_files/LEVEL_LOGGED   0   0
-	$(DOS33_RAW) riven_disk43.dsk  22 0 disk43_files/LEVEL_LOGGED2  0   0
-	$(DOS33_RAW) riven_disk43.dsk  27 0 disk43_files/MOVIE_CART_RIDE  0   0
+	$(DOS33_RAW) riven_disk43.dsk  8  0 disk43_files/LEVEL_BRIDGE   0   0
+	$(DOS33_RAW) riven_disk43.dsk  13 0 disk43_files/LEVEL_LOGGED   0   0
+	$(DOS33_RAW) riven_disk43.dsk  18 0 disk43_files/LEVEL_LOGGED3  0   0
+	$(DOS33_RAW) riven_disk43.dsk  23 0 disk43_files/LEVEL_LOGGED4  0   0
+	$(DOS33_RAW) riven_disk43.dsk  26 0 disk43_files/LEVEL_LOGGED5  0   0
+	$(DOS33_RAW) riven_disk43.dsk  31 0 disk43_files/MOVIE_CART_RIDE  0   0
 
 riven_disk44.dsk:	QBOOT QLOAD TITLE_44 \
 	disk44_files/DISK44 \
@@ -642,6 +646,18 @@ disk40_files/LEVEL_OUTSIDE:
 disk43_files/LEVEL_CART:
 	cd disk43_files && make
 
+disk43_files/LEVEL_LOGGED:
+	cd disk43_files && make
+
+disk43_files/LEVEL_LOGGED3:
+	cd disk43_files && make
+
+disk43_files/LEVEL_LOGGED4:
+	cd disk43_files && make
+
+disk43_files/LEVEL_LOGGED5:
+	cd disk43_files && make
+
 ####
 
 disk44_files/LEVEL_PATH:
@@ -830,7 +846,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk43_files/LEVEL_CART \
 	disk43_files/LEVEL_BRIDGE \
 	disk43_files/LEVEL_LOGGED \
-	disk43_files/LEVEL_LOGGED2 \
+	disk43_files/LEVEL_LOGGED3 \
+	disk43_files/LEVEL_LOGGED4 \
+	disk43_files/LEVEL_LOGGED5 \
 	disk43_files/MOVIE_CART_RIDE \
 	disk44_files/DISK44 \
 	disk44_files/LEVEL_PATH \
@@ -898,10 +916,12 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 41 31 0` disk41_files/MOVIE_COVE  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 0  2` disk43_files/DISK43  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 2  0` disk43_files/LEVEL_CART     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 9  0` disk43_files/LEVEL_BRIDGE   0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 16 0` disk43_files/LEVEL_LOGGED   0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 22 0` disk43_files/LEVEL_LOGGED2  0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 27 0` disk43_files/MOVIE_CART_RIDE  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 8  0` disk43_files/LEVEL_BRIDGE   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 13 0` disk43_files/LEVEL_LOGGED   0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 18 0` disk43_files/LEVEL_LOGGED3  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 23 0` disk43_files/LEVEL_LOGGED4  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 26 0` disk43_files/LEVEL_LOGGED5  0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 43 31 0` disk43_files/MOVIE_CART_RIDE  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 44 0  2` disk44_files/DISK44  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 44 2  0` disk44_files/LEVEL_FISH     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 44 8  0` disk44_files/LEVEL_PATH     0   0

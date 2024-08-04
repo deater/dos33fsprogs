@@ -27,7 +27,7 @@ location1:
 	.byte	$FF		; north exit
 	.byte	$ff		; south exit
 	.byte	RIVEN_LOGGED	; east exit
-	.byte	LOAD_LOGGED2<<4|RIVEN_LOGGED3		; west exit
+	.byte	LOAD_LOGGED3<<4|RIVEN_LOGGED3		; west exit
 	.byte	$ff		; north exit_dir
 	.byte	$ff		; south exit_dir
 	.byte	DIRECTION_E	; east exit_dir

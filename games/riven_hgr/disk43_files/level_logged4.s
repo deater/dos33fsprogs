@@ -1,4 +1,4 @@
-; Riven -- Jungle Island -- Logging area 2
+; Riven -- Jungle Island -- Logging area 4
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -117,6 +117,6 @@ cart_button_clicked:
 	;==========================
 
 
-.include "graphics_logged2/logged2_graphics.inc"
+.include "graphics_logged4/logged4_graphics.inc"
 
-.include "leveldata_logged2.inc"
+.include "leveldata_logged4.inc"

@@ -1,4 +1,4 @@
-; Riven -- Jungle Island, initial path
+; Riven -- Jungle Island -- Logging area 3
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,9 +7,9 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
-	.include "disk44_defines.inc"
+	.include "disk43_defines.inc"
 
-path_start:
+riven_logged3:
 
 	;===================
 	; init screen
@@ -102,40 +102,58 @@ really_exit:
 
 	rts
 
-
 	;==========================
-        ; handle split dir
-        ;==========================
+	; handle split dir
+	;==========================
 handle_split_dir1:
 
-	; if 19 or less, go to $E0
-	; if 20, do nothing
-	; if 21 or more, go to $E1
+        ; if 19 or less, go to disk44
+        ; if 20, do nothing
+        ; if 21 or more, go W
 
 	lda	CURSOR_X
 	cmp	#21
-	bcs	go_right
+	bcs	go_west
 
 	cmp	#19
-	bcc	go_left
+	bcc	go_disk44
+
+	rts
+
+go_west:
+	lda	#LOAD_LOGGED4
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_LOGGED4
+	sta	LOCATION
+
+        lda     #1
+        sta     LEVEL_OVER
+
+
+
+	lda	#DIRECTION_W
+	bne	done_dir        ; bra
+
+go_disk44:
+        lda     #$E2
+        sta     LEVEL_OVER
+
+        lda     #DIRECTION_E
+done_dir:
+        sta     DIRECTION
 
         rts
 
-go_left:
-	lda	#$E0
-	sta	LEVEL_OVER
-	rts
 
-go_right:
-	lda	#$E1
-	sta	LEVEL_OVER
-	rts
+
+
 
 	;==========================
 	; includes
 	;==========================
 
 
-.include "graphics_path/path_graphics.inc"
+.include "graphics_logged3/logged3_graphics.inc"
 
-.include "leveldata_path.inc"
+.include "leveldata_logged3.inc"

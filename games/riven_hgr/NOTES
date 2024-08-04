@@ -168,11 +168,13 @@ Disk43 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      8S = 0T8S	(2048) 300B free
-T         2 = CART      23280 bytes         = 7T0S	(28672)  5k free
-T	  9 = BRIDGE	18609 bytes	    = 7T0S	(28672) 10k free
-T	 16 = LOGGED	17570 bytes	    = 6T0S	(24576) 7k free
-T	 22 = LOGGED2   17584 bytes         = 5T0S	(20480) 3k free
-T	 27 = MOVIE_CART32275 bytes    128S = 8T0S	(32512)500B free
+T         2 = CART      23280 bytes         = 6T0S	(24576)  1k free
+T	  8 = BRIDGE	18609 bytes	    = 5T0S	(20480)  2k free
+T	 13 = LOGGED	17570 bytes	    = 5T0S	(20480)  3k free
+T	 18 = LOGGED3   18594 bytes         = 5T0S	(20480)  2k free
+T	 23 = LOGGED4   11845 bytes         = 3T0S	(12288)  1k free
+T	 26 = LOGGED5   16894 bytes         = 5T0S	(20480)  4k free
+T	 31 = MOVIE_CART   2k bytes    128S = 8T0S	(32512)500B free
 
 Disk44 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -257,6 +259,7 @@ API for loading:
 	only one copy of qload/title
 
 
+7/33
 
 IN_SPECIAL
 IN_RIGHT
@@ -268,4 +271,9 @@ IN_LEFT
 		1/3/4/8 direction
 		40 = only point
 		80 = split screen
+
+
+	SPLIT
+		if X>20 and forward -> dest1
+		if X<20 and forward -> dest2
 

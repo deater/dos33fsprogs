@@ -20,4 +20,7 @@ location0:
 	.word	path_e_zx02	; east bg
 	.word	path_w_zx02	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte   DIRECTION_W|DIRECTION_ONLY_POINT        ; special exit
+        .byte   7,33
+        .byte   0,180
+        .word   handle_split_dir1-1
