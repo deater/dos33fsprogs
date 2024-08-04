@@ -22,7 +22,7 @@ location0:
 	.byte	BG_NORTH|BG_SOUTH	; all bgs
 	.byte	$ff		; special exit
 
-; RIVEN_STEPS2	-- second level of steps
+; RIVEN_STEPS4	-- second level of steps
 location1:
 	.byte	LOAD_TOP<<4|RIVEN_TOP		; north exit
 	.byte	RIVEN_STEPS3	; south exit
@@ -37,5 +37,9 @@ location1:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_NORTH|BG_SOUTH	; all bgs
-	.byte	$ff		; special exit
+	.byte	DIRECTION_N|DIRECTION_ONLY_POINT        ; special exit
+	.byte	7,33
+	.byte	0,180
+	.word	handle_split_dir-1
+
 

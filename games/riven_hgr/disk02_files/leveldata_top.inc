@@ -20,4 +20,5 @@ location0:
 	.word	top_e_zx02	; east bg
 	.word	top_w_zx02	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST	; all bgs
-	.byte	$ff		; special exit
+	.byte	$ff
+

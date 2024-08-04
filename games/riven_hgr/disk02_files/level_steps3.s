@@ -102,6 +102,39 @@ really_exit:
 
 	rts
 
+	;==========================
+        ; handle split dir
+        ;==========================
+handle_split_dir:
+
+	; if 19 or less, go N
+	; if 20 or more, go E
+
+        lda     #LOAD_TOP
+        sta     WHICH_LOAD
+
+        lda     #RIVEN_TOP
+        sta     LOCATION
+
+	lda	CURSOR_X
+	cmp	#20
+	bcs	go_east
+
+go_north:
+        lda     #DIRECTION_N
+	bne	done_dir		; bra
+
+go_east:
+	lda	#DIRECTION_E
+done_dir:
+
+        sta     DIRECTION
+
+        lda     #1
+        sta     LEVEL_OVER
+
+        rts
+
 
 	;==========================
 	; includes

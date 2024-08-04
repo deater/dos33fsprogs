@@ -85,7 +85,7 @@ Disk02 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
-T         2 = STEPS1    21647 bytes         = 6T0S	(24576)  3k free
+T         2 = STEPS1    23639 bytes         = 6T0S	(24576)  1k free
 T         8 = STEPS3    15872 bytes         = 6T0S	(24576)  9k free
 T	 14 = TOP	15210 bytes	    = 4T0S	(16384)  1k free
 T	 18 = BRIDGE	15021 bytes	    = 4T0S	(16384)  1k free
@@ -256,4 +256,16 @@ API for loading:
 
 	only one copy of qload/title
 
+
+
+IN_SPECIAL
+IN_RIGHT
+IN_LEFT
+
+	SPECIAL
+		FF = not special
+		bottom nibble = directions
+		1/3/4/8 direction
+		40 = only point
+		80 = split screen
 

@@ -75,8 +75,10 @@ finger_grab:
 	rts
 
 really_draw_grab:
+	ldy	#LOCATION_SPECIAL_EXIT
+	lda	(LOCATION_STRUCT_L),Y
 
-	lda	DIRECTION
+;	lda	DIRECTION
 	and	#DIRECTION_ONLY_POINT
 	bne	special_but_point
 
