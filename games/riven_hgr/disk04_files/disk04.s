@@ -12,19 +12,19 @@ which_disk_bin:
 
 load_address_array:
 	.byte	$40,$40,$40,$40	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	$40,$40,$40,$40 ; TUNNEL3,TUNNEL4
+	.byte	$40,$40,$40,$40 ; TUNNEL3,TUNNEL4,TUNNEL7
 
 track_array:
 	.byte	0, 2, 7,12	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	17,22,27,0	; TUNNEL3,TUNNEL4
+	.byte	17,22,28,0	; TUNNEL3,TUNNEL4,TUNNEL7
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	0,0,0,0		; TUNNEL3
+	.byte	0,0,0,0		; TUNNEL3,TUNNEL4,TUNNEL7
 
 length_array:
 	.byte	8, 80,80,80	; TITLE, BRIDGE1, BRIDGE2, TUNNEL1
-	.byte	80,80,80,0	; TUNNEL3
+	.byte	80,96,96,0	; TUNNEL3,TUNNEL4,TUNNEL7
 
 
 disk_exit_disk: ; note: not BCD anymore

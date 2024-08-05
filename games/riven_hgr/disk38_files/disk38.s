@@ -59,7 +59,7 @@ disk_exit_dni_l:
 
 disk_exit_load:			; disk39, LOAD_PROJECTOR, PROJ_DOOR, N
 	.byte LOAD_PROJECTOR		; LOAD_PROJECTOR
-	.byte LOAD_TUNNEL4		;
+	.byte LOAD_TUNNEL7		;
 	.byte 0
 	.byte 0
 	.byte 0
@@ -67,7 +67,7 @@ disk_exit_load:			; disk39, LOAD_PROJECTOR, PROJ_DOOR, N
 
 disk_exit_level:
 	.byte RIVEN_PROJ_DOOR		; riven PROJ_DOOR
-	.byte RIVEN_TUNNEL5	;
+	.byte RIVEN_TUNNEL8_OPEN	;
 	.byte 0
 	.byte 0
 	.byte 0

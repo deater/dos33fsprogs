@@ -111,7 +111,9 @@ T         2 = BRIDGE1    9027 bytes         = 5T0S	(20480) 11k free
 T         7 = BRIDGE2    8982 bytes         = 5T0S	(20480) 11k free
 T        12 = TUNNEL1   12632 bytes         = 5T0S	(20480)  8k free
 T        17 = TUNNEL3   17217 bytes         = 5T0S	(20480)  3k free
-T	 22 = TUNNEL4   13065 bytes	    = 5T0S	(20480)  7k free
+T	 22 = TUNNEL4   22153 bytes	    = 6T0S	(24576)  2k free
+T	 28 = TUNNEL7   20847 bytes	    = 6T0S	(24576)  4k free
+
 
 Disk05 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

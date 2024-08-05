@@ -118,7 +118,8 @@ riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
 	disk04_files/LEVEL_BRIDGE2 \
 	disk04_files/LEVEL_TUNNEL1 \
 	disk04_files/LEVEL_TUNNEL3 \
-	disk04_files/LEVEL_TUNNEL4
+	disk04_files/LEVEL_TUNNEL4 \
+	disk04_files/LEVEL_TUNNEL7
 	cp $(EMPTY_DISK)/empty.dsk riven_disk04.dsk
 	$(DOS33_RAW) riven_disk04.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk04.dsk  0  2 QBOOT                1   1
@@ -131,6 +132,7 @@ riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
 	$(DOS33_RAW) riven_disk04.dsk  12  0 disk04_files/LEVEL_TUNNEL1      0   0
 	$(DOS33_RAW) riven_disk04.dsk  17  0 disk04_files/LEVEL_TUNNEL3      0   0
 	$(DOS33_RAW) riven_disk04.dsk  22  0 disk04_files/LEVEL_TUNNEL4      0   0
+	$(DOS33_RAW) riven_disk04.dsk  28  0 disk04_files/LEVEL_TUNNEL7      0   0
 
 ###
 
@@ -603,6 +605,9 @@ disk04_files/LEVEL_TUNNEL3:
 disk04_files/LEVEL_TUNNEL4:	
 	cd disk04_files && make
 
+disk04_files/LEVEL_TUNNEL7:	
+	cd disk07_files && make
+
 ####
 
 disk05_files/LEVEL_CHAIR:	
@@ -822,6 +827,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk04_files/LEVEL_TUNNEL1 \
 	disk04_files/LEVEL_TUNNEL3 \
 	disk04_files/LEVEL_TUNNEL4 \
+	disk04_files/LEVEL_TUNNEL7 \
 	disk05_files/DISK05 \
 	disk05_files/LEVEL_CHAIR \
 	disk10_files/DISK10 \
@@ -895,6 +901,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 12 0` disk04_files/LEVEL_TUNNEL1     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 17 0` disk04_files/LEVEL_TUNNEL3     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 22 0` disk04_files/LEVEL_TUNNEL4     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 28 0` disk04_files/LEVEL_TUNNEL7     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 0  2` disk05_files/DISK05  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 2  0` disk05_files/LEVEL_CHAIR     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 0  2` disk10_files/DISK10  0   0

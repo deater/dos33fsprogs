@@ -7,11 +7,14 @@ all:	tunnel4_graphics.inc
 
 tunnel4_graphics.inc:	\
 	tunnel4_w.hgr.zx02 tunnel4_e.hgr.zx02 \
-	tunnel5_w.hgr.zx02 tunnel5_e.hgr.zx02
+	tunnel5_w.hgr.zx02 tunnel5_e.hgr.zx02 \
+	tunnel6_w.hgr.zx02 tunnel6_e.hgr.zx02
 	echo "tunnel4_w_zx02: .incbin \"tunnel4_w.hgr.zx02\"" > tunnel4_graphics.inc
 	echo "tunnel4_e_zx02: .incbin \"tunnel4_e.hgr.zx02\"" >> tunnel4_graphics.inc
 	echo "tunnel5_w_zx02: .incbin \"tunnel5_w.hgr.zx02\"" >> tunnel4_graphics.inc
 	echo "tunnel5_e_zx02: .incbin \"tunnel5_e.hgr.zx02\"" >> tunnel4_graphics.inc
+	echo "tunnel6_w_zx02: .incbin \"tunnel6_w.hgr.zx02\"" >> tunnel4_graphics.inc
+	echo "tunnel6_e_zx02: .incbin \"tunnel6_e.hgr.zx02\"" >> tunnel4_graphics.inc
 
 ####
 
