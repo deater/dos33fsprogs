@@ -22,13 +22,17 @@ level_inside.o:	level_inside.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk10_defines.inc \
 		leveldata_inside.inc \
-		graphics_inside/inside_graphics.inc
+		graphics_inside/inside_graphics.inc \
+		graphics_stained/stained_graphics.inc
 	ca65 -o level_inside.o level_inside.s -l level_inside.lst
 
 ####
 
 graphics_inside/inside_graphics.inc:
 	cd graphics_inside && make
+
+graphics_stained/stained_graphics.inc:
+	cd graphics_stained && make
 
 ####
 
