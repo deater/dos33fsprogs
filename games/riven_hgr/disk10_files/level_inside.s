@@ -109,5 +109,6 @@ really_exit:
 
 
 .include "graphics_inside/inside_graphics.inc"
+.include "graphics_stained/stained_graphics.inc"
 
 .include "leveldata_inside.inc"
