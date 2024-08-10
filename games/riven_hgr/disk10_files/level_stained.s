@@ -1,4 +1,4 @@
-; Riven -- Inside Rotate room
+; Riven -- Looking at Beetles
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -9,7 +9,7 @@
 	.include "../qload.inc"
 	.include "disk10_defines.inc"
 
-bridge1_start:
+stained_start:
 
 	;===================
 	; init screen
@@ -102,55 +102,13 @@ really_exit:
 
 	rts
 
-	;==========================
-	; handle pillars 2/3
-	;==========================
-handle_pillars_23:
-
-	; if 13 or to pillar 2
-	; if 26 or more, go to pillar 3
-	; otherwise, go to center path (nothing for now)
-
-	lda	CURSOR_X
-	cmp	#26
-	bcs	go_pillar3
-
-	cmp	#13
-	bcc	go_pillar2
-
-	rts
-
-go_pillar3:
-	lda     #LOAD_STAINED
-	sta     WHICH_LOAD
-
-	lda     #RIVEN_BEETLE_FAR_R
-	sta     LOCATION
-
-	lda     #DIRECTION_W
-	bne     done_dir        ; bra
-
-go_pillar2:
-	lda	#LOAD_STAINED
-	sta	WHICH_LOAD
-
-	lda     #RIVEN_BEETLE_FAR_R
-	sta     LOCATION
-
-	lda	#DIRECTION_W
-done_dir:
-	sta	DIRECTION
-
-	lda	#1
-	sta	LEVEL_OVER
-	rts
-
 
 	;==========================
 	; includes
 	;==========================
 
 
-.include "graphics_inside/inside_graphics.inc"
 
-.include "leveldata_inside.inc"
+.include "graphics_stained/stained_graphics.inc"
+
+.include "leveldata_stained.inc"

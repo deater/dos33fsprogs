@@ -9,19 +9,19 @@ which_disk_bin:
 	.byte	10
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, INSIDE
+	.byte	$40,$40,$40,$40	; TITLE, INSIDE, STAINED
 	.byte	$40,$40,$40,$40 ;
 
 track_array:
-	.byte	0, 2, 7,12	; TITLE, INSIDE
+	.byte	0, 2, 8,12	; TITLE, INSIDE, STAINED
 	.byte	17,22,27,0	;
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, INSIDE
+	.byte	8, 0, 0, 0	; TITLE, INSIDE, STAINED
 	.byte	0,0,0,0		;
 
 length_array:
-	.byte	8, 80,80,80	; TITLE, INSIDE
+	.byte	8, 96,96,80	; TITLE, INSIDE, STAINED
 	.byte	80,80,80,0	;
 
 

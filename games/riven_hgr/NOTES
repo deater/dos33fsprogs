@@ -122,6 +122,16 @@ T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
 T         2 = CHAIR      1195 bytes         = 6T0S	(24576) 23k free
 
+Disk10 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
+T         2 = INSIDE    17137 bytes         = 6T0S	(24576) 7k free
+T         8 = STAINED   15420 bytes         = 6T0S	(24576) 9k free
+
+
+
 Disk38 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
@@ -279,4 +289,37 @@ IN_LEFT
 	SPLIT
 		if X>20 and forward -> dest1
 		if X<20 and forward -> dest2
+
+
+
+rotating room   -- rotates clockwise.  B initially blocked
+     / \
+ B  /   \		-- rotation 0, can get to B and E. C is blocked
+   /O    \Q		-- rotation 1, both E and C blocked
+  /       \		-- rotation 2, E blocked.  B + C open
+  \       /C		-- rotation 3, E and Q open
+  P\__O__/		-- rotation 4, C and P open (pipe)
+      E				can flip telescope controls
+				can flip wall handle.  also another button
+				flip twice to get to Q, also handle and
+				button (both needed to get to dome)
+			rotate button at B as well
+
+
+
+settings for rotating toom
+	80 (shadow) / 81 (bright) / 66 (contrast)
+
+stained glass:
+	crop to actual size
+	run "erode"
+	scale to 192 high
+	canvas size 280x192
+	grid 2x2
+	reduce to 16 colors
+	paint paint paint
+	draw border
+
+
+
 

@@ -6,9 +6,13 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	inside_graphics.inc
 
 inside_graphics.inc:	\
-	entrance_w.hgr.zx02 entrance_e.hgr.zx02
+	entrance_w.hgr.zx02 entrance_e.hgr.zx02 \
+	pillars_23.hgr.zx02 pillars_51.hgr.zx02
 	echo "entrance_w_zx02: .incbin \"entrance_w.hgr.zx02\"" > inside_graphics.inc
 	echo "entrance_e_zx02: .incbin \"entrance_e.hgr.zx02\"" >> inside_graphics.inc
+	echo "pillars_23_zx02: .incbin \"pillars_23.hgr.zx02\"" >> inside_graphics.inc
+	echo "pillars_51_zx02: .incbin \"pillars_51.hgr.zx02\"" >> inside_graphics.inc
+
 
 ####
 
