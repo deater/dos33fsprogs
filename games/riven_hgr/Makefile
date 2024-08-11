@@ -168,7 +168,8 @@ riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
 
 riven_disk38.dsk:	QBOOT QLOAD TITLE_38 \
 	disk38_files/DISK38 \
-	disk38_files/LEVEL_PROJECTOR
+	disk38_files/LEVEL_PROJECTOR \
+	disk38_files/LEVEL_ENTRY
 	cp $(EMPTY_DISK)/empty.dsk riven_disk38.dsk
 	$(DOS33_RAW) riven_disk38.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk38.dsk  0  2 QBOOT                1   1
@@ -177,6 +178,8 @@ riven_disk38.dsk:	QBOOT QLOAD TITLE_38 \
 	$(DOS33_RAW) riven_disk38.dsk  0  8 TITLE_38		 0   0
 	$(DOS33_RAW) riven_disk38.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk38.dsk  2  0 disk38_files/LEVEL_PROJECTOR      0   0
+	$(DOS33_RAW) riven_disk38.dsk  8  0 disk38_files/LEVEL_ENTRY      0   0
+
 
 ###
 
@@ -629,6 +632,9 @@ disk10_files/LEVEL_STAINED:
 disk38_files/LEVEL_PROJECTOR:	
 	cd disk38_files && make
 
+disk38_files/LEVEL_ENTRY:	
+	cd disk38_files && make
+
 ####
 
 disk39_files/LEVEL_OUTSIDE:	
@@ -841,6 +847,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk10_files/LEVEL_STAINED \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
+	disk38_files/LEVEL_ENTRY \
 	disk39_files/DISK39 \
 	disk39_files/LEVEL_MAGSTEPS \
 	disk39_files/LEVEL_MAGLEV \
@@ -916,6 +923,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 8  0` disk10_files/LEVEL_STAINED     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 8  0` disk38_files/LEVEL_ENTRY      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 0  2` disk39_files/DISK39  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 2  0` disk39_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 39 8  0` disk39_files/LEVEL_OUTSIDE        0   0

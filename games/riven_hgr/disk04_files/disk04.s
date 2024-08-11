@@ -63,14 +63,14 @@ disk_exit_dni_l:
 			;
 disk_exit_load:
 	.byte	LOAD_BRIDGE
-	.byte	LOAD_PROJECTOR
+	.byte	LOAD_ENTRY
 	.byte	LOAD_CHAIR
 	.byte	0
 	.byte	0
 	.byte	LOAD_CYAN
 disk_exit_level:
 	.byte	RIVEN_BRIDGE
-	.byte	RIVEN_PROJECTOR
+	.byte	RIVEN_DOOR
 	.byte	RIVEN_CHAIR
 	.byte	0
 	.byte	0

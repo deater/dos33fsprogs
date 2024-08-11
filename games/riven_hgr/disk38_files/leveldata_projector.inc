@@ -9,11 +9,11 @@ locations:
 location0:
 	.byte	$E0|0			; north exit
 	.byte	RIVEN_WAHRK		; south exit
-	.byte	$E0|1			; east exit
+	.byte	LOAD_ENTRY<<4|RIVEN_NEAR_DOOR		; east exit
 	.byte	$FF			; west exit
 	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
-	.byte	$ff		; east exit_dir
+	.byte	DIRECTION_E	; east exit_dir
 	.byte	$ff		; west exit_dir
 	.word	projector_n_zx02	; north bg
 	.word	projector_s_zx02	; south bg

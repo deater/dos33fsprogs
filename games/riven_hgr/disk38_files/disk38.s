@@ -10,19 +10,19 @@ which_disk_bin:
 	.byte	38
 
 load_address_array:
-	.byte $40,$40,$00,$00	; TITLE, PROJECTOR
+	.byte $40,$40,$40,$00	; TITLE, PROJECTOR, ENTRY
 	.byte $00,$00,$00,$00	;
 
 track_array:
-        .byte  0, 2, 0, 0	; TITLE, PROJECTOR
+        .byte  0, 2, 8, 0	; TITLE, PROJECTOR, ENTRY
 	.byte  0, 0, 0, 0	;
 
 sector_array:
-        .byte  8, 0, 0, 0	; TITLE, PROJECTOR
+        .byte  8, 0, 0, 0	; TITLE, PROJECTOR, ENTRY
 	.byte  0, 0, 0, 0	;
 
 length_array:
-        .byte  8, 123,0,0	; TITLE, PROJECTOR
+        .byte  8, 96,96,0	; TITLE, PROJECTOR, ENTRY
 	.byte  0, 0, 0, 0	;
 
 disk_exit_disk: ; note: not BCD anymore
