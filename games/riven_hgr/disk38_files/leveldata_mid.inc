@@ -20,4 +20,7 @@ location0:
 	.word	mid_e_zx02	; east bg
 	.word	mid_w_zx02	; west bg
 	.byte	BG_NORTH|BG_SOUTH|BG_EAST|BG_WEST
-	.byte	$FF		; special exit (none)
+	.byte	DIRECTION_S|DIRECTION_ONLY_POINT        ; special exit
+	.byte	7,33
+	.byte	0,180
+	.word	handle_wahrks-1

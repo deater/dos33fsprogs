@@ -98,6 +98,47 @@ really_exit:
 
 
 	;==========================
+        ; handle wahrks
+        ;==========================
+handle_wahrks:
+	; if 11 or less, go left wahrk
+        ; if 29 or more, go right wahrk
+        ; otherwise, go close
+
+        lda     CURSOR_X
+        cmp     #29
+        bcs     go_right_wahrk
+
+        cmp     #12
+        bcc     go_left_wahrk
+
+	lda	#RIVEN_CLOSE
+
+	jmp	done_dir
+
+go_left_wahrk:
+        lda     #RIVEN_WAHRK_L
+	jmp	done_dir
+
+go_right_wahrk:
+        lda     #RIVEN_WAHRK_R
+
+done_dir:
+
+	sta	LOCATION
+
+	lda	#LOAD_CLOSE
+	sta	WHICH_LOAD
+
+	lda	#DIRECTION_S
+	sta	DIRECTION
+	lda	#1
+	sta	LEVEL_OVER
+
+	rts
+
+
+	;==========================
 	; includes
 	;==========================
 
