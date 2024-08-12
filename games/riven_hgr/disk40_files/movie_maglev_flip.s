@@ -89,8 +89,9 @@ movie_maglev_flip_start:
 	jsr	full_decomp
 
 
-	lda	MAGLEV_FLIP_DIRECTION
-	beq	maglev_forward_flip
+	lda	STATE_MAGLEV
+	and	#MAGLEV1_DIRECTION
+	bne	maglev_forward_flip
 
 
 	;===============================

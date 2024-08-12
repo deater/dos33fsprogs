@@ -124,9 +124,33 @@ DRAW_NUMBER		= $A2
 NUMBER_LOW		= $A3
 NUMBER_HIGH		= $A4
 
-MAGLEV_FLIP_DIRECTION	= $B0
-BEACH_ANIMALS_SEEN	= $B1
-ROOM_ROTATION		= $B2
+;=============================
+; Riven Game State
+;=============================
+
+STATE_MAGLEV	=	$B0
+	MAGLEV1_LOCATION	=	$01	; 0 = initial
+	MAGLEV2_LOCATION	=	$02	; 1 = far away
+	MAGLEV3_LOCATION	=	$04
+	MAGLEV1_DIRECTION	=	$10	; 0 = inbound
+	MAGLEV2_DIRECTION	=	$20	; 1 = outbound
+	MAGLEV3_DIRECTION	=	$40
+
+STATE_DOORS	=	$B1
+	TEMPLE_DOOR		=	$01	; 0 = closed, 1 = open
+	; other doors?  to temple? to scanner room?
+	; fish mouth
+
+STATE_SWITCHES	=	$B2
+	; two switches in rotate room
+	; telescope power
+
+STATE_EVENTS	=	$B3
+	BEACH_ANIMALS_SEEN	=	$01
+
+
+ROOM_ROTATION		= $B4
+
 
 COUNT		=	$F7
 TEMPY		=	$F8

@@ -298,8 +298,11 @@ done_setup_sound:
 
 	lda	#0
 	sta	LEVEL_OVER
-	sta	BEACH_ANIMALS_SEEN
-	sta	ROOM_ROTATION
+	sta	STATE_MAGLEV		; init maglevs
+	sta	STATE_DOORS		; reset doors
+	sta	STATE_SWITCHES		; reset switches
+	sta	STATE_EVENTS		; reset events
+	sta	ROOM_ROTATION		; reset room rotation
 ;	sta	JOYSTICK_ENABLED
 
 	; init hi-res graphics

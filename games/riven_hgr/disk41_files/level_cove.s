@@ -28,7 +28,8 @@ riven_jungle_cove:
 	; set up location
 	;========================
 
-	lda	BEACH_ANIMALS_SEEN
+	lda	STATE_EVENTS
+	and	#BEACH_ANIMALS_SEEN
 	beq	no_beach_patch
 
 	lda	#RIVEN_COVE

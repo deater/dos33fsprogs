@@ -106,8 +106,9 @@ handle1_clicked:
 
 	bit	SPEAKER
 
-	lda	#0
-	sta	MAGLEV_FLIP_DIRECTION
+	lda	STATE_MAGLEV
+	ora	#MAGLEV1_DIRECTION
+	sta	STATE_MAGLEV
 
 	lda	#LOAD_MOVIE1
 	sta	WHICH_LOAD
@@ -132,8 +133,9 @@ handle2_clicked:
 	cmp	#27
 	bcc	go_for_maglev
 
-	lda	#1
-	sta	MAGLEV_FLIP_DIRECTION
+	lda	STATE_MAGLEV
+	and	#~MAGLEV1_DIRECTION
+	sta	STATE_MAGLEV
 
 	lda	#LOAD_MOVIE1
 	jmp	common_handle2

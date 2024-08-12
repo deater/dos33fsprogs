@@ -197,8 +197,9 @@ done_movie:
 	lda	#RIVEN_COVE
 	sta	LOCATION
 
-	lda	#1
-	sta	BEACH_ANIMALS_SEEN
+	lda	STATE_EVENTS
+	ora	#BEACH_ANIMALS_SEEN
+	sta	STATE_EVENTS
 
 	; needed?
 
