@@ -10,20 +10,20 @@ which_disk_bin:
 	.byte	38
 
 load_address_array:
-	.byte $40,$40,$40,$00	; TITLE, PROJECTOR, ENTRY
-	.byte $00,$00,$00,$00	;
+	.byte $40,$40,$40,$40	; TITLE, PROJECTOR, ENTRY, CLOSE
+	.byte $40,$00,$00,$00	; MID
 
 track_array:
-        .byte  0, 2, 8, 0	; TITLE, PROJECTOR, ENTRY
-	.byte  0, 0, 0, 0	;
+        .byte  0, 2, 8, 14	; TITLE, PROJECTOR, ENTRY, CLOSE
+	.byte  20, 0, 0, 0	; MID
 
 sector_array:
-        .byte  8, 0, 0, 0	; TITLE, PROJECTOR, ENTRY
-	.byte  0, 0, 0, 0	;
+        .byte  8, 0, 0, 0	; TITLE, PROJECTOR, ENTRY, CLOSE
+	.byte  0, 0, 0, 0	; MID
 
 length_array:
-        .byte  8, 96,96,0	; TITLE, PROJECTOR, ENTRY
-	.byte  0, 0, 0, 0	;
+        .byte  8, 96,96,96	; TITLE, PROJECTOR, ENTRY, CLOSE
+	.byte  96, 0, 0, 0	; MID
 
 disk_exit_disk: ; note: not BCD anymore
 	.byte 39		; outside maglev

@@ -27,7 +27,7 @@ location0:
 
 location1:
 	.byte	$ff			; north exit
-	.byte	LOAD_PROJECTOR<<4|RIVEN_PROJECTOR	; south exit
+	.byte	LOAD_MID<<4|RIVEN_MID	; south exit
 	.byte	RIVEN_DOOR		; east exit
 	.byte	LOAD_PROJECTOR<<4|RIVEN_PROJECTOR	; west exit
 	.byte	$ff		; north exit_dir
