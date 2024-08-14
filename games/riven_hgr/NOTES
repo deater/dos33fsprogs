@@ -120,7 +120,7 @@ Disk05 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
-T         2 = CHAIR      1195 bytes         = 6T0S	(24576) 23k free
+T         2 = CHAIR     14263 bytes         = 6T0S	(24576) 10k free
 
 Disk10 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -326,6 +326,6 @@ stained glass:
 	paint paint paint
 	draw border
 
-
-
-
+chair room
+	shadow 72? 69/45?
+	or instead levels auto?

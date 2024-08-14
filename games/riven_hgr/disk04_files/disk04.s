@@ -71,7 +71,7 @@ disk_exit_load:
 disk_exit_level:
 	.byte	RIVEN_BRIDGE
 	.byte	RIVEN_DOOR
-	.byte	RIVEN_CHAIR
+	.byte	RIVEN_ENTRANCE
 	.byte	0
 	.byte	0
 	.byte	0

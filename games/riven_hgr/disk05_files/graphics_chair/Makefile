@@ -6,8 +6,15 @@ PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 all:	chair_graphics.inc
 
 chair_graphics.inc:	\
-	chair_n.hgr.zx02
+	chair_n.hgr.zx02 chair_s.hgr.zx02 \
+	entrance_n.hgr.zx02 entrance_s.hgr.zx02 \
+	entrance_open_s.hgr.zx02
 	echo "chair_n_zx02: .incbin \"chair_n.hgr.zx02\"" > chair_graphics.inc
+	echo "chair_s_zx02: .incbin \"chair_s.hgr.zx02\"" >> chair_graphics.inc
+	echo "entrance_n_zx02: .incbin \"entrance_n.hgr.zx02\"" >> chair_graphics.inc
+	echo "entrance_s_zx02: .incbin \"entrance_s.hgr.zx02\"" >> chair_graphics.inc
+	echo "entrance_open_s_zx02: .incbin \"entrance_open_s.hgr.zx02\"" >> chair_graphics.inc
+
 
 
 ####

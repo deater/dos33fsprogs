@@ -468,7 +468,7 @@ game_continue:
 	lda	#LOAD_CHAIR
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_CHAIR
+	lda	#RIVEN_ENTRANCE
 	sta	LOCATION
 
 	lda	#DIRECTION_N
