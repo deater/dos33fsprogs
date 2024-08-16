@@ -7,11 +7,11 @@ locations:
 
 ; RIVEN_CHAIR -- scary chair
 location0:
-	.byte	$ff		; north exit
+	.byte	LOAD_CHAIR2<<4|RIVEN_CHAIR2		; north exit
 	.byte	RIVEN_ENTRANCE	; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
-	.byte	$FF		; north exit_dir
+	.byte	DIRECTION_N	; north exit_dir
 	.byte	DIRECTION_S	; south exit_dir
 	.byte	$ff		; east exit_dir
 	.byte	$ff		; west exit_dir

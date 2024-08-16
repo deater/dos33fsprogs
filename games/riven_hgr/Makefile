@@ -138,7 +138,8 @@ riven_disk04.dsk:	QBOOT QLOAD TITLE_04 \
 
 riven_disk05.dsk:	QBOOT QLOAD TITLE_05 \
 	disk05_files/DISK05 \
-	disk05_files/LEVEL_CHAIR
+	disk05_files/LEVEL_CHAIR \
+	disk05_files/LEVEL_CHAIR2
 	cp $(EMPTY_DISK)/empty.dsk riven_disk05.dsk
 	$(DOS33_RAW) riven_disk05.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk05.dsk  0  2 QBOOT                1   1
@@ -147,6 +148,8 @@ riven_disk05.dsk:	QBOOT QLOAD TITLE_05 \
 	$(DOS33_RAW) riven_disk05.dsk  0  8 TITLE_05		 0   0
 	$(DOS33_RAW) riven_disk05.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk05.dsk  2  0 disk05_files/LEVEL_CHAIR      0   0
+	$(DOS33_RAW) riven_disk05.dsk  8  0 disk05_files/LEVEL_CHAIR2      0   0
+
 
 ###
 
@@ -622,6 +625,9 @@ disk04_files/LEVEL_TUNNEL7:
 disk05_files/LEVEL_CHAIR:	
 	cd disk05_files && make
 
+disk05_files/LEVEL_CHAIR2:	
+	cd disk05_files && make
+
 ####
 
 disk10_files/LEVEL_INSIDE:	
@@ -851,6 +857,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk04_files/LEVEL_TUNNEL7 \
 	disk05_files/DISK05 \
 	disk05_files/LEVEL_CHAIR \
+	disk05_files/LEVEL_CHAIR2 \
 	disk10_files/DISK10 \
 	disk10_files/LEVEL_INSIDE \
 	disk10_files/LEVEL_STAINED \
@@ -929,6 +936,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 4 28 0` disk04_files/LEVEL_TUNNEL7     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 0  2` disk05_files/DISK05  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 2  0` disk05_files/LEVEL_CHAIR     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 8  0` disk05_files/LEVEL_CHAIR2     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 0  2` disk10_files/DISK10  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 2  0` disk10_files/LEVEL_INSIDE     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 8  0` disk10_files/LEVEL_STAINED     0   0

@@ -9,19 +9,19 @@ which_disk_bin:
 	.byte	5
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, CHAIR
+	.byte	$40,$40,$40,$40	; TITLE, CHAIR, CHAIR2
 	.byte	$40,$00,$00,$00 ;
 
 track_array:
-	.byte	0, 2, 9,16	; TITLE, CHAIR
+	.byte	0, 2, 8,16	; TITLE, CHAIR, CHAIR2
 	.byte	22,0,0,0	;
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, CHAIR
+	.byte	8, 0, 0, 0	; TITLE, CHAIR, CHAIR2
 	.byte	0,0,0,0		;
 
 length_array:
-	.byte	8, 96,84, 96	; TITLE, CHAIR
+	.byte	8, 96,112, 96	; TITLE, CHAIR, CHARI2
 	.byte	80,0,0,0
 
 
