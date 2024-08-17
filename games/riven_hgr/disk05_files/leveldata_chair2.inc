@@ -38,7 +38,10 @@ location1:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte	DIRECTION_S|DIRECTION_ONLY_POINT	; special exit
+	.byte	1,39
+	.byte	0,180
+	.word	chair3_handler-1
 
 ; RIVEN_PORTHOLE_L -- looking at temple
 location2:
@@ -92,7 +95,10 @@ location4:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte   DIRECTION_S     ; special exit
+	.byte	2,8		; special x
+	.byte	140,160		; special y
+	.word	chair3_flip-1	; special function
 
 
 ; RIVEN_CHAIR3_DOWN_FLIP -- sitting in chair, down, flipped
@@ -110,5 +116,8 @@ location5:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte   DIRECTION_S     ; special exit
+	.byte	32,37		; special x
+	.byte	146,166		; special y
+	.word	chair3_done-1	; special function
 

@@ -49,11 +49,11 @@ riven_projector_mid:
 	sta	CURSOR_Y
 
 
-
-
 	;===================================
 	; init
 	;===================================
+
+	jsr	update_temple_door
 
 	jsr	change_location
 
@@ -136,6 +136,35 @@ done_dir:
 	sta	LEVEL_OVER
 
 	rts
+
+
+	;==========================
+        ; update temple door
+        ;==========================
+
+	; update data to point to right image
+update_temple_door:
+	lda	STATE_DOORS
+	and	#TEMPLE_DOOR
+	beq	make_door_closed
+
+make_door_open:
+
+	lda	#<mid_n_open_zx02
+	sta	location0+LOCATION_NORTH_BG
+	lda	#>mid_n_open_zx02
+	jmp	make_door_common
+
+make_door_closed:
+
+	lda	#<mid_n_zx02
+	sta	location0+LOCATION_NORTH_BG
+	lda	#>mid_n_zx02
+make_door_common:
+	sta	location0+LOCATION_NORTH_BG+1
+
+	rts
+
 
 
 	;==========================

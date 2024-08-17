@@ -55,6 +55,10 @@ riven_projector:
 	; init
 	;===================================
 
+	; open/shut door
+
+	jsr	update_temple_door
+
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
@@ -95,6 +99,39 @@ frame_no_oflo:
 really_exit:
 
 	rts
+
+
+	;==========================
+        ; update temple door
+        ;==========================
+
+	; update data to point to right image
+update_temple_door:
+	lda	STATE_DOORS
+	and	#TEMPLE_DOOR
+	beq	make_door_closed
+
+make_door_open:
+	lda	#$E0
+	sta	location0+LOCATION_NORTH_EXIT
+
+	lda	#<projector_n_open_zx02
+	sta	location0+LOCATION_NORTH_BG
+	lda	#>projector_n_open_zx02
+	jmp	make_door_common
+
+make_door_closed:
+	lda	#$FF
+	sta	location0+LOCATION_NORTH_EXIT
+
+	lda	#<projector_n_zx02
+	sta	location0+LOCATION_NORTH_BG
+	lda	#>projector_n_zx02
+make_door_common:
+	sta	location0+LOCATION_NORTH_BG+1
+
+	rts
+
 
 
 	;==========================

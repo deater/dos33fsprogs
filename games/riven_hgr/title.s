@@ -497,6 +497,12 @@ game_continue:
 
 	lda	#DIRECTION_S
 	sta	DIRECTION
+
+	; DEBUG -- doors open when start on this disk
+	lda	STATE_DOORS
+	ora	#TEMPLE_DOOR
+	sta	STATE_DOORS
+
 .endif
 
 .if DISK=39
