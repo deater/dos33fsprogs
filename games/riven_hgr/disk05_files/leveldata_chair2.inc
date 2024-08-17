@@ -55,7 +55,10 @@ location2:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_SOUTH
-	.byte	$ff		; special exit
+	.byte   DIRECTION_S     ; special exit
+	.byte	2,8		; special x
+	.byte	60,126		; special y
+	.word	temple_door_switch-1	; special function
 
 ; RIVEN_PORTHOLE_R -- looking at blue? maglev?
 location3:

@@ -55,11 +55,9 @@ chair2_start:
 	; init
 	;===================================
 
-; done in title
+	; update the temple door switch if open/closed
 
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
+	jsr	update_temple_door
 
 	jsr	change_location
 
@@ -99,6 +97,54 @@ frame_no_oflo:
 	jmp	game_loop
 
 really_exit:
+
+	rts
+
+
+	;==========================
+	; temple door switch
+	;==========================
+temple_door_switch:
+
+	bit	SPEAKER
+
+	; toggle switch
+
+	lda	STATE_DOORS
+	eor	#TEMPLE_DOOR
+	sta	STATE_DOORS
+
+	jsr	update_temple_door
+
+	lda     #1
+	sta     LEVEL_OVER
+
+	rts
+
+
+	;==========================
+	; update temple door
+	;==========================
+
+	; update data to point to right image
+update_temple_door:
+	lda	STATE_DOORS
+	and	#TEMPLE_DOOR
+	beq	make_door_closed
+
+make_door_open:
+	lda	#<porthole_l_open_s_zx02
+	sta	location2+LOCATION_SOUTH_BG
+	lda	#>porthole_l_open_s_zx02
+	jmp	make_door_common
+
+
+make_door_closed:
+	lda	#<porthole_l_closed_s_zx02
+	sta	location2+LOCATION_SOUTH_BG
+	lda	#>porthole_l_closed_s_zx02
+make_door_common:
+	sta	location2+LOCATION_SOUTH_BG+1
 
 	rts
 

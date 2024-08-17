@@ -136,14 +136,18 @@ STATE_MAGLEV	=	$B0
 	MAGLEV2_DIRECTION	=	$20	; 1 = outbound
 	MAGLEV3_DIRECTION	=	$40
 
+
+	; other doors?  to scanner room?
+	; fish mouth
 STATE_DOORS	=	$B1
 	TEMPLE_DOOR		=	$01	; 0 = closed, 1 = open
-	; other doors?  to temple? to scanner room?
-	; fish mouth
 
-STATE_SWITCHES	=	$B2
+	; other:
 	; two switches in rotate room
 	; telescope power
+STATE_SWITCHES	=	$B2
+	CHAIR_OPEN		=	$01	; 0 = down, 1 = up
+
 
 STATE_EVENTS	=	$B3
 	BEACH_ANIMALS_SEEN	=	$01
