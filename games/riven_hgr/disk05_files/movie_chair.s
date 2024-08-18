@@ -74,9 +74,10 @@ chair_loop:
 	cmp	#NUM_OVERLAYS
 	beq	done_chair
 
-	; in theory we are 500ms (10*50) long here...
+	; in theory we are 5 fps, so 200ms here
+	;	wait_a_bit is *50? so should be 4?
 
-	ldx	#7
+	ldx	#4
 	jsr	wait_a_bit
 
 	jmp	chair_loop
@@ -111,16 +112,16 @@ frames_l:
 	.byte <overlay06		; 2
 	.byte <overlay07		; 3
 	.byte <overlay08		; 4
-	.byte <empty			; 5
-	.byte <empty			; 6
-	.byte <empty			; 7
-	.byte <empty			; 8
-	.byte <empty			; 9
-	.byte <empty			; 10
-	.byte <empty			; 11
-	.byte <empty			; 12
-	.byte <empty			; 13
-	.byte <empty			; 14
+	.byte <overlay09		; 5
+	.byte <overlay10		; 6
+	.byte <overlay11		; 7
+	.byte <overlay12		; 8
+	.byte <overlay13		; 9
+	.byte <overlay14		; 10
+	.byte <overlay15		; 11
+	.byte <overlay16		; 12
+	.byte <overlay17		; 13
+	.byte <overlay18		; 14
 
 frames_h:
 	.byte >overlay04		; 0
@@ -128,16 +129,16 @@ frames_h:
 	.byte >overlay06		; 2
 	.byte >overlay07		; 3
 	.byte >overlay08		; 4
-	.byte >empty			; 5
-	.byte >empty			; 6
-	.byte >empty			; 7
-	.byte >empty			; 8
-	.byte >empty			; 9
-	.byte >empty			; 10
-	.byte >empty			; 11
-	.byte >empty			; 12
-	.byte >empty			; 13
-	.byte >empty			; 14
+	.byte >overlay09		; 5
+	.byte >overlay10		; 6
+	.byte >overlay11		; 7
+	.byte >overlay12		; 8
+	.byte >overlay13		; 9
+	.byte >overlay14		; 10
+	.byte >overlay15		; 11
+	.byte >overlay16		; 12
+	.byte >overlay17		; 13
+	.byte >overlay18		; 14
 
 chair_graphics:
 	.include	"movie_chair/movie_chair.inc"
