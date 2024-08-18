@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK05 LEVEL_CHAIR LEVEL_CHAIR2
+all:	DISK05 LEVEL_CHAIR LEVEL_CHAIR2 MOVIE_CHAIR
 
 ####
 
@@ -37,6 +37,17 @@ level_chair2.o:	level_chair2.s \
 		graphics_chair2/chair2_graphics.inc
 	ca65 -o level_chair2.o level_chair2.s -l level_chair2.lst
 
+####
+
+MOVIE_CHAIR:	movie_chair.o
+	ld65 -o MOVIE_CHAIR movie_chair.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+movie_chair.o:	movie_chair.s \
+	../flip_pages.s ../disk00_files/draw_scene.s \
+	../zp.inc ../hardware.inc ../qload.inc \
+	../common_defines.inc disk05_defines.inc \
+	movie_chair/movie_chair.inc
+	ca65 -o movie_chair.o movie_chair.s -l movie_chair.lst
 
 ####
 

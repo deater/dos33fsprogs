@@ -1,3 +1,19 @@
+Things missing:
+~~~~~~~~~~~~~~~
++ DISK05
+  the blue viewer should show if maglev is there or not
+
++ DISK38
+  The graphics should be different for essentially all views (more light)
+     when door is open
+  Should see maglev out the door if it's there
+
++ DISK39
+  Maglev should not be there at first, and should arrive when press button
+  Should be full movie of maglev arriving
+  Should handle case of being outside temple when door is closed
+
+
 
 REMEMBER!  QLOAD actually trashes 2 bytes above the top of the load
 	for most of this we re-write those bytes and it doesn't matter
@@ -24,32 +40,6 @@ $D000-$FFFF = ROM
 
 
 
-image conversion
-	scummvm/vokoscreen capture
-	crop
-	scale to 140x201
-	convert
-	re-scale and crop to 280x192
-
-	(old) map to 12 colors and eyeball which?
-	(old) contrast/bright 57/3	(note: not always or even often)
-
-	dark areas, crank shadow removal to 80?
-
-	on some hard to define areas crank contrast to 50?
-
-	on atrus movie go to color levels and hit "auto" before iipix
-
-final movie roto procedure:
-	scale to 40x50
-	crop to 40x48
-	add layer
-	paste overlay mask on top
-	rotoscope
-	copy to new image
-	convert to indexed apple II palette
-	scale to 80x48
-	save
 
 ;================================
 ; NOTE: for hard-disk image we use 512-byte blocks (not 256-byte sectors)
@@ -122,6 +112,7 @@ T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
 T         2 = CHAIR     14263 bytes         = 6T0S	(24576) 10k free
 T         8 = CHAIR2    27064 bytes         = 7T0S	(28672) 1k free
+T        15 = MOV_CHAIR 20480 bytes         = 5T0S	(20480) 1k free
 
 
 Disk10 Map (disk has 35 tracks, each 4k in size)
@@ -310,6 +301,35 @@ rotating room   -- rotates clockwise.  B initially blocked
 				flip twice to get to Q, also handle and
 				button (both needed to get to dome)
 			rotate button at B as well
+
+
+
+image conversion
+	scummvm/vokoscreen capture
+	crop
+	scale to 140x201
+	convert
+	re-scale and crop to 280x192
+
+	(old) map to 12 colors and eyeball which?
+	(old) contrast/bright 57/3	(note: not always or even often)
+
+	dark areas, crank shadow removal to 80?
+
+	on some hard to define areas crank contrast to 50?
+
+	on atrus movie go to color levels and hit "auto" before iipix
+
+final movie roto procedure:
+	scale to 40x50
+	crop to 40x48
+	add layer
+	paste overlay mask on top
+	rotoscope
+	copy to new image
+	convert to indexed apple II palette
+	scale to 80x48
+	save
 
 
 settings for temple

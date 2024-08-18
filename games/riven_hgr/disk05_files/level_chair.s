@@ -15,14 +15,12 @@ chair_start:
 	; init screen
 	;===================
 
-;	jsr	TEXT
-;	jsr	HOME
-	bit	KEYRESET
+;	bit	KEYRESET
 
-	bit	SET_GR
-	bit	PAGE1
-	bit	HIRES
-	bit	FULLGR
+;	bit	SET_GR
+;	bit	PAGE1
+;	bit	HIRES
+;	bit	FULLGR
 
 	;========================
 	; set up location
@@ -55,15 +53,22 @@ chair_start:
 	; init
 	;===================================
 
-; done in title
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
 
 	jsr	change_location
 
 	jsr     save_bg_14x14           ; save old bg
+
+	;===================
+	; init screen
+	;===================
+
+	bit	KEYRESET
+
+	bit	SET_GR
+	bit	PAGE1
+	bit	HIRES
+	bit	FULLGR
+
 
 game_loop:
 

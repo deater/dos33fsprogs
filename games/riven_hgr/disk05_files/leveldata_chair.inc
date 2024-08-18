@@ -24,7 +24,7 @@ location0:
 
 ; RIVEN_ENTRANCE -- entrance to chair room
 location1:
-	.byte	RIVEN_CHAIR		; north exit
+	.byte	MOVIE_CHAIR<<4|0	; north exit
 	.byte	RIVEN_ENTRANCE_OPEN	; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit

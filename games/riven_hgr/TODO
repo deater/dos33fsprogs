@@ -1,5 +1,28 @@
-disk01:
+General:
+	press escape to skip cutscenes?
 
++ disk handling code
+	+ on every load check to make sure disk hasn't been swapped?
+		can put expected disk number at beginning of each thing
+		we load and compare against it
+	+ allow pressing escape to back-out disk change?
+
++ Keyboard handling
+	- Better keyboard handling on IIe
+	-> was actually one of the main reasons I started working on this
+
+qload:
++ move flip_pages.s into QLOAD
+
+
+title:
+
+disk00:
+
+
+
+disk01:
+	+ maybe redo opening graphics
 
 disk02:	(steps)
 	one	E
@@ -24,63 +47,23 @@ disk03: (down other side)
 	allow walking through doorway depending on room rotation	
 
 disk04: bridge
-	
-	bridge2 (nsew)
-	bridge3 (nsew)
-	bridge4 (nsew)
-	tunnel1 (ew)
-	tunnel2 (ew)
-	tunnel3 (new) door open)
+	add missing N/S views
+	allow clicking on chair room door to go direct there
 
 disk05: control room
-	in1
-	in2 (plays movie of opening)
-	in3
-	in4 seat
-	temple view
-	sub view
-	possibly animation of lowering when button pressed/pull handle
+	blue view should have maglev there/not
+	orange view should animate opening door
 
 disk06: more tunnel
-	tunnel4
-	tunnel5
-	tunnel6
-	tunnel7
-	tunnel8 (door)
-	tunnel9 (looking into temple)
+	allow clicking on cair room to go direct here
+	animate opening door?
 
+disk10:
+	figure out rotation
 
-
-+ disk handling code
-	+ on every load check to make sure disk hasn't been swapped?
-		can put expected disk number at beginning of each thing
-		we load and compare against it
-	+ allow pressing escape to back-out disk change?
-
-+ Keyboard handling
-	- Better keyboard handling on IIe
-	-> was actually one of the main reasons I started working on this
-
-qload:
-+ move flip_pages.s into QLOAD
-
-title:
-
-disk00:
-	+ cyan intro
-		use page flipping on Apple IIe with auxmem?
-	+ atrus intro
-	+ capture movie:
-	+ opening movie: implement it
-		ESC key... in wait_a_bit write to WAIT_KEYPRESS
-		allow skipping chunks of it
-
-disk01:
-	+ maybe redo opening graphics
 
 disk38:
-	-> complete things
-
+	
 disk39:
 	-> try to fit last little bit of maglev sequence
 		+ do the handle animation at end?
@@ -88,19 +71,25 @@ disk39:
 		+ if out of room in RAM (but not disk)
 			optionally load tail end
 			to language card on machines that have it?
+
 disk40:
 	-> implement maglev flip
 	-> implement maglev back
 
 disk41:
-	-> see if we can implement left/straight right/straight
-		options for fork-in-road type situations
+	-> allow going down where animals were, see ball?
+
 
 disk43:
-	-> implement cart
+	-> implement cart ride (maybe move to disk50)
 	-> fix up graphics
 	-> fix up path
-	-> again, figure out fork-in-road handling
+	-> batter fork-in-road handling
+
+disk44:
+	-> more path
+	-> fish mouth
+	-> probably move fish to own disk
 
 disk50:
 	-> implement reverse cart

@@ -1,6 +1,7 @@
 LOAD_TITLE_05	=	0
 LOAD_CHAIR	=	1
 LOAD_CHAIR2	=	2
+MOVIE_CHAIR	=	3
 
 ;================================
 ; Level definitions
