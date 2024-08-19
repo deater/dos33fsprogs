@@ -1,4 +1,4 @@
-; Riven -- Inside Rotate room
+; Riven -- Inside Rotate room, area 15
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -9,7 +9,7 @@
 	.include "../qload.inc"
 	.include "disk10_defines.inc"
 
-bridge1_start:
+room_15_start:
 
 	;===================
 	; init screen
@@ -103,54 +103,54 @@ really_exit:
 	rts
 
 	;==========================
-	; handle pillars 2/3
+	; move to center
 	;==========================
-handle_pillars_23:
+move_to_center:
 
-	; if 13 or to pillar 2
-	; if 26 or more, go to pillar 3
-	; otherwise, go to center path (nothing for now)
+	; if 17 or less, go to center_23
+	; if 23 or more, go to center_34
+	; otherwise, go directly to pillar 3 (TODO?)
 
 	lda	CURSOR_X
-	cmp	#26
-	bcs	go_pillar3
+	cmp	#18
+	bcc	go_center_23		; blt
 
-	cmp	#13
-	bcc	go_pillar2
+	cmp	#23
+	bcs	go_center_34		; bge
+
+	; do nothing
 
 	rts
 
-go_pillar3:
-	lda     #LOAD_STAINED
+go_center_23:
+	lda     #LOAD_CENTER
 	sta     WHICH_LOAD
 
-	lda     #RIVEN_BEETLE_FAR_R
+	lda     #RIVEN_CENTER_23
 	sta     LOCATION
 
-	lda     #DIRECTION_W
-	bne     done_dir        ; bra
+	jmp	done_dir
 
-go_pillar2:
-	lda	#LOAD_STAINED
+go_center_34:
+	lda	#LOAD_CENTER
 	sta	WHICH_LOAD
 
-	lda     #RIVEN_BEETLE_FAR_R
+	lda     #RIVEN_CENTER_34
 	sta     LOCATION
 
-	lda	#DIRECTION_W
 done_dir:
+	lda     #DIRECTION_N
 	sta	DIRECTION
 
 	lda	#1
 	sta	LEVEL_OVER
 	rts
 
-
 	;==========================
 	; includes
 	;==========================
 
 
-.include "graphics_inside/inside_graphics.inc"
+.include "graphics_15/15_graphics.inc"
 
-.include "leveldata_inside.inc"
+.include "leveldata_15.inc"

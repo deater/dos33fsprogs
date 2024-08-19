@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK10 LEVEL_INSIDE LEVEL_STAINED
+all:	DISK10 LEVEL_CENTER LEVEL_PILLARS LEVEL_15
 
 ####
 
@@ -13,51 +13,86 @@ DISK10:	disk10.o
 disk10.o:	disk10.s ../zp.inc
 	ca65 -o disk10.o disk10.s -l disk10.lst
 
+
 ####
 
-LEVEL_INSIDE:	level_inside.o
-	ld65 -o LEVEL_INSIDE level_inside.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+LEVEL_CENTER:	level_center.o
+	ld65 -o LEVEL_CENTER level_center.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-level_inside.o:	level_inside.s \
+level_center.o:	level_center.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk10_defines.inc \
-		leveldata_inside.inc \
-		graphics_inside/inside_graphics.inc
-	ca65 -o level_inside.o level_inside.s -l level_inside.lst
+		leveldata_center.inc \
+		graphics_center/center_graphics.inc
+	ca65 -o level_center.o level_center.s -l level_center.lst
 
 ####
 
-LEVEL_STAINED:	level_stained.o
-	ld65 -o LEVEL_STAINED level_stained.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+LEVEL_15:	level_15.o
+	ld65 -o LEVEL_15 level_15.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-level_stained.o:	level_stained.s \
+level_15.o:	level_15.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk10_defines.inc \
-		leveldata_stained.inc \
-		graphics_stained/stained_graphics.inc
-	ca65 -o level_stained.o level_stained.s -l level_stained.lst
+		leveldata_15.inc \
+		graphics_15/15_graphics.inc
+	ca65 -o level_15.o level_15.s -l level_15.lst
+
+####
+
+LEVEL_PILLARS:	level_pillars.o
+	ld65 -o LEVEL_PILLARS level_pillars.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_pillars.o:	level_pillars.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk10_defines.inc \
+		leveldata_pillars.inc \
+		graphics_pillars/pillars_graphics.inc
+	ca65 -o level_pillars.o level_pillars.s -l level_pillars.lst
 
 
 ####
 
-graphics_inside/inside_graphics.inc:
-	cd graphics_inside && make
+LEVEL_23:	level_23.o
+	ld65 -o LEVEL_23 level_23.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-graphics_stained/stained_graphics.inc:
-	cd graphics_stained && make
+level_23.o:	level_23.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk10_defines.inc \
+		leveldata_23.inc \
+		graphics_23/23_graphics.inc
+	ca65 -o level_23.o level_23.s -l level_23.lst
+
+
+####
+
+graphics_center/center_graphics.inc:
+	cd graphics_center && make
+
+graphics_pillars/pillars_graphics.inc:
+	cd graphics_pillars && make
+
+graphics_15/15_graphics.inc:
+	cd graphics_15 && make
+
+graphics_23/23_graphics.inc:
+	cd graphics_23 && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst DISK10 \
-		LEVEL_INSIDE LEVEL_STAINED
+		LEVEL_CENTER LEVEL_PILLARS \
+		LEVEL_15 LEVEL_23
 
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK10 \
-		LEVEL_INSIDE LEVEL_STAINED
-	cd graphics_inside && make clean
-	cd graphics_stained && make clean
+		LEVEL_CENTER LEVEL_PILLARS LEVEL_15 LEVEL_23
+	cd graphics_center && make clean
+	cd graphics_pillars && make clean
+	cd graphics_15 && make clean
+	cd graphics_23 && make clean
 

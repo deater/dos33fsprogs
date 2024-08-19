@@ -476,13 +476,13 @@ game_continue:
 .endif
 
 .if DISK=10
-	lda	#LOAD_INSIDE
+	lda	#LOAD_15
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_INSIDE
+	lda	#RIVEN_15
 	sta	LOCATION
 
-	lda	#DIRECTION_W
+	lda	#DIRECTION_N
 	sta	DIRECTION
 .endif
 

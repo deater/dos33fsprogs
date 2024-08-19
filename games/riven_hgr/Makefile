@@ -156,8 +156,9 @@ riven_disk05.dsk:	QBOOT QLOAD TITLE_05 \
 ###
 
 riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
-	disk10_files/LEVEL_INSIDE \
-	disk10_files/LEVEL_STAINED
+	disk10_files/LEVEL_CENTER \
+	disk10_files/LEVEL_PILLARS \
+	disk10_files/LEVEL_15
 	cp $(EMPTY_DISK)/empty.dsk riven_disk10.dsk
 	$(DOS33_RAW) riven_disk10.dsk  0  0 QBOOT                0   1
 	$(DOS33_RAW) riven_disk10.dsk  0  2 QBOOT                1   1
@@ -165,9 +166,9 @@ riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
 	$(DOS33_RAW) riven_disk10.dsk  0  1 disk10_files/DISK10  0   0
 	$(DOS33_RAW) riven_disk10.dsk  0  8 TITLE_10		 0   0
 	$(DOS33_RAW) riven_disk10.dsk  1  0 QLOAD                0   0
-	$(DOS33_RAW) riven_disk10.dsk  2  0 disk10_files/LEVEL_INSIDE      0   0
-	$(DOS33_RAW) riven_disk10.dsk  8  0 disk10_files/LEVEL_STAINED      0   0
-
+	$(DOS33_RAW) riven_disk10.dsk  2  0 disk10_files/LEVEL_CENTER      0   0
+	$(DOS33_RAW) riven_disk10.dsk  8  0 disk10_files/LEVEL_15      0   0
+	$(DOS33_RAW) riven_disk10.dsk  23 0 disk10_files/LEVEL_PILLARS      0   0
 
 ###
 
@@ -635,10 +636,13 @@ disk05_files/MOVIE_CHAIR:
 
 ####
 
-disk10_files/LEVEL_INSIDE:	
+disk10_files/LEVEL_CENTER:	
 	cd disk10_files && make
 
-disk10_files/LEVEL_STAINED:	
+disk10_files/LEVEL_PILLARS:	
+	cd disk10_files && make
+
+disk10_files/LEVEL_15:	
 	cd disk10_files && make
 
 ####
@@ -865,8 +869,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk05_files/LEVEL_CHAIR2 \
 	disk05_files/MOVIE_CHAIR \
 	disk10_files/DISK10 \
-	disk10_files/LEVEL_INSIDE \
-	disk10_files/LEVEL_STAINED \
+	disk10_files/LEVEL_CENTER \
+	disk10_files/LEVEL_PILLARS \
+	disk10_files/LEVEL_15 \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
 	disk38_files/LEVEL_ENTRY \
@@ -945,8 +950,9 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 8  0` disk05_files/LEVEL_CHAIR2     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 5 15 0` disk05_files/MOVIE_CHAIR     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 0  2` disk10_files/DISK10  0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 2  0` disk10_files/LEVEL_INSIDE     0   0
-	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 8  0` disk10_files/LEVEL_STAINED     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 2  0` disk10_files/LEVEL_CENTER     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 8  0` disk10_files/LEVEL_15     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 23  0` disk10_files/LEVEL_PILLARS     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 2  0` disk38_files/LEVEL_PROJECTOR      0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 8  0` disk38_files/LEVEL_ENTRY      0   0

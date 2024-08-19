@@ -9,20 +9,20 @@ which_disk_bin:
 	.byte	10
 
 load_address_array:
-	.byte	$40,$40,$40,$40	; TITLE, INSIDE, STAINED
-	.byte	$40,$40,$40,$40 ;
+	.byte	$40,$40,$40,$40	; TITLE, CENTER, LEVEL_15, LEVEL_21
+	.byte	$40,$40,$40,$40 ; LEVEL_32,LEVEL_43,LEVEL_54,PILLARS
 
 track_array:
-	.byte	0, 2, 8,12	; TITLE, INSIDE, STAINED
-	.byte	17,22,27,0	;
+	.byte	0, 2, 8,11	; TITLE, CENTER, LEVEL_15, LEVEL_21
+	.byte	14,17,20,23	; LEVEL_32,LEVEL_43,LEVEL_54,PILLARS
 
 sector_array:
-	.byte	8, 0, 0, 0	; TITLE, INSIDE, STAINED
-	.byte	0,0,0,0		;
+	.byte	8, 0, 0, 0	; TITLE, CENTER, LEVEL_15, LEVEL_21
+	.byte	0,0,0,0		; LEVEL_32,LEVEL_43,LEVEL_54,PILLARS
 
 length_array:
-	.byte	8, 96,96,80	; TITLE, INSIDE, STAINED
-	.byte	80,80,80,0	;
+	.byte	8, 112,48,48	; TITLE, CENTER, LEVEL_15, LEVEL_21
+	.byte	48,48,48,112	; LEVEL_32,LEVEL_43,LEVEL_54,PILLARS
 
 
 disk_exit_disk: ; note: not BCD anymore

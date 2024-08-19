@@ -29,7 +29,7 @@ location1:
 	.byte	$ff		; north exit
 	.byte	$ff		; south exit
 	.byte	$FF		; east exit
-	.byte	RIVEN_STAINED2	; west exit
+	.byte	RIVEN_STAINED3	; west exit
 	.byte	$FF		; north exit_dir
 	.byte	$FF		; south exit_dir
 	.byte	$FF		; east exit_dir
