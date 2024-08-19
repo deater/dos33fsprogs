@@ -83,16 +83,16 @@ graphics_23/23_graphics.inc:
 clean:		
 	rm -f *~ *.o *.lst DISK10 \
 		LEVEL_CENTER LEVEL_PILLARS \
-		LEVEL_15 LEVEL_23
+		LEVEL_15
 
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK10 \
-		LEVEL_CENTER LEVEL_PILLARS LEVEL_15 LEVEL_23
+		LEVEL_CENTER LEVEL_PILLARS LEVEL_15
 	cd graphics_center && make clean
 	cd graphics_pillars && make clean
 	cd graphics_15 && make clean
-	cd graphics_23 && make clean
+
 
