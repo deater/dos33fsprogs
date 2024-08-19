@@ -57,6 +57,9 @@ graphics_chair/chair_graphics.inc:
 graphics_chair2/chair2_graphics.inc:
 	cd graphics_chair2 && make
 
+movie_chair/movie_chair.inc:
+	cd movie_chair && make
+
 
 ####
 
