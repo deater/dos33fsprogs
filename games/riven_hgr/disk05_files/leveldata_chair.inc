@@ -20,7 +20,11 @@ location0:
 	.word	$0000		; east bg
 	.word	$0000		; west bg
 	.byte	BG_NORTH|BG_SOUTH	;
-	.byte	$ff		; special exit
+	.byte   DIRECTION_S	; special exit
+        .byte   7,33
+        .byte   0,180
+        .word   play_exit_audio-1
+
 
 ; RIVEN_ENTRANCE -- entrance to chair room
 location1:

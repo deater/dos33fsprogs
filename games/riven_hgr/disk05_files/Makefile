@@ -22,7 +22,8 @@ level_chair.o:	level_chair.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../common_defines.inc disk05_defines.inc \
 		leveldata_chair.inc \
-		graphics_chair/chair_graphics.inc
+		graphics_chair/chair_graphics.inc \
+		../audio.s audio/chair_close.btc.zx02
 	ca65 -o level_chair.o level_chair.s -l level_chair.lst
 
 ####
@@ -46,7 +47,8 @@ movie_chair.o:	movie_chair.s \
 	../flip_pages.s ../disk00_files/draw_scene.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	../common_defines.inc disk05_defines.inc \
-	movie_chair/movie_chair.inc
+	movie_chair/movie_chair.inc \
+	../audio.s audio/chair_open.btc.zx02
 	ca65 -o movie_chair.o movie_chair.s -l movie_chair.lst
 
 ####
@@ -60,6 +62,11 @@ graphics_chair2/chair2_graphics.inc:
 movie_chair/movie_chair.inc:
 	cd movie_chair && make
 
+audio/chair_open.btc.zx02:
+	cd audio && make
+
+audio/chair_close.btc.zx02:
+	cd audio && make
 
 ####
 
@@ -74,6 +81,6 @@ distclean:
 		LEVEL_CHAIR LEVEL_CHAIR2
 	cd graphics_chair && make clean
 	cd graphics_chair2 && make clean
-
+	cd audio && make clean
 
 
