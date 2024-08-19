@@ -134,7 +134,7 @@ handle2_clicked:
 	bcc	go_for_maglev
 
 	lda	STATE_MAGLEV
-	and	#~MAGLEV1_DIRECTION
+	and	#<(~MAGLEV1_DIRECTION)
 	sta	STATE_MAGLEV
 
 	lda	#LOAD_MOVIE1
