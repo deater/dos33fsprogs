@@ -20,7 +20,12 @@ location0:
 	.word	tunnel4_e_zx02	; east bg
 	.word	tunnel4_w_zx02	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte   DIRECTION_W|DIRECTION_ONLY_POINT	; special exit
+	.byte   25,33
+	.byte   0,180
+	.word   look_at_door-1
+
+
 
 ; RIVEN_TUNNEL5 -- more tunnel
 location1:

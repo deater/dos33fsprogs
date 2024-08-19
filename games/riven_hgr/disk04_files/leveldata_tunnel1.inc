@@ -37,5 +37,9 @@ location1:
 	.word	tunnel2_e_zx02	; east bg
 	.word	tunnel2_w_zx02	; west bg
 	.byte	BG_EAST|BG_WEST
-	.byte	$ff		; special exit
+	.byte   DIRECTION_E|DIRECTION_ONLY_POINT        ; special exit
+        .byte   7,14
+        .byte   0,180
+        .word   look_at_door-1
+
 

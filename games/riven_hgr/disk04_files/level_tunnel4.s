@@ -102,6 +102,26 @@ really_exit:
 
 	rts
 
+	;==========================
+        ; look at door
+        ;==========================
+look_at_door:
+
+        lda     #LOAD_TUNNEL3
+        sta     WHICH_LOAD
+
+        lda     #RIVEN_TUNNEL3
+        sta     LOCATION
+
+        lda     #DIRECTION_N
+        sta     DIRECTION
+
+        lda     #1
+        sta     LEVEL_OVER
+
+        rts
+
+
 
 	;==========================
 	; includes
