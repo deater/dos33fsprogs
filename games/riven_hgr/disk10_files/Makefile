@@ -3,7 +3,8 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 
 
-all:	DISK10 LEVEL_CENTER LEVEL_PILLARS LEVEL_15
+all:	DISK10 LEVEL_CENTER LEVEL_PILLARS \
+	LEVEL_15 LEVEL_32
 
 ####
 
@@ -40,6 +41,19 @@ level_15.o:	level_15.s \
 
 ####
 
+LEVEL_32:	level_32.o
+	ld65 -o LEVEL_32 level_32.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_32.o:	level_32.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk10_defines.inc \
+		leveldata_32.inc \
+		graphics_32/32_graphics.inc
+	ca65 -o level_32.o level_32.s -l level_32.lst
+
+
+####
+
 LEVEL_PILLARS:	level_pillars.o
 	ld65 -o LEVEL_PILLARS level_pillars.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
@@ -53,19 +67,6 @@ level_pillars.o:	level_pillars.s \
 
 ####
 
-LEVEL_23:	level_23.o
-	ld65 -o LEVEL_23 level_23.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
-
-level_23.o:	level_23.s \
-		../zp.inc ../hardware.inc ../qload.inc \
-		../common_defines.inc disk10_defines.inc \
-		leveldata_23.inc \
-		graphics_23/23_graphics.inc
-	ca65 -o level_23.o level_23.s -l level_23.lst
-
-
-####
-
 graphics_center/center_graphics.inc:
 	cd graphics_center && make
 
@@ -75,24 +76,26 @@ graphics_pillars/pillars_graphics.inc:
 graphics_15/15_graphics.inc:
 	cd graphics_15 && make
 
-graphics_23/23_graphics.inc:
-	cd graphics_23 && make
+graphics_32/32_graphics.inc:
+	cd graphics_32 && make
 
 ####
 
 clean:		
 	rm -f *~ *.o *.lst DISK10 \
 		LEVEL_CENTER LEVEL_PILLARS \
-		LEVEL_15
+		LEVEL_15 LEVEL_32
 
 
 ####
 
 distclean:
 	rm -f *~ *.o *.lst DISK10 \
-		LEVEL_CENTER LEVEL_PILLARS LEVEL_15
+		LEVEL_CENTER LEVEL_PILLARS \
+		LEVEL_15 LEVEL_32
 	cd graphics_center && make clean
 	cd graphics_pillars && make clean
 	cd graphics_15 && make clean
+	cd graphics_32 && make clean
 
 
