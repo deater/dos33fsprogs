@@ -137,9 +137,9 @@ done_cliff:
 	rts
 
 
-	.include	"../hgr_tables.s"
+	.include	"hgr_tables.s"
 
-	.include	"../zx02_optim.s"
+	.include	"zx02_optim.s"
 
 	.include	"wait.s"
 
