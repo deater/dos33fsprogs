@@ -159,6 +159,7 @@ riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
 	disk10_files/LEVEL_CENTER \
 	disk10_files/LEVEL_PILLARS \
 	disk10_files/LEVEL_15 \
+	disk10_files/LEVEL_21 \
 	disk10_files/LEVEL_32
 	cp $(EMPTY_DISK)/empty.dsk riven_disk10.dsk
 	$(DOS33_RAW) riven_disk10.dsk  0  0 QBOOT                0   1
@@ -169,6 +170,7 @@ riven_disk10.dsk:	QBOOT QLOAD TITLE_10 \
 	$(DOS33_RAW) riven_disk10.dsk  1  0 QLOAD                0   0
 	$(DOS33_RAW) riven_disk10.dsk  2  0 disk10_files/LEVEL_CENTER      0   0
 	$(DOS33_RAW) riven_disk10.dsk  8  0 disk10_files/LEVEL_15      0   0
+	$(DOS33_RAW) riven_disk10.dsk 11  0 disk10_files/LEVEL_21      0   0
 	$(DOS33_RAW) riven_disk10.dsk 14  0 disk10_files/LEVEL_32      0   0
 	$(DOS33_RAW) riven_disk10.dsk  23 0 disk10_files/LEVEL_PILLARS      0   0
 
@@ -647,6 +649,9 @@ disk10_files/LEVEL_PILLARS:
 disk10_files/LEVEL_15:	
 	cd disk10_files && make
 
+disk10_files/LEVEL_21:	
+	cd disk10_files && make
+
 disk10_files/LEVEL_32:	
 	cd disk10_files && make
 
@@ -877,6 +882,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	disk10_files/LEVEL_CENTER \
 	disk10_files/LEVEL_PILLARS \
 	disk10_files/LEVEL_15 \
+	disk10_files/LEVEL_21 \
 	disk10_files/LEVEL_32 \
 	disk38_files/DISK38 \
 	disk38_files/LEVEL_PROJECTOR \
@@ -958,6 +964,7 @@ riven_hgr.2mg:	dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 0  2` disk10_files/DISK10  0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 2  0` disk10_files/LEVEL_CENTER     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 8  0` disk10_files/LEVEL_15     0   0
+	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 11  0` disk10_files/LEVEL_21     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 14  0` disk10_files/LEVEL_32     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 10 23  0` disk10_files/LEVEL_PILLARS     0   0
 	$(PRODOS_RAW) riven_hgr.2mg `./dts_block 38 0  2` disk38_files/DISK38  0   0

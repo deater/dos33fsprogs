@@ -4,7 +4,7 @@ LINKER_SCRIPTS = ../../../linker_scripts/
 
 
 all:	DISK10 LEVEL_CENTER LEVEL_PILLARS \
-	LEVEL_15 LEVEL_32
+	LEVEL_15 LEVEL_21 LEVEL_32
 
 ####
 
@@ -38,6 +38,19 @@ level_15.o:	level_15.s \
 		leveldata_15.inc \
 		graphics_15/15_graphics.inc
 	ca65 -o level_15.o level_15.s -l level_15.lst
+
+####
+
+LEVEL_21:	level_21.o
+	ld65 -o LEVEL_21 level_21.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+
+level_21.o:	level_21.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../common_defines.inc disk10_defines.inc \
+		leveldata_21.inc \
+		graphics_21/21_graphics.inc
+	ca65 -o level_21.o level_21.s -l level_21.lst
+
 
 ####
 
@@ -76,6 +89,9 @@ graphics_pillars/pillars_graphics.inc:
 graphics_15/15_graphics.inc:
 	cd graphics_15 && make
 
+graphics_21/21_graphics.inc:
+	cd graphics_21 && make
+
 graphics_32/32_graphics.inc:
 	cd graphics_32 && make
 
@@ -84,7 +100,7 @@ graphics_32/32_graphics.inc:
 clean:		
 	rm -f *~ *.o *.lst DISK10 \
 		LEVEL_CENTER LEVEL_PILLARS \
-		LEVEL_15 LEVEL_32
+		LEVEL_15 LEVEL_21 LEVEL_32
 
 
 ####
@@ -92,10 +108,11 @@ clean:
 distclean:
 	rm -f *~ *.o *.lst DISK10 \
 		LEVEL_CENTER LEVEL_PILLARS \
-		LEVEL_15 LEVEL_32
+		LEVEL_15 LEVEL_21 LEVEL_32
 	cd graphics_center && make clean
 	cd graphics_pillars && make clean
 	cd graphics_15 && make clean
+	cd graphics_21 && make clean
 	cd graphics_32 && make clean
 
 

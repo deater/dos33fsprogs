@@ -160,9 +160,7 @@ move_51:
 
 	; go to level_15
 
-	lda     #LOAD_15
-	sta     WHICH_LOAD
-
+	ldx	#LOAD_15
 	lda	#RIVEN_15
 	jmp	go_edge
 
@@ -225,7 +223,7 @@ move_23:
 	; if 12 or less, go to pillar 2
 	; if 28 or more, go to pillar 3
 	; if 34 or more, go to center 34
-	; otherwise, go directly to level 23
+	; otherwise, go directly to level 32
 
 	lda	CURSOR_X
 	cmp	#6
@@ -240,9 +238,7 @@ move_23:
 
 	; go to level_32
 
-	lda     #LOAD_32
-	sta     WHICH_LOAD
-
+	ldx	#LOAD_32
 	lda	#RIVEN_32
 	jmp	go_edge
 
@@ -254,7 +250,7 @@ move_12:
 	; if 12 or less, go to pillar 1
 	; if 28 or more, go to pillar 2
 	; if 34 or more, go to center 23
-	; otherwise, go directly to level 12
+	; otherwise, go directly to level 21
 
 	lda	CURSOR_X
 	cmp	#6
@@ -267,9 +263,11 @@ move_12:
 	cmp	#28
 	bcs	go_pillar_2		; bge
 
-	; go to level_12
+	; go to level_21
 
-	rts
+	ldx     #LOAD_21
+	lda	#RIVEN_21
+	jmp	go_edge
 
 	;============================
 	; go to next center location
@@ -304,6 +302,7 @@ done_center:
 	;======================
 
 go_edge:
+	stx	WHICH_LOAD
 	sta     LOCATION
 
 	lda     #DIRECTION_S
