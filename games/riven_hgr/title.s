@@ -36,6 +36,10 @@
 	.include "disk10_files/disk10_defines.inc"
 .endif
 
+.if DISK=16
+	.include "disk16_files/disk16_defines.inc"
+.endif
+
 .if DISK=38
 	.include "disk38_files/disk38_defines.inc"
 .endif
@@ -485,6 +489,18 @@ game_continue:
 	lda	#DIRECTION_N
 	sta	DIRECTION
 .endif
+
+.if DISK=16
+	lda	#LOAD_BRIDGE
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_BRIDGE
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
 
 
 

@@ -1,4 +1,4 @@
-; Riven -- Alcove
+; Riven -- Bridge to Dome
 
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -7,9 +7,9 @@
 	.include "../hardware.inc"
 	.include "../common_defines.inc"
 	.include "../qload.inc"
-	.include "disk02_defines.inc"
+	.include "disk16_defines.inc"
 
-alcove_start:
+bridge_start:
 
 	;===================
 	; init screen
@@ -138,45 +138,45 @@ update_exit:
 	ldx	ROOM_ROTATION
 
 	lda	room_bg_l,X
-	sta	location0+LOCATION_WEST_BG
+	sta	location0+LOCATION_SOUTH_BG
 
 	lda	room_bg_h,X
-	sta	location0+LOCATION_WEST_BG+1
+	sta	location0+LOCATION_SOUTH_BG+1
 
 	lda	room_exits,X
-	sta	location0+LOCATION_WEST_EXIT
+	sta	location0+LOCATION_SOUTH_EXIT
 
 	rts
 
 	; rotates clockwise
 
 room_bg_l:
-	.byte	<alcove_w_zx02		; opening
-	.byte	<alcove3_w_zx02		; blocked
-	.byte	<alcove3_w_zx02		; blocked
-	.byte	<alcove_w_zx02		; opening
-	.byte	<alcove3_w_zx02		; blocked
+	.byte	<dome_bridge_s_zx02		; opening
+	.byte	<dome_bridge_s_blocked_zx02	; blocked
+	.byte	<dome_bridge_s_blocked_zx02	; blocked
+	.byte	<dome_bridge_s_zx02		; opening
+	.byte	<dome_bridge_s_blocked_zx02	; blocked
 
 room_bg_h:
-	.byte	>alcove_w_zx02		; opening
-	.byte	>alcove3_w_zx02		; blocked
-	.byte	>alcove3_w_zx02		; blocked
-	.byte	>alcove_w_zx02		; opening
-	.byte	>alcove3_w_zx02		; blocked
+	.byte	>dome_bridge_s_zx02		; opening
+	.byte	>dome_bridge_s_blocked_zx02	; blocked
+	.byte	>dome_bridge_s_blocked_zx02	; blocked
+	.byte	>dome_bridge_s_zx02		; opening
+	.byte	>dome_bridge_s_blocked_zx02	; blocked
 
 room_exits:
-	.byte	$E3			; 0
+	.byte	$E0			; 0
 	.byte	$FF			; 1
 	.byte	$FF			; 2
-	.byte	$E3			; 3
+	.byte	$E0			; 3
 	.byte	$FF			; 4
 
 
 	;==========================
-	; alcove button
+	; bridge button
 	;==========================
 
-alcove_button:
+bridge_button:
 
 	; rotate, mod5
 
@@ -192,17 +192,6 @@ room_no_wrap:
 	; update the pointers
 
 	jsr	update_exit
-
-	; display "rotation" animation
-
-	lda	#<alcove2_w_zx02
-	sta	ZX0_src
-	lda	#>alcove2_w_zx02
-	sta	ZX0_src+1
-
-	lda	#$20
-
-	jsr	full_decomp
 
 	; only play sound if language card
 
@@ -242,18 +231,6 @@ do_play_audio:
 
 done_play_audio:
 
-	; re-display exit graphic
-
-	lda	location0+14
-	sta	ZX0_src
-
-	lda	location0+15
-	sta	ZX0_src+1
-
-	lda	#$20
-
-	jsr	full_decomp
-
 	; TODO: tail call
 
 	rts
@@ -263,11 +240,11 @@ done_play_audio:
 	;==========================
 
 
-.include "graphics_alcove/alcove_graphics.inc"
+.include "graphics_bridge/bridge_graphics.inc"
 
-.include "leveldata_alcove.inc"
+.include "leveldata_bridge.inc"
 
 .include "../audio.s"
 
 rotate_audio:
-	.incbin "audio/rotate.btc.zx02"
+	.incbin "../disk02_files/audio/rotate.btc.zx02"

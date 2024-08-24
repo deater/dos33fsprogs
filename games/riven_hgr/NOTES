@@ -128,7 +128,12 @@ T        17 = LEVEL_43  18289 bytes         = 3T0S	(12288) ?k free
 T        20 = LEVEL_54  18289 bytes         = 3T0S	(12288) ?k free
 T        23 = PILLARS   32000 bytes         = 7T15S	(32512) ?k free
 
-
+Disk16 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot
+T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
+T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
+T         2 = BRIDGE    21162 bytes         = 6T0S	(28672) 6k free
 
 Disk38 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
