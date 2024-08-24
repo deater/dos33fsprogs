@@ -491,10 +491,10 @@ game_continue:
 .endif
 
 .if DISK=16
-	lda	#LOAD_BRIDGE
+	lda	#LOAD_DOME_BRIDGE
 	sta	WHICH_LOAD
 
-	lda	#RIVEN_BRIDGE
+	lda	#RIVEN_DOME_BRIDGE
 	sta	LOCATION
 
 	lda	#DIRECTION_N

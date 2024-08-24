@@ -9,11 +9,11 @@ locations:
 
 location0:
 	.byte	$ff		; north exit
-	.byte	$ff		; south exit
+	.byte	$E1		; south exit
 	.byte	$FF		; east exit
 	.byte	$FF		; west exit
 	.byte	$FF		; north exit_dir
-	.byte	DIRECTION_E	; south exit_dir
+	.byte	DIRECTION_N	; south exit_dir
 	.byte	$FF		; east exit_dir
 	.byte	$FF		; west exit_dir
 	.word	pillars_32_in_zx02	; north bg
