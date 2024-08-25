@@ -13,15 +13,15 @@ load_address_array:
 	.byte	$40,$00,$00,$00 ;
 
 track_array:
-	.byte	0, 2, 8,15	; TITLE, BRIDGE, BRIDGE2, DOME
-	.byte	22,0,0,0	;
+	.byte	0, 2, 9,15	; TITLE, BRIDGE, BRIDGE2, DOME
+	.byte	21,0,0,0	;
 
 sector_array:
 	.byte	8, 0, 0, 0	; TITLE, BRIDGE, BRIDGE2, DOME
 	.byte	0,0,0,0		;
 
 length_array:
-	.byte	8, 96,112,80	; TITLE, BRIDGE, BRIDGE2, DOME
+	.byte	8,112,96,80	; TITLE, BRIDGE, BRIDGE2, DOME
 	.byte	80,0,0,0
 
 

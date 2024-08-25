@@ -133,7 +133,9 @@ Disk16 Map (disk has 35 tracks, each 4k in size)
 T         0 = Qboot
 T       0.5 = TITLE	 1805 bytes	 8S = 0T8S	(2048) 400B free
 T         1 = QLOAD      2314 bytes      16S= 1T0S	(4096)   2k free
-T         2 = BRIDGE    21162 bytes         = 6T0S	(28672) 6k free
+T         2 = BRIDGE    26859 bytes         = 7T0S	(28672)  2k free
+T         9 = BRIDGE2    4984 bytes         = 6T0S	(24576) 20k free
+T        15 = DOME       6813 bytes         = 6T0S	(24576) 18k free
 
 Disk38 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -361,3 +363,7 @@ stained glass:
 chair room
 	shadow 72? 69/45?
 	or instead levels auto?
+
+inside done:
+	close one.  80/69 brightness/contrast?
+	

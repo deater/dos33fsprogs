@@ -7,7 +7,7 @@ locations:
 
 ; RIVEN_BRIDGE	-- bridge to dome
 location0:
-	.byte	$ff		; north exit
+	.byte	LOAD_DOME_BRIDGE2<<4|RIVEN_DOME_BRIDGE2	; north exit
 	.byte	$E0		; south exit
 	.byte	$ff		; east exit
 	.byte	$ff		; west exit
