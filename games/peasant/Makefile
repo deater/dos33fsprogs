@@ -782,4 +782,5 @@ clean:
 	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC GAME_OVER \
-			*.ZX02 dialog_peasant2
+			*.ZX02 dialog_peasant2 \
+			generate_common generate_all_symbols

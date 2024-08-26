@@ -45,16 +45,43 @@ print_string_loop:
 	beq	done_print_string
 
 	; adjust for upper/lowercase
+
+	; $20..$80
+	; normal
+	;	$20..$3F (symbols)   = $A0-$BF (ora $80)
+	;	$40..$5F (uppercase) = $C0-$DF (ora $80)
+	;	$60..$7F (lowercase) = $E0-$FF (ora $80)
+	; inverse (need to set $C00F if lowercase, but
+	;		that will make uppercase into mousechars :( )
+	;	$20..$3F (symbols)   = $20-$3F (and $7f)
+	;	$40..$5F (uppercase) = $00-$1F (and $3f)
+	;	$60..$7F (lowercase) = $60-$7F (and $7f)
+
+
 	cmp	#$60
 	bcc	not_lowercase
+
+	; here if lowercase
 ps_smc2:
-	and	#$ff
+	and	#$ff		; $9f to force uppercase, $ff regular
 
 not_lowercase:
 
 	; adjust for inverse/flash/normal
+
 ps_smc1:
-	and	#$3f			; make sure we are inverse
+	and	#$7f			; this will be ORA $80 if normal
+					; this will be AND $3F if inverse
+					; we want to skip if inverse
+					;  and not capital letters blah
+
+	cmp	#$40
+	bcc	not_inverse_uppercase
+	cmp	#$60
+	bcs	not_inverse_uppercase
+	and	#$3f
+
+not_inverse_uppercase:
 	sta	(BASL),Y
 	iny
 	bne	print_string_loop
@@ -91,6 +118,14 @@ set_normal:
 	rts
 
 	; restore inverse text
+
+	; urgh, inverse is $00..$??
+	; for lowercase though it's $60..$??
+	; and you have to set $c00f first?
+
+	; so $3f on Apple II
+	; so mask with #$7f instead on IIe+
+
 set_inverse:
 	lda	#$3f		;
 	sta	ps_smc1+1

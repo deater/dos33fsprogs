@@ -32,6 +32,10 @@
 	.include "disk05_files/disk05_defines.inc"
 .endif
 
+.if DISK=06
+	.include "disk06_files/disk06_defines.inc"
+.endif
+
 .if DISK=10
 	.include "disk10_files/disk10_defines.inc"
 .endif
@@ -66,6 +70,10 @@
 
 .if DISK=50
 	.include "disk50_files/disk50_defines.inc"
+.endif
+
+.if DISK=60
+	.include "disk60_files/disk60_defines.inc"
 .endif
 
 
@@ -140,7 +148,13 @@ go_print:
 	cmp	#'+'
 	beq	patch_uppercase
 	cmp	#' '
-	bne	no_patch_uppercase
+	beq	patch_uppercase
+
+non_ii_or_iiplus:
+	sta	$C00F	; ALTCHR, allow lowercase inverse
+;	lda	#$7f
+;	sta	set_inverse+1
+	jmp	no_patch_uppercase
 
 patch_uppercase:
 	jsr	force_uppercase
@@ -479,6 +493,18 @@ game_continue:
 	sta	DIRECTION
 .endif
 
+.if DISK=06
+	lda	#LOAD_ATRUS_JOURNAL
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_JOURNAL
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+
 .if DISK=10
 	lda	#LOAD_15
 	sta	WHICH_LOAD
@@ -581,6 +607,17 @@ game_continue:
 	sta	WHICH_LOAD
 
 	lda	#RIVEN_CHIPPER
+	sta	LOCATION
+
+	lda	#DIRECTION_N
+	sta	DIRECTION
+.endif
+
+.if DISK=60
+	lda	#LOAD_SPIRES
+	sta	WHICH_LOAD
+
+	lda	#RIVEN_SPIRES
 	sta	LOCATION
 
 	lda	#DIRECTION_N
