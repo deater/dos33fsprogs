@@ -114,10 +114,12 @@ game_loop:
 	;=====================
 	; draw enemies
 
-	lda	#$20		 ; backup location
-	sta	OUTH
-	lda	#$00
-	sta	OUTL
+	ldx	#0
+
+;	lda	#$20		 ; backup location
+;	sta	OUTH
+;	lda	#$00
+;	sta	OUTL
 
 	lda	#8
 	sta	SPRITE_X
@@ -125,22 +127,24 @@ game_loop:
 	lda	#100
 	sta	SPRITE_Y
 
-	lda	#<bird0_sprite
-	sta	INL
-	lda	#>bird0_sprite
-	sta	INH
+;	lda	#<bird0_sprite
+;	sta	INL
+;	lda	#>bird0_sprite
+;	sta	INH
 
-	lda	#<bird0_mask
-	sta	MASKL
-	lda	#>bird0_mask
-	sta	MASKH
+;	lda	#<bird0_mask
+;	sta	MASKL
+;	lda	#>bird0_mask
+;	sta	MASKH
 
 	jsr	hgr_draw_sprite
 
-	lda	#$21		 ; backup location
-	sta	OUTH
-	lda	#$00
-	sta	OUTL
+	ldx	#1
+
+;	lda	#$21		 ; backup location
+;	sta	OUTH
+;	lda	#$00
+;	sta	OUTL
 
 	lda	#21
 	sta	SPRITE_X
@@ -148,15 +152,15 @@ game_loop:
 	lda	#89
 	sta	SPRITE_Y
 
-	lda	#<bird1_sprite
-	sta	INL
-	lda	#>bird1_sprite
-	sta	INH
+;	lda	#<bird1_sprite
+;	sta	INL
+;	lda	#>bird1_sprite
+;	sta	INH
 
-	lda	#<bird1_mask
-	sta	MASKL
-	lda	#>bird1_mask
-	sta	MASKH
+;	lda	#<bird1_mask
+;	sta	MASKL
+;	lda	#>bird1_mask
+;	sta	MASKH
 
 	jsr	hgr_draw_sprite
 
@@ -222,3 +226,28 @@ priority_data:
 
 sprites:
 	.include "sprites/enemy_sprites.inc"
+
+
+sprites_xsize:
+	.byte	3, 3
+sprites_ysize:
+	.byte	16,12
+
+sprites_data_l:
+	.byte <bird0_sprite,<bird1_sprite
+sprites_data_h:
+	.byte >bird0_sprite,>bird1_sprite
+sprites_mask_l:
+	.byte <bird0_mask,<bird1_mask
+sprites_mask_h:
+	.byte >bird0_mask,>bird1_mask
+
+save_xsize:
+	.byte	0, 0
+save_ysize:
+	.byte	0, 0
+save_x:
+	.byte	0, 0
+save_y:
+	.byte	0, 0
+

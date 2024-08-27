@@ -5,57 +5,69 @@
 	;
 	; *cannot* handle sprites bigger than a 256 byte page
 
-	; SPRITE in INL/INH
-	;	note: xsize,ysize in first two bytes
-	;	total bytes in text two bytes
-	;	mask data immediately follows sprite data
-
 	; Location at SPRITE_X SPRITE_Y
 	;	note: sprite_x is column, so Xcoord/7
 
-	; Save at OUTL/OUTH
+	; which sprite in X
 
 hgr_draw_sprite:
+
+	; backup location in case we need to restore
+	lda	SPRITE_X
+	sta	save_x,X
+	lda	SPRITE_Y
+	sta	save_y,X
+
+	; handle xsize
+
+	lda	sprites_xsize,X
+	sta	save_xsize,X
+	clc
+	adc	SPRITE_X
+	sta	sprite_width_end_smc+1	; self modify for end of line
+	sta	osprite_width_end_smc+1	; self modify for end of line
+
+	; handle ysize
+
+	lda	sprites_ysize,X
+	sta	save_ysize,X
+	sta	sprite_ysize_smc+1	; self modify for end row
+	sta	osprite_ysize_smc+1	; self modify for end row
+
+	; point smc to sprite
+	lda	sprites_data_l,X
+	sta	sprite_smc1+1
+	sta	osprite_smc1+1
+	lda	sprites_data_h,X
+	sta	sprite_smc1+2
+	sta	osprite_smc1+2
+
+	; point smc to mask
+	lda	sprites_mask_l,X
+	sta	sprite_mask_smc1+1
+	sta	osprite_mask_smc1+1
+	lda	sprites_mask_h,X
+	sta	sprite_mask_smc1+2
+	sta	osprite_mask_smc1+2
+
+
+
+
+	; pick if even or odd code
+
 	lda	SPRITE_X
 	ror
 	bcs	hgr_draw_sprite_odd
 
 hgr_draw_sprite_even:
-	ldy	#0
-	lda	(INL),Y			; load xsize
-	sta	(OUTL),Y		; store to screen backup
-	clc
-	adc	SPRITE_X
-	sta	sprite_width_end_smc+1	; self modify for end of line
-
-	iny				; load ysize
-	lda	(INL),Y
-	sta	(OUTL),Y		; store to screen backup
-	sta	sprite_ysize_smc+1	; self modify for end row
-
-	; point smc to sprite
-	lda	INL
-	sta	sprite_smc1+1
-	lda	INH
-	sta	sprite_smc1+2
-	sta	INH
-
-	; point smc to backup
-	lda	OUTL
-	sta	backup_sprite_smc1+1
-	lda	OUTH
-	sta	backup_sprite_smc1+2
-
-	; point smc to mask
-	lda	MASKL
-	sta	sprite_mask_smc1+1
-	lda	MASKH
-	sta	sprite_mask_smc1+2
 
 	ldx	#0			; X is pointer offset
 	stx	CURRENT_ROW		; actual row
 
-	ldx	#2			; start two bytes in (past x/y)
+;	ldx	#0			; start two bytes in (past x/y)
+
+
+
 
 hgr_sprite_yloop:
 
@@ -107,43 +119,17 @@ sprite_ysize_smc:
 
 	rts
 
+
+	;============================================
+
+
 hgr_draw_sprite_odd:
-
-	ldy	#0
-	lda	(INL),Y			; load xsize
-	sta	(OUTL),Y		; store to screen backup
-	clc
-	adc	SPRITE_X
-	sta	osprite_width_end_smc+1	; self modify for end of line
-
-	iny
-	lda	(INL),Y			; load ysize
-	sta	(OUTL),Y		; store to screen backup
-	sta	osprite_ysize_smc+1	; self modify for end row
-
-	; point smc to sprite
-	lda	INL
-	sta	osprite_smc1+1
-	lda	INH
-	sta	osprite_smc1+2
-
-	; point smc to backup
-	lda	OUTL
-	sta	obackup_sprite_smc1+1
-	lda	OUTH
-	sta	obackup_sprite_smc1+2
-
-	; point smc to mask
-	lda	MASKL
-	sta	osprite_mask_smc1+1
-	lda	MASKH
-	sta	osprite_mask_smc1+2
 
 
 	ldx	#0			; X is pointer offset
 	stx	CURRENT_ROW		; actual row
 
-	ldx	#2
+;	ldx	#2
 
 ohgr_sprite_yloop:
 
@@ -221,18 +207,3 @@ osprite_ysize_smc:
 	rts
 
 
-.if 0
-
-
-
-
-;hgr_sprite_page_smc:
-;	eor	#$00
-
-
-
-
-backup_sprite1 = $1800
-backup_sprite2 = $1900
-
-.endif
