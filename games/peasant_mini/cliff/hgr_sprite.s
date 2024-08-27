@@ -96,7 +96,7 @@ backup_sprite_smc1:
 sprite_smc1:
         eor     $f000,X			; load sprite data
 sprite_mask_smc1:
-	and	$f000,X
+	and	$f000,X			; mask
 	eor	(GBASL),Y
 	sta	(GBASL),Y		; store to screen
 
@@ -136,6 +136,7 @@ hgr_draw_sprite_odd:
 
 	lda	#$0
 	sta	SPRITE_TEMP	; default high bit to 0
+	lda	#$ff		; because we have to invert FIXME
 	sta	MASK_TEMP	; defailt high bit to 0
 
 osprite_inner_loop:
@@ -154,6 +155,7 @@ osprite_mask_smc1:
 	rol	MASK_TEMP
 	rol
 	sta	MASK_TEMP
+	and	#$7f
 
 	and	TEMP
 	sta	TEMP
@@ -164,9 +166,9 @@ osprite_smc1:
 	rol	SPRITE_TEMP
 	rol
 	sta	SPRITE_TEMP
-	ora	TEMP
-
 	and	#$7f	; force purple/green
+
+	ora	TEMP
 
 	sta	(GBASL),Y		; store to screen
 

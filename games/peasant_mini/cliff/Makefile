@@ -28,7 +28,7 @@ CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 cliff.o:	cliff.s zx02_optim.s \
-		hgr_copy.s hgr_partial_save.s \
+		hgr_copy.s hgr_partial_restore.s \
 		hgr_sprite.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
 		sprites/enemy_sprites.inc \

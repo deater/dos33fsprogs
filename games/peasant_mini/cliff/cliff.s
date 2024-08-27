@@ -209,7 +209,7 @@ done_cliff:
 
 	.include	"move_peasant.s"
 
-	.include	"hgr_partial_save.s"
+	.include	"hgr_partial_restore.s"
 
 	.include	"hgr_1x28_sprite_mask.s"
 
@@ -255,4 +255,4 @@ save_yend:
 bird_x:
 	.byte	37
 bird_y:
-	.byte	10
+	.byte	75
