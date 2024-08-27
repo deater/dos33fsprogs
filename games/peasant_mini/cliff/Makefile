@@ -29,15 +29,24 @@ CLIFF:	cliff.o
 
 cliff.o:	cliff.s zx02_optim.s \
 		hgr_copy.s hgr_partial_save.s \
+		hgr_sprite.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
+		sprites/enemy_sprites.inc \
 		zp.inc hardware.inc
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
+####
+
 cliff_graphics/cliff_base.hgr.zx02:	
 	cd cliff_graphics && make
+
+sprites/enemy_sprites.inc:	
+	cd sprites && make
+
 
 ####
 
 clean:	
 	rm -f *.lst *.o CLIFF HELLO
 	cd cliff_graphics && make clean
+	cd sprites && make clean

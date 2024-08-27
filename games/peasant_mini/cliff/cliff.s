@@ -110,6 +110,60 @@ game_loop:
 
 	jsr	draw_peasant
 
+
+	;=====================
+	; draw enemies
+
+	lda	#$20		 ; backup location
+	sta	OUTH
+	lda	#$00
+	sta	OUTL
+
+	lda	#8
+	sta	SPRITE_X
+
+	lda	#100
+	sta	SPRITE_Y
+
+	lda	#<bird0_sprite
+	sta	INL
+	lda	#>bird0_sprite
+	sta	INH
+
+	lda	#<bird0_mask
+	sta	MASKL
+	lda	#>bird0_mask
+	sta	MASKH
+
+	jsr	hgr_draw_sprite
+
+	lda	#$21		 ; backup location
+	sta	OUTH
+	lda	#$00
+	sta	OUTL
+
+	lda	#21
+	sta	SPRITE_X
+
+	lda	#89
+	sta	SPRITE_Y
+
+	lda	#<bird1_sprite
+	sta	INL
+	lda	#>bird1_sprite
+	sta	INH
+
+	lda	#<bird1_mask
+	sta	MASKL
+	lda	#>bird1_mask
+	sta	MASKH
+
+	jsr	hgr_draw_sprite
+
+
+
+
+
 	;=====================
 	; increment frame
 
@@ -139,6 +193,8 @@ done_cliff:
 
 	.include	"hgr_tables.s"
 
+	.include	"hgr_sprite.s"
+
 	.include	"zx02_optim.s"
 
 	.include	"wait.s"
@@ -162,7 +218,7 @@ bg_data:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
 
 priority_data:
-
 	.incbin "cliff_graphics/cliff_base_priority.zx02"
 
-
+sprites:
+	.include "sprites/enemy_sprites.inc"

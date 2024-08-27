@@ -16,6 +16,11 @@ DRIVE2_DISK	= $0C
 DRIVE1_TRACK	= $0D
 DRIVE2_TRACK	= $0E
 
+SPRITE_TEMP	= $10
+MASK_TEMP	= $11
+TEMP		= $12
+
+
 TEMP0   = $10
 TEMP1   = $11
 TEMP2   = $12
@@ -271,7 +276,12 @@ P3		= $F4
 P4		= $F5
 P5		= $F6
 
+SPRITE_X	= $F7
+SPRITE_Y	= $F8
+CURRENT_ROW	= $F9
 
+MASKL		= $FA
+MASKH		= $FB
 INL		= $FC
 INH		= $FD
 OUTL		= $FE
