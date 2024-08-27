@@ -9,30 +9,32 @@
 	;	note: sprite_x is column, so Xcoord/7
 
 	; which sprite in X
+	; where to save in Y
 
 hgr_draw_sprite:
 
 	; backup location in case we need to restore
 	lda	SPRITE_X
-	sta	save_x,X
+	sta	save_xstart,Y
 	lda	SPRITE_Y
-	sta	save_y,X
+	sta	save_ystart,Y
 
 	; handle xsize
 
 	lda	sprites_xsize,X
-	sta	save_xsize,X
 	clc
 	adc	SPRITE_X
 	sta	sprite_width_end_smc+1	; self modify for end of line
 	sta	osprite_width_end_smc+1	; self modify for end of line
+	sta	save_xend,Y
 
 	; handle ysize
 
 	lda	sprites_ysize,X
-	sta	save_ysize,X
 	sta	sprite_ysize_smc+1	; self modify for end row
-	sta	osprite_ysize_smc+1	; self modify for end row
+	clc
+	adc	SPRITE_Y
+	sta	save_yend,Y
 
 	; point smc to sprite
 	lda	sprites_data_l,X
@@ -51,7 +53,10 @@ hgr_draw_sprite:
 	sta	osprite_mask_smc1+2
 
 
+	ldx	#0			; X is pointer offset
+	stx	CURRENT_ROW		; actual row
 
+hgr_sprite_yloop:
 
 	; pick if even or odd code
 
@@ -59,17 +64,10 @@ hgr_draw_sprite:
 	ror
 	bcs	hgr_draw_sprite_odd
 
+
+	;================================
+
 hgr_draw_sprite_even:
-
-	ldx	#0			; X is pointer offset
-	stx	CURRENT_ROW		; actual row
-
-;	ldx	#0			; start two bytes in (past x/y)
-
-
-
-
-hgr_sprite_yloop:
 
 	lda	CURRENT_ROW		; row
 
@@ -83,8 +81,9 @@ hgr_sprite_yloop:
 	sta	GBASL
 	lda	hposn_high,Y
 
-	clc
-	adc	DRAW_PAGE
+; always PAGE2
+;	clc
+;	adc	DRAW_PAGE
 	sta	GBASH
 
 	ldy	SPRITE_X
@@ -109,29 +108,13 @@ sprite_width_end_smc:
 	cpy	#6			; see if reached end of row
 	bne	sprite_inner_loop	; if not, loop
 
-
-	inc	CURRENT_ROW		; row
-	lda	CURRENT_ROW		; row
-
-sprite_ysize_smc:
-	cmp	#31			; see if at end
-	bne	hgr_sprite_yloop	; if not, loop
-
-	rts
+	jmp	common_common
 
 
 	;============================================
 
 
 hgr_draw_sprite_odd:
-
-
-	ldx	#0			; X is pointer offset
-	stx	CURRENT_ROW		; actual row
-
-;	ldx	#2
-
-ohgr_sprite_yloop:
 
 	lda	CURRENT_ROW		; row
 
@@ -145,8 +128,8 @@ ohgr_sprite_yloop:
 	sta	GBASL
 	lda	hposn_high,Y
 
-	clc
-	adc	DRAW_PAGE
+;	clc
+;	adc	DRAW_PAGE
 	sta	GBASH
 
 	ldy	SPRITE_X
@@ -188,6 +171,8 @@ osprite_smc1:
 	sta	(GBASL),Y		; store to screen
 
 
+
+
 	inx				; increment sprite offset
 	iny				; increment output position
 
@@ -197,12 +182,14 @@ osprite_width_end_smc:
 	cpy	#6			; see if reached end of row
 	bne	osprite_inner_loop	; if not, loop
 
+common_common:
+
 	inc	CURRENT_ROW		; row
 	lda	CURRENT_ROW		; row
 
-osprite_ysize_smc:
+sprite_ysize_smc:
 	cmp	#31			; see if at end
-	bne	ohgr_sprite_yloop	; if not, loop
+	bne	hgr_sprite_yloop	; if not, loop
 
 	rts
 

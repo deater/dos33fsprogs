@@ -112,60 +112,60 @@ game_loop:
 
 
 	;=====================
+	;=====================
 	; draw enemies
+	;=====================
+	;=====================
+
+	;=====================
+	; erase old
+
+	; from A to X
+	;	SAVED_Y1 to SAVED_Y2
+
 
 	ldx	#0
+	lda	save_ystart,X
+	sta	SAVED_Y1
+	lda	save_yend,X
+	sta	SAVED_Y2
+	lda	save_xstart,X
+	pha
+	lda	save_xend,X
+	tax
+	pla
+	cpx	#0
+	beq	nothing_to_restore
 
-;	lda	#$20		 ; backup location
-;	sta	OUTH
-;	lda	#$00
-;	sta	OUTL
+	jsr	hgr_partial_restore
+nothing_to_restore:
 
-	lda	#8
+	;=====================
+	; bird
+
+	lda	bird_x
 	sta	SPRITE_X
-
-	lda	#100
+	lda	bird_y
 	sta	SPRITE_Y
 
-;	lda	#<bird0_sprite
-;	sta	INL
-;	lda	#>bird0_sprite
-;	sta	INH
+	lda	FRAME
+	and	#1
+	tax
 
-;	lda	#<bird0_mask
-;	sta	MASKL
-;	lda	#>bird0_mask
-;	sta	MASKH
+	ldy	#0
 
 	jsr	hgr_draw_sprite
 
-	ldx	#1
+	;=====================
+	; move enemies
 
-;	lda	#$21		 ; backup location
-;	sta	OUTH
-;	lda	#$00
-;	sta	OUTL
+	dec	bird_x
+	bpl	bird_good
 
-	lda	#21
-	sta	SPRITE_X
+	lda	#37
+	sta	bird_x
 
-	lda	#89
-	sta	SPRITE_Y
-
-;	lda	#<bird1_sprite
-;	sta	INL
-;	lda	#>bird1_sprite
-;	sta	INH
-
-;	lda	#<bird1_mask
-;	sta	MASKL
-;	lda	#>bird1_mask
-;	sta	MASKH
-
-	jsr	hgr_draw_sprite
-
-
-
+bird_good:
 
 
 	;=====================
@@ -231,7 +231,7 @@ sprites:
 sprites_xsize:
 	.byte	3, 3
 sprites_ysize:
-	.byte	16,12
+	.byte	16,14
 
 sprites_data_l:
 	.byte <bird0_sprite,<bird1_sprite
@@ -242,12 +242,17 @@ sprites_mask_l:
 sprites_mask_h:
 	.byte >bird0_mask,>bird1_mask
 
-save_xsize:
+save_xstart:
 	.byte	0, 0
-save_ysize:
+save_xend:
 	.byte	0, 0
-save_x:
+save_ystart:
 	.byte	0, 0
-save_y:
+save_yend:
 	.byte	0, 0
 
+
+bird_x:
+	.byte	37
+bird_y:
+	.byte	10
