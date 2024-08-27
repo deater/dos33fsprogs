@@ -25,7 +25,7 @@ hgr_draw_sprite:
 	clc
 	adc	SPRITE_X
 	sta	sprite_width_end_smc+1	; self modify for end of line
-	sta	osprite_width_end_smc+1	; self modify for end of line
+;	sta	osprite_width_end_smc+1	; self modify for end of line
 	sta	save_xend,Y
 
 	; handle ysize
@@ -58,16 +58,6 @@ hgr_draw_sprite:
 
 hgr_sprite_yloop:
 
-	; pick if even or odd code
-
-	lda	SPRITE_X
-	ror
-	bcs	hgr_draw_sprite_odd
-
-
-	;================================
-
-hgr_draw_sprite_even:
 
 	lda	CURRENT_ROW		; row
 
@@ -88,15 +78,64 @@ hgr_draw_sprite_even:
 
 	ldy	SPRITE_X
 
+	lda	#$0
+	sta	SPRITE_TEMP	; default high bit to 0
+	sta	MASK_TEMP	; defailt high bit to 0
+
+
 sprite_inner_loop:
+
+	; pick if even or odd code
+
+	lda	SPRITE_X
+	ror
+	bcs	hgr_draw_sprite_odd
+
+
+	;================================
+
+hgr_draw_sprite_even:
+
+
+sprite_smc1:
+        lda     $f000,X			; load sprite data
+	sta	TEMP_SPRITE
+sprite_mask_smc1:
+	lda	$f000,X			; mask
+	sta	TEMP_MASK
+
+	jmp	hgr_draw_sprite_both
+
+hgr_draw_sprite_odd:
+
+osprite_mask_smc1:
+        lda	$f000,X			; load mask data
+
+	rol	MASK_TEMP
+	rol
+	sta	MASK_TEMP
+	and	#$7f
+	sta	TEMP_MASK
+
+osprite_smc1:
+        lda	$f000,X			; load sprite data
+
+	rol	SPRITE_TEMP
+	rol
+	sta	SPRITE_TEMP
+	and	#$7f	; force purple/green
+
+	sta	TEMP_SPRITE
+
+hgr_draw_sprite_both:
 
 	lda     (GBASL),Y		; load bg
 backup_sprite_smc1:
 	sta	$f000,X
-sprite_smc1:
-        eor     $f000,X			; load sprite data
-sprite_mask_smc1:
-	and	$f000,X			; mask
+
+	eor	TEMP_SPRITE
+	and	TEMP_MASK
+
 	eor	(GBASL),Y
 	sta	(GBASL),Y		; store to screen
 
@@ -107,84 +146,6 @@ sprite_mask_smc1:
 sprite_width_end_smc:
 	cpy	#6			; see if reached end of row
 	bne	sprite_inner_loop	; if not, loop
-
-	jmp	common_common
-
-
-	;============================================
-
-
-hgr_draw_sprite_odd:
-
-	lda	CURRENT_ROW		; row
-
-	clc
-	adc	SPRITE_Y		; add in cursor_y
-
-	; calc GBASL/GBASH
-
-	tay				; get output ROW into GBASL/H
-	lda	hposn_low,Y
-	sta	GBASL
-	lda	hposn_high,Y
-
-;	clc
-;	adc	DRAW_PAGE
-	sta	GBASH
-
-	ldy	SPRITE_X
-
-	lda	#$0
-	sta	SPRITE_TEMP	; default high bit to 0
-	lda	#$ff		; because we have to invert FIXME
-	sta	MASK_TEMP	; defailt high bit to 0
-
-osprite_inner_loop:
-
-	lda	(GBASL),Y		; load bg data
-	sta	TEMP
-
-obackup_sprite_smc1:
-	sta	$f000,X			; store backup
-
-osprite_mask_smc1:
-        lda	$f000,X			; load mask data
-
-	eor	#$FF
-
-	rol	MASK_TEMP
-	rol
-	sta	MASK_TEMP
-	and	#$7f
-
-	and	TEMP
-	sta	TEMP
-
-osprite_smc1:
-        lda	$f000,X			; load sprite data
-
-	rol	SPRITE_TEMP
-	rol
-	sta	SPRITE_TEMP
-	and	#$7f	; force purple/green
-
-	ora	TEMP
-
-	sta	(GBASL),Y		; store to screen
-
-
-
-
-	inx				; increment sprite offset
-	iny				; increment output position
-
-
-
-osprite_width_end_smc:
-	cpy	#6			; see if reached end of row
-	bne	osprite_inner_loop	; if not, loop
-
-common_common:
 
 	inc	CURRENT_ROW		; row
 	lda	CURRENT_ROW		; row
