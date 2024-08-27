@@ -1,5 +1,5 @@
-/* Grabs part of 280x192 8-bit PNG file with correct palette to */
-/* Sprites suitable for Apple II HGR */
+/* Grabs part of 280x192 8-bit PNG file with correct palette */
+/* Makes "sprites" suitable for Apple II HGR */
 
 #define VERSION "0.0.1"
 
@@ -380,7 +380,7 @@ static unsigned char apple2_image[8192];
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0,error;
-	int printsize=0;
+	int printsize=0,mask_offset=0,total_bytes=0;
 	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
@@ -396,7 +396,7 @@ int main(int argc, char **argv) {
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvdsl:") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdmsl:") ) != -1) {
 
 		switch(c) {
 
@@ -411,6 +411,9 @@ int main(int argc, char **argv) {
 				break;
 			case 's':
 				printsize=1;
+				break;
+			case 'm':
+				mask_offset=1;
 				break;
 			case 'l':
 				strncpy(label_string,optarg,BUFSIZ-1);
@@ -471,14 +474,28 @@ int main(int argc, char **argv) {
 		fprintf(stderr,"Warning!  x1 should be a multiple of 7\n");
 	}
 
+	xs=(x2/7-x1/7);
+	if (!((x2%7==0)&&(x1%7==0))) xs++;
+
+	total_bytes=(xs*(y2-y1));
+//	if (printsize) total_bytes+=2;
+//	if (mask_offset) total_bytes+=2;
+
 	printf("; %d %d %d %d\n",x1,y1,x2,y2);
+	printf("; total bytes: %d\n",total_bytes);
 	printf("%s:\n",label_string);
 
+
 	if (printsize) {
-		xs=(x2/7-x1/7);
-		if (!((x2%7==0)&&(x1%7==0))) xs++;
+
 		printf("\t.byte $%02X,$%02X\n",
 				xs,y2-y1);
+	}
+
+	if (mask_offset) {
+		printf("\t.byte $%02X,$%02X\n",
+				total_bytes&0xff,
+				total_bytes>>8);
 	}
 
 	for(y=y1;y<y2;y++) {
