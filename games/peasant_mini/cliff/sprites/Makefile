@@ -28,7 +28,7 @@ enemy_sprites.inc:     enemy_sprites.png
 	$(HGR_SPRITE) -l smallrock3_sprite enemy_sprites.png  98 91 111 105 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock3_mask   enemy_sprites.png 126 91 139 105 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock_crash0_sprite enemy_sprites.png 98 119 111 134 >> enemy_sprites.inc
-	$(HGR_SPRITE) -l smallrock_crash0_mask   enemy_sprites.png 127 119 140 134 >> enemy_sprites.inc
+	$(HGR_SPRITE) -l smallrock_crash0_mask   enemy_sprites.png 126 119 139 134 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock_crash1_sprite enemy_sprites.png 126 147 153 166 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock_crash1_mask   enemy_sprites.png 168 147 195 165 >> enemy_sprites.inc
 

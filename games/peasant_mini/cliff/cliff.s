@@ -175,15 +175,70 @@ done_erase_old:
 	; draw rock
 	;=====================
 
-	lda	rock_x
+	MAX_ROCKS=3
+
+	lda	#0
+	sta	CURRENT_ROCK
+draw_rock_loop:
+	ldx	CURRENT_ROCK
+
+	lda	rock_x,X
 	sta	SPRITE_X
-	lda	rock_y
+	lda	rock_y,X
 	sta	SPRITE_Y
+
+	lda	rock_state,X
+	beq	do_draw_rock
+
+	cmp	#3		; 1,2=exploding
+	bcc	do_explode_rock		; blt
+
+	; if we get here, rock not out
+	; for now just skip
+
+	bcs	skip_rock
+
+
+do_explode_rock:
+	; explode is 1 or 2
+	; map to 6,7 or 12,13
+
+	lda	rock_type,X
+	beq	explode_big_rock
+explode_small_rock:
+	lda	#11
+	bne	explode_common_rock	; bra
+
+explode_big_rock:
+	lda	#5
+
+explode_common_rock:
+	clc
+	adc	rock_state,X
+	bne	really_draw_rock
+
+do_draw_rock:
+
+	lda	rock_type,X
+	beq	draw_big_rock
+draw_small_rock:
+	lda	#8
+	bne	draw_common_rock	; bra
+
+draw_big_rock:
+	lda	#2
+
+draw_common_rock:
+	sta	rock_add_smc+1
+
 
 	lda	FRAME
 	and	#3
 	clc
+rock_add_smc:
 	adc	#2	; rock
+
+really_draw_rock:
 	tax
 
 	ldy	ERASE_SPRITE_COUNT
@@ -191,6 +246,12 @@ done_erase_old:
 	jsr	hgr_draw_sprite
 
 	inc	ERASE_SPRITE_COUNT
+
+skip_rock:
+	inc	CURRENT_ROCK
+	lda	CURRENT_ROCK
+	cmp	#MAX_ROCKS
+	bne	draw_rock_loop
 
 
 
@@ -214,16 +275,45 @@ bird_good:
 	;=====================
 	; rock
 
-	inc	rock_y
-	lda	rock_y
-	cmp	#105
-	bcc	rock_good
+	ldx	#0
+	stx	CURRENT_ROCK
+move_rock_loop:
+	ldx	CURRENT_ROCK
+
+	lda	rock_state,X
+	beq	move_rock_normal
+	cmp	#3
+	bcc	move_rock_exploding
+
+move_rock_waiting:
+
+	lda	#0
+	sta	rock_state,X
 
 	lda	#12
-	sta	rock_y
+	sta	rock_y,X
+	jmp	rock_good
+
+
+move_rock_exploding:
+	inc	rock_state,X
+	jmp	rock_good
+
+move_rock_normal:
+	inc	rock_y,X
+	lda	rock_y,X
+	cmp	#105
+	bcc	rock_good
+rock_start_explode:
+
+	lda	#1
+	sta	rock_state,X
 
 rock_good:
-
+	inc	CURRENT_ROCK
+	lda	CURRENT_ROCK
+	cmp	#MAX_ROCKS
+	bne	move_rock_loop
 
 
 	;=====================
@@ -289,50 +379,82 @@ sprites:
 sprites_xsize:
 	.byte	3, 3		; bird
 	.byte	3, 3, 3, 3	; bigrock
+	.byte 	3, 4		; bigrock_crash
+	.byte	2, 2, 2, 2	; smallrock
+	.byte 	2, 4		; smallrock_crash
+
 sprites_ysize:
 	.byte	16,14		; bird
 	.byte	23,22,21,22	; bigrock
+	.byte	18,21		; bigrock_crash
+	.byte	15,14,15,14	; smallrock
+	.byte	15,19		; smallrock_crash
 
 sprites_data_l:
 	.byte <bird0_sprite,<bird1_sprite
 	.byte <bigrock0_sprite,<bigrock1_sprite
 	.byte <bigrock2_sprite,<bigrock3_sprite
-
+	.byte <bigrock_crash0_sprite,<bigrock_crash1_sprite
+	.byte <smallrock0_sprite,<smallrock1_sprite
+	.byte <smallrock2_sprite,<smallrock3_sprite
+	.byte <smallrock_crash0_sprite,<smallrock_crash1_sprite
 sprites_data_h:
 	.byte >bird0_sprite,>bird1_sprite
 	.byte >bigrock0_sprite,>bigrock1_sprite
 	.byte >bigrock2_sprite,>bigrock3_sprite
+	.byte >bigrock_crash0_sprite,>bigrock_crash1_sprite
+	.byte >smallrock0_sprite,>smallrock1_sprite
+	.byte >smallrock2_sprite,>smallrock3_sprite
+	.byte >smallrock_crash0_sprite,>smallrock_crash1_sprite
 
 sprites_mask_l:
 	.byte <bird0_mask,<bird1_mask
 	.byte <bigrock0_mask,<bigrock1_mask
 	.byte <bigrock2_mask,<bigrock3_mask
+	.byte <bigrock_crash0_mask,<bigrock_crash1_mask
+	.byte <smallrock0_mask,<smallrock1_mask
+	.byte <smallrock2_mask,<smallrock3_mask
+	.byte <smallrock_crash0_mask,<smallrock_crash1_mask
 
 sprites_mask_h:
 	.byte >bird0_mask,>bird1_mask
 	.byte >bigrock0_mask,>bigrock1_mask
 	.byte >bigrock2_mask,>bigrock3_mask
-
+	.byte >bigrock_crash0_mask,>bigrock_crash1_mask
+	.byte >smallrock0_mask,>smallrock1_mask
+	.byte >smallrock2_mask,>smallrock3_mask
+	.byte >smallrock_crash0_mask,>smallrock_crash1_mask
 
 	;========================================
 
-save_xstart:
-	.byte	0, 0
-save_xend:
-	.byte	0, 0
-save_ystart:
-	.byte	0, 0
-save_yend:
-	.byte	0, 0
+	; background restore parameters
+	; currently 4, should check this and error if we overflow
 
+save_xstart:
+	.byte	0, 0, 0, 0
+save_xend:
+	.byte	0, 0, 0, 0
+save_ystart:
+	.byte	0, 0, 0, 0
+save_yend:
+	.byte	0, 0, 0, 0
+
+
+	;========================================
+	; data for the enemies
 
 bird_x:
 	.byte	37
 bird_y:
 	.byte	75
 
+
+rock_type:		; 0=big, 1=little
+	.byte	0, 1, 0
+rock_state:
+	.byte 	0, 0, 3	; 0 = falling, 1,2 = exploding, 3 = waiting?
 rock_x:
-	.byte	7	; remember, /7
+	.byte	7, 12, 17	; remember, /7
 rock_y:
-	.byte	12
+	.byte	12,12,12
 
