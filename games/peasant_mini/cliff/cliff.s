@@ -119,6 +119,7 @@ game_loop:
 
 	;=====================
 	; erase old
+	;=====================
 
 	; from A to X
 	;	SAVED_Y1 to SAVED_Y2
@@ -141,7 +142,8 @@ game_loop:
 nothing_to_restore:
 
 	;=====================
-	; bird
+	; draw bird
+	;=====================
 
 	lda	bird_x
 	sta	SPRITE_X
@@ -156,8 +158,36 @@ nothing_to_restore:
 
 	jsr	hgr_draw_sprite
 
+
+	;=====================
+	; draw rock
+	;=====================
+
+	lda	rock_x
+	sta	SPRITE_X
+	lda	rock_y
+	sta	SPRITE_Y
+
+	lda	FRAME
+	and	#3
+	clc
+	adc	#2	; rock
+	tax
+
+	ldy	#1	; bg save
+
+	jsr	hgr_draw_sprite
+
+
+
+	;=====================
 	;=====================
 	; move enemies
+	;=====================
+	;=====================
+
+	;=====================
+	; bird
 
 	dec	bird_x
 	bpl	bird_good
@@ -166,6 +196,20 @@ nothing_to_restore:
 	sta	bird_x
 
 bird_good:
+
+	;=====================
+	; rock
+
+	inc	rock_y
+	lda	rock_y
+	cmp	#105
+	bcc	rock_good
+
+	lda	#12
+	sta	rock_y
+
+rock_good:
+
 
 
 	;=====================
@@ -229,18 +273,34 @@ sprites:
 
 
 sprites_xsize:
-	.byte	3, 3
+	.byte	3, 3		; bird
+	.byte	3, 3, 3, 3	; bigrock
 sprites_ysize:
-	.byte	16,14
+	.byte	16,14		; bird
+	.byte	23,22,21,22	; bigrock
 
 sprites_data_l:
 	.byte <bird0_sprite,<bird1_sprite
+	.byte <bigrock0_sprite,<bigrock1_sprite
+	.byte <bigrock2_sprite,<bigrock3_sprite
+
 sprites_data_h:
 	.byte >bird0_sprite,>bird1_sprite
+	.byte >bigrock0_sprite,>bigrock1_sprite
+	.byte >bigrock2_sprite,>bigrock3_sprite
+
 sprites_mask_l:
 	.byte <bird0_mask,<bird1_mask
+	.byte <bigrock0_mask,<bigrock1_mask
+	.byte <bigrock2_mask,<bigrock3_mask
+
 sprites_mask_h:
 	.byte >bird0_mask,>bird1_mask
+	.byte >bigrock0_mask,>bigrock1_mask
+	.byte >bigrock2_mask,>bigrock3_mask
+
+
+	;========================================
 
 save_xstart:
 	.byte	0, 0
@@ -256,3 +316,9 @@ bird_x:
 	.byte	37
 bird_y:
 	.byte	75
+
+rock_x:
+	.byte	7	; remember, /7
+rock_y:
+	.byte	12
+
