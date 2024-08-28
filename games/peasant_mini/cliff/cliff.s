@@ -36,6 +36,7 @@ cliff_base:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 	sta	PEASANT_DIR	; 0 = up
+	sta	ERASE_SPRITE_COUNT
 
 	lda	#10
 	sta	PEASANT_X
@@ -124,8 +125,12 @@ game_loop:
 	; from A to X
 	;	SAVED_Y1 to SAVED_Y2
 
+erase_old_loop:
+	ldx	ERASE_SPRITE_COUNT
+	beq	done_erase_old
 
-	ldx	#0
+	dex				; index is one less than count
+
 	lda	save_ystart,X
 	sta	SAVED_Y1
 	lda	save_yend,X
@@ -135,11 +140,17 @@ game_loop:
 	lda	save_xend,X
 	tax
 	pla
-	cpx	#0
-	beq	nothing_to_restore
 
 	jsr	hgr_partial_restore
-nothing_to_restore:
+
+	dec	ERASE_SPRITE_COUNT
+	bpl	erase_old_loop
+
+
+done_erase_old:
+
+	lda	#0
+	sta	ERASE_SPRITE_COUNT	; no doubt this could be optimized
 
 	;=====================
 	; draw bird
@@ -154,10 +165,11 @@ nothing_to_restore:
 	and	#1
 	tax
 
-	ldy	#0
+	ldy	ERASE_SPRITE_COUNT
 
 	jsr	hgr_draw_sprite
 
+	inc	ERASE_SPRITE_COUNT
 
 	;=====================
 	; draw rock
@@ -174,9 +186,11 @@ nothing_to_restore:
 	adc	#2	; rock
 	tax
 
-	ldy	#1	; bg save
+	ldy	ERASE_SPRITE_COUNT
 
 	jsr	hgr_draw_sprite
+
+	inc	ERASE_SPRITE_COUNT
 
 
 
