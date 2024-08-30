@@ -130,8 +130,8 @@ osprite_smc1:
 hgr_draw_sprite_both:
 
 	lda     (GBASL),Y		; load bg
-backup_sprite_smc1:
-	sta	$f000,X
+;backup_sprite_smc1:
+;	sta	$f000,X
 
 	eor	TEMP_SPRITE
 	and	TEMP_MASK

@@ -154,10 +154,12 @@ peasant_the_same:
 
 	; restore bg behind peasant
 erase_peasant:
+
+.if 1
 	lda	PEASANT_Y
 	sta	SAVED_Y1
 	clc
-	adc	#28
+	adc	#30
 	sta	SAVED_Y2
 
 	ldx	PEASANT_X
@@ -165,7 +167,7 @@ erase_peasant:
 	inx
 
 	jmp	hgr_partial_restore	; tail call
-
+.endif
 
 
 

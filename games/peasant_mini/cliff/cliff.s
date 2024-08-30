@@ -359,12 +359,12 @@ done_cliff:
 
 	.include	"hgr_partial_restore.s"
 
-	.include	"hgr_1x28_sprite_mask.s"
+
 
 	.include	"gr_copy.s"
 	.include	"hgr_copy.s"
 
-	.include "cliff_graphics/peasant_robe_sprites.inc"
+;	.include "cliff_graphics/peasant_robe_sprites.inc"
 
 bg_data:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
@@ -431,13 +431,13 @@ sprites_mask_h:
 	; currently 4, should check this and error if we overflow
 
 save_xstart:
-	.byte	0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0
 save_xend:
-	.byte	0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0
 save_ystart:
-	.byte	0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0
 save_yend:
-	.byte	0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0
 
 
 	;========================================
@@ -457,4 +457,63 @@ rock_x:
 	.byte	7, 12, 17	; remember, /7
 rock_y:
 	.byte	12,12,12
+
+
+	.include "hgr_sprite_bg_mask.s"
+
+	.include "sprites/walk_sprites.inc"
+
+
+
+walk_sprites_xsize:
+	.byte	2, 2, 2, 2, 2, 2	; right
+	.byte	2, 2, 2, 2, 2, 2	; left
+	.byte	2, 2, 2, 2, 2, 2	; up
+	.byte	2, 2, 2, 2, 2, 2	; down
+
+walk_sprites_ysize:
+	.byte	30, 30, 30, 30, 30, 30	; right
+	.byte	30, 30, 30, 30, 30, 30	; left
+	.byte	30, 30, 30, 30, 30, 30	; up
+	.byte	30, 30, 30, 30, 30, 30	; down
+
+walk_sprites_data_l:
+	.byte <walk_r0_sprite,<walk_r1_sprite,<walk_r2_sprite
+	.byte <walk_r3_sprite,<walk_r4_sprite,<walk_r5_sprite
+	.byte <walk_l0_sprite,<walk_l1_sprite,<walk_l2_sprite
+	.byte <walk_l3_sprite,<walk_l4_sprite,<walk_l5_sprite
+	.byte <walk_u0_sprite,<walk_u1_sprite,<walk_u2_sprite
+	.byte <walk_u3_sprite,<walk_u4_sprite,<walk_u5_sprite
+	.byte <walk_d0_sprite,<walk_d1_sprite,<walk_d2_sprite
+	.byte <walk_d3_sprite,<walk_d4_sprite,<walk_d5_sprite
+
+walk_sprites_data_h:
+	.byte >walk_r0_sprite,>walk_r1_sprite,>walk_r2_sprite
+	.byte >walk_r3_sprite,>walk_r4_sprite,>walk_r5_sprite
+	.byte >walk_l0_sprite,>walk_l1_sprite,>walk_l2_sprite
+	.byte >walk_l3_sprite,>walk_l4_sprite,>walk_l5_sprite
+	.byte >walk_u0_sprite,>walk_u1_sprite,>walk_u2_sprite
+	.byte >walk_u3_sprite,>walk_u4_sprite,>walk_u5_sprite
+	.byte >walk_d0_sprite,>walk_d1_sprite,>walk_d2_sprite
+	.byte >walk_d3_sprite,>walk_d4_sprite,>walk_d5_sprite
+
+walk_mask_data_l:
+	.byte <walk_r0_mask,<walk_r1_mask,<walk_r2_mask
+	.byte <walk_r3_mask,<walk_r4_mask,<walk_r5_mask
+	.byte <walk_l0_mask,<walk_l1_mask,<walk_l2_mask
+	.byte <walk_l3_mask,<walk_l4_mask,<walk_l5_mask
+	.byte <walk_u0_mask,<walk_u1_mask,<walk_u2_mask
+	.byte <walk_u3_mask,<walk_u4_mask,<walk_u5_mask
+	.byte <walk_d0_mask,<walk_d1_mask,<walk_d2_mask
+	.byte <walk_d3_mask,<walk_d4_mask,<walk_d5_mask
+
+walk_mask_data_h:
+	.byte >walk_r0_mask,>walk_r1_mask,>walk_r2_mask
+	.byte >walk_r3_mask,>walk_r4_mask,>walk_r5_mask
+	.byte >walk_l0_mask,>walk_l1_mask,>walk_l2_mask
+	.byte >walk_l3_mask,>walk_l4_mask,>walk_l5_mask
+	.byte >walk_u0_mask,>walk_u1_mask,>walk_u2_mask
+	.byte >walk_u3_mask,>walk_u4_mask,>walk_u5_mask
+	.byte >walk_d0_mask,>walk_d1_mask,>walk_d2_mask
+	.byte >walk_d3_mask,>walk_d4_mask,>walk_d5_mask
 

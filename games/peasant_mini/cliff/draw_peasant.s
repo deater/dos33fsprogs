@@ -34,15 +34,11 @@ peasant_up:
 	beq	peasant_up1
 
 peasant_up2:
-	lda	#<peasant_up2_sprite
-	sta	INL
-	lda	#>peasant_up2_sprite
+	ldx	#13
 	jmp	done_pick_draw
 
 peasant_up1:
-	lda	#<peasant_up1_sprite
-	sta	INL
-	lda	#>peasant_up1_sprite
+	ldx	#12
 	jmp	done_pick_draw
 
 	;=====================
@@ -54,15 +50,11 @@ peasant_down:
 	beq	peasant_down1
 
 peasant_down2:
-	lda	#<peasant_down2_sprite
-	sta	INL
-	lda	#>peasant_down2_sprite
+	ldx	#19
 	jmp	done_pick_draw
 
 peasant_down1:
-	lda	#<peasant_down1_sprite
-	sta	INL
-	lda	#>peasant_down1_sprite
+	ldx	#18
 	jmp	done_pick_draw
 
 	;=====================
@@ -74,15 +66,11 @@ peasant_left:
 	bne	draw_left1
 
 draw_left2:
-	lda	#<peasant_left2_sprite
-	sta	INL
-	lda	#>peasant_left2_sprite
+	ldx	#7
 	jmp	done_pick_draw
 
 draw_left1:
-	lda	#<peasant_left1_sprite
-	sta	INL
-	lda	#>peasant_left1_sprite
+	ldx	#6
 	jmp	done_pick_draw
 
 
@@ -92,25 +80,18 @@ peasant_right:
 	bne	draw_right1
 
 draw_right2:
-	lda	#<peasant_right2_sprite
-	sta	INL
-	lda	#>peasant_right2_sprite
+	ldx	#1
+
 	jmp	done_pick_draw
 
 draw_right1:
-	lda	#<peasant_right1_sprite
-	sta	INL
-	lda	#>peasant_right1_sprite
+	ldx	#0
 
 done_pick_draw:
-	sta	INH
 
-	jsr	hgr_draw_sprite_1x28
+	jsr	hgr_draw_sprite_bg_mask
 
 done_draw_peasant:
 
 	rts
 
-
-;.include "sprites/peasant_sprites.inc"
-;.include "sprites/peasant_robe_sprites.inc"
