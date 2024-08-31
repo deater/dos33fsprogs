@@ -168,7 +168,7 @@ erase_peasant:
 
 	jmp	hgr_partial_restore	; tail call
 .endif
-
+	rts
 
 
 ; when peasants collide

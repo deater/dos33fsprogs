@@ -6,11 +6,12 @@
 	; attempts to shift for odd/even column
 	; cannot handle sprites bigger than 256 bytes
 
-	;
 	; Location at CURSOR_X CURSOR_Y
 
-	; for now, BG mask is only all or nothing
+	; for now, BG mask is only all or nothing (from LORES)
 	; so we just skip drawing if behind
+	; this version handles arbitrary width sprites, which complicates
+	;	things
 
 	; X is sprite to draw
 
@@ -18,12 +19,17 @@
 
 hgr_draw_sprite_bg_mask:
 
-	ldy	#4	; FIXME
+	ldy	#4	; FIXME, should be proper save slot
+
+	; save info on background to restore
 
 	lda	CURSOR_X
 	sta	save_xstart,Y
 	lda	CURSOR_Y
 	sta	save_ystart,Y
+
+	; calculate end of sprite on screen for Xpos loop
+	; also save for background restore
 
 	lda	walk_sprites_xsize,X
 	clc
@@ -31,18 +37,24 @@ hgr_draw_sprite_bg_mask:
 	sta	hdsb_width_smc+1
 	sta	save_xend,Y
 
+	; calculate bottom of sprite for Ypos loop
+	; also save for background restore
+
 	lda	walk_sprites_ysize,X
 	sta	hdsb_ysize_smc+1
 	sta	save_yend,Y
 
+	; set up mask countdown value
 
 	lda	#0
 	sta	MASK_COUNTDOWN
 
 	; calculate peasant priority
-	; based on head
+	; based on head location
+	; see chart later
 
-	lda	PEASANT_Y
+	lda	PEASANT_Y		; this should be CURSOR_Y????
+					; they should in theory be same
 	sec
 	sbc	#48			; Y=48
 	lsr				; div by 8
@@ -63,6 +75,11 @@ hgr_draw_sprite_bg_mask:
 	sta	h728_smc3+1
 	lda	walk_mask_data_h,X
 	sta	h728_smc3+2
+
+	;===============================
+	; main loop
+	;	X = row counter at times (CURRENT_ROW is real one)
+	;	Y = col counter
 
 	ldx	#0			; X is row counter
 	stx	CURRENT_ROW
@@ -128,12 +145,15 @@ hsbm_draw_sprite_both:
 	eor	(GBASL),Y	; store out
 	sta	(GBASL),Y	; store out
 
+
+
+	iny
+
+
 draw_sprite_skip:
 
-
-
 	inx
-	iny
+
 
 hdsb_width_smc:
 	cpy	#6
@@ -151,60 +171,15 @@ hdsb_ysize_smc:
 	rts
 
 
-
-	;======================
-	; restore bg 1x28
-	;======================
-
-restore_bg_1x28:
-
-	; restore bg behind peasant
-
-	; is this actually faster than using the generic version?
-
-	ldy	CURSOR_Y		; y start point
-
-	ldx	#27			; height
-
-restore_yloop:
-	; calc GBASL/GBASH using lookup table
-
-	clc
-	lda	hposn_low,Y
-	adc	PEASANT_X
-	sta	restore_page1_smc+1
-	sta	restore_page2_smc+1
-
-	; $40 -> $20   0100 0000 -> 0010 0000
-	; $41 -> $21   0100 0001 -> 0010 0001
-	; $51 -> $31   0101 0011 -> 0101 0001
-
-	lda	hposn_high,Y
-	sta	restore_page2_smc+2
-	eor	#$60
-	sta	restore_page1_smc+2
-
-restore_page1_smc:
-	lda	$DDDD
-restore_page2_smc:
-	sta	$DDDD
-
-	iny
-
-	dex
-	bpl	restore_yloop
-
-	rts
-
-
 	;===================
 	; update_bg_mask
 	;===================
-	; newx/7 in Y
-	; newy in X
+	; Column (xpos/7) in Y
+	; Row in X
 	; updates MASK
 update_bg_mask:
 
+			; ?????????
 			; rrrr rtii	top 5 bits row, bit 2 top/bottom
 
 	sty	xsave
@@ -212,8 +187,10 @@ mask_try_again:
 	stx	ysave
 
 	txa
-	and	#$04	; see if odd/even
+	and	#$04	; see if odd/even in the lo-res lookup
 	beq	bg_mask_even
+
+	; setup mask based on odd/even
 
 bg_mask_odd:
 	lda	#$f0
@@ -222,22 +199,36 @@ bg_mask_odd:
 bg_mask_even:
 	lda	#$0f
 bg_mask_mask:
-
 	sta	MASK
+
+	; X is current row here
+
+	; converting to which row in lores
+	;	0 -> 0 low
+	;	4 -> 0 high
+	;	8 -> 1 low
+	;	....
+	;     191 -> 23 high
 
 	txa
 	lsr
 	lsr		; need to divide by 8 then * 2
 	lsr		; can't just div by 4 as we need to mask bottom bit
-	asl
+	asl		; because our lookup is multiple of two
 	tax
+
+	; set up row for mask lookup
 
 	lda	gr_offsets,X
 	sta	BASL
 	lda	gr_offsets+1,X
 	sta	BASH
 
+	; read out current mask color
+
 	lda	(BASL),Y
+
+	; get high/low properly
 
 	ldy	MASK
 	cpy	#$f0
@@ -250,13 +241,25 @@ mask_top:
 	jmp	mask_mask_mask
 mask_bottom:
 	and	#$0f
+
+
 mask_mask_mask:
 	sta	MASK
 
+	; special cases?
+
 	cmp	#$0			; 0 means collision, find mask
 	bne	mask_not_zero		; by iteratively going down till
-	ldx	ysave			; non-zero
+
+	; mask 0 here, which means can't walk there but doesn't give
+	;	prioirty.  This can happen if there's a don't walk spot
+	;	above you even if not on it. In this case, find the actual
+	;	mask by looking down the screen until we find an actual
+	;	proper mask value
+
 	ldy	xsave
+
+	ldx	ysave			; move to next lower lookup value
 	inx
 	inx
 	inx
@@ -306,10 +309,6 @@ mask_false:
 ;====================
 ; save area
 ;====================
-
-;save_sprite_1x28:
-;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
-;.byte $00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 
 ysave:
 .byte $00
