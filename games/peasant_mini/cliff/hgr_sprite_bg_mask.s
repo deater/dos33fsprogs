@@ -3,8 +3,11 @@
 	;===============================================
 	; used primarily to draw Rather Dashing
 	;===============================================
+	; *cannot* handle sprites bigger than 256 bytes
+	;
 	; attempts to shift for odd/even column
-	; cannot handle sprites bigger than 256 bytes
+	; ideally sprite palette has precedence over background
+	;     if completely transparent then let bg keep palette
 
 	; Location at CURSOR_X CURSOR_Y
 
@@ -53,8 +56,7 @@ hgr_draw_sprite_bg_mask:
 	; based on head location
 	; see chart later
 
-	lda	PEASANT_Y		; this should be CURSOR_Y????
-					; they should in theory be same
+	lda	CURSOR_Y
 	sec
 	sbc	#48			; Y=48
 	lsr				; div by 8
@@ -67,14 +69,18 @@ hgr_draw_sprite_bg_mask:
 	; set up sprite pointers
 	lda	walk_sprites_data_l,X
 	sta	h728_smc1+1
+	sta	h728_smc2+1
 	lda	walk_sprites_data_h,X
 	sta	h728_smc1+2
+	sta	h728_smc2+2
 
 	; set up mask pointers
 	lda	walk_mask_data_l,X
 	sta	h728_smc3+1
+	sta	h728_smc4+1
 	lda	walk_mask_data_h,X
 	sta	h728_smc3+2
+	sta	h728_smc4+2
 
 	;===============================
 	; main loop
@@ -85,7 +91,8 @@ hgr_draw_sprite_bg_mask:
 	stx	CURRENT_ROW		; zero row counter
 
 hgr_sprite_bm_yloop:
-	lda	MASK_COUNTDOWN
+	lda	MASK_COUNTDOWN		; FIXME is this same as CURRENT_ROW
+
 	and	#$3			; only update every 4th
 	bne	mask_good
 
@@ -121,7 +128,7 @@ mask_good:
 	lda	hposn_low,Y
 	sta	GBASL
 	lda	hposn_high,Y
-	sta	GBASH
+	sta	GBASH			; always page2
 
 
 	;============================
@@ -135,28 +142,79 @@ mask_good:
 
 hsbm_inner_loop:
 
+
+
 	lda	MASK
 	bne	draw_sprite_skip
 
 	;============================
 	; not masked so actually draw
 
+	;=========================
+	; pick if even or odd
 
+	lda	CURSOR_X
+	ror
+	bcs	hsbm_draw_sprite_odd
+
+	;============================
+
+hsbm_draw_sprite_even:
 
 h728_smc1:
 	lda	$d000,X		; load sprite value
 	sta	TEMP_SPRITE
 h728_smc3:
 	lda	$d000,X		; load mask value
-	sta	TEMP_MASK
 
+	jmp	hsbm_draw_sprite_both
+
+
+hsbm_draw_sprite_odd:
+
+h728_smc2:
+        lda     $f000,X                 ; load sprite data
+
+                                        ;            PSSS SSSS
+                                        ; rol   C=P, SSSS SSST
+
+                                        ; want to set bit7 to C?
+
+	rol	SPRITE_TEMP
+	rol
+	sta	SPRITE_TEMP
+	bcc	hsbm_pal0
+hsbm_pal1:
+	ora	#$80                    ; set pal bit
+	bne     hsbm_pal_done
+hsbm_pal0:
+	and	#$7f                    ; clear pal bit
+
+hsbm_pal_done:
+        sta     TEMP_SPRITE
+
+h728_smc4:
+        lda     $f000,X                 ; load sprite data
+
+	rol	MASK_TEMP
+	rol
+	sta	MASK_TEMP
 
 hsbm_draw_sprite_both:
-	lda	(GBASL),Y	; load background
-	eor	TEMP_SPRITE
-	and	TEMP_MASK
+	eor	#$FF
+	and	#$7F
+	sta	TEMP_MASK
 
-	eor	(GBASL),Y	; store out
+	; if mask is $7f then skip drawing
+	cmp	#$7f
+	beq	draw_sprite_skip
+
+	; do actual sprite-ing
+
+	lda	(GBASL),Y	; load background
+	and	TEMP_MASK
+	ora	TEMP_SPRITE
+
 	sta	(GBASL),Y	; store out
 
 draw_sprite_skip:
