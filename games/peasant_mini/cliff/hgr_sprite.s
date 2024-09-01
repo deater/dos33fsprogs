@@ -1,9 +1,11 @@
 	;===========================================
 	; hgr draw sprite (only at 7-bit boundaries)
 	;===========================================
+	; *cannot* handle sprites bigger than a 256 byte page
+	;
 	; attempts to shift to allow arbitray odd/even columns
 	;
-	; *cannot* handle sprites bigger than a 256 byte page
+	; ideally foreground sprite palette has precedence over background
 
 	; Location at SPRITE_X SPRITE_Y
 	;	note: sprite_x is column, so Xcoord/7
@@ -13,22 +15,21 @@
 
 hgr_draw_sprite:
 
-	; backup location in case we need to restore
+	; backup location for eventual restore
 	lda	SPRITE_X
 	sta	save_xstart,Y
 	lda	SPRITE_Y
 	sta	save_ystart,Y
 
-	; handle xsize
+	; generate x-end for both restore as well as inner loop
 
 	lda	sprites_xsize,X
 	clc
 	adc	SPRITE_X
 	sta	sprite_width_end_smc+1	; self modify for end of line
-;	sta	osprite_width_end_smc+1	; self modify for end of line
 	sta	save_xend,Y
 
-	; handle ysize
+	; handle ysize for both restore as well as outer loop
 
 	lda	sprites_ysize,X
 	sta	sprite_ysize_smc+1	; self modify for end row
@@ -37,6 +38,7 @@ hgr_draw_sprite:
 	sta	save_yend,Y
 
 	; point smc to sprite
+
 	lda	sprites_data_l,X
 	sta	sprite_smc1+1
 	sta	osprite_smc1+1
@@ -45,12 +47,16 @@ hgr_draw_sprite:
 	sta	osprite_smc1+2
 
 	; point smc to mask
+
 	lda	sprites_mask_l,X
 	sta	sprite_mask_smc1+1
 	sta	osprite_mask_smc1+1
 	lda	sprites_mask_h,X
 	sta	sprite_mask_smc1+2
 	sta	osprite_mask_smc1+2
+
+	;=============================
+	; set up outer loop
 
 
 	ldx	#0			; X is pointer offset
@@ -76,7 +82,11 @@ hgr_sprite_yloop:
 ;	adc	DRAW_PAGE
 	sta	GBASH
 
+	; setup Xpos for inner loop
+
 	ldy	SPRITE_X
+
+	; values to shift in for odd columns
 
 	lda	#$0
 	sta	SPRITE_TEMP	; default high bit to 0
@@ -102,11 +112,31 @@ sprite_smc1:
 	sta	TEMP_SPRITE
 sprite_mask_smc1:
 	lda	$f000,X			; mask
-	sta	TEMP_MASK
 
 	jmp	hgr_draw_sprite_both
 
 hgr_draw_sprite_odd:
+
+osprite_smc1:
+        lda	$f000,X			; load sprite data
+
+					;            PSSS SSSS
+					; rol   C=P, SSSS SSST
+
+					; want to set bit7 to C?
+
+	rol	SPRITE_TEMP
+	rol
+	sta	SPRITE_TEMP
+	bcc	pal0
+pal1:
+	ora	#$80			; set pal bit
+	bne	pal_done
+pal0:
+	and	#$7f			; clear pal bit
+
+pal_done:
+	sta	TEMP_SPRITE
 
 osprite_mask_smc1:
         lda	$f000,X			; load mask data
@@ -114,29 +144,31 @@ osprite_mask_smc1:
 	rol	MASK_TEMP
 	rol
 	sta	MASK_TEMP
-	and	#$7f
-	sta	TEMP_MASK
-
-osprite_smc1:
-        lda	$f000,X			; load sprite data
-
-	rol	SPRITE_TEMP
-	rol
-	sta	SPRITE_TEMP
-	and	#$7f	; force purple/green
-
-	sta	TEMP_SPRITE
 
 hgr_draw_sprite_both:
+	eor	#$FF
+	and	#$7F
+	sta	TEMP_MASK
+
+					;   BBBB BBBB	; background
+					; & 1111 0000	; mask
+					;  ============
+					;   BBBB 0000
+					; | 0000 SSSS   ; sprite
+					; =============
+					;   BBBB SSSS
+
+
+	; do the actual sprite-ing
 
 	lda     (GBASL),Y		; load bg
-;backup_sprite_smc1:
-;	sta	$f000,X
 
-	eor	TEMP_SPRITE
+;	eor	TEMP_SPRITE
 	and	TEMP_MASK
 
-	eor	(GBASL),Y
+	ora	TEMP_SPRITE
+
+;	eor	(GBASL),Y
 	sta	(GBASL),Y		; store to screen
 
 	inx				; increment sprite offset
