@@ -81,32 +81,34 @@ hgr_draw_sprite_bg_mask:
 	;	X = row counter at times (CURRENT_ROW is real one)
 	;	Y = col counter
 
-	ldx	#0			; X is row counter
-	stx	CURRENT_ROW
+	ldx	#0			; X is sprite counter
+	stx	CURRENT_ROW		; zero row counter
+
 hgr_sprite_bm_yloop:
 	lda	MASK_COUNTDOWN
 	and	#$3			; only update every 4th
 	bne	mask_good
 
-	txa
-	pha				; save X
 
+	;======================
 	; recalculate mask
+
 	txa
+	pha				; save sprite counter
+
+	lda	CURRENT_ROW
 	clc
 	adc	CURSOR_Y
-	tax
-	ldy	CURSOR_X
+	tax				; X has row
+
+	ldy	CURSOR_X		; Y has column
+					; FIXME: we have multi-width now
 	jsr	update_bg_mask
 
-
-        pla				; restore X
+	pla				; restore sprite counter
 	tax
 
 mask_good:
-	lda	MASK
-	bne	draw_sprite_skip
-
 
 	lda	CURRENT_ROW
 
@@ -121,19 +123,31 @@ mask_good:
 	lda	hposn_high,Y
 	sta	GBASH
 
+
+	;============================
+	; set up inner loop
+
 	ldy	CURSOR_X
+
 	lda	#0
 	sta	SPRITE_TEMP
 	sta	MASK_TEMP
 
 hsbm_inner_loop:
 
+	lda	MASK
+	bne	draw_sprite_skip
+
+	;============================
+	; not masked so actually draw
+
+
 
 h728_smc1:
-	lda	$d000,X		; or in sprite
+	lda	$d000,X		; load sprite value
 	sta	TEMP_SPRITE
 h728_smc3:
-	lda	$d000,X		; mask with sprite mask
+	lda	$d000,X		; load mask value
 	sta	TEMP_MASK
 
 
@@ -145,21 +159,21 @@ hsbm_draw_sprite_both:
 	eor	(GBASL),Y	; store out
 	sta	(GBASL),Y	; store out
 
-
-
-	iny
-
-
 draw_sprite_skip:
 
-	inx
+	inx			; increment sprite pointer
+	iny			; increment column
+
+
 
 
 hdsb_width_smc:
 	cpy	#6
 	bne	hsbm_inner_loop
 
-	inc	MASK_COUNTDOWN
+
+
+	inc	MASK_COUNTDOWN	; increment row
 
 	inc	CURRENT_ROW
 	lda	CURRENT_ROW
