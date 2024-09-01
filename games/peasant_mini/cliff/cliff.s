@@ -37,6 +37,7 @@ cliff_base:
 	sta	PEASANT_YADD
 	sta	PEASANT_DIR	; 0 = up
 	sta	ERASE_SPRITE_COUNT
+	sta	PEASANT_STEPS
 
 	lda	#10
 	sta	PEASANT_X

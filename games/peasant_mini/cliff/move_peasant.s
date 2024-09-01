@@ -12,6 +12,17 @@ move_peasant:
 
 really_move_peasant:
 
+	; increment step count, wrapping at 6
+
+	inc	PEASANT_STEPS
+	lda	PEASANT_STEPS
+	cmp	#6
+	bne	no_peasant_wrap
+	lda	#0
+	sta	PEASANT_STEPS
+
+no_peasant_wrap:
+
 	; restore bg behind peasant
 
 	jsr	erase_peasant

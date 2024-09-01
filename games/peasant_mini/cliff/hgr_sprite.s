@@ -68,7 +68,7 @@ hgr_sprite_yloop:
 	lda	CURRENT_ROW		; row
 
 	clc
-	adc	SPRITE_Y		; add in cursor_y
+	adc	SPRITE_Y		; add in sprite_y
 
 	; calc GBASL/GBASH
 

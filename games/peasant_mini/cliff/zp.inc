@@ -239,7 +239,9 @@ VISITED_1		= $A9
 VISITED_2		= $AA
 VISITED_3		= $AB
 
-END_OF_SAVE		= $AC
+PEASANT_STEPS		= $AC
+
+END_OF_SAVE		= $AD
 
 ;=============================================
 

@@ -10,7 +10,7 @@ draw_peasant:
 	lda	LEVEL_OVER
 	bne	done_draw_peasant
 
-	lda	PEASANT_X
+	lda	PEASANT_X		; needed?  should we hard-code?
 	sta	CURSOR_X
 	lda	PEASANT_Y
 	sta	CURSOR_Y
@@ -27,67 +27,44 @@ draw_peasant:
 
 	;=====================
 	; up up up up
+	;=====================
+	; 12 ... 17 depending on PEASANT_STEPS
+
 peasant_up:
-
-	lda	PEASANT_Y
-	and	#4
-	beq	peasant_up1
-
-peasant_up2:
-	ldx	#13
-	jmp	done_pick_draw
-
-peasant_up1:
-	ldx	#12
-	jmp	done_pick_draw
+	lda	#12
+	bne	done_pick_draw		; bra
 
 	;=====================
 	; down down down
+	;=====================
+	; 18 ... 23 depending on PEASANT_STEPS
 peasant_down:
-
-	lda	PEASANT_Y
-	and	#4
-	beq	peasant_down1
-
-peasant_down2:
-	ldx	#19
-	jmp	done_pick_draw
-
-peasant_down1:
-	ldx	#18
-	jmp	done_pick_draw
+	lda	#18
+	bne	done_pick_draw		; bra
 
 	;=====================
 	; left left left
-
+	;=====================
+	; 6 ... 11 depending on PEASANT_STEPS
 peasant_left:
-	lda	CURSOR_X
-	and	#1
-	bne	draw_left1
+	lda	#6
+	bne	done_pick_draw		; bra
 
-draw_left2:
-	ldx	#7
-	jmp	done_pick_draw
-
-draw_left1:
-	ldx	#6
-	jmp	done_pick_draw
-
+	;=====================
+	; right right right
+	;=====================
+	; 0 ... 5 depending on PEASANT_STEPS
 
 peasant_right:
-	lda	CURSOR_X
-	and	#1
-	bne	draw_right1
+	lda	#0
 
-draw_right2:
-	ldx	#1
-
-	jmp	done_pick_draw
-
-draw_right1:
-	ldx	#0
+	; fallthrough
 
 done_pick_draw:
+	clc
+	adc	PEASANT_STEPS
+
+	tax
 
 	jsr	hgr_draw_sprite_bg_mask
 
