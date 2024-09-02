@@ -1,11 +1,29 @@
+; FIXME
+; the save routines are off by one
+; so we are in theory restoring too much
+
+
+	; Y is which
+hgr_partial_restore_by_num:
+	lda	save_ystart,Y
+	sta	SAVED_Y1
+	lda	save_yend,Y
+	sta	SAVED_Y2
+	lda	save_xstart,Y
+	pha
+	lda	save_xend,Y
+	tax
+	pla
+
+
 	;=======================
 	; HGR Partial Restore
 	;=======================
 	; loads from $20
 	; save to $40
 
-	; restores from X = A<=to<=X
-	;               Y = SAVED_Y1 to SAVED_Y2
+	; restores from Xpos = A<=to<=X
+	;               Ypos = SAVED_Y1 to SAVED_Y2
 
 hgr_partial_restore:
 	sta	partial_restore_x1_smc+1	; update smc with xtart

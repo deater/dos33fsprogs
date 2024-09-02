@@ -15,56 +15,38 @@ draw_peasant:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	lda	PEASANT_DIR
-	cmp	#PEASANT_DIR_RIGHT
-	beq	peasant_right
-	cmp	#PEASANT_DIR_LEFT
-	beq	peasant_left
-	cmp	#PEASANT_DIR_DOWN
-	beq	peasant_down
+	; get offset for graphics
 
-	; else we are up
-
-	;=====================
-	; up up up up
-	;=====================
-	; 12 ... 17 depending on PEASANT_STEPS
-
-peasant_up:
-	lda	#12
-	bne	done_pick_draw		; bra
-
-	;=====================
-	; down down down
-	;=====================
-	; 18 ... 23 depending on PEASANT_STEPS
-peasant_down:
-	lda	#18
-	bne	done_pick_draw		; bra
-
-	;=====================
-	; left left left
-	;=====================
-	; 6 ... 11 depending on PEASANT_STEPS
-peasant_left:
-	lda	#6
-	bne	done_pick_draw		; bra
-
-	;=====================
-	; right right right
-	;=====================
-	; 0 ... 5 depending on PEASANT_STEPS
-
-peasant_right:
-	lda	#0
-
-	; fallthrough
-
-done_pick_draw:
+	ldx	PEASANT_DIR
+	lda	peasant_walk_offsets,X
 	clc
 	adc	PEASANT_STEPS
-
 	tax
+
+	ldy	#4	; reserved for peasant
+
+	jsr	hgr_draw_sprite_bg_mask
+
+
+	;=============================
+	; draw flame if applicable
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sec
+	sbc	#4
+	sta	CURSOR_Y
+
+	; get offset for graphics
+
+	ldx	PEASANT_DIR
+	lda	peasant_flame_offsets,X
+	clc
+	adc	FLAME_COUNT
+	tax
+
+	ldy	#5	; reserved for flame
 
 	jsr	hgr_draw_sprite_bg_mask
 
@@ -72,3 +54,9 @@ done_draw_peasant:
 
 	rts
 
+; UP RIGHT LEFT DOWN = 0, 1, 2, 3
+peasant_walk_offsets:
+	.byte 12, 0, 6, 18
+
+peasant_flame_offsets:
+	.byte 30,24,27,33

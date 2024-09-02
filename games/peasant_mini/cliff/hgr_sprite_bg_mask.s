@@ -22,12 +22,13 @@
 
 hgr_draw_sprite_bg_mask:
 
-	ldy	#4	; FIXME, should be proper save slot
+;	ldy	#4	; FIXME, should be proper save slot
 
 	; save info on background to restore
 
 	lda	CURSOR_X
 	sta	save_xstart,Y
+
 	lda	CURSOR_Y
 	sta	save_ystart,Y
 
@@ -45,6 +46,8 @@ hgr_draw_sprite_bg_mask:
 
 	lda	walk_sprites_ysize,X
 	sta	hdsb_ysize_smc+1
+	clc
+	adc	CURSOR_Y
 	sta	save_yend,Y
 
 	; set up mask countdown value

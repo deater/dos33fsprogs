@@ -38,6 +38,7 @@ cliff_base:
 	sta	PEASANT_DIR	; 0 = up
 	sta	ERASE_SPRITE_COUNT
 	sta	PEASANT_STEPS
+	sta	FLAME_COUNT
 
 	lda	#10
 	sta	PEASANT_X
@@ -157,6 +158,9 @@ done_erase_old:
 	; draw bird
 	;=====================
 
+	lda	bird_out
+	beq	done_draw_bird
+
 	lda	bird_x
 	sta	SPRITE_X
 	lda	bird_y
@@ -171,6 +175,8 @@ done_erase_old:
 	jsr	hgr_draw_sprite
 
 	inc	ERASE_SPRITE_COUNT
+
+done_draw_bird:
 
 	;=====================
 	; draw rock
@@ -265,13 +271,35 @@ skip_rock:
 	;=====================
 	; bird
 
-	dec	bird_x
-	bpl	bird_good
+	lda	bird_out
+	bne	move_bird
+maybe_new_bird:
+
+	jsr	random16
+	and	#7		; 1/8 of time start new bird?
+	bne	move_bird_done
+
+	jsr	random16
+	and	#$3f		; 0... 64
+	clc
+	adc	#12		; skip top bar
+	sta	bird_y
 
 	lda	#37
 	sta	bird_x
+	inc	bird_out
+	jmp	move_bird_done
 
-bird_good:
+move_bird:
+	dec	bird_x
+	bpl	move_bird_done
+
+	; off screen here
+
+	lda	#0
+	sta	bird_out
+
+move_bird_done:
 
 	;=====================
 	; rock
@@ -288,11 +316,22 @@ move_rock_loop:
 
 move_rock_waiting:
 
-	lda	#0
-	sta	rock_state,X
+	jsr	random16
+	and	#7		; 1/8 of time start new rock
+	bne	rock_good
+
+	jsr	random16
+	and	#$1f		; 0... 31
+	clc
+	adc	#2		; skip to middle slightly
+	sta	rock_x,X
 
 	lda	#12
 	sta	rock_y,X
+
+	lda	#0
+	sta	rock_state,X
+
 	jmp	rock_good
 
 
@@ -322,6 +361,17 @@ rock_good:
 
 	inc	FRAME
 
+	inc	FLAME_COUNT
+	lda	FLAME_COUNT
+	cmp	#3
+	bne	flame_good
+
+
+	lda	#0
+	sta	FLAME_COUNT
+
+flame_good:
+
 	;=====================
 	; check keyboard
 
@@ -343,14 +393,13 @@ done_cliff:
 	sta	WHICH_LOAD
 	rts
 
+	.include	"wait.s"
 
 	.include	"hgr_tables.s"
 
 	.include	"hgr_sprite.s"
 
 	.include	"zx02_optim.s"
-
-	.include	"wait.s"
 
 	.include	"keyboard.s"
 
@@ -365,7 +414,7 @@ done_cliff:
 	.include	"gr_copy.s"
 	.include	"hgr_copy.s"
 
-;	.include "cliff_graphics/peasant_robe_sprites.inc"
+	.include	"random16.s"
 
 bg_data:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
@@ -429,20 +478,23 @@ sprites_mask_h:
 	;========================================
 
 	; background restore parameters
-	; currently 4, should check this and error if we overflow
+	; currently 5, should check this and error if we overflow
 
 save_xstart:
-	.byte	0, 0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0, 0
 save_xend:
-	.byte	0, 0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0, 0
 save_ystart:
-	.byte	0, 0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0, 0
 save_yend:
-	.byte	0, 0, 0, 0, 0
+	.byte	0, 0, 0, 0, 0, 0
 
 
 	;========================================
 	; data for the enemies
+
+bird_out:
+	.byte	0
 
 bird_x:
 	.byte	37
@@ -453,7 +505,7 @@ bird_y:
 rock_type:		; 0=big, 1=little
 	.byte	0, 1, 0
 rock_state:
-	.byte 	0, 0, 3	; 0 = falling, 1,2 = exploding, 3 = waiting?
+	.byte 	3, 3, 3	; 0 = falling, 1,2 = exploding, 3 = waiting?
 rock_x:
 	.byte	7, 12, 17	; remember, /7
 rock_y:
@@ -464,19 +516,30 @@ rock_y:
 
 	.include "sprites/walk_sprites.inc"
 
-
+	.include "sprites/flame_sprites.inc"
 
 walk_sprites_xsize:
-	.byte	2, 2, 2, 2, 2, 2	; right
-	.byte	2, 2, 2, 2, 2, 2	; left
-	.byte	2, 2, 2, 2, 2, 2	; up
-	.byte	2, 2, 2, 2, 2, 2	; down
+	.byte	2, 2, 2, 2, 2, 2	; right		; 0
+	.byte	2, 2, 2, 2, 2, 2	; left		; 6
+	.byte	2, 2, 2, 2, 2, 2	; up		; 12
+	.byte	2, 2, 2, 2, 2, 2	; down		; 18
+flame_sprites_xsize:
+	.byte	2, 2, 2			; right		; 24
+	.byte	2, 2, 2			; left		; 27
+	.byte	2, 2, 2			; up		; 30
+	.byte	2, 2, 2			; down		; 33
+
 
 walk_sprites_ysize:
 	.byte	30, 30, 30, 30, 30, 30	; right
 	.byte	30, 30, 30, 30, 30, 30	; left
 	.byte	30, 30, 30, 30, 30, 30	; up
 	.byte	30, 30, 30, 30, 30, 30	; down
+flame_sprites_ysize:
+	.byte	9, 9, 9			; right
+	.byte	9, 9, 9			; left
+	.byte	9, 9, 9			; up
+	.byte	9, 9, 9			; down
 
 walk_sprites_data_l:
 	.byte <walk_r0_sprite,<walk_r1_sprite,<walk_r2_sprite
@@ -487,6 +550,11 @@ walk_sprites_data_l:
 	.byte <walk_u3_sprite,<walk_u4_sprite,<walk_u5_sprite
 	.byte <walk_d0_sprite,<walk_d1_sprite,<walk_d2_sprite
 	.byte <walk_d3_sprite,<walk_d4_sprite,<walk_d5_sprite
+flame_sprites_data_l:
+	.byte <flame_r0_sprite,<flame_r1_sprite,<flame_r2_sprite
+	.byte <flame_l0_sprite,<flame_l1_sprite,<flame_l2_sprite
+	.byte <flame_u0_sprite,<flame_u1_sprite,<flame_u2_sprite
+	.byte <flame_d0_sprite,<flame_d1_sprite,<flame_d2_sprite
 
 walk_sprites_data_h:
 	.byte >walk_r0_sprite,>walk_r1_sprite,>walk_r2_sprite
@@ -497,6 +565,11 @@ walk_sprites_data_h:
 	.byte >walk_u3_sprite,>walk_u4_sprite,>walk_u5_sprite
 	.byte >walk_d0_sprite,>walk_d1_sprite,>walk_d2_sprite
 	.byte >walk_d3_sprite,>walk_d4_sprite,>walk_d5_sprite
+flame_sprites_data_h:
+	.byte >flame_r0_sprite,>flame_r1_sprite,>flame_r2_sprite
+	.byte >flame_l0_sprite,>flame_l1_sprite,>flame_l2_sprite
+	.byte >flame_u0_sprite,>flame_u1_sprite,>flame_u2_sprite
+	.byte >flame_d0_sprite,>flame_d1_sprite,>flame_d2_sprite
 
 walk_mask_data_l:
 	.byte <walk_r0_mask,<walk_r1_mask,<walk_r2_mask
@@ -507,6 +580,11 @@ walk_mask_data_l:
 	.byte <walk_u3_mask,<walk_u4_mask,<walk_u5_mask
 	.byte <walk_d0_mask,<walk_d1_mask,<walk_d2_mask
 	.byte <walk_d3_mask,<walk_d4_mask,<walk_d5_mask
+flame_mask_data_l:
+	.byte <flame_r0_mask,<flame_r1_mask,<flame_r2_mask
+	.byte <flame_l0_mask,<flame_l1_mask,<flame_l2_mask
+	.byte <flame_u0_mask,<flame_u1_mask,<flame_u2_mask
+	.byte <flame_d0_mask,<flame_d1_mask,<flame_d2_mask
 
 walk_mask_data_h:
 	.byte >walk_r0_mask,>walk_r1_mask,>walk_r2_mask
@@ -517,4 +595,8 @@ walk_mask_data_h:
 	.byte >walk_u3_mask,>walk_u4_mask,>walk_u5_mask
 	.byte >walk_d0_mask,>walk_d1_mask,>walk_d2_mask
 	.byte >walk_d3_mask,>walk_d4_mask,>walk_d5_mask
-
+flame_mask_data_h:
+	.byte >flame_r0_mask,>flame_r1_mask,>flame_r2_mask
+	.byte >flame_l0_mask,>flame_r1_mask,>flame_l2_mask
+	.byte >flame_u0_mask,>flame_u1_mask,>flame_u2_mask
+	.byte >flame_d0_mask,>flame_d1_mask,>flame_d2_mask

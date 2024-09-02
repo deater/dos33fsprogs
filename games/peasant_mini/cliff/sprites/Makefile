@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	enemy_sprites.inc walk_sprites.inc
+all:	enemy_sprites.inc walk_sprites.inc robe_sprites.inc flame_sprites.inc
 
 enemy_sprites.inc:     enemy_sprites.png
 	$(HGR_SPRITE) -l bird0_sprite enemy_sprites.png 210 50 230 66 > enemy_sprites.inc
@@ -31,6 +31,57 @@ enemy_sprites.inc:     enemy_sprites.png
 	$(HGR_SPRITE) -l smallrock_crash0_mask   enemy_sprites.png 126 119 139 134 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock_crash1_sprite enemy_sprites.png 126 147 153 166 >> enemy_sprites.inc
 	$(HGR_SPRITE) -l smallrock_crash1_mask   enemy_sprites.png 168 147 195 165 >> enemy_sprites.inc
+
+
+robe_sprites.inc:     robe_sprites.png
+	$(HGR_SPRITE) -l robe_r0_sprite robe_sprites.png  14  32  27  62 > robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r0_mask   robe_sprites.png  14  63  27  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r1_sprite robe_sprites.png  42  32  53  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r1_mask   robe_sprites.png  42  63  53  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r2_sprite robe_sprites.png  70  32  83  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r2_mask   robe_sprites.png  70  63  83  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r3_sprite robe_sprites.png  98  32 111  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r3_mask   robe_sprites.png  98  63 111  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r4_sprite robe_sprites.png 126  32 139  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r4_mask   robe_sprites.png 126  63 139  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r5_sprite robe_sprites.png 154  32 167  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_r5_mask   robe_sprites.png 154  63 167  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l0_sprite robe_sprites.png  14 128  27 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l0_mask   robe_sprites.png  14 159  27 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l1_sprite robe_sprites.png  42 128  53 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l1_mask   robe_sprites.png  42 159  53 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l2_sprite robe_sprites.png  70 128  83 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l2_mask   robe_sprites.png  70 159  83 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l3_sprite robe_sprites.png  98 128 111 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l3_mask   robe_sprites.png  98 159 111 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l4_sprite robe_sprites.png 126 128 139 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l4_mask   robe_sprites.png 126 159 139 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l5_sprite robe_sprites.png 154 128 167 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_l5_mask   robe_sprites.png 154 159 167 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u0_sprite robe_sprites.png 182   1 195  31 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u0_mask   robe_sprites.png 183  32 195  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u1_sprite robe_sprites.png 210   1 221  31 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u1_mask   robe_sprites.png 210  32 223  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u2_sprite robe_sprites.png 238   1 251  31 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u2_mask   robe_sprites.png 238  32 251  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u3_sprite robe_sprites.png 266   1 279  31 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u3_mask   robe_sprites.png 266  32 279  62 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u4_sprite robe_sprites.png 182  63 195  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u4_mask   robe_sprites.png 182  94 195 124 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u5_sprite robe_sprites.png 210  63 223  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_u5_mask   robe_sprites.png 210  94 223 124 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d0_sprite robe_sprites.png 238  63 251  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d0_mask   robe_sprites.png 238  94 251 124 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d1_sprite robe_sprites.png 266  63 279  93 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d1_mask   robe_sprites.png 266  94 279 124 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d2_sprite robe_sprites.png 182 128 195 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d2_mask   robe_sprites.png 182 159 195 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d3_sprite robe_sprites.png 210 128 223 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d3_mask   robe_sprites.png 210 159 223 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d4_sprite robe_sprites.png 238 128 251 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d4_mask   robe_sprites.png 238 159 251 189 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d5_sprite robe_sprites.png 266 128 279 158 >> robe_sprites.inc
+	$(HGR_SPRITE) -l robe_d5_mask   robe_sprites.png 266 159 279 189 >> robe_sprites.inc
 
 
 walk_sprites.inc:     walk_sprites.png
@@ -84,6 +135,34 @@ walk_sprites.inc:     walk_sprites.png
 	$(HGR_SPRITE) -l walk_d5_mask   walk_sprites.png 266 159 279 189 >> walk_sprites.inc
 
 
+flame_sprites.inc:     flame_sprites.png
+	$(HGR_SPRITE) -l flame_r0_sprite flame_sprites.png  14  25  27  34 > flame_sprites.inc
+	$(HGR_SPRITE) -l flame_r0_mask   flame_sprites.png  14  35  27  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_r1_sprite flame_sprites.png  42  25  55  34 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_r1_mask   flame_sprites.png  42  35  55  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_r2_sprite flame_sprites.png  70  25  83  34 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_r2_mask   flame_sprites.png  70  35  83  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l0_sprite flame_sprites.png  98  25 111  34 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l0_mask   flame_sprites.png  98  35 111  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l1_sprite flame_sprites.png 126  25 139  34 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l1_mask   flame_sprites.png 126  35 139  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l2_sprite flame_sprites.png 154  25 167  34 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_l2_mask   flame_sprites.png 154  35 167  44 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u0_sprite flame_sprites.png  14 147  27 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u0_mask   flame_sprites.png  14 157  27 166 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u1_sprite flame_sprites.png  42 147  55 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u1_mask   flame_sprites.png  42 157  55 166 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u2_sprite flame_sprites.png  70 147  83 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_u2_mask   flame_sprites.png  70 157  83 166 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d0_sprite flame_sprites.png  98 147 111 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d0_mask   flame_sprites.png  98 157 111 166 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d1_sprite flame_sprites.png 126 147 139 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d1_mask   flame_sprites.png 126 157 139 166 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d2_sprite flame_sprites.png 154 147 167 156 >> flame_sprites.inc
+	$(HGR_SPRITE) -l flame_d2_mask   flame_sprites.png 154 157 167 166 >> flame_sprites.inc
+
+
+
 
 
 
@@ -92,5 +171,6 @@ walk_sprites.inc:     walk_sprites.png
 
 
 clean:	
-	rm -f *~ enemy_sprites.inc walk_sprites.inc
+	rm -f *~ enemy_sprites.inc robe_sprites.inc flame_sprites.inc \
+		walk_sprites.inc
 

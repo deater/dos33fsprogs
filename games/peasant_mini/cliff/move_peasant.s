@@ -166,20 +166,30 @@ peasant_the_same:
 	; restore bg behind peasant
 erase_peasant:
 
-.if 1
-	lda	PEASANT_Y
-	sta	SAVED_Y1
-	clc
-	adc	#30
-	sta	SAVED_Y2
+	; erase flame if applicable
+	ldy	#5
+	jsr	hgr_partial_restore_by_num
 
-	ldx	PEASANT_X
-	txa
-	inx
 
-	jmp	hgr_partial_restore	; tail call
-.endif
-	rts
+;	lda	PEASANT_Y
+;	sta	SAVED_Y1
+;	clc
+;	adc	#30
+;	sta	SAVED_Y2
+
+;	ldx	PEASANT_X
+;	txa
+;	inx
+
+;	jmp	hgr_partial_restore	; tail call
+
+
+	ldy	#4
+
+	jmp	hgr_partial_restore_by_num	; tail call
+
+
+;	rts
 
 
 ; when peasants collide

@@ -31,9 +31,11 @@ cliff.o:	cliff.s zx02_optim.s \
 		move_peasant.s draw_peasant.s \
 		hgr_copy.s hgr_partial_restore.s \
 		hgr_sprite.s hgr_sprite_bg_mask.s \
+		random16.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
 		sprites/enemy_sprites.inc \
 		sprites/walk_sprites.inc \
+		sprites/flame_sprites.inc \
 		zp.inc hardware.inc
 	ca65 -o cliff.o cliff.s -l cliff.lst
 
