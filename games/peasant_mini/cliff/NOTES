@@ -1,0 +1,8 @@
+
+
+
+$2000-$3FFF = saved bg
+$4000-$5FFF = HGR2 display
+$6000-$9FFF = code (16k)
+$A000-$B000 = sprite data (4k)
+$B000-$BFFF = lookup tables and such
