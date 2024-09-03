@@ -35,12 +35,13 @@ cliff.o:	cliff.s zx02_optim.s \
 		random16.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
 		sprites/enemy_sprites.inc \
-		sprites/walk_sprites.inc \
-		sprites/flame_sprites.inc \
 		zp.inc hardware.inc \
 		walking_sprites.zx02
 	ca65 -o cliff.o cliff.s -l cliff.lst
 ####
+
+#		sprites/walk_sprites.inc \
+#		sprites/flame_sprites.inc \
 
 walking_sprites.zx02:	walking_sprites
 	$(ZX02) -f walking_sprites walking_sprites.zx02
@@ -48,7 +49,9 @@ walking_sprites.zx02:	walking_sprites
 walking_sprites:	walking_sprites.o
 	ld65 -o walking_sprites walking_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
 
-walking_sprites.o:	walking_sprites.s sprites/walk_sprites.inc
+walking_sprites.o:	walking_sprites.s \
+	sprites/flame_sprites.inc \
+	sprites/walk_sprites.inc
 	ca65 -o walking_sprites.o walking_sprites.s -l walking_sprites.lst
 
 
