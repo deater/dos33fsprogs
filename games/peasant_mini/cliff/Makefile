@@ -53,11 +53,10 @@ climb.o:	climb.s zx02_optim.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
 		sprites/enemy_sprites.inc \
 		zp.inc hardware.inc \
-		walking_sprites.zx02
+		climbing_sprites.zx02
 	ca65 -o climb.o climb.s -l climb.lst
 
 ####
-
 
 walking_sprites.zx02:	walking_sprites
 	$(ZX02) -f walking_sprites walking_sprites.zx02
@@ -73,6 +72,21 @@ walking_sprites.o:	walking_sprites.s \
 
 ####
 
+climbing_sprites.zx02:	climbing_sprites
+	$(ZX02) -f climbing_sprites climbing_sprites.zx02
+
+climbing_sprites:	climbing_sprites.o
+	ld65 -o climbing_sprites climbing_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+
+climbing_sprites.o:	climbing_sprites.s \
+	sprites/flame_sprites.inc \
+	sprites/walk_sprites.inc
+	ca65 -o climbing_sprites.o climbing_sprites.s -l climbing_sprites.lst
+
+
+
+####
+
 cliff_graphics/cliff_base.hgr.zx02:	
 	cd cliff_graphics && make
 
@@ -83,6 +97,7 @@ sprites/enemy_sprites.inc:
 ####
 
 clean:	
-	rm -f *.lst *.o CLIFF CLIMB HELLO walking_sprites *.zx02
+	rm -f *.lst *.o CLIFF CLIMB HELLO \
+		walking_sprites climbing_sprites *.zx02
 	cd cliff_graphics && make clean
 	cd sprites && make clean
