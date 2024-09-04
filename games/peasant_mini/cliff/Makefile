@@ -12,10 +12,11 @@ all:	cliff.dsk
 
 ####
 
-cliff.dsk:	HELLO CLIFF
+cliff.dsk:	HELLO CLIFF CLIMB
 	cp $(EMPTY_DISK) cliff.dsk
 	$(DOS33) -y cliff.dsk SAVE A HELLO
 	$(DOS33) -y cliff.dsk BSAVE -a 0x6000 CLIFF
+	$(DOS33) -y cliff.dsk BSAVE -a 0x6000 CLIMB
 
 ###
 
@@ -38,10 +39,25 @@ cliff.o:	cliff.s zx02_optim.s \
 		zp.inc hardware.inc \
 		walking_sprites.zx02
 	ca65 -o cliff.o cliff.s -l cliff.lst
+
 ####
 
-#		sprites/walk_sprites.inc \
-#		sprites/flame_sprites.inc \
+CLIMB:	climb.o
+	ld65 -o CLIMB climb.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+climb.o:	climb.s zx02_optim.s \
+		move_peasant.s draw_peasant.s \
+		hgr_copy.s hgr_partial_restore.s \
+		hgr_sprite.s hgr_sprite_bg_mask.s \
+		random16.s \
+		cliff_graphics/cliff_base.hgr.zx02 \
+		sprites/enemy_sprites.inc \
+		zp.inc hardware.inc \
+		walking_sprites.zx02
+	ca65 -o climb.o climb.s -l climb.lst
+
+####
+
 
 walking_sprites.zx02:	walking_sprites
 	$(ZX02) -f walking_sprites walking_sprites.zx02
@@ -67,6 +83,6 @@ sprites/enemy_sprites.inc:
 ####
 
 clean:	
-	rm -f *.lst *.o CLIFF HELLO walking_sprites *.zx02
+	rm -f *.lst *.o CLIFF CLIMB HELLO walking_sprites *.zx02
 	cd cliff_graphics && make clean
 	cd sprites && make clean
