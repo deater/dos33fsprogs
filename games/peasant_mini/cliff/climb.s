@@ -40,7 +40,7 @@ cliff_climb:
 
 	lda	#10
 	sta	PEASANT_X
-	lda	#100
+	lda	#90
 	sta	PEASANT_Y
 
 	; default for peasant quest is the tables are for page2
@@ -121,7 +121,7 @@ game_loop:
 	;=====================
 	; draw peasant
 
-	jsr	draw_peasant
+	jsr	draw_peasant_climb
 
 
 	;=====================
@@ -413,9 +413,9 @@ done_cliff:
 
 	.include	"keyboard.s"
 
-	.include	"draw_peasant.s"
+	.include	"draw_peasant_climb.s"
 
-	.include	"move_peasant.s"
+	.include	"move_peasant_climb.s"
 
 	.include	"hgr_partial_restore.s"
 

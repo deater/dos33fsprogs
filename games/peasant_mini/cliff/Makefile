@@ -46,7 +46,7 @@ CLIMB:	climb.o
 	ld65 -o CLIMB climb.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 climb.o:	climb.s zx02_optim.s \
-		move_peasant.s draw_peasant.s \
+		move_peasant_climb.s draw_peasant_climb.s \
 		hgr_copy.s hgr_partial_restore.s \
 		hgr_sprite.s hgr_sprite_bg_mask.s \
 		random16.s \
@@ -97,7 +97,7 @@ sprites/enemy_sprites.inc:
 ####
 
 clean:	
-	rm -f *.lst *.o CLIFF CLIMB HELLO \
+	rm -f *.lst *.o *~ CLIFF CLIMB HELLO \
 		walking_sprites climbing_sprites *.zx02
 	cd cliff_graphics && make clean
 	cd sprites && make clean
