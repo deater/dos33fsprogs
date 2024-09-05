@@ -80,7 +80,7 @@ climbing_sprites:	climbing_sprites.o
 
 climbing_sprites.o:	climbing_sprites.s \
 	sprites/flame_sprites.inc \
-	sprites/walk_sprites.inc
+	sprites/climb_sprites.inc
 	ca65 -o climbing_sprites.o climbing_sprites.s -l climbing_sprites.lst
 
 

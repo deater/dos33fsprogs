@@ -43,7 +43,7 @@ climb_sprites.inc:     climb_sprites.png
 	$(HGR_SPRITE) -l climb_r2_mask   climb_sprites.png 182 161 202 191 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_r3_sprite climb_sprites.png 210 129 230 159 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_r3_mask   climb_sprites.png 210 161 230 191 >> climb_sprites.inc
-	$(HGR_SPRITE) -l climb_l0_sprite climb_sprites.png 126  33 146  63 > climb_sprites.inc
+	$(HGR_SPRITE) -l climb_l0_sprite climb_sprites.png 126  33 146  63 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_l0_mask   climb_sprites.png 126  65 146  95 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_l1_sprite climb_sprites.png 154 129 174 159 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_l1_mask   climb_sprites.png 154  65 174  95 >> climb_sprites.inc
@@ -55,10 +55,22 @@ climb_sprites.inc:     climb_sprites.png
 	$(HGR_SPRITE) -l climb_u0_mask   climb_sprites.png  14  66  34  97 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_u1_sprite climb_sprites.png  42  33  62  64 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_u1_mask   climb_sprites.png  42  66  62  97 >> climb_sprites.inc
-	$(HGR_SPRITE) -l climb_u2_sprite climb_sprites.png  70  33  99  64 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_u2_sprite climb_sprites.png  70  33  90  64 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_u2_mask   climb_sprites.png  70  66  90  97 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_u3_sprite climb_sprites.png  98  33 118  64 >> climb_sprites.inc
 	$(HGR_SPRITE) -l climb_u3_mask   climb_sprites.png  98  66 118  97 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f0_sprite climb_sprites.png  14 126  34 147 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f0_mask   climb_sprites.png  14 154  34 175 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f1_sprite climb_sprites.png  42 126  62 147 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f1_mask   climb_sprites.png  42 154  62 175 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f2_sprite climb_sprites.png  70 126  90 147 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f2_mask   climb_sprites.png  70 154  90 175 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f3_sprite climb_sprites.png  98 126 118 147 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_f3_mask   climb_sprites.png  98 154 118 175 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_s0_sprite climb_sprites.png 238  25 258  46 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_s0_mask   climb_sprites.png 238  49 258  70 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_s1_sprite climb_sprites.png 238 121 258 142 >> climb_sprites.inc
+	$(HGR_SPRITE) -l climb_s1_mask   climb_sprites.png 238 145 258 166 >> climb_sprites.inc
 
 
 
@@ -198,15 +210,6 @@ flame_sprites.inc:     flame_sprites.png
 	$(HGR_SPRITE) -l flame_d1_mask   flame_sprites.png 126 157 139 166 >> flame_sprites.inc
 	$(HGR_SPRITE) -l flame_d2_sprite flame_sprites.png 154 147 167 156 >> flame_sprites.inc
 	$(HGR_SPRITE) -l flame_d2_mask   flame_sprites.png 154 157 167 166 >> flame_sprites.inc
-
-
-
-
-
-
-
-
-
 
 clean:	
 	rm -f *~ enemy_sprites.inc robe_sprites.inc flame_sprites.inc \
