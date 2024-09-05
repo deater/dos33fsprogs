@@ -35,7 +35,7 @@ hgr_draw_sprite_bg_mask:
 	; calculate end of sprite on screen for Xpos loop
 	; also save for background restore
 
-	lda	walk_sprites_xsize,X
+	lda	peasant_sprites_xsize,X
 	clc
 	adc	CURSOR_X
 	sta	hdsb_width_smc+1
@@ -44,7 +44,7 @@ hgr_draw_sprite_bg_mask:
 	; calculate bottom of sprite for Ypos loop
 	; also save for background restore
 
-	lda	walk_sprites_ysize,X
+	lda	peasant_sprites_ysize,X
 	sta	hdsb_ysize_smc+1
 	clc
 	adc	CURSOR_Y
@@ -70,18 +70,18 @@ hgr_draw_sprite_bg_mask:
 	sta	PEASANT_PRIORITY
 
 	; set up sprite pointers
-	lda	walk_sprites_data_l,X
+	lda	peasant_sprites_data_l,X
 	sta	h728_smc1+1
 	sta	h728_smc2+1
-	lda	walk_sprites_data_h,X
+	lda	peasant_sprites_data_h,X
 	sta	h728_smc1+2
 	sta	h728_smc2+2
 
 	; set up mask pointers
-	lda	walk_mask_data_l,X
+	lda	peasant_mask_data_l,X
 	sta	h728_smc3+1
 	sta	h728_smc4+1
-	lda	walk_mask_data_h,X
+	lda	peasant_mask_data_h,X
 	sta	h728_smc3+2
 	sta	h728_smc4+2
 

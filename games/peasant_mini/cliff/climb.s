@@ -1,5 +1,8 @@
 ; Cliff climb minigame from Peasant's Quest
 ;
+; the actual climbing part
+
+;
 ; Yet Another HR project
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
@@ -8,17 +11,12 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-;div7_table     = $400
-;mod7_table     = $500
-;hposn_high     = $600
-;hposn_low      = $700
-
 div7_table      = $b800
 mod7_table      = $b900
 hposn_high      = $ba00
 hposn_low       = $bb00
 
-cliff_base:
+cliff_climb:
 
 	;===================
 	; set graphics mode
@@ -527,13 +525,13 @@ rock_y:
 	.include "hgr_sprite_bg_mask.s"
 
 walking_sprite_data:
-	.incbin "walking_sprites.zx02"
+	.incbin "climbing_sprites.zx02"
 
 peasant_sprite_offset = $a000
 
-walk_sprites_xsize = peasant_sprite_offset+0
-walk_sprites_ysize = peasant_sprite_offset+36
-walk_sprites_data_l = peasant_sprite_offset+72
-walk_sprites_data_h = peasant_sprite_offset+108
-walk_mask_data_l = peasant_sprite_offset+144
-walk_mask_data_h = peasant_sprite_offset+180
+peasant_sprites_xsize = peasant_sprite_offset+0
+peasant_sprites_ysize = peasant_sprite_offset+34
+peasant_sprites_data_l = peasant_sprite_offset+68
+peasant_sprites_data_h = peasant_sprite_offset+102
+peasant_mask_data_l = peasant_sprite_offset+136
+peasant_mask_data_h = peasant_sprite_offset+170
