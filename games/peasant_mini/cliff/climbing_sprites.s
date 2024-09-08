@@ -17,8 +17,8 @@ splat_sprites_xsize:
 climb_sprites_ysize:
 	.byte	30, 30, 30, 30		; right
 	.byte	30, 30, 30, 30		; left
-	.byte	30, 30, 30, 30		; up
-	.byte	30, 30, 30, 30		; down
+	.byte	31, 31, 31, 31		; up
+	.byte	31, 31, 31, 31		; down
 flame_sprites_ysize:
 	.byte	9, 9, 9			; right
 	.byte	9, 9, 9			; left
