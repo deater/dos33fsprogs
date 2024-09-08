@@ -37,6 +37,7 @@ cliff_climb:
 	sta	ERASE_SPRITE_COUNT
 	sta	PEASANT_STEPS
 	sta	FLAME_COUNT
+	sta	CLIMB_COUNT
 
 	lda	#10
 	sta	PEASANT_X
@@ -411,7 +412,7 @@ done_cliff:
 
 	.include	"zx02_optim.s"
 
-	.include	"keyboard.s"
+	.include	"keyboard_climb.s"
 
 	.include	"draw_peasant_climb.s"
 
@@ -426,11 +427,17 @@ done_cliff:
 
 	.include	"random16.s"
 
+	.include	"gr_offsets.s"
+
 bg_data:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
+	.incbin "cliff_graphics/cliff2.hgr.zx02"
+	.incbin "cliff_graphics/cliff3.hgr.zx02"
 
 priority_data:
 	.incbin "cliff_graphics/cliff_base_priority.zx02"
+	.incbin "cliff_graphics/cliff2_priority.zx02"
+	.incbin "cliff_graphics/cliff3_priority.zx02"
 
 sprites:
 	.include "sprites/enemy_sprites.inc"

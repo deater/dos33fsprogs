@@ -20,7 +20,7 @@ draw_peasant_climb:
 	ldx	PEASANT_DIR
 	lda	peasant_climb_offsets,X
 	clc
-	adc	PEASANT_STEPS
+	adc	CLIMB_COUNT
 	tax
 
 	ldy	#4	; reserved for peasant

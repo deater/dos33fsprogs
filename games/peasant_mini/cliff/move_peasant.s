@@ -5,7 +5,7 @@ move_peasant:
 	; redraw peasant if moved
 
 	lda	PEASANT_XADD
-	ora	PEASANT_YADD
+	ora	PEASANT_YADD		; sneaky way to see if both nonzero
 	bne	really_move_peasant
 
 	jmp	peasant_the_same

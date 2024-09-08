@@ -4,20 +4,22 @@ move_peasant:
 
 	; redraw peasant if moved
 
-	lda	PEASANT_XADD
-	ora	PEASANT_YADD
+	lda	CLIMB_COUNT
 	bne	really_move_peasant
 
 	jmp	peasant_the_same
 
 really_move_peasant:
 
-	; increment step count, wrapping at 4
+	; decrement climb count
 
-	inc	PEASANT_STEPS
-	lda	PEASANT_STEPS
-	and	#3
-	sta	PEASANT_STEPS
+	dec	CLIMB_COUNT
+	bne	climb_continue
+climb_stop:
+
+	jsr	stop_peasant
+
+climb_continue:
 
 	; restore bg behind peasant
 
@@ -37,10 +39,12 @@ really_move_peasant:
 	lda	PEASANT_X
 	adc	PEASANT_XADD			; A = new X
 
-	bmi	peasant_x_negative		; if newx <0, handle
+	; in theory this can't happen when climbing
 
-	cmp	#40
-	bcs	peasant_x_toobig		; if newx>=40, hanfle (bge)
+;	bmi	peasant_x_negative		; if newx <0, handle
+
+;	cmp	#40
+;	bcs	peasant_x_toobig		; if newx>=40, handle (bge)
 
 
 	;======================================
@@ -68,28 +72,28 @@ really_move_peasant:
 	jmp	do_move_peasant_y
 
 	;============================
-peasant_x_toobig:
+;peasant_x_toobig:
 
-	jsr	move_map_east
+;	jsr	move_map_east
 
-	lda	#0		; new X location
+;	lda	#0		; new X location
 
-	jmp	done_movex
+;	jmp	done_movex
 
 	;============================
-peasant_x_negative:
+;peasant_x_negative:
 
-	jsr	move_map_west
+;	jsr	move_map_west
 
-	lda	#39		; new X location
+;	lda	#39		; new X location
 
-	jmp	done_movex
+;	jmp	done_movex
 
 	; check edge of screen
-done_movex:
+;done_movex:
 	; if we get here we changed screens
-	sta	PEASANT_X		; update new location
-	jmp	peasant_the_same	; skip checking for Y collision
+;	sta	PEASANT_X		; update new location
+;	jmp	peasant_the_same	; skip checking for Y collision
 
 
 
@@ -100,8 +104,11 @@ do_move_peasant_y:
 	lda	PEASANT_Y
 	adc	PEASANT_YADD			; newy in A
 
-	cmp	#45				; if <45 then off screen
+	cmp	#12				; if <12 then off screen
 	bcc	peasant_y_negative		; blt
+
+
+	; FIXME: in theory can never go down
 
 	cmp	#160				; if >=150 then off screen
 	bcs	peasant_y_toobig		; bge
@@ -130,7 +137,7 @@ peasant_y_toobig:
 
 	jsr	move_map_south
 
-	lda	#45		; new X location
+	lda	#12		; new Y location
 
 	jmp	done_movey
 
@@ -140,7 +147,7 @@ peasant_y_negative:
 
 	jsr	move_map_north
 
-	lda	#160		; new X location
+	lda	#160		; new Y location
 
 	jmp	done_movey
 
@@ -254,5 +261,9 @@ move_map_south:
 	rts
 
 
-.include "gr_offsets.s"
-
+stop_peasant:
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	sta	PEASANT_DIR	; PEASANT_UP is 0
+	rts

@@ -47,10 +47,16 @@ CLIMB:	climb.o
 
 climb.o:	climb.s zx02_optim.s \
 		move_peasant_climb.s draw_peasant_climb.s \
+		keyboard_climb.s \
 		hgr_copy.s hgr_partial_restore.s \
 		hgr_sprite.s hgr_sprite_bg_mask.s \
 		random16.s \
 		cliff_graphics/cliff_base.hgr.zx02 \
+		cliff_graphics/cliff2.hgr.zx02 \
+		cliff_graphics/cliff3.hgr.zx02 \
+		cliff_graphics/cliff_base_priority.zx02 \
+		cliff_graphics/cliff2_priority.zx02 \
+		cliff_graphics/cliff3_priority.zx02 \
 		sprites/enemy_sprites.inc \
 		zp.inc hardware.inc \
 		climbing_sprites.zx02
