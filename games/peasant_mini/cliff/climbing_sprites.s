@@ -32,8 +32,8 @@ splat_sprites_ysize:
 climb_sprites_data_l:
 	.byte <climb_r0_sprite,<climb_r1_sprite,<climb_r2_sprite
 	.byte <climb_r3_sprite
-	.byte <climb_l0_sprite,<climb_l1_sprite,<climb_l2_sprite
-	.byte <climb_l3_sprite
+	.byte <climb_l3_sprite,<climb_l2_sprite,<climb_l1_sprite
+	.byte <climb_l0_sprite
 	.byte <climb_u0_sprite,<climb_u1_sprite,<climb_u2_sprite
 	.byte <climb_u3_sprite
 	.byte <climb_u3_sprite,<climb_u2_sprite,<climb_u1_sprite
@@ -52,8 +52,8 @@ splat_sprites_data_l:
 climb_sprites_data_h:
 	.byte >climb_r0_sprite,>climb_r1_sprite,>climb_r2_sprite
 	.byte >climb_r3_sprite
-	.byte >climb_l0_sprite,>climb_l1_sprite,>climb_l2_sprite
-	.byte >climb_l3_sprite
+	.byte >climb_l3_sprite,>climb_l2_sprite,>climb_l1_sprite
+	.byte >climb_l0_sprite
 	.byte >climb_u0_sprite,>climb_u1_sprite,>climb_u2_sprite
 	.byte >climb_u3_sprite
 	.byte >climb_u3_sprite,>climb_u2_sprite,>climb_u1_sprite
@@ -73,8 +73,8 @@ splat_sprites_data_h:
 climb_mask_data_l:
 	.byte <climb_r0_mask,<climb_r1_mask,<climb_r2_mask
 	.byte <climb_r3_mask
-	.byte <climb_l0_mask,<climb_l1_mask,<climb_l2_mask
-	.byte <climb_l3_mask
+	.byte <climb_l3_mask,<climb_l2_mask,<climb_l1_mask
+	.byte <climb_l0_mask
 	.byte <climb_u0_mask,<climb_u1_mask,<climb_u2_mask
 	.byte <climb_u3_mask
 	.byte <climb_u3_mask,<climb_u2_mask,<climb_u1_mask
@@ -94,8 +94,8 @@ splat_mask_data_l:
 climb_mask_data_h:
 	.byte >climb_r0_mask,>climb_r1_mask,>climb_r2_mask
 	.byte >climb_r3_mask
-	.byte >climb_l0_mask,>climb_l1_mask,>climb_l2_mask
-	.byte >climb_l3_mask
+	.byte >climb_l3_mask,>climb_l2_mask,>climb_l1_mask
+	.byte >climb_l0_mask
 	.byte >climb_u0_mask,>climb_u1_mask,>climb_u2_mask
 	.byte >climb_u3_mask
 	.byte >climb_u3_mask,>climb_u2_mask,>climb_u1_mask

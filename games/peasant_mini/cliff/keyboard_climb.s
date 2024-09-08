@@ -76,7 +76,7 @@ up_pressed:
 
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
-	lda	#$FC
+	lda	#$FE				; -2
 	sta	PEASANT_YADD
 
 	bne	done_keyboard_reset		; bra
@@ -91,7 +91,7 @@ down_pressed:
 
 	lda	#PEASANT_DIR_DOWN
 	sta	PEASANT_DIR
-	lda	#$4
+	lda	#$2				; 2
 	sta	PEASANT_YADD
 
 	bne	done_keyboard_reset		; bra
@@ -105,7 +105,8 @@ enter_pressed:
 
 
 done_keyboard_reset:
-	lda	#4
+	lda	#5			; decremented once before use
+
 	sta	CLIMB_COUNT		; start climbing
 
 	bit	KEYRESET

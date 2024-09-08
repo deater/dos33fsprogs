@@ -1,5 +1,10 @@
 ; Move that Peasant!
 
+
+; note: left/right across screen is roughly 24 keypresses
+; width on Apple II roughly 30 across
+; so the full animation should in the end only move one box, not 4?
+
 move_peasant:
 
 	; redraw peasant if moved
@@ -35,9 +40,20 @@ climb_continue:
 	;==========================
 	; first move in X direction
 
+	lda	CLIMB_COUNT
+	cmp	#3
+	beq	do_xadd
+	cmp	#1
+	bne	skip_xadd
+do_xadd:
 	clc
 	lda	PEASANT_X
 	adc	PEASANT_XADD			; A = new X
+	jmp	done_xadd
+
+skip_xadd:
+	lda	PEASANT_X
+done_xadd:
 
 	; in theory this can't happen when climbing
 

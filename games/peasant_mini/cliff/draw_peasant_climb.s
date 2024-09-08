@@ -20,7 +20,8 @@ draw_peasant_climb:
 	ldx	PEASANT_DIR
 	lda	peasant_climb_offsets,X
 	clc
-	adc	CLIMB_COUNT
+	ldx	CLIMB_COUNT
+	adc	peasant_extra_offset,X
 	tax
 
 	ldy	#4	; reserved for peasant
@@ -60,3 +61,10 @@ peasant_climb_offsets:
 
 peasant_flame_offsets:
 	.byte 22,16,19,25
+
+
+; note: animation actually 5 frames
+;	essentially counts down 3,2,1,0 then 0 again
+
+peasant_extra_offset:
+	.byte 0,0,1,2,3

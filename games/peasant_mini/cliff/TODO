@@ -1,0 +1,10 @@
+
+Rocks on right at base are impassable
+Change collision code to work on three-wide sprites
+Change draw transparency code to work on three-wide sprites
+Add all three levels
+Alternate color schemes for sprites
+
+for coach-z release
++ add some method of keeping score
++ add intro with directions, outtro when die/finish
