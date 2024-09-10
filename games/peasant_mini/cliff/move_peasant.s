@@ -134,7 +134,7 @@ peasant_y_toobig:
 
 	jsr	move_map_south
 
-	lda	#45		; new X location
+	lda	#45		; new Y location
 
 	jmp	done_movey
 
@@ -144,7 +144,7 @@ peasant_y_negative:
 
 	jsr	move_map_north
 
-	lda	#160		; new X location
+	lda	#160		; new Y location
 
 	jmp	done_movey
 

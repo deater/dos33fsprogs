@@ -151,7 +151,7 @@ do_move_peasant_y:
 	;============================
 peasant_y_toobig:
 
-	jsr	move_map_south
+;	jsr	move_map_south
 
 	lda	#12		; new Y location
 
@@ -161,9 +161,12 @@ peasant_y_toobig:
 	;============================
 peasant_y_negative:
 
-	jsr	move_map_north
+;	jsr	move_map_north
 
-	lda	#160		; new Y location
+	lda	#$FF
+	sta	LEVEL_OVER
+
+	lda	#158		; new Y location
 
 	jmp	done_movey
 

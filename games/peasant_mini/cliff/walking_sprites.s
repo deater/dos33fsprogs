@@ -79,7 +79,7 @@ walk_mask_data_h:
 	.byte >walk_d3_mask,>walk_d4_mask,>walk_d5_mask
 flame_mask_data_h:
 	.byte >flame_r0_mask,>flame_r1_mask,>flame_r2_mask
-	.byte >flame_l0_mask,>flame_r1_mask,>flame_l2_mask
+	.byte >flame_l0_mask,>flame_l1_mask,>flame_l2_mask
 	.byte >flame_u0_mask,>flame_u1_mask,>flame_u2_mask
 	.byte >flame_d0_mask,>flame_d1_mask,>flame_d2_mask
 

@@ -85,7 +85,7 @@ climbing_sprites:	climbing_sprites.o
 	ld65 -o climbing_sprites climbing_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
 
 climbing_sprites.o:	climbing_sprites.s \
-	sprites/flame_sprites.inc \
+	sprites/climb_flame_sprites.inc \
 	sprites/climb_sprites.inc
 	ca65 -o climbing_sprites.o climbing_sprites.s -l climbing_sprites.lst
 

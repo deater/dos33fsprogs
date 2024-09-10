@@ -59,8 +59,12 @@ done_draw_peasant:
 peasant_climb_offsets:
 	.byte 8, 0, 4, 12
 
+; note, when climbing, flame is on right for both up and down
+;	left seems to be same as up
+
 peasant_flame_offsets:
-	.byte 22,16,19,25
+;	.byte 22,16,19,25
+	.byte 25,16,19,25
 
 
 ; note: animation actually 5 frames

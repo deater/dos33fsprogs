@@ -38,6 +38,7 @@ cliff_climb:
 	sta	PEASANT_STEPS
 	sta	FLAME_COUNT
 	sta	CLIMB_COUNT
+	sta	MAP_LOCATION
 
 	lda	#10
 	sta	PEASANT_X
@@ -49,49 +50,8 @@ cliff_climb:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-	;========================
-	; Load Priority graphics
-	;========================
 
-	lda     #<priority_data
-	sta     ZX0_src
-	lda     #>priority_data
-	sta     ZX0_src+1
-
-        lda     #$20                    ; temporarily load to $2000
-
-	jsr	full_decomp
-
-	; copy to $400
-
-	jsr	gr_copy_to_page1
-
-
-
-	;=============================
-
-
-	;==========================
-	; Load Background Graphics
-	;===========================
-
-load_image:
-
-	lda	#<bg_data
-	sta	ZX0_src
-	lda	#>bg_data
-	sta	ZX0_src+1
-
-
-	lda	#$20
-
-	jsr	full_decomp
-
-	jsr	hgr_copy			; copy to page2
-
-	bit	PAGE2
-
-
+	jsr	load_graphics
 
 	;========================
 	; Load Peasant Sprites
@@ -389,7 +349,7 @@ flame_good:
 	jsr	check_keyboard
 
 	lda	LEVEL_OVER
-	bne	done_cliff
+	bne	top_cliff
 
 	; delay
 
@@ -399,10 +359,66 @@ flame_good:
 	jmp	game_loop
 
 
-done_cliff:
+top_cliff:
+	inc	MAP_LOCATION
+	jsr	load_graphics
+
 	lda	#0
-	sta	WHICH_LOAD
+	sta	LEVEL_OVER
+
+	jmp	game_loop
+
+
+load_graphics:
+
+
+
+	;========================
+	; Load Priority graphics
+	;========================
+
+	ldx	MAP_LOCATION
+	lda     priority_data_l,X
+	sta     ZX0_src
+	lda     priority_data_h,X
+	sta     ZX0_src+1
+
+        lda     #$20                    ; temporarily load to $2000
+
+	jsr	full_decomp
+
+	; copy to $400
+
+	jsr	gr_copy_to_page1
+
+
+
+	;=============================
+
+
+	;==========================
+	; Load Background Graphics
+	;===========================
+
+	ldx	MAP_LOCATION
+	lda	bg_data_l,X
+	sta	ZX0_src
+	lda	bg_data_h,X
+	sta	ZX0_src+1
+
+
+	lda	#$20
+
+	jsr	full_decomp
+
+	jsr	hgr_copy			; copy to page2
+
+	bit	PAGE2
+
 	rts
+
+
+
 
 	.include	"wait.s"
 
@@ -429,14 +445,28 @@ done_cliff:
 
 	.include	"gr_offsets.s"
 
-bg_data:
+priority_data_l:
+	.byte <priority_cliff1,<priority_cliff2,<priority_cliff3
+priority_data_h:
+	.byte >priority_cliff1,>priority_cliff2,>priority_cliff3
+
+bg_data_l:
+	.byte <bg_cliff1,<bg_cliff2,<bg_cliff3
+bg_data_h:
+	.byte >bg_cliff1,>bg_cliff2,>bg_cliff3
+
+bg_cliff1:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
+bg_cliff2:
 	.incbin "cliff_graphics/cliff2.hgr.zx02"
+bg_cliff3:
 	.incbin "cliff_graphics/cliff3.hgr.zx02"
 
-priority_data:
+priority_cliff1:
 	.incbin "cliff_graphics/cliff_base_priority.zx02"
+priority_cliff2:
 	.incbin "cliff_graphics/cliff2_priority.zx02"
+priority_cliff3:
 	.incbin "cliff_graphics/cliff3_priority.zx02"
 
 sprites:

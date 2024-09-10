@@ -5,7 +5,7 @@ climb_sprites_xsize:
 	.byte	3, 3, 3, 3		; down		; 12
 flame_sprites_xsize:
 	.byte	2, 2, 2			; right		; 16
-	.byte	2, 2, 2			; left		; 19
+	.byte	3, 3, 3			; left		; 19
 	.byte	2, 2, 2			; up		; 22
 	.byte	2, 2, 2			; down		; 25
 fall_sprites_xsize:
@@ -102,7 +102,7 @@ climb_mask_data_h:
 	.byte >climb_u0_mask
 flame_mask_data_h:
 	.byte >flame_r0_mask,>flame_r1_mask,>flame_r2_mask
-	.byte >flame_l0_mask,>flame_r1_mask,>flame_l2_mask
+	.byte >flame_l0_mask,>flame_l1_mask,>flame_l2_mask
 	.byte >flame_u0_mask,>flame_u1_mask,>flame_u2_mask
 	.byte >flame_d0_mask,>flame_d1_mask,>flame_d2_mask
 fall_mask_data_h:
@@ -115,4 +115,4 @@ splat_mask_data_h:
 
 	.include "sprites/climb_sprites.inc"
 
-	.include "sprites/flame_sprites.inc"
+	.include "sprites/climb_flame_sprites.inc"
