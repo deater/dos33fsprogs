@@ -7,6 +7,26 @@
 
 move_peasant:
 
+	lda	PEASANT_FALLING
+	beq	peasant_not_falling
+
+
+peasant_falling:
+	; restore bg behind peasant
+
+	jsr	erase_peasant
+
+	lda	PEASANT_Y
+	cmp	#140
+	bcs	done_falling_peasant
+
+	inc	PEASANT_Y
+done_falling_peasant:
+	rts
+
+
+peasant_not_falling:
+
 	; redraw peasant if moved
 
 	lda	CLIMB_COUNT

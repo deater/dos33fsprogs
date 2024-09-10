@@ -85,10 +85,10 @@ flame_mask_data_l:
 	.byte <flame_u0_mask,<flame_u1_mask,<flame_u2_mask
 	.byte <flame_d0_mask,<flame_d1_mask,<flame_d2_mask
 fall_mask_data_l:
-	.byte >climb_f0_mask,>climb_f1_mask,>climb_f2_mask
-	.byte >climb_f3_mask
+	.byte <climb_f0_mask,<climb_f1_mask,<climb_f2_mask
+	.byte <climb_f3_mask
 splat_mask_data_l:
-	.byte >climb_s0_mask,>climb_s1_mask
+	.byte <climb_s0_mask,<climb_s1_mask
 
 
 climb_mask_data_h:
@@ -106,10 +106,10 @@ flame_mask_data_h:
 	.byte >flame_u0_mask,>flame_u1_mask,>flame_u2_mask
 	.byte >flame_d0_mask,>flame_d1_mask,>flame_d2_mask
 fall_mask_data_h:
-	.byte <climb_f0_mask,<climb_f1_mask,<climb_f2_mask
-	.byte <climb_f3_mask
+	.byte >climb_f0_mask,>climb_f1_mask,>climb_f2_mask
+	.byte >climb_f3_mask
 splat_mask_data_h:
-	.byte <climb_s0_mask,<climb_s1_mask
+	.byte >climb_s0_mask,>climb_s1_mask
 
 
 

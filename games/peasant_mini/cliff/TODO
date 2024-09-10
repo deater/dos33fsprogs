@@ -1,4 +1,4 @@
-
+Reset rocks/bird when on new screen
 Rocks on right at base are impassable
 Change collision code to work on three-wide sprites
 Change draw transparency code to work on three-wide sprites

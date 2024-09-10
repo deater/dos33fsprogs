@@ -243,6 +243,9 @@ PEASANT_STEPS		= $AC
 
 END_OF_SAVE		= $AD
 
+
+PEASANT_FALLING		= $AF
+
 ;=============================================
 
 CURRENT_VERB	= $B0		; parser

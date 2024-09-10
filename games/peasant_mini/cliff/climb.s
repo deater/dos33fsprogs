@@ -43,6 +43,7 @@ cliff_climb:
 	sta	FLAME_COUNT
 	sta	CLIMB_COUNT
 	sta	MAP_LOCATION
+	sta	PEASANT_FALLING
 
 	lda	#10
 	sta	PEASANT_X
@@ -276,6 +277,23 @@ new_bird_wider:
 	jmp	move_bird_done
 
 move_bird:
+
+	; collision detect here?
+
+	; we're both 3 wide
+	; be lazy and only see if they exactly match?
+
+	lda	PEASANT_X
+	cmp	bird_x
+	bne	no_bird_collision
+
+	; collision happened!
+
+	lda	#1
+	sta	PEASANT_FALLING
+
+no_bird_collision:
+
 	dec	bird_x
 	bpl	move_bird_done
 

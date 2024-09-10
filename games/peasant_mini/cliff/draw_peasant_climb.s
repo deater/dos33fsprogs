@@ -15,6 +15,9 @@ draw_peasant_climb:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
+	lda	PEASANT_FALLING			; only for climbing minigame
+	bne	draw_peasant_falling
+
 	; get offset for graphics
 
 	ldx	PEASANT_DIR
@@ -54,6 +57,53 @@ draw_peasant_climb:
 done_draw_peasant:
 
 	rts
+
+	;================================
+
+
+draw_peasant_falling:
+
+	; get offset for graphics
+
+	lda	FRAME		; always spinning, spinning
+	and	#$3
+	clc
+	adc	#28		; peasant fall offset
+
+;	lda	#28		; peasant fall offset
+;	clc
+;	adc	CLIMB_COUNT
+	tax
+
+	ldy	#4	; reserved for peasant
+
+	jsr	hgr_draw_sprite_bg_mask
+
+
+	;=============================
+	; draw flame if applicable
+
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sec
+	sbc	#4
+	sta	CURSOR_Y
+
+	; get offset for graphics
+
+	ldx	PEASANT_DIR
+	lda	peasant_flame_offsets,X
+	clc
+	adc	FLAME_COUNT
+	tax
+
+	ldy	#5	; reserved for flame
+
+	jsr	hgr_draw_sprite_bg_mask
+
+	rts
+
 
 ; UP RIGHT LEFT DOWN = 0, 1, 2, 3
 peasant_climb_offsets:
