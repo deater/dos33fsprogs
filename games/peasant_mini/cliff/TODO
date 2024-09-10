@@ -2,8 +2,10 @@
 Rocks on right at base are impassable
 Change collision code to work on three-wide sprites
 Change draw transparency code to work on three-wide sprites
-Add all three levels
-Alternate color schemes for sprites
+Erase flame even when not moving?  That is tricky as would need to
+	redraw head as well :(  maybe just erase part above the head?
+Draw/erase the rocks in order for less flicker
+Make it so you can't go down to previous level
 
 for coach-z release
 + add some method of keeping score

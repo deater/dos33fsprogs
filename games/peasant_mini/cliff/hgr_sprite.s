@@ -13,6 +13,10 @@
 	; which sprite in X
 	; where to save in Y
 
+	; if Ypos+SPRITE_Y>191 we clip to 191
+early_exit:
+	rts
+
 hgr_draw_sprite:
 
 	; backup location for eventual restore
@@ -20,6 +24,8 @@ hgr_draw_sprite:
 	sta	save_xstart,Y
 	lda	SPRITE_Y
 	sta	save_ystart,Y
+	cmp	#192			; exit if try to draw off bottom
+	bcs	early_exit		; bge
 
 	; generate x-end for both restore as well as inner loop
 
@@ -35,6 +41,22 @@ hgr_draw_sprite:
 	sta	sprite_ysize_smc+1	; self modify for end row
 	clc
 	adc	SPRITE_Y
+	cmp	#192
+	bcc	hgr_sprite_ysize_ok		; blt
+
+hgr_sprite_ysize_not_ok:
+
+	; adjust self modify
+	; want it to be (192-SPRITE_Y)
+
+	lda	#192
+	sec
+	sbc	SPRITE_Y
+	sta	sprite_ysize_smc+1	; self modify for end row
+
+	lda	#191				; max out yend
+
+hgr_sprite_ysize_ok:
 	sta	save_yend,Y
 
 	; point smc to sprite

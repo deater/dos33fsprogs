@@ -16,6 +16,10 @@ mod7_table      = $b900
 hposn_high      = $ba00
 hposn_low       = $bb00
 
+; defines
+
+MAX_ROCKS	= 3
+
 cliff_climb:
 
 	;===================
@@ -57,9 +61,9 @@ cliff_climb:
 	; Load Peasant Sprites
 	;========================
 
-	lda     #<walking_sprite_data
+	lda     #<climbing_sprite_data
 	sta     ZX0_src
-	lda     #>walking_sprite_data
+	lda     #>climbing_sprite_data
 	sta     ZX0_src+1
 
         lda     #$a0
@@ -153,7 +157,7 @@ done_draw_bird:
 	; draw rock
 	;=====================
 
-	MAX_ROCKS=3
+
 
 	lda	#0
 	sta	CURRENT_ROCK
@@ -250,8 +254,18 @@ maybe_new_bird:
 	and	#7		; 1/8 of time start new bird?
 	bne	move_bird_done
 
+	; bird on base level,	12 .. 76	(MAP_LOCATION==0)
+	; bird on other levels, 12 .. 140
+
 	jsr	random16
+
+	ldx	MAP_LOCATION
+	bne	new_bird_wider
+
 	and	#$3f		; 0... 64
+new_bird_wider:
+	and	#$7f		; 0... 128
+
 	clc
 	adc	#12		; skip top bar
 	sta	bird_y
@@ -287,20 +301,28 @@ move_rock_loop:
 
 move_rock_waiting:
 
+	; see if start new rock
+
 	jsr	random16
 	and	#7		; 1/8 of time start new rock
 	bne	rock_good
 
+start_new_rock:
+
+	; pick x position
+	;	bit of a hack, really should be from 0..38
+	;	but we actually do 2..34 as it's easier
+
 	jsr	random16
 	and	#$1f		; 0... 31
 	clc
-	adc	#2		; skip to middle slightly
+	adc	#2		; push away from edge a bit
 	sta	rock_x,X
 
-	lda	#12
+	lda	#12		; start at top
 	sta	rock_y,X
 
-	lda	#0
+	lda	#0		; put in falling state
 	sta	rock_state,X
 
 	jmp	rock_good
@@ -311,8 +333,28 @@ move_rock_exploding:
 	jmp	rock_good
 
 move_rock_normal:
+
+	; two states.  If MAP_LOCATION==0, if ypos>105 start exploding
+	;		else if ypos>190 or so just go away
+	;		sprite code will truncate sprite so we don't
+	;		run off screen and corrupt memory
+
 	inc	rock_y,X
 	lda	rock_y,X
+
+	ldy	MAP_LOCATION
+	beq	move_rock_base_level
+
+move_rock_upper_level:
+	cmp	#190			; if > 168 make disappear
+	bcc	rock_good
+
+	lda	#3			; make it go away
+	sta	rock_state,X
+	bne	rock_good		; bra
+
+move_rock_base_level:
+
 	cmp	#105
 	bcc	rock_good
 rock_start_explode:
@@ -561,7 +603,7 @@ rock_y:
 
 	.include "hgr_sprite_bg_mask.s"
 
-walking_sprite_data:
+climbing_sprite_data:
 	.incbin "climbing_sprites.zx02"
 
 peasant_sprite_offset = $a000
