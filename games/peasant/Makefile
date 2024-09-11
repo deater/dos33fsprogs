@@ -5,49 +5,68 @@ DOS33_RAW = ../../utils/dos33fs-utils/dos33_raw
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts
 EMPTY_DISK = ../../empty_disk
-#LZSA = ~/research/lzsa/lzsa/lzsa
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+PRODOS = ../../utils/prodos-utils/prodos
+PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
-all:	peasant.dsk peasant_side2.dsk
 
-zip:	peasant.dsk peasant_side2.dsk
-	zip peasant.zip peasant.dsk peasant_side2.dsk
+all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+#	peasant.2mg
 
-peasant.dsk:	QBOOT QLOAD VID_LOGO TITLE INTRO \
+submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+
+peasant_disk1.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
+	SAVE1 SAVE2 SAVE3 MUSIC COPY_CHECK
+	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
+	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
+	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
+	$(DOS33_RAW) peasant_disk1.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) peasant_disk1.dsk  0 11 SAVE1      0   1
+	$(DOS33_RAW) peasant_disk1.dsk  0 12 SAVE2      0   1
+	$(DOS33_RAW) peasant_disk1.dsk  0 13 SAVE3      0   1
+	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
+	$(DOS33_RAW) peasant_disk1.dsk  3  0 MUSIC      0   0
+	$(DOS33_RAW) peasant_disk1.dsk  4  0 VID_LOGO   0   0
+	$(DOS33_RAW) peasant_disk1.dsk  6  0 TITLE      0   0
+	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO      0   0
+	$(DOS33_RAW) peasant_disk1.dsk 30 0 COPY_CHECK   0   0
+
+peasant_disk2.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY PARSE_INPUT.ZX02
-	cp $(EMPTY_DISK)/empty.dsk peasant.dsk
-	$(DOS33_RAW) peasant.dsk  0  0 QBOOT      0   1
-	$(DOS33_RAW) peasant.dsk  0  2 QBOOT      1   1
-	$(DOS33_RAW) peasant.dsk  0  4 QBOOT      2   1
-	$(DOS33_RAW) peasant.dsk  0 11 SAVE1      0   1
-	$(DOS33_RAW) peasant.dsk  0 12 SAVE2      0   1
-	$(DOS33_RAW) peasant.dsk  0 13 SAVE3      0   1
-	$(DOS33_RAW) peasant.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant.dsk  3  0 MUSIC      0   0
-	$(DOS33_RAW) peasant.dsk  4  0 VID_LOGO   0   0
-	$(DOS33_RAW) peasant.dsk  6  0 TITLE      0   0
-	$(DOS33_RAW) peasant.dsk  9  0 INTRO      0   0
-	$(DOS33_RAW) peasant.dsk  13 0 PARSE_INPUT.ZX02  0   0
-	$(DOS33_RAW) peasant.dsk  14 0 INVENTORY  0   0
-	$(DOS33_RAW) peasant.dsk  15 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant.dsk  20 0 PEASANT2	  0   0
-	$(DOS33_RAW) peasant.dsk  25 0 PEASANT3	  0   0
-	$(DOS33_RAW) peasant.dsk  30 0 PEASANT4	  0   0
+	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
+	$(DOS33_RAW) peasant_disk2.dsk  0  0 QBOOT      0   1
+	$(DOS33_RAW) peasant_disk2.dsk  0  2 QBOOT      1   1
+	$(DOS33_RAW) peasant_disk2.dsk  0  4 QBOOT      2   1
+	$(DOS33_RAW) peasant_disk2.dsk  0 11 SAVE1      0   1
+	$(DOS33_RAW) peasant_disk2.dsk  0 12 SAVE2      0   1
+	$(DOS33_RAW) peasant_disk2.dsk  0 13 SAVE3      0   1
+	$(DOS33_RAW) peasant_disk2.dsk  1  0 QLOAD      0   0
+	$(DOS33_RAW) peasant_disk2.dsk  3  0 MUSIC      0   0
+	$(DOS33_RAW) peasant_disk2.dsk  4  0 VID_LOGO   0   0
+	$(DOS33_RAW) peasant_disk2.dsk  6  0 TITLE      0   0
+	$(DOS33_RAW) peasant_disk2.dsk  9  0 ./intro/INTRO      0   0
+	$(DOS33_RAW) peasant_disk2.dsk  13 0 PARSE_INPUT.ZX02  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  14 0 INVENTORY  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  20 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
-peasant_side2.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING \
+peasant_disk3.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING \
 	CLIFF GAME_OVER INSIDE INN ARCHERY MAP
-	cp $(EMPTY_DISK)/empty.dsk peasant_side2.dsk
-	$(DOS33_RAW) peasant_side2.dsk   0 0  WBOOT2      0   1
-	$(DOS33_RAW) peasant_side2.dsk   1 0 COPY_CHECK   0   0
-	$(DOS33_RAW) peasant_side2.dsk   3 0 GAME_OVER    0   0
-	$(DOS33_RAW) peasant_side2.dsk   4 0 MAP          0   0
-	$(DOS33_RAW) peasant_side2.dsk   6 0 ARCHERY      0   0
-	$(DOS33_RAW) peasant_side2.dsk   9 0 INSIDE       0   0
-	$(DOS33_RAW) peasant_side2.dsk  14 0 INN          0   0
-	$(DOS33_RAW) peasant_side2.dsk  19 0 TROGDOR	  0   0
-	$(DOS33_RAW) peasant_side2.dsk  24 0 ENDING	  0   0
-	$(DOS33_RAW) peasant_side2.dsk  29 0 CLIFF	  0   0
+	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
+	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
+	$(DOS33_RAW) peasant_disk3.dsk   1 0 COPY_CHECK   0   0
+	$(DOS33_RAW) peasant_disk3.dsk   3 0 GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk3.dsk   4 0 MAP          0   0
+	$(DOS33_RAW) peasant_disk3.dsk   6 0 ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
+	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  19 0 TROGDOR	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  24 0 ENDING	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  29 0 CLIFF	  0   0
 
 
 
@@ -227,28 +246,8 @@ title.o:	title.s qload.inc music.inc \
 
 ###
 
-INTRO:	intro.o
-	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-intro.o:	intro.s zp.inc qload.inc music.inc \
-		graphics_peasantry/graphics_intro.inc \
-		graphics_peasantry/priority_intro.inc \
-		sprites/peasant_sprites.inc \
-		sprites/bubble_sprites_e.inc \
-		sprites/bubble_sprites_w.inc \
-		sprites/river_bubble_sprites.inc \
-		text/intro.inc \
-		animate_river.s \
-		animate_bubbles.s \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		hgr_partial_save.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		title.s directions.s \
-		intro_cottage.s intro_lake_w.s intro_lake_e.s \
-		intro_river.s intro_knight.s \
-		new_game.s
-	ca65 -o intro.o intro.s -l intro.lst
+./intro/INTRO:	
+	cd intro && make
 
 ###
 
@@ -775,12 +774,14 @@ distclean:
 	cd graphics_trogdor && make clean
 	cd graphics_vid && make clean
 	cd text && make clean
+	cd intro && make distclean
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE INTRO COPY_CHECK \
+	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC GAME_OVER \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
+	cd intro && make clean

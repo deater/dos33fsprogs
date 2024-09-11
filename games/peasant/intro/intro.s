@@ -4,11 +4,11 @@
 
 ; with apologies to everyone
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "music.inc"
+.include "../qload.inc"
+.include "../music.inc"
 
 peasant_quest_intro:
 
@@ -118,7 +118,7 @@ mockingboard_notfound2:
 
 	jmp	start_new_game
 
-.include "new_game.s"
+.include "../new_game.s"
 
 .include "intro_cottage.s"
 .include "intro_lake_w.s"
@@ -126,25 +126,25 @@ mockingboard_notfound2:
 .include "intro_river.s"
 .include "intro_knight.s"
 
-.include "draw_peasant.s"
+.include "../draw_peasant.s"
 
-.include "hgr_1x5_sprite.s"
+.include "../hgr_1x5_sprite.s"
 
-.include "hgr_sprite.s"
+.include "../hgr_sprite.s"
 
-.include "gr_copy.s"
-.include "hgr_copy.s"
+.include "../gr_copy.s"
+.include "../hgr_copy.s"
 
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
-.include "graphics_peasantry/graphics_intro.inc"
+.include "../graphics_peasantry/graphics_intro.inc"
 
-.include "graphics_peasantry/priority_intro.inc"
+.include "../graphics_peasantry/priority_intro.inc"
 
-.include "text/intro.inc"
+.include "../text/intro.inc"
 
-.include "animate_bubbles.s"
+.include "../animate_bubbles.s"
 
 skip_text:
         .byte 0,2,"ESC Skips",0

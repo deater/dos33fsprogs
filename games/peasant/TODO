@@ -40,6 +40,9 @@ Peasant sprites:
 
 Text parsing:
 ~~~~~~~~~~~~~
++ get rid ot wasd, make it more like original
+	for Apple II+ use :,/ for up,down
+
 + always load CURERENT_NOUN into A before calling into parsing
 	routines
 
