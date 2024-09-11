@@ -15,10 +15,25 @@ peasant_quest_intro:
 	lda	#0
 	sta	ESC_PRESSED
 	sta	LEVEL_OVER
+	sta	PEASANT_STEPS
+	sta	GAME_STATE_2
 
 	jsr	hgr_make_tables
 
 	jsr	hgr2
+
+	;==============================
+	; load sprite data
+	;==============================
+
+	lda	#<walking_sprite_data
+	sta	zx_src_l+1
+	lda	#>walking_sprite_data
+	sta	zx_src_h+1
+
+	lda	#$A0                    ; load to $A000
+
+	jsr	zx02_full_decomp
 
 
 	;===============================
@@ -129,11 +144,15 @@ mockingboard_notfound2:
 .include "intro_river.s"
 .include "intro_knight.s"
 
-.include "../draw_peasant.s"
+.include "../draw_peasant_new.s"
 
 .include "../hgr_1x5_sprite.s"
 
 .include "../hgr_sprite.s"
+
+.include "../hgr_sprite_bg_mask.s"
+.include "../gr_offsets.s"
+.include "../hgr_partial_restore.s"
 
 .include "../gr_copy.s"
 .include "../hgr_copy.s"
@@ -141,9 +160,20 @@ mockingboard_notfound2:
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
-.include "../graphics_peasantry/graphics_intro.inc"
 
-.include "../graphics_peasantry/priority_intro.inc"
+
+
+cottage_zx02:	.incbin "../graphics_peasantry/cottage.zx02"
+lake_w_zx02:	.incbin "../graphics_peasantry/lake_w.zx02"
+lake_e_zx02:	.incbin "../graphics_peasantry/lake_e.zx02"
+river_zx02:	.incbin "../graphics_peasantry/river.zx02"
+knight_zx02:	.incbin "../graphics_peasantry/knight.zx02"
+
+cottage_priority_zx02:	.incbin "../graphics_peasantry/cottage_priority.zx02"
+lake_w_priority_zx02:	.incbin "../graphics_peasantry/lake_w_priority.zx02"
+lake_e_priority_zx02:	.incbin "../graphics_peasantry/lake_e_priority.zx02"
+river_priority_zx02:	.incbin "../graphics_peasantry/river_priority.zx02"
+knight_priority_zx02:	.incbin "../graphics_peasantry/knight_priority.zx02"
 
 .include "../text/intro.inc"
 
@@ -170,3 +200,26 @@ intro_print_title:
 	jmp	hgr_put_string		; tail call
 
 
+	; background restore parameters
+	; currently 5, should check this and error if we overflow
+
+save_xstart:
+	.byte   0, 0, 0, 0, 0, 0
+save_xend:
+	.byte   0, 0, 0, 0, 0, 0
+save_ystart:
+	.byte   0, 0, 0, 0, 0, 0
+save_yend:
+	.byte   0, 0, 0, 0, 0, 0
+
+walking_sprite_data:
+	.incbin "../sprites_peasant/walking_sprites.zx02"
+
+peasant_sprite_offset = $a000
+
+peasant_sprites_xsize = peasant_sprite_offset+0
+peasant_sprites_ysize = peasant_sprite_offset+36
+peasant_sprites_data_l = peasant_sprite_offset+72
+peasant_sprites_data_h = peasant_sprite_offset+108
+peasant_mask_data_l = peasant_sprite_offset+144
+peasant_mask_data_h = peasant_sprite_offset+180

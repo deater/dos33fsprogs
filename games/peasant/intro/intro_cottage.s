@@ -76,12 +76,10 @@ intro_cottage:
 
 cottage_walk_loop:
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	restore_bg_1x28
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
 
 	;=======================
@@ -95,14 +93,10 @@ cottage_walk_loop:
 	lda	cottage_path,X
 	bmi	done_cottage
 	sta	PEASANT_X
-	sta	CURSOR_X
 
 	inx
 	lda	cottage_path,X
 	sta	PEASANT_Y
-	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
@@ -185,6 +179,21 @@ now_wait:
 	bne	done_cottage
 
 	inc	FRAME
+
+
+really_move_peasant:
+
+        ; increment step count, wrapping at 6
+
+        inc     PEASANT_STEPS
+        lda     PEASANT_STEPS
+        cmp     #6
+        bne     no_peasant_wrap
+        lda     #0
+        sta     PEASANT_STEPS
+
+no_peasant_wrap:
+	jsr	erase_peasant
 
 	jmp	cottage_walk_loop
 

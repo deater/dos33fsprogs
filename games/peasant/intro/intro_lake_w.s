@@ -75,12 +75,12 @@ intro_lake_west:
 
 lake_w_walk_loop:
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
-	jsr	restore_bg_1x28
+;	jsr	restore_bg_1x28
 
 	; draw peasant
 

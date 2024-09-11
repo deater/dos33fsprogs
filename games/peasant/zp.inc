@@ -16,6 +16,10 @@ DRIVE2_DISK	= $0C
 DRIVE1_TRACK	= $0D
 DRIVE2_TRACK	= $0E
 
+SPRITE_TEMP	= $10	; ?
+MASK_TEMP	= $11
+TEMP		= $12
+
 TEMP0   = $10
 TEMP1   = $11
 TEMP2   = $12
@@ -234,7 +238,9 @@ VISITED_1		= $A9
 VISITED_2		= $AA
 VISITED_3		= $AB
 
-END_OF_SAVE		= $AC
+PEASANT_STEPS		= $AC
+
+END_OF_SAVE		= $AD
 
 ;=============================================
 
@@ -264,6 +270,8 @@ CURRENT_DISK	= $DC
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
+FLAME_COUNT	= $EE
+
 P0		= $F1
 P1		= $F2
 P2		= $F3
@@ -271,6 +279,9 @@ P3		= $F4
 P4		= $F5
 P5		= $F6
 
+CURRENT_ROW	= $F9	; ?
+TEMP_SPRITE	= $FA
+TEMP_MASK	= $FB
 
 INL		= $FC
 INH		= $FD
