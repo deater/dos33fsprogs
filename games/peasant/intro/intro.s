@@ -116,9 +116,12 @@ mockingboard_notfound2:
 	; start new game
 	;=============================
 
-	jmp	start_new_game
+	; just fall on through...
 
-.include "../new_game.s"
+;	jmp	start_new_game
+
+
+.include "new_game.s"
 
 .include "intro_cottage.s"
 .include "intro_lake_w.s"

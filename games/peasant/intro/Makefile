@@ -26,7 +26,7 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music.inc \
 		../title.s ../directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s \
-		../new_game.s
+		new_game.s
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###

@@ -779,7 +779,7 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO VID_LOGO TITLE COPY_CHECK \
+	rm -f *~ *.o *.lst VID_LOGO TITLE COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC GAME_OVER \
 			*.ZX02 dialog_peasant2 \
