@@ -280,19 +280,10 @@ new_bird_wider:
 move_bird:
 
 	;=========================
-	; collision detect here?
+	; collision detect here
 
-	; we're both 3 wide
-	; be lazy and only see if they exactly match?
-
-	lda	PEASANT_X
-	cmp	bird_x
-	bne	no_bird_collision
-
-	; check height
-	; we are 30 tall
-	; bird is 15 or so
-
+	jsr	bird_collide
+	bcc	no_bird_collision
 
 	; collision happened!
 
@@ -639,3 +630,76 @@ peasant_sprites_data_l = peasant_sprite_offset+68
 peasant_sprites_data_h = peasant_sprite_offset+102
 peasant_mask_data_l = peasant_sprite_offset+136
 peasant_mask_data_h = peasant_sprite_offset+170
+
+
+	;===========================
+	; check for bird collisions
+
+bird_collide:
+
+	; bird is 3x16
+	; peasant is 3x30
+
+	; doing a sort of Minkowski Sum collision detection here
+	; with the rectangular regions
+
+	; might be faster to set it up so you can subtract, but that leads
+	;	to issues when we go negative and bcc/bcs are unsigned compares
+
+	; if (bird_x+1<PEASANT_X-1) no_collide
+	;	equivalent, if (bird_x+2<PEASANT_X)
+	;	equivalent, if (PEASANT_X-1 >= bird_x+1)
+
+	lda	bird_x
+	sta	TEMP_CENTER
+	inc	TEMP_CENTER	; bird_x+1
+
+	sec
+	lda	PEASANT_X
+	sbc	#1			; A is PEASANT_X-1
+	cmp	TEMP_CENTER		; compare with bird_x+1
+	bcs	bird_no_collide		; bge
+
+	; if (bird_x+1>=PEASANT_X+3) no collide
+	;	equivalent, if (bird_x-2>=PEASANT_X)
+	;	equivalent, if (PEASANT_X+3<bird_x+1)
+
+	; carry clear here
+	adc	#4			; A is now PEASANT_X+3
+	cmp	TEMP_CENTER
+	bcc	bird_no_collide		; blt
+
+	; if (bird_y+8<PEASANT_Y-8) no_collide
+	;	equivalent, if (bird_y+16<PEASANT_Y)
+	;	equivalent, if (PEASANT_Y-8>=bird_y+8)
+
+	lda	bird_y
+	clc
+	adc	#8
+	sta	TEMP_CENTER
+
+	lda	PEASANT_Y
+	sec
+	sbc	#8			; A is now PEASANT_Y-8
+	cmp	TEMP_CENTER
+	bcs	bird_no_collide		; blt
+
+	; if (bird_Y+8>=PEASANT_Y+38) no collide
+	;	equivalent, if (bird_y-30>=PEASANT_Y)
+	;	equivalent, if (PEASANT_Y+38<bird_y+8)
+
+	; carry clead here
+	adc	#38			; A is now bird_y+30
+	cmp	TEMP_CENTER
+	bcc	bird_no_collide		; blt
+
+bird_yes_collide:
+	sec
+	rts
+
+bird_no_collide:
+	clc
+	rts
+
+
+
