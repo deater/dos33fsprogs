@@ -63,6 +63,22 @@ done_draw_peasant:
 
 draw_peasant_falling:
 
+	; PEASANT_FALLING already in A here
+	; 1 = falling
+	; 2 = crashing
+	; 3 = crashed
+
+	cmp	#2
+	bcc	yep_really_falling	; blt
+
+	lda	#(32-1)			; base splat sprite
+	clc				; -1 as we are 1/2 here
+	adc	PEASANT_FALLING
+	bne	yep_falling_common	; bra
+
+
+yep_really_falling:
+
 	; get offset for graphics
 
 	lda	FRAME		; always spinning, spinning
@@ -70,9 +86,7 @@ draw_peasant_falling:
 	clc
 	adc	#28		; peasant fall offset
 
-;	lda	#28		; peasant fall offset
-;	clc
-;	adc	CLIMB_COUNT
+yep_falling_common:
 	tax
 
 	ldy	#4	; reserved for peasant
@@ -85,7 +99,23 @@ draw_peasant_falling:
 
 	lda	PEASANT_X
 	sta	CURSOR_X
-	lda	PEASANT_Y
+
+	lda	PEASANT_FALLING	; if falling, adjust from table
+	cmp	#1
+	beq	flame_adjust_falling
+
+	; otherwise, always adjust as if it's 1
+	ldx	#1
+	bne	flame_adjust_mid	; bra
+
+flame_adjust_falling:
+	lda	FRAME
+	and	#3
+	tax
+flame_adjust_mid:
+	lda	peasant_flame_fall_yadjust,X
+	clc
+	adc	PEASANT_Y
 	sec
 	sbc	#4
 	sta	CURSOR_Y
@@ -116,6 +146,9 @@ peasant_flame_offsets:
 ;	.byte 22,16,19,25
 	.byte 25,16,19,25
 
+; head at different heights so move flame with it
+peasant_flame_fall_yadjust:
+	.byte	11,16,16,0
 
 ; note: animation actually 5 frames
 ;	essentially counts down 3,2,1,0 then 0 again

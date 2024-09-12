@@ -12,15 +12,38 @@ move_peasant:
 
 
 peasant_falling:
+	; if PEASANT_FALLING == 1, then falling
+	; if PEASANT_FALLING == 2, then crashing
+	; if PEASANT_FALLING == 3, then crashed
+
+
+	lda	PEASANT_FALLING
+	cmp	#2
+	bcs	done_falling_peasant	; bge
+
+
 	; restore bg behind peasant
 
 	jsr	erase_peasant
 
-	lda	PEASANT_Y
-	cmp	#140
-	bcs	done_falling_peasant
 
+	; FIXME: if not on screen0
+
+	lda	PEASANT_Y
+	cmp	#115
+
+	bcc	move_falling_peasant
+
+	; if here, finish falling
+
+	inc	PEASANT_FALLING
+	jmp	done_falling_peasant
+
+
+move_falling_peasant:
 	inc	PEASANT_Y
+	inc	PEASANT_Y
+
 done_falling_peasant:
 	rts
 
