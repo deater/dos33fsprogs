@@ -44,6 +44,7 @@ cliff_climb:
 	sta	CLIMB_COUNT
 	sta	MAP_LOCATION
 	sta	PEASANT_FALLING
+	sta	MAX_HEIGHT
 
 	lda	#10
 	sta	PEASANT_X
@@ -278,6 +279,7 @@ new_bird_wider:
 
 move_bird:
 
+	;=========================
 	; collision detect here?
 
 	; we're both 3 wide
@@ -286,6 +288,11 @@ move_bird:
 	lda	PEASANT_X
 	cmp	bird_x
 	bne	no_bird_collision
+
+	; check height
+	; we are 30 tall
+	; bird is 15 or so
+
 
 	; collision happened!
 
