@@ -38,9 +38,9 @@ pq2.o:	pq2.s zx02_optim.s \
 
 ###
 
-graphics/pg2_bgl.hgr.zx02:	
+graphics/pq2_bgl.hgr.zx02:	
 	cd graphics && make
 
 clean:
-	rm -f *~ *.o *.lst PQ2
+	rm -f *~ *.o *.lst HELLO PQ2
 	cd graphics && make clean
