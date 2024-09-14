@@ -407,7 +407,7 @@ flame_good:
 	jsr	check_keyboard
 
 	lda	LEVEL_OVER
-	bne	top_cliff
+	bne	cliff_reload_bg
 
 	; delay
 
@@ -416,9 +416,7 @@ flame_good:
 
 	jmp	game_loop
 
-
-top_cliff:
-	inc	MAP_LOCATION
+cliff_reload_bg:
 	jsr	load_graphics
 
 	lda	#0

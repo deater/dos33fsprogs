@@ -1,5 +1,6 @@
 ; Move that Peasant!
 
+; climbing edition
 
 ; note: left/right across screen is roughly 24 keypresses
 ; width on Apple II roughly 30 across
@@ -27,8 +28,29 @@ peasant_falling:
 	jsr	erase_peasant
 
 
-	; FIXME: if not on screen0
+	; falling, see if hit bottom
+	; 
 
+	lda	MAP_LOCATION
+	beq	check_falling_hit_ground
+
+	; otherwise see if hit bottom of screen
+	lda	PEASANT_Y
+	cmp	#180
+	bcc	move_falling_peasant
+
+	; new screen
+
+	dec	MAP_LOCATION
+	lda	#12		; move back to top of screen
+	sta	PEASANT_Y
+
+	lda	#$FF
+	sta	LEVEL_OVER
+	jmp	done_falling_peasant
+
+
+check_falling_hit_ground:
 	lda	PEASANT_Y
 	cmp	#115
 
@@ -202,12 +224,17 @@ peasant_y_toobig:
 
 
 	;============================
+	; move up over top of screen
+
 peasant_y_negative:
 
-;	jsr	move_map_north
 
 	lda	#$FF
 	sta	LEVEL_OVER
+
+	inc	MAP_LOCATION
+	; FIXME: if high enough, we won
+	; in the coach Z version, increase score
 
 	lda	#158		; new Y location
 
