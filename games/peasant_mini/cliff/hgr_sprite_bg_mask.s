@@ -21,8 +21,8 @@
 	; Y is save slot
 
 hgr_draw_sprite_bg_mask:
-
-;	ldy	#4	; FIXME, should be proper save slot
+	lda	#1
+	sta	save_valid,Y
 
 	; save info on background to restore
 

@@ -163,8 +163,8 @@ draw_bird:
 
 	; erase the bird if needed
 
-	ldx	#0			; always in erase slot 0
-	jsr	erase_enemy
+	ldy	#0			; always in erase slot 0
+	jsr	hgr_partial_restore_by_num
 
 	; only draw bird if it's out
 
@@ -198,10 +198,10 @@ done_draw_bird:
 	lda	#0
 	sta	CURRENT_ROCK
 draw_rock_loop:
-	ldx	CURRENT_ROCK
+	ldy	CURRENT_ROCK
 
-	inx
-	jsr	erase_enemy
+	iny
+	jsr	hgr_partial_restore_by_num
 
 	ldx	CURRENT_ROCK
 
@@ -820,38 +820,4 @@ bird_yes_collide:
 bird_no_collide:
 	clc
 	rts
-
-
-
-	;=====================
-	; erase old
-	;=====================
-	; from A to X
-	;	SAVED_Y1 to SAVED_Y2
-
-	;========================
-	; which one is in X
-
-erase_enemy:
-	lda	save_valid,X
-	bne	really_erase_enemy
-
-	rts
-
-really_erase_enemy:
-	lda	#0
-	sta	save_valid,X
-
-	lda	save_ystart,X
-	sta	SAVED_Y1
-	lda	save_yend,X
-	sta	SAVED_Y2
-	lda	save_xstart,X
-	pha
-	lda	save_xend,X
-	tax
-	pla
-
-	jmp	hgr_partial_restore
-
 

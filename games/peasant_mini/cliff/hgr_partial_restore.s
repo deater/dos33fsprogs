@@ -5,6 +5,15 @@
 
 	; Y is which
 hgr_partial_restore_by_num:
+	lda	save_valid,Y
+	bne	really_partial_restore
+	rts
+
+really_partial_restore:
+
+	lda	#0
+	sta	save_valid,Y
+
 	lda	save_ystart,Y
 	sta	SAVED_Y1
 	lda	save_yend,Y
