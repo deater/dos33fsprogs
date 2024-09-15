@@ -48,7 +48,16 @@ keyboard_not_falling:
 key_was_pressed:
 	inc	SEEDL		; ????
 
+	and	#$7f			; strip off high
+	cmp	#$96
+	bcc	no_upper_convert	; blt
+
 	and	#$5f		; strip off high bit and make uppercase
+
+no_upper_convert:
+
+				; what if punctuation like / which is $2F
+				; 0101 1111 & 0010 1111 -> 0xF
 
 	;===========================
 	; check moving
@@ -95,6 +104,8 @@ right_pressed:
 check_up:
 	cmp	#'W'
 	beq	up_pressed
+	cmp	#';'				; for Apple II+
+	beq	up_pressed
 	cmp	#$0B
 	bne	check_down
 
@@ -110,6 +121,8 @@ up_pressed:
 check_down:
 	cmp	#'S'
 	beq	down_pressed
+	cmp	#'/'				; for Apple II+
+	beq	down_pressed
 	cmp	#$0A
 	bne	check_enter
 
@@ -117,6 +130,14 @@ down_pressed:
 
 	lda	#PEASANT_DIR_DOWN
 	sta	PEASANT_DIR
+
+	; don't go down if below 160 or so?
+
+	lda	PEASANT_Y
+	cmp	#157
+	bcs	done_keyboard_reset		; bge
+
+
 	lda	#$2				; 2
 	sta	PEASANT_YADD
 

@@ -45,6 +45,8 @@ peasant_falling:
 	lda	#12		; move back to top of screen
 	sta	PEASANT_Y
 
+	jsr	reset_enemy_state
+
 	lda	#$FF
 	sta	LEVEL_OVER
 	jmp	done_falling_peasant
@@ -191,8 +193,8 @@ do_move_peasant_y:
 
 	; FIXME: in theory can never go down
 
-	cmp	#160				; if >=150 then off screen
-	bcs	peasant_y_toobig		; bge
+;	cmp	#160				; if >=150 then off screen
+;	bcs	peasant_y_toobig		; bge
 
 	; check collide
 
@@ -218,7 +220,7 @@ peasant_y_toobig:
 
 ;	jsr	move_map_south
 
-	lda	#12		; new Y location
+;	lda	#12		; new Y location
 
 	jmp	done_movey
 
