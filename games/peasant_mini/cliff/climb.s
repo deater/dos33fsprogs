@@ -123,38 +123,6 @@ game_loop:
 	;=====================
 	;=====================
 
-	;=====================
-	; erase old
-	;=====================
-	; from A to X
-	;	SAVED_Y1 to SAVED_Y2
-
-erase_old_loop:
-;	ldx	ERASE_SPRITE_COUNT
-;	beq	done_erase_old
-
-;	dex				; index is one less than count
-
-;	lda	save_ystart,X
-;	sta	SAVED_Y1
-;	lda	save_yend,X
-;	sta	SAVED_Y2
-;	lda	save_xstart,X
-;	pha
-;	lda	save_xend,X
-;	tax
-;	pla
-
-;	jsr	hgr_partial_restore
-
-;	dec	ERASE_SPRITE_COUNT
-;	bpl	erase_old_loop
-
-
-done_erase_old:
-
-;	lda	#0
-;	sta	ERASE_SPRITE_COUNT	; no doubt this could be optimized
 
 	;=====================
 	; draw bird
@@ -198,9 +166,9 @@ done_draw_bird:
 	lda	#0
 	sta	CURRENT_ROCK
 draw_rock_loop:
-	ldy	CURRENT_ROCK
 
-	iny
+	ldy	CURRENT_ROCK
+	iny					; rock erase slot=rock+1
 	jsr	hgr_partial_restore_by_num
 
 	ldx	CURRENT_ROCK
@@ -264,11 +232,9 @@ rock_add_smc:
 really_draw_rock:
 	tax
 
-	; erase sprite = rock+1
-	lda	CURRENT_ROCK
-	clc
-	adc	#1
-	tay
+	; erase slot = rock+1
+	ldy	CURRENT_ROCK
+	iny
 
 	jsr	hgr_draw_sprite
 
@@ -397,6 +363,9 @@ move_rock_normal:
 	;		run off screen and corrupt memory
 
 	inc	rock_y,X
+	inc	rock_y,X
+	inc	rock_y,X
+
 	lda	rock_y,X
 
 	ldy	MAP_LOCATION
