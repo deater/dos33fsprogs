@@ -27,6 +27,28 @@ cliff_climb:
 	;===================
 	jsr	HOME
 
+	bit	KEYRESET
+
+	lda	#0
+	sta	DRAW_PAGE
+
+;
+	lda	#<opening_text
+	sta	OUTL
+	lda	#>opening_text
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+wait_until_keypress:
+	lda	KEYPRESS				; 4
+	bpl	wait_until_keypress			; 3
+	bit	KEYRESET	; clear the keyboard buffer
+
+
+;
+restart_game:
+
 	bit	HIRES
 	bit	FULLGR
 	bit	SET_GR
@@ -406,6 +428,19 @@ flame_good:
 
 	jsr	check_keyboard
 
+	;===========================
+	; check level over
+	;	a few ways to get here
+	;	0 = fine, keep going
+	;	$FF = hit top of screen, go to next
+	;	$FF = falling and going down to next
+	;	$80 = falling, end of game, key pressed
+	;	? = won game
+
+	lda	LEVEL_OVER
+	cmp	#$80
+	beq	cliff_game_over
+
 	lda	LEVEL_OVER
 	bne	cliff_reload_bg
 
@@ -415,6 +450,47 @@ flame_good:
 	jsr	wait
 
 	jmp	game_loop
+
+cliff_game_over:
+
+	jsr	clear_gr_all
+
+	bit	SET_TEXT
+	bit	PAGE1
+
+	; update max height attained
+
+	lda	MAX_HEIGHT
+	and	#$f
+	clc
+	adc	#$30
+	sta	losing_number+1
+
+	lda	MAX_HEIGHT
+	lsr
+	lsr
+	lsr
+	lsr
+	clc
+	adc	#$30
+	sta	losing_number
+
+	lda	#<losing_text
+	sta	OUTL
+	lda	#>losing_text
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	bit	KEYRESET
+
+wait_until_keypress2:
+	lda	KEYPRESS				; 4
+	bpl	wait_until_keypress2			; 3
+	bit	KEYRESET	; clear the keyboard buffer
+
+	jmp	restart_game
+
 
 cliff_reload_bg:
 	jsr	load_graphics
@@ -476,15 +552,18 @@ load_graphics:
 
 
 
-	.include	"wait.s"
+
 
 	.include	"hgr_tables.s"
 
 	.include	"hgr_sprite.s"
 
+	.include	"wait.s"
+
 	.include	"zx02_optim.s"
 
 	.include	"keyboard_climb.s"
+
 
 	.include	"draw_peasant_climb.s"
 
@@ -493,6 +572,7 @@ load_graphics:
 	.include	"hgr_partial_restore.s"
 
 
+	.include	"text_print.s"	; for z version
 
 	.include	"gr_copy.s"
 	.include	"hgr_copy.s"
@@ -500,6 +580,18 @@ load_graphics:
 	.include	"random16.s"
 
 	.include	"gr_offsets.s"
+
+opening_text:
+.byte	0,0,"CLIFF CLIMB",0
+.byte	0,2,"FROM PEASANTS QUEST BY VIDELECTRIX",0
+.byte	0,4,"USE ARROWS OR WSAD TO CLIMB UP",0
+.byte	0,6,"AVOID BIRDS AND ROCKS",0,$FF
+
+losing_number=losing_text+34
+losing_text:
+.byte	0,0,"YOU FELL",0
+.byte	0,2,"YOU MADE IT TO LEVEL 02",0
+.byte	0,4,"GOOD JORB!",0,$FF
 
 priority_data_l:
 	.byte <priority_cliff1,<priority_cliff2,<priority_cliff3

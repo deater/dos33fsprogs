@@ -15,6 +15,32 @@
 
 check_keyboard:
 
+	lda	PEASANT_FALLING
+	beq	keyboard_not_falling
+
+	; if on ground then exit if keypressed
+
+	cmp	#2		; on ground
+	beq	keyboard_on_ground
+
+	; still falling, clear strobe and exit
+
+on_ground_exit:
+	bit	KEYRESET
+	rts
+
+keyboard_on_ground:
+	lda	KEYPRESS
+	bpl	on_ground_exit	; if no press, exit
+
+	lda	#$80		; done
+	sta	LEVEL_OVER
+
+	rts
+
+
+keyboard_not_falling:
+
 	lda	KEYPRESS
 	bmi	key_was_pressed
 	rts

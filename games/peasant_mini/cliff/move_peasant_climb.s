@@ -235,6 +235,13 @@ peasant_y_negative:
 	inc	MAP_LOCATION
 	; FIXME: if high enough, we won
 	; in the coach Z version, increase score
+	; bcd
+	lda	MAX_HEIGHT
+	clc
+	sed
+	adc	#$01
+	cld
+	sta	MAX_HEIGHT
 
 	lda	#158		; new Y location
 
