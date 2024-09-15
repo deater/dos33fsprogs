@@ -50,6 +50,7 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 
 restart_game:
+	jsr	reset_enemy_state
 
 ; end intro
 
@@ -481,6 +482,8 @@ wait_until_keypress2:
 
 
 cliff_reload_bg:
+	jsr	reset_enemy_state
+
 	jsr	load_graphics
 
 	lda	#0
@@ -720,6 +723,18 @@ peasant_sprites_data_h = peasant_sprite_offset+102
 peasant_mask_data_l = peasant_sprite_offset+136
 peasant_mask_data_h = peasant_sprite_offset+170
 
+	; call this when restarting, also when move to new screen
+reset_enemy_state:
+
+	lda	#0
+	sta	bird_out
+
+	lda	#3
+	sta	rock_state
+	sta	rock_state+1
+	sta	rock_state+2
+
+	rts
 
 	;===========================
 	; check for bird collisions
