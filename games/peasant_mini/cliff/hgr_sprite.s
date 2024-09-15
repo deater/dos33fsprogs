@@ -20,6 +20,9 @@ early_exit:
 hgr_draw_sprite:
 
 	; backup location for eventual restore
+	lda	#1
+	sta	save_valid,Y		; no inc,Y
+
 	lda	SPRITE_X
 	sta	save_xstart,Y
 	lda	SPRITE_Y

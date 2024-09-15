@@ -487,6 +487,8 @@ sprites_mask_h:
 	; background restore parameters
 	; currently 5, should check this and error if we overflow
 
+save_valid:
+	.byte	0, 0, 0, 0, 0, 0
 save_xstart:
 	.byte	0, 0, 0, 0, 0, 0
 save_xend:

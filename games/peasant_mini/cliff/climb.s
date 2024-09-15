@@ -25,14 +25,18 @@ cliff_climb:
 	;===================
 	; set graphics mode
 	;===================
+
 	jsr	HOME
 
+	; clear keyboard
+
 	bit	KEYRESET
+
+; intro
 
 	lda	#0
 	sta	DRAW_PAGE
 
-;
 	lda	#<opening_text
 	sta	OUTL
 	lda	#>opening_text
@@ -45,22 +49,22 @@ wait_until_keypress:
 	bpl	wait_until_keypress			; 3
 	bit	KEYRESET	; clear the keyboard buffer
 
-
-;
 restart_game:
 
-	bit	HIRES
+; end intro
+
+	bit	HIRES			; init graphics
 	bit	FULLGR
 	bit	SET_GR
 	bit	PAGE1
 
-	lda	#0
+	lda	#0			; init variables
 	sta	LEVEL_OVER
 	sta	FRAME
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
-	sta	PEASANT_DIR	; 0 = up
-	sta	ERASE_SPRITE_COUNT
+	sta	PEASANT_DIR		; 0 = up
+;	sta	ERASE_SPRITE_COUNT
 	sta	PEASANT_STEPS
 	sta	FLAME_COUNT
 	sta	CLIMB_COUNT
@@ -68,7 +72,7 @@ restart_game:
 	sta	PEASANT_FALLING
 	sta	MAX_HEIGHT
 
-	lda	#10
+	lda	#10				; starting location
 	sta	PEASANT_X
 	lda	#90
 	sta	PEASANT_Y
@@ -122,58 +126,68 @@ game_loop:
 	;=====================
 	; erase old
 	;=====================
-
 	; from A to X
 	;	SAVED_Y1 to SAVED_Y2
 
 erase_old_loop:
-	ldx	ERASE_SPRITE_COUNT
-	beq	done_erase_old
+;	ldx	ERASE_SPRITE_COUNT
+;	beq	done_erase_old
 
-	dex				; index is one less than count
+;	dex				; index is one less than count
 
-	lda	save_ystart,X
-	sta	SAVED_Y1
-	lda	save_yend,X
-	sta	SAVED_Y2
-	lda	save_xstart,X
-	pha
-	lda	save_xend,X
-	tax
-	pla
+;	lda	save_ystart,X
+;	sta	SAVED_Y1
+;	lda	save_yend,X
+;	sta	SAVED_Y2
+;	lda	save_xstart,X
+;	pha
+;	lda	save_xend,X
+;	tax
+;	pla
 
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
-	dec	ERASE_SPRITE_COUNT
-	bpl	erase_old_loop
+;	dec	ERASE_SPRITE_COUNT
+;	bpl	erase_old_loop
 
 
 done_erase_old:
 
-	lda	#0
-	sta	ERASE_SPRITE_COUNT	; no doubt this could be optimized
+;	lda	#0
+;	sta	ERASE_SPRITE_COUNT	; no doubt this could be optimized
 
 	;=====================
 	; draw bird
 	;=====================
+draw_bird:
+
+	; erase the bird if needed
+
+	ldx	#0			; always in erase slot 0
+	jsr	erase_enemy
+
+	; only draw bird if it's out
 
 	lda	bird_out
 	beq	done_draw_bird
+
+
+	; load in X/Y co-ords
 
 	lda	bird_x
 	sta	SPRITE_X
 	lda	bird_y
 	sta	SPRITE_Y
 
+	; get wing flapping (which sprite) based on frame count
+
 	lda	FRAME
 	and	#1
 	tax
 
-	ldy	ERASE_SPRITE_COUNT
+	ldy	#0			; bird always erase slot #0
 
 	jsr	hgr_draw_sprite
-
-	inc	ERASE_SPRITE_COUNT
 
 done_draw_bird:
 
@@ -181,11 +195,14 @@ done_draw_bird:
 	; draw rock
 	;=====================
 
-
-
 	lda	#0
 	sta	CURRENT_ROCK
 draw_rock_loop:
+	ldx	CURRENT_ROCK
+
+	inx
+	jsr	erase_enemy
+
 	ldx	CURRENT_ROCK
 
 	lda	rock_x,X
@@ -247,11 +264,13 @@ rock_add_smc:
 really_draw_rock:
 	tax
 
-	ldy	ERASE_SPRITE_COUNT
+	; erase sprite = rock+1
+	lda	CURRENT_ROCK
+	clc
+	adc	#1
+	tay
 
 	jsr	hgr_draw_sprite
-
-	inc	ERASE_SPRITE_COUNT
 
 skip_rock:
 	inc	CURRENT_ROCK
@@ -558,9 +577,11 @@ load_graphics:
 
 	.include	"hgr_sprite.s"
 
-	.include	"wait.s"
 
 	.include	"zx02_optim.s"
+
+	.include	"wait.s"
+
 
 	.include	"keyboard_climb.s"
 
@@ -675,6 +696,15 @@ sprites_mask_h:
 	; background restore parameters
 	; currently 5, should check this and error if we overflow
 
+	; tried to dynamically do this, but in the end hard-coded
+
+	; 0 = bird
+	; 1,2,3 = boulders
+	; 4 = peasant
+	; 5 = flame
+
+save_valid:
+	.byte	0, 0, 0, 0, 0, 0
 save_xstart:
 	.byte	0, 0, 0, 0, 0, 0
 save_xend:
@@ -791,5 +821,37 @@ bird_no_collide:
 	clc
 	rts
 
+
+
+	;=====================
+	; erase old
+	;=====================
+	; from A to X
+	;	SAVED_Y1 to SAVED_Y2
+
+	;========================
+	; which one is in X
+
+erase_enemy:
+	lda	save_valid,X
+	bne	really_erase_enemy
+
+	rts
+
+really_erase_enemy:
+	lda	#0
+	sta	save_valid,X
+
+	lda	save_ystart,X
+	sta	SAVED_Y1
+	lda	save_yend,X
+	sta	SAVED_Y2
+	lda	save_xstart,X
+	pha
+	lda	save_xend,X
+	tax
+	pla
+
+	jmp	hgr_partial_restore
 
 
