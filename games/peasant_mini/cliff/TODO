@@ -2,9 +2,8 @@ Change priority code to work on three-wide sprites
 Change draw transparency code to work on three-wide sprites
 Erase flame even when not moving?  That is tricky as would need to
 	redraw head as well :(  maybe just erase part above the head?
-Make it so you can't go down to previous level
-
-Above level2 don't crash, just show bg#2 again
+add collision detection for boulders
+adjust boulder fall frequency to match original
 
 For Coach Z version:
 	Speed up rocks/change spawn rate above level2

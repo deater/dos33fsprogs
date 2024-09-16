@@ -501,6 +501,15 @@ load_graphics:
 	;========================
 
 	ldx	MAP_LOCATION
+
+	cpx	#2
+	bcc	priority_normal
+
+	ldx	#2
+
+priority_normal:
+
+
 	lda     priority_data_l,X
 	sta     ZX0_src
 	lda     priority_data_h,X
@@ -524,6 +533,17 @@ load_graphics:
 	;===========================
 
 	ldx	MAP_LOCATION
+
+	; extra for Z variant
+	; repeat level 2 over and over
+
+	cpx	#2
+	bcc	bg_normal
+
+	ldx	#2
+
+bg_normal:
+
 	lda	bg_data_l,X
 	sta	ZX0_src
 	lda	bg_data_h,X
