@@ -15,6 +15,7 @@ div7_table      = $b800
 mod7_table      = $b900
 hposn_high      = $ba00
 hposn_low       = $bb00
+collision_location	= $bc00
 
 ; defines
 
@@ -523,6 +524,14 @@ priority_normal:
 
 	jsr	gr_copy_to_page1
 
+	; copy collision detection info
+
+	ldx	#0
+col_copy_loop:
+	lda	$2400,X
+	sta	collision_location,X
+	inx
+	bne	col_copy_loop
 
 
 	;=============================
@@ -632,7 +641,6 @@ priority_cliff3:
 
 sprites:
 	.include "sprites/enemy_sprites.inc"
-
 
 sprites_xsize:
 	.byte	3, 3		; bird

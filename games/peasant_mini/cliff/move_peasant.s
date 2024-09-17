@@ -201,60 +201,53 @@ erase_peasant:
 	; newy in X
 	; returns C=0 if no collide
 	;	  C=1 if collide
+
+	; collide data, 6 rows of 40 columns
+	;	then in 8 bit chunks
+
+	; rrrtttii
+	;	bottom 2 bits don't matter (lores tile is 4 rows high)
+	;	next 3 bits = which of 8 bits is relevant
+	;	top 3 bits are row lookup
+
 peasant_collide:
-			; rrrr rtii	top 5 bits row, bit 2 top/bottom
+
+	; assume 3-wide sprite, colliding with feet of the middle?
+
+	iny
+	sty	collision_smc1+1
 
 	; add 28 to collide with feet
 	txa
 	clc
-	adc	#28
-	tax
+	adc	#28		; FIXME: if want to collide somewhere else
 
-	txa
-	and	#$04	; see if odd/even
-	beq	peasant_collide_even
-
-peasant_collide_odd:
-	lda	#$f0
-	bne	peasant_collide_mask		; bra
-
-peasant_collide_even:
-	lda	#$0f
-peasant_collide_mask:
-
-	sta	MASK
-
-	txa
 	lsr
-	lsr		; need to divide by 8 then * 2
-	lsr		; can't just div by 4 as we need to mask bottom bit
-	asl
+	lsr		; need to divide by 4 for offset lookup
+	pha
+	and	#$7
+	sta	collision_smc2+1
+	pla
+
+	lsr
+	lsr		; shift 3 more times for row lookup
+	lsr
+
+	tax
+	lda	collision_offset,X		; get collision offset
+	clc
+collision_smc1:
+	adc	#$00				; add in XPOS
+
 	tax
 
-	lda	gr_offsets,X
-	sta	INL
-	lda	gr_offsets+1,X
-	sta	INH
+	lda	collision_location,X		; get 8 bits of collision info
 
-	lda	(INL),Y			; get value
+collision_smc2:
+	ldx	#$01
+	and	collision_masks,X
 
-	and	MASK
-
-;	ldy	MASK
-;	cpy	#$f0
-;	beq	in_top
-;in_bottom:
-;	and	#$0f
-;	jmp	done_feet
-;in_top:
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;done_feet:
-
-	beq	collide_true		; true if color 0
-	;bne	collide_false
+	bne	collide_true		; true if bit set
 
 collide_false:
 	clc
@@ -272,5 +265,8 @@ move_map_south:
 	rts
 
 
-.include "gr_offsets.s"
+collision_offset:
+	.byte 0,40,80,120,160,200
 
+collision_masks:
+	.byte $80,$40,$20,$10,$08,$04,$02,$01

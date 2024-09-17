@@ -8,10 +8,11 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-div7_table      = $b800
-mod7_table      = $b900
-hposn_high      = $ba00
-hposn_low       = $bb00
+div7_table	= $b800
+mod7_table	= $b900
+hposn_high	= $ba00
+hposn_low	= $bb00
+collision_location	= $bc00
 
 cliff_base:
 
@@ -422,6 +423,8 @@ done_cliff:
 	.include	"hgr_copy.s"
 
 	.include	"random16.s"
+
+	.include	"gr_offsets.s"
 
 bg_data:
 	.incbin "cliff_graphics/cliff_base.hgr.zx02"
