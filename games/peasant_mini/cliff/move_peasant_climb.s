@@ -19,9 +19,8 @@ peasant_falling:
 
 
 	lda	PEASANT_FALLING
-	cmp	#2
+	cmp	#3
 	bcs	done_falling_peasant	; bge
-
 
 	; restore bg behind peasant
 

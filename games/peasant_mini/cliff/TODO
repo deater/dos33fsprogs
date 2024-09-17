@@ -1,7 +1,8 @@
-Change priority code to work on three-wide sprites
-Change draw transparency code to work on three-wide sprites
 Erase flame even when not moving?  That is tricky as would need to
 	redraw head as well :(  maybe just erase part above the head?
+	or just draw peasant always, even when not moving,
+	you don't have to erase
+
 add collision detection for boulders
 adjust boulder fall frequency to match original
 

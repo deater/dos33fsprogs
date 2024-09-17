@@ -262,7 +262,7 @@ skip_rock:
 maybe_new_bird:
 
 	jsr	random16
-	and	#7		; 1/8 of time start new bird?
+	and	#$1f		; 1/32 of time start new bird?
 	bne	move_bird_done
 
 	; bird on base level,	12 .. 76	(MAP_LOCATION==0)
@@ -329,7 +329,7 @@ move_rock_waiting:
 	; see if start new rock
 
 	jsr	random16
-	and	#7		; 1/8 of time start new rock
+	and	#$1f		; 1/32 of time start new rock
 	bne	rock_good
 
 start_new_rock:

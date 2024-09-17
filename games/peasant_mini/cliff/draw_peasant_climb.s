@@ -68,11 +68,11 @@ draw_peasant_falling:
 	; 2 = crashing
 	; 3 = crashed
 
-	cmp	#2
-	bcc	yep_really_falling	; blt
+	cmp	#1			; if falling then handle that
+	beq	yep_really_falling	;
 
-	lda	#(32-1)			; base splat sprite
-	clc				; -1 as we are 1/2 here
+	lda	#(32-2)			; base splat sprite
+	clc				; -1 as we are 2/3 here
 	adc	PEASANT_FALLING
 	bne	yep_falling_common	; bra
 

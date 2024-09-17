@@ -20,7 +20,7 @@ check_keyboard:
 
 	; if on ground then exit if keypressed
 
-	cmp	#2		; on ground
+	cmp	#3		; on ground
 	beq	keyboard_on_ground
 
 	; still falling, clear strobe and exit
