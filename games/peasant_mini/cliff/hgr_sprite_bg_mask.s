@@ -21,10 +21,12 @@
 	; Y is save slot
 
 hgr_draw_sprite_bg_mask:
-	lda	#1
-	sta	save_valid,Y
 
+	;===================================
 	; save info on background to restore
+
+	lda	#1			; can't inc as inc,Y not possible
+	sta	save_valid,Y
 
 	lda	CURSOR_X
 	sta	save_xstart,Y
@@ -32,6 +34,7 @@ hgr_draw_sprite_bg_mask:
 	lda	CURSOR_Y
 	sta	save_ystart,Y
 
+	;==================================
 	; calculate end of sprite on screen for Xpos loop
 	; also save for background restore
 
@@ -41,6 +44,7 @@ hgr_draw_sprite_bg_mask:
 	sta	hdsb_width_smc+1
 	sta	save_xend,Y
 
+	;================================
 	; calculate bottom of sprite for Ypos loop
 	; also save for background restore
 
@@ -50,14 +54,11 @@ hgr_draw_sprite_bg_mask:
 	adc	CURSOR_Y
 	sta	save_yend,Y
 
-	; set up mask countdown value
-
-	lda	#0
-	sta	MASK_COUNTDOWN
-
+	;================================
 	; calculate peasant priority
 	; based on head location
 	; see chart later
+	;	in theory only need to do this if PEASANT_Y changes
 
 	lda	CURSOR_Y
 	sec
@@ -69,6 +70,7 @@ hgr_draw_sprite_bg_mask:
 	adc	#2
 	sta	PEASANT_PRIORITY
 
+	;==================================
 	; set up sprite pointers
 	lda	peasant_sprites_data_l,X
 	sta	h728_smc1+1
@@ -77,6 +79,7 @@ hgr_draw_sprite_bg_mask:
 	sta	h728_smc1+2
 	sta	h728_smc2+2
 
+	;==================================
 	; set up mask pointers
 	lda	peasant_mask_data_l,X
 	sta	h728_smc3+1
@@ -87,24 +90,30 @@ hgr_draw_sprite_bg_mask:
 
 	;===============================
 	; main loop
-	;	X = row counter at times (CURRENT_ROW is real one)
+	;	X = sprite pointer
 	;	Y = col counter
 
-	ldx	#0			; X is sprite counter
-	stx	CURRENT_ROW		; zero row counter
+	ldx	#0			; reset sprite pointer
+	stx	CURRENT_ROW		; also zero out row counter
 
 hgr_sprite_bm_yloop:
-	lda	MASK_COUNTDOWN		; FIXME is this same as CURRENT_ROW
 
+
+	; we need to re-calculate masks every 4th row
+
+	lda	CURRENT_ROW
 	and	#$3			; only update every 4th
 	bne	mask_good
 
 
 	;======================
 	; recalculate mask
+	;	assume max width 3?  This might change some day...
 
-	txa
-	pha				; save sprite counter
+mask_recalc:
+
+	txa				; save sprite pointer
+	pha
 
 	lda	CURRENT_ROW
 	clc
@@ -115,7 +124,7 @@ hgr_sprite_bm_yloop:
 					; FIXME: we have multi-width now
 	jsr	update_bg_mask
 
-	pla				; restore sprite counter
+	pla				; restore sprite pointer
 	tax
 
 mask_good:
@@ -145,9 +154,7 @@ mask_good:
 
 hsbm_inner_loop:
 
-
-
-	lda	MASK
+	lda	MASK0
 	bne	draw_sprite_skip
 
 	;============================
@@ -234,7 +241,7 @@ hdsb_width_smc:
 
 
 
-	inc	MASK_COUNTDOWN	; increment row
+;	inc	MASK_COUNTDOWN	; increment row
 
 	inc	CURRENT_ROW
 	lda	CURRENT_ROW
@@ -249,17 +256,24 @@ hdsb_ysize_smc:
 	;===================
 	; update_bg_mask
 	;===================
+	; updates the drawing mask for 3d positioning
+	;	based on colors on lo-res screen
+	;
+	; need to convert hi-res co-ords to lo-res coords
+	;	xpos already the same
+	;	ypos need to divide by four
+	;	then need to get top/bottom nibble
+	; 		rrrr rtii	top 5 bits row, bit 2 top/bottom
+
 	; Column (xpos/7) in Y
 	; Row in X
-	; updates MASK
+	; updates MASK0..MASK2
+
 update_bg_mask:
 
-			; ?????????
-			; rrrr rtii	top 5 bits row, bit 2 top/bottom
-
-	sty	xsave
+	sty	xsave	; save xpos
 mask_try_again:
-	stx	ysave
+	stx	ysave	; save ypos
 
 	txa
 	and	#$04	; see if odd/even in the lo-res lookup
@@ -306,20 +320,20 @@ bg_mask_mask:
 	; get high/low properly
 
 	ldy	MASK
-	cpy	#$f0
-	bne	mask_bottom
+;	cpy	#$f0
+;	bne	mask_bottom
+	bpl	mask_bottom
 mask_top:
 	lsr
 	lsr
 	lsr
 	lsr
-	jmp	mask_mask_mask
+;	jmp	mask_mask_mask
 mask_bottom:
-	and	#$0f
-
+	and	#$0f		; ok to always do this?
 
 mask_mask_mask:
-	sta	MASK
+	sta	MASK0
 
 	; special cases?
 
@@ -351,12 +365,12 @@ mask_not_zero:
 
 mask_true:
 	lda	#$ff
-	sta	MASK
+	sta	MASK0
 	rts
 
 mask_false:
 	lda	#$00
-	sta	MASK
+	sta	MASK0
 	rts
 
 

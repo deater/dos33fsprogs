@@ -57,9 +57,12 @@ GBASL		= $26
 GBASH		= $27
 BASL		= $28
 BASH		= $29
-MASK		= $2E
-MASK_COUNTDOWN	= $2F
-PEASANT_PRIORITY	= $30
+
+MASK			= $2E	; used many places
+MASK0			= $2F	; used by priority code in bg_mask
+MASK1			= $30
+MASK2			= $31
+PEASANT_PRIORITY	= $32
 
 SEEDL = $4E
 SEEDH = $4F
