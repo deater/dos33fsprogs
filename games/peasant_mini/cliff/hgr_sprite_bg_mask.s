@@ -39,9 +39,9 @@ hgr_draw_sprite_bg_mask:
 	; also save for background restore
 
 	lda	peasant_sprites_xsize,X
+	sta	hdsb_width_smc+1
 	clc
 	adc	CURSOR_X
-	sta	hdsb_width_smc+1
 	sta	save_xend,Y
 
 	;================================
@@ -121,7 +121,7 @@ mask_recalc:
 	tax				; X has row
 
 	ldy	CURSOR_X		; Y has column
-					; FIXME: we have multi-width now
+
 	jsr	update_bg_mask
 
 	pla				; restore sprite pointer
@@ -129,8 +129,10 @@ mask_recalc:
 
 mask_good:
 
-	lda	CURRENT_ROW
+	;====================================
+	; get hires address for current row
 
+	lda	CURRENT_ROW
 	clc
 	adc	CURSOR_Y		; add in cursor_y
 
@@ -138,6 +140,8 @@ mask_good:
 
 	tay				; get output ROW into GBASL/H
 	lda	hposn_low,Y
+	clc
+	adc	CURSOR_X		; point at actual location
 	sta	GBASL
 	lda	hposn_high,Y
 	sta	GBASH			; always page2
@@ -146,15 +150,14 @@ mask_good:
 	;============================
 	; set up inner loop
 
-	ldy	CURSOR_X
+	ldy	#0			; Y starts at 0 now
 
 	lda	#0
 	sta	SPRITE_TEMP
 	sta	MASK_TEMP
 
 hsbm_inner_loop:
-
-	lda	MASK0
+	lda	MASK0,Y			; yes, would be better if in X
 	bne	draw_sprite_skip
 
 	;============================
@@ -239,10 +242,6 @@ hdsb_width_smc:
 	cpy	#6
 	bne	hsbm_inner_loop
 
-
-
-;	inc	MASK_COUNTDOWN	; increment row
-
 	inc	CURRENT_ROW
 	lda	CURRENT_ROW
 
@@ -271,24 +270,10 @@ hdsb_ysize_smc:
 
 update_bg_mask:
 
-	sty	xsave	; save xpos
-mask_try_again:
-	stx	ysave	; save ypos
-
 	txa
 	and	#$04	; see if odd/even in the lo-res lookup
-	beq	bg_mask_even
-
-	; setup mask based on odd/even
-
-bg_mask_odd:
-	lda	#$f0
-	bne	bg_mask_mask		; bra
-
-bg_mask_even:
-	lda	#$0f
-bg_mask_mask:
-	sta	MASK
+	sta	MASK	; all we care about is zero or not
+			; even if  zero
 
 	; X is current row here
 
@@ -313,32 +298,39 @@ bg_mask_mask:
 	lda	gr_offsets+1,X
 	sta	BASH
 
+	; loop 3 times
+	ldx	#0
+set_mask_loop:
+
 	; read out current mask color
 
 	lda	(BASL),Y
 
 	; get high/low properly
 
+	sty	ysave
+
 	ldy	MASK
-;	cpy	#$f0
-;	bne	mask_bottom
-	bpl	mask_bottom
+	beq	mask_bottom
 mask_top:
 	lsr
 	lsr
 	lsr
 	lsr
-;	jmp	mask_mask_mask
 mask_bottom:
 	and	#$0f		; ok to always do this?
 
 mask_mask_mask:
-	sta	MASK0
+
+	ldy	ysave
 
 	; special cases?
 
-	cmp	#$0			; 0 means collision, find mask
-	bne	mask_not_zero		; by iteratively going down till
+	; we used to have 0 be special for collision detection
+	;	but we've moved that to separate data structure
+
+;	cmp	#$0			; 0 means collision, find mask
+;	bne	mask_not_zero		; by iteratively going down till
 
 	; mask 0 here, which means can't walk there but doesn't give
 	;	prioirty.  This can happen if there's a don't walk spot
@@ -346,14 +338,14 @@ mask_mask_mask:
 	;	mask by looking down the screen until we find an actual
 	;	proper mask value
 
-	ldy	xsave
+;	ldy	xsave
 
-	ldx	ysave			; move to next lower lookup value
-	inx
-	inx
-	inx
-	inx
-	jmp	mask_try_again
+;	ldx	ysave			; move to next lower lookup value
+;	inx
+;	inx
+;	inx
+;	inx
+;	jmp	mask_try_again
 
 mask_not_zero:
 	cmp	#$f			; priority F means always on top
@@ -365,18 +357,25 @@ mask_not_zero:
 
 mask_true:
 	lda	#$ff
-	sta	MASK0
-	rts
+	bne	mask_store		; bra
 
 mask_false:
 	lda	#$00
-	sta	MASK0
+
+mask_store:
+	sta	MASK0,X
+
+	iny
+	inx
+	cpx	#3			; adjust if sprite size changes
+	bne	set_mask_loop
+
 	rts
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; priorities
-; 0 = collision
+; 0 = collision (not anymore)
 ; 1 = bg = always draw		; Y-48
 ; 2 	0-55
 ; 3 	56-63			; 8/8+2 = 3
@@ -401,5 +400,5 @@ mask_false:
 
 ysave:
 .byte $00
-xsave:
-.byte $00
+;xsave:
+;.byte $00

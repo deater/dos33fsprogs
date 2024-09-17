@@ -5,5 +5,7 @@ Erase flame even when not moving?  That is tricky as would need to
 add collision detection for boulders
 adjust boulder fall frequency to match original
 
+collision detect head and feet?
+
 For Coach Z version:
 	Speed up rocks/change spawn rate above level2
