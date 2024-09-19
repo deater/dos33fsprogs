@@ -9,7 +9,7 @@ all:	INTRO
 INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-intro.o:	intro.s ../zp.inc ../qload.inc ../music.inc \
+intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../graphics_peasantry/cottage.zx02 \
 		../graphics_peasantry/lake_w.zx02 \
 		../graphics_peasantry/lake_e.zx02 \
@@ -32,7 +32,6 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music.inc \
 		../hgr_partial_save.s \
 		../hgr_sprite_bg_mask.s \
 		../wait_a_bit.s ../draw_peasant_new.s ../hgr_text_box.s \
-		../title.s ../directions.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s \
 		new_game.s

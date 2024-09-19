@@ -4,12 +4,12 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE = LOCATION_TROGDOR_LAIR	; 23
 
@@ -299,22 +299,22 @@ draw_sprite_h:
 
 .include "move_peasant_tiny.s"
 .include "draw_peasant_tiny.s"
-;.include "hgr_1x5_save_bg.s"
+.include "../gr_offsets.s"
 
-.include "gr_copy.s"
-.include "hgr_copy.s"
+.include "../gr_copy.s"
+.include "../hgr_copy.s"
 
-.include "keyboard.s"
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "../keyboard.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
-.include "version.inc"
+.include "../version.inc"
 
-.include "speaker_beeps.inc"
+.include "../speaker_beeps.inc"
 
-.include "hgr_sprite.s"
+.include "../hgr_sprite.s"
 
-.include "ssi263/ssi263_simple_speech.s"
+.include "../ssi263/ssi263_simple_speech.s"
 .include "trogdor_speech.s"
 
 .include "graphics_trogdor/trogdor_graphics.inc"
@@ -361,6 +361,6 @@ verb_tables_hi:
 
 
 trogdor_text_zx02:
-.incbin "DIALOG_TROGDOR.ZX02"
+.incbin "../DIALOG_TROGDOR.ZX02"
 
 .include "trogdor_actions.s"

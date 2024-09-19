@@ -8,7 +8,7 @@
 .include "../zp.inc"
 
 .include "../qload.inc"
-.include "../music.inc"
+.include "../music/music.inc"
 
 peasant_quest_intro:
 

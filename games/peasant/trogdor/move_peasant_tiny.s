@@ -210,4 +210,3 @@ collide_true:
 
 
 
-.include "gr_offsets.s"

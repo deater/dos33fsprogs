@@ -16,9 +16,10 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 
-peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO ./title/TITLE \
-	./intro/INTRO \
-	SAVE1 SAVE2 SAVE3 ./music/MUSIC COPY_CHECK
+peasant_disk1.dsk:	QBOOT QLOAD \
+	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
+	./music/MUSIC ./copy/COPY_CHECK \
+	SAVE1 SAVE2 SAVE3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
@@ -27,11 +28,11 @@ peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO ./title/TITLE \
 	$(DOS33_RAW) peasant_disk1.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO   0   0
-	$(DOS33_RAW) peasant_disk1.dsk  6  0 ./title/TITLE      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO      0   0
-	$(DOS33_RAW) peasant_disk1.dsk 30 0 COPY_CHECK   0   0
+	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO 0   0
+	$(DOS33_RAW) peasant_disk1.dsk  6  0 ./title/TITLE       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO       0   0
+	$(DOS33_RAW) peasant_disk1.dsk 30  0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
@@ -51,17 +52,16 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
-peasant_disk3.dsk:	WBOOT2 COPY_CHECK TROGDOR ENDING \
+peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ENDING \
 	CLIFF GAME_OVER INSIDE INN ARCHERY MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
-	$(DOS33_RAW) peasant_disk3.dsk   1 0 COPY_CHECK   0   0
 	$(DOS33_RAW) peasant_disk3.dsk   3 0 GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk3.dsk   4 0 MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk   6 0 ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
-	$(DOS33_RAW) peasant_disk3.dsk  19 0 TROGDOR	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ENDING	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  29 0 CLIFF	  0   0
 
@@ -213,13 +213,13 @@ inventory.o:	inventory.s \
 
 ###
 
-./vi_logo/VID_LOGO:
+./vid_logo/VID_LOGO:
 	cd vid_logo && make
 
-./title/TITLE:	
+./title/TITLE:	./music/music.inc
 	cd title && make
 
-./intro/INTRO:	
+./intro/INTRO:	./music/music.inc
 	cd intro && make
 
 ./music/MUSIC:	
@@ -376,23 +376,8 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 
 ###
 
-TROGDOR:	trogdor.o
-	ld65 -o TROGDOR trogdor.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-trogdor.o:	trogdor.s zp.inc \
-		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
-		sprites/inventory_sprites.inc \
-		DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
-		ssi263/ssi263_simple_speech.s \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		draw_peasant_tiny.s \
-		keyboard.s new_map_location.s \
-		move_peasant_tiny.s score.s inventory.s \
-		trogdor_actions.s
-
-	ca65 -o trogdor.o trogdor.s -l trogdor.lst
+./trogdor/TROGDOR:	DIALOG_TROGDOR.ZX02
+	cd trogdor && make
 
 ###
 
@@ -414,14 +399,8 @@ ending.o:	ending.s zp.inc qload.inc ./music/music.inc \
 
 ###
 
-COPY_CHECK:	copy_check.o
-	ld65 -o COPY_CHECK copy_check.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-copy_check.o:	copy_check.s graphics_copy/copy_graphics.inc \
-		hgr_input.s \
-		draw_box.s hgr_rectangle.s hgr_font.s \
-		copy_check.s
-	ca65 -o copy_check.o copy_check.s -l copy_check.lst
+./copy/COPY_CHECK:	
+	cd copy && make
 
 ###
 
@@ -665,9 +644,6 @@ graphics_archery/archery_graphics.inc:
 graphics_cliff/cliff_graphics.inc:
 	cd graphics_cliff && make
 
-graphics_copy/copy_graphics.inc:
-	cd graphics_copy && make
-
 graphics_end/ending_graphics.inc:
 	cd graphics_end && make
 
@@ -689,18 +665,12 @@ graphics_peasantry/graphics_intro.inc:
 graphics_peasantry/graphics_peasant1.inc:
 	cd graphics_peasantry && make
 
-graphics_trogdor/trogdor_graphics.inc:
-	cd graphics_trogdor && make
-
 ####
 
 sprites/inventory_sprites.inc:
 	cd sprites && make
 
 sprites/peasant_sprites.inc:
-	cd sprites && make
-
-sprites/trogdor_sprites.inc:
 	cd sprites && make
 
 ####
@@ -716,27 +686,29 @@ distclean:
 	cd sprites && make clean
 	cd graphics_archery && make clean
 	cd graphics_cliff && make clean
-	cd graphics_copy && make clean
 	cd graphics_end && make clean
 	cd graphics_inn && make clean
 	cd graphics_inside && make clean
 	cd graphics_map && make clean
 	cd graphics_over && make clean
 	cd graphics_peasantry && make clean
-	cd graphics_trogdor && make clean
 	cd text && make clean
+	cd copy && make distclean
 	cd intro && make distclean
+	cd trogdor && make distclean
 	cd vid_logo && make distclean
 	cd music && make distclean
 ###
 
 clean:	
-	rm -f *~ *.o *.lst COPY_CHECK \
+	rm -f *~ *.o *.lst \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			TROGDOR ENDING MUSIC GAME_OVER \
+			ENDING GAME_OVER \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
+	cd copy && make clean
 	cd intro && make clean
-	cd music && make_clean
+	cd music && make clean
 	cd title && make clean
+	cd trogdor && make clean
 	cd vid_logo && make clean

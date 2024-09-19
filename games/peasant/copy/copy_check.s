@@ -9,10 +9,10 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
+.include "../qload.inc"
 
 	;************************
 	; Ending

@@ -1,4 +1,4 @@
-.include "tokens.inc"
+.include "../tokens.inc"
 
 	;=======================
 	;=======================
@@ -505,5 +505,5 @@ dashing_progress_h:
 	.byte >dashing6_sprite,>dashing7_sprite,>dashing8_sprite
 
 
-.include "dialog_trogdor.inc"
+.include "../dialog_trogdor.inc"
 
