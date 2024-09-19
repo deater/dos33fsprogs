@@ -52,7 +52,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
-peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ENDING \
+peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ./ending/ENDING \
 	CLIFF GAME_OVER INSIDE INN ARCHERY MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
@@ -62,7 +62,7 @@ peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  24 0 ENDING	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  29 0 CLIFF	  0   0
 
 
@@ -379,25 +379,8 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 ./trogdor/TROGDOR:	DIALOG_TROGDOR.ZX02
 	cd trogdor && make
 
-###
-
-ENDING:	ending.o
-	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-ending.o:	ending.s zp.inc qload.inc ./music/music.inc \
-		graphics_end/ending_graphics.inc sprites/peasant_sprites.inc \
-		sprites/ending_sprites.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_2x14_sprite_mask.s \
-		hgr_sprite.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s inventory.s
-
-	ca65 -o ending.o ending.s -l ending.lst
-
-
-###
+./ending/ENDING:	
+	cd ending && make
 
 ./copy/COPY_CHECK:	
 	cd copy && make
@@ -644,9 +627,6 @@ graphics_archery/archery_graphics.inc:
 graphics_cliff/cliff_graphics.inc:
 	cd graphics_cliff && make
 
-graphics_end/ending_graphics.inc:
-	cd graphics_end && make
-
 graphics_inn/graphics_inn.inc:
 	cd graphics_inn && make
 
@@ -686,7 +666,6 @@ distclean:
 	cd sprites && make clean
 	cd graphics_archery && make clean
 	cd graphics_cliff && make clean
-	cd graphics_end && make clean
 	cd graphics_inn && make clean
 	cd graphics_inside && make clean
 	cd graphics_map && make clean
@@ -694,6 +673,7 @@ distclean:
 	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd copy && make distclean
+	cd ending && make distclean
 	cd intro && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
@@ -703,10 +683,11 @@ distclean:
 clean:	
 	rm -f *~ *.o *.lst \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			ENDING GAME_OVER \
+			GAME_OVER \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
 	cd copy && make clean
+	cd ending && make clean
 	cd intro && make clean
 	cd music && make clean
 	cd title && make clean

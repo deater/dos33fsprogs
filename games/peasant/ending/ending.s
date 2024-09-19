@@ -5,11 +5,11 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "./music/music.inc"
+.include "../qload.inc"
+.include "../music/music.inc"
 
 ending:
 
@@ -565,14 +565,14 @@ stuck_forever:
 
 
 
-.include "hgr_2x14_sprite_mask.s"
-.include "hgr_sprite.s"
+.include "../hgr_2x14_sprite_mask.s"
+.include "../hgr_sprite.s"
 
 
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
-.include "speaker_beeps.inc"
+.include "../speaker_beeps.inc"
 
 .include "graphics_end/ending_graphics.inc"
 
