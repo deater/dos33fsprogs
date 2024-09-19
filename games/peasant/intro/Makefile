@@ -12,6 +12,10 @@ all:	INTRO
 ../sprites/peasant_sprites.inc:	
 	cd ../sprites && make
 
+
+../sprites_peasant/walking_sprites.zx02:	
+	cd ../sprites_peasant && make
+
 ###
 
 
@@ -29,6 +33,7 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../graphics_peasantry/lake_e_priority.zx02 \
 		../graphics_peasantry/river_priority.zx02 \
 		../graphics_peasantry/knight_priority.zx02 \
+		../sprites_peasant/walking_sprites.zx02 \
 		../sprites/peasant_sprites.inc \
 		../sprites/bubble_sprites_e.inc \
 		../sprites/bubble_sprites_w.inc \

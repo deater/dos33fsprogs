@@ -245,6 +245,6 @@ climb_flame_sprites.inc:     climb_flame_sprites.png
 
 
 clean:	
-	rm -f *~ enemy_sprites.inc robe_sprites.inc flame_sprites.inc \
+	rm -f *~ *.zx02 enemy_sprites.inc robe_sprites.inc flame_sprites.inc \
 		walk_sprites.inc climb_sprites.inc climb_flame_sprites.inc
 

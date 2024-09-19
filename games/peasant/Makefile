@@ -619,6 +619,7 @@ text/common.inc.lookup:
 distclean:
 	make clean
 	cd sprites && make clean
+	cd sprites_peasant && make clean
 	cd graphics_archery && make clean
 	cd graphics_cliff && make clean
 	cd graphics_inn && make clean
