@@ -264,6 +264,7 @@ skip_rock:
 maybe_new_bird:
 
 	jsr	random16
+bird_freq_smc:
 	and	#$1f		; 1/32 of time start new bird?
 	bne	move_bird_done
 
@@ -349,6 +350,7 @@ move_rock_waiting:
 	; see if start new rock
 
 	jsr	random16
+rock_freq_smc:
 	and	#$1f		; 1/32 of time start new rock
 	bne	rock_good
 
@@ -384,11 +386,12 @@ move_rock_normal:
 	;		sprite code will truncate sprite so we don't
 	;		run off screen and corrupt memory
 
-	inc	rock_y,X
-	inc	rock_y,X
-	inc	rock_y,X
-
+	clc
 	lda	rock_y,X
+rock_speed_smc:
+	adc	#3
+
+	sta	rock_y,X
 
 	ldy	MAP_LOCATION
 	beq	move_rock_base_level
@@ -537,6 +540,16 @@ load_graphics:
 
 	cpx	#2
 	bcc	priority_normal
+
+	; here if map_location above 2
+	; for coach z version make it harder in this case
+
+	lda	#$f
+	sta	bird_freq_smc+1
+	sta	rock_freq_smc+1
+
+	txa
+	sta	rock_speed_smc+1	; rock speed prop to level
 
 	ldx	#2
 
