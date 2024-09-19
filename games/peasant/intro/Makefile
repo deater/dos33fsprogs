@@ -6,6 +6,15 @@ all:	INTRO
 
 ###
 
+../graphics_peasantry/cottage.zx02:	
+	cd ../graphics_peasantry && make
+
+../sprites/peasant_sprites.inc:	
+	cd ../sprites && make
+
+###
+
+
 INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -38,6 +47,11 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
+
+distclean:	
+	make clean
+
+#####
 
 clean:	
 	rm -f *~ *.o *.lst INTRO

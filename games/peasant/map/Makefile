@@ -28,7 +28,6 @@ graphics_map/map_graphics.inc:
 
 distclean:
 	make clean
-	cd graphics_archery && make clean
 	cd graphics_map && make clean
 
 ###
