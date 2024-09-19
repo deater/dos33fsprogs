@@ -1,0 +1,32 @@
+Disk contents
+
+Disk00 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD         99 bytes         = 1T         (4096)  4k free
+T         2 = TITLE       9280 bytes         = 3T        (12288)  3k free
+T         5 = DUCK_POND   3474 bytes         = 3T        (12288)  9k free
+T         8 = ROOF         865 bytes         = 3T        (12288) 11k free
+T        11 = ASPLODE	 17042 bytes	     = 5T        (20480)  3k free
+T        16 = FISH       23287 bytes         = 6T        (24576)  1k free
+T        22 = RAT         7581 bytes         = 2T        ( 8192)  1k free
+T        24 = BACK_OFF    6072 bytes         = 2T        ( 8192)  2k free
+T	 26 = CLIMB	 13013 bytes         = 4T        (16384)  3k free
+
+
+
+
+memory map
+
+6000 code
+
+A000 background
+
+
+Code currently 16k
+Need to be 8 K in order to fit bg2 at $8000
+
+asplode_sound = 4.9k
+graphics1     = 1.3k  (would need another 1.3k for other graphic)
+title         = 1.4k
+
