@@ -6,6 +6,12 @@ all:	ENDING
 
 ###
 
+sprites/ending_sprites.inc:	
+	cd sprites && make
+
+###
+
+
 ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -33,6 +39,7 @@ graphics_end/ending_graphics.inc:
 
 distclean:
 	make clean
+	cd sprites && make clean
 	cd graphics_end && make clean
 
 ###
