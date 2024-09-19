@@ -19,7 +19,7 @@ ending.o:	ending.s \
 		../hgr_sprite.s ../hgr_save_restore.s \
 		../wait_a_bit.s ../draw_peasant.s ../hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
-		../move_peasant.s ../score.s ../inventory.s
+		../move_peasant.s ../score.s ../inventory/inventory.inc
 
 	ca65 -o ending.o ending.s -l ending.lst
 

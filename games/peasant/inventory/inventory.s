@@ -1,6 +1,6 @@
-.include "zp.inc"
-.include "hardware.inc"
-.include "qload.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
+.include "../qload.inc"
 
 	;=====================
 	; show inventory
@@ -656,8 +656,8 @@ descriptions_high:
 	.byte >map_description
 	.byte >tshirt_description
 
-.include "text/lookup.inc"
-.include "text/inventory.inc.lookup"
+.include "../text/lookup.inc"
+.include "../text/inventory.inc.lookup"
 
 .if 0
 
@@ -927,4 +927,4 @@ inv_sprite_table_high:
 
 .include "sprites/inventory_sprites.inc"
 
-.include "hgr_2x16_sprite.s"
+.include "../hgr_2x16_sprite.s"

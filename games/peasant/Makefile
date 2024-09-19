@@ -36,7 +36,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-	SAVE1 SAVE2 SAVE3 INVENTORY PARSE_INPUT.ZX02
+	SAVE1 SAVE2 SAVE3 ./inventory/INVENTORY PARSE_INPUT.ZX02
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  0  2 QBOOT      1   1
@@ -46,7 +46,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant_disk2.dsk  13 0 PARSE_INPUT.ZX02  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  14 0 INVENTORY  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./inventory/INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
@@ -198,20 +198,13 @@ qload.inc:	generate_common QLOAD
 
 ###
 
-inventory.inc:	generate_common INVENTORY
-	./generate_common -a 0xd000 -s show_inventory inventory.lst > inventory.inc
+./inventory/inventory.inc:	./generate_common
+	cd inventory && make
 
 ###
 
-INVENTORY:	inventory.o
-	ld65 -o INVENTORY inventory.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
-
-inventory.o:	inventory.s \
-		sprites/inventory_sprites.inc \
-		hgr_2x16_sprite.s
-	ca65 -o inventory.o inventory.s -l inventory.lst
-
-###
+inventory/INVENTORY:	
+	cd inventory && make
 
 ./vid_logo/VID_LOGO:
 	cd vid_logo && make
@@ -230,7 +223,7 @@ inventory.o:	inventory.s \
 CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-cliff.o:	cliff.s zp.inc inventory.inc \
+cliff.o:	cliff.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		cliff_actions.s DIALOG_CLIFF.ZX02 dialog_cliff.inc \
 		graphics_cliff/cliff_graphics.inc sprites/peasant_sprites.inc \
@@ -247,7 +240,7 @@ cliff.o:	cliff.s zp.inc inventory.inc \
 ARCHERY:	archery.o
 	ld65 -o ARCHERY archery.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-archery.o:	archery.s zp.inc inventory.inc \
+archery.o:	archery.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		graphics_archery/archery_graphics.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -262,7 +255,7 @@ archery.o:	archery.s zp.inc inventory.inc \
 MAP:	map.o
 	ld65 -o MAP map.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-map.o:	map.s zp.inc inventory.inc \
+map.o:	map.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		graphics_map/map_graphics.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -298,12 +291,12 @@ game_over.o:	game_over.s zp.inc \
 PEASANT1:	peasant1.o
 	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant1.o:	peasant1.s zp.inc inventory.inc \
+peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		peasant1_actions.s DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
 		text/peasant1.inc text/kerrek.inc \
 		kerrek_actions.s peasant_common.s \
-		sprites/peasant_sprites.inc sprites/inventory_sprites.inc \
+		sprites/peasant_sprites.inc \
 		sprites/kerrek_sprites.inc \
 		sprites/gary_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
@@ -320,7 +313,7 @@ peasant1.o:	peasant1.s zp.inc inventory.inc \
 PEASANT2:	peasant2.o
 	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant2.o:	peasant2.s zp.inc inventory.inc \
+peasant2.o:	peasant2.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		peasant2_actions.s DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
@@ -332,7 +325,7 @@ peasant2.o:	peasant2.s zp.inc inventory.inc \
 		hgr_1x28_sprite_mask.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		move_peasant.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s loadsave_menu.s
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
 
 ###
@@ -340,7 +333,7 @@ peasant2.o:	peasant2.s zp.inc inventory.inc \
 PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant3.o:	peasant3.s zp.inc inventory.inc \
+peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		peasant3_actions.s DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
@@ -359,7 +352,7 @@ peasant3.o:	peasant3.s zp.inc inventory.inc \
 PEASANT4:	peasant4.o
 	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant4.o:	peasant4.s zp.inc inventory.inc \
+peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		sprites/ned_sprites.inc \
 		peasant4_actions.s DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
@@ -390,17 +383,16 @@ peasant4.o:	peasant4.s zp.inc inventory.inc \
 INSIDE:	inside.o
 	ld65 -o INSIDE inside.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-inside.o:	inside.s zp.inc inventory.inc \
+inside.o:	inside.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		inside_actions.s DIALOG_INSIDE.ZX02 dialog_inside.inc \
 		graphics_inside/graphics_inside.inc sprites/peasant_sprites.inc \
 		graphics_inside/priority_inside.inc \
-		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		move_peasant.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s loadsave_menu.s
 	ca65 -o inside.o inside.s -l inside.lst
 
 ###
@@ -408,17 +400,16 @@ inside.o:	inside.s zp.inc inventory.inc \
 INN:	inn.o
 	ld65 -o INN inn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-inn.o:	inn.s zp.inc inventory.inc \
+inn.o:	inn.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		inn_actions.s DIALOG_INN.ZX02 dialog_inn.inc \
 		graphics_inn/graphics_inn.inc sprites/peasant_sprites.inc \
 		graphics_inn/priority_inn.inc \
-		sprites/inventory_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_1x28_sprite_mask.s hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
 		keyboard.s new_map_location.s \
-		move_peasant.s score.s inventory.s loadsave_menu.s
+		move_peasant.s score.s loadsave_menu.s
 	ca65 -o inn.o inn.s -l inn.lst
 
 
@@ -646,9 +637,6 @@ graphics_peasantry/graphics_peasant1.inc:
 	cd graphics_peasantry && make
 
 ####
-
-sprites/inventory_sprites.inc:
-	cd sprites && make
 
 sprites/peasant_sprites.inc:
 	cd sprites && make
