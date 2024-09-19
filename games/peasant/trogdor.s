@@ -314,7 +314,7 @@ draw_sprite_h:
 
 .include "hgr_sprite.s"
 
-.include "ssi263_simple_speech.s"
+.include "ssi263/ssi263_simple_speech.s"
 .include "trogdor_speech.s"
 
 .include "graphics_trogdor/trogdor_graphics.inc"

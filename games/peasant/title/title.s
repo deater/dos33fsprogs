@@ -2,11 +2,11 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "music.inc"
+.include "../qload.inc"
+.include "../music/music.inc"
 
 title:
 	jsr	hgr2				; clear screen, HGR page 2
@@ -301,25 +301,17 @@ duet_finished:
 
 	rts
 
-
-
-;.include "decompress_fast_v2.s"
-;.include "wait_keypress.s"
-
 .include "directions.s"
 
-;.include "hgr_font.s"
-;.include "hgr_tables.s"
-;.include "hgr_hgr2.s"
-
-.include "duet.s"
+.include "../music/duet.s"
 
 peasant_ed:
-.incbin "music/peasant.ed"
+.incbin "../music/peasant.ed"
 
-.include "pt3_lib_mockingboard_patch.s"
+.include "../pt3_lib/pt3_lib_mockingboard_patch.s"
 
 .include "graphics_title/title_graphics.inc"
 
 altfire:
 .include "graphics_title/altfire.inc"
+

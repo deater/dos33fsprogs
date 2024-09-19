@@ -1,6 +1,12 @@
 New:
 ~~~~
 use updated speaker_beeps.s from music/redbook_sound
+use updates ssi263 code from wargames
+check if newer pt3_lib needed
+updated qload code
+add hard-disk image support
+change keyboard to use ;,/ for up/down on II+
+remove need to type enter
 
 
 QUESTIONS FOR VIDELECTRIX:

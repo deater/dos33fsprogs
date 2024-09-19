@@ -16,7 +16,8 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 
-peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO TITLE ./intro/INTRO \
+peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO ./title/TITLE \
+	./intro/INTRO \
 	SAVE1 SAVE2 SAVE3 ./music/MUSIC COPY_CHECK
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
@@ -28,11 +29,11 @@ peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO TITLE ./intro/INTRO \
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO   0   0
-	$(DOS33_RAW) peasant_disk1.dsk  6  0 TITLE      0   0
+	$(DOS33_RAW) peasant_disk1.dsk  6  0 ./title/TITLE      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO      0   0
 	$(DOS33_RAW) peasant_disk1.dsk 30 0 COPY_CHECK   0   0
 
-peasant_disk2.dsk:	QBOOT QLOAD TITLE ./intro/INTRO \
+peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 	SAVE1 SAVE2 SAVE3 INVENTORY PARSE_INPUT.ZX02
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
@@ -43,8 +44,6 @@ peasant_disk2.dsk:	QBOOT QLOAD TITLE ./intro/INTRO \
 	$(DOS33_RAW) peasant_disk2.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk2.dsk  6  0 TITLE      0   0
-	$(DOS33_RAW) peasant_disk2.dsk  9  0 ./intro/INTRO      0   0
 	$(DOS33_RAW) peasant_disk2.dsk  13 0 PARSE_INPUT.ZX02  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  14 0 INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
@@ -217,41 +216,16 @@ inventory.o:	inventory.s \
 ./vi_logo/VID_LOGO:
 	cd vid_logo && make
 
-###
-
-TITLE:	title.o
-	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-title.o:	title.s qload.inc ./music/music.inc \
-		graphics_title/title_graphics.inc \
-		graphics_title/altfire.inc \
-		directions.s \
-		pt3_lib_mockingboard_patch.s duet.s
-	ca65 -o title.o title.s -l title.lst
-
-###
+./title/TITLE:	
+	cd title && make
 
 ./intro/INTRO:	
 	cd intro && make
 
-###
+./music/MUSIC:	
+	cd music && make
 
-MUSIC:	music.o
-	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
-
-music.o:	music.s zp.inc \
-		music/peasant.pt3 \
-		pt3_lib_core.s \
-		pt3_lib_mockingboard_detect.s \
-		pt3_lib_detect_model.s \
-		pt3_lib_mockingboard.inc \
-		pt3_lib_init.s \
-		pt3_lib_mockingboard_setup.s \
-		pt3_lib_irq_handler.s
-	ca65 -o music.o music.s -l music.lst
-
-
-###
+####
 
 CLIFF:	cliff.o
 	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
@@ -409,7 +383,7 @@ trogdor.o:	trogdor.s zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
 		sprites/inventory_sprites.inc \
 		DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
-		ssi263_simple_speech.s \
+		ssi263/ssi263_simple_speech.s \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
 		hgr_save_restore.s \
 		wait_a_bit.s draw_peasant.s hgr_text_box.s \
@@ -715,14 +689,8 @@ graphics_peasantry/graphics_intro.inc:
 graphics_peasantry/graphics_peasant1.inc:
 	cd graphics_peasantry && make
 
-graphics_title/title_graphics.inc:
-	cd graphics_title && make
-
 graphics_trogdor/trogdor_graphics.inc:
 	cd graphics_trogdor && make
-
-graphics_vid/vid_graphics.inc:
-	cd graphics_vid && make
 
 ####
 
@@ -755,9 +723,7 @@ distclean:
 	cd graphics_map && make clean
 	cd graphics_over && make clean
 	cd graphics_peasantry && make clean
-	cd graphics_title && make clean
 	cd graphics_trogdor && make clean
-	cd graphics_vid && make clean
 	cd text && make clean
 	cd intro && make distclean
 	cd vid_logo && make distclean
@@ -765,11 +731,12 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst VID_LOGO TITLE COPY_CHECK \
+	rm -f *~ *.o *.lst COPY_CHECK \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			TROGDOR ENDING MUSIC GAME_OVER \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
 	cd intro && make clean
-	cd music && make_cean
+	cd music && make_clean
+	cd title && make clean
 	cd vid_logo && make clean
