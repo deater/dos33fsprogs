@@ -18,8 +18,8 @@ submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
-	./music/MUSIC ./copy/COPY_CHECK \
-	SAVE1 SAVE2 SAVE3
+	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
+	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
@@ -32,21 +32,15 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO 0   0
 	$(DOS33_RAW) peasant_disk1.dsk  6  0 ./title/TITLE       0   0
 	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  13 0 PARSE_INPUT.ZX02  0   0
+	$(DOS33_RAW) peasant_disk1.dsk  14 0 ./inventory/INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk1.dsk 30  0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-	SAVE1 SAVE2 SAVE3 ./inventory/INVENTORY PARSE_INPUT.ZX02
+	WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
-	$(DOS33_RAW) peasant_disk2.dsk  0  0 QBOOT      0   1
-	$(DOS33_RAW) peasant_disk2.dsk  0  2 QBOOT      1   1
-	$(DOS33_RAW) peasant_disk2.dsk  0  4 QBOOT      2   1
-	$(DOS33_RAW) peasant_disk2.dsk  0 11 SAVE1      0   1
-	$(DOS33_RAW) peasant_disk2.dsk  0 12 SAVE2      0   1
-	$(DOS33_RAW) peasant_disk2.dsk  0 13 SAVE3      0   1
-	$(DOS33_RAW) peasant_disk2.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk2.dsk  13 0 PARSE_INPUT.ZX02  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./inventory/INVENTORY  0   0
+	$(DOS33_RAW) peasant_disk2.dsk   0 0  WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
