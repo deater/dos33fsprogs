@@ -53,11 +53,11 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ./ending/ENDING \
-	CLIFF GAME_OVER INSIDE INN ARCHERY MAP
+	CLIFF ./game_over/GAME_OVER INSIDE INN ARCHERY ./map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
-	$(DOS33_RAW) peasant_disk3.dsk   3 0 GAME_OVER    0   0
-	$(DOS33_RAW) peasant_disk3.dsk   4 0 MAP          0   0
+	$(DOS33_RAW) peasant_disk3.dsk   3 0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk   6 0 ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
@@ -252,38 +252,11 @@ archery.o:	archery.s zp.inc ./inventory/inventory.inc \
 
 ###
 
-MAP:	map.o
-	ld65 -o MAP map.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+./map/MAP:	
+	cd map && make
 
-map.o:	map.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		graphics_map/map_graphics.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o map.o map.s -l map.lst
-
-
-
-###
-
-
-GAME_OVER:	game_over.o
-	ld65 -o GAME_OVER game_over.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-game_over.o:	game_over.s zp.inc \
-		graphics_over/game_over_graphics.inc \
-		graphics_over/game_over_animation.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o game_over.o game_over.s -l game_over.lst
-
-
+./game_over/GAME_OVER:
+	cd game_over && make
 
 ###
 
@@ -624,12 +597,6 @@ graphics_inn/graphics_inn.inc:
 graphics_inside/graphics_inside.inc:
 	cd graphics_inside && make
 
-graphics_map/map_graphics.inc:
-	cd graphics_map && make
-
-graphics_over/game_over_graphics.inc:
-	cd graphics_over && make
-
 graphics_peasantry/graphics_intro.inc:
 	cd graphics_peasantry && make
 
@@ -656,13 +623,13 @@ distclean:
 	cd graphics_cliff && make clean
 	cd graphics_inn && make clean
 	cd graphics_inside && make clean
-	cd graphics_map && make clean
-	cd graphics_over && make clean
 	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd copy && make distclean
 	cd ending && make distclean
+	cd game_over && make distclean
 	cd intro && make distclean
+	cd map && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
 	cd music && make distclean
@@ -671,12 +638,13 @@ distclean:
 clean:	
 	rm -f *~ *.o *.lst \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			GAME_OVER \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
 	cd copy && make clean
 	cd ending && make clean
+	cd game_over && make clean
 	cd intro && make clean
+	cd map && make clean
 	cd music && make clean
 	cd title && make clean
 	cd trogdor && make clean

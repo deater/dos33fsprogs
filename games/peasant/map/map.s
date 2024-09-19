@@ -4,12 +4,12 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory/inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE	= LOCATION_MAP
 
@@ -58,7 +58,7 @@ game_loop:
 	jmp	update_map_location
 
 
-.include "new_map_location.s"
+.include "../new_map_location.s"
 
 .include "graphics_map/map_graphics.inc"
 

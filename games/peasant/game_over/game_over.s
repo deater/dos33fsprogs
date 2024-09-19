@@ -4,10 +4,10 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
+.include "../qload.inc"
 
 
 game_over:
@@ -154,17 +154,11 @@ done_beep:
 ;forever:
 ;	jmp	forever
 
-.include "hgr_sprite.s"
-.include "speaker_beeps.inc"
+.include "../hgr_sprite.s"
+.include "../speaker_beeps.inc"
 
-;.include "wait_keypress.s"
-
-;.include "score.s"
-
-
-.include "wait_a_bit.s"
-;.include "loadsave_menu.s"
-.include "wait.s"
+.include "../wait_a_bit.s"
+.include "../wait.s"
 
 .include "graphics_over/game_over_graphics.inc"
 

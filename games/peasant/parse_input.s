@@ -3,7 +3,7 @@
 .include "qload.inc"
 
 .include "version.inc"
-.include "inventory.inc"
+.include "./inventory/inventory.inc"
 
 .include "tokens.inc"
 

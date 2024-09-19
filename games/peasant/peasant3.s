@@ -12,7 +12,7 @@
 .include "zp.inc"
 
 .include "qload.inc"
-.include "inventory.inc"
+.include "./inventory/inventory.inc"
 .include "parse_input.inc"
 
 LOCATION_BASE   = LOCATION_JHONKA_CAVE	; index starts here (10)
