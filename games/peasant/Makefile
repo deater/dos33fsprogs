@@ -16,8 +16,8 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 
-peasant_disk1.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
-	SAVE1 SAVE2 SAVE3 MUSIC COPY_CHECK
+peasant_disk1.dsk:	QBOOT QLOAD ./vid_logo/VID_LOGO TITLE ./intro/INTRO \
+	SAVE1 SAVE2 SAVE3 ./music/MUSIC COPY_CHECK
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
@@ -26,15 +26,15 @@ peasant_disk1.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
 	$(DOS33_RAW) peasant_disk1.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  3  0 MUSIC      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  4  0 VID_LOGO   0   0
+	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC      0   0
+	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO   0   0
 	$(DOS33_RAW) peasant_disk1.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO      0   0
 	$(DOS33_RAW) peasant_disk1.dsk 30 0 COPY_CHECK   0   0
 
-peasant_disk2.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
+peasant_disk2.dsk:	QBOOT QLOAD TITLE ./intro/INTRO \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-	SAVE1 SAVE2 SAVE3 MUSIC INVENTORY PARSE_INPUT.ZX02
+	SAVE1 SAVE2 SAVE3 INVENTORY PARSE_INPUT.ZX02
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  0  2 QBOOT      1   1
@@ -43,8 +43,6 @@ peasant_disk2.dsk:	QBOOT QLOAD VID_LOGO TITLE ./intro/INTRO \
 	$(DOS33_RAW) peasant_disk2.dsk  0 12 SAVE2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  0 13 SAVE3      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk2.dsk  3  0 MUSIC      0   0
-	$(DOS33_RAW) peasant_disk2.dsk  4  0 VID_LOGO   0   0
 	$(DOS33_RAW) peasant_disk2.dsk  6  0 TITLE      0   0
 	$(DOS33_RAW) peasant_disk2.dsk  9  0 ./intro/INTRO      0   0
 	$(DOS33_RAW) peasant_disk2.dsk  13 0 PARSE_INPUT.ZX02  0   0
@@ -196,16 +194,8 @@ qload.inc:	generate_common QLOAD
 
 ####
 
-music.inc:	generate_common MUSIC
-	./generate_common -a 0xd000 -s pt3_init_song music.lst > music.inc
-	./generate_common -a 0xd000 -s mockingboard_init music.lst >> music.inc
-	./generate_common -a 0xd000 -s reset_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s clear_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
-	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
-	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
-	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
-
+./music/music.inc:	./generate_common
+	cd music && make
 
 ###
 
@@ -224,20 +214,15 @@ inventory.o:	inventory.s \
 
 ###
 
-VID_LOGO:	vid_logo.o
-	ld65 -o VID_LOGO vid_logo.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-vid_logo.o:	vid_logo.s qload.inc \
-		hgr_overlay.s speaker_beeps.s \
-		graphics_vid/vid_graphics.inc
-	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
+./vi_logo/VID_LOGO:
+	cd vid_logo && make
 
 ###
 
 TITLE:	title.o
 	ld65 -o TITLE title.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-title.o:	title.s qload.inc music.inc \
+title.o:	title.s qload.inc ./music/music.inc \
 		graphics_title/title_graphics.inc \
 		graphics_title/altfire.inc \
 		directions.s \
@@ -440,7 +425,7 @@ trogdor.o:	trogdor.s zp.inc \
 ENDING:	ending.o
 	ld65 -o ENDING ending.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-ending.o:	ending.s zp.inc qload.inc music.inc \
+ending.o:	ending.s zp.inc qload.inc ./music/music.inc \
 		graphics_end/ending_graphics.inc sprites/peasant_sprites.inc \
 		sprites/ending_sprites.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -775,7 +760,8 @@ distclean:
 	cd graphics_vid && make clean
 	cd text && make clean
 	cd intro && make distclean
-
+	cd vid_logo && make distclean
+	cd music && make distclean
 ###
 
 clean:	
@@ -785,3 +771,5 @@ clean:
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
 	cd intro && make clean
+	cd music && make_cean
+	cd vid_logo && make clean

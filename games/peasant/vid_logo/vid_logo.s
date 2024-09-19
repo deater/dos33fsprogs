@@ -8,10 +8,10 @@
 
 ; with apologies to everyone
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
+.include "../qload.inc"
 
 intro_text:
 
@@ -487,27 +487,25 @@ delays:
 
 
 
-.include "hgr_overlay.s"
+.include "../hgr_overlay.s"
 
-.include "speaker_beeps.inc"
+.include "../speaker_beeps.inc"
 
-.include "text_print.s"
-.include "gr_offsets.s"
+.include "../text_print.s"
+.include "../gr_offsets.s"
 
-.include "wait_a_bit.s"
+.include "../wait_a_bit.s"
 
 .include "lc_detect.s"
 
-.include "pt3_lib_mockingboard.inc"
-.include "pt3_lib_detect_model.s"
-.include "pt3_lib_mockingboard_detect.s"
+.include "../pt3_lib/pt3_lib_mockingboard.inc"
+.include "../pt3_lib/pt3_lib_detect_model.s"
+.include "../pt3_lib/pt3_lib_mockingboard_detect.s"
 
-.include "ssi263.inc"
-.include "ssi263_detect.s"
+.include "../ssi263/ssi263.inc"
+.include "../ssi263/ssi263_detect.s"
 
-.include "wait.s"
-
-;.include "hgr_hgr2.s"
+.include "../wait.s"
 
 .include "graphics_vid/vid_graphics.inc"
 

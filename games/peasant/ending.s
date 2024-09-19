@@ -9,7 +9,7 @@
 .include "zp.inc"
 
 .include "qload.inc"
-.include "music.inc"
+.include "./music/music.inc"
 
 ending:
 
