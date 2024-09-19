@@ -9,7 +9,9 @@ SOUND_STATUS	=	$05
 MOCKINGBOARD_SLOT	= $06
 DISP_PAGE	= $07		; only in videlectrix intro?
 DRAW_PAGE	= $08
-NIBCOUNT	= $09
+
+WHICH_LOAD	= $09
+;NIBCOUNT	= $09
 CURRENT_DRIVE	= $0A
 DRIVE1_DISK	= $0B
 DRIVE2_DISK	= $0C
@@ -137,7 +139,7 @@ PREVIOUS_LOCATION= $8D
 ; savegame state
 ;=======================
 
-WHICH_LOAD	= $90
+;WHICH_LOAD	= $90
 PEASANT_X	= $91
 PEASANT_Y	= $92
 PEASANT_DIR	= $93

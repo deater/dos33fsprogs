@@ -29,6 +29,8 @@ cliff_climb:
 
 	jsr	HOME
 
+	bit	SET_TEXT
+
 	; clear keyboard
 
 	bit	KEYRESET
@@ -74,9 +76,9 @@ restart_game:
 	sta	PEASANT_FALLING
 	sta	MAX_HEIGHT
 
-	lda	#10				; starting location
+	lda	#22				; starting location
 	sta	PEASANT_X
-	lda	#90
+	lda	#86
 	sta	PEASANT_Y
 
 	; default for peasant quest is the tables are for page2
@@ -495,10 +497,22 @@ cliff_game_over:
 wait_until_keypress2:
 	lda	KEYPRESS				; 4
 	bpl	wait_until_keypress2			; 3
+
+	cmp	#'N'|$80
+	beq	exit_game
+
+	cmp	#'n'|$80
+	beq	exit_game
+
 	bit	KEYRESET	; clear the keyboard buffer
 
 	jmp	restart_game
 
+exit_game:
+	lda	#0
+	sta	WHICH_LOAD
+
+	rts			; will this work?
 
 cliff_reload_bg:
 	jsr	reset_enemy_state
@@ -631,7 +645,8 @@ losing_number=losing_text+34
 losing_text:
 .byte	0,0,"YOU FELL",0
 .byte	0,2,"YOU MADE IT TO LEVEL 02",0
-.byte	0,4,"GOOD JORB!",0,$FF
+.byte	0,4,"GOOD JORB!",0
+.byte	0,6,"TRY AGAIN? (Y/N)",0,$FF
 
 priority_data_l:
 	.byte <priority_cliff1,<priority_cliff2,<priority_cliff3
@@ -860,6 +875,10 @@ bird_no_collide:
 	; which rock in X
 
 rock_collide:
+	; first check if out
+
+	lda	rock_state,X
+	bne	rock_no_collide		; don't collide if not falling
 
 	; 0 = bit, 1 = little
 	lda	rock_type,X
