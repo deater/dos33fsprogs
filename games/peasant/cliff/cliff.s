@@ -6,12 +6,12 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "./inventory/inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory/inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE	= LOCATION_CLIFF_BASE ; (20)
 
@@ -236,23 +236,20 @@ exiting_cliff:
 
 
 
-.include "draw_peasant.s"
-.include "move_peasant.s"
+.include "../draw_peasant.s"
+.include "../move_peasant.s"
 
-.include "gr_copy.s"
-.include "hgr_copy.s"
+.include "../gr_copy.s"
+.include "../hgr_copy.s"
 
-.include "new_map_location.s"
+.include "../new_map_location.s"
 
+.include "../keyboard.s"
 
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
-
-.include "keyboard.s"
-
-.include "wait.s"
-.include "wait_a_bit.s"
-
-.include "version.inc"
+.include "../version.inc"
 
 
 .include "graphics_cliff/cliff_graphics.inc"
@@ -291,6 +288,6 @@ verb_tables_hi:
 
 
 cliff_text_zx02:
-.incbin "DIALOG_CLIFF.ZX02"
+.incbin "../DIALOG_CLIFF.ZX02"
 
 .include "cliff_actions.s"

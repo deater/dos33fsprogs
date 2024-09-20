@@ -4,12 +4,12 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "./inventory/inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory/inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE	= LOCATION_ARCHERY ; (28)
 
@@ -138,23 +138,10 @@ game_over:
 
 	rts
 
+.include "../new_map_location.s"
 
-
-
-;.include "draw_peasant.s"
-
-;.include "gr_copy.s"
-
-.include "new_map_location.s"
-
-;.include "peasant_move.s"
-
-;.include "score.s"
-
-;.include "keyboard.s"
-
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
 .include "graphics_archery/archery_graphics.inc"
 

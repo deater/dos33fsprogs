@@ -47,17 +47,18 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ./ending/ENDING \
-	CLIFF ./game_over/GAME_OVER INSIDE INN ARCHERY ./map/MAP
+	./cliff/CLIFF ./game_over/GAME_OVER INSIDE INN \
+	./archery/ARCHERY ./map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk3.dsk   3 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk3.dsk   6 0 ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk3.dsk   6 0 ./archery/ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  29 0 CLIFF	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./cliff/CLIFF	  0   0
 
 
 
@@ -214,35 +215,11 @@ inventory/INVENTORY:
 
 ####
 
-CLIFF:	cliff.o
-	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+./cliff/CLIFF:	DIALOG_CLIFF.ZX02
+	cd cliff && make
 
-cliff.o:	cliff.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		cliff_actions.s DIALOG_CLIFF.ZX02 dialog_cliff.inc \
-		graphics_cliff/cliff_graphics.inc sprites/peasant_sprites.inc \
-		graphics_cliff/priority_cliff.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o cliff.o cliff.s -l cliff.lst
-
-###
-
-ARCHERY:	archery.o
-	ld65 -o ARCHERY archery.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-archery.o:	archery.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		graphics_archery/archery_graphics.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o archery.o archery.s -l archery.lst
+./archery/ARCHERY:
+	cd archery && make
 
 ###
 
@@ -579,12 +556,6 @@ dialog_test.o:	dialog_test.s
 
 ####
 
-graphics_archery/archery_graphics.inc:
-	cd graphics_archery && make
-
-graphics_cliff/cliff_graphics.inc:
-	cd graphics_cliff && make
-
 graphics_inn/graphics_inn.inc:
 	cd graphics_inn && make
 
@@ -620,6 +591,8 @@ distclean:
 	cd graphics_inside && make clean
 	cd graphics_peasantry && make clean
 	cd text && make clean
+	cd archery && make distclean
+	cd cliff && make distclean
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
@@ -635,6 +608,8 @@ clean:
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
+	cd archery && make clean
+	cd cliff && make clean
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean

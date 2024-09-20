@@ -1,4 +1,4 @@
-.include "tokens.inc"
+.include "../tokens.inc"
 
 	;=======================
 	;=======================
@@ -247,4 +247,4 @@ cave_outer_do_climb:
 
 
 
-.include "dialog_cliff.inc"
+.include "../dialog_cliff.inc"
