@@ -216,7 +216,7 @@ ssi_not_found:
 
 mockingboard_notfound:
 
-
+.if 0
 	;==================================
 	; check if disk in drive #2
 	;==================================
@@ -245,7 +245,7 @@ yes_floppy_drive2:
 no_floppy_drive2:
 
 done_drive2_check:
-
+.endif
 
 skip_all_checks:
 
@@ -371,6 +371,9 @@ no_note:
 done_loop:
 
 	bit	KEYRESET
+
+	lda	#LOAD_TITLE             ; next load title
+	sta	WHICH_LOAD
 
 	rts
 

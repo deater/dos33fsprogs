@@ -44,8 +44,6 @@ INSTRUMENT1    =       $13
 INSTRUMENT2    =       $14
 MADDRL         =       $15
 MADDRH         =       $16
-LOC4E          =       $4E
-COUNT256       =       $4F
 
 
 HGR_BITS	= $1C
@@ -60,8 +58,24 @@ MASK		= $2E
 MASK_COUNTDOWN	= $2F
 PEASANT_PRIORITY	= $30
 
+; this is the structure for a ProDOS smartport command, at least
+; for a read (command=1)
+	tmpsec	= $3c
+
+	COMMAND	= $42		; ProDOS constant
+	UNIT	= $43		; ProDOS constant
+	ADRLO	= $44		; ProDOS constant
+	ADRHI	= $45		; ProDOS constant
+	BLOKLO	= $46		; ProDOS constant
+	BLOKHI	= $47		; ProDOS constant
+
+
+
 SEEDL = $4E
 SEEDH = $4F
+
+LOC4E          =       $4E	; electric duet
+COUNT256       =       $4F
 
 
 INVENTORY_MASK	= $60

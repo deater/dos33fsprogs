@@ -6,12 +6,12 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts
 EMPTY_DISK = ../../empty_disk
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+PRODOSDIR = ../../utils/prodos-utils/
 PRODOS = ../../utils/prodos-utils/prodos
 PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 
-all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
-#	peasant.2mg
+all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk peasant.2mg
 
 submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
 	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
@@ -63,7 +63,66 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 
 
 
+peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
+	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
+	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
+	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02 ./game_over/GAME_OVER
+	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
+	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 11` SAVE1      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 12` SAVE2      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 13` SAVE3      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 3  0` ./music/MUSIC       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 4  0` ./vid_logo/VID_LOGO 0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 6  0` ./title/TITLE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 9  0` ./intro/INTRO       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 13 0` PARSE_INPUT.ZX02  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 14 0` ./inventory/INVENTORY  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 15 0` ./game_over/GAME_OVER    0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 0 30 0` ./copy/COPY_CHECK   0   0
+
 ###
+
+dts_block:	dts_block.o
+	$(CC) $(LFLAGS) -o dts_block dts_block.o
+
+dts_block.o:	dts_block.c
+	$(CC) $(CFLAGS) -c dts_block.c
+
+###
+
+PROBOOTHD:	proboothd.o
+	ld65 -o PROBOOTHD proboothd.o -C $(LINKER_SCRIPTS)/apple2_800.inc
+
+proboothd.o:	proboothd.s
+	ca65 -o proboothd.o proboothd.s -l proboothd.lst
+
+###
+
+QLOAD_HD:       qload_hd.o
+	ld65 -o QLOAD_HD qload_hd.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
+
+qload_hd.o:	qload_hd.s qboot.inc \
+		zx02_optim.s \
+		hgr_font.s \
+		draw_box.s \
+		hgr_rectangle.s \
+		hgr_1x28_sprite_mask.s \
+		hgr_partial_save.s \
+		hgr_input.s \
+		hgr_tables.s \
+		hgr_text_box.s \
+		text/word_list.s \
+		clear_bottom.s \
+		hgr_hgr2.s \
+		hgr_copy.s \
+		gr_offsets.s \
+		qkumba_popwr.s \
+		random16.s
+	ca65 -o qload_hd.o qload.s -DFLOPPY=0 -l qload_hd.lst
+
+####
 
 QBOOT:	qboot_sector.o
 	ld65 -o QBOOT qboot_sector.o -C $(LINKER_SCRIPTS)/apple2_800.inc
@@ -93,9 +152,8 @@ qload.o:	qload.s qboot.inc \
 		hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
-		random16.s \
-		drive2.s
-	ca65 -o qload.o qload.s -l qload.lst
+		random16.s
+	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
 
 ###
 
@@ -145,10 +203,8 @@ qboot.inc:	generate_common QBOOT
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
 	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
-#	./generate_common -a 0xb00 -s decompress_lzsa2_fast qload.lst >> qload.inc
-#	./generate_common -a 0xb00 -s getsrc_smc qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx02_full_decomp qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_h qload.lst >> qload.inc

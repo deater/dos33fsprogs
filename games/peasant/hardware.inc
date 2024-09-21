@@ -6,8 +6,14 @@ KEYRESET	=	$C010
 ; SOFT SWITCHES
 CLR80COL	=	$C000	; PAGE1/PAGE1 normal
 SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
+READMAINMEM	=	$C002	; (w) to read from main mem ($0200..$BFFF)
+READAUXMEM	=	$C003	; (w) to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM	=	$C004	; (w) to write to main mem ($0200..$BFFF)
+WRITEAUXMEM	=	$C005	; (w)to write to aux mem ($0200..$BFFF)
+SETSTDZP	=	$C008	; (w) to use main mem stack/zp ($00FF-$01FF)
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+PRIMARYCHARSET	=	$C00E	; (w) to disable mousetext
 TBCOLOR		=	$C022	; IIgs text foreground / background colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
@@ -51,6 +57,7 @@ HPLOT0		= $F457		; plot at (Y,X), (A)
 ;CLRTOP	= $F836			; clear only top of low-res screen
 ;SETCOL	= $F864			; COLOR=A
 ;ROM_TEXT2COPY = $F962		; iigs
+INIT_TEXT = $FB2F		; set lo-res/page1 and call text
 TEXT	= $FB36							; qboot
 ;TABV	= $FB5B			; VTAB to A
 ROM_MACHINEID = $FBB3		; iigs
@@ -60,12 +67,12 @@ ROM_MACHINEID = $FBB3		; iigs
 HOME	= $FC58			; Clear the text screen		; qboot
 ;WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
 ;CROUT1	= $FD8B
-;SETINV	= $FE80			; INVERSE
-;SETNORM	= $FE84			; NORMAL
+SETINV	= $FE80			; INVERSE
+SETNORM	= $FE84			; NORMAL
 COUT	= $FDED			; output A to screen		; qboot
 COUT1	= $FDF0			; output A to screen		; qload
-
-
+SETKBD	= $FE89			; set input to keyboard
+SETVID	= $FE93			; set output to video screen
 
 
 
