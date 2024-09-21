@@ -250,9 +250,9 @@ insert_disk_string:
 which_disk_array:
 	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
 	.byte 2,2,2,2		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 2,2,1,2		; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte 1,1,1,2		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte 2,2,2		; INSIDE, ARCHERY, MAP
+	.byte 3,3,1,3		; TROGDOR, ENDING, MUSIC, CLIFF
+	.byte 1,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+	.byte 3,3,3		; INSIDE, ARCHERY, MAP
 	.byte 1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte $f		; disk detect
 

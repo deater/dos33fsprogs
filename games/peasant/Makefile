@@ -39,19 +39,20 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-	WBOOT2
+	./wrong_boot/WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
-	$(DOS33_RAW) peasant_disk2.dsk   0 0  WBOOT2      0   1
+	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 PEASANT2	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
-peasant_disk3.dsk:	WBOOT2 ./trogdor/TROGDOR ./ending/ENDING \
+peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	./cliff/CLIFF ./game_over/GAME_OVER INSIDE INN \
-	./archery/ARCHERY ./map/MAP
+	./archery/ARCHERY ./map/MAP \
+	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
-	$(DOS33_RAW) peasant_disk3.dsk   0 0  WBOOT2      0   1
+	$(DOS33_RAW) peasant_disk3.dsk   0 0  ./wrong_boot/WBOOT3      0   1
 	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk   6 0 ./archery/ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
@@ -98,11 +99,12 @@ qload.o:	qload.s qboot.inc \
 
 ###
 
-WBOOT2:	wrong_boot2.o
-	ld65 -o WBOOT2 wrong_boot2.o -C ../../linker_scripts/apple2_800.inc
+./wrong_boot/WBOOT2:
+	cd wrong_boot && make
 
-wrong_boot2.o: 	wrong_boot2.s
-	ca65 -o wrong_boot2.o wrong_boot2.s -l wrong_boot2.lst
+./wrong_boot/WBOOT3:
+	cd wrong_boot && make
+
 
 ###
 
@@ -600,6 +602,7 @@ distclean:
 	cd map && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
+	cd wrong_boot && make distclean
 	cd music && make distclean
 ###
 
@@ -619,3 +622,4 @@ clean:
 	cd title && make clean
 	cd trogdor && make clean
 	cd vid_logo && make clean
+	cd wrong_boot && make clean
