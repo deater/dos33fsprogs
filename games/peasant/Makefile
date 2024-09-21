@@ -70,17 +70,30 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 11` SAVE1      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 12` SAVE2      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 0 13` SAVE3      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 3  0` ./music/MUSIC       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 4  0` ./vid_logo/VID_LOGO 0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 6  0` ./title/TITLE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 9  0` ./intro/INTRO       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 13 0` PARSE_INPUT.ZX02  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 14 0` ./inventory/INVENTORY  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 15 0` ./game_over/GAME_OVER    0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 0 30 0` ./copy/COPY_CHECK   0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 11` SAVE1      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` SAVE2      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 13` SAVE3      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 3  0` ./music/MUSIC       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./vid_logo/VID_LOGO 0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 6  0` ./title/TITLE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 9  0` ./intro/INTRO       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 13 0` PARSE_INPUT.ZX02  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 14 0` ./inventory/INVENTORY  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 15 0` ./game_over/GAME_OVER    0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` PEASANT2	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 25 0` PEASANT3	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 30 0` PEASANT4	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  0 0` ./wrong_boot/WBOOT3      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  4 0` ./map/MAP          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  6 0` ./archery/ARCHERY      0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  9 0` INSIDE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./trogdor/TROGDOR	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./ending/ENDING	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./cliff/CLIFF	  0   0
 
 ###
 
@@ -259,7 +272,7 @@ qload.inc:	generate_common QLOAD
 inventory/INVENTORY:	
 	cd inventory && make
 
-./vid_logo/VID_LOGO:
+./vid_logo/VID_LOGO: qload.inc
 	cd vid_logo && make
 
 ./title/TITLE:	./music/music.inc
@@ -663,7 +676,7 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst \
+	rm -f *~ *.o *.lst qload.inc \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols

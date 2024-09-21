@@ -15,7 +15,7 @@ qload_floppy:
 
 main_game_loop:
 
-	jsr	load_file		; actually load intro
+	jsr	load_file_internal	; actually load intro
 
 entry_smc:
 	jsr	$6000			; run intro
@@ -24,7 +24,7 @@ entry_smc:
 ;	sta	WHICH_LOAD
 
 
-;	jsr	load_file
+;	jsr	load_file_internal
 
 ;	jsr	$6000			; all entry points currently $6000
 	jmp	main_game_loop
@@ -33,7 +33,7 @@ entry_smc:
 	;====================================
 	; loads file specified by WHICH_LOAD
 	;====================================
-load_file:
+load_file_internal:
 	ldx	WHICH_LOAD
 
 	lda	which_disk_array,X		; get disk# for file to load

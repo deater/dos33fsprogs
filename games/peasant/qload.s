@@ -72,6 +72,8 @@ length_array:
 	.byte   1		; disk detect
 
 
+load_file:
+	jmp	load_file_internal
 
 .include "qkumba_popwr.s"
 .include "zx02_optim.s"

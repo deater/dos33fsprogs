@@ -30,7 +30,7 @@ proboot_start:
 	sta	$C082		; read rom / no write (language card)
 	sta	PRIMARYCHARSET	; turn off mouse text
 	sta	EIGHTYCOLOFF	; disable 80-col mode
-h	sta	CLR80COL
+	sta	CLR80COL
 	sta	READMAINMEM	; make sure not using aux mem
 	sta	WRITEMAINMEM
 	sta	SETSTDZP

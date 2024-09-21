@@ -23,14 +23,14 @@ slot_smc:
 	; init the write code if needed
 	; ???
 
-	lda	#0
+	lda	#1
 	sta	CURRENT_DISK
 
 	lda	#LOAD_VID_LOGO
 	sta	WHICH_LOAD
 
 main_game_loop:
-	jsr	load_file
+	jsr	load_file_internal
 
 entry_point_smc:
 	jsr	$6000			; most entry points currently $6000
@@ -47,14 +47,16 @@ entry_point_smc:
 	;====================================
 	; loads file specified by WHICH_LOAD
 	;====================================
-load_file:
+load_file_internal:
 	ldx	WHICH_LOAD
 
 	lda	load_address_array,X
 	sta	ADRHI
 	sta	entry_point_smc+2
 
-	lda	CURRENT_DISK
+	lda	which_disk_array,X		; CURRENT DISK
+	sta	CURRENT_DISK
+
 	sta	BLOKHI
 	inc	BLOKHI		; off by one
 	lda	track_array,X	; track
