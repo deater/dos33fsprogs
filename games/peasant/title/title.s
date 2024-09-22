@@ -301,7 +301,7 @@ duet_finished:
 
 	rts
 
-.include "directions.s"
+.include "tips.s"
 
 .include "../music/duet.s"
 
