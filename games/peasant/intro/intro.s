@@ -16,6 +16,7 @@ peasant_quest_intro:
 	sta	ESC_PRESSED
 	sta	LEVEL_OVER
 	sta	PEASANT_STEPS
+	sta	INPUT_ACTIVE
 	sta	GAME_STATE_2
 
 	jsr	hgr_make_tables

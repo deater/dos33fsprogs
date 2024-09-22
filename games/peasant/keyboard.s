@@ -7,12 +7,15 @@
 	; Movement
 	;	Note in the game, pressing a key starts walking
 	;	To stop you have to press the same direction again
+	;	This is convenient as this is how actual Apple II works
 
 	; Text
-	;	We require ENTER/RETURN pressed before entering text
-	;		this is mildly annoying, but lets us use
-	;		WASD to walk.  The Apple II+ doesn't have
-	;		up or down buttons
+	;	We originally tries having WASD but it's a bit of a pain
+	;		so instead on Apple II+ use :,/ for up/down
+	;		and have text input like original game
+
+	;	Can walk while typing text, but
+	;		Once enter is pressed, stop walking
 
 check_keyboard:
 
@@ -21,17 +24,19 @@ check_keyboard:
 	rts
 
 key_was_pressed:
-	inc	SEEDL
+	bit	KEYRESET
 
-	and	#$5f		 ; strip off high bit and make uppercase
+	inc	SEEDL		; does this help?
+
+	and	#$7f			; strip off high bit
+
+	; don't convert to uppercase, we can handle lowercase
 
 	;==========================
 	; Left
 	;==========================
 check_left:
 	cmp	#$8
-	beq	left_pressed
-	cmp	#'A'
 	bne	check_right
 left_pressed:				; if peasant_moving_left, stop
 					; otherwise clear all movement, move left
@@ -54,8 +59,6 @@ continue_left:
 
 check_right:
 	cmp	#$15
-	beq	right_pressed
-	cmp	#'D'
 	bne	check_up
 right_pressed:
 
@@ -76,7 +79,7 @@ continue_right:
 	jmp	done_check_keyboard
 
 check_up:
-	cmp	#'W'
+	cmp	#';'
 	beq	up_pressed
 	cmp	#$0B
 	bne	check_down
@@ -102,7 +105,7 @@ continue_up:
 	jmp	done_check_keyboard
 
 check_down:
-	cmp	#'S'
+	cmp	#'/'
 	beq	down_pressed
 	cmp	#$0A
 	bne	check_enter
@@ -128,19 +131,29 @@ continue_down:
 check_enter:
 	cmp	#13
 	beq	enter_pressed
-	cmp	#' '
-	bne	done_check_keyboard
-enter_pressed:
-	jsr	clear_bottom
+
+all_other_keys:
+
 	jsr	hgr_input
+
+	; could tail-call here
+
+	jmp	done_check_keyboard
+
+enter_pressed:
+
+	jsr	stop_peasant
+
+	jsr	done_hgr_input
 
 	jsr	parse_input
 
 	jsr	clear_bottom
 
-done_check_keyboard:
+	lda	#0		; reset buffer
+	sta	input_buffer
 
-	bit	KEYRESET
+done_check_keyboard:
 
 	rts
 

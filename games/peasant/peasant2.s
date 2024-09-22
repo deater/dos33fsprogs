@@ -344,16 +344,24 @@ skip_level_specific:
 	;====================
 	; check keyboard
 
+	lda	#13
+	sta	WAIT_LOOP
+wait_loop:
 	jsr	check_keyboard
 
 
+	lda	#50	; approx 7ms
+	jsr	wait
+
+	dec	WAIT_LOOP
+	bne	wait_loop
 
 
 	;=====================
 	; delay
 
-	lda	#200
-	jsr	wait
+;	lda	#200	; approx 100ms
+;	jsr	wait
 
 	jmp	game_loop
 
