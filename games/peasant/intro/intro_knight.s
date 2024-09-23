@@ -73,13 +73,14 @@ intro_knight:
 
 knight_walk_loop:
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
 
-	jsr	restore_bg_1x28
+;	jsr	restore_bg_1x28
 
+	;======================
 	; draw peasant
 
 	lda	FRAME
@@ -150,6 +151,12 @@ done_knight_action:
 	bne	done_knight
 
 	inc	FRAME
+
+	jsr	really_move_peasant
+
+        jsr     erase_peasant
+
+
 
 	jmp	knight_walk_loop
 

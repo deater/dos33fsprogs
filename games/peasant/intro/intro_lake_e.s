@@ -37,8 +37,8 @@ intro_lake_east:
 	jsr	gr_copy_to_page1
 
 
-	;=====================
-	; load bg
+	;=========================
+	; load bg to $2000 (PAGE1)
 
 	lda	#<(lake_e_zx02)
 	sta	zx_src_l+1
@@ -72,12 +72,12 @@ intro_lake_east:
 
 lake_e_walk_loop:
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	restore_bg_1x28
+;	lda	PEASANT_X
+;	sta	CURSOR_X
+;	lda	PEASANT_Y
+;	sta	CURSOR_Y
+;
+;	jsr	restore_bg_1x28
 
 	; draw peasant
 
@@ -88,17 +88,19 @@ lake_e_walk_loop:
 	lda	lake_e_path,X
 	bmi	done_lake_e
 	sta	PEASANT_X
-	sta	CURSOR_X
+;	sta	CURSOR_X
 
 	inx
 	lda	lake_e_path,X
 	sta	PEASANT_Y
-	sta	CURSOR_Y
+;	sta	CURSOR_Y
 
 ;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
+	;=======================
+	; handle special action
 
 	lda	FRAME
 check_lake_e_action1:
@@ -135,6 +137,10 @@ done_lake_e_action:
 	bne	done_lake_e
 
 	inc	FRAME
+
+	jsr	really_move_peasant
+
+	jsr	erase_peasant
 
 	jmp	lake_e_walk_loop
 

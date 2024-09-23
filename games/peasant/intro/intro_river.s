@@ -38,7 +38,7 @@ intro_river:
 
 
 	;====================
-	; load bg
+	; load bg to $2000 (PAGE1)
 
 
 	lda	#<(river_zx02)
@@ -57,28 +57,13 @@ intro_river:
 
 	jsr	intro_print_title
 
-	;====================
-	; save background
-
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
 
 	;=======================
 	; walking
 
-;	jsr	save_bg_1x28
-
 river_walk_loop:
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-	jsr	restore_bg_1x28
-
+	;====================
 	; draw peasant
 
 	lda	FRAME
@@ -88,16 +73,15 @@ river_walk_loop:
 	lda	river_path,X
 	bmi	done_river
 	sta	PEASANT_X
-	sta	CURSOR_X
 
 	inx
 	lda	river_path,X
 	sta	PEASANT_Y
-	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
+
+	;=========================
+	; handle special action
 
 
 	lda	FRAME
@@ -135,6 +119,10 @@ done_river_action:
 	bne	done_river
 
 	inc	FRAME
+
+	jsr	really_move_peasant
+
+	jsr	erase_peasant
 
 	jmp	river_walk_loop
 

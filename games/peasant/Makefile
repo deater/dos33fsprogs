@@ -13,9 +13,6 @@ PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk peasant.2mg
 
-submit:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
-	zip peasant.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
-
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
@@ -650,6 +647,16 @@ sprites/peasant_sprites.inc:
 text/common.inc.lookup:
 	cd text && make
 
+
+###
+
+submit:	peasant_floppies.zip peasant.2mg.zip
+
+peasant_floppies.zip:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+	zip peasant_floppies.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+
+peasant.2mg.zip:	peasant.2mg
+	zip peasant.2mg.zip peasant.2mg
 
 ###
 

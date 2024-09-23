@@ -124,9 +124,18 @@ check_cottage_action2:
 
 	;=======================
 	; un-draw the text box
+
+	; FIXME: have it auto-save to one of the slots
+
+	lda	#12
+	sta	SAVED_Y1
+	lda	#100
+	sta	SAVED_Y2
+
 	lda	#0
 	ldx	#39
-	jsr	hgr_partial_restore
+
+	jsr	hgr_partial_restore2
 
 	;=======================
 	; display cottage text 2
@@ -141,9 +150,15 @@ check_cottage_action3:
 
 	;=========================
 	; undraw the text box
+
+	lda	#12
+	sta	SAVED_Y1
+	lda	#100
+	sta	SAVED_Y2
+
 	lda	#0
 	ldx	#39
-	jsr	hgr_partial_restore
+	jsr	hgr_partial_restore2
 
 	;=========================
 	; display cottage text 3
@@ -180,19 +195,8 @@ now_wait:
 
 	inc	FRAME
 
+	jsr	really_move_peasant
 
-really_move_peasant:
-
-        ; increment step count, wrapping at 6
-
-        inc     PEASANT_STEPS
-        lda     PEASANT_STEPS
-        cmp     #6
-        bne     no_peasant_wrap
-        lda     #0
-        sta     PEASANT_STEPS
-
-no_peasant_wrap:
 	jsr	erase_peasant
 
 	jmp	cottage_walk_loop

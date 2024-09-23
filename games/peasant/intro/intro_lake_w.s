@@ -40,8 +40,8 @@ intro_lake_west:
 	jsr	gr_copy_to_page1
 
 
-	;==================
-	; load background
+	;=================================
+	; load background to $2000 (PAGE1)
 
 	lda	#<(lake_w_zx02)
 	sta	zx_src_l+1
@@ -82,6 +82,7 @@ lake_w_walk_loop:
 
 ;	jsr	restore_bg_1x28
 
+	;===============
 	; draw peasant
 
 	lda	FRAME
@@ -91,18 +92,20 @@ lake_w_walk_loop:
 	lda	lake_w_path,X
 	bmi	done_lake_w
 	sta	PEASANT_X
-	sta	CURSOR_X
+;	sta	CURSOR_X
 
 	inx
 	lda	lake_w_path,X
 	sta	PEASANT_Y
-	sta	CURSOR_Y
+;	sta	CURSOR_Y
 
 ;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
 
+	;============================
+	; handle special action
 
 
 	lda	FRAME
@@ -150,6 +153,10 @@ done_lake_w_action:
 	bne	done_lake_w
 
 	inc	FRAME
+
+	jsr	really_move_peasant
+
+	jsr	erase_peasant
 
 	jmp	lake_w_walk_loop
 

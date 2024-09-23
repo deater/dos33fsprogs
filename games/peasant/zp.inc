@@ -55,8 +55,11 @@ GBASH		= $27
 BASL		= $28
 BASH		= $29
 MASK		= $2E
-MASK_COUNTDOWN	= $2F
-PEASANT_PRIORITY	= $30
+MASK0			= $2F   ; used by priority code in bg_mask
+MASK1			= $30
+MASK2			= $31
+PEASANT_PRIORITY	= $32
+MASK_COUNTDOWN		= $33
 
 ; this is the structure for a ProDOS smartport command, at least
 ; for a read (command=1)

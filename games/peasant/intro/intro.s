@@ -201,9 +201,32 @@ intro_print_title:
 	jmp	hgr_put_string		; tail call
 
 
+	;================================
+	; really_move_peasant
+
+really_move_peasant:
+
+        ; increment step count, wrapping at 6
+
+        inc     PEASANT_STEPS
+        lda     PEASANT_STEPS
+        cmp     #6
+        bne     no_peasant_wrap
+        lda     #0
+        sta     PEASANT_STEPS
+
+no_peasant_wrap:
+        jsr     erase_peasant	; tail?
+	rts
+
+
+
+
 	; background restore parameters
 	; currently 5, should check this and error if we overflow
 
+save_valid:
+	.byte	0, 0, 0, 0, 0, 0
 save_xstart:
 	.byte   0, 0, 0, 0, 0, 0
 save_xend:

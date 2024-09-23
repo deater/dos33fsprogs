@@ -1,0 +1,20 @@
+You've been subscribed to the sometimes weekly
+	Peasant's Quest for Apple II update newsletter
+
+Recent changes: (version 0.85 released)
+	+ Now is on 3 disks instead of 2.  Much more annoying to play with
+	  actual floppy disks but makes other things work better
+	+ Added support for hard drive image.  If your emulator supports
+	  this then no need to swap floppies at all.  Also this is good
+	  for emulators where you can't swap floppies (like the internet
+	  archive in-browser one)
+	+ Updated input code to match the original game behavior
+	  (before it had a hacked-together proof-of-concept way for typing
+	  things in)
+	+ Started merging in the updated peasant sprite support.  For now
+	  only in intro.  Still has issues.
+	+ You can play through most of the game, though many animations
+	  and sprite-changes not implemented yet.  Currently you get stuck
+	  at the cliff climb as I haven't merged that code in yet.
+	  If you have a save game at the top you can complete the game
+	  (but parts of the final cliff-top sequence are missing)
