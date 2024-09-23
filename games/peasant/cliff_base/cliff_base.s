@@ -1,28 +1,33 @@
 ; Peasant's Quest
 
-; Cliff
+; Cliff Base
 
-;	Cliff base, cliff heights, trogdor outer
+; just the cliff base
+;	we're going crazy with disk accesses now
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "../hardware.inc"
 .include "../zp.inc"
+.include "../hardware.inc"
 
+.include "../peasant_sprite.inc"
 .include "../qload.inc"
 .include "../inventory/inventory.inc"
 .include "../parse_input.inc"
 
+collision_location = $bc00
+
 LOCATION_BASE	= LOCATION_CLIFF_BASE ; (20)
 
 cliff_base:
+
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
 
 	jsr	hgr_make_tables
-;	jsr	hgr2
 
+	;================================
 	; decompress dialog to $D000
 
 	lda	#<cliff_text_zx02
@@ -34,7 +39,7 @@ cliff_base:
 
 	jsr	zx02_full_decomp
 
-
+	;===============================
 	; update score
 
 	jsr	update_score
@@ -91,6 +96,15 @@ new_location:
 
 	jsr	gr_copy_to_page1
 
+	; copy collision detection info
+
+	ldx	#0
+col_copy_loop:
+	lda	$2400,X
+	sta	collision_location,X
+	inx
+	bne	col_copy_loop
+
 
 	;=====================
 	; load bg
@@ -105,11 +119,11 @@ new_location:
 	lda	map_backgrounds_hi,X
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$20				; load to $2000
 
 	jsr	zx02_full_decomp
 
-	jsr	hgr_copy
+	jsr	hgr_copy			; copy to $4000
 
 	;===================
 	; put peasant text
@@ -121,10 +135,26 @@ new_location:
 
 	jsr	hgr_put_string
 
+	;===================
 	; put score
 
 	jsr	print_score
 
+
+	;========================
+	; Load Peasant Sprites
+	;========================
+	; Note: to get to this point of the game you have to be
+	;	in a robe and on fire, so we should enforce that
+
+	lda	#<walking_sprite_data
+	sta	ZX0_src
+	lda	#>walking_sprite_data
+	sta	ZX0_src+1
+
+	lda	#$a0
+
+	jsr	zx02_full_decomp
 
 	;===========================
 	;===========================
@@ -140,6 +170,14 @@ game_loop:
 
 	jsr	move_peasant
 
+	;====================
+	; check if done level
+
+	lda	LEVEL_OVER
+	bmi	oops_new_location
+	bne	level_over
+
+
 	;=====================
 	; always draw peasant
 
@@ -153,17 +191,26 @@ game_loop:
 	;======================
 	; check keyboard
 
+	; original code also waited approximately 100ms?
+	; this led to keypressed being lost
+
+	lda	#13
+	sta	WAIT_LOOP
+wait_loop:
 	jsr	check_keyboard
 
-	lda	LEVEL_OVER
-	bmi	oops_new_location
-	bne	level_over
+	lda	#50		; approx 7ms
+	jsr	wait
+
+	dec	WAIT_LOOP
+	bne	wait_loop
+
 
 
 	; delay
 
-	lda	#200
-	jsr	wait
+;	lda	#200
+;	jsr	wait
 
 
 	jmp	game_loop
@@ -234,10 +281,13 @@ exiting_cliff:
 	rts
 
 
+.include "../draw_peasant_new.s"
+.include "../move_peasant_new.s"
 
+.include "../hgr_sprite_bg_mask.s"
+.include "../gr_offsets.s"
+.include "../hgr_partial_restore.s"
 
-.include "../draw_peasant.s"
-.include "../move_peasant.s"
 
 .include "../gr_copy.s"
 .include "../hgr_copy.s"
@@ -291,3 +341,6 @@ cliff_text_zx02:
 .incbin "../DIALOG_CLIFF.ZX02"
 
 .include "cliff_actions.s"
+
+walking_sprite_data:
+	.incbin "../sprites_peasant/walking_sprites.zx02"

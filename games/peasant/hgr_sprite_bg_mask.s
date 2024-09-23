@@ -420,3 +420,6 @@ ysave:
 .byte $00
 ;xsave:
 ;.byte $00
+
+
+.include "hgr_restore_data.s"

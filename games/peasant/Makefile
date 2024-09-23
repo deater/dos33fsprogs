@@ -45,7 +45,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
-	./cliff/CLIFF ./game_over/GAME_OVER INSIDE INN \
+	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER INSIDE INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -56,7 +56,7 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./cliff/CLIFF	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./cliff_base/CLIFF_BASE	  0   0
 
 
 
@@ -90,7 +90,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` INN          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./ending/ENDING	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./cliff/CLIFF	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./cliff_base/CLIFF_BASE	  0   0
 
 ###
 
@@ -284,8 +284,8 @@ inventory/INVENTORY:
 
 ####
 
-./cliff/CLIFF:	DIALOG_CLIFF.ZX02
-	cd cliff && make
+./cliff_base/CLIFF_BASE:	DIALOG_CLIFF.ZX02
+	cd cliff_base && make
 
 ./archery/ARCHERY:
 	cd archery && make
@@ -664,8 +664,6 @@ distclean:
 	make clean
 	cd sprites && make clean
 	cd sprites_peasant && make clean
-	cd graphics_archery && make clean
-	cd graphics_cliff && make clean
 	cd graphics_inn && make clean
 	cd graphics_inside && make clean
 	cd graphics_peasantry && make clean
@@ -689,7 +687,7 @@ clean:
 			*.ZX02 dialog_peasant2 \
 			generate_common generate_all_symbols
 	cd archery && make clean
-	cd cliff && make clean
+	cd cliff_base && make clean
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean

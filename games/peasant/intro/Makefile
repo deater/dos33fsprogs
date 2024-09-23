@@ -23,6 +23,7 @@ INTRO:	intro.o
 	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
+		../peasant_sprite.inc \
 		../graphics_peasantry/cottage.zx02 \
 		../graphics_peasantry/lake_w.zx02 \
 		../graphics_peasantry/lake_e.zx02 \

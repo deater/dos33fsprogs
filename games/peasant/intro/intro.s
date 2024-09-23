@@ -224,26 +224,20 @@ no_peasant_wrap:
 
 	; background restore parameters
 	; currently 5, should check this and error if we overflow
-
-save_valid:
-	.byte	0, 0, 0, 0, 0, 0
-save_xstart:
-	.byte   0, 0, 0, 0, 0, 0
-save_xend:
-	.byte   0, 0, 0, 0, 0, 0
-save_ystart:
-	.byte   0, 0, 0, 0, 0, 0
-save_yend:
-	.byte   0, 0, 0, 0, 0, 0
+;
+;save_valid:
+;	.byte	0, 0, 0, 0, 0, 0
+;save_xstart:
+;	.byte   0, 0, 0, 0, 0, 0
+;save_xend:
+;	.byte   0, 0, 0, 0, 0, 0
+;save_ystart:
+;	.byte   0, 0, 0, 0, 0, 0
+;save_yend:
+;	.byte   0, 0, 0, 0, 0, 0
 
 walking_sprite_data:
 	.incbin "../sprites_peasant/walking_sprites.zx02"
 
-peasant_sprite_offset = $a000
+.include "../peasant_sprite.inc"
 
-peasant_sprites_xsize = peasant_sprite_offset+0
-peasant_sprites_ysize = peasant_sprite_offset+36
-peasant_sprites_data_l = peasant_sprite_offset+72
-peasant_sprites_data_h = peasant_sprite_offset+108
-peasant_mask_data_l = peasant_sprite_offset+144
-peasant_mask_data_h = peasant_sprite_offset+180
