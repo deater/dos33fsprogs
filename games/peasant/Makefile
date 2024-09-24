@@ -50,15 +50,15 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  ./wrong_boot/WBOOT3      0   1
-	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk3.dsk   6 0 ./archery/ARCHERY      0   0
-	$(DOS33_RAW) peasant_disk3.dsk   9 0 ./inside/INSIDE       0   0
-	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./inn/INN          0   0
-	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./cliff_base/CLIFF_BASE	  0   0
-
-
+	$(DOS33_RAW) peasant_disk3.dsk   1 0 ./map/MAP          0   0
+	$(DOS33_RAW) peasant_disk3.dsk   3 0 ./archery/ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk3.dsk   7 0 ./inside/INSIDE       0   0
+	$(DOS33_RAW) peasant_disk3.dsk  11 0 ./inn/INN          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  15 0 ./trogdor/TROGDOR	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./ending/ENDING	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./cliff_base/CLIFF_BASE	  0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/HEIGHTS	  0   0
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
@@ -84,13 +84,13 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 25 0` PEASANT3	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 30 0` PEASANT4	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  0 0` ./wrong_boot/WBOOT3      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  4 0` ./map/MAP          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  6 0` ./archery/ARCHERY      0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  9 0` ./inside/INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./inn/INN          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./trogdor/TROGDOR	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./ending/ENDING	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  1 0` ./map/MAP          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  3 0` ./archery/ARCHERY      0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  7 0` ./inside/INSIDE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 11 0` ./inn/INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./trogdor/TROGDOR	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./ending/ENDING	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./cliff_base/CLIFF_BASE	  0   0
 
 ###
 

@@ -227,39 +227,43 @@ TROGDOR		15657	14774
 ENDING		17642	17038
 CLIFF		13418	12648
 
+Disk Maps, current
 
-Disk Maps, Current
+Disk1 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = Qboot / SAVES
+T	  1 = QLOAD	 5037 bytes	2T	(8192)  3k free
+T	  3 = MUSIC	 4045 bytes	1T	(4096)  0k free
+T	  4 = VID_LOGO	 7343 bytes	2T	(8192)  1k free
+T	  6 = TITLE      8500 bytes	3T	(12288) 4k free
+T	  9 = INTRO	13628 bytes	4T	(16384) 3k free
+T	 13 = PARSE_INP	 3249 bytes	1T	(4096)  1k free
+T	 14 = INVENTORY  3122 bytes     1T      (4096)  1k free
+T	 15 = GAME_OVER  2074 bytes	1T	(4096)  2k free
+T	 30 = COPY_CHECK 2834 bytes	1T	(4096)  1k free
 
-	Disk1
-		QLOAD
-		SAVES
-		MUSIC
-		VID_LOGO
-		TITLE
-		INTRO
-		PARSE_INPUT
-		INVENTORY
-		COPY_CHECK
-		GAME_OVER	; because need to restart/reload anyway
-		
-	Disk2
-		PEASANT1
-		PEASANT2
-		PEASANT3
-		PEASANT4
-		MAP
-		INSIDE
-		INN
-		; variants with night backgrounds?
-		; rain code?
+Disk2 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT2
+T	 15 = PEASANT1	18205 bytes	5T	(20480) 2k free
+T	 20 = PEASANT2	17194 bytes	5T	(20480) 3k free
+T	 25 = PEASANT3	17924 bytes	5T	(20480) 3k free
+T	 30 = PEASANT4	16698 bytes	5T	(20480) 3k free
 
-	Disk3
-		ARCHERY
-		CLIFF/CLIMB
-		TROGDOR
-		SAM code?
-		ENDING		
-	
+Disk3 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT3
+T	  1 = MAP	 2556 bytes     2T	 (8192) 6k free
+T         3 = ARCHERY	 2016 bytes     4T	(16384) 14k free
+T         7 = INSIDE	13457 bytes     4T	(16384) 3k free
+T        11 = INN	 8935 bytes     4T	(16384) 7k free
+T	 15 = TROGDOR	14771 bytes     4T	(16384) 3k free
+T        19 = ENDING	17037 bytes	5T	(20480) 3k free
+T	 24 = CLIFF_BASE 6071 bytes     2T       (8192) 2k free
+T	 26 = CLIMB     16384 bytes	4T	(16483) 0k free
+T	 30 = HEIGHTS   ????  bytes     3T      (12288) 0k free
+
+
 
 Disk Maps, Original
 
