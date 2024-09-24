@@ -326,7 +326,7 @@ verb_tables_hi:
 
 
 cliff_text_zx02:
-.incbin "../DIALOG_CLIFF.ZX02"
+.incbin "DIALOG_CLIFF_BASE.ZX02"
 
 .include "cliff_actions.s"
 

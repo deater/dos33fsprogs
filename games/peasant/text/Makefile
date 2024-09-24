@@ -9,6 +9,7 @@ all:	dump_text shrink_text \
 	kerrek.inc.lookup \
 	inside.inc.lookup \
 	inn.inc.lookup \
+	cliff_base.inc.lookup \
 	cliff.inc.lookup \
 	trogdor.inc.lookup \
 	common.inc.lookup \
@@ -18,6 +19,9 @@ all:	dump_text shrink_text \
 
 cliff.inc.lookup:	cliff.inc shrink_text
 	./shrink_text < cliff.inc > cliff.inc.lookup
+
+cliff_base.inc.lookup:	cliff_base.inc shrink_text
+	./shrink_text < cliff_base.inc > cliff_base.inc.lookup
 
 common.inc.lookup:	common.inc shrink_text
 	./shrink_text < common.inc > common.inc.lookup

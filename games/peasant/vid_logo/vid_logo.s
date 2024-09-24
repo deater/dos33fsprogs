@@ -13,17 +13,26 @@
 
 .include "../qload.inc"
 
-intro_text:
+videlectrix_intro:
 
 	;===========================
-	; print text part of intro
+	; clear text
 	;===========================
+
+	; FIXME: should we use our own routines and not monitor?
 
 	jsr	TEXT
 	jsr	HOME
 
-	lda	#0
-	sta	DRAW_PAGE
+	;==========================
+	; init various zero page vars
+	; at astart of game
+
+	jsr	init_global_vars
+
+	;===========================
+	; print text part of intro
+	;===========================
 
 	; print non-inverse
 	lda	#$80
@@ -265,7 +274,7 @@ skip_all_checks:
 	;===================================
 	;===================================
 
-videlectrix_intro:
+do_animated_videlectrix_intro:
 	jsr	hgr2				; HGR_PAGE=$40
 
 	lda	#$20
@@ -509,6 +518,8 @@ delays:
 .include "../ssi263/ssi263_detect.s"
 
 .include "../wait.s"
+
+.include "../init_vars.s"
 
 .include "graphics_vid/vid_graphics.inc"
 

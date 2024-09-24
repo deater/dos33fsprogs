@@ -12,6 +12,7 @@ VID_LOGO:	vid_logo.o
 
 vid_logo.o:	vid_logo.s ../qload.inc \
 		../hgr_overlay.s ../speaker_beeps.s \
+		../init_vars.s \
 		graphics_vid/vid_graphics.inc
 	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 
