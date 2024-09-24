@@ -12,7 +12,7 @@ TROGDOR:	trogdor.o
 
 trogdor.o:	trogdor.s ../zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
-		DIALOG_TROGDOR.ZX02 ../dialog_trogdor.inc \
+		DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 		../ssi263/ssi263_simple_speech.s \
 		../draw_box.s ../hgr_rectangle.s ../hgr_font.s ../hgr_input.s \
 		../hgr_save_restore.s \

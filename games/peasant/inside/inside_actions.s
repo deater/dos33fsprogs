@@ -1069,4 +1069,4 @@ inside_nn_close_drawer_full:
 
 
 
-.include "../dialog_inside.inc"
+.include "dialog_inside.inc"
