@@ -148,9 +148,9 @@ col_copy_loop:
 	;	in a robe and on fire, so we should enforce that
 
 	lda	#<walking_sprite_data
-	sta	ZX0_src
+	sta	zx_src_l+1
 	lda	#>walking_sprite_data
-	sta	ZX0_src+1
+	sta	zx_src_h+1
 
 	lda	#$a0
 
