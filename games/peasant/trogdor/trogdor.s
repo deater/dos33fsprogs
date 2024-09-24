@@ -361,6 +361,6 @@ verb_tables_hi:
 
 
 trogdor_text_zx02:
-.incbin "../DIALOG_TROGDOR.ZX02"
+.incbin "DIALOG_TROGDOR.ZX02"
 
 .include "trogdor_actions.s"

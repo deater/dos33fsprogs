@@ -45,14 +45,14 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
-	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER INSIDE ./inn/INN \
+	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER ./inside/INSIDE ./inn/INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  ./wrong_boot/WBOOT3      0   1
 	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk   6 0 ./archery/ARCHERY      0   0
-	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
+	$(DOS33_RAW) peasant_disk3.dsk   9 0 ./inside/INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./inn/INN          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
@@ -86,7 +86,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  0 0` ./wrong_boot/WBOOT3      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  4 0` ./map/MAP          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  6 0` ./archery/ARCHERY      0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  9 0` INSIDE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3  9 0` ./inside/INSIDE       0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./inn/INN          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./ending/ENDING	  0   0
@@ -382,7 +382,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 
 ###
 
-./trogdor/TROGDOR:	DIALOG_TROGDOR.ZX02
+./trogdor/TROGDOR:	
 	cd trogdor && make
 
 ./ending/ENDING:	
@@ -391,24 +391,8 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./copy/COPY_CHECK:	
 	cd copy && make
 
-###
-
-INSIDE:	inside.o
-	ld65 -o INSIDE inside.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-inside.o:	inside.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		inside_actions.s DIALOG_INSIDE.ZX02 dialog_inside.inc \
-		graphics_inside/graphics_inside.inc sprites/peasant_sprites.inc \
-		graphics_inside/priority_inside.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s loadsave_menu.s
-	ca65 -o inside.o inside.s -l inside.lst
-
-###
+./inside/INSIDE:
+	cd inside && make
 
 ./inn/INN:
 	cd inn && make
@@ -538,22 +522,6 @@ dialog_peasant4.inc:	generate_all_symbols dialog_peasant4
 
 ####
 
-DIALOG_INSIDE.ZX02:	dialog_inside
-	$(ZX02) -f  dialog_inside DIALOG_INSIDE.ZX02
-
-dialog_inside:	dialog_inside.o
-	ld65 -o dialog_inside dialog_inside.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_inside.o:	dialog_inside.s text/inside.inc.lookup
-	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
-
-###
-
-dialog_inside.inc:	generate_all_symbols dialog_inside
-	./generate_all_symbols -a 0xd000 dialog_inside.lst > dialog_inside.inc
-
-####
-
 DIALOG_CLIFF.ZX02:	dialog_cliff
 	$(ZX02) -f  dialog_cliff DIALOG_CLIFF.ZX02
 
@@ -570,23 +538,6 @@ dialog_cliff.inc:	generate_all_symbols dialog_cliff
 
 ####
 
-DIALOG_TROGDOR.ZX02:	dialog_trogdor
-	$(ZX02) -f  dialog_trogdor DIALOG_TROGDOR.ZX02
-
-dialog_trogdor:	dialog_trogdor.o
-	ld65 -o dialog_trogdor dialog_trogdor.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_trogdor.o:	dialog_trogdor.s text/trogdor.inc
-	ca65 -o dialog_trogdor.o dialog_trogdor.s -l dialog_trogdor.lst
-
-###
-
-dialog_trogdor.inc:	generate_all_symbols dialog_trogdor
-	./generate_all_symbols -a 0xd000 dialog_trogdor.lst > dialog_trogdor.inc
-
-
-####
-
 dialog_test:	dialog_test.o
 	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_d000.inc
 
@@ -594,12 +545,6 @@ dialog_test.o:	dialog_test.s
 	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
 
 ####
-
-graphics_inn/graphics_inn.inc:
-	cd graphics_inn && make
-
-graphics_inside/graphics_inside.inc:
-	cd graphics_inside && make
 
 graphics_peasantry/graphics_intro.inc:
 	cd graphics_peasantry && make
@@ -634,8 +579,6 @@ distclean:
 	make clean
 	cd sprites && make clean
 	cd sprites_peasant && make clean
-	cd graphics_inn && make clean
-	cd graphics_inside && make clean
 	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd archery && make distclean
@@ -644,6 +587,7 @@ distclean:
 	cd ending && make distclean
 	cd game_over && make distclean
 	cd inn && make distclean
+	cd inside && make distclean
 	cd intro && make distclean
 	cd map && make distclean
 	cd trogdor && make distclean
@@ -663,6 +607,7 @@ clean:
 	cd ending && make clean
 	cd game_over && make clean
 	cd inn && make clean
+	cd inside && make clean
 	cd intro && make clean
 	cd map && make clean
 	cd music && make clean

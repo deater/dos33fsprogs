@@ -8,12 +8,12 @@
 
 ; with apologies to everyone
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "./inventory/inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory/inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE	= LOCATION_HIDDEN_GLEN		; index starts here (24)
 
@@ -363,19 +363,19 @@ to_left:
 	rts
 
 
-.include "move_peasant.s"
-.include "draw_peasant.s"
+.include "../move_peasant.s"
+.include "../draw_peasant.s"
 
 
-.include "gr_copy.s"
-.include "hgr_copy.s"
+.include "../gr_copy.s"
+.include "../hgr_copy.s"
 
-.include "new_map_location.s"
+.include "../new_map_location.s"
 
-.include "keyboard.s"
+.include "../keyboard.s"
 
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
 .include "graphics_inside/graphics_inside.inc"
 .include "graphics_inside/priority_inside.inc"
