@@ -2,14 +2,14 @@ include ../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../linker_scripts
 
-all:	CLIFF_BASE
+all:	CLIFF_HEIGHTS
 
 ####
 
-CLIFF_BASE:	cliff_base.o
-	ld65 -o CLIFF_BASE cliff_base.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+CLIFF_HEIGHTS:	cliff_heights.o
+	ld65 -o CLIFF_HEIGHTS cliff_heights.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-cliff_base.o:	cliff_base.s \
+cliff_heights.o:	cliff_heights.s \
 		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
 		../inventory/inventory.inc \
 		../parse_input.inc \
@@ -23,7 +23,7 @@ cliff_base.o:	cliff_base.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait.s ../wait_a_bit.s
-	ca65 -o cliff_base.o cliff_base.s -l cliff_base.lst
+	ca65 -o cliff_heights.o cliff_heights.s -l cliff_heights.lst
 
 ###
 
@@ -39,5 +39,4 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst CLIFF_BASE
-
+	rm -f *~ *.o *.lst CLIFF_HEIGHTS

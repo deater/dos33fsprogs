@@ -307,33 +307,21 @@ exiting_cliff:
 
 map_backgrounds_low:
 	.byte   <cliff_base_zx02
-	.byte   <cliff_heights_zx02
-	.byte   <outer_zx02
 
 map_backgrounds_hi:
 	.byte   >cliff_base_zx02
-	.byte   >cliff_heights_zx02
-	.byte   >outer_zx02
 
 map_priority_low:
 	.byte	<cliff_base_priority_zx02
-	.byte	<cliff_heights_priority_zx02
-	.byte	<outer_priority_zx02
 
 map_priority_hi:
 	.byte	>cliff_base_priority_zx02
-	.byte	>cliff_heights_priority_zx02
-	.byte	>outer_priority_zx02
 
 verb_tables_low:
 	.byte	<cliff_base_verb_table
-	.byte	<cliff_heights_verb_table
-	.byte	<cave_outer_verb_table
 
 verb_tables_hi:
 	.byte	>cliff_base_verb_table
-	.byte	>cliff_heights_verb_table
-	.byte	>cave_outer_verb_table
 
 
 

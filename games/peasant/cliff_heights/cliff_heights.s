@@ -1,9 +1,8 @@
 ; Peasant's Quest
 
-; Cliff Base
+; Cliff Heights
 
-; just the cliff base
-;	we're going crazy with disk accesses now
+; Top of the cliff and outer trogdor lair
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -17,9 +16,9 @@
 
 collision_location = $bc00
 
-LOCATION_BASE	= LOCATION_CLIFF_BASE ; (20)
+LOCATION_BASE	= LOCATION_CLIFF_HEIGHTS ; (21)
 
-cliff_base:
+cliff_heights:
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -306,32 +305,26 @@ exiting_cliff:
 .include "graphics_cliff/priority_cliff.inc"
 
 map_backgrounds_low:
-	.byte   <cliff_base_zx02
 	.byte   <cliff_heights_zx02
 	.byte   <outer_zx02
 
 map_backgrounds_hi:
-	.byte   >cliff_base_zx02
 	.byte   >cliff_heights_zx02
 	.byte   >outer_zx02
 
 map_priority_low:
-	.byte	<cliff_base_priority_zx02
 	.byte	<cliff_heights_priority_zx02
 	.byte	<outer_priority_zx02
 
 map_priority_hi:
-	.byte	>cliff_base_priority_zx02
 	.byte	>cliff_heights_priority_zx02
 	.byte	>outer_priority_zx02
 
 verb_tables_low:
-	.byte	<cliff_base_verb_table
 	.byte	<cliff_heights_verb_table
 	.byte	<cave_outer_verb_table
 
 verb_tables_hi:
-	.byte	>cliff_base_verb_table
 	.byte	>cliff_heights_verb_table
 	.byte	>cave_outer_verb_table
 

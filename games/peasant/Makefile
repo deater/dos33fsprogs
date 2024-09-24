@@ -45,7 +45,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
-	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER INSIDE INN \
+	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER INSIDE ./inn/INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -53,7 +53,7 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk   4 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk   6 0 ./archery/ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   9 0 INSIDE       0   0
-	$(DOS33_RAW) peasant_disk3.dsk  14 0 INN          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./inn/INN          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./ending/ENDING	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./cliff_base/CLIFF_BASE	  0   0
@@ -87,7 +87,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  4 0` ./map/MAP          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  6 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  9 0` INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./inn/INN          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./ending/ENDING	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./cliff_base/CLIFF_BASE	  0   0
@@ -410,22 +410,8 @@ inside.o:	inside.s zp.inc ./inventory/inventory.inc \
 
 ###
 
-INN:	inn.o
-	ld65 -o INN inn.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-inn.o:	inn.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		inn_actions.s DIALOG_INN.ZX02 dialog_inn.inc \
-		graphics_inn/graphics_inn.inc sprites/peasant_sprites.inc \
-		graphics_inn/priority_inn.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s loadsave_menu.s
-	ca65 -o inn.o inn.s -l inn.lst
-
-
+./inn/INN:
+	cd inn && make
 
 ###
 
@@ -568,22 +554,6 @@ dialog_inside.inc:	generate_all_symbols dialog_inside
 
 ####
 
-DIALOG_INN.ZX02:	dialog_inn
-	$(ZX02) -f  dialog_inn DIALOG_INN.ZX02
-
-dialog_inn:	dialog_inn.o
-	ld65 -o dialog_inn dialog_inn.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_inn.o:	dialog_inn.s text/inn.inc.lookup
-	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
-
-###
-
-dialog_inn.inc:	generate_all_symbols dialog_inn
-	./generate_all_symbols -a 0xd000 dialog_inn.lst > dialog_inn.inc
-
-####
-
 DIALOG_CLIFF.ZX02:	dialog_cliff
 	$(ZX02) -f  dialog_cliff DIALOG_CLIFF.ZX02
 
@@ -673,6 +643,7 @@ distclean:
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
+	cd inn && make distclean
 	cd intro && make distclean
 	cd map && make distclean
 	cd trogdor && make distclean
@@ -691,6 +662,7 @@ clean:
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
+	cd inn && make clean
 	cd intro && make clean
 	cd map && make clean
 	cd music && make clean
