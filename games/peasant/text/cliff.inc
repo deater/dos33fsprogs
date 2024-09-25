@@ -34,6 +34,8 @@ cliff_base_climb2_message:
 
 ;    (Hit by rock or pterodactyl when climbing the cliff) 
 ;    {You fall to the ground and lie in a heap}
+;    {pause like 1s before displaying this}
+;    {note, peasant and rocks fall at same speed}
 .byte "Oops! You climbed real bad.",13
 .byte "You knew that you were",13
 .byte "AVOIDING the rocks, right?",13
@@ -46,8 +48,10 @@ cliff_base_climb2_message:
 ;===================
 
 ; arrive
-; +3 POINTS (maybe at the top?)
+; +3 POINTS (maybe at the top?, makes noise after you dismiss message)
+; lightning makes sound effect, same as rock crashing noise
 
+; shows once atop
 .byte "Nice jorb climbing the",13
 .byte "cliff. You have a real way",13
 .byte "with those arrow keys.",0
@@ -100,6 +104,10 @@ cliff_heights_get_bone_message:
 ; +5 POINTS (give soda or answer question)
 ; +5 POINTS (give pills or answer question)
 
+; walk in, you can walk out again.  once the keeper appears
+;	you are stuck and have to talk
+; will only say the "I think he wants... text
+
 ; Type any command other than "take the quiz" or "give (requested item)"
 ; after being apporached by a Keeper
 .byte "I think he wants something",13
@@ -139,6 +147,11 @@ cave_outer_look_skeleton_message:
 .byte "You can't be sure but you",13
 .byte "think those are dead person",13
 .byte "bones.",0
+
+; + get bones
+cave_outer_get_bones_message:
+.byte "Eww. No. Grody. You're",13
+.byte "grody. No. Eww.",0
 
 ;=========================
 ; First Keeper
@@ -183,7 +196,9 @@ cave_outer_look_skeleton_message:
 .byte "Seriously - this guy should",13
 .byte "get a job.",0
 
-.byte "Okay here goes. What did you win from the Archery game?",13
+.byte "Okay here goes. What did",13
+.byte "you win from the Archery",13
+.byte "game?",13
 .byte "A. SuperBow FunTime TM",13
 .byte "B. SuperTime FunBow TM",13	; correct
 .byte "C. SuperFun BowTime TM",0
@@ -196,24 +211,47 @@ cave_outer_look_skeleton_message:
 .byte "C. Allo",0
 
 
-.byte "Okay here goes. What is the only creature the Jhonka fears?",13
+.byte "Okay here goes. What is the",13
+.byte "only creature the Jhonka",13
+.byte "fears?",13
 .byte "A. Poor Gary",13
 .byte "B. The Baby",13
 .byte "C. The Kerrek",0			; correct
 
 ; Response to Correct Answer
+; makes happy noise, then gives you points
 .byte 34,"Ah crap! You're right.",13
 .byte "Here, take this stupid",13
-.byte "Trog-Shield!",0
+.byte "Trog-Shield!",34,0
 
 ; Response to Incorrect Answer
-.byte "Sorry peasant! You fail! And as punishment, you will be turned into... RON CUMBERDALE!!",0
-.byte "You ask who the crap Ron Cumberdale is.",0
-.byte "Just this kid from 4th grade that I really hated. But he was a BIG LOSER and HE SMELLED!",0
-.byte "Well, you not exactly dead. But there's no way you could defeat Trogdor as Ron Cumberdale. Your quest ends here. Thanks for playing.",0
+;
+;
+.byte "Sorry peasant! You fail!",13
+.byte "And as punishment, you will",13
+.byte "be turned into... RON ",13
+.byte "CUMBERDALE!!",0
+
+.byte "You ask who the crap Ron",13
+.byte "Cumberdale is.",0
+
+.byte 34,"Just this kid from 4th",13
+.byte "grade that I really hated.",13
+.byte "But he was a BIG LOSER and",12
+.byte "HE SMELLED!",34,0
+
+; wiggles hands, poof of smoke, turn into Ron
+; makes twinkly noise as wiggles hand, another noise (blrrp?) as poof of smoke
+.byte "Well, you not exactly dead.",0
+.byte "But there's no way you",0
+.byte "could defeat Trogdor as Ron",0
+.byte "Cumberdale. Your quest",0
+.byte "ends here. Thanks for",0
+.byte "playing.",0
 
 
 ; + give sub, sandwich
+;   slowly backs away, you suddenly have shield
 .byte "No way! I was just kidding",13
 .byte "but you've really got a",13
 .byte "meatball sub. This rules!",13
@@ -221,12 +259,15 @@ cave_outer_look_skeleton_message:
 .byte "Trog-Shield.",0
 
 ; you now have the shield and can leave if you want
+; whole new walking animation
 
 ;=========================
 ; Second Keeper
 ;=========================
 
 ; + (approached by second keeper)
+;	comes out and waggles his hands
+
 .byte "Hold, peasant! You must",13
 .byte "answer the second dreaded",13
 .byte "Trog-Trivia question!",0
@@ -239,14 +280,19 @@ cave_outer_look_skeleton_message:
 ; + get a job again
 
 
-.byte "Listen careful now. Which one of these letters is the letter C?",13
+.byte "Listen careful now. Which",13
+.byte "one of these letters is the",13
+.byte "letter C?",13
 .byte "A. B",13 
 .byte "B. C",13		; correct
 .byte "C. A",0
 
-.byte "Listen careful now. How many berry bushes are there in the whole kingdom of Peasantry?",13
+.byte "Listen careful now. How",13
+.byte "many berry bushes are there",13
+.byte "in the whole kingdom of",13
+.byte "Peasantry?",13
 .byte "A. 4",13
-.byte "B. 5",13
+.byte "B. 5",13		; [sic] correct?
 .byte "C. 6 ",0
 
 .byte "Listen careful now. What",13
@@ -261,10 +307,25 @@ cave_outer_look_skeleton_message:
 .byte "sucks. Guess I have to give",13
 .byte "you this Trog-Helmet.",13
 .byte "Dang.",0
+; backs out, you now have helm on, can leave
 
 ; Response to Incorrect Answer
-.byte "WRONG! You are hereby cursed to write corny folk songs for the rest of eternity! The kind that only OLD PEOPLE LIKE!!",0
-.byte "Well, you not exactly dead. But you certainly can't face Trogdor after writing 'Wheat Grows Sweet, But My Gal's Sweeter'. Your quest ends here. Thanks for playing.",0
+.byte 34,"WRONG! You are hereby",13
+.byte "cursed to write corny folk",13
+.byte "songs for the rest of",13
+.byte "eternity! The kind that",13
+.byte "only OLD PEOPLE LIKE!!",34,0
+
+; waggles arms
+; you face forward, then play the guitar for like 5 seconds
+
+.byte "Well, you not exactly dead.",13
+.byte "But you certainly can't",13
+.byte "face Trogdor after writing",13
+.byte "'Wheat Grows Sweet, But My",13
+.byte "Gal's Sweeter'. Your quest",13
+.byte "ends here. Thanks for",13
+.byte "playing.",0
 
 ; + give soda
 .byte "Sweet deal, peasant. I",13
@@ -298,16 +359,20 @@ cave_outer_look_skeleton_message:
 .byte "C. Naked Ned",0		; correct
 
 
-.byte "Riddle me this. What color are the leaves on the tree that grows by the well?",13
+.byte "Riddle me this. What color",13
+.byte "are the leaves on the tree",13
+.byte "that grows by the well?",13
 .byte "A. Orange",13
 .byte "B. Green",13
 .byte "C. Yellow",0
 
 
-.byte "Riddle me this. Which way does the river that runs through Peasantry flow?",13
+.byte "Riddle me this. Which way",13
+.byte "does the river that runs",13
+.byte "through Peasantry flow?",13
 .byte "A. West to East",13
 .byte "B. Northwest to South",13
-.byte "C. Northeast to Southwest",0
+.byte "C. Northeast to Southwest",0	; correct
 
 ; Response to Correct Answer
 
@@ -330,8 +395,15 @@ cave_outer_look_skeleton_message:
 
 ; Response to Incorrect Answer
 
-.byte "YES! I was hoping you'd get mine wrong. No Trog-Sword for you. In fact, no skin for you either!",0
-.byte "Wow. You sure dead. You had a good run, though. Thanks for playin.",0
+.byte "YES! I was hoping you'd get",13
+.byte "mine wrong. No Trog-Sword",13
+.byte "for you. In fact, no skin",13
+.byte "for you either!",0
+
+; turns you into a skeleton
+.byte "Wow. You sure dead. You had",13
+.byte "a good run, though. Thanks",13
+.byte "for playin.",0
 
 ; Response if not A, B, or C
 ; then print following followed by repeat of question
@@ -356,6 +428,8 @@ cave_outer_look_skeleton_message:
 .byte "means to strike down",13
 .byte "Trogdor. Good luck,",13
 .byte "peasant.",0
+
+; backs out, you raise the sword in the air animation
 
 ; + climb cliff
 cave_outer_climb_message:

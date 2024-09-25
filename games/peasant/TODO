@@ -1,3 +1,7 @@
+Sound effects:
+	+ Rocks make noise when crash
+	+ di-dit-da-do when falling
+
 New:
 ~~~~
 use updated speaker_beeps.s from music/redbook_sound
