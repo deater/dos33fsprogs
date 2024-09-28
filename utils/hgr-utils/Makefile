@@ -3,7 +3,7 @@ include ../../Makefile.inc
 CFLAGS = -O2 -Wall -g
 
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
-	hgr2png hgr_make_sprite png2font
+	hgr2png hgr_make_sprite png2font dhgr2png
 
 ###
 
@@ -58,6 +58,15 @@ hgr2png:		hgr2png.o
 
 hgr2png.o:		hgr2png.c
 			$(CC) $(CFLAGS) -c hgr2png.c
+
+###
+
+dhgr2png:		dhgr2png.o
+			$(CC) -o dhgr2png dhgr2png.o $(LFLAGS) -lpng
+
+dhgr2png.o:		dhgr2png.c
+			$(CC) $(CFLAGS) -c dhgr2png.c
+
 
 ###
 

@@ -1,5 +1,6 @@
 /* Converts 140x192 8-bit PNG file with correct palette to Apple II DHGR */
 
+/*  https://lastrationalman.blogspot.com/2017/04/apple-ii-double-hi-res-from-ground-up_12.html */
 /* http://www.battlestations.zone/2017/04/apple-ii-double-hi-res-from-ground-up_12.html */
 
 #define VERSION "0.0.1"
