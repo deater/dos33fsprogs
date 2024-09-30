@@ -12,11 +12,24 @@ T        16 = FISH       23287 bytes         = 6T        (24576)  1k free
 T        22 = RAT         7581 bytes         = 2T        ( 8192)  1k free
 T        24 = BACK_OFF    6072 bytes         = 2T        ( 8192)  2k free
 T	 26 = CLIMB	 13013 bytes         = 4T        (16384)  3k free
+T	 30 = DATING                         = 4T        (16384)  ?k free
 
 
 
 
 memory map
+
+to enable returning back, shouldn't over-write low-level code if we
+can avoid it
+
+QBOOT loaded at $800-??
+QLOAD loaded at $1200, only 100 bytes?
+
+
+
+
+
+
 
 6000 code
 

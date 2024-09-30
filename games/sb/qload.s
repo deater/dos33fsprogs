@@ -167,27 +167,28 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; TITLE,  DUCK,   ROOF,  ASPLODE
-	.byte 1,1,1,1		; CLIMB,  FISH,   RAT,   BACK_OFF
+	.byte 1,1,1,1		; CLIMB,  FISH,   RAT,   DATING
+	.byte 1			; BACK_OFF
 
 load_address_array:
         .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF,  ASPLODE
-	.byte $60,$40,$60,$60	; CLIMB,  FISH,  RAT,   BACK_OFF
-
+	.byte $60,$40,$60,$40	; CLIMB,  FISH,  RAT,   DATING
+	.byte $60		; BACK_OFF
 
 track_array:
         .byte  2, 5, 8,11	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte 26,16,22,24	; CLIMB,  FISH,  RAT,  BACK_OFF
-
+	.byte 26,16,22,30	; CLIMB,  FISH,  RAT,  DATING
+	.byte 24		; BACK_OFF
 
 sector_array:
         .byte  0, 0, 0, 0	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  0, 0, 0, 0	; CLIMB,  FISH,  RAT,  BACK_OFF
-
+	.byte  0, 0, 0, 0	; CLIMB,  FISH,  RAT,  DATING
+	.byte  0		; BACK_OFF
 
 length_array:
         .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  64, 92, 32, 32	; CLIMB,  FISH,  RAT,  BACK_OFF
-
+	.byte  64, 92, 32, 64	; CLIMB,  FISH,  RAT,  DATING
+	.byte  32		; BACK_OFF
 
 qload_end:
 

@@ -13,7 +13,7 @@ all:	sb.dsk
 ####
 
 sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF \
-	./fish/FISH RAT
+	./fish/FISH RAT ./dating/DATING_XR
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
@@ -28,6 +28,7 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF \
 	$(DOS33_RAW) sb.dsk  22 0 RAT        0   0
 	$(DOS33_RAW) sb.dsk  24 0 BACK_OFF   0   0
 	$(DOS33_RAW) sb.dsk  26 0 ../peasant_mini/cliff/CLIMB   0   0
+	$(DOS33_RAW) sb.dsk  30 0 ./dating/DATING_XR  0   0
 
 ####
 
@@ -106,6 +107,11 @@ back_off.o:	back_off.s zx02_optim.s \
 
 ./fish/FISH:	
 	cd fish && make
+
+####
+
+./dating/DATING_XR:	
+	cd dating && make
 
 
 #CLIFF:	cliff.o
@@ -205,6 +211,7 @@ HELLO:	hello.bas
 clean:	
 	rm -f *.lst *.o QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE TARGET CLIFF RAT *~
 	cd asplode_sound && make clean
+	cd dating && make clean
 	cd rat_sound && make clean
 	cd title_sound && make clean
 	cd asplode_graphics && make clean

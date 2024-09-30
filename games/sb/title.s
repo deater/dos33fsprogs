@@ -196,12 +196,12 @@ wait_until_keypress:
 	cmp	#27
 	beq	load_loop
 
-	cmp	#'7'
+	cmp	#'8'
 	beq	draw_edga_jr
 
 	cmp	#'1'
 	bcc	done_check_number		; blt
-	cmp	#'7'
+	cmp	#'8'
 	bcs	done_check_number		; bge
 
 
@@ -242,7 +242,7 @@ arrow_up:
 
 arrow_down:
 	lda	MENU_ITEM
-	cmp	#5			; 0 indexed
+	cmp	#6			; 0 indexed
 	bcs	done_arrow
 	inc	MENU_ITEM
 
@@ -318,4 +318,4 @@ purple_data:
 
 	; offsets of arrow
 arrow_y:
-	.byte 111,121,131,141,151,161
+	.byte 111,121,131,141,151,161,171

@@ -686,7 +686,7 @@ asplode_asplode:
 
 
 back_off:
-	lda	#7
+	lda	#8
 	bne	really_done_game	; bra
 
 	;==========================
