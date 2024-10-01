@@ -13,7 +13,7 @@ DATING_XR:	dating_xr.o
 
 dating_xr.o:	dating_xr.s zx02_optim.s \
 		graphics/a2_dating.hgr.zx02 \
-		audio.s play_sounds.s \
+		audio.s \
 		zp.inc hardware.inc
 	ca65 -o dating_xr.o dating_xr.s -l dating_xr.lst
 

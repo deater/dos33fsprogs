@@ -176,9 +176,9 @@ load_address_array:
 	.byte $60		; BACK_OFF
 
 track_array:
-        .byte  2, 5, 8,11	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte 26,16,22,30	; CLIMB,  FISH,  RAT,  DATING
-	.byte 24		; BACK_OFF
+        .byte  2, 5, 8, 9	; TITLE,  DUCK,  ROOF, ASPLODE
+	.byte 24,14,20,28	; CLIMB,  FISH,  RAT,  DATING
+	.byte 22		; BACK_OFF
 
 sector_array:
         .byte  0, 0, 0, 0	; TITLE,  DUCK,  ROOF, ASPLODE
@@ -187,7 +187,7 @@ sector_array:
 
 length_array:
         .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
-	.byte  64, 92, 32, 64	; CLIMB,  FISH,  RAT,  DATING
+	.byte  64, 92, 32, 96	; CLIMB,  FISH,  RAT,  DATING
 	.byte  32		; BACK_OFF
 
 qload_end:

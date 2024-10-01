@@ -33,6 +33,12 @@ dating_start:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
+
+	lda	#$0
+	sta	TEXT_COL
+	sta	TEXT_ROW
+
+
 .if 0
 	;==========================
 	; Load Sound
@@ -95,38 +101,6 @@ wait_at_tile:
 	bit	KEYRESET
 
 	;===================
-	; print directions
-	;===================
-	; in the actual game this is overlay ontop of the faded gameplay
-	; that would be a pain so we're not going to do it
-
-;	lda	#$0
-;	sta	DRAW_PAGE
-
-;	jsr	clear_all
-
-;	bit	LORES
-;	bit	FULLGR
-;	bit	SET_TEXT
-;	bit	PAGE1
-
-
-;	ldx	#7
-;print_help:
-;	jsr	move_and_print
-;	dex
-;	bne	print_help
-
-;	jsr	set_flash		; have the "press spacebar" flash
-;	jsr	move_and_print
-
-;wait_at_directions:
-;	lda	KEYPRESS
-;	bpl	wait_at_directions
-
-;	bit	KEYRESET
-
-	;===================
 	; setup game
 	;===================
 
@@ -151,13 +125,6 @@ load_background:
 	jsr	full_decomp
 
 
-	;===================
-	; set up variables
-
-	; have it show garbage on page2 briefly
-	; this is better than re-showing title
-	; ideally we'd just clear the screen I guess
-
 	bit	PAGE1
 	bit	HIRES
 	bit	TEXTGR
@@ -176,15 +143,9 @@ load_background:
 
 	jsr	move_and_print_list
 
+	jsr	set_inverse
 
-	lda	#$20
-	sta	DRAW_PAGE
-
-	; re-set up hgr tables
-
-;	lda	#$20
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
+	jsr	update_text
 
 
 	;==========================
@@ -194,58 +155,8 @@ main_loop:
 
 
 
-;	jsr	flip_page
-
-
-
-	;========================
-	;========================
-	; draw the scene
-	;========================
-	;========================
-
-	;==================================
-	; copy over (erase) old background
-.if 0
-	; this isn't fast, but much faster than decompressing
-	;	we could be faster if we unrolled, or only
-	;	did part of the screen
-
-	lda	#$a0
-	sta	bg_copy_in_smc+2
-
-	clc
-	lda	DRAW_PAGE
-	adc	#$20
-	sta	bg_copy_out_smc+2
-
-	ldy	#0
-bg_copy_loop:
-
-bg_copy_in_smc:
-	lda	$A000,Y
-bg_copy_out_smc:
-	sta	$2000,Y
-	dey
-	bne	bg_copy_loop
-
-	inc	bg_copy_in_smc+2
-	inc	bg_copy_out_smc+2
-	lda	bg_copy_in_smc+2
-	cmp	#$C0
-	bne	bg_copy_loop
-.endif
-
 	inc	FRAME
 
-
-
-	;============================
-	; play sound
-	;============================
-
-;	ldy	#5
-;	jsr	play_asplode
 
 
 	;===========================
@@ -265,12 +176,70 @@ check_keypress:
 	bne	not_done_game
 
 	jmp	done_game
+
+
 not_done_game:
-	; do this after or else '/' counts as escape
 
-	and	#$df			; convert lowercase to upper
+	cmp	#$96			; see if need to convert
+	bcc	no_upper_convert
 
+	and	#$5f			; convert lowercase to upper
 
+no_upper_convert:
+
+	;========================
+	; check left
+	;========================
+check_left:
+	cmp	#$8
+	beq	left_pressed
+	cmp	#'A'
+	bne	check_right
+left_pressed:
+	jsr	erase_current
+	lda	#0
+	sta	TEXT_COL
+	beq	done_movement	; bra
+
+check_right:
+	cmp	#$15
+	beq	right_pressed
+	cmp	#'D'
+	bne	check_up
+right_pressed:
+	jsr	erase_current
+	lda	#1
+	sta	TEXT_COL
+	bne	done_movement	; bra
+
+check_up:
+	cmp	#$0b
+	beq	up_pressed
+	cmp	#'W'
+	bne	check_down
+up_pressed:
+	jsr	erase_current
+	lda	TEXT_ROW
+	beq	no_up_move
+	dec	TEXT_ROW
+no_up_move:
+	jmp	done_movement
+
+check_down:
+	cmp	#$0a
+	beq	down_pressed
+	cmp	#'S'
+	bne	check_enter
+down_pressed:
+	jsr	erase_current
+	lda	TEXT_ROW
+	cmp	#3
+	bcs	no_down_move
+	inc	TEXT_ROW
+no_down_move:
+	jmp	done_movement
+
+check_enter:
 	cmp	#' '
 	beq	do_sound
 	cmp	#13		; return/enter
@@ -279,10 +248,42 @@ not_done_game:
 done_keyboard_check:
 	jmp	main_loop
 
+done_movement:
+	jsr	set_inverse
+	jsr	update_text
+	jmp	main_loop
+
 do_sound:
-	lda	#<marzipan_sounds
+	lda	TEXT_COL
+	bne	homestar_sound
+
+marzipan_sound:
+	lda	TEXT_ROW
+
+	tax
+	lda	m_sounds_len,X
+	sta	SOUND_LEN
+
+	lda	m_sounds_l,X
 	sta	ZX0_src
-	lda	#>marzipan_sounds
+	lda	m_sounds_h,X
+	jmp	sound_common
+
+
+homestar_sound:
+	lda	TEXT_ROW
+	cmp	#3
+	beq	done_keyboard_check
+
+	tax
+	lda	h_sounds_len
+	sta	SOUND_LEN
+
+	lda	h_sounds_l,X
+	sta	ZX0_src
+	lda	h_sounds_h,X
+
+sound_common:
 	sta	ZX0_src+1
 
 	lda	#$A0
@@ -296,10 +297,10 @@ do_sound:
 	sta	BTC_L
 	lda	#$A0
 	sta	BTC_H
-	ldx	#16
+	ldx	SOUND_LEN
 
 	jsr	play_audio
-
+sound_done:
 	jmp	done_keyboard_check
 
 
@@ -320,23 +321,54 @@ wait_until_keypress:
 	bit	KEYRESET	; clear the keyboard buffer
 	rts
 
+
+	;=======================
+	; erase current
+
+erase_current:
+	jsr	set_normal
+
+update_text:
+	lda	#0
+	sta	DRAW_PAGE
+
+	lda	TEXT_COL
+	asl
+	asl
+	clc
+	adc	TEXT_ROW
+	tax
+
+	lda	game_text_l,X
+	sta	OUTL
+	lda	game_text_h,X
+	sta	OUTH
+	jsr	move_and_print
+
+	lda	#$20
+	sta	DRAW_PAGE
+	rts
+
+
+
+
+game_text_l:
+	.byte <text_m_duh,<text_m_buh,<text_m_fuh,<text_m_ques
+	.byte <text_h_duh,<text_h_buh,<text_h_fuh,<text_h_ques
+game_text_h:
+	.byte >text_m_duh,>text_m_buh,>text_m_fuh,>text_m_ques
+	.byte >text_h_duh,>text_h_buh,>text_h_fuh,>text_h_ques
+
 game_text:
-	.byte 8,20,"DUH!",0
-	.byte 8,21,"BUH!",0
-	.byte 8,22,"FUH!",0
-	.byte 8,23,"???",0
-	.byte 28,20,"DUH!",0
-	.byte 28,21,"BUH!",0
-	.byte 28,22,"FUH!",0
-	.byte 28,23,"???",0
+text_m_duh:	.byte 8,20,"DUH!",0
+text_m_buh:	.byte 8,21,"BUH!",0
+text_m_fuh:	.byte 8,22,"FUH!",0
+text_m_ques:	.byte 8,23,"???",0
+text_h_duh:	.byte 28,20,"DUH!",0
+text_h_buh:	.byte 28,21,"BUH!",0
+text_h_fuh:	.byte 28,22,"FUH!",0
+text_h_ques:	.byte 28,23,"???",0
 	.byte $FF
-
-
-
-;sound_data_fish:
-;	.incbin "sounds/fish.btc.zx02"
-;sound_data_boat:
-;	.incbin "sounds/get_in_boat.btc.zx02"
 
 title_data:
 	.incbin "graphics/dating_title.hgr.zx02"
@@ -347,25 +379,44 @@ bg_data:
 
 
 	.include	"zx02_optim.s"
-;	.include	"gr_fast_clear.s"
 
 	.include	"hgr_tables.s"
-;	.include	"hgr_sprite_big.s"
-;	.include	"hgr_sprite_mask.s"
-;	.include	"hgr_sprite.s"
 
-
-;	.include	"hgr_copy_fast.s"
 	.include	"audio.s"
-	.include	"play_sounds.s"
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
 ;	.include	"random16.s"
 
-marzipan_sounds:
+m_sounds_l:
+	.byte <marzipan_duh,<marzipan_buh,<marzipan_fuh,<marzipan_on_point
+m_sounds_h:
+	.byte >marzipan_duh,>marzipan_buh,>marzipan_fuh,>marzipan_on_point
+m_sounds_len:
+	.byte 15,15,15,31
+
+marzipan_duh:
 	.incbin "sounds/m_duh.btc.zx02"
+marzipan_buh:
 	.incbin "sounds/m_buh.btc.zx02"
+marzipan_fuh:
 	.incbin "sounds/m_fuh.btc.zx02"
+marzipan_on_point:
+	.incbin "sounds/m_sb_on_point.btc.zx02"
+
+h_sounds_l:
+	.byte <homestar_duh,<homestar_buh,<homestar_fuh
+h_sounds_h:
+	.byte >homestar_duh,>homestar_buh,>homestar_fuh
+h_sounds_len:
+	.byte 15,15,15
+
+homestar_duh:
+	.incbin "sounds/h_duh.btc.zx02"
+homestar_buh:
+	.incbin "sounds/h_buh.btc.zx02"
+homestar_fuh:
+	.incbin "sounds/h_fuh.btc.zx02"
+
 
 
 

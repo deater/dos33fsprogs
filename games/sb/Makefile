@@ -22,13 +22,13 @@ sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF \
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
 	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
 	$(DOS33_RAW) sb.dsk  8  0 ROOF       0   0
-	$(DOS33_RAW) sb.dsk  11 0 ASPLODE    0   0
+	$(DOS33_RAW) sb.dsk  9  0 ASPLODE    0   0
 #	$(DOS33_RAW) sb.dsk  20 0 TARGET     0   0
-	$(DOS33_RAW) sb.dsk  16 0 ./fish/FISH      0   0
-	$(DOS33_RAW) sb.dsk  22 0 RAT        0   0
-	$(DOS33_RAW) sb.dsk  24 0 BACK_OFF   0   0
-	$(DOS33_RAW) sb.dsk  26 0 ../peasant_mini/cliff/CLIMB   0   0
-	$(DOS33_RAW) sb.dsk  30 0 ./dating/DATING_XR  0   0
+	$(DOS33_RAW) sb.dsk  14 0 ./fish/FISH      0   0
+	$(DOS33_RAW) sb.dsk  20 0 RAT        0   0
+	$(DOS33_RAW) sb.dsk  22 0 BACK_OFF   0   0
+	$(DOS33_RAW) sb.dsk  24 0 ../peasant_mini/cliff/CLIMB   0   0
+	$(DOS33_RAW) sb.dsk  28 0 ./dating/DATING_XR  0   0
 
 ####
 
