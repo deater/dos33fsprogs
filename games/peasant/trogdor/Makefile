@@ -12,7 +12,7 @@ TROGDOR:	trogdor.o
 
 trogdor.o:	trogdor.s ../zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
-		DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
+		../text/DIALOG_TROGDOR.ZX02 ../text/dialog_trogdor.inc \
 		../ssi263/ssi263_simple_speech.s \
 		../draw_box.s ../hgr_rectangle.s ../hgr_font.s ../hgr_input.s \
 		../hgr_save_restore.s \
@@ -24,22 +24,6 @@ trogdor.o:	trogdor.s ../zp.inc \
 
 	ca65 -o trogdor.o trogdor.s -l trogdor.lst
 
-
-####
-
-DIALOG_TROGDOR.ZX02:	dialog_trogdor
-	$(ZX02) -f  dialog_trogdor DIALOG_TROGDOR.ZX02
-
-dialog_trogdor:	dialog_trogdor.o
-	ld65 -o dialog_trogdor dialog_trogdor.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
-
-dialog_trogdor.o:	dialog_trogdor.s ../text/trogdor.inc
-	ca65 -o dialog_trogdor.o dialog_trogdor.s -l dialog_trogdor.lst
-
-###
-
-dialog_trogdor.inc:	../generate_all_symbols dialog_trogdor
-	../generate_all_symbols -a 0xd000 dialog_trogdor.lst > dialog_trogdor.inc
 
 ####
 
@@ -58,4 +42,4 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst TROGDOR *.ZX02 dialog_trogdor.inc
+	rm -f *~ *.o *.lst TROGDOR

@@ -623,9 +623,4 @@ inn_light_candle:
 	jmp	finish_parse_message
 
 
-
-
-
-
-
 .include "../text/dialog_inn.inc"

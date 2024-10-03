@@ -418,6 +418,6 @@ verb_tables_hi:
 
 
 inside_text_zx02:
-.incbin "DIALOG_INSIDE.ZX02"
+.incbin "../text/DIALOG_INSIDE.ZX02"
 
 .include "inside_actions.s"

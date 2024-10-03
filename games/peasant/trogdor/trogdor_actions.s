@@ -505,5 +505,5 @@ dashing_progress_h:
 	.byte >dashing6_sprite,>dashing7_sprite,>dashing8_sprite
 
 
-.include "dialog_trogdor.inc"
+.include "../text/dialog_trogdor.inc"
 

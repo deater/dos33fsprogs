@@ -11,11 +11,11 @@ all:	dump_text shrink_text \
 	DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
 	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
-	inside.inc.lookup \
+	DIALOG_INSIDE.ZX02 dialog_inside.inc \
 	DIALOG_INN.ZX02 dialog_inn.inc \
 	cliff_base.inc.lookup \
 	cliff.inc.lookup \
-	trogdor.inc.lookup \
+	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 	common.inc.lookup \
 	inventory.inc.lookup
 
@@ -101,6 +101,39 @@ dialog_inn.o:	dialog_inn.s inside_inn.inc.lookup
 dialog_inn.inc:	../generate_all_symbols dialog_inn
 	../generate_all_symbols -a 0xd000 dialog_inn.lst > dialog_inn.inc
 
+###
+
+DIALOG_INSIDE.ZX02:	dialog_inside
+	$(ZX02) -f  dialog_inside DIALOG_INSIDE.ZX02
+
+dialog_inside:	dialog_inside.o
+	ld65 -o dialog_inside dialog_inside.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inside.o:	dialog_inside.s \
+		inside_lady.inc.lookup inside_ned.inc.lookup \
+		hidden_glen.inc.lookup
+	ca65 -o dialog_inside.o dialog_inside.s -l dialog_inside.lst
+
+dialog_inside.inc:	../generate_all_symbols dialog_inside
+	../generate_all_symbols -a 0xd000 dialog_inside.lst > dialog_inside.inc
+
+###
+
+DIALOG_TROGDOR.ZX02:	dialog_trogdor
+	$(ZX02) -f  dialog_trogdor DIALOG_TROGDOR.ZX02
+
+dialog_trogdor:	dialog_trogdor.o
+	ld65 -o dialog_trogdor dialog_trogdor.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_trogdor.o:	dialog_trogdor.s \
+		trogdor.inc.lookup
+	ca65 -o dialog_trogdor.o dialog_trogdor.s -l dialog_trogdor.lst
+
+dialog_trogdor.inc:	../generate_all_symbols dialog_trogdor
+	../generate_all_symbols -a 0xd000 dialog_trogdor.lst > dialog_trogdor.inc
+
+
+
 
 ###
 
@@ -127,8 +160,17 @@ gary.inc.lookup:	gary.inc shrink_text
 hay.inc.lookup:	hay.inc shrink_text
 	./shrink_text < hay.inc > hay.inc.lookup
 
+hidden_glen.inc.lookup:	hidden_glen.inc shrink_text
+	./shrink_text < hidden_glen.inc > hidden_glen.inc.lookup
+
 inside_inn.inc.lookup:	inside_inn.inc shrink_text
 	./shrink_text < inside_inn.inc > inside_inn.inc.lookup
+
+inside_lady.inc.lookup:	inside_lady.inc shrink_text
+	./shrink_text < inside_lady.inc > inside_lady.inc.lookup
+
+inside_ned.inc.lookup:	inside_ned.inc shrink_text
+	./shrink_text < inside_ned.inc > inside_ned.inc.lookup
 
 jhonka.inc.lookup:	jhonka.inc shrink_text
 	./shrink_text < jhonka.inc > jhonka.inc.lookup
