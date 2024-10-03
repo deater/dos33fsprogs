@@ -290,13 +290,15 @@ inventory/INVENTORY:
 ./archery/ARCHERY:
 	cd archery && make
 
-###
-
 ./map/MAP:	
 	cd map && make
 
 ./game_over/GAME_OVER:
 	cd game_over && make
+
+
+./knight_falls_rock/KNIGHT_FALLS_ROCK:	DIALOG_KNIGHT_FALLS_ROCK.ZX02
+	cd knight_falls_rock && make
 
 ###
 
@@ -465,7 +467,7 @@ DIALOG_PEASANT1.ZX02:	dialog_peasant1
 dialog_peasant1:	dialog_peasant1.o
 	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc.lookup
+dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc
 	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
 
 ###
@@ -481,7 +483,7 @@ DIALOG_PEASANT2.ZX02:	dialog_peasant2
 dialog_peasant2:	dialog_peasant2.o
 	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc.lookup
+dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc
 	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
 
 ###
@@ -497,7 +499,7 @@ DIALOG_PEASANT3.ZX02:	dialog_peasant3
 dialog_peasant3:	dialog_peasant3.o
 	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc.lookup
+dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc
 	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
 
 ###
@@ -512,7 +514,7 @@ DIALOG_PEASANT4.ZX02:	dialog_peasant4
 dialog_peasant4:	dialog_peasant4.o
 	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc.lookup
+dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc
 	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
 
 ###
@@ -521,6 +523,22 @@ dialog_peasant4.inc:	generate_all_symbols dialog_peasant4
 	./generate_all_symbols -a 0xd000 dialog_peasant4.lst > dialog_peasant4.inc
 
 ####
+
+###
+
+DIALOG_KNIGHT_FALLS_ROCK.ZX02:	dialog_knight_falls_rock
+	$(ZX02) -f  dialog_knight_falls_rock DIALOG_KNIGHT_FALLS_ROCK.ZX02
+
+dialog_knight_falls_rock:	dialog_knight_falls_rock.o
+	ld65 -o dialog_knight_falls_rock dialog_knight_falls_rock.o -C ../../linker_scripts/apple2_d000.inc
+
+dialog_knight_falls_rock.o:	dialog_knight_falls_rock.s text/knight_falls_rock.inc.lookup
+	ca65 -o dialog_knight_falls_rock.o dialog_knight_falls_rock.s -l dialog_knight_falls_rock.lst
+
+dialog_knight_falls_rock.inc:	generate_all_symbols dialog_knight_falls_rock
+	./generate_all_symbols -a 0xd000 dialog_knight_falls_rock.lst > dialog_knight_falls_rock.inc
+
+###
 
 DIALOG_CLIFF.ZX02:	dialog_cliff
 	$(ZX02) -f  dialog_cliff DIALOG_CLIFF.ZX02

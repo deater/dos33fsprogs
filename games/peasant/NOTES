@@ -78,13 +78,14 @@ $03	Disk Lookup, IRQ vectors
 $04-$07 Text/GR page 1 (priority map)
 $08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
 $0B-$1F QLOAD disk routines and HGR drawing routines (5120 bytes)
-$20-$3F HGR Page 1
-$40-$5f HGR Page 2
+$20-$3F HGR Page 1	(shown)
+$40-$5f HGR Page 2	(current image background)
 $60-$AF Programs	(we limit to 20k, 20480 bytes, $50 pages)
-$B0-$??
+$A0-$AF peasaant sprites
+$B0-$B7?
 $B8-$BB Hi-res lookup tables
 $BC     temp area for load/save files
-$BD-$BE temp area when saving game
+$BD-$BE temp are (save games, sprite staging)
 $BF	verb table
 $C0-$CF	I/O
 
