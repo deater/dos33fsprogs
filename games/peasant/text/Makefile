@@ -1,11 +1,16 @@
+include ../../../Makefile.inc
+
+ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+LINKER_SCRIPTS = ../../../linker_scripts
+
 CC = gcc
 CFLAGS = -O2 -Wall -g
 
-all:	dump_text shrink_text \
-	peasant1.inc \
-	peasant2.inc \
-	peasant3.inc \
-	peasant4.inc \
+all:	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
+	DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
+	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
+	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
+	dump_text shrink_text \
 	inside.inc.lookup \
 	inn.inc.lookup \
 	cliff_base.inc.lookup \
@@ -14,27 +19,73 @@ all:	dump_text shrink_text \
 	common.inc.lookup \
 	inventory.inc.lookup
 
-#####################
-# derived locations #
-#####################
+###
 
-peasant1.inc:	gary.inc.lookup kerrek.inc.lookup \
+DIALOG_PEASANT1.ZX02:	dialog_peasant1
+	$(ZX02) -f  dialog_peasant1 DIALOG_PEASANT1.ZX02
+
+dialog_peasant1:	dialog_peasant1.o
+	ld65 -o dialog_peasant1 dialog_peasant1.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_peasant1.o:	dialog_peasant1.s \
+		gary.inc.lookup kerrek.inc.lookup \
 		well.inc.lookup yellow_tree.inc.lookup \
 		falls.inc.lookup
+	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
 
+dialog_peasant1.inc:	../generate_all_symbols dialog_peasant1
+	../generate_all_symbols -a 0xd000 dialog_peasant1.lst > dialog_peasant1.inc
 
-peasant2.inc:	hay.inc.lookup mud.inc.lookup \
+###
+
+DIALOG_PEASANT2.ZX02:	dialog_peasant2
+	$(ZX02) -f  dialog_peasant2 DIALOG_PEASANT2.ZX02
+
+dialog_peasant2:	dialog_peasant2.o
+	ld65 -o dialog_peasant2 dialog_peasant2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_peasant2.o:	dialog_peasant2.s \
+		hay.inc.lookup mud.inc.lookup \
 		archery.inc.lookup rock.inc.lookup \
 		knight.inc.lookup
+	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
 
+dialog_peasant2.inc:	../generate_all_symbols dialog_peasant2
+	../generate_all_symbols -a 0xd000 dialog_peasant2.lst > dialog_peasant2.inc
 
-peasant3.inc:	jhonka.inc.lookup cottage.inc.lookup \
+###
+
+DIALOG_PEASANT3.ZX02:	dialog_peasant3
+	$(ZX02) -f  dialog_peasant3 DIALOG_PEASANT3.ZX02
+
+dialog_peasant3:	dialog_peasant3.o
+	ld65 -o dialog_peasant3 dialog_peasant3.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_peasant3.o:	dialog_peasant3.s \
+		jhonka.inc.lookup cottage.inc.lookup \
 		lake_west.inc.lookup lake_east.inc.lookup \
 		outside_inn.inc.lookup
+	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
 
-peasant4.inc:	ned_cottage.inc.lookup wavy_tree.inc.lookup \
+dialog_peasant3.inc:	../generate_all_symbols dialog_peasant3
+	../generate_all_symbols -a 0xd000 dialog_peasant3.lst > dialog_peasant3.inc
+
+###
+
+DIALOG_PEASANT4.ZX02:	dialog_peasant4
+	$(ZX02) -f  dialog_peasant4 DIALOG_PEASANT4.ZX02
+
+dialog_peasant4:	dialog_peasant4.o
+	ld65 -o dialog_peasant4 dialog_peasant4.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_peasant4.o:	dialog_peasant4.s \
+		ned_cottage.inc.lookup wavy_tree.inc.lookup \
 		kerrek.inc.lookup lady_cottage.inc.lookup \
 		burninated_tree.inc.lookup
+	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
+
+dialog_peasant4.inc:	../generate_all_symbols dialog_peasant4
+	../generate_all_symbols -a 0xd000 dialog_peasant4.lst > dialog_peasant4.inc
 
 
 ####################
@@ -147,4 +198,4 @@ shrink_text.o:	shrink_text.c
 ###
 
 clean:	
-	rm -f *.o *~ dump_text shrink_text *.lookup
+	rm -f *.o *~ dump_text shrink_text *.lookup *.ZX02

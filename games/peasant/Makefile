@@ -308,8 +308,8 @@ PEASANT1:	peasant1.o
 
 peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
-		peasant1_actions.s DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
-		text/peasant1.inc text/kerrek.inc \
+		peasant1_actions.s \
+		text/DIALOG_PEASANT1.ZX02 text/dialog_peasant1.inc \
 		kerrek_actions.s peasant_common.s \
 		sprites/peasant_sprites.inc \
 		sprites/kerrek_sprites.inc \
@@ -330,7 +330,8 @@ PEASANT2:	peasant2.o
 
 peasant2.o:	peasant2.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
-		peasant2_actions.s DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
+		peasant2_actions.s \
+		text/DIALOG_PEASANT2.ZX02 text/dialog_peasant2.inc \
 		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant2.inc \
 		sprites/river_bubble_sprites.inc \
@@ -350,7 +351,8 @@ PEASANT3:	peasant3.o
 
 peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
-		peasant3_actions.s DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
+		peasant3_actions.s \
+		text/DIALOG_PEASANT3.ZX02 text/dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
 		peasant_common.s \
@@ -370,9 +372,9 @@ PEASANT4:	peasant4.o
 peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		sprites/ned_sprites.inc \
-		peasant4_actions.s DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
+		peasant4_actions.s \
+		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
 		kerrek_actions.s peasant_common.s \
-		text/peasant4.inc text/kerrek.inc \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
@@ -458,85 +460,33 @@ parse_input:	parse_input.o
 parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
 	ca65 -o parse_input.o parse_input.s -l parse_input.lst
 
+###
+
+text/DIALOG_PEASANT1.ZX02:
+	cd text && make
+
+text/DIALOG_PEASANT2.ZX02:
+	cd text && make
+
+text/DIALOG_PEASANT3.ZX02:
+	cd text && make
+
+text/DIALOG_PEASANT4.ZX02:
+	cd text && make
 
 ###
 
-DIALOG_PEASANT1.ZX02:	dialog_peasant1
-	$(ZX02) -f  dialog_peasant1 DIALOG_PEASANT1.ZX02
+text/dialog_peasant1.inc:
+	cd text && make
 
-dialog_peasant1:	dialog_peasant1.o
-	ld65 -o dialog_peasant1 dialog_peasant1.o -C ../../linker_scripts/apple2_d000.inc
+text/dialog_peasant2.inc:
+	cd text && make
 
-dialog_peasant1.o:	dialog_peasant1.s text/peasant1.inc
-	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
+text/dialog_peasant3.inc:
+	cd text && make
 
-###
-
-dialog_peasant1.inc:	generate_all_symbols dialog_peasant1
-	./generate_all_symbols -a 0xd000 dialog_peasant1.lst > dialog_peasant1.inc
-
-###
-
-DIALOG_PEASANT2.ZX02:	dialog_peasant2
-	$(ZX02) -f  dialog_peasant2 DIALOG_PEASANT2.ZX02
-
-dialog_peasant2:	dialog_peasant2.o
-	ld65 -o dialog_peasant2 dialog_peasant2.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_peasant2.o:	dialog_peasant2.s text/peasant2.inc
-	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
-
-###
-
-dialog_peasant2.inc:	generate_all_symbols dialog_peasant2
-	./generate_all_symbols -a 0xd000 dialog_peasant2.lst > dialog_peasant2.inc
-
-####
-
-DIALOG_PEASANT3.ZX02:	dialog_peasant3
-	$(ZX02) -f  dialog_peasant3 DIALOG_PEASANT3.ZX02
-
-dialog_peasant3:	dialog_peasant3.o
-	ld65 -o dialog_peasant3 dialog_peasant3.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_peasant3.o:	dialog_peasant3.s text/peasant3.inc
-	ca65 -o dialog_peasant3.o dialog_peasant3.s -l dialog_peasant3.lst
-
-###
-
-dialog_peasant3.inc:	generate_all_symbols dialog_peasant3
-	./generate_all_symbols -a 0xd000 dialog_peasant3.lst > dialog_peasant3.inc
-
-####
-DIALOG_PEASANT4.ZX02:	dialog_peasant4
-	$(ZX02) -f  dialog_peasant4 DIALOG_PEASANT4.ZX02
-
-dialog_peasant4:	dialog_peasant4.o
-	ld65 -o dialog_peasant4 dialog_peasant4.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_peasant4.o:	dialog_peasant4.s text/peasant4.inc
-	ca65 -o dialog_peasant4.o dialog_peasant4.s -l dialog_peasant4.lst
-
-###
-
-dialog_peasant4.inc:	generate_all_symbols dialog_peasant4
-	./generate_all_symbols -a 0xd000 dialog_peasant4.lst > dialog_peasant4.inc
-
-####
-
-###
-
-DIALOG_KNIGHT_FALLS_ROCK.ZX02:	dialog_knight_falls_rock
-	$(ZX02) -f  dialog_knight_falls_rock DIALOG_KNIGHT_FALLS_ROCK.ZX02
-
-dialog_knight_falls_rock:	dialog_knight_falls_rock.o
-	ld65 -o dialog_knight_falls_rock dialog_knight_falls_rock.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_knight_falls_rock.o:	dialog_knight_falls_rock.s text/knight_falls_rock.inc.lookup
-	ca65 -o dialog_knight_falls_rock.o dialog_knight_falls_rock.s -l dialog_knight_falls_rock.lst
-
-dialog_knight_falls_rock.inc:	generate_all_symbols dialog_knight_falls_rock
-	./generate_all_symbols -a 0xd000 dialog_knight_falls_rock.lst > dialog_knight_falls_rock.inc
+text/dialog_peasant4.inc:
+	cd text && make
 
 ###
 

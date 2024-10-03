@@ -1,3 +1,5 @@
+.include "lookup.inc"
+
 peasant3_dialog_start:
 
 .include "jhonka.inc.lookup"
@@ -9,3 +11,4 @@ peasant3_dialog_start:
 peasant3_dialog_end:
 
 .assert (>peasant3_dialog_end - >peasant3_dialog_start) < $1E , error, "peasant3 dialog too big"
+
