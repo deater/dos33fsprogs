@@ -531,6 +531,6 @@ verb_tables_hi:
 
 
 peasant2_text_zx02:
-.incbin "DIALOG_PEASANT2.ZX02"
+.incbin "text/DIALOG_PEASANT2.ZX02"
 
 .include "peasant2_actions.s"

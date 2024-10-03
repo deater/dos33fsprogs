@@ -6,13 +6,13 @@ LINKER_SCRIPTS = ../../../linker_scripts
 CC = gcc
 CFLAGS = -O2 -Wall -g
 
-all:	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
+all:	dump_text shrink_text \
+	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
 	DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
 	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
-	dump_text shrink_text \
 	inside.inc.lookup \
-	inn.inc.lookup \
+	DIALOG_INN.ZX02 dialog_inn.inc \
 	cliff_base.inc.lookup \
 	cliff.inc.lookup \
 	trogdor.inc.lookup \
@@ -87,6 +87,23 @@ dialog_peasant4.o:	dialog_peasant4.s \
 dialog_peasant4.inc:	../generate_all_symbols dialog_peasant4
 	../generate_all_symbols -a 0xd000 dialog_peasant4.lst > dialog_peasant4.inc
 
+###
+
+DIALOG_INN.ZX02:	dialog_inn
+	$(ZX02) -f  dialog_inn DIALOG_INN.ZX02
+
+dialog_inn:	dialog_inn.o
+	ld65 -o dialog_inn dialog_inn.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inn.o:	dialog_inn.s inside_inn.inc.lookup
+	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
+
+dialog_inn.inc:	../generate_all_symbols dialog_inn
+	../generate_all_symbols -a 0xd000 dialog_inn.lst > dialog_inn.inc
+
+
+###
+
 
 ####################
 # single locations #
@@ -109,6 +126,9 @@ gary.inc.lookup:	gary.inc shrink_text
 
 hay.inc.lookup:	hay.inc shrink_text
 	./shrink_text < hay.inc > hay.inc.lookup
+
+inside_inn.inc.lookup:	inside_inn.inc shrink_text
+	./shrink_text < inside_inn.inc > inside_inn.inc.lookup
 
 jhonka.inc.lookup:	jhonka.inc shrink_text
 	./shrink_text < jhonka.inc > jhonka.inc.lookup
@@ -163,8 +183,6 @@ cliff_base.inc.lookup:	cliff_base.inc shrink_text
 common.inc.lookup:	common.inc shrink_text
 	./shrink_text < common.inc > common.inc.lookup
 
-inn.inc.lookup:	inn.inc shrink_text
-	./shrink_text < inn.inc > inn.inc.lookup
 
 inside.inc.lookup:	inside.inc shrink_text
 	./shrink_text < inside.inc > inside.inc.lookup
@@ -198,4 +216,7 @@ shrink_text.o:	shrink_text.c
 ###
 
 clean:	
+	rm -f *.o *~ dump_text shrink_text *.lookup *.ZX02
+
+distclean:	
 	rm -f *.o *~ dump_text shrink_text *.lookup *.ZX02

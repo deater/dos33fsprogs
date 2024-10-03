@@ -1111,4 +1111,4 @@ crooked_look_tree:
 	jmp	finish_parse_message
 
 
-.include "dialog_peasant4.inc"
+.include "text/dialog_peasant4.inc"

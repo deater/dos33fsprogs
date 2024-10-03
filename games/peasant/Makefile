@@ -558,6 +558,7 @@ distclean:
 	cd inside && make distclean
 	cd intro && make distclean
 	cd map && make distclean
+	cd text && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
 	cd wrong_boot && make distclean
@@ -579,6 +580,7 @@ clean:
 	cd intro && make clean
 	cd map && make clean
 	cd music && make clean
+	cd text && make clean
 	cd title && make clean
 	cd trogdor && make clean
 	cd vid_logo && make clean

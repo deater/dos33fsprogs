@@ -628,4 +628,4 @@ inn_light_candle:
 
 
 
-.include "dialog_inn.inc"
+.include "../text/dialog_inn.inc"

@@ -1179,4 +1179,4 @@ knight_belt_fire:
 	jmp	finish_parse_message
 
 
-.include "dialog_peasant2.inc"
+.include "text/dialog_peasant2.inc"

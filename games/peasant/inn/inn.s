@@ -302,6 +302,6 @@ verb_tables_hi:
 
 
 inn_text_zx02:
-.incbin "DIALOG_INN.ZX02"
+.incbin "../text/DIALOG_INN.ZX02"
 
 .include "inn_actions.s"

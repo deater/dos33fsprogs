@@ -1226,4 +1226,4 @@ waterfall_swim_water:
 
 
 
-.include "dialog_peasant1.inc"
+.include "./text/dialog_peasant1.inc"

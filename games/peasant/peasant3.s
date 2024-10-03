@@ -385,7 +385,7 @@ verb_tables_hi:
 
 
 peasant3_text_zx02:
-.incbin "DIALOG_PEASANT3.ZX02"
+.incbin "text/DIALOG_PEASANT3.ZX02"
 
 .include "peasant3_actions.s"
 

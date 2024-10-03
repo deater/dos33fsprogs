@@ -1376,5 +1376,5 @@ inn_note_no_note:
 	jmp	finish_parse_message
 
 
-.include "dialog_peasant3.inc"
+.include "text/dialog_peasant3.inc"
 
