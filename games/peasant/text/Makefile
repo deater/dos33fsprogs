@@ -13,11 +13,28 @@ all:	dump_text shrink_text \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
 	DIALOG_INSIDE.ZX02 dialog_inside.inc \
 	DIALOG_INN.ZX02 dialog_inn.inc \
-	cliff_base.inc.lookup \
+	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	cliff.inc.lookup \
 	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 	common.inc.lookup \
 	inventory.inc.lookup
+
+
+###
+
+DIALOG_CLIFF_BASE.ZX02:	dialog_cliff_base
+	$(ZX02) -f  dialog_cliff_base DIALOG_CLIFF_BASE.ZX02
+
+dialog_cliff_base:	dialog_cliff_base.o
+	ld65 -o dialog_cliff_base dialog_cliff_base.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_cliff_base.o:	dialog_cliff_base.s \
+		cliff_base.inc.lookup
+	ca65 -o dialog_cliff_base.o dialog_cliff_base.s -l dialog_cliff_base.lst
+
+dialog_cliff_base.inc:	../generate_all_symbols dialog_cliff_base
+	../generate_all_symbols -a 0xd000 dialog_cliff_base.lst > dialog_cliff_base.inc
+
 
 ###
 
@@ -148,6 +165,9 @@ archery.inc.lookup:	archery.inc shrink_text
 burninated_tree.inc.lookup:	burninated_tree.inc shrink_text
 	./shrink_text < burninated_tree.inc > burninated_tree.inc.lookup
 
+cliff_base.inc.lookup:	cliff_base.inc shrink_text
+	./shrink_text < cliff_base.inc > cliff_base.inc.lookup
+
 cottage.inc.lookup:	cottage.inc shrink_text
 	./shrink_text < cottage.inc > cottage.inc.lookup
 
@@ -218,9 +238,6 @@ yellow_tree.inc.lookup:	yellow_tree.inc shrink_text
 
 cliff.inc.lookup:	cliff.inc shrink_text
 	./shrink_text < cliff.inc > cliff.inc.lookup
-
-cliff_base.inc.lookup:	cliff_base.inc shrink_text
-	./shrink_text < cliff_base.inc > cliff_base.inc.lookup
 
 common.inc.lookup:	common.inc shrink_text
 	./shrink_text < common.inc > common.inc.lookup

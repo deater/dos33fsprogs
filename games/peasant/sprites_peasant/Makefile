@@ -4,7 +4,7 @@ LINKER_SCRIPTS = ../../../linker_scripts
 
 all:	enemy_sprites.inc walk_sprites.inc climb_flame_sprites.inc \
 	climb_sprites.inc robe_sprites.inc flame_sprites.inc \
-	walking_sprites.zx02
+	walking_sprites.zx02 robe_sprites.zx02
 
 ####
 
@@ -17,6 +17,19 @@ walking_sprites:	walking_sprites.o
 walking_sprites.o:	walking_sprites.s \
 	flame_sprites.inc walk_sprites.inc
 	ca65 -o walking_sprites.o walking_sprites.s -l walking_sprites.lst
+
+####
+
+robe_sprites.zx02:	robe_sprites
+	$(ZX02) -f robe_sprites robe_sprites.zx02
+
+robe_sprites:	robe_sprites.o
+	ld65 -o robe_sprites robe_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+
+robe_sprites.o:	robe_sprites.s \
+	flame_sprites.inc walk_sprites.inc
+	ca65 -o robe_sprites.o robe_sprites.s -l robe_sprites.lst
+
 
 
 

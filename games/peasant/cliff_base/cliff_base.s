@@ -147,9 +147,9 @@ col_copy_loop:
 	; Note: to get to this point of the game you have to be
 	;	in a robe and on fire, so we should enforce that
 
-	lda	#<walking_sprite_data
+	lda	#<robe_sprite_data
 	sta	zx_src_l+1
-	lda	#>walking_sprite_data
+	lda	#>robe_sprite_data
 	sta	zx_src_h+1
 
 	lda	#$a0
@@ -204,13 +204,6 @@ wait_loop:
 
 	dec	WAIT_LOOP
 	bne	wait_loop
-
-
-
-	; delay
-
-;	lda	#200
-;	jsr	wait
 
 
 	jmp	game_loop
@@ -326,9 +319,9 @@ verb_tables_hi:
 
 
 cliff_text_zx02:
-.incbin "DIALOG_CLIFF_BASE.ZX02"
+.incbin "../text/DIALOG_CLIFF_BASE.ZX02"
 
-.include "cliff_actions.s"
+.include "cliff_base_actions.s"
 
-walking_sprite_data:
-	.incbin "../sprites_peasant/walking_sprites.zx02"
+robe_sprite_data:
+	.incbin "../sprites_peasant/robe_sprites.zx02"
