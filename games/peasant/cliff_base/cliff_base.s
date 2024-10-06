@@ -24,6 +24,7 @@ cliff_base:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
+	sta	FLAME_COUNT
 
 	jsr	hgr_make_tables
 
@@ -196,6 +197,21 @@ game_loop:
 	; increment frame
 
 	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	inc	FRAME
+
+	inc	FLAME_COUNT
+	lda	FLAME_COUNT
+	cmp	#3
+	bne	flame_good
+
+	lda	#0
+	sta	FLAME_COUNT
+
+flame_good:
 
 	;======================
 	; check keyboard
