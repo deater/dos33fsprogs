@@ -52,6 +52,9 @@ cliff_base_do_climb:
 	lda	#LOAD_HEIGHTS
 	sta	WHICH_LOAD
 
+	lda	#LOCATION_CLIFF_HEIGHTS
+	sta	MAP_LOCATION
+
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER
 

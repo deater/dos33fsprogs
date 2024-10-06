@@ -14,10 +14,10 @@ cliff_heights.o:	cliff_heights.s \
 		../inventory/inventory.inc \
 		../parse_input.inc \
 		cliff_actions.s \
-		../DIALOG_CLIFF.ZX02 ../dialog_cliff.inc \
+		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
 		graphics_cliff/cliff_graphics.inc \
 		graphics_cliff/priority_cliff.inc \
-		../sprites/peasant_sprites.inc \
+		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant.s ../move_peasant.s \
 		../gr_copy.s ../hgr_copy.s \
 		../new_map_location.s \

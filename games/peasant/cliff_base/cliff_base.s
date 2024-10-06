@@ -201,8 +201,6 @@ game_loop:
 	;=====================
 	; increment flame
 
-	inc	FRAME
-
 	inc	FLAME_COUNT
 	lda	FLAME_COUNT
 	cmp	#3

@@ -5,7 +5,6 @@
 ; Top of the cliff and outer trogdor lair
 
 ; by Vince `deater` Weaver	vince@deater.net
-
 .include "../zp.inc"
 .include "../hardware.inc"
 
@@ -16,13 +15,14 @@
 
 collision_location = $bc00
 
-LOCATION_BASE	= LOCATION_CLIFF_HEIGHTS ; (21)
+LOCATION_BASE	= LOCATION_CLIFF_HEIGHTS ; (21 = $15)
 
 cliff_heights:
 
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
+	sta	FLAME_COUNT
 
 	jsr	hgr_make_tables
 
@@ -140,16 +140,26 @@ col_copy_loop:
 	jsr	print_score
 
 
+	;======================
+	; always activate text
+
+	jsr	setup_prompt
+
+
 	;========================
 	; Load Peasant Sprites
 	;========================
 	; Note: to get to this point of the game you have to be
 	;	in a robe and on fire, so we should enforce that
 
+	lda	GAME_STATE_2
+	ora	#ON_FIRE
+	sta	GAME_STATE_2
+
 	lda	#<robe_sprite_data
-	sta	ZX0_src
+	sta	zx_src_l+1
 	lda	#>robe_sprite_data
-	sta	ZX0_src+1
+	sta	zx_src_h+1
 
 	lda	#$a0
 
@@ -186,6 +196,20 @@ game_loop:
 	; increment frame
 
 	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	inc	FLAME_COUNT
+	lda	FLAME_COUNT
+	cmp	#3
+	bne	flame_good
+
+	lda	#0
+	sta	FLAME_COUNT
+
+flame_good:
+
 
 	;======================
 	; check keyboard
@@ -331,7 +355,7 @@ verb_tables_hi:
 
 
 cliff_text_zx02:
-.incbin "../DIALOG_CLIFF.ZX02"
+.incbin "../text/DIALOG_CLIFF_HEIGHTS.ZX02"
 
 .include "cliff_actions.s"
 

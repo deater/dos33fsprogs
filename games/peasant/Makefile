@@ -496,22 +496,6 @@ text/dialog_peasant3.inc:
 text/dialog_peasant4.inc:
 	cd text && make
 
-###
-
-DIALOG_CLIFF.ZX02:	dialog_cliff
-	$(ZX02) -f  dialog_cliff DIALOG_CLIFF.ZX02
-
-dialog_cliff:	dialog_cliff.o
-	ld65 -o dialog_cliff dialog_cliff.o -C ../../linker_scripts/apple2_d000.inc
-
-dialog_cliff.o:	dialog_cliff.s text/cliff.inc
-	ca65 -o dialog_cliff.o dialog_cliff.s -l dialog_cliff.lst
-
-###
-
-dialog_cliff.inc:	generate_all_symbols dialog_cliff
-	./generate_all_symbols -a 0xd000 dialog_cliff.lst > dialog_cliff.inc
-
 ####
 
 dialog_test:	dialog_test.o
