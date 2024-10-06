@@ -146,9 +146,9 @@ col_copy_loop:
 	; Note: to get to this point of the game you have to be
 	;	in a robe and on fire, so we should enforce that
 
-	lda	#<walking_sprite_data
+	lda	#<robe_sprite_data
 	sta	ZX0_src
-	lda	#>walking_sprite_data
+	lda	#>robe_sprite_data
 	sta	ZX0_src+1
 
 	lda	#$a0
@@ -335,5 +335,5 @@ cliff_text_zx02:
 
 .include "cliff_actions.s"
 
-walking_sprite_data:
-	.incbin "../sprites_peasant/walking_sprites.zx02"
+robe_sprite_data:
+	.incbin "../sprites_peasant/robe_sprites.zx02"

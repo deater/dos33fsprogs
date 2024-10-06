@@ -212,43 +212,43 @@ oops_new_location:
 
 	; new location but same file
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_CLIFF_HEIGHTS
-	bne	not_the_cliff
+;	lda	MAP_LOCATION
+;	cmp	#LOCATION_CLIFF_HEIGHTS
+;	bne	not_the_cliff
 
-	lda	PREVIOUS_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	beq	to_cliff_from_outer
+;	lda	PREVIOUS_LOCATION
+;	cmp	#LOCATION_TROGDOR_OUTER
+;	beq	to_cliff_from_outer
 
-to_cliff_from_cliff:
-	lda	#18
-	sta	PEASANT_X
-	lda	#140
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
+;to_cliff_from_cliff:
+;	lda	#18
+;	sta	PEASANT_X
+;	lda	#140
+;	sta	PEASANT_Y
+;	bne	not_the_cliff		; bra
 
-to_cliff_from_outer:
-	lda	#32
-	sta	PEASANT_X
-	lda	#120
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
+;to_cliff_from_outer:
+;	lda	#32
+;	sta	PEASANT_X
+;	lda	#120
+;	sta	PEASANT_Y
+;	bne	not_the_cliff		; bra
 
-not_the_cliff:
+;not_the_cliff:
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	bne	not_outer
+;	lda	MAP_LOCATION
+;	cmp	#LOCATION_TROGDOR_OUTER
+;	bne	not_outer
 
-	lda	#2
-	sta	PEASANT_X
-	lda	#100
-	sta	PEASANT_Y
+;	lda	#2
+;	sta	PEASANT_X
+;	lda	#100
+;	sta	PEASANT_Y
 
-not_outer:
-just_go_there:
+;not_outer:
+;just_go_there:
 
-	jmp	new_location
+;	jmp	new_location
 
 
 	;************************
@@ -260,7 +260,6 @@ level_over:
 	beq	exiting_cliff
 
 	; new location
-	; in theory this can only be TROGDOR
 
 	lda	#4
 	sta	PEASANT_X

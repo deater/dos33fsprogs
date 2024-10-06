@@ -18,7 +18,7 @@ cliff_base.o:	cliff_base.s \
 		../text/DIALOG_CLIFF_BASE.ZX02 ../text/dialog_cliff_base.inc \
 		graphics_cliff/cliff_graphics.inc \
 		graphics_cliff/priority_cliff.inc \
-		../sprites/peasant_sprites.inc \
+		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant.s ../move_peasant.s \
 		../gr_copy.s ../hgr_copy.s \
 		../new_map_location.s \

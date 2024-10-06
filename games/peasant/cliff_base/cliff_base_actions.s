@@ -48,6 +48,13 @@ cliff_base_climb:
 	jmp	parse_common_unknown
 
 cliff_base_do_climb:
+
+	lda	#LOAD_HEIGHTS
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
 	ldx	#<cliff_base_climb_message
 	ldy	#>cliff_base_climb_message
 	jsr	partial_message_step

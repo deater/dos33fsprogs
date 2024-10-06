@@ -76,7 +76,7 @@ length_array:
 	.byte  64, 80, 16, 32	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 	.byte  16, 16, 16, 64	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte  64, 64, 32, 64	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  48		; HEIGHTS
+	.byte  64		; HEIGHTS
 
 	.byte   1,1,1		; SAVE1, SAVE2, SAVE3
 	.byte   1		; disk detect

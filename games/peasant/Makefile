@@ -58,11 +58,14 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./ending/ENDING	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./cliff_base/CLIFF_BASE	  0   0
 #	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/HEIGHTS	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
+	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
+	./trogdor/TROGDOR ./ending/ENDING ./cliff_base/CLIFF_BASE \
+	./cliff_heights/CLIFF_HEIGHTS \
 	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02 ./game_over/GAME_OVER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
@@ -91,6 +94,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./ending/ENDING	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` ./cliff_heights/CLIFF_HEIGHTS	  0   0
 
 ###
 
@@ -284,8 +288,11 @@ inventory/INVENTORY:
 
 ####
 
-./cliff_base/CLIFF_BASE:	DIALOG_CLIFF.ZX02
+./cliff_base/CLIFF_BASE:
 	cd cliff_base && make
+
+./cliff_base/CLIFF_HEIGHTS:
+	cd cliff_heights && make
 
 ./archery/ARCHERY:
 	cd archery && make
