@@ -141,11 +141,20 @@ col_copy_loop:
 	jsr	print_score
 
 
+	;======================
+	; always activate text
+
+	jsr	setup_prompt
+
 	;========================
 	; Load Peasant Sprites
 	;========================
 	; Note: to get to this point of the game you have to be
 	;	in a robe and on fire, so we should enforce that
+
+	lda	GAME_STATE_2
+	ora	#ON_FIRE
+	sta	GAME_STATE_2
 
 	lda	#<robe_sprite_data
 	sta	zx_src_l+1

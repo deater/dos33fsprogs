@@ -9,28 +9,28 @@
 	;	we print to chars to right
 
 hgr_input:
-	ldx	INPUT_ACTIVE
-	bne	input_currently_happening
+;	ldx	INPUT_ACTIVE
+;	bne	input_currently_happening
 
-	inc	INPUT_ACTIVE		; make input active
+;	inc	INPUT_ACTIVE		; make input active
 
 	; current keypress in A
 
-	pha
+;	pha
 
 	; activate typing area
 
-	jsr	clear_bottom
+;	jsr	clear_bottom
 
-	ldx	#0
-	ldy	#184
-	lda	#'>'
-	jsr	hgr_put_char
+;	ldx	#0
+;	ldy	#184
+;	lda	#'>'
+;	jsr	hgr_put_char
 
-	ldx	#0		; reset INPUT_X
-	stx	INPUT_X
+;	ldx	#0		; reset INPUT_X
+;	stx	INPUT_X
 
-	pla
+;	pla
 input_currently_happening:
 
 	; check for backspace
@@ -83,7 +83,7 @@ done_hgr_input:
 
 	ldx	INPUT_X			; NUL terminate
 	lda	#0
-	sta	INPUT_ACTIVE
+;	sta	INPUT_ACTIVE
 	sta	input_buffer,X
 
 	rts

@@ -148,10 +148,7 @@ enter_pressed:
 
 	jsr	parse_input
 
-	jsr	clear_bottom
-
-	lda	#0		; reset buffer
-	sta	input_buffer
+	jsr	reset_prompt
 
 done_check_keyboard:
 
@@ -163,3 +160,24 @@ stop_peasant:
 	sta	PEASANT_YADD
 	rts
 
+	;==================================
+	; reset prompt on bottom of screen
+	;==================================
+reset_prompt:
+
+
+
+	lda	#0		; reset buffer
+	sta	input_buffer
+	sta	INPUT_X		; reset INPUT_X
+
+setup_prompt:
+
+	jsr	clear_bottom
+
+	ldx	#0
+	ldy	#184
+	lda	#'>'
+	jsr	hgr_put_char
+
+	rts
