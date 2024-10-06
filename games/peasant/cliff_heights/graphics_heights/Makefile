@@ -3,23 +3,23 @@ PNG2HGR = ../../../../utils/hgr-utils/png2hgr
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
-all:	cliff_graphics.inc \
-	priority_cliff.inc
+all:	cliff_heights_graphics.inc \
+	priority_cliff_heights.inc
 
 ###
 
-cliff_graphics.inc:	\
+cliff_heights_graphics.inc:	\
 	cliff_heights.zx02 outer.zx02
-	echo "cliff_heights_zx02: .incbin \"cliff_heights.zx02\"" >> cliff_graphics.inc
-	echo "outer_zx02: .incbin \"outer.zx02\"" >> cliff_graphics.inc
+	echo "cliff_heights_zx02: .incbin \"cliff_heights.zx02\"" >> cliff_heights_graphics.inc
+	echo "outer_zx02: .incbin \"outer.zx02\"" >> cliff_heights_graphics.inc
 
 ###
 
-priority_cliff.inc:  \
+priority_cliff_heights.inc:  \
 	cliff_heights_priority.zx02 \
 	outer_priority.zx02
-	echo "cliff_heights_priority_zx02: .incbin \"cliff_heights_priority.zx02\"" >> priority_cliff.inc
-	echo "outer_priority_zx02: .incbin \"outer_priority.zx02\"" >> priority_cliff.inc
+	echo "cliff_heights_priority_zx02: .incbin \"cliff_heights_priority.zx02\"" >> priority_cliff_heights.inc
+	echo "outer_priority_zx02: .incbin \"outer_priority.zx02\"" >> priority_cliff_heights.inc
 
 ###
 
@@ -71,5 +71,5 @@ outer_collision.bin:	outer_collision.png
 
 
 clean:	
-	rm -f *~ cliff_graphics.inc priority_cliff.inc *.zx02 *.gr *.hgr
+	rm -f *~ cliff_heights_graphics.inc priority_cliff_heights.inc *.zx02 *.gr *.hgr
 

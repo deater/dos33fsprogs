@@ -15,8 +15,8 @@ cliff_heights.o:	cliff_heights.s \
 		../parse_input.inc \
 		cliff_actions.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
-		graphics_cliff/cliff_graphics.inc \
-		graphics_cliff/priority_cliff.inc \
+		graphics_heights/ciff_heights_graphics.inc \
+		graphics_heights/priority_cliff_heights.inc \
 		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant.s ../move_peasant.s \
 		../gr_copy.s ../hgr_copy.s \
@@ -27,14 +27,14 @@ cliff_heights.o:	cliff_heights.s \
 
 ###
 
-graphics_cliff/cliff_graphics.inc:
-	cd graphics_cliff && make
+graphics_heights/ciff_heights_graphics.inc:
+	cd graphics_heights && make
 
 ###
 
 distclean:
 	make clean
-	cd graphics_cliff && make clean
+	cd graphics_heights && make clean
 
 ###
 

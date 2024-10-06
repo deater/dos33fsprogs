@@ -339,8 +339,8 @@ exiting_cliff:
 .include "../version.inc"
 
 
-.include "graphics_cliff/cliff_graphics.inc"
-.include "graphics_cliff/priority_cliff.inc"
+.include "graphics_heights/cliff_heights_graphics.inc"
+.include "graphics_heights/priority_cliff_heights.inc"
 
 map_backgrounds_low:
 	.byte   <cliff_heights_zx02
