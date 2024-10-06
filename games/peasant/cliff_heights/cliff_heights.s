@@ -43,6 +43,20 @@ cliff_heights:
 
 	jsr	update_score
 
+
+	; FIXME!
+	; only set this if just arrived, not if loading saved game
+
+	lda	#14
+	sta	PEASANT_X
+	lda	#150
+	sta	PEASANT_Y
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+
 	;=============================
 	;=============================
 	; new screen location

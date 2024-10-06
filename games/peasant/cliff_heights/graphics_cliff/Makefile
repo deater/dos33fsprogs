@@ -1,7 +1,7 @@
-
 PNG2GR = ../../../../utils/gr-utils/png2gr
 PNG2HGR = ../../../../utils/hgr-utils/png2hgr
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
+PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	cliff_graphics.inc \
 	priority_cliff.inc
@@ -12,6 +12,14 @@ cliff_graphics.inc:	\
 	cliff_heights.zx02 outer.zx02
 	echo "cliff_heights_zx02: .incbin \"cliff_heights.zx02\"" >> cliff_graphics.inc
 	echo "outer_zx02: .incbin \"outer.zx02\"" >> cliff_graphics.inc
+
+###
+
+priority_cliff.inc:  \
+	cliff_heights_priority.zx02 \
+	outer_priority.zx02
+	echo "cliff_heights_priority_zx02: .incbin \"cliff_heights_priority.zx02\"" >> priority_cliff.inc
+	echo "outer_priority_zx02: .incbin \"outer_priority.zx02\"" >> priority_cliff.inc
 
 ###
 
@@ -29,41 +37,35 @@ outer.zx02:	outer.hgr
 outer.hgr:	outer.png
 	$(PNG2HGR) outer.png > outer.hgr
 
-
-
-###
-
-priority_cliff.inc:  \
-	outer_priority.zx02 \
-	cliff_heights_priority.zx02
-	echo "cliff_heights_priority_zx02: .incbin \"cliff_heights_priority.zx02\"" >> priority_cliff.inc
-	echo "outer_priority_zx02: .incbin \"outer_priority.zx02\"" >> priority_cliff.inc
-
-
 ####
 
-outer_priority.zx02:	outer_priority.gr
-	$(ZX02) -f outer_priority.gr outer_priority.zx02
+cliff_heights_priority.zx02:	cliff_heights_priority.combined
+	$(ZX02) -f cliff_heights_priority.combined cliff_heights_priority.zx02
 
-outer_priority.gr:	outer_priority.png
-	$(PNG2GR) outer_priority.png outer_priority.gr
-
-####
-
-cliff_base_priority.zx02:	cliff_base_priority.gr
-	$(ZX02) -f cliff_base_priority.gr cliff_base_priority.zx02
-
-cliff_base_priority.gr:	cliff_base_priority.png
-	$(PNG2GR) cliff_base_priority.png cliff_base_priority.gr
-
-####
-
-cliff_heights_priority.zx02:	cliff_heights_priority.gr
-	$(ZX02) -f cliff_heights_priority.gr cliff_heights_priority.zx02
+cliff_heights_priority.combined:	cliff_heights_priority.gr cliff_heights_collision.bin
+	cat cliff_heights_priority.gr >  cliff_heights_priority.combined
+	cat cliff_heights_collision.bin >> cliff_heights_priority.combined
 
 cliff_heights_priority.gr:	cliff_heights_priority.png
 	$(PNG2GR) cliff_heights_priority.png cliff_heights_priority.gr
 
+cliff_heights_collision.bin:	cliff_heights_collision.png
+	$(PNG2COLLISION) cliff_heights_collision.png cliff_heights_collision.bin
+
+####
+
+outer_priority.zx02:	outer_priority.combined
+	$(ZX02) -f outer_priority.combined outer_priority.zx02
+
+outer_priority.combined:	outer_priority.gr outer_collision.bin
+	cat outer_priority.gr >  outer_priority.combined
+	cat outer_collision.bin >> outer_priority.combined
+
+outer_priority.gr:	outer_priority.png
+	$(PNG2GR) outer_priority.png outer_priority.gr
+
+outer_collision.bin:	outer_collision.png
+	$(PNG2COLLISION) outer_collision.png outer_collision.bin
 
 ####
 
