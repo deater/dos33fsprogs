@@ -45,7 +45,8 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
-	./cliff_base/CLIFF_BASE ./game_over/GAME_OVER ./inside/INSIDE ./inn/INN \
+	./cliff_base/CLIFF_BASE ./cliff_heights/CLIFF_HEIGHTS \
+	./game_over/GAME_OVER ./inside/INSIDE ./inn/INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -292,7 +293,7 @@ inventory/INVENTORY:
 ./cliff_base/CLIFF_BASE:
 	cd cliff_base && make
 
-./cliff_base/CLIFF_HEIGHTS:
+./cliff_heights/CLIFF_HEIGHTS:
 	cd cliff_heights && make
 
 ./archery/ARCHERY:
@@ -542,7 +543,8 @@ distclean:
 	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd archery && make distclean
-	cd cliff && make distclean
+	cd cliff_base && make distclean
+	cd cliff_heights && make distclean
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
@@ -564,6 +566,7 @@ clean:
 			generate_common generate_all_symbols
 	cd archery && make clean
 	cd cliff_base && make clean
+	cd cliff_heights && make clean
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
