@@ -261,10 +261,12 @@ END_OF_SAVE		= $AD
 
 ;=============================================
 
+PEASANT_FALLING	= $AF		; cliff climb
+
 CURRENT_VERB	= $B0		; parser
 CURRENT_NOUN	= $B1
 WORD_MATCH	= $B2
-;INPUT_ACTIVE	= $B3
+MAX_HEIGHT	= $B3
 WAIT_LOOP	= $B4
 
 INPUT_X		= $C0
@@ -289,7 +291,10 @@ CURRENT_DISK	= $DC
 HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
+TEMP_CENTER	= $EC		; for cliff climb
+CLIMB_COUNT	= $ED		; for cliff climb
 FLAME_COUNT	= $EE
+CURRENT_ROCK	= $EF		; for cliff climb
 
 P0		= $F1
 P1		= $F2
@@ -297,6 +302,8 @@ P2		= $F3
 P3		= $F4
 P4		= $F5
 P5		= $F6
+SPRITE_X	= $F7	; ?
+SPRITE_Y	= $F8	; ?
 
 CURRENT_ROW	= $F9	; ?
 TEMP_SPRITE	= $FA
