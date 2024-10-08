@@ -184,11 +184,6 @@ col_copy_loop:
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
 
-
-;	ldx     #<gary_scare_message
- ;       ldy     #>gary_scare_message
-  ;      jsr     partial_message_step
-
 	; score points
 
 	lda	#3
@@ -198,7 +193,7 @@ col_copy_loop:
 	ora	#CLIFF_CLIMBED
 	sta	GAME_STATE_3
 
-        ; TODO: break fence
+	; print the message
 
 	ldx	#<cliff_heights_top_message
 	ldy	#>cliff_heights_top_message
@@ -360,7 +355,6 @@ exiting_cliff:
 .include "../gr_offsets.s"
 .include "../hgr_partial_restore.s"
 
-
 .include "../gr_copy.s"
 .include "../hgr_copy.s"
 
@@ -370,10 +364,6 @@ exiting_cliff:
 
 .include "../wait.s"
 .include "../wait_a_bit.s"
-
-.include "../version.inc"
-
-;.include "../print_text_message.s"
 
 .include "graphics_heights/cliff_heights_graphics.inc"
 .include "graphics_heights/priority_cliff_heights.inc"
