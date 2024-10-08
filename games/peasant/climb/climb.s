@@ -549,6 +549,24 @@ col_copy_loop:
 
 	bit	PAGE2
 
+	;===================
+	; put peasant text
+
+	lda	#<peasant_text
+	sta	OUTL
+	lda	#>peasant_text
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	;===================
+	; put score
+
+	jsr	print_score
+
+
+
+
 	rts
 
 
