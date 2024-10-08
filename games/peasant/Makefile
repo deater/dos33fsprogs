@@ -46,6 +46,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 
 peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	./cliff_base/CLIFF_BASE ./cliff_heights/CLIFF_HEIGHTS \
+	./climb/CLIMB \
 	./game_over/GAME_OVER ./inside/INSIDE ./inn/INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
@@ -58,7 +59,7 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk  15 0 ./trogdor/TROGDOR	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./ending/ENDING	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./cliff_base/CLIFF_BASE	  0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
@@ -95,6 +96,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./ending/ENDING	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./climb/CLIMB	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` ./cliff_heights/CLIFF_HEIGHTS	  0   0
 
 ###
@@ -293,6 +295,9 @@ inventory/INVENTORY:
 ./cliff_base/CLIFF_BASE:
 	cd cliff_base && make
 
+./climb/CLIMB:
+	cd climb && make
+
 ./cliff_heights/CLIFF_HEIGHTS:
 	cd cliff_heights && make
 
@@ -456,6 +461,9 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s get_noun_again parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_input_smc parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s hay_blown_away_message parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s print_text_message parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s restore_parse_message parse_input.lst >> parse_input.inc
+
 
 
 ###
@@ -545,6 +553,7 @@ distclean:
 	cd archery && make distclean
 	cd cliff_base && make distclean
 	cd cliff_heights && make distclean
+	cd climb && make clean
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
@@ -567,6 +576,7 @@ clean:
 	cd archery && make clean
 	cd cliff_base && make clean
 	cd cliff_heights && make clean
+	cd climb && make clean
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
