@@ -17,6 +17,7 @@ peasant_quest_intro:
 	sta	LEVEL_OVER
 	sta	PEASANT_STEPS
 	sta	INPUT_X
+	sta     input_buffer	; reset buffer (NUL at start)
 	sta	GAME_STATE_2
 
 	jsr	hgr_make_tables

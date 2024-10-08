@@ -124,5 +124,7 @@ start_new_game:
 	sta	KERREK_STATE
 	sta	ARROW_SCORE
 
+	bit	KEYRESET	; clear or else escape ends up in buffer
+
 	rts
 

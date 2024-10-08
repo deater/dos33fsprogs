@@ -165,8 +165,6 @@ stop_peasant:
 	;==================================
 reset_prompt:
 
-
-
 	lda	#0		; reset buffer
 	sta	input_buffer
 	sta	INPUT_X		; reset INPUT_X
@@ -181,3 +179,4 @@ setup_prompt:
 	jsr	hgr_put_char
 
 	rts
+
