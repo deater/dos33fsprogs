@@ -241,6 +241,10 @@ look_inventory_there_message:
 ; + save
 ; + show priority
 ; + version
+
+version_message:
+.include "../version.inc"
+
 ; + copy
 
 unknown_message:
