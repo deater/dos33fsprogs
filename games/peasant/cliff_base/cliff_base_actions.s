@@ -49,10 +49,10 @@ cliff_base_climb:
 
 cliff_base_do_climb:
 
-	lda	#LOAD_HEIGHTS
+	lda	#LOAD_CLIMB
 	sta	WHICH_LOAD
 
-	lda	#LOCATION_CLIFF_HEIGHTS
+	lda	#LOCATION_CLIMB
 	sta	MAP_LOCATION
 
 	lda	#NEW_FROM_DISK

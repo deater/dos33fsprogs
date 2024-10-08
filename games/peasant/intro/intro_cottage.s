@@ -252,12 +252,14 @@ done_cottage:
 cottage_path:
 	.byte 10,117		; 0 ; 5s, text 1
 	.byte 10,117		; 1 ; 3s, text 2
+	; diagonal
 	.byte 11,122
 	.byte 12,127
 	.byte 13,132
 	.byte 14,137
 	.byte 15,142
 	.byte 16,147
+	; horizontal
 	.byte 17,147
 	.byte 18,147
 	.byte 19,147
@@ -281,4 +283,18 @@ cottage_path:
 	.byte 37,147
 	.byte 38,147
 	.byte $FF,$FF
+
+
+
+	;=====================================
+	; walk to
+	;	go one step from PEASANT_X, PEASANT_Y
+	;	to WALK_DEST_X, WALK_DEST_Y
+	; if PEASANT_X>WALK_DEST_X face left
+	; else WALK_DEST_X face right
+	; if PEASANT_X==WALK_DEST_X
+	;    if PEASANT_Y>WALK_DEST_Y face up
+	;    else WALK_DEST_Y face down
+
+walk_to:
 

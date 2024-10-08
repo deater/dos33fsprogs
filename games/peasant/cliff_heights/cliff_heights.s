@@ -167,7 +167,11 @@ col_copy_loop:
 	jsr	zx02_full_decomp
 
 
+	; clear the keyboard in case we were holding it down
 
+	bit	KEYRESET
+
+	; See if we need to give points
 
 	lda	GAME_STATE_3
 	and	#CLIFF_CLIMBED
@@ -206,8 +210,6 @@ col_copy_loop:
 	jsr	restore_parse_message
 
 cliff_already_climbed:
-
-
 
 	;===========================
 	;===========================

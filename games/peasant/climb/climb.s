@@ -41,7 +41,7 @@ cliff_climb:
 	sta	PEASANT_FALLING
 	sta	MAX_HEIGHT
 
-	lda	#22				; starting location
+	lda	#19				; starting location
 	sta	PEASANT_X
 	lda	#86
 	sta	PEASANT_Y
@@ -127,7 +127,7 @@ draw_bird:
 	jsr	hgr_draw_sprite
 
 done_draw_bird:
-
+.if 0
 	;=====================
 	; draw rock
 	;=====================
@@ -383,7 +383,7 @@ rock_good:
 	lda	CURRENT_ROCK
 	cmp	#MAX_ROCKS
 	bne	move_rock_loop
-
+.endif
 
 	;=====================
 	; increment frame
@@ -429,62 +429,55 @@ flame_good:
 
 	jmp	game_loop
 
+
+
+
+	;=======================
+	; here if fell
+	;=======================
 cliff_game_over:
 
-;	jsr	clear_gr_all
 
-;	bit	SET_TEXT
-;	bit	PAGE1
-
-	; update max height attained
-
-;	lda	MAX_HEIGHT
-;	and	#$f
-;	clc
-;	adc	#$30
-;	sta	losing_number+1
-
-;	lda	MAX_HEIGHT
-;	lsr
-;	lsr
-;	lsr
-;	lsr
-;	clc
-;	adc	#$30
-;	sta	losing_number
-
-;	lda	#<losing_text
-;	sta	OUTL
-;	lda	#>losing_text
-;	sta	OUTH
-
-;	jsr	move_and_print_list
-
-;	bit	KEYRESET
-
-;wait_until_keypress2:
-;	lda	KEYPRESS				; 4
-;	bpl	wait_until_keypress2			; 3
-
-;	cmp	#'N'|$80
-;	beq	exit_game
-
-;	cmp	#'n'|$80
-;	beq	exit_game
-
-;	bit	KEYRESET	; clear the keyboard buffer
-
-;	jmp	restart_game
-
-exit_game:
-	; FIXME
-
-	lda	#0
+	lda	#LOAD_GAME_OVER
 	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+	; FIXME: there actually is a message I think
+
+;	ldx	#<die_message
+;	ldy	#>die_message
+;	jmp	finish_parse_message
 
 	rts			; will this work?
 
+
+	;==========================
+	; here if off top of screen
+	;==========================
+
 cliff_reload_bg:
+	lda	MAP_LOCATION
+	cmp	#3
+	bcc	keep_on_climbing		; blt
+
+	; hit the top!
+
+	lda	#LOCATION_CLIFF_HEIGHTS
+	sta	MAP_LOCATION
+
+	lda	#LOAD_HEIGHTS
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+	rts
+
+
+
+keep_on_climbing:
 	jsr	reset_enemy_state
 
 	jsr	load_graphics
@@ -495,6 +488,10 @@ cliff_reload_bg:
 	jmp	game_loop
 
 
+	;================================
+	; load graphics
+	;================================
+
 load_graphics:
 
 
@@ -504,25 +501,6 @@ load_graphics:
 	;========================
 
 	ldx	MAP_LOCATION
-
-	cpx	#2
-	bcc	priority_normal
-
-	; here if map_location above 2
-	; for coach z version make it harder in this case
-
-	lda	#$f
-	sta	bird_freq_smc+1
-	sta	rock_freq_smc+1
-
-	txa
-	sta	rock_speed_smc+1	; rock speed prop to level
-
-	ldx	#2
-
-priority_normal:
-
-
 	lda     priority_data_l,X
 	sta     zx_src_l+1
 	lda     priority_data_h,X
@@ -552,18 +530,10 @@ col_copy_loop:
 	;==========================
 	; Load Background Graphics
 	;===========================
+	; one of the three map locations
+
 
 	ldx	MAP_LOCATION
-
-	; extra for Z variant
-	; repeat level 2 over and over
-
-	cpx	#2
-	bcc	bg_normal
-
-	ldx	#2
-
-bg_normal:
 
 	lda	bg_data_l,X
 	sta	zx_src_l+1
@@ -585,18 +555,11 @@ bg_normal:
 	;====================================
 	; includes
 
-;	.include	"hgr_tables.s"
-
 	.include	"../hgr_sprite.s"
-
-
-;	.include	"zx02_optim.s"
-
-	.include	"../wait.s"
-
 
 	.include	"keyboard_climb.s"
 
+	.include	"../wait.s"
 
 	.include	"draw_peasant_climb.s"
 
@@ -604,13 +567,8 @@ bg_normal:
 
 	.include	"../hgr_partial_restore.s"
 
-
-;	.include	"text_print.s"	; for z version
-
 	.include	"../gr_copy.s"
 	.include	"../hgr_copy.s"
-
-;	.include	"random16.s"
 
 	.include	"../gr_offsets.s"
 
@@ -694,31 +652,6 @@ sprites_mask_h:
 	.byte >smallrock2_mask,>smallrock3_mask
 	.byte >smallrock_crash0_mask,>smallrock_crash1_mask
 
-.if 0
-	;========================================
-
-	; background restore parameters
-	; currently 5, should check this and error if we overflow
-
-	; tried to dynamically do this, but in the end hard-coded
-
-	; 0 = bird
-	; 1,2,3 = boulders
-	; 4 = peasant
-	; 5 = flame
-
-save_valid:
-	.byte	0, 0, 0, 0, 0, 0
-save_xstart:
-	.byte	0, 0, 0, 0, 0, 0
-save_xend:
-	.byte	0, 0, 0, 0, 0, 0
-save_ystart:
-	.byte	0, 0, 0, 0, 0, 0
-save_yend:
-	.byte	0, 0, 0, 0, 0, 0
-
-.endif
 	;========================================
 	; data for the enemies
 

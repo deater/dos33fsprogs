@@ -67,6 +67,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
 	./trogdor/TROGDOR ./ending/ENDING ./cliff_base/CLIFF_BASE \
+	./climb/CLIMB \
 	./cliff_heights/CLIFF_HEIGHTS \
 	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02 ./game_over/GAME_OVER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2

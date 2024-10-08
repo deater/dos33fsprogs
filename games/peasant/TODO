@@ -1,3 +1,10 @@
+current:
+	finish base (mostly walk_to)
+	fix/add sound effects for rocks/lightning
+	add lightning
+
+===============================
+
 Sound effects:
 	+ Rocks make noise when crash
 	+ di-dit-da-do when falling
@@ -47,10 +54,7 @@ General:
 + background priority mask not working when at far top of screen
 + fix issue where walking stops when you cross to screen w priority
   (most visible, mountain pass to river)
-+ More frames in peasant sprites
-+ Let disk 2 live in the 2nd drive?  
-	LDA $C08A,X to select first drive
-	LDA $C08B,X to select second drive
+
 
 
 Peasant sprites:
@@ -63,8 +67,6 @@ Peasant sprites:
 
 Text parsing:
 ~~~~~~~~~~~~~
-+ get rid ot wasd, make it more like original
-	for Apple II+ use :,/ for up,down
 
 + always load CURERENT_NOUN into A before calling into parsing
 	routines
@@ -211,15 +213,26 @@ Inside Inn:
 + Animate getting room (sleeping in bed, waking up)
 + Animate night falling
 
-Cliff:
-~~~~~~
+Cliff_Base:
+~~~~~~~~~~~
++ Walk to
+
+Cliff Climb
+~~~~~~~~~~~
++ Hook up
++ Sound effects for rocks falling
++ Sound effect for falling
++ Message upon hitting ground
+
+Cliff Heights
+~~~~~~~~~~~~~
 + Hook up points/message for arriving at cliff
-+ Cliff minigame
 + Animate lightning
 + Fix the priority/entry points for the various entrances
 + Hook up dialog with keepers
 + Animate keepers
 + Animate the three deaths
++ peasant sprites for the various outfits
 
 Trogdor:
 ~~~~~~~~
