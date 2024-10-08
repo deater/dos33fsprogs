@@ -132,6 +132,11 @@ check_enter:
 	cmp	#13
 	beq	enter_pressed
 
+
+check_escape:
+	cmp	#27		; can press by accident when skipping intro
+	beq	done_check_keyboard
+
 all_other_keys:
 
 	jsr	hgr_input
