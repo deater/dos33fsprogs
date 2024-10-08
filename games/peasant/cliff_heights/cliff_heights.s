@@ -401,3 +401,5 @@ cliff_text_zx02:
 
 robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
+
+.include "sprites_heights/lightning_sprites.inc"
