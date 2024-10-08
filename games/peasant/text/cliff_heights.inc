@@ -318,7 +318,7 @@ cave_outer_get_bones_message:
 .byte "Riddle me this. What color",13
 .byte "are the leaves on the tree",13
 .byte "that grows by the well?",13
-.byte "A. Orange",13
+.byte "A. Orange",13		; correct
 .byte "B. Green",13
 .byte "C. Yellow",0
 
