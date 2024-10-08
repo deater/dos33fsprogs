@@ -7,6 +7,7 @@
 ; lightning makes sound effect, same as rock crashing noise
 
 ; shows once atop
+cliff_heights_top_message:
 .byte "Nice jorb climbing the",13
 .byte "cliff. You have a real way",13
 .byte "with those arrow keys.",0

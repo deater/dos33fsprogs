@@ -44,19 +44,6 @@ cliff_heights:
 	jsr	update_score
 
 
-	; FIXME!
-	; only set this if just arrived, not if loading saved game
-
-	lda	#14
-	sta	PEASANT_X
-	lda	#150
-	sta	PEASANT_Y
-
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-
-
 	;=============================
 	;=============================
 	; new screen location
@@ -178,6 +165,54 @@ col_copy_loop:
 	lda	#$a0
 
 	jsr	zx02_full_decomp
+
+
+
+
+	lda	GAME_STATE_3
+	and	#CLIFF_CLIMBED
+	bne	cliff_already_climbed
+
+	; only set this if just arrived, not if loading saved game
+
+	lda	#14
+	sta	PEASANT_X
+	lda	#150
+	sta	PEASANT_Y
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+
+;	ldx     #<gary_scare_message
+ ;       ldy     #>gary_scare_message
+  ;      jsr     partial_message_step
+
+	; score points
+
+	lda	#3
+	jsr	score_points
+
+	lda	GAME_STATE_3
+	ora	#CLIFF_CLIMBED
+	sta	GAME_STATE_3
+
+        ; TODO: break fence
+
+	ldx	#<cliff_heights_top_message
+	ldy	#>cliff_heights_top_message
+	stx     OUTL
+        sty     OUTH
+        jsr     print_text_message
+
+        jsr     wait_until_keypress
+
+	jsr	restore_parse_message
+
+cliff_already_climbed:
+
+
 
 	;===========================
 	;===========================
@@ -338,6 +373,7 @@ exiting_cliff:
 
 .include "../version.inc"
 
+;.include "../print_text_message.s"
 
 .include "graphics_heights/cliff_heights_graphics.inc"
 .include "graphics_heights/priority_cliff_heights.inc"
