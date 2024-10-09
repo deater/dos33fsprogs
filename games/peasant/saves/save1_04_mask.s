@@ -1,22 +1,18 @@
-; SAVE1 -- ??
-
-.include "zp.inc"
-
-; want to load this to address $90
+; SAVE1 -- with Mask
 
 ;
 .byte LOAD_PEASANT2	; WHICH_LOAD	= 	$90
 .byte 10		; PEASANT_X	=	$91
 .byte 100		; PEASANT_Y	=	$92
 .byte PEASANT_DIR_UP	; PEASANT_DIR	=	$93
-.byte 0			; MAP_X		=	$94
-.byte 1			; MAP_Y		=	$95
-.byte LOCATION_HAY_BALE	; MAP_LOCATION	=	$96
+.byte LOCATION_HAY_BALE	; MAP_LOCATION	=	$94
+.byte $00		; ??		=	$95
 .byte GARY_SCARED
-			; GAME_STATE_0	=	$97
-.byte $00		; GAME_STATE_1	=	$98
+			; GAME_STATE_0	=	$96
+.byte $00		; GAME_STATE_1	=	$97
 .byte TALKED_TO_KNIGHT
-			; GAME_STATE_2	=	$99
+			; GAME_STATE_2	=	$98
+.byte $00		; GAME_STATE_3	=	$99
 .byte $00		; NED_STATUS	=	$9A
 .byte $00		; BUSH_STATUS	=	$9B
 .byte $00		; KERREK_STATE	=	$9C

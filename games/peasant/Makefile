@@ -16,14 +16,12 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk peasant.2mg
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02 ./game_over/GAME_OVER
+	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  4 QBOOT      2   1
-	$(DOS33_RAW) peasant_disk1.dsk  0 11 SAVE1      0   1
-	$(DOS33_RAW) peasant_disk1.dsk  0 12 SAVE2      0   1
-	$(DOS33_RAW) peasant_disk1.dsk  0 13 SAVE3      0   1
+	$(DOS33_RAW) peasant_disk1.dsk  0 12 ./saves/SAVE_DATA  0   1
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC       0   0
 	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO 0   0
@@ -69,13 +67,11 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./trogdor/TROGDOR ./ending/ENDING ./cliff_base/CLIFF_BASE \
 	./climb/CLIMB \
 	./cliff_heights/CLIFF_HEIGHTS \
-	SAVE1 SAVE2 SAVE3 PARSE_INPUT.ZX02 ./game_over/GAME_OVER
+	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 11` SAVE1      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` SAVE2      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 13` SAVE3      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` ./saves/SAVE_DATA      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 3  0` ./music/MUSIC       0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./vid_logo/VID_LOGO 0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 6  0` ./title/TITLE       0   0
@@ -418,27 +414,8 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 
 ###
 
-SAVE1:	save1.o
-	ld65 -o SAVE1 save1.o -C ../../linker_scripts/apple2_e00.inc
-
-save1.o:	save1.s
-	ca65 -o save1.o save1.s -l save1.lst
-
-###
-
-SAVE2:	save2.o
-	ld65 -o SAVE2 save2.o -C ../../linker_scripts/apple2_e00.inc
-
-save2.o:	save2.s
-	ca65 -o save2.o save2.s -l save2.lst
-
-###
-
-SAVE3:	save3.o
-	ld65 -o SAVE3 save3.o -C ../../linker_scripts/apple2_e00.inc
-
-save3.o:	save3.s
-	ca65 -o save3.o save3.s -l save3.lst
+./saves/SAVE_DATA:
+	cd saves && make
 
 ###
 
@@ -562,6 +539,7 @@ distclean:
 	cd inside && make distclean
 	cd intro && make distclean
 	cd map && make distclean
+	cd saves && make distclean
 	cd text && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
@@ -586,6 +564,7 @@ clean:
 	cd intro && make clean
 	cd map && make clean
 	cd music && make clean
+	cd saves && make clean
 	cd text && make clean
 	cd title && make clean
 	cd trogdor && make clean

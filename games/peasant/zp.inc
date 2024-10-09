@@ -150,6 +150,8 @@ PREVIOUS_LOCATION= $8D
 ; savegame state
 ;=======================
 
+LOAD_START	= $90
+
 WHICH_LOAD	= $90
 PEASANT_X	= $91
 PEASANT_Y	= $92

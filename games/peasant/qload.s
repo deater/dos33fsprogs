@@ -34,7 +34,7 @@ which_disk_array:
 	.byte 3,3,3,3		; INSIDE, ARCHERY, MAP, CLIMB
 	.byte 3			; HEIGHTS
 
-	.byte 1,1,1		; SAVE1, SAVE2, SAVE3
+	.byte 1,1,1		; SAVE_DATA, ?, ?
 	.byte $f		; disk detect
 
 load_address_array:
@@ -45,7 +45,7 @@ load_address_array:
 	.byte $60,$60,$60,$60	; INSIDE, ARCHERY, MAP, CLIMB
 	.byte $60		; HEIGHTS
 
-	.byte $BC,$BC,$BC	; SAVE1, SAVE2, SAVE3
+	.byte $BC,$BC,$BC	; SAVE_DATA,? , ?
 	.byte $BC		; disk detect
 
 track_array:
@@ -56,7 +56,7 @@ track_array:
 	.byte  7,3,1,26		; INSIDE, ARCHERY, MAP, CLIMB
 	.byte 30		; HEIGHTS
 
-	.byte  0, 0, 0		; SAVE1, SAVE2, SAVE3
+	.byte  0, 0, 0		; SAVE_DATA, ?, ?
 	.byte  0		; disk detect
 
 sector_array:
@@ -67,7 +67,7 @@ sector_array:
 	.byte  0, 0, 0, 0	; INSIDE, ARCHERY, MAP, CLIMB
 	.byte  0		; HEIGHTS
 
-	.byte  11,12,13		; SAVE1, SAVE2, SAVE3
+	.byte  12,0,0		; SAVE_DATA, ?, ?
 	.byte  0		; disk detect
 
 length_array:
@@ -78,7 +78,7 @@ length_array:
 	.byte  64, 64, 32, 64	; INSIDE, ARCHERY, MAP, CLIMB
 	.byte  64		; HEIGHTS
 
-	.byte   1,1,1		; SAVE1, SAVE2, SAVE3
+	.byte   1,1,1		; SAVE_DATA, ? , ?
 	.byte   1		; disk detect
 
 
@@ -111,7 +111,3 @@ qload_end:
 
 ;.assert (>qload_end - >qload_start) < $e , error, "loader too big"
 .assert (>qload_end - >qload_start) < $15 , error, "loader too big"
-
-
-
-

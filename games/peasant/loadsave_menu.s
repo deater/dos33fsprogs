@@ -4,6 +4,13 @@
 
 	; FIXME: we can share some of the code here a bit more
 
+
+; we load one sector (256 or 512 bytes depending) to $BC00 currently
+; SAVE1 is at $00, SAVE2 at $20, SAVE3 at $40
+
+load_buffer	= $BC00
+
+
 	;=====================
 	; load_menu
 	;=====================
@@ -474,21 +481,32 @@ load_game:
 	bcs	done_load
 
 	; actually load it
-	lda	INVENTORY_Y
-	clc
-	adc	#LOAD_SAVE1
-	sta	WHICH_LOAD
+;	lda	INVENTORY_Y		; this is the pointer?
+;	clc
+;	adc	#LOAD_SAVE1
+;	sta	WHICH_LOAD
 
-	jsr	load_file
+	lda	#LOAD_SAVE1		; should already be loaded?
+	jsr	load_file		; is this necessary?
 
 	; copy to zero page
 
+	lda	INVENTORY_Y		; this is pointer 0/1/2
+	asl
+	asl
+	asl
+	asl
+	asl				; multiply by 32
+	sta	load_buffer_smc+1
+
 	ldx	#0
 load_loop:
-	lda	$BC00,X
-	sta	WHICH_LOAD,X
+
+load_buffer_smc:
+	lda	load_buffer,X
+	sta	LOAD_START,X
 	inx
-	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
+	cpx	#(END_OF_SAVE-LOAD_START+1)
 	bne	load_loop
 
 	lda	#NEW_FROM_LOAD		; load whole level from disk
@@ -545,12 +563,12 @@ actually_save:
 
 	sta	WHICH_LOAD
 
-	; copy save data to $BC00
+	; copy save data to load_buffer
 
 	ldx	#0
 copy_loop:
 	lda	WHICH_LOAD,X
-	sta	$BC00,X
+	sta	load_buffer,X
 	inx
 	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
 	bne	copy_loop
@@ -628,34 +646,44 @@ are_you_sure:
 	;=========================
 update_save_info:
 
-	lda	WHICH_LOAD
-	pha
+	lda	WHICH_LOAD		; save our current disk location
+	pha				; on stack
 
-	ldx	#0
-update_save_info_loop:
-	clc
-	txa
-	pha
-	adc	#LOAD_SAVE1
+;	ldx	#0
+;update_save_info_loop:
+;	clc
+;	txa
+;	pha
+
+	lda	#LOAD_SAVE1		; load it into memory
 	sta	WHICH_LOAD
 
 	jsr	load_file
 
-	pla
-	tax
+;	pla
+;	tax
 
-	lda	$BC06		; MAP_LOCATION
+	ldx	#0
+	ldy	#0
+update_save_info_loop:
+
+	lda	load_buffer+(MAP_LOCATION-LOAD_START),Y	; MAP_LOCATION
 	sta	load_slot_levels,X
-	lda	$BC0E		; SCORE_HUNDREDS
+	lda	load_buffer+(SCORE_HUNDREDS-LOAD_START),Y	; SCORE_HUNDREDS
 	sta	load_slot_pts_high,X
-	lda	$BC0F		; SCORE_HUNDREDS
+	lda	load_buffer+(SCORE_TENSONES-LOAD_START),Y	; SCORE_TENSONES
 	sta	load_slot_pts_low,X
+
+	tya			; info at 32 byte offsets
+	clc
+	adc	#$20
+	tay
 
 	inx
 	cpx	#3
 	bne	update_save_info_loop
 
-	pla
+	pla						; restore load info
 	sta	WHICH_LOAD
 
 	rts
