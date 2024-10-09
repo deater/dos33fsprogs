@@ -13,8 +13,9 @@ CLIMB:	climb.o
 	ld65 -o CLIMB climb.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 climb.o:	climb.s \
-		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
+		../zp.inc ../hardware.inc ../qload.inc \
 		draw_peasant_climb.s move_peasant_climb.s \
+		../hgr_sprite_save.s \
 		keyboard_climb.s \
 		sprites/enemy_sprites.inc \
 		../cliff_base/graphics_cliff/cliff_base.hgr.zx02 \

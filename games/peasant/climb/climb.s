@@ -124,10 +124,9 @@ draw_bird:
 
 	ldy	#0			; bird always erase slot #0
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_save
 
 done_draw_bird:
-.if 0
 	;=====================
 	; draw rock
 	;=====================
@@ -205,7 +204,7 @@ really_draw_rock:
 	ldy	CURRENT_ROCK
 	iny
 
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_save
 
 skip_rock:
 	inc	CURRENT_ROCK
@@ -383,7 +382,7 @@ rock_good:
 	lda	CURRENT_ROCK
 	cmp	#MAX_ROCKS
 	bne	move_rock_loop
-.endif
+
 
 	;=====================
 	; increment frame
@@ -573,7 +572,7 @@ col_copy_loop:
 	;====================================
 	; includes
 
-	.include	"../hgr_sprite.s"
+;	.include	"../hgr_sprite.s"
 
 	.include	"keyboard_climb.s"
 
@@ -583,6 +582,7 @@ col_copy_loop:
 
 	.include	"move_peasant_climb.s"
 
+	.include	"../hgr_sprite_save.s"
 	.include	"../hgr_partial_restore.s"
 
 	.include	"../gr_copy.s"
