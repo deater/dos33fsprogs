@@ -232,6 +232,27 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
+	;=====================
+	; draw lightning
+
+	lda	FRAME
+	and	#$3
+	tax
+
+;	ldx	#0
+	lda	big_lightning_l,X
+	sta	INL
+	lda	big_lightning_h,X
+	sta	INH
+
+	lda	big_lightning_x,X
+	sta	CURSOR_X
+	lda	big_lightning_y,X
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+
 
 	;=====================
 	; always draw peasant
@@ -356,6 +377,7 @@ exiting_cliff:
 .include "../hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
 .include "../hgr_partial_restore.s"
+.include "../hgr_sprite.s"
 
 .include "../gr_copy.s"
 .include "../hgr_copy.s"
@@ -405,3 +427,23 @@ robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
 
 .include "sprites_heights/lightning_sprites.inc"
+
+big_lightning_l:
+	.byte <big_lightning0,<big_lightning1,<big_lightning2,<big_lightning3
+small_lightning_l:
+	.byte <small_lightning0,<small_lightning1,<small_lightning2,<small_lightning3
+
+big_lightning_h:
+	.byte >big_lightning0,>big_lightning1,>big_lightning2,>big_lightning3
+small_lightning_h:
+	.byte >small_lightning0,>small_lightning1,>small_lightning2,>small_lightning3
+
+big_lightning_x:
+	.byte 13,11,10,10
+small_lightning_x:
+	.byte 2,2,2,2
+
+big_lightning_y:
+	.byte 27,27,27,27
+small_lightning_y:
+	.byte 39,39,39,39
