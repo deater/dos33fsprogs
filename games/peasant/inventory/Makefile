@@ -15,9 +15,16 @@ INVENTORY:	inventory.o
 	ld65 -o INVENTORY inventory.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 inventory.o:	inventory.s \
+		../text/invenory.inc.lookup \
 		sprites/inventory_sprites.inc \
 		../hgr_2x16_sprite.s
 	ca65 -o inventory.o inventory.s -l inventory.lst
+
+
+###
+
+../text/invenory.inc.lookup:
+	cd ../text && make
 
 ###
 

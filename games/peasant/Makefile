@@ -538,6 +538,7 @@ distclean:
 	cd inn && make distclean
 	cd inside && make distclean
 	cd intro && make distclean
+	cd inventory && make distclean
 	cd map && make distclean
 	cd saves && make distclean
 	cd text && make distclean
@@ -562,6 +563,7 @@ clean:
 	cd inn && make clean
 	cd inside && make clean
 	cd intro && make clean
+	cd inventory && make clean
 	cd map && make clean
 	cd music && make clean
 	cd saves && make clean
