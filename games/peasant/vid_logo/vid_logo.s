@@ -364,7 +364,7 @@ done_page:
 	lda	#50
 	sta	speaker_duration
 
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 no_note:
 	pla				; restore Y
@@ -501,7 +501,8 @@ delays:
 
 .include "../hgr_overlay.s"
 
-.include "../speaker_beeps.inc"
+;.include "../speaker_beeps.inc"
+.include "../redbook_sound.inc"
 
 .include "../text_print.s"
 .include "../gr_offsets.s"

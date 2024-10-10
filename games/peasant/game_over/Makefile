@@ -13,7 +13,7 @@ game_over.o:	game_over.s \
 		../hardware.inc ../zp.inc ../qload.inc \
 		graphics_over/game_over_graphics.inc \
 		graphics_over/game_over_animation.inc \
-		../hgr_sprite.s ../speaker_beeps.s \
+		../hgr_sprite.s \
 		../wait_a_bit.s ../wait.s
 	ca65 -o game_over.o game_over.s -l game_over.lst
 

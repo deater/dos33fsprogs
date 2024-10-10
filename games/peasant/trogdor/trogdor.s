@@ -310,7 +310,7 @@ draw_sprite_h:
 
 .include "../version.inc"
 
-.include "../speaker_beeps.inc"
+.include "../redbook_sound.inc"
 
 .include "../hgr_sprite.s"
 

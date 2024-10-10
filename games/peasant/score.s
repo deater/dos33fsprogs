@@ -125,19 +125,19 @@ clear_top:
 
 	lda	#32
 	sta	speaker_duration
-	lda	#NOTE_E4
+	lda	#NOTE_E5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 	lda	#64
+	sta	speaker_duration
+	lda	#NOTE_F5
+	sta	speaker_frequency
+	jsr	speaker_tone
+	lda	#128
 	sta	speaker_duration
 	lda	#NOTE_F4
 	sta	speaker_frequency
-	jsr	speaker_beep
-	lda	#128
-	sta	speaker_duration
-	lda	#NOTE_F3
-	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	rts
 

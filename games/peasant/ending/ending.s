@@ -146,43 +146,43 @@ boat_loop:
 	beq	bloop
 
 click:
-	lda	#NOTE_C3
+	lda	#NOTE_C4
 	sta	speaker_frequency
 	lda	#6
 	sta	speaker_duration
-	jsr	speaker_beep
+	jsr	speaker_tone
 	jmp	no_sound
 
 bloop:
 	lda	#10
 	sta	speaker_duration
-	lda	#NOTE_C4
+	lda	#NOTE_C5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	lda	#10
 	sta	speaker_duration
-	lda	#NOTE_D4
+	lda	#NOTE_D5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	lda	#10
 	sta	speaker_duration
-	lda	#NOTE_E4
+	lda	#NOTE_E5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	lda	#10
 	sta	speaker_duration
-	lda	#NOTE_D4
+	lda	#NOTE_D5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	lda	#10
 	sta	speaker_duration
-	lda	#NOTE_C4
+	lda	#NOTE_C5
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 	jmp	no_sound
 
 
@@ -572,7 +572,7 @@ stuck_forever:
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
-.include "../speaker_beeps.inc"
+.include "../redbook_sound.inc"
 
 .include "graphics_end/ending_graphics.inc"
 

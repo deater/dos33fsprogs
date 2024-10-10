@@ -349,17 +349,17 @@ burninate_loop:
 
 	lda     #16
         sta     speaker_duration
-        lda     #NOTE_C3
+        lda     #NOTE_C4
         sta     speaker_frequency
-        jsr     speaker_beep
+        jsr     speaker_tone
 
 	bit	PAGE2
 
 	lda     #16
         sta     speaker_duration
-        lda     #NOTE_D3
+        lda     #NOTE_D4
         sta     speaker_frequency
-        jsr     speaker_beep
+        jsr     speaker_tone
 
 	dec	BABY_COUNT
 	bne	burninate_loop
@@ -413,9 +413,9 @@ dashing_loop:
 
 	lda     #64
         sta     speaker_duration
-        lda     #NOTE_C3
+        lda     #NOTE_C4
         sta     speaker_frequency
-        jsr     speaker_beep
+        jsr     speaker_tone
 
 no_boom:
 

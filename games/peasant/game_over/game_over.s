@@ -96,7 +96,8 @@ make_beep:
 	sta	speaker_frequency
 	lda	animation_note_lens,X
 	sta	speaker_duration
-	jsr	speaker_beep
+;	jsr	speaker_beep
+	jsr	speaker_tone
 
 	ldx	FRAME
 	lda	animation_pause_lens,X
@@ -155,7 +156,8 @@ done_beep:
 ;	jmp	forever
 
 .include "../hgr_sprite.s"
-.include "../speaker_beeps.inc"
+;.include "../speaker_beeps.inc"
+.include "../redbook_sound.inc"
 
 .include "../wait_a_bit.s"
 .include "../wait.s"
@@ -208,6 +210,61 @@ animation_steps_h:
 	.byte >over_anim10	; skull mostly
 	.byte >over_anim11	; skull down
 
+
+animation_notes:
+	.byte	NOTE_G5	; 0
+	.byte	NOTE_F5	; 1
+	.byte	NOTE_F5	; 2
+	.byte	NOTE_E5	; 3
+	.byte	NOTE_E5	; 4
+	.byte	NOTE_D5	; 5
+	.byte	NOTE_C5	; 6
+	.byte	0	; 7
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 9
+	.byte	NOTE_C4	; 10
+	.byte	0	; 11
+
+animation_note_lens:
+	.byte	150	;	NOTE_G5	; 0
+	.byte	50	;	NOTE_F5	; 1
+	.byte	100	;	NOTE_F5	; 2
+	.byte	50	;	NOTE_E5	; 3
+	.byte	100	;	NOTE_E5	; 4
+	.byte	50	;	NOTE_D5	; 5
+	.byte	150	;	NOTE_C5	; 6
+	.byte	0	; 7
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 9
+	.byte	150	;	NOTE_C4	; 10
+	.byte	0	; 11
+
+animation_pause_lens:
+	.byte	1	;	NOTE_G5	; 0
+	.byte	1	;	NOTE_F5	; 1
+	.byte	1	;	NOTE_F5	; 2
+	.byte	1	;	NOTE_E5	; 3
+	.byte	1	;	NOTE_E5	; 4
+	.byte	1	;	NOTE_D5	; 5
+	.byte	1	;	NOTE_C5	; 6
+	.byte	0	; 7
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 8
+	.byte	0	; 9
+	.byte	1	;	NOTE_C4	; 10
+	.byte	0	; 11
+
+
+
+.if 0
 animation_notes:
 	.byte	NOTE_G4	; 0
 	.byte	NOTE_F4	; 1
@@ -258,4 +315,6 @@ animation_pause_lens:
 	.byte	0	; 9
 	.byte	1	;	NOTE_C3	; 10
 	.byte	0	; 11
+
+.endif
 

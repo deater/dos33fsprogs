@@ -6,7 +6,7 @@
 ;	if dead on this screen
 ;	if dead not on this screen
 
-.include "speaker_beeps.inc"
+.include "redbook_sound.inc"
 
 	;=======================
 	;=======================
@@ -275,27 +275,27 @@ kerrek_row4:
 kerrek_warning_music:
 	lda     #96
 	sta     speaker_duration
-	lda     #NOTE_G3
+	lda     #NOTE_G4
 	sta     speaker_frequency
-	jsr     speaker_beep
+	jsr     speaker_tone
 
 	lda     #48
 	sta     speaker_duration
-	lda     #NOTE_F3
+	lda     #NOTE_F4
 	sta     speaker_frequency
-	jsr     speaker_beep
+	jsr     speaker_tone
 
 	lda     #48
 	sta     speaker_duration
-	lda     #NOTE_E3
+	lda     #NOTE_E4
 	sta     speaker_frequency
-	jsr     speaker_beep
+	jsr     speaker_tone
 
 	lda     #192
 	sta     speaker_duration
-	lda     #NOTE_C3
+	lda     #NOTE_C4
 	sta     speaker_frequency
-	jsr     speaker_beep
+	jsr     speaker_tone
 
 	rts
 
@@ -662,9 +662,9 @@ kerrek_got_ya:
 	; bonk sound effect
 	lda	#96
 	sta	speaker_duration
-	lda	#NOTE_C3
+	lda	#NOTE_C4
 	sta	speaker_frequency
-	jsr	speaker_beep
+	jsr	speaker_tone
 
 	; wait a bit
 
