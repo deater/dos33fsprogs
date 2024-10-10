@@ -1,0 +1,9 @@
+Trying to find a good pseudo-random number generator for 6502
+
+I had been using the "random16" one here, but at least on Peasant's Quest
+when used to generate a 0-31 random value it seemed to have "0" and "17"
+come up way more than exected
+
+the "random8" one here is better, but it's really only 7 bits as you can't
+actually generate a 0 and code might fail if you never get a 0 result?
+
