@@ -315,7 +315,7 @@ move_rock_waiting:
 
 	jsr	random8
 rock_freq_smc:
-	and	#$1f		; 1/32 of time start new rock
+	and	#$7f		; 1/128 of time start new rock
 	bne	rock_good
 
 start_new_rock:

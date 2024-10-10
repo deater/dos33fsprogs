@@ -40,7 +40,7 @@ int main(int argc, char **argv) {
 
 	for(i=0;i<1024;i++) {
 		r=rand8();
-		printf("%02X m%02X\n",r,r&0x1f);
+		printf("%d: %02X m%02X\n",i,r,r&0x1f);
 	}
 
 	return 0;
