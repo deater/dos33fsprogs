@@ -100,7 +100,7 @@ load_file:
 .include "gr_offsets.s"
 .include "loadsave_menu.s"
 .include "wait_keypress.s"
-.include "random16.s"
+.include "random8.s"
 .include "score.s"
 ;.include "speaker_beeps.s"
 .include "redbook_sound.s"

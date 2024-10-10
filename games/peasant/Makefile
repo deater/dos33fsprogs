@@ -133,7 +133,7 @@ qload_hd.o:	qload_hd.s qboot.inc \
 		hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
-		random16.s
+		random8.s
 	ca65 -o qload_hd.o qload.s -DFLOPPY=0 -l qload_hd.lst
 
 ####
@@ -166,7 +166,7 @@ qload.o:	qload.s qboot.inc \
 		hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
-		random16.s
+		random8.s
 	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
 
 ###
@@ -248,7 +248,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s location_names_l qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s location_names_h qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait_until_keypress qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s random16 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s random8 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s score_points qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s print_score qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s update_score qload.lst >> qload.inc

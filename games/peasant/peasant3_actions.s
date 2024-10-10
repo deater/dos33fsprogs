@@ -405,7 +405,7 @@ jhonka_cant_knock_door:
 	jmp	parse_common_unknown
 
 jhonka_knock_door:
-	jsr	random16
+	jsr	random8
 	and	#$7
 
 	beq	jhonka_knock5

@@ -201,8 +201,9 @@ not_kerrek:
 	; init ned
 	;	randomly waits 126-64 frames
 
-	jsr	random16
+	jsr	random8
 	and	#$3f
+
 ;	lda	#64
 	sta	NED_STATUS
 

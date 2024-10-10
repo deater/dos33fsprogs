@@ -2,7 +2,15 @@ CC = gcc
 CFLAGS = -O2 -Wall
 LFLAGS =
 
-all:	random16 random8 #random15
+all:	random16 random8 random24
+
+###
+
+random24:	random24.o
+	$(CC) $(LFLAGS) -o random24 random24.o
+
+random24.o:	random24.c
+	$(CC) $(CFLAGS) -c random24.c
 
 ###
 
@@ -23,4 +31,4 @@ random8.o:	random8.c
 ###
 
 clean:
-	rm -f *~ *.o random16 random8 random15
+	rm -f *~ *.o random16 random8 random24

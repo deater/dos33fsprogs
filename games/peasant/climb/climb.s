@@ -227,7 +227,7 @@ skip_rock:
 	bne	move_bird
 maybe_new_bird:
 
-	jsr	random16
+	jsr	random8
 bird_freq_smc:
 	and	#$1f		; 1/32 of time start new bird?
 	bne	move_bird_done
@@ -235,7 +235,7 @@ bird_freq_smc:
 	; bird on base level,	12 .. 76	(MAP_LOCATION==0)
 	; bird on other levels, 12 .. 140
 
-	jsr	random16
+	jsr	random8
 
 	ldx	MAP_LOCATION
 	bne	new_bird_wider
@@ -313,7 +313,7 @@ move_rock_waiting:
 
 	; see if start new rock
 
-	jsr	random16
+	jsr	random8
 rock_freq_smc:
 	and	#$1f		; 1/32 of time start new rock
 	bne	rock_good
@@ -324,7 +324,7 @@ start_new_rock:
 	;	bit of a hack, really should be from 0..38
 	;	but we actually do 2..34 as it's easier
 
-	jsr	random16
+	jsr	random8
 	and	#$1f		; 0... 31
 	clc
 	adc	#2		; push away from edge a bit

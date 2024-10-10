@@ -342,7 +342,7 @@ gary_scare_horse_mask:
 
 gary_scare_horse_nomask:
 
-	jsr	random16
+	jsr	random8
 	and	#$3		; 0..4
 	beq	gary_scare_try2
 	cmp	#$1

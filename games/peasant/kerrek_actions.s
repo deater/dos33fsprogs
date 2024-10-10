@@ -194,7 +194,7 @@ kerrek_setup:
 	bne	kerrek_setup_dead
 
 kerrek_setup_alive:
-	jsr	random16
+	jsr	random8
 	and	#$1
 	beq	kerrek_alive_not_there
 kerrek_alive_out:
