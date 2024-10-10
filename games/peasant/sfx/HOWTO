@@ -1,0 +1,12 @@
+ffmpeg -i thump_mono.wav -f u8 -ar 8000 thump_mono.raw
+od -A none -t u1 -w1 -v ./thump_mono.raw
+
+8000/140 = 60 roughly
+
+64 byte samples?
+
+sox stat
+sox stat -freq
+
+
+sox -r 8000 -e unsigned-integer -b8 -c1 thump.raw -n stat
