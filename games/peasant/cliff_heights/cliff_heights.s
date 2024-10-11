@@ -427,6 +427,7 @@ robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
 
 .include "sprites_heights/lightning_sprites.inc"
+.include "sprites_heights/ron_sprites.inc"
 
 big_lightning_l:
 	.byte <big_lightning0,<big_lightning1,<big_lightning2,<big_lightning3
