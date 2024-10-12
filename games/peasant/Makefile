@@ -218,6 +218,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
 	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
 #	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s do_savegame qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx02_full_decomp qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_l qload.lst >> qload.inc

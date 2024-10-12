@@ -195,4 +195,18 @@ insert_disk_string:
 .byte "PLEASE INSERT DISK 1",13
 .byte " THEN PRESS RETURN",0
 
+do_savegame:
+	; spin up disk
+	jsr     driveon
+
+	; actually save it
+
+	lda	#12                     ; save is track0 sector 12
+	sta	requested_sector+1
+
+	jsr	sector_write
+
+	jsr	driveoff
+
+	rts
 

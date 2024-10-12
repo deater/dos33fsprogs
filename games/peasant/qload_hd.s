@@ -14,10 +14,12 @@ setup_loop:
 	ora	#$c0
 	sta	slot_smc+2
 	sta	entry_smc+2	; set up smartport/prodos entry point
+	sta	entry2_smc+2	; set up smartport/prodos entry point
 
 slot_smc:
 	lda	$cfff
 	sta	entry_smc+1	; set up rest of smartport/prodos entry
+	sta	entry2_smc+1	; set up rest of smartport/prodos entry
 
 
 	; init the write code if needed
@@ -66,7 +68,7 @@ load_file_internal:
 	rol	BLOKHI
 	sta	BLOKLO
 	lda	sector_array,X	; sector
-	lsr
+	lsr			; divide by 2
 	clc
 	adc	BLOKLO
 	sta	BLOKLO
@@ -91,41 +93,9 @@ load_file_internal:
 	;===================================================
 	; LEVEL_OVER bottom 4 bits hold which exit
 
+	; for hard disk image no need to change
+
 change_disk:
-
-;	lda	LEVEL_OVER
-;	and	#$f
-;	sta	LEVEL_OVER
-;	tax
-
-	; set up locations
-;	lda	DISK_EXIT_DISK,X
-;	sta	CURRENT_DISK
-
-;	lda	DISK_EXIT_LOAD,X
-;	sta	WHICH_LOAD
-;	lda	DISK_EXIT_LEVEL,X
-;	sta	LOCATION
-;	lda	DISK_EXIT_DIRECTION,X
-;	sta	DIRECTION
-
-;	lda	DISK_EXIT_DNI_H,X
-;	sta	NUMBER_HIGH
-;	lda	DISK_EXIT_DNI_L,X
-;	sta	NUMBER_LOW
-
-
-	; see if disk we want is in drive
-
-
-	;==========================
-	; load QLOAD table
-	;	check if disk matches
-;verify_disk:
-
-;	jsr	load_qload_offsets
-
-
 
 	;==============================================
 	; all good, continue
@@ -135,38 +105,6 @@ update_disk:
 
 
 
-.if 0
-load_qload_offsets:
-	lda	#$12
-	sta	ADRHI
-
-	lda	CURRENT_DISK
-	sta	BLOKHI
-	inc	BLOKHI		; off by one
-	lda	#0		; track
-	asl
-	asl
-	asl
-	rol	BLOKHI
-	sta	BLOKLO
-	lda	#$2		; sector
-	lsr
-	clc
-	adc	BLOKLO
-	sta	BLOKLO
-
-;	lda	#$0
-;	sta	load_track
-
-;	lda	#$02		; track 0 sector 2
-;	sta	load_sector
-
-	lda	#$1
-	sta	COUNT
-
-	jmp	seekread
-
-.endif
 
 	;================================
 	; seek + read blocks
@@ -203,3 +141,59 @@ no_blokloflo:
 	bne	seekread_loop
 
 	rts
+
+
+	;=============================
+	; do_savegame
+	;=============================
+	; hack, 512 bytes at $BC00
+	; to disk0/track0/sector12 (which is just "6" for us)
+do_savegame:
+	lda	#$0
+	sta	BLOKHI
+	sta	ADRLO
+	lda	#$6
+	sta	BLOKLO
+	lda	#$BC
+	sta	ADRHI
+	lda	#$1
+	sta	COUNT
+
+; fallthrough
+
+	;================================
+	; seek + write blocks
+	;================================
+	; this calls the smartport PRODOS entrypoint
+	;	command=2 WRITEBLOCK
+	;	I can't find this documented anywhere
+	;	but the paramaters are stored in the zero page
+	;================================
+	; BLOKHI:BLOKLO = block number to store (???)
+	; COUNT = num blocks
+seekwrite:
+
+seekwrite_loop:
+	lda	#2		; WRITEBLOCK
+	sta	COMMAND
+	lda	ADRHI
+	pha
+entry2_smc:
+	jsr	$d1d1
+	pla
+	sta	ADRHI
+
+	inc	ADRHI		; twice, as 512 byte chunks
+	inc	ADRHI
+
+	inc	BLOKLO		; increment block pointer
+	bne	no_sblokloflo
+	inc	BLOKHI
+no_sblokloflo:
+
+
+	dec	COUNT
+	bne	seekwrite_loop
+
+	rts
+

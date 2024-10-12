@@ -527,16 +527,15 @@ save_game:
 
 	; print are you sure message
 
-
 	jsr	confirm_action
 
 	bcs	done_save
 
 	; put which save into A
 
-	lda	INVENTORY_Y
+;	lda	INVENTORY_Y
 
-	pha			; save slot for later on stack
+;	pha			; save slot for later on stack
 
 ;	clc
 ;	adc	#LOAD_SAVE1
@@ -551,50 +550,59 @@ actually_save:
 	; first load something from
 	; disk1/track0 to seek the head there
 
-	lda	WHICH_LOAD		; save this value as we
+;	lda	WHICH_LOAD		; save this value as we
 					; destroy it for load
-	pha
+;	pha
 
 	lda	#LOAD_SAVE1		; use SAVE1 as it's on track 0
 	sta	WHICH_LOAD
 	jsr	load_file
 
-	pla
+;	pla
 
-	sta	WHICH_LOAD
+;	sta	WHICH_LOAD
 
+	;=================================
 	; copy save data to load_buffer
 
+	lda	INVENTORY_Y
+	asl
+	asl
+	asl
+	asl
+	asl			; multiply by 32
+	sta	copy_save_smc+1
+
 	ldx	#0
-copy_loop:
-	lda	WHICH_LOAD,X
+copy_save_loop:
+	lda	LOAD_START,X
+copy_save_smc:
 	sta	load_buffer,X
 	inx
-	cpx	#(END_OF_SAVE-WHICH_LOAD+1)
-	bne	copy_loop
+	cpx	#(END_OF_SAVE-LOAD_START+1)	; why +1?
+	bne	copy_save_loop
 
+	jsr	do_savegame
+.if 0
 	; spin up disk
 	jsr	driveon
 
 	; actually save it
-	pla
-	clc
-	adc	#11
+
+	lda	#12			; save is track0 sector 12
 	sta	requested_sector+1
 
 	jsr	sector_write
 
 	jsr	driveoff
 
+.endif
+
 done_save:
 	lda	#NEW_LOCATION	; reload level as we scrawled on $2000
 	sta	LEVEL_OVER
 
 	rts
-
-
-
-
 
 
 	;=======================================
