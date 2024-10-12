@@ -16,6 +16,7 @@ climb.o:	climb.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		draw_peasant_climb.s move_peasant_climb.s \
 		../hgr_sprite_save.s \
+		../text/DIALOG_CLIMB.ZX02 \
 		keyboard_climb.s \
 		sprites/enemy_sprites.inc \
 		../cliff_base/graphics_cliff/cliff_base.hgr.zx02 \

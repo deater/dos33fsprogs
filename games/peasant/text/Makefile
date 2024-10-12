@@ -16,6 +16,7 @@ all:	dump_text shrink_text \
 	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	DIALOG_CLIFF_HEIGHTS.ZX02 dialog_cliff_heights.inc \
 	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
+	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
 	inventory.inc.lookup
 
@@ -34,6 +35,25 @@ dialog_cliff_base.o:	dialog_cliff_base.s \
 
 dialog_cliff_base.inc:	../generate_all_symbols dialog_cliff_base
 	../generate_all_symbols -a 0xd000 dialog_cliff_base.lst > dialog_cliff_base.inc
+
+
+###
+
+
+DIALOG_CLIMB.ZX02:	dialog_climb
+	$(ZX02) -f  dialog_climb DIALOG_CLIMB.ZX02
+
+dialog_climb:	dialog_climb.o
+	ld65 -o dialog_climb dialog_climb.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_climb.o:	dialog_climb.s \
+		climb.inc.lookup
+	ca65 -o dialog_climb.o dialog_climb.s -l dialog_climb.lst
+
+dialog_climb.inc:	../generate_all_symbols dialog_climb
+	../generate_all_symbols -a 0xd000 dialog_climb.lst > dialog_climb.inc
+
+
 
 ###
 
@@ -186,6 +206,9 @@ cliff_base.inc.lookup:	cliff_base.inc shrink_text
 
 cliff_heights.inc.lookup:	cliff_heights.inc shrink_text
 	./shrink_text < cliff_heights.inc > cliff_heights.inc.lookup
+
+climb.inc.lookup:	climb.inc shrink_text
+	./shrink_text < climb.inc > climb.inc.lookup
 
 cottage.inc.lookup:	cottage.inc shrink_text
 	./shrink_text < cottage.inc > cottage.inc.lookup

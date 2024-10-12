@@ -8,8 +8,9 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 
-;.include "../peasant_sprite.inc"
 .include "../qload.inc"
+.include "../text/dialog_climb.inc"
+.include "../parse_input.inc"
 
 collision_location	= $bc00
 
@@ -51,8 +52,20 @@ cliff_climb:
 	sta	HGR_PAGE
 	jsr	hgr_make_tables
 
-
 	jsr	load_graphics
+
+	;================================
+	; decompress dialog to $D000
+
+	lda	#<climb_text_zx02
+	sta	zx_src_l+1
+	lda	#>climb_text_zx02
+	sta	zx_src_h+1
+
+	lda	#$D0
+
+	jsr	zx02_full_decomp
+
 
 	;========================
 	; Load Peasant Sprites
@@ -443,11 +456,18 @@ cliff_game_over:
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER
 
-	; FIXME: there actually is a message I think
+	;===========================================
+	; print the message
 
-;	ldx	#<die_message
-;	ldy	#>die_message
-;	jmp	finish_parse_message
+	bit	KEYRESET
+
+	ldx	#<climb_fallen_message
+	ldy	#>climb_fallen_message
+	stx	OUTL
+	sty	OUTH
+	jsr	print_text_message
+
+	jsr	wait_until_keypress
 
 	rts			; will this work?
 
@@ -474,8 +494,6 @@ cliff_reload_bg:
 
 	rts
 
-
-
 keep_on_climbing:
 	jsr	reset_enemy_state
 
@@ -492,8 +510,6 @@ keep_on_climbing:
 	;================================
 
 load_graphics:
-
-
 
 	;========================
 	; Load Priority graphics
@@ -563,9 +579,6 @@ col_copy_loop:
 
 	jsr	print_score
 
-
-
-
 	rts
 
 
@@ -592,6 +605,8 @@ col_copy_loop:
 
 	.include 	"../hgr_sprite_bg_mask.s"
 
+climb_text_zx02:
+.incbin "../text/DIALOG_CLIMB.ZX02"
 
 
 priority_data_l:
