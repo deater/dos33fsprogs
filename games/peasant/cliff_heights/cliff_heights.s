@@ -23,6 +23,7 @@ cliff_heights:
 	sta	LEVEL_OVER
 	sta	FRAME
 	sta	FLAME_COUNT
+	sta	BABY_COUNT
 
 	jsr	hgr_make_tables
 
@@ -244,6 +245,16 @@ game_loop:
 no_lightning:
 
 	;=====================
+	; draw keeper
+
+	lda     MAP_LOCATION
+	cmp	#LOCATION_TROGDOR_OUTER
+	bne	no_keeper
+	jsr	draw_keeper
+no_keeper:
+
+
+	;=====================
 	; always draw peasant
 
 	jsr	draw_peasant
@@ -419,3 +430,121 @@ robe_sprite_data:
 .include "sprites_heights/ron_sprites.inc"
 
 .include "draw_lightning.s"
+
+
+
+;==========================================
+; first keeper info
+;
+;	seems to trigger at approx peasant_x = 70 (10)
+;
+
+; 0 (4), move down/r
+; 0 (4), move down/r
+; 1 (4), no move
+; 1 (5), move down/r
+
+; 1 (5), move down/r
+; 1 (5), move down/r
+; 1 (5), move down/r
+; 1 (5), move down/r
+
+; 2 (5)
+; 3 (4)
+; 4 (10)
+; 3 (10)
+
+; 4 (15)
+; 3 (5)
+; 2 (5)
+; 1 (11) ; starts talking
+
+keeper_x:
+.byte	9, 9, 9, 9
+.byte  10,10,10,10
+.byte  10,10,10,10, 10,10
+.byte  10,10,10,10,10,10,10
+
+keeper_y:
+.byte	55,56,56,57
+.byte   58,59,60,61
+.byte	61,61,61,61, 61,61
+.byte	61,61,61,61, 61,61,61
+
+which_keeper_sprite:
+.byte	0, 0, 1, 1
+.byte	1, 1, 1, 1
+.byte	2, 3, 4, 4, 3, 3
+
+.byte   4, 4, 4, 3, 2, 1, 1
+
+
+draw_keeper:
+
+	; erase prev keeper
+
+	ldy	#3                      ; erase slot 3?
+	jsr	hgr_partial_restore_by_num
+
+	inc	BABY_COUNT
+	lda	BABY_COUNT
+	cmp	#21
+	bne	nowrap_keeper
+
+	lda	#0
+	sta	BABY_COUNT
+nowrap_keeper:
+
+	ldx	BABY_COUNT
+
+	lda     keeper_x,X
+	sta     SPRITE_X
+	lda     keeper_y,X
+	sta     SPRITE_Y
+
+        ; get offset for graphics
+
+	ldx	BABY_COUNT
+	lda	which_keeper_sprite,X
+	clc
+	adc	#5			; skip ron
+	tax
+
+	ldy     #3      ; ? slot
+
+	jsr	hgr_draw_sprite_save
+
+
+	rts
+
+sprites_xsize:
+	.byte  2, 2, 2, 2, 2			; ron 0..4
+	.byte  2, 2, 3, 3, 3, 3, 3, 3		; keeper 0..7
+
+sprites_ysize:
+	.byte 29,30,30,30,30			; ron 0..4
+	.byte 28,28,28,28,28,28,28,28		; keeper 0..7
+
+sprites_data_l:
+	.byte <ron0,<ron1,<ron2,<ron3,<ron4
+	.byte <keeper0,<keeper1,<keeper2,<keeper3
+	.byte <keeper4,<keeper5,<keeper6,<keeper7
+
+sprites_data_h:
+	.byte >ron0,>ron1,>ron2,>ron3,>ron4
+	.byte >keeper0,>keeper1,>keeper2,>keeper3
+	.byte >keeper4,>keeper5,>keeper6,>keeper7
+
+
+sprites_mask_l:
+	.byte <ron0_mask,<ron1_mask,<ron2_mask,<ron3_mask,<ron4_mask
+	.byte <keeper0_mask,<keeper1_mask,<keeper2_mask,<keeper3_mask
+	.byte <keeper4_mask,<keeper5_mask,<keeper6_mask,<keeper7_mask
+
+
+sprites_mask_h:
+	.byte >ron0_mask,>ron1_mask,>ron2_mask,>ron3_mask,>ron4_mask
+	.byte >keeper0_mask,>keeper1_mask,>keeper2_mask,>keeper3_mask
+	.byte >keeper4_mask,>keeper5_mask,>keeper6_mask,>keeper7_mask
+
+.include "../hgr_sprite_save.s"

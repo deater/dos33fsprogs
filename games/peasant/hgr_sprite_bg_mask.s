@@ -2,6 +2,8 @@
 	; hgr draw sprite, with bg mask in GR $400
 	;===============================================
 	; used primarily to draw Rather Dashing
+	;	if you just want to draw masked sprite
+	;	see hgr_sprite_save()
 	;===============================================
 	; *cannot* handle sprites bigger than 256 bytes
 	;
