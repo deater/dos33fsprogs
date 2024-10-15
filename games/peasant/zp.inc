@@ -284,9 +284,15 @@ SAVED_Y1	= $C7
 SAVED_Y2	= $C8
 
 ; temp for animations, etc
+
 BABY_COUNT	= $C9
-PREV_X		= $CA
-PREV_Y		= $CB
+KEEPER_COUNT	= $C9	; cliff heights
+
+IN_QUIZ		= $CA	; cliff heights
+
+
+PREV_X		= $CB	; ??
+PREV_Y		= $CC	; ??
 
 ; D0-D? used by HGR?
 

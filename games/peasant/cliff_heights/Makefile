@@ -13,7 +13,7 @@ cliff_heights.o:	cliff_heights.s \
 		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
 		../inventory/inventory.inc \
 		../parse_input.inc \
-		cliff_actions.s draw_lightning.s \
+		heights_actions.s draw_lightning.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
 		graphics_heights/ciff_heights_graphics.inc \
 		graphics_heights/priority_cliff_heights.inc \

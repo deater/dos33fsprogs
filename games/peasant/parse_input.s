@@ -1089,6 +1089,7 @@ noun_lookup_again:
 .byte "PLAQUE",NOUN_PLAQUE|$80
 .byte "POT",NOUN_POT|$80
 .byte "PUDDLE",NOUN_PUDDLE|$80
+.byte "QUIZ",NOUN_QUIZ|$80
 .byte "RICHES",NOUN_RICHES|$80
 .byte "RIVER",NOUN_RIVER|$80
 .byte "ROBE",NOUN_ROBE|$80

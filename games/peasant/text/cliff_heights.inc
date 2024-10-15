@@ -64,13 +64,6 @@ cliff_heights_get_bone_message:
 ;	you are stuck and have to talk
 ; will only say the "I think he wants... text
 
-; Type any command other than "take the quiz" or "give (requested item)"
-; after being apporached by a Keeper
-.byte "I think he wants something",13
-.byte "from your inventory. Or you",13
-.byte "could just tell him ",34,"take",13
-.byte "the quiz",34,0
-
 ; + look
 cave_outer_look_message:
 .byte "There are 3 openings with a",13
@@ -109,20 +102,25 @@ cave_outer_get_bones_message:
 .byte "Eww. No. Grody. You're",13
 .byte "grody. No. Eww.",0
 
+
+
 ;=========================
 ; First Keeper
 ;=========================
 
 ; + (approached by first keeper)
+cave_outer_keeper1_message1:
 .byte "Foolish peasant! How dare",13
 .byte "you enter this fairly",13
 .byte "sacred chamber!",0
 
+cave_outer_keeper1_message2:
 .byte "You explain that you're",13
 .byte "here to smote Trogdor and",13
 .byte "if he doesn't get outta",13
 .byte "your way, him too!",0
 
+cave_outer_keeper1_message3:
 .byte "You cannot vanquish",13
 .byte "Trogdor! Only the Three",13
 .byte "Keepers of Trogdor hold the",13
@@ -132,11 +130,14 @@ cave_outer_get_bones_message:
 .byte "Trog-Helmet, and the",13
 .byte "Trog-Sword.",0
 
+cave_outer_keeper1_message4:
 .byte "And the only way we'll give",13
 .byte "them up is if you answer",13
 .byte "the three Trog-Trivia",13
 .byte "questions correctly.",0
 
+; only say this if have sub
+cave_outer_keeper1_message5:
 .byte "Unless you happen to have",13
 .byte "something to eat on ya.",13
 .byte "Then we could forego my",13
@@ -145,13 +146,24 @@ cave_outer_get_bones_message:
 ; can't leave or do anything except take quiz or give sub
 ;	prints a message saying so
 
+; Type any command other than "take the quiz" or "give (requested item)"
+; after being apporached by a Keeper
+cave_outer_keeper_wants_message:
+.byte "I think he wants something",13
+.byte "from your inventory. Or you",13
+.byte "could just tell him ",34,"take",13
+.byte "the quiz",34,0
+
+
 ; take quiz
 
+cave_outer_keeper_take_quiz:
 .byte "Your shake off the Keeper of",13
 .byte "Trogdor's request.",13
 .byte "Seriously - this guy should",13
 .byte "get a job.",0
 
+cave_outer_quiz1_1:
 .byte "Okay here goes. What did",13
 .byte "you win from the Archery",13
 .byte "game?",13
@@ -159,6 +171,7 @@ cave_outer_get_bones_message:
 .byte "B. SuperTime FunBow TM",13	; correct
 .byte "C. SuperFun BowTime TM",0
 
+cave_outer_quiz1_2:
 .byte "Okay here goes. What does",13
 .byte "Mendelev have you tell",13
 .byte "Dongolev?",13
@@ -167,6 +180,7 @@ cave_outer_get_bones_message:
 .byte "C. Allo",0
 
 
+cave_outer_quiz1_3:
 .byte "Okay here goes. What is the",13
 .byte "only creature the Jhonka",13
 .byte "fears?",13
@@ -176,21 +190,25 @@ cave_outer_get_bones_message:
 
 ; Response to Correct Answer
 ; makes happy noise, then gives you points
+cave_outer_quiz1_correct:
 .byte 34,"Ah crap! You're right.",13
 .byte "Here, take this stupid",13
 .byte "Trog-Shield!",34,0
 
 ; Response to Incorrect Answer
 ;
-;
+
+cave_outer_quiz1_wrong:
 .byte "Sorry peasant! You fail!",13
 .byte "And as punishment, you will",13
 .byte "be turned into... RON ",13
 .byte "CUMBERDALE!!",0
 
+cave_outer_quiz1_wrong_part2:
 .byte "You ask who the crap Ron",13
 .byte "Cumberdale is.",0
 
+cave_outer_quiz1_wrong_part3:
 .byte 34,"Just this kid from 4th",13
 .byte "grade that I really hated.",13
 .byte "But he was a BIG LOSER and",12
@@ -198,6 +216,7 @@ cave_outer_get_bones_message:
 
 ; wiggles hands, poof of smoke, turn into Ron
 ; makes twinkly noise as wiggles hand, another noise (blrrp?) as poof of smoke
+cave_outer_quiz1_wrong_part4:
 .byte "Well, you not exactly dead.",0
 .byte "But there's no way you",0
 .byte "could defeat Trogdor as Ron",0
@@ -208,6 +227,8 @@ cave_outer_get_bones_message:
 
 ; + give sub, sandwich
 ;   slowly backs away, you suddenly have shield
+cave_outer_give_sub_message:
+cave_outer_give_sandwich_message:
 .byte "No way! I was just kidding",13
 .byte "but you've really got a",13
 .byte "meatball sub. This rules!",13

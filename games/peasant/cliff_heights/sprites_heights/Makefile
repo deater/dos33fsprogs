@@ -29,7 +29,7 @@ ron_sprites.inc:	heights_sprites.png
 	$(HGR_SPRITE) -l keeper3 heights_sprites.png  98 128 118 156 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper4 heights_sprites.png 126 128 146 156 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper5 heights_sprites.png 154 128 174 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper6 heights_sprites.png 181 128 202 156 >> ron_sprites.inc
+	$(HGR_SPRITE) -l keeper6 heights_sprites.png 182 128 202 156 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper7 heights_sprites.png 210 128 230 156 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper0_mask heights_sprites.png  14 159 27 187 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper1_mask heights_sprites.png  42 159 55 187 >> ron_sprites.inc
@@ -37,7 +37,7 @@ ron_sprites.inc:	heights_sprites.png
 	$(HGR_SPRITE) -l keeper3_mask heights_sprites.png  98 159 118 187 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper4_mask heights_sprites.png 126 159 146 187 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper5_mask heights_sprites.png 154 159 174 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper6_mask heights_sprites.png 181 159 202 187 >> ron_sprites.inc
+	$(HGR_SPRITE) -l keeper6_mask heights_sprites.png 182 159 202 187 >> ron_sprites.inc
 	$(HGR_SPRITE) -l keeper7_mask heights_sprites.png 210 159 230 187 >> ron_sprites.inc
 
 

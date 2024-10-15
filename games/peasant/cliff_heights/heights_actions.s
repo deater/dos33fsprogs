@@ -8,6 +8,10 @@
 	;=======================
 	;=======================
 
+	; This one is complex, should we have multiple verb tables
+	;	for when taking quiz?
+
+
 cliff_heights_verb_table:
 	.byte VERB_GET
 	.word cliff_heights_get-1
@@ -188,6 +192,79 @@ cave_outer_do_climb:
 	ldy	#>cave_outer_climb_message
 	jmp	finish_parse_message
 
+
+	;=======================
+	;=======================
+	;=======================
+	; Trogdor Cave Outer -- Keeper 1
+	;=======================
+	;=======================
+	;=======================
+
+keeper1_verb_table:
+	.byte VERB_TAKE
+	.word keeper1_take-1
+	.byte VERB_GIVE
+	.word keeper1_give-1
+	.byte 0
+
+	;=============================
+	; take
+	;=============================
+	; can only take quiz
+	;
+
+keeper1_take:
+;	lda	IN_QUIZ
+;	bne	actual_quiz
+;	; it not being quizzed, can't try to take it??
+;	jmp	parse_common_get	; is this the right path
+
+actual_quiz:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_QUIZ
+	beq	cave_outer_take_quiz
+
+	; if not say quiz, give hint
+
+cave_outer_hint:
+	ldx	#<cave_outer_keeper_wants_message
+	ldy	#>cave_outer_keeper_wants_message
+	jmp	finish_parse_message
+
+cave_outer_take_quiz:
+	; FIXME
+	ldx	#<cave_outer_climb_message
+	ldy	#>cave_outer_climb_message
+	jmp	finish_parse_message
+
+
+	;=============================
+	; give
+	;=============================
+	; can only give sub/sandwich
+
+keeper1_give:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_SUB
+	beq	cave_outer_give_sub
+	cmp	#NOUN_SANDWICH
+	beq	cave_outer_give_sandwich
+
+cave_outer_give_sub:
+cave_outer_give_sandwich:
+	; TODO
+	;	give points
+	;	give shield
+	;	change peasant sprites
+
+	ldx	#<cave_outer_give_sub_message
+	ldy	#>cave_outer_give_sub_message
+	jmp	finish_parse_message
 
 
 .include "../text/dialog_cliff_heights.inc"

@@ -23,7 +23,8 @@ cliff_heights:
 	sta	LEVEL_OVER
 	sta	FRAME
 	sta	FLAME_COUNT
-	sta	BABY_COUNT
+	sta	KEEPER_COUNT
+	sta	IN_QUIZ
 
 	jsr	hgr_make_tables
 
@@ -245,12 +246,25 @@ game_loop:
 no_lightning:
 
 	;=====================
-	; draw keeper
+	; see if keeper triggered
 
 	lda     MAP_LOCATION
 	cmp	#LOCATION_TROGDOR_OUTER
 	bne	no_keeper
-	jsr	draw_keeper
+
+check_keeper1:
+	lda	INVENTORY_2
+	and	#INV2_TROGSHIELD	; only if not have shield
+	bne	check_keeper2
+
+	lda	PEASANT_X		; only if ourx > 9
+	cmp	#10
+	bcc	check_keeper2
+
+	jsr	handle_keeper1
+
+check_keeper2:
+
 no_keeper:
 
 
@@ -267,16 +281,7 @@ no_keeper:
 	;=====================
 	; increment flame
 
-	inc	FLAME_COUNT
-	lda	FLAME_COUNT
-	cmp	#3
-	bne	flame_good
-
-	lda	#0
-	sta	FLAME_COUNT
-
-flame_good:
-
+	jsr	increment_flame
 
 	;======================
 	; check keyboard
@@ -421,7 +426,7 @@ verb_tables_hi:
 cliff_text_zx02:
 .incbin "../text/DIALOG_CLIFF_HEIGHTS.ZX02"
 
-.include "cliff_actions.s"
+.include "heights_actions.s"
 
 robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
@@ -460,16 +465,16 @@ robe_sprite_data:
 ; 1 (11) ; starts talking
 
 keeper_x:
-.byte	9, 9, 9, 9
+.byte   9, 9,10,10
 .byte  10,10,10,10
 .byte  10,10,10,10, 10,10
 .byte  10,10,10,10,10,10,10
 
 keeper_y:
-.byte	55,56,56,57
-.byte   58,59,60,61
-.byte	61,61,61,61, 61,61
-.byte	61,61,61,61, 61,61,61
+.byte	51,52,53,54
+.byte   56,58,59,60
+.byte	60,60,60,60, 60,60
+.byte	60,60,60,60, 60,60,60
 
 which_keeper_sprite:
 .byte	0, 0, 1, 1
@@ -479,23 +484,33 @@ which_keeper_sprite:
 .byte   4, 4, 4, 3, 2, 1, 1
 
 
-draw_keeper:
+	;===============================
+	; handle keeper1
+	;===============================
+	; handle keeper1
+	;	stop walking
+	;	have keeper come out to talk
+	;	special limited handling
+	;	can't walk unless win
+handle_keeper1:
+
+	lda	#0		; stop walking
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+	;===========================
+	; animate keeper coming out
+
+
+keeper1_loop:
 
 	; erase prev keeper
 
 	ldy	#3                      ; erase slot 3?
 	jsr	hgr_partial_restore_by_num
 
-	inc	BABY_COUNT
-	lda	BABY_COUNT
-	cmp	#21
-	bne	nowrap_keeper
-
-	lda	#0
-	sta	BABY_COUNT
-nowrap_keeper:
-
-	ldx	BABY_COUNT
+	inc	KEEPER_COUNT
+	ldx	KEEPER_COUNT
 
 	lda     keeper_x,X
 	sta     SPRITE_X
@@ -504,7 +519,7 @@ nowrap_keeper:
 
         ; get offset for graphics
 
-	ldx	BABY_COUNT
+	ldx	KEEPER_COUNT
 	lda	which_keeper_sprite,X
 	clc
 	adc	#5			; skip ron
@@ -514,8 +529,99 @@ nowrap_keeper:
 
 	jsr	hgr_draw_sprite_save
 
+	;=======================
+	; see if done animation
+
+	lda	KEEPER_COUNT
+	cmp	#20		;
+	beq	keeper_talk1
+
+
+
+	;========================
+	; increment flame
+
+	jsr	draw_peasant
+
+	;========================
+	; increment flame
+
+	jsr	increment_flame
+
+	;=========================
+	; delay
+
+	lda	#200
+	jsr	wait
+
+
+	jmp	keeper1_loop
 
 	rts
+
+
+	;====================
+	; increment flame
+	;====================
+increment_flame:
+	inc	FLAME_COUNT
+	lda	FLAME_COUNT
+	cmp	#3
+	bne	flame_good
+
+	lda	#0
+	sta	FLAME_COUNT
+
+flame_good:
+	rts
+
+keeper_talk1:
+	; print the message
+
+	ldx     #<cave_outer_keeper1_message1
+	ldy     #>cave_outer_keeper1_message1
+	jsr	finish_parse_message
+
+	ldx     #<cave_outer_keeper1_message2
+	ldy     #>cave_outer_keeper1_message2
+	jsr     finish_parse_message
+
+	ldx     #<cave_outer_keeper1_message3
+	ldy     #>cave_outer_keeper1_message3
+	jsr     finish_parse_message
+
+	ldx     #<cave_outer_keeper1_message4
+	ldy     #>cave_outer_keeper1_message4
+	jsr     finish_parse_message
+
+	;===============================================
+	; if have sub print5, otherwise skip ahead
+
+	lda	INVENTORY_2
+	and	#INV2_MEATBALL_SUB
+	beq	dont_have_sub
+
+	ldx     #<cave_outer_keeper1_message4
+	ldy     #>cave_outer_keeper1_message4
+	stx     OUTL
+	sty     OUTH
+	jsr     print_text_message
+
+	jsr     wait_until_keypress
+
+dont_have_sub:
+
+	lda	#0
+	ldx	#39
+	jsr	hgr_partial_restore
+
+	lda	INVENTORY_2
+	ora	#INV2_TROGSHIELD	; get the shield
+	sta	INVENTORY_2
+
+	jmp	game_loop
+
+
 
 sprites_xsize:
 	.byte  2, 2, 2, 2, 2			; ron 0..4
