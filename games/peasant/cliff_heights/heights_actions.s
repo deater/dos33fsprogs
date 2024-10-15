@@ -235,9 +235,24 @@ cave_outer_hint:
 	jmp	finish_parse_message
 
 cave_outer_take_quiz:
-	; FIXME
-	ldx	#<cave_outer_climb_message
-	ldy	#>cave_outer_climb_message
+	jsr	random8
+	cmp	#85
+	bcc	keeper1_quiz3
+	cmp	#170
+	bcc	keeper1_quiz2
+keeper1_quiz1:
+	ldx	#<cave_outer_quiz1_1
+	ldy	#>cave_outer_quiz1_1
+	jmp	finish_parse_message
+
+keeper1_quiz2:
+	ldx	#<cave_outer_quiz1_2
+	ldy	#>cave_outer_quiz1_2
+	jmp	finish_parse_message
+
+keeper1_quiz3:
+	ldx	#<cave_outer_quiz1_3
+	ldy	#>cave_outer_quiz1_3
 	jmp	finish_parse_message
 
 
@@ -265,6 +280,28 @@ cave_outer_give_sandwich:
 	ldx	#<cave_outer_give_sub_message
 	ldy	#>cave_outer_give_sub_message
 	jmp	finish_parse_message
+
+parse_quiz_unknown:
+	ldx     #<cave_outer_keeper_wants_message
+        ldy     #>cave_outer_keeper_wants_message
+        jmp     finish_parse_message
+
+verb_table = $BF00
+
+
+setup_quiz_verb_table:
+	ldx     #0
+unknown_loop:
+        lda     #<(parse_quiz_unknown-1)
+        sta     verb_table,X
+        lda     #>(parse_quiz_unknown-1)
+        sta     verb_table+1,X
+        inx
+        inx
+        cpx     #(VERB_ALL_DONE*2)
+        bne     unknown_loop
+
+	rts
 
 
 .include "../text/dialog_cliff_heights.inc"

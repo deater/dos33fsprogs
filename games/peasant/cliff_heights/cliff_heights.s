@@ -252,6 +252,9 @@ no_lightning:
 	cmp	#LOCATION_TROGDOR_OUTER
 	bne	no_keeper
 
+	lda	IN_QUIZ
+	bne	no_keeper
+
 check_keeper1:
 	lda	INVENTORY_2
 	and	#INV2_TROGSHIELD	; only if not have shield
@@ -300,13 +303,20 @@ wait_loop:
 	dec	WAIT_LOOP
 	bne	wait_loop
 
-
-
 	; delay
 
 ;	lda	#200
 ;	jsr	wait
 
+
+	lda	IN_QUIZ
+	beq	not_in_quiz
+
+	lda	#0		; keep from moving
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+not_in_quiz:
 
 	jmp	game_loop
 
@@ -611,13 +621,31 @@ keeper_talk1:
 
 dont_have_sub:
 
-	lda	#0
-	ldx	#39
-	jsr	hgr_partial_restore
+	; now we need to re-draw keeper
+	; also we're in quiz mode
+	; so we can't move and can only take quiz or give sub
 
-	lda	INVENTORY_2
-	ora	#INV2_TROGSHIELD	; get the shield
-	sta	INVENTORY_2
+	lda	#1
+	sta	IN_QUIZ
+
+	; custom common verb table the essentially does nothing
+	jsr	setup_quiz_verb_table
+
+	; respond only to take quiz and give sub
+	lda	#<keeper1_verb_table
+	sta	INL
+	lda	#>keeper1_verb_table
+	sta	INH
+	jsr	load_custom_verb_table
+
+
+;	lda	#0
+;	ldx	#39
+;	jsr	hgr_partial_restore
+
+;	lda	INVENTORY_2
+;	ora	#INV2_TROGSHIELD	; get the shield
+;	sta	INVENTORY_2
 
 	jmp	game_loop
 

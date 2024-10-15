@@ -163,6 +163,11 @@ cave_outer_keeper_take_quiz:
 .byte "Seriously - this guy should",13
 .byte "get a job.",0
 
+; if you say other than A/B/C then...
+;    Peasant fool! Choose A, B,
+;    or C!
+; followed by repeat of the question
+
 cave_outer_quiz1_1:
 .byte "Okay here goes. What did",13
 .byte "you win from the Archery",13
