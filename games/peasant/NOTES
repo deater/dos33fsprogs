@@ -71,30 +71,33 @@ Memory Map
 
 ; notes -- VID_LOGO loads title at $9000 - $AFFF
 
-$00	Zero Page
-$01	Stack
-$02	Disk Lookup
-$03	Disk Lookup, IRQ vectors
-$04-$07 Text/GR page 1 (priority map)
-$08-$0B Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
-$0B-$1F QLOAD disk routines and HGR drawing routines (5120 bytes)
-$20-$3F HGR Page 1	(shown)
-$40-$5f HGR Page 2	(current image background)
-$60-$AF Programs	(we limit to 20k, 20480 bytes, $50 pages)
-$A0-$AF peasaant sprites
-$B0-$B7?
-$B8-$BB Hi-res lookup tables
-$BC     temp area for load/save files
-$BD-$BE temp are (save games, sprite staging)
-$BF	verb table
-$C0-$CF	I/O
+; this describes current plan, currently peasant1/2/3/4 violate this
+
+$00	(256B)	Zero Page
+$01	(256B)	Stack
+$02	(256B)	Disk Lookup
+$03	(256B)	Disk Lookup, IRQ vectors
+$04-$07 (1k)	Text/GR page 1 (priority map)
+$08-$0B (0.75k)	Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
+$0B-$1F (5.25k)	QLOAD disk and common routines (5376 bytes, 4996 bytes used)
+$20-$3F (8k)	HGR Page 1	(shown)
+$40-$5f (8k)	HGR Page 2	(current image background)
+$60-$9F (16k)	Programs	(we limit to 16k, 16384 bytes, $40 pages)
+$A0-$AF (4k)	peasant sprites
+$B0-$B7 (2k)	unused currently?
+$B8-$BB (1k)	Hi-res lookup tables
+$BC-$BD (512B)	temp area for load/save file marshalling
+$BE	(256B)	unused(?)
+$BF	(256B)	verb table
+$C0-$CF	(n/a)	I/O
 
 Language card (high 16k)
 
-$D0-$ED (bank1) per-levelstrings	
-$D0-$DF (bank2) inventory		(3122 bytes)
-$EE-$FF common parser code  (4.5k = 4608 bytes [4332 currently])
+$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is 6k currently)
+$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
+$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
 
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 238, to 280 (6)
 50 to 135 (85)   6*85=510
@@ -202,7 +205,7 @@ deaths/endings implemented
 +6	walk on range (while Dongolev shooting)
 +7	walk too close to Kerrek
 +8	say "yes" when Jhonka asks if you stole riches
-
++9	fall off cliff
 
 
 v0.84 sizes:	lzsa	 zx02
@@ -262,8 +265,8 @@ T        11 = INN	 8935 bytes     4T	(16384) 7k free
 T	 15 = TROGDOR	14771 bytes     4T	(16384) 3k free
 T        19 = ENDING	17037 bytes	5T	(20480) 3k free
 T	 24 = CLIFF_BASE 6071 bytes     2T       (8192) 2k free
-T	 26 = CLIMB     16384 bytes	4T	(16483) 0k free
-T	 30 = HEIGHTS   ????  bytes     3T      (12288) 0k free
+T	 26 = CLIMB     12448 bytes	4T	(16384) 4k free
+T	 30 = HEIGHTS   14948 bytes     4T      (16384) 1k free
 
 
 

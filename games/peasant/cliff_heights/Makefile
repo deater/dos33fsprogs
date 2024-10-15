@@ -17,6 +17,7 @@ cliff_heights.o:	cliff_heights.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
 		graphics_heights/ciff_heights_graphics.inc \
 		graphics_heights/priority_cliff_heights.inc \
+		sprites_heights/ron_sprites.inc \
 		sprites_heights/lightning_sprites.inc \
 		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant.s ../move_peasant.s \
@@ -32,6 +33,9 @@ graphics_heights/ciff_heights_graphics.inc:
 	cd graphics_heights && make
 
 ###
+
+sprites_heights/ron_sprites.inc:
+	cd sprites_heights && make
 
 sprites_heights/lightning_sprites.inc:
 	cd sprites_heights && make
