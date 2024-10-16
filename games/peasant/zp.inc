@@ -289,10 +289,10 @@ BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
 
 IN_QUIZ		= $CA	; cliff heights
+WHICH_QUIZ	= $CB	; cliff heights
 
-
-PREV_X		= $CB	; ??
-PREV_Y		= $CC	; ??
+PREV_X		= $CC	; ??
+PREV_Y		= $CD	; ??
 
 ; D0-D? used by HGR?
 

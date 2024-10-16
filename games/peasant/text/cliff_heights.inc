@@ -176,6 +176,15 @@ cave_outer_quiz1_1:
 .byte "B. SuperTime FunBow TM",13	; correct
 .byte "C. SuperFun BowTime TM",0
 
+cave_outer_quiz1_1again:
+.byte "Peasant fool! Choose A, B,",13
+.byte "or C!",13
+.byte "What did you win from the",13
+.byte "Archery game?",13
+.byte "A. SuperBow FunTime TM",13
+.byte "B. SuperTime FunBow TM",13	; correct
+.byte "C. SuperFun BowTime TM",0
+
 cave_outer_quiz1_2:
 .byte "Okay here goes. What does",13
 .byte "Mendelev have you tell",13
@@ -184,6 +193,14 @@ cave_outer_quiz1_2:
 .byte "B. Hallo",13
 .byte "C. Allo",0
 
+cave_outer_quiz1_2again:
+.byte "Peasant fool! Choose A, B,",13
+.byte "or C!",13
+.byte "What does Mendelev have you",13
+.byte "tell Dongolev?",13
+.byte "A. Haldo",13			; correct
+.byte "B. Hallo",13
+.byte "C. Allo",0
 
 cave_outer_quiz1_3:
 .byte "Okay here goes. What is the",13
@@ -193,8 +210,18 @@ cave_outer_quiz1_3:
 .byte "B. The Baby",13
 .byte "C. The Kerrek",0			; correct
 
+cave_outer_quiz1_3again:
+.byte "Peasant fool! Choose A, B,",13
+.byte "or C!",13
+.byte "What is the only creature",13
+.byte "the Jhonka fears?",13
+.byte "A. Poor Gary",13
+.byte "B. The Baby",13
+.byte "C. The Kerrek",0			; correct
+
+
 ; Response to Correct Answer
-; makes happy noise, then gives you points
+; makes happy noise, then gives you +5 POINTS
 cave_outer_quiz1_correct:
 .byte 34,"Ah crap! You're right.",13
 .byte "Here, take this stupid",13
@@ -216,22 +243,23 @@ cave_outer_quiz1_wrong_part2:
 cave_outer_quiz1_wrong_part3:
 .byte 34,"Just this kid from 4th",13
 .byte "grade that I really hated.",13
-.byte "But he was a BIG LOSER and",12
+.byte "But he was a BIG LOSER and",13
 .byte "HE SMELLED!",34,0
 
 ; wiggles hands, poof of smoke, turn into Ron
 ; makes twinkly noise as wiggles hand, another noise (blrrp?) as poof of smoke
 cave_outer_quiz1_wrong_part4:
-.byte "Well, you not exactly dead.",0
-.byte "But there's no way you",0
-.byte "could defeat Trogdor as Ron",0
-.byte "Cumberdale. Your quest",0
-.byte "ends here. Thanks for",0
+.byte "Well, you not exactly dead.",13
+.byte "But there's no way you",13
+.byte "could defeat Trogdor as Ron",13
+.byte "Cumberdale. Your quest",13
+.byte "ends here. Thanks for",13
 .byte "playing.",0
 
 
 ; + give sub, sandwich
 ;   slowly backs away, you suddenly have shield
+; +5 POINTS
 cave_outer_give_sub_message:
 cave_outer_give_sandwich_message:
 .byte "No way! I was just kidding",13

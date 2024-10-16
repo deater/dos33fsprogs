@@ -59,22 +59,8 @@ new_location:
 	;==========================
 	; load updated verb table
 
-	; setup default verb table
+	jsr	setup_heights_verb_table
 
-	jsr	setup_default_verb_table
-
-	; local verb table
-
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
-
-	lda	verb_tables_low,X
-	sta	INL
-	lda	verb_tables_hi,X
-	sta	INH
-	jsr	load_custom_verb_table
 
 	;===============================
 	; load priority to $400
@@ -232,10 +218,10 @@ game_loop:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	bne	level_over
+	beq	level_good
 
-
-
+	jmp	level_over
+level_good:
 	;=====================
 	; draw lightning
 
@@ -295,6 +281,15 @@ no_keeper:
 	lda	#13
 	sta	WAIT_LOOP
 wait_loop:
+
+	lda	IN_QUIZ
+	cmp	#2		; means waiting for answer
+	bne	normal_keyboard_check
+
+	jsr	check_keyboard_answer
+
+normal_keyboard_check:
+
 	jsr	check_keyboard
 
 	lda	#50		; approx 7ms
@@ -303,11 +298,9 @@ wait_loop:
 	dec	WAIT_LOOP
 	bne	wait_loop
 
-	; delay
-
-;	lda	#200
-;	jsr	wait
-
+	;===================================
+	; keep from moving if being quizzed
+	;===================================
 
 	lda	IN_QUIZ
 	beq	not_in_quiz
@@ -592,17 +585,25 @@ keeper_talk1:
 	ldy     #>cave_outer_keeper1_message1
 	jsr	finish_parse_message
 
+	jsr	draw_standing_keeper
+
 	ldx     #<cave_outer_keeper1_message2
 	ldy     #>cave_outer_keeper1_message2
 	jsr     finish_parse_message
+
+	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_keeper1_message3
 	ldy     #>cave_outer_keeper1_message3
 	jsr     finish_parse_message
 
+	jsr	draw_standing_keeper
+
 	ldx     #<cave_outer_keeper1_message4
 	ldy     #>cave_outer_keeper1_message4
 	jsr     finish_parse_message
+
+	jsr	draw_standing_keeper
 
 	;===============================================
 	; if have sub print5, otherwise skip ahead
@@ -611,13 +612,11 @@ keeper_talk1:
 	and	#INV2_MEATBALL_SUB
 	beq	dont_have_sub
 
-	ldx     #<cave_outer_keeper1_message4
-	ldy     #>cave_outer_keeper1_message4
-	stx     OUTL
-	sty     OUTH
-	jsr     print_text_message
+	ldx     #<cave_outer_keeper1_message5
+	ldy     #>cave_outer_keeper1_message5
+	jsr     finish_parse_message
 
-	jsr     wait_until_keypress
+	jsr	draw_standing_keeper
 
 dont_have_sub:
 
@@ -638,18 +637,183 @@ dont_have_sub:
 	sta	INH
 	jsr	load_custom_verb_table
 
-
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore
-
-;	lda	INVENTORY_2
-;	ora	#INV2_TROGSHIELD	; get the shield
-;	sta	INVENTORY_2
-
 	jmp	game_loop
 
 
+	;==============================
+	; check_keyboard_answer
+	;==============================
+	; for when in quiz
+	; looking for just A, B, or C
+
+check_keyboard_answer:
+
+	lda	KEYPRESS
+	bpl	no_answer
+
+	pha
+	jsr	restore_parse_message
+	pla
+
+	and	#$7f	; strip high bit
+	and	#$df	; convert to lowercase $61 -> $41  0110 -> 0100
+
+	cmp	#'A'
+	bcc	invalid_answer		; blt
+	cmp	#'D'
+	bcs	invalid_answer		; bge
+
+	ldx	WHICH_QUIZ
+
+	cmp	quiz1_answers,X
+	beq	right_answer
+	bne	wrong_answer
+
+no_answer:
+	rts
+
+	;======================
+	; quiz1 invalid answer
+	;======================
+
+invalid_answer:
+	bit	KEYRESET	; clear the keyboard buffer
+
+	lda	WHICH_QUIZ
+	cmp	#3
+	beq	resay_quiz3
+	cmp	#2
+	beq	resay_quiz2
+
+resay_quiz1:
+	ldx	#<cave_outer_quiz1_1again
+	ldy	#>cave_outer_quiz1_1again
+	jmp	print_text_message
+resay_quiz2:
+	ldx	#<cave_outer_quiz1_2again
+	ldy	#>cave_outer_quiz1_2again
+	jmp	print_text_message
+resay_quiz3:
+	ldx	#<cave_outer_quiz1_3again
+	ldy	#>cave_outer_quiz1_3again
+	jmp	print_text_message
+
+
+
+	;======================
+	; quiz1 wrong answer
+	;======================
+
+wrong_answer:
+	bit	KEYRESET	; clear the keyboard buffer
+
+	ldx     #<cave_outer_quiz1_wrong
+	ldy     #>cave_outer_quiz1_wrong
+	jsr	finish_parse_message
+
+	ldx     #<cave_outer_quiz1_wrong_part2
+	ldy     #>cave_outer_quiz1_wrong_part2
+	jsr	finish_parse_message
+
+	ldx     #<cave_outer_quiz1_wrong_part3
+	ldy     #>cave_outer_quiz1_wrong_part3
+	jsr	finish_parse_message
+
+	; FIXME: wiggles hand
+	; FIXME: turn to Ron
+
+	ldx     #<cave_outer_quiz1_wrong_part4
+	ldy     #>cave_outer_quiz1_wrong_part4
+	jsr	finish_parse_message
+
+	lda	#0
+	sta	IN_QUIZ
+
+	; game over
+
+	lda	#LOAD_GAME_OVER
+	sta	WHICH_LOAD
+
+	lda	#NEW_FROM_DISK
+	sta	LEVEL_OVER
+
+	rts
+
+	;======================
+	; quiz1 correct answer
+	;======================
+
+right_answer:
+	bit	KEYRESET	; clear the keyboard buffer
+	ldx     #<cave_outer_quiz1_correct
+	ldy     #>cave_outer_quiz1_correct
+	jsr	finish_parse_message
+
+	jsr	cave_outer_get_shield
+
+	; FIXME: animate keeper backing off
+
+	rts
+
+quiz1_answers:
+	.byte 'B','A','C'
+
+	;============================
+	; setup heights verb table
+	;============================
+	; we do this a lot so make it a function
+
+setup_heights_verb_table:
+	; setup default verb table
+
+	jsr	setup_default_verb_table
+
+	; local verb table
+
+	lda     MAP_LOCATION
+	sec
+	sbc     #LOCATION_BASE
+	tax
+
+	lda	verb_tables_low,X
+	sta	INL
+	lda	verb_tables_hi,X
+	sta	INH
+	jsr	load_custom_verb_table
+
+	rts
+
+
+	;==========================
+	; draw standing keeper
+	;==========================
+draw_standing_keeper:
+
+	; erase prev keeper
+
+	ldy	#3                      ; erase slot 3?
+	jsr	hgr_partial_restore_by_num
+
+	ldx	#19
+
+	lda     keeper_x,X
+	sta     SPRITE_X
+	lda     keeper_y,X
+	sta     SPRITE_Y
+
+        ; get offset for graphics
+
+	ldx	#19
+	lda	which_keeper_sprite,X
+	clc
+	adc	#5			; skip ron
+	tax
+
+	ldy     #3      ; ? slot
+
+	jsr	hgr_draw_sprite_save
+
+	rts
 
 sprites_xsize:
 	.byte  2, 2, 2, 2, 2			; ron 0..4

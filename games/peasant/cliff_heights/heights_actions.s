@@ -235,25 +235,34 @@ cave_outer_hint:
 	jmp	finish_parse_message
 
 cave_outer_take_quiz:
+	inc	IN_QUIZ		; make it 2 which means wait for answer
+
 	jsr	random8
 	cmp	#85
 	bcc	keeper1_quiz3
 	cmp	#170
 	bcc	keeper1_quiz2
 keeper1_quiz1:
+	lda	#0
 	ldx	#<cave_outer_quiz1_1
 	ldy	#>cave_outer_quiz1_1
-	jmp	finish_parse_message
+	jmp	keeper1_quiz_common
 
 keeper1_quiz2:
+	lda	#1
 	ldx	#<cave_outer_quiz1_2
 	ldy	#>cave_outer_quiz1_2
-	jmp	finish_parse_message
+	jmp	keeper1_quiz_common
 
 keeper1_quiz3:
+	lda	#2
 	ldx	#<cave_outer_quiz1_3
 	ldy	#>cave_outer_quiz1_3
-	jmp	finish_parse_message
+keeper1_quiz_common:
+	sta	WHICH_QUIZ
+	stx	OUTL
+	sty	OUTH
+	jmp	print_text_message
 
 
 	;=============================
@@ -272,14 +281,16 @@ keeper1_give:
 
 cave_outer_give_sub:
 cave_outer_give_sandwich:
-	; TODO
-	;	give points
-	;	give shield
-	;	change peasant sprites
 
 	ldx	#<cave_outer_give_sub_message
 	ldy	#>cave_outer_give_sub_message
-	jmp	finish_parse_message
+	jsr	finish_parse_message
+
+	jsr	cave_outer_get_shield
+
+	; FIXME: back out the keeper
+
+	rts
 
 parse_quiz_unknown:
 	ldx     #<cave_outer_keeper_wants_message
@@ -300,6 +311,32 @@ unknown_loop:
         inx
         cpx     #(VERB_ALL_DONE*2)
         bne     unknown_loop
+
+	rts
+
+	;=============================
+	; you got the shield somehow
+	;=============================
+cave_outer_get_shield:
+
+	lda	#0
+	sta	IN_QUIZ
+
+	; re-set up the verb table
+
+	jsr	setup_heights_verb_table
+
+	; actually get the shield
+
+	lda	INVENTORY_2
+	ora	#INV2_TROGSHIELD        ; get the shield
+	sta	INVENTORY_2
+
+	; score points
+        lda     #5
+        jsr     score_points
+
+        ; FIXME: load new peasant sprite with shield
 
 	rts
 
