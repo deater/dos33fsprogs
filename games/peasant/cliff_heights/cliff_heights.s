@@ -12,6 +12,7 @@
 .include "../qload.inc"
 .include "../inventory/inventory.inc"
 .include "../parse_input.inc"
+.include "../redbook_sound.inc"
 
 collision_location = $bc00
 
@@ -321,6 +322,8 @@ done_keyboard_check:
 
 not_in_quiz:
 
+	jsr	wait_vblank
+
 	jmp	game_loop
 
 oops_new_location:
@@ -406,6 +409,8 @@ exiting_cliff:
 
 .include "../wait.s"
 .include "../wait_a_bit.s"
+
+.include "../vblank.s"
 
 .include "graphics_heights/cliff_heights_graphics.inc"
 .include "graphics_heights/priority_cliff_heights.inc"
@@ -503,6 +508,30 @@ ron_transform:
 
 ron1_loop:
 
+	; play sound if needed, 2.. 12
+
+	lda	KEEPER_COUNT
+	cmp	#2
+	bcc	skip_ron_sound
+	cmp	#12
+	bcs	skip_ron_sound
+
+	and	#1
+	beq	ron_other_note
+
+        lda     #NOTE_F6
+	beq	ron_common_note		; bra
+ron_other_note:
+        lda     #NOTE_E6
+
+ron_common_note:
+        sta     speaker_frequency
+        lda     #8
+        sta     speaker_duration
+        jsr     speaker_tone
+
+skip_ron_sound:
+
 	; erase prev keeper
 
 	ldy	#3                      ; erase slot 3?
@@ -585,6 +614,20 @@ done_ron_peasant:
 	jmp	ron1_loop
 
 ron_done:
+
+	;===========================
+        ; weep sound
+
+        lda     #32
+        sta     speaker_duration
+        lda     #NOTE_E5
+        sta     speaker_frequency
+        jsr     speaker_tone
+        lda     #64
+        sta     speaker_duration
+        lda     #NOTE_F5
+        sta     speaker_frequency
+        jsr     speaker_tone
 
 	jsr	wait_until_keypress
 

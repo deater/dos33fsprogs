@@ -11,11 +11,16 @@ VBLANK	= $C019		;
 	; wait for vblank on IIe
 	; positive? during vblank
 
+wait_vblank:
+	lda	APPLE_II_MODEL
+	cmp	#'E'
+	bne	no_vblank
+
 wait_vblank_iie:
 	lda	VBLANK
 	bmi	wait_vblank_iie		; wait for positive (in vblank)
 wait_vblank_done_iie:
 	lda	VBLANK			; wait for negative (vlank done)
 	bpl	wait_vblank_done_iie
-
+no_vblank:
 	rts
