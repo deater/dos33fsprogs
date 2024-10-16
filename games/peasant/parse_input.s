@@ -717,6 +717,9 @@ finish_parse_message:
 
 
 restore_parse_message:
+	lda	#1
+	sta	REFRESH_SCREEN		; might need to re-draw bg things
+
 
 	lda	#0
 	ldx	#39

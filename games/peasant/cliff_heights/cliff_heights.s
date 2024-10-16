@@ -190,11 +190,7 @@ col_copy_loop:
 
 	ldx	#<cliff_heights_top_message
 	ldy	#>cliff_heights_top_message
-	stx     OUTL
-        sty     OUTH
-        jsr     print_text_message
-
-        jsr     wait_until_keypress
+        jsr     finish_parse_message
 
 	jsr	restore_parse_message
 
@@ -237,10 +233,10 @@ no_lightning:
 
 	lda     MAP_LOCATION
 	cmp	#LOCATION_TROGDOR_OUTER
-	bne	no_keeper
+	bne	done_check_keeper
 
 	lda	IN_QUIZ
-	bne	no_keeper
+	bne	done_check_keeper
 
 check_keeper1:
 	lda	INVENTORY_2
@@ -255,8 +251,27 @@ check_keeper1:
 
 check_keeper2:
 
-no_keeper:
 
+
+
+done_check_keeper:
+
+
+	;=================================
+	; draw keeper if we need refresh
+
+	lda	REFRESH_SCREEN
+	beq	no_draw_keeper
+
+	lda	#0
+	sta	REFRESH_SCREEN
+
+	lda	IN_QUIZ		; need to draw keeper if quizzing
+	beq	no_draw_keeper
+
+	jsr	draw_standing_keeper
+
+no_draw_keeper:
 
 	;=====================
 	; always draw peasant
@@ -610,6 +625,7 @@ done_ron_peasant:
 	lda	#200
 	jsr	wait
 
+	jsr	wait_vblank
 
 	jmp	ron1_loop
 
@@ -751,6 +767,7 @@ keeper1_loop:
 	lda	#200
 	jsr	wait
 
+	jsr	wait_vblank
 
 	jmp	keeper1_loop
 
@@ -845,8 +862,14 @@ check_keyboard_answer:
 	lda	KEYPRESS
 	bpl	no_answer
 
+	bit	KEYRESET
+
 	pha
 	jsr	restore_parse_message
+
+	lda	#0
+	sta	REFRESH_SCREEN	; don't refresh or we draw keeper on top
+
 	pla
 
 	and	#$7f	; strip high bit
@@ -874,24 +897,23 @@ invalid_answer:
 	bit	KEYRESET	; clear the keyboard buffer
 
 	lda	WHICH_QUIZ
-	cmp	#3
+	cmp	#2		; off by 1
 	beq	resay_quiz3
-	cmp	#2
+	cmp	#1
 	beq	resay_quiz2
 
 resay_quiz1:
 	ldx	#<cave_outer_quiz1_1again
 	ldy	#>cave_outer_quiz1_1again
-	jmp	print_text_message
+	jmp	finish_parse_message_nowait
 resay_quiz2:
 	ldx	#<cave_outer_quiz1_2again
 	ldy	#>cave_outer_quiz1_2again
-	jmp	print_text_message
+	jmp	finish_parse_message_nowait
 resay_quiz3:
 	ldx	#<cave_outer_quiz1_3again
 	ldy	#>cave_outer_quiz1_3again
-	jmp	print_text_message
-
+	jmp	finish_parse_message_nowait
 
 
 	;======================

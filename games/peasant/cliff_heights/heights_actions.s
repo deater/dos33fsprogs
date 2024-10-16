@@ -260,9 +260,7 @@ keeper1_quiz3:
 	ldy	#>cave_outer_quiz1_3
 keeper1_quiz_common:
 	sta	WHICH_QUIZ
-	stx	OUTL
-	sty	OUTH
-	jmp	print_text_message
+	jmp	finish_parse_message_nowait
 
 
 	;=============================

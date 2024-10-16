@@ -12,7 +12,7 @@ VBLANK	= $C019		;
 	; positive? during vblank
 
 wait_vblank:
-	lda	APPLE_II_MODEL
+	lda	APPLEII_MODEL
 	cmp	#'E'
 	bne	no_vblank
 
