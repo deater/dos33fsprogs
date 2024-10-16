@@ -290,9 +290,10 @@ KEEPER_COUNT	= $C9	; cliff heights
 
 IN_QUIZ		= $CA	; cliff heights
 WHICH_QUIZ	= $CB	; cliff heights
+OLD_DIR		= $CC	; cliff heights
 
-PREV_X		= $CC	; ??
-PREV_Y		= $CD	; ??
+PREV_X		= $CD	; ??
+PREV_Y		= $CE	; ??
 
 ; D0-D? used by HGR?
 
