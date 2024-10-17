@@ -2,7 +2,7 @@ include ../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../linker_scripts
 
-all:	WBOOT2 WBOOT3
+all:	WBOOT2 WBOOT3 WBOOT4
 
 ###
 
@@ -20,6 +20,15 @@ WBOOT3:	wrong_boot3.o
 wrong_boot3.o: 	wrong_boot3.s
 	ca65 -o wrong_boot3.o wrong_boot3.s -l wrong_boot3.lst
 
+###
+
+WBOOT4:	wrong_boot4.o
+	ld65 -o WBOOT4 wrong_boot4.o -C $(LINKER_SCRIPTS)/apple2_800.inc
+
+wrong_boot4.o: 	wrong_boot4.s
+	ca65 -o wrong_boot4.o wrong_boot4.s -l wrong_boot4.lst
+
+
 
 ###
 
@@ -29,4 +38,4 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst WBOOT2 WBOOT3
+	rm -f *~ *.o *.lst WBOOT2 WBOOT3 WBOOT4

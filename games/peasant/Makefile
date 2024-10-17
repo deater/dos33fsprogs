@@ -11,7 +11,8 @@ PRODOS = ../../utils/prodos-utils/prodos
 PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 
-all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk peasant.2mg
+all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk \
+	peasant_disk4.dsk peasant.2mg
 
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
@@ -59,6 +60,14 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./cliff_base/CLIFF_BASE	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
+
+peasant_disk4.dsk:	./wrong_boot/WBOOT4 \
+	./cliff_base/CLIFF_BASE ./climb/CLIMB \
+	./cliff_heights/CLIFF_HEIGHTS \
+	./trogdor/TROGDOR ./ending/ENDING
+	cp $(EMPTY_DISK)/empty.dsk peasant_disk4.dsk
+	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4      0   1
+
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
@@ -516,8 +525,10 @@ text/common.inc.lookup:
 
 submit:	peasant_floppies.zip peasant.2mg.zip
 
-peasant_floppies.zip:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
-	zip peasant_floppies.zip peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk
+peasant_floppies.zip:	peasant_disk1.dsk peasant_disk2.dsk \
+	peasant_disk3.dsk peasant_disk4.dsk
+	zip peasant_floppies.zip peasant_disk1.dsk peasant_disk2.dsk \
+		peasant_disk3.dsk peasant_disk4.dsk
 
 peasant.2mg.zip:	peasant.2mg
 	zip peasant.2mg.zip peasant.2mg
@@ -553,7 +564,7 @@ distclean:
 clean:	
 	rm -f *~ *.o *.lst qload.inc \
 			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
-			*.ZX02 dialog_peasant2 \
+			*.ZX02 \
 			generate_common generate_all_symbols
 	cd archery && make clean
 	cd cliff_base && make clean
