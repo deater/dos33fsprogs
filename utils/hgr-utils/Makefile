@@ -3,7 +3,8 @@ include ../../Makefile.inc
 CFLAGS = -O2 -Wall -g
 
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
-	hgr2png hgr_make_sprite png2font dhgr2png
+	hgr2png hgr_make_sprite png2font dhgr2png \
+	png2tiles
 
 ###
 
@@ -32,6 +33,15 @@ png2hgr:		png2hgr.o
 
 png2hgr.o:		png2hgr.c
 			$(CC) $(CFLAGS) -c png2hgr.c
+
+###
+
+png2tiles:		png2tiles.o
+			$(CC) -o png2tiles png2tiles.o $(LFLAGS) -lpng
+
+png2tiles.o:		png2tiles.c
+			$(CC) $(CFLAGS) -c png2tiles.c
+
 
 ###
 
@@ -82,5 +92,5 @@ install:
 		cp pcx2hgr shape_table png2hgr hgr2png hgr_make_sprite png2font $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o pcx2hgr shape_table dump_table png2hgr png2dhgr hgr2png hgr_make_sprite png2font
+		rm -f *~ *.o pcx2hgr shape_table dump_table png2hgr png2dhgr hgr2png hgr_make_sprite png2font png2tiles
 
