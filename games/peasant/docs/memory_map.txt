@@ -1,0 +1,32 @@
+Memory Map
+~~~~~~~~~~
+
+; notes -- VID_LOGO loads title at $9000 - $AFFF
+
+; this describes current plan, currently peasant1/2/3/4 violate this
+
+$00	(256B)	Zero Page
+$01	(256B)	Stack
+$02	(256B)	Disk Lookup
+$03	(256B)	Disk Lookup, IRQ vectors
+$04-$07 (1k)	Text/GR page 1 (priority map)
+$08-$0B (0.75k)	Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
+$0B-$1F (5.25k)	QLOAD disk and common routines (5376 bytes, 4996 bytes used)
+$20-$3F (8k)	HGR Page 1	(shown)
+$40-$5f (8k)	HGR Page 2	(current image background)
+$60-$9F (16k)	Programs	(we limit to 16k, 16384 bytes, $40 pages)
+$A0-$AF (4k)	peasant sprites
+$B0-$B7 (2k)	unused currently?
+$B8-$BB (1k)	Hi-res lookup tables
+$BC-$BD (512B)	temp area for load/save file marshalling
+$BE	(256B)	unused(?)
+$BF	(256B)	verb table
+$C0-$CF	(n/a)	I/O
+
+Language card (high 16k)
+
+$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is 6k currently)
+$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
+$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
+
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-

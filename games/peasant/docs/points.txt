@@ -1,0 +1,52 @@
+
+POINTS IMPLEMENTED: (in order of implementation)
++ 10 (Talk Trogdor)
++  1 (talk to archer)
++  1 (talked to archer after trinket/mask)
++  2 (move rock)
++  1 (get pebbles)
++  1 (get feed)
++  5 (give riches)
++  5 (give baby) [inn]
++  3 (get room)
++  2 (feed fish)
++  2 (put pebbles in bucket)
++  3 (put baby in bucket)
++  2 (turn crank [baby in bucket])
++  2 (scare gary)
++  2 (get arrow)
++  3 (say haldo to dongolev)
++  3 (jump in hay)
++  2 (fall in mud puddle)
++  2 (give trinket to brothers)
++  2 (get super trinket)
++  3 (win archery game)
++ 10 (get belt)
++  5 (kill kerrek)
++  7 (talk to knight once have belt, robe, and on fire)
++  7 (get riches from jhonka)
++  5 (throw baby)
++  5 (deploy baby)
++  1 (close drawer)
++ 10 (get robe)
++  3 (wear robe)
++  2 (get grease)
++ 10 (catch on fire)
++  7 (throw sword at trogdor)
++  3 (climb to top of cliff)
++  5 (get trogshield)
+======
+ 137 points
+
+
+deaths/endings implemented
+==================
++1	Typing "die"
++2	Beating the game
++3	Cutting off arms, legs, and head
++4	kick/punch/kill Old Gary
++5	get arrow (while Dongolev shooting)
++6	walk on range (while Dongolev shooting)
++7	walk too close to Kerrek
++8	say "yes" when Jhonka asks if you stole riches
++9	fall off cliff

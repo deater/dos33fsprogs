@@ -1,0 +1,69 @@
+
+Disk Maps, current
+
+Disk1 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = Qboot / SAVES
+T	  1 = QLOAD	 5037 bytes	2T	(8192)  3k free
+T	  3 = MUSIC	 4045 bytes	1T	(4096)  0k free
+T	  4 = VID_LOGO	 7343 bytes	2T	(8192)  1k free
+T	  6 = TITLE      8500 bytes	3T	(12288) 4k free
+T	  9 = INTRO	13628 bytes	4T	(16384) 3k free
+T	 13 = PARSE_INP	 3249 bytes	1T	(4096)  1k free
+T	 14 = INVENTORY  3122 bytes     1T      (4096)  1k free
+T	 15 = GAME_OVER  2074 bytes	1T	(4096)  2k free
+T	 30 = COPY_CHECK 2834 bytes	1T	(4096)  1k free
+
+Disk2 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT2
+T	 15 = PEASANT1	18205 bytes	5T	(20480) 2k free
+T	 20 = PEASANT2	17194 bytes	5T	(20480) 3k free
+T	 25 = PEASANT3	17924 bytes	5T	(20480) 3k free
+T	 30 = PEASANT4	16698 bytes	5T	(20480) 3k free
+
+Disk3 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT3
+T	  1 = MAP	 2556 bytes     2T	 (8192) 6k free
+T         3 = ARCHERY	 2016 bytes     4T	(16384) 14k free
+T         7 = INSIDE	13457 bytes     4T	(16384) 3k free
+T        11 = INN	 8935 bytes     4T	(16384) 7k free
+T	 15 = TROGDOR	14771 bytes     4T	(16384) 3k free
+T        19 = ENDING	17037 bytes	5T	(20480) 3k free
+T	 24 = CLIFF_BASE 6071 bytes     2T       (8192) 2k free
+T	 26 = CLIMB     12448 bytes	4T	(16384) 4k free
+T	 30 = HEIGHTS   14948 bytes     4T      (16384) 1k free
+
+
+
+Disk Maps, Original
+
+
+Disk1 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = Qboot
+T	  1 = QLOAD	 5286 bytes	21S = 1T5S
+T	  3 = MUSIC	 4045 bytes	16S = 1T0S
+T	  4 = VID_LOGO	 7574 bytes	30S = 1T14S
+T	  6 = TITLE      8950 bytes	35S = 2T3S
+T	  9 = INTRO	13467 bytes	52S = 3T4S
+T	 14 = INVENTORY  3121 bytes     13S = 0T13S
+T	 15 = PEASANT1  17007 bytes	67S = 4T3S	; 80 is max
+T	 20 = PEASANT2  17941 bytes	71S = 4T7S	; 79 = 20224
+T        25 = PEASANT3  18154 bytes	71S = 4T7S
+T	 30 = PEASANT4	15806 bytes	62S = 3T14S
+
+Disk2 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT
+T	  1 = COPY_CHECK 2942 bytes	12S = 0T12S
+T         3 = GAME_OVER	 2111 bytes	 9S = 0T9S
+T	  4 = MAP        2703 bytes     11S = 0T11S
+T         6 = ARCHERY	 2112 bytes     11S = 0T11S
+T         9 = INSIDE	14178 bytes     56s = 3T8S
+T        14 = INN	 6906 bytes     27S = 1T11S
+T	 19 = TROGDOR	11468 bytes     45S = 2T13S	
+T        24 = ENDING	17619 bytes	69S = 4T5S
+T	 29 = CLIFF     13024 bytes     51S = 3T3S
+
