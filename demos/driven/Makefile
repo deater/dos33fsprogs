@@ -10,14 +10,15 @@ all:	driven.dsk
 
 driven.dsk:	QBOOT QLOAD \
 	MUSIC \
-	music.inc qload.inc
+	music.inc qload.inc \
+	./part00_intro/INTRO
 	cp $(EMPTY_DISK) driven.dsk
 	$(DOS33_RAW) driven.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) driven.dsk 0 2 QBOOT		1 1
 	$(DOS33_RAW) driven.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) driven.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) driven.dsk 4 0 MUSIC		0 0
-
+	$(DOS33_RAW) driven.dsk 9 0 ./part00_intro/INTRO 0 0
 
 #second_d1.dsk:	QBOOT QLOAD \
 #	music.inc qload.inc \
@@ -60,8 +61,8 @@ driven.dsk:	QBOOT QLOAD \
 
 ####
 
-part00_boot/FAKE_BIOS:	
-	cd part00_boot && make
+part00_intro/INTRO:	
+	cd part00_intro && make
 
 part01_intropan/INTRO:	
 	cd part01_intropan && make
@@ -230,7 +231,7 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
-
+	cd part00_intro && make clean
 
 ###
 

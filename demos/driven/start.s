@@ -139,7 +139,7 @@ load_program_loop:
 	cmp	#10
 	bne	load_program_loop
 
-
+.endif
 	;=======================
 	;=======================
 	; Load intro
@@ -148,10 +148,10 @@ load_program_loop:
 
 	; load from disk
 
-	lda     #2		; INTRO
+	lda     #13		; INTRO
 	sta     WHICH_LOAD
 	jsr     load_file
-.endif
+
 	;=======================
 	;=======================
 	; Run intro
@@ -159,9 +159,9 @@ load_program_loop:
 	;=======================
 
 	cli			; start music
-.if 0
-	jsr	$8000
 
+	jsr	$8000
+.if 0
 
 	;=======================
 	;=======================

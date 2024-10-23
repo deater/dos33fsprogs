@@ -22,7 +22,7 @@ intro.o:	intro.s \
 
 ###
 
-graphics/intro2.hgr.zx02:	
+graphics/desire.hgr.zx02:	
 	cd graphics && make
 
 ###

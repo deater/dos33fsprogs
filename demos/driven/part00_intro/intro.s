@@ -30,7 +30,7 @@ load_loop:
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
-;	bit	PAGE1
+	bit	PAGE1
 
 ;	lda	#0
 ;	jsr	hgr_page1_clearscreen
