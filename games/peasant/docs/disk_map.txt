@@ -29,11 +29,20 @@ T	  1 = MAP	 2556 bytes     2T	 (8192) 6k free
 T         3 = ARCHERY	 2016 bytes     4T	(16384) 14k free
 T         7 = INSIDE	13457 bytes     4T	(16384) 3k free
 T        11 = INN	 8935 bytes     4T	(16384) 7k free
+
+Disk4 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T	  0 = WBOOT4
+T	  1 = CLIFF_BASE 6071 bytes     2T       (8192) 2k free
+T	  3 = CLIMB     12448 bytes	4T	(16384) 4k free
+T	  7 = HEIGHTS   14948 bytes     4T      (16384) 1k free
+T	 11 = OUTER     14948 bytes     4T      (16384) 1k free
 T	 15 = TROGDOR	14771 bytes     4T	(16384) 3k free
 T        19 = ENDING	17037 bytes	5T	(20480) 3k free
-T	 24 = CLIFF_BASE 6071 bytes     2T       (8192) 2k free
-T	 26 = CLIMB     12448 bytes	4T	(16384) 4k free
-T	 30 = HEIGHTS   14948 bytes     4T      (16384) 1k free
+SECOND COPY OF MUSIC TO AVOID DISK SWAP? PEASANT SPRITES?
+S.A.M. CODE?
+
+
 
 
 

@@ -15,6 +15,7 @@ all:	dump_text shrink_text \
 	DIALOG_INN.ZX02 dialog_inn.inc \
 	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	DIALOG_CLIFF_HEIGHTS.ZX02 dialog_cliff_heights.inc \
+	DIALOG_OUTER.ZX02 dialog_outer.inc \
 	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
@@ -69,6 +70,23 @@ dialog_cliff_heights.o:	dialog_cliff_heights.s \
 
 dialog_cliff_heights.inc:	../generate_all_symbols dialog_cliff_heights
 	../generate_all_symbols -a 0xd000 dialog_cliff_heights.lst > dialog_cliff_heights.inc
+
+###
+
+DIALOG_OUTER.ZX02:	dialog_outer
+	$(ZX02) -f  dialog_outer DIALOG_OUTER.ZX02
+
+dialog_outer:	dialog_outer.o
+	ld65 -o dialog_outer dialog_outer.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_outer.o:	dialog_outer.s \
+		outer.inc.lookup
+	ca65 -o dialog_outer.o dialog_outer.s -l dialog_outer.lst
+
+dialog_outer.inc:	../generate_all_symbols dialog_outer
+	../generate_all_symbols -a 0xd000 dialog_outer.lst > dialog_outer.inc
+
+
 
 
 
@@ -257,6 +275,9 @@ mud.inc.lookup:	mud.inc shrink_text
 
 ned_cottage.inc.lookup:	ned_cottage.inc shrink_text
 	./shrink_text < ned_cottage.inc > ned_cottage.inc.lookup
+
+outer.inc.lookup:	outer.inc shrink_text
+	./shrink_text < outer.inc > outer.inc.lookup
 
 outside_inn.inc.lookup:	outside_inn.inc shrink_text
 	./shrink_text < outside_inn.inc > outside_inn.inc.lookup

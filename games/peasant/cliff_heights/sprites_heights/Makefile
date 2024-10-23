@@ -1,6 +1,7 @@
+
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	lightning_sprites.inc ron_sprites.inc
+all:	lightning_sprites.inc
 
 lightning_sprites.inc:	lightning.png
 	$(HGR_SPRITE) -s -l small_lightning1 lightning.png 14 3 27 14 > lightning_sprites.inc
@@ -12,34 +13,7 @@ lightning_sprites.inc:	lightning.png
 	$(HGR_SPRITE) -s -l big_lightning3 lightning.png 112 51 167 118 >> lightning_sprites.inc
 	$(HGR_SPRITE) -s -l big_lightning0 lightning.png 182 51 237 118 >> lightning_sprites.inc
 
-ron_sprites.inc:	keeper1_sprites.png
-	$(HGR_SPRITE) -l ron0 keeper1_sprites.png  14 32  27 61 > ron_sprites.inc
-	$(HGR_SPRITE) -l ron1 keeper1_sprites.png  42 32  55 62 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron2 keeper1_sprites.png  70 32  83 62 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron3 keeper1_sprites.png  98 32 111 62 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron4 keeper1_sprites.png 126 32 139 62 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron0_mask keeper1_sprites.png  14 63  27 93 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron1_mask keeper1_sprites.png  42 63  55 93 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron2_mask keeper1_sprites.png  70 63  83 93 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron3_mask keeper1_sprites.png  98 63 111 93 >> ron_sprites.inc
-	$(HGR_SPRITE) -l ron4_mask keeper1_sprites.png 126 63 139 93 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper0 keeper1_sprites.png  14 128  27 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper1 keeper1_sprites.png  42 128  55 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper2 keeper1_sprites.png  70 128  90 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper3 keeper1_sprites.png  98 128 118 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper4 keeper1_sprites.png 126 128 146 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper5 keeper1_sprites.png 154 128 174 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper6 keeper1_sprites.png 182 128 202 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper7 keeper1_sprites.png 210 128 230 156 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper0_mask keeper1_sprites.png  14 159 27 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper1_mask keeper1_sprites.png  42 159 55 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper2_mask keeper1_sprites.png  70 159 90 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper3_mask keeper1_sprites.png  98 159 118 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper4_mask keeper1_sprites.png 126 159 146 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper5_mask keeper1_sprites.png 154 159 174 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper6_mask keeper1_sprites.png 182 159 202 187 >> ron_sprites.inc
-	$(HGR_SPRITE) -l keeper7_mask keeper1_sprites.png 210 159 230 187 >> ron_sprites.inc
-
-
 clean:
-	rm -f *~ lightning_sprites.inc ron_sprites.inc
+	rm -f *~ lightning_sprites.inc \
+		keeper1_sprites.inc ron_sprites.inc \
+		keeper2_sprites.inc
