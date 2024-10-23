@@ -383,6 +383,7 @@ int main(int argc, char **argv) {
 	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
+	int i;
 
 	char *filename;
 
@@ -412,6 +413,11 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
+	for(i=optind;i<argc;i++) {
+		printf("%i %s\n",i,argv[i]);
+	}
+
+#if 0
 	filename=strdup(argv[optind]);
 
 	memset(apple2_image,0,8192);
@@ -499,5 +505,6 @@ int main(int argc, char **argv) {
 		}
 		printf("\n");
 	}
+#endif
 	return 0;
 }
