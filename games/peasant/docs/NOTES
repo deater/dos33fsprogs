@@ -1,3 +1,16 @@
+Moving locations around on disk:
++ Make sure LOCATIONS and LOAD are up to date in zp.inc
++ Update end of qload.s
++ edit new_map_location.s
+
+
+
+
+
+
+
+
+
 Dialog issues:
 				Uncompressed	LZSA	ZX02
 	DIALOG_PEASANT1		7394		4002	3804

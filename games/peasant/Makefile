@@ -43,10 +43,8 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
-peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
-	./cliff_base/CLIFF_BASE ./cliff_heights/CLIFF_HEIGHTS \
-	./climb/CLIMB \
-	./game_over/GAME_OVER ./inside/INSIDE ./inn/INN \
+peasant_disk3.dsk:	\
+	./inside/INSIDE ./inn/INN \
 	./archery/ARCHERY ./map/MAP \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -55,18 +53,20 @@ peasant_disk3.dsk:	./trogdor/TROGDOR ./ending/ENDING \
 	$(DOS33_RAW) peasant_disk3.dsk   3 0 ./archery/ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk3.dsk   7 0 ./inside/INSIDE       0   0
 	$(DOS33_RAW) peasant_disk3.dsk  11 0 ./inn/INN          0   0
-	$(DOS33_RAW) peasant_disk3.dsk  15 0 ./trogdor/TROGDOR	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./ending/ENDING	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./cliff_base/CLIFF_BASE	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./climb/CLIMB	  0   0
-	$(DOS33_RAW) peasant_disk3.dsk  30 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
 
 peasant_disk4.dsk:	./wrong_boot/WBOOT4 \
 	./cliff_base/CLIFF_BASE ./climb/CLIMB \
-	./cliff_heights/CLIFF_HEIGHTS \
+	./cliff_heights/CLIFF_HEIGHTS ./outer/OUTER \
 	./trogdor/TROGDOR ./ending/ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk4.dsk
-	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4      0   1
+	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4	0   1
+	$(DOS33_RAW) peasant_disk4.dsk   1 0 ./cliff_base/CLIFF_BASE	0   0
+	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./climb/CLIMB	  	0   0
+	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(DOS33_RAW) peasant_disk4.dsk  11 0 ./outer/OUTER	  	0   0
+	$(DOS33_RAW) peasant_disk4.dsk  15 0 ./trogdor/TROGDOR	  	0   0
+	$(DOS33_RAW) peasant_disk4.dsk  19 0 ./ending/ENDING	  	0   0
+
 
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
@@ -74,7 +74,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
 	./trogdor/TROGDOR ./ending/ENDING ./cliff_base/CLIFF_BASE \
-	./climb/CLIMB \
+	./climb/CLIMB ./outer/OUTER \
 	./cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
@@ -99,11 +99,13 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  3 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  7 0` ./inside/INSIDE       0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 11 0` ./inn/INN          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./trogdor/TROGDOR	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./ending/ENDING	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./cliff_base/CLIFF_BASE	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./climb/CLIMB	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` ./cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 1 0` ./cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 3 0` ./climb/CLIMB	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 7 0` ./cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 11 0` ./outer/OUTER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 15 0` ./trogdor/TROGDOR	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 19 0` ./ending/ENDING	  0   0
+
 
 ###
 
@@ -318,9 +320,11 @@ inventory/INVENTORY:
 ./game_over/GAME_OVER:
 	cd game_over && make
 
-
 ./knight_falls_rock/KNIGHT_FALLS_ROCK:	DIALOG_KNIGHT_FALLS_ROCK.ZX02
 	cd knight_falls_rock && make
+
+./outer/OUTER:	
+	cd outer && make
 
 ###
 
@@ -496,10 +500,10 @@ text/dialog_peasant4.inc:
 
 ####
 
-dialog_test:	dialog_test.o
-	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_d000.inc
+#dialog_test:	dialog_test.o
+#	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_d000.inc
 
-dialog_test.o:	dialog_test.s
+##dialog_test.o:	dialog_test.s
 	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
 
 ####
@@ -553,6 +557,7 @@ distclean:
 	cd intro && make distclean
 	cd inventory && make distclean
 	cd map && make distclean
+	cd outer && make distclean
 	cd saves && make distclean
 	cd text && make distclean
 	cd trogdor && make distclean
@@ -579,6 +584,7 @@ clean:
 	cd inventory && make clean
 	cd map && make clean
 	cd music && make clean
+	cd outer && make clean
 	cd saves && make clean
 	cd text && make clean
 	cd title && make clean

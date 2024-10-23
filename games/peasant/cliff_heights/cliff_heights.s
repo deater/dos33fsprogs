@@ -13,7 +13,7 @@
 .include "../inventory/inventory.inc"
 .include "../parse_input.inc"
 .include "../redbook_sound.inc"
-.include "../common_locations.inc"
+.include "../common_defines.inc"
 
 LOCATION_BASE	= LOCATION_CLIFF_HEIGHTS ; (21 = $15)
 
@@ -268,61 +268,35 @@ wait_loop:
 
 oops_new_location:
 
-	; new location but same file
+;	lda	MAP_LOCATION
+;	cmp	#LOCATION_TROGDOR_OUTER
+;	bne	not_outer
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_CLIFF_HEIGHTS
-	bne	not_the_cliff
-
-	lda	PREVIOUS_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	beq	to_cliff_from_outer
-
-to_cliff_from_cliff:
-	lda	#18
-	sta	PEASANT_X
-	lda	#140
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
-
-to_cliff_from_outer:
-	lda	#32
-	sta	PEASANT_X
-	lda	#120
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
-
-not_the_cliff:
-
-	lda	MAP_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	bne	not_outer
-
-	lda	#2
-	sta	PEASANT_X
-	lda	#100
-	sta	PEASANT_Y
+;	lda	#2
+;	sta	PEASANT_X
+;	lda	#100
+;	sta	PEASANT_Y
 
 not_outer:
 just_go_there:
 
-	jmp	new_location
+;	jmp	new_location
 
 
-	;************************
+	;========================
 	; exit level
-	;************************
+	;========================
 level_over:
 
 	cmp	#NEW_FROM_LOAD		; see if loading save game
 	beq	exiting_cliff
 
 	; new location
-	; in theory this can only be TROGDOR
+	; in theory this can only be OUTER
 
-	lda	#4
+	lda	#2
 	sta	PEASANT_X
-	lda	#170
+	lda	#100
 	sta	PEASANT_Y
 
 	lda	#0

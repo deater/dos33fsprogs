@@ -1,7 +1,10 @@
 current:
-	finish base (mostly walk_to)
+	finish cliff_base (mostly walk_to)
 	fix/add sound effects for rocks/lightning
-	add lightning
+	finish outer
+
+	maybe have exiting x,y data in new_map_location somehow?
+
 
 ===============================
 
@@ -219,20 +222,21 @@ Cliff_Base:
 
 Cliff Climb
 ~~~~~~~~~~~
-+ Hook up
 + Sound effects for rocks falling
 + Sound effect for falling
-+ Message upon hitting ground
 
 Cliff Heights
 ~~~~~~~~~~~~~
-+ Hook up points/message for arriving at cliff
-+ Animate lightning
-+ Fix the priority/entry points for the various entrances
++ Improve left lightning
+
+Outer
+~~~~~
 + Hook up dialog with keepers
 + Animate keepers
 + Animate the three deaths
 + peasant sprites for the various outfits
++ When give items, have them taken out of inventory
++ If don't have item like sub, skip letting them try to give something
 
 Trogdor:
 ~~~~~~~~

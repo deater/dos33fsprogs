@@ -304,44 +304,38 @@ not_in_quiz:
 oops_new_location:
 
 	; new location but same file
+	; actually not possible
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_CLIFF_HEIGHTS
-	bne	not_the_cliff
 
-	lda	PREVIOUS_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	beq	to_cliff_from_outer
+;to_cliff_from_cliff:
+;	lda	#18
+;	sta	PEASANT_X
+;	lda	#140
+;	sta	PEASANT_Y
+;	bne	not_the_cliff		; bra
 
-to_cliff_from_cliff:
-	lda	#18
-	sta	PEASANT_X
-	lda	#140
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
+;to_cliff_from_outer:
+;	lda	#32
+;	sta	PEASANT_X
+;	lda	#120
+;	sta	PEASANT_Y
+;	bne	not_the_cliff		; bra
 
-to_cliff_from_outer:
-	lda	#32
-	sta	PEASANT_X
-	lda	#120
-	sta	PEASANT_Y
-	bne	not_the_cliff		; bra
+;not_the_cliff:
 
-not_the_cliff:
+;	lda	MAP_LOCATION
+;	cmp	#LOCATION_TROGDOR_OUTER
+;	bne	not_outer
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_TROGDOR_OUTER
-	bne	not_outer
-
-	lda	#2
-	sta	PEASANT_X
-	lda	#100
-	sta	PEASANT_Y
+;	lda	#2
+;	sta	PEASANT_X
+;	lda	#100
+;	sta	PEASANT_Y
 
 not_outer:
 just_go_there:
 
-	jmp	new_location
+;	jmp	new_location
 
 
 	;========================
@@ -350,20 +344,31 @@ just_go_there:
 level_over:
 
 	cmp	#NEW_FROM_LOAD		; see if loading save game
-	beq	exiting_cliff
+	beq	exiting_outer
 
 	; new location
-	; in theory this can only be TROGDOR
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_CLIFF_HEIGHTS
+	bne 	not_cliff
+was_cliff:
+	lda	#32
+	sta	PEASANT_X
+	lda	#120
+	bne	done_outer_pos		; bra
+not_cliff:
+	; trogdor
 
 	lda	#4
 	sta	PEASANT_X
 	lda	#170
+done_outer_pos:
 	sta	PEASANT_Y
 
 	lda	#0
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
-exiting_cliff:
+exiting_outer:
 	rts
 
 
@@ -422,7 +427,8 @@ robe_sprite_data:
 
 .include "sprites_outer/keeper1_sprites.inc"
 .include "sprites_outer/ron_sprites.inc"
-;.include "sprites_outer/keeper2_sprites.inc"
+.include "sprites_outer/keeper2_sprites.inc"
+.include "sprites_outer/guitar_sprites.inc"
 
 
 ;==========================================

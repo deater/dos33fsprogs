@@ -20,6 +20,7 @@ outer.o:	outer.s \
 		sprites_outer/ron_sprites.inc \
 		sprites_outer/keeper1_sprites.inc \
 		sprites_outer/keeper2_sprites.inc \
+		sprites_outer/guitar_sprites.inc \
 		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant.s ../move_peasant.s \
 		../gr_copy.s ../hgr_copy.s \
