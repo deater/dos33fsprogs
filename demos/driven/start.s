@@ -148,7 +148,7 @@ load_program_loop:
 
 	; load from disk
 
-	lda     #13		; INTRO
+	lda     #2		; INTRO
 	sta     WHICH_LOAD
 	jsr     load_file
 
@@ -161,7 +161,7 @@ load_program_loop:
 	cli			; start music
 
 	jsr	$8000
-.if 0
+
 
 	;=======================
 	;=======================
@@ -173,70 +173,25 @@ load_program_loop:
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
 
-	; load music
+	; load credits
 
-	lda	#1		; MUSIC_MAIN
+	lda	#3			; CREDITS
 	sta	WHICH_LOAD
 	jsr	load_file
 
-	; load from disk
-
-	lda     #3		; CHESS
-	sta     WHICH_LOAD
-	jsr     load_file
-
 
 	; restart music
-
-
-	;============================
-	; Re-Init the Mockingboard
-	;============================
-
-	; NOTE: I don't know how much of this is actually necessary
-	;	wasted a lot of time debugging, leaving it as-is
-	;	as it seems to be working
-
-	lda	#0
-	sta	DONE_PLAYING
-
-	lda	#1
-	sta	LOOP
-
-	;========================
-	; patch mockingboard
-
-	lda	SOUND_STATUS
-	beq	skip_mbp2
-        jsr     mockingboard_patch      ; patch to work in slots other than 4?
-skip_mbp2:
-
-	jsr	mockingboard_init
-	;=======================
-	; Set up 50Hz interrupt
-	;========================
-
-
-	jsr	mockingboard_setup_interrupt
-	jsr	reset_ay_both
-	jsr	clear_ay_both
-
-	;==================
-	; init song
-	;==================
-
-	jsr	pt3_init_song
 
 	cli		; start interrupts (music)
 
 	;=======================
 	;=======================
-	; Run Chess
+	; Run Credits
 	;=======================
 	;=======================
 
 	jsr	$8000
-
+.if 0
 	;==========================
 	;==========================
 	; Run 4-9, copy from AUX

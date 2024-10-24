@@ -163,47 +163,46 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte 1,1,1,1		; GORILLA,LEAVES,LENS,PLASMA
-	.byte 1,1,1,1		; CUBE,DOTS,SPHERES,OCEAN
-	.byte 1,1		; POLAR,FAKE_BIOS
+	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte 1,1,1,1		;
+	.byte 1,1,1,1		;
+	.byte 1,1		;
 
 load_address_array:
-	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte $60,$60,$60,$60	; GORILLA,LEAVES,LENS,PLASMA
-	.byte $60,$60,$60,$60	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $60,$80		; POLAR,FAKE_BIOS
+	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte $60,$60,$60,$60	;
+	.byte $60,$60,$60,$60	;
+	.byte $60,$80		;
 
 start_address:
-	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte $60,$60,$60,$80	; GORILLA,LEAVES,LENS,PLASMA
-	.byte $80,$80,$80,$60	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $80,$80		; POLAR,FAKE_BIOS
+	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte $60,$60,$60,$80	;
+	.byte $80,$80,$80,$60	;
+	.byte $80,$80		;
 
 aux_dest:
-	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte $70,$50,$40,$30	; GORILLA,LEAVES,LENS,PLASMA
-	.byte $20,$10,$80,$20	; CUBE,DOTS,SPHERES,OCEAN
-	.byte $10,$A0		; POLAR,FAKE_BIOS
+	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte $70,$50,$40,$30	;
+	.byte $20,$10,$80,$20	;
+	.byte $10,$A0		;
 
 track_array:
-	.byte 2,4,10,15		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte 19,21,23,24	; GORILLA,LEAVES,LENS,PLASMA
-	.byte 25,26,27,28	; CUBE,DOTS,SPHERES,OCEAN
-	.byte 34,9		; POLAR,FAKE_BIOS
+	.byte 2,4,9,13		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte 19,21,23,24	;
+	.byte 25,26,27,28	;
+	.byte 34,9		;
 
 sector_array:
-	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte 0,0,0,0		; GORILLA,LEAVES,LENS,PLASMA
-	.byte 0,0,0,0		; CUBE,DOTS,SPHERES,OCEAN
-	.byte 0,0		; POLAR,FAKE_BIOS
-
+	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte 0,0,0,0		;
+	.byte 0,0,0,0		;
+	.byte 0,0		;
 
 length_array:
-	.byte 32,48,64,48	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CHESS
-	.byte 32,32,16,16	; GORILLA,LEAVES,LENS,PLASMA
-	.byte 16,16,16,96	; CUBE,DOTS,SPHERES,OCEAN
-	.byte 16,16		; POLAR,FAKE_BIOS
+	.byte 32,48,48,64	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
+	.byte 32,32,16,16	;
+	.byte 16,16,16,96	;
+	.byte 16,16		;
 
 PT3_ENABLE_APPLE_IIC = 1
 

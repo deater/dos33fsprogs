@@ -11,7 +11,8 @@ all:	driven.dsk
 driven.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
-	./part00_intro/INTRO
+	./part00_intro/INTRO \
+	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) driven.dsk
 	$(DOS33_RAW) driven.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) driven.dsk 0 2 QBOOT		1 1
@@ -19,6 +20,7 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) driven.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) driven.dsk 9 0 ./part00_intro/INTRO 0 0
+	$(DOS33_RAW) driven.dsk 13 0 ./part20_credits/CREDITS 0 0
 
 #second_d1.dsk:	QBOOT QLOAD \
 #	music.inc qload.inc \
@@ -64,38 +66,8 @@ driven.dsk:	QBOOT QLOAD \
 part00_intro/INTRO:	
 	cd part00_intro && make
 
-part01_intropan/INTRO:	
-	cd part01_intropan && make
-
-part04_chess_shapes/CHESS:	
-	cd part04_chess_shapes && make
-
-part08_gorilla/GORILLA:	
-	cd part08_gorilla && make
-
-part09_leaves/LEAVES:	
-	cd part09_leaves && make
-
-part10_lens_rotozoom/LENS:	
-	cd part10_lens_rotozoom && make
-
-part12_plasma/PLASMA:	
-	cd part12_plasma && make
-
-part13_plasmacube/PLASMACUBE:	
-	cd part13_plasmacube && make
-
-part14_dotbounce/DOTS:	
-	cd part14_dotbounce && make
-
-part15_transmission/SPHERES:	
-	cd part15_transmission && make
-
-part16_ocean/OCEAN:	
-	cd part16_ocean && make
-
-part17_polar/POLAR:	
-	cd part17_polar && make
+part20_credits/CREDITS:	
+	cd part20_credits && make
 
 
 ####
@@ -232,6 +204,7 @@ clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd part00_intro && make clean
+	cd part20_credits && make clean
 
 ###
 
