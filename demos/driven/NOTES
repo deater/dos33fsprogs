@@ -1,0 +1,30 @@
+Disk Usage:
+
+Disk1 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+T         0 = Qboot / SAVES
+T         1 = QLOAD      1244 bytes     3T      (?)  3k free
+T         4 = MUSIC      4803 bytes     5T      (?)  0k free
+T         9 = INTRO         ? bytes     4T      (16384) 3k free
+T        13 = CREDITS       ? bytes     4T      (16384)  1k free
+
+
+
+note: below is not accurate
+
+RAM usage:
+	MAIN		AUX
+	----		---
+$00	ZP		ZP
+$01	Stack		Stack
+$02-$03 Disk Code
+$04-$07	Lores page1	???	1k
+$08-$0B	Lores page2	???	1k
+$0C-$0F	??		???	1k
+$10-$1F	library code	???	4k
+$20-$3F	hires page1	???	8k
+$40-$5F	hires page2	???	8k
+$60-$BF	current code	???	24k
+$C0-$CF	I/O		I/O
+$D0-$FF	music		???	12k
+$D0-$DF	??		???	4k

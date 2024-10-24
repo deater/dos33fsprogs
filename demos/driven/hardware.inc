@@ -46,6 +46,7 @@ HLINE	= $F819			; HLINE Y,$2C at A
 VLINE	= $F828			; VLINE A,$2D at Y
 CLRSCR	= $F832			; Clear low-res screen
 CLRTOP	= $F836			; clear only top of low-res screen
+GBASCALC= $F847
 SETCOL	= $F864			; COLOR=A
 ROM_TEXT2COPY = $F962		; iigs
 TEXT	= $FB36

@@ -12,6 +12,7 @@ driven.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./part00_intro/INTRO \
+	./part01_dni/DNI \
 	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) driven.dsk
 	$(DOS33_RAW) driven.dsk 0 0 QBOOT		0 1
@@ -21,6 +22,7 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) driven.dsk 9 0 ./part00_intro/INTRO 0 0
 	$(DOS33_RAW) driven.dsk 13 0 ./part20_credits/CREDITS 0 0
+	$(DOS33_RAW) driven.dsk 17 0 ./part01_dni/DNI 0 0
 
 #second_d1.dsk:	QBOOT QLOAD \
 #	music.inc qload.inc \
@@ -65,6 +67,9 @@ driven.dsk:	QBOOT QLOAD \
 
 part00_intro/INTRO:	
 	cd part00_intro && make
+
+part01_dni/DNI:	
+	cd part01_dni && make
 
 part20_credits/CREDITS:	
 	cd part20_credits && make

@@ -33,6 +33,8 @@ MASK	= $2E
 COLOR	= $30
 ;INVFLG	= $32
 
+WHICH_TRACK	= $54
+
 ;==========================
 ; $60-$6F unused currently
 ;==========================
@@ -94,6 +96,9 @@ TOTAL_RAM       = $8F
 ; $90-$CF currently free
 ;=============================
 
+Table1  = $A0   ; 40 bytes ($28) A0-C7
+Table2  = $C8   ; 40 bytes ($28) C8-EF
+
 ;=============================
 ; $D0-$D9 = hgr move
 ;=============================
@@ -131,26 +136,21 @@ MASKH		= $ED
 ; $F0-$FB can re-use in each file
 ;==============================================
 
-; tunnel
-XX		= $F2
-MINUSXX         = $F3
-YY		= $F4
-MINUSYY         = $F5
-D               = $F6
-R               = $F7
-CX              = $F8
-CY              = $F9
-RR              = $FA
+; D'NI
+
+SPRITEY		= $F2
+SPRITEX		= $F3
+SPRITE_XSIZE	= $F4
+SIN_COUNT	= $F5
+NUMBER_HIGH	= $F6
+NUMBER_LOW	= $F7
+DRAW_NUMBER	= $F8
 
 ; Credits
 BACKUP_OUTL	= $F2
 BACKUP_OUTH	= $F3
 
-; Nuts/ opener
 
-SPRITE_Y	= $F2
-SPRITE_X	= $F3
-CURRENT_ROW	= $F4
 
 ; PLASMACUBE
 OUT1		= $F0

@@ -165,7 +165,36 @@ load_program_loop:
 
 	;=======================
 	;=======================
-	; Load music / chess
+	; Load dni
+	;=======================
+	;=======================
+
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load dni
+
+	lda	#4			; DNI
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	;=======================
+	;=======================
+	; Run Dni
+	;=======================
+	;=======================
+
+	jsr	$4000
+
+	;=======================
+	;=======================
+	; Load Credits
 	;=======================
 	;=======================
 
