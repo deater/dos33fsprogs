@@ -182,7 +182,7 @@ load_program_loop:
 
 	; restart music
 
-	cli		; start interrupts (music)
+;	cli		; start interrupts (music)
 
 	;=======================
 	;=======================

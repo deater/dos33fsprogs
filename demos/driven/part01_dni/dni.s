@@ -61,7 +61,9 @@ next_scene:
 	sta	DRAW_PAGE
 	bit	PAGE1
 
-	ldx	#$20		; ???
+	; clears $20-$24 to white for some reason?
+
+	ldx	#$20		; address
 	lda	#$FF		; white
 
 	jsr	clear_1k
@@ -203,12 +205,10 @@ display_line_loop:
 
 	lda	GBASL
         sta     INL
+
 	lda	GBASH
-
 	clc
-	adc	#$1c	; load from $2000
-
-;	adc	graphics_loc,Y
+	adc	#$1c	; load from $1c00-$2000
         sta     INH
 
 	lda	GBASH
@@ -279,7 +279,7 @@ effect2:
 	lda	DRAW_PAGE
 	pha
 
-	lda	#$1c
+	lda	#$1c			; draw DNI number to $1c
 	sta	DRAW_PAGE
 	jsr	draw_full_dni_number
 
