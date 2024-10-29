@@ -34,7 +34,7 @@ load_loop:
 	bit	PAGE1
 
 	lda	#0
-	jsr	hgr_page1_clearscreen
+	jsr	hgr_page1_clearscreen	; unrolled
 
 ;	jsr	hgr_make_tables
 
@@ -44,13 +44,17 @@ load_loop:
 	; scroll job
 	;=======================
 	;=======================
+	; so the way this works is that is only displays PAGE1
+	;	and it prints new credits just off the bottom of it which
+	;	is essentially the top of PAGE2
+	; then it scrolls things up
 
 	ldx	#8
 	stx	FRAME
 
 	; print message
 
-	lda	#192			; top of $4000 PAGE2
+	lda	#183			; top of $4000 PAGE2
 	sta	CV
 
 	lda	#<final_credits
@@ -72,11 +76,9 @@ do_scroll:
 	lda	#0
 	sta	FRAME
 
-	; clear lines on Page2
+	; clear lines
 
-	; we cheat and setup 192-200 to map to top of page2
-
-	ldx	#200
+	ldx	#191
 cl_outer_loop:
 	lda	hposn_low,X
 	sta	INL
@@ -89,7 +91,7 @@ cl_inner_loop:
 	dey
 	bpl	cl_inner_loop
 	dex
-	cpx	#191
+	cpx	#183
 	bne	cl_outer_loop
 
 urgh:
@@ -141,32 +143,31 @@ no_update_message:
 
 
 final_credits:
-	.byte 12,"Apple ][ Reality",0
+	.byte 16,"DRI\/EN",0
 	.byte 20," ",0
 	.byte 11,"by Deater / Desire",0
 	.byte 20," ",0
-	.byte 4,"This demo won the oldskool demo",0
-	.byte 5,"competition at Demosplash 2023",0
+	.byte 7,"This demo was first shown",0
+	.byte 10,"at Demosplash 2024",0
 	.byte 8,"held in Pittsburgh, PA,",0
-	.byte 12,"in November 2023.",0
+	.byte 12,"in November 2024.",0
 	.byte 20," ",0
 	.byte 13,"Apologies to:",0
 	.byte 14,"Future Crew",0
 	.byte 20," ",0
-
 	.byte 15,"Code used:",0
 	.byte  9,"French Touch -- Plasma",0
 	.byte  7,"DMSC -- ZX02 decompression",0
 	.byte  7,"qkumba -- fast disk loader",0
 	.byte 15,"4am - font",0
 	.byte  2,"K. Kennaway -- iipix image converter",0
-	.byte  3,"O. Schmidt -- sampled audio player",0
-	.byte  6,"Hellmood -- circles/sierzoom",0
+;	.byte  3,"O. Schmidt -- sampled audio player",0
+;	.byte  6,"Hellmood -- circles/sierzoom",0
 	.byte 20," ",0
 
 	.byte 11,"Special Thanks to:",0
 	.byte 5,"mA2E for providing intro music",0
-	.byte 7,"at the extreme-last minute",0
+;	.byte 7,"at the extreme-last minute",0
 	.byte 20," ",0
 
 	.byte 15,"Greets to:",0
