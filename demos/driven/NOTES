@@ -7,7 +7,8 @@ T         1 = QLOAD      1244 bytes     3T      (?)  3k free
 T         4 = MUSIC      4803 bytes     5T      (?)  0k free
 T         9 = INTRO         ? bytes     4T      (16384) 3k free
 T        13 = CREDITS       ? bytes     4T      (16384)  1k free
-
+T	 17 = DNI	    ? bytes     4T      (16384)
+T	 21 = SCROLL	    ? bytes     4T      (16384)
 
 
 note: below is not accurate

@@ -175,7 +175,7 @@ load_program_loop:
 
 	; load dni
 
-	lda	#4			; DNI
+	lda	#5			; SCROLL
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -190,7 +190,7 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	jsr	$4000
+	jsr	$8000
 
 	;=======================
 	;=======================

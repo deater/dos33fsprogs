@@ -164,43 +164,43 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 1,1,1,1		; DNI
+	.byte 1,1,1,1		; DNI, SCROLL
 	.byte 1,1,1,1		;
 	.byte 1,1		;
 
 load_address_array:
 	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $40,$60,$60,$60	; DNI
+	.byte $40,$80,$60,$60	; DNI, SCROLL
 	.byte $60,$60,$60,$60	;
 	.byte $60,$80		;
 
 start_address:
 	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $40,$60,$60,$80	; DNI
+	.byte $40,$80,$60,$80	; DNI, SCROLL
 	.byte $80,$80,$80,$60	;
 	.byte $80,$80		;
 
 aux_dest:
 	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $70,$50,$40,$30	; DNI
+	.byte $70,$50,$40,$30	; DNI, SCROLL
 	.byte $20,$10,$80,$20	;
 	.byte $10,$A0		;
 
 track_array:
 	.byte 2,4,9,13		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 17,21,23,24	; DNI
+	.byte 17,21,23,24	; DNI, SCROLL
 	.byte 25,26,27,28	;
 	.byte 34,9		;
 
 sector_array:
 	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 0,0,0,0		; DNI
+	.byte 0,0,0,0		; DNI, SCROLL
 	.byte 0,0,0,0		;
 	.byte 0,0		;
 
 length_array:
 	.byte 32,48,48,64	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 32,32,16,16	; DNI
+	.byte 32,64,16,16	; DNI, SCROLL
 	.byte 16,16,16,96	;
 	.byte 16,16		;
 

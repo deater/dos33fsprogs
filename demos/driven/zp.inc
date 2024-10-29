@@ -216,51 +216,13 @@ ANGLE		= $FA
 ; credits
 SCROLL_X	= $F0
 
-; polar
-SCROLL_START	= $F0
-YDEST		= $F1
+; scroller
+HGR_COPY_Y1	= $F1
+HGR_COPY_Y2	= $F2
+FIRE_COLOR	= $F3
+SCROLL_LENGTH	= $F4
+OFFSET		= $F5
 
-; sierzoom
-;XX     =       $F0
-XX_TH   =       $F1
-XX_TL   =       $F2
-;YY     =       $F3
-YY_TH   =       $F4
-YY_TL   =       $F5
-T_L     =       $F6
-T_H     =       $F7
-SAVED   =       $F8
-
-BAR_X1 =	$F0
-BAR_X2	=	$F1
-
-; spheres
-BASE_SPRITEL	= $F0
-BASE_SPRITEH	= $F1
-CURRENT_SPRITEL	= $F2
-CURRENT_SPRITEH	= $F3
-XMISSION_COUNT	= $F4
-REF1L		= $F5
-REF1H		= $F6
-REF2L		= $F7
-REF2H		= $F8
-REFCOUNT	= $F9
-
-; BIOS
-STRING_COUNT	= $F0
-LEAD0		= $F1
-SCROLL_OUT	= $F2
-SCROLL_IN	= $F3
-MEMCOUNT	= $F4
-FAKE_KEY_COUNT	= $F5
-
-; OPENER
-TICKER		= $F1
-P2_OFFSET	= $F2
-
-; dots
-MAX_DOTS	= $F1
-Y_OFFSET	= $F2
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers
