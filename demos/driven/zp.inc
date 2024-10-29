@@ -96,8 +96,9 @@ TOTAL_RAM       = $8F
 ; $90-$CF currently free
 ;=============================
 
-Table1  = $A0   ; 40 bytes ($28) A0-C7
-Table2  = $C8   ; 40 bytes ($28) C8-EF
+; for plasma?
+;Table1  = $A0   ; 40 bytes ($28) A0-C7
+;Table2  = $C8   ; 40 bytes ($28) C8-EF
 
 ;=============================
 ; $D0-$D9 = hgr move

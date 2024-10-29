@@ -1,7 +1,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
-
+.include "../music.inc"
 
 
 ; OK: was going to have hi-res top, scroll lo-res bottom
@@ -26,8 +26,12 @@ atrus_opener:
 
 	bit     SET_GR
         bit     HIRES
-        bit     FULLGR
+        bit     TEXTGR
         bit     PAGE1
+
+	;=================================
+	; intro
+	;=================================
 
 	lda	#<atrus03_graphics
 	sta	zx_src_l+1
@@ -36,8 +40,46 @@ atrus_opener:
 	lda	#$20
 	jsr	zx02_full_decomp
 
+	lda	#<atrus_text
+	sta	OUTL
+	lda	#>atrus_text
+	sta	OUTH
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	move_and_print
 
 	jsr	wait_until_keypress
+
+	;=================================
+	; scroller
+	;=================================
+
+	lda	#<atrus10_graphics
+	sta	zx_src_l+1
+	lda	#>atrus10_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+
+	jsr	wait_until_keypress
+
+	;=================================
+	; plasma
+	;=================================
+
+	lda	#<atrus11_graphics
+	sta	zx_src_l+1
+	lda	#>atrus11_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+
+	jsr	plasma_debut
+
+	jsr	wait_until_keypress
+
 
 	rts
 
@@ -48,4 +90,11 @@ atrus10_graphics:
 atrus11_graphics:
 	.incbin "graphics/atrus11_iipix.hgr.zx02"
 
+atrus_text:
+	.byte 7,20,"Thank God you've returned.",0
+	.byte 4,22,"I need... Wait, is this a demo?",0
+	.byte 9,23,"Sorry let me try again",0
+
 .include "../wait_keypress.s"
+
+.include "plasma.s"
