@@ -27,34 +27,39 @@
 	.include "macros.s"
 
 ;!macro FX_INITONCE_1BIT .CoordinatesFile, .Start {
-;InitOnce
-;	bit   .Start
-;	lda   #$4C
-;	sta   InitOnce
+.macro FX_INITONCE_1_BIT CoordinatesFile, Start
+InitOnce:
+	bit   Start
+	lda   #$4C
+	sta   InitOnce
 
-;	+LDADDR .CoordinatesFile
-;	ldx   #>Coordinates1Bit
-;	jsr   iLoadFXDATA
+	LDADDR CoordinatesFile
+	ldx   #>Coordinates1Bit
+	jsr   iLoadFXDATA
 
-;	sec
-;	ror   EndCoordinates1Bit
+	sec
+	ror   EndCoordinates1Bit
 ;}
+.endmacro
 
 ; same but also loading an FXCode file
 ;!macro FX_INITONCE_1BIT .FXCodeFile, .CoordinatesFile, .Start {
-;InitOnce
-;	bit   .Start
-;	lda   #$4C
-;	sta   InitOnce
+.macro FX_INITONCE_1BIT FXCodeFile, CoordinatesFile, Start
 
-;	+LDADDR .FXCodeFile
-;	ldx   #>FXCode
-;	jsr   iLoadFXCODE
+InitOnce:
+	bit   Start
+	lda   #$4C
+	sta   InitOnce
 
-;	+LDADDR .CoordinatesFile
-;	ldx   #>Coordinates1Bit
-;	jsr   iLoadFXDATA
+	LDADDR FXCodeFile
+	ldx   #>FXCode
+	jsr   iLoadFXCODE
 
-;	sec
-;	ror   EndCoordinates1Bit
+	LDADDR CoordinatesFile
+	ldx   #>Coordinates1Bit
+	jsr   iLoadFXDATA
+
+	sec
+	ror   EndCoordinates1Bit
 ;}
+.endmacro

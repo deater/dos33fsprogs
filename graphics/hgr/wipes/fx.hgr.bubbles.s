@@ -9,11 +9,11 @@
 	.include "fx.hgr.precomputed.1bit.s"
 
 
-;         +FX_INITONCE_1BIT FXCodeFile, CoordinatesFile, Start
+;         FX_INITONCE_1BIT FXCodeFile, CoordinatesFile, Start
 Start:
 ;         jmp   FXCode
 
-;FXCodeFile
-;         +PSTRING  "HGR1"
-;CoordinatesFile
-;         +PSTRING "BUBBLES.DATA"
+FXCodeFile:
+         PSTRING  "HGR1"
+CoordinatesFile:
+         PSTRING "BUBBLES.DATA"

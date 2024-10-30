@@ -24,6 +24,7 @@ WIPE_TEST:	wipe_test.o
 
 wipe_test.o:	wipe_test.s \
 	zp.inc hardware.inc wait_keypress.s zx02_optim.s \
+	main_macros.s \
 	fx.hgr.bubbles.s \
 	fx.hgr.precomputed.1bit.s \
 	macros.s

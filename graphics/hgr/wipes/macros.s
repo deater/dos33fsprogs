@@ -5,7 +5,7 @@
 ;!ifndef _FX_MACROS_ {
 .ifndef _FX_MACROS_
 ;         !source "src/macros.a"
-;	.include "macros.s"
+	.include "main_macros.s"
 ;         !source "src/fx/macros.hgr.a"
 	.include "macros.hgr.s"
 ;         !source "src/fx/macros.dhgr.a"
