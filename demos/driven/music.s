@@ -30,4 +30,5 @@ PT3_ENABLE_APPLE_IIC = 1
 
 .align $100
 PT3_LOC:
-.incbin "music/mA2E_3.pt3"
+;.incbin "music/mA2E_3.pt3"
+.incbin "music/mA2E - Desire_Demosplash_2024.pt3"
