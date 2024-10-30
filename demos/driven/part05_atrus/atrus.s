@@ -75,6 +75,15 @@ atrus_opener:
 	lda	#$20
 	jsr	zx02_full_decomp
 
+	; load both pages as we page flip
+
+	lda	#<atrus11_graphics
+	sta	zx_src_l+1
+	lda	#>atrus11_graphics
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
 
 	jsr	plasma_debut
 
