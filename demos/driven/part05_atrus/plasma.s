@@ -26,9 +26,10 @@ Table2	= $74D0	; 40 bytes
 
 plasma_debut:
 
-	lda     #0
-	jsr	hgr_page1_clearscreen
-	jsr	hgr_page2_clearscreen
+; don't clear
+;	lda     #0
+;	jsr	hgr_page1_clearscreen
+;	jsr	hgr_page2_clearscreen
 
 	bit	SET_GR
 	bit	HIRES
@@ -76,6 +77,7 @@ div8_loop:
 	eor	#$20
 	sta	DRAW_PAGE
 
+.if 0
 	jsr	scroll_off
 
 	lda	#25
@@ -135,7 +137,7 @@ change_mono:
 	sta	DRAW_PAGE
 
 	jsr	scroll_off
-
+.endif
 	lda     #0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen

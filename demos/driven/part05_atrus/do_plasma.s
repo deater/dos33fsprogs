@@ -1,4 +1,5 @@
-
+; for this demo in book
+;	so at least initially from 70,35 (10,35) to 203,140 (29,140)
 
 do_plasma:
 	; init
@@ -29,6 +30,8 @@ precalc:
 	; Table2(X) = sin3(PARAM3+X)+sin1(PARAM4+X)
 
 	ldx	#$28		; 40					; 2
+
+
 ; 30
 
 precalc_loop:
@@ -76,14 +79,16 @@ pc_off4:
 
 display_normal:
 
-	ldx	#23			; lines 0-23	lignes 0-23	; 2
+	ldx	#17			; lines 0-23	lignes 0-23	; 2
 
 display_line_loop:
 ; 0
 	lda	hposn_low_div8,X	; setup line pointer		; 4
 	sta	GBASL							; 3
 ; 7
-	ldy	#39			; col 0-39			; 2
+;	ldy	#39			; col 0-39			; 2
+
+	ldy	#28
 
 	lda	Table2,X		; setup base sine value for row	; 4
 	sta	display_row_sin_smc+1					; 4
@@ -124,7 +129,6 @@ color_smc:
 
 display_lookup_smc:
 	lda	hires_colors_even_l0	; attention: must be aligned	; 4
-;	lda	#$fe
 	sta	(GBASL),Y						; 6
 	clc								; 2
 	lda	#$10							; 2
@@ -135,10 +139,12 @@ display_lookup_smc:
 ; 38
 
 	dey								; 2
-	bpl	display_col_loop					; 2/3
+	cpy	#10
+	bcs	display_col_loop					; 2/3
 
 	dex								; 2
-	bpl	display_line_loop					; 2/3
+	cpx	#5
+	bcs	display_line_loop					; 2/3
 
 ; ============================================================================
 
