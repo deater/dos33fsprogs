@@ -12,8 +12,8 @@
 ;         !source "src/fx/macros.shr.a"
 ;         !source "src/fx/macros.copybit.a"
 ;         !source "src/fx/macros.misc.a"
-.endif
 _FX_MACROS_=*
+.endif
 
 ;_FX_MACROS_=*
 ;}

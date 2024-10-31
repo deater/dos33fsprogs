@@ -74,9 +74,11 @@ end_pstring:
 
 ; load the address of .ptr into A (low) and Y (high)
 ;!macro   LDADDR .ptr {
-;         lda   #<.ptr
-;         ldy   #>.ptr
+.macro LDADDR ptr
+	lda   #<ptr
+	ldy   #>ptr
 ;}
+.endmacro
 
 ; load a 16-bit value into A (low) and Y (high)
 ;!macro   LD16 .ptr {
