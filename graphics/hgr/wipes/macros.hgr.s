@@ -80,7 +80,7 @@
 .endmacro
 
 ;!macro ROW_X_TO_BASE_ADDRESSES .src1, .src2, .dest1, .dest2 {
-.macro ROW_X_TO_BAS_ADDRESSES src1, src2, dest1, dest2
+.macro ROW_X_TO_BASE_ADDRESSES src1, src2, dest1, dest2
          lda   hgrlo, x
          sta   <dest1
          sta   <src1

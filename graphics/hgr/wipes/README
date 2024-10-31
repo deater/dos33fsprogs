@@ -1,0 +1,17 @@
+Trying to figure out how the fancy wipes from Total Replay / 4cade work
+
+Designed so can be modular and loaded on the fly, but for our purposes
+that doesn't really matter
+
+Summary here best I can tell:
+	+ FXCode = current effect, loaded to $6C00
+
+	+ Coordinates1Bit = $8600 = $3480 bytes of data?
+	+ Coordinates2Bit = $8100 = $3C00 bytes of data
+	+ Coordinates3Bit = $6D00 = 
+
+; depends on $300
+	     $200
+	     $BB00
+	     $BC00
+	     $BE00	

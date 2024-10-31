@@ -7,6 +7,7 @@
 ;!ifndef _MACROS_ {
 .ifndef _MACROS_
 ;         !source "src/constants.a"
+	.include "constants.s"
 
 ; appears to put string and length?
 

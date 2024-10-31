@@ -11,7 +11,10 @@
 ;         !source "src/fx/macros.dhgr.a"
 ;         !source "src/fx/macros.shr.a"
 ;         !source "src/fx/macros.copybit.a"
+	.include "macros.copybit.s"
 ;         !source "src/fx/macros.misc.a"
+	.include "macros.misc.s"
+
 _FX_MACROS_=*
 .endif
 
