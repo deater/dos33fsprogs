@@ -343,6 +343,7 @@ hgr_page1_vscroll_loop:
 	sta	$39D0,Y
 	lda	$2250,Y		; 160 -> 159
 	sta	$3DD0,Y
+.if 0
 	lda	$2650,Y		; 161 -> 160
 	sta	$2250,Y
 	lda	$2A50,Y		; 162 -> 161
@@ -407,7 +408,7 @@ hgr_page1_vscroll_loop:
 	sta	$3BD0,Y
 ;	lda	$0000,Y		; 192 -> 191
 ;	sta	$3FD0,Y
-
+.endif
 	dey
 
 	bmi	done_vscroll
