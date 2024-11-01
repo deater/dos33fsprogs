@@ -35,6 +35,7 @@ load_loop:
 
 	lda	#0
 	jsr	hgr_page1_clearscreen	; unrolled
+	jsr	hgr_page2_clearscreen	; unrolled
 
 ;	jsr	hgr_make_tables
 
@@ -125,6 +126,8 @@ skip_next_text:
 
 	jsr	hgr_vertical_scroll
 
+	jsr	hgr_page_flip
+
 	jmp	scroll_loop
 
 .align $100
@@ -140,7 +143,7 @@ skip_next_text:
 ;	.include	"fonts/font_4am_1x10_data.s"
 
 	.include	"../irq_wait.s"
-
+	.include	"../hgr_page_flip.s"
 
 
 final_credits:

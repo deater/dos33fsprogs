@@ -67,6 +67,7 @@ still_good:
 	adc	CH				; add in x-coord
 	sta	dcb_row_1x8_0+4
 	lda	hposn_high, Y			; get high memory offset
+	adc	DRAW_PAGE
 	sta	dcb_row_1x8_0+5			; save it out
 	iny					; go to next row
 
