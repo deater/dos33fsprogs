@@ -50,13 +50,11 @@ load_loop:
 	;	is essentially the top of PAGE2
 	; then it scrolls things up
 
-	ldx	#8
+	ldx	#0
 	stx	FRAME
 
 	; print message
 
-	lda	#160			; bottom of scroll area
-	sta	CV
 
 	lda	#<final_credits		; store location of string
 	sta	BACKUP_OUTL
@@ -65,64 +63,104 @@ load_loop:
 
 scroll_loop:
 
-	inc	FRAME			; next frame
-
-	lda	FRAME			; wrap frame after 9 lines
-	cmp	#9
-	bne	no_update_message
-
-	lda	#0
-	sta	FRAME
-
-no_update_message:
 
 	;============================================
 	; clear lines to get rid of stray old chars
+	;============================================
+	; just erase line 158 and 159
 
-	ldx	#160
-cl_outer_loop:
-	lda	hposn_low,X
-	sta	INL
-	lda	hposn_high,X
-	sta	INH
+	;	$39D0, $3DD0
+
+	clc
+	lda	#$39
+	adc	DRAW_PAGE
+	sta	cl_smc+2
+
+	clc
+	lda	#$3d
+	adc	DRAW_PAGE
+	sta	cl_smc+5
+
 	ldy	#39
-	lda	#0
+	lda	#$00
 cl_inner_loop:
-	sta	(INL),Y
+
+cl_smc:
+	sta	$39D0,Y
+	sta	$3DD0,Y
 	dey
 	bpl	cl_inner_loop
-;	dex
-;	cpx	#183
-;	bne	cl_outer_loop
 
-urgh:
+	;=============================
+	;=============================
+	; draw text
+	;=============================
+	;=============================
+
+	;=======================
+	; draw one line at 158
+	;=======================
+
+	lda	#158		;
+	sta	CV
 	lda	BACKUP_OUTL	; get saved text location
-;	sta	OUTL		; FIXME: can call w/o again
 	ldy	BACKUP_OUTH	; and load direct in A/Y
-;	sta	OUTH
-
 	ldx	FRAME		; load which line of text to draw
-
-;	jsr	draw_condensed_1x8_again
-
 	jsr	draw_condensed_1x8
 
-	; FIXME: only do below if on next string
+	; X points to last char printed?
+
+	;=========================================
+	; check if increment to next line of text
+	;=========================================
+	; flip over if frame==9
 
 	lda	FRAME
-	cmp	#8
-	bne	skip_next_text
+	cmp	#9
+	bcc	skip_next_text
 
 			; point to location after
 	sec		; always add 1
-;	inx
 	txa		; afterward X points to end of string
-	adc	OUTL
+	adc	OUTL		; (OUTL is already+1)
 	sta	BACKUP_OUTL
-	lda	#0
+	lda	#$0
 	adc	OUTH
 	sta	BACKUP_OUTH
+	lda	#$ff
+	sta	FRAME
 skip_next_text:
+
+	;===========================
+	; draw second line at 159
+	;===========================
+
+	lda	#159		;
+	sta	CV
+	lda	BACKUP_OUTL	; get saved text location
+	ldy	BACKUP_OUTH	; and load direct in A/Y
+	ldx	FRAME
+	inx
+	jsr	draw_condensed_1x8
+
+	;=================================
+	; increment the frame
+	;=================================
+
+	inc	FRAME			; next frame
+
+;	lda	FRAME			; wrap frame after 10 lines
+;	cmp	#10
+;	bne	no_update_message
+
+;	lda	#0
+;	sta	FRAME
+
+
+
+	;=============================
+	; do the scroll
+	;=============================
 
 	jsr	hgr_vertical_scroll
 

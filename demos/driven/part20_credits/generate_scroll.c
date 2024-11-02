@@ -32,12 +32,38 @@ int main(int argc, char **argv) {
 //		printf("$%04X\n",hires_lookup[i]);
 //	}
 
+
+#if 0
+	/* generate scroll up by 1, page 1 */
+
 	for(i=0;i<192;i++) {
 		printf("\tlda\t$%04X,Y\t\t; %d -> %d\n",
 			hires_lookup[i+1],i+1,i);
 		printf("\tsta\t$%04X,Y\n",
 			hires_lookup[i]);
 	}
+#endif
+
+	/* generate scroll up by 1, page 1 */
+
+	for(i=0;i<192;i++) {
+		printf("\tlda\t$%04X,Y\t\t; %d -> %d\n",
+			hires_lookup[i+2],i+2,i);
+		printf("\tsta\t$%04X,Y\n",
+			hires_lookup[i]);
+	}
+
+	/* generate scroll up by 1, page 1 */
+
+	for(i=0;i<192;i++) {
+		printf("\tlda\t$%04X,Y\t\t; %d -> %d\n",
+			hires_lookup[i+2]+0x2000,i+2,i);
+		printf("\tsta\t$%04X,Y\n",
+			hires_lookup[i]+0x2000);
+	}
+
+
+
 
 	return 0;
 }

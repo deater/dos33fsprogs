@@ -8,7 +8,6 @@
 ;
 
 ; VMW: commented, reformatted, minor changes, ca65 assembly
-;	hacked up some more
 
 FONT_OFFSET = $13
 
@@ -18,8 +17,10 @@ FONT_OFFSET = $13
 ;
 ; in:    A/Y points to zero terminated string, with x-pos and y-pos at start
 ;	X is which line
+;	if line>7 then just print 0
 ; out:   clobbers all registers & flags
 ;------------------------------------------------------------------------------
+
 draw_condensed_1x8:
 
 	; store the string location
@@ -29,7 +30,7 @@ draw_condensed_1x8:
 
 draw_condensed_1x8_again:
 
-	ldy	#0
+	ldy	#0		; get X position before string
 	lda	(OUTL),Y
 	sta	CH
 	bpl	still_good
@@ -41,26 +42,35 @@ demo_demo_done:
 
 
 still_good:
-	clc
+	clc				; increment font pointer
 	lda	#1
 	adc	OUTL
 	sta	OUTL
 	sta	dcb_loop_1x8_smc+1
+	sta	dcb_loop_1x8b_smc+1
 
-	lda	#0
+	lda	#0			; 16 bits
 	adc	OUTH
 	sta	OUTH
 	sta	dcb_loop_1x8_smc+2
+	sta	dcb_loop_1x8b_smc+2
+
+	ldy	CV			; get ypos
 
 
-	ldy	CV
+	cpx	#8
+	bcs	draw_blank_line		; if row>7 draw blank line
+
+draw_font_line:
+	; point to proper row of font (row in X)
 
 	lda	font_rows_l,X
 	sta	dcb_row_1x8_0+1
 	lda	font_rows_h,X
 	sta	dcb_row_1x8_0+2
 
-	; row0
+	;===================================
+	; setup output pointer to hgr area
 
 	lda	hposn_low, Y			; get low memory offset
 	clc
@@ -69,8 +79,10 @@ still_good:
 	lda	hposn_high, Y			; get high memory offset
 	adc	DRAW_PAGE
 	sta	dcb_row_1x8_0+5			; save it out
-	iny					; go to next row
+;	iny					; go to next row
 
+	;=========================
+	; loop across string
 
 	ldx	#0
 dcb_loop_1x8:
@@ -92,6 +104,47 @@ dcb_row_1x8_0:
 dcb_done_1x8:
 
 	rts
+
+
+
+draw_blank_line:
+
+	;===================================
+	; setup output pointer to hgr area
+
+	lda	hposn_low, Y			; get low memory offset
+	clc
+	adc	CH				; add in x-coord
+	sta	dcb_row_1x8_b+3
+	lda	hposn_high, Y			; get high memory offset
+	adc	DRAW_PAGE
+	sta	dcb_row_1x8_b+4			; save it out
+;	iny					; go to next row
+
+	;=========================
+	; loop across string
+
+	ldx	#0
+dcb_loop_1x8b:
+dcb_loop_1x8b_smc:
+	ldy	$FDFD, X		; load next char into Y
+	beq	dcb_done_1x8b
+
+dcb_row_1x8_b:
+	lda	#0
+	sta	$FDFD, X		; write out to graphics mem
+
+	inc	CH
+	inx				; move to next
+
+	bne	dcb_loop_1x8b		; bra (well, as long as string
+					;	is less than 255 chars)
+
+dcb_done_1x8b:
+
+	rts
+
+
 
 font_rows_l:
 	.byte <(font_1x8_row0-FONT_OFFSET)
