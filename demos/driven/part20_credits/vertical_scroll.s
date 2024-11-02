@@ -10,9 +10,8 @@ hgr_vertical_scroll:
 	ldx	#0
 
 	lda	DRAW_PAGE
-;	beq	hgr_page1_clearscreen
-;	lda	#0
-;	beq	hgr_page2_clearscreen
+	beq	hgr_vertical_scroll_page1
+	jmp	hgr_vertical_scroll_page2
 
 
 hgr_vertical_scroll_page1:
@@ -343,6 +342,7 @@ hgr_page1_vscroll_loop:
 	sta	$39D0,Y
 	lda	$2250,Y		; 160 -> 159
 	sta	$3DD0,Y
+.if 0
 	lda	$2650,Y		; 161 -> 160
 	sta	$2250,Y
 	lda	$2A50,Y		; 162 -> 161
@@ -407,7 +407,7 @@ hgr_page1_vscroll_loop:
 	sta	$3BD0,Y
 ;	lda	$0000,Y		; 192 -> 191
 ;	sta	$3FD0,Y
-
+.endif
 	dey
 
 	bmi	done_vscroll
@@ -415,6 +415,409 @@ hgr_page1_vscroll_loop:
 	jmp	hgr_page1_vscroll_loop
 
 done_vscroll:
+	rts
+
+hgr_vertical_scroll_page2:
+	; PAGE1 for now
+
+hgr_page2_vscroll:
+
+	ldy	#39
+hgr_page2_vscroll_loop:
+
+	lda	$4400,Y		; 1 -> 0
+	sta	$4000,Y
+	lda	$4800,Y		; 2 -> 1
+	sta	$4400,Y
+	lda	$4C00,Y		; 3 -> 2
+	sta	$4800,Y
+	lda	$5000,Y		; 4 -> 3
+	sta	$4C00,Y
+	lda	$5400,Y		; 5 -> 4
+	sta	$5000,Y
+	lda	$5800,Y		; 6 -> 5
+	sta	$5400,Y
+	lda	$5C00,Y		; 7 -> 6
+	sta	$5800,Y
+	lda	$4080,Y		; 8 -> 7
+	sta	$5C00,Y
+	lda	$4480,Y		; 9 -> 8
+	sta	$4080,Y
+	lda	$4880,Y		; 10 -> 9
+	sta	$4480,Y
+	lda	$4C80,Y		; 11 -> 10
+	sta	$4880,Y
+	lda	$5080,Y		; 12 -> 11
+	sta	$4C80,Y
+	lda	$5480,Y		; 13 -> 12
+	sta	$5080,Y
+	lda	$5880,Y		; 14 -> 13
+	sta	$5480,Y
+	lda	$5C80,Y		; 15 -> 14
+	sta	$5880,Y
+	lda	$4100,Y		; 16 -> 15
+	sta	$5C80,Y
+	lda	$4500,Y		; 17 -> 16
+	sta	$4100,Y
+	lda	$4900,Y		; 18 -> 17
+	sta	$4500,Y
+	lda	$4D00,Y		; 19 -> 18
+	sta	$4900,Y
+	lda	$5100,Y		; 20 -> 19
+	sta	$4D00,Y
+	lda	$5500,Y		; 21 -> 20
+	sta	$5100,Y
+	lda	$5900,Y		; 22 -> 21
+	sta	$5500,Y
+	lda	$5D00,Y		; 23 -> 22
+	sta	$5900,Y
+	lda	$4180,Y		; 24 -> 23
+	sta	$5D00,Y
+	lda	$4580,Y		; 25 -> 24
+	sta	$4180,Y
+	lda	$4980,Y		; 26 -> 25
+	sta	$4580,Y
+	lda	$4D80,Y		; 27 -> 26
+	sta	$4980,Y
+	lda	$5180,Y		; 28 -> 27
+	sta	$4D80,Y
+	lda	$5580,Y		; 29 -> 28
+	sta	$5180,Y
+	lda	$5980,Y		; 30 -> 29
+	sta	$5580,Y
+	lda	$5D80,Y		; 31 -> 30
+	sta	$5980,Y
+	lda	$4200,Y		; 32 -> 31
+	sta	$5D80,Y
+	lda	$4600,Y		; 33 -> 32
+	sta	$4200,Y
+	lda	$4A00,Y		; 34 -> 33
+	sta	$4600,Y
+	lda	$4E00,Y		; 35 -> 34
+	sta	$4A00,Y
+	lda	$5200,Y		; 36 -> 35
+	sta	$4E00,Y
+	lda	$5600,Y		; 37 -> 36
+	sta	$5200,Y
+	lda	$5A00,Y		; 38 -> 37
+	sta	$5600,Y
+	lda	$5E00,Y		; 39 -> 38
+	sta	$5A00,Y
+	lda	$4280,Y		; 40 -> 39
+	sta	$5E00,Y
+	lda	$4680,Y		; 41 -> 40
+	sta	$4280,Y
+	lda	$4A80,Y		; 42 -> 41
+	sta	$4680,Y
+	lda	$4E80,Y		; 43 -> 42
+	sta	$4A80,Y
+	lda	$5280,Y		; 44 -> 43
+	sta	$4E80,Y
+	lda	$5680,Y		; 45 -> 44
+	sta	$5280,Y
+	lda	$5A80,Y		; 46 -> 45
+	sta	$5680,Y
+	lda	$5E80,Y		; 47 -> 46
+	sta	$5A80,Y
+	lda	$4300,Y		; 48 -> 47
+	sta	$5E80,Y
+	lda	$4700,Y		; 49 -> 48
+	sta	$4300,Y
+	lda	$4B00,Y		; 50 -> 49
+	sta	$4700,Y
+	lda	$4F00,Y		; 51 -> 50
+	sta	$4B00,Y
+	lda	$5300,Y		; 52 -> 51
+	sta	$4F00,Y
+	lda	$5700,Y		; 53 -> 52
+	sta	$5300,Y
+	lda	$5B00,Y		; 54 -> 53
+	sta	$5700,Y
+	lda	$5F00,Y		; 55 -> 54
+	sta	$5B00,Y
+	lda	$4380,Y		; 56 -> 55
+	sta	$5F00,Y
+	lda	$4780,Y		; 57 -> 56
+	sta	$4380,Y
+	lda	$4B80,Y		; 58 -> 57
+	sta	$4780,Y
+	lda	$4F80,Y		; 59 -> 58
+	sta	$4B80,Y
+	lda	$5380,Y		; 60 -> 59
+	sta	$4F80,Y
+	lda	$5780,Y		; 61 -> 60
+	sta	$5380,Y
+	lda	$5B80,Y		; 62 -> 61
+	sta	$5780,Y
+	lda	$5F80,Y		; 63 -> 62
+	sta	$5B80,Y
+	lda	$4028,Y		; 64 -> 63
+	sta	$5F80,Y
+	lda	$4428,Y		; 65 -> 64
+	sta	$4028,Y
+	lda	$4828,Y		; 66 -> 65
+	sta	$4428,Y
+	lda	$4C28,Y		; 67 -> 66
+	sta	$4828,Y
+	lda	$5028,Y		; 68 -> 67
+	sta	$4C28,Y
+	lda	$5428,Y		; 69 -> 68
+	sta	$5028,Y
+	lda	$5828,Y		; 70 -> 69
+	sta	$5428,Y
+	lda	$5C28,Y		; 71 -> 70
+	sta	$5828,Y
+	lda	$40A8,Y		; 72 -> 71
+	sta	$5C28,Y
+	lda	$44A8,Y		; 73 -> 72
+	sta	$40A8,Y
+	lda	$48A8,Y		; 74 -> 73
+	sta	$44A8,Y
+	lda	$4CA8,Y		; 75 -> 74
+	sta	$48A8,Y
+	lda	$50A8,Y		; 76 -> 75
+	sta	$4CA8,Y
+	lda	$54A8,Y		; 77 -> 76
+	sta	$50A8,Y
+	lda	$58A8,Y		; 78 -> 77
+	sta	$54A8,Y
+	lda	$5CA8,Y		; 79 -> 78
+	sta	$58A8,Y
+	lda	$4128,Y		; 80 -> 79
+	sta	$5CA8,Y
+	lda	$4528,Y		; 81 -> 80
+	sta	$4128,Y
+	lda	$4928,Y		; 82 -> 81
+	sta	$4528,Y
+	lda	$4D28,Y		; 83 -> 82
+	sta	$4928,Y
+	lda	$5128,Y		; 84 -> 83
+	sta	$4D28,Y
+	lda	$5528,Y		; 85 -> 84
+	sta	$5128,Y
+	lda	$5928,Y		; 86 -> 85
+	sta	$5528,Y
+	lda	$5D28,Y		; 87 -> 86
+	sta	$5928,Y
+	lda	$41A8,Y		; 88 -> 87
+	sta	$5D28,Y
+	lda	$45A8,Y		; 89 -> 88
+	sta	$41A8,Y
+	lda	$49A8,Y		; 90 -> 89
+	sta	$45A8,Y
+	lda	$4DA8,Y		; 91 -> 90
+	sta	$49A8,Y
+	lda	$51A8,Y		; 92 -> 91
+	sta	$4DA8,Y
+	lda	$55A8,Y		; 93 -> 92
+	sta	$51A8,Y
+	lda	$59A8,Y		; 94 -> 93
+	sta	$55A8,Y
+	lda	$5DA8,Y		; 95 -> 94
+	sta	$59A8,Y
+	lda	$4228,Y		; 96 -> 95
+	sta	$5DA8,Y
+	lda	$4628,Y		; 97 -> 96
+	sta	$4228,Y
+	lda	$4A28,Y		; 98 -> 97
+	sta	$4628,Y
+	lda	$4E28,Y		; 99 -> 98
+	sta	$4A28,Y
+	lda	$5228,Y		; 100 -> 99
+	sta	$4E28,Y
+	lda	$5628,Y		; 101 -> 100
+	sta	$5228,Y
+	lda	$5A28,Y		; 102 -> 101
+	sta	$5628,Y
+	lda	$5E28,Y		; 103 -> 102
+	sta	$5A28,Y
+	lda	$42A8,Y		; 104 -> 103
+	sta	$5E28,Y
+	lda	$46A8,Y		; 105 -> 104
+	sta	$42A8,Y
+	lda	$4AA8,Y		; 106 -> 105
+	sta	$46A8,Y
+	lda	$4EA8,Y		; 107 -> 106
+	sta	$4AA8,Y
+	lda	$52A8,Y		; 108 -> 107
+	sta	$4EA8,Y
+	lda	$56A8,Y		; 109 -> 108
+	sta	$52A8,Y
+	lda	$5AA8,Y		; 110 -> 109
+	sta	$56A8,Y
+	lda	$5EA8,Y		; 111 -> 110
+	sta	$5AA8,Y
+	lda	$4328,Y		; 112 -> 111
+	sta	$5EA8,Y
+	lda	$4728,Y		; 113 -> 112
+	sta	$4328,Y
+	lda	$4B28,Y		; 114 -> 113
+	sta	$4728,Y
+	lda	$4F28,Y		; 115 -> 114
+	sta	$4B28,Y
+	lda	$5328,Y		; 116 -> 115
+	sta	$4F28,Y
+	lda	$5728,Y		; 117 -> 116
+	sta	$5328,Y
+	lda	$5B28,Y		; 118 -> 117
+	sta	$5728,Y
+	lda	$5F28,Y		; 119 -> 118
+	sta	$5B28,Y
+	lda	$43A8,Y		; 120 -> 119
+	sta	$5F28,Y
+	lda	$47A8,Y		; 121 -> 120
+	sta	$43A8,Y
+	lda	$4BA8,Y		; 122 -> 121
+	sta	$47A8,Y
+	lda	$4FA8,Y		; 123 -> 122
+	sta	$4BA8,Y
+	lda	$53A8,Y		; 124 -> 123
+	sta	$4FA8,Y
+	lda	$57A8,Y		; 125 -> 124
+	sta	$53A8,Y
+	lda	$5BA8,Y		; 126 -> 125
+	sta	$57A8,Y
+	lda	$5FA8,Y		; 127 -> 126
+	sta	$5BA8,Y
+	lda	$4050,Y		; 128 -> 127
+	sta	$5FA8,Y
+	lda	$4450,Y		; 129 -> 128
+	sta	$4050,Y
+	lda	$4850,Y		; 130 -> 129
+	sta	$4450,Y
+	lda	$4C50,Y		; 131 -> 130
+	sta	$4850,Y
+	lda	$5050,Y		; 132 -> 131
+	sta	$4C50,Y
+	lda	$5450,Y		; 133 -> 132
+	sta	$5050,Y
+	lda	$5850,Y		; 134 -> 133
+	sta	$5450,Y
+	lda	$5C50,Y		; 135 -> 134
+	sta	$5850,Y
+	lda	$40D0,Y		; 136 -> 135
+	sta	$5C50,Y
+	lda	$44D0,Y		; 137 -> 136
+	sta	$40D0,Y
+	lda	$48D0,Y		; 138 -> 137
+	sta	$44D0,Y
+	lda	$4CD0,Y		; 139 -> 138
+	sta	$48D0,Y
+	lda	$50D0,Y		; 140 -> 139
+	sta	$4CD0,Y
+	lda	$54D0,Y		; 141 -> 140
+	sta	$50D0,Y
+	lda	$58D0,Y		; 142 -> 141
+	sta	$54D0,Y
+	lda	$5CD0,Y		; 143 -> 142
+	sta	$58D0,Y
+	lda	$4150,Y		; 144 -> 143
+	sta	$5CD0,Y
+	lda	$4550,Y		; 145 -> 144
+	sta	$4150,Y
+	lda	$4950,Y		; 146 -> 145
+	sta	$4550,Y
+	lda	$4D50,Y		; 147 -> 146
+	sta	$4950,Y
+	lda	$5150,Y		; 148 -> 147
+	sta	$4D50,Y
+	lda	$5550,Y		; 149 -> 148
+	sta	$5150,Y
+	lda	$5950,Y		; 150 -> 149
+	sta	$5550,Y
+	lda	$5D50,Y		; 151 -> 150
+	sta	$5950,Y
+	lda	$41D0,Y		; 152 -> 151
+	sta	$5D50,Y
+	lda	$45D0,Y		; 153 -> 152
+	sta	$41D0,Y
+	lda	$49D0,Y		; 154 -> 153
+	sta	$45D0,Y
+	lda	$4DD0,Y		; 155 -> 154
+	sta	$49D0,Y
+	lda	$51D0,Y		; 156 -> 155
+	sta	$4DD0,Y
+	lda	$55D0,Y		; 157 -> 156
+	sta	$51D0,Y
+	lda	$59D0,Y		; 158 -> 157
+	sta	$55D0,Y
+	lda	$5DD0,Y		; 159 -> 158
+	sta	$59D0,Y
+	lda	$4250,Y		; 160 -> 159
+	sta	$5DD0,Y
+.if 0
+	lda	$4650,Y		; 161 -> 160
+	sta	$4250,Y
+	lda	$4A50,Y		; 162 -> 161
+	sta	$4650,Y
+	lda	$4E50,Y		; 163 -> 162
+	sta	$4A50,Y
+	lda	$5250,Y		; 164 -> 163
+	sta	$4E50,Y
+	lda	$5650,Y		; 165 -> 164
+	sta	$5250,Y
+	lda	$5A50,Y		; 166 -> 165
+	sta	$5650,Y
+	lda	$5E50,Y		; 167 -> 166
+	sta	$5A50,Y
+	lda	$42D0,Y		; 168 -> 167
+	sta	$5E50,Y
+	lda	$46D0,Y		; 169 -> 168
+	sta	$42D0,Y
+	lda	$4AD0,Y		; 170 -> 169
+	sta	$46D0,Y
+	lda	$4ED0,Y		; 171 -> 170
+	sta	$4AD0,Y
+	lda	$52D0,Y		; 172 -> 171
+	sta	$4ED0,Y
+	lda	$56D0,Y		; 173 -> 172
+	sta	$52D0,Y
+	lda	$5AD0,Y		; 174 -> 173
+	sta	$56D0,Y
+	lda	$5ED0,Y		; 175 -> 174
+	sta	$5AD0,Y
+	lda	$4350,Y		; 176 -> 175
+	sta	$5ED0,Y
+	lda	$4750,Y		; 177 -> 176
+	sta	$4350,Y
+	lda	$4B50,Y		; 178 -> 177
+	sta	$4750,Y
+	lda	$4F50,Y		; 179 -> 178
+	sta	$4B50,Y
+	lda	$5350,Y		; 180 -> 179
+	sta	$4F50,Y
+	lda	$5750,Y		; 181 -> 180
+	sta	$5350,Y
+	lda	$5B50,Y		; 182 -> 181
+	sta	$5750,Y
+	lda	$5F50,Y		; 183 -> 182
+	sta	$5B50,Y
+	lda	$43D0,Y		; 184 -> 183
+	sta	$5F50,Y
+	lda	$47D0,Y		; 185 -> 184
+	sta	$43D0,Y
+	lda	$4BD0,Y		; 186 -> 185
+	sta	$47D0,Y
+	lda	$4FD0,Y		; 187 -> 186
+	sta	$4BD0,Y
+	lda	$53D0,Y		; 188 -> 187
+	sta	$4FD0,Y
+	lda	$57D0,Y		; 189 -> 188
+	sta	$53D0,Y
+	lda	$5BD0,Y		; 190 -> 189
+	sta	$57D0,Y
+	lda	$5FD0,Y		; 191 -> 190
+	sta	$5BD0,Y
+;	lda	$0000,Y		; 192 -> 191
+;	sta	$5FD0,Y
+.endif
+	dey
+
+	bmi	done_vscroll2
+
+	jmp	hgr_page2_vscroll_loop
+
+done_vscroll2:
 	rts
 
 
