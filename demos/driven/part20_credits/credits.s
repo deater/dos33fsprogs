@@ -63,6 +63,8 @@ load_loop:
 
 scroll_loop:
 
+	jsr	hgr_vertical_scroll
+
 
 	;============================================
 	; clear lines to get rid of stray old chars
@@ -162,7 +164,7 @@ skip_next_text:
 	; do the scroll
 	;=============================
 
-	jsr	hgr_vertical_scroll
+	jsr	wait_vblank
 
 	jsr	hgr_page_flip
 
@@ -183,8 +185,11 @@ skip_next_text:
 	.include	"../irq_wait.s"
 	.include	"../hgr_page_flip.s"
 
+	.include	"../vblank.s"
+
 
 final_credits:
+	.byte 20," ",0
 	.byte 16,"DRI\/EN",0
 	.byte 20," ",0
 	.byte 15,"by Desire",0
