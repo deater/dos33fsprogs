@@ -158,6 +158,81 @@ skip_next_text:
 ;	lda	#0
 ;	sta	FRAME
 
+	;=============================
+	; draw sprites
+	;=============================
+
+	lda	#18
+	sta	CURSOR_X
+
+	lda	#160
+	sta	CURSOR_Y
+
+	inc	GUITAR_FRAME
+
+	lda	GUITAR_FRAME
+	and	#7
+	tax
+	lda	guitar_pattern,X
+	tax
+
+	lda	guitar_l,X
+	sta	INL
+	lda	guitar_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+	;===========================
+	; keeper1
+
+	lda	GUITAR_FRAME
+	and	#$1f
+	tax
+	lda	keeper1_pattern,X
+	tax
+
+
+	lda	#14
+	sta	CURSOR_X
+
+	lda	#160
+	sta	CURSOR_Y
+
+	lda	keeper_l,X
+	sta	INL
+	lda	keeper_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	;====================
+	; keeper2
+
+	lda	GUITAR_FRAME
+	and	#$1f
+	tax
+	lda	keeper2_pattern,X
+	tax
+
+
+	lda	#22
+	sta	CURSOR_X
+
+	lda	#160
+	sta	CURSOR_Y
+
+	lda	keeper_l,X
+	sta	INL
+	lda	keeper_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+
+
 
 
 	;=============================
@@ -186,6 +261,61 @@ skip_next_text:
 	.include	"../hgr_page_flip.s"
 
 	.include	"../vblank.s"
+
+	.include	"hgr_sprite.s"
+
+	.include	"graphics/guitar_sprites.inc"
+
+guitar_pattern:
+.byte 0,0,1,1,2,2,1,1
+
+guitar_l:
+	.byte <guitar0,<guitar1,<guitar2
+guitar_h:
+	.byte >guitar0,>guitar1,>guitar2
+
+	.include	"graphics/keeper1_sprites.inc"
+	.include	"graphics/keeper2_sprites.inc"
+
+keeper_l:
+	.byte <keeper_r0,<keeper_r1,<keeper_r2
+	.byte <keeper_r3,<keeper_r4,<keeper_r5
+	.byte <keeper_r6,<keeper_r7
+	.byte <keeper_l0,<keeper_l1,<keeper_l2
+	.byte <keeper_l3,<keeper_l4,<keeper_l5
+	.byte <keeper_l6,<keeper_l7
+
+keeper_h:
+	.byte >keeper_r0,>keeper_r1,>keeper_r2
+	.byte >keeper_r3,>keeper_r4,>keeper_r5
+	.byte >keeper_r6,>keeper_r7
+	.byte >keeper_l0,>keeper_l1,>keeper_l2
+	.byte >keeper_l3,>keeper_l4,>keeper_l5
+	.byte >keeper_l6,>keeper_l7
+
+
+
+
+
+keeper1_pattern:
+.byte 1,1,2,2,1,1,2,2
+.byte 1,2,3,4,5,4,3,4
+.byte 5,4,3,4,5,6,7,5
+.byte 7,6,5,4,3,2,1,2
+
+
+
+keeper2_pattern:
+.byte 1+8,1+8,2+8,2+8,1+8,1+8,2+8,2+8
+.byte 1+8,2+8,3+8,4+8,5+8,4+8,3+8,4+8
+.byte 5+8,4+8,3+8,4+8,5+8,6+8,7+8,5+8
+.byte 7+8,6+8,5+8,4+8,3+8,2+8,1+8,2+8
+
+
+
+
+
+
 
 
 final_credits:

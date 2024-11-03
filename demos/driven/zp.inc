@@ -163,8 +163,12 @@ DRAW_NUMBER	= $FA
 
 
 ; Credits
+CURSOR_X	= $EE
+CURSOR_Y	= $EF
+SCROLL_X	= $F0
 BACKUP_OUTL	= $F2
 BACKUP_OUTH	= $F3
+GUITAR_FRAME	= $F4
 
 
 
@@ -214,8 +218,7 @@ SCALE_I		= $F8
 SCALE_F		= $F9
 ANGLE		= $FA
 
-; credits
-SCROLL_X	= $F0
+
 
 ; scroller
 HGR_COPY_Y1	= $F1
