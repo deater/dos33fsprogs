@@ -175,7 +175,7 @@ load_program_loop:
 
 	; load dni
 
-	lda	#5			; SCROLL
+	lda	#6			; SCROLL
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -190,7 +190,37 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	jsr	$8000
+	jsr	$6000
+
+
+	;=======================
+	;=======================
+	; Load graphics
+	;=======================
+	;=======================
+
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load dni
+
+	lda	#6			; SCROLL
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	;=======================
+	;=======================
+	; Run Graphics
+	;=======================
+	;=======================
+
+	jsr	$6000
 
 	;=======================
 	;=======================

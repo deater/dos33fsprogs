@@ -14,6 +14,7 @@ driven.dsk:	QBOOT QLOAD \
 	./part00_intro/INTRO \
 	./part01_dni/DNI \
 	./part05_atrus/ATRUS \
+	./part10_graphics/GRAPHICS \
 	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) driven.dsk
 	$(DOS33_RAW) driven.dsk 0 0 QBOOT		0 1
@@ -25,6 +26,7 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 13 0 ./part20_credits/CREDITS 0 0
 	$(DOS33_RAW) driven.dsk 17 0 ./part01_dni/DNI 0 0
 	$(DOS33_RAW) driven.dsk 21 0 ./part05_atrus/ATRUS 0 0
+	$(DOS33_RAW) driven.dsk 25 0 ./part10_graphics/GRAPHICS 0 0
 
 #second_d1.dsk:	QBOOT QLOAD \
 #	music.inc qload.inc \

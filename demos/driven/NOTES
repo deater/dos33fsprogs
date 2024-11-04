@@ -9,7 +9,7 @@ T         9 = INTRO         ? bytes     4T      (16384) 3k free
 T        13 = CREDITS       ? bytes     4T      (16384)  1k free
 T	 17 = DNI	    ? bytes     4T      (16384)
 T	 21 = SCROLL	    ? bytes     4T      (16384)
-
+T	 25 = GRAPHICS	    ? bytes     4T
 
 note: below is not accurate
 
