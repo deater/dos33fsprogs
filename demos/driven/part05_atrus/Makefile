@@ -14,13 +14,17 @@ atrus.o:	atrus.s \
 	../zp.inc ../hardware.inc \
 	graphics/atrus03_iipix.hgr.zx02 \
 	graphics/atrus10_iipix.hgr.zx02 \
-	graphics/atrus11_iipix.hgr.zx02
+	graphics/atrus11_iipix.hgr.zx02 \
+	font/large_font.inc
 	ca65 -o atrus.o atrus.s -l atrus.lst
 
 
 ###
 
-graphics/tree01.gr.zx02:	
+font/large_font.inc:
+	cd font && make
+
+graphics/atrus03_iipix.hgr.zx02:
 	cd graphics && make
 
 ###
