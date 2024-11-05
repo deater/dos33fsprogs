@@ -107,3 +107,5 @@ atrus_text:
 .include "../wait_keypress.s"
 
 .include "plasma.s"
+
+.include "font/large_font.inc"

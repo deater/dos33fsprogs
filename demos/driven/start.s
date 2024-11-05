@@ -162,40 +162,9 @@ load_program_loop:
 
 	jsr	$8000
 
-
 	;=======================
 	;=======================
-	; Load dni
-	;=======================
-	;=======================
-
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
-
-	; load dni
-
-	lda	#6			; SCROLL
-	sta	WHICH_LOAD
-	jsr	load_file
-
-
-	; restart music
-
-	cli		; start interrupts (music)
-
-	;=======================
-	;=======================
-	; Run Dni
-	;=======================
-	;=======================
-
-	jsr	$6000
-
-
-	;=======================
-	;=======================
-	; Load graphics
+	; Run Atrus
 	;=======================
 	;=======================
 
@@ -205,7 +174,7 @@ load_program_loop:
 
 	; load dni
 
-	lda	#6			; SCROLL
+	lda	#5			; Atrus
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -214,11 +183,33 @@ load_program_loop:
 
 	cli		; start interrupts (music)
 
+	;======================
+	; run atrus
+
+	jsr	$8000
+
 	;=======================
 	;=======================
-	; Run Graphics
+	; Load GRAPHICS
 	;=======================
 	;=======================
+
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load dni
+
+	lda	#6			; GRAPHICS
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	; Run GRAPHICS
 
 	jsr	$6000
 
@@ -243,11 +234,8 @@ load_program_loop:
 
 	cli		; start interrupts (music)
 
-	;=======================
-	;=======================
 	; Run Credits
-	;=======================
-	;=======================
+
 
 	jsr	$8000
 .if 0
@@ -504,61 +492,6 @@ load_program_loop2:
 	jsr	$8000
 
 .endif
-	;=============================
-	; ask for side2
-	;=============================
-
-;	sei				; disable music
-;	jsr	clear_ay_both		; stop from making noise
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	bit	PAGE1			; be sure we're on PAGE1
-
-	; clear text screen
-	lda	#$A0
-	sta	clear_all_color+1
-	jsr	clear_all
-
-	; switch to text/gr
-	bit	TEXTGR
-
-	; print non-inverse
-
-	jsr	set_normal
-
-	; print messages
-	lda	#<disk_change_string
-	sta	OUTL
-	lda	#>disk_change_string
-	sta	OUTH
-
-	; print the text
-
-	jsr	move_and_print
-
-	bit	KEYRESET			; just to be safe
-	jsr	wait_until_keypress
-
-	;==================
-	; reboot
-	;==================
-
-	; swap back in ROM
-
-	lda	$C08A	; read rom, no write
-
-	lda	WHICH_SLOT
-	lsr
-	lsr
-	lsr
-	lsr
-	ora	#$C0
-	sta	reboot_smc+2
-
-reboot_smc:
-	jmp	$C600
 
 forever:
 	jmp	forever
@@ -569,11 +502,6 @@ forever:
 
 	.include	"gs_interrupt.s"
 
-;.include "title.s"
-
-disk_change_string:
-;             0123456789012345678901234567890123456789
-.byte   5,22,"INSERT DISK 2 AND PRESS ANY KEY",0
 
 .include "pt3_lib_mockingboard_patch.s"
 

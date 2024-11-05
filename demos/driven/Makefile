@@ -28,45 +28,6 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 21 0 ./part05_atrus/ATRUS 0 0
 	$(DOS33_RAW) driven.dsk 25 0 ./part10_graphics/GRAPHICS 0 0
 
-#second_d1.dsk:	QBOOT QLOAD \
-#	music.inc qload.inc \
-#	MUSIC_INTRO \
-#	MUSIC \
-#	./part00_boot/FAKE_BIOS \
-#	./part01_intropan/INTRO \
-#	./part04_chess_shapes/CHESS \
-#	./part05_dot_tunnel/TUNNEL \
-#	./part08_gorilla/GORILLA \
-#	./part09_leaves/LEAVES \
-#	./part10_lens_rotozoom/LENS \
-#	./part12_plasma/PLASMA \
-#	./part13_plasmacube/PLASMACUBE	\
-#	./part14_dotbounce/DOTS	\
-#	./part15_transmission/SPHERES \
-#	./part16_ocean/OCEAN \
-#	./part17_polar/POLAR
-#	cp $(EMPTY_DISK) second_d1.dsk
-#	$(DOS33_RAW) second_d1.dsk 0 0 QBOOT		0 1
-#	$(DOS33_RAW) second_d1.dsk 0 2 QBOOT		1 1
-#	$(DOS33_RAW) second_d1.dsk 0 4 QBOOT		2 1
-#	$(DOS33_RAW) second_d1.dsk 1 0 QLOAD		0 0
-#	$(DOS33_RAW) second_d1.dsk 2 0 MUSIC_INTRO	0 0
-#	$(DOS33_RAW) second_d1.dsk 4 0 MUSIC		0 0
-#	$(DOS33_RAW) second_d1.dsk  9 0 ./part00_boot/FAKE_BIOS 0 0
-#	$(DOS33_RAW) second_d1.dsk 10 0 ./part01_intropan/INTRO	0 0
-#	$(DOS33_RAW) second_d1.dsk 15 0 ./part04_chess_shapes/CHESS	0 0
-#	$(DOS33_RAW) second_d1.dsk 16 0 ./part05_dot_tunnel/TUNNEL	0 0
-#	$(DOS33_RAW) second_d1.dsk 19 0 ./part08_gorilla/GORILLA	0 0
-#	$(DOS33_RAW) second_d1.dsk 21 0 ./part09_leaves/LEAVES		0 0
-#	$(DOS33_RAW) second_d1.dsk 23 0 ./part10_lens_rotozoom/LENS		0 0
-#	$(DOS33_RAW) second_d1.dsk 24 0 ./part12_plasma/PLASMA		0 0
-#	$(DOS33_RAW) second_d1.dsk 25 0 ./part13_plasmacube/PLASMACUBE	0 0
-#	$(DOS33_RAW) second_d1.dsk 26 0 ./part14_dotbounce/DOTS	0 0
-#	$(DOS33_RAW) second_d1.dsk 27 0 ./part15_transmission/SPHERES	0 0
-#	$(DOS33_RAW) second_d1.dsk 28 0 ./part16_ocean/OCEAN 0 0
-#	$(DOS33_RAW) second_d1.dsk 34 0 ./part17_polar/POLAR	0 0
-
-
 ####
 
 part00_intro/INTRO:	
@@ -77,6 +38,9 @@ part01_dni/DNI:
 
 part05_atrus/ATRUS:	
 	cd part05_atrus && make
+
+part10_graphics/GRAPHICS:	
+	cd part10_graphics && make
 
 part20_credits/CREDITS:	
 	cd part20_credits && make
@@ -168,22 +132,6 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
 
-music2.inc:	generate_common MUSIC2
-	./generate_common -a 0xd000 -s pt3_init_song music2.lst > music2.inc
-	./generate_common -a 0xd000 -s mockingboard_init music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s reset_ay_both music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s clear_ay_both music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s done_pt3_irq_handler music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s PT3_LOC music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s current_pattern_smc music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s copy_main_aux music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s copy_aux_main music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s mute_ay_both music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s unmute_ay_both music2.lst >> music2.inc
-	./generate_common -a 0xd000 -s interrupt_handler music2.lst >> music2.inc
-
 ####
 
 MUSIC:	music.o
@@ -216,6 +164,8 @@ clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd part00_intro && make clean
+	cd part05_atrus && make clean
+	cd part10_graphics && make clean
 	cd part20_credits && make clean
 
 ###
