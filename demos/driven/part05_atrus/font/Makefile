@@ -1,8 +1,11 @@
 
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
+HGR_LARGEFONT = ../../../../utils/hgr-utils/png2largefont
 
-all:	font.inc
+all:	font.inc large_font.inc
 
+large_font.inc:	a2_big_font.png
+	$(HGR_LARGEFONT) -r a2_big_font.png > large_font.inc
 
 font.inc:	a2_big_font.png
 	$(HGR_SPRITE) -l font_space a2_big_font.png  0  0  13 16 > font.inc
@@ -42,4 +45,4 @@ font.inc:	a2_big_font.png
 
 clean:
 	rm -f *~ \
-		font.inc
+		font.inc large_font.inc
