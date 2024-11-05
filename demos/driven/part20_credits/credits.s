@@ -332,6 +332,8 @@ final_credits:
 	.byte 13,"Apologies to:",0
 	.byte 18,"Cyan",0
 
+	.byte 8,"No Wharks were harmed in",0
+	.byte 8,"the making of this demo.",0
 
 ; TODO: Cyan disclaimer
 

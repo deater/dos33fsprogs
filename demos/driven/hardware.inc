@@ -21,7 +21,8 @@ PAGE1		=	$C054
 PAGE2		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
-AN3		=	$C05E	; Annunciator 3
+AN3		=	$C05E	; clear Annunciator 3
+SETAN3		=	$C05F	; set Annunicator 3 (WR)
 
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
