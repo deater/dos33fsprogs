@@ -128,9 +128,12 @@ atrus_text:
 
 
 do_scroll:
-
+	lda	#0
+	sta	SCROLL_START
+do_scroll_again:
 	ldy	#0
-	sty	SCROLL_OFFSET	; FIXME: SCROLL_OFFSET
+	lda	SCROLL_START
+	sta	SCROLL_OFFSET	; FIXME: SCROLL_OFFSET
 do_scroll_loop:
 	ldx	SCROLL_OFFSET
 	lda	scroll_text,X
@@ -197,7 +200,24 @@ do_scroll_col_loop:
 	inc	SCROLL_OFFSET
 	cpy	#40
 	bne	do_scroll_loop
+
+	; FIXME: also check keyboard
+
+	lda	#200
+	jsr	wait
+
+	inc	SCROLL_START
+	lda	SCROLL_START
+	cmp	#80
+	beq	do_scroll_done
+
+	jmp	do_scroll_again
+
+do_scroll_done:
+
 	rts
 
-scroll_text:
-	.byte "THE@QUICK@BROWN@FOX@JUMPED@OVER@THE@LAZY@DOG"
+scroll_text:  ;0123456789012345678901234567890123456789
+	.byte "@@@@@@@@@@@@@@@@@@@@\]^_THE@QUICK@BROWN@"
+	.byte "FOX@JUMPED@OVER@THE@LAZY@DOG@PACK@MY@BOX"
+	.byte "@WITH@FIVE@DOZEN@LIQOUR@JUGS"

@@ -363,7 +363,7 @@ int main(int argc, char **argv) {
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 	fprintf(stderr,"Using font offset of 0x%x\n",start_offset);
 
-	int pal[2],color=0,byte1,byte2;
+	int pal[2],color1=0,color2=0,byte1,byte2;
 	/* for now, assume 14x16 font starting at 0,0 */
 	for(row=0;row<2;row++) {
 	for(col=0;col<16;col++) {
@@ -371,19 +371,28 @@ int main(int argc, char **argv) {
 		temp=0;
 		pal[0]=0,pal[1]=0;
 		for(x=0;x<14;x+=2) {
-			color=image[ (((row*18)+y)*280)+(col*14)+x];
-			switch(color){
-				case 0: temp=temp<<2; break;
-				case 1: temp=temp<<2; temp|=2; break;
-				case 2: temp=temp<<2; temp|=1; break;
-				case 3: temp=temp<<2; temp|=3; break;
-				case 4: temp=temp<<2; break;
-				case 5: temp=temp<<2; temp|=2;
+			color1=image[ (((row*18)+y)*280)+(col*14)+x];
+			color2=image[ (((row*18)+y)*280)+(col*14)+x+1];
+			temp=temp<<2;
+			switch(color1){
+				case 0: if ((color2==0) || (color2==4)) temp|=0;
+					else temp|=1;
+					break;
+				case 1: temp|=2; break;
+				case 2: temp|=1; break;
+				case 3: if ((color2==3) ||(color2==7)) temp|=3;
+					else temp|=2;
+					break;
+				case 4: if ((color2==0) || (color2==4)) temp|=0;
+					else temp|=1;
 					pal[x/7]=1; break;
-				case 6: temp=temp<<2; temp|=1;
+				case 5: temp|=2;
 					pal[x/7]=1; break;
-				case 7: temp=temp<<2; temp|=3;
+				case 6: temp|=1;
 					pal[x/7]=1; break;
+				case 7: if ((color2==3) || (color2==7)) temp|=3;
+					else temp|=1;
+					pal[x/7]=2; break;
 			}
 		}
 		byte1=(reverse_byte(temp>>6)&0x7f)|pal[0]<<7;
