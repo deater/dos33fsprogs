@@ -137,6 +137,13 @@ MASKH		= $ED
 ; $F0-$FB can re-use in each file
 ;==============================================
 
+; LOGO
+
+LEFT_X		= $F0
+RIGHT_X		= $F1
+X_OFFSET	= $F2
+SAVE_X		= $F3
+
 ; D'NI
 
 SPRITEY		= $EE
