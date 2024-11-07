@@ -13,7 +13,7 @@ DNI:	dni.o
 	ld65 -o DNI dni.o -C $(LINKERSCRIPTS)/apple2_4000.inc
 
 dni.o:	dni.s \
-	../zp.inc ../hardware.inc
+	../zp.inc ../hardware.inc ../qload.inc
 	ca65 -o dni.o dni.s -l dni.lst
 
 ####
