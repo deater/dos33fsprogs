@@ -2,24 +2,47 @@
 	; scrolls large font
 	; right to left, at 168
 
-	; this version scrolls in 7 pixel chunks
-	;	which is blocky but compact
+	; scroll by half
+
+	; even frames, like normal
+	; odd frames, start with odd
 
 
 do_scroll:
 	lda	#0
 	sta	SCROLL_START
+	sta	SCROLL_ODD
+
+
 do_scroll_again:
-	ldy	#0
-	lda	SCROLL_START
-	sta	SCROLL_OFFSET	; FIXME: SCROLL_OFFSET
-do_scroll_loop:
-	ldx	SCROLL_OFFSET
-	lda	scroll_text,X
+	ldy	#0		; Y is column on screen currently drawing
+
+	lda	SCROLL_START	; reset string offset to current start
+	sta	SCROLL_OFFSET
+
+	lda	SCROLL_ODD	; check if odd/even inside of char
+	beq	do_scroll_loop	; if even, normal scroll
+
+	ldx	SCROLL_OFFSET	; load offset into string
+	lda	scroll_text,X	; get the character
 	sec
-	sbc	#'@'
+	sbc	#'@'		; convert from ASCII
 	asl
 	tax
+	inx			; point to second half of char
+
+	jmp	do_scroll_col_loop
+
+
+do_scroll_loop:
+	ldx	SCROLL_OFFSET	; load offset into string
+	lda	scroll_text,X	; get the character
+	sec
+	sbc	#'@'		; convert from ASCII
+	asl
+	tax
+
+
 do_scroll_col_loop:
 	; row1
 	lda	large_font_row0,X
@@ -70,26 +93,34 @@ do_scroll_col_loop:
 	lda	large_font_row15,X
 	sta	$3F50,Y
 
+skip_first_col:
 	inx
 	iny
-	tya
-	and	#1
-	bne	do_scroll_col_loop
 
-	inc	SCROLL_OFFSET
-	cpy	#40
-	bne	do_scroll_loop
+	txa				; see if done char
+	and	#1
+	bne	do_scroll_col_loop	; if not, draw second half
+
+	inc	SCROLL_OFFSET		; point to next char
+
+	cpy	#40			; see if Y edge of screen
+	bcc	do_scroll_loop
 
 	; FIXME: also check keyboard
 
 	lda	#200
 	jsr	wait
 
+	lda	#$1
+	eor	SCROLL_ODD
+	sta	SCROLL_ODD
+	bne	jmp_scroll_again	; skip if odd
+
 	inc	SCROLL_START
 	lda	SCROLL_START
 	cmp	#80
 	beq	do_scroll_done
-
+jmp_scroll_again:
 	jmp	do_scroll_again
 
 do_scroll_done:
