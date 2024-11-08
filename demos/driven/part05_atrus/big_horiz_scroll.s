@@ -7,6 +7,21 @@
 	; even frames, like normal
 	; odd frames, start with odd
 
+	; X6543210 XDCBA987
+
+	; 0123456 789ABCD	X		Y	Z
+	; 	lda X, sta Y  lda X+1, sta Y+1
+	; 2345678 9ABCDef	X<<2 | Y<<2
+	;	lda X, sta Y  lda X+1 and #$fc lda Y+1, and #$3 ora, sta Y+1
+	; 456789A BCDefgh	X<<4 | Y<<4
+	;	lda X, sta Y  lda X+1 and #$fc lda Y+1, and #$3 ora, sta Y+1
+	; 6789ABC Defghij	X<<6 | Y<<6
+	; 89ABCDe fghijkl	Y<<1 | Z<<1
+	; ABCDefg hijklmn	Y<<3 | Z<<3
+	; CDefghi jklmnop	Y<<5 | Z<<6
+	; efghijk lmnopqr	Z
+
+
 
 do_scroll:
 	lda	#0
