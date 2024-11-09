@@ -19,12 +19,16 @@ intro.o:	intro.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	erase.s \
 	graphics/logo_frame01.hgr.zx02 \
-	graphics/logo_frame46.hgr.zx02
+	graphics/logo_frame46.hgr.zx02 \
+	graphics/d_sprites.inc
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
 
 graphics/logo_frame01.hgr.zx02:	
+	cd graphics && make
+
+graphics/d_sprites.inc:	
 	cd graphics && make
 
 ###

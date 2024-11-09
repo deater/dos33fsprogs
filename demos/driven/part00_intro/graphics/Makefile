@@ -3,8 +3,26 @@ include ../../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../../utils/gr-utils/png2gr
+HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	desire.hgr.zx02 logo_frame01.hgr.zx02 logo_frame46.hgr.zx02
+all:	desire.hgr.zx02 logo_frame01.hgr.zx02 logo_frame46.hgr.zx02 \
+	d_sprites.inc
+
+
+####
+
+d_sprites.inc:	logo_frame11.png logo_frame12.png logo_frame13.png \
+		logo_frame14.png logo_frame15.png logo_frame16.png \
+		logo_frame17.png logo_frame18.png logo_frame19.png
+	$(HGR_SPRITE) -s -l d11_sprite logo_frame11.png  70 55  125 109 > d_sprites.inc
+	$(HGR_SPRITE) -s -l d12_sprite logo_frame12.png  70 55  125 109 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d13_sprite logo_frame13.png  70 55  125 109 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d14_sprite logo_frame14.png  56 55  125 109 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d15_sprite logo_frame15.png  56 56  125 109 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d16_sprite logo_frame16.png  42 56  125 109 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d17_sprite logo_frame17.png  42 56  111 107 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d18_sprite logo_frame18.png  42 56   98 107 >> d_sprites.inc
+	$(HGR_SPRITE) -s -l d19_sprite logo_frame19.png  28 56   98 108 >> d_sprites.inc
 
 ####
 
@@ -34,4 +52,4 @@ desire.hgr.zx02:	desire.hgr
 ####
 
 clean:
-	rm -f *~ *.zx02 *.hgr
+	rm -f *~ *.zx02 *.hgr *.inc

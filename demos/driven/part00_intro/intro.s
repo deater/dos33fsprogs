@@ -58,7 +58,38 @@ load_loop:
 
 	jsr	erase_frame
 
+	;==============================
+	; rotate D into place
+	;==============================
+
+	lda	#0
+	sta	X_OFFSET
+
+
+
+d_rotate_loop:
+	ldx	X_OFFSET
+
+	lda     d_sprite_x,X
+        sta     CURSOR_X
+
+        lda     d_sprite_y,X
+        sta     CURSOR_Y
+
+	lda	d_sprite_l,X
+	sta	INL
+	lda	d_sprite_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
 	jsr	wait_until_keypress
+
+	inc	X_OFFSET
+	lda	X_OFFSET
+	cmp	#13
+	bne	d_rotate_loop
+
 
 	;==============================
 	; gradually load in final logo
@@ -247,3 +278,24 @@ masks_reverse:
 
 .include "erase.s"
 .include "../wait_keypress.s"
+
+.include "graphics/d_sprites.inc"
+
+.include "../hgr_sprite.s"
+
+d_sprite_h:
+	.byte >d11_sprite,>d12_sprite,>d13_sprite
+	.byte >d14_sprite,>d15_sprite,>d16_sprite
+	.byte >d17_sprite,>d18_sprite,>d19_sprite
+d_sprite_l:
+	.byte <d11_sprite,<d12_sprite,<d13_sprite
+	.byte <d14_sprite,<d15_sprite,<d16_sprite
+	.byte <d17_sprite,<d18_sprite,<d19_sprite
+d_sprite_x:
+	.byte	10,10,10
+	.byte	 8, 8, 6
+	.byte	 6, 6, 4
+d_sprite_y:
+	.byte	55,55,55
+	.byte	55,56,56
+	.byte	56,56,56

@@ -262,7 +262,7 @@ skip_next_text:
 
 	.include	"../vblank.s"
 
-	.include	"hgr_sprite.s"
+	.include	"../hgr_sprite.s"
 
 	.include	"graphics/guitar_sprites.inc"
 

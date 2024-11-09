@@ -18,7 +18,7 @@ credits.o:	credits.s vertical_scroll.s \
 	./fonts/font_4am_1x8_data.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	graphics/guitar_sprites.inc \
-	hgr_sprite.s
+	../hgr_sprite.s
 	ca65 -o credits.o credits.s -l credits.lst
 
 ###
