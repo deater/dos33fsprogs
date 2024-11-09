@@ -143,6 +143,8 @@ LEFT_X		= $F0
 RIGHT_X		= $F1
 X_OFFSET	= $F2
 SAVE_X		= $F3
+ERASE_OFFSET	= $F4
+
 
 ; D'NI
 

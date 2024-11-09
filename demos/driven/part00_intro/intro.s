@@ -53,6 +53,14 @@ load_loop:
 	jsr	wait_seconds
 
 	;==============================
+	; gradually erase edges
+	;==============================
+
+	jsr	erase_frame
+
+	jsr	wait_until_keypress
+
+	;==============================
 	; gradually load in final logo
 	;==============================
 
@@ -236,3 +244,6 @@ masks:
 
 masks_reverse:
 	.byte $C0,$E0,$F0,$F8,$FC,$FE,$FF
+
+.include "erase.s"
+.include "../wait_keypress.s"

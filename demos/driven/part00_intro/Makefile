@@ -17,12 +17,14 @@ INTRO:	intro.o
 intro.o:	intro.s \
 	../zx02_optim.s \
 	../zp.inc ../hardware.inc ../qload.inc \
-	graphics/desire.hgr.zx02
+	erase.s \
+	graphics/logo_frame01.hgr.zx02 \
+	graphics/logo_frame46.hgr.zx02
 	ca65 -o intro.o intro.s -l intro.lst
 
 ###
 
-graphics/desire.hgr.zx02:	
+graphics/logo_frame01.hgr.zx02:	
 	cd graphics && make
 
 ###
