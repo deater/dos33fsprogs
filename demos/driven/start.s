@@ -496,13 +496,9 @@ load_program_loop2:
 forever:
 	jmp	forever
 
-;.align $100
-	.include	"wait_keypress.s"
-	.include	"zx02_optim.s"
 
-	.include	"gs_interrupt.s"
-
-
-.include "pt3_lib_mockingboard_patch.s"
-
-.include "hardware_detect.s"
+	.include "wait_keypress.s"
+	.include "zx02_optim.s"
+	.include "gs_interrupt.s"
+	.include "pt3_lib_mockingboard_patch.s"
+	.include "hardware_detect.s"

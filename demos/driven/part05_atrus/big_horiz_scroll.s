@@ -121,7 +121,11 @@ skip_first_col:
 	cpy	#40			; see if Y edge of screen
 	bcc	do_scroll_loop
 
-	; FIXME: also check keyboard
+	;=====================
+	; check keyboard
+
+	lda	KEYPRESS
+	bmi	do_scroll_done
 
 	lda	#200
 	jsr	wait
@@ -139,7 +143,7 @@ jmp_scroll_again:
 	jmp	do_scroll_again
 
 do_scroll_done:
-
+	bit	KEYRESET
 	rts
 
 scroll_text:  ;0123456789012345678901234567890123456789

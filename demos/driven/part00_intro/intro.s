@@ -277,7 +277,7 @@ masks_reverse:
 	.byte $C0,$E0,$F0,$F8,$FC,$FE,$FF
 
 .include "erase.s"
-.include "../wait_keypress.s"
+;.include "../wait_keypress.s"
 
 .include "graphics/d_sprites.inc"
 

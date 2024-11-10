@@ -70,13 +70,18 @@ graphics:
 	rts
 
 floater_graphics:
-	.incbin "graphics/floater_wide_steffest.hgr.zx02"
+;	.incbin "graphics/floater_wide_steffest.hgr.zx02"
+;	.incbin "graphics/a2_atrus.hgr.zx02"
+;	.incbin "graphics/atrus_iipix.hgr.zx02"
+	.incbin "graphics/atrus_light_iipix.hgr.zx02"
 
 riven_233_graphics_aux:
-	.incbin "graphics/riven_233.aux.zx02"
+;	.incbin "graphics/riven_233.aux.zx02"
+	.incbin "graphics/atrus.aux.zx02"
 
 riven_233_graphics_bin:
-	.incbin "graphics/riven_233.bin.zx02"
+;	.incbin "graphics/riven_233.bin.zx02"
+	.incbin "graphics/atrus.bin.zx02"
 
 
-.include "../wait_keypress.s"
+;.include "../wait_keypress.s"

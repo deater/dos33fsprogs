@@ -120,7 +120,7 @@ atrus_text:
 	.byte 4,22,"I need... Wait, is this a demo?",0
 	.byte 9,23,"Sorry let me try again",0
 
-.include "../wait_keypress.s"
+;.include "../wait_keypress.s"
 
 .include "plasma.s"
 

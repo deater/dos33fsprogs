@@ -246,16 +246,11 @@ skip_next_text:
 	jmp	scroll_loop
 
 .align $100
-	.include	"../wait_keypress.s"
-;	.include	"../zx02_optim.s"
 	.include	"../hgr_clear_screen.s"
 	.include	"vertical_scroll.s"
 
 	.include	"font_4am_1x8_oneline.s"
 	.include	"fonts/font_4am_1x8_data.s"
-
-;	.include	"font_4am_1x10.s"
-;	.include	"fonts/font_4am_1x10_data.s"
 
 	.include	"../irq_wait.s"
 	.include	"../hgr_page_flip.s"
