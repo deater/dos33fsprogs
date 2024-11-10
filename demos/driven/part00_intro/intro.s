@@ -95,8 +95,8 @@ d_rotate_loop:
 	; gradually load in final logo
 	;==============================
 
-	lda	#0
-	jsr	hgr_page1_clearscreen
+;	lda	#0
+;	jsr	hgr_page1_clearscreen
 
 	; load bg image $4000
 
@@ -287,15 +287,23 @@ d_sprite_h:
 	.byte >d11_sprite,>d12_sprite,>d13_sprite
 	.byte >d14_sprite,>d15_sprite,>d16_sprite
 	.byte >d17_sprite,>d18_sprite,>d19_sprite
+	.byte >d20_sprite,>d21_sprite,>d22_sprite
+	.byte >d23_sprite
 d_sprite_l:
 	.byte <d11_sprite,<d12_sprite,<d13_sprite
 	.byte <d14_sprite,<d15_sprite,<d16_sprite
 	.byte <d17_sprite,<d18_sprite,<d19_sprite
+	.byte <d20_sprite,<d21_sprite,<d22_sprite
+	.byte <d23_sprite
 d_sprite_x:
 	.byte	10,10,10
 	.byte	 8, 8, 6
 	.byte	 6, 6, 4
+	.byte	 4, 2, 2
+	.byte 	 2
 d_sprite_y:
 	.byte	55,55,55
 	.byte	55,56,56
 	.byte	56,56,56
+	.byte	56,55,55
+	.byte	54
