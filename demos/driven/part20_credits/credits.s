@@ -312,67 +312,84 @@ keeper2_pattern:
 
 final_credits:
 	.byte 20," ",0
-	.byte 16,"DRI\/EN",0
+	.byte 16,"DRI\/EN",0					; 7 (16.5)
 	.byte 20," ",0
-	.byte 15,"by Desire",0
+	.byte 15,"by Desire",0					; 9 (15.5)
 	.byte 20," ",0
-	.byte 7,"This demo was first shown",0
-	.byte 10,"at Demosplash 2024",0
-	.byte 8,"held in Pittsburgh, PA,",0
-	.byte 12,"in November 2024.",0
+	.byte  7,"This demo was first shown",0			; 25 (7.5)
+	.byte 11,"at Demosplash 2024",0				; 18 (11)
+	.byte  8,"held in Pittsburgh, PA,",0			; 23 (8.5)
+	.byte 11,"in November 2024.",0				; 17 (11.5)
 	.byte 20," ",0
-	.byte 13,"Apologies to:",0
-	.byte 18,"Cyan",0
 
-	.byte 8,"No Wharks were harmed in",0
-	.byte 8,"the making of this demo.",0
+; Cyan disclaimer
 
-; TODO: Cyan disclaimer
+	.byte 11,"*** DISCLAIMER ***",0				; 18 (11)
+	.byte  2,"This demo contains trademarks and/or",0	; 36 (2)
+	.byte  7,"copyrighted works of CYAN.",0			; 26 (7)
+	.byte  2,"This product is not official and is",0	; 35 (2.5)
+	.byte  9,"not endorsed by CYAN.",0			; 21 (9.5)
 
-;	.byte 14,"Future Crew",0
+; Credits
+
+; Code
 	.byte 20," ",0
-	.byte 15,"Code used:",0
-; Deater
-	.byte  9,"French Touch -- Plasma",0
-	.byte  7,"DMSC -- ZX02 decompression",0
-	.byte  7,"qkumba -- fast disk loader",0
-	.byte 15,"4am - font",0
-	.byte  2,"K. Kennaway -- iipix image converter",0
-;	.byte  3,"O. Schmidt -- sampled audio player",0
-;	.byte  6,"Hellmood -- circles/sierzoom",0
 	.byte 20," ",0
+	.byte 15,"Code:",0
+	.byte  9,"French Touch -- Plasma",0			; 22 (9)
+	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
+	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
+	.byte  8,"4am -- font, transitions",0			; 24 (8)
+	.byte  2,"K. Kennaway -- iipix image converter",0	; 36 (2)
+	.byte  8,"Deater - everything else",0			; 24 (8)
 
 ; Graphics
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte  9,"Custom Graphics/Logo:",0		; 21 (9.5)
+	.byte 16,"Steffest",0				; 8 (16)
+	.byte 20," ",0
+
 
 ; Music
-
-;	.byte 11,"Special Thanks to:",0
-;	.byte 5,"mA2E for providing intro music",0
-;	.byte 7,"at the extreme-last minute",0
-;	.byte 20," ",0
-
-	.byte 15,"Greets to:",0
-	.byte 14,"French Touch",0
-	.byte 18,"4am",0
-	.byte 17,"qkumba",0
-	.byte 17,"Grouik",0
-	.byte 14,"Fenarinarsa",0
-	.byte 14,"Ninjaforce",0
-	.byte 15,"T. Greene",0
-	.byte 15,"K. Savetz",0
-	.byte 15,"Boo Atari",0
-	.byte 15,"textfiles",0
-	.byte 13,"Stealth Susie",0
-	.byte 17,"wiz21b",0
-	.byte 17,"Trixter",0
-	.byte 18,"LGR",0
-	.byte 16,"Hellmood",0
-	.byte 17,"Foone",0
 	.byte 20," ",0
-	.byte 14,"Talbot 0101",0
-	.byte 12,"Utopia BBS (410)",0
-	.byte 10,"Weave's World Talker",0
-	.byte 8,"Tell 'em Deater sent ya",0
+	.byte 20," ",0
+	.byte 17,"Music:",0				; 6 (17)
+	.byte 18,"mA2E",0				; 4 (18)
+
+; Greetz
+
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 15,"Greets to:",0				; 10 (15)
+	.byte 14,"French Touch",0			; 12 (14)
+	.byte 18,"4am",0				; 3 (18.5)
+	.byte 17,"qkumba",0				; 6 (17)
+	.byte 17,"Grouik",0				; 6 (17)
+	.byte 14,"Fenarinarsa",0			; 11 (14.5)
+	.byte 15,"Ninjaforce",0				; 10 (15)
+	.byte 15,"T. Greene",0				; 9 (15.5)
+	.byte 15,"K. Savetz",0				; 9 (15.5)
+	.byte 15,"Boo Atari",0				; 9 (15.5)
+	.byte 15,"textfiles",0				; 9 (15.5)
+	.byte 13,"Stealth Susie",0			; 13 (13.5)
+	.byte 17,"wiz21b",0				; 6 (17)
+	.byte 17,"Trixter",0				; 7 (17.5)
+	.byte 18,"LGR",0				; 3 (18.5)
+	.byte 16,"Hellmood",0				; 8 (16)
+	.byte 17,"Foone",0				; 5 (17.5)
+	.byte 20," ",0
+	.byte 14,"Talbot 0101",0			; 11 (14.5)
+	.byte 12,"Utopia BBS (410)",0			; 16 (12)
+	.byte 10,"Weave's World Talker",0		; 20 (10)
+	.byte 8,"Tell 'em Deater sent ya",0		; 23 (8.5)
+	.byte 20," ",0
+	.byte 20," ",0
+
+; animals
+	.byte 8,"No Wharks were harmed in",0		; 24 (8)
+	.byte 8,"the making of this demo.",0		; 24 (8)
+
 	; end
 	.byte 20," ",0
 	.byte 20," ",0
@@ -385,7 +402,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte 12,"Apple II Forever",0
+	.byte 12,"Apple II Forever",0			; 16 (12)
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
