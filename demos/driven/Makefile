@@ -172,7 +172,9 @@ clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd part00_intro && make clean
+	cd part01_dni && make clean
 	cd part05_atrus && make clean
+	cd part07_maglev && make clean
 	cd part10_graphics && make clean
 	cd part20_credits && make clean
 

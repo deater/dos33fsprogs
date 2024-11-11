@@ -28,19 +28,6 @@ restart:
 	sta	DRAW_PAGE
 
 
-	;========================
-	; fake BIOS
-	;========================
-
-;	lda	#13			; load FAKE_BIOS
-;	sta	WHICH_LOAD
-
-;	jsr	load_file
-
-	; run fake boot / fake bios
-
-;	jsr	$6000
-
 	;==================================
 	; load music into the language card
 	;       into $D000 set 1
@@ -50,7 +37,7 @@ restart:
 	bit	$C083
 	bit	$C083
 
-	lda	#1			; load MUSIC from disk
+	lda	#PART_MUSIC		; load MUSIC from disk
 	sta	WHICH_LOAD
 
 	jsr	load_file
@@ -100,6 +87,7 @@ skip_all_checks:
 	; Pre-Load some programs into AUX MEM
 	;====================================
 	;====================================
+	; TODO: do d'ni countdown
 	; 4 - 9
 
 	sta	$C008		; use MAIN zero-page/stack/language card
@@ -142,25 +130,48 @@ load_program_loop:
 .endif
 	;=======================
 	;=======================
-	; Load intro
+	; Run intro
 	;=======================
 	;=======================
 
 	; load from disk
 
-	lda     #2		; INTRO
+	lda     #PART_INTRO		; INTRO
 	sta     WHICH_LOAD
 	jsr     load_file
 
-	;=======================
-	;=======================
 	; Run intro
-	;=======================
-	;=======================
 
 	cli			; start music
 
 	jsr	$8000
+
+
+	;=======================
+	;=======================
+	; Run Maglev
+	;=======================
+	;=======================
+
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load maglev
+
+	lda	#PART_MAGLEV		; Maglev
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	; run maglev
+
+	jsr	$4000
+
 
 	;=======================
 	;=======================
@@ -172,9 +183,9 @@ load_program_loop:
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
 
-	; load dni
+	; load atrus
 
-	lda	#5			; Atrus
+	lda	#PART_ATRUS		; Atrus
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -200,7 +211,7 @@ load_program_loop:
 
 	; load dni
 
-	lda	#6			; GRAPHICS
+	lda	#PART_GRAPHICS		; GRAPHICS
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -225,7 +236,7 @@ load_program_loop:
 
 	; load credits
 
-	lda	#3			; CREDITS
+	lda	#PART_CREDITS			; CREDITS
 	sta	WHICH_LOAD
 	jsr	load_file
 
