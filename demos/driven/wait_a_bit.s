@@ -1,15 +1,33 @@
-	;====================================
-	; wait for keypress or a few seconds
-	;====================================
-	; A is length to wait
+	;======================================
+	; delay some time (multiple of 50ms)
+	;======================================
+	; to wait 50ms its approximately 139?
+
+wait_50ms:
+	ldx	#1
+wait_50xms:
+
+wait_50_loop:
+	lda	#139
+	jsr	wait
+	dex
+	bne	wait_50_loop
+
+	rts
+
+
+	;=======================================================
+	; wait for multiple of 50ms, but exit early if keypress
+	;=======================================================
+	; X * 50ms is wait
+	; A/X trashed
 
 wait_a_bit:
 
 	bit	KEYRESET
-	tax
 
 keyloop:
-	lda	#200			; delay a bit
+	lda	#139			; delay a bit
 	jsr	wait
 
 	lda	KEYPRESS
@@ -17,21 +35,10 @@ keyloop:
 
 	dex
 	bne	keyloop
-;	beq	no_escape
 
 done_keyloop:
-
-;	and	#$7f
-;	cmp	#27
-;	bne	no_escape
-
-;	inc	ESC_PRESSED
-;no_escape:
-
 	bit	KEYRESET
 
 	rts
 
-
-
-
+.assert (>wait_end - >wait) < 1 , error, "wait crosses page boundary"

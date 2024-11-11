@@ -163,46 +163,39 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 1,1,1,1		; DNI, ATRUS, GRAPHICS
+	.byte 1,1,1,1		; ???, MUSIC, INTRO, CREDITS
+	.byte 1,1,1,1		; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 1,1,1,1		;
-	.byte 1,1		;
 
 load_address_array:
-	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $40,$80,$60,$60	; DNI, ATRUS, GRAPHICS
+	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
+	.byte $40,$80,$60,$40	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte $60,$60,$60,$60	;
-	.byte $60,$80		;
 
 start_address:
-	.byte $D0,$D0,$80,$80	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $40,$80,$60,$80	; DNI, ATRUS, GRAPHICS
+	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
+	.byte $40,$80,$60,$40	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte $80,$80,$80,$60	;
-	.byte $80,$80		;
 
 aux_dest:
-	.byte $D0,$D0,$A0,$A0	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte $70,$50,$40,$30	; DNI, ATRUS, GRAPHICS
+	.byte $D0,$D0,$A0,$A0	; ???, MUSIC, INTRO, CREDITS
+	.byte $70,$50,$40,$30	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte $20,$10,$80,$20	;
-	.byte $10,$A0		;
 
 track_array:
-	.byte 2,4,9,13		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 17,21,25,24	; DNI, ATRUS, GRAPHICS
+	.byte 2,2,5,8		; ???, MUSIC, INTRO, CREDITS
+	.byte 11,12,15,19	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 25,26,27,28	;
-	.byte 34,9		;
 
 sector_array:
-	.byte 0,0,0,0		; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 0,0,0,0		; DNI, ATRUS, GRAPHICS
+	.byte 0,0,0,0		; ???, MUSIC, INTRO, CREDITS
+	.byte 0,0,0,0		; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 0,0,0,0		;
-	.byte 0,0		;
 
 length_array:
-	.byte 32,48,48,64	; MUSIC_INTRO, MUSIC_MAIN, INTRO, CREDITS
-	.byte 32,63,64,16	; DNI, ATRUS, GRAPHICS
+	.byte 48,48,48,48	; ???, MUSIC, INTRO, CREDITS
+	.byte 16,48,64,127	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 16,16,16,96	;
-	.byte 16,16		;
 
 PT3_ENABLE_APPLE_IIC = 1
 

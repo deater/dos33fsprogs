@@ -14,6 +14,7 @@ driven.dsk:	QBOOT QLOAD \
 	./part00_intro/INTRO \
 	./part01_dni/DNI \
 	./part05_atrus/ATRUS \
+	./part07_maglev/MOVIE_MAGLEV_RIDE \
 	./part10_graphics/GRAPHICS \
 	./part20_credits/CREDITS
 	cp $(EMPTY_DISK) driven.dsk
@@ -21,12 +22,13 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 0 2 QBOOT		1 1
 	$(DOS33_RAW) driven.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) driven.dsk 1 0 QLOAD		0 0
-	$(DOS33_RAW) driven.dsk 4 0 MUSIC		0 0
-	$(DOS33_RAW) driven.dsk 9 0 ./part00_intro/INTRO 0 0
-	$(DOS33_RAW) driven.dsk 13 0 ./part20_credits/CREDITS 0 0
-	$(DOS33_RAW) driven.dsk 17 0 ./part01_dni/DNI 0 0
-	$(DOS33_RAW) driven.dsk 21 0 ./part05_atrus/ATRUS 0 0
-	$(DOS33_RAW) driven.dsk 25 0 ./part10_graphics/GRAPHICS 0 0
+	$(DOS33_RAW) driven.dsk 2 0 MUSIC		0 0
+	$(DOS33_RAW) driven.dsk 5 0 ./part00_intro/INTRO 0 0
+	$(DOS33_RAW) driven.dsk 8 0 ./part20_credits/CREDITS 0 0
+	$(DOS33_RAW) driven.dsk 11 0 ./part01_dni/DNI 0 0
+	$(DOS33_RAW) driven.dsk 12 0 ./part05_atrus/ATRUS 0 0
+	$(DOS33_RAW) driven.dsk 15 0 ./part10_graphics/GRAPHICS 0 0
+	$(DOS33_RAW) driven.dsk 19 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
 
 ####
 
@@ -38,6 +40,9 @@ part01_dni/DNI:
 
 part05_atrus/ATRUS:	
 	cd part05_atrus && make
+
+part07_maglev/MOVIE_MAGLEV_RIDE:	
+	cd part07_maglev && make
 
 part10_graphics/GRAPHICS:	
 	cd part10_graphics && make
@@ -95,6 +100,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 
 ####
 

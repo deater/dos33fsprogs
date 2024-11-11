@@ -22,13 +22,15 @@ QLOAD: can be up to 4k, have room
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot / SAVES
-T         1 = QLOAD      1244 bytes     3T      (?)  3k free
-T         4 = MUSIC      4803 bytes     5T      (?)  0k free
-T         9 = INTRO         ? bytes     4T      (16384) 3k free
-T        13 = CREDITS       ? bytes     4T      (16384)  1k free
-T	 17 = DNI	    ? bytes     4T      (16384)
-T	 21 = ATRUS	    ? bytes     4T      (16384)
-T	 25 = GRAPHICS	    ? bytes     4T
+T         1 = QLOAD      1244 bytes     1T      ( 4096)  3k free
+T         2 = MUSIC      8645 bytes     3T      (12288)  3k free
+T         5 = INTRO      9779 bytes     3T      (12288)  3k free
+T         8 = CREDITS    6030 bytes     3T      (12288)  6k free
+T	 11 = DNI	 2133 bytes     1T      (4096)   2k free
+T	 12 = ATRUS	 9506 bytes     3T      (12288)  3k free
+T	 15 = GRAPHICS	14570 bytes     4T	(16384)  2k free
+T	 19 = MAGLEV	32000 bytes	8T	(32768)	 0k free
+DISK HAS 27..34 free = 32k free
 
 note: below is not accurate
 
