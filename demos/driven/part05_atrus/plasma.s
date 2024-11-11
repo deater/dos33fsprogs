@@ -2,11 +2,6 @@
 
 ; based on code by French Touch
 
-mod7_table      = $1c00
-div7_table      = $1d00
-hposn_low       = $1e00
-hposn_high      = $1f00
-
 hposn_high_div8=$6200
 hposn_low_div8 =$6300
 

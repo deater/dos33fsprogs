@@ -6,8 +6,13 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../common_defines.inc"
 
+; FIXME: make sure free
 lores_colors_fine=$8000
+; was in page0, we don't really have room
+Table1  = $74A0 ; 40 bytes
+Table2  = $74D0 ; 40 bytes
 
 
 	;======================================

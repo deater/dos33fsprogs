@@ -2,7 +2,7 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 .include "../music.inc"
-
+.include "../common_defines.inc"
 
 ; OK: was going to have hi-res top, scroll lo-res bottom
 ;	vapor lock (but using IIe)

@@ -6,12 +6,8 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../common_defines.inc"
 .include "../music.inc"
-
-mod7_table	= $1c00
-div7_table	= $1d00
-hposn_low	= $1e00
-hposn_high	= $1f00
 
 desire_start:
 	;=====================
@@ -281,7 +277,7 @@ masks_reverse:
 
 .include "graphics/d_sprites.inc"
 
-.include "../hgr_sprite.s"
+;.include "../hgr_sprite.s"
 
 d_sprite_h:
 	.byte >d11_sprite,>d12_sprite,>d13_sprite

@@ -3,13 +3,19 @@ Disk Usage:
 QLOAD: can be up to 4k, have room
 	maybe put hires lookup tables at $c00?
 
+	; load at start
 	INTRO = 10k, unlikely to get much bigger
 	MUSIC   = 9k
 	DNI	= 4k (actually less, merge in with music?)
+
+	; start out in AUX?  we have $2000-$C000 easily there
+	;	though we need $2000-$4000 for double-hires
+
+	74k?
 	ATRUS	= 10k or so
-	CREDITS = 8k or so
-	GRAPHICS = 16k
 	MAGLEV	= 32k
+	GRAPHICS = 16k
+	CREDITS = 8k or so
 
 
 

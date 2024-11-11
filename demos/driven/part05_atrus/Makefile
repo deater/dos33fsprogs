@@ -11,7 +11,7 @@ ATRUS:	atrus.o
 
 atrus.o:	atrus.s \
 	plasma.s do_plasma.s init_plasma.s \
-	../zp.inc ../hardware.inc \
+	../zp.inc ../hardware.inc ../common_defines.inc ../qload.inc \
 	graphics/atrus03_iipix.hgr.zx02 \
 	graphics/atrus10_iipix.hgr.zx02 \
 	graphics/atrus11_iipix.hgr.zx02 \

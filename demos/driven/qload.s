@@ -4,7 +4,7 @@
 .include "hardware.inc"
 .include "music.inc"
 
-;.include "common_defines.inc"
+.include "common_defines.inc"
 .include "qboot.inc"
 
 qload_start:
@@ -220,12 +220,8 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 
-mod7_table      = $1c00
-div7_table      = $1d00
-hposn_low       = $1e00
-hposn_high      = $1f00
-
         .include        "hgr_table.s"
+	.include	"hgr_sprite.s"
 
 qload_end:
 

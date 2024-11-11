@@ -2,7 +2,7 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 .include "../music.inc"
-
+.include "../common_defines.inc"
 
 
 	;=============================

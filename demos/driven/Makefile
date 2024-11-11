@@ -60,13 +60,13 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
-qload.o:	zp.inc hardware.inc qload.s \
+qload.o:	zp.inc hardware.inc common_defines.inc qload.s \
 	music.inc \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
-	hgr_table.s \
+	hgr_table.s hgr_sprite.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s
@@ -94,6 +94,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 
 ####
 

@@ -10,11 +10,8 @@
 .include "../hardware.inc"
 .include "../qload.inc"
 .include "../music.inc"
+.include "../common_defines.inc"
 
-mod7_table	= $1c00
-div7_table	= $1d00
-hposn_low	= $1e00
-hposn_high	= $1f00
 
 intro_start:
 	;=====================
@@ -257,7 +254,7 @@ skip_next_text:
 
 	.include	"../vblank.s"
 
-	.include	"../hgr_sprite.s"
+;	.include	"../hgr_sprite.s"
 
 	.include	"graphics/guitar_sprites.inc"
 
