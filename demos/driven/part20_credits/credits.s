@@ -20,11 +20,6 @@ intro_start:
 
 	bit	KEYRESET		; clear just in case
 
-	;===================
-	; Load graphics
-	;===================
-load_loop:
-
 	bit	SET_GR
 	bit	HIRES
 	bit	FULLGR
@@ -48,7 +43,10 @@ load_loop:
 	; then it scrolls things up
 
 	ldx	#0
-	stx	FRAME
+	stx	SCROLL_LINE
+	sta	SCROLL_DONE
+	sta	FRAMEL
+	sta	FRAMEH
 
 	; print message
 
@@ -59,6 +57,16 @@ load_loop:
 	sta	BACKUP_OUTH
 
 scroll_loop:
+
+	; if done scrolling, keepy playing music
+
+	lda	SCROLL_DONE
+	bne	draw_sprites
+
+
+	;================================
+	; scroll up current page
+
 
 	jsr	hgr_vertical_scroll
 
@@ -92,6 +100,35 @@ cl_smc:
 
 	;=============================
 	;=============================
+	; draw stars
+	;=============================
+	;=============================
+
+	jsr	random8
+	and	#$1f		; 1..32
+	tax
+	lda	star_x,X
+	bmi	no_stars
+
+	sta	CURSOR_X
+
+	lda	#158
+	sta	CURSOR_Y
+
+	jsr	random8
+	and	#7
+	tax
+
+	lda	star_sprites_l,X
+	sta	INL
+	lda	star_sprites_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+no_stars:
+
+	;=============================
+	;=============================
 	; draw text
 	;=============================
 	;=============================
@@ -104,7 +141,7 @@ cl_smc:
 	sta	CV
 	lda	BACKUP_OUTL	; get saved text location
 	ldy	BACKUP_OUTH	; and load direct in A/Y
-	ldx	FRAME		; load which line of text to draw
+	ldx	SCROLL_LINE		; load which line of text to draw
 	jsr	draw_condensed_1x8
 
 	; X points to last char printed?
@@ -114,7 +151,7 @@ cl_smc:
 	;=========================================
 	; flip over if frame==9
 
-	lda	FRAME
+	lda	SCROLL_LINE
 	cmp	#9
 	bcc	skip_next_text
 
@@ -127,7 +164,7 @@ cl_smc:
 	adc	OUTH
 	sta	BACKUP_OUTH
 	lda	#$ff
-	sta	FRAME
+	sta	SCROLL_LINE
 skip_next_text:
 
 	;===========================
@@ -138,7 +175,7 @@ skip_next_text:
 	sta	CV
 	lda	BACKUP_OUTL	; get saved text location
 	ldy	BACKUP_OUTH	; and load direct in A/Y
-	ldx	FRAME
+	ldx	SCROLL_LINE
 	inx
 	jsr	draw_condensed_1x8
 
@@ -146,19 +183,13 @@ skip_next_text:
 	; increment the frame
 	;=================================
 
-	inc	FRAME			; next frame
-
-;	lda	FRAME			; wrap frame after 10 lines
-;	cmp	#10
-;	bne	no_update_message
-
-;	lda	#0
-;	sta	FRAME
+	inc	SCROLL_LINE		; increment starting text subline
+	inc	FRAME
 
 	;=============================
 	; draw sprites
 	;=============================
-
+draw_sprites:
 	lda	#18
 	sta	CURSOR_X
 
@@ -229,18 +260,32 @@ skip_next_text:
 
 
 
-
-
-
 	;=============================
 	; do the scroll
 	;=============================
 
 	jsr	wait_vblank
 
-	jsr	hgr_page_flip
+	lda	SCROLL_DONE
+	beq	do_page_flip
+
+	; this is a hack?
+
+	bit	PAGE1
+	lda	#0
+	sta	DRAW_PAGE
+
+	lda	#200
+	jsr	wait
 
 	jmp	scroll_loop
+
+do_page_flip:
+	jsr	hgr_page_flip
+skip_page_flip:
+
+	jmp	scroll_loop
+
 
 .align $100
 	.include	"../hgr_clear_screen.s"
@@ -285,17 +330,11 @@ keeper_h:
 	.byte >keeper_l3,>keeper_l4,>keeper_l5
 	.byte >keeper_l6,>keeper_l7
 
-
-
-
-
 keeper1_pattern:
 .byte 1,1,2,2,1,1,2,2
 .byte 1,2,3,4,5,4,3,4
 .byte 5,4,3,4,5,6,7,5
 .byte 7,6,5,4,3,2,1,2
-
-
 
 keeper2_pattern:
 .byte 1+8,1+8,2+8,2+8,1+8,1+8,2+8,2+8
@@ -304,7 +343,18 @@ keeper2_pattern:
 .byte 7+8,6+8,5+8,4+8,3+8,2+8,1+8,2+8
 
 
+	.include	"graphics/other_sprites.inc"
 
+star_sprites_l:
+	.byte <star0_sprite,<star1_sprite,<star2_sprite,<star3_sprite
+	.byte <star4_sprite,<star5_sprite,<star6_sprite,<star7_sprite
+star_sprites_h:
+	.byte >star0_sprite,>star1_sprite,>star2_sprite,>star3_sprite
+	.byte >star4_sprite,>star5_sprite,>star6_sprite,>star7_sprite
+
+star_x:
+	.byte 0,2,4,6, 8,10,12,14, 16,18,20,22, 24,26,28,30
+	.byte 32,34,36,38, $FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF, $FF,$FF,$FF,$FF
 
 
 
@@ -335,7 +385,7 @@ final_credits:
 ; Code
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte 15,"Code:",0
+	.byte 17,"Code:",0					;  5 (17.5)
 	.byte  9,"French Touch -- Plasma",0			; 22 (9)
 	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
 	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)

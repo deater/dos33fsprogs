@@ -101,6 +101,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
 
 ####
 

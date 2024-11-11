@@ -19,6 +19,17 @@ QLOAD: can be up to 4k, have room
 
 
 
+Mem usage plan:
+	QLOAD at $1200..$1FFF (3.5k)
+	MUSIC+DNI = 11k or so, put in $D000-$FE00
+	INTRO = 12k or so, loaded at start
+
+	ATRUS = 12k or so	; how to fit?
+	MAGLEV= 32k
+	GRAPHCIS = 16k or so
+	
+	CREDITS = load after music stopped
+
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot / SAVES

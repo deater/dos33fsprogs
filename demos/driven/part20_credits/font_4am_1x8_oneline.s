@@ -36,9 +36,9 @@ draw_condensed_1x8_again:
 	bpl	still_good
 
 demo_demo_done:
-	; FIXME: stop music?
 
-	jmp	demo_demo_done
+	inc	SCROLL_DONE
+	rts
 
 
 still_good:
