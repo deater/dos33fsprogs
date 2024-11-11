@@ -9,7 +9,7 @@ hgr_make_tables:
 	;=====================
 	; make /7 %7 tables
 	;=====================
-
+.if 0
 hgr_make_7_tables:
 
 	ldy	#0
@@ -43,6 +43,7 @@ mod7_not7:
 	iny
 	bne	mod7_loop
 
+.endif
 
 	; Hposn table
 
