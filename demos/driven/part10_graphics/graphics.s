@@ -45,7 +45,6 @@ graphics:
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
 
 	;=================================
 	; spires
@@ -55,8 +54,13 @@ graphics:
 	sta	zx_src_l+1
 	lda	#>spires_graphics
 	sta	zx_src_h+1
-	lda	#$20
+	lda	#$40
 	jsr	zx02_full_decomp
+
+
+	jsr	wait_until_keypress
+
+	jsr	do_wipe_center
 
 	jsr	wait_until_keypress
 
@@ -225,3 +229,6 @@ atrus_message2:
 .byte 0,21,"written.",0
 .byte 0,22,"Perhaps that's because we ran out of",0
 .byte 0,23,"time before the submission deadline.",0
+
+.include "wipes/fx.hgr.center.by.pixel.s"
+

@@ -102,25 +102,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 
-####
-
-qload2.inc:	generate_common QLOAD2
-	./generate_common -a 0x1200 -s load_file qload2.lst > qload2.inc
-	./generate_common -a 0x1200 -s detect_appleii_model qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s clear_all qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s clear_all_color qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s set_normal qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s set_inverse qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s wait qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s wait_a_bit qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s move_and_print qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s detect_language_card qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s mockingboard_detect qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s clear_bottom qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s clear_bottoms qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s clear_screens qload2.lst >> qload2.inc
-	./generate_common -a 0x1200 -s hgr_make_tables qload2.lst >> qload2.inc
 
 ####
 

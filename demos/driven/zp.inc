@@ -33,6 +33,9 @@ MASK	= $2E
 COLOR	= $30
 ;INVFLG	= $32
 
+WIPEL	= $3C	; used by input for wipes?
+WIPEH	= $3D
+
 WHICH_TRACK	= $54
 
 ;==========================
@@ -93,12 +96,17 @@ DRAW_PAGE	= $8E
 TOTAL_RAM       = $8F
 
 ;=============================
-; $90-$CF currently free
+; $90-$BF currently free
 ;=============================
 
 ; for plasma?
 ;Table1  = $A0   ; 40 bytes ($28) A0-C7
 ;Table2  = $C8   ; 40 bytes ($28) C8-EF
+
+;===========================
+; $C0-$CF = wipe
+;===========================
+; use $C0-$CF for wipes
 
 ;=============================
 ; $D0-$D9 = hgr move
@@ -155,20 +163,6 @@ SIN_COUNT	= $F1
 NUMBER_HIGH	= $F2
 NUMBER_LOW	= $F3
 DRAW_NUMBER	= $FA
-
-;OUT1		= $F0
-;OUT1H		= $F1
-;OUT2		= $F2
-;OUT2H		= $F3
-;COMPT1		= $F4
-;COMPT2		= $F5
-;PARAM1		= $F6
-;PARAM2		= $F7
-;PARAM3		= $F8
-;PARAM4		= $F9
-;GRLINE		= $FA
-;GRLINEH		= $FB
-
 
 
 ; Credits

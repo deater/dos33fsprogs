@@ -15,7 +15,8 @@ graphics.o:	graphics.s \
 	graphics/atrus_light_iipix.hgr.zx02 \
 	graphics/a2_atrus.hgr.zx02 \
 	graphics/riven_233.aux.zx02 \
-	graphics/riven_233.bin.zx02
+	graphics/riven_233.bin.zx02 \
+	wipes/fx.hgr.center.by.pixel.s
 	ca65 -o graphics.o graphics.s -l graphics.lst
 
 ###

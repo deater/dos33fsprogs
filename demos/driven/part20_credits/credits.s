@@ -381,7 +381,7 @@ done_draw_objects:
 	.include	"../irq_wait.s"
 	.include	"../hgr_page_flip.s"
 
-	.include	"../vblank.s"
+;	.include	"../vblank.s"
 
 ;	.include	"../hgr_sprite.s"
 
