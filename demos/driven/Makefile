@@ -75,7 +75,7 @@ qload.o:	zp.inc hardware.inc common_defines.inc qload.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
-	irq_wait.s vblank.s
+	irq_wait.s vblank.s hgr_page_flip.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####
@@ -107,6 +107,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
 
 
 ####

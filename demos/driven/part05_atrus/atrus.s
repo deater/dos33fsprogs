@@ -41,6 +41,13 @@ atrus_opener:
 	lda	#$20
 	jsr	zx02_full_decomp
 
+	lda	#<atrus03_graphics
+	sta	zx_src_l+1
+	lda	#>atrus03_graphics
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
 	lda	#<atrus_text
 	sta	OUTL
 	lda	#>atrus_text

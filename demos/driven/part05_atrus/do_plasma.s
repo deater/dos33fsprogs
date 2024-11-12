@@ -79,7 +79,10 @@ pc_off4:
 
 display_normal:
 
-	ldx	#17			; lines 0-23	lignes 0-23	; 2
+	; rows 5..17 = 40..136 or so?
+
+bottom_smc:
+	ldx	#16			; lines 0-23	lignes 0-23	; 2
 
 display_line_loop:
 ; 0
@@ -88,6 +91,9 @@ display_line_loop:
 ; 7
 ;	ldy	#39			; col 0-39			; 2
 
+; DRIVEN: only display  10 - 28   (70 - 201)
+
+right_smc:
 	ldy	#28
 
 	lda	Table2,X		; setup base sine value for row	; 4
@@ -139,12 +145,14 @@ display_lookup_smc:
 ; 38
 
 	dey								; 2
+left_smc:
 	cpy	#10
 	bcs	display_col_loop					; 2/3
 
 	dex								; 2
+top_smc:
 	cpx	#5
-	bcs	display_line_loop					; 2/3
+	bne	display_line_loop					; 2/3
 
 ; ============================================================================
 
@@ -169,6 +177,32 @@ plasma_end_smc:
 	jmp	done_plasma
 
 wasnt_keypress:
+
+	;====================
+	; make size bigger
+
+	lda	top_smc+1
+;	cmp	#0
+	bmi	top_good
+	dec	top_smc+1
+top_good:
+	lda	bottom_smc+1
+	cmp	#23
+	beq	bottom_good
+	inc	bottom_smc+1
+bottom_good:
+
+	lda	left_smc+1
+	cmp	#1
+	beq	left_good
+	dec	left_smc+1
+left_good:
+	lda	right_smc+1
+	cmp	#38
+	beq	right_good
+	inc	right_smc+1
+right_good:
+
 
 
 ; 15?

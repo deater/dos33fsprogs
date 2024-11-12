@@ -59,6 +59,11 @@ do_scroll_loop:
 
 
 do_scroll_col_loop:
+
+	lda	DRAW_PAGE
+	bne	draw_text_page2
+
+draw_text_page1:
 	; row1
 	lda	large_font_row0,X
 	sta	$22D0,Y
@@ -108,18 +113,78 @@ do_scroll_col_loop:
 	lda	large_font_row15,X
 	sta	$3F50,Y
 
+	jmp	skip_first_col
+
+draw_text_page2:
+
+	; row1
+	lda	large_font_row0,X
+	sta	$42D0,Y
+	; row2
+	lda	large_font_row1,X
+	sta	$46D0,Y
+	; row3
+	lda	large_font_row2,X
+	sta	$4AD0,Y
+	; row4
+	lda	large_font_row3,X
+	sta	$4ED0,Y
+	; row5
+	lda	large_font_row4,X
+	sta	$52D0,Y
+	; row6
+	lda	large_font_row5,X
+	sta	$56D0,Y
+	; row7
+	lda	large_font_row6,X
+	sta	$5AD0,Y
+	; row8
+	lda	large_font_row7,X
+	sta	$5ED0,Y
+	; row9
+	lda	large_font_row8,X
+	sta	$4350,Y
+	; row10
+	lda	large_font_row9,X
+	sta	$4750,Y
+	; row11
+	lda	large_font_row10,X
+	sta	$4B50,Y
+	; row12
+	lda	large_font_row11,X
+	sta	$4F50,Y
+	; row13
+	lda	large_font_row12,X
+	sta	$5350,Y
+	; row14
+	lda	large_font_row13,X
+	sta	$5750,Y
+	; row15
+	lda	large_font_row14,X
+	sta	$5B50,Y
+	; row16
+	lda	large_font_row15,X
+	sta	$5F50,Y
+
+
 skip_first_col:
 	inx
 	iny
 
 	txa				; see if done char
 	and	#1
-	bne	do_scroll_col_loop	; if not, draw second half
+;	bne	do_scroll_col_loop	; if not, draw second half
+	beq	scroll_col_done
+	jmp	do_scroll_col_loop
+scroll_col_done:
 
 	inc	SCROLL_OFFSET		; point to next char
 
 	cpy	#40			; see if Y edge of screen
-	bcc	do_scroll_loop
+;	bcc	do_scroll_loop
+	bcs	scroll_loop_done
+	jmp	do_scroll_loop
+scroll_loop_done:
 
 	;=====================
 	; check keyboard
@@ -127,7 +192,11 @@ skip_first_col:
 	lda	KEYPRESS
 	bmi	do_scroll_done
 
-	lda	#150
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	lda	#200
 	jsr	wait
 
 	lda	#$1

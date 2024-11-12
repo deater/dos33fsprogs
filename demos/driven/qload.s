@@ -218,6 +218,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"random8.s"
 	.include	"vblank.s"
 	.include	"irq_wait.s"
+	.include	"hgr_page_flip.s"
 
 qload_end:
 
