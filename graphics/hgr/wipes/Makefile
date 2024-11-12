@@ -13,7 +13,8 @@ wipes.dsk:	HELLO \
 	diamond/WIPE_DIAMOND \
 	diamond_stripes/WIPE_DIAMOND_STRIPE \
 	crystal/WIPE_CRYSTAL \
-	fizzle/WIPE_FIZZLE
+	fizzle/WIPE_FIZZLE \
+	lr/WIPE_LR
 	cp $(EMPTY_DISK)/empty.dsk wipes.dsk
 	$(DOS33) -y wipes.dsk SAVE A HELLO
 	$(DOS33) -y wipes.dsk BSAVE -a 0x5700 bubbles/WIPE_BUBBLES
@@ -21,6 +22,7 @@ wipes.dsk:	HELLO \
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 diamond_stripes/WIPE_DIAMOND_STRIPE
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 crystal/WIPE_CRYSTAL
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 fizzle/WIPE_FIZZLE
+	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 lr/WIPE_LR
 
 ###
 
@@ -44,6 +46,9 @@ diamond_stripes/WIPE_DIAMOND_STRIPE:
 fizzle/WIPE_FIZZLE:	
 	cd fizzle && make
 
+lr/WIPE_LR:	
+	cd lr && make
+
 ###
 
 clean:	
@@ -53,3 +58,4 @@ clean:
 	cd diamond_stripes && make clean
 	cd crystal && make clean
 	cd fizzle && make clean
+	cd lr && make clean
