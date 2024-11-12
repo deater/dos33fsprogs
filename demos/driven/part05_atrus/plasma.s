@@ -143,7 +143,7 @@ change_mono:
 .include "do_plasma.s"
 .include "../hgr_clear_screen.s"
 .include "scroll_off.s"
-.include "../irq_wait.s"
+;.include "../irq_wait.s"
 
 ;.include "hgr_table.s"
 

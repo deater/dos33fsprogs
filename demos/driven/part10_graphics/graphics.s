@@ -57,12 +57,19 @@ graphics:
 	lda	#$40
 	jsr	zx02_full_decomp
 
+	; wait a bit
 
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
 
 	jsr	do_wipe_center
 
-	jsr	wait_until_keypress
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
+
+;	jsr	wait_until_keypress
 
 
 	;=================================
@@ -94,7 +101,12 @@ graphics:
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
+
+;	jsr	wait_until_keypress
 
 	; disable 80column mode
 	sta	SETAN3
@@ -113,7 +125,12 @@ graphics:
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
+
+;	jsr	wait_until_keypress
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -129,19 +146,27 @@ graphics:
 
 	; The path home...
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	; linking book
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	; cleft
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	; meet...
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 
 	bit	FULLGR
@@ -159,7 +184,9 @@ graphics:
 
 	jsr	do_wipe_fizzle
 
-	jsr	wait_until_keypress
+	lda	#2
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -176,12 +203,16 @@ graphics:
 	; Perhaps1
 	jsr	move_and_print
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	; Perhaps2
 	jsr	move_and_print
 	jsr	move_and_print
-	jsr	wait_until_keypress
+	lda	#1
+	jsr	wait_seconds
+;	jsr	wait_until_keypress
 
 	bit	FULLGR
 

@@ -378,7 +378,7 @@ done_draw_objects:
 	.include	"font_4am_1x8_oneline.s"
 	.include	"fonts/font_4am_1x8_data.s"
 
-	.include	"../irq_wait.s"
+;	.include	"../irq_wait.s"
 	.include	"../hgr_page_flip.s"
 
 ;	.include	"../vblank.s"

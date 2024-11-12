@@ -257,7 +257,7 @@ logo_done:
 
 
 	.include	"../hgr_clear_screen.s"
-	.include	"../irq_wait.s"
+;	.include	"../irq_wait.s"
 
 logo_data_01:
 	.incbin "graphics/logo_frame01.hgr.zx02"
