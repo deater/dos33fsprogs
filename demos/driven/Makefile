@@ -106,6 +106,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
 
 
 ####

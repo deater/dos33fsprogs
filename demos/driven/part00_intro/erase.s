@@ -59,7 +59,10 @@ efo_y2_smc:
 erase_frame_done:
 	sty	ERASE_OFFSET
 
-	jsr	wait_until_keypress
+	lda	#5
+	jsr	wait_ticks
+;	jsr	wait_until_keypress
+
 	jmp	next_box
 
 erase_frame_totally_done:

@@ -64,6 +64,9 @@ done_check_timeout_done:
 	; busy wait A * 1 50Hz tick
 	;==========================
 wait_ticks:
+	; is there a race condition here?
+	; no, don't think so
+
         sta     IRQ_COUNTDOWN
 wait_tick_loop:
 	lda	IRQ_COUNTDOWN

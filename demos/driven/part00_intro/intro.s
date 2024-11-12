@@ -45,7 +45,7 @@ load_loop:
 
 	; wait a bit
 
-	lda	#8
+	lda	#4
 	jsr	wait_seconds
 
 	;==============================
@@ -79,7 +79,10 @@ d_rotate_loop:
 
 	jsr	hgr_draw_sprite
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+	lda	#5
+	jsr	wait_ticks
 
 	inc	X_OFFSET
 	lda	X_OFFSET
@@ -246,7 +249,7 @@ logo_transit3_inner_loop:
 
 	; wait a bit
 
-	lda	#8
+	lda	#3
 	jsr	wait_seconds
 
 
