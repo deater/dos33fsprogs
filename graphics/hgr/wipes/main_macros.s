@@ -191,9 +191,16 @@ end_pstring:
 ;}
 
 ;!macro   LBPL .target {
+.macro LBPL target
 ;         bmi   +
 ;         jmp   .target
 ;+
+	.local plus
+	bmi	plus
+	jmp	target
+plus:
+
+.endmacro
 ;}
 
 ;!macro   LBMI .target {
