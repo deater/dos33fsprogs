@@ -28,7 +28,7 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 11 0 ./part01_dni/DNI 0 0
 	$(DOS33_RAW) driven.dsk 12 0 ./part05_atrus/ATRUS 0 0
 	$(DOS33_RAW) driven.dsk 15 0 ./part10_graphics/GRAPHICS 0 0
-	$(DOS33_RAW) driven.dsk 19 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
+	$(DOS33_RAW) driven.dsk 21 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
 
 ####
 

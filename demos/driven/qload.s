@@ -184,7 +184,7 @@ aux_dest:
 
 track_array:
 	.byte 2,2,5,8		; ???, MUSIC, INTRO, CREDITS
-	.byte 11,12,15,19	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 11,12,15,21	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 25,26,27,28	;
 
 sector_array:
@@ -194,7 +194,7 @@ sector_array:
 
 length_array:
 	.byte 48,48,48,32	; ???, MUSIC, INTRO, CREDITS
-	.byte 16,48,64,127	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 16,48,95,127	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 16,16,16,96	;
 
 PT3_ENABLE_APPLE_IIC = 1

@@ -5,6 +5,21 @@
 .include "../common_defines.inc"
 
 
+
+	;=============================
+	; Some graphics scenes, with transitons
+	;	we have in theory 24k or so to work with
+	;
+	; one other? maybe survey island?
+	;	spires:  4500
+	;	233:	 6600
+	;	atrus_l: 5100
+	;	floater: 2700
+
+	;=============================
+
+
+
 	;=============================
 	; draw some graphics
 	;=============================
@@ -18,12 +33,12 @@ graphics:
         bit     PAGE1
 
 	;=================================
-	; floater
+	; spires
 	;=================================
 
-	lda	#<floater_graphics
+	lda	#<spires_graphics
 	sta	zx_src_l+1
-	lda	#>floater_graphics
+	lda	#>spires_graphics
 	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
@@ -64,24 +79,59 @@ graphics:
 
 	; disable 80column mode
 	sta	SETAN3
-	jsr	CLR80COL
-	jsr	EIGHTYCOLOFF
+	sta	CLR80COL
+	sta	EIGHTYCOLOFF
+	bit	PAGE1
+
+	;=================================
+	; atrus
+	;=================================
+
+	lda	#<atrus_graphics
+	sta	zx_src_l+1
+	lda	#>atrus_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
+
+
+	;=================================
+	; floater
+	;=================================
+
+	lda	#<floater_graphics
+	sta	zx_src_l+1
+	lda	#>floater_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
 
 	rts
 
+spires_graphics:
+	.incbin "graphics/spires_n.hgr.zx02"
+
 floater_graphics:
-;	.incbin "graphics/floater_wide_steffest.hgr.zx02"
-;	.incbin "graphics/a2_atrus.hgr.zx02"
+	.incbin "graphics/floater_wide_steffest.hgr.zx02"
+
+
+atrus_graphics:
+;	.incbin "graphics/atrus_light_iipix.hgr.zx02"
+	.incbin "graphics/a2_atrus.hgr.zx02"
 ;	.incbin "graphics/atrus_iipix.hgr.zx02"
-	.incbin "graphics/atrus_light_iipix.hgr.zx02"
+
 
 riven_233_graphics_aux:
-;	.incbin "graphics/riven_233.aux.zx02"
-	.incbin "graphics/atrus.aux.zx02"
+	.incbin "graphics/riven_233.aux.zx02"
+;	.incbin "graphics/atrus.aux.zx02"
 
 riven_233_graphics_bin:
-;	.incbin "graphics/riven_233.bin.zx02"
-	.incbin "graphics/atrus.bin.zx02"
+	.incbin "graphics/riven_233.bin.zx02"
+;	.incbin "graphics/atrus.bin.zx02"
 
 
 ;.include "../wait_keypress.s"

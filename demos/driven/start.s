@@ -233,7 +233,7 @@ load_program_loop:
 	; Load GRAPHICS
 	;=======================
 	;=======================
-.if 0
+
 	sei				; stop music interrupts
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
@@ -252,40 +252,6 @@ load_program_loop:
 	; Run GRAPHICS
 
 	jsr	$6000
-.endif
-
-	;=======================
-	;=======================
-	; Load Credits
-	;=======================
-	;=======================
-
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
-
-	; load credits
-
-	lda	#PART_CREDITS			; CREDITS
-	sta	WHICH_LOAD
-	jsr	load_file
-
-
-	; restart music
-
-	cli		; start interrupts (music)
-
-	; Run Credits
-
-
-	jsr	$8000
-
-
-
-
-
-
-
 
 
 .if 0
@@ -542,6 +508,45 @@ load_program_loop2:
 	jsr	$8000
 
 .endif
+
+
+
+	;=======================
+	;=======================
+	; Load Credits
+	;=======================
+	;=======================
+
+.if DEBUG=1
+	; skip to credits music
+	lda     #72		; FIXME: not right
+	sta	current_pattern_smc+1
+	jsr	pt3_set_pattern
+.endif
+
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load credits
+
+	lda	#PART_CREDITS			; CREDITS
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	; Run Credits
+
+
+	jsr	$8000
+
+
+	; in theory never get here...
+
 
 forever:
 	jmp	forever

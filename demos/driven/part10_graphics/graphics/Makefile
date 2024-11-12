@@ -10,7 +10,8 @@ all:	floater_wide_steffest.hgr.zx02 \
 	riven_233.aux.zx02 riven_233.bin.zx02 \
 	a2_atrus.hgr.zx02 \
 	atrus_iipix.hgr.zx02 atrus_light_iipix.hgr.zx02 \
-	atrus.aux.zx02 atrus.bin.zx02
+	atrus.aux.zx02 atrus.bin.zx02 \
+	spires_n.hgr.zx02
 
 ####
 
@@ -19,6 +20,14 @@ floater_wide_steffest.hgr.zx02:	floater_wide_steffest.hgr
 
 floater_wide_steffest.hgr:	floater_wide_steffest.png
 	$(PNG_TO_HGR) floater_wide_steffest.png > floater_wide_steffest.hgr
+
+####
+
+spires_n.hgr.zx02:	spires_n.hgr
+	$(ZX02) spires_n.hgr spires_n.hgr.zx02
+
+spires_n.hgr:	spires_n.png
+	$(PNG_TO_HGR) spires_n.png > spires_n.hgr
 
 ####
 
