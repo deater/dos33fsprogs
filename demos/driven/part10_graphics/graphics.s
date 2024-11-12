@@ -35,6 +35,19 @@ graphics:
         bit     PAGE1
 
 	;=================================
+	; minecart
+	;=================================
+
+	lda	#<minecart_graphics
+	sta	zx_src_l+1
+	lda	#>minecart_graphics
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp
+
+	jsr	wait_until_keypress
+
+	;=================================
 	; spires
 	;=================================
 
@@ -168,6 +181,12 @@ graphics:
 
 
 	rts
+
+minecart_graphics:
+;	.incbin "graphics/a2_minecart.hgr.zx02"
+;	.incbin "graphics/minecart1_iipix.hgr.zx02"
+	.incbin "graphics/minecart2_iipix.hgr.zx02"
+
 
 spires_graphics:
 	.incbin "graphics/spires_n.hgr.zx02"
