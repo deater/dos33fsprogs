@@ -44,7 +44,7 @@ wipe_diamond:
 	;=================================
 test_loop:
 
-	jsr	do_wipe_diamond
+	jsr	do_wipe_fizzle
 
 	jsr	wait_until_keypress
 	jmp	test_loop
@@ -55,7 +55,7 @@ test_loop:
 .include "../main_macros.s"
 .include "../macros.hgr.s"
 
-.include "fx.hgr.diamond.s"
+.include "fx.hgr.fizzle.s"
 
 test_graphic:
 	.incbin "../graphics/a2_dating.hgr.zx02"

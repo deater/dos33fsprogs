@@ -203,9 +203,16 @@ end_pstring:
 ;}
 
 ;!macro   LBNE .target {
+.macro	LBNE target
 ;         beq   +
 ;         jmp   .target
 ;+
+	.local lbnep
+	beq	lbnep
+	jmp	target
+lbnep:
+
+.endmacro
 ;}
 
 ;!macro   LBCS .target {
@@ -238,8 +245,10 @@ end_pstring:
 ;}
 
 ;!macro   READ_RAM1_WRITE_RAM1 {
-;         bit   $C08B
-;         bit   $C08B
+.macro READ_RAM1_WRITE_RAM1
+         bit   $C08B
+         bit   $C08B
+.endmacro
 ;}
 
 ;!macro   READ_RAM2_NO_WRITE {
@@ -262,7 +271,9 @@ end_pstring:
 ;}
 
 ;!macro   READ_ROM_NO_WRITE {
-;         sta   $C082
+.macro	READ_ROM_NO_WRITE
+         sta   $C082
+.endmacro
 ;}
 
 ;!macro   WRITE_AUX {

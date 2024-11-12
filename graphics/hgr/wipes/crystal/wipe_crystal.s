@@ -1,9 +1,9 @@
-; test 4-cade diamond wipe
+; test 4-cade crystal wipe
 
 .include "../zp.inc"
 .include "../hardware.inc"
 
-wipe_diamond:
+wipe_crystal:
 
 	bit     SET_GR
         bit     HIRES
@@ -44,7 +44,7 @@ wipe_diamond:
 	;=================================
 test_loop:
 
-	jsr	do_wipe_diamond
+	jsr	do_wipe_crystal
 
 	jsr	wait_until_keypress
 	jmp	test_loop
@@ -55,7 +55,7 @@ test_loop:
 .include "../main_macros.s"
 .include "../macros.hgr.s"
 
-.include "fx.hgr.diamond.s"
+
 
 test_graphic:
 	.incbin "../graphics/a2_dating.hgr.zx02"
@@ -64,3 +64,5 @@ test_graphic:
 
 .include "../vblank.s"
 
+; must be at end, sticks data after this
+.include "fx.hgr.crystal.s"

@@ -51,15 +51,20 @@ m1:	lda	start-1, x
 .endmacro
 
 ;!macro OVERCOPY_TO_0 .start, .end {
+.macro OVERCOPY_TO_0 start, end
 ; over-copy region to $00
 ; clobbers $FF
+
+.local oczm
+
 ; out:   X=0
 ;        Y=last byte before start (e.g. 0 if the last instruction is JMP $0000)
-;         ldx   #(.end-.start+1)
-;-        ldy   .start-2, x
-;         sty   $FE, x
-;         dex
-;         bne   -
+         ldx   #(end-start+1)
+oczm:        ldy   start-2, x
+         sty   $FE, x
+         dex
+         bne   oczm
+.endmacro
 ;}
 
 ;!macro INC_INPUT_AND_LOOP .input, .loop {
