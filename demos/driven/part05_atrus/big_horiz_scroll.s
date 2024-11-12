@@ -127,7 +127,7 @@ skip_first_col:
 	lda	KEYPRESS
 	bmi	do_scroll_done
 
-	lda	#200
+	lda	#150
 	jsr	wait
 
 	lda	#$1
@@ -137,7 +137,7 @@ skip_first_col:
 
 	inc	SCROLL_START
 	lda	SCROLL_START
-	cmp	#80
+	cmp	#193
 	beq	do_scroll_done
 jmp_scroll_again:
 	jmp	do_scroll_again
@@ -147,6 +147,15 @@ do_scroll_done:
 	rts
 
 scroll_text:  ;0123456789012345678901234567890123456789
-	.byte "@@@@@@@@@@@@@@@@@@@@\]^_THE@QUICK@BROWN@"
-	.byte "FOX@JUMPED@OVER@THE@LAZY@DOG@PACK@MY@BOX"
-	.byte "@WITH@FIVE@DOZEN@LIQOUR@JUGS"
+;	.byte "@@@@@@@@@@@@@@@@@@@@\]^_THE@QUICK@BROWN@"
+;	.byte "FOX@JUMPED@OVER@THE@LAZY@DOG@PACK@MY@BOX"
+;	.byte "@WITH@FIVE@DOZEN@LIQOUR@JUGS"
+
+
+	      ;0123456789012345678901234567890123456789
+	.byte "@@@@@@@@@@@@@@@@@@@@\]^_@I@HAVE@FOUND@A@W"
+	.byte "AY@TO@GET@YOU@HOME[@YOU@MUST@TRAVEL@TO@R"
+	.byte "IVENQ@FREE@THE@PEOPLEQ@SAVE@MY@WIFEQ@AND"
+	.byte "@TRAP@MY@DAD[@OH@ALSO@RIVEN@IS@IMPLODING"
+	.byte "[@SIGNAL@ME@WHEN@YOU@ARE@DONE[@@@@@@@@@@"
+	.byte "@@@@@@@@@@@@@@"

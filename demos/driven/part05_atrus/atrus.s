@@ -30,8 +30,9 @@ atrus_opener:
         bit     PAGE1
 
 	;=================================
-	; intro
+	; atrus greetings
 	;=================================
+	; TODO: a wipe of some sort?
 
 	lda	#<atrus03_graphics
 	sta	zx_src_l+1
@@ -44,27 +45,29 @@ atrus_opener:
 	sta	OUTL
 	lda	#>atrus_text
 	sta	OUTH
-	jsr	move_and_print
-	jsr	move_and_print
-	jsr	move_and_print
 
-	jsr	wait_until_keypress
+	jsr	move_and_print	; Thank....
+	lda	#1
+	jsr	wait_seconds
+
+	jsr	move_and_print	; I need...
+	lda	#1
+	jsr	wait_seconds
+
+	jsr	move_and_print	; try again...
+	lda	#1
+	jsr	wait_seconds
+
+;	jsr	wait_until_keypress
 
 	;=================================
 	; scroller
 	;=================================
 	bit	FULLGR
 
-	lda	#<atrus10_graphics
-	sta	zx_src_l+1
-	lda	#>atrus10_graphics
-	sta	zx_src_h+1
-	lda	#$40				; on both pages
-	jsr	zx02_full_decomp
-
 	jsr	do_scroll
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 	;=================================
@@ -75,10 +78,20 @@ atrus_opener:
 	sta	zx_src_l+1
 	lda	#>atrus10_graphics
 	sta	zx_src_h+1
+	lda	#$40				; on both pages
+	jsr	zx02_full_decomp
+
+	lda	#<atrus10_graphics
+	sta	zx_src_l+1
+	lda	#>atrus10_graphics
+	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	jsr	wait_until_keypress
+	lda	#2
+	jsr	wait_seconds
+
+;	jsr	wait_until_keypress
 
 	;=================================
 	; plasma
@@ -100,10 +113,9 @@ atrus_opener:
 	lda	#$40
 	jsr	zx02_full_decomp
 
-
 	jsr	plasma_debut
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 	rts

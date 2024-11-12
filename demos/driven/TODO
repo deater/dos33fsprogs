@@ -1,50 +1,37 @@
 global:
 	sync up sound
 	load some things to AUX memory
-	print detection at beginning
+		can have music player do some slow memory copy from 
+		language card 4k area?
 	count down as loaded
 	merge music+dni
 	
-
-
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Loading:	Demosplash logo?  Count down as loaded?
-	Print "Needs Apple IIe / 128k"
-
-Intro:
-	auto-progress animation
+Loading:
+	Demosplash logo?  Count down as loaded?
 
 Number Counting:
+	figure out what to do
+
+Intro:
+	re-time animation?
 
 ATRUS:
 + fix centering of book
-+ at end have it grow out of book
 	Talk1
 	Talk2 (TODO: have him look up?)
-	Scrolll text
+	Faster Scrolll text
+	Smoother scroll text (page flip?)
 	Plasma (have plasma expand to fill screen?)
 
 Maglev:
 
-
-Mine-cart / Circles
+Mine-cart / Circles effect:
 	Didn't have time :(
 
-Images
-	Spiky
-	233
-	????Catherine?
-	Atrus standing by the rift saying to go for it?
-	White
-	Guy in void
-	Fade out?
-
-	Perhaps the ending has not yet been written...
-
-	Seriously, how is it mid November already...
-	Or perhaps we ran out of time before the deadline...
-
+Images:
+	different wipe?
 
 CREDITS:
 + Make the music people look like Atrus and Moiety?
