@@ -18,12 +18,13 @@ pan_outer_outer_loop:
 	ldx	#183			; work backwards, 184->168
 pan_outer_loop:
 
+	; setup the high bytes in the SMC
+
 	; $2000					; 0010 -> 0100 0011 -> 0101
 	lda	hposn_high,X
 	sta	pil_smc1+2
 	sta	pil_smc2+2
 	sta	pil_smc3+2
-;	sta	pil_smc4+2
 	sta	pil_smc6+2
 	; $6000
 	clc
@@ -33,27 +34,24 @@ pan_outer_loop:
 	sta	pil_smc8+2
 	sta	pil_smc9+2
 
+	; setup the low address bytes in the SMC
+
 	; $2000
 	lda	hposn_low,X
 	sta	pil_smc1+1
 	sta	pil_smc2+1
-;	sta	pil_smc4+1
 	sta	pil_smc6+1
 	sta	pil_smc5+1
 	sta	pil_smc8+1
 
 	; $2000+1
-
+	clc
+	adc	#1
 	sta	pil_smc3+1
-	inc	pil_smc3+1
 	sta	pil_smc7+1
-	inc	pil_smc7+1
 	sta	pil_smc9+1
-	inc	pil_smc9+1
-
 
 	stx	XSAVE
-
 
 	; inner loop
 
@@ -121,7 +119,7 @@ pil_smc9:
 	;7 KJJIIHH NNMMLLK ~~~~~~~  ~~~~~~~
 	;8                 RQQPPOO  UUTTSSR
 
-	; every 8 clicks need to copy over two more columns
+	; every 7 clicks need to copy over two more columns
 
 	ldx	XSAVE
 
