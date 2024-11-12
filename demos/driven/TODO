@@ -1,20 +1,25 @@
-New:
-	scoll up, 2 pixel high stars randomly chosen?
-	myst book
-	falling guy
-	various of the riven symbols
+global:
+	sync up sound
+	load some things to AUX memory
+	print detection at beginning
+	count down as loaded
+	merge music+dni
+	
 
 
-
-
-
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Loading:	Demosplash logo?  Count down as loaded?
+	Print "Needs Apple IIe / 128k"
 
-Intro: Driven animation
+Intro:
+	auto-progress animation
 
-Atrus:
+Number Counting:
+
+ATRUS:
++ fix centering of book
++ at end have it grow out of book
 	Talk1
 	Talk2 (TODO: have him look up?)
 	Scrolll text
@@ -22,9 +27,9 @@ Atrus:
 
 Maglev:
 
-Number Counting:
 
 Mine-cart / Circles
+	Didn't have time :(
 
 Images
 	Spiky
@@ -41,20 +46,8 @@ Images
 	Or perhaps we ran out of time before the deadline...
 
 
-Credits
-	Add random stars that scroll up?
-	Add little visualizer to both sides?
-	Myst linking book float by?
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-ATRUS:
-+ fix centering of book
-+ at end have it grow out of book
-
-
 CREDITS:
-+ fix centering
-+ add all credits
 + Make the music people look like Atrus and Moiety?
++ Add little visualizer to both sides?
++ Fix alignment of animals to better center whark at end
+

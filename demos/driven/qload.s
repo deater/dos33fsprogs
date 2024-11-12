@@ -193,7 +193,7 @@ sector_array:
 	.byte 0,0,0,0		;
 
 length_array:
-	.byte 48,48,48,48	; ???, MUSIC, INTRO, CREDITS
+	.byte 48,48,48,32	; ???, MUSIC, INTRO, CREDITS
 	.byte 16,48,64,127	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 16,16,16,96	;
 
