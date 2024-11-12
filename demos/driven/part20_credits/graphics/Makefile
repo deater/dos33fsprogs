@@ -17,6 +17,24 @@ other_sprites.inc:	other_sprites.png
 	$(HGR_SPRITE) -s -l book_sprite  other_sprites.png 14 140 48 184 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l demosplash_sprite other_sprites.png 14 8 34 25 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l falling_sprite other_sprites.png 70 140 90 155 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l vmw_sprite other_sprites.png 42 8 90 20 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal0_sprite other_sprites.png 14 35 27 46 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal1_sprite other_sprites.png 14 47 27 58 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal2_sprite other_sprites.png 14 59 27 71 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal3_sprite other_sprites.png 14 72 27 84 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal4_sprite other_sprites.png 14 85 27 94 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal5_sprite other_sprites.png 14 95 27 108 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal6_sprite other_sprites.png 14 109 27 122 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal7_sprite other_sprites.png 42 35 55 45 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal8_sprite other_sprites.png 42 46 55 55 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal9_sprite other_sprites.png 42 56 55 65 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal10_sprite other_sprites.png 42 66 55 76 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal11_sprite other_sprites.png 42 77 55 86 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal12_sprite other_sprites.png 42 87 55 98 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l animal13_sprite other_sprites.png 42 99 55 109 >> other_sprites.inc
+
+
+
 
 
 

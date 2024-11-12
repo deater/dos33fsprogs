@@ -168,7 +168,11 @@ skip_next_text:
 	;=================================
 
 	inc	SCROLL_LINE		; increment starting text subline
-	inc	FRAME
+
+	inc	FRAMEL
+	bne	frame_noflo
+	inc	FRAMEH
+frame_noflo:
 
 	;=============================
 	; draw sprites
@@ -466,6 +470,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 17,"Code:",0					;  5 (17.5)
+	.byte 20," ",0
 	.byte  9,"French Touch -- Plasma",0			; 22 (9)
 	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
 	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
@@ -476,7 +481,9 @@ final_credits:
 ; Graphics
 	.byte 20," ",0
 	.byte 20," ",0
+	.byte 20," ",0
 	.byte  9,"Custom Graphics/Logo:",0		; 21 (9.5)
+	.byte 20," ",0
 	.byte 16,"Steffest",0				; 8 (16)
 	.byte 20," ",0
 
@@ -485,6 +492,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 17,"Music:",0				; 6 (17)
+	.byte 20," ",0
 	.byte 18,"mA2E",0				; 4 (18)
 
 ; Greetz
@@ -492,6 +500,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 15,"Greets to:",0				; 10 (15)
+	.byte 20," ",0
 	.byte 14,"French Touch",0			; 12 (14)
 	.byte 18,"4am",0				; 3 (18.5)
 	.byte 17,"qkumba",0				; 6 (17)
@@ -508,11 +517,13 @@ final_credits:
 	.byte 18,"LGR",0				; 3 (18.5)
 	.byte 16,"Hellmood",0				; 8 (16)
 	.byte 17,"Foone",0				; 5 (17.5)
+	.byte 14,"Chapman Bros",0			; 12 (14)
 	.byte 20," ",0
 	.byte 14,"Talbot 0101",0			; 11 (14.5)
 	.byte 12,"Utopia BBS (410)",0			; 16 (12)
 	.byte 10,"Weave's World Talker",0		; 20 (10)
 	.byte 8,"Tell 'em Deater sent ya",0		; 23 (8.5)
+	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
 
@@ -549,20 +560,126 @@ final_credits:
 
 
 sprite_triggers_l:
-	.byte $48,$49
+	.byte $48,$49		; demosplash logo
+	.byte $08,$09		; vmw logo
+	.byte $50,$51		; falling book
+	.byte $90,$91		; falling guy
+	.byte $D0,$D1		; animal10
+	.byte $E0,$E1		; animal11
+	.byte $F0,$F1		; animal12
+	.byte $00,$01		; animal13
+	.byte $10,$11		; animal9
+	.byte $20,$21		; animal1
+	.byte $30,$31		; animal2
+	.byte $40,$41		; animal3
+	.byte $50,$51		; animal4
+	.byte $60,$61		; animal5
+	.byte $70,$71		; animal6
+	.byte $80,$81		; animal7
+	.byte $90,$91		; animal8
+	.byte $A0,$A1		; animal0
+
 
 sprite_triggers_h:
-	.byte $00,$00
+	.byte $00,$00		; demosplash logo
+	.byte $01,$01		; vmw logo
+	.byte $01,$01		; falling book
+	.byte $01,$01		; falling guy
+	.byte $01,$01		; animal10
+	.byte $01,$01		; animal11
+	.byte $01,$01		; animal12
+	.byte $02,$02		; animal13
+	.byte $02,$02		; animal9
+	.byte $02,$02		; animal1
+	.byte $02,$02		; animal2
+	.byte $02,$02		; animal3
+	.byte $02,$02		; animal4
+	.byte $02,$02		; animal5
+	.byte $02,$02		; animal6
+	.byte $02,$02		; animal7
+	.byte $02,$02		; animal8
+	.byte $02,$02		; animal0
 	.byte $ff
 
 sprite_triggers_x:
-	.byte	2,2
+	.byte	2,2		; demosplash logo
+	.byte	16,16		; vmw logo
+	.byte	2,2		; falling book
+	.byte	34,34		; falling guy
+	.byte	2,2		; animal10
+	.byte	34,34		; animal11
+	.byte	2,2		; animal12
+	.byte	34,34		; animal13
+	.byte	2,2		; animal9
+	.byte	34,34		; animal1
+	.byte	2,2		; animal2
+	.byte	34,34		; animal3
+	.byte	2,2		; animal4
+	.byte	34,34		; animal5
+	.byte	2,2		; animal6
+	.byte	34,34		; animal7
+	.byte	2,2		; animal8
+	.byte	34,34		; animal0
 
 sprite_triggers_y:
-	.byte	143,142
+	.byte	143,142		; demosplash logo
+	.byte	146,145		; vmw logo
+	.byte	117,116		; falling book
+	.byte	145,144		; falling guy
+	.byte	145,144		; animal10
+	.byte	145,144		; animal11
+	.byte	145,144		; animal12
+	.byte	145,144		; animal13
+	.byte	145,144		; animal9
+	.byte	145,144		; animal1
+	.byte	145,144		; animal2
+	.byte	145,144		; animal3
+	.byte	145,144		; animal4
+	.byte	145,144		; animal5
+	.byte	145,144		; animal6
+	.byte	145,144		; animal7
+	.byte	145,144		; animal8
+	.byte	145,144		; animal0
+
 
 sprite_triggers_sprite_l:
 	.byte	<demosplash_sprite,<demosplash_sprite
+	.byte	<vmw_sprite,<vmw_sprite
+	.byte	<book_sprite,<book_sprite
+	.byte	<falling_sprite,<falling_sprite
+	.byte	<animal10_sprite,<animal10_sprite
+	.byte	<animal11_sprite,<animal11_sprite
+	.byte	<animal12_sprite,<animal12_sprite
+	.byte	<animal13_sprite,<animal13_sprite
+	.byte	<animal9_sprite,<animal9_sprite
+	.byte	<animal1_sprite,<animal1_sprite
+	.byte	<animal2_sprite,<animal2_sprite
+	.byte	<animal3_sprite,<animal3_sprite
+	.byte	<animal4_sprite,<animal4_sprite
+	.byte	<animal5_sprite,<animal5_sprite
+	.byte	<animal6_sprite,<animal6_sprite
+	.byte	<animal7_sprite,<animal7_sprite
+	.byte	<animal8_sprite,<animal8_sprite
+	.byte	<animal0_sprite,<animal0_sprite
+
 
 sprite_triggers_sprite_h:
 	.byte	>demosplash_sprite,>demosplash_sprite
+	.byte	>vmw_sprite,>vmw_sprite
+	.byte	>book_sprite,>book_sprite
+	.byte	>falling_sprite,>falling_sprite
+	.byte	>animal10_sprite,>animal10_sprite
+	.byte	>animal11_sprite,>animal11_sprite
+	.byte	>animal12_sprite,>animal12_sprite
+	.byte	>animal13_sprite,>animal13_sprite
+	.byte	>animal9_sprite,>animal9_sprite
+	.byte	>animal1_sprite,>animal1_sprite
+	.byte	>animal2_sprite,>animal2_sprite
+	.byte	>animal3_sprite,>animal3_sprite
+	.byte	>animal4_sprite,>animal4_sprite
+	.byte	>animal5_sprite,>animal5_sprite
+	.byte	>animal6_sprite,>animal6_sprite
+	.byte	>animal7_sprite,>animal7_sprite
+	.byte	>animal8_sprite,>animal8_sprite
+	.byte	>animal0_sprite,>animal0_sprite
+
