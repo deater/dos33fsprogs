@@ -174,31 +174,7 @@ load_program_loop:
 	jsr	$8000
 .endif
 
-	;=======================
-	;=======================
-	; Run Maglev
-	;=======================
-	;=======================
-.if 0
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
 
-	; load maglev
-
-	lda	#PART_MAGLEV		; Maglev
-	sta	WHICH_LOAD
-	jsr	load_file
-
-
-	; restart music
-
-	cli		; start interrupts (music)
-
-	; run maglev
-
-	jsr	$4000
-.endif
 
 .if 0
 	;=======================
@@ -227,6 +203,34 @@ load_program_loop:
 
 	jsr	$8000
 .endif
+
+
+	;=======================
+	;=======================
+	; Run Maglev
+	;=======================
+	;=======================
+.if 1
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
+
+	; load maglev
+
+	lda	#PART_MAGLEV		; Maglev
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
+	; restart music
+
+	cli		; start interrupts (music)
+
+	; run maglev
+
+	jsr	$4000
+.endif
+
 
 	;=======================
 	;=======================
