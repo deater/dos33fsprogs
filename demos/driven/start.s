@@ -17,16 +17,41 @@ driven_start:
 
 	jsr	hardware_detect
 
+	lda	APPLEII_MODEL
+	sta	message_type_offset
+
 	jsr	hgr_make_tables
 
+	; init vars
 
-	;===================
-	; restart?
-	;===================
-restart:
 	lda	#0
 	sta	DRAW_PAGE
 
+	;=====================
+	; clear text screen
+
+	lda	#$A0
+	jsr	clear_top_a
+	jsr	clear_bottom
+
+	; print start message
+
+	jsr	set_normal
+
+	lda	#<start_message
+	sta	OUTL
+	lda	#>start_message
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	lda	APPLEII_MODEL
+	cmp	#'e'
+	beq	good_to_go
+
+	jsr	wait_until_keypress
+
+good_to_go:
 
 	;==================================
 	; load music into the language card
@@ -128,6 +153,8 @@ load_program_loop:
 	bne	load_program_loop
 
 .endif
+
+.if 0
 	;=======================
 	;=======================
 	; Run intro
@@ -145,14 +172,14 @@ load_program_loop:
 	cli			; start music
 
 	jsr	$8000
-
+.endif
 
 	;=======================
 	;=======================
 	; Run Maglev
 	;=======================
 	;=======================
-
+.if 0
 	sei				; stop music interrupts
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
@@ -171,8 +198,9 @@ load_program_loop:
 	; run maglev
 
 	jsr	$4000
+.endif
 
-
+.if 0
 	;=======================
 	;=======================
 	; Run Atrus
@@ -198,13 +226,14 @@ load_program_loop:
 	; run atrus
 
 	jsr	$8000
+.endif
 
 	;=======================
 	;=======================
 	; Load GRAPHICS
 	;=======================
 	;=======================
-
+.if 0
 	sei				; stop music interrupts
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
@@ -223,6 +252,7 @@ load_program_loop:
 	; Run GRAPHICS
 
 	jsr	$6000
+.endif
 
 	;=======================
 	;=======================
@@ -249,6 +279,15 @@ load_program_loop:
 
 
 	jsr	$8000
+
+
+
+
+
+
+
+
+
 .if 0
 	;==========================
 	;==========================
@@ -513,3 +552,12 @@ forever:
 	.include "gs_interrupt.s"
 	.include "pt3_lib_mockingboard_patch.s"
 	.include "hardware_detect.s"
+
+
+start_message:
+	.byte 0,0,"LOADING DRIVEN DEMO",0
+	.byte 0,1,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
+	.byte 0,3,"SYSTEM DETECTED: APPLE II"
+message_type_offset:
+	.byte "   ",0
+	.byte $FF
