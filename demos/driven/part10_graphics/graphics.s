@@ -154,8 +154,10 @@ graphics:
 	sta	zx_src_l+1
 	lda	#>floater_graphics
 	sta	zx_src_h+1
-	lda	#$20
+	lda	#$40
 	jsr	zx02_full_decomp
+
+	jsr	do_wipe_fizzle
 
 	jsr	wait_until_keypress
 
@@ -231,4 +233,5 @@ atrus_message2:
 .byte 0,23,"time before the submission deadline.",0
 
 .include "wipes/fx.hgr.center.by.pixel.s"
+.include "wipes/fx.hgr.fizzle.s"
 
