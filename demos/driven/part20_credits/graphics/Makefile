@@ -6,14 +6,14 @@ all:	keeper1_sprites.inc \
 	other_sprites.inc
 
 other_sprites.inc:	other_sprites.png
-	$(HGR_SPRITE) -s -l star0_sprite other_sprites.png  0 0  13 2 > other_sprites.inc
-	$(HGR_SPRITE) -s -l star1_sprite other_sprites.png 14 0  27 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star2_sprite other_sprites.png 28 0  41 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star3_sprite other_sprites.png 42 0  55 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star4_sprite other_sprites.png 56 0  69 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star5_sprite other_sprites.png 70 0  83 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star6_sprite other_sprites.png 84 0  97 2 >> other_sprites.inc
-	$(HGR_SPRITE) -s -l star7_sprite other_sprites.png 98 0 111 2 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star0_sprite other_sprites.png  0 0  13 1 > other_sprites.inc
+	$(HGR_SPRITE) -s -l star1_sprite other_sprites.png 14 0  27 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star2_sprite other_sprites.png 28 0  41 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star3_sprite other_sprites.png 42 0  55 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star4_sprite other_sprites.png 56 0  69 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star5_sprite other_sprites.png 70 0  83 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star6_sprite other_sprites.png 84 0  97 1 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l star7_sprite other_sprites.png 98 0 111 1 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l book_sprite  other_sprites.png 14 140 48 184 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l demosplash_sprite other_sprites.png 14 8 34 25 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l falling_sprite other_sprites.png 70 140 90 155 >> other_sprites.inc

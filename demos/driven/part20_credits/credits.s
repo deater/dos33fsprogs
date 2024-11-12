@@ -13,7 +13,14 @@
 .include "../common_defines.inc"
 
 
-intro_start:
+	;=======================
+	; so the way this works is that it only displays PAGE1
+	;	and it prints new credits just off the bottom of it which
+	;	is essentially the top of PAGE2
+	; then it scrolls things up
+	;========================
+
+credits_start:
 	;=====================
 	; initializations
 	;=====================
@@ -31,22 +38,12 @@ intro_start:
 
 ;	jsr	hgr_make_tables
 
-
-	;=======================
-	;=======================
-	; scroll job
-	;=======================
-	;=======================
-	; so the way this works is that it only displays PAGE1
-	;	and it prints new credits just off the bottom of it which
-	;	is essentially the top of PAGE2
-	; then it scrolls things up
-
 	ldx	#0
 	stx	SCROLL_LINE
 	sta	SCROLL_DONE
 	sta	FRAMEL
 	sta	FRAMEH
+	sta	SPRITE_LIST
 
 	; print message
 
@@ -104,28 +101,15 @@ cl_smc:
 	;=============================
 	;=============================
 
-	jsr	random8
-	and	#$1f		; 1..32
-	tax
-	lda	star_x,X
-	bmi	no_stars
+	jsr	draw_stars
 
-	sta	CURSOR_X
+	;=============================
+	;=============================
+	; draw falling objects
+	;=============================
+	;=============================
 
-	lda	#158
-	sta	CURSOR_Y
-
-	jsr	random8
-	and	#7
-	tax
-
-	lda	star_sprites_l,X
-	sta	INL
-	lda	star_sprites_h,X
-	sta	INH
-
-	jsr	hgr_draw_sprite
-no_stars:
+	jsr	draw_objects
 
 	;=============================
 	;=============================
@@ -275,7 +259,7 @@ draw_sprites:
 	lda	#0
 	sta	DRAW_PAGE
 
-	lda	#200
+	lda	#150		; eyeballed
 	jsr	wait
 
 	jmp	scroll_loop
@@ -285,6 +269,102 @@ do_page_flip:
 skip_page_flip:
 
 	jmp	scroll_loop
+
+
+
+
+	;=============================
+	;=============================
+	; draw stars
+	;=============================
+	;=============================
+draw_stars:
+
+	lda	FRAME
+	and	#1
+	bne	stars_odd
+
+stars_even:
+
+	; generate star data
+
+	; get x-coord
+
+	jsr	random8
+	and	#$1f		; 1..32
+	tax
+	lda	star_x,X
+	sta	STAR_X
+
+	; get type
+
+	jsr	random8
+	and	#7
+	sta	STAR_WHICH
+
+	lda	#159
+	bne	stars_common	; bra
+
+stars_odd:
+	lda	#158
+stars_common:
+	sta	CURSOR_Y
+
+	lda	STAR_X
+	bmi	no_stars
+	sta	CURSOR_X
+
+	lda	STAR_WHICH
+	tax
+	lda	star_sprites_l,X
+	sta	INL
+	lda	star_sprites_h,X
+	sta	INH
+
+	jmp	hgr_draw_sprite	; tail call
+no_stars:
+	rts
+
+
+
+	;=============================
+	;=============================
+	; draw objects
+	;=============================
+	;=============================
+draw_objects:
+
+	ldx	SPRITE_LIST
+	lda	sprite_triggers_h,X
+	bmi	done_draw_objects
+
+	cmp	FRAMEH
+	bne	done_draw_objects
+
+	lda	sprite_triggers_l,X
+	cmp	FRAMEL
+	bne	done_draw_objects
+
+	; we matched!
+
+	inc	SPRITE_LIST			; point to next in advance
+
+	lda	sprite_triggers_y,X
+	sta	CURSOR_Y
+
+	lda	sprite_triggers_x,X
+	sta	CURSOR_X
+
+	lda	sprite_triggers_sprite_l,X
+	sta	INL
+	lda	sprite_triggers_sprite_h,X
+	sta	INH
+
+	jmp	hgr_draw_sprite	; tail call
+done_draw_objects:
+	rts
+
+
 
 
 .align $100
@@ -466,3 +546,23 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte $FF
+
+
+sprite_triggers_l:
+	.byte $48,$49
+
+sprite_triggers_h:
+	.byte $00,$00
+	.byte $ff
+
+sprite_triggers_x:
+	.byte	2,2
+
+sprite_triggers_y:
+	.byte	143,142
+
+sprite_triggers_sprite_l:
+	.byte	<demosplash_sprite,<demosplash_sprite
+
+sprite_triggers_sprite_h:
+	.byte	>demosplash_sprite,>demosplash_sprite
