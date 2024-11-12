@@ -95,8 +95,10 @@ end_pstring:
 
 ; store a 16-bit value from A (low) and Y (high)
 ;!macro   ST16 .ptr {
-;         sta   .ptr
-;         sty   .ptr+1
+.macro	ST16 ptr
+         sta   ptr
+         sty   ptr+1
+.endmacro
 ;}
 
 ; store a 16-bit value from X (low) and Y (high)

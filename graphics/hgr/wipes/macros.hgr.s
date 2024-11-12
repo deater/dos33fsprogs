@@ -6,7 +6,7 @@
 .ifndef _FX_MACROS_HGR_
 
 ;!macro HGR_CALC {
-.macro HGR_CACLC
+.macro HGR_CALC
 ; in:    A = HGR row (0x00..0xBF)
 ; out:   A/X clobbered
 ;        Y preserved
@@ -15,14 +15,18 @@
 ; based on 'Woz Recodes Hi-Res Address Calculations'
 ; Apple Assembly Line vol. 7 issue 3 (December 1986)
 ; http://www.txbobsc.com/aal/1986/aal8612.html#a9
+
+	.local calc1
+	.local calc2
+
          asl
          tax
          and   #$F0
-         bpl   @calc1
+         bpl   calc1
          ora   #$05
-@calc1   bcc   @calc2
+calc1:   bcc   calc2
          ora   #$0A
-@calc2   asl
+calc2:   asl
          asl
          sta   $26
          txa
@@ -190,7 +194,7 @@ HGRBlockCopy:
 ;        Z set
 ;        C clear
 ;        all other flags and registers clobbered
-         +HGR_ROW_CALC
+         HGR_ROW_CALC
 HGRBlockCopyNoRecalc:
          clc
          ldx   #$08
@@ -279,7 +283,7 @@ HGRStaggerToWhite:
 .macro HGR_COPY_MASK_ROUTINES
 SetCopyMask:
 ; in:    A/Y points to 8-byte array of bit masks used by HGRBlockCopyWithMask
-         +ST16 CopyMaskAddr
+         ST16 CopyMaskAddr
          rts
 
 HGRBlockCopyWithMask:
@@ -289,7 +293,7 @@ HGRBlockCopyWithMask:
 ; out:   Y preserved
 ;        A/X clobbered
 ;        $00 clobbered
-         +HGR_ROW_CALC
+         HGR_ROW_CALC
 HGRBlockCopyWithMaskNoRecalc:
          ldx   #7
 HGRBlockCopyWithMasksLoop:

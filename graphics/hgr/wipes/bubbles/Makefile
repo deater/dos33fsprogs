@@ -34,5 +34,5 @@ fx.hgr.bubbles.data.o:	fx.hgr.bubbles.data.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_TEST
+	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_BUBBLES
 
