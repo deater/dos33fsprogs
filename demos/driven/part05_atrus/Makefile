@@ -16,7 +16,7 @@ atrus.o:	atrus.s \
 	graphics/atrus10_iipix.hgr.zx02 \
 	graphics/atrus11_iipix.hgr.zx02 \
 	font/large_font.inc \
-	big_horiz_scroll.s
+	big_horiz_scroll.s horiz_scroll.s
 	ca65 -o atrus.o atrus.s -l atrus.lst
 
 

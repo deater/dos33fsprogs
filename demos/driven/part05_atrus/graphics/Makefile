@@ -7,7 +7,8 @@ HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	atrus03_iipix.hgr.zx02 \
 	atrus10_iipix.hgr.zx02 \
-	atrus11_iipix.hgr.zx02
+	atrus11_iipix.hgr.zx02 \
+	overlook_n.hgr.zx02
 
 ####
 
@@ -33,8 +34,13 @@ atrus11_iipix.hgr.zx02:	atrus11_iipix.hgr
 atrus11_iipix.hgr:	atrus11_iipix.png
 	$(PNG_TO_HGR) atrus11_iipix.png > atrus11_iipix.hgr
 
+####
 
+overlook_n.hgr.zx02:	overlook_n.hgr
+	$(ZX02) overlook_n.hgr overlook_n.hgr.zx02
 
+overlook_n.hgr:	overlook_n.png
+	$(PNG_TO_HGR) overlook_n.png > overlook_n.hgr
 
 ####
 

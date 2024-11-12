@@ -2,51 +2,49 @@
 	; scrolls large font
 	; right to left, at 168
 
-	; scroll by half
-
-	; even frames, like normal
-	; odd frames, start with odd
-
-	; X6543210 XDCBA987
-
-	; 0123456 789ABCD	X		Y	Z
-	; 	lda X, sta Y  lda X+1, sta Y+1
-	; 2345678 9ABCDef	X<<2 | Y<<2
-	;	lda X, sta Y  lda X+1 and #$fc lda Y+1, and #$3 ora, sta Y+1
-	; 456789A BCDefgh	X<<4 | Y<<4
-	;	lda X, sta Y  lda X+1 and #$fc lda Y+1, and #$3 ora, sta Y+1
-	; 6789ABC Defghij	X<<6 | Y<<6
-	; 89ABCDe fghijkl	Y<<1 | Z<<1
-	; ABCDefg hijklmn	Y<<3 | Z<<3
-	; CDefghi jklmnop	Y<<5 | Z<<6
-	; efghijk lmnopqr	Z
-
+; trying to make it a "smooth" scroll
 
 
 do_scroll:
 	lda	#0
-	sta	SCROLL_START
-	sta	SCROLL_ODD
-
+	sta	SCROLL_START		; offset into string
+	sta	SCROLL_SUBSCROLL	; 0..13 of current scroll
 
 do_scroll_again:
+
+	lda	#0
+	sta	SCROLL_ROW
+
+do_scroll_row:
+	clc
+	lda	SCROLL_ROW
+	adc	#168
+	tay
+	lda	hposn_low,Y
+	sta	out1_smc+1
+	sta	out2_smc+1
+	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
+	sta	out1_smc+2
+	sta	out2_smc+2
+
 	ldy	#0		; Y is column on screen currently drawing
+	sty	SCROLL_COL
 
 	lda	SCROLL_START	; reset string offset to current start
-	sta	SCROLL_OFFSET
+	sta	SCROLL_OFFSET	; current char we are scrolling
 
-	lda	SCROLL_ODD	; check if odd/even inside of char
-	beq	do_scroll_loop	; if even, normal scroll
-
+do_scroll_col:
 	ldx	SCROLL_OFFSET	; load offset into string
 	lda	scroll_text,X	; get the character
 	sec
 	sbc	#'@'		; convert from ASCII
 	asl
-	tax
-	inx			; point to second half of char
 
-	jmp	do_scroll_col_loop
+	; A is now pointer to the char to lookup * 2
+
+	tax
 
 
 do_scroll_loop:
@@ -57,126 +55,62 @@ do_scroll_loop:
 	asl
 	tax
 
+	ldy	SCROLL_SUBSCROLL
+	lda	jump_table_h,Y
+	pha
+	lda	jump_table_l,Y
+	pha
+	rts
 
-do_scroll_col_loop:
+jump_table_l:
+	.byte <(handle_offset0-1),<(handle_offset1-1),<(handle_offset2-1)
+	.byte <(handle_offset3-1),<(handle_offset4-1),<(handle_offset5-1)
+	.byte <(handle_offset6-1)
 
-	lda	DRAW_PAGE
-	bne	draw_text_page2
+jump_table_h:
+	.byte >(handle_offset0-1),>(handle_offset1-1),>(handle_offset2-1)
+	.byte >(handle_offset3-1),>(handle_offset4-1),>(handle_offset5-1)
+	.byte >(handle_offset6-1)
 
-draw_text_page1:
-	; row1
-	lda	large_font_row0,X
+handle_offset0:
+handle_offset1:
+handle_offset2:
+handle_offset3:
+handle_offset4:
+handle_offset5:
+handle_offset6:
+	lda	#$ff
+	sta	FONT1
+	lda	#$00
+	sta	FONT2
+handle_offset_done:
+
+	ldy	SCROLL_COL
+
+	lda	FONT1
+out1_smc:
 	sta	$22D0,Y
-	; row2
-	lda	large_font_row1,X
-	sta	$26D0,Y
-	; row3
-	lda	large_font_row2,X
-	sta	$2AD0,Y
-	; row4
-	lda	large_font_row3,X
-	sta	$2ED0,Y
-	; row5
-	lda	large_font_row4,X
-	sta	$32D0,Y
-	; row6
-	lda	large_font_row5,X
-	sta	$36D0,Y
-	; row7
-	lda	large_font_row6,X
-	sta	$3AD0,Y
-	; row8
-	lda	large_font_row7,X
-	sta	$3ED0,Y
-	; row9
-	lda	large_font_row8,X
-	sta	$2350,Y
-	; row10
-	lda	large_font_row9,X
-	sta	$2750,Y
-	; row11
-	lda	large_font_row10,X
-	sta	$2B50,Y
-	; row12
-	lda	large_font_row11,X
-	sta	$2F50,Y
-	; row13
-	lda	large_font_row12,X
-	sta	$3350,Y
-	; row14
-	lda	large_font_row13,X
-	sta	$3750,Y
-	; row15
-	lda	large_font_row14,X
-	sta	$3B50,Y
-	; row16
-	lda	large_font_row15,X
-	sta	$3F50,Y
-
-	jmp	skip_first_col
-
-draw_text_page2:
-
-	; row1
-	lda	large_font_row0,X
-	sta	$42D0,Y
-	; row2
-	lda	large_font_row1,X
-	sta	$46D0,Y
-	; row3
-	lda	large_font_row2,X
-	sta	$4AD0,Y
-	; row4
-	lda	large_font_row3,X
-	sta	$4ED0,Y
-	; row5
-	lda	large_font_row4,X
-	sta	$52D0,Y
-	; row6
-	lda	large_font_row5,X
-	sta	$56D0,Y
-	; row7
-	lda	large_font_row6,X
-	sta	$5AD0,Y
-	; row8
-	lda	large_font_row7,X
-	sta	$5ED0,Y
-	; row9
-	lda	large_font_row8,X
-	sta	$4350,Y
-	; row10
-	lda	large_font_row9,X
-	sta	$4750,Y
-	; row11
-	lda	large_font_row10,X
-	sta	$4B50,Y
-	; row12
-	lda	large_font_row11,X
-	sta	$4F50,Y
-	; row13
-	lda	large_font_row12,X
-	sta	$5350,Y
-	; row14
-	lda	large_font_row13,X
-	sta	$5750,Y
-	; row15
-	lda	large_font_row14,X
-	sta	$5B50,Y
-	; row16
-	lda	large_font_row15,X
-	sta	$5F50,Y
-
-
-skip_first_col:
-	inx
 	iny
+	lda	FONT2
+out2_smc:
+	sta	$22D0,Y
 
-	txa				; see if done char
-	and	#1
-;	bne	do_scroll_col_loop	; if not, draw second half
-	beq	scroll_col_done
-	jmp	do_scroll_col_loop
-scroll_col_done:
+	iny
+	sty	SCROLL_COL
+	cpy	#40
+	bne	do_scroll_col
+
+
+	inc	SCROLL_ROW
+	lda	SCROLL_ROW
+	cmp	#16
+	bne	do_scroll_row
+
+	; done displaying row
+
+
+blah:
+	jmp	blah
 
 	inc	SCROLL_OFFSET		; point to next char
 
@@ -214,6 +148,27 @@ jmp_scroll_again:
 do_scroll_done:
 	bit	KEYRESET
 	rts
+
+
+font_0_row0_s0: .byte $00,$00, $03,$00
+font_0_row1_s0: .byte $00,$00, $0f,$00
+font_0_row2_s0:	.byte $00,$00, $3f,$00
+font_0_row3_s0: .byte $00,$00, $7f,$01
+font_0_row4_s0: .byte $00,$00, $7f,$07
+font_0_row5_s0: .byte $00,$00, $7f,$1f
+font_0_row6_s0: .byte $00,$00, $7f,$7f
+font_0_row7_s0: .byte $00,$00, $03,$00
+font_0_row8_s0: .byte $00,$00, $03,$00
+font_0_row9_s0: .byte $00,$00, $03,$00
+font_0_row10_s0: .byte $00,$00, $03,$00
+font_0_row11_s0: .byte $00,$00, $03,$00
+font_0_row12_s0: .byte $00,$00, $03,$00
+font_0_row13_s0: .byte $00,$00, $03,$00
+font_0_row14_s0: .byte $00,$00, $03,$00
+font_0_row15_s0: .byte $00,$00, $03,$00
+
+
+
 
 scroll_text:  ;0123456789012345678901234567890123456789
 ;	.byte "@@@@@@@@@@@@@@@@@@@@\]^_THE@QUICK@BROWN@"

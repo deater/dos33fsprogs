@@ -145,4 +145,6 @@ atrus_text:
 
 .include "font/large_font.inc"
 
-.include "big_horiz_scroll.s"
+;.include "big_horiz_scroll.s"
+
+.include "horiz_scroll.s"
