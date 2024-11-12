@@ -14,7 +14,8 @@ wipes.dsk:	HELLO \
 	diamond_stripes/WIPE_DIAMOND_STRIPE \
 	crystal/WIPE_CRYSTAL \
 	fizzle/WIPE_FIZZLE \
-	lr/WIPE_LR
+	lr/WIPE_LR \
+	cascade/WIPE_CASCADE
 	cp $(EMPTY_DISK)/empty.dsk wipes.dsk
 	$(DOS33) -y wipes.dsk SAVE A HELLO
 	$(DOS33) -y wipes.dsk BSAVE -a 0x5700 bubbles/WIPE_BUBBLES
@@ -23,6 +24,7 @@ wipes.dsk:	HELLO \
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 crystal/WIPE_CRYSTAL
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 fizzle/WIPE_FIZZLE
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 lr/WIPE_LR
+	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 cascade/WIPE_CASCADE
 
 ###
 
@@ -33,6 +35,9 @@ HELLO:	hello.bas
 
 bubbles/WIPE_BUBBLES:	
 	cd bubbles && make
+
+cascade/WIPE_CASCADE:	
+	cd cascade && make
 
 crystal/WIPE_CRYSTAL:	
 	cd crystal && make
@@ -54,6 +59,7 @@ lr/WIPE_LR:
 clean:	
 	rm -f *~ *.o *.lst *.zx02 HELLO
 	cd bubbles && make clean
+	cd cascade && make clean
 	cd diamond && make clean
 	cd diamond_stripes && make clean
 	cd crystal && make clean
