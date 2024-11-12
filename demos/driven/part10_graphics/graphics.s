@@ -25,6 +25,8 @@
 	;=============================
 
 graphics:
+	bit	KEYRESET	; just to be safe
+
 	lda	#0
 
 	bit     SET_GR
@@ -96,6 +98,36 @@ graphics:
 
 	jsr	wait_until_keypress
 
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	bit	TEXTGR
+
+	lda	#<atrus_message
+	sta	OUTL
+	lda	#>atrus_message
+	sta	OUTH
+
+	; The path home...
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+	; linking book
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+	; cleft
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+	; meet...
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+
+	bit	FULLGR
 
 	;=================================
 	; floater
@@ -110,6 +142,31 @@ graphics:
 
 	jsr	wait_until_keypress
 
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	clear_bottom
+
+	bit	TEXTGR
+
+	lda	#<atrus_message2
+	sta	OUTL
+	lda	#>atrus_message2
+	sta	OUTH
+
+	; Perhaps1
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+	; Perhaps2
+	jsr	move_and_print
+	jsr	move_and_print
+	jsr	wait_until_keypress
+
+	bit	FULLGR
+
+
 	rts
 
 spires_graphics:
@@ -120,8 +177,8 @@ floater_graphics:
 
 
 atrus_graphics:
-;	.incbin "graphics/atrus_light_iipix.hgr.zx02"
 	.incbin "graphics/a2_atrus.hgr.zx02"
+;	.incbin "graphics/atrus_light_iipix.hgr.zx02"
 ;	.incbin "graphics/atrus_iipix.hgr.zx02"
 
 
@@ -135,3 +192,17 @@ riven_233_graphics_bin:
 
 
 ;.include "../wait_keypress.s"
+
+atrus_message:
+	  ; 0123456789012345678901234567890123456789
+.byte 0,20,"The path home is now clear for all of us",0
+.byte 0,21,"I'll take the linking book",0
+.byte 0,22,"        you take the bottomless cleft.",0
+.byte 0,23,"Perhaps we will meet again someday...",0
+
+atrus_message2:
+	  ; 0123456789012345678901234567890123456789
+.byte 0,20,"Perhaps the ending has not yet been",0
+.byte 0,21,"written.",0
+.byte 0,22,"Perhaps that's because we ran out of",0
+.byte 0,23,"time before the submission deadline.",0
