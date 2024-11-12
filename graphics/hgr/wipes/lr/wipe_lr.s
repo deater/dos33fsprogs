@@ -62,5 +62,6 @@ test_graphic:
 
 .include "../zx02_optim.s"
 
-.include "../vblank.s"
+;.include "../vblank.s"
 
+;.include "../wait_for_key.s"

@@ -30,7 +30,7 @@ h1=*+1
          bne   loop1
 
          lda   #$10
-;         jsr   iWaitForKeyWithTimeout
+	jsr   WaitForKeyWithTimeout
          bmi   lrexit
 
          inc   h1
@@ -53,7 +53,7 @@ h2=*+1
          bne   loop2
 
          lda   #$10
-;         jsr   iWaitForKeyWithTimeout
+	jsr   WaitForKeyWithTimeout
          bmi   lrexit
 
          inc   h2

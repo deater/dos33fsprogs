@@ -90,7 +90,7 @@ loop:
          lda   ($fe),y
          bpl   copy
          lda   #$10
-;         jsr   iWaitForKeyWithTimeout
+         jsr   WaitForKeyWithTimeout
          bmi   cexit
          bpl   next                 ; always branches
 copy:
