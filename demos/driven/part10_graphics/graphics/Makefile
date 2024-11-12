@@ -8,9 +8,10 @@ HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	floater_wide_steffest.hgr.zx02 \
 	riven_233.aux.zx02 riven_233.bin.zx02 \
-	a2_atrus.hgr.zx02 \
+	a2_atrus.hgr.zx02 a2_minecart.hgr.zx02 \
 	atrus_iipix.hgr.zx02 atrus_light_iipix.hgr.zx02 \
 	atrus.aux.zx02 atrus.bin.zx02 \
+	minecart1_iipix.hgr.zx02 minecart2_iipix.hgr.zx02 \
 	spires_n.hgr.zx02
 
 ####
@@ -36,6 +37,31 @@ a2_atrus.hgr.zx02:	a2_atrus.hgr
 
 a2_atrus.hgr:	a2_atrus.png
 	$(PNG_TO_HGR) a2_atrus.png > a2_atrus.hgr
+
+####
+
+a2_minecart.hgr.zx02:	a2_minecart.hgr
+	$(ZX02) a2_minecart.hgr a2_minecart.hgr.zx02
+
+a2_minecart.hgr:	a2_minecart.png
+	$(PNG_TO_HGR) a2_minecart.png > a2_minecart.hgr
+
+####
+
+minecart1_iipix.hgr.zx02:	minecart1_iipix.hgr
+	$(ZX02) minecart1_iipix.hgr minecart1_iipix.hgr.zx02
+
+minecart1_iipix.hgr:	minecart1_iipix.png
+	$(PNG_TO_HGR) minecart1_iipix.png > minecart1_iipix.hgr
+
+####
+
+minecart2_iipix.hgr.zx02:	minecart2_iipix.hgr
+	$(ZX02) minecart2_iipix.hgr minecart2_iipix.hgr.zx02
+
+minecart2_iipix.hgr:	minecart2_iipix.png
+	$(PNG_TO_HGR) minecart2_iipix.png > minecart2_iipix.hgr
+
 
 ####
 

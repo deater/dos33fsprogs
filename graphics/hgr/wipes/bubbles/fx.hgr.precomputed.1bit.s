@@ -24,7 +24,7 @@
 ;
 
 ;         !source "src/fx/macros.a"
-	.include "macros.s"
+	.include "../macros.s"
 
 ;!macro FX_INITONCE_1BIT .CoordinatesFile, .Start {
 .macro FX_INITONCE_1_BIT CoordinatesFile, Start

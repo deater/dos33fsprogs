@@ -1,16 +1,16 @@
 ; test some of the 4cade wipes
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 wipe_test:
 	jmp	after
 test_graphic:
-	.incbin "graphics/a2_dating.hgr.zx02"
+	.incbin "../graphics/a2_dating.hgr.zx02"
 
-.include "zx02_optim.s"
+.include "../zx02_optim.s"
 
-.include "fx.lib.s"
+.include "../fx.lib.s"
 
 after:
 
@@ -63,7 +63,7 @@ test_loop:
 	jsr	wait_until_keypress
 	jmp	test_loop
 
-.include "wait_keypress.s"
+.include "../wait_keypress.s"
 
 
 .include "fx.hgr.bubbles.s"
