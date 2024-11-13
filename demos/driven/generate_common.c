@@ -25,6 +25,9 @@ static void find_address(char *symbol_name, int routine_offset) {
 			exit(-1);
 		}
 
+		/* UGH: bug here if partial substring match */
+		/*  e.g. gr_page_flip and hgr_page_flip */
+
 		result=strstr(string,temp_name);
 		if (result!=NULL) {
 			string[6]=0;

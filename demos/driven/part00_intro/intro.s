@@ -23,6 +23,12 @@ desire_start:
 	; Load graphics
 	;===================
 load_loop:
+;	jsr	wait_until_keypress
+
+	; dni
+
+;	jsr	dni_plasma
+
 
 	; already in hires when we come in?
 
@@ -244,11 +250,12 @@ logo_transit3_inner_loop:
 
 
 
-	; wait a bit
+	; wait for intro music to stop
 
-	lda	#3
-	jsr	wait_seconds
-
+wait_till_right_pattern:
+	lda	#4
+	jsr	wait_for_pattern
+	bcc	wait_till_right_pattern
 
 	; done
 logo_done:
@@ -276,6 +283,8 @@ masks_reverse:
 ;.include "../wait_keypress.s"
 
 .include "graphics/d_sprites.inc"
+
+.include "../part01_dni/dni_plasma.s"
 
 ;.include "../hgr_sprite.s"
 

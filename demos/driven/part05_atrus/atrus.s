@@ -29,6 +29,11 @@ atrus_opener:
         bit     TEXTGR
         bit     PAGE1
 
+;	lda	#$A0
+;	sta	clear_all_color+1
+
+	jsr	clear_bottoms
+
 	;=================================
 	; atrus greetings
 	;=================================

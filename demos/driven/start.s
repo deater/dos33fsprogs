@@ -332,6 +332,9 @@ forever:
 	;=========================
 	; print next dni number
 print_next_dni:
+	lda	#0
+	sta	clear_all_color+1
+
 	jsr	clear_all
 
 	ldy	#$4

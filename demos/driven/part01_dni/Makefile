@@ -5,7 +5,7 @@ PNG_TO_40x96 = ../../utils/gr-utils/png_to_40x96
 LINKERSCRIPTS = ../../../linker_scripts/
 
 
-all:	DNI
+all:	
 
 ###
 

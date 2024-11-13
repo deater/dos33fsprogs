@@ -220,11 +220,12 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"part01_dni/print_dni_numbers.s"
 	.include	"part01_dni/number_sprites.inc"
 	.include	"part01_dni/inc_base5.s"
-	.include "wait_keypress.s"
-        .include "zx02_optim.s"
-        .include "gs_interrupt.s"
-        .include "pt3_lib_mockingboard_patch.s"
-        .include "hardware_detect.s"
+	.include	"wait_keypress.s"
+        .include	"zx02_optim.s"
+        .include	"gs_interrupt.s"
+        .include	"pt3_lib_mockingboard_patch.s"
+        .include	"hardware_detect.s"
+        .include	"gr_page_flip.s"
 
 
 	.include	"start.s"

@@ -4,21 +4,15 @@
 
 ; originally based on Plasmagoria (GPL3) code by French Touch
 
-.include "../hardware.inc"
-.include "../zp.inc"
-.include "../common_defines.inc"
-.include "../qload.inc"
-
 ; Memory:
-;	Loads at $4000
 ;	Plasma uses $2000-$23ff
-;	Uses $8000-$83FF (1k) for color lookup table
-;	Uses 80 bytes from $74A0-$7500 for some reason?
+;	Uses $2400-$27FF (1k) for color lookup table
+;	Uses 80 bytes for Tables
 
-lores_colors_fine=$8000
+lores_colors_fine=$2400
 ; was in page0, we don't really have room
-Table1  = $74A0 ; 40 bytes
-Table2  = $74D0 ; 40 bytes
+Table1  = $28A0 ; 40 bytes
+Table2  = $28D0 ; 40 bytes
 
 
 	;======================================
@@ -27,59 +21,6 @@ Table2  = $74D0 ; 40 bytes
 
 dni_plasma:
 
-;	bit	SET_GR
-;	bit	LORES			; set lo-res
-;	bit	FULLGR
-
-	;======================
-	; init variables
-	;======================
-
-;	lda	#0
-;	sta	DRAW_PAGE
-;	sta	NUMBER_HIGH
-;	sta	NUMBER_LOW
-;	sta	WHICH_TRACK
-
-.if 0
-	;======================
-	; draw plain number
-	;======================
-
-draw_plain_number_loop:
-
-	; essentially just clear current lo-res page to black
-
-;	lda	#$4
-;	clc
-;	adc	DRAW_PAGE
-;	tax
-;	lda	#$0		; black
-;	jsr	clear_1k
-
-	jsr	clear_all
-
-	lda	#$4
-	sta	XPOS
-	lda	#$5
-	sta	YPOS
-
-	jsr	draw_full_dni_number
-
-	jsr	inc_base5
-
-	jsr	gr_page_flip
-
-	lda	#200
-	jsr	wait
-
-	lda	NUMBER_HIGH
-	cmp	#$02
-	beq	next_scene
-
-	bne	draw_plain_number_loop	; bra
-
-.endif
 
 next_scene:
 
@@ -232,10 +173,10 @@ display_line_loop:
 
 	lda	GBASH
 	clc
-	adc	#$1c	; load from $1c00-$2000
+	adc	#$1c	; load from $2000-$2400
         sta     INH
 
-	lda	GBASH
+	lda	GBASH		; adjust to proper output page
 	clc
 	adc	DRAW_PAGE
 	sta	GBASH
@@ -303,14 +244,14 @@ effect2:
 	lda	DRAW_PAGE
 	pha
 
-	lda	#$1c			; draw DNI number to $1c
+	lda	#$1c			; draw DNI number to $1c+$4
 	sta	DRAW_PAGE
 	jsr	draw_full_dni_number
 
 	pla
 	sta	DRAW_PAGE
 
-	ldx	#$20
+	ldx	#$20			; invert it
 	jsr	invert_1k
 
 	inc	FRAMEL
@@ -388,7 +329,13 @@ no_inc_effect1:
 done_effect:
 
 
-	jsr	gr_page_flip
+	jsr	gr_flip_page
+
+        lda     #2
+        jsr     wait_for_pattern
+        bcs	done_dni_plasma
+
+
 
 	inc	COMPT1
 	beq	zoop
@@ -403,10 +350,6 @@ zoop:
 zoop2:
 
 
-wait_till_right_pattern:
-        lda     #2
-        jsr     wait_for_pattern
-        bcc     wait_till_right_pattern
 
 	jmp	do_plasma	; bra
 

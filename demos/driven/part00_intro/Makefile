@@ -3,7 +3,7 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts/
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
-all:	INTRO INTRO.ZX02
+all:	INTRO
 
 ####
 
@@ -19,6 +19,7 @@ intro.o:	intro.s \
 	../zx02_optim.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	erase.s \
+	../part01_dni/dni_plasma.s \
 	graphics/logo_frame01.hgr.zx02 \
 	graphics/logo_frame46.hgr.zx02 \
 	graphics/d_sprites.inc
