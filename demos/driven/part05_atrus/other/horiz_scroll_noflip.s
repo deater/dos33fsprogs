@@ -22,24 +22,17 @@ pan_outer_loop:
 
 	; $2000					; 0010 -> 0100 0011 -> 0101
 	lda	hposn_high,X
-	pha
-	clc
-	adc	DRAW_PAGE
-	sta	pil_smc2+2	; lda
-	sta	pil_smc6+2	; lda
-	eor	#$60
-	sta	pil_smc1+2	; sta
-	sta	pil_smc3+2	; sta
-
-
+	sta	pil_smc1+2
+	sta	pil_smc2+2
+	sta	pil_smc3+2
+	sta	pil_smc6+2
 	; $6000
-	pla
 	clc
 	adc	#$40
-	sta	pil_smc5+2	; lda
-	sta	pil_smc7+2	; sta
-	sta	pil_smc8+2	; sta
-	sta	pil_smc9+2	; sta
+	sta	pil_smc5+2
+	sta	pil_smc7+2
+	sta	pil_smc8+2
+	sta	pil_smc9+2
 
 	; setup the low address bytes in the SMC
 
@@ -159,10 +152,6 @@ next_letter:
 
 
 no_ticker:
-
-;	jsr	wait_vblank
-	jsr	hgr_page_flip
-
 	lda	SCROLL_OFFSET
 	cmp	#193
 	beq	done_pan
