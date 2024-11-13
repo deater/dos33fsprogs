@@ -72,8 +72,7 @@ pan_outer_loop:
 
 	; original: 6+(30*39)-1 = 1175
 	; new	    6+(24*39)-1 = 941
-	; unroll?   6+(41*20)-1 = 825
-	; unroll by 3	6+(58*13)-1 = 760
+	; unroll by 3	6+((19+19+19+5)*13)-1 = 811
 
 	ldy	#0			; start col0			; 2
 pil_smc1:
@@ -135,16 +134,16 @@ pil_smc22:
 	cpy	#39							; 2
 	bne	pan_inner_loop						; 2/3
 
-; leftover
+	;==================================
+	; leftover
+	;==================================
 
 	; X has $2000,39
 	lda	left_lookup_main,X			; 4+
-	sta	TEMPY					; 3
 
 pil_smc5:
 	ldx	$6000					; 4+
-	lda	left_lookup_next,X			; 4+
-	ora	TEMPY					; 3
+	ora	left_lookup_next,X			; 4+
 
 pil_smc6:
 	sta	$2000,Y					; 5
@@ -153,12 +152,10 @@ pil_smc6:
 	; shift font
 		; X has $6000
 	lda	left_lookup_main,X			; 4+
-	sta	TEMPY					; 3
 
 pil_smc7:
 	ldx	$6000+1					; 4+
-	lda	left_lookup_next,X			; 4+
-	ora	TEMPY					; 3
+	ora	left_lookup_next,X			; 4+
 
 pil_smc8:
 	sta	$6000					; 5
@@ -209,7 +206,7 @@ next_letter:
 
 no_ticker:
 
-;	jsr	wait_vblank
+	jsr	wait_vblank
 	jsr	hgr_page_flip
 
 	lda	SCROLL_OFFSET

@@ -7,8 +7,14 @@
 .include "../hardware.inc"
 .include "../zp.inc"
 .include "../common_defines.inc"
+.include "../qload.inc"
 
-; FIXME: make sure free
+; Memory:
+;	Loads at $4000
+;	Plasma uses $2000-$23ff
+;	Uses $8000-$83FF (1k) for color lookup table
+;	Uses 80 bytes from $74A0-$7500 for some reason?
+
 lores_colors_fine=$8000
 ; was in page0, we don't really have room
 Table1  = $74A0 ; 40 bytes
@@ -21,24 +27,36 @@ Table2  = $74D0 ; 40 bytes
 
 plasma_mask:
 
+	bit	SET_GR
 	bit	LORES			; set lo-res
 	bit	FULLGR
+
+	;======================
+	; init variables
+	;======================
 
 	lda	#0
 	sta	DRAW_PAGE
 	sta	NUMBER_HIGH
 	sta	NUMBER_LOW
 	sta	WHICH_TRACK
-goopy:
 
+	;======================
+	; draw plain number
+	;======================
 
-	lda	#$4
-	clc
-	adc	DRAW_PAGE
-	tax
-	lda	#$0		; black
+draw_plain_number_loop:
 
-	jsr	clear_1k
+	; essentially just clear current lo-res page to black
+
+;	lda	#$4
+;	clc
+;	adc	DRAW_PAGE
+;	tax
+;	lda	#$0		; black
+;	jsr	clear_1k
+
+	jsr	clear_all
 
 	lda	#$4
 	sta	XPOS
@@ -58,7 +76,9 @@ goopy:
 	cmp	#$02
 	beq	next_scene
 
-	jmp	goopy
+	bne	draw_plain_number_loop	; bra
+
+
 
 next_scene:
 
@@ -413,11 +433,11 @@ sin1:
 sin2=sin1+$100
 sin3=sin1+$200
 
-.include "print_dni_numbers.s"
-.include "number_sprites.inc"
-.include "../gr_offsets.s"
-.include "inc_base5.s"
-.include "../wait.s"
+;.include "print_dni_numbers.s"
+;.include "number_sprites.inc"
+;.include "../gr_offsets.s"
+;.include "inc_base5.s"
+;.include "../wait.s"
 
 .include "page_flip.s"
 

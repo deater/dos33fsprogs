@@ -108,6 +108,9 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
 
 
 ####

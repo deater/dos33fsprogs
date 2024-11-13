@@ -179,7 +179,7 @@ start_address:
 
 aux_dest:
 	.byte $D0,$D0,$A0,$A0	; ???, MUSIC, INTRO, CREDITS
-	.byte $70,$50,$40,$30	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte $70,$50,$40,$10	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte $20,$10,$80,$20	;
 
 track_array:
@@ -201,8 +201,6 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	.include	"wait.s"
 
-	.include	"start.s"
-
 	.include	"lc_detect.s"
 
 	.include	"wait_a_bit.s"
@@ -219,6 +217,17 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"vblank.s"
 	.include	"irq_wait.s"
 	.include	"hgr_page_flip.s"
+	.include	"part01_dni/print_dni_numbers.s"
+	.include	"part01_dni/number_sprites.inc"
+	.include	"part01_dni/inc_base5.s"
+	.include "wait_keypress.s"
+        .include "zx02_optim.s"
+        .include "gs_interrupt.s"
+        .include "pt3_lib_mockingboard_patch.s"
+        .include "hardware_detect.s"
+
+
+	.include	"start.s"
 
 qload_end:
 

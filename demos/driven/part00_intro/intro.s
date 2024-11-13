@@ -1,5 +1,10 @@
 ; Desire Logo to Driven transistion
 
+; Memory used:
+;	Loads at $8000	(no reason can't load at $2000?)
+;	Uses hi-res at $2000
+;	Second half uses $4000
+
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
@@ -28,12 +33,6 @@ load_loop:
 	bit	FULLGR
 	bit	PAGE1
 
-;	lda	#0
-;	jsr	hgr_page1_clearscreen
-;	jsr	hgr_page2_clearscreen
-
-;	bit	PAGE2			; look at page2
-
 	; load image $2000
 
 	lda	#<logo_data_01
@@ -60,8 +59,6 @@ load_loop:
 
 	lda	#0
 	sta	X_OFFSET
-
-
 
 d_rotate_loop:
 	ldx	X_OFFSET
@@ -259,7 +256,7 @@ logo_done:
 
 
 
-	.include	"../hgr_clear_screen.s"
+;	.include	"../hgr_clear_screen.s"
 ;	.include	"../irq_wait.s"
 
 logo_data_01:

@@ -54,6 +54,22 @@ driven_start:
 good_to_go:
 
 	;==================================
+	; print D'NI 1
+	;==================================
+
+	bit	SET_GR
+	bit	LORES		; set lo-res
+	bit	FULLGR
+
+	lda	#0
+	sta	NUMBER_HIGH
+	sta	DRAW_PAGE
+	sta	NUMBER_LOW
+
+	jsr	print_next_dni
+
+
+	;==================================
 	; load music into the language card
 	;       into $D000 set 1
 	;==================================
@@ -66,6 +82,8 @@ good_to_go:
 	sta	WHICH_LOAD
 
 	jsr	load_file
+
+	jsr	print_next_dni
 
 	lda	#0
 	sta	DONE_PLAYING
@@ -106,27 +124,25 @@ dont_enable_mc:
 
 skip_all_checks:
 
-.if 0
+	jsr	print_next_dni
+
+
 	;====================================
 	;====================================
 	; Pre-Load some programs into AUX MEM
 	;====================================
 	;====================================
-	; TODO: do d'ni countdown
-	; 4 - 9
 
 	sta	$C008		; use MAIN zero-page/stack/language card
 
 	;=============================
 	; want to load 4..9
 
-	lda	#4
+	lda	#PART_MAGLEV
 	sta	COUNT
 
 load_program_loop:
 	;============================
-	; load next program to MAIN $6000
-
 	; load from disk
 
 	lda     COUNT		; which one
@@ -136,10 +152,10 @@ load_program_loop:
 	; copy to proper AUX location
 
 	ldx	COUNT
-	lda	aux_dest,X	; load AUX dest
+	lda	aux_dest,X		; load AUX dest
 	pha
 
-	ldy	#$60		; MAIN src $6000
+	ldy	load_address_array,X	; where we loaded in MAIN
 
 	lda	length_array,X	; number of pages
 	tax			; in X
@@ -147,14 +163,35 @@ load_program_loop:
 
 	jsr	copy_main_aux
 
-	inc	COUNT
-	lda	COUNT
-	cmp	#10
-	bne	load_program_loop
+;	inc	COUNT
+;	lda	COUNT
+;	cmp	#10
+;	bne	load_program_loop
 
-.endif
+	jsr	print_next_dni
 
 .if 0
+	;=======================
+	;=======================
+	; Run D'NI Count
+	;=======================
+	;=======================
+
+	; load from disk
+
+	lda     #PART_DNI		; DNI
+	sta     WHICH_LOAD
+	jsr     load_file
+
+	; Run intro
+
+;	cli			; start music
+
+	jsr	$4000
+.endif
+
+
+.if 1
 	;=======================
 	;=======================
 	; Run intro
@@ -205,30 +242,23 @@ load_program_loop:
 .endif
 
 
+.if 1
 	;=======================
 	;=======================
 	; Run Maglev
 	;=======================
 	;=======================
-.if 1
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
+	; copy MAGLEV from AUX $1000 to MAIN $4000
 
-	; load maglev
-
-	lda	#PART_MAGLEV		; Maglev
-	sta	WHICH_LOAD
-	jsr	load_file
-
-
-	; restart music
-
-	cli		; start interrupts (music)
+	lda	#$10		; AUX src $1000
+	ldy	#$40		; MAIN dest $4000
+	ldx	#127		; 127 pages
+	jsr	copy_aux_main
 
 	; run maglev
 
 	jsr	$4000
+
 .endif
 
 
@@ -242,7 +272,7 @@ load_program_loop:
 	jsr	mute_ay_both
 	jsr	clear_ay_both		; stop from making noise
 
-	; load dni
+	; load GRAPHICS
 
 	lda	#PART_GRAPHICS		; GRAPHICS
 	sta	WHICH_LOAD
@@ -256,263 +286,6 @@ load_program_loop:
 	; Run GRAPHICS
 
 	jsr	$6000
-
-
-.if 0
-	;==========================
-	;==========================
-	; Run 4-9, copy from AUX
-	;==========================
-	;==========================
-
-	;=======================
-	; run GORILLA (#4)
-	;=======================
-	; copy GORILLA from AUX $7000 to MAIN $8000
-
-	lda	#$70		; AUX src $7000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#32		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug gorilla music
-	lda     #25
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	; run gorilla
-
-	jsr	$8000
-
-	;=======================
-	; run LEAVES (#5)
-	;=======================
-	; copy LEAVES from AUX $5000 to MAIN $8000
-
-	lda	#$50		; AUX src $5000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#32		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug leaves music
-	lda     #30
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	; run leaves
-
-	jsr	$8000
-
-
-	;=======================
-	; run LENS/ROTOZOOM (#6)
-	;=======================
-	; copy LENS from AUX $4000 to MAIN $6000
-
-	lda	#$40		; AUX src $4000
-	ldy	#$60		; MAIN dest $6000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug lens music
-	lda     #34
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	; run lens
-
-	jsr	$6000
-
-
-	;=======================
-	; run PLASMA (#7)
-	;=======================
-	; copy PLASMA from AUX $3000 to MAIN $8000
-
-	lda	#$30		; AUX src $3000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug plasma music
-	lda     #47
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	; run plasma
-
-	jsr	$8000
-
-	;=======================
-	; run PLASMACUBE (#8)
-	;=======================
-	; copy PLASMACUBE from AUX $2000 to MAIN $8000
-
-	lda	#$20		; AUX src $2000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug plasmacube music
-	lda     #52
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	; run plasmacube
-
-	jsr	$8000
-
-	;=======================
-	; run DOTS (#9)
-	;=======================
-	; copy DOTS from AUX $1000 to MAIN $8000
-
-	lda	#$10		; AUX src $1000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug dots music
-	lda     #60
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-	; run dots
-
-	jsr	$8000
-
-
-	;=======================
-	;=======================
-	; Load 10-12 to RAM
-	;=======================
-	;=======================
-
-	; disable music
-
-	sei
-
-	jsr	mute_ay_both		; stop from making noise
-
-	;=============================
-	; want to load 10..12
-
-	lda	#10
-	sta	COUNT
-
-load_program_loop2:
-	;============================
-	; load next program to MAIN $6000
-
-	; load from disk
-
-	lda     COUNT		; which one
-	sta     WHICH_LOAD
-	jsr     load_file
-
-	; copy to proper AUX location
-
-	ldx	COUNT
-	lda	aux_dest,X	; load AUX dest
-	pha
-
-	ldy	#$60		; MAIN src $6000
-
-	lda	length_array,X	; number of pages
-	tax			; in X
-	pla			; restore AUX dest to A
-
-	jsr	copy_main_aux
-
-	inc	COUNT
-	lda	COUNT
-	cmp	#13
-	bne	load_program_loop2
-
-
-	;==========================
-	;==========================
-	; Run 10-12
-	;==========================
-	;==========================
-
-	; restart music
-
-	jsr	unmute_ay_both		; restart
-	cli
-
-	;=======================
-	; run SPHERES
-	;============================================
-	; copy SPHERES from AUX $8000 to MAIN $8000
-
-	lda	#$80		; AUX src $8000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug spheres music
-	lda     #68
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	jsr	$8000
-
-	;=======================
-	; run OCEAN
-	;=======================
-	; copy OCEAN from AUX $2000 to MAIN $6000
-
-	lda	#$20		; AUX src $1000
-	ldy	#$60		; MAIN dest $6000
-	ldx	#96		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; debug ocean music
-	lda     #72
-	sta	current_pattern_smc+1
-	jsr	pt3_set_pattern
-.endif
-
-	jsr	$6000
-
-	;=======================
-	; run POLAR
-	;=======================
-	; copy POLAR from AUX $1000 to MAIN $8000
-
-	lda	#$10		; AUX src $1000
-	ldy	#$80		; MAIN dest $8000
-	ldx	#16		; 16 pages
-	jsr	copy_aux_main
-
-.if DEBUG=1
-	; setup music ocean=pattern24 (3:07) pattern#47
-;	lda	#76
-;	sta	current_pattern_smc+1
-;	jsr	pt3_set_pattern
-.endif
-
-	; run polar
-
-	jsr	$8000
-
-.endif
-
 
 
 	;=======================
@@ -556,11 +329,27 @@ forever:
 	jmp	forever
 
 
-	.include "wait_keypress.s"
-	.include "zx02_optim.s"
-	.include "gs_interrupt.s"
-	.include "pt3_lib_mockingboard_patch.s"
-	.include "hardware_detect.s"
+	;=========================
+	; print next dni number
+print_next_dni:
+	jsr	clear_all
+
+	ldy	#$4
+	sty	XPOS
+	iny
+	sty	YPOS
+
+	jsr	inc_base5
+
+	jmp	draw_full_dni_number	; tail
+
+
+
+;	.include "wait_keypress.s"
+;	.include "zx02_optim.s"
+;	.include "gs_interrupt.s"
+;	.include "pt3_lib_mockingboard_patch.s"
+;	.include "hardware_detect.s"
 
 
 start_message:

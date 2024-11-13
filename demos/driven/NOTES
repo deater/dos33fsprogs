@@ -33,15 +33,25 @@ Mem usage plan:
 Disk1 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 T         0 = Qboot
-T         1 = QLOAD      1518 bytes     1T      ( 4096)  3k free
+T         1 = QLOAD      1541 bytes     1T      ( 4096)  3k free
 T         2 = MUSIC      8645 bytes     3T      (12288)  3k free
-T         5 = INTRO      9704 bytes     3T      (12288)  3k free
+T         5 = INTRO      9335 bytes     3T      (12288)  3k free
 T         8 = CREDITS    7487 bytes     2T      ( 8192)  500B free
 T	 11 = DNI	 2133 bytes     1T      (4096)   2k free
 T	 12 = ATRUS	 9506 bytes     3T      (12288)  3k free
 T	 15 = GRAPHICS	21967 bytes     6T	(24576)  2k free
 T	 21 = MAGLEV	32000 bytes	8T	(32768)	 0k free
 DISK HAS 10,29..34 free = 24k free
+
+Loader:
+	Load QLOAD->$1000/$1FFF
+	Load 
+	Load MUSIC   ->LC1 $D000/$F000
+	Load Intro   -> $8000->$AFFF (4k free)
+	Load Atrus   -> $8000->$AFFF (4k free)
+	Load MAGLEV  -> $4000->$BFFF		AUX: $1000->$8FFF (12k free)
+	Load Graphics-> $6000->$BFFF
+	Load Credits -> $8000->$9FFF
 
 note: below is not accurate
 

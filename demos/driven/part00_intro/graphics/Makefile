@@ -42,8 +42,8 @@ logo_frame01.hgr.zx02:	logo_frame01.hgr
 
 ####
 
-logo_frame46.hgr:	logo_frame46.png
-	$(PNG_TO_HGR) logo_frame46.png > logo_frame46.hgr
+logo_frame46.hgr:	logo_frame46_nod.png
+	$(PNG_TO_HGR) logo_frame46_nod.png > logo_frame46.hgr
 
 logo_frame46.hgr.zx02:	logo_frame46.hgr
 	$(ZX02) -f logo_frame46.hgr logo_frame46.hgr.zx02
