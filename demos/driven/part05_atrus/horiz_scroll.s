@@ -26,10 +26,14 @@ pan_outer_loop:
 	clc
 	adc	DRAW_PAGE
 	sta	pil_smc2+2	; lda
+	sta	pil_smc12+2	; lda
+	sta	pil_smc22+2	; lda
 	sta	pil_smc6+2	; lda
 	eor	#$60
 	sta	pil_smc1+2	; sta
 	sta	pil_smc3+2	; sta
+	sta	pil_smc13+2	; sta
+	sta	pil_smc23+2	; sta
 
 
 	; $6000
@@ -47,6 +51,8 @@ pan_outer_loop:
 	lda	hposn_low,X
 	sta	pil_smc1+1
 	sta	pil_smc2+1
+	sta	pil_smc12+1
+	sta	pil_smc22+1
 	sta	pil_smc6+1
 	sta	pil_smc5+1
 	sta	pil_smc8+1
@@ -55,6 +61,8 @@ pan_outer_loop:
 	clc
 	adc	#1
 	sta	pil_smc3+1
+	sta	pil_smc13+1
+	sta	pil_smc23+1
 	sta	pil_smc7+1
 	sta	pil_smc9+1
 
@@ -64,10 +72,15 @@ pan_outer_loop:
 
 	; original: 6+(30*39)-1 = 1175
 	; new	    6+(24*39)-1 = 941
+	; unroll?   6+(41*20)-1 = 825
+	; unroll by 3	6+(58*13)-1 = 760
 
 	ldy	#0			; start col0			; 2
 pil_smc1:
 	ldx	$2000,Y			; even col			; 4+
+
+	;===================================
+	; loop1
 
 pan_inner_loop:
 
@@ -80,6 +93,42 @@ pil_smc3:
 	ora	left_lookup_next,X					; 4+
 
 pil_smc2:
+	sta	$2000,Y			; update			; 5
+
+	iny								; 2
+
+	;===================================
+	; loop2
+
+;pan_inner_loop:
+
+	; X from previous loop
+
+	lda	left_lookup_main,X	; lookup next			; 4+
+
+pil_smc13:
+	ldx	$2000+1,Y		; odd col			; 4+
+	ora	left_lookup_next,X					; 4+
+
+pil_smc12:
+	sta	$2000,Y			; update			; 5
+
+	iny								; 2
+
+	;===================================
+	; loop3
+
+;pan_inner_loop:
+
+	; X from previous loop
+
+	lda	left_lookup_main,X	; lookup next			; 4+
+
+pil_smc23:
+	ldx	$2000+1,Y		; odd col			; 4+
+	ora	left_lookup_next,X					; 4+
+
+pil_smc22:
 	sta	$2000,Y			; update			; 5
 
 	iny								; 2
