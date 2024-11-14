@@ -164,7 +164,7 @@ graphics:
 
 	; meet...
 	jsr	move_and_print
-	lda	#1
+	lda	#2
 	jsr	wait_seconds
 ;	jsr	wait_until_keypress
 
@@ -210,12 +210,17 @@ graphics:
 	; Perhaps2
 	jsr	move_and_print
 	jsr	move_and_print
-	lda	#1
+	lda	#2
 	jsr	wait_seconds
 ;	jsr	wait_until_keypress
 
 	bit	FULLGR
 
+	; wait till end of song essentially
+
+wait_till_right_pattern8:
+	cmp	current_pattern_smc+1
+	bne	wait_till_right_pattern8
 
 	rts
 

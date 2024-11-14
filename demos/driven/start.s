@@ -304,7 +304,7 @@ load_program_loop:
 
 	sei				; stop music interrupts
 	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
+;	jsr	clear_ay_both		; stop from making noise
 
 	; load GRAPHICS
 
@@ -315,6 +315,7 @@ load_program_loop:
 
 	; restart music
 
+	jsr	unmute_ay_both
 	cli		; start interrupts (music)
 
 	; Run GRAPHICS

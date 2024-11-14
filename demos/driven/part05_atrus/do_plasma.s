@@ -82,7 +82,7 @@ display_normal:
 	; rows 5..17 = 40..136 or so?
 
 bottom_smc:
-	ldx	#16			; lines 0-23	lignes 0-23	; 2
+	ldx	#16			; lines 0-23	lines 0-23	; 2
 
 display_line_loop:
 ; 0
@@ -151,7 +151,7 @@ left_smc:
 
 	dex								; 2
 top_smc:
-	cpx	#5
+	cpx	#4
 	bne	display_line_loop					; 2/3
 
 ; ============================================================================

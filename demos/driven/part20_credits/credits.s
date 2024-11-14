@@ -482,7 +482,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte  9,"Custom Graphics/Logo:",0		; 21 (9.5)
+	.byte  9,"Falling Graphic, Logo:",0		; 22 (9)
 	.byte 20," ",0
 	.byte 16,"Steffest",0				; 8 (16)
 	.byte 20," ",0
