@@ -201,12 +201,12 @@ draw_sprites:
 
 
 	;===========================
-	; keeper1
+	; catherine
 
 	lda	GUITAR_FRAME
 	and	#$1f
 	tax
-	lda	keeper1_pattern,X
+	lda	catherine_pattern,X
 	tax
 
 
@@ -216,20 +216,20 @@ draw_sprites:
 	lda	#160
 	sta	CURSOR_Y
 
-	lda	keeper_l,X
+	lda	moiety_l,X
 	sta	INL
-	lda	keeper_h,X
+	lda	moiety_h,X
 	sta	INH
 
 	jsr	hgr_draw_sprite
 
 	;====================
-	; keeper2
+	; moiety2
 
 	lda	GUITAR_FRAME
 	and	#$1f
 	tax
-	lda	keeper2_pattern,X
+	lda	moiety2_pattern,X
 	tax
 
 
@@ -239,9 +239,9 @@ draw_sprites:
 	lda	#160
 	sta	CURSOR_Y
 
-	lda	keeper_l,X
+	lda	moiety_l,X
 	sta	INL
-	lda	keeper_h,X
+	lda	moiety_h,X
 	sta	INH
 
 	jsr	hgr_draw_sprite
@@ -395,32 +395,32 @@ guitar_l:
 guitar_h:
 	.byte >guitar0,>guitar1,>guitar2
 
-	.include	"graphics/keeper1_sprites.inc"
-	.include	"graphics/keeper2_sprites.inc"
+	.include	"graphics/catherine_sprites.inc"
+	.include	"graphics/moiety2_sprites.inc"
 
-keeper_l:
-	.byte <keeper_r0,<keeper_r1,<keeper_r2
-	.byte <keeper_r3,<keeper_r4,<keeper_r5
-	.byte <keeper_r6,<keeper_r7
-	.byte <keeper_l0,<keeper_l1,<keeper_l2
-	.byte <keeper_l3,<keeper_l4,<keeper_l5
-	.byte <keeper_l6,<keeper_l7
+moiety_l:
+	.byte <moiety_r0,<moiety_r1,<moiety_r2
+	.byte <moiety_r3,<moiety_r4,<moiety_r5
+	.byte <moiety_r6,<moiety_r7
+	.byte <moiety_l0,<moiety_l1,<moiety_l2
+	.byte <moiety_l3,<moiety_l4,<moiety_l5
+	.byte <moiety_l6,<moiety_l7
 
-keeper_h:
-	.byte >keeper_r0,>keeper_r1,>keeper_r2
-	.byte >keeper_r3,>keeper_r4,>keeper_r5
-	.byte >keeper_r6,>keeper_r7
-	.byte >keeper_l0,>keeper_l1,>keeper_l2
-	.byte >keeper_l3,>keeper_l4,>keeper_l5
-	.byte >keeper_l6,>keeper_l7
+moiety_h:
+	.byte >moiety_r0,>moiety_r1,>moiety_r2
+	.byte >moiety_r3,>moiety_r4,>moiety_r5
+	.byte >moiety_r6,>moiety_r7
+	.byte >moiety_l0,>moiety_l1,>moiety_l2
+	.byte >moiety_l3,>moiety_l4,>moiety_l5
+	.byte >moiety_l6,>moiety_l7
 
-keeper1_pattern:
+catherine_pattern:
 .byte 1,1,2,2,1,1,2,2
 .byte 1,2,3,4,5,4,3,4
 .byte 5,4,3,4,5,6,7,5
 .byte 7,6,5,4,3,2,1,2
 
-keeper2_pattern:
+moiety2_pattern:
 .byte 1+8,1+8,2+8,2+8,1+8,1+8,2+8,2+8
 .byte 1+8,2+8,3+8,4+8,5+8,4+8,3+8,4+8
 .byte 5+8,4+8,3+8,4+8,5+8,6+8,7+8,5+8

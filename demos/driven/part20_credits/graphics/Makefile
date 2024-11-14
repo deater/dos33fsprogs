@@ -1,9 +1,9 @@
 
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	keeper1_sprites.inc \
-	keeper2_sprites.inc guitar_sprites.inc \
-	other_sprites.inc
+all:	moiety1_sprites.inc \
+	moiety2_sprites.inc guitar_sprites.inc \
+	other_sprites.inc catherine_sprites.inc
 
 other_sprites.inc:	other_sprites.png
 	$(HGR_SPRITE) -s -l star0_sprite other_sprites.png  0 0  13 1 > other_sprites.inc
@@ -37,27 +37,36 @@ other_sprites.inc:	other_sprites.png
 
 
 
+catherine_sprites.inc:	catherine_sprites.png
+	$(HGR_SPRITE) -s -l moiety_r0 catherine_sprites.png  14 128  27 156 > catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r1 catherine_sprites.png  42 128  62 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r2 catherine_sprites.png  70 128  90 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r3 catherine_sprites.png  98 128 118 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r4 catherine_sprites.png 126 128 146 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r5 catherine_sprites.png 154 128 174 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r6 catherine_sprites.png 182 128 202 156 >> catherine_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r7 catherine_sprites.png 210 128 230 156 >> catherine_sprites.inc
 
 
-keeper1_sprites.inc:	keeper1_sprites.png
-	$(HGR_SPRITE) -s -l keeper_r0 keeper1_sprites.png  14 128  27 156 > keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r1 keeper1_sprites.png  42 128  62 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r2 keeper1_sprites.png  70 128  90 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r3 keeper1_sprites.png  98 128 118 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r4 keeper1_sprites.png 126 128 146 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r5 keeper1_sprites.png 154 128 174 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r6 keeper1_sprites.png 182 128 202 156 >> keeper1_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_r7 keeper1_sprites.png 210 128 230 156 >> keeper1_sprites.inc
+moiety1_sprites.inc:	moiety1_sprites.png
+	$(HGR_SPRITE) -s -l moiety_r0 moiety1_sprites.png  14 128  27 156 > moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r1 moiety1_sprites.png  42 128  62 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r2 moiety1_sprites.png  70 128  90 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r3 moiety1_sprites.png  98 128 118 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r4 moiety1_sprites.png 126 128 146 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r5 moiety1_sprites.png 154 128 174 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r6 moiety1_sprites.png 182 128 202 156 >> moiety1_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_r7 moiety1_sprites.png 210 128 230 156 >> moiety1_sprites.inc
 
-keeper2_sprites.inc:	keeper2_sprites.png
-	$(HGR_SPRITE) -s -l keeper_l0 keeper2_sprites.png  14 128  34 156 > keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l1 keeper2_sprites.png  42 128  62 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l2 keeper2_sprites.png  70 128  90 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l3 keeper2_sprites.png  98 128 118 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l4 keeper2_sprites.png 126 128 146 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l5 keeper2_sprites.png 154 128 174 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l6 keeper2_sprites.png 182 128 202 156 >> keeper2_sprites.inc
-	$(HGR_SPRITE) -s -l keeper_l7 keeper2_sprites.png 210 128 230 156 >> keeper2_sprites.inc
+moiety2_sprites.inc:	moiety2_sprites.png
+	$(HGR_SPRITE) -s -l moiety_l0 moiety2_sprites.png  14 128  34 156 > moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l1 moiety2_sprites.png  42 128  62 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l2 moiety2_sprites.png  70 128  90 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l3 moiety2_sprites.png  98 128 118 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l4 moiety2_sprites.png 126 128 146 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l5 moiety2_sprites.png 154 128 174 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l6 moiety2_sprites.png 182 128 202 156 >> moiety2_sprites.inc
+	$(HGR_SPRITE) -s -l moiety_l7 moiety2_sprites.png 210 128 230 156 >> moiety2_sprites.inc
 
 guitar_sprites.inc:	guitar_sprites.png
 	$(HGR_SPRITE) -s -l guitar0 guitar_sprites.png  14  32  41 62 > guitar_sprites.inc
@@ -69,8 +78,6 @@ guitar_sprites.inc:	guitar_sprites.png
 
 
 clean:
-	rm -f *~ \
-		keeper1_sprites.inc \
-		keeper2_sprites.inc guitar_sprites.inc \
-		other_sprites.inc
+	rm -f *~ *.inc
+
 
