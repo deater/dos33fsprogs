@@ -168,10 +168,16 @@ was_page1:
 done_pageflip:
 	sta	DRAW_PAGE						; 3
 
-plasma_end_smc:
-	lda	#52
+;plasma_end_smc:
+	lda	#$E
 	jsr	wait_for_pattern
+	bcc	no_grow_yet		; carry set = done
 
+	inc	PLASMA_GROW
+
+no_grow_yet:
+	lda	#$F
+	jsr	wait_for_pattern
 	bcc	wasnt_keypress
 
 	jmp	done_plasma
@@ -181,6 +187,8 @@ wasnt_keypress:
 	;====================
 	; make size bigger
 
+	lda	PLASMA_GROW
+	beq	skip_plasma_grow
 	lda	top_smc+1
 ;	cmp	#0
 	bmi	top_good
@@ -202,7 +210,7 @@ left_good:
 	beq	right_good
 	inc	right_smc+1
 right_good:
-
+skip_plasma_grow:
 
 
 ; 15?

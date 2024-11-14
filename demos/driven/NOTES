@@ -17,7 +17,21 @@ QLOAD: can be up to 4k, have room
 	GRAPHICS = 16k
 	CREDITS = 8k or so
 
-
+Timing:		Pattern		Going-on
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+		0,1,2,3		Intro
+		4		Start of Atrus
+		5 (rough)	Start of Scroll
+		C (rough)	End of Scroll
+		D (rough)	Holds up book
+		D		Plasma starts
+		F		Load maglev image
+		10		Maglev start
+		16		Graphics Load
+		18		Roughly Atrus
+		1B		Roughly falling guy
+		1C		Roughly credits start
+		1D = end of music
 
 Mem usage plan:
 	QLOAD at $1200..$1FFF (3.5k)

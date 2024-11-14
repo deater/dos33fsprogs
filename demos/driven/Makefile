@@ -28,9 +28,6 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
 	$(DOS33_RAW) driven.dsk 26 0 ./part20_credits/CREDITS 0 0
 
-
-
-
 ####
 
 part00_intro/INTRO:	

@@ -61,8 +61,8 @@ div8_loop:
 	;=============================
 	; do blue/orange
 
-	lda	#49
-	sta	plasma_end_smc+1
+;	lda	#49
+;	sta	plasma_end_smc+1
 
 	jsr	init_plasma_colors
 	jsr	do_plasma
@@ -132,11 +132,11 @@ change_mono:
 	sta	DRAW_PAGE
 
 	jsr	scroll_off
-.endif
+
 	lda     #0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
-
+.endif
 	rts
 
 .include "init_plasma.s"

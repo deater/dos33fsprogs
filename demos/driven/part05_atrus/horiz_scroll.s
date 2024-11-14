@@ -210,7 +210,7 @@ no_ticker:
 	jsr	hgr_page_flip
 
 	lda	SCROLL_OFFSET
-	cmp	#193
+	cmp	#164
 	beq	done_pan
 
 	jmp	pan_outer_outer_loop
@@ -346,9 +346,10 @@ draw_text_page3:
 scroll_text:
 	      ;0123456789012345678901234567890123456789
 ;	.byte "@@@@@@@@@@@@@@@@@@@@"
-	.byte "\]^_@I@HAVE@FOUND@A@W"
+	.byte "@\]^_@I@HAVE@FOUND@A@W"
 	.byte "AY@TO@GET@YOU@HOME[@YOU@MUST@TRAVEL@TO@R"
 	.byte "IVENQ@FREE@THE@PEOPLEQ@SAVE@MY@WIFEQ@AND"
 	.byte "@TRAP@MY@DAD[@OH@ALSO@RIVEN@IS@IMPLODING"
-	.byte "[@SIGNAL@ME@WHEN@YOU@ARE@DONE[@@@@@@@@@@"
-	.byte "@@@@@@@@@@@@@@"
+	.byte "[@@@@@@@@@@@@@@@@@@@@"
+;	.byte "[@SIGNAL@ME@WHEN@YOU@ARE@DONE[@@@@@@@@@@"
+;	.byte "@@@@@@@@@@@@@@"

@@ -264,5 +264,6 @@ atrus_message2:
 .byte 0,23,"time before the submission deadline.",0
 
 .include "../wipes/fx.hgr.center.by.pixel.s"
+;.include "../wipes/fx.hgr.2pass.lr.s"
 ;.include "../wipes/fx.hgr.fizzle.s"
 

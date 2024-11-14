@@ -23,6 +23,7 @@
 
 atrus_opener:
 	lda	#0
+	sta	PLASMA_GROW
 
 	bit     SET_GR
         bit     HIRES
@@ -100,7 +101,7 @@ atrus_opener:
 	lda	#$20
 	jsr	zx02_full_decomp
 
-	lda	#2
+	lda	#1
 	jsr	wait_seconds
 
 ;	jsr	wait_until_keypress
@@ -129,20 +130,20 @@ atrus_opener:
 
 ;	jsr	wait_until_keypress
 
-	bit	PAGE1
-
 	;=================================
-	; plasma
+	; go to overlook graphics
 	;=================================
 
-	lda	#<overlook_graphics
+	bit	PAGE1			; show page 1
+
+	lda	#<overlook_graphics	; load to page2
 	sta	zx_src_l+1
 	lda	#>overlook_graphics
 	sta	zx_src_h+1
 	lda	#$40
 	jsr	zx02_full_decomp
 
-	jsr	do_wipe_fizzle
+	jsr	do_wipe_fizzle		; wipe
 
 	rts
 
