@@ -183,8 +183,8 @@ aux_dest:
 	.byte $20,$10,$80,$20	;
 
 track_array:
-	.byte 2,2,5,8		; ???, MUSIC, INTRO, CREDITS
-	.byte 11,12,15,21	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 2,2,17,26		; ???, MUSIC, INTRO, CREDITS
+	.byte 28,13,20,5	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 25,26,27,28	;
 
 sector_array:
@@ -194,7 +194,7 @@ sector_array:
 
 length_array:
 	.byte 48,48,48,32	; ???, MUSIC, INTRO, CREDITS
-	.byte 16,48,95,127	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 16,63,95,127	; DNI, ATRUS, GRAPHICS, MAGLEV
 	.byte 16,16,16,96	;
 
 PT3_ENABLE_APPLE_IIC = 1
@@ -226,7 +226,7 @@ PT3_ENABLE_APPLE_IIC = 1
         .include	"pt3_lib_mockingboard_patch.s"
         .include	"hardware_detect.s"
         .include	"gr_page_flip.s"
-
+	.include	"wipes/fx.hgr.fizzle.s"
 
 	.include	"start.s"
 

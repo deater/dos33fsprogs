@@ -22,11 +22,14 @@ driven.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) driven.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) driven.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) driven.dsk 2 0 MUSIC		0 0
-	$(DOS33_RAW) driven.dsk 5 0 ./part00_intro/INTRO 0 0
-	$(DOS33_RAW) driven.dsk 8 0 ./part20_credits/CREDITS 0 0
-	$(DOS33_RAW) driven.dsk 12 0 ./part05_atrus/ATRUS 0 0
-	$(DOS33_RAW) driven.dsk 15 0 ./part10_graphics/GRAPHICS 0 0
-	$(DOS33_RAW) driven.dsk 21 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
+	$(DOS33_RAW) driven.dsk 5 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
+	$(DOS33_RAW) driven.dsk 13 0 ./part05_atrus/ATRUS 0 0
+	$(DOS33_RAW) driven.dsk 17 0 ./part00_intro/INTRO 0 0
+	$(DOS33_RAW) driven.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
+	$(DOS33_RAW) driven.dsk 26 0 ./part20_credits/CREDITS 0 0
+
+
+
 
 ####
 
@@ -72,7 +75,8 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
-	irq_wait.s vblank.s hgr_page_flip.s
+	irq_wait.s vblank.s hgr_page_flip.s \
+	wipes/fx.hgr.fizzle.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####
@@ -109,6 +113,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
 
 
 ####

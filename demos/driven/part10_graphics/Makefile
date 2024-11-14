@@ -16,8 +16,8 @@ graphics.o:	graphics.s \
 	graphics/a2_atrus.hgr.zx02 \
 	graphics/riven_233.aux.zx02 \
 	graphics/riven_233.bin.zx02 \
-	wipes/fx.hgr.center.by.pixel.s \
-	wipes/fx.hgr.fizzle.s
+	../wipes/fx.hgr.center.by.pixel.s \
+	../wipes/fx.hgr.fizzle.s
 	ca65 -o graphics.o graphics.s -l graphics.lst
 
 ###

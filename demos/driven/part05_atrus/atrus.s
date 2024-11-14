@@ -129,6 +129,20 @@ atrus_opener:
 
 ;	jsr	wait_until_keypress
 
+	bit	PAGE1
+
+	;=================================
+	; plasma
+	;=================================
+
+	lda	#<overlook_graphics
+	sta	zx_src_l+1
+	lda	#>overlook_graphics
+	sta	zx_src_h+1
+	lda	#$40
+	jsr	zx02_full_decomp
+
+	jsr	do_wipe_fizzle
 
 	rts
 
@@ -138,6 +152,8 @@ atrus10_graphics:
 	.incbin "graphics/atrus10_iipix.hgr.zx02"
 atrus11_graphics:
 	.incbin "graphics/atrus11_iipix.hgr.zx02"
+overlook_graphics:
+	.incbin "graphics/overlook_n.hgr.zx02"
 
 atrus_text:
 	.byte 7,20,"Thank God you've returned.",0
