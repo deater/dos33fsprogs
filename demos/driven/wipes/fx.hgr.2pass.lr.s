@@ -6,6 +6,8 @@
 
 WROW = $D0
 
+; original was $10
+LR_TIMEOUT = $40
 
 do_wipe_lr:
 	lda	#$00
@@ -26,7 +28,7 @@ h1_smc:
 	cmp	#$FF
 	bne	loop1
 
-	lda	#$10
+	lda	#LR_TIMEOUT
 	jsr	WaitForKeyWithTimeout
 	bmi	lrexit
 
@@ -50,7 +52,7 @@ h2_smc:
 	cmp	#$FE
 	bne	loop2
 
-	lda	#$10
+	lda	#LR_TIMEOUT
 	jsr	WaitForKeyWithTimeout
 	bmi	lrexit
 
@@ -67,13 +69,13 @@ WaitForKeyWithTimeout:
 ; out:   A clobbered (not always 0 if key is pressed, but also not the key pressed)
 ;        X/Y preserved
 	sec
-wait1:	pha
-wait2:	sbc	#1
-	bne	wait2
+wait11:	pha
+wait22:	sbc	#1
+	bne	wait22
 	pla
 	bit	KEYPRESS
 	bmi	wfk_exit
 	sbc	#1
-	bne	wait1
+	bne	wait11
 wfk_exit:
 	rts

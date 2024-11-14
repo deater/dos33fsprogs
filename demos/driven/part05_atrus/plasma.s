@@ -141,7 +141,7 @@ change_mono:
 
 .include "init_plasma.s"
 .include "do_plasma.s"
-.include "../hgr_clear_screen.s"
+;.include "../hgr_clear_screen.s"
 .include "scroll_off.s"
 ;.include "../irq_wait.s"
 

@@ -164,37 +164,37 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; ???, MUSIC, INTRO, CREDITS
-	.byte 1,1,1,1		; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 1,1,1,1		; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte 1,1,1,1		;
 
 load_address_array:
 	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
-	.byte $40,$80,$60,$40	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte $40,$60,$40,$80	; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte $60,$60,$60,$60	;
 
 start_address:
 	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
-	.byte $40,$80,$60,$40	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte $40,$60,$40,$80	; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte $80,$80,$80,$60	;
 
 aux_dest:
 	.byte $D0,$D0,$A0,$A0	; ???, MUSIC, INTRO, CREDITS
-	.byte $70,$50,$40,$10	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte $70,$40,$02,$82	; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte $20,$10,$80,$20	;
 
 track_array:
 	.byte 2,2,17,26		; ???, MUSIC, INTRO, CREDITS
-	.byte 28,13,20,5	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 28,20,5,13	; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte 25,26,27,28	;
 
 sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, INTRO, CREDITS
-	.byte 0,0,0,0		; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 0,0,0,0		; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte 0,0,0,0		;
 
 length_array:
 	.byte 48,48,48,32	; ???, MUSIC, INTRO, CREDITS
-	.byte 16,63,95,127	; DNI, ATRUS, GRAPHICS, MAGLEV
+	.byte 16,95,127, 58	; DNI, GRAPHICS, MAGLEV, ATRUS
 	.byte 16,16,16,96	;
 
 PT3_ENABLE_APPLE_IIC = 1
@@ -227,6 +227,9 @@ PT3_ENABLE_APPLE_IIC = 1
         .include	"hardware_detect.s"
         .include	"gr_page_flip.s"
 	.include	"wipes/fx.hgr.fizzle.s"
+	.include	"wipes/fx.hgr.2pass.lr.s"
+	.include	"wipes/fx.hgr.center.by.pixel.s"
+	.include	"hgr_clear_screen.s"
 
 	.include	"start.s"
 

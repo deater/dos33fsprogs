@@ -145,6 +145,11 @@ atrus_opener:
 
 	jsr	do_wipe_fizzle		; wipe
 
+wait_till_right_pattern99:
+        lda     #$10
+        jsr     wait_for_pattern
+        bcc     wait_till_right_pattern99
+
 	rts
 
 atrus03_graphics:

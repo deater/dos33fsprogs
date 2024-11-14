@@ -25,10 +25,6 @@ desire_start:
 load_loop:
 ;	jsr	wait_until_keypress
 
-	; dni
-
-;	jsr	dni_plasma
-
 
 	; already in hires when we come in?
 
@@ -39,19 +35,38 @@ load_loop:
 	bit	FULLGR
 	bit	PAGE1
 
-	; load image $2000
+	lda	#0
+	jsr	hgr_page1_clearscreen
+
+
+	; load image $4000
 
 	lda	#<logo_data_01
 	sta	zx_src_l+1
 	lda	#>logo_data_01
 	sta	zx_src_h+1
-	lda	#$20
+	lda	#$40
 	jsr	zx02_full_decomp
 
 	; wait a bit
 
-	lda	#4
+	lda	#1
 	jsr	wait_seconds
+
+	; wipe the logo onto the screen
+
+	jsr	do_wipe_lr
+
+
+wait_till_right_pattern5:
+        lda     #2
+        jsr     wait_for_pattern
+        bcc     wait_till_right_pattern5
+
+	; wait a bit
+
+;	lda	#3
+;	jsr	wait_seconds
 
 	;==============================
 	; gradually erase edges

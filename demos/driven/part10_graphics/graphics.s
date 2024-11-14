@@ -263,7 +263,7 @@ atrus_message2:
 .byte 0,22,"Perhaps that's because we ran out of",0
 .byte 0,23,"time before the submission deadline.",0
 
-.include "../wipes/fx.hgr.center.by.pixel.s"
+;.include "../wipes/fx.hgr.center.by.pixel.s"
 ;.include "../wipes/fx.hgr.2pass.lr.s"
 ;.include "../wipes/fx.hgr.fizzle.s"
 

@@ -372,7 +372,7 @@ done_draw_objects:
 
 
 .align $100
-	.include	"../hgr_clear_screen.s"
+;	.include	"../hgr_clear_screen.s"
 	.include	"vertical_scroll.s"
 
 	.include	"font_4am_1x8_oneline.s"

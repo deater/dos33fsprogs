@@ -73,7 +73,9 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
 	irq_wait.s vblank.s hgr_page_flip.s \
-	wipes/fx.hgr.fizzle.s
+	wipes/fx.hgr.fizzle.s \
+	wipes/fx.hgr.2pass.lr.s \
+	hgr_clear_screen.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####
@@ -111,6 +113,10 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 
 
 ####

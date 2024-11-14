@@ -15,6 +15,8 @@ driven_start:
 	; initializations
 	;=====================
 
+	bit	PAGE1
+
 	jsr	hardware_detect
 
 	lda	APPLEII_MODEL
@@ -53,13 +55,27 @@ driven_start:
 
 good_to_go:
 
+	;=========================================
+	;=========================================
+	; start loading the demo
+	;=========================================
+	;=========================================
+
+
 	;==================================
 	; print D'NI 1
 	;==================================
 
 	bit	SET_GR
 	bit	LORES		; set lo-res
-	bit	FULLGR
+;	bit	TEXTGR
+
+
+;	lda	#<load_message
+;	sta	OUTL
+;	lda	#>load_message
+;	sta	OUTH
+;	jsr	move_and_print
 
 	lda	#0
 	sta	NUMBER_HIGH
@@ -136,7 +152,7 @@ skip_all_checks:
 	sta	$C008		; use MAIN zero-page/stack/language card
 
 	;=============================
-	; want to load 4..9
+	; want to load 6..7
 
 	lda	#PART_MAGLEV
 	sta	COUNT
@@ -163,12 +179,14 @@ load_program_loop:
 
 	jsr	copy_main_aux
 
-;	inc	COUNT
-;	lda	COUNT
-;	cmp	#10
-;	bne	load_program_loop
-
 	jsr	print_next_dni
+
+	inc	COUNT
+	lda	COUNT
+	cmp	#8
+	bne	load_program_loop
+
+
 
 .if 0
 	;=======================
@@ -204,6 +222,8 @@ load_program_loop:
 	sta     WHICH_LOAD
 	jsr     load_file
 
+;	bit	FULLGR
+
 	; Run intro
 
 	cli			; start music
@@ -220,25 +240,39 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
+;	sei				; stop music interrupts
+;	jsr	mute_ay_both
+;	jsr	clear_ay_both		; stop from making noise
 
 	; load atrus
 
-	lda	#PART_ATRUS		; Atrus
-	sta	WHICH_LOAD
-	jsr	load_file
+;	lda	#PART_ATRUS		; Atrus
+;	sta	WHICH_LOAD
+;	jsr	load_file
 
 
 	; restart music
 
-	cli		; start interrupts (music)
+;	cli		; start interrupts (music)
 
 	;======================
 	; run atrus
 
+;	jsr	$8000
+
+
+	; copy ATRUS from AUX $8200 to MAIN $8000
+
+	lda	#$82		; AUX src $8200
+	ldy	#$80		; MAIN dest $8000
+	ldx	#58		; 58 pages
+	jsr	copy_aux_main
+
+	; run atrus
+
 	jsr	$8000
+
+
 .endif
 
 
@@ -248,9 +282,9 @@ load_program_loop:
 	; Run Maglev
 	;=======================
 	;=======================
-	; copy MAGLEV from AUX $1000 to MAIN $4000
+	; copy MAGLEV from AUX $200 to MAIN $4000
 
-	lda	#$10		; AUX src $1000
+	lda	#$02		; AUX src $1000
 	ldy	#$40		; MAIN dest $4000
 	ldx	#127		; 127 pages
 	jsr	copy_aux_main
@@ -362,3 +396,6 @@ start_message:
 message_type_offset:
 	.byte "   ",0
 	.byte $FF
+
+load_message:
+	.byte 16,22,	"LOADING",0
