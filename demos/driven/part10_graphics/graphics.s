@@ -219,7 +219,7 @@ graphics:
 	; wait till end of song essentially
 
 wait_till_right_pattern8:
-	cmp	current_pattern_smc+1
+	lda	current_pattern_smc+1
 	bne	wait_till_right_pattern8
 
 	rts
