@@ -183,10 +183,10 @@ submit:	driven.zip
 driven.zip:	driven.dsk file_id.diz
 	mkdir -p demosplash2024_driven
 	cp file_id.diz ./demosplash2024_driven
-	cp second_d1.dsk ./demosplash2024_driven
-	cp second_d2.dsk ./demosplash2024_driven
+	cp driven.dsk ./demosplash2024_driven
+#	cp second_d2.dsk ./demosplash2024_driven
 #	cp a2r_720p.mp4 ./demosplash2024_driven
-	cp a2r_screen.png ./demosplash2024_driven
-	zip -r a2_reality.zip demosplash2024_driven
+	cp driven_screenshot.png ./demosplash2024_driven
+	zip -r driven.zip demosplash2024_driven
 
 ####
