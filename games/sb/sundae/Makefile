@@ -23,11 +23,15 @@ SUNDAE:	sundae.o
 	ld65 -o SUNDAE sundae.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 sundae.o:	sundae.s ../zx02_optim.s \
-		../zp.inc ../hardware.inc
+		../zp.inc ../hardware.inc\
+		graphics/a2_sundae_title.gr.zx02 \
+		graphics/a2_sundae_bg.gr.zx02 \
+		graphics/a2_sundae_james.gr.zx02 \
+		graphics/sundae_sprites.inc
 	ca65 -o sundae.o sundae.s -l sundae.lst
 
-duck_graphics/duck_sprites.inc:	
-	cd duck_graphics && make
+graphics/a2_sundae_title.gr.zx02:	
+	cd graphics && make
 
 
 ####

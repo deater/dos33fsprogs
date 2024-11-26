@@ -140,9 +140,7 @@ CURSOR		= $9D
 
 CURRENT_DISK	= $DC
 
-; More zero-page addresses
-; we try not to conflict with anything DOS, MONITOR or BASIC related
-
+; for duck game
 
 D1_SCORE	= $E0
 D1_SCORE_H	= $E1
@@ -173,6 +171,22 @@ D2_YSPEED	= $ED
 OLD_X		= $EC
 OLDER_X		= $ED
 
+;================================
+; for sundae game
+
+CHERRY_X	= $E0
+CHERRY_Y	= $E1
+TREE1_X		= $E2
+TREE1_Y		= $E3
+TREE2_X		= $E4
+TREE2_Y		= $E5
+SUNDAE_X	= $E6
+SUNDAE_Y	= $E7
+
+
+;================================
+; common
+
 DISP_PAGE	= $EE
 DRAW_PAGE	= $EF
 
@@ -202,7 +216,7 @@ OUTH		=	$FF
 ; read any file slot 6 version
 ; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
 
-; modified to assembled with ca64 -- vmw
+; modified to assembled with ca65 -- vmw
 ; added code to patch it to run from current disk slot -- vmw
 
 
