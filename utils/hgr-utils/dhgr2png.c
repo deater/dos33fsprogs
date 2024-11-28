@@ -1,3 +1,5 @@
+/* Convert an Apple IIe double-hires memory capture to a PNG */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,7 +7,11 @@
 #include <fcntl.h>
 #include <errno.h>
 
+#include <sys/stat.h>
+
 #include <png.h>
+
+#define VERSION "0.0.1"
 
 #define PAL_LENGTH	16	// PNG_MAX_PALETTE_LENGTH
 
@@ -120,6 +126,20 @@ unsigned char flip_bits[16]={
 	15,		// 1111 -> 1111 white
 };
 
+static void print_help(char *name,int version) {
+
+	printf("%s\n",VERSION);
+
+	if (version) exit(1);
+
+	printf("Usage: %s FILENAME.BIN [FILENAME.AUX] OUTPUT\n",name);
+	printf("\twhere FILENAME.BIN is either a 16k aux/bin memory dump\n");
+	printf("\tor else you have separate 8k bin/aux memory dumps\n");
+	printf("\n");
+
+	exit(1);
+}
+
 
 //unsigned char flip_bits[16]={0,8,4,0xc,2,0xA,6,0xE,1,9,5,0xD,3,0xb,7,0xf};
 //unsigned char flip_bits[16]={0,1,2,3,4,5,7,8,9,10,11,12,13,14,15};
@@ -146,35 +166,75 @@ int main(int argc, char **argv) {
 	png_color *col;
 
 	/* print arguments */
-	if (argc<2) {
-		fprintf(stderr,"Usage: dhgr2 FILENAME.BIN FILENAME.AUX OUTPUT\n");
-		fprintf(stderr,"  where FILENAME.BIN/AUX are 8k AppleII HIRES images\n\n");
-		return -1;
+	if (argc<3) {
+		print_help(argv[0],0);
 	}
+
+	/* Assume 3 or 4 arguments */
+	/* if 3 arguments, it's 16k filename, output name */
+	/* if 4 arguments, it's 8k bin, 8k aux, output name */
+
+	/* FIXME: avoid accidentally over-writing?  Need -f to force? */
+
 
 	/* if no name specified, make one from the input name */
-	if (argc<4) {
-		sprintf(filename,"%s.png",argv[1]);
-	}
-	else {
-		strncpy(filename,argv[3],256-1);
-	}
+//	if (argc<4) {
+//		sprintf(filename,"%s.png",argv[1]);
+//	}
+//	else {
+//		strncpy(filename,argv[3],256-1);
+//	}
 
+	struct stat input_stat;
+	int bin_size,result;
+
+	/* check if argv[1] is 16k */
 	fd=open(argv[1],O_RDONLY);
 	if (fd<0) {
-		printf("Error opening %s! %s\n",argv[1],strerror(errno));
+		fprintf(stderr,"Error opening %s! %s\n",argv[1],strerror(errno));
 		return -1;
 	}
-	read(fd,bin_screen,8192);
-	close(fd);
+	result=fstat(fd,&input_stat);
+	if (result<0) {
+		fprintf(stderr,"Error statting!\n");
+		return -1;
+	}
 
-	fd=open(argv[2],O_RDONLY);
-	if (fd<0) {
-		printf("Error opening %s! %s\n",argv[2],strerror(errno));
+	bin_size=input_stat.st_size;
+	if (bin_size==16384) {
+		read(fd,aux_screen,8192);
+		read(fd,bin_screen,8192);
+		close(fd);
+		strncpy(filename,argv[2],256-1);
+	}
+	else if ((bin_size==8192) && (argc==4)) {
+		/* assume next file has next 8k */
+		fd=open(argv[2],O_RDONLY);
+		if (fd<0) {
+			printf("Error opening %s! %s\n",argv[2],strerror(errno));
+			return -1;
+		}
+		result=fstat(fd,&input_stat);
+		if (result<0) {
+			fprintf(stderr,"Error statting!\n");
+			return -1;
+		}
+		bin_size=input_stat.st_size;
+		if (bin_size!=8192) {
+			fprintf(stderr,"ERROR: File %s has unexpected size %d\n",
+				argv[1],bin_size);
+			return -1;
+		}
+
+		read(fd,aux_screen,8192);
+		close(fd);
+		strncpy(filename,argv[3],256-1);
+	}
+	else {
+		fprintf(stderr,"ERROR: File %s has unexpected size %d\n",
+			argv[1],bin_size);
 		return -1;
 	}
-	read(fd,aux_screen,8192);
-	close(fd);
 
 
 
