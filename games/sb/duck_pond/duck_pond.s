@@ -24,8 +24,8 @@
 ;      PRESS "F"  TO THROW BREAD
 ;       PRESS SPACEBAR TO START
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 duck_pond:
@@ -207,22 +207,22 @@ done_loop:
 
 	jmp	main_loop
 
-	.include	"zx02_optim.s"
-	.include	"gr_copy.s"
-	.include	"gr_offsets.s"
+	.include	"../zx02_optim.s"
+	.include	"../gr_copy.s"
+	.include	"../gr_offsets.s"
 
-	.include	"gr_putsprite_mask.s"
-	.include	"gr_pageflip.s"
+	.include	"../gr_putsprite_mask.s"
+	.include	"../gr_pageflip.s"
 
 	.include	"duck_score.s"
 	.include	"draw_ducks.s"
 	.include	"move_ducks.s"
 
 title_data:
-	.incbin "duck_graphics/a2_duckpond_title.gr.zx02"
+	.incbin "graphics/a2_duckpond_title.gr.zx02"
 
 main_data:
-	.incbin "duck_graphics/a2_duckpond.gr.zx02"
+	.incbin "graphics/a2_duckpond.gr.zx02"
 
-	.include "duck_graphics/num_sprites.inc"
-	.include "duck_graphics/duck_sprites.inc"
+	.include "graphics/num_sprites.inc"
+	.include "graphics/duck_sprites.inc"

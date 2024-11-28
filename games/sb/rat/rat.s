@@ -7,8 +7,8 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 div7_table     = $9C00
 mod7_table     = $9D00
@@ -359,34 +359,34 @@ long_wait_loop:
 	bne	long_wait_loop
 	rts
 
-	.include	"zx02_optim.s"
+	.include	"../zx02_optim.s"
 
-	.include	"hgr_sprite.s"
-	.include	"hgr_sprite_mask.s"
-	.include	"hgr_tables.s"
+	.include	"../hgr_sprite.s"
+	.include	"../hgr_sprite_mask.s"
+	.include	"../hgr_tables.s"
 
 .align	$100
-	.include	"duet.s"
+	.include	"../duet.s"
 
 music:
-	.incbin "rat_sound/fortnight.ed"
+	.incbin "sound/fortnight.ed"
 
 fn_image:
-	.incbin "rat_graphics/a2_fortnight.hgr.zx02"
+	.incbin "graphics/a2_fortnight.hgr.zx02"
 fn_99_image:
-	.incbin "rat_graphics/a2_fortnight_99.hgr.zx02"
+	.incbin "graphics/a2_fortnight_99.hgr.zx02"
 fn_100_image:
-	.incbin "rat_graphics/a2_fortnight_100.hgr.zx02"
+	.incbin "graphics/a2_fortnight_100.hgr.zx02"
 
 
 rat1_image:
-	.incbin "rat_graphics/a2_fortnight_rat1.hgr.zx02"
+	.incbin "graphics/a2_fortnight_rat1.hgr.zx02"
 rat2_image:
-	.incbin "rat_graphics/a2_fortnight_rat2.hgr.zx02"
+	.incbin "graphics/a2_fortnight_rat2.hgr.zx02"
 break_image:
-	.incbin "rat_graphics/a2_break.hgr.zx02"
+	.incbin "graphics/a2_break.hgr.zx02"
 
-	.include "rat_graphics/disk_sprites.inc"
+	.include "graphics/disk_sprites.inc"
 
 floppy_x:
 	.byte	10,12,14,16

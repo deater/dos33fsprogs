@@ -12,20 +12,20 @@ all:	sb.dsk
 
 ####
 
-sb.dsk:	QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE BACK_OFF \
-	./fish/FISH RAT ./dating/DATING_XR
+sb.dsk:	QBOOT QLOAD TITLE ./duck_pond/DUCK_POND ROOF ASPLODE BACK_OFF \
+	./fish/FISH ./rat/RAT ./dating/DATING_XR
 	cp $(EMPTY_DISK) sb.dsk
 	$(DOS33_RAW) sb.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) sb.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) sb.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) sb.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) sb.dsk  2  0 TITLE      0   0
-	$(DOS33_RAW) sb.dsk  5  0 DUCK_POND  0   0
+	$(DOS33_RAW) sb.dsk  5  0 ./duck_pond/DUCK_POND  0   0
 	$(DOS33_RAW) sb.dsk  8  0 ROOF       0   0
 	$(DOS33_RAW) sb.dsk  9  0 ASPLODE    0   0
 #	$(DOS33_RAW) sb.dsk  20 0 TARGET     0   0
 	$(DOS33_RAW) sb.dsk  14 0 ./fish/FISH      0   0
-	$(DOS33_RAW) sb.dsk  20 0 RAT        0   0
+	$(DOS33_RAW) sb.dsk  20 0 ./rat/RAT        0   0
 	$(DOS33_RAW) sb.dsk  22 0 BACK_OFF   0   0
 	$(DOS33_RAW) sb.dsk  24 0 ../peasant_mini/cliff/CLIMB   0   0
 	$(DOS33_RAW) sb.dsk  28 0 ./dating/DATING_XR  0   0
@@ -114,17 +114,6 @@ back_off.o:	back_off.s zx02_optim.s \
 	cd dating && make
 
 
-#CLIFF:	cliff.o
-#	ld65 -o CLIFF cliff.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-#cliff.o:	cliff.s zx02_optim.s \
-#		cliff_graphics/cliff_base.hgr.zx02 \
-#		zp.inc hardware.inc
-#	ca65 -o cliff.o cliff.s -l cliff.lst
-
-#cliff_graphics/cliff_base.hgr.zx02:	
-#	cd cliff_graphics && make
-
 ####
 
 TARGET:	target.o
@@ -141,26 +130,8 @@ target_graphics/target.hgr.zx02:
 
 ####
 
-RAT:	rat.o
-	ld65 -o RAT rat.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-rat.o:	rat.s zx02_optim.s duet.s hgr_sprite_mask.s hgr_sprite.s hgr_tables.s \
-		zp.inc hardware.inc \
-		rat_sound/fortnight.ed \
-		rat_graphics/a2_fortnight.hgr.zx02 \
-		rat_graphics/a2_fortnight_99.hgr.zx02 \
-		rat_graphics/a2_fortnight_100.hgr.zx02 \
-		rat_graphics/a2_fortnight_rat1.hgr.zx02 \
-		rat_graphics/a2_fortnight_rat2.hgr.zx02 \
-		rat_graphics/a2_break.hgr.zx02 \
-		rat_graphics/disk_sprites.inc
-	ca65 -o rat.o rat.s -l rat.lst
-
-rat_sound/fortnight.ed:	
-	cd rat_sound && make
-
-rat_graphics/a2_fortnight.hgr.zx02:	
-	cd rat_graphics && make
+./rat/RAT:	
+	cd rat && make
 
 ####
 
@@ -187,19 +158,8 @@ title_graphics/czmg4ap_title.hgr.zx02:
 
 ####
 
-DUCK_POND:	duck_pond.o
-	ld65 -o DUCK_POND duck_pond.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-duck_pond.o:	duck_pond.s zx02_optim.s \
-		zp.inc hardware.inc \
-		gr_copy.s duck_score.s gr_putsprite_mask.s \
-		draw_ducks.s move_ducks.s \
-		duck_graphics/duck_sprites.inc duck_graphics/num_sprites.inc
-	ca65 -o duck_pond.o duck_pond.s -l duck_pond.lst
-
-duck_graphics/duck_sprites.inc:	
-	cd duck_graphics && make
-
+./duck_pond/DUCK_POND:	
+	cd duck_pond && make
 
 ####
 
@@ -209,15 +169,18 @@ HELLO:	hello.bas
 ####
 
 clean:	
-	rm -f *.lst *.o QBOOT QLOAD TITLE DUCK_POND ROOF ASPLODE TARGET CLIFF RAT *~
+	rm -f *.lst *.o *~ QBOOT QLOAD TITLE ROOF ASPLODE
+	cd duck_pond && make clean
+	cd rat && make clean
 	cd asplode_sound && make clean
 	cd dating && make clean
 	cd rat_sound && make clean
 	cd title_sound && make clean
 	cd asplode_graphics && make clean
-	cd cliff_graphics && make clean
-	cd duck_graphics && make clean
-	cd rat_graphics && make clean
 	cd roof_graphics && make clean
-	cd target_graphics && make clean
 	cd title_graphics && make clean
+
+distclean:
+	rm -f *.lst *.o *~ QBOOT QLOAD TITLE ROOF ASPLODE
+	cd duck_pond && make distclean
+	cd rat && make distclean
