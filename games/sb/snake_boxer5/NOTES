@@ -1,0 +1,22 @@
+snake moves up and down?  randomly attacks?
+	coils then attacks
+
+red bars are your lives
+KOs are times you've killed snake
+
+snake changes color each time you KO, turns bluer? and moves faster?
+	green -> cyan -> light blue -> red
+
+you and snake blink a few times once you die
+
+
+
+
+graphics: original IIpix conversion
+			original	updated
+			--------	-------
+	hgr		4578		2911
+	dhgr.aux	5872		2690
+	dhgr.bin	5612		2756
+			=====		====
+			16,062		6,357

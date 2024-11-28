@@ -15,17 +15,18 @@ all:	snake_boxer5.dsk
 snake_boxer5.dsk:	HELLO SNAKE_BOXER5
 	cp $(EMPTY_DISK) snake_boxer5.dsk
 	$(DOS33) -y snake_boxer5.dsk SAVE A HELLO
-	$(DOS33) -y snake_boxer5.dsk BSAVE -a 0x6000 SNAKE_BOXER5
+	$(DOS33) -y snake_boxer5.dsk BSAVE -a 0x4000 SNAKE_BOXER5
 
 ###
 
 SNAKE_BOXER5:	snake_boxer5.o
-	ld65 -o SNAKE_BOXER5 snake_boxer5.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o SNAKE_BOXER5 snake_boxer5.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 snake_boxer5.o:	snake_boxer5.s ../zx02_optim.s \
 		../zp.inc ../hardware.inc\
 		graphics/videlectrix.gr.zx02 \
-		graphics/gameplay.gr.zx02
+		graphics/gameplay.gr.zx02 \
+		graphics/title.hgr.zx02
 	ca65 -o snake_boxer5.o snake_boxer5.s -l snake_boxer5.lst
 
 graphics/videlectrix.gr.zx02:	

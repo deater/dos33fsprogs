@@ -48,12 +48,77 @@ intro:
 	jsr	wait_until_keypress
 
 
-
 	;===================
 	; TITLE SCREEN
 	;===================
 
 title_screen:
+
+	lda	#<title_hgr_data
+	sta	ZX0_src
+	lda	#>title_hgr_data
+	sta	ZX0_src+1
+
+	lda	#$20			; load at $2000
+
+	jsr	full_decomp
+
+	bit	HIRES
+
+	jsr	wait_until_keypress
+
+
+	;===================
+	; DHGR TITLE SCREEN
+	;===================
+
+dhgr_title_screen:
+
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+	sta	AN3             ; set double hires
+	sta	EIGHTYCOLON     ; 80 column
+	sta	SET80COL        ; 80 store
+
+	bit	PAGE1   ; start in page1
+
+	lda	#<title_dhgr_bin_data
+	sta	ZX0_src
+	lda	#>title_dhgr_bin_data
+	sta	ZX0_src+1
+
+	lda	#$20			; load at $2000
+
+	jsr	full_decomp
+
+	bit	PAGE2			; store in AUX $2000
+
+	lda	#<title_dhgr_aux_data
+	sta	ZX0_src
+	lda	#>title_dhgr_aux_data
+	sta	ZX0_src+1
+
+	lda	#$20
+
+	jsr	full_decomp
+
+	jsr	wait_until_keypress
+
+	; disable 80column mode
+        sta     SETAN3
+        sta     CLR80COL
+        sta     EIGHTYCOLOFF
+        bit     PAGE1
+
+
+	;===================
+	; GAMEPLAY SCREEN
+	;===================
+
+gameplay_screen:
+	bit	LORES
+
 
 	lda	#<gameplay_data
 	sta	ZX0_src
@@ -269,4 +334,13 @@ videlectrix_data:
 
 gameplay_data:
 	.incbin "graphics/gameplay.gr.zx02"
+
+title_hgr_data:
+	.incbin "graphics/title.hgr.zx02"
+
+title_dhgr_aux_data:
+	.incbin "graphics/title.dhgr.aux.zx02"
+
+title_dhgr_bin_data:
+	.incbin "graphics/title.dhgr.bin.zx02"
 
