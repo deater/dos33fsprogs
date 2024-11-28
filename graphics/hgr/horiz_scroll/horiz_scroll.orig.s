@@ -1,6 +1,9 @@
 	;============================
 	; do the pan
 
+	; 427a2 (272,290 cycles)
+
+
 do_horiz_scroll:
 
 pan_loop:
@@ -8,7 +11,7 @@ pan_loop:
 	lda	#0
 	sta	COUNT
 	sta	TICKER
-	sta	SCROLL_OFFSET
+	sta	P2_OFFSET
 
 pan_outer_outer_loop:
 
@@ -20,8 +23,8 @@ pan_outer_loop:
 	sta	pil_smc1+2
 	sta	pil_smc2+2
 	sta	pil_smc3+2
+;	sta	pil_smc4+2
 	sta	pil_smc6+2
-
 	; $4000
 	eor	#$60
 	sta	pil_smc5+2
@@ -33,72 +36,77 @@ pan_outer_loop:
 	lda	hposn_low,X
 	sta	pil_smc1+1
 	sta	pil_smc2+1
+;	sta	pil_smc4+1
 	sta	pil_smc6+1
 	sta	pil_smc5+1
 	sta	pil_smc8+1
 
 	; $2000+1
-	clc
-	adc	#1
+
 	sta	pil_smc3+1
+	inc	pil_smc3+1
 	sta	pil_smc7+1
+	inc	pil_smc7+1
 	sta	pil_smc9+1
+	inc	pil_smc9+1
+
 
 	stx	XSAVE
 
-	; inner loop
 
-	ldy	#0			; start col0		; 2
+	ldy	#0
+
+	; original: 36*39 = ??
+	; updated:  34*39
 
 pil_smc1:
-	ldx	$2000,Y			; even col		; 4+
+	ldx	$2000,Y			;			; 4+
 pan_inner_loop:
 
-	; X from previous loop
-
-	lda	left_lookup_main,X	; lookup next		; 4+
-;	sta	TEMPY						; 3
+	lda	left_lookup_main,X			; 4+
+	sta	TEMPY					; 3
 
 pil_smc3:
-	ldx	$2000+1,Y		; odd col		; 4+
-	ora	left_lookup_next,X				; 4+
+	ldx	$2000+1,Y				; 4+
+	lda	left_lookup_next,X			; 4+
+	ora	TEMPY					; 3
 
 pil_smc2:
-	sta	$2000,Y			; update		; 5
+	sta	$2000,Y					; 5
 
-	iny							; 2
-	cpy	#39						; 2
-	bne	pan_inner_loop					; 2/3
+	iny						; 2
+	cpy	#39					; 2
+	bne	pan_inner_loop				; 2/3
 
 ; leftover
 
 	; X has $2000,39
-	lda	left_lookup_main,X				; 4+
-;	sta	TEMPY						; 3
+	lda	left_lookup_main,X			; 4+
+	sta	TEMPY					; 3
 
 pil_smc5:
-	ldx	$4000						; 4+
-	ora	left_lookup_next,X				; 4+
-;	ora	TEMPY						; 3
+	ldx	$4000					; 4+
+	lda	left_lookup_next,X			; 4+
+	ora	TEMPY					; 3
 
 pil_smc6:
-	sta	$2000,Y						; 5
+	sta	$2000,Y					; 5
 
 	; X has $4000
-	lda	left_lookup_main,X				; 4+
-;	sta	TEMPY						; 3
+	lda	left_lookup_main,X			; 4+
+	sta	TEMPY					; 3
 
 pil_smc7:
-	ldx	$4000+1						; 4+
-	ora	left_lookup_next,X				; 4+
-;	ora	TEMPY						; 3
+	ldx	$4000+1					; 4+
+	lda	left_lookup_next,X			; 4+
+	ora	TEMPY					; 3
 
 pil_smc8:
-	sta	$4000						; 5
+	sta	$4000					; 5
 
-	lda	left_lookup_main,X				; 4+
+	lda	left_lookup_main,X			; 4+
 pil_smc9:
-	sta	$4000+1						; 5
+	sta	$4000+1					; 5
 
 	;   $2038  $2039   $4000    $4001
 	;0 DCCBBAA GGFFEED KJJIIHH  NNMMLLK
@@ -133,8 +141,8 @@ done_pan_outer_loop:
 
 	lda	#0
 	sta	TICKER
-	inc	SCROLL_OFFSET
-	inc	SCROLL_OFFSET
+	inc	P2_OFFSET
+	inc	P2_OFFSET
 
 	ldx	#0
 p2_loop:
@@ -144,7 +152,7 @@ p2_loop:
 	eor	#$60
 	sta	GBASH
 
-	ldy	SCROLL_OFFSET
+	ldy	P2_OFFSET
 	lda	(GBASL),Y
 	pha
 	iny

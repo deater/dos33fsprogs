@@ -1,3 +1,11 @@
 
 $8000-?? code
 
+block on done_pan_outer_loop:
+original scroll code from second reality:
+	427a2 = 272,290 cycles = 272kc * 1s/1023k = 266ms = 4 fps = 140/4=37s
+
+
+
+orig	427a2	272,290		266ms	3.8fps	37s
+opt	364a2	222,370		217ms	4.6fps	30s

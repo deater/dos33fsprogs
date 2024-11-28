@@ -66,7 +66,7 @@ hscroll_test:
 	; do the pan
 	;==============================
 
-	jsr	horiz_pan
+	jsr	do_horiz_scroll
 
 	; wait a bit
 
