@@ -3,8 +3,8 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 div7_table     = $9C00
 mod7_table     = $9D00
@@ -296,25 +296,25 @@ load_new_program:
 	sta	WHICH_LOAD
 	rts
 
-	.include	"zx02_optim.s"
-	.include	"hgr_tables.s"
-	.include	"hgr_logo_scroll.s"
-	.include	"audio.s"
+	.include	"../zx02_optim.s"
+	.include	"../hgr_tables.s"
+	.include	"../hgr_logo_scroll.s"
+	.include	"../audio.s"
 	.include	"play_purple.s"
-	.include	"lc_detect.s"
-	.include	"title_graphics/title_sprites.inc"
-	.include	"hgr_sprite.s"
-	.include	"hgr_sprite_big.s"
+	.include	"../lc_detect.s"
+	.include	"graphics/title_sprites.inc"
+	.include	"../hgr_sprite.s"
+	.include	"../hgr_sprite_big.s"
 
 title_data:
-	.incbin "title_graphics/czmg4ap_title.hgr.zx02"
+	.incbin "graphics/czmg4ap_title.hgr.zx02"
 vid_top:
-	.incbin "title_graphics/videlectrix_top.hgr.zx02"
+	.incbin "graphics/videlectrix_top.hgr.zx02"
 loading_data:
-	.incbin "title_graphics/the_cheat_loading.hgr.zx02"
+	.incbin "graphics/the_cheat_loading.hgr.zx02"
 
 purple_data:
-	.incbin "title_sound/purple.btc.zx02"
+	.incbin "sound/purple.btc.zx02"
 
 	; offsets of arrow
 arrow_y:

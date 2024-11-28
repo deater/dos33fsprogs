@@ -6,4 +6,4 @@ purple.btc.zx02:	purple.btc
 	$(ZX02) purple.btc purple.btc.zx02
 
 clean:	
-	rm -f *~
+	rm -f *~ *.zx02

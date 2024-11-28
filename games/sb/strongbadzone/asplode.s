@@ -35,8 +35,8 @@
 ;   sound
 
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 div7_table     = $400
 mod7_table     = $500
@@ -192,16 +192,16 @@ load_backgrounds:
 
 
 title_data:
-	.incbin "asplode_graphics/sb_title.hgr.zx02"
+	.incbin "graphics/sb_title.hgr.zx02"
 
 bg1_data:
-	.incbin "asplode_graphics/sb_zone.hgr.zx02"
+	.incbin "graphics/sb_zone.hgr.zx02"
 
 sound_data:
-	.incbin "asplode_sound/asplode_sound.btc.zx02"
+	.incbin "sound/asplode_sound.btc.zx02"
 
-	.include	"hgr_tables.s"
-	.include	"zx02_optim.s"
+	.include	"../hgr_tables.s"
+	.include	"../zx02_optim.s"
 
 	; start at least 8k in?
 
@@ -734,13 +734,13 @@ done_flip:
 
 
 
-	.include	"hgr_sprite_big.s"
+	.include	"../hgr_sprite_big.s"
 	.include	"cycle_colors.s"
-	.include	"hgr_copy_fast.s"
-	.include	"audio.s"
+	.include	"../hgr_copy_fast.s"
+	.include	"../audio.s"
 	.include	"play_asplode.s"
 
-	.include	"asplode_graphics/sb_sprites.inc"
+	.include	"graphics/sb_sprites.inc"
 
 
 shield_sprites_l:
@@ -816,4 +816,4 @@ bullet_vals_center:
 ; 9,5 -> 22,14 = 12x9 roughly.  3 times smaller, 4x3?  2x6?
 
 bg2_data:
-	.incbin "asplode_graphics/sb_zone2.hgr.zx02"
+	.incbin "graphics/sb_zone2.hgr.zx02"

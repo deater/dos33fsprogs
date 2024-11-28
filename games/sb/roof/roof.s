@@ -3,8 +3,8 @@
 ; by deater (Vince Weaver) <vince@deater.net>
 
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 
 hires_start:
@@ -65,8 +65,8 @@ which_ok:
 
 
 
-	.include	"zx02_optim.s"
+	.include "../zx02_optim.s"
 
 
 comp_data:
-	.incbin "roof_graphics/strongbad_sample.hgr.zx02"
+	.incbin "graphics/strongbad_sample.hgr.zx02"

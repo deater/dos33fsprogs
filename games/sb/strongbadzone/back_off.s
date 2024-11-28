@@ -7,8 +7,8 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
-.include "hardware.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
 
 div7_table     = $400
 mod7_table     = $500
@@ -361,19 +361,19 @@ done_flip:
 
 
 
-	.include	"hgr_sprite_big.s"
-	.include	"hgr_copy_fast.s"
-	.include	"audio.s"
+	.include	"../hgr_sprite_big.s"
+	.include	"../hgr_copy_fast.s"
+	.include	"../audio.s"
 	.include	"play_back_off.s"
 
-	.include	"asplode_graphics/bob_sprites.inc"
+	.include	"graphics/bob_sprites.inc"
 
 bg1_data:
-	.incbin		"asplode_graphics/bob_bg.hgr.zx02"
+	.incbin		"graphics/bob_bg.hgr.zx02"
 
 sound_data:
-	.incbin		"asplode_sound/back_off.btc.zx02"
+	.incbin		"sound/back_off.btc.zx02"
 
-	.include	"zx02_optim.s"
+	.include	"../zx02_optim.s"
 
 
