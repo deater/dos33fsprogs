@@ -319,6 +319,7 @@ ReverseCoordinates1Bit:
          bcs   -
          bcc   --                    ; always
 ++       rts
+.endif
 
 BuildHGRSparseBitmasks2Bit:
          lda   #%10000011
@@ -353,7 +354,7 @@ BuildHGRSparseBitmasks2Bit:
          sta   copymasks2bit+$E0
          sta   mirror_copymasks2bit
          rts
-
+.if 0
 BuildDHGRSparseBitmasks2Bit:
          ldx   #$00
          txa
