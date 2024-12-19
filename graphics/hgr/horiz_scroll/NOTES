@@ -9,3 +9,30 @@ original scroll code from second reality:
 
 orig	427a2	272,290		266ms	3.8fps	37s
 opt	364a2	222,370		217ms	4.6fps	30s
+
+
+
+current:
+	image in page1+page2, gradually shifts off, in end
+		page1 is same as page2
+
+	to use page flipping
+		page1+page2 get results
+		need two more pages with graphics?  32k?  excessive?
+	instead, load page1, page2 is page1 shifted by 2
+		then shift in page3
+	
+
+why not just walk through memory instead?
+
+$2000...$2027 (grab from $4000)
+$2028...$204F
+$2050...$2077 (grab from) (skip 8 bytes
+
+$2080...$20A7
+$20A8...$20CF
+$20D0...$20F7 (skip 8 bytes)
+
+
+
+
