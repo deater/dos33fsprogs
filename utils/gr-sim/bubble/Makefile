@@ -6,7 +6,7 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	bubble bubble_orig
+all:	bubble bubble_orig bubble_sf
 
 ####
 
@@ -15,6 +15,15 @@ bubble:	bubble.o $(GR_SIM)
 
 bubble.o:	bubble.c
 	$(CC) $(CFLAGS) -c bubble.c
+
+####
+
+bubble_sf:	bubble_sf.o $(GR_SIM)
+	$(CC) -o bubble_sf bubble_sf.o $(GR_SIM) $(SDL_LIBS) $(LFLAGS)
+
+bubble_sf.o:	bubble_sf.c
+	$(CC) $(CFLAGS) -c bubble_sf.c
+
 
 ####
 
@@ -28,4 +37,4 @@ bubble_orig.o:	bubble_orig.c
 ####
 
 clean:	
-	rm -f *~ *.o bubble bubble_orig
+	rm -f *~ *.o bubble bubble_orig bubble_sf

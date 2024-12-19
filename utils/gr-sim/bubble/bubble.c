@@ -177,6 +177,31 @@ int main(int argc, char **argv) {
 		float_to_fixed(r*i,&rh[i],&rl[i]);
 	}
 
+#if 0
+	printf("rh:\n");
+	printf(".byte\t");
+	for(i=0;i<NUM;i++) {
+		printf("$%02X,",rh[i]);
+	}
+	printf("\n");
+
+	printf("rl:\n");
+	printf(".byte\t");
+	for(i=0;i<NUM;i++) {
+		printf("$%02X,",rl[i]);
+	}
+	printf("\n");
+
+	printf("sin:\n");
+	printf(".byte\t");
+	for(i=0;i<256;i++) {
+		printf("$%02X,",(fsinh[i]&0xff));
+	}
+	printf("\n");
+
+
+#endif
+
 	// HGR2:FOR I=0 TO N:RR=R*I:FOR J=0 TO N
 
 	hgr();
@@ -204,7 +229,8 @@ int main(int argc, char **argv) {
 					&vh,&vl);
 
 				// X=U+T
-				//float_to_fixed( (u+fixed_to_float(th,tl)),&xh,&xl);
+				//float_to_fixed( (u+fixed_to_float(th,tl)),
+				//		&xh,&xl);
 
 				fixed_add(uh,ul,th,tl,&xh,&xl);
 

@@ -1,15 +1,37 @@
 # label         dos3.3 name     prefix for png file
 gp		GP.ZX02		gp
-peddle		PEDDLE.ZX02	peddle
 peddle3		PEDDLE3.ZX02	peddle3
-forty5		FORTY5.ZX02	45
-forty5b2d	FORTY5B2D.ZX02	45b2d
-forty5zoom	FORTY5Z.ZX02	45zoom
 zebra		ZEB.ZX02	zebra
 fm2j		FM2J.ZX02	Fm2JZOJWAAEVX0l_a2
-fmh3		FMH3.ZX02	FmH3w6vXwAAd1pF_a2
-fulu		FULU.ZX02	FULUd0EXEAgPCeG_a2
+fmh3		FMH3.ZX02	FmH3w6vXwAAd1pF_a2	'@helpcomputer0
+fulu		FULU.ZX02	FULUd0EXEAgPCeG_a2	'@starmanpixel
 fllg		FLLG.ZX02	FllGu1OWIAAAG8O_a2
 fplv		FPLV.ZX02	FpLVqVDaIAk9jtc_a2
 fxeg		FXEG.ZX02	FXeGzxKXgAEnsbj_a2
 fmdi		FMDI.ZX02	FmDIeJZXkAA4IiP_a2
+fqnp		FQNP.ZX02	FqNptseWYAYpG8W_a2	'@Dark_Scorpion19
+esch1		ESCH1.ZX02	FqFXs8dXgAMaRD2_a2	'M.C.Escher
+fqjd		FQJD.ZX02	FqJd09MXwAAoOpB_a2	'@StuntmAEn_Bob
+cheat		CHEAT.ZX02	cheat			'@StrongBadActual
+sb		SB.ZX02		sb			'@StrongBadActual
+flwg		FLWG		flwg			'@TabBaVN
+flwgp		FLWGP		flwgp			'@TabBaVN
+ctree		CTREE.ZX02	ctree			'@pixelblip1
+mtn		MTN.ZX02	mtn			'@helpcomputer0
+mtn2		MTN2.ZX02	mtn2			'@helpcomputer0
+fortnight	FORTNIGHT.ZX02	fortnight		'@deater78
+data		DATA.ZX02	data			'
+bdr		BDR.ZX02	bdr			'@MusicaJosh
+riven		RIVEN.ZX02	riven_hgr		'@deater78
+walk		WALK.ZX02	walk_hgr		'@Goldstarknight
+pgf		PGF.ZX02	a2_pgf			'
+space		SPACE.ZX02	a2_space		'
+red_castle	RED_CASTLE.ZX02	a2_red_castle		'@StuntmAEn_Bob
+hires		HIRES.ZX02	genuine_hires2		'@deater78
+gp_grongy	GP_G.ZX02	gp_grongy_a2		'grongy
+hacker_grongy	HACK_G.ZX02	hacker_grongy_a2	'grongy
+icecream_arrtop	ICECREAM.ZX02	icecream_arttop_a2	'arttop
+pc		PC.ZX02		a2_pc			'
+ycity		YCITY.ZX02	a2_ycity		' grongy
+smil		SMIL.ZX02	a2_smil			' WattTack
+whouse		WHOUSE.ZX02	a2_whouse		' UriS
