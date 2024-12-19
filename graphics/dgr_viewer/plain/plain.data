@@ -2,7 +2,8 @@
 myst		MYST		myst		'
 chanelwood	CHANNEL		channelwood
 selenetic	SELEN		selenetic
-sworg		SWORG		sworg_dgr	'
+sworg		SWORG		sworg_dgr	' @helpcomputer0
 test		TEST		dgr_test_bar
+lady2		LADY2		lady2_dgr	' @phubans
 lady1		LADY1		lady1_dgr	' number1exile
 lara1		LARA1		lara1_dgr	' number1exile
