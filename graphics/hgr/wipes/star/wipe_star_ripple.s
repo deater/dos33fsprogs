@@ -1,4 +1,5 @@
-; test some of the 4cade wipes
+; wipe star ripple
+
 
 .include "../zp.inc"
 .include "../hardware.inc"
@@ -6,14 +7,7 @@
 Coordinates2Bit=$8100
 EndCoordinates2Bit = Coordinates2Bit + (origEndCoordinates2Bit-origCoordinates2Bit)
 
-wipe_test:
-;	jmp	after
-test_graphic:
-;	.incbin "../graphics/a2_dating.hgr.zx02"
-
-;.include "../zx02_optim.s"
-
-after:
+wipe_star_ripple:
 
 	; from code.hgr.precomputed.2bit
 
@@ -53,38 +47,29 @@ col_smc2:
 	dex
 	bpl	outer_copy_coords_loop
 
-;	lda	#<test_graphic
-;	sta	zx_src_l+1
-;	lda	#>test_graphic
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
 
-;	ldy	#0
-;fake_hgr2:
-;	lda	#$0
-;	sta	$4000,Y
-;	dey
-;	bne	fake_hgr2
-;
-;	inc	fake_hgr2+2
-;	lda	fake_hgr2+2
-;	cmp	#$60
-;	bne	fake_hgr2
+	;=======================================
+	; set up screen
 
 
 	jsr	HGR2
 	jsr	HGR
 	bit	FULLGR
 
-	jsr	InitOnce
 
 do_it_again:
 
+oog:	; smc
 
-
-oog:
 	lda	#$FF
+
+	; clears E6 for some reason?
+
+	ldx	#$20
+	stx	$E6
+
+
+
 	jsr	BKGND0
 
 	jsr	wait_until_keypress
@@ -94,7 +79,7 @@ oog:
 	;=================================
 test_loop:
 
-
+	jsr	InitOnce
 
 	jsr	wait_until_keypress
 

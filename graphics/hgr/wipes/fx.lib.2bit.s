@@ -518,8 +518,8 @@ ric2_mm:
 	beq	ric2_p
 	lda	$bf, X
 	jsr	ric2_aslmod
-	sty	$be, x
-	sta	$bf, x
+	sty	$be, X
+	sta	$bf, X
 	sty	$fc
 	clc
 	adc	#>Coordinates2Bit
