@@ -448,130 +448,148 @@ rc2_pp:
 	rts
 
 
-.if 0
+
 RippleCoordinates2Bit:
-         ldy   #0
+	ldy	#0
 
-         ldx   #$33
--        lda   @ptrtbl, x
-         sta   $c0, x
-         dex
-         bpl   -
+	ldx	#$33
+ric2_m:
+	lda	ric2_ptrtbl, X
+	sta	$c0, X
+	dex
+	bpl	ric2_m
 
-         lda   #$9b
-         sta   $fe
-         iny
-         sty   $ff
+	lda	#$9b
+	sta	$fe
+	iny
+	sty	$ff
 
-         ldx   #6
--        lda   Coordinates2Bit + 1, x
-         sta   $7f, x
-         lda   Coordinates2Bit + 9, x
-         sta   $85, x
-         lda   Coordinates2Bit + 17, x
-         sta   $8b, x
-         lda   Coordinates2Bit + 65, x
-         sta   $9b, x
-         dex
-         bne   -
-         lda   Coordinates2Bit + 28
-         sta   $92
-         lda   Coordinates2Bit + 29
-         sta   $93
-         ldx   #4
--        lda   Coordinates2Bit + 33, x
-         sta   $93, x
-         lda   Coordinates2Bit + 41, x
-         sta   $97, x
-         lda   Coordinates2Bit + 83, x
-         sta   $a1, x
-         dex
-         bne   -
-         ldx   #2
--        lda   Coordinates2Bit + 125, x
-         sta   $a5, x
-         lda   Coordinates2Bit + 131, x
-         sta   $a7, x
-         lda   Coordinates2Bit + 139, x
-         sta   $a9, x
-         lda   Coordinates2Bit + 169, x
-         sta   $ab, x
-         lda   Coordinates2Bit + 237, x
-         sta   $ad, x
-         lda   Coordinates2Bit + 2193, x
-         sta   $af, x
-         lda   Coordinates2Bit + 6581, x
-         sta   $b1, x
-         dex
-         bne   -
+	ldx	#6
+ric2_m2:
+	lda	Coordinates2Bit + 1, X
+	sta	$7f, X
+	lda	Coordinates2Bit + 9, X
+	sta	$85, X
+	lda	Coordinates2Bit + 17, X
+	sta	$8b, X
+	lda	Coordinates2Bit + 65, X
+	sta	$9b, X
+	dex
+	bne	ric2_m2
+	lda	Coordinates2Bit + 28
+	sta	$92
+	lda	Coordinates2Bit + 29
+	sta	$93
+	ldx	#4
+ric2_m3:
+	lda	Coordinates2Bit + 33, X
+	sta	$93, X
+	lda	Coordinates2Bit + 41, X
+	sta	$97, X
+	lda	Coordinates2Bit + 83, X
+	sta	$a1, X
+	dex
+	bne	ric2_m3
+	ldx	#2
+ric2_m4:
+	lda	Coordinates2Bit + 125, X
+	sta	$a5, X
+	lda	Coordinates2Bit + 131, X
+	sta	$a7, X
+	lda	Coordinates2Bit + 139, X
+	sta	$a9, X
+	lda	Coordinates2Bit + 169, X
+	sta	$ab, X
+	lda	Coordinates2Bit + 237, X
+	sta	$ad, X
+	lda	Coordinates2Bit + 2193, X
+	sta	$af, X
+	lda	Coordinates2Bit + 6581, X
+	sta	$b1, X
+	dex
+	bne	ric2_m4
 
----      ldx   #$34
---       lda   $be, x
-         tay
-         ora   $bf, x
-         beq   +
-         lda   $bf, x
-         jsr   @aslmod
-         sty   $be, x
-         sta   $bf, x
-         sty   $fc
-         clc
-         adc   #>Coordinates2Bit
-         sta   $fd
-         ldy   #0
-         !byte $24
--        sec
-         lda   ($fc), y
-         pha
-         lda   $7e, x
-         sta   ($fc), y
-         pla
-         sta   $7e, x
-         inx
-         iny
-         bcc   -
-         dex
-         dex
-+        dex
-         dex
-         bne   --
-         ldy   #1
-         lda   $fe
-         eor   #<(411 - 2)
-         beq   +
-         ldy   #9
-         eor   #<(411 - 2) xor <(411 - 136)
-         bne   ++
-+
--        ldx   @zerotbl, y
-         sta   $0, x
-         sta   $1, x
-         dey
-         bpl   -
-++       dec   $fe
-         bne   ---
-         dec   $ff
-         bpl   ---
-         bmi   @exit                  ; always branches
-@aslmod  jsr   +
-+        cmp   #$1E
-         bcc   +
-         iny
-+        pha
-         tya
-         asl
-         tay
-         pla
-         rol
-         cmp   #$3C
-         bcc   @exit
-         sbc   #$3C
-@exit    rts
-@ptrtbl  !word 2, 4, 6, 10, 12, 14, 18, 20
-         !word 22, 28, 34, 36, 42, 44, 66, 68
-         !word 70, 84, 86, 126, 132, 140, 170, 238
-         !word 2194, 6582
-@zerotbl !byte $f0, $f2, $ca, $d2, $d8, $e0, $e2, $e6, $ea, $ee
+ric2_mmm:
+	ldx	#$34
+ric2_mm:
+	lda	$be, X
+	tay
+	ora	$bf, X
+	beq	ric2_p
+	lda	$bf, X
+	jsr	ric2_aslmod
+	sty	$be, x
+	sta	$bf, x
+	sty	$fc
+	clc
+	adc	#>Coordinates2Bit
+	sta	$fd
+	ldy	#0
+	.byte $24
+ric2_m5:
+	sec
+	lda	($fc), Y
+	pha
+	lda	$7e, X
+	sta	($fc), Y
+	pla
+	sta	$7e, X
+	inx
+	iny
+	bcc	ric2_m5
+	dex
+	dex
+ric2_p:
+	dex
+	dex
+	bne	ric2_mm
+	ldy	#1
+	lda	$fe
+	eor	#<(411 - 2)
+	beq	ric2_p2
+	ldy	#9
+	eor	#(<(411 - 2) ^ <(411 - 136))
+	bne	ric2_pp
+ric2_p2:
+ric2_m6:
+	ldx	ric2_zerotbl, Y
+	sta	$0, X
+	sta	$1, X
+	dey
+	bpl	ric2_m6
+ric2_pp:
+	dec	$fe
+	bne	ric2_mmm
+	dec	$ff
+	bpl	ric2_mmm
+	bmi	ric2_exit		; always branches
+ric2_aslmod:
+	jsr	ric2_p3
+ric2_p3:
+	cmp	#$1E
+	bcc	ric2_p4
+	iny
+ric2_p4:
+	pha
+	tya
+	asl
+	tay
+	pla
+	rol
+	cmp	#$3C
+	bcc	ric2_exit
+	sbc	#$3C
+ric2_exit:
+	rts
+ric2_ptrtbl:
+	.word 2, 4, 6, 10, 12, 14, 18, 20
+	.word 22, 28, 34, 36, 42, 44, 66, 68
+	.word 70, 84, 86, 126, 132, 140, 170, 238
+	.word 2194, 6582
+ric2_zerotbl:
+	.byte $f0, $f2, $ca, $d2, $d8, $e0, $e2, $e6, $ea, $ee
+
+.if 0
 
 SetupPrecomputed3Bit:
          ; build regular HGR lookup tables, then split them

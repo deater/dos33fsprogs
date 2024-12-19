@@ -13,6 +13,7 @@ wipes.dsk:	HELLO \
 	star/WIPE_STAR \
 	star/WIPE_STAR_BLOOM \
 	star/WIPE_STAR_IN \
+	star/WIPE_STAR_RIPPLE \
 	cascade/WIPE_CASCADE \
 	center/WIPE_CENTER \
 	diamond/WIPE_DIAMOND \
@@ -27,6 +28,7 @@ wipes.dsk:	HELLO \
 	$(DOS33) -y wipes.dsk BSAVE -a 0x1000 star/WIPE_STAR
 	$(DOS33) -y wipes.dsk BSAVE -a 0x1000 star/WIPE_STAR_BLOOM
 	$(DOS33) -y wipes.dsk BSAVE -a 0x1000 star/WIPE_STAR_IN
+	$(DOS33) -y wipes.dsk BSAVE -a 0x1000 star/WIPE_STAR_RIPPLE
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 diamond/WIPE_DIAMOND
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 diamond_stripes/WIPE_DIAMOND_STRIPE
 	$(DOS33) -y wipes.dsk BSAVE -a 0x6000 crystal/WIPE_CRYSTAL
@@ -70,6 +72,9 @@ star/WIPE_STAR:
 	cd star && make
 
 star/WIPE_STAR_IN:	
+	cd star && make
+
+star/WIPE_STAR_RIPPLE:	
 	cd star && make
 
 star/WIPE_STAR_BLOOM:	
