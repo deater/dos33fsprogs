@@ -242,8 +242,12 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-h] [-v] [-d] [-l label] PNGFILE x1 y1 x2 y2\n\n",name);
+	printf("\nUsage: %s [-h] [-v] [-d] [-s] [-l label] PNGFILE x1 y1 x2 y2\n\n",name);
 	printf("\t[-d] debug\n");
+	printf("\t[-h] help\n");
+	printf("\t[-b] version\n");
+	printf("\t[-s] emit size of sprite before the data\n");
+	printf("\t[-l label] for the sprite\n");
 	printf("\n");
 
 	exit(1);

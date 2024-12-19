@@ -18,8 +18,37 @@
 #define OUTPUT_ORIGINAL		0
 #define OUTPUT_ROWS		1
 #define OUTPUT_BINARY		2
+#define OUTPUT_FULL		3
 
 static int debug=0;
+
+
+static int shift(int value1, int value2, int left, int amount) {
+
+	int out1=0,out2=0;
+	int high1,high2;
+
+	high1=value1&0x80;
+	high2=value2&0x80;
+
+
+	switch(amount) {
+		case 0:	out1=value1; out2=value2; break;
+
+		/* X6543210 Ydcba987 */
+		/* X8765432 Y10dcba9 */
+		/* Xa987654 Y3210dcb */
+		/* Xcba9876 Y543210  */
+		case 1: out1=out1<<2;
+
+
+	}
+
+	if (left) return out1;
+	else return out2;
+
+}
+
 
 static int reverse_byte(int value) {
 	/* 0001 0111 -> X011 1010 */
@@ -314,11 +343,12 @@ int main(int argc, char **argv) {
 
 	char *filename;
 	int output_type=OUTPUT_ORIGINAL;
-	int start_offset=0x20;
+
+	int which;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvdrbo:") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdfrb") ) != -1) {
 
 		switch(c) {
 
@@ -337,8 +367,8 @@ int main(int argc, char **argv) {
 			case 'b':
 				output_type=OUTPUT_BINARY;
 				break;
-			case 'o':
-				start_offset=strtod(optarg,NULL);
+			case 'f':
+				output_type=OUTPUT_FULL;
                                 break;
 			default:
 				print_help(argv[0],0);
@@ -361,7 +391,6 @@ int main(int argc, char **argv) {
 	}
 
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
-	fprintf(stderr,"Using font offset of 0x%x\n",start_offset);
 
 	int pal[2],color1=0,color2=0,byte1,byte2;
 	/* for now, assume 14x16 font starting at 0,0 */
@@ -419,7 +448,7 @@ int main(int argc, char **argv) {
 		}
 	}
 	/* row based output */
-	if (output_type==OUTPUT_ROWS) {
+	else if (output_type==OUTPUT_ROWS) {
 		for(row=0;row<16;row++) {
 			printf("large_font_row%d:\n",row);
 			printf(".byte ");
@@ -433,6 +462,38 @@ int main(int argc, char **argv) {
 		}
 
 	}
+	/* full output */
+
+	/* X6543210 Xdcba987 */
+	/* X4321065 Xba987dc */
+	/* X2106543 X987dcba */
+	/* X0654321 X7cdba98 */
+
+
+
+	else if (output_type==OUTPUT_FULL) {
+		for(which=0;which<7;which++) {
+			for(row=0;row<16;row++) {
+				printf("large_font_%d_row%d:\n",which,row);
+				printf(".byte ");
+				for(c=0;c<32;c++) {
+					printf("$%02X,$%02X",
+						shift(font_data[c][row][0],
+							font_data[c][row][1],
+							0,which),
+						shift(font_data[c][row][0],
+							font_data[c][row][1],
+							1,which));
+
+					if (c!=31) printf(",");
+				}
+				printf("\n");
+			}
+
+		}
+
+	}
+
 	else if (output_type==OUTPUT_BINARY) {
 		fprintf(stderr,"ERROR!  Binary not implemented yet\n");
 	}

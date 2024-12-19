@@ -357,6 +357,9 @@ int main(int argc, char **argv) {
 		current_sector=next_sector;
 	}
 
+	/* why? */
+	vtoc_buffer[0xff]=2;
+
 	/**************************/
 	/* Write out VTOC to disk */
 	/**************************/
