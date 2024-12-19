@@ -403,7 +403,6 @@ BuildDHGRSparseBitmasks2Bit:
          rts
 .endif
 
-.if 0
 ReverseCoordinates2Bit:
 	ldy	#0                    ; <Coordinates2Bit
 	sty	$f0
@@ -447,7 +446,7 @@ rc2_p2:
 	bcc	rc2_mm                    ; always branches
 rc2_pp:
 	rts
-.endif
+
 
 .if 0
 RippleCoordinates2Bit:
