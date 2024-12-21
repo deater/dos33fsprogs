@@ -97,6 +97,13 @@ pil_smc1:
 	;===================================
 	; loop1
 
+; FF -> 9F
+; 1111 1111  -> 1001 1111	00 20 40 60 00 20 40 60
+; 7F -> 1F
+; 0111 111   -> 0001 1111
+
+; copy over high bit when do next copy
+
 pan_inner_loop:
 
 	; X from previous loop
@@ -181,16 +188,16 @@ pil_smc9:
 	sta	$6000+1					; 5
 
 
-	;   $2038  $2039   $4000    $4001
-	;0 DCCBBAA GGFFEED KJJIIHH  NNMMLLK
-	;1 EDDCCBB HHGGFFE LKKJJII  ~~NNMML
-	;2 FEEDDCC IIHHGGF MLLKKJJ  ~~~~NNM
-	;3 GFFEEDD JJIIHHG NMMLLKK  ~~~~~~N
-	;4 HGGFFEE KKJJIIH ~NNMMLL  ~~~~~~~
-	;5 IHHGGFF LLKKJJI ~~~NNMM  ~~~~~~~
-	;6 JIIHHGG MMLLKKJ ~~~~~NN  ~~~~~~~
-	;7 KJJIIHH NNMMLLK ~~~~~~~  ~~~~~~~
-	;8                 RQQPPOO  UUTTSSR
+	;   $2038    $2039    $4000    $4001
+	;0 XDCCBBAA XGGFFEED XKJJIIHH  XNNMMLLK
+	;1 XEDDCCBB XHHGGFFE XLKKJJII  X~~NNMML
+	;2 XFEEDDCC XIIHHGGF XMLLKKJJ  X~~~~NNM
+	;3 XGFFEEDD XJJIIHHG XNMMLLKK  X~~~~~~N
+	;4 XHGGFFEE XKKJJIIH X~NNMMLL  X~~~~~~~
+	;5 XIHHGGFF XLLKKJJI X~~~NNMM  X~~~~~~~
+	;6 XJIIHHGG XMMLLKKJ X~~~~~NN  X~~~~~~~
+	;7 XKJJIIHH XNNMMLLK X~~~~~~~  X~~~~~~~
+	;8                    RQQPPOO  UUTTSSR
 
 	; every 7 clicks need to copy over two more columns
 
@@ -213,6 +220,10 @@ done_pan_outer_loop:
 	cmp	#7
 	bne	no_ticker
 
+
+	;=================================
+	; did 7 shifts, time for new letter
+	; also copy over palette bits?
 next_letter:
 	lda	#0
 	sta	SCROLL_SUBSCROLL

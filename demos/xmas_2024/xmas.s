@@ -44,11 +44,16 @@ xmas_main:
 	jsr     load_file
 
 	;======================================
-	; star-wipe again
+	; star ripple wipe this time
 	;======================================
+
+	jsr	save_zp
+
+	jsr     RippleCoordinates2Bit
 
 	jsr	wipe_star
 
+	jsr	restore_zp
 
 	;======================================
 	; start music
@@ -64,6 +69,27 @@ repeat:
 
 finished:
 	jmp	repeat
+
+
+save_zp:
+	ldx	#0
+save_zp_loop:
+	lda	$0,X
+	sta	$6100,X
+	inx
+	bne	save_zp_loop
+	rts
+
+restore_zp:
+	ldx	#0
+restore_zp_loop:
+	lda	$6100,X
+	sta	$0,X
+	inx
+	bne	restore_zp_loop
+	rts
+
+
 
 
 .include "wait_keypress.s"

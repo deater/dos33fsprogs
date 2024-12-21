@@ -260,7 +260,9 @@ rc2_pp:
 
 .endif
 
-.if 0
+
+	; note, destroys...
+	;	essentially $70-$FF
 
 RippleCoordinates2Bit:
 	ldy	#0
@@ -404,4 +406,4 @@ ric2_zerotbl:
 
 
 
-.endif
+
