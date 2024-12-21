@@ -11,7 +11,10 @@ music_lib:
 
 PT3_ENABLE_APPLE_IIC = 1
 
-;	nop		; urgh to keep interrupt_handler from starting at $C4
+	nop
+	nop
+
+	nop		; urgh to keep interrupt_handler from starting at $C4
 			; which broke auto-patcher
 
 	; pt3 player

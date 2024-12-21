@@ -8,13 +8,13 @@
 
 ; ZX0 decompression addresses
 
-ZX0_src		= $00
-ZX0_dst		= $02
-offset		= $04
-bitr		= $06
-pntr		= $07
-WHICH_LOAD	= $09
-CURRENT_DISK	= $0A
+;ZX0_src		= $00
+;ZX0_dst		= $02
+;offset		= $04
+;bitr		= $06
+;pntr		= $07
+
+
 
 ; Zero page monitor routines addresses
 ; We don't use the monitor but we use some of these anyway
@@ -108,7 +108,8 @@ BOARD_COUNT	= $D5
 
 
 WHICH_SLOT = $DA		; from boot sector
-
+WHICH_LOAD	= $DB
+CURRENT_DISK	= $DC
 
 ;==============================================
 ; $E0-$EF use for common things, don't re-use

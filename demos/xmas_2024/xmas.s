@@ -16,6 +16,11 @@ xmas_main:
 	; init
 	;======================================
 
+
+	;======================================
+	; clear screen to black, HGR PAGE1
+	;======================================
+
 	lda	#$00
 	jsr	hgr_page1_clearscreen
 
@@ -24,14 +29,32 @@ xmas_main:
 	bit	PAGE1
 
 	;======================================
-	; draw opening scene
+	; star-wipe to Merry Christmas
 	;======================================
 
-	; start music
+	jsr	wipe_star
 
-	cli
+	;======================================
+	; Load guinea pig from disk
+	;======================================
+
+	lda     #4		; load Guinea Pig from disk
+	sta     WHICH_LOAD
+
+	jsr     load_file
+
+	;======================================
+	; star-wipe again
+	;======================================
 
 	jsr	wipe_star
+
+
+	;======================================
+	; start music
+	;======================================
+
+	cli
 
 	jsr	do_scroll
 
