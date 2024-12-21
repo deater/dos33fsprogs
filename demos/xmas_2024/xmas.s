@@ -56,9 +56,11 @@ xmas_main:
 
 	cli
 
+repeat:
+
 	jsr	do_scroll
 
-repeat:
+
 
 finished:
 	jmp	repeat
