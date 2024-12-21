@@ -37,7 +37,11 @@ xmas_main:
 
 	cli
 
+	bit	KEYRESET
+
 	jsr	wipe_star
+
+	jsr	do_scroll
 
 repeat:
 
@@ -49,6 +53,11 @@ finished:
 .include "irq_wait.s"
 
 .include "wipe_star.s"
+
+.include "horiz_scroll.s"
+.include "font/large_font.inc"
+.include "hgr_page_flip.s"
+.include "vblank.s"
 
 gp_hat_graphics:
 .incbin "graphics/gp_hgr.zx02"

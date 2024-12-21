@@ -1,4 +1,4 @@
-; XMAS 2023
+; XMAS 2024
 
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
@@ -112,11 +112,20 @@ print_no_mock:
 done_set_message:
 	sta	OUTH
 
-	; print the text
+	; print the mockingboard text
 
 	jsr	move_and_print
 
+	;==============================
+	;==============================
+	; print title text
 
+	lda	#<title_string
+	sta	OUTL
+	lda	#>title_string
+	sta	OUTH
+
+	jsr	move_and_print_list
 
 
 	;=======================
@@ -199,6 +208,19 @@ mockingboard_string:
 
 no_mockingboard_string:
 .byte   3,22,"NO MOCKINGBOARD, CONTINUING ANYWAY",0
+
+
+;             0123456789012345678901234567890123456789
+title_string:
+.byte 0,4, "XMAS 2024",0
+.byte 0,6, "BY THE GUINEA PIG GANG",0
+.byte 0,8, "CODE:  VINCE 'DEATER' WEAVER",0
+.byte 0,9, "ART:   GUINEAGIRL2424",0
+.byte 0,10,"FX:    4AM/QKUMBA",0
+.byte 0,11,"QLOAD: QKUMBA",0
+.byte 0,12,"MUSIC: ARRANGED BY TOYMUSIC",0
+.byte 0,13,"       (CASIO-8 DEMO SONG)",0
+.byte $FF
 
 .include "pt3_lib_mockingboard_patch.s"
 

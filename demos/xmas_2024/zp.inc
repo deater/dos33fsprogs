@@ -144,9 +144,17 @@ CX              = $F8
 CY              = $F9
 RR              = $FA
 
-; Credits
-BACKUP_OUTL	= $F2
-BACKUP_OUTH	= $F3
+; Scroll
+
+SCROLL_OFFSET   = $F0
+SCROLL_START    = $F1
+SCROLL_ODD      = $F2
+PLASMA_GROW     = $F3
+SCROLL_SUBSCROLL= $F4
+FONT1           = $F5
+FONT2           = $F6
+SCROLL_ROW      = $F7
+SCROLL_COL      = $F8
 
 
 ;==============================================
