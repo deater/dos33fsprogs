@@ -164,7 +164,7 @@ load_xmas:
 
 	; start code
 
-	jsr	$6000
+	jsr	$6200
 
 forever:
 	jmp	forever

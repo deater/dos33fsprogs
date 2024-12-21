@@ -167,11 +167,11 @@ which_disk_array:
 	.byte 1			; GP
 
 load_address_array:
-	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte $D0,$62,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 	.byte $40		; GP
 
 start_address:
-	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte $D0,$62,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 	.byte $40		; GP
 
 track_array:
@@ -183,7 +183,7 @@ sector_array:
 	.byte 0			; GP
 
 length_array:
-	.byte 32,32,60,32	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte 32,30,60,32	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 	.byte 32		; GP
 
 PT3_ENABLE_APPLE_IIC = 1

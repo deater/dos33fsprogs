@@ -126,11 +126,11 @@ music.o:	music.s zp.inc \
 ###
 
 XMAS:	xmas.o
-	ld65 -o XMAS xmas.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o XMAS xmas.o -C $(LINKER_SCRIPTS)/apple2_6200.inc
 
 xmas.o:	xmas.s \
 	zp.inc hardware.inc qload.inc \
-	wipe_star.s \
+	wipe_star.s horiz_scroll.s \
 	graphics/gp_hgr.zx02
 	ca65 -o xmas.o xmas.s -l xmas.lst
 
