@@ -188,7 +188,7 @@ no_mockingboard_string:
 
 ;             0123456789012345678901234567890123456789
 title_string:
-.byte 0,4, "XMAS 2024",0
+.byte 0,4, "XMAS 2024 (V1.1)",0
 .byte 0,6, "BY THE GUINEA PIG GANG",0
 .byte 0,8, "CODE:  VINCE 'DEATER' WEAVER",0
 .byte 0,9, "ART:   GUINEAGIRL2424",0

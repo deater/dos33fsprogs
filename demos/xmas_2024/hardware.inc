@@ -8,11 +8,14 @@ CLR80COL	=	$C000	; PAGE1/PAGE1 normal
 SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+
+RDVBLBAR	=	$C019	; iic
 TBCOLOR		=	$C022	; IIgs text fg/bg colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
 CYAREG		=	$C036	; iigs motor detect and clock speed
+RDVBLMSK	=	$C041	; iic read vbl interrupt
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
@@ -22,10 +25,18 @@ PAGE2		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
 AN3		=	$C05E	; Annunciator 3
+DISVBL		=	$C05B	; (write) (iic) (ioudison) disable VBL interrupt
+ENVBL		=	$C05B	; (write) (iic) (ioudison) enable VBL interrupt
+CLRAN3		=	$C05E	; (write) in 80-col mode, enable double graphics
+SETAN3		=	$C05F	; (write) in 80-col mode, disable double graphics
 
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
-PTRIG		=	$C070
+PTRIG		=	$C070	; analog input reset / reset VBL interrupt (iic)
+
+IOUDISON	=	$C07E	; (write) disable IOU
+IOUDISOFF	=	$C07F	; (write) enable IOU
+
 
 ; APPLESOFT BASIC ROUTINES
 

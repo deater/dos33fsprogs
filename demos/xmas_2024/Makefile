@@ -42,7 +42,7 @@ qload.o:	zp.inc hardware.inc music.inc qload.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
-	hgr_table.s gs_interrupt.s \
+	hgr_table.s gs_interrupt.s vblank.s \
 	zx02_optim.s wait_keypress.s hardware_detect.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
