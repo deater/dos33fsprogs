@@ -22,7 +22,6 @@ pan_outer_loop:
 
 	; $2000					; 0010 -> 0100 0011 -> 0101
 	lda	hposn_high,X
-;	pha
 	clc
 	adc	DRAW_PAGE
 	sta	pil_smc2+2	; lda
@@ -41,16 +40,12 @@ pan_outer_loop:
 	; this is always $60 when compact
 	; in theory don't even need to self modify
 
-;	pla
-;	clc
-;	adc	#$40
+;	lda	#$60
 
-	lda	#$60
-
-	sta	pil_smc5+2	; lda
-	sta	pil_smc7+2	; sta
-	sta	pil_smc8+2	; sta
-	sta	pil_smc9+2	; sta
+;	sta	pil_smc5+2	; lda
+;	sta	pil_smc7+2	; sta
+;	sta	pil_smc8+2	; sta
+;	sta	pil_smc9+2	; sta
 
 	; setup the low address bytes in the SMC
 
