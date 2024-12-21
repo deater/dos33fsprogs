@@ -37,35 +37,9 @@ xmas_main:
 
 	cli
 
-;	jsr	fireplace_opener
+	jsr	wipe_star
 
 repeat:
-
-	;======================================
-	; 3D tree
-	;======================================
-
-;	jsr	regular_tree
-
-	;======================================
-	; plasma tree
-	;======================================
-
-;	jsr	plasma_tree
-
-	;======================================
-	; snowflakes
-	;======================================
-
-;	jsr	do_snow
-
-
-	;======================================
-	; fireplace without vapor lock
-	;======================================
-
-
-;	jsr	fireplace_restart
 
 finished:
 	jmp	repeat
@@ -73,6 +47,8 @@ finished:
 
 .include "wait_keypress.s"
 .include "irq_wait.s"
+
+.include "wipe_star.s"
 
 gp_hat_graphics:
 .incbin "graphics/gp_hgr.zx02"

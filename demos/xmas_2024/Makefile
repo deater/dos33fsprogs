@@ -9,7 +9,7 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	xmas_2024.dsk
 
 xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC XMAS
+	MUSIC XMAS WIPE_STAR_DATA
 	cp $(EMPTY_DISK) xmas_2024.dsk
 	$(DOS33_RAW) xmas_2024.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) xmas_2024.dsk 0 2 QBOOT		1 1
@@ -17,6 +17,8 @@ xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
 	$(DOS33_RAW) xmas_2024.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) xmas_2024.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) xmas_2024.dsk 12 0 XMAS		0 0
+	$(DOS33_RAW) xmas_2024.dsk 16 0 WIPE_STAR_DATA	0 0
+
 
 
 ####
@@ -121,18 +123,21 @@ music.o:	music.s zp.inc \
 ###
 
 XMAS:	xmas.o
-	ld65 -o XMAS xmas.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
+	ld65 -o XMAS xmas.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 xmas.o:	xmas.s \
 	zp.inc hardware.inc qload.inc \
+	wipe_star.s \
 	graphics/gp_hgr.zx02
 	ca65 -o xmas.o xmas.s -l xmas.lst
 
+####
 
-###
+WIPE_STAR_DATA:	wipe_star_data.o
+	ld65 -o WIPE_STAR_DATA wipe_star_data.o -C $(LINKER_SCRIPTS)/apple2_8100.inc
 
-graphics/tree01.gr.zx02:	
-	cd graphics && make
+wipe_star_data.o:	wipe_star_data.s
+	ca65 -o wipe_star_data.o wipe_star_data.s -l wipe_star_data.lst
 
 ###
 

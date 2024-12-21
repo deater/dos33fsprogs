@@ -4,7 +4,7 @@
 .include "hardware.inc"
 .include "music.inc"
 
-;.include "common_defines.inc"
+.include "common_defines.inc"
 .include "qboot.inc"
 
 qload_start:
@@ -163,22 +163,22 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1		; MUSIC, XMAS
+	.byte 1,1,1		; MUSIC, XMAS, WIPE_STAR_DATA
 
 load_address_array:
-	.byte $D0,$80		; MUSIC, XMAS
+	.byte $D0,$60,$81	; MUSIC, XMAS, WIPE_STAR_DATA
 
 start_address:
-	.byte $D0,$80		; MUSIC, XMAS
+	.byte $D0,$60,$81	; MUSIC, XMAS, WIPE_STAR_DATA
 
 track_array:
-	.byte 4,12		; MUSIC, XMAS
+	.byte 4,12,16		; MUSIC, XMAS, WIPE_STAR_DATA
 
 sector_array:
-	.byte 0,0		; MUSIC, XMAS
+	.byte 0,0,0		; MUSIC, XMAS, WIPE_STAR_DATA
 
 length_array:
-	.byte 32,32		; MUSIC, XMAS
+	.byte 32,32,60		; MUSIC, XMAS, WIPE_STAR_DATA
 
 PT3_ENABLE_APPLE_IIC = 1
 
@@ -195,11 +195,6 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
-
-mod7_table      = $1c00
-div7_table      = $1d00
-hposn_low       = $1e00
-hposn_high      = $1f00
 
         .include        "hgr_table.s"
 

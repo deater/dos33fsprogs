@@ -128,6 +128,14 @@ load_xmas:
 
 	; load from disk
 
+	lda	#2			; load WIPE_DATA_STAR from disk
+	sta	WHICH_LOAD		; to $8100
+
+	jsr	load_file
+
+
+	; load from disk
+
 	lda     #1		; XMAS
 	sta     WHICH_LOAD
 	jsr     load_file
@@ -140,7 +148,7 @@ load_xmas:
 
 ;	cli			; start music
 
-	jsr	$8000
+	jsr	$6000
 
 
 
