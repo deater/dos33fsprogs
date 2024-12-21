@@ -128,6 +128,19 @@ done_set_message:
 	jsr	move_and_print_list
 
 
+	;===============================
+	;===============================
+	; Load Merry Christmas to page2
+	;===============================
+	;===============================
+
+	; load from disk
+
+	lda	#3			; load MERRY_XMAS
+	sta	WHICH_LOAD		; to $4000
+
+	jsr	load_file
+
 	;=======================
 	;=======================
 	; Load xmas

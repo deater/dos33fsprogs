@@ -9,7 +9,8 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	xmas_2024.dsk
 
 xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
-	MUSIC XMAS WIPE_STAR_DATA
+	MUSIC XMAS WIPE_STAR_DATA \
+	./graphics/MERRY_XMAS
 	cp $(EMPTY_DISK) xmas_2024.dsk
 	$(DOS33_RAW) xmas_2024.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) xmas_2024.dsk 0 2 QBOOT		1 1
@@ -18,6 +19,7 @@ xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
 	$(DOS33_RAW) xmas_2024.dsk 4 0 MUSIC		0 0
 	$(DOS33_RAW) xmas_2024.dsk 12 0 XMAS		0 0
 	$(DOS33_RAW) xmas_2024.dsk 16 0 WIPE_STAR_DATA	0 0
+	$(DOS33_RAW) xmas_2024.dsk 20 0 ./graphics/MERRY_XMAS 0 0
 
 
 

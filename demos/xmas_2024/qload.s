@@ -163,22 +163,22 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1		; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte 1,1,1,1		; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 load_address_array:
-	.byte $D0,$60,$81	; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 start_address:
-	.byte $D0,$60,$81	; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 track_array:
-	.byte 4,12,16		; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte 4,12,16,20	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 sector_array:
-	.byte 0,0,0		; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte 0,0,0,0		; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 length_array:
-	.byte 32,32,60		; MUSIC, XMAS, WIPE_STAR_DATA
+	.byte 32,32,60,32	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
 
 PT3_ENABLE_APPLE_IIC = 1
 
