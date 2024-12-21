@@ -105,13 +105,12 @@ pil_smc1:
 pan_inner_loop:
 
 	; X from previous loop
-llm1_smc:
-	lda	left_lookup_keep_main,X	; lookup next			; 4+
+
+	lda	left_lookup_main,X	; lookup next			; 4+
 
 pil_smc3:
 	ldx	$2000+1,Y		; odd col			; 4+
-lln1_smc:
-	ora	left_lookup_keep_next,X					; 4+
+	ora	left_lookup_next,X					; 4+
 
 pil_smc2:
 	sta	$2000,Y			; update			; 5
@@ -125,13 +124,11 @@ pil_smc2:
 
 	; X from previous loop
 
-llm2_smc:
-	lda	left_lookup_keep_main,X	; lookup next			; 4+
+	lda	left_lookup_main,X	; lookup next			; 4+
 
 pil_smc13:
 	ldx	$2000+1,Y		; odd col			; 4+
-lln2_smc:
-	ora	left_lookup_keep_next,X					; 4+
+	ora	left_lookup_next,X					; 4+
 
 pil_smc12:
 	sta	$2000,Y			; update			; 5
@@ -145,13 +142,11 @@ pil_smc12:
 
 	; X from previous loop
 
-llm3_smc:
-	lda	left_lookup_keep_main,X	; lookup next			; 4+
+	lda	left_lookup_main,X	; lookup next			; 4+
 
 pil_smc23:
 	ldx	$2000+1,Y		; odd col			; 4+
-lln3_smc:
-	ora	left_lookup_keep_next,X					; 4+
+	ora	left_lookup_next,X					; 4+
 
 pil_smc22:
 	sta	$2000,Y			; update			; 5
@@ -165,13 +160,11 @@ pil_smc22:
 	;==================================
 
 	; X has $2000,39
-llm4_smc:
-	lda	left_lookup_keep_main,X			; 4+
+	lda	left_lookup_main,X			; 4+
 
 pil_smc5:
 	ldx	$6000					; 4+
-lln4_smc:
-	ora	left_lookup_keep_next,X			; 4+
+	ora	left_lookup_next,X			; 4+
 
 pil_smc6:
 	sta	$2000,Y					; 5
@@ -179,19 +172,16 @@ pil_smc6:
 	;=================
 	; shift font
 		; X has $6000
-llm5_smc:
-	lda	left_lookup_keep_main,X			; 4+
+	lda	left_lookup_main,X			; 4+
 
 pil_smc7:
 	ldx	$6000+1					; 4+
-lln5_smc:
-	ora	left_lookup_keep_next,X			; 4+
+	ora	left_lookup_next,X			; 4+
 
 pil_smc8:
 	sta	$6000					; 5
 
-llm6_smc:
-	lda	left_lookup_keep_main,X			; 4+
+	lda	left_lookup_main,X			; 4+
 pil_smc9:
 	sta	$6000+1					; 5
 
@@ -221,34 +211,6 @@ done_pan_outer_loop:
 	lda	KEYPRESS			; if keypress early exit
 	bmi	done_pan
 
-	lda	SCROLL_SUBSCROLL
-	cmp	#6
-	beq	yes_pal_shift
-	cmp	#2
-	beq	yes_pal_shift
-
-no_pal_shift:
-	ldx	#>left_lookup_keep_main
-	ldy	#>left_lookup_keep_next
-	jmp	pal_shift
-yes_pal_shift:
-	ldx	#>left_lookup_swap_main
-	ldy	#>left_lookup_swap_next
-
-pal_shift:
-	stx	llm1_smc+2
-	stx	llm2_smc+2
-	stx	llm3_smc+2
-	stx	llm4_smc+2
-	stx	llm5_smc+2
-	stx	llm6_smc+2
-
-	sty	lln1_smc+2
-	sty	lln2_smc+2
-	sty	lln3_smc+2
-	sty	lln4_smc+2
-	sty	lln5_smc+2
-
 	; wrap subscroll counter
 	; TODO: use mod 7 table here
 	inc	SCROLL_SUBSCROLL
@@ -256,6 +218,17 @@ pal_shift:
 	cmp	#7
 	bne	no_ticker
 
+	;====================================
+	; update palette at 3 and 7
+	;====================================
+
+
+	;do all at once
+	ldx	#5*16
+rotate_pal_loop:
+	rol	palette_bits_1,X
+	dex
+	bmi	rotate_pal_loop
 
 	;=================================
 	; did 7 shifts, time for new letter
@@ -273,7 +246,7 @@ no_ticker:
 	jsr	hgr_page_flip
 
 	lda	SCROLL_OFFSET
-	cmp	#142
+	cmp	#137
 	beq	done_pan
 
 	jmp	pan_outer_outer_loop
@@ -286,7 +259,7 @@ done_pan:
 
 	rts
 
-
+.include "scroll_tables.s"
 
 
 
@@ -312,98 +285,178 @@ draw_text_page3:
 	; row1
 	lda	large_font_row0,X
 	sta	$6000
+	and	#$80
+	sta	palette_bits_1+5
 	lda	large_font_row0+1,X
 	sta	$6001
+	lsr
+	ora	palette_bits_1+5
+	sta	palette_bits_1+5
 
 	; row2
 	lda	large_font_row1,X
 	sta	$6002
+	and	#$80
+	sta	palette_bits_2+5
 	lda	large_font_row1+1,X
 	sta	$6003
+	lsr
+	ora	palette_bits_2+5
+	sta	palette_bits_2+5
 
 	; row3
 	lda	large_font_row2,X
 	sta	$6004
+	and	#$80
+	sta	palette_bits_3+5
 	lda	large_font_row2+1,X
 	sta	$6005
+	lsr
+	ora	palette_bits_3+5
+	sta	palette_bits_3+5
 
 	; row4
 	lda	large_font_row3,X
 	sta	$6006
+	and	#$80
+	sta	palette_bits_4+5
 	lda	large_font_row3+1,X
 	sta	$6007
+	lsr
+	ora	palette_bits_4+5
+	sta	palette_bits_4+5
 
 	; row5
 	lda	large_font_row4,X
 	sta	$6008
+	and	#$80
+	sta	palette_bits_5+5
 	lda	large_font_row4+1,X
 	sta	$6009
+	lsr
+	ora	palette_bits_5+5
+	sta	palette_bits_5+5
 
 	; row6
 	lda	large_font_row5,X
 	sta	$600A
+	and	#$80
+	sta	palette_bits_6+5
 	lda	large_font_row5+1,X
 	sta	$600B
+	lsr
+	ora	palette_bits_6+5
+	sta	palette_bits_6+5
 
 	; row7
 	lda	large_font_row6,X
 	sta	$600C
+	and	#$80
+	sta	palette_bits_7+5
 	lda	large_font_row6+1,X
 	sta	$600D
+	lsr
+	ora	palette_bits_7+5
+	sta	palette_bits_7+5
 
 	; row8
 	lda	large_font_row7,X
 	sta	$600E
+	and	#$80
+	sta	palette_bits_8+5
 	lda	large_font_row7+1,X
 	sta	$600F
+	lsr
+	ora	palette_bits_8+5
+	sta	palette_bits_8+5
 
 	; row9
 	lda	large_font_row8,X
 	sta	$6010
+	and	#$80
+	sta	palette_bits_9+5
 	lda	large_font_row8+1,X
 	sta	$6011
+	lsr
+	ora	palette_bits_9+5
+	sta	palette_bits_9+5
 
 	; row10
 	lda	large_font_row9,X
 	sta	$6012
+	and	#$80
+	sta	palette_bits_10+5
 	lda	large_font_row9+1,X
 	sta	$6013
+	lsr
+	ora	palette_bits_10+5
+	sta	palette_bits_10+5
 
 	; row11
 	lda	large_font_row10,X
 	sta	$6014
+	and	#$80
+	sta	palette_bits_11+5
 	lda	large_font_row10+1,X
 	sta	$6015
+	lsr
+	ora	palette_bits_11+5
+	sta	palette_bits_11+5
 
 	; row12
 	lda	large_font_row11,X
 	sta	$6016
+	and	#$80
+	sta	palette_bits_12+5
 	lda	large_font_row11+1,X
 	sta	$6017
+	lsr
+	ora	palette_bits_12+5
+	sta	palette_bits_12+5
 
 	; row13
 	lda	large_font_row12,X
 	sta	$6018
+	and	#$80
+	sta	palette_bits_13+5
 	lda	large_font_row12+1,X
 	sta	$6019
+	lsr
+	ora	palette_bits_13+5
+	sta	palette_bits_13+5
 
 	; row14
 	lda	large_font_row13,X
 	sta	$601A
+	and	#$80
+	sta	palette_bits_14+5
 	lda	large_font_row13+1,X
 	sta	$601B
+	lsr
+	ora	palette_bits_14+5
+	sta	palette_bits_14+5
 
 	; row15
 	lda	large_font_row14,X
 	sta	$601c
+	and	#$80
+	sta	palette_bits_15+5
 	lda	large_font_row14+1,X
 	sta	$601d
+	lsr
+	ora	palette_bits_15+5
+	sta	palette_bits_15+5
 
 	; row16
 	lda	large_font_row15,X
 	sta	$601E
+	and	#$80
+	sta	palette_bits_16+5
 	lda	large_font_row15+1,X
 	sta	$601F
+	lsr
+	ora	palette_bits_16+5
+	sta	palette_bits_16+5
 
 	inc	SCROLL_OFFSET		; point to next char
 
@@ -411,14 +464,11 @@ draw_text_page3:
 
 scroll_text:
 ; ]^_
-; note _ is space with pal bit set
-; \ is christmas tree
-; ]^ is a lobster
 	      ;0123456789012345678901234567890123456789
-	.byte "@\@\@MERRY@CHRISTMAS@FROM@MAINE@]^_"
-	.byte "@]^_@FROM@THE@GUINEA@PIG@GANG@"		; 63
-	.byte "]^_@\@]^_@\@BEST@WISHES@FOR@A@GREAT@WINTER@\@\@" ; 111
-	.byte "]^_@\@]^_@@@@@@@@@@@@@@@@@@@@"		; 140
+	.byte "@\@\@MERRY@CHRISTMAS@FROM@MAINE@]^"
+	.byte "@]^@FROM@THE@GUINEA@PIG@GANG@"		; 63
+	.byte "]^@\@]^@\@BEST@WISHES@FOR@A@GREAT@WINTER@\@\@\" ; 111
+	.byte "]^@\@]^@@@@@@@@@@@@@@@@@@@@"		; 137
 
 
 
@@ -442,7 +492,21 @@ compact_odd:
 	.byte $01,$03,$05,$07,$09,$0B,$0D,$0F
 	.byte $11,$13,$15,$17,$19,$1B,$1D,$1F
 
+palette_bits_1: .byte $00,$00,$00,$00,$00, $00
+palette_bits_2: .byte $00,$00,$00,$00,$00, $00
+palette_bits_3: .byte $00,$00,$00,$00,$00, $00
+palette_bits_4: .byte $00,$00,$00,$00,$00, $00
+palette_bits_5: .byte $00,$00,$00,$00,$00, $00
+palette_bits_6: .byte $00,$00,$00,$00,$00, $00
+palette_bits_7: .byte $00,$00,$00,$00,$00, $00
+palette_bits_8: .byte $00,$00,$00,$00,$00, $00
+palette_bits_9: .byte $00,$00,$00,$00,$00, $00
+palette_bits_10: .byte $00,$00,$00,$00,$00, $00
+palette_bits_11: .byte $00,$00,$00,$00,$00, $00
+palette_bits_12: .byte $00,$00,$00,$00,$00, $00
+palette_bits_13: .byte $00,$00,$00,$00,$00, $00
+palette_bits_14: .byte $00,$00,$00,$00,$00, $00
+palette_bits_15: .byte $00,$00,$00,$00,$00, $00
+palette_bits_16: .byte $00,$00,$00,$00,$00, $00
 
 
-.align	$100
-.include "scroll_tables.s"
