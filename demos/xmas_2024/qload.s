@@ -164,21 +164,27 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte 1			; GP
 
 load_address_array:
 	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte $40		; GP
 
 start_address:
 	.byte $D0,$60,$81,$40	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte $40		; GP
 
 track_array:
 	.byte 4,12,16,20	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte 24		; GP
 
 sector_array:
 	.byte 0,0,0,0		; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte 0			; GP
 
 length_array:
 	.byte 32,32,60,32	; MUSIC, XMAS, WIPE_STAR_DATA, MERRY_XMAS
+	.byte 32		; GP
 
 PT3_ENABLE_APPLE_IIC = 1
 
@@ -197,6 +203,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"pt3_lib_mockingboard_detect.s"
 
         .include        "hgr_table.s"
+	.include	"hgr_clear_screen.s"
 
 qload_end:
 

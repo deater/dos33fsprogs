@@ -143,7 +143,7 @@ done_set_message:
 
 	;=======================
 	;=======================
-	; Load xmas
+	; Load xmas code
 	;=======================
 	;=======================
 load_xmas:
@@ -162,53 +162,16 @@ load_xmas:
 	sta     WHICH_LOAD
 	jsr     load_file
 
-	;=======================
-	;=======================
-	; Run intro
-	;=======================
-	;=======================
-
-;	cli			; start music
+	; start code
 
 	jsr	$6000
-
-
-
-
-;	bit	PAGE1			; be sure we're on PAGE1
-
-	; clear text screen
-;	lda	#$A0
-;	sta	clear_all_color+1
-;	jsr	clear_all
-
-	; switch to text/gr
-;	bit	TEXTGR
-
-	; print non-inverse
-
-;	jsr	set_normal
-
-	; print messages
-;	lda	#<disk_change_string
-;	sta	OUTL
-;	lda	#>disk_change_string
-;	sta	OUTH
-
-	; print the text
-
-;	jsr	move_and_print
-
-;	bit	KEYRESET			; just to be safe
-;	jsr	wait_until_keypress
-
 
 forever:
 	jmp	forever
 
 
 	.include	"wait_keypress.s"
-	.include	"zx02_optim.s"
+;	.include	"zx02_optim.s"
 
 	.include	"gs_interrupt.s"
 

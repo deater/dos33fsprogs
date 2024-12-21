@@ -5,7 +5,12 @@ PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
 PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	gp_hgr.zx02 merry_christmas.zx02 MERRY_XMAS
+all:	gp_hgr.zx02 merry_christmas.zx02 MERRY_XMAS GP
+
+####
+
+GP:	gp_hgr.hgr
+	cp gp_hgr.hgr GP
 
 ####
 

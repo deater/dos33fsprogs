@@ -10,7 +10,7 @@ all:	xmas_2024.dsk
 
 xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
 	MUSIC XMAS WIPE_STAR_DATA \
-	./graphics/MERRY_XMAS
+	./graphics/MERRY_XMAS ./graphics/GP
 	cp $(EMPTY_DISK) xmas_2024.dsk
 	$(DOS33_RAW) xmas_2024.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) xmas_2024.dsk 0 2 QBOOT		1 1
@@ -20,7 +20,7 @@ xmas_2024.dsk:	QBOOT QLOAD music.inc qload.inc \
 	$(DOS33_RAW) xmas_2024.dsk 12 0 XMAS		0 0
 	$(DOS33_RAW) xmas_2024.dsk 16 0 WIPE_STAR_DATA	0 0
 	$(DOS33_RAW) xmas_2024.dsk 20 0 ./graphics/MERRY_XMAS 0 0
-
+	$(DOS33_RAW) xmas_2024.dsk 24 0 ./graphics/GP 0 0
 
 
 ####
@@ -86,9 +86,10 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_top qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 
 ####
 

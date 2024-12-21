@@ -8,36 +8,28 @@
 
 xmas_main:
 
+	; clear extraneous keypresses
+
+	bit KEYRESET
+
 	;======================================
 	; init
 	;======================================
 
 	lda	#$00
-	sta	DRAW_PAGE
-	sta	clear_all_color+1
-
-	lda	#$04
-	sta	DRAW_PAGE
-	jsr	clear_all
-
-	;======================================
-	; draw opening scene
-	;======================================
+	jsr	hgr_page1_clearscreen
 
 	bit	SET_GR
 	bit	HIRES
 	bit	PAGE1
 
-	lda	#<gp_hat_graphics
-	sta	zx_src_l+1
-	lda	#>gp_hat_graphics
-	sta	zx_src_h+1
-	lda	#$20
-	jsr	zx02_full_decomp
+	;======================================
+	; draw opening scene
+	;======================================
+
+	; start music
 
 	cli
-
-	bit	KEYRESET
 
 	jsr	wipe_star
 
@@ -59,5 +51,5 @@ finished:
 .include "hgr_page_flip.s"
 .include "vblank.s"
 
-gp_hat_graphics:
-.incbin "graphics/gp_hgr.zx02"
+;gp_hat_graphics:
+;.incbin "graphics/gp_hgr.zx02"
