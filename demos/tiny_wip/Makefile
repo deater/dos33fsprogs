@@ -8,7 +8,8 @@ LINKER_SCRIPTS = ../../linker_scripts/
 all:	tiny_demos.dsk
 
 tiny_demos.dsk:	HELLO CHEVRON_17 CIRCUIT_17 TIGER_22 \
-	NOISY_TIGER_35 ANGLE_SONG_30 \
+	NOISY_TIGER_35 ANGLE_SONG_30 RAMP_34 \
+	MAD_COMPUTE_31 \
 	TEST
 	cp $(EMPTYDISK) tiny_demos.dsk
 	$(DOS33) -y tiny_demos.dsk SAVE A HELLO
@@ -17,6 +18,8 @@ tiny_demos.dsk:	HELLO CHEVRON_17 CIRCUIT_17 TIGER_22 \
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 TIGER_22
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 NOISY_TIGER_35
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 ANGLE_SONG_30
+	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 RAMP_34
+	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 MAD_COMPUTE_31
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 TEST
 
 ###
@@ -64,6 +67,24 @@ ANGLE_SONG_30:	angle_song_30.o
 angle_song_30.o:	angle_song_30.s
 	ca65 -o angle_song_30.o angle_song_30.s -l angle_song_30.lst
 
+###
+
+RAMP_34:	ramp_34.o
+	ld65 -o RAMP_34 ramp_34.o -C $(LINKER_SCRIPTS)/apple2_e7_zp.inc
+
+ramp_34.o:	ramp_34.s
+	ca65 -o ramp_34.o ramp_34.s -l ramp_34.lst
+
+###
+
+MAD_COMPUTE_31:	mad_compute_31.o
+	ld65 -o MAD_COMPUTE_31 mad_compute_31.o -C $(LINKER_SCRIPTS)/apple2_e7_zp.inc
+
+mad_compute_31.o:	mad_compute_31.s
+	ca65 -o mad_compute_31.o mad_compute_31.s -l mad_compute_31.lst
+
+
+
 
 ###
 
@@ -78,6 +99,7 @@ test.o:	test.s
 clean:	
 	rm -f *~ *.o *.lst HELLO \
 		CHEVRON_17 CIRCUIT_17 TIGER_22 \
-		NOISY_TIGER_35 ANGLE_SONG_30 \
+		NOISY_TIGER_35 ANGLE_SONG_30 RAMP_34 \
+		MAD_COMPUTE_31 \
 		TEST *.zip
 

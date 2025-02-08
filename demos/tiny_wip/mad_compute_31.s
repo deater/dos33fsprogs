@@ -1,6 +1,15 @@
-; 30B Angle Song -- XDRAW pattern plus some "music"
+; 31B Mad Compute
+
+; for Lovebyte 2025
 
 ; by Vince `deater` Weaver / dSr
+
+; pattern $E2E3
+; scale 5 rotate 0 = mad_compute
+;         rotate 2 = fish scales / apple panic
+;         rotate 10 = alert noise
+;         rotate 14 = feather
+
 
 ; zero page locations
 GBASL		=	$26
@@ -15,12 +24,12 @@ XDRAW0		=	$F65D
 XDRAW1		=	$F661
 HPLOT0          =       $F457
 
-angle_song:
+mad_compute:
 
-	; we load at zero page $E7 which is HGR_SCALE
-	; this means the scale is $20 (JSR)
+	; $05 is ORA IMM
 
-	; $20 $D8 $F3
+	.byte	$5		; scale in $E7
+	nop
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
@@ -37,22 +46,16 @@ angle_song:
 				; after Y= orig X/7
 				; A and X are ??
 
+
 tiny_loop:
 
-	; generate some sound
 
- ; try flipping X/Y
+; generate some sound
 
-;	ldx	$26
-	ldx     $D4		; HGR_E
+	ldx	$D4		; HGR_E
 outer_delay:
 	bit	$C030		; click speaker
 	ldy	$27
-
-;	lda	$27		; for lower beeps?
-;	asl
-;	tay
-
 
 inner_delay:
 	dey
@@ -61,12 +64,9 @@ inner_delay:
 	dex
 	bne	outer_delay
 
+	txa
 
-
-rot_smc:
-	lda	#$D8		; $18, $58, $98, $D8
-
-				; ROT=$D8
+;	lda	#$0		; ROT=$0
 
 	ldy	#$E2		;
 	ldx	#$E3		; Y=$E2

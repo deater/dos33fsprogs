@@ -1,6 +1,10 @@
-; 17B interesting XDRAW pattern
+; test
 
-; This one looks vaguely like a chevron shape
+; scale 5 rotate 0 = mad_compute
+;         rotate 2 = fish scales / apple panic
+;	  rotate 10 = alert noise
+;	  rotate 14 = feather
+
 
 ; by Vince `deater` Weaver / dSr
 
@@ -17,12 +21,15 @@ XDRAW0		=	$F65D
 XDRAW1		=	$F661
 HPLOT0          =       $F457
 
-chevron17:
+test:
 
-	; we load at zero page $E7 which is HGR_SCALE
-	; this means the scale is $20 (JSR)
+	; $05 is ORA IMM
 
-	; $20 $D8 $F3
+	.byte	$5
+	nop
+
+;	lda	#5
+;	sta	$E7		; scale
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
@@ -40,81 +47,25 @@ chevron17:
 				; A and X are ??
 
 
-	; aa = (orange)tiger stripes
-	; 55 = purple
-	; 2a = green
-;	lda	#$2a
-;	jsr	$F3F4
-
 tiny_loop:
 
-	; e2/e3
-	; 0.. 63?
-	; 0 = maze
-	; 1 = scaly
-	; 2 = ??
-	; 3 = tower plates
-	; 4 = bubbles
-	; 5 = strings
-	; 6 = circuit board	*
-	; 7 = noodles
-	; 8 = pickup sticks
-	; 9 = meh
-	; 10 = interesting
-	; 11 = meh
-	; 12 = static
-	; 13 = weave
-	; 14 = core
-	; 15 = masts		*
-	; 16 = maze again
-	; 17 = spots		*
-	; 18 = bamboo		*
-	; 19 = mesh
-	; 20 = coils
-	; 21 = sunspots
-	; 22 = gridy
-	; 23 = dominos
-	; 24 = chevron		**
-	; 25 = borg
-	; 26 = grid
-	; 27 = plants
-	; 28 = spaces
-	; 29 = ridges
-	; 30 = net
-	; 31 = odd
-	; 32 = maze again
 
-	; e2/e5
-	; e3 looks best?
-	; a0 interesting, green train
+; generate some sound
 
-;	inc	rot_smc+1	; broken glass
-
-;	bit	$C030
-
-
-
- ; try flipping X/Y
-
-;        ldx     $26
-        ldx     $D4
+	ldx	$D4		; HGR_E
 outer_delay:
-        bit     $C030
-        ldy     $27
+	bit	$C030		; click speaker
+	ldy	$27
 
 inner_delay:
-        dey
-        bne	inner_delay
+	dey
+	bne	inner_delay
 
-        dex
-        bne     outer_delay
+	dex
+	bne	outer_delay
 
 
-
-rot_smc:
-	lda	#$D8		; $18, $58, $98, $D8
-
-				; ROT=$D8
+	lda	#$10		; ROT=$0
 
 	ldy	#$E2		;
 	ldx	#$E3		; Y=$E2
