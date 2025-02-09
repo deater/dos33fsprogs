@@ -9,7 +9,7 @@ all:	tiny_demos.dsk
 
 tiny_demos.dsk:	HELLO CHEVRON_17 CIRCUIT_17 TIGER_22 \
 	NOISY_TIGER_35 ANGLE_SONG_30 RAMP_34 \
-	MAD_COMPUTE_31 \
+	MAD_COMPUTE_31 WALL_17 BLACKHOLE_64 \
 	TEST
 	cp $(EMPTYDISK) tiny_demos.dsk
 	$(DOS33) -y tiny_demos.dsk SAVE A HELLO
@@ -20,6 +20,8 @@ tiny_demos.dsk:	HELLO CHEVRON_17 CIRCUIT_17 TIGER_22 \
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 ANGLE_SONG_30
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 RAMP_34
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 MAD_COMPUTE_31
+	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 WALL_17
+	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 BLACKHOLE_64
 	$(DOS33) -y tiny_demos.dsk BSAVE -a 0xE7 TEST
 
 ###
@@ -42,6 +44,24 @@ CIRCUIT_17:	circuit_17.o
 
 circuit_17.o:	circuit_17.s
 	ca65 -o circuit_17.o circuit_17.s -l circuit_17.lst
+
+###
+
+WALL_17:	wall_17.o
+	ld65 -o WALL_17 wall_17.o -C $(LINKER_SCRIPTS)/apple2_e7_zp.inc
+
+wall_17.o:	wall_17.s
+	ca65 -o wall_17.o wall_17.s -l wall_17.lst
+
+###
+
+BLACKHOLE_64:	blackhole_64.o
+	ld65 -o BLACKHOLE_64 blackhole_64.o -C $(LINKER_SCRIPTS)/apple2_e7_zp.inc
+
+blackhole_64.o:	blackhole_64.s
+	ca65 -o blackhole_64.o blackhole_64.s -l blackhole_64.lst
+
+
 
 ###
 
@@ -100,6 +120,6 @@ clean:
 	rm -f *~ *.o *.lst HELLO \
 		CHEVRON_17 CIRCUIT_17 TIGER_22 \
 		NOISY_TIGER_35 ANGLE_SONG_30 RAMP_34 \
-		MAD_COMPUTE_31 \
+		MAD_COMPUTE_31 WALL_17 BLACKHOLE_64 \
 		TEST *.zip
 

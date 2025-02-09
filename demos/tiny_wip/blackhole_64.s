@@ -1,19 +1,14 @@
-; 17B interesting XDRAW pattern
-
-; This one looks vaguely like a circuit board
+; blackhole_64
 
 ; by Vince `deater` Weaver / dSr
 
+; For Lovebyte 2025
+
 ; zero page locations
-GBASL		=	$26
-GBASH		=	$27
 HGR_COLOR	=	$E4
 HGR_SCALE	=	$E7
-HGR_COLLISIONS	=	$EA
 HGR_ROTATION	=	$E8
 FRAME		=	$E9
-
-
 
 ; ROM locations
 HGR2		=	$F3D8
@@ -32,8 +27,9 @@ black_hole:
 
 	jsr	HGR2		; Hi-res, full screen		; 3
 				; Y=0, A=0 after this call
-;	sta	FRAME
-	sta	HGR_COLOR	; set color to black for DRAW0 later
+
+restart:
+	sty	HGR_COLOR	; set color to black for DRAW0 later
 
 	; A and Y are 0 here.
 	; X is left behind by the boot process?
@@ -83,7 +79,8 @@ tiny_loop2:
 	ldy	HGR_SCALE
 	cpy	#$1C
 done:
-	beq	done
+;	beq	done
+	beq	restart
 
 	; A is 0 both paths
 
