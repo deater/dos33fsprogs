@@ -1,5 +1,7 @@
 ; Tri-Scroll
 
+; 128 byte Apple II entry for Lovebyte 2025
+
 ; Three way sorta parallax thing
 ; This was an outtake from a parallax demo
 

@@ -22,7 +22,6 @@ blackhole_64.zip:	BLACKHOLE_64 blackhole_64.s file_id.diz blackhole_64.dsk
 	cp blackhole_64.s ./lovebyte2025_blackhole_64
 	cp file_id.diz ./lovebyte2025_blackhole_64
 	cp blackhole_64.dsk ./lovebyte2025_blackhole_64
-	cp monitor.txt ./lovebyte2025_blackhole_64
 	cp blackhole_64_screen.png ./lovebyte2025_blackhole_64
 	cp blackhole_64_720p.mp4 ./lovebyte2025_blackhole_64
 	zip -r blackhole_64.zip lovebyte2025_blackhole_64

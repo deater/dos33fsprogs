@@ -17,14 +17,14 @@ tri_scroll.dsk:	HELLO TRI_SCROLL
 submit:	tri_scroll.zip
 
 tri_scroll.zip:	TRI_SCROLL tri_scroll.s file_id.diz tri_scroll.dsk
-	mkdir -p lovebyte2024_tri_scroll
-	cp TRI_SCROLL ./lovebyte2024_tri_scroll
-	cp tri_scroll.s ./lovebyte2024_tri_scroll
-	cp file_id.diz ./lovebyte2024_tri_scroll
-	cp tri_scroll.dsk ./lovebyte2024_tri_scroll
-	cp tri_scroll_screen.png ./lovebyte2024_tri_scroll
-	cp tri_scroll_720p.mp4 ./lovebyte2024_tri_scroll
-	zip -r tri_scroll.zip lovebyte2024_tri_scroll
+	mkdir -p lovebyte2025_tri_scroll_128
+	cp TRI_SCROLL ./lovebyte2025_tri_scroll_128
+	cp tri_scroll.s ./lovebyte2025_tri_scroll_128
+	cp file_id.diz ./lovebyte2025_tri_scroll_128
+	cp tri_scroll.dsk ./lovebyte2025_tri_scroll_128
+	cp tri_scroll_screen.png ./lovebyte2025_tri_scroll_128
+	cp tri_scroll_720p.mp4 ./lovebyte2025_tri_scroll_128
+	zip -r tri_scroll.zip lovebyte2025_tri_scroll_128
 
 ####
 
