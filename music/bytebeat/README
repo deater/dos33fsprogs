@@ -1,0 +1,43 @@
+Bytebeat code on Apple II
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Bytebeat uses math to generate music-sounding samples, in this case
+at roughly 8kHz
+
+On Apple II this means generating and outputting the sound every 128 cycles
+or so.
+
+The problem is you have to maintain this tone until the next sample is
+calculated, something you really can't do with the regular speaker.
+
+You could pre-generate the music and then play it back with software DAC
+but at 8kHz that fills up RAM pretty quickly.
+
+Instead here we use a Mockingboard to play things (in theory you could use
+an actual DAC board like the S.A.M. too)
+
+
+Using the Mockingboard as a 4-bit DAC
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This ha been done a lot by other systems that have AY-3-8910 sound.
+
+If you turn off a channel by either muting it with register 7 or 
+setting the output divider to 0 in registers 0/1, the actual hardware
+will float the signal high.  The volume/amplitude registers still affect
+this though, so you can modulate this signal like a 4-bit DAC.
+
+(some people also will use an actual steady tone as a base to modulate too
+but that might be tricky to get to sound right)
+
+One problem is the Mockingboard amplitude register is logarithmic, so to
+get things to sound right you might have to run things through a LOG table
+lookup.
+
+To get more bits out of the DAC you can combine multiple channels but that's
+more complex.
+
+For more info see:
+
+https://map.grauw.nl/articles/psg_sample.php
+

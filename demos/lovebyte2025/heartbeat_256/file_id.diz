@@ -1,0 +1,17 @@
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+Heartbeat 256 for Lovebyte 2025
++=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=+=
+by Deater / dsr
+
+Mockingboard bytebeat with Lo-res graphics
+256-byte Intro for Apple II
+
+You'll need a Mockingboard in Slot #4
+also music only comes out one channel
+
+music code based on Tjoppen's 128 byte
+Atari 2600 code, a variant of viznut's
+combo of xpansive's and varjohukka's
+stuff from the pouet thread
+http://pouet.net/topic.php?which=8357&page=4
+(t>>7|t|t>>6)*10+4*(t&t>>13|t>>6)
