@@ -16,6 +16,8 @@
 
 ; zero page RAM addresses
 
+COLOR	= $30
+
 COUNTER1	= $F0   ; t
 COUNTER2	= $F1	; t >> 6
 COUNTER3	= $F2	; t >> 7
@@ -26,9 +28,11 @@ TEMP2		= $F5
 OUTL		= $F6
 OUTH		= $F7
 XSAVE		= $F8
+COUNT		= $F9
 
 FULLGR	= $C052
 SETGR	= $FB40
+VLINE  = $F828                 ; VLINE A,$2D at Y
 
 
 volume_lookup	= $2000
@@ -36,6 +40,38 @@ volume_lookup	= $2000
 ; for a 256 entry we need to fit in 252 bytes
 
 bytebeat:
+	jsr	SETGR			; enable lo-res graphics
+					; A=$D0, Z=1
+
+	bit	FULLGR			; make graphcs full screen
+
+
+	; clear to white
+	lda	#$ff
+	sta	COLOR
+
+	lda	#24
+	sta	COUNT
+heart_loop:
+	ldy	COUNT
+
+	lda	vlin_stop-16,Y
+	sta	$2D
+
+	lda	vlin_start-16,Y
+
+	jsr	VLINE
+
+	dec	COUNT
+	lda	COUNT
+	cmp	#15
+	bne	heart_loop
+
+;over:
+;	jmp	over
+
+
+
 	lda	#0
 	sta	COUNTER1		; init counters
 	sta	COUNTER2
@@ -49,10 +85,7 @@ bytebeat:
 	sta	OUTH			; LORES PAGE1
 
 
-	jsr	SETGR			; enable lo-res graphics
-					; A=$D0, Z=1
 
-	bit	FULLGR			; make graphcs full screen
 
 
 	;===================
@@ -135,11 +168,15 @@ mockingboard_init:
 	ldx	#$FF			; 2
 	stx	MOCK_6522_DDRB1		; 3	$C402
 	stx	MOCK_6522_DDRA1		; 3	$C403
+;	stx	MOCK_6522_DDRB2		; 3	$C402
+;	stx	MOCK_6522_DDRA2		; 3	$C403
 
 	inx				; 1	#MOCK_AY_RESET $0
 	stx	MOCK_6522_ORB1		; 3	$C400
+;	stx	MOCK_6522_ORB2		; 3	$C400
 	ldx	#MOCK_AY_INACTIVE	; 2	$4
 	stx	MOCK_6522_ORB1		; 3	$C400
+;	stx	MOCK_6522_ORB2		; 3	$C400
 
 	;============================
 	; set up registers
@@ -225,19 +262,35 @@ output:
 	; 20 cycles of visualization
 
 	ldy	#0							; 2
+	lda	(OUTL),Y
+	cmp	#$FF
+	beq	skip
 	lda	COUNTER3						; 3
+	and	#$33
+
 	sta	(OUTL),Y						; 6
-	inc	OUTL							; 5
+skip:
 
-	bne	noflo
-	inc	OUTH
+	lda	OUTL							; 3
+	clc								; 2
+	adc	#1							; 2
+	sta	OUTL							; 3
+	lda	OUTH							; 3
+	adc	#0							; 2
+;	sta	OUTH							; 3
 
-	lda	OUTH
+
+;	inc	OUTL							; 5
+;	bne	noflo							; 2/3
+;	inc	OUTH							; 5
+;	lda	OUTH							; 3
+
 	cmp	#$8
 	bne	noflo
 	lda	#$4
-	sta	OUTH
 noflo:
+	sta	OUTH
+
 	jmp	output_loop
 
 div_64:
@@ -273,35 +326,72 @@ Counter3_OK:
 	;============================
 	;============================
 	;============================
-	; ay3 write reg both channels
+	; ay3 write reg
 	;============================
 	;============================
 	;============================
 	; X is reg to write
 	; A is value
 
+
+ay3_write_reg:
+; 0
+        sta     TEMP2                                                   ; 3
+ay3_write_reg_temp2:
+
+; 3
+        lda     #MOCK_AY_LATCH_ADDR     ; latch_address for PB1         ; 2
+        ldy     #MOCK_AY_INACTIVE       ; go inactive                   ; 2
+; 7
+        stx     MOCK_6522_ORA1          ; put address on PA1            ; 4
+        sta     MOCK_6522_ORB1          ; latch_address on PB1          ; 4
+        sty     MOCK_6522_ORB1                                          ; 4
+; 19
+        ; value
+        lda     TEMP2                                                   ; 2
+        sta     MOCK_6522_ORA1          ; put value on PA1              ; 4
+        lda     #MOCK_AY_WRITE          ;                               ; 2
+        sta     MOCK_6522_ORB1          ; write on PB1                  ; 4
+        sty     MOCK_6522_ORB1                                          ; 4
+; 35
+        rts
+; 41
+
+
+.if 0
+	;=========================
+	; both channels code
+	; too slow
+	;=========================
 ay3_write_reg:
 ; 0
 	sta	TEMP2							; 3
 ay3_write_reg_temp2:
-
 ; 3
-	lda	#MOCK_AY_LATCH_ADDR     ; latch_address for PB1         ; 2
-	ldy	#MOCK_AY_INACTIVE       ; go inactive                   ; 2
-; 7
-	stx	MOCK_6522_ORA1          ; put address on PA1            ; 4
-	sta	MOCK_6522_ORB1          ; latch_address on PB1          ; 4
+	stx	MOCK_6522_ORA1		; put address on PA1            ; 4
+	stx	MOCK_6522_ORA2		; put address on PA2            ; 4
+	lda	#MOCK_AY_LATCH_ADDR	; latch_address on PB1          ; 2
+	sta	MOCK_6522_ORB1		; latch_address on PB1          ; 4
+	sta	MOCK_6522_ORB2		; latch_address on PB2          ; 4
+	ldy	#MOCK_AY_INACTIVE	; go inactive                   ; 2
 	sty	MOCK_6522_ORB1                                          ; 4
-; 19
-	; value
-	lda	TEMP2							; 2
+	sty	MOCK_6522_ORB2                                          ; 4
+
+	lda	TEMP2							; 3
 	sta	MOCK_6522_ORA1          ; put value on PA1              ; 4
+	sta	MOCK_6522_ORA2          ; put value on PA2              ; 4
 	lda	#MOCK_AY_WRITE          ;                               ; 2
 	sta	MOCK_6522_ORB1          ; write on PB1                  ; 4
+	sta	MOCK_6522_ORB2          ; write on PB2                  ; 4
 	sty	MOCK_6522_ORB1                                          ; 4
-; 35
-	rts
-; 41
+	sty	MOCK_6522_ORB2                                          ; 4
+                                                                ;===========
+                                                                ;        29
+
+        rts                                                             ; 6
+                                                                ;===========
+                                                                ;       63
+.endif
 
 
 	;======================================
@@ -349,3 +439,10 @@ volume_lookup:
 .byte $0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F
 .byte $0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F,$0F
 .endif
+
+	; start at 16
+vlin_start:
+	.byte	18,14,12,14,18,14,12,14,18
+
+vlin_stop:
+	.byte	23,25,27,31,33,31,29,25,23
