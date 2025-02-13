@@ -6,27 +6,27 @@ HGR2PNG = ../../../utils/hgr-utils/png2hgr
 LINKER_SCRIPTS = ../../../linker_scripts
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 
-all:	bytebeat.dsk
+all:	heartbeat.dsk
 
 ####
 
-submit:	bytebeat256.zip
+submit:	heartbeat256.zip
 
-bytebeat256.zip:	BYTEBEAT bytebeat.s file_id.diz bytebeat.dsk
-	mkdir -p lovebyte2022_bytebeat_256
-	cp BYTEBEAT ./lovebyte2022_bytebeat_256
-	cp *.s ./lovebyte2022_bytebeat_256
-	cp file_id.diz ./lovebyte2022_bytebeat_256
-	cp bytebeat.dsk ./lovebyte2022_bytebeat_256
-	cp bytebeat_720p.mp4 ./lovebyte2022_bytebeat_256
-	zip -r bytebeat256.zip lovebyte2022_bytebeat_256
+heartbeat256.zip:	HEARTBEAT heartbeat.s file_id.diz heartbeat.dsk
+	mkdir -p lovebyte2022_heartbeat_256
+	cp HEARTBEAT ./lovebyte2022_heartbeat_256
+	cp *.s ./lovebyte2022_heartbeat_256
+	cp file_id.diz ./lovebyte2022_heartbeat_256
+	cp heartbeat.dsk ./lovebyte2022_heartbeat_256
+	cp heartbeat_720p.mp4 ./lovebyte2022_heartbeat_256
+	zip -r heartbeat256.zip lovebyte2022_heartbeat_256
 
 ####
 
-bytebeat.dsk:	HELLO BYTEBEAT
-	cp $(EMPTY_DISK)/empty.dsk ./bytebeat.dsk
-	$(DOS33) -y bytebeat.dsk SAVE A HELLO
-	$(DOS33) -y bytebeat.dsk -t BIN -a 0xC00 BSAVE BYTEBEAT
+heartbeat.dsk:	HELLO HEARTBEAT
+	cp $(EMPTY_DISK)/empty.dsk ./heartbeat.dsk
+	$(DOS33) -y heartbeat.dsk SAVE A HELLO
+	$(DOS33) -y heartbeat.dsk -t BIN -a 0xC00 BSAVE HEARTBEAT
 
 
 ####
@@ -36,13 +36,13 @@ HELLO:	hello.bas
 
 ####
 
-BYTEBEAT:	bytebeat.o
-	ld65 -o BYTEBEAT bytebeat.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
+HEARTBEAT:	heartbeat.o
+	ld65 -o HEARTBEAT heartbeat.o -C $(LINKER_SCRIPTS)/apple2_c00.inc
 
-bytebeat.o:	bytebeat.s
-	ca65 -o bytebeat.o bytebeat.s -l bytebeat.lst
+heartbeat.o:	heartbeat.s
+	ca65 -o heartbeat.o heartbeat.s -l heartbeat.lst
 
 ####
 
 clean:
-	rm -f *~ *.o *.lst BYTEBEAT HELLO
+	rm -f *~ *.o *.lst HEARTBEAT HELLO
