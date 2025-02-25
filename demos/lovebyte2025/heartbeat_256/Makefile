@@ -13,13 +13,13 @@ all:	heartbeat.dsk
 submit:	heartbeat256.zip
 
 heartbeat256.zip:	HEARTBEAT heartbeat.s file_id.diz heartbeat.dsk
-	mkdir -p lovebyte2022_heartbeat_256
-	cp HEARTBEAT ./lovebyte2022_heartbeat_256
-	cp *.s ./lovebyte2022_heartbeat_256
-	cp file_id.diz ./lovebyte2022_heartbeat_256
-	cp heartbeat.dsk ./lovebyte2022_heartbeat_256
-	cp heartbeat_720p.mp4 ./lovebyte2022_heartbeat_256
-	zip -r heartbeat256.zip lovebyte2022_heartbeat_256
+	mkdir -p lovebyte2025_heartbeat_256
+	cp HEARTBEAT ./lovebyte2025_heartbeat_256
+	cp *.s ./lovebyte2025_heartbeat_256
+	cp file_id.diz ./lovebyte2025_heartbeat_256
+	cp heartbeat.dsk ./lovebyte2025_heartbeat_256
+	cp heartbeat_720p.mp4 ./lovebyte2025_heartbeat_256
+	zip -r heartbeat256.zip lovebyte2025_heartbeat_256
 
 ####
 
