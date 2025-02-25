@@ -37,7 +37,7 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 
 int main(int argc, char **argv) {
 
-	int frame,color,depth,x,y,yprime,xprime;
+	double frame,color,depth,x,y,yprime,xprime,a;
 	int temp,ch;
 
 	// set_default_pal();
@@ -64,39 +64,53 @@ L:
 			temp=(x*6)-depth;	// curve X by the current depth
 
 			// if left of the curve, jump to "sky"
-			if (temp&0x100) {
+//			if (temp&0x100) {
+			if (temp<0) {
 
-				color=27-16;	// is both the star color and
+				color=15;	// is both the star color and
 						// palette offset into sky
 
 				// pseudorandom multiplication leftover DL added to
 				// truncated pixel count
 				// 1 in 256 chance to be a star
-				if ((((x*6)+yprime)&0xff)!=0) {
+				a=(x*6)+yprime;
+				while(a>256) a-=256;
+//				if (( (int)((x*6)+yprime) %256)!=0) {
+//				if (a<4) printf("a=%lf (%d,%d)\n",a,(int)x,(int)y);
+				if (a>6) {
 					// if not, shift the starcolor and add scaled pixel count
-					color=(color<<4)|((y*4)>>4);
-					color-=160;
+					// want 16 .. 32
+					color=(y/4)+16;
+					//color-=160;
 				}
-
-
 			}
 			else {
 				// multiply X by current depth (into AH)
 				xprime=temp*depth;
 
 				// OR for geometry and texture pattern
-				temp=((xprime)|(yprime))>>8;
+
+//				temp=((int)(xprime)|(int)(yprime))/256;
+				temp=((int)(xprime/256)|(int)(yprime/256));
 
 				// get (current depth) + (current frame)
 				// mask geometry/texture by time shifted depth
-				color=(temp&(depth+frame));
+//
+				color=((int)temp&(int)(depth+frame));
 
 				// (increment depth by one)
 				depth++;
 
 				// ... to create "gaps"
 
-				if ((color&0x10)==0) goto L;
+				// color is always 0..16 here?
+				// so gap if it is 16 or 32?
+
+//				if (((int)color&0x10)==0) {
+				if (color<16) {
+//					printf("yeah %d!\n",(int)color);
+					goto L;
+				}
 
 				// if ray did not hit, repeat pixel loop
 
@@ -108,8 +122,6 @@ L:
 	}
 
 	frame++;		// increment frame counter
-
-//	dump_framebuffer_gr();
 
 	grsim_update();
 
