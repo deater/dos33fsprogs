@@ -5,6 +5,13 @@
 ;     deater -- Vince Weaver -- vince@deater.net -- 25 February 2025
 
 
+
+
+square1_lo	=	$2000
+square1_hi	=	$2200
+square2_lo	=	$2400
+square2_hi	=	$2600
+
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 PLOT1	= $F80E		; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 
@@ -13,7 +20,10 @@ SETGR	= $FB40
 
 FULLGR	= $C052
 
-COLOR	= $30
+GBASL	= $26
+GBASH	= $27
+
+;COLOR	= $30
 
 FRAME	= $F0
 YPOS	= $F1
@@ -29,6 +39,7 @@ YPH	= $FA
 XPL	= $FB
 XPH	= $FC
 Q	= $FD
+EVENC	= $FE
 
 	;=============================
 	;=============================
@@ -48,6 +59,9 @@ starpath:
 	; initialize
 	;=============================
 
+	;=============================
+	; inline the multiply table initialization
+	;============================
 
 init_multiply_tables:
 
@@ -91,13 +105,28 @@ second_table:
 	inx
 	bne second_table
 
-;	lda	#0
-	stx	FRAME
+	;=======================
+	; done inline
+	;=======================
+
+	; X is 0 here from table init
+
+	stx	FRAME		; init frame count
 
 next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
+
 yloop:
+	lda	YPOS
+	tay
+	lsr
+	bcs	skip_load
+	lda	gr_offsets,Y
+	sta	GBASL
+	lda	gr_offsets+1,Y
+	sta	GBASH
+skip_load:
 	lda	#0		; start with XPOS=0
 	sta	XPOS
 xloop:
@@ -243,16 +272,40 @@ plot_pixel:
 	;=====================
 	; set color
 
-	sta	COLOR
+	sta	EVENC
 
 ;	jsr	SETCOL			; Set COLOR with ROM routine (mul*17)
 
 	;=====================
 	; plot point
-
-	ldy	XPOS
+plot_point:
 	lda	YPOS
-	jsr	PLOT			; PLOT AT Y,A (Y preserved)
+	lsr
+	bcc	even_plot
+
+odd_plot:
+	lda	EVENC
+	and	#$f0
+	sta	EVENC
+	ldy	XPOS
+	lda	(GBASL),Y
+	and	#$0f
+	ora	EVENC
+	sta	(GBASL),Y
+	jmp	done_plot
+even_plot:
+	lda	EVENC
+	and	#$0f
+	sta	EVENC
+	ldy	XPOS
+	lda	(GBASL),Y
+	and	#$f0
+	ora	EVENC
+	sta	(GBASL),Y
+
+;	lda	YPOS
+;	jsr	PLOT			; PLOT AT Y,A (Y preserved)
+done_plot:
 
 	;===================
 	; increment xloop
@@ -260,9 +313,9 @@ plot_pixel:
 	inc	XPOS
 	lda	XPOS
 	cmp	#40
-	bne	xloop
-;	beq	xloop_done
-;	jmp	xloop
+;	bne	xloop
+	beq	xloop_done
+	jmp	xloop
 xloop_done:
 
 	;===================
@@ -271,9 +324,9 @@ xloop_done:
 	inc	YPOS
 	lda	YPOS
 	cmp	#48
-	bne	yloop
-;	beq	yloop_done
-;	jmp	yloop
+;	bne	yloop
+	beq	yloop_done
+	jmp	yloop
 yloop_done:
 	inc	FRAME
 
@@ -340,22 +393,8 @@ sm4a:
 
 	rts
 
-
-; Fast mutiply -- setup tables
-
-.ifndef square1_lo
-square1_lo	=	$2000
-square1_hi	=	$2200
-square2_lo	=	$2400
-square2_hi	=	$2600
-.endif
-
-;	for(i=0;i<512;i++) {
-;		square1_lo[i]=((i*i)/4)&0xff;
-;		square1_hi[i]=(((i*i)/4)>>8)&0xff;
-;		square2_lo[i]=( ((i-255)*(i-255))/4)&0xff;
-;		square2_hi[i]=(( ((i-255)*(i-255))/4)>>8)&0xff;
-;	}
-
-
+gr_offsets:
+	.word	$400,$480,$500,$580,$600,$680,$700,$780
+	.word	$428,$4a8,$528,$5a8,$628,$6a8,$728,$7a8
+	.word	$450,$4d0,$550,$5d0,$650,$6d0,$750,$7d0
 
