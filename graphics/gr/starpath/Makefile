@@ -7,7 +7,7 @@ TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKERSCRIPTS = ../../../linker_scripts
 EMPTYDISK = ../../../empty_disk
 
-all:	starpath.dsk
+all:	starpath.dsk ANDOR
 
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
@@ -29,6 +29,14 @@ HELLO:	hello.bas
 STARPATH.BAS:	starpath.bas
 	$(TOKENIZE) < starpath.bas > STARPATH.BAS
 
+
+####
+
+ANDOR:	andor.o
+	ld65 -o ANDOR andor.o -C $(LINKERSCRIPTS)/apple2_300.inc
+
+andor.o:	andor.s
+	ca65 -o andor.o andor.s -l andor.lst
 
 ###
 
