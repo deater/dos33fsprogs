@@ -1,3 +1,10 @@
+; An Apple II lores version of Hellmood's amazing 64B DOS Star Path Demo
+;
+;       See https://hellmood.111mb.de//starpath_is_55_bytes.html
+;
+;     deater -- Vince Weaver -- vince@deater.net -- 25 February 2025
+
+
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 PLOT1	= $F80E		; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 
@@ -49,10 +56,12 @@ yloop:
 	lda	#0		; start with XPOS=0
 	sta	XPOS
 xloop:
-	lda	#14
-	sta	DEPTH		; start Depth at 14
+	ldx	#14
 
 depth_loop:
+	stx	DEPTH		; start Depth at 14
+
+
 	;===============
 	; YP = Y*4*DEPTH
 	;===============
@@ -62,12 +71,13 @@ depth_loop:
 	asl			; A is YPOS*4
 
 	tay			; multiply Y*4*DEPTH
-	lda	DEPTH
+;	lda	DEPTH
+	txa
 	jsr	mul8		; 8-bit unsigned multiply
 
 	sta	YPH		; store out to YPH:YPL
-	lda	PRODLO
-	sta	YPL
+	;lda	PRODLO
+	;sta	YPL
 
 	;========================
 	; XP=(X*6)-DEPTH
@@ -109,9 +119,9 @@ draw_sky:
 
 	; ??? used to see if star
 
-	clc
+	clc			; A=X*6+YP
 	lda	AL
-	adc	YPL		; A=X*6+YP
+	adc	PRODLO		; YPL from previous multiply
 
 	;==============
 	; see if star
@@ -140,7 +150,8 @@ draw_path:
 	; calc XP*DEPTH and get high byte
 
 	ldy	XPL
-	lda	DEPTH
+;	lda	DEPTH
+	txa
 	jsr	mul8		; A=XP*DEPTH
 
 	;===================================
@@ -155,7 +166,8 @@ draw_path:
 	; 	mask geometry by time shifted depth
 
 	clc
-	lda	DEPTH
+;	lda	DEPTH
+	txa
 	adc	FRAME		; add depth plus frame  D+F
 
 	and	Q		; C = Q & (D+FRAME)
@@ -164,7 +176,8 @@ draw_path:
 	;=========================
 	; increment depth
 
-	inc	DEPTH		; DEPTH=DEPTH+1
+;	inc	DEPTH		; DEPTH=DEPTH+1
+	inx
 
 	;==========================
 	; to create gaps
@@ -181,8 +194,8 @@ plot_pixel:
 	sec
 	sbc	#8			; A is C/2-8
 
-	tax
-	lda	color_lookup,X		; Lookup in color table
+	tay
+	lda	color_lookup,Y		; Lookup in color table
 
 	;=====================
 	; set color
@@ -213,9 +226,9 @@ xloop_done:
 	inc	YPOS
 	lda	YPOS
 	cmp	#48
-;	bne	yloop
-	beq	yloop_done
-	jmp	yloop
+	bne	yloop
+;	beq	yloop_done
+;	jmp	yloop
 yloop_done:
 	inc	FRAME
 
