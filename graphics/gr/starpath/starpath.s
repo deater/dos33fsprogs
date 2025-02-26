@@ -4,9 +4,6 @@
 ;
 ;     deater -- Vince Weaver -- vince@deater.net -- 25 February 2025
 
-
-
-
 square1_lo	=	$2000
 square1_hi	=	$2200
 square2_lo	=	$2400
@@ -118,15 +115,31 @@ next_frame:
 	sta	YPOS
 
 yloop:
+	; set up graphics output routines for line
+	;	odd/even in same byte
+
 	lda	YPOS
 	tay
-	lsr
-	bcs	skip_load
+	lsr				; detect even/odd
+	bcc	y_setup_even
+y_setup_odd:
+	ldy	#$f0
+	lda	#$0f
+	bne	y_setup_done		; bra
+
+y_setup_even:
+	; set up new pointers to line
 	lda	gr_offsets,Y
 	sta	GBASL
 	lda	gr_offsets+1,Y
 	sta	GBASH
-skip_load:
+
+	ldy	#$0f
+	lda	#$f0
+y_setup_done:
+	sty	plot_mask1_smc+1
+	sta	plot_mask2_smc+1
+
 	lda	#0		; start with XPOS=0
 	sta	XPOS
 xloop:
@@ -272,40 +285,29 @@ plot_pixel:
 	;=====================
 	; set color
 
-	sta	EVENC
+;	sta	EVENC
 
 ;	jsr	SETCOL			; Set COLOR with ROM routine (mul*17)
 
 	;=====================
 	; plot point
 plot_point:
-	lda	YPOS
-	lsr
-	bcc	even_plot
 
-odd_plot:
-	lda	EVENC
+;	lda	EVENC
+
+	ldy	XPOS
+plot_mask1_smc:
 	and	#$f0
 	sta	EVENC
-	ldy	XPOS
 	lda	(GBASL),Y
+plot_mask2_smc:
 	and	#$0f
-	ora	EVENC
-	sta	(GBASL),Y
-	jmp	done_plot
-even_plot:
-	lda	EVENC
-	and	#$0f
-	sta	EVENC
-	ldy	XPOS
-	lda	(GBASL),Y
-	and	#$f0
 	ora	EVENC
 	sta	(GBASL),Y
 
 ;	lda	YPOS
 ;	jsr	PLOT			; PLOT AT Y,A (Y preserved)
-done_plot:
+
 
 	;===================
 	; increment xloop
@@ -333,7 +335,8 @@ yloop_done:
 	jmp	next_frame
 
 color_lookup:
-.byte	$00,$55,$AA,$55,$AA,$77,$FF,$FF,$22,$11,$33,$99,$DD,$CC
+;.byte	$00,$55,$AA,$55,$AA,$77,$FF,$FF,$02,$01,$03,$09,$0D,$0C
+.byte	$00,$50,$55,$57,$77,$7F,$FF,$FF,$02,$01,$03,$09,$0D,$0C
 
 
 ; Fast mutiply

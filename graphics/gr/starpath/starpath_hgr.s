@@ -340,18 +340,20 @@ yloop_done:
 
 
 color_lookup_even_col:
-.byte	$00,$4C,$19,$33,$66,$7E,$FF,$FF
-.byte	$55,$D5,$55,$AA,$2A,$2A,$00,$00
+.byte	$00,$4C,$19,$33,$66,$7E,$1F,$FF		; grey
+.byte	$55,$D5,$55,$AA,$2A,$2A,$00,$00		; sky
+
 color_lookup_odd_col:
-.byte	$00,$19,$4C,$66,$33,$7E,$FF,$FF
-.byte	$2A,$AA,$2A,$D5,$55,$55,$00,$00
+.byte	$00,$19,$4C,$66,$33,$7E,$1F,$FF		; grey
+.byte	$2A,$AA,$2A,$D5,$55,$55,$00,$00		; sky
 
 color_lookup_even_col_odd_row:
-.byte	$00,$4C,$19,$33,$66,$7E,$FF,$FF
-.byte	$D5,$D5,$55,$AA,$AA,$2A,$00,$00
+.byte	$00,$19,$4C,$66,$33,$1F,$7E,$FF		; grey
+.byte	$D5,$D5,$55,$AA,$AA,$2A,$00,$00		; sky
+
 color_lookup_odd_col_odd_row:
-.byte	$00,$19,$4C,$66,$33,$7E,$FF,$FF
-.byte	$AA,$AA,$2A,$D5,$D5,$55,$00,$00
+.byte	$00,$4C,$19,$33,$66,$1F,$7E,$FF		; grey
+.byte	$AA,$AA,$2A,$D5,$D5,$55,$00,$00		; sky
 
 
 
