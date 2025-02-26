@@ -1,0 +1,22 @@
+Some experiments with using & and USR() to call into assembly
+language from BASIC.
+
+Neither is very convenient when sizecoding.
+
+; When &/ampersand call
+;	jumps to address $3F5 (applesoft already has a placeholder jmp there)
+;       when called next char/token in A (so can easily do things like &PLOT)
+;       can't return anything unless you look up a variable by name and
+;		write to the pointer
+
+; USR() can take one argument, returns value
+;	jumps to $0A in zero page, which is usually a jump
+;		to a USER handler.  BASIC is set up to illegal quant error
+;		by default
+;	need to manipulate the FAC accumulator to handle input/return
+
+
+
+https://mirrors.apple2.org.za/ftp.apple.asimov.net/documentation/magazines/misc/theappleorchard_v1n1_applesoftinternalentrypoints_ocr.pdf
+https://6502disassembly.com/a2-rom/Applesoft.html
+https://wiki.reactivemicro.com/images/f/f7/Applesoft_II_2019.pdf
