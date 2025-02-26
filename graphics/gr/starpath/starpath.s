@@ -59,13 +59,13 @@ loop3:
 
 	tay			; multiply Y*4*D
 	lda	D
-	jsr	mul8
+	jsr	mul8		; definitely 8-bit mul in original
 
 	sta	YPH		; store out to YPH:YPL
 	lda	PRODLO
 	sta	YPL
 
-	lda	XPOS		; XP=(X*6)-D
+	lda	XPOS		; XP=(X*6)-D	curve X by depth
 	asl
 	sta	XPL
 	asl
@@ -79,7 +79,7 @@ loop3:
 	sbc	D
 	sta	XPL
 
-	bpl	loop4	;IF XP<0 THEN
+	bcs	loop4		; IF XP<0 THEN  if left then draw  sky
 
 	lda	#31		; C=31
 	sta	C
@@ -96,17 +96,20 @@ loop3:
 	jmp	loop7	; GOTO7
 
 loop4:
-			; Q=XP*D/256
+				; Q=XP*D/256  multiply X by current depth
+				; want high part
+				; definitely 8-bit mul
 	ldy	XPL
 	lda	D
 	jsr	mul8
-	ora	YPH	; R=YP/256
-	sta	Q	; Q=ora Q,R
-
+	ora	YPH		; R=YP/256
+	sta	Q		; Q=ora Q,R
+				; or for texture pattern
 	clc
-	lda	D		;and D+F
+	lda	D		; add depth plus frame  D+F
 	adc	FRAME
-	and	Q
+
+	and	Q		; mask geometry by time shifted depth
 
 	sta	C
 	inc	D		; D=D+1
