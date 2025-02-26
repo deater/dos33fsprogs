@@ -9,10 +9,10 @@ FULLGR	= $C052
 FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
-D	= $F3
+DEPTH	= $F3
 C	= $F4
 AL	= $F5
-AH	= $F6
+;AH	= $F6
 PRODLO	= $F7
 FACTOR2	= $F8
 YPL	= $F9
@@ -42,7 +42,7 @@ starpath:
 	lda	#0
 	sta	FRAME
 
-big_loop:
+next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
 yloop:
@@ -50,117 +50,179 @@ yloop:
 	sta	XPOS
 xloop:
 	lda	#14
-	sta	D		; start D at 14
+	sta	DEPTH		; start Depth at 14
 
-loop3:
-	lda	YPOS		; YP=Y*4*D
+depth_loop:
+	;===============
+	; YP = Y*4*DEPTH
+	;===============
+
+	lda	YPOS		;
 	asl
-	asl			; YPOS*4
+	asl			; A is YPOS*4
 
-	tay			; multiply Y*4*D
-	lda	D
-	jsr	mul8		; definitely 8-bit mul in original
+	tay			; multiply Y*4*DEPTH
+	lda	DEPTH
+	jsr	mul8		; 8-bit unsigned multiply
 
 	sta	YPH		; store out to YPH:YPL
 	lda	PRODLO
 	sta	YPL
 
-	lda	XPOS		; XP=(X*6)-D	curve X by depth
+	;========================
+	; XP=(X*6)-DEPTH
+	;	curve X by depth
+	;=========================
+
+	lda	XPOS		; load XPOS
 	asl
 	sta	XPL
 	asl
-	clc
+	;clc			; carry always 0 as x never more than 40?
 	adc	XPL
-	sta	XPL		; XPL=X*6
+	sta	XPL		; XPL=XPOS*6
 
-	sta	AL		; AL also is X*6
+	sta	AL		; AL also is XPOS*6
 
-	sec			; XPL=X*6-D
-	sbc	D
-	sta	XPL
+	sec			; Subtract DEPTH
+	sbc	DEPTH
+	sta	XPL		; XP=(XPOS*6)-DEPTH
 
-	bcs	loop4		; IF XP<0 THEN  if left then draw  sky
+				; if carry set means not negative
+				; and draw path
+				; otherwise we draw the sky
+	bcs	draw_path
+
+	;========================
+	; draw the sky
+	;========================
+draw_sky:
+
+	;================================
+	; set color to white for star?
 
 	lda	#31		; C=31
 	sta	C
 
+	;=====================
+	; calc A=(XPOS*6)+YP
+
+	; ??? used to see if star
+
 	clc
 	lda	AL
 	adc	YPL		; A=X*6+YP
-	sta	AL
 
-	lda	#0		; AH
-	adc	YPH
-	sta	AH
+	;==============
+	; see if star
 
-	jmp	loop7	; GOTO7
+	cmp	#6		; if A&0xFF < 6 then skip, we are star
+	bcc	plot_pixel
 
-loop4:
-				; Q=XP*D/256  multiply X by current depth
-				; want high part
-				; definitely 8-bit mul
-	ldy	XPL
-	lda	D
-	jsr	mul8
-	ora	YPH		; R=YP/256
-	sta	Q		; Q=ora Q,R
-				; or for texture pattern
-	clc
-	lda	D		; add depth plus frame  D+F
-	adc	FRAME
+	;==============
+	; not star, sky
 
-	and	Q		; mask geometry by time shifted depth
-
-	sta	C
-	inc	D		; D=D+1
-	cmp	#16		; IF C<16 THEN 3
-	bcc	loop3
-loop6:
-	jmp	loop9
-loop7:
-	lda	AL
-	cmp	#6
-	bcc	loop9
-			; 8IF(A&0xff)>6THENC=Y/4+32
-	lda	YPOS
+	lda	YPOS		; C=Y/4+32
 	lsr
 	lsr
 	clc
 	adc	#32
 	sta	C
-loop9:
+
+	bne	plot_pixel	; bra
+
+	;====================
+	; draw path
+	;====================
+
+draw_path:
+	;=================================
+	; calc XP*DEPTH and get high byte
+
+	ldy	XPL
+	lda	DEPTH
+	jsr	mul8		; A=XP*DEPTH
+
+	;===================================
+	; calc Q= (XP*DEPTH)/256 | (YP/256)
+	;	for texture pattern
+
+	ora	YPH		; Q=(XP*DEPTH)/256 | YP/256
+	sta	Q
+
+	;==============================
+	; calc C = Q & (Depth + Frame)
+	; 	mask geometry by time shifted depth
+
+	clc
+	lda	DEPTH
+	adc	FRAME		; add depth plus frame  D+F
+
+	and	Q		; C = Q & (D+FRAME)
+	sta	C
+
+	;=========================
+	; increment depth
+
+	inc	DEPTH		; DEPTH=DEPTH+1
+
+	;==========================
+	; to create gaps
+
+	cmp	#16		; IF C<16 THEN 3
+	bcc	depth_loop
+
+	;===========================
+	; plot pixel
+	;	XPOS,YPOS  COLOR=LOOKUP(C/2-8)
+plot_pixel:
 	lda	C
 	lsr
 	sec
-	sbc	#8
+	sbc	#8			; A is C/2-8
+
 	tax
-	lda	color_lookup,X
-	jsr	SETCOL			;COLOR=CL(C/2-8)
+	lda	color_lookup,X		; Lookup in color table
+
+	;=====================
+	; set color
+
+	jsr	SETCOL			; Set COLOR with ROM routine (mul*17)
+
+	;=====================
+	; plot point
 
 	ldy	XPOS
 	lda	YPOS
 	jsr	PLOT			; PLOT AT Y,A (Y preserved)
 
+	;===================
+	; increment xloop
+
 	inc	XPOS
 	lda	XPOS
 	cmp	#40
-;	bne	xloop
-	beq	xloop_done
-	jmp	xloop
+	bne	xloop
+;	beq	xloop_done
+;	jmp	xloop
 xloop_done:
+
+	;===================
+	; increment yloop
+
 	inc	YPOS
 	lda	YPOS
 	cmp	#48
-	;bne	yloop
+;	bne	yloop
 	beq	yloop_done
 	jmp	yloop
 yloop_done:
 	inc	FRAME
 
-	jmp	big_loop
+	jmp	next_frame
 
 color_lookup:
-.byte	0,5,10,5,10,7,15,15,2,1,3,9,13,12,4,4
+.byte	0,5,10,5,10,7,15,15,2,1,3,9,13,12
 
 
 ; Russian Peasant multiply by Thwaite
