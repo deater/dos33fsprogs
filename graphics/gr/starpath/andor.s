@@ -11,6 +11,13 @@
 VARPNTL = $83
 VARPNTH = $84
 
+EXECUTE = $D838	; execute basic command in Y, return through CHRGET?
+POS	= $E2FF ; load value in CH and convert to FAC	($D9 in table)
+
+
+;	ldy	#$d9	; $A0 $D9 = COLOR=POS
+;	jmp	$D838	; $4C $38 $D8	L8PDL
+
 FRMEVL = $DD7B
 GETADDR= $E752
 CHKCOM = $DEBE
