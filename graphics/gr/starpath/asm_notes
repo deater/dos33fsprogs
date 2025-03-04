@@ -1,0 +1,38 @@
+8C7:	LDA CH		; A5 24			; ONERR$
+8C9:	BIT $E700	; 2C 00 E7		; , (nul, addrl)
+8CC:	PHP		; 08			; (addrh)
+8CD:	PLP		; 28			; (linel)
+8CE:	ORA #$??	; 09 ??			; (lineh) )
+8D0:	AND #$??	; 29 ??			; )%
+8D2:	STA CH		; 85 24			; DEL$
+8D4:	BIT MIXCLR	; 2C 52 C0		; ,RTAB(
+8D7:	JMP $D550	; 4C 50 D5		; LPUSR
+
+The following all jump to E301
+DEA1 / DF62 / DFD3 / E6D9 / E6EF / E778 / 
+
+D0E8 contains $E2FF
+
+$E2FF/$E301	LDY CH, Convert to FAC
+$F7FA		STA CH/RTS
+
+JMP()	$6C
+
+
+
+/* 80 */ "END","FOR","NEXT","DATA","INPUT","DEL","DIM","READ",
+/* 88 */ "GR","TEXT","PR#","IN#","CALL","PLOT","HLIN","VLIN",
+/* 90 */ "HGR2","HGR","HCOLOR=","HPLOT","DRAW","XDRAW","HTAB","HOME",
+/* 98 */ "ROT=","SCALE=","SHLOAD","TRACE","NOTRACE","NORMAL","INVERSE","FLASH",
+/* A0 */ "COLOR=","POP","VTAB","HIMEM:","LOMEM:","ONERR","RESUME","RECALL",
+/* A8 */ "STORE","SPEED=","LET","GOTO","RUN","IF","RESTORE","&",
+/* B0 */ "GOSUB","RETURN","REM","STOP","ON","WAIT","LOAD","SAVE",
+/* B8 */ "DEF","POKE","PRINT","CONT","LIST","CLEAR","GET","NEW",
+/* C0 */ "TAB(","TO","FN","SPC(","THEN","AT","NOT","STEP",
+/* C8 */ "+","-","*","/","^","AND","OR",">",
+/* D0 */ "=","<","SGN","INT","ABS","USR","FRE","SCRN(",
+/* D8 */ "PDL","POS","SQR","RND","LOG","EXP","COS","SIN",
+/* E0 */ "TAN","ATN","PEEK","LEN","STR$","VAL","ASC","CHR$",
+/* E8 */ "LEFT$","RIGHT$","MID$","","","","","",
+/* F0 */ "","","","","","","","",
+/* F8 */ "","","","","","(","(","("
