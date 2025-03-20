@@ -60,10 +60,14 @@ static int debug=0;
 #define FLASH	0xF3
 #define TEMP	0xFA
 
+/* For these variables, off=0 and on=0xff */
 static int text_mode=0xff;
 static int text_page_1=0x00;
 static int hires_on=0x00;
 static int mixed_graphics=0xff;
+static int a3_state=0x00;
+static int eightycol_on=0x00;
+static int set80col=0x00;	/* if on, PAGE2 maps AUX:2000 to MAIN:2000 */
 
 static int plaid_mode=0;
 
@@ -104,6 +108,32 @@ void soft_switch(unsigned short address) {
 			break;
 		default:
 			fprintf(stderr,"Unknown soft switch %x\n",address);
+			break;
+	}
+}
+
+/* On apple IIe and newer some things only happen on write */
+void soft_switch_write(unsigned short address) {
+
+	switch(address) {
+
+		case SET80_COL:		/* $c001 */
+			set80col=0xff;
+			break;
+
+		case EIGHTY_COLON:	/* $c00d */
+			eightycol_on=0xff;
+			break;
+
+		case AN3:		/* $c05e */
+			a3_state=0xff;
+			break;
+
+		default:
+			/* if not specifically handled, fall through */
+			/* to regular access */
+			soft_switch(address);
+//			fprintf(stderr,"Unknown soft switch %x\n",address);
 			break;
 	}
 }
