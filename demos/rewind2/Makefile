@@ -22,11 +22,11 @@ rewind2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) rewind2.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) rewind2.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) rewind2.dsk 2 0 MUSIC		0 0
-	$(DOS33_RAW) rewind2.dsk 5 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
-	$(DOS33_RAW) rewind2.dsk 13 0 ./part05_atrus/ATRUS 0 0
-	$(DOS33_RAW) rewind2.dsk 17 0 ./part00_intro/INTRO 0 0
-	$(DOS33_RAW) rewind2.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
-	$(DOS33_RAW) rewind2.dsk 26 0 ./part20_credits/CREDITS 0 0
+#	$(DOS33_RAW) rewind2.dsk 5 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
+#	$(DOS33_RAW) rewind2.dsk 13 0 ./part05_atrus/ATRUS 0 0
+#	$(DOS33_RAW) rewind2.dsk 17 0 ./part00_intro/INTRO 0 0
+#	$(DOS33_RAW) rewind2.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
+#	$(DOS33_RAW) rewind2.dsk 26 0 ./part20_credits/CREDITS 0 0
 
 ####
 
@@ -68,13 +68,14 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
-	hgr_table.s hgr_sprite.s \
+	hgr_table.s \
+#	hgr_sprite.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
 	irq_wait.s vblank.s hgr_page_flip.s \
-	wipes/fx.hgr.fizzle.s \
-	wipes/fx.hgr.2pass.lr.s \
+#	wipes/fx.hgr.fizzle.s \
+#	wipes/fx.hgr.2pass.lr.s \
 	hgr_clear_screen.s
 	ca65 -o qload.o qload.s -l qload.lst
 
@@ -100,21 +101,21 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 
@@ -145,7 +146,7 @@ MUSIC:	music.o
 
 music.o:	music.s zp.inc \
 	aux_memcopy.s \
-	Qjeta_TakeOnMe.pt3 \
+	music/Qjeta_TakeOnMe.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard.inc \
@@ -169,12 +170,12 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
-	cd part00_intro && make clean
-	cd part01_dni && make clean
-	cd part05_atrus && make clean
-	cd part07_maglev && make clean
-	cd part10_graphics && make clean
-	cd part20_credits && make clean
+#	cd part00_intro && make clean
+#	cd part01_dni && make clean
+#	cd part05_atrus && make clean
+#	cd part07_maglev && make clean
+#	cd part10_graphics && make clean
+#	cd part20_credits && make clean
 
 ###
 

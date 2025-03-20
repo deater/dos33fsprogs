@@ -336,7 +336,7 @@ forever:
 
 
 start_message:
-	.byte 0,0,"LOADING DRIVEN DEMO",0
+	.byte 0,0,"LOADING REWIND2 PROOF OF CONCEPT",0
 	.byte 0,1,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
