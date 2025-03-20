@@ -65,7 +65,7 @@ static int text_mode=0xff;
 static int text_page_1=0x00;
 static int hires_on=0x00;
 static int mixed_graphics=0xff;
-static int a3_state=0x00;
+static int an3_on=0x00;
 static int eightycol_on=0x00;
 static int set80col=0x00;	/* if on, PAGE2 maps AUX:2000 to MAIN:2000 */
 
@@ -126,7 +126,7 @@ void soft_switch_write(unsigned short address) {
 			break;
 
 		case AN3:		/* $c05e */
-			a3_state=0xff;
+			an3_on=0xff;
 			break;
 
 		default:
@@ -206,6 +206,26 @@ int grsim_input(void) {
 
 	return 0;
 }
+
+/* double hi-res colors, shifted for weird reasons */
+static unsigned int dcolor[16]={
+	0,		/*  0000 -> 0000 black */
+	0x604ebd,	/*  0001 -> 0010 2 dark blue */
+	0x00a360,	/*  0010 -> 0100 4 dark green */
+	0x14cffd,	/*  0011 -> 0110 6 medium blue */
+	0x607203,	/*  0100 -> 1000 8 brown */
+	0x9d9d9d,	/*  0101 -> 1010 10 grey 2 */
+	0x14f53c,	/*  0110 -> 1100 12 bright green */
+	0x72ffd0,	/*  0111 -> 1110 14 aqua */
+	0xe31e60,	/*  1000 -> 0001 1 magenta */
+	0xff44fd,	/*  1001 -> 0011 3 purple */
+	0x9c9c9c,	/*  1010 -> 0101 5 grey 1 */
+	0xd0c3ff,	/*  1011 -> 0111 7 light blue */
+	0xff6a3c,	/*  1100 -> 1001 9 orange */
+	0xffa0d0,	/*  1101 -> 1011 11 pink */
+	0xd0dd8d,	/*  1110 -> 1101 13 yellow */
+	0xffffff,	/*  1111 -> 1111 15 white */
+};
 
 static unsigned int color[16]={
 	0,		/*  0 black */
@@ -446,6 +466,77 @@ void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
 }
 
 
+/* FIXME: this is simplistic and just draws ideal colors */
+/*	in theory we could do proper NTSC calculations */
+
+
+/* Way this works: same 16 colors as lores */
+/* still stuck in 7-bit chunks, palette bit ignored on IIe
+
+    AUX         MAIN         AUX      MAIN
+   PBBBAAAA    PDDCCCCB   PFEEEEDD    PGGGGFFF
+
+*/
+void draw_dhires(unsigned int *out_pointer,int y_start, int y_end) {
+
+	int j,yy,xx;
+	int gr_addr;
+	unsigned int *t_pointer;
+
+	/* X_SCALE / Y_SCALE makes the output bigger */
+	/* so 280x192 -> 560x384, etc */
+
+	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
+
+	/* do the hires graphics */
+	for(yy=y_start;yy<y_end;yy++) {
+
+		for(j=0;j<HGR_Y_SCALE;j++) {
+
+			gr_addr=gr_addr_lookup[yy/8]+0x1c00;
+			gr_addr+=0x400*(yy&0x7);
+
+			int cola[7];
+			int aux0,main0,aux1,main1;
+
+			for(xx=0;xx<20;xx++) {
+//				printf("HGR ADDR=%x\n",gr_addr);
+				aux0=ram[gr_addr+0x10000];
+				main0=ram[gr_addr];
+				aux1=ram[gr_addr+1+0x10000];
+				main1=ram[gr_addr+1];
+
+				cola[0]=dcolor[(aux0&0xf)];
+				cola[1]=dcolor[((aux0>>4)&0x7)|((main0&1)<<3)];
+				cola[2]=dcolor[(main0>>1)&0xf];
+				cola[3]=dcolor[((main0>>5)&0x3)|((aux1&3)<<2)];
+				cola[4]=dcolor[(aux1>>2)&0xf];
+				cola[5]=dcolor[((aux1>>6)&0x1)|((main1&0x7)<<1)];
+				cola[6]=dcolor[(main1>>3)&0xf];
+
+				int q;
+				for(q=0;q<7;q++) {
+					*t_pointer=cola[q];
+					t_pointer++;
+					*t_pointer=cola[q];
+					t_pointer++;
+					*t_pointer=cola[q];
+					t_pointer++;
+					*t_pointer=cola[q];
+					t_pointer++;
+
+				}
+
+				gr_addr+=2;
+			}
+
+		}
+
+	}
+
+}
+
+
 
 void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
@@ -458,7 +549,10 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 
 	t_pointer=out_pointer+(y_start*280*HGR_X_SCALE*HGR_Y_SCALE);
 
-	/* do the hires graphics */
+	/* do the dhires graphics */
+
+
+	/* row by row */
 	for(yy=y_start;yy<y_end;yy++) {
 
 		for(j=0;j<HGR_Y_SCALE;j++) {
@@ -528,6 +622,7 @@ void draw_hires(unsigned int *out_pointer,int y_start, int y_end) {
 }
 
 
+
 int grsim_update(void) {
 
 	unsigned int *t_pointer;
@@ -545,7 +640,10 @@ int grsim_update(void) {
 		draw_text(t_pointer,0,TEXT_YSIZE);
 	}
 	else {
-		if (hires_on) {
+		if ((hires_on) && (an3_on) && (eightycol_on)) {
+			draw_dhires(t_pointer,0,192);
+		}
+		else if (hires_on) {
 			draw_hires(t_pointer,0,192);
 		}
 		else {
