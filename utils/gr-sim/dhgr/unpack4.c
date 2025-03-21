@@ -1,6 +1,11 @@
+/* testing code to unpack 4-color dhgr images to different palettes */
+/* based on some effects from the rewind2 demo */
+/* the trick is to do this in assembly language */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <string.h>
 
 #include <fcntl.h>
 
@@ -122,10 +127,15 @@ static void wait_until_keypress(void) {
 int main(int argc, char **argv) {
 
 	int fd;
+	char *filename;
 
-	if (argc<1) {
+	if (argc<2) {
 		fprintf(stderr,"Usage: unpack4 FILENAME.4\n");
 		fprintf(stderr,"  where FILENAME.4 is a 4-packed AppleII DHIRES image\n\n");
+		filename=strdup("bear.packed");
+	}
+	else {
+		filename=strdup(argv[1]);
 	}
 
 	grsim_init();
@@ -142,7 +152,7 @@ int main(int argc, char **argv) {
 	soft_switch(SET_PAGE1);
 
 	/* Load FILE */
-	fd=open(argv[1],O_RDONLY);
+	fd=open(filename,O_RDONLY);
 	if (fd<0) {
 		printf("Error opening!\n");
 		return -1;
