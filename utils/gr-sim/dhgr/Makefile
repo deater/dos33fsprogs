@@ -6,125 +6,28 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	dhgr_view
+all:	dhgr_view unpack4
 
 
 ###
 
 dhgr_view:	dhgr_view.o $(GR_SIM)
 	$(CC) -o dhgr_view dhgr_view.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-dhgr_view.o:	dhgr_view.c
 
+dhgr_view.o:	dhgr_view.c
 	$(CC) $(CFLAGS) -c dhgr_view.c
 
 ###
 
-image_load:	image_load.o $(GR_SIM)
-	$(CC) -o image_load image_load.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
+unpack4:	unpack4.o $(GR_SIM)
+	$(CC) -o unpack4 unpack4.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
 
-image_load.o:	image_load.c
-	$(CC) $(CFLAGS) -c image_load.c
+unpack4.o:	unpack4.c
+	$(CC) $(CFLAGS) -c unpack4.c
 
-###
-
-lines:	lines.o $(GR_SIM)
-	$(CC) -o lines lines.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-lines.o:	lines.c
-	$(CC) $(CFLAGS) -c lines.c
-
-###
-
-fireworks:	fireworks.o $(GR_SIM)
-	$(CC) -o fireworks fireworks.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-fireworks.o:	fireworks.c
-	$(CC) $(CFLAGS) -c fireworks.c
-
-###
-
-tunnel:	tunnel.o $(GR_SIM)
-	$(CC) -o tunnel tunnel.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-tunnel.o:	tunnel.c
-	$(CC) $(CFLAGS) -c tunnel.c
-
-###
-
-tunnel_small:	tunnel_small.o $(GR_SIM)
-	$(CC) -o tunnel_small tunnel_small.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-tunnel_small.o:	tunnel_small.c
-	$(CC) $(CFLAGS) -c tunnel_small.c
-
-
-
-###
-
-plasma_new:	plasma_new.o $(GR_SIM)
-	$(CC) -o plasma_new plasma_new.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-plasma_new.o:	plasma_new.c
-	$(CC) $(CFLAGS) -c plasma_new.c
-
-###
-
-plasma_test64:	plasma_test64.o $(GR_SIM)
-	$(CC) -o plasma_test64 plasma_test64.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-plasma_test64.o:	plasma_test64.c
-	$(CC) $(CFLAGS) -c plasma_test64.c
-
-###
-
-plasma_test:	plasma_test.o $(GR_SIM)
-	$(CC) -o plasma_test plasma_test.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-plasma_test.o:	plasma_test.c
-	$(CC) $(CFLAGS) -c plasma_test.c
-
-
-###
-
-fw_purple:	fw_purple.o $(GR_SIM)
-	$(CC) -o fw_purple fw_purple.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-fw_purple.o:	fw_purple.c
-	$(CC) $(CFLAGS) -c fw_purple.c
-###
-
-seven:	seven.o $(GR_SIM)
-	$(CC) -o seven seven.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-seven.o:	seven.c
-	$(CC) $(CFLAGS) -c seven.c
-
-###
-
-random16:	random16.o $(GR_SIM)
-	$(CC) -o random16 random16.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-random16.o:	random16.c
-	$(CC) $(CFLAGS) -c random16.c
-
-####
-
-scroll:	scroll.o $(GR_SIM)
-	$(CC) -o scroll scroll.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-scroll.o:	scroll.c
-	$(CC) $(CFLAGS) -c scroll.c
-
-####
-
-scroll-asm:	scroll-asm.o $(GR_SIM)
-	$(CC) -o scroll-asm scroll-asm.o $(GR_SIM) $(LFLAGS) $(SDL_LIBS)
-
-scroll-asm.o:	scroll-asm.c
-	$(CC) $(CFLAGS) -c scroll-asm.c
 
 ####
 
 
 clean:	
-	rm -f *~ *.o dhgr_view
+	rm -f *~ *.o dhgr_view unpack4
