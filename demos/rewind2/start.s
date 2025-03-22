@@ -174,28 +174,24 @@ load_program_loop:
 .endif
 
 
-.if 0
+
 	;=======================
 	;=======================
-	; Run intro
+	; Run headphones
 	;=======================
 	;=======================
 
 	; load from disk
 
-	lda     #PART_INTRO		; INTRO
+	lda     #PART_HEADPHONES		; HEADPHONES
 	sta     WHICH_LOAD
 	jsr     load_file
-
-;	bit	FULLGR
-
-.endif
 
 	; Run intro
 
 	cli			; start music
 
-;	jsr	$8000
+	jsr	$6000
 
 blah:
 	jmp	blah

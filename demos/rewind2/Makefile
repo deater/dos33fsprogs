@@ -10,8 +10,8 @@ all:	rewind2.dsk
 
 rewind2.dsk:	QBOOT QLOAD \
 	MUSIC \
-	music.inc qload.inc
-#	./part00_intro/INTRO \
+	music.inc qload.inc \
+	./headphones/HEADPHONES
 #	./part05_atrus/ATRUS \
 #	./part07_maglev/MOVIE_MAGLEV_RIDE \
 #	./part10_graphics/GRAPHICS \
@@ -22,7 +22,7 @@ rewind2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) rewind2.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) rewind2.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) rewind2.dsk 2 0 MUSIC		0 0
-#	$(DOS33_RAW) rewind2.dsk 5 0 ./part07_maglev/MOVIE_MAGLEV_RIDE 0 0
+	$(DOS33_RAW) rewind2.dsk 5 0 ./headphones/HEADPHONES 0 0
 #	$(DOS33_RAW) rewind2.dsk 13 0 ./part05_atrus/ATRUS 0 0
 #	$(DOS33_RAW) rewind2.dsk 17 0 ./part00_intro/INTRO 0 0
 #	$(DOS33_RAW) rewind2.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
@@ -30,8 +30,8 @@ rewind2.dsk:	QBOOT QLOAD \
 
 ####
 
-part00_intro/INTRO:	
-	cd part00_intro && make
+headphones/HEADPHONES:	
+	cd headphones && make
 
 part01_dni/DNI:	
 	cd part01_dni && make
@@ -170,24 +170,10 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
-#	cd part00_intro && make clean
+	cd headphones && make clean
 #	cd part01_dni && make clean
 #	cd part05_atrus && make clean
 #	cd part07_maglev && make clean
 #	cd part10_graphics && make clean
 #	cd part20_credits && make clean
 
-###
-
-submit:	rewind2.zip
-
-rewind2.zip:	rewind2.dsk file_id.diz
-	mkdir -p demosplash2024_rewind2
-	cp file_id.diz ./demosplash2024_rewind2
-	cp rewind2.dsk ./demosplash2024_rewind2
-#	cp second_d2.dsk ./demosplash2024_rewind2
-#	cp a2r_720p.mp4 ./demosplash2024_rewind2
-	cp rewind2_screenshot.png ./demosplash2024_rewind2
-	zip -r rewind2.zip demosplash2024_rewind2
-
-####

@@ -163,38 +163,38 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; ???, MUSIC, INTRO, CREDITS
-	.byte 1,1,1,1		; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte 1,1,1,1		; ???, MUSIC, HEADPHONES
+	.byte 1,1,1,1		;
 	.byte 1,1,1,1		;
 
 load_address_array:
-	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
-	.byte $40,$60,$40,$80	; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte $D0,$D0,$60,$80	; ???, MUSIC, HEADPHONES
+	.byte $40,$60,$40,$80	;
 	.byte $60,$60,$60,$60	;
 
 start_address:
-	.byte $D0,$D0,$80,$80	; ???, MUSIC, INTRO, CREDITS
-	.byte $40,$60,$40,$80	; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte $D0,$D0,$60,$80	; ???, MUSIC, HEADPHONES
+	.byte $40,$60,$40,$80	;
 	.byte $80,$80,$80,$60	;
 
 aux_dest:
-	.byte $D0,$D0,$A0,$A0	; ???, MUSIC, INTRO, CREDITS
-	.byte $70,$40,$02,$82	; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte $D0,$D0,$60,$A0	; ???, MUSIC, HEADPHONES
+	.byte $70,$40,$02,$82	;
 	.byte $20,$10,$80,$20	;
 
 track_array:
-	.byte 2,2,17,26		; ???, MUSIC, INTRO, CREDITS
-	.byte 28,20,5,13	; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte 2,2,5,26		; ???, MUSIC, HEADPHONES
+	.byte 28,20,5,13	;
 	.byte 25,26,27,28	;
 
 sector_array:
-	.byte 0,0,0,0		; ???, MUSIC, INTRO, CREDITS
-	.byte 0,0,0,0		; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte 0,0,0,0		; ???, MUSIC, HEADPHONES
+	.byte 0,0,0,0		;
 	.byte 0,0,0,0		;
 
 length_array:
-	.byte 48,32,48,32	; ???, MUSIC, INTRO, CREDITS
-	.byte 16,95,127, 58	; DNI, GRAPHICS, MAGLEV, ATRUS
+	.byte 48,32,64,32	; ???, MUSIC, HEADPHONES
+	.byte 16,95,127, 58	;
 	.byte 16,16,16,96	;
 
 PT3_ENABLE_APPLE_IIC = 1
