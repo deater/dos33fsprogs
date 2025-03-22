@@ -136,119 +136,33 @@ COLOR_MASK	= $E7	; gr_plot
 FRAME           = $E8
 FRAMEL		= $E8
 FRAMEH		= $E9
-BTC_L		= $EA	; audio
-BTC_H		= $EB	; audio
-MASKL		= $EC	; gr_putsprite_mask
-MASKH		= $ED
+MASKL		= $EA	; gr_putsprite_mask
+MASKH		= $EB
 
 ;==============================================
 ; $F0-$FB can re-use in each file
 ;==============================================
 
-; LOGO
+; bear
+AUX0		= $EC
+MAIN0		= $ED
+AUX1		= $EE
+MAIN1		= $EF
 
-LEFT_X		= $F0
-RIGHT_X		= $F1
-X_OFFSET	= $F2
-SAVE_X		= $F3
-ERASE_OFFSET	= $F4
-
-
-; D'NI
-
-SPRITEY		= $EE
-SPRITEX		= $EF
-SPRITE_XSIZE	= $F0
-SIN_COUNT	= $F1
-NUMBER_HIGH	= $F2
-NUMBER_LOW	= $F3
-DRAW_NUMBER	= $FA
-
-
-; Credits
-CURSOR_X	= $EE
-CURSOR_Y	= $EF
-SCROLL_X	= $F0
-BACKUP_OUTL	= $F2
-BACKUP_OUTH	= $F3
-GUITAR_FRAME	= $F4
-SCROLL_DONE	= $F5
-SCROLL_LINE	= $F6
-STAR_X		= $F7
-STAR_WHICH	= $F8
-SPRITE_LIST	= $F9
-
-; Atrus
-
-SCROLL_OFFSET	= $F0
-SCROLL_START	= $F1
-SCROLL_ODD	= $F2
-PLASMA_GROW	= $F3
-SCROLL_SUBSCROLL= $F4
-FONT1		= $F5
-FONT2		= $F6
-SCROLL_ROW	= $F7
-SCROLL_COL	= $F8
+CURRENT		= $F0
+LEFT		= $F1
+XSTART		= $F2
+XEND		= $F3
+COLORS0		= $F4
+COLORS1		= $F5
+COLORS2		= $F6
+COLORS3		= $F7
+COLORS4		= $F8
+COLORS5		= $F9
+COLORS6		= $FA
+COLORS7		= $FB
 
 
-; PLASMA
-COMPT1		= $F4
-COMPT2		= $F5
-PARAM1		= $F6
-PARAM2		= $F7
-PARAM3		= $F8
-PARAM4		= $F9
-
-; Maglev
-
-TEMP		= $F0
-LEVEL_OVER	= $F1
-WHICH_OVERLAY	= $F2
-
-
-
-
-
-; PLASMA
-
-; CUBE
-SAVEX		= $F3
-SAVEY		= $F4
-SUM		= $F5
-
-; CIRCLES/DRAW_BOXES
-COLOR2		= $F3
-X1		= $F4
-X2		= $F5
-Y1		= $F6
-Y2		= $F7
-SCENE_COUNT	= $F8
-LAST_TYPE	= $F9
-
-; lens
-LENS_X		= $F0
-LENS_Y		= $F1
-XADD		= $F2
-YADD		= $F3
-
-; rotozoom
-NUM1L		= $F0
-NUM1H		= $F1
-NUM2L		= $F2
-NUM2H		= $F3
-RESULT		= $F4	; F5,F6,F7
-SCALE_I		= $F8
-SCALE_F		= $F9
-ANGLE		= $FA
-
-
-
-; scroller
-HGR_COPY_Y1	= $F1
-HGR_COPY_Y2	= $F2
-FIRE_COLOR	= $F3
-SCROLL_LENGTH	= $F4
-OFFSET		= $F5
 
 
 ;==============================================
@@ -260,27 +174,4 @@ INH		=	$FD
 OUTL		=	$FE
 OUTH		=	$FF
 
-
-; read any file slot 6 version
-; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
-
-; modified to assembled with ca64 -- vmw
-; added code to patch it to run from current disk slot -- vmw
-
-
-	adrlo	=	$26	; constant from boot prom
-	adrhi	=	$27	; constant from boot prom
-	tmpsec	=	$3c	; constant from boot prom
-	reqsec	=	$3d	; constant from boot prom
-	sizelo	=	$44
-	sizehi	=	$45
-	secsize	=	$46
-
-	ldsizel	=	$f0
-	ldsizeh	=	$f1
-	namlo	=	$fb
-	namhi	=	$fc
-	step	=	$fd	; state for stepper motor
-	tmptrk	=	$fe	; temporary copy of current track
-	phase	=	$ff	; current phase for /seek
 
