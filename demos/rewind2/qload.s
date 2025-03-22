@@ -164,38 +164,32 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 1,1,1,1		;
-	.byte 1,1,1,1		;
+	.byte 1,1,1,1		; BEAR
 
 load_address_array:
 	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $40,$60,$40,$80	;
-	.byte $60,$60,$60,$60	;
+	.byte $60,$60,$40,$80	; BEAR
 
 start_address:
 	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $40,$60,$40,$80	;
-	.byte $80,$80,$80,$60	;
+	.byte $60,$60,$40,$80	; BEAR
 
 aux_dest:
 	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $70,$40,$02,$82	;
-	.byte $20,$10,$80,$20	;
+	.byte $60,$40,$02,$82	; BEAR
 
 track_array:
 	.byte 2,2,5,13		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 28,20,5,13	;
-	.byte 25,26,27,28	;
+	.byte 17,20,5,13	; BEAR
 
 sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 0,0,0,0		;
-	.byte 0,0,0,0		;
+	.byte 0,0,0,0		; BEAR
 
 length_array:
 	.byte 48,32,32,32	; ???, MUSIC, HEADPHONES, DANCING
-	.byte 16,95,127, 58	;
-	.byte 16,16,16,96	;
+	.byte 32,95,127,58	; BEAR
+
 
 PT3_ENABLE_APPLE_IIC = 1
 

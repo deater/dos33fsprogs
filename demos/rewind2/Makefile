@@ -12,10 +12,8 @@ rewind2.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./headphones/HEADPHONES \
-	./dancing/DANCING
-#	./part07_maglev/MOVIE_MAGLEV_RIDE \
-#	./part10_graphics/GRAPHICS \
-#	./part20_credits/CREDITS
+	./dancing/DANCING \
+	./bear/BEAR
 	cp $(EMPTY_DISK) rewind2.dsk
 	$(DOS33_RAW) rewind2.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) rewind2.dsk 0 2 QBOOT		1 1
@@ -24,9 +22,8 @@ rewind2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) rewind2.dsk 2 0 MUSIC		0 0
 	$(DOS33_RAW) rewind2.dsk 5 0 ./headphones/HEADPHONES 0 0
 	$(DOS33_RAW) rewind2.dsk 13 0 ./dancing/DANCING 0 0
-#	$(DOS33_RAW) rewind2.dsk 17 0 ./part00_intro/INTRO 0 0
-#	$(DOS33_RAW) rewind2.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
-#	$(DOS33_RAW) rewind2.dsk 26 0 ./part20_credits/CREDITS 0 0
+	$(DOS33_RAW) rewind2.dsk 17 0 ./bear/BEAR 0 0
+
 
 ####
 
@@ -35,6 +32,9 @@ headphones/HEADPHONES:
 
 dancing/DANCING:	
 	cd dancing && make
+
+bear/BEAR:	
+	cd bear && make
 
 ####
 
@@ -157,8 +157,6 @@ clean:
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd headphones && make clean
 	cd dancing && make clean
-#	cd part05_atrus && make clean
-#	cd part07_maglev && make clean
-#	cd part10_graphics && make clean
-#	cd part20_credits && make clean
+	cd bear && make clean
+
 

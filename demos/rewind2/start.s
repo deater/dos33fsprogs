@@ -173,6 +173,26 @@ load_program_loop:
 
 .endif
 
+	;=======================
+	;=======================
+	; Run bear
+	;=======================
+	;=======================
+
+	; load from disk
+
+	sei
+	lda	#PART_BEAR	; HEADPHONES
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	; Run intro
+
+	cli			; start music
+
+	jsr	$6000
+
+
 
 
 	;=======================
@@ -183,6 +203,7 @@ load_program_loop:
 
 	; load from disk
 
+	sei
 	lda     #PART_HEADPHONES		; HEADPHONES
 	sta     WHICH_LOAD
 	jsr     load_file

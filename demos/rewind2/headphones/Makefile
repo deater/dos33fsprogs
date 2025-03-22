@@ -3,6 +3,7 @@ include ../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../utils/hgr-utils/png2hgr
 PNG_TO_DHGR = ../../../utils/hgr-utils/png2dhgr
+PNG_TO_DHGR4 = ../../../utils/hgr-utils/png2dhgr4
 PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../linker_scripts/
@@ -20,7 +21,16 @@ headphones.o:	headphones.s \
 	hip1.bin.zx02 hip1.aux.zx02 \
 	hip2.bin.zx02 hip2.aux.zx02 \
 	hip3.bin.zx02 hip3.aux.zx02
+#	bear.packed.zx02
 	ca65 -o headphones.o headphones.s -l headphones.lst
+
+####
+
+bear.packed.zx02:     bear.packed
+	$(ZX02) bear.packed bear.packed.zx02
+
+bear.packed:  bear.png
+	$(PNG_TO_DHGR4) bear.png bear
 
 ####
 
