@@ -6,6 +6,8 @@ KEYRESET	=	$C010
 ; SOFT SWITCHES
 CLR80COL	=	$C000	; PAGE1/PAGE1 normal
 SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
+EIGHTYSTOREON	=	$C001	;
+
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
 TBCOLOR		=	$C022	; IIgs text fg/bg colors
@@ -22,6 +24,7 @@ PAGE2		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
 AN3		=	$C05E	; clear Annunciator 3
+CLRAN3		=	$C05E
 SETAN3		=	$C05F	; set Annunicator 3 (WR)
 
 PADDLE_BUTTON0	=	$C061

@@ -11,8 +11,8 @@ all:	rewind2.dsk
 rewind2.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
-	./headphones/HEADPHONES
-#	./part05_atrus/ATRUS \
+	./headphones/HEADPHONES \
+	./dancing/DANCING
 #	./part07_maglev/MOVIE_MAGLEV_RIDE \
 #	./part10_graphics/GRAPHICS \
 #	./part20_credits/CREDITS
@@ -23,7 +23,7 @@ rewind2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) rewind2.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) rewind2.dsk 2 0 MUSIC		0 0
 	$(DOS33_RAW) rewind2.dsk 5 0 ./headphones/HEADPHONES 0 0
-#	$(DOS33_RAW) rewind2.dsk 13 0 ./part05_atrus/ATRUS 0 0
+	$(DOS33_RAW) rewind2.dsk 13 0 ./dancing/DANCING 0 0
 #	$(DOS33_RAW) rewind2.dsk 17 0 ./part00_intro/INTRO 0 0
 #	$(DOS33_RAW) rewind2.dsk 20 0 ./part10_graphics/GRAPHICS 0 0
 #	$(DOS33_RAW) rewind2.dsk 26 0 ./part20_credits/CREDITS 0 0
@@ -33,21 +33,8 @@ rewind2.dsk:	QBOOT QLOAD \
 headphones/HEADPHONES:	
 	cd headphones && make
 
-part01_dni/DNI:	
-	cd part01_dni && make
-
-part05_atrus/ATRUS:	
-	cd part05_atrus && make
-
-part07_maglev/MOVIE_MAGLEV_RIDE:	
-	cd part07_maglev && make
-
-part10_graphics/GRAPHICS:	
-	cd part10_graphics && make
-
-part20_credits/CREDITS:	
-	cd part20_credits && make
-
+dancing/DANCING:	
+	cd dancing && make
 
 ####
 
@@ -74,8 +61,6 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
 	irq_wait.s vblank.s hgr_page_flip.s \
-#	wipes/fx.hgr.fizzle.s \
-#	wipes/fx.hgr.2pass.lr.s \
 	hgr_clear_screen.s
 	ca65 -o qload.o qload.s -l qload.lst
 
@@ -171,7 +156,7 @@ clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	cd headphones && make clean
-#	cd part01_dni && make clean
+	cd dancing && make clean
 #	cd part05_atrus && make clean
 #	cd part07_maglev && make clean
 #	cd part10_graphics && make clean

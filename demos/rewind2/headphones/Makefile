@@ -16,7 +16,10 @@ HEADPHONES:	headphones.o
 
 headphones.o:	headphones.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	headphone.bin.zx02 headphone.aux.zx02
+	headphone.bin.zx02 headphone.aux.zx02 \
+	hip1.bin.zx02 hip1.aux.zx02 \
+	hip2.bin.zx02 hip2.aux.zx02 \
+	hip3.bin.zx02 hip3.aux.zx02
 	ca65 -o headphones.o headphones.s -l headphones.lst
 
 ####
@@ -32,6 +35,50 @@ headphone.bin.zx02:     headphone.BIN
 
 headphone.BIN: headphone.png
 	$(PNG_TO_DHGR) headphone.png headphone
+
+####
+
+hip1.aux.zx02:     hip1.AUX
+	$(ZX02) hip1.AUX hip1.aux.zx02
+
+hip1.AUX:  hip1.png
+	$(PNG_TO_DHGR) hip1.png hip1
+
+hip1.bin.zx02:     hip1.BIN
+	$(ZX02) hip1.BIN hip1.bin.zx02
+
+hip1.BIN: hip1.png
+	$(PNG_TO_DHGR) hip1.png hip1
+
+####
+
+hip2.aux.zx02:     hip2.AUX
+	$(ZX02) hip2.AUX hip2.aux.zx02
+
+hip2.AUX:  hip2.png
+	$(PNG_TO_DHGR) hip2.png hip2
+
+hip2.bin.zx02:     hip2.BIN
+	$(ZX02) hip2.BIN hip2.bin.zx02
+
+hip2.BIN: hip2.png
+	$(PNG_TO_DHGR) hip2.png hip2
+
+####
+
+hip3.aux.zx02:     hip3.AUX
+	$(ZX02) hip3.AUX hip3.aux.zx02
+
+hip3.AUX:  hip3.png
+	$(PNG_TO_DHGR) hip3.png hip3
+
+hip3.bin.zx02:     hip3.BIN
+	$(ZX02) hip3.BIN hip3.bin.zx02
+
+hip3.BIN: hip3.png
+	$(PNG_TO_DHGR) hip3.png hip3
+
+
 
 
 ####

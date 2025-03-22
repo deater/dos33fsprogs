@@ -193,39 +193,35 @@ load_program_loop:
 
 	jsr	$6000
 
-blah:
-	jmp	blah
 
 
-
-.if 0
 	;=======================
 	;=======================
-	; Run Atrus
+	; Run Dancing
 	;=======================
 	;=======================
 
-;	sei				; stop music interrupts
-;	jsr	mute_ay_both
-;	jsr	clear_ay_both		; stop from making noise
+	sei				; stop music interrupts
+	jsr	mute_ay_both
+	jsr	clear_ay_both		; stop from making noise
 
-	; load atrus
+	; load dancing
 
-;	lda	#PART_ATRUS		; Atrus
-;	sta	WHICH_LOAD
-;	jsr	load_file
+	lda	#PART_DANCING		; Atrus
+	sta	WHICH_LOAD
+	jsr	load_file
 
 
 	; restart music
 
-;	cli		; start interrupts (music)
+	cli		; start interrupts (music)
 
 	;======================
-	; run atrus
+	; start dancing
 
-;	jsr	$8000
+	jsr	$6000
 
-
+.if 0
 	; copy ATRUS from AUX $8200 to MAIN $8000
 
 	lda	#$82		; AUX src $8200
@@ -240,6 +236,8 @@ blah:
 
 .endif
 
+blah:
+	jmp	blah
 
 .if 0
 	;=======================
