@@ -112,6 +112,7 @@ int plot(unsigned char xcoord, unsigned char ycoord);
 #define HIRES		0xc057	// hires mode
 #define DHIRES_ON	0xc05e	// double-hires on
 #define AN3		0xc05e	// annunciator 3
+#define CLRAN3		0xc05e	// annunciator 3
 #define DHIRES_OFF	0xc05f	// double-hires off
 #define DHIRES_RD	0xc07f	// double-hires read
 

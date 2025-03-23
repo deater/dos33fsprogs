@@ -22,6 +22,12 @@
 #define GR_X_SCALE	14
 #define GR_Y_SCALE	8
 
+/* 80x48 double low-res mode	*/
+#define DGR_XSIZE	80
+#define DGR_YSIZE	48
+#define DGR_X_SCALE	7
+#define DGR_Y_SCALE	8
+
 /* 40 column only for now */
 #define TEXT_XSIZE	40
 #define TEXT_YSIZE	24
@@ -466,6 +472,64 @@ void draw_text(unsigned int *out_pointer,int text_start, int text_end) {
 }
 
 
+
+static void draw_dlores(unsigned int *out_pointer,int gr_start, int gr_end) {
+
+	int i,j,yy,xx;
+	int gr_addr,gr_addr_hi;
+	int temp_col;
+	unsigned int *t_pointer;
+
+	t_pointer=out_pointer+(gr_start*80*DGR_X_SCALE*DGR_Y_SCALE);
+
+	/* do the top 40/48 if in graphics mode */
+	for(yy=gr_start;yy<gr_end;yy++) {
+
+		for(j=0;j<DGR_Y_SCALE;j++) {
+
+			gr_addr=gr_addr_lookup[yy/2];
+			gr_addr_hi=yy%2;
+
+			/* adjust for page */
+			/* FIXME */
+			if (text_page_1) {
+				gr_addr+=0x400;
+			}
+
+			for(xx=0;xx<DGR_XSIZE/2;xx++) {
+
+				/* even from aux */
+				if (gr_addr_hi) {
+					temp_col=(ram[gr_addr+0x10000]&0xf0)>>4;
+				}
+				else {
+					temp_col=ram[gr_addr+0x10000]&0x0f;
+				}
+
+				for(i=0;i<DGR_X_SCALE;i++) {
+					*t_pointer=dcolor[temp_col];
+					t_pointer++;
+				}
+
+
+				/* odd from main */
+				if (gr_addr_hi) {
+					temp_col=(ram[gr_addr]&0xf0)>>4;
+				}
+				else {
+					temp_col=ram[gr_addr]&0x0f;
+				}
+
+				for(i=0;i<DGR_X_SCALE;i++) {
+					*t_pointer=color[temp_col];
+					t_pointer++;
+				}
+				gr_addr++;
+			}
+		}
+	}
+}
+
 /* FIXME: this is simplistic and just draws ideal colors */
 /*	in theory we could do proper NTSC calculations */
 
@@ -642,6 +706,9 @@ int grsim_update(void) {
 	else {
 		if ((hires_on) && (an3_on) && (eightycol_on)) {
 			draw_dhires(t_pointer,0,192);
+		}
+		else if ((an3_on) && (eightycol_on)) {
+			draw_dlores(t_pointer,0,48);
 		}
 		else if (hires_on) {
 			draw_hires(t_pointer,0,192);
