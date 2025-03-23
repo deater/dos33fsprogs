@@ -4,6 +4,10 @@
 .include "../music.inc"
 .include "../common_defines.inc"
 
+
+; 0x2B975E = 2.8s -- initial working code
+; 0x2555e9 = 2.4s -- optimize the shifts
+
 	;=============================
 	; do the bear sequence
 	;=============================
@@ -182,7 +186,7 @@ decode_image:
 	sta	INL
 	sta	LEFT
 
-	lda	#0	; for(y=0;y<192;y++) {
+;	lda	#0	; for(y=0;y<192;y++) {
 	sta	YPOS
 
 yloop:
@@ -198,13 +202,7 @@ xloop:
 
 	; load colors
 
-	ldx	#0
-load_color_loop:
-	jsr	get_next_color
-	sta	COLORS0,X
-	inx
-	cpx	#7
-	bne	load_color_loop
+	jsr	load_colors
 
 	; set base colors
 set_base_colors:
@@ -222,55 +220,54 @@ set_base_colors:
 	cmp	XEND
 	bcs	skip_set_colors
 
-	lda	COLORS0
-	sta	AUX0
+	; AUX0
+
 	lda	COLORS1
 	and	#$7
 	asl
 	asl
 	asl
 	asl
-	ora	AUX0
+	ora	COLORS0
 	sta	AUX0	; aux0=(colors[0])|((colors[1]&0x7)<<4);
 
-	lda	COLORS1
-	lsr
-	lsr
-	lsr
-	sta	MAIN0
-	lda	COLORS2
-	asl
-	ora	MAIN0
-	sta	MAIN0
+	; MAIN0
+
 	lda	COLORS3
 	and	#$3
 	asl
 	asl
 	asl
 	asl
+	ora	COLORS2
 	asl
+	sta	MAIN0
+	lda	COLORS1
+	lsr
+	lsr
+	lsr
 	ora	MAIN0
 	sta	MAIN0	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
 
-	lda	COLORS3
-	lsr
-	lsr
-	sta	AUX1
-	lda	COLORS4
-	asl
-	asl
-	ora	AUX1
-	sta	AUX1
+	; AUX1
+
 	lda	COLORS5
 	and	#$1
 	asl
 	asl
 	asl
 	asl
+	ora	COLORS4
 	asl
 	asl
+	sta	AUX1
+	lda	COLORS3
+	lsr
+	lsr
 	ora	AUX1
 	sta	AUX1	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
+
+	; MAIN1
 
 	lda	COLORS5
 	lsr
@@ -284,8 +281,10 @@ set_base_colors:
 	sta	MAIN1	; main1=(colors[5]>>1)|(colors[6]<<3);
 
 skip_set_colors:
-	bit	PAGE1
+
 	ldy	#0
+
+	bit	PAGE1
 	lda	MAIN0
 	sta	(OUTL),Y
 	iny
@@ -310,6 +309,7 @@ skip_set_colors:
 	cmp	#20
 	beq	xloop_done
 	jmp	xloop
+;	bne	xloop
 xloop_done:
 
 
@@ -328,6 +328,14 @@ yloop_done:
 	;=================================
 	; get next color from packed area
 	;=================================
+
+load_colors:
+
+	ldx	#0
+
+load_color_loop:
+
+
 get_next_color:
 
 	lda	LEFT
@@ -356,6 +364,11 @@ still_left:
 	lsr	CURRENT
 color_lookup_smc:
 	lda	color_lookup_grey,Y
+
+	sta	COLORS0,X
+	inx
+	cpx	#7
+	bne	load_color_loop
 
 	rts
 
