@@ -7,6 +7,8 @@
 
 ; 0x2B975E = 2.8s -- initial working code
 ; 0x2555e9 = 2.4s -- optimize the shifts
+; 0x24a147 = 2.3s -- more optimize the shifts
+; 0x243587 = 2.3s -- inline get_color
 
 	;=============================
 	; do the bear sequence
@@ -167,7 +169,6 @@ bear:
 	rts
 
 
-
 	;==================================
 	; decode image
 	;==================================
@@ -202,133 +203,11 @@ xloop:
 
 	; load colors
 
-	jsr	load_colors
-
-	; set base colors
-set_base_colors:
-	lda	#0
-	sta	AUX0
-	sta	MAIN0
-	sta	AUX1
-	sta	MAIN1
-
-	; skip drawing if out of range
-
-	lda	XPOS
-	cmp	XSTART
-	bcc	skip_set_colors
-	cmp	XEND
-	bcs	skip_set_colors
-
-	; AUX0
-
-	lda	COLORS1
-	and	#$7
-	asl
-	asl
-	asl
-	asl
-	ora	COLORS0
-	sta	AUX0	; aux0=(colors[0])|((colors[1]&0x7)<<4);
-
-	; MAIN0
-
-	lda	COLORS3
-	and	#$3
-	asl
-	asl
-	asl
-	asl
-	ora	COLORS2
-	asl
-	sta	MAIN0
-	lda	COLORS1
-	lsr
-	lsr
-	lsr
-	ora	MAIN0
-	sta	MAIN0	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
-
-	; AUX1
-
-	lda	COLORS5
-	and	#$1
-	asl
-	asl
-	asl
-	asl
-	ora	COLORS4
-	asl
-	asl
-	sta	AUX1
-	lda	COLORS3
-	lsr
-	lsr
-	ora	AUX1
-	sta	AUX1	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
-
-	; MAIN1
-
-	lda	COLORS5
-	lsr
-	sta	MAIN1
-
-	lda	COLORS6
-	asl
-	asl
-	asl
-	ora	MAIN1
-	sta	MAIN1	; main1=(colors[5]>>1)|(colors[6]<<3);
-
-skip_set_colors:
-
-	ldy	#0
-
-	bit	PAGE1
-	lda	MAIN0
-	sta	(OUTL),Y
-	iny
-	lda	MAIN1
-	sta	(OUTL),Y
-
-	bit	PAGE2
-	ldy	#0
-	lda	AUX0
-	sta	(OUTL),Y
-	iny
-	lda	AUX1
-	sta	(OUTL),Y
-
-	inc	OUTL
-	inc	OUTL
-
-	; do xloop
-
-	inc	XPOS
-	lda	XPOS
-	cmp	#20
-	beq	xloop_done
-	jmp	xloop
-;	bne	xloop
-xloop_done:
-
-
-	; do yloop
-
-	inc	YPOS
-	lda	YPOS
-	cmp	#192
-	beq	yloop_done
-	jmp	yloop
-yloop_done:
-
-	rts
-
 
 	;=================================
 	; get next color from packed area
 	;=================================
-
+	; inline
 load_colors:
 
 	ldx	#0
@@ -370,7 +249,168 @@ color_lookup_smc:
 	cpx	#7
 	bne	load_color_loop
 
+;	rts
+
+
+;	jsr	load_colors
+
+	; set base colors
+set_base_colors:
+	lda	#0
+	sta	AUX0
+	sta	MAIN0
+	sta	AUX1
+	sta	MAIN1
+
+	; skip drawing if out of range
+
+	lda	XPOS
+	cmp	XSTART
+	bcc	skip_set_colors
+	cmp	XEND
+	bcs	skip_set_colors
+
+	; AUX0 PBBBAAAA (19)
+	; aux0=(colors[0])|((colors[1]&0x7)<<4);
+
+	lda	COLORS1							; 3
+	and	#$7							; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	COLORS0							; 3
+	sta	AUX0							; 3
+									;===
+									; 19
+
+	; MAIN0 PDDCCCCB (37 -> 27)
+	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
+
+	lda	COLORS3							; 3
+	and	#$3							; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	COLORS2							; 3
+	sta	MAIN0							; 3
+	lda	COLORS1							; 3
+	cmp	#8		; bit 3 into carry			; 2
+	rol	MAIN0							; 3
+									;=====
+									; 27
+	; AUX1 PFEEEEDD (36)
+	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
+
+	lda	COLORS5							; 3
+	and	#$1							; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	COLORS4							; 3
+	asl								; 2
+	asl								; 2
+	sta	AUX1							; 3
+	lda	COLORS3							; 3
+	lsr								; 2
+	lsr								; 2
+	ora	AUX1							; 3
+	sta	AUX1							; 3
+									;===
+									; 36
+
+	; MAIN1 PGGGGFFF (23 -> 19)
+	; main1=(colors[5]>>1)|(colors[6]<<3);
+
+	lda	COLORS6							; 3
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	COLORS5							; 3
+	lsr								; 2
+	sta	MAIN1							; 3
+									;====
+									; 19
+
+	; OOG
+	; AUX0         MAIN0    AUX1      MAIN1
+	; PBBBAAAA    PDDCCCCB  PFEEEEDD  PGGGGFFF
+	; PGGGGFFF PFEEEEDD PDDCCCCB PBBBAAAA
+
+	; MAIN1         AUX1     MAIN0    AUX0
+	; 0000GGGG FFFFEEEE DDDDCCCC BBBBAAAA
+
+	; lda AUX0							; 3
+	; and #$7f							; 2
+	; sta ..........						; 4
+	; rol AUX0							; 5
+	; rol MAIN0							; 5
+	; rol AUX1							; 5
+	; rol MAIN1	000GGGGF FFFEEEED DDDCCCCB			; 5
+	; lda MAIN0							; 3
+	; and #$7f							; 2
+	; sta .........							; 4
+	; rol MAIN0							; 5
+	; rol AUX1							; 5
+	; rol MAIN1	00GGGGFF FFEEEEDD				; 5
+	; lda AUX1							; 3
+	; and #$7f							; 2
+	; sta .........							; 4
+	; rol AUX1							; 5
+	; rol MAIN1							; 5
+	; lda MAIN1							; 3
+	; sta .........							; 4
+									; 79
+skip_set_colors:
+
+	ldy	#0
+
+	bit	PAGE1
+	lda	MAIN0
+	sta	(OUTL),Y
+	iny
+	lda	MAIN1
+	sta	(OUTL),Y
+
+	bit	PAGE2
+	ldy	#0
+	lda	AUX0
+	sta	(OUTL),Y
+	iny
+	lda	AUX1
+	sta	(OUTL),Y
+
+	inc	OUTL
+	inc	OUTL
+
+	; do xloop
+
+	inc	XPOS
+	lda	XPOS
+	cmp	#20
+	beq	xloop_done
+
+	jmp	xloop
+;	bne	xloop
+xloop_done:
+
+
+	; do yloop
+
+	inc	YPOS
+	lda	YPOS
+	cmp	#192
+	beq	yloop_done
+	jmp	yloop
+yloop_done:
+
 	rts
+
+
+
 
 
 
