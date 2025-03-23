@@ -12,6 +12,9 @@
 ; 0x26B46E = 2.5s -- URGH wasted lots of time on shift version, ended up longer
 ; 0x2380e5 = 2.3s -- optimize xloop
 ; 0x21b6bc = 2.2s -- output bytes directly
+; 0x20ccda = 2.1s -- don't need to init output registers
+; 0x202726 = 2.1s -- ignore P bit
+; 0x1f59f8 = 2.0s -- rearrange skip
 
 	;=============================
 	; do the bear sequence
@@ -193,7 +196,7 @@ decode_image:
 	sta	YPOS
 
 yloop:
-	ldy	YPOS
+	ldy	YPOS		; load row address
 	lda	hposn_low,Y
 	sta	OUTL
 	lda	hposn_high,Y
@@ -219,7 +222,7 @@ load_color_loop:
 
 get_next_color:
 
-	lda	LEFT		; see if any bits left
+	ldy	LEFT		; see if any bits left
 	bne	still_left
 
 no_bits_left:
@@ -232,84 +235,75 @@ packed_load_smc:
 	inc	packed_load_smc+2
 noflo_inl:
 	ldy	#4		; reset to 4*2 bits left
-	sty	LEFT
 
 still_left:
+	dey			; decrement left
+	sty	LEFT
 
 	lda	CURRENT		; get value
 	and	#$3		; only want bottom 2 bits
 	tay			; save for later
 
-	dec	LEFT		; decrement left
-
-	lsr	CURRENT		; adjust current value
-	lsr	CURRENT
+	lsr	CURRENT		; adjust current value			; 5
+	lsr	CURRENT							; 5
 color_lookup_smc:
 	lda	color_lookup_grey,Y	; lookup color
 
-	sta	COLORSG,X	; store it out to temp value
+	sta	COLORSG,X	; store it out to color value
 	dex
 	bpl	load_color_loop
 
 	;==== done inline
 
-	; set base colors
-set_base_colors:
-	lda	#0
-	sta	AUX0
-	sta	MAIN0
-	sta	AUX1
-	sta	MAIN1
 
 	; skip drawing if out of range
-
+check_range:
 	ldy	XPOS
 	cpy	XSTART
 	bcc	skip_set_colors
 	cpy	XEND
-	bcs	skip_set_colors
+;	bcs	skip_set_colors
+	bcc	calculate_colors
 
-	; AUX0 PBBBAAAA (19)
-	; aux0=(colors[0])|((colors[1]&0x7)<<4);
+skip_set_colors:
+
+	lda	#0
+	bit	PAGE1		; MAIN values
+	sta	(OUTL),Y
+	iny
+	sta	(OUTL),Y
+	dey
+
+	bit	PAGE2		; AUX values
+	sta	(OUTL),Y
+	jmp	write_out_end
+
+;	iny
+;	sta	(OUTL),Y
+
+
+
+calculate_colors:
+	; AUX0 PBBBAAAA (24)
+	; aux0=(colorsA)|((colorsB&0x7)<<4);
 
 	lda	COLORSB							; 3
-	and	#$7							; 2
+;	and	#$7		; assume ignore P bit?			;
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	ora	COLORSA							; 3
-;	sta	AUX0							; 3
-	bit	PAGE2
-;	lda	AUX0
-	sta	(OUTL),Y
+	bit	PAGE2		; set AUX				; 4
+	sta	(OUTL),Y	; AUX0					; 6
 									;===
-									; 19
+									; 24
 
-	; MAIN0 PDDCCCCB (37 -> 27)
-	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
-
-	lda	COLORSD							; 3
-	and	#$3							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	COLORSC							; 3
-	sta	MAIN0							; 3
-	lda	COLORSB							; 3
-	cmp	#8		; bit 3 into carry			; 2
-	rol	MAIN0							; 3
-	bit	PAGE1
-	lda	MAIN0
-	sta	(OUTL),Y
-									;=====
-									; 27
-	; AUX1 PFEEEEDD (36)
+	; AUX1 PFEEEEDD (39)
 	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
 
 	lda	COLORSF							; 3
-	and	#$1							; 2
+;	and	#$1		; assume P bit ignored			;
 	asl								; 2
 	asl								; 2
 	asl								; 2
@@ -322,16 +316,35 @@ set_base_colors:
 	lsr								; 2
 	lsr								; 2
 	ora	AUX1							; 3
-;	sta	AUX1							; 3
-	iny
-	bit	PAGE2
-;	lda	AUX1
-	sta	(OUTL),Y
-
+	iny								; 2
+	sta	(OUTL),Y	; AUX1					; 6
 									;===
-									; 36
+									; 39
 
-	; MAIN1 PGGGGFFF (23 -> 19)
+
+	; MAIN0 PDDCCCCB (40)
+	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
+
+	lda	COLORSD							; 3
+;	and	#$3		; assume P bit ignored			;
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	asl								; 2
+	ora	COLORSC							; 3
+	sta	MAIN0							; 3
+	lda	COLORSB							; 3
+	cmp	#8		; bit 3 into carry			; 2
+	rol	MAIN0							; 3
+	dey								; 2
+	bit	PAGE1		; set MAIN memory			; 4
+	lda	MAIN0							; 3
+	sta	(OUTL),Y	; MAIN0					; 6
+									;=====
+									; 40
+
+
+	; MAIN1 PGGGGFFF (24)
 	; main1=(colors[5]>>1)|(colors[6]<<3);
 
 	lda	COLORSG							; 3
@@ -341,28 +354,15 @@ set_base_colors:
 	asl								; 2
 	ora	COLORSF							; 3
 	lsr								; 2
-;	sta	MAIN1							; 3
-	bit	PAGE1
-;	lda	MAIN1
-	sta	(OUTL),Y
+write_out_end:
+	iny								; 2
+	sta	(OUTL),Y	; MAIN1					; 6
 									;====
-									; 19
+									; 24
 
-	jmp	continue_xloop
+;	jmp	continue_xloop						; 3
 
-skip_set_colors:
 
-	lda	#0
-	bit	PAGE1
-	sta	(OUTL),Y
-	bit	PAGE2
-	sta	(OUTL),Y
-
-	iny
-	bit	PAGE1
-	sta	(OUTL),Y
-	bit	PAGE2
-	sta	(OUTL),Y
 
 continue_xloop:
 	iny
@@ -387,11 +387,6 @@ xloop_done:
 yloop_done:
 
 	rts
-
-
-
-
-
 
 color_lookup_grey:
 	.byte 0,5,11,15		; default   black/grey/lblue/white
