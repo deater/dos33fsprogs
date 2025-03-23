@@ -43,26 +43,126 @@ bear:
 	; Unpack further to DHGR
 	;=================================
 
-	; setup source pointer
 
-	lda	#$a0
-	sta	INH
-	lda	#$00
-	sta	INL
-	sta	LEFT
+	; full screen grey
 
 	lda	#0
 	sta	XSTART
 	lda	#100
 	sta	XEND
 
-	jsr	decode_image
+	lda	#<color_lookup_grey
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_grey
+	sta	color_lookup_smc+2
 
-	bit	PAGE1
+	jsr	decode_image
 
 	jsr	wait_until_keypress
 
+	; green1
+
+	lda	#0
+	sta	XSTART
+	lda	#5
+	sta	XEND
+
+	lda	#<color_lookup_green
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_green
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+	; green2
+
+	lda	#0
+	sta	XSTART
+	lda	#10
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+	; blue1
+
+	lda	#4
+	sta	XSTART
+	lda	#10
+	sta	XEND
+
+	lda	#<color_lookup_blue
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_blue
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+	; blue2
+
+	lda	#4
+	sta	XSTART
+	lda	#15
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+	; red1
+
+	lda	#9
+	sta	XSTART
+	lda	#15
+	sta	XEND
+
+	lda	#<color_lookup_red
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_red
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+	; red2
+
+	lda	#9
+	sta	XSTART
+	lda	#20
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+
+	; yellow1
+
+	lda	#14
+	sta	XSTART
+	lda	#20
+	sta	XEND
+
+	lda	#<color_lookup_yellow
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_yellow
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+
+	jsr	wait_until_keypress
+
+
+
 	rts
+
+
 
 	;==================================
 	; decode image
@@ -74,6 +174,13 @@ decode_image:
 	; AUX0         MAIN0    AUX1      MAIN1
 	; PBBBAAAA    PDDCCCCB  PFEEEEDD  PGGGGFFF
 
+	; reset source pointer
+
+	lda	#$a0
+	sta	INH
+	lda	#$00
+	sta	INL
+	sta	LEFT
 
 	lda	#0	; for(y=0;y<192;y++) {
 	sta	YPOS
@@ -247,18 +354,22 @@ still_left:
 
 	lsr	CURRENT
 	lsr	CURRENT
-
-	lda	color_lookups,Y
+color_lookup_smc:
+	lda	color_lookup_grey,Y
 
 	rts
 
 
 
-color_lookups:
+color_lookup_grey:
 	.byte 0,5,11,15		; default   black/grey/lblue/white
+color_lookup_green:
 	.byte 0,2,6,14		; green     black/dgreen/lgreen/yellow
+color_lookup_blue:
         .byte 0,1,3,11		; blue      black/dblue/medblue/lblue
+color_lookup_red:
         .byte 0,8,9,13		; red       black/red/purple/pink
+color_lookup_yellow:
         .byte 0,4,12,14		; yellow    black/brown/orange/yellow
 
 bear_packed_zx02:
