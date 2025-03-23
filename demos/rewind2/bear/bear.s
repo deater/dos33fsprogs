@@ -11,6 +11,7 @@
 ; 0x243587 = 2.3s -- inline get_color
 ; 0x26B46E = 2.5s -- URGH wasted lots of time on shift version, ended up longer
 ; 0x2380e5 = 2.3s -- optimize xloop
+; 0x21b6bc = 2.2s -- output bytes directly
 
 	;=============================
 	; do the bear sequence
@@ -183,9 +184,9 @@ decode_image:
 	; reset source pointer
 
 	lda	#$a0
-	sta	INH
+	sta	packed_load_smc+2
 	lda	#$00
-	sta	INL
+	sta	packed_load_smc+1
 	sta	LEFT
 
 ;	lda	#0	; for(y=0;y<192;y++) {
@@ -211,44 +212,44 @@ xloop:
 	; inline
 load_colors:
 
-	ldx	#0
+	ldx	#6
 
 load_color_loop:
 
 
 get_next_color:
 
-	lda	LEFT
+	lda	LEFT		; see if any bits left
 	bne	still_left
 
-	ldy	#0
-	lda	(INL),Y
-	sta	CURRENT
+no_bits_left:
+packed_load_smc:
+	lda	$A000		; load next value
+	sta	CURRENT		; save for later
 
-	inc	INL
+	inc	packed_load_smc+1	; 16-bit increment
 	bne	noflo_inl
-	inc	INH
+	inc	packed_load_smc+2
 noflo_inl:
-	ldy	#4
+	ldy	#4		; reset to 4*2 bits left
 	sty	LEFT
 
 still_left:
 
-	lda	CURRENT
-	and	#$3
-	tay
+	lda	CURRENT		; get value
+	and	#$3		; only want bottom 2 bits
+	tay			; save for later
 
-	dec	LEFT
+	dec	LEFT		; decrement left
 
-	lsr	CURRENT
+	lsr	CURRENT		; adjust current value
 	lsr	CURRENT
 color_lookup_smc:
-	lda	color_lookup_grey,Y
+	lda	color_lookup_grey,Y	; lookup color
 
-	sta	COLORS0,X
-	inx
-	cpx	#7
-	bne	load_color_loop
+	sta	COLORSG,X	; store it out to temp value
+	dex
+	bpl	load_color_loop
 
 	;==== done inline
 
@@ -271,86 +272,99 @@ set_base_colors:
 	; AUX0 PBBBAAAA (19)
 	; aux0=(colors[0])|((colors[1]&0x7)<<4);
 
-	lda	COLORS1							; 3
+	lda	COLORSB							; 3
 	and	#$7							; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	COLORS0							; 3
-	sta	AUX0							; 3
+	ora	COLORSA							; 3
+;	sta	AUX0							; 3
+	bit	PAGE2
+;	lda	AUX0
+	sta	(OUTL),Y
 									;===
 									; 19
 
 	; MAIN0 PDDCCCCB (37 -> 27)
 	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
 
-	lda	COLORS3							; 3
+	lda	COLORSD							; 3
 	and	#$3							; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	COLORS2							; 3
+	ora	COLORSC							; 3
 	sta	MAIN0							; 3
-	lda	COLORS1							; 3
+	lda	COLORSB							; 3
 	cmp	#8		; bit 3 into carry			; 2
 	rol	MAIN0							; 3
+	bit	PAGE1
+	lda	MAIN0
+	sta	(OUTL),Y
 									;=====
 									; 27
 	; AUX1 PFEEEEDD (36)
 	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
 
-	lda	COLORS5							; 3
+	lda	COLORSF							; 3
 	and	#$1							; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	COLORS4							; 3
+	ora	COLORSE							; 3
 	asl								; 2
 	asl								; 2
 	sta	AUX1							; 3
-	lda	COLORS3							; 3
+	lda	COLORSD							; 3
 	lsr								; 2
 	lsr								; 2
 	ora	AUX1							; 3
-	sta	AUX1							; 3
+;	sta	AUX1							; 3
+	iny
+	bit	PAGE2
+;	lda	AUX1
+	sta	(OUTL),Y
+
 									;===
 									; 36
 
 	; MAIN1 PGGGGFFF (23 -> 19)
 	; main1=(colors[5]>>1)|(colors[6]<<3);
 
-	lda	COLORS6							; 3
+	lda	COLORSG							; 3
 	asl								; 2
 	asl								; 2
 	asl								; 2
 	asl								; 2
-	ora	COLORS5							; 3
+	ora	COLORSF							; 3
 	lsr								; 2
-	sta	MAIN1							; 3
+;	sta	MAIN1							; 3
+	bit	PAGE1
+;	lda	MAIN1
+	sta	(OUTL),Y
 									;====
 									; 19
 
+	jmp	continue_xloop
+
 skip_set_colors:
 
-
+	lda	#0
 	bit	PAGE1
-	lda	MAIN0
 	sta	(OUTL),Y
 	bit	PAGE2
-	lda	AUX0
 	sta	(OUTL),Y
 
 	iny
 	bit	PAGE1
-	lda	MAIN1
 	sta	(OUTL),Y
 	bit	PAGE2
-	lda	AUX1
 	sta	(OUTL),Y
 
+continue_xloop:
 	iny
 	sty	XPOS
 
@@ -360,7 +374,6 @@ skip_set_colors:
 	beq	xloop_done
 
 	jmp	xloop
-;	bne	xloop
 xloop_done:
 
 
