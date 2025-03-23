@@ -10,7 +10,6 @@
 ; 0x24a147 = 2.3s -- more optimize the shifts
 ; 0x243587 = 2.3s -- inline get_color
 ; 0x26B46E = 2.5s -- URGH wasted lots of time on shift version, ended up longer
-; 0x2380e5 = 2.3s -- optimize xloop
 
 	;=============================
 	; do the bear sequence
@@ -72,7 +71,7 @@ bear:
 
 	lda	#0
 	sta	XSTART
-	lda	#10
+	lda	#5
 	sta	XEND
 
 	lda	#<color_lookup_green
@@ -88,7 +87,7 @@ bear:
 
 	lda	#0
 	sta	XSTART
-	lda	#20
+	lda	#10
 	sta	XEND
 
 	jsr	decode_image
@@ -97,9 +96,9 @@ bear:
 
 	; blue1
 
-	lda	#8
+	lda	#4
 	sta	XSTART
-	lda	#20
+	lda	#10
 	sta	XEND
 
 	lda	#<color_lookup_blue
@@ -113,9 +112,9 @@ bear:
 
 	; blue2
 
-	lda	#8
+	lda	#4
 	sta	XSTART
-	lda	#30
+	lda	#15
 	sta	XEND
 
 	jsr	decode_image
@@ -124,9 +123,9 @@ bear:
 
 	; red1
 
-	lda	#18
+	lda	#9
 	sta	XSTART
-	lda	#30
+	lda	#15
 	sta	XEND
 
 	lda	#<color_lookup_red
@@ -140,9 +139,9 @@ bear:
 
 	; red2
 
-	lda	#18
+	lda	#9
 	sta	XSTART
-	lda	#40
+	lda	#20
 	sta	XEND
 
 	jsr	decode_image
@@ -152,9 +151,9 @@ bear:
 
 	; yellow1
 
-	lda	#28
+	lda	#14
 	sta	XSTART
-	lda	#40
+	lda	#20
 	sta	XEND
 
 	lda	#<color_lookup_yellow
@@ -202,16 +201,15 @@ yloop:
 	sta	XPOS
 xloop:
 
-	; load colors
-
-
 	;=================================
 	; get next color from packed area
 	;=================================
 	; inline
 load_colors:
+	lda	#0		; need to start with even
+	sta	ODD
 
-	ldx	#0
+	ldx	#3
 
 load_color_loop:
 
@@ -242,121 +240,120 @@ still_left:
 
 	lsr	CURRENT
 	lsr	CURRENT
+
+	; color is in Y
+
 color_lookup_smc:
 	lda	color_lookup_grey,Y
 
-	sta	COLORS0,X
-	inx
-	cpx	#7
-	bne	load_color_loop
+	ldy	ODD
+	bne	odd
 
-	;==== done inline
+even:
+	sta	MAIN1,X
+	inc	ODD
+	cpx	#0
+	beq	oog_done		; if x=0 then done
+	bne	load_color_loop		; bra
 
+odd:
+	dec	ODD
+	asl
+	asl
+	asl
+	asl
+	ora	MAIN1,X
+	sta	MAIN1,X
+	dex
+	bpl	load_color_loop		; bra
+
+oog_done:
 	; set base colors
 set_base_colors:
-	lda	#0
-	sta	AUX0
-	sta	MAIN0
-	sta	AUX1
-	sta	MAIN1
 
 	; skip drawing if out of range
 
-	ldy	XPOS
-	cpy	XSTART
-	bcc	skip_set_colors
-	cpy	XEND
-	bcs	skip_set_colors
+	lda	XPOS
+	cmp	XSTART
+	bcc	skip_colors
+	cmp	XEND
+	bcs	skip_colors
 
-	; AUX0 PBBBAAAA (19)
-	; aux0=(colors[0])|((colors[1]&0x7)<<4);
+do_set_colors:
+	; load colors
 
-	lda	COLORS1							; 3
-	and	#$7							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	COLORS0							; 3
-	sta	AUX0							; 3
-									;===
-									; 19
+	; OOG
+	; AUX0         MAIN0    AUX1      MAIN1
+	; PBBBAAAA    PDDCCCCB  PFEEEEDD  PGGGGFFF
 
-	; MAIN0 PDDCCCCB (37 -> 27)
-	; main0=(colors[1]>>3)|(colors[2]<<1)|((colors[3]&3)<<5);
+	; MAIN1         AUX1     MAIN0    AUX0
+	; PGGGGFFF PFEEEEDD PDDCCCCB PBBBAAAA
 
-	lda	COLORS3							; 3
-	and	#$3							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	COLORS2							; 3
-	sta	MAIN0							; 3
-	lda	COLORS1							; 3
-	cmp	#8		; bit 3 into carry			; 2
-	rol	MAIN0							; 3
-									;=====
-									; 27
-	; AUX1 PFEEEEDD (36)
-	; aux1=(colors[3]>>2)|(colors[4]<<2)|((colors[5]&1)<<6);
-
-	lda	COLORS5							; 3
-	and	#$1							; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	COLORS4							; 3
-	asl								; 2
-	asl								; 2
-	sta	AUX1							; 3
-	lda	COLORS3							; 3
-	lsr								; 2
-	lsr								; 2
-	ora	AUX1							; 3
-	sta	AUX1							; 3
-									;===
-									; 36
-
-	; MAIN1 PGGGGFFF (23 -> 19)
-	; main1=(colors[5]>>1)|(colors[6]<<3);
-
-	lda	COLORS6							; 3
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	asl								; 2
-	ora	COLORS5							; 3
-	lsr								; 2
-	sta	MAIN1							; 3
-									;====
-									; 19
-
+	; MAIN1         AUX1     MAIN0    AUX0
+	; 0000GGGG FFFFEEEE DDDDCCCC BBBBAAAA
 skip_set_colors:
+	ldy	#0							; 2
 
+	bit	PAGE2							; 4
+	lda	AUX0							; 3
+;	and	#$7f							; 2
+	sta	(OUTL),Y						; 6
+
+;	rol	AUX0							; 5
+	rol								; 2
+	rol	MAIN0							; 5
+	rol	AUX1							; 5
+	rol	MAIN1		; 000GGGGF FFFEEEED DDDCCCCB		; 5
+	lda	MAIN0							; 3
+;	and	#$7f							; 2
+	bit	PAGE1							; 4
+	sta	(OUTL),Y						; 6
+
+;	rol	MAIN0							; 5
+	rol								; 2
+	rol	AUX1							; 5
+	rol	MAIN1		; 00GGGGFF FFEEEEDD			; 5
+	lda	AUX1							; 3
+;	and	#$7f							; 2
+	iny								; 2
+	bit	PAGE2							; 4
+	sta	(OUTL),Y						; 6
+
+;	rol	AUX1							; 5
+	rol								; 2
+	rol	MAIN1							; 5
+	lda	MAIN1							; 3
+	bit	PAGE1							; 4
+	sta	(OUTL),Y						; 6
+									;====
+									; 79
+	jmp	blah
+
+
+skip_colors:
+	ldy	#0
 
 	bit	PAGE1
-	lda	MAIN0
+	lda	#0
 	sta	(OUTL),Y
-	bit	PAGE2
-	lda	AUX0
+	iny
 	sta	(OUTL),Y
 
-	iny
-	bit	PAGE1
-	lda	MAIN1
-	sta	(OUTL),Y
 	bit	PAGE2
-	lda	AUX1
+	ldy	#0
+	sta	(OUTL),Y
+	iny
 	sta	(OUTL),Y
 
-	iny
-	sty	XPOS
+blah:
+	inc	OUTL
+	inc	OUTL
 
 	; do xloop
 
-	cpy	#40
+	inc	XPOS
+	lda	XPOS
+	cmp	#20
 	beq	xloop_done
 
 	jmp	xloop

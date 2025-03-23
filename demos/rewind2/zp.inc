@@ -144,11 +144,11 @@ MASKH		= $EB
 ;==============================================
 
 ; bear
-AUX0		= $EC
-MAIN0		= $ED
-AUX1		= $EE
-MAIN1		= $EF
-
+ODD		= $EB
+MAIN1		= $EC
+AUX1		= $ED
+MAIN0		= $EE
+AUX0		= $EF
 CURRENT		= $F0
 LEFT		= $F1
 XSTART		= $F2
