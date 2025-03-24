@@ -161,7 +161,8 @@ COLORSC		= $F8
 COLORSB		= $F9
 COLORSA		= $FA
 
-
+; dancing
+DANCE_COUNT	= $F0
 
 
 ;==============================================

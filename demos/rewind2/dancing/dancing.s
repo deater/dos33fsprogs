@@ -12,11 +12,11 @@ dancing:
 	bit	KEYRESET	; just to be safe
 
 	lda	#0
+	sta	DANCE_COUNT
 
 	;=================================
 	; Dancing
 	;=================================
-	; FIXME: make this properly animate
 
 	bit	SET_GR
 	bit	LORES
@@ -27,40 +27,62 @@ dancing:
 
         bit	PAGE1   ; start in page1
 
-	lda	#<aha1_main
+	lda	#<aha_main
         sta	zx_src_l+1
-        lda	#>aha1_main
+        lda	#>aha_main
         sta	zx_src_h+1
-        lda	#$20
+        lda	#$40
         jsr	zx02_full_decomp
-	jsr	copy_to_400
 
 
         ; auxiliary part
-        bit	PAGE2
-	lda	#<aha1_aux
+
+	lda	#<aha_aux
 	sta	zx_src_l+1
-	lda	#>aha1_aux
+	lda	#>aha_aux
 	sta	zx_src_h+1
-	lda	#$20
+	lda	#$70
 	jsr	zx02_full_decomp
-	jsr	copy_to_400
 
 	; wait a bit
+animate_loop:
+	bit	PAGE1
 
-	lda	#3
-	jsr	wait_seconds
+	ldy	DANCE_COUNT
+	ldx	animation_main,Y
 
-;	jsr	wait_until_keypress
+;	ldx	#$40
+	jsr	copy_to_400
 
+	bit	PAGE2
+
+	ldy	DANCE_COUNT
+	ldx	animation_aux,Y
+;	ldx	#$70
+	jsr	copy_to_400
+
+	jsr	wait_until_keypress
+
+	inc	DANCE_COUNT
+	lda	DANCE_COUNT
+	cmp	#4
+	bne	animate_loop
+	lda	#0
+	sta	DANCE_COUNT
+	beq	animate_loop
 
 	rts
 
+animation_aux:
+	.byte $70,$74,$78,$7c
 
-aha1_aux:
-	.incbin "aha1.aux.zx02"
+animation_main:
+	.byte $40,$44,$48,$4c
 
-aha1_main:
-	.incbin "aha1.main.zx02"
+aha_aux:
+	.incbin "aha.aux.zx02"
+
+aha_main:
+	.incbin "aha.main.zx02"
 
 .include "copy_400.s"

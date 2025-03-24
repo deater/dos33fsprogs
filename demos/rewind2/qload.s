@@ -167,15 +167,15 @@ which_disk_array:
 	.byte 1,1,1,1		; BEAR
 
 load_address_array:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
+	.byte $D0,$D0,$60,$20	; ???, MUSIC, HEADPHONES, DANCING
 	.byte $60,$60,$40,$80	; BEAR
 
 start_address:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
+	.byte $D0,$D0,$60,$20	; ???, MUSIC, HEADPHONES, DANCING
 	.byte $60,$60,$40,$80	; BEAR
 
 aux_dest:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
+	.byte $D0,$D0,$60,$20	; ???, MUSIC, HEADPHONES, DANCING
 	.byte $60,$40,$02,$82	; BEAR
 
 track_array:
