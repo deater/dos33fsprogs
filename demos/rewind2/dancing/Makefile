@@ -21,16 +21,24 @@ dancing.o:	dancing.s \
 
 ###
 
-aha.main:	aha001.main aha002.main aha003.main aha004.main
-	cat aha001.main aha002.main aha003.main aha004.main > aha.main
+aha.main:	aha001.main aha002.main aha003.main aha004.main \
+		aha005.main aha006.main aha007.main aha008.main \
+		aha009.main aha010.main aha011.main aha012.main
+	cat aha001.main aha002.main aha003.main aha004.main \
+		aha005.main aha006.main aha007.main aha008.main \
+		aha009.main aha010.main aha011.main aha012.main > aha.main
 
 aha.main.zx02: aha.main
 	$(ZX02) aha.main aha.main.zx02
 
 ###
 
-aha.aux:	aha001.aux aha002.aux aha003.aux aha004.aux
-	cat aha001.aux aha002.aux aha003.aux aha004.aux > aha.aux
+aha.aux:	aha001.aux aha002.aux aha003.aux aha004.aux \
+		aha005.aux aha006.aux aha007.aux aha008.aux \
+		aha009.aux aha010.aux aha011.aux aha012.aux
+	cat aha001.aux aha002.aux aha003.aux aha004.aux \
+		aha005.aux aha006.aux aha007.aux aha008.aux \
+		aha009.aux aha010.aux aha011.aux aha012.aux > aha.aux
 
 aha.aux.zx02: aha.aux
 	$(ZX02) aha.aux aha.aux.zx02
@@ -49,6 +57,32 @@ aha003.aux:  aha003.png
 aha004.aux:  aha004.png
 	$(PNG_TO_DGR) aha004.png aha004
 
+aha005.aux:  aha005.png
+	$(PNG_TO_DGR) aha005.png aha005
+
+aha006.aux:  aha006.png
+	$(PNG_TO_DGR) aha006.png aha006
+
+aha007.aux:  aha007.png
+	$(PNG_TO_DGR) aha007.png aha007
+
+aha008.aux:  aha008.png
+	$(PNG_TO_DGR) aha008.png aha008
+
+aha009.aux:  aha009.png
+	$(PNG_TO_DGR) aha009.png aha009
+
+aha010.aux:  aha010.png
+	$(PNG_TO_DGR) aha010.png aha010
+
+aha011.aux:  aha011.png
+	$(PNG_TO_DGR) aha011.png aha011
+
+aha012.aux:  aha012.png
+	$(PNG_TO_DGR) aha012.png aha012
+
+
+
 #####
 
 aha001.main: aha001.png
@@ -63,7 +97,32 @@ aha003.main: aha003.png
 aha004.main: aha004.png
 	$(PNG_TO_DGR) aha004.png aha004
 
+aha005.main: aha005.png
+	$(PNG_TO_DGR) aha005.png aha005
+
+aha006.main: aha006.png
+	$(PNG_TO_DGR) aha006.png aha006
+
+aha007.main: aha007.png
+	$(PNG_TO_DGR) aha007.png aha007
+
+aha008.main: aha008.png
+	$(PNG_TO_DGR) aha008.png aha008
+
+aha009.main: aha009.png
+	$(PNG_TO_DGR) aha009.png aha009
+
+aha010.main: aha010.png
+	$(PNG_TO_DGR) aha010.png aha010
+
+aha011.main: aha011.png
+	$(PNG_TO_DGR) aha011.png aha011
+
+aha012.main: aha012.png
+	$(PNG_TO_DGR) aha012.png aha012
+
+
 ####
 
 clean:
-	rm -f *~ DANCING *.zx02
+	rm -f *~ DANCING *.zx02 aha.aux aha.main

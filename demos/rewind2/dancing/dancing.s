@@ -65,7 +65,7 @@ animate_loop:
 
 	inc	DANCE_COUNT
 	lda	DANCE_COUNT
-	cmp	#4
+	cmp	#12
 	bne	animate_loop
 	lda	#0
 	sta	DANCE_COUNT
@@ -75,9 +75,13 @@ animate_loop:
 
 animation_aux:
 	.byte $70,$74,$78,$7c
+	.byte $80,$84,$88,$8c
+	.byte $90,$94,$98,$9c
 
 animation_main:
 	.byte $40,$44,$48,$4c
+	.byte $50,$54,$58,$5c
+	.byte $60,$64,$68,$6c
 
 aha_aux:
 	.incbin "aha.aux.zx02"
