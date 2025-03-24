@@ -16,22 +16,22 @@ DANCING:	dancing.o
 
 dancing.o:	dancing.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	aha1.main.zx02 aha1.aux.zx02
+	aha001.main.zx02 aha001.aux.zx02
 	ca65 -o dancing.o dancing.s -l dancing.lst
 
 ####
 
-aha1.aux.zx02:     aha1.aux
-	$(ZX02) aha1.aux aha1.aux.zx02
+aha001.aux.zx02:     aha001.aux
+	$(ZX02) aha001.aux aha001.aux.zx02
 
-aha1.aux:  aha1.png
-	$(PNG_TO_DGR) aha1.png aha1
+aha001.aux:  aha001.png
+	$(PNG_TO_DGR) aha001.png aha001
 
-aha1.main.zx02:     aha1.main
-	$(ZX02) aha1.main aha1.main.zx02
+aha001.main.zx02:     aha001.main
+	$(ZX02) aha001.main aha001.main.zx02
 
-aha1.main: aha1.png
-	$(PNG_TO_DGR) aha1.png aha1
+aha001.main: aha001.png
+	$(PNG_TO_DGR) aha001.png aha001
 
 
 ####
