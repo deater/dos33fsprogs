@@ -61,7 +61,7 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
 	irq_wait.s vblank.s hgr_page_flip.s \
-	hgr_clear_screen.s
+	hgr_clear_screen.s vblank.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####

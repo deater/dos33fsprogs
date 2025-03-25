@@ -23,8 +23,6 @@
 bear:
 	bit	KEYRESET	; just to be safe
 
-	lda	#0
-
 	;=================================
 	; Unpack base image
 	;=================================
@@ -41,23 +39,23 @@ bear:
 	; Set DHGR mode
 	;=================================
 
-
 	bit	SET_GR
-        bit	HIRES
-        bit	FULLGR
-        sta	AN3             ; set double hires
-        sta	EIGHTYCOLON     ; 80 column
-        sta	SET80COL        ; 80 store
+	bit	HIRES
+	bit	FULLGR
+	sta	AN3		; set double hires
+	sta	EIGHTYCOLON	; 80 column
+;	sta	SET80COL	; 80 store
 
-        bit	PAGE1   ; start in page1
+        bit	PAGE1		; start in page1
+	lda	#$20
+	sta	DRAW_PAGE	; draw to page2
 
 	;=================================
 	; Unpack further to DHGR
 	;=================================
 
-
 	; full screen grey
-
+.if 0
 	lda	#0
 	sta	XSTART
 	lda	#100
@@ -69,9 +67,14 @@ bear:
 	sta	color_lookup_smc+2
 
 	jsr	decode_image
+	jsr	copy_to_aux
+
+	bit	PAGE2				; switch to PAGE2
 
 	jsr	wait_until_keypress
+.endif
 
+	;=================
 	; green1
 
 	lda	#0
@@ -86,7 +89,13 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE2				; show PAGE2
+	lda	#$00				; draw PAGE1
+	sta	DRAW_PAGE
+
+;	jsr	wait_until_keypress
 
 	; green2
 
@@ -97,8 +106,15 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE1				; show PAGE1
+	lda	#$20				; draw PAGE2
+	sta	DRAW_PAGE
 
+;	jsr	wait_until_keypress
+
+	;======
 	; blue1
 
 	lda	#8
@@ -113,8 +129,15 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE2				; show PAGE2
+	lda	#$00				; draw PAGE1
+	sta	DRAW_PAGE
 
+;	jsr	wait_until_keypress
+
+	;========
 	; blue2
 
 	lda	#8
@@ -124,8 +147,15 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE1				; show PAGE1
+	lda	#$20				; draw PAGE2
+	sta	DRAW_PAGE
 
+;	jsr	wait_until_keypress
+
+	;=============
 	; red1
 
 	lda	#18
@@ -140,8 +170,15 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE2				; show PAGE2
+	lda	#$00				; draw PAGE1
+	sta	DRAW_PAGE
 
+;	jsr	wait_until_keypress
+
+	;=========
 	; red2
 
 	lda	#18
@@ -151,9 +188,15 @@ bear:
 
 	jsr	decode_image
 
-	jsr	wait_until_keypress
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE1				; show PAGE1
+	lda	#$20				; draw PAGE2
+	sta	DRAW_PAGE
 
+;	jsr	wait_until_keypress
 
+	;=========
 	; yellow1
 
 	lda	#28
@@ -167,6 +210,12 @@ bear:
 	sta	color_lookup_smc+2
 
 	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	bit	PAGE2				; show PAGE2
+	lda	#$00				; draw PAGE1
+	sta	DRAW_PAGE
 
 	jsr	wait_until_keypress
 
@@ -199,8 +248,17 @@ yloop:
 	ldy	YPOS		; load row address
 	lda	hposn_low,Y
 	sta	OUTL
+	sta	AUXOUTL
+
 	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
 	sta	OUTH		; addr=hgr_offset(y);
+
+	lda	hposn_high,Y
+	clc
+	adc	#$50		; base is $70
+	sta	AUXOUTH
 
 	lda	#0		; for(x=0;x<20;x++) {
 	sta	XPOS
@@ -268,20 +326,12 @@ check_range:
 skip_set_colors:
 
 	lda	#0
-	bit	PAGE1		; MAIN values
 	sta	(OUTL),Y
+	sta	(AUXOUTL),Y
 	iny
 	sta	(OUTL),Y
-	dey
-
-	bit	PAGE2		; AUX values
-	sta	(OUTL),Y
+	sta	(AUXOUTL),Y
 	jmp	write_out_end
-
-;	iny
-;	sta	(OUTL),Y
-
-
 
 calculate_colors:
 	; AUX0 PBBBAAAA (24)
@@ -294,8 +344,8 @@ calculate_colors:
 	asl								; 2
 	asl								; 2
 	ora	COLORSA							; 3
-	bit	PAGE2		; set AUX				; 4
-	sta	(OUTL),Y	; AUX0					; 6
+;	bit	PAGE2		; set AUX				; 4
+	sta	(AUXOUTL),Y	; AUX0					; 6
 									;===
 									; 24
 
@@ -317,7 +367,7 @@ calculate_colors:
 	lsr								; 2
 	ora	AUX1							; 3
 	iny								; 2
-	sta	(OUTL),Y	; AUX1					; 6
+	sta	(AUXOUTL),Y	; AUX1					; 6
 									;===
 									; 39
 
@@ -337,7 +387,7 @@ calculate_colors:
 	cmp	#8		; bit 3 into carry			; 2
 	rol	MAIN0							; 3
 	dey								; 2
-	bit	PAGE1		; set MAIN memory			; 4
+;	bit	PAGE1		; set MAIN memory			; 4
 	lda	MAIN0							; 3
 	sta	(OUTL),Y	; MAIN0					; 6
 									;=====
@@ -354,15 +404,12 @@ calculate_colors:
 	asl								; 2
 	ora	COLORSF							; 3
 	lsr								; 2
-write_out_end:
 	iny								; 2
 	sta	(OUTL),Y	; MAIN1					; 6
 									;====
 									; 24
 
-;	jmp	continue_xloop						; 3
-
-
+write_out_end:
 
 continue_xloop:
 	iny
@@ -398,6 +445,8 @@ color_lookup_red:
         .byte 0,8,9,13		; red       black/red/purple/pink
 color_lookup_yellow:
         .byte 0,4,12,14		; yellow    black/brown/orange/yellow
+
+	.include "copy_to_aux.s"
 
 bear_packed_zx02:
 	.incbin "bear.packed.zx02"

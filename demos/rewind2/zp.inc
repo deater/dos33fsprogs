@@ -144,7 +144,8 @@ MASKH		= $EB
 ;==============================================
 
 ; bear
-ODD		= $EB
+AUXOUTL		= $EA
+AUXOUTH		= $EB
 MAIN1		= $EC
 AUX1		= $ED
 MAIN0		= $EE
@@ -160,6 +161,7 @@ COLORSD		= $F7
 COLORSC		= $F8
 COLORSB		= $F9
 COLORSA		= $FA
+ODD		= $FB
 
 ; dancing
 DANCE_COUNT	= $F0

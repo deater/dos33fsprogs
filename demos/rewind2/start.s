@@ -16,6 +16,7 @@ rewind2_start:
 	;=====================
 
 	bit	PAGE1
+	bit	KEYRESET
 
 	jsr	hardware_detect
 
@@ -47,8 +48,15 @@ rewind2_start:
 
 	jsr	move_and_print_list
 
+	;===============================
+	; pause at warning if not e/c/gs
+
 	lda	APPLEII_MODEL
 	cmp	#'e'
+	beq	good_to_go
+	cmp	#'g'
+	beq	good_to_go
+	cmp	#'c'
 	beq	good_to_go
 
 	jsr	wait_until_keypress
@@ -60,18 +68,6 @@ good_to_go:
 	; start loading the demo
 	;=========================================
 	;=========================================
-
-;	bit	SET_GR
-;	bit	LORES		; set lo-res
-;	bit	TEXTGR
-
-
-;	lda	#<load_message
-;	sta	OUTL
-;	lda	#>load_message
-;	sta	OUTH
-;	jsr	move_and_print
-
 
 	;==================================
 	; load music into the language card
@@ -125,6 +121,18 @@ skip_mbp1:
 dont_enable_mc:
 
 skip_all_checks:
+
+	;====================================
+	;====================================
+	; Clear DHGR PAGE1
+	;	MAIN:$2000 and AUX:$2000
+	;====================================
+	;====================================
+
+	jsr	hgr_page1_clearscreen
+	sta	WRAUX			; writes to AUX memory
+	jsr	hgr_page1_clearscreen
+	sta	WRMAIN			; writes back to MAIN memory
 
 .if 0
 
@@ -182,7 +190,7 @@ load_program_loop:
 	; load from disk
 
 	sei
-	lda	#PART_BEAR	; HEADPHONES
+	lda	#PART_BEAR	; Multi-color AHA tape intro
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -261,12 +269,16 @@ blah:
 	jmp	blah
 
 
-start_message:
+start_message:	  ;01234567890123456789012345678901234567890
 	.byte 0,0,"LOADING REWIND2 PROOF OF CONCEPT",0
-	.byte 0,1,"REQUIRES APPLE IIE/C/GS, 128K, MOCKINGBOARD",0
+	.byte 0,1,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
+	.byte 0,10,"MUSIC BY QJETA",0
+	.byte 0,12,"VISUALS BASED ON OPENING OF REWIND2",0
+	.byte 0,13,"   ATARI XL DEMO",0
+	.byte 0,14,"   BY NEW GENERATION, RADIANCE, ZELAX",0
 	.byte $FF
 
 load_message:
