@@ -103,6 +103,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s check_timeout qload.lst >> qload.inc
 
 
 ####

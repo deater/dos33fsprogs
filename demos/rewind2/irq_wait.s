@@ -23,10 +23,11 @@ setup_timeout:
 	rts
 
 	;===========================
-	; countodown second timeout
+	; countodown 50Hz timer
 	; also check for keypress
 	;===========================
 	; carry set = done
+
 check_timeout:
 	; check keyboard first
 	lda	KEYPRESS
@@ -40,14 +41,14 @@ check_timeout:
 timeout_not_keypress:
 	lda	IRQ_COUNTDOWN
 	bne	done_check_timeout_notdone
-irq_countdown_zero:
-	lda	SECOND_COUNTDOWN
+;irq_countdown_zero:
+;	lda	SECOND_COUNTDOWN
 	beq	done_check_timeout_done
 
 	; otherwise we need to decrement and update
-	dec	SECOND_COUNTDOWN
-	lda	#50
-	sta	IRQ_COUNTDOWN
+;	dec	SECOND_COUNTDOWN
+;	lda	#50
+;	sta	IRQ_COUNTDOWN
 
 done_check_pattern_notdone:
 done_check_timeout_notdone:

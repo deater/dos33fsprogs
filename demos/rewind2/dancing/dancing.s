@@ -46,6 +46,9 @@ dancing:
 
 	; wait a bit
 animate_loop:
+	lda	#5
+	sta	IRQ_COUNTDOWN
+
 	bit	PAGE1
 
 	ldy	DANCE_COUNT
@@ -61,7 +64,12 @@ animate_loop:
 ;	ldx	#$70
 	jsr	copy_to_400
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
+
+
+wait_10hz:
+	jsr	check_timeout
+	bcc	wait_10hz
 
 	inc	DANCE_COUNT
 	lda	DANCE_COUNT
