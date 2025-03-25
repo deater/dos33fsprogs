@@ -4,28 +4,35 @@
 .include "../music.inc"
 .include "../common_defines.inc"
 
-	;=============================
-	; draw some graphics
-	;=============================
+	;=================================
+	; Dancing
+	;=================================
 
 dancing:
 	bit	KEYRESET	; just to be safe
 
 	lda	#0
 	sta	DANCE_COUNT
+	sta	DRAW_PAGE	; DRAW PAGE1
 
-	;=================================
-	; Dancing
-	;=================================
+	;==========================
+	; TODO: clear both screens
+
+	;=============================
+	; Init Double lo-res graphics
+	;=============================
 
 	bit	SET_GR
 	bit	LORES
-	sta	SET80COL	; 80 store
+	sta	EIGHTYCOLON	; 80 column mode
 	bit	FULLGR
 	sta	CLRAN3		; set double lores
-	sta	EIGHTYSTOREON	; PAGE2 remaps MAIN:page2 writes to AUX:page1
+	sta	EIGHTYSTOREOFF	; normal PAGE1/PAGE2 behavior
+        bit	PAGE2		; DISPLAY PAGE2
 
-        bit	PAGE1   ; start in page1
+	;==============================
+	; decompress graphics (main)
+	;==============================
 
 	lda	#<aha_main
         sta	zx_src_l+1
@@ -34,8 +41,9 @@ dancing:
         lda	#$40
         jsr	zx02_full_decomp
 
-
-        ; auxiliary part
+	;==============================
+	; decompress graphics (aux)
+	;==============================
 
 	lda	#<aha_aux
 	sta	zx_src_l+1
@@ -44,32 +52,53 @@ dancing:
 	lda	#$70
 	jsr	zx02_full_decomp
 
-	; wait a bit
+	;==============================
+	; animate loop
+	;==============================
+
 animate_loop:
+
+	;================================
+	; start 5-tick (10Hz) countdown
+
 	lda	#5
 	sta	IRQ_COUNTDOWN
 
-	bit	PAGE1
+	;================================
+	; copy in MAIN graphics
 
+	sta	WRMAIN
 	ldy	DANCE_COUNT
 	ldx	animation_main,Y
-
-;	ldx	#$40
 	jsr	copy_to_400
 
-	bit	PAGE2
+	;================================
+	; copy in AUX graphics
 
+
+	sta	WRAUX
 	ldy	DANCE_COUNT
 	ldx	animation_aux,Y
-;	ldx	#$70
 	jsr	copy_to_400
+	sta	WRMAIN
 
-;	jsr	wait_until_keypress
-
+	;============================
+	; wait until 5 frames are up
 
 wait_10hz:
 	jsr	check_timeout
 	bcc	wait_10hz
+
+	jsr	wait_vblank
+
+	;============================
+	; page flip
+
+	jsr	gr_flip_page
+
+	;==============================
+	; move to next animation frame
+
 
 	inc	DANCE_COUNT
 	lda	DANCE_COUNT
@@ -97,4 +126,4 @@ aha_aux:
 aha_main:
 	.incbin "aha.main.zx02"
 
-.include "copy_400.s"
+

@@ -9,9 +9,7 @@
 
 memcpy_routines:
         .include "aux_memcopy.s"
-
-;dni_routines:
-;	.include "part01_dni/dni_plasma.s"
+	.include "copy_400.s"
 
 music_lib:
 

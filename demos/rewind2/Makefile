@@ -124,6 +124,7 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s mute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
+	./generate_common -a 0xd000 -s copy_to_400 music.lst >> music.inc
 
 ####
 
@@ -131,7 +132,7 @@ MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
-	aux_memcopy.s \
+	aux_memcopy.s copy_400.s \
 	music/Qjeta_TakeOnMe.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
