@@ -101,6 +101,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s check_timeout qload.lst >> qload.inc
@@ -130,6 +131,8 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_aux music.lst >> music.inc
 
 ####
 
@@ -138,7 +141,7 @@ MUSIC:	music.o
 
 music.o:	music.s zp.inc \
 	aux_memcopy.s copy_400.s \
-	zx02_optim.s \
+	zx02_optim.s vertical_scroll_down.s \
 	music/Qjeta_TakeOnMe.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \

@@ -7,6 +7,13 @@
 
 	; can also be used for dhgr
 
+hgr_vertical_scroll_aux:
+	sta	RDAUX
+	sta	WRAUX
+
+hgr_vertical_scroll_main:
+
+
 hgr_vertical_scroll:
 	ldx	#0
 
@@ -65,6 +72,7 @@ hgr_page1_vscroll_loop:
 	sta	$32D0,Y
 	lda	$26D0,Y		; 169 -> 171
 	sta	$2ED0,Y
+.endif
 	lda	$22D0,Y		; 168 -> 170
 	sta	$2AD0,Y
 	lda	$3E50,Y		; 167 -> 169
@@ -81,7 +89,6 @@ hgr_page1_vscroll_loop:
 	sta	$3250,Y
 	lda	$2650,Y		; 161 -> 163
 	sta	$2E50,Y
-.endif
 	lda	$2250,Y		; 160 -> 162
 	sta	$2A50,Y
 	lda	$3DD0,Y		; 159 -> 161
@@ -412,6 +419,8 @@ hgr_page1_vscroll_loop:
 	jmp	hgr_page1_vscroll_loop
 
 done_vscroll:
+	sta	RDMAIN
+	sta	WRMAIN
 	rts
 
 hgr_vertical_scroll_page2:
@@ -421,6 +430,7 @@ hgr_page2_vscroll:
 
 	ldy	#39
 hgr_page2_vscroll_loop:
+
 .if 0
 	lda	$57D0,Y		; 189 -> 191
 	sta	$5FD0,Y
@@ -464,6 +474,8 @@ hgr_page2_vscroll_loop:
 	sta	$52D0,Y
 	lda	$46D0,Y		; 169 -> 171
 	sta	$4ED0,Y
+.endif
+
 	lda	$42D0,Y		; 168 -> 170
 	sta	$4AD0,Y
 	lda	$5E50,Y		; 167 -> 169
@@ -480,7 +492,6 @@ hgr_page2_vscroll_loop:
 	sta	$5250,Y
 	lda	$4650,Y		; 161 -> 163
 	sta	$4E50,Y
-.endif
 	lda	$4250,Y		; 160 -> 162
 	sta	$4A50,Y
 	lda	$5DD0,Y		; 159 -> 161
@@ -811,6 +822,8 @@ hgr_page2_vscroll_loop:
 	jmp	hgr_page2_vscroll_loop
 
 done_vscroll2:
+	sta	RDMAIN
+	sta	WRMAIN
 	rts
 
 

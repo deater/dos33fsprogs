@@ -187,7 +187,7 @@ sector_array:
 	.byte 0,0,0,0		; BEAR
 
 length_array:
-	.byte 48,32,32,32	; ???, MUSIC, HEADPHONES, DANCING
+	.byte 48,42,32,32	; ???, MUSIC, HEADPHONES, DANCING
 	.byte 32,95,127,58	; BEAR
 
 

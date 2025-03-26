@@ -11,6 +11,7 @@ memcpy_routines:
         .include "aux_memcopy.s"
 	.include "copy_400.s"
 	.include "zx02_optim.s"
+	.include "vertical_scroll_down.s"
 
 music_lib:
 

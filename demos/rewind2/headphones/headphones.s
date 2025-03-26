@@ -72,7 +72,10 @@ headphones:
 
 scroll_loop:
 
-	jsr	hgr_vertical_scroll
+	; scroll
+	jsr	hgr_vertical_scroll_main
+	jsr	hgr_vertical_scroll_aux
+
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
@@ -83,8 +86,11 @@ scroll_loop:
 
 	; wait a bit
 
-	lda	#3
+	lda	#1
 	jsr	wait_seconds
+
+
+	jsr	clear_dhgr_screens
 
 	;=======================
 	; hip1
@@ -114,7 +120,6 @@ hip1:
 	jsr	wait_ticks
 
 hip2:
-	bit	PAGE1
 	lda	#<hip2_bin
 	sta	zx_src_l+1
 	lda	#>hip2_bin
@@ -165,13 +170,31 @@ hip3:
 	lda	#20
 	jsr	wait_ticks
 
+	jsr	clear_dhgr_screens
 
 	rts
 
-	.include "vertical_scroll.s"
+
+	;===================================
+	; clear dhgr screens
+	;===================================
+clear_dhgr_screens:
+	jsr	hgr_clear_screen
+	sta	WRAUX
+	jsr	hgr_clear_screen
+	sta	WRMAIN
+	jsr	hgr_page_flip
+
+	jsr	hgr_clear_screen
+	sta	WRAUX
+	jsr	hgr_clear_screen
+	sta	WRMAIN
+	jsr	hgr_page_flip
+
+	rts
 
 headphone_bin:
-	.incbin "headphone.bin.zx02"
+	.incbin "headphones.bin.zx02"
 
 hip1_bin:
 	.incbin "hip1.bin.zx02"
@@ -182,7 +205,7 @@ hip3_bin:
 
 
 headphone_aux:
-	.incbin "headphone.aux.zx02"
+	.incbin "headphones.aux.zx02"
 hip1_aux:
 	.incbin "hip1.aux.zx02"
 hip2_aux:

@@ -17,7 +17,7 @@ HEADPHONES:	headphones.o
 
 headphones.o:	headphones.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	headphone.bin.zx02 headphone.aux.zx02 \
+	headphones.bin.zx02 headphones.aux.zx02 \
 	hip1.bin.zx02 hip1.aux.zx02 \
 	hip2.bin.zx02 hip2.aux.zx02 \
 	hip3.bin.zx02 hip3.aux.zx02
@@ -64,17 +64,17 @@ headphones_aux.inc:	../generate_common HEADPHONES_AUX
 
 ####
 
-headphone.aux.zx02:     headphone.AUX
-	$(ZX02) headphone.AUX headphone.aux.zx02
+headphones.aux.zx02:     headphones.AUX
+	$(ZX02) headphones.AUX headphones.aux.zx02
 
-headphone.AUX:  headphone.png
-	$(PNG_TO_DHGR) headphone.png headphone
+headphones.AUX:  headphones.png
+	$(PNG_TO_DHGR) headphones.png headphones
 
-headphone.bin.zx02:     headphone.BIN
-	$(ZX02) headphone.BIN headphone.bin.zx02
+headphones.bin.zx02:     headphones.BIN
+	$(ZX02) headphones.BIN headphones.bin.zx02
 
-headphone.BIN: headphone.png
-	$(PNG_TO_DHGR) headphone.png headphone
+headphones.BIN: headphones.png
+	$(PNG_TO_DHGR) headphones.png headphones
 
 ####
 

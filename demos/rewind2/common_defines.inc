@@ -1,5 +1,5 @@
-hposn_low       = $1e00
-hposn_high      = $1f00
+hposn_low       = $fd00
+hposn_high      = $fe00
 
 
 PART_MUSIC	=	1
