@@ -163,6 +163,9 @@ COLORSB		= $F9
 COLORSA		= $FA
 ODD		= $FB
 
+; headphones
+SCROLL_COUNT	= $F0
+
 ; dancing
 DANCE_COUNT	= $F0
 

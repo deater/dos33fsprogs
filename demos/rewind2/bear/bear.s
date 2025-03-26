@@ -91,12 +91,11 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE2				; show PAGE2
-	lda	#$00				; draw PAGE1
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
+	;=================
 	; green2
 
 	lda	#0
@@ -108,9 +107,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE1				; show PAGE1
-	lda	#$20				; draw PAGE2
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
@@ -131,9 +128,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE2				; show PAGE2
-	lda	#$00				; draw PAGE1
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
@@ -149,9 +144,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE1				; show PAGE1
-	lda	#$20				; draw PAGE2
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
@@ -172,9 +165,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE2				; show PAGE2
-	lda	#$00				; draw PAGE1
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
@@ -190,9 +181,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE1				; show PAGE1
-	lda	#$20				; draw PAGE2
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
 
@@ -213,9 +202,7 @@ bear:
 
 	jsr	copy_to_aux
 	jsr	wait_vblank
-	bit	PAGE2				; show PAGE2
-	lda	#$00				; draw PAGE1
-	sta	DRAW_PAGE
+	jsr	hgr_page_flip
 
 	jsr	wait_until_keypress
 

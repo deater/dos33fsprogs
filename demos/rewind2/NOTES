@@ -8,7 +8,7 @@ Bear: (4k)
 Headphones: (6k)
 	Loads to $6000...$7FFF in AUX, copied to MAIN before running
 	Uses $2000...$5FFF both main and AUX
-
+	Uses $A000...$BFFF both for temporary copy for scrolling
 Dancing: (8k)
 	Loads to 
 

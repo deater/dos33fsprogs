@@ -28,6 +28,9 @@ headphones:
 	lda	#$20
 	sta	DRAW_PAGE	; draw to page2
 
+	;=======================
+	; load graphic to page2
+
 	lda	#<headphone_bin
         sta	zx_src_l+1
         lda	#>headphone_bin
@@ -42,6 +45,40 @@ headphones:
 
 	jsr	wait_vblank
 	jsr	hgr_page_flip
+
+	;========================
+	; load graphic to page 1
+
+	lda	#<headphone_bin
+        sta	zx_src_l+1
+        lda	#>headphone_bin
+        sta	zx_src_h+1
+        jsr	zx02_full_decomp_main
+
+	lda	#<headphone_aux
+	sta	zx_src_l+1
+	lda	#>headphone_aux
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	;==================
+	; scroll a bit
+
+	lda	#64
+	sta	SCROLL_COUNT
+
+scroll_loop:
+
+	jsr	hgr_vertical_scroll
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	dec	SCROLL_COUNT
+	bne	scroll_loop
+
 
 
 	; wait a bit
@@ -130,6 +167,8 @@ hip3:
 
 
 	rts
+
+	.include "vertical_scroll.s"
 
 headphone_bin:
 	.incbin "headphone.bin.zx02"
