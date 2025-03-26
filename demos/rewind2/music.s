@@ -5,13 +5,14 @@
 .include "hardware.inc"
 .include "zp.inc"
 ;.include "qload.inc"
-;.include "common_defines.inc"
+.include "common_defines.inc"
 
 memcpy_routines:
         .include "aux_memcopy.s"
 	.include "copy_400.s"
 	.include "zx02_optim.s"
 	.include "vertical_scroll_down.s"
+	.include "slow_copy.s"
 
 music_lib:
 

@@ -23,8 +23,6 @@ rewind2_start:
 	lda	APPLEII_MODEL
 	sta	message_type_offset
 
-	jsr	hgr_make_tables
-
 	; init vars
 
 	lda	#0
@@ -121,6 +119,11 @@ skip_mbp1:
 dont_enable_mc:
 
 skip_all_checks:
+
+
+	jsr	hgr_make_tables
+
+
 
 	;====================================
 	;====================================

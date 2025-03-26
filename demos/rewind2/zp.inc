@@ -165,6 +165,9 @@ ODD		= $FB
 
 ; headphones
 SCROLL_COUNT	= $F0
+INDEX		= $F1
+OFFSET		= $F2
+LENGTH		= $F3
 
 ; dancing
 DANCE_COUNT	= $F0

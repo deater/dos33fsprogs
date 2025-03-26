@@ -14,7 +14,6 @@ headphones:
 	;=================================
 	; Scrolling Headphones
 	;=================================
-	; TODO: scroll them in?
 
 	bit	SET_GR
         bit	HIRES
@@ -29,7 +28,10 @@ headphones:
 	sta	DRAW_PAGE	; draw to page2
 
 	;=======================
-	; load graphic to page2
+	; load graphic to $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
 
 	lda	#<headphone_bin
         sta	zx_src_l+1
@@ -43,8 +45,48 @@ headphones:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_aux
 
+	lda	#$20
+	sta	DRAW_PAGE
+
+
+	;=================================
+	; copy graphic to off-screen page
+
+	ldx	#0
+	ldy	#128
+	lda	#64
+	jsr	slow_copy_main
+
+	ldx	#0
+	ldy	#128
+	lda	#64
+	jsr	slow_copy_aux
+
 	jsr	wait_vblank
 	jsr	hgr_page_flip
+
+	;========================
+	; copy graphic to page 2
+
+	ldx	#0			; line in PAGE1/PAGE2 to output to
+	ldy	#128			; lines to copy
+	lda	#63			; line to start in $A000
+	jsr	slow_copy_main
+
+	ldx	#0
+	ldy	#128
+	lda	#63
+	jsr	slow_copy_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+
+
+
+.if 0
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
 
 	;========================
 	; load graphic to page 1
@@ -63,7 +105,7 @@ headphones:
 
 	jsr	wait_vblank
 	jsr	hgr_page_flip
-
+.endif
 	;==================
 	; scroll a bit
 
@@ -74,7 +116,18 @@ scroll_loop:
 
 	; scroll
 	jsr	hgr_vertical_scroll_main
+
+	ldx	#0
+	ldy	#2
+	ldx	SCROLL_COUNT
+	jsr	slow_copy_main
+
 	jsr	hgr_vertical_scroll_aux
+
+	ldx	#0
+	ldy	#2
+	ldx	SCROLL_COUNT
+	jsr	slow_copy_aux
 
 	jsr	wait_vblank
 	jsr	hgr_page_flip
