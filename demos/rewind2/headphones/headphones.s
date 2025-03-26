@@ -11,8 +11,6 @@
 headphones:
 	bit	KEYRESET	; just to be safe
 
-	lda	#0
-
 	;=================================
 	; Scrolling Headphones
 	;=================================
@@ -21,89 +19,85 @@ headphones:
 	bit	SET_GR
         bit	HIRES
         bit	FULLGR
-        sta	AN3             ; set double hires
-        sta	EIGHTYCOLON     ; 80 column
-;        sta	SET80COL        ; 80 store
+        sta	AN3		; set double hires
+        sta	EIGHTYCOLON	; 80 column
+	sta	CLR80COL
+;	sta	SET80COL	; 80 store
 
-        bit	PAGE1   ; start in page1
+        bit	PAGE1		; display page1
+	lda	#$20
+	sta	DRAW_PAGE	; draw to page2
 
 	lda	#<headphone_bin
         sta	zx_src_l+1
         lda	#>headphone_bin
         sta	zx_src_h+1
-        lda	#$20
-        jsr	zx02_full_decomp
+        jsr	zx02_full_decomp_main
 
-        ; auxiliary part
-;        bit	PAGE2
-;	lda	#<headphone_aux
-;	sta	zx_src_l+1
-;	lda	#>headphone_aux
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
+	lda	#<headphone_aux
+	sta	zx_src_l+1
+	lda	#>headphone_aux
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
 
 	; wait a bit
 
 	lda	#3
 	jsr	wait_seconds
 
-;	jsr	wait_until_keypress
-
+	;=======================
+	; hip1
 
 hip1:
 	bit	KEYRESET	; just to be safe
 
-	lda	#0
-
-	bit	PAGE1
 	lda	#<hip1_bin
-        sta	zx_src_l+1
-        lda	#>hip1_bin
-        sta	zx_src_h+1
-        lda	#$20
-        jsr	zx02_full_decomp
+	sta	zx_src_l+1
+	lda	#>hip1_bin
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
 
         ; auxiliary part
-;       bit	PAGE2
-;	lda	#<hip1_aux
-;	sta	zx_src_l+1
-;	lda	#>hip1_aux
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
+	lda	#<hip1_aux
+	sta	zx_src_l+1
+	lda	#>hip1_aux
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
 
 	; wait a bit
 
-	lda	#1
-	jsr	wait_seconds
+	lda	#20
+	jsr	wait_ticks
 
 hip2:
-	bit	KEYRESET	; just to be safe
-
-	lda	#0
-
 	bit	PAGE1
 	lda	#<hip2_bin
-        sta	zx_src_l+1
-        lda	#>hip2_bin
-        sta	zx_src_h+1
-        lda	#$20
-        jsr	zx02_full_decomp
+	sta	zx_src_l+1
+	lda	#>hip2_bin
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
 
         ; auxiliary part
-;        bit	PAGE2
-;	lda	#<hip2_aux
-;	sta	zx_src_l+1
-;	lda	#>hip2_aux
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
+	lda	#<hip2_aux
+	sta	zx_src_l+1
+	lda	#>hip2_aux
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
 
 	; wait a bit
 
-	lda	#1
-	jsr	wait_seconds
+	lda	#20
+	jsr	wait_ticks
 
 
 hip3:
@@ -111,27 +105,28 @@ hip3:
 
 	lda	#0
 
-	bit	PAGE1
 	lda	#<hip3_bin
-        sta	zx_src_l+1
-        lda	#>hip3_bin
-        sta	zx_src_h+1
-        lda	#$20
-        jsr	zx02_full_decomp
+	sta	zx_src_l+1
+	lda	#>hip3_bin
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp_main
 
         ; auxiliary part
- ;       bit	PAGE2
-;	lda	#<hip3_aux
-;	sta	zx_src_l+1
-;	lda	#>hip3_aux
-;	sta	zx_src_h+1
-;	lda	#$20
-;	jsr	zx02_full_decomp
+	lda	#<hip3_aux
+	sta	zx_src_l+1
+	lda	#>hip3_aux
+	sta	zx_src_h+1
+	lda	#$20
+	jsr	zx02_full_decomp_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
 
 	; wait a bit
 
-	lda	#1
-	jsr	wait_seconds
+	lda	#20
+	jsr	wait_ticks
 
 
 	rts

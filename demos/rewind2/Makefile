@@ -82,9 +82,9 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_top qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
@@ -125,6 +125,11 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s copy_to_400 music.lst >> music.inc
+	./generate_common -a 0xd000 -s zx02_full_decomp music.lst >> music.inc
+	./generate_common -a 0xd000 -s zx02_full_decomp_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
+	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
 
 ####
 
@@ -133,6 +138,7 @@ MUSIC:	music.o
 
 music.o:	music.s zp.inc \
 	aux_memcopy.s copy_400.s \
+	zx02_optim.s \
 	music/Qjeta_TakeOnMe.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \

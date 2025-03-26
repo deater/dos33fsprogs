@@ -212,15 +212,8 @@ load_program_loop:
 
 	; run headphones
 
-	cli
+	cli			; start music
 	jsr	$6000
-
-	; Run intro
-
-;	cli			; start music
-
-;	jsr	$6000
-
 
 	;=======================
 	;=======================
@@ -234,7 +227,7 @@ load_program_loop:
 
 	; load dancing
 
-	lda	#PART_DANCING		; Atrus
+	lda	#PART_DANCING		; Dancing
 	sta	WHICH_LOAD
 	jsr	load_file
 
@@ -248,20 +241,6 @@ load_program_loop:
 
 	jsr	$2000
 
-.if 0
-	; copy ATRUS from AUX $8200 to MAIN $8000
-
-	lda	#$82		; AUX src $8200
-	ldy	#$80		; MAIN dest $8000
-	ldx	#58		; 58 pages
-	jsr	copy_aux_main
-
-	; run atrus
-
-	jsr	$8000
-
-
-.endif
 
 blah:
 	jmp	blah
