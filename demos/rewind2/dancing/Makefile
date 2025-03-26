@@ -23,10 +23,16 @@ dancing.o:	dancing.s \
 
 aha.main:	aha001.main aha002.main aha003.main aha004.main \
 		aha005.main aha006.main aha007.main aha008.main \
-		aha009.main aha010.main aha011.main aha012.main
+		aha009.main aha010.main aha011.main aha012.main \
+		aha013.main aha014.main aha015.main aha016.main \
+		aha017.main aha018.main aha019.main aha020.main \
+		aha021.main aha022.main aha023.main aha024.main
 	cat aha001.main aha002.main aha003.main aha004.main \
 		aha005.main aha006.main aha007.main aha008.main \
-		aha009.main aha010.main aha011.main aha012.main > aha.main
+		aha009.main aha010.main aha011.main aha012.main \
+		aha013.main aha014.main aha015.main aha016.main \
+		aha017.main aha018.main aha019.main aha020.main \
+		aha021.main aha022.main aha023.main aha024.main > aha.main
 
 aha.main.zx02: aha.main
 	$(ZX02) aha.main aha.main.zx02
@@ -35,10 +41,16 @@ aha.main.zx02: aha.main
 
 aha.aux:	aha001.aux aha002.aux aha003.aux aha004.aux \
 		aha005.aux aha006.aux aha007.aux aha008.aux \
-		aha009.aux aha010.aux aha011.aux aha012.aux
+		aha009.aux aha010.aux aha011.aux aha012.aux \
+		aha013.aux aha014.aux aha015.aux aha016.aux \
+		aha017.aux aha018.aux aha019.aux aha020.aux \
+		aha021.aux aha022.aux aha023.aux aha024.aux
 	cat aha001.aux aha002.aux aha003.aux aha004.aux \
 		aha005.aux aha006.aux aha007.aux aha008.aux \
-		aha009.aux aha010.aux aha011.aux aha012.aux > aha.aux
+		aha009.aux aha010.aux aha011.aux aha012.aux \
+		aha013.aux aha014.aux aha015.aux aha016.aux \
+		aha017.aux aha018.aux aha019.aux aha020.aux \
+		aha021.aux aha022.aux aha023.aux aha024.aux > aha.aux
 
 aha.aux.zx02: aha.aux
 	$(ZX02) aha.aux aha.aux.zx02
@@ -81,6 +93,41 @@ aha011.aux:  aha011.png
 aha012.aux:  aha012.png
 	$(PNG_TO_DGR) aha012.png aha012
 
+aha013.aux:  aha013.png
+	$(PNG_TO_DGR) aha013.png aha013
+
+aha014.aux:  aha014.png
+	$(PNG_TO_DGR) aha014.png aha014
+
+aha015.aux:  aha015.png
+	$(PNG_TO_DGR) aha015.png aha015
+
+aha016.aux:  aha016.png
+	$(PNG_TO_DGR) aha016.png aha016
+
+aha017.aux:  aha017.png
+	$(PNG_TO_DGR) aha017.png aha017
+
+aha018.aux:  aha018.png
+	$(PNG_TO_DGR) aha018.png aha018
+
+aha019.aux:  aha019.png
+	$(PNG_TO_DGR) aha019.png aha019
+
+aha020.aux:  aha020.png
+	$(PNG_TO_DGR) aha020.png aha020
+
+aha021.aux:  aha021.png
+	$(PNG_TO_DGR) aha021.png aha021
+
+aha022.aux:  aha022.png
+	$(PNG_TO_DGR) aha022.png aha022
+
+aha023.aux:  aha023.png
+	$(PNG_TO_DGR) aha023.png aha023
+
+aha024.aux:  aha024.png
+	$(PNG_TO_DGR) aha024.png aha024
 
 
 #####
@@ -121,6 +168,41 @@ aha011.main: aha011.png
 aha012.main: aha012.png
 	$(PNG_TO_DGR) aha012.png aha012
 
+aha013.main: aha013.png
+	$(PNG_TO_DGR) aha013.png aha013
+
+aha014.main: aha014.png
+	$(PNG_TO_DGR) aha014.png aha014
+
+aha015.main: aha015.png
+	$(PNG_TO_DGR) aha015.png aha015
+
+aha016.main: aha016.png
+	$(PNG_TO_DGR) aha016.png aha016
+
+aha017.main: aha017.png
+	$(PNG_TO_DGR) aha017.png aha017
+
+aha018.main: aha018.png
+	$(PNG_TO_DGR) aha018.png aha018
+
+aha019.main: aha019.png
+	$(PNG_TO_DGR) aha019.png aha019
+
+aha020.main: aha020.png
+	$(PNG_TO_DGR) aha020.png aha020
+
+aha021.main: aha021.png
+	$(PNG_TO_DGR) aha021.png aha021
+
+aha022.main: aha022.png
+	$(PNG_TO_DGR) aha022.png aha022
+
+aha023.main: aha023.png
+	$(PNG_TO_DGR) aha023.png aha023
+
+aha024.main: aha024.png
+	$(PNG_TO_DGR) aha024.png aha024
 
 ####
 
