@@ -132,6 +132,7 @@ skip_all_checks:
 	;====================================
 	;====================================
 
+	lda	#0
 	jsr	hgr_page1_clearscreen
 	sta	WRAUX			; writes to AUX memory
 	jsr	hgr_page1_clearscreen

@@ -37,7 +37,7 @@ headphones:
         sta	zx_src_l+1
         lda	#>headphone_bin
         sta	zx_src_h+1
-        jsr	zx02_full_decomp_main
+	jsr	zx02_full_decomp_main
 
 	lda	#<headphone_aux
 	sta	zx_src_l+1
@@ -48,9 +48,13 @@ headphones:
 	lda	#$20
 	sta	DRAW_PAGE
 
+	;=================================
+	; clear screens
+
+	jsr	clear_dhgr_screens
 
 	;=================================
-	; copy graphic to off-screen page
+	; copy graphic to off-screen page1
 
 	ldx	#0
 	ldy	#128
@@ -82,34 +86,10 @@ headphones:
 	jsr	hgr_page_flip
 
 
-
-
-.if 0
-;	jsr	wait_vblank
-;	jsr	hgr_page_flip
-
-	;========================
-	; load graphic to page 1
-
-	lda	#<headphone_bin
-        sta	zx_src_l+1
-        lda	#>headphone_bin
-        sta	zx_src_h+1
-        jsr	zx02_full_decomp_main
-
-	lda	#<headphone_aux
-	sta	zx_src_l+1
-	lda	#>headphone_aux
-	sta	zx_src_h+1
-	jsr	zx02_full_decomp_aux
-
-	jsr	wait_vblank
-	jsr	hgr_page_flip
-.endif
 	;==================
 	; scroll a bit
 
-	lda	#64
+	lda	#62
 	sta	SCROLL_COUNT
 
 scroll_loop:
@@ -119,14 +99,14 @@ scroll_loop:
 
 	ldx	#0
 	ldy	#2
-	ldx	SCROLL_COUNT
+	lda	SCROLL_COUNT
 	jsr	slow_copy_main
 
 	jsr	hgr_vertical_scroll_aux
 
 	ldx	#0
 	ldy	#2
-	ldx	SCROLL_COUNT
+	lda	SCROLL_COUNT
 	jsr	slow_copy_aux
 
 	jsr	wait_vblank

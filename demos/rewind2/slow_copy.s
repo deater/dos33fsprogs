@@ -53,7 +53,7 @@ slow_copy_smc2:
 	dec	LENGTH
 	bne	slow_copy_outer_loop
 
-	bit	RDMAIN
-	bit	WRMAIN
+	sta	RDMAIN
+	sta	WRMAIN
 
 	rts
