@@ -257,7 +257,7 @@ yloop:
 
 	lda	hposn_high,Y
 	clc
-	adc	#$50		; base is $70
+	adc	#$60		; base is $80
 	sta	AUXOUTH
 
 	lda	#0		; for(x=0;x<20;x++) {

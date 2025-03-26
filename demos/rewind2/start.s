@@ -134,8 +134,6 @@ skip_all_checks:
 	jsr	hgr_page1_clearscreen
 	sta	WRMAIN			; writes back to MAIN memory
 
-.if 0
-
 	;====================================
 	;====================================
 	; Pre-Load some programs into AUX MEM
@@ -145,9 +143,9 @@ skip_all_checks:
 	sta	$C008		; use MAIN zero-page/stack/language card
 
 	;=============================
-	; want to load 6..7
+	; want to load 2...3
 
-	lda	#PART_MAGLEV
+	lda	#PART_HEADPHONES
 	sta	COUNT
 
 load_program_loop:
@@ -172,14 +170,10 @@ load_program_loop:
 
 	jsr	copy_main_aux
 
-	jsr	print_next_dni
-
 	inc	COUNT
 	lda	COUNT
-	cmp	#8
+	cmp	#3
 	bne	load_program_loop
-
-.endif
 
 	;=======================
 	;=======================
@@ -188,7 +182,7 @@ load_program_loop:
 	;=======================
 
 	; load from disk
-
+.if 0
 	sei
 	lda	#PART_BEAR	; Multi-color AHA tape intro
 	sta	WHICH_LOAD
@@ -199,7 +193,7 @@ load_program_loop:
 	cli			; start music
 
 	jsr	$6000
-
+.endif
 
 
 
@@ -208,22 +202,26 @@ load_program_loop:
 	; Run headphones
 	;=======================
 	;=======================
-.if 0
-	; load from disk
 
-	sei
-	lda     #PART_HEADPHONES		; HEADPHONES
-	sta     WHICH_LOAD
-	jsr     load_file
+	; copy HEADPHONES from AUX $6000 to MAIN $6000
+
+	lda	#$60		; AUX src $6000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#32		; 8k*4 = 32 pages
+	jsr	copy_aux_main
+
+	; run headphones
+
+	cli
+	jsr	$6000
 
 	; Run intro
 
-	cli			; start music
+;	cli			; start music
 
-	jsr	$6000
+;	jsr	$6000
 
 
-.endif
 	;=======================
 	;=======================
 	; Run Dancing

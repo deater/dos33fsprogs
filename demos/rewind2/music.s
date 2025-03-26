@@ -1,4 +1,4 @@
-; music, music
+; o/~ Pipe... wrench... fight o/~
 
 ; by Vince `deater` Weaver	vince@deater.net
 
