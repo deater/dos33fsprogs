@@ -10,15 +10,17 @@ Headphones: (6k)
 	Loads to $6000...$7FFF in AUX, copied to MAIN before running
 	Uses $2000...$5FFF both main and AUX
 	Uses $A000...$BFFF both for temporary copy for scrolling
+
 Dancing: (8k)
-	Loads to 
+	Loads to $8000 in AUX at start up, then copied back to
+	$2000 in MAIN, then also $2000 in AUX so the decompression
+	code up in the language card area can access both
 
 	all images combined compress to 3025/3038 bytes or 128 bytes or so avg
 	6202 is total size
-	24k=$6000  decompress to $6000
 
-	load to $8000 in AUX, copy to $2000 at run time	
-
+	image data (24 frames) Decompress to 24k for main 24k for aux
+	decompress starting at $4000 in both
 
 Memory map:
 
