@@ -263,7 +263,7 @@ blah:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING REWIND2 PROOF OF CONCEPT",0
+	.byte 0,0,"LOADING REWIND2 PROOF OF CONCEPT V1.0",0
 	.byte 0,1,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
@@ -272,7 +272,12 @@ message_type_offset:
 	.byte 0,12,"VISUALS BASED ON OPENING OF REWIND2",0
 	.byte 0,13,"   ATARI XL DEMO",0
 	.byte 0,14,"   BY NEW GENERATION, RADIANCE, ZELAX",0
+	.byte 0,16,"FAST DISK LOAD BY QKUMBA",0
+	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
+	.byte 0,18,"EVERYTHING ELSE BY DEATER",0
+	.byte 10,20,"  ______",0
+	.byte 10,21,"A \/\/\/ PRODUCTION",0
 	.byte $FF
 
-load_message:
-	.byte 16,22,	"LOADING",0
+;load_message:
+;	.byte 16,22,	"LOADING",0
