@@ -186,19 +186,17 @@ load_program_loop:
 	;=======================
 
 	; load from disk
-.if 0
+
 	sei
 	lda	#PART_BEAR	; Multi-color AHA tape intro
 	sta	WHICH_LOAD
 	jsr	load_file
 
-	; Run intro
+	; Run Bear
 
-	cli			; start music
+;	cli			; start music
 
 	jsr	$6000
-.endif
-
 
 
 	;=======================

@@ -74,6 +74,8 @@ bear:
 	jsr	wait_until_keypress
 .endif
 
+	cli	; start music
+
 	;=================
 	; green1
 
@@ -93,7 +95,6 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
 
 	;=================
 	; green2
@@ -108,8 +109,6 @@ bear:
 	jsr	copy_to_aux
 	jsr	wait_vblank
 	jsr	hgr_page_flip
-
-;	jsr	wait_until_keypress
 
 	;======
 	; blue1
@@ -130,7 +129,6 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
 
 	;========
 	; blue2
@@ -146,7 +144,6 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
 
 	;=============
 	; red1
@@ -167,8 +164,6 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
-
 	;=========
 	; red2
 
@@ -182,8 +177,6 @@ bear:
 	jsr	copy_to_aux
 	jsr	wait_vblank
 	jsr	hgr_page_flip
-
-;	jsr	wait_until_keypress
 
 	;=========
 	; yellow1
@@ -204,9 +197,8 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-	jsr	wait_until_keypress
-
-
+	lda	#100
+	jsr	wait_ticks
 
 	rts
 

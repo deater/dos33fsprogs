@@ -15,6 +15,15 @@ headphones:
 	; Scrolling Headphones
 	;=================================
 
+	;=================================
+	; init graphics
+	;=================================
+
+	jsr	clear_dhgr_screens
+
+	; assume set from before
+
+.if 0
 	bit	SET_GR
         bit	HIRES
         bit	FULLGR
@@ -26,6 +35,7 @@ headphones:
         bit	PAGE1		; display page1
 	lda	#$20
 	sta	DRAW_PAGE	; draw to page2
+.endif
 
 	;=======================
 	; load graphic to $A000
