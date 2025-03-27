@@ -38,8 +38,11 @@ dancing:
         sta	zx_src_l+1
         lda	#>aha_main
         sta	zx_src_h+1
-        lda	#$40
-        jsr	zx02_full_decomp
+
+        lda	#($40-$20)
+	sta	DRAW_PAGE
+
+        jsr	zx02_full_decomp_main
 
 	;==============================
 	; decompress graphics (aux)
@@ -49,8 +52,11 @@ dancing:
 	sta	zx_src_l+1
 	lda	#>aha_aux
 	sta	zx_src_h+1
-	lda	#$70
-	jsr	zx02_full_decomp
+
+	lda	#($40-$20)
+	sta	DRAW_PAGE
+
+	jsr	zx02_full_decomp_aux
 
 	;==============================
 	; animate loop
@@ -67,20 +73,16 @@ animate_loop:
 	;================================
 	; copy in MAIN graphics
 
-	sta	WRMAIN
 	ldy	DANCE_COUNT
 	ldx	animation_main,Y
-	jsr	copy_to_400
+	jsr	copy_to_400_main
 
 	;================================
 	; copy in AUX graphics
 
-
-	sta	WRAUX
 	ldy	DANCE_COUNT
-	ldx	animation_aux,Y
-	jsr	copy_to_400
-	sta	WRMAIN
+	ldx	animation_main,Y
+	jsr	copy_to_400_aux
 
 	;============================
 	; wait until 5 frames are up
@@ -102,7 +104,7 @@ wait_10hz:
 
 	inc	DANCE_COUNT
 	lda	DANCE_COUNT
-	cmp	#12
+	cmp	#24
 	bne	animate_loop
 	lda	#0
 	sta	DANCE_COUNT
@@ -110,15 +112,14 @@ wait_10hz:
 
 	rts
 
-animation_aux:
-	.byte $70,$74,$78,$7c
-	.byte $80,$84,$88,$8c
-	.byte $90,$94,$98,$9c
-
 animation_main:
 	.byte $40,$44,$48,$4c
 	.byte $50,$54,$58,$5c
 	.byte $60,$64,$68,$6c
+animation_jump:
+	.byte $70,$74,$78,$7c
+	.byte $80,$84,$88,$8c
+	.byte $90,$94,$98,$9c
 
 aha_aux:
 	.incbin "aha.aux.zx02"

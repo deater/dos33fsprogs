@@ -207,4 +207,4 @@ aha024.main: aha024.png
 ####
 
 clean:
-	rm -f *~ DANCING *.zx02 aha.aux aha.main
+	rm -f *~ DANCING *.zx02 *.aux *.main

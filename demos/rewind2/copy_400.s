@@ -2,6 +2,14 @@
 	; copy to 400
 	;=========================
 	; X is page to copy from
+
+copy_to_400_aux:
+	sta	RDAUX
+	sta	WRAUX
+
+copy_to_400_main:
+
+
 copy_to_400:
 
 	stx	c400_smc1+2
@@ -80,5 +88,8 @@ c400_smc16:
 
 	dex
 	bpl	looper1
+
+	sta	RDMAIN
+	sta	WRMAIN
 
 	rts

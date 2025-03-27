@@ -176,7 +176,7 @@ load_program_loop:
 
 	inc	COUNT
 	lda	COUNT
-	cmp	#3
+	cmp	#4
 	bne	load_program_loop
 
 	;=======================
@@ -225,15 +225,29 @@ load_program_loop:
 	;=======================
 	;=======================
 
-	sei				; stop music interrupts
-	jsr	mute_ay_both
-	jsr	clear_ay_both		; stop from making noise
+	; copy DANCING from AUX $8000 to MAIN $2000
+
+	lda	#$80		; AUX src $8000
+	ldy	#$20		; MAIN dest $2000
+	ldx	#32		; 8k*4 = 32 pages
+	jsr	copy_aux_main
+
+	; Also copy from MAIN $2000 to AUX $2000.  Inefficient :(
+
+	lda	#$20		; AUX dest $2000
+	ldy	#$20		; MAIN src $2000
+	ldx	#32		; 8k*4
+	jsr	copy_main_aux
+
+;	sei				; stop music interrupts
+;	jsr	mute_ay_both
+;	jsr	clear_ay_both		; stop from making noise
 
 	; load dancing
 
-	lda	#PART_DANCING		; Dancing
-	sta	WHICH_LOAD
-	jsr	load_file
+;	lda	#PART_DANCING		; Dancing
+;	sta	WHICH_LOAD
+;	jsr	load_file
 
 
 	; restart music

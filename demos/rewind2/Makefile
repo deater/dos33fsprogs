@@ -126,6 +126,8 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s copy_to_400 music.lst >> music.inc
+	./generate_common -a 0xd000 -s copy_to_400_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s copy_to_400_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx02_full_decomp music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx02_full_decomp_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc

@@ -1,4 +1,5 @@
 
+
 Bear: (4k)
 	Loads to $6000...$6FFF
 	Uses $2000...$5FFF both main and AUX
@@ -11,6 +12,13 @@ Headphones: (6k)
 	Uses $A000...$BFFF both for temporary copy for scrolling
 Dancing: (8k)
 	Loads to 
+
+	all images combined compress to 3025/3038 bytes or 128 bytes or so avg
+	6202 is total size
+	24k=$6000  decompress to $6000
+
+	load to $8000 in AUX, copy to $2000 at run time	
+
 
 Memory map:
 
