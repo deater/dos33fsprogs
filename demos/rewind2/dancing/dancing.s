@@ -13,10 +13,29 @@ dancing:
 
 	lda	#0
 	sta	DANCE_COUNT
-	sta	DRAW_PAGE	; DRAW PAGE1
 
-	;==========================
-	; TODO: clear both screens
+
+	;============================
+	; clear both lo-res screens
+	;============================
+
+	lda	#0
+	sta	clear_all_color+1
+
+	lda	#4
+	sta	DRAW_PAGE	; DRAW PAGE1
+	jsr	clear_all
+	sta	WRAUX
+	jsr	clear_all
+	sta	WRMAIN
+
+	lda	#0
+	sta	DRAW_PAGE	; DRAW PAGE1
+	jsr	clear_all
+	sta	WRAUX
+	jsr	clear_all
+	sta	WRMAIN
+
 
 	;=============================
 	; Init Double lo-res graphics
@@ -104,7 +123,7 @@ wait_10hz:
 
 	inc	DANCE_COUNT
 	lda	DANCE_COUNT
-	cmp	#24
+	cmp	#132
 	bne	animate_loop
 	lda	#0
 	sta	DANCE_COUNT
@@ -113,18 +132,22 @@ wait_10hz:
 	rts
 
 animation_main:
-	.byte $40,$44,$48,$4c
-	.byte $50,$54,$58,$5c
-	.byte $60,$64,$68,$6c
-animation_jump:
-	.byte $70,$74,$78,$7c
-	.byte $80,$84,$88,$8c
-	.byte $90,$94,$98,$9c
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $70,$74,$78,$7c,$80,$84,$88,$8c,$90,$94,$98,$9c	; jump
+	.byte $70,$74,$78,$7c,$80,$84,$88,$8c,$90,$94,$98,$9c	; jump
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $70,$74,$78,$7c,$80,$84,$88,$8c,$90,$94,$98,$9c	; jump
+	.byte $40,$44,$48,$4c,$50,$54,$58,$5c,$60,$64,$68,$6c	; plain
+	.byte $70,$74,$78,$7c,$80,$84,$88,$8c,$90,$94,$98,$9c	; jump
+	.byte $70,$74,$78,$7c,$80,$84,$88,$8c,$90,$94,$98,$9c	; jump
+
 
 aha_aux:
 	.incbin "aha.aux.zx02"
 
 aha_main:
 	.incbin "aha.main.zx02"
-
 
