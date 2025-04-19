@@ -13,7 +13,7 @@ all:	BUCKET
 ###
 
 BUCKET:	bucket.o
-	ld65 -o BUCKET bucket.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o BUCKET bucket.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 bucket.o:	bucket.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \

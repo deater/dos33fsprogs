@@ -1,4 +1,4 @@
-; copy from $A000+start : $A000+end  to $2000/$4000
+; copy from $8000+start : $8000+end  to $2000/$4000
 
 
 	; X=start
@@ -26,7 +26,7 @@ slow_copy_outer_loop:
 	sta	slow_copy_smc1+1
 	lda	hposn_high,X
 	clc
-	adc	#$80			; to $A0
+	adc	#$60			; to $80
 	sta	slow_copy_smc1+2
 
 	ldx	INDEX			; restore index
