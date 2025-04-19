@@ -123,8 +123,10 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
-	./generate_common -a 0xd000 -s hgr_vertical_scroll_main music.lst >> music.inc
-	./generate_common -a 0xd000 -s hgr_vertical_scroll_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_down_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_down_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_up_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_up_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_aux music.lst >> music.inc
 
@@ -136,7 +138,8 @@ MUSIC:	music.o
 
 music.o:	music.s zp.inc \
 	aux_memcopy.s copy_400.s \
-	zx02_optim.s vertical_scroll_down.s \
+	zx02_optim.s \
+	vertical_scroll_down.s vertical_scroll_up.s \
 	slow_copy.s \
 	music/ivan_roschin_spring_2001.pt3 \
 	pt3_lib_core.s \

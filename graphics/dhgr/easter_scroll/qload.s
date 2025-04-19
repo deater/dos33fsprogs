@@ -182,7 +182,7 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, BUCKET
 
 length_array:
-	.byte 48,32,100,32	; ???, MUSIC, BUCKET
+	.byte 48,40,100,32	; ???, MUSIC, BUCKET
 
 
 PT3_ENABLE_APPLE_IIC = 1

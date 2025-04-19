@@ -128,8 +128,25 @@ prep_for_scroll:
 	; X = start Y = len  A=offset
 
 	ldx	#0			; $A000
-	ldy	#192			; 128 lines?
-	lda	#0			; start 64 lines in
+	ldy	#191			; 128 lines?
+	lda	#1			; start 64 lines in
+	jsr	slow_copy_main
+
+	ldx	#0
+	ldy	#191
+	lda	#1
+	jsr	slow_copy_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+
+	;========================
+	; copy graphic to page 2
+
+	ldx	#0			; line in PAGE1/PAGE2 to output to
+	ldy	#192			; lines to copy
+	lda	#0			; line to start in $8000
 	jsr	slow_copy_main
 
 	ldx	#0
@@ -140,54 +157,37 @@ prep_for_scroll:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-oog:
-	jmp oog
-
-	;========================
-	; copy graphic to page 2
-
-	ldx	#0			; line in PAGE1/PAGE2 to output to
-	ldy	#128			; lines to copy
-	lda	#63			; line to start in $A000
-	jsr	slow_copy_main
-
-	ldx	#0
-	ldy	#128
-	lda	#63
-	jsr	slow_copy_aux
-
-	jsr	wait_vblank
-	jsr	hgr_page_flip
-
 
 	;==================
 	; scroll a bit
 
-	lda	#62
+	lda	#192
 	sta	SCROLL_COUNT
 
-scroll_loop:
+scroll_down_loop:
 
 	; scroll
-	jsr	hgr_vertical_scroll_main
+	jsr	hgr_vertical_scroll_down_main	; scroll draw page down 2
 
+.if 0
 	ldx	#0
 	ldy	#2
 	lda	SCROLL_COUNT
 	jsr	slow_copy_main
+.endif
 
-	jsr	hgr_vertical_scroll_aux
-
+	jsr	hgr_vertical_scroll_down_aux
+.if 0
 	ldx	#0
 	ldy	#2
 	lda	SCROLL_COUNT
 	jsr	slow_copy_aux
-
+.endif
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
 	dec	SCROLL_COUNT
-	bne	scroll_loop
+	bne	scroll_down_loop
 
 
 

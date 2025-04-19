@@ -12,6 +12,7 @@ memcpy_routines:
 	.include "copy_400.s"
 	.include "zx02_optim.s"
 	.include "vertical_scroll_down.s"
+	.include "vertical_scroll_up.s"
 	.include "slow_copy.s"
 
 music_lib:

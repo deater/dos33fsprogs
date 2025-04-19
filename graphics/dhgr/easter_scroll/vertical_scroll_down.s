@@ -1,5 +1,5 @@
 	;==============================
-	; two page vertical scroll
+	; two page vertical scroll down
 	;==============================
 	;
 	; 8*192*40 = 61440 cycles = roughly 16fps best case
@@ -7,28 +7,28 @@
 
 	; can also be used for dhgr
 
-hgr_vertical_scroll_aux:
+hgr_vertical_scroll_down_aux:
 	sta	RDAUX
 	sta	WRAUX
 
-hgr_vertical_scroll_main:
+hgr_vertical_scroll_down_main:
 
 
-hgr_vertical_scroll:
+hgr_vertical_scroll_down:
 	ldx	#0
 
 	lda	DRAW_PAGE
-	beq	hgr_vertical_scroll_page1
-	jmp	hgr_vertical_scroll_page2
+	beq	hgr_vertical_scroll_down_page1
+	jmp	hgr_vertical_scroll_down_page2
 
 
-hgr_vertical_scroll_page1:
+hgr_vertical_scroll_down_page1:
 	; PAGE1 for now
 
-hgr_page1_vscroll:
+hgr_page1_vscroll_down:
 
 	ldy	#39
-hgr_page1_vscroll_loop:
+hgr_page1_vscroll_down_loop:
 .if 0
 	lda	$37D0,Y		; 189 -> 191
 	sta	$3FD0,Y
@@ -414,22 +414,22 @@ hgr_page1_vscroll_loop:
 
 	dey
 
-	bmi	done_vscroll
+	bmi	done_vscroll_down
 
-	jmp	hgr_page1_vscroll_loop
+	jmp	hgr_page1_vscroll_down_loop
 
-done_vscroll:
+done_vscroll_down:
 	sta	RDMAIN
 	sta	WRMAIN
 	rts
 
-hgr_vertical_scroll_page2:
+hgr_vertical_scroll_down_page2:
 	; PAGE1 for now
 
-hgr_page2_vscroll:
+hgr_page2_vscroll_down:
 
 	ldy	#39
-hgr_page2_vscroll_loop:
+hgr_page2_vscroll_down_loop:
 
 .if 0
 	lda	$57D0,Y		; 189 -> 191
@@ -817,11 +817,11 @@ hgr_page2_vscroll_loop:
 
 	dey
 
-	bmi	done_vscroll2
+	bmi	done_vscroll2_down
 
-	jmp	hgr_page2_vscroll_loop
+	jmp	hgr_page2_vscroll_down_loop
 
-done_vscroll2:
+done_vscroll2_down:
 	sta	RDMAIN
 	sta	WRMAIN
 	rts
