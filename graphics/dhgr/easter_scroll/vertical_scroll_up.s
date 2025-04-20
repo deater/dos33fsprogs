@@ -345,7 +345,7 @@ hgr_page1_vscroll_up_loop:
 	sta	$31D0,Y
 	lda	$3DD0,Y		; 159 -> 157
 	sta	$35D0,Y
-.if 0
+.if 1
 	lda	$2250,Y		; 160 -> 158
 	sta	$39D0,Y
 	lda	$2650,Y		; 161 -> 159
@@ -410,10 +410,10 @@ hgr_page1_vscroll_up_loop:
 	sta	$33D0,Y
 	lda	$3FD0,Y		; 191 -> 189
 	sta	$37D0,Y
-	lda	$0000,Y		; 192 -> 190
-	sta	$3BD0,Y
-	lda	$0000,Y		; 193 -> 191
-	sta	$3FD0,Y
+;	lda	$0000,Y		; 192 -> 190
+;	sta	$3BD0,Y
+;	lda	$0000,Y		; 193 -> 191
+;	sta	$3FD0,Y
 .endif
 	dey
 
@@ -750,7 +750,7 @@ hgr_page2_vscroll_up_loop:
 	sta	$51D0,Y
 	lda	$5DD0,Y		; 159 -> 157
 	sta	$55D0,Y
-.if 0
+.if 1
 	lda	$4250,Y		; 160 -> 158
 	sta	$59D0,Y
 	lda	$4650,Y		; 161 -> 159
@@ -815,10 +815,10 @@ hgr_page2_vscroll_up_loop:
 	sta	$53D0,Y
 	lda	$5FD0,Y		; 191 -> 189
 	sta	$57D0,Y
-	lda	$2000,Y		; 192 -> 190
-	sta	$5BD0,Y
-	lda	$2000,Y		; 193 -> 191
-	sta	$5FD0,Y
+;	lda	$2000,Y		; 192 -> 190
+;	sta	$5BD0,Y
+;	lda	$2000,Y		; 193 -> 191
+;	sta	$5FD0,Y
 .endif
 	dey
 

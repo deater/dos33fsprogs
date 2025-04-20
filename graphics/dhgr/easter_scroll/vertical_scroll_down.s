@@ -29,7 +29,7 @@ hgr_page1_vscroll_down:
 
 	ldy	#39
 hgr_page1_vscroll_down_loop:
-.if 0
+.if 1
 	lda	$37D0,Y		; 189 -> 191
 	sta	$3FD0,Y
 	lda	$33D0,Y		; 188 -> 190
@@ -430,8 +430,7 @@ hgr_page2_vscroll_down:
 
 	ldy	#39
 hgr_page2_vscroll_down_loop:
-
-.if 0
+.if 1
 	lda	$57D0,Y		; 189 -> 191
 	sta	$5FD0,Y
 	lda	$53D0,Y		; 188 -> 190

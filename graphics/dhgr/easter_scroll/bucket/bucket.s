@@ -116,11 +116,16 @@ skip:
 	jsr	clear_dhgr_screens
 
 
+	lda	#$20
+	sta	DRAW_PAGE
+
+restart_scroll:
+
 	;================================
 	; set up initial graphics
 	;================================
-prep_for_scroll:
-
+prep_for_scroll_up:
+.if 1
 	;=================================
 	; copy full bottom graphic to off-screen page1
 
@@ -158,10 +163,10 @@ prep_for_scroll:
 	jsr	hgr_page_flip
 
 
-	;==================
-	; scroll a bit
+	;========================
+	; scroll DOWN 2 screens
 
-	lda	#192
+	lda	#191
 	sta	SCROLL_COUNT
 
 scroll_down_loop:
@@ -169,35 +174,146 @@ scroll_down_loop:
 	; scroll
 	jsr	hgr_vertical_scroll_down_main	; scroll draw page down 2
 
-.if 0
-	ldx	#0
-	ldy	#2
-	lda	SCROLL_COUNT
-	jsr	slow_copy_main
-.endif
 
-	jsr	hgr_vertical_scroll_down_aux
-.if 0
 	ldx	#0
 	ldy	#2
 	lda	SCROLL_COUNT
-	jsr	slow_copy_aux
-.endif
+	jsr	slow_copy_A0_main
+
+
+ 	jsr	hgr_vertical_scroll_down_aux
+	ldx	#0
+	ldy	#2
+	lda	SCROLL_COUNT
+	jsr	slow_copy_A0_aux
+
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
 	dec	SCROLL_COUNT
+	lda	SCROLL_COUNT
+	cmp	#$FF
+
 	bne	scroll_down_loop
-
-
 
 	; wait a bit
 
 	lda	#1
 	jsr	wait_seconds
 
+.endif
 
-;	jsr	clear_dhgr_screens
+	;=========================================
+	;=========================================
+	;=========================================
+	;=========================================
+	;=========================================
+
+
+	;==============================
+	; scroll down
+	;==============================
+	; assume DRAW page is at location 0
+
+prep_for_scroll_down:
+
+	;========================
+	;========================
+	; setup graphics for location 0 again
+
+	lda	#0			; from $A000 (top)
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#192			; lines to copy
+	jsr	slow_copy_A0_main	; to MAIN
+
+	lda	#0			; from $A000 (top)
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#192			; lines to copy
+	jsr	slow_copy_A0_aux	; to AUX
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	; showing SCROLL=0
+	; drawing SCROLL=1
+
+
+	;==================================================
+	; 	copy full bottom graphic+1 to DRAW_PAGE
+
+	; from $A000+1 to DRAW_PAGE
+
+	lda	#1			; from $A000+1
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#191			; 191 lines
+	jsr	slow_copy_A0_main
+
+	lda	#1			; from $A000+1
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#191			; 191 lines
+	jsr	slow_copy_A0_aux
+
+	; bottom line from next
+
+	lda	#0			; from $8000 (bottom)
+	ldx	#191			; to DRAW_PAGE+191
+	ldy	#1			; 1 line
+	jsr	slow_copy_main
+
+	lda	#0
+	ldx	#191
+	ldy	#1
+	jsr	slow_copy_aux
+
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	;======================
+	; show scroll=1
+	; draw scroll=2
+
+
+	;========================
+	; scroll UP 2 screens
+
+	lda	#0
+	sta	SCROLL_COUNT
+
+scroll_up_loop:
+
+	; scroll
+	jsr	hgr_vertical_scroll_up_main	; scroll up by 2
+
+	; from $8000+start+offset - $2000/$4000+offset
+	; X = start Y = len  A=offset
+
+	lda	SCROLL_COUNT		; from $8000+SCROLL_COUNT (bottom)
+	ldx	#190			; to DRAW_PAGE+190
+	ldy	#2			; length
+	jsr	slow_copy_main
+
+	jsr	hgr_vertical_scroll_up_aux
+
+	lda	SCROLL_COUNT		; from $8000+SCROLL_COUNT (bottom)
+	ldx	#190			; to DRAW_PAGE+190
+	ldy	#2			; length
+	jsr	slow_copy_aux
+
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	inc	SCROLL_COUNT
+	lda	SCROLL_COUNT
+	cmp	#191
+	bne	scroll_up_loop
+
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
+
+	jmp	restart_scroll
 
 	rts
 
