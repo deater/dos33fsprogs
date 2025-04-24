@@ -30,6 +30,16 @@ XPL	= $FB
 XPH	= $FC
 Q	= $FD
 
+
+; Fast mutiply -- setup tables
+
+square1_lo	=	$B000
+square1_hi	=	$B200
+square2_lo	=	$B400
+square2_hi	=	$B600
+
+
+
 	;=============================
 	;=============================
 	; star path
@@ -341,21 +351,6 @@ sm4a:
 	rts
 
 
-; Fast mutiply -- setup tables
-
-.ifndef square1_lo
-square1_lo	=	$2000
-square1_hi	=	$2200
-square2_lo	=	$2400
-square2_hi	=	$2600
-.endif
-
-;	for(i=0;i<512;i++) {
-;		square1_lo[i]=((i*i)/4)&0xff;
-;		square1_hi[i]=(((i*i)/4)>>8)&0xff;
-;		square2_lo[i]=( ((i-255)*(i-255))/4)&0xff;
-;		square2_hi[i]=(( ((i-255)*(i-255))/4)>>8)&0xff;
-;	}
 
 
 
