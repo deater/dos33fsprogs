@@ -10,13 +10,15 @@ all:	starpath_asm.dsk
 $(DOS33):	
 	cd ../../utils/dos33fs-utils && make
 
-starpath_asm.dsk:	$(DOS33) HELLO STARPATH STARPATH_SMALL STARPATH_HGR STARPATH_256
+starpath_asm.dsk:	$(DOS33) HELLO STARPATH STARPATH_SMALL \
+	STARPATH_HGR STARPATH_256 STARPATH_LONG
 	cp $(EMPTYDISK)/empty.dsk starpath_asm.dsk
 	$(DOS33) -y starpath_asm.dsk SAVE A HELLO
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_SMALL
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_HGR
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_256
+	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_LONG
 
 ###
 
@@ -55,10 +57,20 @@ STARPATH_256:	starpath_256.o
 starpath_256.o:	starpath_256.s
 	ca65 -o starpath_256.o starpath_256.s -l starpath_256.lst
 
+###
+
+STARPATH_LONG:	starpath_long.o
+	ld65 -o STARPATH_LONG starpath_long.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+
+starpath_long.o:	starpath_long.s
+	ca65 -o starpath_long.o starpath_long.s -l starpath_long.lst
+
+
 
 
 ####
 
 clean:	
-	rm -f *~ *.o HELLO STARPATH STARPATH_SMALL STARPATH_HGR STARPATH_256 *.lst
+	rm -f *~ *.o HELLO STARPATH STARPATH_SMALL STARPATH_HGR \
+		STARPATH_LONG STARPATH_256 *.lst
 

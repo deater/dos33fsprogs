@@ -1,0 +1,6 @@
+STARPATH_LONG:
+	4:48 or so precalc (first 32 frames)
+
+	Frame 1 length
+
+	0x857270 = 8,745,584 cycles = 8.5s/frame = 0.117 fps
