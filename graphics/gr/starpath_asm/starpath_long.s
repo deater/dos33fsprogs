@@ -2,9 +2,12 @@
 ;
 ;       See https://hellmood.111mb.de//starpath_is_55_bytes.html
 ;
-;     deater -- Vince Weaver -- vince@deater.net -- 25 February 2025
+;     Vince 'deater' Weaver -- vince@deater.net -- 25 February 2025
 
-
+; optimization
+;	329 bytes -- 8,745,584 cycles -- original code
+;	326 bytes -- 8,154,511 cycles -- calculate xpos*6 by adding
+;	324 bytes -- 8,015,008 cycles -- remove unneeded AL term
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -17,12 +20,14 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
+
+XPOS6   = $EF
 FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
 DEPTH	= $F3
 C	= $F4
-AL	= $F5
+;AL	= $F5
 M1	= $F6
 ;M2	= $F7
 ;TEMP	= $F8
@@ -110,9 +115,11 @@ next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
 yloop:
-	lda	#0		; start with XPOS=0
-	sta	XPOS
+	lda	#0
+	sta	XPOS		; start with XPOS=0
+;	sta	XPOS6		; XPOS*6
 xloop:
+	sta	XPOS6
 	ldx	#14		; start Depth at 14
 
 depth_loop:
@@ -139,15 +146,8 @@ depth_loop:
 	;	curve X by depth
 	;=========================
 
-	lda	XPOS		; load XPOS
-	asl
-	sta	XPL
-	asl
-	adc	XPL		; carry always 0 as XPOS never more than 40?
-	sta	XPL		; XPL=XPOS*6
-
-	sta	AL		; AL also is XPOS*6
-
+	lda	XPOS6		; load XPOS*6
+;	sta	AL		; AL also is XPOS*6
 	sec			; Subtract DEPTH
 	sbc	DEPTH
 	sta	XPL		; XP=(XPOS*6)-DEPTH
@@ -156,9 +156,6 @@ depth_loop:
 				; and draw path
 				; otherwise we draw the sky
 	bcs	draw_path
-
-
-
 
 
 	;========================
@@ -178,7 +175,7 @@ draw_sky:
 	; ??? used to see if star
 
 	clc			; A=X*6+YP
-	lda	AL
+	lda	XPOS6
 	adc	M1		; YPL from previous multiply
 
 	;==============
@@ -273,8 +270,11 @@ plot_pixel:
 	; increment xloop
 
 	inc	XPOS
-	lda	XPOS
-	cmp	#40
+
+	lda	XPOS6
+	clc
+	adc	#6
+	cmp	#240
 	bne	xloop
 ;	beq	xloop_done
 ;	jmp	xloop
