@@ -23,6 +23,8 @@
 ;	316 bytes -- 2,212,118 cycles -- convert square table to mul
 ;	313 bytes -- 2,212,118 cycles -- convert xpos and ypos tables to mul
 ;	317 bytes -- 2,212,118 cycles -- back to functional completeness
+;	312 bytes -- 2,212,118 cycles -- make mul8 A*X rather than A*Y
+;	294 bytes -- 2,212,118 cycles -- combine xpos and ypos table gen
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -58,14 +60,8 @@ TEMPY	= $FE
 
 ; Lookup Tables
 
-;ypos_lookup	= $1000	; ...$3fff	$30 long
-;xpos_lookup	= $9000 ; ...$77ff 	$28 long (but fill $30)
-;squares_lookup	= $f00
-
 xpos_lookup	= $1000	; ...$3fff	$30 long
-ypos_lookup	= $1080	; ...$3fff	$30 long
-
-;xpos_lookup	= $8000 ; ...$77ff 	$28 long (but fill $30)
+ypos_lookup	= $1080	; ...$3fff	(offset in top half)
 squares_lookup	= $f00
 
 ; stored frames, 32 of them so 32k
@@ -100,9 +96,11 @@ init_tables:
 xpos_table_x_loop:
 
 	tya
-	clc				; not needed? max 240 so no carry
+	clc
 	adc	#>xpos_lookup
 	sta	xpos_smc+2
+	sta	ypos_smc+2
+
 
 	ldx	#0		; for(d=0;d<128;d++) {
 xpos_table_d_loop:
@@ -114,13 +112,25 @@ xpos_table_d_loop:
 	adc	TEMPY		; A is now XX*3
 	asl			; A is now XX*6
 
-	tay			; calculte XX*6*DEPTH
-	txa
-	jsr	mul8		; A*Y -> high in A
+	jsr	mul8		; A*X -> high in A
 
 	ldy	TEMPY		; restore Y
 xpos_smc:
 	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+
+	sty	TEMPY		; save YY for later
+
+	tya
+	asl
+	asl			; A is YY*4
+
+	jsr	mul8		; mul X*A, high byte of result in A
+				; calc YY*4*DEPTH
+
+	ldy	TEMPY		; restore YY
+ypos_smc:
+	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
 
 	inx
 	cpx	#128
@@ -141,7 +151,7 @@ xpos_smc:
 	; d=0, 0 0  0  0  0  0  0
 	; d=1, 0 4  8 12 16 20 24
 	; d=2, 0 8 16 24 32 40 48
-
+.if 0
 
 	ldy	#0		; for(y=0;y<48;x++) {
 ypos_table_x_loop:
@@ -160,10 +170,8 @@ ypos_table_d_loop:
 	asl
 	asl			; A is YY*4
 
-
-	tay
-	txa
-	jsr	mul8		; calc YY*4*DEPTH
+	jsr	mul8		; mul X*A, high byte of result in A
+				; calc YY*4*DEPTH
 
 	ldy	TEMPY		; restore YY
 ypos_smc:
@@ -177,6 +185,7 @@ ypos_smc:
 	cpy	#48
 	bne	ypos_table_x_loop
 
+.endif
 
 	;==============================
 	; init squares table
@@ -184,8 +193,7 @@ ypos_smc:
 	ldx	#0
 square_loop:
 	txa
-	tay
-	jsr	mul8
+	jsr	mul8			; mul A*X, high byte result in A
 	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
 
 	inx
@@ -453,7 +461,7 @@ c1k_loop:
 ; Multiplies two 8-bit factors to produce a 16-bit product
 ; in about 153 cycles.
 ; @param A one factor
-; @param Y another factor
+; @param X another factor
 ; @return high 8 bits in A; low 8 bits in PRODLO
 ;         Y and FACTOR2 are trashed; X is untouched
 
@@ -463,7 +471,7 @@ mul8:
 
 	lsr			; prime the carry bit for the loop
 	sta	PRODLO
-	sty	FACTOR2
+	stx	FACTOR2
 	lda	#0
 	ldy	#8
 mul8_loop:
