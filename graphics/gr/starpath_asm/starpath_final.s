@@ -22,6 +22,7 @@
 ;	337 bytes -- 2,212,118 cycles -- add in old multiply routine
 ;	316 bytes -- 2,212,118 cycles -- convert square table to mul
 ;	313 bytes -- 2,212,118 cycles -- convert xpos and ypos tables to mul
+;	317 bytes -- 2,212,118 cycles -- back to functional completeness
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -61,8 +62,10 @@ TEMPY	= $FE
 ;xpos_lookup	= $9000 ; ...$77ff 	$28 long (but fill $30)
 ;squares_lookup	= $f00
 
-ypos_lookup	= $1000	; ...$3fff	$30 long
-xpos_lookup	= $8000 ; ...$77ff 	$28 long (but fill $30)
+xpos_lookup	= $1000	; ...$3fff	$30 long
+ypos_lookup	= $1080	; ...$3fff	$30 long
+
+;xpos_lookup	= $8000 ; ...$77ff 	$28 long (but fill $30)
 squares_lookup	= $f00
 
 ; stored frames, 32 of them so 32k
@@ -120,6 +123,7 @@ xpos_smc:
 	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
 
 	inx
+	cpx	#128
 	bne	xpos_table_d_loop
 
 	iny
@@ -166,88 +170,12 @@ ypos_smc:
 	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
 
 	inx
+	cpx	#128
 	bne	ypos_table_d_loop
 
 	iny
 	cpy	#48
 	bne	ypos_table_x_loop
-
-
-;	lda	#>ypos_lookup
-;	sta	table_change_smc+1
-
-;	lda	#$18		; clc
-;	sta	mul_smc
-
-;	jsr	combined_init
-
-
-
-
-
-.if 0
-	;===========================
-	; combined init
-
-combined_init:
-
-
-	ldy	#0	; for(x=0;x<48;x++) {
-
-xpos_table_x_loop:
-	lda	#0
-	sta	SHORTL	; shortx=0;
-	sta	SHORTH
-
-	tya
-
-mul_smc:			; select *4 vs *6
-	sec
-	bcs	mul6
-
-	; multiply by 4
-mul4:
-	asl
-	jmp	mul_common
-
-	; multiply by 6
-mul6:
-	sta	DIFF
-	asl
-	adc	DIFF
-mul_common:
-	asl
-	sta	DIFF
-
-	tya
-;	clc				; not needed? max 240 so no carry
-table_change_smc:
-	adc	#>xpos_lookup
-	sta	xpos_smc+2
-
-	ldx	#0	; for(d=0;d<128;d++) {
-xpos_table_d_loop:
-
-	clc			; short+=diff
-	lda	SHORTL
-	adc	DIFF
-	sta	SHORTL
-	lda	#0
-	adc	SHORTH
-	sta	SHORTH
-xpos_smc:
-	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-;	cpx	#128			; only need 128, smaller code 256
-	bne	xpos_table_d_loop
-
-	iny
-	cpy	#48
-	bne	xpos_table_x_loop
-
-	rts
-.endif
 
 
 	;==============================
@@ -442,8 +370,10 @@ yloop_done:
 	;===================
 	; end of frame
 end_of_frame:
-	lda	FRAME			; if 31, done pre-calc
-	cmp	#31
+					; FIXME: this draws an extra frame
+
+	lda	FRAME			; if 32, done pre-calc
+	cmp	#32
 	beq	done_precalc
 
 	ldy	#2			; copy from screen to off-screen
