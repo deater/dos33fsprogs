@@ -16,6 +16,7 @@
 ;	286 bytes -- 2,645,188 cycles -- avoid writing out DEPTH
 ;	286 bytes -- 2,212,118 cycles -- move xsmc outside critical loop
 ;	262 bytes -- 2,212,118 cycles -- optimize table generation
+;	252 bytes -- 2,212,118 cycles -- optimize table generation more
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -36,11 +37,12 @@ XPOS	= $F2
 XPOS6   = $F3
 PIXEL	= $F4
 Q	= $F5
-DIFF	= $F6
+DIFFS	= $F6
 SQUAREL = $F7
 SQUAREH = $F8
-SHORTL	= $F7
-SHORTH	= $F8
+DIFF	= $F9
+SHORTL	= $FA
+SHORTH	= $FB
 
 
 
@@ -49,7 +51,7 @@ SHORTH	= $F8
 
 
 ypos_lookup	= $2000	; ...$4fff	$30 long
-xpos_lookup	= $5000 ; ...$77ff 	$28 long
+xpos_lookup	= $5000 ; ...$77ff 	$28 long (but fill $30)
 squares_lookup	= $8000
 
 	;=============================
@@ -92,87 +94,38 @@ init_tables:
 	jsr	combined_init
 
 
-.if 0
-	;===========================
-	; init X*6*DEPTH table
-
-	; 40*6*128 = 30720 max
-
-	ldy	#0	; for(x=0;x<40;x++) {
-
-xpos_table_x_loop:
-	lda	#0
-	sta	SHORTL	; shortx=0;
-	sta	SHORTH
-
-	tya
-	sta	DIFF
-	asl
-	adc	DIFF
-	asl
-	sta	DIFF	; dadd=x*6;
-
-	tya
-	clc
-	adc	#>xpos_lookup
-	sta	xpos_smc+2
-
-	ldx	#0	; for(d=0;d<128;d++) {
-xpos_table_d_loop:
-
-	clc			; short+=diff
-	lda	SHORTL
-	adc	DIFF
-	sta	SHORTL
-	lda	#0
-	adc	SHORTH
-	sta	SHORTH
-xpos_smc:
-	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-	cpx	#128
-	bne	xpos_table_d_loop
-
-	iny
-	cpy	#40
-	bne	xpos_table_x_loop
-.endif
-
-
-
-
 	;==============================
 	; init squares table
 
-	lda	#1
-	sta	DIFF
 
-	lda	#0
-	sta	SQUAREL
-	sta	SQUAREH
+	ldx	#1			;
+	stx	DIFFS			; 1
+
+	dex
+	stx	SQUAREL			; 0
+	stx	SQUAREH
 
 	; 0, 1, 4, 9, 16, 25, 36
 	;  1   3  5  7  9   11
 
-	ldx	#0
+;	ldx	#0
 square_loop:
 	lda	SQUAREH
 	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
 
 	clc				; square+=diff
 	lda	SQUAREL
-	adc	DIFF
+	adc	DIFFS
 	sta	SQUAREL
 	lda	#0
 	adc	SQUAREH
 	sta	SQUAREH
 
-	inc	DIFF			; diff+=2;
-	inc	DIFF
+	inc	DIFFS			; diff+=2;
+	inc	DIFFS
 
 	inx
-	cpx	#128
+;	cpx	#128
 	bne	square_loop
 
 	;============================
@@ -181,7 +134,7 @@ square_loop:
 	;============================
 	;============================
 
-	ldx	#0
+;	ldx	#0
 	stx	FRAME
 
 next_frame:
@@ -207,7 +160,7 @@ xloop:
 	adc	#>xpos_lookup
 	sta	xp_smc+2
 
-	inc	PIXEL
+	inc	PIXEL		; pixel count for PRNG
 
 depth_loop:
 
@@ -360,10 +313,6 @@ sky_colors:
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
 
 
-
-
-
-
 	;   y  0 4  8 12 16 20 24
 	; d=0, 0 0  0  0  0  0  0
 	; d=1, 0 4  8 12 16 20 24
@@ -386,7 +335,7 @@ xpos_table_x_loop:
 
 	tya
 
-mul_smc:
+mul_smc:			; select *4 vs *6
 	sec
 	bcs	mul6
 
@@ -405,7 +354,7 @@ mul_common:
 	sta	DIFF
 
 	tya
-	clc
+;	clc				; not needed? max 240 so no carry
 table_change_smc:
 	adc	#>xpos_lookup
 	sta	xpos_smc+2
@@ -424,7 +373,7 @@ xpos_smc:
 	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
 
 	inx
-	cpx	#128
+;	cpx	#128			; only need 128, smaller code 256
 	bne	xpos_table_d_loop
 
 	iny
@@ -433,48 +382,3 @@ xpos_smc:
 
 	rts
 
-.if 0
-
-	ldy	#0	; for(y=0;y<48;y++) {
-ypos_table_y_loop:
-
-
-	; init Y*4*DEPTH table
-
-	lda	#0
-	sta	SHORTYL	; shorty=0;
-	sta	SHORTYH
-
-	tya
-	asl
-	asl
-	sta	DIFFY	; dadd=y*4;
-
-	tya
-	clc
-	adc	#>ypos_lookup
-	sta	ypos_smc+2
-
-	ldx	#0	; for(d=0;d<128;d++) {
-ypos_table_d_loop:
-
-	clc			; short+=diff
-	lda	SHORTL
-	adc	DIFF
-	sta	SHORTL
-	lda	#0
-	adc	SHORTH
-	sta	SHORTH
-ypos_smc:
-	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-	cpx	#128
-	bne	ypos_table_d_loop
-
-	iny
-	cpy	#48
-	bne	ypos_table_y_loop
-
-	rts
-.endif
