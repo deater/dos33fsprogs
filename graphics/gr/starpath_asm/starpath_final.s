@@ -26,6 +26,12 @@
 ;	312 bytes -- 2,212,118 cycles -- make mul8 A*X rather than A*Y
 ;	294 bytes -- 2,212,118 cycles -- combine xpos and ypos table gen
 
+
+; TODO: sound?
+;	show HGR when building lookup tables?
+;	run loops backwards?
+
+
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 PLOT1	= $F80E		; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
@@ -38,25 +44,19 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-SRCL	= $E8
-SRCH	= $E9
-DESTL	= $EA
-DESTH	= $EB
-FRAME	= $F0
-YPOS	= $F1
-XPOS	= $F2
-XPOS6   = $F3
-PIXEL	= $F4
-Q	= $F5
-DIFFS	= $F6
-SQUAREL = $F7
-SQUAREH = $F8
-DIFF	= $F9
-SHORTL	= $FA
-SHORTH	= $FB
-FACTOR2	= $FC
-PRODLO	= $FD
-TEMPY	= $FE
+SRCL	= $F0
+SRCH	= $F1
+DESTL	= $F2
+DESTH	= $F3
+FRAME	= $F4
+YPOS	= $F5
+XPOS	= $F6
+XPOS6   = $F7
+PIXEL	= $F8
+Q	= $F9
+FACTOR2	= $FA
+PRODLO	= $FB
+TEMPY	= $FC
 
 ; Lookup Tables
 
@@ -91,11 +91,24 @@ init_tables:
 	;===========================
 	; first init X*6*DEPTH table
 	; 40*6*128 = 30720 max
+	;	in bottom half of pages
 
-	ldy	#0	; for(x=0;x<48;x++) {
+	; modify and do Y table
+	; init Y*4*DEPTH table
+	; 48*4*128 = 24576 = max
+	;	in top half of pages
+
+	;   y  0 4  8 12 16 20 24
+	; d=0, 0 0  0  0  0  0  0
+	; d=1, 0 4  8 12 16 20 24
+	; d=2, 0 8 16 24 32 40 48
+
+
+	ldy	#0		; for(x=0;x<48;x++) {
 xpos_table_x_loop:
 
-	tya
+
+	tya			; self-modify the destination of the tables
 	clc
 	adc	#>xpos_lookup
 	sta	xpos_smc+2
@@ -107,88 +120,48 @@ xpos_table_d_loop:
 
 	sty	TEMPY		; save Y
 
+	; calculate XX*6*DEPTH
+
 	tya			; XX in A
 	asl
 	adc	TEMPY		; A is now XX*3
 	asl			; A is now XX*6
 
+				; calculate XX*6*DEPTH
 	jsr	mul8		; A*X -> high in A
 
-	ldy	TEMPY		; restore Y
 xpos_smc:
-	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+	sta	xpos_lookup,X	; xpos_depth_lookup[y][d]=(x*6*d)>>8;
 
 
-	sty	TEMPY		; save YY for later
+	; calculate YY*4*DEPTH
 
-	tya
+	lda	TEMPY		; get YY
 	asl
 	asl			; A is YY*4
 
 	jsr	mul8		; mul X*A, high byte of result in A
 				; calc YY*4*DEPTH
 
-	ldy	TEMPY		; restore YY
 ypos_smc:
-	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*4*d)>>8;
+
+	ldy	TEMPY		; restore YY
 
 	inx
 	cpx	#128
 	bne	xpos_table_d_loop
 
 	iny
-	cpy	#48			; only needs to be 40
+	cpy	#48			; 48 lines (does unneeded work for x)
 	bne	xpos_table_x_loop
 
 
-
-	;===========================
-	; modify and do Y table
-	; init Y*4*DEPTH table
-	; 48*4*128 = 24576 = max
-
-	;   y  0 4  8 12 16 20 24
-	; d=0, 0 0  0  0  0  0  0
-	; d=1, 0 4  8 12 16 20 24
-	; d=2, 0 8 16 24 32 40 48
-.if 0
-
-	ldy	#0		; for(y=0;y<48;x++) {
-ypos_table_x_loop:
-
-	tya
-	clc			; not needed? max 240 so no carry
-	adc	#>ypos_lookup
-	sta	ypos_smc+2
-
-	ldx	#0		; for(d=0;d<128;d++) {
-ypos_table_d_loop:
-
-	sty	TEMPY		; save YY for later
-
-	tya
-	asl
-	asl			; A is YY*4
-
-	jsr	mul8		; mul X*A, high byte of result in A
-				; calc YY*4*DEPTH
-
-	ldy	TEMPY		; restore YY
-ypos_smc:
-	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-	cpx	#128
-	bne	ypos_table_d_loop
-
-	iny
-	cpy	#48
-	bne	ypos_table_x_loop
-
-.endif
-
 	;==============================
 	; init squares table
+
+	; could save 5 bytes at expense of slowdown by putting
+	; this in the previous init loop
 
 	ldx	#0
 square_loop:
@@ -213,10 +186,10 @@ square_loop:
 next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
-	sta	PIXEL
+	sta	PIXEL		; needs reset each frame
 yloop:
 
-	lda	YPOS
+	lda	YPOS		; setup YPOS lookup pointer
 	clc
 	adc	#>ypos_lookup
 	sta	yp_smc+2
@@ -228,7 +201,7 @@ xloop:
 	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
 
-	lda	XPOS
+	lda	XPOS		; setup XPOS lookup pointer
 	clc
 	adc	#>xpos_lookup
 	sta	xp_smc+2
@@ -289,7 +262,7 @@ draw_sky:
 draw_path:
 	;=================================
 	; calc (XPOS*6-DEPTH)*DEPTH and get high byte
-	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)
+	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)h
 
 xp_smc:
 	lda	xpos_lookup,X	; XPOS
