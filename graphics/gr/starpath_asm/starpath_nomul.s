@@ -11,6 +11,8 @@
 ;	318 bytes -- 7,867,352 cycles -- STARPATH_LONG code
 ;	238 bytes -- 7,852,906 cycles -- rip out save frames code
 ;	291 bytes -- 3,439,410 cycles -- no multiplies
+;	291 bytes -- 2,980,116 cycles -- put ysmc outside critical loop
+;	287 bytes -- 2,728,792 cycles -- get rid of unneeded YPH
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -36,9 +38,9 @@ XPOS	= $F2
 DEPTH	= $F3
 XPOS6   = $F4
 PIXEL	= $F5
-M1	= $F6
-YPH	= $FA
-XPL	= $FB
+;M1	= $F6
+;YPH	= $FA
+;XPL	= $FB
 Q	= $FD
 
 
@@ -201,7 +203,10 @@ square_loop:
 	bne	square_loop
 
 	;============================
-	; prep for start
+	;============================
+	; start drawing loop
+	;============================
+	;============================
 
 	ldx	#0
 	stx	FRAME
@@ -211,6 +216,12 @@ next_frame:
 	sta	YPOS
 	sta	PIXEL
 yloop:
+
+	lda	YPOS
+	clc
+	adc	#>ypos_lookup
+	sta	yp_smc+2
+
 	lda	#0
 	sta	XPOS		; start with XPOS=0
 
@@ -229,15 +240,6 @@ depth_loop:
 
 	; yprime_high=ypos4_times_depth(ypos,depth);
 
-	lda	YPOS
-	clc
-	adc	#>ypos_lookup
-	sta	yp_smc+2
-
-yp_smc:
-	lda	ypos_lookup,X
-
-	sta	YPH		; YPH = YPOS*4*DEPTH
 
 
 	;========================
@@ -247,8 +249,7 @@ yp_smc:
 
 	lda	XPOS6		; load XPOS*6
 	sec			; Subtract DEPTH
-	sbc	DEPTH
-;	sta	XPL		; XP=(XPOS*6)-DEPTH
+	sbc	DEPTH		; XP=(XPOS*6)-DEPTH
 
 				; if carry set means not negative
 				; and draw path
@@ -261,13 +262,7 @@ yp_smc:
 	;========================
 draw_sky:
 
-	;=====================
-	; calc A=(XPOS*6)+YP
-
-
-;	clc			; A=X*6+YP
-;	lda	XPOS6
-;	adc	M1		; YPL from previous multiply
+	; fake random number to draw stars
 
 	ldy	PIXEL
 	lda	$F500,Y
@@ -315,8 +310,12 @@ xp_smc:
 	; calc Q= (XP*DEPTH)/256 | (YP/256)
 	;	for texture pattern
 
-	ora	YPH		; Q=(XP*DEPTH)/256 | YP/256
-	sta	Q
+yp_smc:
+	ora	ypos_lookup,X	; YPH = YPOS*4*DEPTH
+
+;	sta	YPH
+;	ora	YPH
+	sta	Q		; Q=(XP*DEPTH)/256 | YP/256
 
 	;==============================
 	; calc C = Q & (Depth + Frame)
