@@ -21,7 +21,7 @@
 // black/white gradient, let's map from 0..15 instead
 // in decimal, so add 100/16 each time, or 6.25?
 
-static int color_remap[32]={
+static int color_remap[MAX_COLORS]={
 //	0, 5, 0, 5, 5, 5,10,10, 5, 5,10,10, 7, 7, 15, 15,
 //	1, 2, 1, 2, 3, 9, 3, 9,13,12,13,12, 4, 4, 4, 4,
 //	1, 1, 2, 2, 3, 3, 9, 9,13,13,12,12, 4, 4, 4, 4,
@@ -32,14 +32,6 @@ static int color_remap[32]={
 
 
 };
-
-static void framebuffer_putpixel(unsigned int x, unsigned int y,
-	unsigned char color) {
-
-	color_equals(color_remap[(color/2)-8]);
-	basic_plot(x,y);
-
-}
 
 
 static int ypos_depth_lookup[48][256];
@@ -145,7 +137,7 @@ depth_loop:
 	// if left of the curve, jump to "sky"
 	if (temp&0x100) {
 
-		color=31;	// white for star
+		color=15;	// white for star
 
 		if ( (random_lookup[pixel])>4) {
 //		if (((xpos6+yprime)&0xff)!=0) {
@@ -153,7 +145,7 @@ depth_loop:
 			//color=(color<<4)|((ypos*4)>>4);
 			//color-=160;
 
-			color=(ypos/4)+32;	// sky gradient instead
+			color=(ypos/4)+16;	// sky gradient instead
 		}
 
 
@@ -207,9 +199,13 @@ depth_loop:
 
 		// if ray did not hit, repeat pixel loop
 
+		color-=16;
 	}
 
-	framebuffer_putpixel(xpos,ypos,color);
+	// draw pixel
+	// /2 just makes table smaller
+	color_equals(color_remap[color/2]);
+	basic_plot(xpos,ypos);
 
 	xpos++;
 	xpos6+=6;

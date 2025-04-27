@@ -37,6 +37,7 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 
 int main(int argc, char **argv) {
 
+	int maxdepth=0;
 	int frame,color,depth,x,y,yprime,xprime;
 	int temp,ch;
 
@@ -93,6 +94,11 @@ L:
 
 				// (increment depth by one)
 				depth++;
+
+				if (depth>maxdepth) {
+					maxdepth=depth;
+					printf("New maxdepth=%d\n",depth);
+				}
 
 				// ... to create "gaps"
 

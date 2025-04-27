@@ -4,3 +4,19 @@ STARPATH_LONG:
 	Frame 1 length
 
 	0x857270 = 8,745,584 cycles = 8.5s/frame = 0.117 fps
+	0x7c6d8f = 8,154,511 cycles = 7.9s/frame = 0.125 fps
+	0x7a4ca0 = 8,015,008 cycles = 7.8s/frame = 0.128 fps
+
+
+	Depth runs from 15 ... 127
+	YPOS runs from 0..47 = 6k of lookup
+
+	XPOS6 much harder
+
+
+YPOS*4*DEPTH -> YPH
+
+
+XPL = XPOS6-DEPTH
+XPL*DEPTH, high byte | YPH & (DEPTH+FRAME)
+

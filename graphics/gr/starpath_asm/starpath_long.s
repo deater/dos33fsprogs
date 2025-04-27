@@ -7,7 +7,8 @@
 ; optimization
 ;	329 bytes -- 8,745,584 cycles -- original code
 ;	326 bytes -- 8,154,511 cycles -- calculate xpos*6 by adding
-;	324 bytes -- 8,015,008 cycles -- remove unneeded AL term
+;	323 bytes -- 8,015,008 cycles -- remove unneeded AL term
+
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -27,14 +28,9 @@ YPOS	= $F1
 XPOS	= $F2
 DEPTH	= $F3
 C	= $F4
-;AL	= $F5
 M1	= $F6
-;M2	= $F7
-;TEMP	= $F8
-;YPL	= $F9
 YPH	= $FA
 XPL	= $FB
-;XPH	= $FC
 Q	= $FD
 
 
@@ -117,9 +113,9 @@ next_frame:
 yloop:
 	lda	#0
 	sta	XPOS		; start with XPOS=0
-;	sta	XPOS6		; XPOS*6
+
 xloop:
-	sta	XPOS6
+	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
 
 depth_loop:
@@ -134,8 +130,7 @@ depth_loop:
 	asl			; A is YPOS*4
 
 	tay			; multiply Y*4*DEPTH
-;	lda	DEPTH
-	txa
+				; depth in X
 	jsr	multiply_u8x8	; 8-bit unsigned multiply
 
 	sta	YPH		; store out to YPH:YPL
@@ -147,7 +142,6 @@ depth_loop:
 	;=========================
 
 	lda	XPOS6		; load XPOS*6
-;	sta	AL		; AL also is XPOS*6
 	sec			; Subtract DEPTH
 	sbc	DEPTH
 	sta	XPL		; XP=(XPOS*6)-DEPTH
@@ -205,8 +199,7 @@ draw_path:
 	; calc XP*DEPTH and get high byte
 
 	ldy	XPL
-;	lda	DEPTH
-	txa
+				; depth in X
 	jsr	multiply_u8x8	; 8-bit unsigned multiply
 
 	;===================================
@@ -221,8 +214,7 @@ draw_path:
 	; 	mask geometry by time shifted depth
 
 	clc
-;	lda	DEPTH
-	txa
+	txa			; depth in X
 	adc	FRAME		; add depth plus frame  D+F
 
 	and	Q		; C = Q & (D+FRAME)
@@ -231,8 +223,7 @@ draw_path:
 	;=========================
 	; increment depth
 
-;	inc	DEPTH		; DEPTH=DEPTH+1
-	inx
+	inx			; depth in X
 
 	;==========================
 	; to create gaps
@@ -255,9 +246,7 @@ plot_pixel:
 	;=====================
 	; set color
 
-	sta	COLOR
-
-;	jsr	SETCOL			; Set COLOR with ROM routine (mul*17)
+	sta	COLOR			; if color top/bottom don't need SETCOL
 
 	;=====================
 	; plot point
@@ -269,15 +258,14 @@ plot_pixel:
 	;===================
 	; increment xloop
 
-	inc	XPOS
+	inc	XPOS			; XPOS+=1
 
-	lda	XPOS6
+	lda	XPOS6			; XPOS6+=6
 	clc
 	adc	#6
 	cmp	#240
 	bne	xloop
-;	beq	xloop_done
-;	jmp	xloop
+
 xloop_done:
 
 	;===================
@@ -354,11 +342,11 @@ sky_colors:
 
 ; Fast 8x8 bit unsigned multiplication, 16-bit result
 
-; input AxY
-; Result: M2,A:M1
-;
+; calculate X * Y
+; Result: A:M1
 
 multiply_u8x8:
+	txa
         sta     sm1a+1                                                  ; 3
         sta     sm3a+1                                                  ; 3
         eor     #$ff    ; invert the bits for subtracting               ; 2
@@ -375,10 +363,11 @@ sm3a:
 	lda	square1_hi,Y
 sm4a:
 	sbc	square2_hi,Y
-;	sta	M2
 
 	rts
 
+
+	;===========================
 
 copy_from_mem:
 	lda	FRAME		; 0->$10, 1->$14, 2->$18
