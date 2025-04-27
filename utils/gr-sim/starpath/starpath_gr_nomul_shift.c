@@ -50,8 +50,8 @@ static int ypos4_times_depth(int ypos, int depth) {
 }
 
 static void lookup_init(void) {
-	int x,y,d;
-	short shortx,shorty,dadd;
+	int y,d;
+	short shorty,dadd;
 
 	//   y  0 4  8 12 16 20 24
 	// d=0, 0 0  0  0  0  0  0
@@ -60,24 +60,24 @@ static void lookup_init(void) {
 
 	// 24576 = max
 
-	for(y=0;y<48;y++) {
+	for(d=0;d<128;d++) {
 		shorty=0;
-		dadd=y*4;
-		for(d=0;d<128;d++) {
+		dadd=d*4;
+		for(y=0;y<48;y++) {
 			shorty+=dadd;
-			ypos_depth_lookup[y][d]=(shorty)>>8;
+			ypos_depth_lookup[y][d]=(shorty)>>7;
 			// (y*d)
 		}
 	}
 
 	// 30720 = max
 
-	for(x=0;x<40;x++) {
-		shortx=0;
-		dadd=x*6;
-		for(d=0;d<128;d++) {
-			shortx+=dadd;
-			xpos_depth_lookup[x][d]=(shortx)>>8;
+	for(d=0;d<128;d++) {
+		shorty=0;
+		dadd=d*6;
+		for(y=0;y<40;y++) {
+			shorty+=dadd;
+			xpos_depth_lookup[y][d]=(shorty)>>7;
 		}
 	}
 
@@ -86,7 +86,7 @@ static void lookup_init(void) {
 	for(d=0;d<128;d++) {
 		// 0, 1, 4, 9, 16, 25, 36
 		//  1   3  5  7  9   11
-		depth_squared_lookup[d]=(square)>>8;
+		depth_squared_lookup[d]=(square)>>7;
 		square=square+diff;
 		diff+=2;
 	}
@@ -199,7 +199,7 @@ depth_loop:
 //		xprime_high=xprime>>8;
 //		yprime_high=yprime>>8;
 
-		temp=(xprime_high|yprime_high);
+		temp=(xprime_high|yprime_high)>>1;
 
 		// get (current depth) + (current frame)
 		// mask geometry/texture by time shifted depth

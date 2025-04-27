@@ -7,6 +7,9 @@ STARPATH_LONG:
 	0x7c6d8f = 8,154,511 cycles = 7.9s/frame = 0.125 fps
 	0x7a4ca0 = 8,015,008 cycles = 7.8s/frame = 0.128 fps
 	0x77e8c5 = 7,858,373 cycles = 7.7s/frame = 0.130 fps
+	0x780bd8 = 7,867,352 cycles
+	0x77d36a = 7,852,906 cycles
+	0x347b32 = 3,439,410 cycles = 3.4s/frame = 0.297 fps
 
 	Depth runs from 15 ... 127
 	YPOS runs from 0..47 = 6k of lookup
@@ -14,7 +17,8 @@ STARPATH_LONG:
 	XPOS6 much harder
 
 
-YPOS*4*DEPTH -> YPH
+YPOS*4*DEPTH, top 8 bits   192   0 . 4 . 8 . 12 . 16 . 20
+XPOS*6*DEPTH, top 8 bits   240   0 . . 6 . . 12 . . 18 .
 
 
 XPL = XPOS6-DEPTH

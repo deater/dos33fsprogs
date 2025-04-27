@@ -20,10 +20,12 @@
 // black/white gradient, let's map from 0..15 instead
 // in decimal, so add 100/16 each time, or 6.25?
 
-static int color_remap[32]={
-	0, 5, 0, 5, 5, 5,10,10, 5, 5,10,10, 7, 7, 15, 15,
-	1, 2, 1, 2, 3, 9, 3, 9,13,12,13,12, 4, 4, 4, 4,
-//	1, 1, 2, 2, 3, 3, 9, 9,13,13,12,12, 4, 4, 4, 4,
+static int color_remap[MAX_COLORS]={
+//	0, 5, 0, 5, 5, 5,10,10, 5, 5,10,10, 7, 7, 15, 15,
+	0, 0, 5, 5, 10, 10, 5, 5, 7, 7, 14, 14, 15, 15, 15, 15,
+
+//	1, 2, 1, 2, 3, 9, 3, 9,13,12,13,12, 4, 4, 4, 4,
+	2, 2, 3, 3, 1, 1, 9, 9,13,13,12,12, 15, 15, 0, 0,
 };
 
 static void framebuffer_putpixel(unsigned int x, unsigned int y,
@@ -67,16 +69,18 @@ L:
 			// if left of the curve, jump to "sky"
 			if (temp&0x100) {
 
-				color=27-16;	// is both the star color and
+				//color=27-16;	// is both the star color and
 						// palette offset into sky
-
+				color=28;
 				// pseudorandom multiplication leftover DL added to
 				// truncated pixel count
 				// 1 in 256 chance to be a star
 				if ((((x*6)+yprime)&0xff)!=0) {
 					// if not, shift the starcolor and add scaled pixel count
-					color=(color<<4)|((y*4)>>4);
-					color-=160;
+				//	color=(color<<4)|((y*4)>>4);
+				//	color-=160;
+				color=(y/4)+16; // sky gradient instead
+
 				}
 
 
@@ -119,7 +123,7 @@ L:
 
 	grsim_update();
 
-	usleep(10000);
+	usleep(20000);
 
 	ch=grsim_input();
 	if (ch=='q') return 0;

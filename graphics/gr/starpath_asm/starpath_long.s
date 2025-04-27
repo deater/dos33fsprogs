@@ -9,6 +9,7 @@
 ;	326 bytes -- 8,154,511 cycles -- calculate xpos*6 by adding
 ;	323 bytes -- 8,015,008 cycles -- remove unneeded AL term
 ;	314 bytes -- 7,858,373 cycles -- redo color lookup table
+;	318 bytes -- 7,867,352 cycles -- use ROM for random numbers
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -22,12 +23,12 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-XPOS6   = $EF
 FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
 DEPTH	= $F3
-;C	= $F4
+XPOS6   = $F4
+PIXEL	= $F5
 M1	= $F6
 YPH	= $FA
 XPL	= $FB
@@ -110,6 +111,7 @@ second_table:
 next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
+	sta	PIXEL
 yloop:
 	lda	#0
 	sta	XPOS		; start with XPOS=0
@@ -117,6 +119,8 @@ yloop:
 xloop:
 	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
+
+	inc	PIXEL
 
 depth_loop:
 	stx	DEPTH
@@ -157,40 +161,33 @@ depth_loop:
 	;========================
 draw_sky:
 
-	;================================
-	; set color to white for star
-
-;;	ldy	#6		; C=15 (white)
-;;	sta	C
-
 	;=====================
 	; calc A=(XPOS*6)+YP
 
-	; ??? used to see if star
 
-	clc			; A=X*6+YP
-	lda	XPOS6
-	adc	M1		; YPL from previous multiply
+;	clc			; A=X*6+YP
+;	lda	XPOS6
+;	adc	M1		; YPL from previous multiply
+
+	ldy	PIXEL
+	lda	$F500,Y
+
 
 	;==============
 	; see if star
 
-	ldy	#6		; white
-	cmp	#6		; if A&0xFF < 6 then skip, we are star
+	ldy	#6		; set color to white
+	cmp	#4		; if A&0xFF < 6 then skip, we are star
 	bcc	plot_pixel_known_color
 
 	;==============
 	; not star, sky
 
-	lda	YPOS		; C=Y/4+16
+	lda	YPOS		; Color offset=YPOS/8
 	lsr
 	lsr
 	lsr
 	tay
-;	lda	sky_colors,Y
-;	clc
-;	adc	#16
-;	sta	C
 
 	jmp	plot_pixel_known_color	; bra
 
@@ -221,8 +218,7 @@ draw_path:
 	txa			; depth in X
 	adc	FRAME		; add depth plus frame  D+F
 
-	and	Q		; C = Q & (D+FRAME)
-;	sta	C
+	and	Q		; Color Offset = Q & (D+FRAME)
 
 	;=========================
 	; increment depth
@@ -237,21 +233,16 @@ draw_path:
 
 	;===========================
 	; plot pixel
-	;	XPOS,YPOS  COLOR=LOOKUP(C/2-8)
+	;	XPOS,YPOS  COLOR OFFSET in A
 plot_pixel:
-;	lda	C
-	lsr
-;	sec
-;	sbc	#8			; A is C/2-8
-
-
+	; color offset in A.  Is >16
+	lsr			; divide by 2 to reduce colors in lookup
 	tay
 plot_pixel_known_color:
 	lda	color_lookup,Y		; Lookup in color table
 
 	;=====================
 	; set color
-plot_pixel_already_color:
 
 	sta	COLOR			; if color top/bottom don't need SETCOL
 
@@ -314,6 +305,7 @@ color_lookup:
 sky_colors:
 ; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
 .byte $22,$33,$11,$99,$DD,$CC, $FF, $00
+; wall colors, offset 8 from start
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
 
 ; Fast mutiply
