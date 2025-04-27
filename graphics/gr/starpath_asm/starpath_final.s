@@ -19,6 +19,9 @@
 ;	252 bytes -- 2,212,118 cycles -- optimize table generation more
 ;	323 bytes -- 2,212,118 cycles -- add back memory copy code
 ;	311 bytes -- 2,212,118 cycles -- optimize memory copy code
+;	337 bytes -- 2,212,118 cycles -- add in old multiply routine
+;	316 bytes -- 2,212,118 cycles -- convert square table to mul
+;	313 bytes -- 2,212,118 cycles -- convert xpos and ypos tables to mul
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -48,6 +51,9 @@ SQUAREH = $F8
 DIFF	= $F9
 SHORTL	= $FA
 SHORTH	= $FB
+FACTOR2	= $FC
+PRODLO	= $FD
+TEMPY	= $FE
 
 ; Lookup Tables
 
@@ -87,54 +93,174 @@ init_tables:
 	; first init X*6*DEPTH table
 	; 40*6*128 = 30720 max
 
-	jsr	combined_init
+	ldy	#0	; for(x=0;x<48;x++) {
+xpos_table_x_loop:
+
+	tya
+	clc				; not needed? max 240 so no carry
+	adc	#>xpos_lookup
+	sta	xpos_smc+2
+
+	ldx	#0		; for(d=0;d<128;d++) {
+xpos_table_d_loop:
+
+	sty	TEMPY		; save Y
+
+	tya			; XX in A
+	asl
+	adc	TEMPY		; A is now XX*3
+	asl			; A is now XX*6
+
+	tay			; calculte XX*6*DEPTH
+	txa
+	jsr	mul8		; A*Y -> high in A
+
+	ldy	TEMPY		; restore Y
+xpos_smc:
+	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+	inx
+	bne	xpos_table_d_loop
+
+	iny
+	cpy	#48			; only needs to be 40
+	bne	xpos_table_x_loop
+
+
 
 	;===========================
 	; modify and do Y table
 	; init Y*4*DEPTH table
 	; 48*4*128 = 24576 = max
 
-	lda	#>ypos_lookup
-	sta	table_change_smc+1
+	;   y  0 4  8 12 16 20 24
+	; d=0, 0 0  0  0  0  0  0
+	; d=1, 0 4  8 12 16 20 24
+	; d=2, 0 8 16 24 32 40 48
 
-	lda	#$18		; clc
-	sta	mul_smc
 
-	jsr	combined_init
+	ldy	#0		; for(y=0;y<48;x++) {
+ypos_table_x_loop:
+
+	tya
+	clc			; not needed? max 240 so no carry
+	adc	#>ypos_lookup
+	sta	ypos_smc+2
+
+	ldx	#0		; for(d=0;d<128;d++) {
+ypos_table_d_loop:
+
+	sty	TEMPY		; save YY for later
+
+	tya
+	asl
+	asl			; A is YY*4
+
+
+	tay
+	txa
+	jsr	mul8		; calc YY*4*DEPTH
+
+	ldy	TEMPY		; restore YY
+ypos_smc:
+	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+	inx
+	bne	ypos_table_d_loop
+
+	iny
+	cpy	#48
+	bne	ypos_table_x_loop
+
+
+;	lda	#>ypos_lookup
+;	sta	table_change_smc+1
+
+;	lda	#$18		; clc
+;	sta	mul_smc
+
+;	jsr	combined_init
+
+
+
+
+
+.if 0
+	;===========================
+	; combined init
+
+combined_init:
+
+
+	ldy	#0	; for(x=0;x<48;x++) {
+
+xpos_table_x_loop:
+	lda	#0
+	sta	SHORTL	; shortx=0;
+	sta	SHORTH
+
+	tya
+
+mul_smc:			; select *4 vs *6
+	sec
+	bcs	mul6
+
+	; multiply by 4
+mul4:
+	asl
+	jmp	mul_common
+
+	; multiply by 6
+mul6:
+	sta	DIFF
+	asl
+	adc	DIFF
+mul_common:
+	asl
+	sta	DIFF
+
+	tya
+;	clc				; not needed? max 240 so no carry
+table_change_smc:
+	adc	#>xpos_lookup
+	sta	xpos_smc+2
+
+	ldx	#0	; for(d=0;d<128;d++) {
+xpos_table_d_loop:
+
+	clc			; short+=diff
+	lda	SHORTL
+	adc	DIFF
+	sta	SHORTL
+	lda	#0
+	adc	SHORTH
+	sta	SHORTH
+xpos_smc:
+	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+	inx
+;	cpx	#128			; only need 128, smaller code 256
+	bne	xpos_table_d_loop
+
+	iny
+	cpy	#48
+	bne	xpos_table_x_loop
+
+	rts
+.endif
 
 
 	;==============================
 	; init squares table
 
-
-	ldx	#1			;
-	stx	DIFFS			; 1
-
-	dex
-	stx	SQUAREL			; 0
-	stx	SQUAREH
-
-	; 0, 1, 4, 9, 16, 25, 36
-	;  1   3  5  7  9   11
-
-;	ldx	#0
+	ldx	#0
 square_loop:
-	lda	SQUAREH
+	txa
+	tay
+	jsr	mul8
 	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
 
-	clc				; square+=diff
-	lda	SQUAREL
-	adc	DIFFS
-	sta	SQUAREL
-	lda	#0
-	adc	SQUAREH
-	sta	SQUAREH
-
-	inc	DIFFS			; diff+=2;
-	inc	DIFFS
-
 	inx
-;	cpx	#128
 	bne	square_loop
 
 	;============================
@@ -345,74 +471,6 @@ sky_colors:
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
 
 
-	;   y  0 4  8 12 16 20 24
-	; d=0, 0 0  0  0  0  0  0
-	; d=1, 0 4  8 12 16 20 24
-	; d=2, 0 8 16 24 32 40 48
-
-
-
-	;===========================
-	; combined init
-
-combined_init:
-
-
-	ldy	#0	; for(x=0;x<48;x++) {
-
-xpos_table_x_loop:
-	lda	#0
-	sta	SHORTL	; shortx=0;
-	sta	SHORTH
-
-	tya
-
-mul_smc:			; select *4 vs *6
-	sec
-	bcs	mul6
-
-	; multiply by 4
-mul4:
-	asl
-	jmp	mul_common
-
-	; multiply by 6
-mul6:
-	sta	DIFF
-	asl
-	adc	DIFF
-mul_common:
-	asl
-	sta	DIFF
-
-	tya
-;	clc				; not needed? max 240 so no carry
-table_change_smc:
-	adc	#>xpos_lookup
-	sta	xpos_smc+2
-
-	ldx	#0	; for(d=0;d<128;d++) {
-xpos_table_d_loop:
-
-	clc			; short+=diff
-	lda	SHORTL
-	adc	DIFF
-	sta	SHORTL
-	lda	#0
-	adc	SHORTH
-	sta	SHORTH
-xpos_smc:
-	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-;	cpx	#128			; only need 128, smaller code 256
-	bne	xpos_table_d_loop
-
-	iny
-	cpy	#48
-	bne	xpos_table_x_loop
-
-	rts
 
 
 	;===========================
@@ -454,3 +512,40 @@ c1k_loop:
 	inc	FRAME			; doesn't belong here, saves room
 
 	rts				; return
+	inc	FRAME
+
+	jmp	next_frame
+
+
+; Russian Peasant multiply by Thwaite
+; https://www.nesdev.org/wiki/8-bit_Multiply
+;
+; Multiplies two 8-bit factors to produce a 16-bit product
+; in about 153 cycles.
+; @param A one factor
+; @param Y another factor
+; @return high 8 bits in A; low 8 bits in PRODLO
+;         Y and FACTOR2 are trashed; X is untouched
+
+mul8:
+	; Factor 1 is stored in the lower bits of prodlo; the low byte of
+	; the product is stored in the upper bits.
+
+	lsr			; prime the carry bit for the loop
+	sta	PRODLO
+	sty	FACTOR2
+	lda	#0
+	ldy	#8
+mul8_loop:
+	; At the start of the loop, one bit of prodlo has already been
+	; shifted out into the carry.
+	bcc	mul8_noadd
+	clc
+	adc	FACTOR2
+mul8_noadd:
+	ror
+	ror	PRODLO		; pull another bit out for the next iteration
+	dey		; inc/dec don't modify carry; only shifts and adds do
+	bne	mul8_loop
+	rts
+
