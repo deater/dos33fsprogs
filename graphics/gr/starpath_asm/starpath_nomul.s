@@ -14,6 +14,8 @@
 ;	291 bytes -- 2,980,116 cycles -- put ysmc outside critical loop
 ;	287 bytes -- 2,728,792 cycles -- get rid of unneeded YPH
 ;	286 bytes -- 2,645,188 cycles -- avoid writing out DEPTH
+;	286 bytes -- 2,212,118 cycles -- move xsmc outside critical loop
+;	262 bytes -- 2,212,118 cycles -- optimize table generation
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -27,19 +29,20 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-DIFF	= $E0
-SQUAREL = $E1
-SQUAREH = $E2
-SHORTL	= $E3
-SHORTH	= $E4
 
 FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
-;DEPTH	= $F3
-XPOS6   = $F4
-PIXEL	= $F5
-Q	= $F6
+XPOS6   = $F3
+PIXEL	= $F4
+Q	= $F5
+DIFF	= $F6
+SQUAREL = $F7
+SQUAREH = $F8
+SHORTL	= $F7
+SHORTH	= $F8
+
+
 
 
 ; Lookup Tables
@@ -67,57 +70,29 @@ starpath:
 	; initialize
 	;=============================
 
-
 init_tables:
-	;   y  0 4  8 12 16 20 24
-	; d=0, 0 0  0  0  0  0  0
-	; d=1, 0 4  8 12 16 20 24
-	; d=2, 0 8 16 24 32 40 48
-
-	; 48*4*128 = 24576 = max
 
 	;===========================
+	; first init X*6*DEPTH table
+	; 40*6*128 = 30720 max
+
+	jsr	combined_init
+
+	;===========================
+	; modify and do Y table
 	; init Y*4*DEPTH table
+	; 48*4*128 = 24576 = max
 
-	ldy	#0	; for(y=0;y<48;y++) {
+	lda	#>ypos_lookup
+	sta	table_change_smc+1
 
-ypos_table_y_loop:
-	lda	#0
-	sta	SHORTL	; shorty=0;
-	sta	SHORTH
+	lda	#$18		; clc
+	sta	mul_smc
 
-	tya
-	asl
-	asl
-	sta	DIFF	; dadd=y*4;
-
-	tya
-	clc
-	adc	#>ypos_lookup
-	sta	ypos_smc+2
-
-	ldx	#0	; for(d=0;d<128;d++) {
-ypos_table_d_loop:
-
-	clc			; short+=diff
-	lda	SHORTL
-	adc	DIFF
-	sta	SHORTL
-	lda	#0
-	adc	SHORTH
-	sta	SHORTH
-ypos_smc:
-	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
-
-	inx
-	cpx	#128
-	bne	ypos_table_d_loop
-
-	iny
-	cpy	#48
-	bne	ypos_table_y_loop
+	jsr	combined_init
 
 
+.if 0
 	;===========================
 	; init X*6*DEPTH table
 
@@ -162,7 +137,7 @@ xpos_smc:
 	iny
 	cpy	#40
 	bne	xpos_table_x_loop
-
+.endif
 
 
 
@@ -227,24 +202,24 @@ xloop:
 	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
 
+	lda	XPOS
+	clc
+	adc	#>xpos_lookup
+	sta	xp_smc+2
+
 	inc	PIXEL
 
 depth_loop:
-;	stx	DEPTH
 
 	;========================
 	; XP=(X*6)-DEPTH
 	;	curve X by depth
 	;=========================
 
-;	lda	XPOS6		; load XPOS*6
-;	sec			; Subtract DEPTH
-;	sbc	DEPTH		; XP=(XPOS*6)-DEPTH
-
-	txa
+	txa			; DEPTH in A
 	eor	#$FF
-	sec
-	adc	XPOS6
+	sec			; two's complement (-DEPTH in A)
+	adc	XPOS6		; add to XPOS6
 
 				; if carry set means not negative
 				; and draw path
@@ -290,10 +265,6 @@ draw_path:
 	; calc (XPOS*6-DEPTH)*DEPTH and get high byte
 	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)
 
-	lda	XPOS
-	clc
-	adc	#>xpos_lookup
-	sta	xp_smc+2
 xp_smc:
 	lda	xpos_lookup,X	; XPOS
 	sec
@@ -302,11 +273,13 @@ xp_smc:
 	; A now (XPOS*6*DEPTH - DEPTH*DEPTH)>>8
 
 	;===================================
-	; calc Q= (XP*DEPTH)/256 | (YP/256)
+	; calc Q= ((XP*DEPTH) | (YPH))>>8
 	;	for texture pattern
 
 yp_smc:
 	ora	ypos_lookup,X	; YPH = YPOS*4*DEPTH
+
+	; A now XPH|YPH
 
 	sta	Q		; Q=(XP*DEPTH)/256 | YP/256
 
@@ -386,3 +359,122 @@ sky_colors:
 ; wall colors, offset 8 from start
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
 
+
+
+
+
+
+	;   y  0 4  8 12 16 20 24
+	; d=0, 0 0  0  0  0  0  0
+	; d=1, 0 4  8 12 16 20 24
+	; d=2, 0 8 16 24 32 40 48
+
+
+
+	;===========================
+	; combined init
+
+combined_init:
+
+
+	ldy	#0	; for(x=0;x<48;x++) {
+
+xpos_table_x_loop:
+	lda	#0
+	sta	SHORTL	; shortx=0;
+	sta	SHORTH
+
+	tya
+
+mul_smc:
+	sec
+	bcs	mul6
+
+	; multiply by 4
+mul4:
+	asl
+	jmp	mul_common
+
+	; multiply by 6
+mul6:
+	sta	DIFF
+	asl
+	adc	DIFF
+mul_common:
+	asl
+	sta	DIFF
+
+	tya
+	clc
+table_change_smc:
+	adc	#>xpos_lookup
+	sta	xpos_smc+2
+
+	ldx	#0	; for(d=0;d<128;d++) {
+xpos_table_d_loop:
+
+	clc			; short+=diff
+	lda	SHORTL
+	adc	DIFF
+	sta	SHORTL
+	lda	#0
+	adc	SHORTH
+	sta	SHORTH
+xpos_smc:
+	sta	xpos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+	inx
+	cpx	#128
+	bne	xpos_table_d_loop
+
+	iny
+	cpy	#48
+	bne	xpos_table_x_loop
+
+	rts
+
+.if 0
+
+	ldy	#0	; for(y=0;y<48;y++) {
+ypos_table_y_loop:
+
+
+	; init Y*4*DEPTH table
+
+	lda	#0
+	sta	SHORTYL	; shorty=0;
+	sta	SHORTYH
+
+	tya
+	asl
+	asl
+	sta	DIFFY	; dadd=y*4;
+
+	tya
+	clc
+	adc	#>ypos_lookup
+	sta	ypos_smc+2
+
+	ldx	#0	; for(d=0;d<128;d++) {
+ypos_table_d_loop:
+
+	clc			; short+=diff
+	lda	SHORTL
+	adc	DIFF
+	sta	SHORTL
+	lda	#0
+	adc	SHORTH
+	sta	SHORTH
+ypos_smc:
+	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*d)>>8;
+
+	inx
+	cpx	#128
+	bne	ypos_table_d_loop
+
+	iny
+	cpy	#48
+	bne	ypos_table_y_loop
+
+	rts
+.endif
