@@ -18,6 +18,7 @@
 ;	262 bytes -- 2,212,118 cycles -- optimize table generation
 ;	252 bytes -- 2,212,118 cycles -- optimize table generation more
 ;	323 bytes -- 2,212,118 cycles -- add back memory copy code
+;	311 bytes -- 2,212,118 cycles -- optimize memory copy code
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -31,7 +32,10 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-
+SRCL	= $E8
+SRCH	= $E9
+DESTL	= $EA
+DESTH	= $EB
 FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
@@ -141,6 +145,8 @@ square_loop:
 
 ;	ldx	#0
 	stx	FRAME
+	stx	DESTL
+	stx	SRCL
 
 next_frame:
 	lda	#0		; start with YPOS=0
@@ -307,24 +313,25 @@ xloop_done:
 
 yloop_done:
 
-	jsr     copy_to_mem		; save image off-screen
+	;===================
+	; end of frame
+end_of_frame:
+	lda	FRAME			; if 31, done pre-calc
+	cmp	#31
+	beq	done_precalc
 
-	inc	FRAME			; next frame
+	ldy	#2			; copy from screen to off-screen
+	jsr     copy_1k			; save image off-screen
+					; also increments frame
+					; will always be non-zero here?
 
-	lda	FRAME			; wrap frame at 32
-	cmp	#32			; if 32, done pre-calc
+;	bne	next_frame
 
-	bne	next_frame
-
+	jmp	next_frame
 done_precalc:
 
-	lda	FRAME
-	and	#$1f
-	sta	FRAME
-
-	jsr	copy_from_mem
-
-	inc	FRAME
+	ldy	#0			; copy from off-screen to screen
+	jsr	copy_1k			; also increments frame
 
 	jmp	done_precalc
 
@@ -410,75 +417,40 @@ xpos_smc:
 
 	;===========================
 	;===========================
-	; copy to memory (src=gr, dest=framestore)
-	;===========================
-	;===========================
-	; save lo-res image at $400 to memory at page FRAME*4+frame_location
-
-
-	; A has FRAME*4
-copy_to_mem:
-	lda	FRAME			; 0->$10, 1->$14, 2->$18
-	asl
-	asl
-	clc
-	adc	#>frame_location	; frame_offset
-
-	tay				; dest
-
-	ldx	#$4			; src = $400
-
-	bne	copy_1k			; bra
-
-	;===========================
-	;===========================
-	; copy to memory, src=memry, dest=gr page1
-	;===========================
-	;===========================
-
-copy_from_mem:
-	ldy	#$4			; dest=$400
-
-
-	lda	FRAME			; 0->$10, 1->$14, 2->$18
-	asl
-	asl
-	clc
-	adc	#>frame_location	; start location
-
-	tax
-
-	;===================================
-	;===================================
-
-
-	;===========================
-	;===========================
-	; copy 1k starting page X to page Y
+	; copy 1k
+	;	if Y=2, copies from $400 -> FRAME*4+frame_offset
+	;	if Y=0, copies from FRAME*4+frame_offset -> $400
 	;===========================
 	;===========================
 
 copy_1k:
-	stx	c1k_src_smc+2		; src
-	sty	c1k_dest_smc+2		; dest
+	ldx	#4			; copy 4 pages (1k)
+	stx	SRCH
+	stx	DESTH			; overwrite both just in case
 
-copy_mem_common:
+	lda	FRAME			; 0->$10, 1->$14, 2->$18
+	and	#$1F
+	sta	FRAME
+
+	asl
+	asl
+	adc	#>frame_location	; start location
+	sta	SRCH,Y			; 0 or 2 for src or dest
 
 	ldy	#0			; start at 0
-	ldx	#4			; copy 4 pages (1k)
 c1k_loop:
 
-c1k_src_smc:
-	lda	$400,Y			; load src
-c1k_dest_smc:
-	sta	frame_location,Y	; store to destination
+	lda	(SRCL),Y		; load src
+	sta	(DESTL),Y		; store to destination
 	iny				; increment pointer
 	bne	c1k_loop		; continue until 256 bytes
 
-	inc	c1k_src_smc+2		; increment src page
-	inc	c1k_dest_smc+2		; increment dest_page
+	inc	SRCH			; increment src page
+	inc	DESTH			; increment dest_page
 
 	dex				; go for required number of pages
 	bne	c1k_loop
+
+	inc	FRAME			; doesn't belong here, saves room
 
 	rts				; return
