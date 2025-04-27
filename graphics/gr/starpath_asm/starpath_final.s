@@ -17,6 +17,7 @@
 ;	286 bytes -- 2,212,118 cycles -- move xsmc outside critical loop
 ;	262 bytes -- 2,212,118 cycles -- optimize table generation
 ;	252 bytes -- 2,212,118 cycles -- optimize table generation more
+;	323 bytes -- 2,212,118 cycles -- add back memory copy code
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -304,33 +305,28 @@ xloop_done:
 	cmp	#48
 	bne	yloop
 
-;	inc	FRAME
-
-;	jmp	next_frame
-
 yloop_done:
 
-	jsr     copy_to_mem
+	jsr     copy_to_mem		; save image off-screen
 
-	inc	FRAME
+	inc	FRAME			; next frame
+
+	lda	FRAME			; wrap frame at 32
+	cmp	#32			; if 32, done pre-calc
+
+	bne	next_frame
+
+done_precalc:
 
 	lda	FRAME
 	and	#$1f
 	sta	FRAME
-	beq	oog
-
-	jmp	next_frame
-
-oog:
 
 	jsr	copy_from_mem
 
 	inc	FRAME
-	lda	FRAME
-	and	#$1f
-	sta	FRAME
 
-	jmp	oog
+	jmp	done_precalc
 
 
 
@@ -414,28 +410,35 @@ xpos_smc:
 
 	;===========================
 	;===========================
-	; copy from memory
+	; copy to memory (src=gr, dest=framestore)
 	;===========================
 	;===========================
 	; save lo-res image at $400 to memory at page FRAME*4+frame_location
 
-copy_from_mem:
-	lda	FRAME			; 0->$10, 1->$14, 2->$18
-	asl
-	asl
-	clc
-	adc	#>frame_location	; start location
 
-	sta	ctm_smc1+2
-
-	lda	#$4
-	sta	ctm_smc2+2
-
-	bne	garb
-
+	; A has FRAME*4
 copy_to_mem:
-	lda	#$4
-	sta	ctm_smc1+2
+	lda	FRAME			; 0->$10, 1->$14, 2->$18
+	asl
+	asl
+	clc
+	adc	#>frame_location	; frame_offset
+
+	tay				; dest
+
+	ldx	#$4			; src = $400
+
+	bne	copy_1k			; bra
+
+	;===========================
+	;===========================
+	; copy to memory, src=memry, dest=gr page1
+	;===========================
+	;===========================
+
+copy_from_mem:
+	ldy	#$4			; dest=$400
+
 
 	lda	FRAME			; 0->$10, 1->$14, 2->$18
 	asl
@@ -443,26 +446,39 @@ copy_to_mem:
 	clc
 	adc	#>frame_location	; start location
 
-	sta	ctm_smc2+2
-garb:
+	tax
 
-	ldy	#0
-	ldx	#4
+	;===================================
+	;===================================
 
-ctm_xloop:
 
-ctm_yloop:
-ctm_smc1:
-	lda	$400,Y
-ctm_smc2:
-	sta	frame_location,Y
-	iny
-	bne	ctm_yloop
+	;===========================
+	;===========================
+	; copy 1k starting page X to page Y
+	;===========================
+	;===========================
 
-	inc	ctm_smc1+2
-	inc	ctm_smc2+2
+copy_1k:
+	stx	c1k_src_smc+2		; src
+	sty	c1k_dest_smc+2		; dest
 
-	dex
-	bne	ctm_xloop
+copy_mem_common:
 
-	rts
+	ldy	#0			; start at 0
+	ldx	#4			; copy 4 pages (1k)
+c1k_loop:
+
+c1k_src_smc:
+	lda	$400,Y			; load src
+c1k_dest_smc:
+	sta	frame_location,Y	; store to destination
+	iny				; increment pointer
+	bne	c1k_loop		; continue until 256 bytes
+
+	inc	c1k_src_smc+2		; increment src page
+	inc	c1k_dest_smc+2		; increment dest_page
+
+	dex				; go for required number of pages
+	bne	c1k_loop
+
+	rts				; return
