@@ -2,13 +2,13 @@
 ;
 ;       See https://hellmood.111mb.de//starpath_is_55_bytes.html
 ;
-;     Vince 'deater' Weaver -- vince@deater.net -- 25 February 2025
+;     Vince 'deater' Weaver -- vince@deater.net -- 26 April 2025
 
 ; optimization
 ;	329 bytes -- 8,745,584 cycles -- original code
 ;	326 bytes -- 8,154,511 cycles -- calculate xpos*6 by adding
 ;	323 bytes -- 8,015,008 cycles -- remove unneeded AL term
-
+;	314 bytes -- 7,858,373 cycles -- redo color lookup table
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -27,7 +27,7 @@ FRAME	= $F0
 YPOS	= $F1
 XPOS	= $F2
 DEPTH	= $F3
-C	= $F4
+;C	= $F4
 M1	= $F6
 YPH	= $FA
 XPL	= $FB
@@ -158,10 +158,10 @@ depth_loop:
 draw_sky:
 
 	;================================
-	; set color to white for star?
+	; set color to white for star
 
-	lda	#31		; C=31
-	sta	C
+;;	ldy	#6		; C=15 (white)
+;;	sta	C
 
 	;=====================
 	; calc A=(XPOS*6)+YP
@@ -175,20 +175,24 @@ draw_sky:
 	;==============
 	; see if star
 
+	ldy	#6		; white
 	cmp	#6		; if A&0xFF < 6 then skip, we are star
-	bcc	plot_pixel
+	bcc	plot_pixel_known_color
 
 	;==============
 	; not star, sky
 
-	lda	YPOS		; C=Y/4+32
+	lda	YPOS		; C=Y/4+16
 	lsr
 	lsr
-	clc
-	adc	#32
-	sta	C
+	lsr
+	tay
+;	lda	sky_colors,Y
+;	clc
+;	adc	#16
+;	sta	C
 
-	bne	plot_pixel	; bra
+	jmp	plot_pixel_known_color	; bra
 
 	;====================
 	; draw path
@@ -218,7 +222,7 @@ draw_path:
 	adc	FRAME		; add depth plus frame  D+F
 
 	and	Q		; C = Q & (D+FRAME)
-	sta	C
+;	sta	C
 
 	;=========================
 	; increment depth
@@ -235,16 +239,19 @@ draw_path:
 	; plot pixel
 	;	XPOS,YPOS  COLOR=LOOKUP(C/2-8)
 plot_pixel:
-	lda	C
+;	lda	C
 	lsr
-	sec
-	sbc	#8			; A is C/2-8
+;	sec
+;	sbc	#8			; A is C/2-8
+
 
 	tay
+plot_pixel_known_color:
 	lda	color_lookup,Y		; Lookup in color table
 
 	;=====================
 	; set color
+plot_pixel_already_color:
 
 	sta	COLOR			; if color top/bottom don't need SETCOL
 
@@ -302,13 +309,12 @@ oog:
 	jmp	oog
 
 
+
 color_lookup:
-;.byte	$00,$55,$AA,$55,$AA,$77,$FF,$FF
-.byte	$00,$55,$AA,$55,$77,$EE,$FF,$FF
 sky_colors:
 ; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
-.byte $22,$33,$11,$99,$DD,$CC
-
+.byte $22,$33,$11,$99,$DD,$CC, $FF, $00
+.byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
 
 ; Fast mutiply
 
