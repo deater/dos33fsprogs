@@ -5,7 +5,16 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	starpath_gr starpath_hgr starpath_basic
+all:	starpath_gr_nomul starpath_gr starpath_hgr starpath_basic
+
+###
+
+starpath_gr_nomul: starpath_gr_nomul.o
+	$(CC) $(LFLAGS) -o starpath_gr_nomul starpath_gr_nomul.o $(GR_SIM) $(SDL_LIBS)
+
+starpath_gr_nomul.o:	starpath_gr_nomul.c
+	$(CC) $(CFLAGS) -c starpath_gr_nomul.c
+
 
 ###
 
@@ -36,4 +45,4 @@ starpath_hgr.o:	starpath_hgr.c
 ###
 
 clean:	
-	rm -f *~ *.o starpath_hgr starpath_gr starpath_basic
+	rm -f *~ *.o starpath_hgr starpath_gr starpath_basic starpath_gr_nomul
