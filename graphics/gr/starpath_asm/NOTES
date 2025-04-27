@@ -1,3 +1,14 @@
+STARPATH_FINAL:
+	Wants to store 32 frames?
+		$8000
+		From $4000...$C000?
+	Also need 12k of lookup tables?
+		From $1000-$4000?
+
+
+
+
+
 STARPATH_LONG:
 	4:48 or so precalc (first 32 frames)
 
