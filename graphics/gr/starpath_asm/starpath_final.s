@@ -149,8 +149,10 @@ ypos_smc:
 	ldy	TEMPY		; restore YY
 
 	inx
-	cpx	#128
-	bne	xpos_table_d_loop
+;	cpx	#128
+;	bne	xpos_table_d_loop
+
+	bpl	xpos_table_d_loop	; run until 128
 
 	iny
 	cpy	#48			; 48 lines (does unneeded work for x)
@@ -232,6 +234,8 @@ depth_loop:
 draw_sky:
 
 	; fake random number to draw stars
+
+	; this takes 9 bytes?
 
 	ldy	PIXEL
 	lda	$F500,Y
@@ -374,15 +378,6 @@ done_precalc:
 
 
 
-color_lookup:
-sky_colors:
-; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
-.byte $22,$33,$11,$99,$DD,$CC, $FF, $00
-; wall colors, offset 8 from start
-.byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
-
-
-
 
 	;===========================
 	;===========================
@@ -460,3 +455,10 @@ mul8_noadd:
 	bne	mul8_loop
 	rts
 
+
+color_lookup:
+sky_colors:
+; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
+.byte $22,$33,$11,$99,$DD,$CC, $FF, $44
+; wall colors, offset 8 from start
+.byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
