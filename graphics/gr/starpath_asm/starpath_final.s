@@ -28,7 +28,8 @@
 ;	289 bytes -- ?         cycles -- use bpl for 0..127 loop
 ;	283 bytes -- 2,384,780 cycles -- move to zero page
 ;	277 bytes -- ?         cycles -- hard code xpos/ypos in table gen
-;	275 bytes -- ?         cycles -- remove TEMPY
+;	273 bytes -- ?         cycles -- remove TEMPY
+;	268 bytes --           cycles -- stray instructions before copy 1k?
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -79,6 +80,7 @@ frame_location	= $4000 ; ... $c000
 .globalzp pixel_smc
 .globalzp ypos_smc
 .globalzp xpos_smc
+.globalzp tempy
 
 
 	;=============================
@@ -116,8 +118,10 @@ init_tables:
 	; d=1, 0 4  8 12 16 20 24
 	; d=2, 0 8 16 24 32 40 48
 
-;	ldy	#47		; count 47 down to 0 for(x=0;x<48;x++) {
+				; count 47 down to 0 for(x=0;x<48;x++) {
 				; does minor extra work for XX case (40)
+				; we actually optimized this away
+				; and don't need to set in advance anymore
 xpos_table_x_loop:
 
 	; decrement page (high address byte) of both tables
@@ -128,12 +132,9 @@ xpos_table_x_loop:
 	ldx	#0		; for(d=0;d<128;d++) {
 xpos_table_d_loop:
 
-;	sty	TEMPY		; save Y
-
 	; calculate XX*6*DEPTH
 
-	lda	tempy+1
-;	tya			; XX in A
+	lda	tempy+1		; tempy1+1 location holds XX
 	asl
 	adc	tempy+1		; A is now XX*3
 	asl			; A is now XX*6
@@ -149,7 +150,7 @@ xpos_smc:
 	; calculate YY*4*DEPTH
 
 tempy:
-	lda	#47		; get YY
+	lda	#47		; get YY (XX/YY actually stored here)
 	asl
 	asl			; A is YY*4
 
@@ -160,13 +161,10 @@ tempy:
 ypos_smc:
 	sta	ypos_lookup+(48<<8),X
 
-;	ldy	TEMPY			; restore YY
-
 	inx
 	bpl	xpos_table_d_loop	; run until 128
 
-	dec	tempy+1
-;	dey				; countdown YY to 0
+	dec	tempy+1			; countdown YY to 0
 	bpl	xpos_table_x_loop
 
 
@@ -175,6 +173,9 @@ ypos_smc:
 
 	; could save 5 bytes at expense of slowdown by putting
 	; this in the previous init loop
+
+	; also X is 128 here, could in theory decrement
+	; down to 0 and save 2 bytes
 
 	ldx	#0
 square_loop:
@@ -329,6 +330,8 @@ plot_pixel_known_color:
 	;=====================
 	; set color
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; end of zero page roughly
+
 	sta	COLOR			; if color top/bottom don't need SETCOL
 
 	;=====================
@@ -377,7 +380,7 @@ end_of_frame:
 
 ;	bne	next_frame
 
-	jmp	next_frame
+	jmp	next_frame	; TODO: remove
 done_precalc:
 
 	ldy	#0			; copy from off-screen to screen
@@ -427,9 +430,12 @@ c1k_loop:
 	inc	FRAME			; doesn't belong here, saves room
 
 	rts				; return
-	inc	FRAME
 
-	jmp	next_frame
+
+
+;	inc	FRAME
+
+;	jmp	next_frame
 
 
 ; Russian Peasant multiply by Thwaite
