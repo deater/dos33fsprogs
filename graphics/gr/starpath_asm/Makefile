@@ -21,7 +21,7 @@ starpath_asm.dsk:	$(DOS33) HELLO STARPATH STARPATH_SMALL \
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_256
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_LONG
 	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_NOMUL
-	$(DOS33) -y starpath_asm.dsk BSAVE -a 0xc00 STARPATH_FINAL
+	$(DOS33) -y starpath_asm.dsk BSAVE -a 0x70 STARPATH_FINAL
 
 ###
 
@@ -79,7 +79,7 @@ starpath_nomul.o:	starpath_nomul.s
 ###
 
 STARPATH_FINAL:	starpath_final.o
-	ld65 -o STARPATH_FINAL starpath_final.o -C $(LINKERSCRIPTS)/apple2_c00.inc
+	ld65 -o STARPATH_FINAL starpath_final.o -C ./apple2_70_zp.inc
 
 starpath_final.o:	starpath_final.s
 	ca65 -o starpath_final.o starpath_final.s -l starpath_final.lst

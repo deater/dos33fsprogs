@@ -15,21 +15,23 @@
 ;	287 bytes -- 2,728,792 cycles -- get rid of unneeded YPH
 ;	286 bytes -- 2,645,188 cycles -- avoid writing out DEPTH
 ;	286 bytes -- 2,212,118 cycles -- move xsmc outside critical loop
-;	262 bytes -- 2,212,118 cycles -- optimize table generation
-;	252 bytes -- 2,212,118 cycles -- optimize table generation more
-;	323 bytes -- 2,212,118 cycles -- add back memory copy code
-;	311 bytes -- 2,212,118 cycles -- optimize memory copy code
-;	337 bytes -- 2,212,118 cycles -- add in old multiply routine
-;	316 bytes -- 2,212,118 cycles -- convert square table to mul
-;	313 bytes -- 2,212,118 cycles -- convert xpos and ypos tables to mul
-;	317 bytes -- 2,212,118 cycles -- back to functional completeness
-;	312 bytes -- 2,212,118 cycles -- make mul8 A*X rather than A*Y
-;	294 bytes -- 2,212,118 cycles -- combine xpos and ypos table gen
-
+;	262 bytes -- ?         cycles -- optimize table generation
+;	252 bytes -- ?         cycles -- optimize table generation more
+;	323 bytes -- ?         cycles -- add back memory copy code
+;	311 bytes -- ?         cycles -- optimize memory copy code
+;	337 bytes -- ?         cycles -- add in old multiply routine
+;	316 bytes -- ?         cycles -- convert square table to mul
+;	313 bytes -- ?         cycles -- convert xpos and ypos tables to mul
+;	317 bytes -- ?         cycles -- back to functional completeness
+;	312 bytes -- ?         cycles -- make mul8 A*X rather than A*Y
+;	294 bytes -- ?         cycles -- combine xpos and ypos table gen
+;	289 bytes -- ?         cycles -- use bpl for 0..127 loop
+;	283 bytes -- 2,384,780 cycles -- move to zero page
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
 ;	run loops backwards?
+;	page flipping
 
 
 ; ROM routines
@@ -44,19 +46,19 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-SRCL	= $F0
-SRCH	= $F1
-DESTL	= $F2
-DESTH	= $F3
-FRAME	= $F4
-YPOS	= $F5
-XPOS	= $F6
-XPOS6   = $F7
-PIXEL	= $F8
-Q	= $F9
-FACTOR2	= $FA
-PRODLO	= $FB
-TEMPY	= $FC
+SRCL	= $60
+SRCH	= $61
+DESTL	= $62
+DESTH	= $63
+FRAME	= $64
+YPOS	= $65
+XPOS	= $66
+XPOS6   = $67
+Q	= $69
+FACTOR2	= $6A
+PRODLO	= $6B
+TEMPY	= $6C
+
 
 ; Lookup Tables
 
@@ -67,12 +69,24 @@ squares_lookup	= $f00
 ; stored frames, 32 of them so 32k
 frame_location	= $4000 ; ... $c000
 
+; run from zeropage
+
+.zeropage
+.globalzp xp_smc
+.globalzp yp_smc
+.globalzp pixel_smc
+.globalzp ypos_smc
+.globalzp xpos_smc
+
+
 
 	;=============================
 	;=============================
 	; star path
 	;=============================
 	;=============================
+
+
 
 starpath:
 	;=============================
@@ -188,7 +202,7 @@ square_loop:
 next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
-	sta	PIXEL		; needs reset each frame
+	sta	pixel_smc+1	; needs reset each frame
 yloop:
 
 	lda	YPOS		; setup YPOS lookup pointer
@@ -208,7 +222,7 @@ xloop:
 	adc	#>xpos_lookup
 	sta	xp_smc+2
 
-	inc	PIXEL		; pixel count for PRNG
+	inc	pixel_smc+1		; pixel count for PRNG
 
 depth_loop:
 
@@ -235,10 +249,8 @@ draw_sky:
 
 	; fake random number to draw stars
 
-	; this takes 9 bytes?
-
-	ldy	PIXEL
-	lda	$F500,Y
+pixel_smc:
+	lda	$F500
 
 
 	;==============
