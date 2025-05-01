@@ -28,6 +28,7 @@
 ;	289 bytes -- ?         cycles -- use bpl for 0..127 loop
 ;	283 bytes -- 2,384,780 cycles -- move to zero page
 ;	277 bytes -- ?         cycles -- hard code xpos/ypos in table gen
+;	275 bytes -- ?         cycles -- remove TEMPY
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -55,10 +56,10 @@ FRAME	= $64
 YPOS	= $65
 XPOS	= $66
 XPOS6   = $67
-Q	= $69
-FACTOR2	= $6A
-PRODLO	= $6B
-TEMPY	= $6C
+Q	= $68
+FACTOR2	= $69
+PRODLO	= $6A
+
 
 
 ; Lookup Tables
@@ -115,7 +116,7 @@ init_tables:
 	; d=1, 0 4  8 12 16 20 24
 	; d=2, 0 8 16 24 32 40 48
 
-	ldy	#47		; count 47 down to 0 for(x=0;x<48;x++) {
+;	ldy	#47		; count 47 down to 0 for(x=0;x<48;x++) {
 				; does minor extra work for XX case (40)
 xpos_table_x_loop:
 
@@ -127,13 +128,14 @@ xpos_table_x_loop:
 	ldx	#0		; for(d=0;d<128;d++) {
 xpos_table_d_loop:
 
-	sty	TEMPY		; save Y
+;	sty	TEMPY		; save Y
 
 	; calculate XX*6*DEPTH
 
-	tya			; XX in A
+	lda	tempy+1
+;	tya			; XX in A
 	asl
-	adc	TEMPY		; A is now XX*3
+	adc	tempy+1		; A is now XX*3
 	asl			; A is now XX*6
 
 				; calculate XX*6*DEPTH
@@ -146,7 +148,8 @@ xpos_smc:
 
 	; calculate YY*4*DEPTH
 
-	lda	TEMPY		; get YY
+tempy:
+	lda	#47		; get YY
 	asl
 	asl			; A is YY*4
 
@@ -157,12 +160,13 @@ xpos_smc:
 ypos_smc:
 	sta	ypos_lookup+(48<<8),X
 
-	ldy	TEMPY			; restore YY
+;	ldy	TEMPY			; restore YY
 
 	inx
 	bpl	xpos_table_d_loop	; run until 128
 
-	dey				; countdown YY to 0
+	dec	tempy+1
+;	dey				; countdown YY to 0
 	bpl	xpos_table_x_loop
 
 
