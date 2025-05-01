@@ -27,6 +27,7 @@
 ;	294 bytes -- ?         cycles -- combine xpos and ypos table gen
 ;	289 bytes -- ?         cycles -- use bpl for 0..127 loop
 ;	283 bytes -- 2,384,780 cycles -- move to zero page
+;	277 bytes -- ?         cycles -- hard code xpos/ypos in table gen
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -79,14 +80,11 @@ frame_location	= $4000 ; ... $c000
 .globalzp xpos_smc
 
 
-
 	;=============================
 	;=============================
 	; star path
 	;=============================
 	;=============================
-
-
 
 starpath:
 	;=============================
@@ -117,17 +115,14 @@ init_tables:
 	; d=1, 0 4  8 12 16 20 24
 	; d=2, 0 8 16 24 32 40 48
 
-
-	ldy	#0		; for(x=0;x<48;x++) {
+	ldy	#47		; count 47 down to 0 for(x=0;x<48;x++) {
+				; does minor extra work for XX case (40)
 xpos_table_x_loop:
 
+	; decrement page (high address byte) of both tables
 
-	tya			; self-modify the destination of the tables
-	clc
-	adc	#>xpos_lookup
-	sta	xpos_smc+2
-	sta	ypos_smc+2
-
+	dec	xpos_smc+2
+	dec	ypos_smc+2
 
 	ldx	#0		; for(d=0;d<128;d++) {
 xpos_table_d_loop:
@@ -144,8 +139,9 @@ xpos_table_d_loop:
 				; calculate XX*6*DEPTH
 	jsr	mul8		; A*X -> high in A
 
+	; xpos_depth_lookup[y][d]=(x*6*d)>>8;
 xpos_smc:
-	sta	xpos_lookup,X	; xpos_depth_lookup[y][d]=(x*6*d)>>8;
+	sta	xpos_lookup+(48<<8),X
 
 
 	; calculate YY*4*DEPTH
@@ -157,20 +153,17 @@ xpos_smc:
 	jsr	mul8		; mul X*A, high byte of result in A
 				; calc YY*4*DEPTH
 
+	; ypos_depth_lookup[y][d]=(y*4*d)>>8;
 ypos_smc:
-	sta	ypos_lookup,X	; ypos_depth_lookup[y][d]=(y*4*d)>>8;
+	sta	ypos_lookup+(48<<8),X
 
-	ldy	TEMPY		; restore YY
+	ldy	TEMPY			; restore YY
 
 	inx
-;	cpx	#128
-;	bne	xpos_table_d_loop
-
 	bpl	xpos_table_d_loop	; run until 128
 
-	iny
-	cpy	#48			; 48 lines (does unneeded work for x)
-	bne	xpos_table_x_loop
+	dey				; countdown YY to 0
+	bpl	xpos_table_x_loop
 
 
 	;==============================
