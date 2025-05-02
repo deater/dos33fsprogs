@@ -37,6 +37,7 @@
 ;	264 bytes -- 2,107,401 cycles -- move more ZP vars to innerloop consts
 ;	262 bytes -- ?         cycles -- optimize color selection
 ;	256 bytes -- ?         cycles -- inline memory copy
+;	259 bytes -- ?         cycles -- HACK! offset xpos by 1 to avoid glitch
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -139,6 +140,12 @@ xpos_table_d_loop:
 	; calculate XX*6*DEPTH
 
 	lda	tempy+1		; tempy1+1 location holds XX
+
+	clc			; HACK HACK HACK
+	adc	#1		; offset by 1 avoids glitch in output
+				; at right edge of sky
+
+
 	asl
 	adc	tempy+1		; A is now XX*3
 	asl			; A is now XX*6

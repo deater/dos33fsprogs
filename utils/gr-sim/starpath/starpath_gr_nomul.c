@@ -60,14 +60,17 @@ static void lookup_init(void) {
 
 	// 24576 = max
 
+	/* should be y*4*d */
 	for(y=0;y<48;y++) {
 		shorty=0;
 		dadd=y*4;
 		for(d=0;d<128;d++) {
-			shorty+=dadd;
 			ypos_depth_lookup[y][d]=(shorty)>>8;
-			// (y*d)
+			if (shorty!=y*4*d) printf("Error %d %d-> %x!=%x\n",
+				y,d,y*4*d,shorty);
+			shorty+=dadd;
 		}
+
 	}
 
 	// 30720 = max
@@ -76,8 +79,10 @@ static void lookup_init(void) {
 		shortx=0;
 		dadd=x*6;
 		for(d=0;d<128;d++) {
-			shortx+=dadd;
 			xpos_depth_lookup[x][d]=(shortx)>>8;
+			if (shortx!=x*6*d) printf("Error %d %d-> %x!=%x\n",
+				x,d,x*6*d,shortx);
+			shortx+=dadd;
 		}
 	}
 
@@ -242,7 +247,12 @@ depth_loop:
 
 	usleep(20000);
 
-	ch=grsim_input();
+	ch=0;
+	while(!ch) {
+		ch=grsim_input();
+		usleep(10000);
+	}
+
 	if (ch=='q') return 0;
 	if (ch==27) return 0;
 
