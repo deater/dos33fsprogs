@@ -33,6 +33,7 @@
 ;	268 bytes -- 2,298,542 cycles -- eliminate Q
 ;	267 bytes --           cycles -- bne instead of jmp
 ;	265 bytes -- 2,288,961 cycles -- init xpos/ypos ptrs outside loops
+;	264 bytes -- 2,201,310 cycles -- remove extraneous SEC
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -211,31 +212,19 @@ next_frame:
 	sta	YPOS
 	sta	pixel_smc+1	; needs reset each frame
 
-	lda	#>ypos_lookup
+	lda	#>ypos_lookup	; reset ypos lookup high byte
 	sta	yp_smc+2
 
 yloop:
-
-;	lda	YPOS		; setup YPOS lookup pointer
-;	clc
-;	adc	#>ypos_lookup
-;	sta	yp_smc+2
-
-	lda	#>xpos_lookup
+	lda	#>xpos_lookup	; reset xpos lookup high byte
 	sta	xp_smc+2
 
 	lda	#0
-	sta	XPOS		; start with XPOS=0
+	sta	XPOS		; start with XPOS=0/XPOS6=0
 
 xloop:
 	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
-
-;	lda	XPOS		; setup XPOS lookup pointer
-;	clc
-;	adc	#>xpos_lookup
-;	sta	xp_smc+2
-
 
 depth_loop:
 
@@ -293,9 +282,11 @@ draw_path:
 	; calc (XPOS*6-DEPTH)*DEPTH and get high byte
 	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)
 
+	; carry always set here (we came here with BCS)
+
 xp_smc:
 	lda	xpos_lookup,X	; XPOS
-	sec
+;	sec
 	sbc	squares_lookup,X
 
 	; A now (XPOS*6*DEPTH - DEPTH*DEPTH)>>8
