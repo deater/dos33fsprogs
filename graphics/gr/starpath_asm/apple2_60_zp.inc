@@ -1,5 +1,5 @@
 MEMORY {
-       ZP: start = $70, size = $120, type = rw;
+       ZP: start = $60, size = $120, type = rw;
        RAM: start = $100, size = $8E00, file = %O;
 }
 

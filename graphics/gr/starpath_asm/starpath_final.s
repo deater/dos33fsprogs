@@ -40,7 +40,7 @@
 ;	show HGR when building lookup tables?
 ;	run loops backwards?
 ;	page flipping
-
+;	running YPOS backward saves 2 bytes, but it ugly
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -54,18 +54,12 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-SRCL	= $56
-SRCH	= $57
-DESTL	= $58
-DESTH	= $59
-;FRAME	= $5A
-;YPOS	= $5B
-;XPOS	= $5C
-;XPOS6   = $5D
+SRCL	= $5A
+SRCH	= $5B
+DESTL	= $5C
+DESTH	= $5D
 FACTOR2	= $5E
 PRODLO	= $5F
-
-
 
 ; Lookup Tables
 
@@ -212,11 +206,15 @@ square_loop:
 	;============================
 
 next_frame:
-	lda	#0		; start with YPOS=0
-	sta	ypos_smc+1
-	sta	pixel_smc+1	; needs reset each frame
+;	lda	#47
 
-	lda	#>ypos_lookup	; reset ypos lookup high byte
+
+	lda	#0		; start with YPOS=0
+	sta	pixel_smc+1	; needs reset each frame
+	sta	ypos_smc+1
+
+;	lda	#(>ypos_lookup)+47	; reset ypos lookup high byte
+	lda	#(>ypos_lookup)		; reset ypos lookup high byte
 	sta	yp_smc+2
 
 	;========================
@@ -279,7 +277,7 @@ pixel_smc:
 	lsr
 	tay
 
-	jmp	plot_pixel_known_color	; bra
+	jmp	plot_pixel_known_color
 
 	;====================
 	; draw path
@@ -303,7 +301,7 @@ xp_smc:
 	;	for texture pattern
 
 yp_smc:
-	ora	ypos_lookup,X	; YPH = YPOS*4*DEPTH
+	ora	ypos_lookup,X		; YPH = YPOS*4*DEPTH
 
 	; A now XPH|YPH
 
@@ -378,12 +376,15 @@ xloop_done:
 	;===================
 	; increment yloop
 
-	inc	yp_smc+2
+	inc	yp_smc+2	; increment page of yp lookup table
 
 	inc	ypos_smc+1
 	lda	ypos_smc+1
 	cmp	#48
 	bne	yloop
+
+;	dec	ypos_smc+1
+;	bpl	yloop
 
 yloop_done:
 
