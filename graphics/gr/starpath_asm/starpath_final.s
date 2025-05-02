@@ -35,6 +35,8 @@
 ;	265 bytes -- 2,288,961 cycles -- init xpos/ypos ptrs outside loops
 ;	264 bytes -- 2,201,310 cycles -- remove extraneous SEC
 ;	264 bytes -- 2,107,401 cycles -- move more ZP vars to innerloop consts
+;	262 bytes -- ?         cycles -- optimize color selection
+;	256 bytes -- ?         cycles -- inline memory copy
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -258,15 +260,15 @@ draw_sky:
 	; fake random number to draw stars
 
 pixel_smc:
-	lda	$F500
-
+	ldy	$F500		; PRNG from ROM code
 
 	;==============
 	; see if star
 
-	ldy	#6		; set color to white
-	cmp	#4		; if A&0xFF < 6 then skip, we are star
-	bcc	plot_pixel_known_color
+	lda	#$FF		; set color to white
+	cpy	#4		; if random value<4 then draw star
+
+	bcc	plot_pixel_exact_color
 
 	;==============
 	; not star, sky
@@ -274,10 +276,8 @@ pixel_smc:
 	lda	ypos_smc+1	; Color offset=YPOS/8
 	lsr
 	lsr
-	lsr
-	tay
 
-	jmp	plot_pixel_known_color
+	jmp	plot_pixel	; plot pixel does an LSR/TAY
 
 	;====================
 	; draw path
@@ -337,12 +337,11 @@ plot_pixel:
 	; color offset in A.  Is >16
 	lsr			; divide by 2 to reduce colors in lookup
 	tay
-plot_pixel_known_color:
 	lda	color_lookup,Y		; Lookup in color table
 
 	;=====================
 	; set color
-
+plot_pixel_exact_color:
 	sta	COLOR			; if color top/bottom don't need SETCOL
 
 	;=====================
@@ -393,26 +392,26 @@ yloop_done:
 end_of_frame:
 					; FIXME: this draws an extra frame
 
-	lda	frame_smc+1		; if 32, done pre-calc
-	cmp	#32
-	beq	done_precalc
+;	lda	frame_smc+1		; if 32, done pre-calc
+;	cmp	#32
+;	beq	done_precalc
 
-	ldy	#2			; copy from screen to off-screen
-	jsr     copy_1k			; save image off-screen
+;	ldy	#2			; copy from screen to off-screen
+;	jsr     copy_1k			; save image off-screen
 					; also increments frame
 					; will always be non-zero here?
 
-	bne	next_frame
+;	bne	next_frame
 
 ;	jmp	next_frame
 done_precalc:
 
-	ldy	#0			; copy from off-screen to screen
-	jsr	copy_1k			; also increments frame
+;	ldy	#0			; copy from off-screen to screen
+;	jsr	copy_1k			; also increments frame
 
-	jmp	done_precalc
+;	jmp	done_precalc
 
-
+	ldy	#2			; copy from graphics to frames
 
 
 	;===========================
@@ -428,11 +427,11 @@ copy_1k:
 	stx	SRCH
 	stx	DESTH			; overwrite both just in case
 
-	lda	frame_smc+1		; 0->$10, 1->$14, 2->$18
-	and	#$1F
-	sta	frame_smc+1
+	lda	frame_smc+1		; wrap FRAME at 32
+;	and	#$1F
+;	sta	frame_smc+1
 
-	asl
+	asl				; 0->$10, 1->$14, 2->$18
 	asl
 	adc	#>frame_location	; start location
 	sta	SRCH,Y			; 0 or 2 for src or dest
@@ -453,7 +452,21 @@ c1k_loop:
 
 	inc	frame_smc+1		; doesn't belong here, saves room
 
-	rts				; return
+	lda	frame_smc+1		; wrap FRAME at 32
+	and	#$1F
+	sta	frame_smc+1
+
+	beq	oog
+force_done:
+	jmp	next_frame
+
+oog:
+	; Y always 0 here
+
+	lda	#$2C
+;	ldy	#0
+	sta	a:force_done
+	bne	copy_1k			; bra
 
 
 ; Russian Peasant multiply by Thwaite
@@ -492,6 +505,6 @@ mul8_noadd:
 color_lookup:
 sky_colors:
 ; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
-.byte $22,$33,$11,$99,$DD,$CC, $FF, $44
+.byte $22,$33,$11,$99,$DD,$CC,		$FF, $FF	; last two unused?
 ; wall colors, offset 8 from start
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
