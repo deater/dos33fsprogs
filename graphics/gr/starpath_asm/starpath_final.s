@@ -34,6 +34,7 @@
 ;	267 bytes --           cycles -- bne instead of jmp
 ;	265 bytes -- 2,288,961 cycles -- init xpos/ypos ptrs outside loops
 ;	264 bytes -- 2,201,310 cycles -- remove extraneous SEC
+;	264 bytes -- 2,107,401 cycles -- move more ZP vars to innerloop consts
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -57,10 +58,10 @@ SRCL	= $56
 SRCH	= $57
 DESTL	= $58
 DESTH	= $59
-FRAME	= $5A
-YPOS	= $5B
-XPOS	= $5C
-XPOS6   = $5D
+;FRAME	= $5A
+;YPOS	= $5B
+;XPOS	= $5C
+;XPOS6   = $5D
 FACTOR2	= $5E
 PRODLO	= $5F
 
@@ -81,11 +82,14 @@ frame_location	= $4000 ; ... $c000
 .globalzp xp_smc
 .globalzp yp_smc
 .globalzp pixel_smc
-.globalzp ypos_smc
-.globalzp xpos_smc
+.globalzp ypos_lu_smc
+.globalzp xpos_lu_smc
 .globalzp tempy
 .globalzp qsmc
-
+.globalzp frame_smc
+.globalzp xpos6_smc
+.globalzp ypos_smc
+.globalzp xpos_smc
 
 	;=============================
 	;=============================
@@ -130,8 +134,8 @@ xpos_table_x_loop:
 
 	; decrement page (high address byte) of both tables
 
-	dec	xpos_smc+2
-	dec	ypos_smc+2
+	dec	xpos_lu_smc+2
+	dec	ypos_lu_smc+2
 
 	ldx	#0		; for(d=0;d<128;d++) {
 xpos_table_d_loop:
@@ -147,7 +151,7 @@ xpos_table_d_loop:
 	jsr	mul8		; A*X -> high in A
 
 	; xpos_depth_lookup[y][d]=(x*6*d)>>8;
-xpos_smc:
+xpos_lu_smc:
 	sta	xpos_lookup+(48<<8),X
 
 
@@ -162,7 +166,7 @@ tempy:
 				; calc YY*4*DEPTH
 
 	; ypos_depth_lookup[y][d]=(y*4*d)>>8;
-ypos_smc:
+ypos_lu_smc:
 	sta	ypos_lookup+(48<<8),X
 
 	inx
@@ -197,7 +201,7 @@ square_loop:
 	;============================
 
 ;	ldx	#0
-	stx	FRAME
+	stx	frame_smc+1
 	stx	DESTL
 	stx	SRCL
 
@@ -209,23 +213,26 @@ square_loop:
 
 next_frame:
 	lda	#0		; start with YPOS=0
-	sta	YPOS
+	sta	ypos_smc+1
 	sta	pixel_smc+1	; needs reset each frame
 
 	lda	#>ypos_lookup	; reset ypos lookup high byte
 	sta	yp_smc+2
 
+	;========================
 yloop:
 	lda	#>xpos_lookup	; reset xpos lookup high byte
 	sta	xp_smc+2
 
 	lda	#0
-	sta	XPOS		; start with XPOS=0/XPOS6=0
+	sta	xpos_smc+1	; start with XPOS=0/XPOS6=0
 
+	;========================
 xloop:
-	sta	XPOS6		; XPOS*6 is in A here, both paths
+	sta	xpos6_smc+1	; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
 
+	;========================
 depth_loop:
 
 	;========================
@@ -236,7 +243,8 @@ depth_loop:
 	txa			; DEPTH in A
 	eor	#$FF
 	sec			; two's complement (-DEPTH in A)
-	adc	XPOS6		; add to XPOS6
+xpos6_smc:			; XPOS6
+	adc	#0		; add to XPOS6
 
 				; if carry set means not negative
 				; and draw path
@@ -265,7 +273,7 @@ pixel_smc:
 	;==============
 	; not star, sky
 
-	lda	YPOS		; Color offset=YPOS/8
+	lda	ypos_smc+1	; Color offset=YPOS/8
 	lsr
 	lsr
 	lsr
@@ -285,8 +293,7 @@ draw_path:
 	; carry always set here (we came here with BCS)
 
 xp_smc:
-	lda	xpos_lookup,X	; XPOS
-;	sec
+	lda	xpos_lookup,X		; XPOS
 	sbc	squares_lookup,X
 
 	; A now (XPOS*6*DEPTH - DEPTH*DEPTH)>>8
@@ -308,7 +315,8 @@ yp_smc:
 
 	clc
 	txa			; depth in X
-	adc	FRAME		; add depth plus frame  D+F
+frame_smc:			; FRAME
+	adc	#0		; add depth plus frame  D+F
 
 qsmc:
 	and	#0		; Color Offset = Q & (D+FRAME)
@@ -337,15 +345,15 @@ plot_pixel_known_color:
 	;=====================
 	; set color
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;; end of zero page roughly
-
 	sta	COLOR			; if color top/bottom don't need SETCOL
 
 	;=====================
 	; plot point
 
-	ldy	XPOS
-	lda	YPOS
+xpos_smc:
+	ldy	#0			; XPOS
+ypos_smc:
+	lda	#0			; YPOS
 	jsr	PLOT			; PLOT AT Y,A (Y preserved)
 
 	;===================
@@ -355,13 +363,15 @@ plot_pixel_known_color:
 	inc	xp_smc+2
 	inc	pixel_smc+1		; pixel count for PRNG
 
-	inc	XPOS			; XPOS+=1
+	inc	xpos_smc+1		; XPOS+=1
 
-	lda	XPOS6			; XPOS6+=6
+	lda	xpos6_smc+1		; XPOS6+=6
 	clc
 	adc	#6
 	cmp	#240
 	bne	xloop
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;; approximate end of zero page
 
 xloop_done:
 
@@ -370,8 +380,8 @@ xloop_done:
 
 	inc	yp_smc+2
 
-	inc	YPOS
-	lda	YPOS
+	inc	ypos_smc+1
+	lda	ypos_smc+1
 	cmp	#48
 	bne	yloop
 
@@ -382,7 +392,7 @@ yloop_done:
 end_of_frame:
 					; FIXME: this draws an extra frame
 
-	lda	FRAME			; if 32, done pre-calc
+	lda	frame_smc+1		; if 32, done pre-calc
 	cmp	#32
 	beq	done_precalc
 
@@ -417,9 +427,9 @@ copy_1k:
 	stx	SRCH
 	stx	DESTH			; overwrite both just in case
 
-	lda	FRAME			; 0->$10, 1->$14, 2->$18
+	lda	frame_smc+1		; 0->$10, 1->$14, 2->$18
 	and	#$1F
-	sta	FRAME
+	sta	frame_smc+1
 
 	asl
 	asl
@@ -440,7 +450,7 @@ c1k_loop:
 	dex				; go for required number of pages
 	bne	c1k_loop
 
-	inc	FRAME			; doesn't belong here, saves room
+	inc	frame_smc+1		; doesn't belong here, saves room
 
 	rts				; return
 

@@ -29,6 +29,7 @@ STARPATH_LONG:
 	0x2312ae = 2,298,542 cycles = 2.2s/frame = 0.445 fps
 	0x22ed41 = 2,288,961 cycles = 2.2s/frame = 0.447 fps
 	0x2196de = 2,201,310 cycles = 2.2s/frame = 0.465 fps
+	0x202809 = 2,107,401 cycles = 2.1s/frame = 0.485 fps
 
 	Depth runs from 15 ... 127
 	YPOS runs from 0..47 = 6k of lookup
