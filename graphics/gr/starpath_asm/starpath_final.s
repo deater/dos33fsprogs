@@ -30,6 +30,9 @@
 ;	277 bytes -- ?         cycles -- hard code xpos/ypos in table gen
 ;	273 bytes -- ?         cycles -- remove TEMPY
 ;	268 bytes --           cycles -- stray instructions before copy 1k?
+;	268 bytes -- 2,298,542 cycles -- eliminate Q
+;	267 bytes --           cycles -- bne instead of jmp
+;	265 bytes -- 2,288,961 cycles -- init xpos/ypos ptrs outside loops
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -49,17 +52,16 @@ FULLGR	= $C052		; enable full-screen (no-split text) graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-SRCL	= $60
-SRCH	= $61
-DESTL	= $62
-DESTH	= $63
-FRAME	= $64
-YPOS	= $65
-XPOS	= $66
-XPOS6   = $67
-Q	= $68
-FACTOR2	= $69
-PRODLO	= $6A
+SRCL	= $56
+SRCH	= $57
+DESTL	= $58
+DESTH	= $59
+FRAME	= $5A
+YPOS	= $5B
+XPOS	= $5C
+XPOS6   = $5D
+FACTOR2	= $5E
+PRODLO	= $5F
 
 
 
@@ -69,7 +71,7 @@ xpos_lookup	= $1000	; ...$3fff	$30 long
 ypos_lookup	= $1080	; ...$3fff	(offset in top half)
 squares_lookup	= $f00
 
-; stored frames, 32 of them so 32k
+; stored frames, 32 of them so 32k ($80)
 frame_location	= $4000 ; ... $c000
 
 ; run from zeropage
@@ -81,6 +83,7 @@ frame_location	= $4000 ; ... $c000
 .globalzp ypos_smc
 .globalzp xpos_smc
 .globalzp tempy
+.globalzp qsmc
 
 
 	;=============================
@@ -188,7 +191,7 @@ square_loop:
 
 	;============================
 	;============================
-	; start drawing loop
+	; setup drawing loop
 	;============================
 	;============================
 
@@ -197,16 +200,29 @@ square_loop:
 	stx	DESTL
 	stx	SRCL
 
+	;============================
+	;============================
+	; main drawing loop
+	;============================
+	;============================
+
 next_frame:
 	lda	#0		; start with YPOS=0
 	sta	YPOS
 	sta	pixel_smc+1	; needs reset each frame
+
+	lda	#>ypos_lookup
+	sta	yp_smc+2
+
 yloop:
 
-	lda	YPOS		; setup YPOS lookup pointer
-	clc
-	adc	#>ypos_lookup
-	sta	yp_smc+2
+;	lda	YPOS		; setup YPOS lookup pointer
+;	clc
+;	adc	#>ypos_lookup
+;	sta	yp_smc+2
+
+	lda	#>xpos_lookup
+	sta	xp_smc+2
 
 	lda	#0
 	sta	XPOS		; start with XPOS=0
@@ -215,12 +231,11 @@ xloop:
 	sta	XPOS6		; XPOS*6 is in A here, both paths
 	ldx	#14		; start Depth at 14
 
-	lda	XPOS		; setup XPOS lookup pointer
-	clc
-	adc	#>xpos_lookup
-	sta	xp_smc+2
+;	lda	XPOS		; setup XPOS lookup pointer
+;	clc
+;	adc	#>xpos_lookup
+;	sta	xp_smc+2
 
-	inc	pixel_smc+1		; pixel count for PRNG
 
 depth_loop:
 
@@ -276,7 +291,7 @@ pixel_smc:
 draw_path:
 	;=================================
 	; calc (XPOS*6-DEPTH)*DEPTH and get high byte
-	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)h
+	;	same as (XPOS*6*DEPTH)-(DEPTH*DEPTH)
 
 xp_smc:
 	lda	xpos_lookup,X	; XPOS
@@ -294,7 +309,7 @@ yp_smc:
 
 	; A now XPH|YPH
 
-	sta	Q		; Q=(XP*DEPTH)/256 | YP/256
+	sta	qsmc+1		; Q=(XP*DEPTH)/256 | YP/256
 
 	;==============================
 	; calc C = Q & (Depth + Frame)
@@ -304,7 +319,8 @@ yp_smc:
 	txa			; depth in X
 	adc	FRAME		; add depth plus frame  D+F
 
-	and	Q		; Color Offset = Q & (D+FRAME)
+qsmc:
+	and	#0		; Color Offset = Q & (D+FRAME)
 
 	;=========================
 	; increment depth
@@ -344,6 +360,10 @@ plot_pixel_known_color:
 	;===================
 	; increment xloop
 
+
+	inc	xp_smc+2
+	inc	pixel_smc+1		; pixel count for PRNG
+
 	inc	XPOS			; XPOS+=1
 
 	lda	XPOS6			; XPOS6+=6
@@ -356,6 +376,8 @@ xloop_done:
 
 	;===================
 	; increment yloop
+
+	inc	yp_smc+2
 
 	inc	YPOS
 	lda	YPOS
@@ -378,9 +400,9 @@ end_of_frame:
 					; also increments frame
 					; will always be non-zero here?
 
-;	bne	next_frame
+	bne	next_frame
 
-	jmp	next_frame	; TODO: remove
+;	jmp	next_frame
 done_precalc:
 
 	ldy	#0			; copy from off-screen to screen
@@ -430,12 +452,6 @@ c1k_loop:
 	inc	FRAME			; doesn't belong here, saves room
 
 	rts				; return
-
-
-
-;	inc	FRAME
-
-;	jmp	next_frame
 
 
 ; Russian Peasant multiply by Thwaite
