@@ -4,7 +4,8 @@ CFLAGS = -g -Wall -O2
 
 all:	text2gr png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 \
 	png2sixbitmap png2six80 png2sixrle png2fourrle png2sixrle2 png_16x16 \
-	png2raw png2sprites gr2png dgr2png png2dgr png2collision
+	png2raw png2sprites gr2png dgr2png png2dgr png2collision \
+	sca2gr
 
 ###
 
@@ -28,6 +29,15 @@ png2gr:		png2gr.o loadpng.o
 
 png2gr.o:		png2gr.c loadpng.h
 	$(CC) $(CFLAGS) -c png2gr.c
+
+###
+
+sca2gr:		sca2gr.o
+	$(CC) $(LFLAGS) -o sca2gr sca2gr.o -lpng
+
+sca2gr.o:		sca2gr.c
+	$(CC) $(CFLAGS) -c sca2gr.c
+
 
 ###
 
@@ -180,8 +190,8 @@ dgr2png.o:		dgr2png.c
 ###
 
 install:	
-		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2sixrle2 png2fourrle png2six80 png_16x16 png2raw png2sprites gr2png dgr2png png2dgr png2collision $(INSTALL_LOC)
+		cp png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2sixrle2 png2fourrle png2six80 png_16x16 png2raw png2sprites gr2png dgr2png png2dgr png2collision sca2gr $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2fourrle png2sixrle2 png2six80 text2gr pnglarge2rle png_16x16 png2raw png2sprites gr2png dgr2png png2dgr png2collision
+		rm -f *~ *.o png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 png2sixbitmap png2sixrle png2fourrle png2sixrle2 png2six80 text2gr pnglarge2rle png_16x16 png2raw png2sprites gr2png dgr2png png2dgr png2collision sca2gr
 
