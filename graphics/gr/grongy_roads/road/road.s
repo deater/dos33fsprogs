@@ -12,8 +12,8 @@ dancing:
 	bit	KEYRESET	; just to be safe
 
 	lda	#0
-	sta	DANCE_COUNT
-
+	sta	ROAD_COUNT
+	sta	ROAD_FILE
 
 	;============================
 	; clear both lo-res screens
@@ -41,12 +41,20 @@ dancing:
         bit	PAGE2		; DISPLAY PAGE2
 
 	;==============================
+	; reset road
+	;==============================
+reset_road:
+	lda	#0
+	sta	ROAD_FILE
+
+	;==============================
 	; decompress graphics (main)
 	;==============================
-
-	lda	#<road_main
+decompress_loop:
+	ldy	ROAD_FILE
+	lda	low_road,Y
         sta	zx_src_l+1
-        lda	#>road_main
+        lda	high_road,Y
         sta	zx_src_h+1
 
         lda	#$D0
@@ -69,7 +77,7 @@ animate_loop:
 	;================================
 	; copy in MAIN graphics
 
-	ldy	DANCE_COUNT
+	ldy	ROAD_COUNT
 	ldx	animation_main,Y
 	jsr	copy_to_400_main
 
@@ -92,13 +100,19 @@ wait_10hz:
 	; move to next animation frame
 
 
-	inc	DANCE_COUNT
-	lda	DANCE_COUNT
+	inc	ROAD_COUNT
+	lda	ROAD_COUNT
 	cmp	#8
 	bne	animate_loop
+
 	lda	#0
-	sta	DANCE_COUNT
-	beq	animate_loop
+	sta	ROAD_COUNT
+
+	inc	ROAD_FILE
+	lda	ROAD_FILE
+	cmp	#4
+	beq	reset_road
+	bne	decompress_loop
 
 	rts
 
@@ -106,10 +120,19 @@ animation_main:
 ;	.byte $40,$44,$48,$4c,$50,$54,$58,$5c		; plain
 	.byte $d0,$d4,$d8,$dc,$e0,$e4,$e8,$ec		; plain
 
+high_road:
+	.byte >road00_zx02,>road01_zx02,>road02_zx02,>road03_zx02
 
-road_main:
+low_road:
+	.byte <road00_zx02,<road01_zx02,<road02_zx02,<road03_zx02
+
+
+road00_zx02:
 	.incbin "../grongy/road000.zx02"
+road01_zx02:
 	.incbin "../grongy/road001.zx02"
+road02_zx02:
 	.incbin "../grongy/road002.zx02"
+road03_zx02:
 	.incbin "../grongy/road003.zx02"
 

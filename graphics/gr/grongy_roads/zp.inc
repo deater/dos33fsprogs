@@ -169,8 +169,9 @@ INDEX		= $F1
 OFFSET		= $F2
 LENGTH		= $F3
 
-; dancing
-DANCE_COUNT	= $F0
+; road
+ROAD_FILE	= $F0
+ROAD_COUNT	= $F1
 
 
 ;==============================================
