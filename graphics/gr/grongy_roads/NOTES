@@ -1,0 +1,16 @@
+
+MAIN			AUX
+~~~~			~~~
+$00 -- zero page	$00 -- unused
+$01 -- statck		$01 -- unused
+$02 -- disk data	$02 -- ???
+$03 -- disk data	$03 -- ???
+$04-$07 -- lores p1	$04-$07 -- dlores p1
+$08-$0B -- lores p2	$08-$0B -- dlores p2
+$0c-$0F -- ???		$0c-$0F -- ???
+$10-$11 -- Boot code	$10-$11 -- ???
+$12-$1F -- QLOAD	$12-$1F -- ???
+$20-$BF -- hires p1	$20-$BF -- ???
+$C0-$CF -- I/O		$C0-$CF -- I/O
+$D0-$DF -- hard to use	$D0-$DF -- hard to access
+$D0-$FF -- MUSIC	$D0-$FF -- hard to access 
