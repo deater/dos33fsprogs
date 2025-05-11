@@ -136,7 +136,7 @@ blah2:
 
 	cli			; start music
 
-	jsr	$6000
+	jsr	$2000
 
 
 blah:

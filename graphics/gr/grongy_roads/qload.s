@@ -166,13 +166,13 @@ which_disk_array:
 	.byte 1,1,1,1		; ???, MUSIC, ????, ROADS
 
 load_address_array:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, ????, ROADS
+	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
 
 start_address:
-	.byte $D0,$D0,$60,$20	; ???, MUSIC, ????, ROADS
+	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
 
 aux_dest:
-	.byte $D0,$D0,$60,$80	; ???, MUSIC, ????, ROADS
+	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
 
 track_array:
 	.byte 2,2,5,13		; ???, MUSIC, ????, ROADS
@@ -181,7 +181,7 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, ????, ROADS
 
 length_array:
-	.byte 48,42,32,32	; ???, MUSIC, ????, ROADS
+	.byte 48,15,32,64	; ???, MUSIC, ????, ROADS
 
 
 PT3_ENABLE_APPLE_IIC = 1
@@ -209,6 +209,10 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"copy_400.s"
 
 	.include	"start.s"
+
+.align $100
+PT3_LOC:
+.incbin "music/mA2E_3.pt3"
 
 qload_end:
 

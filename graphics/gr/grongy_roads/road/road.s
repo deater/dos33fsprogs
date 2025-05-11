@@ -49,8 +49,7 @@ dancing:
         lda	#>road_main
         sta	zx_src_h+1
 
-        lda	#($40-$20)	; decompresses to DRAW_PAGE+$20
-	sta	DRAW_PAGE
+        lda	#$D0
 
         jsr	zx02_full_decomp_main
 
@@ -104,9 +103,13 @@ wait_10hz:
 	rts
 
 animation_main:
-	.byte $40,$44,$48,$4c,$50,$54,$58,$5c		; plain
+;	.byte $40,$44,$48,$4c,$50,$54,$58,$5c		; plain
+	.byte $d0,$d4,$d8,$dc,$e0,$e4,$e8,$ec		; plain
 
 
 road_main:
-	.incbin "../grongy/img008.zx02"
+	.incbin "../grongy/road000.zx02"
+	.incbin "../grongy/road001.zx02"
+	.incbin "../grongy/road002.zx02"
+	.incbin "../grongy/road003.zx02"
 

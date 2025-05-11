@@ -27,21 +27,21 @@
 ; Decompress ZX0 data (6502 optimized format)
 
 
-zx02_full_decomp_aux:
-	sta	RDAUX
-	sta	WRAUX
+;zx02_full_decomp_aux:
+;	sta	RDAUX
+;	sta	WRAUX
 
 zx02_full_decomp_main:
 
-	lda	#$20
-	clc
-	adc	DRAW_PAGE
+;	lda	#$20
+;	clc
+;	adc	DRAW_PAGE
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
-	sta	RDMAIN		; return to read/write main
-	sta	WRMAIN		;
-	rts
+;	sta	RDMAIN		; return to read/write main
+;	sta	WRMAIN		;
+;	rts
 
 zx02_full_decomp:
 ;              ; Get initialization block

@@ -32,7 +32,7 @@ static int convert_color(int color, char *filename) {
 		case 0x00ffff:	c=7; break;	/* light blue => light blue */
 		case 0xcdcdcd:	c=5; break;	/* grey => grey */
 		case 0xffff00:	c=13; break;	/* light yellow => yellow */
-
+		case 0xcd00cd:	c=3; break;	/* dark purple => purple */
 
 		case 0xe31e60:	c=1; break;	/* magenta */
 		case 0x604ebd:	c=2; break;	/* dark blue */

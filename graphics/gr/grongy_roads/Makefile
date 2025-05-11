@@ -90,41 +90,42 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s copy_to_400 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s copy_to_400_main qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s copy_to_400_aux qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s PT3_LOC qload.lst >> qload.inc
 
 ####
 
 music.inc:	generate_common MUSIC
-	./generate_common -a 0xd000 -s pt3_init_song music.lst > music.inc
-	./generate_common -a 0xd000 -s mockingboard_init music.lst >> music.inc
-	./generate_common -a 0xd000 -s reset_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s clear_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
-	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
-	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
-	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
-	./generate_common -a 0xd000 -s current_pattern_smc music.lst >> music.inc
-	./generate_common -a 0xd000 -s pt3_set_pattern music.lst >> music.inc
-#	./generate_common -a 0xd000 -s copy_main_aux music.lst >> music.inc
-#	./generate_common -a 0xd000 -s copy_aux_main music.lst >> music.inc
-	./generate_common -a 0xd000 -s mute_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
-	./generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
-#	./generate_common -a 0xd000 -s copy_to_400 music.lst >> music.inc
-#	./generate_common -a 0xd000 -s copy_to_400_main music.lst >> music.inc
-#	./generate_common -a 0xd000 -s copy_to_400_aux music.lst >> music.inc
-#	./generate_common -a 0xd000 -s zx02_full_decomp music.lst >> music.inc
-#	./generate_common -a 0xd000 -s zx02_full_decomp_aux music.lst >> music.inc
-#	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
-#	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
-#	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
-#	./generate_common -a 0xd000 -s slow_copy_main music.lst >> music.inc
-#	./generate_common -a 0xd000 -s slow_copy_aux music.lst >> music.inc
+	./generate_common -a 0xf000 -s pt3_init_song music.lst > music.inc
+	./generate_common -a 0xf000 -s mockingboard_init music.lst >> music.inc
+	./generate_common -a 0xf000 -s reset_ay_both music.lst >> music.inc
+	./generate_common -a 0xf000 -s clear_ay_both music.lst >> music.inc
+	./generate_common -a 0xf000 -s mockingboard_setup_interrupt music.lst >> music.inc
+	./generate_common -a 0xf000 -s mockingboard_disable_interrupt music.lst >> music.inc
+	./generate_common -a 0xf000 -s done_pt3_irq_handler music.lst >> music.inc
+#	./generate_common -a 0xf000 -s PT3_LOC music.lst >> music.inc
+	./generate_common -a 0xf000 -s current_pattern_smc music.lst >> music.inc
+	./generate_common -a 0xf000 -s pt3_set_pattern music.lst >> music.inc
+#	./generate_common -a 0xf000 -s copy_main_aux music.lst >> music.inc
+#	./generate_common -a 0xf000 -s copy_aux_main music.lst >> music.inc
+	./generate_common -a 0xf000 -s mute_ay_both music.lst >> music.inc
+	./generate_common -a 0xf000 -s unmute_ay_both music.lst >> music.inc
+	./generate_common -a 0xf000 -s interrupt_handler music.lst >> music.inc
+#	./generate_common -a 0xf000 -s copy_to_400 music.lst >> music.inc
+#	./generate_common -a 0xf000 -s copy_to_400_main music.lst >> music.inc
+#	./generate_common -a 0xf000 -s copy_to_400_aux music.lst >> music.inc
+#	./generate_common -a 0xf000 -s zx02_full_decomp music.lst >> music.inc
+#	./generate_common -a 0xf000 -s zx02_full_decomp_aux music.lst >> music.inc
+#	./generate_common -a 0xf000 -s zx02_full_decomp_main music.lst >> music.inc
+#	./generate_common -a 0xf000 -s zx_src_h music.lst >> music.inc
+#	./generate_common -a 0xf000 -s zx_src_l music.lst >> music.inc
+#	./generate_common -a 0xf000 -s slow_copy_main music.lst >> music.inc
+#	./generate_common -a 0xf000 -s slow_copy_aux music.lst >> music.inc
 
 
 ####
 
 MUSIC:	music.o
-	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_f000.inc
 
 music.o:	music.s zp.inc \
 	copy_400.s \

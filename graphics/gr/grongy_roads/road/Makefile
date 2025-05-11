@@ -12,11 +12,14 @@ all:	ROAD
 ###
 
 ROAD:	road.o
-	ld65 -o ROAD road.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o ROAD road.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 road.o:	road.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	../grongy/img008.zx02
+	../grongy/road000.zx02 \
+	../grongy/road001.zx02 \
+	../grongy/road002.zx02 \
+	../grongy/road003.zx02
 	ca65 -o road.o road.s -l road.lst
 
 ###

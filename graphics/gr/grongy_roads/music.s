@@ -30,6 +30,8 @@ PT3_ENABLE_APPLE_IIC = 1
 
 ; only load one music track, self modify to make other
 
-.align $100
-PT3_LOC:
-.incbin "music/mA2E_3.pt3"
+PT3_LOC = $1900 	; FIXME properly?
+
+;.align $100
+;PT3_LOC:
+;.incbin "music/mA2E_3.pt3"
