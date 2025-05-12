@@ -11,9 +11,22 @@ draw_road:
 	;==============================
 	; move to next animation frame
 
+	lda	ROAD_FILE
+	cmp	#24
+	bne	normal_road
+
+	; urgh only 2 here
+
+	inc	ROAD_COUNT
+	lda	ROAD_COUNT
+	and	#$1
+	jmp	road_common
+
+normal_road:
 	inc	ROAD_COUNT
 	lda	ROAD_COUNT
 	and	#$7
+road_common:
 	sta	ROAD_COUNT	; wrap at 8
 
 	bne	no_oflo
@@ -37,4 +50,4 @@ no_oflo:
 	rts
 
 animation_main:
-        .byte $d0,$d4,$d8,$dc,$e0,$e4,$e8,$ec           ; plain
+	.byte $0e,$12,$16,$1a,$1e,$22,$26,$2a		; plain

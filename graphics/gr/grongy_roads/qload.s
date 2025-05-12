@@ -166,13 +166,13 @@ which_disk_array:
 	.byte 1,1,1,1		; ???, MUSIC, ????, ROADS
 
 load_address_array:
-	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
+	.byte $D0,$D0,$60,$2e	; ???, MUSIC, ????, ROADS
 
 start_address:
-	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
+	.byte $D0,$D0,$60,$2e	; ???, MUSIC, ????, ROADS
 
 aux_dest:
-	.byte $D0,$F0,$60,$20	; ???, MUSIC, ????, ROADS
+	.byte $D0,$D0,$60,$2e	; ???, MUSIC, ????, ROADS
 
 track_array:
 	.byte 2,2,5,13		; ???, MUSIC, ????, ROADS
@@ -181,39 +181,39 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, ????, ROADS
 
 length_array:
-	.byte 48,15,32,159	; ???, MUSIC, ????, ROADS
+	.byte 48,47,32,144	; ???, MUSIC, ????, ROADS
 
 
 PT3_ENABLE_APPLE_IIC = 1
 
-	.include	"wait.s"
-
 	.include	"lc_detect.s"
-
-	.include	"wait_a_bit.s"
-	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 	.include	"gr_offsets.s"
-
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 
-	.include	"vblank.s"
-	.include	"irq_wait.s"
-	.include	"wait_keypress.s"
-	.include	"zx02_optim.s"
+;	.include	"wait.s"
+;	.include	"wait_a_bit.s"
+	.include	"gr_fast_clear.s"
+
+;	.include	"vblank.s"
+;	.include	"irq_wait.s"
+;	.include	"wait_keypress.s"
+
 	.include	"gs_interrupt.s"
 	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"hardware_detect.s"
-	.include	"gr_page_flip.s"
-	.include	"copy_400.s"
+
+;	.include	"zx02_optim.s"
+;	.include	"gr_page_flip.s"
+;	.include	"copy_400.s"
 
 	.include	"start.s"
-	.include	"draw_road.s"
+;	.include	"draw_road.s"
 
-.align $100
-PT3_LOC:
-.incbin "music/mA2E_3.pt3"
+;.align $100
+;PT3_LOC:
+;.incbin "music/mA2E_3.pt3"
 
 qload_end:
 

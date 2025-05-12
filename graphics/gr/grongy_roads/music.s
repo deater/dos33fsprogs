@@ -6,13 +6,12 @@
 .include "common_defines.inc"
 
 
-draw_road	= $1815
-
-memcpy_routines:
-;        .include "aux_memcopy.s"
+routines:
+	.include "gr_page_flip.s"
+	.include "draw_road.s"
 	.include "copy_400.s"
-;	.include "zx02_optim.s"
-	.include "slow_copy.s"
+	.include "zx02_optim.s"
+
 
 music_lib:
 
@@ -29,12 +28,18 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include "interrupt_handler.s"
 	.include "pt3_lib_mockingboard_detect.s"
 
+road21_zx02:
+	.incbin "./grongy/road021.zx02"
+road22_zx02:
+	.incbin "./grongy/road022.zx02"
+road23_zx02:
+	.incbin "./grongy/road023.zx02"
+road24_zx02:
+	.incbin "./grongy/road024.zx02"
 
 
 ; only load one music track, self modify to make other
 
-PT3_LOC = $1900 	; FIXME properly?
-
-;.align $100
-;PT3_LOC:
-;.incbin "music/mA2E_3.pt3"
+.align $100
+PT3_LOC:
+.incbin "music/mA2E_3.pt3"

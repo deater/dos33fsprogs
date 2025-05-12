@@ -60,58 +60,6 @@ decompress_loop:
 	sta	START_DECOMPRESS
 
 	beq	decompress_loop		; bra
-.if 0
-	;==============================
-	; animate loop
-	;==============================
-
-animate_loop:
-
-	;================================
-	; start 5-tick (10Hz) countdown
-
-	lda	#5
-	sta	IRQ_COUNTDOWN
-
-	;================================
-	; copy in MAIN graphics
-
-	ldy	ROAD_COUNT
-	ldx	animation_main,Y
-	jsr	copy_to_400_main
-
-	;==============================
-	; move to next animation frame
-
-	inc	ROAD_COUNT
-	lda	ROAD_COUNT
-	and	#$7
-	sta	ROAD_COUNT	; wrap at 8
-
-	bne	no_oflo
-
-	; need to load more
-
-	jsr	decompress_next
-
-no_oflo:
-
-
-wait_10hz:
-	jsr	check_timeout
-	bcc	wait_10hz
-
-	jsr	wait_vblank
-
-	;============================
-	; page flip
-
-	jsr	gr_flip_page
-
-	jmp	animate_loop
-
-	rts
-.endif
 
 
 decompress_next:
@@ -121,14 +69,14 @@ decompress_next:
         lda	high_road,Y
         sta	zx_src_h+1
 
-        lda	#$D0
+        lda	#$0e
 
         jsr	zx02_full_decomp_main
 
 
 	inc	ROAD_FILE
 	lda	ROAD_FILE
-	cmp	#20
+	cmp	#25
 	bne	done_decompress_next
 
 	lda	#0
@@ -137,9 +85,6 @@ decompress_next:
 done_decompress_next:
 	rts
 
-
-;animation_main:
-;	.byte $d0,$d4,$d8,$dc,$e0,$e4,$e8,$ec		; plain
 
 high_road:
 	.byte >road00_zx02,>road01_zx02,>road02_zx02,>road03_zx02
@@ -204,15 +149,16 @@ road19_zx02:
 	.incbin "../grongy/road019.zx02"
 road20_zx02:
 	.incbin "../grongy/road020.zx02"
-road21_zx02:
-	.incbin "../grongy/road021.zx02"
-road22_zx02:
-	.incbin "../grongy/road022.zx02"
-road23_zx02:
-	.incbin "../grongy/road023.zx02"
 
-road24_zx02:
-	.incbin "../grongy/road024.zx02"
+;road21_zx02:
+;	.incbin "../grongy/road021.zx02"
+;road22_zx02:
+;	.incbin "../grongy/road022.zx02"
+;road23_zx02:
+;	.incbin "../grongy/road023.zx02"
+
+;road24_zx02:
+;	.incbin "../grongy/road024.zx02"
 
 
 

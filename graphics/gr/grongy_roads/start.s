@@ -45,15 +45,15 @@ roads_start:
 	;===============================
 	; pause at warning if not e/c/gs
 
-	lda	APPLEII_MODEL
-	cmp	#'e'
-	beq	good_to_go
-	cmp	#'g'
-	beq	good_to_go
-	cmp	#'c'
-	beq	good_to_go
+;	lda	APPLEII_MODEL
+;	cmp	#'e'
+;	beq	good_to_go
+;	cmp	#'g'
+;	beq	good_to_go
+;	cmp	#'c'
+;	beq	good_to_go
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 good_to_go:
 
@@ -88,7 +88,7 @@ good_to_go:
 	lda	SOUND_STATUS
 	beq	skip_mbp1
 
-        jsr     mockingboard_patch      ; patch to work in slots other than 4?
+	jsr	mockingboard_patch	; patch to work in slots other than 4?
 
 skip_mbp1:
 
@@ -124,7 +124,6 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-blah2:
 	; load from disk
 
 	sei
@@ -136,11 +135,9 @@ blah2:
 
 	cli			; start music
 
-	jsr	$2000
+	jmp	$2e00
 
 
-blah:
-	jmp	blah
 
 
 start_message:	  ;01234567890123456789012345678901234567890
@@ -158,5 +155,3 @@ message_type_offset:
 	.byte 10,21,"A \/\/\/ PRODUCTION",0
 	.byte $FF
 
-;load_message:
-;	.byte 16,22,	"LOADING",0
