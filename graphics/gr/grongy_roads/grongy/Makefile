@@ -403,7 +403,7 @@ road024.zx02:	road024.big
 
 road024.big:	00189.gr 00190.gr 00191.gr 00192.gr \
 		00193.gr 00194.gr
-	cat 00189.gr > road023.big
+	cat 00189.gr > road024.big
 	cat 00190.gr >> road024.big
 	cat 00191.gr >> road024.big
 	cat 00192.gr >> road024.big

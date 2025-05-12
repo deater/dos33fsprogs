@@ -1,3 +1,9 @@
+decoding an 8 frame zx02 takes 4 or 5 frames
+
+to avoid all 8-frames with a 2 at end (194 frames) instead the last three
+	are 6-frames with code to handle that
+
+
 
 
 

@@ -22,9 +22,9 @@ grongy_road:
 	lda	#0		; reset count and file offsets
 	sta	ROAD_COUNT
 	sta	ROAD_FILE
+	sta	ROAD_FILE_DECOMPRESSING
 
-	lda	#1		; decompress right away
-	sta	START_DECOMPRESS
+	sta	START_DECOMPRESS	; start already decompressed
 
 	lda	#5		; set initial IRQ countdown
 	sta	IRQ_COUNTDOWN
@@ -55,6 +55,14 @@ grongy_road:
         bit	PAGE2		; DISPLAY PAGE2
 
 
+	;===============================
+	; decompress initial graphics
+
+	jsr	decompress_next
+
+
+	cli			; start music
+
 	;==============================
 	; decompress graphics (main)
 	;==============================
@@ -63,14 +71,27 @@ decompress_loop:
 	lda	START_DECOMPRESS
 	beq	decompress_loop		; wait until IRQ sets this to 1
 
-;	jsr	decompress_next
-
-
 	;===============================
 	; decompress next frame
 
+	jsr	decompress_next
+
+
+
+	lda	#0			; turn off decompressing
+	sta	START_DECOMPRESS
+
+	beq	decompress_loop		; bra
+
+
+	;===========================================
+	;===========================================
+	; common routine to decompress next chunk
+	;===========================================
+	;===========================================
+
 decompress_next:
-	ldy	ROAD_FILE		; get file to decompress
+	ldy	ROAD_FILE_DECOMPRESSING		; get file to decompress
 	lda	low_road,Y
         sta	zx_src_l+1
         lda	high_road,Y
@@ -82,20 +103,17 @@ decompress_next:
 
 decompress_finished:
 
-	inc	ROAD_FILE		; point to next file
-	lda	ROAD_FILE
+	inc	ROAD_FILE_DECOMPRESSING		; point to next file
+	lda	ROAD_FILE_DECOMPRESSING
 	cmp	#25			; if 25, then wrap back to 0
 	bne	done_decompress_next
 
 	lda	#0
-	sta	ROAD_FILE
+	sta	ROAD_FILE_DECOMPRESSING
 
 done_decompress_next:
 
-	lda	#0			; turn off decompressing
-	sta	START_DECOMPRESS
-
-	beq	decompress_loop		; bra
+	rts
 
 
 ;==================================

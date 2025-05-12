@@ -133,7 +133,7 @@ skip_all_checks:
 
 	; Run Roads
 
-	cli			; start music
+;	cli			; start music
 
 	jmp	$2e00
 

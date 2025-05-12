@@ -30,7 +30,6 @@ special_road:
 
 	inc	ROAD_COUNT			; increment
 	lda	ROAD_COUNT
-	sta	ROAD_COUNT
 
 	cmp	#5
 	beq	road_start_decompress
@@ -42,7 +41,6 @@ special_road:
 normal_road:
 	inc	ROAD_COUNT			; increment
 	lda	ROAD_COUNT
-	sta	ROAD_COUNT
 
 	cmp	#7
 	beq	road_start_decompress
@@ -53,6 +51,15 @@ normal_road:
 
 
 wrap_road:
+	inc	ROAD_FILE
+	lda	ROAD_FILE
+	cmp	#25
+	bne	road_file_ok
+road_file_wrap:
+	lda	#0
+	sta	ROAD_FILE
+
+road_file_ok:
 	lda	#0
 	sta	ROAD_COUNT
 	beq	done_draw_road			; bra

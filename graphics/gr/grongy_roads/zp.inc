@@ -143,36 +143,11 @@ MASKH		= $EB
 ; $F0-$FB can re-use in each file
 ;==============================================
 
-; bear
-AUXOUTL		= $EA
-AUXOUTH		= $EB
-MAIN1		= $EC
-AUX1		= $ED
-MAIN0		= $EE
-AUX0		= $EF
-CURRENT		= $F0
-LEFT		= $F1
-XSTART		= $F2
-XEND		= $F3
-COLORSG		= $F4
-COLORSF		= $F5
-COLORSE		= $F6
-COLORSD		= $F7
-COLORSC		= $F8
-COLORSB		= $F9
-COLORSA		= $FA
-ODD		= $FB
-
-; headphones
-SCROLL_COUNT	= $F0
-INDEX		= $F1
-OFFSET		= $F2
-LENGTH		= $F3
-
 ; road
 ROAD_FILE	= $F0
 ROAD_COUNT	= $F1
-START_DECOMPRESS= $F2
+ROAD_FILE_DECOMPRESSING = $F2
+START_DECOMPRESS= $F3
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers
