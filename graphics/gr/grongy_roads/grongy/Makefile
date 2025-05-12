@@ -373,40 +373,85 @@ road022.zx02:	road022.big
 	$(ZX02) -f road022.big road022.zx02
 
 road022.big:	00177.gr 00178.gr 00179.gr 00180.gr \
-		00181.gr 00182.gr 00183.gr 00184.gr
+		00181.gr 00182.gr
 	cat 00177.gr > road022.big
 	cat 00178.gr >> road022.big
 	cat 00179.gr >> road022.big
 	cat 00180.gr >> road022.big
 	cat 00181.gr >> road022.big
 	cat 00182.gr >> road022.big
-	cat 00183.gr >> road022.big
-	cat 00184.gr >> road022.big
+
 
 ###
 
 road023.zx02:	road023.big
 	$(ZX02) -f road023.big road023.zx02
 
-road023.big:	00185.gr 00186.gr 00187.gr 00188.gr \
-		00189.gr 00190.gr 00191.gr 00192.gr
-	cat 00185.gr > road023.big
+road023.big:	00183.gr 00184.gr 00185.gr 00186.gr \
+		00187.gr 00188.gr
+	cat 00183.gr > road023.big
+	cat 00184.gr >> road023.big
+	cat 00185.gr >> road023.big
 	cat 00186.gr >> road023.big
 	cat 00187.gr >> road023.big
 	cat 00188.gr >> road023.big
-	cat 00189.gr >> road023.big
-	cat 00190.gr >> road023.big
-	cat 00191.gr >> road023.big
-	cat 00192.gr >> road023.big
 
 ###
 
 road024.zx02:	road024.big
 	$(ZX02) -f road024.big road024.zx02
 
-road024.big:	00193.gr 00194.gr
-	cat 00193.gr > road024.big
+road024.big:	00189.gr 00190.gr 00191.gr 00192.gr \
+		00193.gr 00194.gr
+	cat 00189.gr > road023.big
+	cat 00190.gr >> road024.big
+	cat 00191.gr >> road024.big
+	cat 00192.gr >> road024.big
+	cat 00193.gr >> road024.big
 	cat 00194.gr >> road024.big
+
+
+###
+
+#road022.zx02:	road022.big
+#	$(ZX02) -f road022.big road022.zx02
+
+#road022.big:	00177.gr 00178.gr 00179.gr 00180.gr \
+#		00181.gr 00182.gr 00183.gr 00184.gr
+#	cat 00177.gr > road022.big
+#	cat 00178.gr >> road022.big
+#	cat 00179.gr >> road022.big
+#	cat 00180.gr >> road022.big
+#	cat 00181.gr >> road022.big
+#	cat 00182.gr >> road022.big
+#	cat 00183.gr >> road022.big
+#	cat 00184.gr >> road022.big
+
+###
+
+#road023.zx02:	road023.big
+#	$(ZX02) -f road023.big road023.zx02
+
+#road023.big:	00185.gr 00186.gr 00187.gr 00188.gr \
+#		00189.gr 00190.gr 00191.gr 00192.gr
+#	cat 00185.gr > road023.big
+#	cat 00186.gr >> road023.big
+#	cat 00187.gr >> road023.big
+#	cat 00188.gr >> road023.big
+#	cat 00189.gr >> road023.big
+#	cat 00190.gr >> road023.big
+#	cat 00191.gr >> road023.big
+#	cat 00192.gr >> road023.big
+
+###
+
+#road024.zx02:	road024.big
+#	$(ZX02) -f road024.big road024.zx02
+
+#road024.big:	00193.gr 00194.gr
+#	cat 00193.gr > road024.big
+#	cat 00194.gr >> road024.big
+
 
 
 

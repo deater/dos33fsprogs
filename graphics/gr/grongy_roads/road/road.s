@@ -1,3 +1,11 @@
+	;=====================================
+	; data frames for Grongy Road
+	;=====================================
+	; should probably be pure data
+	; but have some code here too
+	; this gets loaded at $2E00 for reasons
+
+
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
@@ -11,14 +19,14 @@
 grongy_road:
 	bit	KEYRESET	; just to be safe
 
-	lda	#0
+	lda	#0		; reset count and file offsets
 	sta	ROAD_COUNT
 	sta	ROAD_FILE
 
-	lda	#1
+	lda	#1		; decompress right away
 	sta	START_DECOMPRESS
 
-	lda	#5
+	lda	#5		; set initial IRQ countdown
 	sta	IRQ_COUNTDOWN
 
 	;============================
@@ -55,36 +63,43 @@ decompress_loop:
 	lda	START_DECOMPRESS
 	beq	decompress_loop		; wait until IRQ sets this to 1
 
-	jsr	decompress_next
-	lda	#0
-	sta	START_DECOMPRESS
+;	jsr	decompress_next
 
-	beq	decompress_loop		; bra
 
+	;===============================
+	; decompress next frame
 
 decompress_next:
-	ldy	ROAD_FILE
+	ldy	ROAD_FILE		; get file to decompress
 	lda	low_road,Y
         sta	zx_src_l+1
         lda	high_road,Y
         sta	zx_src_h+1
 
-        lda	#$0e
+        lda	#$0e			; decompress 8k from $0E-$2E
 
         jsr	zx02_full_decomp_main
 
+decompress_finished:
 
-	inc	ROAD_FILE
+	inc	ROAD_FILE		; point to next file
 	lda	ROAD_FILE
-	cmp	#25
+	cmp	#25			; if 25, then wrap back to 0
 	bne	done_decompress_next
 
 	lda	#0
 	sta	ROAD_FILE
 
 done_decompress_next:
-	rts
 
+	lda	#0			; turn off decompressing
+	sta	START_DECOMPRESS
+
+	beq	decompress_loop		; bra
+
+
+;==================================
+; lookup tables for frame offsets
 
 high_road:
 	.byte >road00_zx02,>road01_zx02,>road02_zx02,>road03_zx02
@@ -149,6 +164,8 @@ road19_zx02:
 	.incbin "../grongy/road019.zx02"
 road20_zx02:
 	.incbin "../grongy/road020.zx02"
+
+; these live in "MUSIC" for space reasons
 
 ;road21_zx02:
 ;	.incbin "../grongy/road021.zx02"

@@ -21,32 +21,53 @@ draw_road:
 	; move to next animation frame
 
 	lda	ROAD_FILE			; check which of 0..24 we're in
-	cmp	#24				; if not 24 normal handling
-	bne	normal_road
+	cmp	#22				; if < 22 normal handling
+	bcc	normal_road			; blt
 
-	; File #24 (the 25th one) is "special" and only has two frames
+special_road:
+	; Files 22,23,24 are "special" and only have 6 frames
+	;   this is all because 194 is not a nice multiple of 8
 
 	inc	ROAD_COUNT			; increment
 	lda	ROAD_COUNT
-	and	#$1				; wrap at 2
-	jmp	road_common
+	sta	ROAD_COUNT
+
+	cmp	#5
+	beq	road_start_decompress
+
+	cmp	#6
+	beq	wrap_road
+	bne	done_draw_road
 
 normal_road:
 	inc	ROAD_COUNT			; increment
 	lda	ROAD_COUNT
-	and	#$7				; wrap at 8
-road_common:
-	sta	ROAD_COUNT			; store updated value
+	sta	ROAD_COUNT
 
-	bne	no_oflo				; if 0 on to next file
+	cmp	#7
+	beq	road_start_decompress
+
+	cmp	#8
+	beq	wrap_road
+	bne	done_draw_road
+
+
+wrap_road:
+	lda	#0
+	sta	ROAD_COUNT
+	beq	done_draw_road			; bra
+
 
 	;=============================
 	; next file: start decompress
+road_start_decompress:
+	;   it takes roughly 5 frames to decompress 8 frames
+
 
 	lda	#1				; trigger decompress in
 	sta	START_DECOMPRESS		; main thread
 
-no_oflo:
+done_draw_road:
 
 	;===============================
 	; can't VBLANK, waiting up to 1/60s will take too long

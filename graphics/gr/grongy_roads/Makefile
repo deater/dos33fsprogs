@@ -132,6 +132,7 @@ MUSIC:	music.o
 music.o:	music.s zp.inc \
 	copy_400.s \
 	zx02_optim.s \
+	draw_road.s \
 	music/mA2E_3.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
