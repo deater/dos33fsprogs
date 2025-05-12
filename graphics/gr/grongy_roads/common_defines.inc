@@ -1,7 +1,6 @@
-hposn_low       = $fd00
-hposn_high      = $fe00
-
-
 PART_MUSIC	=	1
 PART_ROADS	=	3
+
+
+FRAME_DELAY	=	4
 

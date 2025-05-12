@@ -51,7 +51,7 @@ skip_irq_dec:
 	;=======================
 	; do something
 
-	lda	#5
+	lda	#FRAME_DELAY
 	sta	IRQ_COUNTDOWN
 
 	jsr	draw_road

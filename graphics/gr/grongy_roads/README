@@ -1,2 +1,29 @@
-TODO
+This is a variant of the "Scroll Block" demo by Otomata Labs
+	from Deadline 2024.
+	https://www.pouet.net/prod.php?which=98269
+
+Originally for ZX Spectrum with 48k RAM.
+
+it's mostly just using the graphics by Grongy
+
+music is by MA2E
+
+Impressive they fit all that in 48k of RAM.  I struggled to fit everything
+in 60k using ZX02 compression.  Though possibly if I dropped the qkumba
+fast load code I might be able to squeeze it into 48k.
+
+
+requirements:
+	Apple II with 64k and Mockingboard
+	It requires a Mockingboard as I use timer interrupts to decompress
+		the 8k frames in the background.
+	IIgs probably not working as I'd have to have the IRQ handler not
+		in the language card, which is possible I just didn't have
+		time to stick an indirect somewhere.
+
+
+To build you'll need to grab the .gif version of the graphic from
+	https://zxart.ee/eng/authors/g/grongy/scroll-block-full/
+copy it to the ./grongy/ directory and run the convert.sh file to generate
+the images
 
