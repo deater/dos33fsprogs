@@ -172,7 +172,7 @@ LENGTH		= $F3
 ; road
 ROAD_FILE	= $F0
 ROAD_COUNT	= $F1
-
+START_DECOMPRESS= $F2
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers

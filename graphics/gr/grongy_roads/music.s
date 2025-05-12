@@ -5,6 +5,9 @@
 ;.include "qload.inc"
 .include "common_defines.inc"
 
+
+draw_road	= $1815
+
 memcpy_routines:
 ;        .include "aux_memcopy.s"
 	.include "copy_400.s"

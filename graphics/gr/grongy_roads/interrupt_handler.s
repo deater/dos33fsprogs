@@ -29,13 +29,40 @@ interrupt_handler:
 
 ;	inc	$0404		; debug (flashes char onscreen)
 
-	lda	IRQ_COUNTDOWN
-	beq	skip_irq_dec
-	dec	IRQ_COUNTDOWN
+;	lda	IRQ_COUNTDOWN
+;	beq	skip_irq_dec
+;	dec	IRQ_COUNTDOWN
 skip_irq_dec:
 
 
 .include "pt3_lib_irq_handler.s"
+
+
+
+	;===============================
+	; handle graphics
+	;===============================
+
+	dec	IRQ_COUNTDOWN
+	lda	IRQ_COUNTDOWN
+	bne	not_yet
+
+
+	;=======================
+	; do something
+
+	lda	#5
+	sta	IRQ_COUNTDOWN
+
+	jsr	draw_road
+
+
+not_yet:
+	;===============================
+	;
+	;===============================
+
+
 
 	jmp	exit_interrupt
 

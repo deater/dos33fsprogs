@@ -181,7 +181,7 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, ????, ROADS
 
 length_array:
-	.byte 48,15,32,64	; ???, MUSIC, ????, ROADS
+	.byte 48,15,32,159	; ???, MUSIC, ????, ROADS
 
 
 PT3_ENABLE_APPLE_IIC = 1
@@ -209,6 +209,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"copy_400.s"
 
 	.include	"start.s"
+	.include	"draw_road.s"
 
 .align $100
 PT3_LOC:

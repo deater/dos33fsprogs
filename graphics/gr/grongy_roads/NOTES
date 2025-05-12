@@ -1,16 +1,49 @@
 
-MAIN			AUX
-~~~~			~~~
-$00 -- zero page	$00 -- unused
-$01 -- statck		$01 -- unused
-$02 -- disk data	$02 -- ???
-$03 -- disk data	$03 -- ???
-$04-$07 -- lores p1	$04-$07 -- dlores p1
-$08-$0B -- lores p2	$08-$0B -- dlores p2
-$0c-$0F -- ???		$0c-$0F -- ???
-$10-$11 -- Boot code	$10-$11 -- ???
-$12-$1F -- QLOAD	$12-$1F -- ???
-$20-$BF -- hires p1	$20-$BF -- ???
-$C0-$CF -- I/O		$C0-$CF -- I/O
-$D0-$DF -- hard to use	$D0-$DF -- hard to access
-$D0-$FF -- MUSIC	$D0-$FF -- hard to access 
+
+
+Timing:
+	73665
+	7095f
+	733AE
+	773B3
+
+80000 = 524,288 cycles = 25 frames
+	but only 8 frames of data		16fps = 
+
+
+Plan:
+	start decompressing
+	every 5 frames run the copy routine
+
+	0	5	10	15	20	25	30	35
+
+	0	1	2	3	4	5	6	7
+
+
+
+$2000-$C000 = 40k
+
+
+MAIN			
+~~~~			
+$00 -- zero page	
+$01 -- statck		
+$02 -- disk data	
+$03 -- disk data	
+$04-$07 -- lores p1	
+$08-$0B -- lores p2	
+$0c-$0F -- ???		
+$10-$11 -- Boot code	
+$12-$1F -- QLOAD	
+$20-$BF -- hires p1	
+$C0-$CF -- I/O		
+$D0-$DF -- hard to use	
+$D0-$EF -- 8k current roads
+$F0-$FF -- MUSIC	
+
+
+
+
+
+
+

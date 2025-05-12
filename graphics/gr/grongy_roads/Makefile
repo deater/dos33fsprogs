@@ -90,6 +90,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s copy_to_400 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s copy_to_400_main qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s copy_to_400_aux qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s draw_road qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s PT3_LOC qload.lst >> qload.inc
 
 ####
