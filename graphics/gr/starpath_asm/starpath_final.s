@@ -38,6 +38,8 @@
 ;	262 bytes -- ?         cycles -- optimize color selection
 ;	256 bytes -- ?         cycles -- inline memory copy
 ;	259 bytes -- ?         cycles -- HACK! offset xpos by 1 to avoid glitch
+;	258 bytes -- ?         cycles -- use Y to save byte in hack
+;	255 bytes -- ?         cycles -- calc square table with rest of precalc
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -50,9 +52,13 @@ PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 PLOT1	= $F80E		; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 ;SETCOL	= $F864		; COLOR=A
 SETGR	= $FB40		; init lores graphics page1, clear screen, split text
+HGR2	= $F3D8		; these destroy $E6 and others so not useful :(
+HGR	= $F3E2
 
 ; softswitches
 FULLGR	= $C052		; enable full-screen (no-split text) graphics
+LORES	= $C056		; Enable LORES graphics
+HIRES	= $C057		; Enable HIRES graphics
 
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
@@ -99,8 +105,14 @@ starpath:
 	; setup graphics
 	;=============================
 
+;	jsr	HGR2			; can't use, destroys $E6
+;	bit	LORES
+
 	jsr	SETGR			; set graphics
-	bit	$C052			; set full-screen graphics
+	bit	FULLGR			; set full-screen graphics
+
+;	bit	HIRES			; shows progress but too big
+;	bit	LORES
 
 	;=============================
 	; initialize
@@ -139,12 +151,17 @@ xpos_table_d_loop:
 
 	; calculate XX*6*DEPTH
 
-	lda	tempy+1		; tempy1+1 location holds XX
+;	lda	tempy+1		; tempy1+1 location holds XX
 
-	clc			; HACK HACK HACK
-	adc	#1		; offset by 1 avoids glitch in output
+;	clc			; HACK HACK HACK
+;	adc	#1		; offset by 1 avoids glitch in output
 				; at right edge of sky
 
+	ldy	tempy+1		; tempy1+1 location holds XX
+
+	iny			; HACK HACK HACK
+	tya			; offset by 1 avoids glitch in output
+				; at right edge of sky
 
 	asl
 	adc	tempy+1		; A is now XX*3
@@ -172,6 +189,18 @@ tempy:
 ypos_lu_smc:
 	sta	ypos_lookup+(48<<8),X
 
+	;==============================
+	; init squares table
+	;	this slows down precalc a decent amount because
+	;	it does it 48 times
+	;	but it saves 5 bytes
+
+	txa
+	jsr	mul8			; mul A*X, high byte result in A
+	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
+
+	;===================
+
 	inx
 	bpl	xpos_table_d_loop	; run until 128
 
@@ -188,14 +217,14 @@ ypos_lu_smc:
 	; also X is 128 here, could in theory decrement
 	; down to 0 and save 2 bytes
 
-	ldx	#0
-square_loop:
-	txa
-	jsr	mul8			; mul A*X, high byte result in A
-	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
+;	ldx	#0
+;square_loop:
+;	txa
+;	jsr	mul8			; mul A*X, high byte result in A
+;	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
 
-	inx
-	bne	square_loop
+;	inx
+;	bne	square_loop
 
 	;============================
 	;============================
@@ -203,7 +232,7 @@ square_loop:
 	;============================
 	;============================
 
-;	ldx	#0
+	ldx	#0
 	stx	frame_smc+1
 	stx	DESTL
 	stx	SRCL
@@ -402,6 +431,11 @@ end_of_frame:
 
 	ldy	#2			; copy from graphics to frames
 
+
+	; enter here when pre-calcing with Y=2
+	; also enters here when replaying with Y=0
+copy_next_frame:
+
 	;===========================
 	;===========================
 	; copy 1k
@@ -415,11 +449,9 @@ copy_1k:
 	stx	SRCH
 	stx	DESTH			; overwrite both just in case
 
-	lda	frame_smc+1		; wrap FRAME at 32
-;	and	#$1F
-;	sta	frame_smc+1
+	lda	frame_smc+1		; get frame val.  Assume always <32
 
-	asl				; 0->$10, 1->$14, 2->$18
+	asl				; 0->$40, 1->$44, 2->$48
 	asl
 	adc	#>frame_location	; start location
 	sta	SRCH,Y			; 0 or 2 for src or dest
@@ -438,23 +470,29 @@ c1k_loop:
 	dex				; go for required number of pages
 	bne	c1k_loop
 
+
+	;================================
+	; point to next frame
+
 	inc	frame_smc+1		; doesn't belong here, saves room
 
 	lda	frame_smc+1		; wrap FRAME at 32
 	and	#$1F
 	sta	frame_smc+1
 
-	beq	oog
-force_done:
-	jmp	next_frame
+	beq	done_frame_precalc	; triggered when FRAME%32==0
 
-oog:
+force_done_smc:
+	jmp	next_frame		; gets modified to BIT when done precalc
+
+
+done_frame_precalc:
 	; Y always 0 here
-
-	lda	#$2C
 ;	ldy	#0
-	sta	a:force_done
-	bne	copy_1k			; bra
+
+	lda	#$2C			; BIT
+	sta	a:force_done_smc	; change JMP to BIT
+	bne	copy_next_frame		; bra
 
 
 ; Russian Peasant multiply by Thwaite
