@@ -41,7 +41,7 @@
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
-;	run loops backwards?
+;		calling HGR2 will clear out some zero page which would be bad
 ;	page flipping
 ;	running YPOS backward saves 2 bytes, but it ugly
 
@@ -281,6 +281,7 @@ pixel_smc:
 	; not star, sky
 
 	lda	ypos_smc+1	; Color offset=YPOS/8
+				; plot pixel shifts one more time
 	lsr
 	lsr
 
@@ -397,29 +398,9 @@ yloop_done:
 	;===================
 	; end of frame
 end_of_frame:
-					; FIXME: this draws an extra frame
 
-;	lda	frame_smc+1		; if 32, done pre-calc
-;	cmp	#32
-;	beq	done_precalc
-
-;	ldy	#2			; copy from screen to off-screen
-;	jsr     copy_1k			; save image off-screen
-					; also increments frame
-					; will always be non-zero here?
-
-;	bne	next_frame
-
-;	jmp	next_frame
-done_precalc:
-
-;	ldy	#0			; copy from off-screen to screen
-;	jsr	copy_1k			; also increments frame
-
-;	jmp	done_precalc
 
 	ldy	#2			; copy from graphics to frames
-
 
 	;===========================
 	;===========================
