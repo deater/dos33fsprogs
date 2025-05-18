@@ -40,22 +40,26 @@
 ;	259 bytes -- ?         cycles -- HACK! offset xpos by 1 to avoid glitch
 ;	258 bytes -- ?         cycles -- use Y to save byte in hack
 ;	255 bytes -- ?         cycles -- calc square table with rest of precalc
+;	249 bytes -- ?         cycles -- merge SRC/DST on top of init code
+;	255 bytes -- ?         cycles -- have hi-res during initial init
+
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
-;		calling HGR2 will clear out some zero page which would be bad
-;	page flipping
-;	running YPOS backward saves 2 bytes, but it ugly
+;		calling HGR2 will require putting $E6 somewhere harmless
+;	page flipping: how many pages?
+;	running YPOS backward saves 2 bytes, but is ugly
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
 PLOT1	= $F80E		; PLOT at (GBASL),Y (need MASK to be $0f or $f0)
 ;SETCOL	= $F864		; COLOR=A
 SETGR	= $FB40		; init lores graphics page1, clear screen, split text
-HGR2	= $F3D8		; these destroy $E6 and others so not useful :(
+HGR2	= $F3D8		; destroy $1A/$1B/$1C/$E6
 HGR	= $F3E2
 
 ; softswitches
+SET_GR	= $C050		; enable graphics mode
 FULLGR	= $C052		; enable full-screen (no-split text) graphics
 LORES	= $C056		; Enable LORES graphics
 HIRES	= $C057		; Enable HIRES graphics
@@ -63,10 +67,10 @@ HIRES	= $C057		; Enable HIRES graphics
 ; zero page addresses
 COLOR	= $30		; color used by PLOT routines
 
-SRCL	= $5A
-SRCH	= $5B
-DESTL	= $5C
-DESTH	= $5D
+;SRCL	= $5A
+;SRCH	= $5B
+;DESTL	= $5C
+;DESTH	= $5D
 FACTOR2	= $5E
 PRODLO	= $5F
 
@@ -93,6 +97,7 @@ frame_location	= $4000 ; ... $c000
 .globalzp xpos6_smc
 .globalzp ypos_smc
 .globalzp xpos_smc
+.globalzp hacko
 
 	;=============================
 	;=============================
@@ -107,17 +112,37 @@ starpath:
 
 ;	jsr	HGR2			; can't use, destroys $E6
 ;	bit	LORES
+;	jsr	SETGR			; set graphics
 
-	jsr	SETGR			; set graphics
+	bit	SET_GR			; set graphics
 	bit	FULLGR			; set full-screen graphics
+	bit	HIRES			; set hi-res
 
-;	bit	HIRES			; shows progress but too big
-;	bit	LORES
 
 	;=============================
 	; initialize
 	;=============================
 
+
+;hacko:
+;	ldx	#0
+;	ldx	#0
+
+;SRCL	= hacko+1
+;SRCH	= hacko+2
+;DESTL	= hacko+3
+;DESTH	= hacko+4
+
+;	stx	DESTL
+;	stx	SRCL
+
+;DESTL:
+;	ldx	#0
+;SRCL:
+;	ldx	#0
+
+;	stx	frame_smc+1		; clear FRAME counter
+					; is this needed?
 init_tables:
 
 	;===========================
@@ -146,7 +171,19 @@ xpos_table_x_loop:
 	dec	xpos_lu_smc+2
 	dec	ypos_lu_smc+2
 
+
+
+
+hacko:
 	ldx	#0		; for(d=0;d<128;d++) {
+	ldx	#0
+
+SRCL	= hacko+1
+SRCH	= hacko+2
+DESTL	= hacko+3
+DESTH	= hacko+4
+
+
 xpos_table_d_loop:
 
 	; calculate XX*6*DEPTH
@@ -226,16 +263,18 @@ ypos_lu_smc:
 ;	inx
 ;	bne	square_loop
 
+	bit	LORES
+
 	;============================
 	;============================
 	; setup drawing loop
 	;============================
 	;============================
 
-	ldx	#0
-	stx	frame_smc+1
-	stx	DESTL
-	stx	SRCL
+;	ldx	#0
+;	stx	frame_smc+1
+;	stx	DESTL
+;	stx	SRCL
 
 	;============================
 	;============================
