@@ -48,7 +48,7 @@
 ;	show HGR when building lookup tables?
 ;		calling HGR2 will require putting $E6 somewhere harmless
 ;	page flipping: how many pages?
-;	running YPOS backward saves 2 bytes, but is ugly
+;	running YPOS backward saves 2 bytes, but is ugly drawing up screen
 
 ; ROM routines
 PLOT	= $F800		; PLOT AT Y,A (A colors output, Y preserved)
@@ -97,7 +97,7 @@ frame_location	= $4000 ; ... $c000
 .globalzp xpos6_smc
 .globalzp ypos_smc
 .globalzp xpos_smc
-.globalzp hacko
+.globalzp srcdest
 
 	;=============================
 	;=============================
@@ -123,26 +123,6 @@ starpath:
 	; initialize
 	;=============================
 
-
-;hacko:
-;	ldx	#0
-;	ldx	#0
-
-;SRCL	= hacko+1
-;SRCH	= hacko+2
-;DESTL	= hacko+3
-;DESTH	= hacko+4
-
-;	stx	DESTL
-;	stx	SRCL
-
-;DESTL:
-;	ldx	#0
-;SRCL:
-;	ldx	#0
-
-;	stx	frame_smc+1		; clear FRAME counter
-					; is this needed?
 init_tables:
 
 	;===========================
@@ -171,28 +151,19 @@ xpos_table_x_loop:
 	dec	xpos_lu_smc+2
 	dec	ypos_lu_smc+2
 
-
-
-
-hacko:
+srcdest:
 	ldx	#0		; for(d=0;d<128;d++) {
-	ldx	#0
+	ldx	#0		; redundant, but these two used as SRC/DEST
 
-SRCL	= hacko+1
-SRCH	= hacko+2
-DESTL	= hacko+3
-DESTH	= hacko+4
+SRCL	= srcdest+1
+SRCH	= srcdest+2
+DESTL	= srcdest+3
+DESTH	= srcdest+4
 
 
 xpos_table_d_loop:
 
 	; calculate XX*6*DEPTH
-
-;	lda	tempy+1		; tempy1+1 location holds XX
-
-;	clc			; HACK HACK HACK
-;	adc	#1		; offset by 1 avoids glitch in output
-				; at right edge of sky
 
 	ldy	tempy+1		; tempy1+1 location holds XX
 
@@ -244,37 +215,16 @@ ypos_lu_smc:
 	dec	tempy+1			; countdown YY to 0
 	bpl	xpos_table_x_loop
 
-
-	;==============================
-	; init squares table
-
-	; could save 5 bytes at expense of slowdown by putting
-	; this in the previous init loop
-
-	; also X is 128 here, could in theory decrement
-	; down to 0 and save 2 bytes
-
-;	ldx	#0
-;square_loop:
-;	txa
-;	jsr	mul8			; mul A*X, high byte result in A
-;	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
-
-;	inx
-;	bne	square_loop
-
-	bit	LORES
-
 	;============================
 	;============================
 	; setup drawing loop
 	;============================
 	;============================
 
-;	ldx	#0
-;	stx	frame_smc+1
-;	stx	DESTL
-;	stx	SRCL
+	;=======================================
+	; switch to LORES for drawing frames
+
+	bit	LORES
 
 	;============================
 	;============================
@@ -284,7 +234,6 @@ ypos_lu_smc:
 
 next_frame:
 ;	lda	#47
-
 
 	lda	#0		; start with YPOS=0
 	sta	pixel_smc+1	; needs reset each frame
@@ -500,6 +449,26 @@ c1k_loop:
 
 	lda	(SRCL),Y		; load src
 	sta	(DESTL),Y		; store to destination
+
+;==================
+; sound
+	; 2, 1  = ok
+	; $FF (none) not horrible and 2 bytes shorter
+	; for 1, lsr/bcc same
+	; tried and boring: 5
+
+;	and	#$7
+;	beq	nosound
+	lsr
+	bcs	nosound
+
+	bit	$C030
+
+nosound:
+
+;==================
+;
+
 	iny				; increment pointer
 	bne	c1k_loop		; continue until 256 bytes
 
