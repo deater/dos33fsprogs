@@ -44,11 +44,9 @@
 ;	255 bytes -- ?         cycles -- have hi-res during initial init
 ;	261 bytes -- ?         cycles -- add sound effects
 ;	258 bytes -- ?         cycles -- use HGR at start
+;	256 bytes -- ?         cycles -- find another 0 to put DST at
 
-; TODO: sound?
-;	show HGR when building lookup tables?
-;		calling HGR2 will require putting $E6 somewhere harmless
-;	page flipping: how many pages?
+; TODO: page flipping: how many pages?
 ;	running YPOS backward saves 2 bytes, but is ugly drawing up screen
 
 ; ROM routines
@@ -111,18 +109,15 @@ starpath:
 	; setup graphics
 	;=============================
 
-;	jsr	HGR2			; can't use, destroys $E6
-;	bit	LORES
-;	jsr	SETGR			; set graphics
+	jsr	HGR			; set hi-res for visuals during
+					; table pre-calc
 
-;	bit	SET_GR			; set graphics
-;	bit	FULLGR			; set full-screen graphics
-;	bit	HIRES			; set hi-res
+					; destroys $E6
+					; it stores $20 so we manipulate
+					;    load address so it over-writes
+					;    a JSR ($20) instruction
 
-	jsr	HGR			; destroys $E6
-					; by luck it stores $20 which is a
-					;	JSR which is alrady there
-	bit	FULLGR
+	bit	FULLGR			; full-screen graphics
 
 
 	;=============================
@@ -159,12 +154,9 @@ xpos_table_x_loop:
 
 srcdest:
 	ldx	#0		; for(d=0;d<128;d++) {
-;	ldx	#0		; redundant, but these two used as SRC/DEST
 
-SRCL	= srcdest+1
-SRCH	= srcdest+2
-
-
+SRCL	= srcdest+1		; use this later as SRCL/SRCH but with
+SRCH	= srcdest+2		; 0 set already so we don't have to
 
 xpos_table_d_loop:
 
@@ -215,8 +207,8 @@ dest_smc:
 
 	; this is $9D $00 $0F
 
-DESTL	= dest_smc+1
-DESTH	= dest_smc+2
+DESTL	= dest_smc+1			; as before, use the existing 0
+DESTH	= dest_smc+2			; later when precalc done
 
 	;===================
 
@@ -436,7 +428,7 @@ end_of_frame:
 	ldy	#(DESTL-SRCL)			; copy from graphics to frames
 
 
-	; enter here when pre-calcing with Y=2
+	; enter here when pre-calcing with Y=DEST-SRC offset
 	; also enters here when replaying with Y=0
 copy_next_frame:
 
