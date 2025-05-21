@@ -42,7 +42,8 @@
 ;	255 bytes -- ?         cycles -- calc square table with rest of precalc
 ;	249 bytes -- ?         cycles -- merge SRC/DST on top of init code
 ;	255 bytes -- ?         cycles -- have hi-res during initial init
-
+;	261 bytes -- ?         cycles -- add sound effects
+;	258 bytes -- ?         cycles -- use HGR at start
 
 ; TODO: sound?
 ;	show HGR when building lookup tables?
@@ -71,8 +72,8 @@ COLOR	= $30		; color used by PLOT routines
 ;SRCH	= $5B
 ;DESTL	= $5C
 ;DESTH	= $5D
-FACTOR2	= $5E
-PRODLO	= $5F
+FACTOR2	= $5A
+PRODLO	= $5B
 
 ; Lookup Tables
 
@@ -114,9 +115,14 @@ starpath:
 ;	bit	LORES
 ;	jsr	SETGR			; set graphics
 
-	bit	SET_GR			; set graphics
-	bit	FULLGR			; set full-screen graphics
-	bit	HIRES			; set hi-res
+;	bit	SET_GR			; set graphics
+;	bit	FULLGR			; set full-screen graphics
+;	bit	HIRES			; set hi-res
+
+	jsr	HGR			; destroys $E6
+					; by luck it stores $20 which is a
+					;	JSR which is alrady there
+	bit	FULLGR
 
 
 	;=============================
@@ -153,12 +159,11 @@ xpos_table_x_loop:
 
 srcdest:
 	ldx	#0		; for(d=0;d<128;d++) {
-	ldx	#0		; redundant, but these two used as SRC/DEST
+;	ldx	#0		; redundant, but these two used as SRC/DEST
 
 SRCL	= srcdest+1
 SRCH	= srcdest+2
-DESTL	= srcdest+3
-DESTH	= srcdest+4
+
 
 
 xpos_table_d_loop:
@@ -205,7 +210,13 @@ ypos_lu_smc:
 
 	txa
 	jsr	mul8			; mul A*X, high byte result in A
+dest_smc:
 	sta	squares_lookup,X	; squares_lookup[X]=(square)>>8
+
+	; this is $9D $00 $0F
+
+DESTL	= dest_smc+1
+DESTH	= dest_smc+2
 
 	;===================
 
@@ -296,6 +307,11 @@ pixel_smc:
 
 	;==============
 	; not star, sky
+
+	; convert from -> 0..47 ->  0..11
+	; would prefer -> 0..47 ->  4..15
+
+	; carry set here.  could add 7 but space savings would cancel
 
 	lda	ypos_smc+1	; Color offset=YPOS/8
 				; plot pixel shifts one more time
@@ -417,7 +433,7 @@ yloop_done:
 end_of_frame:
 
 
-	ldy	#2			; copy from graphics to frames
+	ldy	#(DESTL-SRCL)			; copy from graphics to frames
 
 
 	; enter here when pre-calcing with Y=2
@@ -452,6 +468,7 @@ c1k_loop:
 
 ;==================
 ; sound
+;=================
 	; 2, 1  = ok
 	; $FF (none) not horrible and 2 bytes shorter
 	; for 1, lsr/bcc same
@@ -482,7 +499,7 @@ nosound:
 	;================================
 	; point to next frame
 
-	inc	frame_smc+1		; doesn't belong here, saves room
+	inc	frame_smc+1		; increment frame
 
 	lda	frame_smc+1		; wrap FRAME at 32
 	and	#$1F
@@ -496,7 +513,6 @@ force_done_smc:
 
 done_frame_precalc:
 	; Y always 0 here
-;	ldy	#0
 
 	lda	#$2C			; BIT
 	sta	a:force_done_smc	; change JMP to BIT
@@ -536,9 +552,18 @@ mul8_noadd:
 	rts
 
 
+; plot pixel is called with color C
+;	we divide by 2 to limit lookup table size
+;
+;	for star, we manually set
+;	for sky, color is from 0..15 but never higher than 12
+;	for wall, colors if from 16...31
+
 color_lookup:
-sky_colors:
+
+;sky_colors:
 ; 2=blue 1=magenta 3=purple 9=orange d=yellow c=l.green
 .byte $22,$33,$11,$99,$DD,$CC,		$FF, $FF	; last two unused?
+;wall_colors:
 ; wall colors, offset 8 from start
 .byte $00,$55,$AA,$55,$77,$EE,$FF,$FF
