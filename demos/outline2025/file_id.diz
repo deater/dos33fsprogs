@@ -1,0 +1,20 @@
+Apple II Starpath
+-
+256-byte Intro for Apple II, Outline 2025
+by Deater / dSr
+
+Based on the 64-byte DOS "starpath" by
+Hellmood from Lovebyte 2025
+
+This is the fastest I could get the
+raymarching to go on a 6502.  It makes
+6k of lookup tables, then draws 32 frames
+and then plays them back (taking 32k of
+RAM).
+
+Managed to squeeze thigns down enough
+to have some sound, still not sure
+it was worth it.
+
+Should run on any Apple II with 48k
+of RAM
