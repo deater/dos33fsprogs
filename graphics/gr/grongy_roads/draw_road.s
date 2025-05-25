@@ -82,11 +82,48 @@ done_draw_road:
 ;	jsr	wait_vblank
 
 	;============================
+	; draw visualization
+
+	; RBG based on music
+	;	R=1, B=2, G=4
+
+	ldx	#0
+visual_loop:
+	lda	A_VOLUME,X
+	lsr
+	lsr
+	tay
+	lda	volume_lookup,Y
+	and	volume_colors,X
+
+	ldy	DRAW_PAGE
+	beq	visualize_page1
+
+visualize_page2:
+	sta	$880,X
+	sta	$8A5,X
+	jmp	done_visualize
+
+visualize_page1:
+	sta	$480,X
+	sta	$4A5,X
+done_visualize:
+	inx
+	cpx	#3
+	bne	visual_loop
+
+
+	;============================
 	; page flip
 
 	jsr	gr_flip_page			; page flip
 
 	rts
+
+volume_lookup:
+	.byte $00,$F0,$F0,$FF
+volume_colors:
+	.byte $11,$22,$33
 
 animation_main:
 	.byte $0e,$12,$16,$1a,$1e,$22,$26,$2a		; plain
