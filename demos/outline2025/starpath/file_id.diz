@@ -12,9 +12,9 @@ raymarching to go on a 6502.  It makes
 and then plays them back (taking 32k of
 RAM).
 
-Managed to squeeze thigns down enough
+Managed to squeeze things down enough
 to have some sound, still not sure
 it was worth it.
 
 Should run on any Apple II with 48k
-of RAM
+or more of RAM

@@ -468,10 +468,13 @@ c1k_loop:
 
 ;	and	#$7
 ;	beq	nosound
+
+.ifndef QUIET
 	lsr
 	bcs	nosound
 
 	bit	$C030
+.endif
 
 nosound:
 
