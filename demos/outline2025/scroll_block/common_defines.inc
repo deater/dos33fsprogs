@@ -1,0 +1,6 @@
+PART_MUSIC	=	1
+PART_ROADS	=	3
+
+
+FRAME_DELAY	=	4
+
