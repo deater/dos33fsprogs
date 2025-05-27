@@ -77,10 +77,7 @@ lrexit:
 ; based on 'Woz Recodes Hi-Res Address Calculations'
 ; Apple Assembly Line vol. 7 issue 3 (December 1986)
 ; http://www.txbobsc.com/aal/1986/aal8612.html#a9
-HGRCalc:
-
-;!macro HGR_CALC {
-;.macro HGR_CALC
+;
 ; in:    A = HGR row (0x00..0xBF)
 ; out:   A/X clobbered
 ;        Y preserved
@@ -90,9 +87,7 @@ HGRCalc:
 ; Apple Assembly Line vol. 7 issue 3 (December 1986)
 ; http://www.txbobsc.com/aal/1986/aal8612.html#a9
 
-;	.local calc1
-;	.local calc2
-
+HGRCalc:
          asl
          tax
          and   #$F0
@@ -109,15 +104,16 @@ calc2:   asl
          asl   $26
          rol
          sta   $27
-         eor   #$60
+
+	clc
+	adc	#$80		; load from $A000 not $4000
+
+;         eor   #$60
          sta   $3d
-         lda   $26
-         sta   $3c
-;}
-;.endmacro
 
+	lda	$26		; same bottom bits
+	sta	$3c
 
-;         HGR_CALC
          rts
 
 
@@ -140,6 +136,7 @@ wfk_exit:    rts
 
 
 
+;================================================
 ;license:MIT
 ;(c) 2019 by 4am
 ;
@@ -147,80 +144,111 @@ wfk_exit:    rts
 ;!to "build/FX.INDEXED/DIAMOND",plain
 ;*=$6000
 
+; 4am diamond wipe
 
-.macro SWITCH_TO_MASKS copy
-         lda   #<copy
-         sta   CopyMaskAddr
-         lda   #>copy
-         sta   CopyMaskAddr+1
-;}
-.endmacro
+wipe_diamond:
+	lda	#32
+	sta	COUNTER
 
-do_wipe_diamond:
-         lda   #32
-         sta   COUNTER
-
-         lda   #39
-         sta   COL
+	lda	#39
+	sta	COL
 colloop:
-         lda   #23
-         sta   ROW
-         ldy   COL
-         sty   YY
-;         jsr   WaitForVBL
-         jsr   wait_vblank
+	lda	#23
+	sta	ROW
+	ldy	COL
+	sty	YY
+
+	jsr	wait_vblank
+
 rowloop:
-         ; check if this column is visible
-         ldy   YY
-         bpl   dp
-dm:        jmp   skip1
-dp:        cpy   #40
-         bcs   dm
-         ; do corner 1
-         SWITCH_TO_MASKS copymasks1
-         lda   ROW
-         jsr   HGRBlockCopyWithMask
-         ; do corner 2 (same row, opposing col)
-         SWITCH_TO_MASKS copymasks2
-         lda   #39
-         sec
-         sbc   YY
-         tay
-         lda   ROW
-         jsr   HGRBlockCopyWithMask
-         ; do corner 3 (opposing row, opposing col)
-         SWITCH_TO_MASKS copymasks3
-         lda   #39
-         sec
-         sbc   YY
-         tay
-         lda   #23
-         sec
-         sbc   ROW
-         jsr   HGRBlockCopyWithMask
-         ; do corner 4 (opposing row, same col)
-         SWITCH_TO_MASKS copymasks4
-         ldy   YY
-         lda   #23
-         sec
-         sbc   ROW
-         jsr   HGRBlockCopyWithMask
-         ; reset y for looping
-         ldy   YY
+	; check if this column is visible
+	ldy	YY
+	bpl	dp
+dm:
+	jmp	skip1
+dp:
+	cpy	#40
+	bcs	dm			; blt
+
+	;==============
+	; do corner 1
+
+	lda	#<copymasks1
+	sta	CopyMaskAddr
+	lda	#>copymasks1
+	sta	CopyMaskAddr+1
+
+	lda	ROW
+	jsr	HGRBlockCopyWithMask
+
+	;=====================================
+	; do corner 2 (same row, opposing col)
+
+	lda	#<copymasks2
+	sta	CopyMaskAddr
+	lda	#>copymasks2
+	sta	CopyMaskAddr+1
+
+	lda	#39
+	sec
+	sbc	YY
+	tay
+	lda	ROW
+
+	jsr	HGRBlockCopyWithMask
+
+	;=========================================
+	; do corner 3 (opposing row, opposing col)
+
+	lda	#<copymasks3
+	sta	CopyMaskAddr
+	lda	#>copymasks3
+	sta	CopyMaskAddr+1
+
+	lda	#39
+	sec
+	sbc	YY
+	tay
+	lda	#23
+	sec
+	sbc	ROW
+
+	jsr	HGRBlockCopyWithMask
+
+	;=====================================
+	; do corner 4 (opposing row, same col)
+
+	lda	#<copymasks4
+	sta	CopyMaskAddr
+	lda	#>copymasks4
+	sta	CopyMaskAddr+1
+
+	ldy	YY
+	lda	#23
+	sec
+	sbc	ROW
+
+	jsr	HGRBlockCopyWithMask
+
+	; reset y for looping
+	ldy	YY
 skip1:
-         iny
-         sty   YY
-         ; now check if *this* column is visible
-         bpl   dp2
-dm2:        jmp   skip2
-dp2:        cpy   #40
-         bcs   dm2
-         ; do corner 1
-         lda   ROW
-         jsr   HGRBlockCopy
-         ; do corner 2
-         lda   #39
-         sec
+	iny
+	sty	YY
+	; now check if *this* column is visible
+	bpl	dp2
+dm2:
+	jmp	skip2
+dp2:
+	cpy	#40
+	bcs	dm2			; bge
+
+	; do corner 1
+	lda	ROW
+	jsr	HGRBlockCopy
+	; do corner 2
+	lda	#39
+	sec
          sbc   YY
          tay
          lda   #23
@@ -241,16 +269,18 @@ dp2:        cpy   #40
          sbc   ROW
          jsr   HGRBlockCopy
 skip2:
-         dec   ROW
-         bmi   dp3
-         jmp   rowloop
-dp3:        lda   $c000
-         bmi   dexit
-         dec   COL
-         dec   COUNTER
-         beq   dexit
-         jmp   colloop
-dexit:    jmp   unwait_for_vblank
+	dec	ROW
+	bmi	dp3
+	jmp	rowloop
+dp3:
+	lda	$c000			; keyboard
+	bmi	dexit
+	dec	COL
+	dec	COUNTER
+	beq	dexit
+	jmp	colloop
+dexit:
+	jmp	unwait_for_vblank
 
 copymasks1:
          .byte %11111111
@@ -289,40 +319,18 @@ copymasks4:
          .byte %11111110
          .byte %11111111
 
-; /!\ C must be clear before using this macro
-;!macro HGR_INC_WITHIN_BLOCK {
-.macro HGR_INC_WITHIN_BLOCK
-         lda   $27
-         adc   #$04
-         sta   $27
-         eor   #$60
-         sta   $3d
-;}
-.endmacro
-
-;!macro HGR_ROW_CALC {
-.macro HGR_ROW_CALC
-        asl
-        asl
-        asl
-;         +HGR_CALC
-;        HGR_CALC
-	jsr	HGRCalc
-;}
-.endmacro
-
-;!macro   ST16 .ptr {
-.macro  ST16 ptr
-         sta   ptr
-         sty   ptr+1
-.endmacro
-;}
 
 
-.macro HGR_COPY_MASK_ROUTINES
+
+;====================================
+; HGR_COPY_MASK_ROUTINES
+;====================================
+
 SetCopyMask:
 ; in:    A/Y points to 8-byte array of bit masks used by HGRBlockCopyWithMask
-         ST16 CopyMaskAddr
+
+         sta CopyMaskAddr
+         sty CopyMaskAddr+1
          rts
 
 HGRBlockCopyWithMask:
@@ -332,7 +340,14 @@ HGRBlockCopyWithMask:
 ; out:   Y preserved
 ;        A/X clobbered
 ;        $00 clobbered
-         HGR_ROW_CALC
+
+
+	; HGR_ROW_CALC
+        asl
+        asl
+        asl
+	jsr	HGRCalc
+
 HGRBlockCopyWithMaskNoRecalc:
          ldx   #7
 HGRBlockCopyWithMasksLoop:
@@ -343,15 +358,27 @@ CopyMaskAddr=*+1
          eor   ($26),y
          sta   ($26),y
          clc
-HGR_INC_WITHIN_BLOCK
+
+	; HGR_INC_WITHIN_BLOCK
+         lda   $27
+         adc   #$04
+         sta   $27
+
+	; VMW
+	clc
+	adc	#$80
+
+;         eor   #$60
+         sta   $3d
+
          dex
          bpl   HGRBlockCopyWithMasksLoop
          rts
-;}
-.endmacro
 
-.macro HGR_BLOCK_COPY_ROUTINES
-HGRBlockCopy:
+
+;======================================
+; HGRBlockCopy
+;======================================
 ; in:    A = HGR row / 8 (0x00..0x17)
 ;        Y = HGR column (0x00..0x27)
 ; out:   Y preserved
@@ -359,23 +386,38 @@ HGRBlockCopy:
 ;        Z set
 ;        C clear
 ;        all other flags and registers clobbered
-         HGR_ROW_CALC
+
+HGRBlockCopy:
+
+	; HGR_ROW_CALC
+        asl
+        asl
+        asl
+	jsr	HGRCalc
+
 HGRBlockCopyNoRecalc:
          clc
          ldx   #$08
 @loop:
-         lda   ($3c),y
+         lda   ($3C),y
          sta   ($26),y
-         HGR_INC_WITHIN_BLOCK
+
+	; HGR_INC_WITHIN_BLOCK
+         lda   $27
+         adc   #$04
+         sta   $27
+;         eor   #$60
+	; VMW
+
+	clc
+	adc	#$80
+	sta	$3D
+
          dex
          bne   @loop
          rts
-;}
-.endmacro
 
 
-         HGR_COPY_MASK_ROUTINES
-         HGR_BLOCK_COPY_ROUTINES
 
 
 .include "vblank.s"

@@ -30,8 +30,7 @@ road.o:	road.s \
 	grongy/sroad003.zx02 grongy/sroad004.zx02 grongy/sroad005.zx02 \
 	grongy/sroad006.zx02 grongy/sroad007.zx02 grongy/sroad008.zx02 \
 	grongy/sroad009.zx02 grongy/sroad010.zx02 grongy/sroad011.zx02 \
-	graphics/title1.hgr.zx02 \
-	lr_wipe.s
+	wipes.s
 	ca65 -o road.o road.s -l road.lst
 
 
@@ -128,6 +127,7 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
+	./generate_common -a 0xd000 -s title_graphic music.lst >> music.inc
 #	./generate_common -a 0xd000 -s road21_zx02 music.lst >> music.inc
 #	./generate_common -a 0xd000 -s road22_zx02 music.lst >> music.inc
 #	./generate_common -a 0xd000 -s road23_zx02 music.lst >> music.inc
@@ -149,7 +149,8 @@ music.o:	music.s zp.inc \
 	pt3_lib_mockingboard.inc \
 	pt3_lib_init.s \
 	pt3_lib_mockingboard_setup.s \
-	pt3_lib_irq_handler.s
+	pt3_lib_irq_handler.s \
+	graphics/title1.hgr.zx02
 	ca65 -o music.o music.s -l music.lst
 
 

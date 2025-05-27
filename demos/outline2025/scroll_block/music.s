@@ -30,6 +30,9 @@ PT3_ENABLE_APPLE_IIC = 1
 
 ; only load one music track, self modify to make other
 
+title_graphic:
+       .incbin "graphics/title1.hgr.zx02"
+
 .align $100
 PT3_LOC:
 ;.incbin "music/mA2E_3.pt3"

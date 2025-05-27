@@ -180,7 +180,7 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, ????, ROADS
 
 length_array:
-	.byte 48,47,32,100	; ???, MUSIC, ????, ROADS
+	.byte 48,47,32,96	; ???, MUSIC, ????, ROADS
 
 
 PT3_ENABLE_APPLE_IIC = 1

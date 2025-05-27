@@ -19,6 +19,16 @@
 grongy_road:
 	bit	KEYRESET	; just to be safe
 
+	;=========================
+	; clear screen
+	;=========================
+
+	jsr	hgr_clear_slow
+
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+        bit	PAGE1
 
 	;=========================
 	; start music
@@ -38,40 +48,30 @@ grongy_road:
         lda	#>title_graphic
         sta	zx_src_h+1
 
-        lda	#$20			; decompress to hi-res page1
+	lda	#$A0			; decompress to $A000
 
         jsr	zx02_full_decomp_main
 
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
-        bit	PAGE1
-
-
 	;================================
-	; wait here until music is right
+	; wipe to hires page 1
 	;================================
+
+	jsr	wipe_diamond
+
+	;========================================
+	; wait here until music slows (pattern 7)
+	;========================================
 
 	; either pattern 7 (when it slows) or 8 (when speeds up)
 
-;	lda	#$8
-
-; temp debug
-	lda	#$1
-
-	;============================
-	; wait for music pattern
-	; also check for keypress
-	;============================
-	; pattern # in A
+	lda	#$7
 wait_for_pattern2:
 	cmp	current_pattern_smc+1
 	bne	wait_for_pattern2
 
+	jsr	wipe_lr
 
-;	jsr	wipe_lr
 
-	jsr	do_wipe_diamond
 
 	;=================================
 	; Prepare Animation
@@ -88,9 +88,6 @@ wait_for_pattern2:
 	lda	#FRAME_DELAY		; set initial IRQ countdown
 	sta	IRQ_COUNTDOWN
 
-	lda	#1
-	sta	START_ANIMATION
-
 	;============================
 	; clear both lo-res screens
 	;============================
@@ -105,6 +102,17 @@ wait_for_pattern2:
 	lda	#0
 	sta	DRAW_PAGE	; DRAW PAGE1
 	jsr	clear_all
+
+
+
+	;========================================================
+	; wait here until just before music speeds up (pattern 8)
+	;========================================================
+
+	lda	#$8
+wait_for_pattern3:
+	cmp	current_pattern_smc+1
+	bne	wait_for_pattern3
 
 
 	;=============================
@@ -123,7 +131,8 @@ wait_for_pattern2:
 	jsr	decompress_next
 
 
-
+	lda	#1
+	sta	START_ANIMATION
 
 	;==============================
 	; decompress graphics (main)
@@ -144,6 +153,11 @@ decompress_loop:
 	sta	START_DECOMPRESS
 
 	beq	decompress_loop		; bra
+
+
+
+
+
 
 
 	;===========================================
@@ -194,6 +208,9 @@ low_road:
 ;	.byte <road12_zx02
 
 
+
+.include "hgr_clear_slow.s"
+
 road00_zx02:
 	.incbin "grongy/sroad000.zx02"
 road01_zx02:
@@ -222,8 +239,8 @@ road11_zx02:
 ;road12_zx02:
 ;	.incbin "grongy/sroad012.zx02"
 
-title_graphic:
-	.incbin "graphics/title1.hgr.zx02"
+;title_graphic:
+;	.incbin "graphics/title1.hgr.zx02"
 
 
-.include "lr_wipe.s"
+.include "wipes.s"
