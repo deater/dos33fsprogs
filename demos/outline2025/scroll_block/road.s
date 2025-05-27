@@ -58,6 +58,18 @@ grongy_road:
 
 	jsr	wipe_diamond
 
+
+	;========================================
+	; wait a bit (pattern 4)
+	;========================================
+	lda	#$4
+wait_for_pattern4:
+	cmp	current_pattern_smc+1
+	bne	wait_for_pattern4
+
+	jsr	pinch_title
+
+
 	;========================================
 	; wait here until music slows (pattern 7)
 	;========================================

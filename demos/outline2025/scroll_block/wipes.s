@@ -424,3 +424,69 @@ HGRBlockCopyNoRecalc:
 
 unwait_for_vblank:
 	rts
+
+
+
+; this doesn't belong here, but for now let's leave it
+
+	; clear top/bottom 40 lines to black
+pinch_title:
+
+	;==================
+	; pinch top
+
+	ldy	#0
+top_pinch_loop:
+
+	jsr	wait_vblank
+
+	tya
+	jsr	HGRCalc
+
+	tya
+	pha
+
+	lda	#0
+	ldy	#39
+pinch_top_loop:
+	sta	($26),Y
+	dey
+	bpl	pinch_top_loop
+
+	pla
+	tay
+
+	iny
+	cpy	#40
+	bne	top_pinch_loop
+
+
+	;==================
+	; pinch bottom
+
+	ldy	#191
+bottom_pinch_loop:
+
+	jsr	wait_vblank
+
+	tya
+	jsr	HGRCalc
+
+	tya
+	pha
+
+	lda	#0
+	ldy	#39
+pinch_bottom_loop:
+	sta	($26),Y
+	dey
+	bpl	pinch_bottom_loop
+
+	pla
+	tay
+
+	dey
+	cpy	#150
+	bne	bottom_pinch_loop
+
+	rts
