@@ -1,5 +1,5 @@
 	;=================================================
-	; 194 frames to draw.  This is an annoying number
+	; 96 frames to draw.
 	;=================================================
 	; this runs in the interrupt handler?
 	;=================================================
@@ -10,6 +10,13 @@
 	;   before it is time to display that one
 
 draw_road:
+	lda	START_ANIMATION
+	bne	yes_draw_road
+
+	rts
+
+yes_draw_road:
+
 	;==============================
 	; copy in frame
 
@@ -143,4 +150,4 @@ volume_colors:
 	.byte $11,$22,$33
 
 animation_main:
-	.byte $0e,$12,$16,$1a,$1e,$22,$26,$2a		; plain
+	.byte $20,$24,$28,$2c,$30,$34,$38,$3c		; plain

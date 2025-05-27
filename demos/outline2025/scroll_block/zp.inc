@@ -148,6 +148,19 @@ ROAD_FILE	= $F0
 ROAD_COUNT	= $F1
 ROAD_FILE_DECOMPRESSING = $F2
 START_DECOMPRESS= $F3
+START_ANIMATION	= $F4
+
+; wipes
+
+; LR
+WIPE_ROW	= $F5
+
+; Diamond
+YY		= $F5
+ROW		= $F6
+COL		= $F7
+COUNTER		= $F8
+
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers
@@ -157,5 +170,3 @@ INL		=	$FC
 INH		=	$FD
 OUTL		=	$FE
 OUTH		=	$FF
-
-

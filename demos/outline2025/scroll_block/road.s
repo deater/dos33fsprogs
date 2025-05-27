@@ -19,6 +19,65 @@
 grongy_road:
 	bit	KEYRESET	; just to be safe
 
+
+	;=========================
+	; start music
+	;=========================
+
+	lda	#0
+	sta	START_ANIMATION
+
+	cli			; start music
+
+	;=================================
+	; Display Title
+	;=================================
+
+	lda	#<title_graphic
+        sta	zx_src_l+1
+        lda	#>title_graphic
+        sta	zx_src_h+1
+
+        lda	#$20			; decompress to hi-res page1
+
+        jsr	zx02_full_decomp_main
+
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+        bit	PAGE1
+
+
+	;================================
+	; wait here until music is right
+	;================================
+
+	; either pattern 7 (when it slows) or 8 (when speeds up)
+
+;	lda	#$8
+
+; temp debug
+	lda	#$1
+
+	;============================
+	; wait for music pattern
+	; also check for keypress
+	;============================
+	; pattern # in A
+wait_for_pattern2:
+	cmp	current_pattern_smc+1
+	bne	wait_for_pattern2
+
+
+;	jsr	wipe_lr
+
+	jsr	do_wipe_diamond
+
+	;=================================
+	; Prepare Animation
+	;=================================
+
+
 	lda	#0		; reset count and file offsets
 	sta	ROAD_COUNT
 	sta	ROAD_FILE
@@ -26,8 +85,11 @@ grongy_road:
 
 	sta	START_DECOMPRESS	; start already decompressed
 
-	lda	#5		; set initial IRQ countdown
+	lda	#FRAME_DELAY		; set initial IRQ countdown
 	sta	IRQ_COUNTDOWN
+
+	lda	#1
+	sta	START_ANIMATION
 
 	;============================
 	; clear both lo-res screens
@@ -61,7 +123,7 @@ grongy_road:
 	jsr	decompress_next
 
 
-	cli			; start music
+
 
 	;==============================
 	; decompress graphics (main)
@@ -93,13 +155,13 @@ decompress_loop:
 decompress_next:
 	ldy	ROAD_FILE_DECOMPRESSING		; get file to decompress
 	lda	low_road,Y
-        sta	zx_src_l+1
-        lda	high_road,Y
-        sta	zx_src_h+1
+	sta	zx_src_l+1
+	lda	high_road,Y
+	sta	zx_src_h+1
 
-        lda	#$0e			; decompress 8k from $0E-$2E
+	lda	#$20			; decompress 8k t0  $20-$3F
 
-        jsr	zx02_full_decomp_main
+	jsr	zx02_full_decomp_main
 
 decompress_finished:
 
@@ -160,6 +222,8 @@ road11_zx02:
 ;road12_zx02:
 ;	.incbin "grongy/sroad012.zx02"
 
+title_graphic:
+	.incbin "graphics/title1.hgr.zx02"
 
 
-
+.include "lr_wipe.s"

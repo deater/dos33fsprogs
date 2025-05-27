@@ -6,30 +6,32 @@ EMPTY_DISK = ../../../empty_disk/empty.dsk
 TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../linker_scripts/
 
-all:	road.dsk
+all:	scroll_block.dsk
 
-road.dsk:	QBOOT QLOAD \
+scroll_block.dsk:	QBOOT QLOAD \
 	MUSIC ROAD \
 	music.inc qload.inc
-	cp $(EMPTY_DISK) road.dsk
-	$(DOS33_RAW) road.dsk 0 0 QBOOT		0 1
-	$(DOS33_RAW) road.dsk 0 2 QBOOT		1 1
-	$(DOS33_RAW) road.dsk 0 4 QBOOT		2 1
-	$(DOS33_RAW) road.dsk 1 0 QLOAD		0 0
-	$(DOS33_RAW) road.dsk 2 0 MUSIC		0 0
-	$(DOS33_RAW) road.dsk 13 0 ROAD 0 0
+	cp $(EMPTY_DISK) scroll_block.dsk
+	$(DOS33_RAW) scroll_block.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) scroll_block.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) scroll_block.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) scroll_block.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) scroll_block.dsk 2 0 MUSIC		0 0
+	$(DOS33_RAW) scroll_block.dsk 13 0 ROAD 0 0
 
 ###
 
 ROAD:	road.o
-	ld65 -o ROAD road.o -C $(LINKER_SCRIPTS)/apple2_2e00.inc
+	ld65 -o ROAD road.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 road.o:	road.s \
 	zp.inc hardware.inc qload.inc common_defines.inc \
-	grongy/sroad000.zx02 \
-	grongy/sroad001.zx02 \
-	grongy/sroad002.zx02 \
-	grongy/sroad003.zx02
+	grongy/sroad000.zx02 grongy/sroad001.zx02 grongy/sroad002.zx02 \
+	grongy/sroad003.zx02 grongy/sroad004.zx02 grongy/sroad005.zx02 \
+	grongy/sroad006.zx02 grongy/sroad007.zx02 grongy/sroad008.zx02 \
+	grongy/sroad009.zx02 grongy/sroad010.zx02 grongy/sroad011.zx02 \
+	graphics/title1.hgr.zx02 \
+	lr_wipe.s
 	ca65 -o road.o road.s -l road.lst
 
 
@@ -89,7 +91,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
-#	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
@@ -165,7 +167,7 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst QBOOT QLOAD MUSIC ROAD generate_common
 	rm -f qload.inc qload2.inc music.inc music2.inc
-	cd road && make clean
+
 
 
 

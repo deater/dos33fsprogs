@@ -1,0 +1,71 @@
+This version only does 96 frames (vs 194 from proof of concept)
+
+TIMING:
+	decompress_next:	4c
+	decomress_finished:	6f
+
+	9FF57
+	ACCE6	; 707,814 = 88,476 cycles/frame roughly
+	9f6b1
+	9f1aa
+
+	; we're running 4fps
+
+
+
+; START:
+;	loads MUSIC to languge card $D000
+;	loads ROADS to $4000
+;	start music?
+;	decompress TITLE to $2000-$4000
+;	do some sort of wipe?
+;	start animating, with output of decompression from $2000-$4000
+
+
+80000 = 524,288 cycles = 25 frames
+	but only 8 frames of data		16fps = 
+
+
+MUSIC = 7691, so roughly $D000 - $F000
+ROAD = 24751 so roughly $4000 -> $A000 (just over 24k). A/B?
+
+Put HGR at $E/$F
+
+
+
+Plan:
+	start decompressing
+	every 5 frames run the copy routine
+
+	0	5	10	15	20	25	30	35
+
+	0	1	2	3	4	5	6	7
+
+
+
+$2000-$C000 = 40k
+
+
+21762 = 22k = $6
+
+; NOTES:  move road to load $4000->$A000
+;	  move buffer to $2000->$4000
+
+; intro graphic?
+
+MAIN			
+~~~~			
+$00 -- zero page	
+$01 -- statck		
+$02 -- disk data	
+$03 -- disk data	
+$04-$07 -- lores p1	
+$08-$0B -- lores p2	
+$0c-$0F -- ???			; $E -> $2E = 8k buffer
+$10-$11 -- Boot code	
+$12-$1F -- QLOAD	
+$20-$BF -- hires p1		; road loads at $2E00 -> $8E00???
+$C0-$CF -- I/O		
+$D0-$DF -- hard to use	
+$D0-$EF -- 8k current roads
+$F0-$FF -- MUSIC	

@@ -180,7 +180,7 @@ sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, ????, ROADS
 
 length_array:
-	.byte 48,47,32,96	; ???, MUSIC, ????, ROADS
+	.byte 48,47,32,100	; ???, MUSIC, ????, ROADS
 
 
 PT3_ENABLE_APPLE_IIC = 1
@@ -196,7 +196,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"gr_fast_clear.s"
 
 ;	.include	"vblank.s"
-;	.include	"irq_wait.s"
+	.include	"irq_wait.s"
 ;	.include	"wait_keypress.s"
 
 	.include	"gs_interrupt.s"
