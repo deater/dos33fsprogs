@@ -7,7 +7,7 @@ Based on the 64-byte DOS "starpath" by
 Hellmood from Lovebyte 2025
 
 This is the fastest I could get the
-raymarching to go on a 6502.  It makes
+raycasting to go on a 6502.  It makes
 6k of lookup tables, then draws 32 frames
 and then plays them back (taking 32k of
 RAM).

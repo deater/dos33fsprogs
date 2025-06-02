@@ -1,0 +1,26 @@
+Apple II Scroll Block
+
+Outline 2025
+
+by desire / otomata labs
+
+code:      deater (apple ii code)
+           4am (apple ii transitions)
+           qkumba (apple ii disk)
+           artemka (ZX code)
+graphics:  grongy
+music:     alex winston
+
+
+This is a re-imagining of the 
+ZX Spectrum demo "Scroll Block"
+from Deadline 2024, but for the
+Apple II.
+
+Will run on a 64k Apple II system
+with Mockingboard.
+
+96 frames of animation, ZX02
+compressed with various tricks
+to display while decompressing
+due to RAM limitations.
