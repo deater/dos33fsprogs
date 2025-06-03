@@ -155,7 +155,7 @@ done_beep:
 ;forever:
 ;	jmp	forever
 
-.include "../hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite.s"
 ;.include "../speaker_beeps.inc"
 .include "../redbook_sound.inc"
 

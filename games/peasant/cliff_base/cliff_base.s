@@ -299,13 +299,13 @@ exiting_cliff:
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
-.include "../hgr_sprite_bg_mask.s"
+.include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-.include "../hgr_partial_restore.s"
+.include "../hgr_routines/hgr_partial_restore.s"
 
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 

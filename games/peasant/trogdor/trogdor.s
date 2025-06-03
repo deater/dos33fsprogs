@@ -302,7 +302,7 @@ draw_sprite_h:
 .include "../gr_offsets.s"
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../keyboard.s"
 .include "../wait.s"
@@ -312,7 +312,7 @@ draw_sprite_h:
 
 .include "../redbook_sound.inc"
 
-.include "../hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite.s"
 
 .include "../ssi263/ssi263_simple_speech.s"
 .include "trogdor_speech.s"

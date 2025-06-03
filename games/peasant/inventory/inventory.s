@@ -927,4 +927,4 @@ inv_sprite_table_high:
 
 .include "sprites/inventory_sprites.inc"
 
-.include "../hgr_2x16_sprite.s"
+.include "../hgr_routines/hgr_2x16_sprite.s"

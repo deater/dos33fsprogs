@@ -20,7 +20,7 @@ inside.o:	inside.s \
 		graphics_inside/priority_inside.inc \
 		../sprites/peasant_sprites.inc \
 		../move_peasant.s ../draw_peasant.s \
-		../gr_copy.s ../hgr_copy.s \
+		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait.s ../wait_a_bit.s

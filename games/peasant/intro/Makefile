@@ -42,11 +42,11 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../text/intro.inc \
 		../animate_river.s \
 		../animate_bubbles.s \
-		../draw_box.s ../hgr_rectangle.s ../hgr_font.s ../hgr_input.s \
-		../hgr_save_restore.s \
-		../hgr_partial_save.s \
-		../hgr_sprite_bg_mask.s \
-		../wait_a_bit.s ../draw_peasant_new.s ../hgr_text_box.s \
+		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
+		../hgr_routines/hgr_save_restore.s \
+		../hgr_routines/hgr_partial_save.s \
+		../hgr_routines/hgr_sprite_bg_mask.s \
+		../wait_a_bit.s ../draw_peasant_new.s ../hgr_routines/hgr_text_box.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s \
 		new_game.s

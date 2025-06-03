@@ -368,7 +368,7 @@ to_left:
 
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 

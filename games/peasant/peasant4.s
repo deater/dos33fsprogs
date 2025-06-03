@@ -491,7 +491,7 @@ no_draw_ned:
 .include "draw_peasant.s"
 
 .include "gr_copy.s"
-.include "hgr_copy.s"
+.include "hgr_routines/hgr_copy.s"
 
 .include "new_map_location.s"
 
@@ -560,4 +560,4 @@ peasant4_text_zx02:
 
 .include "sprites/ned_sprites.inc"
 
-.include "hgr_sprite.s"
+.include "hgr_routines/hgr_sprite.s"

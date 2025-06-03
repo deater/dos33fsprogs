@@ -585,7 +585,7 @@ col_copy_loop:
 	;====================================
 	; includes
 
-;	.include	"../hgr_sprite.s"
+;	.include	"../hgr_routines/hgr_sprite.s"
 
 	.include	"keyboard_climb.s"
 
@@ -595,15 +595,15 @@ col_copy_loop:
 
 	.include	"move_peasant_climb.s"
 
-	.include	"../hgr_sprite_save.s"
-	.include	"../hgr_partial_restore.s"
+	.include	"../hgr_routines/hgr_sprite_save.s"
+	.include	"../hgr_routines/hgr_partial_restore.s"
 
 	.include	"../gr_copy.s"
-	.include	"../hgr_copy.s"
+	.include	"../hgr_routines/hgr_copy.s"
 
 	.include	"../gr_offsets.s"
 
-	.include 	"../hgr_sprite_bg_mask.s"
+	.include 	"../hgr_routines/hgr_sprite_bg_mask.s"
 
 climb_text_zx02:
 .incbin "../text/DIALOG_CLIMB.ZX02"

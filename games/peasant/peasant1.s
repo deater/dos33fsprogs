@@ -498,9 +498,9 @@ level_over:
 .include "wait.s"
 .include "wait_a_bit.s"
 
-.include "hgr_sprite.s"
+.include "hgr_routines/hgr_sprite.s"
 
-.include "hgr_copy.s"
+.include "hgr_routines/hgr_copy.s"
 
 ;.include "text/peasant1.inc"
 

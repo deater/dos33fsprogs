@@ -478,8 +478,8 @@ mendelev_arm_moved:
 .include "graphics_peasantry/graphics_peasant2.inc"
 .include "graphics_peasantry/priority_peasant2.inc"
 
-.include "hgr_copy.s"
-.include "hgr_sprite.s"
+.include "hgr_routines/hgr_copy.s"
+.include "hgr_routines/hgr_sprite.s"
 
 .include "animate_river.s"
 

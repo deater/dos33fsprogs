@@ -565,8 +565,8 @@ stuck_forever:
 
 
 
-.include "../hgr_2x14_sprite_mask.s"
-.include "../hgr_sprite.s"
+.include "../hgr_routines/hgr_2x14_sprite_mask.s"
+.include "../hgr_routines/hgr_sprite.s"
 
 
 .include "../wait.s"

@@ -130,18 +130,18 @@ QLOAD_HD:       qload_hd.o
 
 qload_hd.o:	qload_hd.s qboot.inc \
 		zx02_optim.s \
-		hgr_font.s \
+		hgr_routines/hgr_font.s \
 		draw_box.s \
-		hgr_rectangle.s \
-		hgr_1x28_sprite_mask.s \
-		hgr_partial_save.s \
-		hgr_input.s \
-		hgr_tables.s \
-		hgr_text_box.s \
+		hgr_routines/hgr_rectangle.s \
+		hgr_routines/hgr_1x28_sprite_mask.s \
+		hgr_routines/hgr_partial_save.s \
+		hgr_routines/hgr_input.s \
+		hgr_routines/hgr_tables.s \
+		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
-		hgr_hgr2.s \
-		hgr_copy.s \
+		hgr_routines/hgr_hgr2.s \
+		hgr_routines/hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s
@@ -163,18 +163,18 @@ QLOAD:	qload.o
 
 qload.o:	qload.s qboot.inc \
 		zx02_optim.s \
-		hgr_font.s \
+		hgr_routines/hgr_font.s \
 		draw_box.s \
-		hgr_rectangle.s \
-		hgr_1x28_sprite_mask.s \
-		hgr_partial_save.s \
-		hgr_input.s \
-		hgr_tables.s \
-		hgr_text_box.s \
+		hgr_routines/hgr_rectangle.s \
+		hgr_routines/hgr_1x28_sprite_mask.s \
+		hgr_routines/hgr_partial_save.s \
+		hgr_routines/hgr_input.s \
+		hgr_routines/hgr_tables.s \
+		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
-		hgr_hgr2.s \
-		hgr_copy.s \
+		hgr_routines/hgr_hgr2.s \
+		hgr_routines/hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s
@@ -342,9 +342,9 @@ peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
 		sprites/gary_sprites.inc \
 		graphics_peasantry/graphics_peasant1.inc \
 		graphics_peasantry/priority_peasant1.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
 		keyboard.s new_map_location.s \
 		move_peasant.s score.s
 	ca65 -o peasant1.o peasant1.s -l peasant1.lst
@@ -363,9 +363,9 @@ peasant2.o:	peasant2.s zp.inc ./inventory/inventory.inc \
 		sprites/river_bubble_sprites.inc \
 		animate_river.s \
 		peasant_common.s \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
 		keyboard.s new_map_location.s \
 		move_peasant.s score.s loadsave_menu.s
 	ca65 -o peasant2.o peasant2.s -l peasant2.lst
@@ -383,9 +383,9 @@ peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
 		graphics_peasantry/priority_peasant3.inc \
 		peasant_common.s \
 		animate_bubbles.s \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
 		keyboard.s new_map_location.s \
 		move_peasant.s score.s
 	ca65 -o peasant3.o peasant3.s -l peasant3.lst
@@ -403,9 +403,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 		kerrek_actions.s peasant_common.s \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
-		draw_box.s hgr_rectangle.s hgr_font.s hgr_input.s \
-		hgr_1x28_sprite_mask.s hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_text_box.s \
+		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
 		keyboard.s new_map_location.s \
 		move_peasant.s score.s
 	ca65 -o peasant4.o peasant4.s -l peasant4.lst

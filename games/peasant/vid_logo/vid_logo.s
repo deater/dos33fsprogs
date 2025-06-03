@@ -499,7 +499,7 @@ delays:
 
 
 
-.include "../hgr_overlay.s"
+.include "../hgr_routines/hgr_overlay.s"
 
 ;.include "../speaker_beeps.inc"
 .include "../redbook_sound.inc"

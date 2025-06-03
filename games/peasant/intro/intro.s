@@ -148,16 +148,16 @@ mockingboard_notfound2:
 
 .include "../draw_peasant_new.s"
 
-.include "../hgr_1x5_sprite.s"
+.include "../hgr_routines/hgr_1x5_sprite.s"
 
-.include "../hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite.s"
 
-.include "../hgr_sprite_bg_mask.s"
+.include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-.include "../hgr_partial_restore.s"
+.include "../hgr_routines/hgr_partial_restore.s"
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../wait.s"
 .include "../wait_a_bit.s"
