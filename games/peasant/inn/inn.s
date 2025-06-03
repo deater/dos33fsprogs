@@ -265,7 +265,7 @@ level_over:
 .include "../draw_peasant.s"
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 

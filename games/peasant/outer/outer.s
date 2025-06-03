@@ -375,13 +375,13 @@ exiting_outer:
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
-.include "../hgr_sprite_bg_mask.s"
+.include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-.include "../hgr_partial_restore.s"
-.include "../hgr_sprite.s"
+.include "../hgr_routines/hgr_partial_restore.s"
+.include "../hgr_routines/hgr_sprite.s"
 
 .include "../gr_copy.s"
-.include "../hgr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 
@@ -1027,4 +1027,4 @@ sprites_mask_h:
 	.byte >keeper_r0_mask,>keeper_r1_mask,>keeper_r2_mask,>keeper_r3_mask
 	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
 
-.include "../hgr_sprite_save.s"
+.include "../hgr_routines/hgr_sprite_save.s"
