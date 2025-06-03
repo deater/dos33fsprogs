@@ -19,6 +19,31 @@ scroll_block.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) scroll_block.dsk 2 0 MUSIC		0 0
 	$(DOS33_RAW) scroll_block.dsk 13 0 ROAD 0 0
 
+
+###
+
+submit: a2_scroll_block.zip a2_scroll_block_small.zip
+
+a2_scroll_block.zip:	file_id.diz scroll_block.dsk
+	mkdir -p outline2025_a2_scroll_block
+	mkdir -p outline2025_a2_scroll_block/code
+	cp *.s ./outline2025_a2_scroll_block/code
+	cp *.inc ./outline2025_a2_scroll_block/code
+	cp file_id.diz ./outline2025_a2_scroll_block
+	cp scroll_block.dsk ./outline2025_a2_scroll_block
+	cp a2_scroll_block_720p.mp4 ./outline2025_a2_scroll_block
+	cp a2_scroll_block_screen.png ./outline2025_a2_scroll_block
+	zip -r a2_scroll_block.zip outline2025_a2_scroll_block
+
+a2_scroll_block_small.zip:	file_id.diz scroll_block.dsk
+	mkdir -p outline2025_a2_scroll_block_small
+	mkdir -p outline2025_a2_scroll_block_small/code
+	cp *.s ./outline2025_a2_scroll_block_small/code
+	cp *.inc ./outline2025_a2_scroll_block_small/code
+	cp file_id.diz ./outline2025_a2_scroll_block_small
+	cp scroll_block.dsk ./outline2025_a2_scroll_block_small
+	zip -r a2_scroll_block_small.zip outline2025_a2_scroll_block_small
+
 ###
 
 ROAD:	road.o

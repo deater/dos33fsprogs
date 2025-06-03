@@ -1,9 +1,9 @@
-include ../../Makefile.inc
+include ../../../Makefile.inc
 
-DOS33 = ../../utils/dos33fs-utils/dos33
-TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
-EMPTYDISK = ../../empty_disk/empty.dsk
-LINKERSCRIPTS = ../../linker_scripts/
+DOS33 = ../../../utils/dos33fs-utils/dos33
+TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
+EMPTYDISK = ../../../empty_disk/empty.dsk
+LINKERSCRIPTS = ../../../linker_scripts/
 
 all:	starpath.dsk
 
