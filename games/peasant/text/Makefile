@@ -8,9 +8,9 @@ CFLAGS = -O2 -Wall -g
 
 all:	dump_text shrink_text \
 	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
-	DIALOG_PEASANT2.ZX02 dialog_peasant2.inc \
 	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
+	DIALOG_RIVER.ZX02 dialog_river.inc \
 	DIALOG_KNIGHT.ZX02 dialog_knight.inc \
 	DIALOG_INSIDE.ZX02 dialog_inside.inc \
 	DIALOG_INN.ZX02 dialog_inn.inc \
@@ -52,6 +52,22 @@ dialog_knight.o:	dialog_knight.s \
 
 dialog_knight.inc:	../generate_all_symbols dialog_knight
 	../generate_all_symbols -a 0xd000 dialog_knight.lst > dialog_knight.inc
+
+###
+
+DIALOG_RIVER.ZX02:	dialog_river
+	$(ZX02) -f  dialog_river DIALOG_RIVER.ZX02
+
+dialog_river:	dialog_river.o
+	ld65 -o dialog_river dialog_river.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_river.o:	dialog_river.s \
+		rock.inc.lookup
+	ca65 -o dialog_river.o dialog_river.s -l dialog_river.lst
+
+dialog_river.inc:	../generate_all_symbols dialog_river
+	../generate_all_symbols -a 0xd000 dialog_river.lst > dialog_river.inc
+
 
 
 ###
@@ -125,20 +141,20 @@ dialog_peasant1.inc:	../generate_all_symbols dialog_peasant1
 
 ###
 
-DIALOG_PEASANT2.ZX02:	dialog_peasant2
-	$(ZX02) -f  dialog_peasant2 DIALOG_PEASANT2.ZX02
+#DIALOG_PEASANT2.ZX02:	dialog_peasant2
+#	$(ZX02) -f  dialog_peasant2 DIALOG_PEASANT2.ZX02
 
-dialog_peasant2:	dialog_peasant2.o
-	ld65 -o dialog_peasant2 dialog_peasant2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+#dialog_peasant2:	dialog_peasant2.o
+#	ld65 -o dialog_peasant2 dialog_peasant2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
-dialog_peasant2.o:	dialog_peasant2.s \
-		hay.inc.lookup mud.inc.lookup \
-		archery.inc.lookup rock.inc.lookup \
-		knight.inc.lookup
-	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
+#dialog_peasant2.o:	dialog_peasant2.s \
+#		hay.inc.lookup mud.inc.lookup \
+#		archery.inc.lookup rock.inc.lookup \
+#		knight.inc.lookup
+#	ca65 -o dialog_peasant2.o dialog_peasant2.s -l dialog_peasant2.lst
 
-dialog_peasant2.inc:	../generate_all_symbols dialog_peasant2
-	../generate_all_symbols -a 0xd000 dialog_peasant2.lst > dialog_peasant2.inc
+#dialog_peasant2.inc:	../generate_all_symbols dialog_peasant2
+#	../generate_all_symbols -a 0xd000 dialog_peasant2.lst > dialog_peasant2.inc
 
 ###
 
