@@ -1,24 +1,22 @@
 ; Peasant's Quest
 
-; Peasantry Part 2 (second line of map)
-
-;	haystack, puddle, archery, river, knight (pass)
+; Knight (location 4,2)
 
 ; by Vince `deater` Weaver	vince@deater.net
 
 ; with apologies to everyone
 
-.include "hardware.inc"
-.include "zp.inc"
+.include "../hardware.inc"
+.include "../zp.inc"
 
-.include "qload.inc"
-.include "./inventory/inventory.inc"
-.include "parse_input.inc"
+.include "../qload.inc"
+.include "../inventory/inventory.inc"
+.include "../parse_input.inc"
 
 LOCATION_BASE   = LOCATION_HAY_BALE	; index starts here (5)
 
 
-peasantry2:
+peasantry_knight:
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -29,9 +27,9 @@ peasantry2:
 
 	; decompress dialog to $D000
 
-	lda	#<peasant2_text_zx02
+	lda	#<knight_text_zx02
         sta     zx_src_l+1
-        lda     #>peasant2_text_zx02
+        lda     #>knight_text_zx02
         sta     zx_src_h+1
 
         lda     #$D0
@@ -62,6 +60,7 @@ new_location:
 
 	; we are PEASANT2 so locations 5...9 map to 0...4
 
+.if 0
 	lda	MAP_LOCATION
 	sec
 	sbc	#LOCATION_BASE
@@ -71,6 +70,13 @@ new_location:
 	sta	INL
 	lda	verb_tables_hi,X
 	sta	INH
+.endif
+
+	lda	#<mountain_pass_verb_table	; 9	-- knight
+	sta	INL
+	lda	#>mountain_pass_verb_table	; 9	-- knight
+	sta	INH
+
 	jsr	load_custom_verb_table
 
 	;============================
@@ -79,6 +85,7 @@ new_location:
 
 	; we are PEASANT2 so locations 5...9 map to 0...4
 
+.if 0
 	lda	MAP_LOCATION
 	sec
 	sbc	#LOCATION_BASE
@@ -87,6 +94,11 @@ new_location:
 	lda	map_priority_low,X
 	sta	zx_src_l+1
 	lda	map_priority_hi,X
+	sta	zx_src_h+1
+.endif
+	lda	#<knight_priority_zx02
+	sta	zx_src_l+1
+	lda	#>knight_priority_zx02
 	sta	zx_src_h+1
 
 	lda	#$20
@@ -99,7 +111,7 @@ new_location:
 	; load bg
 
 	; we are PEASANT2 so locations 5...9 map to 0...4
-
+.if 0
 	lda	MAP_LOCATION
 	sec
 	sbc	#LOCATION_BASE
@@ -108,6 +120,12 @@ new_location:
 	lda	map_backgrounds_low,X
 	sta	zx_src_l+1
 	lda	map_backgrounds_hi,X
+	sta	zx_src_h+1
+.endif
+
+	lda	#<knight_zx02		; 9	-- knight
+	sta	zx_src_l+1
+	lda	#>knight_zx02		; 9	-- knight
 	sta	zx_src_h+1
 
 	lda	#$20
@@ -150,13 +168,13 @@ new_location:
 	;======================
 	; check if in hay
 
-	jsr	check_haystack_exit
+;	jsr	check_haystack_exit
 
 
 	;=====================
 	; special archery
 	;=====================
-
+.if 0
 	lda	ARROW_SCORE
 	bpl	game_loop
 
@@ -223,7 +241,7 @@ arrow_game_lose_common:
 	ldx	#<archery_lose_message
 	ldy	#>archery_lose_message
 	jsr	partial_message_step
-
+.endif
 
 	;================================
 	;================================
@@ -247,7 +265,7 @@ game_loop:
 	;=====================
 	; level specific
 	;=====================
-
+.if 0
 	lda     MAP_LOCATION
 	cmp     #LOCATION_MUD_PUDDLE
 	beq     at_mud_puddle
@@ -327,7 +345,7 @@ at_mud_puddle:
 	lda	GAME_STATE_2
 	ora	#GOT_MUDDY_ALREADY
 	sta	GAME_STATE_2
-
+.endif
 
 skip_level_specific:
 
@@ -424,7 +442,7 @@ to_left_of_inn:
 	sta	PEASANT_X
 	rts
 
-
+.if 0
 	;========================
 	; animate archery
 	;=========================
@@ -460,77 +478,76 @@ mendelev_arm_moved:
 
 	jmp	hgr_draw_sprite		;
 
+.endif
 
+.include "../peasant_common.s"
+.include "../move_peasant.s"
+.include "../draw_peasant.s"
 
-.include "peasant_common.s"
-.include "move_peasant.s"
-.include "draw_peasant.s"
+.include "../gr_copy.s"
 
-.include "gr_copy.s"
+.include "../new_map_location.s"
 
-.include "new_map_location.s"
+.include "../keyboard.s"
 
-.include "keyboard.s"
+.include "../wait.s"
+.include "../wait_a_bit.s"
 
-.include "wait.s"
-.include "wait_a_bit.s"
+.include "graphics_knight/graphics_knight.inc"
+.include "graphics_knight/priority_knight.inc"
 
-.include "graphics_peasantry/graphics_peasant2.inc"
-.include "graphics_peasantry/priority_peasant2.inc"
+.include "../hgr_routines/hgr_copy.s"
+.include "../hgr_routines/hgr_sprite.s"
 
-.include "hgr_routines/hgr_copy.s"
-.include "hgr_routines/hgr_sprite.s"
-
-.include "animate_river.s"
-
-.include "sprites/archery_sprites.inc"
+;.include "../animate_river.s"
+;.include "../sprites/archery_sprites.inc"
 
 map_backgrounds_low:
-	.byte	<haystack_zx02		; 5	-- haystack
-	.byte	<puddle_zx02		; 6	-- puddle
-	.byte	<archery_zx02		; 7	-- archery
-	.byte	<river_zx02		; 8	-- river
+;	.byte	<haystack_zx02		; 5	-- haystack
+;	.byte	<puddle_zx02		; 6	-- puddle
+;	.byte	<archery_zx02		; 7	-- archery
+;	.byte	<river_zx02		; 8	-- river
 	.byte	<knight_zx02		; 9	-- knight
 
 map_backgrounds_hi:
-	.byte	>haystack_zx02		; 5	-- haystack
-	.byte	>puddle_zx02		; 6	-- puddle
-	.byte	>archery_zx02		; 7	-- archery
-	.byte	>river_zx02		; 8	-- river
+;	.byte	>haystack_zx02		; 5	-- haystack
+;	.byte	>puddle_zx02		; 6	-- puddle
+;	.byte	>archery_zx02		; 7	-- archery
+;	.byte	>river_zx02		; 8	-- river
 	.byte	>knight_zx02		; 9	-- knight
 
 map_priority_low:
-	.byte	<haystack_priority_zx02		; 5	-- haystack
-	.byte	<puddle_priority_zx02		; 6	-- puddle
-	.byte	<archery_priority_zx02		; 7	-- archery
-	.byte	<river_priority_zx02		; 8	-- river
+;	.byte	<haystack_priority_zx02		; 5	-- haystack
+;	.byte	<puddle_priority_zx02		; 6	-- puddle
+;	.byte	<archery_priority_zx02		; 7	-- archery
+;	.byte	<river_priority_zx02		; 8	-- river
 	.byte	<knight_priority_zx02		; 9	-- knight
 
 map_priority_hi:
-	.byte	>haystack_priority_zx02		; 5	-- haystack
-	.byte	>puddle_priority_zx02		; 6	-- puddle
-	.byte	>archery_priority_zx02		; 7	-- archery
-	.byte	>river_priority_zx02		; 8	-- river
+;	.byte	>haystack_priority_zx02		; 5	-- haystack
+;	.byte	>puddle_priority_zx02		; 6	-- puddle
+;	.byte	>archery_priority_zx02		; 7	-- archery
+;	.byte	>river_priority_zx02		; 8	-- river
 	.byte	>knight_priority_zx02		; 9	-- knight
 
 verb_tables_low:
-	.byte	<hay_bale_verb_table		; 5	-- haystack
-	.byte	<puddle_verb_table		; 6	-- puddle
-	.byte	<archery_verb_table		; 7	-- archery
-	.byte	<river_stone_verb_table		; 8	-- river
+;	.byte	<hay_bale_verb_table		; 5	-- haystack
+;	.byte	<puddle_verb_table		; 6	-- puddle
+;	.byte	<archery_verb_table		; 7	-- archery
+;	.byte	<river_stone_verb_table		; 8	-- river
 	.byte	<mountain_pass_verb_table	; 9	-- knight
 
 verb_tables_hi:
-	.byte	>hay_bale_verb_table		; 5	-- haystack
-	.byte	>puddle_verb_table		; 6	-- puddle
-	.byte	>archery_verb_table		; 7	-- archery
-	.byte	>river_stone_verb_table		; 8	-- river
+;	.byte	>hay_bale_verb_table		; 5	-- haystack
+;	.byte	>puddle_verb_table		; 6	-- puddle
+;	.byte	>archery_verb_table		; 7	-- archery
+;	.byte	>river_stone_verb_table		; 8	-- river
 	.byte	>mountain_pass_verb_table	; 9	-- knight
 
 
 
 
-peasant2_text_zx02:
-.incbin "text/DIALOG_PEASANT2.ZX02"
+knight_text_zx02:
+.incbin "../text/DIALOG_KNIGHT.ZX02"
 
-.include "peasant2_actions.s"
+.include "knight_actions.s"

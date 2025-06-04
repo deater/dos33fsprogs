@@ -34,12 +34,12 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
-	PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
+	PEASANT1 ./location_knight/KNIGHT PEASANT3 PEASANT4 \
 	./wrong_boot/WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  20 0 PEASANT2	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_knight/KNIGHT	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
 
@@ -76,7 +76,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./trogdor/TROGDOR ./ending/ENDING ./cliff_base/CLIFF_BASE \
 	./climb/CLIMB ./outer/OUTER \
 	./cliff_heights/CLIFF_HEIGHTS \
-	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER
+	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_knight/KNIGHT
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -91,7 +92,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` PEASANT2	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_knight/KNIGHT	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 25 0` PEASANT3	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 30 0` PEASANT4	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3  0 0` ./wrong_boot/WBOOT3      0   1
@@ -351,26 +352,6 @@ peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
 
 ###
 
-PEASANT2:	peasant2.o
-	ld65 -o PEASANT2 peasant2.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-peasant2.o:	peasant2.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		peasant2_actions.s \
-		text/DIALOG_PEASANT2.ZX02 text/dialog_peasant2.inc \
-		graphics_peasantry/graphics_peasant2.inc sprites/peasant_sprites.inc \
-		graphics_peasantry/priority_peasant2.inc \
-		sprites/river_bubble_sprites.inc \
-		animate_river.s \
-		peasant_common.s \
-		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s loadsave_menu.s
-	ca65 -o peasant2.o peasant2.s -l peasant2.lst
-
-###
 
 PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
@@ -427,6 +408,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./inn/INN:
 	cd inn && make
 
+./location_knight/KNIGHT:
+	cd location_knight && make
+
 ###
 
 ./saves/SAVE_DATA:
@@ -475,8 +459,8 @@ parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
 text/DIALOG_PEASANT1.ZX02:
 	cd text && make
 
-text/DIALOG_PEASANT2.ZX02:
-	cd text && make
+#text/DIALOG_PEASANT2.ZX02:
+#	cd text && make
 
 text/DIALOG_PEASANT3.ZX02:
 	cd text && make
@@ -489,8 +473,8 @@ text/DIALOG_PEASANT4.ZX02:
 text/dialog_peasant1.inc:
 	cd text && make
 
-text/dialog_peasant2.inc:
-	cd text && make
+#text/dialog_peasant2.inc:
+#	cd text && make
 
 text/dialog_peasant3.inc:
 	cd text && make
@@ -556,6 +540,7 @@ distclean:
 	cd inside && make distclean
 	cd intro && make distclean
 	cd inventory && make distclean
+	cd location_knight && make distclean
 	cd map && make distclean
 	cd outer && make distclean
 	cd saves && make distclean
@@ -582,6 +567,7 @@ clean:
 	cd inside && make clean
 	cd intro && make clean
 	cd inventory && make clean
+	cd location_knight && make clean
 	cd map && make clean
 	cd music && make clean
 	cd outer && make clean

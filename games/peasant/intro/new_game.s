@@ -49,9 +49,9 @@ start_new_game:
 
 
 
-	; start in PEASANT2 file
+	; start in KNIGHT file
 
-	lda	#LOAD_PEASANT2
+	lda	#LOAD_KNIGHT
 	sta	WHICH_LOAD
 
 	;=========================

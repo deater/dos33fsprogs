@@ -1,5 +1,6 @@
-.include "tokens.inc"
+.include "../tokens.inc"
 
+.if 0
 	;=======================
 	;=======================
 	;=======================
@@ -897,7 +898,7 @@ river_swim:
 	ldx	#<river_swim_message
 	ldy	#>river_swim_message
 	jmp	finish_parse_message
-
+.endif
 	;=======================
 	;=======================
 	;=======================
@@ -1179,4 +1180,4 @@ knight_belt_fire:
 	jmp	finish_parse_message
 
 
-.include "text/dialog_peasant2.inc"
+.include "../text/dialog_peasant2.inc"
