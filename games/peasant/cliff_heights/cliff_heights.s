@@ -392,18 +392,6 @@ setup_heights_verb_table:
 	rts
 
 
-	;====================
-	; increment flame
-	;====================
-increment_flame:
-	inc	FLAME_COUNT
-	lda	FLAME_COUNT
-	cmp	#3
-	bne	flame_good
+.include "../location_common/flame_common.s"
 
-	lda	#0
-	sta	FLAME_COUNT
-
-flame_good:
-	rts
 

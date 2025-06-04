@@ -1,2 +1,3 @@
 
-collision_location = $bc00	; FIXME: how big?  somewhere else?
+collision_location = $b000	; FIXME: how big?  somewhere else?
+				; put in $800?

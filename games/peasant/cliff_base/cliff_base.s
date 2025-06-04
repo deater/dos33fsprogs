@@ -201,15 +201,7 @@ game_loop:
 	;=====================
 	; increment flame
 
-	inc	FLAME_COUNT
-	lda	FLAME_COUNT
-	cmp	#3
-	bne	flame_good
-
-	lda	#0
-	sta	FLAME_COUNT
-
-flame_good:
+	jsr	increment_flame
 
 	;======================
 	; check keyboard
@@ -274,9 +266,9 @@ oops_new_location:
 ;	jmp	new_location
 
 
-	;************************
+	;========================
 	; exit level
-	;************************
+	;========================
 level_over:
 
 	cmp	#NEW_FROM_LOAD		; see if loading save game
@@ -347,3 +339,5 @@ cliff_text_zx02:
 
 robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
+
+.include "../location_common/flame_common.s"

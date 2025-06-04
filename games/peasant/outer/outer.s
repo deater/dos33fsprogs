@@ -735,21 +735,6 @@ keeper1_loop:
 	rts
 
 
-	;====================
-	; increment flame
-	;====================
-increment_flame:
-	inc	FLAME_COUNT
-	lda	FLAME_COUNT
-	cmp	#3
-	bne	flame_good
-
-	lda	#0
-	sta	FLAME_COUNT
-
-flame_good:
-	rts
-
 keeper_talk1:
 	; print the message
 
@@ -1028,3 +1013,5 @@ sprites_mask_h:
 	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
 
 .include "../hgr_routines/hgr_sprite_save.s"
+
+.include "../location_common/flame_common.s"

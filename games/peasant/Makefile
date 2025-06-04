@@ -567,6 +567,7 @@ clean:
 	cd inside && make clean
 	cd intro && make clean
 	cd inventory && make clean
+	cd location_common && make clean
 	cd location_knight && make clean
 	cd map && make clean
 	cd music && make clean
