@@ -18,7 +18,8 @@ $60-$9F (16k)	Programs	(we limit to 16k, 16384 bytes, $40 pages)
 $A0-$AF (4k)	peasant sprites
 $B0-$B7 (2k)	unused currently?
 $B8-$BB (1k)	Hi-res lookup tables
-$BC-$BD (512B)	temp area for load/save file marshalling (collision)
+$BC-$BD (512B)	temp area for load/save file marshalling
+		 (also collision info (1page))
 $BE	(256B)	unused(?)
 $BF	(256B)	verb table
 $C0-$CF	(n/a)	I/O

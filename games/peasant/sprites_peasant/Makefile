@@ -7,7 +7,20 @@ all:	walk_sprites.inc climb_flame_sprites.inc \
 	walking_sprites.zx02 \
 	climbing_sprites.zx02 \
 	robe_sprites.zx02 robe_sprites_orange.zx02 robe_sprites_purple.zx02 \
-	robe_shield_sprites.zx02
+	robe_shield_sprites.zx02 \
+	PEASANT_SPRITES_COMMON
+
+
+####
+
+PEASANT_SPRITES_COMMON:	peasant_sprite_common.o
+	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+
+peasant_sprite_common.o:	peasant_sprite_common.s \
+	walking_sprites.zx02 \
+	robe_sprites.zx02
+	ca65 -o peasant_sprite_common.o peasant_sprite_common.s -l peasant_sprite_common.lst
+
 
 ####
 
@@ -433,5 +446,6 @@ clean:
 	rm -f *~ *.zx02 enemy_sprites.inc \
 		robe_sprites.inc robe_sprites_purple.inc robe_sprites_orange.inc \
 		flame_sprites.inc \
-		walk_sprites.inc climb_sprites.inc climb_flame_sprites.inc
+		walk_sprites.inc climb_sprites.inc climb_flame_sprites.inc \
+		PEASANT_SPRITES_COMMON
 
