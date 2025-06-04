@@ -28,8 +28,8 @@ knight.o:	knight.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ####
 
-knight_graphics/knight_graphics.inc:
-	cd knight_graphcis && make
+graphics_knight/knight_graphics.inc:
+	cd graphics_knight && make
 
 ###
 
