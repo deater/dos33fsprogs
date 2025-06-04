@@ -28,8 +28,8 @@ river.o:	river.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ####
 
-river_graphics/river_graphics.inc:
-	cd river_graphcis && make
+graphics_river/river_graphics.inc:
+	cd graphics_river && make
 
 ###
 
