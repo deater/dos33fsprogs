@@ -19,7 +19,7 @@ climb.o:	climb.s \
 		../text/DIALOG_CLIMB.ZX02 \
 		keyboard_climb.s \
 		sprites/enemy_sprites.inc \
-		../cliff_base/graphics_cliff/cliff_base.hgr.zx02 \
+		../location_cliff_base/graphics_cliff/cliff_base.hgr.zx02 \
 		graphics_cliff/cliff2.hgr.zx02 \
 		graphics_cliff/cliff3.hgr.zx02
 	ca65 -o climb.o climb.s -l climb.lst

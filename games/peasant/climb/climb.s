@@ -620,14 +620,14 @@ bg_data_h:
 	.byte >bg_cliff1,>bg_cliff2,>bg_cliff3
 
 bg_cliff1:
-	.incbin "../cliff_base/graphics_cliff/cliff_base.hgr.zx02"
+	.incbin "../location_cliff_base/graphics_cliff/cliff_base.hgr.zx02"
 bg_cliff2:
 	.incbin "graphics_cliff/cliff2.hgr.zx02"
 bg_cliff3:
 	.incbin "graphics_cliff/cliff3.hgr.zx02"
 
 priority_cliff1:
-	.incbin "../cliff_base/graphics_cliff/cliff_base_priority.zx02"
+	.incbin "../location_cliff_base/graphics_cliff/cliff_base_priority.zx02"
 priority_cliff2:
 	.incbin "graphics_cliff/cliff2_priority.zx02"
 priority_cliff3:

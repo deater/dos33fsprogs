@@ -4,143 +4,16 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "../zp.inc"
-.include "../hardware.inc"
-
-.include "../peasant_sprite.inc"
-.include "../qload.inc"
-.include "../inventory/inventory.inc"
-.include "../parse_input.inc"
-.include "../common_defines.inc"
-
-LOCATION_BASE   = LOCATION_MOUNTAIN_PASS	; index starts here (9)
-
+.include "../location_common/include_common.s"
 
 peasantry_knight:
 
-	lda	#0
-	sta	LEVEL_OVER
-	sta	FRAME
-	sta	FLAME_COUNT
+DIALOG_LOCATION=knight_text_zx02
+VERB_TABLE=mountain_pass_verb_table
+PRIORITY_LOCATION=knight_priority_zx02
+BG_LOCATION=knight_zx02
 
-	jsr	hgr_make_tables		; necessary?
-
-	;===============================
-	; decompress dialog to $D000
-
-	lda	#<knight_text_zx02
-        sta     zx_src_l+1
-        lda     #>knight_text_zx02
-        sta     zx_src_h+1
-
-        lda     #$D0
-
-        jsr     zx02_full_decomp
-
-	;================================
-	; update score
-
-	jsr	update_score
-
-
-	;=============================
-	;=============================
-	; new screen location
-	;=============================
-	;=============================
-
-new_location:
-	lda	#0
-	sta	LEVEL_OVER
-
-	;==========================
-	; load updated verb table
-
-        ; setup default verb table
-
-        jsr     setup_default_verb_table
-
-	lda	#<mountain_pass_verb_table	; 9	-- knight
-	sta	INL
-	lda	#>mountain_pass_verb_table	; 9	-- knight
-	sta	INH
-
-	jsr	load_custom_verb_table
-
-	;============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<knight_priority_zx02
-	sta	zx_src_l+1
-	lda	#>knight_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#$20			; temporarily load to $2000
-
-	jsr	zx02_full_decomp
-
-	jsr	gr_copy_to_page1	; copy to $400
-
-	; copy collision detection info
-
-	ldx     #0
-col_copy_loop:
-	lda	$2400,X
-	sta	collision_location,X
-	inx
-	bne	col_copy_loop
-
-
-	;=====================
-	; load bg
-
-	lda	#<knight_zx02		; 9	-- knight
-	sta	zx_src_l+1
-	lda	#>knight_zx02		; 9	-- knight
-	sta	zx_src_h+1
-
-	lda	#$20
-
-	jsr	zx02_full_decomp
-
-	; copy to $4000
-
-	jsr	hgr_copy
-
-	;=======================
-	; put peasant text
-
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
-
-	jsr	hgr_put_string
-
-	;=======================
-	; put score
-
-	jsr	print_score
-
-	;=======================
-	; always activate text
-
-	jsr	setup_prompt
-
-	;========================
-	; Load Peasant Sprites
-	;========================
-
-	lda	#<robe_sprite_data
-	sta	zx_src_l+1
-	lda	#>robe_sprite_data
-	sta	zx_src_h+1
-
-	lda	#$a0
-
-	jsr	zx02_full_decomp
-
+.include "../location_common/init_common.s"
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -278,9 +151,6 @@ to_left_of_inn:
 	sta	PEASANT_X
 	rts
 
-;.include "../peasant_common.s"
-;.include "../move_peasant.s"
-;.include "../draw_peasant.s"
 
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
@@ -293,7 +163,6 @@ to_left_of_inn:
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
-
 .include "../location_common/flame_common.s"
 
 .include "../gr_copy.s"
@@ -302,7 +171,6 @@ to_left_of_inn:
 .include "../new_map_location.s"
 
 .include "../keyboard.s"
-
 
 .include "../vblank.s"
 

@@ -13,14 +13,16 @@ cliff_heights.o:	cliff_heights.s \
 		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
 		../inventory/inventory.inc \
 		../parse_input.inc \
+		../location_common/flame_common.s \
+		../location_common/include_common.s \
+		../location_common/init_common.s \
 		heights_actions.s draw_lightning.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
 		graphics_heights/ciff_heights_graphics.inc \
 		graphics_heights/priority_cliff_heights.inc \
-		sprites_heights/ron_sprites.inc \
 		sprites_heights/lightning_sprites.inc \
 		../sprites_peasant/robe_sprites.zx02 \
-		../draw_peasant.s ../move_peasant.s \
+		../draw_peasant_new.s ../move_peasant_new.s \
 		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s \
 		../keyboard.s \
