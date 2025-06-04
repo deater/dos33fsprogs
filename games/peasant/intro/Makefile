@@ -27,13 +27,13 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../graphics_peasantry/cottage.zx02 \
 		../graphics_peasantry/lake_w.zx02 \
 		../graphics_peasantry/lake_e.zx02 \
-		../graphics_peasantry/river.zx02 \
-		../graphics_peasantry/knight.zx02 \
+		../location_river/graphics_river/river.zx02 \
+		../location_knight/graphics_knight/knight.zx02 \
 		../graphics_peasantry/cottage_priority.zx02 \
 		../graphics_peasantry/lake_w_priority.zx02 \
 		../graphics_peasantry/lake_e_priority.zx02 \
-		../graphics_peasantry/river_priority.zx02 \
-		../graphics_peasantry/knight_priority.zx02 \
+		../location_river/graphics_river/river_priority.zx02 \
+		../location_knight/graphics_knight/knight_priority.zx02 \
 		../sprites_peasant/walking_sprites.zx02 \
 		../sprites/peasant_sprites.inc \
 		../sprites/bubble_sprites_e.inc \

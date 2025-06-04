@@ -23,13 +23,13 @@ graphics_intro.inc:	\
 	cottage.zx02 \
 	lake_e.zx02 \
 	lake_w.zx02 \
-	river.zx02 \
-	knight.zx02
+	../location_river/graphics_river/river.zx02 \
+	../location_knight/graphics_knight/knight.zx02
 	echo "cottage_zx02: .incbin \"cottage.zx02\"" > graphics_intro.inc
 	echo "lake_w_zx02: .incbin \"lake_w.zx02\"" >> graphics_intro.inc
 	echo "lake_e_zx02: .incbin \"lake_e.zx02\"" >> graphics_intro.inc
-	echo "river_zx02: .incbin \"river.zx02\"" >> graphics_intro.inc
-	echo "knight_zx02: .incbin \"knight.zx02\"" >> graphics_intro.inc
+	echo "river_zx02: .incbin \"../location_river/graphics_river/river.zx02\"" >> graphics_intro.inc
+	echo "knight_zx02: .incbin \"../location_knight/graphics_knight/knight.zx02\"" >> graphics_intro.inc
 
 ###
 
@@ -50,14 +50,10 @@ graphics_peasant1.inc:	\
 graphics_peasant2.inc:	\
 	haystack.zx02 \
 	puddle.zx02 \
-	archery.zx02 \
-	river.zx02 \
-	knight.zx02
+	archery.zx02
 	echo "haystack_zx02: .incbin \"haystack.zx02\"" > graphics_peasant2.inc
 	echo "puddle_zx02: .incbin \"puddle.zx02\"" >> graphics_peasant2.inc
 	echo "archery_zx02: .incbin \"archery.zx02\"" >> graphics_peasant2.inc
-	echo "river_zx02: .incbin \"river.zx02\"" >> graphics_peasant2.inc
-	echo "knight_zx02: .incbin \"knight.zx02\"" >> graphics_peasant2.inc
 
 ###
 
@@ -95,12 +91,13 @@ graphics_peasant4.inc:	\
 priority_intro.inc:	\
 	cottage_priority.zx02 \
 	lake_w_priority.zx02 lake_e_priority.zx02 \
-	river_priority.zx02 knight_priority.zx02
+	../location_river/graphics_river/river_priority.zx02 \
+	../location_knight/graphics_knight/knight_priority.zx02
 	echo "cottage_priority_zx02: .incbin \"cottage_priority.zx02\"" > priority_intro.inc
 	echo "lake_w_priority_zx02: .incbin \"lake_w_priority.zx02\"" >> priority_intro.inc
 	echo "lake_e_priority_zx02: .incbin \"lake_e_priority.zx02\"" >> priority_intro.inc
-	echo "river_priority_zx02: .incbin \"river_priority.zx02\"" >> priority_intro.inc
-	echo "knight_priority_zx02: .incbin \"knight_priority.zx02\"" >> priority_intro.inc
+	echo "river_priority_zx02: .incbin \"../location_river/graphics_river/river_priority.zx02\"" >> priority_intro.inc
+	echo "knight_priority_zx02: .incbin \"../location_knight/graphics_knight/knight_priority.zx02\"" >> priority_intro.inc
 
 priority_peasant1.inc:	\
 	gary_priority.zx02 top_prints_priority.zx02 \
@@ -117,13 +114,10 @@ priority_peasant1.inc:	\
 
 priority_peasant2.inc:	\
 	haystack_priority.zx02 puddle_priority.zx02 \
-	archery_priority.zx02 \
-	river_priority.zx02 knight_priority.zx02
+	archery_priority.zx02
 	echo "haystack_priority_zx02: .incbin \"haystack_priority.zx02\"" > priority_peasant2.inc
 	echo "puddle_priority_zx02: .incbin \"puddle_priority.zx02\"" >> priority_peasant2.inc
 	echo "archery_priority_zx02: .incbin \"archery_priority.zx02\"" >> priority_peasant2.inc
-	echo "river_priority_zx02: .incbin \"river_priority.zx02\"" >> priority_peasant2.inc
-	echo "knight_priority_zx02: .incbin \"knight_priority.zx02\"" >> priority_peasant2.inc
 
 ###
 
@@ -219,12 +213,8 @@ jhonka.hgr:	jhonka.png
 
 ###
 
-knight.zx02:	knight.hgr
-	$(ZX02) knight.hgr knight.zx02
-
-knight.hgr:	knight.png
-	$(PNG2HGR) knight.png > knight.hgr
-
+../location_knight/graphics_knight/knight.zx02:	
+	cd ../location_knight/graphics_knight && make
 
 ###
 
@@ -288,11 +278,8 @@ puddle.hgr:	puddle.png
 
 ###
 
-river.zx02:	river.hgr
-	$(ZX02) river.hgr river.zx02
-
-river.hgr:	river.png
-	$(PNG2HGR) river.png > river.hgr
+../location_river/graphics_river/river.zx02:	
+	cd ../location_river/graphics_river && make
 
 ###
 

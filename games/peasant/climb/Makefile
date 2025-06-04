@@ -26,6 +26,9 @@ climb.o:	climb.s \
 
 ####
 
+../location_cliff_base/graphics_cliff/cliff_base.hgr.zx02:	
+	cd ../location_cliff_base/graphics_cliff && make
+
 graphics_cliff/cliff2.hgr.zx02:	
 	cd graphics_cliff && make
 

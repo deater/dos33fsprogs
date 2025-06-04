@@ -168,14 +168,14 @@ mockingboard_notfound2:
 cottage_zx02:	.incbin "../graphics_peasantry/cottage.zx02"
 lake_w_zx02:	.incbin "../graphics_peasantry/lake_w.zx02"
 lake_e_zx02:	.incbin "../graphics_peasantry/lake_e.zx02"
-river_zx02:	.incbin "../graphics_peasantry/river.zx02"
-knight_zx02:	.incbin "../graphics_peasantry/knight.zx02"
+river_zx02:	.incbin "../location_river/graphics_river/river.zx02"
+knight_zx02:	.incbin "../location_knight/graphics_knight/knight.zx02"
 
 cottage_priority_zx02:	.incbin "../graphics_peasantry/cottage_priority.zx02"
 lake_w_priority_zx02:	.incbin "../graphics_peasantry/lake_w_priority.zx02"
 lake_e_priority_zx02:	.incbin "../graphics_peasantry/lake_e_priority.zx02"
-river_priority_zx02:	.incbin "../graphics_peasantry/river_priority.zx02"
-knight_priority_zx02:	.incbin "../graphics_peasantry/knight_priority.zx02"
+river_priority_zx02:	.incbin "../location_river/graphics_river/river_priority.zx02"
+knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priority.zx02"
 
 .include "../text/intro.inc"
 
