@@ -28,11 +28,12 @@ qload_start:
 
 which_disk_array:
 	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
-	.byte 2,2,2,2		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 4,4,1,4		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+	.byte 2,2,3,3		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+	.byte 5,5,1,5		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 	.byte 1,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte 3,3,3,4		; INSIDE, ARCHERY, MAP, CLIMB
-	.byte 4,4,2		; HEIGHTS, OUTER, KNIGHT
+	.byte 4,4,4,5		; INSIDE, ARCHERY, MAP, CLIMB
+	.byte 5,5		; HEIGHTS, OUTER
+	.byte 2,2,2,2,2		; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte 1,1,1		; SAVE_DATA, ?, ?
 	.byte $f		; disk detect
@@ -43,7 +44,8 @@ load_address_array:
 	.byte $60,$60,$D0,$60	; TROGDOR, ENDING, MUSIC, CLIFF
 	.byte $60,$D0,$20,$60	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte $60,$60,$60,$60	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte $60,$60,$60	; HEIGHTS, OUTER, KNIGHT
+	.byte $60,$60		; HEIGHTS, OUTER
+	.byte $60,$60,$60,$60,$60	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte $BC,$BC,$BC	; SAVE_DATA,? , ?
 	.byte $BC		; disk detect
@@ -54,7 +56,8 @@ track_array:
 	.byte 15,19, 3, 1	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 	.byte 15,14,13,11	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte  7, 3, 1, 3	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  7,11,20		; HEIGHTS, OUTER, KNIGHT
+	.byte  7,11		; HEIGHTS, OUTER
+	.byte 20,22,24,26,28	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte  0, 0, 0		; SAVE_DATA, ?, ?
 	.byte  0		; disk detect
@@ -65,7 +68,8 @@ sector_array:
 	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 	.byte  0, 0, 0, 0	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte  0, 0, 0, 0	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  0, 0, 0		; HEIGHTS, OUTER, KNIGHT
+	.byte  0, 0		; HEIGHTS, OUTER
+	.byte  0, 0, 0, 0, 0	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte  12,0,0		; SAVE_DATA, ?, ?
 	.byte  0		; disk detect
@@ -76,7 +80,8 @@ length_array:
 	.byte  64, 80, 16, 32	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 	.byte  16, 16, 16, 64	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 	.byte  64, 64, 32, 64	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  64, 64, 32	; HEIGHTS, OUTER, KNIGHT
+	.byte  64,64		; HEIGHTS, OUTER
+	.byte  32,32,32,32,32 	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte   1,1,1		; SAVE_DATA, ? , ?
 	.byte   1		; disk detect

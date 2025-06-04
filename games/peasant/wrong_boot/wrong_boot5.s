@@ -51,7 +51,7 @@ done:
 
 message:
 	.byte	$0D,$0D,$0D,$0D,$0D
-	.byte	"        PEASANT'S QUEST - DISK 4",$0D,$0D,$0D
+	.byte	"        PEASANT'S QUEST - DISK 5",$0D,$0D,$0D
 	.byte	"         PLEASE INSERT DISK 1",$0D,$0D
 	.byte	"        PRESS ANY KEY TO REBOOT",$0D
 	.byte	$00

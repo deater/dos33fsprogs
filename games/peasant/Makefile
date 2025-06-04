@@ -12,7 +12,7 @@ PRODOS_RAW = ../../utils/prodos-utils/prodos_raw
 
 
 all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk \
-	peasant_disk4.dsk peasant.2mg
+	peasant_disk4.dsk peasant_disk5.dsk peasant.2mg
 
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
@@ -34,38 +34,50 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
-	PEASANT1 ./location_knight/KNIGHT PEASANT3 PEASANT4 \
+	PEASANT1 ./location_knight/KNIGHT \
 	./wrong_boot/WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_knight/KNIGHT	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  25 0 PEASANT3	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  30 0 PEASANT4	  0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_knight/KNIGHT	  0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_knight/KNIGHT	  0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_knight/KNIGHT	  0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_knight/KNIGHT	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT	  0   0
 
-peasant_disk3.dsk:	\
-	./inside/INSIDE ./inn/INN \
-	./archery/ARCHERY ./map/MAP \
+peasant_disk3.dsk:	QBOOT QLOAD \
+	PEASANT3 PEASANT4 \
 	./wrong_boot/WBOOT3
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  ./wrong_boot/WBOOT3      0   1
-	$(DOS33_RAW) peasant_disk3.dsk   1 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk3.dsk   3 0 ./archery/ARCHERY      0   0
-	$(DOS33_RAW) peasant_disk3.dsk   7 0 ./inside/INSIDE       0   0
-	$(DOS33_RAW) peasant_disk3.dsk  11 0 ./inn/INN          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  25 0 PEASANT3	  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  30 0 PEASANT4	  0   0
 
-peasant_disk4.dsk:	./wrong_boot/WBOOT4 \
-	./location_cliff_base/CLIFF_BASE ./climb/CLIMB \
-	./cliff_heights/CLIFF_HEIGHTS ./outer/OUTER \
-	./trogdor/TROGDOR ./ending/ENDING
+peasant_disk4.dsk:	\
+	./inside/INSIDE ./inn/INN \
+	./archery/ARCHERY ./map/MAP \
+	./wrong_boot/WBOOT4
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk4.dsk
-	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4	0   1
-	$(DOS33_RAW) peasant_disk4.dsk   1 0 ./location_cliff_base/CLIFF_BASE	0   0
-	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./climb/CLIMB	  	0   0
-	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./cliff_heights/CLIFF_HEIGHTS	  0   0
-	$(DOS33_RAW) peasant_disk4.dsk  11 0 ./outer/OUTER	  	0   0
-	$(DOS33_RAW) peasant_disk4.dsk  15 0 ./trogdor/TROGDOR	  	0   0
-	$(DOS33_RAW) peasant_disk4.dsk  19 0 ./ending/ENDING	  	0   0
+	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4      0   1
+	$(DOS33_RAW) peasant_disk4.dsk   1 0 ./map/MAP          0   0
+	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./archery/ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./inside/INSIDE       0   0
+	$(DOS33_RAW) peasant_disk4.dsk  11 0 ./inn/INN          0   0
+
+peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
+	 ./climb/CLIMB \
+	 ./outer/OUTER \
+	./location_cliff_base/CLIFF_BASE \
+	./location_cliff_heights/CLIFF_HEIGHTS \
+	./trogdor/TROGDOR ./ending/ENDING
+	cp $(EMPTY_DISK)/empty.dsk peasant_disk5.dsk
+	$(DOS33_RAW) peasant_disk5.dsk   0 0  ./wrong_boot/WBOOT5	0   1
+	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE	0   0
+	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./outer/OUTER	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./trogdor/TROGDOR	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./ending/ENDING	  	0   0
 
 
 
@@ -75,10 +87,10 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE \
 	./climb/CLIMB ./outer/OUTER \
-	./cliff_heights/CLIFF_HEIGHTS \
+	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_knight/KNIGHT
-	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 2800 -2
+	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` ./saves/SAVE_DATA      0   1
@@ -92,20 +104,24 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_knight/KNIGHT	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 25 0` PEASANT3	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 30 0` PEASANT4	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  0 0` ./wrong_boot/WBOOT3      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  1 0` ./map/MAP          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  3 0` ./archery/ARCHERY      0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3  7 0` ./inside/INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 11 0` ./inn/INN          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 1 0` ./location_cliff_base/CLIFF_BASE	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 3 0` ./climb/CLIMB	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 7 0` ./cliff_heights/CLIFF_HEIGHTS	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 11 0` ./outer/OUTER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 15 0` ./trogdor/TROGDOR	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 19 0` ./ending/ENDING	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_knight/KNIGHT	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_knight/KNIGHT	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_knight/KNIGHT	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_knight/KNIGHT	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` PEASANT3	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` PEASANT4	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  1 0` ./map/MAP          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  3 0` ./archery/ARCHERY      0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./inside/INSIDE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 11 0` ./inn/INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 1 0` ./location_cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 3 0` ./climb/CLIMB	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 7 0` ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./outer/OUTER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./trogdor/TROGDOR	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./ending/ENDING	  0   0
 
 
 ###
@@ -303,14 +319,14 @@ inventory/INVENTORY:
 
 ####
 
-./location_cliff_base/CLIFF_BASE:
-	cd location_cliff_base && make
-
 ./climb/CLIMB:
 	cd climb && make
 
-./cliff_heights/CLIFF_HEIGHTS:
-	cd cliff_heights && make
+./location_cliff_base/CLIFF_BASE:
+	cd location_cliff_base && make
+
+./location_cliff_heights/CLIFF_HEIGHTS:
+	cd location_cliff_heights && make
 
 ./archery/ARCHERY:
 	cd archery && make
@@ -530,7 +546,6 @@ distclean:
 	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd archery && make distclean
-	cd cliff_heights && make distclean
 	cd climb && make clean
 	cd copy && make distclean
 	cd ending && make distclean
@@ -540,6 +555,7 @@ distclean:
 	cd intro && make distclean
 	cd inventory && make distclean
 	cd location_cliff_base && make distclean
+	cd location_cliff_heights && make distclean
 	cd location_knight && make distclean
 	cd map && make distclean
 	cd outer && make distclean
@@ -557,7 +573,6 @@ clean:
 			*.ZX02 \
 			generate_common generate_all_symbols
 	cd archery && make clean
-	cd cliff_heights && make clean
 	cd climb && make clean
 	cd copy && make clean
 	cd ending && make clean
@@ -567,6 +582,7 @@ clean:
 	cd intro && make clean
 	cd inventory && make clean
 	cd location_cliff_base && make clean
+	cd location_cliff_heights && make clean
 	cd location_common && make clean
 	cd location_knight && make clean
 	cd map && make clean
