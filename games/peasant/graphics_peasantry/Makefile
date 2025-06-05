@@ -49,11 +49,9 @@ graphics_peasant1.inc:	\
 
 graphics_peasant2.inc:	\
 	haystack.zx02 \
-	puddle.zx02 \
-	archery.zx02
+	puddle.zx02
 	echo "haystack_zx02: .incbin \"haystack.zx02\"" > graphics_peasant2.inc
 	echo "puddle_zx02: .incbin \"puddle.zx02\"" >> graphics_peasant2.inc
-	echo "archery_zx02: .incbin \"archery.zx02\"" >> graphics_peasant2.inc
 
 ###
 
@@ -113,11 +111,10 @@ priority_peasant1.inc:	\
 ###
 
 priority_peasant2.inc:	\
-	haystack_priority.zx02 puddle_priority.zx02 \
-	archery_priority.zx02
+	haystack_priority.zx02 puddle_priority.zx02
 	echo "haystack_priority_zx02: .incbin \"haystack_priority.zx02\"" > priority_peasant2.inc
 	echo "puddle_priority_zx02: .incbin \"puddle_priority.zx02\"" >> priority_peasant2.inc
-	echo "archery_priority_zx02: .incbin \"archery_priority.zx02\"" >> priority_peasant2.inc
+
 
 ###
 
@@ -145,14 +142,6 @@ priority_peasant4.inc:	\
 	echo "lady_cottage_priority_zx02: .incbin \"lady_cottage_priority.zx02\"" >> priority_peasant4.inc
 	echo "crooked_tree_priority_zx02: .incbin \"crooked_tree_priority.zx02\"" >> priority_peasant4.inc
 
-
-###
-
-archery.zx02:	archery.hgr
-	$(ZX02) archery.hgr archery.zx02
-
-archery.hgr:	archery.png
-	$(PNG2HGR) archery.png > archery.hgr
 
 ###
 
@@ -325,14 +314,6 @@ todo.hgr:	todo.png
 
 ###########################################
 ###########################################
-
-###
-
-archery_priority.zx02:	archery_priority.hgr
-	$(ZX02) archery_priority.hgr archery_priority.zx02
-
-archery_priority.hgr:	archery_priority.png
-	$(PNG2GR) archery_priority.png archery_priority.hgr
 
 ###
 

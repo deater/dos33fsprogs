@@ -35,6 +35,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 \
+	./location_brothers/BROTHERS \
 	./location_river/RIVER \
 	./location_knight/KNIGHT \
 	./wrong_boot/WBOOT2
@@ -43,7 +44,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_knight/KNIGHT	  0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_knight/KNIGHT	  0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_knight/KNIGHT	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_river/RIVER	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT	  0   0
 
@@ -92,7 +93,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_knight/KNIGHT \
-	./location_river/RIVER
+	./location_river/RIVER \
+	./location_brothers/BROTHERS
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -109,7 +111,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_knight/KNIGHT	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_knight/KNIGHT	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_knight/KNIGHT	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` PEASANT3	  0   0

@@ -9,6 +9,9 @@ all:	INTRO
 ../graphics_peasantry/cottage.zx02:	
 	cd ../graphics_peasantry && make
 
+../graphics_peasantry/cottage_priority.zx02:	
+	cd ../graphics_peasantry && make
+
 ../sprites/peasant_sprites.inc:	
 	cd ../sprites && make
 

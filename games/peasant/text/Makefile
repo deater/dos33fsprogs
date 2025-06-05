@@ -10,6 +10,7 @@ all:	dump_text shrink_text \
 	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
 	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
+	DIALOG_BROTHERS.ZX02 dialog_brothers.inc \
 	DIALOG_RIVER.ZX02 dialog_river.inc \
 	DIALOG_KNIGHT.ZX02 dialog_knight.inc \
 	DIALOG_INSIDE.ZX02 dialog_inside.inc \
@@ -67,6 +68,22 @@ dialog_river.o:	dialog_river.s \
 
 dialog_river.inc:	../generate_all_symbols dialog_river
 	../generate_all_symbols -a 0xd000 dialog_river.lst > dialog_river.inc
+
+###
+
+DIALOG_BROTHERS.ZX02:	dialog_brothers
+	$(ZX02) -f  dialog_brothers DIALOG_BROTHERS.ZX02
+
+dialog_brothers:	dialog_brothers.o
+	ld65 -o dialog_brothers dialog_brothers.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_brothers.o:	dialog_brothers.s \
+		archery.inc.lookup
+	ca65 -o dialog_brothers.o dialog_brothers.s -l dialog_brothers.lst
+
+dialog_brothers.inc:	../generate_all_symbols dialog_brothers
+	../generate_all_symbols -a 0xd000 dialog_brothers.lst > dialog_brothers.inc
+
 
 
 
