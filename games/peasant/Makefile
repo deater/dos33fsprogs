@@ -35,6 +35,8 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	PEASANT1 \
+	./location_haystack/HAYSTACK \
+	./location_puddle/PUDDLE \
 	./location_brothers/BROTHERS \
 	./location_river/RIVER \
 	./location_knight/KNIGHT \
@@ -42,8 +44,8 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_knight/KNIGHT	  0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_knight/KNIGHT	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_river/RIVER	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT	  0   0
@@ -94,7 +96,9 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_knight/KNIGHT \
 	./location_river/RIVER \
-	./location_brothers/BROTHERS
+	./location_brothers/BROTHERS \
+	./location_puddle/PUDDLE \
+	./location_haystack/HAYSTACK
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -109,8 +113,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_knight/KNIGHT	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_knight/KNIGHT	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT	  0   0
@@ -336,9 +340,6 @@ inventory/INVENTORY:
 ./game_over/GAME_OVER:
 	cd game_over && make
 
-./knight_falls_rock/KNIGHT_FALLS_ROCK:	DIALOG_KNIGHT_FALLS_ROCK.ZX02
-	cd knight_falls_rock && make
-
 ./outer/OUTER:	
 	cd outer && make
 
@@ -434,6 +435,16 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 
 ./location_river/RIVER:
 	cd location_river && make
+
+./location_brothers/BROTHERS:
+	cd location_brothers && make
+
+./location_puddle/PUDDLE:
+	cd location_puddle && make
+
+./location_haystack/HAYSTACK:
+	cd location_haystack && make
+
 
 
 ###
@@ -563,9 +574,12 @@ distclean:
 	cd inside && make distclean
 	cd intro && make distclean
 	cd inventory && make distclean
+	cd location_brothers && make distclean
 	cd location_cliff_base && make distclean
 	cd location_cliff_heights && make distclean
+	cd location_haystack && make distclean
 	cd location_knight && make distclean
+	cd location_puddle && make distclean
 	cd location_river && make distclean
 	cd map && make distclean
 	cd outer && make distclean
@@ -591,10 +605,13 @@ clean:
 	cd inside && make clean
 	cd intro && make clean
 	cd inventory && make clean
+	cd location_brothers && make clean
 	cd location_cliff_base && make clean
 	cd location_cliff_heights && make clean
 	cd location_common && make clean
+	cd location_haystack && make clean
 	cd location_knight && make clean
+	cd location_puddle && make clean
 	cd location_river && make clean
 	cd map && make clean
 	cd music && make clean

@@ -10,6 +10,8 @@ all:	dump_text shrink_text \
 	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
 	DIALOG_PEASANT3.ZX02 dialog_peasant3.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
+	DIALOG_PUDDLE.ZX02 dialog_puddle.inc \
+	DIALOG_HAYSTACK.ZX02 dialog_haystack.inc \
 	DIALOG_BROTHERS.ZX02 dialog_brothers.inc \
 	DIALOG_RIVER.ZX02 dialog_river.inc \
 	DIALOG_KNIGHT.ZX02 dialog_knight.inc \
@@ -83,6 +85,37 @@ dialog_brothers.o:	dialog_brothers.s \
 
 dialog_brothers.inc:	../generate_all_symbols dialog_brothers
 	../generate_all_symbols -a 0xd000 dialog_brothers.lst > dialog_brothers.inc
+
+###
+
+DIALOG_PUDDLE.ZX02:	dialog_puddle
+	$(ZX02) -f  dialog_puddle DIALOG_PUDDLE.ZX02
+
+dialog_puddle:	dialog_puddle.o
+	ld65 -o dialog_puddle dialog_puddle.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_puddle.o:	dialog_puddle.s \
+		mud.inc.lookup
+	ca65 -o dialog_puddle.o dialog_puddle.s -l dialog_puddle.lst
+
+dialog_puddle.inc:	../generate_all_symbols dialog_puddle
+	../generate_all_symbols -a 0xd000 dialog_puddle.lst > dialog_puddle.inc
+
+###
+
+DIALOG_HAYSTACK.ZX02:	dialog_haystack
+	$(ZX02) -f  dialog_haystack DIALOG_HAYSTACK.ZX02
+
+dialog_haystack:	dialog_haystack.o
+	ld65 -o dialog_haystack dialog_haystack.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_haystack.o:	dialog_haystack.s \
+		hay.inc.lookup
+	ca65 -o dialog_haystack.o dialog_haystack.s -l dialog_haystack.lst
+
+dialog_haystack.inc:	../generate_all_symbols dialog_haystack
+	../generate_all_symbols -a 0xd000 dialog_haystack.lst > dialog_haystack.inc
+
 
 
 
