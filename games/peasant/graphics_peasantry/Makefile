@@ -7,12 +7,10 @@ B2D = ../../../utils/bmp2dhr/b2d
 
 all:	graphics_intro.inc \
 	graphics_peasant1.inc \
-	graphics_peasant2.inc \
 	graphics_peasant3.inc \
 	graphics_peasant4.inc \
 	priority_peasant1.inc \
 	priority_intro.inc \
-	priority_peasant2.inc \
 	priority_peasant3.inc \
 	priority_peasant4.inc
 
@@ -44,14 +42,6 @@ graphics_peasant1.inc:	\
 	echo "wishing_well_zx02: .incbin \"wishing_well.zx02\"" >> graphics_peasant1.inc
 	echo "leaning_tree_zx02: .incbin \"leaning_tree.zx02\"" >> graphics_peasant1.inc
 	echo "waterfall_zx02: .incbin \"waterfall.zx02\"" >> graphics_peasant1.inc
-
-###
-
-graphics_peasant2.inc:	\
-	haystack.zx02 \
-	puddle.zx02
-	echo "haystack_zx02: .incbin \"haystack.zx02\"" > graphics_peasant2.inc
-	echo "puddle_zx02: .incbin \"puddle.zx02\"" >> graphics_peasant2.inc
 
 ###
 
@@ -106,14 +96,6 @@ priority_peasant1.inc:	\
 	echo "wishing_well_priority_zx02: .incbin \"wishing_well_priority.zx02\"" >> priority_peasant1.inc
 	echo "leaning_tree_priority_zx02: .incbin \"leaning_tree_priority.zx02\"" >> priority_peasant1.inc
 	echo "waterfall_priority_zx02: .incbin \"waterfall_priority.zx02\"" >> priority_peasant1.inc
-
-
-###
-
-priority_peasant2.inc:	\
-	haystack_priority.zx02 puddle_priority.zx02
-	echo "haystack_priority_zx02: .incbin \"haystack_priority.zx02\"" > priority_peasant2.inc
-	echo "puddle_priority_zx02: .incbin \"puddle_priority.zx02\"" >> priority_peasant2.inc
 
 
 ###

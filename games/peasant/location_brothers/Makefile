@@ -31,6 +31,9 @@ brothers.o:	brothers.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_brothers/brothers_graphics.inc:
 	cd graphics_brothers && make
 
+sprites/archery_sprites.inc:
+	cd sprites && make
+
 ###
 
 distclean:

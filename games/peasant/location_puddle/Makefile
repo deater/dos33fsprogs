@@ -22,8 +22,7 @@ puddle.o:	puddle.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait.s ../wait_a_bit.s \
 		puddle_actions.s \
 		../text/DIALOG_PUDDLE.ZX02 ../text/dialog_puddle.inc \
-		graphics_puddle/puddle_graphics.inc \
-		sprites/archery_sprites.inc
+		graphics_puddle/puddle_graphics.inc
 	ca65 -o puddle.o puddle.s -l puddle.lst
 
 ####

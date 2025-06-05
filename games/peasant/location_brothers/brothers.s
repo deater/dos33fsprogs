@@ -267,6 +267,7 @@ mendelev_arm_moved:
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
+.include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
 
 .include "../gr_copy.s"

@@ -145,4 +145,5 @@ cliff_text_zx02:
 robe_sprite_data:
 	.incbin "../sprites_peasant/robe_sprites.zx02"
 
+.include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"

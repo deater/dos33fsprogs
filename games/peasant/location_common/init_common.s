@@ -89,6 +89,12 @@ col_copy_loop:
 
 	jsr	hgr_copy
 
+	;====================================
+        ; check if allowed to be in haystack
+
+	jsr	check_haystack_exit
+
+
 	;=======================
 	; put peasant text
 

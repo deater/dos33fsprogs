@@ -486,7 +486,7 @@ no_draw_ned:
 	rts
 
 
-.include "peasant_common.s"
+.include "location_common/peasant_common.s"
 .include "move_peasant.s"
 .include "draw_peasant.s"
 

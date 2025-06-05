@@ -222,6 +222,7 @@ robe_sprite_data:
 
 .include "draw_lightning.s"
 
+.include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
 
 

@@ -148,7 +148,6 @@ to_left_of_inn:
 
 .include "../move_peasant_new.s"
 .include "../draw_peasant_new.s"
-.include "../peasant_common.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
@@ -158,6 +157,7 @@ to_left_of_inn:
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
+.include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
 
 .include "../gr_copy.s"

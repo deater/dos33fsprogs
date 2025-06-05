@@ -353,7 +353,7 @@ peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
 		parse_input.inc \
 		peasant1_actions.s \
 		text/DIALOG_PEASANT1.ZX02 text/dialog_peasant1.inc \
-		kerrek_actions.s peasant_common.s \
+		kerrek_actions.s location_common/peasant_common.s \
 		sprites/peasant_sprites.inc \
 		sprites/kerrek_sprites.inc \
 		sprites/gary_sprites.inc \
@@ -378,7 +378,7 @@ peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
 		text/DIALOG_PEASANT3.ZX02 text/dialog_peasant3.inc \
 		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant3.inc \
-		peasant_common.s \
+		location_common/peasant_common.s \
 		animate_bubbles.s \
 		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
 		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
@@ -397,7 +397,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 		sprites/ned_sprites.inc \
 		peasant4_actions.s \
 		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
-		kerrek_actions.s peasant_common.s \
+		kerrek_actions.s location_common/peasant_common.s \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
