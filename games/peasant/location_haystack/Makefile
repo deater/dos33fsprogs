@@ -22,8 +22,7 @@ haystack.o:	haystack.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait.s ../wait_a_bit.s \
 		haystack_actions.s \
 		../text/DIALOG_HAYSTACK.ZX02 ../text/dialog_haystack.inc \
-		graphics_haystack/haystack_graphics.inc \
-		sprites/archery_sprites.inc
+		graphics_haystack/haystack_graphics.inc
 	ca65 -o haystack.o haystack.s -l haystack.lst
 
 ####
