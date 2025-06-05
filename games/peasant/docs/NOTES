@@ -1,3 +1,13 @@
+decompress
+	knight = 5f535 = 390435 = 3fps
+
+
+
+
+
+
+
+
 Moving locations around on disk:
 + Make sure LOCATIONS and LOAD are up to date in zp.inc
 + Update end of qload.s
