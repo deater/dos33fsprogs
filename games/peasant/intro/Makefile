@@ -43,7 +43,7 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../sprites/bubble_sprites_w.inc \
 		../sprites/river_bubble_sprites.inc \
 		../text/intro.inc \
-		../animate_river.s \
+		../location_river/animate_river.s \
 		../animate_bubbles.s \
 		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_save_restore.s \

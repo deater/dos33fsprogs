@@ -172,4 +172,4 @@ river_path:
 	.byte $FF,$FF
 
 
-.include "../animate_river.s"
+.include "../location_river/animate_river.s"

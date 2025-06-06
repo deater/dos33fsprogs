@@ -23,7 +23,8 @@ river.o:	river.s ../zp.inc ../hardware.inc ../qload.inc \
 		river_actions.s \
 		../text/DIALOG_RIVER.ZX02 ../text/dialog_river.inc \
 		graphics_river/river_graphics.inc \
-		../sprites/peasant_sprites.inc
+		../sprites/peasant_sprites.inc \
+		animate_river.s
 	ca65 -o river.o river.s -l river.lst
 
 ####

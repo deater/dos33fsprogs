@@ -185,7 +185,7 @@ to_left_of_inn:
 robe_sprite_data:
         .incbin "../sprites_peasant/robe_sprites.zx02"
 
-.include "../animate_river.s"
+.include "animate_river.s"
 
 .include "graphics_river/river_graphics.inc"
 .include "graphics_river/river_priority.inc"
