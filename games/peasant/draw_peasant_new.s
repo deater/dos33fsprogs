@@ -71,7 +71,7 @@ peasant_flame_offsets:
 
 	; restore bg behind peasant
 erase_peasant:
-
+.if 0
 	lda	GAME_STATE_2
 	and	#ON_FIRE
 	beq	skip_erase_fire
@@ -87,5 +87,5 @@ skip_erase_fire:
 	ldy	#4
 
 	jmp	hgr_partial_restore_by_num      ; tail call
-
+.endif
 	rts

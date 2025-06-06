@@ -20,6 +20,20 @@ BG_LOCATION=knight_zx02
 
 	bit	KEYRESET
 
+	lda	#$00
+	sta	DRAW_PAGE
+
+        lda     #<BG_LOCATION           ; 9     -- knight
+        sta     zx_src_l+1
+        lda     #>BG_LOCATION           ; 9     -- knight
+        sta     zx_src_h+1
+
+        lda     #$80
+
+        jsr     zx02_full_decomp
+
+
+
 	;================================
 	;================================
 	;================================
@@ -45,6 +59,13 @@ game_loop:
 
 skip_level_specific:
 
+
+	lda	#$80
+	jsr	hgr_copy_fast
+
+
+
+
 	;====================
 	; always draw peasant
 
@@ -69,26 +90,21 @@ skip_level_specific:
 
 	lda	PEASANT_DIR
 	sta	OLD_DIR
-
-	lda	#13
+;	lda	#13
+	lda	#1
 	sta	WAIT_LOOP
 wait_loop:
-
-
 	jsr	check_keyboard
-
-
 	lda	#50	; approx 7ms
 	jsr	wait
-
 	dec	WAIT_LOOP
 	bne	wait_loop
 
+	jsr	hgr_page_flip
 
 	;=====================
 	; delay
-
-	jsr	wait_vblank
+;	jsr	wait_vblank
 
 	jmp	game_loop
 
@@ -185,3 +201,6 @@ knight_text_zx02:
 .incbin "../text/DIALOG_KNIGHT.ZX02"
 
 .include "knight_actions.s"
+.include "../hgr_routines/hgr_page_flip.s"
+
+.include "hgr_copy_fast.s"

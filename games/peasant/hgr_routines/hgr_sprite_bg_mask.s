@@ -163,7 +163,11 @@ mask_good:
 	clc
 	adc	CURSOR_X		; point at actual location
 	sta	GBASL
+	sec
 	lda	hposn_high,Y
+	sbc	#$20			; FIXME: defaults to $40
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH			; always page2
 
 
@@ -267,8 +271,11 @@ hdsb_width_smc:
 
 hdsb_ysize_smc:
 	cmp	#28
-	bne	hgr_sprite_bm_yloop
+	beq	hdsb_done
+;	bne	hgr_sprite_bm_yloop
+	jmp	hgr_sprite_bm_yloop
 
+hdsb_done:
 	rts
 
 
