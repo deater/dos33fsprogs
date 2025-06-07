@@ -12,9 +12,11 @@ KNIGHT_LOADER:	knight_loader.o
 
 knight_loader.o:	knight_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
+		../priority_copy.s \
 		../text/DIALOG_KNIGHT.ZX02 \
 		graphics_knight/knight_graphics.inc \
 		graphics_knight/knight_priority.inc\
+		../location_common/loader_common.s \
 		KNIGHT_CORE.zx02
 	ca65 -o knight_loader.o knight_loader.s -l knight_loader.lst
 
@@ -24,7 +26,7 @@ KNIGHT_CORE.zx02:	KNIGHT_CORE
 	$(ZX02) -f KNIGHT_CORE KNIGHT_CORE.zx02
 
 KNIGHT_CORE:	knight_core.o
-	ld65 -o KNIGHT_CORE knight_core.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o KNIGHT_CORE knight_core.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 knight_core.o:	knight_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../inventory/inventory.inc \

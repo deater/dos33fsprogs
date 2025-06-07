@@ -17,7 +17,7 @@ CORE_LOCATION=knight_core_zx02
 .include "../location_common/loader_common.s"
 
 
-	jmp	$6000
+	jmp	$8000
 
 
 robe_sprite_data:
@@ -32,4 +32,4 @@ knight_text_zx02:
 knight_core_zx02:
 .incbin "KNIGHT_CORE.zx02"
 
-.include "../gr_copy.s"
+.include "../priority_copy.s"

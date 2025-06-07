@@ -12,9 +12,10 @@ $03	(256B)	Disk Lookup, IRQ vectors
 $04-$07 (1k)	Text/GR page 1 (priority map)
 $08-$0B (0.75k)	Text/GR page 2.  $08=boot, $09-$0A = qboot stage2
 $0B-$1F (5.25k)	QLOAD disk and common routines (5376 bytes, 4996 bytes used)
-$20-$3F (8k)	HGR Page 1	(shown)
-$40-$5f (8k)	HGR Page 2	(current image background)
-$60-$9F (16k)	Programs	(we limit to 16k, 16384 bytes, $40 pages)
+$20-$3F (8k)	HGR Page 1	(PAGE1)
+$40-$5f (8k)	HGR Page 2	(PAGE2)
+$60-$7F (8k)	Offscreen Background
+$80-$9F (8k)	Programs	(we limit to 8k, 8192 bytes, $20 pages)
 $A0-$AF (4k)	peasant sprites
 $B0-$B7 (2k)	unused currently?
 $B8-$BB (1k)	Hi-res lookup tables

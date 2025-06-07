@@ -1,3 +1,7 @@
+DIALOG_DESTINATION = $D000
+PRIORITY_TEMP = $6000
+BACKGROUND_DESTINATION = $6000
+CORE_DESTINATION = $8000
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -14,25 +18,10 @@
         lda     #>DIALOG_LOCATION
         sta     zx_src_h+1
 
-        lda     #$D0
+        lda     #>DIALOG_DESTINATION
 
         jsr     zx02_full_decomp
 
-	;================================
-	; update score
-
-;	jsr	update_score
-
-
-	;=============================
-	;=============================
-	; new screen location
-	;=============================
-	;=============================
-
-new_location:
-	lda	#0
-	sta	LEVEL_OVER
 
 	;============================
 	; load priority to $400
@@ -43,17 +32,17 @@ new_location:
 	lda	#>PRIORITY_LOCATION
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#>PRIORITY_TEMP		; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
-	jsr	gr_copy_to_page1	; copy to $400
+	jsr	priority_copy		; copy to $400
 
 	; copy collision detection info
 
 	ldx     #0
 col_copy_loop:
-	lda	$2400,X
+	lda	PRIORITY_TEMP+$400,X
 	sta	collision_location,X
 	inx
 	bne	col_copy_loop
@@ -67,40 +56,16 @@ col_copy_loop:
 	lda	#>BG_LOCATION
 	sta	zx_src_h+1
 
-	lda	#$80			; load to $8000 (FIXME)
+	lda	#>BACKGROUND_DESTINATION	; load to $6000
 
 	jsr	zx02_full_decomp
 
 
-	;====================================
-        ; check if allowed to be in haystack
-
-;	jsr	check_haystack_exit
-
-
-	;=======================
-	; put peasant text
-
-;	lda	#<peasant_text
-;	sta	OUTL
-;	lda	#>peasant_text
-;	sta	OUTH
-
-;	jsr	hgr_put_string
-
-	;=======================
-	; put score
-
-;	jsr	print_score
-
-	;=======================
-	; always activate text
-
-;	jsr	setup_prompt
-
 	;========================
 	; Load Peasant Sprites
 	;========================
+	; TODO: move this elsewhere
+
 
 	lda	#<robe_sprite_data
 	sta	zx_src_l+1
@@ -121,7 +86,7 @@ col_copy_loop:
 	lda	#>CORE_LOCATION
 	sta	zx_src_h+1
 
-	lda	#$60
+	lda	#>CORE_DESTINATION
 
 	jsr	zx02_full_decomp
 

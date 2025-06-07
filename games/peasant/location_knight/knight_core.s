@@ -7,19 +7,12 @@
 .include "../location_common/include_common.s"
 
 VERB_TABLE = mountain_pass_verb_table
-	;====================================================
-	; clear the keyboard in case we were holding it down
 
-	bit	KEYRESET
+
+	;===================================
+	; continue setting up screen
 
 	jsr	update_score
-
-	jsr	setup_prompt
-
-  ;====================================
-        ; check if allowed to be in haystack
-
-;       jsr     check_haystack_exit
 
 
         ;=======================
@@ -33,23 +26,36 @@ VERB_TABLE = mountain_pass_verb_table
         jsr     hgr_put_string
 
 
+	;======================
+	; always show prompt
+
+	jsr	setup_prompt
+
+	;====================================
+	; check if allowed to be in haystack
+
+	jsr	check_haystack_exit
 
 
-;==========================
-        ; load updated verb table
+	;==========================
+	; load updated verb table
 
-        ; setup default verb table
+	; setup default verb table
 
-        jsr     setup_default_verb_table
+	jsr     setup_default_verb_table
 
-        lda     #<VERB_TABLE    ; 9     -- knight
-        sta     INL
-        lda     #>VERB_TABLE    ; 9     -- knight
-        sta     INH
+	lda	#<VERB_TABLE
+	sta	INL
+	lda	#>VERB_TABLE
+	sta	INH
 
-        jsr     load_custom_verb_table
+	jsr	load_custom_verb_table
 
 
+	;====================================================
+	; clear the keyboard in case we were holding it down
+
+	bit	KEYRESET
 
 	;================================
 	;================================
@@ -77,10 +83,11 @@ game_loop:
 skip_level_specific:
 
 
-	lda	#$80
+	;===========================
+	; copy bg to current screen
+
+	lda	#$60
 	jsr	hgr_copy_fast
-
-
 
 
 	;====================
@@ -190,32 +197,15 @@ to_left_of_inn:
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-;.include "../hgr_routines/hgr_partial_restore.s"
-;.include "../hgr_routines/hgr_sprite.s"
-
-
-;.include "../wait_a_bit.s"
 
 .include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
-
-;.include "../gr_copy.s"
-;.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 
 .include "../keyboard.s"
 
 .include "../vblank.s"
-
-;robe_sprite_data:
-;	.incbin "../sprites_peasant/robe_sprites.zx02"
-
-;.include "graphics_knight/knight_graphics.inc"
-;.include "graphics_knight/knight_priority.inc"
-
-;knight_text_zx02:
-;.incbin "../text/DIALOG_KNIGHT.ZX02"
 
 .include "knight_actions.s"
 
