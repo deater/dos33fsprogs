@@ -17,20 +17,25 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk \
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER
+	./saves/SAVE_DATA PARSE_INPUT.ZX02 \
+	./game_over/GAME_OVER \
+	sprites_peasant/PEASANT_SPRITES_COMMON \
+	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  4 QBOOT      2   1
 	$(DOS33_RAW) peasant_disk1.dsk  0 12 ./saves/SAVE_DATA  0   1
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
-	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./music/MUSIC       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./vid_logo/VID_LOGO 0   0
-	$(DOS33_RAW) peasant_disk1.dsk  6  0 ./title/TITLE       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./intro/INTRO       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  13 0 PARSE_INPUT.ZX02  0   0
-	$(DOS33_RAW) peasant_disk1.dsk  14 0 ./inventory/INVENTORY  0   0
-	$(DOS33_RAW) peasant_disk1.dsk  15 0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk1.dsk  5  0 ./map/MAP          0   0
+	$(DOS33_RAW) peasant_disk1.dsk  7  0 ./music/MUSIC       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  8  0 ./vid_logo/VID_LOGO 0   0
+	$(DOS33_RAW) peasant_disk1.dsk  10  0 ./title/TITLE       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  13  0 ./intro/INTRO       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  17 0 PARSE_INPUT.ZX02  0   0
+	$(DOS33_RAW) peasant_disk1.dsk  18 0 ./inventory/INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
@@ -41,9 +46,15 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./location_brothers/BROTHERS \
 	./location_river/RIVER_LOADER \
 	./location_knight/KNIGHT_LOADER \
-	./wrong_boot/WBOOT2
+	./wrong_boot/WBOOT2 \
+	./game_over/GAME_OVER \
+	sprites_peasant/PEASANT_SPRITES_COMMON \
+	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
+	$(DOS33_RAW) peasant_disk2.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  4  0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk2.dsk  5  0 ./map/MAP          0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
@@ -57,32 +68,49 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 
 peasant_disk3.dsk:	QBOOT QLOAD \
 	PEASANT3 PEASANT4 \
-	./wrong_boot/WBOOT3
+	./wrong_boot/WBOOT3 \
+	./game_over/GAME_OVER \
+	sprites_peasant/PEASANT_SPRITES_COMMON \
+	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk   0 0  ./wrong_boot/WBOOT3      0   1
+	$(DOS33_RAW) peasant_disk3.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk3.dsk  4  0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk3.dsk  5  0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  25 0 PEASANT3	  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk4.dsk:	\
 	./inside/INSIDE ./inn/INN \
-	./archery/ARCHERY ./map/MAP \
-	./wrong_boot/WBOOT4
+	./archery/ARCHERY \
+	./wrong_boot/WBOOT4 \
+	./game_over/GAME_OVER \
+	sprites_peasant/PEASANT_SPRITES_COMMON \
+	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk4.dsk
 	$(DOS33_RAW) peasant_disk4.dsk   0 0  ./wrong_boot/WBOOT4      0   1
-	$(DOS33_RAW) peasant_disk4.dsk   1 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./archery/ARCHERY      0   0
-	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./inside/INSIDE       0   0
-	$(DOS33_RAW) peasant_disk4.dsk  11 0 ./inn/INN          0   0
+	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk4.dsk   4 0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk4.dsk   5 0 ./map/MAP          0   0
+	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./archery/ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk4.dsk   9 0 ./inside/INSIDE       0   0
+	$(DOS33_RAW) peasant_disk4.dsk  13 0 ./inn/INN          0   0
 
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
 	 ./outer/OUTER \
 	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
-	./trogdor/TROGDOR ./ending/ENDING
+	./trogdor/TROGDOR ./ending/ENDING \
+	./game_over/GAME_OVER \
+	sprites_peasant/PEASANT_SPRITES_COMMON \
+	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk5.dsk
 	$(DOS33_RAW) peasant_disk5.dsk   0 0  ./wrong_boot/WBOOT5	0   1
 	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE_LOADER	0   0
+	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk5.dsk   4 0 ./game_over/GAME_OVER    0   0
+	$(DOS33_RAW) peasant_disk5.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
 	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./outer/OUTER	  	0   0
@@ -105,18 +133,21 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_river/RIVER_LOADER \
 	./location_brothers/BROTHERS \
 	./location_puddle/PUDDLE \
-	./location_haystack/HAYSTACK
+	./location_haystack/HAYSTACK \
+	./sprites_peasant/PEASANT_SPRITES_COMMON
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` ./saves/SAVE_DATA      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 3  0` ./music/MUSIC       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./vid_logo/VID_LOGO 0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 6  0` ./title/TITLE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 9  0` ./intro/INTRO       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 13 0` PARSE_INPUT.ZX02  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 14 0` ./inventory/INVENTORY  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 15 0` ./game_over/GAME_OVER    0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 3  0` ./sprites_peasant/PEASANT_SPRITES_COMMON    0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./game_over/GAME_OVER    0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 5  0` ./map/MAP          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 7  0` ./music/MUSIC       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 8  0` ./vid_logo/VID_LOGO 0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 10 0` ./title/TITLE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 13 0` ./intro/INTRO       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 17 0` PARSE_INPUT.ZX02  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 18 0` ./inventory/INVENTORY  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
@@ -132,16 +163,15 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` PEASANT3	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` PEASANT4	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4  1 0` ./map/MAP          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4  3 0` ./archery/ARCHERY      0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./inside/INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 11 0` ./inn/INN          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 3 0` ./climb/CLIMB	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 7 0` ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./outer/OUTER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./trogdor/TROGDOR	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./ending/ENDING	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  9 0` ./inside/INSIDE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 13 0` ./inn/INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./outer/OUTER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
 
 
 ###

@@ -3,7 +3,15 @@ Memory Map
 
 ; notes -- VID_LOGO loads title at $9000 - $AFFF
 
-; this describes current plan, currently peasant1/2/3/4 violate this
+
+
+; ================================
+; This is the layout for levels
+
+; new level, a loader (up to 8k) is loaded at $4000 which decompresses
+;	various parts and then jumps to $8000
+; we might consider moving the peasant sprites up a bit in RAM to
+;	free up some room for level data
 
 $00	(256B)	Zero Page
 $01	(256B)	Stack
