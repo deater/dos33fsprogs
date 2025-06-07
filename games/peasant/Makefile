@@ -72,12 +72,12 @@ peasant_disk4.dsk:	\
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
 	 ./outer/OUTER \
-	./location_cliff_base/CLIFF_BASE \
+	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./trogdor/TROGDOR ./ending/ENDING
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk5.dsk
 	$(DOS33_RAW) peasant_disk5.dsk   0 0  ./wrong_boot/WBOOT5	0   1
-	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE	0   0
+	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE_LOADER	0   0
 	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
 	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./outer/OUTER	  	0   0
@@ -90,7 +90,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
-	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE \
+	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./outer/OUTER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
@@ -125,7 +125,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  3 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./inside/INSIDE       0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4 11 0` ./inn/INN          0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 1 0` ./location_cliff_base/CLIFF_BASE	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 3 0` ./climb/CLIMB	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 7 0` ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./outer/OUTER	  0   0
@@ -426,7 +426,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./inn/INN:
 	cd inn && make
 
-./location_cliff_base/CLIFF_BASE:
+./location_cliff_base/CLIFF_BASE_LOADER:
 	cd location_cliff_base && make
 
 ./location_cliff_heights/CLIFF_HEIGHTS:

@@ -5,7 +5,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	cliff_graphics.inc \
-	priority_cliff.inc
+	cliff_priority.inc
 
 ###
 
@@ -23,9 +23,9 @@ cliff_base.hgr:	cliff_base.png
 
 ###
 
-priority_cliff.inc:  \
+cliff_priority.inc:  \
 	cliff_base_priority.zx02
-	echo "cliff_base_priority_zx02: .incbin \"cliff_base_priority.zx02\"" > priority_cliff.inc
+	echo "cliff_base_priority_zx02: .incbin \"cliff_base_priority.zx02\"" > cliff_priority.inc
 
 ####
 
@@ -45,6 +45,6 @@ cliff_base_collision.bin:	cliff_base_collision.png
 ####
 
 clean:	
-	rm -f *~ cliff_graphics.inc priority_cliff.inc \
+	rm -f *~ cliff_graphics.inc cliff_priority.inc \
 		*.combined *.bin *.zx02 *.gr *.hgr
 

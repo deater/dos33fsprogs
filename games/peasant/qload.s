@@ -39,13 +39,13 @@ which_disk_array:
 	.byte $f		; disk detect
 
 load_address_array:
-	.byte $60,$60,$60,$60	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte $60,$60,$60,$60	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte $60,$60,$D0,$60	; TROGDOR, ENDING, MUSIC, CLIFF
-	.byte $60,$D0,$20,$60	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte $60,$60,$60,$60	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte $60,$60		; HEIGHTS, OUTER
-	.byte $60,$60,$60,$60,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte $60,$60,$60,$60		; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte $60,$60,$60,$60		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+.byte $60,$60,$D0,$40		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+.byte $60,$D0,$20,$60		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte $60,$60,$60,$60		; INSIDE, ARCHERY, MAP, CLIMB
+.byte $60,$60			; HEIGHTS, OUTER
+.byte $60,$60,$60,$60,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte $BC,$BC,$BC	; SAVE_DATA,? , ?
 	.byte $BC		; disk detect
@@ -107,7 +107,6 @@ load_file:
 .include "wait_keypress.s"
 .include "random8.s"
 .include "score.s"
-;.include "speaker_beeps.s"
 .include "redbook_sound.s"
 .include "hgr_routines/hgr_page_flip.s"
 .include "wait.s"

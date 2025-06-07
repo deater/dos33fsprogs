@@ -8,64 +8,9 @@
 
 VERB_TABLE = mountain_pass_verb_table
 
+knight_core:
 
-
-
-
-        ;=======================
-	; draw header offscreen
-	;=======================
-
-	lda	DRAW_PAGE
-	pha
-
-	lda	#$40			; draw to $6000
-	sta	DRAW_PAGE
-
-        ; put peasant text
-
-        lda     #<peasant_text
-        sta     OUTL
-        lda     #>peasant_text
-        sta     OUTH
-
-        jsr     hgr_put_string
-
-	; update / print score
-
-	jsr	update_score
-
-	jsr	print_score
-
-	; show prompt
-
-	jsr	setup_prompt
-
-
-	pla
-	sta	DRAW_PAGE
-
-
-
-	;====================================
-	; check if allowed to be in haystack
-
-	jsr	check_haystack_exit
-
-
-	;==========================
-	; load updated verb table
-
-	; setup default verb table
-
-	jsr     setup_default_verb_table
-
-	lda	#<VERB_TABLE
-	sta	INL
-	lda	#>VERB_TABLE
-	sta	INH
-
-	jsr	load_custom_verb_table
+.include "../location_common/common_core.s"
 
 
 	;====================================================
@@ -130,24 +75,12 @@ skip_level_specific:
 
 	lda	PEASANT_DIR
 	sta	OLD_DIR
-;	lda	#13
-;	lda	#1
-;	sta	WAIT_LOOP
-wait_loop:
 
 	jsr	check_keyboard
 
-
-;	lda	#50	; approx 7ms
-;	jsr	wait
-;	dec	WAIT_LOOP
-;	bne	wait_loop
+;	jsr	wait_vblank
 
 	jsr	hgr_page_flip
-
-	;=====================
-	; delay
-;	jsr	wait_vblank
 
 	jmp	game_loop
 
