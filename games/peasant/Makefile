@@ -38,7 +38,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./location_haystack/HAYSTACK \
 	./location_puddle/PUDDLE \
 	./location_brothers/BROTHERS \
-	./location_river/RIVER \
+	./location_river/RIVER_LOADER \
 	./location_knight/KNIGHT_LOADER \
 	./wrong_boot/WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
@@ -47,7 +47,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS 0   0
-	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_river/RIVER	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_river/RIVER_LOADER	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT_LOADER	  0   0
 
 peasant_disk3.dsk:	QBOOT QLOAD \
@@ -95,7 +95,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_knight/KNIGHT_LOADER \
-	./location_river/RIVER \
+	./location_river/RIVER_LOADER \
 	./location_brothers/BROTHERS \
 	./location_puddle/PUDDLE \
 	./location_haystack/HAYSTACK
@@ -116,7 +116,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` PEASANT3	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` PEASANT4	  0   0
@@ -435,7 +435,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_knight/KNIGHT_LOADER:
 	cd location_knight && make
 
-./location_river/RIVER:
+./location_river/RIVER_LOADER:
 	cd location_river && make
 
 ./location_brothers/BROTHERS:

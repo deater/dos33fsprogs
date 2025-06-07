@@ -136,14 +136,14 @@ new_location:
 	sta	INH
 
 	; switch to page1
-	lda	#$60
-	sta	hgr_sprite_page_smc+1
+;	lda	#$60
+;	sta	hgr_sprite_page_smc+1
 
 	jsr	hgr_draw_sprite
 
 	; switch back to page2
-	lda	#$00
-	sta	hgr_sprite_page_smc+1
+;	lda	#$00
+;	sta	hgr_sprite_page_smc+1
 
 no_draw_gary:
 

@@ -45,7 +45,7 @@ load_address_array:
 .byte $60,$D0,$20,$60		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 .byte $60,$60,$60,$60		; INSIDE, ARCHERY, MAP, CLIMB
 .byte $60,$60			; HEIGHTS, OUTER
-.byte $60,$60,$60,$60,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte $40,$40,$40,$40,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 
 	.byte $BC,$BC,$BC	; SAVE_DATA,? , ?
 	.byte $BC		; disk detect

@@ -37,17 +37,14 @@ cliff_base_core.o:	cliff_base_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s ../keyboard.s \
-		../wait.s ../wait_a_bit.s \
-		cliff_base_actions.s \
-		../text/DIALOG_CLIFF_BASE.ZX02 ../text/dialog_cliff_base.inc \
-		graphics_cliff/cliff_base_graphics.inc
-
+		../wait_a_bit.s \
+		cliff_base_actions.s
 	ca65 -o cliff_base_core.o cliff_base_core.s -l cliff_base_core.lst
 
 
 ###
 
-graphics_cliff/cliff_base_graphics.inc:
+graphics_cliff/cliff_graphics.inc:
 	cd graphics_cliff && make
 
 ###

@@ -81,7 +81,7 @@ bubble_progress_r:
 	.word bubble_r_sprite1
 
 
-	.include "sprites/river_bubble_sprites.inc"
+	.include "sprites_river/river_bubble_sprites.inc"
 
 .if 0
 bubble_r_sprite0:
