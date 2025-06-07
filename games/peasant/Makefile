@@ -34,7 +34,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
-	PEASANT1 \
+	./location_waterfall/WATERFALL_LOADER \
 	./location_haystack/HAYSTACK \
 	./location_puddle/PUDDLE \
 	./location_brothers/BROTHERS \
@@ -43,7 +43,11 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./wrong_boot/WBOOT2
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
-	$(DOS33_RAW) peasant_disk2.dsk  15 0 PEASANT1	  0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
+#	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  18 0 ./location_waterfall/WATERFALL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS 0   0
@@ -112,7 +116,11 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 15 0` ./game_over/GAME_OVER    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` PEASANT1	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 18 0` ./location_waterfall/WATERFALL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS	  0   0
@@ -348,29 +356,6 @@ inventory/INVENTORY:
 ###
 
 
-PEASANT1:	peasant1.o
-	ld65 -o PEASANT1 peasant1.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-peasant1.o:	peasant1.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		peasant1_actions.s \
-		text/DIALOG_PEASANT1.ZX02 text/dialog_peasant1.inc \
-		kerrek_actions.s location_common/peasant_common.s \
-		sprites/peasant_sprites.inc \
-		sprites/kerrek_sprites.inc \
-		sprites/gary_sprites.inc \
-		graphics_peasantry/graphics_peasant1.inc \
-		graphics_peasantry/priority_peasant1.inc \
-		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o peasant1.o peasant1.s -l peasant1.lst
-
-###
-
-
 PEASANT3:	peasant3.o
 	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -447,6 +432,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_haystack/HAYSTACK:
 	cd location_haystack && make
 
+./location_waterfall/WATERFALL_LOADER:
+	cd location_waterfall && make
+
 
 
 ###
@@ -494,12 +482,6 @@ parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
 
 ###
 
-text/DIALOG_PEASANT1.ZX02:
-	cd text && make
-
-#text/DIALOG_PEASANT2.ZX02:
-#	cd text && make
-
 text/DIALOG_PEASANT3.ZX02:
 	cd text && make
 
@@ -507,12 +489,6 @@ text/DIALOG_PEASANT4.ZX02:
 	cd text && make
 
 ###
-
-text/dialog_peasant1.inc:
-	cd text && make
-
-#text/dialog_peasant2.inc:
-#	cd text && make
 
 text/dialog_peasant3.inc:
 	cd text && make
@@ -583,6 +559,7 @@ distclean:
 	cd location_knight && make distclean
 	cd location_puddle && make distclean
 	cd location_river && make distclean
+	cd location_waterfall && make distclean
 	cd map && make distclean
 	cd outer && make distclean
 	cd saves && make distclean
@@ -595,7 +572,7 @@ distclean:
 
 clean:	
 	rm -f *~ *.o *.lst qload.inc \
-			PEASANT1 PEASANT2 PEASANT3 PEASANT4 \
+			PEASANT3 PEASANT4 \
 			*.ZX02 \
 			generate_common generate_all_symbols
 	cd archery && make clean
@@ -615,6 +592,7 @@ clean:
 	cd location_knight && make clean
 	cd location_puddle && make clean
 	cd location_river && make clean
+	cd location_waterfall && make clean
 	cd map && make clean
 	cd music && make clean
 	cd outer && make clean

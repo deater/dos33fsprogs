@@ -8,6 +8,11 @@ CFLAGS = -O2 -Wall -g
 
 all:	dump_text shrink_text \
 	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
+	DIALOG_GARY.ZX02 dialog_gary.inc \
+	DIALOG_KERREK1.ZX02 dialog_kerrek1.inc \
+	DIALOG_WELL.ZX02 dialog_well.inc \
+	DIALOG_YELLOW_TREE.ZX02 dialog_yellow_tree.inc \
+	DIALOG_WATERFALL.ZX02 dialog_waterfall.inc \
 	DIALOG_PUDDLE.ZX02 dialog_puddle.inc \
 	DIALOG_HAYSTACK.ZX02 dialog_haystack.inc \
 	DIALOG_BROTHERS.ZX02 dialog_brothers.inc \
@@ -25,6 +30,81 @@ all:	dump_text shrink_text \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
 	inventory.inc.lookup
+
+###
+
+DIALOG_GARY.ZX02:	dialog_gary
+	$(ZX02) -f  dialog_gary DIALOG_GARY.ZX02
+
+dialog_gary:	dialog_gary.o
+	ld65 -o dialog_gary dialog_gary.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_gary.o:	dialog_gary.s \
+		gary.inc.lookup
+	ca65 -o dialog_gary.o dialog_gary.s -l dialog_gary.lst
+
+dialog_gary.inc:	../generate_all_symbols dialog_gary
+	../generate_all_symbols -a 0xd000 dialog_gary.lst > dialog_gary.inc
+
+###
+
+DIALOG_KERREK1.ZX02:	dialog_kerrek1
+	$(ZX02) -f  dialog_kerrek1 DIALOG_KERREK1.ZX02
+
+dialog_kerrek1:	dialog_kerrek1.o
+	ld65 -o dialog_kerrek1 dialog_kerrek1.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_kerrek1.o:	dialog_kerrek1.s \
+		kerrek.inc.lookup
+	ca65 -o dialog_kerrek1.o dialog_kerrek1.s -l dialog_kerrek1.lst
+
+dialog_kerrek1.inc:	../generate_all_symbols dialog_kerrek1
+	../generate_all_symbols -a 0xd000 dialog_kerrek1.lst > dialog_kerrek1.inc
+
+###
+
+DIALOG_WELL.ZX02:	dialog_well
+	$(ZX02) -f  dialog_well DIALOG_WELL.ZX02
+
+dialog_well:	dialog_well.o
+	ld65 -o dialog_well dialog_well.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_well.o:	dialog_well.s \
+		well.inc.lookup
+	ca65 -o dialog_well.o dialog_well.s -l dialog_well.lst
+
+dialog_well.inc:	../generate_all_symbols dialog_well
+	../generate_all_symbols -a 0xd000 dialog_well.lst > dialog_well.inc
+
+###
+
+DIALOG_YELLOW_TREE.ZX02:	dialog_yellow_tree
+	$(ZX02) -f  dialog_yellow_tree DIALOG_YELLOW_TREE.ZX02
+
+dialog_yellow_tree:	dialog_yellow_tree.o
+	ld65 -o dialog_yellow_tree dialog_yellow_tree.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_yellow_tree.o:	dialog_yellow_tree.s \
+		yellow_tree.inc.lookup
+	ca65 -o dialog_yellow_tree.o dialog_yellow_tree.s -l dialog_yellow_tree.lst
+
+dialog_yellow_tree.inc:	../generate_all_symbols dialog_yellow_tree
+	../generate_all_symbols -a 0xd000 dialog_yellow_tree.lst > dialog_yellow_tree.inc
+
+###
+
+DIALOG_WATERFALL.ZX02:	dialog_waterfall
+	$(ZX02) -f  dialog_waterfall DIALOG_WATERFALL.ZX02
+
+dialog_waterfall:	dialog_waterfall.o
+	ld65 -o dialog_waterfall dialog_waterfall.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_waterfall.o:	dialog_waterfall.s \
+		falls.inc.lookup
+	ca65 -o dialog_waterfall.o dialog_waterfall.s -l dialog_waterfall.lst
+
+dialog_waterfall.inc:	../generate_all_symbols dialog_waterfall
+	../generate_all_symbols -a 0xd000 dialog_waterfall.lst > dialog_waterfall.inc
 
 
 ###

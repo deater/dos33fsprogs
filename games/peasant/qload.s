@@ -46,45 +46,49 @@ load_address_array:
 .byte $60,$60,$60,$60		; INSIDE, ARCHERY, MAP, CLIMB
 .byte $60,$60			; HEIGHTS, OUTER
 .byte $40,$40,$40,$40,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte $40,$40,$40,$40,$40	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-	.byte $BC,$BC,$BC	; SAVE_DATA,? , ?
-	.byte $BC		; disk detect
+.byte $BC,$BC,$BC		; SAVE_DATA,? , ?
+.byte $BC			; disk detect
 
 track_array:
-        .byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 15,19, 3, 1	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-	.byte 15,14,13,11	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  7, 3, 1, 3	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  7,11		; HEIGHTS, OUTER
-	.byte 20,22,24,26,28	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte  4, 6, 9,1	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+.byte 15,19, 3, 1	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+.byte 15,14,13,11	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte  7, 3, 1, 3	; INSIDE, ARCHERY, MAP, CLIMB
+.byte  7,11		; HEIGHTS, OUTER
+.byte 20,22,24,26,28	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte 10,12,14,16,18	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-	.byte  0, 0, 0		; SAVE_DATA, ?, ?
-	.byte  0		; disk detect
+.byte  0, 0, 0		; SAVE_DATA, ?, ?
+.byte  0		; disk detect
 
 sector_array:
-        .byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-	.byte  0, 0, 0, 0	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  0, 0, 0, 0	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  0, 0		; HEIGHTS, OUTER
-	.byte  0, 0, 0, 0, 0	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte  0, 0, 0, 0	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte  0, 0, 0, 0	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+.byte  0, 0, 0, 0	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+.byte  0, 0, 0, 0	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte  0, 0, 0, 0	; INSIDE, ARCHERY, MAP, CLIMB
+.byte  0, 0		; HEIGHTS, OUTER
+.byte  0, 0, 0, 0, 0	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte  0, 0, 0, 0, 0	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-	.byte  12,0,0		; SAVE_DATA, ?, ?
-	.byte  0		; disk detect
+.byte  12,0,0		; SAVE_DATA, ?, ?
+.byte  0		; disk detect
 
 length_array:
-        .byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
-	.byte  80, 88, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte  64, 80, 16, 32	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-	.byte  16, 16, 16, 64	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte  64, 64, 32, 64	; INSIDE, ARCHERY, MAP, CLIMB
-	.byte  64,64		; HEIGHTS, OUTER
-	.byte  32,32,32,32,32 	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte  80, 88, 88, 80	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+.byte  64, 80, 16, 32	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+.byte  16, 16, 16, 64	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte  64, 64, 32, 64	; INSIDE, ARCHERY, MAP, CLIMB
+.byte  64,64		; HEIGHTS, OUTER
+.byte  32,32,32,32,32 	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte  32,32,32,32,32	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-	.byte   1,1,1		; SAVE_DATA, ? , ?
-	.byte   1		; disk detect
+.byte   1,1,1		; SAVE_DATA, ? , ?
+.byte   1		; disk detect
 
 
 load_file:
