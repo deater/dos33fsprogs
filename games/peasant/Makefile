@@ -34,6 +34,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
+	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
 	./location_haystack/HAYSTACK \
 	./location_puddle/PUDDLE \
@@ -46,7 +47,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 #	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  18 0 ./location_waterfall/WATERFALL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE	  0   0
@@ -98,6 +99,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./outer/OUTER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_yellow_tree/YELLOW_TREE_LOADER \
+	./location_waterfall/WATERFALL_LOADER \
 	./location_knight/KNIGHT_LOADER \
 	./location_river/RIVER_LOADER \
 	./location_brothers/BROTHERS \
@@ -119,7 +122,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 18 0` ./location_waterfall/WATERFALL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE	  0   0
@@ -435,6 +438,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_waterfall/WATERFALL_LOADER:
 	cd location_waterfall && make
 
+./location_yellow_tree/YELLOW_TREE_LOADER:
+	cd location_yellow_tree && make
+
 
 
 ###
@@ -501,8 +507,8 @@ text/dialog_peasant4.inc:
 #dialog_test:	dialog_test.o
 #	ld65 -o dialog_test dialog_test.o -C ../../linker_scripts/apple2_d000.inc
 
-##dialog_test.o:	dialog_test.s
-	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
+#dialog_test.o:	dialog_test.s
+#	ca65 -o dialog_test.o dialog_test.s -l dialog_test.lst
 
 ####
 
@@ -560,6 +566,7 @@ distclean:
 	cd location_puddle && make distclean
 	cd location_river && make distclean
 	cd location_waterfall && make distclean
+	cd location_yellow_tree && make distclean
 	cd map && make distclean
 	cd outer && make distclean
 	cd saves && make distclean
@@ -593,6 +600,7 @@ clean:
 	cd location_puddle && make clean
 	cd location_river && make clean
 	cd location_waterfall && make clean
+	cd location_yellow_tree && make clean
 	cd map && make clean
 	cd music && make clean
 	cd outer && make clean

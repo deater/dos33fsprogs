@@ -27,16 +27,17 @@ qload_start:
 .align $100
 
 which_disk_array:
-	.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
-	.byte 2,2,3,3		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
-	.byte 5,5,1,5		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-	.byte 1,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-	.byte 4,4,4,5		; INSIDE, ARCHERY, MAP, CLIMB
-	.byte 5,5		; HEIGHTS, OUTER
-	.byte 2,2,2,2,2		; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
+.byte 2,2,3,3		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
+.byte 5,5,1,5		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
+.byte 1,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte 4,4,4,5		; INSIDE, ARCHERY, MAP, CLIMB
+.byte 5,5		; HEIGHTS, OUTER
+.byte 2,2,2,2,2		; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
+.byte 2,2,2,2,2		; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-	.byte 1,1,1		; SAVE_DATA, ?, ?
-	.byte $f		; disk detect
+.byte 1,1,1		; SAVE_DATA, ?, ?
+.byte $f		; disk detect
 
 load_address_array:
 .byte $60,$60,$60,$60		; VID_LOGO, TITLE, INTRO, COPY_CHECK
