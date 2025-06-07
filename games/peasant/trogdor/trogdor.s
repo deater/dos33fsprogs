@@ -305,7 +305,7 @@ draw_sprite_h:
 .include "../hgr_routines/hgr_copy.s"
 
 .include "../keyboard.s"
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "../version.inc"

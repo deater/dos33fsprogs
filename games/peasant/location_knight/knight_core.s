@@ -9,13 +9,19 @@
 VERB_TABLE = mountain_pass_verb_table
 
 
-	;===================================
-	; continue setting up screen
 
-	jsr	update_score
 
 
         ;=======================
+	; draw header offscreen
+	;=======================
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
         ; put peasant text
 
         lda     #<peasant_text
@@ -25,11 +31,21 @@ VERB_TABLE = mountain_pass_verb_table
 
         jsr     hgr_put_string
 
+	; update / print score
 
-	;======================
-	; always show prompt
+	jsr	update_score
+
+	jsr	print_score
+
+	; show prompt
 
 	jsr	setup_prompt
+
+
+	pla
+	sta	DRAW_PAGE
+
+
 
 	;====================================
 	; check if allowed to be in haystack
@@ -115,14 +131,17 @@ skip_level_specific:
 	lda	PEASANT_DIR
 	sta	OLD_DIR
 ;	lda	#13
-	lda	#1
-	sta	WAIT_LOOP
+;	lda	#1
+;	sta	WAIT_LOOP
 wait_loop:
+
 	jsr	check_keyboard
-	lda	#50	; approx 7ms
-	jsr	wait
-	dec	WAIT_LOOP
-	bne	wait_loop
+
+
+;	lda	#50	; approx 7ms
+;	jsr	wait
+;	dec	WAIT_LOOP
+;	bne	wait_loop
 
 	jsr	hgr_page_flip
 
@@ -209,7 +228,7 @@ to_left_of_inn:
 
 .include "knight_actions.s"
 
-.include "../hgr_routines/hgr_page_flip.s"
+;.include "../hgr_routines/hgr_page_flip.s"
 .include "../hgr_routines/hgr_copy_fast.s"
 
-.include "../wait.s"
+;.include "../wait.s"

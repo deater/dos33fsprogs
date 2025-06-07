@@ -712,6 +712,7 @@ finish_parse_message:
 	stx	OUTL
 	sty	OUTH
 	jsr	print_text_message
+	jsr	hgr_page_flip
 
 	jsr	wait_until_keypress
 
@@ -1233,10 +1234,11 @@ partial_message_step:
 	stx	OUTL
 	sty	OUTH
 	jsr	print_text_message
+	jsr	hgr_page_flip
 	jsr	wait_until_keypress
 	lda	#0
 	ldx	#39
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 	rts
 
 verb_table = $BF00

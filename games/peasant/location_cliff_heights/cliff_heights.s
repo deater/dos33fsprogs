@@ -202,7 +202,7 @@ exiting_cliff:
 
 .include "../vblank.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 

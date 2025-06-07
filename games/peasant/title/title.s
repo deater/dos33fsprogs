@@ -9,6 +9,7 @@
 .include "../music/music.inc"
 
 title:
+
 	jsr	hgr2				; clear screen, HGR page 2
 
 	;=========================

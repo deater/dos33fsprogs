@@ -7,7 +7,7 @@ SOUND_STATUS	=	$05
 	SOUND_MOCKINGBOARD = $02	; mockingboard detected
 	SOUND_SSI263    = $04		; SSI-263 speech chip detected
 MOCKINGBOARD_SLOT	= $06
-DISP_PAGE	= $07		; only in videlectrix intro?
+DISP_PAGE	= $07			; only in videlectrix intro?
 DRAW_PAGE	= $08
 NIBCOUNT	= $09
 CURRENT_DRIVE	= $0A
@@ -36,6 +36,7 @@ ZX0_srch= $15
 bitr	= $16
 pntr	= $17
 pntrh	= $18
+
 ; electric duet
 FREQ1          =       $10
 FREQ2          =       $11
@@ -46,15 +47,15 @@ MADDRL         =       $15
 MADDRH         =       $16
 
 
-HGR_BITS	= $1C
+HGR_BITS		= $1C
 
-CH		= $24
-CV		= $25
-GBASL		= $26
-GBASH		= $27
-BASL		= $28
-BASH		= $29
-MASK		= $2E
+CH			= $24
+CV			= $25
+GBASL			= $26
+GBASH			= $27
+BASL			= $28
+BASH			= $29
+MASK			= $2E
 MASK0			= $2F   ; used by priority code in bg_mask
 MASK1			= $30
 MASK2			= $31
@@ -81,6 +82,7 @@ LOC4E          =       $4E	; electric duet
 COUNT256       =       $4F
 
 
+DRAW_PAGE_SAVE	= $5F
 INVENTORY_MASK	= $60
 INVENTORY_Y	= $61
 

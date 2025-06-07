@@ -160,7 +160,7 @@ done_beep:
 .include "../redbook_sound.inc"
 
 .include "../wait_a_bit.s"
-.include "../wait.s"
+;.include "../wait.s"
 
 .include "graphics_over/game_over_graphics.inc"
 

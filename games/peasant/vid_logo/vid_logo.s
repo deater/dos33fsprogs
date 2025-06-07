@@ -518,7 +518,7 @@ delays:
 .include "../ssi263/ssi263.inc"
 .include "../ssi263/ssi263_detect.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 
 .include "../init_vars.s"
 

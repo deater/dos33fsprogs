@@ -163,7 +163,7 @@ mockingboard_notfound2:
 .include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 

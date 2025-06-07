@@ -171,7 +171,7 @@ to_left_of_inn:
 .include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 

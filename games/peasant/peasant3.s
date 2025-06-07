@@ -332,7 +332,7 @@ level_over:
 
 .include "keyboard.s"
 
-.include "wait.s"
+;.include "wait.s"
 .include "wait_a_bit.s"
 
 .include "graphics_peasantry/graphics_peasant3.inc"

@@ -589,7 +589,7 @@ col_copy_loop:
 
 	.include	"keyboard_climb.s"
 
-	.include	"../wait.s"
+;	.include	"../wait.s"
 
 	.include	"draw_peasant_climb.s"
 

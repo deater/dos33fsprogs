@@ -293,6 +293,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s speaker_tone qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s speaker_duration qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s speaker_frequency qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_page_flip qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s wait qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 #	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc
@@ -550,9 +552,9 @@ text/common.inc.lookup:
 submit:	peasant_floppies.zip peasant.2mg.zip
 
 peasant_floppies.zip:	peasant_disk1.dsk peasant_disk2.dsk \
-	peasant_disk3.dsk peasant_disk4.dsk
+	peasant_disk3.dsk peasant_disk4.dsk peasant_disk5.dsk
 	zip peasant_floppies.zip peasant_disk1.dsk peasant_disk2.dsk \
-		peasant_disk3.dsk peasant_disk4.dsk
+		peasant_disk3.dsk peasant_disk4.dsk peasant_disk5.dsk
 
 peasant.2mg.zip:	peasant.2mg
 	zip peasant.2mg.zip peasant.2mg

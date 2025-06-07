@@ -569,7 +569,7 @@ stuck_forever:
 .include "../hgr_routines/hgr_sprite.s"
 
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "../redbook_sound.inc"

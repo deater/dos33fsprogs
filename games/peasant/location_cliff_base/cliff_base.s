@@ -131,7 +131,7 @@ exiting_cliff:
 
 .include "../keyboard.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "graphics_cliff/cliff_graphics.inc"

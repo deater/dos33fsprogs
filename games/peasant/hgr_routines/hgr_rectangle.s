@@ -211,6 +211,8 @@ fast_hposn:
 	lda	hposn_low,X
 	sta	GBASL
 	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	lda	VGI_RX1

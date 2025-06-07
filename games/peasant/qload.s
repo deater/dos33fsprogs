@@ -109,6 +109,8 @@ load_file:
 .include "score.s"
 ;.include "speaker_beeps.s"
 .include "redbook_sound.s"
+.include "hgr_routines/hgr_page_flip.s"
+.include "wait.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0

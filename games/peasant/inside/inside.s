@@ -374,7 +374,7 @@ to_left:
 
 .include "../keyboard.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "graphics_inside/graphics_inside.inc"

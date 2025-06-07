@@ -264,7 +264,7 @@ mendelev_arm_moved:
 .include "../hgr_routines/hgr_partial_restore.s"
 .include "../hgr_routines/hgr_sprite.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "../location_common/peasant_common.s"

@@ -9,28 +9,16 @@
 	;	we print to chars to right
 
 hgr_input:
-;	ldx	INPUT_ACTIVE
-;	bne	input_currently_happening
-
-;	inc	INPUT_ACTIVE		; make input active
 
 	; current keypress in A
 
-;	pha
+	ldx	DRAW_PAGE
+	stx	DRAW_PAGE_SAVE
 
-	; activate typing area
+	ldx	#$40			; all writing goes to $6000
+	stx	DRAW_PAGE
 
-;	jsr	clear_bottom
 
-;	ldx	#0
-;	ldy	#184
-;	lda	#'>'
-;	jsr	hgr_put_char
-
-;	ldx	#0		; reset INPUT_X
-;	stx	INPUT_X
-
-;	pla
 input_currently_happening:
 
 	; check for backspace
@@ -60,7 +48,7 @@ input_currently_happening:
 	inc	INPUT_X
 input_too_big:
 
-	rts
+	jmp	hgr_input_exit
 
 hgr_input_backspace:
 	ldx	INPUT_X
@@ -77,16 +65,24 @@ hgr_input_backspace:
 
 
 done_backspace:
+
+hgr_input_exit:
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
 	rts
+
+	;===================================
+	; only called by enter_pressed(?)
 
 done_hgr_input:
 
 	ldx	INPUT_X			; NUL terminate
 	lda	#0
-;	sta	INPUT_ACTIVE
 	sta	input_buffer,X
-
 	rts
+
 
 input_buffer:
 	.byte 0,0,0,0,0,0,0,0,0,0

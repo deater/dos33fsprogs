@@ -497,11 +497,12 @@ no_draw_ned:
 
 .include "keyboard.s"
 
-.include "wait.s"
-.include "wait_a_bit.s"
 
 .include "graphics_peasantry/graphics_peasant4.inc"
 .include "graphics_peasantry/priority_peasant4.inc"
+
+;.include "wait.s"
+.include "wait_a_bit.s"
 
 
 

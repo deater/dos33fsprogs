@@ -26,7 +26,7 @@ check_keyboard:
 key_was_pressed:
 	bit	KEYRESET
 
-	inc	SEEDL		; does this help?
+	inc	SEEDL			; randomize PRNG.  does this help?
 
 	and	#$7f			; strip off high bit
 
@@ -153,7 +153,16 @@ enter_pressed:
 
 	jsr	parse_input
 
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40
+	sta	DRAW_PAGE
+
 	jsr	reset_prompt
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 done_check_keyboard:
 
@@ -174,6 +183,7 @@ reset_prompt:
 	sta	input_buffer
 	sta	INPUT_X		; reset INPUT_X
 
+	; this is also a callsite
 setup_prompt:
 
 	jsr	clear_bottom

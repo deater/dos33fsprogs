@@ -140,7 +140,7 @@ game_over:
 
 .include "../new_map_location.s"
 
-.include "../wait.s"
+;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "graphics_archery/archery_graphics.inc"
