@@ -13,7 +13,7 @@ VERB_TABLE=mountain_pass_verb_table
 PRIORITY_LOCATION=knight_priority_zx02
 BG_LOCATION=knight_zx02
 
-.include "../location_common/init_common.s"
+.include "../location_common/init_common2.s"
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -183,7 +183,7 @@ to_left_of_inn:
 .include "../location_common/flame_common.s"
 
 .include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
+;.include "../hgr_routines/hgr_copy.s"
 
 .include "../new_map_location.s"
 
@@ -201,6 +201,6 @@ knight_text_zx02:
 .incbin "../text/DIALOG_KNIGHT.ZX02"
 
 .include "knight_actions.s"
-.include "../hgr_routines/hgr_page_flip.s"
 
-.include "hgr_copy_fast.s"
+.include "../hgr_routines/hgr_page_flip.s"
+.include "../hgr_routines/hgr_copy_fast.s"

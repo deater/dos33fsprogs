@@ -83,6 +83,8 @@ mask_good:
 	lda	hposn_low,Y
 	sta	GBASL
 	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	ldy	CURSOR_X
@@ -127,6 +129,8 @@ save_yloop:
 	lda	hposn_low,X
 	sta	GBASL
 	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	pla
@@ -172,6 +176,8 @@ restore_yloop:
 	; $51 -> $31   0101 0011 -> 0101 0001
 
 	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
 	sta	restore_page2_smc+2
 	eor	#$60
 	sta	restore_page1_smc+2

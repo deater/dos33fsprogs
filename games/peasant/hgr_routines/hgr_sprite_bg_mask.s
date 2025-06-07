@@ -163,10 +163,10 @@ mask_good:
 	clc
 	adc	CURSOR_X		; point at actual location
 	sta	GBASL
-	sec
+;	sec
 	lda	hposn_high,Y
-	sbc	#$20			; FIXME: defaults to $40
-	clc
+;	sbc	#$20			; FIXME: defaults to $40
+;	clc
 	adc	DRAW_PAGE
 	sta	GBASH			; always page2
 

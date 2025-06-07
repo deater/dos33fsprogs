@@ -200,10 +200,12 @@ exiting_cliff:
 
 .include "../keyboard.s"
 
+.include "../vblank.s"
+
 .include "../wait.s"
 .include "../wait_a_bit.s"
 
-.include "../vblank.s"
+
 
 .include "graphics_heights/cliff_heights_graphics.inc"
 .include "graphics_heights/priority_cliff_heights.inc"

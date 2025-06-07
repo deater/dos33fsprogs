@@ -167,11 +167,13 @@ to_left_of_inn:
 .include "../hgr_routines/hgr_partial_restore.s"
 .include "../hgr_routines/hgr_sprite.s"
 
-.include "../wait.s"
-.include "../wait_a_bit.s"
 
 .include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
+
+.include "../wait.s"
+.include "../wait_a_bit.s"
+
 
 .include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy.s"

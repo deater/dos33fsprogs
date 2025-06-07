@@ -37,9 +37,8 @@ do_title:
 	lda	#>(title_trogfree_zx02)
 	sta	zx_src_h+1
 
-	lda	#$40
+	lda	#$40				; decompress to $40 (PAGE2)
 
-;	jsr	decompress_lzsa2_fast
 	jsr	zx02_full_decomp
 
 
@@ -51,9 +50,8 @@ do_title:
 	lda	#>(title_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$20				; decompress to $20 (PAGE1)
 
-;	jsr	decompress_lzsa2_fast
 	jsr	zx02_full_decomp
 
 	bit	KEYRESET
@@ -73,9 +71,9 @@ mockingboard_notfound:
 title_loop_done:
 
 
-	;************************
+	;========================
 	; Tips
-	;************************
+	;========================
 
 	jsr	directions
 

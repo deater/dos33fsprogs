@@ -1,4 +1,3 @@
-
 	;======================================
 	; hgr 1x8 draw sprite XOR
 	;======================================
@@ -6,6 +5,7 @@
 	;======================================
 	; SPRITE in INL/INH
 	; Location at CURSOR_X CURSOR_Y*7
+	; Draws to page indicated by DRAW_PAGE
 	; X, Y, A trashed
 
 hgr_draw_sprite_1x8:
@@ -27,6 +27,8 @@ hgr_1x8_sprite_yloop:
 	lda	hposn_low,Y
 	sta	GBASL
 	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
 	sta	GBASH
 
 	ldy	CURSOR_X

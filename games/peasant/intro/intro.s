@@ -24,6 +24,10 @@ peasant_quest_intro:
 
 	jsr	hgr2
 
+	lda	#$20		; draw to page2
+	sta	DRAW_PAGE
+
+
 	;==============================
 	; load sprite data
 	;==============================

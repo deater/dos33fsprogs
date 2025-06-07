@@ -6,7 +6,6 @@
 ; This is fixed-width can only put the fonts easily in a 40x24 grid
 
 
-
 	;===================
 	; in OUTL/OUTH
 	;	first byte X, next byte Y, then string (NUL terminated)

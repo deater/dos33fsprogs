@@ -123,19 +123,11 @@ hposn:
 
 	and	#$1F
 
-	ora	HGR_PAGE	; default is $40 in this game
-	sta	GBASH
+	ora	#$20
 
-;	txa
-;	cpy	#0
-;	beq	xpos_lessthan_256
-;	ldy	#35
-;	adc	#4
-;label_1:
-;	iny
-;xpos_lessthan_256:
-;	sbc	#7
-;	bcs	label_1
+;	ora	HGR_PAGE	; default is $40 in this game
+				; update: $20 default
+	sta	GBASH
 
 	rts
 

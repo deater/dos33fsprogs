@@ -22,12 +22,16 @@ puddle.o:	puddle.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait.s ../wait_a_bit.s \
 		puddle_actions.s \
 		../text/DIALOG_PUDDLE.ZX02 ../text/dialog_puddle.inc \
-		graphics_puddle/puddle_graphics.inc
+		graphics_puddle/puddle_graphics.inc \
+		graphics_puddle/puddle_priority.inc
 	ca65 -o puddle.o puddle.s -l puddle.lst
 
 ####
 
 graphics_puddle/puddle_graphics.inc:
+	cd graphics_puddle && make
+
+graphics_puddle/puddle_priority.inc:
 	cd graphics_puddle && make
 
 ###

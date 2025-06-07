@@ -1,6 +1,6 @@
-	;************************
+	;========================
 	; Tips
-	;************************
+	;========================
 
 directions:
 	lda	#<(tips_zx02)
@@ -8,7 +8,7 @@ directions:
 	lda	#>(tips_zx02)
 	sta	zx_src_h+1
 
-	lda	#$40
+	lda	#$40			; decompress to $40 (PAGE2)
 
 	jsr	zx02_full_decomp
 
