@@ -4,14 +4,15 @@ qload_floppy:
 	lda	WHICH_SLOT
 	jsr	popwr_init
 
+	; set current disk
+	lda	#1
+	sta	CURRENT_DISK		; current disk number
+
 	; first time entry
 	; start by loading text title
 
-	lda	#LOAD_VID_LOGO		; load intro
+	lda	#LOAD_VID_LOGO		; load videlectrix intro
 	sta	WHICH_LOAD
-
-	lda	#1
-	sta	CURRENT_DISK		; current disk number
 
 main_game_loop:
 
@@ -20,13 +21,6 @@ main_game_loop:
 entry_smc:
 	jsr	$6000			; run intro
 
-;	lda	#LOAD_TITLE		; next load title
-;	sta	WHICH_LOAD
-
-
-;	jsr	load_file_internal
-
-;	jsr	$6000			; all entry points currently $6000
 	jmp	main_game_loop
 
 
@@ -37,23 +31,26 @@ load_file_internal:
 	ldx	WHICH_LOAD
 
 	lda	which_disk_array,X		; get disk# for file to load
+
+	bmi	load_file_no_diskcheck		; if $FF file is on all disks
+
 	cmp	CURRENT_DISK			; if not currently using
 	bne	change_disk			; need to change disk
 
 load_file_no_diskcheck:
-	lda	load_address_array,X
+	lda	load_address_array,X		; setup address
 	sta	load_address
 
-	lda	track_array,X
+	lda	track_array,X			; setup track
 	sta	load_track
 
-	lda	sector_array,X
+	lda	sector_array,X			; setup sector
 	sta	load_sector
 
-	lda	length_array,X
+	lda	length_array,X			; setup length
 	sta	load_length
 
-	jsr	load_new
+	jsr	load_new			; load file
 
 	rts
 
@@ -147,17 +144,24 @@ LOAD_FIRST_SECTOR = 22
 
 	; first sector now in $BC00
 	;	offset 5B
-	;		disk1 = $12
+	;		disk1 = $12		; WHY???
 	;		disk2 = $32 ('2')
 	;		disk3 = $33 ('3')
+	;		disk3 = $34 ('4')
+	;		disk3 = $35 ('5')
 
 	lda	$BC5B
+
 	cmp	#$12
 	beq	is_disk1
 	cmp	#$32
 	beq	is_disk2
 	cmp	#$33
 	beq	is_disk3
+	cmp	#$34
+	beq	is_disk4
+	cmp	#$35
+	beq	is_disk5
 	bne	change_disk		; unknown disk
 
 is_disk1:
@@ -169,6 +173,14 @@ is_disk2:
 	bne	disk_compare		; bra
 
 is_disk3:
+	lda	#3
+	bne	disk_compare		; bra
+
+is_disk4:
+	lda	#4
+	bne	disk_compare		; bra
+
+is_disk5:
 	lda	#3
 
 disk_compare:

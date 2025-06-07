@@ -30,14 +30,14 @@ which_disk_array:
 .byte 1,1,1,1		; VID_LOGO, TITLE, INTRO. COPY_CHECK
 .byte 2,2,3,3		; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 .byte 5,5,1,5		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-.byte 1,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
-.byte 4,4,1,5		; INSIDE, ARCHERY, MAP, CLIMB
+.byte $FF,1,1,3		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte 4,4,$FF,5		; INSIDE, ARCHERY, MAP, CLIMB
 .byte 5,5		; HEIGHTS, OUTER
 .byte 2,2,2,2,2		; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte 2,2,2,2,2		; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte 1,1,1		; SAVE_DATA, ?, ?
-.byte $f		; disk detect
+.byte 1,$FF,1		; SAVE_DATA, PEASANT_SPRITES, ?
+.byte $FF		; disk detect
 
 load_address_array:
 .byte $60,$60,$60,$60		; VID_LOGO, TITLE, INTRO, COPY_CHECK
@@ -49,20 +49,20 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte $40,$40,$40,$40,$40	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte $BC,$BC,$BC		; SAVE_DATA,? , ?
+.byte $BC,$A0,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
 .byte $BC			; disk detect
 
 track_array:
 .byte  8,10,13,30	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 .byte 15,20,25,30	; PEASANT1, PEASANT2, PEASANT3, PEASANT4
 .byte 19,23, 7, 1	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
-.byte 15,18,17,13	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
+.byte  4,18,17,13	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 .byte  9, 7, 5, 7	; INSIDE, ARCHERY, MAP, CLIMB
 .byte 11,15		; HEIGHTS, OUTER
 .byte 20,22,24,26,28	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte 10,12,14,16,18	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte  0, 0, 0		; SAVE_DATA, ?, ?
+.byte  0, 0, 0		; SAVE_DATA, PEASANT_SPRITES, ?
 .byte  0		; disk detect
 
 sector_array:
@@ -75,7 +75,7 @@ sector_array:
 .byte  0, 0, 0, 0, 0	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte  0, 0, 0, 0, 0	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte  12,0,0		; SAVE_DATA, ?, ?
+.byte  12,0,0		; SAVE_DATA, PEASANT_SPRITES, ?
 .byte  0		; disk detect
 
 length_array:
@@ -88,7 +88,7 @@ length_array:
 .byte  32,32,32,32,32 	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte  32,32,32,32,32	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte   1,1,1		; SAVE_DATA, ? , ?
+.byte   1,16,1		; SAVE_DATA, PEASANT_SPRITES , ?
 .byte   1		; disk detect
 
 

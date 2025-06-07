@@ -229,6 +229,7 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
 qload.o:	qload.s qboot.inc \
+		qload_floppy.s \
 		zx02_optim.s \
 		hgr_routines/hgr_font.s \
 		draw_box.s \

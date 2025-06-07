@@ -57,6 +57,14 @@ load_file_internal:
 	sta	entry_point_smc+2
 
 	lda	which_disk_array,X		; CURRENT DISK
+	bpl	normal_disk
+any_disk:
+	; $FF means any disk, in this case use 1 for it
+	; as we don't duplicate the data multiple times like the floppy does
+
+	lda	#$1
+
+normal_disk:
 	sta	CURRENT_DISK
 
 	sta	BLOKHI
