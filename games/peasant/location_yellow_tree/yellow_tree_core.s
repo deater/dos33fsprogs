@@ -103,7 +103,6 @@ level_over:
 
 .include "yellow_tree_actions.s"
 
-;.include "../hgr_routines/hgr_page_flip.s"
 .include "../hgr_routines/hgr_copy_fast.s"
 
 ;.include "../wait.s"

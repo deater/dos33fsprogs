@@ -38,7 +38,7 @@ waterfall_core.o:	waterfall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
-		waterfall_actions.s
+		waterfall_actions.s draw_waterfall.s
 	ca65 -o waterfall_core.o waterfall_core.s -l waterfall_core.lst
 
 

@@ -17,10 +17,6 @@ CORE_LOCATION=waterfall_core_zx02
 
 	jmp	$8000
 
-
-robe_sprite_data:
-        .incbin "../sprites_peasant/robe_sprites.zx02"
-
 .include "graphics_waterfall/waterfall_graphics.inc"
 .include "graphics_waterfall/waterfall_priority.inc"
 

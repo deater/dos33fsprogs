@@ -17,9 +17,6 @@ CORE_LOCATION=yellow_tree_core_zx02
 
 	jmp	$8000
 
-robe_sprite_data:
-	.incbin "../sprites_peasant/robe_sprites.zx02"
-
 .include "graphics_yellow_tree/yellow_tree_graphics.inc"
 .include "graphics_yellow_tree/yellow_tree_priority.inc"
 

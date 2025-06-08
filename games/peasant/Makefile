@@ -39,6 +39,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
+	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
 	./location_haystack/HAYSTACK \
@@ -57,7 +58,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  5  0 ./map/MAP          0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  18 0 ./location_waterfall/WATERFALL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
@@ -127,6 +128,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./outer/OUTER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
 	./location_knight/KNIGHT_LOADER \
@@ -152,7 +154,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 18 0` ./location_waterfall/WATERFALL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
@@ -471,6 +473,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_waterfall/WATERFALL_LOADER:
 	cd location_waterfall && make
 
+./location_well/WELL_LOADER:
+	cd location_well && make
+
 ./location_yellow_tree/YELLOW_TREE_LOADER:
 	cd location_yellow_tree && make
 
@@ -600,6 +605,7 @@ distclean:
 	cd location_puddle && make distclean
 	cd location_river && make distclean
 	cd location_waterfall && make distclean
+	cd location_well && make distclean
 	cd location_yellow_tree && make distclean
 	cd map && make distclean
 	cd outer && make distclean
@@ -635,6 +641,7 @@ clean:
 	cd location_puddle && make clean
 	cd location_river && make clean
 	cd location_waterfall && make clean
+	cd location_well && make clean
 	cd location_yellow_tree && make clean
 	cd map && make clean
 	cd music && make clean
