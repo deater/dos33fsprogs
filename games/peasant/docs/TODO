@@ -1,3 +1,11 @@
+engine:
+	the "check haystack" code is missing from some locations.
+		it should really be a generic "countdown/check all states"
+		code to see when things like rain/etc run out
+
+
+
+
 current:
 	finish cliff_base (mostly walk_to)
 	fix/add sound effects for rocks/lightning

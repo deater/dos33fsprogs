@@ -557,6 +557,9 @@ verb_tables_hi:
 peasant4_text_zx02:
 .incbin "text/DIALOG_PEASANT4.ZX02"
 
+.include "redbook_sound.inc"
+.include "location_kerrek1/sprites_kerrek1/kerrek_sprites.inc"
+
 .include "peasant4_actions.s"
 
 .include "sprites/ned_sprites.inc"

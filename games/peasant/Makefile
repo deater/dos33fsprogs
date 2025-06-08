@@ -39,6 +39,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
+	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
@@ -57,7 +58,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  4  0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk2.dsk  5  0 ./map/MAP          0   0
 #	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  18 0 ./location_waterfall/WATERFALL_LOADER 0   0
@@ -128,6 +129,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./outer/OUTER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
@@ -153,7 +155,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 18 0` ./location_waterfall/WATERFALL_LOADER	  0   0
@@ -422,7 +424,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 		sprites/ned_sprites.inc \
 		peasant4_actions.s \
 		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
-		kerrek_actions.s location_common/peasant_common.s \
+		location_kerrek1/kerrek_actions.s location_common/peasant_common.s \
 		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
 		graphics_peasantry/priority_peasant4.inc \
 		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
@@ -449,26 +451,29 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./inn/INN:
 	cd inn && make
 
+./location_brothers/BROTHERS:
+	cd location_brothers && make
+
 ./location_cliff_base/CLIFF_BASE_LOADER:
 	cd location_cliff_base && make
 
 ./location_cliff_heights/CLIFF_HEIGHTS:
 	cd location_cliff_heights && make
 
+./location_haystack/HAYSTACK:
+	cd location_haystack && make
+
+./location_kerrek1/KERREK1_LOADER:
+	cd location_kerrek1 && make
+
 ./location_knight/KNIGHT_LOADER:
 	cd location_knight && make
-
-./location_river/RIVER_LOADER:
-	cd location_river && make
-
-./location_brothers/BROTHERS:
-	cd location_brothers && make
 
 ./location_puddle/PUDDLE:
 	cd location_puddle && make
 
-./location_haystack/HAYSTACK:
-	cd location_haystack && make
+./location_river/RIVER_LOADER:
+	cd location_river && make
 
 ./location_waterfall/WATERFALL_LOADER:
 	cd location_waterfall && make
@@ -601,6 +606,7 @@ distclean:
 	cd location_cliff_base && make distclean
 	cd location_cliff_heights && make distclean
 	cd location_haystack && make distclean
+	cd location_kerrek1 && make distclean
 	cd location_knight && make distclean
 	cd location_puddle && make distclean
 	cd location_river && make distclean
@@ -637,6 +643,7 @@ clean:
 	cd location_cliff_heights && make clean
 	cd location_common && make clean
 	cd location_haystack && make clean
+	cd location_kerrek1 && make clean
 	cd location_knight && make clean
 	cd location_puddle && make clean
 	cd location_river && make clean

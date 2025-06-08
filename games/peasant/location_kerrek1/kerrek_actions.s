@@ -6,8 +6,6 @@
 ;	if dead on this screen
 ;	if dead not on this screen
 
-.include "redbook_sound.inc"
-
 	;=======================
 	;=======================
 	; kerrek draw
@@ -473,12 +471,14 @@ kerrek_got_ya:
 	sbc	#22
 	sta	KERREK_Y
 
-        lda     #<peasant_down2_sprite
-        sta     INL
-        lda     #>peasant_down2_sprite
-	sta     INH
+; FIXME
 
-        jsr     hgr_draw_sprite_1x28
+;        lda     #<peasant_down2_sprite
+ ;       sta     INL
+  ;      lda     #>peasant_down2_sprite
+;	sta     INH
+
+ ;       jsr     hgr_draw_sprite_1x28
 
 	; draw kerrek
 
@@ -1264,4 +1264,4 @@ kerrek_look_footprints:
 	ldy	#>kerrek_look_footprints_message
 	jmp	finish_parse_message
 
-.include "sprites/kerrek_sprites.inc"
+;.include "sprites/kerrek_sprites.inc"

@@ -620,7 +620,7 @@ ned_tree_look_ned_out:
 	;=======================
 	;=======================
 
-.include "kerrek_actions.s"
+.include "location_kerrek1/kerrek_actions.s"
 
 
 	;=======================
