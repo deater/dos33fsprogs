@@ -21,8 +21,8 @@ CORE_LOCATION=cliff_base_core_zx02
 
 	jmp	$8000
 
-robe_sprite_data:
-	.incbin "../sprites_peasant/robe_sprites.zx02"
+;robe_sprite_data:
+;	.incbin "../sprites_peasant/robe_sprites.zx02"
 
 .include "graphics_cliff/cliff_graphics.inc"
 .include "graphics_cliff/cliff_priority.inc"

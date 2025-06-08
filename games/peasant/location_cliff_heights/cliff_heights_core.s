@@ -9,12 +9,9 @@
 .include "../location_common/include_common.s"
 .include "../redbook_sound.inc"
 
-DIALOG_LOCATION=cliff_text_zx02
 VERB_TABLE = cliff_heights_verb_table
-PRIORITY_LOCATION=cliff_heights_priority_zx02
-BG_LOCATION=cliff_heights_zx02
 
-.include "../location_common/init_common.s"
+.include "../location_common/common_core.s"
 
 cliff_heights:
 
@@ -96,7 +93,15 @@ game_loop:
 	beq	level_good
 
 	jmp	level_over
+
 level_good:
+
+	;===========================
+	; copy bg to current screen
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
 	;=====================
 	; draw lightning
 
@@ -125,37 +130,22 @@ no_lightning:
 	;======================
 	; check keyboard
 
-	; original code also waited approximately 100ms?
-	; this led to keypressed being lost
-
-
-	lda	#13
-	sta	WAIT_LOOP
-wait_loop:
+	lda	PEASANT_DIR
+	sta	OLD_DIR
 
 	jsr	check_keyboard
 
-	lda	#50		; approx 7ms
-	jsr	wait
+;	jsr	wait_vblank
 
-	dec	WAIT_LOOP
-	bne	wait_loop
-
-	jsr	wait_vblank
+	jsr	hgr_page_flip
 
 	jmp	game_loop
 
+        ;====================
+        ; end of level
+
+
 oops_new_location:
-
-;	lda	MAP_LOCATION
-;	cmp	#LOCATION_TROGDOR_OUTER
-;	bne	not_outer
-
-;	lda	#2
-;	sta	PEASANT_X
-;	lda	#100
-;	sta	PEASANT_Y
-
 not_outer:
 just_go_there:
 
@@ -190,11 +180,13 @@ exiting_cliff:
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
+
 .include "../hgr_routines/hgr_partial_restore.s"
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_copy_fast.s"
 
-.include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
+.include "../location_common/peasant_common.s"
+.include "../location_common/flame_common.s"
 
 .include "../new_map_location.s"
 
@@ -205,26 +197,10 @@ exiting_cliff:
 ;.include "../wait.s"
 .include "../wait_a_bit.s"
 
-
-
-.include "graphics_heights/cliff_heights_graphics.inc"
-.include "graphics_heights/priority_cliff_heights.inc"
-
-
-
-cliff_text_zx02:
-.incbin "../text/DIALOG_CLIFF_HEIGHTS.ZX02"
+.include "../gr_copy.s"
+.include "../hgr_routines/hgr_copy.s"
 
 .include "heights_actions.s"
 
-robe_sprite_data:
-	.incbin "../sprites_peasant/robe_sprites.zx02"
-;	.incbin "../sprites_peasant/robe_shield_sprites.zx02"
-
-
 .include "draw_lightning.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
 

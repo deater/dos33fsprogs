@@ -103,7 +103,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
 	 ./outer/OUTER \
 	./location_cliff_base/CLIFF_BASE_LOADER \
-	./location_cliff_heights/CLIFF_HEIGHTS \
+	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./trogdor/TROGDOR ./ending/ENDING \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
@@ -115,7 +115,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk5.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
-	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
 	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./outer/OUTER	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./trogdor/TROGDOR	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./ending/ENDING	  	0   0
@@ -128,7 +128,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./outer/OUTER \
-	./location_cliff_heights/CLIFF_HEIGHTS \
+	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_gary/GARY_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
@@ -174,7 +174,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4 13 0` ./inn/INN          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./outer/OUTER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
@@ -459,7 +459,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_cliff_base/CLIFF_BASE_LOADER:
 	cd location_cliff_base && make
 
-./location_cliff_heights/CLIFF_HEIGHTS:
+./location_cliff_heights/CLIFF_HEIGHTS_LOADER:
 	cd location_cliff_heights && make
 
 ./location_gary/GARY_LOADER:
