@@ -38,7 +38,9 @@ kerrek1_core.o:	kerrek1_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
-		kerrek1_actions.s
+		kerrek1_actions.s kerrek_actions.s \
+		graphics_kerrek1/kerrek1_graphics.inc \
+		sprites_kerrek1/kerrek1_sprites.inc
 	ca65 -o kerrek1_core.o kerrek1_core.s -l kerrek1_core.lst
 
 

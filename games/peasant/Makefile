@@ -39,6 +39,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
+	./location_gary/GARY_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
@@ -57,7 +58,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  4  0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk2.dsk  5  0 ./map/MAP          0   0
-#	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_gary/GARY_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  12 0 ./location_kerrek1/KERREK1_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
@@ -129,6 +130,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./outer/OUTER \
 	./location_cliff_heights/CLIFF_HEIGHTS \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_gary/GARY_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
@@ -154,7 +156,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 18 0` ./inventory/INVENTORY  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 12 0` ./location_kerrek1/KERREK1_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
@@ -460,6 +462,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_cliff_heights/CLIFF_HEIGHTS:
 	cd location_cliff_heights && make
 
+./location_gary/GARY_LOADER:
+	cd location_gary && make
+
 ./location_haystack/HAYSTACK:
 	cd location_haystack && make
 
@@ -605,6 +610,7 @@ distclean:
 	cd location_brothers && make distclean
 	cd location_cliff_base && make distclean
 	cd location_cliff_heights && make distclean
+	cd location_gary && make distclean
 	cd location_haystack && make distclean
 	cd location_kerrek1 && make distclean
 	cd location_knight && make distclean
@@ -642,6 +648,7 @@ clean:
 	cd location_cliff_base && make clean
 	cd location_cliff_heights && make clean
 	cd location_common && make clean
+	cd location_gary && make clean
 	cd location_haystack && make clean
 	cd location_kerrek1 && make clean
 	cd location_knight && make clean
