@@ -48,12 +48,6 @@ start_new_game:
         jsr     zx02_full_decomp
 
 
-
-	; start in KNIGHT file
-
-	lda	#LOAD_KNIGHT
-	sta	WHICH_LOAD
-
 	;=========================
 	; init peasant position
 	; draw at 18,108
@@ -125,12 +119,21 @@ start_new_game:
 	sta	ARROW_SCORE
 	sta	WHICH_PEASANT_SPRITES
 
-
 	;==============================
 	; load initial peasant sprites
 
+	; urgh over-writes $6000 where intro code lives
+	; make it use $4000 again?
+
 	lda	WHICH_PEASANT_SPRITES
 	jsr	load_peasant_sprites
+
+	;==============================
+	; start in KNIGHT file
+
+	lda	#LOAD_KNIGHT
+	sta	WHICH_LOAD
+
 
 
 	bit	KEYRESET	; clear or else escape ends up in buffer

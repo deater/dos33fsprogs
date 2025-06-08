@@ -49,7 +49,7 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte $40,$40,$40,$40,$40	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte $BC,$60,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
+.byte $BC,$40,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
 .byte $BC			; disk detect
 
 track_array:

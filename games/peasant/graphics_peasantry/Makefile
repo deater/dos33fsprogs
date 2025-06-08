@@ -33,15 +33,9 @@ graphics_intro.inc:	\
 
 graphics_peasant1.inc:	\
 	gary.zx02 \
-	top_prints.zx02 \
-	wishing_well.zx02 \
-	leaning_tree.zx02 \
-	waterfall.zx02
+	top_prints.zx02
 	echo "gary_zx02: .incbin \"gary.zx02\"" > graphics_peasant1.inc
 	echo "top_prints_zx02: .incbin \"top_prints.zx02\"" >> graphics_peasant1.inc
-	echo "wishing_well_zx02: .incbin \"wishing_well.zx02\"" >> graphics_peasant1.inc
-	echo "leaning_tree_zx02: .incbin \"leaning_tree.zx02\"" >> graphics_peasant1.inc
-	echo "waterfall_zx02: .incbin \"waterfall.zx02\"" >> graphics_peasant1.inc
 
 ###
 
@@ -88,15 +82,9 @@ priority_intro.inc:	\
 	echo "knight_priority_zx02: .incbin \"../location_knight/graphics_knight/knight_priority.zx02\"" >> priority_intro.inc
 
 priority_peasant1.inc:	\
-	gary_priority.zx02 top_prints_priority.zx02 \
-	wishing_well_priority.zx02 leaning_tree_priority.zx02 \
-	waterfall_priority.zx02
+	gary_priority.zx02 top_prints_priority.zx02
 	echo "gary_priority_zx02: .incbin \"gary_priority.zx02\"" > priority_peasant1.inc
 	echo "top_prints_priority_zx02: .incbin \"top_prints_priority.zx02\"" >> priority_peasant1.inc
-	echo "wishing_well_priority_zx02: .incbin \"wishing_well_priority.zx02\"" >> priority_peasant1.inc
-	echo "leaning_tree_priority_zx02: .incbin \"leaning_tree_priority.zx02\"" >> priority_peasant1.inc
-	echo "waterfall_priority_zx02: .incbin \"waterfall_priority.zx02\"" >> priority_peasant1.inc
-
 
 ###
 

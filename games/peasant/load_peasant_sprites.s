@@ -1,4 +1,3 @@
-load_sprites_temp = $6000
 
 	;=================================
 	; load peasant sprites to $A000
@@ -13,16 +12,14 @@ load_peasant_sprites:
 
 	jsr	load_file
 
-	; loads to $6000
+	; loads to $4000 (peasant_sprites_temp)
 
 	lda	WHICH_PEASANT_SPRITES
 	asl
 	tax
-	lda	load_sprites_temp,X
-;        lda     #<robe_sprite_data
+	lda	peasant_sprites_temp,X
         sta     zx_src_l+1
-;        lda     #>robe_sprite_data
-	lda	load_sprites_temp+1,X
+	lda	peasant_sprites_temp+1,X
         sta     zx_src_h+1
 
         lda     #>peasant_sprites_location
