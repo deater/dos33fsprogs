@@ -31,7 +31,6 @@ waterfall_core:
 
 game_loop:
 
-	.include "draw_waterfall.s"
 
 	;======================
 	; move peasant
@@ -47,6 +46,12 @@ game_loop:
 
 	lda	#$60
 	jsr	hgr_copy_fast
+
+	;======================
+	; draw waterfall
+
+	.include "draw_waterfall.s"
+
 
 
 	;======================
