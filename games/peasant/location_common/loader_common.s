@@ -10,6 +10,27 @@ CORE_DESTINATION = $8000
 
 	jsr	hgr_make_tables		; necessary?
 
+
+	;========================
+	; Load Peasant Sprites
+	;========================
+	; TODO: move this elsewhere
+
+
+;	lda	#<robe_sprite_data
+;	sta	zx_src_l+1
+;	lda	#>robe_sprite_data
+;	sta	zx_src_h+1
+
+;	lda	#$a0
+
+;	jsr	zx02_full_decomp
+
+;	lda	#0
+;	jsr	load_peasant_sprites
+
+
+
 	;===============================
 	; decompress dialog to $D000
 
@@ -60,21 +81,6 @@ col_copy_loop:
 
 	jsr	zx02_full_decomp
 
-
-	;========================
-	; Load Peasant Sprites
-	;========================
-	; TODO: move this elsewhere
-
-
-	lda	#<robe_sprite_data
-	sta	zx_src_l+1
-	lda	#>robe_sprite_data
-	sta	zx_src_h+1
-
-	lda	#$a0
-
-	jsr	zx02_full_decomp
 
 
 	;========================

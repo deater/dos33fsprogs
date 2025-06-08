@@ -30,3 +30,4 @@ river_core_zx02:
 .incbin "RIVER_CORE.zx02"
 
 .include "../priority_copy.s"
+

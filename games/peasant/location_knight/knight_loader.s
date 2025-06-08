@@ -20,9 +20,6 @@ CORE_LOCATION=knight_core_zx02
 	jmp	$8000
 
 
-robe_sprite_data:
-        .incbin "../sprites_peasant/robe_sprites.zx02"
-
 .include "graphics_knight/knight_graphics.inc"
 .include "graphics_knight/knight_priority.inc"
 
@@ -33,3 +30,4 @@ knight_core_zx02:
 .incbin "KNIGHT_CORE.zx02"
 
 .include "../priority_copy.s"
+

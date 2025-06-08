@@ -245,7 +245,8 @@ qload.o:	qload.s qboot.inc \
 		hgr_routines/hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
-		random8.s
+		random8.s \
+		load_peasant_sprites.s
 	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
 
 ###
@@ -337,6 +338,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s speaker_frequency qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_page_flip qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s load_peasant_sprites qload.lst >> qload.inc
 	echo "hposn_high = \$$BA00" >> qload.inc
 	echo "hposn_low = \$$BB00" >> qload.inc
 #	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc
@@ -472,7 +474,8 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_yellow_tree/YELLOW_TREE_LOADER:
 	cd location_yellow_tree && make
 
-
+./sprites_peasant/PEASANT_SPRITES_COMMON:
+	cd sprites_peasant && make
 
 ###
 
@@ -601,6 +604,7 @@ distclean:
 	cd map && make distclean
 	cd outer && make distclean
 	cd saves && make distclean
+	cd sprites_peasant && make distclean
 	cd text && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
@@ -636,6 +640,7 @@ clean:
 	cd music && make clean
 	cd outer && make clean
 	cd saves && make clean
+	cd sprites_peasant && make clean
 	cd text && make clean
 	cd title && make clean
 	cd trogdor && make clean

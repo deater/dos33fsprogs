@@ -12,7 +12,7 @@
 
 .include "hardware.inc"
 
-;.include "common_defines.inc"
+.include "common_defines.inc"
 
 .include "qboot.inc"
 
@@ -49,7 +49,7 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte $40,$40,$40,$40,$40	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte $BC,$A0,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
+.byte $BC,$60,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
 .byte $BC			; disk detect
 
 track_array:
@@ -62,7 +62,7 @@ track_array:
 .byte 20,22,24,26,28	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte 10,12,14,16,18	; GARY, KERREK1, WELL, RIVER, KNIGHT
 
-.byte  0, 0, 0		; SAVE_DATA, PEASANT_SPRITES, ?
+.byte  0, 3, 0		; SAVE_DATA, PEASANT_SPRITES, ?
 .byte  0		; disk detect
 
 sector_array:
@@ -115,6 +115,7 @@ load_file:
 .include "redbook_sound.s"
 .include "hgr_routines/hgr_page_flip.s"
 .include "wait.s"
+.include "load_peasant_sprites.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0

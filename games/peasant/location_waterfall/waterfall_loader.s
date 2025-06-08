@@ -31,3 +31,4 @@ waterfall_core_zx02:
 .incbin "WATERFALL_CORE.zx02"
 
 .include "../priority_copy.s"
+

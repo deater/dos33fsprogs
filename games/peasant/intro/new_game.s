@@ -123,6 +123,15 @@ start_new_game:
 	sta	BUSH_STATUS
 	sta	KERREK_STATE
 	sta	ARROW_SCORE
+	sta	WHICH_PEASANT_SPRITES
+
+
+	;==============================
+	; load initial peasant sprites
+
+	lda	WHICH_PEASANT_SPRITES
+	jsr	load_peasant_sprites
+
 
 	bit	KEYRESET	; clear or else escape ends up in buffer
 

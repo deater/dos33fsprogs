@@ -14,7 +14,7 @@ all:	walk_sprites.inc climb_flame_sprites.inc \
 ####
 
 PEASANT_SPRITES_COMMON:	peasant_sprite_common.o
-	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant_sprite_common.o:	peasant_sprite_common.s \
 	walking_sprites.zx02 \
