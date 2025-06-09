@@ -27,7 +27,7 @@ all:	dump_text shrink_text \
 	DIALOG_E_LAKE.ZX02 dialog_e_lake.inc \
 	DIALOG_PEASANT4.ZX02 dialog_peasant4.inc \
 	DIALOG_INSIDE.ZX02 dialog_inside.inc \
-	DIALOG_INN.ZX02 dialog_inn.inc \
+	DIALOG_INSIDE_INN.ZX02 dialog_inside_inn.inc \
 	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	DIALOG_CLIFF_HEIGHTS.ZX02 dialog_cliff_heights.inc \
 	DIALOG_OUTER.ZX02 dialog_outer.inc \
@@ -417,17 +417,17 @@ dialog_peasant4.inc:	../generate_all_symbols dialog_peasant4
 
 ###
 
-DIALOG_INN.ZX02:	dialog_inn
-	$(ZX02) -f  dialog_inn DIALOG_INN.ZX02
+DIALOG_INSIDE_INN.ZX02:	dialog_inside_inn
+	$(ZX02) -f  dialog_inside_inn DIALOG_INSIDE_INN.ZX02
 
-dialog_inn:	dialog_inn.o
-	ld65 -o dialog_inn dialog_inn.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+dialog_inside_inn:	dialog_inside_inn.o
+	ld65 -o dialog_inside_inn dialog_inside_inn.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
-dialog_inn.o:	dialog_inn.s inside_inn.inc.lookup
-	ca65 -o dialog_inn.o dialog_inn.s -l dialog_inn.lst
+dialog_inside_inn.o:	dialog_inside_inn.s inside_inn.inc.lookup
+	ca65 -o dialog_inside_inn.o dialog_inside_inn.s -l dialog_inside_inn.lst
 
-dialog_inn.inc:	../generate_all_symbols dialog_inn
-	../generate_all_symbols -a 0xd000 dialog_inn.lst > dialog_inn.inc
+dialog_inside_inn.inc:	../generate_all_symbols dialog_inside_inn
+	../generate_all_symbols -a 0xd000 dialog_inside_inn.lst > dialog_inside_inn.inc
 
 
 ###

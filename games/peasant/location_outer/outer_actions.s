@@ -211,9 +211,9 @@ cave_outer_get_shield:
 	lda	#0
 	sta	IN_QUIZ
 
-	; re-set up the verb table
+	; re-set up the verb table (why?)
 
-	jsr	setup_outer_verb_table
+;	jsr	setup_outer_verb_table
 
 	; actually get the shield
 

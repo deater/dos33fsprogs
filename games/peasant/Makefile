@@ -95,7 +95,8 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  30 0 PEASANT4	  0   0
 
 peasant_disk4.dsk:	\
-	./inside/INSIDE ./inn/INN \
+	./inside/INSIDE \
+	./location_inside_inn/INSIDE_INN_LOADER \
 	./archery/ARCHERY \
 	./wrong_boot/WBOOT4 \
 	./game_over/GAME_OVER \
@@ -108,11 +109,11 @@ peasant_disk4.dsk:	\
 	$(DOS33_RAW) peasant_disk4.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./archery/ARCHERY      0   0
 	$(DOS33_RAW) peasant_disk4.dsk   9 0 ./inside/INSIDE       0   0
-	$(DOS33_RAW) peasant_disk4.dsk  13 0 ./inn/INN          0   0
+	$(DOS33_RAW) peasant_disk4.dsk  13 0 ./location_inside_inn/INSIDE_INN_LOADER          0   0
 
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
-	 ./outer/OUTER \
+	 ./location_outer/OUTER_LOADER \
 	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./trogdor/TROGDOR ./ending/ENDING \
@@ -127,7 +128,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
-	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./outer/OUTER	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./location_outer/OUTER_LOADER	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./trogdor/TROGDOR	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./ending/ENDING	  	0   0
 
@@ -136,9 +137,10 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./map/MAP ./archery/ARCHERY ./inside/INSIDE ./inn/INN \
+	./map/MAP ./archery/ARCHERY ./inside/INSIDE \
+	./location_inside_inn/INSIDE_INN_LOADER \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
-	./climb/CLIMB ./outer/OUTER \
+	./climb/CLIMB ./location_outer/OUTER_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 #	./location_jhonka/JHONKA_LOADER \
@@ -191,11 +193,11 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  9 0` ./inside/INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 13 0` ./inn/INN          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 13 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./outer/OUTER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./location_outer/OUTER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
 
@@ -412,29 +414,27 @@ inventory/INVENTORY:
 ./game_over/GAME_OVER:
 	cd game_over && make
 
-./outer/OUTER:	
-	cd outer && make
+
 
 ###
 
-
-PEASANT3:	peasant3.o
-	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		peasant3_actions.s \
-		text/DIALOG_PEASANT3.ZX02 text/dialog_peasant3.inc \
-		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
-		graphics_peasantry/priority_peasant3.inc \
-		location_common/peasant_common.s \
-		animate_bubbles.s \
-		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o peasant3.o peasant3.s -l peasant3.lst
+#PEASANT3:	peasant3.o
+#	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+#
+#peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
+#		parse_input.inc \
+#		peasant3_actions.s \
+#		text/DIALOG_PEASANT3.ZX02 text/dialog_peasant3.inc \
+#		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
+#		graphics_peasantry/priority_peasant3.inc \
+#		location_common/peasant_common.s \
+#		animate_bubbles.s \
+#		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+#		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+#		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
+#		keyboard.s new_map_location.s \
+#		move_peasant.s score.s
+#	ca65 -o peasant3.o peasant3.s -l peasant3.lst
 
 ###
 
@@ -470,9 +470,6 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./inside/INSIDE:
 	cd inside && make
 
-./inn/INN:
-	cd inn && make
-
 ./location_brothers/BROTHERS:
 	cd location_brothers && make
 
@@ -494,6 +491,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_haystack/HAYSTACK:
 	cd location_haystack && make
 
+./location_inside_inn/INSIDE_INN_LOADER:
+	cd location_inside_inn && make
+
 ./location_kerrek1/KERREK1_LOADER:
 	cd location_kerrek1 && make
 
@@ -505,6 +505,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 
 ./location_lake_west/LAKE_WEST_LOADER:
 	cd location_lake_west && make
+
+./location_outer/OUTER_LOADER:
+	cd location_outer && make
 
 ./location_outside_inn/OUTSIDE_INN_LOADER:
 	cd location_outside_inn && make
@@ -638,7 +641,6 @@ distclean:
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
-	cd inn && make distclean
 	cd inside && make distclean
 	cd intro && make distclean
 	cd inventory && make distclean
@@ -648,11 +650,13 @@ distclean:
 	cd location_cottage && make distclean
 	cd location_gary && make distclean
 	cd location_haystack && make distclean
+	cd location_inside_inn && make distclean
 	cd location_jhonka && make distclean
 	cd location_kerrek1 && make distclean
 	cd location_knight && make distclean
 	cd location_lake_east && make distclean
 	cd location_lake_west && make distclean
+	cd location_outer && make distclean
 	cd location_outside_inn && make distclean
 	cd location_puddle && make distclean
 	cd location_river && make distclean
@@ -660,7 +664,6 @@ distclean:
 	cd location_well && make distclean
 	cd location_yellow_tree && make distclean
 	cd map && make distclean
-	cd outer && make distclean
 	cd saves && make distclean
 	cd sprites_peasant && make distclean
 	cd text && make distclean
@@ -680,7 +683,6 @@ clean:
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
-	cd inn && make clean
 	cd inside && make clean
 	cd intro && make clean
 	cd inventory && make clean
@@ -691,11 +693,13 @@ clean:
 	cd location_cottage && make clean
 	cd location_gary && make clean
 	cd location_haystack && make clean
+	cd location_inside_inn && make clean
 	cd location_jhonka && make clean
 	cd location_kerrek1 && make clean
 	cd location_knight && make clean
 	cd location_lake_east && make clean
 	cd location_lake_west && make clean
+	cd location_outer && make clean
 	cd location_outside_inn && make clean
 	cd location_puddle && make clean
 	cd location_river && make clean
@@ -704,7 +708,6 @@ clean:
 	cd location_yellow_tree && make clean
 	cd map && make clean
 	cd music && make clean
-	cd outer && make clean
 	cd saves && make clean
 	cd sprites_peasant && make clean
 	cd text && make clean

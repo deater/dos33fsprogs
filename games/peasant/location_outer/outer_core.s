@@ -2,24 +2,14 @@
 
 ; Trogdor's Outer Sanctum
 
-; split off from cliff heights as it was too big and there's
-;	a lot going on
-
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "../zp.inc"
-.include "../hardware.inc"
-
-.include "../peasant_sprite.inc"
-.include "../qload.inc"
-.include "../inventory/inventory.inc"
-.include "../parse_input.inc"
 .include "../redbook_sound.inc"
-.include "../common_defines.inc"
+.include "../location_common/include_common.s"
 
-LOCATION_BASE	= LOCATION_TROGDOR_OUTER ; (22 = $16)
+VERB_TABLE = cave_outer_verb_table
 
-outer:
+outer_core:
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -28,135 +18,9 @@ outer:
 	sta	KEEPER_COUNT
 	sta	IN_QUIZ
 
-	jsr	hgr_make_tables
+.include "../location_common/common_core.s"
 
-	;================================
-	; decompress dialog to $D000
-
-	lda	#<outer_text_zx02
-	sta	zx_src_l+1
-	lda	#>outer_text_zx02
-	sta	zx_src_h+1
-
-	lda	#$D0
-
-	jsr	zx02_full_decomp
-
-	;===============================
-	; update score
-
-	jsr	update_score
-
-
-	;=============================
-	;=============================
-	; new screen location
-	;=============================
-	;=============================
-
-new_location:
-	lda	#0
-	sta	LEVEL_OVER
-
-	;==========================
-	; load updated verb table
-
-	jsr	setup_outer_verb_table
-
-
-	;===============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
-
-	lda	map_priority_low,X
-	sta	zx_src_l+1
-	lda	map_priority_hi,X
-	sta	zx_src_h+1
-
-	lda	#$20			; temporarily load to $2000
-
-	jsr	zx02_full_decomp
-
-	; copy to $400
-
-	jsr	gr_copy_to_page1
-
-	; copy collision detection info
-
-	ldx	#0
-col_copy_loop:
-	lda	$2400,X
-	sta	collision_location,X
-	inx
-	bne	col_copy_loop
-
-
-	;=====================
-	; load bg
-
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
-
-	lda	map_backgrounds_low,X
-	sta	zx_src_l+1
-	lda	map_backgrounds_hi,X
-	sta	zx_src_h+1
-
-	lda	#$20				; load to $2000
-
-	jsr	zx02_full_decomp
-
-	jsr	hgr_copy			; copy to $4000
-
-	;===================
-	; put peasant text
-
-	lda	#<peasant_text
-	sta	OUTL
-	lda	#>peasant_text
-	sta	OUTH
-
-	jsr	hgr_put_string
-
-	;===================
-	; put score
-
-	jsr	print_score
-
-
-	;======================
-	; always activate text
-
-	jsr	setup_prompt
-
-
-	;========================
-	; Load Peasant Sprites
-	;========================
-	; Note: to get to this point of the game you have to be
-	;	in a robe and on fire, so we should enforce that
-
-	lda	GAME_STATE_2
-	ora	#ON_FIRE
-	sta	GAME_STATE_2
-
-	lda	#<robe_sprite_data
-	sta	zx_src_l+1
-	lda	#>robe_sprite_data
-	sta	zx_src_h+1
-
-	lda	#$a0
-
-	jsr	zx02_full_decomp
-
-
+	;====================================================
 	; clear the keyboard in case we were holding it down
 
 	bit	KEYRESET
@@ -186,6 +50,13 @@ game_loop:
 	jmp	level_over
 
 level_good:
+
+	;===========================
+	; copy bg to current screen
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
 
 
 	;=====================
@@ -251,17 +122,6 @@ no_draw_keeper:
 	;======================
 	; check keyboard
 
-	; original code also waited approximately 100ms?
-	; this led to keypressed being lost
-
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
-	lda	#13
-	sta	WAIT_LOOP
-wait_loop:
-
-
 	lda	IN_QUIZ
 	cmp	#2		; means waiting for answer
 	bne	normal_keyboard_check
@@ -271,15 +131,21 @@ wait_loop:
 
 normal_keyboard_check:
 
+	;====================
+	; check keyboard
+
+	lda	PEASANT_DIR
+	sta	OLD_DIR
+
 	jsr	check_keyboard
+
+;	jsr	wait_vblank
+
+	jsr	hgr_page_flip
 
 done_keyboard_check:
 
-	lda	#50		; approx 7ms
-	jsr	wait
 
-	dec	WAIT_LOOP
-	bne	wait_loop
 
 	;===================================
 	; keep from moving if being quizzed
@@ -303,39 +169,8 @@ not_in_quiz:
 
 oops_new_location:
 
-	; new location but same file
-	; actually not possible
-
-
-;to_cliff_from_cliff:
-;	lda	#18
-;	sta	PEASANT_X
-;	lda	#140
-;	sta	PEASANT_Y
-;	bne	not_the_cliff		; bra
-
-;to_cliff_from_outer:
-;	lda	#32
-;	sta	PEASANT_X
-;	lda	#120
-;	sta	PEASANT_Y
-;	bne	not_the_cliff		; bra
-
-;not_the_cliff:
-
-;	lda	MAP_LOCATION
-;	cmp	#LOCATION_TROGDOR_OUTER
-;	bne	not_outer
-
-;	lda	#2
-;	sta	PEASANT_X
-;	lda	#100
-;	sta	PEASANT_Y
-
 not_outer:
 just_go_there:
-
-;	jmp	new_location
 
 
 	;========================
@@ -372,63 +207,6 @@ exiting_outer:
 	rts
 
 
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-.include "../hgr_routines/hgr_partial_restore.s"
-.include "../hgr_routines/hgr_sprite.s"
-
-.include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-;.include "../wait.s"
-.include "../wait_a_bit.s"
-
-.include "../vblank.s"
-
-.include "graphics_outer/outer_graphics.inc"
-.include "graphics_outer/outer_priority.inc"
-
-map_backgrounds_low:
-	.byte   <outer_zx02
-
-map_backgrounds_hi:
-	.byte   >outer_zx02
-
-map_priority_low:
-	.byte	<outer_priority_zx02
-
-map_priority_hi:
-	.byte	>outer_priority_zx02
-
-verb_tables_low:
-	.byte	<cave_outer_verb_table
-
-verb_tables_hi:
-	.byte	>cave_outer_verb_table
-
-
-
-outer_text_zx02:
-.incbin "../text/DIALOG_OUTER.ZX02"
-
-.include "outer_actions.s"
-
-robe_sprite_data:
-	.incbin "../sprites_peasant/robe_sprites.zx02"
-;	.incbin "../sprites_peasant/robe_shield_sprites.zx02"
-
-
-.include "sprites_outer/keeper1_sprites.inc"
-.include "sprites_outer/ron_sprites.inc"
-.include "sprites_outer/keeper2_sprites.inc"
-.include "sprites_outer/guitar_sprites.inc"
 
 
 ;==========================================
@@ -510,8 +288,8 @@ skip_ron_sound:
 
 	; erase prev keeper
 
-	ldy	#3                      ; erase slot 3?
-	jsr	hgr_partial_restore_by_num
+;	ldy	#3                      ; erase slot 3?
+;	jsr	hgr_partial_restore_by_num
 
 	inc	KEEPER_COUNT
 	ldx	KEEPER_COUNT
@@ -531,7 +309,8 @@ skip_ron_sound:
 
 	ldy     #3      ; ? slot
 
-	jsr	hgr_draw_sprite_save
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite
 
 	;=======================
 	; see if done animation
@@ -545,8 +324,8 @@ skip_ron_sound:
 
 	; erase prev peasant
 
-	ldy	#4				; erase slot 4?
-	jsr	hgr_partial_restore_by_num
+;	ldy	#4				; erase slot 4?
+;	jsr	hgr_partial_restore_by_num
 
 	ldx	KEEPER_COUNT
 
@@ -563,7 +342,8 @@ skip_ron_sound:
 
 	ldy     #4	; ? slot
 
-	jsr	hgr_draw_sprite_save
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite
 
 	jmp	done_ron_peasant
 
@@ -680,8 +460,8 @@ keeper1_loop:
 
 	; erase prev keeper
 
-	ldy	#3                      ; erase slot 3?
-	jsr	hgr_partial_restore_by_num
+;	ldy	#3                      ; erase slot 3?
+;	jsr	hgr_partial_restore_by_num
 
 	inc	KEEPER_COUNT
 	ldx	KEEPER_COUNT
@@ -701,7 +481,8 @@ keeper1_loop:
 
 	ldy     #3      ; ? slot
 
-	jsr	hgr_draw_sprite_save
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite
 
 	;=======================
 	; see if done animation
@@ -929,7 +710,7 @@ quiz1_answers:
 	; setup outer verb table
 	;============================
 	; we do this a lot so make it a function
-
+.if 0
 setup_outer_verb_table:
 	; setup default verb table
 
@@ -949,7 +730,7 @@ setup_outer_verb_table:
 	jsr	load_custom_verb_table
 
 	rts
-
+.endif
 
 	;==========================
 	; draw standing keeper
@@ -958,8 +739,8 @@ draw_standing_keeper:
 
 	; erase prev keeper
 
-	ldy	#3                      ; erase slot 3?
-	jsr	hgr_partial_restore_by_num
+;	ldy	#3                      ; erase slot 3?
+;	jsr	hgr_partial_restore_by_num
 
 	ldx	#19
 
@@ -978,7 +759,8 @@ draw_standing_keeper:
 
 	ldy     #3      ; ? slot
 
-	jsr	hgr_draw_sprite_save
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite
 
 	rts
 
@@ -1012,6 +794,33 @@ sprites_mask_h:
 	.byte >keeper_r0_mask,>keeper_r1_mask,>keeper_r2_mask,>keeper_r3_mask
 	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
 
-.include "../hgr_routines/hgr_sprite_save.s"
 
+
+.include "../draw_peasant_new.s"
+.include "../move_peasant_new.s"
+
+.include "../hgr_routines/hgr_sprite_bg_mask.s"
+.include "../gr_offsets.s"
+
+.include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
+
+.include "../new_map_location.s"
+
+.include "../keyboard.s"
+
+.include "../vblank.s"
+
+.include "outer_actions.s"
+
+;.include "../hgr_routines/hgr_page_flip.s"
+.include "../hgr_routines/hgr_copy_fast.s"
+
+;.include "../wait.s"
+
+.include "../hgr_routines/hgr_sprite.s"
+
+.include "sprites_outer/keeper1_sprites.inc"
+.include "sprites_outer/ron_sprites.inc"
+.include "sprites_outer/keeper2_sprites.inc"
+.include "sprites_outer/guitar_sprites.inc"
