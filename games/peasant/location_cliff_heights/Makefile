@@ -16,7 +16,7 @@ cliff_heights_loader.o:	cliff_heights_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 \
 		graphics_heights/cliff_heights_graphics.inc \
-		graphics_heights/cliff_heights_priority.inc\
+		graphics_heights/cliff_heights_priority.inc \
 		../location_common/loader_common.s \
 		CLIFF_HEIGHTS_CORE.zx02
 	ca65 -o cliff_heights_loader.o cliff_heights_loader.s -l cliff_heights_loader.lst
@@ -49,10 +49,10 @@ cliff_heights_core.o:	cliff_heights_core.s \
 
 ###
 
-graphics_heights/ciff_heights_graphics.inc:
+graphics_heights/cliff_heights_graphics.inc:
 	cd graphics_heights && make
 
-graphics_heights/ciff_heights_priority.inc:
+graphics_heights/cliff_heights_priority.inc:
 	cd graphics_heights && make
 
 ###
