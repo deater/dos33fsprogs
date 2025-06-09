@@ -8,6 +8,11 @@ CFLAGS = -O2 -Wall -g
 
 all:	dump_text shrink_text \
 	DIALOG_PEASANT1.ZX02 dialog_peasant1.inc \
+	DIALOG_JHONKA.ZX02 dialog_jhonka.inc \
+	DIALOG_COTTAGE.ZX02 dialog_cottage.inc \
+	DIALOG_LAKE_WEST.ZX02 dialog_lake_west.inc \
+	DIALOG_LAKE_EAST.ZX02 dialog_lake_east.inc \
+	DIALOG_OUTSIDE_INN.ZX02 dialog_outside_inn.inc \
 	DIALOG_GARY.ZX02 dialog_gary.inc \
 	DIALOG_KERREK1.ZX02 dialog_kerrek1.inc \
 	DIALOG_WELL.ZX02 dialog_well.inc \
@@ -30,6 +35,79 @@ all:	dump_text shrink_text \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
 	inventory.inc.lookup
+
+
+###
+
+DIALOG_JHONKA.ZX02:	dialog_jhonka
+	$(ZX02) -f  dialog_jhonka DIALOG_JHONKA.ZX02
+
+dialog_jhonka:	dialog_jhonka.o
+	ld65 -o dialog_jhonka dialog_jhonka.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_jhonka.o:	dialog_jhonka.s \
+		jhonka.inc.lookup
+	ca65 -o dialog_jhonka.o dialog_jhonka.s -l dialog_jhonka.lst
+
+dialog_jhonka.inc:	../generate_all_symbols dialog_jhonka
+	../generate_all_symbols -a 0xd000 dialog_jhonka.lst > dialog_jhonka.inc
+
+###
+
+DIALOG_COTTAGE.ZX02:	dialog_cottage
+	$(ZX02) -f  dialog_cottage DIALOG_COTTAGE.ZX02
+
+dialog_cottage:	dialog_cottage.o
+	ld65 -o dialog_cottage dialog_cottage.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_cottage.o:	dialog_cottage.s \
+		cottage.inc.lookup
+	ca65 -o dialog_cottage.o dialog_cottage.s -l dialog_cottage.lst
+
+dialog_cottage.inc:	../generate_all_symbols dialog_cottage
+	../generate_all_symbols -a 0xd000 dialog_cottage.lst > dialog_cottage.inc
+###
+
+DIALOG_LAKE_WEST.ZX02:	dialog_lake_west
+	$(ZX02) -f  dialog_lake_west DIALOG_LAKE_WEST.ZX02
+
+dialog_lake_west:	dialog_lake_west.o
+	ld65 -o dialog_lake_west dialog_lake_west.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_lake_west.o:	dialog_lake_west.s \
+		lake_west.inc.lookup
+	ca65 -o dialog_lake_west.o dialog_lake_west.s -l dialog_lake_west.lst
+
+dialog_lake_west.inc:	../generate_all_symbols dialog_lake_west
+	../generate_all_symbols -a 0xd000 dialog_lake_west.lst > dialog_lake_west.inc
+###
+
+DIALOG_LAKE_EAST.ZX02:	dialog_lake_east
+	$(ZX02) -f  dialog_lake_east DIALOG_LAKE_EAST.ZX02
+
+dialog_lake_east:	dialog_lake_east.o
+	ld65 -o dialog_lake_east dialog_lake_east.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_lake_east.o:	dialog_lake_east.s \
+		lake_east.inc.lookup
+	ca65 -o dialog_lake_east.o dialog_lake_east.s -l dialog_lake_east.lst
+
+dialog_lake_east.inc:	../generate_all_symbols dialog_lake_east
+	../generate_all_symbols -a 0xd000 dialog_lake_east.lst > dialog_lake_east.inc
+###
+
+DIALOG_OUTSIDE_INN.ZX02:	dialog_outside_inn
+	$(ZX02) -f  dialog_outside_inn DIALOG_OUTSIDE_INN.ZX02
+
+dialog_outside_inn:	dialog_outside_inn.o
+	ld65 -o dialog_outside_inn dialog_outside_inn.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_outside_inn.o:	dialog_outside_inn.s \
+		outside_inn.inc.lookup
+	ca65 -o dialog_outside_inn.o dialog_outside_inn.s -l dialog_outside_inn.lst
+
+dialog_outside_inn.inc:	../generate_all_symbols dialog_outside_inn
+	../generate_all_symbols -a 0xd000 dialog_outside_inn.lst > dialog_outside_inn.inc
 
 ###
 

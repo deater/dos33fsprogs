@@ -1,6 +1,6 @@
 ; Peasant's Quest
 
-; Knight (location 4,2)
+; Knight (location 5,2)
 
 ; by Vince `deater` Weaver	vince@deater.net
 

@@ -1,6 +1,6 @@
 ; Peasant's Quest
 
-; o/~ By the beautiful, the beautiful river o/~  (location 3,2)
+; o/~ By the beautiful, the beautiful river o/~  (location 4,2)
 
 ; by Vince `deater` Weaver	vince@deater.net
 
