@@ -107,5 +107,8 @@ lake_west_throw_baby_already_message:
 
 ; + throw feed (at south side)
 ; + throw baby (not in right spot)
-; same as lake_east_throw_feed_too_south_message:
-
+; note: same as lake_east_throw_feed_too_south_message:
+lake_west_throw_feed_too_south_message:
+.byte "Maybe try again from the",13
+.byte "center of the lake. Looks",13
+.byte "deeper there.",0

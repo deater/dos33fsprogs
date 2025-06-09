@@ -72,14 +72,14 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 
 #	location_jhonka/JHONKA_LOADER \
 #	location_cottage/COTTAGE_LOADER \
-#	location_lake_West/LAKE_WEST_LOADER \
-#	location_lake_east/LAKE_EAST_LOADER \
 
 peasant_disk3.dsk:	QBOOT QLOAD \
 	PEASANT4 \
 	./wrong_boot/WBOOT3 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
+	location_lake_west/LAKE_WEST_LOADER \
+	location_lake_east/LAKE_EAST_LOADER \
 	location_outside_inn/OUTSIDE_INN_LOADER \
 	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -89,8 +89,8 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  5  0 ./map/MAP          0   0
 #	$(DOS33_RAW) peasant_disk3.dsk  10 0 ./location_jhonka/JHONKA_LOADER          0   0
 #	$(DOS33_RAW) peasant_disk3.dsk  12 0 ./location_cottage/COTTAGE_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  16 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  16 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  18 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  30 0 PEASANT4	  0   0
 
@@ -143,8 +143,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 #	./location_jhonka/JHONKA_LOADER \
 #	./location_cottage/COTTAGE_LOADER \
-#	./location_lake_west/LAKE_WEST_LOADER \
-#	./location_lake_east/LAKE_EAST_LOADER \
+	./location_lake_west/LAKE_WEST_LOADER \
+	./location_lake_east/LAKE_EAST_LOADER \
 	./location_outside_inn/OUTSIDE_INN_LOADER \
 	./location_gary/GARY_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
@@ -184,8 +184,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 3 10 0` ./location_jhonka/JHONKA_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 3 12 0` ./location_cottage/COTTAGE_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 16 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 16 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 18 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` PEASANT4	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
