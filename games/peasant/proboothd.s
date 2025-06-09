@@ -9,9 +9,14 @@
 .include "zp.inc"
 
 	; we want to load 10 blocks from 1024 to $0b00
+
+	; blurgh we want to load 10.5 (512-byte) blocks
+	; I guess we can load 11 and hope over-writing a bit at $2000
+	;	doesn't matter?
+
 QLOAD_BLOCK	=	((0+1)*512)+(1*8)+(0)	; D0 T1 S0
 QLOAD_ADDR	=	$0b00
-QLOAD_SIZE	=	10
+QLOAD_SIZE	=	11
 
 
 ; start of boot sector, presumably how many sectors to load
