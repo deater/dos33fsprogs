@@ -81,7 +81,7 @@ bubble_progress_e:
 	.word bubble_e_sprite4
 	.word bubble_e_sprite5
 
-.include "sprites/bubble_sprites_e.inc"
+;.include "sprites/bubble_sprites_e.inc"
 
 .if 0
 bubble_e_sprite0:
@@ -240,7 +240,7 @@ bubble_progress:
 	.word bubble_sprite5
 
 
-	.include "sprites/bubble_sprites_w.inc"
+;	.include "sprites/bubble_sprites_w.inc"
 
 .if 0
 bubble_sprite0:

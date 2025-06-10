@@ -6,8 +6,8 @@ all:	INTRO
 
 ###
 
-../graphics_peasantry/cottage.zx02:	
-	cd ../graphics_peasantry && make
+../location_cottage/graphics_cottage/cottage.zx02:	
+	cd ../location_cottage/graphics_cottage && make
 
 ../graphics_peasantry/cottage_priority.zx02:	
 	cd ../graphics_peasantry && make
@@ -27,24 +27,24 @@ INTRO:	intro.o
 
 intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../peasant_sprite.inc \
-		../graphics_peasantry/cottage.zx02 \
-		../graphics_peasantry/lake_w.zx02 \
-		../graphics_peasantry/lake_e.zx02 \
+		../location_cottage/graphics_cottage/cottage.zx02 \
+		../location_lake_west/graphics_lake_west/lake_w.zx02 \
+		../location_lake_east/graphics_lake_east/lake_e.zx02 \
 		../location_river/graphics_river/river.zx02 \
 		../location_knight/graphics_knight/knight.zx02 \
-		../graphics_peasantry/cottage_priority.zx02 \
-		../graphics_peasantry/lake_w_priority.zx02 \
-		../graphics_peasantry/lake_e_priority.zx02 \
+		../location_cottage/graphics_cottage/cottage_priority.zx02 \
+		../location_lake_west/graphics_lake_west/lake_w_priority.zx02 \
+		../location_lake_east/graphics_lake_east/lake_e_priority.zx02 \
 		../location_river/graphics_river/river_priority.zx02 \
 		../location_knight/graphics_knight/knight_priority.zx02 \
 		../sprites_peasant/walking_sprites.zx02 \
 		../sprites/peasant_sprites.inc \
-		../sprites/bubble_sprites_e.inc \
-		../sprites/bubble_sprites_w.inc \
-		../sprites/river_bubble_sprites.inc \
+		../location_lake_east/sprites_lake_east/bubble_sprites_e.inc \
+		../location_lake_west/sprites_lake_west/bubble_sprites_w.inc \
+		../location_river/sprites_river/river_bubble_sprites.inc \
 		../text/intro.inc \
 		../location_river/animate_river.s \
-		../animate_bubbles.s \
+		../location_lake_west/animate_bubbles.s \
 		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_save_restore.s \
 		../hgr_routines/hgr_partial_save.s \

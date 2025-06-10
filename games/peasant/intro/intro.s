@@ -169,21 +169,25 @@ mockingboard_notfound2:
 
 
 
-cottage_zx02:	.incbin "../graphics_peasantry/cottage.zx02"
-lake_w_zx02:	.incbin "../graphics_peasantry/lake_w.zx02"
-lake_e_zx02:	.incbin "../graphics_peasantry/lake_e.zx02"
+cottage_zx02:	.incbin "../location_cottage/graphics_cottage/cottage.zx02"
+lake_w_zx02:	.incbin "../location_lake_west/graphics_lake_west/lake_w.zx02"
+lake_e_zx02:	.incbin "../location_lake_east/graphics_lake_east/lake_e.zx02"
 river_zx02:	.incbin "../location_river/graphics_river/river.zx02"
 knight_zx02:	.incbin "../location_knight/graphics_knight/knight.zx02"
 
-cottage_priority_zx02:	.incbin "../graphics_peasantry/cottage_priority.zx02"
-lake_w_priority_zx02:	.incbin "../graphics_peasantry/lake_w_priority.zx02"
-lake_e_priority_zx02:	.incbin "../graphics_peasantry/lake_e_priority.zx02"
+cottage_priority_zx02:	.incbin "../location_cottage/graphics_cottage/cottage_priority.zx02"
+lake_w_priority_zx02:	.incbin "../location_lake_west/graphics_lake_west/lake_w_priority.zx02"
+lake_e_priority_zx02:	.incbin "../location_lake_east/graphics_lake_east/lake_e_priority.zx02"
 river_priority_zx02:	.incbin "../location_river/graphics_river/river_priority.zx02"
 knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priority.zx02"
 
 .include "../text/intro.inc"
 
-.include "../animate_bubbles.s"
+.include "../location_lake_east/sprites_lake_east/bubble_sprites_e.inc"
+.include "../location_lake_west/sprites_lake_west/bubble_sprites_w.inc"
+
+
+.include "animate_bubbles.s"
 
 skip_text:
         .byte 0,2,"ESC Skips",0

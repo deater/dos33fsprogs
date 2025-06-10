@@ -70,13 +70,15 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT_LOADER	  0   0
 
 
-#	location_jhonka/JHONKA_LOADER \
-#	location_cottage/COTTAGE_LOADER \
+
+
 
 peasant_disk3.dsk:	QBOOT QLOAD \
 	./wrong_boot/WBOOT3 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
+	location_jhonka/JHONKA_LOADER \
+	location_cottage/COTTAGE_LOADER \
 	location_lake_west/LAKE_WEST_LOADER \
 	location_lake_east/LAKE_EAST_LOADER \
 	location_outside_inn/OUTSIDE_INN_LOADER \
@@ -87,8 +89,8 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk3.dsk  4  0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk3.dsk  5  0 ./map/MAP          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  10 0 ./location_jhonka/JHONKA_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  12 0 ./location_cottage/COTTAGE_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  10 0 ./location_jhonka/JHONKA_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  12 0 ./location_cottage/COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  16 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  18 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
@@ -147,8 +149,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./location_outer/OUTER_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
-#	./location_jhonka/JHONKA_LOADER \
-#	./location_cottage/COTTAGE_LOADER \
+	./location_jhonka/JHONKA_LOADER \
+	./location_cottage/COTTAGE_LOADER \
 	./location_lake_west/LAKE_WEST_LOADER \
 	./location_lake_east/LAKE_EAST_LOADER \
 	./location_outside_inn/OUTSIDE_INN_LOADER \
@@ -189,15 +191,15 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 10 0` ./location_jhonka/JHONKA_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 12 0` ./location_cottage/COTTAGE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 10 0` ./location_jhonka/JHONKA_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 12 0` ./location_cottage/COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 16 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 18 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 20 0` ./location_jhonka/JHONKA_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 22 0` ./location_cottage/COTTAGE_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 20 0` ./location_ned_cottage/NED_COTTAGE	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 22 0` ./location_wavy_tree/WAVY_TREE_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./location_kerrek2/KERREK2_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./location_lady_cottage/LADY_COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 28 0` ./location_burninated/BURNINATED_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
@@ -491,10 +493,10 @@ inventory/INVENTORY:
 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER:
 	cd location_cliff_heights && make
 
-./location_cottage/COTTAGE:
+./location_cottage/COTTAGE_LOADER:
 	cd location_cottage && make
 
-./location_jhonka/JHONKA:
+./location_jhonka/JHONKA_LOADER:
 	cd location_jhonka && make
 
 ./location_gary/GARY_LOADER:
