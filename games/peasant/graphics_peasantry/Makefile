@@ -5,14 +5,15 @@ PNG2HGR = ../../../utils/hgr-utils/png2hgr
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 B2D = ../../../utils/bmp2dhr/b2d
 
-all:	graphics_intro.inc \
-	graphics_peasant1.inc \
-	graphics_peasant3.inc \
-	graphics_peasant4.inc \
-	priority_peasant1.inc \
-	priority_intro.inc \
-	priority_peasant3.inc \
-	priority_peasant4.inc
+all:
+#	graphics_intro.inc \
+#	priority_intro.inc
+#	graphics_peasant1.inc \
+#	graphics_peasant3.inc \
+#	graphics_peasant4.inc \
+#	priority_peasant1.inc \
+#	priority_peasant3.inc \
+#	priority_peasant4.inc
 
 
 ###

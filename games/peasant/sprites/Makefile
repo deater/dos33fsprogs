@@ -1,9 +1,7 @@
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	boat_sprites.inc boat_sprites_fish.inc peasant_sprites.inc ned_sprites.inc \
-	peasant_robe_sprites.inc kerrek_sprites.inc \
-	waterfall_sprites.inc bubble_sprites_w.inc bubble_sprites_e.inc \
-	gary_sprites.inc
+all:	peasant_sprites.inc ned_sprites.inc
+
 
 peasant_sprites.inc:	peasant_sprites.png
 	$(HGR_SPRITE) -l peasant_right1_sprite peasant_sprites.png  35   1 35 29 > peasant_sprites.inc

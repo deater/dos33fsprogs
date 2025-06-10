@@ -23,7 +23,7 @@ PUDDLE_CORE.zx02:	PUDDLE_CORE
 	$(ZX02) -f PUDDLE_CORE PUDDLE_CORE.zx02
 
 PUDDLE_CORE:	puddle_core.o
-	ld65 -o PUDDLE_CORE puddle_core.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+	ld65 -o PUDDLE_CORE puddle_core.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 puddle_core.o:	puddle_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../inventory/inventory.inc \

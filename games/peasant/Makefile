@@ -74,13 +74,13 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 #	location_cottage/COTTAGE_LOADER \
 
 peasant_disk3.dsk:	QBOOT QLOAD \
-	PEASANT4 \
 	./wrong_boot/WBOOT3 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
 	location_lake_west/LAKE_WEST_LOADER \
 	location_lake_east/LAKE_EAST_LOADER \
 	location_outside_inn/OUTSIDE_INN_LOADER \
+	location_burninated/BURNINATED_LOADER \
 	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
 	$(DOS33_RAW) peasant_disk3.dsk  0  0  ./wrong_boot/WBOOT3      0   1
@@ -92,7 +92,11 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  16 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  18 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
-	$(DOS33_RAW) peasant_disk3.dsk  30 0 PEASANT4	  0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  20 0 ./location_jhonka/JHONKA_LOADER          0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  22 0 ./location_cottage/COTTAGE_LOADER          0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
+#	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  28 0 ./location_burninated/BURNINATED_LOADER          0   0
 
 peasant_disk4.dsk:	\
 	./inside/INSIDE \
@@ -149,6 +153,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_lake_east/LAKE_EAST_LOADER \
 	./location_outside_inn/OUTSIDE_INN_LOADER \
 	./location_gary/GARY_LOADER \
+	./location_burninated/BURNINATED_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
@@ -189,7 +194,11 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 16 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 18 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 30 0` PEASANT4	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 20 0` ./location_jhonka/JHONKA_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 22 0` ./location_cottage/COTTAGE_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
+#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 28 0` ./location_burninated/BURNINATED_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  9 0` ./inside/INSIDE       0   0
@@ -438,23 +447,23 @@ inventory/INVENTORY:
 
 ###
 
-PEASANT4:	peasant4.o
-	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+#PEASANT4:	peasant4.o
+#	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
-		parse_input.inc \
-		sprites/ned_sprites.inc \
-		peasant4_actions.s \
-		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
-		location_kerrek1/kerrek_actions.s location_common/peasant_common.s \
-		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
-		graphics_peasantry/priority_peasant4.inc \
-		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-		keyboard.s new_map_location.s \
-		move_peasant.s score.s
-	ca65 -o peasant4.o peasant4.s -l peasant4.lst
+#peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
+#		parse_input.inc \
+#		sprites/ned_sprites.inc \
+#		peasant4_actions.s \
+#		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
+#		location_kerrek1/kerrek_actions.s location_common/peasant_common.s \
+#		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
+#		graphics_peasantry/priority_peasant4.inc \
+#		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
+#		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
+#		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
+#		keyboard.s new_map_location.s \
+#		move_peasant.s score.s
+#	ca65 -o peasant4.o peasant4.s -l peasant4.lst
 
 ###
 
@@ -472,6 +481,9 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 
 ./location_brothers/BROTHERS_LOADER:
 	cd location_brothers && make
+
+./location_burninated/BURNINATED_LOADER:
+	cd location_burninated && make
 
 ./location_cliff_base/CLIFF_BASE_LOADER:
 	cd location_cliff_base && make
@@ -645,6 +657,7 @@ distclean:
 	cd intro && make distclean
 	cd inventory && make distclean
 	cd location_brothers && make distclean
+	cd location_burninated && make distclean
 	cd location_cliff_base && make distclean
 	cd location_cliff_heights && make distclean
 	cd location_cottage && make distclean
@@ -675,7 +688,6 @@ distclean:
 
 clean:	
 	rm -f *~ *.o *.lst qload.inc \
-			PEASANT3 PEASANT4 \
 			*.ZX02 \
 			generate_common generate_all_symbols
 	cd archery && make clean
@@ -687,6 +699,7 @@ clean:
 	cd intro && make clean
 	cd inventory && make clean
 	cd location_brothers && make clean
+	cd location_burninated && make clean
 	cd location_cliff_base && make clean
 	cd location_cliff_heights && make clean
 	cd location_common && make clean
