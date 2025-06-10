@@ -48,13 +48,13 @@ outer_core.o:	outer_core.s \
 
 ###
 
-graphics_outer_core/outer_core_graphics.inc:
-	cd graphics_outer_core && make
+graphics_outer/outer_graphics.inc:
+	cd graphics_outer && make
 
 ###
 
-sprites_outer_core/ron_sprites.inc:
-	cd sprites_outer_core && make
+sprites_outer/ron_sprites.inc:
+	cd sprites_outer && make
 
 ###
 

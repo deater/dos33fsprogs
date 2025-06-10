@@ -1,19 +1,16 @@
 ; Peasant's Quest
 
-; Archery / Brothers
+; Archery / Brothers (Location 3,2)
 
 ; by Vince `deater` Weaver	vince@deater.net
 
 .include "../location_common/include_common.s"
 
-peasantry_brothers:
-
-DIALOG_LOCATION=brothers_text_zx02
 VERB_TABLE=archery_verb_table
-PRIORITY_LOCATION=archery_priority_zx02
-BG_LOCATION=archery_zx02
 
-.include "../location_common/init_common.s"
+peasantry_brothers_core:
+
+.include "../location_common/common_core.s"
 
 
 	;=====================
@@ -126,6 +123,12 @@ at_archery:
 
 skip_level_specific:
 
+	;===========================
+	; copy bg to current screen
+
+	lda	#$60
+	jsr	hgr_copy_fast
+
 	;====================
 	; always draw peasant
 
@@ -136,32 +139,24 @@ skip_level_specific:
 
 	inc	FRAME
 
-	;====================
+	;=======================
 	; check keyboard
 
-	lda	#13
-	sta	WAIT_LOOP
-wait_loop:
+	lda	PEASANT_DIR
+	sta	OLD_DIR
+
 	jsr	check_keyboard
 
+;	jsr	wait_vblank
 
-	lda	#50	; approx 7ms
-	jsr	wait
-
-	dec	WAIT_LOOP
-	bne	wait_loop
-
-
-	;=====================
-	; delay
-
-;	lda	#200	; approx 100ms
-;	jsr	wait
+	jsr	hgr_page_flip
 
 	jmp	game_loop
 
+	;====================
+	; end of level
+
 oops_new_location:
-	jmp	new_location
 
 
 	;========================
@@ -256,23 +251,19 @@ mendelev_arm_moved:
 	jmp	hgr_draw_sprite		;
 
 
-.include "../move_peasant_new.s"
 .include "../draw_peasant_new.s"
+.include "../move_peasant_new.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-.include "../hgr_routines/hgr_partial_restore.s"
+
+;.include "../hgr_routines/hgr_partial_restore.s"
 .include "../hgr_routines/hgr_sprite.s"
 
-;.include "../wait.s"
 .include "../wait_a_bit.s"
 
 .include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
-
-.include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
-
 
 .include "../new_map_location.s"
 
@@ -280,15 +271,12 @@ mendelev_arm_moved:
 
 .include "../vblank.s"
 
-robe_sprite_data:
-	.incbin "../sprites_peasant/robe_sprites.zx02"
+.include "../gr_copy.s"
+.include "../hgr_routines/hgr_copy_fast.s"
 
-.include "graphics_brothers/archery_graphics.inc"
-.include "graphics_brothers/archery_priority.inc"
+.include "sprites_brothers/archery_sprites.inc"
 
-.include "sprites/archery_sprites.inc"
-
-brothers_text_zx02:
-.incbin "../text/DIALOG_BROTHERS.ZX02"
+;brothers_text_zx02:
+;.incbin "../text/DIALOG_BROTHERS.ZX02"
 
 .include "brothers_actions.s"

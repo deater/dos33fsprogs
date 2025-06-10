@@ -15,7 +15,7 @@ inside_inn_loader.o:	inside_inn_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_INSIDE_INN.ZX02 \
 		graphics_inside_inn/inside_inn_graphics.inc \
-		graphics_inside_inn/inside_inn_priority.inc\
+		graphics_inside_inn/inside_inn_priority.inc \
 		../location_common/loader_common.s \
 		INSIDE_INN_CORE.zx02
 	ca65 -o inside_inn_loader.o inside_inn_loader.s -l inside_inn_loader.lst
@@ -42,7 +42,7 @@ inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ####
 
-graphics_inside_inn/graphics_inside_inn.inc:
+graphics_inside_inn/inside_inn_graphics.inc:
 	cd graphics_inside_inn && make
 
 ###

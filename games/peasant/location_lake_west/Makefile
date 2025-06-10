@@ -37,6 +37,7 @@ lake_west_core.o:	lake_west_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../gr_copy.s ../hgr_routines/hgr_copy.s \
 		../new_map_location.s ../keyboard.s \
+		sprites_lake_west/lake_west_sprites.inc \
 		../wait_a_bit.s \
 		lake_west_actions.s
 	ca65 -o lake_west_core.o lake_west_core.s -l lake_west_core.lst

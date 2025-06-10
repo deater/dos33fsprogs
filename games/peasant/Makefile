@@ -44,9 +44,9 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./location_well/WELL_LOADER \
 	./location_yellow_tree/YELLOW_TREE_LOADER \
 	./location_waterfall/WATERFALL_LOADER \
-	./location_haystack/HAYSTACK \
-	./location_puddle/PUDDLE \
-	./location_brothers/BROTHERS \
+	./location_haystack/HAYSTACK_LOADER \
+	./location_puddle/PUDDLE_LOADER \
+	./location_brothers/BROTHERS_LOADER \
 	./location_river/RIVER_LOADER \
 	./location_knight/KNIGHT_LOADER \
 	./wrong_boot/WBOOT2 \
@@ -63,9 +63,9 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk2.dsk  14 0 ./location_well/WELL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  16 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  18 0 ./location_waterfall/WATERFALL_LOADER 0   0
-	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK 0   0
-	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  20 0 ./location_haystack/HAYSTACK_LOADER 0   0
+	$(DOS33_RAW) peasant_disk2.dsk  22 0 ./location_puddle/PUDDLE_LOADER	  0   0
+	$(DOS33_RAW) peasant_disk2.dsk  24 0 ./location_brothers/BROTHERS_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  26 0 ./location_river/RIVER_LOADER	  0   0
 	$(DOS33_RAW) peasant_disk2.dsk  28 0 ./location_knight/KNIGHT_LOADER	  0   0
 
@@ -155,9 +155,9 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_waterfall/WATERFALL_LOADER \
 	./location_knight/KNIGHT_LOADER \
 	./location_river/RIVER_LOADER \
-	./location_brothers/BROTHERS \
-	./location_puddle/PUDDLE \
-	./location_haystack/HAYSTACK \
+	./location_brothers/BROTHERS_LOADER \
+	./location_puddle/PUDDLE_LOADER \
+	./location_haystack/HAYSTACK_LOADER \
 	./sprites_peasant/PEASANT_SPRITES_COMMON
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
@@ -179,9 +179,9 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 14 0` ./location_well/WELL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 16 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 18 0` ./location_waterfall/WATERFALL_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 20 0` ./location_haystack/HAYSTACK_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 22 0` ./location_puddle/PUDDLE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 24 0` ./location_brothers/BROTHERS_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 26 0` ./location_river/RIVER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 28 0` ./location_knight/KNIGHT_LOADER	  0   0
 #	$(PRODOS_RAW) peasant.2mg `./dts_block 3 10 0` ./location_jhonka/JHONKA_LOADER	  0   0
@@ -470,7 +470,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./inside/INSIDE:
 	cd inside && make
 
-./location_brothers/BROTHERS:
+./location_brothers/BROTHERS_LOADER:
 	cd location_brothers && make
 
 ./location_cliff_base/CLIFF_BASE_LOADER:
@@ -488,7 +488,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_gary/GARY_LOADER:
 	cd location_gary && make
 
-./location_haystack/HAYSTACK:
+./location_haystack/HAYSTACK_LOADER:
 	cd location_haystack && make
 
 ./location_inside_inn/INSIDE_INN_LOADER:
@@ -512,7 +512,7 @@ peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
 ./location_outside_inn/OUTSIDE_INN_LOADER:
 	cd location_outside_inn && make
 
-./location_puddle/PUDDLE:
+./location_puddle/PUDDLE_LOADER:
 	cd location_puddle && make
 
 ./location_river/RIVER_LOADER:
