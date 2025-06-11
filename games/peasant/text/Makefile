@@ -7,6 +7,10 @@ CC = gcc
 CFLAGS = -O2 -Wall -g
 
 all:	dump_text shrink_text \
+	DIALOG_NED_COTTAGE.ZX02 dialog_ned_cottage.inc \
+	DIALOG_WAVY_TREE.ZX02 dialog_wavy_tree.inc \
+	DIALOG_LADY_COTTAGE.ZX02 dialog_lady_cottage.inc \
+	DIALOG_KERREK2.ZX02 dialog_kerrek2.inc \
 	DIALOG_BURNINATED_TREE.ZX02 dialog_burninated_tree.inc \
 	DIALOG_JHONKA.ZX02 dialog_jhonka.inc \
 	DIALOG_COTTAGE.ZX02 dialog_cottage.inc \
@@ -23,7 +27,9 @@ all:	dump_text shrink_text \
 	DIALOG_BROTHERS.ZX02 dialog_brothers.inc \
 	DIALOG_RIVER.ZX02 dialog_river.inc \
 	DIALOG_KNIGHT.ZX02 dialog_knight.inc \
-	DIALOG_INSIDE.ZX02 dialog_inside.inc \
+	DIALOG_INSIDE_LADY.ZX02 dialog_inside_lady.inc \
+	DIALOG_INSIDE_NED.ZX02 dialog_inside_ned.inc \
+	DIALOG_HIDDEN_GLEN.ZX02 dialog_hidden_glen.inc \
 	DIALOG_INSIDE_INN.ZX02 dialog_inside_inn.inc \
 	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	DIALOG_CLIFF_HEIGHTS.ZX02 dialog_cliff_heights.inc \
@@ -33,6 +39,110 @@ all:	dump_text shrink_text \
 	common.inc.lookup \
 	inventory.inc.lookup
 
+###
+
+DIALOG_INSIDE_LADY.ZX02:	dialog_inside_lady
+	$(ZX02) -f  dialog_inside_lady DIALOG_INSIDE_LADY.ZX02
+
+dialog_inside_lady:	dialog_inside_lady.o
+	ld65 -o dialog_inside_lady dialog_inside_lady.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inside_lady.o:	dialog_inside_lady.s \
+		inside_lady.inc.lookup
+	ca65 -o dialog_inside_lady.o dialog_inside_lady.s -l dialog_inside_lady.lst
+
+dialog_inside_lady.inc:	../generate_all_symbols dialog_inside_lady
+	../generate_all_symbols -a 0xd000 dialog_inside_lady.lst > dialog_inside_lady.inc
+###
+
+DIALOG_INSIDE_NED.ZX02:	dialog_inside_ned
+	$(ZX02) -f  dialog_inside_ned DIALOG_INSIDE_NED.ZX02
+
+dialog_inside_ned:	dialog_inside_ned.o
+	ld65 -o dialog_inside_ned dialog_inside_ned.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inside_ned.o:	dialog_inside_ned.s \
+		inside_ned.inc.lookup
+	ca65 -o dialog_inside_ned.o dialog_inside_ned.s -l dialog_inside_ned.lst
+
+dialog_inside_ned.inc:	../generate_all_symbols dialog_inside_ned
+	../generate_all_symbols -a 0xd000 dialog_inside_ned.lst > dialog_inside_ned.inc
+
+###
+
+DIALOG_HIDDEN_GLEN.ZX02:	dialog_hidden_glen
+	$(ZX02) -f  dialog_hidden_glen DIALOG_HIDDEN_GLEN.ZX02
+
+dialog_hidden_glen:	dialog_hidden_glen.o
+	ld65 -o dialog_hidden_glen dialog_hidden_glen.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_hidden_glen.o:	dialog_hidden_glen.s \
+		hidden_glen.inc.lookup
+	ca65 -o dialog_hidden_glen.o dialog_hidden_glen.s -l dialog_hidden_glen.lst
+
+dialog_hidden_glen.inc:	../generate_all_symbols dialog_hidden_glen
+	../generate_all_symbols -a 0xd000 dialog_hidden_glen.lst > dialog_hidden_glen.inc
+
+###
+
+DIALOG_NED_COTTAGE.ZX02:	dialog_ned_cottage
+	$(ZX02) -f  dialog_ned_cottage DIALOG_NED_COTTAGE.ZX02
+
+dialog_ned_cottage:	dialog_ned_cottage.o
+	ld65 -o dialog_ned_cottage dialog_ned_cottage.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_ned_cottage.o:	dialog_ned_cottage.s \
+		ned_cottage.inc.lookup
+	ca65 -o dialog_ned_cottage.o dialog_ned_cottage.s -l dialog_ned_cottage.lst
+
+dialog_ned_cottage.inc:	../generate_all_symbols dialog_ned_cottage
+	../generate_all_symbols -a 0xd000 dialog_ned_cottage.lst > dialog_ned_cottage.inc
+
+###
+
+DIALOG_WAVY_TREE.ZX02:	dialog_wavy_tree
+	$(ZX02) -f  dialog_wavy_tree DIALOG_WAVY_TREE.ZX02
+
+dialog_wavy_tree:	dialog_wavy_tree.o
+	ld65 -o dialog_wavy_tree dialog_wavy_tree.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_wavy_tree.o:	dialog_wavy_tree.s \
+		wavy_tree.inc.lookup
+	ca65 -o dialog_wavy_tree.o dialog_wavy_tree.s -l dialog_wavy_tree.lst
+
+dialog_wavy_tree.inc:	../generate_all_symbols dialog_wavy_tree
+	../generate_all_symbols -a 0xd000 dialog_wavy_tree.lst > dialog_wavy_tree.inc
+
+###
+
+DIALOG_KERREK2.ZX02:	dialog_kerrek2
+	$(ZX02) -f  dialog_kerrek2 DIALOG_KERREK2.ZX02
+
+dialog_kerrek2:	dialog_kerrek2.o
+	ld65 -o dialog_kerrek2 dialog_kerrek2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_kerrek2.o:	dialog_kerrek2.s \
+		kerrek.inc.lookup
+	ca65 -o dialog_kerrek2.o dialog_kerrek2.s -l dialog_kerrek2.lst
+
+dialog_kerrek2.inc:	../generate_all_symbols dialog_kerrek2
+	../generate_all_symbols -a 0xd000 dialog_kerrek2.lst > dialog_kerrek2.inc
+
+
+###
+
+DIALOG_LADY_COTTAGE.ZX02:	dialog_lady_cottage
+	$(ZX02) -f  dialog_lady_cottage DIALOG_LADY_COTTAGE.ZX02
+
+dialog_lady_cottage:	dialog_lady_cottage.o
+	ld65 -o dialog_lady_cottage dialog_lady_cottage.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_lady_cottage.o:	dialog_lady_cottage.s \
+		lady_cottage.inc.lookup
+	ca65 -o dialog_lady_cottage.o dialog_lady_cottage.s -l dialog_lady_cottage.lst
+
+dialog_lady_cottage.inc:	../generate_all_symbols dialog_lady_cottage
+	../generate_all_symbols -a 0xd000 dialog_lady_cottage.lst > dialog_lady_cottage.inc
 
 ###
 

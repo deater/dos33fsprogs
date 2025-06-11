@@ -82,6 +82,10 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	location_lake_west/LAKE_WEST_LOADER \
 	location_lake_east/LAKE_EAST_LOADER \
 	location_outside_inn/OUTSIDE_INN_LOADER \
+	location_ned_cottage/NED_COTTAGE_LOADER \
+	location_wavy_tree/WAVY_TREE_LOADER \
+	location_kerrek2/KERREK2_LOADER \
+	location_lady_cottage/LADY_COTTAGE_LOADER \
 	location_burninated/BURNINATED_LOADER \
 	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk3.dsk
@@ -94,14 +98,16 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  14 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  16 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  18 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  20 0 ./location_jhonka/JHONKA_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  22 0 ./location_cottage/COTTAGE_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./location_lake_west/LAKE_WEST_LOADER          0   0
-#	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./location_lake_east/LAKE_EAST_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  20 0 ./location_ned_cottage/NED_COTTAGE_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  22 0 ./location_wavy_tree/WAVY_TREE_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  24 0 ./location_kerrek2/KERREK2_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  26 0 ./location_lady_cottage/LADY_COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  28 0 ./location_burninated/BURNINATED_LOADER          0   0
 
 peasant_disk4.dsk:	\
-	./inside/INSIDE \
+	./location_inside_lady/INSIDE_LADY_LOADER \
+	./location_inside_ned/INSIDE_NED_LOADER \
+	./location_hidden_glen/HIDDEN_GLEN_LOADER \
 	./location_inside_inn/INSIDE_INN_LOADER \
 	./archery/ARCHERY \
 	./wrong_boot/WBOOT4 \
@@ -114,8 +120,10 @@ peasant_disk4.dsk:	\
 	$(DOS33_RAW) peasant_disk4.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk4.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./archery/ARCHERY      0   0
-	$(DOS33_RAW) peasant_disk4.dsk   9 0 ./inside/INSIDE       0   0
-	$(DOS33_RAW) peasant_disk4.dsk  13 0 ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(DOS33_RAW) peasant_disk4.dsk  16 0 ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(DOS33_RAW) peasant_disk4.dsk  18 0 ./location_inside_lady/INSIDE_LADY_LOADER          0   0
+	$(DOS33_RAW) peasant_disk4.dsk  20 0 ./location_inside_ned/INSIDE_NED_LOADER          0   0
+	$(DOS33_RAW) peasant_disk4.dsk  22 0 ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
@@ -143,18 +151,25 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./map/MAP ./archery/ARCHERY ./inside/INSIDE \
-	./location_inside_inn/INSIDE_INN_LOADER \
+	./map/MAP ./archery/ARCHERY \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./location_outer/OUTER_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	./location_inside_lady/INSIDE_LADY_LOADER \
+	./location_inside_ned/INSIDE_NED_LOADER \
+	./location_hidden_glen/HIDDEN_GLEN_LOADER \
+	./location_inside_inn/INSIDE_INN_LOADER \
 	./location_jhonka/JHONKA_LOADER \
 	./location_cottage/COTTAGE_LOADER \
 	./location_lake_west/LAKE_WEST_LOADER \
 	./location_lake_east/LAKE_EAST_LOADER \
 	./location_outside_inn/OUTSIDE_INN_LOADER \
 	./location_gary/GARY_LOADER \
+	./location_ned_cottage/NED_COTTAGE_LOADER \
+	./location_wavy_tree/WAVY_TREE_LOADER \
+	./location_kerrek2/KERREK2_LOADER \
+	./location_lady_cottage/LADY_COTTAGE_LOADER \
 	./location_burninated/BURNINATED_LOADER \
 	./location_kerrek1/KERREK1_LOADER \
 	./location_well/WELL_LOADER \
@@ -196,15 +211,17 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 14 0` ./location_lake_west/LAKE_WEST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 16 0` ./location_lake_east/LAKE_EAST_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 18 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 20 0` ./location_ned_cottage/NED_COTTAGE	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 22 0` ./location_wavy_tree/WAVY_TREE_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./location_kerrek2/KERREK2_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./location_lady_cottage/LADY_COTTAGE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 20 0` ./location_ned_cottage/NED_COTTAGE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 22 0` ./location_wavy_tree/WAVY_TREE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 24 0` ./location_kerrek2/KERREK2_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 26 0` ./location_lady_cottage/LADY_COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 28 0` ./location_burninated/BURNINATED_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  0 0` ./wrong_boot/WBOOT3      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4  9 0` ./inside/INSIDE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4 13 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 16 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 18 0` ./location_inside_lady/INSIDE_LADY_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 20 0` ./location_inside_ned/INSIDE_NED_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4 22 0` ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
@@ -478,9 +495,6 @@ inventory/INVENTORY:
 ./copy/COPY_CHECK:	
 	cd copy && make
 
-./inside/INSIDE:
-	cd inside && make
-
 ./location_brothers/BROTHERS_LOADER:
 	cd location_brothers && make
 
@@ -505,20 +519,38 @@ inventory/INVENTORY:
 ./location_haystack/HAYSTACK_LOADER:
 	cd location_haystack && make
 
+./location_hidden_glen/HIDDEN_GLEN_LOADER:
+	cd location_hidden_glen && make
+
 ./location_inside_inn/INSIDE_INN_LOADER:
 	cd location_inside_inn && make
+
+./location_inside_lady/INSIDE_LADY_LOADER:
+	cd location_inside_lady && make
+
+./location_inside_ned/INSIDE_NED_LOADER:
+	cd location_inside_ned && make
 
 ./location_kerrek1/KERREK1_LOADER:
 	cd location_kerrek1 && make
 
+./location_kerrek2/KERREK2_LOADER:
+	cd location_kerrek2 && make
+
 ./location_knight/KNIGHT_LOADER:
 	cd location_knight && make
+
+./location_lady_cottage/LADY_COTTAGE_LOADER:
+	cd location_lady_cottage && make
 
 ./location_lake_east/LAKE_EAST_LOADER:
 	cd location_lake_east && make
 
 ./location_lake_west/LAKE_WEST_LOADER:
 	cd location_lake_west && make
+
+./location_ned_cottage/NED_COTTAGE_LOADER:
+	cd location_ned_cottage && make
 
 ./location_outer/OUTER_LOADER:
 	cd location_outer && make
@@ -534,6 +566,9 @@ inventory/INVENTORY:
 
 ./location_waterfall/WATERFALL_LOADER:
 	cd location_waterfall && make
+
+./location_wavy_tree/WAVY_TREE_LOADER:
+	cd location_wavy_tree && make
 
 ./location_well/WELL_LOADER:
 	cd location_well && make
@@ -655,7 +690,6 @@ distclean:
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
-	cd inside && make distclean
 	cd intro && make distclean
 	cd inventory && make distclean
 	cd location_brothers && make distclean
@@ -665,17 +699,24 @@ distclean:
 	cd location_cottage && make distclean
 	cd location_gary && make distclean
 	cd location_haystack && make distclean
+	cd location_hidden_glen && make distclean
 	cd location_inside_inn && make distclean
+	cd location_inside_lady && make distclean
+	cd location_inside_ned && make distclean
 	cd location_jhonka && make distclean
 	cd location_kerrek1 && make distclean
+	cd location_kerrek2 && make distclean
 	cd location_knight && make distclean
+	cd location_lady_cottage && make distclean
 	cd location_lake_east && make distclean
 	cd location_lake_west && make distclean
+	cd location_ned_cottage && make distclean
 	cd location_outer && make distclean
 	cd location_outside_inn && make distclean
 	cd location_puddle && make distclean
 	cd location_river && make distclean
 	cd location_waterfall && make distclean
+	cd location_wavy_tree && make distclean
 	cd location_well && make distclean
 	cd location_yellow_tree && make distclean
 	cd map && make distclean
@@ -697,7 +738,6 @@ clean:
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
-	cd inside && make clean
 	cd intro && make clean
 	cd inventory && make clean
 	cd location_brothers && make clean
@@ -708,17 +748,24 @@ clean:
 	cd location_cottage && make clean
 	cd location_gary && make clean
 	cd location_haystack && make clean
+	cd location_hidden_glen && make clean
 	cd location_inside_inn && make clean
+	cd location_inside_lady && make clean
+	cd location_inside_ned && make clean
 	cd location_jhonka && make clean
 	cd location_kerrek1 && make clean
+	cd location_kerrek2 && make clean
 	cd location_knight && make clean
+	cd location_lady_cottage && make clean
 	cd location_lake_east && make clean
 	cd location_lake_west && make clean
+	cd location_ned_cottage && make clean
 	cd location_outer && make clean
 	cd location_outside_inn && make clean
 	cd location_puddle && make clean
 	cd location_river && make clean
 	cd location_waterfall && make clean
+	cd location_wavy_tree && make clean
 	cd location_well && make clean
 	cd location_yellow_tree && make clean
 	cd map && make clean
