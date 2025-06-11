@@ -44,10 +44,11 @@ lady_cottage_core.o:	lady_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc 
 
 ###
 
-graphics_lady_cottage/crooked_tree_graphics.inc:
+
+graphics_lady_cottage/lady_cottage_graphics.inc:
 	cd graphics_lady_cottage && make
 
-sprites_lady_cottage/crooked_tree_sprites.inc:
+sprites_lady_cottage/lady_cottage_sprites.inc:
 	cd sprites_lady_cottage && make
 
 ###
@@ -55,7 +56,7 @@ sprites_lady_cottage/crooked_tree_sprites.inc:
 distclean:
 	make clean
 	cd graphics_lady_cottage && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

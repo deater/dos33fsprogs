@@ -58,7 +58,7 @@ sprites_inside_lady/inside_lady_sprites.inc:
 distclean:
 	make clean
 	cd graphics_inside_lady && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

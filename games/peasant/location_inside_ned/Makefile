@@ -58,7 +58,7 @@ sprites_inside_ned/inside_ned_sprites.inc:
 distclean:
 	make clean
 	cd graphics_inside_ned && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

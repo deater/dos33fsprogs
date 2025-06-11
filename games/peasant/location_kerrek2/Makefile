@@ -39,14 +39,13 @@ kerrek2_core.o:	kerrek2_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
 		../location_kerrek1/kerrek_actions.s \
-		graphics_kerrek2/kerrek2_graphics.inc \
 		../location_kerrek1/sprites_kerrek1/kerrek_sprites.inc
 	ca65 -o kerrek2_core.o kerrek2_core.s -l kerrek2_core.lst
 
 
 ###
 
-graphics_kerrek2/kerrek2_graphics.inc:
+graphics_kerrek2/bottom_prints_graphics.inc:
 	cd graphics_kerrek2 && make
 
 sprites_kerrek2/kerrek2_sprites.inc:
@@ -57,7 +56,7 @@ sprites_kerrek2/kerrek2_sprites.inc:
 distclean:
 	make clean
 	cd graphics_kerrek2 && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

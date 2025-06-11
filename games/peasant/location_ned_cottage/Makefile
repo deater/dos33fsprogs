@@ -56,7 +56,7 @@ sprites_ned_cottage/ned_sprites.inc:
 distclean:
 	make clean
 	cd graphics_ned_cottage && make clean
-	cd sprites && make clean
+	cd sprites_ned_cottage && make clean
 
 ###
 

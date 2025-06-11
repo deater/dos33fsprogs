@@ -58,7 +58,7 @@ sprites_hidden_glen/hidden_glen_sprites.inc:
 distclean:
 	make clean
 	cd graphics_hidden_glen && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

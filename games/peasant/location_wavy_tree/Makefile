@@ -45,7 +45,7 @@ wavy_tree_core.o:	wavy_tree_core.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ###
 
-graphics_wavy_tree/crooked_tree_graphics.inc:
+graphics_wavy_tree/ned_graphics.inc:
 	cd graphics_wavy_tree && make
 
 sprites_wavy_tree/ned_sprites.inc:
@@ -56,7 +56,7 @@ sprites_wavy_tree/ned_sprites.inc:
 distclean:
 	make clean
 	cd graphics_wavy_tree && make clean
-	cd sprites && make clean
+	cd sprites_wavy_tree && make clean
 
 ###
 

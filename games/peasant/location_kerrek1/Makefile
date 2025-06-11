@@ -57,7 +57,7 @@ sprites_kerrek1/kerrek1_sprites.inc:
 distclean:
 	make clean
 	cd graphics_kerrek1 && make clean
-	cd sprites && make clean
+	cd sprites_kerrek1 && make clean
 
 ###
 

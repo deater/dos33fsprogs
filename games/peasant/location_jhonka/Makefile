@@ -58,7 +58,7 @@ sprites_jhonka/jhonka_sprites.inc:
 distclean:
 	make clean
 	cd graphics_jhonka && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

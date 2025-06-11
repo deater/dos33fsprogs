@@ -58,7 +58,7 @@ sprites_cottage/cottage_sprites.inc:
 distclean:
 	make clean
 	cd graphics_cottage && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

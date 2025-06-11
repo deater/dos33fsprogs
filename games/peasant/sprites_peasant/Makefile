@@ -449,3 +449,5 @@ clean:
 		walk_sprites.inc climb_sprites.inc climb_flame_sprites.inc \
 		PEASANT_SPRITES_COMMON
 
+distclean:
+	make clean

@@ -55,7 +55,6 @@ sprites_burninated/crooked_tree_sprites.inc:
 distclean:
 	make clean
 	cd graphics_burninated && make clean
-	cd sprites && make clean
 
 ###
 

@@ -681,9 +681,7 @@ peasant.2mg.zip:	peasant.2mg
 
 distclean:
 	make clean
-	cd sprites && make clean
 	cd sprites_peasant && make clean
-	cd graphics_peasantry && make clean
 	cd text && make clean
 	cd archery && make distclean
 	cd climb && make clean

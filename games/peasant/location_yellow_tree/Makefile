@@ -55,7 +55,7 @@ sprites_yellow_tree/yellow_tree_sprites.inc:
 distclean:
 	make clean
 	cd graphics_yellow_tree && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

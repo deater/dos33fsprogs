@@ -55,7 +55,7 @@ sprites_well/well_sprites.inc:
 distclean:
 	make clean
 	cd graphics_well && make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 
 ###
 

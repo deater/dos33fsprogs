@@ -59,7 +59,7 @@ sprites_lake_east/lake_east_sprites.inc:
 distclean:
 	make clean
 	cd graphics_lake_east && make clean
-	cd sprites && make clean
+	cd sprites_lake_east && make clean
 
 ###
 

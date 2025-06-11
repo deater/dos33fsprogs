@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	peasant_sprites.inc ned_sprites.inc
+all:	peasant_sprites.inc
 
 
 peasant_sprites.inc:	peasant_sprites.png

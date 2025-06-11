@@ -57,7 +57,7 @@ sprites_gary/gary_sprites.inc:
 distclean:
 	make clean
 	cd graphics_gary && make clean
-	cd sprites && make clean
+	cd sprites_gary && make clean
 
 ###
 

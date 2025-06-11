@@ -55,7 +55,7 @@ sprites_river/river_sprites.inc:
 distclean:
 	make clean
 	cd graphics_river && make clean
-	cd sprites && make clean
+	cd sprites_river && make clean
 
 ###
 

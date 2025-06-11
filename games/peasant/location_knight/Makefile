@@ -55,7 +55,7 @@ sprites_knight/knight_sprites.inc:
 distclean:
 	make clean
 	cd graphics_knight && make clean
-	cd sprites && make clean
+	cd sprites_knight && make clean
 
 ###
 
