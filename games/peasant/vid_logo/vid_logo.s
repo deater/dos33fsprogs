@@ -282,35 +282,35 @@ do_animated_videlectrix_intro:
 	lda	#$40
 	sta	DRAW_PAGE
 
-	;************************
+	;========================
+	;========================
 	; Intro
-	;************************
-
+	;========================
+	;========================
 
 	; Load logo offscreen at $9000
 
 	lda	#<(videlectrix_zx02)
 	sta	zx_src_l+1
-;	sta	getsrc_smc+1
 	lda	#>(videlectrix_zx02)
 	sta	zx_src_h+1
-;	sta	getsrc_smc+2
 
-	lda	#$90
+	lda	#$90			; load at $9000
 
-;	jsr	decompress_lzsa2_fast
 	jsr	zx02_full_decomp
-
 
 ;	jsr	wait_until_keypress
 
-
 	ldy	#0
+
+	;===========================
+	; animation loop
+
 animation_loop:
 
 	; flip between the two pages
 
-	lda	DRAW_PAGE
+	lda	DRAW_PAGE	; note unlike other code, draw page is $40/$20
 	cmp	#$40
 	beq	show_page2
 
@@ -324,21 +324,20 @@ show_page2:
 	lda	#$20
 
 done_page:
-	sta	DRAW_PAGE
+	sta	DRAW_PAGE	; flip $20/$40
 	eor	#$60
 	sta	DISP_PAGE
 
-	; load delays
+	;===========================
+	; load delay for this frame
 	; $FF means we are done
 
-	lda	delays,Y
+	lda	delays,Y		; ??? do we ignore?
 	bmi	done_loop
 
-	lda	animation_low,Y
-;	sta	getsrc_smc+1
+	lda	animation_low,Y		; decompress frame
 	sta	zx_src_l+1
 	lda	animation_high,Y
-;	sta	getsrc_smc+2
 	sta	zx_src_h+1
 
 	tya
@@ -347,15 +346,16 @@ done_page:
 	lda	DRAW_PAGE
 
 	jsr	zx02_full_decomp
-;	jsr	decompress_lzsa2_fast
 
-	jsr	hgr_overlay
+	jsr	hgr_overlay		; overlay animation on title
 
 	pla
 	tay
 	pha
 
+	;=========================
 	; play sound if needed?
+
 	lda	notes,Y
 	beq	no_note
 
@@ -501,7 +501,6 @@ delays:
 
 .include "../hgr_routines/hgr_overlay.s"
 
-;.include "../speaker_beeps.inc"
 .include "../redbook_sound.inc"
 
 .include "../text_print.s"

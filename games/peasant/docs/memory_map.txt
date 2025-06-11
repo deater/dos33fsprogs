@@ -1,7 +1,21 @@
 Memory Map
 ~~~~~~~~~~
 
-; notes -- VID_LOGO loads title at $9000 - $AFFF
+;========================= VID_LOGO
+
+	; Does sound/detection
+
+	; code is about 7k or so.  We leave out half the frames
+	;	due to lack of space?  Just zx02 decompresses and page flips
+
+	; loads title screen at $9000, decompresses animation and overlays
+	;	to DRAW_PAGE via "hgr_overlay"
+
+	$2000 = page1
+	$4000 = page2, does page flipping
+	$6000 = code
+	$9000 - $AFFF = title
+
 
 
 
