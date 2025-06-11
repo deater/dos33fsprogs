@@ -45,7 +45,7 @@ ned_cottage_core.o:	ned_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ###
 
-graphics_ned_cottage/crooked_tree_graphics.inc:
+graphics_ned_cottage/empty_hut_graphics.inc:
 	cd graphics_ned_cottage && make
 
 sprites_ned_cottage/ned_sprites.inc:
