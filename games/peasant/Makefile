@@ -248,6 +248,10 @@ proboothd.o:	proboothd.s
 
 ###
 
+#		hgr_routines/hgr_1x28_sprite_mask.s \
+#		hgr_routines/hgr_partial_save.s \
+#		hgr_routines/hgr_copy.s \
+
 QLOAD_HD:       qload_hd.o
 	ld65 -o QLOAD_HD qload_hd.o -C $(LINKER_SCRIPTS)/apple2_b00.inc
 
@@ -256,15 +260,12 @@ qload_hd.o:	qload_hd.s qboot.inc \
 		hgr_routines/hgr_font.s \
 		draw_box.s \
 		hgr_routines/hgr_rectangle.s \
-		hgr_routines/hgr_1x28_sprite_mask.s \
-		hgr_routines/hgr_partial_save.s \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
 		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
 		hgr_routines/hgr_hgr2.s \
-		hgr_routines/hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s
@@ -279,6 +280,11 @@ qboot_sector.o:	qboot_sector.s	qboot_stage2.s
 	ca65 -o qboot_sector.o qboot_sector.s -l qboot_sector.lst
 
 
+#		hgr_routines/hgr_1x28_sprite_mask.s \
+#		hgr_routines/hgr_partial_save.s \
+#		hgr_routines/hgr_copy.s \
+
+
 ###
 
 QLOAD:	qload.o
@@ -290,15 +296,12 @@ qload.o:	qload.s qboot.inc \
 		hgr_routines/hgr_font.s \
 		draw_box.s \
 		hgr_routines/hgr_rectangle.s \
-		hgr_routines/hgr_1x28_sprite_mask.s \
-		hgr_routines/hgr_partial_save.s \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
 		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
 		hgr_routines/hgr_hgr2.s \
-		hgr_routines/hgr_copy.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s \
@@ -362,8 +365,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr_draw_sprite_1x28 qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s hgr_draw_sprite_1x28 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s input_buffer qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box_nosave qload.lst >> qload.inc

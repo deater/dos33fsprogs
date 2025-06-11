@@ -16,7 +16,7 @@ brothers_loader.o:	brothers_loader.s \
 		../parse_input.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
-		../gr_copy.s ../hgr_routines/hgr_copy.s \
+		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../text/DIALOG_BROTHERS.ZX02 \
 		../text/dialog_brothers.inc \
@@ -40,7 +40,7 @@ brothers_core.o:	brothers_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s ../hgr_routines/hgr_copy.s \
+		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait.s ../wait_a_bit.s \
 		brothers_actions.s \

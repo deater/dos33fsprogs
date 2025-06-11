@@ -49,8 +49,11 @@ intro_lake_east:
 
 	jsr	zx02_full_decomp
 
-	jsr	hgr_copy
+;	jsr	hgr_copy
 
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	hgr_copy_fast
 
 	;================
 	; print title line

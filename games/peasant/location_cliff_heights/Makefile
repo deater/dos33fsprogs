@@ -41,7 +41,7 @@ cliff_heights_core.o:	cliff_heights_core.s \
 		sprites_heights/lightning_sprites.inc \
 		../sprites_peasant/robe_sprites.zx02 \
 		../draw_peasant_new.s ../move_peasant_new.s \
-		../gr_copy.s ../hgr_routines/hgr_copy.s \
+		../gr_copy.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait_a_bit.s

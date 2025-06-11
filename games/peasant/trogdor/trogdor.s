@@ -108,7 +108,11 @@ new_location:
 
 	jsr	zx02_full_decomp
 
-	jsr	hgr_copy
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	hgr_copy_fast
+
+;	jsr	hgr_copy
 
 	;=====================
 	; update name/score
@@ -302,7 +306,7 @@ draw_sprite_h:
 .include "../gr_offsets.s"
 
 .include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
+.include "../hgr_routines/hgr_copy_fast.s"
 
 .include "../keyboard.s"
 ;.include "../wait.s"

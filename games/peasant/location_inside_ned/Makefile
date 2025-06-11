@@ -35,7 +35,7 @@ inside_ned_core.o:	inside_ned_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s ../hgr_routines/hgr_copy.s \
+		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
 		inside_ned_actions.s

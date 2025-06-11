@@ -198,7 +198,7 @@ exiting_cliff:
 .include "../wait_a_bit.s"
 
 .include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy.s"
+;.include "../hgr_routines/hgr_copy.s"
 
 .include "heights_actions.s"
 

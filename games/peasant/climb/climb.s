@@ -560,7 +560,12 @@ col_copy_loop:
 
 	jsr	zx02_full_decomp
 
-	jsr	hgr_copy			; copy to page2
+;	jsr	hgr_copy			; copy to page2
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	jsr	hgr_copy_fast
 
 	bit	PAGE2
 
@@ -599,7 +604,7 @@ col_copy_loop:
 	.include	"../hgr_routines/hgr_partial_restore.s"
 
 	.include	"../gr_copy.s"
-	.include	"../hgr_routines/hgr_copy.s"
+	.include	"../hgr_routines/hgr_copy_fast.s"
 
 	.include	"../gr_offsets.s"
 

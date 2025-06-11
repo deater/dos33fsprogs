@@ -54,7 +54,17 @@ intro_cottage:
 
 	jsr	zx02_full_decomp
 
-	jsr	hgr_copy
+	; copies from $2000 to $4000, intentionally slow for miniblind
+
+;	jsr	hgr_copy
+
+
+	; instead
+
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	hgr_copy_fast
+
 
 	;===================
 	; print title

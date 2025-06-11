@@ -211,7 +211,7 @@ ned_cottage_rock_not_moved:
 	lda	PEASANT_Y
 	sta	CURSOR_Y
 
-	jsr	restore_bg_1x28
+;	jsr	restore_bg_1x28
 
 	; 161,117
 	lda	#23

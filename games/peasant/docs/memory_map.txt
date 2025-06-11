@@ -41,6 +41,11 @@ Memory Map
 
 ;=========================== intro
 
+	$6000 = code, 14k or so ($6000 - $9FFF)
+	$A000 - $AFFF = peasant sprite data
+	$D000 - $DFFF = pt3 music still (4k) though hacked
+	
+
 
 ; ================================
 ; This is the layout for levels
