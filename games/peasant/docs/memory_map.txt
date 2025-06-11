@@ -16,7 +16,30 @@ Memory Map
 	$6000 = code
 	$9000 - $AFFF = title
 
+;========================= TITLE
 
+	; set up HGR tables at $b800-bbff
+
+	; loads two title images
+
+	; loads sound:
+	;   if mockingboard: pt3 player, music in $D000
+
+	; if electric duet: plays it
+
+	; when key pressed, flips to "tips" screen
+	;	flip to page2
+	;	load tips+print text to page1
+	;	flip to page1
+
+	; then loads "intro"
+
+	$2000 = image with trogdor
+	$4000 = image without trogdor
+	$6000 = code
+	$D000 = pt3 music (4k)
+
+;=========================== intro
 
 
 ; ================================

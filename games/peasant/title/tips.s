@@ -3,14 +3,26 @@
 	;========================
 
 directions:
+
+	; first flip to page2
+
+	bit	PAGE2
+
+	; load tips header to PAGE1
+
 	lda	#<(tips_zx02)
 	sta	zx_src_l+1
 	lda	#>(tips_zx02)
 	sta	zx_src_h+1
 
-	lda	#$40			; decompress to $40 (PAGE2)
+	lda	#$20			; decompress to $20 (PAGE1)
 
 	jsr	zx02_full_decomp
+
+	; write text to page1
+
+	lda	#0
+	sta	DRAW_PAGE		; draw to page1
 
 	lda     #<directions_text
 	sta	OUTL
@@ -28,6 +40,8 @@ directions_loop:
 	tax
 	dex
 	bne	directions_loop
+
+	jsr	hgr_page_flip
 
 	jsr	wait_until_keypress
 
