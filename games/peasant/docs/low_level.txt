@@ -1,0 +1,36 @@
+
+The dialog code
+
+	draw a box, properly sized
+	purple line around edge
+	draw text into it
+
+
+	draw_box() calls it
+	
+	; draw outer rectangle, x+6, y+5      x-6, y-5
+
+        ; draw 4 boxes
+        ;       x1+6,y1+5 ... x2-6,y1+6
+        ;       x1+6,y2-6 ... x2-6,y2-5
+        ;       x1+6,y1+5 ... x1+7,y2-6
+        ;       x2-7,y1+5 ... x2-6,y2-6
+
+; locations that use it
+		14,261 = 2, 36R?  37*7=259
+
+
+	loadsave_menu	14,20 261,135
+	parse_input	35,24 253, scaled based on size
+	inventory	14,20,261,135
+	
+
+	hgr_text_box	OUTL,OUTH
+			from words
+				intro diff, 35,34 , 253,72
+				loadsave_menu
+				qload
+				copy_check
+
+
+
