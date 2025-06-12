@@ -51,8 +51,8 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte $40,$40,$40,$40,$40	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte $40,$40,$40		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte $BC,$40,$BC		; SAVE_DATA,PEASANT_SPRITES , ?
-.byte $BC			; disk detect
+.byte >load_buffer,$40,$40	; SAVE_DATA,PEASANT_SPRITES , ?
+.byte >load_buffer		; disk detect
 
 track_array:
 .byte  8,10,13,30	; VID_LOGO, TITLE, INTRO, COPY_CHECK

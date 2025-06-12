@@ -114,7 +114,7 @@ nothing_in_drive2:
 
 	; patch error string to say correct disk to insert
 
-	ldy	#27
+	ldy	#25
 	sta	(OUTL),Y
 
 	jsr	hgr_text_box
@@ -200,9 +200,10 @@ update_disk:
 
 	jmp	load_file
 
-; offset for disk number is 27
+; offset for disk number is 25
 insert_disk_string:
-.byte   0,43,24, 0,240,74
+;.byte   0,43,24, 0,240,74
+.byte	 6,24, 33,74
 .byte   10,41
 .byte "PLEASE INSERT DISK 1",13
 .byte " THEN PRESS RETURN",0

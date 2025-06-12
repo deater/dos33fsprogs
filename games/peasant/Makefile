@@ -305,6 +305,7 @@ qload.o:	qload.s qboot.inc \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s \
+		loadsave_menu.s \
 		load_peasant_sprites.s
 	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
 

@@ -4,11 +4,8 @@
 
 	; FIXME: we can share some of the code here a bit more
 
-
-; we load one sector (256 or 512 bytes depending) to $BC00 currently
+; we load one sector (256 or 512 bytes depending) to $BA00 currently
 ; SAVE1 is at $00, SAVE2 at $20, SAVE3 at $40
-
-load_buffer	= $BC00
 
 
 	;=====================
@@ -16,7 +13,7 @@ load_buffer	= $BC00
 	;=====================
 load_menu:
 	lda	#0
-	sta	loadsave_smc1+1
+	sta	loadsave_smc1+1		; ???
 	sta	loadsave_smc2+1
 
 	jmp	common_menu
@@ -29,13 +26,20 @@ save_menu:
 	sta	loadsave_smc1+1
 	sta	loadsave_smc2+1
 
-	jmp	common_menu
+;	jmp	common_menu		; Fallthrough
 
 
 	;=====================
 	; common_menu
 	;=====================
 common_menu:
+
+	; HACK: make DRAW_PAGE current visible one
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
 
 	;============================
 	; first read all three saves
@@ -184,16 +188,20 @@ save_memset:
 	; draw text box
 draw_loadsave_box:
 
-	lda	#0
-	sta	BOX_X1H
-	lda	#14
+;	lda	#0
+;	sta	BOX_X1H
+
+;	lda	#14
+	lda	#2		; 14/7=2
 	sta	BOX_X1L
 	lda	#20
 	sta	BOX_Y1
 
-	lda	#1
-	sta	BOX_X2H
-	lda	#5		; ?
+;	lda	#1
+;	sta	BOX_X2H
+;	lda	#5		; ?
+
+	lda	#38		; 261/7=~38
 	sta	BOX_X2L
 	lda	#135
 	sta	BOX_Y2
@@ -645,7 +653,8 @@ dont_do_it:
 
 
 are_you_sure:
-.byte  0,43,40, 0,240,90
+;.byte  0,43,40, 0,240,90
+.byte      6,40,    35,90
 .byte  10,61
 .byte  "ARE YOU SURE? (Y/N)",0
 
