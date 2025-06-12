@@ -4,6 +4,7 @@
 
 .include "version.inc"
 .include "./inventory/inventory.inc"
+.include "common_defines.inc"
 
 .include "tokens.inc"
 
@@ -720,11 +721,7 @@ finish_parse_message:
 restore_parse_message:
 	lda	#1
 	sta	REFRESH_SCREEN		; might need to re-draw bg things
-
-
-	lda	#0
-	ldx	#39
-;	jsr	hgr_partial_restore
+					; does this do anything?
 
 
 done_parse_message:
@@ -1242,12 +1239,10 @@ partial_message_step:
 	jsr	print_text_message
 	jsr	hgr_page_flip
 	jsr	wait_until_keypress
-	lda	#0
-	ldx	#39
+;	lda	#0
+;	ldx	#39
 ;	jsr	hgr_partial_restore
 	rts
-
-verb_table = $BF00
 
 
 	;=========================

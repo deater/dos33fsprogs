@@ -617,7 +617,7 @@ parse_input.inc:	generate_common parse_input
 
 ###
 
-PARSE_INPUT.ZX02:	parse_input
+PARSE_INPUT.ZX02:	parse_input parse_input.inc
 	$(ZX02) -f  parse_input PARSE_INPUT.ZX02
 
 parse_input:	parse_input.o
@@ -733,6 +733,7 @@ distclean:
 
 clean:	
 	rm -f *~ *.o *.lst qload.inc \
+		parse_input.inc \
 			*.ZX02 \
 			generate_common generate_all_symbols
 	cd archery && make clean

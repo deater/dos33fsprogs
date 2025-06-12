@@ -186,8 +186,6 @@ parse_quiz_unknown:
         ldy     #>cave_outer_keeper_wants_message
         jmp     finish_parse_message
 
-verb_table = $BF00
-
 
 setup_quiz_verb_table:
 	ldx     #0
