@@ -1,3 +1,6 @@
+	; this is currently only used by the inventory code
+	;	to draw items
+
 	;======================
 	; hgr 2x16 draw sprite
 	;======================
@@ -17,14 +20,6 @@ hgr_draw_sprite_2x16:
 	sta	hds2_smc1+2
 	sta	hds2_smc2+2
 
-;	clc
-;	lda	INL
-;	adc	#1
-;	sta	hds2_smc2+1
-;	lda	#0
-;	adc	INH
-;	sta	hds2_smc2+2
-
 	ldx	#0
 hgr_2x16_sprite_yloop:
 	txa
@@ -39,6 +34,8 @@ hgr_2x16_sprite_yloop:
 	lda	hposn_low,X
 	sta	GBASL
 	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE	; draw to DRAW_PAGE
 	sta	GBASH
 
 	pla
