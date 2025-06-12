@@ -6,6 +6,8 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../common_defines.inc"
+
 
 .include "../qload.inc"
 .include "../music/music.inc"
@@ -32,14 +34,25 @@ peasant_quest_intro:
 	; load sprite data
 	;==============================
 
-	lda	#<walking_sprite_data
-	sta	zx_src_l+1
-	lda	#>walking_sprite_data
-	sta	zx_src_h+1
+	;==============================
+        ; load initial peasant sprites
 
-	lda	#$A0                    ; load to $A000
+        ; urgh over-writes $6000 where intro code lives
+        ; make it use $4000 again?
 
-	jsr	zx02_full_decomp
+        lda     #0				; FIXME: default walking
+        jsr     load_peasant_sprites
+
+
+
+;	lda	#<walking_sprite_data
+;	sta	zx_src_l+1
+;	lda	#>walking_sprite_data
+;	sta	zx_src_h+1
+
+;	lda	#$A0                    ; load to $A000
+
+;	jsr	zx02_full_decomp
 
 
 	;===============================
@@ -230,8 +243,8 @@ no_peasant_wrap:
 	rts
 
 
-walking_sprite_data:
-	.incbin "../sprites_peasant/walking_sprites.zx02"
+;walking_sprite_data:
+;	.incbin "../sprites_peasant/walking_sprites.zx02"
 
 .include "../peasant_sprite.inc"
 

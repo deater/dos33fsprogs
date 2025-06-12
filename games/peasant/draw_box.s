@@ -1,36 +1,29 @@
 	;========================
 	; draw dialog box
 	;========================
-	; from X1H:X1L,Y1 to X2H:X2L, Y2
+
+	; draw to DRAW_PAGE
+	;	from X1L/7,Y1 to X2L/7,Y2
+
+	; OLD: from X1H:X1L,Y1 to X2H:X2L, Y2
 	;   FIXME: X1H/X2H mostly ignored
+	;	for dialog we have a fixed with and often
+	;	a fixed Y1?
 draw_box:
-
-	; draw rectangle
-
-	lda	#$33		; color is white1
-	sta	VGI_RCOLOR
-
 	lda	BOX_X1L
 	sta	VGI_RX1
+
 	lda	BOX_Y1
 	sta	VGI_RY1
 
-				; calculate X run
-	sec			; 16-bit subtract?
-	lda	BOX_X2H		; doesn't handle >255
-	sbc	BOX_X1H
-
 	lda	BOX_X2L
-	sbc	BOX_X1L
-	sta	VGI_RXRUN
+	sta	VGI_RX2
 
-	sec
 	lda	BOX_Y2
-	sbc	BOX_Y1
-	sta	VGI_RYRUN
+	sta	VGI_RY2
 
-	jsr	vgi_simple_rectangle
-
+	jsr	hgr_rectangle
+.if 0
 	; draw lines
 
 	lda	#$22			; color is purple
@@ -122,6 +115,7 @@ draw_box:
 	sta	VGI_RYRUN
 
 	jsr	vgi_simple_rectangle
+.endif
 
 	rts
 

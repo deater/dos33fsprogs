@@ -67,17 +67,16 @@ $40-$5f (8k)	HGR Page 2	(PAGE2)
 $60-$7F (8k)	Offscreen Background
 $80-$9F (8k)	Programs	(we limit to 8k, 8192 bytes, $20 pages)
 $A0-$AF (4k)	peasant sprites
-$B0-$B7 (2k)	unused currently?
-$B8-$BB (1k)	Hi-res lookup tables
-$BC-$BD (512B)	temp area for load/save file marshalling
-		 (also collision info (1page))
-$BE	(256B)	unused(?)
+$B0-$B9 (2k)	unused currently?
+$BA-$BB (512B)	temp area for load/save file marshalling
+$BC-$BD (512B)	Hi-res lookup tables
+$BE	(256B)	collision lookup
 $BF	(256B)	verb table
 $C0-$CF	(n/a)	I/O
 
 Language card (high 16k)
 
-$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is 6k currently)
+$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is ~3571 [outer]  currently)
 $D0-$DF (bank2) (4k)	inventory	(3122 bytes)
 $EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
 

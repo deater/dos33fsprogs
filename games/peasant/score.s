@@ -96,28 +96,29 @@ score_points:
 
 	jsr	update_score
 
+	;========================
 	; clear top
+	;========================
 clear_top:
-	; draw rectangle
-
-	lda     #$3		; color is white1
-	sta     VGI_RCOLOR
+	; default color is white
 
 	lda     #0
 	sta     VGI_RX1
 	lda     #0
 	sta     VGI_RY1
-	lda	#140
-	sta	VGI_RXRUN
+	lda	#20			; 140/7
+	sta	VGI_RX2
 	lda	#12
-        sta     VGI_RYRUN
+        sta     VGI_RY2
 
-        jsr     vgi_simple_rectangle
+        jsr     hgr_rectangle
 
+	;========================
 	; print score
 
 	jsr	print_score
 
+	;==========================
 	; play tone
 
 	;===========================

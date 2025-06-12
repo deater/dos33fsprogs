@@ -1,11 +1,11 @@
 	;===========================
 	; hgr text box
 	;===========================
-	; point OUTL:OUTH at it
-	; x1h,x1l,y1 x2h,x2l,y2
-	; then X,Y of text
-	; CR moves to next line
-	; 0 ends
+	; loads from OUTL:OUTH
+	;	first bytes are X1L/7,Y1,X2L/7,Y2 for rectangle
+	;	then X,Y of text
+	;	CR moves to next line
+	;	0 ends
 
 hgr_text_box:
 	ldy	#0
@@ -13,9 +13,9 @@ hgr_text_box:
 	;====================
 	; draw text box
 
-	lda	(OUTL),Y
-	sta	BOX_X1H
-	iny
+;	lda	(OUTL),Y
+;	sta	BOX_X1H
+;	iny
 	lda	(OUTL),Y
 	sta	BOX_X1L
 	iny
@@ -23,34 +23,34 @@ hgr_text_box:
 	sta	BOX_Y1
 	iny
 
-	lda	(OUTL),Y
-	sta	BOX_X2H
-	iny
+;	lda	(OUTL),Y
+;	sta	BOX_X2H
+;	iny
 	lda	(OUTL),Y
 	sta	BOX_X2L
 	iny
 	lda	(OUTL),Y
 	sta	BOX_Y2
 
-skip_box_save_smc:
-	lda	#1
-	beq	skip_box_save
+;skip_box_save_smc:
+;	lda	#1
+;	beq	skip_box_save
 
-	lda     BOX_Y1
-        sta     SAVED_Y1
+;	lda     BOX_Y1
+ ;       sta     SAVED_Y1
 
-        ldx     BOX_Y2
-        stx     SAVED_Y2
+  ;      ldx     BOX_Y2
+   ;     stx     SAVED_Y2
 
 ;	jsr	hgr_partial_save
 
-skip_box_save:
+;skip_box_save:
 
 	jsr	draw_box
 
-	clc
+	clc			; skip rectangle co-ordinates
 	lda	OUTL
-	adc	#6
+	adc	#4
 	sta	OUTL
 	lda	OUTH
 	adc	#0
@@ -143,12 +143,12 @@ disp_loop_smc:
 	;============================
 	; like above, but don't save
 	;============================
-hgr_text_box_nosave:
-	lda	#0
-	sta	skip_box_save_smc+1
-	jsr	hgr_text_box
-	lda	#1
-	sta	skip_box_save_smc+1
-	rts
+;hgr_text_box_nosave:
+;	lda	#0
+;	sta	skip_box_save_smc+1
+;	jsr	hgr_text_box
+;	lda	#1
+;	sta	skip_box_save_smc+1
+;	rts
 
 .include "text/word_list.s"

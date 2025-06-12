@@ -623,7 +623,8 @@ confirm_action:
 	lda	#>are_you_sure
 	sta	OUTH
 
-	jsr	hgr_text_box_nosave
+;	jsr	hgr_text_box_nosave
+	jsr	hgr_text_box
 
 wait_confirmation:
 	lda	KEYPRESS

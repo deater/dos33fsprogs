@@ -7,6 +7,7 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../common_defines.inc"
 
 .include "../qload.inc"
 .include "../music/music.inc"
@@ -88,8 +89,11 @@ boat:
 
 	jsr	update_top
 
+	;===================
 	; draw rectangle
-
+	; ???
+	; why?
+.if 0
 	lda     #$80            ; color is black2
 	sta     VGI_RCOLOR
 
@@ -112,7 +116,7 @@ boat:
 	lda	#20
         sta     VGI_RYRUN
         jsr     vgi_simple_rectangle
-
+.endif
 
 	lda	#<boat_string
 	sta	OUTL
@@ -229,8 +233,9 @@ waterfall:
 
 	jsr	update_top
 
+	;========================
 	; draw rectangle
-
+.if 0
 	lda     #$80            ; color is black2
 	sta     VGI_RCOLOR
 
@@ -242,8 +247,8 @@ waterfall:
 	sta	VGI_RXRUN
 	lda	#20
         sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-
+	jsr     vgi_simple_rectangle
+.endif
 	lda	#<waterfall_string
 	sta	OUTL
 	lda	#>waterfall_string
@@ -386,7 +391,7 @@ jhonka:
 	jsr	update_top
 
 	; draw rectangle
-
+.if 0
 	lda     #$80            ; color is black2
 	sta     VGI_RCOLOR
 
@@ -399,7 +404,7 @@ jhonka:
 	lda	#12
         sta     VGI_RYRUN
         jsr     vgi_simple_rectangle
-
+.endif
 	lda	#<jhonka_string
 	sta	OUTL
 	lda	#>jhonka_string
@@ -468,7 +473,7 @@ cottage:
 
 
 	; draw rectangle
-
+.if 0
 	lda     #$80            ; color is black2
 	sta     VGI_RCOLOR
 
@@ -481,7 +486,7 @@ cottage:
 	lda	#32
         sta     VGI_RYRUN
         jsr     vgi_simple_rectangle
-
+.endif
 
 	lda	#<cottage_string
 	sta	OUTL
@@ -495,7 +500,7 @@ cottage:
 
 	;====================
 	; second message
-
+.if 0
 	lda     #11
 	sta     VGI_RX1
 	lda     #48
@@ -515,7 +520,7 @@ cottage:
 	lda	#32
         sta     VGI_RYRUN
         jsr     vgi_simple_rectangle
-
+.endif
 
 	lda	#<cottage_string2
 	sta	OUTL

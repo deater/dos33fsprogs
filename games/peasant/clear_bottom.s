@@ -1,32 +1,31 @@
+	; clear the bottom of the screen where the text goes
+	; clear to #$00 (black0)
+	; clear from 183-191?
+	; use DRAW_PAGE
 
 clear_bottom:
-	; draw rectangle
 
-	lda     #$00            ; color is black1
-	sta     VGI_RCOLOR
+	ldx	#183
+clear_bottom_yloop:
 
-	lda     #0
-	sta     VGI_RX1
-cb_smc1:
-	lda     #183
-	sta     VGI_RY1
-	lda	#140
-	sta	VGI_RXRUN
-	lda	#9
-        sta     VGI_RYRUN
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	GBASH
 
-        jsr     vgi_simple_rectangle
+	lda	#0
+	ldy	#39
+clear_bottom_xloop:
 
-	lda     #140
-	sta     VGI_RX1
-cb_smc2:
-	lda     #183
-	sta     VGI_RY1
-	lda	#140
-	sta	VGI_RXRUN
-	lda	#9
-        sta     VGI_RYRUN
+	sta	(GBASL),Y
 
-        jsr     vgi_simple_rectangle
+	dey
+	bpl	clear_bottom_xloop
+
+	inx
+	cpx	#192
+	bne	clear_bottom_yloop
 
 	rts

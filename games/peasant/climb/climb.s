@@ -11,8 +11,7 @@
 .include "../qload.inc"
 .include "../text/dialog_climb.inc"
 .include "../parse_input.inc"
-
-collision_location	= $bc00
+.include "../common_defines.inc"
 
 LOCATION_BASE = LOCATION_CLIMB
 

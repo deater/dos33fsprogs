@@ -1,6 +1,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
+.include "../common_defines.inc"
 
 	;=====================
 	; show inventory
@@ -10,33 +11,33 @@ show_inventory:
 	lda	#0
 	sta	INVENTORY_Y
 
-	;=================
-	; save bg
+	;==============================
+	; HACK: draw to visible screen
+	;	the alternative, with page flipping, is complicated
+	;	as we run out of the other $D0 page
 
-	lda	#20
-	sta	BOX_Y1
-	sta	SAVED_Y1
-	lda	#135
-	sta	BOX_Y2
-	sta	SAVED_Y2
-
-;	jsr	hgr_partial_save
-
+	lda	DRAW_PAGE
+	eor	#$20		; flip $00/$20
+	sta	DRAW_PAGE
 
 	;====================
 	; draw text box
 draw_inv_box:
 
-	lda	#0
-	sta	BOX_X1H
-	lda	#14
+;	lda	#0
+;	sta	BOX_X1H
+
+;	lda	#14
+	lda	#2		; 14/7 = 2
 	sta	BOX_X1L
 	lda	#20
 	sta	BOX_Y1
 
-	lda	#1
-	sta	BOX_X2H
-	lda	#5		; ?
+;	lda	#1
+;	sta	BOX_X2H
+;	lda	#5		; ?
+
+	lda	#38		; 261/7 = 38
 	sta	BOX_X2L
 	lda	#135
 	sta	BOX_Y2
@@ -226,6 +227,7 @@ handle_inv_keypress:
 
 	cmp	#27
 	beq	urgh_done		; ESCAPE
+
 	cmp	#$7f
 	bne	inv_check_down		; DELETE
 
@@ -432,16 +434,20 @@ done_draw_inv_sprite:
 	;====================
 show_item:
 
-	lda	#0
-	sta	BOX_X1H
-	lda	#14
+;	lda	#0
+;	sta	BOX_X1H
+;	lda	#14
+
+	lda	#2		; 14/7=2
 	sta	BOX_X1L
 	lda	#20
 	sta	BOX_Y1
 
-	lda	#1
-	sta	BOX_X2H
-	lda	#5		; ?
+;	lda	#1
+;	sta	BOX_X2H
+;	lda	#5		; ?
+
+	lda	#38		; 261/7=~38
 	sta	BOX_X2L
 	lda	#135
 	sta	BOX_Y2

@@ -7,7 +7,6 @@
 ; by Vince `deater` Weaver	vince@deater.net
 
 .include "../location_common/include_common.s"
-.include "../redbook_sound.inc"
 
 VERB_TABLE = cliff_heights_verb_table
 

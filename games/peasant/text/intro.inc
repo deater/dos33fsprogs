@@ -5,7 +5,8 @@
 
 
 cottage_text1:
-	.byte 0,52,24,  0,253,82
+;	.byte 0,52,24,  0,253,82
+	.byte 7,24,  36,82
 	.byte 9,35,"YOU are Rather Dashing, a",13
 	.byte      "humble peasant living in",13
 	.byte      "the peasant kingdom of",13
@@ -14,7 +15,8 @@ cottage_text1:
 ; wait a few seconds
 
 cottage_text2:
-	.byte 0,41,15, 0,255,96
+;	.byte 0,41,15, 0,255,96
+	.byte    6,15,    38,96
 	.byte 8,25,"You return home from a",13
 	.byte       "vacation on Scalding Lake",13
 	.byte       "only to find that TROGDOR",13
@@ -26,7 +28,8 @@ cottage_text2:
 ; wait a few seconds, then start walking toward cottage
 
 cottage_text3:
-	.byte   0,28,20, 0,252,86
+;	.byte   0,28,20, 0,252,86
+	.byte      4,20,    36,86
 	.byte 7,33,"With nothing left to lose,",13
 	.byte      "you swear to get revenge on",13
 	.byte      "the Wingaling Dragon in the",13
@@ -37,19 +40,22 @@ cottage_text3:
 
 
 lake_w_message1:
-	.byte   0,42,24, 0,252,82
+;	.byte   0,42,24, 0,252,82
+	.byte      6,24,    36,82
 	.byte   8,41,"You head east toward the",13
 	.byte        "mountain atop which",13
 	.byte        "TROGDOR lives.",0
 
 lake_e_message1:
-	.byte 0,35,34, 0,253,72
+;	.byte 0,35,34, 0,253,72
+	.byte    5,34,    36,72
 	.byte 7,49,"That's a nice looking lake.",0
 
 ; walk up a bit
 
 river_message1:
-	.byte 0,35,34, 0,253,82
+;	.byte 0,35,34, 0,253,82
+	.byte    5,34,    36,82
 	.byte 7,49,"You can start playing in a",13
 	.byte      "second here.",0
 
@@ -61,5 +67,6 @@ river_message1:
 ; stops as approach knight
 
 knight_message1:
-	.byte 0,35,34, 0,253,72
+;	.byte 0,35,34, 0,253,72
+	.byte    5,34,    36,72
 	.byte 7,49,"OK go for it.",0

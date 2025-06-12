@@ -140,5 +140,3 @@ level_over:
 .include "../wait_a_bit.s"
 
 .include "../hgr_routines/hgr_sprite.s"
-
-.include "../redbook_sound.inc"

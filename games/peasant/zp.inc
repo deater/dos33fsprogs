@@ -26,6 +26,8 @@ TEMP2   = $12
 TEMP3   = $13
 TEMP4   = $14
 TEMP5   = $15
+COUNT	= TEMP5
+
 
 ; zx02 code
 offset	= $10
@@ -388,13 +390,12 @@ LOAD_PEASANT_SPRITES	= 41
 LOAD_SAVE3		= 42
 
 
-VGI_RCOLOR      = P0
-VGI_RX1         = P1
-VGI_RY1         = P2
-VGI_RXRUN       = P3
-VGI_RYRUN       = P4
-VGI_RCOLOR2     = P5    ; only for dither
-COUNT		= TEMP5
+;VGI_RCOLOR	= P0
+VGI_RX1		= P1
+VGI_RY1		= P2
+VGI_RX2		= P3
+VGI_RY2		= P4
+
 
 
 ; LOCATIONS

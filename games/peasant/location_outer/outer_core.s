@@ -4,7 +4,6 @@
 
 ; by Vince `deater` Weaver	vince@deater.net
 
-.include "../redbook_sound.inc"
 .include "../location_common/include_common.s"
 
 VERB_TABLE = cave_outer_verb_table

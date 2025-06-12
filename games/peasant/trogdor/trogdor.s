@@ -6,6 +6,7 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../common_defines.inc"
 
 .include "../qload.inc"
 .include "../inventory/inventory.inc"

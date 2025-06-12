@@ -128,5 +128,4 @@ level_over:
 
 .include "../hgr_routines/hgr_sprite.s"
 
-.include "../redbook_sound.inc"
 

@@ -724,7 +724,7 @@ restore_parse_message:
 
 	lda	#0
 	ldx	#39
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 
 done_parse_message:
@@ -1147,19 +1147,25 @@ noun_lookup_again:
 print_text_message:
 	jsr	count_message_lines
 
-        lda     #0			; always 0
-        sta     BOX_X1H
-        sta     BOX_X2H
 
-        lda     #35			; always 35
-        sta     BOX_X1L
+	;==================================
+	; set up co-ords for draw_box
 
-        lda     #24			; always 24
-        sta     BOX_Y1
-	sta	SAVED_Y1
+;	lda	#0			; always 0
+;	sta	BOX_X1H
+;	sta	BOX_X2H
 
-        lda     #253			; always 253
-        sta     BOX_X2L
+;	lda     #35			; always 35
+	lda	#5			; 35/7 = 5
+	sta	BOX_X1L
+
+	lda	#24			; always 24
+	sta	BOX_Y1
+	sta	SAVED_Y1		; ???  BOX_Y1 is destroyed
+
+;	lda	#253			; always 253
+	lda	#36			; always 253/7=~36
+	sta	BOX_X2L
 
 ;                      1   2   3   4   5   6    7    8
 ;message_y2:	.byte 54, 62, 70, 78, 86, 94, 102, 110

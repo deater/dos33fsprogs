@@ -8,7 +8,7 @@
 .include "../zp.inc"
 
 .include "../qload.inc"
-
+.include "../common_defines.inc"
 
 game_over:
 	lda	#0

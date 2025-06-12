@@ -4,6 +4,7 @@
 
 .include "../hardware.inc"
 .include "../zp.inc"
+.include "../common_defines.inc"
 
 .include "../qload.inc"
 .include "../music/music.inc"

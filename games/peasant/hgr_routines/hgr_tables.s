@@ -1,7 +1,7 @@
-div7_table	= $b800
-mod7_table	= $b900
-hposn_high	= $ba00
-hposn_low	= $bb00
+;div7_table	= $b800
+;mod7_table	= $b900
+;hposn_high	= $ba00
+;hposn_low	= $bb00
 
 
 
@@ -10,7 +10,7 @@ hposn_low	= $bb00
 	;=====================
 
 hgr_make_tables:
-
+.if 0
 	ldy	#0
 	lda	#0
 	ldx	#0
@@ -41,7 +41,7 @@ mod7_loop:
 mod7_not7:
 	iny
 	bne	mod7_loop
-
+.endif
 
 	; Hposn table
 
@@ -75,7 +75,7 @@ hposn_loop:
 	;	x111 1100	0011111		start at 2
 	; ...
 	;	x100 0000	0000001		start at 6
-
+.if 0
 left_masks:
 	.byte $FF,$FE,$FC,$F8, $F0,$E0,$C0
 
@@ -90,7 +90,7 @@ left_masks:
 right_masks:
 	.byte $81,$83,$87, $8F,$9F,$BF,$FF
 
-
+.endif
 
 
 	; from the Apple II firmware
