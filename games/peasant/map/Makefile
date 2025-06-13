@@ -16,9 +16,9 @@ map.o:	map.s ../zp.inc ../inventory/inventory.inc \
 		graphics_map/map_graphics.inc \
 		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_save_restore.s \
-		../wait_a_bit.s ../draw_peasant.s ../hgr_routines/hgr_text_box.s \
+		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
-		../move_peasant.s ../score.s
+		../score.s
 	ca65 -o map.o map.s -l map.lst
 
 ###

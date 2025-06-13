@@ -16,7 +16,7 @@ trogdor.o:	trogdor.s ../zp.inc \
 		../ssi263/ssi263_simple_speech.s \
 		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_save_restore.s \
-		../wait_a_bit.s ../draw_peasant.s ../hgr_routines/hgr_text_box.s \
+		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		draw_peasant_tiny.s \
 		../keyboard.s ../new_map_location.s \
 		move_peasant_tiny.s ../score.s ../inventory/inventory.inc \

@@ -23,9 +23,9 @@ ending.o:	ending.s \
 		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_2x14_sprite_mask.s \
 		../hgr_routines/hgr_sprite.s ../hgr_routines/hgr_save_restore.s \
-		../wait_a_bit.s ../draw_peasant.s ../hgr_routines/hgr_text_box.s \
+		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
-		../move_peasant.s ../score.s ../inventory/inventory.inc
+		../score.s ../inventory/inventory.inc
 
 	ca65 -o ending.o ending.s -l ending.lst
 
