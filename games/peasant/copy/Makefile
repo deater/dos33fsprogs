@@ -11,7 +11,9 @@ COPY_CHECK:	copy_check.o
 
 copy_check.o:	copy_check.s graphics_copy/copy_graphics.inc \
 		../hgr_routines/hgr_input.s \
-		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s \
+		../hgr_routines/hgr_draw_box.s \
+		../hgr_routines/hgr_rectangle.s \
+		../hgr_routines/hgr_font.s \
 		copy_check.s
 	ca65 -o copy_check.o copy_check.s -l copy_check.lst
 

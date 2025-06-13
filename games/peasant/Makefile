@@ -258,7 +258,7 @@ QLOAD_HD:       qload_hd.o
 qload_hd.o:	qload_hd.s qboot.inc \
 		zx02_optim.s \
 		hgr_routines/hgr_font.s \
-		draw_box.s \
+		hgr_routines/hgr_draw_box.s \
 		hgr_routines/hgr_rectangle.s \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
@@ -294,7 +294,7 @@ qload.o:	qload.s qboot.inc \
 		qload_floppy.s \
 		zx02_optim.s \
 		hgr_routines/hgr_font.s \
-		draw_box.s \
+		hgr_routines/hgr_draw_box.s \
 		hgr_routines/hgr_rectangle.s \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
@@ -685,10 +685,8 @@ peasant.2mg.zip:	peasant.2mg
 
 distclean:
 	make clean
-	cd sprites_peasant && make clean
-	cd text && make clean
 	cd archery && make distclean
-	cd climb && make clean
+	cd climb && make distclean
 	cd copy && make distclean
 	cd ending && make distclean
 	cd game_over && make distclean
@@ -722,13 +720,15 @@ distclean:
 	cd location_well && make distclean
 	cd location_yellow_tree && make distclean
 	cd map && make distclean
+	cd music && make distclean
 	cd saves && make distclean
 	cd sprites_peasant && make distclean
 	cd text && make distclean
+	cd title && make distclean
 	cd trogdor && make distclean
 	cd vid_logo && make distclean
 	cd wrong_boot && make distclean
-	cd music && make distclean
+
 ###
 
 clean:	
@@ -741,6 +741,7 @@ clean:
 	cd copy && make clean
 	cd ending && make clean
 	cd game_over && make clean
+	cd hgr_routines && make clean
 	cd intro && make clean
 	cd inventory && make clean
 	cd location_brothers && make clean

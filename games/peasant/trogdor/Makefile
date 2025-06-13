@@ -14,7 +14,10 @@ trogdor.o:	trogdor.s ../zp.inc \
 		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
 		../text/DIALOG_TROGDOR.ZX02 ../text/dialog_trogdor.inc \
 		../ssi263/ssi263_simple_speech.s \
-		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
+		../hgr_routines/hgr_draw_box.s \
+		../hgr_routines/hgr_rectangle.s \
+		../hgr_routines/hgr_font.s \
+		../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_save_restore.s \
 		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		draw_peasant_tiny.s \

@@ -73,7 +73,10 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../text/intro.inc \
 		../location_river/animate_river.s \
 		../location_lake_west/animate_bubbles.s \
-		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
+		../hgr_routines/hgr_draw_box.s \
+		../hgr_routines/hgr_rectangle.s \
+		../hgr_routines/hgr_font.s \
+		../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_sprite_bg_mask.s \
 		../wait_a_bit.s ../draw_peasant_new.s ../hgr_routines/hgr_text_box.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \

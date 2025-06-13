@@ -20,7 +20,10 @@ ending.o:	ending.s \
 		graphics_end/ending_graphics.inc \
 		../sprites/peasant_sprites.inc \
 		sprites/ending_sprites.inc \
-		../draw_box.s ../hgr_routines/hgr_rectangle.s ../hgr_routines/hgr_font.s ../hgr_routines/hgr_input.s \
+		../hgr_routines/hgr_draw_box.s \
+		../hgr_routines/hgr_rectangle.s \
+		../hgr_routines/hgr_font.s \
+		../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_2x14_sprite_mask.s \
 		../hgr_routines/hgr_sprite.s ../hgr_routines/hgr_save_restore.s \
 		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \

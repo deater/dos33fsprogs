@@ -1,53 +1,36 @@
 	;========================
 	; draw dialog box
 	;========================
-
-	; draw to DRAW_PAGE
-	;	from X1L/7,Y1 to X2L/7,Y2
-
-	; OLD: from X1H:X1L,Y1 to X2H:X2L, Y2
+	; from X1H:X1L,Y1 to X2H:X2L, Y2
 	;   FIXME: X1H/X2H mostly ignored
-	;	for dialog we have a fixed with and often
-	;	a fixed Y1?
 draw_box:
+
+	; draw rectangle
+
+	lda	#$33		; color is white1
+	sta	VGI_RCOLOR
+
 	lda	BOX_X1L
 	sta	VGI_RX1
-
 	lda	BOX_Y1
 	sta	VGI_RY1
 
+				; calculate X run
+	sec			; 16-bit subtract?
+	lda	BOX_X2H		; doesn't handle >255
+	sbc	BOX_X1H
+
 	lda	BOX_X2L
-	sta	VGI_RX2
+	sbc	BOX_X1L
+	sta	VGI_RXRUN
 
+	sec
 	lda	BOX_Y2
-	sta	VGI_RY2
+	sbc	BOX_Y1
+	sta	VGI_RYRUN
 
-	jsr	hgr_rectangle	; this destroys BOX_Y1
+	jsr	vgi_simple_rectangle
 
-	;===========================
-	; left purple bar
-
-	ldx	BOX_Y1
-l_purple_y_loop:
-	lda	hposn_low,X
-	sta	GBASL
-	lda	hposn_high,X
-	clc
-	adc	DRAW_PAGE
-	sta	GBASH
-
-	lda	#$22
-	ldy	BOX_X1L
-	sta	(GBASL),Y
-	ldy	BOX_X2L
-	sta	(GBASL),Y
-
-	inx
-	cpx	BOX_Y2
-	bne	l_purple_y_loop
-
-
-.if 0
 	; draw lines
 
 	lda	#$22			; color is purple
@@ -139,7 +122,6 @@ l_purple_y_loop:
 	sta	VGI_RYRUN
 
 	jsr	vgi_simple_rectangle
-.endif
 
 	rts
 

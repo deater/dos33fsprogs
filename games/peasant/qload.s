@@ -103,7 +103,7 @@ load_file:
 .include "qkumba_popwr.s"
 .include "zx02_optim.s"
 .include "hgr_routines/hgr_font.s"
-.include "draw_box.s"
+.include "hgr_routines/hgr_draw_box.s"
 .include "hgr_routines/hgr_rectangle.s"
 ;.include "hgr_routines/hgr_1x28_sprite_mask.s"
 .include "hgr_routines/hgr_partial_save.s"
