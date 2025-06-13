@@ -22,7 +22,31 @@ draw_box:
 	lda	BOX_Y2
 	sta	VGI_RY2
 
-	jsr	hgr_rectangle
+	jsr	hgr_rectangle	; this destroys BOX_Y1
+
+	;===========================
+	; left purple bar
+
+	ldx	BOX_Y1
+l_purple_y_loop:
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	GBASH
+
+	lda	#$22
+	ldy	BOX_X1L
+	sta	(GBASL),Y
+	ldy	BOX_X2L
+	sta	(GBASL),Y
+
+	inx
+	cpx	BOX_Y2
+	bne	l_purple_y_loop
+
+
 .if 0
 	; draw lines
 
