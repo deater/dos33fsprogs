@@ -33,16 +33,16 @@ kerrek_actually_draw:
 	;=================
 
 	lda	PREV_Y
-	sta	SAVED_Y1
+;	sta	SAVED_Y1
 	clc
 	adc	#51
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 	lda	PREV_X
 	tax
 	inx
 	inx
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 
 	;=================
@@ -442,16 +442,16 @@ kerrek_got_ya:
 	; erase old kerrek (FIXME: make common?)
 
 	lda	PREV_Y
-	sta	SAVED_Y1
+;	sta	SAVED_Y1
 	clc
 	adc	#51
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 	lda	PREV_X
 	tax
 	inx
 	inx
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 	jsr	erase_peasant
 
@@ -556,15 +556,15 @@ kerrek_got_ya:
 	lda	KERREK_Y
 	clc
 	adc	#10
-	sta	SAVED_Y1
+;	sta	SAVED_Y1
 	adc	#10
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 	lda	KERREK_X
 	tax
 	inx
 	inx
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 
 	; draw kerrek
@@ -599,15 +599,15 @@ kerrek_got_ya:
 	lda	KERREK_Y
 	sec
 	sbc	#2
-	sta	SAVED_Y1
+;	sta	SAVED_Y1
 	adc	#17
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 	lda	KERREK_X
 	tax
 	inx
 	inx
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 
 	; draw kerrek
@@ -725,9 +725,9 @@ kerrek_got_ya:
 	lda	KERREK_Y
 	clc
 	adc	#11
-	sta	SAVED_Y1
+;	sta	SAVED_Y1
 	adc	#20
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 	lda	KERREK_X
 	tax
@@ -735,7 +735,7 @@ kerrek_got_ya:
 	inx
 	inx
 	inx
-	jsr	hgr_partial_restore
+;	jsr	hgr_partial_restore
 
 	; draw kerrek
 

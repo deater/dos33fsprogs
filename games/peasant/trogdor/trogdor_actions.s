@@ -487,9 +487,9 @@ skip_speech:
 	jsr	wait_until_keypress
 
 done_speech:
-	lda	#0
-	ldx	#39
-	jsr	hgr_partial_restore
+;	lda	#0
+;	ldx	#39
+;	jsr	hgr_partial_restore
 
 	rts
 

@@ -139,14 +139,14 @@ leave_ned_alone:
 
 	; erase by copying from background
 ned_erase_bg:
-	lda	#81
-	sta	SAVED_Y1
-	lda	#114
-	sta	SAVED_Y2
+;	lda	#81
+;	sta	SAVED_Y1
+;	lda	#114
+;	sta	SAVED_Y2
 
-	lda	#25
-	ldx	#30
-	jsr	hgr_partial_restore
+;	lda	#25
+;	ldx	#30
+;	jsr	hgr_partial_restore
 
 	; 125,255 draw ned1 sprite
 	; 126,254 draw ned2 sprite

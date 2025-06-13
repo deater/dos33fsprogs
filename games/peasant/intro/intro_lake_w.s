@@ -134,9 +134,9 @@ check_lake_w_action2:
 	;=========================
 	; clear old text
 
-	lda	#0
-	ldx	#39
-	jsr	hgr_partial_restore
+;	lda	#0
+;	ldx	#39
+;	jsr	hgr_partial_restore
 
 	;===========================
 	; display text

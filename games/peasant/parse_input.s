@@ -1158,7 +1158,7 @@ print_text_message:
 
 	lda	#24			; always 24
 	sta	BOX_Y1
-	sta	SAVED_Y1		; ???  BOX_Y1 is destroyed
+;	sta	SAVED_Y1		; ???  BOX_Y1 is destroyed
 
 ;	lda	#253			; always 253
 	lda	#36			; always 253/7=~36
@@ -1179,7 +1179,7 @@ print_text_message:
 	adc	message_len
 
         sta     BOX_Y2
-	sta	SAVED_Y2
+;	sta	SAVED_Y2
 
 ;	jsr	hgr_partial_save
 

@@ -226,14 +226,15 @@ animate_archery:
 
 mendelev_normal:
 
-	lda	#107
-	sta	SAVED_Y1
-	lda	#110
-	sta	SAVED_Y2
+;	lda	#107
+;	sta	SAVED_Y1
+;	lda	#110
+;	sta	SAVED_Y2
 
-	lda	#29
-	ldx	#31
-	jmp	hgr_partial_restore
+;	lda	#29
+;	ldx	#31
+;	jmp	hgr_partial_restore
+	rts
 
 mendelev_arm_moved:
 

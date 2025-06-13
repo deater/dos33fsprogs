@@ -106,7 +106,7 @@ load_file:
 .include "hgr_routines/hgr_draw_box.s"
 .include "hgr_routines/hgr_rectangle.s"
 ;.include "hgr_routines/hgr_1x28_sprite_mask.s"
-.include "hgr_routines/hgr_partial_save.s"
+;.include "hgr_routines/hgr_partial_save.s"
 .include "hgr_routines/hgr_input.s"
 .include "hgr_routines/hgr_tables.s"
 .include "hgr_routines/hgr_text_box.s"

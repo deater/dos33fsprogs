@@ -137,15 +137,15 @@ check_cottage_action2:
 
 	; FIXME: have it auto-save to one of the slots
 
-	lda	#12
-	sta	SAVED_Y1
-	lda	#100
-	sta	SAVED_Y2
+;	lda	#12
+;	sta	SAVED_Y1
+;	lda	#100
+;	sta	SAVED_Y2
 
-	lda	#0
-	ldx	#39
+;	lda	#0
+;	ldx	#39
 
-	jsr	hgr_partial_restore2
+;	jsr	hgr_partial_restore2
 
 	;=======================
 	; display cottage text 2
@@ -161,14 +161,14 @@ check_cottage_action3:
 	;=========================
 	; undraw the text box
 
-	lda	#12
-	sta	SAVED_Y1
-	lda	#100
-	sta	SAVED_Y2
+;	lda	#12
+;	sta	SAVED_Y1
+;	lda	#100
+;	sta	SAVED_Y2
 
-	lda	#0
-	ldx	#39
-	jsr	hgr_partial_restore2
+;	lda	#0
+;	ldx	#39
+;	jsr	hgr_partial_restore2
 
 	;=========================
 	; display cottage text 3

@@ -171,7 +171,7 @@ mockingboard_notfound2:
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 .include "../gr_offsets.s"
-.include "../hgr_routines/hgr_partial_restore.s"
+;.include "../hgr_routines/hgr_partial_restore.s"
 ;.include "../hgr_routines/hgr_partial_save.s"
 
 .include "../gr_copy.s"

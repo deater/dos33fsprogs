@@ -281,13 +281,13 @@ WAIT_LOOP	= $B4
 REFRESH_SCREEN	= $B5
 
 INPUT_X		= $C0
-BOX_X1L		= $C1
-;BOX_X1H		= $C2
+
+BOX_X1L		= $C1		; draw box
 BOX_Y1		= $C3
 BOX_X2L		= $C4
-;BOX_X2H		= $C5
 BOX_Y2		= $C6
-SAVED_Y1	= $C7
+
+SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8
 
 ; temp for animations, etc

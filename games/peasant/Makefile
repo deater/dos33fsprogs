@@ -371,7 +371,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s input_buffer qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box_nosave qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr_partial_restore qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s hgr_partial_restore qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_input qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s done_hgr_input qload.lst >> qload.inc
