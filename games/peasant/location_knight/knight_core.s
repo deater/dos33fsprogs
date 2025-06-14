@@ -32,6 +32,9 @@ game_loop:
 
 	jsr	move_peasant
 
+	;=====================
+	; check if level over
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
@@ -43,18 +46,11 @@ game_loop:
 
 skip_level_specific:
 
+	;=====================
+	; update screen
+	;=====================
 
-	;===========================
-	; copy bg to current screen
-
-	lda	#$60
-	jsr	hgr_copy_fast
-
-
-	;====================
-	; always draw peasant
-
-	jsr	draw_peasant
+	jsr	update_screen
 
 	;====================
 	; increment frame
@@ -144,24 +140,32 @@ to_left_of_inn:
 	rts
 
 
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
+	;===========================
+	; update screen
+	;===========================
 
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
+update_screen:
+	;===========================
+	; copy bg to current screen
 
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
+;	lda	#$60
+	jsr	hgr_copy_faster
 
-.include "../new_map_location.s"
 
-.include "../keyboard.s"
+	;====================
+	; always draw peasant
 
-.include "../vblank.s"
+	jsr	draw_peasant
+
+	;===================
+	; draw knight
+
+
+	rts
+
+
+.include "../hgr_routines/hgr_copy_faster.s"
+
+.include "../location_common/include_bottom.s"
 
 .include "knight_actions.s"
-
-;.include "../hgr_routines/hgr_page_flip.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
