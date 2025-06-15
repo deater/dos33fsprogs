@@ -23,10 +23,6 @@ really_move_peasant:
 
 no_peasant_wrap:
 
-	; restore bg behind peasant
-
-	jsr	erase_peasant
-
 	;=========================
 	;=========================
 	; move peasant

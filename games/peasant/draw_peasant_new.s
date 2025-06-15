@@ -1,4 +1,3 @@
-
 	;============================
 	; draw peasant
 	;============================
@@ -65,27 +64,4 @@ peasant_flame_offsets:
 	.byte 30,24,27,33
 
 
-	;===========================
-	; erase peasant
-	;===========================
-
-	; restore bg behind peasant
-erase_peasant:
-.if 0
-	lda	GAME_STATE_2
-	and	#ON_FIRE
-	beq	skip_erase_fire
-
-	; erase flame if applicable
-	ldy	#5
-	jsr	hgr_partial_restore_by_num
-
-skip_erase_fire:
-
-	; erase peasant
-
-	ldy	#4
-
-	jmp	hgr_partial_restore_by_num      ; tail call
-.endif
 	rts

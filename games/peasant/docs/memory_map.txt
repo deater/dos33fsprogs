@@ -18,7 +18,7 @@ Memory Map
 
 ;========================= TITLE
 
-	; set up HGR tables at $b800-bbff
+	; set up HGR tables
 
 	; loads two title images
 
@@ -36,7 +36,7 @@ Memory Map
 
 	$2000 = image with trogdor
 	$4000 = image without trogdor
-	$6000 = code
+	$6000 = code			(8510 bytes)
 	$D000 = pt3 music (4k)
 
 ;=========================== intro

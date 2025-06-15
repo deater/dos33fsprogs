@@ -143,8 +143,6 @@ done_lake_e_action:
 
 	jsr	really_move_peasant
 
-	jsr	erase_peasant
-
 	jmp	lake_e_walk_loop
 
 

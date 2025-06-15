@@ -239,7 +239,7 @@ really_move_peasant:
         sta     PEASANT_STEPS
 
 no_peasant_wrap:
-        jsr     erase_peasant	; tail?
+
 	rts
 
 

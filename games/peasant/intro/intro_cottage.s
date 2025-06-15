@@ -207,8 +207,6 @@ now_wait:
 
 	jsr	really_move_peasant
 
-	jsr	erase_peasant
-
 	jmp	cottage_walk_loop
 
 

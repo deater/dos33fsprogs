@@ -453,7 +453,7 @@ kerrek_got_ya:
 	inx
 ;	jsr	hgr_partial_restore
 
-	jsr	erase_peasant
+;	jsr	erase_peasant
 
 	; draw peasant
 
@@ -678,7 +678,7 @@ kerrek_got_ya:
 
 	; erase peasant
 
-	jsr	erase_peasant
+;	jsr	erase_peasant
 
 	; draw peasant in ground
 

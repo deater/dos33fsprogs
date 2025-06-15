@@ -1,8 +1,9 @@
 ; o/~ At the beautiful, the beautiful, River o/~
 
-	;************************
+	;========================
 	; River
-	;************************
+	;========================
+
 intro_river:
 	lda	#0
 	sta	FRAME
@@ -125,8 +126,6 @@ done_river_action:
 	inc	FRAME
 
 	jsr	really_move_peasant
-
-	jsr	erase_peasant
 
 	jmp	river_walk_loop
 

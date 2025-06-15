@@ -1,8 +1,9 @@
 ; o/~ One knight in Bangkok makes a hard man humble o/~
 
-	;************************
+	;========================
 	; Knight
-	;************************
+	;========================
+
 intro_knight:
 	lda	#0
 	sta	FRAME
@@ -157,10 +158,6 @@ done_knight_action:
 	inc	FRAME
 
 	jsr	really_move_peasant
-
-        jsr     erase_peasant
-
-
 
 	jmp	knight_walk_loop
 
