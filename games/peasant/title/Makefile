@@ -26,7 +26,7 @@ graphics_title/title_graphics.inc:
 
 distclean:
 	make clean
-	cd sprites && make clean
+#	cd sprites && make clean
 	cd graphics_title && make clean
 
 ###
