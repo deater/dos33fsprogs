@@ -27,14 +27,14 @@ hgr_draw_sprite_bg_mask:
 	;===================================
 	; save info on background to restore
 
-	lda	#1			; can't inc as inc,Y not possible
-	sta	save_valid,Y
+;	lda	#1			; can't inc as inc,Y not possible
+;	sta	save_valid,Y
 
-	lda	CURSOR_X
-	sta	save_xstart,Y
+;	lda	CURSOR_X
+;	sta	save_xstart,Y
 
-	lda	CURSOR_Y
-	sta	save_ystart,Y
+;	lda	CURSOR_Y
+;	sta	save_ystart,Y
 
 	;==================================
 	; calculate end of sprite on screen for Xpos loop
@@ -44,7 +44,7 @@ hgr_draw_sprite_bg_mask:
 	sta	hdsb_width_smc+1
 	clc
 	adc	CURSOR_X
-	sta	save_xend,Y
+;	sta	save_xend,Y
 
 	;================================
 	; calculate bottom of sprite for Ypos loop
@@ -72,7 +72,7 @@ hdsb_ysize_not_ok:
 
 hdsb_ysize_ok:
 
-	sta	save_yend,Y
+;	sta	save_yend,Y
 
 	;================================
 	; calculate peasant priority
@@ -163,12 +163,10 @@ mask_good:
 	clc
 	adc	CURSOR_X		; point at actual location
 	sta	GBASL
-;	sec
 	lda	hposn_high,Y
-;	sbc	#$20			; FIXME: defaults to $40
 ;	clc
 	adc	DRAW_PAGE
-	sta	GBASH			; always page2
+	sta	GBASH			;
 
 
 	;============================
