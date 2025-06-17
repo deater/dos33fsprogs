@@ -24,7 +24,7 @@ graphics_title/title_graphics.inc:
 	cd graphics_title && make
 
 sprites_title/title_sprites.inc:
-	cd sptires_title && make
+	cd sprites_title && make
 
 ###
 
