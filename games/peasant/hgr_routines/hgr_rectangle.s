@@ -22,6 +22,8 @@ hgr_rectangle:
 
 	lda	#$7f				; white0
 						; for purple/green background
+
+hgr_rectangle_color:
 	sta	HGR_COLOR
 
 hgr_rectangle_yloop:

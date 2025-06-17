@@ -83,7 +83,7 @@ sector_array:
 .byte  0		; disk detect
 
 length_array:
-.byte  32, 50, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte  32, 48, 60, 20	; VID_LOGO, TITLE, INTRO, COPY_CHECK
 .byte  64, 80, 16, 32	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 .byte  16, 16, 16, 64	; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 .byte  64, 32, 64	; ARCHERY, MAP, CLIMB

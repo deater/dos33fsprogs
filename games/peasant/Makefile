@@ -383,6 +383,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr_put_char_cursor qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_char qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_rectangle qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_rectangle_color qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s peasant_text qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s save_menu qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s load_menu qload.lst >> qload.inc

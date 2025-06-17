@@ -13,7 +13,8 @@ title.o:	title.s ../qload.inc \
 		../music/music.inc ../music/duet.s \
 		graphics_title/title_graphics.inc \
 		graphics_title/altfire.inc \
-		tips.s \
+		sprites_title/title_sprites.inc \
+		tips.s title_mockingboard.s title_duet.s \
 		../pt3_lib/pt3_lib_mockingboard_patch.s
 	ca65 -o title.o title.s -l title.lst
 
@@ -22,11 +23,14 @@ title.o:	title.s ../qload.inc \
 graphics_title/title_graphics.inc:
 	cd graphics_title && make
 
+sprites_title/title_sprites.inc:
+	cd sptires_title && make
+
 ###
 
 distclean:
 	make clean
-#	cd sprites && make clean
+	cd sprites_title && make clean
 	cd graphics_title && make clean
 
 ###
