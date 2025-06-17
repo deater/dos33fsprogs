@@ -14,9 +14,9 @@
 
 ending:
 
-	jsr	hgr_make_tables
+;	jsr	hgr_make_tables
 
-	jsr	hgr2
+;	jsr	hgr2
 
 
 	lda	#0

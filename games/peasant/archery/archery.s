@@ -18,8 +18,10 @@ archery:
 	sta	LEVEL_OVER
 	sta	FRAME
 
-	jsr	hgr_make_tables
-	jsr	hgr2
+;	jsr	hgr_make_tables
+;	jsr	hgr2
+
+	jsr	hgr2_clearscreen
 
 	;=============================
 	;=============================

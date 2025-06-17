@@ -14,16 +14,17 @@
 
 .include "../qload.inc"
 
-	;************************
-	; Ending
-	;************************
+	;============================
+	; Fake Copy Protection Check
+	;============================
 
 copy_check:
 
-	jsr	hgr_make_tables
+;	jsr	hgr_make_tables
 
-	jsr	hgr2
+;	jsr	hgr2
 
+	jsr	hgr2_clearscreen
 
 trogdor_question:
 	lda	#<(trogdor_zx02)

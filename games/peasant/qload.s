@@ -111,7 +111,7 @@ load_file:
 .include "hgr_routines/hgr_tables.s"
 .include "hgr_routines/hgr_text_box.s"
 .include "clear_bottom.s"
-.include "hgr_routines/hgr_hgr2.s"		; this one is maybe only needed once?
+.include "hgr_routines/hgr_clearscreen.s"	; maybe only for title?
 .include "gr_offsets.s"
 .include "loadsave_menu.s"
 .include "wait_keypress.s"

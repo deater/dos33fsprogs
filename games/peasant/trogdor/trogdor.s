@@ -19,8 +19,8 @@ trogdor:
 	sta	LEVEL_OVER
 	sta	FRAME
 
-	jsr	hgr_make_tables		; needed?
-	jsr	hgr2			; needed?
+;	jsr	hgr_make_tables		; needed?
+;	jsr	hgr2			; needed?
 
 	; decompress dialog to $D000
 

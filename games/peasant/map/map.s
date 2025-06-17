@@ -18,8 +18,12 @@ the_map:
 	sta	LEVEL_OVER
 	sta	FRAME
 
-	jsr	hgr_make_tables
-	jsr	hgr2
+;	jsr	hgr_make_tables
+;	jsr	hgr2
+
+	; FIXME: clear and use DRAW_PAGE
+
+	jsr	hgr2_clearscreen
 
 	;=============================
 	;=============================

@@ -10,8 +10,20 @@
 .include "../music/music.inc"
 
 title:
+	;============================
+	; set hi-res graphics, PAGE2
+	;============================
 
-	jsr	hgr2				; clear screen, HGR page 2
+        bit     PAGE2
+        bit     FULLGR
+        lda     HIRES
+        lda     SET_GR
+
+	;============================
+	; clear page2
+	;============================
+
+	jsr	hgr2_clearscreen
 
 	;=========================
 	; set up hgr lookup tables

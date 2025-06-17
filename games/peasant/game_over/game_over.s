@@ -15,11 +15,11 @@ game_over:
 	sta	LEVEL_OVER
 	sta	FRAME
 
-	jsr	hgr_make_tables
+;	jsr	hgr_make_tables
 
-	jsr	hgr2		; Hi-res graphics, no text at bottom
-				; Y=0, A=0 after this called
+	; FIXME: should clear DRAW_SCREEN not necessarily PAGE2
 
+	jsr	hgr2_clearscreen
 
 	; update score
 

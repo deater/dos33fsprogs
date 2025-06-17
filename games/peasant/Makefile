@@ -265,7 +265,7 @@ qload_hd.o:	qload_hd.s qboot.inc \
 		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
-		hgr_routines/hgr_hgr2.s \
+		hgr_routines/hgr_clearscreen.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s
@@ -301,7 +301,7 @@ qload.o:	qload.s qboot.inc \
 		hgr_routines/hgr_text_box.s \
 		text/word_list.s \
 		clear_bottom.s \
-		hgr_routines/hgr_hgr2.s \
+		hgr_routines/hgr_clearscreen.s \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s \
@@ -363,7 +363,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s zx02_full_decomp qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_h qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr2 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr2_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
 #	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc

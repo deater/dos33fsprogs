@@ -22,9 +22,13 @@ peasant_quest_intro:
 	sta     input_buffer	; reset buffer (NUL at start)
 	sta	GAME_STATE_2
 
-	jsr	hgr_make_tables
+	;===========================
 
-	jsr	hgr2
+;	jsr	hgr_make_tables		; needed?
+
+;	jsr	hgr2
+
+	jsr	hgr2_clearscreen
 
 	lda	#$20		; draw to page2
 	sta	DRAW_PAGE
