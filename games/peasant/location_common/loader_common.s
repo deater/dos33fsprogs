@@ -1,5 +1,3 @@
-DIALOG_DESTINATION = $D000
-PRIORITY_TEMP = $6000
 BACKGROUND_DESTINATION = $6000
 CORE_DESTINATION = $8000
 
@@ -39,7 +37,7 @@ CORE_DESTINATION = $8000
         lda     #>DIALOG_LOCATION
         sta     zx_src_h+1
 
-        lda     #>DIALOG_DESTINATION
+        lda     #>dialog_location
 
         jsr     zx02_full_decomp
 
@@ -53,7 +51,7 @@ CORE_DESTINATION = $8000
 	lda	#>PRIORITY_LOCATION
 	sta	zx_src_h+1
 
-	lda	#>PRIORITY_TEMP		; temporarily load to $6000
+	lda	#>priority_temp		; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
@@ -63,7 +61,7 @@ CORE_DESTINATION = $8000
 
 	ldx     #0
 col_copy_loop:
-	lda	PRIORITY_TEMP+$400,X
+	lda	collision_temp,X
 	sta	collision_location,X
 	inx
 	bne	col_copy_loop

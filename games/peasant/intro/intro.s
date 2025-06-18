@@ -185,7 +185,8 @@ cottage_zx02:	.incbin "../location_cottage/graphics_cottage/cottage.zx02"
 lake_w_zx02:	.incbin "../location_lake_west/graphics_lake_west/lake_w.zx02"
 lake_e_zx02:	.incbin "../location_lake_east/graphics_lake_east/lake_e.zx02"
 river_zx02:	.incbin "../location_river/graphics_river/river.zx02"
-knight_zx02:	.incbin "../location_knight/graphics_knight/knight.zx02"
+;knight_zx02:	.incbin "../location_knight/graphics_knight/knight.zx02"
+; now in MUSIC
 
 cottage_priority_zx02:	.incbin "../location_cottage/graphics_cottage/cottage_priority.zx02"
 lake_w_priority_zx02:	.incbin "../location_lake_west/graphics_lake_west/lake_w_priority.zx02"

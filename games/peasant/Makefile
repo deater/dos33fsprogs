@@ -31,11 +31,11 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk1.dsk  5  0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk1.dsk  7  0 ./music/MUSIC       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  8  0 ./vid_logo/VID_LOGO 0   0
-	$(DOS33_RAW) peasant_disk1.dsk  10  0 ./title/TITLE       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  13  0 ./intro/INTRO       0   0
-	$(DOS33_RAW) peasant_disk1.dsk  17 0 PARSE_INPUT.ZX02  0   0
-	$(DOS33_RAW) peasant_disk1.dsk  18 0 ./inventory/INVENTORY  0   0
+	$(DOS33_RAW) peasant_disk1.dsk  9  0 ./vid_logo/VID_LOGO 0   0
+	$(DOS33_RAW) peasant_disk1.dsk  11  0 ./title/TITLE       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  14  0 ./intro/INTRO       0   0
+	$(DOS33_RAW) peasant_disk1.dsk  18 0 PARSE_INPUT.ZX02  0   0
+	$(DOS33_RAW) peasant_disk1.dsk  19 0 ./inventory/INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
@@ -189,11 +189,11 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./game_over/GAME_OVER    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 5  0` ./map/MAP          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 7  0` ./music/MUSIC       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 8  0` ./vid_logo/VID_LOGO 0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 10 0` ./title/TITLE       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 13 0` ./intro/INTRO       0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 17 0` PARSE_INPUT.ZX02  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 18 0` ./inventory/INVENTORY  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 9  0` ./vid_logo/VID_LOGO 0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 11 0` ./title/TITLE       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 14 0` ./intro/INTRO       0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 18 0` PARSE_INPUT.ZX02  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 19 0` ./inventory/INVENTORY  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_gary/GARY_LOADER	  0   0

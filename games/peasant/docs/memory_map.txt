@@ -51,6 +51,12 @@ Memory Map
 	
 	$BC-$BD (512B)	Hi-res lookup tables
 
+	blurgh
+		river.zx02 = 2379
+		knight.zx02 = 1938
+		lake_e.zx02 = 1750
+
+
 ; ================================
 ; This is the layout for levels
 
@@ -71,27 +77,26 @@ $40-$5f (8k)	HGR Page 2	(PAGE2)
 $60-$7F (8k)	Offscreen Background
 $80-$AF (12k)	Programs	(we limit to 12k, 12288 bytes, $30 pages)
 $B0-$BF (4k)	peasant sprites
-;$A0-$AF (4k)	peasant sprites
-;$B0-$B9 (2k)	unused currently?
 $C0-$CF	(n/a)	I/O
 
-TODO: sprites $b000-$bfff
-other stuff up in language card
+Language card (high 16k) (new)
 
-Language card (high 16k)
+$D0-$DF (bank1)	(4k)	per-levelstrings (biggest is ~3571 [outer]  currently)
+$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
+$E0-$E7 (2k)    unused/temporary for overflow graphics/sprites
+$E8-$E9 (512B)	temp area for load/save file marshalling
+$EA-$EB (512B)	Hi-res lookup tables
+$EC	(256B)	collision lookup
+$ED	(256B)	verb table
+$EE-$FF (4.5k)	parser code	(4608 bytes, 4332 currently)
+
+
+Language card (high 16k) (old)
 
 ;$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is ~3571 [outer]  currently)
 ;$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
 ;$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
-
-
-$D0-$DF (bank1)	(4k)	per-levelstrings (biggest is ~3571 [outer]  currently)
-$E0-$E1 (512B)	temp area for load/save file marshalling
-$E2-$E3 (512B)	Hi-res lookup tables
-$E4	(256B)	collision lookup
-$B5	(256B)	verb table
-
-$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
-$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
+;$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
+;$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
 
 -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
