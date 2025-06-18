@@ -10,7 +10,7 @@ all:	CLIMB
 ####
 
 CLIMB:	climb.o
-	ld65 -o CLIMB climb.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o CLIMB climb.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 climb.o:	climb.s \
 		../zp.inc ../hardware.inc ../qload.inc \
@@ -21,7 +21,8 @@ climb.o:	climb.s \
 		sprites/enemy_sprites.inc \
 		../location_cliff_base/graphics_cliff/cliff_base.hgr.zx02 \
 		graphics_cliff/cliff2.hgr.zx02 \
-		graphics_cliff/cliff3.hgr.zx02
+		graphics_cliff/cliff3.hgr.zx02 \
+		rock_code.s bird_code.s
 	ca65 -o climb.o climb.s -l climb.lst
 
 ####
