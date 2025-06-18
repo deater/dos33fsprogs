@@ -276,6 +276,12 @@ skip_all_checks:
 
 do_animated_videlectrix_intro:
 	;============================
+	; clear page2
+	;============================
+
+	jsr	hgr2_clearscreen
+
+	;============================
 	; set hi-res graphics, PAGE2
 	;============================
 
@@ -283,12 +289,6 @@ do_animated_videlectrix_intro:
 	bit	FULLGR
 	lda	HIRES
 	lda	SET_GR
-
-	;============================
-	; clear page2
-	;============================
-
-	jsr	hgr2_clearscreen
 
 	lda	#$20
 	sta	DISP_PAGE

@@ -5,11 +5,14 @@
 	;	unrolled here takes         0x0A501 =  42,241 cycles
 
 
+	; Assume clear to black
+
 	; TODO: also have a page1-clearscreen
 
 hgr2_clearscreen:
 
 	ldy	#0
+	tya
 hgr2_cls_loop:
 	sta	$4000,Y
 	sta	$4100,Y
