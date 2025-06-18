@@ -1,6 +1,6 @@
 
 	;=================================
-	; load peasant sprites to $A000
+	; load peasant sprites to peasant_sprites_location ($de00)
 	;	which to load in A
 	;	current is in WHICH_PEASANT_SPRITES
 
@@ -12,7 +12,7 @@ load_peasant_sprites:
 
 	jsr	load_file
 
-	; loads to $4000 (peasant_sprites_temp)
+	; loads to $6000 (peasant_sprites_temp)
 
 	lda	WHICH_PEASANT_SPRITES
 	asl
@@ -26,5 +26,5 @@ load_peasant_sprites:
 
         jsr     zx02_full_decomp
 
-	rts					; tail call?
+	rts					; TODO: tail call?
 

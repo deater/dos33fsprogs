@@ -45,7 +45,11 @@ Memory Map
 	$A000 - $AFFF = peasant sprite data
 	$D000 - $DFFF = pt3 music still (4k) though hacked
 	
-
+	New:
+	$6000 - $7FFF = offscreen image
+	$8000 - $B800 = code (14k?)
+	
+	$BC-$BD (512B)	Hi-res lookup tables
 
 ; ================================
 ; This is the layout for levels
@@ -65,18 +69,28 @@ $0B-$1F (5.25k)	QLOAD disk and common routines (5376 bytes, 4996 bytes used)
 $20-$3F (8k)	HGR Page 1	(PAGE1)
 $40-$5f (8k)	HGR Page 2	(PAGE2)
 $60-$7F (8k)	Offscreen Background
-$80-$9F (8k)	Programs	(we limit to 8k, 8192 bytes, $20 pages)
-$A0-$AF (4k)	peasant sprites
-$B0-$B9 (2k)	unused currently?
-$BA-$BB (512B)	temp area for load/save file marshalling
-$BC-$BD (512B)	Hi-res lookup tables
-$BE	(256B)	collision lookup
-$BF	(256B)	verb table
+$80-$AF (12k)	Programs	(we limit to 12k, 12288 bytes, $30 pages)
+$B0-$BF (4k)	peasant sprites
+;$A0-$AF (4k)	peasant sprites
+;$B0-$B9 (2k)	unused currently?
 $C0-$CF	(n/a)	I/O
+
+TODO: sprites $b000-$bfff
+other stuff up in language card
 
 Language card (high 16k)
 
-$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is ~3571 [outer]  currently)
+;$D0-$ED (bank1)	(7.5k)	per-levelstrings (biggest is ~3571 [outer]  currently)
+;$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
+;$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
+
+
+$D0-$DF (bank1)	(4k)	per-levelstrings (biggest is ~3571 [outer]  currently)
+$E0-$E1 (512B)	temp area for load/save file marshalling
+$E2-$E3 (512B)	Hi-res lookup tables
+$E4	(256B)	collision lookup
+$B5	(256B)	verb table
+
 $D0-$DF (bank2) (4k)	inventory	(3122 bytes)
 $EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
 

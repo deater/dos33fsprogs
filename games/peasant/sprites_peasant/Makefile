@@ -14,7 +14,7 @@ all:	walk_sprites.inc climb_flame_sprites.inc \
 ####
 
 PEASANT_SPRITES_COMMON:	peasant_sprite_common.o
-	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
+	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 peasant_sprite_common.o:	peasant_sprite_common.s \
 	walking_sprites.zx02 \
@@ -28,7 +28,7 @@ climbing_sprites.zx02:	climbing_sprites
 	$(ZX02) -f climbing_sprites climbing_sprites.zx02
 
 climbing_sprites:	climbing_sprites.o
-	ld65 -o climbing_sprites climbing_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o climbing_sprites climbing_sprites.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 climbing_sprites.o:	climbing_sprites.s \
 	climb_flame_sprites.inc \
@@ -41,7 +41,7 @@ walking_sprites.zx02:	walking_sprites
 	$(ZX02) -f walking_sprites walking_sprites.zx02
 
 walking_sprites:	walking_sprites.o
-	ld65 -o walking_sprites walking_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o walking_sprites walking_sprites.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 walking_sprites.o:	walking_sprites.s \
 	flame_sprites.inc walk_sprites.inc
@@ -53,7 +53,7 @@ robe_sprites.zx02:	robe_sprites
 	$(ZX02) -f robe_sprites robe_sprites.zx02
 
 robe_sprites:	robe_sprites.o
-	ld65 -o robe_sprites robe_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o robe_sprites robe_sprites.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 robe_sprites.o:	robe_sprites.s \
 	flame_sprites.inc robe_sprites.inc
@@ -65,7 +65,7 @@ robe_shield_sprites.zx02:	robe_shield_sprites
 	$(ZX02) -f robe_shield_sprites robe_shield_sprites.zx02
 
 robe_shield_sprites:	robe_shield_sprites.o
-	ld65 -o robe_shield_sprites robe_shield_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o robe_shield_sprites robe_shield_sprites.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 robe_shield_sprites.o:	robe_shield_sprites.s \
 	flame_sprites.inc robe_shield_sprites.inc
@@ -78,7 +78,7 @@ robe_sprites_purple.zx02:	robe_sprites_purple
 	$(ZX02) -f robe_sprites_purple robe_sprites_purple.zx02
 
 robe_sprites_purple:	robe_sprites_purple.o
-	ld65 -o robe_sprites_purple robe_sprites_purple.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o robe_sprites_purple robe_sprites_purple.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 robe_sprites_purple.o:	robe_sprites_purple.s \
 	flame_sprites.inc robe_sprites_purple.inc
@@ -90,7 +90,7 @@ robe_sprites_orange.zx02:	robe_sprites_orange
 	$(ZX02) -f robe_sprites_orange robe_sprites_orange.zx02
 
 robe_sprites_orange:	robe_sprites_orange.o
-	ld65 -o robe_sprites_orange robe_sprites_orange.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
+	ld65 -o robe_sprites_orange robe_sprites_orange.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
 
 robe_sprites_orange.o:	robe_sprites_orange.s \
 	flame_sprites.inc robe_sprites_orange.inc

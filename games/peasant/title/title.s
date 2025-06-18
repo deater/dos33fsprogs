@@ -25,6 +25,15 @@ title:
 
 	jsr	hgr2_clearscreen
 
+
+	;===================================
+	; switch in language card
+	; read/write RAM, $d000 bank 2
+
+	lda	$C083
+	lda	$C083
+
+
 	;=========================
 	; set up hgr lookup tables
 	;=========================

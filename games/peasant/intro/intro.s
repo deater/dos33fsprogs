@@ -8,11 +8,16 @@
 .include "../zp.inc"
 .include "../common_defines.inc"
 
-
 .include "../qload.inc"
 .include "../music/music.inc"
 
 peasant_quest_intro:
+
+
+	; we get here from "tips"
+	; DRAW_PAGE = PAGE2
+	; looking at PAGE1
+
 
 	lda	#0
 	sta	ESC_PRESSED
@@ -20,6 +25,7 @@ peasant_quest_intro:
 	sta	PEASANT_STEPS
 	sta	INPUT_X
 	sta     input_buffer	; reset buffer (NUL at start)
+				; ????
 	sta	GAME_STATE_2
 
 	;===========================
@@ -28,10 +34,10 @@ peasant_quest_intro:
 
 ;	jsr	hgr2
 
-	jsr	hgr2_clearscreen
+;	jsr	hgr2_clearscreen	; clear PAGE2
 
-	lda	#$20		; draw to page2
-	sta	DRAW_PAGE
+;	lda	#$20		; draw to page2
+;	sta	DRAW_PAGE
 
 
 	;==============================
@@ -41,22 +47,10 @@ peasant_quest_intro:
 	;==============================
         ; load initial peasant sprites
 
-        ; urgh over-writes $6000 where intro code lives
-        ; make it use $4000 again?
+        ; loads temporarily in $6000
 
         lda     #0				; FIXME: default walking
         jsr     load_peasant_sprites
-
-
-
-;	lda	#<walking_sprite_data
-;	sta	zx_src_l+1
-;	lda	#>walking_sprite_data
-;	sta	zx_src_h+1
-
-;	lda	#$A0                    ; load to $A000
-
-;	jsr	zx02_full_decomp
 
 
 	;===============================
@@ -88,7 +82,7 @@ mockingboard_notfound:
 
 	lda	ESC_PRESSED
 	bne	escape_handler
-
+.if 0
 	;========================
 	; Lake West
 	;========================
@@ -121,7 +115,7 @@ mockingboard_notfound:
 	;========================
 
 	jsr	intro_knight
-
+.endif
 	;========================
 	; Start actual game
 	;========================
@@ -162,10 +156,10 @@ mockingboard_notfound2:
 .include "new_game.s"
 
 .include "intro_cottage.s"
-.include "intro_lake_w.s"
-.include "intro_lake_e.s"
-.include "intro_river.s"
-.include "intro_knight.s"
+;.include "intro_lake_w.s"
+;.include "intro_lake_e.s"
+;.include "intro_river.s"
+;.include "intro_knight.s"
 
 .include "../draw_peasant_new.s"
 
@@ -178,7 +172,7 @@ mockingboard_notfound2:
 ;.include "../hgr_routines/hgr_partial_restore.s"
 ;.include "../hgr_routines/hgr_partial_save.s"
 
-.include "../gr_copy.s"
+;.include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy_fast.s"
 
 ;.include "../wait.s"
@@ -246,9 +240,7 @@ no_peasant_wrap:
 
 	rts
 
-
-;walking_sprite_data:
-;	.incbin "../sprites_peasant/walking_sprites.zx02"
-
 .include "../peasant_sprite.inc"
 
+.include "../priority_copy.s"
+.include "../hgr_routines/hgr_copy_faster.s"

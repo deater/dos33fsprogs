@@ -22,8 +22,8 @@ PT3_ENABLE_APPLE_IIC = 1
 	; switch in language card
 	; read/write RAM, $d000 bank 2
 
-	lda	$C083
-	lda	$C083
+;	lda	$C083
+;	lda	$C083
 
 	; actually load it
 	lda	#LOAD_MUSIC

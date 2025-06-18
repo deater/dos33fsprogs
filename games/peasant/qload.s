@@ -41,7 +41,7 @@ which_disk_array:
 .byte $FF		; disk detect
 
 load_address_array:
-.byte $60,$60,$60,$60		; VID_LOGO, TITLE, INTRO, COPY_CHECK
+.byte $60,$60,$80,$60		; VID_LOGO, TITLE, INTRO, COPY_CHECK
 .byte $60,$60,$D0,$40		; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 .byte $60,$D0,$20,$60		; GAME_OVER, INVENTORY, PARSE_INPUT, INN
 .byte $60,$60,$60		; ARCHERY, MAP, CLIMB
@@ -51,7 +51,7 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte $40,$40,$40,$40,$40	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte $40,$40,$40		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte >load_buffer,$40,$40	; SAVE_DATA,PEASANT_SPRITES , ?
+.byte >load_buffer,>peasant_sprites_temp,$40	; SAVE_DATA,PEASANT_SPRITES , ?
 .byte >load_buffer		; disk detect
 
 track_array:

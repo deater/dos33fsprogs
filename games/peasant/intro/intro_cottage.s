@@ -32,64 +32,50 @@ intro_cottage:
 	lda	#>cottage_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#$60			; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
 	; copy to $400
 
-	jsr	gr_copy_to_page1
+;	jsr	gr_copy_to_page1
+
+	jsr	priority_copy
 
 
 
 	;==========================
-	; load background to $2000 (PAGE1)
+	; load background to $6000
 
 	lda	#<(cottage_zx02)
 	sta	zx_src_l+1
 	lda	#>(cottage_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$60
 
 	jsr	zx02_full_decomp
-
-	; copies from $2000 to $4000, intentionally slow for miniblind
-
-;	jsr	hgr_copy
-
-
-	; instead
-
-	lda	#$20
-	sta	DRAW_PAGE
-	jsr	hgr_copy_fast
-
 
 	;===================
 	; print title
 
 	jsr	intro_print_title
 
+
 	;====================
-	; save background
+	;====================
+	; walk loop
+	;====================
+	;====================
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-
-	;=======================
-	; walking
-
-;	jsr	save_bg_1x28
 
 cottage_walk_loop:
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
+	;===========================
+	; copy bg to current screen
+
+;       lda     #$60
+	jsr	hgr_copy_faster
 
 
 	;=======================
@@ -132,20 +118,6 @@ check_cottage_action2:
 	cmp	#1
 	bne	check_cottage_action3
 
-	;=======================
-	; un-draw the text box
-
-	; FIXME: have it auto-save to one of the slots
-
-;	lda	#12
-;	sta	SAVED_Y1
-;	lda	#100
-;	sta	SAVED_Y2
-
-;	lda	#0
-;	ldx	#39
-
-;	jsr	hgr_partial_restore2
 
 	;=======================
 	; display cottage text 2
@@ -157,18 +129,6 @@ check_cottage_action2:
 check_cottage_action3:
 	cmp	#13
 	bne	done_cottage_action
-
-	;=========================
-	; undraw the text box
-
-;	lda	#12
-;	sta	SAVED_Y1
-;	lda	#100
-;	sta	SAVED_Y2
-
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore2
 
 	;=========================
 	; display cottage text 3
@@ -184,6 +144,8 @@ finish_cottage_action:
 done_cottage_action:
 
 ;	jsr	wait_until_keypress
+
+	jsr	hgr_page_flip
 
 	lda	FRAME
 	bne	special2

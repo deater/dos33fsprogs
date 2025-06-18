@@ -46,12 +46,8 @@ all:	INTRO
 
 ###
 
-#		../hgr_routines/hgr_save_restore.s \
-#		../hgr_routines/hgr_partial_save.s \
-
-
 INTRO:	intro.o
-	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o INTRO intro.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
 intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../peasant_sprite.inc \
