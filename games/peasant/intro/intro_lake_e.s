@@ -28,60 +28,47 @@ intro_lake_east:
 	lda	#>lake_e_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#$60			; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
 	; copy to $400
 
-	jsr	gr_copy_to_page1
-
+	jsr	priority_copy
 
 	;=========================
-	; load bg to $2000 (PAGE1)
+	; load bg to $6000
 
 	lda	#<(lake_e_zx02)
 	sta	zx_src_l+1
 	lda	#>(lake_e_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$60
 
 	jsr	zx02_full_decomp
-
-;	jsr	hgr_copy
-
-	lda	#$20
-	sta	DRAW_PAGE
-	jsr	hgr_copy_fast
 
 	;================
 	; print title line
 
 	jsr	intro_print_title
 
-	;====================
-	; save background
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-
-	;=======================
-	; walking
-
-;	jsr	save_bg_1x28
+	;===================
+	;===================
+	; lake_e loop
+	;===================
+	;===================
 
 lake_e_walk_loop:
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-;
-;	jsr	restore_bg_1x28
+	;===========================
+	; copy bg to current screen
 
+	jsr	hgr_copy_faster
+
+
+	;==============
 	; draw peasant
 
 	lda	FRAME
@@ -91,14 +78,10 @@ lake_e_walk_loop:
 	lda	lake_e_path,X
 	bmi	done_lake_e
 	sta	PEASANT_X
-;	sta	CURSOR_X
 
 	inx
 	lda	lake_e_path,X
 	sta	PEASANT_Y
-;	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
@@ -132,6 +115,8 @@ done_lake_e_action:
 	jsr	animate_bubbles_e
 
 ;	jsr	wait_until_keypress
+
+	jsr	hgr_page_flip
 
 	lda	#3
 	jsr	wait_a_bit

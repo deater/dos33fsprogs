@@ -30,13 +30,13 @@ intro_knight:
 	lda	#>knight_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#$60			; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
 	; copy to $400
 
-	jsr	gr_copy_to_page1
+	jsr	priority_copy
 
 
 	;=====================
@@ -47,15 +47,9 @@ intro_knight:
 	lda	#>(knight_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$60
 
 	jsr	zx02_full_decomp
-
-;	jsr	hgr_copy
-
-	lda	#$20
-	sta	DRAW_PAGE
-	jsr	hgr_copy_fast
 
 	;==================
 	; print title line
@@ -63,27 +57,19 @@ intro_knight:
 	jsr	intro_print_title
 
 
-	;====================
-	; save background
-
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-
 	;=======================
-	; walking
-
-;	jsr	save_bg_1x28
+	;=======================
+	; knight walk loop
+	;=======================
+	;=======================
 
 knight_walk_loop:
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
+	;===========================
+	; copy bg to current screen
 
-;	jsr	restore_bg_1x28
+	jsr	hgr_copy_faster
+
 
 	;======================
 	; draw peasant
@@ -148,6 +134,8 @@ done_knight_action:
 
 
 ;	jsr	wait_until_keypress
+
+	jsr	hgr_page_flip
 
 	lda	#3
 	jsr	wait_a_bit

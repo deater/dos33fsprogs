@@ -82,7 +82,7 @@ mockingboard_notfound:
 
 	lda	ESC_PRESSED
 	bne	escape_handler
-.if 0
+
 	;========================
 	; Lake West
 	;========================
@@ -115,7 +115,7 @@ mockingboard_notfound:
 	;========================
 
 	jsr	intro_knight
-.endif
+
 	;========================
 	; Start actual game
 	;========================
@@ -156,10 +156,10 @@ mockingboard_notfound2:
 .include "new_game.s"
 
 .include "intro_cottage.s"
-;.include "intro_lake_w.s"
-;.include "intro_lake_e.s"
-;.include "intro_river.s"
-;.include "intro_knight.s"
+.include "intro_lake_w.s"
+.include "intro_lake_e.s"
+.include "intro_river.s"
+.include "intro_knight.s"
 
 .include "../draw_peasant_new.s"
 

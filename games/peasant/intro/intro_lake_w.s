@@ -31,32 +31,27 @@ intro_lake_west:
 	lda	#>lake_w_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#$60			; temporarily load to $6000
 
 	jsr     zx02_full_decomp
 
 	; copy to $400
 
-	jsr	gr_copy_to_page1
+;	jsr	gr_copy_to_page1
 
+	jsr	priority_copy
 
 	;=================================
-	; load background to $2000 (PAGE1)
+	; load background to $6000 (PAGE1)
 
 	lda	#<(lake_w_zx02)
 	sta	zx_src_l+1
 	lda	#>(lake_w_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$60
 
 	jsr	zx02_full_decomp
-
-;	jsr	hgr_copy
-
-	lda	#$20
-	sta	DRAW_PAGE
-	jsr	hgr_copy_fast
 
 
 	;================
@@ -65,27 +60,17 @@ intro_lake_west:
 	jsr	intro_print_title
 
 
-	;====================
-	; save background
-
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-
-	;=======================
-	; walking
-
-;	jsr	save_bg_1x28
+	;================
+	;================
+	; walk loop
+	;================
+	;================
 
 lake_w_walk_loop:
+	;===========================
+	; copy bg to current screen
 
-;	lda	PEASANT_X
-;	sta	CURSOR_X
-;	lda	PEASANT_Y
-;	sta	CURSOR_Y
-
-;	jsr	restore_bg_1x28
+	jsr	hgr_copy_faster
 
 	;===============
 	; draw peasant
@@ -150,6 +135,8 @@ done_lake_w_action:
 
 
 ;	jsr	wait_until_keypress
+
+	jsr	hgr_page_flip
 
 	lda	#3
 	jsr	wait_a_bit

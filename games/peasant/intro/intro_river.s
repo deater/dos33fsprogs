@@ -29,17 +29,17 @@ intro_river:
 	lda	#>river_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$20			; temporarily load to $2000
+	lda	#$60			; temporarily load to $6000
 
 	jsr	zx02_full_decomp
 
 	; copy to $400
 
-	jsr	gr_copy_to_page1
+	jsr	priority_copy
 
 
 	;====================
-	; load bg to $2000 (PAGE1)
+	; load bg to $6000
 
 
 	lda	#<(river_zx02)
@@ -47,15 +47,10 @@ intro_river:
 	lda	#>(river_zx02)
 	sta	zx_src_h+1
 
-	lda	#$20
+	lda	#$60
 
 	jsr	zx02_full_decomp
 
-;	jsr	hgr_copy
-
-	lda	#$20
-	sta	DRAW_PAGE
-	jsr	hgr_copy_fast
 
 	;================
 	; print title
@@ -64,9 +59,18 @@ intro_river:
 
 
 	;=======================
-	; walking
+	;=======================
+	; river walk loop
+	;=======================
+	;=======================
 
 river_walk_loop:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
 
 	;====================
 	; draw peasant
@@ -116,6 +120,8 @@ done_river_action:
 
 
 ;	jsr	wait_until_keypress
+
+	jsr	hgr_page_flip
 
 	lda	#3
 	jsr	wait_a_bit
