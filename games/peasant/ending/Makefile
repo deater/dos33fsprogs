@@ -25,7 +25,7 @@ ending.o:	ending.s \
 		../hgr_routines/hgr_font.s \
 		../hgr_routines/hgr_input.s \
 		../hgr_routines/hgr_2x14_sprite_mask.s \
-		../hgr_routines/hgr_sprite.s ../hgr_routines/hgr_save_restore.s \
+		../hgr_routines/hgr_sprite.s \
 		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
 		../score.s ../inventory/inventory.inc

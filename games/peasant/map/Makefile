@@ -18,7 +18,6 @@ map.o:	map.s ../zp.inc ../inventory/inventory.inc \
 		../hgr_routines/hgr_rectangle.s \
 		../hgr_routines/hgr_font.s \
 		../hgr_routines/hgr_input.s \
-		../hgr_routines/hgr_save_restore.s \
 		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
 		../score.s
