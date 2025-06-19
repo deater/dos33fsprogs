@@ -15,15 +15,21 @@ game_over:
 	sta	LEVEL_OVER
 	sta	FRAME
 
-;	jsr	hgr_make_tables
 
 	; FIXME: should clear DRAW_SCREEN not necessarily PAGE2
 
-	jsr	hgr2_clearscreen
+;	jsr	hgr2_clearscreen
 
 	; update score
 
 	jsr	update_score
+
+	;====================================
+	; move draw page to current visible
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
 
 
 	;===========================
@@ -35,7 +41,9 @@ game_over:
 	lda	#>game_over_zx02
 	sta	zx_src_h+1
 
-	lda	#$40
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
 
 	jsr	zx02_full_decomp
 
@@ -96,7 +104,6 @@ make_beep:
 	sta	speaker_frequency
 	lda	animation_note_lens,X
 	sta	speaker_duration
-;	jsr	speaker_beep
 	jsr	speaker_tone
 
 	ldx	FRAME
@@ -123,13 +130,18 @@ done_beep:
 
 	;=====================
 	; draw videlectrix
+	;=====================
 
 	lda	#<videlectrix_zx02
 	sta	zx_src_l+1
 	lda	#>videlectrix_zx02
 	sta	zx_src_h+1
 
-	lda	#$40
+	; draw to currently visible page
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
 
 	jsr	zx02_full_decomp
 
@@ -141,12 +153,10 @@ done_beep:
 	lda	#8
 	sta	CURSOR_X
 
-	lda	#136
+	lda	#128
         sta     CURSOR_Y
 
         jsr     disp_put_string_cursor
-
-
 
 	jsr	load_menu
 
@@ -164,7 +174,7 @@ done_beep:
 
 .include "graphics_over/game_over_graphics.inc"
 
-.include "graphics_over/game_over_animation.inc"
+.include "sprites_over/game_over_animation.inc"
 
 game_over_text:
 .byte 34,"Thanks so much for playing",13
