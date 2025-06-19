@@ -29,7 +29,8 @@ draw_bird:
 
 	ldy	#0			; bird always erase slot #0
 
-	jsr	hgr_draw_sprite_save
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite_mask
 
 done_draw_bird:
 

@@ -40,8 +40,8 @@ game_loop:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 
 	;=====================
@@ -142,6 +142,7 @@ really_level_over:
 
 	rts
 
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -157,10 +158,13 @@ really_level_over:
 
 .include "../vblank.s"
 
-.include "inside_lady_actions.s"
-
 .include "../hgr_routines/hgr_copy_fast.s"
 
 ;.include "../wait.s"
+.endif
+
+.include "../location_common/include_bottom.s"
+
+.include "inside_lady_actions.s"
 
 .include "../hgr_routines/hgr_sprite.s"

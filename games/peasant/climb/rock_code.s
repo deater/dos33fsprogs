@@ -76,7 +76,7 @@ really_draw_rock:
 	ldy	CURRENT_ROCK
 	iny
 
-	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite_mask
 
 skip_rock:
 	inc	CURRENT_ROCK

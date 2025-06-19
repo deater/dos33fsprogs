@@ -24,7 +24,7 @@ peasant_falling:
 
 	; restore bg behind peasant
 
-	jsr	erase_peasant
+;	jsr	erase_peasant
 
 
 	; falling, see if hit bottom
@@ -94,7 +94,7 @@ climb_continue:
 
 	; restore bg behind peasant
 
-	jsr	erase_peasant
+;	jsr	erase_peasant
 
 	;=========================
 	;=========================
@@ -264,17 +264,17 @@ peasant_the_same:
 	;===========================
 
 	; restore bg behind peasant
-erase_peasant:
+;erase_peasant:
 
 	; erase flame if applicable
-	ldy	#5
-	jsr	hgr_partial_restore_by_num
+;	ldy	#5
+;	jsr	hgr_partial_restore_by_num
 
 	; erase peasant
 
-	ldy	#4
+;	ldy	#4
 
-	jmp	hgr_partial_restore_by_num	; tail call
+;	jmp	hgr_partial_restore_by_num	; tail call
 
 
 ; when peasants collide

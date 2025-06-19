@@ -172,7 +172,6 @@ update_screen:
 	rts
 
 .include "../hgr_routines/hgr_sprite_mask.s"
-.include "../hgr_routines/hgr_copy_faster.s"
 
 .include "../location_common/include_bottom.s"
 

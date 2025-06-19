@@ -79,7 +79,6 @@ cliff_climb:
 
 	jsr	zx02_full_decomp
 
-
 	;==========================
 	;==========================
 	; main loop
@@ -354,29 +353,21 @@ reset_enemy_state:
 	;====================================
 	; includes
 
-;	.include	"../hgr_routines/hgr_sprite.s"
-
 	.include	"rock_code.s"
 	.include	"bird_code.s"
 
-
 	.include	"keyboard_climb.s"
-
-;	.include	"../wait.s"
 
 	.include	"draw_peasant_climb.s"
 
 	.include	"move_peasant_climb.s"
 
-;	.include	"../hgr_routines/hgr_sprite_save.s"
-;	.include	"../hgr_routines/hgr_partial_restore.s"
-
-;	.include	"../gr_copy.s"
 	.include	"../priority_copy.s"
-	.include	"../hgr_routines/hgr_copy_faster.s"
+;	.include	"../hgr_routines/hgr_copy_faster.s"
 
-	.include	"../gr_offsets.s"
+;	.include	"../gr_offsets.s"
 
+	.include	"../hgr_routines/hgr_sprite_mask.s"
 	.include 	"../hgr_routines/hgr_sprite_bg_mask.s"
 
 climb_text_zx02:
@@ -491,6 +482,6 @@ peasant_mask_data_h = peasant_sprites_location+170
 climbing_sprite_data:
 	.incbin "../sprites_peasant/climbing_sprites.zx02"
 
+climb_end:
 
-
-
+.assert (>climb_end - >cliff_climb) < $30 , error, "loader too big"

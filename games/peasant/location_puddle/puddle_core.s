@@ -38,8 +38,8 @@ game_loop:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;=====================
 	; handle mud puddle
@@ -142,7 +142,7 @@ level_over:
 really_level_over:
 
 	rts
-
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -169,5 +169,7 @@ really_level_over:
 
 ;puddle_text_zx02:
 ;.incbin "../text/DIALOG_PUDDLE.ZX02"
+.endif
 
+.include "../location_common/include_bottom.s"
 .include "puddle_actions.s"

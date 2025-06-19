@@ -52,8 +52,8 @@ skip_level_specific:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;====================
 	; always draw peasant
@@ -89,7 +89,7 @@ oops_new_location:
 level_over:
 
 	rts
-
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -112,5 +112,8 @@ level_over:
 .include "../keyboard.s"
 
 .include "../vblank.s"
+.endif
 
+.include "../location_common/include_bottom.s"
 .include "haystack_actions.s"
+

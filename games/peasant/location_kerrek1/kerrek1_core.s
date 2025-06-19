@@ -54,8 +54,8 @@ game_loop:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;======================
 	; always draw peasant
@@ -116,6 +116,10 @@ level_over:
 
 	rts
 
+
+.include "../location_common/include_bottom.s"
+
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -131,12 +135,14 @@ level_over:
 
 .include "../vblank.s"
 
-.include "kerrek1_actions.s"
-.include "sprites_kerrek1/kerrek_sprites.inc"
-
 .include "../hgr_routines/hgr_copy_fast.s"
 
 ;.include "../wait.s"
-.include "../wait_a_bit.s"
 
+.endif
+
+.include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
+.include "kerrek1_actions.s"
+.include "sprites_kerrek1/kerrek_sprites.inc"
+

@@ -168,7 +168,7 @@ mockingboard_notfound2:
 .include "../hgr_routines/hgr_sprite.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
+;.include "../gr_offsets.s"
 ;.include "../hgr_routines/hgr_partial_restore.s"
 ;.include "../hgr_routines/hgr_partial_save.s"
 
@@ -244,4 +244,4 @@ no_peasant_wrap:
 .include "../peasant_sprite.inc"
 
 .include "../priority_copy.s"
-.include "../hgr_routines/hgr_copy_faster.s"
+;.include "../hgr_routines/hgr_copy_faster.s"

@@ -73,8 +73,6 @@ DISK4
 	HIDDEN_GLEN	22-23
 	????		24-34
 
-	INSIDE		9-12		13489 (4)
-
 DISK5
 	WBOOT5		0		159
 	CLIFF_BASE	1-2		5804 (2)
@@ -87,3 +85,23 @@ DISK5
 	TROGDOR		19-22		14782 (4)
 	ENDING		23-27		17038 (5)
 	???		28-34
+
+
+
+
+
+Actual Map
+
+  0         1         2           3         4                5
+Hidden	  gary      kerrek1     well      yellow tree    waterfall
+Glen
+          haystack   puddle    archery     river          knight
+
+	jhonka      cottage     lake w    lake e           inn
+                                                           (inside inn)
+
+	ned         wavy        kerrek2   lady cottage     burninate
+       (inside ned)                        (inside lady)
+
+
+                                   14     | 10

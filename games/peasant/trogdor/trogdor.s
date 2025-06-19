@@ -304,7 +304,7 @@ draw_sprite_h:
 
 .include "move_peasant_tiny.s"
 .include "draw_peasant_tiny.s"
-.include "../gr_offsets.s"
+;.include "../gr_offsets.s"
 
 .include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy_fast.s"

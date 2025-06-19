@@ -263,6 +263,7 @@ qload_hd.o:	qload_hd.s qboot.inc \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
 		hgr_routines/hgr_text_box.s \
+		hgr_routines/hgr_copy_faster.s \
 		text/word_list.s \
 		clear_bottom.s \
 		hgr_routines/hgr_clearscreen.s \
@@ -299,6 +300,7 @@ qload.o:	qload.s qboot.inc \
 		hgr_routines/hgr_input.s \
 		hgr_routines/hgr_tables.s \
 		hgr_routines/hgr_text_box.s \
+		hgr_routines/hgr_copy_faster.s \
 		text/word_list.s \
 		clear_bottom.s \
 		hgr_routines/hgr_clearscreen.s \
@@ -400,6 +402,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr_page_flip qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s load_peasant_sprites qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s hgr_copy_faster qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s gr_offsets qload.lst >> qload.inc
 #	echo "hposn_high = \$$BA00" >> qload.inc
 #	echo "hposn_low = \$$BB00" >> qload.inc
 #	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc

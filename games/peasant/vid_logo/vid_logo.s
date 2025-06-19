@@ -517,7 +517,7 @@ delays:
 .include "../redbook_sound.inc"
 
 .include "../text_print.s"
-.include "../gr_offsets.s"
+;.include "../gr_offsets.s"
 
 .include "../wait_a_bit.s"
 

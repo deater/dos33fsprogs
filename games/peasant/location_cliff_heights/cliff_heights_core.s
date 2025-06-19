@@ -98,8 +98,8 @@ level_good:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;=====================
 	; draw lightning
@@ -173,6 +173,7 @@ level_over:
 exiting_cliff:
 	rts
 
+.if 0
 
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
@@ -198,6 +199,12 @@ exiting_cliff:
 
 .include "../gr_copy.s"
 ;.include "../hgr_routines/hgr_copy.s"
+
+.endif
+
+.include "../location_common/include_bottom.s"
+
+.include "../hgr_routines/hgr_sprite.s"
 
 .include "heights_actions.s"
 

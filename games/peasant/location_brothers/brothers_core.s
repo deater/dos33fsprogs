@@ -126,8 +126,8 @@ skip_level_specific:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;====================
 	; always draw peasant
@@ -251,7 +251,7 @@ mendelev_arm_moved:
 
 	jmp	hgr_draw_sprite		;
 
-
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -259,7 +259,6 @@ mendelev_arm_moved:
 .include "../gr_offsets.s"
 
 ;.include "../hgr_routines/hgr_partial_restore.s"
-.include "../hgr_routines/hgr_sprite.s"
 
 .include "../wait_a_bit.s"
 
@@ -275,9 +274,13 @@ mendelev_arm_moved:
 .include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy_fast.s"
 
-.include "sprites_brothers/archery_sprites.inc"
+
 
 ;brothers_text_zx02:
 ;.incbin "../text/DIALOG_BROTHERS.ZX02"
+.endif
 
+.include "../hgr_routines/hgr_sprite.s"
+.include "../location_common/include_bottom.s"
 .include "brothers_actions.s"
+.include "sprites_brothers/archery_sprites.inc"

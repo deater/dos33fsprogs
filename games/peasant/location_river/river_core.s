@@ -46,8 +46,8 @@ game_loop:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 
 	;====================
@@ -148,7 +148,7 @@ to_left_of_inn:
 	rts
 
 
-
+.if 0
 
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
@@ -165,10 +165,15 @@ to_left_of_inn:
 
 .include "../vblank.s"
 
-.include "river_actions.s"
 
-.include "animate_river.s"
 
-.include "../hgr_routines/hgr_sprite.s"
+
 .include "../hgr_routines/hgr_copy_fast.s"
 
+.endif
+
+.include "../location_common/include_bottom.s"
+
+.include "../hgr_routines/hgr_sprite.s"
+.include "river_actions.s"
+.include "animate_river.s"

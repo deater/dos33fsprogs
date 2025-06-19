@@ -57,8 +57,8 @@ game_loop:
 	;===========================
 	; copy bg to current screen
 
-	lda	#$60
-	jsr	hgr_copy_fast
+;	lda	#$60
+	jsr	hgr_copy_faster
 
 	;=====================
 	; always draw peasant
@@ -112,7 +112,7 @@ level_over:
 exiting_cliff:
 	rts
 
-
+.if 0
 .include "../draw_peasant_new.s"
 .include "../move_peasant_new.s"
 
@@ -128,6 +128,11 @@ exiting_cliff:
 
 .include "../vblank.s"
 
+.include "../hgr_routines/hgr_copy_fast.s"
+
+.endif
+
+.include "../location_common/include_bottom.s"
+
 .include "cliff_base_actions.s"
 
-.include "../hgr_routines/hgr_copy_fast.s"
