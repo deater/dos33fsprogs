@@ -307,7 +307,7 @@ qload.o:	qload.s qboot.inc \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s \
-		loadsave_menu.s \
+		loadsave/loadsave_menu.s \
 		load_peasant_sprites.s
 	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
 
@@ -749,6 +749,7 @@ clean:
 	cd hgr_routines && make clean
 	cd intro && make clean
 	cd inventory && make clean
+	cd loadsave && make clean
 	cd location_brothers && make clean
 	cd location_burninated && make clean
 	cd location_cliff_base && make clean

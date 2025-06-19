@@ -4,8 +4,14 @@
 
 	; FIXME: we can share some of the code here a bit more
 
-; we load one sector (256 or 512 bytes depending) to $BA00 currently
+; we load one sector (256 or 512 bytes depending) to $E800 currently
 ; SAVE1 is at $00, SAVE2 at $20, SAVE3 at $40
+
+
+; original was 20 which looks nicer
+; 12 isn't great but lets all of the game over message appear
+
+load_menu_location = 12			; Y position
 
 
 	;=====================
@@ -170,40 +176,20 @@ save_memset:
 	lda	#0
 	sta	INVENTORY_Y
 
-	;==========================
-	; save bg range to restore
-
-;	lda	#20
-;	sta	BOX_Y1
-;	sta	SAVED_Y1
-
-;	lda	#135
-;	sta	BOX_Y2
-;	sta	SAVED_Y2
-
-;	jsr	hgr_partial_save
-
-
 	;====================
 	; draw text box
 draw_loadsave_box:
 
-;	lda	#0
-;	sta	BOX_X1H
-
-;	lda	#14
-	lda	#2		; 14/7=2
+	lda	#2			; 14/7=2
 	sta	BOX_X1L
-	lda	#20
+
+	lda	#load_menu_location	; default was 20
 	sta	BOX_Y1
 
-;	lda	#1
-;	sta	BOX_X2H
-;	lda	#5		; ?
-
-	lda	#38		; 261/7=~38
+	lda	#38			; 261/7=~38
 	sta	BOX_X2L
-	lda	#135
+
+	lda	#load_menu_location+115	; default was 135
 	sta	BOX_Y2
 
 	jsr	draw_box
@@ -400,15 +386,15 @@ done_ls_keypress:
 ; BACK
 
 load_message:
-.byte 10,28
+.byte 10,load_menu_location+8			; 28
 .byte	"it's a load game menu",0
 
 save_message:
-.byte 10,28
+.byte 10,load_menu_location+8			; 28
 .byte	"it's a save game menu",0
 
 save_details:
-.byte	10,44
+.byte	10,load_menu_location+24		; 44
 save_pts1:
 .byte	"       115 PTS",13
 save_name1:
@@ -424,10 +410,14 @@ save_name3:
 .byte  0
 
 save_titles:
-.byte	6,44, "SLOT 1",0
-.byte	6,68, "SLOT 2",0
-.byte	6,92, "SLOT 3",0
-.byte	6,116,"BACK",0
+.byte	6,load_menu_location+24		; 44
+.byte	"SLOT 1",0
+.byte	6,load_menu_location+48		; 68
+.byte	"SLOT 2",0
+.byte	6,load_menu_location+72		; 92
+.byte	"SLOT 3",0
+.byte	6,load_menu_location+96		; 116
+.byte	"BACK",0
 
 
         ;========================
@@ -452,7 +442,7 @@ overwrite_entry_ls:
 	asl
 	asl
 	asl
-	adc	#44
+	adc	#load_menu_location+24		; 44
 	sta	CURSOR_Y
 
 	ldx	#6	; assume 6 chars wide
@@ -489,10 +479,6 @@ load_game:
 	bcs	done_load
 
 	; actually load it
-;	lda	INVENTORY_Y		; this is the pointer?
-;	clc
-;	adc	#LOAD_SAVE1
-;	sta	WHICH_LOAD
 
 	lda	#LOAD_SAVE1		; should already be loaded?
 	jsr	load_file		; is this necessary?
@@ -631,7 +617,6 @@ confirm_action:
 	lda	#>are_you_sure
 	sta	OUTH
 
-;	jsr	hgr_text_box_nosave
 	jsr	hgr_text_box
 
 wait_confirmation:
@@ -653,9 +638,9 @@ dont_do_it:
 
 
 are_you_sure:
-;.byte  0,43,40, 0,240,90
-.byte      6,40,    35,90
-.byte  10,61
+.byte	6,load_menu_location+20 	; 40	; upper left for box
+.byte	35,load_menu_location+70	; 90	; lower right for box
+.byte	10,load_menu_location+41	; 61	; print location
 .byte  "ARE YOU SURE? (Y/N)",0
 
 

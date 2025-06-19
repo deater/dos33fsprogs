@@ -1,0 +1,4 @@
++ different Y locations based on in game (20) or game_over (12)
++ add little icons to load screen
++ combine score calculation code with update_score code
+

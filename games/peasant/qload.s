@@ -111,7 +111,7 @@ load_file:
 .include "clear_bottom.s"
 .include "hgr_routines/hgr_clearscreen.s"	; maybe only for title?
 .include "gr_offsets.s"
-.include "loadsave_menu.s"
+.include "loadsave/loadsave_menu.s"
 .include "wait_keypress.s"
 .include "random8.s"
 .include "score.s"

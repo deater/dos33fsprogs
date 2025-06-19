@@ -158,7 +158,22 @@ done_beep:
 
         jsr     disp_put_string_cursor
 
+	; return DRAW_PAGE to original
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
 	jsr	load_menu
+
+	; we pressed escape at the load menu?
+	; what do we even do then?  game over again?
+
+	; return DRAW_PAGE to original
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
 
 	rts
 
