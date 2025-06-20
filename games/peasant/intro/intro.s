@@ -12,6 +12,8 @@
 .include "../music/music.inc"
 .include "../peasant_sprite.inc"
 
+DEFAULT_WAIT = 1	; was 3 before we changed background copy?
+
 peasant_quest_intro:
 
 	; we get here from "tips"
@@ -180,6 +182,7 @@ knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priorit
 
 
 .include "animate_bubbles.s"
+.include "../location_river/animate_river.s"
 
 skip_text:
         .byte 0,2,"ESC Skips",0

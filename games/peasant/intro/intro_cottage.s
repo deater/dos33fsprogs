@@ -97,7 +97,8 @@ cottage_walk_loop:
 	;=======================
 	; FRAMES  0 - ?      display cottage text 1, wait 25
 	; FRAMES  1 - 12     display cottage text 2, wait 12 except wait 3 as 12
-	; FRAMES 13 -        display cottage text 3
+	; FRAMES 23 -        display cottage text 3
+	;	we move this to 23 from 13?
 
 	lda	FRAME
 check_cottage_action1:
@@ -114,8 +115,9 @@ check_cottage_action1:
 	jmp	finish_cottage_action
 
 check_cottage_action2:
-	cmp	#1
-	bne	check_cottage_action3
+	; if less than 23
+	cmp	#23
+	bcs	check_cottage_action3		; bgt
 
 
 	;=======================
@@ -126,8 +128,8 @@ check_cottage_action2:
 	jmp	finish_cottage_action
 
 check_cottage_action3:
-	cmp	#13
-	bne	done_cottage_action
+;	cmp	#13
+;	bne	done_cottage_action
 
 	;=========================
 	; display cottage text 3
@@ -152,25 +154,14 @@ done_cottage_action:
 	; extra delays
 
 	lda	FRAME
-	bne	special2
+	bne	regular_wait
 
 	; frame==0, wait 25
 	lda	#25
 	jmp	now_wait
 
-special2:
-	; frame==1, wait 3?
-
-	cmp	#1
-	bne	regular_wait
-
-	; otherwise wait 12?
-
-	lda	#12
-	jmp	now_wait
-
 regular_wait:
-	lda	#3
+	lda	#DEFAULT_WAIT
 now_wait:
 	jsr	wait_a_bit
 

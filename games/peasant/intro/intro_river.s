@@ -91,12 +91,17 @@ river_walk_loop:
 
 	;=========================
 	; handle special action
-
+	;========================
+	; 0..9 - nothing
+	; 10..? - print message
+	; 15    - change direction walking
 
 	lda	FRAME
 check_river_action1:
 	cmp	#10
-	bne	check_river_action2
+	bcc	done_river_action
+
+	; over 10, print message
 
 	lda	#<river_message1
 	sta	OUTL
@@ -105,12 +110,12 @@ check_river_action1:
 
 	jsr	hgr_text_box
 
-	jmp	done_river_action
+	; if 15 switch direction
 
-check_river_action2:
+	lda	FRAME
 	cmp	#15
 	bne	done_river_action
-;	jsr	hgr_restore
+
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
@@ -123,7 +128,7 @@ done_river_action:
 
 	jsr	hgr_page_flip
 
-	lda	#3
+	lda	#DEFAULT_WAIT
 	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
@@ -180,5 +185,3 @@ river_path:
 	.byte 38,105
 	.byte $FF,$FF
 
-
-.include "../location_river/animate_river.s"

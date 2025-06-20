@@ -37,8 +37,6 @@ intro_lake_west:
 
 	; copy to $400
 
-;	jsr	gr_copy_to_page1
-
 	jsr	priority_copy
 
 	;=================================
@@ -82,63 +80,61 @@ lake_w_walk_loop:
 	lda	lake_w_path,X
 	bmi	done_lake_w
 	sta	PEASANT_X
-;	sta	CURSOR_X
 
 	inx
 	lda	lake_w_path,X
 	sta	PEASANT_Y
-;	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
 
 	;============================
 	; handle special action
-
+	;============================
+	; FRAME  0 -- 19         cottage_text_3
+	; FRAME 20 -- ??         lake_w_text
 
 	lda	FRAME
 check_lake_w_action1:
-	cmp	#0
-	bne	check_lake_w_action2
+	cmp	#20
+	bcs	check_lake_w_action2	; bge
 
 	;==========================
 	; re-display cottage text 3
 	lda	#<cottage_text3
 	sta	OUTL
 	lda	#>cottage_text3
-        sta	OUTH
-        jsr	hgr_text_box
+
 	jmp	done_lake_w_action
 
 check_lake_w_action2:
-	cmp	#20
-	bne	done_lake_w_action
-
-	;=========================
-	; clear old text
-
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore
+;	cmp	#20
+;	bne	done_lake_w_action
 
 	;===========================
 	; display text
 
-	jsr	display_lake_w_text1
+	;============================
+	; display cottage text 1
+	;============================
+display_lake_w_text1:
+
+	lda	#<lake_w_message1
+	sta	OUTL
+	lda	#>lake_w_message1
 
 done_lake_w_action:
+        sta	OUTH
+        jsr	hgr_text_box
 
+	;=========================
+	; animate bubbles
 
 	jsr	animate_bubbles_w
 
-
-;	jsr	wait_until_keypress
-
 	jsr	hgr_page_flip
 
-	lda	#3
+	lda	#DEFAULT_WAIT
 	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
@@ -171,20 +167,6 @@ done_lake_w:
 
 ; walk to edge
 
-
-	;============================
-	; display cottage text 1
-	;============================
-display_lake_w_text1:
-
-	lda	#<lake_w_message1
-	sta	OUTL
-	lda	#>lake_w_message1
-	sta	OUTH
-
-	jsr	hgr_text_box
-
-	rts
 
 
 lake_w_path:

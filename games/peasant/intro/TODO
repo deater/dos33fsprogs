@@ -1,0 +1,6 @@
++ add "walk to support"
++ update knight level (remove knight from bg, then draw sprite)
++ move "ok to start" comment to knight level
++ adjust timing of walking so time to read messages
++ see if we can size-optimize to get knight code back from MUSIC
+

@@ -81,24 +81,24 @@ knight_walk_loop:
 	lda	knight_path,X
 	bmi	done_knight
 	sta	PEASANT_X
-	sta	CURSOR_X
 
 	inx
 	lda	knight_path,X
 	sta	PEASANT_Y
-	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
 
 	jsr	draw_peasant
 
-
-
+	;=====================
+	; Do action
+	;=====================
+	; FRAME 0..7 -- print river message
+	; FRAME 8..16 -- print nothing
+	; FRAME 17..?? -- print knight1 message
 
 	lda	FRAME
 check_knight_action1:
-	cmp	#0
-	bne	check_knight_action2
+	cmp	#8
+	bcs	check_knight_action2
 
 	lda	#<river_message1
 	sta	OUTL
@@ -110,16 +110,12 @@ check_knight_action1:
 	jmp	done_knight_action
 
 check_knight_action2:
-	cmp	#8
-	bne	check_knight_action3
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore
-	jmp	done_knight_action
+	cmp	#17
+	bcc	done_knight_action
 
 check_knight_action3:
-	cmp	#17
-	bne	done_knight_action
+;	cmp	#17
+;	bne	done_knight_action
 
 	lda	#<knight_message1
 	sta	OUTL
@@ -137,7 +133,7 @@ done_knight_action:
 
 	jsr	hgr_page_flip
 
-	lda	#3
+	lda	#DEFAULT_WAIT
 	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
@@ -154,6 +150,17 @@ done_knight_action:
 	; done
 
 done_knight:
+
+	; we want to make sure we end with draw_page=PAGE2 ($20)
+	; otherwise when the loader loads to page2 we see garbage on
+	; the screen
+
+;	lda	DRAW_PAGE
+;	bne	done_knight_good
+
+;	jsr	hgr_page_flip
+
+done_knight_good:
 
 	rts
 

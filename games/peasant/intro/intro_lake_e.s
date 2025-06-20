@@ -1,5 +1,7 @@
 ; Lake East
 
+; apparently nothing witty to say about this one
+
 	;========================
 	; Lake East
 	;========================
@@ -87,11 +89,17 @@ lake_e_walk_loop:
 
 	;=======================
 	; handle special action
+	;=======================
+	; FRAME 0..9 - nothing
+	; FRAME 10..?? - lake_e_message1
+	; FRAME 28. - change peasant direction?
 
 	lda	FRAME
 check_lake_e_action1:
-	cmp	#10
-	bne	check_lake_e_action2
+	cmp	#10			; <10 do nothing extra
+	bcc	done_lake_e_action
+
+	; 10 and above, print message
 
 	lda	#<lake_e_message1
 	sta	OUTL
@@ -99,18 +107,19 @@ check_lake_e_action1:
 	sta	OUTH
 	jsr	hgr_text_box
 
-	jmp	done_lake_e_action
+	; if frame #28 change peasant to be walking upward
 
-check_lake_e_action2:
+	lda	FRAME
 	cmp	#28
 	bne	done_lake_e_action
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore
+
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
 
 done_lake_e_action:
+
+	;=======================
+	; animate bubbles
 
 	jsr	animate_bubbles_e
 
@@ -118,7 +127,7 @@ done_lake_e_action:
 
 	jsr	hgr_page_flip
 
-	lda	#3
+	lda	#DEFAULT_WAIT
 	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
