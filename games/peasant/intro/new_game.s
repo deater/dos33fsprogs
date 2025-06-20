@@ -29,7 +29,8 @@ start_new_game:
         lda     LCBANK1
         lda     LCBANK1
 
-	; load parse_input compressed to $2000
+	; load parse_input compressed to $6000
+	; (was $2000 but that puts garbage on screen)
 
         lda     #LOAD_PARSE_INPUT
         sta     WHICH_LOAD
@@ -40,10 +41,10 @@ start_new_game:
 
 	lda	#$00
 	sta	zx_src_l+1
-        lda	#$20
+        lda	#$60
         sta     zx_src_h+1
 
-        lda     #$EE
+        lda     #>parse_input_location
 
         jsr     zx02_full_decomp
 
@@ -122,13 +123,8 @@ start_new_game:
 	;==============================
 	; load initial peasant sprites
 
-	; urgh over-writes $6000 where intro code lives
-	; make it use $4000 again?
-
-; FIXME: not needed anymore
-
-;	lda	WHICH_PEASANT_SPRITES
-;	jsr	load_peasant_sprites
+	; not needed: we get here either via INTRO which loads them
+	;	or LOAD which in theory handles things properly
 
 	;==============================
 	; start in KNIGHT file

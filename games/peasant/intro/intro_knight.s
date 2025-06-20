@@ -151,17 +151,6 @@ done_knight_action:
 
 done_knight:
 
-	; we want to make sure we end with draw_page=PAGE2 ($20)
-	; otherwise when the loader loads to page2 we see garbage on
-	; the screen
-
-;	lda	DRAW_PAGE
-;	bne	done_knight_good
-
-;	jsr	hgr_page_flip
-
-done_knight_good:
-
 	rts
 
 
@@ -195,6 +184,7 @@ knight_path:
 	.byte 16,107
 	.byte 17,107
 	.byte 18,107
+	.byte 18,107	; extra one so we end on PAGE1?
 	.byte $FF,$FF
 
 score_text:

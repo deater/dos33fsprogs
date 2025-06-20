@@ -1,5 +1,7 @@
 ; Peasant's Quest
 
+; o/~ One Knight in Peasantry makes a hard man humble o/~
+
 ; Knight (location 5,2)
 
 ; by Vince `deater` Weaver	vince@deater.net

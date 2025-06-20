@@ -10,4 +10,4 @@ hposn_low			= $ea00		; 256 bytes
 hposn_high			= $eb00		; 256 bytes
 collision_location		= $ec00		; 256 bytes
 verb_table			= $ed00		; 256 bytes
-
+parse_input_location		= $ee00		; ? bytes

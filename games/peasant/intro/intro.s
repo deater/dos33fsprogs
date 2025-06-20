@@ -110,12 +110,12 @@ mockingboard_notfound:
 	; Start actual game
 	;========================
 
-	jsr	draw_peasant
+;	jsr	draw_peasant
 
 	; wait a bit
 
-	lda	#10
-	jsr	wait_a_bit
+;	lda	#10
+;	jsr	wait_a_bit
 
 escape_handler:
 

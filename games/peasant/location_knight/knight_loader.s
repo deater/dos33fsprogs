@@ -9,7 +9,6 @@
 knight_loader:
 
 DIALOG_LOCATION=knight_text_zx02
-;VERB_TABLE=mountain_pass_verb_table
 PRIORITY_LOCATION=knight_priority_zx02
 BG_LOCATION=knight_zx02
 CORE_LOCATION=knight_core_zx02
