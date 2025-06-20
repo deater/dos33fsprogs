@@ -44,13 +44,11 @@ game_loop:
 
 	;=====================
 	; level specific
-	;=====================
 
 skip_level_specific:
 
 	;=====================
 	; update screen
-	;=====================
 
 	jsr	update_screen
 
@@ -82,16 +80,29 @@ skip_level_specific:
 
 	jmp	game_loop
 
-oops_new_location:
-;	jmp	new_location
-
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 	cmp	#NEW_FROM_LOAD		; skip to end if loading save game
 	beq	really_level_over
+
+
+	;==========================================================
+	; be sure on DRAW_PAGE=$20 when leaving as we load to PAGE2
+
+	lda	DRAW_PAGE
+	bne	on_proper_page
+
+	jsr	update_screen
+	jsr	hgr_page_flip
+
+on_proper_page:
+
+	lda	PEASANT_NEWY
+	sta	PEASANT_Y
+
 
 	; specical case if going outside inn
 	; we don't want to end up behind inn
@@ -150,7 +161,6 @@ update_screen:
 	;===========================
 	; copy bg to current screen
 
-;	lda	#$60
 	jsr	hgr_copy_faster
 
 

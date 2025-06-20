@@ -1,0 +1,8 @@
++ have knight walk down once you have finished 3 trials
++ have collision in background change once that happens
++ remove knight from background sprite (might have to fix intro then too)
++ animate knight
++ fix color clash on knight sprite
++ fix so always on page1 (DRAW_PAGE=$00) when leaving
++ Fix leaving code so don't crash into INN (genericly)
+

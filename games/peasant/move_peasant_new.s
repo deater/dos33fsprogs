@@ -39,8 +39,10 @@ no_peasant_wrap:
 
 	bmi	peasant_x_negative		; if newx <0, handle
 
-	cmp	#40
-	bcs	peasant_x_toobig		; if newx>=40, hanfle (bge)
+	; peasant sprite 2 wide now?
+
+	cmp	#39
+	bcs	peasant_x_toobig		; if newx>=39, hanfle (bge)
 
 
 	;======================================
@@ -132,7 +134,7 @@ peasant_y_toobig:
 
 	lda	#45		; new Y location
 
-	jmp	done_movey
+	bne	done_exiting	; bra
 
 
 	;============================
@@ -142,52 +144,19 @@ peasant_y_negative:
 
 	lda	#160		; new Y location
 
-	jmp	done_movey
+	bne	done_exiting	; bra
 
 	; check edge of screen
 done_movey:
 	sta	PEASANT_Y
 
-	; if we moved off screen, don't re-draw peasant ?
-
 peasant_the_same:
 
 	rts
 
-.if 0
-	;===========================
-	; erase peasant
-	;===========================
-
-	; restore bg behind peasant
-erase_peasant:
-
-	; erase flame if applicable
-	ldy	#5
-	jsr	hgr_partial_restore_by_num
-
-
-;	lda	PEASANT_Y
-;	sta	SAVED_Y1
-;	clc
-;	adc	#30
-;	sta	SAVED_Y2
-
-;	ldx	PEASANT_X
-;	txa
-;	inx
-
-;	jmp	hgr_partial_restore	; tail call
-
-
-	ldy	#4
-
-	jmp	hgr_partial_restore_by_num	; tail call
-
-
-;	rts
-
-.endif
+done_exiting:
+	sta	PEASANT_NEWY	; don't update until actually on new screen
+	rts
 
 
 ; when peasants collide

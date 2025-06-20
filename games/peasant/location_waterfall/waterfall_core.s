@@ -31,33 +31,26 @@ waterfall_core:
 
 game_loop:
 
-
 	;======================
 	; move peasant
 
 	jsr	move_peasant
 
+	;======================
+	; check if level over
+
 	lda	LEVEL_OVER
-	bmi	oops_new_location
-	bne	level_over
-
-	;===========================
-	; copy bg to current screen
-
-	lda	#$60
-	jsr	hgr_copy_faster
+	bmi	oops_new_location		; we used to diffentiate
+	bne	level_over			; if we had more than one level
+						; per file
+	;======================
+	; level specific
 
 	;======================
-	; draw waterfall
+	; update screen
 
-	.include "draw_waterfall.s"
+	jsr	update_screen
 
-
-
-	;======================
-	; always draw peasant
-
-	jsr	draw_peasant
 
 	;=======================
 	; increment frame
@@ -73,7 +66,7 @@ game_loop:
 	; check keyboard
 
 	lda	PEASANT_DIR
-	sta	OLD_DIR
+	sta	OLD_DIR		; why?
 
 	jsr	check_keyboard
 
@@ -83,46 +76,58 @@ game_loop:
 
 	jmp	game_loop
 
-	;====================
-	; end of level
-
-oops_new_location:
-
-;	jmp	new_location
-
 
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 	; note: check reason for load if changing gamestate
 
+
+	;==========================================================
+	; be sure on DRAW_PAGE=$20 when leaving as we load to PAGE2
+
+	lda	DRAW_PAGE
+	bne	on_proper_page
+
+	jsr	update_screen
+	jsr	hgr_page_flip
+
+on_proper_page:
+
+	lda	PEASANT_NEWY
+	sta	PEASANT_Y
+
+
 	rts
-.if 0
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
 
 
 
-;.include "../hgr_routines/hgr_page_flip.s"
-.include "../hgr_routines/hgr_copy_fast.s"
+	;=============================
+	; update screen
+	;=============================
 
-;.include "../wait.s"
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;======================
+	; draw waterfall
+
+	.include "draw_waterfall.s"
+
+	;======================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	rts
 
 
-.endif
 
 .include "../hgr_routines/hgr_sprite.s"
 .include "../location_common/include_bottom.s"
