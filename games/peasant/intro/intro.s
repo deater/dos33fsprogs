@@ -10,14 +10,13 @@
 
 .include "../qload.inc"
 .include "../music/music.inc"
+.include "../peasant_sprite.inc"
 
 peasant_quest_intro:
-
 
 	; we get here from "tips"
 	; DRAW_PAGE = PAGE2
 	; looking at PAGE1
-
 
 	lda	#0
 	sta	ESC_PRESSED
@@ -27,17 +26,6 @@ peasant_quest_intro:
 	sta     input_buffer	; reset buffer (NUL at start)
 				; ????
 	sta	GAME_STATE_2
-
-	;===========================
-
-;	jsr	hgr_make_tables		; needed?
-
-;	jsr	hgr2
-
-;	jsr	hgr2_clearscreen	; clear PAGE2
-
-;	lda	#$20		; draw to page2
-;	sta	DRAW_PAGE
 
 
 	;==============================
@@ -163,22 +151,13 @@ mockingboard_notfound2:
 
 .include "../draw_peasant_new.s"
 
-;.include "../hgr_routines/hgr_1x5_sprite.s"
-
 .include "../hgr_routines/hgr_sprite.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
-;.include "../gr_offsets.s"
-;.include "../hgr_routines/hgr_partial_restore.s"
-;.include "../hgr_routines/hgr_partial_save.s"
 
-;.include "../gr_copy.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
 .include "../wait_a_bit.s"
 
-
+.include "../priority_copy.s"
 
 
 cottage_zx02:	.incbin "../location_cottage/graphics_cottage/cottage.zx02"
@@ -241,7 +220,5 @@ no_peasant_wrap:
 
 	rts
 
-.include "../peasant_sprite.inc"
 
-.include "../priority_copy.s"
-;.include "../hgr_routines/hgr_copy_faster.s"
+

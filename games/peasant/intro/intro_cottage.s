@@ -38,8 +38,6 @@ intro_cottage:
 
 	; copy to $400
 
-;	jsr	gr_copy_to_page1
-
 	jsr	priority_copy
 
 
@@ -68,19 +66,16 @@ intro_cottage:
 	;====================
 	;====================
 
-
 cottage_walk_loop:
 
 	;===========================
 	; copy bg to current screen
 
-;       lda     #$60
 	jsr	hgr_copy_faster
 
 
 	;=======================
 	; draw peasant
-
 
 	lda	FRAME
 	asl
@@ -97,8 +92,12 @@ cottage_walk_loop:
 	jsr	draw_peasant
 
 
-	;======================
-	; handle special action
+	;=======================
+	; handle special actions
+	;=======================
+	; FRAMES  0 - ?      display cottage text 1, wait 25
+	; FRAMES  1 - 12     display cottage text 2, wait 12 except wait 3 as 12
+	; FRAMES 13 -        display cottage text 3
 
 	lda	FRAME
 check_cottage_action1:
@@ -143,17 +142,30 @@ finish_cottage_action:
 
 done_cottage_action:
 
-;	jsr	wait_until_keypress
+	;======================
+	; flip page
 
 	jsr	hgr_page_flip
 
+
+	;======================
+	; extra delays
+
 	lda	FRAME
 	bne	special2
+
+	; frame==0, wait 25
 	lda	#25
 	jmp	now_wait
+
 special2:
+	; frame==1, wait 3?
+
 	cmp	#1
 	bne	regular_wait
+
+	; otherwise wait 12?
+
 	lda	#12
 	jmp	now_wait
 

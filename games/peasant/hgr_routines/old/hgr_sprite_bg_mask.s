@@ -23,13 +23,26 @@
 
 hgr_draw_sprite_bg_mask:
 
+	;===================================
+	; save info on background to restore
+
+;	lda	#1			; can't inc as inc,Y not possible
+;	sta	save_valid,Y
+
+;	lda	CURSOR_X
+;	sta	save_xstart,Y
+
+;	lda	CURSOR_Y
+;	sta	save_ystart,Y
+
 	;==================================
 	; calculate end of sprite on screen for Xpos loop
+	; also save for background restore
 
 	lda	peasant_sprites_xsize,X
 	sta	hdsb_width_smc+1
-;	clc
-;	adc	CURSOR_X
+	clc
+	adc	CURSOR_X
 ;	sta	save_xend,Y
 
 	;================================
@@ -38,20 +51,25 @@ hgr_draw_sprite_bg_mask:
 
 	lda	peasant_sprites_ysize,X
 	sta	hdsb_ysize_smc+1
-;	clc
-;	adc	CURSOR_Y
-;	cmp	#192
-;	bcc	hdsb_ysize_ok
+	clc
+	adc	CURSOR_Y
+	cmp	#192
+	bcc	hdsb_ysize_ok
 
-;hdsb_ysize_not_ok:
+hdsb_ysize_not_ok:
 	; adjust self modify
-	; if past 192, adjust down to 191
+        ; want it to be (192-SPRITE_Y)
 
-;	lda	#191				; max out yend
+;        lda     #192
+ ;       sec
+  ;      sbc     SPRITE_Y
+   ;     sta     sprite_ysize_smc+1      ; self modify for end row
+
+        lda     #191                            ; max out yend
 
 
 
-;hdsb_ysize_ok:
+hdsb_ysize_ok:
 
 ;	sta	save_yend,Y
 
@@ -216,43 +234,22 @@ h728_smc4:
 	rol
 	sta	MASK_TEMP
 
-
-	;=====================================
-
 hsbm_draw_sprite_both:
-
-	; A has mask value
-
-	eor	#$FF			; flip bits (we use inverse masks
-					; for some reason?)
-	and	#$7F			; ignore high bit on mask
+	eor	#$FF
+	and	#$7F
 	sta	TEMP_MASK
 
 	; if mask is $7f then skip drawing
-	cmp	#$7f			; if mask was all set, nothing there
-	beq	draw_sprite_skip	; to draw
+	cmp	#$7f
+	beq	draw_sprite_skip
 
-	;==========================
 	; do actual sprite-ing
 
-	; what if we want to use background palette?
-	; if so TEMP_SPRITE should be anded with $7f previously
-	; and temp mask should have high bit set
+	lda	(GBASL),Y	; load background
+	and	TEMP_MASK
+	ora	TEMP_SPRITE
 
-	lda	TEMP_SPRITE
-	and	#$7f
-	sta	TEMP_SPRITE
-
-	lda	TEMP_MASK
-	ora	#$80
-	sta	TEMP_MASK
-
-	lda	(GBASL),Y		; load background
-	and	TEMP_MASK		; and with mask
-					; FIXME: can we and direct?
-	ora	TEMP_SPRITE		; set the colors
-
-	sta	(GBASL),Y		; store back out
+	sta	(GBASL),Y	; store out
 
 draw_sprite_skip:
 
@@ -270,7 +267,7 @@ hdsb_width_smc:
 	lda	CURRENT_ROW
 
 hdsb_ysize_smc:
-	cmp	#28				; see if hit end of sprite
+	cmp	#28
 	beq	hdsb_done
 ;	bne	hgr_sprite_bm_yloop
 	jmp	hgr_sprite_bm_yloop
@@ -429,3 +426,6 @@ ysave:
 .byte $00
 ;xsave:
 ;.byte $00
+
+
+;.include "hgr_restore_data.s"
