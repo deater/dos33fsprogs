@@ -15,6 +15,11 @@ knight_core:
 .include "../location_common/common_core.s"
 
 
+	lda	#<update_screen
+	sta	update_screen_smc+1
+	lda	#>update_screen
+	sta	update_screen_smc+2
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -28,6 +33,12 @@ knight_core:
 	;================================
 	;================================
 game_loop:
+
+	;====================
+	; check keyboard
+
+	jsr	check_keyboard
+
 
 	;====================
 	; move peasant
@@ -63,16 +74,9 @@ skip_level_specific:
 	jsr	increment_flame
 
 
+
 	;====================
-	; check keyboard
-
-	; original code also waited approximately 100ms?
-	; this led to keypressed being lost
-
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
-	jsr	check_keyboard
+	; flip screen
 
 ;	jsr	wait_vblank
 

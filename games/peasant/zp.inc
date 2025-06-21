@@ -64,6 +64,7 @@ MASK2			= $31
 PEASANT_PRIORITY	= $32
 MASK_COUNTDOWN		= $33
 
+
 ; this is the structure for a ProDOS smartport command, at least
 ; for a read (command=1)
 	tmpsec	= $3c
@@ -306,8 +307,8 @@ PREV_Y		= $CE	; ??
 
 WHICH_SLOT	= $DA
 CURRENT_DISK	= $DC
-HGR_COLOR	= $E4
-HGR_PAGE	= $E6
+HGR_COLOR	= $E4		; hgr rectangle
+;HGR_PAGE	= $E6
 
 TEMP_CENTER	= $EC		; for cliff climb
 CLIMB_COUNT	= $ED		; for cliff climb

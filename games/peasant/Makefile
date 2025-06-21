@@ -451,48 +451,6 @@ inventory/INVENTORY:
 ./game_over/GAME_OVER:
 	cd game_over && make
 
-
-
-###
-
-#PEASANT3:	peasant3.o
-#	ld65 -o PEASANT3 peasant3.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-#
-#peasant3.o:	peasant3.s zp.inc ./inventory/inventory.inc \
-#		parse_input.inc \
-#		peasant3_actions.s \
-#		text/DIALOG_PEASANT3.ZX02 text/dialog_peasant3.inc \
-#		graphics_peasantry/graphics_peasant3.inc sprites/peasant_sprites.inc \
-#		graphics_peasantry/priority_peasant3.inc \
-#		location_common/peasant_common.s \
-#		animate_bubbles.s \
-#		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-#		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-#		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-#		keyboard.s new_map_location.s \
-#		move_peasant.s score.s
-#	ca65 -o peasant3.o peasant3.s -l peasant3.lst
-
-###
-
-#PEASANT4:	peasant4.o
-#	ld65 -o PEASANT4 peasant4.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
-
-#peasant4.o:	peasant4.s zp.inc ./inventory/inventory.inc \
-#		parse_input.inc \
-#		sprites/ned_sprites.inc \
-#		peasant4_actions.s \
-#		text/DIALOG_PEASANT4.ZX02 text/dialog_peasant4.inc \
-#		location_kerrek1/kerrek_actions.s location_common/peasant_common.s \
-#		graphics_peasantry/graphics_peasant4.inc sprites/peasant_sprites.inc \
-#		graphics_peasantry/priority_peasant4.inc \
-#		draw_box.s hgr_routines/hgr_rectangle.s hgr_routines/hgr_font.s hgr_routines/hgr_input.s \
-#		hgr_routines/hgr_1x28_sprite_mask.s hgr_routines/hgr_save_restore.s \
-#		wait_a_bit.s draw_peasant.s hgr_routines/hgr_text_box.s \
-#		keyboard.s new_map_location.s \
-#		move_peasant.s score.s
-#	ca65 -o peasant4.o peasant4.s -l peasant4.lst
-
 ###
 
 ./trogdor/TROGDOR:	
@@ -617,7 +575,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s hay_blown_away_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s print_text_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s restore_parse_message parse_input.lst >> parse_input.inc
-
+	./generate_common -a 0xee00 -s update_screen_smc parse_input.lst >> parse_input.inc
 
 
 ###

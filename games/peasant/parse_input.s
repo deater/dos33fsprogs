@@ -710,16 +710,26 @@ finish_parse_message_nowait:
 	stx	OUTL
 	sty	OUTH
 	jsr	print_text_message
+	jsr	hgr_page_flip
 	rts
 
+	; note this is the same as partial_message_step
+	;	now that we use pageflip
+
 finish_parse_message:
-	stx	OUTL
-	sty	OUTH
-	jsr	print_text_message
-	jsr	hgr_page_flip
+	jmp	partial_message_step
 
-	jsr	wait_until_keypress
+;	stx	OUTL
+;	sty	OUTH
+;	jsr	print_text_message
+;	jsr	hgr_page_flip
+;	jsr	wait_until_keypress
 
+;	rts
+
+
+	;==========================================
+	; this is called after load/save/inventory
 
 restore_parse_message:
 	lda	#1
@@ -1236,15 +1246,31 @@ last_bg_h:	.byte $00
 	; partial message step
 	;======================
 	;======================
+
 partial_message_step:
+	pha
+	txa
+	pha
+	tya
+	pha
+
+update_screen_smc:
+	jsr	$ffff
+
+	pla
+	tay
+	pla
+	tax
+	pla
+
+
 	stx	OUTL
 	sty	OUTH
 	jsr	print_text_message
 	jsr	hgr_page_flip
+	bit	KEYRESET
 	jsr	wait_until_keypress
-;	lda	#0
-;	ldx	#39
-;	jsr	hgr_partial_restore
+
 	rts
 
 
