@@ -37,9 +37,12 @@ no_pot_on_head:
 upcase_loop:
 	lda	input_buffer,X
 	beq	done_upcase_loop
-	cmp	#' '|$80		; skip uppercasing space
-	bne	skip_uppercase
+	cmp	#' '			; skip uppercasing space
+	beq	skip_uppercase
 	and	#$DF			; uppercase
+					; $61 = 0110 0001 a
+					; $DF = 1101 1111
+					; $41 = 0100 0001 A
 skip_uppercase:
 	sta	input_buffer,X
 	inx
