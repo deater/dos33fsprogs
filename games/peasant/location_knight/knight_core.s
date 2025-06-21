@@ -163,25 +163,59 @@ update_screen:
 
 	jsr	hgr_copy_faster
 
-
-	;====================
-	; always draw peasant
-
-	jsr	draw_peasant
-
 	;===================
 	; draw knight
+	;===================
+	; knight behavior, wait random number of frames (100+?)
+	; do animation
 
+	dec	knight_countdown
+	lda	knight_countdown
+	cmp	#$FF
+	bne	good_knight
+reset_knight:
+	jsr	random8
+	and	#$3f
+	adc	#64
+	sta	knight_countdown
+good_knight:
+	cmp	#18
+	bcs	standing_knight
+
+	tax
+	lda	knight_animation,X
+	tax
+
+	jmp	draw_knight
+
+	; otherwise we are standing
+standing_knight:
+	ldx	#0		; stand sprite
+
+draw_knight:
 	lda	#24		; 168/7=24
 	sta	SPRITE_X
 
 	lda	#92
 	sta	SPRITE_Y
 
-	ldx	#0		; stand sprite
+
 	jsr	hgr_draw_sprite_mask
 
+
+
+	;====================
+	; draw peasant
+
+	jsr	draw_peasant
+
+
+
 	rts
+
+knight_countdown:
+	.byte 0
+
 
 .include "../hgr_routines/hgr_sprite_mask.s"
 
@@ -191,15 +225,21 @@ update_screen:
 
 .include "sprites_knight/knight_sprites.inc"
 
+knight_animation:
+;	.byte	0,1,2,3,4,5,6,1,0
+
+;	.byte	2,3,8,7,6,5,4,3,2
+	.byte	3,3,4,4,9,9,8,8,7,7,6,6,5,5,4,4,3,3
+
 sprites_xsize:
 	.byte	3, 3, 3		; stand, walk, walk
 	.byte	3, 3, 3, 3	; yawn0.3
 	.byte	3, 3, 3, 3	; yawn4.7
 
 sprites_ysize:
-	.byte	32, 32, 32	; stand, walk, walk
-	.byte	32, 32, 32, 32	; yawn0.3
-	.byte	32, 32, 32, 32	; yawn4.7
+	.byte	33, 33, 33	; stand, walk, walk
+	.byte	33, 33, 33, 33	; yawn0.3
+	.byte	33, 33, 33, 33	; yawn4.7
 
 sprites_data_l:
 	.byte <ks0_sprite,<kw0_sprite,<kw1_sprite
