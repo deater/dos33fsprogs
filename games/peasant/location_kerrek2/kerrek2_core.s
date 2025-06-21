@@ -40,6 +40,11 @@ kerrek2_core:
 
 game_loop:
 
+	;=======================
+	; check keyboard
+
+	jsr	check_keyboard
+
 	;===================
 	; move peasant
 
@@ -49,16 +54,10 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
-	;===========================
-	; copy bg to current screen
-
-;	lda	#$60
-	jsr	hgr_copy_faster
-
 	;=====================
-	; always draw peasant
+	; update screen
 
-	jsr	draw_peasant
+	jsr	update_screen
 
 	;====================
 	; increment frame
@@ -74,13 +73,9 @@ game_loop:
 	jsr	kerrek_move_and_check_collision
 
 
-	;=======================
-	; check keyboard
+	;==================
+	; flip page
 
-	lda     PEASANT_DIR
-	sta     OLD_DIR
-
-	jsr	check_keyboard
 
 ;	jsr	wait_vblank
 
@@ -102,28 +97,6 @@ level_over:
 
 	rts
 
-.if 0
-
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
-
-.endif
 
 .include "../wait_a_bit.s"
 .include "../location_common/include_bottom.s"
@@ -135,3 +108,19 @@ level_over:
 
 
 
+	;=========================
+	; update screen
+	;=========================
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	rts

@@ -79,6 +79,12 @@ cliff_already_climbed:
 	;===========================
 game_loop:
 
+	;======================
+	; check keyboard
+
+	jsr	check_keyboard
+
+
 	;===================
 	; move peasant
 
@@ -95,26 +101,10 @@ game_loop:
 
 level_good:
 
-	;===========================
-	; copy bg to current screen
+	;====================
+	; update screen
 
-;	lda	#$60
-	jsr	hgr_copy_faster
-
-	;=====================
-	; draw lightning
-
-	lda     MAP_LOCATION
-	cmp	#LOCATION_CLIFF_HEIGHTS
-	bne	no_lightning
-	jsr	draw_lightning
-no_lightning:
-
-
-	;=====================
-	; always draw peasant
-
-	jsr	draw_peasant
+	jsr	update_screen
 
 	;=====================
 	; increment frame
@@ -126,13 +116,9 @@ no_lightning:
 
 	jsr	increment_flame
 
-	;======================
-	; check keyboard
 
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
-	jsr	check_keyboard
+	;==================
+	; flip page
 
 ;	jsr	wait_vblank
 
@@ -173,34 +159,6 @@ level_over:
 exiting_cliff:
 	rts
 
-.if 0
-
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../hgr_routines/hgr_partial_restore.s"
-.include "../hgr_routines/hgr_sprite.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-;.include "../wait.s"
-.include "../wait_a_bit.s"
-
-.include "../gr_copy.s"
-;.include "../hgr_routines/hgr_copy.s"
-
-.endif
 
 .include "../location_common/include_bottom.s"
 
@@ -210,3 +168,30 @@ exiting_cliff:
 
 .include "draw_lightning.s"
 
+	;=========================
+	; update screen
+	;=========================
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+;	lda	#$60
+	jsr	hgr_copy_faster
+
+	;=====================
+	; draw lightning
+
+	lda     MAP_LOCATION
+	cmp	#LOCATION_CLIFF_HEIGHTS
+	bne	no_lightning
+	jsr	draw_lightning
+no_lightning:
+
+
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+	rts

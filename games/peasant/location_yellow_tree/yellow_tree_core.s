@@ -28,6 +28,10 @@ yellow_tree_core:
 
 game_loop:
 
+	;=======================
+	; check keyboard
+
+	jsr	check_keyboard
 
 	;======================
 	; move peasant
@@ -38,6 +42,47 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
+	;=====================
+	; update screen
+
+	jsr	update_screen
+
+
+	;=======================
+	; increment frame
+
+	inc	FRAME
+
+
+	;========================
+	; flip pages
+
+;	jsr	wait_vblank
+
+        jsr	hgr_page_flip
+
+        jmp	game_loop
+
+
+	;========================
+	; exit level
+	;========================
+oops_new_location:
+level_over:
+	; note: check reason for load if changing gamestate
+
+	rts
+
+
+.include "../location_common/include_bottom.s"
+.include "yellow_tree_actions.s"
+
+
+	;==========================
+	; update screen
+	;==========================
+
+update_screen:
 
 	;===========================
 	; copy bg to current screen
@@ -51,64 +96,4 @@ game_loop:
 
 	jsr	draw_peasant
 
-	;=======================
-	; increment frame
-
-	inc	FRAME
-
-	;=======================
-	; check keyboard
-
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
-	jsr	check_keyboard
-
-;	jsr	wait_vblank
-
-        jsr	hgr_page_flip
-
-        jmp	game_loop
-
-	;====================
-	; end of level
-
-oops_new_location:
-
-;	jmp	new_location
-
-
-	;========================
-	; exit level
-	;========================
-level_over:
-	; note: check reason for load if changing gamestate
-
 	rts
-
-.if 0
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
-
-.include "../hgr_routines/hgr_sprite.s"
-.endif
-
-
-.include "../location_common/include_bottom.s"
-.include "yellow_tree_actions.s"

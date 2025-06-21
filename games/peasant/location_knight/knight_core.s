@@ -15,11 +15,6 @@ knight_core:
 .include "../location_common/common_core.s"
 
 
-	lda	#<update_screen
-	sta	update_screen_smc+1
-	lda	#>update_screen
-	sta	update_screen_smc+2
-
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

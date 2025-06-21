@@ -14,7 +14,6 @@ waterfall_core:
 
 .include "../location_common/common_core.s"
 
-
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -30,6 +29,11 @@ waterfall_core:
 	;========================================
 
 game_loop:
+
+	;=======================
+	; check keyboard
+
+	jsr	check_keyboard
 
 	;======================
 	; move peasant
@@ -62,13 +66,8 @@ game_loop:
 
 	jsr	increment_flame
 
-	;=======================
-	; check keyboard
-
-	lda	PEASANT_DIR
-	sta	OLD_DIR		; why?
-
-	jsr	check_keyboard
+	;====================
+	; page flip
 
 ;	jsr	wait_vblank
 

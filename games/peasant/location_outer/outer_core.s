@@ -493,7 +493,7 @@ keeper1_loop:
 
 
 	;========================
-	; increment flame
+	; draw_peasant
 
 	jsr	draw_peasant
 
@@ -793,28 +793,6 @@ sprites_mask_h:
 	.byte >keeper_r0_mask,>keeper_r1_mask,>keeper_r2_mask,>keeper_r3_mask
 	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
 
-.if 0
-
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-;.include "../hgr_routines/hgr_page_flip.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
-.endif
 
 .include "../location_common/include_bottom.s"
 
@@ -827,3 +805,11 @@ sprites_mask_h:
 .include "sprites_outer/keeper2_sprites.inc"
 .include "sprites_outer/guitar_sprites.inc"
 
+
+	;======================
+	; update screen
+	;======================
+update_screen:
+
+
+	rts

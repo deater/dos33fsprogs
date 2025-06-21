@@ -55,3 +55,11 @@
 	jsr	load_custom_verb_table
 
 
+	;================================
+	; setup pointer to update_screen
+
+	lda	#<update_screen
+	sta	update_screen_smc+1
+	lda	#>update_screen
+	sta	update_screen_smc+2
+

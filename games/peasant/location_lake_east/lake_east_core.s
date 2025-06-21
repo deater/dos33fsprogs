@@ -26,6 +26,10 @@ lake_east_core:
 	;=================================
 
 game_loop:
+	;====================
+	; check keyboard
+
+	jsr	check_keyboard
 
 	;==============
 	; move peasant
@@ -39,16 +43,6 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
-	;===========================
-	; copy bg to current screen
-
-;	lda	#$60
-	jsr	hgr_copy_faster
-
-	;=====================
-	; always draw peasant
-
-	jsr	draw_peasant
 
 	;==================
 	; increment frame
@@ -94,13 +88,10 @@ done_choose_boat:
 
 done_dude:
 
-	;====================
-	; check keyboard
 
-	lda	PEASANT_DIR
-	sta	OLD_DIR
 
-	jsr	check_keyboard
+	;=====================
+	; flip page
 
 ;	jsr	wait_vblank
 
@@ -121,33 +112,6 @@ level_over:
 
 	rts
 
-.if 0
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-
-
-;.include "../hgr_routines/hgr_page_flip.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-
-
-
-
-;.include "../wait.s"
-.endif
 
 .include "../location_common/include_bottom.s"
 
@@ -158,3 +122,26 @@ level_over:
 .include "sprites_lake_east/bubble_sprites_e.inc"
 
 .include "animate_bubbles.s"
+
+
+
+	;=====================
+	; update screen
+	;=====================
+
+	; FIXME: boat too?
+
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+
+	rts

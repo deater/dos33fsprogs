@@ -41,6 +41,10 @@ kerrek1_core:
 
 game_loop:
 
+	;=======================
+	; check keyboard
+
+	jsr	check_keyboard
 
 	;======================
 	; move peasant
@@ -51,23 +55,15 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
+	;==========================
+	; update screen
+
+
+	jsr	update_screen
+
+
 	;===========================
-	; copy bg to current screen
-
-;	lda	#$60
-	jsr	hgr_copy_faster
-
-	;======================
-	; always draw peasant
-
-	jsr	draw_peasant
-
-	;======================
-	; draw kerrerk
-
-	; FIXME: draw kerrek before peasant if behind him?
-
-	jsr	kerrek_draw
+	; handle kerrek
 
 	jsr	kerrek_move_and_check_collision
 
@@ -86,13 +82,9 @@ no_sting:
 
 	inc	FRAME
 
+
 	;=======================
-	; check keyboard
-
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
-	jsr	check_keyboard
+	; flip page
 
 ;	jsr	wait_vblank
 
@@ -119,30 +111,33 @@ level_over:
 
 .include "../location_common/include_bottom.s"
 
-.if 0
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-.include "../hgr_routines/hgr_copy_fast.s"
-
-;.include "../wait.s"
-
-.endif
-
 .include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "kerrek1_actions.s"
 .include "sprites_kerrek1/kerrek_sprites.inc"
 
+	;==========================
+	; update screen
+	;==========================
+update_screen:
+
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;======================
+	; draw kerrerk
+
+	; FIXME: draw kerrek before peasant if behind him?
+
+	jsr	kerrek_draw
+
+	;======================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+
+	rts

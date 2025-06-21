@@ -27,6 +27,10 @@ lake_west_core:
 	;=================================
 
 game_loop:
+	;====================
+	; check keyboard
+
+	jsr	check_keyboard
 
 	;==============
 	; move peasant
@@ -40,42 +44,31 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
-	;===========================
-	; copy bg to current screen
-
-;	lda	#$60
-	jsr	hgr_copy_faster
-
-	;=====================
-	; always draw peasant
-
-	jsr	draw_peasant
 
 	;==================
 	; increment frame
 
 	inc	FRAME
 
-	;====================
-	; check keyboard
-
-	jsr	check_keyboard
 
 
 	;===================
 	; level specific
 	;=====================
 
+	; FIXME: draw these in update screen?
+
 at_lake_west:
 	jsr	animate_bubbles_w
 
-	;====================
-	; check keyboard
+	;======================
+	; update screen
 
-	lda	PEASANT_DIR
-	sta	OLD_DIR
+	jsr	update_screen
 
-	jsr	check_keyboard
+	;===================
+	; page flip
+
 
 ;	jsr	wait_vblank
 
@@ -97,34 +90,27 @@ level_over:
 
 	rts
 
-.if 0
-.include "../draw_peasant_new.s"
-.include "../move_peasant_new.s"
-
-.include "../hgr_routines/hgr_sprite_bg_mask.s"
-.include "../gr_offsets.s"
-
-.include "../location_common/peasant_common.s"
-.include "../location_common/flame_common.s"
-
-.include "../new_map_location.s"
-
-.include "../keyboard.s"
-
-.include "../vblank.s"
-
-
-
-;.include "../hgr_routines/hgr_page_flip.s"
-.include "../hgr_routines/hgr_copy_fast.s"
-
-
-
-;.include "../wait.s"
-.endif
-
 .include "../location_common/include_bottom.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "lake_west_actions.s"
 .include "sprites_lake_west/bubble_sprites_w.inc"
 .include "animate_bubbles.s"
+
+
+	;========================
+	; update screen
+	;========================
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+
+	rts
