@@ -49,11 +49,15 @@ game_loop:
 
 	jsr	update_screen
 
-
 	;==================
 	; increment frame
 
 	inc	FRAME
+
+	;==================
+	; increment flame
+
+	jsr	increment_flame
 
 	;=====================
 	; page flip
@@ -67,16 +71,23 @@ game_loop:
 
         ;====================
         ; end of level
-
 oops_new_location:
-
-
-
 level_over:
 
-	; FIXME: check for load from savegame if modifying game state
+	;===============================
+	; handle end of level
+	;===============================
 
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 .include "../location_common/include_bottom.s"
 .include "cottage_actions.s"

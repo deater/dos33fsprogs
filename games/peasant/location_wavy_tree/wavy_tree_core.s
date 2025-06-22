@@ -48,6 +48,9 @@ game_loop:
 
 	jsr	move_peasant
 
+	;=====================
+	; check if level over
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
@@ -63,6 +66,11 @@ game_loop:
 	; increment frame
 
 	inc	FRAME
+
+	;====================
+	; increment flame
+
+	jsr	increment_flame
 
 
 	;=====================
@@ -95,8 +103,18 @@ oops_new_location:
 	;========================
 level_over:
 
-	; note: check for load from savegame if change state
+	;===============================
+	; handle end of level
+	;===============================
 
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
 
 

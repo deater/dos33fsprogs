@@ -55,12 +55,13 @@ game_loop:
 
 	jsr	check_keyboard
 
-
-
 	;===================
 	; move peasant
 
 	jsr	move_peasant
+
+	;=====================
+	; check if level over
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
@@ -76,6 +77,11 @@ game_loop:
 	; increment frame
 
 	inc	FRAME
+
+	;====================
+	; increment flame
+
+	jsr	increment_flame
 
 
 	;=======================
@@ -131,18 +137,26 @@ not_ned_cottage:
 
 	jmp	game_loop
 
-oops_new_location:
-;	jmp	new_location
-
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 
-	; note: check for load from savegame if change state
+	;===============================
+	; handle end of level
+	;===============================
 
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 
 .include "../location_common/include_bottom.s"

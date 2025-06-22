@@ -45,7 +45,6 @@ game_loop:
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	beq	level_good
-
 	jmp	level_over
 
 level_good:

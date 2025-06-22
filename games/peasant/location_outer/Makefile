@@ -40,10 +40,9 @@ outer_core.o:	outer_core.s \
 		sprites_outer/keeper1_sprites.inc \
 		sprites_outer/keeper2_sprites.inc \
 		sprites_outer/guitar_sprites.inc \
-		../gr_copy.s \
 		../new_map_location.s \
 		../keyboard.s \
-		../wait.s ../wait_a_bit.s
+		../wait_a_bit.s borders.s
 	ca65 -o outer_core.o outer_core.s -l outer_core.lst
 
 ###

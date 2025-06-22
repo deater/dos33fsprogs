@@ -46,25 +46,20 @@ game_loop:
 
 
 	;==================
+	; update screen
+
+	jsr	update_screen
+
+	;==================
 	; increment frame
 
 	inc	FRAME
 
+	;==================
+	; increment flame
 
+	jsr	increment_flame
 
-	;===================
-	; level specific
-	;=====================
-
-	; FIXME: draw these in update screen?
-
-at_lake_west:
-	jsr	animate_bubbles_w
-
-	;======================
-	; update screen
-
-	jsr	update_screen
 
 	;===================
 	; page flip
@@ -76,19 +71,27 @@ at_lake_west:
 
 	jmp	game_loop
 
-oops_new_location:
-;	jmp	new_location
-
 
 	;========================
 	; exit level
 	;========================
-
+oops_new_location:
 level_over:
 
-	; FIXME: check for load from savegame if modifying game state
+	;===============================
+	; handle end of level
+	;===============================
 
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 .include "../location_common/include_bottom.s"
 .include "../hgr_routines/hgr_sprite.s"
@@ -106,6 +109,11 @@ update_screen:
 	; copy bg to current screen
 
 	jsr	hgr_copy_faster
+
+	;=========================
+	; draw bubbles
+
+	jsr	animate_bubbles_w
 
 	;=====================
 	; always draw peasant

@@ -38,6 +38,8 @@ game_loop:
 
 	jsr	move_peasant
 
+	;=====================
+	; check if level over
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
@@ -48,12 +50,15 @@ game_loop:
 
 	jsr	update_screen
 
-
-
 	;=====================
 	; increment frame
 
 	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	jsr	increment_flame
 
 
 inside_nn_cottage:
@@ -93,23 +98,26 @@ skip_level_specific:
 
 	jmp	game_loop
 
-
-        ;====================
-        ; end of level
-
-oops_new_location:
-
-
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 
+	;===============================
+	; handle end of level
+	;===============================
+
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
 
 really_level_over:
-
 	rts
+
 
 
 .include "../location_common/include_bottom.s"

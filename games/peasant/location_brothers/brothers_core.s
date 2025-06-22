@@ -110,6 +110,9 @@ game_loop:
 
 	jsr	move_peasant
 
+	;=====================
+	; check if level over
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
@@ -119,13 +122,7 @@ game_loop:
 	; level specific
 	;=====================
 
-	;=======================
-	; archery animations
-	;=======================
-at_archery:
-	jsr	animate_archery
 
-skip_level_specific:
 
 	;=====================
 	; update screen
@@ -133,13 +130,15 @@ skip_level_specific:
 	jsr	update_screen
 
 
-
 	;====================
 	; increment frame
 
 	inc	FRAME
 
+	;====================
+	; increment flame
 
+	jsr	increment_flame
 
 	;=======================
 	; flip page
@@ -150,65 +149,25 @@ skip_level_specific:
 
 	jmp	game_loop
 
-	;====================
-	; end of level
-
-oops_new_location:
-
 
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
-	cmp	#NEW_FROM_LOAD		; skip to end if loading save game
-	beq	really_level_over
 
-	; specical case if going outside inn
-	; we don't want to end up behind inn
+	;===============================
+	; handle end of level
+	;===============================
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_OUTSIDE_INN
-	bne	not_behind_inn
+.include "../location_common/end_of_level_common.s"
 
-	; be sure we're in range
-	lda	PEASANT_X
-	cmp	#6
-	bcc	really_level_over	; fine if at far right
+	;======================================
+	; special case leaving-level borders
 
-	cmp	#18
-	bcc	to_left_of_inn
-	cmp	#30
-	bcc	to_right_of_inn
+.include "borders.s"
 
-					; fine if at far left
-
-not_behind_inn:
-	lda	MAP_LOCATION
-	cmp	#LOCATION_CLIFF_BASE
-	bne	not_going_to_cliff
-
-	lda	#18
-	sta	PEASANT_X
-	lda	#140
-	sta	PEASANT_Y
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-	sta	PEASANT_DIR
-
-not_going_to_cliff:
 really_level_over:
-
-	rts
-
-to_right_of_inn:
-	lda	#31
-	sta	PEASANT_X
-	rts
-
-to_left_of_inn:
-	lda	#5
-	sta	PEASANT_X
 	rts
 
 
@@ -263,6 +222,13 @@ update_screen:
 	; copy bg to current screen
 
 	jsr	hgr_copy_faster
+
+
+	;=======================
+	; archery animations
+	;=======================
+
+	jsr	animate_archery
 
 	;====================
 	; always draw peasant

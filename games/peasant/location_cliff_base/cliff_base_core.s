@@ -87,28 +87,28 @@ game_loop:
 
 	jmp	game_loop
 
-oops_new_location:
+
 
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 
-	cmp	#NEW_FROM_LOAD		; see if loading save game
-	beq	exiting_cliff
+	;===============================
+	; handle end of level
+	;===============================
 
-	; new location
+.include "../location_common/end_of_level_common.s"
 
-	lda	#4
-	sta	PEASANT_X
-	lda	#170
-	sta	PEASANT_Y
+	;======================================
+	; special case leaving-level borders
 
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-exiting_cliff:
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 
 .include "../location_common/include_bottom.s"

@@ -32,9 +32,8 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
-		../wait.s ../wait_a_bit.s \
+		../wait_a_bit.s borders.s \
 		haystack_actions.s
 	ca65 -o haystack_core.o haystack_core.s -l haystack_core.lst
 

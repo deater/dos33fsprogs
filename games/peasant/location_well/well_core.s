@@ -31,15 +31,15 @@ game_loop:
 	;=======================
 	; check keyboard
 
-	lda	PEASANT_DIR
-	sta	OLD_DIR
-
 	jsr	check_keyboard
 
 	;======================
 	; move peasant
 
 	jsr	move_peasant
+
+	;======================
+	; check if level over
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
@@ -56,6 +56,11 @@ game_loop:
 
 	inc	FRAME
 
+	;=======================
+	; increment flame
+
+	jsr	increment_flame
+
 
 	;=======================
 	; page flip
@@ -67,47 +72,24 @@ game_loop:
 	jmp	game_loop
 
 
-	;====================
-	; end of level
-
-oops_new_location:
-
-	; special case if leaving with baby in well
-
-	; trouble though, by this point MAP_LOCATION is the new one?
-
-	lda	PREVIOUS_LOCATION
-	cmp	#LOCATION_OLD_WELL
-	bne	skip_level_specific
-
-at_old_well:
-	lda	GAME_STATE_0
-	and	#BABY_IN_WELL
-	beq	skip_level_specific
-
-	ldx	#<well_leave_baby_in_well_message
-	ldy	#>well_leave_baby_in_well_message
-	jsr	finish_parse_message
-
-	lda	#LOAD_GAME_OVER
-	sta	WHICH_LOAD
-
-	lda	#NEW_FROM_DISK	; needed?
-	sta	LEVEL_OVER
-	jmp	level_over
-
-skip_level_specific:
-
-
-;	jmp	new_location
-
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
-	; note: check reason for load if changing gamestate
 
+	;===============================
+	; handle end of level
+	;===============================
+
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
 
 

@@ -51,6 +51,9 @@ game_loop:
 
 	jsr	move_peasant
 
+	;======================
+	; check if level over
+
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
@@ -67,6 +70,7 @@ game_loop:
 
 	jsr	kerrek_move_and_check_collision
 
+	; FIXME: is this needed in KERREK2
 
 	; oh kerrek where is thine sting
 	; play music sting if needed
@@ -92,21 +96,27 @@ no_sting:
 
 	jmp	game_loop
 
-	;====================
-	; end of level
-
-oops_new_location:
-
-;	jmp	new_location
-
 
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
-	; note: check reason for load if changing gamestate
 
+	;===============================
+	; handle end of level
+	;===============================
+
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 
 .include "../location_common/include_bottom.s"

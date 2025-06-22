@@ -95,11 +95,7 @@ game_loop:
 
 	lda	LEVEL_OVER
 	bmi	oops_new_location
-	beq	level_good
-
-	jmp	level_over
-
-level_good:
+	bne	level_over
 
 	;====================
 	; update screen
@@ -126,38 +122,28 @@ level_good:
 
 	jmp	game_loop
 
-        ;====================
-        ; end of level
-
-
-oops_new_location:
-not_outer:
-just_go_there:
-
-;	jmp	new_location
-
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
+not_outer:
+just_go_there:
 level_over:
 
-	cmp	#NEW_FROM_LOAD		; see if loading save game
-	beq	exiting_cliff
+	;===============================
+	; handle end of level
+	;===============================
 
-	; new location
-	; in theory this can only be OUTER
+.include "../location_common/end_of_level_common.s"
 
-	lda	#2
-	sta	PEASANT_X
-	lda	#100
-	sta	PEASANT_Y
+	;======================================
+	; special case leaving-level borders
 
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-exiting_cliff:
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 
 .include "../location_common/include_bottom.s"
