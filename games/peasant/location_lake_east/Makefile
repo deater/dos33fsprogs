@@ -35,10 +35,9 @@ lake_east_core.o:	lake_east_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		sprites_lake_east/lake_east_sprites.inc \
-		../wait_a_bit.s \
+		../wait_a_bit.s borders.s \
 		lake_east_actions.s
 	ca65 -o lake_east_core.o lake_east_core.s -l lake_east_core.lst
 

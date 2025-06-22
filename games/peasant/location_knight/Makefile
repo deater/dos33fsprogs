@@ -35,9 +35,8 @@ knight_core.o:	knight_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
-		../wait_a_bit.s \
+		../wait_a_bit.s borders.s \
 		knight_actions.s \
 		sprites_knight/knight_sprites.inc
 	ca65 -o knight_core.o knight_core.s -l knight_core.lst

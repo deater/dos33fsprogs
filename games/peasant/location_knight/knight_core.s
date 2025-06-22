@@ -88,40 +88,7 @@ level_over:
 	; handle end of level
 	;===============================
 
-
-	;==========================================================
-	; be sure on DRAW_PAGE=$20 when leaving as we load to PAGE2
-
-	lda	DRAW_PAGE
-	bne	on_proper_page
-
-	jsr	update_screen
-	jsr	hgr_page_flip
-
-on_proper_page:
-
-	;===============================
-	; handle end of level
-	;===============================
-	; 3 cases:
-	;  + left level by walking (in this case
-	;	XYZ
-	;  + left level by walking but still in same disk file
-	;    (this is no longer possible with new game engine)
-	;  + left level by loading from a savegame.  in that
-	;	case skip all the end of level stuff
-
-	lda	LEVEL_OVER
-	cmp	#NEW_FROM_LOAD		; skip to end if loading save game
-	beq	really_level_over
-
-	; update our Y location to the new one
-	; FIXME: what about X?
-
-
-	lda	PEASANT_NEWY
-	sta	PEASANT_Y
-
+.include "../location_common/end_of_level_common.s"
 
 	;======================================
 	; special case leaving-level borders

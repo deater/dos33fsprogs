@@ -35,9 +35,8 @@ river_core.o:	river_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
-		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
-		../wait_a_bit.s \
+		../wait_a_bit.s borders.s \
 		river_actions.s
 	ca65 -o river_core.o river_core.s -l river_core.lst
 

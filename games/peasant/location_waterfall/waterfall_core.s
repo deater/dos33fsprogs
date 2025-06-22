@@ -81,27 +81,20 @@ game_loop:
 	;========================
 oops_new_location:
 level_over:
-	; note: check reason for load if changing gamestate
 
+	;===============================
+	; handle end of level
+	;===============================
 
-	;==========================================================
-	; be sure on DRAW_PAGE=$20 when leaving as we load to PAGE2
+.include "../location_common/end_of_level_common.s"
 
-	lda	DRAW_PAGE
-	bne	on_proper_page
+	;======================================
+	; special case leaving-level borders
 
-	jsr	update_screen
-	jsr	hgr_page_flip
+.include "borders.s"
 
-on_proper_page:
-
-	lda	PEASANT_NEWY
-	sta	PEASANT_Y
-
-
+really_level_over:
 	rts
-
-
 
 	;=============================
 	; update screen

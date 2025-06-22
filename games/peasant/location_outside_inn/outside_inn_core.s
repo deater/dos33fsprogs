@@ -79,6 +79,11 @@ game_loop:
 
 	inc	FRAME
 
+	;==================
+	; increment flame
+
+	jsr	increment_flame
+
 	;===================
 	; level specific
 	;=====================
@@ -97,19 +102,26 @@ skip_level_specific:
 
 	jmp	game_loop
 
-oops_new_location:
-;       jmp     new_location
-
-
-        ;========================
-        ; exit level
-
 	;========================
 	; exit level
 	;========================
+oops_new_location:
 level_over:
 
+	;===============================
+	; handle end of level
+	;===============================
+
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
 	rts
+
 
 
 .include "../location_common/include_bottom.s"

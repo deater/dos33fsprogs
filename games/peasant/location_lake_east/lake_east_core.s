@@ -43,21 +43,107 @@ game_loop:
 	bmi	oops_new_location
 	bne	level_over
 
+	;===================
+	; level specific
+
+
+	;===================
+	; update screen
+
+	jsr	update_screen
 
 	;==================
 	; increment frame
 
 	inc	FRAME
 
-	;===================
-	; level specific
+	;==================
+	; increment flame
+
+	jsr	increment_flame
+
+
+	;=====================
+	; flip page
+
+;	jsr	wait_vblank
+
+	jsr	hgr_page_flip
+
+	jmp	game_loop
+
+
+	;========================
+	; exit level
+	;========================
+oops_new_location:
+level_over:
+
+	;===============================
+	; handle end of level
+	;===============================
+
+.include "../location_common/end_of_level_common.s"
+
+	;======================================
+	; special case leaving-level borders
+
+.include "borders.s"
+
+really_level_over:
+	rts
+
+
+
+.include "../location_common/include_bottom.s"
+
+.include "../hgr_routines/hgr_sprite.s"
+
+.include "lake_east_actions.s"
+.include "sprites_lake_east/boat_sprites.inc"
+.include "sprites_lake_east/bubble_sprites_e.inc"
+
+.include "animate_bubbles.s"
+
+
+
+	;=====================
+	; update screen
 	;=====================
 
-at_lake_east:
+update_screen:
+
+	;===========================
+	; copy bg to current screen
+
+	jsr	hgr_copy_faster
+
+	;===========================
+	; draw dude/boat
+
+	jsr	draw_dude
+
+
+	;===========================
+	; draw bubbles
+	;	she is the joy and laughter
+
 	jsr	animate_bubbles_e
 
-        ; draw dude
 
+	;=====================
+	; always draw peasant
+
+	jsr	draw_peasant
+
+
+	rts
+
+
+	;===========================
+        ; draw dude in boat
+	;===========================
+draw_dude:
 	lda	GAME_STATE_1
 	and	#FISH_FED
 	bne	done_dude
@@ -87,61 +173,4 @@ done_choose_boat:
         jsr     hgr_draw_sprite
 
 done_dude:
-
-
-
-	;=====================
-	; flip page
-
-;	jsr	wait_vblank
-
-	jsr	hgr_page_flip
-
-	jmp	game_loop
-
-oops_new_location:
-;	jmp	new_location
-
-
-	;========================
-	; exit level
-	;========================
-level_over:
-
-	; FIXME: check for load from savegame if modifying game state
-
-	rts
-
-
-.include "../location_common/include_bottom.s"
-
-.include "../hgr_routines/hgr_sprite.s"
-
-.include "lake_east_actions.s"
-.include "sprites_lake_east/boat_sprites.inc"
-.include "sprites_lake_east/bubble_sprites_e.inc"
-
-.include "animate_bubbles.s"
-
-
-
-	;=====================
-	; update screen
-	;=====================
-
-	; FIXME: boat too?
-
-update_screen:
-
-	;===========================
-	; copy bg to current screen
-
-	jsr	hgr_copy_faster
-
-	;=====================
-	; always draw peasant
-
-	jsr	draw_peasant
-
-
 	rts
