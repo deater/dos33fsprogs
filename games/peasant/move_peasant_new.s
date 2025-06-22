@@ -149,6 +149,7 @@ peasant_y_negative:
 	; check edge of screen
 done_movey:
 	sta	PEASANT_Y
+	sta	PEASANT_NEWY
 
 peasant_the_same:
 

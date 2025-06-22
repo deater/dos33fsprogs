@@ -86,6 +86,11 @@ no_sting:
 
 	inc	FRAME
 
+	;=======================
+	; increment flame
+
+	jsr	increment_flame
+
 
 	;=======================
 	; flip page
