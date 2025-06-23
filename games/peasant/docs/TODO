@@ -1,10 +1,17 @@
+bugs:
+	can't hit escape to cancel in intro once start walking?
+	if you have text typed and then walk off screen it gets 
+		half-reset/corrupted?
+	
+
+todo:
+	add autosave feature?
+
+
 engine:
 	the "check haystack" code is missing from some locations.
 		it should really be a generic "countdown/check all states"
 		code to see when things like rain/etc run out
-
-
-
 
 current:
 	finish cliff_base (mostly walk_to)

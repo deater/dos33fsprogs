@@ -189,7 +189,16 @@ skip_text:
 
 	;===================
         ; print title
+	;===================
+	; print to $6000 area
 intro_print_title:
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
 	lda	#<peasant_text
 	sta	OUTL
 	lda	#>peasant_text
@@ -202,7 +211,12 @@ intro_print_title:
 	lda	#>skip_text
 	sta	OUTH
 
-	jmp	hgr_put_string		; tail call
+	jsr	hgr_put_string
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+	rts
 
 
 	;================================
