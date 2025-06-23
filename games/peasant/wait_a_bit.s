@@ -31,7 +31,3 @@ no_escape:
 	bit	KEYRESET
 
 	rts
-
-
-
-

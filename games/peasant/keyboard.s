@@ -201,6 +201,35 @@ setup_prompt:
 	lda	#'>'
 	jsr	hgr_put_char
 
+	; redraw text, if any
+
+
+	ldx     INPUT_X
+	beq	done_setup_prompt
+
+	ldy	#0
+	ldx	#0
+setup_prompt_loop:
+	txa
+	pha
+	tya
+	pha
+
+	lda	input_buffer,Y		; load value
+
+	ldy     #184			; print char
+	inx				; print two to the right
+	inx				; because of prompt
+	jsr	hgr_put_char
+	pla
+	tay
+	pla
+	tax
+	inx
+	iny
+	cpy	INPUT_X
+	bne	setup_prompt_loop
+done_setup_prompt:
 	rts
 
 ; moved to hgr_copy_faster.s

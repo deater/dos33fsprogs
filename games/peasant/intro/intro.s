@@ -239,3 +239,37 @@ no_peasant_wrap:
 
 
 
+	;================================
+	; intro drain keyboard buffer
+	;================================
+	; because hgr_copy_faster isn't really
+intro_drain_keyboard_buffer:
+	ldx	KEY_OFFSET
+	beq	done_intro_drain_keyboard_buffer
+
+	ldx	#0
+
+intro_drain_keyboard_buffer_loop:
+	txa
+	pha
+
+	lda	keyboard_buffer,X
+	and	#$7f
+	cmp	#27
+	bne	idk_not_esc
+
+	inc	ESC_PRESSED
+
+idk_not_esc:
+
+	pla
+	tax
+	inx
+	cpx	KEY_OFFSET
+	bne	intro_drain_keyboard_buffer_loop
+
+done_intro_drain_keyboard_buffer:
+	ldx	#0		; reset
+	stx	KEY_OFFSET
+	rts
+
