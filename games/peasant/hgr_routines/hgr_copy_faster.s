@@ -113,6 +113,12 @@ hgr_copy_faster_page2:
 	lda	$7F00,X							; 4
 	sta	$5F00,X							; 5
 
+	lda	KEYPRESS
+	bpl	page2_no_keypress
+	jsr	insert_keyboard_buffer
+
+page2_no_keypress:
+
 	dex								; 2
 	beq	hgr_copy_faster_page2_done				; 2nt/3t
 	jmp	hgr_copy_faster_page2					; 3
@@ -218,6 +224,12 @@ hgr_copy_faster_page1:
 	lda	$7F00,X							; 4
 	sta	$3F00,X							; 5
 
+	lda	KEYPRESS
+	bpl	page1_nokeypress
+	jsr	insert_keyboard_buffer
+
+page1_nokeypress:
+
 	dex								; 2
 	beq	hgr_copy_faster_page1_done				; 2nt/3t
 	jmp	hgr_copy_faster_page1					; 3
@@ -226,3 +238,24 @@ hgr_copy_faster_page1_done:
 	rts								; 6
 
 
+keyboard_buffer:
+	.byte 0,0,0,0,0,0,0,0
+
+
+insert_keyboard_buffer:
+	txa
+	pha
+
+	ldx	KEY_OFFSET
+	cpx	#8
+	bcs	done_insert_keyboard_buffer     ; can we hit this?
+
+	lda	KEYPRESS
+	sta	keyboard_buffer,X
+	inc	KEY_OFFSET
+
+done_insert_keyboard_buffer:
+	pla
+	tax
+	bit	KEYRESET
+	rts

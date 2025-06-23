@@ -19,12 +19,20 @@
 
 check_keyboard:
 
+	jsr	drain_keyboard_buffer	; drain keyboard buffer if events
+					; happened while slow screen update
+					; happening
+
+check_keyboard_no_drain:
+
 	lda	KEYPRESS
 	bmi	key_was_pressed
 	rts
 
 key_was_pressed:
 	bit	KEYRESET
+
+check_key:
 
 	inc	SEEDL			; randomize PRNG.  does this help?
 
@@ -194,4 +202,55 @@ setup_prompt:
 	jsr	hgr_put_char
 
 	rts
+
+; moved to hgr_copy_faster.s
+
+.if 0
+; buffer keypresses during slow screen update
+keyboard_buffer:
+	.byte 0,0,0,0,0,0,0,0
+
+
+insert_keyboard_buffer:
+
+	ldx	KEY_OFFSET
+	cpx	#8
+	bcs	done_insert_keyboard_buffer	; can we hit this?
+
+	lda	KEYPRESS
+	sta	keyboard_buffer,X
+	inc	KEY_OFFSET
+
+done_insert_keyboard_buffer:
+	rts
+
+.endif
+	;=========================
+	; drain keyboard buffer
+	;=========================
+drain_keyboard_buffer:
+
+	ldx	KEY_OFFSET
+	beq	done_drain_keyboard_buffer
+
+	ldx	#0
+
+drain_keyboard_buffer_loop:
+	txa
+	pha
+
+	lda	keyboard_buffer,X
+	jsr	check_key
+
+	pla
+	tax
+	inx
+	cpx	KEY_OFFSET
+	bne	drain_keyboard_buffer_loop
+
+done_drain_keyboard_buffer:
+	ldx	#0		; reset
+	stx	KEY_OFFSET
+	rts
+
 

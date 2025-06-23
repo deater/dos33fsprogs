@@ -32,6 +32,8 @@ game_loop:
 	;====================
 	; check keyboard
 
+;	jsr	drain_keyboard_buffer
+
 	jsr	check_keyboard
 
 

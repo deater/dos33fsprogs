@@ -63,7 +63,7 @@ MASK1			= $30
 MASK2			= $31
 PEASANT_PRIORITY	= $32
 MASK_COUNTDOWN		= $33
-
+KEY_OFFSET		= $34
 
 ; this is the structure for a ProDOS smartport command, at least
 ; for a read (command=1)

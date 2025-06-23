@@ -404,6 +404,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_peasant_sprites qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_copy_faster qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s gr_offsets qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s keyboard_buffer qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s insert_keyboard_buffer qload.lst >> qload.inc
 #	echo "hposn_high = \$$BA00" >> qload.inc
 #	echo "hposn_low = \$$BB00" >> qload.inc
 #	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc
