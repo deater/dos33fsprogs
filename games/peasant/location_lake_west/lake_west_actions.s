@@ -37,6 +37,8 @@ lake_west_take:
 
 	cmp	#NOUN_BERRIES
 	beq	lake_west_get_berries
+	cmp	#NOUN_ROCK
+	beq	lake_west_get_pebbles
 	cmp	#NOUN_STONE
 	beq	lake_west_get_pebbles
 	cmp	#NOUN_PEBBLES
@@ -101,6 +103,12 @@ lake_west_look:
 	beq	lake_west_look_at_lake
 	cmp	#NOUN_SAND
 	beq	lake_west_look_at_sand
+	cmp	#NOUN_ROCK
+	beq	lake_west_look_at_sand
+	cmp	#NOUN_STONE
+	beq	lake_west_look_at_sand
+	cmp	#NOUN_PEBBLES
+	beq	lake_west_look_at_sand
 	cmp	#NOUN_WATER
 	beq	lake_west_look_at_lake
 	cmp	#NOUN_BUSH
@@ -161,6 +169,8 @@ lake_west_skip:
 	cmp	#NOUN_STONE
 	beq	lake_west_skip_stones
 	cmp	#NOUN_PEBBLES
+	beq	lake_west_skip_stones
+	cmp	#NOUN_ROCK
 	beq	lake_west_skip_stones
 
 	jmp	parse_common_unknown
