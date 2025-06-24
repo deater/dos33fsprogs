@@ -37,6 +37,7 @@ lake_west_core.o:	lake_west_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		sprites_lake_west/lake_west_sprites.inc \
+		sprites_lake_west/pebbles_sprites.inc \
 		../wait_a_bit.s borders.s \
 		lake_west_actions.s
 	ca65 -o lake_west_core.o lake_west_core.s -l lake_west_core.lst

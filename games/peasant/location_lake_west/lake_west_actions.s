@@ -61,6 +61,9 @@ lake_west_get_pebbles:
 lake_west_no_pebbles:
 	; only if standing vaguely near them
 
+	; FIXME: check X as well
+	;	also we're supposed to walk to them
+
 	lda	PEASANT_Y
 	cmp	#$70
 	bcs	pebbles_too_far		; bge
@@ -75,10 +78,14 @@ lake_west_no_pebbles:
 	lda	#1
 	jsr	score_points
 
+	jsr	remove_pebbles
+
 	; print message
 	ldx	#<lake_west_get_pebbles_message
 	ldy	#>lake_west_get_pebbles_message
 	jmp	finish_parse_message
+
+
 
 pebbles_too_far:
 	ldx	#<lake_west_pebbles_too_far_message
@@ -207,6 +214,13 @@ lake_west_swim_lake:
 	;================
 lake_west_throw:
 	lda	CURRENT_NOUN
+
+	cmp	#NOUN_ROCK
+	beq	lake_west_skip_stones
+	cmp	#NOUN_STONE
+	beq	lake_west_skip_stones
+	cmp	#NOUN_PEBBLES
+	beq	lake_west_skip_stones
 
 	cmp	#NOUN_BABY
 	beq	lake_west_throw_baby

@@ -12,11 +12,17 @@ lake_west_core:
 
 .include "../location_common/common_core.s"
 
+
+        ;====================================================
+        ; check if pebbles gone, and if so erase them
+
+	jsr	remove_pebbles
+
+
         ;====================================================
         ; clear the keyboard in case we were holding it down
 
         bit     KEYRESET
-
 
 	;=================================
 	;=================================
@@ -97,6 +103,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite.s"
 .include "lake_west_actions.s"
 .include "sprites_lake_west/bubble_sprites_w.inc"
+.include "sprites_lake_west/pebbles_sprites.inc"
 .include "animate_bubbles.s"
 
 
@@ -122,3 +129,49 @@ update_screen:
 
 
 	rts
+
+
+	;==========================
+	; remove pebbles
+	;==========================
+	; if pebbles picked up, erase them
+	; from background graphics
+remove_pebbles:
+
+	; erase if we're holding them
+	lda	INVENTORY_1
+	and	#INV1_PEBBLES
+	bne	undraw_pebbles
+
+	; erase if we had them but they're gone
+	lda	INVENTORY_1_GONE
+	and	#INV1_PEBBLES
+	beq	pebbles_are_fine
+
+undraw_pebbles:
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
+	lda	#<no_pebbles
+	sta	INL
+	inx
+	lda	#>no_pebbles
+	sta	INH
+
+	lda	#12		; 84/7 = 12
+	sta	CURSOR_X
+	lda	#100
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+pebbles_are_fine:
+	rts
+
+

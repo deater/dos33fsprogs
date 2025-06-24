@@ -1448,6 +1448,14 @@ look_check_if_in_inventory:
 	cmp	#NOUN_PEBBLES
 	beq	check_inventory_1
 
+	ldx	#INV1_PEBBLES
+	cmp	#NOUN_ROCK
+	beq	check_inventory_1
+
+	ldx	#INV1_PEBBLES
+	cmp	#NOUN_STONE
+	beq	check_inventory_1
+
 	ldx	#INV1_PILLS
 	cmp	#NOUN_PILLS
 	beq	check_inventory_1
