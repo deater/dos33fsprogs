@@ -1,0 +1,115 @@
+Based on the walkthrough from the hrwiki
+
+PART1: STINK Like a Peasant
+
++ Get the map (not necessary)
+  From start, W, S, W, W.  get map inside cottage
++ Get pebbles
+   E.  "get pebbles" (or rocks, or stones) (1 point)
+
++ Go to well
+   S, S. "turn crank"
+         "put pebbles in bucket"     (2 points)
+	 "turn crank".   Should now have mask
++ Talk to archer
+	S.  "talk man"  ( 2 points)
++ Go to Poor Gary
+	W, W, N "wear mask"      (2 points)
++ Hidden Glen
+	W.  "haldo"     (3 points)
+	"get arrow"     (2 points)
++ Go to lady cottage
+	E, N, E, E, E.	"open door"
+	"talk" "get chicken feed"	    (1 point)
+	leave, "get berries" all four bushes     (2 points)
++ Back to archery
+	W, N, W "talk" "give trinket"     (2 points)
+	"play"
++ Archery game
+    line up the tip of arrow with the furthest right or left pixel 
+    of the blue circle in strong winds (flag moving due left or right), 
+    one pixel inside of the formost part of the blue circle during mild 
+    winds (flag diagonal), and directly at the bullseye when the air is 
+    still (flag down).
+    press space, and then press space again  at red line
+	when second hits red, press space again
+    Three bullseyes to win the SuperTime FunBow TM.
+				    (3 points)
++ Kerrek
+	S, S "shoot kerrek"	    (5 points)
+	(rains)
++ "get belt"      (10 points)
+
+PART2: DRESS Like a Peasant
+
++ Mud Puddle (now wet)
+    N, N, W
+    walk in to get muddy      (2 points)
++ Haystack
+    W "jump into hay"		    (3 points)
++ Jhonka
+    S "get riches"  (hay blows away)
+	"no"			    (7 points)
++ Lady cottage
+    S, E, E, E "open door"
+	"give riches"		    (5 points)
++ Boat
+	N "talk man"
+        "throw chicken feed"     (2 points)
++ Inn
+	E "open door"
+	"give baby"		    (5 points)
+	Leave
++ West Lake
+	W, W
+	"throw baby"	    (5 points)
++ Well
+	N, N
+	"put baby in bucket"     (3 points)
+	"turn crank"
+	get baby back		 (2 points)
+
++ Ned hut
+	N, W, W
+	"move rock"		 (2 points)
+	"deploy baby"		(5 points)
++ Inside Hut
+	"open drawer"
+	"get robe"		(10 points)
+	"wear robe"		( 3 points)
+	"close drawer"		(1 point)
+
+PART3: ON FIRE Like a Peasant
+
++ Back to Inn
+	E, E, E, E, N "open door"
+	"talk man"
+	"get a room"		(3 points)
+	sleep 20 mins
+	"look pantry"
+	"get grease"			(2 points)
+	walk out with pot on head.      (3 points)
+		right->up, left->down, down->left, up->right
++ Lantern
+	S
+	on fire			(10 points)
+
+Trogdor:
+	N, N
+	"talk man"		(7 points)
+cliff
+	E, "climb"
+	climb cliff		(3 points)
+heights
+	+ E
+Outer
+	q1/ "give sub"		(5 points)
+	q2/ "give soda"		(5 points)
+	q3/ "give pills"	(5 points)
+Trogdor:
+	+ E
+	"use sword" w/o getting too close       (7 points)
+	"talk"		    (10 points)
+
+
+
