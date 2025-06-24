@@ -4,6 +4,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	knight_graphics.inc \
+	intro_knight_graphics.inc \
 	knight_priority.inc
 
 ###
@@ -19,6 +20,20 @@ knight.zx02:	knight.hgr
 
 knight.hgr:	knight.png
 	$(PNG2HGR) knight.png > knight.hgr
+
+###
+
+intro_knight_graphics.inc:	\
+	intro_knight.zx02
+	echo "knight_zx02: .incbin \"intro_knight.zx02\"" > intro_knight_graphics.inc
+
+###
+
+intro_knight.zx02:	intro_knight.hgr
+	$(ZX02) -f intro_knight.hgr intro_knight.zx02
+
+intro_knight.hgr:	intro_knight.png
+	$(PNG2HGR) intro_knight.png > intro_knight.hgr
 
 ###
 

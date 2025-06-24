@@ -42,9 +42,9 @@ intro_knight:
 	;=====================
 	; load bg
 
-	lda	#<(knight_zx02)
+	lda	#<(intro_knight_zx02)
 	sta	zx_src_l+1
-	lda	#>(knight_zx02)
+	lda	#>(intro_knight_zx02)
 	sta	zx_src_h+1
 
 	lda	#$60

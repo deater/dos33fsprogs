@@ -28,5 +28,5 @@ PT3_LOC:
 peasant_pt3:
 .incbin "peasant.pt3"
 
-knight_zx02:
-.incbin "../location_knight/graphics_knight/knight.zx02"
+intro_knight_zx02:
+.incbin "../location_knight/graphics_knight/intro_knight.zx02"
