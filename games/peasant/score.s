@@ -92,9 +92,21 @@ score_points:
 	sta	SCORE_HUNDREDS
 	cld			; clear BCD mode
 
+	;====================
 	; update score string
 
 	jsr	update_score
+
+
+	;====================
+	; modify DRAW_PAGE
+	; we want to draw to $6000 which is DRAW_PAGE $40
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40
+	sta	DRAW_PAGE
 
 	;========================
 	; clear top
@@ -117,6 +129,12 @@ clear_top:
 	; print score
 
 	jsr	print_score
+
+	;========================
+	; restore draw page
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 	;==========================
 	; play tone
