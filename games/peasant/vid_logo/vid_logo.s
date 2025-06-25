@@ -539,7 +539,9 @@ delays:
 
 ;             0123456789012345678901234567890123456789
 boot_message:
-.byte	0,0, "LOADING PEASANT'S QUEST V0.89",0
+.byte	0,0, "LOADING PEASANT'S QUEST V"
+.include "../version.inc"
+.byte	0
 .byte	0,3,"ORIGINAL BY VIDELECTRIX",0
 .byte	0,5,"APPLE II PORT: VINCE WEAVER",0
 .byte	0,6,"DISK CODE    : QKUMBA",0

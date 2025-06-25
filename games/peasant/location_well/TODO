@@ -1,0 +1,20 @@
+
+borders:
+	in actual game, walking down center pops you out gap in trees ar archery
+	walking to left pops you out the trees on left, but you can't
+	go back that way
+
+
+action:
+	turn crank
+		will walk from wherever you are to crank
+		
+		left of well says "you can't reach from there"
+
+		there's a somewaht narrow rectangular region from left
+		of well to tree and not to top/bottom it will walk you there
+
+		walking goes diagonal until one co-ord matches then goes
+			straight there
+
+	

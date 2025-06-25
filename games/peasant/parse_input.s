@@ -2,7 +2,6 @@
 .include "hardware.inc"
 .include "qload.inc"
 
-.include "version.inc"
 .include "./inventory/inventory.inc"
 .include "common_defines.inc"
 
@@ -1550,7 +1549,10 @@ inventory_there:
 	rts
 
 
-
+.byte   "APPLE ][ PEASANT'S QUEST",13
+.byte   "version "
+.include "version.inc"
+.byte 0
 
 
 parse_input_file_end:

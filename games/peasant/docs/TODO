@@ -21,12 +21,6 @@ current:
 	maybe have exiting x,y data in new_map_location somehow?
 
 
-===============================
-
-Sound effects:
-	+ Rocks make noise when crash
-	+ di-dit-da-do when falling
-
 New:
 ~~~~
 use updated speaker_beeps.s from music/redbook_sound
@@ -40,11 +34,14 @@ further out there:
 	include "Peasant's Quest" text in the background images so
 		it doesn't flicker when loaded?
 
+===============================
+
 input code:
-	once active, leave it up on screen with >
-	maybe leave it active all the time?
-	if move to next screen and active, preserve it
+	(done) once active, leave it up on screen with >
+	(done) maybe leave it active all the time?
+	(done) if move to next screen and active, preserve it
 	fix "version" not working?
+
 cliff:
 	force cloak/on-fire
 	remove bush

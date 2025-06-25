@@ -1,0 +1,9 @@
+
+walking:
+	in actual game, can only walk up through gap in tree, everything
+	else is blocked
+
+	walking south works in all places actual.  In our game you can
+	end up in lake in that
+
+	walking east it toward bottom will put you up mid-screen

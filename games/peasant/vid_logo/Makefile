@@ -12,7 +12,7 @@ VID_LOGO:	vid_logo.o
 
 vid_logo.o:	vid_logo.s ../qload.inc \
 		../hgr_routines/hgr_overlay.s ../redbook_sound.s \
-		../init_vars.s \
+		../init_vars.s ../version.inc \
 		graphics_vid/vid_graphics.inc
 	ca65 -o vid_logo.o vid_logo.s -l vid_logo.lst
 
