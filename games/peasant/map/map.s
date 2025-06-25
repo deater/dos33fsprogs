@@ -11,19 +11,15 @@
 .include "../inventory/inventory.inc"
 .include "../parse_input.inc"
 
-LOCATION_BASE	= LOCATION_MAP
-
 the_map:
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
 
-;	jsr	hgr_make_tables
-;	jsr	hgr2
 
 	; FIXME: clear and use DRAW_PAGE
 
-	jsr	hgr2_clearscreen
+;	jsr	hgr2_clearscreen
 
 	;=============================
 	;=============================
@@ -34,20 +30,22 @@ the_map:
 	lda	#0
 	sta	LEVEL_OVER
 
-	;=====================
-	; load bg
+	;===========================
+	; load bg to current screen?
 
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
 
 	lda	#<map_zx02
 	sta	zx_src_l+1
 	lda	#>map_zx02
 	sta	zx_src_h+1
 
-	lda	#$40
+	lda	DRAW_PAGE
+	clc
+	adc	#$20
 
 	jsr	zx02_full_decomp
 
