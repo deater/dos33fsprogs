@@ -1,0 +1,9 @@
+- Kerrek 1
+  + allow kerrek to hit from left (instead of just right)
+  + make sure kerrek hit animation doesn't go off screen
+  + Implement dead kerrek
+  + Animate kerrek (more frames)
+  + Animate shooting kerrek
+  + Sound effect when kerrek appears
+  + Animate getting belt
+  + Implement rain

@@ -1,50 +1,39 @@
-bugs:
-	can't hit escape to cancel in intro once start walking?
-	if you have text typed and then walk off screen it gets 
-		half-reset/corrupted?
-	
 
-todo:
+
+load/save:
 	add autosave feature?
 
 
-engine:
+general engine:
 	the "check haystack" code is missing from some locations.
 		it should really be a generic "countdown/check all states"
 		code to see when things like rain/etc run out
-
-current:
-	finish cliff_base (mostly walk_to)
-	fix/add sound effects for rocks/lightning
-	finish outer
-
 	maybe have exiting x,y data in new_map_location somehow?
+	updated qload code (???)
 
-
-New:
-~~~~
-use updated speaker_beeps.s from music/redbook_sound
-use updates ssi263 code from wargames
-	or alternately use SAM
-check if newer pt3_lib needed
-updated qload code
-
-
-further out there:
-	include "Peasant's Quest" text in the background images so
-		it doesn't flicker when loaded?
-
-===============================
+sound:
+	fix/add sound effects for rocks/lightning
+	use updated speaker_beeps.s from music/redbook_sound
+	use updates ssi263 code from wargames
+		or alternately use SAM
+	check if newer pt3_lib needed
+	-- Kerrek one is off
+	-- Various trogdor ones might use some help too
 
 input code:
 	(done) once active, leave it up on screen with >
 	(done) maybe leave it active all the time?
 	(done) if move to next screen and active, preserve it
-	fix "version" not working?
+	(done) fix "version" not working?
 
-cliff:
-	force cloak/on-fire
-	remove bush
+
+General:
+~~~~~~~~
++ wait for screen refresh on IIe/IIc/IIgs
++ (???) make text every 9th row so descenders don't interfere?
++ background priority mask not working when at far top of screen
++ fix issue where walking stops when you cross to screen w priority
+  (most visible, mountain pass to river)
 
 
 
@@ -54,36 +43,17 @@ QUESTIONS FOR VIDELECTRIX:
   It seems like if you enter from a screen and he's not there then
      he'll never appear from that direction unless you enter from
      a different direction
-+ Notes for the sound effects
-	-- Kerrek one is off
-	-- Various trogdor ones might use some help too
-
-
-TODO:
-
-General:
-~~~~~~~~
-+ fix the rectangle code to be proper (see hgr_hlin)
-+ wait for screen refresh on IIe/IIc/IIgs
-+ make text every 9th row so descenders don't interfere?
-+ background priority mask not working when at far top of screen
-+ fix issue where walking stops when you cross to screen w priority
-  (most visible, mountain pass to river)
-
 
 
 Peasant sprites:
 ~~~~~~~~~~~~~~~~
-+ Need some generic way of handling this/location in RAM to hold this?
-+ Wearing robe
-+ Wearing robe and on fire
 + Wearing haystack
 + Muddy
 
 Text parsing:
 ~~~~~~~~~~~~~
 
-+ always load CURERENT_NOUN into A before calling into parsing
++ (???) always load CURERENT_NOUN into A before calling into parsing
 	routines
 
 Each time enter room:
@@ -94,171 +64,13 @@ Each time enter room:
 + Update map visited location
 + Blow away haystack if applicable
 
-Title:
-~~~~~~
-+ print warning message on 48k systems that we need at least 64k
-  (done, but should we stop them from continuing?)
-+ Better electric duet music?
-
-Intro:
-~~~~~~
-+ Use walkto interface?
-+ Let message 2 last longer
-
-Map:
-~~~~
-+ Blot out areas you haven't been to
-+ Draw current location on map
-
-Game Over:
-~~~~~~~~~~
-+ more frames in animation for game_over
-+ better music for game over
 
 Loading Screen:
 ~~~~~~~~~~~~~~~
-+ Move all save games into one sector
-+ After loading, no need to clear text before moving to next level
++ (done) Move all save games into one sector
++ (????) After loading, no need to clear text before moving to next level
 + After loading, clear xadd/yadd so not walking
 
 
-Peasant1:
-~~~~~~~~~
 
-- Gary
-  + fly animation
-  + hook up mask stuff
-  + hook up animation when you get kicked
-  + hook up scare animation 
-  + hook up after-gary, fence hole and no horse
-  + update x-coords when walk off screen (fence)
-  + setup priority wall depending on if fence broken (lo-res box?)
-- Kerrek 1
-  + allow kerrek to hit from left (instead of just right)
-  + make sure kerrek hit animation doesn't go off screen
-  + Implement dead kerrek
-  + Animate kerrek (more frames)
-  + Animate shooting kerrek
-  + Sound effect when kerrek appears
-  + Animate getting belt
-  + Implement rain
-- Well
-  + Walk to
-  + Animate lowering bucket
-  + Animate getting mask
-  + Animate baby in well
-- Yellow Tree
-  + adjust enter/leaving x/y co-ordinates?
-- Waterfall
 
-Peasant2:
-~~~~~~~~~
-
-- Haystack
-  + Animate jumping into haystack
-  + Hook up sprites for walking hay
-  + adjust enter leave x/y (mostly near fence)
-- Puddle
-  + Alternate version with wet mud
-  + Animation for falling into mud
-- Archery
-  + Archer animations
-  + Hook up minigame
-  + fix where we can get stuck on top of targets at archery range
-- River/Rock
-  + Better/bigger River animation
-- Mountain Pass
-  + Knight animations
-  + Block path unless you have all three items
-
-Peasant3:
-~~~~~~~~~
-- Jhonka
-  + Animate Jhonka
-  + Take note off door once Kerrek dead
-  + Draw riches when applicable
-  + x/y when entering screen (along fence)
-- Cottage
-  + Fix y-coords when walking to Jhonka
-- West Lake
-  + Better/bigger water animation
-  + Make pebbles go away once you pick them up
-  + Animate "throw baby" sequence
-- East Lake
-  + Animate Boat
-  + Better/bigger water animation
-  + Animate whole fish-feeding sequence
-- Inn
-  + Take note off door once old man is inside
-  + Animate taking pot off head
-
-Peasant4:
-~~~~~~~~~
-- Ned Cottage
-  + Animate deploying baby
-  + Make door open once baby deployed
-  + enter x/y (mostly near fence)
-- Ned
-  + Animate Ned
-  + Can you walk behind him?
-- Kerrek2
-  + See Kerrek1
-- Lady Cottage outside
-  + Walk to bushes as search them
-- Burnt trees
-  + Animate flame at night
-
-Inside:
-~~~~~~~
-- Lady Cottage inside
-  + walk-to-shelf when get feed
-  + Rocking animation (both her there and not)
-- Jhonka Cave Inside
-  + Animate opening drawer
-- Hidden Glen
-  + Animate Dongolev
-  + Animate Dongolev shooting
-  + Walk to tree to get arrows
-
-Inside Inn:
-~~~~~~~~~~~
-+ Walk funny when pot on head
-+ Animate innkeeper (day)
-+ Animate pot falling on head
-+ Animate getting room (sleeping in bed, waking up)
-+ Animate night falling
-
-Cliff_Base:
-~~~~~~~~~~~
-+ Walk to
-
-Cliff Climb
-~~~~~~~~~~~
-+ Sound effects for rocks falling
-+ Sound effect for falling
-
-Cliff Heights
-~~~~~~~~~~~~~
-+ Improve left lightning
-
-Outer
-~~~~~
-+ Hook up dialog with keepers
-+ Animate keepers
-+ Animate the three deaths
-+ peasant sprites for the various outfits
-+ When give items, have them taken out of inventory
-+ If don't have item like sub, skip letting them try to give something
-
-Trogdor:
-~~~~~~~~
-+ Walk to
-+ Animate fire death
-+ Animate throwing sword
-+ Animate Trogdor standing up
-
-Ending:
-~~~~~~~
-+ Smoother baby animation?  Use page-flipping?
-+ Modify sprite routine to auto-shift colors so we can have more
-  of an arc on baby trajectory?

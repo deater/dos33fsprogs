@@ -1,4 +1,7 @@
-page flipping?
++ page flipping?
++ proper trogdor integration with animated lightning
++ print warning message on 48k systems that we need at least 64k
+  (done, but should we stop them from continuing?)
++ Better electric duet music?
 
-proper trogdor integration with animated lightning
 

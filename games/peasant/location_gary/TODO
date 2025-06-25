@@ -1,0 +1,9 @@
+- Gary
+  + fly animation
+  + hook up mask stuff
+  + hook up animation when you get kicked
+  + hook up scare animation
+  + hook up after-gary, fence hole and no horse
+  + update x-coords when walk off screen (fence)
+  + setup priority wall depending on if fence broken (lo-res box?)
+
