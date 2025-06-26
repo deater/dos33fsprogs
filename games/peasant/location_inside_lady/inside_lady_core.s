@@ -99,15 +99,15 @@ after_trinket_message:
 done_trinket_message:
 
 	; put outside door
-	lda	#$17
-	sta	PEASANT_X
-	lda	#$7D
-	sta	PEASANT_Y
+;	lda	#$17
+;	sta	PEASANT_X
+;	lda	#$7D
+;	sta	PEASANT_Y
 
 	; stop walking
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+;	lda	#0
+;	sta	PEASANT_XADD
+;	sta	PEASANT_YADD
 
 
 	; move back

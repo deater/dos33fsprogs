@@ -50,6 +50,9 @@ graphics_kerrek2/bottom_prints_graphics.inc:
 sprites_kerrek2/kerrek2_sprites.inc:
 	cd sprites_kerrek2 && make
 
+../location_kerrek1/sprites_kerrek1/kerrek_sprites.inc:
+	cd ../location_kerrek1/sprites_kerrek1 && make
+
 ###
 
 distclean:

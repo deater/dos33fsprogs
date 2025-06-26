@@ -72,8 +72,14 @@ exit_inside_inn:
 	; check if leaving
 
 	lda	PEASANT_Y
-	cmp	#$95
+	cmp	#149			; $95
 	bcc	skip_level_specific
+
+	; leaving inn
+
+	lda	#LOCATION_OUTSIDE_INN
+	jsr	update_map_location
+
 
 skip_level_specific:
 

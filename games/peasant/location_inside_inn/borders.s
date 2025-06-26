@@ -11,12 +11,12 @@ check_outside:
 	; need to position to correct x/y/facing co-ords
 
 	lda	MAP_LOCATION
-	cmp	#LOCATION_OUTSIDE_LADY
+	cmp	#LOCATION_OUTSIDE_INN
 	bne	check_north
 
-	lda	#23
+	lda	#9
 	sta	PEASANT_X
-	lda	#120
+	lda	#112
 	sta	PEASANT_Y
 
 	lda	#PEASANT_DIR_DOWN

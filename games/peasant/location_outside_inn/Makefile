@@ -38,7 +38,8 @@ outside_inn_core.o:	outside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
-		outside_inn_actions.s
+		outside_inn_actions.s \
+		sprites_outside_inn/sprites_inn.inc
 	ca65 -o outside_inn_core.o outside_inn_core.s -l outside_inn_core.lst
 
 
@@ -50,7 +51,7 @@ graphics_outside_inn/outside_inn_graphics.inc:
 graphics_outside_inn/outside_inn_priority.inc:
 	cd graphics_outside_inn && make
 
-sprites_outside_inn/outside_inn_sprites.inc:
+sprites_outside_inn/sprites_inn.inc:
 	cd sprites_outside_inn && make
 
 ###

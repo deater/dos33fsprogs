@@ -12,6 +12,11 @@ outside_inn_core:
 
 .include "../location_common/common_core.s"
 
+	;=======================================
+	; check if note is there, if so post it
+
+	jsr	post_note
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -126,7 +131,9 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "outside_inn_actions.s"
+.include "sprites_outside_inn/sprites_inn.inc"
 
+.include "../hgr_routines/hgr_sprite.s"
 
 	;=====================
 	; update screen
@@ -136,7 +143,6 @@ update_screen:
 	;===========================
 	; copy bg to current screen
 
-;	lda	#$60
 	jsr	hgr_copy_faster
 
 	;=====================
@@ -144,5 +150,43 @@ update_screen:
 
 	jsr	draw_peasant
 
+
+	rts
+
+
+	;==========================
+	; post note
+	;==========================
+	; default is no note
+	; if FISH_FED not true then post it
+post_note:
+
+	lda	GAME_STATE_1
+	and	#FISH_FED		; will be 1 if FISH_FED
+	bne	no_post_note
+
+draw_note:
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
+	lda	#<note_sprite
+	sta	INL
+	lda	#>note_sprite
+	sta     INH
+
+	lda	#9			; 63/7 = 9
+	sta	CURSOR_X
+	lda	#100
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+no_post_note:
 
 	rts
