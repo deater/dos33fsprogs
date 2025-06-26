@@ -1,5 +1,5 @@
-	;=======================
-	; animate gary of applicable
+	;============================
+	; animate gary if applicable
 
 
 flies_check_gary_out:
@@ -7,7 +7,7 @@ flies_check_gary_out:
 	lda	GAME_STATE_0
 	and	#GARY_SCARED
 	beq	do_draw_gary_flies
-	jmp	no_draw_gary_flies
+	jmp	no_draw_gary_flies	; if he's gone, don't draw him
 
 	;=====================
 	; draw the flies

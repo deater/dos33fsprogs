@@ -7,7 +7,7 @@
 .align $20
 .include "save1_30_heights.s"
 .align $20
-.include "save1_18_nn_cottage.s"
+.include "save2_01_gary.s"
 .align $20
 .include "save1_04_mask.s"
 
