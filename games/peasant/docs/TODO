@@ -1,4 +1,7 @@
 
+walking:
+	sub-pixel walking left/right?  Currently we walk too fast
+	Maybe even add sierra-style +/-
 
 load/save:
 	add autosave feature?

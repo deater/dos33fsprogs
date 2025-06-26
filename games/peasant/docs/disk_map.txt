@@ -26,6 +26,115 @@ DISK2
 	???		1-2
 	PSPRITE		3		1682 (1)
 	GAME_OVER	4		2074 (1)
+	MAP		5-6		2566 (1)
+	KNIGHT		7-8		5249 (2)
+	OUSTSIDE_INN	9-10		5043 (2)
+	INSIDE_INN	11-12		5903 (2)
+	BURN_TREE	13-14		4319 (2)
+	WATERFALL	15-16		3588 (1)
+	YELLOW_TREE	17-18		3466 (1)
+	RIVER		19-20		4813 (2)
+	LAKE_E		21-22		4266 (2)
+	LADY_COTTAGE	23-24		3793 (1)
+	INSIDE_LADY	25-26		5940 (2)
+	LAKE_W		27-28		3923 (1)
+	BROTHERS	29-30		5595 (2)
+	WELL		31-32		5113 (2)
+	KERREK2		33-34		4432 (2)
+
+DISK3
+	WBOOT3		0		159
+	???		1-2
+	PSPRITE		3		1682 (1)
+	GAME_OVER	4		2074 (1)
+	MAP		5-6		2566 (1)
+	KERREK1		7-8		4519 (2)
+	PUDDLE		9-10		2932 (1)
+	COTTAGE		11-12		3287 (1)
+	WAVY_TREE	13-14		2433 (1)
+	HAYSTACK	15-16		3801 (1)
+	JHONKA		17-18		5057 (2)
+	NED		19-20		4740 (2)		
+	INSIDE_NED	21-22		4292 92)
+	GARY		23-24		4341 (2)
+	HIDDEN_GLEN	25-26		5018 (2)
+	????		27-34		
+
+DISK4
+	WBOOT4		0		159
+	???		1-2
+	PSPRITE		3		1682 (1)
+	GAME_OVER	4		2074 (1)
+	MAP		5-6		2569 (2)
+	ARCHERY		7-10		2029 (1)
+	??		11-34
+
+DISK5
+	WBOOT5		0		159
+	CLIFF_BASE	1-2		5804 (2)
+	PSPRITE		3
+	GAME_OVER	4		2074
+	MAP		5-6		2569
+	CLIMB		7-10		12448 (4)
+	CLIFF_HEIGHTS	11-14		10345 (3)
+	OUTER		15-18		13491 (4)
+	TROGDOR		19-22		14782 (4)
+	ENDING		23-27		17038 (5)
+	???		28-34
+
+
+
+
+
+Actual Map
+
+  0         1         2           3         4                5
+Hidden	  gary      kerrek1     well      yellow tree    waterfall
+Glen
+          haystack   puddle    archery     river          knight
+
+	jhonka      cottage     lake w    lake e           inn
+                                                           (inside inn)
+
+	ned         wavy        kerrek2   lady cottage     burninate
+       (inside ned)                        (inside lady)
+
+
+                                   14     | 10
+
+
+
+; OLD OLD OLD
+
+
+
+Common: peasant sprites (1)	TRACK3
+	game over	(1)	TRACK4
+	map		(2)	TRACK5+6
+
+
+Disk1
+	QBOOT		0	0..6?
+	SAVE_DATA	0	12
+	QLOAD		1-2		5340 (2)
+	PSPRITE		3		1682 (1)
+	GAME_OVER	4		2074 (1)
+	MAP		5-6		2569 (1)
+	MUSIC		7-8		4045 (1)
+	VID_LOGO	9-10		7343 (2)
+	TITLE		11-13		8500 (3)
+	INTRO		14-17		13827 (4)
+	PARSE_INPUT	18		3261 (1)
+	INVENTORY	19		3122 (1)
+	???		21-29
+	COPY_CHECK	30		2834 (1)
+	???		31-34
+
+DISK2
+	WBOOT2		0		159
+	???		1-2
+	PSPRITE		3		1682 (1)
+	GAME_OVER	4		2074 (1)
 	MAP		5-6		2569 (1)
 	7-9		???
 	GARY		10-11		4347 (2)
@@ -85,23 +194,3 @@ DISK5
 	TROGDOR		19-22		14782 (4)
 	ENDING		23-27		17038 (5)
 	???		28-34
-
-
-
-
-
-Actual Map
-
-  0         1         2           3         4                5
-Hidden	  gary      kerrek1     well      yellow tree    waterfall
-Glen
-          haystack   puddle    archery     river          knight
-
-	jhonka      cottage     lake w    lake e           inn
-                                                           (inside inn)
-
-	ned         wavy        kerrek2   lady cottage     burninate
-       (inside ned)                        (inside lady)
-
-
-                                   14     | 10
