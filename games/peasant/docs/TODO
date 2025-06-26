@@ -5,7 +5,7 @@ walking:
 
 load/save:
 	add autosave feature?
-
+	move savegame to disk2?
 
 general engine:
 	the "check haystack" code is missing from some locations.

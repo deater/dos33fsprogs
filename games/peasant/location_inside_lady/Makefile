@@ -37,7 +37,8 @@ inside_lady_core.o:	inside_lady_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		inside_lady_actions.s
+		inside_lady_actions.s \
+		sprites_inside_lady/lady_cottage_sprites.inc
 	ca65 -o inside_lady_core.o inside_lady_core.s -l inside_lady_core.lst
 
 
@@ -49,7 +50,7 @@ graphics_inside_lady/inside_lady_graphics.inc:
 graphics_inside_lady/inside_lady_priority.inc:
 	cd graphics_inside_lady && make
 
-sprites_inside_lady/inside_lady_sprites.inc:
+sprites_inside_lady/lady_cottage_sprites.inc:
 	cd sprites_inside_lady && make
 
 ###

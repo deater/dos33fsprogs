@@ -157,6 +157,7 @@ really_level_over:
 
 .include "inside_lady_actions.s"
 
+.include "sprites_inside_lady/lady_cottage_sprites.inc"
 .include "../hgr_routines/hgr_sprite.s"
 
 
@@ -173,6 +174,11 @@ update_screen:
 	jsr	hgr_copy_faster
 
 
+	;====================
+	; draw lady and/or chair
+
+	jsr	draw_lady
+
 	;=====================
 	; always draw peasant
 
@@ -180,3 +186,45 @@ update_screen:
 
 
 	rts
+
+
+
+
+	;========================
+	; draw lady
+	;========================
+	; FIXME: draw chair after she's left
+
+draw_lady:
+
+	lda	FRAME
+	and	#$f
+	lsr
+	tax
+	lda	lady_frame_which,X
+
+	tax
+	lda	lady_sprites_l,X
+	sta	INL
+	lda	lady_sprites_h,X
+	sta	INH
+
+	lda	#18
+	sta     CURSOR_X
+	lda	#127
+	sta	CURSOR_Y
+
+        jsr     hgr_draw_sprite
+
+	rts
+
+
+
+lady_frame_which:
+	.byte 0,1,1,2,2,1,1,0	; FIXME
+
+lady_sprites_l:
+	.byte <lady_rock0,<lady_rock1,<lady_rock2
+
+lady_sprites_h:
+	.byte >lady_rock0,>lady_rock1,>lady_rock2
