@@ -31,8 +31,7 @@ INSIDE_INN_CORE:	inside_inn_core.o
 inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../inventory/inventory.inc \
 		../parse_input.inc \
-		../move_peasant.s ../draw_peasant.s \
-		../gr_copy.s ../hgr_routines/hgr_copy.s \
+		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		inside_inn_actions.s \
 		../text/DIALOG_INSIDE_INN.ZX02 ../text/dialog_inside_inn.inc \
@@ -54,4 +53,4 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst INSIDE_INN_LOOKUP INSIDE_INN_CORE
+	rm -f *~ *.o *.lst INSIDE_INN_LOADER INSIDE_INN_CORE
