@@ -18,7 +18,7 @@ main_game_loop:
 
 	jsr	load_file_internal	; actually load intro
 
-entry_smc:
+entry_point_smc:
 	jsr	$6000			; run intro
 
 	jmp	main_game_loop
@@ -40,6 +40,7 @@ load_file_internal:
 load_file_no_diskcheck:
 	lda	load_address_array,X		; setup address
 	sta	load_address
+	sta	entry_point_smc+2		; self-modify entry point
 
 	lda	track_array,X			; setup track
 	sta	load_track

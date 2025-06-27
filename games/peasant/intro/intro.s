@@ -273,3 +273,6 @@ done_intro_drain_keyboard_buffer:
 	stx	KEY_OFFSET
 	rts
 
+peasant_quest_intro_end:
+
+.assert (>peasant_quest_intro_end - >peasant_quest_intro) < $30 , error, "intro too big"
