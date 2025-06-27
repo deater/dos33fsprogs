@@ -101,10 +101,12 @@ really_level_over:
 
 .include "lake_east_actions.s"
 .include "sprites_lake_east/boat_sprites.inc"
+.include "sprites_lake_east/boat_sprites_fish.inc"
 .include "sprites_lake_east/bubble_sprites_e.inc"
 
 .include "animate_bubbles.s"
-
+.include "animate_fish.s"
+.include "../wait_a_bit.s"
 
 
 	;=====================
@@ -174,3 +176,7 @@ done_choose_boat:
 
 done_dude:
 	rts
+
+
+
+

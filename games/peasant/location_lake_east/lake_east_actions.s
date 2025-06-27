@@ -202,6 +202,10 @@ throw_feed_hes_there:
 	lda	#2
 	jsr	score_points
 
+	; animate fish
+
+	jsr	animate_fish
+
 	ldx	#<lake_east_throw_feed2_message
 	ldy	#>lake_east_throw_feed2_message
 	jmp	finish_parse_message
