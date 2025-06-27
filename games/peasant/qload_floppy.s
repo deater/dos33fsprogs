@@ -103,6 +103,13 @@ nothing_in_drive2:
 	;==============================
 	; print "insert disk" message
 
+	; print to current screen
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+	eor	#$20
+	sta	DRAW_PAGE
+
 	lda	#<insert_disk_string
 	sta	OUTL
 	lda	#>insert_disk_string
@@ -120,6 +127,11 @@ nothing_in_drive2:
 
 	jsr	hgr_text_box
 
+	; switch back
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
 fnf_keypress:
 	lda	KEYPRESS
 	bpl	fnf_keypress
@@ -132,8 +144,6 @@ verify_disk:
 	lda	WHICH_LOAD
 	pha
 
-LOAD_FIRST_SECTOR = 22
-
 	ldx	#LOAD_FIRST_SECTOR	; load track 0 sector 0
 	stx	WHICH_LOAD
 
@@ -143,7 +153,7 @@ LOAD_FIRST_SECTOR = 22
 	sta	WHICH_LOAD
 	tax
 
-	; first sector now in $BC00
+	; first sector now in load_buffer+$5B (currently $E85b)
 	;	offset 5B
 	;		disk1 = $12		; WHY???
 	;		disk2 = $32 ('2')
@@ -151,7 +161,7 @@ LOAD_FIRST_SECTOR = 22
 	;		disk3 = $34 ('4')
 	;		disk3 = $35 ('5')
 
-	lda	$BC5B
+	lda	load_buffer+$5B
 
 	cmp	#$12
 	beq	is_disk1
@@ -196,8 +206,9 @@ update_disk:
 	lda	which_disk_array,X
 	sta	CURRENT_DISK
 
-	ldx	CURRENT_DRIVE
-	sta	DRIVE1_DISK-1,X		; indexed from 1
+; leftover from 2-drive support?
+;	ldx	CURRENT_DRIVE
+;	sta	DRIVE1_DISK-1,X		; indexed from 1
 
 	jmp	load_file
 

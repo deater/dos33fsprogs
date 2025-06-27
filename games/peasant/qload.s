@@ -94,7 +94,7 @@ length_array:
 .byte  32,32,32,32,32	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte  32,32,32		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte   1,16,1		; SAVE_DATA, PEASANT_SPRITES , ?
-.byte   1		; disk detect
+.byte   1		; disk detect	; 43
 
 
 load_file:
