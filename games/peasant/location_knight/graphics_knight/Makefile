@@ -56,6 +56,10 @@ knight_priority.gr:	knight_priority.png
 knight_collision.bin:	knight_collision.png
 	$(PNG2COLLISION) knight_collision.png knight_collision.bin
 
+knight_collision2.bin:	knight_collision2.png
+	$(PNG2COLLISION) knight_collision2.png knight_collision2.bin
+
+
 ####
 
 clean:	

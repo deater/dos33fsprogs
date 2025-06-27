@@ -266,7 +266,7 @@ knight_belt_robe:
 	jmp	finish_parse_message
 
 knight_belt_fire:
-	; TODO: move knight, open path
+
 
 	; score points
 	lda	#7
@@ -278,7 +278,17 @@ knight_belt_fire:
 
 	ldx	#<talk_knight_after_robe_belt_fire_message2
 	ldy	#>talk_knight_after_robe_belt_fire_message2
-	jmp	finish_parse_message
+	jsr	finish_parse_message
+
+	; TODO: move knight animation
+
+	lda	GAME_STATE_3
+	ora	#KNIGHT_MOVED
+	sta	GAME_STATE_3
+
+	jsr	move_knight
+
+	rts
 
 
 .include "../text/dialog_knight.inc"

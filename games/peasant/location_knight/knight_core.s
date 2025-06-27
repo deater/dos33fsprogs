@@ -15,6 +15,12 @@ knight_core:
 .include "../location_common/common_core.s"
 
 
+	;=================================
+	; see if need to move knight
+
+	jsr	move_knight
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -144,6 +150,7 @@ draw_knight:
 	lda	#24		; 168/7=24
 	sta	SPRITE_X
 
+knight_y_smc:
 	lda	#92
 	sta	SPRITE_Y
 
@@ -208,3 +215,44 @@ sprites_mask_h:
 	.byte >ks0_mask,>kw0_mask,>kw1_mask
 	.byte >yw0_mask,>yw1_mask,>yw2_mask,>yw3_mask
 	.byte >yw4_mask,>yw5_mask,>yw6_mask,>yw7_mask
+
+
+
+	;================================
+	; move the knight out of way
+	;	only if knight moved
+move_knight:
+
+	lda	GAME_STATE_3
+	and	#KNIGHT_MOVED
+	beq	done_move_knight
+
+	;=====================
+	; move Y position
+
+	lda	#100		; +8?
+	sta	knight_y_smc+1
+
+	;===================================
+	; FIXME: need to update priority too
+
+	;===============================================
+	; patch collision detect so we can walk through
+
+;	-91  3f 21
+;	+91  20 20
+
+	lda	#20
+	sta	collision_location+$91
+	sta	collision_location+$92
+
+;	-b9  fc 9c
+;	+b9  7c 7c
+
+	lda	#$7c
+	sta	collision_location+$b9
+	sta	collision_location+$ba
+
+
+done_move_knight:
+	rts

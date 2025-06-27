@@ -1,7 +1,7 @@
 ; SAVE1 -- On Fire
 
 ;
-.byte LOAD_PEASANT2	; WHICH_LOAD	= 	$90
+.byte LOAD_KNIGHT	; WHICH_LOAD	= 	$90
 .byte 10		; PEASANT_X	=	$91
 .byte 100		; PEASANT_Y	=	$92
 .byte PEASANT_DIR_UP	; PEASANT_DIR	=	$93
