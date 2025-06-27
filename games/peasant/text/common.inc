@@ -242,8 +242,14 @@ look_inventory_there_message:
 ; + show priority
 ; + version
 
+;version_message:
+;.include "../version.inc"
+
 version_message:
+.byte   "APPLE ][ PEASANT'S QUEST",13
+.byte   "version "
 .include "../version.inc"
+.byte 0
 
 ; + copy
 

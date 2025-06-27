@@ -1548,11 +1548,11 @@ inventory_there:
 	clc
 	rts
 
-
-.byte   "APPLE ][ PEASANT'S QUEST",13
-.byte   "version "
-.include "version.inc"
-.byte 0
+;version_message:
+;.byte   "APPLE ][ PEASANT'S QUEST",13
+;.byte   "version "
+;.include "version.inc"
+;.byte 0
 
 
 parse_input_file_end:

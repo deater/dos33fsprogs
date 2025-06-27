@@ -17,7 +17,7 @@ all:	peasant_disk1.dsk peasant_disk2.dsk peasant_disk3.dsk \
 peasant_disk1.dsk:	QBOOT QLOAD \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./saves/SAVE_DATA PARSE_INPUT.ZX02 \
+	PARSE_INPUT.ZX02 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
 	map/MAP
@@ -25,7 +25,6 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  4 QBOOT      2   1
-	$(DOS33_RAW) peasant_disk1.dsk  0 12 ./saves/SAVE_DATA  0   1
 	$(DOS33_RAW) peasant_disk1.dsk  1  0 QLOAD      0   0
 	$(DOS33_RAW) peasant_disk1.dsk  3  0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk1.dsk  4  0 ./game_over/GAME_OVER    0   0
@@ -40,6 +39,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	./wrong_boot/WBOOT2 \
+	./saves/SAVE_DATA \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
 	map/MAP \
@@ -59,6 +59,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./location_kerrek2/KERREK2_LOADER
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
+	$(DOS33_RAW) peasant_disk1.dsk   0 12 ./saves/SAVE_DATA  0   1
 	$(DOS33_RAW) peasant_disk2.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk2.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk2.dsk   5 0 ./map/MAP          0   0
@@ -147,13 +148,14 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
+	./saves/SAVE_DATA \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./archery/ARCHERY \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./location_outer/OUTER_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
-	./saves/SAVE_DATA PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
+	PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_inside_lady/INSIDE_LADY_LOADER \
 	./location_inside_ned/INSIDE_NED_LOADER \
 	./location_hidden_glen/HIDDEN_GLEN_LOADER \
@@ -182,7 +184,6 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 1 0 12` ./saves/SAVE_DATA      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 3  0` ./sprites_peasant/PEASANT_SPRITES_COMMON    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 4  0` ./game_over/GAME_OVER    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 5  0` ./map/MAP          0   0
@@ -194,6 +195,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 19 0` ./inventory/INVENTORY  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 0 12` ./saves/SAVE_DATA      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  7 0` ./location_knight/KNIGHT_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  9 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 11 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0

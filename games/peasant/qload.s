@@ -37,7 +37,7 @@ which_disk_array:
 .byte 3,3,2,2,2		; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte 3,3,2,2,2		; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte 2,3,3		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte 1,$FF,1		; SAVE_DATA, PEASANT_SPRITES, ?
+.byte 2,$FF,1		; SAVE_DATA, PEASANT_SPRITES, ?
 .byte $FF		; disk detect
 
 load_address_array:
