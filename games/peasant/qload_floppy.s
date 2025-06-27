@@ -66,9 +66,11 @@ change_disk:
 
 	; see if disk we want is in drive1
 check_drive1:
-	lda	which_disk_array,X
-	cmp	DRIVE1_DISK
-	bne	disk_not_found
+;	lda	which_disk_array,X
+;	cmp	CURRENT_DISK
+
+;	cmp	DRIVE1_DISK
+;	bne	disk_not_found
 
 ;	jsr	switch_drive1		; switch to drive1
 ;	jmp	update_disk

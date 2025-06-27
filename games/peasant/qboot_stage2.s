@@ -566,12 +566,12 @@ slotpatch10:
 
 	; this could be more compact
 
-	lda	CURRENT_DRIVE
-	cmp	#2
-	bne	done_drive_select
+;	lda	CURRENT_DRIVE
+;	cmp	#2
+;	bne	done_drive_select
+	jmp	done_drive_select
 
-
-driveon_disk2:
+;driveon_disk2:
 
 slotpatch11:
 	lda     $C0d1		;       drive 2 select

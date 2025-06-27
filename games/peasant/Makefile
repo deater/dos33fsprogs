@@ -59,7 +59,7 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	./location_kerrek2/KERREK2_LOADER
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
-	$(DOS33_RAW) peasant_disk1.dsk   0 12 ./saves/SAVE_DATA  0   1
+	$(DOS33_RAW) peasant_disk2.dsk   0 12 ./saves/SAVE_DATA  0   1
 	$(DOS33_RAW) peasant_disk2.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk2.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk2.dsk   5 0 ./map/MAP          0   0

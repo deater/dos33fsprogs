@@ -240,35 +240,35 @@ preread:
 	ldy	#firstsec
 	rts
 
-switch_drive1:
+;switch_drive1:
 ;	lda	CURRENT_DRIVE
 ;	cmp	#1
 ;	beq	switch_drive1
 
-	lda	curtrk_smc+1
-	sta	DRIVE2_TRACK	;	save track location
+;	lda	curtrk_smc+1
+;	sta	DRIVE2_TRACK	;	save track location
 ;slotpatch10:
 ;	lda	$C0d1		; 	drive 1 select
-	lda	#1
-	sta	CURRENT_DRIVE
-	lda	DRIVE1_TRACK	;	restore saved track location
-	sta	curtrk_smc+1
-	rts
+;	lda	#1
+;	sta	CURRENT_DRIVE
+;	lda	DRIVE1_TRACK	;	restore saved track location
+;	sta	curtrk_smc+1
+;	rts
 
-switch_drive2:
+;switch_drive2:
 ;	lda	CURRENT_DRIVE
 ;	cmp	#2
 ;	beq	switch_drive2
 
-	lda	curtrk_smc+1
-	sta	DRIVE1_TRACK	;	save track location
+;	lda	curtrk_smc+1
+;	sta	DRIVE1_TRACK	;	save track location
 ;slotpatch11:
 ;	lda	$C0d1		;	drive 2 select
-	lda	#2
-	sta	CURRENT_DRIVE
-	lda	DRIVE2_TRACK	;	restore saved track location
-	sta	curtrk_smc+1
-	rts
+;	lda	#2
+;	sta	CURRENT_DRIVE
+;	lda	DRIVE2_TRACK	;	restore saved track location
+;	sta	curtrk_smc+1
+;	rts
 
 
 

@@ -40,11 +40,6 @@ save_menu:
 	;=====================
 common_menu:
 
-	; HACK: make DRAW_PAGE current visible one
-
-	lda	DRAW_PAGE
-	eor	#$20
-	sta	DRAW_PAGE
 
 
 	;============================
@@ -52,6 +47,18 @@ common_menu:
 	; updating the save info
 
 	jsr	update_save_info
+
+
+	; HACK: make DRAW_PAGE current visible one
+
+	; note: do this after the "update" above because it might
+	; swap DRAW_PAGE itself when prompting for a disk change
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+	eor	#$20
+	sta	DRAW_PAGE
+
 
 	;============================
 	; Next update the save message
@@ -480,8 +487,8 @@ load_game:
 
 	; actually load it
 
-	lda	#LOAD_SAVE1		; should already be loaded?
-	jsr	load_file		; is this necessary?
+;	lda	#LOAD_SAVE1		; should already be loaded?
+;	jsr	load_file		; is this necessary?
 
 	; copy to zero page
 
@@ -507,6 +514,12 @@ load_buffer_smc:
 	sta	LEVEL_OVER
 
 done_load:
+
+	;==================
+	; restore draw page
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 	rts
 
