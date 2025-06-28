@@ -182,7 +182,7 @@ knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priorit
 
 
 .include "animate_bubbles.s"
-.include "../location_river/animate_river.s"
+.include "animate_river.s"
 
 skip_text:
         .byte 0,2,"ESC Skips",0

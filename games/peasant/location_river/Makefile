@@ -37,6 +37,8 @@ river_core.o:	river_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
+		animate_river.s \
+		sprites_river/river_current_sprites.inc \
 		river_actions.s
 	ca65 -o river_core.o river_core.s -l river_core.lst
 
@@ -46,7 +48,7 @@ river_core.o:	river_core.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_river/river_graphics.inc:
 	cd graphics_river && make
 
-sprites_river/river_sprites.inc:
+sprites_river/river_current_sprites.inc:
 	cd sprites_river && make
 
 ###
