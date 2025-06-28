@@ -101,7 +101,9 @@ really_level_over:
 
 .include "../hgr_routines/hgr_sprite.s"
 .include "river_actions.s"
+
 .include "animate_river.s"
+.include "sprites_river/river_current_sprites.inc"
 
 	;==========================
 	; update screen

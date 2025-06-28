@@ -78,7 +78,7 @@ border_update_x:
 
 					; fine if at far left
 
-not_goint_to_archery:
+not_going_to_archery:
 
 check_east:
 check_west:
