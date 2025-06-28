@@ -8,7 +8,8 @@
 ;.include "save1_30_heights.s"
 .include "save1_24_on_fire.s"
 .align $20
-.include "save2_01_gary.s"
+;.include "save2_01_gary.s"
+.include "save2_02_feed.s"
 .align $20
 .include "save1_04_mask.s"
 

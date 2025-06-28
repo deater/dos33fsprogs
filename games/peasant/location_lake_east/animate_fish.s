@@ -3,10 +3,66 @@
 	;=============================
 	; based on the scene from ending
 
+	;=================================
+	; Print first message (note, boat keeps moving when displayed)
+	;
+	;	throw one handful
+	;		when hand up in air the feed released
+	;		goes up and left
+	;		left down
+	;		left down (hand lowers a notch)
+	;		feed disappears, back to start
+	;	throw second handful
+	;		starts catching (with noise)
+	;		pauses briefly
+	; Second message
+	;	key pressed
+	;	wheep-clunk of points being added
+	;
+
+animate_throw:
+
+	ldy	#0
+	sty	BABY_COUNT
+
+	lda	#1			; turn off our peasant
+	sta	SUPPRESS_PEASANT
+
+throw_loop:
+	jsr	update_screen
+
+	lda	PEASANT_X
+	sta	SPRITE_X
+	lda	PEASANT_Y
+	sta	SPRITE_Y
+
+	ldy	BABY_COUNT
+	ldx	throw_progress,Y
+
+	jsr	hgr_draw_sprite_mask
+
+	jsr	hgr_page_flip
+
+	lda	#4
+	jsr	wait_a_bit
+
+	inc	BABY_COUNT
+	lda	BABY_COUNT
+	cmp	#14
+	beq	done_animate_throw
+	jmp	throw_loop
+done_animate_throw:
+
+	;==========================
+	; handle catching fish
+	;==========================
+
+
 animate_fish:
 
 	lda	#0
-	sta	 BABY_COUNT
+	sta	BABY_COUNT
+	sta	SUPPRESS_PEASANT
 fish_loop:
 
 	; play sound effect
@@ -112,3 +168,8 @@ boat_progress_h:
 	.byte >boat0,>boat1
 	.byte >boat2,>boat3,>boat3
 	.byte >boat4,>boat5,>boat6,>boat7,>boat7
+
+
+throw_progress:
+	.byte 0,1,2,3,4,5,6,0,1,2,3,4,5,6
+

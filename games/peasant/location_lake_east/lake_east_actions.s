@@ -181,6 +181,7 @@ do_have_feed:
 
 throw_feed_hes_there:
 
+	;============================
 	; actually throw feed
 
 	ldx	#<lake_east_throw_feed_message
@@ -197,18 +198,22 @@ throw_feed_hes_there:
 	ora	#INV1_CHICKEN_FEED
 	sta	INVENTORY_1_GONE
 
-	; add 2 points to score
+	; animate feed+fish
 
-	lda	#2
-	jsr	score_points
-
-	; animate fish
-
-	jsr	animate_fish
+	jsr	animate_throw
 
 	ldx	#<lake_east_throw_feed2_message
 	ldy	#>lake_east_throw_feed2_message
-	jmp	finish_parse_message
+	jsr	finish_parse_message
+
+	; add 2 points to score
+	; this happens after message
+
+	lda	#2
+	jmp	score_points
+
+
+
 
 throw_feed_too_south:
 	ldx	#<lake_east_throw_feed_too_south_message

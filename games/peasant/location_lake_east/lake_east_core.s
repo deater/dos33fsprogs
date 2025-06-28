@@ -98,11 +98,13 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "lake_east_actions.s"
 .include "sprites_lake_east/boat_sprites.inc"
 .include "sprites_lake_east/boat_sprites_fish.inc"
 .include "sprites_lake_east/bubble_sprites_e.inc"
+.include "sprites_lake_east/throw_sprites.inc"
 
 .include "animate_bubbles.s"
 .include "animate_fish.s"
@@ -134,10 +136,13 @@ update_screen:
 
 
 	;=====================
-	; always draw peasant
+	; almost always draw peasant
+
+	lda	SUPPRESS_PEASANT
+	bne	skip_peasant
 
 	jsr	draw_peasant
-
+skip_peasant:
 
 	rts
 
@@ -177,6 +182,38 @@ done_choose_boat:
 done_dude:
 	rts
 
+sprites_data_l:
+	.byte <throw_sprite0,<throw_sprite1,<throw_sprite2
+	.byte <throw_sprite3,<throw_sprite4,<throw_sprite5
+	.byte <throw_sprite6
+	.byte <feed_sprite0,<feed_sprite1,<feed_sprite2,<feed_sprite3
 
+sprites_data_h:
+	.byte >throw_sprite0,>throw_sprite1,>throw_sprite2
+	.byte >throw_sprite3,>throw_sprite4,>throw_sprite5
+	.byte >throw_sprite6
+	.byte >feed_sprite0,>feed_sprite1,>feed_sprite2,>feed_sprite3
 
+sprites_mask_l:
+	.byte <throw_mask0,<throw_mask1,<throw_mask2
+	.byte <throw_mask3,<throw_mask4,<throw_mask5
+	.byte <throw_mask6
+	; mask and sprite are the same
+	.byte <feed_sprite0,<feed_sprite1,<feed_sprite2,<feed_sprite3
 
+sprites_mask_h:
+	.byte >throw_mask0,>throw_mask1,>throw_mask2
+	.byte >throw_mask3,>throw_mask4,>throw_mask5
+	.byte >throw_mask6
+	.byte >feed_sprite0,>feed_sprite1,>feed_sprite2,>feed_sprite3
+
+sprites_xsize:
+	.byte 2,2,2
+	.byte 2,2,2
+	.byte 2
+	.byte 2,2,2,2
+sprites_ysize:
+	.byte 30,30,30
+	.byte 30,30,30
+	.byte 30
+	.byte 10,11,10,8

@@ -284,9 +284,11 @@ REFRESH_SCREEN	= $B5
 INPUT_X		= $C0
 
 BOX_X1L		= $C1		; draw box
-BOX_Y1		= $C3
-BOX_X2L		= $C4
-BOX_Y2		= $C6
+BOX_Y1		= $C2
+BOX_X2L		= $C3
+BOX_Y2		= $C4
+
+SUPPRESS_PEASANT=$C5		; don't draw peasant
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8
@@ -300,8 +302,8 @@ IN_QUIZ		= $CA	; cliff heights
 WHICH_QUIZ	= $CB	; cliff heights
 OLD_DIR		= $CC	; cliff heights
 
-PREV_X		= $CD	; ??
-PREV_Y		= $CE	; ??
+PREV_X		= $CD	; kerrek
+PREV_Y		= $CE	; kerrek
 
 ; D0-D? used by HGR?
 
