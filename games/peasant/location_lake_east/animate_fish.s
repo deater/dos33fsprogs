@@ -48,23 +48,25 @@ throw_loop:
 	;=======================
 	; draw feed
 
+	ldy	BABY_COUNT
+	lda	feed_progress,Y
+	beq	skip_draw_feed
+
 	sec
 	lda	PEASANT_X
-	sbc	#1
+	sbc	feed_xadd,Y
 	sta	SPRITE_X
 
 	clc
 	lda	PEASANT_Y
-	adc	#10
+	adc	feed_yadd,Y
 	sta	SPRITE_Y
 
-;	ldy	BABY_COUNT
-;	ldx	throw_progress,Y
-
-	ldx	#7
+	ldx	feed_progress,Y
 
 	jsr	hgr_draw_sprite_mask
 
+skip_draw_feed:
 
 
 	jsr	hgr_page_flip
@@ -74,7 +76,7 @@ throw_loop:
 
 	inc	BABY_COUNT
 	lda	BABY_COUNT
-	cmp	#14
+	cmp	#18
 	beq	done_animate_throw
 	jmp	throw_loop
 done_animate_throw:
@@ -197,6 +199,30 @@ boat_progress_h:
 	.byte >boat4,>boat5,>boat6,>boat7,>boat7
 
 
+	; 0 = arm back, 1=shoulder level
+	; 2 = in more   3=out
+	; 4 = vaguely up, feed compact, level with head
+	; 5 = same, feed one more left, slightly higher
+	; 6 = same, feed level with neck
+	; 7 = hand lowered, feed lower (hard to see?)
+	; repeat
+
+	; 18 total
+
 throw_progress:
-	.byte 0,1,2,3,4,5,6,0,1,2,3,4,5,6
+	.byte 0,1,2,3,4, 5,6,6,5
+	.byte 0,1,2,3,4, 5,6,6,5
+
+; 0 = none
+feed_progress:
+	.byte 0,0,0,0,0, 7,8,9,10
+	.byte 0,0,0,0,0, 7,8,9,10
+
+feed_xadd:
+	.byte 0,0,0,0,0, 2,3,4,5
+	.byte 0,0,0,0,0, 2,3,4,5
+
+feed_yadd:
+	.byte 0,0,0,0,0, 8,4,12,20
+	.byte 0,0,0,0,0, 8,4,12,20
 
