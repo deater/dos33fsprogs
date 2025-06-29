@@ -126,8 +126,11 @@ update_screen:
 	;===========================
 	; draw dude/boat
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_BOAT
+	bne	skip_boat
 	jsr	draw_dude
-
+skip_boat:
 
 	;===========================
 	; draw bubbles
@@ -139,7 +142,8 @@ update_screen:
 	;=====================
 	; almost always draw peasant
 
-	lda	SUPPRESS_PEASANT
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
 	bne	skip_peasant
 
 	jsr	draw_peasant

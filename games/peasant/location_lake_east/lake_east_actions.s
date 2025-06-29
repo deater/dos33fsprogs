@@ -188,7 +188,13 @@ throw_feed_hes_there:
 	ldy	#>lake_east_throw_feed_message
 	jsr	partial_message_step
 
+
+	; animate feed+fish
+
+	jsr	animate_throw
+
 	; feed fish
+	; (do this after or boat won't be drawn)
 	lda	GAME_STATE_1
 	ora	#FISH_FED
 	sta	GAME_STATE_1
@@ -198,9 +204,6 @@ throw_feed_hes_there:
 	ora	#INV1_CHICKEN_FEED
 	sta	INVENTORY_1_GONE
 
-	; animate feed+fish
-
-	jsr	animate_throw
 
 	ldx	#<lake_east_throw_feed2_message
 	ldy	#>lake_east_throw_feed2_message

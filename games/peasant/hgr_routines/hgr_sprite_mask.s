@@ -182,7 +182,7 @@ hgr_draw_sprite_both:
 	; if so TEMP_SPRITE should be anded with $7f previously
 	; and temp mask should have high bit set
 
-.if USE_BG_PALETTE
+.ifdef USE_BG_PALETTE
 	lda	TEMP_SPRITE
 	and	#$7f
 	sta	TEMP_SPRITE		; clear palette bit on sprite

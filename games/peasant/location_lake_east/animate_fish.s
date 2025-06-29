@@ -7,7 +7,7 @@
 	; Print first message (note, boat keeps moving when displayed)
 	;
 	;	throw one handful
-	;		when hand up in air the feed released
+	;		when hand up in air (5?) the feed released
 	;		goes up and left
 	;		left down
 	;		left down (hand lowers a notch)
@@ -25,11 +25,14 @@ animate_throw:
 	ldy	#0
 	sty	BABY_COUNT
 
-	lda	#1			; turn off our peasant
-	sta	SUPPRESS_PEASANT
+	lda	#SUPPRESS_PEASANT		; turn off our peasant
+	sta	SUPPRESS_DRAWING
 
 throw_loop:
 	jsr	update_screen
+
+	;=======================
+	; draw peasant throwing
 
 	lda	PEASANT_X
 	sta	SPRITE_X
@@ -41,9 +44,32 @@ throw_loop:
 
 	jsr	hgr_draw_sprite_mask
 
+
+	;=======================
+	; draw feed
+
+	sec
+	lda	PEASANT_X
+	sbc	#1
+	sta	SPRITE_X
+
+	clc
+	lda	PEASANT_Y
+	adc	#10
+	sta	SPRITE_Y
+
+;	ldy	BABY_COUNT
+;	ldx	throw_progress,Y
+
+	ldx	#7
+
+	jsr	hgr_draw_sprite_mask
+
+
+
 	jsr	hgr_page_flip
 
-	lda	#4
+	lda	#2
 	jsr	wait_a_bit
 
 	inc	BABY_COUNT
@@ -62,7 +88,8 @@ animate_fish:
 
 	lda	#0
 	sta	BABY_COUNT
-	sta	SUPPRESS_PEASANT
+	lda	#SUPPRESS_BOAT
+	sta	SUPPRESS_DRAWING
 fish_loop:
 
 	; play sound effect

@@ -6,6 +6,6 @@ init_global_vars:
 	sta	DRAW_PAGE
 	sta	INPUT_X		; text pointer
 	sta	KEY_OFFSET	; keyboard buffer pointer
-	sta	SUPPRESS_PEASANT
+	sta	SUPPRESS_DRAWING
 
 	rts

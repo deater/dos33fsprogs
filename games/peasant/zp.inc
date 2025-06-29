@@ -288,7 +288,10 @@ BOX_Y1		= $C2
 BOX_X2L		= $C3
 BOX_Y2		= $C4
 
-SUPPRESS_PEASANT=$C5		; don't draw peasant
+SUPPRESS_DRAWING=$C5		; don't draw peasant
+	SUPPRESS_PEASANT = $01
+	SUPPRESS_BOAT = $02
+
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8
