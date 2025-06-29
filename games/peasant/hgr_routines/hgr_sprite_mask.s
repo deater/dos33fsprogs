@@ -6,7 +6,7 @@
 	; attempts to shift to allow arbitray odd/even columns
 	;
 	; ideally foreground sprite palette has precedence over background
-	;	can be in either mode.  With a define?
+	;	can be in either mode.  Set USE_BG_PALETTE = 1
 
 	; Location at SPRITE_X SPRITE_Y
 	;	note: sprite_x is column, so Xcoord/7
