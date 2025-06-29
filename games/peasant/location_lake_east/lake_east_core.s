@@ -98,6 +98,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "../hgr_routines/hgr_sprite.s"
+USE_BG_PALETTE = 1
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "lake_east_actions.s"

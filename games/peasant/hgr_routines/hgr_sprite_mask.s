@@ -6,6 +6,7 @@
 	; attempts to shift to allow arbitray odd/even columns
 	;
 	; ideally foreground sprite palette has precedence over background
+	;	can be in either mode.  With a define?
 
 	; Location at SPRITE_X SPRITE_Y
 	;	note: sprite_x is column, so Xcoord/7
@@ -28,7 +29,6 @@ hgr_draw_sprite_mask:
 	clc
 	adc	SPRITE_X
 	sta	hgr_sprite_mask_width_end_smc+1	; self modify for end of line
-;	sta	save_xend,Y
 
 	; handle ysize for both restore as well as outer loop
 
@@ -176,6 +176,21 @@ hgr_draw_sprite_both:
 
 
 	; do the actual sprite-ing
+
+
+	; what if we want to use background palette?
+	; if so TEMP_SPRITE should be anded with $7f previously
+	; and temp mask should have high bit set
+
+.if USE_BG_PALETTE
+	lda	TEMP_SPRITE
+	and	#$7f
+	sta	TEMP_SPRITE		; clear palette bit on sprite
+
+	lda	TEMP_MASK
+	ora	#$80
+	sta	TEMP_MASK
+.endif
 
 	lda     (GBASL),Y		; load bg
 
