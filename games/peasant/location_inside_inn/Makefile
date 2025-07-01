@@ -36,7 +36,8 @@ inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		inside_inn_actions.s \
 		../text/DIALOG_INSIDE_INN.ZX02 ../text/dialog_inside_inn.inc \
 		graphics_inside_inn/inside_inn_graphics.inc \
-		graphics_inside_inn/inside_inn_priority.inc
+		graphics_inside_inn/inside_inn_priority.inc \
+		sprites_inside_inn/keeper_sprites.inc
 	ca65 -o inside_inn_core.o inside_inn_core.s -l inside_inn_core.lst
 
 ####
@@ -44,11 +45,15 @@ inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_inside_inn/inside_inn_graphics.inc:
 	cd graphics_inside_inn && make
 
+sprites_inside_inn/keeper_sprites.inc:
+	cd sprites_inside_inn && make
+
 ###
 
 distclean:
 	make clean
 	cd graphics_inside_inn && make clean
+	cd sprites_inside_inn && make clean
 
 ###
 
