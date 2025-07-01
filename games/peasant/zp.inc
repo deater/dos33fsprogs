@@ -86,24 +86,25 @@ COUNT256       =       $4F
 
 
 DRAW_PAGE_SAVE	= $5F
-INVENTORY_MASK	= $60
-INVENTORY_Y	= $61
-
-CURSOR_X	= $63
-CURSOR_Y	= $64
-FRAME		= $65
-ALTFIRE		= $66
-ALTL		= $67
-ALTH		= $68
-SAVED_X		= $69
-PEASANT_XADD	= $6A
-PEASANT_YADD	= $6B
-LEVEL_OVER	= $6C
+WALK_DEST_X	= $60
+WALK_DEST_Y	= $61
+INVENTORY_MASK	= $62
+INVENTORY_Y	= $63
+CURSOR_X	= $64
+CURSOR_Y	= $65
+FRAME		= $66
+ALTFIRE		= $67
+ALTL		= $68
+ALTH		= $69
+SAVED_X		= $6A
+PEASANT_XADD	= $6B
+PEASANT_YADD	= $6C
+LEVEL_OVER	= $6D
 	NEW_LOCATION	= $FF
 	NEW_FROM_DISK	= $01
 	NEW_FROM_LOAD	= $02		; loaded from load/save menu
-KERREK_SPEED	= $6D
-KERREK_DIRECTION= $6E	; 0 = left, 1=right
+KERREK_SPEED	= $6E
+KERREK_DIRECTION= $6F	; 0 = left, 1=right
 	KERREK_LEFT = 0
 	KERREK_RIGHT = 1
 
@@ -268,6 +269,10 @@ VISITED_3		= $AB
 
 PEASANT_STEPS		= $AC
 
+;PEASANT_XL		= $91	; in case we ever add sub-pixel resolution
+; also move XADD/XADDL/YADD here
+;  so we save in case we change it later
+
 END_OF_SAVE		= $AD
 
 ;=============================================
@@ -298,6 +303,7 @@ SAVED_Y2	= $C8
 
 ; temp for animations, etc
 
+WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
 

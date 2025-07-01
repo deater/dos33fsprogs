@@ -77,6 +77,7 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../wait_a_bit.s ../draw_peasant_new.s ../hgr_routines/hgr_text_box.s \
 		intro_cottage.s intro_lake_w.s intro_lake_e.s \
 		intro_river.s intro_knight.s \
+		walkto.s \
 		new_game.s
 	ca65 -o intro.o intro.s -l intro.lst
 

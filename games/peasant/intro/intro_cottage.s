@@ -66,6 +66,16 @@ intro_cottage:
 	;====================
 	;====================
 
+	lda	#0
+	sta	WALK_COUNT
+
+	lda	#1
+	sta	PEASANT_XADD
+	lda	#5
+	sta	PEASANT_YADD
+
+	jsr	update_walk
+
 cottage_walk_loop:
 
 	;===========================
@@ -77,19 +87,34 @@ cottage_walk_loop:
 	;=======================
 	; draw peasant
 
-	lda	FRAME
-	asl
-	tax
-
-	lda	cottage_path,X
-	bmi	done_cottage
-	sta	PEASANT_X
-
-	inx
-	lda	cottage_path,X
-	sta	PEASANT_Y
-
 	jsr	draw_peasant
+
+
+	;=====================
+	; move peasant
+
+	jsr	walk_to
+	bcc	move_good
+
+	jsr	update_walk
+	bcs	done_cottage
+
+move_good:
+
+
+;	lda	FRAME
+;	asl
+;	tax
+
+;	lda	cottage_path,X
+;	bmi	done_cottage
+;	sta	PEASANT_X
+
+;	inx
+;	lda	cottage_path,X
+;	sta	PEASANT_Y
+
+
 
 
 	;=======================
@@ -106,7 +131,7 @@ check_cottage_action1:
 	bne	check_cottage_action2
 
 	;========================
-	; display cottage text 1
+	; FRAME0: display cottage text 1
 
 	lda	#<cottage_text1
 	sta	OUTL
@@ -115,24 +140,23 @@ check_cottage_action1:
 	jmp	finish_cottage_action
 
 check_cottage_action2:
-	; if less than 23
+
 	cmp	#23
 	bcs	check_cottage_action3		; bgt
 
 
-	;=======================
-	; display cottage text 2
+	;=============================
+	; FRAME 1-22: display cottage text 2
+
 	lda	#<cottage_text2
 	sta	OUTL
 	lda	#>cottage_text2
 	jmp	finish_cottage_action
 
 check_cottage_action3:
-;	cmp	#13
-;	bne	done_cottage_action
 
 	;=========================
-	; display cottage text 3
+	; FRAME 23-?? display cottage text 3
 
 	lda	#<cottage_text3
 	sta	OUTL
@@ -166,12 +190,13 @@ done_cottage_action:
 
 	; frame==0, wait 25
 	lda	#25
+	jsr	wait_a_bit
 	jmp	now_wait
 
 regular_wait:
-	lda	#DEFAULT_WAIT
+;	lda	#DEFAULT_WAIT
 now_wait:
-	jsr	wait_a_bit
+;	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
 	bne	done_cottage
@@ -228,8 +253,17 @@ done_cottage:
 
 ; Walk to edge of screen
 
+	; note by default XADD=1,YADD=5
+	;	though note originally only moved every other frame?
 
+cottage_path:
+	.byte 10,117		; 0 ; 5s, text 1
+	.byte 10,117		; 1 ; 3s, text 2
+	.byte 16,147
+	.byte 38,147
+	.byte $FF		; end
 
+.if 0
 cottage_path:
 	.byte 10,117		; 0 ; 5s, text 1
 	.byte 10,117		; 1 ; 3s, text 2
@@ -265,17 +299,28 @@ cottage_path:
 	.byte 38,147
 	.byte $FF,$FF
 
+.endif
+
+update_walk:
+	ldy	WALK_COUNT
+
+	lda	cottage_path,Y
+	cmp	#$ff
+	beq	update_walk_done
+	sta	WALK_DEST_X
+
+	iny
+
+	lda	cottage_path,Y
+	sta	WALK_DEST_Y
+
+	inc	WALK_COUNT
+	inc	WALK_COUNT
 
 
-	;=====================================
-	; walk to
-	;	go one step from PEASANT_X, PEASANT_Y
-	;	to WALK_DEST_X, WALK_DEST_Y
-	; if PEASANT_X>WALK_DEST_X face left
-	; else WALK_DEST_X face right
-	; if PEASANT_X==WALK_DEST_X
-	;    if PEASANT_Y>WALK_DEST_Y face up
-	;    else WALK_DEST_Y face down
-
-walk_to:
+	clc
+	rts
+update_walk_done:
+	sec
+	rts
 
