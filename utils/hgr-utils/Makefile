@@ -1,6 +1,6 @@
 include ../../Makefile.inc
 
-CFLAGS = -O2 -Wall -g
+CFLAGS += -g
 
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
 	hgr2png hgr_make_sprite png2font dhgr2png \
