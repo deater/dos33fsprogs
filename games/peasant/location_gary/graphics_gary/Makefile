@@ -4,7 +4,8 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	gary_graphics.inc \
-	gary_priority.inc
+	gary_priority.inc \
+	gary_priority_after.gr gary_collision_after.bin
 
 ###
 
@@ -40,6 +41,14 @@ gary_priority.gr:	gary_priority.png
 
 gary_collision.bin:	gary_collision.png
 	$(PNG2COLLISION) gary_collision.png gary_collision.bin
+
+####
+
+gary_priority_after.gr:	gary_priority_after.png
+	$(PNG2GR) gary_priority_after.png gary_priority_after.gr
+
+gary_collision_after.bin:	gary_collision_after.png
+	$(PNG2COLLISION) gary_collision_after.png gary_collision_after.bin
 
 ####
 

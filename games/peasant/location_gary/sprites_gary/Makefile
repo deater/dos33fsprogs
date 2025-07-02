@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	gary_sprites.inc
+all:	gary_sprites.inc gary_bg.inc
 
 gary_sprites.inc:	gary_sprites.png
 	$(HGR_SPRITE) -s -l gary_base_sprite gary_sprites.png   21  98 55   124 > gary_sprites.inc
@@ -12,5 +12,8 @@ gary_sprites.inc:	gary_sprites.png
 	$(HGR_SPRITE) -s -l gary_foot1_sprite gary_sprites.png  91 118 104  128 >> gary_sprites.inc
 	$(HGR_SPRITE) -s -l gary_foot2_sprite gary_sprites.png 119 118 132  128 >> gary_sprites.inc
 
+gary_bg.inc:	gary_bg.png
+	$(HGR_SPRITE) -s -l gary_bg_sprite gary_bg.png   0  101 34   161 > gary_bg.inc
+
 clean:
-	rm -f *~ gary_sprites.inc
+	rm -f *~ gary_sprites.inc gary_bg.inc

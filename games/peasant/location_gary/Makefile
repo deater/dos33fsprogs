@@ -39,7 +39,8 @@ gary_core.o:	gary_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait_a_bit.s borders.s \
 		gary_actions.s gary_update_bg.s draw_gary.s \
 		graphics_gary/gary_graphics.inc \
-		sprites_gary/gary_sprites.inc
+		sprites_gary/gary_sprites.inc \
+		sprites_gary/gary_bg.inc
 	ca65 -o gary_core.o gary_core.s -l gary_core.lst
 
 

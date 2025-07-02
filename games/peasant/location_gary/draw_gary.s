@@ -1,13 +1,30 @@
 	;============================
 	; animate gary if applicable
 
+draw_gary:
 
-flies_check_gary_out:
+check_gary_out:
 	; see if gary out
 	lda	GAME_STATE_0
 	and	#GARY_SCARED
-	beq	do_draw_gary_flies
-	jmp	no_draw_gary_flies	; if he's gone, don't draw him
+	beq	do_draw_gary
+	jmp	no_draw_gary		; if he's gone, don't draw him
+
+
+	; draw gary
+do_draw_gary:
+	lda	#9
+	sta	CURSOR_X
+	lda	#120
+	sta	CURSOR_Y
+
+	lda	#<gary_base_sprite
+	sta	INL
+	lda	#>gary_base_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
 
 	;=====================
 	; draw the flies
@@ -119,5 +136,6 @@ draw_foot:
 done_draw_foot:
 
 
-no_draw_gary_flies:
+no_draw_gary:
 
+	rts

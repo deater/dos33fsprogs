@@ -13,8 +13,11 @@ gary_core:
 
 .include "../location_common/common_core.s"
 
+	;==================================
+	; see if need to draw hole in fence
+	jsr	gary_update_bg
 
-.include "gary_update_bg.s"
+
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -103,8 +106,11 @@ really_level_over:
 
 .include "../hgr_routines/hgr_sprite.s"
 
+.include "gary_update_bg.s"
 .include "gary_actions.s"
+.include "draw_gary.s"
 .include "sprites_gary/gary_sprites.inc"
+.include "sprites_gary/gary_bg.inc"
 
 
 	;=========================
@@ -121,7 +127,7 @@ update_screen:
 	;=======================
 	; draw gary
 
-	.include "draw_gary.s"
+	jsr	draw_gary
 
 	;======================
 	; draw peasant
