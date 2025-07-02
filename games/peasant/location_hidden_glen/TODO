@@ -2,4 +2,9 @@
   + Animate Dongolev
   + Animate Dongolev shooting
   + Walk to tree to get arrows
+  + When try to walk in front of and/or get arrows while shooting, then
+	it walks you to center and then has an animation
+  + Handle better when you walk behind archer or arrows (should check for
+	this and switch drawing order)
+  + Sound effect as arrow flies
 

@@ -26,6 +26,9 @@ hidden_glen_core:
 	;============================
 	;============================
 
+	lda	#0
+	sta	ARCHER_COUNT
+
 game_loop:
 
 	;=======================
@@ -128,18 +131,19 @@ level_over:
 .include "borders.s"
 
 really_level_over:
-	rts
-
 
 	rts
+
 
 
 .include "../location_common/include_bottom.s"
 
 .include "hidden_glen_actions.s"
 
-.include "../hgr_routines/hgr_sprite.s"
+.include "archer.s"
 
+.include "../hgr_routines/hgr_sprite.s"
+.include "sprites_hidden_glen/archer_sprites.inc"
 
 	;========================
 	; update screen
@@ -156,6 +160,13 @@ update_screen:
 	; always draw peasant
 
 	jsr	draw_peasant
+
+	;==========================
+	; draw archer if necessary
+	;	note: might need extra work to make sure appears
+	;	in front of / behind peasant
+
+	jsr	draw_archer
 
 
 	rts

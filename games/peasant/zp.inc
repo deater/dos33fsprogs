@@ -306,6 +306,7 @@ SAVED_Y2	= $C8
 WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
+ARCHER_COUNT	= $C9	; hidden glen
 
 IN_QUIZ		= $CA	; cliff heights
 WHICH_QUIZ	= $CB	; cliff heights
