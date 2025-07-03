@@ -25,6 +25,14 @@ kerrek1_core:
 	jsr	kerrek_setup
 
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_0
+	ora	#MAP_KERREK_1
+	sta	VISITED_0
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

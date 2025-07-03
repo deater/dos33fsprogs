@@ -17,6 +17,12 @@ gary_core:
 	; see if need to draw hole in fence
 	jsr	gary_update_bg
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_0
+	ora	#MAP_POOR_GARY
+	sta	VISITED_0
 
 
 	;====================================================

@@ -35,6 +35,14 @@ ned_cottage_core:
 
 not_necessary_cottage:
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_3
+	ora	#MAP_OUTSIDE_NN
+	sta	VISITED_3
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

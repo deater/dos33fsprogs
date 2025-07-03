@@ -20,6 +20,12 @@ knight_core:
 
 	jsr	move_knight
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_1
+	ora	#MAP_MOUNTAIN_PASS
+	sta	VISITED_1
 
 	;====================================================
 	; clear the keyboard in case we were holding it down

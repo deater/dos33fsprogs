@@ -18,6 +18,14 @@ peasantry_haystack:
 
 	jsr	check_haystack_exit
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_1
+	ora	#MAP_HAY_BALE
+	sta	VISITED_1
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

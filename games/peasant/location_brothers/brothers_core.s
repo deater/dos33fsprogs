@@ -86,6 +86,15 @@ arrow_game_lose_common:
 
 not_from_archery:
 
+
+	;===================================
+	; mark location visited
+
+	lda	VISITED_1
+	ora	#MAP_ARCHERY
+	sta	VISITED_1
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

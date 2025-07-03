@@ -12,6 +12,14 @@ peasantry_puddle:
 
 .include "../location_common/common_core.s"
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_1
+	ora	#MAP_MUD_PUDDLE
+	sta	VISITED_1
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

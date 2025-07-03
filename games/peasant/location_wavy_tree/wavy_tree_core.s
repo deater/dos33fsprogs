@@ -23,6 +23,15 @@ lady_cottage_core:
 ;	lda	#64
 	sta	NED_STATUS
 
+
+	;===================================
+	; mark location visited
+
+	lda	VISITED_3
+	ora	#MAP_WAVY_TREE
+	sta	VISITED_3
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

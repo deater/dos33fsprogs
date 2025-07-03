@@ -12,6 +12,12 @@ peasantry_river_core:
 
 .include "../location_common/common_core.s"
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_1
+	ora	#MAP_RIVER_STONE
+	sta	VISITED_1
 
 	;====================================================
 	; clear the keyboard in case we were holding it down

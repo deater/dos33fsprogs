@@ -12,6 +12,14 @@ lake_east_core:
 
 .include "../location_common/common_core.s"
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_2
+	ora	#MAP_LAKE_EAST
+	sta	VISITED_2
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

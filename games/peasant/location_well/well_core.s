@@ -12,6 +12,13 @@ well_core:
 
 .include "../location_common/common_core.s"
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_0
+	ora	#MAP_OLD_WELL
+	sta	VISITED_0
+
 
 	;====================================================
 	; clear the keyboard in case we were holding it down

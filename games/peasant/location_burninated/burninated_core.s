@@ -13,6 +13,14 @@ burninated_core:
 .include "../location_common/common_core.s"
 
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_3
+	ora	#MAP_BURN_TREES
+	sta	VISITED_3
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

@@ -30,6 +30,13 @@ before_jhonka_cave:
 no_before_game_text:
 
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_2
+	ora	#MAP_JHONKA_CAVE
+	sta	VISITED_2
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

@@ -13,6 +13,14 @@ lady_cottage_core:
 .include "../location_common/common_core.s"
 
 
+	;===================================
+	; mark location visited
+
+	lda	VISITED_3
+	ora	#MAP_OUTSIDE_LADY
+	sta	VISITED_3
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
