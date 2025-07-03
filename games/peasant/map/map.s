@@ -63,5 +63,6 @@ game_loop:
 .include "../new_map_location.s"
 
 .include "graphics_map/map_graphics.inc"
+.include "sprites_map/map_sprites.inc"
 
 

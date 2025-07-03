@@ -20,7 +20,7 @@ map.o:	map.s ../zp.inc ../inventory/inventory.inc \
 		../hgr_routines/hgr_input.s \
 		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
 		../keyboard.s ../new_map_location.s \
-		../score.s
+		sprites_map/map_sprites.inc
 	ca65 -o map.o map.s -l map.lst
 
 ###
@@ -28,11 +28,15 @@ map.o:	map.s ../zp.inc ../inventory/inventory.inc \
 graphics_map/map_graphics.inc:
 	cd graphics_map && make
 
+sprites_map/map_sprites.inc:
+	cd sprites_map && make
+
 ###
 
 distclean:
 	make clean
 	cd graphics_map && make clean
+	cd sprites_map && make clean
 
 ###
 

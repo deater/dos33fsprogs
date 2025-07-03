@@ -1,3 +1,12 @@
 draw things as you visit
 
 blinking peasant head at current location
+	note: has one head location for each map square
+		(i.e. it's not based on your x/y of your location in the level)
+	if you're inside a building it just shows you on the map outside
+	if you're in the hidden glen it shows you off the map to the side
+
+	if you're on the cliff and beyond it shows you off the map the
+		the right of the knight location
+
+	there are possibly more mountains on a totally blank map
