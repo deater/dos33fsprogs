@@ -1,12 +1,13 @@
 
 borders:
-	in actual game, walking down center pops you out gap in trees ar archery
-	walking to left pops you out the trees on left, but you can't
-	go back that way
+	+ (done)
+		in actual game, walking down center pops you out gap in
+		trees ar archery walking to left pops you out the trees
+		on left, but you can't go back that way
 
 
-action:
-	turn crank
+actions:
+	+ turn crank
 		will walk from wherever you are to crank
 		
 		left of well says "you can't reach from there"
@@ -17,11 +18,11 @@ action:
 		walking goes diagonal until one co-ord matches then goes
 			straight there
 
-	put pebbles in bucket
+	+ put pebbles in bucket
 		walk over (possibly from even further?)
 		crank animates turning and bucket goes down
 		
-	turn crank again
+	+ turn crank again
 		walk over
 		to left of well	
 		"you got a short reach to match..
@@ -37,3 +38,8 @@ action:
   + Animate lowering bucket
   + Animate getting mask
   + Animate baby in well
+  + Have it remember state of well when off screen and restore it
+	when back
+  + Adjust well priority mask when bucket up/down
+  + Fix the "crank up" animation.  Maybe look at it when setting up baby
+

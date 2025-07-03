@@ -332,10 +332,14 @@ SAVED_Y2	= $C8
 
 ; temp for animations, etc
 
+BUCKET_COUNT	= $C9	; well
 WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
 ARCHER_COUNT	= $C9	; hidden glen
+
+BUCKET_STATE	= $CA	; well
+CRANK_STATE	= $CB	; well
 
 IN_QUIZ		= $CA	; cliff heights
 WHICH_QUIZ	= $CB	; cliff heights

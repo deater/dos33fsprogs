@@ -12,6 +12,27 @@ well_core:
 
 .include "../location_common/common_core.s"
 
+	;==================================
+	; set up bucket state
+	;==================================
+	; 0 = up	(crank=0, up)
+	; 3 = down	(crank=1, level)
+bucket_setup:
+	lda	#0
+	sta	BUCKET_STATE
+	sta	CRANK_STATE
+
+	lda	GAME_STATE_0
+	and	#BUCKET_DOWN_WELL
+	beq	done_bucket_setup
+
+	lda	#3
+	sta	BUCKET_STATE
+	lda	#1
+	sta	CRANK_STATE
+done_bucket_setup:
+
+
 	;===================================
 	; mark location visited
 
@@ -104,7 +125,11 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "well_actions.s"
+.include "draw_well.s"
 
+.include "sprites_well/well_sprites.inc"
+
+.include "../hgr_routines/hgr_sprite_mask.s"
 
 	;==============================
 	; update screen
@@ -119,10 +144,15 @@ update_screen:
 	;======================
 	; always draw peasant
 
+	; FIXME: handle in front of / behind well
+
 	jsr	draw_peasant
 
+
+	;========================
+	; draw well
+
+	jsr	draw_well
+
+
 	rts
-
-
-
-

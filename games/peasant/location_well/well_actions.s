@@ -67,6 +67,8 @@ well_look_at:
 	jmp	finish_parse_message
 
 well_look_at_well:
+	; primary message
+
 	ldx	#<well_look_at_well_message
 	ldy	#>well_look_at_well_message
 	jsr	partial_message_step
@@ -77,8 +79,9 @@ well_look_at_well:
 
 	ldx	#<well_look_at_well_message2
 	ldy	#>well_look_at_well_message2
+	jsr	finish_parse_message
 well_look_had_mask:
-	jmp	finish_parse_message
+	rts
 
 well_look_at_crank:
 	lda	INVENTORY_1_GONE
@@ -287,7 +290,7 @@ well_turn_crank:
 
 	; we are close enough
 
-	; check in baby in
+	; check if baby in
 	lda	GAME_STATE_0
 	and	#BABY_IN_WELL
 	bne	well_turn_crank_baby_in
@@ -316,24 +319,46 @@ well_play_with_well:
 	bne	well_bucket_go_up
 
 well_bucket_go_down:
+
+	; toggle well state (well marked down)
+
 	lda	GAME_STATE_0
 	eor	#BUCKET_DOWN_WELL
 	sta	GAME_STATE_0
+
+	; run lower bucket animation
+
+	jsr	lower_bucket
+
+	; make sarcastic comment
 
 	ldx	#<well_bucket_down_message
 	ldy	#>well_bucket_down_message
 	jmp	finish_parse_message
 
 well_bucket_go_up:
+
+	; toggle well state (to up)
+
 	lda	GAME_STATE_0
 	eor	#BUCKET_DOWN_WELL
 	sta	GAME_STATE_0
+
+	; animate bucket coming up
+
+	jsr	raise_bucket
+
+	; print sarcastic message
 
 	ldx	#<well_bucket_up_message
 	ldy	#>well_bucket_up_message
 	jmp	finish_parse_message
 
 well_turn_crank_baby_in:
+
+	; here?
+	; jsr	lower_bucket_baby
+
 	ldx	#<well_turn_crank_baby_message
 	ldy	#>well_turn_crank_baby_message
 	jsr	partial_message_step
@@ -342,6 +367,10 @@ well_turn_crank_baby_in:
 
 	lda	#2
 	jsr	score_points
+
+	; here?
+
+	jsr	raise_bucket_baby
 
 	; get sub
 
@@ -359,19 +388,25 @@ well_turn_crank_baby_in:
 	ldy	#>well_turn_crank_baby2_message
 	jmp	finish_parse_message
 
-
-
 well_turn_crank_pebbles_in:
+
+	; raise bucket with mask in animation
+
+	jsr	raise_bucket_mask
+
+	; print message about finding mask
 
 	ldx	#<well_turn_crank_pebbles_message
 	ldy	#>well_turn_crank_pebbles_message
 	jsr	partial_message_step
 
-	; get mask
+	; put mask into inventory
 
 	lda	INVENTORY_1
 	ora	#INV1_MONSTER_MASK
 	sta	INVENTORY_1
+
+	; print message about mask scaring horse
 
 	ldx	#<well_turn_crank_pebbles2_message
 	ldy	#>well_turn_crank_pebbles2_message
@@ -383,8 +418,8 @@ well_turn_crank_pebbles_not_in:
 	ldy	#>well_turn_crank_no_pebbles_message
 	jmp	finish_parse_message
 
-	;=====================
-	; turn crank, too far
+	;=========================
+	; turn crank, too far away
 
 well_turn_crank_too_far:
 
@@ -576,6 +611,8 @@ well_put_pebbles_in_bucket_but_gone:
 
 well_put_pebbles_in_bucket_have_them:
 
+	jsr	lower_bucket
+
 	; add 2 points to score
 
 	lda	#2
@@ -591,8 +628,8 @@ well_put_pebbles_in_bucket_have_them:
 	ldy	#>well_put_pebbles_in_bucket_message
 	jmp	finish_parse_message
 
-	;=========================
-	; pebbles in well
+	;=================================
+	; pebbles in well (not the bucket)
 
 well_put_pebbles_in_well:
 
@@ -609,6 +646,7 @@ well_put_pebbles_in_well:
 	beq	well_put_pebbles_in_well_but_gone
 
 well_put_pebbles_in_well_but_have:
+
 	ldx	#<well_put_pebbles_in_well_message
 	ldy	#>well_put_pebbles_in_well_message
 	jmp	finish_parse_message

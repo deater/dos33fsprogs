@@ -37,7 +37,8 @@ well_core.o:	well_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		well_actions.s
+		sprites_well/well_sprites.inc \
+		draw_well.s well_actions.s
 	ca65 -o well_core.o well_core.s -l well_core.lst
 
 
@@ -54,7 +55,7 @@ sprites_well/well_sprites.inc:
 distclean:
 	make clean
 	cd graphics_well && make clean
-#	cd sprites && make clean
+	cd sprites_well && make clean
 
 ###
 
