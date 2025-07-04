@@ -1,6 +1,8 @@
-draw things as you visit
++ (done?) draw things as you visit
++ peasant head at current location
++ peasant head should blink
 
-blinking peasant head at current location
+notes:
 	note: has one head location for each map square
 		(i.e. it's not based on your x/y of your location in the level)
 	if you're inside a building it just shows you on the map outside

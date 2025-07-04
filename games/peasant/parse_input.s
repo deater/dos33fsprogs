@@ -421,6 +421,10 @@ do_have_map:
 	sta	MAP_LOCATION
 	lda	#1
 	sta	LEVEL_OVER
+
+	lda	PEASANT_Y
+	sta	PEASANT_NEWY
+
 	jmp	done_parse_message
 
 dont_have_map:
