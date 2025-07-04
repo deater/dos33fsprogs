@@ -46,7 +46,7 @@ videlectrix_intro:
 	lda	#>boot_message
 	sta	OUTH
 
-	ldx	#8
+	ldx	#9
 text_loop:
 
 	jsr	move_and_print
@@ -549,6 +549,8 @@ boot_message:
 .byte	0,8,"ELECTRIC DUET: PAUL LUTUS",0
 .byte	7,18,"______",0
 .byte	5,19,"A \/\/\/ SOFTWARE PRODUCTION",0
+
+.byte	2,21,"www.deater.net/weave/vmwprod/peasant",0
 
 config_string:
 ;             0123456789012345678901234567890123456789
