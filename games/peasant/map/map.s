@@ -219,18 +219,29 @@ row4_skip_draw:
 	cpx	#5
 	bne	row4_loop
 
-
-
-
-
 	;========================================
 	; draw rather dashing at current position
 	;========================================
 	; note there is only one position per location
 	;	it isn't adjusted for sub-location X,Y
+draw_head:
+	ldx	PREVIOUS_LOCATION
+	lda	head_location_x,X
+	sta	CURSOR_X
+	lda	head_location_y,X
+	sta	CURSOR_Y
 
+	lda	#<head_sprite
+	sta	INL
+	lda	#>head_sprite
+	sta	INH
 
-map_loop:
+	jsr	hgr_draw_sprite
+
+	;========================================
+	; wait until keypress
+	;========================================
+map_wait:
 
 	bit	KEYRESET
 
@@ -285,6 +296,76 @@ row4_sprite_l:
 row4_sprite_h:
 	.byte >map03_sprite,>map13_sprite,>map23_sprite
 	.byte >map33_sprite,>map43_sprite
+
+;================
+; HEAD_LOCATIONS
+
+head_location_x:
+.byte	7	; 49	; LOCATION_POOR_GARY	=	0
+.byte	13	; 91	; LOCATION_KERREK_1	=	1
+.byte	20	; 140	; LOCATION_OLD_WELL	=	2
+.byte	27	; 189	; LOCATION_YELLOW_TREE	=	3
+.byte	31	; 217	; LOCATION_WATERFALL	=	4
+.byte	6	; 42	; LOCATION_HAY_BALE	=	5
+.byte	12	; 84	; LOCATION_MUD_PUDDLE	=	6
+.byte	18	; 126	; LOCATION_ARCHERY	=	7
+.byte	26	; 182	; LOCATION_RIVER_STONE	=	8
+.byte	30	; 210	; LOCATION_MOUNTAIN_PASS=	9
+.byte	5	; 35	; LOCATION_JHONKA_CAVE	=	10
+.byte	13	; 91	; LOCATION_YOUR_COTTAGE	=	11
+.byte	17	; 119	; LOCATION_LAKE_WEST	=	12
+.byte	28	; 196	; LOCATION_LAKE_EAST	=	13
+.byte	33	; 231	; LOCATION_OUTSIDE_INN	=	14
+.byte	8	; 56	; LOCATION_OUTSIDE_NN	=	15
+.byte	14	; 98	; LOCATION_WAVY_TREE	=	16
+.byte	19	; 133	; LOCATION_KERREK_2	=	17
+.byte	26	; 182	; LOCATION_OUTSIDE_LADY	=	18
+.byte	33	; 231	; LOCATION_BURN_TREES	=	19
+.byte	36	; 252	; LOCATION_CLIFF_BASE	=	20
+.byte	36	; 252	; LOCATION_CLIFF_HEIGHTS=	21
+.byte	36	; 252	; LOCATION_TROGDOR_OUTER=	22
+.byte	36	; 252	; LOCATION_TROGDOR_LAIR	=	23
+.byte	2	; 14	; LOCATION_HIDDEN_GLEN	=	24
+.byte	25	; 175	; LOCATION_INSIDE_LADY	=	25
+.byte	5	; 35	; LOCATION_INSIDE_NN	=	26
+.byte	31	; 217	; LOCATION_INSIDE_INN	=	27
+.byte	19	; 133	; LOCATION_ARCHERY_GAME	=	28
+.byte	36	; 252	; LOCATION_MAP		=	29
+.byte	36	; 252	; LOCATION_CLIMB	=	30
+
+head_location_y:
+.byte	63		; LOCATION_POOR_GARY	=	0
+.byte	63		; LOCATION_KERREK_1	=	1
+.byte	63		; LOCATION_OLD_WELL	=	2
+.byte	63		; LOCATION_YELLOW_TREE	=	3
+.byte	63		; LOCATION_WATERFALL	=	4
+.byte	91		; LOCATION_HAY_BALE	=	5
+.byte	91		; LOCATION_MUD_PUDDLE	=	6
+.byte	105		; LOCATION_ARCHERY	=	7
+.byte	98		; LOCATION_RIVER_STONE	=	8
+.byte	91		; LOCATION_MOUNTAIN_PASS=	9
+.byte	126		; LOCATION_JHONKA_CAVE	=	10
+.byte	119		; LOCATION_YOUR_COTTAGE	=	11
+.byte	126		; LOCATION_LAKE_WEST	=	12
+.byte	126		; LOCATION_LAKE_EAST	=	13
+.byte	126		; LOCATION_OUTSIDE_INN	=	14
+.byte	154		; LOCATION_OUTSIDE_NN	=	15
+.byte	154		; LOCATION_WAVY_TREE	=	16
+.byte	147		; LOCATION_KERREK_2	=	17
+.byte	161		; LOCATION_OUTSIDE_LADY	=	18
+.byte	154		; LOCATION_BURN_TREES	=	19
+.byte	84		; LOCATION_CLIFF_BASE	=	20
+.byte	84		; LOCATION_CLIFF_HEIGHTS=	21
+.byte	84		; LOCATION_TROGDOR_OUTER=	22
+.byte	84		; LOCATION_TROGDOR_LAIR	=	23
+.byte	70		; LOCATION_HIDDEN_GLEN	=	24
+.byte	152		; LOCATION_INSIDE_LADY	=	25
+.byte	154		; LOCATION_INSIDE_NN	=	26
+.byte	122		; LOCATION_INSIDE_INN	=	27
+.byte	91		; LOCATION_ARCHERY_GAME	=	28
+.byte	84		; LOCATION_MAP		=	29
+.byte	84		; LOCATION_CLIMB	=	30
+
 
 
 
