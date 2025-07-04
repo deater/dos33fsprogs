@@ -219,39 +219,65 @@ row4_skip_draw:
 	cpx	#5
 	bne	row4_loop
 
+
+	;========================================
+	; wait until keypress
+	;========================================
+
+	bit	KEYRESET
+
+map_wait_loop:
+
 	;========================================
 	; draw rather dashing at current position
 	;========================================
 	; note there is only one position per location
 	;	it isn't adjusted for sub-location X,Y
-draw_head:
+draw_at_location:
 	ldx	PREVIOUS_LOCATION
 	lda	head_location_x,X
 	sta	CURSOR_X
 	lda	head_location_y,X
 	sta	CURSOR_Y
 
+	lda	FRAME
+	and	#$10
+	beq	draw_head
+draw_blank:
+	lda	#<nohead_sprite
+	sta	INL
+	lda	#>nohead_sprite
+	jmp	draw_common
+
+draw_head:
 	lda	#<head_sprite
 	sta	INL
 	lda	#>head_sprite
+
+draw_common:
 	sta	INH
 
 	jsr	hgr_draw_sprite
 
-	;========================================
-	; wait until keypress
-	;========================================
-map_wait:
+wait_for_keypress:
+	lda	KEYPRESS				; 4
+	bmi	done_map
 
-	bit	KEYRESET
+	inc	FRAME
 
-	jsr	wait_until_keypress
+	lda	#100
+	jsr	wait
+
+	jmp	map_wait_loop
+
+done_map:
+
+	bit	KEYRESET	; clear the keyboard buffer
 
 	lda	PREVIOUS_LOCATION	; return to previous location
 
 	jmp	update_map_location
 
-	rts
 
 row1_x:
 	.byte  4,10,17,24,29

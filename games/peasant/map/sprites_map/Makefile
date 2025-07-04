@@ -24,7 +24,7 @@ map_sprites.inc:	map_sprites.png
 	$(HGR_SPRITE) -s -l map23_sprite map_sprites.png 112 157 153 166 >> map_sprites.inc
 	$(HGR_SPRITE) -s -l map33_sprite map_sprites.png 161 144 202 166 >> map_sprites.inc
 	$(HGR_SPRITE) -s -l map43_sprite map_sprites.png 203 143 237 165 >> map_sprites.inc
-
+	$(HGR_SPRITE) -s -l nohead_sprite  map_sprites.png 224  41 230  49 >> map_sprites.inc
 
 
 

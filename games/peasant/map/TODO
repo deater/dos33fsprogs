@@ -1,6 +1,6 @@
-+ (done?) draw things as you visit
-+ peasant head at current location
-+ peasant head should blink
++ (done) draw things as you visit
++ (done) peasant head at current location
++ (done) peasant head should blink
 
 notes:
 	note: has one head location for each map square
