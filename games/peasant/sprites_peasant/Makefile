@@ -7,7 +7,8 @@ all:	walk_sprites.inc \
 	walking_sprites.zx02 \
 	robe_sprites.zx02 robe_sprites_orange.zx02 robe_sprites_purple.zx02 \
 	robe_shield_sprites.zx02 \
-	PEASANT_SPRITES_COMMON
+	PEASANT_SPRITES_COMMON \
+	PEASANT_SPRITES_OUTER
 
 
 ####
@@ -19,6 +20,18 @@ peasant_sprite_common.o:	peasant_sprite_common.s \
 	walking_sprites.zx02 \
 	robe_sprites.zx02
 	ca65 -o peasant_sprite_common.o peasant_sprite_common.s -l peasant_sprite_common.lst
+
+
+####
+
+PEASANT_SPRITES_OUTER:	peasant_sprite_outer.o
+	ld65 -o PEASANT_SPRITES_OUTER peasant_sprite_outer.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+peasant_sprite_outer.o:	peasant_sprite_outer.s \
+	robe_shield_sprites.zx02 \
+	robe_sprites.zx02
+	ca65 -o peasant_sprite_outer.o peasant_sprite_outer.s -l peasant_sprite_outer.lst
+
 
 
 ####

@@ -7,7 +7,7 @@
 
 
 peasant_location0:
-	.word peasannt_robe_shield_zx02
+	.word peasant_robe_shield_zx02
 
 peasant_location1:
 	.word peasant_robe_zx02
