@@ -14,22 +14,6 @@ VERB_TABLE = cliff_heights_verb_table
 
 cliff_heights:
 
-	; custom init
-
-	lda	#0
-	sta	KEEPER_COUNT
-	sta	IN_QUIZ
-
-	;========================
-	; Note: to get to this point of the game you have to be
-	;	in a robe and on fire, so we should enforce that
-
-	lda	GAME_STATE_2
-	ora	#ON_FIRE
-	sta	GAME_STATE_2
-
-
-
 	; clear the keyboard in case we were holding it down
 
 	bit	KEYRESET

@@ -15,10 +15,6 @@ cliff_base_core:
 
 .include "../location_common/common_core.s"
 
-	; custom init
-	lda	#0
-	sta	KEEPER_COUNT
-	sta	IN_QUIZ
 
 	; Note: to get to this point of the game you have to be
 	;       in a robe and on fire, so we should enforce that
@@ -26,6 +22,11 @@ cliff_base_core:
 	lda	GAME_STATE_2
 	ora	#ON_FIRE
 	sta	GAME_STATE_2
+
+	; robe2 = PEASANT_OUTER_SPRITES sprite set
+
+	lda	#PEASANT_OUTFIT_ROBE2
+	sta	WHICH_PEASANT_SPRITES
 
 	;====================================================
 	; clear the keyboard in case we were holding it down

@@ -39,8 +39,8 @@ peasant_quest_intro:
 
         ; loads temporarily in $6000
 
-        lda     #0				; FIXME: default walking
-        jsr     load_peasant_sprites
+	lda     #PEASANT_OUTFIT_SHORTS
+	jsr	load_peasant_sprites
 
 
 	;===============================

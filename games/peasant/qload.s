@@ -37,7 +37,8 @@ which_disk_array:
 .byte 3,3,2,2,2		; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte 3,3,2,2,2		; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte 2,3,3		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte 2,$FF,5		; SAVE_DATA, PEASANT_SPRITES, CLIMB_SPRITES
+.byte 5,5		; OUTER2,OUTER3
+.byte 2,$FF,5,5		; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte $FF		; disk detect
 
 load_address_array:
@@ -51,8 +52,9 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte $40,$40,$40,$40,$40	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte $40,$40,$40		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte >load_buffer,>peasant_sprites_temp,>peasant_sprites_temp
-				; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES
+.byte $40,$40			; OUTER2,OUTER3
+.byte >load_buffer,>peasant_sprites_temp,>peasant_sprites_temp,>peasant_sprites_temp
+				; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte >load_buffer		; disk detect
 
 track_array:
@@ -60,13 +62,14 @@ track_array:
 .byte 19,23, 7, 1	; TROGDOR, ENDING, MUSIC, CLIFF_BASE
 .byte  4,19,18,11	; GAME_OVER, INVENTORY, PARSE_INPUT, INSIDE_INN
 .byte  7, 5, 7		; ARCHERY, MAP, CLIMB
-.byte 11,15		; HEIGHTS, OUTER
+.byte 11,13		; HEIGHTS, OUTER
 .byte 15, 9,29,19, 7	; HAYSTACK, PUDDLE, BROTHERS, RIVER, KNIGHT
 .byte 23, 7,31,17,15	; GARY, KERREK1, WELL, YELLOW_TREE, WATERFALL
 .byte 17,11,27,21, 9	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte 19,13,33,23,13	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte 25,21,25		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte  0, 3, 28		; SAVE_DATA, PEASANT_SPRITES, CLIMB_SPRITES
+.byte 15,17		; OUTER2, OUTER3
+.byte  0, 3, 10, 3	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte  0		; disk detect
 
 sector_array:
@@ -80,7 +83,8 @@ sector_array:
 .byte  0, 0, 0, 0, 0	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte  0, 0, 0, 0, 0	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte  0, 0, 0		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte  12,0,0		; SAVE_DATA, PEASANT_SPRITES, CLIMB_SPRITES
+.byte  0, 0		; OUTER2,OUTER3
+.byte  12,0,0,0		; SAVE_DATA, PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte  0		; disk detect
 
 length_array:
@@ -94,8 +98,9 @@ length_array:
 .byte  32,32,32,32,32	; JHONKA, COTTAGE, LAKE_W, LAKE_E, OUTSIDE_INN
 .byte  32,32,32,32,32	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte  32,32,32		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
-.byte   1,16,16		; SAVE_DATA, PEASANT_SPRITES , CLIMB_SPRITES
-.byte   1		; disk detect	; 43
+.byte  32,32		; OUTER2, OUTER3
+.byte   1,16,16,16	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
+.byte   1		; disk detect	; 46
 
 
 load_file:

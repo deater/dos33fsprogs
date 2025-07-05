@@ -6,14 +6,34 @@
 load_peasant_sprites:
 	sta	WHICH_PEASANT_SPRITES
 
-	lda	#LOAD_PEASANT_SPRITES
-	sta	WHICH_LOAD
+	cmp	#5			; see which to load
+	bcs	outer_peasant_sprites
 
+common_peasant_sprites:
+
+	lda	#LOAD_PEASANT_SPRITES
+	jmp	done_checking_peasant_sprites
+
+outer_peasant_sprites:
+
+	lda	#LOAD_OUTER_SPRITES
+
+done_checking_peasant_sprites:
+
+	sta	WHICH_LOAD
 	jsr	load_file
 
 	; loads to $6000 (peasant_sprites_temp)
 
 	lda	WHICH_PEASANT_SPRITES
+	cmp	#5
+
+	; adjust if we are outer sprites
+
+	bcc	no_adjust_peasant_sprites
+	sec
+	sbc	#5
+no_adjust_peasant_sprites:
 	asl
 	tax
 	lda	peasant_sprites_temp,X
