@@ -21,26 +21,10 @@ handle_keeper1:
 
 keeper1_loop:
 
+	;=======================
+	; move to next frame
+
 	inc	KEEPER_COUNT
-;	ldx	KEEPER_COUNT
-
-;	lda     keeper_x,X
-;	sta     SPRITE_X
-;	lda     keeper_y,X
-;	sta     SPRITE_Y
-
-        ; get offset for graphics
-
-;	ldx	KEEPER_COUNT
-;	lda	which_keeper_sprite,X
-;	clc
-;	adc	#5			; skip ron
-;	tax
-
-;	ldy     #3      ; ? slot
-;	jsr	hgr_draw_sprite_save
-
-;	jsr	hgr_draw_sprite
 
 	;=======================
 	; see if done animation
@@ -57,263 +41,29 @@ not_done_keeper1_walk:
 
 	jsr	update_screen
 
-;=====================
-        ; increment frame
+	;=====================
+	; increment frame
 
-        inc     FRAME
+	inc	FRAME
 
-        ;=====================
-        ; increment flame
+	;=====================
+	; increment flame
 
-        jsr     increment_flame
+	jsr	increment_flame
 
 
-        ;=======================
-        ; flip page
+	;=======================
+	; flip page
 
 ;       jsr     wait_vblank
 
-        jsr     hgr_page_flip
+	jsr	hgr_page_flip
 
 	jmp	keeper1_loop
 
 
-
-
-
-
-
-
-;==========================================
-; first keeper ron
-
-; flips peasant forward
-; 3 (4) (u shaped)
-; 5 (4) (up)
-; 6 (6) (up, up)
-; 7 (4) (up, down)
-; 6 (4)
-; 7 (4)
-; 6 (4)
-; 7 (4)
-; 6 (4)
-; 7 (4)
-; 6 (4)
-; 7 (4) 9? repeats, ending on down
-; ron transition happens
-;   (8) switches to 5 part way through first frame?
-; 3 / ron next , to 1 part way through second (cloud frame)
-; 5 ron (gap)
-; 10 ron (tiny smoke)
-; 10 full ron
-
-ron_which_keeper_sprite:
-.byte	3, 5, 6, 7
-.byte	6, 7, 6, 7
-.byte	6, 7, 6, 7
-
-.byte   7, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1
-
-ron_which_ron_sprite:
-.byte	0, 0, 0, 0
-.byte	0, 0, 0, 0
-.byte	0, 0, 0, 0
-
-.byte	0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4
-
-
-	;===============================
-	; ron transform
-	;===============================
-ron_transform:
-
-	lda	#0
-	sta	KEEPER_COUNT
-
-	; look down for this
-
-	lda	#PEASANT_DIR_DOWN
-	sta	PEASANT_DIR
-
-ron1_loop:
-
-	; play sound if needed, 2.. 12
-
-	lda	KEEPER_COUNT
-	cmp	#2
-	bcc	skip_ron_sound
-	cmp	#12
-	bcs	skip_ron_sound
-
-	and	#1
-	beq	ron_other_note
-
-        lda     #NOTE_F6
-	beq	ron_common_note		; bra
-ron_other_note:
-        lda     #NOTE_E6
-
-ron_common_note:
-        sta     speaker_frequency
-        lda     #8
-        sta     speaker_duration
-        jsr     speaker_tone
-
-skip_ron_sound:
-
-	; erase prev keeper
-
-;	ldy	#3                      ; erase slot 3?
-;	jsr	hgr_partial_restore_by_num
-
-	inc	KEEPER_COUNT
-	ldx	KEEPER_COUNT
-
-	lda     #10
-	sta     SPRITE_X
-	lda     #60
-	sta     SPRITE_Y
-
-        ; get offset for graphics
-
-	ldx	KEEPER_COUNT
-	lda	ron_which_keeper_sprite,X
-	clc
-	adc	#5			; skip ron
-	tax
-
-;	ldy     #3      ; ? slot
-
-;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite_mask
-
-	;=======================
-	; see if done animation
-
-	lda	KEEPER_COUNT
-	cmp	#21		;
-	beq	ron_done
-
-	cmp	#12
-	bcc	ron_peasant	; normal peasant first 12 frames
-
-	; erase prev peasant
-
-;	ldy	#4				; erase slot 4?
-;	jsr	hgr_partial_restore_by_num
-
-	ldx	KEEPER_COUNT
-
-	lda     PEASANT_X
-	sta     SPRITE_X
-	lda     PEASANT_Y
-	sta     SPRITE_Y
-
-        ; get offset for graphics
-
-;	ldx	KEEPER_COUNT
-	lda	ron_which_ron_sprite,X
-	tax
-
-;	ldy     #4	; ? slot
-
-;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite_mask
-
-	jmp	done_ron_peasant
-
-ron_peasant:
-	;========================
-	; draw peasant
-
-	jsr	draw_peasant
-
-
-	;========================
-	; increment flame
-
-	jsr	increment_flame
-done_ron_peasant:
-
-	;=========================
-	; delay
-
-	lda	#200
-	jsr	wait
-
-	jsr	wait_vblank
-
-	jmp	ron1_loop
-
-ron_done:
-
-	;===========================
-        ; weep sound
-
-        lda     #32
-        sta     speaker_duration
-        lda     #NOTE_E5
-        sta     speaker_frequency
-        jsr     speaker_tone
-        lda     #64
-        sta     speaker_duration
-        lda     #NOTE_F5
-        sta     speaker_frequency
-        jsr     speaker_tone
-
-	jsr	wait_until_keypress
-
-	rts
-
-;==========================================
-; first keeper info
-;
-;	seems to trigger at approx peasant_x = 70 (10)
-;
-
-; 0 (4), move down/r
-; 0 (4), move down/r
-; 1 (4), no move
-; 1 (5), move down/r
-
-; 1 (5), move down/r
-; 1 (5), move down/r
-; 1 (5), move down/r
-; 1 (5), move down/r
-
-; 2 (5)
-; 3 (4)
-; 4 (10)
-; 3 (10)
-
-; 4 (15)
-; 3 (5)
-; 2 (5)
-; 1 (11) ; starts talking
-
-
-
-keeper_x:
-.byte   9, 9,10,10
-.byte  10,10,10,10
-.byte  10,10,10,10, 10,10
-.byte  10,10,10,10,10,10,10
-
-keeper_y:
-.byte	51,52,53,54
-.byte   56,58,59,60
-.byte	60,60,60,60, 60,60
-.byte	60,60,60,60, 60,60,60
-
-which_keeper_sprite:
-.byte	0, 0, 1, 1
-.byte	1, 1, 1, 1
-.byte	2, 3, 4, 4, 3, 3
-
-.byte   4, 4, 4, 3, 2, 1, 1
-
-
-
+	;===================
+	; talking to keeper
 
 keeper_talk1:
 	; print the message
@@ -322,25 +72,25 @@ keeper_talk1:
 	ldy     #>cave_outer_keeper1_message1
 	jsr	finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_keeper1_message2
 	ldy     #>cave_outer_keeper1_message2
 	jsr     finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_keeper1_message3
 	ldy     #>cave_outer_keeper1_message3
 	jsr     finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_keeper1_message4
 	ldy     #>cave_outer_keeper1_message4
 	jsr     finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	;===============================================
 	; if have sub print5, otherwise skip ahead
@@ -353,7 +103,7 @@ keeper_talk1:
 	ldy     #>cave_outer_keeper1_message5
 	jsr     finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 dont_have_sub:
 
@@ -361,8 +111,8 @@ dont_have_sub:
 	; also we're in quiz mode
 	; so we can't move and can only take quiz or give sub
 
-	lda	#1
-	sta	IN_QUIZ
+;	lda	#1
+;	sta	IN_QUIZ
 
 	; custom common verb table the essentially does nothing
 	jsr	setup_quiz_verb_table
@@ -509,7 +259,7 @@ quiz1_answers:
 	; setup outer verb table
 	;============================
 	; we do this a lot so make it a function
-.if 0
+
 setup_outer_verb_table:
 	; setup default verb table
 
@@ -517,19 +267,163 @@ setup_outer_verb_table:
 
 	; local verb table
 
-	lda     MAP_LOCATION
-	sec
-	sbc     #LOCATION_BASE
-	tax
-
-	lda	verb_tables_low,X
+	lda	#<cave_outer_verb_table
 	sta	INL
-	lda	verb_tables_hi,X
+	lda	#>cave_outer_verb_table
 	sta	INH
 	jsr	load_custom_verb_table
 
+	; FIXME: tail call
+
 	rts
-.endif
+
+
+
+	;===============================
+	; ron transform
+	;===============================
+ron_transform:
+
+	lda	#0
+	sta	KEEPER_COUNT
+
+	; look down for this
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
+ron1_loop:
+
+	; play sound if needed, 2.. 12
+
+	lda	KEEPER_COUNT
+	cmp	#2
+	bcc	skip_ron_sound
+	cmp	#12
+	bcs	skip_ron_sound
+
+	and	#1
+	beq	ron_other_note
+
+        lda     #NOTE_F6
+	beq	ron_common_note		; bra
+ron_other_note:
+        lda     #NOTE_E6
+
+ron_common_note:
+        sta     speaker_frequency
+        lda     #8
+        sta     speaker_duration
+        jsr     speaker_tone
+
+skip_ron_sound:
+
+	; erase prev keeper
+
+;	ldy	#3                      ; erase slot 3?
+;	jsr	hgr_partial_restore_by_num
+
+	inc	KEEPER_COUNT
+	ldx	KEEPER_COUNT
+
+	lda     #10
+	sta     SPRITE_X
+	lda     #60
+	sta     SPRITE_Y
+
+        ; get offset for graphics
+
+	ldx	KEEPER_COUNT
+	lda	ron_which_keeper_sprite,X
+	clc
+	adc	#5			; skip ron
+	tax
+
+;	ldy     #3      ; ? slot
+
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite_mask
+
+	;=======================
+	; see if done animation
+
+	lda	KEEPER_COUNT
+	cmp	#21		;
+	beq	ron_done
+
+	cmp	#12
+	bcc	ron_peasant	; normal peasant first 12 frames
+
+	; erase prev peasant
+
+;	ldy	#4				; erase slot 4?
+;	jsr	hgr_partial_restore_by_num
+
+	ldx	KEEPER_COUNT
+
+	lda     PEASANT_X
+	sta     SPRITE_X
+	lda     PEASANT_Y
+	sta     SPRITE_Y
+
+        ; get offset for graphics
+
+;	ldx	KEEPER_COUNT
+	lda	ron_which_ron_sprite,X
+	tax
+
+;	ldy     #4	; ? slot
+
+;	jsr	hgr_draw_sprite_save
+	jsr	hgr_draw_sprite_mask
+
+	jmp	done_ron_peasant
+
+ron_peasant:
+	;========================
+	; draw peasant
+
+	jsr	draw_peasant
+
+
+	;========================
+	; increment flame
+
+	jsr	increment_flame
+done_ron_peasant:
+
+	;=========================
+	; delay
+
+	lda	#200
+	jsr	wait
+
+	jsr	wait_vblank
+
+	jmp	ron1_loop
+
+ron_done:
+
+	;===========================
+        ; weep sound
+
+        lda     #32
+        sta     speaker_duration
+        lda     #NOTE_E5
+        sta     speaker_frequency
+        jsr     speaker_tone
+        lda     #64
+        sta     speaker_duration
+        lda     #NOTE_F5
+        sta     speaker_frequency
+        jsr     speaker_tone
+
+	jsr	wait_until_keypress
+
+	rts
+
+
+
 
 
 	;==========================
@@ -560,8 +454,6 @@ draw_keeper:
 	adc	#5			; skip ron
 	tax
 
-;	ldy     #3      ; ? slot
-;	jsr	hgr_draw_sprite_save
 	jsr	hgr_draw_sprite_mask
 
 	rts
@@ -597,3 +489,89 @@ sprites_mask_h:
 	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
 
 
+
+;==========================================
+; first keeper info
+;
+;	seems to trigger at approx peasant_x = 70 (10)
+;
+
+; 0 (4), move down/r
+; 0 (4), move down/r
+; 1 (4), no move
+; 1 (5), move down/r
+
+; 1 (5), move down/r
+; 1 (5), move down/r
+; 1 (5), move down/r
+; 1 (5), move down/r
+
+; 2 (5)
+; 3 (4)
+; 4 (10)
+; 3 (10)
+
+; 4 (15)
+; 3 (5)
+; 2 (5)
+; 1 (11) ; starts talking
+
+
+
+keeper_x:
+.byte   9, 9,10,10
+.byte  10,10,10,10
+.byte  10,10,10,10, 10,10
+.byte  10,10,10,10,10,10,10
+
+keeper_y:
+.byte	51,52,53,54
+.byte   56,58,59,60
+.byte	60,60,60,60, 60,60
+.byte	60,60,60,60, 60,60,60
+
+which_keeper_sprite:
+.byte	0, 0, 1, 1
+.byte	1, 1, 1, 1
+.byte	2, 3, 4, 4, 3, 3
+
+.byte   4, 4, 4, 3, 2, 1, 1
+
+
+
+;==========================================
+; first keeper ron
+
+; flips peasant forward
+; 3 (4) (u shaped)
+; 5 (4) (up)
+; 6 (6) (up, up)
+; 7 (4) (up, down)
+; 6 (4)
+; 7 (4)
+; 6 (4)
+; 7 (4)
+; 6 (4)
+; 7 (4)
+; 6 (4)
+; 7 (4) 9? repeats, ending on down
+; ron transition happens
+;   (8) switches to 5 part way through first frame?
+; 3 / ron next , to 1 part way through second (cloud frame)
+; 5 ron (gap)
+; 10 ron (tiny smoke)
+; 10 full ron
+
+ron_which_keeper_sprite:
+.byte	3, 5, 6, 7
+.byte	6, 7, 6, 7
+.byte	6, 7, 6, 7
+
+.byte   7, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1
+
+ron_which_ron_sprite:
+.byte	0, 0, 0, 0
+.byte	0, 0, 0, 0
+.byte	0, 0, 0, 0
+
+.byte	0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4

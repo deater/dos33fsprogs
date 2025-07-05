@@ -167,6 +167,7 @@ keeper1_give:
 	beq	cave_outer_give_sub
 	cmp	#NOUN_SANDWICH
 	beq	cave_outer_give_sandwich
+	bne	parse_quiz_unknown
 
 cave_outer_give_sub:
 cave_outer_give_sandwich:
@@ -209,9 +210,9 @@ cave_outer_get_shield:
 	lda	#0
 	sta	IN_QUIZ
 
-	; re-set up the verb table (why?)
+	; re-set up the verb table
 
-;	jsr	setup_outer_verb_table
+	jsr	setup_outer_verb_table
 
 	; actually get the shield
 

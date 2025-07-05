@@ -198,7 +198,7 @@ update_screen:
 	lda	IN_QUIZ		; need to draw keeper if quizzing
 	beq	no_draw_keeper
 
-	jsr	draw_standing_keeper
+	jsr	draw_keeper
 
 no_draw_keeper:
 
