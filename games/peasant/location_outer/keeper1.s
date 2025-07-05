@@ -1,3 +1,88 @@
+	;===============================
+	; handle keeper1
+	;===============================
+	; handle keeper1
+	;	stop walking
+	;	have keeper come out to talk
+	;	special limited handling
+	;	can't walk unless win
+handle_keeper1:
+
+	lda	#0		; stop walking
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	sta	KEEPER_COUNT
+
+	lda	#1		; start a quiz
+	sta	IN_QUIZ
+
+	;===========================
+	; animate keeper coming out
+
+keeper1_loop:
+
+	inc	KEEPER_COUNT
+;	ldx	KEEPER_COUNT
+
+;	lda     keeper_x,X
+;	sta     SPRITE_X
+;	lda     keeper_y,X
+;	sta     SPRITE_Y
+
+        ; get offset for graphics
+
+;	ldx	KEEPER_COUNT
+;	lda	which_keeper_sprite,X
+;	clc
+;	adc	#5			; skip ron
+;	tax
+
+;	ldy     #3      ; ? slot
+;	jsr	hgr_draw_sprite_save
+
+;	jsr	hgr_draw_sprite
+
+	;=======================
+	; see if done animation
+
+	lda	KEEPER_COUNT
+	cmp	#20
+	bne	not_done_keeper1_walk
+
+	jmp	keeper_talk1
+not_done_keeper1_walk:
+
+	;========================
+	; draw_scene
+
+	jsr	update_screen
+
+;=====================
+        ; increment frame
+
+        inc     FRAME
+
+        ;=====================
+        ; increment flame
+
+        jsr     increment_flame
+
+
+        ;=======================
+        ; flip page
+
+;       jsr     wait_vblank
+
+        jsr     hgr_page_flip
+
+	jmp	keeper1_loop
+
+
+
+
+
+
+
 
 ;==========================================
 ; first keeper ron
@@ -97,10 +182,10 @@ skip_ron_sound:
 	adc	#5			; skip ron
 	tax
 
-	ldy     #3      ; ? slot
+;	ldy     #3      ; ? slot
 
 ;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_mask
 
 	;=======================
 	; see if done animation
@@ -130,10 +215,10 @@ skip_ron_sound:
 	lda	ron_which_ron_sprite,X
 	tax
 
-	ldy     #4	; ? slot
+;	ldy     #4	; ? slot
 
 ;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_mask
 
 	jmp	done_ron_peasant
 
@@ -228,82 +313,6 @@ which_keeper_sprite:
 .byte   4, 4, 4, 3, 2, 1, 1
 
 
-	;===============================
-	; handle keeper1
-	;===============================
-	; handle keeper1
-	;	stop walking
-	;	have keeper come out to talk
-	;	special limited handling
-	;	can't walk unless win
-handle_keeper1:
-
-	lda	#0		; stop walking
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-
-	;===========================
-	; animate keeper coming out
-
-
-keeper1_loop:
-
-	; erase prev keeper
-
-;	ldy	#3                      ; erase slot 3?
-;	jsr	hgr_partial_restore_by_num
-
-	inc	KEEPER_COUNT
-	ldx	KEEPER_COUNT
-
-	lda     keeper_x,X
-	sta     SPRITE_X
-	lda     keeper_y,X
-	sta     SPRITE_Y
-
-        ; get offset for graphics
-
-	ldx	KEEPER_COUNT
-	lda	which_keeper_sprite,X
-	clc
-	adc	#5			; skip ron
-	tax
-
-	ldy     #3      ; ? slot
-
-;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite
-
-	;=======================
-	; see if done animation
-
-	lda	KEEPER_COUNT
-	cmp	#20		;
-	beq	keeper_talk1
-
-
-	;========================
-	; draw_peasant
-
-	jsr	draw_peasant
-
-	;========================
-	; increment flame
-
-	jsr	increment_flame
-
-
-	;=========================
-	; delay
-
-	lda	#200
-	jsr	wait
-
-	jsr	wait_vblank
-
-	jmp	keeper1_loop
-
-	rts
 
 
 keeper_talk1:
@@ -522,17 +531,22 @@ setup_outer_verb_table:
 	rts
 .endif
 
+
 	;==========================
 	; draw standing keeper
 	;==========================
 draw_standing_keeper:
 
-	; erase prev keeper
+	ldx	#19		; standing
+	stx	KEEPER_COUNT
 
-;	ldy	#3                      ; erase slot 3?
-;	jsr	hgr_partial_restore_by_num
+	;==========================
+	; draw keeper
+	;==========================
+	; which frame in KEEPER_COUNT
+draw_keeper:
 
-	ldx	#19
+	ldx	KEEPER_COUNT
 
 	lda     keeper_x,X
 	sta     SPRITE_X
@@ -541,16 +555,14 @@ draw_standing_keeper:
 
         ; get offset for graphics
 
-	ldx	#19
 	lda	which_keeper_sprite,X
 	clc
 	adc	#5			; skip ron
 	tax
 
-	ldy     #3      ; ? slot
-
+;	ldy     #3      ; ? slot
 ;	jsr	hgr_draw_sprite_save
-	jsr	hgr_draw_sprite
+	jsr	hgr_draw_sprite_mask
 
 	rts
 

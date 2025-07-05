@@ -170,7 +170,8 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 
-.include "../hgr_routines/hgr_sprite.s"
+;.include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper1.s"
 .include "outer_actions.s"
@@ -178,7 +179,7 @@ really_level_over:
 .include "sprites_outer/keeper1_sprites.inc"
 .include "sprites_outer/ron_sprites.inc"
 .include "sprites_outer/keeper2_sprites.inc"
-.include "sprites_outer/guitar_sprites.inc"
+;.include "sprites_outer/guitar_sprites.inc"
 
 
 	;======================
