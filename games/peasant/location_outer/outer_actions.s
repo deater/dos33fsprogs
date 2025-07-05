@@ -219,7 +219,11 @@ cave_outer_get_shield:
         lda     #5
         jsr     score_points
 
-        ; FIXME: load new peasant sprite with shield
+	;=================================
+        ; load new peasant sprite with shield
+
+	lda	#PEASANT_OUTFIT_SHIELD
+	jsr	load_peasant_sprites
 
 	;==================
 	; back out the keeper
