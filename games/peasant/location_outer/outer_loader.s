@@ -27,3 +27,7 @@ outer_core_zx02:
 .incbin "OUTER_CORE.zx02"
 
 .include "../priority_copy.s"
+
+outer_end:
+
+.assert (>outer_end - >outer_loader) < $20 , error, "outer too big"

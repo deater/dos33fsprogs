@@ -1,4 +1,35 @@
 ; check borders when leaving
 
-; nothing for now
+
+check_exit_west:
+	;==========================
+	; outer -> cliff_heights
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_CLIFF_HEIGHTS
+	bne	check_exit_east
+
+	lda	#32
+	sta	PEASANT_X
+	lda	#120
+	bne	done_borders			; bra
+
+
+check_exit_east:
+	;===========================
+	; outer -> trogdor
+
+	lda	#4
+	sta	PEASANT_X
+	lda	#170
+done_outer_pos:
+	sta	PEASANT_Y
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+done_borders:
+
+
 
