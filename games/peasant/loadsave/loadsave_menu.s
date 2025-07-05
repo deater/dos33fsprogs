@@ -521,6 +521,29 @@ done_load:
 	lda	DRAW_PAGE_SAVE
 	sta	DRAW_PAGE
 
+	;========================
+	; update peasant sprites
+
+	; note it over-writes WHICH_LOAD
+
+	; TODO: somehow only re-load if new doesn't match old
+
+	lda	WHICH_LOAD
+	pha
+
+	lda	WHICH_PEASANT_SPRITES		; FIXME
+	jsr	load_peasant_sprites
+
+	pla
+	sta	WHICH_LOAD
+
+	; make sure not walking after load
+	; actual game has you press enter before starting
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
 	rts
 
 

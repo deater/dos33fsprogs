@@ -224,7 +224,14 @@ cliff_reload_bg:
 	cmp	#3
 	bcc	keep_on_climbing		; blt
 
+	;========================
 	; hit the top!
+
+	; re-load proper sprite
+
+	lda	#PEASANT_OUTFIT_ROBE		; always robe
+	jsr	load_peasant_sprites
+
 
 	lda	#LOCATION_CLIFF_HEIGHTS
 	sta	MAP_LOCATION
@@ -302,14 +309,6 @@ col_copy_loop:
 
 	jsr	zx02_full_decomp
 
-;	jsr	hgr_copy			; copy to page2
-
-;	lda	#$20
-;	sta	DRAW_PAGE
-
-;	jsr	hgr_copy_fast
-
-;	bit	PAGE2
 
 	;===================
 	; put peasant text

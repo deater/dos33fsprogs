@@ -1,4 +1,3 @@
-
 	;=================================
 	; load peasant sprites to peasant_sprites_location ($de00)
 	;	which to load in A

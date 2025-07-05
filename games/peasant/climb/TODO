@@ -1,3 +1,9 @@
+
++ movement too slow with full page-flipping
++ we can actually just re-draw the backgrounds behind the objects,
+	we already sort of had code for that
+
+
 Sound effects:
         + Rocks make noise when crash
         + di-dit-da-do when falling
