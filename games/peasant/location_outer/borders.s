@@ -12,6 +12,7 @@ check_exit_west:
 	lda	#32
 	sta	PEASANT_X
 	lda	#120
+	sta	PEASANT_Y
 	bne	done_borders			; bra
 
 
@@ -22,7 +23,6 @@ check_exit_east:
 	lda	#4
 	sta	PEASANT_X
 	lda	#170
-done_outer_pos:
 	sta	PEASANT_Y
 
 	lda	#0

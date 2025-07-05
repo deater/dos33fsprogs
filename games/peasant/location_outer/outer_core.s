@@ -75,6 +75,29 @@ done_keyboard_check:
 
 not_in_quiz:
 
+	;==========================
+	; see if keeper triggered
+
+	lda	IN_QUIZ
+	bne	done_check_keeper
+
+check_keeper1:
+	lda	INVENTORY_2
+	and	#INV2_TROGSHIELD	; only if not have shield
+	bne	check_keeper2
+
+	lda	PEASANT_X		; only if ourx > 9
+	cmp	#10
+	bcc	check_keeper2
+
+	jsr	handle_keeper1
+
+check_keeper2:
+
+
+done_check_keeper:
+
+
 
 	;===================
 	; move peasant
@@ -168,14 +191,8 @@ update_screen:
 
 	jsr	hgr_copy_faster
 
-	;=================================
-	; draw keeper if we need refresh
-
-	lda	REFRESH_SCREEN
-	beq	no_draw_keeper
-
-	lda	#0
-	sta	REFRESH_SCREEN
+	;=============
+	; draw keeper
 
 	lda	IN_QUIZ		; need to draw keeper if quizzing
 	beq	no_draw_keeper
@@ -184,29 +201,6 @@ update_screen:
 
 no_draw_keeper:
 
-	;==========================
-	; see if keeper triggered
-
-	lda	IN_QUIZ
-	bne	done_check_keeper
-
-check_keeper1:
-	lda	INVENTORY_2
-	and	#INV2_TROGSHIELD	; only if not have shield
-	bne	check_keeper2
-
-	lda	PEASANT_X		; only if ourx > 9
-	cmp	#10
-	bcc	check_keeper2
-
-	jsr	handle_keeper1
-
-check_keeper2:
-
-
-
-
-done_check_keeper:
 
 	;=====================
 	; always draw peasant
