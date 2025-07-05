@@ -174,6 +174,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper1.s"
+.include "quiz1.s"
 .include "outer_actions.s"
 
 .include "sprites_outer/keeper1_sprites.inc"

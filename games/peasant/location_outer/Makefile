@@ -40,7 +40,7 @@ outer_core.o:	outer_core.s \
 		sprites_outer/keeper1_sprites.inc \
 		sprites_outer/keeper2_sprites.inc \
 		sprites_outer/guitar_sprites.inc \
-		keeper1.s \
+		keeper1.s quiz1.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait_a_bit.s borders.s

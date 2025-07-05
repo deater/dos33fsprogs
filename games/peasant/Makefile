@@ -132,12 +132,12 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./trogdor/TROGDOR ./ending/ENDING \
 	./game_over/GAME_OVER \
-	sprites_peasant/PEASANT_SPRITES_COMMON \
+	sprites_peasant/PEASANT_SPRITES_OUTER \
 	map/MAP
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk5.dsk
 	$(DOS33_RAW) peasant_disk5.dsk   0 0  ./wrong_boot/WBOOT5	0   1
 	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE_LOADER	0   0
-	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
+	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_OUTER  0   0
 	$(DOS33_RAW) peasant_disk5.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk5.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./climb/CLIMB	  	0   0
@@ -181,7 +181,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_brothers/BROTHERS_LOADER \
 	./location_puddle/PUDDLE_LOADER \
 	./location_haystack/HAYSTACK_LOADER \
-	./sprites_peasant/PEASANT_SPRITES_COMMON
+	./sprites_peasant/PEASANT_SPRITES_COMMON \
+	./sprites_peasant/PEASANT_SPRITES_OUTER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -224,6 +225,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5  3 0` ./sprites_peasant/PEASANT_SPRITES_OUTER    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./location_outer/OUTER_LOADER	  0   0
