@@ -19,47 +19,7 @@ handle_keeper1:
 	;===========================
 	; animate keeper coming out
 
-keeper1_loop:
-
-	;=======================
-	; move to next frame
-
-	inc	KEEPER_COUNT
-
-	;=======================
-	; see if done animation
-
-	lda	KEEPER_COUNT
-	cmp	#20
-	bne	not_done_keeper1_walk
-
-	jmp	keeper_talk1
-not_done_keeper1_walk:
-
-	;========================
-	; draw_scene
-
-	jsr	update_screen
-
-	;=====================
-	; increment frame
-
-	inc	FRAME
-
-	;=====================
-	; increment flame
-
-	jsr	increment_flame
-
-
-	;=======================
-	; flip page
-
-;       jsr     wait_vblank
-
-	jsr	hgr_page_flip
-
-	jmp	keeper1_loop
+	jsr	keeper1_emerge
 
 
 	;===================
@@ -125,6 +85,110 @@ dont_have_sub:
 	jsr	load_custom_verb_table
 
 	jmp	game_loop
+
+
+
+
+	;=========================
+	; keeper1 emerge
+	;=========================
+
+keeper1_emerge:
+	lda	#0
+	sta	KEEPER_COUNT
+
+keeper1_emerge_loop:
+
+	;=======================
+	; move to next frame
+
+	inc	KEEPER_COUNT
+
+	;=======================
+	; see if done animation
+
+	lda	KEEPER_COUNT
+	cmp	#20
+	beq	done_keeper1_emerge
+
+	;========================
+	; draw_scene
+
+	jsr	update_screen
+
+	;=====================
+	; increment frame
+
+	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	jsr	increment_flame
+
+
+	;=======================
+	; flip page
+
+;       jsr     wait_vblank
+
+	jsr	hgr_page_flip
+
+	jmp	keeper1_emerge_loop
+
+done_keeper1_emerge:
+	rts
+
+
+	;=========================
+	; keeper1 retreat
+	;=========================
+
+keeper1_retreat:
+	lda	#19
+	sta	KEEPER_COUNT
+
+keeper1_retreat_loop:
+
+	;=======================
+	; move to next frame
+
+	dec	KEEPER_COUNT
+
+	;=======================
+	; see if done animation
+
+	lda	KEEPER_COUNT
+	beq	done_keeper1_retreat
+
+	;========================
+	; draw_scene
+
+	jsr	update_screen
+
+	;=====================
+	; increment frame
+
+	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	jsr	increment_flame
+
+
+	;=======================
+	; flip page
+
+;       jsr     wait_vblank
+
+	jsr	hgr_page_flip
+
+	jmp	keeper1_retreat_loop
+
+done_keeper1_retreat:
+	rts
+
 
 
 	;==============================
@@ -203,13 +267,13 @@ wrong_answer:
 	ldy     #>cave_outer_quiz1_wrong
 	jsr	finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_quiz1_wrong_part2
 	ldy     #>cave_outer_quiz1_wrong_part2
 	jsr	finish_parse_message
 
-	jsr	draw_standing_keeper
+;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_quiz1_wrong_part3
 	ldy     #>cave_outer_quiz1_wrong_part3
@@ -429,10 +493,10 @@ ron_done:
 	;==========================
 	; draw standing keeper
 	;==========================
-draw_standing_keeper:
-
-	ldx	#19		; standing
-	stx	KEEPER_COUNT
+;draw_standing_keeper:
+;
+;	ldx	#19		; standing
+;	stx	KEEPER_COUNT
 
 	;==========================
 	; draw keeper
@@ -575,3 +639,4 @@ ron_which_ron_sprite:
 .byte	0, 0, 0, 0
 
 .byte	0, 0, 1, 1, 2, 2, 3, 3, 4, 4, 4
+

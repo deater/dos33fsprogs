@@ -178,8 +178,6 @@ cave_outer_give_sandwich:
 
 	jsr	cave_outer_get_shield
 
-	; FIXME: back out the keeper
-
 	rts
 
 parse_quiz_unknown:
@@ -207,9 +205,6 @@ unknown_loop:
 	;=============================
 cave_outer_get_shield:
 
-	lda	#0
-	sta	IN_QUIZ
-
 	; re-set up the verb table
 
 	jsr	setup_outer_verb_table
@@ -225,6 +220,20 @@ cave_outer_get_shield:
         jsr     score_points
 
         ; FIXME: load new peasant sprite with shield
+
+	;==================
+	; back out the keeper
+
+	jsr	keeper1_retreat
+
+
+	;==========================================
+	; exit quiz last so we keep drawing keeper
+
+	lda	#0
+	sta	IN_QUIZ
+
+
 
 	rts
 
