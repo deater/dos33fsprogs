@@ -3,11 +3,6 @@
 	;=====================
 draw_bird:
 
-	; erase the bird if needed
-
-;	ldy	#0			; always in erase slot 0
-;	jsr	hgr_partial_restore_by_num
-
 	; only draw bird if it's out
 
 	lda	bird_out
@@ -16,10 +11,25 @@ draw_bird:
 
 	; load in X/Y co-ords
 
+	lda	DRAW_PAGE
+	beq	bird_page1
+bird_page2:
 	lda	bird_x
 	sta	SPRITE_X
+	sta	erase_data_page2_x+2
 	lda	bird_y
 	sta	SPRITE_Y
+	sta	erase_data_page2_y+2
+	jmp	done_erase_bird
+
+bird_page1:
+	lda	bird_x
+	sta	SPRITE_X
+	sta	erase_data_page1_x+2
+	lda	bird_y
+	sta	SPRITE_Y
+	sta	erase_data_page1_y+2
+done_erase_bird:
 
 	; get wing flapping (which sprite) based on frame count
 

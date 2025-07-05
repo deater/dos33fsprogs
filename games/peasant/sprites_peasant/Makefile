@@ -2,10 +2,9 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 LINKER_SCRIPTS = ../../../linker_scripts
 
-all:	walk_sprites.inc climb_flame_sprites.inc \
-	climb_sprites.inc robe_sprites.inc flame_sprites.inc \
+all:	walk_sprites.inc \
+	robe_sprites.inc flame_sprites.inc \
 	walking_sprites.zx02 \
-	climbing_sprites.zx02 \
 	robe_sprites.zx02 robe_sprites_orange.zx02 robe_sprites_purple.zx02 \
 	robe_shield_sprites.zx02 \
 	PEASANT_SPRITES_COMMON

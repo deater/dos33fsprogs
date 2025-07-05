@@ -126,6 +126,7 @@ peasant_disk4.dsk:	\
 
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	 ./climb/CLIMB \
+	 ./climb/sprites/climbing_sprites.zx02 \
 	 ./location_outer/OUTER_LOADER \
 	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
@@ -139,13 +140,12 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk5.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk5.dsk   5 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk5.dsk   3 0 ./climb/CLIMB	  	0   0
-	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
-	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./location_outer/OUTER_LOADER	  	0   0
-	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./trogdor/TROGDOR	  	0   0
-	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./ending/ENDING	  	0   0
-
-
+	$(DOS33_RAW) peasant_disk5.dsk   7 0 ./climb/CLIMB	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
+	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./location_outer/OUTER_LOADER	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./trogdor/TROGDOR	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  23 0 ./ending/ENDING	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  28 0 ./climb/sprites/climbing_sprites.zx02	  	0   0
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA \
@@ -153,7 +153,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./archery/ARCHERY \
 	./trogdor/TROGDOR ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
-	./climb/CLIMB ./location_outer/OUTER_LOADER \
+	./climb/CLIMB ./climb/sprites/climbing_sprites.zx02 \
+	./location_outer/OUTER_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_inside_lady/INSIDE_LADY_LOADER \
@@ -228,6 +229,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./location_outer/OUTER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 28 0` ./climb/sprites/climbing_sprites.zx02	  0   0
+
 
 
 ###
@@ -443,6 +446,9 @@ inventory/INVENTORY:
 
 ./climb/CLIMB:
 	cd climb && make
+
+./climb/sprites/climbing_sprites.zx02:
+	cd climb/sprites && make
 
 ./archery/ARCHERY:
 	cd archery && make

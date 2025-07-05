@@ -10,10 +10,25 @@ draw_peasant_climb:
 	lda	LEVEL_OVER
 	bne	done_draw_peasant
 
+	lda	DRAW_PAGE
+	beq	peasant_erase_page1
+
+peasant_erase_page2:
 	lda	PEASANT_X		; needed?  should we hard-code?
 	sta	CURSOR_X
+	sta	erase_data_page2_x+0
 	lda	PEASANT_Y
 	sta	CURSOR_Y
+	sta	erase_data_page2_y+0
+	jmp	peasant_erase_done
+peasant_erase_page1:
+	lda	PEASANT_X		; needed?  should we hard-code?
+	sta	CURSOR_X
+	sta	erase_data_page1_x+0
+	lda	PEASANT_Y
+	sta	erase_data_page1_y+0
+	sta	CURSOR_Y
+peasant_erase_done:
 
 	lda	PEASANT_FALLING			; only for climbing minigame
 	bne	draw_peasant_falling
@@ -27,20 +42,40 @@ draw_peasant_climb:
 	adc	peasant_extra_offset,X
 	tax
 
-	ldy	#4	; reserved for peasant
+;	ldy	#4	; reserved for peasant
 
 	jsr	hgr_draw_sprite_bg_mask
 
 
-	;=============================
-	; draw flame if applicable
+	;===========
+	; draw flame
 
+	lda	DRAW_PAGE
+	beq	flame_erase_page1
+
+flame_erase_page2:
+	lda	PEASANT_X
+	sta	erase_data_page2_x+1
 	lda	PEASANT_X
 	sta	CURSOR_X
 	lda	PEASANT_Y
 	sec
 	sbc	#4
 	sta	CURSOR_Y
+	sta	erase_data_page2_y+1
+	jmp	flame_erase_done
+
+flame_erase_page1:
+	lda	PEASANT_X
+	sta	erase_data_page1_x+1
+	lda	PEASANT_X
+	sta	CURSOR_X
+	lda	PEASANT_Y
+	sec
+	sbc	#4
+	sta	CURSOR_Y
+	sta	erase_data_page1_y+1
+flame_erase_done:
 
 	; get offset for graphics
 
@@ -50,7 +85,7 @@ draw_peasant_climb:
 	adc	FLAME_COUNT
 	tax
 
-	ldy	#5	; reserved for flame
+;	ldy	#5	; reserved for flame
 
 	jsr	hgr_draw_sprite_bg_mask
 
@@ -59,7 +94,10 @@ done_draw_peasant:
 	rts
 
 	;================================
-
+	;================================
+	; draw peasant falling
+	;================================
+	;================================
 
 draw_peasant_falling:
 
@@ -89,13 +127,13 @@ yep_really_falling:
 yep_falling_common:
 	tax
 
-	ldy	#4	; reserved for peasant
+;	ldy	#4	; reserved for peasant
 
 	jsr	hgr_draw_sprite_bg_mask
 
 
-	;=============================
-	; draw flame if applicable
+	;===========
+	; draw flame
 
 	lda	PEASANT_X
 	sta	CURSOR_X
@@ -119,6 +157,24 @@ flame_adjust_mid:
 	sec
 	sbc	#4
 	sta	CURSOR_Y
+
+
+	lda	DRAW_PAGE
+	beq	fall_flame_erase_page1
+
+fall_flame_erase_page2:
+	lda	CURSOR_X
+	sta	erase_data_page2_x+1
+	lda	CURSOR_Y
+	sta	erase_data_page2_y+1
+	jmp	fall_flame_erase_done
+fall_flame_erase_page1:
+	lda	CURSOR_X
+	sta	erase_data_page1_x+1
+	lda	CURSOR_Y
+	sta	erase_data_page1_y+1
+fall_flame_erase_done:
+
 
 	; get offset for graphics
 
@@ -155,3 +211,6 @@ peasant_flame_fall_yadjust:
 
 peasant_extra_offset:
 	.byte 0,0,1,2,3
+
+
+

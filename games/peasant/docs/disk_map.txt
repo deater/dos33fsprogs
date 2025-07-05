@@ -80,7 +80,8 @@ DISK5
 	OUTER		15-18		13491 (4)
 	TROGDOR		19-22		14782 (4)
 	ENDING		23-27		17038 (5)
-	???		28-34
+	CLIMB_SPRITES	28		1270  (1) (TODO move after climb)
+	???		29-34
 
 
 

@@ -7,16 +7,30 @@ draw_rocks:
 	sta	CURRENT_ROCK
 draw_rock_loop:
 
-;	ldy	CURRENT_ROCK
-;	iny					; rock erase slot=rock+1
-;	jsr	hgr_partial_restore_by_num
-
 	ldx	CURRENT_ROCK
 
+
+	lda	DRAW_PAGE
+	beq	erase_rock_page1
+
+erase_rock_page2:
 	lda	rock_x,X
 	sta	SPRITE_X
+	sta	erase_data_page2_x+3,X
 	lda	rock_y,X
 	sta	SPRITE_Y
+	sta	erase_data_page2_y+3,X
+	jmp	erase_rock_done
+
+erase_rock_page1:
+	lda	rock_x,X
+	sta	SPRITE_X
+	sta	erase_data_page1_x+3,X
+	lda	rock_y,X
+	sta	SPRITE_Y
+	sta	erase_data_page1_y+3,X
+erase_rock_done:
+
 
 	lda	rock_state,X
 	beq	do_draw_rock

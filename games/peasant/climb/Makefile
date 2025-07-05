@@ -21,7 +21,8 @@ climb.o:	climb.s \
 		../location_cliff_base/graphics_cliff/cliff_base.hgr.zx02 \
 		graphics_cliff/cliff2.hgr.zx02 \
 		graphics_cliff/cliff3.hgr.zx02 \
-		rock_code.s bird_code.s
+		rock_code.s bird_code.s \
+		erase_bg.s
 	ca65 -o climb.o climb.s -l climb.lst
 
 ####

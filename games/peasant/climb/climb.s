@@ -44,10 +44,32 @@ cliff_climb:
 	lda	#86
 	sta	PEASANT_Y
 
-	; default for peasant quest is the tables are for page2
-;	lda	#$40
-;	sta	HGR_PAGE
-;	jsr	hgr_make_tables
+
+
+	;========================
+	; Load Peasant Sprites
+	;========================
+	; from disk to save ~1k
+	; TODO: move other sprites in with it?
+
+	lda	#LOAD_CLIMB_SPRITES
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	; loads to $6000 (peasant_sprites_temp)
+
+	lda	#<peasant_sprites_temp
+	sta	zx_src_l+1
+	lda	#>peasant_sprites_temp
+	sta	zx_src_h+1
+
+	lda	#>peasant_sprites_location
+
+	jsr	zx02_full_decomp
+
+
+	; assume hi-res lookup table already loaded
 
 	jsr	load_graphics
 
@@ -64,20 +86,6 @@ cliff_climb:
 	jsr	zx02_full_decomp
 
 
-	;========================
-	; Load Peasant Sprites
-	;========================
-
-	; TODO: can we load this from disk somehow?
-
-	lda     #<climbing_sprite_data
-	sta     zx_src_l+1
-	lda     #>climbing_sprite_data
-	sta     zx_src_h+1
-
-        lda     #>peasant_sprites_location
-
-	jsr	zx02_full_decomp
 
 	;==========================
 	;==========================
@@ -87,9 +95,9 @@ cliff_climb:
 game_loop:
 
 	;===========================
-	; copy bg to current screen
+	; erase bg
 
-	jsr	hgr_copy_faster
+	jsr	erase_bg
 
 
 	;=====================
@@ -179,8 +187,8 @@ flame_good:
 
 	; delay
 
-;	lda	#200
-;	jsr	wait
+	lda	#180		; adjust?
+	jsr	wait
 
 	jmp	game_loop
 
@@ -209,6 +217,8 @@ cliff_game_over:
 	stx	OUTL
 	sty	OUTH
 	jsr	print_text_message
+
+	jsr	hgr_page_flip
 
 	jsr	wait_until_keypress
 
@@ -305,6 +315,9 @@ col_copy_loop:
 	lda	bg_data_h,X
 	sta	zx_src_h+1
 
+	;======================
+	; to offscreen
+
 	lda	#$60
 
 	jsr	zx02_full_decomp
@@ -312,6 +325,12 @@ col_copy_loop:
 
 	;===================
 	; put peasant text
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40		; write text to $6000
+	sta	DRAW_PAGE
 
 	lda	#<peasant_text
 	sta	OUTL
@@ -324,6 +343,24 @@ col_copy_loop:
 	; put score
 
 	jsr	print_score
+
+
+	;====================================
+	; copy background to both PAGE1/PAGE2
+	;====================================
+	; glitchy but how better to do it?
+
+
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	hgr_copy_faster
+
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	hgr_copy_faster
+
+	lda	DRAW_PAGE_SAVE
 
 	rts
 
@@ -362,9 +399,8 @@ reset_enemy_state:
 	.include	"move_peasant_climb.s"
 
 	.include	"../priority_copy.s"
-;	.include	"../hgr_routines/hgr_copy_faster.s"
 
-;	.include	"../gr_offsets.s"
+	.include	"erase_bg.s"
 
 	.include	"../hgr_routines/hgr_sprite_mask.s"
 	.include 	"../hgr_routines/hgr_sprite_bg_mask.s"
@@ -478,9 +514,31 @@ peasant_sprites_data_h = peasant_sprites_location+102
 peasant_mask_data_l = peasant_sprites_location+136
 peasant_mask_data_h = peasant_sprites_location+170
 
-climbing_sprite_data:
-	.incbin "../sprites_peasant/climbing_sprites.zx02"
+;climbing_sprite_data:
+;	.incbin "sprites/climbing_sprites.zx02"
+
+
+erase_data_page1_x:
+	.byte	$ff,$ff,$ff,$ff,$ff,$ff	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page1_y:
+	.byte	0,0,0,0,0,0	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page1_xsize:
+	.byte	3,4,3,5,5,5	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page1_ysize:
+	.byte	31,10,20,21,21,21	; peasant/flame/bird/rock1/rock2/rock3
+
+erase_data_page2_x:
+	.byte	$ff,$ff,$ff,$ff,$ff,$ff	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page2_y:
+	.byte	0,0,0,0,0,0	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page2_xsize:
+	.byte	3,4,3,5,5,5	; peasant/flame/bird/rock1/rock2/rock3
+erase_data_page2_ysize:
+	.byte	31,10,20,21,21,21	; peasant/flame/bird/rock1/rock2/rock3
+
+
+
 
 climb_end:
 
-.assert (>climb_end - >cliff_climb) < $30 , error, "loader too big"
+.assert (>climb_end - >cliff_climb) < $30 , error, "climb too big"
