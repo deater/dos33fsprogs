@@ -1,3 +1,77 @@
+	;=========================
+	; take quiz
+	;=========================
+
+take_quiz:
+
+quiz1_loop:
+
+	;=======================
+	; check keyboard special
+
+	jsr	check_keyboard_answer
+
+	lda	IN_QUIZ
+	beq	done_quiz1
+
+	;========================
+	; draw_scene
+
+	jsr	update_screen
+
+	;=======================
+	; draw quiz message
+
+	lda	WHICH_QUIZ
+	cmp	#2
+	beq	draw_keeper1_quiz3
+	cmp	#1
+	beq	draw_keeper1_quiz2
+
+draw_keeper1_quiz1:
+	ldx	#<cave_outer_quiz1_1
+	ldy	#>cave_outer_quiz1_1
+	jmp	draw_keeper1_quiz_common
+
+draw_keeper1_quiz2:
+	ldx	#<cave_outer_quiz1_2
+	ldy	#>cave_outer_quiz1_2
+	jmp	draw_keeper1_quiz_common
+
+draw_keeper1_quiz3:
+	ldx	#<cave_outer_quiz1_3
+	ldy	#>cave_outer_quiz1_3
+draw_keeper1_quiz_common:
+	stx	OUTL
+	sty	OUTH
+	jsr     print_text_message
+
+
+	;=====================
+	; increment frame
+
+	inc	FRAME
+
+	;=====================
+	; increment flame
+
+	jsr	increment_flame
+
+
+	;=======================
+	; flip page
+
+;       jsr     wait_vblank
+
+	jsr	hgr_page_flip
+
+	jmp	quiz1_loop
+
+done_quiz1:
+	rts
+
+
+
 	;==============================
 	; check_keyboard_answer
 	;==============================
@@ -13,9 +87,6 @@ check_keyboard_answer:
 
 	pha
 	jsr	restore_parse_message
-
-	lda	#0
-	sta	REFRESH_SCREEN	; don't refresh or we draw keeper on top
 
 	pla
 
@@ -74,13 +145,9 @@ wrong_answer:
 	ldy     #>cave_outer_quiz1_wrong
 	jsr	finish_parse_message
 
-;	jsr	draw_standing_keeper
-
 	ldx     #<cave_outer_quiz1_wrong_part2
 	ldy     #>cave_outer_quiz1_wrong_part2
 	jsr	finish_parse_message
-
-;	jsr	draw_standing_keeper
 
 	ldx     #<cave_outer_quiz1_wrong_part3
 	ldy     #>cave_outer_quiz1_wrong_part3
@@ -90,9 +157,31 @@ wrong_answer:
 
 	jsr	ron_transform
 
+after_ron:
+
+	; force message to current page
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
 	ldx     #<cave_outer_quiz1_wrong_part4
 	ldy     #>cave_outer_quiz1_wrong_part4
-	jsr	finish_parse_message
+
+	; hack so Ron still displayed for message
+
+	stx     OUTL
+        sty     OUTH
+        jsr     print_text_message
+ ;       jsr     hgr_page_flip
+        bit     KEYRESET
+        jsr     wait_until_keypress
+
+
+
+
+;	jsr	finish_parse_message
+
 
 	lda	#0
 	sta	IN_QUIZ
@@ -119,8 +208,6 @@ right_answer:
 
 	jsr	cave_outer_get_shield
 
-	; FIXME: animate keeper backing off
-
 	rts
 
 quiz1_answers:
@@ -133,7 +220,7 @@ quiz1_answers:
 ron_transform:
 
 	lda	#0
-	sta	KEEPER_COUNT
+	sta	RON_COUNT
 
 	; look down for this
 
@@ -141,10 +228,17 @@ ron_transform:
 	sta	PEASANT_DIR
 
 ron1_loop:
+	;=============================
+	; copy page (note this is going to mess with sound)
+
+	; FIXME: instead just copy from BG like climb code?
+
+	jsr	hgr_copy_faster
+
 
 	; play sound if needed, 2.. 12
 
-	lda	KEEPER_COUNT
+	lda	RON_COUNT
 	cmp	#2
 	bcc	skip_ron_sound
 	cmp	#12
@@ -166,13 +260,9 @@ ron_common_note:
 
 skip_ron_sound:
 
-	; erase prev keeper
 
-;	ldy	#3                      ; erase slot 3?
-;	jsr	hgr_partial_restore_by_num
-
-	inc	KEEPER_COUNT
-	ldx	KEEPER_COUNT
+	inc	RON_COUNT
+	ldx	RON_COUNT
 
 	lda     #10
 	sta     SPRITE_X
@@ -181,33 +271,25 @@ skip_ron_sound:
 
         ; get offset for graphics
 
-	ldx	KEEPER_COUNT
+	ldx	RON_COUNT
 	lda	ron_which_keeper_sprite,X
 	clc
 	adc	#5			; skip ron
 	tax
 
-;	ldy     #3      ; ? slot
-
-;	jsr	hgr_draw_sprite_save
 	jsr	hgr_draw_sprite_mask
 
 	;=======================
 	; see if done animation
-
-	lda	KEEPER_COUNT
+blurgh:
+	lda	RON_COUNT
 	cmp	#21		;
 	beq	ron_done
 
 	cmp	#12
 	bcc	ron_peasant	; normal peasant first 12 frames
 
-	; erase prev peasant
-
-;	ldy	#4				; erase slot 4?
-;	jsr	hgr_partial_restore_by_num
-
-	ldx	KEEPER_COUNT
+	ldx	RON_COUNT
 
 	lda     PEASANT_X
 	sta     SPRITE_X
@@ -216,13 +298,10 @@ skip_ron_sound:
 
         ; get offset for graphics
 
-;	ldx	KEEPER_COUNT
+;	ldx	RON_COUNT
 	lda	ron_which_ron_sprite,X
 	tax
 
-;	ldy     #4	; ? slot
-
-;	jsr	hgr_draw_sprite_save
 	jsr	hgr_draw_sprite_mask
 
 	jmp	done_ron_peasant
@@ -233,20 +312,25 @@ ron_peasant:
 
 	jsr	draw_peasant
 
-
 	;========================
 	; increment flame
 
 	jsr	increment_flame
+
 done_ron_peasant:
 
 	;=========================
 	; delay
 
-	lda	#200
-	jsr	wait
+;	lda	#200
+;	jsr	wait
 
-	jsr	wait_vblank
+	;=========================
+	; flip page
+
+	jsr	hgr_page_flip
+
+;	jsr	wait_vblank
 
 	jmp	ron1_loop
 

@@ -348,9 +348,10 @@ ARCHER_COUNT	= $C9	; hidden glen
 BUCKET_STATE	= $CA	; well
 CRANK_STATE	= $CB	; well
 
-IN_QUIZ		= $CA	; cliff heights
-WHICH_QUIZ	= $CB	; cliff heights
-OLD_DIR		= $CC	; cliff heights
+IN_QUIZ		= $CA	; outer
+WHICH_QUIZ	= $CB	; outer
+OLD_DIR		= $CC	; outer
+RON_COUNT	= $CD	; outer
 
 PREV_X		= $CD	; kerrek
 PREV_Y		= $CE	; kerrek

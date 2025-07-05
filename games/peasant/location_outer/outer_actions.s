@@ -135,23 +135,24 @@ cave_outer_take_quiz:
 	bcc	keeper1_quiz2
 keeper1_quiz1:
 	lda	#0
-	ldx	#<cave_outer_quiz1_1
-	ldy	#>cave_outer_quiz1_1
+;	ldx	#<cave_outer_quiz1_1
+;	ldy	#>cave_outer_quiz1_1
 	jmp	keeper1_quiz_common
 
 keeper1_quiz2:
 	lda	#1
-	ldx	#<cave_outer_quiz1_2
-	ldy	#>cave_outer_quiz1_2
+;	ldx	#<cave_outer_quiz1_2
+;	ldy	#>cave_outer_quiz1_2
 	jmp	keeper1_quiz_common
 
 keeper1_quiz3:
 	lda	#2
-	ldx	#<cave_outer_quiz1_3
-	ldy	#>cave_outer_quiz1_3
+;	ldx	#<cave_outer_quiz1_3
+;	ldy	#>cave_outer_quiz1_3
 keeper1_quiz_common:
 	sta	WHICH_QUIZ
-	jmp	finish_parse_message_nowait
+	rts
+;	jmp	finish_parse_message_nowait
 
 
 	;=============================

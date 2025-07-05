@@ -35,17 +35,15 @@ outer_core:
 game_loop:
 
 	;======================
-	; check keyboard
+	; check if in quiz
 
 	lda	IN_QUIZ
 	cmp	#2		; means waiting for answer
 	bne	normal_keyboard_check
 
-	; FIXME: need to drain?
+	jsr	take_quiz
 
-	jsr	check_keyboard_answer
-
-	jmp	done_keyboard_check
+	jmp	check_done_level
 
 normal_keyboard_check:
 
@@ -106,7 +104,7 @@ done_check_keeper:
 
 	;====================
 	; check if done level
-
+check_done_level:
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over
