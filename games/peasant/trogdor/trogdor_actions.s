@@ -179,14 +179,14 @@ awake_no_keypress:
 
 awake_talk_trogdor:
 
-	lda	#<trogdor_cave_zx02
-	sta	zx_src_l+1
-	lda	#>trogdor_cave_zx02
-	sta	zx_src_h+1
+;	lda	#<trogdor_cave_zx02
+;	sta	zx_src_l+1
+;	lda	#>trogdor_cave_zx02
+;	sta	zx_src_h+1
 
-	lda	#$40
+;	lda	#$40
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
 	;======================
 	; draw rather dashing
@@ -203,7 +203,8 @@ awake_talk_trogdor:
 
 	jsr	hgr_draw_sprite
 
-	jsr	update_top
+	jsr	update_score
+	jsr	print_score
 
 
 	;========================
@@ -289,14 +290,14 @@ burninate_rather_dashing:
 
 trogdor_open:
 
-	lda	#<trogdor_open_zx02
-	sta	zx_src_l+1
-	lda	#>trogdor_open_zx02
-	sta	zx_src_h+1
+;	lda	#<trogdor_open_zx02
+;	sta	zx_src_l+1
+;	lda	#>trogdor_open_zx02
+;	sta	zx_src_h+1
 
-	lda	#$40
+;	lda	#$40
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
 	;======================
 	; draw rather dashing
@@ -313,32 +314,35 @@ trogdor_open:
 
 	jsr	hgr_draw_sprite
 
-	jsr	update_top
+	jsr	update_score
+	jsr	print_score
+
+;	jsr	update_top
 
 ;	jsr	wait_until_keypress
 
 
 trogdor_flame1:
 
-	lda	#<trogdor_flame1_zx02
-	sta	zx_src_l+1
-	lda	#>trogdor_flame1_zx02
-	sta	zx_src_h+1
+;	lda	#<trogdor_flame1_zx02
+;	sta	zx_src_l+1
+;	lda	#>trogdor_flame1_zx02
+;	sta	zx_src_h+1
 
-	lda	#$40
+;	lda	#$40
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
 trogdor_flame2:
 
-	lda	#<trogdor_flame2_zx02
-	sta	zx_src_l+1
-	lda	#>trogdor_flame2_zx02
-	sta	zx_src_h+1
+;	lda	#<trogdor_flame2_zx02
+;	sta	zx_src_l+1
+;	lda	#>trogdor_flame2_zx02
+;	sta	zx_src_h+1
 
-	lda	#$20
+;	lda	#$20
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
 
 	ldx	#32
@@ -372,16 +376,18 @@ burninate_loop:
 	; charred
 	; smoke
 
-	lda	#<trogdor_cave_zx02
-	sta	zx_src_l+1
-	lda	#>trogdor_cave_zx02
-	sta	zx_src_h+1
+;	lda	#<trogdor_cave_zx02
+;	sta	zx_src_l+1
+;	lda	#>trogdor_cave_zx02
+;	sta	zx_src_h+1
 
-	lda	#$40
+;	lda	#$40
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
-	jsr	update_top
+;	jsr	update_top
+	jsr	update_score
+	jsr	print_score
 
 	;======================
 	; draw rather dashing

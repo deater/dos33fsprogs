@@ -3,31 +3,44 @@ include ../../../Makefile.inc
 LINKER_SCRIPTS = ../../../linker_scripts
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
-all:	TROGDOR
+all:	TROGDOR_LOADER
 
 ###
 
-TROGDOR:	trogdor.o
-	ld65 -o TROGDOR trogdor.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+TROGDOR_LOADER:	trogdor_loader.o
+	ld65 -o TROGDOR_LOADER trogdor_loader.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
-trogdor.o:	trogdor.s ../zp.inc \
-		graphics_trogdor/trogdor_graphics.inc sprites/trogdor_sprites.inc \
-		../text/DIALOG_TROGDOR.ZX02 ../text/dialog_trogdor.inc \
-		../ssi263/ssi263_simple_speech.s \
-		../hgr_routines/hgr_draw_box.s \
-		../hgr_routines/hgr_rectangle.s \
-		../hgr_routines/hgr_font.s \
-		../hgr_routines/hgr_input.s \
-		../wait_a_bit.s ../hgr_routines/hgr_text_box.s \
-		draw_peasant_tiny.s \
-		../keyboard.s ../new_map_location.s \
-		move_peasant_tiny.s ../score.s ../inventory/inventory.inc \
-		trogdor_actions.s
-
-	ca65 -o trogdor.o trogdor.s -l trogdor.lst
-
+trogdor_loader.o:	trogdor_loader.s \
+		../zp.inc ../hardware.inc ../qload.inc \
+		../priority_copy.s \
+		../text/DIALOG_TROGDOR.ZX02 \
+		graphics_trogdor/trogdor_bg.inc \
+		sprites/trogdor_sprites.inc \
+		TROGDOR_CORE.zx02
+	ca65 -o trogdor_loader.o trogdor_loader.s -l trogdor_loader.lst
 
 ####
+
+TROGDOR_CORE.zx02:	TROGDOR_CORE
+	$(ZX02) -f TROGDOR_CORE TROGDOR_CORE.zx02
+
+TROGDOR_CORE:	trogdor_core.o
+	ld65 -o TROGDOR_CORE trogdor_core.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
+
+trogdor_core.o:	trogdor_core.s \
+		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
+		../inventory/inventory.inc \
+		../parse_input.inc ../common_defines.inc \
+		trogdor_actions.s \
+		graphics_trogdor/trogdor_graphics.inc \
+		../text/DIALOG_TROGDOR.ZX02 ../text/dialog_trogdor.inc \
+                ../wait_a_bit.s borders.s
+	ca65 -o trogdor_core.o trogdor_core.s -l trogdor_core.lst
+
+####
+
+graphics_trogdor/trogdor_bg.inc:
+	cd graphics_trogdor && make
 
 graphics_trogdor/trogdor_graphics.inc:
 	cd graphics_trogdor && make
