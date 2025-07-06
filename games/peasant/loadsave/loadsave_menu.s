@@ -777,7 +777,11 @@ location_names_l:
 	.byte <lname_inside_inn
 
 	.byte <lname_archery_game
-	.byte <lname_map
+	.byte <lname_map				; 29
+
+	.byte <lname_empty				; 30 (climb)
+	.byte <lname_trogdor_outer			; 31 (outer2)
+	.byte <lname_trogdor_outer			; 32 (outer3)
 
 	.byte <lname_empty
 
@@ -814,45 +818,49 @@ location_names_h:
 	.byte >lname_inside_inn
 
 	.byte >lname_archery_game
-	.byte >lname_map
+	.byte >lname_map				; 29
+
+	.byte >lname_empty				; 30 (climb)
+	.byte >lname_trogdor_outer			; 31 (outer2)
+	.byte >lname_trogdor_outer			; 32 (outer3)
 
 	.byte >lname_empty
 
 
 location_names:
-lname_poor_gary:	.byte "Poor Gary's Glen",0	; A1 LOCATION_POOR_GARY
-lname_kerrek_1:		.byte "Kerrek Tracks 1",0	; B1 LOCATION_KERREK_1
-lname_old_well:		.byte "Old Well",0		; C1 LOCATION_OLD_WELL
-lname_yellow_tree:	.byte "Yellow Tree",0		; D1 LOCATION_YELLOW_TREE
-lname_waterfall:	.byte "Waterfall",0		; E1 LOCATION_WATERFALL
-lname_hay_bale:		.byte "That Hay Bale",0		; A2 LOCATION_HAY_BALE
-lname_mud_puddle:	.byte "That Mud Puddle",0	; B2 LOCATION_MUD_PUDDLE
-lname_archery:		.byte "Archery Range",0		; C2 LOCATION_ARCHERY
-lname_river_stone:	.byte "River and Stone",0	; D2 LOCATION_RIVER_STONE
-lname_mountain_pass:	.byte "Mountain Pass",0		; E2 LOCATION_MOUNTAIN_PASS
-lname_jhonka_cave:	.byte "Jhonka's Cave",0			; A3 LOCATION_JHONKA_CAVE
-lname_your_cottage:	.byte "Your Burninated Cottage",0	; B3 LOCATION_YOUR_COTTAGE
-lname_lake_west:	.byte "Pebble Lake West",0		; C3 LOCATION_LAKE_WEST
-lname_lake_east:	.byte "Pebble Lake East",0		; D3 LOCATION_LAKE_EAST
-lname_outside_inn:	.byte "Outside Giant Inn",0		; E3 LOCATION_OUTSIDE_INN
-lname_outside_nn:	.byte "Outside Mysterious Cottage",0	; A4 LOCATION_OUTSIDE_NN
-lname_wavy_tree:	.byte "Wavy Tree",0			; B4 LOCATION_WAVY_TREE
-lname_kerrek_2:		.byte "Kerrek Tracks 2",0		; C4 LOCATION_KERREK_2
-lname_outside_lady:	.byte "Outside Baby Lady Cottage",0	; D4 LOCATION_OUTSIDE_LADY
-lname_burn_tree:	.byte "Burninated Trees",0		; E4 LOCATION_BURN_TREES
+lname_poor_gary:	.byte "Poor Gary's Glen",0	; 00 A1 LOCATION_POOR_GARY
+lname_kerrek_1:		.byte "Kerrek Tracks 1",0	; 01 B1 LOCATION_KERREK_1
+lname_old_well:		.byte "Old Well",0		; 02 C1 LOCATION_OLD_WELL
+lname_yellow_tree:	.byte "Yellow Tree",0		; 03 D1 LOCATION_YELLOW_TREE
+lname_waterfall:	.byte "Waterfall",0		; 04 E1 LOCATION_WATERFALL
+lname_hay_bale:		.byte "That Hay Bale",0		; 05 A2 LOCATION_HAY_BALE
+lname_mud_puddle:	.byte "That Mud Puddle",0	; 06 B2 LOCATION_MUD_PUDDLE
+lname_archery:		.byte "Archery Range",0		; 07 C2 LOCATION_ARCHERY
+lname_river_stone:	.byte "River and Stone",0	; 08 D2 LOCATION_RIVER_STONE
+lname_mountain_pass:	.byte "Mountain Pass",0		; 09 E2 LOCATION_MOUNTAIN_PASS
+lname_jhonka_cave:	.byte "Jhonka's Cave",0			; 10 A3 LOCATION_JHONKA_CAVE
+lname_your_cottage:	.byte "Your Burninated Cottage",0	; 11 B3 LOCATION_YOUR_COTTAGE
+lname_lake_west:	.byte "Pebble Lake West",0		; 12 C3 LOCATION_LAKE_WEST
+lname_lake_east:	.byte "Pebble Lake East",0		; 13 D3 LOCATION_LAKE_EAST
+lname_outside_inn:	.byte "Outside Giant Inn",0		; 14 E3 LOCATION_OUTSIDE_INN
+lname_outside_nn:	.byte "Outside Mysterious Cottage",0	; 15 A4 LOCATION_OUTSIDE_NN
+lname_wavy_tree:	.byte "Wavy Tree",0			; 16 B4 LOCATION_WAVY_TREE
+lname_kerrek_2:		.byte "Kerrek Tracks 2",0		; 17 C4 LOCATION_KERREK_2
+lname_outside_lady:	.byte "Outside Baby Lady Cottage",0	; 18 D4 LOCATION_OUTSIDE_LADY
+lname_burn_tree:	.byte "Burninated Trees",0		; 19 E4 LOCATION_BURN_TREES
 
-lname_cliff_base:	.byte "Cliff Base",0			; LOCATION_CLIFF_BASE
-lname_cliffland_heights:.byte "Cliffland Heights",0		; LOCATION_CLIFF_HEIGHTS
-lname_trogdor_outer:	.byte "Trogdor's Outer Sanctum",0	; LOCATION_TROGDOR_OUTER
-lname_trogdor_posh:	.byte "Trogdor's Posh Lair",0		; LOCATION_TROGDOR_LAIR
+lname_cliff_base:	.byte "Cliff Base",0			; 20 LOCATION_CLIFF_BASE
+lname_cliffland_heights:.byte "Cliffland Heights",0		; 21 LOCATION_CLIFF_HEIGHTS
+lname_trogdor_outer:	.byte "Trogdor's Outer Sanctum",0	; 22 LOCATION_TROGDOR_OUTER
+lname_trogdor_posh:	.byte "Trogdor's Posh Lair",0		; 23 LOCATION_TROGDOR_LAIR
 
-lname_hidden_glen:	.byte "Hidden Glen",0			; LOCATION_HIDDEN_GLEN
-lname_inside_lady:	.byte "Inside Baby Lady Cottage",0	; LOCATION_INSIDE_LADY
-lname_inside_nn:	.byte "Inside Mysterious Cottage",0	; LOCATION_INSIDE_NN
-lname_inside_inn:	.byte "Inside Giant Inn",0		; LOCATION_INSIDE_INN
+lname_hidden_glen:	.byte "Hidden Glen",0			; 24 LOCATION_HIDDEN_GLEN
+lname_inside_lady:	.byte "Inside Baby Lady Cottage",0	; 25 LOCATION_INSIDE_LADY
+lname_inside_nn:	.byte "Inside Mysterious Cottage",0	; 26 LOCATION_INSIDE_NN
+lname_inside_inn:	.byte "Inside Giant Inn",0		; 27 LOCATION_INSIDE_INN
 
-lname_archery_game:	.byte "Archery Game",0			; LOCATION_INSIDE_INN
-lname_map:		.byte "Map",0				; LOCATION_INSIDE_INN
+lname_archery_game:	.byte "Archery Game",0			; 28 LOCATION_INSIDE_INN
+lname_map:		.byte "Map",0				; 29 LOCATION_INSIDE_INN
 
 lname_empty:		.byte "Empty",0
 location_names_end:
