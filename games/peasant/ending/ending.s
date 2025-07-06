@@ -14,13 +14,12 @@
 
 ending:
 
-;	jsr	hgr_make_tables
-
-;	jsr	hgr2
-
-
 	lda	#0
 	sta	FRAME
+
+	lda	#$20
+	sta	DRAW_PAGE		; always show page2
+	bit	PAGE2
 
 	; update score
 
@@ -90,33 +89,20 @@ boat:
 	jsr	update_top
 
 	;===================
-	; draw rectangle
-	; ???
-	; why?
-.if 0
+	; draw black rectangle
+	; to draw text on top of
+
+	lda	#2		; 12/7 = ~2
+	sta	VGI_RX1
+	lda	#98
+	sta	VGI_RY1
+	lda	#38		; 269/7 = ~38
+	sta	VGI_RX2
+	lda	#118
+        sta     VGI_RY2
+
 	lda     #$80            ; color is black2
-	sta     VGI_RCOLOR
-
-	lda     #12
-	sta     VGI_RX1
-	lda     #98
-	sta     VGI_RY1
-	lda	#202
-	sta	VGI_RXRUN
-	lda	#20
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-
-	lda     #214
-	sta     VGI_RX1
-	lda     #98
-	sta     VGI_RY1
-	lda	#45
-	sta	VGI_RXRUN
-	lda	#20
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-.endif
+        jsr     hgr_rectangle_color
 
 	lda	#<boat_string
 	sta	OUTL
@@ -234,21 +220,21 @@ waterfall:
 	jsr	update_top
 
 	;========================
-	; draw rectangle
-.if 0
-	lda     #$80            ; color is black2
-	sta     VGI_RCOLOR
+	; draw black rectangle
+	; for text
 
-	lda     #44
+	lda     #6		; 44/7 = ~6
 	sta     VGI_RX1
 	lda     #48
 	sta     VGI_RY1
-	lda	#192
-	sta	VGI_RXRUN
-	lda	#20
-        sta     VGI_RYRUN
-	jsr     vgi_simple_rectangle
-.endif
+	lda	#34		; 236/7 = ~33
+	sta	VGI_RX2
+	lda	#68
+        sta     VGI_RY2
+
+	lda     #$80            ; color is black2
+        jsr     hgr_rectangle_color
+
 	lda	#<waterfall_string
 	sta	OUTL
 	lda	#>waterfall_string
@@ -391,20 +377,19 @@ jhonka:
 	jsr	update_top
 
 	; draw rectangle
-.if 0
-	lda     #$80            ; color is black2
-	sta     VGI_RCOLOR
 
-	lda     #44
-	sta     VGI_RX1
+	lda     #6
+	sta     VGI_RX1		; 44/7 = ~6
 	lda     #58
 	sta     VGI_RY1
-	lda	#180
-	sta	VGI_RXRUN
-	lda	#12
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-.endif
+	lda	#33		; 224/7 = ~32
+	sta	VGI_RX2
+	lda	#70
+        sta     VGI_RY2
+
+	lda     #$80            ; color is black2
+        jsr     hgr_rectangle_color
+
 	lda	#<jhonka_string
 	sta	OUTL
 	lda	#>jhonka_string
@@ -472,21 +457,21 @@ cottage:
 	jsr	update_top
 
 
+	;==================
 	; draw rectangle
-.if 0
-	lda     #$80            ; color is black2
-	sta     VGI_RCOLOR
 
-	lda     #40
+	lda     #5			; 40/7 = ~5
 	sta     VGI_RX1
 	lda     #48
 	sta     VGI_RY1
-	lda	#192
-	sta	VGI_RXRUN
-	lda	#32
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-.endif
+	lda	#34			; 232/7 = ~33
+	sta	VGI_RX2
+	lda	#80
+        sta     VGI_RY2
+
+	lda     #$80            ; color is black2
+        jsr     hgr_rectangle_color
+
 
 	lda	#<cottage_string
 	sta	OUTL
@@ -500,27 +485,19 @@ cottage:
 
 	;====================
 	; second message
-.if 0
-	lda     #11
-	sta     VGI_RX1
-	lda     #48
-	sta     VGI_RY1
-	lda	#192
-	sta	VGI_RXRUN
-	lda	#32
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
 
-	lda     #203
+	lda     #1			; 11/7 = ~1
 	sta     VGI_RX1
 	lda     #48
 	sta     VGI_RY1
-	lda	#60
-	sta	VGI_RXRUN
-	lda	#32
-        sta     VGI_RYRUN
-        jsr     vgi_simple_rectangle
-.endif
+	lda	#39			; 263 / 7 = ~39
+	sta	VGI_RX2
+	lda	#80
+        sta     VGI_RY2
+
+	lda     #$80            ; color is black2
+        jsr     hgr_rectangle_color
+
 
 	lda	#<cottage_string2
 	sta	OUTL
