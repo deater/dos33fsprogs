@@ -8,4 +8,5 @@
   + hook up scare animation
   + update x-coords when walk off screen (fence)
 
-
+  + have flies be animated independently.  Not sure if worth it
+  + Sound effects for everything

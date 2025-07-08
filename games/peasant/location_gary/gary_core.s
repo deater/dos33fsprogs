@@ -25,6 +25,12 @@ gary_core:
 	sta	VISITED_0
 
 
+	;=====================
+	; make sure not wearing mask
+
+	lda	#0
+	sta	WEARING_MASK
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -115,9 +121,11 @@ really_level_over:
 .include "gary_update_bg.s"
 .include "gary_actions.s"
 .include "draw_gary.s"
+.include "draw_gary_scare.s"
+
 .include "sprites_gary/gary_sprites.inc"
 .include "sprites_gary/gary_bg.inc"
-
+.include "sprites_gary/gary_scare.inc"
 
 	;=========================
 	; update screen
@@ -139,5 +147,26 @@ update_screen:
 	; draw peasant
 
 	jsr	draw_peasant
+
+	;=======================
+	; draw mask, if necessary
+
+	lda	WEARING_MASK
+	beq	not_wearing_mask
+
+	lda	#15
+	sta	CURSOR_X
+	lda	#119
+	sta     CURSOR_Y
+
+	lda	#<peasant_mask
+	sta	INL
+	lda	#>peasant_mask
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+not_wearing_mask:
 
 	rts

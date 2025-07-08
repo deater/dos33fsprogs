@@ -344,16 +344,21 @@ WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
 ARCHER_COUNT	= $C9	; hidden glen
+WEARING_MASK	= $C9	; gary
 
 BUCKET_STATE	= $CA	; well
-CRANK_STATE	= $CB	; well
-
 IN_QUIZ		= $CA	; outer
-WHICH_QUIZ	= $CB	; outer
-OLD_DIR		= $CC	; outer
-RON_COUNT	= $CD	; outer
+GARY_COUNT	= $CA	; gary
 
+
+CRANK_STATE	= $CB	; well
+WHICH_QUIZ	= $CB	; outer
+
+OLD_DIR		= $CC	; outer
+
+RON_COUNT	= $CD	; outer
 PREV_X		= $CD	; kerrek
+
 PREV_Y		= $CE	; kerrek
 
 ; D0-D? used by HGR?

@@ -37,10 +37,12 @@ gary_core.o:	gary_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		gary_actions.s gary_update_bg.s draw_gary.s \
+		gary_actions.s gary_update_bg.s \
+		draw_gary.s draw_gary_scare.s \
 		graphics_gary/gary_graphics.inc \
 		sprites_gary/gary_sprites.inc \
-		sprites_gary/gary_bg.inc
+		sprites_gary/gary_bg.inc \
+		sprites_gary/gary_scare.inc
 	ca65 -o gary_core.o gary_core.s -l gary_core.lst
 
 

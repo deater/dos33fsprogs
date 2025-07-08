@@ -333,9 +333,11 @@ gary_scare_horse_mask:
 	ora	#GARY_SCARED
 	sta	GAME_STATE_0
 
-	; TODO: break fence (done, check it works)
+	;========================
+	; draw sequence where we scare gary
+	;	and break fence
 
-	jsr	gary_update_bg
+	jsr	draw_gary_scare
 
 	ldx	#<gary_scare_message2
 	ldy	#>gary_scare_message2

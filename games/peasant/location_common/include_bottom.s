@@ -13,4 +13,6 @@
 
 .include "../vblank.s"
 
+.include "../walkto.s"
+
 ;.include "../hgr_routines/hgr_copy_faster.s"
