@@ -51,10 +51,11 @@ scare_gary_loop:
 
 	ldy	GARY_COUNT
 	ldx	scare_gary_which,Y
+	bmi	done_scare_gary_loop
 
 	lda	scare_gary_x,X
 	sta	CURSOR_X
-	lda	scare_gary_y,Y
+	lda	scare_gary_y,X
 	sta	CURSOR_Y
 
 	lda	scare_gary_sprite_l,X
@@ -70,8 +71,9 @@ scare_gary_loop:
 	jsr	hgr_page_flip
 
 	inc	GARY_COUNT
-	lda	GARY_COUNT
-	bpl	scare_gary_loop
+	jmp	scare_gary_loop
+
+done_scare_gary_loop:
 
 	;==================================
 	; actually break fence and
