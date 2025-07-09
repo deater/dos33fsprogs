@@ -388,6 +388,7 @@ archery_talk_mendelev:
 	lda	GAME_STATE_0
 	and	#TALKED_TO_MENDELEV
 	beq	archery_no_mendelev_yet
+
 	lda	GAME_STATE_0
 	and	#HALDO_TO_DONGOLEV
 	beq	archery_yes_mendelev_no_dongolev
@@ -435,6 +436,12 @@ archery_no_mendelev_yet:
 	ldx	#<archery_talk_mendelev3_message
 	ldy	#>archery_talk_mendelev3_message
 	jsr	finish_parse_message
+
+	; somehow forgot this
+
+	lda	GAME_STATE_0
+	ora	#TALKED_TO_MENDELEV
+	sta	GAME_STATE_0
 
 	; add 1 point to score if don't have mask or trinket
 	; add 2 points otherwise
