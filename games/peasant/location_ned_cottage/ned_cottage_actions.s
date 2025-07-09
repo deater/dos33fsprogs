@@ -193,6 +193,8 @@ ned_cottage_move:
 
 	cmp	#NOUN_ROCK
 	beq	ned_cottage_rock
+	cmp	#NOUN_STONE		; not sure ifthis is canon
+	beq	ned_cottage_rock
 
 	; else "probably wish" message
 
@@ -412,6 +414,8 @@ ned_cottage_look:
 	cmp	#NOUN_COTTAGE
 	beq	ned_cottage_look_at_cottage
 	cmp	#NOUN_ROCK
+	beq	ned_cottage_look_at_rock
+	cmp	#NOUN_STONE
 	beq	ned_cottage_look_at_rock
 	cmp	#NOUN_HOLE
 	beq	ned_cottage_look_at_hole
