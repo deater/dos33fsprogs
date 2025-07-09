@@ -89,7 +89,7 @@ scare_gary_x:
 
 scare_gary_y:
 	.byte	120,117,115,112
-	.byte	115,117,119,102,102,102
+	.byte	115,117,119,101,101,101
 
 scare_gary_sprite_l:
 	.byte <gary_rear0,<gary_rear1,<gary_rear2,<gary_rear3
