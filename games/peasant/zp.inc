@@ -332,7 +332,8 @@ BOX_Y2		= $C4
 SUPPRESS_DRAWING=$C5		; don't draw peasant
 	SUPPRESS_PEASANT = $01
 	SUPPRESS_BOAT = $02
-
+	SUPPRESS_GARY = $04
+	CUSTOM_PEASANT= $08
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8

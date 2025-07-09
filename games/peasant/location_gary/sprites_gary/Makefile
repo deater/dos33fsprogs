@@ -27,6 +27,14 @@ gary_scare.inc:	gary_scare.png gary_fence.png
 	$(HGR_SPRITE) -s -l gary_run3 gary_fence.png    140 102  195 162 >> gary_scare.inc
 	$(HGR_SPRITE) -s -l gary_run4 gary_fence.png    140  37  181  97 >> gary_scare.inc
 	$(HGR_SPRITE) -s -l gary_run5 gary_fence.png     84  37  125  97 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip0 gary_revenge.png   14  77   41  106 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip1 gary_revenge.png   56  88   83  106 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip2 gary_revenge.png   98  82  125  105 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip3 gary_revenge.png  140  76  153  106 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip4 gary_revenge.png  168  80  195  106 >> gary_scare.inc
+	$(HGR_SPRITE) -s -l peasant_flip5 gary_revenge.png  210  98  244  107 >> gary_scare.inc
+
+
 
 
 

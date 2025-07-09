@@ -165,9 +165,24 @@ kick_gary:
 
 kick_gary_there:
 
+	; walk to location
+
+	ldx	#15
+	ldy	#119
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
+
+	; print message
+
 	ldx	#<gary_kick_horse_message
 	ldy	#>gary_kick_horse_message
 	jsr	partial_message_step
+
+	; do animation
+
+	jsr	draw_gary_revenge
 
 	; this kills you
 	lda	#LOAD_GAME_OVER

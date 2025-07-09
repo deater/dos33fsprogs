@@ -26,10 +26,11 @@ gary_core:
 
 
 	;=====================
-	; make sure not wearing mask
+	; extra init
 
 	lda	#0
-	sta	WEARING_MASK
+	sta	WEARING_MASK		; make sure not wearing mask
+	sta	SUPPRESS_DRAWING	; no suppressions to start
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -72,18 +73,6 @@ game_loop:
 
 
 	;=======================
-	; increment frame
-
-	inc	FRAME
-
-	;=======================
-	; increment flame
-
-	jsr	increment_flame
-
-
-
-	;=======================
 	; flip screen
 
 ;	jsr	wait_vblank
@@ -122,6 +111,7 @@ really_level_over:
 .include "gary_actions.s"
 .include "draw_gary.s"
 .include "draw_gary_scare.s"
+.include "draw_gary_revenge.s"
 
 .include "sprites_gary/gary_sprites.inc"
 .include "sprites_gary/gary_bg.inc"
@@ -141,12 +131,35 @@ update_screen:
 	;=======================
 	; draw gary
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_GARY
+	bne	gary_suppressed
+
 	jsr	draw_gary
+
+gary_suppressed:
 
 	;======================
 	; draw peasant
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	peasant_suppressed
+
+	; hack to draw injured peasant at end
+	lda	SUPPRESS_DRAWING
+	and	#CUSTOM_PEASANT
+	beq	regular_draw_peasant
+
+	jsr	handle_draw_peasant_revenge
+
+	jmp	peasant_suppressed
+
+regular_draw_peasant:
+
 	jsr	draw_peasant
+
+peasant_suppressed:
 
 	;=======================
 	; draw mask, if necessary
@@ -168,5 +181,16 @@ update_screen:
 
 
 not_wearing_mask:
+
+
+	;=======================
+	; increment frame
+
+	inc	FRAME
+
+	;=======================
+	; increment flame
+
+	jsr	increment_flame
 
 	rts
