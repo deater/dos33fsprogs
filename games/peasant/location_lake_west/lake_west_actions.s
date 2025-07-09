@@ -179,6 +179,12 @@ lake_west_skip:
 	beq	lake_west_skip_stones
 	cmp	#NOUN_ROCKS
 	beq	lake_west_skip_stones
+	cmp	#NOUN_STONE
+	beq	lake_west_skip_stones
+	cmp	#NOUN_ROCK
+	beq	lake_west_skip_stones
+	; in theory you can skip just "pebble" but not sure
+	;	I want to waste a slot on that
 
 	jmp	parse_common_unknown
 
@@ -220,6 +226,10 @@ lake_west_throw:
 	cmp	#NOUN_STONES
 	beq	lake_west_skip_stones
 	cmp	#NOUN_PEBBLES
+	beq	lake_west_skip_stones
+	cmp	#NOUN_ROCK
+	beq	lake_west_skip_stones
+	cmp	#NOUN_STONE
 	beq	lake_west_skip_stones
 
 	cmp	#NOUN_BABY

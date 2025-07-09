@@ -205,3 +205,5 @@ NOUN_ROCK	= 121
 NOUN_STONE	= 122
 ;
 NOUN_UNKNOWN	= 123
+
+; MISSING -> PEBBLE in theory can be used with "SKIP" in lakeW/lakeE

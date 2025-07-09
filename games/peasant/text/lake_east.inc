@@ -41,6 +41,16 @@ lake_east_look_at_boat_gone_message:
 .byte "Fishing Challenge",13
 .byte "videogame.",0
 
+; + skip stones/pebbles
+lake_east_skip_stones_message:
+.byte "You've always been",13
+.byte "terrible at skipping",13
+.byte "stones. And you're even",13
+.byte "worse at just plain",13
+.byte "throwing rocks in lakes.",13
+.byte "You decide to save yourself",13
+.byte "the embarrassment.",0
+
 ; + talk man (before throwing chicken feed in lake)
 lake_east_talk_man_message:
 .byte "You holler at the old man",13

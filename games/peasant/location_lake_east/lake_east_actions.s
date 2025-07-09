@@ -15,6 +15,8 @@ lake_east_verb_table:
         .word lake_east_talk-1
         .byte VERB_THROW
         .word lake_east_throw-1
+        .byte VERB_SKIP
+        .word lake_east_skip-1
 	.byte 0
 
 	;=================
@@ -135,6 +137,29 @@ talk_hes_there:
 	ldy	#>lake_east_talk_man_message
 	jmp	finish_parse_message
 
+	;=================
+	; skip
+	;=================
+
+lake_east_skip:
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_STONE
+	beq	lake_east_skip_stones
+	cmp	#NOUN_STONES
+	beq	lake_east_skip_stones
+	cmp	#NOUN_ROCK
+	beq	lake_east_skip_stones
+	cmp	#NOUN_ROCKS
+	beq	lake_east_skip_stones
+
+	jmp	parse_common_unknown
+
+lake_east_skip_stones:
+	ldx	#<lake_east_skip_stones_message
+	ldy	#>lake_east_skip_stones_message
+	jmp	finish_parse_message
 
 	;=================
 	; throw
@@ -146,6 +171,14 @@ lake_east_throw:
 
 	cmp	#NOUN_FEED
 	beq	lake_east_throw_feed
+	cmp	#NOUN_STONE
+	beq	lake_east_skip_stones
+	cmp	#NOUN_STONES
+	beq	lake_east_skip_stones
+	cmp	#NOUN_ROCK
+	beq	lake_east_skip_stones
+	cmp	#NOUN_ROCKS
+	beq	lake_east_skip_stones
 
 	bne	lake_east_throw_default
 
@@ -240,5 +273,5 @@ lake_east_throw_feed_man_default:
 	ldy	#>lake_east_throw_default_message
 	jmp	finish_parse_message
 
-.include "../text/dialog_e_lake.inc"
+.include "../text/dialog_lake_east.inc"
 
