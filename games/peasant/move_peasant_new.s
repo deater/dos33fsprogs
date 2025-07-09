@@ -1,12 +1,32 @@
 ; Move that Peasant!
 
+
+	;======================
+	; check moving
+	;	carry set if moving
+	;	carry clear if not
+
+check_moving:
+	sec
+	lda	PEASANT_XADD
+	ora	PEASANT_YADD		; sneaky way to see if both nonzero
+	bne	yes_moving
+not_moving:
+	clc
+	rts
+yes_moving:
+	sec
+	rts
+
+	;=========================
+	; move the peasant
+
 move_peasant:
 
 	; redraw peasant if moved
 
-	lda	PEASANT_XADD
-	ora	PEASANT_YADD		; sneaky way to see if both nonzero
-	bne	really_move_peasant
+	jsr	check_moving
+	bcs	really_move_peasant
 
 	jmp	peasant_the_same
 

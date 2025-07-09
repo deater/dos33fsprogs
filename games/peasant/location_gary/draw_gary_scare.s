@@ -27,18 +27,15 @@
 
 draw_gary_scare:
 
-	;============================
-	; first move peasant to 105,119 (15,119)
-
-	ldx	#15
-	ldy	#119
-	jsr	peasant_walkto
 
 	;=============================
 	; enable mask
 
 	lda	#1
 	sta	WEARING_MASK
+
+	;===============================
+	; FIXME: sound effect for this
 
 	lda	#0
 	sta	GARY_COUNT

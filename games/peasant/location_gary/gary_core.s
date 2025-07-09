@@ -57,6 +57,17 @@ game_loop:
 
 	jsr	move_peasant
 
+	; bit of a hack
+	jsr	check_moving
+	bcc	didnt_move
+
+	; turn off mask if moved
+
+	lda	#0
+	sta	WEARING_MASK
+
+didnt_move:
+
 	;=======================
 	; check if level over
 

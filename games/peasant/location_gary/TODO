@@ -3,10 +3,11 @@
   + (done?) hook up after-gary, fence hole and no horse
   + (done?) setup priority wall depending on if fence broken (lo-res box?)
 
-  + hook up mask stuff
-  + hook up animation when you get kicked
-  + hook up scare animation
-  + update x-coords when walk off screen (fence)
+  + (done) hook up animation when you get kicked
+  + (done) hook up mask/scare animation
+  + (done?) update x-coords when walk off screen (fence)
 
   + have flies be animated independently.  Not sure if worth it
   + Sound effects for everything
+	when gary rears up (mask)
+	whe he breaks fence

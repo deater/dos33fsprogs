@@ -335,14 +335,23 @@ gary_scare_horse:
 
 gary_scare_horse_mask:
 
+	;============================
+	; first move peasant to 105,119 (15,119)
+
+	ldx	#15
+	ldy	#119
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
+
+	; print mask message
+
 	ldx	#<gary_scare_message
 	ldy	#>gary_scare_message
 	jsr	partial_message_step
 
-	; get points
-
-	lda	#2
-	jsr	score_points
+	; set this here to suppress drawing gary through the whole sequence
 
 	lda	GAME_STATE_0
 	ora	#GARY_SCARED
@@ -353,6 +362,11 @@ gary_scare_horse_mask:
 	;	and break fence
 
 	jsr	draw_gary_scare
+
+	; get points
+
+	lda	#2
+	jsr	score_points
 
 	ldx	#<gary_scare_message2
 	ldy	#>gary_scare_message2
