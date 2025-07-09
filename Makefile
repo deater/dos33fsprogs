@@ -3,6 +3,10 @@ include Makefile.inc
 all:
 	cd utils && make
 
+show-config:
+	@echo "CFLAGS=${CFLAGS}"
+	@echo "LFLAGS=${LFLAGS}"
+
 install:
 	cd utils && make install
 
