@@ -1020,7 +1020,8 @@ end_of_input:
 noun_lookup:
 .byte "BABY",NOUN_BABY|$80		; these are first
 .byte "PEBBLES",NOUN_PEBBLES|$80	; so at Well we can also
-.byte "STONE",NOUN_STONE|$80		; check for destination (bucket/well)
+.byte "STONES",NOUN_STONES|$80		; check for destination (bucket/well)
+.byte "ROCKS",NOUN_ROCKS|$80
 
 noun_lookup_again:
 .byte "ARCHER",NOUN_ARCHER|$80
@@ -1106,11 +1107,11 @@ noun_lookup_again:
 .byte "PLAQUE",NOUN_PLAQUE|$80
 .byte "POT",NOUN_POT|$80
 .byte "PUDDLE",NOUN_PUDDLE|$80
+.byte "ROCK",NOUN_ROCK|$80
 .byte "QUIZ",NOUN_QUIZ|$80
 .byte "RICHES",NOUN_RICHES|$80
 .byte "RIVER",NOUN_RIVER|$80
 .byte "ROBE",NOUN_ROBE|$80
-.byte "ROCK",NOUN_ROCK|$80
 .byte "ROOM",NOUN_ROOM|$80
 .byte "RUB",NOUN_RUB|$80
 .byte "RUG",NOUN_RUG|$80
@@ -1124,6 +1125,7 @@ noun_lookup_again:
 .byte "SKULL",NOUN_SKULL|$80
 .byte "SMELL",NOUN_SMELL|$80
 .byte "SODA",NOUN_SODA|$80
+.byte "STONE",NOUN_STONE|$80
 .byte "STUFF",NOUN_STUFF|$80
 .byte "STUMP",NOUN_STUMP|$80
 .byte "SUB",NOUN_SUB|$80
@@ -1452,11 +1454,11 @@ look_check_if_in_inventory:
 	beq	check_inventory_1
 
 	ldx	#INV1_PEBBLES
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	check_inventory_1
 
 	ldx	#INV1_PEBBLES
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	check_inventory_1
 
 	ldx	#INV1_PILLS

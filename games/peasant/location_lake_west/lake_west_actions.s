@@ -37,9 +37,9 @@ lake_west_take:
 
 	cmp	#NOUN_BERRIES
 	beq	lake_west_get_berries
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	lake_west_get_pebbles
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	lake_west_get_pebbles
 	cmp	#NOUN_PEBBLES
 	beq	lake_west_get_pebbles
@@ -110,9 +110,9 @@ lake_west_look:
 	beq	lake_west_look_at_lake
 	cmp	#NOUN_SAND
 	beq	lake_west_look_at_sand
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	lake_west_look_at_sand
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	lake_west_look_at_sand
 	cmp	#NOUN_PEBBLES
 	beq	lake_west_look_at_sand
@@ -173,11 +173,11 @@ lake_west_look_at_berries:
 lake_west_skip:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	lake_west_skip_stones
 	cmp	#NOUN_PEBBLES
 	beq	lake_west_skip_stones
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	lake_west_skip_stones
 
 	jmp	parse_common_unknown
@@ -215,9 +215,9 @@ lake_west_swim_lake:
 lake_west_throw:
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	lake_west_skip_stones
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	lake_west_skip_stones
 	cmp	#NOUN_PEBBLES
 	beq	lake_west_skip_stones

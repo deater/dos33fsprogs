@@ -212,9 +212,9 @@ well_use:
 
 	cmp	#NOUN_PEBBLES
 	beq	well_use_pebbles
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	well_use_pebbles
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	well_use_pebbles
 	cmp	#NOUN_BABY
 	beq	well_use_baby
@@ -453,9 +453,9 @@ well_put:
 	beq	well_put_baby
 	cmp	#NOUN_PEBBLES
 	beq	well_put_pebbles
-	cmp	#NOUN_STONE
+	cmp	#NOUN_STONES
 	beq	well_put_pebbles
-	cmp	#NOUN_ROCK
+	cmp	#NOUN_ROCKS
 	beq	well_put_pebbles
 
 well_put_anything_else:
