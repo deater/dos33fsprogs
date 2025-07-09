@@ -12,28 +12,7 @@ ned_cottage_core:
 
 .include "../location_common/common_core.s"
 
-	;====================
-	; update ned cottage if necessary
-
-	lda	GAME_STATE_2
-	and	#COTTAGE_ROCK_MOVED
-	beq	not_necessary_cottage
-
-	; 161,117
-	lda	#23
-	sta	CURSOR_X
-	lda	#117
-	sta	CURSOR_Y
-
-	lda	#<rock_moved_sprite
-	sta	INL
-	lda	#>rock_moved_sprite
-	sta	INH
-
-	jsr	hgr_draw_sprite
-
-
-not_necessary_cottage:
+	jsr	ned_move_rock
 
 	;===================================
 	; mark location visited
@@ -192,3 +171,40 @@ update_screen:
 
 
 	rts
+
+
+	;==============================
+	; draw moved rock if necessary
+	;==============================
+ned_move_rock:
+	lda	GAME_STATE_2
+	and	#COTTAGE_ROCK_MOVED
+	beq	rock_not_moved
+
+	; 161,117
+	lda	#23
+	sta	CURSOR_X
+	lda	#117
+	sta	CURSOR_Y
+
+	lda	#<rock_moved_sprite
+	sta	INL
+	lda	#>rock_moved_sprite
+	sta	INH
+
+	;======================
+	; draw to $6000
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
+	jsr	hgr_draw_sprite
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+rock_not_moved:
+	rts
+

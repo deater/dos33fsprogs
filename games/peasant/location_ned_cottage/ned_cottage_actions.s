@@ -208,42 +208,16 @@ ned_cottage_rock:
 ned_cottage_rock_not_moved:
 	; move rock
 
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-;	jsr	restore_bg_1x28
-
-	; 161,117
-	lda	#23
-	sta	CURSOR_X
-	lda	#117
-	sta	CURSOR_Y
-
-	lda	#<rock_moved_sprite
-	sta	INL
-	lda	#>rock_moved_sprite
-	sta	INH
-
-	jsr	hgr_draw_sprite
-
-	lda	PEASANT_X
-	sta	CURSOR_X
-	lda	PEASANT_Y
-	sta	CURSOR_Y
-
-;	jsr	save_bg_1x28
-
-	jsr	draw_peasant
-
-
 	; make rock moved
-
 
 	lda	GAME_STATE_2
 	ora	#COTTAGE_ROCK_MOVED
 	sta	GAME_STATE_2
+
+	;=======================
+	; actually move rock
+
+	jsr	ned_move_rock
 
 	ldx	#<ned_cottage_get_rock_message
 	ldy	#>ned_cottage_get_rock_message
