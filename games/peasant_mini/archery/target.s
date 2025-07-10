@@ -221,7 +221,7 @@ bow_sprites_h:
 
 
 string_sprite_offsets:
-	.byte 3,14,3,14
+	.byte 2,15,2,15
 
 string_sprites_l:
 	.byte <string_sprite_odd0,<string_sprite_odd1
