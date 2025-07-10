@@ -351,7 +351,7 @@ BOW_X		= $C9	; target
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer
 GARY_COUNT	= $CA	; gary
-
+BOW_INDEX	= $CA	; target
 
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer
