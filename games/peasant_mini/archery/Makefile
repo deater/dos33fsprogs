@@ -29,7 +29,9 @@ TARGET:	target.o
 	ld65 -o TARGET target.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 target.o:	target.s zx02_optim.s \
-		target_graphics/target_base.hgr.zx02
+		keyboard_target.s \
+		target_graphics/target_base.hgr.zx02 \
+		target_sprites/bow_sprites.inc
 	ca65 -o target.o target.s -l target.lst
 
 
@@ -48,43 +50,13 @@ target.o:	target.s zx02_optim.s \
 #		zp.inc hardware.inc \
 #		targeting_sprites.zx02
 
-
-####
-
-walking_sprites.zx02:	walking_sprites
-	$(ZX02) -f walking_sprites walking_sprites.zx02
-
-walking_sprites:	walking_sprites.o
-	ld65 -o walking_sprites walking_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
-
-walking_sprites.o:	walking_sprites.s \
-	sprites/flame_sprites.inc \
-	sprites/walk_sprites.inc
-	ca65 -o walking_sprites.o walking_sprites.s -l walking_sprites.lst
-
-
-####
-
-climbing_sprites.zx02:	climbing_sprites
-	$(ZX02) -f climbing_sprites climbing_sprites.zx02
-
-climbing_sprites:	climbing_sprites.o
-	ld65 -o climbing_sprites climbing_sprites.o -C $(LINKER_SCRIPTS)/apple2_a000.inc
-
-climbing_sprites.o:	climbing_sprites.s \
-	sprites/climb_flame_sprites.inc \
-	sprites/climb_sprites.inc
-	ca65 -o climbing_sprites.o climbing_sprites.s -l climbing_sprites.lst
-
-
-
-####
+###
 
 target_graphics/target_base.hgr.zx02:	
 	cd target_graphics && make
 
-sprites/enemy_sprites.inc:	
-	cd sprites && make
+target_sprites/bow_sprites.inc:	
+	cd target_sprites && make
 
 
 ####
@@ -93,4 +65,4 @@ clean:
 	rm -f *.lst *.o *~ TARGET TARGET HELLO \
 		walking_sprites climbing_sprites *.zx02
 	cd target_graphics && make clean
-#	cd sprites && make clean
+	cd target_sprites && make clean

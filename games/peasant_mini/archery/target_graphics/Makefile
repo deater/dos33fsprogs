@@ -7,15 +7,15 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 PNG2SPRITES = ../../../utils/gr-utils/png2sprites
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 
-all:	target.hgr.zx02
+all:	target_bg.hgr.zx02
 
 ####
 
-target.hgr.zx02:	target.hgr
-	$(ZX02) target.hgr target.hgr.zx02
+target_bg.hgr.zx02:	target_bg.hgr
+	$(ZX02) target_bg.hgr target_bg.hgr.zx02
 
-target.hgr:	target.png
-	$(PNG_TO_HGR) target.png > target.hgr
+target_bg.hgr:	target_bg.png
+	$(PNG_TO_HGR) target_bg.png > target_bg.hgr
 
 ####
 

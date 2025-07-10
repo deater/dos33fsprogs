@@ -336,7 +336,7 @@ SUPPRESS_DRAWING=$C5		; don't draw peasant
 	CUSTOM_PEASANT= $08
 
 SAVED_Y1	= $C7		; climb (for now)
-SAVED_Y2	= $C8
+SAVED_Y2	= $C8		; climb
 
 ; temp for animations, etc
 
@@ -346,6 +346,7 @@ BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
 ARCHER_COUNT	= $C9	; hidden glen
 WEARING_MASK	= $C9	; gary
+BOW_X		= $C9	; target
 
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer
