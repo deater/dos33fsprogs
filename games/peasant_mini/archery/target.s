@@ -9,7 +9,7 @@
 .include "hardware.inc"
 
 
-hires_start:
+target_start:
 
 	;===================
 	; set graphics mode
@@ -36,21 +36,14 @@ load_loop:
 
 load_image:
 
-	; size in ldsizeh:ldsizel (f1/f0)
-
 	lda	#<comp_data
-	sta	ZX0_src
+	sta	zx_src_l+1
 	lda	#>comp_data
-	sta	ZX0_src+1
-
+	sta	zx_src_h+1
 
 	lda	#$20
 
-
-	jsr	full_decomp
-
-;	rts
-
+	jsr	zx02_full_decomp
 
 
 wait_until_keypress:
