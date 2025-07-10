@@ -38,7 +38,7 @@ wavy_tree_core.o:	wavy_tree_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
 		sprites_wavy_tree/ned_sprites.inc \
-		wavy_tree_actions.s
+		wavy_tree_actions.s handle_ned.s
 	ca65 -o wavy_tree_core.o wavy_tree_core.s -l wavy_tree_core.lst
 
 
