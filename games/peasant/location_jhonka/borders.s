@@ -28,7 +28,29 @@ move_to_right_of_fence:
 
 	;=====================
 	; check going east
+	;	jhonka -> cottage
+
+	; less than 49 fine
+	; 49..70 make 49
+
 check_east:
+
+	lda	MAP_LOCATION
+	cmp	#LOCATION_YOUR_COTTAGE
+	bne	check_west
+
+	; be sure we're in range
+	lda	PEASANT_Y
+	cmp	#49
+	bcc	check_done			; blt
+
+	cmp	#70
+	bcs	check_done			; bge
+
+	lda	#49
+	sta	PEASANT_Y
+	bne	check_done			; bra
+
 check_west:
 check_north:
 
