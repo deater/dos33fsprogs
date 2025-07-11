@@ -36,7 +36,12 @@ check_left:
 	bne	check_right
 left_pressed:
 
+	lda	BOW_X
+	cmp	#$F7
+	beq	bow_dont_dec
+
 	dec	BOW_X
+bow_dont_dec:
 	jmp	done_keyboard_reset		; bra
 
 check_right:
@@ -46,7 +51,13 @@ check_right:
 	bne	check_up
 right_pressed:
 
+	lda	BOW_X
+	cmp	#$10
+	beq	bow_dont_inc
+
 	inc	BOW_X
+
+bow_dont_inc:
 
 	jmp	done_keyboard_reset		; bra
 

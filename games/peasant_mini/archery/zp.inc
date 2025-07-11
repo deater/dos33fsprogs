@@ -355,11 +355,14 @@ BOW_INDEX	= $CA	; target
 
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer
+ARROW_X		= $CB	; target
 
 OLD_DIR		= $CC	; outer
+ARROW_Y		= $CC	; target
 
 RON_COUNT	= $CD	; outer
 PREV_X		= $CD	; kerrek
+WIND_DIR	= $CD	; target
 
 PREV_Y		= $CE	; kerrek
 
