@@ -62,7 +62,6 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../location_river/graphics_river/river_priority.zx02 \
 		../location_knight/graphics_knight/knight_priority.zx02 \
 		../sprites_peasant/walking_sprites.zx02 \
-		../sprites/peasant_sprites.inc \
 		../location_lake_east/sprites_lake_east/bubble_sprites_e.inc \
 		../location_lake_west/sprites_lake_west/bubble_sprites_w.inc \
 		../location_river/sprites_river/river_bubble_sprites.inc \

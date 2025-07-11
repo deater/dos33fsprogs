@@ -18,7 +18,6 @@ ENDING:	ending.o
 ending.o:	ending.s \
 		../zp.inc ../qload.inc ../music/music.inc \
 		graphics_end/ending_graphics.inc \
-		../sprites/peasant_sprites.inc \
 		sprites/ending_sprites.inc \
 		../hgr_routines/hgr_draw_box.s \
 		../hgr_routines/hgr_rectangle.s \

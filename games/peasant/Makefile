@@ -639,8 +639,8 @@ graphics_peasantry/graphics_peasant1.inc:
 
 ####
 
-sprites/peasant_sprites.inc:
-	cd sprites && make
+#sprites/peasant_sprites.inc:
+#	cd sprites && make
 
 ####
 
