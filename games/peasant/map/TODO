@@ -2,6 +2,9 @@
 + (done) peasant head at current location
 + (done) peasant head should blink
 
++ head location when in trogdor's inner sanctum maybe should be
+	one notch up from when you are on cliff heights
+
 notes:
 	note: has one head location for each map square
 		(i.e. it's not based on your x/y of your location in the level)

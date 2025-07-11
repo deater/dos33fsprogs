@@ -49,6 +49,8 @@ check_south:
 	bcs	exit_mid_left
 
 exit_through_trees:
+	lda	#50
+	sta	PEASANT_Y
 
 	lda	#8
 	bne	border_update_x			; bra

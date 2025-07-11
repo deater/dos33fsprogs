@@ -1,16 +1,13 @@
 
 walking:
-	in actual game, can only walk up through gap in tree, everything
-	else is blocked
-
-	walking south works in all places actual.  In our game you can
-	end up in lake in that
-
-	walking east it toward bottom will put you up mid-screen
-
-
+	borders (mostly fixed?  can sometimes walk through trees
+	on left even though you shouldn't)
 - Archery
-  + Archer animations
+  + (done) Archer animations
   + Hook up minigame
-  + fix where we can get stuck on top of targets at archery range
+  + (done) fix where we can get stuck on top of targets at archery range
 
+  + Fix priority issue where it doesn't cut off at the edge of the desk
+	properly.
+	Not sure if we need to move desk or to somehow fix the priority
+	code cutoff

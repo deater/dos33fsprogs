@@ -12,80 +12,23 @@ peasantry_brothers_core:
 
 .include "../location_common/common_core.s"
 
-
-	;=====================
-	; special archery
-	;=====================
+	;============================================
+	; check if coming back from archery minigame
+	;============================================
 
 	lda	ARROW_SCORE
 	bpl	not_from_archery
 
-	; coming back from archery game
-
-	and	#$7f		; unset
-	sta	ARROW_SCORE
-
-	and	#$f			; see if score (bottom) is 0
-	beq	arrow_game_zero
-
-	sta	TEMP0
-
-	lda	ARROW_SCORE
-	lsr
-	lsr
-	lsr
-	lsr
-	cmp	TEMP0
-	bne	arrow_game_lost
-
-arrow_game_won:
-	; get 3 points
-	lda	#3
-	jsr	score_points
-
-	; get bow
-	lda	INVENTORY_1
-	ora	#INV1_BOW
-	sta	INVENTORY_1
-
-	; set won
-	lda	GAME_STATE_0
-	ora	#ARROW_BEATEN
-	sta	GAME_STATE_0
-
-	lda	TEMP0
-	clc
-	adc	#'0'
-	sta	archery_won_message+14
-
-	ldx	#<archery_won_message
-	ldy	#>archery_won_message
-	jsr	partial_message_step
-	jmp	game_loop
-
-arrow_game_zero:
-	ldx	#<archery_zero_message
-	ldy	#>archery_zero_message
-	jsr	partial_message_step
-	jmp	arrow_game_lose_common
-
-arrow_game_lost:
-	lda	TEMP0
-	clc
-	adc	#'0'
-	sta	archery_some_message+24	; urgh affected by compression
-
-	ldx	#<archery_some_message
-	ldy	#>archery_some_message
-	jsr	partial_message_step
-
-arrow_game_lose_common:
-	ldx	#<archery_lose_message
-	ldy	#>archery_lose_message
-	jsr	partial_message_step
+	jsr	handle_archery_return
 
 not_from_archery:
 
+
+	;==================================
+	; add dongolev to priority map if needed
+	;==================================
+
+	jsr priority_add_dongolev
 
 	;===================================
 	; mark location visited
@@ -181,25 +124,23 @@ really_level_over:
 
 
 	;========================
-	; animate archery
+	; animate brothers
 	;=========================
-animate_archery:
+animate_brothers:
 
+	;==========================
+	; always animate mendelev
+animate_mendelev:
 	lda     FRAME
 	and     #4
 	bne	mendelev_arm_moved
 
 mendelev_normal:
 
-;	lda	#107
-;	sta	SAVED_Y1
-;	lda	#110
-;	sta	SAVED_Y2
-
-;	lda	#29
-;	ldx	#31
-;	jmp	hgr_partial_restore
-	rts
+	lda	#<mendelev0_sprite
+	sta	INL
+	lda	#>mendelev0_sprite
+	jmp	mendelev_common
 
 mendelev_arm_moved:
 
@@ -207,14 +148,61 @@ mendelev_arm_moved:
 	sta	INL
 	inx
 	lda	#>mendelev1_sprite
+
+mendelev_common:
+
 	sta	INH
 
-	lda	#29
+	lda	#29		; 203/7 = 29
 	sta     CURSOR_X
-	lda	#107
+	lda	#96
 	sta	CURSOR_Y
 
-	jmp	hgr_draw_sprite		;
+	jsr	hgr_draw_sprite		;
+
+
+
+	;==========================
+	; only animate dongolev if there
+
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	done_animate_brothers
+
+animate_dongolev:
+	lda     FRAME
+	adc	#2			; offset from mendelev
+	and     #4
+	bne	dongolev_mouth_open
+
+dongolevlev_normal:
+
+	lda	#<dongolev0_sprite
+	sta	INL
+	lda	#>dongolev0_sprite
+	jmp	dongolev_common
+
+dongolev_mouth_open:
+
+	lda	#<dongolev1_sprite
+	sta	INL
+	inx
+	lda	#>dongolev1_sprite
+
+dongolev_common:
+
+	sta	INH
+
+	lda	#34		; 238/7 = 34
+	sta     CURSOR_X
+	lda	#94
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite		;
+
+done_animate_brothers:
+	rts
+
 
 
 .include "../hgr_routines/hgr_sprite.s"
@@ -237,11 +225,107 @@ update_screen:
 	; archery animations
 	;=======================
 
-	jsr	animate_archery
+	jsr	animate_brothers
 
 	;====================
 	; always draw peasant
 
 	jsr	draw_peasant
 
+	rts
+
+
+
+	;================================
+	;================================
+	; coming back from archery game
+	;================================
+	;================================
+
+handle_archery_return:
+
+	and	#$7f		; unset
+	sta	ARROW_SCORE
+
+	and	#$f			; see if score (bottom) is 0
+	beq	arrow_game_zero
+
+	sta	TEMP0
+
+	lda	ARROW_SCORE
+	lsr
+	lsr
+	lsr
+	lsr
+	cmp	TEMP0
+	bne	arrow_game_lost
+
+arrow_game_won:
+	; get 3 points
+	lda	#3
+	jsr	score_points
+
+	; get bow
+	lda	INVENTORY_1
+	ora	#INV1_BOW
+	sta	INVENTORY_1
+
+	; set won
+	lda	GAME_STATE_0
+	ora	#ARROW_BEATEN
+	sta	GAME_STATE_0
+
+	lda	TEMP0
+	clc
+	adc	#'0'
+	sta	archery_won_message+14
+
+	ldx	#<archery_won_message
+	ldy	#>archery_won_message
+	jsr	partial_message_step
+	jmp	game_loop
+
+arrow_game_zero:
+	ldx	#<archery_zero_message
+	ldy	#>archery_zero_message
+	jsr	partial_message_step
+	jmp	arrow_game_lose_common
+
+arrow_game_lost:
+	lda	TEMP0
+	clc
+	adc	#'0'
+	sta	archery_some_message+24	; urgh affected by compression
+
+	ldx	#<archery_some_message
+	ldy	#>archery_some_message
+	jsr	partial_message_step
+
+arrow_game_lose_common:
+	ldx	#<archery_lose_message
+	ldy	#>archery_lose_message
+	jsr	partial_message_step
+
+	rts
+
+	;==============================
+	; add dongolev to priority map
+	; so we can walk behind him
+	;==============================
+
+priority_add_dongolev:
+
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	done_brothers_priority
+
+	; 64A 11->81
+	; 64B 11->88
+
+	lda	#$81
+	sta	$64A
+	lda	#$88
+	sta	$64B
+
+done_brothers_priority:
 	rts

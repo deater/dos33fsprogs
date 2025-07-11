@@ -4,7 +4,8 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	archery_graphics.inc \
-	archery_priority.inc
+	archery_priority.inc \
+	archery_priority_dongolev.gr
 
 ###
 
@@ -37,6 +38,9 @@ archery_priority.combined:	archery_priority.gr archery_collision.bin
 
 archery_priority.gr:	archery_priority.png
 	$(PNG2GR) archery_priority.png archery_priority.gr
+
+archery_priority_dongolev.gr:	archery_priority_dongolev.png
+	$(PNG2GR) archery_priority_dongolev.png archery_priority_dongolev.gr
 
 archery_collision.bin:	archery_collision.png
 	$(PNG2COLLISION) archery_collision.png archery_collision.bin
