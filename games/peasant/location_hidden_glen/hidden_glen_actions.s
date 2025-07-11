@@ -233,17 +233,16 @@ hidden_glen_get_arrow:
 	bne	hidden_glen_get_arrow_dongolev_gone
 
 hidden_glen_get_arrow_dongolev_shooting:
-	; walk on over
+
+	; walk in place and have incident
+
+	jsr	range_intrusion_setup
+
 	ldx	#<hidden_glen_active_range_message
 	ldy	#>hidden_glen_active_range_message
 	jsr	partial_message_step
 
-	; this kills you
-	lda	#LOAD_GAME_OVER
-	sta	WHICH_LOAD
-
-	lda	#NEW_FROM_DISK
-	sta	LEVEL_OVER
+	jsr	range_intrusion_action
 
 	ldx	#<hidden_glen_active_range_message2
 	ldy	#>hidden_glen_active_range_message2

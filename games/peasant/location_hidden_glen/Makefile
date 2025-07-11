@@ -38,6 +38,7 @@ hidden_glen_core.o:	hidden_glen_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
 		hidden_glen_actions.s archer.s \
+		hidden_glen_intrusion.s \
 		sprites_hidden_glen/archer_sprites.inc
 	ca65 -o hidden_glen_core.o hidden_glen_core.s -l hidden_glen_core.lst
 

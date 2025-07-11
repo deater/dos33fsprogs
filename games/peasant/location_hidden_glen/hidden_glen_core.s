@@ -64,41 +64,11 @@ game_loop:
 
 	jsr	increment_flame
 
-inside_hidden_glen:
-
 	;=====================================
 	; check if in line of Dongolev's arrow
 
-	; first check if he's there
-	lda	GAME_STATE_0
-	and	#HALDO_TO_DONGOLEV
-	bne	skip_level_specific
+	jsr	check_in_range
 
-	; check if in range
-	lda	PEASANT_Y
-	cmp	#$54
-	bne	skip_level_specific
-
-	; oops we're getting shot
-
-	ldx	#<hidden_glen_walk_in_way_message
-	ldy	#>hidden_glen_walk_in_way_message
-	jsr	partial_message_step
-
-	ldx	#<hidden_glen_walk_in_way_message2
-	ldy	#>hidden_glen_walk_in_way_message2
-	jsr	partial_message_step
-
-	ldx	#<hidden_glen_walk_in_way_message3
-	ldy	#>hidden_glen_walk_in_way_message3
-	jsr	partial_message_step
-
-	; this kills you
-	lda	#LOAD_GAME_OVER
-	sta	WHICH_LOAD
-
-	lda	#NEW_FROM_DISK
-	sta	LEVEL_OVER
 skip_level_specific:
 
 
@@ -139,6 +109,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "hidden_glen_actions.s"
+.include "hidden_glen_intrusion.s"
 
 .include "archer.s"
 
@@ -170,3 +141,58 @@ update_screen:
 
 
 	rts
+
+
+	;============================
+	; check in range
+	;============================
+check_in_range:
+
+	; first check if he's there
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	bne	not_in_range
+
+	; check if in range
+	; guessing from 77 -> 90?
+
+	; also check X to see if behind dongolev or tree
+
+	lda	PEASANT_Y
+	cmp	#77
+	bcc	not_in_range		; blt
+
+	cmp	#90
+	bcs	not_in_range		; bge
+
+	lda	PEASANT_X
+	cmp	#30
+	bcs	not_in_range		; bge
+
+	cmp	#12
+	bcc	not_in_range		; blt
+
+	;=========================
+	; oops we're getting shot
+
+	jsr	range_intrusion_setup
+
+	ldx	#<hidden_glen_walk_in_way_message
+	ldy	#>hidden_glen_walk_in_way_message
+	jsr	partial_message_step
+
+	jsr	range_intrusion_action
+
+	ldx	#<hidden_glen_walk_in_way_message2
+	ldy	#>hidden_glen_walk_in_way_message2
+	jsr	partial_message_step
+
+	ldx	#<hidden_glen_walk_in_way_message3
+	ldy	#>hidden_glen_walk_in_way_message3
+	jsr	partial_message_step
+
+
+not_in_range:
+	rts
+
+
