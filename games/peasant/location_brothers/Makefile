@@ -62,6 +62,7 @@ sprites_brothers/archery_sprites.inc:
 distclean:
 	make clean
 	cd graphics_brothers && make clean
+	cd sprites_brothers && make clean
 
 ###
 
