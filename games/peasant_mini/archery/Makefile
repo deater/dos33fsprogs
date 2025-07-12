@@ -30,8 +30,11 @@ TARGET:	target.o
 
 target.o:	target.s zx02_optim.s \
 		keyboard_target.s \
+		draw_bow.s \
+		draw_flag.s \
 		target_graphics/target_base.hgr.zx02 \
-		target_sprites/bow_sprites.inc
+		target_sprites/bow_sprites.inc \
+		target_sprites/flag_sprites.inc
 	ca65 -o target.o target.s -l target.lst
 
 

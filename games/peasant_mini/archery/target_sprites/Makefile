@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	bow_sprites.inc
+all:	bow_sprites.inc flag_sprites.inc
 
 bow_sprites.inc:	bow_sprites.png
 	$(HGR_SPRITE) -s -l bow_sprite_odd0 bow_sprites.png  21 159  76 183 > bow_sprites.inc
@@ -15,6 +15,26 @@ bow_sprites.inc:	bow_sprites.png
 	$(HGR_SPRITE) -s -l bow_sprite_even3 bow_sprites.png 168   7 223  31 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_even0 bow_sprites.png  28 31 118 32 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_even1 bow_sprites.png 119 31 209 32 >> bow_sprites.inc
+
+flag_sprites.inc:	flag_sprites.png
+	$(HGR_SPRITE) -s -l flag_nowind0 flag_sprites.png  14   0  41  37 > flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_rwindl0 flag_sprites.png  91   0 125  28 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_rwindl1 flag_sprites.png 161   0 195  28 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_lwindl0 flag_sprites.png   0  72  41 100 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_lwindl1 flag_sprites.png  70  72 111 100 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_lwindh0 flag_sprites.png 140  72 181  83 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_lwindh1 flag_sprites.png   0 140  41 151 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_rwindh0 flag_sprites.png  91 140 132 151 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_rwindh1 flag_sprites.png 161 140 202 151 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_bg0     flag_sprites.png 210 140 272 161 >> flag_sprites.inc
+	$(HGR_SPRITE) -s -l flag_bg1     flag_sprites.png 210 161 272 179 >> flag_sprites.inc
+
+
+
+
+
+
+
 
 clean:	
 	rm -f *~ bow_sprites.inc

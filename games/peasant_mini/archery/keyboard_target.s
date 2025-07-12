@@ -10,6 +10,8 @@ keyboard_bow:
 
 	lda	KEYPRESS
 	bmi	key_was_pressed
+
+	clc
 	rts
 
 key_was_pressed:
@@ -42,7 +44,7 @@ left_pressed:
 
 	dec	BOW_X
 bow_dont_dec:
-	jmp	done_keyboard_reset		; bra
+	jmp	done_keyboard_regular		; bra
 
 check_right:
 	cmp	#$15
@@ -59,7 +61,7 @@ right_pressed:
 
 bow_dont_inc:
 
-	jmp	done_keyboard_reset		; bra
+	jmp	done_keyboard_regular		; bra
 
 check_up:
 check_down:
@@ -67,15 +69,18 @@ check_enter:
 	cmp	#13
 	beq	enter_pressed
 	cmp	#' '
-	bne	done_check_keyboard
+	bne	done_keyboard_regular
 enter_pressed:
+	sec
+	bcs	done_keyboard_enter		; bra
 
-
-done_keyboard_reset:
-
+done_keyboard_enter:
 	bit	KEYRESET
+	sec					; enter pressed
+	rts
 
-done_check_keyboard:
-
+done_keyboard_regular:
+	bit	KEYRESET
+	clc					; not enter pressed
 	rts
 
