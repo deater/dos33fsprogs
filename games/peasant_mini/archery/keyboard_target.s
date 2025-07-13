@@ -84,3 +84,56 @@ done_keyboard_regular:
 	clc					; not enter pressed
 	rts
 
+
+
+
+
+
+	;=========================
+	; check keyboard
+	;	for meter
+	;==========================
+
+keyboard_meter:
+
+	lda	KEYPRESS
+	bmi	meter_key_was_pressed
+
+	clc
+	rts
+
+meter_key_was_pressed:
+	inc	SEEDL		; ????
+
+	and	#$7f			; strip off high
+	cmp	#$96
+	bcc	meter_no_upper_convert	; blt
+
+	and	#$5f		; strip off high bit and make uppercase
+
+meter_no_upper_convert:
+
+				; what if punctuation like / which is $2F
+				; 0101 1111 & 0010 1111 -> 0xF
+
+
+meter_check_enter:
+	cmp	#13
+	beq	meter_enter_pressed
+	cmp	#' '
+	bne	meter_done_keyboard_regular
+meter_enter_pressed:
+	sec
+	bcs	meter_done_keyboard_enter		; bra
+
+meter_done_keyboard_enter:
+	bit	KEYRESET
+	sec					; enter pressed
+	rts
+
+meter_done_keyboard_regular:
+	bit	KEYRESET
+	clc					; not enter pressed
+	rts
+
+

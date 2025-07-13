@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	bow_sprites.inc flag_sprites.inc
+all:	bow_sprites.inc flag_sprites.inc arrow_sprites.inc
 
 bow_sprites.inc:	bow_sprites.png
 	$(HGR_SPRITE) -s -l bow_sprite_odd0 bow_sprites.png  21 159  76 183 > bow_sprites.inc
@@ -29,7 +29,11 @@ flag_sprites.inc:	flag_sprites.png
 	$(HGR_SPRITE) -s -l flag_bg0     flag_sprites.png 210 140 272 161 >> flag_sprites.inc
 	$(HGR_SPRITE) -s -l flag_bg1     flag_sprites.png 210 161 272 179 >> flag_sprites.inc
 
-
+arrow_sprites.inc:	arrow_sprites.png
+	$(HGR_SPRITE) -s -l l_pointer arrow_sprites.png 245 172 251 181 > arrow_sprites.inc
+	$(HGR_SPRITE) -s -l r_pointer arrow_sprites.png 266 172 272 181 >> arrow_sprites.inc
+	$(HGR_SPRITE) -l arrow0_sprite arrow_sprites.png 126 104 139 147 >> arrow_sprites.inc
+	$(HGR_SPRITE) -l arrow0_mask   arrow_sprites.png 154 104 167 147 >> arrow_sprites.inc
 
 
 
@@ -37,5 +41,5 @@ flag_sprites.inc:	flag_sprites.png
 
 
 clean:	
-	rm -f *~ bow_sprites.inc
+	rm -f *~ bow_sprites.inc arrow_sprites.inc
 

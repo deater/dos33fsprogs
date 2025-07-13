@@ -34,24 +34,9 @@ target.o:	target.s zx02_optim.s \
 		draw_flag.s \
 		target_graphics/target_base.hgr.zx02 \
 		target_sprites/bow_sprites.inc \
-		target_sprites/flag_sprites.inc
+		target_sprites/flag_sprites.inc \
+		target_sprites/arrow_sprites.inc
 	ca65 -o target.o target.s -l target.lst
-
-
-#		move_peasant_target.s draw_peasant_target.s \
-#		keyboard_target.s \
-#		hgr_copy.s hgr_partial_restore.s \
-#		hgr_sprite.s hgr_sprite_bg_mask.s \
-#		random16.s \
-
-#		target_graphics/target2.hgr.zx02 \
-#		target_graphics/target3.hgr.zx02 \
-#		target_graphics/target_base_priority.zx02 \
-#		target_graphics/target2_priority.zx02 \
-#		target_graphics/target3_priority.zx02 \
-#		sprites/enemy_sprites.inc \
-#		zp.inc hardware.inc \
-#		targeting_sprites.zx02
 
 ###
 

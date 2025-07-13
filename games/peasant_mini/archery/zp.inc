@@ -365,6 +365,9 @@ PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
 
 PREV_Y		= $CE	; kerrek
+POWER_METER	= $CE	; target
+
+ARROWS_LEFT	= $CF	; target
 
 ; D0-D? used by HGR?
 
