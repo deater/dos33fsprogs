@@ -91,6 +91,14 @@ cave_outer_give_sandwich:
 	ldy	#>cave_outer_give_sub_message
 	jsr	finish_parse_message
 
+
+	;============================
+	; take sub out of inventory
+
+	lda	INVENTORY_2_GONE
+	ora	#INV2_MEATBALL_SUB
+	sta	INVENTORY_2_GONE
+
 	jsr	cave_outer_get_shield
 
 	rts

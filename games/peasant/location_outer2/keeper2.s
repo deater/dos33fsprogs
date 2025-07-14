@@ -1,13 +1,13 @@
 	;===============================
-	; handle keeper1
+	; handle keeper2
 	;===============================
-	; handle keeper1
+	; handle keeper2
 	;	stop walking
 	;	have keeper come out to talk
 	;	special limited handling
 	;	can't walk unless win
-handle_keeper1:
-
+handle_keeper2:
+.if 0
 	lda	#0		; stop walking
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
@@ -19,28 +19,28 @@ handle_keeper1:
 	;===========================
 	; animate keeper coming out
 
-	jsr	keeper1_emerge
+	jsr	keeper2_emerge
 
 	;==============================
 	; initial keeper conversation
 
-keeper_talk1:
+keeper_talk2:
 	; print the message
 
-	ldx     #<cave_outer_keeper1_message1
-	ldy     #>cave_outer_keeper1_message1
+	ldx     #<cave_outer_keeper2_message1
+	ldy     #>cave_outer_keeper2_message1
 	jsr	finish_parse_message
 
-	ldx     #<cave_outer_keeper1_message2
-	ldy     #>cave_outer_keeper1_message2
+	ldx     #<cave_outer_keeper2_message2
+	ldy     #>cave_outer_keeper2_message2
 	jsr     finish_parse_message
 
-	ldx     #<cave_outer_keeper1_message3
-	ldy     #>cave_outer_keeper1_message3
+	ldx     #<cave_outer_keeper2_message3
+	ldy     #>cave_outer_keeper2_message3
 	jsr     finish_parse_message
 
-	ldx     #<cave_outer_keeper1_message4
-	ldy     #>cave_outer_keeper1_message4
+	ldx     #<cave_outer_keeper2_message4
+	ldy     #>cave_outer_keeper2_message4
 	jsr     finish_parse_message
 
 	;===============================================
@@ -50,8 +50,8 @@ keeper_talk1:
 	and	#INV2_MEATBALL_SUB
 	beq	dont_have_sub
 
-	ldx     #<cave_outer_keeper1_message5
-	ldy     #>cave_outer_keeper1_message5
+	ldx     #<cave_outer_keeper2_message5
+	ldy     #>cave_outer_keeper2_message5
 	jsr     finish_parse_message
 
 dont_have_sub:
@@ -72,21 +72,21 @@ dont_have_sub:
 	lda	#>keeper1_verb_table
 	sta	INH
 	jsr	load_custom_verb_table
-
+.endif
 	jmp	game_loop
 
 
 
 
 	;=========================
-	; keeper1 emerge
+	; keeper2 emerge
 	;=========================
 
-keeper1_emerge:
+keeper2_emerge:
 	lda	#0
 	sta	KEEPER_COUNT
 
-keeper1_emerge_loop:
+keeper2_emerge_loop:
 
 	;=======================
 	; move to next frame
@@ -98,7 +98,7 @@ keeper1_emerge_loop:
 
 	lda	KEEPER_COUNT
 	cmp	#20
-	beq	done_keeper1_emerge
+	beq	done_keeper2_emerge
 
 	;========================
 	; draw_scene
@@ -123,21 +123,21 @@ keeper1_emerge_loop:
 
 	jsr	hgr_page_flip
 
-	jmp	keeper1_emerge_loop
+	jmp	keeper2_emerge_loop
 
-done_keeper1_emerge:
+done_keeper2_emerge:
 	rts
 
 
 	;=========================
-	; keeper1 retreat
+	; keeper2 retreat
 	;=========================
 
-keeper1_retreat:
+keeper2_retreat:
 	lda	#19
 	sta	KEEPER_COUNT
 
-keeper1_retreat_loop:
+keeper2_retreat_loop:
 
 	;=======================
 	; move to next frame
@@ -148,7 +148,7 @@ keeper1_retreat_loop:
 	; see if done animation
 
 	lda	KEEPER_COUNT
-	beq	done_keeper1_retreat
+	beq	done_keeper2_retreat
 
 	;========================
 	; draw_scene
@@ -173,9 +173,9 @@ keeper1_retreat_loop:
 
 	jsr	hgr_page_flip
 
-	jmp	keeper1_retreat_loop
+	jmp	keeper2_retreat_loop
 
-done_keeper1_retreat:
+done_keeper2_retreat:
 	rts
 
 
@@ -203,22 +203,12 @@ setup_outer_verb_table:
 	rts
 
 
-
-
-	;==========================
-	; draw standing keeper
-	;==========================
-;draw_standing_keeper:
-;
-;	ldx	#19		; standing
-;	stx	KEEPER_COUNT
-
 	;==========================
 	; draw keeper
 	;==========================
 	; which frame in KEEPER_COUNT
 draw_keeper:
-
+.if 0
 	ldx	KEEPER_COUNT
 
 	lda     keeper_x,X
@@ -230,84 +220,75 @@ draw_keeper:
 
 	lda	which_keeper_sprite,X
 	clc
-	adc	#5			; skip ron
+	adc	#8			; skip guitar
 	tax
 
 	jsr	hgr_draw_sprite_mask
-
+.endif
 	rts
 
+
 sprites_xsize:
-	.byte  2, 2, 2, 2, 2			; ron 0..4
+	.byte  2, 2, 3, 4, 4, 4, 4, 4		; guitar 0..7
 	.byte  2, 2, 3, 3, 3, 3, 3, 3		; keeper 0..7
 
 sprites_ysize:
-	.byte 29,30,30,30,30			; ron 0..4
+	.byte 30,30,30,30,30,30,30,30		; guitar 0..7
 	.byte 28,28,28,28,28,28,28,28		; keeper 0..7
 
 sprites_data_l:
-	.byte <ron0,<ron1,<ron2,<ron3,<ron4
-	.byte <keeper_r0,<keeper_r1,<keeper_r2,<keeper_r3
-	.byte <keeper_r4,<keeper_r5,<keeper_r6,<keeper_r7
+	.byte <guitar0,<guitar1,<guitar2,<guitar3
+	.byte <guitar4,<guitar5,<guitar6,<guitar7
+	.byte <keeper_l0,<keeper_l1,<keeper_l2,<keeper_l3
+	.byte <keeper_l4,<keeper_l5,<keeper_l6,<keeper_l7
 
 sprites_data_h:
-	.byte >ron0,>ron1,>ron2,>ron3,>ron4
-	.byte >keeper_r0,>keeper_r1,>keeper_r2,>keeper_r3
-	.byte >keeper_r4,>keeper_r5,>keeper_r6,>keeper_r7
+	.byte >guitar0,>guitar1,>guitar2,>guitar3
+	.byte >guitar4,>guitar5,>guitar6,>guitar7
+	.byte >keeper_l0,>keeper_l1,>keeper_l2,>keeper_l3
+	.byte >keeper_l4,>keeper_l5,>keeper_l6,>keeper_l7
 
 
 sprites_mask_l:
-	.byte <ron0_mask,<ron1_mask,<ron2_mask,<ron3_mask,<ron4_mask
-	.byte <keeper_r0_mask,<keeper_r1_mask,<keeper_r2_mask,<keeper_r3_mask
-	.byte <keeper_r4_mask,<keeper_r5_mask,<keeper_r6_mask,<keeper_r7_mask
+	.byte <guitar0_mask,<guitar1_mask,<guitar2_mask,<guitar3_mask
+	.byte <guitar4_mask,<guitar5_mask,<guitar6_mask,<guitar7_mask
+	.byte <keeper_l0_mask,<keeper_l1_mask,<keeper_l2_mask,<keeper_l3_mask
+	.byte <keeper_l4_mask,<keeper_l5_mask,<keeper_l6_mask,<keeper_l7_mask
 
 
 sprites_mask_h:
-	.byte >ron0_mask,>ron1_mask,>ron2_mask,>ron3_mask,>ron4_mask
-	.byte >keeper_r0_mask,>keeper_r1_mask,>keeper_r2_mask,>keeper_r3_mask
-	.byte >keeper_r4_mask,>keeper_r5_mask,>keeper_r6_mask,>keeper_r7_mask
-
+	.byte >guitar0_mask,>guitar1_mask,>guitar2_mask,>guitar3_mask
+	.byte >guitar4_mask,>guitar5_mask,>guitar6_mask,>guitar7_mask
+	.byte >keeper_l0_mask,>keeper_l1_mask,>keeper_l2_mask,>keeper_l3_mask
+	.byte >keeper_l4_mask,>keeper_l5_mask,>keeper_l6_mask,>keeper_l7_mask
 
 
 ;==========================================
-; first keeper info
+; second keeper info
 ;
-;	seems to trigger at approx peasant_x = 70 (10)
+;	seems to trigger at approx peasant_x = 126 (18)
 ;
 
-; 0 (4), move down/r
-; 0 (4), move down/r
-; 1 (4), no move
-; 1 (5), move down/r
+; starts 	sprite x y
+;		0	140,43		; start
+;		0	140,45		; move down/l
+;		1	140,45		; no move (light up)
 
-; 1 (5), move down/r
-; 1 (5), move down/r
-; 1 (5), move down/r
-; 1 (5), move down/r
-
-; 2 (5)
-; 3 (4)
-; 4 (10)
-; 3 (10)
-
-; 4 (15)
-; 3 (5)
-; 2 (5)
-; 1 (11) ; starts talking
-
-
+	; 6 before moving arms
+	; also, moving sprites actually slither a bit
+	; ends at 133,49
 
 keeper_x:
-.byte   9, 9,10,10
-.byte  10,10,10,10
-.byte  10,10,10,10, 10,10
-.byte  10,10,10,10,10,10,10
+.byte  20,20,20,20
+.byte  19,19,19,19
+.byte  19,19,19,19, 19,19
+.byte  19,19,19,19,19,19,19
 
 keeper_y:
-.byte	51,52,53,54
-.byte   56,58,59,60
-.byte	60,60,60,60, 60,60
-.byte	60,60,60,60, 60,60,60
+.byte	43,44,44,45
+.byte   46,47,48,49
+.byte	49,49,49,49, 49,49
+.byte	49,49,49,49, 49,49,49
 
 which_keeper_sprite:
 .byte	0, 0, 1, 1
@@ -315,6 +296,4 @@ which_keeper_sprite:
 .byte	2, 3, 4, 4, 3, 3
 
 .byte   4, 4, 4, 3, 2, 1, 1
-
-
 

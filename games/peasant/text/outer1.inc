@@ -56,6 +56,13 @@ cave_outer_get_bones_message:
 .byte "grody. No. Eww.",0
 
 
+; Type any command other than "take the quiz" or "give (requested item)"
+; after being apporached by a Keeper
+cave_outer_keeper_wants_message:
+.byte "I think he wants something",13
+.byte "from your inventory. Or you",13
+.byte "could just tell him ",34,"take",13
+.byte "the quiz",34,0
 
 ;=========================
 ; First Keeper
@@ -98,15 +105,6 @@ cave_outer_keeper1_message5:
 
 ; can't leave or do anything except take quiz or give sub
 ;	prints a message saying so
-
-; Type any command other than "take the quiz" or "give (requested item)"
-; after being apporached by a Keeper
-cave_outer_keeper_wants_message:
-.byte "I think he wants something",13
-.byte "from your inventory. Or you",13
-.byte "could just tell him ",34,"take",13
-.byte "the quiz",34,0
-
 
 ; take quiz
 

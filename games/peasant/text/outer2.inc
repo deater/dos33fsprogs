@@ -55,6 +55,14 @@ cave_outer_get_bones_message:
 .byte "Eww. No. Grody. You're",13
 .byte "grody. No. Eww.",0
 
+; Type any command other than "take the quiz" or "give (requested item)"
+; after being apporached by a Keeper
+cave_outer_keeper_wants_message:
+.byte "I think he wants something",13
+.byte "from your inventory. Or you",13
+.byte "could just tell him ",34,"take",13
+.byte "the quiz",34,0
+
 
 
 ;=========================
@@ -87,7 +95,7 @@ cave_outer_quiz2_1:
 .byte "B. C",13		; correct
 .byte "C. A",0
 
-hcave_outer_quiz2_1again:
+cave_outer_quiz2_1again:
 .byte "Peasant fool! Choose A, B,",13
 .byte "or C!",13
 .byte "Which one of these letters",13

@@ -1,10 +1,10 @@
 	;=========================
-	; take quiz
+	; take quiz2
 	;=========================
 
 take_quiz:
 
-quiz1_loop:
+quiz2_loop:
 
 	;=======================
 	; check keyboard special
@@ -12,7 +12,7 @@ quiz1_loop:
 	jsr	check_keyboard_answer
 
 	lda	IN_QUIZ
-	beq	done_quiz1
+	beq	done_quiz2
 
 	;========================
 	; draw_scene
@@ -24,24 +24,24 @@ quiz1_loop:
 
 	lda	WHICH_QUIZ
 	cmp	#2
-	beq	draw_keeper1_quiz3
+	beq	draw_keeper2_quiz3
 	cmp	#1
-	beq	draw_keeper1_quiz2
+	beq	draw_keeper2_quiz2
 
-draw_keeper1_quiz1:
-	ldx	#<cave_outer_quiz1_1
-	ldy	#>cave_outer_quiz1_1
-	jmp	draw_keeper1_quiz_common
+draw_keeper2_quiz1:
+	ldx	#<cave_outer_quiz2_1
+	ldy	#>cave_outer_quiz2_1
+	jmp	draw_keeper2_quiz_common
 
-draw_keeper1_quiz2:
-	ldx	#<cave_outer_quiz1_2
-	ldy	#>cave_outer_quiz1_2
-	jmp	draw_keeper1_quiz_common
+draw_keeper2_quiz2:
+	ldx	#<cave_outer_quiz2_2
+	ldy	#>cave_outer_quiz2_2
+	jmp	draw_keeper2_quiz_common
 
-draw_keeper1_quiz3:
-	ldx	#<cave_outer_quiz1_3
-	ldy	#>cave_outer_quiz1_3
-draw_keeper1_quiz_common:
+draw_keeper2_quiz3:
+	ldx	#<cave_outer_quiz2_3
+	ldy	#>cave_outer_quiz2_3
+draw_keeper2_quiz_common:
 	stx	OUTL
 	sty	OUTH
 	jsr     print_text_message
@@ -65,9 +65,9 @@ draw_keeper1_quiz_common:
 
 	jsr	hgr_page_flip
 
-	jmp	quiz1_loop
+	jmp	quiz2_loop
 
-done_quiz1:
+done_quiz2:
 	rts
 
 
@@ -100,7 +100,7 @@ check_keyboard_answer:
 
 	ldx	WHICH_QUIZ
 
-	cmp	quiz1_answers,X
+	cmp	quiz2_answers,X
 	beq	right_answer
 	bne	wrong_answer
 
@@ -108,7 +108,7 @@ no_answer:
 	rts
 
 	;======================
-	; quiz1 invalid answer
+	; quiz2 invalid answer
 	;======================
 
 invalid_answer:
@@ -121,43 +121,36 @@ invalid_answer:
 	beq	resay_quiz2
 
 resay_quiz1:
-	ldx	#<cave_outer_quiz1_1again
-	ldy	#>cave_outer_quiz1_1again
+	ldx	#<cave_outer_quiz2_1again
+	ldy	#>cave_outer_quiz2_1again
 	jmp	finish_parse_message_nowait
 resay_quiz2:
-	ldx	#<cave_outer_quiz1_2again
-	ldy	#>cave_outer_quiz1_2again
+	ldx	#<cave_outer_quiz2_2again
+	ldy	#>cave_outer_quiz2_2again
 	jmp	finish_parse_message_nowait
 resay_quiz3:
-	ldx	#<cave_outer_quiz1_3again
-	ldy	#>cave_outer_quiz1_3again
+	ldx	#<cave_outer_quiz2_3again
+	ldy	#>cave_outer_quiz2_3again
 	jmp	finish_parse_message_nowait
 
 
 	;======================
-	; quiz1 wrong answer
+	; quiz2 wrong answer
 	;======================
 
 wrong_answer:
 	bit	KEYRESET	; clear the keyboard buffer
 
-	ldx     #<cave_outer_quiz1_wrong
-	ldy     #>cave_outer_quiz1_wrong
+	ldx     #<cave_outer_quiz2_wrong
+	ldy     #>cave_outer_quiz2_wrong
 	jsr	finish_parse_message
 
-	ldx     #<cave_outer_quiz1_wrong_part2
-	ldy     #>cave_outer_quiz1_wrong_part2
-	jsr	finish_parse_message
+	; transform to guitar guy
+	; play guitar for like 5 s
 
-	ldx     #<cave_outer_quiz1_wrong_part3
-	ldy     #>cave_outer_quiz1_wrong_part3
-	jsr	finish_parse_message
+	jsr	guitar_transform
 
-	; transform to ron
-
-	jsr	ron_transform
-
-after_ron:
+after_guitar:
 
 	; force message to current page
 
@@ -165,10 +158,10 @@ after_ron:
 	eor	#$20
 	sta	DRAW_PAGE
 
-	ldx     #<cave_outer_quiz1_wrong_part4
-	ldy     #>cave_outer_quiz1_wrong_part4
+	ldx     #<cave_outer_quiz2_wrong_part2
+	ldy     #>cave_outer_quiz2_wrong_part2
 
-	; hack so Ron still displayed for message
+	; hack so still displayed for message
 
 	stx     OUTL
         sty     OUTH
@@ -197,27 +190,27 @@ after_ron:
 	rts
 
 	;======================
-	; quiz1 correct answer
+	; quiz2 correct answer
 	;======================
 
 right_answer:
 	bit	KEYRESET	; clear the keyboard buffer
-	ldx     #<cave_outer_quiz1_correct
-	ldy     #>cave_outer_quiz1_correct
+	ldx     #<cave_outer_quiz2_correct
+	ldy     #>cave_outer_quiz2_correct
 	jsr	finish_parse_message
 
-	jsr	cave_outer_get_shield
+	jsr	cave_outer_get_helm
 
 	rts
 
-quiz1_answers:
-	.byte 'B','A','C'
+quiz2_answers:
+	.byte 'B','B','C'
 
 
 	;===============================
-	; ron transform
+	; guitar transform
 	;===============================
-ron_transform:
+guitar_transform:
 
 	lda	#0
 	sta	RON_COUNT

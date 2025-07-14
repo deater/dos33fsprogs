@@ -35,8 +35,9 @@ POINTS IMPLEMENTED: (in order of implementation)
 +  7 (throw sword at trogdor)
 +  3 (climb to top of cliff)
 +  5 (get trogshield)
++  5 (get troghelm)
 ======
- 137 points
+ 142 points
 
 
 deaths/endings implemented

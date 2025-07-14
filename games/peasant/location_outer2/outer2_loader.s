@@ -17,14 +17,14 @@ CORE_LOCATION=outer_core_zx02
 
 	jmp     $8000
 
-.include "graphics_outer/outer_graphics.inc"
-.include "graphics_outer/outer_priority.inc"
+.include "../location_outer/graphics_outer/outer_graphics.inc"
+.include "../location_outer/graphics_outer/outer_priority.inc"
 
 outer_text_zx02:
-.incbin "../text/DIALOG_OUTER.ZX02"
+.incbin "../text/DIALOG_OUTER2.ZX02"
 
 outer_core_zx02:
-.incbin "OUTER_CORE.zx02"
+.incbin "OUTER2_CORE.zx02"
 
 .include "../priority_copy.s"
 

@@ -2,13 +2,15 @@
 
 ; Trogdor's Outer Sanctum
 
+;	KEEPER2 edition
+
 ; by Vince `deater` Weaver	vince@deater.net
 
 .include "../location_common/include_common.s"
 
 VERB_TABLE = cave_outer_verb_table
 
-outer_core:
+outer2_core:
 
 	lda	#0
 	sta	LEVEL_OVER
@@ -79,19 +81,16 @@ not_in_quiz:
 	lda	IN_QUIZ
 	bne	done_check_keeper
 
-check_keeper1:
+check_keeper2:
 	lda	INVENTORY_2
-	and	#INV2_TROGSHIELD	; only if not have shield
+	and	#INV2_TROGHELM		; only if not have helm
 	bne	check_keeper2
 
-	lda	PEASANT_X		; only if ourx > 9
-	cmp	#10
-	bcc	check_keeper2
+	lda	PEASANT_X		; only if ourx >= 18
+	cmp	#19
+	bcc	check_keeper2		; blt
 
-	jsr	handle_keeper1
-
-check_keeper2:
-
+	jsr	handle_keeper2
 
 done_check_keeper:
 
@@ -171,14 +170,13 @@ really_level_over:
 ;.include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
 
-.include "keeper1.s"
-.include "quiz1.s"
-.include "outer_actions.s"
+.include "keeper2.s"
+.include "quiz2.s"
+.include "../location_outer/outer_actions_common.s"
+.include "outer2_actions.s"
 
-.include "sprites_outer/keeper1_sprites.inc"
-.include "sprites_outer/ron_sprites.inc"
-.include "sprites_outer/keeper2_sprites.inc"
-;.include "sprites_outer/guitar_sprites.inc"
+.include "sprites_outer2/keeper2_sprites.inc"
+.include "sprites_outer2/guitar_sprites.inc"
 
 
 	;======================

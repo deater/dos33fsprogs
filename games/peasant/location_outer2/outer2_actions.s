@@ -1,102 +1,16 @@
-.include "../tokens.inc"
+	;==================================
+	;==================================
+	;==================================
+	; Trogdor Cave Outer -- Keeper 2
+	;==================================
+	;==================================
+	;==================================
 
-	;=======================
-	;=======================
-	;=======================
-	; Trogdor Cave Outer
-	;=======================
-	;=======================
-	;=======================
-
-cave_outer_verb_table:
-	.byte VERB_CLIMB
-	.word cave_outer_climb-1
-	.byte VERB_LOOK
-	.word cave_outer_look-1
-	.byte 0
-
-	;=================
-	; look
-	;=================
-
-cave_outer_look:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_BEADS
-	beq	cave_outer_look_at_curtain
-	cmp	#NOUN_CURTAIN
-	beq	cave_outer_look_at_curtain
-	cmp	#NOUN_DOOR
-	beq	cave_outer_look_at_door
-	cmp	#NOUN_SKELETON
-	beq	cave_outer_look_at_skeleton
-	cmp	#NOUN_OPENINGS
-	beq	cave_outer_look_at_openings
-	cmp	#NOUN_NONE
-	beq	cave_outer_look_at
-
-	jmp	parse_common_look
-
-cave_outer_look_at:
-	ldx	#<cave_outer_look_message
-	ldy	#>cave_outer_look_message
-	jmp	finish_parse_message
-
-cave_outer_look_at_curtain:
-	ldx	#<cave_outer_look_curtain_message
-	ldy	#>cave_outer_look_curtain_message
-	jmp	finish_parse_message
-
-cave_outer_look_at_door:
-	ldx	#<cave_outer_look_door_message
-	ldy	#>cave_outer_look_door_message
-	jmp	finish_parse_message
-
-cave_outer_look_at_openings:
-	ldx	#<cave_outer_look_openings_message
-	ldy	#>cave_outer_look_openings_message
-	jmp	finish_parse_message
-
-cave_outer_look_at_skeleton:
-	ldx	#<cave_outer_look_skeleton_message
-	ldy	#>cave_outer_look_skeleton_message
-	jmp	finish_parse_message
-
-
-	;================
-	; climb
-	;================
-cave_outer_climb:
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_CLIFF
-	beq	cave_outer_do_climb
-	cmp	#NOUN_NONE
-	beq	cave_outer_do_climb
-
-	jmp	parse_common_unknown
-
-cave_outer_do_climb:
-	ldx	#<cave_outer_climb_message
-	ldy	#>cave_outer_climb_message
-	jmp	finish_parse_message
-
-
-	;=======================
-	;=======================
-	;=======================
-	; Trogdor Cave Outer -- Keeper 1
-	;=======================
-	;=======================
-	;=======================
-
-keeper1_verb_table:
+keeper2_verb_table:
 	.byte VERB_TAKE
-	.word keeper1_take-1
+	.word keeper2_take-1
 	.byte VERB_GIVE
-	.word keeper1_give-1
+	.word keeper2_give-1
 	.byte 0
 
 	;=============================
@@ -105,7 +19,7 @@ keeper1_verb_table:
 	; can only take quiz
 	;
 
-keeper1_take:
+keeper2_take:
 ;	lda	IN_QUIZ
 ;	bne	actual_quiz
 ;	; it not being quizzed, can't try to take it??
@@ -130,54 +44,51 @@ cave_outer_take_quiz:
 
 	jsr	random8
 	cmp	#85
-	bcc	keeper1_quiz3
+	bcc	keeper2_quiz3
 	cmp	#170
-	bcc	keeper1_quiz2
-keeper1_quiz1:
+	bcc	keeper2_quiz2
+keeper2_quiz1:
 	lda	#0
-;	ldx	#<cave_outer_quiz1_1
-;	ldy	#>cave_outer_quiz1_1
-	jmp	keeper1_quiz_common
+	jmp	keeper2_quiz_common
 
-keeper1_quiz2:
+keeper2_quiz2:
 	lda	#1
-;	ldx	#<cave_outer_quiz1_2
-;	ldy	#>cave_outer_quiz1_2
-	jmp	keeper1_quiz_common
+	jmp	keeper2_quiz_common
 
-keeper1_quiz3:
+keeper2_quiz3:
 	lda	#2
-;	ldx	#<cave_outer_quiz1_3
-;	ldy	#>cave_outer_quiz1_3
-keeper1_quiz_common:
+keeper2_quiz_common:
 	sta	WHICH_QUIZ
 	rts
-;	jmp	finish_parse_message_nowait
 
 
 	;=============================
 	; give
 	;=============================
-	; can only give sub/sandwich
+	; can only give soda
 
-keeper1_give:
+keeper2_give:
 
 	lda	CURRENT_NOUN
 
-	cmp	#NOUN_SUB
-	beq	cave_outer_give_sub
-	cmp	#NOUN_SANDWICH
-	beq	cave_outer_give_sandwich
+	cmp	#NOUN_SODA
+	beq	cave_outer_give_soda
 	bne	parse_quiz_unknown
 
-cave_outer_give_sub:
-cave_outer_give_sandwich:
+cave_outer_give_soda:
 
-	ldx	#<cave_outer_give_sub_message
-	ldy	#>cave_outer_give_sub_message
+	ldx	#<cave_outer_give_soda_message
+	ldy	#>cave_outer_give_soda_message
 	jsr	finish_parse_message
 
-	jsr	cave_outer_get_shield
+	;============================
+	; take soda out of inventory
+
+	lda	INVENTORY_2_GONE
+	ora	#INV2_SODA
+	sta	INVENTORY_2_GONE
+
+	jsr	cave_outer_get_helm
 
 	rts
 
@@ -202,34 +113,34 @@ unknown_loop:
 	rts
 
 	;=============================
-	; you got the shield somehow
+	; you got the helm somehow
 	;=============================
-cave_outer_get_shield:
+cave_outer_get_helm:
 
 	; re-set up the verb table
 
 	jsr	setup_outer_verb_table
 
-	; actually get the shield
+	; actually get the helm
 
 	lda	INVENTORY_2
-	ora	#INV2_TROGSHIELD        ; get the shield
+	ora	#INV2_TROGHELM		; get the helm
 	sta	INVENTORY_2
 
 	; score points
         lda     #5
         jsr     score_points
 
-	;=================================
+	;=====================================
         ; load new peasant sprite with shield
 
-	lda	#PEASANT_OUTFIT_SHIELD
+	lda	#PEASANT_OUTFIT_HELM
 	jsr	load_peasant_sprites
 
 	;==================
 	; back out the keeper
 
-	jsr	keeper1_retreat
+	jsr	keeper2_retreat
 
 
 	;==========================================
@@ -243,4 +154,4 @@ cave_outer_get_shield:
 	rts
 
 
-.include "../text/dialog_outer.inc"
+.include "../text/dialog_outer2.inc"
