@@ -32,14 +32,12 @@ outer_core.o:	outer_core.s \
 		../zp.inc ../hardware.inc ../qload.inc ../version.inc \
 		../inventory/inventory.inc \
 		../parse_input.inc ../common_defines.inc \
-		outer_actions.s \
+		outer_actions_common.s outer_actions1.s \
 		../text/DIALOG_OUTER.ZX02 ../text/dialog_outer.inc \
 		graphics_outer/outer_graphics.inc \
 		graphics_outer/outer_priority.inc \
 		sprites_outer/ron_sprites.inc \
 		sprites_outer/keeper1_sprites.inc \
-		sprites_outer/keeper2_sprites.inc \
-		sprites_outer/guitar_sprites.inc \
 		keeper1.s quiz1.s \
 		../new_map_location.s \
 		../keyboard.s \

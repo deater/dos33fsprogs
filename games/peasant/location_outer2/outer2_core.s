@@ -173,12 +173,11 @@ really_level_over:
 
 .include "keeper1.s"
 .include "quiz1.s"
-.include "outer_actions_common.s"
-.include "outer_actions1.s"
+.include "outer_actions.s"
 
 .include "sprites_outer/keeper1_sprites.inc"
 .include "sprites_outer/ron_sprites.inc"
-;.include "sprites_outer/keeper2_sprites.inc"
+.include "sprites_outer/keeper2_sprites.inc"
 ;.include "sprites_outer/guitar_sprites.inc"
 
 
