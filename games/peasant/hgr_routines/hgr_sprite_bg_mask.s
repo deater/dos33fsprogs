@@ -28,48 +28,12 @@ hgr_draw_sprite_bg_mask:
 
 	lda	peasant_sprites_xsize,X
 	sta	hdsb_width_smc+1
-;	clc
-;	adc	CURSOR_X
-;	sta	save_xend,Y
 
 	;================================
 	; calculate bottom of sprite for Ypos loop
-	; also save for background restore
 
 	lda	peasant_sprites_ysize,X
 	sta	hdsb_ysize_smc+1
-;	clc
-;	adc	CURSOR_Y
-;	cmp	#192
-;	bcc	hdsb_ysize_ok
-
-;hdsb_ysize_not_ok:
-	; adjust self modify
-	; if past 192, adjust down to 191
-
-;	lda	#191				; max out yend
-
-
-
-;hdsb_ysize_ok:
-
-;	sta	save_yend,Y
-
-	;================================
-	; calculate peasant priority
-	; based on head location
-	; see chart later
-	;	in theory only need to do this if PEASANT_Y changes
-
-	lda	CURSOR_Y
-	sec
-	sbc	#48			; Y=48
-	lsr				; div by 8
-	lsr
-	lsr
-	clc
-	adc	#2
-	sta	PEASANT_PRIORITY
 
 	;==================================
 	; set up sprite pointers
@@ -88,6 +52,25 @@ hgr_draw_sprite_bg_mask:
 	lda	peasant_mask_data_h,X
 	sta	h728_smc3+2
 	sta	h728_smc4+2
+
+hgr_draw_sprite_bg_mask_common:
+
+	;================================
+	; calculate peasant priority
+	; based on head location
+	; see chart later
+	;	in theory only need to do this if PEASANT_Y changes
+
+	lda	CURSOR_Y
+	sec
+	sbc	#48			; Y=48
+	lsr				; div by 8
+	lsr
+	lsr
+	clc
+	adc	#2
+	sta	PEASANT_PRIORITY
+
 
 	;===============================
 	; main loop
@@ -427,5 +410,4 @@ mask_store:
 
 ysave:
 .byte $00
-;xsave:
-;.byte $00
+

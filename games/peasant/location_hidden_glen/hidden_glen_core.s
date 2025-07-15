@@ -112,9 +112,13 @@ really_level_over:
 .include "hidden_glen_intrusion.s"
 
 .include "archer.s"
+.include "archer_leave.s"
 
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
+
 .include "sprites_hidden_glen/archer_sprites.inc"
+.include "sprites_hidden_glen/leaving_sprites.inc"
 
 	;========================
 	; update screen

@@ -84,8 +84,13 @@ hidden_glen_say_haldo_hooray:
 
 	ldx	#<hidden_glen_say_haldo_message
 	ldy	#>hidden_glen_say_haldo_message
-	jmp	finish_parse_message
+	jsr	finish_parse_message
 
+	; dongolev walks away
+
+	jsr	draw_archer_leave
+
+	rts
 
 hidden_glen_say_haldo_skip_mendelev:
 	ldx	#<hidden_glen_say_haldo_skip_mendelev_message
