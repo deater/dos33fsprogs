@@ -11,4 +11,4 @@
 
 .include "kerrek_actions.s"
 
-.include "../text/dialog_peasant1.inc"
+.include "../text/dialog_kerrek1.inc"
