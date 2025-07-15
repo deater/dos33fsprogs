@@ -537,6 +537,12 @@ inventory/INVENTORY:
 ./location_ned_cottage/NED_COTTAGE_LOADER:
 	cd location_ned_cottage && make
 
+./location_outer/OUTER2_LOADER:
+	cd location_outer2 && make
+
+./location_outer/OUTER3_LOADER:
+	cd location_outer3 && make
+
 ./location_outer/OUTER_LOADER:
 	cd location_outer && make
 
