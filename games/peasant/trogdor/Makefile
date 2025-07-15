@@ -57,4 +57,4 @@ distclean:
 ###
 
 clean:	
-	rm -f *~ *.o *.lst TROGDOR
+	rm -f *~ *.o *.lst TROGDOR_CORE TROGDOR_LOADER *.zx02

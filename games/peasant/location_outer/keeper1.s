@@ -73,9 +73,9 @@ dont_have_sub:
 	sta	INH
 	jsr	load_custom_verb_table
 
-	jmp	game_loop
+;	jmp	game_loop
 
-
+	rts
 
 
 	;=========================
@@ -176,6 +176,13 @@ keeper1_retreat_loop:
 	jmp	keeper1_retreat_loop
 
 done_keeper1_retreat:
+
+	;=====================
+	; exit to next
+
+	lda	#LOCATION_TROGDOR_OUTER2
+	jsr	update_map_location
+
 	rts
 
 

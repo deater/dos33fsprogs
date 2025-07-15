@@ -358,6 +358,8 @@ head_location_x:
 .byte	19	; 133	; LOCATION_ARCHERY_GAME	=	28
 .byte	36	; 252	; LOCATION_MAP		=	29
 .byte	36	; 252	; LOCATION_CLIMB	=	30
+.byte	36	; 252	; LOCATION_OUTER2	=	31
+.byte	36	; 252	; LOCATION_OUTER3	=	32
 
 head_location_y:
 .byte	63		; LOCATION_POOR_GARY	=	0
@@ -391,6 +393,8 @@ head_location_y:
 .byte	91		; LOCATION_ARCHERY_GAME	=	28
 .byte	84		; LOCATION_MAP		=	29
 .byte	84		; LOCATION_CLIMB	=	30
+.byte	84		; LOCATION_OUTER2	=	31
+.byte	84		; LOCATION_OUTER3	=	32
 
 
 

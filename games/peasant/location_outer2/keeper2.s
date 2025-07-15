@@ -7,7 +7,7 @@
 	;	special limited handling
 	;	can't walk unless win
 handle_keeper2:
-.if 0
+
 	lda	#0		; stop walking
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
@@ -31,51 +31,31 @@ keeper_talk2:
 	ldy     #>cave_outer_keeper2_message1
 	jsr	finish_parse_message
 
+
+	;===============================================
+	; if have soda print part2, otherwise skip ahead
+
+	lda	INVENTORY_2
+	and	#INV2_SODA
+	beq	dont_have_soda
+
 	ldx     #<cave_outer_keeper2_message2
 	ldy     #>cave_outer_keeper2_message2
 	jsr     finish_parse_message
 
-	ldx     #<cave_outer_keeper2_message3
-	ldy     #>cave_outer_keeper2_message3
-	jsr     finish_parse_message
-
-	ldx     #<cave_outer_keeper2_message4
-	ldy     #>cave_outer_keeper2_message4
-	jsr     finish_parse_message
-
-	;===============================================
-	; if have sub print part5, otherwise skip ahead
-
-	lda	INVENTORY_2
-	and	#INV2_MEATBALL_SUB
-	beq	dont_have_sub
-
-	ldx     #<cave_outer_keeper2_message5
-	ldy     #>cave_outer_keeper2_message5
-	jsr     finish_parse_message
-
-dont_have_sub:
-
-	; now we need to re-draw keeper
-	; also we're in quiz mode
-	; so we can't move and can only take quiz or give sub
-
-;	lda	#1
-;	sta	IN_QUIZ
+dont_have_soda:
 
 	; custom common verb table the essentially does nothing
 	jsr	setup_quiz_verb_table
 
 	; respond only to take quiz and give sub
-	lda	#<keeper1_verb_table
+	lda	#<keeper2_verb_table
 	sta	INL
-	lda	#>keeper1_verb_table
+	lda	#>keeper2_verb_table
 	sta	INH
 	jsr	load_custom_verb_table
-.endif
-	jmp	game_loop
 
-
+	rts
 
 
 	;=========================
@@ -208,7 +188,7 @@ setup_outer_verb_table:
 	;==========================
 	; which frame in KEEPER_COUNT
 draw_keeper:
-.if 0
+
 	ldx	KEEPER_COUNT
 
 	lda     keeper_x,X
@@ -220,17 +200,17 @@ draw_keeper:
 
 	lda	which_keeper_sprite,X
 	clc
-	adc	#8			; skip guitar
+	adc	#8			; skip guitar sprites
 	tax
 
 	jsr	hgr_draw_sprite_mask
-.endif
+
 	rts
 
 
 sprites_xsize:
 	.byte  2, 2, 3, 4, 4, 4, 4, 4		; guitar 0..7
-	.byte  2, 2, 3, 3, 3, 3, 3, 3		; keeper 0..7
+	.byte  3, 3, 3, 3, 3, 3, 3, 3		; keeper 0..7
 
 sprites_ysize:
 	.byte 30,30,30,30,30,30,30,30		; guitar 0..7

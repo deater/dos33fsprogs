@@ -20,6 +20,9 @@ check_exit_east:
 	;===========================
 	; outer -> trogdor
 
+	cmp	#LOCATION_TROGDOR_LAIR
+	bne	done_borders
+
 	lda	#4
 	sta	PEASANT_X
 	lda	#170

@@ -79,20 +79,20 @@ not_in_quiz:
 	; see if keeper triggered
 
 	lda	IN_QUIZ
-	bne	done_check_keeper
+	bne	done_check_keeper2
 
 check_keeper2:
 	lda	INVENTORY_2
 	and	#INV2_TROGHELM		; only if not have helm
-	bne	check_keeper2
+	bne	done_check_keeper2
 
 	lda	PEASANT_X		; only if ourx >= 18
 	cmp	#19
-	bcc	check_keeper2		; blt
+	bcc	done_check_keeper2	; blt
 
 	jsr	handle_keeper2
 
-done_check_keeper:
+done_check_keeper2:
 
 
 

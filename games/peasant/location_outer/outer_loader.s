@@ -21,7 +21,7 @@ CORE_LOCATION=outer_core_zx02
 .include "graphics_outer/outer_priority.inc"
 
 outer_text_zx02:
-.incbin "../text/DIALOG_OUTER.ZX02"
+.incbin "../text/DIALOG_OUTER1.ZX02"
 
 outer_core_zx02:
 .incbin "OUTER_CORE.zx02"

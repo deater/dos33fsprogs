@@ -13,7 +13,7 @@ OUTER_LOADER:	outer_loader.o
 outer_loader.o:	outer_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../priority_copy.s \
-		../text/DIALOG_OUTER.ZX02 \
+		../text/DIALOG_OUTER1.ZX02 \
 		graphics_outer/outer_graphics.inc \
 		graphics_outer/outer_priority.inc\
 		../location_common/loader_common.s \
@@ -33,7 +33,7 @@ outer_core.o:	outer_core.s \
 		../inventory/inventory.inc \
 		../parse_input.inc ../common_defines.inc \
 		outer_actions_common.s outer_actions1.s \
-		../text/DIALOG_OUTER.ZX02 ../text/dialog_outer.inc \
+		../text/DIALOG_OUTER1.ZX02 ../text/dialog_outer1.inc \
 		graphics_outer/outer_graphics.inc \
 		graphics_outer/outer_priority.inc \
 		sprites_outer/ron_sprites.inc \
