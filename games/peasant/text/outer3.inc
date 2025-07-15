@@ -111,7 +111,7 @@ cave_outer_quiz3_2:
 .byte "B. Green",13
 .byte "C. Yellow",0
 
-cave_outer_quiz3_2_again:
+cave_outer_quiz3_2again:
 .byte "Peasant fool! Choose A, B,",13
 .byte "or C!",13
 .byte "What color are the leaves on",13

@@ -129,6 +129,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	./climb/sprites/climbing_sprites.zx02 \
 	./location_outer/OUTER_LOADER \
 	./location_outer2/OUTER2_LOADER \
+	./location_outer3/OUTER3_LOADER \
 	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./trogdor/TROGDOR_LOADER ./ending/ENDING \
@@ -146,7 +147,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk  11 0 ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
 	$(DOS33_RAW) peasant_disk5.dsk  13 0 ./location_outer/OUTER_LOADER	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  15 0 ./location_outer2/OUTER2_LOADER	  	0   0
-#	$(DOS33_RAW) peasant_disk5.dsk  17 0 ./location_outer3/OUTER3_LOADER	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  17 0 ./location_outer3/OUTER3_LOADER	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./trogdor/TROGDOR_LOADER  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  23 0 ./ending/ENDING	  	0   0
 
@@ -160,6 +161,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./climb/CLIMB ./climb/sprites/climbing_sprites.zx02 \
 	./location_outer/OUTER_LOADER \
 	./location_outer2/OUTER2_LOADER \
+	./location_outer3/OUTER3_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	PARSE_INPUT.ZX02 ./game_over/GAME_OVER \
 	./location_inside_lady/INSIDE_LADY_LOADER \
@@ -236,7 +238,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 11 0` ./location_cliff_heights/CLIFF_HEIGHTS_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 13 0` ./location_outer/OUTER_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 15 0` ./location_outer2/OUTER2_LOADER	  0   0
-#	$(PRODOS_RAW) peasant.2mg `./dts_block 5 17 0` ./location_outer3/OUTER3_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 17 0` ./location_outer3/OUTER3_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
 
@@ -537,10 +539,10 @@ inventory/INVENTORY:
 ./location_ned_cottage/NED_COTTAGE_LOADER:
 	cd location_ned_cottage && make
 
-./location_outer/OUTER2_LOADER:
+./location_outer2/OUTER2_LOADER:
 	cd location_outer2 && make
 
-./location_outer/OUTER3_LOADER:
+./location_outer3/OUTER3_LOADER:
 	cd location_outer3 && make
 
 ./location_outer/OUTER_LOADER:

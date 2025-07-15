@@ -1,12 +1,12 @@
 	;===============================
-	; handle keeper2
+	; handle keeper3
 	;===============================
-	; handle keeper2
+	; handle keeper3
 	;	stop walking
 	;	have keeper come out to talk
 	;	special limited handling
 	;	can't walk unless win
-handle_keeper2:
+handle_keeper3:
 
 	lda	#0		; stop walking
 	sta	PEASANT_XADD
@@ -19,7 +19,7 @@ handle_keeper2:
 	;===========================
 	; animate keeper coming out
 
-	jsr	keeper2_emerge
+	jsr	keeper3_emerge
 
 	;==============================
 	; initial keeper conversation
@@ -27,8 +27,8 @@ handle_keeper2:
 keeper_talk2:
 	; print the message
 
-	ldx     #<cave_outer_keeper2_message1
-	ldy     #>cave_outer_keeper2_message1
+	ldx     #<cave_outer_keeper3_message1
+	ldy     #>cave_outer_keeper3_message1
 	jsr	finish_parse_message
 
 
@@ -39,8 +39,8 @@ keeper_talk2:
 	and	#INV2_SODA
 	beq	dont_have_soda
 
-	ldx     #<cave_outer_keeper2_message2
-	ldy     #>cave_outer_keeper2_message2
+	ldx     #<cave_outer_keeper3_message2
+	ldy     #>cave_outer_keeper3_message2
 	jsr     finish_parse_message
 
 dont_have_soda:
@@ -49,9 +49,9 @@ dont_have_soda:
 	jsr	setup_quiz_verb_table
 
 	; respond only to take quiz and give sub
-	lda	#<keeper2_verb_table
+	lda	#<keeper3_verb_table
 	sta	INL
-	lda	#>keeper2_verb_table
+	lda	#>keeper3_verb_table
 	sta	INH
 	jsr	load_custom_verb_table
 
@@ -59,14 +59,14 @@ dont_have_soda:
 
 
 	;=========================
-	; keeper2 emerge
+	; keeper3 emerge
 	;=========================
 
-keeper2_emerge:
+keeper3_emerge:
 	lda	#0
 	sta	KEEPER_COUNT
 
-keeper2_emerge_loop:
+keeper3_emerge_loop:
 
 	;=======================
 	; move to next frame
@@ -78,7 +78,7 @@ keeper2_emerge_loop:
 
 	lda	KEEPER_COUNT
 	cmp	#20
-	beq	done_keeper2_emerge
+	beq	done_keeper3_emerge
 
 	;========================
 	; draw_scene
@@ -103,21 +103,21 @@ keeper2_emerge_loop:
 
 	jsr	hgr_page_flip
 
-	jmp	keeper2_emerge_loop
+	jmp	keeper3_emerge_loop
 
-done_keeper2_emerge:
+done_keeper3_emerge:
 	rts
 
 
 	;=========================
-	; keeper2 retreat
+	; keeper3 retreat
 	;=========================
 
-keeper2_retreat:
+keeper3_retreat:
 	lda	#19
 	sta	KEEPER_COUNT
 
-keeper2_retreat_loop:
+keeper3_retreat_loop:
 
 	;=======================
 	; move to next frame
@@ -128,7 +128,7 @@ keeper2_retreat_loop:
 	; see if done animation
 
 	lda	KEEPER_COUNT
-	beq	done_keeper2_retreat
+	beq	done_keeper3_retreat
 
 	;========================
 	; draw_scene
@@ -153,16 +153,9 @@ keeper2_retreat_loop:
 
 	jsr	hgr_page_flip
 
-	jmp	keeper2_retreat_loop
+	jmp	keeper3_retreat_loop
 
-done_keeper2_retreat:
-
-	;=====================
-	; exit to next
-
-	lda	#LOCATION_TROGDOR_OUTER3
-	jsr	update_map_location
-
+done_keeper3_retreat:
 	rts
 
 
