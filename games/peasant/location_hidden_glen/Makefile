@@ -55,6 +55,9 @@ graphics_hidden_glen/hidden_glen_priority.inc:
 sprites_hidden_glen/archer_sprites.inc:
 	cd sprites_hidden_glen && make
 
+sprites_hidden_glen/leaving_sprites.inc:
+	cd sprites_hidden_glen && make
+
 ###
 
 distclean:

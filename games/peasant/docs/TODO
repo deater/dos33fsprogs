@@ -1,11 +1,15 @@
 
+
 walking:
 	sub-pixel walking left/right?  Currently we walk too fast
 	Maybe even add sierra-style +/-
 
 load/save:
 	add autosave feature?
-	move savegame to disk2?
+	(done) move savegame to disk2?
+
+	loading game might trigger "borders.s" adjustments.
+		should skip if exit type is load
 
 general engine:
 	the "check haystack" code is missing from some locations.

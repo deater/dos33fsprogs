@@ -246,29 +246,29 @@ sprites_mask_h:
 ;==========================================
 ; second keeper info
 ;
-;	seems to trigger at approx peasant_x = 126 (18)
+;	seems to trigger at approx peasant_x = 210 (30)
 ;
 
 ; starts 	sprite x y
-;		0	140,43		; start
-;		0	140,45		; move down/l
-;		1	140,45		; no move (light up)
+;		0	203,61	(29)	; start
+;		0	203,63		; move down/l
+;		1	203,63		; no move (light up)
 
 	; 6 before moving arms
 	; also, moving sprites actually slither a bit
-	; ends at 133,49
+	; ends at 196,67	(28)
 
 keeper_x:
-.byte  20,20,20,20
-.byte  19,19,19,19
-.byte  19,19,19,19, 19,19
-.byte  19,19,19,19,19,19,19
+.byte  29,29,29,29
+.byte  28,28,28,28
+.byte  28,28,28,28, 28,28
+.byte  28,28,28,28,28,28,28
 
 keeper_y:
-.byte	43,44,44,45
-.byte   46,47,48,49
-.byte	49,49,49,49, 49,49
-.byte	49,49,49,49, 49,49,49
+.byte	61,62,62,63
+.byte   64,65,66,67
+.byte	67,67,67,67, 67,67
+.byte	67,67,67,67, 67,67,67
 
 which_keeper_sprite:
 .byte	0, 0, 1, 1

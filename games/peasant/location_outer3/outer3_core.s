@@ -87,7 +87,7 @@ check_keeper3:
 	bne	done_check_keeper3
 
 	lda	PEASANT_X		; only if ourx >= 29
-	cmp	#20			; 203/7=29
+	cmp	#30			; 203/7=29
 	bcc	done_check_keeper3	; blt
 
 	jsr	handle_keeper3
