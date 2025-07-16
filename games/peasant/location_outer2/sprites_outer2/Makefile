@@ -34,10 +34,10 @@ guitar_sprites.inc:	guitar_sprites.png
 	$(HGR_SPRITE) -l guitar1_mask guitar_sprites.png  56 159  68 189 >> guitar_sprites.inc
 	$(HGR_SPRITE) -l guitar2_mask guitar_sprites.png  98 159 118 189 >> guitar_sprites.inc
 	$(HGR_SPRITE) -l guitar3_mask guitar_sprites.png 140 159 167 189 >> guitar_sprites.inc
-	$(HGR_SPRITE) -l guitar4_mask guitar_sprites.png 140  63 167 92 >> guitar_sprites.inc
-	$(HGR_SPRITE) -l guitar5_mask guitar_sprites.png  14  63  41 92 >> guitar_sprites.inc
-	$(HGR_SPRITE) -l guitar6_mask guitar_sprites.png  56  63  83 92 >> guitar_sprites.inc
-	$(HGR_SPRITE) -l guitar7_mask guitar_sprites.png  98  63 125 92 >> guitar_sprites.inc
+	$(HGR_SPRITE) -l guitar4_mask guitar_sprites.png 140  63 167 93 >> guitar_sprites.inc
+	$(HGR_SPRITE) -l guitar5_mask guitar_sprites.png  14  63  41 93 >> guitar_sprites.inc
+	$(HGR_SPRITE) -l guitar6_mask guitar_sprites.png  56  63  83 93 >> guitar_sprites.inc
+	$(HGR_SPRITE) -l guitar7_mask guitar_sprites.png  98  63 125 93 >> guitar_sprites.inc
 
 clean:
 	rm -f *~ \

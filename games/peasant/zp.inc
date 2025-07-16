@@ -347,26 +347,29 @@ BUCKET_COUNT	= $C9	; well
 WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9
 KEEPER_COUNT	= $C9	; cliff heights
+SUBGUITAR_COUNT = $C9	; outer2
 ARCHER_COUNT	= $C9	; hidden glen
 WEARING_MASK	= $C9	; gary
 BOW_X		= $C9	; target
 
 BUCKET_STATE	= $CA	; well
-IN_QUIZ		= $CA	; outer
+IN_QUIZ		= $CA	; outer1/2/3
 GARY_COUNT	= $CA	; gary
 BOW_INDEX	= $CA	; target
 
 CRANK_STATE	= $CB	; well
-WHICH_QUIZ	= $CB	; outer
+WHICH_QUIZ	= $CB	; outer1/2/3
 ARROW_X		= $CB	; target
 
-OLD_DIR		= $CC	; outer
+OLD_DIR		= $CC	; outer1/2/3
 ARROW_Y		= $CC	; target
 
-RON_COUNT	= $CD	; outer
+RON_COUNT	= $CD	; outer1
+GUITAR_COUNT	= $CD	; outer2
 PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
 
+WRONG_KEY	= $CE	; outer1/2/3
 PREV_Y		= $CE	; kerrek
 
 ; D0-D? used by HGR?
