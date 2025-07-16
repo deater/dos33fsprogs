@@ -89,42 +89,6 @@ done_quiz2:
 	rts
 
 
-
-	;==============================
-	; check_keyboard_answer
-	;==============================
-	; for when in quiz
-	; looking for just A, B, or C
-
-check_keyboard_answer:
-
-	lda	KEYPRESS
-	bpl	no_answer
-
-	bit	KEYRESET
-
-	pha
-	jsr	restore_parse_message
-
-	pla
-
-	and	#$7f	; strip high bit
-	and	#$df	; convert to lowercase $61 -> $41  0110 -> 0100
-
-	cmp	#'A'
-	bcc	invalid_answer		; blt
-	cmp	#'D'
-	bcs	invalid_answer		; bge
-
-	ldx	WHICH_QUIZ
-
-	cmp	quiz2_answers,X
-	beq	right_answer
-	bne	wrong_answer
-
-no_answer:
-	rts
-
 	;======================
 	; quiz2 invalid answer
 	;======================
@@ -177,6 +141,8 @@ after_guitar:
 
 	; force message to current page
 
+	; in theory we keep playing when message shown
+
 	lda	DRAW_PAGE
 	eor	#$20
 	sta	DRAW_PAGE
@@ -226,7 +192,7 @@ right_answer:
 
 	rts
 
-quiz2_answers:
+quiz_answers:
 	.byte 'B','B','C'
 
 

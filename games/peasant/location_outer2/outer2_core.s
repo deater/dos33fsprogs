@@ -170,6 +170,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper2.s"
+.include "../location_outer/quiz_keyboard.s"
 .include "quiz2.s"
 .include "../location_outer/outer_actions_common.s"
 .include "outer2_actions.s"

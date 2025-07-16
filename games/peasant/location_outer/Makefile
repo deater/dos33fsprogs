@@ -38,7 +38,7 @@ outer_core.o:	outer_core.s \
 		graphics_outer/outer_priority.inc \
 		sprites_outer/ron_sprites.inc \
 		sprites_outer/keeper1_sprites.inc \
-		keeper1.s quiz1.s \
+		keeper1.s quiz1.s quiz_keyboard.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait_a_bit.s borders.s

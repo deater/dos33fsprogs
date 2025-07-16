@@ -29,18 +29,37 @@ quiz1_loop:
 	beq	draw_keeper1_quiz2
 
 draw_keeper1_quiz1:
+	lda	WRONG_KEY
+	bne	draw_keeper1_quiz1_again
 	ldx	#<cave_outer_quiz1_1
 	ldy	#>cave_outer_quiz1_1
 	jmp	draw_keeper1_quiz_common
+draw_keeper1_quiz1_again:
+	ldx	#<cave_outer_quiz1_1again
+	ldy	#>cave_outer_quiz1_1again
+	jmp	draw_keeper1_quiz_common
 
 draw_keeper1_quiz2:
+	lda	WRONG_KEY
+	bne	draw_keeper1_quiz2_again
 	ldx	#<cave_outer_quiz1_2
 	ldy	#>cave_outer_quiz1_2
 	jmp	draw_keeper1_quiz_common
+draw_keeper1_quiz2_again:
+	ldx	#<cave_outer_quiz1_2again
+	ldy	#>cave_outer_quiz1_2again
+	jmp	draw_keeper1_quiz_common
 
 draw_keeper1_quiz3:
+	lda	WRONG_KEY
+	bne	draw_keeper1_quiz3_again
 	ldx	#<cave_outer_quiz1_3
 	ldy	#>cave_outer_quiz1_3
+	jmp	draw_keeper1_quiz_common
+draw_keeper1_quiz3_again:
+	ldx	#<cave_outer_quiz1_3again
+	ldy	#>cave_outer_quiz1_3again
+
 draw_keeper1_quiz_common:
 	stx	OUTL
 	sty	OUTH
@@ -72,40 +91,6 @@ done_quiz1:
 
 
 
-	;==============================
-	; check_keyboard_answer
-	;==============================
-	; for when in quiz
-	; looking for just A, B, or C
-
-check_keyboard_answer:
-
-	lda	KEYPRESS
-	bpl	no_answer
-
-	bit	KEYRESET
-
-	pha
-	jsr	restore_parse_message
-
-	pla
-
-	and	#$7f	; strip high bit
-	and	#$df	; convert to lowercase $61 -> $41  0110 -> 0100
-
-	cmp	#'A'
-	bcc	invalid_answer		; blt
-	cmp	#'D'
-	bcs	invalid_answer		; bge
-
-	ldx	WHICH_QUIZ
-
-	cmp	quiz1_answers,X
-	beq	right_answer
-	bne	wrong_answer
-
-no_answer:
-	rts
 
 	;======================
 	; quiz1 invalid answer
@@ -113,6 +98,12 @@ no_answer:
 
 invalid_answer:
 	bit	KEYRESET	; clear the keyboard buffer
+
+	inc	WRONG_KEY
+
+	rts
+.if 0
+
 
 	lda	WHICH_QUIZ
 	cmp	#2		; off by 1
@@ -132,7 +123,7 @@ resay_quiz3:
 	ldx	#<cave_outer_quiz1_3again
 	ldy	#>cave_outer_quiz1_3again
 	jmp	finish_parse_message_nowait
-
+.endif
 
 	;======================
 	; quiz1 wrong answer
@@ -210,7 +201,7 @@ right_answer:
 
 	rts
 
-quiz1_answers:
+quiz_answers:
 	.byte 'B','A','C'
 
 

@@ -36,7 +36,7 @@ outer2_core.o:	outer2_core.s \
 		../text/DIALOG_OUTER2.ZX02 ../text/dialog_outer2.inc \
 		sprites_outer2/keeper2_sprites.inc \
 		sprites_outer2/guitar_sprites.inc \
-		keeper2.s quiz2.s \
+		keeper2.s quiz2.s ../location_outer/quiz_keyboard.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait_a_bit.s borders.s

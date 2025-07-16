@@ -16,6 +16,7 @@ outer_core:
 	sta	FLAME_COUNT
 	sta	KEEPER_COUNT
 	sta	IN_QUIZ
+	sta	WRONG_KEY
 
 .include "../location_common/common_core.s"
 
@@ -172,6 +173,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper1.s"
+.include "quiz_keyboard.s"
 .include "quiz1.s"
 .include "outer_actions_common.s"
 .include "outer_actions1.s"

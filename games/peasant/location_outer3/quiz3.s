@@ -29,18 +29,36 @@ quiz3_loop:
 	beq	draw_keeper3_quiz2
 
 draw_keeper3_quiz1:
+	lda	WRONG_KEY
+	bne	draw_keeper3_quiz1_again
 	ldx	#<cave_outer_quiz3_1
 	ldy	#>cave_outer_quiz3_1
 	jmp	draw_keeper3_quiz_common
+draw_keeper3_quiz1_again:
+	ldx	#<cave_outer_quiz3_1again
+	ldy	#>cave_outer_quiz3_1again
+	jmp	draw_keeper3_quiz_common
 
 draw_keeper3_quiz2:
+	lda	WRONG_KEY
+	bne	draw_keeper3_quiz2_again
 	ldx	#<cave_outer_quiz3_2
 	ldy	#>cave_outer_quiz3_2
 	jmp	draw_keeper3_quiz_common
+draw_keeper3_quiz2_again:
+	ldx	#<cave_outer_quiz3_2again
+	ldy	#>cave_outer_quiz3_2again
+	jmp	draw_keeper3_quiz_common
 
 draw_keeper3_quiz3:
+	lda	WRONG_KEY
+	bne	draw_keeper3_quiz3_again
 	ldx	#<cave_outer_quiz3_3
 	ldy	#>cave_outer_quiz3_3
+	jmp	draw_keeper3_quiz_common
+draw_keeper3_quiz3_again:
+	ldx	#<cave_outer_quiz3_3again
+	ldy	#>cave_outer_quiz3_3again
 draw_keeper3_quiz_common:
 	stx	OUTL
 	sty	OUTH
@@ -72,40 +90,6 @@ done_quiz3:
 
 
 
-	;==============================
-	; check_keyboard_answer
-	;==============================
-	; for when in quiz
-	; looking for just A, B, or C
-
-check_keyboard_answer:
-
-	lda	KEYPRESS
-	bpl	no_answer
-
-	bit	KEYRESET
-
-	pha
-	jsr	restore_parse_message
-
-	pla
-
-	and	#$7f	; strip high bit
-	and	#$df	; convert to lowercase $61 -> $41  0110 -> 0100
-
-	cmp	#'A'
-	bcc	invalid_answer		; blt
-	cmp	#'D'
-	bcs	invalid_answer		; bge
-
-	ldx	WHICH_QUIZ
-
-	cmp	quiz3_answers,X
-	beq	right_answer
-	bne	wrong_answer
-
-no_answer:
-	rts
 
 	;======================
 	; quiz3 invalid answer
@@ -114,6 +98,9 @@ no_answer:
 invalid_answer:
 	bit	KEYRESET	; clear the keyboard buffer
 
+	inc	WRONG_KEY
+	rts
+.if 0
 	lda	WHICH_QUIZ
 	cmp	#2		; off by 1
 	beq	resay_quiz3
@@ -132,7 +119,7 @@ resay_quiz3:
 	ldx	#<cave_outer_quiz3_3again
 	ldy	#>cave_outer_quiz3_3again
 	jmp	finish_parse_message_nowait
-
+.endif
 
 	;======================
 	; quiz3 wrong answer
@@ -211,8 +198,8 @@ right_answer:
 
 	rts
 
-quiz3_answers:
-	.byte 'C','C','A'
+quiz_answers:
+	.byte 'C','A','C'
 
 
 	;===============================
