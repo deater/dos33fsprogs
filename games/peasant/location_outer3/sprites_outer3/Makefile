@@ -22,22 +22,16 @@ keeper3_sprites.inc:	keeper3_sprites.png
 	$(HGR_SPRITE) -l keeper_l7_mask keeper3_sprites.png 210 159 230 187 >> keeper3_sprites.inc
 
 skeleton_sprites.inc:	skeleton_sprites.png
-	$(HGR_SPRITE) -l guitar0 skeleton_sprites.png  14 128  27 158 > skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar1 skeleton_sprites.png  56 128  68 158 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar2 skeleton_sprites.png  98 128 118 158 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar3 skeleton_sprites.png 140 128 167 158 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar4 skeleton_sprites.png 140  32 167 62 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar5 skeleton_sprites.png  14  32  41 62 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar6 skeleton_sprites.png  56  32  83 62 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar7 skeleton_sprites.png  98  32 125 62 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar0_mask skeleton_sprites.png  14 159  27 189 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar1_mask skeleton_sprites.png  56 159  68 189 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar2_mask skeleton_sprites.png  98 159 118 189 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar3_mask skeleton_sprites.png 140 159 167 189 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar4_mask skeleton_sprites.png 140  63 167 92 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar5_mask skeleton_sprites.png  14  63  41 92 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar6_mask skeleton_sprites.png  56  63  83 92 >> skeleton_sprites.inc
-	$(HGR_SPRITE) -l guitar7_mask skeleton_sprites.png  98  63 125 92 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton0 skeleton_sprites.png  14 32  27 62 > skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton1 skeleton_sprites.png  42 32  55 62 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton2 skeleton_sprites.png  70 32  83 62 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton3 skeleton_sprites.png  98 32 111 62 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton4 skeleton_sprites.png 126 32 139 62 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton0_mask skeleton_sprites.png  14 63  27 93 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton1_mask skeleton_sprites.png  42 63  55 93 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton2_mask skeleton_sprites.png  70 63  83 93 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton3_mask skeleton_sprites.png  98 63 111 93 >> skeleton_sprites.inc
+	$(HGR_SPRITE) -l skeleton4_mask skeleton_sprites.png 126 63 139 93 >> skeleton_sprites.inc
 
 clean:
 	rm -f *~ \

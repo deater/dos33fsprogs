@@ -200,7 +200,7 @@ draw_keeper:
 
 	lda	which_keeper_sprite,X
 	clc
-	adc	#8			; skip guitar sprites
+	adc	#5			; skip skeleton sprites
 	tax
 
 	jsr	hgr_draw_sprite_mask
@@ -209,42 +209,42 @@ draw_keeper:
 
 
 sprites_xsize:
-	.byte  2, 2, 3, 4, 4, 4, 4, 4		; guitar 0..7
+	.byte  2, 2, 2, 2, 2			; skeleton 0..4
 	.byte  3, 3, 3, 3, 3, 3, 3, 3		; keeper 0..7
 
 sprites_ysize:
-	.byte 30,30,30,30,30,30,30,30		; guitar 0..7
+	.byte 30,30,30,30,30			; skeleton 0..4
 	.byte 28,28,28,28,28,28,28,28		; keeper 0..7
 
 sprites_data_l:
-	.byte <guitar0,<guitar1,<guitar2,<guitar3
-	.byte <guitar4,<guitar5,<guitar6,<guitar7
+	.byte <skeleton0,<skeleton1,<skeleton2,<skeleton3
+	.byte <skeleton4
 	.byte <keeper_l0,<keeper_l1,<keeper_l2,<keeper_l3
 	.byte <keeper_l4,<keeper_l5,<keeper_l6,<keeper_l7
 
 sprites_data_h:
-	.byte >guitar0,>guitar1,>guitar2,>guitar3
-	.byte >guitar4,>guitar5,>guitar6,>guitar7
+	.byte >skeleton0,>skeleton1,>skeleton2,>skeleton3
+	.byte >skeleton4
 	.byte >keeper_l0,>keeper_l1,>keeper_l2,>keeper_l3
 	.byte >keeper_l4,>keeper_l5,>keeper_l6,>keeper_l7
 
 
 sprites_mask_l:
-	.byte <guitar0_mask,<guitar1_mask,<guitar2_mask,<guitar3_mask
-	.byte <guitar4_mask,<guitar5_mask,<guitar6_mask,<guitar7_mask
+	.byte <skeleton0_mask,<skeleton1_mask,<skeleton2_mask,<skeleton3_mask
+	.byte <skeleton4_mask
 	.byte <keeper_l0_mask,<keeper_l1_mask,<keeper_l2_mask,<keeper_l3_mask
 	.byte <keeper_l4_mask,<keeper_l5_mask,<keeper_l6_mask,<keeper_l7_mask
 
 
 sprites_mask_h:
-	.byte >guitar0_mask,>guitar1_mask,>guitar2_mask,>guitar3_mask
-	.byte >guitar4_mask,>guitar5_mask,>guitar6_mask,>guitar7_mask
+	.byte >skeleton0_mask,>skeleton1_mask,>skeleton2_mask,>skeleton3_mask
+	.byte >skeleton4_mask
 	.byte >keeper_l0_mask,>keeper_l1_mask,>keeper_l2_mask,>keeper_l3_mask
 	.byte >keeper_l4_mask,>keeper_l5_mask,>keeper_l6_mask,>keeper_l7_mask
 
 
 ;==========================================
-; second keeper info
+; third keeper info
 ;
 ;	seems to trigger at approx peasant_x = 210 (30)
 ;

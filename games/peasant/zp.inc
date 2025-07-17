@@ -366,6 +366,7 @@ ARROW_Y		= $CC	; target
 
 RON_COUNT	= $CD	; outer1
 GUITAR_COUNT	= $CD	; outer2
+SKELETON_COUNT	= $CD	; outer3
 PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
 

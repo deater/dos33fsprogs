@@ -141,6 +141,7 @@ after_skeleton:
 	; force message to current page
 
 	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
 	eor	#$20
 	sta	DRAW_PAGE
 
@@ -156,11 +157,10 @@ after_skeleton:
         bit     KEYRESET
         jsr     wait_until_keypress
 
-
-
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 ;	jsr	finish_parse_message
-
 
 	lda	#0
 	sta	IN_QUIZ
@@ -208,14 +208,14 @@ quiz_answers:
 skeleton_transform:
 
 	lda	#0
-	sta	RON_COUNT
+	sta	SKELETON_COUNT
 
 	; look down for this
 
 	lda	#PEASANT_DIR_DOWN
 	sta	PEASANT_DIR
 
-ron1_loop:
+skeleton_loop:
 	;=============================
 	; copy page (note this is going to mess with sound)
 
@@ -226,58 +226,60 @@ ron1_loop:
 
 	; play sound if needed, 2.. 12
 
-	lda	RON_COUNT
+	lda	SKELETON_COUNT
 	cmp	#2
-	bcc	skip_ron_sound
+	bcc	skip_skeleton_sound
 	cmp	#12
-	bcs	skip_ron_sound
+	bcs	skip_skeleton_sound
 
 	and	#1
-	beq	ron_other_note
+	beq	skeleton_other_note
 
         lda     #NOTE_F6
-	beq	ron_common_note		; bra
-ron_other_note:
+	beq	skeleton_common_note		; bra
+skeleton_other_note:
         lda     #NOTE_E6
 
-ron_common_note:
+skeleton_common_note:
         sta     speaker_frequency
         lda     #8
         sta     speaker_duration
         jsr     speaker_tone
 
-skip_ron_sound:
+skip_skeleton_sound:
 
 
-	inc	RON_COUNT
-	ldx	RON_COUNT
+	inc	SKELETON_COUNT
+	ldx	SKELETON_COUNT
 
-	lda     #10
+	; draw keeper
+
+	lda     #28
 	sta     SPRITE_X
-	lda     #60
+	lda     #67
 	sta     SPRITE_Y
 
         ; get offset for graphics
 
-	ldx	RON_COUNT
-	lda	ron_which_keeper_sprite,X
+	ldx	SKELETON_COUNT
+	lda	skeleton_which_keeper_sprite,X
 	clc
-	adc	#5			; skip ron
+	adc	#5			; skip skeleton
 	tax
 
 	jsr	hgr_draw_sprite_mask
 
 	;=======================
 	; see if done animation
-blurgh:
-	lda	RON_COUNT
+
+	lda	SKELETON_COUNT
 	cmp	#21		;
-	beq	ron_done
+	beq	skeleton_done
 
 	cmp	#12
-	bcc	ron_peasant	; normal peasant first 12 frames
+	bcc	skeleton_peasant	; normal peasant first 12 frames
 
-	ldx	RON_COUNT
+	ldx	SKELETON_COUNT
 
 	lda     PEASANT_X
 	sta     SPRITE_X
@@ -286,15 +288,14 @@ blurgh:
 
         ; get offset for graphics
 
-;	ldx	RON_COUNT
-	lda	ron_which_ron_sprite,X
+	lda	skeleton_which_skeleton_sprite,X
 	tax
 
 	jsr	hgr_draw_sprite_mask
 
-	jmp	done_ron_peasant
+	jmp	done_skeleton_peasant
 
-ron_peasant:
+skeleton_peasant:
 	;========================
 	; draw peasant
 
@@ -305,7 +306,7 @@ ron_peasant:
 
 	jsr	increment_flame
 
-done_ron_peasant:
+done_skeleton_peasant:
 
 	;=========================
 	; delay
@@ -320,9 +321,9 @@ done_ron_peasant:
 
 ;	jsr	wait_vblank
 
-	jmp	ron1_loop
+	jmp	skeleton_loop
 
-ron_done:
+skeleton_done:
 
 	;===========================
         ; weep sound
@@ -346,7 +347,7 @@ ron_done:
 
 
 ;==========================================
-; first keeper ron info
+; first keeper skeleton info
 
 ; flips peasant forward
 ; 3 (4) (u shaped)
@@ -361,21 +362,21 @@ ron_done:
 ; 7 (4)
 ; 6 (4)
 ; 7 (4) 9? repeats, ending on down
-; ron transition happens
+; skeleton transition happens
 ;   (8) switches to 5 part way through first frame?
-; 3 / ron next , to 1 part way through second (cloud frame)
-; 5 ron (gap)
-; 10 ron (tiny smoke)
-; 10 full ron
+; 3 / skeleton next , to 1 part way through second (cloud frame)
+; 5 skeleton (gap)
+; 10 skeleton (tiny smoke)
+; 10 full skeleton
 
-ron_which_keeper_sprite:
+skeleton_which_keeper_sprite:
 .byte	3, 5, 6, 7
 .byte	6, 7, 6, 7
 .byte	6, 7, 6, 7
 
 .byte   7, 5, 5, 1, 1, 1, 1, 1, 1, 1, 1
 
-ron_which_ron_sprite:
+skeleton_which_skeleton_sprite:
 .byte	0, 0, 0, 0
 .byte	0, 0, 0, 0
 .byte	0, 0, 0, 0
