@@ -1,7 +1,7 @@
 
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	keeper3_sprites.inc skeleton_sprites.inc
+all:	keeper3_sprites.inc skeleton_sprites.inc curtain_sprites.inc
 
 keeper3_sprites.inc:	keeper3_sprites.png
 	$(HGR_SPRITE) -l keeper_l0 keeper3_sprites.png  14 128  34 156 > keeper3_sprites.inc
@@ -32,6 +32,13 @@ skeleton_sprites.inc:	skeleton_sprites.png
 	$(HGR_SPRITE) -l skeleton2_mask skeleton_sprites.png  70 63  83 93 >> skeleton_sprites.inc
 	$(HGR_SPRITE) -l skeleton3_mask skeleton_sprites.png  98 63 111 93 >> skeleton_sprites.inc
 	$(HGR_SPRITE) -l skeleton4_mask skeleton_sprites.png 126 63 139 93 >> skeleton_sprites.inc
+
+curtain_sprites.inc:	curtain_sprites.png
+	$(HGR_SPRITE) -s -l curtain0 curtain_sprites.png 189 112 216 160 > curtain_sprites.inc
+	$(HGR_SPRITE) -s -l curtain1 curtain_sprites.png 133 112 160 160 >> curtain_sprites.inc
+	$(HGR_SPRITE) -s -l curtain2 curtain_sprites.png  77 112 104 160 >> curtain_sprites.inc
+
+
 
 clean:
 	rm -f *~ \

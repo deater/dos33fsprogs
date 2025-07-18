@@ -179,6 +179,7 @@ really_level_over:
 
 .include "sprites_outer3/keeper3_sprites.inc"
 .include "sprites_outer3/skeleton_sprites.inc"
+.include "sprites_outer3/curtain_sprites.inc"
 
 
 	;======================

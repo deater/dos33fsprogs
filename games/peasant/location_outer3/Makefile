@@ -36,7 +36,9 @@ outer3_core.o:	outer3_core.s \
 		../text/DIALOG_OUTER3.ZX02 ../text/dialog_outer3.inc \
 		sprites_outer3/keeper3_sprites.inc \
 		sprites_outer3/skeleton_sprites.inc \
+		sprites_outer3/curtain_sprites.inc \
 		keeper3.s quiz3.s ../location_outer/quiz_keyboard.s \
+		get_sword.s \
 		../new_map_location.s \
 		../keyboard.s \
 		../wait_a_bit.s borders.s
