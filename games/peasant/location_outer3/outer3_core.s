@@ -172,6 +172,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper3.s"
+.include "get_sword.s"
 .include "../location_outer/quiz_keyboard.s"
 .include "quiz3.s"
 .include "../location_outer/outer_actions_common.s"
@@ -180,6 +181,7 @@ really_level_over:
 .include "sprites_outer3/keeper3_sprites.inc"
 .include "sprites_outer3/skeleton_sprites.inc"
 .include "sprites_outer3/curtain_sprites.inc"
+.include "sprites_outer3/sword_sprites.inc"
 
 
 	;======================

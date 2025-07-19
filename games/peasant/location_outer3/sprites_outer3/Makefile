@@ -1,7 +1,8 @@
 
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	keeper3_sprites.inc skeleton_sprites.inc curtain_sprites.inc
+all:	keeper3_sprites.inc skeleton_sprites.inc curtain_sprites.inc \
+	sword_sprites.inc
 
 keeper3_sprites.inc:	keeper3_sprites.png
 	$(HGR_SPRITE) -l keeper_l0 keeper3_sprites.png  14 128  34 156 > keeper3_sprites.inc
@@ -38,8 +39,31 @@ curtain_sprites.inc:	curtain_sprites.png
 	$(HGR_SPRITE) -s -l curtain1 curtain_sprites.png 133 112 160 160 >> curtain_sprites.inc
 	$(HGR_SPRITE) -s -l curtain2 curtain_sprites.png  77 112 104 160 >> curtain_sprites.inc
 
+sword_sprites.inc:	get_sword.png
+	$(HGR_SPRITE) -l sword_base_sprite get_sword.png  0 34  20 64 > sword_sprites.inc
+	$(HGR_SPRITE) -l sword0_sprite get_sword.png  28 34  41 64 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword1_sprite get_sword.png  56 40  69 54 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword2_sprite get_sword.png  84 40  97 54 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword3_sprite get_sword.png 112 34 125 52 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword4_sprite get_sword.png 140 40 153 61 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword5_sprite get_sword.png 168 46 181 67 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword6_sprite get_sword.png 196 49 209 73 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword7_sprite get_sword.png 224 51 244 77 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword8_sprite get_sword.png 252 53 272 81 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword_base_mask get_sword.png  0 67  20 97 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword0_mask get_sword.png  28 73  41 97 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword1_mask get_sword.png  56 73  69 87 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword2_mask get_sword.png  84 73  97 87 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword3_mask get_sword.png 112 67 125 85 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword4_mask get_sword.png 140 79 153 100 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword5_mask get_sword.png 168 91 181 112 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword6_mask get_sword.png 196 97 209 121 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword7_mask get_sword.png 224 101 244 127 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword8_mask get_sword.png 252 105 272 133 >> sword_sprites.inc
+
 
 
 clean:
 	rm -f *~ \
-		keeper3_sprites.inc skeleton_sprites.inc
+		keeper3_sprites.inc skeleton_sprites.inc \
+		sword_sprites.inc curtain_sprites.inc

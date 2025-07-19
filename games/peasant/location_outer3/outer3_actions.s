@@ -145,15 +145,10 @@ cave_outer_get_sword:
 	ldy	#>cave_outer_quiz3_correct_part4
 	jsr	finish_parse_message
 
-	;==================
-	; open the beaded curtain
+	;==============================================
+	; get sword, back out the keeper, open curtain
 
-	; TODO
-
-	;==================
-	; back out the keeper
-
-	jsr	keeper3_retreat
+	jsr	get_sword
 
 
 	;==========================================
