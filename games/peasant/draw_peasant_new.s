@@ -33,6 +33,12 @@ draw_peasant:
 	and	#ON_FIRE
 	beq	done_draw_peasant
 
+	; stop drawing once we have shield
+
+	lda	INVENTORY_2
+	lda	#INV2_TROGSHIELD
+	bne	done_draw_peasant
+
 	lda	PEASANT_X
 	sta	CURSOR_X
 	lda	PEASANT_Y
