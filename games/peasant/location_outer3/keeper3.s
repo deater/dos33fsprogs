@@ -139,6 +139,10 @@ setup_outer_verb_table:
 	; which frame in KEEPER_COUNT
 draw_keeper:
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_KEEPER
+	bne	done_draw_keeper
+
 	ldx	KEEPER_COUNT
 
 	lda     keeper_x,X
@@ -155,6 +159,7 @@ draw_keeper:
 
 	jsr	hgr_draw_sprite_mask
 
+done_draw_keeper:
 	rts
 
 

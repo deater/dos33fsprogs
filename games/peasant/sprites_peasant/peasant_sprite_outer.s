@@ -16,7 +16,7 @@ peasant_location2:
 	.word peasant_robe_helm_zx02
 
 peasant_location3:
-	.word peasant_robe_shield_zx02
+	.word peasant_robe_sword_zx02
 
 ;==========================
 
@@ -28,4 +28,7 @@ peasant_robe_zx02:
 
 peasant_robe_helm_zx02:
 	.incbin "robe_helm_sprites.zx02"
+
+peasant_robe_sword_zx02:
+	.incbin "robe_sword_sprites.zx02"
 

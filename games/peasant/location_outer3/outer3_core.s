@@ -19,6 +19,7 @@ outer3_core:
 	sta	KEEPER_COUNT
 	sta	IN_QUIZ
 	sta	WRONG_KEY
+	sta	SUPPRESS_DRAWING
 
 .include "../location_common/common_core.s"
 

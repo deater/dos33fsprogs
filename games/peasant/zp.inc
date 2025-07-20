@@ -337,6 +337,7 @@ SUPPRESS_DRAWING=$C5		; don't draw peasant
 	SUPPRESS_BOAT = $02
 	SUPPRESS_GARY = $04
 	CUSTOM_PEASANT= $08
+	SUPPRESS_KEEPER= $10
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8		; climb
