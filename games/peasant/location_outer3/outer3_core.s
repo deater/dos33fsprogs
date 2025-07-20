@@ -23,6 +23,15 @@ outer3_core:
 
 .include "../location_common/common_core.s"
 
+	lda	INVENTORY_2
+	and	#INV2_TROGSWORD
+	beq	curtains_closed
+
+	jsr	setup_curtain_bg
+
+curtains_closed:
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -169,7 +178,7 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 
-;.include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "keeper3.s"

@@ -374,6 +374,8 @@ WIND_DIR	= $CD	; target
 WRONG_KEY	= $CE	; outer1/2/3
 PREV_Y		= $CE	; kerrek
 
+SWORD_COUNT	= $CF	; outer3
+
 ; D0-D? used by HGR?
 
 WHICH_SLOT	= $DA

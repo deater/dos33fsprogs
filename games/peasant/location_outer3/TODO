@@ -1,12 +1,14 @@
-Outer
+Outer3
 ~~~~~
-+ Hook up dialog with keeper
-+ Animate keeper
-+ Animate the death
-+ peasant sprites for sword
-+ Animation raising sword
-+ Animation opening curtain
-+ When give items, have them taken out of inventory
-+ If don't have item like pills, skip letting them try to give something
++ (done) Hook up dialog with keeper
++ (done) Animate keeper
++ (done) Animate the death
++ (done) peasant sprites for sword
++ (done) Animation raising sword
++ (done) Animation opening curtain
++ (done) When give items, have them taken out of inventory
++ (done) If don't have item like pills, skip letting them try to give something
 
++ The walking-with-sword animation should be wider.  We have the sprites
+	encoded but it will greatly complicate the walking routines...
 

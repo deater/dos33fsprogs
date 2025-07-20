@@ -114,7 +114,8 @@ done_keeper2_emerge:
 	;=========================
 
 keeper2_retreat:
-	lda	#19
+;	lda	#19
+	lda	#9
 	sta	KEEPER_COUNT
 
 keeper2_retreat_loop:

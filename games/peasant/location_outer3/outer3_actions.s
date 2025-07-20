@@ -134,8 +134,10 @@ cave_outer_get_sword:
 	;=====================================
         ; load new peasant sprite with shield
 
-	lda	#PEASANT_OUTFIT_SWORD
-	jsr	load_peasant_sprites
+	; do this later?
+
+;	lda	#PEASANT_OUTFIT_SWORD
+;	jsr	load_peasant_sprites
 
 
 	;=================================

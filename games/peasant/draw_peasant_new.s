@@ -36,7 +36,7 @@ draw_peasant:
 	; stop drawing once we have shield
 
 	lda	INVENTORY_2
-	lda	#INV2_TROGSHIELD
+	and	#INV2_TROGSHIELD
 	bne	done_draw_peasant
 
 	lda	PEASANT_X

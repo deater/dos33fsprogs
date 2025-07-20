@@ -41,7 +41,7 @@ curtain_sprites.inc:	curtain_sprites.png
 
 sword_sprites.inc:	get_sword.png
 	$(HGR_SPRITE) -l sword_base_sprite get_sword.png  0 34  20 64 > sword_sprites.inc
-	$(HGR_SPRITE) -l sword0_sprite get_sword.png  28 34  41 64 >> sword_sprites.inc
+	$(HGR_SPRITE) -l sword0_sprite get_sword.png  28 40  41 64 >> sword_sprites.inc
 	$(HGR_SPRITE) -l sword1_sprite get_sword.png  56 40  69 54 >> sword_sprites.inc
 	$(HGR_SPRITE) -l sword2_sprite get_sword.png  84 40  97 54 >> sword_sprites.inc
 	$(HGR_SPRITE) -l sword3_sprite get_sword.png 112 34 125 52 >> sword_sprites.inc

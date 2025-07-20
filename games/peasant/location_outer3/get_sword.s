@@ -14,37 +14,79 @@
 get_sword:
 
 	lda	#0
+	sta	SWORD_COUNT
+
+	lda	#8
 	sta	KEEPER_COUNT
 
+
 get_sword_loop:
-
-	;=======================
-	; move to next frame
-
-	dec	KEEPER_COUNT
-
-	;=======================
-	; see if done animation
-
-	lda	KEEPER_COUNT
-	beq	done_get_sword
 
 	;========================
 	; draw_scene
 
 	jsr	update_screen
 
+
+	;=============================
+	; draw curtain if necessary
+
+	sec
+	lda	SWORD_COUNT
+	sbc	#37
+	bmi	no_curtain
+
+	tax
+
+	lda	#35			; 245/7
+	sta	CURSOR_X
+	lda	#112
+	sta	CURSOR_Y
+
+	lda	curtain_sprites_l,X
+	sta	INL
+	lda	curtain_sprites_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+no_curtain:
 	;========================
 	; draw base sprite
 
-	lda	PEASANT_X
-	sta	SPRITE_X
+	ldx	PEASANT_X			; one to left
+	dex
+	stx	SPRITE_X
 	lda	PEASANT_Y
 	sta	SPRITE_Y
 
 	ldx	#13				; base keeper sprite
 
         jsr     hgr_draw_sprite_mask
+
+
+	;========================
+	; draw overlay sprite
+
+	ldx	PEASANT_X			; one to right
+	inx
+	stx	SPRITE_X
+
+	ldx	SWORD_COUNT
+	ldy	which_sword_sprite,X
+
+	clc
+	lda	PEASANT_Y
+	adc	sword_y_offset,Y
+	sta	SPRITE_Y
+
+	tya
+	clc
+	adc	#14
+	tax					; offset
+
+        jsr     hgr_draw_sprite_mask
+
 
 
 	;=====================
@@ -60,29 +102,92 @@ get_sword_loop:
 
 	jsr	hgr_page_flip
 
+
+	;=======================
+	; move to next frame
+	inc	SWORD_COUNT
+
+	dec	KEEPER_COUNT
+	bne	keeper_ok
+	lda	#SUPPRESS_KEEPER
+	sta	SUPPRESS_DRAWING
+keeper_ok:
+
+	;=======================
+	; see if done animation
+
+	lda	SWORD_COUNT
+	cmp	#40
+	beq	done_get_sword
+
 	jmp	get_sword_loop
 
 done_get_sword:
+
+	;==========================
+	; switch to sword outfit
+
+	lda	#PEASANT_OUTFIT_SWORD
+	jsr	load_peasant_sprites
+
+	;===========================
+	; setup curtain
+
+	jsr	setup_curtain_bg
+
 	rts
 
 
+	;==============================
+	; setup curtain
+	;==============================
+	; set curtain to open if necessary
+
+setup_curtain_bg:
+
+	; save current draw page
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40			; means draw to $6000
+	sta	DRAW_PAGE
+
+	; draw new curtain in background
+
+	lda	#35			; 245/7
+	sta	CURSOR_X
+	lda	#112
+	sta	CURSOR_Y
+
+	lda	#<curtain2
+	sta	INL
+	lda	#>curtain2
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+	rts
+
+
+curtain_sprites_l:
+	.byte	<curtain0,<curtain1,<curtain2
+curtain_sprites_h:
+	.byte	>curtain0,>curtain1,>curtain2
+
+which_sword_sprite:
+.byte	0,0,1,1,2,2,3,3,4,4	; keeper is gone
+.byte	5,5,6,6,7,7,8,8,8,8
+.byte	7,7,6,6,5,5,4,4,3,3
+.byte	2,2,1,1,0,0
+.byte	0,0,0
+; then curtain opens (while making "success" noise)
+
+
 sword_y_offset:
-.byte	0
+.byte	6,6,6,0,-6
+.byte	-12,-15,-17,-19
 
-.if 0
-keeper_x:
-.byte  28,28,28,28
-.byte  29,29,29,29
-
-
-
-keeper_y:
-.byte	67,66,65,64
-.byte   63,62,62,61
-
-
-which_keeper_sprite:
-.byte   1, 1, 1, 1
-.byte   1, 1, 0, 0
-
-.endif
