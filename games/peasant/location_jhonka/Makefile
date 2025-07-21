@@ -34,6 +34,7 @@ jhonka_core.o:	jhonka_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
+		sprites_jhonka/jhonka_sprites.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
@@ -57,7 +58,7 @@ sprites_jhonka/jhonka_sprites.inc:
 distclean:
 	make clean
 	cd graphics_jhonka && make clean
-#	cd sprites && make clean
+	cd sprites_jhonka && make clean
 
 ###
 

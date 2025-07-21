@@ -121,7 +121,7 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "jhonka_actions.s"
-
+.include "sprites_jhonka/sprites_jhonka.inc"
 
 	;======================
 	; update screen

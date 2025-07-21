@@ -9,6 +9,10 @@ Outer3
 + (done) When give items, have them taken out of inventory
 + (done) If don't have item like pills, skip letting them try to give something
 
++ Modify the new-sprite load to not corrupt the screen...
+
 + The walking-with-sword animation should be wider.  We have the sprites
 	encoded but it will greatly complicate the walking routines...
+  It's mostly noticable when walking to the right, so maybe just 
+	add it for those?
 
