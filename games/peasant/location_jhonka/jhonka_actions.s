@@ -62,9 +62,8 @@ jhonka_climb_fence:
 	;================
 jhonka_get:
 	; check if alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_get_kerrek_dead
+	lda	check_kerrek_dead
+	bcs	jhonka_get_kerrek_dead
 
 jhonka_get_kerrek_alive:
 
@@ -221,9 +220,8 @@ jhonka_look:
 not_in_hay_bale:
 
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	beq	jhonka_look_kerrek_alive
+	jsr	check_kerrek_dead
+	bcc	jhonka_look_kerrek_alive
 
 
 jhonka_look_kerrek_dead:
@@ -342,9 +340,8 @@ jhonka_look_at_fence:
 jhonka_read:
 
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_cant_read_note
+	jsr	check_kerrek_dead
+	bcs	jhonka_cant_read_note
 
 	lda	CURRENT_NOUN
 
@@ -365,9 +362,8 @@ jhonka_read_note:
 	;================
 jhonka_open:
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_cant_open_door
+	jsr	check_kerrek_dead
+	bcs	jhonka_cant_open_door
 
 	lda	CURRENT_NOUN
 
@@ -390,9 +386,8 @@ jhonka_open_door:
 	;================
 jhonka_knock:
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_cant_knock_door
+	jsr	check_kerrek_dead
+	bcs	jhonka_cant_knock_door
 
 	lda	CURRENT_NOUN
 
@@ -454,9 +449,8 @@ jhonka_knock5:
 	;================
 jhonka_ask:
 	; check if alive
-	lda	KERREK_STATE
-	and	#$f
-	beq	jhonka_ask_kerrek_alive
+	jsr	check_kerrek_dead
+	bcc	jhonka_ask_kerrek_alive
 
 	lda	CURRENT_NOUN
 
@@ -514,9 +508,8 @@ jhonka_ask_kerrek_alive:
 jhonka_talk:
 
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	beq	jhonka_cant_talk
+	jsr	check_kerrek_dead
+	bcc	jhonka_cant_talk
 
 	lda	CURRENT_NOUN
 
@@ -547,9 +540,8 @@ jhonka_talk_in_hay:
 jhonka_give:
 
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_do_give
+	jsr	check_kerrek_dead
+	bcs	jhonka_do_give
 
 	jmp	parse_common_give
 
@@ -564,9 +556,8 @@ jhonka_do_give:
 jhonka_kill:
 
 	; check if kerrek alive
-	lda	KERREK_STATE
-	and	#$f
-	bne	jhonka_do_kill
+	jsr	check_kerrek_dead
+	bcs	jhonka_do_kill
 
 	jmp	parse_common_unknown
 
@@ -576,5 +567,20 @@ jhonka_do_kill:
 	jmp	finish_parse_message
 
 
+
+	;====================
+	; check if kerrek dead
+	;	Carry Set = yes
+	;	Carry Clear = no
+check_kerrek_dead:
+	sec
+	lda	KERREK_STATE
+	and	#$f
+	bne	done_check_kerrek_dead
+	clc
+done_check_kerrek_dead:
+	rts
+
 .include "../text/dialog_jhonka.inc"
+
 

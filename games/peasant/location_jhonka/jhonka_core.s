@@ -26,8 +26,24 @@ before_jhonka_cave:
 	ldy	#>jhonka_in_hay_message
 	jsr	finish_parse_message
 
-
 no_before_game_text:
+
+	;=============================
+	; handle note on door
+
+	jsr	unpost_note
+
+	;============================
+	; add jhonka collision
+
+	jsr	check_kerrek_dead
+	bcc	skip_add_jhonka
+
+	lda	#$08
+	sta	collision_location+$b9
+	sta	collision_location+$ba
+	sta	collision_location+$bb
+skip_add_jhonka:
 
 
 	;===================================
@@ -121,7 +137,14 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "jhonka_actions.s"
+.include "draw_jhonka.s"
 .include "sprites_jhonka/sprites_jhonka.inc"
+.include "unpost_note.s"
+
+USE_BG_PALETTE=1
+.include "../hgr_routines/hgr_sprite_mask.s"
+.include "../hgr_routines/hgr_sprite.s"
+
 
 	;======================
 	; update screen
@@ -139,5 +162,10 @@ update_screen:
 	; always draw peasant
 
 	jsr	draw_peasant
+
+	;=====================
+	; draw jhonka
+
+	jsr	draw_jhonka
 
 	rts

@@ -38,7 +38,7 @@ jhonka_core.o:	jhonka_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		jhonka_actions.s
+		jhonka_actions.s draw_jhonka.s unpost_note.s
 	ca65 -o jhonka_core.o jhonka_core.s -l jhonka_core.lst
 
 

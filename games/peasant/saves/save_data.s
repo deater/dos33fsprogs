@@ -11,9 +11,10 @@
 ;.include "save1_02_pebbles.s"
 ;.include "save1_03_well.s"
 .align $20
+.include  "save1_11_riches.s"
 ;.include "save2_01_gary.s"
 ;.include "save2_02_feed.s"
-.include "save1_32_outer.s"
+;.include "save1_32_outer.s"
 .align $20
 .include "save1_04_mask.s"
 
