@@ -37,6 +37,7 @@ inside_cottage_give:
 
 	cmp	#NOUN_RICHES
 	beq	inside_cottage_give_riches
+
 	cmp	#NOUN_TRINKET
 	beq	inside_cottage_give_trinket
 
@@ -77,6 +78,12 @@ inside_cottage_give_riches:
 	lda	INVENTORY_1
 	ora	#INV1_BABY
 	sta	INVENTORY_1
+
+	; get rid of lady
+
+	lda	GAME_STATE_0
+	ora	#LADY_GONE
+	sta	GAME_STATE_0
 
 	ldx	#<inside_cottage_give_riches2_message
 	ldy	#>inside_cottage_give_riches2_message
