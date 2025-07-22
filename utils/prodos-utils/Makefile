@@ -108,8 +108,8 @@ prodos_time.o:	prodos_time.c prodos.h
 
 
 install:	
-		cp prodos mkprodosfs prodos_cat text_to_prodos $(INSTALL_LOC)
+		cp prodos prodos_raw mkprodosfs prodos_cat text_to_prodos $(INSTALL_LOC)
 
 clean:		
-		rm -f *~ *.o prodos mkprodosfs prodos_cat text_to_prodos
+		rm -f *~ *.o prodos prodos_raw mkprodosfs prodos_cat text_to_prodos
 
