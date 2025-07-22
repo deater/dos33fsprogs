@@ -31,7 +31,9 @@ inside_lady_priority.inc:  \
 inside_cottage_priority.zx02:	inside_cottage_priority.combined
 	$(ZX02) -f inside_cottage_priority.combined inside_cottage_priority.zx02
 
-inside_cottage_priority.combined:	inside_cottage_priority.gr inside_cottage_collision.bin
+inside_cottage_priority.combined:	\
+	inside_cottage_priority.gr inside_cottage_chair_priority.gr \
+	inside_cottage_collision.bin
 	cat inside_cottage_priority.gr >  inside_cottage_priority.combined
 	cat inside_cottage_collision.bin >> inside_cottage_priority.combined
 
@@ -40,6 +42,11 @@ inside_cottage_priority.gr:	inside_cottage_priority.png
 
 inside_cottage_collision.bin:	inside_cottage_collision.png
 	$(PNG2COLLISION) inside_cottage_collision.png inside_cottage_collision.bin
+
+####
+
+inside_cottage_chair_priority.gr:	inside_cottage_chair_priority.png
+	$(PNG2GR) inside_cottage_chair_priority.png inside_cottage_chair_priority.gr
 
 ####
 

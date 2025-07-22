@@ -37,7 +37,7 @@ inside_lady_core.o:	inside_lady_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		inside_lady_actions.s \
+		inside_lady_actions.s draw_lady.s \
 		sprites_inside_lady/lady_cottage_sprites.inc
 	ca65 -o inside_lady_core.o inside_lady_core.s -l inside_lady_core.lst
 

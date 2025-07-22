@@ -85,6 +85,9 @@ inside_cottage_give_riches:
 	ora	#LADY_GONE
 	sta	GAME_STATE_0
 
+	; update chair priority
+	jsr	update_priority_chair
+
 	ldx	#<inside_cottage_give_riches2_message
 	ldy	#>inside_cottage_give_riches2_message
 	jmp	finish_parse_message
