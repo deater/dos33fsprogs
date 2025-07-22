@@ -45,7 +45,7 @@ int main(int argc, char **argv) {
 	int result,read_result;
 	struct stat statbuf;
 	unsigned char header[64];
-	int debug=1;
+	int debug=0;
 	int interleave=PRODOS_INTERLEAVE_PRODOS,num_blocks,offset=0;
 
 	if (argc<6) {

@@ -1015,8 +1015,6 @@ end_of_input:
 	rts
 
 
-
-
 noun_lookup:
 .byte "BABY",NOUN_BABY|$80		; these are first
 .byte "PEBBLES",NOUN_PEBBLES|$80	; so at Well we can also

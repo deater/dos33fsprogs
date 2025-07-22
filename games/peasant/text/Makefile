@@ -31,6 +31,7 @@ all:	dump_text shrink_text \
 	DIALOG_INSIDE_NED.ZX02 dialog_inside_ned.inc \
 	DIALOG_HIDDEN_GLEN.ZX02 dialog_hidden_glen.inc \
 	DIALOG_INSIDE_INN.ZX02 dialog_inside_inn.inc \
+	DIALOG_INSIDE_INN_NIGHT.ZX02 dialog_inside_inn_night.inc \
 	DIALOG_CLIFF_BASE.ZX02 dialog_cliff_base.inc \
 	DIALOG_CLIFF_HEIGHTS.ZX02 dialog_cliff_heights.inc \
 	DIALOG_OUTER1.ZX02 dialog_outer1.inc \
@@ -572,6 +573,21 @@ dialog_inside_inn.inc:	../generate_all_symbols dialog_inside_inn
 
 ###
 
+DIALOG_INSIDE_INN_NIGHT.ZX02:	dialog_inside_inn_night
+	$(ZX02) -f  dialog_inside_inn_night DIALOG_INSIDE_INN_NIGHT.ZX02
+
+dialog_inside_inn_night:	dialog_inside_inn_night.o
+	ld65 -o dialog_inside_inn_night dialog_inside_inn_night.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inside_inn_night.o:	dialog_inside_inn_night.s inside_inn_night.inc.lookup
+	ca65 -o dialog_inside_inn_night.o dialog_inside_inn_night.s -l dialog_inside_inn_night.lst
+
+dialog_inside_inn_night.inc:	../generate_all_symbols dialog_inside_inn_night
+	../generate_all_symbols -a 0xd000 dialog_inside_inn_night.lst > dialog_inside_inn_night.inc
+
+
+###
+
 DIALOG_INSIDE.ZX02:	dialog_inside
 	$(ZX02) -f  dialog_inside DIALOG_INSIDE.ZX02
 
@@ -643,6 +659,9 @@ hidden_glen.inc.lookup:	hidden_glen.inc shrink_text
 
 inside_inn.inc.lookup:	inside_inn.inc shrink_text
 	./shrink_text < inside_inn.inc > inside_inn.inc.lookup
+
+inside_inn_night.inc.lookup:	inside_inn_night.inc shrink_text
+	./shrink_text < inside_inn_night.inc > inside_inn_night.inc.lookup
 
 inside_lady.inc.lookup:	inside_lady.inc shrink_text
 	./shrink_text < inside_lady.inc > inside_lady.inc.lookup

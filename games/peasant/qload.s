@@ -38,6 +38,7 @@ which_disk_array:
 .byte 3,3,2,2,2		; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte 2,3,3		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte 5,5		; OUTER2,OUTER3
+.byte 3			; INSIDE_INN_NIGHT
 .byte 2,$FF,5,5		; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte $FF		; disk detect
 
@@ -53,6 +54,7 @@ load_address_array:
 .byte $40,$40,$40,$40,$40	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte $40,$40,$40		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte $40,$40			; OUTER2,OUTER3
+.byte $40			; INSIDE_INN_NIGHT
 .byte >load_buffer,>peasant_sprites_temp,>peasant_sprites_temp,>peasant_sprites_temp
 				; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte >load_buffer		; disk detect
@@ -69,6 +71,7 @@ track_array:
 .byte 19,13,33,23,13	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte 25,21,25		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte 15,17		; OUTER2, OUTER3
+.byte 27		; INSIDE_INN_NIGHT
 .byte  0, 3, 10, 3	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte  0		; disk detect
 
@@ -84,6 +87,7 @@ sector_array:
 .byte  0, 0, 0, 0, 0	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte  0, 0, 0		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte  0, 0		; OUTER2,OUTER3
+.byte  0		; INSIDE_INN_NIGHT
 .byte  12,0,0,0		; SAVE_DATA, PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte  0		; disk detect
 
@@ -99,6 +103,7 @@ length_array:
 .byte  32,32,32,32,32	; NED, WAVY_TREE, KERREK2, LADY_COTTAGE, BURN_TREE
 .byte  32,32,32		; INSIDE_LADY, INSIDE_NED, HIDDEN_GLEN
 .byte  32,32		; OUTER2, OUTER3
+.byte  32		; INSIDE_INN_NIGHT
 .byte   1,16,16,16	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
 .byte   1		; disk detect	; 46
 

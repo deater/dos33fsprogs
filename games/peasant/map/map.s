@@ -360,6 +360,7 @@ head_location_x:
 .byte	36	; 252	; LOCATION_CLIMB	=	30
 .byte	36	; 252	; LOCATION_OUTER2	=	31
 .byte	36	; 252	; LOCATION_OUTER3	=	32
+.byte	31	; 217	; LOCATION_INSIDE_INN_NIGHT=	33
 
 head_location_y:
 .byte	63		; LOCATION_POOR_GARY	=	0
@@ -395,6 +396,7 @@ head_location_y:
 .byte	84		; LOCATION_CLIMB	=	30
 .byte	84		; LOCATION_OUTER2	=	31
 .byte	84		; LOCATION_OUTER3	=	32
+.byte	122		; LOCATION_INSIDE_INN_NIGHT=	33
 
 
 
