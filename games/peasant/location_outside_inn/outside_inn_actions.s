@@ -93,7 +93,15 @@ inn_door_open:
 	and	#FISH_FED
 	beq	inn_open_locked
 
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	inn_open_day
+inn_open_night:
+	lda	#LOCATION_INSIDE_INN_NIGHT
+	bne	inn_open_common		; bra
+inn_open_day:
 	lda	#LOCATION_INSIDE_INN
+inn_open_common:
 	jsr	update_map_location
 
 	ldx	#<outside_inn_door_open_message

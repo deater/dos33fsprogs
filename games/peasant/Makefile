@@ -60,12 +60,12 @@ peasant_disk2.dsk:	QBOOT QLOAD \
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk2.dsk
 	$(DOS33_RAW) peasant_disk2.dsk   0 0  ./wrong_boot/WBOOT2      0   1
 	$(DOS33_RAW) peasant_disk2.dsk   0 12 ./saves/SAVE_DATA  0   1
+	$(DOS33_RAW) peasant_disk2.dsk   1 0 ./location_inside_inn/INSIDE_INN_LOADER          0   0
 	$(DOS33_RAW) peasant_disk2.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk2.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk2.dsk   5 0 ./map/MAP          0   0
 	$(DOS33_RAW) peasant_disk2.dsk   7 0 ./location_knight/KNIGHT_LOADER	  0   0
-	$(DOS33_RAW) peasant_disk2.dsk   9 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
-	$(DOS33_RAW) peasant_disk2.dsk  11 0 ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(DOS33_RAW) peasant_disk2.dsk  10 0 ./location_outside_inn/OUTSIDE_INN_LOADER          0   0
 	$(DOS33_RAW) peasant_disk2.dsk  13 0 ./location_burninated/BURNINATED_LOADER          0   0
 	$(DOS33_RAW) peasant_disk2.dsk  15 0 ./location_waterfall/WATERFALL_LOADER 0   0
 	$(DOS33_RAW) peasant_disk2.dsk  17 0 ./location_yellow_tree/YELLOW_TREE_LOADER 0   0
@@ -208,9 +208,9 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 0 12` ./saves/SAVE_DATA      0   1
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2  1 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  7 0` ./location_knight/KNIGHT_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2  9 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 2 11 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 2 10 0` ./location_outside_inn/OUTSIDE_INN_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 13 0` ./location_burninated/BURNINATED_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 15 0` ./location_waterfall/WATERFALL_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 17 0` ./location_yellow_tree/YELLOW_TREE_LOADER	  0   0

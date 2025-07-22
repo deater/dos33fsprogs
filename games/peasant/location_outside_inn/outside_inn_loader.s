@@ -11,7 +11,10 @@ outside_inn_loader:
 DIALOG_LOCATION=outside_inn_text_zx02
 PRIORITY_LOCATION=inn_priority_zx02
 BG_LOCATION=inn_zx02
+BG_NIGHT_LOCATION=inn_night_zx02
 CORE_LOCATION=outside_inn_core_zx02
+
+LOAD_NIGHT=1
 
 .include "../location_common/loader_common.s"
 
@@ -20,6 +23,7 @@ CORE_LOCATION=outside_inn_core_zx02
 
 
 .include "graphics_outside_inn/inn_graphics.inc"
+.include "graphics_outside_inn/inn_night_graphics.inc"
 .include "graphics_outside_inn/inn_priority.inc"
 
 outside_inn_text_zx02:

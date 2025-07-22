@@ -62,7 +62,9 @@ inside_inn_look_bell_message:
 inside_inn_look_desk_night_message:
 .byte "There's a broken bell and",13
 .byte "a piece of parchment on",13
-.byte "there.",0
+.byte "there.  Oh and a candle.",0
+; note we added candle because to description as bad graphics Apple II
+; can be hard to tell what it is
 
 ; + look candle (night)
 inside_inn_look_candle_night_message:

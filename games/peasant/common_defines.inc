@@ -3,7 +3,7 @@ priority_location		= $400		; 1k
 peasant_sprites_temp		= $6000
 peasant_sprites_location	= $b000		; 4k
 
-priority_temp			= $6000		; 1k
+priority_temp			= $7000		; 1k
 collision_temp			= priority_temp+$400	; 256 bytes
 
 dialog_location			= $d000		; 4k

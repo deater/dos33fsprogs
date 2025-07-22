@@ -14,7 +14,8 @@ outside_inn_loader.o:	outside_inn_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../priority_copy.s \
 		../text/DIALOG_OUTSIDE_INN.ZX02 \
-		graphics_outside_inn/outside_inn_graphics.inc \
+		graphics_outside_inn/inn_graphics.inc \
+		graphics_outside_inn/inn_night_graphics.inc \
 		graphics_outside_inn/outside_inn_priority.inc\
 		../location_common/loader_common.s \
 		OUTSIDE_INN_CORE.zx02

@@ -53,23 +53,11 @@ col_copy_loop:
 	bne	col_copy_loop
 
 
-	;=====================
-	; load bg
-
-	lda	#<BG_LOCATION
-	sta	zx_src_l+1
-	lda	#>BG_LOCATION
-	sta	zx_src_h+1
-
-	lda	#>BACKGROUND_DESTINATION	; load to $6000
-
-	jsr	zx02_full_decomp
-
-
-
 	;========================
 	; Load Core
 	;========================
+	; do this before background
+	; as we might be located above $6000 if the loader is >8k
 
 	lda	#<CORE_LOCATION
 	sta	zx_src_l+1
@@ -80,4 +68,31 @@ col_copy_loop:
 
 	jsr	zx02_full_decomp
 
+
+	;=====================
+	; load bg
+	;=====================
+
+.ifdef LOAD_NIGHT
+	lda	GAME_STATE_1
+	and	#NIGHT
+	beq	load_bg_normal
+
+load_bg_night:
+	lda	#<BG_NIGHT_LOCATION
+	sta	zx_src_l+1
+	lda	#>BG_NIGHT_LOCATION
+	jmp	load_bg_common
+
+.endif
+
+load_bg_normal:
+	lda	#<BG_LOCATION
+	sta	zx_src_l+1
+	lda	#>BG_LOCATION
+load_bg_common:
+	sta	zx_src_h+1
+	lda	#>BACKGROUND_DESTINATION	; load to $6000
+
+	jsr	zx02_full_decomp
 
