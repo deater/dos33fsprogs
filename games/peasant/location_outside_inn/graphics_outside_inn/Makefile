@@ -3,7 +3,7 @@ PNG2HGR = ../../../../utils/hgr-utils/png2hgr
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
-all:	inn_graphics.inc \
+all:	inn_graphics.inc inn_night_graphics.inc \
 	inn_priority.inc
 
 ###
@@ -12,6 +12,11 @@ inn_graphics.inc:	\
 	inn.zx02
 	echo "inn_zx02: .incbin \"inn.zx02\"" > inn_graphics.inc
 
+inn_night_graphics.inc:	\
+	inn_night.zx02
+	echo "inn_night_zx02: .incbin \"inn_night.zx02\"" > inn_night_graphics.inc
+
+
 ###
 
 inn.zx02:	inn.hgr
@@ -19,6 +24,15 @@ inn.zx02:	inn.hgr
 
 inn.hgr:	inn.png
 	$(PNG2HGR) inn.png > inn.hgr
+
+###
+
+inn_night.zx02:	inn_night.hgr
+	$(ZX02) -f inn_night.hgr inn_night.zx02
+
+inn_night.hgr:	inn_night.png
+	$(PNG2HGR) inn_night.png > inn_night.hgr
+
 
 ###
 
@@ -44,6 +58,6 @@ inn_collision.bin:	inn_collision.png
 ####
 
 clean:	
-	rm -f *~ inn_graphics.inc inn_priority.inc \
+	rm -f *~ inn_graphics.inc inn_night_graphics.inc inn_priority.inc \
 		*.bin *.combined *.zx02 *.gr *.hgr
 
