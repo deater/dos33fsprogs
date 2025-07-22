@@ -33,7 +33,7 @@ inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
-		inside_inn_actions.s \
+		inside_inn_actions.s draw_inkeeper.s \
 		../text/DIALOG_INSIDE_INN.ZX02 ../text/dialog_inside_inn.inc \
 		graphics_inside_inn/inside_inn_graphics.inc \
 		graphics_inside_inn/inside_inn_priority.inc \
