@@ -27,8 +27,8 @@ inside_inn_verb_table:
         .word inside_inn_sleep-1
         .byte VERB_OPEN
         .word inside_inn_open-1
-        .byte VERB_LIGHT
-        .word inside_inn_light-1
+;        .byte VERB_LIGHT
+ ;       .word inside_inn_light-1
 	.byte 0
 
 	;=================
@@ -36,11 +36,11 @@ inside_inn_verb_table:
 	;=================
 
 inside_inn_look:
-	lda	GAME_STATE_1
-	and	#NIGHT
-	beq	inside_inn_look_day
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	beq	inside_inn_look_day
 
-	jmp	inside_inn_look_night
+;	jmp	inside_inn_look_night
 
 inside_inn_look_day:
 	lda	CURRENT_NOUN
@@ -141,71 +141,71 @@ inn_look_at_door:
 	jmp	finish_parse_message
 
 
-inside_inn_look_night:
-	lda	CURRENT_NOUN
+;inside_inn_look_night:
+;	lda	CURRENT_NOUN
 
-	cmp	#NOUN_PILLOW
-	beq	inn_look_at_pillow
-	cmp	#NOUN_NOTE
-	beq	inn_look_at_paper
-	cmp	#NOUN_PAPER
-	beq	inn_look_at_paper
-	cmp	#NOUN_PAINTING
-	beq	inn_look_at_painting
-	cmp	#NOUN_DUDE
-	beq	inn_look_at_man_night
-	cmp	#NOUN_GUY
-	beq	inn_look_at_man_night
-	cmp	#NOUN_MAN
-	beq	inn_look_at_man_night
-	cmp	#NOUN_WINDOW
-	beq	inn_look_at_window
-	cmp	#NOUN_PILLOW
-	beq	inn_look_at_pillow
-	cmp	#NOUN_RUG
-	beq	inn_look_at_rug
-	cmp	#NOUN_CARPET
-	beq	inn_look_at_rug
-	cmp	#NOUN_BED
-	beq	inn_look_at_bed
-	cmp	#NOUN_MATTRESS
-	beq	inn_look_at_bed
-	cmp	#NOUN_BELL
-	beq	inn_look_at_bell
-	cmp	#NOUN_DESK
-	beq	inn_look_at_desk
-	cmp	#NOUN_POT
-	beq	inn_look_at_pot_night
+;	cmp	#NOUN_PILLOW
+;	beq	inn_look_at_pillow
+;	cmp	#NOUN_NOTE
+;	beq	inn_look_at_paper
+;	cmp	#NOUN_PAPER
+;	beq	inn_look_at_paper
+;	cmp	#NOUN_PAINTING
+;	beq	inn_look_at_painting
+;	cmp	#NOUN_DUDE
+;	beq	inn_look_at_man_night
+;	cmp	#NOUN_GUY
+;	beq	inn_look_at_man_night
+;	cmp	#NOUN_MAN
+;	beq	inn_look_at_man_night
+;	cmp	#NOUN_WINDOW
+;	beq	inn_look_at_window
+;	cmp	#NOUN_PILLOW
+;	beq	inn_look_at_pillow
+;	cmp	#NOUN_RUG
+;	beq	inn_look_at_rug
+;	cmp	#NOUN_CARPET
+;	beq	inn_look_at_rug
+;	cmp	#NOUN_BED
+;	beq	inn_look_at_bed
+;	cmp	#NOUN_MATTRESS
+;	beq	inn_look_at_bed
+;	cmp	#NOUN_BELL
+;	beq	inn_look_at_bell
+;	cmp	#NOUN_DESK
+;	beq	inn_look_at_desk
+;	cmp	#NOUN_POT
+;	beq	inn_look_at_pot_night
 
-	cmp	#NOUN_NONE
-	beq	inn_look_at_night
+;	cmp	#NOUN_NONE
+;	beq	inn_look_at_night
 
-	jmp	parse_common_look
+;	jmp	parse_common_look
 
-inn_look_at_night:
-	ldx	#<inside_inn_look_night_message
-	ldy	#>inside_inn_look_night_message
-	jmp	finish_parse_message
+;inn_look_at_night:
+;	ldx	#<inside_inn_look_night_message
+;	ldy	#>inside_inn_look_night_message
+;	jmp	finish_parse_message
 
-inn_look_at_man_night:
-	ldx	#<inside_inn_look_man_night_message
-	ldy	#>inside_inn_look_man_night_message
-	jmp	finish_parse_message
+;inn_look_at_man_night:
+;	ldx	#<inside_inn_look_man_night_message
+;	ldy	#>inside_inn_look_man_night_message
+;	jmp	finish_parse_message
 
-inn_look_at_pot_night:
-	ldx	#<inside_inn_look_pot_night_message
-	ldy	#>inside_inn_look_pot_night_message
-	jmp	finish_parse_message
+;inn_look_at_pot_night:
+;	ldx	#<inside_inn_look_pot_night_message
+;	ldy	#>inside_inn_look_pot_night_message
+;	jmp	finish_parse_message
 
-inn_look_at_desk_night:
-	ldx	#<inside_inn_look_desk_night_message
-	ldy	#>inside_inn_look_desk_night_message
-	jmp	finish_parse_message
+;inn_look_at_desk_night:
+;	ldx	#<inside_inn_look_desk_night_message
+;	ldy	#>inside_inn_look_desk_night_message
+;	jmp	finish_parse_message
 
-inn_look_at_candle_night:
-	ldx	#<inside_inn_look_candle_night_message
-	ldy	#>inside_inn_look_candle_night_message
-	jmp	finish_parse_message
+;inn_look_at_candle_night:
+;	ldx	#<inside_inn_look_candle_night_message
+;	ldy	#>inside_inn_look_candle_night_message
+;	jmp	finish_parse_message
 
 
 
@@ -217,9 +217,9 @@ inside_inn_talk:
 
 	; no talking at night
 
-	lda	GAME_STATE_1
-	and	#NIGHT
-	bne	inn_talk_no_one
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	bne	inn_talk_no_one
 
 	lda	CURRENT_NOUN
 
@@ -247,9 +247,9 @@ inside_inn_give:
 
 	; no giving at night
 
-	lda	GAME_STATE_1
-	and	#NIGHT
-	bne	inn_give_no_one
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	bne	inn_give_no_one
 
 	lda	CURRENT_NOUN
 
@@ -327,12 +327,12 @@ inside_inn_get:
 	beq	inn_get_bell
 	cmp	#NOUN_BED
 	beq	inn_get_bed
-	cmp	#NOUN_POT
-	beq	inn_get_pot
-	cmp	#NOUN_GREASE
-	beq	inn_get_grease
-	cmp	#NOUN_CANDLE
-	beq	inn_get_candle
+;	cmp	#NOUN_POT
+;	beq	inn_get_pot
+;	cmp	#NOUN_GREASE
+;	beq	inn_get_grease
+;	cmp	#NOUN_CANDLE
+;	beq	inn_get_candle
 	cmp	#NOUN_RUB
 	beq	inn_get_rub
 
@@ -376,47 +376,47 @@ inn_get_bed:
 	ldy	#>inside_inn_get_bed_message
 	jmp	finish_parse_message
 
-inn_get_pot:
-inn_get_grease:
-	lda	GAME_STATE_1
-	and	#NIGHT
-	bne	inn_do_get_grease
-	jmp	parse_common_get
+;inn_get_pot:
+;inn_get_grease:
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	bne	inn_do_get_grease
+;	jmp	parse_common_get
 
-inn_do_get_grease:
-	lda	GAME_STATE_2
-	and	#GREASE_ON_HEAD
-	beq	inn_finally_get_grease
+;inn_do_get_grease:
+;	lda	GAME_STATE_2
+;	and	#GREASE_ON_HEAD
+;	beq	inn_finally_get_grease
 
-inn_grease_already:
-	ldx	#<inside_inn_grease_already_message
-	ldy	#>inside_inn_grease_already_message
-	jmp	finish_parse_message
+;inn_grease_already:
+;	ldx	#<inside_inn_grease_already_message
+;	ldy	#>inside_inn_grease_already_message
+;	jmp	finish_parse_message
 
-inn_finally_get_grease:
-	ldx	#<inside_inn_get_grease_message
-	ldy	#>inside_inn_get_grease_message
-	jsr	partial_message_step
+;inn_finally_get_grease:
+;	ldx	#<inside_inn_get_grease_message
+;	ldy	#>inside_inn_get_grease_message
+;	jsr	partial_message_step
 
-	lda	#2
-	jsr	score_points
+;	lda	#2
+;	jsr	score_points
 
-	lda	GAME_STATE_2
-	ora	#GREASE_ON_HEAD
-	sta	GAME_STATE_2
+;	lda	GAME_STATE_2
+;	ora	#GREASE_ON_HEAD
+;	sta	GAME_STATE_2
 
-	lda	GAME_STATE_1
-	ora	#POT_ON_HEAD
-	sta	GAME_STATE_1
+;	lda	GAME_STATE_1
+;	ora	#POT_ON_HEAD
+;	sta	GAME_STATE_1
 
-	ldx	#<inside_inn_get_grease_message2
-	ldy	#>inside_inn_get_grease_message2
-	jmp	finish_parse_message
+;	ldx	#<inside_inn_get_grease_message2
+;	ldy	#>inside_inn_get_grease_message2
+;	jmp	finish_parse_message
 
-inn_get_candle:
-	ldx	#<inside_inn_get_candle_message
-	ldy	#>inside_inn_get_candle_message
-	jmp	finish_parse_message
+;inn_get_candle:
+;	ldx	#<inside_inn_get_candle_message
+;	ldy	#>inside_inn_get_candle_message
+;	jmp	finish_parse_message
 
 inn_get_rub:
 	ldx	#<inside_inn_get_rub_message
@@ -498,11 +498,11 @@ inn_get_room_skip_points:
 
 inside_inn_ask:
 
-	lda	GAME_STATE_1
-	and	#NIGHT
-	beq	inn_ask_day
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	beq	inn_ask_day
 
-	jmp	parse_common_ask
+;	jmp	parse_common_ask
 
 inn_ask_day:
 
@@ -574,9 +574,9 @@ inn_ring_bell:
 
 inside_inn_sleep:
 
-	lda	GAME_STATE_1
-	and	#NIGHT
-	bne	inn_sleep_no_one
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	bne	inn_sleep_no_one
 
 	lda	CURRENT_NOUN
 
@@ -615,23 +615,23 @@ inn_open_door:
 	; light
 	;=================
 
-inside_inn_light:
+;inside_inn_light:
 
-	lda	GAME_STATE_1
-	and	#NIGHT
-	beq	inn_light_day
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	beq	inn_light_day
 
-	lda	CURRENT_NOUN
+;	lda	CURRENT_NOUN
 
-	cmp	#NOUN_CANDLE
-	beq	inn_light_candle
-inn_light_day:
-	jmp	parse_common_unknown
+;	cmp	#NOUN_CANDLE
+;	beq	inn_light_candle
+;inn_light_day:
+;	jmp	parse_common_unknown
 
-inn_light_candle:
-	ldx	#<inside_inn_get_candle_message
-	ldy	#>inside_inn_get_candle_message
-	jmp	finish_parse_message
+;inn_light_candle:
+;	ldx	#<inside_inn_get_candle_message
+;	ldy	#>inside_inn_get_candle_message
+;	jmp	finish_parse_message
 
 
 .include "../text/dialog_inside_inn.inc"

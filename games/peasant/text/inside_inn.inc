@@ -1,8 +1,8 @@
-inn_dialog_start:
+inside_inn_dialog_start:
 
-;==================
-; Inside Giant Inn
-;==================
+;=======================
+; Inside Giant Inn (Day)
+;=======================
 
 ; + look (day)
 inside_inn_look_message:
@@ -13,11 +13,11 @@ inside_inn_look_message:
 .byte "that's closed.",0
 
 ; + look (night)
-inside_inn_look_night_message:
-.byte "It's still dark out. The",13
-.byte "grimey old Innkeeper is",13
-.byte "gone and he left the",13
-.byte "pantry open.",0
+;inside_inn_look_night_message:
+;.byte "It's still dark out. The",13
+;.byte "grimey old Innkeeper is",13
+;.byte "gone and he left the",13
+;.byte "pantry open.",0
 
 ; + look window (day/night)
 inside_inn_look_window_message:
@@ -32,8 +32,8 @@ inside_inn_look_man_message:
 .byte "are nose hairs. Grody.",0
 
 ; + look man (night)		not in wiki?
-inside_inn_look_man_night_message:
-.byte "He gone.",0
+;inside_inn_look_man_night_message:
+;.byte "He gone.",0
 
 ; + look painting (day/night)
 inside_inn_look_painting_message:
@@ -53,9 +53,9 @@ inside_inn_look_pillow_message:
 .byte "head on that nasty pillow.",0
 
 ; + look pot (night)
-inside_inn_look_pot_night_message:
-.byte "It's full of horse grease.",13
-.byte "I guess that sounds useful.",0
+;inside_inn_look_pot_night_message:
+;.byte "It's full of horse grease.",13
+;.byte "I guess that sounds useful.",0
 
 ; + look rug (day/night)
 inside_inn_look_rug_message:
@@ -81,15 +81,15 @@ inside_inn_look_desk_message:
 .byte "guy behind it.",0
 
 ; + look desk (night)
-inside_inn_look_desk_night_message:
-.byte "There's a broken bell and",13
-.byte "a piece of parchment on",13
-.byte "there.",0
+;inside_inn_look_desk_night_message:
+;.byte "There's a broken bell and",13
+;.byte "a piece of parchment on",13
+;.byte "there.",0
 
 ; + look candle (night)
-inside_inn_look_candle_night_message:
-.byte "That candle's not at all on",13
-.byte "fire.",0
+;inside_inn_look_candle_night_message:
+;.byte "That candle's not at all on",13
+;.byte "fire.",0
 
 ; + look/open door (day)
 inside_inn_open_door_message:
@@ -201,7 +201,7 @@ inside_inn_get_rug_message:
 .byte "thing. Too many",13
 .byte "questionable stains on it.",0
 
-; + get doing-sproings (day/night)
+; + get doing-sproings (day)
 inside_inn_get_doing_message:
 .byte "That's the worst thing",13
 .byte "anyone has ever tried to",13
@@ -222,33 +222,33 @@ inside_inn_get_bell_message:
 
 ; +2 POINTS
 ; + get/take/steal pot/grease (night)
-inside_inn_get_grease_message:
-.byte "You reach way up to the top",13
-.byte "shelf.",0
+;inside_inn_get_grease_message:
+;.byte "You reach way up to the top",13
+;.byte "shelf.",0
 
 ; points actually happen here
 ; falls on your head
 
-inside_inn_get_grease_message2:
-.byte "Oh great! Now you can't see",13
-.byte "a thing and your head is",13
-.byte "covered in highly",13
-.byte "flammable horse grease.",13
-.byte "You better get out of here",13
-.byte "before that disgusting old",13
-.byte "man comes back.",0
+;inside_inn_get_grease_message2:
+;.byte "Oh great! Now you can't see",13
+;.byte "a thing and your head is",13
+;.byte "covered in highly",13
+;.byte "flammable horse grease.",13
+;.byte "You better get out of here",13
+;.byte "before that disgusting old",13
+;.byte "man comes back.",0
 
 ; + get pot/grease (at night, already have it)
-inside_inn_grease_already_message:
-.byte "You already have a nice",13
-.byte "greasy swab of it on the",13
-.byte "corner of your hood.",0
+;inside_inn_grease_already_message:
+;.byte "You already have a nice",13
+;.byte "greasy swab of it on the",13
+;.byte "corner of your hood.",0
 
 ; + get/light candle (night)
-inside_inn_get_candle_message:
-.byte "It seems like you should be",13
-.byte "able to do that, doesn't",13
-.byte "it? Sorry. No dice.",0
+;inside_inn_get_candle_message:
+;.byte "It seems like you should be",13
+;.byte "able to do that, doesn't",13
+;.byte "it? Sorry. No dice.",0
 
 ; + get old man rub (day/night) (after getting pills?)
 inside_inn_get_rub_message:
@@ -318,7 +318,7 @@ inside_inn_ring_bell_message:
 
 
 
-inn_dialog_end:
+inside_inn_dialog_end:
 
-.assert (>inn_dialog_end - >inn_dialog_start) < $1E , error, "inn dialog too big"
+.assert (>inside_inn_dialog_end - >inside_inn_dialog_start) < $1E , error, "inside inn dialog too big"
 

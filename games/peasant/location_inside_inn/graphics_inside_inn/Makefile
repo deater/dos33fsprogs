@@ -9,9 +9,8 @@ all:	inside_inn_graphics.inc \
 ###
 
 inside_inn_graphics.inc:	\
-	inside_inn.zx02 inside_inn_night.zx02
+	inside_inn.zx02
 	echo "inside_inn_zx02: .incbin \"inside_inn.zx02\"" > inside_inn_graphics.inc
-#	echo "inside_inn_night_zx02: .incbin \"inside_inn_night.zx02\"" >> inside_inn_graphics.inc
 
 ###
 
