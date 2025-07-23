@@ -11,7 +11,10 @@ knight_loader:
 DIALOG_LOCATION=knight_text_zx02
 PRIORITY_LOCATION=knight_priority_zx02
 BG_LOCATION=knight_zx02
+BG_NIGHT_LOCATION=knight_night_zx02
 CORE_LOCATION=knight_core_zx02
+
+LOAD_NIGHT = 1
 
 .include "../location_common/loader_common.s"
 
@@ -20,6 +23,7 @@ CORE_LOCATION=knight_core_zx02
 
 
 .include "graphics_knight/knight_graphics.inc"
+.include "graphics_knight/knight_night_graphics.inc"
 .include "graphics_knight/knight_priority.inc"
 
 knight_text_zx02:

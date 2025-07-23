@@ -15,6 +15,7 @@ knight_loader.o:	knight_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_KNIGHT.ZX02 \
 		graphics_knight/knight_graphics.inc \
+		graphics_knight/knight_night_graphics.inc \
 		graphics_knight/knight_priority.inc\
 		../location_common/loader_common.s \
 		KNIGHT_CORE.zx02
