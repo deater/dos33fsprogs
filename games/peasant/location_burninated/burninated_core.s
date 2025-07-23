@@ -155,9 +155,10 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "burninated_actions.s"
+.include "draw_flame.s"
 
 .include "../hgr_routines/hgr_sprite.s"
-
+.include "sprites_burninated/flame_sprites.inc"
 
 
 	;=======================
@@ -170,6 +171,10 @@ update_screen:
 
 	jsr	hgr_copy_faster
 
+	;=====================
+	; draw flame
+
+	jsr	draw_flame
 
 	;=====================
 	; always draw peasant

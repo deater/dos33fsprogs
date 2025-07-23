@@ -42,7 +42,7 @@ brothers_core.o:	brothers_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		brothers_actions.s \
+		brothers_actions.s draw_brothers.s \
 		../text/DIALOG_BROTHERS.ZX02 ../text/dialog_brothers.inc \
 		graphics_brothers/brothers_graphics.inc \
 		sprites_brothers/archery_sprites.inc
