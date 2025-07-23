@@ -15,6 +15,7 @@ lady_cottage_loader.o:	lady_cottage_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_LADY_COTTAGE.ZX02 \
 		graphics_lady_cottage/lady_cottage_graphics.inc \
+		graphics_lady_cottage/lady_cottage_night_graphics.inc \
 		graphics_lady_cottage/lady_cottage_priority.inc \
 		../location_common/loader_common.s \
 		LADY_COTTAGE_CORE.zx02

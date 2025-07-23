@@ -4,6 +4,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	lady_cottage_graphics.inc \
+	lady_cottage_night_graphics.inc \
 	lady_cottage_priority.inc
 
 ###
@@ -12,6 +13,11 @@ lady_cottage_graphics.inc:	\
 	lady_cottage.zx02
 	echo "lady_cottage_zx02: .incbin \"lady_cottage.zx02\"" > lady_cottage_graphics.inc
 
+lady_cottage_night_graphics.inc:	\
+	lady_cottage_night.zx02
+	echo "lady_cottage_night_zx02: .incbin \"lady_cottage_night.zx02\"" > lady_cottage_night_graphics.inc
+
+
 ###
 
 lady_cottage.zx02:	lady_cottage.hgr
@@ -19,6 +25,15 @@ lady_cottage.zx02:	lady_cottage.hgr
 
 lady_cottage.hgr:	lady_cottage.png
 	$(PNG2HGR) lady_cottage.png > lady_cottage.hgr
+
+###
+
+lady_cottage_night.zx02:	lady_cottage_night.hgr
+	$(ZX02) -f lady_cottage_night.hgr lady_cottage_night.zx02
+
+lady_cottage_night.hgr:	lady_cottage_night.png
+	$(PNG2HGR) lady_cottage_night.png > lady_cottage_night.hgr
+
 
 ###
 
@@ -44,6 +59,7 @@ lady_cottage_collision.bin:	lady_cottage_collision.png
 ####
 
 clean:	
-	rm -f *~ lady_cottage_graphics.inc lady_cottage_priority.inc \
+	rm -f *~ lady_cottage_graphics.inc lady_cottage_night_graphics.inc \
+		lady_cottage_priority.inc \
 		*.bin *.combined *.zx02 *.gr *.hgr
 
