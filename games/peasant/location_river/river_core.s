@@ -110,6 +110,7 @@ really_level_over:
 
 .include "animate_river.s"
 .include "sprites_river/river_current_sprites.inc"
+.include "sprites_river/river_night_sprites.inc"
 
 	;==========================
 	; update screen

@@ -40,6 +40,7 @@ river_core.o:	river_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait_a_bit.s borders.s \
 		animate_river.s \
 		sprites_river/river_current_sprites.inc \
+		sprites_river/river_night_sprites.inc \
 		river_actions.s
 	ca65 -o river_core.o river_core.s -l river_core.lst
 
