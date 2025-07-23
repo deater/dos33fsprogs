@@ -19,6 +19,11 @@ yellow_tree_core:
 	ora	#MAP_YELLOW_TREE
 	sta	VISITED_0
 
+	;=============================
+	; if it's night, end it
+
+.include "../location_common/end_night.s"
+
 
 	;====================================================
 	; clear the keyboard in case we were holding it down

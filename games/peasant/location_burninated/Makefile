@@ -35,11 +35,12 @@ burninated_core.o:	burninated_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
+		sprites_burninated/flame_sprites.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
-		burninated_actions.s
+		burninated_actions.s draw_flame.s
 	ca65 -o burninated_core.o burninated_core.s -l burninated_core.lst
 
 
@@ -48,7 +49,7 @@ burninated_core.o:	burninated_core.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_burninated/crooked_tree_graphics.inc:
 	cd graphics_burninated && make
 
-sprites_burninated/crooked_tree_sprites.inc:
+sprites_burninated/flame_sprites.inc:
 	cd sprites_burninated && make
 
 ###
@@ -56,7 +57,7 @@ sprites_burninated/crooked_tree_sprites.inc:
 distclean:
 	make clean
 	cd graphics_burninated && make clean
-
+	cd sprites_burninated && make clean
 ###
 
 clean:	

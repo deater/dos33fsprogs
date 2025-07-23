@@ -34,6 +34,13 @@ kerrek2_core:
 	sta	VISITED_3
 
 
+	;=============================
+	; if it's night, end it
+
+.include "../location_common/end_night.s"
+
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
