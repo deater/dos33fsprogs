@@ -26,6 +26,13 @@ lake_west_core:
 	ora	#MAP_LAKE_WEST
 	sta	VISITED_2
 
+
+	;=============================
+	; if it's night, end it
+
+.include "../location_common/end_night.s"
+
+
         ;====================================================
         ; clear the keyboard in case we were holding it down
 

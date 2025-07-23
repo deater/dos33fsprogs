@@ -14,8 +14,9 @@ lake_east_loader.o:	lake_east_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../priority_copy.s \
 		../text/DIALOG_LAKE_EAST.ZX02 \
-		graphics_lake_east/lake_east_graphics.inc \
-		graphics_lake_east/lake_east_priority.inc\
+		graphics_lake_east/lake_e_graphics.inc \
+		graphics_lake_east/lake_e_night_graphics.inc \
+		graphics_lake_east/lake_e_priority.inc\
 		../location_common/loader_common.s \
 		LAKE_EAST_CORE.zx02
 	ca65 -o lake_east_loader.o lake_east_loader.s -l lake_east_loader.lst
@@ -36,7 +37,9 @@ lake_east_core.o:	lake_east_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
-		sprites_lake_east/lake_east_sprites.inc \
+		sprites_lake_east/boat_sprites.inc \
+		sprites_lake_east/boat_sprites_fish.inc \
+		sprites_lake_east/bubble_sprites_e.inc \
 		sprites_lake_east/throw_sprites.inc \
 		../wait_a_bit.s borders.s \
 		lake_east_actions.s
@@ -45,13 +48,13 @@ lake_east_core.o:	lake_east_core.s ../zp.inc ../hardware.inc ../qload.inc \
 
 ###
 
-graphics_lake_east/lake_east_graphics.inc:
+graphics_lake_east/lake_e_graphics.inc:
 	cd graphics_lake_east && make
 
-graphics_lake_east/lake_east_priority.inc:
+graphics_lake_east/lake_e_priority.inc:
 	cd graphics_lake_east && make
 
-sprites_lake_east/lake_east_sprites.inc:
+sprites_lake_east/boat_sprites.inc:
 	cd sprites_lake_east && make
 
 ###

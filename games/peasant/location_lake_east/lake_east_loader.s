@@ -11,7 +11,10 @@ lake_east_loader:
 DIALOG_LOCATION=lake_east_text_zx02
 PRIORITY_LOCATION=lake_e_priority_zx02
 BG_LOCATION=lake_e_zx02
+BG_NIGHT_LOCATION=lake_e_night_zx02
 CORE_LOCATION=lake_east_core_zx02
+
+LOAD_NIGHT = 1
 
 .include "../location_common/loader_common.s"
 
@@ -20,6 +23,7 @@ CORE_LOCATION=lake_east_core_zx02
 
 
 .include "graphics_lake_east/lake_e_graphics.inc"
+.include "graphics_lake_east/lake_e_night_graphics.inc"
 .include "graphics_lake_east/lake_e_priority.inc"
 
 lake_east_text_zx02:
