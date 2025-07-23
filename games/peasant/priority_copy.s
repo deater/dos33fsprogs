@@ -8,7 +8,7 @@
 
 priority_copy:
 
-	ldy	#119		; for early ones, copy 120 bytes	; 2
+	ldy	#119		; preserve memory holes		; 2
 
 gr_copy_line:
 	lda	priority_temp,Y		; load a byte			; 4
@@ -32,7 +32,7 @@ gr_copy_line:
 	lda	priority_temp+$300,Y	; load a byte			; 4
 	sta	$700,Y			; store a byte			; 5
 
-	lda	priority_temp+$380	; load a byte			; 4
+	lda	priority_temp+$380,Y	; load a byte			; 4
 	sta	$780,Y			; store a byte			; 5
 
 	dey			; decrement pointer			; 2

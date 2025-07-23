@@ -17,10 +17,9 @@ hay_blown_away_message:
 .byte "you're no longer in stealth",13
 .byte "mode.",0
 
-; TODO
 ; when it's night
-; after you've walked through (???) screens?
-; unclear how this works
+; and you walk out of range
+night_over_message:
 .byte "Man, screens sure get light",13
 .byte "fast around here.",0
 

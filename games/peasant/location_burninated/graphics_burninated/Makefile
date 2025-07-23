@@ -4,6 +4,7 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	crooked_tree_graphics.inc \
+	crooked_tree_night_graphics.inc \
 	crooked_tree_priority.inc
 
 ###
@@ -12,6 +13,11 @@ crooked_tree_graphics.inc:	\
 	crooked_tree.zx02
 	echo "crooked_tree_zx02: .incbin \"crooked_tree.zx02\"" > crooked_tree_graphics.inc
 
+crooked_tree_night_graphics.inc:	\
+	crooked_tree_night.zx02
+	echo "crooked_tree_night_zx02: .incbin \"crooked_tree_night.zx02\"" > crooked_tree_night_graphics.inc
+
+
 ###
 
 crooked_tree.zx02:	crooked_tree.hgr
@@ -19,6 +25,15 @@ crooked_tree.zx02:	crooked_tree.hgr
 
 crooked_tree.hgr:	crooked_tree.png
 	$(PNG2HGR) crooked_tree.png > crooked_tree.hgr
+
+###
+
+crooked_tree_night.zx02:	crooked_tree_night.hgr
+	$(ZX02) -f crooked_tree_night.hgr crooked_tree_night.zx02
+
+crooked_tree_night.hgr:	crooked_tree_night.png
+	$(PNG2HGR) crooked_tree_night.png > crooked_tree_night.hgr
+
 
 ###
 
@@ -44,6 +59,7 @@ crooked_tree_collision.bin:	crooked_tree_collision.png
 ####
 
 clean:	
-	rm -f *~ crooked_tree_graphics.inc crooked_tree_priority.inc \
+	rm -f *~ crooked_tree_graphics.inc crooked_tree_night_graphics.inc \
+		crooked_tree_priority.inc \
 		*.bin *.combined *.zx02 *.gr *.hgr
 

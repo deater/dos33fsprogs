@@ -16,6 +16,7 @@ burninated_loader.o:	burninated_loader.s \
 		../text/DIALOG_BURNINATED_TREE.ZX02 \
 		graphics_burninated/crooked_tree_graphics.inc \
 		graphics_burninated/crooked_tree_priority.inc\
+		graphics_burninated/crooked_tree_night_graphics.inc \
 		../location_common/loader_common.s \
 		BURNINATED_CORE.zx02
 	ca65 -o burninated_loader.o burninated_loader.s -l burninated_loader.lst

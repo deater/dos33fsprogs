@@ -22,6 +22,12 @@ waterfall_core:
 	sta	VISITED_0
 
 
+	;=============================
+	; if it's night, end it
+
+.include "../location_common/end_night.s"
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 

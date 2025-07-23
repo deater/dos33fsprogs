@@ -606,6 +606,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s get_noun_again parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s parse_input_smc parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s hay_blown_away_message parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s night_over_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s print_text_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s restore_parse_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s update_screen_smc parse_input.lst >> parse_input.inc
