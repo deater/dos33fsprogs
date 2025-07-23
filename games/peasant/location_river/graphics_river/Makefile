@@ -3,7 +3,7 @@ PNG2HGR = ../../../../utils/hgr-utils/png2hgr
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
-all:	river_graphics.inc \
+all:	river_graphics.inc river_night_graphics.inc \
 	river_priority.inc
 
 ###
@@ -12,6 +12,11 @@ river_graphics.inc:	\
 	river.zx02
 	echo "river_zx02: .incbin \"river.zx02\"" > river_graphics.inc
 
+river_night_graphics.inc:	\
+	river_night.zx02
+	echo "river_night_zx02: .incbin \"river_night.zx02\"" > river_night_graphics.inc
+
+
 ###
 
 river.zx02:	river.hgr
@@ -19,6 +24,15 @@ river.zx02:	river.hgr
 
 river.hgr:	river.png
 	$(PNG2HGR) river.png > river.hgr
+
+###
+
+river_night.zx02:	river_night.hgr
+	$(ZX02) -f river_night.hgr river_night.zx02
+
+river_night.hgr:	river_night.png
+	$(PNG2HGR) river_night.png > river_night.hgr
+
 
 ###
 
@@ -44,6 +58,7 @@ river_collision.bin:	river_collision.png
 ####
 
 clean:	
-	rm -f *~ river_graphics.inc river_priority.inc \
+	rm -f *~ river_graphics.inc river_night_graphics.inc \
+		river_priority.inc \
 		*.bin *.combined *.zx02 *.gr *.hgr
 

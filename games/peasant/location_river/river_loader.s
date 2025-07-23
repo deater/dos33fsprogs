@@ -11,16 +11,17 @@ river_loader:
 DIALOG_LOCATION = river_text_zx02
 PRIORITY_LOCATION = river_priority_zx02
 BG_LOCATION = river_zx02
+BG_NIGHT_LOCATION = river_night_zx02
 CORE_LOCATION = river_core_zx02
+
+LOAD_NIGHT = 1
 
 .include "../location_common/loader_common.s"
 
 	jmp	$8000
 
-robe_sprite_data:
-        .incbin "../sprites_peasant/robe_sprites.zx02"
-
 .include "graphics_river/river_graphics.inc"
+.include "graphics_river/river_night_graphics.inc"
 .include "graphics_river/river_priority.inc"
 
 river_text_zx02:

@@ -15,6 +15,7 @@ river_loader.o:	river_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_RIVER.ZX02 \
 		graphics_river/river_graphics.inc \
+		graphics_river/river_night_graphics.inc \
 		graphics_river/river_priority.inc\
 		../location_common/loader_common.s \
 		RIVER_CORE.zx02

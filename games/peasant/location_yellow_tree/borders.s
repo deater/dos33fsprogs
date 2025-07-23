@@ -8,9 +8,13 @@ check_south:
 
 	;=====================
 	; check going east
-	;	yellow_tree->wterfall
+	;	yellow_tree->waterfall
 
 check_east:
+	lda	PEASANT_Y	; OK if at bottom of river
+	cmp	#$90
+	bcs	east_fine
+
 
 	; possible to get caught on edge of river
 
