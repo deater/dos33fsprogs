@@ -453,12 +453,44 @@ inn_get_room_have_room_day:
 	and	#ON_FIRE	; check if on fire
 	bne	inn_get_room_on_fire
 
+
+	;=====================================
+	; actually getting room
+	;=====================================
+
+	; print "OK Youngster Message"
+
 	ldx	#<inside_inn_get_room_message
 	ldy	#>inside_inn_get_room_message
 	jsr	partial_message_step
 
+	; walk to bed
+
+	ldx	#33		; 231/7=33
+	ldy	#95
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
+
+	;==========================
+	; Make it night
+	lda	GAME_STATE_1
+	ora	#(NIGHT|ALREADY_GOT_ROOM)
+	sta	GAME_STATE_1
+
+	lda	GAME_STATE_3
+	ora	#(ASLEEP)
+	sta	GAME_STATE_3
+
+	;==========================
+	; do wipe effect
+
+
+	;===========================
 	; add 3 points to score
 	; only do this once though
+	;	(this happens just before message)
 
 	lda	GAME_STATE_1
 	and	#ALREADY_GOT_ROOM
@@ -468,10 +500,11 @@ inn_get_room_have_room_day:
 	jsr	score_points
 inn_get_room_skip_points:
 
-	; Make it night
-	lda	GAME_STATE_1
-	ora	#(NIGHT|ALREADY_GOT_ROOM)
-	sta	GAME_STATE_1
+	;=================================
+	; night falls like powerpoint...
+	ldx	#<inside_inn_get_room2_message
+	ldy	#>inside_inn_get_room2_message
+	jsr	partial_message_step
 
 	;=====================
         ;  transition to night
@@ -480,16 +513,12 @@ inn_get_room_skip_points:
 	jsr	update_map_location
 
 
-	; night falls like powerpoint...
-	ldx	#<inside_inn_get_room2_message
-	ldy	#>inside_inn_get_room2_message
-	jsr	partial_message_step
-
 	; what an uncomfortable bed...
-	ldx	#<inside_inn_get_room3_message
-	ldy	#>inside_inn_get_room3_message
-	jmp	finish_parse_message
+;	ldx	#<inside_inn_get_room3_message
+;	ldy	#>inside_inn_get_room3_message
+;	jmp	finish_parse_message
 
+	rts
 
 
 	;=================

@@ -213,6 +213,7 @@ GAME_STATE_3	= $99
 ;	SWORD_THROWN	= $01
 	CLIFF_CLIMBED	= $02
 	KNIGHT_MOVED	= $04
+	ASLEEP		= $08
 
 NED_STATUS	= $9A
 	; 0 = hiding (no increment)

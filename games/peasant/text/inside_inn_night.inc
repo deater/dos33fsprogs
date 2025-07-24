@@ -129,6 +129,13 @@ inside_inn_grease_already_message:
 .byte "greasy swab of it on the",13
 .byte "corner of your hood.",0
 
+inside_inn_get_room3_message:
+.byte "What an uncomfortable bed!",13
+.byte "You sleep for maybe 20",13
+.byte "minutes before the extreme",13
+.byte "pain in your spine forces",13
+.byte "you to get up.",0
+
 ; + get/light candle (night)
 inside_inn_get_candle_message:
 .byte "It seems like you should be",13

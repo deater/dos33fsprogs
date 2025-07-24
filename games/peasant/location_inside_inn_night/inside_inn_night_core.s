@@ -19,6 +19,47 @@ inside_inn_core:
 
 	bit	KEYRESET
 
+
+	;======================================
+	; sepcial case coming in from sleeping
+
+	lda	GAME_STATE_3
+	and	#ASLEEP
+	beq	not_asleep
+
+
+	;====================================
+	; do wipe in reverse
+
+	; peasant is on bed facing up
+	; roll around a bit
+
+	jsr	roll_in_bed
+
+	; UP->LEFT_>UP->RIGHT->up->left->up
+
+	; gets out of bed and stands, facing left
+
+	ldx	#30
+	stx	PEASANT_X
+	ldy	#95
+	sty	PEASANT_Y
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
+
+	; what an uncomfortable bed...
+	ldx	#<inside_inn_get_room3_message
+	ldy	#>inside_inn_get_room3_message
+	jsr	finish_parse_message
+
+	; wake up
+
+	lda	GAME_STATE_3
+	and	#<(~ASLEEP)
+	sta	GAME_STATE_3
+
+not_asleep:
+
 	;===========================
 	;===========================
 	;===========================
@@ -125,7 +166,7 @@ really_level_over:
 ;.include "draw_inkeeper.s"
 
 .include "../hgr_routines/hgr_sprite.s"
-;.include "sprites_inside_inn/keeper_sprites.inc"
+.include "sprites_inside_inn_night/sleep_sprites.inc"
 
 
 	;==========================
@@ -142,9 +183,81 @@ update_screen:
 	;========================
 	; always draw the peasant
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	done_suppress_peasant
+
 	jsr	draw_peasant
+done_suppress_peasant:
 
 	rts
 
 
+	;==============================
+	;==============================
+	; roll in bed
+	;==============================
+	;==============================
+roll_in_bed:
+	; UP->LEFT_>UP->RIGHT->up->left->up
 
+	lda	#0
+	sta	FRAME
+
+	lda	#SUPPRESS_PEASANT
+	sta	SUPPRESS_DRAWING
+
+roll_in_bed_loop:
+
+	;========================
+	; update screen
+
+	jsr	update_screen
+
+	;=========================
+	; draw peasant
+
+	lda	FRAME
+	lsr
+	lsr
+	lsr	; slow down a bit
+	tay
+
+	ldx	roll_in_bed_pattern,Y
+	bmi	done_peasant_sleep
+
+	lda	sleep_sprite_l,X
+	sta	INL
+	lda	sleep_sprite_h,X
+	sta	INH
+
+        lda	#32			; 224/7 = 32
+        sta     CURSOR_X
+        lda     #131
+        sta     CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	jsr	hgr_page_flip
+
+	inc	FRAME
+
+	jmp	roll_in_bed_loop
+
+done_peasant_sleep:
+
+	lda	#0
+	sta	SUPPRESS_DRAWING
+
+	rts
+
+
+roll_in_bed_pattern:
+	.byte 0,1,0,2,0,1,0,$FF
+
+
+sleep_sprite_l:
+	.byte <sleep0,<sleep1,<sleep2
+
+sleep_sprite_h:
+	.byte >sleep0,>sleep1,>sleep2

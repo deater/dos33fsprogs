@@ -167,12 +167,12 @@ inside_inn_get_room2_message:
 ; un-transition
 ; rolling around
 
-inside_inn_get_room3_message:
-.byte "What an uncomfortable bed!",13
-.byte "You sleep for maybe 20",13
-.byte "minutes before the extreme",13
-.byte "pain in your spine forces",13
-.byte "you to get up.",0
+;inside_inn_get_room3_message:
+;.byte "What an uncomfortable bed!",13
+;.byte "You sleep for maybe 20",13
+;.byte "minutes before the extreme",13
+;.byte "pain in your spine forces",13
+;.byte "you to get up.",0
 
 ; + get a room (when on fire)
 inside_inn_get_room_on_fire_message:
