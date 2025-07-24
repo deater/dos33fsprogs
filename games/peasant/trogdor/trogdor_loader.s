@@ -10,14 +10,15 @@ trogdor_loader:
 
 DIALOG_LOCATION=trogdor_text_zx02
 PRIORITY_LOCATION=trogdor_priority_zx02
-BG_LOCATION=trogdor_cave_zx02
+BG_LOCATION=trogdor_sleep_zx02
 CORE_LOCATION=trogdor_core_zx02
 
 .include "../location_common/loader_common.s"
 
 	jmp     $8000
 
-.include "graphics_trogdor/trogdor_bg.inc"
+;.include "graphics_trogdor/trogdor_bg.inc"
+.include "graphics_trogdor/trogdor_sleep.inc"
 .include "graphics_trogdor/trogdor_priority.inc"
 
 trogdor_text_zx02:

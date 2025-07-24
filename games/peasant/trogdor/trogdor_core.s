@@ -175,7 +175,7 @@ draw_sprite_h:
 ;.include "graphics_trogdor/trogdor_graphics.inc"
 ;.include "graphics_trogdor/priority_trogdor.inc"
 
-.include "sprites/trogdor_sprites.inc"
+.include "sprites_trogdor/trogdor_sprites.inc"
 
 .if 0
 map_backgrounds_low:

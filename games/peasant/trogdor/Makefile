@@ -15,7 +15,7 @@ trogdor_loader.o:	trogdor_loader.s \
 		../priority_copy.s \
 		../text/DIALOG_TROGDOR.ZX02 \
 		graphics_trogdor/trogdor_bg.inc \
-		sprites/trogdor_sprites.inc \
+		sprites_trogdor/trogdor_sprites.inc \
 		TROGDOR_CORE.zx02
 	ca65 -o trogdor_loader.o trogdor_loader.s -l trogdor_loader.lst
 
@@ -45,15 +45,15 @@ graphics_trogdor/trogdor_bg.inc:
 graphics_trogdor/trogdor_graphics.inc:
 	cd graphics_trogdor && make
 
-sprites/trogdor_sprites.inc:
-	cd sprites && make
+sprites_trogdor/trogdor_sprites.inc:
+	cd sprites_trogdor && make
 
 #####
 
 distclean:
 	make clean
 	cd graphics_trogdor && make clean
-	cd sprites && make clean
+	cd sprites_trogdor && make clean
 ###
 
 clean:	

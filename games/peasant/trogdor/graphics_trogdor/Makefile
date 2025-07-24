@@ -5,7 +5,12 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 
 all:	trogdor_graphics.inc \
 	trogdor_bg.inc \
+	trogdor_sleep.inc \
 	trogdor_priority.inc
+
+trogdor_sleep.inc:	\
+	trogdor_sleep.zx02
+	echo "trogdor_sleep_zx02: .incbin \"trogdor_sleep.zx02\"" > trogdor_sleep.inc
 
 trogdor_bg.inc:	\
 	trogdor_cave.zx02
@@ -14,12 +19,11 @@ trogdor_bg.inc:	\
 trogdor_graphics.inc:	\
 	trogdor_open.zx02 \
 	trogdor_flame1.zx02 \
-	trogdor_flame2.zx02 \
-	trogdor_sleep.zx02
+	trogdor_flame2.zx02
 	echo "trogdor_open_zx02: .incbin \"trogdor_open.zx02\"" > trogdor_graphics.inc
 	echo "trogdor_flame1_zx02: .incbin \"trogdor_flame1.zx02\"" >> trogdor_graphics.inc
 	echo "trogdor_flame2_zx02: .incbin \"trogdor_flame2.zx02\"" >> trogdor_graphics.inc
-	echo "trogdor_sleep_zx02: .incbin \"trogdor_sleep.zx02\"" >> trogdor_graphics.inc
+
 
 ###
 
@@ -79,5 +83,6 @@ trogdor_priority.gr:	trogdor_priority.png
 
 
 clean:	
-	rm -f *~ trogdor_bg.inc trogdor_graphics.inc trogdor_priority.inc *.zx02 *.gr *.hgr
+	rm -f *~ trogdor_bg.inc trogdor_graphics.inc \
+		trogdor_sleep.inc trogdor_priority.inc *.zx02 *.gr *.hgr
 
