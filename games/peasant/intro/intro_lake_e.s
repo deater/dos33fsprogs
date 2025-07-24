@@ -30,7 +30,7 @@ intro_lake_east:
 	lda	#>lake_e_priority_zx02
 	sta	zx_src_h+1
 
-	lda	#$60			; temporarily load to $6000
+	lda	#>priority_temp		; temporarily load to $7000
 
 	jsr	zx02_full_decomp
 
