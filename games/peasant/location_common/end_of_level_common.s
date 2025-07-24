@@ -3,10 +3,18 @@
 	;==========================================================
 	; be sure on DRAW_PAGE=$20 when leaving as we load to PAGE2
 
+	; HACK!  skip if sleeping (wiped)
+
 	lda	DRAW_PAGE
 	bne	on_proper_page
 
+	lda	GAME_STATE_3
+	and	#ASLEEP
+	bne	skip_last_update
+
 	jsr	update_screen
+skip_last_update:
+
 	jsr	hgr_page_flip
 
 on_proper_page:

@@ -21,7 +21,7 @@ inside_inn_core:
 
 
 	;======================================
-	; sepcial case coming in from sleeping
+	; special case coming in from sleeping
 
 	lda	GAME_STATE_3
 	and	#ASLEEP
@@ -40,9 +40,9 @@ inside_inn_core:
 
 	; gets out of bed and stands, facing left
 
-	ldx	#30
+	ldx	#32
 	stx	PEASANT_X
-	ldy	#95
+	ldy	#98
 	sty	PEASANT_Y
 	lda	#PEASANT_DIR_LEFT
 	sta	PEASANT_DIR
@@ -163,7 +163,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "inside_inn_night_actions.s"
-;.include "draw_inkeeper.s"
+.include "wipe_center.s"
 
 .include "../hgr_routines/hgr_sprite.s"
 .include "sprites_inside_inn_night/sleep_sprites.inc"
@@ -207,6 +207,10 @@ roll_in_bed:
 	lda	#SUPPRESS_PEASANT
 	sta	SUPPRESS_DRAWING
 
+	lda	#$20		; draw to page2
+	sta	DRAW_PAGE
+	bit	PAGE1		; page1 should be clear?
+
 roll_in_bed_loop:
 
 	;========================
@@ -231,12 +235,26 @@ roll_in_bed_loop:
 	lda	sleep_sprite_h,X
 	sta	INH
 
-        lda	#32			; 224/7 = 32
-        sta     CURSOR_X
-        lda     #131
-        sta     CURSOR_Y
+	lda	#32			; 224/7 = 32
+	sta	CURSOR_X
+	lda	#131
+	sta	CURSOR_Y
 
 	jsr	hgr_draw_sprite
+
+	;===========================
+	; special case if FRAME<16
+
+	lda	FRAME
+	cmp	#16
+	bcs	skip_wipe
+
+	;=====================
+	; do reverse wipe
+
+	jsr	wipe_center_to_scene
+
+skip_wipe:
 
 	jsr	hgr_page_flip
 
@@ -253,7 +271,7 @@ done_peasant_sleep:
 
 
 roll_in_bed_pattern:
-	.byte 0,1,0,2,0,1,0,$FF
+	.byte 0,1,0,2,0,1,0,2,0,$FF
 
 
 sleep_sprite_l:

@@ -354,6 +354,7 @@ ARCHER_COUNT	= $C9	; hidden glen
 WEARING_MASK	= $C9	; gary
 BOW_X		= $C9	; target
 JHONKA_COUNT	= $C9	; jhonka
+WIPE_COUNT	= $C9	; inside inn day/night
 
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3

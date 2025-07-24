@@ -127,6 +127,8 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite.s"
 .include "sprites_inside_inn/keeper_sprites.inc"
 
+.include "wipe_center.s"
+
 	;==========================
 	; update screen
 	;==========================

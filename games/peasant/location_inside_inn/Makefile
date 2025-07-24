@@ -37,7 +37,8 @@ inside_inn_core.o:	inside_inn_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../text/DIALOG_INSIDE_INN.ZX02 ../text/dialog_inside_inn.inc \
 		graphics_inside_inn/inside_inn_graphics.inc \
 		graphics_inside_inn/inside_inn_priority.inc \
-		sprites_inside_inn/keeper_sprites.inc
+		sprites_inside_inn/keeper_sprites.inc \
+		wipe_center.s
 	ca65 -o inside_inn_core.o inside_inn_core.s -l inside_inn_core.lst
 
 ####

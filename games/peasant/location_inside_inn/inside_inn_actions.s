@@ -486,6 +486,10 @@ inn_get_room_have_room_day:
 	;==========================
 	; do wipe effect
 
+	jsr	wipe_center_to_black
+
+	;===========================
+	; clear both screens?
 
 	;===========================
 	; add 3 points to score
@@ -502,9 +506,22 @@ inn_get_room_skip_points:
 
 	;=================================
 	; night falls like powerpoint...
+	;
+	; do this manually so it doesn't update screen
+
 	ldx	#<inside_inn_get_room2_message
 	ldy	#>inside_inn_get_room2_message
-	jsr	partial_message_step
+;	jsr	partial_message_step
+
+	stx     OUTL
+        sty     OUTH
+        jsr     print_text_message
+ ;       jsr     hgr_page_flip
+        bit     KEYRESET
+        jsr     wait_until_keypress
+
+
+
 
 	;=====================
         ;  transition to night
