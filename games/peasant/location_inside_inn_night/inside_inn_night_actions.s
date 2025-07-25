@@ -280,6 +280,12 @@ inn_grease_already:
 	jmp	finish_parse_message
 
 inn_finally_get_grease:
+	; walk to location
+
+	ldx	#26			; 182 / 7 = 26
+	ldy	#68
+	jsr	peasant_walkto
+
 	ldx	#<inside_inn_get_grease_message
 	ldy	#>inside_inn_get_grease_message
 	jsr	partial_message_step
@@ -294,6 +300,25 @@ inn_finally_get_grease:
 	lda	GAME_STATE_1
 	ora	#POT_ON_HEAD
 	sta	GAME_STATE_1
+
+	; flat feet
+	; right hand up
+	; right hand up higher
+	; right hand up to top of head
+	; stand on tiptoes
+	; down
+	; up
+	; down
+	; up for a while
+	;	pot tilts right/center/left/center
+	;	pot tilts right
+	;	falls a bit
+	;	falls more rotating
+	;	falls just above head
+	;	falls on head, arms up
+	;	wiggle arms up and down 4 times
+	; print message "oh great..."
+
 
 	ldx	#<inside_inn_get_grease_message2
 	ldy	#>inside_inn_get_grease_message2
