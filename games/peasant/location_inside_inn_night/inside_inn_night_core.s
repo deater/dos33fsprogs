@@ -42,7 +42,7 @@ inside_inn_core:
 
 	ldx	#32
 	stx	PEASANT_X
-	ldy	#98
+	ldy	#95			; above 96 get stuck in bed
 	sty	PEASANT_Y
 	lda	#PEASANT_DIR_LEFT
 	sta	PEASANT_DIR

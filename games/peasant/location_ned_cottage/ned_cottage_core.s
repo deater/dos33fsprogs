@@ -103,6 +103,7 @@ game_loop:
 	cmp	#18
 	bcs	not_ned_cottage
 
+	;=========================================
 	; we did it, we're entering Ned's cottage
 
 	lda	#LOCATION_INSIDE_NN
@@ -111,7 +112,7 @@ game_loop:
 	lda	#11
 	sta	PEASANT_X
 	lda	#$90
-	sta	PEASANT_Y
+	sta	PEASANT_NEWY
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
 	lda	#0
