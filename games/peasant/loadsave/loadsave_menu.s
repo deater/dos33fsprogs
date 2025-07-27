@@ -766,22 +766,24 @@ location_names_l:
 	.byte <lname_outside_lady
 	.byte <lname_burn_tree
 
-	.byte <lname_cliff_base
-	.byte <lname_cliffland_heights
-	.byte <lname_trogdor_outer
-	.byte <lname_trogdor_posh
+	.byte <lname_cliff_base				; 20
+	.byte <lname_cliffland_heights			; 21
+	.byte <lname_trogdor_outer			; 22
+	.byte <lname_trogdor_posh			; 23
 
-	.byte <lname_hidden_glen
-	.byte <lname_inside_lady
-	.byte <lname_inside_nn
-	.byte <lname_inside_inn
+	.byte <lname_hidden_glen			; 24
+	.byte <lname_inside_lady			; 25
+	.byte <lname_inside_nn				; 26
+	.byte <lname_inside_inn				; 27
 
-	.byte <lname_archery_game
+	.byte <lname_archery_game			; 28
 	.byte <lname_map				; 29
 
 	.byte <lname_empty				; 30 (climb)
 	.byte <lname_trogdor_outer			; 31 (outer2)
 	.byte <lname_trogdor_outer			; 32 (outer3)
+
+	.byte <lname_inside_inn				; 33 (inside inn night)
 
 	.byte <lname_empty
 
@@ -807,22 +809,23 @@ location_names_h:
 	.byte >lname_outside_lady
 	.byte >lname_burn_tree
 
-	.byte >lname_cliff_base
-	.byte >lname_cliffland_heights
-	.byte >lname_trogdor_outer
-	.byte >lname_trogdor_posh
+	.byte >lname_cliff_base				; 20
+	.byte >lname_cliffland_heights			; 21
+	.byte >lname_trogdor_outer			; 22
+	.byte >lname_trogdor_posh			; 23
 
-	.byte >lname_hidden_glen
-	.byte >lname_inside_lady
-	.byte >lname_inside_nn
-	.byte >lname_inside_inn
+	.byte >lname_hidden_glen			; 24
+	.byte >lname_inside_lady			; 25
+	.byte >lname_inside_nn				; 26
+	.byte >lname_inside_inn				; 27
 
-	.byte >lname_archery_game
+	.byte >lname_archery_game			; 28
 	.byte >lname_map				; 29
 
 	.byte >lname_empty				; 30 (climb)
 	.byte >lname_trogdor_outer			; 31 (outer2)
 	.byte >lname_trogdor_outer			; 32 (outer3)
+	.byte >lname_inside_inn				; 33 (inside inn night)
 
 	.byte >lname_empty
 

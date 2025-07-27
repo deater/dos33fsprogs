@@ -698,6 +698,7 @@ distclean:
 	cd location_haystack && make distclean
 	cd location_hidden_glen && make distclean
 	cd location_inside_inn && make distclean
+	cd location_inside_inn_night && make distclean
 	cd location_inside_lady && make distclean
 	cd location_inside_ned && make distclean
 	cd location_jhonka && make distclean
@@ -709,6 +710,8 @@ distclean:
 	cd location_lake_west && make distclean
 	cd location_ned_cottage && make distclean
 	cd location_outer && make distclean
+	cd location_outer2 && make distclean
+	cd location_outer3 && make distclean
 	cd location_outside_inn && make distclean
 	cd location_puddle && make distclean
 	cd location_river && make distclean
@@ -752,6 +755,7 @@ clean:
 	cd location_haystack && make clean
 	cd location_hidden_glen && make clean
 	cd location_inside_inn && make clean
+	cd location_inside_inn_night && make clean
 	cd location_inside_lady && make clean
 	cd location_inside_ned && make clean
 	cd location_jhonka && make clean
@@ -763,6 +767,8 @@ clean:
 	cd location_lake_west && make clean
 	cd location_ned_cottage && make clean
 	cd location_outer && make clean
+	cd location_outer2 && make clean
+	cd location_outer3 && make clean
 	cd location_outside_inn && make clean
 	cd location_puddle && make clean
 	cd location_river && make clean
