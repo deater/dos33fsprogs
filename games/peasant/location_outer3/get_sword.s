@@ -186,6 +186,8 @@ which_sword_sprite:
 .byte	0,0,0
 ; then curtain opens (while making "success" noise)
 
+; urgh needed to allow negative numbers
+.feature force_range
 
 sword_y_offset:
 .byte	6,6,6,0,-6

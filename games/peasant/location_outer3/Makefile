@@ -52,6 +52,9 @@ outer3_core.o:	outer3_core.s \
 
 ###
 
+sprites_outer3/curtain_sprites.inc:
+	cd sprites_outer3 && make
+
 sprites_outer3/keeper3_sprites.inc:
 	cd sprites_outer3 && make
 
