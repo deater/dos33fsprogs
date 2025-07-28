@@ -20,6 +20,19 @@ inside_inn_core:
 	bit	KEYRESET
 
 
+
+	;==================================================
+	; remove pot from shelf if we made it fall already
+
+	lda	GAME_STATE_2
+	and	#GREASE_ON_HEAD
+	beq	pot_still_on_shelf
+
+	jsr	remove_pot_from_shelf
+
+pot_still_on_shelf:
+
+
 	;======================================
 	; special case coming in from sleeping
 
@@ -167,6 +180,9 @@ really_level_over:
 
 .include "../hgr_routines/hgr_sprite.s"
 .include "sprites_inside_inn_night/sleep_sprites.inc"
+.include "sprites_inside_inn_night/pantry_sprites.inc"
+
+.include "peasant_animations.s"
 
 
 	;==========================
@@ -191,91 +207,3 @@ update_screen:
 done_suppress_peasant:
 
 	rts
-
-
-	;==============================
-	;==============================
-	; roll in bed
-	;==============================
-	;==============================
-roll_in_bed:
-	; UP->LEFT_>UP->RIGHT->up->left->up
-
-	lda	#0
-	sta	FRAME
-
-	lda	#SUPPRESS_PEASANT
-	sta	SUPPRESS_DRAWING
-
-	lda	#$20		; draw to page2
-	sta	DRAW_PAGE
-	bit	PAGE1		; page1 should be clear?
-
-roll_in_bed_loop:
-
-	;========================
-	; update screen
-
-	jsr	update_screen
-
-	;=========================
-	; draw peasant
-
-	lda	FRAME
-	lsr
-	lsr
-	lsr	; slow down a bit
-	tay
-
-	ldx	roll_in_bed_pattern,Y
-	bmi	done_peasant_sleep
-
-	lda	sleep_sprite_l,X
-	sta	INL
-	lda	sleep_sprite_h,X
-	sta	INH
-
-	lda	#32			; 224/7 = 32
-	sta	CURSOR_X
-	lda	#131
-	sta	CURSOR_Y
-
-	jsr	hgr_draw_sprite
-
-	;===========================
-	; special case if FRAME<16
-
-	lda	FRAME
-	cmp	#16
-	bcs	skip_wipe
-
-	;=====================
-	; do reverse wipe
-
-	jsr	wipe_center_to_scene
-
-skip_wipe:
-
-	jsr	hgr_page_flip
-
-	inc	FRAME
-
-	jmp	roll_in_bed_loop
-
-done_peasant_sleep:
-
-	lda	#0
-	sta	SUPPRESS_DRAWING
-
-	rts
-
-
-roll_in_bed_pattern:
-	.byte 0,1,0,2,0,1,0,2,0,$FF
-
-
-sleep_sprite_l:
-	.byte <sleep0,<sleep1,<sleep2
-
-sleep_sprite_h:
-	.byte >sleep0,>sleep1,>sleep2

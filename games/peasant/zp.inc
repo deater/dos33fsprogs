@@ -360,6 +360,7 @@ BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3
 GARY_COUNT	= $CA	; gary
 BOW_INDEX	= $CA	; target
+POT_COUNT	= $CA	; inside inn night
 
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer1/2/3

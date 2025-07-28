@@ -34,10 +34,12 @@ inside_inn_night_core.o:	inside_inn_night_core.s ../zp.inc ../hardware.inc ../ql
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		inside_inn_night_actions.s wipe_center.s \
+		peasant_animations.s \
 		../text/DIALOG_INSIDE_INN_NIGHT.ZX02 ../text/dialog_inside_inn.inc \
 		graphics_inside_inn_night/inside_inn_night_graphics.inc \
 		graphics_inside_inn_night/inside_inn_night_priority.inc \
-		sprites_inside_inn_night/sleep_sprites.inc
+		sprites_inside_inn_night/sleep_sprites.inc \
+		sprites_inside_inn_night/pantry_sprites.inc
 	ca65 -o inside_inn_night_core.o inside_inn_night_core.s -l inside_inn_night_core.lst
 
 ####

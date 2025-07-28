@@ -9,26 +9,24 @@
 	;=======================
 
 inside_inn_night_verb_table:
-        .byte VERB_LOOK
-        .word inside_inn_look-1
-        .byte VERB_TALK
-        .word inside_inn_talk-1
-        .byte VERB_GIVE
-        .word inside_inn_give-1
-        .byte VERB_USE
-        .word inside_inn_give-1
-        .byte VERB_GET
-        .word inside_inn_get-1
-        .byte VERB_ASK
-        .word inside_inn_ask-1
-        .byte VERB_RING
-        .word inside_inn_ring-1
-        .byte VERB_SLEEP
-        .word inside_inn_sleep-1
-;        .byte VERB_OPEN
-;       .word inside_inn_open-1
-        .byte VERB_LIGHT
-        .word inside_inn_light-1
+	.byte VERB_LOOK
+	.word inside_inn_look-1
+	.byte VERB_TALK
+	.word inside_inn_talk-1
+	.byte VERB_GIVE
+	.word inside_inn_give-1
+	.byte VERB_USE
+	.word inside_inn_give-1
+	.byte VERB_GET
+	.word inside_inn_get-1
+	.byte VERB_ASK
+	.word inside_inn_ask-1
+	.byte VERB_RING
+	.word inside_inn_ring-1
+	.byte VERB_SLEEP
+	.word inside_inn_sleep-1
+	.byte VERB_LIGHT
+	.word inside_inn_light-1
 	.byte 0
 
 	;=================
@@ -43,11 +41,6 @@ inn_look_at_window:
 	ldx	#<inside_inn_look_window_message
 	ldy	#>inside_inn_look_window_message
 	jmp	finish_parse_message
-
-;inn_look_at_man:
-;	ldx	#<inside_inn_look_man_message
-;	ldy	#>inside_inn_look_man_message
-;	jmp	finish_parse_message
 
 inn_look_at_painting:
 	ldx	#<inside_inn_look_painting_message
@@ -78,17 +71,6 @@ inn_look_at_bell:
 	ldx	#<inside_inn_look_bell_message
 	ldy	#>inside_inn_look_bell_message
 	jmp	finish_parse_message
-
-;inn_look_at_desk:
-;	ldx	#<inside_inn_look_desk_message
-;	ldy	#>inside_inn_look_desk_message
-;	jmp	finish_parse_message
-
-;inn_look_at_door:
-;	ldx	#<inside_inn_open_door_message
-;	ldy	#>inside_inn_open_door_message
-;	jmp	finish_parse_message
-
 
 inside_inn_look_night:
 	lda	CURRENT_NOUN
@@ -280,18 +262,36 @@ inn_grease_already:
 	jmp	finish_parse_message
 
 inn_finally_get_grease:
+
+	;============================
+	; grab the pot
+	;============================
+
+	;====================
 	; walk to location
 
 	ldx	#26			; 182 / 7 = 26
 	ldy	#68
 	jsr	peasant_walkto
 
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+	;==============================
+	; print "you reach way up"...
+
 	ldx	#<inside_inn_get_grease_message
 	ldy	#>inside_inn_get_grease_message
 	jsr	partial_message_step
 
+	;==============================
+	; update points
+
 	lda	#2
 	jsr	score_points
+
+	;================================
+	; put grease and pot on head
 
 	lda	GAME_STATE_2
 	ora	#GREASE_ON_HEAD
@@ -300,6 +300,11 @@ inn_finally_get_grease:
 	lda	GAME_STATE_1
 	ora	#POT_ON_HEAD
 	sta	GAME_STATE_1
+
+	;=============================
+	; animate pot falling
+
+	jsr	animate_falling_pot
 
 	; flat feet
 	; right hand up
@@ -317,8 +322,9 @@ inn_finally_get_grease:
 	;	falls just above head
 	;	falls on head, arms up
 	;	wiggle arms up and down 4 times
-	; print message "oh great..."
 
+	;=================================
+	; print message "oh great..."
 
 	ldx	#<inside_inn_get_grease_message2
 	ldy	#>inside_inn_get_grease_message2
