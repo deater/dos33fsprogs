@@ -34,6 +34,7 @@ animate_falling_pot:
 
 	lda	#0
 	sta	POT_COUNT
+	sta	FRAME
 
 	lda	#SUPPRESS_PEASANT
 	sta	SUPPRESS_DRAWING
@@ -55,7 +56,7 @@ pot_still_there:
 	; draw peasant
 
 	ldy	POT_COUNT
-	ldx	pot_sequence,Y
+	ldx	peasant_sequence,Y
 	bmi	skip_draw_pot
 
 	lda	pantry_peasant_l,X
@@ -94,6 +95,10 @@ skip_draw_pot:
 
 	jsr	hgr_page_flip
 
+	inc	FRAME			; slow down animation
+	lda	FRAME
+	and	#$3
+	bne	falling_loop
 
 	inc	POT_COUNT
 	lda	POT_COUNT
@@ -114,7 +119,7 @@ peasant_sequence:
 
 
 pantry_peasant_y:
-	.byte 68,68,68,68, 66,69,69
+	.byte 68,68,68,68, 65,67,67
 
 
 pantry_peasant_l:
