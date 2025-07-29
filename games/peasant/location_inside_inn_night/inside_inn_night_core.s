@@ -116,11 +116,9 @@ game_loop:
 
 	jsr	increment_flame
 
-
-
-	;=====================
-	; level specific
-	;=====================
+	;=============================
+	; check if going through door
+	;=============================
 
 exit_inside_inn:
 	; check if leaving
@@ -134,6 +132,8 @@ exit_inside_inn:
 	lda	#LOCATION_OUTSIDE_INN
 	jsr	update_map_location
 
+	lda	#8
+	sta	PEASANT_X
 
 skip_level_specific:
 

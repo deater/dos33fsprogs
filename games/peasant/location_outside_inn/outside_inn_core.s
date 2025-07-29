@@ -24,21 +24,18 @@ outside_inn_core:
 	ora	#MAP_OUTSIDE_INN
 	sta	VISITED_2
 
-
-	;====================================================
-	; clear the keyboard in case we were holding it down
-
-	bit	KEYRESET
-
 	;=====================
-	; at inn
+	; check if pot on head
 
-before_inn:
-	; see if pot on head
+check_pot_head:
 
 	lda	GAME_STATE_1
 	and	#POT_ON_HEAD
 	beq	no_before_game_text
+
+	; draw animation
+
+	jsr	remove_pot_from_head
 
 	; take pot off head
 
@@ -50,8 +47,20 @@ before_inn:
 	ldy	#>outside_inn_pot_message
 	jsr	finish_parse_message
 
+	; stop walking
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+
 no_before_game_text:
 
+
+	;====================================================
+	; clear the keyboard in case we were holding it down
+
+	bit	KEYRESET
 
 	;=================================
 	;=================================
@@ -140,6 +149,8 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "outside_inn_actions.s"
 .include "sprites_outside_inn/sprites_inn.inc"
+.include "draw_remove_pot.s"
+.include "sprites_outside_inn/pot_remove.inc"
 
 .include "../hgr_routines/hgr_sprite.s"
 
@@ -154,10 +165,14 @@ update_screen:
 	jsr	hgr_copy_faster
 
 	;=====================
-	; always draw peasant
+	; draw peasant
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 
 	jsr	draw_peasant
-
+skip_draw_peasant:
 
 	rts
 
