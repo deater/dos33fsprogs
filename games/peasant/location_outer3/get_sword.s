@@ -186,10 +186,12 @@ which_sword_sprite:
 .byte	0,0,0
 ; then curtain opens (while making "success" noise)
 
-; urgh needed to allow negative numbers
-.feature force_range
+; urgh no portable way to have negative number in both old and new
+; versions of ca65
+;  Oliver S. made a really stupid decision here
+;.feature force_range
 
 sword_y_offset:
 .byte	6,6,6,0,-6
-.byte	-12,-15,-17,-19
-
+;.byte	-12,-15,-17,-19
+.byte	(~12)+1,(~15)+1,(~17)+1,(~19)+1
