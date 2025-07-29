@@ -323,6 +323,12 @@ inn_finally_get_grease:
 	;	falls on head, arms up
 	;	wiggle arms up and down 4 times
 
+	; load pop sprites
+
+	lda	#PEASANT_OUTFIT_POT
+	jsr	load_peasant_sprites
+
+
 	;=================================
 	; print message "oh great..."
 

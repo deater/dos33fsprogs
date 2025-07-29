@@ -33,6 +33,11 @@ check_pot_head:
 	and	#POT_ON_HEAD
 	beq	no_before_game_text
 
+	; load regular robe sprites
+
+	lda	#PEASANT_OUTFIT_ROBE
+	jsr	load_peasant_sprites
+
 	; draw animation
 
 	jsr	remove_pot_from_head
