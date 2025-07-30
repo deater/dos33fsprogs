@@ -43,6 +43,9 @@ hidden_glen_priority.gr:	hidden_glen_priority.png
 hidden_glen_priority_after.gr:	hidden_glen_priority_after.png
 	$(PNG2GR) hidden_glen_priority_after.png hidden_glen_priority_after.gr
 
+hidden_glen_collision.bin:	hidden_glen_collision.png
+	$(PNG2COLLISION) hidden_glen_collision.png hidden_glen_collision.bin
+
 hidden_glen_collision_after.bin:	hidden_glen_collision_after.png
 	$(PNG2COLLISION) hidden_glen_collision_after.png hidden_glen_collision_after.bin
 
