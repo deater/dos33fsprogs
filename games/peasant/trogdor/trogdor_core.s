@@ -69,11 +69,6 @@ game_loop:
 
 	inc	FRAME
 
-	;====================
-	; increment flame
-
-	jsr	increment_flame
-
 	;=====================
 	; flip page
 
@@ -98,45 +93,6 @@ level_over:
         sta     WHICH_LOAD
 
         rts
-
-erase_sprite_x:
-.byte 18,18, 22, 18, 18,18
-erase_sprite_y:
-.byte 80,80,146,130,108,95
-erase_sprite_l:
-.byte <smoke1_sprite		; erase smoke5
-.byte <smoke1_sprite		; do nothing
-.byte <sleep1_sprite		; erase sleep2
-.byte <smoke1_sprite		; erase smoke2
-.byte <smoke1_sprite		; erase smoke3
-.byte <smoke1_sprite		; erase smoke4
-erase_sprite_h:
-.byte >smoke1_sprite		; erase smoke5
-.byte >smoke1_sprite		; do nothing
-.byte >sleep1_sprite		; erase sleep2
-.byte >smoke1_sprite		; erase smoke2
-.byte >smoke1_sprite		; erase smoke3
-.byte >smoke1_sprite		; erase smoke4
-
-
-draw_sprite_x:
-.byte  22, 22, 18, 18,18,18
-draw_sprite_y:
-.byte 146,146,130,108,95,80
-draw_sprite_l:
-.byte <sleep1_sprite		; do nothing
-.byte <sleep2_sprite		; draw open mouth
-.byte <smoke2_sprite		; draw smoke2
-.byte <smoke3_sprite		; draw smoke3
-.byte <smoke4_sprite		; draw smoke4
-.byte <smoke5_sprite		; draw smoke5
-draw_sprite_h:
-.byte >sleep1_sprite
-.byte >sleep2_sprite
-.byte >smoke2_sprite
-.byte >smoke3_sprite
-.byte >smoke4_sprite
-.byte >smoke5_sprite
 
 
 ; include bottom.s
@@ -171,41 +127,20 @@ draw_sprite_h:
 
 .include "../ssi263/ssi263_simple_speech.s"
 .include "trogdor_speech.s"
+.include "trogdor_sleep.s"
 
 ;.include "graphics_trogdor/trogdor_graphics.inc"
 ;.include "graphics_trogdor/priority_trogdor.inc"
 
 .include "sprites_trogdor/trogdor_sprites.inc"
-
-.if 0
-map_backgrounds_low:
-	.byte   <trogdor_sleep_zx02
-
-map_backgrounds_hi:
-	.byte   >trogdor_sleep_zx02
-
-map_priority_low:
-	.byte   <trogdor_priority_zx02
-
-map_priority_hi:
-	.byte   >trogdor_priority_zx02
-
-verb_tables_low:
-	.byte   <trogdor_inner_verb_table
-
-verb_tables_hi:
-	.byte   >trogdor_inner_verb_table
-
-.endif
-
-;trogdor_text_zx02:
-;.incbin "../text/DIALOG_TROGDOR.ZX02"
+.include "sprites_trogdor/sleep_sprites.inc"
 
 .include "trogdor_actions.s"
 
 
-
-
+	;===========================
+	; update screen
+	;===========================
 
 update_screen:
 
@@ -220,76 +155,10 @@ update_screen:
 
 	jsr	draw_peasant_tiny
 
-
+	;======================
 	; draw sleeping trogdor
-	; actual:
-	; 	16 frames of nothing
-	; 	17 - open mouth
-	; 	60 - close mouth, puff1
-	; 	64 puff2, 68 puff3, 72 puff4
-	;	76 puff5, 80 puff6, 84 nothing
-	; ours:
-	;	16 frames of nothing
-	;	17 open mouth
-	;	48 puff2, 52 puff3, 56 puff4 60 puff5
 
-	ldx	#0
-	lda	FRAME		; mask off at 64
-	and	#$3f
-	beq	draw_sleep_sprites
-	inx	; 1
-	cmp	#17
-	beq	draw_sleep_sprites
-	inx	; 2
-	cmp	#48
-	beq	draw_sleep_sprites
-	inx	; 3
-	cmp	#52
-	beq	draw_sleep_sprites
-	inx	; 4
-	cmp	#56
-	beq	draw_sleep_sprites
-	inx	; 5
-	cmp	#60
-	beq	draw_sleep_sprites
-	bne	no_sleeping
+	jsr	draw_sleeping_trogdor
 
-draw_sleep_sprites:
-
-	lda	erase_sprite_x,X
-	sta	CURSOR_X
-	lda	erase_sprite_y,X
-	sta	CURSOR_Y
-	lda	erase_sprite_l,X
-	sta	INL
-	lda	erase_sprite_h,X
-	sta	INH
-
-	txa
-	pha
-
-	jsr	hgr_draw_sprite
-
-	pla
-	tax
-
-	lda	draw_sprite_x,X
-	sta	CURSOR_X
-	lda	draw_sprite_y,X
-	sta	CURSOR_Y
-	lda	draw_sprite_l,X
-	sta	INL
-	lda	draw_sprite_h,X
-	sta	INH
-	jsr	hgr_draw_sprite
-
-no_sleeping:
-
-	; delay
-
-;	lda	#200
-;	jsr	wait
-
-;	jmp	game_loop
 
 	rts

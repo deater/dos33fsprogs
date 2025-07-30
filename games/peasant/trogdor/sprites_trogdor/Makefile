@@ -1,6 +1,11 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	trogdor_sprites.inc
+all:	trogdor_sprites.inc sleep_sprites.inc
+
+sleep_sprites.inc:	sleep_sprites.png
+	$(HGR_SPRITE) -s -l sleep_sprite0 sleep_sprites.png 140 75 195  93 > sleep_sprites.inc
+	$(HGR_SPRITE) -s -l sleep_sprite1 sleep_sprites.png 140 93 195 111 >> sleep_sprites.inc
+
 
 trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l dashing0_sprite trogdor_sprites.png 14 6 20 45 > trogdor_sprites.inc
@@ -32,4 +37,4 @@ trogdor_sprites.inc:	trogdor_sprites.png
 
 
 clean:
-	rm -f *~ trogdor_sprites.inc
+	rm -f *~ trogdor_sprites.inc sleep_sprites.inc

@@ -34,7 +34,8 @@ trogdor_core.o:	trogdor_core.s \
 		trogdor_actions.s \
 		graphics_trogdor/trogdor_graphics.inc \
 		../text/DIALOG_TROGDOR.ZX02 ../text/dialog_trogdor.inc \
-                ../wait_a_bit.s borders.s
+                ../wait_a_bit.s borders.s \
+		trogdor_sleep.s
 	ca65 -o trogdor_core.o trogdor_core.s -l trogdor_core.lst
 
 ####

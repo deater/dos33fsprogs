@@ -347,7 +347,7 @@ SAVED_Y2	= $C8		; climb
 
 BUCKET_COUNT	= $C9	; well
 WALK_COUNT	= $C9	; intro
-BABY_COUNT	= $C9
+BABY_COUNT	= $C9	; ending
 KEEPER_COUNT	= $C9	; cliff heights
 SUBGUITAR_COUNT = $C9	; outer2
 ARCHER_COUNT	= $C9	; hidden glen
@@ -355,6 +355,7 @@ WEARING_MASK	= $C9	; gary
 BOW_X		= $C9	; target
 JHONKA_COUNT	= $C9	; jhonka
 WIPE_COUNT	= $C9	; inside inn day/night
+SLEEP_COUNT	= $C9	; trogdor
 
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3
