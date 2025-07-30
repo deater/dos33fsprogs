@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	archer_sprites.inc leaving_sprites.inc
+all:	archer_sprites.inc leaving_sprites.inc in_way_sprites.inc
 
 archer_sprites.inc:	sprites_hidden_glen.png
 	$(HGR_SPRITE) -s -l archer0 sprites_hidden_glen.png 161 154 181 185 > archer_sprites.inc
@@ -26,9 +26,12 @@ leaving_sprites.inc:	sprites_leaving.png
 	$(HGR_SPRITE) -l leaving1_mask   sprites_leaving.png  42 105 55 138 >> leaving_sprites.inc
 	$(HGR_SPRITE) -l leaving2_mask   sprites_leaving.png  70 105 83 138 >> leaving_sprites.inc
 
+in_way_sprites.inc:	sprites_in_way.png
+	$(HGR_SPRITE) -s -l arrowed0 sprites_in_way.png 161 154 181 185 > in_way_sprites.inc
+
 
 clean:
 	rm -f *~ \
-		archer_sprites.inc leaving_sprites.inc
+		archer_sprites.inc leaving_sprites.inc in_way_sprites.inc
 
 

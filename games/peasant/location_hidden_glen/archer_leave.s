@@ -1,4 +1,53 @@
 	;===================
+	; archer update bg
+	;===================
+	; update bg/collision after archer is gone
+
+archer_update_bg:
+
+	; update depth
+
+	; $543: 77->11
+	; $545: 77->11
+	; $5C3: 77->11
+	; $5C4: 17->11
+	; $5C5: 77->11
+	; $643: 17->11
+	; $644: 17->11
+	; $645: 77->11
+	; $6C4: 77->11
+	; $6C5: 77->11
+	; $744: 17->11
+	; $745: 17->11
+
+	lda	#$11
+	sta	$543
+	sta	$545
+	sta	$5C3
+	sta	$5C4
+	sta	$5C5
+	sta	$643
+	sta	$644
+	sta	$645
+	sta	$6C4
+	sta	$6C5
+	sta	$744
+	sta	$745
+
+	; update collision
+
+	; $94 08->00
+	; $95 08->00
+
+	lda	#$00
+	sta	collision_location+$94
+	sta	collision_location+$95
+
+	rts
+
+
+
+	;===================
 	; draw archer leave
 	;===================
 	; draw archer as he leaves

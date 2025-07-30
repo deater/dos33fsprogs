@@ -13,6 +13,18 @@ hidden_glen_core:
 .include "../location_common/common_core.s"
 
 
+	;===========================
+	; update bg if dongolev gone
+
+	lda	GAME_STATE_0
+	and	#HALDO_TO_DONGOLEV
+	beq	bg_was_fine
+
+	jsr	archer_update_bg
+
+bg_was_fine:
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -109,7 +121,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "hidden_glen_actions.s"
-.include "hidden_glen_intrusion.s"
+.include "hidden_glen_arrowed.s"
 
 .include "archer.s"
 .include "archer_leave.s"
@@ -119,6 +131,7 @@ really_level_over:
 
 .include "sprites_hidden_glen/archer_sprites.inc"
 .include "sprites_hidden_glen/leaving_sprites.inc"
+.include "sprites_hidden_glen/in_way_sprites.inc"
 
 	;========================
 	; update screen

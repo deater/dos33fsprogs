@@ -86,6 +86,11 @@ hidden_glen_say_haldo_hooray:
 	ldy	#>hidden_glen_say_haldo_message
 	jsr	finish_parse_message
 
+	; update collision detection
+	; do this first as we check background when drawing walking away
+
+	jsr	archer_update_bg
+
 	; dongolev walks away
 
 	jsr	draw_archer_leave
