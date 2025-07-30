@@ -104,6 +104,28 @@ not_arrowed_yet:
 	cmp	#20		;
 	bcc	archer_ohno_loop
 
+	;====================
+	; draw us in background so there for dialog
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+	lda	#$40
+	sta	DRAW_PAGE		; draw to $6000
+
+	lda	#<arrowed3
+	sta	INL
+	lda	#>arrowed3
+	sta	INH
+
+	lda	#15
+	sta	CURSOR_X
+	lda	#84
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 	;==================
 	; this kills you

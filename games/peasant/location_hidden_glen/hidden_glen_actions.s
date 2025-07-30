@@ -286,6 +286,13 @@ hidden_glen_get_another:
 	jmp	finish_parse_message
 
 hidden_glen_yes_get_arrow:
+
+	; walk to tree
+
+	ldx	#15
+	ldy	#84
+	jsr	peasant_walkto
+
 	; add 2 points to score
 	lda	#2
 	jsr	score_points
