@@ -132,7 +132,7 @@ exit_inside_inn:
 	lda	#LOCATION_OUTSIDE_INN
 	jsr	update_map_location
 
-	lda	#8
+	lda	#7
 	sta	PEASANT_X
 
 skip_level_specific:

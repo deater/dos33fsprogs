@@ -39,23 +39,34 @@ walking_right_left_common:
 	; setup Y (up/down)
 
 	cpy	PEASANT_Y
-	bcs	walking_up
-walking_down:
+	bcs	walking_down
+walking_up:
 	lda	#$FF
 	sta	walkto_up_down_add_smc+1
-	lda	#PEASANT_DIR_DOWN
+	lda	#PEASANT_DIR_UP
 	jmp	walking_up_down_common
-walking_up:
+walking_down:
 	lda	#1
 	sta	walkto_up_down_add_smc+1
-	lda	#PEASANT_DIR_UP
+	lda	#PEASANT_DIR_DOWN
 walking_up_down_common:
 	sta	walkto_up_down_dir_smc+1
 
 	;============================
 	; loop
+	;============================
 
 peasant_walkto_loop:
+
+	; increment step count, wrapping at 6
+
+	inc	PEASANT_STEPS
+	lda	PEASANT_STEPS
+	cmp	#6
+	bne	no_peasant_steps_wrap
+	lda	#0
+	sta	PEASANT_STEPS
+no_peasant_steps_wrap:
 
 
 walkto_check_up_down:
