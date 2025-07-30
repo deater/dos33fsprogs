@@ -37,13 +37,13 @@ archer_wait:
 	; starts when arrow first beyond bow
 	; oddly it draws that arrow and one in head at same time
 
-	; note Y has feed on base of root
+	; note Y has feet on base of root
 
 	;					X
-	; frame1:	arrowed0 (from left)	same
-	; frame2:	arrowed1 (in tree)	112 or so
-	; frame3:	arrowed2		105 or so
-	; frame4:	arrowed3		105 or so
+	; frame1:	arrowed0 (from left)	140 or so (20)
+	; frame2:	arrowed1 (in tree)	112 or so (16)
+	; frame3:	arrowed2		105 or so (15)
+	; frame4:	arrowed3		105 or so (15)
 	; frame5:	arrowed4
 	; frame6:   	arrowed3
 	; frame7:	arrowed5
@@ -52,16 +52,56 @@ archer_wait:
 	; frame10:	arrowed5
 	; frame11:	arrowed3 for like 20 frames
 
+	; seems to arrive with ARCHER_COUNT as $05
+	; 15 is when he starts drawing arrow
+	; 30 is when shot happens
+
 range_intrusion_action:
 
 
 archer_ohno_loop:
+	; load ARCHER COUNT
+	; if >=30, SUPPRESS PEASANT AND ARROW
+
 	jsr	update_screen
+
+	;=====================
+	; draw arrow aftermath
+
+	lda	ARCHER_COUNT
+	cmp	#30
+	bcc	not_arrowed_yet
+
+do_animation:
+	lda	#(SUPPRESS_PEASANT|SUPPRESS_ARROW)
+	sta	SUPPRESS_DRAWING
+
+	ldy	ARROWED_COUNT
+	ldx	arrowed_progress,Y
+
+	lda	arrowed_l,X
+	sta	INL
+	lda	arrowed_h,X
+	sta	INH
+
+	lda	arrowed_x,X
+	sta	CURSOR_X
+	lda	#84
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	inc	ARROWED_COUNT
+
+not_arrowed_yet:
+
 
 	jsr	hgr_page_flip
 
-	lda	ARCHER_COUNT
-	cmp	#29		; 15 is when a shot is started
+;	jsr	wait_until_keypress
+
+	lda	ARROWED_COUNT
+	cmp	#20		;
 	bcc	archer_ohno_loop
 
 
@@ -76,3 +116,18 @@ archer_ohno_loop:
 	sta	LEVEL_OVER
 
 	rts
+
+arrowed_progress:
+	.byte	0,1,2,3, 4,3,5,4
+	.byte	3,5,3,3, 3,3,3,3
+	.byte	3,3,3,3
+
+arrowed_x:
+	.byte	20,16,15,15,15,15
+
+arrowed_l:
+	.byte	<arrowed0,<arrowed1,<arrowed2,<arrowed3,<arrowed4,<arrowed5
+
+arrowed_h:
+	.byte	>arrowed0,>arrowed1,>arrowed2,>arrowed3,>arrowed4,>arrowed5
+

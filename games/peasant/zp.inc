@@ -339,6 +339,7 @@ SUPPRESS_DRAWING=$C5		; don't draw peasant
 	SUPPRESS_GARY = $04
 	CUSTOM_PEASANT= $08
 	SUPPRESS_KEEPER= $10
+	SUPPRESS_ARROW = $20
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8		; climb
@@ -362,6 +363,7 @@ IN_QUIZ		= $CA	; outer1/2/3
 GARY_COUNT	= $CA	; gary
 BOW_INDEX	= $CA	; target
 POT_COUNT	= $CA	; inside inn night
+ARROWED_COUNT	= $CA	; hidden glen
 
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer1/2/3

@@ -38,6 +38,10 @@ no_reset_archer:
 	;=========================
 	; draw arrow if necessary
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_ARROW
+	bne	done_draw_arrow
+
 	lda	ARCHER_COUNT
 	cmp	#30
 	bcc	done_draw_arrow
@@ -64,8 +68,14 @@ no_reset_archer:
 done_draw_arrow:
 	;=========================
 	; move to next frame
+	;	only if not being arrowed
+
+	lda	ARROWED_COUNT
+	bne	skip_inc_archer
 
 	inc	ARCHER_COUNT
+
+skip_inc_archer:
 
 skip_draw_archer:
 

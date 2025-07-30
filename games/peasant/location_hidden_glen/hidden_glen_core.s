@@ -24,6 +24,10 @@ hidden_glen_core:
 
 bg_was_fine:
 
+	; reset arrowed count
+
+	lda	#0
+	sta	ARROWED_COUNT
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -145,9 +149,14 @@ update_screen:
 	jsr	hgr_copy_faster
 
 	;=====================
-	; always draw peasant
+	; draw peasant
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 
 	jsr	draw_peasant
+skip_draw_peasant:
 
 	;==========================
 	; draw archer if necessary

@@ -27,7 +27,17 @@ leaving_sprites.inc:	sprites_leaving.png
 	$(HGR_SPRITE) -l leaving2_mask   sprites_leaving.png  70 105 83 138 >> leaving_sprites.inc
 
 in_way_sprites.inc:	sprites_in_way.png
-	$(HGR_SPRITE) -s -l arrowed0 sprites_in_way.png 161 154 181 185 > in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed0 sprites_in_way.png  28  36  55  66 > in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed1 sprites_in_way.png  70  36  90  62 >> in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed2 sprites_in_way.png 105  36 125  66 >> in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed3 sprites_in_way.png 133  36 153  66 >> in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed4 sprites_in_way.png 161  36 181  66 >> in_way_sprites.inc
+	$(HGR_SPRITE) -s -l arrowed5 sprites_in_way.png 189  36 209  66 >> in_way_sprites.inc
+
+
+
+
+
 
 
 clean:
