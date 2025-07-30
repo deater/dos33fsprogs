@@ -59,12 +59,15 @@ sprites_hidden_glen/archer_sprites.inc:
 sprites_hidden_glen/leaving_sprites.inc:
 	cd sprites_hidden_glen && make
 
+sprites_hidden_glen/in_way_sprites.inc:
+	cd sprites_hidden_glen && make
+
 ###
 
 distclean:
 	make clean
 	cd graphics_hidden_glen && make clean
-#	cd sprites && make clean
+	cd sprites_hidden_glen && make clean
 
 ###
 
