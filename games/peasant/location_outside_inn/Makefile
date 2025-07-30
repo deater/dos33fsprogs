@@ -61,7 +61,7 @@ sprites_outside_inn/sprites_inn.inc:
 distclean:
 	make clean
 	cd graphics_outside_inn && make clean
-#	cd sprites && make clean
+	cd sprites_outside_inn && make clean
 
 ###
 
