@@ -28,22 +28,6 @@ kerrek_no_draw:
 
 kerrek_actually_draw:
 
-	;=================
-	; erase old kerrek
-	;=================
-
-	lda	PREV_Y
-;	sta	SAVED_Y1
-	clc
-	adc	#51
-;	sta	SAVED_Y2
-
-	lda	PREV_X
-	tax
-	inx
-	inx
-;	jsr	hgr_partial_restore
-
 
 	;=================
 	; draw kerrek body
@@ -1054,7 +1038,15 @@ kerrek_actually_kill:
 	lda	#5
 	jsr	score_points
 
-	inc	KERREK_STATE	; make kerrek dead
+	; make kerrek dead
+
+	inc	KERREK_STATE
+
+	lda	GAME_STATE_3
+	ora	#KERREK_DEAD
+	sta	GAME_STATE_3
+
+	; make it rain, make the puddle wet
 
 	lda	GAME_STATE_1
 	ora	#(RAINING|PUDDLE_WET)
@@ -1126,7 +1118,7 @@ kerrek_look_there_dead:
 	; kerrek was there and dead
 	; already masked off
 
-	cmp	#KERREK_DEAD
+	cmp	#KERREK_ARROWED
 	beq	kerrek_look_there_dead_dead
 	cmp	#KERREK_DECOMPOSING
 	beq	kerrek_look_there_dead_decomposing
@@ -1264,4 +1256,4 @@ kerrek_look_footprints:
 	ldy	#>kerrek_look_footprints_message
 	jmp	finish_parse_message
 
-;.include "sprites/kerrek_sprites.inc"
+

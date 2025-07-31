@@ -20,6 +20,11 @@ peasantry_puddle:
 	sta	VISITED_1
 
 
+	;====================================
+	; draw mud if necessary
+
+	jsr	make_muddy
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -161,7 +166,9 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "puddle_actions.s"
-
+.include "sprites_puddle/mud_sprites.inc"
+.include "handle_mud.s"
+.include "../hgr_routines/hgr_sprite.s"
 
 	;==========================
 	; update screen

@@ -34,10 +34,11 @@ puddle_core.o:	puddle_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		puddle_actions.s \
+		puddle_actions.s handle_mud.s \
 		../text/DIALOG_PUDDLE.ZX02 ../text/dialog_puddle.inc \
 		graphics_puddle/puddle_graphics.inc \
-		graphics_puddle/puddle_priority.inc
+		graphics_puddle/puddle_priority.inc \
+		sprites_puddle/mud_sprites.inc
 	ca65 -o puddle_core.o puddle_core.s -l puddle_core.lst
 
 
@@ -50,11 +51,15 @@ graphics_puddle/puddle_graphics.inc:
 graphics_puddle/puddle_priority.inc:
 	cd graphics_puddle && make
 
+sprites_puddle/mud_sprites.inc:
+	cd sprites_puddle && make
+
 ###
 
 distclean:
 	make clean
 	cd graphics_puddle && make clean
+	cd sprites_puddle && make clean
 
 ###
 

@@ -572,6 +572,8 @@ jhonka_do_kill:
 	; check if kerrek dead
 	;	Carry Set = yes
 	;	Carry Clear = no
+
+	; FIXME: we can check GAME_STATE_3 KERREK_DEAD too
 check_kerrek_dead:
 	sec
 	lda	KERREK_STATE
