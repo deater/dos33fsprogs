@@ -57,25 +57,61 @@ sleep_good:
 
 done_breathing:
 
+	; draw smoke
+
+	lda	SLEEP_COUNT
+	cmp	#60
+	bcc	done_smoke		; blt
+
+	sec
+	sbc	#60
+	lsr
+	lsr
+	tax
+
+	lda	#17			; 119/7=17
+	sta	CURSOR_X
+	lda	smoke_y,X
+	sta	CURSOR_Y
+	lda	smoke_sprite_l,X
+	sta	INL
+	lda	smoke_sprite_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+done_smoke:
+
 	rts
 
+smoke_y:
+	.byte	130,118,111,103,96,87
 
-draw_sprite_x:
-.byte  22, 22, 18, 18,18,18
-draw_sprite_y:
-.byte 146,146,130,108,95,80
-draw_sprite_l:
-.byte <sleep1_sprite		; do nothing
-.byte <sleep2_sprite		; draw open mouth
-.byte <smoke2_sprite		; draw smoke2
-.byte <smoke3_sprite		; draw smoke3
-.byte <smoke4_sprite		; draw smoke4
-.byte <smoke5_sprite		; draw smoke5
-draw_sprite_h:
-.byte >sleep1_sprite
-.byte >sleep2_sprite
-.byte >smoke2_sprite
-.byte >smoke3_sprite
-.byte >smoke4_sprite
-.byte >smoke5_sprite
+smoke_sprite_l:
+	.byte <smoke0_sprite,<smoke1_sprite,<smoke2_sprite,<smoke3_sprite
+	.byte <smoke4_sprite,<smoke5_sprite
+smoke_sprite_h:
+	.byte >smoke0_sprite,>smoke1_sprite,>smoke2_sprite,>smoke3_sprite
+	.byte >smoke4_sprite,>smoke5_sprite
+
+
+;draw_sprite_x:
+;.byte  22, 22, 18, 18,18,18
+;draw_sprite_y:
+;.byte 146,146,130,108,95,80
+;draw_sprite_l:
+;.byte <sleep1_sprite		; do nothing
+;.byte <sleep2_sprite		; draw open mouth
+;.byte <smoke2_sprite		; draw smoke2
+;.byte <smoke3_sprite		; draw smoke3
+;.byte <smoke4_sprite		; draw smoke4
+;.byte <smoke5_sprite		; draw smoke5
+;draw_sprite_h:
+;.byte >sleep1_sprite
+;.byte >sleep2_sprite
+;.byte >smoke2_sprite
+;.byte >smoke3_sprite
+;.byte >smoke4_sprite
+;.byte >smoke5_sprite
 
