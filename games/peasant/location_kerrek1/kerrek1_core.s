@@ -18,9 +18,10 @@ kerrek1_core:
 	;====================
 
 	; clear out old state otherwise kerrek can follow us around
+	; no?  should not be necessary?
 
-	lda	#0
-	sta	KERREK_STATE
+;	lda	#0
+;	sta	KERREK_STATE
 
 	jsr	kerrek_setup
 

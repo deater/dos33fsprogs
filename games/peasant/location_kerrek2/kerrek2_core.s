@@ -19,9 +19,10 @@ kerrek2_core:
 	;====================
 
 	; clear out state otherwise kerrek can follow us around
+	; no?
 
-	lda	#0
-	sta	KERREK_STATE
+;	lda	#0
+;	sta	KERREK_STATE
 
 	jsr	kerrek_setup
 

@@ -19,5 +19,5 @@
 ;.include "save1_32_outer.s"
 
 .align $20
-.include "save1_04_mask.s"
-
+;.include "save1_04_mask.s"
+.include "save1_09_kerrek_dead.s"

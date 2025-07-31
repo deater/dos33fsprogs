@@ -62,7 +62,7 @@ jhonka_climb_fence:
 	;================
 jhonka_get:
 	; check if alive
-	lda	check_kerrek_dead
+	jsr	check_kerrek_dead
 	bcs	jhonka_get_kerrek_dead
 
 jhonka_get_kerrek_alive:
@@ -160,6 +160,10 @@ jhonka_verb_no:
 	sta	GAME_STATE_1
 
 	; get riches
+
+	lda	GAME_STATE_3
+	ora	#GOT_RICHES
+	sta	GAME_STATE_3
 
 	lda	INVENTORY_2
 	ora	#INV2_RICHES
