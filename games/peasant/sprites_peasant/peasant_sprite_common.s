@@ -23,7 +23,7 @@ peasant_location1:				; robe
 	.word peasant_robe_zx02
 
 peasant_location2:				; mud
-	.word peasant_original_zx02
+	.word peasant_mud_zx02
 
 peasant_location3:				; pot
 	.word peasant_pot_zx02
@@ -35,6 +35,9 @@ peasant_location4:				; haystack
 
 peasant_original_zx02:
 	.incbin "walking_sprites.zx02"
+
+peasant_mud_zx02:
+	.incbin "mud_sprites.zx02"
 
 peasant_robe_zx02:
 	.incbin "robe_sprites.zx02"

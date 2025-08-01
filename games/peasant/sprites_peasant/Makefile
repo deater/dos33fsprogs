@@ -2,12 +2,11 @@ HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 LINKER_SCRIPTS = ../../../linker_scripts
 
-all:	walk_sprites.inc \
-	robe_sprites.inc flame_sprites.inc \
-	walking_sprites.zx02 \
+all:	walking_sprites.zx02 \
 	robe_sprites.zx02 robe_sprites_orange.zx02 robe_sprites_purple.zx02 \
 	robe_shield_sprites.zx02 robe_helm_sprites.zx02 \
 	robe_sword_sprites.zx02 \
+	mud_sprites.zx02 \
 	PEASANT_SPRITES_COMMON \
 	PEASANT_SPRITES_OUTER
 
@@ -20,7 +19,8 @@ PEASANT_SPRITES_COMMON:	peasant_sprite_common.o
 peasant_sprite_common.o:	peasant_sprite_common.s \
 	walking_sprites.zx02 \
 	robe_sprites.zx02 \
-	robe_pot_sprites.zx02
+	robe_pot_sprites.zx02 \
+	mud_sprites.zx02
 	ca65 -o peasant_sprite_common.o peasant_sprite_common.s -l peasant_sprite_common.lst
 
 
@@ -62,6 +62,19 @@ walking_sprites:	walking_sprites.o
 walking_sprites.o:	walking_sprites.s \
 	flame_sprites.inc walk_sprites.inc
 	ca65 -o walking_sprites.o walking_sprites.s -l walking_sprites.lst
+
+####
+
+mud_sprites.zx02:	mud_sprites
+	$(ZX02) -f mud_sprites mud_sprites.zx02
+
+mud_sprites:	mud_sprites.o
+	ld65 -o mud_sprites mud_sprites.o -C $(LINKER_SCRIPTS)/apple2_b000.inc
+
+mud_sprites.o:	mud_sprites.s \
+	flame_sprites.inc mud_sprites.inc
+	ca65 -o mud_sprites.o mud_sprites.s -l mud_sprites.lst
+
 
 ####
 
@@ -595,6 +608,56 @@ walk_sprites.inc:     walk_sprites.png
 	$(HGR_SPRITE) -l walk_d5_sprite walk_sprites.png 266 128 279 158 >> walk_sprites.inc
 	$(HGR_SPRITE) -l walk_d5_mask   walk_sprites.png 266 159 279 189 >> walk_sprites.inc
 
+mud_sprites.inc:     mud_sprites.png
+	$(HGR_SPRITE) -l walk_r0_sprite mud_sprites.png  14  32  27  62 > mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r0_mask   mud_sprites.png  14  63  27  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r1_sprite mud_sprites.png  42  32  53  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r1_mask   mud_sprites.png  42  63  53  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r2_sprite mud_sprites.png  70  32  83  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r2_mask   mud_sprites.png  70  63  83  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r3_sprite mud_sprites.png  98  32 111  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r3_mask   mud_sprites.png  98  63 111  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r4_sprite mud_sprites.png 126  32 139  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r4_mask   mud_sprites.png 126  63 139  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r5_sprite mud_sprites.png 154  32 167  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_r5_mask   mud_sprites.png 154  63 167  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l0_sprite mud_sprites.png  14 128  27 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l0_mask   mud_sprites.png  14 159  27 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l1_sprite mud_sprites.png  42 128  53 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l1_mask   mud_sprites.png  42 159  53 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l2_sprite mud_sprites.png  70 128  83 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l2_mask   mud_sprites.png  70 159  83 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l3_sprite mud_sprites.png  98 128 111 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l3_mask   mud_sprites.png  98 159 111 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l4_sprite mud_sprites.png 126 128 139 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l4_mask   mud_sprites.png 126 159 139 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l5_sprite mud_sprites.png 154 128 167 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_l5_mask   mud_sprites.png 154 159 167 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u0_sprite mud_sprites.png 182   1 195  31 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u0_mask   mud_sprites.png 183  32 195  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u1_sprite mud_sprites.png 210   1 221  31 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u1_mask   mud_sprites.png 210  32 223  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u2_sprite mud_sprites.png 238   1 251  31 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u2_mask   mud_sprites.png 238  32 251  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u3_sprite mud_sprites.png 266   1 279  31 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u3_mask   mud_sprites.png 266  32 279  62 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u4_sprite mud_sprites.png 182  63 195  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u4_mask   mud_sprites.png 182  94 195 124 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u5_sprite mud_sprites.png 210  63 223  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_u5_mask   mud_sprites.png 210  94 223 124 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d0_sprite mud_sprites.png 238  63 251  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d0_mask   mud_sprites.png 238  94 251 124 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d1_sprite mud_sprites.png 266  63 279  93 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d1_mask   mud_sprites.png 266  94 279 124 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d2_sprite mud_sprites.png 182 128 195 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d2_mask   mud_sprites.png 182 159 195 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d3_sprite mud_sprites.png 210 128 223 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d3_mask   mud_sprites.png 210 159 223 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d4_sprite mud_sprites.png 238 128 251 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d4_mask   mud_sprites.png 238 159 251 189 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d5_sprite mud_sprites.png 266 128 279 158 >> mud_sprites.inc
+	$(HGR_SPRITE) -l walk_d5_mask   mud_sprites.png 266 159 279 189 >> mud_sprites.inc
+
 
 flame_sprites.inc:     flame_sprites.png
 	$(HGR_SPRITE) -l flame_r0_sprite flame_sprites.png  14  25  27  34 > flame_sprites.inc
@@ -654,6 +717,7 @@ clean:
 		robe_sprites.inc robe_sprites_purple.inc robe_sprites_orange.inc \
 		flame_sprites.inc \
 		walk_sprites.inc climb_sprites.inc climb_flame_sprites.inc \
+		mud_sprites.inc \
 		PEASANT_SPRITES_COMMON
 
 distclean:
