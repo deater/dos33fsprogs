@@ -51,7 +51,7 @@ graphics_jhonka/jhonka_graphics.inc:
 graphics_jhonka/jhonka_priority.inc:
 	cd graphics_jhonka && make
 
-sprites_jhonka/jhonka_sprites.inc:
+sprites_jhonka/sprites_jhonka.inc:
 	cd sprites_jhonka && make
 
 ###
