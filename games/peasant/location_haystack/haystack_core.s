@@ -13,10 +13,10 @@ peasantry_haystack:
 .include "../location_common/common_core.s"
 
 
-	;======================
-	; check if in hay
+	;=================================
+	; check if need to erase haystack
 
-	jsr	check_haystack_exit
+	jsr	haystack_update_bg
 
 	;===================================
 	; mark location visited
@@ -116,7 +116,9 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "haystack_actions.s"
-
+.include "sprites_haystack/haystack_gone_sprite.inc"
+.include "haystack_gone.s"
+.include "../hgr_routines/hgr_sprite.s"
 
 	;========================
 	; update screen

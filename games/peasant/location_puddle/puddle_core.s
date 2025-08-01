@@ -99,6 +99,11 @@ at_mud_puddle:
 
 	jsr	fall_into_mud
 
+	; load muddy sprites
+
+	lda	#PEASANT_OUTFIT_MUD
+	jsr	load_peasant_sprites
+
 	; print message
 
 	ldx	#<puddle_walk_in_message
@@ -119,10 +124,6 @@ at_mud_puddle:
 	ora	#GOT_MUDDY_ALREADY
 	sta	GAME_STATE_2
 
-	; load muddy sprites
-
-	lda	#PEASANT_OUTFIT_MUD
-	jsr	load_peasant_sprites
 
 
 skip_level_specific:

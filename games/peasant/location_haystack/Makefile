@@ -34,7 +34,8 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		haystack_actions.s
+		sprites_haystack/haystack_gone_sprite.inc \
+		haystack_actions.s haystack_gone.s
 	ca65 -o haystack_core.o haystack_core.s -l haystack_core.lst
 
 
@@ -43,11 +44,15 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_haystack/haystack_graphics.inc:
 	cd graphics_haystack && make
 
+sprites_haystack/haystack_gone_sprite.inc:
+	cd sprites_haystack && make
+
 ###
 
 distclean:
 	make clean
 	cd graphics_haystack && make clean
+	cd sprites_haystack && make clean
 
 ###
 

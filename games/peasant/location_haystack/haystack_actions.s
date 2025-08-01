@@ -164,9 +164,21 @@ enter_hay_too_far:
 	jmp	finish_parse_message
 
 really_enter_hay_muddy:
+
+	; message 1 first
+
 	ldx	#<hay_enter_hay_muddy_message
 	ldy	#>hay_enter_hay_muddy_message
 	jsr	partial_message_step
+
+	; walk to location
+
+	ldx	#25
+	ldy	#124
+	jsr	peasant_walkto
+
+	; animate jump
+;	jsr	jump_in_hay
 
 	; add 3 points to score
 
@@ -180,7 +192,14 @@ really_enter_hay_muddy:
 
 	ldx	#<hay_enter_hay_muddy_message2
 	ldy	#>hay_enter_hay_muddy_message2
-	jmp	finish_parse_message
+	jsr	finish_parse_message
+
+	; erase haystack from background
+
+	jsr	haystack_update_bg
+
+	rts
+
 
 enter_hay_no_mud:
 	ldx	#<hay_enter_hay_clean_message
