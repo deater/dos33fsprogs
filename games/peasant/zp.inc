@@ -170,7 +170,7 @@ PEASANT_DIR	= $93
 MAP_LOCATION	= $94
 
 WHICH_PEASANT_SPRITES	= $95
-	PEASANT_OUTFIT_SHORTS	= 0
+	PEASANT_OUTFIT_SHORTS	= 0	; FIXME: should be "SHORT_PANTS"
 	PEASANT_OUTFIT_ROBE	= 1
 	PEASANT_OUTFIT_MUD	= 2
 	PEASANT_OUTFIT_POT	= 3
@@ -362,7 +362,7 @@ SLEEP_COUNT	= $C9	; trogdor
 MUD_COUNT	= $C9	; puddle
 
 BUCKET_STATE	= $CA	; well
-IN_QUIZ		= $CA	; outer1/2/3
+IN_QUIZ		= $CA	; outer1/2/3,jhonka
 GARY_COUNT	= $CA	; gary
 BOW_INDEX	= $CA	; target
 POT_COUNT	= $CA	; inside inn night
@@ -372,7 +372,7 @@ CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer1/2/3
 ARROW_X		= $CB	; target
 
-OLD_DIR		= $CC	; outer1/2/3
+OLD_DIR		= $CC	; outer1/2/3,jhonka
 ARROW_Y		= $CC	; target
 
 RON_COUNT	= $CD	; outer1

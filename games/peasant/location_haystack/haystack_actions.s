@@ -129,9 +129,19 @@ hay_climb_fence:
 	jmp	finish_parse_message
 
 
-	;===================
-	; enter hay
-	;===================
+	;=============================
+	; enter / jump in/ hide in hay
+	;=============================
+	; in actual game
+	;	enter in hay
+	;	hide in hay
+	;	jump in hay
+	;	enter hay
+	;	hide hay
+	; all work but
+	;	jump hay
+	; doesn't for some reason?
+
 
 hay_bale_enter:
 hay_bale_jump:
@@ -142,6 +152,8 @@ hay_bale_hide:
 	cmp	#NOUN_FENCE
 	beq	hay_climb_fence
 	cmp	#NOUN_HAY
+	beq	enter_hay
+	cmp	#NOUN_IN_HAY
 	beq	enter_hay
 
 	jmp	parse_common_unknown

@@ -540,7 +540,15 @@ done_load:
 	; make sure not walking after load
 	; actual game has you press enter before starting
 
-	jsr	stop_walking
+;	can't call this as we don't include move_peasant
+;		move to QLOAD?
+
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+
+
+;	jsr	stop_walking
 
 	rts
 

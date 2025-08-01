@@ -63,8 +63,8 @@ done_upcase_loop:
 	; this is turned to a "rts" in cases where
 	; we want to skip the verb table
 	; (mostly jhonka "yes/no" and maybe in trogdor cave
-parse_input_smc:
-	nop
+;parse_input_smc:
+;	nop
 
 
 	;================================
@@ -533,7 +533,10 @@ talk_noone:
 	; unknown
 	;=================
 parse_common_unknown:
+
+parse_unknown_smc1:
 	ldx	#<unknown_message
+parse_unknown_smc2:
 	ldy	#>unknown_message
 	jmp	finish_parse_message
 
@@ -1279,10 +1282,10 @@ update_screen_smc:
 
 	;=========================
 	;=========================
-	; setup default verb table
+	; clear default verb table
 	;=========================
 	;=========================
-setup_default_verb_table:
+clear_default_verb_table:
 
 	;===========================
 	; first make it all unknown
@@ -1297,6 +1300,20 @@ unknown_loop:
 	inx
 	cpx	#(VERB_ALL_DONE*2)
 	bne	unknown_loop
+
+	rts
+
+	;=========================
+	;=========================
+	; setup default verb table
+	;=========================
+	;=========================
+setup_default_verb_table:
+
+	;===========================
+	; first make it all unknown
+
+	jsr	clear_default_verb_table
 
 	;=========================
 	; now add in common calls

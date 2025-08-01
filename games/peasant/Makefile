@@ -610,6 +610,12 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s print_text_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s restore_parse_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s update_screen_smc parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_unknown_smc1 parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s parse_unknown_smc2 parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s unknown_message parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s clear_default_verb_table parse_input.lst >> parse_input.inc
+
+
 
 
 ###

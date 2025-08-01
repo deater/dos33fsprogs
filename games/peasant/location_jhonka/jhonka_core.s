@@ -17,7 +17,7 @@ jhonka_core:
 
 	lda	#0
 	sta	JHONKA_COUNT
-
+	sta	IN_QUIZ
 
 	;=============================
 	; handle note on door
@@ -89,17 +89,32 @@ game_loop:
 	;=======================
 	; check keyboard
 
+	lda	PEASANT_DIR
+	sta	OLD_DIR
+
 	jsr	check_keyboard
 
 
+	;=======================
+	; don't move if being quizzed
+
+	lda	IN_QUIZ
+	beq	normal_move_peasant
+
+	; keep from moving
+	lda	OLD_DIR
+	sta	PEASANT_DIR
+	jmp	check_done_level
+
 	;==============
 	; move peasant
+normal_move_peasant:
 
 	jsr	move_peasant
 
 	;=====================
 	; check if level over
-
+check_done_level:
 	lda	LEVEL_OVER
 	bmi	oops_new_location
 	bne	level_over

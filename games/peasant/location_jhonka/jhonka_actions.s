@@ -39,6 +39,15 @@ jhonka_cave_verb_table:
 	.byte 0
 
 
+jhonka_cave_quiz_verb_table:
+	.byte VERB_YES
+	.word jhonka_verb_yes-1
+	.byte VERB_NO
+	.word jhonka_verb_no-1
+	.byte 0
+
+
+
 	;================
 	; climb
 	;================
@@ -123,36 +132,86 @@ jhonka_get_riches_in_hay:
 	lda	GAME_STATE_1
 	and	#<(~IN_HAY_BALE)
 	sta	GAME_STATE_1
+
 	; no longer muddy
 	lda	GAME_STATE_2
 	and	#<(~COVERED_IN_MUD)
 	sta	GAME_STATE_2
 
+	; change back to street clothes
+
+	lda	#PEASANT_OUTFIT_SHORTS
+	jsr	load_peasant_sprites
+
+	; face down
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
 jhonka_wait_for_answer:
-	jsr	clear_bottom
-	jsr	hgr_input
+	; this is like the quizzes at the end
+	; you can't move, only answer question
 
-	lda	#$60			; modify parse input to return
-	sta	parse_input_smc		; rather than verb-jump
+	inc	IN_QUIZ			; being quizzed
 
-	jsr	parse_input
+	lda	#<jhonka_cave_quiz_verb_table
+	sta	INL
+	lda	#>jhonka_cave_quiz_verb_table
+	sta	INH
 
-	lda	CURRENT_VERB
-	cmp	#VERB_NO
-	beq	jhonka_verb_no
-	cmp	#VERB_YES
-	beq	jhonka_verb_yes
+	jsr	clear_default_verb_table	; clear out defaults
+						; so only want yes/no
+	jsr	load_custom_verb_table
 
-	ldx	#<jhonka_answer_him_message
-	ldy	#>jhonka_answer_him_message
-	jsr	partial_message_step
+	lda	#<jhonka_answer_him_message
+	sta	parse_unknown_smc1+1
+	lda	#>jhonka_answer_him_message
+	sta	parse_unknown_smc2+1
 
-	jmp	jhonka_wait_for_answer
+
+;	lda	#$60			; modify parse input to return
+;	sta	parse_input_smc		; rather than verb-jump
+
+;	jsr	clear_bottom
+;	jsr	hgr_input
+
+;	jsr	parse_input
+
+;	lda	CURRENT_VERB
+;	cmp	#VERB_NO
+;	beq	jhonka_verb_no
+;	cmp	#VERB_YES
+;	beq	jhonka_verb_yes
+
+;	ldx	#<jhonka_answer_him_message
+;	ldy	#>jhonka_answer_him_message
+;	jsr	partial_message_step
+
+;	jmp	jhonka_wait_for_answer
+
+	rts
 
 jhonka_verb_no:
-	; restore parse_message
-	lda	#$EA
-	sta	parse_input_smc
+	; cancel quiz
+
+	lda	#0
+	sta	IN_QUIZ
+
+	; restore original verb table
+
+	jsr	setup_default_verb_table
+
+	lda	#<jhonka_cave_verb_table
+	sta	INL
+	lda	#>jhonka_cave_verb_table
+	sta	INH
+
+	jsr	load_custom_verb_table
+
+	lda	#<unknown_message
+	sta	parse_unknown_smc1+1
+	lda	#>unknown_message
+	sta	parse_unknown_smc2+1
 
 	; dry up the mud
 	lda	GAME_STATE_1
@@ -178,9 +237,8 @@ jhonka_verb_no:
 	jmp	finish_parse_message
 
 jhonka_verb_yes:
-	; restore parse_message
-	lda	#$EA
-	sta	parse_input_smc
+
+	; we don't need to restore verb table because we're dying?
 
 	; this kills you
 	lda	#LOAD_GAME_OVER
@@ -196,13 +254,6 @@ jhonka_verb_yes:
 	ldx	#<jhonka_yes_message2
 	ldy	#>jhonka_yes_message2
 	jmp	finish_parse_message
-
-
-
-
-
-
-
 
 
 	;=================
