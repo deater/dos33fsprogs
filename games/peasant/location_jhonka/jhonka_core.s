@@ -27,7 +27,7 @@ jhonka_core:
 	;=============================
 	; handle riches
 
-	jsr	place_riches
+	jsr	remove_riches
 
 	;=============================
 	; handle background haystack

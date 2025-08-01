@@ -36,19 +36,28 @@ done_unpost_note:
 
 
 	;==========================
-	; place_riches
+	; remove riches
 	;==========================
-	; default is no riches
-	; if GAME_STATE_3 and KERREK_DEAD and !GOT_RICHES
+	; default is yes riches
+	; remove if GAME_STATE_3 (!KERREK_DEAD or GOT_RICHES)
 
-place_riches:
+remove_riches:
+
+	;	KD GR    erase riches
+	;	0  0         yes
+	;	0  1         yes
+	; 	1  0         no
+	;	1  1         yes
 
 	lda	GAME_STATE_3
 	and	#(KERREK_DEAD|GOT_RICHES)
-	cmp	#KERREK_DEAD
-	bne	done_place_riches
 
-draw_riches:
+	; we want to erase riches if result is result is KD=1 GR=0
+
+	cmp	#KERREK_DEAD			; checking KD=1 GR=0
+	beq	done_place_riches		; if match, skip erasing
+
+erase_riches:
 	lda	DRAW_PAGE
 	sta	DRAW_PAGE_SAVE
 

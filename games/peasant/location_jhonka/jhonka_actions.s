@@ -124,6 +124,29 @@ jhonka_get_riches_no_hay:
 
 jhonka_get_riches_in_hay:
 
+	; walk to the riches
+
+	ldx	#15			; 105/7 = 15
+	ldy	#77
+	jsr	peasant_walkto
+
+	; face downward
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
+	; get riches
+
+	lda	GAME_STATE_3
+	ora	#GOT_RICHES
+	sta	GAME_STATE_3
+
+	lda	INVENTORY_2
+	ora	#INV2_RICHES
+	sta	INVENTORY_2
+
+	jsr	remove_riches
+
 	ldx	#<jhonka_steal_riches_message
 	ldy	#>jhonka_steal_riches_message
 	jsr	partial_message_step
@@ -143,10 +166,6 @@ jhonka_get_riches_in_hay:
 	lda	#PEASANT_OUTFIT_SHORTS
 	jsr	load_peasant_sprites
 
-	; face down
-
-	lda	#PEASANT_DIR_DOWN
-	sta	PEASANT_DIR
 
 jhonka_wait_for_answer:
 	; this is like the quizzes at the end
@@ -217,16 +236,6 @@ jhonka_verb_no:
 	lda	GAME_STATE_1
 	and	#<(~PUDDLE_WET)
 	sta	GAME_STATE_1
-
-	; get riches
-
-	lda	GAME_STATE_3
-	ora	#GOT_RICHES
-	sta	GAME_STATE_3
-
-	lda	INVENTORY_2
-	ora	#INV2_RICHES
-	sta	INVENTORY_2
 
 	; add 7 points
 	lda	#7
