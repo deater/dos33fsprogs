@@ -12,6 +12,12 @@ jhonka_core:
 
 .include "../location_common/common_core.s"
 
+	;=============================
+	; reset jhonka
+
+	lda	#0
+	sta	JHONKA_COUNT
+
 
 	;=============================
 	; handle note on door
@@ -168,7 +174,6 @@ update_screen:
 	;===========================
 	; copy bg to current screen
 
-;	lda	#$60
 	jsr	hgr_copy_faster
 
 	;=====================
