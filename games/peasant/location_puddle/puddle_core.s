@@ -88,17 +88,22 @@ at_mud_puddle:
 	cmp	#$80
 	bcs	skip_level_specific
 
-	; in range!
-	ldx	#<puddle_walk_in_message
-	ldy	#>puddle_walk_in_message
-	jsr	partial_message_step
+	; in range! fall in!
 
 	; make muddy
 	lda	GAME_STATE_2
 	ora	#COVERED_IN_MUD
 	sta	GAME_STATE_2
 
-	; do animation?
+	; do animation
+
+	jsr	fall_into_mud
+
+	; print message
+
+	ldx	#<puddle_walk_in_message
+	ldy	#>puddle_walk_in_message
+	jsr	partial_message_step
 
 	; points if we haven't already
 	lda	GAME_STATE_2
@@ -113,6 +118,11 @@ at_mud_puddle:
 	lda	GAME_STATE_2
 	ora	#GOT_MUDDY_ALREADY
 	sta	GAME_STATE_2
+
+	; load muddy sprites
+
+	lda	#PEASANT_OUTFIT_MUD
+	jsr	load_peasant_sprites
 
 
 skip_level_specific:
@@ -169,6 +179,7 @@ really_level_over:
 .include "sprites_puddle/mud_sprites.inc"
 .include "handle_mud.s"
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 
 	;==========================
 	; update screen
@@ -184,9 +195,13 @@ update_screen:
 
 
 	;====================
-	; always draw peasant
+	; draw peasant
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 
 	jsr	draw_peasant
-
+skip_draw_peasant:
 
 	rts

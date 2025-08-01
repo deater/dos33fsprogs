@@ -1,4 +1,9 @@
 
+getting points:
+	merge with message print so it prints message and plays sound.
+	adds some delay for message but also if playing with sound off
+	you aren't surprised by the weird pause
+
 
 walking:
 	sub-pixel walking left/right?  Currently we walk too fast

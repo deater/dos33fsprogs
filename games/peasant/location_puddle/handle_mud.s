@@ -60,76 +60,89 @@ no_make_muddy:
 	; draw rather dashing falling into mud
 
 fall_into_mud:
-.if 0
-	lda	#0
-	sta	ARCHER_COUNT
 
-leave_loop:
+	lda	#0
+	sta	MUD_COUNT
+
+	lda	#SUPPRESS_PEASANT
+	sta	SUPPRESS_DRAWING
+
+mud_fall_loop:
 
 	jsr	update_screen
 
-	ldy	ARCHER_COUNT
-	ldx	archer_lookup,Y
+	ldy	MUD_COUNT
+	ldx	mud_lookup,Y
 
-
-
-	lda	archer_leave_x,Y
+;	lda	archer_leave_x,X
+	lda	PEASANT_X
 	sta	CURSOR_X
-	lda	archer_leave_y,Y
+;	lda	archer_leave_y,X
+	lda	PEASANT_Y
+	; adc ?
 	sta	CURSOR_Y
 
-	ldx	archer_leave_which,Y
-
-	jsr	hgr_sprite_custom_bg_mask
-
+;	jsr	hgr_sprite_custom_bg_mask
 
 	jsr	hgr_page_flip
 
 	;=========================
 	; move to next frame
 
-	inc	ARCHER_COUNT
+	inc	MUD_COUNT
 
-	lda	ARCHER_COUNT
-	cmp	#22
-	bne	leave_loop
+	lda	MUD_COUNT
+	cmp	#28
+	bne	mud_fall_loop
 
-done_leaving:
-.endif
+done_mud_fall:
+
+	lda	SUPPRESS_DRAWING
+	and	#<(~SUPPRESS_PEASANT)
+	sta	SUPPRESS_DRAWING
+
 	rts
 
-.if 0
-	; starts at 196 (28) ,81
-	; walks diagonal 13 until he gets to 231 (33), 109
-	; then walks right 11 until edge of screen,
-	;	4 more partially on screen
 
-archer_leave_x:
-	.byte 28,28,29,29, 30,30,31,31, 32,32,33,33
-	.byte 34,34,35,35, 36,36,37,37, 38,38
-archer_leave_y:
-	.byte 83,85,87,89, 91,93,95,97, 99,101,103,105
-	.byte 107,109,109,109, 109,109,109,109, 109,109
+	; fall in place?
+	; facing right?  (check to see what happens when enter from right)
 
-archer_leave_which:
-	.byte 1,2,0,1, 2,0,1,2, 0,1,2,0
-	.byte 1,2,0,1, 2,0,1,2, 0,1
+	; 0:	put on brown pants
+	; 1:    slip backward, feet up
+	; 2:    sideways
+	; 3:    mostly flipped up in air
+	; 4:	totally upside down
+	; 5:	only feet sticking up, left leg higher
+	; 6:	right leg up
+	; 5,6,5,6,5,6,5,6,5,6,5,6
+	; 7:    pull head up
+	; 8:	pull up more
+	; 9:	up on elbows
+	; 10:	ankle deep
+	; 11:	standing face forward (5 frames?)
+	; print message
 
+
+mud_lookup:
+	.byte 0,1,2,3, 4,5,6,5
+	.byte 6,5,6,5, 6,5,6,5
+	.byte 6,5,6,7, 8,9,10,11
+	.byte 11,11,11,11
 
 custom_sprites_data_l:
-	.byte <leaving0_sprite,<leaving1_sprite,<leaving2_sprite
+;	.byte <leaving0_sprite,<leaving1_sprite,<leaving2_sprite
 custom_sprites_data_h:
-	.byte >leaving0_sprite,>leaving1_sprite,>leaving2_sprite
+;	.byte >leaving0_sprite,>leaving1_sprite,>leaving2_sprite
 
 custom_mask_data_l:
-	.byte <leaving0_mask,<leaving1_mask,<leaving2_mask
+;	.byte <leaving0_mask,<leaving1_mask,<leaving2_mask
 custom_mask_data_h:
-	.byte >leaving0_mask,>leaving1_mask,>leaving2_mask
+;	.byte >leaving0_mask,>leaving1_mask,>leaving2_mask
 
 custom_sprites_xsize:
-	.byte 2,2,2
+;	.byte 2,2,2
 custom_sprites_ysize:
-	.byte 33,33,33
+;	.byte 33,33,33
 
 
-.endif
+

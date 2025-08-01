@@ -359,6 +359,7 @@ BOW_X		= $C9	; target
 JHONKA_COUNT	= $C9	; jhonka
 WIPE_COUNT	= $C9	; inside inn day/night
 SLEEP_COUNT	= $C9	; trogdor
+MUD_COUNT	= $C9	; puddle
 
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3
