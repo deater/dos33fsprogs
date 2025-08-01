@@ -97,6 +97,8 @@ mud_fall_loop:
 
 done_mud_fall:
 
+	jsr	stop_walking
+
 	lda	SUPPRESS_DRAWING
 	and	#<(~SUPPRESS_PEASANT)
 	sta	SUPPRESS_DRAWING

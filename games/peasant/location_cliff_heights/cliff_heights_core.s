@@ -31,9 +31,7 @@ cliff_heights:
 	lda	#150
 	sta	PEASANT_Y
 
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+	jsr	stop_walking
 
 	; score points
 

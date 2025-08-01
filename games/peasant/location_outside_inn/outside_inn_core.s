@@ -54,10 +54,7 @@ check_pot_head:
 
 	; stop walking
 
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
-
+	jsr	stop_walking
 
 no_before_game_text:
 

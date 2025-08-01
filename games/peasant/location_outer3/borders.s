@@ -28,9 +28,7 @@ check_exit_east:
 	lda	#170
 	sta	PEASANT_Y
 
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+	jsr	stop_walking
 
 done_borders:
 

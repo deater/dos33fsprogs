@@ -8,9 +8,9 @@
 	;	can't walk unless win
 handle_keeper3:
 
-	lda	#0		; stop walking
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+	jsr	stop_walking
+
+	lda	#0
 	sta	KEEPER_COUNT
 
 	lda	#1		; start a quiz

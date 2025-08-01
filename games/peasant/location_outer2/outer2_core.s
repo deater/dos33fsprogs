@@ -67,9 +67,7 @@ done_keyboard_check:
 	lda	IN_QUIZ
 	beq	not_in_quiz
 
-	lda	#0		; keep from moving
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+	jsr	stop_walking	; keep from moving
 
 	lda	OLD_DIR		; keep from changing dir
 	sta	PEASANT_DIR

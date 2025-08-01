@@ -258,3 +258,9 @@ collision_offset:
 
 collision_masks:
 	.byte $80,$40,$20,$10,$08,$04,$02,$01
+
+stop_walking:
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	rts

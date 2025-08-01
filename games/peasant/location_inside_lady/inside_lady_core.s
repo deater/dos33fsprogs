@@ -109,10 +109,7 @@ done_trinket_message:
 ;	sta	PEASANT_Y
 
 	; stop walking
-;	lda	#0
-;	sta	PEASANT_XADD
-;	sta	PEASANT_YADD
-
+;	jsr	stop_walking
 
 	; move back
 
