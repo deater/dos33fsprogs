@@ -12,8 +12,24 @@ jhonka_core:
 
 .include "../location_common/common_core.s"
 
-	;=====================
-	; at jhonka cave
+
+	;=============================
+	; handle note on door
+
+	jsr	unpost_note
+
+	;=============================
+	; handle riches
+
+	jsr	place_riches
+
+	;=============================
+	; handle background haystack
+
+	jsr	haystack_bg
+
+	;==========================
+	; see if print hay message
 
 before_jhonka_cave:
 	; check to see if in hay
@@ -28,10 +44,6 @@ before_jhonka_cave:
 
 no_before_game_text:
 
-	;=============================
-	; handle note on door
-
-	jsr	unpost_note
 
 	;============================
 	; add jhonka collision
@@ -139,7 +151,8 @@ really_level_over:
 .include "jhonka_actions.s"
 .include "draw_jhonka.s"
 .include "sprites_jhonka/sprites_jhonka.inc"
-.include "unpost_note.s"
+.include "sprites_jhonka/sprites_riches.inc"
+.include "update_bg.s"
 
 USE_BG_PALETTE=1
 .include "../hgr_routines/hgr_sprite_mask.s"

@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	sprites_jhonka.inc
+all:	sprites_jhonka.inc sprites_riches.inc
 
 
 sprites_jhonka.inc:	sprites_jhonka.png
@@ -17,6 +17,10 @@ sprites_jhonka.inc:	sprites_jhonka.png
 	$(HGR_SPRITE) -l jhonka3_mask   sprites_jhonka.png 154  63 195  86 >> sprites_jhonka.inc
 	$(HGR_SPRITE) -l jhonka4_mask   sprites_jhonka.png  14 154  48 185 >> sprites_jhonka.inc
 	$(HGR_SPRITE) -l jhonka5_mask   sprites_jhonka.png  49 161  90 185 >> sprites_jhonka.inc
+
+sprites_riches.inc:	sprites_riches.png
+	$(HGR_SPRITE) -s -l nostack_sprite sprites_riches.png 154  55 181  72 > sprites_riches.inc
+	$(HGR_SPRITE) -s -l riches_sprite sprites_riches.png   91 100 139 126 >> sprites_riches.inc
 
 clean:
 	rm -f *~ sprites_jhonka.inc
