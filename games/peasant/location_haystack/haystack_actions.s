@@ -171,8 +171,8 @@ enter_hay_muddy:
 	bcs	really_enter_hay_muddy
 
 enter_hay_too_far:
-	ldx	#<hay_enter_hay_clean_message
-	ldy	#>hay_enter_hay_clean_message
+	ldx	#<hay_enter_hay_too_far_message
+	ldy	#>hay_enter_hay_too_far_message
 	jmp	finish_parse_message
 
 really_enter_hay_muddy:
