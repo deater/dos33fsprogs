@@ -7,7 +7,7 @@ mud_sprites.inc:	mud.png
 	$(HGR_SPRITE) -s -l mud_sprite1 mud.png  77 140 188 154 >> mud_sprites.inc
 
 fall_sprites.inc:	slip.png
-	$(HGR_SPRITE) -l fall0_sprite  slip.png  14 112  27 142 >> slip_sprites.inc
+	$(HGR_SPRITE) -l fall0_sprite  slip.png  14 112  27 142 > slip_sprites.inc
 	$(HGR_SPRITE) -l fall1_sprite  slip.png  42 112  69 141 >> slip_sprites.inc
 	$(HGR_SPRITE) -l fall2_sprite  slip.png  84 122 111 140 >> slip_sprites.inc
 	$(HGR_SPRITE) -l fall3_sprite  slip.png 126 116 153 140 >> slip_sprites.inc

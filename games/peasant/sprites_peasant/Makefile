@@ -14,7 +14,7 @@ all:	walking_sprites.zx02 \
 ####
 
 PEASANT_SPRITES_COMMON:	peasant_sprite_common.o
-	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o PEASANT_SPRITES_COMMON peasant_sprite_common.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 peasant_sprite_common.o:	peasant_sprite_common.s \
 	walking_sprites.zx02 \
@@ -27,7 +27,7 @@ peasant_sprite_common.o:	peasant_sprite_common.s \
 ####
 
 PEASANT_SPRITES_OUTER:	peasant_sprite_outer.o
-	ld65 -o PEASANT_SPRITES_OUTER peasant_sprite_outer.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+	ld65 -o PEASANT_SPRITES_OUTER peasant_sprite_outer.o -C $(LINKER_SCRIPTS)/apple2_2000.inc
 
 peasant_sprite_outer.o:	peasant_sprite_outer.s \
 	robe_shield_sprites.zx02 \

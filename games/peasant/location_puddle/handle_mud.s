@@ -87,7 +87,7 @@ mud_fall_loop:
 
 	jsr	hgr_page_flip
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	;=========================
 	; move to next frame
@@ -146,8 +146,6 @@ mud_xadd:
 	.byte $FF,$FF,$FF,0, 0, 0, 0
 
 
-
-.if 0
 custom_sprites_data_l:
 	.byte <fall0_sprite,<fall1_sprite,<fall2_sprite
 	.byte <fall3_sprite,<fall4_sprite,<fall5_sprite
@@ -160,7 +158,8 @@ custom_sprites_data_h:
 	.byte >fall6_sprite,>fall7_sprite,>fall8_sprite
 	.byte >fall9_sprite,>fall10_sprite,>fall11_sprite
 	.byte >fall12_sprite,>fall13_sprite,>fall14_sprite
-.endif
+
+.if 0
 custom_sprites_data_l:
 	.byte <fall0_mask,<fall1_mask,<fall2_mask
 	.byte <fall3_mask,<fall4_mask,<fall5_mask
@@ -173,7 +172,7 @@ custom_sprites_data_h:
 	.byte >fall6_mask,>fall7_mask,>fall8_mask
 	.byte >fall9_mask,>fall10_mask,>fall11_mask
 	.byte >fall12_mask,>fall13_mask,>fall14_mask
-
+.endif
 
 custom_mask_data_l:
 	.byte <fall0_mask,<fall1_mask,<fall2_mask

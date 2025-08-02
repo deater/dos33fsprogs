@@ -1,6 +1,6 @@
 priority_location		= $400		; 1k
 
-peasant_sprites_temp		= $6000
+peasant_sprites_temp		= $2000
 peasant_sprites_location	= $b000		; 4k
 
 priority_temp			= $7000		; 1k
