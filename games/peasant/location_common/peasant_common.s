@@ -41,12 +41,17 @@ must_exit_hay:
 	and	#<(~COVERED_IN_MUD)
 	sta	GAME_STATE_2
 
+	; TODO: show animation
+
+	; change back to normal clothes
+
+	lda	#PEASANT_OUTFIT_SHORTS
+	jsr	load_peasant_sprites
+
 	; print message
 	ldx	#<hay_blown_away_message
 	ldy	#>hay_blown_away_message
 	jsr	partial_message_step
-
-	; TODO: show animation
 
 	rts
 
