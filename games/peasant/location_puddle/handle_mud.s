@@ -74,17 +74,20 @@ mud_fall_loop:
 	ldy	MUD_COUNT
 	ldx	mud_lookup,Y
 
-;	lda	archer_leave_x,X
 	lda	PEASANT_X
+	clc
+	adc	mud_xadd,X
 	sta	CURSOR_X
-;	lda	archer_leave_y,X
+	clc
 	lda	PEASANT_Y
-	; adc ?
+	adc	mud_yadd,X
 	sta	CURSOR_Y
 
-;	jsr	hgr_sprite_custom_bg_mask
+	jsr	hgr_sprite_custom_bg_mask
 
 	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
 
 	;=========================
 	; move to next frame
@@ -114,37 +117,83 @@ done_mud_fall:
 	; 2:    sideways
 	; 3:    mostly flipped up in air
 	; 4:	totally upside down
-	; 5:	only feet sticking up, left leg higher
-	; 6:	right leg up
-	; 5,6,5,6,5,6,5,6,5,6,5,6
-	; 7:    pull head up
-	; 8:	pull up more
-	; 9:	up on elbows
-	; 10:	ankle deep
-	; 11:	standing face forward (5 frames?)
+	; 5:	only feet sticking up, left leg higher, mud
+	; 6:	right leg up, mud
+	; 7:	left leg up, less mud
+	; 8:    right leg, no mud
+	; 9:	left leg, no mud
+	; 8,9,8,9,8,9,8,9,8,9,8,9
+	; 10:    pull head up
+	; 11:	pull up more
+	; 12:	up on elbows
+	; 13:	ankle deep
+	; 14:	standing face forward (5 frames?)
 	; print message
 
 
 mud_lookup:
-	.byte 0,1,2,3, 4,5,6,5
-	.byte 6,5,6,5, 6,5,6,5
-	.byte 6,5,6,7, 8,9,10,11
-	.byte 11,11,11,11
+	.byte 0,1,2,3,  4,5,6,7
+	.byte 8,9,8,9,  8,9,8,9
+	.byte 8,9,8,10, 11,12,13,14
+	.byte 14,14,14,14
 
+mud_yadd:
+	.byte  0, 0, 0, 0,  0,16,16,16
+	.byte 16,16,19,19, 16, 6, 0
+
+mud_xadd:
+	.byte  0,$FF,$FF,$FF,  0,$FF,$FF,$FF
+	.byte $FF,$FF,$FF,0, 0, 0, 0
+
+
+
+.if 0
 custom_sprites_data_l:
-;	.byte <leaving0_sprite,<leaving1_sprite,<leaving2_sprite
+	.byte <fall0_sprite,<fall1_sprite,<fall2_sprite
+	.byte <fall3_sprite,<fall4_sprite,<fall5_sprite
+	.byte <fall6_sprite,<fall7_sprite,<fall8_sprite
+	.byte <fall9_sprite,<fall10_sprite,<fall11_sprite
+	.byte <fall12_sprite,<fall13_sprite,<fall14_sprite
 custom_sprites_data_h:
-;	.byte >leaving0_sprite,>leaving1_sprite,>leaving2_sprite
+	.byte >fall0_sprite,>fall1_sprite,>fall2_sprite
+	.byte >fall3_sprite,>fall4_sprite,>fall5_sprite
+	.byte >fall6_sprite,>fall7_sprite,>fall8_sprite
+	.byte >fall9_sprite,>fall10_sprite,>fall11_sprite
+	.byte >fall12_sprite,>fall13_sprite,>fall14_sprite
+.endif
+custom_sprites_data_l:
+	.byte <fall0_mask,<fall1_mask,<fall2_mask
+	.byte <fall3_mask,<fall4_mask,<fall5_mask
+	.byte <fall6_mask,<fall7_mask,<fall8_mask
+	.byte <fall9_mask,<fall10_mask,<fall11_mask
+	.byte <fall12_mask,<fall13_mask,<fall14_mask
+custom_sprites_data_h:
+	.byte >fall0_mask,>fall1_mask,>fall2_mask
+	.byte >fall3_mask,>fall4_mask,>fall5_mask
+	.byte >fall6_mask,>fall7_mask,>fall8_mask
+	.byte >fall9_mask,>fall10_mask,>fall11_mask
+	.byte >fall12_mask,>fall13_mask,>fall14_mask
+
 
 custom_mask_data_l:
-;	.byte <leaving0_mask,<leaving1_mask,<leaving2_mask
+	.byte <fall0_mask,<fall1_mask,<fall2_mask
+	.byte <fall3_mask,<fall4_mask,<fall5_mask
+	.byte <fall6_mask,<fall7_mask,<fall8_mask
+	.byte <fall9_mask,<fall10_mask,<fall11_mask
+	.byte <fall12_mask,<fall13_mask,<fall14_mask
 custom_mask_data_h:
-;	.byte >leaving0_mask,>leaving1_mask,>leaving2_mask
+	.byte >fall0_mask,>fall1_mask,>fall2_mask
+	.byte >fall3_mask,>fall4_mask,>fall5_mask
+	.byte >fall6_mask,>fall7_mask,>fall8_mask
+	.byte >fall9_mask,>fall10_mask,>fall11_mask
+	.byte >fall12_mask,>fall13_mask,>fall14_mask
 
 custom_sprites_xsize:
-;	.byte 2,2,2
+	.byte  2, 4, 4, 4,  2, 4, 4, 4
+	.byte  4, 4, 4, 2,  2, 2, 2
 custom_sprites_ysize:
-;	.byte 33,33,33
+	.byte 30,29,18,24, 30,12,12,12
+	.byte 12,12, 9, 9, 13,23,30
 
 
 

@@ -38,7 +38,8 @@ puddle_core.o:	puddle_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../text/DIALOG_PUDDLE.ZX02 ../text/dialog_puddle.inc \
 		graphics_puddle/puddle_graphics.inc \
 		graphics_puddle/puddle_priority.inc \
-		sprites_puddle/mud_sprites.inc
+		sprites_puddle/mud_sprites.inc \
+		sprites_puddle/slip_sprites.inc
 	ca65 -o puddle_core.o puddle_core.s -l puddle_core.lst
 
 

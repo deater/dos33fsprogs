@@ -178,6 +178,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "puddle_actions.s"
 .include "sprites_puddle/mud_sprites.inc"
+.include "sprites_puddle/slip_sprites.inc"
 .include "handle_mud.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
