@@ -182,22 +182,24 @@ of bytes.
 
 == LOAD ADDRESS CONSIDERATIONS ==
 
-The CHRGET load address starts at
-$800, the default load address of BASIC
-programs.  We want to point it to ROM
-which is at the top of the address
-space.  The easiest way to do this
-is just have some high address bytes
-at the start of the code and just load
-the program so it drops into the middle
-of the LDA instruction.
+The CHRGET load address TXTPTR starts at
+$800 (the default load address of BASIC
+programs) or somewhere around $200
+(if reading from the keyboard buffer).
+We want to point it to ROM which is at
+ the top of the address space.  The
+easiest way to do this is just have
+some high address bytes at the start
+of the code and just load the program
+so it drops into the middle of the
+LDA instruction.
 
 If we were running code by entering
 it into the assembly language monitor
 that would be fine, we could load
 the bytes and then jump to an arbitrary
 memory offset.  However for the
-competition we are going to load from
+demoparty entry we are going to load from
 disk so we have to start executing
 from the start of our binary.  This
 means these address bytes also need
@@ -363,11 +365,20 @@ CALL -151
 B8: 2C EA 20 F4 F3 20 D8 F3 
 B8G
 
+Note: on an Apple IIgs (or system with
+an 65c816 processor) F4/F3 don't
+behave as NOPs anymore.  On a system
+like that, try launching things with
+"BDG" instead.
+
 =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 by Vince `deater` Weaver
    http://www.deater.net/weave
    11 February 2023
+
+Updated:
+    5 August 2025
 
 with apologies to 4AM for vaguely
      stealing his writeup format
