@@ -37,6 +37,7 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		jump_hay.s \
 		sprites_haystack/haystack_gone_sprite.inc \
 		sprites_haystack/jump_in_hay_sprite.inc \
+		sprites_haystack/haystack_sprite.inc \
 		haystack_actions.s haystack_gone.s
 	ca65 -o haystack_core.o haystack_core.s -l haystack_core.lst
 

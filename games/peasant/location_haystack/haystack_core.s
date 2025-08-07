@@ -122,6 +122,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
 .include "jump_hay.s"
+.include "sprites_haystack/haystack_sprite.inc"
 
 	;========================
 	; update screen
