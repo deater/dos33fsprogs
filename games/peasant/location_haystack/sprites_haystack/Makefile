@@ -14,7 +14,7 @@ jump_in_hay_sprite.inc:	jump_in_hay.png
 	$(HGR_SPRITE) -l jump_sprite4 jump_in_hay.png 126 140 153 157 >> jump_in_hay_sprite.inc
 	$(HGR_SPRITE) -l jump_sprite5 jump_in_hay.png 168 138 195 157 >> jump_in_hay_sprite.inc
 	$(HGR_SPRITE) -l jump_sprite6 jump_in_hay.png 210 148 223 157 >> jump_in_hay_sprite.inc
-	$(HGR_SPRITE) -l jump_mask0 jump_in_hay.png  14 166  27 190 > jump_in_hay_sprite.inc
+	$(HGR_SPRITE) -l jump_mask0 jump_in_hay.png  14 166  27 190 >> jump_in_hay_sprite.inc
 	$(HGR_SPRITE) -l jump_mask1 jump_in_hay.png  42 167  55 190 >> jump_in_hay_sprite.inc
 	$(HGR_SPRITE) -l jump_mask2 jump_in_hay.png  70 159  83 190 >> jump_in_hay_sprite.inc
 	$(HGR_SPRITE) -l jump_mask3 jump_in_hay.png  98 162 118 190 >> jump_in_hay_sprite.inc

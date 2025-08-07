@@ -190,7 +190,7 @@ really_enter_hay_muddy:
 	jsr	peasant_walkto
 
 	; animate jump
-;	jsr	jump_in_hay
+	jsr	jump_in_hay
 
 	; add 3 points to score
 

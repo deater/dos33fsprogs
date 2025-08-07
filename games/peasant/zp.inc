@@ -360,6 +360,7 @@ JHONKA_COUNT	= $C9	; jhonka
 WIPE_COUNT	= $C9	; inside inn day/night
 SLEEP_COUNT	= $C9	; trogdor
 MUD_COUNT	= $C9	; puddle
+HAY_JUMP_COUNT	= $C9	; hay
 
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3,jhonka
