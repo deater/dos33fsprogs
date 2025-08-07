@@ -117,6 +117,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "haystack_actions.s"
 .include "sprites_haystack/haystack_gone_sprite.inc"
+.include "sprites_haystack/jump_in_hay_sprite.inc"
 .include "haystack_gone.s"
 .include "../hgr_routines/hgr_sprite.s"
 
