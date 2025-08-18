@@ -36,9 +36,10 @@ jhonka_core.o:	jhonka_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/init_common.s \
 		sprites_jhonka/sprites_jhonka.inc \
 		sprites_jhonka/sprites_riches.inc \
+		sprites_jhonka/sprites_beat.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
-		../wait_a_bit.s borders.s \
+		../wait_a_bit.s borders.s jhonka_beat.s \
 		jhonka_actions.s draw_jhonka.s update_bg.s
 	ca65 -o jhonka_core.o jhonka_core.s -l jhonka_core.lst
 

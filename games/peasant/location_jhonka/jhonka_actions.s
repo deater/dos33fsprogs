@@ -249,6 +249,17 @@ jhonka_verb_yes:
 
 	; we don't need to restore verb table because we're dying?
 
+
+	ldx	#<jhonka_yes_message
+	ldy	#>jhonka_yes_message
+	jsr	partial_message_step
+
+	jsr	jhonka_beat
+
+	ldx	#<jhonka_yes_message2
+	ldy	#>jhonka_yes_message2
+	jsr	finish_parse_message
+
 	; this kills you
 	lda	#LOAD_GAME_OVER
 	sta	WHICH_LOAD
@@ -256,13 +267,7 @@ jhonka_verb_yes:
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER
 
-	ldx	#<jhonka_yes_message
-	ldy	#>jhonka_yes_message
-	jsr	partial_message_step
-
-	ldx	#<jhonka_yes_message2
-	ldy	#>jhonka_yes_message2
-	jmp	finish_parse_message
+	rts
 
 
 	;=================

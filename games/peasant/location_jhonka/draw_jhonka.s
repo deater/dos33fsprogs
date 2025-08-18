@@ -74,24 +74,44 @@ jhonka_y:
 	.byte 121,121,121,124,124,124
 
 sprites_xsize:
-	.byte  5,5,6,6,5,6			; jhonka0..jhonka5
+	.byte  5,5,6,6			; jhonka0..jhonka3
+	.byte  5,5,6,6			; jhonka4..jhonka7
+	.byte  5,6			; jhonka8..jhonka9
 
 sprites_ysize:
-        .byte 24,26,26,23,31,24,24,26		; jhonka0..jhonka5
+        .byte 24,26,26,23		; jhonka0..jhonka3
+        .byte 24,26,26,23		; jhonka4..jhonka7
+	.byte 31,24			; jhonka8..jhonka9
 
+	; note: 6 never used?
+
+	; 0 = club on left,  club down, knees bent
+	; 1 = club on left,  club down, standing
+	; 2 = club on left,  club out, standing
+	; 3 = club of left,  club out, knees bent
+	; 4 = club on right, club down, knees bent
+	; 5 = club on right, club down, standing
+	; 6 = club on right, club out, standing
+	; 7 = club of right, club out, knees bent
+	; 8 = club on right, club raised
+	; 9 = club on right, club hitting
 
 sprites_data_l:
-        .byte <jhonka0_sprite,<jhonka1_sprite,<jhonka2_sprite
-        .byte <jhonka3_sprite,<jhonka4_sprite,<jhonka5_sprite
+        .byte <jhonka0_sprite,<jhonka1_sprite,<jhonka2_sprite,<jhonka3_sprite
+	.byte <jhonka4_sprite,<jhonka5_sprite,<jhonka6_sprite,<jhonka7_sprite
+	.byte <jhonka8_sprite,<jhonka9_sprite
 
 sprites_data_h:
-        .byte >jhonka0_sprite,>jhonka1_sprite,>jhonka2_sprite
-        .byte >jhonka3_sprite,>jhonka4_sprite,>jhonka5_sprite
+        .byte >jhonka0_sprite,>jhonka1_sprite,>jhonka2_sprite,>jhonka3_sprite
+	.byte >jhonka4_sprite,>jhonka5_sprite,>jhonka6_sprite,>jhonka7_sprite
+	.byte >jhonka8_sprite,>jhonka9_sprite
 
 sprites_mask_l:
-        .byte <jhonka0_mask,<jhonka1_mask,<jhonka2_mask
-        .byte <jhonka3_mask,<jhonka4_mask,<jhonka5_mask
+        .byte <jhonka0_mask,<jhonka1_mask,<jhonka2_mask,<jhonka3_mask
+	.byte <jhonka4_mask,<jhonka5_mask,<jhonka6_mask,<jhonka7_mask
+	.byte <jhonka8_mask,<jhonka9_mask
 
 sprites_mask_h:
-        .byte >jhonka0_mask,>jhonka1_mask,>jhonka2_mask
-        .byte >jhonka3_mask,>jhonka4_mask,>jhonka5_mask
+        .byte >jhonka0_mask,>jhonka1_mask,>jhonka2_mask,>jhonka3_mask
+	.byte >jhonka4_mask,>jhonka5_mask,>jhonka6_mask,>jhonka7_mask
+	.byte >jhonka8_mask,>jhonka9_mask

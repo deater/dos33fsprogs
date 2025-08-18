@@ -342,6 +342,7 @@ SUPPRESS_DRAWING=$C5		; don't draw peasant
 	CUSTOM_PEASANT= $08
 	SUPPRESS_KEEPER= $10
 	SUPPRESS_ARROW = $20
+	SUPPRESS_JHONKA = $40
 
 SAVED_Y1	= $C7		; climb (for now)
 SAVED_Y2	= $C8		; climb
@@ -362,6 +363,7 @@ SLEEP_COUNT	= $C9	; trogdor
 MUD_COUNT	= $C9	; puddle
 HAY_JUMP_COUNT	= $C9	; hay
 
+BEAT_COUNT	= $CA	; jhonka
 BUCKET_STATE	= $CA	; well
 IN_QUIZ		= $CA	; outer1/2/3,jhonka
 GARY_COUNT	= $CA	; gary

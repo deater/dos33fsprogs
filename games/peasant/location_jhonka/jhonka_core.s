@@ -173,7 +173,9 @@ really_level_over:
 .include "draw_jhonka.s"
 .include "sprites_jhonka/sprites_jhonka.inc"
 .include "sprites_jhonka/sprites_riches.inc"
+.include "sprites_jhonka/sprites_beat.inc"
 .include "update_bg.s"
+.include "jhonka_beat.s"
 
 USE_BG_PALETTE=1
 .include "../hgr_routines/hgr_sprite_mask.s"
@@ -192,13 +194,22 @@ update_screen:
 	jsr	hgr_copy_faster
 
 	;=====================
-	; always draw peasant
+	; draw peasant
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 	jsr	draw_peasant
+skip_draw_peasant:
 
 	;=====================
 	; draw jhonka
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_JHONKA
+	bne	skip_draw_jhonka
+
 	jsr	draw_jhonka
+skip_draw_jhonka:
 
 	rts
