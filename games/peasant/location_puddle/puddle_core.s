@@ -62,6 +62,8 @@ game_loop:
 	;=====================
 
 at_mud_puddle:
+
+	;====================
 	; see if falling in
 
 	; see if puddle wet
@@ -76,16 +78,16 @@ at_mud_puddle:
 
 	; see if X in range
 	lda	PEASANT_X
-	cmp	#$B
+	cmp	#12
 	bcc	skip_level_specific
-	cmp	#$1B
+	cmp	#27
 	bcs	skip_level_specific
 
 	; see if Y in range
 	lda	PEASANT_Y
-	cmp	#$64
+	cmp	#104
 	bcc	skip_level_specific
-	cmp	#$80
+	cmp	#128
 	bcs	skip_level_specific
 
 	; in range! fall in!

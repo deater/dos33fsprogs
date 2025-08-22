@@ -6,6 +6,10 @@
 load_peasant_sprites:
 	sta	WHICH_PEASANT_SPRITES
 
+	tax
+	ldy	outfit_bg_pal_lookup,X
+	sty	OUTFIT_BG_PALETTE
+
 	cmp	#5			; see which to load
 	bcs	outer_peasant_sprites
 
@@ -47,3 +51,8 @@ no_adjust_peasant_sprites:
 
 	rts					; TODO: tail call?
 
+
+	; shorts, robe, mud, pot, haystack
+	; shield, robe2, helm, sword
+outfit_bg_pal_lookup:
+	.byte 1,0,0,0,0,0,0,0

@@ -222,6 +222,9 @@ hsbm_draw_sprite_both:
 	; if so TEMP_SPRITE should be anded with $7f previously
 	; and temp mask should have high bit set
 
+	lda	OUTFIT_BG_PALETTE
+	beq	dont_use_bg_palette
+
 	lda	TEMP_SPRITE
 	and	#$7f
 	sta	TEMP_SPRITE
@@ -229,6 +232,8 @@ hsbm_draw_sprite_both:
 	lda	TEMP_MASK
 	ora	#$80
 	sta	TEMP_MASK
+
+dont_use_bg_palette:
 
 	lda	(GBASL),Y		; load background
 	and	TEMP_MASK		; and with mask
