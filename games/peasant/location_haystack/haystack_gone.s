@@ -18,9 +18,9 @@ haystack_update_bg:
 	; $94 08->00
 	; $95 08->00
 
-;	lda	#$00
-;	sta	collision_location+$94
-;	sta	collision_location+$95
+	lda	#$00
+	sta	collision_location+$94
+	sta	collision_location+$95
 
 
 	;============================

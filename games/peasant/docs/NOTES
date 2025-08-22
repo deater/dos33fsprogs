@@ -1,3 +1,11 @@
+notes for future presentation:
+
+	+ x kinds of sprite drawing
+	+ shrank some sprites (haystack) to fit in 256 bytes (one page)
+	+ need to outline colors / color clash
+
+
+
 decompress
 	knight = 5f535 = 390435 = 3fps
 

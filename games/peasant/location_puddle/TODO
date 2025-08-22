@@ -1,3 +1,7 @@
 - Puddle
-  + Alternate version with wet mud
-  + Animation for falling into mud
+
+  + Set it up so when emerging from the mud we are orange not green
+	probably involves setting the BG_PAL define properly
+
+  + (done) Alternate version with wet mud
+  + (done) Animation for falling into mud

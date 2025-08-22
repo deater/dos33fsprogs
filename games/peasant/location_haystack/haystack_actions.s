@@ -185,9 +185,12 @@ really_enter_hay_muddy:
 
 	; walk to location
 
-	ldx	#25
-	ldy	#124
+	ldx	#24
+	ldy	#117
 	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
 
 	; animate jump
 	jsr	jump_in_hay
@@ -197,6 +200,9 @@ really_enter_hay_muddy:
 	lda	#3
 	jsr	score_points
 
+	; TODO
+	;	back to normal clothes?
+
 	; get in hay
 	lda	GAME_STATE_1
 	ora	#IN_HAY_BALE
@@ -205,6 +211,23 @@ really_enter_hay_muddy:
 	ldx	#<hay_enter_hay_muddy_message2
 	ldy	#>hay_enter_hay_muddy_message2
 	jsr	finish_parse_message
+
+	; unsuppress peasant
+
+	lda	#0
+	sta	SUPPRESS_DRAWING
+
+	; move peasant to new location
+
+	lda	#30			; 210
+	sta	PEASANT_X
+
+	lda	#117
+	sta	PEASANT_Y
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
 
 	; erase haystack from background
 
