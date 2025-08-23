@@ -1,8 +1,27 @@
 notes for future presentation:
 
+	+ had to abandon 2 disk idea
+		including lots of work done with idea of using two drives
+		to avoid swapping
+
+	+ ProDOS image to make disk swappign not happen on modern/emulator
+		also tried to arrange files so less swappign with floppies
+
+	+ splitting up had lots of advantages
+		- less room for text
+		- more room for sprites
+		- more loads from disk
+
+	+ sound work
+
+	+ licensing
+
 	+ x kinds of sprite drawing
 	+ shrank some sprites (haystack) to fit in 256 bytes (one page)
 	+ need to outline colors / color clash
+
+	+ mud, against green background
+	+ night scene solution
 
 
 

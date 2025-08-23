@@ -15,13 +15,20 @@ haystack_update_bg:
 
 	; update collision
 
-	; $94 08->00
-	; $95 08->00
+	; $BC 08->00
+	; $BD 08->00
+	; $BE 08->00
+	; $BF 08->00
+	; $C0 08->00
+	; $C1 08->00
 
 	lda	#$00
-	sta	collision_location+$94
-	sta	collision_location+$95
-
+	sta	collision_location+$BC
+	sta	collision_location+$BD
+	sta	collision_location+$BE
+	sta	collision_location+$BF
+	sta	collision_location+$C0
+	sta	collision_location+$C1
 
 	;============================
 	; update bg

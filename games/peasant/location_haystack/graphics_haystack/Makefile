@@ -31,7 +31,8 @@ haystack_priority.inc:  \
 haystack_priority.zx02:	haystack_priority.combined
 	$(ZX02) -f haystack_priority.combined haystack_priority.zx02
 
-haystack_priority.combined:	haystack_priority.gr haystack_collision.bin
+haystack_priority.combined:	haystack_priority.gr haystack_collision.bin \
+	haystack_collision_after.bin
 	cat haystack_priority.gr >  haystack_priority.combined
 	cat haystack_collision.bin >> haystack_priority.combined
 
@@ -40,6 +41,9 @@ haystack_priority.gr:	haystack_priority.png
 
 haystack_collision.bin:	haystack_collision.png
 	$(PNG2COLLISION) haystack_collision.png haystack_collision.bin
+
+haystack_collision_after.bin:	haystack_collision_after.png
+	$(PNG2COLLISION) haystack_collision_after.png haystack_collision_after.bin
 
 ####
 

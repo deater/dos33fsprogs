@@ -106,6 +106,11 @@ at_mud_puddle:
 	lda	#PEASANT_OUTFIT_MUD
 	jsr	load_peasant_sprites
 
+	; face down
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
 	; print message
 
 	ldx	#<puddle_walk_in_message
