@@ -177,6 +177,8 @@ enter_hay_too_far:
 
 really_enter_hay_muddy:
 
+	;====================================
+
 	; message 1 first
 
 	ldx	#<hay_enter_hay_muddy_message
@@ -203,14 +205,14 @@ really_enter_hay_muddy:
 	; TODO
 	;	back to normal clothes?
 
+	ldx	#<hay_enter_hay_muddy_message2
+	ldy	#>hay_enter_hay_muddy_message2
+	jsr	finish_parse_message
+
 	; get in hay
 	lda	GAME_STATE_1
 	ora	#IN_HAY_BALE
 	sta	GAME_STATE_1
-
-	ldx	#<hay_enter_hay_muddy_message2
-	ldy	#>hay_enter_hay_muddy_message2
-	jsr	finish_parse_message
 
 	; unsuppress peasant
 

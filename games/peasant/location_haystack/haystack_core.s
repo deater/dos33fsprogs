@@ -121,8 +121,10 @@ really_level_over:
 .include "haystack_gone.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
+.include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 .include "jump_hay.s"
 .include "sprites_haystack/haystack_sprite.inc"
+.include "draw_haystack.s"
 
 	;========================
 	; update screen
@@ -145,4 +147,12 @@ update_screen:
 	jsr	draw_peasant
 
 skip_draw_peasant:
+
+	;=====================
+	; draw haystack
+
+	jsr	draw_haystack
+
+
+
 	rts

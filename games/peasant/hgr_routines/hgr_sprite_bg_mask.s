@@ -6,16 +6,19 @@
 	;	see hgr_sprite_mask()
 	;===============================================
 	; *cannot* handle sprites bigger than 256 bytes
+	;	also maximum width is 6 (MASK0..MASK5 in zero page)
 	;
 	; attempts to shift for odd/even column
+
+	; Location at CURSOR_X CURSOR_Y
+
 	;
 	; ideally sprite palette has precedence over background
 	;     if completely transparent then let bg keep palette
 
-	; Location at CURSOR_X CURSOR_Y
-
 	; for now, BG mask is only all or nothing (from LORES)
 	; so we just skip drawing if behind
+	;
 	; this version handles arbitrary width sprites, which complicates
 	;	things
 
@@ -28,6 +31,7 @@ hgr_draw_sprite_bg_mask:
 
 	lda	peasant_sprites_xsize,X
 	sta	hdsb_width_smc+1
+	sta	mask_store_smc+1
 
 	;================================
 	; calculate bottom of sprite for Ypos loop
@@ -281,7 +285,7 @@ hdsb_done:
 
 	; Column (xpos/7) in Y
 	; Row in X
-	; updates MASK0..MASK2
+	; updates MASK0..MASK0+sprite_xsize (note: currently MASK6 is max)
 
 update_bg_mask:
 
@@ -313,7 +317,7 @@ update_bg_mask:
 	lda	gr_offsets+1,X
 	sta	BASH
 
-	; loop 3 times
+	; loop xsize times
 	ldx	#0
 set_mask_loop:
 
@@ -382,6 +386,7 @@ mask_store:
 
 	iny
 	inx
+mask_store_smc:
 	cpx	#3			; adjust if sprite size changes
 	bne	set_mask_loop
 

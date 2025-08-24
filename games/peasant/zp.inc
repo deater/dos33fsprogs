@@ -58,12 +58,20 @@ GBASH			= $27
 BASL			= $28
 BASH			= $29
 MASK			= $2E
+
+
+
 MASK0			= $2F   ; used by priority code in bg_mask
 MASK1			= $30
 MASK2			= $31
-PEASANT_PRIORITY	= $32
-MASK_COUNTDOWN		= $33
-KEY_OFFSET		= $34
+MASK3			= $32
+MASK4			= $33
+MASK5			= $34
+MASK6			= $35
+
+PEASANT_PRIORITY	= $36
+MASK_COUNTDOWN		= $37
+KEY_OFFSET		= $38
 
 ; this is the structure for a ProDOS smartport command, at least
 ; for a read (command=1)
@@ -375,6 +383,7 @@ ARROWED_COUNT	= $CA	; hidden glen
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer1/2/3
 ARROW_X		= $CB	; target
+HAY_BALE_COUNT	= $CB	; haystack,jhonka
 
 OLD_DIR		= $CC	; outer1/2/3,jhonka
 ARROW_Y		= $CC	; target

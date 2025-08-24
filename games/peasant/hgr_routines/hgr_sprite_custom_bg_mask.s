@@ -14,6 +14,7 @@ hgr_sprite_custom_bg_mask:
 
 	lda	custom_sprites_xsize,X
 	sta	hdsb_width_smc+1
+	sta	mask_store_smc+1
 
 	;================================
 	; calculate bottom of sprite for Ypos loop
