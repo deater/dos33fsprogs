@@ -11,7 +11,23 @@ haystack_update_bg:
 	beq	done_haystack_update_bg
 
 	; update depth
-	;	not needed as always going to be in bale?
+	; $6D..$71 : $bb -> $11
+	; $ec..$F1 : $bb -> $11
+	; $2C6..$2C8: $bb -> $11
+	; $345..$348: $bb -> $11
+	; $3C5..$3C69: $bb-> $11
+
+	lda	#$11
+	ldy	#6
+clear_priority_hay_loop:
+	sta	priority_location+$6D,Y
+	sta	priority_location+$EC,Y
+	sta	priority_location+$2C6,Y
+	sta	priority_location+$345,Y
+	sta	priority_location+$3C5,Y
+
+	dey
+	bpl	clear_priority_hay_loop
 
 	; update collision
 
