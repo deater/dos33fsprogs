@@ -35,9 +35,9 @@
 
 
 	;====================================
-	; check if allowed to be in haystack
+	; check other common entry code
 
-	jsr	check_haystack_exit
+	jsr	check_common_entry
 
 
 	;==========================
