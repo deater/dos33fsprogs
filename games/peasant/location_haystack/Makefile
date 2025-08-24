@@ -34,7 +34,7 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
-		jump_hay.s draw_haystack.s \
+		jump_hay.s draw_haystack.s check_haystack.s \
 		sprites_haystack/haystack_gone_sprite.inc \
 		sprites_haystack/jump_in_hay_sprite.inc \
 		sprites_haystack/haystack_sprite.inc \

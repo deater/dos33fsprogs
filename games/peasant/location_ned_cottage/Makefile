@@ -37,6 +37,7 @@ ned_cottage_core.o:	ned_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
+		../location_haystack/check_haystack.s \
 		sprites_ned_cottage/ned_sprites.inc \
 		ned_cottage_actions.s
 	ca65 -o ned_cottage_core.o ned_cottage_core.s -l ned_cottage_core.lst

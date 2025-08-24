@@ -21,6 +21,10 @@ ned_cottage_core:
 	ora	#MAP_OUTSIDE_NN
 	sta	VISITED_3
 
+	;======================================================
+	; check if in hay, and if so, make us no longer in hay
+
+	jsr	check_haystack_exit
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -154,6 +158,8 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite.s"
 
 .include "sprites_ned_cottage/ned_sprites.inc"
+
+.include "../location_haystack/check_haystack.s"
 
 	;=========================
 	; update screen

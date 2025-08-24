@@ -1,34 +1,32 @@
-; some common actions that are needed in all the peasantry levels
-
-; + exiting hastack
-; + kerrek body countdown
-; + night-time count down
-; + rain-storm count down
-
-
 	;======================================================
 	; if start level and not in JHONKA_CAVE or HAY_BALE
 	; then exit the hay bale, print message, do animation
 
+	; we only include this in the 4 locations it can happen
+	;	POOR_GARY
+	;	NED_HUT
+	;	PUDDLE
+	;	OUR_COTTAGE
+
 check_haystack_exit:
 
-	; fist see if in hay bale
+	; first see if in hay bale
 
 	lda	GAME_STATE_1
 	and	#IN_HAY_BALE
-	beq	hay_bale_good
+	beq	done_not_in_hay_bale
 
-	lda	MAP_LOCATION
-	cmp	#LOCATION_JHONKA_CAVE
-	beq	hay_bale_good
-	cmp	#LOCATION_HAY_BALE
-	bne	must_exit_hay
+must_exit_hay:
 
-hay_bale_good:
+	jsr	blow_hay_away
+
+done_not_in_hay_bale:
 	rts
 
 
-must_exit_hay:
+
+
+blow_hay_away:
 
 	; exit hay bale
 
@@ -54,5 +52,3 @@ must_exit_hay:
 	jsr	partial_message_step
 
 	rts
-
-

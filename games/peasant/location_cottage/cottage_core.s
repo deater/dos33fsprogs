@@ -19,6 +19,13 @@ cottage_core:
 	ora	#MAP_YOUR_COTTAGE
 	sta	VISITED_2
 
+	;======================================================
+	; check if in hay, and if so, make us no longer in hay
+
+	jsr	check_haystack_exit
+
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -98,6 +105,7 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "cottage_actions.s"
 
+.include "../location_haystack/check_haystack.s"
 
 	;==========================
 	; update screen

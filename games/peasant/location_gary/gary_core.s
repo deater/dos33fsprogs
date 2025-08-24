@@ -32,6 +32,11 @@ gary_core:
 	sta	WEARING_MASK		; make sure not wearing mask
 	sta	SUPPRESS_DRAWING	; no suppressions to start
 
+	;======================================================
+	; check if in hay, and if so, make us no longer in hay
+
+	jsr	check_haystack_exit
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -127,6 +132,7 @@ really_level_over:
 .include "sprites_gary/gary_sprites.inc"
 .include "sprites_gary/gary_bg.inc"
 .include "sprites_gary/gary_scare.inc"
+.include "../location_haystack/check_haystack.s"
 
 	;=========================
 	; update screen

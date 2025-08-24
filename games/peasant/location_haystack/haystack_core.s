@@ -125,6 +125,7 @@ really_level_over:
 .include "jump_hay.s"
 .include "sprites_haystack/haystack_sprite.inc"
 .include "draw_haystack.s"
+.include "check_haystack.s"
 
 	;========================
 	; update screen

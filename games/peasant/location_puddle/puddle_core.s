@@ -25,6 +25,13 @@ peasantry_puddle:
 
 	jsr	make_muddy
 
+
+	;======================================================
+	; check if in hay, and if so, make us no longer in hay
+
+	jsr	check_haystack_exit
+
+
 	;====================================================
 	; clear the keyboard in case we were holding it down
 
@@ -189,6 +196,7 @@ really_level_over:
 .include "handle_mud.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
+.include "../location_haystack/check_haystack.s"
 
 	;==========================
 	; update screen
