@@ -79,6 +79,7 @@ clear_priority_hay_loop:
 	lda	#>hg_sprite0
 	sta	INH
 
+
 	jsr	hgr_draw_sprite
 
 
@@ -91,7 +92,6 @@ clear_priority_hay_loop:
 done_haystack_update_bg:
 
 	rts
-
 
 
 

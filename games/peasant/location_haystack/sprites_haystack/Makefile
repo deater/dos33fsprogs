@@ -1,7 +1,7 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	haystack_gone_sprite.inc jump_in_hay_sprite.inc \
-	haystack_sprite.inc
+	haystack_sprite.inc blown_away_sprite.inc
 
 # 189 49 244 96
 haystack_gone_sprite.inc:	haystack_gone.png
@@ -33,6 +33,17 @@ jump_in_hay_sprite.inc:	jump_in_hay.png
 	$(HGR_SPRITE) -l jump_mask6 jump_in_hay.png 210 181 223 190 >> jump_in_hay_sprite.inc
 
 
+blown_away_sprite.inc:	blown_away.png
+	$(HGR_SPRITE) -l blown_sprite0 blown_away.png  14 50  55 92 > blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_sprite1 blown_away.png  70 50 111 85 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_sprite2 blown_away.png 126 50 174 82 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_sprite3 blown_away.png 182 50 209 76 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_sprite4 blown_away.png 224 50 237 61 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_mask0 blown_away.png  14 93  55 135 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_mask1 blown_away.png  70 93 111 128 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_mask2 blown_away.png 126 93 174 125 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_mask3 blown_away.png 182 93 209 119 >> blown_away_sprite.inc
+	$(HGR_SPRITE) -l blown_mask4 blown_away.png 224 93 237 104 >> blown_away_sprite.inc
 
 
 
@@ -40,4 +51,4 @@ jump_in_hay_sprite.inc:	jump_in_hay.png
 
 clean:
 	rm -f *~ haystack_gone_sprite.inc jump_in_hay_sprite.inc \
-		haystack_sprite.inc
+		haystack_sprite.inc blown_away_sprite.inc
