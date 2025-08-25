@@ -51,7 +51,7 @@ done_draw_haystack:
 
 	rts
 
-
+.if 0
 custom_sprites_data_l:
 	.byte <haystack_sprite0,<haystack_sprite1,<haystack_sprite2
 custom_sprites_data_h:
@@ -67,3 +67,4 @@ custom_sprites_xsize:
 custom_sprites_ysize:
 	.byte 43,43,43
 
+.endif

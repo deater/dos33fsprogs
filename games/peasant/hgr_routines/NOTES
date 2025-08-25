@@ -1,0 +1,24 @@
+Different sprite routines:
+
+to add: max sprite size, max sprite width, if handles edge-of-screen properly
+
++ hgr_draw_sprite   (sprite in INL/INH, draw at CURSORX,CURSORY)
+		(column sensitive (no adjustment)
+
++ hgr_draw_sprite_bg_mask (sprite in peasant_sprites_data,X,
+		draw at CURSORX,CURSORY)
+		(adjusts for odd/even column)
+		(masks against background and peasant_mask,X)
+		(primarily for drawing peasant)
+
++ hgr_draw_sprite_mask
+	sprite in sprites_data,X
+	draws at SPRITE_X,SPRITE_Y
+	adjusts for odd/even
+	masks from sprites_mask,X
+
++ hgr_sprite_custom_bg_mask
+	sprite in custom_sprites_data,X
+	draws at CURSOR_X,CURSOR_Y
+	adjusts for odd/even
+	masks from background also sprites_mask

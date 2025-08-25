@@ -1,0 +1,8 @@
+
+haystack:
+	+ uses hgr_draw_sprite_bg_mask	for peasant
+	+ uses hgr_draw_sprite for erasing haystack
+	+ hgr_draw_sprite_mask for jump in hay
+	+ hgr_custom_bg_mask for haystack
+
+
