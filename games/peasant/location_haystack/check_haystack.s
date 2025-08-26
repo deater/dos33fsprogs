@@ -118,6 +118,6 @@ blown_x:
 ; y offset for animation
 
 blown_y:
-	.byte 0,+1,-3,-10,-14
+	.byte 0,+1,<(-3),<(-10),<(-14)
 
 
