@@ -105,7 +105,12 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "cottage_actions.s"
 
+BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"
+.include "../location_haystack/sprites_haystack/blown_away_sprite.inc"
+.include "haystack_data.s"
+.include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
+
 
 	;==========================
 	; update screen
@@ -117,8 +122,14 @@ update_screen:
 	jsr	hgr_copy_faster
 
 	;=====================
-	; always draw peasant
+	; draw peasant
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 
 	jsr	draw_peasant
+
+skip_draw_peasant:
 
 	rts

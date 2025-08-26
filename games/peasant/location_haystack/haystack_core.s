@@ -125,6 +125,7 @@ really_level_over:
 .include "jump_hay.s"
 .include "sprites_haystack/haystack_sprite.inc"
 .include "draw_haystack.s"
+BLOWN_AWAY_OFFSET=0
 .include "check_haystack.s"
 .include "sprites_haystack/blown_away_sprite.inc"
 .include "haystack_data.s"

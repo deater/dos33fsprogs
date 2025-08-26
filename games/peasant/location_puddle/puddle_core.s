@@ -196,7 +196,9 @@ really_level_over:
 .include "handle_mud.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
+BLOWN_AWAY_OFFSET=15
 .include "../location_haystack/check_haystack.s"
+.include "../location_haystack/sprites_haystack/blown_away_sprite.inc"
 
 	;==========================
 	; update screen

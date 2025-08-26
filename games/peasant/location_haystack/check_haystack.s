@@ -25,6 +25,10 @@ done_not_in_hay_bale:
 
 
 
+	;====================================
+	; do the blow hay away animation
+
+	; be sure to set BLOWN_AWAY_OFFSET to offset in custom_sprite table
 
 blow_hay_away:
 
@@ -39,7 +43,59 @@ blow_hay_away:
 	and	#<(~COVERED_IN_MUD)
 	sta	GAME_STATE_2
 
-	; TODO: show animation
+	;===============================
+	; animation
+
+	lda	#0
+	sta	BLOWN_AWAY_COUNT
+
+	lda	#SUPPRESS_PEASANT
+	sta	SUPPRESS_DRAWING
+
+blown_away_loop:
+
+	jsr	update_screen
+
+	lda	BLOWN_AWAY_COUNT
+	lsr
+	tax
+
+	clc
+	lda	PEASANT_X
+	adc	blown_x,X
+	sta	CURSOR_X
+
+	clc
+	lda	PEASANT_Y
+	adc	blown_y,X
+	sta	CURSOR_Y
+
+	clc
+	txa
+	adc	#BLOWN_AWAY_OFFSET
+	tax
+
+	jsr	hgr_sprite_custom_bg_mask
+
+	jsr	hgr_page_flip
+
+;	jsr	wait_until_keypress
+
+	inc	BLOWN_AWAY_COUNT
+	lda	BLOWN_AWAY_COUNT
+	cmp	#10
+	bne	blown_away_loop
+
+
+done_blown_away:
+
+	jsr	stop_walking
+
+	; unsuppress drawing peasant
+
+	lda	SUPPRESS_DRAWING
+	and	#<(~SUPPRESS_PEASANT)
+	sta	SUPPRESS_DRAWING
 
 	; change back to normal clothes
 
@@ -53,32 +109,15 @@ blow_hay_away:
 
 	rts
 
-.if 0
 
-; x offset
+; x offset for animation
 
-.byte 0,+2,+2,+4,+6
+blown_x:
+	.byte 2+0,2+2,2+2,2+4,2+6
 
-; y offset
+; y offset for animation
 
-.byte 0,+1,-3,-10,-14
+blown_y:
+	.byte 0,+1,-3,-10,-14
 
-custom_sprites_data_l:
-        .byte <blown_sprite0,<blown_sprite1,<blown_sprite2
-        .byte <blown_sprite3,<blown_sprite4
-custom_sprites_data_h:
-        .byte >blown_sprite0,>blown_sprite1,>blown_sprite2
-        .byte >blown_sprite3,>blown_sprite4
 
-custom_mask_data_l:
-        .byte <blown_mask0,<blown_mask1,<blown_mask2
-        .byte <blown_mask3,<blown_mask4
-custom_mask_data_h:
-        .byte >blown_mask0,>blown_mask1,>blown_mask2
-        .byte >blown_mask3,>blown_mask4
-
-custom_sprites_xsize:
-        .byte  6, 6, 7, 4, 2
-custom_sprites_ysize:
-        .byte 43,35,32,26,11
-.endif

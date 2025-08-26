@@ -159,7 +159,11 @@ really_level_over:
 
 .include "sprites_ned_cottage/ned_sprites.inc"
 
+BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"
+.include "../location_haystack/sprites_haystack/blown_away_sprite.inc"
+.include "haystack_data.s"
+.include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 
 	;=========================
 	; update screen

@@ -34,7 +34,9 @@ cottage_core.o:	cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
 		../location_common/init_common.s \
+		haystack_data.s \
 		../location_haystack/check_haystack.s \
+		../location_haystack/sprites_haystack/blown_away_sprite.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \

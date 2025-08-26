@@ -43,7 +43,9 @@ gary_core.o:	gary_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		graphics_gary/gary_graphics.inc \
 		sprites_gary/gary_sprites.inc \
 		sprites_gary/gary_bg.inc \
-		sprites_gary/gary_scare.inc
+		sprites_gary/gary_scare.inc \
+		../location_haystack/check_haystack.s \
+		../location_haystack/sprites_haystack/blown_away_sprite.inc
 	ca65 -o gary_core.o gary_core.s -l gary_core.lst
 
 

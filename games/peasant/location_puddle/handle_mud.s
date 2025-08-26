@@ -152,6 +152,10 @@ custom_sprites_data_l:
 	.byte <fall6_sprite,<fall7_sprite,<fall8_sprite
 	.byte <fall9_sprite,<fall10_sprite,<fall11_sprite
 	.byte <fall12_sprite,<fall13_sprite,<fall14_sprite
+
+	.byte <blown_sprite0,<blown_sprite1,<blown_sprite2
+	.byte <blown_sprite3,<blown_sprite4
+
 custom_sprites_data_h:
 	.byte >fall0_sprite,>fall1_sprite,>fall2_sprite
 	.byte >fall3_sprite,>fall4_sprite,>fall5_sprite
@@ -159,20 +163,8 @@ custom_sprites_data_h:
 	.byte >fall9_sprite,>fall10_sprite,>fall11_sprite
 	.byte >fall12_sprite,>fall13_sprite,>fall14_sprite
 
-.if 0
-custom_sprites_data_l:
-	.byte <fall0_mask,<fall1_mask,<fall2_mask
-	.byte <fall3_mask,<fall4_mask,<fall5_mask
-	.byte <fall6_mask,<fall7_mask,<fall8_mask
-	.byte <fall9_mask,<fall10_mask,<fall11_mask
-	.byte <fall12_mask,<fall13_mask,<fall14_mask
-custom_sprites_data_h:
-	.byte >fall0_mask,>fall1_mask,>fall2_mask
-	.byte >fall3_mask,>fall4_mask,>fall5_mask
-	.byte >fall6_mask,>fall7_mask,>fall8_mask
-	.byte >fall9_mask,>fall10_mask,>fall11_mask
-	.byte >fall12_mask,>fall13_mask,>fall14_mask
-.endif
+	.byte >blown_sprite0,>blown_sprite1,>blown_sprite2
+	.byte >blown_sprite3,>blown_sprite4
 
 custom_mask_data_l:
 	.byte <fall0_mask,<fall1_mask,<fall2_mask
@@ -180,6 +172,10 @@ custom_mask_data_l:
 	.byte <fall6_mask,<fall7_mask,<fall8_mask
 	.byte <fall9_mask,<fall10_mask,<fall11_mask
 	.byte <fall12_mask,<fall13_mask,<fall14_mask
+
+	.byte <blown_mask0,<blown_mask1,<blown_mask2
+	.byte <blown_mask3,<blown_mask4
+
 custom_mask_data_h:
 	.byte >fall0_mask,>fall1_mask,>fall2_mask
 	.byte >fall3_mask,>fall4_mask,>fall5_mask
@@ -187,12 +183,18 @@ custom_mask_data_h:
 	.byte >fall9_mask,>fall10_mask,>fall11_mask
 	.byte >fall12_mask,>fall13_mask,>fall14_mask
 
+	.byte >blown_mask0,>blown_mask1,>blown_mask2
+	.byte >blown_mask3,>blown_mask4
+
 custom_sprites_xsize:
 	.byte  2, 4, 4, 4,  2, 4, 4, 4
 	.byte  4, 4, 4, 2,  2, 2, 2
+
+	.byte  6, 6, 7, 4, 2
+
 custom_sprites_ysize:
 	.byte 30,29,18,24, 30,12,12,12
 	.byte 12,12, 9, 9, 13,23,30
 
-
+	.byte 43,35,32,26,11
 

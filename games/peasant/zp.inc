@@ -393,6 +393,8 @@ GUITAR_COUNT	= $CD	; outer2
 SKELETON_COUNT	= $CD	; outer3
 PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
+BLOWN_AWAY_COUNT= $CD	; jhonka,hay,gary,cottage,puddle
+
 
 WRONG_KEY	= $CE	; outer1/2/3
 PREV_Y		= $CE	; kerrek

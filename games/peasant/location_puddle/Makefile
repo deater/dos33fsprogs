@@ -36,6 +36,7 @@ puddle_core.o:	puddle_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait_a_bit.s borders.s \
 		puddle_actions.s handle_mud.s \
 		../location_haystack/check_haystack.s \
+		../location_haystack/sprites_haystack/blown_away_sprite.inc \
 		../text/DIALOG_PUDDLE.ZX02 ../text/dialog_puddle.inc \
 		graphics_puddle/puddle_graphics.inc \
 		graphics_puddle/puddle_priority.inc \
