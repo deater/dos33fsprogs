@@ -160,12 +160,22 @@ hay_bale_hide:
 
 enter_hay:
 
+	; don't jump in unless covered in mud
+
 	lda	GAME_STATE_2
 	and	#COVERED_IN_MUD
 	beq	enter_hay_no_mud
 
+	; same message if currently in hay?
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	bne	enter_hay_no_mud
+
 enter_hay_muddy:
+
 	; check if in range
+
 	lda	PEASANT_X
 	cmp	#15
 	bcs	really_enter_hay_muddy
@@ -216,8 +226,8 @@ really_enter_hay_muddy:
 
 	; unsuppress peasant
 
-	lda	#0
-	sta	SUPPRESS_DRAWING
+;	lda	#0
+;	sta	SUPPRESS_DRAWING
 
 	; move peasant to new location
 

@@ -113,6 +113,8 @@ jhonka_get_club:
 
 jhonka_get_riches:
 
+	; check if in hay bale
+
 	lda	GAME_STATE_1
 	and	#IN_HAY_BALE
 	bne	jhonka_get_riches_in_hay
@@ -152,19 +154,21 @@ jhonka_get_riches_in_hay:
 	jsr	partial_message_step
 
 	; exit hay bale
-	lda	GAME_STATE_1
-	and	#<(~IN_HAY_BALE)
-	sta	GAME_STATE_1
+	jsr	blow_hay_away
+
+;	lda	GAME_STATE_1
+;	and	#<(~IN_HAY_BALE)
+;	sta	GAME_STATE_1
 
 	; no longer muddy
-	lda	GAME_STATE_2
-	and	#<(~COVERED_IN_MUD)
-	sta	GAME_STATE_2
+;	lda	GAME_STATE_2
+;	and	#<(~COVERED_IN_MUD)
+;	sta	GAME_STATE_2
 
 	; change back to street clothes
 
-	lda	#PEASANT_OUTFIT_SHORTS
-	jsr	load_peasant_sprites
+;	lda	#PEASANT_OUTFIT_SHORTS
+;	jsr	load_peasant_sprites
 
 
 jhonka_wait_for_answer:

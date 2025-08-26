@@ -1,3 +1,10 @@
+graphics:
+	haystack blowing away probably has unnecessary full hay-stack
+	sprite.  Getting rid of it might save 512 bytes on some levels
+
+
+suppression:
+	the SUPPRESS_DRAW value should probably be in the save state
 
 getting points:
 	merge with message print so it prints message and plays sound.

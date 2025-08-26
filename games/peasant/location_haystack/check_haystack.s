@@ -43,6 +43,13 @@ blow_hay_away:
 	and	#<(~COVERED_IN_MUD)
 	sta	GAME_STATE_2
 
+	; no longer suppressed
+
+	lda	SUPPRESS_DRAWING
+	and	#<(~SUPPRESS_PEASANT)
+	sta	SUPPRESS_DRAWING
+
+
 	;===============================
 	; animation
 

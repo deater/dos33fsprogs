@@ -176,10 +176,15 @@ update_screen:
 	jsr	hgr_copy_faster
 
 	;=====================
-	; always draw peasant
+	; draw peasant
+
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 
 	jsr	draw_peasant
-
+skip_draw_peasant:
 
 	rts
 

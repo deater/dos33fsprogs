@@ -36,6 +36,7 @@ hay_look_at_fence_message:
 .byte "outta these things.",0
 
 ; + enter hay / jump in hay / hide in hay (not muddy)
+; also if you are already in hay
 hay_enter_hay_clean_message:
 .byte "Not right now, man. You're",13
 .byte "feeling fairly clean given",13

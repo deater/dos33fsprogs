@@ -15,29 +15,22 @@ draw_haystack:
 	lda	PEASANT_X
 	sec
 	sbc	#2
-	sta	SPRITE_X
+	sta	CURSOR_X
 
 	lda	PEASANT_Y
 	sec
 	sbc	#5
-	sta	SPRITE_Y
-
-	;  FIXME: this should be the BG version?
-
-;	inx
-;	inx
-;	inx
-;	inx
-;	inx
-;	inx
-;	inx
-
+	sta	CURSOR_Y
 
 	jsr	hgr_sprite_custom_bg_mask
 
 
 	;=========================
 	; move to next frame
+	;	only if walking?
+
+	jsr	check_moving
+	bcc	done_draw_haystack
 
 	inc	HAY_BALE_COUNT
 	lda	HAY_BALE_COUNT
