@@ -31,12 +31,16 @@ jhonka_priority.inc:  \
 jhonka_priority.zx02:	jhonka_priority.combined
 	$(ZX02) -f jhonka_priority.combined jhonka_priority.zx02
 
-jhonka_priority.combined:	jhonka_priority.gr jhonka_collision.bin jhonka_collision_there.bin
+jhonka_priority.combined:	jhonka_priority.gr jhonka_priority_noriches.gr \
+	jhonka_collision.bin jhonka_collision_there.bin
 	cat jhonka_priority.gr >  jhonka_priority.combined
 	cat jhonka_collision.bin >> jhonka_priority.combined
 
 jhonka_priority.gr:	jhonka_priority.png
 	$(PNG2GR) jhonka_priority.png jhonka_priority.gr
+
+jhonka_priority_noriches.gr:	jhonka_priority_noriches.png
+	$(PNG2GR) jhonka_priority_noriches.png jhonka_priority_noriches.gr
 
 jhonka_collision.bin:	jhonka_collision.png
 	$(PNG2COLLISION) jhonka_collision.png jhonka_collision.bin

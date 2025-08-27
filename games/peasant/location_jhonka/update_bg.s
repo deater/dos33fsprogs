@@ -58,6 +58,29 @@ remove_riches:
 	beq	done_place_riches		; if match, skip erasing
 
 erase_riches:
+
+
+	; update priority
+	; $238 A1->11
+	; $2B6 A1->11
+	; $2B8->B A* -> 11
+	; $336->B *A -> 11
+
+	lda	#$11
+	sta	priority_location+$238
+	sta	priority_location+$2B6
+
+	ldx	#6
+erase_riches_loop:
+
+	sta	priority_location+$2B0,X
+	sta	priority_location+$330,X
+
+	inx
+	cpx	#$C
+	bne	erase_riches_loop
+
+
 	lda	DRAW_PAGE
 	sta	DRAW_PAGE_SAVE
 
