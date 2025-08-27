@@ -149,12 +149,13 @@ jhonka_get_riches_in_hay:
 
 	jsr	remove_riches
 
+	; exit hay bale
+	jsr	blow_away_hay_no_message
+
 	ldx	#<jhonka_steal_riches_message
 	ldy	#>jhonka_steal_riches_message
 	jsr	partial_message_step
 
-	; exit hay bale
-	jsr	blow_hay_away
 
 ;	lda	GAME_STATE_1
 ;	and	#<(~IN_HAY_BALE)

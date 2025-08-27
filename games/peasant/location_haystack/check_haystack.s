@@ -31,6 +31,17 @@ done_not_in_hay_bale:
 	; be sure to set BLOWN_AWAY_OFFSET to offset in custom_sprite table
 
 blow_hay_away:
+	jsr	blow_away_hay_no_message
+
+	; print message
+	ldx	#<hay_blown_away_message
+	ldy	#>hay_blown_away_message
+	jsr	partial_message_step
+
+	rts
+
+
+blow_away_hay_no_message:
 
 	; exit hay bale
 
@@ -56,8 +67,8 @@ blow_hay_away:
 	lda	#0
 	sta	BLOWN_AWAY_COUNT
 
-	lda	#SUPPRESS_PEASANT
-	sta	SUPPRESS_DRAWING
+;	lda	#SUPPRESS_PEASANT
+;	sta	SUPPRESS_DRAWING
 
 blown_away_loop:
 
@@ -100,19 +111,14 @@ done_blown_away:
 
 	; unsuppress drawing peasant
 
-	lda	SUPPRESS_DRAWING
-	and	#<(~SUPPRESS_PEASANT)
-	sta	SUPPRESS_DRAWING
+;	lda	SUPPRESS_DRAWING
+;	and	#<(~SUPPRESS_PEASANT)
+;	sta	SUPPRESS_DRAWING
 
 	; change back to normal clothes
 
 	lda	#PEASANT_OUTFIT_SHORTS
 	jsr	load_peasant_sprites
-
-	; print message
-	ldx	#<hay_blown_away_message
-	ldy	#>hay_blown_away_message
-	jsr	partial_message_step
 
 	rts
 
@@ -120,7 +126,7 @@ done_blown_away:
 ; x offset for animation
 
 blown_x:
-	.byte 2+0,2+2,2+2,2+4,2+6
+	.byte <(0-2),2-2,2-2,4-2,6-2
 
 ; y offset for animation
 

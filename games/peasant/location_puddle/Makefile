@@ -57,6 +57,9 @@ graphics_puddle/puddle_priority.inc:
 sprites_puddle/mud_sprites.inc:
 	cd sprites_puddle && make
 
+../location_haystack/sprites_haystack/blown_away_sprite.inc:
+	cd ../location_haystack/sprites_haystack && make
+
 ###
 
 distclean:

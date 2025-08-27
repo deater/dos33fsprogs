@@ -25,9 +25,32 @@ move_to_right_of_fence:
 
 					; fine if at far left
 
+
 	;=====================
 	; check going east
+	;	haystack -> puddle
+
 check_east:
+	lda	MAP_LOCATION
+	cmp	#LOCATION_MUD_PUDDLE
+	bne	check_west
+
+	; move further if in hay
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	border_not_in_hay
+
+	lda	#3
+	sta	PEASANT_X
+
+border_not_in_hay:
+
+
+
+	;=====================
+	; check going west
+
 check_west:
 check_north:
 

@@ -1,7 +1,9 @@
 - Jhonka
 
-  + Animate Jhonka
-  + Take note off door once Kerrek dead
-  + Draw riches when applicable
+  + Add priority to riches
+  + (done) Animate Jhonka normal
+  + Animate Jhonka when say "yes"
+  + (done) Take note off door once Kerrek dead
+  + (done) Draw riches when applicable
   + (done) x/y when entering screen (along fence)
   + Add collision to Jhonka/Riches if there

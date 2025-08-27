@@ -39,6 +39,18 @@ check_east:
 	cmp	#LOCATION_YOUR_COTTAGE
 	bne	check_west
 
+	; check X.
+	;	if in hay, move us a bit further right
+
+	lda	GAME_STATE_1
+	and	#IN_HAY_BALE
+	beq	border_not_in_hay
+
+	lda	#3
+	sta	PEASANT_X
+
+border_not_in_hay:
+
 	; be sure we're in range
 	lda	PEASANT_Y
 	cmp	#49

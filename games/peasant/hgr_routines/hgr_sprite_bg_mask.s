@@ -65,7 +65,17 @@ hgr_draw_sprite_bg_mask_common:
 	; see chart later
 	;	in theory only need to do this if PEASANT_Y changes
 
+	; note: clamp to 0 if goes negative?
+
+
 	lda	CURSOR_Y
+
+	cmp	#48
+	bcs	prio_big_enough
+
+	lda	#48
+
+prio_big_enough:
 	sec
 	sbc	#48			; Y=48
 	lsr				; div by 8
