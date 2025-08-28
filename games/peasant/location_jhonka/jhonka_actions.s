@@ -256,6 +256,9 @@ jhonka_verb_yes:
 
 	; we don't need to restore verb table because we're dying?
 
+	; move down so we can get hit properly?
+	ldy	#82
+	sty	PEASANT_Y
 
 	ldx	#<jhonka_yes_message
 	ldy	#>jhonka_yes_message

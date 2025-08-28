@@ -1,8 +1,12 @@
 - Jhonka
 
-  + Add priority to riches
+  + remove smash5 sprite as not used
+  + remove haystack1 sprite as not used?
+  + have the moveto code rotate through the haystack count
+
+  + (done) Add priority to riches
   + (done) Animate Jhonka normal
-  + Animate Jhonka when say "yes"
+  + (done) Animate Jhonka when say "yes"
   + (done) Take note off door once Kerrek dead
   + (done) Draw riches when applicable
   + (done) x/y when entering screen (along fence)

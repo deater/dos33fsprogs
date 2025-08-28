@@ -23,11 +23,11 @@ sprites_riches.inc:	sprites_riches.png
 	$(HGR_SPRITE) -s -l riches_sprite sprites_riches.png   91 100 139 126 >> sprites_riches.inc
 
 sprites_beat.inc:	sprites_beaten.png
-	$(HGR_SPRITE) -s -l smash1_sprite sprites_beaten.png  98  88 111 119 > sprites_beat.inc
-	$(HGR_SPRITE) -s -l smash2_sprite sprites_beaten.png 126  91 139 119 >> sprites_beat.inc
-	$(HGR_SPRITE) -s -l smash3_sprite sprites_beaten.png 154  93 167 119 >> sprites_beat.inc
-	$(HGR_SPRITE) -s -l smash4_sprite sprites_beaten.png 182  98 195 119 >> sprites_beat.inc
-	$(HGR_SPRITE) -s -l smash5_sprite sprites_beaten.png 203 106 223 119 >> sprites_beat.inc
+	$(HGR_SPRITE) -s -l smash1_sprite sprites_beaten.png 105  89 118 119 > sprites_beat.inc
+	$(HGR_SPRITE) -s -l smash2_sprite sprites_beaten.png 133  91 146 119 >> sprites_beat.inc
+	$(HGR_SPRITE) -s -l smash3_sprite sprites_beaten.png 161  93 174 119 >> sprites_beat.inc
+	$(HGR_SPRITE) -s -l smash4_sprite sprites_beaten.png 189  98 202 119 >> sprites_beat.inc
+	$(HGR_SPRITE) -s -l smash5_sprite sprites_beaten.png 217 106 237 119 >> sprites_beat.inc
 	$(HGR_SPRITE) -l jhonka4_sprite sprites_beaten.png  14  33  48  57 >> sprites_beat.inc
 	$(HGR_SPRITE) -l jhonka5_sprite sprites_beaten.png  56  31  90  57 >> sprites_beat.inc
 	$(HGR_SPRITE) -l jhonka6_sprite sprites_beaten.png  98  31 139  57 >> sprites_beat.inc

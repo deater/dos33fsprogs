@@ -105,12 +105,12 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  11 0 ./location_cottage/COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  13 0 ./location_wavy_tree/WAVY_TREE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  15 0 ./location_haystack/HAYSTACK_LOADER 0   0
-	$(DOS33_RAW) peasant_disk3.dsk  17 0 ./location_jhonka/JHONKA_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./location_ned_cottage/NED_COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  21 0 ./location_inside_ned/INSIDE_NED_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  23 0 ./location_gary/GARY_LOADER 0   0
 	$(DOS33_RAW) peasant_disk3.dsk  25 0 ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  27 0 ./location_inside_inn_night/INSIDE_INN_NIGHT_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./location_jhonka/JHONKA_LOADER          0   0
 
 peasant_disk4.dsk:	\
 	./archery/ARCHERY \
@@ -228,12 +228,12 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 11 0` ./location_cottage/COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 13 0` ./location_wavy_tree/WAVY_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./location_haystack/HAYSTACK_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 17 0` ./location_jhonka/JHONKA_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./location_ned_cottage/NED_COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 21 0` ./location_inside_ned/INSIDE_NED_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 23 0` ./location_gary/GARY_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 27 0` ./location_inside_inn_night/INSIDE_INN_NIGHT_LOADER          0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./location_jhonka/JHONKA_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  3 0` ./sprites_peasant/PEASANT_SPRITES_OUTER    0   0
