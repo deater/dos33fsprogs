@@ -132,10 +132,6 @@ jhonka_get_riches_in_hay:
 	ldy	#77
 	jsr	peasant_walkto
 
-	; face downward
-
-	lda	#PEASANT_DIR_DOWN
-	sta	PEASANT_DIR
 
 	; get riches
 
@@ -148,6 +144,12 @@ jhonka_get_riches_in_hay:
 	sta	INVENTORY_2
 
 	jsr	remove_riches
+
+	; face downward
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+	sta	OLD_DIR
 
 	; exit hay bale
 	jsr	blow_away_hay_no_message

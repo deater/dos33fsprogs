@@ -182,7 +182,7 @@ USE_BG_PALETTE=1
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 
-BLOWN_AWAY_OFFSET=0
+BLOWN_AWAY_OFFSET=3
 .include "../location_haystack/sprites_haystack/blown_away_sprite.inc"
 .include "../location_haystack/sprites_haystack/haystack_sprite.inc"
 .include "../location_haystack/check_haystack.s"

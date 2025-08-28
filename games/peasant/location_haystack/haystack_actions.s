@@ -212,8 +212,16 @@ really_enter_hay_muddy:
 	lda	#3
 	jsr	score_points
 
-	; TODO
 	;	back to normal clothes?
+	lda	#PEASANT_OUTFIT_SHORTS
+	jsr	load_peasant_sprites
+
+	; override so haystack can be orange
+
+	lda	#0
+	sta	OUTFIT_BG_PALETTE
+
+	; print message
 
 	ldx	#<hay_enter_hay_muddy_message2
 	ldy	#>hay_enter_hay_muddy_message2

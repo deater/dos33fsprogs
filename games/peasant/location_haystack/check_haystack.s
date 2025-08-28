@@ -61,6 +61,8 @@ blow_away_hay_no_message:
 	sta	SUPPRESS_DRAWING
 
 
+
+
 	;===============================
 	; animation
 
@@ -117,8 +119,13 @@ done_blown_away:
 
 	; change back to normal clothes
 
-	lda	#PEASANT_OUTFIT_SHORTS
-	jsr	load_peasant_sprites
+;	lda	#PEASANT_OUTFIT_SHORTS
+;	jsr	load_peasant_sprites
+
+	; use bg palette again
+
+	lda	#0
+	sta     OUTFIT_BG_PALETTE
 
 	rts
 
@@ -132,5 +139,6 @@ blown_x:
 
 blown_y:
 	.byte 0,+1,<(-3),<(-10),<(-14)
+
 
 
