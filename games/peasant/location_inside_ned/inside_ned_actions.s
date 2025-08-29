@@ -71,6 +71,10 @@ inside_nn_get_robe_drawer_closed:
 
 inside_nn_actually_get_robe:
 
+	; walk to drawer
+
+	jsr	walk_to_drawer
+
 	; get 10 pts
 
 	lda	#$10
@@ -81,6 +85,11 @@ inside_nn_actually_get_robe:
 	lda	INVENTORY_2
 	ora	#INV2_ROBE
 	sta	INVENTORY_2
+
+	; update image
+
+	jsr	draw_drawer
+
 
 	ldx	#<inside_nn_get_robe_message
 	ldy	#>inside_nn_get_robe_message
@@ -190,11 +199,20 @@ inside_nn_open_drawer_closed_empty:
 	jmp	finish_parse_message
 
 inside_nn_open_drawer_closed_full:
+
+	; walk to drawer
+
+	jsr	walk_to_drawer
+
 	; open the drawer
 
 	lda	GAME_STATE_2
 	ora	#DRESSER_OPEN
 	sta	GAME_STATE_2
+
+	; update image
+
+	jsr	draw_drawer
 
 	ldx	#<inside_nn_open_closed_drawer_message
 	ldy	#>inside_nn_open_closed_drawer_message
@@ -232,11 +250,19 @@ inside_nn_close_drawer_closed:
 
 inside_nn_close_drawer_open:
 
+	; walk to drawer
+
+	jsr	walk_to_drawer
+
 	; regardless, we close the drawer
 
 	lda	GAME_STATE_2
 	and	#<(~DRESSER_OPEN)
 	sta	GAME_STATE_2
+
+	; update image
+
+	jsr	draw_drawer
 
 	; see if robe has been taken
 

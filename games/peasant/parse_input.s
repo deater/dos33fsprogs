@@ -610,6 +610,11 @@ parse_common_wear_robe_do_have:
 	ora	#WEARING_ROBE
 	sta	GAME_STATE_1
 
+	; actually put it on
+
+	lda	#PEASANT_OUTFIT_ROBE
+	jsr	load_peasant_sprites
+
 	; get 3 points
 
 	lda	#3

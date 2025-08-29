@@ -13,6 +13,11 @@ inside_neds_cottage_core:
 
 .include "../location_common/common_core.s"
 
+	;====================================================
+	; draw the initial drawer to background
+
+	jsr	draw_drawer
+
 
 	;====================================================
 	; clear the keyboard in case we were holding it down
@@ -124,6 +129,8 @@ really_level_over:
 
 .include "inside_ned_actions.s"
 
+.include "sprites_inside_ned/drawer_sprites.inc"
+.include "draw_drawer.s"
 
 	;======================
 	; update screen

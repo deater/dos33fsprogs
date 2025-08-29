@@ -37,6 +37,8 @@ inside_ned_core.o:	inside_ned_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
+		sprites_inside_ned/drawer_sprites.inc \
+		draw_drawer.s \
 		inside_ned_actions.s
 	ca65 -o inside_ned_core.o inside_ned_core.s -l inside_ned_core.lst
 
@@ -49,7 +51,7 @@ graphics_inside_ned/inside_ned_graphics.inc:
 graphics_inside_ned/inside_ned_priority.inc:
 	cd graphics_inside_ned && make
 
-sprites_inside_ned/inside_ned_sprites.inc:
+sprites_inside_ned/drawer_sprites.inc:
 	cd sprites_inside_ned && make
 
 ###
@@ -57,7 +59,7 @@ sprites_inside_ned/inside_ned_sprites.inc:
 distclean:
 	make clean
 	cd graphics_inside_ned && make clean
-#	cd sprites && make clean
+	cd sprites_inside_ned && make clean
 
 ###
 
