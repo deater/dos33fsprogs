@@ -216,6 +216,18 @@ ned_cottage_rock_not_moved:
 
 	;=======================
 	; actually move rock
+	;=======================
+
+	; walk to it
+
+	ldx	#26			; 182/7=26
+	ldy	#97
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
+
+	; move it
 
 	jsr	ned_move_rock
 
@@ -275,11 +287,28 @@ ned_cottage_baby:
 	bne	ned_cottage_baby_gone
 
 ned_cottage_baby_deploy:
+
+	;==========================
 	; actually deploy baby
+	;==========================
+
+	; walk to spot
+
+	ldx	#28			; 196/7=28
+	ldy	#97
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
 
 	ldx	#<ned_cottage_deploy_baby_message
 	ldy	#>ned_cottage_deploy_baby_message
 	jsr	partial_message_step
+
+	;=========================
+	; baby animation
+
+	jsr	baby_animation
 
 	; add points
 	lda	#5
@@ -290,6 +319,9 @@ ned_cottage_baby_deploy:
 	ora	#INV1_BABY
 	sta	INVENTORY_1_GONE
 
+	; open door
+
+	jsr	draw_door
 
 	ldx	#<ned_cottage_deploy_baby_message2
 	ldy	#>ned_cottage_deploy_baby_message2

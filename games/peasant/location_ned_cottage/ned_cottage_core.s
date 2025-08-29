@@ -12,7 +12,16 @@ ned_cottage_core:
 
 .include "../location_common/common_core.s"
 
+	;========================
+	; move rock if needed
+
 	jsr	ned_move_rock
+
+	;========================
+	; open door if needed
+
+	jsr	draw_door
+
 
 	;===================================
 	; mark location visited
@@ -164,6 +173,8 @@ BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/sprites_haystack/blown_away_sprite.inc"
 .include "haystack_data.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
+.include "draw_door.s"
+.include "animate_baby.s"
 
 	;=========================
 	; update screen
