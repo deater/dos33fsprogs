@@ -119,7 +119,7 @@ really_level_over:
 .include "sprites_lake_west/bubble_sprites_w.inc"
 .include "sprites_lake_west/pebbles_sprites.inc"
 .include "animate_bubbles.s"
-
+.include "sprites_lake_west/throw_sprites.inc"
 
 	;========================
 	; update screen
