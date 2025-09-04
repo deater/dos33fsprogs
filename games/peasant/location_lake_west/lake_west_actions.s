@@ -268,11 +268,27 @@ lake_west_throw_baby:
 
 	; throwing for the first time
 lake_west_throw_baby_for_reals:
-	; do the animation
+
+	; walk to location
+
+	ldx	#11		; 77, 101
+	ldy	#101
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
+
+	; do the throw baby animation
+
+	jsr	throw_baby
 
 	ldx	#<lake_west_throw_baby_message
 	ldy	#>lake_west_throw_baby_message
 	jsr	partial_message_step
+
+	; do the baby swim animation
+
+	jsr	baby_swim
 
 	; score points
 	lda	#5

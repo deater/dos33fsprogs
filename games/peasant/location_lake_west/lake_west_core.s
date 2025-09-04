@@ -115,11 +115,13 @@ really_level_over:
 
 .include "../location_common/include_bottom.s"
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 .include "lake_west_actions.s"
 .include "sprites_lake_west/bubble_sprites_w.inc"
 .include "sprites_lake_west/pebbles_sprites.inc"
 .include "animate_bubbles.s"
 .include "sprites_lake_west/throw_sprites.inc"
+.include "throw_baby.s"
 
 	;========================
 	; update screen
@@ -137,10 +139,13 @@ update_screen:
 	jsr	animate_bubbles_w
 
 	;=====================
-	; always draw peasant
+	; draw peasant
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant
 	jsr	draw_peasant
-
+skip_draw_peasant:
 
 	rts
 

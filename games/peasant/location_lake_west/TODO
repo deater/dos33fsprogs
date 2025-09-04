@@ -2,7 +2,9 @@ in theory should walk to the pebbles if not immediately on top of them
 	maybe it should be more of a "face pebbles" if standing to any side
 	of them
 
+refuse the throw baby if not vaguely standing near the shoreline
+
 - West Lake
   + Better/bigger water animation
-  + (done?) Make pebbles go away once you pick them up
+  + (done) Make pebbles go away once you pick them up
   + Animate "throw baby" sequence
