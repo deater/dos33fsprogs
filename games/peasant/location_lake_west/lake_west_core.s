@@ -121,6 +121,7 @@ really_level_over:
 .include "sprites_lake_west/pebbles_sprites.inc"
 .include "animate_bubbles.s"
 .include "sprites_lake_west/throw_sprites.inc"
+.include "sprites_lake_west/swim_sprites.inc"
 .include "throw_baby.s"
 
 	;========================

@@ -2,7 +2,8 @@ HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	bubble_sprites_w.inc \
 	pebbles_sprites.inc \
-	throw_sprites.inc
+	throw_sprites.inc \
+	swim_sprites.inc
 
 bubble_sprites_w.inc:	bubble_sprites_w.png
 	$(HGR_SPRITE) -s -l bubble_sprite0 bubble_sprites_w.png 7 1  13 6 > bubble_sprites_w.inc
@@ -46,16 +47,22 @@ throw_sprites.inc:	throw.png
 	$(HGR_SPRITE) -l baby_mask1  throw.png 42 175  55 187 >> throw_sprites.inc
 	$(HGR_SPRITE) -l baby_mask2  throw.png 70 175  83 187 >> throw_sprites.inc
 	$(HGR_SPRITE) -l baby_mask3  throw.png 98 175 111 187 >> throw_sprites.inc
-	$(HGR_SPRITE) -s -l swim_sprite0  throw.png  91 161 118 171 >> throw_sprites.inc
-	$(HGR_SPRITE) -s -l swim_sprite1  throw.png 126 161 153 171 >> throw_sprites.inc
-	$(HGR_SPRITE) -s -l swim_sprite2  throw.png 161 161 188 171 >> throw_sprites.inc
 
-
-
-
-
-
+swim_sprites.inc:	swim.png
+	$(HGR_SPRITE) -s -l swim_sprite0  swim.png 126   1 153  10 > swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite1  swim.png 126  12 153  22 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite2  swim.png 126  23 153  31 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite3  swim.png 119  34 153  43 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite4  swim.png 119  45 153  54 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite5  swim.png 119  56 146  66 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite6  swim.png 112  67 146  77 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite7  swim.png 119  78 139  86 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite8  swim.png 112  89 139  97 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite9  swim.png 105 122 139 132 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite10 swim.png 105 143 125 151 >> swim_sprites.inc
+	$(HGR_SPRITE) -s -l swim_sprite11 swim.png  98 165 125 174 >> swim_sprites.inc
 
 clean:
-	rm -f *~ bubble_sprites_w.inc pebbles_sprites.inc throw_sprites.inc
+	rm -f *~ bubble_sprites_w.inc pebbles_sprites.inc \
+		throw_sprites.inc swim_sprites.inc
 
