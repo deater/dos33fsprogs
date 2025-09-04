@@ -89,13 +89,27 @@ outside_inn_open:
 
 inn_door_open:
 
+	; check if door unlocked
+
 	lda	GAME_STATE_1
 	and	#FISH_FED
 	beq	inn_open_locked
 
+	; walk to door
+
+	ldx	#9
+	ldy	#116
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+	; check if night
+
 	lda	GAME_STATE_1
 	and	#NIGHT
 	beq	inn_open_day
+
 inn_open_night:
 	lda	#LOCATION_INSIDE_INN_NIGHT
 	bne	inn_open_common		; bra

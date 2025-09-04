@@ -194,10 +194,14 @@ dont_have_feed:
 	jmp	finish_parse_message
 
 do_have_feed:
-	; check if too far south
+
+	; check if too far up/down
+	;	#$34 52 -> 120
 
 	lda	PEASANT_Y
-	cmp	#$80
+	cmp	#52
+	bcc	throw_feed_too_south	; blt
+	cmp	#120
 	bcs	throw_feed_too_south	; bge
 
 	; check if man still there
@@ -213,6 +217,16 @@ do_have_feed:
 	jmp	finish_parse_message
 
 throw_feed_hes_there:
+
+	;=============================
+	; walk to location
+
+	ldx	#27
+	ldy	#64
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
 
 	;============================
 	; actually throw feed
