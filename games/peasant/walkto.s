@@ -122,4 +122,8 @@ walkto_not_done:
 
 walkto_done:
 
+	; clear keyboard in case pressed while walking
+
+	bit	KEYRESET
+
 	rts

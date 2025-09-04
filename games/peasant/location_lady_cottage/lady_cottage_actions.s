@@ -114,10 +114,19 @@ lady_cottage_open:
 
 lady_cottage_open_door:
 
+	; walk to door
+	ldx	#23
+	ldy	#116
+	jsr	peasant_walkto
+
+	; print message
+
 	ldx	#<lady_cottage_open_door_message
 	ldy	#>lady_cottage_open_door_message
 
 	jsr	partial_message_step
+
+	; walk on in
 
 	lda	#LOCATION_INSIDE_LADY
 	jsr	update_map_location

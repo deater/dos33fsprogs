@@ -22,5 +22,6 @@ check_outside:
 	lda	#PEASANT_DIR_DOWN
 	sta	PEASANT_DIR
 
+	jsr	stop_walking
 
 check_north:

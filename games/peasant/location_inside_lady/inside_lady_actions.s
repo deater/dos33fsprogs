@@ -175,6 +175,16 @@ inside_cottage_get_feed:
 	and	#INV1_CHICKEN_FEED
 	bne	inside_cottage_get_feed_already
 
+	; walk to feed
+	ldx	#11
+	ldy	#116
+	jsr	peasant_walkto
+
+	; face left
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
+
 	; get the feed
 	lda	INVENTORY_1
 	ora	#INV1_CHICKEN_FEED

@@ -1,11 +1,12 @@
-in theory should walk to the pebbles if not immediately on top of them
-	maybe it should be more of a "face pebbles" if standing to any side
-	of them
-
-refuse the throw baby if not vaguely standing near the shoreline
 
 - West Lake
-  + throw anination possibly has twice as many frames
+  + throw animation possibly has twice as many frames
   + Better/bigger water animation
+
+  + (wrong?) is it possible to trigger a message with "throw feed"?
+ 
+  + (done) walk to pebbles
+  + (done) refuse to get pebbles if not near shore
+  + (done) refuse to throw baby if not near shore 
+  + (done) Animate "throw baby" sequence
   + (done) Make pebbles go away once you pick them up
-  + Animate "throw baby" sequence

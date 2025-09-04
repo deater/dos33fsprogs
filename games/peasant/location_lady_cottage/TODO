@@ -1,3 +1,6 @@
 
 - Lady Cottage outside
   + Walk to bushes as search them
+
+  + (done) Walk to door when type "open"
+           note we walk through wall, but original game does too

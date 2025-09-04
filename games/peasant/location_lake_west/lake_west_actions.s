@@ -59,14 +59,27 @@ lake_west_get_pebbles:
 	bne	lake_west_yes_pebbles
 
 lake_west_no_pebbles:
+	;======================================
 	; only if standing vaguely near them
 
-	; FIXME: check X as well
-	;	also we're supposed to walk to them
+	; x<20 and Y<112
+
+	lda	PEASANT_X
+	cmp	#20
+	bcs	pebbles_too_far
 
 	lda	PEASANT_Y
-	cmp	#$70
+	cmp	#112
 	bcs	pebbles_too_far		; bge
+
+	; walk to pebbles
+
+	ldx	#12
+	ldy	#80
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
 
 	; pick up pebbles
 	lda	INVENTORY_1
@@ -235,19 +248,25 @@ lake_west_throw:
 	cmp	#NOUN_BABY
 	beq	lake_west_throw_baby
 
-	cmp	#NOUN_FEED
-	beq	lake_west_throw_feed
+	; for some reason we thought this could happen
+	;	but recently tried actual game and couldn't
+	;	make it say anything?
+
+;	cmp	#NOUN_FEED
+;	beq	lake_west_throw_feed_too_far
 
 	jmp	parse_common_unknown
 
 lake_west_throw_baby:
 
+	;==========================
 	; first see if have baby
 
 	lda	INVENTORY_1
 	and	#INV1_BABY
 	beq	lake_west_throw_baby_no_baby
 
+	;==========================
 	; next see if baby gone
 
 	lda	INVENTORY_1_GONE
@@ -255,12 +274,20 @@ lake_west_throw_baby:
 	bne	lake_west_throw_baby_no_baby
 
 
+	;==========================
 	; see if in right spot
-	; TODO:
-	lda	PEASANT_X
-	lda	PEASANT_Y
+	; 	looks like roughly X<20 and Y<112
 
-	; see if have soda
+	lda	PEASANT_X
+	cmp	#20
+	bcs	lake_west_throw_baby_too_far
+
+	lda	PEASANT_Y
+	cmp	#112
+	bcs	lake_west_throw_baby_too_far
+
+	;==========================
+	; see if already have soda
 
 	lda	INVENTORY_2
 	and	#INV2_SODA
@@ -314,8 +341,8 @@ lake_west_throw_baby_no_baby:
 	ldy	#>lake_west_throw_baby_no_baby_message
 	jmp	finish_parse_message
 
-
-lake_west_throw_feed:
+lake_west_throw_baby_too_far:
+lake_west_throw_feed_too_far:
 	ldx	#<lake_west_throw_feed_too_south_message
 	ldy	#>lake_west_throw_feed_too_south_message
 	jmp	finish_parse_message
