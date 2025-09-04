@@ -1,3 +1,5 @@
+; "Also I lost baby Bertner somewhere..."
+
 	;===================
 	; throw baby animation
 	;===================
