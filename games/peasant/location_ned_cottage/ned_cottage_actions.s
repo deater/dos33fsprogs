@@ -308,7 +308,7 @@ ned_cottage_baby_deploy:
 	;=========================
 	; baby animation
 
-	jsr	baby_animation
+	jsr	deploy_baby_animation
 
 	; add points
 	lda	#5

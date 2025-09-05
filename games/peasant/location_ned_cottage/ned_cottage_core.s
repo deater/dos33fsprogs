@@ -174,7 +174,7 @@ BLOWN_AWAY_OFFSET = 0
 .include "haystack_data.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 .include "draw_door.s"
-.include "animate_baby.s"
+.include "deploy_baby.s"
 
 	;=========================
 	; update screen
