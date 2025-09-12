@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	ned_sprites.inc
+all:	ned_sprites.inc baby_sprites.inc
 
 # 84,98 ->132,133
 # 84,98 -> 132,115
@@ -11,6 +11,40 @@ ned_sprites.inc:	ned_sprites.png
 	$(HGR_SPRITE) -s -l door_open_top_sprite ned_sprites.png   84  98 132 115 >> ned_sprites.inc
 	$(HGR_SPRITE) -s -l door_open_bottom_sprite ned_sprites.png   84  115 132 133 >> ned_sprites.inc
 
+baby_sprites.inc:	baby_sprites.png
+	$(HGR_SPRITE) -l baby1_sprite0 baby_sprites.png 168  1 195  9 >  baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite1 baby_sprites.png 168 10 195 18 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite2 baby_sprites.png 168 19 195 27 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite3 baby_sprites.png 168 28 188 36 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite4 baby_sprites.png 168 37 188 45 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite5 baby_sprites.png 168 46 188 54 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_sprite6 baby_sprites.png 168 55 181 63 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask0   baby_sprites.png 210  1 237  9 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask1   baby_sprites.png 210 10 237 18 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask2   baby_sprites.png 210 19 237 27 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask3   baby_sprites.png 210 28 230 36 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask4   baby_sprites.png 210 37 230 45 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask5   baby_sprites.png 210 46 230 54 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby1_mask6   baby_sprites.png 210 55 223 63 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite0 baby_sprites.png 168 70 195 78 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite1 baby_sprites.png 168 79 195 87 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite2 baby_sprites.png 168 88 195 96 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite3 baby_sprites.png 168 97 188 105 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite4 baby_sprites.png 168 106 188 114 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite5 baby_sprites.png 168 115 188 123 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_sprite6 baby_sprites.png 168 124 181 132 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask0   baby_sprites.png 210 70 237 78 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask1   baby_sprites.png 210 79 237 87 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask2   baby_sprites.png 210 88 237 96 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask3   baby_sprites.png 210 97 237 105 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask4   baby_sprites.png 210 106 230 114 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask5   baby_sprites.png 210 115 230 123 >> baby_sprites.inc
+	$(HGR_SPRITE) -l baby2_mask6   baby_sprites.png 210 124 230 132 >> baby_sprites.inc
+
+
+
+
+
 clean:
-	rm -f *~ ned_sprites.inc
+	rm -f *~ ned_sprites.inc baby_sprites.inc
 
