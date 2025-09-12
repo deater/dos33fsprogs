@@ -167,6 +167,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite.s"
 
 .include "sprites_ned_cottage/ned_sprites.inc"
+.include "sprites_ned_cottage/baby_sprites.inc"
 
 BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"

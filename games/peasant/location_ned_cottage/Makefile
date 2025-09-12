@@ -39,6 +39,7 @@ ned_cottage_core.o:	ned_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait_a_bit.s borders.s \
 		../location_haystack/check_haystack.s \
 		sprites_ned_cottage/ned_sprites.inc \
+		sprites_ned_cottage/baby_sprites.inc \
 		../location_haystack/check_haystack.s \
 		../location_haystack/sprites_haystack/blown_away_sprite.inc \
 		draw_door.s deploy_baby.s \
@@ -52,6 +53,9 @@ graphics_ned_cottage/empty_hut_graphics.inc:
 	cd graphics_ned_cottage && make
 
 sprites_ned_cottage/ned_sprites.inc:
+	cd sprites_ned_cottage && make
+
+sprites_ned_cottage/baby_sprites.inc:
 	cd sprites_ned_cottage && make
 
 ###
