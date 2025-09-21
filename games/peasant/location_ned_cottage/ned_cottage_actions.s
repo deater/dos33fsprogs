@@ -294,7 +294,7 @@ ned_cottage_baby_deploy:
 
 	; walk to spot
 
-	ldx	#28			; 196/7=28
+	ldx	#30			; 196/7=28
 	ldy	#97
 	jsr	peasant_walkto
 

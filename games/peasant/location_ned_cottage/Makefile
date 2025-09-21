@@ -43,7 +43,7 @@ ned_cottage_core.o:	ned_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../location_haystack/check_haystack.s \
 		../location_haystack/sprites_haystack/blown_away_sprite.inc \
 		draw_door.s deploy_baby.s \
-		ned_cottage_actions.s
+		ned_cottage_actions.s haystack_data.s
 	ca65 -o ned_cottage_core.o ned_cottage_core.s -l ned_cottage_core.lst
 
 

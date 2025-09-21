@@ -379,14 +379,17 @@ GARY_COUNT	= $CA	; gary
 BOW_INDEX	= $CA	; target
 POT_COUNT	= $CA	; inside inn night
 ARROWED_COUNT	= $CA	; hidden glen
+BABY_SUBCOUNT	= $CA	; ned_cottage
 
 CRANK_STATE	= $CB	; well
 WHICH_QUIZ	= $CB	; outer1/2/3
 ARROW_X		= $CB	; target
 HAY_BALE_COUNT	= $CB	; haystack,jhonka
+BABY_X		= $CB	; ned_cottage
 
 OLD_DIR		= $CC	; outer1/2/3,jhonka
 ARROW_Y		= $CC	; target
+BABY_Y		= $CC	; ned cottage
 
 RON_COUNT	= $CD	; outer1
 GUITAR_COUNT	= $CD	; outer2
