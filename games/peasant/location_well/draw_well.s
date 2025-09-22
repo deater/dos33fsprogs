@@ -4,6 +4,8 @@
 
 draw_well:
 
+	; draw bucket
+
 	ldx	BUCKET_STATE
 
 	lda	#9		; 63/7=9
@@ -15,6 +17,8 @@ draw_well:
 	jsr	hgr_draw_sprite_mask
 
 draw_crank:
+
+	; draw crank
 
 	lda	CRANK_STATE
 	clc

@@ -282,13 +282,23 @@ well_turn:
 	jmp	parse_common_unknown
 
 well_turn_crank:
+
 	; check if close enough
 
-	lda	PEASANT_X
-	cmp	#25
-	bcs	well_turn_crank_too_far
+	jsr	check_close_to_well
 
-	; we are close enough
+	bcs	walk_to_well			; carry set if close enough
+
+	jmp	well_turn_crank_too_far
+
+walk_to_well:
+	; walk to well
+	ldx	#14
+	ldy	#92
+	jsr	peasant_walkto
+
+	lda	#PEASANT_DIR_LEFT
+	sta	PEASANT_DIR
 
 	; check if baby in
 	lda	GAME_STATE_0
@@ -356,8 +366,9 @@ well_bucket_go_up:
 
 well_turn_crank_baby_in:
 
-	; here?
-	; jsr	lower_bucket_baby
+	; raise bucket with baby in animation
+
+	jsr	raise_bucket_baby
 
 	ldx	#<well_turn_crank_baby_message
 	ldy	#>well_turn_crank_baby_message
@@ -465,107 +476,9 @@ well_put_anything_else:
 
 
 	;=============
-	; put baby
-
-well_put_baby:
-
-	jsr	get_noun_again
-
-	lda	CURRENT_NOUN
-
-	cmp	#NOUN_BUCKET
-	beq	well_put_baby_in_bucket
-	cmp	#NOUN_WELL
-	beq	well_put_baby_in_well
-	cmp	#NOUN_IN_WELL
-	beq	well_put_baby_in_well
-
-	; put general message
-
-	ldx	#<well_put_baby_message
-	ldy	#>well_put_baby_message
-	jmp	finish_parse_message
-
-	;=================
-	; baby in bucket
-
-well_put_baby_in_bucket:
-
-	lda	INVENTORY_1
-	and	#INV1_BABY
-	beq	well_put_baby_in_bucket_no_baby
-
-well_put_baby_in_bucket_yes_baby:
-	lda	PEASANT_X
-	cmp	#25
-	bcc	well_put_baby_bucket_close_enough
-
-	ldx	#<well_put_baby_in_bucket_too_far_message
-	ldy	#>well_put_baby_in_bucket_too_far_message
-	jmp	finish_parse_message
-
-well_put_baby_bucket_close_enough:
-	; see if have sub
-
-	lda	INVENTORY_2
-	and	#INV2_MEATBALL_SUB
-	bne	well_put_baby_in_bucket_already_done
-
-	; actually do it
-
-	lda	#3
-	jsr	score_points
-
-	; put baby in bucket
-
-	lda	GAME_STATE_0
-	ora	#BABY_IN_WELL
-	sta	GAME_STATE_0
-
-	ldx	#<well_put_baby_in_bucket_message
-	ldy	#>well_put_baby_in_bucket_message
-	jmp	finish_parse_message
-
-well_put_baby_in_bucket_already_done:
-	ldx	#<well_put_baby_in_bucket_already_done_message
-	ldy	#>well_put_baby_in_bucket_already_done_message
-	jmp	finish_parse_message
-
-well_put_baby_in_bucket_no_baby:
-	ldx	#<well_put_baby_none_message
-	ldy	#>well_put_baby_none_message
-	jmp	finish_parse_message
-
-	;=================
-	; baby in well
-
-well_put_baby_in_well:
-
-	; check if have baby
-
-	; first check if gone
-	lda	INVENTORY_1_GONE
-	and	#INV1_BABY
-	bne	well_put_baby_in_well_but_gone
-
-	; next check if we have baby
-	lda	INVENTORY_1
-	and	#INV1_BABY
-	beq	well_put_baby_in_well_but_gone
-
-well_put_baby_in_well_but_have:
-	ldx	#<well_put_baby_in_well_message
-	ldy	#>well_put_baby_in_well_message
-	jmp	finish_parse_message
-
-well_put_baby_in_well_but_gone:
-	ldx	#<well_put_baby_none_message
-	ldy	#>well_put_baby_none_message
-	jmp	finish_parse_message
-
-
-	;=============
 	; put pebbles
+	;=============
+
 well_put_pebbles:
 
 	jsr	get_noun_again
@@ -586,6 +499,8 @@ well_put_pebbles:
 	jmp	finish_parse_message
 
 well_put_pebbles_in_bucket:
+
+	; does *not* check to see if you are close
 
 	; check if have pebbles
 
@@ -610,6 +525,11 @@ well_put_pebbles_in_bucket_but_gone:
 	jmp	finish_parse_message
 
 well_put_pebbles_in_bucket_have_them:
+
+	; walk to well
+	ldx	#14
+	ldy	#92
+	jsr	peasant_walkto
 
 	jsr	lower_bucket
 
@@ -656,4 +576,150 @@ well_put_pebbles_in_well_but_gone:
 	ldy	#>well_put_pebbles_in_well_gone_message
 	jmp	finish_parse_message
 
+	;=============
+	; put baby
+	;=============
+well_put_baby:
+
+	jsr	get_noun_again
+
+	lda	CURRENT_NOUN
+
+	cmp	#NOUN_BUCKET
+	beq	well_put_baby_in_bucket
+	cmp	#NOUN_WELL
+	beq	well_put_baby_in_well
+	cmp	#NOUN_IN_WELL
+	beq	well_put_baby_in_well
+
+	; put general message
+
+	ldx	#<well_put_baby_message
+	ldy	#>well_put_baby_message
+	jmp	finish_parse_message
+
+	;=================
+	; baby in bucket
+
+well_put_baby_in_bucket:
+
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	well_put_baby_in_bucket_no_baby
+
+well_put_baby_in_bucket_yes_baby:
+	lda	PEASANT_X
+
+	jsr	check_close_to_well
+	bcs	well_put_baby_bucket_close_enough
+
+	ldx	#<well_put_baby_in_bucket_too_far_message
+	ldy	#>well_put_baby_in_bucket_too_far_message
+	jmp	finish_parse_message
+
+	; note, it doesn't check if bucket is up you can
+	;	put baby in if bucket up or down
+	; also actual game you can but baby in bucket
+	;	even if it already is in bucket
+
+well_put_baby_bucket_close_enough:
+
+	; walk to well
+
+	ldx	#14
+	ldy	#92
+	jsr	peasant_walkto
+
+	; see if have sub
+
+	lda	INVENTORY_2
+	and	#INV2_MEATBALL_SUB
+	bne	well_put_baby_in_bucket_already_done
+
+	; actually do it
+
+	lda	#3
+	jsr	score_points
+
+	; put baby in bucket
+
+	lda	GAME_STATE_0
+	ora	#BABY_IN_WELL
+	sta	GAME_STATE_0
+
+	jsr	lower_bucket_baby
+
+	ldx	#<well_put_baby_in_bucket_message
+	ldy	#>well_put_baby_in_bucket_message
+	jmp	finish_parse_message
+
+well_put_baby_in_bucket_already_done:
+	ldx	#<well_put_baby_in_bucket_already_done_message
+	ldy	#>well_put_baby_in_bucket_already_done_message
+	jmp	finish_parse_message
+
+well_put_baby_in_bucket_no_baby:
+	ldx	#<well_put_baby_none_message
+	ldy	#>well_put_baby_none_message
+	jmp	finish_parse_message
+
+	;=================
+	; baby in well
+
+well_put_baby_in_well:
+
+	; check if have baby
+
+	; first check if gone
+	lda	INVENTORY_1_GONE
+	and	#INV1_BABY
+	bne	well_put_baby_in_well_but_gone
+
+	; next check if we have baby
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	beq	well_put_baby_in_well_but_gone
+
+well_put_baby_in_well_but_have:
+	ldx	#<well_put_baby_in_well_message
+	ldy	#>well_put_baby_in_well_message
+	jmp	finish_parse_message
+
+well_put_baby_in_well_but_gone:
+	ldx	#<well_put_baby_none_message
+	ldy	#>well_put_baby_none_message
+	jmp	finish_parse_message
+
+
+
+
 .include "../text/dialog_well.inc"
+
+	;===============================
+	; see if close enough to well
+	; to mess with it
+	;===============================
+	; if X >30 or X <12 or Y > 128 not close enough
+	;===============================
+	; carry set if close enough
+	; carry clear if not
+
+check_close_to_well:
+
+	lda	PEASANT_Y
+	cmp	#128
+	bcs	well_too_far
+
+	lda	PEASANT_X
+	cmp	#30
+	bcs	well_too_far
+	cmp	#12
+	bcs	well_close_enough
+
+well_too_far:
+	clc
+	rts
+
+well_close_enough:
+	sec
+	rts

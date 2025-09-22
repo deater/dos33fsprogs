@@ -1,45 +1,25 @@
 
-borders:
-	+ (done)
-		in actual game, walking down center pops you out gap in
++ better looking mask-in-bucket sprite?
++ draw crank-over-face better (currently sprite over-writes face)
++ Adjust well priority mask when bucket up/down
++ Fix the "crank up" animation.  Maybe look at it when setting up baby
++ Animate baby in well
+
+
++ (done) put pebbles in bucket animation
+		walk over (doesn't check for closeness)
+		crank animates turning and bucket goes down
+		
++ (done) in actual game, walking down center pops you out gap in
 		trees ar archery walking to left pops you out the trees
 		on left, but you can't go back that way
 
-
-actions:
-	+ turn crank
-		will walk from wherever you are to crank
-		
-		left of well says "you can't reach from there"
-
-		there's a somewaht narrow rectangular region from left
++ (done) walk to well when "turn crank"
+		When out of bounds says "you can't reach from there"
+		Bounds are somewhat narrow rectangular region from left
 		of well to tree and not to top/bottom it will walk you there
 
-		walking goes diagonal until one co-ord matches then goes
-			straight there
-
-	+ put pebbles in bucket
-		walk over (possibly from even further?)
-		crank animates turning and bucket goes down
-		
-	+ turn crank again
-		walk over
-		to left of well	
++ (done) turn crank again walk over to left of well	
 		"you got a short reach to match..
 
-	
-	animate coming back up with mask
-		mask empty
-
-
-
-- Well
-  + Walk to
-  + Animate lowering bucket
-  + Animate getting mask
-  + Animate baby in well
-  + Have it remember state of well when off screen and restore it
-	when back
-  + Adjust well priority mask when bucket up/down
-  + Fix the "crank up" animation.  Maybe look at it when setting up baby
-
++ (done) Have it remember state of well when off screen and restore it
