@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	ned_sprites.inc baby_sprites.inc
+all:	ned_sprites.inc baby_sprites.inc cottage_sprites.inc
 
 # 84,98 ->132,133
 # 84,98 -> 132,115
@@ -10,6 +10,27 @@ ned_sprites.inc:	ned_sprites.png
 	$(HGR_SPRITE) -s -l rock_moved_sprite ned_sprites.png 161 144 181 155 > ned_sprites.inc
 	$(HGR_SPRITE) -s -l door_open_top_sprite ned_sprites.png   84  98 132 115 >> ned_sprites.inc
 	$(HGR_SPRITE) -s -l door_open_bottom_sprite ned_sprites.png   84  115 132 133 >> ned_sprites.inc
+
+
+	# 0 = small open (door closed)
+	# 1 = medium open (door closed)
+	# 2 = large open (door closed)
+	# 3 = door part open
+	# 4 = door full open (note, should we separate door and broom?)
+	# 5 = medium open (door open)
+	# 6 = small open (door closed)
+	# 7 = close up small open
+
+cottage_sprites.inc:	deploy1.png deploy2.png deploy3.png deploy4.png \
+		deploy5.png deploy6.png deploy7.png deploy8.png
+	$(HGR_SPRITE) -l wall_sprite0 deploy2.png 125 90 153 104 > cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite1 deploy3.png 119 82 160 120 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite2 deploy4.png  97 69 167 125 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite3 deploy5.png 105 98 132 132 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite4 deploy6.png  84 98 132 132 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite5 deploy7.png  97 69 167 125 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite6 deploy8.png 119 81 160 119 >> cottage_sprites.inc
+	$(HGR_SPRITE) -l wall_sprite7 deploy1.png 125 90 153 104 >> cottage_sprites.inc
 
 baby_sprites.inc:	baby_sprites.png
 	$(HGR_SPRITE) -l baby_sprite0 baby_sprites.png  56  1 83  8 >  baby_sprites.inc
@@ -67,5 +88,5 @@ baby_sprites.inc:	baby_sprites.png
 
 
 clean:
-	rm -f *~ ned_sprites.inc baby_sprites.inc
+	rm -f *~ ned_sprites.inc baby_sprites.inc cottage_sprites.inc
 
