@@ -17,6 +17,11 @@ deploy_baby_animation:
 
 deploy_baby_loop:
 
+	; change background if needed
+
+	jsr	change_background
+
+
 	jsr	update_screen
 
 	; draw baby
@@ -158,3 +163,100 @@ done_deploy_baby:
 	;519  104	message
 
 
+
+
+
+	;===================
+	; change background
+	;===================
+
+change_background:
+
+	;133   22  t	-12	0	0 small
+	;139   23  t	-13	0	1 bigger
+	;143   24  w	-14	0	2 full
+	;289   52			3 broom fallen, door part open
+	;293   53			4 door fall open
+	;333   61	baby stop down	5 opening middle
+	;339   62			6 opening small
+	;343   63			7 opening gone
+
+
+	ldx	#0
+	ldy	BABY_COUNT
+	cpy	#22
+	beq	do_change_background
+
+	inx
+	cpy	#23
+	beq	do_change_background
+
+	inx
+	cpy	#24
+	beq	do_change_background
+
+	inx
+	cpy	#52
+	beq	do_change_background
+
+	inx
+	cpy	#53
+	beq	do_change_background
+
+	inx
+	cpy	#61
+	beq	do_change_background
+
+	inx
+	cpy	#62
+	beq	do_change_background
+
+	inx
+	cpy	#63
+	bne	background_same
+do_change_background:
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40		; draw to $6000
+	sta	DRAW_PAGE
+
+	lda	background_x,X
+	sta	CURSOR_X
+	lda	background_y,X
+	sta	CURSOR_Y
+
+	lda	background_l,X
+	sta	INL
+	lda	background_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+done_change_background:
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+background_same:
+	rts
+
+
+
+background_x:
+	.byte	18,17,14	; 126,119,98
+	.byte	15,12,14	; 105,84,98
+	.byte	17,18		; 119,126
+background_y:
+	.byte	90,82,69
+	.byte	98,98,69
+	.byte	81,90
+
+background_l:
+	.byte	<wall_sprite0,<wall_sprite1,<wall_sprite2
+	.byte	<wall_sprite3,<wall_sprite4,<wall_sprite5
+	.byte	<wall_sprite6,<wall_sprite7
+background_h:
+	.byte	>wall_sprite0,>wall_sprite1,>wall_sprite2
+	.byte	>wall_sprite3,>wall_sprite4,>wall_sprite5
+	.byte	>wall_sprite6,>wall_sprite7
