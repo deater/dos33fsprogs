@@ -4,7 +4,7 @@
 + Adjust well priority mask when bucket up/down
 + Fix the "crank up" animation.  Maybe look at it when setting up baby
 + Animate baby in well
-
++ can re-use some of the sprites/masks in the well animations to save space
 
 + (done) put pebbles in bucket animation
 		walk over (doesn't check for closeness)

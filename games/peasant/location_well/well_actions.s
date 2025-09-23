@@ -379,10 +379,6 @@ well_turn_crank_baby_in:
 	lda	#2
 	jsr	score_points
 
-	; here?
-
-	jsr	raise_bucket_baby
-
 	; get sub
 
 	lda	INVENTORY_2

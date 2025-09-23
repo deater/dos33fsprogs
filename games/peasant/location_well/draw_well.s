@@ -134,27 +134,81 @@ done_raise_bucket_mask:
 	;===================
 	; lower bucket baby
 	;===================
-	; TODO
+	;
 
 lower_bucket_baby:
+	lda	#$0
+	sta	BUCKET_COUNT
 
-	lda	#3
-	sta	BUCKET_STATE
+lower_bucket_baby_loop:
+	ldy	BUCKET_COUNT
+	ldx	lower_bucket_baby_animation,Y
+	stx	BUCKET_STATE
+
+	ldx	lower_crank_animation,Y
+	stx	CRANK_STATE
+
+	jsr	update_screen
+
+	jsr	hgr_page_flip
+
+	inc	BUCKET_COUNT
+	lda	BUCKET_COUNT
+	cmp	#11
+	bne	lower_bucket_baby_loop
+
+done_lower_bucket_baby:
 
 	rts
 
 	;===================
 	; raise bucket baby
 	;===================
-	; TODO
 
 raise_bucket_baby:
+	lda	#$0
+	sta	BUCKET_COUNT
+
+raise_bucket_baby_loop:
+	ldy	BUCKET_COUNT
+	ldx	raise_bucket_baby_animation,Y
+	stx	BUCKET_STATE
+
+	ldx	raise_mask_crank_animation,Y
+	stx	CRANK_STATE
+
+	jsr	update_screen
+
+	jsr	hgr_page_flip
+
+	inc	BUCKET_COUNT
+	lda	BUCKET_COUNT
+	cmp	#15
+	bne	raise_bucket_baby_loop
+
+done_raise_bucket_baby:
 
 	lda	#0
 	sta	BUCKET_STATE
+	sta	CRANK_STATE
 
 	rts
 
+
+
+
+lower_bucket_baby_animation:
+	.byte	11,11,11	; up
+	.byte	12,12		; part down
+	.byte	13,13		; more down
+	.byte	14,14,3,3	; even more down / all down
+
+raise_bucket_baby_animation:
+	.byte	3,3,3,3	; all down
+	.byte	14,14	; part up baby (shared with lower)
+	.byte	15,15	; mid top baby
+	.byte	16,16	; near top baby
+	.byte	17,17,17,17,17	; top baby
 
 lower_bucket_animation:
 	.byte	0,0,0	; up
@@ -197,28 +251,41 @@ sprites_xsize:
 	.byte	5, 5, 5, 5	; bucket0,bucket1,bucket2,bucket3
 	.byte	5, 5, 5, 5	; mask0,mask1,mask2,mask3
 	.byte	2, 2, 2		; crank0,crank1,crank2
+	.byte	5, 5, 5, 5	; babydn0,babydn1,babydn2,babydn3
+	.byte	5, 5, 5		; babyup0,babyup1,babyup2
 
 sprites_ysize:
 	.byte	20, 20, 20, 20	; bucket0,bucket1,bucket2,bucket3
 	.byte	20, 20, 20, 20	; mask0,mask1,mask2,mask3
 	.byte	12, 12, 12	; crank0,crank1,crank2
+	.byte	20, 20, 20, 20	; babydn0,babydn1,babydn2,babydn3
+	.byte	20, 20, 20	; babyup0,babyup1,babyup2
 
 sprites_data_l:
 	.byte <bucket0_sprite,<bucket1_sprite,<bucket2_sprite,<bucket3_sprite
 	.byte <mask0_sprite,<mask1_sprite,<mask2_sprite,<mask3_sprite
 	.byte <crank0_sprite,<crank1_sprite,<crank2_sprite
+	.byte <babydn0_sprite,<babydn1_sprite,<babydn2_sprite,<babydn3_sprite
+	.byte <babyup0_sprite,<babyup1_sprite,<babyup2_sprite
 
 sprites_data_h:
 	.byte >bucket0_sprite,>bucket1_sprite,>bucket2_sprite,>bucket3_sprite
 	.byte >mask0_sprite,>mask1_sprite,>mask2_sprite,>mask3_sprite
 	.byte >crank0_sprite,>crank1_sprite,>crank2_sprite
+	.byte >babydn0_sprite,>babydn1_sprite,>babydn2_sprite,>babydn3_sprite
+	.byte >babyup0_sprite,>babyup1_sprite,>babyup2_sprite
 
 sprites_mask_l:
 	.byte <bucket0_mask,<bucket1_mask,<bucket2_mask,<bucket3_mask
 	.byte <mask0_mask,<mask1_mask,<mask2_mask,<mask3_mask
 	.byte <crank0_mask,<crank1_mask,<crank2_mask
+	.byte <babydn0_mask,<babydn1_mask,<babydn2_mask,<babydn3_mask
+	.byte <babyup0_mask,<babyup1_mask,<babyup2_mask
 
 sprites_mask_h:
 	.byte >bucket0_mask,>bucket1_mask,>bucket2_mask,>bucket3_mask
 	.byte >mask0_mask,>mask1_mask,>mask2_mask,>mask3_mask
 	.byte >crank0_mask,>crank1_mask,>crank2_mask
+	.byte >babydn0_mask,>babydn1_mask,>babydn2_mask,>babydn3_mask
+	.byte >babyup0_mask,>babyup1_mask,>babyup2_mask
+

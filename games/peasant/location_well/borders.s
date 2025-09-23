@@ -17,7 +17,7 @@ check_baby_in_well:
 
 	lda	#NEW_FROM_DISK	; needed?
 	sta	LEVEL_OVER
-	jmp	level_over
+	jmp	check_done
 
 baby_not_in_well:
 
