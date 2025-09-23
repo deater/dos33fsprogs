@@ -8,10 +8,10 @@ draw_well:
 
 	ldx	BUCKET_STATE
 
-	lda	#9		; 63/7=9
+	lda	#8		; 56/7=8
 	sta	SPRITE_X
 
-	lda	#90
+	lda	#88
 	sta	SPRITE_Y
 
 	jsr	hgr_draw_sprite_mask
@@ -194,13 +194,13 @@ raise_mask_crank_animation:
 	.byte	1,0,1,2,1	; level,up,level,down,level
 
 sprites_xsize:
-	.byte	4, 4, 4, 4	; bucket0,bucket1,bucket2,bucket3
-	.byte	4, 4, 4, 4	; mask0,mask1,mask2,mask3
+	.byte	5, 5, 5, 5	; bucket0,bucket1,bucket2,bucket3
+	.byte	5, 5, 5, 5	; mask0,mask1,mask2,mask3
 	.byte	2, 2, 2		; crank0,crank1,crank2
 
 sprites_ysize:
-	.byte	18, 18, 18, 18	; bucket0,bucket1,bucket2,bucket3
-	.byte	18, 18, 18, 18	; mask0,mask1,mask2,mask3
+	.byte	20, 20, 20, 20	; bucket0,bucket1,bucket2,bucket3
+	.byte	20, 20, 20, 20	; mask0,mask1,mask2,mask3
 	.byte	12, 12, 12	; crank0,crank1,crank2
 
 sprites_data_l:
