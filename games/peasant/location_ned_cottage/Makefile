@@ -41,6 +41,7 @@ ned_cottage_core.o:	ned_cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		sprites_ned_cottage/ned_sprites.inc \
 		sprites_ned_cottage/baby_sprites.inc \
 		sprites_ned_cottage/cottage_sprites.inc \
+		graphics_ned_cottage/baby_hut_priority.inc \
 		../location_haystack/check_haystack.s \
 		../location_haystack/sprites_haystack/blown_away_sprite.inc \
 		draw_door.s deploy_baby.s \

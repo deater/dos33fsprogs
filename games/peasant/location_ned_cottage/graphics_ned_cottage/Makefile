@@ -4,7 +4,8 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	empty_hut_graphics.inc \
-	empty_hut_priority.inc
+	empty_hut_priority.inc \
+	baby_hut_priority.inc
 
 ###
 
@@ -26,6 +27,13 @@ empty_hut_priority.inc:  \
 	empty_hut_priority.zx02
 	echo "empty_hut_priority_zx02: .incbin \"empty_hut_priority.zx02\"" > empty_hut_priority.inc
 
+###
+
+baby_hut_priority.inc:  \
+	baby_hut_priority.zx02
+	echo "baby_hut_priority_zx02: .incbin \"baby_hut_priority.zx02\"" > baby_hut_priority.inc
+
+
 ####
 
 empty_hut_priority.zx02:	empty_hut_priority.combined
@@ -43,7 +51,18 @@ empty_hut_collision.bin:	empty_hut_collision.png
 
 ####
 
+baby_hut_priority.zx02:	baby_hut_priority.gr
+	$(ZX02) -f baby_hut_priority.gr baby_hut_priority.zx02
+
+baby_hut_priority.gr:	baby_hut_priority.png
+	$(PNG2GR) baby_hut_priority.png baby_hut_priority.gr
+
+
+
+####
+
 clean:	
 	rm -f *~ empty_hut_graphics.inc empty_hut_priority.inc \
+		baby_hut_priority.inc \
 		*.bin *.combined *.zx02 *.gr *.hgr
 

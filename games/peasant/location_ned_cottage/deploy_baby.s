@@ -5,6 +5,29 @@
 
 deploy_baby_animation:
 
+
+	; load new background priority
+
+	;============================
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+	lda	#<baby_hut_priority_zx02
+	sta	zx_src_l+1
+	lda	#>baby_hut_priority_zx02
+	sta	zx_src_h+1
+
+	lda	#$4
+
+;	lda	#>priority_temp         ; temporarily load to $6000
+
+	jsr	zx02_full_decomp
+
+;	jsr	priority_copy           ; copy to $400
+
+
+
+
 	lda	#0
 	sta	BABY_COUNT
 	sta	BABY_SUBCOUNT
@@ -163,7 +186,8 @@ done_deploy_baby:
 	;519  104	message
 
 
-
+; really the bg shouldn't change until $1B = 27 (not 22)
+; 	when door opens		       $40 = 64 (not 52)
 
 
 	;===================
