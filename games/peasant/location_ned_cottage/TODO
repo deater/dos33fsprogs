@@ -1,7 +1,11 @@
-
 - Ned Cottage
-  + Animate deploying baby
+
   + Make door open once baby deployed
+  + door near end of deploy is missing bottom line
+  + double check timing of whole thing
+  + animate broom falling
+  + fix priority for door
+  + reload original priority when done
 
   + (done) enter x/y (mostly near fence)
   + (done) re-draw background and fence
