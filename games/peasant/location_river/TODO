@@ -1,3 +1,5 @@
 - River/Rock
   + Better/bigger River animation
   + When leaving to south on far left can get stuck on lake
+  + When going north from north-central side of river can end up in river
+    on next screen
