@@ -31,6 +31,13 @@ cottage_sprites.inc:	deploy1.png deploy2.png deploy3.png deploy4.png \
 	$(HGR_SPRITE) -s -l wall_sprite5 deploy7.png  98 69 167 125 >> cottage_sprites.inc
 	$(HGR_SPRITE) -s -l wall_sprite6 deploy8.png 119 81 160 119 >> cottage_sprites.inc
 	$(HGR_SPRITE) -s -l wall_sprite7 deploy1.png 126 90 153 104 >> cottage_sprites.inc
+	$(HGR_SPRITE) -s -l broom_sprite0 deploy4.png 14 42  48  70 >> cottage_sprites.inc
+	$(HGR_SPRITE) -s -l broom_sprite1 deploy4.png 14 77  48 105 >> cottage_sprites.inc
+	$(HGR_SPRITE) -s -l broom_sprite2 deploy4.png 14 112 48 140 >> cottage_sprites.inc
+	$(HGR_SPRITE) -s -l broom_sprite3 deploy4.png 14 147 48 175 >> cottage_sprites.inc
+
+
+
 
 baby_sprites.inc:	baby_sprites.png
 	$(HGR_SPRITE) -l baby_sprite0 baby_sprites.png  56  1 83  8 >  baby_sprites.inc

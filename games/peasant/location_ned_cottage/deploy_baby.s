@@ -44,6 +44,10 @@ deploy_baby_loop:
 
 	jsr	change_background
 
+	; change broom if needed
+
+	jsr	change_broom
+
 
 	jsr	update_screen
 
@@ -265,6 +269,81 @@ done_change_background:
 background_same:
 	rts
 
+
+	;===================
+	; change broom
+	;===================
+
+change_broom:
+
+	;203 / 209 (behind broom)	(broom start far right)
+	;213   38			broom slight right
+	;219   39			broom slight left
+	;223   40			broom slight right
+	;229   41			broom slight left
+	;233   42			broom rslight right
+	;239   43			broom slight left
+	;243   44			broom slight right
+	;249   45			broom slight left
+	;253   46  (baby behind door)	broom slight right
+	;259   47			broom slight left
+	;263   48			broom slight right
+	;269   49			broom slight left
+	;273   50			broom slirght right
+	;279   51			broom fall left
+	;289   52			broom fallen, door part open
+	;293   53			door fall open
+
+	ldy	BABY_COUNT
+	cpy	#38
+	bcc	no_change_broom
+	cpy	#53
+	bcs	no_change_broom
+
+do_change_broom:
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40		; draw to $6000
+	sta	DRAW_PAGE
+
+	lda	BABY_COUNT
+	sec
+	sbc	#38
+	tax
+
+	lda	broom_status,X
+	tax
+
+	lda	#18
+	sta	CURSOR_X
+	lda	#97
+	sta	CURSOR_Y
+
+	lda	broom_l,X
+	sta	INL
+	lda	broom_h,X
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+done_change_broom:
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+no_change_broom:
+	rts
+
+
+broom_status:
+	.byte 0,1,0,1,0,1,0,1,0,1,0,1,0,2,3
+
+broom_l:
+	.byte	<broom_sprite0,<broom_sprite1,<broom_sprite2,<broom_sprite3
+
+broom_h:
+	.byte	>broom_sprite0,>broom_sprite1,>broom_sprite2,>broom_sprite3
 
 
 background_x:

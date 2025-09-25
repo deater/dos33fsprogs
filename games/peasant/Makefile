@@ -105,7 +105,7 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  11 0 ./location_cottage/COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  13 0 ./location_wavy_tree/WAVY_TREE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  15 0 ./location_haystack/HAYSTACK_LOADER 0   0
-	$(DOS33_RAW) peasant_disk3.dsk  19 0 ./location_ned_cottage/NED_COTTAGE_LOADER          0   0
+	$(DOS33_RAW) peasant_disk3.dsk  18 0 ./location_ned_cottage/NED_COTTAGE_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  21 0 ./location_inside_ned/INSIDE_NED_LOADER          0   0
 	$(DOS33_RAW) peasant_disk3.dsk  23 0 ./location_gary/GARY_LOADER 0   0
 	$(DOS33_RAW) peasant_disk3.dsk  25 0 ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
@@ -228,7 +228,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 11 0` ./location_cottage/COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 13 0` ./location_wavy_tree/WAVY_TREE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 15 0` ./location_haystack/HAYSTACK_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 3 19 0` ./location_ned_cottage/NED_COTTAGE_LOADER	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 3 18 0` ./location_ned_cottage/NED_COTTAGE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 21 0` ./location_inside_ned/INSIDE_NED_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 23 0` ./location_gary/GARY_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
