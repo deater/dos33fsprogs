@@ -7,6 +7,10 @@
 
 	; Location at CURSOR_X CURSOR_Y
 
+	; which sprite in X
+
+	; note we do bounds check and don't draw if off screen(?)
+
 hgr_sprite_custom_bg_mask:
 
 	;==================================
