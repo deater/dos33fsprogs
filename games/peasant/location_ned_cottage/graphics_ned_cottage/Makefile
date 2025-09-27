@@ -4,8 +4,13 @@ ZX02 = ~/research/6502_compression/zx02.git/build/zx02
 PNG2COLLISION = ../../../../utils/gr-utils/png2collision
 
 all:	empty_hut_graphics.inc \
-	empty_hut_priority.inc \
-	baby_hut_priority.inc
+	empty_hut_priority.inc
+
+###
+
+diff:	baby_hut_priority.gr empty_hut_priority.gr
+	hexdump -C empty_hut_priority.gr > diff1
+	hexdump -C baby_hut_priority.gr > diff2
 
 ###
 

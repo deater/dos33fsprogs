@@ -6,6 +6,8 @@
   + animate broom falling
   + fix priority for door
   + reload original priority when done
+  + change priority swap to be patch style rather than zx02 style
+	this would avoid possibly stomping on video holes
 
   + (done) enter x/y (mostly near fence)
   + (done) re-draw background and fence

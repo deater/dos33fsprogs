@@ -8,25 +8,7 @@ deploy_baby_animation:
 
 	; load new background priority
 
-	;============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<baby_hut_priority_zx02
-	sta	zx_src_l+1
-	lda	#>baby_hut_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#$4
-
-;	lda	#>priority_temp         ; temporarily load to $6000
-
-	jsr	zx02_full_decomp
-
-;	jsr	priority_copy           ; copy to $400
-
-
-
+	jsr	switch_bg_baby
 
 	lda	#0
 	sta	BABY_COUNT
@@ -35,7 +17,7 @@ deploy_baby_animation:
 	lda	#26			; 182/7=26
 	sta	BABY_X
 
-	lda	#117
+	lda	#116			; put on /4 boundary
 	sta	BABY_Y
 
 deploy_baby_loop:
@@ -138,10 +120,12 @@ skip_draw_baby:
 	inc	BABY_COUNT
 
 	lda	BABY_COUNT
-	cmp	#101
+	cmp	#100
 	bne	deploy_baby_loop
 
 done_deploy_baby:
+
+	jsr	switch_bg_orig
 
 	rts
 
@@ -378,3 +362,166 @@ background_h:
 	.byte	>wall_sprite0,>wall_sprite1,>wall_sprite2
 	.byte	>wall_sprite3,>wall_sprite4,>wall_sprite5
 	.byte	>wall_sprite6,>wall_sprite7
+
+
+
+
+
+switch_bg_baby:
+
+	; $60 $16->$11
+	; $61 $16->$11
+	; $3B6 $66->$11
+	; $3B7 $66->$11
+	; $3B8 $66->$11
+	; $3B9 $66->$11
+	; $3BB $66->$11
+	; $3C0 $16->$11
+
+	lda	#$11
+	sta	priority_location+$60
+	sta	priority_location+$61
+	sta	priority_location+$3B6
+	sta	priority_location+$3B7
+	sta	priority_location+$3B8
+	sta	priority_location+$3B9
+	sta	priority_location+$3BB
+	sta	priority_location+$3C0
+
+	; $336 $66->$16
+	; $337 $66->$16
+	; $338 $66->$16
+	; $339 $66->$16
+	; $33B $66->$16
+	; $33C $66->$16
+	; $33D $66->$16
+
+	lda	#$16
+	sta	priority_location+$336
+	sta	priority_location+$337
+	sta	priority_location+$338
+	sta	priority_location+$339
+	sta	priority_location+$33B
+	sta	priority_location+$33C
+	sta	priority_location+$33D
+
+	; $33A $66->$d6
+	; $33E $66->$d6
+	; $33F $66->$d6
+	; $340 $66->$d6
+
+	lda	#$d6
+	sta	priority_location+$33A
+	sta	priority_location+$33E
+	sta	priority_location+$33F
+	sta	priority_location+$340
+
+	; $3BA $66->$dd
+	; $3BC $66->$dd
+	; $3BD $66->$dd
+	; $3BE $66->$dd
+	; $3BF $66->$dd
+
+	lda	#$dd
+	sta	priority_location+$3BA
+	sta	priority_location+$3BC
+	sta	priority_location+$3BD
+	sta	priority_location+$3BE
+	sta	priority_location+$3BF
+
+
+	; $3A9 $11->$F1
+
+	lda	#$F1
+	sta	priority_location+$3A9
+
+	; $51 $11->$FF
+	; $53 $11->$FF
+	; $3AA $11->$FF
+	; $3AB $11->$FF
+	; $3C1 $11->$FF
+
+
+	lda	#$ff
+	sta	priority_location+$51
+	sta	priority_location+$53
+	sta	priority_location+$3AA
+	sta	priority_location+$3AB
+	sta	priority_location+$3C1
+
+
+	rts
+
+
+
+switch_bg_orig:
+	; $51 $11->$FF
+	; $53 $11->$FF
+	; $3A9 $11->$F1
+	; $3AA $11->$FF
+	; $3AB $11->$FF
+	; $3C1 $11->$FF
+
+	lda	#$11
+	sta	priority_location+$51
+	sta	priority_location+$53
+	sta	priority_location+$3A9
+	sta	priority_location+$3AA
+	sta	priority_location+$3AB
+	sta	priority_location+$3C1
+
+	; $60 $16->$11
+	; $61 $16->$11
+	; $3C0 $16->$11
+
+	lda	#$16
+	sta	priority_location+$60
+	sta	priority_location+$61
+	sta	priority_location+$3c0
+
+	; $336 $66->$16
+	; $337 $66->$16
+	; $338 $66->$16
+	; $339 $66->$16
+	; $33A $66->$d6
+	; $33B $66->$16
+	; $33C $66->$16
+	; $33D $66->$16
+	; $33E $66->$d6
+	; $33F $66->$d6
+	; $340 $66->$d6
+
+	; $3B6 $66->$11
+	; $3B7 $66->$11
+	; $3B8 $66->$11
+	; $3B9 $66->$11
+	; $3BA $66->$dd
+	; $3BB $66->$11
+	; $3BC $66->$dd
+	; $3BD $66->$dd
+	; $3BE $66->$dd
+	; $3BF $66->$dd
+
+	lda	#$66
+
+	ldx	#10
+bg_loop1:
+	sta	priority_location+$336,X
+	dex
+	bpl	bg_loop1
+
+	ldx	#9
+bg_loop2:
+	sta	priority_location+$3B6,X
+	dex
+	bpl	bg_loop2
+
+	rts
+
+
+
+
+
+
+
+

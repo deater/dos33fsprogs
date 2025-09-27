@@ -178,7 +178,8 @@ BLOWN_AWAY_OFFSET = 0
 .include "draw_door.s"
 .include "deploy_baby.s"
 
-.include "graphics_ned_cottage/baby_hut_priority.inc"
+;.include "graphics_ned_cottage/baby_hut_priority.inc"
+;.include "graphics_ned_cottage/empty_hut_priority.inc"
 
 	;=========================
 	; update screen
