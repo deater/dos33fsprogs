@@ -7,6 +7,9 @@ custom_sprites_data_l:
 	.byte <baby_sprite3,<baby_sprite4,<baby_sprite5
 	.byte <baby_sprite6,<baby_sprite7,<baby_sprite8
 
+	.byte <fast_sprite0,<fast_sprite1,<fast_sprite2
+	.byte <fast_sprite3,<fast_sprite4
+
 
 custom_sprites_data_h:
 	.byte >blown_sprite0,>blown_sprite1,>blown_sprite2
@@ -16,6 +19,9 @@ custom_sprites_data_h:
 	.byte >baby_sprite3,>baby_sprite4,>baby_sprite5
 	.byte >baby_sprite6,>baby_sprite7,>baby_sprite8
 
+	.byte >fast_sprite0,>fast_sprite1,>fast_sprite2
+	.byte >fast_sprite3,>fast_sprite4
+
 custom_mask_data_l:
 	.byte <blown_mask0,<blown_mask1,<blown_mask2
 	.byte <blown_mask3,<blown_mask4
@@ -23,6 +29,9 @@ custom_mask_data_l:
 	.byte <baby_mask0,<baby_mask1,<baby_mask2
 	.byte <baby_mask3,<baby_mask4,<baby_mask5
 	.byte <baby_mask6,<baby_mask7,<baby_mask8
+
+	.byte <fast_mask0,<fast_mask1,<fast_mask2
+	.byte <fast_mask3,<fast_mask4
 
 custom_mask_data_h:
 	.byte >blown_mask0,>blown_mask1,>blown_mask2
@@ -32,12 +41,19 @@ custom_mask_data_h:
 	.byte >baby_mask3,>baby_mask4,>baby_mask5
 	.byte >baby_mask6,>baby_mask7,>baby_mask8
 
+	.byte >fast_mask0,>fast_mask1,>fast_mask2
+	.byte >fast_mask3,>fast_mask4
+
 custom_sprites_xsize:
         .byte  6, 6, 7, 4, 2
 
 	.byte 4,4,4, 4,3,3, 3,3,2
 
+	.byte 4,4,4, 4,3
+
 custom_sprites_ysize:
         .byte 43,35,32,26,11
 
 	.byte 7,7,7, 7,7,7, 7,7,7
+
+	.byte 7,7,7, 7,7

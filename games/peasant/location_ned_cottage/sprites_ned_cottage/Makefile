@@ -58,7 +58,16 @@ baby_sprites.inc:	baby_sprites.png
 	$(HGR_SPRITE) -l baby_mask6 baby_sprites.png  98 49 118 56 >>  baby_sprites.inc
 	$(HGR_SPRITE) -l baby_mask7 baby_sprites.png  98 57 118 64 >>  baby_sprites.inc
 	$(HGR_SPRITE) -l baby_mask8 baby_sprites.png  98 65 111 72 >>  baby_sprites.inc
-
+	$(HGR_SPRITE) -l fast_sprite0 baby_sprites.png 56  77  83  84 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_sprite1 baby_sprites.png 56  85  83  92 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_sprite2 baby_sprites.png 56  93  83 100 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_sprite3 baby_sprites.png 56 101  83 108 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_sprite4 baby_sprites.png 56 109  76 116 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_mask0   baby_sprites.png 98  77 125  84 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_mask1   baby_sprites.png 98  85 125  92 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_mask2   baby_sprites.png 98  93 125 100 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_mask3   baby_sprites.png 98 101 125 108 >>  baby_sprites.inc
+	$(HGR_SPRITE) -l fast_mask4   baby_sprites.png 98 109 118 116 >>  baby_sprites.inc
 
 
 

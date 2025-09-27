@@ -75,26 +75,41 @@ deploy_baby_loop:
 	; move baby
 
 move_baby_x:
-	inc	BABY_SUBCOUNT
-	lda	BABY_SUBCOUNT
-	cmp	#9
-	bne	baby_doing_fine
 
-	dec	BABY_X
-	dec	BABY_X
+	inc	BABY_SUBCOUNT		; increase subcount
 
-	ldy	BABY_COUNT
+	ldy	BABY_COUNT		; if count > 63 moving fast
 	cpy	#63
-	bcc	baby_slow
+	bcs	move_baby_fast
+
+move_baby_slow:
+
+	lda	BABY_SUBCOUNT		; see if subcount hit 9
+	cmp	#9
+	bne	baby_no_wrap
 
 	dec	BABY_X
 	dec	BABY_X
-baby_slow:
 
-	lda	#0
+	lda	#0			; if was 9. wrap
 	sta	BABY_SUBCOUNT
 
-baby_doing_fine:
+	beq	baby_no_wrap		; bra
+
+
+move_baby_fast:
+
+	lda	BABY_SUBCOUNT		; see if subcount hit 5
+	cmp	#5
+	bne	baby_no_wrap
+
+	dec	BABY_X
+	dec	BABY_X
+
+	lda	#0			; if was 5. wrap
+	sta	BABY_SUBCOUNT
+
+baby_no_wrap:
 
 
 move_baby_y:
@@ -114,7 +129,7 @@ skip_draw_baby:
 
 	jsr	hgr_page_flip
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
 	;=========================
@@ -123,7 +138,7 @@ skip_draw_baby:
 	inc	BABY_COUNT
 
 	lda	BABY_COUNT
-	cmp	#104
+	cmp	#101
 	bne	deploy_baby_loop
 
 done_deploy_baby:
