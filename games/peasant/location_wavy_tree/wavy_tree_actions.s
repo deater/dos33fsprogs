@@ -68,6 +68,7 @@ ned_tree_talk_ned_out:
 
 	lda	#253
 	sta	NED_STATUS
+
 	; FIXME: do we need to re-draw?
 
 	ldx	#<ned_tree_talk_ned_message

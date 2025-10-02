@@ -1,7 +1,12 @@
 - Ned
-  + (done) Animate Ned
+
   + Can you walk behind him?
 	should use sprite mask so you can
   + going-away-animation a bit broken
-  + fix his hair?
+	in game he goes away while text dialog displayed
+	not sure if that's possible with our engine
+
   + fix walking to ned cottage screen, can get stuck behind tree
+
+  + (done) fix his hair
+  + (done) Animate Ned
