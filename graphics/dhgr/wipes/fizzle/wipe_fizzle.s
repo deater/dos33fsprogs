@@ -60,7 +60,7 @@ test_loop:
 .include "../main_macros.s"
 .include "../macros.hgr.s"
 
-.include "fx.hgr.fizzle.s"
+.include "fx.dhgr.fizzle.s"
 
 test_graphic_aux:
 	.incbin "../graphics/a2_nine.aux.zx02"

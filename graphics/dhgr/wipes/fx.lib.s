@@ -121,24 +121,26 @@ bhmc_m1:        tya
          bpl   bhmc_m1
          rts
 
-.if 0
+
 BuildDHGRMirrorCols:
 ; out:   mirror_cols populated with lookup table to get $27-y for y in $00..$27
 ;        duplicated in both mainmem and auxmem
 ;        X=0
 ;        Z=1
-         ldx   #$28
-         ldy   #$00
--        tya
-         sta   mirror_cols-1, x
-         sta   $C005
-         sta   mirror_cols-1, x
-         sta   $C004
-         iny
-         dex
-         bne   -
-         rts
+	ldx	#$28
+	ldy	#$00
+bdhgrmc_m1:
+	tya
+	sta	mirror_cols-1, x
+	sta	$C005
+	sta	mirror_cols-1, x
+	sta	$C004
+	iny
+	dex
+	bne	bdhgrmc_m1
+	rts
 
+.if 0
 BuildHGRDitherMasks:
          ldy   #40
 -        lda   #%10110011
