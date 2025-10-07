@@ -272,7 +272,7 @@ int main(int argc, char **argv) {
 		fprintf(sss,"%s.bin.zx02:\t%s.BIN\n",png_filenames[i],png_filenames[i]);
 		fprintf(sss,"\t$(ZX02) %s.BIN %s.bin.zx02\n",png_filenames[i],png_filenames[i]);
 		fprintf(sss,"\n");
-		fprintf(sss,"%s.BINr:\t%s.png\n",png_filenames[i],png_filenames[i]);
+		fprintf(sss,"%s.BIN:\t%s.png\n",png_filenames[i],png_filenames[i]);
 		fprintf(sss,"\t$(PNG_TO_DHGR) %s.png %s\n",png_filenames[i],png_filenames[i]);
 		fprintf(sss,"\n");
 
