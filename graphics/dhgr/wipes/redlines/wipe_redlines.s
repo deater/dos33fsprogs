@@ -1,9 +1,9 @@
-; test 4-cade dhgr fizzle wipe
+; test 4-cade dhgr redlines wipe
 
 .include "../zp.inc"
 .include "../hardware.inc"
 
-wipe_fizzle:
+wipe_diamond:
 
 	;==================
 	; set graphics mode
@@ -49,7 +49,9 @@ wipe_fizzle:
 	;=================================
 test_loop:
 
-	jsr	do_wipe_fizzle
+	jsr	BuildHGRTables
+
+	jsr	do_wipe_redlines
 
 	jsr	wait_until_keypress
 	jmp	test_loop
@@ -60,7 +62,7 @@ test_loop:
 .include "../main_macros.s"
 .include "../macros.hgr.s"
 
-.include "fx.dhgr.fizzle.s"
+.include "fx.dhgr.redlines.s"
 
 test_graphic_aux:
 	.incbin "../graphics/a2_nine.aux.zx02"
