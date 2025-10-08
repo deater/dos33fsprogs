@@ -1,0 +1,401 @@
+;license:MIT
+;(c) 2018-2023 by 4am
+;
+
+;------------------------------------------------------------------------------
+; YE OLDE GRAND UNIFIED MEMORY MAP
+;
+; LC RAM BANK 1
+; D000       - reserved
+; D001..D06E - gGlobalPrefsStore
+; ...unused...
+; D100..D4FF - HGR font data
+; ...unused...
+; E6C9..FFEB - main program code
+; FFEC..FFF9 - API functions and global constants available for main program
+;              code, prelaunchers, transition effects, &c.
+;              (LoadFileDirect, Wait/UnwaitForVBL, MockingboardStuff, MachineStatus)
+; FFFA..FFFF - NMI, reset, IRQ vectors
+;
+; LC RAM BANK 2
+; D000..D5FF - ProRWTS data
+; D600..D8BD - ProRWTS code
+; D8BE..DCB7 - ProRWTS glue code
+; DCB8..DCBD - backup of stack (during gameplay and self-running demos)
+; DCBE..DCC2 - okvs cache (attract state saved across self-running demo)
+; ...unused...
+; DFB4..DFFF - (de)acceleration function
+;
+; MAIN MEMORY DURING SEARCH/BROWSE MODE
+; 6000..9FFF - search index (499 games = $3C3C/$4000)
+; A000..BCFF - search cache (499 games = $1837/$1D00)
+; BD00..BEFF - prefs buffer (used to write PREFS.CONF if cheat mode changes)
+; BF00..BFFF - ProRWTS glue (supports LoadIndexedFile)
+;
+; MAIN MEMORY DURING MEGA-ATTRACT MODE
+; 0100..0105 - re-entry code for demos (reloaded before demo)
+; 0106..01BF - prelaunch code (reloaded before demo)
+; 0400..07FF - text screen (cleared before each module)
+; 0800..1EFF - slideshow configuration file (persistent during slideshow module)
+; 2000..5FFF - hi-res screens (cleared before each module)
+; 4000..5FFF - slideshow index file (loaded before slideshow module)
+; 6000..     - mega-attract configuration file (reloaded before each module)
+; BD00..BEFF - prefs buffer (clobbered if cheat mode changes)
+; BF00..BFFF - ProRWTS glue (reset after demo)
+;
+; MAIN MEMORY DURING MINI-ATTRACT MODE
+; 0100..0105 - re-entry code for demos (reloaded before demo)
+; 0106..01BF - prelaunch code (reloaded before demo)
+; 0400..07FF - text screen (cleared before each module)
+; 0800..1FFF - mini-attract index file (loaded once)
+; 2000..5FFF - hi-res screens
+; 6000..     - mini-attract configuration file (reloaded before each module)
+; 6000..     - transition effect code (reloaded before each screenshot module)
+; BF00..BFFF - ProRWTS glue (reset after demo)
+;
+; MAIN MEMORY DURING GAME LAUNCH
+; 0100..0105 - re-entry code
+; 0106..01BF - prelaunch code
+; 0400..07FF - text screen cleared
+; 2000..5FFF - hi-res screens cleared
+; A000..     - prelaunch index file
+;
+; MAIN MEMORY DURING CREDITS (preserves search index and cache)
+; 0800..     - credits text
+;
+; MAIN MEMORY DURING GLOBAL HELP (preserves search index and cache)
+; 0800..     - help text
+;
+; MAIN MEMORY DURING PER-GAME HELP (clobbers search cache)
+; 0800..     - help text
+; A000..     - game help index file
+;
+;------------------------------------------------------------------------------
+
+;!ifndef _CONSTANTS_ {
+.ifndef _CONSTANTS_
+
+; soft switches
+KBD =          $C000      ; last key pressed (if any)
+CLEARKBD =     $C010      ; clear last key pressed
+
+STOREOFF =     $C000      ; STA then use the following flags:
+READMAINMEM =  $C002      ; STA to read from main mem ($0200..$BFFF)
+READAUXMEM =   $C003      ; STA to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM = $C004      ; STA to write to main mem ($0200..$BFFF)
+WRITEAUXMEM =  $C005      ; STA to write to aux mem ($0200..$BFFF)
+
+SETSTDZP =     $C008      ; STA to r/w from main mem stack and zero page ($0000..$01FF)
+CLRC3ROM =     $C00A      ; STA to use internal Slot 3 ROM (required to use 128K and DHGR)
+SETC3ROM =     $C00B      ; STA to use external Slot 3 ROM (required to detect VidHD in slot 3)
+CLR80VID =     $C00C      ; STA to use 40 columns (also used to get out of DHGR mode)
+SET80VID =     $C00D      ; STA to use 80 columns (also used to get into DHGR mode)
+PRIMARYCHARSET= $C00E     ; STA to use no-mousetext character set
+SLOT3STATUS =  $C017      ; bit 7 only
+MONOCOLOR =    $C021      ; IIgs bit 7 switches composite mono/color modes
+;TBCOLOR =      $C022      ; IIgs text foreground and background colors (also VidHD but write-only)
+;NEWVIDEO =     $C029      ; IIgs graphics modes (also VidHD)
+;SPEAKER =      $C030      ; chirp chirp
+;CLOCKCTL =     $C034      ; bits 0-3 are IIgs border color (also VidHD but write-only)
+SHADOW =       $C035      ; IIgs auxmem-to-bank-E1 shadowing (also VidHD but write-only)
+TEXTMODE =     $C051
+;PAGE1 =        $C054      ; page 1 (affects text, HGR, DHGR)
+;PAGE2 =        $C055      ; page 2 (affects text, HGR, DHGR)
+DHIRESON =     $C05E      ; double hi-res on switch
+DHIRESOFF =    $C05F      ; double hi-res off switch
+
+; ROM routines and addresses
+; (prefixed because so much of the program runs from LC RAM, so don't call
+; these without thinking about memory banks first)
+;ROM_TEXT2COPY =$F962      ; turn on alternate display mode on IIgs
+ROM_REBOOT =   $FAA6
+ROM_TEXT =     $FB2F
+;ROM_MACHINEID =$FBB3
+ROM_MACHINE2C =$FBC0
+ROM_HOME =     $FC58
+ROM_WAIT =     $FCA8
+ROM_CROUT=     $FD8E
+ROM_COUT =     $FDED
+ROM_NORMAL =   $FE84      ; NORMAL text (instead of INVERSE or FLASH)
+ROM_IN0 =      $FE89      ; SETKBD
+ROM_PR0 =      $FE93      ; SETVID
+
+; zero page addresses during init ONLY
+zpMachineStatus= $F0      ; bit 7 = 1 if machine has joystick
+                          ; bit 6 = 1 if machine has 128K
+                          ; bit 5 = 1 if machine has a VidHD card
+                          ; bit 4 = 1 if machine is a IIgs
+                          ; only used during init, then copied to MachineStatus in LC RAM
+zpCharMask   = $F1        ; only used during init, then clobbered
+
+; zero page addresses
+PARAM        = $00        ; word (used by PARAMS_ON_STACK macro, so basically everywhere)
+PTR          = $02        ; word
+SRC          = $04        ; word
+DEST         = $06        ; word
+SAVE         = $08        ; word
+WINDEX       = $0A        ; word
+WCOUNT       = $0C        ; word
+HTAB         = $24        ; byte
+;VTAB         = $25        ; byte
+RNDSEED      = $4E        ; word
+PrelaunchInit= $EA
+; textrank
+BestMatchIndex = $E5      ; word
+tmpx         = $E7        ; byte
+remainder    = $E8        ; word
+num1         = $EA        ; word
+num2         = $EC        ; byte
+Timeout      = $ED        ; 3 bytes (used by SearchMode)
+zpword   =     $F0        ; word
+zpstring =     $F2        ; word
+runningscore=  $F4        ; word
+startat  =     $F6        ; byte
+i        =     $F7        ; byte
+tmp      =     $F8        ; byte
+gamelength=    $F9        ; byte
+firstletter=   $FA        ; byte
+MatchCount =   $FB        ; byte
+BestMatchScore = $FC      ; byte
+
+; main memory addresses
+gKeyLen      = $1F00      ; used by ParseKeyValueList
+gKey         = $1F01      ; ""
+gValLen      = $1F80      ; ""
+gVal         = $1F81      ; ""
+UILine1      = $1FB0      ; used by DrawUI
+UILine2      = $1FD8      ; ""
+UI_ToPlay    = $1FF7      ; ""
+ProBootEntry = $2028      ; used by ProBoot
+gSearchIndex = $6000
+gSearchCache = $A000
+gPathname    = $BFD0      ; used by SetPath/AddToPath
+
+; main memory addresses used by graphic effects
+hgrlo          = $0201               ; $C0 bytes
+mirror_cols    = $02C1               ; $28 bytes
+hgrhi          = $0301               ; $C0 bytes
+hgr1hi         = hgrhi
+
+;FXCode         = $6200
+;Coordinates1Bit= $8600               ; $3481 bytes ($3480 on disk + 1 byte EOF marker added at runtime)
+;EndCoordinates1Bit = Coordinates1Bit + $3480
+
+;Coordinates2Bit= $8100               ; $3C01 bytes ($3C00 on disk + 1 byte EOF marker added at runtime)
+;EndCoordinates2Bit = Coordinates2Bit + $3C00
+
+;Coordinates3Bit= $6D00               ; $5001 bytes ($5000 on disk + 1 byte EOF marker added at runtime)
+;EndCoordinates3Bit = Coordinates3Bit + $5000
+
+hgrlomirror    = $BB01               ; $C0 bytes
+hgr1himirror   = $BC01               ; $C0 bytes
+dithermasks    = $BDA8               ; $58 bytes, must not cross page boundary
+evenrow_masks  = dithermasks
+oddrow_masks   = dithermasks+2
+no_masks       = dithermasks+44
+copymasks1bit  = $BE00               ; $100 bytes but sparse, index is 0..6 but in high 3 bits, so $00,$20,$40,$60,$80,$A0,$C0
+copymasks2bit  = copymasks1bit       ; $100 bytes but sparse, index is 0..4 but in high 3 bits, so $00,$20,$40,$60,$80
+copymasks3bit  = copymasks1bit       ; $100 bytes but sparse, index is 0..7 but in high 3 bits, so $00,$20,$40,$60,$80,$A0,$C0,$E0
+mirror_copymasks1bit = copymasks1bit+1
+mirror_copymasks2bit = copymasks2bit+1
+hgrlo3a        = $6A00               ; $80 bytes
+hgrlo3b        = $6A80               ; $80 bytes
+hgrlo3c        = $6B00               ; $80 bytes
+hgrhi3a        = $6B80               ; $80 bytes
+dither1_lo     = $6880               ; $80 bytes
+dither2_lo     = $6900               ; $80 bytes
+dither3_lo     = $6980               ; $80 bytes
+hgrhi3b        = $6C00               ; $80 bytes
+hgrhi3c        = $BD01               ; $80 bytes
+extra_cols     = $BEF8               ; $08 bytes
+
+; hgr.48boxes constants
+HGR48StageDrawingRoutines = $7F00    ; $100 bytes
+; High bytes of drawing routines for each stage (actual routines will be page-aligned).
+; To minimize code size, we build drawing routines in this order:
+; - copy01 (STAGE1 template)
+; - copy00 (STAGE0 template)
+; - copy0F..copy09 (OUTER_STAGE template)
+; - copy08..copy02 (MIDDLE_STAGE template)
+; - change some opcodes to turn the 'copy' routines into 'clear' routines
+; - clear0F..clear08 (OUTER_STAGE)
+; - clear07..clear02 (MIDDLE_STAGE)
+; - clear01 (STAGE1)
+; - clear00 (STAGE0)
+clear00  = $80
+clear01  = $81
+clear02  = $82
+clear03  = $83
+clear04  = $84
+clear05  = $85
+clear06  = $86
+clear07  = $87
+clear08  = $88
+clear09  = $89
+clear0A  = $8A
+clear0B  = $8B
+clear0C  = $8C
+clear0D  = $8D
+clear0E  = $8E
+clear0F  = $8F
+copy02   = $90
+copy03   = $91
+copy04   = $92
+copy05   = $93
+copy06   = $94
+copy07   = $95
+copy08   = $96
+copy09   = $97
+copy0A   = $98
+copy0B   = $99
+copy0C   = $9A
+copy0D   = $9B
+copy0E   = $9C
+copy0F   = $9D
+copy00   = $9E
+copy01   = $9F
+
+; dhgr.48boxes constants
+DHGR48BoxStages = $10                ; $30 bytes, current stage for each box
+DHGR48StageDrawingRoutines = $6F00   ; $100 bytes
+; High bytes of drawing routines for each stage (actual routines will be page-aligned).
+; To minimize code size, we build drawing routines in this order:
+; - copy01 (STAGE1 template)
+; - copy00 (STAGE0 template)
+; - copy0F..copy09 (OUTER_STAGE template)
+; - copy08..copy02 (MIDDLE_STAGE template)
+; - change some opcodes to turn the 'copy' routines into 'clear' routines
+; - clear0F..clear08 (OUTER_STAGE)
+; - clear07..clear02 (MIDDLE_STAGE)
+; - clear01 (STAGE1)
+; - clear00 (STAGE0)
+dhgr_clear00  = $70
+dhgr_clear01  = $71
+dhgr_clear02  = $72
+dhgr_clear03  = $73
+dhgr_clear04  = $74
+dhgr_clear05  = $75
+dhgr_clear06  = $76
+dhgr_clear07  = $77
+dhgr_clear08  = $78
+dhgr_clear09  = $79
+dhgr_clear0A  = $7A
+dhgr_clear0B  = $7B
+dhgr_clear0C  = $7C
+dhgr_clear0D  = $7D
+dhgr_clear0E  = $7E
+dhgr_clear0F  = $7F
+dhgr_copy02   = $80
+dhgr_copy03   = $81
+dhgr_copy04   = $82
+dhgr_copy05   = $83
+dhgr_copy06   = $84
+dhgr_copy07   = $85
+dhgr_copy08   = $86
+dhgr_copy09   = $87
+dhgr_copy0A   = $88
+dhgr_copy0B   = $89
+dhgr_copy0C   = $8A
+dhgr_copy0D   = $8B
+dhgr_copy0E   = $8C
+dhgr_copy0F   = $8D
+dhgr_copy00   = $8E
+dhgr_copy01   = $8F
+
+; LC RAM 1 & 2 addresses
+; these are defined here because they are also called by other targets
+; that are assembled separately, e.g. prelaunchers, demo launchers, and graphic effects
+;UnwaitForVBL              = $FFEE
+;WaitForVBL                = UnwaitForVBL-3
+;iLoadFileDirect           = WaitForVBL-3  ; note: you really want LC RAM 2 banked in before calling this
+;iAddToPath                = iLoadFileDirect-3
+;iLoadXSingle              = iAddToPath-3
+;iLoadFXCODE               = iLoadXSingle-3
+;iLoadFXDATA               = iLoadFXCODE-3
+;iBuildHGRTables           = iLoadFXDATA-3
+;iBuildHGRMirrorTables     = iBuildHGRTables-3
+;iBuildHGRMirrorCols       = iBuildHGRMirrorTables-3
+;iBuildDHGRMirrorCols      = iBuildHGRMirrorCols-3
+;iBuildHGRDitherMasks      = iBuildDHGRMirrorCols-3
+;iBuildDHGRDitherMasks     = iBuildHGRDitherMasks-3
+;iWaitForKeyWithTimeout    = iBuildDHGRDitherMasks-3
+;iReverseCoordinates1Bit   = iWaitForKeyWithTimeout-3
+;iRippleCoordinates1Bit    = iReverseCoordinates1Bit-3
+;iRippleCoordinates1Bit2   = iRippleCoordinates1Bit-3
+;iRippleCoordinates1Bit3   = iRippleCoordinates1Bit2-3
+;iRippleCoordinates1Bit4   = iRippleCoordinates1Bit3-3
+;iBuildHGRSparseBitmasks1Bit  = iRippleCoordinates1Bit4-3
+;iBuildDHGRSparseBitmasks1Bit = iBuildHGRSparseBitmasks1Bit-3
+;iBuildHGRSparseBitmasks2Bit  = iBuildDHGRSparseBitmasks1Bit-3
+;iBuildDHGRSparseBitmasks2Bit = iBuildHGRSparseBitmasks2Bit-3
+;iReverseCoordinates2Bit   = iBuildDHGRSparseBitmasks2Bit-3
+;iRippleCoordinates2Bit    = iReverseCoordinates2Bit-3
+;iReverseCoordinates3Bit   = iRippleCoordinates2Bit-3
+;iRippleCoordinates3Bit    = iReverseCoordinates3Bit-3
+;iSetupPrecomputed3Bit     = iRippleCoordinates3Bit-3
+;iPrelaunchInit            = iSetupPrecomputed3Bit-3
+
+MockingboardStuff  = $FFF8  ; bit 7 = 1 if SC-01 speech chip present (Speech I)
+                            ; bit 6 = 1 if SSI-263 speech chip present (Mockingboard "B"-"D")
+                            ; bit 5 = 1 if two AY-3-8910s present (Sound II / Mockingboard "A"-"D")
+                            ; bit 5 = 0 if only AY-3-8910 present (Sound I)
+                            ; bit 4 unused
+                            ; bits 0-3: slot number
+MachineStatus      = $FFF9
+
+; LC RAM 2 addresses
+DisableAccelerator = $DFB4
+EnableAccelerator  = DisableAccelerator+3
+
+; application constants
+gStackSize   = 6          ; seems like only six are needed
+PRELAUNCH_STANDARD_SIZE = 61         ; LoadStandardPrelaunch, eventually to be determined at build-time
+
+; AND masks for MockingboardStuff
+MOCKINGBOARD_SLOT = %00001111
+HAS_STEREO        = %00100000
+HAS_SPEECH        = %11000000
+
+; AND masks for game info bitfield (after game display name in gSearchStore)
+HAS_DHGR_TITLE    = %10000000        ; this one is hard-coded via BMI instead of AND/BNE
+IS_SINGLE_LOAD    = %01000000
+CHEAT_CATEGORY    = %00001111
+;                      ^^
+;                      ++-- your bits here!
+
+; AND masks for MachineStatus
+HAS_JOYSTICK   = %10000000
+HAS_128K       = %01000000
+IS_IIGS        = %00100000           ; /!\ do not use this to gate SHR, use SUPPORTS_SHR instead
+HAS_VIDHD      = %00010000
+SUPPORTS_SHR   = %00110000
+CHEATS_ENABLED = %00001000
+
+; AND masks for gMegaAttractModeFilter
+ATTRACT_DEMO        = %00000001
+ATTRACT_HGR_TITLE   = %00000010
+ATTRACT_HGR_ACTION  = %00000100
+ATTRACT_DHGR_TITLE  = %00001000
+ATTRACT_DHGR_ACTION = %00010000
+ATTRACT_SHR         = %00100000
+ATTRACT_GR          = %01000000
+ATTRACT_DGR         = %10000000
+
+; shared symbols for prelaunch and effects to call ProRWTS2 functions
+iCurBlockLo    = $D601               ; constant
+iCurBlockHi    = $D603               ; constant
+launchpatch    = $D85C               ; glue.launch.a
+itraverse      = $DB4B               ; Roger Rabbit, avoid, use Infiltrator 2 style instead
+                                     ; also Columns (via file in disk image)
+ldrlo          = $55                 ; constant
+ldrhi          = $56                 ; constant
+;namlo          = $57                 ; constant
+;namhi          = $58                 ; constant
+ldrlo2         = $64                 ; constant
+ldrhi2         = $65                 ; constant
+
+; Columns and Dangerous Dave also call (de)accelerator functions directly
+
+_CONSTANTS_=*
+;}
+.endif
