@@ -14,7 +14,7 @@ wipe_diamond:
         bit     FULLGR
 	sta	AN3
 	sta	EIGHTYCOLON
-	sta	SET80COL
+	sta	SET80COL		; special handling
 
         bit     PAGE1
 
@@ -41,6 +41,9 @@ wipe_diamond:
 	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
+
+	bit	PAGE1
+	sta	CLR80COL
 
 	jsr	wait_until_keypress
 

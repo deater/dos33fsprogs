@@ -114,8 +114,8 @@ DrawBlackLine:
 	sta	<blackdst+2
 	lda	#$00
 	clc
-	.byte	$24			; bit
 ;	HIDE_NEXT_BYTE
+	.byte	$24			; bit
 dbl_mm:
 	sec
 	ldy	#$27
@@ -137,8 +137,8 @@ CopyLine:
 	eor	#$60
 	sta	<copysrc+2
 	clc
-	.byte	$24			; bit
 	; HIDE_NEXT_BYTE
+	.byte	$24			; bit
 cl_m1:
 	sec
 	ldy	#$27
