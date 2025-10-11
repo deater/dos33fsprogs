@@ -119,15 +119,14 @@ k_bitcopy       = 30       ; must be last token
 
 	.include "../macros.s"
 
-do_wipe_48:
-
-;*=FXCode
-         jmp   BuildingPhase
+FXCode:
+	jmp	BuildingPhase
 ;*=FXCode+3
-         jmp   DrawingPhase
+	jmp	DrawingPhase
 
 ; All template p-code must be on the same page
-;!align 255,0
+.align 256
+
 ; Template for 'stage 0' routine (copy00), which copies the innermost
 ; part of the box (labeled '0' in diagram above).
 STAGE0:
@@ -240,7 +239,7 @@ OUTER_STAGE:
 ;         !error "Templates are not all on same page"
 ;}
 
-.assert (>* - >STAGE0) < 1 , error, "wait crosses page boundary"
+.assert (>* - >STAGE0) < 1 , error, "stage0 crosses page boundary"
 
 BuildingPhase:
 ; generate |BoxesX| and |BoxesY| arrays

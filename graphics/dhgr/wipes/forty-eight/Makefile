@@ -11,6 +11,8 @@ WIPE_48:	wipe_48.o
 
 wipe_48.o:	wipe_48.s \
 	../zp.inc ../hardware.inc ../wait_keypress.s ../zx02_optim.s \
+	fx.dhgr.48boxes.spiral.s \
+	code.dhgr.48boxes.s \
 	../main_macros.s \
 	../fx.lib.s \
 	../macros.s

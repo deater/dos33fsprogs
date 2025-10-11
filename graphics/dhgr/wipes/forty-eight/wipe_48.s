@@ -49,7 +49,7 @@ wipe_fizzle:
 	;=================================
 test_loop:
 
-	jsr	do_wipe_48
+	jsr	InitOnce
 
 	jsr	wait_until_keypress
 	jmp	test_loop
@@ -60,6 +60,7 @@ test_loop:
 .include "../main_macros.s"
 .include "../macros.hgr.s"
 
+.include "fx.dhgr.48boxes.spiral.s"
 .include "code.dhgr.48boxes.s"
 
 test_graphic_aux:
