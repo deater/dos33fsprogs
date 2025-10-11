@@ -1,0 +1,6 @@
+Memory Uses:
+	Zero Page $10-$3F	= box stages
+
+
+$6F00	-- effect data copied here
+

@@ -2,24 +2,24 @@ include ../../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../../linker_scripts
 
-all:	WIPE_48
+all:	WIPE_48_SPIRAL
 
 ###
 
-WIPE_48:	wipe_48.o
-	ld65 -o WIPE_48 wipe_48.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+WIPE_48_SPIRAL:	wipe_48_spiral.o
+	ld65 -o WIPE_48_SPIRAL wipe_48_spiral.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-wipe_48.o:	wipe_48.s \
+wipe_48_spiral.o:	wipe_48_spiral.s \
 	../zp.inc ../hardware.inc ../wait_keypress.s ../zx02_optim.s \
 	fx.dhgr.48boxes.spiral.s \
 	code.dhgr.48boxes.s \
 	../main_macros.s \
 	../fx.lib.s \
 	../macros.s
-	ca65 -o wipe_48.o wipe_48.s -l wipe_48.lst
+	ca65 -o wipe_48_spiral.o wipe_48_spiral.s -l wipe_48_spiral.lst
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_48
+	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_48_SPIRAL
 
