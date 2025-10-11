@@ -61,14 +61,18 @@ dhgr_copy0F   = $8D
 dhgr_copy00   = $8E
 dhgr_copy01   = $8F
 
-
 ; main memory addresses used by graphic effects
+; why are these+1?
 hgrlo          = $0201               ; $C0 bytes
 mirror_cols    = $02C1               ; $28 bytes
 hgrhi          = $0301               ; $C0 bytes
 hgr1hi         = hgrhi
 
 DHGR48StageDrawingRoutines = $6F00   ; $100 bytes
+
+; $9000-$AFFF used as copy of AUX memory
+
+; why are these not all in $BD page?
 
 auxsrc_hgrhi	= $BD01	; [$C0 bytes] HGR base addresses (hi) starting at $9000
 BoxesX		= $BE90	; [$30 bytes] starting row for each box
@@ -110,30 +114,31 @@ test_loop:
 InitOnce:
 	; self modify to run next code only once
 
-	bit	Start
-	lda	#$4C
-	sta	InitOnce
+;	bit	Start
+;	lda	#$4C
+;	sta	InitOnce
 
 
 	; initialize and copy stage drawing routines table into place
 
 	; write 256 bytes of 0s off end of EndStageHi?
 	; why? do we need padding?
-;	ldx	#0
-;	txa
-;io_m1:
+
+	ldx	#0
+	txa
+io_m1:
 ;	sta	EndStagesHi, X
-;	inx
-;	bne	io_m1
+	sta	DHGR48StageDrawingRoutines, X
+	inx
+	bne	io_m1
 
 	ldx	#0
 io_m2:
 	lda	StagesHi, X
 	sta	DHGR48StageDrawingRoutines, X
 	inx
+	cpx	#(EndStagesHi-StagesHi)
 	bne	io_m2
-
-
 
 ;	beq	Start		; always branches
 
@@ -151,7 +156,9 @@ s_m1:
 
 	jmp	DrawingPhase		; exit via vector to drawing phase
 
-BoxInitialStages:
+
+.if 0
+;BoxInitialStages:
 	.byte $00,$E9,$EA,$EB,$EC,$ED,$EE,$EF
 	.byte $FF,$E8,$D9,$DA,$DB,$DC,$DD,$F0
 	.byte $FE,$E7,$D8,$D1,$D2,$D3,$DE,$F1
@@ -159,7 +166,7 @@ BoxInitialStages:
 	.byte $FC,$E5,$E4,$E3,$E2,$E1,$E0,$F3
 	.byte $FB,$FA,$F9,$F8,$F7,$F6,$F5,$F4
 
-StagesHi:	 ; high bytes of address of drawing routine for each stage
+;StagesHi:	 ; high bytes of address of drawing routine for each stage
 	.byte dhgr_copy0F
 	.byte dhgr_copy0E
 	.byte dhgr_copy0D
@@ -176,7 +183,7 @@ StagesHi:	 ; high bytes of address of drawing routine for each stage
 	.byte dhgr_copy02
 	.byte dhgr_copy01
 	.byte dhgr_copy00
-EndStagesHi:
+;gEndStagesHi:
 
 
 
@@ -187,6 +194,7 @@ EndStagesHi:
 
 .align 256
 
+.endif
 
 ; The screen is separated into 48 boxes.
 ; Boxes are laid out in a grid, left-to-right, top-down:
@@ -971,9 +979,37 @@ load_test_graphic:
 
 	rts
 
-
-
 test_graphic_aux:
 	.incbin "../graphics/a2_nine.aux.zx02"
 test_graphic_bin:
 	.incbin "../graphics/a2_nine.bin.zx02"
+
+
+;.align 256
+
+BoxInitialStages:
+	.byte $00,$E9,$EA,$EB,$EC,$ED,$EE,$EF
+	.byte $FF,$E8,$D9,$DA,$DB,$DC,$DD,$F0
+	.byte $FE,$E7,$D8,$D1,$D2,$D3,$DE,$F1
+	.byte $FD,$E6,$D7,$D6,$D5,$D4,$DF,$F2
+	.byte $FC,$E5,$E4,$E3,$E2,$E1,$E0,$F3
+	.byte $FB,$FA,$F9,$F8,$F7,$F6,$F5,$F4
+
+StagesHi:	 ; high bytes of address of drawing routine for each stage
+	.byte dhgr_copy0F
+	.byte dhgr_copy0E
+	.byte dhgr_copy0D
+	.byte dhgr_copy0C
+	.byte dhgr_copy0B
+	.byte dhgr_copy0A
+	.byte dhgr_copy09
+	.byte dhgr_copy08
+	.byte dhgr_copy07
+	.byte dhgr_copy06
+	.byte dhgr_copy05
+	.byte dhgr_copy04
+	.byte dhgr_copy03
+	.byte dhgr_copy02
+	.byte dhgr_copy01
+	.byte dhgr_copy00
+EndStagesHi:
