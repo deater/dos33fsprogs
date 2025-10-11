@@ -5,6 +5,12 @@
 ;!to "build/FXCODE/DHGR48",plain
 ;*=$6200
 
+
+; want this to start at $6200?
+
+.align 256
+
+
 ; The screen is separated into 48 boxes.
 ; Boxes are laid out in a grid, left-to-right, top-down:
 ;

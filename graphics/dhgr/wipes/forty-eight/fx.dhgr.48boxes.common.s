@@ -7,9 +7,13 @@
 	.include "../macros.s"
 
 InitOnce:
+	; self modify to run next code only once
+
 	bit	Start
 	lda	#$4C
 	sta	InitOnce
+
+	; load effect from disk?  Originally at $6200?
 
 ;	LDADDR	FXCodeFile
 ;	ldx	#>FXCode
@@ -18,12 +22,18 @@ InitOnce:
 	; load fxcode from disk?
 
 	; initialize and copy stage drawing routines table into place
+
+
+	; write 256 bytes of 0s off end of EndStageHi?
+	; why? do we need padding?
+;	ldx	#0
+;	txa
+;io_m1:
+;	sta	EndStagesHi, X
+;	inx
+;	bne	io_m1
+
 	ldx	#0
-	txa
-io_m1:
-	sta	EndStagesHi, X
-	inx
-	bne	io_m1
 io_m2:
 	lda	StagesHi, X
 	sta	DHGR48StageDrawingRoutines, X
@@ -48,4 +58,5 @@ s_m1:
 
 	jmp	FXCode+3              ; exit via vector to drawing phase
 
-BoxInitialStages:
+;BoxInitialStages:
+

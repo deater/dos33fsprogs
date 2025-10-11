@@ -5,9 +5,11 @@
 ;!to "build/FX.INDEXED/DHGR.48.SPIRAL",plain
 ;*=$6000
 
+.align	256
+
 	;!source "src/fx/fx.dhgr.48boxes.common.a"
 	.include "fx.dhgr.48boxes.common.s"
-
+BoxInitialStages:
 	.byte $00,$E9,$EA,$EB,$EC,$ED,$EE,$EF
 	.byte $FF,$E8,$D9,$DA,$DB,$DC,$DD,$F0
 	.byte $FE,$E7,$D8,$D1,$D2,$D3,$DE,$F1

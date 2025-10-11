@@ -3,7 +3,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 
-wipe_fizzle:
+wipe_48_spiral:
 
 	;==================
 	; set graphics mode
@@ -22,7 +22,7 @@ wipe_fizzle:
 	; intro
 	;=================================
 
-	; bin partg
+	; bin part
 
 	lda	#<test_graphic_bin
 	sta	zx_src_l+1
@@ -41,6 +41,9 @@ wipe_fizzle:
 	sta	zx_src_h+1
 	lda	#$20
 	jsr	zx02_full_decomp
+
+	bit	PAGE1
+	sta	CLR80COL
 
 	jsr	wait_until_keypress
 
