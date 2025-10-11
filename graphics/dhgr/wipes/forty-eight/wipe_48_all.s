@@ -101,23 +101,39 @@ test_loop:
 	jsr	wait_until_keypress
 
 
-	jsr	InitOnce
+	jsr	Init
 
 	jsr	wait_until_keypress
 
+	inc	which_one
+	lda	which_one
+	cmp	#2
+	bne	noflo
+	lda	#0
+	sta	which_one
+
+noflo:
+
 	jmp	test_loop
 
+which_one:
+	.byte	0
 
+Init:
 
-;.align	256
+	ldy	which_one
+	lda	wipes_box_init_l,Y
+	sta	initonce_smc1+1
+	lda	wipes_box_init_h,Y
+	sta	initonce_smc1+2
 
-InitOnce:
-	; self modify to run next code only once
+	lda	wipes_stages_l,Y
+	sta	stages_hi_smc+1
+	lda	wipes_stages_h,Y
+	sta	stages_hi_smc+2
 
-;	bit	Start
-;	lda	#$4C
-;	sta	InitOnce
-
+	lda	wipes_stages_size,Y
+	sta	stages_size_smc+1
 
 	; initialize and copy stage drawing routines table into place
 
@@ -134,10 +150,12 @@ io_m1:
 
 	ldx	#0
 io_m2:
-	lda	StagesHi, X
+stages_hi_smc:
+	lda	$DDDD, X
 	sta	DHGR48StageDrawingRoutines, X
 	inx
-	cpx	#(EndStagesHi-StagesHi)
+stages_size_smc:
+	cpx	#$DD
 	bne	io_m2
 
 ;	beq	Start		; always branches
@@ -149,7 +167,9 @@ Start:
 	; copy this effect's initial stages to zp
 	ldx   #47
 s_m1:
-	ldy	BoxInitialStages, X
+
+initonce_smc1:
+	ldy	$DDDD, X
 	sty	DHGR48BoxStages, X
 	dex
 	bpl	s_m1
@@ -157,44 +177,11 @@ s_m1:
 	jmp	DrawingPhase		; exit via vector to drawing phase
 
 
-.if 0
-;BoxInitialStages:
-	.byte $00,$E9,$EA,$EB,$EC,$ED,$EE,$EF
-	.byte $FF,$E8,$D9,$DA,$DB,$DC,$DD,$F0
-	.byte $FE,$E7,$D8,$D1,$D2,$D3,$DE,$F1
-	.byte $FD,$E6,$D7,$D6,$D5,$D4,$DF,$F2
-	.byte $FC,$E5,$E4,$E3,$E2,$E1,$E0,$F3
-	.byte $FB,$FA,$F9,$F8,$F7,$F6,$F5,$F4
-
-;StagesHi:	 ; high bytes of address of drawing routine for each stage
-	.byte dhgr_copy0F
-	.byte dhgr_copy0E
-	.byte dhgr_copy0D
-	.byte dhgr_copy0C
-	.byte dhgr_copy0B
-	.byte dhgr_copy0A
-	.byte dhgr_copy09
-	.byte dhgr_copy08
-	.byte dhgr_copy07
-	.byte dhgr_copy06
-	.byte dhgr_copy05
-	.byte dhgr_copy04
-	.byte dhgr_copy03
-	.byte dhgr_copy02
-	.byte dhgr_copy01
-	.byte dhgr_copy00
-;gEndStagesHi:
-
-
-
-
 ; want this to start at $6200?
 
 ; this has to align on page start or won't work
 
-.align 256
-
-.endif
+;.align 256
 
 ; The screen is separated into 48 boxes.
 ; Boxes are laid out in a grid, left-to-right, top-down:
@@ -984,10 +971,33 @@ test_graphic_aux:
 test_graphic_bin:
 	.incbin "../graphics/a2_nine.bin.zx02"
 
+;==============================================
+;==============================================
+; wipe data
+;==============================================
+;==============================================
 
-;.align 256
+wipes_box_init_l:
+	.byte <spiral_BoxInitialStages
+	.byte <snake_BoxInitialStages
+wipes_box_init_h:
+	.byte >spiral_BoxInitialStages
+	.byte >snake_BoxInitialStages
 
-BoxInitialStages:
+wipes_stages_l:
+	.byte <spiral_StagesHi
+	.byte <snake_StagesHi
+wipes_stages_h:
+	.byte >spiral_StagesHi
+	.byte >snake_StagesHi
+wipes_stages_size:
+	.byte spiral_EndStagesHi-spiral_StagesHi
+	.byte snake_EndStagesHi-snake_StagesHi
+
+;=============================================
+; Spiral Wipe
+
+spiral_BoxInitialStages:
 	.byte $00,$E9,$EA,$EB,$EC,$ED,$EE,$EF
 	.byte $FF,$E8,$D9,$DA,$DB,$DC,$DD,$F0
 	.byte $FE,$E7,$D8,$D1,$D2,$D3,$DE,$F1
@@ -995,7 +1005,7 @@ BoxInitialStages:
 	.byte $FC,$E5,$E4,$E3,$E2,$E1,$E0,$F3
 	.byte $FB,$FA,$F9,$F8,$F7,$F6,$F5,$F4
 
-StagesHi:	 ; high bytes of address of drawing routine for each stage
+spiral_StagesHi:	; high bytes of address of drawing routine for each stage
 	.byte dhgr_copy0F
 	.byte dhgr_copy0E
 	.byte dhgr_copy0D
@@ -1012,4 +1022,36 @@ StagesHi:	 ; high bytes of address of drawing routine for each stage
 	.byte dhgr_copy02
 	.byte dhgr_copy01
 	.byte dhgr_copy00
-EndStagesHi:
+spiral_EndStagesHi:
+
+;=============================================
+; Snake Wipe
+
+snake_BoxInitialStages:
+
+.byte $00,$FF,$FE,$FD,$FC,$FB,$FA,$F9
+.byte $F1,$F2,$F3,$F4,$F5,$F6,$F7,$F8
+.byte $F0,$EF,$EE,$ED,$EC,$EB,$EA,$E9
+.byte $E1,$E2,$E3,$E4,$E5,$E6,$E7,$E8
+.byte $E0,$DF,$DE,$DD,$DC,$DB,$DA,$D9
+.byte  $D1,$D2,$D3,$D4,$D5,$D6,$D7,$D8
+
+snake_StagesHi:	; high bytes of address of drawing routine for each stage
+.byte dhgr_copy0F
+.byte dhgr_copy0E
+.byte dhgr_copy0D
+.byte dhgr_copy0C
+.byte dhgr_copy0B
+.byte dhgr_copy0A
+.byte dhgr_copy09
+.byte dhgr_copy08
+.byte dhgr_copy07
+.byte dhgr_copy06
+.byte dhgr_copy05
+.byte dhgr_copy04
+.byte dhgr_copy03
+.byte dhgr_copy02
+.byte dhgr_copy01
+.byte dhgr_copy00
+snake_EndStagesHi:
+
