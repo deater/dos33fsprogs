@@ -1,11 +1,17 @@
 ; HARDWARE LOCATIONS
 
 KEYPRESS	=	$C000
+KBD		=	$C000
 KEYRESET	=	$C010
 
 ; SOFT SWITCHES
 CLR80COL	=	$C000	; PAGE1/PAGE1 normal
 SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
+READMAINMEM	=	$C002	; STA to read from main mem ($0200..$BFFF)
+READAUXMEM	=	$C003	; STA to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM	=	$C004	; STA to write to main mem ($0200..$BFFF)
+WRITEAUXMEM	=	$C005	; STA to write to aux mem ($0200..$BFFF)
+
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
 TBCOLOR		=	$C022	; IIgs text fg/bg colors

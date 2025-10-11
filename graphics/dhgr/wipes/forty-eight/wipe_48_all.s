@@ -8,12 +8,68 @@
 
 ; zero page use
 
-src		= $00             ; [word][must be at $00] used by drawing routines
-dst		= $02   ; [word] used by drawing routines
-rowcount	= $04   ; [byte] used by drawing routines
-tmpy		= $05   ; [byte] used by drawing routines
-box		= $0E   ; [byte] counter in main loop
-; $10-$3F = lookup
+src		= $00	; [word][must be at $00] used by drawing routines
+dst		= $02	; [word] used by drawing routines
+rowcount	= $04	; [byte] used by drawing routines
+tmpy		= $05	; [byte] used by drawing routines
+box		= $0E	; [byte] counter in main loop
+DHGR48BoxStages	= $10	; $10-$3F $30 bytes, current stage for each box
+
+; $09-$FF also used during inital table build????
+
+; High bytes of drawing routines for each stage (actual routines will be page-aligned).
+; To minimize code size, we build drawing routines in this order:
+; - copy01 (STAGE1 template)
+; - copy00 (STAGE0 template)
+; - copy0F..copy09 (OUTER_STAGE template)
+; - copy08..copy02 (MIDDLE_STAGE template)
+; - change some opcodes to turn the 'copy' routines into 'clear' routines
+; - clear0F..clear08 (OUTER_STAGE)
+; - clear07..clear02 (MIDDLE_STAGE)
+; - clear01 (STAGE1)
+; - clear00 (STAGE0)
+dhgr_clear00  = $70
+dhgr_clear01  = $71
+dhgr_clear02  = $72
+dhgr_clear03  = $73
+dhgr_clear04  = $74
+dhgr_clear05  = $75
+dhgr_clear06  = $76
+dhgr_clear07  = $77
+dhgr_clear08  = $78
+dhgr_clear09  = $79
+dhgr_clear0A  = $7A
+dhgr_clear0B  = $7B
+dhgr_clear0C  = $7C
+dhgr_clear0D  = $7D
+dhgr_clear0E  = $7E
+dhgr_clear0F  = $7F
+dhgr_copy02   = $80
+dhgr_copy03   = $81
+dhgr_copy04   = $82
+dhgr_copy05   = $83
+dhgr_copy06   = $84
+dhgr_copy07   = $85
+dhgr_copy08   = $86
+dhgr_copy09   = $87
+dhgr_copy0A   = $88
+dhgr_copy0B   = $89
+dhgr_copy0C   = $8A
+dhgr_copy0D   = $8B
+dhgr_copy0E   = $8C
+dhgr_copy0F   = $8D
+dhgr_copy00   = $8E
+dhgr_copy01   = $8F
+
+
+; main memory addresses used by graphic effects
+hgrlo          = $0201               ; $C0 bytes
+mirror_cols    = $02C1               ; $28 bytes
+hgrhi          = $0301               ; $C0 bytes
+hgr1hi         = hgrhi
+
+DHGR48StageDrawingRoutines = $6F00   ; $100 bytes
+
 auxsrc_hgrhi	= $BD01	; [$C0 bytes] HGR base addresses (hi) starting at $9000
 BoxesX		= $BE90	; [$30 bytes] starting row for each box
 BoxesY		= $BEC0	; [$30 bytes] starting byte offset for each box
@@ -47,12 +103,7 @@ test_loop:
 
 	jmp	test_loop
 
-.include "../wait_keypress.s"
 
-.include "../fx.lib.s"
-.include "../main_macros.s"
-.include "../macros.hgr.s"
-.include "../macros.s"
 
 ;.align	256
 
@@ -63,16 +114,8 @@ InitOnce:
 	lda	#$4C
 	sta	InitOnce
 
-	; load effect from disk?  Originally at $6200?
-
-;	LDADDR	FXCodeFile
-;	ldx	#>FXCode
-;	jsr	iLoadFXCODE
-
-	; load fxcode from disk?
 
 	; initialize and copy stage drawing routines table into place
-
 
 	; write 256 bytes of 0s off end of EndStageHi?
 	; why? do we need padding?
@@ -89,10 +132,10 @@ io_m2:
 	sta	DHGR48StageDrawingRoutines, X
 	inx
 	bne	io_m2
-	beq	Start		; always branches
 
-FXCodeFile:
-;	+PSTRING "DHGR48"
+
+
+;	beq	Start		; always branches
 
 Start:
 	jsr	BuildingPhase	; building phase
@@ -853,12 +896,47 @@ BuildStage1And0:
 	jmp	BuildDrawingRoutineFrom
 
 
+.include "../wait_keypress.s"
 
 .include "../zx02_optim.s"
 
-.include "../vblank.s"
+;.include "../vblank.s"
 
+; based on routine by John Brooks
+; posted on comp.sys.apple2 on 2018-07-11
+; https://groups.google.com/d/msg/comp.sys.apple2/v2HOfHOmeNQ/zD76fJg_BAAJ
+BuildHGRTables:
+; out:   populates tables at $0201 (hgrlo) and $0301 (hgrhi)
+;        A clobbered
+;        X=$C0 (important! some callers rely on this)
+;        Z=1
+;        Y preserved
 
+	ldx	#0
+bht_m1:
+	txa
+	and	#$F8
+	bpl	bht_p1
+	ora	#5
+bht_p1:
+	asl
+	bpl	bht_p2
+	ora	#5
+bht_p2:
+	asl
+	asl
+	sta	hgrlo, X
+	txa
+	and	#7
+	rol
+	asl	hgrlo, X
+	rol
+	ora	#$20
+	sta	hgrhi, X
+	inx
+	cpx	#$C0
+	bne	bht_m1
+	rts
 
 	;=================================
 	; Load Test Graphic
