@@ -12,7 +12,8 @@ dhgr.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./intro/INTRO \
-	./fourcolor/FOURCOLOR
+	./fourcolor/FOURCOLOR \
+	./credits/CREDITS
 	cp $(EMPTY_DISK) dhgr.dsk
 	$(DOS33_RAW) dhgr.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) dhgr.dsk 0 2 QBOOT		1 1
@@ -21,13 +22,16 @@ dhgr.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) dhgr.dsk 2 0 MUSIC		0 0
 	$(DOS33_RAW) dhgr.dsk 5 0 ./intro/INTRO	0 0
 	$(DOS33_RAW) dhgr.dsk 17 0 ./fourcolor/FOURCOLOR 0 0
+	$(DOS33_RAW) dhgr.dsk 25 0 ./credits/CREDITS 0 0
 
 
 ####
 
+credits/CREDITS:	
+	cd credits && make
+
 intro/INTRO:	
 	cd intro && make
-
 
 fourcolor/FOURCOLOR:	
 	cd fourcolor && make
@@ -168,5 +172,6 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
+	cd credits && make clean
 	cd intro && make clean
 	cd fourcolor && make clean
