@@ -1,0 +1,114 @@
+This demo uses the Double-hires and Double-lores modes on Apple II machines.
+These were introduced on the Apple IIe (1983) and are also found in the
+later Apple IIc and Apple IIgs models.
+
+Effectively using these modes is complex, and involves talking a bit about
+the complicated NTSC graphics as well as the 
+bank-switching memory found on Apple II models.
+
+Auxiliary RAM
+
+The original Apple II has an 8-bit 6502 processor which can address
+64k of memory.  The original model had 4k expandable to 48k, with 
+4k reserved for I/O and expansion card use and 12k reserved for ROM.
+
+The first expansion released was the 16k language card which allowed
+bank-switching in RAM in place of the ROM addresses at $D000-$FFFF.
+There's an additional 4k (because of the I/O space that can't be
+banked out) that can also be mapped at $D000.  These are controlled by
+sending various patterns of read/writes to addresss $C????.
+
+Various 3rd party RAM expansions are available that allow mapping upwards
+of megabytes of RAM into the address space.  For this document I won't talk
+about those, but I will talk about the official Auxiliary (AUX) RAM expansion
+that ended up being common on Apple IIe and built-in on IIc and IIgs.
+
+This is an additional 64k RAM.  Again there are soft-switches to enable
+these.  The primary are WRMAIN/WRAUX and RDMAIN/RDAUX that allow mapping
+reads/and writes to either the MAIN or AUX banks of memory range
+$200-$BFFF.  Note the zero page ($00), stack (at $100) and language card
+area ($D000 and above) are swapped with a separate soft-switch.
+
+Remember all of this as we'll come back to it later.
+
+
+
+Graphics (Original)
+
+Original Apple II had two graphics modes.  lo-res 40x48 in 15 colors
+with two pages, one at $400 and one at $800.  The other is hi-res,
+essentially 280x192 in 6 colors with extremely complicated rules not
+worth getting into here.  Two pages, 8k each, at $2000 and $4000.
+
+Both modes the framebuffer isn't linear, each row's address jumps around.
+Also three rows (which aren't contiguos) are mapped in 40 byte chunks,
+so 120 bytes, and put into a 128 byte power-of two range.  This means
+there are 8 bytes extra each row.  This complicates things; due to the original
+Apple II only having 4k of RAM these "screen hole" areas of RAM are used
+by expansion cards and so if you try to cut corners and over-write them to
+make your assembly programs simpler it can potentially cause your hardware
+to stop working.
+
+Lores mode is also annoying because one memory row has two rows of pixels,
+with the high nibble being the lower half of the row.  This means doing
+sprites and such you'll have to do a lot of masking if you're doing 48 pixels
+high graphics (code gets a lot easier if you just do 24).
+
+
+Graphics (Double Modes)
+
+Soon after the Apple IIe was released it was realized with some simple
+modifications the new 80-column hardware could be used to make more advanced
+graphics, roughly based on the modes from the ill-fated Apple III project.
+
+This allows double-lores 80x48 in 15 colors, and double-hires 140x192 in
+15 colors.
+
+For double-lores it reads out the extra pixles from the AUX area of memory
+$200 or $400.  Same with double-hires, it reads out the extra info from
+$2000 or $4000 in AUX.  Also, to make things more of a pain, the colors
+in the AUX pages are rotated by 1, so you'll need to use different color
+lookup tables for writing to MAIN and AUX.
+
+Finally, how can you write the graphics?  There are essentially 3 ways.
+
+One:  "80col"
+	Set this flag and it modifies the meaning of the PAGE1/PAGE2
+	soft-switch to instead map AUX pages for the active graphics
+	mode from AUX to MAIN.  So you can set PAGE1, write the MAIN bytes,
+	set to AUX and then write $2000 again and it goes to AUX without
+	affecting the rest of memory.
+
+	This is really straightforward, the downside is you can't use
+	pageflipping with this mode
+
+Only write:
+	Write the MAIN values, either to PAGE1 or PAGE2.
+	Then switch WRAUX and write those parts.  This works well
+	with page flipping.
+
+	The downside is if your code wants to read and write from
+	memory.  For example you are decompressing (most decompression
+	algorithms read the previously written values) or if you are trying
+	software sprites where you need to read existing values for
+	transparency.
+
+Living in language card:
+	One thing you can do is have all your read/write code up in $D000
+	of language card.  It is unaffected by the main AUX/MAIN switch, so
+	code there can swap back and forth without being affected.
+
+Advanced:
+	You can actually have your code living and completely switching
+	in MAIN/AUX, for that to work you have to line things up when
+	RD page changes that the code in the other AUX/MAIN continues.
+
+Hard to access:
+	Things get more difficult when trying to do this with interrupts,
+	as in when music is playing on Mockingboard.  In that case it can
+	be hard to swap in AUX language card values unless you have the
+	IRQ handler properly set up in both ones, and also tricky as when
+	you swap language card it swaps ZP and Stack.
+
+Problems: interrupts
+

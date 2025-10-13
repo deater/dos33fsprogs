@@ -5,14 +5,14 @@
 .include "../common_defines.inc"
 
 	;=============================
-	; draw headphone graphics
+	; draw intro
 	;=============================
 
-headphones:
+intro:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
-	; Scrolling Headphones
+	; Scrolling Intro Logo
 	;=================================
 
 	;=================================
@@ -21,21 +21,20 @@ headphones:
 
 	jsr	clear_dhgr_screens
 
-	; assume set from before
+	; We are first to run, so init double-hires
 
-.if 0
 	bit	SET_GR
         bit	HIRES
         bit	FULLGR
         sta	AN3		; set double hires
         sta	EIGHTYCOLON	; 80 column
 	sta	CLR80COL
-;	sta	SET80COL	; 80 store
+;	sta	SET80COL	; (allow page1/2 flip main/aux)
 
         bit	PAGE1		; display page1
 	lda	#$20
 	sta	DRAW_PAGE	; draw to page2
-.endif
+
 
 	;=======================
 	; load graphic to $A000
