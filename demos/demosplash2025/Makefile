@@ -172,6 +172,7 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
 	rm -f qload.inc qload2.inc music.inc music2.inc
+	rm -f generate_common
 	cd credits && make clean
 	cd intro && make clean
 	cd fourcolor && make clean
