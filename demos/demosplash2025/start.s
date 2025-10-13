@@ -182,22 +182,22 @@ load_program_loop:
 
 	;=======================
 	;=======================
-	; Run bear
+	; Run fourcolor
 	;=======================
 	;=======================
 
 	; load from disk
 
-;	sei
-;	lda	#PART_BEAR	; Multi-color AHA tape intro
-;	sta	WHICH_LOAD
-;	jsr	load_file
+	sei
+	lda	#PART_FOURCOLOR	; Multi-color monster
+	sta	WHICH_LOAD
+	jsr	load_file
 
-	; Run Bear
+	; Run Four Color
 
-;	cli			; start music
+	cli			; start music
 
-;	jsr	$6000
+	jsr	$6000
 
 
 	;=======================

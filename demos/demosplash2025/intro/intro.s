@@ -155,7 +155,7 @@ clear_dhgr_screens:
 	rts
 
 logo_bin:
-	.incbin "dsr_logo.bin.zx02"
+	.incbin "dsr_logo_grimnir.bin.zx02"
 
 logo_aux:
-	.incbin "dsr_logo.aux.zx02"
+	.incbin "dsr_logo_grimnir.aux.zx02"
