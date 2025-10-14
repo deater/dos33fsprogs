@@ -12,20 +12,20 @@ all:	dhgr_plasma.dsk
 ####
 
 dhgr_plasma.dsk: HELLO \
-	PLASMA
+	HGR_PLASMA
 	cp $(EMPTY_DISK)/empty.dsk dhgr_plasma.dsk
 	$(DOS33) -y dhgr_plasma.dsk SAVE A HELLO
-	$(DOS33) -y dhgr_plasma.dsk BSAVE -a 0x8000 PLASMA
+	$(DOS33) -y dhgr_plasma.dsk BSAVE -a 0x8000 HGR_PLASMA
 
 ####
 
-PLASMA:	plasma.o
-	ld65 -o PLASMA plasma.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
+HGR_PLASMA:	hgr_plasma.o
+	ld65 -o HGR_PLASMA hgr_plasma.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
 
-plasma.o:	plasma.s \
-	do_plasma.s init_plasma.s scroll_off.s \
+hgr_plasma.o:	hgr_plasma.s \
+	init_plasma.s scroll_off.s \
 	zp.inc hardware.inc
-	ca65 -o plasma.o plasma.s -l plasma.lst
+	ca65 -o hgr_plasma.o hgr_plasma.s -l hgr_plasma.lst
 
 ###
 
@@ -36,5 +36,5 @@ HELLO:	hello.bas
 
 
 clean:
-	rm -f *~ *.o *.lst PLASMA HELLO
+	rm -f *~ *.o *.lst HGR_PLASMA HELLO
 
