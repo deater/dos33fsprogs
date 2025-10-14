@@ -6,8 +6,25 @@
 ;*=$6000
 
 ; for red line:
-; mainmem alternate #$11/#$44
 ; auxmem  alternate #$08/#$22
+; mainmem alternate #$11/#$44
+
+
+; AUX       MAIN     AUX      MAIN
+; PBBBAAAA  PDDCCCCB PFEEEEDD  PGGGGFFF
+; 00001000  00010001 00100010  01000100
+;
+; A = 1000 B = 1000 C = 1000 D = 1000 E = 1000 F = 1000 G = 1000
+
+;          lores dhgr            lores dhgr
+; BLACK =   0000 0000	BROWN  = 1000 0100
+; MAGENTA = 0001 1000	ORANGE = 1001 1100
+; D.BLUE  = 0010 0001	GREY2  = 1010 0101
+; PURPLE  = 0011 1001	PINK   = 1011 1101
+; D.GREEN = 0100 0010	L.GREEN= 1100 0110
+; GREY1   = 0101 1010	YELLOW = 1101 1110
+; M.BLUE  = 0110 0011	AQUA   = 1110 0111
+; L.BLUE  = 0111 1011	WHITE  = 1111 1111
 
 ;hgrlo    =     $0201                 ; [$C0 bytes, main memory only] defined in constants.a
 ;hgr1hi   =     $0301                 ; [$C0 bytes, main memory only] defined in constants.a

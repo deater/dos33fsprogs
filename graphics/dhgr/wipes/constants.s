@@ -76,14 +76,14 @@
 .ifndef _CONSTANTS_
 
 ; soft switches
-KBD =          $C000      ; last key pressed (if any)
+;KBD =          $C000      ; last key pressed (if any)
 CLEARKBD =     $C010      ; clear last key pressed
 
 STOREOFF =     $C000      ; STA then use the following flags:
-READMAINMEM =  $C002      ; STA to read from main mem ($0200..$BFFF)
-READAUXMEM =   $C003      ; STA to read from aux mem ($0200..$BFFF)
-WRITEMAINMEM = $C004      ; STA to write to main mem ($0200..$BFFF)
-WRITEAUXMEM =  $C005      ; STA to write to aux mem ($0200..$BFFF)
+;READMAINMEM =  $C002      ; STA to read from main mem ($0200..$BFFF)
+;READAUXMEM =   $C003      ; STA to read from aux mem ($0200..$BFFF)
+;WRITEMAINMEM = $C004      ; STA to write to main mem ($0200..$BFFF)
+;WRITEAUXMEM =  $C005      ; STA to write to aux mem ($0200..$BFFF)
 
 SETSTDZP =     $C008      ; STA to r/w from main mem stack and zero page ($0000..$01FF)
 CLRC3ROM =     $C00A      ; STA to use internal Slot 3 ROM (required to use 128K and DHGR)
