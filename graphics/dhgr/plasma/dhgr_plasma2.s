@@ -71,9 +71,6 @@ plasma_loop:
 	;=============================
 	; do blue/orange
 
-;	lda	#49
-;	sta	plasma_end_smc+1
-
 	jsr	init_plasma_colors
 	jsr	do_plasma
 
@@ -83,9 +80,6 @@ plasma_loop:
 	sta	DRAW_PAGE
 
 	jsr	scroll_off
-
-;	lda	#25
-;	jsr	wait_ticks
 
 	;=============================
 	; do purple/green
@@ -98,11 +92,7 @@ change_purple:
 	dex
 	bpl	change_purple
 
-
 	jsr	init_plasma_colors
-
-;	lda	#50
-;	sta	plasma_end_smc+1
 
 	jsr	do_plasma
 
@@ -112,9 +102,6 @@ change_purple:
 	sta	DRAW_PAGE
 
 	jsr	scroll_off
-
-;	lda	#25
-;	jsr	wait_ticks
 
 
 	;=============================
@@ -129,9 +116,6 @@ change_mono:
 	bpl	change_mono
 
 	jsr	init_plasma_colors
-
-;	lda	#52
-;	sta	plasma_end_smc+1
 
 	jsr	do_plasma
 
@@ -256,9 +240,6 @@ display_row_sin_smc:
 
 ; 18
 
-;	lda	hires_colors_even_l0	; attention: must be aligned
-;	sta	color_smc+1
-
 	lda	hposn_high_div8,X					; 4
 	clc								; 2
 	adc	DRAW_PAGE						; 3
@@ -267,6 +248,9 @@ display_row_sin_smc:
 	lda	#1							; 2
 	sta	COUNT							; 3
 ; 35
+
+
+
 store_loop:
 color_smc:
 
@@ -277,8 +261,13 @@ color_smc:
 
 display_lookup_smc:
 	lda	hires_colors_even_l0	; attention: must be aligned	; 4
+
 ;	lda	#$fe
+
 	sta	(GBASL),Y						; 6
+
+
+
 	clc								; 2
 	lda	#$10							; 2
 	adc	GBASH							; 3
@@ -306,10 +295,6 @@ was_page1:
 	lda	#$20							; 2
 done_pageflip:
 	sta	DRAW_PAGE						; 3
-
-;plasma_end_smc:
-;	lda	#52
-;	jsr	wait_for_pattern
 
 	lda	KEYPRESS
 

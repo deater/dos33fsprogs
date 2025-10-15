@@ -2,6 +2,12 @@
 
 ; based on code by French Touch
 
+; not this is a huge hack on the lo-res code
+;	it only draws every 4th line to save speed
+;	and actually every other line is a fake hack(?)
+;
+;	it used a lookup table to fake color gradients
+
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -45,6 +51,8 @@ plasma_debut:
 	; init div8
 	;=========================================
 
+	; lookup table only has 0..23 (0..184 / 8)
+
 	ldx	#23
 	ldy	#184
 div8_loop:
@@ -70,9 +78,6 @@ div8_loop:
 plasma_loop:
 	;=============================
 	; do blue/orange
-
-;	lda	#49
-;	sta	plasma_end_smc+1
 
 	jsr	init_plasma_colors
 	jsr	do_plasma
@@ -129,9 +134,6 @@ change_mono:
 	bpl	change_mono
 
 	jsr	init_plasma_colors
-
-;	lda	#52
-;	sta	plasma_end_smc+1
 
 	jsr	do_plasma
 
@@ -227,9 +229,14 @@ pc_off4:
 ; Display "Normal"
 ; AFFICHAGE "NORMAL"
 
+; draws by column (????)
+; only draws 24 rows, spread to 48 (so only every 4th row)
+; on hgr in a group of 8 rows, to get from line 0 to 4 you add $1000
+
 display_normal:
 
 	ldx	#23			; lines 0-23	lignes 0-23	; 2
+					; X is ROW
 
 display_line_loop:
 ; 0
@@ -237,6 +244,7 @@ display_line_loop:
 	sta	GBASL							; 3
 ; 7
 	ldy	#39			; col 0-39			; 2
+					; Y is column
 
 	lda	Table2,X		; setup base sine value for row	; 4
 	sta	display_row_sin_smc+1					; 4
@@ -264,6 +272,11 @@ display_row_sin_smc:
 	adc	DRAW_PAGE						; 3
 	sta	GBASH							; 3
 ; 30
+
+	; go through twice
+	; 	hi-res every 4th pixel.  In grous of 8 rows
+	;	adding $1000 takes you down 4 rows
+
 	lda	#1							; 2
 	sta	COUNT							; 3
 ; 35
@@ -271,7 +284,7 @@ store_loop:
 color_smc:
 
 	lda	display_lookup_smc+2					; 4
-	eor	#$02							; 2
+	eor	#$02		; why?					; 2
 	sta	display_lookup_smc+2					; 4
 ; 10
 
@@ -280,7 +293,7 @@ display_lookup_smc:
 ;	lda	#$fe
 	sta	(GBASL),Y						; 6
 	clc								; 2
-	lda	#$10							; 2
+	lda	#$10		; row 0 -> row 4			; 2
 	adc	GBASH							; 3
 	sta	GBASH							; 3
 	dec	COUNT							; 5
