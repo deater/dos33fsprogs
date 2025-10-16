@@ -477,6 +477,11 @@ table2_v4_adjust:
 table3_v4_adjust:
 .byte	$B4,$40,$e6,$9c,$66,$40,$2c,$20,$30,$48,$6c,$1c
 
+; hold previous version of registers
+; so we only write the ones that change
+ay_register_prev:
+.byte	$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
+
 
 ; Table #1 of Pro Tracker 3.3x - 3.5x
 ;PT3NoteTable_ST_high:
