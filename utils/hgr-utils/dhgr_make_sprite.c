@@ -215,7 +215,8 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-h] [-v] [-d] [-s] [-l label] PNGFILE x1 y1 x2 y2\n\n",name);
+	printf("\nUsage: %s [-h] [-v] [-a] [-d] [-s] [-l label] PNGFILE x1 y1 x2 y2\n\n",name);
+	printf("\t[-a] generate only aux data\n");
 	printf("\t[-d] debug\n");
 	printf("\t[-h] help\n");
 	printf("\t[-b] version\n");
@@ -352,12 +353,14 @@ static int colors_to_bytes(unsigned char colors[14],
 }
 
 
-static unsigned char apple2_image[8192];
+static unsigned char apple2_main[8192];
+static unsigned char apple2_aux[8192];
 
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0,error;
-	int printsize=0,mask_offset=0,total_bytes=0;
+	int printsize=0,total_bytes=0;
+	int only_aux=0,only_main=0;
 	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
@@ -373,10 +376,12 @@ int main(int argc, char **argv) {
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvdmsl:") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvadmsl:") ) != -1) {
 
 		switch(c) {
-
+			case 'a':
+				only_aux=1;
+				break;
                         case 'h':
                                 print_help(argv[0],0);
 				break;
@@ -390,7 +395,7 @@ int main(int argc, char **argv) {
 				printsize=1;
 				break;
 			case 'm':
-				mask_offset=1;
+				only_main=1;
 				break;
 			case 'l':
 				strncpy(label_string,optarg,BUFSIZ-1);
@@ -414,7 +419,8 @@ int main(int argc, char **argv) {
 	x2=atoi(argv[optind+3]);
 	y2=atoi(argv[optind+4]);
 
-	memset(apple2_image,0,8192);
+	memset(apple2_main,0,8192);
+	memset(apple2_aux,0,8192);
 
 	if (loadpng(filename,&image,&xsize,&ysize)<0) {
 		fprintf(stderr,"Error loading png!\n");
@@ -430,19 +436,13 @@ int main(int argc, char **argv) {
 //				if (color1!=color2) {
 //					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
 //							x*14+z*2,y);
-//
 //				}
 				colors[z]=color1;
 			}
-			error=colors_to_bytes(colors,&byte1,&byte2);
-			if (error!=0) {
-				color_warnings++;
-				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-					x*14+error*7,y);
-			}
+			colors_to_bytes(colors,&byte1,&byte2);
 
-			apple2_image[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_image[hgr_offset(y)+(x*2)+1]=byte2;
+			apple2_main[hgr_offset(y)+(x*2)+0]=byte1;
+			apple2_main[hgr_offset(y)+(x*2)+1]=byte2;
 		}
 
 	}
@@ -458,31 +458,46 @@ int main(int argc, char **argv) {
 //	if (printsize) total_bytes+=2;
 //	if (mask_offset) total_bytes+=2;
 
-	printf("; %d %d %d %d\n",x1,y1,x2,y2);
-	printf("; total bytes: %d\n",total_bytes);
-	printf("%s:\n",label_string);
+	if (!only_aux) {
+		printf("; %d %d %d %d\n",x1,y1,x2,y2);
+		printf("; total bytes: %d\n",total_bytes);
+		printf("%s_main:\n",label_string);
 
-
-	if (printsize) {
-
-		printf("\t.byte $%02X,$%02X\n",
-				xs,y2-y1);
-	}
-
-	if (mask_offset) {
-		printf("\t.byte $%02X,$%02X\n",
-				total_bytes&0xff,
-				total_bytes>>8);
-	}
-
-	for(y=y1;y<y2;y++) {
-		printf("\t.byte ");
-		for(x=x1/7;x<=x2/7;x++) {
-			printf("$%02X",apple2_image[hgr_offset(y)+x]);
-			if (x!=x2/7) printf(",");
+		if (printsize) {
+			printf("\t.byte $%02X,$%02X\n",xs,y2-y1);
 		}
-		printf("\n");
+
+		for(y=y1;y<y2;y++) {
+			printf("\t.byte ");
+			for(x=x1/7;x<=x2/7;x++) {
+				printf("$%02X",apple2_main[hgr_offset(y)+x]);
+				if (x!=x2/7) printf(",");
+			}
+			printf("\n");
+		}
 	}
+
+	if (!only_main) {
+
+		printf("; %d %d %d %d\n",x1,y1,x2,y2);
+		printf("; total bytes: %d\n",total_bytes);
+		printf("%s_aux:\n",label_string);
+
+		if (printsize) {
+			printf("\t.byte $%02X,$%02X\n",xs,y2-y1);
+		}
+
+
+		for(y=y1;y<y2;y++) {
+			printf("\t.byte ");
+			for(x=x1/7;x<=x2/7;x++) {
+				printf("$%02X",apple2_aux[hgr_offset(y)+x]);
+				if (x!=x2/7) printf(",");
+			}
+			printf("\n");
+		}
+	}
+
 
 	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 

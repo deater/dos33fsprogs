@@ -1,15 +1,20 @@
 ;; Zero Page
 
-
-;; ZX0 addresses
-
-ZX0_src         = $00
-ZX0_dst         = $02
-offset          = $04
-bitr            = $06
-pntr            = $07
+DRAW_PAGE	= $08
 WHICH_LOAD      = $09
 CURRENT_DISK    = $0A
+
+;; ZX0 addresses
+offset		= $10
+offseth		= $11
+ZX0_src         = $12
+ZX0_dst         = $14
+ZX0_srch	= $15
+bitr            = $16
+pntr            = $17
+pntrh		= $18
+
+
 
 ;; Zero page monitor routines addresses
 
@@ -54,17 +59,8 @@ LETTERD         = $67
 LETTER          = $68
 BLARGH          = $69
 
-				;FACTOR_I	= $66
-				;FACTOR_F	= $67
-				;DX_I		= $68
-				;DX_F		= $69
-				;SPACEX_I	= $6A
-				;SPACEX_F	= $6B
-				;CX_I		= $6C
-				;CX_F		= $6D
-				;DY_I		= $6E
-				;DY_F		= $6F
-
+CURSOR_X	= $6A
+CURSOR_Y	= $6B
 
 ZPOS		= $78
 

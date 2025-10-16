@@ -13,6 +13,9 @@ NINE:	nine.o
 	ld65 -o NINE nine.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 nine.o:	nine.s zx02_optim.s \
+		hgr_sprite.s \
+		hgr_tables.s \
+		sprites/numbers.inc \
 		zp.inc hardware.inc
 	ca65 -o nine.o nine.s -l nine.lst
 ####
@@ -31,3 +34,4 @@ nine.dsk:	HELLO NINE
 
 clean:
 	rm -f *~ *.o *.lst NINE
+	cd sprites && make cleano

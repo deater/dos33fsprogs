@@ -5,6 +5,8 @@
 .include "zp.inc"
 .include "hardware.inc"
 
+hposn_high = $1000
+hposn_low  = $1100
 
 nine_start:
 
@@ -23,6 +25,7 @@ nine_start:
 
 	bit	PAGE1	; start in page1
 
+	jsr	hgr_make_tables
 
 	;===================
 	; Load graphics
@@ -35,6 +38,21 @@ wait_until_keypress:
 	lda	KEYPRESS				; 4
 	bpl	wait_until_keypress			; 3
 	bit	KEYRESET	; clear the keyboard buffer
+
+
+	;==================
+
+	lda	#2
+	sta	CURSOR_X
+	lda	#10
+	sta	CURSOR_Y
+
+	lda	#<one_main
+	sta	INL
+	lda	#>one_main
+	sta	INH
+
+	jsr	hgr_draw_sprite
 
 which_ok:
 	jmp	load_loop
@@ -74,6 +92,11 @@ load_image:
 	rts
 
 	.include	"zx02_optim.s"
+
+	.include	"hgr_sprite.s"
+	.include	"hgr_tables.s"
+
+	.include	"sprites/numbers.inc"
 
 woz_aux:
 	.incbin "graphics/a2_nine_woz.aux.zx02"
