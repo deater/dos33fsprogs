@@ -9,7 +9,12 @@ hposn_high = $1000
 hposn_low  = $1100
 
 nine_start:
+	;==================
+	; init vars
+	;==================
 
+	lda	#$0
+	sta	DRAW_PAGE
 
 	;===================
 	; set graphics mode
@@ -34,11 +39,7 @@ load_loop:
 
 	jsr	load_image
 
-wait_until_keypress:
-	lda	KEYPRESS				; 4
-	bpl	wait_until_keypress			; 3
-	bit	KEYRESET	; clear the keyboard buffer
-
+	jsr	wait_until_keypress
 
 	;==================
 
@@ -54,8 +55,20 @@ wait_until_keypress:
 
 	jsr	hgr_draw_sprite
 
+	jsr	wait_until_keypress
+
 which_ok:
 	jmp	load_loop
+
+
+wait_until_keypress:
+	lda	KEYPRESS				; 4
+	bpl	wait_until_keypress			; 3
+	bit	KEYRESET	; clear the keyboard buffer
+
+	rts
+
+
 
 
 	;==========================
