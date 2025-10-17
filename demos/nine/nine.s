@@ -42,6 +42,9 @@ load_loop:
 	jsr	wait_until_keypress
 
 	;==================
+	; try drawing sprite
+	;
+	bit	PAGE1
 
 	lda	#2
 	sta	CURSOR_X
@@ -54,6 +57,21 @@ load_loop:
 	sta	INH
 
 	jsr	hgr_draw_sprite
+
+	bit	PAGE2
+
+	lda	#2
+	sta	CURSOR_X
+	lda	#10
+	sta	CURSOR_Y
+
+	lda	#<one_aux
+	sta	INL
+	lda	#>one_aux
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
 
 	jsr	wait_until_keypress
 

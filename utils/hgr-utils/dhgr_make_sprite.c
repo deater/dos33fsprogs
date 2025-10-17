@@ -246,108 +246,79 @@ static int hgr_offset(int y) {
 	return address;
 }
 
-/* Count both black/white variants */
-static int color_high(int color) {
-	if (color>3) return 1;
-	return 0;
-}
 
-static int color_low(int color) {
-	if (color<4) return 1;
-	return 0;
-}
+/* rotated right by 1 */
+static unsigned char dhgr_remap[16]={
+	/* 0000 -> 0000 black */	0x00,
+	/* 0001 -> 1000 magenta */	0x08,
+	/* 0010 -> 0001 dark blue */	0x01,
+	/* 0011 -> 1001 purple */	0x09,
+	/* 0100 -> 0010 dark green */	0x02,
+	/* 0101 -> 1010 grey 1 */	0x0a,
+	/* 0110 -> 0011 med blue */	0x03,
+	/* 0111 -> 1011 lt blue */	0x0b,
+	/* 1000 -> 0100 brown */	0x04,
+	/* 1001 -> 1100 orange */	0x0c,
+	/* 1010 -> 0101 grey2 */	0x05,
+	/* 1011 -> 1101 pink */		0x0d,
+	/* 1100 -> 0110 br green */	0x06,
+	/* 1101 -> 1110 yellow */	0x0e,
+	/* 1110 -> 0111 aqua */		0x07,
+	/* 1111 -> 1111 white */	0x0f,
+};
 
-/* also count any black/white */
-static int color_high_bw(int color) {
-	if (color>3) return 1;
-	if ((color==0) || (color==3)) return 1;
-	return 0;
-}
 
-static int color_low_bw(int color) {
-	if (color<4) return 1;
-	if ((color==4) || (color==7)) return 1;
-	return 0;
-}
-
-static int colors_to_bytes(unsigned char colors[14],
-			unsigned char *byte1,
-			unsigned char *byte2) {
-
-	int i;
-	int highbit1=0,highbit2=0,lowbit1=0,lowbit2=0;
-	int bwhigh1=0,bwlow1=0;
-	int bwhigh2=0,bwlow2=0;
-	int hb1,hb2;
-	int error=0;
-
-	*byte1=0;
-	*byte2=0;
-
-	for(i=0;i<7;i++) {
-		highbit1+=color_high(colors[i]);
-		lowbit1+=color_low(colors[i]);
-		bwhigh1+=color_high_bw(colors[i]);
-		bwlow1+=color_low_bw(colors[i]);
-	}
-
-	for(i=7;i<14;i++) {
-		highbit2+=color_high(colors[i]);
-		lowbit2+=color_low(colors[i]);
-		bwhigh2+=color_high_bw(colors[i]);
-		bwlow2+=color_low_bw(colors[i]);
-	}
-
-	if (highbit1==7) hb1=1;			// all were high bit set
-	else if (lowbit1==7) hb1=0;		// all were lo bit set
-	else if (bwhigh1==7) hb1=1;		// ignore black/white
-	else if (bwlow1==7) hb1=0;
-	else {
-		error=1;
-		if (bwhigh1>bwlow1) hb1=1;
-		else hb1=0;
-	}
-
-	if (highbit2==7) hb2=1;			// all were high bit set
-	else if (lowbit2==7) hb2=0;		// all were lo bit set
-	else if (bwhigh2==7) hb2=1;		// ignore black/white
-	else if (bwlow2==7) hb2=0;
-	else {
-		error=1;
-		if (bwhigh2>bwlow2) hb2=1;
-		else hb2=0;
-	}
 
 /*
- 0 0 0 0 -> 00 00
- 1 1 1 1 -> 01 01
- 2 2 2 2 -> 10 10
- 3 3 3 3 -> 11 11
- 1 3 3 1 -> 01 11
 
- 1 1 2 2 3 3 0 -> 0 11 10 01
+  AUX       MAIN     AUX      MAIN
+ PBBBAAAA PDDCCCCB PFEEEEDD PGGGGFFF
 
 */
 
+static int colors_to_bytes(unsigned char colors[14],
+			unsigned char *byte0,
+			unsigned char *byte1,
+			unsigned char *byte2,
+			unsigned char *byte3) {
 
 
-	*byte1|=(colors[0]&1)<<0;
-	*byte1|=(colors[1]&2)<<0;
-	*byte1|=(colors[2]&1)<<2;
-	*byte1|=(colors[3]&2)<<2;
-	*byte1|=(colors[4]&1)<<4;
-	*byte1|=(colors[5]&2)<<4;
-	*byte1|=(colors[6]&1)<<6;
-	*byte1|=hb1<<7;
+	int error=0,i;
+	int debug=0;
 
-	*byte2|=(colors[7]&2)>>1;
-	*byte2|=(colors[8]&1)<<1;
-	*byte2|=(colors[9]&2)<<1;
-	*byte2|=(colors[10]&1)<<3;
-	*byte2|=(colors[11]&2)<<3;
-	*byte2|=(colors[12]&1)<<5;
-	*byte2|=(colors[13]&2)<<5;
-	*byte2|=hb2<<7;
+	if (debug) {
+		printf("Colors before: ");
+		for(i=0;i<14;i++) {
+			printf("%d ",colors[i]);
+		}
+	}
+
+	for(i=0;i<14;i++) {
+		colors[i]=dhgr_remap[colors[i]];
+	}
+
+	if (debug) {
+		printf("Colors after: ");
+		for(i=0;i<14;i++) {
+			printf("%d ",colors[i]);
+		}
+	}
+
+	/* aux0 */
+	*byte0 = (colors[0]) | ((colors[2]&0x7)<<4);
+
+	/* main0 */
+	*byte1 = (colors[2]>>3) | (colors[4]<<1) | ((colors[6]&3)<<5);
+
+	/* aux1 */
+	*byte2 = (colors[6]>>2) | ((colors[8])<<2) | ((colors[10]&1)<<6);
+
+	/* main1 */
+	*byte3 = (colors[10]>>1) | (colors[12]<<3);
+
+	if (debug) {
+		printf("\t%x %x %x %x\n",*byte0,*byte1,*byte2,*byte3);
+	}
 
 	return error;
 }
@@ -358,12 +329,12 @@ static unsigned char apple2_aux[8192];
 
 int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0,error;
+	int xsize=0,ysize=0;
 	int printsize=0,total_bytes=0;
 	int only_aux=0,only_main=0;
 	int c,x,y,z,color1;
 	unsigned char *image;
-	unsigned char byte1,byte2,colors[14];
+	unsigned char byte0,byte1,byte2,byte3,colors[14];
 	char label_string[BUFSIZ];
 
 	int x1,y1,x2,y2;
@@ -439,10 +410,12 @@ int main(int argc, char **argv) {
 //				}
 				colors[z]=color1;
 			}
-			colors_to_bytes(colors,&byte1,&byte2);
+			colors_to_bytes(colors,&byte0,&byte1,&byte2,&byte3);
 
+			apple2_aux[hgr_offset(y)+(x*2)+0]=byte0;
 			apple2_main[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_main[hgr_offset(y)+(x*2)+1]=byte2;
+			apple2_aux[hgr_offset(y)+(x*2)+1]=byte2;
+			apple2_main[hgr_offset(y)+(x*2)+1]=byte3;
 		}
 
 	}
