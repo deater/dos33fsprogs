@@ -41,6 +41,11 @@ load_loop:
 
 	jsr	wait_until_keypress
 
+	lda	#10
+	sta	CURSOR_Y
+
+sprite_loop:
+
 	;==================
 	; try drawing sprite
 	;
@@ -48,8 +53,7 @@ load_loop:
 
 	lda	#2
 	sta	CURSOR_X
-	lda	#10
-	sta	CURSOR_Y
+
 
 	lda	#<one_main
 	sta	INL
@@ -62,8 +66,7 @@ load_loop:
 
 	lda	#2
 	sta	CURSOR_X
-	lda	#10
-	sta	CURSOR_Y
+
 
 	lda	#<one_aux
 	sta	INL
@@ -72,12 +75,13 @@ load_loop:
 
 	jsr	hgr_draw_sprite
 
+	inc	CURSOR_Y
 
-	jsr	wait_until_keypress
+	jmp	sprite_loop
 
-which_ok:
-	jmp	load_loop
 
+	;==================================
+	; wait until keypress
 
 wait_until_keypress:
 	lda	KEYPRESS				; 4
