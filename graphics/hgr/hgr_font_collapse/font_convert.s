@@ -1,4 +1,4 @@
-; VMW: convert lo-res screen to hi-res
+; VMW: convert text screen page1 to hi-res
 
 .include "zp.inc"
 .include "hardware.inc"
