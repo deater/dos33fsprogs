@@ -94,6 +94,12 @@ drop_loop:
 	jsr	hgr_clearscreen
 
 	;===================
+	; move text screen
+	;===================
+
+	jsr	move_text_screen
+
+	;===================
 	; draw text screen
 	;===================
 
@@ -103,10 +109,10 @@ drop_loop:
 	; flip page
 	;===================
 
-retry:
-	lda	KEYPRESS
-	bpl	retry
-	bit	KEYRESET
+;retry:
+;	lda	KEYPRESS
+;	bpl	retry
+;	bit	KEYRESET
 
 	jsr	hgr_page_flip
 
@@ -123,6 +129,7 @@ retry:
 	.include "gr_offsets_split.s"
 
 	.include "hgr_page_flip.s"
+	.include "random8.s"
 
 	;===================
 	; draw text screen
@@ -160,7 +167,13 @@ copy_text_screen_inner_loop:
 	lda	(OUTL),Y	; load from current line
 	and	#$7f		; strip extraneous high bit
 				; note: this means inverse not supported
+
+	cmp	#$20
+	beq	skip_space
+
 	jsr	font_putchar
+
+skip_space:
 
 	inc	TEXT_X
 	lda	TEXT_X
@@ -172,9 +185,70 @@ copy_text_screen_inner_loop:
 ;	adc	#8
 ;	sta	copy_text_screen_ysmc+1
 
+
 	inc	TEXT_Y
 	lda	TEXT_Y
 	cmp	#24
 	bne	copy_text_screen_outer_loop
 
 	rts
+
+
+
+	;===================
+	; move text screen
+	;===================
+	; drop the text
+
+move_text_screen:
+	ldx	#0
+	ldy	#0
+	stx	TEXT_X
+	sty	TEXT_Y
+
+move_text_screen_outer_loop:
+	ldx	TEXT_Y
+	lda	gr_offsets_l,X
+	sta	OUTL
+	sta	INL
+	lda	gr_offsets_h,X
+	sta	OUTH
+	clc
+	adc	#(>drop_y-$4)
+	sta	INH
+
+	ldy	#0
+	sty	TEXT_X
+move_text_screen_inner_loop:
+
+
+	ldy	TEXT_X		; xpos
+
+	jsr	random8
+	and	#3
+
+	adc	(INL),Y		; load current ypos for char
+
+;	clc			; adjust it
+;	adc	#1
+
+				; 23*8 = 184
+	cmp	#184		; see if too far, if so skip
+	bcs	move_skip_write
+
+	sta	(INL),Y
+
+move_skip_write:
+
+	inc	TEXT_X
+	lda	TEXT_X
+	cmp	#40
+	bne	move_text_screen_inner_loop
+
+	inc	TEXT_Y
+	lda	TEXT_Y
+	cmp	#24
+	bne	move_text_screen_outer_loop
+
+	rts
+
