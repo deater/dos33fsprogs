@@ -143,6 +143,10 @@ MASKH		= $EB
 ; $F0-$FB can re-use in each file
 ;==============================================
 
+; start/font fall
+
+TEXT_Y		= $F2
+
 ; bear
 AUXOUTL		= $EA
 AUXOUTH		= $EB

@@ -200,14 +200,15 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"wait_a_bit.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
-	.include	"gr_offsets.s"
+	.include	"gr_offsets_split.s"
 
 	.include	"pt3_lib_detect_model.s"
 	.include	"pt3_lib_mockingboard_detect.s"
 
         .include        "hgr_table.s"
 ;	.include	"hgr_sprite.s"
-;	.include	"random8.s"
+
+	.include	"random8.s"
 	.include	"vblank.s"
 	.include	"irq_wait.s"
 	.include	"hgr_page_flip.s"
@@ -220,9 +221,8 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"hardware_detect.s"
 	.include	"gr_page_flip.s"
-;	.include	"wipes/fx.hgr.fizzle.s"
-;	.include	"wipes/fx.hgr.2pass.lr.s"
-;	.include	"wipes/fx.hgr.center.by.pixel.s"
+
+
 	.include	"hgr_clear_screen.s"
 
 	.include	"start.s"

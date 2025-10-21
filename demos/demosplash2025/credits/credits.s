@@ -388,7 +388,7 @@ done_draw_objects:
 ;	.include	"../vblank.s"
 
 	.include	"hgr_sprite.s"
-	.include	"random8.s"
+;	.include	"random8.s"
 
 .if 0
 

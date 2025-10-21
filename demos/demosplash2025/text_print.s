@@ -14,14 +14,14 @@ move_and_print:
 	sta	CH
 	iny
 	lda	(OUTL),Y
-	asl
+;	asl
 	tay
-	lda	gr_offsets,Y    ; lookup low-res memory address
+	lda	gr_offsets_l,Y	; lookup low-res memory address
 	clc
 	adc	CH		; add in xpos
 	sta	BASL		; store out low byte of addy
 
-	lda	gr_offsets+1,Y	; look up high byte
+	lda	gr_offsets_h,Y	; look up high byte
 	adc	DRAW_PAGE	;
 	sta	BASH		; and store it out
 				; BASH:BASL now points at right place

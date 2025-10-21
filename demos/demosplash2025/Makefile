@@ -51,7 +51,8 @@ QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
 qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
-	gr_offsets.s \
+	font/font_drop.s \
+	gr_offsets_split.s \
 	wait.s wait_a_bit.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
@@ -88,13 +89,14 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
-#	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s gr_offsets_l qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s gr_offsets_h qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc

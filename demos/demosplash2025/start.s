@@ -17,13 +17,14 @@ ds25_start:
 	;=====================
 
 	bit	PAGE1
-	bit	KEYRESET
+	bit	KEYRESET		; clear keypress strobe
 
-	jsr	hardware_detect
+	jsr	hardware_detect		; detect hardware
 
 	lda	APPLEII_MODEL
-	sta	message_type_offset
+	sta	message_type_offset	; update detected hardware message
 
+	;=====================
 	; init vars
 
 	lda	#0
@@ -36,6 +37,7 @@ ds25_start:
 	jsr	clear_top_a
 	jsr	clear_bottom
 
+	;======================
 	; print start message
 
 	jsr	set_normal
@@ -64,7 +66,7 @@ good_to_go:
 
 	;=========================================
 	;=========================================
-	; start loading the demo
+	; start loading the demo parts
 	;=========================================
 	;=========================================
 
@@ -121,9 +123,23 @@ dont_enable_mc:
 
 skip_all_checks:
 
+	;======================
+	; make hires tables
+	;======================
+	; note: need to do this after language card enabled
+	; note! Currently at $FD00/$FE00
 
 	jsr	hgr_make_tables
 
+
+
+	;====================================
+	;====================================
+	; do falling letters effect
+	;====================================
+	;====================================
+
+	jsr	font_drop
 
 
 	;====================================
@@ -264,7 +280,7 @@ blah:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING UNNAMED DEMO / dSr",0
+	.byte 0,0,"LOADING MonsterSplash DEMO / dSr",0
 	.byte 0,1,"DEMOSPLASH 2025",0
 	.byte 0,2,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
@@ -283,3 +299,6 @@ message_type_offset:
 
 ;load_message:
 ;	.byte 16,22,	"LOADING",0
+
+
+.include "font/font_drop.s"

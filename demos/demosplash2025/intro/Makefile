@@ -17,25 +17,20 @@ INTRO:	intro.o
 
 intro.o:	intro.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	dsr_logo_grimnir.bin.zx02 dsr_logo_grimnir.aux.zx02
+	graphics/logo_grafA.bin.zx02 graphics/logo_grafA.aux.zx02
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
 
-dsr_logo_grimnir.aux.zx02:     dsr_logo_grimnir.AUX
-	$(ZX02) dsr_logo_grimnir.AUX dsr_logo_grimnir.aux.zx02
+graphics/logo_grafA.aux.zx02:	
+	cd graphics && make
 
-dsr_logo_grimnir.AUX:  dsr_logo_grimnir.png
-	$(PNG_TO_DHGR) dsr_logo_grimnir.png dsr_logo_grimnir
-
-dsr_logo_grimnir.bin.zx02:     dsr_logo_grimnir.BIN
-	$(ZX02) dsr_logo_grimnir.BIN dsr_logo_grimnir.bin.zx02
-
-dsr_logo_grimnir.BIN: dsr_logo_grimnir.png
-	$(PNG_TO_DHGR) dsr_logo_grimnir.png dsr_logo_grimnir
+graphics/logo_grafA.bin.zx02:	
+	cd graphics && make
 
 
 ####
 
 clean:
 	rm -f *~ INTRO *.zx02 *.lst *.o *.AUX *.BIN
+	cd graphics && make clean
