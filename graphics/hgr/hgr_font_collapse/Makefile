@@ -13,6 +13,7 @@ font_collapse.dsk:	HELLO FONT_CONVERT FONT_DROP
 	$(DOS33) -y font_collapse.dsk SAVE A HELLO
 	$(DOS33) -y font_collapse.dsk BSAVE -a 0x6000 FONT_CONVERT
 	$(DOS33) -y font_collapse.dsk BSAVE -a 0x6000 FONT_DROP
+	$(DOS33) -y font_collapse.dsk BSAVE -a 0x6000 FONT_DROP FONTDROP
 
 ###
 
