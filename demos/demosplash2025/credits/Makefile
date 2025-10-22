@@ -11,7 +11,7 @@ all:	CREDITS
 ####
 
 CREDITS:	credits.o
-	ld65 -o CREDITS credits.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
+	ld65 -o CREDITS credits.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 credits.o:	credits.s vertical_scroll.s \
 	font_4am_1x8_oneline.s\

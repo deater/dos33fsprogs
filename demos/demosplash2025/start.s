@@ -259,7 +259,7 @@ skip_all_checks:
 	;=======================
 
 	; load from disk
-
+.if 0
 	sei
 	lda	#PART_FOURCOLOR	; Multi-color monster
 	sta	WHICH_LOAD
@@ -270,7 +270,7 @@ skip_all_checks:
 	cli			; start music
 
 	jsr	$6000
-
+.endif
 
 	;=======================
 	;=======================
@@ -278,40 +278,18 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-	; copy DANCING from AUX $8000 to MAIN $2000
+	; load from disk
 
-;	lda	#$80		; AUX src $8000
-;	ldy	#$20		; MAIN dest $2000
-;	ldx	#32		; 8k*4 = 32 pages
-;	jsr	copy_aux_main
+	sei
+	lda	#PART_CREDITS
+	sta	WHICH_LOAD
+	jsr	load_file
 
-	; Also copy from MAIN $2000 to AUX $2000.  Inefficient :(
+	; Run credits
 
-;	lda	#$20		; AUX dest $2000
-;	ldy	#$20		; MAIN src $2000
-;	ldx	#32		; 8k*4
-;	jsr	copy_main_aux
+	cli			; start music
 
-;	sei				; stop music interrupts
-;	jsr	mute_ay_both
-;	jsr	clear_ay_both		; stop from making noise
-
-	; load dancing
-
-;	lda	#PART_DANCING		; Dancing
-;	sta	WHICH_LOAD
-;	jsr	load_file
-
-
-	; restart music
-
-;	cli		; start interrupts (music)
-
-	;======================
-	; start dancing
-
-;	jsr	$2000
-
+	jsr	$6000
 
 blah:
 	jmp	blah

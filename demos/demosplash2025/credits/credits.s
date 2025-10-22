@@ -6,7 +6,6 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
-.include "zp.inc"
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
@@ -376,19 +375,13 @@ done_draw_objects:
 
 
 .align $100
-;	.include	"../hgr_clear_screen.s"
 	.include	"vertical_scroll.s"
 
 	.include	"font_4am_1x8_oneline.s"
 	.include	"fonts/font_4am_1x8_data.s"
 
-;	.include	"../irq_wait.s"
-;	.include	"../hgr_page_flip.s"
-
-;	.include	"../vblank.s"
 
 	.include	"hgr_sprite.s"
-;	.include	"random8.s"
 
 .if 0
 

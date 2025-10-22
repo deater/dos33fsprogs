@@ -147,7 +147,14 @@ MASKH		= $EB
 
 TEXT_Y		= $F2
 
-; bear
+; intro: scrolling
+
+SCROLL_COUNT	= $F0
+INDEX		= $F1
+OFFSET		= $F2
+LENGTH		= $F3
+
+; four-color
 AUXOUTL		= $EA
 AUXOUTH		= $EB
 MAIN1		= $EC
@@ -167,15 +174,30 @@ COLORSB		= $F9
 COLORSA		= $FA
 ODD		= $FB
 
-; headphones
-SCROLL_COUNT	= $F0
-INDEX		= $F1
-OFFSET		= $F2
-LENGTH		= $F3
+
+; Credits
+CURSOR_X	= $EE
+CURSOR_Y	= $EF
+SCROLL_X	= $F0
+BACKUP_OUTL	= $F2
+BACKUP_OUTH	= $F3
+GUITAR_FRAME	= $F4
+SCROLL_DONE	= $F5
+SCROLL_LINE	= $F6
+STAR_X		= $F7
+STAR_WHICH	= $F8
+SPRITE_LIST	= $F9
+
+.if 0
+
+
+
+
 
 ; dancing
 DANCE_COUNT	= $F0
 
+.endif
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers
@@ -185,5 +207,7 @@ INL		=	$FC
 INH		=	$FD
 OUTL		=	$FE
 OUTH		=	$FF
+
+
 
 
