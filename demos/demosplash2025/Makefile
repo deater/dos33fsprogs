@@ -32,11 +32,16 @@ dhgr.dsk:	QBOOT QLOAD \
 credits/CREDITS:	
 	cd credits && make
 
+fourcolor/FOURCOLOR:	
+	cd fourcolor && make
+
 intro/INTRO:	
 	cd intro && make
 
-fourcolor/FOURCOLOR:	
-	cd fourcolor && make
+monsters/MONSTERS:	
+	cd monsters && make
+
+
 
 ####
 
@@ -183,5 +188,7 @@ clean:
 	rm -f qload.inc qload2.inc music.inc music2.inc
 	rm -f generate_common
 	cd credits && make clean
-	cd intro && make clean
 	cd fourcolor && make clean
+	cd intro && make clean
+	cd monsters && make clean
+
