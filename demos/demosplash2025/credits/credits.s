@@ -27,10 +27,18 @@ credits_start:
 
 	bit	KEYRESET		; clear just in case
 
-	bit	SET_GR
-	bit	HIRES
-	bit	FULLGR
+;	bit	SET_GR
+;	bit	HIRES
+;	bit	FULLGR
+;	bit	PAGE1
+
+
+	; disable 80column mode
+	sta	SETAN3
+	sta	CLR80COL
+	sta	EIGHTYCOLOFF
 	bit	PAGE1
+
 
 	lda	#0
 	jsr	hgr_page1_clearscreen	; unrolled
@@ -447,45 +455,35 @@ star_x:
 
 final_credits:
 	.byte 20," ",0
-	.byte 16,"DRI\/EN",0					; 7 (16.5)
+	.byte  8,"--== Monster Smash ==--",0			; 23 (8.5)		; 7 (16.5)
 	.byte 20," ",0
 	.byte 15,"by Desire",0					; 9 (15.5)
 	.byte 20," ",0
 	.byte  7,"This demo was first shown",0			; 25 (7.5)
-	.byte 11,"at Demosplash 2024",0				; 18 (11)
+	.byte 11,"at Demosplash 2025",0				; 18 (11)
 	.byte  8,"held in Pittsburgh, PA,",0			; 23 (8.5)
-	.byte 11,"in November 2024.",0				; 17 (11.5)
+	.byte 10,"on Hallowe'en 2025.",0			; 19 (10.5)
 	.byte 20," ",0
-
-; Cyan disclaimer
-
-	.byte 11,"*** DISCLAIMER ***",0				; 18 (11)
-	.byte  2,"This demo contains trademarks and/or",0	; 36 (2)
-	.byte  7,"copyrighted works of CYAN.",0			; 26 (7)
-	.byte  2,"This product is not official and is",0	; 35 (2.5)
-	.byte  9,"not endorsed by CYAN.",0			; 21 (9.5)
-
-; Credits
 
 ; Code
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 17,"Code:",0					;  5 (17.5)
 	.byte 20," ",0
-	.byte  9,"French Touch -- Plasma",0			; 22 (9)
-	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
-	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
 	.byte  8,"4am -- font, transitions",0			; 24 (8)
-	.byte  2,"K. Kennaway -- iipix image converter",0	; 36 (2)
+	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
+	.byte  9,"French Touch -- Plasma",0			; 22 (9)
+	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
+;	.byte  2,"K. Kennaway -- iipix image converter",0	; 36 (2)
 	.byte  8,"Deater - everything else",0			; 24 (8)
 
 ; Graphics
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte  9,"Falling Graphic, Logo:",0		; 22 (9)
+	.byte  9,"Monster Graphics:",0			; 22 (9)
 	.byte 20," ",0
-	.byte 16,"Steffest",0				; 8 (16)
+	.byte 16,"grimnir",0				; 8 (16)
 	.byte 20," ",0
 
 
@@ -518,7 +516,7 @@ final_credits:
 	.byte 18,"LGR",0				; 3 (18.5)
 	.byte 16,"Hellmood",0				; 8 (16)
 	.byte 17,"Foone",0				; 5 (17.5)
-	.byte 14,"Chapman Bros",0			; 12 (14)
+	.byte 11,"The Brothers Chaps",0			; 18 (11)
 	.byte 20," ",0
 	.byte 14,"Talbot 0101",0			; 11 (14.5)
 	.byte 12,"Utopia BBS (410)",0			; 16 (12)
@@ -528,9 +526,7 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 
-; animals
-	.byte 8,"No Wharks were harmed in",0		; 24 (8)
-	.byte 8,"the making of this demo.",0		; 24 (8)
+; ?
 
 	; end
 	.byte 20," ",0
