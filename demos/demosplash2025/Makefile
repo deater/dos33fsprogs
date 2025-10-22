@@ -6,25 +6,25 @@ EMPTY_DISK = ../../empty_disk/empty.dsk
 TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../linker_scripts/
 
-all:	dhgr.dsk
+all:	monster_splash.dsk
 
-dhgr.dsk:	QBOOT QLOAD \
+monster_splash.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./intro/INTRO \
 	./monsters/MONSTERS \
 	./fourcolor/FOURCOLOR \
 	./credits/CREDITS
-	cp $(EMPTY_DISK) dhgr.dsk
-	$(DOS33_RAW) dhgr.dsk 0 0 QBOOT		0 1
-	$(DOS33_RAW) dhgr.dsk 0 2 QBOOT		1 1
-	$(DOS33_RAW) dhgr.dsk 0 4 QBOOT		2 1
-	$(DOS33_RAW) dhgr.dsk 1 0 QLOAD		0 0
-	$(DOS33_RAW) dhgr.dsk 2 0 MUSIC		0 0
-	$(DOS33_RAW) dhgr.dsk 5 0 ./intro/INTRO	0 0
-	$(DOS33_RAW) dhgr.dsk 17 0 ./fourcolor/FOURCOLOR 0 0
-	$(DOS33_RAW) dhgr.dsk 25 0 ./credits/CREDITS 0 0
-	$(DOS33_RAW) dhgr.dsk 28 0 ./monsters/MONSTERS 0 0
+	cp $(EMPTY_DISK) monster_splash.dsk
+	$(DOS33_RAW) monster_splash.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) monster_splash.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) monster_splash.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) monster_splash.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) monster_splash.dsk 2 0 MUSIC		0 0
+	$(DOS33_RAW) monster_splash.dsk 5 0 ./intro/INTRO	0 0
+	$(DOS33_RAW) monster_splash.dsk 17 0 ./fourcolor/FOURCOLOR 0 0
+	$(DOS33_RAW) monster_splash.dsk 25 0 ./credits/CREDITS 0 0
+	$(DOS33_RAW) monster_splash.dsk 28 0 ./monsters/MONSTERS 0 0
 
 
 ####
