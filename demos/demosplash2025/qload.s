@@ -163,32 +163,32 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 1,1,1,1		; BEAR
+	.byte 1,1,1,1		; ???, MUSIC, INTRO, MONSTERS
+	.byte 1,1,1,1		; WOZ, FOURCOLOR, CREDITS
 
 load_address_array:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $60,$60,$40,$80	; BEAR
+	.byte $D0,$D0,$60,$60	; ???, MUSIC, INTRO, MONSTERS
+	.byte $60,$60,$40	; WOZ, FOURCOLOR, CREDITS
 
 start_address:
-	.byte $D0,$D0,$60,$20	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $60,$60,$40,$80	; BEAR
+	.byte $D0,$D0,$60,$60	; ???, MUSIC, INTRO, MONSTERS
+	.byte $60,$60,$40	; WOZ, FOURCOLOR, CREDITS
 
 aux_dest:
-	.byte $D0,$D0,$60,$80	; ???, MUSIC, HEADPHONES, DANCING
-	.byte $60,$40,$02,$82	; BEAR
+	.byte $D0,$D0,$00,$60	; ???, MUSIC, INTRO, MONSTERS
+	.byte $60,$60,$60	; WOZ, FOURCOLOR, CREDITS
 
 track_array:
-	.byte 2,2,5,13		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 17,20,5,13	; BEAR
+	.byte  2, 2, 5,28	; ???, MUSIC, INTRO, MONSTERS
+	.byte 28,17,25		; WOZ, FOURCOLOR, CREDITS
 
 sector_array:
-	.byte 0,0,0,0		; ???, MUSIC, HEADPHONES, DANCING
-	.byte 0,0,0,0		; BEAR
+	.byte 0,0,0,0		; ???, MUSIC, INTRO, MONSTERS
+	.byte 0,0,0		; WOZ, FOURCOLOR, CREDITS
 
 length_array:
-	.byte 48,42,32,32	; ???, MUSIC, HEADPHONES, DANCING
-	.byte 32,95,127,58	; BEAR
+	.byte 48,42,32,64	; ???, MUSIC, INTRO, MONSTERS
+	.byte 32,32,32		; WOZ, FOURCOLOR, CREDITS
 
 
 PT3_ENABLE_APPLE_IIC = 1

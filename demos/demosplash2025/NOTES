@@ -1,10 +1,16 @@
-
-
-Intro: (?k)
+Intro: (8k)
 	Loads to $6000...
 	Uses $2000...$5FFF both main and AUX
-//	Loads image to $A000..$BFFF
-//	Uses $8000...$9FFF as temporary (to copy to aux) data
+	Uses $A000..$BFFF as temporary
+	Uses $8000...$9FFF as temporary (to copy to aux) data
+
+Monsters: (16k)
+	Loads to $6000...$8FFF
+	Copies to AUX $6000...$8FFF
+	Uses?
+
+
+
 
 
 Memory map:

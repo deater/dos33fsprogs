@@ -164,37 +164,93 @@ skip_all_checks:
 	sta	$C008		; use MAIN zero-page/stack/language card
 
 	;=============================
-	; want to load !!2...3
+	; want to load INTRO last
+
+
+	lda	#PART_MONSTERS
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+
+	; load intro
 
 	lda	#PART_INTRO
-	sta	COUNT
+	sta	WHICH_LOAD
+	jsr	load_from_disk
 
-load_program_loop:
-	;============================
-	; load from disk
 
-	lda     COUNT		; which one
-	sta     WHICH_LOAD
-	jsr     load_file
+	;=======================
+	;=======================
+	; Run intro
+	;=======================
+	;=======================
 
-	; copy to proper AUX location
+	; run intro
 
-	ldx	COUNT
-	lda	aux_dest,X		; load AUX dest
-	pha
+	cli			; start music
+;	jsr	$6000
 
-	ldy	load_address_array,X	; where we loaded in MAIN
 
-	lda	length_array,X	; number of pages
-	tax			; in X
-	pla			; restore AUX dest to A
+	;=======================
+	;=======================
+	; Run monsters
+	;=======================
+	;=======================
 
-	jsr	copy_main_aux
+	; copy monsters from AUX $6000 to MAIN $6000
 
-	inc	COUNT
-	lda	COUNT
-	cmp	#4
-	bne	load_program_loop
+	lda	#$60		; AUX src $6000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#64		; 16k*4 = 32 pages
+	jsr	copy_aux_main
+
+	; run monsters
+
+	jsr	$6000
+
+
+	;=======================
+	;=======================
+	; Run Woz
+	;=======================
+	;=======================
+
+	; copy DANCING from AUX $8000 to MAIN $2000
+
+;	lda	#$80		; AUX src $8000
+;	ldy	#$20		; MAIN dest $2000
+;	ldx	#32		; 8k*4 = 32 pages
+;	jsr	copy_aux_main
+
+	; Also copy from MAIN $2000 to AUX $2000.  Inefficient :(
+
+;	lda	#$20		; AUX dest $2000
+;	ldy	#$20		; MAIN src $2000
+;	ldx	#32		; 8k*4
+;	jsr	copy_main_aux
+
+;	sei				; stop music interrupts
+;	jsr	mute_ay_both
+;	jsr	clear_ay_both		; stop from making noise
+
+	; load dancing
+
+;	lda	#PART_DANCING		; Dancing
+;	sta	WHICH_LOAD
+;	jsr	load_file
+
+
+	; restart music
+
+;	cli		; start interrupts (music)
+
+	;======================
+	; start dancing
+
+;	jsr	$2000
+
+
+
+
 
 	;=======================
 	;=======================
@@ -218,25 +274,7 @@ load_program_loop:
 
 	;=======================
 	;=======================
-	; Run intro
-	;=======================
-	;=======================
-
-	; copy HEADPHONES from AUX $6000 to MAIN $6000
-
-	lda	#$60		; AUX src $6000
-	ldy	#$60		; MAIN dest $6000
-	ldx	#32		; 8k*4 = 32 pages
-	jsr	copy_aux_main
-
-	; run headphones
-
-	cli			; start music
-	jsr	$6000
-
-	;=======================
-	;=======================
-	; Run Dancing
+	; Run Credits
 	;=======================
 	;=======================
 
@@ -277,6 +315,39 @@ load_program_loop:
 
 blah:
 	jmp	blah
+
+
+
+	;============================
+	; load from disk
+	;============================
+	; WHICH_LOAD is which to load
+	; copy to AUX unless AUX_LOAD is 0
+
+load_from_disk:
+
+	jsr     load_file
+
+	; copy to proper AUX location
+
+	ldx	WHICH_LOAD
+	lda	aux_dest,X		; load AUX dest
+	beq	skip_aux_copy
+
+	pha
+
+	ldy	load_address_array,X	; where we loaded in MAIN
+
+	lda	length_array,X	; number of pages
+	tax			; in X
+	pla			; restore AUX dest to A
+
+	jsr	copy_main_aux	; tail call?
+
+skip_aux_copy:
+
+	rts
+
 
 
 start_message:	  ;01234567890123456789012345678901234567890

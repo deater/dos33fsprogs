@@ -12,6 +12,7 @@ dhgr.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./intro/INTRO \
+	./monsters/MONSTERS \
 	./fourcolor/FOURCOLOR \
 	./credits/CREDITS
 	cp $(EMPTY_DISK) dhgr.dsk
@@ -23,6 +24,7 @@ dhgr.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) dhgr.dsk 5 0 ./intro/INTRO	0 0
 	$(DOS33_RAW) dhgr.dsk 17 0 ./fourcolor/FOURCOLOR 0 0
 	$(DOS33_RAW) dhgr.dsk 25 0 ./credits/CREDITS 0 0
+	$(DOS33_RAW) dhgr.dsk 28 0 ./monsters/MONSTERS 0 0
 
 
 ####
@@ -57,13 +59,18 @@ qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
 	hgr_table.s \
-#	hgr_sprite.s \
+	font/fonts/a2_lowercase_font.inc \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
 	irq_wait.s vblank.s hgr_page_flip.s \
 	hgr_clear_screen.s vblank.s
 	ca65 -o qload.o qload.s -l qload.lst
+
+####
+
+font/fonts/a2_lowercase_font.inc:	
+	cd font/fonts && make
 
 ####
 

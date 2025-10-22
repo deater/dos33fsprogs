@@ -21,6 +21,7 @@ intro:
 
 	jsr	clear_dhgr_screens
 
+
 	; We are first to run, so init double-hires
 
 	bit	SET_GR
@@ -37,7 +38,7 @@ intro:
 
 
 	;=======================
-	; load graphic to $A000
+	; load graphic to MAIN $A000
 
 	lda	#$80
 	sta	DRAW_PAGE
@@ -48,11 +49,19 @@ intro:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
+	; load AUX part to AUX $A000
+
 	lda	#<logo_aux
 	sta	zx_src_l+1
 	lda	#>logo_aux
 	sta	zx_src_h+1
-	jsr	zx02_full_decomp_aux
+
+	; RDMAIN/WRAUX
+	; note, zx02 is up in $d000 which is not affected by WRAUX
+
+        sta     WRAUX
+
+	jsr	zx02_full_decomp_main
 
 	lda	#$20
 	sta	DRAW_PAGE
@@ -132,6 +141,11 @@ scroll_loop:
 	jsr	wait_seconds
 
 	jsr	clear_dhgr_screens
+
+
+
+bbtf:
+	jmp	bbtf
 
 	rts
 
