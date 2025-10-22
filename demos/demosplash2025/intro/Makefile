@@ -17,7 +17,8 @@ INTRO:	intro.o
 
 intro.o:	intro.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	graphics/logo_grafA.bin.zx02 graphics/logo_grafA.aux.zx02
+	graphics/logo_grafA.bin.zx02 graphics/logo_grafA.aux.zx02 \
+	graphics/logo_dSr_D2.bin.zx02 graphics/logo_dSr_D2.aux.zx02
 	ca65 -o intro.o intro.s -l intro.lst
 
 ####
@@ -28,6 +29,11 @@ graphics/logo_grafA.aux.zx02:
 graphics/logo_grafA.bin.zx02:	
 	cd graphics && make
 
+graphics/logo_dSr_D2.aux.zx02:	
+	cd graphics && make
+
+graphics/logo_dSr_D2.bin.zx02:	
+	cd graphics && make
 
 ####
 

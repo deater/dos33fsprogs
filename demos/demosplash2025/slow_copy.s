@@ -1,5 +1,9 @@
-; copy from $A000+start : $A000+end  to $2000/$4000
+; copy hi-res graphics from $A000:$BFFF to $2000 / $4000
+;	can copy partial screen
 
+; X : start  = y-coord of starting line
+; Y : len    = number of lines to copy
+; A : offset = offset of output (used when scrolling)
 
 	; X=start
 	; Y=len

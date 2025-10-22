@@ -19,9 +19,13 @@ intro:
 	; init graphics
 	;=================================
 
+
+	;=================================
+	; clear screen
+
 	jsr	clear_dhgr_screens
 
-
+	;=================================
 	; We are first to run, so init double-hires
 
 	bit	SET_GR
@@ -37,31 +41,40 @@ intro:
 	sta	DRAW_PAGE	; draw to page2
 
 
-	;=======================
-	; load graphic to MAIN $A000
+	;=============================
+	; load AUX part to AUX $A000
+	; by first uncompressing to MAIN $A000 and copying over
 
 	lda	#$80
 	sta	DRAW_PAGE
 
-	lda	#<logo_bin
+	lda	#<logo1_aux
 	sta	zx_src_l+1
-	lda	#>logo_bin
+	lda	#>logo1_aux
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+	lda	#$A0		; AUX page start (dest)
+	ldy	#$A0		; MAIN page start (src)
+	ldx	#$20		; num pages
+
+	jsr	copy_main_aux
+
+
+	;=======================
+	; load MAIN part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<logo1_bin
+	sta	zx_src_l+1
+	lda	#>logo1_bin
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; load AUX part to AUX $A000
 
-	lda	#<logo_aux
-	sta	zx_src_l+1
-	lda	#>logo_aux
-	sta	zx_src_h+1
-
-	; RDMAIN/WRAUX
-	; note, zx02 is up in $d000 which is not affected by WRAUX
-
-        sta     WRAUX
-
-	jsr	zx02_full_decomp_main
 
 	lda	#$20
 	sta	DRAW_PAGE
@@ -134,18 +147,72 @@ scroll_loop:
 	bne	scroll_loop
 
 
-
+	;=======================
 	; wait a bit
 
 	lda	#1
 	jsr	wait_seconds
 
-	jsr	clear_dhgr_screens
+;	jsr	clear_dhgr_screens
 
+
+
+	;=======================
+	; copy other image in place
+
+
+
+	;=======================
+	; load graphic to MAIN $4000
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	lda	#<logo2_bin
+	sta	zx_src_l+1
+	lda	#>logo2_bin
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
+
+	; load AUX part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<logo2_aux
+	sta	zx_src_l+1
+	lda	#>logo2_aux
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+
+	;========================
+	; copy to AUX page $4000
+
+	lda	#$40		; UX page start (dest)
+	ldy	#$A0		; MAIN page start (src)
+	ldx	#$20		; X = num pages
+
+	jsr	copy_main_aux
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	;=======================
+	; do wipe
+
+
+	bit	PAGE2
 
 
 bbtf:
-	jmp	bbtf
+	lda	KEYPRESS
+	bpl	bbtf
+	bit	KEYRESET
+
+
+	bit	PAGE1
 
 	rts
 
@@ -168,8 +235,14 @@ clear_dhgr_screens:
 
 	rts
 
-logo_bin:
+logo1_bin:
 	.incbin "graphics/logo_grafA.bin.zx02"
 
-logo_aux:
+logo2_bin:
+	.incbin "graphics/logo_dSr_D2.bin.zx02"
+
+logo1_aux:
 	.incbin "graphics/logo_grafA.aux.zx02"
+
+logo2_aux:
+	.incbin "graphics/logo_dSr_D2.aux.zx02"

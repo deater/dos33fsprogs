@@ -112,3 +112,14 @@ Hard to access:
 
 Problems: interrupts
 
+
+
+Problems: decompressing
+
+	Algorithms like ZX02 you read from the input and write to the output,
+	but also you need to read from the output (the contents of the output,
+	like repeating patterns, are copied from the output too).  This means
+	you can't easily have MAIN=READ AUX=WRITE to decompress a ZX02 file
+	from MAIN to AUX.  You either have to copy the source to AUX and
+	decompress all from there, or else decompress to MAIN and then copy
+	to AUX when done.

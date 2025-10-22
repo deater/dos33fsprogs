@@ -187,7 +187,7 @@ sector_array:
 	.byte 0,0,0		; WOZ, FOURCOLOR, CREDITS
 
 length_array:
-	.byte 48,42,32,64	; ???, MUSIC, INTRO, MONSTERS
+	.byte 48,42,64,64	; ???, MUSIC, INTRO, MONSTERS
 	.byte 32,32,32		; WOZ, FOURCOLOR, CREDITS
 
 

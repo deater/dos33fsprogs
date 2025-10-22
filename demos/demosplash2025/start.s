@@ -166,16 +166,12 @@ skip_all_checks:
 	;=============================
 	; want to load INTRO last
 
+	; TODO: wrangle the files
 
-	lda	#PART_MONSTERS
-	sta	WHICH_LOAD
-	jsr	load_from_disk
 
-	; load intro
-
-	lda	#PART_INTRO
-	sta	WHICH_LOAD
-	jsr	load_from_disk
+;	lda	#PART_MONSTERS
+;	sta	WHICH_LOAD
+;	jsr	load_from_disk
 
 
 	;=======================
@@ -184,10 +180,20 @@ skip_all_checks:
 	;=======================
 	;=======================
 
+
+	; load intro
+
+	sei				; disable interrupts
+	lda	#PART_INTRO
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+
+
+
 	; run intro
 
 	cli			; start music
-;	jsr	$6000
+	jsr	$6000
 
 
 	;=======================
@@ -196,12 +202,22 @@ skip_all_checks:
 	;=======================
 	;=======================
 
+	; load monsters
+
+	sei				; disable interrupts
+	lda	#PART_MONSTERS
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+	cli				; re-enable music
+
+.if 0
 	; copy monsters from AUX $6000 to MAIN $6000
 
 	lda	#$60		; AUX src $6000
 	ldy	#$60		; MAIN dest $6000
 	ldx	#64		; 16k*4 = 32 pages
 	jsr	copy_aux_main
+.endif
 
 	; run monsters
 
@@ -213,6 +229,16 @@ skip_all_checks:
 	; Run Woz
 	;=======================
 	;=======================
+
+.if 0
+	; load monsters
+
+	sei				; disable interrupts
+	lda	#PART_MONSTERS
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+	cli				; re-enable music
+
 
 	; copy DANCING from AUX $8000 to MAIN $2000
 
@@ -232,7 +258,7 @@ skip_all_checks:
 ;	jsr	mute_ay_both
 ;	jsr	clear_ay_both		; stop from making noise
 
-	; load dancing
+	; load woz
 
 ;	lda	#PART_DANCING		; Dancing
 ;	sta	WHICH_LOAD
@@ -244,13 +270,13 @@ skip_all_checks:
 ;	cli		; start interrupts (music)
 
 	;======================
-	; start dancing
+	; start woz
 
 ;	jsr	$2000
 
 
 
-
+.endif
 
 	;=======================
 	;=======================
@@ -259,7 +285,7 @@ skip_all_checks:
 	;=======================
 
 	; load from disk
-.if 0
+
 	sei
 	lda	#PART_FOURCOLOR	; Multi-color monster
 	sta	WHICH_LOAD
@@ -270,7 +296,7 @@ skip_all_checks:
 	cli			; start music
 
 	jsr	$6000
-.endif
+
 
 	;=======================
 	;=======================
