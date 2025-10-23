@@ -1,3 +1,33 @@
+monster-c7: raw 16k
+	bin.zx02 = 4385, aux.zx02=4689 = 9074 bytes
+	combined.zx02 = 9057 bytes
+	big.zx02 = 7574 bytes
+	big_packed.zx02 = 6995 bytes
+	
+
+
+
+
+Intro:		16k
+Monster1:	16k
+Monster2:	16k
+Woz:		8k?
+Fourcolor:	8k?
+Credits:	8k?
+		=====
+		72k?
+
+free space:
+	main RAM, from $6000...$9FFF = 16k
+	main RAM, from $D000...$DFFF = 4k
+	AUX RAM, from $1000...$1FFF = 4k
+	AUX RAM, from $6000...$9FFF = 16k	(another 8k if no scrolling?)
+	AUX RAM, from $d000..$DFFF = 4k
+	AUX RAM, from $D000..$FFFF = 12k
+				==============
+					56k?
+
+
 Intro: (8k)
 	Loads to $6000...
 	Uses $2000...$5FFF both main and AUX

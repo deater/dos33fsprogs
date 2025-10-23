@@ -5,7 +5,7 @@ CFLAGS = -O2 -Wall -g
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
 	hgr2png hgr_make_sprite dhgr_make_sprite \
 	png2font dhgr2png \
-	png2tiles png2largefont png2dhgr4
+	png2tiles png2largefont png2dhgr4 png2dhgr_big
 
 ###
 
@@ -103,6 +103,15 @@ png2dhgr:		png2dhgr.o
 
 png2dhgr.o:		png2dhgr.c
 			$(CC) $(CFLAGS) -c png2dhgr.c
+
+###
+
+png2dhgr_big:		png2dhgr_big.o
+			$(CC) -o png2dhgr_big png2dhgr_big.o $(LFLAGS) -lpng
+
+png2dhgr_big.o:		png2dhgr_big.c
+			$(CC) $(CFLAGS) -c png2dhgr_big.c
+
 
 ###
 
