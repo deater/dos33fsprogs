@@ -347,7 +347,7 @@ int main(int argc, char **argv) {
 			color1=flipped_colors[colors[0]]&0xf;
 			color2=flipped_colors[colors[1]]&0xf;
 
-			apple2_out[(y*70)+x]= (color1<<4) | (color2);
+			apple2_out[(y*70)+x]= (color2<<4) | (color1);
 		}
 
 

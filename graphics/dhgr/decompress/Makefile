@@ -14,10 +14,11 @@ all:	dhgr_load.dsk
 ####
 
 dhgr_load.dsk: HELLO \
-	REGULAR
+	REGULAR BETTER
 	cp $(EMPTY_DISK)/empty.dsk dhgr_load.dsk
 	$(DOS33) -y dhgr_load.dsk SAVE A HELLO
 	$(DOS33) -y dhgr_load.dsk BSAVE -a 0x6000 REGULAR
+	$(DOS33) -y dhgr_load.dsk BSAVE -a 0x6000 BETTER
 
 
 ###
@@ -35,6 +36,17 @@ regular.o:	regular.s \
 	graphics/monster_pumpkin.bin.zx02 graphics/monster_pumpkin.aux.zx02
 	ca65 -o regular.o regular.s -l regular.lst
 
+###
+
+BETTER:	better.o
+	ld65 -o BETTER better.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+better.o:	better.s \
+	zp.inc hardware.inc \
+	graphics/monster_pumpkin.big_packed.zx02
+	ca65 -o better.o better.s -l better.lst
+
+
 ####
 
 graphics/monster_pumpkin.aux.zx02:	
@@ -47,9 +59,9 @@ graphics/monster_pumpkin.bin.zx02:
 ####
 
 clean:
-	rm -f *~ REGULAR *.zx02 *.lst *.o HELLO
+	rm -f *~ BETTER REGULAR *.zx02 *.lst *.o HELLO
 
 distclean:
-	rm -f *~ REGULAR *.zx02 *.lst *.o HELLO
+	rm -f *~ BETTER REGULAR *.zx02 *.lst *.o HELLO
 	cd graphics && make clean
 

@@ -143,50 +143,14 @@ MASKH		= $EB
 ; $F0-$FB can re-use in each file
 ;==============================================
 
-; start/font fall
+; loader
 
-TEXT_Y		= $F2
-
-; intro: scrolling
-
-SCROLL_COUNT	= $F0
-INDEX		= $F1
-OFFSET		= $F2
-LENGTH		= $F3
-
-; four-color
-AUXOUTL		= $EA
-AUXOUTH		= $EB
-MAIN1		= $EC
-AUX1		= $ED
-MAIN0		= $EE
-AUX0		= $EF
-CURRENT		= $F0
-LEFT		= $F1
-XSTART		= $F2
-XEND		= $F3
-COLORSG		= $F4
-COLORSF		= $F5
-COLORSE		= $F6
-COLORSD		= $F7
-COLORSC		= $F8
-COLORSB		= $F9
-COLORSA		= $FA
-ODD		= $FB
+CURRENT_COL	= $EE
+CURRENT_ROW	= $EF
+TEMP_COLORS	= $F0	; .. $F7
 
 
-; Credits
-CURSOR_X	= $EE
-CURSOR_Y	= $EF
-SCROLL_X	= $F0
-BACKUP_OUTL	= $F2
-BACKUP_OUTH	= $F3
-GUITAR_FRAME	= $F4
-SCROLL_DONE	= $F5
-SCROLL_LINE	= $F6
-STAR_X		= $F7
-STAR_WHICH	= $F8
-SPRITE_LIST	= $F9
+
 
 .if 0
 
