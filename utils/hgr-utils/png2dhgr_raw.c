@@ -1,4 +1,4 @@
-/* Converts 140x192 8-bit PNG file with correct palette to Apple II DHGR */
+/* Converts 140x192 8-bit PNG file with correct palette to raw Apple II DHGR */
 
 /* This is an extended version which puts the colors in a non-packed */
 /* non-interlaced form to make ZX02 compression work better */
@@ -227,13 +227,13 @@ int loadpng(char *filename,
 
 static void print_help(char *name,int version) {
 
-	printf("\npng2dhgr version %s\n",VERSION);
+	printf("\npng2dhgr_raw version %s\n",VERSION);
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-r] [-s] PNGFILE OUTBASE\n\n",name);
-	printf("\t[-r] raw, don't prepend with BLOAD addr/size\n");
-	printf("\t[-s] short, leave off bottom text area\n");
+	printf("\nUsage: %s [-u] [-t] PNGFILE OUTBASE\n\n",name);
+	printf("\t[-u] uncompact, one color per byte\n");
+	printf("\t[-t] top/bottom, split at line 96\n");
 	printf("\n");
 
 	exit(1);
@@ -266,6 +266,8 @@ static unsigned char apple2_out[65536];
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0;
+	int uncompact=0;
+	int top_bottom=0;
 	int c,x,y,color1,color2;
 	unsigned char *image;
 	unsigned char colors[7];
@@ -276,15 +278,21 @@ int main(int argc, char **argv) {
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvd") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdtu") ) != -1) {
 
 		switch(c) {
 
                         case 'h':
                                 print_help(argv[0],0);
 				break;
-                        case 'v':
-                                print_help(argv[0],1);
+			case 't':
+				top_bottom=1;
+				break;
+			case 'u':
+				uncompact=1;
+				break;
+			case 'v':
+				print_help(argv[0],1);
 				break;
                         case 'd':
 				debug=1;
@@ -317,28 +325,29 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
-	for(y=0;y<192;y++) {
-		for(x=0;x<140;x++) {
-			colors[0]=image[y*140+x];
-			color1=flipped_colors[colors[0]]&0xf;
-			apple2_out[(y*140)+x]=color1;
+	/* 140x192 with each byte a single color */
+	if (uncompact) {
+		for(y=0;y<192;y++) {
+			for(x=0;x<140;x++) {
+				colors[0]=image[y*140+x];
+				color1=flipped_colors[colors[0]]&0xf;
+				apple2_out[(y*140)+x]=color1;
+			}
 		}
 
-
-
+		sprintf(outfile,"%s.uncompact",base);
+		aux=fopen(outfile,"w");
+		if (aux==NULL) {
+			fprintf(stderr,"Error opening %s\n",outfile);
+			exit(1);
+		}
+		fwrite(apple2_out,140*192,sizeof(unsigned char),aux);
+		fclose(aux);
 	}
-
-	sprintf(outfile,"%s.big",base);
-	aux=fopen(outfile,"w");
-	if (aux==NULL) {
-		fprintf(stderr,"Error opening %s\n",outfile);
-		exit(1);
-	}
-	fwrite(apple2_out,140*192,sizeof(unsigned char),aux);
-	fclose(aux);
 
 	memset(apple2_out,0,65536);
 
+	/* 140x192 but two neighboring colors in one byte */
 	for(y=0;y<192;y++) {
 		for(x=0;x<70;x++) {
 			colors[0]=image[(y*140)+(x*2)];
@@ -349,20 +358,40 @@ int main(int argc, char **argv) {
 
 			apple2_out[(y*70)+x]= (color2<<4) | (color1);
 		}
+	}
 
+	if (top_bottom) {
+
+		sprintf(outfile,"%s.raw_top",base);
+		aux=fopen(outfile,"w");
+		if (aux==NULL) {
+			fprintf(stderr,"Error opening %s\n",outfile);
+			exit(1);
+		}
+		fwrite(apple2_out,70*96,sizeof(unsigned char),aux);
+		fclose(aux);
+
+		sprintf(outfile,"%s.raw_bottom",base);
+		aux=fopen(outfile,"w");
+		if (aux==NULL) {
+			fprintf(stderr,"Error opening %s\n",outfile);
+			exit(1);
+		}
+		fwrite(apple2_out+(70*96),70*96,sizeof(unsigned char),aux);
+		fclose(aux);
 
 
 	}
-
-	sprintf(outfile,"%s.big_packed",base);
-	aux=fopen(outfile,"w");
-	if (aux==NULL) {
-		fprintf(stderr,"Error opening %s\n",outfile);
-		exit(1);
+	else {
+		sprintf(outfile,"%s.raw",base);
+		aux=fopen(outfile,"w");
+		if (aux==NULL) {
+			fprintf(stderr,"Error opening %s\n",outfile);
+			exit(1);
+		}
+		fwrite(apple2_out,70*192,sizeof(unsigned char),aux);
+		fclose(aux);
 	}
-	fwrite(apple2_out,70*192,sizeof(unsigned char),aux);
-	fclose(aux);
-
 
 	return 0;
 

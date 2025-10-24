@@ -1,3 +1,7 @@
+; same, but try to do it with only an 8k buffer
+;	(instead of 13k/16k)
+
+
 .include "zp.inc"
 .include "hardware.inc"
 
@@ -32,26 +36,44 @@ better_dhgr:
 ;	sta	SET80COL	; (allow page1/2 flip main/aux)
 
 	bit	PAGE1		; display page1
-	lda	#$20
-	sta	DRAW_PAGE	; draw to page2
-
-
-	;===========================
-	; load raw graphic to $8000
-
 	lda	#$0
-	sta	DRAW_PAGE
+	sta	DRAW_PAGE	; draw to page1
 
-	lda	#<monster1_bin
+
+	;===============================
+	; load raw top graphic to $A000
+
+	lda	#<monster1_top
 	sta	zx_src_l+1
-	lda	#>monster1_bin
+	lda	#>monster1_top
 	sta	zx_src_h+1
 
-	lda	#$80			; load to MAIN DHGR PAGE0
+	lda	#$A0			; load to MAIN DHGR PAGE0
 
 	jsr	zx02_full_decomp
 
-	bit	PAGE1		; be sure on PAGE1
+	lda	#$A0
+
+	jsr	repack_top
+
+	;===============================
+	; load raw bottom graphic to $A000
+
+	lda	#<monster1_bottom
+	sta	zx_src_l+1
+	lda	#>monster1_bottom
+	sta	zx_src_h+1
+
+	lda	#$A0			; load to MAIN DHGR PAGE0
+
+	jsr	zx02_full_decomp
+
+	lda	#$A0
+
+	jsr	repack_bottom
+
+stay_forever:
+	jmp	stay_forever
 
 
 
@@ -60,12 +82,35 @@ better_dhgr:
 	; repack raw graphic
 	;=====================================
 	;=====================================
+	; starts loading from page in A
+repack_top:
+
+	ldx	#0
+	stx	CURRENT_ROW
+
+	ldx	#96
+	bne	repack_common		; bra
+
+repack_bottom:
+	ldx	#96
+	stx	CURRENT_ROW
+	ldx	#192
+
+repack_common:
+	stx	repack_end_smc+1
+
+
+set_source:
+	; set source
+
+	sta	load_loop_smc+2
+	lda	#0
+	sta	load_loop_smc+1
 
 	; load 7 bytes (2 colors each), convert to the 8 bytes DHGR expects
 
 
-	ldx	#0
-	stx	CURRENT_ROW
+
 new_row:
 	ldx	CURRENT_ROW
 	lda	hposn_low,X
@@ -85,7 +130,7 @@ next_col:
 load_loop:
 
 load_loop_smc:
-	lda	$8000,X
+	lda	$A000,X
 	sta	$F0,X
 	dex
 	bpl	load_loop
@@ -220,13 +265,14 @@ done_col:
 
 	inc	CURRENT_ROW
 	ldx	CURRENT_ROW
-	cpx	#192
+repack_end_smc:
+	cpx	#96
 	beq	done_pack
 	jmp	new_row
 
 done_pack:
 
-
+	rts
 
 
 
@@ -237,12 +283,15 @@ done_pack:
 ; MMMMLLLL KKKKJJJJ IIIIHHHH --- save/rol3
 
 
-stay_forever:
-	jmp	stay_forever
+
 
 .include "zx02_optim.s"
 ;.include "aux_memcopy.s"
 .include "hgr_table.s"
 
-monster1_bin:
-	.incbin "graphics/monster_pumpkin.raw.zx02"
+monster1_top:
+	.incbin "graphics/monster_pumpkin.raw_top.zx02"
+
+monster1_bottom:
+	.incbin "graphics/monster_pumpkin.raw_bottom.zx02"
+

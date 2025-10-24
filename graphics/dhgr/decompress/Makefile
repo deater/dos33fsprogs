@@ -14,11 +14,12 @@ all:	dhgr_load.dsk
 ####
 
 dhgr_load.dsk: HELLO \
-	REGULAR BETTER
+	REGULAR BETTER COMPACT
 	cp $(EMPTY_DISK)/empty.dsk dhgr_load.dsk
 	$(DOS33) -y dhgr_load.dsk SAVE A HELLO
 	$(DOS33) -y dhgr_load.dsk BSAVE -a 0x6000 REGULAR
 	$(DOS33) -y dhgr_load.dsk BSAVE -a 0x6000 BETTER
+	$(DOS33) -y dhgr_load.dsk BSAVE -a 0x6000 COMPACT
 
 
 ###
@@ -43,8 +44,20 @@ BETTER:	better.o
 
 better.o:	better.s \
 	zp.inc hardware.inc \
-	graphics/monster_pumpkin.big_packed.zx02
+	graphics/monster_pumpkin.raw.zx02
 	ca65 -o better.o better.s -l better.lst
+
+###
+
+COMPACT:	compact.o
+	ld65 -o COMPACT compact.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+compact.o:	compact.s \
+	zp.inc hardware.inc \
+	graphics/monster_pumpkin.raw_top.zx02 \
+	graphics/monster_pumpkin.raw_bottom.zx02
+	ca65 -o compact.o compact.s -l compact.lst
+
 
 
 ####
@@ -53,6 +66,9 @@ graphics/monster_pumpkin.aux.zx02:
 	cd graphics && make
 
 graphics/monster_pumpkin.bin.zx02:	
+	cd graphics && make
+
+graphics/monster_pumpkin.raw.zx02:	
 	cd graphics && make
 
 
