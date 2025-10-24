@@ -3,21 +3,35 @@ include ../../../../Makefile.inc
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
 PNG_TO_HGR = ../../../../utils/hgr-utils/png2hgr
 PNG_TO_DHGR = ../../../../utils/hgr-utils/png2dhgr
-PNG_TO_DHGR_BIG = ../../../../utils/hgr-utils/png2dhgr_big
+PNG_TO_DHGR_RAW = ../../../../utils/hgr-utils/png2dhgr_raw
 PNG_TO_DHGR4 = ../../../../utils/hgr-utils/png2dhgr4
 PNG2GR = ../../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../../linker_scripts/
 
 all:	monster_pumpkin.bin.zx02 monster_pumpkin.aux.zx02 \
+	monster_pumpkin.raw_top.zx02 monster_pumpkin.raw_bottom.zx02 \
 	monster-bw5.bin.zx02 monster-bw5.aux.zx02 \
 	monster-c7.bin.zx02 monster-c7.aux.zx02 \
 	monster-bw7.bin.zx02 monster-bw7.aux.zx02 \
 	monster-bw10.bin.zx02 monster-bw10.aux.zx02 \
-	monster-c7.combined.zx02 monster-c7.big.zx02 monster-c7.big_packed.zx02
+	monster-c7.raw.zx02 \
+	monster-c7.raw_top.zx02 monster-c7.raw_bottom.zx02
 
 
 ####
+
+monster_pumpkin.raw_top.zx02:     monster_pumpkin.raw_top
+	$(ZX02) monster_pumpkin.raw_top monster_pumpkin.raw_top.zx02
+
+monster_pumpkin.raw_top:  monster_pumpkin.png
+	$(PNG_TO_DHGR_RAW) -t monster_pumpkin.png monster_pumpkin
+
+monster_pumpkin.raw_bottom.zx02:     monster_pumpkin.raw_bottom
+	$(ZX02) monster_pumpkin.raw_bottom monster_pumpkin.raw_bottom.zx02
+
+monster_pumpkin.raw_bottom: monster_pumpkin.png
+	$(PNG_TO_DHGR_RAW) -t monster_pumpkin.png monster_pumpkin
 
 monster_pumpkin.aux.zx02:     monster_pumpkin.AUX
 	$(ZX02) monster_pumpkin.AUX monster_pumpkin.aux.zx02
@@ -78,17 +92,17 @@ monster-bw10.BIN: monster-bw10.png
 
 ####
 
-monster-c7.big_packed.zx02:     monster-c7.big_packed
-	$(ZX02) monster-c7.big_packed monster-c7.big_packed.zx02
+monster-c7.raw.zx02:     monster-c7.raw
+	$(ZX02) monster-c7.raw monster-c7.raw.zx02
 
-monster-c7.big_packed:  monster-c7.png
-	$(PNG_TO_DHGR_BIG) monster-c7.png monster-c7
+monster-c7.raw:  monster-c7.png
+	$(PNG_TO_DHGR_RAW) monster-c7.png monster-c7
 
 monster-c7.big.zx02:     monster-c7.big
 	$(ZX02) monster-c7.big monster-c7.big.zx02
 
 monster-c7.big:  monster-c7.png
-	$(PNG_TO_DHGR_BIG) monster-c7.png monster-c7
+	$(PNG_TO_DHGR_RAW) monster-c7.png monster-c7
 
 monster-c7.combined.zx02:     monster-c7.combined
 	$(ZX02) monster-c7.combined monster-c7.combined.zx02
@@ -109,8 +123,21 @@ monster-c7.bin.zx02:     monster-c7.BIN
 monster-c7.BIN: monster-c7.png
 	$(PNG_TO_DHGR) monster-c7.png monster-c7
 
+monster-c7.raw_top.zx02:     monster-c7.raw_top
+	$(ZX02) monster-c7.raw_top monster-c7.raw_top.zx02
+
+monster-c7.raw_top:  monster-c7.png
+	$(PNG_TO_DHGR_RAW) -t monster-c7.png monster-c7
+
+monster-c7.raw_bottom.zx02:     monster-c7.raw_bottom
+	$(ZX02) monster-c7.raw_bottom monster-c7.raw_bottom.zx02
+
+monster-c7.raw_bottom: monster-c7.png
+	$(PNG_TO_DHGR_RAW) -t monster-c7.png monster-c7
+
+
 
 ####
 
 clean:
-	rm -f *~ *.zx02 *.lst *.o *.AUX *.BIN *.big *.big_packed
+	rm -f *~ *.zx02 *.lst *.o *.AUX *.BIN *.big *.big_packed *.combined *.raw_top *.raw_bottom *.raw
