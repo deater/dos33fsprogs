@@ -14,7 +14,16 @@ all:	logo_dSr_D2.bin.zx02 logo_dSr_D2.aux.zx02 \
 	logo_grafA.bin.zx02 logo_grafA.aux.zx02 \
 	logo_grafA.raw_top.zx02 logo_grafA.raw_bottom.zx02 \
 	logo_pump-kin.bin.zx02 logo_pump-kin.aux.zx02 \
-	logo_splatdsr.bin.zx02 logo_splatdsr.aux.zx02
+	logo_splatdsr.bin.zx02 logo_splatdsr.aux.zx02 \
+	ms_title.hgr.zx02
+
+####
+
+ms_title.hgr.zx02:	ms_title.hgr
+	$(ZX02) ms_title.hgr ms_title.hgr.zx02
+
+ms_title.hgr:  ms_title.png
+	$(PNG_TO_HGR) ms_title.png > ms_title.hgr
 
 ####
 

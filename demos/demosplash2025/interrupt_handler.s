@@ -101,12 +101,22 @@ exit_interrupt:
 	pla		; bit 7 is if $D000 bank 2 (1) or bank 1 (0)
 			;	C083/C08B	bank2/bank1 0011 1011
 
-	lsr
-	lsr
-	lsr
-	lsr
-	and	#$08
-	tax
+	bpl	fix_bank1
+fix_bank2:
+	lda	LCBANK2
+	lda	LCBANK2
+	jmp	fix_bank_done
+fix_bank1:
+	lda	LCBANK1
+	lda	LCBANK1
+fix_bank_done:
+
+;	lsr
+;	lsr
+;	lsr
+;	lsr
+;	and	#$08
+;	tax
 ;	lda	LCBANK2,X
 ;	lda	LCBANK2,X
 

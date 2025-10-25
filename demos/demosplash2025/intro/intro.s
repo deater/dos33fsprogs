@@ -1,3 +1,15 @@
+; Intro
+;	+ Comes in with letters fallen on PAGE1(?)
+;	+ Title graphic + logo1 MAIN at $A000
+;	+ Show title for a bit
+;	+ hires-fade to black, clear both DHGR screens
+;	+ Decompress logo1 AUX to $A000, then copy
+;	+ wait a bit
+;	+ decompress logo2 top/bottom through $A000
+;	+ call redline wipe
+;	+ clear dhgr page2
+;	- fade out? fizzle out? redline wipe again?
+
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
@@ -11,9 +23,30 @@
 intro:
 	bit	KEYRESET	; just to be safe
 
-	;=================================
-	; init graphics
-	;=================================
+	;=======================================
+	; Comes in with letters fallen in Page1
+	;=======================================
+
+
+	;=======================================
+	; Load title to Page1
+	;=======================================
+
+	bit	PAGE1
+
+	lda	#$00			; load to $2000
+	sta	DRAW_PAGE
+
+	lda	#<title_hgr
+	sta	zx_src_l+1
+	lda	#>title_hgr
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+
+
+	jsr	wait_until_keypress
 
 
 	;=================================
@@ -177,3 +210,6 @@ logo2_top:
 	.incbin "graphics/logo_dSr_D2.raw_top.zx02"
 logo2_bottom:
 	.incbin "graphics/logo_dSr_D2.raw_bottom.zx02"
+
+title_hgr:
+	.incbin "graphics/ms_title.hgr.zx02"
