@@ -192,7 +192,7 @@ skip_all_checks:
 
 	; run intro
 
-	cli			; start music
+;	cli			; start music
 	jsr	$6000
 
 

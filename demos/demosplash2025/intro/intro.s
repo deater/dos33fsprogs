@@ -12,10 +12,6 @@ intro:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
-	; Scrolling Intro Logo
-	;=================================
-
-	;=================================
 	; init graphics
 	;=================================
 
@@ -37,173 +33,123 @@ intro:
 ;	sta	SET80COL	; (allow page1/2 flip main/aux)
 
         bit	PAGE1		; display page1
-	lda	#$20
-	sta	DRAW_PAGE	; draw to page2
 
 
 	;=============================
-	; load AUX part to AUX $A000
-	; by first uncompressing to MAIN $A000 and copying over
+	; load top part to MAIN $A000
 
-	lda	#$80
+	lda	#$80			; load to $a000
 	sta	DRAW_PAGE
 
-	lda	#<logo1_aux
+	lda	#<logo1_top
 	sta	zx_src_l+1
-	lda	#>logo1_aux
+	lda	#>logo1_top
 	sta	zx_src_h+1
 
 	jsr	zx02_full_decomp_main
 
-	lda	#$A0		; AUX page start (dest)
-	ldy	#$A0		; MAIN page start (src)
-	ldx	#$20		; num pages
+	lda	#$00			; repack to $2000
+	sta	DRAW_PAGE
+	lda	#$A0			; repack from $a000
 
-	jsr	copy_main_aux
+	jsr	dhgr_repack_top
 
+
+	;=============================
+	; load bottom part to MAIN $A000
+
+	lda	#$80			; load to $a000
+	sta	DRAW_PAGE
+
+	lda	#<logo1_bottom
+	sta	zx_src_l+1
+	lda	#>logo1_bottom
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+
+	lda	#$00			; repack to $2000
+	sta	DRAW_PAGE
+	lda	#$A0
+	jsr	dhgr_repack_bottom
 
 	;=======================
-	; load MAIN part to MAIN $A000
+	; wait a bit
+
+bbtf2:
+	lda	KEYPRESS
+	bpl	bbtf2
+	bit	KEYRESET
+
+
+;	lda	#1
+;	jsr	wait_seconds
+
+
+	;=============================
+	; load top part to MAIN $A000
 
 	lda	#$80
 	sta	DRAW_PAGE
 
-	lda	#<logo1_bin
+	lda	#<logo2_top
 	sta	zx_src_l+1
-	lda	#>logo1_bin
+	lda	#>logo2_top
 	sta	zx_src_h+1
+
 	jsr	zx02_full_decomp_main
 
-
-
-	lda	#$20
+	lda	#$20			; draw to page2
 	sta	DRAW_PAGE
 
-	;=================================
-	; clear screens
+	lda	#$A0
 
-	jsr	clear_dhgr_screens
-
-	;=================================
-	; copy graphic to off-screen page1
-
-	ldx	#0
-	ldy	#128
-	lda	#64
-	jsr	slow_copy_main
-
-	ldx	#0
-	ldy	#128
-	lda	#64
-	jsr	slow_copy_aux
-
-	jsr	wait_vblank
-	jsr	hgr_page_flip
-
-	;========================
-	; copy graphic to page 2
-
-	ldx	#0			; line in PAGE1/PAGE2 to output to
-	ldy	#128			; lines to copy
-	lda	#63			; line to start in $A000
-	jsr	slow_copy_main
-
-	ldx	#0
-	ldy	#128
-	lda	#63
-	jsr	slow_copy_aux
-
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+	jsr	dhgr_repack_top
 
 
-	;==================
-	; scroll a bit
+	;=============================
+	; load bottom part to MAIN $A000
 
-	lda	#62
-	sta	SCROLL_COUNT
+	lda	#$80
+	sta	DRAW_PAGE
 
-scroll_loop:
+	lda	#<logo2_bottom
+	sta	zx_src_l+1
+	lda	#>logo2_bottom
+	sta	zx_src_h+1
 
-	; scroll
-	jsr	hgr_vertical_scroll_main
+	jsr	zx02_full_decomp_main
 
-	ldx	#0
-	ldy	#2
-	lda	SCROLL_COUNT
-	jsr	slow_copy_main
+	lda	#$20			; draw to page2
+	sta	DRAW_PAGE
 
-	jsr	hgr_vertical_scroll_aux
+	lda	#$A0
 
-	ldx	#0
-	ldy	#2
-	lda	SCROLL_COUNT
-	jsr	slow_copy_aux
+	jsr	dhgr_repack_bottom
 
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+; TODO: wait a bit?
 
-	dec	SCROLL_COUNT
-	bne	scroll_loop
+	;================================
+	; do wipe
+
+
+	jsr	save_zp
+	jsr	do_wipe_redlines
+	jsr	restore_zp
+
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
 
 
 	;=======================
 	; wait a bit
 
-	lda	#1
-	jsr	wait_seconds
+;	lda	#1
+;	jsr	wait_seconds
 
 ;	jsr	clear_dhgr_screens
 
-
-
-	;=======================
-	; copy other image in place
-
-
-
-	;=======================
-	; load graphic to MAIN $4000
-
-	lda	#$20
-	sta	DRAW_PAGE
-
-	lda	#<logo2_bin
-	sta	zx_src_l+1
-	lda	#>logo2_bin
-	sta	zx_src_h+1
-	jsr	zx02_full_decomp_main
-
-	; load AUX part to MAIN $A000
-
-	lda	#$80
-	sta	DRAW_PAGE
-
-	lda	#<logo2_aux
-	sta	zx_src_l+1
-	lda	#>logo2_aux
-	sta	zx_src_h+1
-
-	jsr	zx02_full_decomp_main
-
-
-	;========================
-	; copy to AUX page $4000
-
-	lda	#$40		; UX page start (dest)
-	ldy	#$A0		; MAIN page start (src)
-	ldx	#$20		; X = num pages
-
-	jsr	copy_main_aux
-
-	lda	#$20
-	sta	DRAW_PAGE
-
-	;=======================
-	; do wipe
-
-
-	bit	PAGE2
 
 
 bbtf:
@@ -216,33 +162,18 @@ bbtf:
 
 	rts
 
+	.include "../dhgr_clear.s"
+	.include "../dhgr_repack.s"
 
-	;===================================
-	; clear dhgr screens
-	;===================================
-clear_dhgr_screens:
-	jsr	hgr_clear_screen
-	sta	WRAUX
-	jsr	hgr_clear_screen
-	sta	WRMAIN
-	jsr	hgr_page_flip
+	.include "fx.dhgr.redlines.s"
+	.include "save_zp.s"
 
-	jsr	hgr_clear_screen
-	sta	WRAUX
-	jsr	hgr_clear_screen
-	sta	WRMAIN
-	jsr	hgr_page_flip
+logo1_top:
+	.incbin "graphics/logo_grafA.raw_top.zx02"
+logo1_bottom:
+	.incbin "graphics/logo_grafA.raw_bottom.zx02"
 
-	rts
-
-logo1_bin:
-	.incbin "graphics/logo_grafA.bin.zx02"
-
-logo2_bin:
-	.incbin "graphics/logo_dSr_D2.bin.zx02"
-
-logo1_aux:
-	.incbin "graphics/logo_grafA.aux.zx02"
-
-logo2_aux:
-	.incbin "graphics/logo_dSr_D2.aux.zx02"
+logo2_top:
+	.incbin "graphics/logo_dSr_D2.raw_top.zx02"
+logo2_bottom:
+	.incbin "graphics/logo_dSr_D2.raw_bottom.zx02"

@@ -1,6 +1,7 @@
 ; HARDWARE LOCATIONS
 
 KEYPRESS	=	$C000
+KBD		=	$C000
 KEYRESET	=	$C010
 
 ; SOFT SWITCHES
@@ -10,6 +11,13 @@ SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
 EIGHTYSTOREON	=	$C001	;
 RDMAIN		=	$C002	; (w)
 RDAUX		=	$C003	; (w)
+READMAINMEM	=	$C002   ; STA to read from main mem ($0200..$BFFF)
+READAUXMEM	=	$C003   ; STA to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM	=	$C004   ; STA to write to main mem ($0200..$BFFF)
+WRITEAUXMEM	=	$C005   ; STA to write to aux mem ($0200..$BFFF)
+
+
+
 WRMAIN		=	$C004	; (w)
 WRAUX		=	$C005	; (w)
 EIGHTYCOLOFF	=	$C00C

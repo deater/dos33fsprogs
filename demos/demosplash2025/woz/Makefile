@@ -8,17 +8,17 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../linker_scripts/
 
-all:	MONSTERS
+all:	WOZ
 
 ###
 
-MONSTERS:	monsters.o
-	ld65 -o MONSTERS monsters.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+WOZ:	woz.o
+	ld65 -o WOZ woz.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-monsters.o:	monsters.s \
+woz.o:	woz.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	graphics/monster_pumpkin.bin.zx02 graphics/monster_pumpkin.aux.zx02
-	ca65 -o monsters.o monsters.s -l monsters.lst
+	ca65 -o woz.o woz.s -l woz.lst
 
 ####
 
@@ -32,9 +32,9 @@ graphics/monster_pumpkin.bin.zx02:
 ####
 
 clean:
-	rm -f *~ MONSTERS *.zx02 *.lst *.o *.AUX *.BIN
+	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN
 
 distclean:
-	rm -f *~ MONSTERS *.zx02 *.lst *.o *.AUX *.BIN
+	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN
 	cd graphics && make clean
 

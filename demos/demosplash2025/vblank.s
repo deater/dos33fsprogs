@@ -13,20 +13,22 @@ VBLANK	= $C019		;
 
 ; TODO: patch this to a RTS on non-IIe systems
 
+; can't check on fly as zero page might be gone
+
 wait_vblank:
 
-	lda	APPLEII_MODEL
+;	lda	APPLEII_MODEL
 
-	cmp	#'e'
-	beq	wait_vblank_iie
+;	cmp	#'e'
+;	beq	wait_vblank_iie
 
-	cmp	#'g'
-	beq	wait_vblank_iigs
+;	cmp	#'g'
+;	beq	wait_vblank_iigs
 
 ;	cmp	#'c'
 ;	beq	wait_vblank_iic
 
-	bne	no_vblank
+;	bne	no_vblank
 
 ; 4cade does this, the opposite of the way were doing it originally
 

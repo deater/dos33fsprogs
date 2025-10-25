@@ -139,6 +139,9 @@ FRAMEH		= $E9
 MASKL		= $EA	; gr_putsprite_mask
 MASKH		= $EB
 
+CURRENT_COL	= $EC	; dhgr_repack
+CURRENT_ROW	= $ED	; dhgr_repack
+
 ;==============================================
 ; $F0-$FB can re-use in each file
 ;==============================================
@@ -187,17 +190,6 @@ SCROLL_LINE	= $F6
 STAR_X		= $F7
 STAR_WHICH	= $F8
 SPRITE_LIST	= $F9
-
-.if 0
-
-
-
-
-
-; dancing
-DANCE_COUNT	= $F0
-
-.endif
 
 ;==============================================
 ; $FC-$FF we use for in/out pointers

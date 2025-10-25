@@ -179,8 +179,8 @@ aux_dest:
 	.byte $60,$60,$00	; WOZ, FOURCOLOR, CREDITS
 
 track_array:
-	.byte  2, 2, 5,28	; ???, MUSIC, INTRO, MONSTERS
-	.byte 28,17,25		; WOZ, FOURCOLOR, CREDITS
+	.byte  2, 2, 5,10	; ???, MUSIC, INTRO, MONSTERS
+	.byte 15,20,25		; WOZ, FOURCOLOR, CREDITS
 
 sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, INTRO, MONSTERS

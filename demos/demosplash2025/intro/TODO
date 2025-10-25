@@ -1,4 +1,7 @@
 
++ move the one image to load at $A000 at start, decompress from there before we
+use that as temp area
+
 + text printing, print "--=== Monster Splash ===--"
   also put demosplash logo
 
