@@ -95,7 +95,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s wait qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s move_and_print qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
@@ -174,7 +174,8 @@ music.o:	music.s zp.inc \
 	pt3_lib_mockingboard.inc \
 	pt3_lib_init.s \
 	pt3_lib_mockingboard_setup.s \
-	pt3_lib_irq_handler.s
+	pt3_lib_irq_handler.s \
+	interrupt_handler.s
 	ca65 -o music.o music.s -l music.lst
 
 

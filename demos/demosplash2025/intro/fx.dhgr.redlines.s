@@ -1,9 +1,7 @@
 ;license:MIT
 ;(c) 2020 by 4am
 ;
-;!cpu 6502
-;!to "build/FX.INDEXED/DHGR.REDLINES",plain
-;*=$6000
+; NOTE!: copies code over top of zero page $00..$D9
 
 ; for red line:
 ; auxmem  alternate #$08/#$22

@@ -17,11 +17,17 @@ WRITEMAINMEM	=	$C004   ; STA to write to main mem ($0200..$BFFF)
 WRITEAUXMEM	=	$C005   ; STA to write to aux mem ($0200..$BFFF)
 
 
-
 WRMAIN		=	$C004	; (w)
 WRAUX		=	$C005	; (w)
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+
+RDBNK2		=	$C011	; (r7) Language card $D000 bank2=1, bank1=0
+RDLCRAM		=	$C012	; (r7) Language card RAM=1, ROM=0
+RAMRD		=	$C013	; (r7) Read AUX=1, MAIN=0
+RAMWRT		=	$C014	; (r7) Write AUX=1, MAIN=0
+RDALTZP		=	$C016	; (r7) AUX=1 MAIN=0
+
 TBCOLOR		=	$C022	; IIgs text fg/bg colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
@@ -42,6 +48,9 @@ SETAN3		=	$C05F	; set Annunicator 3 (WR)
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
+
+LCBANK2		=	$C083
+LCBANK1		=	$C08B
 
 ; APPLESOFT BASIC ROUTINES
 

@@ -18,14 +18,45 @@
 	;	to be sure status flag and accumulator set properly
 
 interrupt_handler:
-	php			; save status flags
-	cld			; clear decimal mode
+
+	; on Apple IIe with bank switching must save/restore bank switch stuff
+	; possibly need to do this before we even use the stack....
+
+	; for now assume ALTZP isn't set
+
+
+	php			; save flags
+
 	pha			; save A				; 3
 				; A is saved in $45 by firmware
 	txa
 	pha			; save X
 	tya
 	pha			; save Y
+
+
+;	lda	RDALTZP		; bit 7 is if ALT (1) or MAIN (0)
+
+	lda	RDBNK2		; bit 7 is if $D000 bank 2 (1) or bank 1 (0)
+	pha
+
+	lda	RAMWRT		; bit 7 is write AUX=1 MAIN=0
+	pha
+
+	lda	RAMRD		; bit 7 is read AUX=1 MAIN=0
+	pha
+
+
+	; set the banking the way we want
+
+	sta	READMAINMEM
+	sta	WRITEMAINMEM
+
+	lda	LCBANK1		; switch to language card bank1
+	lda	LCBANK1
+
+
+
 
 ;	inc	$0404		; debug (flashes char onscreen)
 
@@ -52,6 +83,32 @@ quiet_exit:
 
 
 exit_interrupt:
+
+	pla			; bit 7 is read AUX=1 MAIN=0
+	rol
+	rol
+	and	#$1
+	tax
+	sta	READMAINMEM,X	; $C002/$C003
+
+	pla
+	rol
+	rol
+	and	#$1
+	tax
+	sta	WRITEMAINMEM,X	; $C004/$C005
+
+	pla		; bit 7 is if $D000 bank 2 (1) or bank 1 (0)
+			;	C083/C08B	bank2/bank1 0011 1011
+
+	lsr
+	lsr
+	lsr
+	lsr
+	and	#$08
+	tax
+;	lda	LCBANK2,X
+;	lda	LCBANK2,X
 
 	pla
 	tay			; restore Y

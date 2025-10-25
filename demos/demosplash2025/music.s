@@ -36,3 +36,5 @@ PT3_ENABLE_APPLE_IIC = 1
 .align $100
 PT3_LOC:
 .incbin "music/mAZE - Spookey.pt3"
+
+.assert (>interrupt_handler) > $E0 , error, "irq handler must be above $E000"
