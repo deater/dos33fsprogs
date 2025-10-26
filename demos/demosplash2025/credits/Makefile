@@ -16,12 +16,21 @@ CREDITS:	credits.o
 credits.o:	credits.s vertical_scroll.s \
 	font_4am_1x8_oneline.s\
 	./fonts/font_4am_1x8_data.s \
-	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc
+	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
+	graphics/keeper1_sprites.inc
 	ca65 -o credits.o credits.s -l credits.lst
 
 ###
 
-clean:
-		rm -f *~ *.o *.lst CREDITS generate_scroll
+graphics/keeper1_sprites.inc:	
+	cd graphics && make
 
+###
+
+clean:
+	rm -f *~ *.o *.lst CREDITS generate_scroll
+
+distclean:
+	rm -f *~ *.o *.lst CREDITS generate_scroll
+	cd graphics && make clean
 
