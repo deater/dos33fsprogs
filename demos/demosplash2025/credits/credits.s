@@ -109,7 +109,9 @@ cl_smc:
 	;=============================
 	;=============================
 
-	jsr	draw_stars
+	; not for this one?  makes it too noisy?
+
+;	jsr	draw_stars
 
 	;=============================
 	;=============================
@@ -186,7 +188,7 @@ frame_noflo:
 	; draw sprites
 	;=============================
 draw_sprites:
-.if 0
+
 	lda	#18
 	sta	CURSOR_X
 
@@ -195,27 +197,27 @@ draw_sprites:
 
 	inc	GUITAR_FRAME
 
-	lda	GUITAR_FRAME
-	and	#7
-	tax
-	lda	guitar_pattern,X
-	tax
+;	lda	GUITAR_FRAME
+;	and	#7
+;	tax
+;	lda	guitar_pattern,X
+;	tax
 
-	lda	guitar_l,X
-	sta	INL
-	lda	guitar_h,X
-	sta	INH
+;	lda	guitar_l,X
+;	sta	INL
+;	lda	guitar_h,X
+;	sta	INH
 
-	jsr	hgr_draw_sprite
+;	jsr	hgr_draw_sprite
 
 
 	;===========================
-	; catherine
+	; keeper1
 
 	lda	GUITAR_FRAME
 	and	#$1f
 	tax
-	lda	catherine_pattern,X
+	lda	keeper1_pattern,X
 	tax
 
 
@@ -225,20 +227,20 @@ draw_sprites:
 	lda	#160
 	sta	CURSOR_Y
 
-	lda	moiety_l,X
+	lda	keeper_l,X
 	sta	INL
-	lda	moiety_h,X
+	lda	keeper_h,X
 	sta	INH
 
 	jsr	hgr_draw_sprite
 
 	;====================
-	; moiety2
+	; keeper2
 
 	lda	GUITAR_FRAME
 	and	#$1f
 	tax
-	lda	moiety2_pattern,X
+	lda	keeper2_pattern,X
 	tax
 
 
@@ -248,13 +250,13 @@ draw_sprites:
 	lda	#160
 	sta	CURSOR_Y
 
-	lda	moiety_l,X
+	lda	keeper_l,X
 	sta	INL
-	lda	moiety_h,X
+	lda	keeper_h,X
 	sta	INH
 
 	jsr	hgr_draw_sprite
-.endif
+
 
 
 	;=============================
@@ -285,14 +287,14 @@ skip_page_flip:
 
 
 
-
+.if 0
 	;=============================
 	;=============================
 	; draw stars
 	;=============================
 	;=============================
 draw_stars:
-.if 0
+
 	lda	FRAME
 	and	#1
 	bne	stars_odd
@@ -336,9 +338,9 @@ stars_common:
 
 	jmp	hgr_draw_sprite	; tail call
 no_stars:
-.endif
-	rts
 
+	rts
+.endif
 
 
 	;=============================
@@ -347,7 +349,7 @@ no_stars:
 	;=============================
 	;=============================
 draw_objects:
-.if 0
+
 	ldx	SPRITE_LIST
 	lda	sprite_triggers_h,X
 	bmi	done_draw_objects
@@ -375,7 +377,7 @@ draw_objects:
 	sta	INH
 
 	jmp	hgr_draw_sprite	; tail call
-.endif
+
 done_draw_objects:
 	rts
 
@@ -391,10 +393,11 @@ done_draw_objects:
 
 ;	.include	"hgr_sprite.s"
 
+
+
+;	.include	"graphics/guitar_sprites.inc"
+
 .if 0
-
-	.include	"graphics/guitar_sprites.inc"
-
 guitar_pattern:
 .byte 0,0,1,1,2,2,1,1
 
@@ -402,34 +405,34 @@ guitar_l:
 	.byte <guitar0,<guitar1,<guitar2
 guitar_h:
 	.byte >guitar0,>guitar1,>guitar2
+.endif
 
+	.include	"graphics/keeper1_sprites.inc"
+	.include	"graphics/keeper2_sprites.inc"
 
-	.include	"graphics/catherine_sprites.inc"
-	.include	"graphics/moiety2_sprites.inc"
+keeper_l:
+	.byte <keeper_r0,<keeper_r1,<keeper_r2
+	.byte <keeper_r3,<keeper_r4,<keeper_r5
+	.byte <keeper_r6,<keeper_r7
+	.byte <keeper_l0,<keeper_l1,<keeper_l2
+	.byte <keeper_l3,<keeper_l4,<keeper_l5
+	.byte <keeper_l6,<keeper_l7
 
-moiety_l:
-	.byte <moiety_r0,<moiety_r1,<moiety_r2
-	.byte <moiety_r3,<moiety_r4,<moiety_r5
-	.byte <moiety_r6,<moiety_r7
-	.byte <moiety_l0,<moiety_l1,<moiety_l2
-	.byte <moiety_l3,<moiety_l4,<moiety_l5
-	.byte <moiety_l6,<moiety_l7
+keeper_h:
+	.byte >keeper_r0,>keeper_r1,>keeper_r2
+	.byte >keeper_r3,>keeper_r4,>keeper_r5
+	.byte >keeper_r6,>keeper_r7
+	.byte >keeper_l0,>keeper_l1,>keeper_l2
+	.byte >keeper_l3,>keeper_l4,>keeper_l5
+	.byte >keeper_l6,>keeper_l7
 
-moiety_h:
-	.byte >moiety_r0,>moiety_r1,>moiety_r2
-	.byte >moiety_r3,>moiety_r4,>moiety_r5
-	.byte >moiety_r6,>moiety_r7
-	.byte >moiety_l0,>moiety_l1,>moiety_l2
-	.byte >moiety_l3,>moiety_l4,>moiety_l5
-	.byte >moiety_l6,>moiety_l7
-
-catherine_pattern:
+keeper1_pattern:
 .byte 1,1,2,2,1,1,2,2
 .byte 1,2,3,4,5,4,3,4
 .byte 5,4,3,4,5,6,7,5
 .byte 7,6,5,4,3,2,1,2
 
-moiety2_pattern:
+keeper2_pattern:
 .byte 1+8,1+8,2+8,2+8,1+8,1+8,2+8,2+8
 .byte 1+8,2+8,3+8,4+8,5+8,4+8,3+8,4+8
 .byte 5+8,4+8,3+8,4+8,5+8,6+8,7+8,5+8
@@ -438,6 +441,7 @@ moiety2_pattern:
 
 	.include	"graphics/other_sprites.inc"
 
+.if 0
 star_sprites_l:
 	.byte <star0_sprite,<star1_sprite,<star2_sprite,<star3_sprite
 	.byte <star4_sprite,<star5_sprite,<star6_sprite,<star7_sprite
@@ -474,25 +478,25 @@ final_credits:
 	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
 	.byte  9,"French Touch -- Plasma",0			; 22 (9)
 	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
-;	.byte  2,"K. Kennaway -- iipix image converter",0	; 36 (2)
 	.byte  8,"Deater - everything else",0			; 24 (8)
 
 ; Graphics
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte  9,"Monster Graphics:",0			; 22 (9)
+	.byte 15,"Graphics:",0					; 9 (15.5)
 	.byte 20," ",0
-	.byte 16,"grimnir",0				; 8 (16)
-	.byte 20," ",0
-
+	.byte  7,"grimnir -- logos/monsters",0			; 25 (7.5)
+	.byte  8,"Videlectrix -- peasantry",0			; 24 (8)
+	.byte  2,"The Pixel Apothecary -- spooky house",0	; 36 (2)
+	.byte  6,"Chad Savage -- fiendish font",0		; 28 (6)
 
 ; Music
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte 17,"Music:",0				; 6 (17)
+	.byte 17,"Music:",0					; 6 (17)
 	.byte 20," ",0
-	.byte 18,"mA2E",0				; 4 (18)
+	.byte 18,"mA2E",0					; 4 (18)
 
 ; Greetz
 
@@ -504,27 +508,42 @@ final_credits:
 	.byte 18,"4am",0				; 3 (18.5)
 	.byte 17,"qkumba",0				; 6 (17)
 	.byte 17,"Grouik",0				; 6 (17)
+	.byte 16,"Lethargy",0				; 8 (16)
+	.byte 14,"Otomata Labs",0			; 12 (14)
 	.byte 14,"Fenarinarsa",0			; 11 (14.5)
 	.byte 15,"Ninjaforce",0				; 10 (15)
 	.byte 15,"T. Greene",0				; 9 (15.5)
 	.byte 15,"K. Savetz",0				; 9 (15.5)
 	.byte 15,"Boo Atari",0				; 9 (15.5)
+	.byte 14,"Talbot 0101",0			; 11 (14.5)
 	.byte 15,"textfiles",0				; 9 (15.5)
 	.byte 13,"Stealth Susie",0			; 13 (13.5)
 	.byte 17,"wiz21b",0				; 6 (17)
-	.byte 17,"Trixter",0				; 7 (17.5)
+	.byte 16,"Trixter",0				; 7 (16.5)
 	.byte 18,"LGR",0				; 3 (18.5)
 	.byte 16,"Hellmood",0				; 8 (16)
 	.byte 17,"Foone",0				; 5 (17.5)
 	.byte 11,"The Brothers Chaps",0			; 18 (11)
 	.byte 20," ",0
-	.byte 14,"Talbot 0101",0			; 11 (14.5)
+	.byte 20," ",0
+
+	.byte 13,"No greets to:",0			; 13 (13.5)
+	.byte 20," ",0
+	.byte 11,"UM Faculty Senate",0			; 17 (11.5)
+	.byte 20," ",0
+	.byte 20," ",0
+
+	.byte 12,"Obsolete boards:",0			; 16 (12)
+	.byte 20," ",0
 	.byte 12,"Utopia BBS (410)",0			; 16 (12)
 	.byte 10,"Weave's World Talker",0		; 20 (10)
 	.byte 8,"Tell 'em Deater sent ya",0		; 23 (8.5)
 	.byte 20," ",0
 	.byte 20," ",0
-	.byte 20," ",0
+
+; No Greetz
+
+
 
 ; ?
 
@@ -555,14 +574,15 @@ final_credits:
 	.byte 20," ",0
 	.byte $FF
 
-.if 0
+
+	; high:low is FRAMEH:L to match on when ready to draw
+	; why doubled?  I guess because odd/even frames?
+
 sprite_triggers_l:
 	.byte $48,$49		; demosplash logo
-	.byte $08,$09		; vmw logo
-	.byte $50,$51		; falling book
-	.byte $90,$91		; falling guy
-	.byte $D0,$D1		; animal10
-	.byte $E0,$E1		; animal11
+	.byte $D0,$D1		; vmw logo
+	.byte $60,$61		; animal10
+	.byte $80,$81		; animal11
 	.byte $F0,$F1		; animal12
 	.byte $00,$01		; animal13
 	.byte $10,$11		; animal9
@@ -579,9 +599,7 @@ sprite_triggers_l:
 
 sprite_triggers_h:
 	.byte $00,$00		; demosplash logo
-	.byte $01,$01		; vmw logo
-	.byte $01,$01		; falling book
-	.byte $01,$01		; falling guy
+	.byte $00,$00		; vmw logo
 	.byte $01,$01		; animal10
 	.byte $01,$01		; animal11
 	.byte $01,$01		; animal12
@@ -601,8 +619,6 @@ sprite_triggers_h:
 sprite_triggers_x:
 	.byte	2,2		; demosplash logo
 	.byte	16,16		; vmw logo
-	.byte	2,2		; falling book
-	.byte	34,34		; falling guy
 	.byte	2,2		; animal10
 	.byte	34,34		; animal11
 	.byte	2,2		; animal12
@@ -621,8 +637,6 @@ sprite_triggers_x:
 sprite_triggers_y:
 	.byte	143,142		; demosplash logo
 	.byte	146,145		; vmw logo
-	.byte	117,116		; falling book
-	.byte	145,144		; falling guy
 	.byte	145,144		; animal10
 	.byte	145,144		; animal11
 	.byte	145,144		; animal12
@@ -642,8 +656,6 @@ sprite_triggers_y:
 sprite_triggers_sprite_l:
 	.byte	<demosplash_sprite,<demosplash_sprite
 	.byte	<vmw_sprite,<vmw_sprite
-	.byte	<book_sprite,<book_sprite
-	.byte	<falling_sprite,<falling_sprite
 	.byte	<animal10_sprite,<animal10_sprite
 	.byte	<animal11_sprite,<animal11_sprite
 	.byte	<animal12_sprite,<animal12_sprite
@@ -663,8 +675,6 @@ sprite_triggers_sprite_l:
 sprite_triggers_sprite_h:
 	.byte	>demosplash_sprite,>demosplash_sprite
 	.byte	>vmw_sprite,>vmw_sprite
-	.byte	>book_sprite,>book_sprite
-	.byte	>falling_sprite,>falling_sprite
 	.byte	>animal10_sprite,>animal10_sprite
 	.byte	>animal11_sprite,>animal11_sprite
 	.byte	>animal12_sprite,>animal12_sprite
@@ -679,5 +689,3 @@ sprite_triggers_sprite_h:
 	.byte	>animal7_sprite,>animal7_sprite
 	.byte	>animal8_sprite,>animal8_sprite
 	.byte	>animal0_sprite,>animal0_sprite
-
-.endif
