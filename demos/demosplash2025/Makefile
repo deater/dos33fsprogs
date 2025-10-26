@@ -110,7 +110,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
-#	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
@@ -130,6 +130,12 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s check_timeout qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s DrawCondensedString qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s save_zp qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s restore_zp qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s clear_dhgr_screens qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s dhgr_repack_top qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s dhgr_repack_bottom qload.lst >> qload.inc
 
 
 ####

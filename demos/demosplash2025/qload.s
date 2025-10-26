@@ -195,7 +195,7 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	.include	"wait.s"
 
-	.include	"lc_detect.s"
+;	.include	"lc_detect.s"
 
 	.include	"wait_a_bit.s"
 	.include	"gr_fast_clear.s"
@@ -206,15 +206,11 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"pt3_lib_mockingboard_detect.s"
 
         .include        "hgr_table.s"
-;	.include	"hgr_sprite.s"
 
 	.include	"random8.s"
 	.include	"vblank.s"
 	.include	"irq_wait.s"
 	.include	"hgr_page_flip.s"
-;	.include	"part01_dni/print_dni_numbers.s"
-;	.include	"part01_dni/number_sprites.inc"
-;	.include	"part01_dni/inc_base5.s"
 	.include	"wait_keypress.s"
 ;	.include	"zx02_optim.s"
 	.include	"gs_interrupt.s"
@@ -222,10 +218,17 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"hardware_detect.s"
 	.include	"gr_page_flip.s"
 
-
 	.include	"hgr_clear_screen.s"
+	.include	"hgr_sprite.s"
+
+	.include	"save_zp.s"
+	.include	"dhgr_clear.s"
+	.include	"dhgr_repack.s"
 
 	.include	"start.s"
+
+	.include "font/font_drop.s"
+	.include "font/font_vmw_1x8.s"
 
 qload_end:
 

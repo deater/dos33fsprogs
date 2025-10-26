@@ -204,13 +204,46 @@ intro:
 
 	jsr	wait_until_keypress
 
+	;=====================================
+	; open door
+	;=====================================
+
+	lda	#<door_sprite
+	sta	INL
+	lda	#>door_sprite
+	sta	INH
+
+	lda	#14			; 98/7= 14
+	sta	CURSOR_X
+	lda	#122
+	sta	CURSOR_Y
+
+	jsr	hgr_draw_sprite
+
+	jsr	wait_until_keypress
+
+	;==========================================
+	; print some text
+	;==========================================
+
+
+	lda	#<question
+	ldy	#>question
+
+	jsr	DrawCondensedString
+
+	jsr	wait_until_keypress
+
 	rts
 
-	.include "../dhgr_clear.s"
-	.include "../dhgr_repack.s"
+question:
+	.byte	13,105,"What is going on out here?",0
+
+;	.include "../dhgr_clear.s"
+;	.include "../dhgr_repack.s"
 
 	.include "fx.dhgr.redlines.s"
-	.include "save_zp.s"
+;	.include "save_zp.s"
 
 ;logo1_top:
 ;	.incbin "graphics/logo_grafA.raw_top.zx02"
@@ -235,3 +268,5 @@ logo2_bottom:
 
 house_hgr:
 	.incbin "graphics/pa_house_bottom.hgr.zx02"
+
+	.include "graphics/house_sprites.inc"

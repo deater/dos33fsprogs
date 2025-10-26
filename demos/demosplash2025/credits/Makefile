@@ -16,8 +16,7 @@ CREDITS:	credits.o
 credits.o:	credits.s vertical_scroll.s \
 	font_4am_1x8_oneline.s\
 	./fonts/font_4am_1x8_data.s \
-	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	hgr_sprite.s
+	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc
 	ca65 -o credits.o credits.s -l credits.lst
 
 ###

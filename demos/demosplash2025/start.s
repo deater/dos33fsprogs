@@ -415,19 +415,19 @@ start_message:	  ;01234567890123456789012345678901234567890
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
-	.byte 0,10,"MUSIC BY mAZE",0
-	.byte 0,12,"GRAPHICS BY GRIMNIR",0
-	.byte 0,13,"DISK BY QKUMBA",0
-	.byte 0,14,"WIPES BY 4AM/QKUMBA",0
-	.byte 0,16,".",0
-	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
-	.byte 0,18,"EVERYTHING ELSE BY DEATER",0
-	.byte 10,20,".",0
-	.byte 10,21,".",0
+;	.byte 0,10,"MUSIC BY mAZE",0
+;	.byte 0,12,"GRAPHICS BY GRIMNIR",0
+;	.byte 0,13,"DISK BY QKUMBA",0
+;	.byte 0,14,"WIPES BY 4AM/QKUMBA",0
+;	.byte 0,16,".",0
+;	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
+;	.byte 0,18,"EVERYTHING ELSE BY DEATER",0
+;	.byte 10,20,".",0
+;	.byte 10,21,".",0
 	.byte $FF
 
 ;load_message:
 ;	.byte 16,22,	"LOADING",0
 
 
-.include "font/font_drop.s"
+;.include "font/font_drop.s"

@@ -389,7 +389,7 @@ done_draw_objects:
 	.include	"fonts/font_4am_1x8_data.s"
 
 
-	.include	"hgr_sprite.s"
+;	.include	"hgr_sprite.s"
 
 .if 0
 
