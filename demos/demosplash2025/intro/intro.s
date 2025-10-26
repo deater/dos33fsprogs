@@ -25,12 +25,14 @@ intro:
 	bit	KEYRESET	; just to be safe
 
 	;=======================================
-	; Comes in with letters fallen in Page1
+	; Comes in with letters fallen in PAGE1
 	;=======================================
 
 
 	;=======================================
-	; Load title to Page1
+	;=======================================
+	; Load TITLE SCREEN to PAGE1
+	;=======================================
 	;=======================================
 
 	bit	PAGE1
@@ -66,52 +68,45 @@ intro:
         bit	PAGE1		; display page1
 
 
-	;=============================
-	; load top part to MAIN $A000
+	;======================================
+	; load LOGO1 MAIN part to MAIN $2000
 
-	lda	#$80			; load to $a000
+	lda	#$00			; load to $2000
 	sta	DRAW_PAGE
 
-	lda	#<logo1_top
+	lda	#<logo1_main
 	sta	zx_src_l+1
-	lda	#>logo1_top
+	lda	#>logo1_main
 	sta	zx_src_h+1
 
 	jsr	zx02_full_decomp_main
 
-	lda	#$00			; repack to $2000
-	sta	DRAW_PAGE
-	lda	#$A0			; repack from $a000
-
-	jsr	dhgr_repack_top
-
-
-	;=============================
-	; load bottom part to MAIN $A000
+	;===========================================================
+	; load LOGO1 AUX part to  MAIN $A000 then copy to AUX $2000
 
 	lda	#$80			; load to $a000
 	sta	DRAW_PAGE
 
-	lda	#<logo1_bottom
+	lda	#<logo1_aux
 	sta	zx_src_l+1
-	lda	#>logo1_bottom
+	lda	#>logo1_aux
 	sta	zx_src_h+1
 
 	jsr	zx02_full_decomp_main
 
+	lda	#$20			; A = AUX page start (dest)
+	ldy	#$A0			; Y = MAIN page start (src)
+	ldx	#$20			; X = num pages
 
-	lda	#$00			; repack to $2000
-	sta	DRAW_PAGE
-	lda	#$A0
-	jsr	dhgr_repack_bottom
+	jsr	copy_main_aux
 
 	;=======================
+	;=======================
 	; wait a bit
+	;=======================
+	;=======================
 
-bbtf2:
-	lda	KEYPRESS
-	bpl	bbtf2
-	bit	KEYRESET
+	jsr	wait_until_keypress
 
 
 ;	lda	#1
@@ -181,15 +176,33 @@ bbtf2:
 
 ;	jsr	clear_dhgr_screens
 
+	jsr	wait_until_keypress
 
+	;=======================================
+	;=======================================
+	; Load HOUSE to PAGE1
+	;=======================================
+	;=======================================
 
-bbtf:
-	lda	KEYPRESS
-	bpl	bbtf
-	bit	KEYRESET
+	; disable DHGR mode
+	sta	SETAN3
+	sta	CLR80COL
+	sta	EIGHTYCOLOFF
+	bit	PAGE1
 
+	lda	#$00			; load to $2000
+	sta	DRAW_PAGE
+
+	lda	#<house_hgr
+	sta	zx_src_l+1
+	lda	#>house_hgr
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
 
 	bit	PAGE1
+
+	jsr	wait_until_keypress
 
 	rts
 
@@ -199,10 +212,18 @@ bbtf:
 	.include "fx.dhgr.redlines.s"
 	.include "save_zp.s"
 
-logo1_top:
-	.incbin "graphics/logo_grafA.raw_top.zx02"
-logo1_bottom:
-	.incbin "graphics/logo_grafA.raw_bottom.zx02"
+;logo1_top:
+;	.incbin "graphics/logo_grafA.raw_top.zx02"
+;logo1_bottom:
+;	.incbin "graphics/logo_grafA.raw_bottom.zx02"
+
+; logo1_main is in EXTRA
+;	this isn't as compact but we save some room still
+;	because half of it is up in $a000
+
+logo1_aux:
+	.incbin "graphics/logo_grafA.aux.zx02"
+
 
 logo2_top:
 	.incbin "graphics/logo_dSr_D2.raw_top.zx02"
@@ -211,3 +232,6 @@ logo2_bottom:
 
 ;title_hgr:
 ;	.incbin "graphics/ms_title.hgr.zx02"
+
+house_hgr:
+	.incbin "graphics/pa_house_bottom.hgr.zx02"
