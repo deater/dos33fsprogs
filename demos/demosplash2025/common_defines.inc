@@ -1,8 +1,11 @@
+repack_src	= $a000
+
 hposn_low       = $fd00
 hposn_high      = $fe00
 
 
-PART_MUSIC	=	1
+PART_MUSIC	=	0
+PART_EXTRA	=	1
 PART_INTRO	=	2
 PART_MONSTERS	=	3
 PART_WOZ	=	4

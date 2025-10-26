@@ -15,7 +15,8 @@ all:	logo_dSr_D2.bin.zx02 logo_dSr_D2.aux.zx02 \
 	logo_grafA.raw_top.zx02 logo_grafA.raw_bottom.zx02 \
 	logo_pump-kin.bin.zx02 logo_pump-kin.aux.zx02 \
 	logo_splatdsr.bin.zx02 logo_splatdsr.aux.zx02 \
-	ms_title.hgr.zx02
+	ms_title.hgr.zx02 \
+	pa_house_bottom.hgr.zx02
 
 ####
 
@@ -24,6 +25,15 @@ ms_title.hgr.zx02:	ms_title.hgr
 
 ms_title.hgr:  ms_title.png
 	$(PNG_TO_HGR) ms_title.png > ms_title.hgr
+
+####
+
+pa_house_bottom.hgr.zx02:	pa_house_bottom.hgr
+	$(ZX02) pa_house_bottom.hgr pa_house_bottom.hgr.zx02
+
+pa_house_bottom.hgr:  pa_house_bottom.png
+	$(PNG_TO_HGR) pa_house_bottom.png > pa_house_bottom.hgr
+
 
 ####
 
@@ -115,4 +125,4 @@ logo_splatdsr.BIN: logo_splatdsr.png
 ####
 
 clean:
-	rm -f *~ *.zx02 *.lst *.o *.AUX *.BIN *.raw_top *.raw_bottom
+	rm -f *~ *.zx02 *.lst *.o *.AUX *.BIN *.raw_top *.raw_bottom *.hgr

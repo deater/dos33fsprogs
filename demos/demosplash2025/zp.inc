@@ -76,6 +76,8 @@ CURRENT_ROW	= $CD	; dhgr_repack
 ; $D0-$DB can re-use in each file
 ;==============================================
 
+REPACK_TMP	= $D0	; $D0...$D7
+
 ; start/font fall
 
 TEXT_Y		= $D2

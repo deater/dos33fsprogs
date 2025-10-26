@@ -12,6 +12,7 @@ monster_splash.dsk:	QBOOT QLOAD \
 	MUSIC \
 	music.inc qload.inc \
 	./intro/INTRO \
+	./intro/EXTRA \
 	./monsters/MONSTERS \
 	./woz/WOZ \
 	./fourcolor/FOURCOLOR \
@@ -22,11 +23,12 @@ monster_splash.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) monster_splash.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) monster_splash.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) monster_splash.dsk 2 0 MUSIC		0 0
-	$(DOS33_RAW) monster_splash.dsk 5 0 ./intro/INTRO	0 0
-	$(DOS33_RAW) monster_splash.dsk 10 0 ./monsters/MONSTERS 0 0
-	$(DOS33_RAW) monster_splash.dsk 15 0 ./woz/WOZ 0 0
-	$(DOS33_RAW) monster_splash.dsk 20 0 ./fourcolor/FOURCOLOR 0 0
-	$(DOS33_RAW) monster_splash.dsk 25 0 ./credits/CREDITS 0 0
+	$(DOS33_RAW) monster_splash.dsk 6 0 ./intro/EXTRA	0 0
+	$(DOS33_RAW) monster_splash.dsk 10 0 ./intro/INTRO	0 0
+	$(DOS33_RAW) monster_splash.dsk 15 0 ./monsters/MONSTERS 0 0
+	$(DOS33_RAW) monster_splash.dsk 20 0 ./woz/WOZ 0 0
+	$(DOS33_RAW) monster_splash.dsk 25 0 ./fourcolor/FOURCOLOR 0 0
+	$(DOS33_RAW) monster_splash.dsk 30 0 ./credits/CREDITS 0 0
 
 
 
@@ -37,6 +39,9 @@ credits/CREDITS:
 
 fourcolor/FOURCOLOR:	
 	cd fourcolor && make
+
+intro/EXTRA:	
+	cd intro && make
 
 intro/INTRO:	
 	cd intro && make

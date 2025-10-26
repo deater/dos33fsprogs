@@ -15,6 +15,7 @@
 .include "../qload.inc"
 .include "../music.inc"
 .include "../common_defines.inc"
+.include "extra.inc"
 
 	;=============================
 	; draw intro
@@ -44,10 +45,7 @@ intro:
 
 	jsr	zx02_full_decomp_main
 
-
-
 	jsr	wait_until_keypress
-
 
 	;=================================
 	; clear screen
@@ -211,5 +209,5 @@ logo2_top:
 logo2_bottom:
 	.incbin "graphics/logo_dSr_D2.raw_bottom.zx02"
 
-title_hgr:
-	.incbin "graphics/ms_title.hgr.zx02"
+;title_hgr:
+;	.incbin "graphics/ms_title.hgr.zx02"

@@ -8,6 +8,10 @@
 	;=====================================
 	; starts loading from page in A
 
+; repack_src = $a000
+; REPACK_TEMP = $D0	; $D0..$D7
+; also uses OUTL
+
 dhgr_repack_top:
 
 	ldx	#0
@@ -57,8 +61,8 @@ next_col:
 load_loop:
 
 load_loop_smc:
-	lda	$A000,X
-	sta	$F0,X
+	lda	repack_src,X
+	sta	REPACK_TMP,X
 	dex
 	bpl	load_loop
 
@@ -74,66 +78,66 @@ noflo:
 
 	; $F0 already has AUX0
 
-	lda	$F0
+	lda	REPACK_TMP		; $F0
 	rol
-	rol	$F1
-	rol	$F2
-	rol	$F3
-	rol	$F4
-	rol	$F5
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+1		; $F1
+	rol	REPACK_TMP+2		; $F2
+	rol	REPACK_TMP+3		; $F3
+	rol	REPACK_TMP+4		; $F4
+	rol	REPACK_TMP+5		; $F5
+	rol	REPACK_TMP+6		; $F6
+	rol	REPACK_TMP+7		; $F7
 
 	; F1 now has MAIN0
 
-	lda	$F1
+	lda	REPACK_TMP+1
 	rol
-	rol	$F2
-	rol	$F3
-	rol	$F4
-	rol	$F5
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+2
+	rol	REPACK_TMP+3
+	rol	REPACK_TMP+4
+	rol	REPACK_TMP+5
+	rol	REPACK_TMP+6
+	rol	REPACK_TMP+7
 
 	; F2 now has AUX1
 
-	lda	$F2
+	lda	REPACK_TMP+2
 	rol
-	rol	$F3
-	rol	$F4
-	rol	$F5
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+3
+	rol	REPACK_TMP+4
+	rol	REPACK_TMP+5
+	rol	REPACK_TMP+6
+	rol	REPACK_TMP+7
 
 	; F3 now has MAIN1
 
-	lda	$F3
+	lda	REPACK_TMP+3
 	rol
-	rol	$F4
-	rol	$F5
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+4
+	rol	REPACK_TMP+5
+	rol	REPACK_TMP+6
+	rol	REPACK_TMP+7
 
 	; F4 now has AUX2
 
-	lda	$F4
+	lda	REPACK_TMP+4
 	rol
-	rol	$F5
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+5
+	rol	REPACK_TMP+6
+	rol	REPACK_TMP+7
 
 	; F5 now has MAIN2
 
-	lda	$F5
+	lda	REPACK_TMP+5
 	rol
-	rol	$F6
-	rol	$F7
+	rol	REPACK_TMP+6
+	rol	REPACK_TMP+7
 
 	; F6 now has AUX3
 
-	lda	$F6
+	lda	REPACK_TMP+6
 	rol
-	rol	$F7
+	rol	REPACK_TMP+7
 
 	; F7 now has MAIN3
 
@@ -144,16 +148,16 @@ noflo:
 
 	ldy	#0
 
-	lda	$F0
+	lda	REPACK_TMP
 	sta	(OUTL),Y
 	iny
-	lda	$F2
+	lda	REPACK_TMP+2
 	sta	(OUTL),Y
 	iny
-	lda	$F4
+	lda	REPACK_TMP+4
 	sta	(OUTL),Y
 	iny
-	lda	$F6
+	lda	REPACK_TMP+6
 	sta	(OUTL),Y
 
 	;========================
@@ -162,19 +166,19 @@ noflo:
 
 	ldy	#0
 
-	lda	$F1
+	lda	REPACK_TMP+1
 	sta	(OUTL),Y
 	iny
 
-	lda	$F3
+	lda	REPACK_TMP+3
 	sta	(OUTL),Y
 	iny
 
-	lda	$F5
+	lda	REPACK_TMP+5
 	sta	(OUTL),Y
 	iny
 
-	lda	$F7
+	lda	REPACK_TMP+7
 	sta	(OUTL),Y
 
 	clc

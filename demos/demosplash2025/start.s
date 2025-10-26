@@ -184,6 +184,13 @@ skip_all_checks:
 	; load intro
 
 	sei				; disable interrupts
+
+	; load extra
+
+	lda	#PART_EXTRA
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+
 	lda	#PART_INTRO
 	sta	WHICH_LOAD
 	jsr	load_from_disk
@@ -330,7 +337,7 @@ skip_all_checks:
 	; Run fourcolor
 	;=======================
 	;=======================
-
+.if 0
 	; load from disk
 
 	sei
@@ -344,7 +351,7 @@ skip_all_checks:
 
 	jsr	$6000
 
-
+.endif
 	;=======================
 	;=======================
 	; Run Credits

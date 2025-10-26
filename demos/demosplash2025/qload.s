@@ -163,31 +163,31 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; ???, MUSIC, INTRO, MONSTERS
+	.byte 1,1,1,1		; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte 1,1,1		; WOZ, FOURCOLOR, CREDITS
 
 load_address_array:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, INTRO, MONSTERS
+	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte $60,$60,$60	; WOZ, FOURCOLOR, CREDITS
 
 start_address:
-	.byte $D0,$D0,$60,$60	; ???, MUSIC, INTRO, MONSTERS
+	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte $60,$60,$60	; WOZ, FOURCOLOR, CREDITS
 
 aux_dest:
-	.byte $D0,$D0,$00,$60	; ???, MUSIC, INTRO, MONSTERS
-	.byte $60,$60,$00	; WOZ, FOURCOLOR, CREDITS
+	.byte $00,$00,$00,$00	; MUSIC, EXTRA,INTRO, MONSTERS
+	.byte $00,$00,$00	; WOZ, FOURCOLOR, CREDITS
 
 track_array:
-	.byte  2, 2, 5,10	; ???, MUSIC, INTRO, MONSTERS
-	.byte 15,20,25		; WOZ, FOURCOLOR, CREDITS
+	.byte  2, 6, 10, 15	; MUSIC, EXTRA, INTRO, MONSTERS
+	.byte 20,25,30		; WOZ, FOURCOLOR, CREDITS
 
 sector_array:
-	.byte 0,0,0,0		; ???, MUSIC, INTRO, MONSTERS
+	.byte 0,0,0,0		; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte 0,0,0		; WOZ, FOURCOLOR, CREDITS
 
 length_array:
-	.byte 48,42,64,64	; ???, MUSIC, INTRO, MONSTERS
+	.byte 48,31,64,64	; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte 32,32,32		; WOZ, FOURCOLOR, CREDITS
 
 
