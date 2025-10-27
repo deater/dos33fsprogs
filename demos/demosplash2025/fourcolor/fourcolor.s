@@ -17,10 +17,10 @@
 ; 0x1f59f8 = 2.0s -- rearrange skip
 
 	;=============================
-	; do the bear sequence
+	; do the monster sequence
 	;=============================
 
-bear:
+monster:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
@@ -28,9 +28,9 @@ bear:
 	;=================================
 
 
-	lda	#<bear_packed_zx02
+	lda	#<monster_packed_zx02
         sta	zx_src_l+1
-        lda	#>bear_packed_zx02
+        lda	#>monster_packed_zx02
         sta	zx_src_h+1
         lda	#$A0
         jsr	zx02_full_decomp
@@ -197,8 +197,17 @@ bear:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-	lda	#100
-	jsr	wait_ticks
+	;========================
+	; wait
+	;========================
+
+	jsr	wait_until_keypress
+
+	;========================
+	; run plasma
+	;========================
+
+	jsr	plasma_debut
 
 	rts
 
@@ -412,6 +421,7 @@ xloop_done:
 	jmp	yloop
 yloop_done:
 
+
 	rts
 
 color_lookup_grey:
@@ -427,5 +437,8 @@ color_lookup_yellow:
 
 	.include "copy_to_aux.s"
 
-bear_packed_zx02:
+monster_packed_zx02:
 	.incbin "graphics/grimnir11_grey.packed.zx02"
+
+
+	.include "plasma/dhgr_plasma.s"

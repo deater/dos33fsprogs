@@ -351,21 +351,22 @@ skip_all_checks:
 	; Run fourcolor
 	;=======================
 	;=======================
-.if 0
+
 	; load from disk
 
-	sei
+	sei			; stop music
+
 	lda	#PART_FOURCOLOR	; Multi-color monster
 	sta	WHICH_LOAD
 	jsr	load_file
 
 	; Run Four Color
 
-	cli			; start music
+	cli			; re-start music
 
 	jsr	$6000
 
-.endif
+
 	;=======================
 	;=======================
 	; Run Credits
@@ -402,19 +403,20 @@ skip_all_checks:
 
         jsr     zx02_full_decomp_main
 
-;	sei
+;	sei			; pause music
 ;	lda	#PART_CREDITS
 ;	sta	WHICH_LOAD
 ;	jsr	load_file
 
+;	cli			; re-start music
+
 	; Run credits
 
-;	cli			; start music
 
 	jsr	$6000
 
-blah:
-	jmp	blah
+forever:
+	jmp	forever
 
 
 
@@ -472,5 +474,3 @@ message_type_offset:
 ;load_message:
 ;	.byte 16,22,	"LOADING",0
 
-
-;.include "font/font_drop.s"

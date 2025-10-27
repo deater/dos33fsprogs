@@ -109,6 +109,13 @@ COLORSB		= $D9
 COLORSA		= $DA
 ODD		= $DB
 
+; Plasma
+COMPT1		= $D0
+COMPT2		= $D1
+PARAM1		= $D2
+PARAM2		= $D3
+PARAM3		= $D4
+PARAM4		= $D5
 
 ; Credits
 CURSOR_X	= $CE
