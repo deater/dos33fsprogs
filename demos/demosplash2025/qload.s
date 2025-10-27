@@ -168,7 +168,7 @@ which_disk_array:
 
 load_address_array:
 	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte $60,$60,$60	; WOZ, FOURCOLOR, CREDITS
+	.byte $60,$60,$D0	; WOZ, FOURCOLOR, CREDITS
 
 start_address:
 	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
@@ -188,7 +188,7 @@ sector_array:
 
 length_array:
 	.byte 48,31,64,64	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte 32,32,32		; WOZ, FOURCOLOR, CREDITS
+	.byte 32,32,16		; WOZ, FOURCOLOR, CREDITS
 
 
 PT3_ENABLE_APPLE_IIC = 1

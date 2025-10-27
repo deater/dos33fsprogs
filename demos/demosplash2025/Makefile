@@ -16,7 +16,7 @@ monster_splash.dsk:	QBOOT QLOAD \
 	./monsters/MONSTERS \
 	./woz/WOZ \
 	./fourcolor/FOURCOLOR \
-	./credits/CREDITS
+	./credits/CREDITS.zx02
 	cp $(EMPTY_DISK) monster_splash.dsk
 	$(DOS33_RAW) monster_splash.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) monster_splash.dsk 0 2 QBOOT		1 1
@@ -28,13 +28,13 @@ monster_splash.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) monster_splash.dsk 15 0 ./monsters/MONSTERS 0 0
 	$(DOS33_RAW) monster_splash.dsk 20 0 ./woz/WOZ 0 0
 	$(DOS33_RAW) monster_splash.dsk 25 0 ./fourcolor/FOURCOLOR 0 0
-	$(DOS33_RAW) monster_splash.dsk 30 0 ./credits/CREDITS 0 0
+	$(DOS33_RAW) monster_splash.dsk 30 0 ./credits/CREDITS.zx02 0 0
 
 
 
 ####
 
-credits/CREDITS:	
+credits/CREDITS.zx02:	
 	cd credits && make
 
 fourcolor/FOURCOLOR:	

@@ -71,8 +71,22 @@ good_to_go:
 	;=========================================
 
 	;==================================
+	; load CREDITS into the language card
+	;       into $D000 bank 2
+	;==================================
+
+	; read/write RAM, use $d000 bank2
+	lda	LCBANK2			; need to read twice
+	lda	LCBANK2
+
+	lda	#PART_CREDITS		; load MUSIC from disk
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	;==================================
 	; load music into the language card
-	;       into $D000 set 1
+	;       into $D000 bank 1
 	;==================================
 
 	; read/write RAM, use $d000 bank1
@@ -90,7 +104,7 @@ good_to_go:
 	lda	#1
 	sta	LOOP
 
-	; patch mockingboard
+	; patch mockingboardv
 
 	lda	SOUND_STATUS
 	beq	skip_mbp1
@@ -358,16 +372,48 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-	; load from disk
+	; copy from MAIN Language Card BANK2
 
-	sei
-	lda	#PART_CREDITS
-	sta	WHICH_LOAD
-	jsr	load_file
+	; we can't zx02 it directly because that lives in BANK1 of the LC
+
+	lda	LCBANK2
+	lda	LCBANK2
+
+	; copy CREDITS.zx02 from MAIN $D000 to MAIN $A000
+
+	lda	#$D0		; MAIN src $D000
+	ldy	#$A0		; MAIN dest $A000
+	ldx	#16		; 4k*4 = 16 pages
+	jsr	copy_main_main
+
+
+	lda	LCBANK1			; restore BANK1
+	lda	LCBANK1
+
+	; decompress
+
+	lda	#$40			; load to $6000
+	sta	DRAW_PAGE
+
+	lda	#<$A000
+	sta	zx_src_l+1
+	lda	#>$A000
+	sta	zx_src_h+1
+
+        jsr     zx02_full_decomp_main
+
+
+
+
+
+;	sei
+;	lda	#PART_CREDITS
+;	sta	WHICH_LOAD
+;	jsr	load_file
 
 	; Run credits
 
-	cli			; start music
+;	cli			; start music
 
 	jsr	$6000
 
@@ -406,6 +452,7 @@ skip_aux_copy:
 
 	rts
 
+.include "main_memcopy.s"
 
 
 start_message:	  ;01234567890123456789012345678901234567890
