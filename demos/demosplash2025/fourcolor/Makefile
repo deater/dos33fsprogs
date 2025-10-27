@@ -17,18 +17,19 @@ FOURCOLOR:	fourcolor.o
 
 fourcolor.o:	fourcolor.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	grimnir11_grey.packed.zx02
+	./graphics/grimnir11_grey.packed.zx02
 	ca65 -o fourcolor.o fourcolor.s -l fourcolor.lst
 
 ####
 
-grimnir11_grey.packed.zx02:     grimnir11_grey.packed
-	$(ZX02) grimnir11_grey.packed grimnir11_grey.packed.zx02
-
-grimnir11_grey.packed:  grimnir11_grey.png
-	$(PNG_TO_DHGR4) grimnir11_grey.png grimnir11_grey
+./graphics/grimnir11_grey.packed.zx02:	
+	cd graphics && make
 
 ####
 
 clean:
-	rm -f *~ FOURCOLOR *.zx02 *.lst *.o *.packed
+	rm -f *~ FOURCOLOR *.zx02 *.lst *.o
+
+distclean:
+	rm -f *~ FOURCOLOR *.zx02 *.lst *.o
+	cd graphics && make clean

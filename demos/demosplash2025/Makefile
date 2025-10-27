@@ -211,3 +211,13 @@ clean:
 	cd monsters && make clean
 	cd woz && make clean
 
+distclean:
+	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
+	rm -f qload.inc qload2.inc music.inc music2.inc
+	rm -f generate_common
+	cd credits && make distclean
+	cd fourcolor && make distclean
+	cd intro && make distclean
+	cd monsters && make distclean
+	cd woz && make distclean
+

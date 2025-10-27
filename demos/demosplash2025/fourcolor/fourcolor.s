@@ -428,4 +428,4 @@ color_lookup_yellow:
 	.include "copy_to_aux.s"
 
 bear_packed_zx02:
-	.incbin "grimnir11_grey.packed.zx02"
+	.incbin "graphics/grimnir11_grey.packed.zx02"
