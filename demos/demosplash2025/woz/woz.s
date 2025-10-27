@@ -5,7 +5,7 @@
 .include "../common_defines.inc"
 
 	;=============================
-	; draw monsters
+	; Do Woz Nine Animation
 	;=============================
 
 monsters:
@@ -34,29 +34,48 @@ monsters:
 	sta	DRAW_PAGE	; draw to page2
 
 
-	;=======================
-	; load graphic to page1
+	;=============================
+	; load top part to MAIN $A000
 
-	lda	#$0
+	lda	#$80
 	sta	DRAW_PAGE
 
-	lda	#<monster1_bin
+	lda	#<woz_top
 	sta	zx_src_l+1
-	lda	#>monster1_bin
+	lda	#>woz_top
 	sta	zx_src_h+1
+
 	jsr	zx02_full_decomp_main
 
-	lda	#<monster1_aux
-	sta	zx_src_l+1
-	lda	#>monster1_aux
-	sta	zx_src_h+1
-	jsr	zx02_full_decomp_aux
+	lda	#$20			; draw to page 2
+	sta	DRAW_PAGE
 
+	lda	#$a0
+	jsr	dhgr_repack_top
+
+	;=============================
+	; load bottom part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<woz_bottom
+	sta	zx_src_l+1
+	lda	#>woz_bottom
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+	lda	#$20			; draw to page 2
+	sta	DRAW_PAGE
+
+	lda	#$a0
+	jsr	dhgr_repack_bottom
+
+	;=======================
 	; wait a bit
 
-	lda	#5
-	jsr	wait_seconds
-
+	jsr	wait_until_keypress
 
 
 	rts
@@ -64,8 +83,8 @@ monsters:
 
 
 
-monster1_bin:
-	.incbin "graphics/monster_pumpkin.bin.zx02"
+woz_top:
+	.incbin "graphics/nine_woz.raw_top.zx02"
 
-monster1_aux:
-	.incbin "graphics/monster_pumpkin.aux.zx02"
+woz_bottom:
+	.incbin "graphics/nine_woz.raw_bottom.zx02"

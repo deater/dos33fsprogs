@@ -17,15 +17,12 @@ WOZ:	woz.o
 
 woz.o:	woz.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	graphics/monster_pumpkin.bin.zx02 graphics/monster_pumpkin.aux.zx02
+	graphics/nine_woz.raw_top.zx02 graphics/nine_woz.raw_bottom.zx02
 	ca65 -o woz.o woz.s -l woz.lst
 
 ####
 
-graphics/monster_pumpkin.aux.zx02:	
-	cd graphics && make
-
-graphics/monster_pumpkin.bin.zx02:	
+graphics/nine_woz.raw_top.zx02:	
 	cd graphics && make
 
 
