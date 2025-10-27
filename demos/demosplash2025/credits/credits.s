@@ -41,6 +41,8 @@ credits_start:
 
 
 	lda	#0
+	sta	DRAW_PAGE
+
 	jsr	hgr_page1_clearscreen	; unrolled
 	jsr	hgr_page2_clearscreen	; unrolled
 

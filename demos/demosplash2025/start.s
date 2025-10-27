@@ -402,10 +402,6 @@ skip_all_checks:
 
         jsr     zx02_full_decomp_main
 
-
-
-
-
 ;	sei
 ;	lda	#PART_CREDITS
 ;	sta	WHICH_LOAD
