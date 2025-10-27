@@ -459,7 +459,7 @@ star_x:
 
 final_credits:
 	.byte 20," ",0
-	.byte  8,"--== Monster Smash ==--",0			; 23 (8.5)		; 7 (16.5)
+	.byte  8,"--== Monster Splash ==--",0			; 24 (8)
 	.byte 20," ",0
 	.byte 15,"by Desire",0					; 9 (15.5)
 	.byte 20," ",0
@@ -579,113 +579,109 @@ final_credits:
 	; why doubled?  I guess because odd/even frames?
 
 sprite_triggers_l:
-	.byte $48,$49		; demosplash logo
-	.byte $D0,$D1		; vmw logo
-	.byte $60,$61		; animal10
-	.byte $80,$81		; animal11
-	.byte $F0,$F1		; animal12
-	.byte $00,$01		; animal13
-	.byte $10,$11		; animal9
-	.byte $20,$21		; animal1
-	.byte $30,$31		; animal2
-	.byte $40,$41		; animal3
-	.byte $50,$51		; animal4
-	.byte $60,$61		; animal5
-	.byte $70,$71		; animal6
-	.byte $80,$81		; animal7
-	.byte $90,$91		; animal8
-	.byte $A0,$A1		; animal0
+	.byte	$48,$49		; demosplash logo
+	.byte	$D0,$D1		; vmw logo
+	.byte	$70,$71		; m
+	.byte	$80,$81		; s
+	.byte	$90,$91		; o
+	.byte	$A0,$A1		; p
+	.byte	$B0,$B1		; n
+	.byte	$C0,$C1		; l
+	.byte	$D0,$D1		; s
+	.byte	$E0,$E1		; a
+	.byte	$F0,$F1		; t
+	.byte	$00,$01		; s
+	.byte	$10,$11		; e
+	.byte	$20,$21		; h
+	.byte	$30,$31		; r
 
 
 sprite_triggers_h:
 	.byte $00,$00		; demosplash logo
 	.byte $00,$00		; vmw logo
-	.byte $01,$01		; animal10
-	.byte $01,$01		; animal11
-	.byte $01,$01		; animal12
-	.byte $02,$02		; animal13
-	.byte $02,$02		; animal9
-	.byte $02,$02		; animal1
-	.byte $02,$02		; animal2
-	.byte $02,$02		; animal3
-	.byte $02,$02		; animal4
-	.byte $02,$02		; animal5
-	.byte $02,$02		; animal6
-	.byte $02,$02		; animal7
-	.byte $02,$02		; animal8
-	.byte $02,$02		; animal0
+	.byte $01,$01		; m
+	.byte $01,$01		; s
+	.byte $01,$01		; o
+	.byte $01,$01		; p
+	.byte $01,$01		; n
+	.byte $01,$01		; l
+	.byte $01,$01		; s
+	.byte $01,$01		; a
+	.byte $01,$01		; t
+	.byte $02,$02		; s
+	.byte $02,$02		; e
+	.byte $02,$02		; h
+	.byte $02,$02		; r
 	.byte $ff
 
 sprite_triggers_x:
 	.byte	2,2		; demosplash logo
 	.byte	16,16		; vmw logo
-	.byte	2,2		; animal10
-	.byte	34,34		; animal11
-	.byte	2,2		; animal12
-	.byte	34,34		; animal13
-	.byte	2,2		; animal9
-	.byte	34,34		; animal1
-	.byte	2,2		; animal2
-	.byte	34,34		; animal3
-	.byte	2,2		; animal4
-	.byte	34,34		; animal5
-	.byte	2,2		; animal6
-	.byte	34,34		; animal7
-	.byte	2,2		; animal8
-	.byte	34,34		; animal0
+	.byte	2,2		; m
+	.byte	34,34		; s
+	.byte	2,2		; o
+	.byte	34,34		; p
+	.byte	2,2		; n
+	.byte	34,34		; l
+	.byte	2,2		; s
+	.byte	34,34		; a
+	.byte	2,2		; t
+	.byte	34,34		; s
+	.byte	2,2		; e
+	.byte	34,34		; h
+	.byte	2,2		; r
+
 
 sprite_triggers_y:
 	.byte	143,142		; demosplash logo
 	.byte	146,145		; vmw logo
-	.byte	145,144		; animal10
-	.byte	145,144		; animal11
-	.byte	145,144		; animal12
-	.byte	145,144		; animal13
-	.byte	145,144		; animal9
-	.byte	145,144		; animal1
-	.byte	145,144		; animal2
-	.byte	145,144		; animal3
-	.byte	145,144		; animal4
-	.byte	145,144		; animal5
-	.byte	145,144		; animal6
-	.byte	145,144		; animal7
-	.byte	145,144		; animal8
-	.byte	145,144		; animal0
+	.byte	145,144		; m
+	.byte	145,144		; s
+	.byte	145,144		; o
+	.byte	145,144		; p
+	.byte	145,144		; n
+	.byte	145,144		; l
+	.byte	145,144		; s
+	.byte	145,144		; a
+	.byte	145,144		; t
+	.byte	145,144		; s
+	.byte	145,144		; e
+	.byte	145,144		; h
+	.byte	145,144		; r
 
 
 sprite_triggers_sprite_l:
 	.byte	<demosplash_sprite,<demosplash_sprite
 	.byte	<vmw_sprite,<vmw_sprite
-	.byte	<animal10_sprite,<animal10_sprite
-	.byte	<animal11_sprite,<animal11_sprite
-	.byte	<animal12_sprite,<animal12_sprite
-	.byte	<animal13_sprite,<animal13_sprite
-	.byte	<animal9_sprite,<animal9_sprite
-	.byte	<animal1_sprite,<animal1_sprite
-	.byte	<animal2_sprite,<animal2_sprite
-	.byte	<animal3_sprite,<animal3_sprite
-	.byte	<animal4_sprite,<animal4_sprite
-	.byte	<animal5_sprite,<animal5_sprite
-	.byte	<animal6_sprite,<animal6_sprite
-	.byte	<animal7_sprite,<animal7_sprite
-	.byte	<animal8_sprite,<animal8_sprite
-	.byte	<animal0_sprite,<animal0_sprite
+	.byte	<m_sprite,<m_sprite
+	.byte	<s_sprite,<s_sprite
+	.byte	<o_sprite,<o_sprite
+	.byte	<p_sprite,<p_sprite
+	.byte	<n_sprite,<n_sprite
+	.byte	<l_sprite,<l_sprite
+	.byte	<s_sprite,<s_sprite
+	.byte	<a_sprite,<a_sprite
+	.byte	<t_sprite,<t_sprite
+	.byte	<s_sprite,<s_sprite
+	.byte	<e_sprite,<e_sprite
+	.byte	<h_sprite,<h_sprite
+	.byte	<r_sprite,<r_sprite
+
 
 
 sprite_triggers_sprite_h:
 	.byte	>demosplash_sprite,>demosplash_sprite
 	.byte	>vmw_sprite,>vmw_sprite
-	.byte	>animal10_sprite,>animal10_sprite
-	.byte	>animal11_sprite,>animal11_sprite
-	.byte	>animal12_sprite,>animal12_sprite
-	.byte	>animal13_sprite,>animal13_sprite
-	.byte	>animal9_sprite,>animal9_sprite
-	.byte	>animal1_sprite,>animal1_sprite
-	.byte	>animal2_sprite,>animal2_sprite
-	.byte	>animal3_sprite,>animal3_sprite
-	.byte	>animal4_sprite,>animal4_sprite
-	.byte	>animal5_sprite,>animal5_sprite
-	.byte	>animal6_sprite,>animal6_sprite
-	.byte	>animal7_sprite,>animal7_sprite
-	.byte	>animal8_sprite,>animal8_sprite
-	.byte	>animal0_sprite,>animal0_sprite
+	.byte	>m_sprite,>m_sprite
+	.byte	>s_sprite,>s_sprite
+	.byte	>o_sprite,>o_sprite
+	.byte	>p_sprite,>p_sprite
+	.byte	>n_sprite,>n_sprite
+	.byte	>l_sprite,>l_sprite
+	.byte	>s_sprite,>s_sprite
+	.byte	>a_sprite,>a_sprite
+	.byte	>t_sprite,>t_sprite
+	.byte	>s_sprite,>s_sprite
+	.byte	>e_sprite,>e_sprite
+	.byte	>h_sprite,>h_sprite
+	.byte	>r_sprite,>r_sprite
