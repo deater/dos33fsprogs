@@ -60,9 +60,23 @@ ds25_start:
 	cmp	#'c'
 	beq	good_to_go
 
+	bit	KEYRESET
 	jsr	wait_until_keypress
 
 good_to_go:
+
+	; print loading message (flashing)
+
+	ldx	#0
+print_load_message:
+	lda	load_message,X
+	beq	done_load_message
+	sta	$6A8+16,X
+	inx
+	jmp	print_load_message
+done_load_message:
+
+	jsr	wait_until_keypress
 
 	;=========================================
 	;=========================================
@@ -454,10 +468,10 @@ skip_aux_copy:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING MonsterSplash DEMO / dSr",0
-	.byte 0,1,"DEMOSPLASH 2025",0
-	.byte 0,2,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
-	.byte 0,3,"SYSTEM DETECTED: APPLE II"
+	.byte 4,0,"LOADING MonsterSplash DEMO / dSr",0
+	.byte 12,2,"DEMOSPLASH  2025",0
+	.byte 1,4,"REQUIRES APPLE IIE, 128K, MOCKINGBOARD",0
+	.byte 7,6,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
 ;	.byte 0,10,"MUSIC BY mAZE",0
@@ -471,6 +485,7 @@ message_type_offset:
 ;	.byte 10,21,".",0
 	.byte $FF
 
-;load_message:
-;	.byte 16,22,	"LOADING",0
+load_message:
+;	.byte 16,12,	$6A8
+	.byte "LOADING",0
 
