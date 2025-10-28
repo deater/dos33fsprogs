@@ -318,6 +318,34 @@ skip_all_checks:
 
 	jsr	$6000
 
+	;=======================
+	;=======================
+	; Run monsters2
+	;=======================
+	;=======================
+
+	; load monsters2
+
+	sei				; disable interrupts
+	lda	#PART_MONSTERS2
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+	cli				; re-enable music
+
+.if 0
+	; copy monsters from AUX $6000 to MAIN $6000
+
+	lda	#$60		; AUX src $6000
+	ldy	#$60		; MAIN dest $6000
+	ldx	#64		; 16k*4 = 32 pages
+	jsr	copy_aux_main
+.endif
+
+	; run monsters2
+
+	jsr	$6000
+
+
 
 	;=======================
 	;=======================
@@ -494,6 +522,15 @@ start_message:	  ;01234567890123456789012345678901234567890
 	.byte 7,6,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
+
+	.byte 3,20,">>Wer mit Ungeheuern kaempft, mag",0
+	.byte 3,21,"  zusehn dass er nicht dabei zum",0
+	.byte 3,22,"  Ungeheuer wird.<<  -- Nietzsche",0
+;	.byte 3,23,"Und wenn du lange in einen Abgrund blickst,
+;	.byte 3,24,"blickt der Abgrund auch in dich hinein."
+
+
+
 	.byte $FF
 
 load_message:

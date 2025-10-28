@@ -5,17 +5,20 @@ monster-c7: raw 16k
 	big_packed.zx02 = 6995 bytes
 	
 
+Order of being loaded:
 
+QLOAD:		3495	4k
+Credits:	3311	4k	T2
+Music:		10994	12k	T3,4,5
+Fourcolor:	4096	4k	T6
+Monster1:	12247	16k	T7,8,9,10
+Monster2:	12247	16k	T11,12,13,14
+Woz:		8k?	8k	T15,16,17,18
+Extra:		5121	8k	T19,20
+Intro:		15220	16k	T21,22,23,24
 
-
-Intro:		16k
-Monster1:	16k
-Monster2:	16k
-Woz:		8k?
-Fourcolor:	8k?
-Credits:	8k?
-		=====
-		72k?
+		=====	===
+			88k?
 
 free space:
 	main RAM, from $6000...$9FFF = 16k
