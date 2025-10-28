@@ -164,8 +164,8 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
 	./generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
-	./generate_common -a 0xd000 -s hgr_vertical_scroll_main music.lst >> music.inc
-	./generate_common -a 0xd000 -s hgr_vertical_scroll_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_up_main music.lst >> music.inc
+	./generate_common -a 0xd000 -s hgr_vertical_scroll_up_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s scroll_off music.lst >> music.inc

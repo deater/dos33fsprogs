@@ -11,7 +11,7 @@ memcpy_routines:
         .include "aux_memcopy.s"
 	.include "copy_400.s"
 	.include "zx02_optim.s"
-	.include "vertical_scroll_down.s"
+	.include "vertical_scroll_up.s"
 	.include "slow_copy.s"
 	.include "scroll_off.s"
 	.include "wait.s"

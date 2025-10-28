@@ -190,17 +190,95 @@ intro:
 	sta	EIGHTYCOLOFF
 	bit	PAGE1
 
-	lda	#$00			; load to $2000
+	;========================
+	; setup for scroll
+
+	; load top into $A000 first
+
+	lda	#$80			; load to $A000
 	sta	DRAW_PAGE
 
-	lda	#<house_hgr
+	lda	#<house_hgr_top
 	sta	zx_src_l+1
-	lda	#>house_hgr
+	lda	#>house_hgr_top
 	sta	zx_src_h+1
 
 	jsr	zx02_full_decomp_main
 
-	bit	PAGE1
+	;===============================
+	; copy top to page1
+
+        ; from $A000 to PAGE1
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	lda	#0			; from $A000+0
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#192			; 192 lines
+	jsr	slow_copy_main
+
+        ; from $A000 to PAGE2
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	lda	#1			; from $A000+1
+	ldx	#0			; to DRAW_PAGE+0
+	ldy	#191			; 191 lines
+	jsr	slow_copy_main
+
+	;===============================
+	; load bottom to $A000
+
+	lda	#$80			; load to $A000
+	sta	DRAW_PAGE
+
+	lda	#<house_hgr_bottom
+	sta	zx_src_l+1
+	lda	#>house_hgr_bottom
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+
+	;==================================================
+
+        ; from $A000+1 to DRAW_PAGE
+
+;        lda     #1                      ; from $A000+1
+ ;       ldx     #0                      ; to DRAW_PAGE+0
+  ;      ldy     #191                    ; 191 lines
+   ;     jsr     slow_copy_main
+
+	lda	#0
+	sta	DRAW_PAGE
+	sta	SCROLL_COUNT
+
+scroll_up_loop:
+
+	jsr	hgr_vertical_scroll_up_main		; scroll up by 2
+
+	; from $A000+start+offset - $2000/$4000+offset
+        ; X = start Y = len  A=offset
+
+        lda     SCROLL_COUNT            ; from $A000+SCROLL_COUNT (bottom)
+        ldx     #190                    ; to DRAW_PAGE+190
+        ldy     #2                      ; length
+        jsr     slow_copy_main
+
+	jsr     wait_vblank
+        jsr     hgr_page_flip
+
+        inc     SCROLL_COUNT
+        lda     SCROLL_COUNT
+        cmp     #104
+        bne     scroll_up_loop
+
+
+
+
+
 
 	jsr	wait_until_keypress
 
@@ -237,7 +315,7 @@ intro:
 	rts
 
 question:
-	.byte	13,105,"What is going on out here?",0
+	.byte	11,105," What is going on out here? ",0
 
 ;	.include "../dhgr_clear.s"
 ;	.include "../dhgr_repack.s"
@@ -266,7 +344,11 @@ logo2_bottom:
 ;title_hgr:
 ;	.incbin "graphics/ms_title.hgr.zx02"
 
-house_hgr:
-	.incbin "graphics/pa_house_bottom.hgr.zx02"
+house_hgr_top:
+	.incbin "graphics/pa_house_top2.hgr.zx02"
+
+house_hgr_bottom:
+	.incbin "graphics/pa_house_bottom2.hgr.zx02"
+
 
 	.include "graphics/house_sprites.inc"

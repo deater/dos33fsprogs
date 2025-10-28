@@ -54,14 +54,15 @@ $03 -- disk data	$03 -- ???
 $04-$07 -- lores p1	$04-$07 -- dlores p1
 $08-$0B -- lores p2	$08-$0B -- dlores p2
 $0c-$0F -- ???		$0c-$0F -- ???
-$10-$11 -- Boot code	$10-$11 -- ???
-$12-$1D -- QLOAD	$12-$1D -- ???
-$1E-$1F -- ????		$1E-$1F -- ???
+$10-$11 -- Boot code	$10-$11 -- FOUR
+$12-$1F -- QLOAD	$12-$1F -- FOUR
 $20-$3F -- hires p1	$20-$3F -- dhires p1
 $40-$5F -- hires p2	$40-$5F -- dhires p2
-$60-$BF -- ???		$60-$BF -- ??
+$60-$9F -- code		$60-$9F -- ??
+$A0-$BF -- temp area	$A0-$BF -- ??
 $C0-$CF -- I/O		$C0-$CF -- I/O
-$D0-$DF -- hard to use	$D0-$DF -- hard to access
-$D0-$FC -- MUSIC	$D0-$FF -- hard to access 
+$D0-$DF(1) -- MUSIC	$D0-$DF(1) -- hard to access
+$D0-$FC(2) -- CREDITS	$D0-$DF(2) -- hard to access 
+$E0-$FC -- MUSIC	$E0-$FF -- hard to access 
 $FD-$FE -- hires lookup
 $FF     -- irq vector

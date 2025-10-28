@@ -16,6 +16,8 @@ all:	logo_dSr_D2.bin.zx02 logo_dSr_D2.aux.zx02 \
 	logo_pump-kin.bin.zx02 logo_pump-kin.aux.zx02 \
 	logo_splatdsr.bin.zx02 logo_splatdsr.aux.zx02 \
 	ms_title.hgr.zx02 \
+	pa_house_top2.hgr.zx02 \
+	pa_house_bottom2.hgr.zx02 \
 	pa_house_bottom.hgr.zx02 \
 	house_sprites.inc
 
@@ -40,6 +42,22 @@ pa_house_bottom.hgr.zx02:	pa_house_bottom.hgr
 
 pa_house_bottom.hgr:  pa_house_bottom.png
 	$(PNG_TO_HGR) pa_house_bottom.png > pa_house_bottom.hgr
+
+####
+
+pa_house_bottom2.hgr.zx02:	pa_house_bottom2.hgr
+	$(ZX02) pa_house_bottom2.hgr pa_house_bottom2.hgr.zx02
+
+pa_house_bottom2.hgr:  pa_house_bottom2.png
+	$(PNG_TO_HGR) pa_house_bottom2.png > pa_house_bottom2.hgr
+
+####
+
+pa_house_top2.hgr.zx02:	pa_house_top2.hgr
+	$(ZX02) pa_house_top2.hgr pa_house_top2.hgr.zx02
+
+pa_house_top2.hgr:  pa_house_top2.png
+	$(PNG_TO_HGR) pa_house_top2.png > pa_house_top2.hgr
 
 
 ####
