@@ -275,12 +275,20 @@ monster:
 	sta	DRAW_PAGE
 	bit	PAGE1
 
-	lda	#<splash_message
-	ldy	#>splash_message
-
+	lda	#<splash_message1
+	ldy	#>splash_message1
 	jsr	DrawCondensedString
 
-;	jsr	hgr_page_flip
+	lda	#96
+	sta	splash_message1+1
+
+	lda	#<splash_message1
+	ldy	#>splash_message1
+	jsr	DrawCondensedString
+
+	lda	#<splash_message3
+	ldy	#>splash_message3
+	jsr	DrawCondensedString
 
 	bit	KEYRESET
 	jsr	wait_until_keypress
@@ -312,10 +320,15 @@ monster:
 
         rts
 
-splash_message:
-        .byte   3,92,"All monsters have been splashed...",0
+splash_message1:
+	.byte   2,88,"                                    ",0
+;splash_message2:
+;	.byte   2,96,"                                    ",0
+splash_message3:
+	.byte   2,92," All monsters have been splashed... ",0
 
-	rts
+
+
 
 
 	;==================================
@@ -548,6 +561,5 @@ color_lookup_black:
 
 monster_packed_zx02:
 	.incbin "graphics/grimnir11_grey.packed.zx02"
-
 
 	.include "plasma/dhgr_plasma.s"

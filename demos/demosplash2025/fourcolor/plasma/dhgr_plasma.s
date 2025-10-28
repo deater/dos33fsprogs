@@ -333,7 +333,7 @@ done_plasma:
 ;.include "wait.s"
 .include "init_plasma.s"
 ;.include "hgr_clear_screen.s"
-.include "scroll_off.s"
+;.include "scroll_off.s"
 ;.include "../irq_wait.s"
 
 

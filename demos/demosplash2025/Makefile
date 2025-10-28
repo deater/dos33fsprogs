@@ -168,6 +168,7 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s hgr_vertical_scroll_aux music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_main music.lst >> music.inc
 	./generate_common -a 0xd000 -s slow_copy_aux music.lst >> music.inc
+	./generate_common -a 0xd000 -s scroll_off music.lst >> music.inc
 
 
 ####

@@ -176,7 +176,7 @@ start_address:
 
 aux_dest:
 	.byte $00,$00,$00,$00	; MUSIC, EXTRA,INTRO, MONSTERS
-	.byte $00,$00,$00	; WOZ, FOURCOLOR, CREDITS
+	.byte $00,$10,$00	; WOZ, FOURCOLOR, CREDITS
 
 track_array:
 	.byte  2, 6, 10, 15	; MUSIC, EXTRA, INTRO, MONSTERS
@@ -188,7 +188,7 @@ sector_array:
 
 length_array:
 	.byte 48,31,64,64	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte 32,32,16		; WOZ, FOURCOLOR, CREDITS
+	.byte 32,16,16		; WOZ, FOURCOLOR, CREDITS
 
 
 PT3_ENABLE_APPLE_IIC = 1

@@ -98,6 +98,7 @@ done_load_message:
 
 	jsr	load_file
 
+
 	;==================================
 	; load music into the language card
 	;       into $D000 bank 1
@@ -150,6 +151,18 @@ skip_mbp1:
 dont_enable_mc:
 
 skip_all_checks:
+
+
+	;==============================
+	; load four-color to AUX:$1000
+
+	; note we can't load to AUX until after MUSIC (with copy aux routines)
+
+	lda	#PART_FOURCOLOR		; Multi-color monster
+	sta	WHICH_LOAD
+	jsr	load_from_disk		; load and copy
+
+
 
 	;======================
 	; make hires tables
@@ -368,15 +381,22 @@ skip_all_checks:
 
 	; load from disk
 
-	sei			; stop music
+;	sei			; stop music
 
-	lda	#PART_FOURCOLOR	; Multi-color monster
-	sta	WHICH_LOAD
-	jsr	load_file
+;	lda	#PART_FOURCOLOR	; Multi-color monster
+;	sta	WHICH_LOAD
+;	jsr	load_file
 
-	; Run Four Color
+	; Copy into place
 
-	cli			; re-start music
+	lda	#$10		; src:  AUX:$1000
+	ldy	#$60		; dest: MAIN:$6000
+	ldx	#$10		; len:  4k
+
+	jsr	copy_aux_main
+
+
+;	cli			; re-start music
 
 	jsr	$6000
 
@@ -474,15 +494,6 @@ start_message:	  ;01234567890123456789012345678901234567890
 	.byte 7,6,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
-;	.byte 0,10,"MUSIC BY mAZE",0
-;	.byte 0,12,"GRAPHICS BY GRIMNIR",0
-;	.byte 0,13,"DISK BY QKUMBA",0
-;	.byte 0,14,"WIPES BY 4AM/QKUMBA",0
-;	.byte 0,16,".",0
-;	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
-;	.byte 0,18,"EVERYTHING ELSE BY DEATER",0
-;	.byte 10,20,".",0
-;	.byte 10,21,".",0
 	.byte $FF
 
 load_message:
