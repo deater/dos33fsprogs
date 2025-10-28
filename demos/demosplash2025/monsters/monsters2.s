@@ -1,14 +1,4 @@
-; Monsters!
-
-; >>Wer mit Ungeheuern kämpft, mag zusehn,
-;   dass er nicht dabei zum Ungeheuer wird.
-;   Und wenn du lange in einen Abgrund blickst,
-;   blickt der Abgrund auch in dich hinein.<<
-
-;      "Whoever battles monsters should see to it that in the process
-;       he does not become a monster.   And if you gaze long enough
-;       into an abyss, the abyss will gaze back into you."
-;					-- Friedrich Nietzsche
+; Monsters 2!
 
 .include "../zp.inc"
 .include "../hardware.inc"
@@ -17,10 +7,10 @@
 .include "../common_defines.inc"
 
 	;=============================
-	; draw monsters
+	; draw more monsters
 	;=============================
 
-monsters:
+monsters2:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
@@ -144,7 +134,7 @@ monsters:
 
 	;========================
 	;========================
-	; load pq tree
+	; load pq cave
 	;========================
 	;========================
 
@@ -154,9 +144,9 @@ monsters:
 	lda	#$80
 	sta	DRAW_PAGE
 
-	lda	#<pq_tree_top
+	lda	#<pq_cave_top
 	sta	zx_src_l+1
-	lda	#>pq_tree_top
+	lda	#>pq_cave_top
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
@@ -175,9 +165,9 @@ monsters:
 	lda	#$80
 	sta	DRAW_PAGE
 
-	lda	#<pq_tree_bottom
+	lda	#<pq_cave_bottom
 	sta	zx_src_l+1
-	lda	#>pq_tree_bottom
+	lda	#>pq_cave_bottom
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
@@ -195,29 +185,23 @@ monsters:
 	rts
 
 monster1_top:
-	.incbin "graphics/monster_pumpkin.raw_top.zx02"
+	.incbin "graphics/monster_hand.raw_top.zx02"
 
 monster1_bottom:
-	.incbin "graphics/monster_pumpkin.raw_bottom.zx02"
+	.incbin "graphics/monster_hand.raw_bottom.zx02"
 
 monster2_top:
-	.incbin "graphics/monster-bw5.raw_top.zx02"
+	.incbin "graphics/monster-bw7.raw_top.zx02"
 
 monster2_bottom:
-	.incbin "graphics/monster-bw5.raw_bottom.zx02"
+	.incbin "graphics/monster-bw7.raw_bottom.zx02"
 
 
 
-pq_tree_top:
-	.incbin "graphics/pq_tree_dhgr.raw_top.zx02"
+pq_cave_top:
+	.incbin "graphics/pq_cave_dhgr.raw_top.zx02"
 
-pq_tree_bottom:
-	.incbin "graphics/pq_tree_dhgr.raw_bottom.zx02"
+pq_cave_bottom:
+	.incbin "graphics/pq_cave_dhgr.raw_bottom.zx02"
 
 
-
-;monster1_bin:
-;	.incbin "graphics/monster_pumpkin.bin.zx02"
-
-;monster1_aux:
-;	.incbin "graphics/monster_pumpkin.aux.zx02"

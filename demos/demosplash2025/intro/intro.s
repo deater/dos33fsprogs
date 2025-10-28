@@ -271,6 +271,9 @@ scroll_up_loop:
 	ldy	#2			; 2 line
 	jsr	slow_copy_main
 
+	lda	KEYPRESS
+	bmi	done_house_scroll
+
 	jsr     wait_vblank
         jsr     hgr_page_flip
 
@@ -281,7 +284,7 @@ scroll_up_loop:
 
 	jsr	wait_until_keypress
 
-
+done_house_scroll:
 	; FIXME: make sure we end up on PAGE1
 
 	lda	#0

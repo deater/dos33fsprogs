@@ -18,7 +18,8 @@ MONSTERS:	monsters.o
 monsters.o:	monsters.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	graphics/monster_pumpkin.raw_bottom.zx02 graphics/monster_pumpkin.raw_top.zx02 \
-	graphics/pq_tree_dhgr.raw_bottom.zx02 graphics/pq_tree_dhgr.raw_top.zx02
+	graphics/pq_tree_dhgr.raw_bottom.zx02 graphics/pq_tree_dhgr.raw_top.zx02 \
+	fx.dhgr.fizzle.s
 	ca65 -o monsters.o monsters.s -l monsters.lst
 
 ###
@@ -29,7 +30,7 @@ MONSTERS2:	monsters2.o
 monsters2.o:	monsters2.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	graphics/monster_pumpkin.raw_bottom.zx02 graphics/monster_pumpkin.raw_top.zx02 \
-	graphics/pq_tree_dhgr.raw_bottom.zx02 graphics/pq_tree_dhgr.raw_top.zx02
+	graphics/pq_cave_dhgr.raw_bottom.zx02 graphics/pq_cave_dhgr.raw_top.zx02
 	ca65 -o monsters2.o monsters2.s -l monsters2.lst
 
 

@@ -133,6 +133,8 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s DrawCondensedString qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s save_zp qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s restore_zp qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s save_zp_x qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s restore_zp_x qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s clear_dhgr_screens qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s dhgr_repack_top qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s dhgr_repack_bottom qload.lst >> qload.inc

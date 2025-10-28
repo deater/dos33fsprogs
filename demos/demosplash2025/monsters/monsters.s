@@ -90,11 +90,9 @@ monsters:
 
 	jsr	wait_until_keypress
 
-
-
 	;========================
 	;========================
-	; load pumpkin
+	; load pumpkin to Page2
 	;========================
 	;========================
 
@@ -110,9 +108,9 @@ monsters:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
@@ -133,11 +131,20 @@ monsters:
 
 	; depack to page1
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
 	jsr	dhgr_repack_bottom
+
+	ldx	#$C0
+	jsr	save_zp_x
+
+	jsr	do_wipe_fizzle
+
+	ldx	#$C0
+	jsr	restore_zp_x
+
 
 	jsr	wait_until_keypress
 
@@ -221,3 +228,5 @@ pq_tree_bottom:
 
 ;monster1_aux:
 ;	.incbin "graphics/monster_pumpkin.aux.zx02"
+
+.include "fx.dhgr.fizzle.s"

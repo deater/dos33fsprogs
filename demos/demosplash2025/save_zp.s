@@ -2,6 +2,8 @@
 
 save_zp:
 	ldx	#0
+save_zp_x:
+
 save_zp_loop:
 	lda	$00,X
 	sta	$A000,X
@@ -11,6 +13,7 @@ save_zp_loop:
 
 restore_zp:
 	ldx	#0
+restore_zp_x:
 restore_zp_loop:
 	lda	$A000,X
 	sta	$00,X
