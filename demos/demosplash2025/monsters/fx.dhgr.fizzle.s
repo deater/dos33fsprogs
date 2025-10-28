@@ -2,7 +2,7 @@
 ;(c) 2017-2020 by qkumba/4am/John Brooks
 ;
 
-addrs=$70 		; $40 bytes from $70..$BF  (original code used  $BF)
+addrs=$70 		; $40 bytes from $70..$AF  (original code used  $BF)
 			; Code is $70 bytes
 
 .macro OVERCOPY_TO_0 start, end
@@ -29,10 +29,10 @@ do_wipe_fizzle:
 	ldx	#$1F			; build address lookup table
 dwf1:
 	txa
-	eor   #$20
-	sta   addrs, x
-	eor   #$A0
-	sta   addrs+$20, x
+	eor   #$20			;
+	sta   addrs, X			; builds the dest table starting at $20
+	eor   #$80			; (was originally $A0 to build at $80)
+	sta   addrs+$20, X		; builds aux table starting at $A0
 	dex
 	bpl	dwf1
 
@@ -40,6 +40,7 @@ dwf1:
 	; $FF clobbered
 	; X=0
 	; Y=0
+
 	jmp	copyaux
 
 
@@ -49,18 +50,19 @@ start:
 
 	;Y=0 on entry to copyaux
 copyaux:
-	sta	READAUXMEM		; copy $4000/aux to $8000/main
+	sta	READAUXMEM		; copy $4000/aux to $A000/main
 	ldx	#$20
 aa:
 	lda	$4000, Y
 bb:
-	sta	$8000, Y
+	sta	$A000, Y		; was $8000
 	iny
 	bne	aa
 	inc	aa+2
 	inc	bb+2
 	dex
 	bne	aa
+
 	sta	READMAINMEM
 	sta	$C001			; 80STORE mode
 ;X,Y=0 on entry to LFSR
@@ -101,12 +103,12 @@ zexit:
 aux:
 	sta	$C055	; switch $2000 access to aux memory (read/write!)
 	sta	<auxsrc+2
-	eor	#$A0
+	eor	#$80		; (was originally $A0 when it loaded from $8000)
 	sta	<auxdst+2
 auxsrc:
-	lda	$FD00, Y
+	lda	$FD00, Y	; gets modified to $A000
 auxdst:
-	sta	$FD00, Y
+	sta	$FD00, Y	; gets modified to $2000
 	txa
 	lsr
 	tax

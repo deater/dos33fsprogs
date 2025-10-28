@@ -56,7 +56,7 @@ $02 -- disk data	$02 -- ???
 $03 -- disk data	$03 -- ???
 $04-$07 -- lores p1	$04-$07 -- dlores p1
 $08-$0B -- lores p2	$08-$0B -- dlores p2
-$0c-$0F -- ???		$0c-$0F -- ???
+$0c-$0F -- ZP save	$0c-$0F -- ???
 $10-$11 -- Boot code	$10-$11 -- FOUR
 $12-$1F -- QLOAD	$12-$1F -- FOUR
 $20-$3F -- hires p1	$20-$3F -- dhires p1

@@ -1,3 +1,5 @@
+zp_save		= $c00
+
 repack_src	= $a000
 
 hposn_low       = $fd00
