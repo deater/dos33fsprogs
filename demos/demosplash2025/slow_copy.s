@@ -1,13 +1,9 @@
 ; copy hi-res graphics from $A000:$BFFF to $2000 / $4000
 ;	can copy partial screen
 
-; X : start  = y-coord of starting line
-; Y : len    = number of lines to copy
-; A : offset = offset of output (used when scrolling)
-
-	; X=start
-	; Y=len
-	; A=offset
+; A : SRC_OFFSET  = src Y-coord offset in $A000
+; X : DEST_OFFSET = dest Y-coord offset in $2000/$4000 (based on DRAW_PAGE)
+; Y : LENGTH      = number of lines to copy
 
 slow_copy_aux:
 	sta	WRAUX
@@ -16,14 +12,18 @@ slow_copy_aux:
 slow_copy_main:
 
 slow_copy:
-	sty	LENGTH
-	sta	OFFSET
+	sty	LENGTH			; save length for later
+	sta	SRC_OFFSET		; save src offset
+
+	lda	#0
+	sta	INDEX
 
 slow_copy_outer_loop:
-	stx	INDEX
-	txa
+	stx	DEST_OFFSET		; save dest_offset
+
+	lda	SRC_OFFSET		; src is SRC_OFFSET+INDEX
 	clc
-	adc	OFFSET
+	adc	INDEX
 	tax
 
 	lda	hposn_low,X		; copy src
@@ -33,9 +33,11 @@ slow_copy_outer_loop:
 	adc	#$80			; to $A0
 	sta	slow_copy_smc1+2
 
-	ldx	INDEX			; restore index
+	; set destination
 
-	lda	hposn_low,X		; copy dest
+	ldx	DEST_OFFSET		; restore dest_offset
+
+	lda	hposn_low,X		; copy destination
 	sta	slow_copy_smc2+1
 
 	lda	hposn_high,X
@@ -54,6 +56,7 @@ slow_copy_smc2:
 	bpl	slow_copy_loop
 
 	inx
+	inc	INDEX
 	dec	LENGTH
 	bne	slow_copy_outer_loop
 

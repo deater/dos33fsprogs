@@ -86,8 +86,9 @@ TEXT_Y		= $D2
 
 SCROLL_COUNT	= $D0
 INDEX		= $D1
-OFFSET		= $D2
-LENGTH		= $D3
+DEST_OFFSET	= $D2
+SRC_OFFSET	= $D3
+LENGTH		= $D4
 
 ; four-color
 AUXOUTL		= $CA

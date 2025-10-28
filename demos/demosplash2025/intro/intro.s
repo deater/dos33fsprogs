@@ -192,6 +192,7 @@ intro:
 
 	;========================
 	; setup for scroll
+	;========================
 
 	; load top into $A000 first
 
@@ -243,13 +244,15 @@ intro:
 
 
 	;==================================================
-
         ; from $A000+1 to DRAW_PAGE
 
-;        lda     #1                      ; from $A000+1
- ;       ldx     #0                      ; to DRAW_PAGE+0
-  ;      ldy     #191                    ; 191 lines
-   ;     jsr     slow_copy_main
+	lda	#$20
+	sta	DRAW_PAGE		; page2
+
+	lda	#0                      ; from $A000+0
+	ldx	#191			; to DRAW_PAGE+191
+	ldy	#1			; 1 line
+	jsr	slow_copy_main
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -259,28 +262,32 @@ scroll_up_loop:
 
 	jsr	hgr_vertical_scroll_up_main		; scroll up by 2
 
-	; from $A000+start+offset - $2000/$4000+offset
-        ; X = start Y = len  A=offset
+	; copy over
 
-        lda     SCROLL_COUNT            ; from $A000+SCROLL_COUNT (bottom)
-        ldx     #190                    ; to DRAW_PAGE+190
-        ldy     #2                      ; length
-        jsr     slow_copy_main
+	; A = src line (in $a000) , X = dest line (in $2000/$4000), Y=length
+
+	lda	SCROLL_COUNT		; from $A000+0
+	ldx	#190			; to DRAW_PAGE+190
+	ldy	#2			; 2 line
+	jsr	slow_copy_main
 
 	jsr     wait_vblank
         jsr     hgr_page_flip
 
         inc     SCROLL_COUNT
         lda     SCROLL_COUNT
-        cmp     #104
+        cmp     #85
         bne     scroll_up_loop
 
-
-
-
-
-
 	jsr	wait_until_keypress
+
+
+	; FIXME: make sure we end up on PAGE1
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	bit	PAGE1
 
 	;=====================================
 	; open door
