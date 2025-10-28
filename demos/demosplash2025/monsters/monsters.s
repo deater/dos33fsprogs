@@ -4,8 +4,6 @@
 .include "../music.inc"
 .include "../common_defines.inc"
 
-; 8742 -- original
-
 	;=============================
 	; draw monsters
 	;=============================
@@ -30,6 +28,57 @@ monsters:
 	bit	PAGE1		; display page1
 ;	lda	#$20
 ;	sta	DRAW_PAGE	; draw to page2
+
+	;========================
+	;========================
+	; load monster
+	;========================
+	;========================
+
+	;=============================
+	; load top part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<monster2_top
+	sta	zx_src_l+1
+	lda	#>monster2_top
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
+
+	; depack to page1
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	lda	#$a0
+	jsr	dhgr_repack_top
+
+
+	;=============================
+	; load bottom part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<monster2_bottom
+	sta	zx_src_l+1
+	lda	#>monster2_bottom
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
+
+	; depack to page1
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	lda	#$a0
+	jsr	dhgr_repack_bottom
+
+	jsr	wait_until_keypress
+
+
 
 	;========================
 	;========================
@@ -138,6 +187,13 @@ monster1_top:
 
 monster1_bottom:
 	.incbin "graphics/monster_pumpkin.raw_bottom.zx02"
+
+monster2_top:
+	.incbin "graphics/monster-bw5.raw_top.zx02"
+
+monster2_bottom:
+	.incbin "graphics/monster-bw5.raw_bottom.zx02"
+
 
 
 pq_tree_top:

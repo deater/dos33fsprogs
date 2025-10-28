@@ -12,13 +12,29 @@ LINKER_SCRIPTS = ../../../../linker_scripts/
 all:	monster_pumpkin.bin.zx02 monster_pumpkin.aux.zx02 \
 	monster_pumpkin.raw_top.zx02 monster_pumpkin.raw_bottom.zx02 \
 	monster-bw5.bin.zx02 monster-bw5.aux.zx02 \
+	monster-bw5.raw_top.zx02 monster-bw5.raw_bottom.zx02 \
 	monster-c7.bin.zx02 monster-c7.aux.zx02 \
 	monster-bw7.bin.zx02 monster-bw7.aux.zx02 \
 	monster-bw10.bin.zx02 monster-bw10.aux.zx02 \
 	monster-c7.raw.zx02 \
 	monster-c7.raw_top.zx02 monster-c7.raw_bottom.zx02 \
-	pq_tree_dhgr.raw_top.zx02 pq_tree_dhgr.raw_bottom.zx02
+	pq_tree_dhgr.raw_top.zx02 pq_tree_dhgr.raw_bottom.zx02 \
+	pq_cave_dhgr.raw_top.zx02 pq_cave_dhgr.raw_bottom.zx02
 
+
+####
+
+pq_cave_dhgr.raw_top.zx02:     pq_cave_dhgr.raw_top
+	$(ZX02) pq_cave_dhgr.raw_top pq_cave_dhgr.raw_top.zx02
+
+pq_cave_dhgr.raw_top:  pq_cave_dhgr.png
+	$(PNG_TO_DHGR_RAW) -t pq_cave_dhgr.png pq_cave_dhgr
+
+pq_cave_dhgr.raw_bottom.zx02:     pq_cave_dhgr.raw_bottom
+	$(ZX02) pq_cave_dhgr.raw_bottom pq_cave_dhgr.raw_bottom.zx02
+
+pq_cave_dhgr.raw_bottom: pq_cave_dhgr.png
+	$(PNG_TO_DHGR_RAW) -t pq_cave_dhgr.png pq_cave_dhgr
 
 ####
 
@@ -61,6 +77,18 @@ monster_pumpkin.BIN: monster_pumpkin.png
 	$(PNG_TO_DHGR) monster_pumpkin.png monster_pumpkin
 
 ####
+
+monster-bw5.raw_top.zx02:     monster-bw5.raw_top
+	$(ZX02) monster-bw5.raw_top monster-bw5.raw_top.zx02
+
+monster-bw5.raw_top:  monster-bw5.png
+	$(PNG_TO_DHGR_RAW) -t monster-bw5.png monster-bw5
+
+monster-bw5.raw_bottom.zx02:     monster-bw5.raw_bottom
+	$(ZX02) monster-bw5.raw_bottom monster-bw5.raw_bottom.zx02
+
+monster-bw5.raw_bottom: monster-bw5.png
+	$(PNG_TO_DHGR_RAW) -t monster-bw5.png monster-bw5
 
 monster-bw5.aux.zx02:     monster-bw5.AUX
 	$(ZX02) monster-bw5.AUX monster-bw5.aux.zx02
