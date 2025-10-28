@@ -108,76 +108,30 @@ plasma_loop:
 	jsr	init_plasma_colors
 	jsr	do_plasma
 
-	; drop
+	; switch to draw to visible page
+
 	lda	DRAW_PAGE
 	eor	#$20
 	sta	DRAW_PAGE
 
 	jsr	scroll_off
 
-;	lda	#25
-;	jsr	wait_ticks
+	; now do same for AUX page
 
-	;=============================
-	; do purple/green
-
-	ldx	#63
-change_purple:
-	lda	hires_colors_even_lookup_l0,X
-	and	#$7f
-	sta	hires_colors_even_lookup_l0,X
-	dex
-	bpl	change_purple
-
-
-	jsr	init_plasma_colors
-
-;	lda	#50
-;	sta	plasma_end_smc+1
-
-	jsr	do_plasma
-
-	; drop
-	lda	DRAW_PAGE
-	eor	#$20
-	sta	DRAW_PAGE
+	sta	WRITEAUXMEM
 
 	jsr	scroll_off
 
-;	lda	#25
-;	jsr	wait_ticks
+	sta	WRITEMAINMEM
 
 
-	;=============================
-	; do black/white?
+;	lda     #0
+;	jsr	hgr_page1_clearscreen
+;	jsr	hgr_page2_clearscreen
 
-	ldx	#63
-change_mono:
-	lda	hires_colors_even_lookup_l0,X
-	ora	#$aa
-	sta	hires_colors_even_lookup_l0,X
-	dex
-	bpl	change_mono
+	rts
 
-	jsr	init_plasma_colors
-
-;	lda	#52
-;	sta	plasma_end_smc+1
-
-	jsr	do_plasma
-
-	; drop
-	lda	DRAW_PAGE
-	eor	#$20
-	sta	DRAW_PAGE
-
-	jsr	scroll_off
-
-	lda     #0
-	jsr	hgr_page1_clearscreen
-	jsr	hgr_page2_clearscreen
-
-	jmp	plasma_loop
+;	jmp	plasma_loop
 
 ;=========================================================================
 ;=========================================================================

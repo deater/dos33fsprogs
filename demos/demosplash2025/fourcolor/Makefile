@@ -17,6 +17,7 @@ FOURCOLOR:	fourcolor.o
 
 fourcolor.o:	fourcolor.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
+	plasma/dhgr_plasma.s \
 	./graphics/grimnir11_grey.packed.zx02
 	ca65 -o fourcolor.o fourcolor.s -l fourcolor.lst
 

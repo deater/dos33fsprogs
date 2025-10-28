@@ -74,7 +74,7 @@ monster:
 	jsr	wait_until_keypress
 .endif
 
-	cli	; start music
+;	cli	; start music
 
 	;=================
 	; green1
@@ -197,15 +197,52 @@ monster:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
+	;====================
+	; full screen black
+
+	lda	#0
+	sta	XSTART
+	lda	#100
+	sta	XEND
+
+	lda	#<color_lookup_black
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_black
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+	jsr	copy_to_aux
+	jsr	hgr_page_flip
+
+	;===========================
+	; full screen black
+
+	lda	#0
+	sta	XSTART
+	lda	#100
+	sta	XEND
+
+	lda	#<color_lookup_black
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_black
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+	jsr	copy_to_aux
+	jsr	hgr_page_flip
+
+
 	;========================
 	; wait
 	;========================
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	;========================
 	; run plasma
 	;========================
+
+	bit	KEYRESET
 
 	jsr	plasma_debut
 
@@ -424,6 +461,7 @@ yloop_done:
 
 	rts
 
+
 color_lookup_grey:
 	.byte 0,5,11,15		; default   black/grey/lblue/white
 color_lookup_green:
@@ -434,6 +472,8 @@ color_lookup_red:
         .byte 0,8,9,13		; red       black/red/purple/pink
 color_lookup_yellow:
         .byte 0,4,12,14		; yellow    black/brown/orange/yellow
+color_lookup_black:
+	.byte 0,0,5,11		; default   black/black/grey/lblue
 
 	.include "copy_to_aux.s"
 
