@@ -1,4 +1,7 @@
-/* Converts 140x192 8-bit PNG file with correct palette to Apple II DHGR */
+/* Converts 280x192 8-bit PNG file with correct palette to Apple II DHGR */
+
+/* Treats it as 140x192 as far as colors go, but it will treat black+white */
+/* specially into sub-pixels, mostly to try to get 40-column text working */
 
 /*  https://lastrationalman.blogspot.com/2017/04/apple-ii-double-hi-res-from-ground-up_12.html */
 /* http://www.battlestations.zone/2017/04/apple-ii-double-hi-res-from-ground-up_12.html */
@@ -67,11 +70,11 @@ int loadpng(char *filename,
 		unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	int x,y;
-	int color;
+	int color,color2;
 	FILE *infile;
 	unsigned char *image,*out_ptr;
 	int width, height;
-	int a2_color;
+	int a2_color,a2_color2;
 	int skip=1;
 
 	png_byte bit_depth;
@@ -191,14 +194,42 @@ int loadpng(char *filename,
 	for(y=0;y<height;y++) {
 		for(x=0;x<width;x+=skip) {
 
-			color=	(row_pointers[y][x*bytes_per_pixel]<<16)+
+			if (skip==2) {
+				/* handle black/white text */
+				color =
+				(row_pointers[y][x*bytes_per_pixel]<<16)+
 				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
 				(row_pointers[y][x*bytes_per_pixel+2]);
-//			if (debug) {
-//				fprintf(stderr,"%x ",color);
-//			}
+				a2_color=convert_color(color);
 
-			a2_color=convert_color(color);
+				color2 =
+				(row_pointers[y][(x+1)*bytes_per_pixel]<<16)+
+				(row_pointers[y][(x+1)*bytes_per_pixel+1]<<8)+
+				(row_pointers[y][(x+1)*bytes_per_pixel+2]);
+				a2_color2=convert_color(color2);
+
+				if (a2_color!=a2_color2) {
+					if ((a2_color==15) && (a2_color2==0)) {
+						a2_color=6; // 12
+					}
+					else if ((a2_color==0) && (a2_color2==15)) {
+						a2_color=9;  // 3
+					}
+				}
+
+			}
+
+			else {
+				color =
+				(row_pointers[y][x*bytes_per_pixel]<<16)+
+				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
+				(row_pointers[y][x*bytes_per_pixel+2]);
+
+//				if (debug) {
+//					fprintf(stderr,"%x ",color);
+//				}
+				a2_color=convert_color(color);
+			}
 
 			if (debug) {
 				fprintf(stderr,"%x",a2_color);
@@ -244,6 +275,7 @@ static int hgr_offset_table[48]={
 	0x0050,0x00D0,0x0150,0x01D0,0x0250,0x02D0,0x0350,0x03D0,
 };
 
+#if 0
 static char aux1_colors[16]={
 	0x00,0x08,0x44,0x4c,0x22,0x2a,0x66,0x6e,
 	0x11,0x19,0x55,0x5d,0x33,0x3b,0x77,0x7f};
@@ -256,6 +288,7 @@ static char aux2_colors[16]={
 static char main2_colors[16]={
 	0x00,0x44,0x22,0x66,0x11,0x55,0x33,0x77,
 	0x08,0x4c,0x2a,0x6e,0x19,0x5d,0x3b,0x7f};
+#endif
 
 static char flipped_colors[16]={
 /* black */	0x00,

@@ -16,8 +16,23 @@ all:	monster_pumpkin.bin.zx02 monster_pumpkin.aux.zx02 \
 	monster-bw7.bin.zx02 monster-bw7.aux.zx02 \
 	monster-bw10.bin.zx02 monster-bw10.aux.zx02 \
 	monster-c7.raw.zx02 \
-	monster-c7.raw_top.zx02 monster-c7.raw_bottom.zx02
+	monster-c7.raw_top.zx02 monster-c7.raw_bottom.zx02 \
+	pq_tree_dhgr.raw_top.zx02 pq_tree_dhgr.raw_bottom.zx02
 
+
+####
+
+pq_tree_dhgr.raw_top.zx02:     pq_tree_dhgr.raw_top
+	$(ZX02) pq_tree_dhgr.raw_top pq_tree_dhgr.raw_top.zx02
+
+pq_tree_dhgr.raw_top:  pq_tree_dhgr.png
+	$(PNG_TO_DHGR_RAW) -t pq_tree_dhgr.png pq_tree_dhgr
+
+pq_tree_dhgr.raw_bottom.zx02:     pq_tree_dhgr.raw_bottom
+	$(ZX02) pq_tree_dhgr.raw_bottom pq_tree_dhgr.raw_bottom.zx02
+
+pq_tree_dhgr.raw_bottom: pq_tree_dhgr.png
+	$(PNG_TO_DHGR_RAW) -t pq_tree_dhgr.png pq_tree_dhgr
 
 ####
 

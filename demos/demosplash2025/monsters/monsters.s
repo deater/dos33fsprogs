@@ -80,6 +80,57 @@ monsters:
 
 	jsr	wait_until_keypress
 
+
+	;========================
+	;========================
+	; load pq tree
+	;========================
+	;========================
+
+	;=============================
+	; load top part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<pq_tree_top
+	sta	zx_src_l+1
+	lda	#>pq_tree_top
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
+
+	; depack to page1
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	lda	#$a0
+	jsr	dhgr_repack_top
+
+
+	;=============================
+	; load bottom part to MAIN $A000
+
+	lda	#$80
+	sta	DRAW_PAGE
+
+	lda	#<pq_tree_bottom
+	sta	zx_src_l+1
+	lda	#>pq_tree_bottom
+	sta	zx_src_h+1
+	jsr	zx02_full_decomp_main
+
+	; depack to page1
+
+	lda	#$00
+	sta	DRAW_PAGE
+
+	lda	#$a0
+	jsr	dhgr_repack_bottom
+
+	jsr	wait_until_keypress
+
+
 	rts
 
 monster1_top:
@@ -87,6 +138,13 @@ monster1_top:
 
 monster1_bottom:
 	.incbin "graphics/monster_pumpkin.raw_bottom.zx02"
+
+
+pq_tree_top:
+	.incbin "graphics/pq_tree_dhgr.raw_top.zx02"
+
+pq_tree_bottom:
+	.incbin "graphics/pq_tree_dhgr.raw_bottom.zx02"
 
 
 

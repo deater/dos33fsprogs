@@ -68,11 +68,11 @@ int loadpng(char *filename,
 		unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	int x,y;
-	int color;
+	int color,color2;
 	FILE *infile;
 	unsigned char *image,*out_ptr;
 	int width, height;
-	int a2_color;
+	int a2_color,a2_color2;
 	int skip=1;
 
 	png_byte bit_depth;
@@ -192,14 +192,43 @@ int loadpng(char *filename,
 	for(y=0;y<height;y++) {
 		for(x=0;x<width;x+=skip) {
 
-			color=	(row_pointers[y][x*bytes_per_pixel]<<16)+
+			if (skip==2) {
+				/* handle black/white text */
+				color =
+				(row_pointers[y][x*bytes_per_pixel]<<16)+
 				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
 				(row_pointers[y][x*bytes_per_pixel+2]);
-//			if (debug) {
-//				fprintf(stderr,"%x ",color);
-//			}
+				a2_color=convert_color(color);
 
-			a2_color=convert_color(color);
+				color2 =
+				(row_pointers[y][(x+1)*bytes_per_pixel]<<16)+
+				(row_pointers[y][(x+1)*bytes_per_pixel+1]<<8)+
+				(row_pointers[y][(x+1)*bytes_per_pixel+2]);
+				a2_color2=convert_color(color2);
+
+				if (a2_color!=a2_color2) {
+					if ((a2_color==15) && (a2_color2==0)) {
+						a2_color=6; // 12
+					}
+					else if ((a2_color==0) && (a2_color2==15)) {
+						a2_color=9; // 3
+					}
+				}
+
+			}
+
+			else {
+
+				color=
+				(row_pointers[y][x*bytes_per_pixel]<<16)+
+				(row_pointers[y][x*bytes_per_pixel+1]<<8)+
+				(row_pointers[y][x*bytes_per_pixel+2]);
+//				if (debug) {
+//					fprintf(stderr,"%x ",color);
+//				}
+
+				a2_color=convert_color(color);
+			}
 
 			if (debug) {
 				fprintf(stderr,"%x",a2_color);
