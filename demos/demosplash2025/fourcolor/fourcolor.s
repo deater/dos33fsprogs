@@ -77,7 +77,7 @@ monster:
 ;	cli	; start music
 
 	;=================
-	; green1
+	; green1 left
 
 	lda	#0
 	sta	XSTART
@@ -97,7 +97,7 @@ monster:
 
 
 	;=================
-	; green2
+	; green2 left
 
 	lda	#0
 	sta	XSTART
@@ -110,8 +110,43 @@ monster:
 	jsr	wait_vblank
 	jsr	hgr_page_flip
 
-	;======
-	; blue1
+	;===============
+	; yellow1 right
+
+	lda	#30
+	sta	XSTART
+	lda	#40
+	sta	XEND
+
+	lda	#<color_lookup_yellow
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_yellow
+	sta	color_lookup_smc+2
+
+	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	;===============
+	; yellow2 right
+
+	lda	#20
+	sta	XSTART
+	lda	#40
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+
+
+	;==============
+	; blue1 mid-left
 
 	lda	#8
 	sta	XSTART
@@ -130,8 +165,43 @@ monster:
 	jsr	hgr_page_flip
 
 
-	;========
-	; blue2
+	;===============
+	; blue2 mid-left
+
+	lda	#18
+	sta	XSTART
+	lda	#30
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+	;=================
+	; red2 mid-right
+
+	lda	#<color_lookup_red
+	sta	color_lookup_smc+1
+	lda	#>color_lookup_red
+	sta	color_lookup_smc+2
+
+	lda	#18
+	sta	XSTART
+	lda	#30
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	jsr	hgr_page_flip
+
+
+
+	;=================
+	; red1	mid-right
 
 	lda	#8
 	sta	XSTART
@@ -145,57 +215,7 @@ monster:
 	jsr	hgr_page_flip
 
 
-	;=============
-	; red1
 
-	lda	#18
-	sta	XSTART
-	lda	#30
-	sta	XEND
-
-	lda	#<color_lookup_red
-	sta	color_lookup_smc+1
-	lda	#>color_lookup_red
-	sta	color_lookup_smc+2
-
-	jsr	decode_image
-
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
-
-	;=========
-	; red2
-
-	lda	#18
-	sta	XSTART
-	lda	#40
-	sta	XEND
-
-	jsr	decode_image
-
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
-
-	;=========
-	; yellow1
-
-	lda	#28
-	sta	XSTART
-	lda	#40
-	sta	XEND
-
-	lda	#<color_lookup_yellow
-	sta	color_lookup_smc+1
-	lda	#>color_lookup_yellow
-	sta	color_lookup_smc+2
-
-	jsr	decode_image
-
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
 
 	;====================
 	; full screen black
@@ -245,6 +265,55 @@ monster:
 	bit	KEYRESET
 
 	jsr	plasma_debut
+
+	;==========================================
+	; print some text
+	;==========================================
+	; only works on page1?
+
+	lda	#$00
+	sta	DRAW_PAGE
+	bit	PAGE1
+
+	lda	#<splash_message
+	ldy	#>splash_message
+
+	jsr	DrawCondensedString
+
+;	jsr	hgr_page_flip
+
+	bit	KEYRESET
+	jsr	wait_until_keypress
+
+	; switch to normal HGR
+
+	; disable 80column mode
+	sta	SETAN3
+	sta	CLR80COL
+	sta	EIGHTYCOLOFF
+;	bit	PAGE1
+
+
+; switch to draw to visible page
+
+ ;       lda     DRAW_PAGE
+ ;       eor     #$20
+
+	lda	#0			; page1
+	sta	DRAW_PAGE
+
+	bit	KEYRESET
+	jsr	wait_until_keypress
+
+        jsr     scroll_off
+
+	bit	KEYRESET
+	jsr	wait_until_keypress
+
+        rts
+
+splash_message:
+        .byte   3,92,"All monsters have been splashed...",0
 
 	rts
 

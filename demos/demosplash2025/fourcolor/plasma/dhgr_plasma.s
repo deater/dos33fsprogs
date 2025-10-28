@@ -108,6 +108,7 @@ plasma_loop:
 	jsr	init_plasma_colors
 	jsr	do_plasma
 
+.if 0
 	; switch to draw to visible page
 
 	lda	DRAW_PAGE
@@ -128,7 +129,7 @@ plasma_loop:
 ;	lda     #0
 ;	jsr	hgr_page1_clearscreen
 ;	jsr	hgr_page2_clearscreen
-
+.endif
 	rts
 
 ;	jmp	plasma_loop
