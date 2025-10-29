@@ -137,14 +137,24 @@ monsters:
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
-	ldx	#$C0
-	jsr	save_zp_x
+;	ldx	#$CF
+;	jsr	save_zp_x
 
-	jsr	do_wipe_fizzle
+	sei
 
-	ldx	#$C0
-	jsr	restore_zp_x
+	jsr	save_zp
 
+	ldx	#0
+	jsr	wipe_48
+
+;	jsr	do_wipe_fizzle
+
+;	ldx	#$CF
+;	jsr	restore_zp_x
+
+	jsr	restore_zp
+
+	cli
 
 	jsr	wait_until_keypress
 
@@ -229,4 +239,6 @@ pq_tree_bottom:
 ;monster1_aux:
 ;	.incbin "graphics/monster_pumpkin.aux.zx02"
 
-.include "fx.dhgr.fizzle.s"
+;.include "fx.dhgr.fizzle.s"
+
+.include "wipe_48_all.s"

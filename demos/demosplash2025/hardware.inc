@@ -19,6 +19,9 @@ WRITEAUXMEM	=	$C005   ; STA to write to aux mem ($0200..$BFFF)
 
 WRMAIN		=	$C004	; (w)
 WRAUX		=	$C005	; (w)
+ALTZPOFF	=	$C008	; (w)	Use MAIN for page 0/1/LC
+ALTZPON		=	$C009	; (w)	Use AUX for page 0/1/LC
+
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
 

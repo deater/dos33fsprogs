@@ -7,6 +7,7 @@ save_zp_x:
 save_zp_loop:
 	lda	$00,X
 	sta	zp_save,X
+
 	dex
 	bne	save_zp_loop
 	lda	$00		; ensure 0 saved as well

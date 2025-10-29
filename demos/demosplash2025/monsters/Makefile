@@ -19,7 +19,7 @@ monsters.o:	monsters.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	graphics/monster_pumpkin.raw_bottom.zx02 graphics/monster_pumpkin.raw_top.zx02 \
 	graphics/pq_tree_dhgr.raw_bottom.zx02 graphics/pq_tree_dhgr.raw_top.zx02 \
-	fx.dhgr.fizzle.s
+	fx.dhgr.fizzle.s wipe_48_all.s
 	ca65 -o monsters.o monsters.s -l monsters.lst
 
 ###
