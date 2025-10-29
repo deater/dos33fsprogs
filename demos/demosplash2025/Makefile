@@ -203,6 +203,19 @@ generate_common.o:	generate_common.c
 
 ###
 
+submit: monster_smash.zip
+
+monster_smash.zip:	file_id.diz monster_smash.dsk
+	mkdir -p demosplash2025_monster_smash
+	cp file_id.diz ./demosplash2025_monster_smash
+	cp monster_smash.dsk ./demosplash2025_monster_smash
+	cp monster_smash_screen.png ./demosplash2025_monster_smash
+#	cp monster_smash_720p.mp4 ./demosplash2025_monster_smash
+	zip -r monster_smash.zip demosplash2025_monster_smash
+
+
+####
+
 
 clean:
 	rm -f *~ *.o *.lst HELLO SECOND QBOOT QLOAD MUSIC START
