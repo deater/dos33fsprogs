@@ -290,9 +290,14 @@ monster:
 	ldy	#>splash_message3
 	jsr	DrawCondensedString
 
-	bit	KEYRESET
-	jsr	wait_until_keypress
 
+	;=================================
+	; wait 1s before going to HGR
+
+	lda	#1
+	jsr	wait_seconds
+
+	;==============================
 	; switch to normal HGR
 
 	; disable 80column mode
@@ -302,21 +307,21 @@ monster:
 ;	bit	PAGE1
 
 
-; switch to draw to visible page
-
- ;       lda     DRAW_PAGE
- ;       eor     #$20
+	; switch to draw to visible page
 
 	lda	#0			; page1
 	sta	DRAW_PAGE
 
-	bit	KEYRESET
-	jsr	wait_until_keypress
+	;=================================
+	; wait 1s before scrolling off
+
+	lda	#2
+	jsr	wait_seconds
+
+	;================================
+	; scroll down line to black
 
         jsr     scroll_off
-
-	bit	KEYRESET
-	jsr	wait_until_keypress
 
         rts
 

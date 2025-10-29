@@ -479,10 +479,12 @@ final_credits:
 	.byte  8,"4am -- font, transitions",0			; 24 (8)
 	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
 	.byte  9,"French Touch -- Plasma",0			; 22 (9)
+	.byte  7,"Martin Kahn -- martimation",0			; 26 (7)
 	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
 	.byte  8,"Deater - everything else",0			; 24 (8)
 
 ; Graphics
+	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
@@ -582,20 +584,20 @@ final_credits:
 
 sprite_triggers_l:
 	.byte	$48,$49		; demosplash logo
-	.byte	$D0,$D1		; vmw logo
-	.byte	$70,$71		; m
-	.byte	$80,$81		; s
-	.byte	$90,$91		; o
-	.byte	$A0,$A1		; p
-	.byte	$B0,$B1		; n
-	.byte	$C0,$C1		; l
-	.byte	$D0,$D1		; s
-	.byte	$E0,$E1		; a
-	.byte	$F0,$F1		; t
-	.byte	$00,$01		; s
-	.byte	$10,$11		; e
-	.byte	$20,$21		; h
-	.byte	$30,$31		; r
+	.byte	$E0,$E1		; vmw logo
+	.byte	$90,$91		; m
+	.byte	$A0,$A1		; s
+	.byte	$B0,$B1		; o
+	.byte	$C0,$C1		; p
+	.byte	$D0,$D1		; n
+	.byte	$E0,$E1		; l
+	.byte	$F0,$F1		; s
+	.byte	$00,$01		; a
+	.byte	$10,$11		; t
+	.byte	$20,$21		; s
+	.byte	$30,$31		; e
+	.byte	$40,$41		; h
+	.byte	$50,$51		; r
 
 
 sprite_triggers_h:
@@ -608,8 +610,8 @@ sprite_triggers_h:
 	.byte $01,$01		; n
 	.byte $01,$01		; l
 	.byte $01,$01		; s
-	.byte $01,$01		; a
-	.byte $01,$01		; t
+	.byte $02,$02		; a
+	.byte $02,$02		; t
 	.byte $02,$02		; s
 	.byte $02,$02		; e
 	.byte $02,$02		; h

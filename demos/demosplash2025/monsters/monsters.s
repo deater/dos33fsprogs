@@ -145,7 +145,7 @@ monsters:
 	jsr	save_zp
 
 	ldx	#0
-	jsr	wipe_48
+;	jsr	wipe_48
 
 ;	jsr	do_wipe_fizzle
 
