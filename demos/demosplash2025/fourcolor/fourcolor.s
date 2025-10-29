@@ -71,7 +71,6 @@ monster:
 
 	bit	PAGE2				; switch to PAGE2
 
-	jsr	wait_until_keypress
 .endif
 
 ;	cli	; start music

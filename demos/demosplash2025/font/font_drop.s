@@ -18,7 +18,7 @@ font_drop:
 
 	lda	#0
 	sta	DRAW_PAGE
-
+	sta	FRAME
 
 	;====================
 	;====================
@@ -125,15 +125,20 @@ drop_loop:
 ;	bpl	retry
 ;	bit	KEYRESET
 
+	inc	FRAME
+	lda	FRAME
+	cmp	#50
+	beq	font_drop_done
+
+
 	lda	KEYPRESS
-	bmi	restart
+	bmi	font_drop_done
 
 	jmp	drop_loop
 
-restart:
+font_drop_done:
 ;	bit	KEYRESET
 ;	jmp	reinit
-
 
 	rts
 

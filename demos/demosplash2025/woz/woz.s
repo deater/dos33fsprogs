@@ -77,11 +77,11 @@ monsters:
 
 	jsr	hgr_page_flip
 
-	;=======================
+	;============================
 	; wait a bit
 
-	jsr	wait_until_keypress
-
+	lda	#5
+	jsr	wait_seconds
 
 	rts
 
