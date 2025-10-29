@@ -43,18 +43,18 @@ martymation:
 	jsr	HGR2
 
 	; decompress images
-	lda	#<(page0_lzsa)
+	lda	#<(page1_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(page0_lzsa)
+	lda	#>(page1_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda	#<(page1_lzsa)
+	lda	#<(page2_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(page1_lzsa)
+	lda	#>(page2_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$40

@@ -5,6 +5,16 @@
 
 ; by Vince `deater` Weaver
 
+.include "zp.inc"
+.include "hardware.inc"
+
+hposn_high = $1000
+hposn_low  = $1100
+
+hires_lookup_low = hposn_low
+hires_lookup_high = hposn_high
+
+
 ; zero page locations
 
 NIBCOUNT	= $00
@@ -13,8 +23,8 @@ HGR_BITS	= $1C
 ; 1C-40 has some things used by hires
 
 
-GBASL		= $80
-GBASH		= $81
+;GBASL		= $80
+;GBASH		= $81
 ROW		= $82
 
 ; D0+ used by HGR routines
@@ -23,43 +33,50 @@ HGR_COLOR	= $E4
 HGR_PAGE	= $E6
 
 ; soft-switches
-KEYPRESS	= $C000
-KEYRESET	= $C010
-SET_GR		= $C050
-FULLGR		= $C052
-PAGE1		= $C054
-HIRES		= $C057
+;KEYPRESS	= $C000
+;KEYRESET	= $C010
+;SET_GR		= $C050
+;FULLGR		= $C052
+;PAGE1		= $C054
+;HIRES		= $C057
 
 ; ROM routines
 
-HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
-HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
-HPLOT0		= $F457		; plot at (Y,X), (A)
-HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
-WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
+;HGR2		= $F3D8		; set hires page2 and clear $4000-$5fff
+;HGR		= $F3E2		; set hires page1 and clear $2000-$3fff
+;HPLOT0		= $F457		; plot at (Y,X), (A)
+;HCOLOR1		= $F6F0		; set HGR_COLOR to value in X
+;WAIT		= $FCA8		; delay 1/2(26+27A+5A^2) us
 
-martymation:
+asteroid_martymation:
+
+	;=======================
+	; set up hgr tables
+
+	jsr	hgr_make_tables
 
 	jsr	HGR2
 
 	; decompress images
-	lda	#<(page0_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(page0_lzsa)
-	sta	getsrc_smc+2
+	lda	#<(page1_zx02)
+	sta	zx_src_l+1
+	lda	#>(page1_zx02)
+	sta	zx_src_h+1
+
+	lda	#$00
+	sta	DRAW_PAGE			; page1
+
+	jsr	zx02_full_decomp_main
+
+	lda	#<(page2_zx02)
+	sta	zx_src_l+1
+	lda	#>(page2_zx02)
+	sta	zx_src_h+1
 
 	lda	#$20
+	sta	DRAW_PAGE			; page2
 
-	jsr	decompress_lzsa2_fast
-
-	lda	#<(page1_lzsa)
-	sta	getsrc_smc+1
-	lda	#>(page1_lzsa)
-	sta	getsrc_smc+2
-
-	lda	#$40
-
-	jsr	decompress_lzsa2_fast
+	jsr	zx02_full_decomp_main
 
 	jmp	start_animation	; at $8503
 
@@ -245,70 +262,14 @@ odd_table:		; $86d9 ... $87d8
 .byte $9a,$9b,$9c,$9d,$9e,$9f,$98,$99, $82,$83,$84,$85,$86,$87,$80,$81	;
 
 
-hires_lookup_high:				; $9100
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
+.include "hgr_table.s"
 
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
+.include "zx02_optim.s"
 
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
+page1_zx02:
+	.incbin "graphics/asteroid_page1.hgr.zx02"
 
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
+page2_zx02:
+	.incbin "graphics/asteroid_page2.hgr.zx02"
 
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
 
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-	.byte $20,$24,$28,$2c, $30,$34,$38,$3c
-
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-	.byte $21,$25,$29,$2d, $31,$35,$39,$3d
-
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-	.byte $22,$26,$2a,$2e, $32,$36,$3a,$3e
-
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-	.byte $23,$27,$2b,$2f, $33,$37,$3b,$3f
-
-hires_lookup_low:
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-	.byte $00,$00,$00,$00, $00,$00,$00,$00
-	.byte $80,$80,$80,$80, $80,$80,$80,$80
-
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-	.byte $28,$28,$28,$28, $28,$28,$28,$28
-	.byte $A8,$A8,$A8,$A8, $A8,$A8,$A8,$A8
-
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-	.byte $50,$50,$50,$50, $50,$50,$50,$50
-	.byte $D0,$D0,$D0,$D0, $D0,$D0,$D0,$D0
-
-.include "decompress_fast_v2.s"
-.include "graphics/asteroid.inc"

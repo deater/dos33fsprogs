@@ -7,12 +7,13 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	marty.dsk
 
-marty.dsk:	HELLO MARTY OREGON MARTY_TINY
+marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY
 	cp $(EMPTY_DISK)/empty.dsk marty.dsk
 	$(DOS33) -y marty.dsk SAVE A HELLO
-	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY
+	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY.ORIGINAL
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY_TINY
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 OREGON
+	$(DOS33) -y marty.dsk BSAVE -a 0x6000 ASTEROID
 
 ###
 
@@ -21,11 +22,20 @@ HELLO:	hello.bas
 
 ###
 
-MARTY:	marty.o ./graphics/asteroid.inc
-	ld65 -o MARTY marty.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+MARTY.ORIGINAL:	marty_original.o ./graphics/asteroid.inc
+	ld65 -o MARTY.ORIGINAL marty_original.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-marty.o:	marty.s
-	ca65 -o marty.o marty.s -l marty.lst
+marty_original.o:	marty_original.s
+	ca65 -o marty_original.o marty_original.s -l marty_original.lst
+
+###
+
+ASTEROID:	asteroid.o ./graphics/asteroid.inc
+	ld65 -o ASTEROID asteroid.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+asteroid.o:	asteroid.s
+	ca65 -o asteroid.o asteroid.s -l asteroid.lst
+
 
 ###
 
@@ -48,4 +58,4 @@ oregon.o:	oregon.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO MARTY OREGON MARTY_TINY
+	rm -f *~ *.o *.lst HELLO MARTY.ORIGINAL OREGON MARTY_TINY ASTEROID

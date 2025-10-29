@@ -38,18 +38,18 @@ martymation:
 	jsr	HGR2
 
 	; decompress images
-	lda	#<(asteroid0_lzsa)
+	lda	#<(asteroid1_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(asteroid0_lzsa)
+	lda	#>(asteroid1_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$20
 
 	jsr	decompress_lzsa2_fast
 
-	lda	#<(asteroid1_lzsa)
+	lda	#<(asteroid2_lzsa)
 	sta	getsrc_smc+1
-	lda	#>(asteroid1_lzsa)
+	lda	#>(asteroid2_lzsa)
 	sta	getsrc_smc+2
 
 	lda	#$40
