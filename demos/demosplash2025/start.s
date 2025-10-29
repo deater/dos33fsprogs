@@ -353,11 +353,10 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-.if 0
-	; load monsters
+	; load woz
 
 	sei				; disable interrupts
-	lda	#PART_MONSTERS
+	lda	#PART_WOZ
 	sta	WHICH_LOAD
 	jsr	load_from_disk
 	cli				; re-enable music
@@ -381,25 +380,12 @@ skip_all_checks:
 ;	jsr	mute_ay_both
 ;	jsr	clear_ay_both		; stop from making noise
 
-	; load woz
-
-;	lda	#PART_DANCING		; Dancing
-;	sta	WHICH_LOAD
-;	jsr	load_file
-
-
-	; restart music
-
-;	cli		; start interrupts (music)
 
 	;======================
 	; start woz
 
-;	jsr	$2000
+	jsr	$6000
 
-
-
-.endif
 
 	;=======================
 	;=======================

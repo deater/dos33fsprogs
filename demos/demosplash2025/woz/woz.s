@@ -73,6 +73,11 @@ monsters:
 	jsr	dhgr_repack_bottom
 
 	;=======================
+	; make visible
+
+	jsr	hgr_page_flip
+
+	;=======================
 	; wait a bit
 
 	jsr	wait_until_keypress
