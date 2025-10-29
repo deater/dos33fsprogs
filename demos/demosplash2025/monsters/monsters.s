@@ -88,7 +88,11 @@ monsters:
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
-	jsr	wait_until_keypress
+	;============================
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
 
 	;========================
 	;========================
@@ -156,7 +160,11 @@ monsters:
 
 	cli
 
-	jsr	wait_until_keypress
+	;============================
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
 
 
 	;========================
@@ -206,7 +214,12 @@ monsters:
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
-	jsr	wait_until_keypress
+
+	;============================
+	; wait a bit
+
+	lda	#1
+	jsr	wait_seconds
 
 
 	rts
