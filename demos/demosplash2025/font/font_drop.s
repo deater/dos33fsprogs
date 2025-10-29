@@ -1,7 +1,7 @@
 ; VMW: convert text screen to hi-res and drop the chars
 
-drop_y		= $a000
-drop_yadd	= $a400
+;drop_y		= $a000
+;drop_yadd	= $a400
 
 ; Note the fps values are going to change depending how many chars on screen
 
@@ -125,9 +125,13 @@ drop_loop:
 ;	bpl	retry
 ;	bit	KEYRESET
 
+
+	;==========================
+	; stop after so many frames
+
 	inc	FRAME
 	lda	FRAME
-	cmp	#50
+	cmp	#60
 	beq	font_drop_done
 
 

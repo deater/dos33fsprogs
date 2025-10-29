@@ -47,7 +47,11 @@ intro:
 
 	jsr	zx02_full_decomp_main
 
-	jsr	wait_until_keypress
+	;===================================
+	; wait a bit at title
+
+	lda	#5
+	jsr	wait_seconds
 
 	;=================================
 	; clear screen

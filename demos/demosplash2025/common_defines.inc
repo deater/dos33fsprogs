@@ -1,5 +1,8 @@
 zp_save		= $c00
 
+drop_y          = $c00	; run at start? need 1k free?
+drop_yadd       = $b800 ; extra only 6k so starting at 7k should be fine?
+
 repack_src	= $a000
 
 hposn_low       = $fd00

@@ -76,7 +76,7 @@ print_load_message:
 	jmp	print_load_message
 done_load_message:
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	;=========================================
 	;=========================================
@@ -173,6 +173,37 @@ skip_all_checks:
 	jsr	hgr_make_tables
 
 
+	;====================================
+	;====================================
+	; Pre-Load some programs into AUX MEM
+	;====================================
+	;====================================
+
+	sta	$C008		; use MAIN zero-page/stack/language card
+
+	;=============================
+	; want to load INTRO last
+
+	; TODO: wrangle the files
+
+
+;	lda	#PART_MONSTERS
+;	sta	WHICH_LOAD
+;	jsr	load_from_disk
+
+	;==================
+	; load extra
+
+	lda	#PART_EXTRA
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+
+	;==================
+	; load intro
+
+	lda	#PART_INTRO
+	sta	WHICH_LOAD
+	jsr	load_from_disk
 
 	;====================================
 	;====================================
@@ -196,23 +227,6 @@ skip_all_checks:
 	jsr	hgr_page1_clearscreen
 	sta	WRMAIN			; writes back to MAIN memory
 
-	;====================================
-	;====================================
-	; Pre-Load some programs into AUX MEM
-	;====================================
-	;====================================
-
-	sta	$C008		; use MAIN zero-page/stack/language card
-
-	;=============================
-	; want to load INTRO last
-
-	; TODO: wrangle the files
-
-
-;	lda	#PART_MONSTERS
-;	sta	WHICH_LOAD
-;	jsr	load_from_disk
 
 
 	;=======================
@@ -220,22 +234,6 @@ skip_all_checks:
 	; Run intro
 	;=======================
 	;=======================
-
-
-	; load intro
-
-	sei				; disable interrupts
-
-	; load extra
-
-	lda	#PART_EXTRA
-	sta	WHICH_LOAD
-	jsr	load_from_disk
-
-	lda	#PART_INTRO
-	sta	WHICH_LOAD
-	jsr	load_from_disk
-
 
 
 	; run intro
