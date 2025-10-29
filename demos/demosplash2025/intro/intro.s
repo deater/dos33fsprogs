@@ -106,11 +106,11 @@ intro:
 	;=======================
 	;=======================
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 
-;	lda	#1
-;	jsr	wait_seconds
+	lda	#1
+	jsr	wait_seconds
 
 
 	;=============================
@@ -171,12 +171,10 @@ intro:
 	;=======================
 	; wait a bit
 
-;	lda	#1
-;	jsr	wait_seconds
+	lda	#1
+	jsr	wait_seconds
 
 ;	jsr	clear_dhgr_screens
-
-	jsr	wait_until_keypress
 
 	;=======================================
 	;=======================================
@@ -282,9 +280,14 @@ scroll_up_loop:
         cmp     #85
         bne     scroll_up_loop
 
-	jsr	wait_until_keypress
-
 done_house_scroll:
+
+	;================================
+	; wait a bit before opening door
+
+	lda	#1
+	jsr	wait_seconds
+
 	; FIXME: make sure we end up on PAGE1
 
 	lda	#0
@@ -308,7 +311,12 @@ done_house_scroll:
 
 	jsr	hgr_draw_sprite
 
-	jsr	wait_until_keypress
+	;================================
+	; wait a bit after opening door
+
+	lda	#1
+	jsr	wait_seconds
+
 
 	;==========================================
 	; print some text
@@ -320,7 +328,11 @@ done_house_scroll:
 
 	jsr	DrawCondensedString
 
-	jsr	wait_until_keypress
+	;=================================
+	; wait a bit after saying message
+
+	lda	#1
+	jsr	wait_seconds
 
 	rts
 
