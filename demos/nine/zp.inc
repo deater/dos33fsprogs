@@ -61,6 +61,8 @@ BLARGH          = $69
 
 CURSOR_X	= $6A
 CURSOR_Y	= $6B
+BALL_X		= $6C
+
 
 ZPOS		= $78
 
@@ -120,6 +122,11 @@ TIME_TAKEN	= $9A
 LYRICS_ACTIVE	= $9B
 ;FORTYCOL	= $9C
 CURSOR		= $9D
+
+CURRENT_COL	= $CC
+CURRENT_ROW	= $CD
+REPACK_TMP	= $D0		; D0...D7
+
 
 ; More zero-page addresses
 ; we try not to conflict with anything DOS, MONITOR or BASIC related

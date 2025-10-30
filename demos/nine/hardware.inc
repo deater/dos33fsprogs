@@ -1,14 +1,41 @@
-;; HARDWARE LOCATIONS
+; HARDWARE LOCATIONS
 
 KEYPRESS	=	$C000
+KBD		=	$C000
 KEYRESET	=	$C010
 
-;; SOFT SWITCHES
-CLR80COL	=	$C000	; PAGE1/PAGE2 normal
-SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE0 in Aux instead
+; SOFT SWITCHES
+CLR80COL	=	$C000	; PAGE1/PAGE1 normal
+EIGHTYSTOREOFF	=	$C000	;
+SET80COL	=	$C001	; PAGE1/PAGE2 switches PAGE1 in Aux instead
+EIGHTYSTOREON	=	$C001	;
+RDMAIN		=	$C002	; (w)
+RDAUX		=	$C003	; (w)
+READMAINMEM	=	$C002   ; STA to read from main mem ($0200..$BFFF)
+READAUXMEM	=	$C003   ; STA to read from aux mem ($0200..$BFFF)
+WRITEMAINMEM	=	$C004   ; STA to write to main mem ($0200..$BFFF)
+WRITEAUXMEM	=	$C005   ; STA to write to aux mem ($0200..$BFFF)
+
+
+WRMAIN		=	$C004	; (w)
+WRAUX		=	$C005	; (w)
+ALTZPOFF	=	$C008	; (w)	Use MAIN for page 0/1/LC
+ALTZPON		=	$C009	; (w)	Use AUX for page 0/1/LC
+
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
+
+RDBNK2		=	$C011	; (r7) Language card $D000 bank2=1, bank1=0
+RDLCRAM		=	$C012	; (r7) Language card RAM=1, ROM=0
+RAMRD		=	$C013	; (r7) Read AUX=1, MAIN=0
+RAMWRT		=	$C014	; (r7) Write AUX=1, MAIN=0
+RDALTZP		=	$C016	; (r7) AUX=1 MAIN=0
+
+TBCOLOR		=	$C022	; IIgs text fg/bg colors
+NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
+CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
+CYAREG		=	$C036	; iigs motor detect and clock speed
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
@@ -17,33 +44,52 @@ PAGE1		=	$C054
 PAGE2		=	$C055
 LORES		=	$C056	; Enable LORES graphics
 HIRES		=	$C057	; Enable HIRES graphics
-AN3		=	$C05E	; Annunciator 3
+AN3		=	$C05E	; clear Annunciator 3
+CLRAN3		=	$C05E
+SETAN3		=	$C05F	; set Annunicator 3 (WR)
 
 PADDLE_BUTTON0	=	$C061
 PADDL0		=	$C064
 PTRIG		=	$C070
 
-;; BASIC ROUTINES
+LCBANK2		=	$C083
+LCBANK1		=	$C08B
 
-NORMAL	=	$F273
+; APPLESOFT BASIC ROUTINES
 
-;; MONITOR ROUTINES
+NORMAL		= $F273
+HGR2		= $F3D8
+HGR		= $F3E2
+BKGND0		= $F3F4		; clear current page to A
+HPOSN		= $F411		; (Y,X),(A)  (values stores in HGRX,XH,Y)
+HPLOT0		= $F457		; plot at (Y,X), (A)
+COLOR_SHIFT	= $F47E
+HLINRL		= $F530		; (X,A),(Y)
+HGLIN		= $F53A		; line to (X,A),(Y)
+COLORTBL	= $F6F6
 
-HLINE	= $F819			;; HLINE Y,$2C at A
-VLINE	= $F828			;; VLINE A,$2D at Y
-CLRSCR	= $F832			;; Clear low-res screen
-CLRTOP	= $F836			;; clear only top of low-res screen
-SETCOL	= $F864			;; COLOR=A
+; MONITOR ROUTINES
+
+HLINE	= $F819			; HLINE Y,$2C at A
+VLINE	= $F828			; VLINE A,$2D at Y
+CLRSCR	= $F832			; Clear low-res screen
+CLRTOP	= $F836			; clear only top of low-res screen
+GBASCALC= $F847
+SETCOL	= $F864			; COLOR=A
+ROM_TEXT2COPY = $F962		; iigs
 TEXT	= $FB36
-TABV	= $FB5B			;; VTAB to A
-BASCALC	= $FBC1			;;
-VTAB	= $FC22			;; VTAB to CV
-HOME	= $FC58			;; Clear the text screen
-WAIT	= $FCA8			;; delay 1/2(26+27A+5A^2) us
-SETINV	= $FE80			;; INVERSE
-SETNORM	= $FE84			;; NORMAL
-COUT	= $FDED			;; output A to screen
-COUT1	= $FDF0			;; output A to screen
+TABV	= $FB5B			; VTAB to A
+ROM_MACHINEID = $FBB3		; iigs
+BASCALC	= $FBC1			;
+BELL	= $FBDD			; ring the bell
+VTAB	= $FC22			; VTAB to CV
+HOME	= $FC58			; Clear the text screen
+WAIT	= $FCA8			; delay 1/2(26+27A+5A^2) us
+SETINV	= $FE80			; INVERSE
+SETNORM	= $FE84			; NORMAL
+COUT	= $FDED			; output A to screen
+COUT1	= $FDF0			; output A to screen
+
 
 
 
