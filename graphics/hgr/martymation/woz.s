@@ -78,6 +78,7 @@ start_animation:			; $853c
 
 
 animate_loop:				; $8550
+
 	lda	PAGE1,X			; set page
 
 	txa				; switch display page
@@ -91,10 +92,44 @@ animate_loop:				; $8550
 
 	stx	disp_page2		; ???????
 
-	lda	#$11
+	lda	#$10
 	jsr	WAIT			; pause a bit
 
 	jsr	cycle_colors
+
+	; draw woz
+
+	txa
+	pha
+
+	lda	#16			; 112/7 = 16
+	sta	CURSOR_X
+	lda	#89
+	sta	CURSOR_Y
+
+	lda	#<woz_arms_sprite
+	sta	INL
+
+	lda	#>woz_arms_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#18			; 126/7 = 18
+	sta	CURSOR_X
+	lda	#62
+	sta	CURSOR_Y
+
+	lda	#<woz_body_sprite
+	sta	INL
+
+	lda	#>woz_body_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	pla
+	tax
 
 	lda	KEYPRESS		; check keypress
 	bpl	key_not_pressed
@@ -234,6 +269,8 @@ odd_table:		; $86d9 ... $87d8
 
 .include "hgr_table.s"
 
+.include "hgr_sprite.s"
+
 .include "zx02_optim.s"
 
 page1_zx02:
@@ -242,4 +279,5 @@ page1_zx02:
 page2_zx02:
 	.incbin "graphics/asteroid_page2.hgr.zx02"
 
+.include "graphics/woz_sprites.inc"
 

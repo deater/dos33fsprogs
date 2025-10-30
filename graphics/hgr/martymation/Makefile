@@ -31,7 +31,7 @@ marty_original.o:	marty_original.s
 
 ###
 
-ASTEROID:	asteroid.o ./graphics/asteroid.inc
+ASTEROID:	asteroid.o
 	ld65 -o ASTEROID asteroid.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 asteroid.o:	asteroid.s
@@ -39,10 +39,10 @@ asteroid.o:	asteroid.s
 
 ###
 
-WOZ:	woz.o ./graphics/woz.inc
+WOZ:	woz.o
 	ld65 -o WOZ woz.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
-woz.o:	woz.s
+woz.o:	woz.s graphics/woz_sprites.inc
 	ca65 -o woz.o woz.s -l woz.lst
 
 

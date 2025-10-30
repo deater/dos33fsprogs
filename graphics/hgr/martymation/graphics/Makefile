@@ -1,4 +1,5 @@
 ZX02 = ~/research/6502_compression/zx02.git/build/zx02 -f
+HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 PNG2RLE = ../../../../utils/gr-utils/png2rle
 PNG2GR = ../../../../utils/gr-utils/png2gr
 PNG2HGR = ../../../../utils/hgr-utils/png2hgr
@@ -6,8 +7,17 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../../utils/bmp2dhr/b2d
 
 all:	asteroid.inc new.inc \
+	woz_sprites.inc \
 	asteroid_page1.hgr.zx02 asteroid_page2.hgr.zx02 \
 	woz_page1.hgr.zx02 woz_page2.hgr.zx02
+
+####
+woz_sprites.inc:	woz_sprite.png
+	$(HGR_SPRITE) -s -l woz_arms_sprite woz_sprite.png 210 36 265 46 > woz_sprites.inc
+	$(HGR_SPRITE) -s -l woz_body_sprite woz_sprite.png 224 85 251 148 >> woz_sprites.inc
+#	$(HGR_SPRITE) -l woz_sprite woz_sprite.png 7  7 76  77 > woz_sprites.inc
+#	$(HGR_SPRITE) -l woz_mask   woz_sprite.png 7 84 76 154 >> woz_sprites.inc
+
 
 ####
 
@@ -91,5 +101,5 @@ oregon.page2.lzsa:	oregon.page2
 
 
 clean:	
-	rm -f *~ outline.inc *.lzsa *.gr *.hgr
+	rm -f *~ outline.inc *.lzsa *.gr *.hgr woz_sprites.inc
 
