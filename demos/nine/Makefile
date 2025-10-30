@@ -35,7 +35,8 @@ WOZ:	woz.o
 woz.o:	woz.s zx02_optim.s \
 		dhgr_sprite.s \
 		hgr_tables.s \
-		sprites/numbers.inc \
+		sprites/ball_sprites.inc \
+		graphics/new_woz.raw_top.zx02 \
 		zp.inc hardware.inc
 	ca65 -o woz.o woz.s -l woz.lst
 

@@ -304,6 +304,12 @@ static int colors_to_bytes(unsigned char colors[14],
 		}
 	}
 
+	for(i=0;i<7;i++) {
+		if (colors[i*2]!=colors[(i*2)+1]) {
+			colors[i*2]=(colors[i*2]&0x3)|(colors[(i*2)+1]&0xc);
+		}
+	}
+
 	/* aux0 */
 	*byte0 = (colors[0]) | ((colors[2]&0x7)<<4);
 
