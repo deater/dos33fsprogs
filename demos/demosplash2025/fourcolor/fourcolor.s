@@ -24,6 +24,12 @@ monster:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
+	; clear screens
+	;=================================
+
+	jsr	clear_dhgr_screens
+
+	;=================================
 	; Unpack base image
 	;=================================
 
@@ -188,7 +194,7 @@ monster:
 
 	lda	#18
 	sta	XSTART
-	lda	#30
+	lda	#34
 	sta	XEND
 
 	jsr	decode_image

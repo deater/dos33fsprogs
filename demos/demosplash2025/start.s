@@ -240,51 +240,7 @@ skip_all_checks:
 
 	cli			; start music
 
-.if 0
-;	2C 8B C0             bit     LCBANK1	; read write ram RR $C083 (bank2) $C08B (bank1)
-;	2C 8B C0             bit     LCBANK1
-;	8D 05 C0             sta     WRITEAUXMEM
-;	8D 03 C0             sta     READAUXMEM      ; after this, off in la-la land
-;	4C 0C 00
-
-	lda	#$2C
-	sta	$00
-	lda	#$8B
-	sta	$01
-	lda	#$C0
-	sta	$02
-
-	lda	#$2C
-	sta	$03
-	lda	#$8B
-	sta	$04
-	lda	#$C0
-	sta	$05
-
-	lda	#$8D
-	sta	$06
-	lda	#$05
-	sta	$07
-	lda	#$C0
-	sta	$08
-
-	lda	#$8D
-	sta	$09
-	lda	#$03
-	sta	$0A
-	lda	#$C0
-	sta	$0B
-
-	lda	#$4C
-	sta	$0C
-	lda	#$0C
-	sta	$0D
-	lda	#$00
-	sta	$0E
-
-	jmp	$0000
-
-.endif
+;	jsr	test_intterupt_banking
 
 	jsr	$6000
 
@@ -314,7 +270,7 @@ skip_all_checks:
 
 	; run monsters
 
-	jsr	$6000
+;	jsr	$6000
 
 	;=======================
 	;=======================
@@ -341,7 +297,7 @@ skip_all_checks:
 
 	; run monsters2
 
-	jsr	$6000
+;	jsr	$6000
 
 
 
@@ -520,4 +476,55 @@ message_type_offset:
 load_message:
 ;	.byte 16,12,	$6A8
 	.byte "LOADING",0
+
+
+
+.if 0
+
+test_interrupt_banking:
+
+;	2C 8B C0             bit     LCBANK1	; read write ram RR $C083 (bank2) $C08B (bank1)
+;	2C 8B C0             bit     LCBANK1
+;	8D 05 C0             sta     WRITEAUXMEM
+;	8D 03 C0             sta     READAUXMEM      ; after this, off in la-la land
+;	4C 0C 00
+
+	lda	#$2C
+	sta	$00
+	lda	#$8B
+	sta	$01
+	lda	#$C0
+	sta	$02
+
+	lda	#$2C
+	sta	$03
+	lda	#$8B
+	sta	$04
+	lda	#$C0
+	sta	$05
+
+	lda	#$8D
+	sta	$06
+	lda	#$05
+	sta	$07
+	lda	#$C0
+	sta	$08
+
+	lda	#$8D
+	sta	$09
+	lda	#$03
+	sta	$0A
+	lda	#$C0
+	sta	$0B
+
+	lda	#$4C
+	sta	$0C
+	lda	#$0C
+	sta	$0D
+	lda	#$00
+	sta	$0E
+
+	jmp	$0000
+
+.endif
 

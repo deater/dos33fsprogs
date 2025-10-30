@@ -92,6 +92,12 @@ monsters:
 
 	jsr	asteroid_martymation
 
+	bit	PAGE1
+
+	lda	#0
+	jsr	hgr_page2_clearscreen
+
+	jsr	do_wipe_fizzle
 
 	rts
 
@@ -105,3 +111,4 @@ woz_bottom:
 	.incbin "graphics/nine_woz.raw_bottom.zx02"
 
 .include "martymation.s"
+.include "fx.hgr.fizzle.s"

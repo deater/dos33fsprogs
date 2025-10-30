@@ -52,6 +52,7 @@ start_animation:			; $853c
 
 	ldx	#$00
 	stx	display_page		; set display page to PAGE1
+	stx	FRAME
 
 	inx				; but move it to PAGE2?
 
@@ -119,14 +120,18 @@ key_was_pressed:
 	jmp	do_exit			; exit
 
 key_not_pressed:
+	inc	FRAME
+	lda	FRAME
+	cmp	#MARTY_LENGTH
+	beq	do_exit
+
 	ldx	disp_page2		; get which page to display
 
 	jmp	animate_loop		;
 
 
 do_exit:
-	lda	PAGE1			; flip back to PAGE1
-	inc	display_page		; increment displayed page? (?)
+
 	rts
 
 display_page:				; $8506

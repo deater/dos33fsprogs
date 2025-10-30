@@ -35,6 +35,9 @@ Table2	= $a9D0	; 40 bytes
 
 plasma_debut:
 
+	lda	#0
+	sta	FRAME
+
 	;=====================
 	; make /7 %7 tables
 	;=====================
@@ -108,31 +111,9 @@ plasma_loop:
 	jsr	init_plasma_colors
 	jsr	do_plasma
 
-.if 0
-	; switch to draw to visible page
-
-	lda	DRAW_PAGE
-	eor	#$20
-	sta	DRAW_PAGE
-
-	jsr	scroll_off
-
-	; now do same for AUX page
-
-	sta	WRITEAUXMEM
-
-	jsr	scroll_off
-
-	sta	WRITEMAINMEM
-
-
-;	lda     #0
-;	jsr	hgr_page1_clearscreen
-;	jsr	hgr_page2_clearscreen
-.endif
 	rts
 
-;	jmp	plasma_loop
+
 
 ;=========================================================================
 ;=========================================================================
@@ -296,6 +277,18 @@ done_pageflip:
 ;plasma_end_smc:
 ;	lda	#52
 ;	jsr	wait_for_pattern
+
+
+	;=======================
+	; see if done via count
+
+	inc	FRAME
+	lda	FRAME
+	cmp	#PLASMA_LENGTH
+	beq	done_plasma
+
+	;=========================
+	; see if done via keyboard
 
 	lda	KEYPRESS
 

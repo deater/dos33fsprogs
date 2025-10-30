@@ -1,3 +1,7 @@
+MARTY_LENGTH  = 64
+PLASMA_LENGTH = 100
+
+
 zp_save		= $c00
 
 drop_y          = $c00	; run at start? need 1k free?
