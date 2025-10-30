@@ -15,7 +15,8 @@ dhgr_wipes.dsk:	HELLO \
 	star/WIPE_STAR \
 	redlines/WIPE_REDLINES \
 	forty-eight/WIPE_48_SPIRAL \
-	forty-eight/WIPE_48_ALL 
+	forty-eight/WIPE_48_ALL \
+	forty-eight/DS_TEST
 	cp $(EMPTY_DISK)/empty.dsk dhgr_wipes.dsk
 	$(DOS33) -y dhgr_wipes.dsk SAVE A HELLO
 	$(DOS33) -y dhgr_wipes.dsk BSAVE -a 0x6000 fizzle/WIPE_FIZZLE
@@ -25,6 +26,7 @@ dhgr_wipes.dsk:	HELLO \
 	$(DOS33) -y dhgr_wipes.dsk BSAVE -a 0x6000 redlines/WIPE_REDLINES
 	$(DOS33) -y dhgr_wipes.dsk BSAVE -a 0x6000 forty-eight/WIPE_48_SPIRAL
 	$(DOS33) -y dhgr_wipes.dsk BSAVE -a 0x6000 forty-eight/WIPE_48_ALL
+	$(DOS33) -y dhgr_wipes.dsk BSAVE -a 0x6000 forty-eight/DS_TEST
 
 ###
 

@@ -2,7 +2,7 @@ include ../../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../../linker_scripts
 
-all:	WIPE_48_ALL WIPE_48_SPIRAL
+all:	WIPE_48_ALL WIPE_48_SPIRAL DS_TEST
 
 ###
 
@@ -30,10 +30,23 @@ wipe_48_all.o:	wipe_48_all.s \
 	../macros.s
 	ca65 -o wipe_48_all.o wipe_48_all.s -l wipe_48_all.lst
 
+###
+
+DS_TEST:	ds_test.o
+	ld65 -o DS_TEST ds_test.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+ds_test.o:	ds_test.s \
+	../zp.inc ../hardware.inc ../wait_keypress.s ../zx02_optim.s \
+	../main_macros.s \
+	../fx.lib.s \
+	../macros.s
+	ca65 -o ds_test.o ds_test.s -l ds_test.lst
+
+
 
 ###
 
 clean:	
-	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_48_SPIRAL WIPE_48_ALL
+	rm -f *~ *.o *.lst *.zx02 HELLO WIPE_48_SPIRAL WIPE_48_ALL DS_TEST
 
 
