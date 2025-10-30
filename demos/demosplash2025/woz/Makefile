@@ -24,6 +24,9 @@ woz.o:	woz.s \
 
 ####
 
+graphics/asteroid_page1.hgr.zx02:	
+	cd graphics && make
+
 graphics/nine_woz.raw_top.zx02:	
 	cd graphics && make
 
