@@ -3,6 +3,9 @@
 ;(c) 2020 by 4am & qkumba
 ;    2025 modifications by deater
 
+; can move most things around, but breaks if we move aux backup
+; from $9000 to $a000
+
 
 ; NOTE!  It also stomps all over $7000-$8F00!!!!
 
