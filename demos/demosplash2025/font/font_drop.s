@@ -131,7 +131,7 @@ drop_loop:
 
 	inc	FRAME
 	lda	FRAME
-	cmp	#60
+	cmp	#FONT_DROP_LENGTH
 	beq	font_drop_done
 
 

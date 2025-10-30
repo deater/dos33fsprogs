@@ -92,6 +92,10 @@ LENGTH		= $D4
 
 ; woz
 ROW		= $D0	; martymation
+FAKE_HGR_PAGE	= $D1
+FAKE_HGR_BITS	= $D2
+FAKE_HGR_SHAPE	= $D3
+FAKE_HGR_SHAPE2	= $D4
 
 ; four-color
 AUXOUTL		= $CA

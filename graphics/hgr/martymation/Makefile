@@ -7,7 +7,7 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	marty.dsk
 
-marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY WOZ
+marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY WOZ HGR8
 	cp $(EMPTY_DISK)/empty.dsk marty.dsk
 	$(DOS33) -y marty.dsk SAVE A HELLO
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY.ORIGINAL
@@ -15,6 +15,7 @@ marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY WOZ
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 OREGON
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 ASTEROID
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 WOZ
+	$(DOS33) -y marty.dsk BSAVE -a 0x6000 HGR8
 
 ###
 
@@ -45,6 +46,14 @@ WOZ:	woz.o
 woz.o:	woz.s graphics/woz_sprites.inc
 	ca65 -o woz.o woz.s -l woz.lst
 
+###
+
+HGR8:	hgr8.o
+	ld65 -o HGR8 hgr8.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+hgr8.o:	hgr8.s
+	ca65 -o hgr8.o hgr8.s -l hgr8.lst
+
 
 
 ###
@@ -68,4 +77,4 @@ oregon.o:	oregon.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO MARTY.ORIGINAL OREGON MARTY_TINY ASTEROID WOZ
+	rm -f *~ *.o *.lst HELLO MARTY.ORIGINAL OREGON MARTY_TINY ASTEROID WOZ HGR8

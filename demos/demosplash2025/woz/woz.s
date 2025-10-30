@@ -86,6 +86,18 @@ monsters:
 
 	;==============================
 	;==============================
+	; run fake hgr8
+	;==============================
+	;==============================
+
+	lda	#$0
+	jsr	hgr_page1_clearscreen
+	jsr	hgr_page2_clearscreen
+
+	jsr	fake_hgr8
+
+	;==============================
+	;==============================
 	; run martymation
 	;==============================
 	;==============================
@@ -112,3 +124,4 @@ woz_bottom:
 
 .include "martymation.s"
 .include "fx.hgr.fizzle.s"
+.include "fake_hgr8.s"
