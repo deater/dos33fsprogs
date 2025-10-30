@@ -1,5 +1,5 @@
 FONT_DROP_LENGTH	= 60	; frames
-HGR8_LENGTH		= 15	; frames
+HGR8_LENGTH		= 8	; frames
 MARTY_LENGTH		= 64	; frames
 PLASMA_LENGTH		= 100	; frames
 

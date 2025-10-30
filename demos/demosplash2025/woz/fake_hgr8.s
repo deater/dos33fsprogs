@@ -15,7 +15,7 @@ fake_hgr8:
 	lda	#$0
 	sta	FRAME
 
-	jsr	hgr2
+;	jsr	hgr2
 
 chrget:
 
@@ -27,7 +27,7 @@ tiny_loop:
 				; $20 $F3 $F4, depends on f3/f4 being nops
 				;	first time through the loop
 
-;	jsr	hgr2		; HGR2	-- init full-screen hi-res graphics
+	jsr	hgr2		; HGR2	-- init full-screen hi-res graphics
 				; zero flag set
 
 	inc	FRAME
