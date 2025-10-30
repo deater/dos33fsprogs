@@ -21,13 +21,13 @@ ball_sprites.inc:	ball_sprites2.png ball_sprites.png
 	$(DHGR_SPRITE) -s -l red4 ball_sprites2.png 14  88  41 102 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l red5 ball_sprites2.png 14 103  41 117 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l red6 ball_sprites2.png 14 118  41 132 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange0 ball_sprites2.png 28  28  69  42 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange1 ball_sprites2.png 28  43  69  57 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange2 ball_sprites2.png 28  58  69  72 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange3 ball_sprites2.png 28  73  69  87 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange4 ball_sprites2.png 28  88  69 102 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange5 ball_sprites2.png 28 103  69 117 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l orange6 ball_sprites2.png 28 118  69 132 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange0 ball_sprites2.png 42  28  69  42 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange1 ball_sprites2.png 42  43  69  57 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange2 ball_sprites2.png 42  58  69  72 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange3 ball_sprites2.png 42  73  69  87 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange4 ball_sprites2.png 42  88  69 102 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange5 ball_sprites2.png 42 103  69 117 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l orange6 ball_sprites2.png 42 118  69 132 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l yellow0 ball_sprites2.png 70  28  97  42 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l yellow1 ball_sprites2.png 70  43  97  57 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l yellow2 ball_sprites2.png 70  58  97  72 >> ball_sprites.inc
@@ -35,7 +35,7 @@ ball_sprites.inc:	ball_sprites2.png ball_sprites.png
 	$(DHGR_SPRITE) -s -l yellow4 ball_sprites2.png 70  88  97 102 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l yellow5 ball_sprites2.png 70 103  97 117 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l yellow6 ball_sprites2.png 70 118  97 132 >> ball_sprites.inc
-	$(DHGR_SPRITE) -s -l green0 ball_sprites2.png 98  28 152  42 >> ball_sprites.inc
+	$(DHGR_SPRITE) -s -l green0 ball_sprites2.png 98  28 125  42 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l green1 ball_sprites2.png 98  43 125  57 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l green2 ball_sprites2.png 98  58 125  72 >> ball_sprites.inc
 	$(DHGR_SPRITE) -s -l green3 ball_sprites2.png 98  73 125  87 >> ball_sprites.inc

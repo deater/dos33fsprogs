@@ -27,7 +27,7 @@ nine_start:
 	ldx	#8
 init_ball_loop:
 	lda	#$ff
-	sta	BALL_MODE,X
+	sta	BALL_STATE,X
 	lda	#$0
 	sta	BALL_OFFSET,X
 	dex
@@ -110,6 +110,7 @@ hat_loop:
 	lda	hat_y,X
 	sta	CURSOR_Y
 
+	ldy	WHICH_BALL
 	jsr	draw_ball
 
 	jsr	erase_hat_actual
@@ -129,6 +130,59 @@ done_ball:
 	bne	hat_loop
 done_hat_loop:
 
+	;======================
+	; clear out remnants
+	;======================
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	lda	#14
+	sta	CURSOR_X
+
+	lda	#10
+	sta	CURSOR_Y
+
+	lda	#<erase_main
+	sta	INL
+	lda	#>erase_main
+	sta	INH
+
+	jsr	dhgr_draw_sprite_main
+
+	lda	#<erase_aux
+	sta	INL
+	lda	#>erase_aux
+	sta	INH
+
+	jsr	dhgr_draw_sprite_aux
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	lda	#14
+	sta	CURSOR_X
+
+	lda	#10
+	sta	CURSOR_Y
+
+	lda	#<erase_main
+	sta	INL
+	lda	#>erase_main
+	sta	INH
+
+	jsr	dhgr_draw_sprite_main
+
+	lda	#<erase_aux
+	sta	INL
+	lda	#>erase_aux
+	sta	INH
+
+	jsr	dhgr_draw_sprite_aux
+
+
+
+
 	;=====================
 	;=====================
 	; circle loop
@@ -137,6 +191,13 @@ done_hat_loop:
 
 	lda	#0
 	sta	ORBITS
+	sta	NEXT_BALL
+
+	; release ball #0 first
+
+	lda	#1
+	sta	BALL_STATE+0
+
 circle_loop:
 
 	jsr	hgr_page_flip
@@ -149,27 +210,58 @@ circle_loop:
 	;=======================
 	; get position and draw
 
-	ldx	BALL_OFFSET
-	lda	circle_x,X
-	lsr
-	sta	BALL_X
+	lda	#0
+	sta	WHICH_BALL
 
-	lda	circle_y,X
+	; release next ball
+
+	lda	BALL_OFFSET+0
+	lsr
+	lsr
+	tax
+	lda	#1
+	sta	BALL_STATE,X
+
+draw_circle_ball_loop:
+
+	ldx	WHICH_BALL		; get ball
+	lda	BALL_STATE,X		; check if out, if not skip
+	bmi	skip_ball
+
+	lda	BALL_OFFSET,X		; get offset in circle
+	tax
+	lda	circle_x,X		; get x-position
+	lsr				; divide by 2?
+	sta	BALL_X			; set position
+
+	lda	circle_y,X		; get y position
 	sta	CURSOR_Y
 
-	jsr	draw_ball
+	ldy	WHICH_BALL		; get color of ball
+	jsr	draw_ball		; draw it
 
-	inc	BALL_OFFSET
-	lda	BALL_OFFSET
-	cmp	#$10
-	bne	circle_loop
+	ldx	WHICH_BALL		; increment current ball offset
+	inc	BALL_OFFSET,X
+	lda	BALL_OFFSET,X
+	cmp	#$20			; 32 positions
+	bne	skip_ball		; if not 32, good
+
+	lda	#0			; reset count to 0
+	sta	BALL_OFFSET,X
+
+	; only orbit if BALL#1
+	lda	WHICH_BALL		; were we ball #0?
+	bne	skip_ball		; if not do nothing
+
+	inc	ORBITS			; increment orbits
+
+skip_ball:
+	inc	WHICH_BALL
+	lda	WHICH_BALL
+	cmp	#8
+	bne	draw_circle_ball_loop
 
 done_orbit:
-
-	lda	#0
-	sta	BALL_OFFSET
-	inc	ORBITS
-
 	lda	ORBITS
 	cmp	#5
 	bne	circle_loop
@@ -329,7 +421,7 @@ load_image:
 
 erase_balls:
 
-	ldy	#15
+	ldy	#31
 	sty	ERASE_COUNT
 erase_balls_loop:
 
@@ -351,15 +443,7 @@ erase_balls_loop:
 
 	jsr	dhgr_draw_sprite_main
 
-.if 0
-	ldy	ERASE_COUNT
-	ldx	circle_x,Y
-	lda	div7_table,X
-	asl
-	sta	CURSOR_X
-	lda	mod7_table,X
-	tax
-.endif
+
 	lda	#<erase_aux
 	sta	INL
 	lda	#>erase_aux
@@ -437,9 +521,11 @@ erase_hat_actual:
 
 	;=================================
 	;=================================
-	; draw ball at CURSOR_X, CURSOR_Y
+	; draw ball at BALL_X, CURSOR_Y
 	;=================================
 	;=================================
+	; color in Y
+	; BALL_X is 0...139 (not 0...279)
 
 draw_ball:
 
@@ -447,8 +533,20 @@ draw_ball:
 	lda	div7_table,X
 	asl
 	sta	CURSOR_X
-	lda	mod7_table,X
+
+;	lda	mod7_table,X	; 0..6 is which sprite
+;	tax
+
+	tya
+	asl
+	asl
+	asl			; a is now color*8
+	clc
+	adc	mod7_table,X
+
 	tax
+
+	pha
 
 	lda	red_ball_main_l,X
 	sta	INL
@@ -465,6 +563,9 @@ draw_ball:
 	lda	mod7_table,X
 	tax
 
+	pla
+	tax
+
 	lda	red_ball_aux_l,X
 	sta	INL
 	lda	red_ball_aux_h,X
@@ -476,19 +577,109 @@ draw_ball:
 
 red_ball_main_l:
 	.byte <red0_main,<red1_main,<red2_main,<red3_main
-	.byte <red4_main,<red5_main,<red6_main
+	.byte <red4_main,<red5_main,<red6_main,0
+orange_ball_main_l:
+	.byte <orange0_main,<orange1_main,<orange2_main,<orange3_main
+	.byte <orange4_main,<orange5_main,<orange6_main,0
+yellow_ball_main_l:
+	.byte <yellow0_main,<yellow1_main,<yellow2_main,<yellow3_main
+	.byte <yellow4_main,<yellow5_main,<yellow6_main,0
+green_ball_main_l:
+	.byte <green0_main,<green1_main,<green2_main,<green3_main
+	.byte <green4_main,<green5_main,<green6_main,0
+blue_ball_main_l:
+	.byte <blue0_main,<blue1_main,<blue2_main,<blue3_main
+	.byte <blue4_main,<blue5_main,<blue6_main,0
+purple_ball_main_l:
+	.byte <purple0_main,<purple1_main,<purple2_main,<purple3_main
+	.byte <purple4_main,<purple5_main,<purple6_main,0
+grey_ball_main_l:
+	.byte <grey0_main,<grey1_main,<grey2_main,<grey3_main
+	.byte <grey4_main,<grey5_main,<grey6_main,0
+brown_ball_main_l:
+	.byte <brown0_main,<brown1_main,<brown2_main,<brown3_main
+	.byte <brown4_main,<brown5_main,<brown6_main,0
+
 
 red_ball_main_h:
 	.byte >red0_main,>red1_main,>red2_main,>red3_main
-	.byte >red4_main,>red5_main,>red6_main
+	.byte >red4_main,>red5_main,>red6_main,0
+orange_ball_main_h:
+	.byte >orange0_main,>orange1_main,>orange2_main,>orange3_main
+	.byte >orange4_main,>orange5_main,>orange6_main,0
+yellow_ball_main_h:
+	.byte >yellow0_main,>yellow1_main,>yellow2_main,>yellow3_main
+	.byte >yellow4_main,>yellow5_main,>yellow6_main,0
+green_ball_main_h:
+	.byte >green0_main,>green1_main,>green2_main,>green3_main
+	.byte >green4_main,>green5_main,>green6_main,0
+blue_ball_main_h:
+	.byte >blue0_main,>blue1_main,>blue2_main,>blue3_main
+	.byte >blue4_main,>blue5_main,>blue6_main,0
+purple_ball_main_h:
+	.byte >purple0_main,>purple1_main,>purple2_main,>purple3_main
+	.byte >purple4_main,>purple5_main,>purple6_main,0
+grey_ball_main_h:
+	.byte >grey0_main,>grey1_main,>grey2_main,>grey3_main
+	.byte >grey4_main,>grey5_main,>grey6_main,0
+brown_ball_main_h:
+	.byte >brown0_main,>brown1_main,>brown2_main,>brown3_main
+	.byte >brown4_main,>brown5_main,>brown6_main,0
 
 red_ball_aux_l:
 	.byte <red0_aux,<red1_aux,<red2_aux,<red3_aux
-	.byte <red4_aux,<red5_aux,<red6_aux
+	.byte <red4_aux,<red5_aux,<red6_aux,0
+orange_ball_aux_l:
+	.byte <orange0_aux,<orange1_aux,<orange2_aux,<orange3_aux
+	.byte <orange4_aux,<orange5_aux,<orange6_aux,0
+yellow_ball_aux_l:
+	.byte <yellow0_aux,<yellow1_aux,<yellow2_aux,<yellow3_aux
+	.byte <yellow4_aux,<yellow5_aux,<yellow6_aux,0
+green_ball_aux_l:
+	.byte <green0_aux,<green1_aux,<green2_aux,<green3_aux
+	.byte <green4_aux,<green5_aux,<green6_aux,0
+blue_ball_aux_l:
+	.byte <blue0_aux,<blue1_aux,<blue2_aux,<blue3_aux
+	.byte <blue4_aux,<blue5_aux,<blue6_aux,0
+purple_ball_aux_l:
+	.byte <purple0_aux,<purple1_aux,<purple2_aux,<purple3_aux
+	.byte <purple4_aux,<purple5_aux,<purple6_aux,0
+grey_ball_aux_l:
+	.byte <grey0_aux,<grey1_aux,<grey2_aux,<grey3_aux
+	.byte <grey4_aux,<grey5_aux,<grey6_aux,0
+brown_ball_aux_l:
+	.byte <brown0_aux,<brown1_aux,<brown2_aux,<brown3_aux
+	.byte <brown4_aux,<brown5_aux,<brown6_aux,0
+
 
 red_ball_aux_h:
 	.byte >red0_aux,>red1_aux,>red2_aux,>red3_aux
-	.byte >red4_aux,>red5_aux,>red6_aux
+	.byte >red4_aux,>red5_aux,>red6_aux,0
+orange_ball_aux_h:
+	.byte >orange0_aux,>orange1_aux,>orange2_aux,>orange3_aux
+	.byte >orange4_aux,>orange5_aux,>orange6_aux,0
+yellow_ball_aux_h:
+	.byte >yellow0_aux,>yellow1_aux,>yellow2_aux,>yellow3_aux
+	.byte >yellow4_aux,>yellow5_aux,>yellow6_aux,0
+green_ball_aux_h:
+	.byte >green0_aux,>green1_aux,>green2_aux,>green3_aux
+	.byte >green4_aux,>green5_aux,>green6_aux,0
+blue_ball_aux_h:
+	.byte >blue0_aux,>blue1_aux,>blue2_aux,>blue3_aux
+	.byte >blue4_aux,>blue5_aux,>blue6_aux,0
+purple_ball_aux_h:
+	.byte >purple0_aux,>purple1_aux,>purple2_aux,>purple3_aux
+	.byte >purple4_aux,>purple5_aux,>purple6_aux,0
+grey_ball_aux_h:
+	.byte >grey0_aux,>grey1_aux,>grey2_aux,>grey3_aux
+	.byte >grey4_aux,>grey5_aux,>grey6_aux,0
+brown_ball_aux_h:
+	.byte >brown0_aux,>brown1_aux,>brown2_aux,>brown3_aux
+	.byte >brown4_aux,>brown5_aux,>brown6_aux,0
+
+
+
+
 
 hat_x:
 	.byte 98, 98, 98, 98, 98, 98, 98, 98
@@ -499,12 +690,30 @@ hat_y:
 	.byte 33, 29, 25, 21, 17, 13,  9,  5
 
 circle_x:
-	.byte 134, 162, 186, 204, 210, 204, 186, 162
-	.byte 134, 106,  82,  64,  56,  62,  82, 106
+	.byte 134, 148, 162, 174, 186, 196, 204, 208
+	.byte 210, 208, 204, 196, 186, 174, 162, 148
+
+	.byte 134, 120, 106,  92, 82,  70, 64,  58
+	.byte  56,  58,  62,  70, 82,  92,106, 120
 
 circle_y:
-	.byte   1,   4,  18,  41,  69, 101, 123, 135
-	.byte 139, 135, 120,  99,  69,  40,  19,   4
+	.byte   1,   1
+	.byte   4,  11
+	.byte  18,  29
+	.byte  41,  55
+	.byte  69,  85
+	.byte 101, 112
+	.byte 123, 131
+	.byte 135, 138
+
+	.byte 139, 138
+	.byte 135, 130
+	.byte 120, 111
+	.byte  99,  84
+	.byte  69,  54
+	.byte  40,  28
+	.byte  19,   9
+	.byte   4,   1
 
 
 	.include	"zx02_optim.s"
