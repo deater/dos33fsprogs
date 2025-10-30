@@ -12,8 +12,23 @@ LINKER_SCRIPTS = ../../../../linker_scripts/
 
 all:	\
 	nine_woz.raw_top.zx02 nine_woz.raw_bottom.zx02 \
+	new_woz.raw_top.zx02 new_woz.raw_bottom.zx02 \
 	asteroid_page1.hgr.zx02 asteroid_page2.hgr.zx02 \
 	woz_sprites.inc
+
+####
+
+new_woz.raw_top.zx02:     new_woz.raw_top
+	$(ZX02) new_woz.raw_top new_woz.raw_top.zx02
+
+new_woz.raw_top:  new_woz.png
+	$(PNG_TO_DHGR_RAW) -t new_woz.png new_woz
+
+new_woz.raw_bottom.zx02:     new_woz.raw_bottom
+	$(ZX02) new_woz.raw_bottom new_woz.raw_bottom.zx02
+
+new_woz.raw_bottom: new_woz.png
+	$(PNG_TO_DHGR_RAW) -t new_woz.png new_woz
 
 ####
 

@@ -7,6 +7,8 @@
 
 hposn_high = $1000
 hposn_low  = $1100
+div7_table = $1200
+mod7_table = $1300
 
 nine_start:
 	;==================

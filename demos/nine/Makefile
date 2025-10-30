@@ -9,6 +9,14 @@ all:	nine.dsk
 
 ####
 
+nine.dsk:	HELLO NINE WOZ
+	cp $(EMPTY_DISK) nine.dsk
+	$(DOS33) -y nine.dsk SAVE A HELLO
+	$(DOS33) -y nine.dsk BSAVE -a 0x6000 NINE
+	$(DOS33) -y nine.dsk BSAVE -a 0x6000 WOZ
+
+####
+
 NINE:	nine.o
 	ld65 -o NINE nine.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
@@ -18,20 +26,32 @@ nine.o:	nine.s zx02_optim.s \
 		sprites/numbers.inc \
 		zp.inc hardware.inc
 	ca65 -o nine.o nine.s -l nine.lst
+
+####
+
+WOZ:	woz.o
+	ld65 -o WOZ woz.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+woz.o:	woz.s zx02_optim.s \
+		dhgr_sprite.s \
+		hgr_tables.s \
+		sprites/ball_sprites.inc \
+		graphics/new_woz.raw_top.zx02 \
+		zp.inc hardware.inc
+	ca65 -o woz.o woz.s -l woz.lst
+
 ####
 
 HELLO:	hello.bas
 	$(TOKENIZE) < hello.bas > HELLO
 
-####
-
-nine.dsk:	HELLO NINE
-	cp $(EMPTY_DISK) nine.dsk
-	$(DOS33) -y nine.dsk SAVE A HELLO
-	$(DOS33) -y nine.dsk BSAVE -a 0x6000 NINE
 
 ####
 
 clean:
-	rm -f *~ *.o *.lst NINE
-	cd sprites && make cleano
+	rm -f *~ *.o *.lst NINE WOZ
+
+distclean:
+	rm -f *~ *.o *.lst NINE WOZ
+	cd graphics && make clean
+	cd sprites && make clean
