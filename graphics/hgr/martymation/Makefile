@@ -7,13 +7,14 @@ EMPTY_DISK = ../../../empty_disk
 
 all:	marty.dsk
 
-marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY
+marty.dsk:	HELLO ASTEROID MARTY.ORIGINAL OREGON MARTY_TINY WOZ
 	cp $(EMPTY_DISK)/empty.dsk marty.dsk
 	$(DOS33) -y marty.dsk SAVE A HELLO
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY.ORIGINAL
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 MARTY_TINY
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 OREGON
 	$(DOS33) -y marty.dsk BSAVE -a 0x6000 ASTEROID
+	$(DOS33) -y marty.dsk BSAVE -a 0x6000 WOZ
 
 ###
 
@@ -35,6 +36,15 @@ ASTEROID:	asteroid.o ./graphics/asteroid.inc
 
 asteroid.o:	asteroid.s
 	ca65 -o asteroid.o asteroid.s -l asteroid.lst
+
+###
+
+WOZ:	woz.o ./graphics/woz.inc
+	ld65 -o WOZ woz.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+woz.o:	woz.s
+	ca65 -o woz.o woz.s -l woz.lst
+
 
 
 ###
@@ -58,4 +68,4 @@ oregon.o:	oregon.s
 ###
 
 clean:	
-	rm -f *~ *.o *.lst HELLO MARTY.ORIGINAL OREGON MARTY_TINY ASTEROID
+	rm -f *~ *.o *.lst HELLO MARTY.ORIGINAL OREGON MARTY_TINY ASTEROID WOZ

@@ -6,7 +6,8 @@ LZSA = ~/research/lzsa/lzsa/lzsa
 B2D = ../../../../utils/bmp2dhr/b2d
 
 all:	asteroid.inc new.inc \
-	asteroid_page1.hgr.zx02 asteroid_page2.hgr.zx02
+	asteroid_page1.hgr.zx02 asteroid_page2.hgr.zx02 \
+	woz_page1.hgr.zx02 woz_page2.hgr.zx02
 
 ####
 
@@ -21,6 +22,21 @@ asteroid_page2.hgr.zx02:	asteroid_page2.hgr
 
 asteroid_page2.hgr:	asteroid_page2.png
 	$(PNG2HGR) asteroid_page2.png > asteroid_page2.hgr
+
+####
+
+woz_page1.hgr.zx02:	woz_page1.hgr
+	$(ZX02) woz_page1.hgr woz_page1.hgr.zx02
+
+woz_page1.hgr:	woz_page1.png
+	$(PNG2HGR) woz_page1.png > woz_page1.hgr
+
+woz_page2.hgr.zx02:	woz_page2.hgr
+	$(ZX02) woz_page2.hgr woz_page2.hgr.zx02
+
+woz_page2.hgr:	woz_page2.png
+	$(PNG2HGR) woz_page2.png > woz_page2.hgr
+
 
 ####
 
