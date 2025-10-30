@@ -17,7 +17,9 @@ WOZ:	woz.o
 
 woz.o:	woz.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
-	graphics/nine_woz.raw_top.zx02 graphics/nine_woz.raw_bottom.zx02
+	martymation.s \
+	graphics/nine_woz.raw_top.zx02 graphics/nine_woz.raw_bottom.zx02 \
+	graphics/asteroid_page1.hgr.zx02
 	ca65 -o woz.o woz.s -l woz.lst
 
 ####

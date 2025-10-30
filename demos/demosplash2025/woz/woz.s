@@ -83,6 +83,16 @@ monsters:
 	lda	#5
 	jsr	wait_seconds
 
+
+	;==============================
+	;==============================
+	; run martymation
+	;==============================
+	;==============================
+
+	jsr	asteroid_martymation
+
+
 	rts
 
 
@@ -93,3 +103,5 @@ woz_top:
 
 woz_bottom:
 	.incbin "graphics/nine_woz.raw_bottom.zx02"
+
+.include "martymation.s"

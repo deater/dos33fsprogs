@@ -90,6 +90,9 @@ DEST_OFFSET	= $D2
 SRC_OFFSET	= $D3
 LENGTH		= $D4
 
+; woz
+ROW		= $D0	; martymation
+
 ; four-color
 AUXOUTL		= $CA
 AUXOUTH		= $CB
