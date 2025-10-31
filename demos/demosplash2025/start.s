@@ -315,17 +315,20 @@ altzp_smc2:
 
         ; switch to AUXZP, ALTZP now $d000/ZP in aux
 
-	sei				; for now, w/o interrupts
+
 
 	; takes
 	;	6+((14*256)+23)*48)+4 = 173146 cycles = 100ms
 	;		50 Hz = 20ms?  lose 5 cycles?
 	;		maybe each time through briefly turn irq off/on?
 
-	sta	AUXZP						; 4
+
 
 	ldy	#0						; 2
 altzp2_loop:
+
+	sei				; for now, w/o interrupts
+	sta	AUXZP						; 4
 
 altzp2_smc1:
 	lda	$D000,Y						; 4+
@@ -334,17 +337,17 @@ altzp2_smc2:
 	iny							; 2
 	bne	altzp2_loop					; 2/3
 
+	; restore MAINZP
+
+	sta	MAINZP						; 4
+	cli			; restart music
+
 	inc	altzp2_smc1+2					; 6
 	inc	altzp2_smc2+2					; 6
 	lda	altzp2_smc2+2					; 6
 	cmp	#$90						; 2
 	bne	altzp2_loop					; 2/3
 
-	; restore MAINZP
-
-	sta	MAINZP						; 4
-
-	cli			; restart music
 
 	; run monsters2
 

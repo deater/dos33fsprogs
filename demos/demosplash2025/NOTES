@@ -60,8 +60,8 @@ $10-$11 -- Boot code		$10-$11 -- FOUR
 $12-$1F -- QLOAD		$12-$1F -- FOUR
 $20-$3F -- hires p1		$20-$3F -- dhires p1
 $40-$5F -- hires p2		$40-$5F -- dhires p2
-$60-$9F -- running code		$60-$9F -- MONSTER
-$A0-$BF -- temp area		$A0-$BF -- ??
+$60-$9F -- running code		$60-$9F -- MONSTERS
+$A0-$BF -- temp area		$A0-$BF -- WOZ
 $C0-$CF -- I/O			$C0-$CF -- I/O
 $D0-$DF(1) -- MUSIC		$D0-$DF(1) -- hard to access
 $D0-$FC(2) -- CREDITS		$D0-$DF(2) -- hard to access 
