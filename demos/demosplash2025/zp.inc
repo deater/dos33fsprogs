@@ -54,6 +54,13 @@ FRAMEL		= $B8
 FRAMEH		= $B9
 WHICH_SLOT	= $BA		; from boot sector
 SECOND_COUNTDOWN= $BB
+
+; Used when sprite drawing
+
+CURSOR_X	= $BE
+CURSOR_Y	= $BF
+
+
 ;==============================================
 ; $C0-$CF available
 ;==============================================
@@ -63,12 +70,24 @@ SECOND_COUNTDOWN= $BB
 BALL_STATE	=	$C0	; C0..C7
 BALL_OFFSET	=	$C8	; C8..CF
 
+; four-color
+AUXOUTL		= $CA
+AUXOUTH		= $CB
+MAIN1		= $CC
+AUX1		= $CD
+MAIN0		= $CE
+AUX0		= $CF
+
+; repack
+
+CURRENT_COL	= $CC	; dhgr_repack
+CURRENT_ROW	= $CD	; dhgr_repack
 
 ;==============================================
 ; $D0-$DB can re-use in each file
 ;==============================================
-CURRENT_COL	= $CC	; dhgr_repack
-CURRENT_ROW	= $CD	; dhgr_repack
+
+; repack
 REPACK_TMP	= $D0	; $D0...$D7
 
 ; start/font fall
@@ -95,13 +114,7 @@ NEXT_BALL       = $D7
 ERASE_COUNT     = $D8
 BALL_X		= $D9
 
-; four-color
-AUXOUTL		= $CA
-AUXOUTH		= $CB
-MAIN1		= $CC
-AUX1		= $CD
-MAIN0		= $CE
-AUX0		= $CF
+; four color
 CURRENT		= $D0
 LEFT		= $D1
 XSTART		= $D2
@@ -122,13 +135,11 @@ PARAM1		= $D2
 PARAM2		= $D3
 PARAM3		= $D4
 PARAM4		= $D5
-XPOS		= $DC
-YPOS		= $DE
-COUNT		= $DF
+XPOS		= $D6
+YPOS		= $D7
+COUNT		= $D8
 
 ; Credits
-CURSOR_X	= $CE
-CURSOR_Y	= $CF
 SCROLL_X	= $D0
 BACKUP_OUTL	= $D2
 BACKUP_OUTH	= $D3

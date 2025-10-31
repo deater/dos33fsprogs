@@ -23,18 +23,6 @@ woz_nine:
 	lda	#$0
 	sta	DRAW_PAGE		; draw to PAGE1
 
-	;==================
-	; init ball modes
-
-	ldx	#8
-init_ball_loop:
-	lda	#$ff
-	sta	BALL_STATE,X
-	lda	#$0
-	sta	BALL_OFFSET,X
-	dex
-	bpl	init_ball_loop
-
 
 	;===================
 	; set graphics mode
@@ -70,7 +58,33 @@ reload_loop:
 
 	jsr	load_image
 
-	jsr	wait_until_keypress
+
+	;==================
+	; init ball modes
+	;==================
+	; note due this after graphics load
+	; as repack uses same ZP range
+
+	ldx	#7
+init_ball_loop:
+	lda	#$ff
+	sta	BALL_STATE,X
+	lda	#$0
+	sta	BALL_OFFSET,X
+	dex
+	bpl	init_ball_loop
+
+
+
+
+	;=====================
+	; wait a bit
+
+	lda	#2
+	jsr	wait_seconds
+
+	;====================
+	; start balls
 
 	lda	#14
 	sta	BALL_X
@@ -343,8 +357,18 @@ done_circle:
 
 	jsr	dhgr_draw_sprite_aux
 
-blah:
-	jmp	blah
+
+	;========================
+	; wait a bit
+
+	lda	#4
+	jsr	wait_seconds
+
+	;========================
+	; done
+
+
+	rts
 
 
 

@@ -20,7 +20,8 @@ woz.o:	woz.s \
 	nine.s \
 	martymation.s fake_hgr8.s \
 	graphics/nine_woz.raw_top.zx02 graphics/nine_woz.raw_bottom.zx02 \
-	graphics/asteroid_page1.hgr.zx02
+	graphics/asteroid_page1.hgr.zx02 \
+	sprites/ball_sprites.inc
 	ca65 -o woz.o woz.s -l woz.lst
 
 ####
@@ -28,8 +29,8 @@ woz.o:	woz.s \
 graphics/asteroid_page1.hgr.zx02:	
 	cd graphics && make
 
-graphics/nine_woz.raw_top.zx02:	
-	cd graphics && make
+sprites/ball_sprites.inc:	
+	cd sprites && make
 
 
 ####
@@ -40,4 +41,5 @@ clean:
 distclean:
 	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN
 	cd graphics && make clean
+	cd sprites && make clean
 
