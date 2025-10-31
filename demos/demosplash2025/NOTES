@@ -7,18 +7,17 @@ monster-c7: raw 16k
 
 Order of being loaded:
 
-QLOAD:		3495	4k
-Credits:	3311	4k	T2
+QLOAD:		3573	4k	T1
+Credits:	3542	4k	T2
 Music:		10994	12k	T3,4,5
 Fourcolor:	4096	4k	T6
-Monster1:	12247	16k	T7,8,9,10
-Monster2:	12247	16k	T11,12,13,14
-Woz:		8k?	8k	T15,16,17,18
+Monster1:	13740	16k	T7,8,9,10
+Monster2:	12031	12k	T11,12,13,14
+Woz:		14982	16k	T15,16,17,18	(8077 compressed)
 Extra:		5121	8k	T19,20
-Intro:		15220	16k	T21,22,23,24
-
+Intro:		15295	16k	T21,22,23,24
 		=====	===
-			88k?
+			90k?
 
 free space:
 	main RAM, from $6000...$9FFF = 16k
@@ -48,24 +47,24 @@ Monsters: (16k)
 
 Memory map:
 
-MAIN			AUX
-~~~~			~~~
-$00 -- zero page	$00 -- unused
-$01 -- stack		$01 -- unused
-$02 -- disk data	$02 -- ???
-$03 -- disk data	$03 -- ???
-$04-$07 -- lores p1	$04-$07 -- dlores p1
-$08-$0B -- lores p2	$08-$0B -- dlores p2
-$0c-$0F -- ZP save	$0c-$0F -- ???
-$10-$11 -- Boot code	$10-$11 -- FOUR
-$12-$1F -- QLOAD	$12-$1F -- FOUR
-$20-$3F -- hires p1	$20-$3F -- dhires p1
-$40-$5F -- hires p2	$40-$5F -- dhires p2
-$60-$9F -- code		$60-$9F -- ??
-$A0-$BF -- temp area	$A0-$BF -- ??
-$C0-$CF -- I/O		$C0-$CF -- I/O
-$D0-$DF(1) -- MUSIC	$D0-$DF(1) -- hard to access
-$D0-$FC(2) -- CREDITS	$D0-$DF(2) -- hard to access 
-$E0-$FC -- MUSIC	$E0-$FF -- hard to access 
+MAIN				AUX
+~~~~				~~~
+$00 -- zero page		$00 -- unused
+$01 -- stack			$01 -- unused
+$02 -- disk data		$02 -- ???
+$03 -- disk data		$03 -- ???
+$04-$07 -- lores p1		$04-$07 -- dlores p1
+$08-$0B -- lores p2		$08-$0B -- dlores p2
+$0c-$0F -- ZP save		$0c-$0F -- ???
+$10-$11 -- Boot code		$10-$11 -- FOUR
+$12-$1F -- QLOAD		$12-$1F -- FOUR
+$20-$3F -- hires p1		$20-$3F -- dhires p1
+$40-$5F -- hires p2		$40-$5F -- dhires p2
+$60-$9F -- running code		$60-$9F -- MONSTER
+$A0-$BF -- temp area		$A0-$BF -- ??
+$C0-$CF -- I/O			$C0-$CF -- I/O
+$D0-$DF(1) -- MUSIC		$D0-$DF(1) -- hard to access
+$D0-$FC(2) -- CREDITS		$D0-$DF(2) -- hard to access 
+$E0-$FC -- MUSIC		$E0-$FF -- hard to access 
 $FD-$FE -- hires lookup
 $FF     -- irq vector

@@ -8,9 +8,12 @@ PNG2GR = ../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../linker_scripts/
 
-all:	WOZ
+all:	WOZ WOZ.zx02
 
 ###
+
+WOZ.zx02:	WOZ
+	$(ZX02) WOZ WOZ.zx02
 
 WOZ:	woz.o
 	ld65 -o WOZ woz.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
@@ -36,10 +39,10 @@ sprites/ball_sprites.inc:
 ####
 
 clean:
-	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN
+	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN *.zx02
 
 distclean:
-	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN
+	rm -f *~ WOZ *.zx02 *.lst *.o *.AUX *.BIN *.zx02
 	cd graphics && make clean
 	cd sprites && make clean
 

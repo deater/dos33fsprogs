@@ -75,12 +75,12 @@ loop2:
 	lda	addrs, X
 	bmi	aux
 	sta	$C054			; switch $2000 access to main memory
-	sta	<dst+2
+	sta	<mdst+2
 	eor	#$60
-	sta	<src+2
-src:
+	sta	<msrc+2
+msrc:
 	lda	$FD00, Y
-dst:
+mdst:
 	sta	$FD00, Y
 	txa
 	lsr
@@ -94,8 +94,8 @@ dst:
 	bmi	zexit
 	txa
 	bne	loop1
-	lda	(src+1), Y	; last lousy byte (because LFSR never hits 0)
-	sta	(dst+1), Y
+	lda	(msrc+1), Y	; last lousy byte (because LFSR never hits 0)
+	sta	(mdst+1), Y
 zexit:
 	sta	$C000		; 80STORE mode off
 	rts

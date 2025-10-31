@@ -149,7 +149,7 @@ monsters:
 	jsr	save_zp
 
 	ldx	#0
-;	jsr	wipe_48
+	jsr	wipe_48
 
 ;	jsr	do_wipe_fizzle
 
@@ -159,6 +159,19 @@ monsters:
 	jsr	restore_zp
 
 	cli
+
+; restore_70..8F
+
+restore70:
+	; re-copy monsters from AUX $7000 to MAIN $7000
+
+	lda	#$70		; AUX src $7000
+	ldy	#$70		; MAIN dest $7000
+	ldx	#48		; 12k*4 = 48 pages
+	jsr	copy_aux_main
+
+
+
 
 	;============================
 	; wait a bit
@@ -244,13 +257,6 @@ pq_tree_top:
 pq_tree_bottom:
 	.incbin "graphics/pq_tree_dhgr.raw_bottom.zx02"
 
-
-
-;monster1_bin:
-;	.incbin "graphics/monster_pumpkin.bin.zx02"
-
-;monster1_aux:
-;	.incbin "graphics/monster_pumpkin.aux.zx02"
 
 ;.include "fx.dhgr.fizzle.s"
 
