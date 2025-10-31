@@ -44,7 +44,8 @@ demo_demo_done:
 
 	lda	#20
 	sta	CH
-	sta	peasant_smc
+	sta	peasant_smc		; do this or our area here called
+					; 8 times (once per line)
 
 	jmp	still_good
 

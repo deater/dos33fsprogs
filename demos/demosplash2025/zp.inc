@@ -70,7 +70,9 @@ CURSOR_Y	= $BF
 BALL_STATE	=	$C0	; C0..C7
 BALL_OFFSET	=	$C8	; C8..CF
 
-; four-color
+; four-color/plasma
+XPOS		= $C8
+YPOS		= $C9
 AUXOUTL		= $CA
 AUXOUTH		= $CB
 MAIN1		= $CC
@@ -135,9 +137,7 @@ PARAM1		= $D2
 PARAM2		= $D3
 PARAM3		= $D4
 PARAM4		= $D5
-XPOS		= $D6
-YPOS		= $D7
-COUNT		= $D8
+COUNT		= $D6
 
 ; Credits
 SCROLL_X	= $D0
