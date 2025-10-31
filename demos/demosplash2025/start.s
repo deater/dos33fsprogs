@@ -161,11 +161,6 @@ skip_all_checks:
 	jsr	hgr_make_tables
 
 
-
-
-
-
-
 	;====================================
 	;====================================
 	; Pre-Load some programs into AUX MEM
@@ -190,6 +185,12 @@ skip_all_checks:
 	sta	WHICH_LOAD
 	jsr	load_from_disk
 
+	;========================
+	; load monsters
+
+	lda	#PART_WOZ
+	sta	WHICH_LOAD
+	jsr	load_from_disk
 
 	;==================
 	; load extra
@@ -300,30 +301,31 @@ skip_all_checks:
 
 	; load woz
 
-	sei				; disable interrupts
-	lda	#PART_WOZ
-	sta	WHICH_LOAD
-	jsr	load_from_disk
-	cli				; re-enable music
+;	sei				; disable interrupts
+;	lda	#PART_WOZ
+;	sta	WHICH_LOAD
+;	jsr	load_from_disk
+;	cli				; re-enable music
 
 
-	; copy DANCING from AUX $8000 to MAIN $2000
+	; copy WOZ from AUX $A000 to MAIN $A000
 
-;	lda	#$80		; AUX src $8000
-;	ldy	#$20		; MAIN dest $2000
-;	ldx	#32		; 8k*4 = 32 pages
-;	jsr	copy_aux_main
+	lda	#$A0		; AUX src $A000
+	ldy	#$A0		; MAIN dest $A000
+	ldx	#32		; 8k*4 = 32 pages
+	jsr	copy_aux_main
 
-	; Also copy from MAIN $2000 to AUX $2000.  Inefficient :(
+	; decompress to $6000
 
-;	lda	#$20		; AUX dest $2000
-;	ldy	#$20		; MAIN src $2000
-;	ldx	#32		; 8k*4
-;	jsr	copy_main_aux
+	lda	#$40			; load to $6000
+	sta	DRAW_PAGE
 
-;	sei				; stop music interrupts
-;	jsr	mute_ay_both
-;	jsr	clear_ay_both		; stop from making noise
+	lda	#<$A000
+	sta	zx_src_l+1
+	lda	#>$A000
+	sta	zx_src_h+1
+
+        jsr     zx02_full_decomp_main
 
 
 	;======================

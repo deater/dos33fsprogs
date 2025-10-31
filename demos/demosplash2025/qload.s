@@ -45,7 +45,8 @@ load_file_no_diskcheck:
 	lda	track_array,X
 	sta	load_track
 
-	lda	sector_array,X
+;	lda	sector_array,X
+	lda	#0			; always 0
 	sta	load_sector
 
 	lda	length_array,X
@@ -170,25 +171,25 @@ load_address_array:
 	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte $60,$60,$D0,$60	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
-start_address:
-	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte $60,$60,$60,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+;start_address:
+;	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
+;	.byte $60,$60,$60,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 aux_dest:
 	.byte $00,$00,$00,$60	; MUSIC, EXTRA,INTRO, MONSTERS
-	.byte $00,$10,$00,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+	.byte $A0,$10,$00,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 track_array:
 	.byte  3,19,21, 7	; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte 15, 6, 2,11	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
-sector_array:
-	.byte 0,0,0,0		; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte 0,0,0,0		; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+;sector_array:
+;	.byte 0,0,0,0		; MUSIC, EXTRA, INTRO, MONSTERS
+;	.byte 0,0,0,0		; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 length_array:
 	.byte 48,31,64,64	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte 64,16,16,64	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+	.byte 32,16,16,64	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 
 PT3_ENABLE_APPLE_IIC = 1
