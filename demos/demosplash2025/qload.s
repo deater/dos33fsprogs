@@ -172,10 +172,10 @@ load_address_array:
 
 start_address:
 	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
-	.byte $60,$60,$60,$60	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+	.byte $60,$60,$60,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 aux_dest:
-	.byte $00,$00,$00,$00	; MUSIC, EXTRA,INTRO, MONSTERS
+	.byte $00,$00,$00,$60	; MUSIC, EXTRA,INTRO, MONSTERS
 	.byte $00,$10,$00,$00	; WOZ, FOURCOLOR, CREDITS, MONSTERS2
 
 track_array:

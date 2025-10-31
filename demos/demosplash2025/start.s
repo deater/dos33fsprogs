@@ -181,15 +181,13 @@ skip_all_checks:
 
 	sta	$C008		; use MAIN zero-page/stack/language card
 
-	;=============================
-	; want to load INTRO last
+	;========================
+	; load monsters
 
-	; TODO: wrangle the files
+	lda	#PART_MONSTERS
+	sta	WHICH_LOAD
+	jsr	load_from_disk
 
-
-;	lda	#PART_MONSTERS
-;	sta	WHICH_LOAD
-;	jsr	load_from_disk
 
 	;==================
 	; load extra
@@ -198,8 +196,9 @@ skip_all_checks:
 	sta	WHICH_LOAD
 	jsr	load_from_disk
 
-	;==================
-	; load intro
+	;=============================
+	; want to load INTRO last
+
 
 	lda	#PART_INTRO
 	sta	WHICH_LOAD
@@ -251,26 +250,20 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-	; load monsters
-
-	sei				; disable interrupts
-	lda	#PART_MONSTERS
-	sta	WHICH_LOAD
-	jsr	load_from_disk
-	cli				; re-enable music
 
 .if 0
 	; copy monsters from AUX $6000 to MAIN $6000
 
-	lda	#$60		; AUX src $6000
+	lda	#$60h		; AUX src $6000
 	ldy	#$60		; MAIN dest $6000
-	ldx	#64		; 16k*4 = 32 pages
+	ldx	#64		; 16k*4 = 64 pages
 	jsr	copy_aux_main
-.endif
 
 	; run monsters
 
-;	jsr	$6000
+	jsr	$6000
+
+.endif
 
 	;=======================
 	;=======================
@@ -338,7 +331,7 @@ skip_all_checks:
 	;======================
 	; start woz
 
-	jsr	$6000
+;	jsr	$6000
 
 
 	;=======================
@@ -346,14 +339,6 @@ skip_all_checks:
 	; Run fourcolor
 	;=======================
 	;=======================
-
-	; load from disk
-
-;	sei			; stop music
-
-;	lda	#PART_FOURCOLOR	; Multi-color monster
-;	sta	WHICH_LOAD
-;	jsr	load_file
 
 	; Copy into place
 
@@ -364,9 +349,7 @@ skip_all_checks:
 	jsr	copy_aux_main
 
 
-;	cli			; re-start music
-
-	jsr	$6000
+;	jsr	$6000
 
 
 	;=======================
