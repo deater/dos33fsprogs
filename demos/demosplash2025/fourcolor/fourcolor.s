@@ -318,9 +318,9 @@ monster:
 	sta	DRAW_PAGE
 
 	;=================================
-	; wait 1s before scrolling off
+	; wait before scrolling off
 
-	lda	#2
+	lda	#SPLASHED_MESSAGE_TIME
 	jsr	wait_seconds
 
 	;================================

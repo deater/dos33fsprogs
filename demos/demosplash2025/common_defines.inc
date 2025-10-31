@@ -1,8 +1,13 @@
+; start
 FONT_DROP_LENGTH	= 60	; frames
+; woz
+NUM_ORBITS		= 2	; orbits
+HGR8_LISTING_TIME	= 3	; seconds
 HGR8_LENGTH		= 6	; frames
 MARTY_LENGTH		= 64	; frames
+; 4 color
 PLASMA_LENGTH		= 100	; frames
-
+SPLASHED_MESSAGE_TIME	= 3	; seconds
 
 zp_save		= $c00
 

@@ -730,8 +730,8 @@ peasant_interlude:
 
 
 
-question1:;          012345  6   7890123456789012345678901234567  8   9
-	.byte 0,85,"Wait, ",34,"All monsters have been splashed",34,"?",0
+question1:;         0  12345678901234567890123456789012  3  4 56789
+	.byte 3,85,34,"All monsters have been splashed",34,"?",0
 question2:
 	.byte 7,95,"What does that even mean?",0
 question3:

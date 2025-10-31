@@ -282,13 +282,13 @@ skip_ball:
 
 done_orbit:
 	lda	ORBITS
-	cmp	#3
+	cmp	#NUM_ORBITS
 	bne	circle_loop
 done_circle:
 	bit	KEYRESET
 
 	;==============================
-	; draw text
+	; draw sourcecode
 	;==============================
 
 	bit	PAGE1
@@ -361,10 +361,10 @@ done_circle:
 	jsr	dhgr_draw_sprite_aux
 
 
-	;========================
-	; wait a bit
+	;==================================
+	; wait a bit (showing sourcecode)
 
-	lda	#4
+	lda	#HGR8_LISTING_TIME
 	jsr	wait_seconds
 
 	;========================

@@ -152,18 +152,6 @@ dont_enable_mc:
 
 skip_all_checks:
 
-
-	;==============================
-	; load four-color to AUX:$1000
-
-	; note we can't load to AUX until after MUSIC (with copy aux routines)
-
-	lda	#PART_FOURCOLOR		; Multi-color monster
-	sta	WHICH_LOAD
-	jsr	load_from_disk		; load and copy
-
-
-
 	;======================
 	; make hires tables
 	;======================
@@ -173,6 +161,11 @@ skip_all_checks:
 	jsr	hgr_make_tables
 
 
+
+
+
+
+
 	;====================================
 	;====================================
 	; Pre-Load some programs into AUX MEM
@@ -180,6 +173,15 @@ skip_all_checks:
 	;====================================
 
 	sta	$C008		; use MAIN zero-page/stack/language card
+
+	;==============================
+	; load four-color to AUX:$1000
+
+	; note we can't load to AUX until after MUSIC (with copy aux routines)
+
+	lda	#PART_FOURCOLOR		; Multi-color monster
+	sta	WHICH_LOAD
+	jsr	load_from_disk		; load and copy
 
 	;========================
 	; load monsters
@@ -250,11 +252,9 @@ skip_all_checks:
 	;=======================
 	;=======================
 
-
-.if 0
 	; copy monsters from AUX $6000 to MAIN $6000
 
-	lda	#$60h		; AUX src $6000
+	lda	#$60		; AUX src $6000
 	ldy	#$60		; MAIN dest $6000
 	ldx	#64		; 16k*4 = 64 pages
 	jsr	copy_aux_main
@@ -262,8 +262,6 @@ skip_all_checks:
 	; run monsters
 
 	jsr	$6000
-
-.endif
 
 	;=======================
 	;=======================
@@ -290,7 +288,7 @@ skip_all_checks:
 
 	; run monsters2
 
-;	jsr	$6000
+	jsr	$6000
 
 
 
@@ -347,7 +345,6 @@ skip_all_checks:
 	ldx	#$10		; len:  4k
 
 	jsr	copy_aux_main
-
 
 	jsr	$6000
 
