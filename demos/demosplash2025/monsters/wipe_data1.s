@@ -16,7 +16,7 @@ wipes_box_init_l:
 wipes_box_init_h:
 	.byte >spiral_BoxInitialStages
 ;	.byte >snake_BoxInitialStages
-;	.byte >arrow_BoxInitialStages
+	.byte >arrow_BoxInitialStages
 ;	.byte >down_BoxInitialStages
 ;	.byte >long_diagonal_BoxInitialStages
 ;	.byte >side_side_BoxInitialStages
