@@ -517,6 +517,7 @@ peasant_smc:			; hack hack hack
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
+	.byte 20," ",0
 	.byte $FF
 
 
