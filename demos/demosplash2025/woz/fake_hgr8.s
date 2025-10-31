@@ -15,7 +15,9 @@ fake_hgr8:
 	lda	#$0
 	sta	FRAME
 
-;	jsr	hgr2
+	; have to run this first to set up pointers
+
+	jsr	hgr2
 
 	bit	KEYRESET
 

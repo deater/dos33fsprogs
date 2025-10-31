@@ -33,59 +33,14 @@ monsters:
 	lda	#$20
 	sta	DRAW_PAGE	; draw to page2
 
-.if 0
-	;=============================
-	; load top part to MAIN $A000
-
-	lda	#$80
-	sta	DRAW_PAGE
-
-	lda	#<woz_top
-	sta	zx_src_l+1
-	lda	#>woz_top
-	sta	zx_src_h+1
-
-	jsr	zx02_full_decomp_main
-
-	lda	#$20			; draw to page 2
-	sta	DRAW_PAGE
-
-	lda	#$a0
-	jsr	dhgr_repack_top
-
-	;=============================
-	; load bottom part to MAIN $A000
-
-	lda	#$80
-	sta	DRAW_PAGE
-
-	lda	#<woz_bottom
-	sta	zx_src_l+1
-	lda	#>woz_bottom
-	sta	zx_src_h+1
-
-	jsr	zx02_full_decomp_main
-
-	lda	#$20			; draw to page 2
-	sta	DRAW_PAGE
-
-	lda	#$a0
-	jsr	dhgr_repack_bottom
-
-	;=======================
-	; make visible
-
-	jsr	hgr_page_flip
-.endif
-
-
-	jsr	woz_nine
 
 	;============================
-	; wait a bit
+	;============================
+	; run the woz/hat part
+	;============================
+	;============================
 
-	lda	#5
-	jsr	wait_seconds
+	jsr	woz_nine
 
 
 	;==============================
@@ -97,6 +52,17 @@ monsters:
 	lda	#$0
 	jsr	hgr_page1_clearscreen
 	jsr	hgr_page2_clearscreen
+
+
+	; drop back to hi-res mode
+
+	; disable DHGR mode
+	sta	SETAN3
+	sta	CLR80COL
+	sta	EIGHTYCOLOFF
+	bit	PAGE1
+
+	; run the effect
 
 	jsr	fake_hgr8
 

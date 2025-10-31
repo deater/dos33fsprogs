@@ -80,8 +80,8 @@ init_ball_loop:
 	;=====================
 	; wait a bit
 
-	lda	#2
-	jsr	wait_seconds
+;	lda	#2
+;	jsr	wait_seconds
 
 	;====================
 	; start balls
@@ -218,6 +218,9 @@ circle_loop:
 
 	jsr	hgr_page_flip
 
+	lda	KEYPRESS
+	bmi	done_circle
+
 	;=======================
 	; erase previous balls
 
@@ -279,10 +282,10 @@ skip_ball:
 
 done_orbit:
 	lda	ORBITS
-	cmp	#5
+	cmp	#3
 	bne	circle_loop
 done_circle:
-
+	bit	KEYRESET
 
 	;==============================
 	; draw text
