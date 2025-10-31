@@ -33,7 +33,7 @@ monsters2:
 
 	;========================
 	;========================
-	; load monster
+	; load monster 1
 	;========================
 	;========================
 
@@ -81,12 +81,12 @@ monsters2:
 	;============================
 	; wait a bit
 
-	lda	#1
+	lda	#MONSTER2_WAIT1
 	jsr	wait_seconds
 
 	;========================
 	;========================
-	; load pumpkin
+	; load pumpkin to page2
 	;========================
 	;========================
 
@@ -102,9 +102,9 @@ monsters2:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
@@ -125,16 +125,28 @@ monsters2:
 
 	; depack to page1
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
+	;===========================
+	; wipe
+
+	ldx	#$CF
+	jsr	save_zp_x
+
+	jsr	do_wipe_fizzle
+
+
+	ldx	#$CF
+	jsr	restore_zp_x
+
 	;============================
 	; wait a bit
 
-	lda	#1
+	lda	#MONSTER2_WAIT2
 	jsr	wait_seconds
 
 
@@ -156,9 +168,9 @@ monsters2:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
@@ -177,14 +189,26 @@ monsters2:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
+	;=========================
+	; wipe
+	;=========================
+
+	ldx	#$CF
+	jsr	save_zp_x
+
+	jsr	do_wipe_fizzle
+
+
+	ldx	#$CF
+	jsr	restore_zp_x
 
 	;============================
 	; wait a bit
@@ -216,3 +240,4 @@ pq_cave_bottom:
 	.incbin "graphics/pq_cave_dhgr.raw_bottom.zx02"
 
 
+.include "fx.dhgr.fizzle.s"

@@ -1,5 +1,8 @@
 ; start
 FONT_DROP_LENGTH	= 60	; frames
+; Monsters
+MONSTER2_WAIT1		= 3	; seconds
+MONSTER2_WAIT2		= 3	; seconds
 ; woz
 NUM_ORBITS		= 2	; orbits
 HGR8_LISTING_TIME	= 3	; seconds
