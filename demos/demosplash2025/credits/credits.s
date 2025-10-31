@@ -105,15 +105,6 @@ cl_smc:
 	dey
 	bpl	cl_inner_loop
 
-	;=============================
-	;=============================
-	; draw stars
-	;=============================
-	;=============================
-
-	; not for this one?  makes it too noisy?
-
-;	jsr	draw_stars
 
 	;=============================
 	;=============================
@@ -199,19 +190,8 @@ draw_sprites:
 
 	inc	GUITAR_FRAME
 
-;	lda	GUITAR_FRAME
-;	and	#7
-;	tax
-;	lda	guitar_pattern,X
-;	tax
 
-;	lda	guitar_l,X
-;	sta	INL
-;	lda	guitar_h,X
-;	sta	INH
-
-;	jsr	hgr_draw_sprite
-
+not_at_end:
 
 	;===========================
 	; keeper1
@@ -289,60 +269,6 @@ skip_page_flip:
 
 
 
-.if 0
-	;=============================
-	;=============================
-	; draw stars
-	;=============================
-	;=============================
-draw_stars:
-
-	lda	FRAME
-	and	#1
-	bne	stars_odd
-
-stars_even:
-
-	; generate star data
-
-	; get x-coord
-
-	jsr	random8
-	and	#$1f		; 1..32
-	tax
-	lda	star_x,X
-	sta	STAR_X
-
-	; get type
-
-	jsr	random8
-	and	#7
-	sta	STAR_WHICH
-
-	lda	#159
-	bne	stars_common	; bra
-
-stars_odd:
-	lda	#158
-stars_common:
-	sta	CURSOR_Y
-
-	lda	STAR_X
-	bmi	no_stars
-	sta	CURSOR_X
-
-	lda	STAR_WHICH
-	tax
-	lda	star_sprites_l,X
-	sta	INL
-	lda	star_sprites_h,X
-	sta	INH
-
-	jmp	hgr_draw_sprite	; tail call
-no_stars:
-
-	rts
-.endif
 
 
 	;=============================
@@ -576,6 +502,21 @@ final_credits:
 	.byte 20," ",0
 	.byte 20," ",0
 	.byte 20," ",0
+peasant_smc:			; hack hack hack
+	.byte $FE," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
+	.byte 20," ",0
 	.byte $FF
 
 
@@ -689,3 +630,108 @@ sprite_triggers_sprite_h:
 	.byte	>e_sprite,>e_sprite
 	.byte	>h_sprite,>h_sprite
 	.byte	>r_sprite,>r_sprite
+
+
+	;=========================
+	; draw peasant at end
+	;=========================
+peasant_interlude:
+
+	lda	OUTL
+	pha
+	lda	OUTH
+	pha
+
+	;====================
+	; draw on current page
+
+	lda	#20
+	sta	CURSOR_X
+	lda	#110
+	sta	CURSOR_Y
+
+	lda	#<peasant
+	sta	INL
+	lda	#>peasant
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#<question1
+	ldy	#>question1
+	jsr	DrawCondensedString
+	lda	#<question2
+	ldy	#>question2
+	jsr	DrawCondensedString
+
+	;=============================
+	; draw on other page one lower
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+	lda	#20
+	sta	CURSOR_X
+	lda	#111
+	sta	CURSOR_Y
+
+	lda	#<peasant
+	sta	INL
+	lda	#>peasant
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	inc	question1+1
+	inc	question2+1
+
+	lda	#<question1
+	ldy	#>question1
+	jsr	DrawCondensedString
+	lda	#<question2
+	ldy	#>question2
+	jsr	DrawCondensedString
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+	lda	#4
+	jsr	wait_seconds
+
+
+	lda	#<question3
+	ldy	#>question3
+	jsr	DrawCondensedString
+
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+	inc	question3+1
+	lda	#<question3
+	ldy	#>question3
+	jsr	DrawCondensedString
+
+	lda	DRAW_PAGE
+	eor	#$20
+	sta	DRAW_PAGE
+
+
+	pla
+	sta	OUTH
+	pla
+	sta	OUTL
+
+	rts
+
+
+
+question1:;          012345  6   7890123456789012345678901234567  8   9
+	.byte 0,85,"Wait, ",34,"All monsters have been splashed",34,"?",0
+question2:
+	.byte 7,95,"What does that even mean?",0
+question3:
+	.byte 9,140,"Wait! Don't scroll me!",0

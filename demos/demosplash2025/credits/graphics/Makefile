@@ -19,6 +19,8 @@ other_sprites.inc:	other_sprites.png
 	$(HGR_SPRITE) -s -l l_sprite other_sprites.png 42 47 55 57 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l a_sprite other_sprites.png 42 59 55 69 >> other_sprites.inc
 	$(HGR_SPRITE) -s -l h_sprite other_sprites.png 42 71 55 81 >> other_sprites.inc
+	$(HGR_SPRITE) -s -l peasant other_sprites.png 154 77 167 107 >> other_sprites.inc
+
 
 keeper1_sprites.inc:	keeper1_sprites.png
 	$(HGR_SPRITE) -s -l keeper_r0 keeper1_sprites.png  14 128  27 156 > keeper1_sprites.inc

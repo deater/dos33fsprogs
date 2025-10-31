@@ -37,6 +37,18 @@ draw_condensed_1x8_again:
 
 demo_demo_done:
 
+	cmp	#$ff			; only really done if $FF
+	beq	really_done
+
+	jsr	peasant_interlude
+
+	lda	#20
+	sta	CH
+	sta	peasant_smc
+
+	jmp	still_good
+
+really_done:
 	inc	SCROLL_DONE
 	rts
 
