@@ -241,3 +241,6 @@ pq_cave_bottom:
 
 
 .include "fx.dhgr.fizzle.s"
+
+.include "wipe_48_all.s"
+.include "wipe_data2.s"

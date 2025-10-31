@@ -141,6 +141,10 @@ monsters:
 	lda	#$a0
 	jsr	dhgr_repack_bottom
 
+	;=============================
+	; fancy wipe
+	;=============================
+
 ;	ldx	#$CF
 ;	jsr	save_zp_x
 
@@ -148,7 +152,7 @@ monsters:
 
 	jsr	save_zp
 
-	ldx	#0
+	ldx	#0		; snake
 	jsr	wipe_48
 
 ;	jsr	do_wipe_fizzle
@@ -198,9 +202,9 @@ restore70:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
@@ -219,13 +223,48 @@ restore70:
 	sta	zx_src_h+1
 	jsr	zx02_full_decomp_main
 
-	; depack to page1
+	; depack to page2
 
-	lda	#$00
+	lda	#$20
 	sta	DRAW_PAGE
 
 	lda	#$a0
 	jsr	dhgr_repack_bottom
+
+
+	;=============================
+	; fancy wipe
+	;=============================
+
+;	ldx	#$CF
+;	jsr	save_zp_x
+
+	sei
+
+	jsr	save_zp
+
+	ldx	#1		; arrow
+	jsr	wipe_48
+
+;	jsr	do_wipe_fizzle
+
+;	ldx	#$CF
+;	jsr	restore_zp_x
+
+	jsr	restore_zp
+
+	cli
+
+
+; restore_70..8F
+
+restore70_again:
+	; re-copy monsters from AUX $7000 to MAIN $7000
+
+	lda	#$70		; AUX src $7000
+	ldy	#$70		; MAIN dest $7000
+	ldx	#48		; 12k*4 = 48 pages
+	jsr	copy_aux_main
 
 
 	;============================
@@ -261,3 +300,4 @@ pq_tree_bottom:
 ;.include "fx.dhgr.fizzle.s"
 
 .include "wipe_48_all.s"
+.include "wipe_data1.s"

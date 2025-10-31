@@ -885,7 +885,7 @@ BuildStage1And0:
 	lda	#<STAGE0
 	jmp	BuildDrawingRoutineFrom
 
-
+.if 0
 ;==============================================
 ;==============================================
 ; wipe data
@@ -1203,3 +1203,4 @@ pageturn_StagesHi: ; high bytes of address of drawing routine for each stage
 .byte dhgr_copy0E
 .byte dhgr_copy0F
 pageturn_EndStagesHi:
+.endif
