@@ -17,6 +17,8 @@ fake_hgr8:
 
 ;	jsr	hgr2
 
+	bit	KEYRESET
+
 chrget:
 
 tiny_loop:
@@ -29,6 +31,9 @@ tiny_loop:
 
 	jsr	hgr2		; HGR2	-- init full-screen hi-res graphics
 				; zero flag set
+
+	lda	KEYPRESS
+	bmi	hgr8_done
 
 	inc	FRAME
 	lda	FRAME
