@@ -22,12 +22,15 @@ woz.o:	woz.s \
 	../zp.inc ../hardware.inc ../qload.inc ../common_defines.inc \
 	nine.s \
 	martymation.s fake_hgr8.s \
-	graphics/nine_woz.raw_top.zx02 graphics/nine_woz.raw_bottom.zx02 \
+	graphics/new_woz.raw_top.zx02 graphics/new_woz.raw_bottom.zx02 \
 	graphics/asteroid_page1.hgr.zx02 \
 	sprites/ball_sprites.inc
 	ca65 -o woz.o woz.s -l woz.lst
 
 ####
+
+graphics/new_woz.raw_top.zx02:	
+	cd graphics && make
 
 graphics/asteroid_page1.hgr.zx02:	
 	cd graphics && make
