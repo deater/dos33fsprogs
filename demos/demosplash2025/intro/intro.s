@@ -327,9 +327,18 @@ done_house_scroll:
 	;==========================================
 
 
-	lda	#<question
-	ldy	#>question
+	lda	#<question1
+	ldy	#>question1
+	jsr	DrawCondensedString
 
+	lda	#109
+	sta	question1+1
+	lda	#<question1
+	ldy	#>question1
+	jsr	DrawCondensedString
+
+	lda	#<question2
+	ldy	#>question2
 	jsr	DrawCondensedString
 
 	;=================================
@@ -340,8 +349,10 @@ done_house_scroll:
 
 	rts
 
-question:
-	.byte	11,105," What is going on out here? ",0
+question1:
+	.byte	8,101,"                                ",0
+question2:
+	.byte	8,105," What's all the noise out here? ",0
 
 ;	.include "../dhgr_clear.s"
 ;	.include "../dhgr_repack.s"
