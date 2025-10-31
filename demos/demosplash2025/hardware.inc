@@ -22,6 +22,9 @@ WRAUX		=	$C005	; (w)
 ALTZPOFF	=	$C008	; (w)	Use MAIN for page 0/1/LC
 ALTZPON		=	$C009	; (w)	Use AUX for page 0/1/LC
 
+MAINZP		=	$C008	; (w)	Use MAIN for page 0/1/LC
+AUXZP		=	$C009	; (w)	Use AUX for page 0/1/LC
+
 EIGHTYCOLOFF	=	$C00C
 EIGHTYCOLON	=	$C00D
 

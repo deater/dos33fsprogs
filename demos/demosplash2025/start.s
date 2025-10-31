@@ -1,4 +1,4 @@
-; Unnamed Demo
+; Monster Splash
 
 ; for Demosplash 2025
 
@@ -178,6 +178,7 @@ skip_all_checks:
 	sta	WHICH_LOAD
 	jsr	load_from_disk		; load and copy
 
+
 	;========================
 	; load monsters
 
@@ -185,8 +186,46 @@ skip_all_checks:
 	sta	WHICH_LOAD
 	jsr	load_from_disk
 
+
+	;=========================
+	; load monsters2
+
+	; first load to MAIN:6000
+	; then copy to AUX:D000
+
+	lda	#PART_MONSTERS2
+	sta	WHICH_LOAD
+	jsr	load_from_disk
+
+        ; switch to AUXZP, ALTZP now $d000/ZP in aux
+
+	sta	AUXZP
+
+	ldy	#0
+altzp_loop:
+
+altzp_smc1:
+	lda	$6000,Y
+altzp_smc2:
+	sta	$D000,Y
+	iny
+	bne	altzp_loop
+
+	inc	altzp_smc1+2
+	inc	altzp_smc2+2
+	lda	altzp_smc1+2
+	cmp	#$90
+	bne	altzp_loop
+
+	; restore MAINZP
+
+	sta	MAINZP
+
+
+
+
 	;========================
-	; load monsters
+	; load woz
 
 	lda	#PART_WOZ
 	sta	WHICH_LOAD
@@ -272,20 +311,35 @@ skip_all_checks:
 
 	; load monsters2
 
-	sei				; disable interrupts
-	lda	#PART_MONSTERS2
-	sta	WHICH_LOAD
-	jsr	load_from_disk
-	cli				; re-enable music
+	; copy from ALTZP $D000 to MAIN $6000
 
-.if 0
-	; copy monsters from AUX $6000 to MAIN $6000
+        ; switch to AUXZP, ALTZP now $d000/ZP in aux
 
-	lda	#$60		; AUX src $6000
-	ldy	#$60		; MAIN dest $6000
-	ldx	#64		; 16k*4 = 32 pages
-	jsr	copy_aux_main
-.endif
+	sei				; for now, w/o interrupts
+
+	sta	AUXZP
+
+	ldy	#0
+altzp2_loop:
+
+altzp2_smc1:
+	lda	$D000,Y
+altzp2_smc2:
+	sta	$6000,Y
+	iny
+	bne	altzp2_loop
+
+	inc	altzp2_smc1+2
+	inc	altzp2_smc2+2
+	lda	altzp2_smc2+2
+	cmp	#$90
+	bne	altzp2_loop
+
+	; restore MAINZP
+
+	sta	MAINZP
+
+	cli			; restart music
 
 	; run monsters2
 
@@ -300,13 +354,6 @@ skip_all_checks:
 	;=======================
 
 	; load woz
-
-;	sei				; disable interrupts
-;	lda	#PART_WOZ
-;	sta	WHICH_LOAD
-;	jsr	load_from_disk
-;	cli				; re-enable music
-
 
 	; copy WOZ from AUX $A000 to MAIN $A000
 

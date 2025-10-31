@@ -34,7 +34,9 @@ qload_start:
 load_file:
 	ldx	WHICH_LOAD
 
-	lda	which_disk_array,X
+;	lda	which_disk_array,X
+
+	lda	#1
 	cmp	CURRENT_DISK
 	bne	change_disk
 
@@ -158,14 +160,17 @@ disk_compare:
 	jmp	load_file
 
 ; offset for disk number is 19
-error_string:
-.byte "PLEASE INSERT DISK 1, PRESS RETURN",0
+;error_string:
+;.byte "PLEASE INSERT DISK 1, PRESS RETURN",0
 
 .endif
 
+.if 0
 which_disk_array:
 	.byte 1,1,1,1		; MUSIC, EXTRA, INTRO, MONSTERS
 	.byte 1,1,1,1		; WOZ, FOURCOLOR, CREDITS, MONSTERS2
+
+.endif
 
 load_address_array:
 	.byte $D0,$A0,$60,$60	; MUSIC, EXTRA, INTRO, MONSTERS
@@ -198,7 +203,7 @@ PT3_ENABLE_APPLE_IIC = 1
 
 ;	.include	"lc_detect.s"
 
-	.include	"wait_a_bit.s"
+;	.include	"wait_a_bit.s"
 	.include	"gr_fast_clear.s"
 	.include	"text_print.s"
 	.include	"gr_offsets_split.s"
@@ -217,7 +222,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"gs_interrupt.s"
 	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"hardware_detect.s"
-	.include	"gr_page_flip.s"
+;	.include	"gr_page_flip.s"
 
 	.include	"hgr_clear_screen.s"
 	.include	"hgr_sprite.s"

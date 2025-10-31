@@ -98,7 +98,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s set_normal qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s move_and_print qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
@@ -111,7 +111,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
@@ -122,7 +122,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s gr_offsets_h qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
