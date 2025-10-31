@@ -49,6 +49,8 @@ DrawCondensedStringAgain:
 	adc	CH				; add in x-coord
 	sta	dcb_row0+4
 	lda	hposn_high, Y			; get high memory offset
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row0+5			; save it out
 	iny					; go to next row
 
@@ -58,6 +60,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row1+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row1+5
 	iny
 
@@ -67,6 +71,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row2+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row2+5
 	iny
 
@@ -76,6 +82,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row3+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row3+5
 	iny
 
@@ -85,6 +93,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row4+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row4+5
 	iny
 
@@ -94,6 +104,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row5+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row5+5
 	iny
 
@@ -103,6 +115,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row6+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row6+5
 	iny
 
@@ -112,6 +126,8 @@ DrawCondensedStringAgain:
 	adc	CH
 	sta	dcb_row7+4
 	lda	hposn_high, Y
+	clc
+	adc	DRAW_PAGE
 	sta	dcb_row7+5
 
 	ldx	#0
