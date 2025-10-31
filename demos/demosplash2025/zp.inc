@@ -45,37 +45,30 @@ WHICH_TRACK	= $54
 DISP_PAGE	= $6E
 DRAW_PAGE	= $6F
 
-;==========================
-; $B0 ... $BF
-;==========================
+;================================================
+; $B0 ... $BF for common things, don't mess with
+;================================================
 
-
-WHICH_SLOT = $BA		; from boot sector
-
+FRAME           = $B8
+FRAMEL		= $B8
+FRAMEH		= $B9
+WHICH_SLOT	= $BA		; from boot sector
+SECOND_COUNTDOWN= $BB
 ;==============================================
-; $C0-$CF use for common things, don't re-use
+; $C0-$CF available
 ;==============================================
-;TOTAL_RAM       = $C0
-SECOND_COUNTDOWN= $C1
-COUNT           = $C2
-XSAVE		= $C3
-TEMPY		= $C4
-XPOS		= $C5	; gr_plot
-YPOS		= $C6	; gr_plot
-COLOR_MASK	= $C7	; gr_plot
-FRAME           = $C8
-FRAMEL		= $C8
-FRAMEH		= $C9
-MASKL		= $CA	; gr_putsprite_mask
-MASKH		= $CB
 
-CURRENT_COL	= $CC	; dhgr_repack
-CURRENT_ROW	= $CD	; dhgr_repack
+; woz
+
+BALL_STATE	=	$C0	; C0..C7
+BALL_OFFSET	=	$C8	; C8..CF
+
 
 ;==============================================
 ; $D0-$DB can re-use in each file
 ;==============================================
-
+CURRENT_COL	= $CC	; dhgr_repack
+CURRENT_ROW	= $CD	; dhgr_repack
 REPACK_TMP	= $D0	; $D0...$D7
 
 ; start/font fall
@@ -96,6 +89,11 @@ FAKE_HGR_PAGE	= $D1
 FAKE_HGR_BITS	= $D2
 FAKE_HGR_SHAPE	= $D3
 FAKE_HGR_SHAPE2	= $D4
+WHICH_BALL	= $D5
+ORBITS		= $D6
+NEXT_BALL       = $D7
+ERASE_COUNT     = $D8
+BALL_X		= $D9
 
 ; four-color
 AUXOUTL		= $CA
@@ -124,6 +122,9 @@ PARAM1		= $D2
 PARAM2		= $D3
 PARAM3		= $D4
 PARAM4		= $D5
+XPOS		= $DC
+YPOS		= $DE
+COUNT		= $DF
 
 ; Credits
 CURSOR_X	= $CE

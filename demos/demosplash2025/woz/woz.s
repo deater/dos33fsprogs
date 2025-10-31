@@ -21,19 +21,19 @@ monsters:
 
 	; We are first to run, so init double-hires
 
-;	bit	SET_GR
-;	bit	HIRES
-;	bit	FULLGR
-;	sta	AN3		; set double hires
-;	sta	EIGHTYCOLON	; 80 column
-;	sta	CLR80COL
+	bit	SET_GR
+	bit	HIRES
+	bit	FULLGR
+	sta	AN3		; set double hires
+	sta	EIGHTYCOLON	; 80 column
+	sta	CLR80COL
 ;	sta	SET80COL	; (allow page1/2 flip main/aux)
 
 	bit	PAGE1		; display page1
 	lda	#$20
 	sta	DRAW_PAGE	; draw to page2
 
-
+.if 0
 	;=============================
 	; load top part to MAIN $A000
 
@@ -76,6 +76,10 @@ monsters:
 	; make visible
 
 	jsr	hgr_page_flip
+.endif
+
+
+	jsr	woz_nine
 
 	;============================
 	; wait a bit
@@ -114,14 +118,7 @@ monsters:
 	rts
 
 
-
-
-woz_top:
-	.incbin "graphics/nine_woz.raw_top.zx02"
-
-woz_bottom:
-	.incbin "graphics/nine_woz.raw_bottom.zx02"
-
 .include "martymation.s"
 .include "fx.hgr.fizzle.s"
 .include "fake_hgr8.s"
+.include "nine.s"

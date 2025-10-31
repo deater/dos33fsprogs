@@ -331,7 +331,7 @@ skip_all_checks:
 	;======================
 	; start woz
 
-;	jsr	$6000
+	jsr	$6000
 
 
 	;=======================
@@ -349,7 +349,7 @@ skip_all_checks:
 	jsr	copy_aux_main
 
 
-;	jsr	$6000
+	jsr	$6000
 
 
 	;=======================
@@ -387,13 +387,6 @@ skip_all_checks:
 	sta	zx_src_h+1
 
         jsr     zx02_full_decomp_main
-
-;	sei			; pause music
-;	lda	#PART_CREDITS
-;	sta	WHICH_LOAD
-;	jsr	load_file
-
-;	cli			; re-start music
 
 	; Run credits
 

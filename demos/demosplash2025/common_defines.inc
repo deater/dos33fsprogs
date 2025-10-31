@@ -7,6 +7,9 @@ PLASMA_LENGTH		= 100	; frames
 zp_save		= $c00
 
 drop_y          = $c00	; run at start? need 1k free?
+div7_table	= $d00
+mod7_table	= $e00
+
 drop_yadd       = $b800 ; extra only 6k so starting at 7k should be fine?
 
 repack_src	= $a000

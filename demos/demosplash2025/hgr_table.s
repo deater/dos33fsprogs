@@ -4,7 +4,7 @@
 ;hposn_low	= $bb00
 
 
-hgr_make_tables:
+
 
 	;=====================
 	; make /7 %7 tables
@@ -43,8 +43,11 @@ mod7_not7:
 	iny
 	bne	mod7_loop
 
+	rts
+
 .endif
 
+hgr_make_tables:
 	; Hposn table
 
 ; hposn_low, hposn_high will each be filled with $C0 bytes

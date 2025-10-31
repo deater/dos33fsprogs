@@ -16,18 +16,19 @@ all:	\
 	asteroid_page1.hgr.zx02 asteroid_page2.hgr.zx02 \
 	woz_sprites.inc
 
+
 ####
 
-new_woz.raw_top.zx02:     new_woz.raw_top
+new_woz.raw_top.zx02:	new_woz.raw_top
 	$(ZX02) new_woz.raw_top new_woz.raw_top.zx02
 
-new_woz.raw_top:  new_woz.png
+new_woz.raw_top:	new_woz.png
 	$(PNG_TO_DHGR_RAW) -t new_woz.png new_woz
 
-new_woz.raw_bottom.zx02:     new_woz.raw_bottom
+new_woz.raw_bottom.zx02:	new_woz.raw_bottom
 	$(ZX02) new_woz.raw_bottom new_woz.raw_bottom.zx02
 
-new_woz.raw_bottom: new_woz.png
+new_woz.raw_bottom:	new_woz.png
 	$(PNG_TO_DHGR_RAW) -t new_woz.png new_woz
 
 ####
@@ -84,3 +85,9 @@ asteroid_page2.hgr:	asteroid_page2.png
 
 clean:
 	rm -f *~ *.zx02 *.lst *.o *.AUX *.BIN *.big *.big_packed *.combined *.raw_top *.raw_bottom *.raw woz_sprites.inc
+
+
+
+
+
+

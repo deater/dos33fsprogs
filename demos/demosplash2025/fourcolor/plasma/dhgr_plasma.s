@@ -14,8 +14,8 @@ hires_colors_odd_l1	= $a300
 hposn_high_div8		= $a400
 hposn_low_div8		= $a500
 
-mod7_table		= $a600
-div7_table		= $a700
+;mod7_table		= $a600
+;div7_table		= $a700
 
 ; was in page0, we don't really have room
 ; can fit at top of hposn tables (only 192 bytes used)
