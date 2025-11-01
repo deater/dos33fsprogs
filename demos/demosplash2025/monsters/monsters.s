@@ -145,44 +145,13 @@ monsters:
 	; fancy wipe
 	;=============================
 
-;	ldx	#$CF
-;	jsr	save_zp_x
+	jsr	save_before_wipe
 
-	sei
-
-	jsr	save_zp
-
-	lda	#$dd
-	sta	$101		; flag saying not to use ZP
-
-	cli
 
 	ldx	#0		; snake
 	jsr	wipe_48
 
-;	jsr	do_wipe_fizzle
-
-;	ldx	#$CF
-;	jsr	restore_zp_x
-
-	sei
-	lda	#0
-	sta	$101
-	jsr	restore_zp
-
-	cli
-
-; restore_70..8F
-
-restore70:
-	; re-copy monsters from AUX $7000 to MAIN $7000
-
-	lda	#$70		; AUX src $7000
-	ldy	#$70		; MAIN dest $7000
-	ldx	#48		; 12k*4 = 48 pages
-	jsr	copy_aux_main
-
-
+	jsr	restore_after_wipe
 
 
 	;============================
@@ -244,35 +213,12 @@ restore70:
 	; fancy wipe
 	;=============================
 
-;	ldx	#$CF
-;	jsr	save_zp_x
-
-	sei
-
-	jsr	save_zp
+	jsr	save_before_wipe
 
 	ldx	#1		; arrow
 	jsr	wipe_48
 
-;	jsr	do_wipe_fizzle
-
-;	ldx	#$CF
-;	jsr	restore_zp_x
-
-	jsr	restore_zp
-
-	cli
-
-
-; restore_70..8F
-
-restore70_again:
-	; re-copy monsters from AUX $7000 to MAIN $7000
-
-	lda	#$70		; AUX src $7000
-	ldy	#$70		; MAIN dest $7000
-	ldx	#48		; 12k*4 = 48 pages
-	jsr	copy_aux_main
+	jsr	restore_after_wipe
 
 
 	;============================
@@ -283,6 +229,49 @@ restore70_again:
 
 
 	rts
+
+
+	;=======================
+	; save before wipe
+
+save_before_wipe:
+	sei
+
+	jsr	save_zp
+
+	lda	#$dd
+	sta	$101		; flag saying not to use ZP
+
+	cli
+
+	rts
+
+	;=======================
+	; restore after wipe
+
+restore_after_wipe:
+	sei
+	lda	#0
+	sta	$101
+	jsr	restore_zp
+
+	cli
+
+; restore_70..8F
+
+restore70:
+	; re-copy monsters from AUX $7000 to MAIN $7000
+
+	lda	#$70		; AUX src $7000
+	ldy	#$70		; MAIN dest $7000
+	ldx	#48		; 12k*4 = 48 pages
+	jsr	copy_aux_main
+
+	rts
+
+
+
+
 
 monster1_top:
 	.incbin "graphics/monster_pumpkin.raw_top.zx02"
