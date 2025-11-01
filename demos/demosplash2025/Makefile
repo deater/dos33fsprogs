@@ -71,7 +71,7 @@ QLOAD:	qload.o
 qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	font/font_drop.s \
 	gr_offsets_split.s \
-	wait.s wait_a_bit.s \
+	wait.s \
 	lc_detect.s gr_fast_clear.s \
 	text_print.s start.s \
 	hgr_table.s \

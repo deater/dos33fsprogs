@@ -1,5 +1,10 @@
 ; start
 FONT_DROP_LENGTH	= 60	; frames
+; intro
+TITLE_WAIT_TIME		= 5	; seconds
+PEASANT_DOOR_WAIT	= 1	; seconds
+PEASANT_MESSAGE_WAIT	= 2	; seconds
+
 ; Monsters
 MONSTER2_WAIT1		= 3	; seconds
 MONSTER2_WAIT2		= 3	; seconds
@@ -14,11 +19,10 @@ SPLASHED_MESSAGE_TIME	= 3	; seconds
 
 zp_save		= $c00
 
+drop_yadd       = $800	; run at start? need 1k free?
 drop_y          = $c00	; run at start? need 1k free?
 div7_table	= $d00
 mod7_table	= $e00
-
-drop_yadd       = $b800 ; extra only 6k so starting at 7k should be fine?
 
 repack_src	= $a000
 

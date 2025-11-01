@@ -33,12 +33,14 @@ EXTRA:	extra.o
 
 extra.o:	extra.s \
 	graphics/logo_grafA.bin.zx02 \
-	graphics/ms_title.hgr.zx02
+	graphics/ms_title.hgr.zx02 \
+	sound/ms.btc.zx02
 	ca65 -o extra.o extra.s -l extra.lst
 
 extra.inc:	EXTRA
 	../generate_common -a 0xa000 -s title_hgr extra.lst > extra.inc
 	../generate_common -a 0xa000 -s logo1_main extra.lst >> extra.inc
+	../generate_common -a 0xa000 -s ms_audio extra.lst >> extra.inc
 
 
 ####
@@ -58,6 +60,9 @@ graphics/logo_dSr_D2.aux.zx02:
 graphics/logo_dSr_D2.bin.zx02:	
 	cd graphics && make
 
+sound/ms.btc.zx02:	
+	cd sound && make
+
 ####
 
 clean:
@@ -66,3 +71,4 @@ clean:
 distclean:
 	rm -f *~ INTRO EXTRA *.zx02 *.lst *.o *.AUX *.BIN
 	cd graphics && make clean
+	cd sound && make clean

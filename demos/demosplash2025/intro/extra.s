@@ -6,3 +6,6 @@ title_hgr:
 
 logo1_main:
 	.incbin "graphics/logo_grafA.bin.zx02"
+
+ms_audio:
+	.incbin "sound/ms.btc.zx02"

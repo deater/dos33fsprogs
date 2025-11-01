@@ -55,6 +55,10 @@ FRAMEH		= $B9
 WHICH_SLOT	= $BA		; from boot sector
 SECOND_COUNTDOWN= $BB
 
+BTC_L		= $BC
+BTC_H		= $BD		; audio
+
+
 ; Used when sprite drawing
 
 CURSOR_X	= $BE

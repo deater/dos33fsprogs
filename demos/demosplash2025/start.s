@@ -280,7 +280,7 @@ altzp_smc2:
 
 	; run intro
 
-	cli			; start music
+;	cli			; start music
 
 ;	jsr	test_intterupt_banking
 

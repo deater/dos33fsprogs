@@ -37,6 +37,19 @@ intro:
 
 	bit	PAGE1
 
+
+	lda	#$20
+	sta	DRAW_PAGE		; load to $4000
+
+
+	lda	#<ms_audio
+	sta	zx_src_l+1
+	lda	#>ms_audio
+	sta	zx_src_h+1
+
+	jsr	zx02_full_decomp_main
+
+
 	lda	#$00			; load to $2000
 	sta	DRAW_PAGE
 
@@ -47,10 +60,26 @@ intro:
 
 	jsr	zx02_full_decomp_main
 
+
+	;===========================
+	; play audio
+
+
+	lda	#<$4000
+	sta	BTC_L
+	lda	#>$4000
+	sta	BTC_H
+
+	ldx	#24
+
+	jsr	play_audio
+
+	cli
+
 	;===================================
 	; wait a bit at title
 
-	lda	#5
+	lda	#TITLE_WAIT_TIME
 	jsr	wait_seconds
 
 	;=================================
@@ -318,7 +347,7 @@ done_house_scroll:
 	;================================
 	; wait a bit after opening door
 
-	lda	#1
+	lda	#PEASANT_DOOR_WAIT
 	jsr	wait_seconds
 
 
@@ -344,7 +373,7 @@ done_house_scroll:
 	;=================================
 	; wait a bit after saying message
 
-	lda	#1
+	lda	#PEASANT_MESSAGE_WAIT
 	jsr	wait_seconds
 
 	rts
@@ -389,3 +418,6 @@ house_hgr_bottom:
 
 
 	.include "graphics/house_sprites.inc"
+
+.align 256
+	.include "../audio.s"
