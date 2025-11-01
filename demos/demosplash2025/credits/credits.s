@@ -406,6 +406,7 @@ final_credits:
 	.byte  7,"DMSC -- ZX02 decompression",0			; 26 (7)
 	.byte  9,"French Touch -- Plasma",0			; 22 (9)
 	.byte  7,"Martin Kahn -- martimation",0			; 26 (7)
+	.byte  5,"Oliver Schmidt -- sound player",0		; 30 (5)
 	.byte  7,"qkumba -- fast disk loader",0			; 26 (7)
 	.byte  8,"Deater - everything else",0			; 24 (8)
 
