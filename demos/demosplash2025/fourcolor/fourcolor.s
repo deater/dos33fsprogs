@@ -23,6 +23,8 @@
 monster:
 	bit	KEYRESET	; just to be safe
 
+
+
 	;=================================
 	; clear screens
 	;=================================
@@ -96,6 +98,13 @@ monster:
 
 	jsr	decode_image
 
+
+fourcolor_wait_start:
+        lda     #$12
+        jsr     wait_for_pattern
+        bcc     fourcolor_wait_start
+
+
 	jsr	copy_to_aux
 	jsr	wait_vblank
 	jsr	hgr_page_flip
@@ -107,13 +116,17 @@ monster:
 	lda	#0
 	sta	XSTART
 	lda	#20
-	sta	XEND
+;	sta	XEND
 
-	jsr	decode_image
+;	jsr	decode_image
 
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+;	jsr	copy_to_aux
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
+
+	jsr	do_common
+
+
 
 	;===============
 	; yellow1 right
@@ -121,7 +134,9 @@ monster:
 	lda	#30
 	sta	XSTART
 	lda	#40
-	sta	XEND
+	jsr	do_common
+
+;	sta	XEND
 
 	lda	#<color_lookup_yellow
 	sta	color_lookup_smc+1
@@ -140,13 +155,15 @@ monster:
 	lda	#20
 	sta	XSTART
 	lda	#40
-	sta	XEND
+	jsr	do_common
 
-	jsr	decode_image
+;	sta	XEND
 
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+;	jsr	decode_image
+
+;	jsr	copy_to_aux
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
 
 
 
@@ -176,13 +193,15 @@ monster:
 	lda	#18
 	sta	XSTART
 	lda	#30
-	sta	XEND
+	jsr	do_common
 
-	jsr	decode_image
+;	sta	XEND
 
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+;	jsr	decode_image
+
+;	jsr	copy_to_aux
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
 
 	;=================
 	; red2 mid-right
@@ -211,13 +230,15 @@ monster:
 	lda	#8
 	sta	XSTART
 	lda	#30
-	sta	XEND
+	jsr	do_common
 
-	jsr	decode_image
+;	sta	XEND
 
-	jsr	copy_to_aux
-	jsr	wait_vblank
-	jsr	hgr_page_flip
+;	jsr	decode_image
+
+;	jsr	copy_to_aux
+;	jsr	wait_vblank
+;	jsr	hgr_page_flip
 
 
 
@@ -267,7 +288,7 @@ monster:
 	; run plasma
 	;========================
 
-	bit	KEYRESET
+;	bit	KEYRESET
 
 	jsr	plasma_debut
 
@@ -553,6 +574,18 @@ yloop_done:
 
 	rts
 
+	;======================
+	; try to save bytes!!!
+
+do_common:
+	sta	XEND
+
+	jsr	decode_image
+
+	jsr	copy_to_aux
+	jsr	wait_vblank
+	jmp	hgr_page_flip
+
 
 color_lookup_grey:
 	.byte 0,5,11,15		; default   black/grey/lblue/white
@@ -569,7 +602,9 @@ color_lookup_black:
 
 	.include "copy_to_aux.s"
 
+
 monster_packed_zx02:
 	.incbin "graphics/grimnir11_grey.packed.zx02"
 
 	.include "plasma/dhgr_plasma.s"
+

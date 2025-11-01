@@ -11,7 +11,7 @@ MONSTER2_WAIT2		= 3	; seconds
 ; woz
 NUM_ORBITS		= 2	; orbits
 HGR8_LISTING_TIME	= 3	; seconds
-HGR8_LENGTH		= 6	; frames
+HGR8_LENGTH		= 4	; frames
 MARTY_LENGTH		= 64	; frames
 ; 4 color
 PLASMA_LENGTH		= 100	; frames
@@ -19,8 +19,8 @@ SPLASHED_MESSAGE_TIME	= 3	; seconds
 
 zp_save		= $c00
 
-drop_yadd       = $800	; run at start? need 1k free?
-drop_y          = $c00	; run at start? need 1k free?
+drop_y		= $c00	; run at start? need 1k free?
+drop_yadd	= $800	; run at start? need 1k free?
 div7_table	= $d00
 mod7_table	= $e00
 

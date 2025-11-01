@@ -13,6 +13,11 @@
 monsters2:
 	bit	KEYRESET	; just to be safe
 
+monsters2_wait_start:
+	lda	#8
+	jsr	wait_for_pattern
+	bcc	monsters2_wait_start
+
 	;=================================
 	; init graphics
 	;=================================
