@@ -19,8 +19,8 @@ SPLASHED_MESSAGE_TIME	= 3	; seconds
 
 zp_save		= $c00
 
-drop_y		= $c00	; run at start? need 1k free?
-drop_yadd	= $800	; run at start? need 1k free?
+drop_y		= $800	; run at start? need 1k free?
+drop_yadd	= $c00	; run at start? need 1k free?
 div7_table	= $d00
 mod7_table	= $e00
 
