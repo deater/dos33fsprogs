@@ -29,6 +29,7 @@ ds25_start:
 
 	lda	#0
 	sta	DRAW_PAGE
+	sta	$101			; sentinel for irq handler
 
 	;=====================
 	; clear text screen

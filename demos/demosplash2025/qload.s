@@ -9,9 +9,6 @@
 
 qload_start:
 
-	; init the write code
-;	lda	WHICH_SLOT
-;	jsr	popwr_init
 
 	; first time entry
 	; start by loading text title
@@ -19,8 +16,8 @@ qload_start:
 ;	lda	#0			; load ZW engine
 ;	sta	WHICH_LOAD
 
-	lda	#1
-	sta	CURRENT_DISK		; current disk number
+;	lda	#1
+;	sta	CURRENT_DISK		; current disk number
 
 ;	jsr	load_file
 
@@ -36,9 +33,9 @@ load_file:
 
 ;	lda	which_disk_array,X
 
-	lda	#1
-	cmp	CURRENT_DISK
-	bne	change_disk
+;	lda	#1
+;	cmp	CURRENT_DISK
+;	bne	change_disk
 
 load_file_no_diskcheck:
 	lda	load_address_array,X

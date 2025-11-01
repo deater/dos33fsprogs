@@ -56,8 +56,28 @@ interrupt_handler:
 	lda	LCBANK1
 
 
+	lda	$101
+	beq	normal_interrupt
+
+	; swap out E0->FF somewhere safe
+
+	ldx	#$1F
+swap_loop1:
+	lda	$E0,X
+	sta	$110,X
+
+	lda	zp_save+$E0,X
+	sta	$E0,X
+
+	dex
+	bpl	swap_loop1
 
 
+
+
+
+
+normal_interrupt:
 ;	inc	$0404		; debug (flashes char onscreen)
 
 	lda	IRQ_COUNTDOWN
@@ -83,6 +103,25 @@ quiet_exit:
 
 
 exit_interrupt:
+
+	lda	$101
+	beq	normal_interrupt_exit
+
+	; swap out E0->FF somewhere safe
+
+	ldx	#$1F
+swap_loop2:
+
+	lda	$E0,X
+	sta	zp_save+$E0,X
+
+	lda	$110,X
+	sta	$E0,X
+
+	dex
+	bpl	swap_loop2
+
+normal_interrupt_exit:
 
 	pla			; bit 7 is read AUX=1 MAIN=0
 	rol

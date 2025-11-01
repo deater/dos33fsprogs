@@ -152,6 +152,11 @@ monsters:
 
 	jsr	save_zp
 
+	lda	#$dd
+	sta	$101		; flag saying not to use ZP
+
+	cli
+
 	ldx	#0		; snake
 	jsr	wipe_48
 
@@ -160,6 +165,9 @@ monsters:
 ;	ldx	#$CF
 ;	jsr	restore_zp_x
 
+	sei
+	lda	#0
+	sta	$101
 	jsr	restore_zp
 
 	cli
