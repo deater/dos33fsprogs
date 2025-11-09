@@ -493,7 +493,7 @@ bp_p1:
 bp_m2:
 	lda	hgrhi-1, X
 	clc
-	adc	#$70
+	adc	#$80				; $70->$80 so A000 instead 0f 9000
 	sta	auxsrc_hgrhi-1, X
 	dex
 	bne	bp_m2
@@ -777,7 +777,7 @@ CopyAuxDHGRToMain:
 at_a:
 	lda	$4000, X
 at_b:
-	sta	$9000, X		; not a000?
+	sta	$a000, X		; was 9000, now a000?
 	inx
 	bne	at_a
 	inc	<at_a+2

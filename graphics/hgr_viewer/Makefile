@@ -27,5 +27,5 @@ HELLO:	hello.bas
 
 
 clean:
-		rm -f *~ *.o *.lst HELLO
+		rm -f *~ *.o *.lst HELLO make_hgr_viewer
 
