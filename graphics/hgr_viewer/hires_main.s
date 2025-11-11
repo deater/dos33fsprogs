@@ -8,9 +8,10 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-WHICH = $E0
-WHICH_BCD = $E1
-IS_TEXT = $E2
+WHICH		= $E0
+WHICH_BCD	= $E1
+IS_TEXT		= $E2
+
 
 hires_start:
 
@@ -28,7 +29,7 @@ hires_start:
 	bit	HIRES
 	bit	FULLGR
 	bit	SET_GR
-	bit	PAGE0
+	bit	PAGE1
 
 	lda	#0
 	sta	WHICH
@@ -77,6 +78,38 @@ load_loop:
 	clc
 	adc	#$B0
 	sta	file_offset+7
+
+	;================================
+	; update filename
+
+
+	; clear first
+	lda	#' '|$80
+	ldx	#19
+clear_filename_loop:
+	sta	filename_offset+12,X
+	dex
+	bpl	clear_filename_loop
+
+	; copy filename data
+
+	ldx	WHICH
+	lda	authors_low,X
+	sta	OUTL
+	lda	authors_high,X
+	sta	OUTH
+
+	ldy	#0
+copy_filenames_loop:
+	lda	(OUTL),Y
+	beq	done_copy_filenames_loop
+	sta	filename_offset+12,Y
+	iny
+	bne	copy_filenames_loop	; bra
+
+done_copy_filenames_loop:
+
+
 
 	;================================
 	; update author
@@ -213,11 +246,14 @@ load_image:
 
 	; size in ldsizeh:ldsizel (f1/f0)
 
-	comp_data	= $a000
-	out_addr	= $2000
+	lda	#$a0
+	sta	zx_src_h+1
+	lda	#$00
+	sta	zx_src_l+1
 
+	lda	#$20			; destination
 
-	jsr	full_decomp
+	jsr	zx02_full_decomp
 
 	rts
 

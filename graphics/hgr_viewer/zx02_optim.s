@@ -11,29 +11,44 @@
 ; Code under MIT license, see LICENSE file.
 
 
-ZP=$80
+;ZP=$80
 
-offset          = ZP+0
-ZX0_src         = ZP+2
-ZX0_dst         = ZP+4
-bitr            = ZP+6
-pntr            = ZP+7
+;offset          = ZP+0
+;ZX0_src         = ZP+2
+;ZX0_dst         = ZP+4
+;bitr            = ZP+6
+;pntr            = ZP+7
 
             ; Initial values for offset, source, destination and bitr
-zx0_ini_block:
-            .byte $00, $00, <comp_data, >comp_data, <out_addr, >out_addr, $80
+;zx0_ini_block:
+;           .byte $00, $00, <comp_data, >comp_data, <out_addr, >out_addr, $80
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
 
-full_decomp:
-              ; Get initialization block
-              ldy #7
+zx02_full_decomp:
+;              ; Get initialization block
+;             ldy #7
+;
+;copy_init:     lda zx0_ini_block-1, y
+;              sta offset-1, y
+;              dey
+;              bne copy_init
 
-copy_init:     lda zx0_ini_block-1, y
-              sta offset-1, y
-              dey
-              bne copy_init
+
+	sta	ZX0_dst+1	; page to output to in A
+zx_src_l:
+	ldy	#$dd
+	sty	ZX0_src
+zx_src_h:
+	ldy	#$dd
+	sty	ZX0_src+1
+	ldy	#$80
+	sty	bitr
+	ldy	#0
+	sty	offset
+	sty	offset+1
+	sty	ZX0_dst		; always on even page
 
 ; Decode literal: Ccopy next N bytes from compressed file
 ;    Elias(length)  byte[1]  byte[2]  ...  byte[N]

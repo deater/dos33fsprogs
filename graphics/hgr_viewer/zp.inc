@@ -1,200 +1,171 @@
-;; Zero Page
 
-FRAMEBUFFER     = $00   ; $00 - $0F
+JS_BUTTON_STATE	=	$03
+JOYSTICK_ENABLED=	$04
+SOUND_STATUS	=	$05
+	SOUND_DISABLED  = $80
+	SOUND_IN_LC     = $01		; sound in language card
+	SOUND_MOCKINGBOARD = $02	; mockingboard detected
+	SOUND_SSI263    = $04		; SSI-263 speech chip detected
+MOCKINGBOARD_SLOT	= $06
+DISP_PAGE	= $07			; only in videlectrix intro?
+DRAW_PAGE	= $08
+NIBCOUNT	= $09
+;CURRENT_DRIVE	= $0A
+;DRIVE1_DISK	= $0B
+;DRIVE2_DISK	= $0C
+;DRIVE1_TRACK	= $0D
+;DRIVE2_TRACK	= $0E
 
-;; LZ4 addresses
+SPRITE_TEMP	= $10	; ?
+MASK_TEMP	= $11
+TEMP		= $12
 
-FLAME_STATE	= $00
-FLAME1		= $01
-FLAME2		= $02
-FLAME3		= $03
-FLAME4		= $04
-FLAME5		= $05
-
-
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
-COUNT		= $06
-DELTA		= $08
-
-;; Zero page monitor routines addresses
-
-WNDLFT	= $20
-WNDWDTH	= $21
-WNDTOP	= $22
-WNDBTM	= $23
-CH	= $24
-CV	= $25
-GBASL	= $26
-GBASH	= $27
-BASL	= $28
-BASH	= $29
-H2	= $2C
-V2	= $2D
-MASK	= $2E
-COLOR	= $30
-			;INVFLG	= $32
-
-; dos33 zero page = 26-2f, 35-38, 3e 3f 40-4d 
-; overlap applesoft  67-6a,6f,70,af,b0,ca-cd,d8 
+TEMP0   = $10
+TEMP1   = $11
+TEMP2   = $12
+TEMP3   = $13
+TEMP4   = $14
+TEMP5   = $15
+COUNT	= TEMP5
 
 
-; DOS33: Confirmed kills $68
+; zx02 code
+offset	= $10
+offseth	= $11
+ZX0_src	= $12
+ZX0_dst	= $14
+ZX0_srch= $15
+bitr	= $16
+pntr	= $17
+pntrh	= $18
 
-RWTSL		= $60
-RWTSH		= $61
-DOSBUFL		= $62
-DOSBUFH		= $63
-FILEML		= $64
-FILEMH		= $65
-
-
-FRAME           = $60
-FRAMEH		= $61
-WAITING         = $62
-LETTERL         = $63
-LETTERH         = $64
-LETTERX         = $65
-LETTERY         = $66
-LETTERD         = $67
-LETTER          = $68
-BLARGH          = $69
-
-				;FACTOR_I	= $66
-				;FACTOR_F	= $67
-				;DX_I		= $68
-				;DX_F		= $69
-				;SPACEX_I	= $6A
-				;SPACEX_F	= $6B
-				;CX_I		= $6C
-				;CX_F		= $6D
-				;DY_I		= $6E
-				;DY_F		= $6F
+; electric duet
+FREQ1          =       $10
+FREQ2          =       $11
+DURATION       =       $12
+INSTRUMENT1    =       $13
+INSTRUMENT2    =       $14
+MADDRL         =       $15
+MADDRH         =       $16
 
 
-ZPOS		= $78
+HGR_BITS		= $1C
 
-REGISTER_DUMP	= $70
-A_FINE_TONE	= $70
-A_COARSE_TONE	= $71
-B_FINE_TONE	= $72
-B_COARSE_TONE	= $73
-C_FINE_TONE	= $74
-C_COARSE_TONE	= $75
-NOISE		= $76
-ENABLE		= $77
-A_VOLUME	= $78
-B_VOLUME	= $79
-C_VOLUME	= $7A
-ENVELOPE_FINE	= $7B
-ENVELOPE_COARSE	= $7C
+CH			= $24
+CV			= $25
+
+GBASL			= $26
+GBASH			= $27
+
+adrlo   =       $26     ; constant from boot prom
+adrhi   =       $27     ; constant from boot prom
+
+BASL			= $28
+BASH			= $29
+MASK			= $2E
+
+MASK0			= $2F   ; used by priority code in bg_mask
+MASK1			= $30
+MASK2			= $31
+MASK3			= $32
+MASK4			= $33
+MASK5			= $34
+MASK6			= $35
+
+PEASANT_PRIORITY	= $36
+MASK_COUNTDOWN		= $37
+KEY_OFFSET		= $38
+
+tmpsec  =       $3c     ; constant from boot prom
+reqsec  =       $3d     ; constant from boot prom
+
+
+; this is the structure for a ProDOS smartport command, at least
+; for a read (command=1)
+
+
+	COMMAND	= $42		; ProDOS constant
+	UNIT	= $43		; ProDOS constant
+	ADRLO	= $44		; ProDOS constant
+	ADRHI	= $45		; ProDOS constant
+	BLOKLO	= $46		; ProDOS constant
+	BLOKHI	= $47		; ProDOS constant
+
+
+sizelo  =       $44
+sizehi  =       $45
+secsize =       $46
+
+SEEDL = $4E
+SEEDH = $4F
+
+LOC4E          =       $4E	; electric duet
+COUNT256       =       $4F
+
+
+DRAW_PAGE_SAVE	= $5F
+
+CURSOR_X	= $64
+CURSOR_Y	= $65
+FRAME		= $66
+
+
+SPEECH_PTRL    = $70
+SPEECH_PTRH    = $71
+
+; pt3 player registers
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
 ENVELOPE_SHAPE  = $7D
+PATTERN_L       = $7E
+PATTERN_H       = $7F
 
 
-COPY_OFFSET	= $7E
-DECODER_STATE	= $7F
+; rest of pt3_player
+PT3_TEMP        = $80
+ORNAMENT_L      = $81
+ORNAMENT_H      = $82
+SAMPLE_L        = $83
+SAMPLE_H        = $84
+LOOP            = $85
+MB_VALUE        = $86
+MB_ADDR_L       = $87
+MB_ADDR_H       = $88
+DONE_PLAYING    = $89
+DONE_SONG       = $8A
+APPLEII_MODEL	= $8B
 
 
-REGISTER_DUMP2	= $80
-A_FINE_TONE2	= $80
-A_COARSE_TONE2	= $81
-B_FINE_TONE2	= $82
-B_COARSE_TONE2	= $83
-C_FINE_TONE2	= $84
-C_COARSE_TONE2	= $85
-NOISE2		= $86
-ENABLE2		= $87
-A_VOLUME2	= $88
-B_VOLUME2	= $89
-C_VOLUME2	= $8A
-ENVELOPE_FINE2	= $8B
-ENVELOPE_COARS2	= $8C
-ENVELOPE_SHAPE2 = $8D
-LYRICSL		= $8E
-LYRICSH		= $8F
+ldsizel =       $90
+ldsizeh =       $91
+namlo   =       $9b
+namhi   =       $9c
+step    =       $9d     ; state for stepper motor
+tmptrk  =       $9e     ; temporary copy of current track
+phase   =       $9f     ; current phase for /seek
 
-FRAME_COUNT	= $90
-MB_VALUE	= $91
-MB_ADDRL	= $91
-MB_ADDRH	= $92
-DONE_PLAYING	= $93
-MB_CHUNK_OFFSET = $94
-MB_FRAME	= $94
-MB_PATTERN	= $95
-CHUNKSIZE	= $95
-LZ4_DONE	= $96
-DECODE_ERROR	= $97
-COPY_TIME	= $98
-DECOMPRESS_TIME	= $99
-TIME_TAKEN	= $9A
-LYRICS_ACTIVE	= $9B
-;FORTYCOL	= $9C
-CURSOR		= $9D
-
-; More zero-page addresses
-; we try not to conflict with anything DOS, MONITOR or BASIC related
-
-			;COLOR1		=	$E0
-			;COLOR2		=	$E1
-			;MATCH		=	$E2
-XX	=	$E3
-YY	=	$E4
-HGR_COLOR       = $E4
-			;SHIPY		=	$E4
-			;YADD		=	$E5
-			;LOOP		=	$E6
-			;MEMPTRL	=	$E7
-			;MEMPTRH	=	$E8
-			;NAMEL		=	$E9
-			;NAMEH		=	$EA
-			;NAMEX		=	$EB
-			;CHAR		=	$EC
-STATE           = $ED
-DISP_PAGE	= $ED
-DRAW_PAGE	= $EE
-OFFSET         = $EF
-
-				;FIRST		=	$F0
-
-LASTKEY         = $F1
-PADDLE_STATUS   = $F2
-
-SPRITETEMP	=	$F2
-XPOS		=	$F3
-YPOS		=	$F4
-TEMP		=	$FA
-TEMPY		=	$FB
-INL		=	$FC
-INH		=	$FD
-OUTL		=	$FE
-OUTH		=	$FF
+INL		= $FC
+INH		= $FD
+OUTL		= $FE
+OUTH		= $FF
 
 
 
 
+ 
 
 
-; read any file slot 6 version
-; based on FASTLD6 and RTS copyright (c) Peter Ferrie 2011-2013,2018
-
-; modified to assembled with ca64 -- vmw
-; added code to patch it to run from current disk slot -- vmw
-
-
-	adrlo	=	$26	; constant from boot prom
-	adrhi	=	$27	; constant from boot prom
-	tmpsec	=	$3c	; constant from boot prom
-	reqsec	=	$3d	; constant from boot prom
-	sizelo	=	$44
-	sizehi	=	$45
-	secsize	=	$46
-
-	ldsizel	=	$f0
-	ldsizeh	=	$f1
-	namlo	=	$fb
-	namhi	=	$fc
-	step	=	$fd	; state for stepper motor
-	tmptrk	=	$fe	; temporary copy of current track
-	phase	=	$ff	; current phase for /seek
 

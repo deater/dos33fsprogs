@@ -295,7 +295,8 @@ int main(int argc, char **argv) {
 
 	fprintf(sss,"####\n\n");
 	fprintf(sss,"clean:\n");
-	fprintf(sss,"\trm -f *~ *.o *.lst *.hgr *.zx02\n\n");
+	fprintf(sss,"\trm -f *~ *.o *.lst *.hgr *.zx02 HELLO HIRES %s.dsk\n\n",
+		filename_base);
 
 
 //	fprintf(sss,"####\n\n");
