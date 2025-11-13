@@ -14,10 +14,12 @@ all:	tile_compress.dsk
 ####
 
 tile_compress.dsk:	HELLO \
-		SATURN_ZX02
+		SATURN_ZX02 \
+		SATURN_TILES
 	cp $(EMPTY_DISK) tile_compress.dsk
 	$(DOS33) -y tile_compress.dsk SAVE A HELLO
 	$(DOS33) -y tile_compress.dsk BSAVE -a 0x6000 SATURN_ZX02
+	$(DOS33) -y tile_compress.dsk BSAVE -a 0x6000 SATURN_TILES
 
 ####
 
@@ -28,6 +30,17 @@ saturn_zx02.o:	saturn_zx02.s zx02_optim.s \
 		zp.inc hardware.inc \
 		graphics/a2_saturn_warrior.hgr.zx02
 	ca65 -o saturn_zx02.o saturn_zx02.s -l saturn_zx02.lst
+
+####
+
+SATURN_TILES:	saturn_tiles.o
+	ld65 -o SATURN_TILES saturn_tiles.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+saturn_tiles.o:	saturn_tiles.s \
+		zp.inc hardware.inc \
+		graphics/saturn_tiles.inc
+	ca65 -o saturn_tiles.o saturn_tiles.s -l saturn_tiles.lst
+
 
 ####
 

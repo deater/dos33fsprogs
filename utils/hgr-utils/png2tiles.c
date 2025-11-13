@@ -413,11 +413,10 @@ int main(int argc, char **argv) {
 		exit(1);
 	}
 
-	for(i=optind;i<argc;i++) {
-		printf("%i %s\n",i,argv[i]);
-	}
+//	for(i=optind;i<argc;i++) {
+//		printf("%i %s\n",i,argv[i]);
+//	}
 
-#if 0
 	filename=strdup(argv[optind]);
 
 	memset(apple2_image,0,8192);
@@ -456,28 +455,41 @@ int main(int argc, char **argv) {
 //	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
 
 
-#define MAX_TILES 1024
-	unsigned char temp_tile[8];
+#define MAX_TILES	1024
+#define TILE_HEIGHT	8
+
+	unsigned char temp_tile[TILE_HEIGHT];
 	int num_tiles=0;
-	unsigned char tiles[1024][8];
+	unsigned char tiles[MAX_TILES][TILE_HEIGHT];
 	unsigned char tilemap[40][24];
 	int l,t;
+
+	/* clear it out */
+	for(y=0;y<TILE_HEIGHT;y++) {
+		temp_tile[y]=0;
+	}
+
+	for(t=0;t<MAX_TILES;t++) {
+		for(y=0;y<TILE_HEIGHT;y++) {
+			tiles[t][y]=0;
+		}
+	}
 
 	for(x=0;x<40;x++) {
 		for(y=0;y<192;y+=8) {
 			/* create current tile */
-			for(l=0;l<8;l++) {
+			for(l=0;l<TILE_HEIGHT;l++) {
 				temp_tile[l]=apple2_image[hgr_offset(y+l)+x];
 			}
 			/* look for match */
 			for(t=0;t<num_tiles;t++) {
-				for(l=0;l<8;l++) {
+				for(l=0;l<TILE_HEIGHT;l++) {
 					if (temp_tile[l]!=tiles[t][l]) break;
 				}
 				/* check if match */
 				if (l==8) {
 					tilemap[x][y/8]=t;
-					printf("*%d,%d=%d\n",x,y/8,t);
+					//printf("*%d,%d=%d\n",x,y/8,t);
 					break;
 				}
 			}
@@ -487,16 +499,17 @@ int main(int argc, char **argv) {
 					tiles[t][l]=temp_tile[l];
 				}
 				tilemap[x][y/8]=t;
-				printf("%d,%d=%d\n",x,y/8,t);
+				//printf("%d,%d=%d\n",x,y/8,t);
 				num_tiles++;
 			}
 		}
 	}
 
-	fprintf(stderr,"Total unique tiles %d\n",num_tiles);
-	fprintf(stderr,"Total warnings: %d\n",color_warnings);
+	printf("; Total unique tiles %d\n",num_tiles);
+	printf("; Total warnings: %d\n",color_warnings);
 
 	printf("; Tilemap\n");
+	printf("tilemap:\n");
 	for(y=0;y<24;y++) {
 		printf(".byte\t");
 		for(x=0;x<40;x++) {
@@ -505,6 +518,28 @@ int main(int argc, char **argv) {
 		}
 		printf("\n");
 	}
-#endif
+	printf(".byte $FF\n");
+
+	printf("; Tile lookup\n");
+
+	printf("tile_lookup_l:\n");
+	for(t=0;t<num_tiles;t++) {
+		printf("\t.byte\t<tile%d\n",t);
+	}
+
+	printf("tile_lookup_h:\n");
+	for(t=0;t<num_tiles;t++) {
+		printf("\t.byte\t>tile%d\n",t);
+	}
+
+	printf("; Tiles\n");
+
+	for(t=0;t<num_tiles;t++) {
+		printf("tile%d:\n",t);
+		for(y=0;y<TILE_HEIGHT;y++) {
+			printf("\t.byte $%02X\n",tiles[t][y]);
+		}
+	}
+
 	return 0;
 }
