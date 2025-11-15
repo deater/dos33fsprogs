@@ -5,7 +5,8 @@ CFLAGS = -O2 -Wall -g
 all:	pcx2hgr png2hgr png2dhgr shape_table dump_table \
 	hgr2png hgr_make_sprite dhgr_make_sprite \
 	png2font dhgr2png \
-	png2tiles png2largefont png2dhgr4 png2dhgr_raw
+	png2tiles png2largefont png2dhgr4 png2dhgr_raw \
+	png2hgr_diff
 
 ###
 
@@ -27,6 +28,7 @@ pcx2hgr:		pcx2hgr.o
 
 pcx2hgr.o:		pcx2hgr.c
 			$(CC) $(CFLAGS) -c pcx2hgr.c
+
 ###
 
 png2hgr:		png2hgr.o
@@ -34,6 +36,15 @@ png2hgr:		png2hgr.o
 
 png2hgr.o:		png2hgr.c
 			$(CC) $(CFLAGS) -c png2hgr.c
+
+###
+
+png2hgr_diff:		png2hgr_diff.o
+			$(CC) -o png2hgr_diff png2hgr_diff.o $(LFLAGS) -lpng
+
+png2hgr_diff.o:		png2hgr_diff.c
+			$(CC) $(CFLAGS) -c png2hgr_diff.c
+
 
 ###
 
@@ -125,11 +136,12 @@ png2dhgr4.o:		png2dhgr4.c
 
 
 install:	
-		cp pcx2hgr shape_table png2hgr hgr2png hgr_make_sprite png2font png2largefont $(INSTALL_LOC)
+		cp pcx2hgr shape_table png2hgr hgr2png hgr_make_sprite png2font png2largefont png2hgr_diff $(INSTALL_LOC)
 
 clean:		
 		rm -f *~ *.o pcx2hgr shape_table dump_table \
 			png2hgr png2dhgr png2dhgr_raw hgr2png \
 			dhgr_make_sprite hgr_make_sprite \
+			png2hgr_diff \
 			png2font png2tiles png2largefont dhgr2png png2dhgr4
 
