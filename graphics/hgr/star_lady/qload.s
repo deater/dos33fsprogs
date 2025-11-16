@@ -100,7 +100,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"wait_keypress.s"
 	.include	"zx02_optim.s"
 	.include	"gs_interrupt.s"
-	.include	"pt3_lib_mockingboard_patch.s"
+;	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"hardware_detect.s"
 ;	.include	"gr_page_flip.s"
 	.include	"hgr_clear_screen.s"

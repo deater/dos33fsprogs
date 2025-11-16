@@ -5,7 +5,7 @@
 ; this is the brute force version, we have to patch 39 locations
 ; see further below if you want to try a smaller, more dangerous, patch
 
-.if 0
+
 mockingboard_patch:
 
 	lda	MB_ADDR_H
@@ -66,8 +66,11 @@ mockingboard_patch:
 	sta	setup_irq_smc5+2	; 38
 	sta	setup_irq_smc6+2	; 39
 
+	sta	disable_irq_smc1+2	; 40
+	sta	disable_irq_smc2+2	; 41
+
 	rts
-.endif
+
 
 ;===================================================================
 ; dangerous code to patch mockingboard if not in slot#4
@@ -80,7 +83,8 @@ mockingboard_patch:
 ;	only do this if 2 bytes after a LDA/STA/LDX/STX
 ;	count total and if not 39 then print error message
 
-mockingboard_patch:
+.if 0
+mockingboard_autopatch:
 	; from mockingboard_init 	$1BBF
 	;   to done_pt3_irq_handler	$1D85
 
@@ -119,3 +123,4 @@ mb_patch_done:
 	stx	MB_ADDR_H	; restore slot for later
 	rts
 
+.endif

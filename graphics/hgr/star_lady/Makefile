@@ -116,6 +116,7 @@ music.inc:	generate_common MUSIC
 	./generate_common -a 0xd000 -s clear_ay_both music.lst >> music.inc
 	./generate_common -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
 	./generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
+	./generate_common -a 0xd000 -s mockingboard_patch music.lst >> music.inc
 	./generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
 	./generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
 	./generate_common -a 0xd000 -s current_pattern_smc music.lst >> music.inc
