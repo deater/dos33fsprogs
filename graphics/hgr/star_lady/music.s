@@ -23,6 +23,7 @@ PT3_ENABLE_APPLE_IIC = 1
 
 	; pt3 player
 ;	.include "pt3_lib_detect_model.s"
+	.include "pt3_lib_mockingboard_patch.s"
 	.include "pt3_lib_core.s"
 	.include "pt3_lib_init.s"
 	.include "pt3_lib_mockingboard_setup.s"
