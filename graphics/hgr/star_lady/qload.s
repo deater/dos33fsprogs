@@ -94,7 +94,7 @@ PT3_ENABLE_APPLE_IIC = 1
 
         .include        "hgr_table.s"
 ;	.include	"random8.s"
-	.include	"vblank.s"
+;	.include	"vblank.s"
 	.include	"irq_wait.s"
 	.include	"hgr_page_flip.s"
 	.include	"wait_keypress.s"
@@ -102,7 +102,7 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"gs_interrupt.s"
 	.include	"pt3_lib_mockingboard_patch.s"
 	.include	"hardware_detect.s"
-	.include	"gr_page_flip.s"
+;	.include	"gr_page_flip.s"
 	.include	"hgr_clear_screen.s"
 
 	.include	"start.s"

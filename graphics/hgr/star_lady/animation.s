@@ -13,6 +13,13 @@ space_lady:
 	bit	KEYRESET	; just to be safe
 
 	;=================================
+	; init vars
+	;=================================
+
+	lda	#3
+	sta	FRAME_RATE
+
+	;=================================
 	; init graphics
 	;=================================
 
@@ -51,6 +58,17 @@ space_lady:
 	jsr	zx02_full_decomp
 
 
+	;=======================
+	; start music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music
+
+yes_music:
+	cli
+no_music:
+
 	; so frame1 is on page1
 	;    frame2 is on page2
 
@@ -74,14 +92,20 @@ animation_loop:
 
 	jsr	patch_graphics
 
-	jsr	wait_until_keypress
+	jsr	draw_sound_bars
+
+	jsr	wait_some
+
+;	jsr	wait_until_keypress
 
 	jsr	hgr_page_flip
 
 
 	; draw page2, view page1
 
-	jsr	wait_until_keypress
+	jsr	wait_some
+
+;	jsr	wait_until_keypress
 
 	ldx	WHICH
 	ldy	patches_page2_h,X
@@ -90,6 +114,8 @@ animation_loop:
 
 	jsr	patch_graphics
 
+	jsr	draw_sound_bars
+
 	jsr	hgr_page_flip
 
 	inc	WHICH
@@ -97,9 +123,68 @@ animation_loop:
 	and	#$3		; wrap at 4
 	sta	WHICH
 
+	;=====================
+	; handle keyboard
+
+	lda	KEYPRESS
+	bpl	keep_going
+
+	bit	KEYRESET
+
+check_g:
+	cmp	#'G'+$80
+	bne	check_o
+
+	jsr	make_green
+	jmp	keep_going
+
+check_o:
+	cmp	#'O'+$80
+	bne	check_plus
+
+	jsr	make_orange
+	jmp	keep_going
+
+check_plus:
+	cmp	#'+'+$80
+	bne	check_minus
+
+	inc	FRAME_RATE
+
+	jmp	keep_going
+
+check_minus:
+	cmp	#'-'+$80
+	bne	keep_going
+
+	dec	FRAME_RATE		; minimum 0
+	bpl	keep_going
+	lda	#0
+	sta	FRAME_RATE
+
+	beq	keep_going		; bra
+
+
+keep_going:
 	jmp	animation_loop
 
 
+	;===================================
+	; wait some frames
+
+wait_some:
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	bne	wait_mockingboard
+
+wait_nomock:
+	lda	FRAME_RATE
+	jmp	wait_50ms
+
+wait_mockingboard:
+	lda	FRAME_RATE
+	jmp	wait_ticks
 
 
 	;=================================
@@ -176,6 +261,123 @@ get_next:
 noflo:
 
 	rts
+
+
+	;=====================================
+	; make green
+	;=====================================
+make_green:
+
+	lda	#$20
+	sta	mgl_smc1+2
+	sta	mgl_smc2+2
+
+
+	ldy	#0
+
+make_green_loop:
+
+mgl_smc1:
+	lda	$2000,Y
+	and	#$7f
+mgl_smc2:
+	sta	$2000,Y
+	iny
+	bne	make_green_loop
+
+	inc	mgl_smc1+2
+	inc	mgl_smc2+2
+	lda	mgl_smc2+2
+	cmp	#$60
+	bne	make_green_loop
+
+	rts
+
+
+	;=====================================
+	; make orange
+	;=====================================
+make_orange:
+
+
+	lda	#$20
+	sta	mol_smc1+2
+	sta	mol_smc2+2
+
+	ldy	#0
+
+make_orange_loop:
+
+mol_smc1:
+	lda	$2000,Y
+	ora	#$80
+mol_smc2:
+	sta	$2000,Y
+	iny
+	bne	make_orange_loop
+
+	inc	mol_smc1+2
+	inc	mol_smc2+2
+	lda	mol_smc2+2
+	cmp	#$60
+	bne	make_orange_loop
+
+	rts
+
+	;===================================
+	; draw sound bars
+	;===================================
+draw_sound_bars:
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$23
+	sta	dsb_smc1+2
+	lda	#$E2
+	sta	dsb_smc1+1
+
+	ldy	#0
+dsb_loop:
+	ldx	#0
+draw_bar_xloop:
+	lda	A_VOLUME,X
+	and	#$f
+	lsr
+	sta	TEMP_VOL
+	cpy	TEMP_VOL
+	bcs	bar_yes		; bge
+
+bar_none:
+	lda	#0
+	beq	draw_bar	; bra
+bar_yes:
+	lda	bar_colors,X
+
+draw_bar:
+dsb_smc1:
+	; 21A8 = left centered veritcally
+	; 23E4 = bottom centered horizontally
+
+	sta	$23E3,X
+
+	inx
+	cpx	#3
+	bne	draw_bar_xloop
+
+	lda	dsb_smc1+2
+	clc
+	adc	#$4
+	sta	dsb_smc1+2
+
+	iny
+	cpy	#8
+	bne	dsb_loop
+
+
+	rts
+
+bar_colors:
+	.byte $85,$8f,$8a
 
 graphics_frame1:
 	.incbin "graphics/a2_frame0001.hgr.zx02"

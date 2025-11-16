@@ -51,15 +51,16 @@ QLOAD:	qload.o
 qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
 	gr_offsets.s \
 	wait.s wait_a_bit.s \
-	lc_detect.s gr_fast_clear.s \
+	lc_detect.s \
+	gr_fast_clear.s \
 	text_print.s start.s \
 	hgr_table.s \
-#	hgr_sprite.s \
 	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard_setup.s interrupt_handler.s \
 	pt3_lib_mockingboard_patch.s \
-	irq_wait.s vblank.s hgr_page_flip.s \
-	hgr_clear_screen.s vblank.s
+	irq_wait.s \
+	hgr_page_flip.s \
+	hgr_clear_screen.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####
@@ -73,6 +74,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
+	./generate_common -a 0x1200 -s wait_50ms qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s move_and_print qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
@@ -87,7 +89,7 @@ qload.inc:	generate_common QLOAD
 #	./generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	./generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
@@ -95,7 +97,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
-	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
+#	./generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
 #	./generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
@@ -146,8 +148,7 @@ MUSIC:	music.o
 
 music.o:	music.s zp.inc \
 	zx02_optim.s \
-	slow_copy.s \
-	music/ivan_roschin_spring_2001.pt3 \
+	music/alex_rostov_intro_theme.pt3 \
 	pt3_lib_core.s \
 	pt3_lib_mockingboard_detect.s \
 	pt3_lib_mockingboard.inc \

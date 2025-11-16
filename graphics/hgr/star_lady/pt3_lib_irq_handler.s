@@ -62,6 +62,11 @@ mb_write_frame:
 mb_write_loop:
 	lda	AY_REGISTERS,X	; load register value			; 4
 
+	cmp	ay_register_prev,X
+	beq	mb_no_write
+
+	sta	ay_register_prev,X
+
 	; special case R13.  If it is 0xff, then don't update
 	; otherwise might spuriously reset the envelope settings
 
