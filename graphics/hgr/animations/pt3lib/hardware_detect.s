@@ -77,4 +77,4 @@ mockingboard_notfound:
 
 	rts
 
-.include "pt3_lib_mockingboard.inc"
+.include "../pt3lib/pt3_lib_mockingboard.inc"

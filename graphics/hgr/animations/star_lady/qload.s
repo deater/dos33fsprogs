@@ -1,7 +1,7 @@
 ; Loader
 
 .include "zp.inc"
-.include "hardware.inc"
+.include "../hardware.inc"
 .include "music.inc"
 
 .include "common_defines.inc"
@@ -80,30 +80,28 @@ length_array:
 
 PT3_ENABLE_APPLE_IIC = 1
 
-	.include	"wait.s"
+	.include	"../wait.s"
 
-	.include	"lc_detect.s"
+	.include	"../pt3lib/lc_detect.s"
 
-	.include	"wait_a_bit.s"
-	.include	"gr_fast_clear.s"
-	.include	"text_print.s"
-	.include	"gr_offsets.s"
+	.include	"../wait_a_bit.s"
+	.include	"../gr_fast_clear.s"
+	.include	"../text_print.s"
+	.include	"../gr_offsets.s"
 
-	.include	"pt3_lib_detect_model.s"
-	.include	"pt3_lib_mockingboard_detect.s"
+	.include	"../pt3lib/pt3_lib_detect_model.s"
+	.include	"../pt3lib/pt3_lib_mockingboard_detect.s"
 
-        .include        "hgr_table.s"
+        .include        "../hgr_table.s"
 ;	.include	"random8.s"
 ;	.include	"vblank.s"
-	.include	"irq_wait.s"
-	.include	"hgr_page_flip.s"
-	.include	"wait_keypress.s"
-	.include	"zx02_optim.s"
-	.include	"gs_interrupt.s"
-;	.include	"pt3_lib_mockingboard_patch.s"
-	.include	"hardware_detect.s"
-;	.include	"gr_page_flip.s"
-	.include	"hgr_clear_screen.s"
+	.include	"../irq_wait.s"
+	.include	"../hgr_page_flip.s"
+	.include	"../wait_keypress.s"
+	.include	"../zx02_optim.s"
+	.include	"../pt3lib/gs_interrupt.s"
+	.include	"../pt3lib/hardware_detect.s"
+	.include	"../hgr_clear_screen.s"
 
 	.include	"start.s"
 

@@ -164,4 +164,4 @@ OUTH		=	$DF
 ; $E0-$FD for PT3 Player
 ;==========================
 
-.include "pt3_lib_zp.inc"
+.include "../pt3lib/pt3_lib_zp.inc"

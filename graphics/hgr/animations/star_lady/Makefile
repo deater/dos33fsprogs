@@ -1,10 +1,10 @@
-include ../../../Makefile.inc
+include ../../../../Makefile.inc
 
-DOS33 = ../../../utils/dos33fs-utils/dos33
-DOS33_RAW = ../../../utils/dos33fs-utils/dos33_raw
-EMPTY_DISK = ../../../empty_disk/empty.dsk
-TOKENIZE = ../../../utils/asoft_basic-utils/tokenize_asoft
-LINKER_SCRIPTS = ../../../linker_scripts/
+DOS33 = ../../../../utils/dos33fs-utils/dos33
+DOS33_RAW = ../../../../utils/dos33fs-utils/dos33_raw
+EMPTY_DISK = ../../../../empty_disk/empty.dsk
+TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
+LINKER_SCRIPTS = ../../../../linker_scripts/
 
 all:	star_lady.dsk
 
@@ -26,7 +26,8 @@ ANIMATION:	animation.o
 	ld65 -o ANIMATION animation.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 animation.o:	animation.s \
-	zp.inc hardware.inc qload.inc common_defines.inc \
+	zp.inc ../hardware.inc qload.inc common_defines.inc \
+	../sound_bars.s ../change_palette.s \
 	graphics/frame1_frame3_diff.inc graphics/frame2_frame4_diff.inc \
 	graphics/frame3_frame5_diff.inc graphics/frame4_frame6_diff.inc \
 	graphics/frame5_frame7_diff.inc graphics/frame6_frame8_diff.inc \
@@ -48,19 +49,23 @@ qboot_sector.o:	qboot_sector.s  qboot_stage2.s
 QLOAD:	qload.o
 	ld65 -o QLOAD qload.o -C $(LINKER_SCRIPTS)/apple2_1200.inc
 
-qload.o:	zp.inc hardware.inc common_defines.inc music.inc qload.s \
-	gr_offsets.s \
-	wait.s wait_a_bit.s \
-	lc_detect.s \
-	gr_fast_clear.s \
-	text_print.s start.s \
-	hgr_table.s \
-	pt3_lib_detect_model.s pt3_lib_mockingboard_detect.s \
-	pt3_lib_mockingboard_setup.s interrupt_handler.s \
-	pt3_lib_mockingboard_patch.s \
-	irq_wait.s \
-	hgr_page_flip.s \
-	hgr_clear_screen.s
+qload.o:	zp.inc ../hardware.inc common_defines.inc music.inc qload.s \
+	../gr_offsets.s \
+	../wait.s \
+	../wait_a_bit.s \
+	../gr_fast_clear.s \
+	../text_print.s \
+	../hgr_table.s \
+	../pt3lib/lc_detect.s \
+	../pt3lib/pt3_lib_detect_model.s \
+	../pt3lib/pt3_lib_mockingboard_detect.s \
+	../pt3lib/pt3_lib_mockingboard_setup.s \
+	../pt3lib/interrupt_handler.s \
+	../pt3lib/pt3_lib_mockingboard_patch.s \
+	../irq_wait.s \
+	../hgr_page_flip.s \
+	../hgr_clear_screen.s \
+	start.s
 	ca65 -o qload.o qload.s -l qload.lst
 
 ####
@@ -148,14 +153,13 @@ MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
-	zx02_optim.s \
 	music/alex_rostov_intro_theme.pt3 \
-	pt3_lib_core.s \
-	pt3_lib_mockingboard_detect.s \
-	pt3_lib_mockingboard.inc \
-	pt3_lib_init.s \
-	pt3_lib_mockingboard_setup.s \
-	pt3_lib_irq_handler.s
+	../pt3lib/pt3_lib_core.s \
+	../pt3lib/pt3_lib_mockingboard_detect.s \
+	../pt3lib/pt3_lib_mockingboard.inc \
+	../pt3lib/pt3_lib_init.s \
+	../pt3lib/pt3_lib_mockingboard_setup.s \
+	../pt3lib/pt3_lib_irq_handler.s
 	ca65 -o music.o music.s -l music.lst
 
 
