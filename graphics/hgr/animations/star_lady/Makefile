@@ -27,7 +27,7 @@ ANIMATION:	animation.o
 
 animation.o:	animation.s \
 	zp.inc ../hardware.inc qload.inc common_defines.inc \
-	../sound_bars.s ../change_palette.s \
+	../sound_bars.s ../change_palette.s ../patch_graphics.s \
 	graphics/frame1_frame3_diff.inc graphics/frame2_frame4_diff.inc \
 	graphics/frame3_frame5_diff.inc graphics/frame4_frame6_diff.inc \
 	graphics/frame5_frame7_diff.inc graphics/frame6_frame8_diff.inc \
