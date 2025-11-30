@@ -955,9 +955,9 @@ static void display_help(char *name, int version_only) {
 	printf("  Where disk_image is a valid dos3.3 disk image\n"
 		"  and COMMAND is one of the following:\n");
 	printf("\tCATALOG\n");
-	printf("\tLOAD     apple_file <local_file>\n");
-	printf("\tSAVE     type local_file <apple_file>\n");
-	printf("\tBSAVE    [-a addr] [-l len] local_file <apple_file>\n");
+	printf("\tLOAD     apple_file [local_file]\n");
+	printf("\tSAVE     type local_file [apple_file]\n");
+	printf("\tBSAVE    [-a addr] [-l len] local_file [apple_file]\n");
 	printf("\tDELETE   apple_file\n");
 	printf("\tLOCK     apple_file\n");
 	printf("\tUNLOCK   apple_file\n");
@@ -1058,6 +1058,7 @@ int main(int argc, char **argv) {
 	char *temp,*endptr;
 	int c;
 	int address=0, length=0;
+	int swp_optind=0;
 	unsigned char vtoc[BYTES_PER_SECTOR];
 	int retval=0;
 
@@ -1075,7 +1076,7 @@ int main(int argc, char **argv) {
 			break;
 		case 'l':
 			length=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Length=%d\n",address);
+			if (debug) fprintf(stderr,"Length=%d\n",length);
 			break;
 #if 0
 		case 't':
@@ -1223,18 +1224,61 @@ int main(int argc, char **argv) {
 
 		if (debug) printf("\ttype=%c\n",type);
 
+		if (command==COMMAND_BSAVE) {
+			// Find position of 'BSAVE' command in argv, and call getopt(3) a
+			// second time to forward position of optind beyond optional -a and
+			// -l arguments on BSD.
+			//
+			// This is necessary because BSD and Linux getopt(3) differs, linux
+			// will process '-a' and '-l' options and mutate argv for the value
+			// of optind to point to remaining arguments, "local_filename
+			// [apple_file]".
+			//
+			// While BSD does not mutate argv, leaving optind at the position of
+			// the first unknown option, 'BSAVE' with remaining arguments, "[-a
+			// addr] [-l len] local_filename [apple_file]" still remaining for
+			// processing, and this is why we must call getopt(3) a second time,
+			// in such a peculiar way.
+			optind = 1;
+			while ((strncmp(argv[swp_optind], "BSAVE", 5)) && swp_optind < argc)
+			{
+				swp_optind++;
+			}
+			swp_optind++;
+
+			// forward argv and decrement argc past BSAVE command and reset optind
+			argv += (swp_optind - 1);
+			argc -= (swp_optind - 1);
+			optind = 1;
+			while ((c = getopt(argc, argv, "a:l:")) != -1)
+			{
+				switch (c) {
+					case 'h':
+						display_help(argv[0], 0);
+						return 0;
+					case 'a':
+						address=strtol(optarg,&endptr,0);
+						if (debug) fprintf(stderr,"Address=%d\n",address);
+						break;
+					case 'l':
+						length=strtol(optarg,&endptr,0);
+						if (debug) fprintf(stderr,"Length=%d\n",length);
+						break;
+				}
+			}
+		}
+
 		if (argc==optind) {
-			fprintf(stderr,"Error! Need file_name\n");
+			fprintf(stderr,"Error! local_file argument required\n");
 
 			if (command==COMMAND_BSAVE) {
 				fprintf(stderr,"%s %s BSAVE "
-						"file_name apple_filename\n\n",
+						"[-a addr] [-l len] local_file [apple_file]\n\n",
 						argv[0],image);
-
 			}
 			else {
 				fprintf(stderr,"%s %s SAVE type "
-						"file_name apple_filename\n\n",
+						"local_file [apple_file]\n\n",
 						argv[0],image);
 			}
 			retval=-ERROR_INVALID_PARAMATER;
