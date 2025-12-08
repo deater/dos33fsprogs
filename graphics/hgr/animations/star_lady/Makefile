@@ -5,6 +5,7 @@ DOS33_RAW = ../../../../utils/dos33fs-utils/dos33_raw
 EMPTY_DISK = ../../../../empty_disk/empty.dsk
 TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../../linker_scripts/
+GENERATE_COMMON = ../generate_common
 
 all:	star_lady.dsk
 
@@ -70,81 +71,81 @@ qload.o:	zp.inc ../hardware.inc common_defines.inc music.inc qload.s \
 
 ####
 
-qload.inc:	../generate_common QLOAD
-	../generate_common -a 0x1200 -s load_file qload.lst > qload.inc
-	../generate_common -a 0x1200 -s detect_appleii_model qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_all qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_all_color qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s set_normal qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s set_inverse qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_50ms qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s move_and_print qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s detect_language_card qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_bottom qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_screens qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s clear_top qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s zx_src_h qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s zx_src_l qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_50xms qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s random8 qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s wait_vblank qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_seconds qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s wait_ticks qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s gr_offsets qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s inc_base5 qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
-#	../generate_common -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
-	../generate_common -a 0x1200 -s check_timeout qload.lst >> qload.inc
+qload.inc:	$(GENERATE_COMMON) QLOAD
+	$(GENERATE_COMMON) -a 0x1200 -s load_file qload.lst > qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s detect_appleii_model qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_all qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_all_color qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s set_normal qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s set_inverse qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_a_bit qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_50ms qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s move_and_print qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s detect_language_card qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s mockingboard_detect qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_bottom qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_bottoms qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_screens qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_top qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s zx02_full_decomp qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s zx_src_h qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s zx_src_l qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_until_keypress qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s hgr_draw_sprite qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_50xms qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s random8 qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s wait_vblank qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_seconds qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_ticks qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s gr_offsets qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s inc_base5 qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s gr_flip_page qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s check_timeout qload.lst >> qload.inc
 
 
 ####
 
-music.inc:	../generate_common MUSIC
-	../generate_common -a 0xd000 -s pt3_init_song music.lst > music.inc
-	../generate_common -a 0xd000 -s mockingboard_init music.lst >> music.inc
-	../generate_common -a 0xd000 -s reset_ay_both music.lst >> music.inc
-	../generate_common -a 0xd000 -s clear_ay_both music.lst >> music.inc
-	../generate_common -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
-	../generate_common -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
-	../generate_common -a 0xd000 -s mockingboard_patch music.lst >> music.inc
-	../generate_common -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
-	../generate_common -a 0xd000 -s PT3_LOC music.lst >> music.inc
-	../generate_common -a 0xd000 -s current_pattern_smc music.lst >> music.inc
-	../generate_common -a 0xd000 -s pt3_set_pattern music.lst >> music.inc
-	../generate_common -a 0xd000 -s mute_ay_both music.lst >> music.inc
-	../generate_common -a 0xd000 -s unmute_ay_both music.lst >> music.inc
-	../generate_common -a 0xd000 -s interrupt_handler music.lst >> music.inc
-#	../generate_common -a 0xd000 -s copy_to_400 music.lst >> music.inc
-#	../generate_common -a 0xd000 -s copy_to_400_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s copy_to_400_aux music.lst >> music.inc
-#	../generate_common -a 0xd000 -s zx02_full_decomp music.lst >> music.inc
-#	../generate_common -a 0xd000 -s zx02_full_decomp_aux music.lst >> music.inc
-#	../generate_common -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s zx_src_h music.lst >> music.inc
-#	../generate_common -a 0xd000 -s zx_src_l music.lst >> music.inc
-#	../generate_common -a 0xd000 -s hgr_vertical_scroll_down_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s hgr_vertical_scroll_down_aux music.lst >> music.inc
-#	../generate_common -a 0xd000 -s hgr_vertical_scroll_up_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s hgr_vertical_scroll_up_aux music.lst >> music.inc
-#	../generate_common -a 0xd000 -s slow_copy_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s slow_copy_aux music.lst >> music.inc
-#	../generate_common -a 0xd000 -s slow_copy_A0_main music.lst >> music.inc
-#	../generate_common -a 0xd000 -s slow_copy_A0_aux music.lst >> music.inc
+music.inc:	$(GENERATE_COMMON) MUSIC
+	$(GENERATE_COMMON) -a 0xd000 -s pt3_init_song music.lst > music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s mockingboard_init music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s reset_ay_both music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s clear_ay_both music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s mockingboard_setup_interrupt music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s mockingboard_disable_interrupt music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s mockingboard_patch music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s PT3_LOC music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s current_pattern_smc music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s pt3_set_pattern music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s mute_ay_both music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s unmute_ay_both music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s interrupt_handler music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s copy_to_400 music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s copy_to_400_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s copy_to_400_aux music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s zx02_full_decomp music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s zx02_full_decomp_aux music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s zx02_full_decomp_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s zx_src_h music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s zx_src_l music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s hgr_vertical_scroll_down_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s hgr_vertical_scroll_down_aux music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s hgr_vertical_scroll_up_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s hgr_vertical_scroll_up_aux music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s slow_copy_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s slow_copy_aux music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s slow_copy_A0_main music.lst >> music.inc
+#	$(GENERATE_COMMON) -a 0xd000 -s slow_copy_A0_aux music.lst >> music.inc
 
 
 ####
