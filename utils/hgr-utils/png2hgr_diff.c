@@ -379,6 +379,7 @@ static unsigned char apple2_image2[8192];
 int main(int argc, char **argv) {
 
 	int xsize=0,ysize=0,error,differences=0;
+	int warn_colors=0;
 	int c,x,y,z,color1,i,j;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
@@ -446,8 +447,10 @@ int main(int argc, char **argv) {
 			error=colors_to_bytes(colors,&byte1,&byte2);
 			if (error!=0) {
 				color_warnings++;
-				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-					x*14+error*7,y);
+				if (warn_colors) {
+					fprintf(stderr,"Warning: mixing colors at %d x %d\n",
+						x*14+error*7,y);
+				}
 			}
 
 			apple2_image1[hgr_offset(y)+(x*2)+0]=byte1;
@@ -479,8 +482,10 @@ int main(int argc, char **argv) {
 			error=colors_to_bytes(colors,&byte1,&byte2);
 			if (error!=0) {
 				color_warnings++;
-				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-					x*14+error*7,y);
+				if (warn_colors) {
+					fprintf(stderr,"Warning: mixing colors at %d x %d\n",
+						x*14+error*7,y);
+				}
 			}
 
 			apple2_image2[hgr_offset(y)+(x*2)+0]=byte1;
@@ -539,6 +544,9 @@ int main(int argc, char **argv) {
 
 //	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 	fprintf(stderr,"Total differences: %d, %d bytes\n",
+			differences,diff_bytes);
+
+	printf("; Total differences: %d, %d bytes\n",
 			differences,diff_bytes);
 
 
