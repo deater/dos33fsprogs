@@ -96,55 +96,11 @@ CURRENT_ROW	= $CD	; dhgr_repack
 ; repack
 REPACK_TMP	= $D0	; $D0...$D7
 
-; start/font fall
-
-TEXT_Y		= $D2
-
-; intro: scrolling
-
-SCROLL_COUNT	= $D0
-INDEX		= $D1
-DEST_OFFSET	= $D2
-SRC_OFFSET	= $D3
-LENGTH		= $D4
-
-; woz
-ROW		= $D0	; martymation
-FAKE_HGR_PAGE	= $D1
-FAKE_HGR_BITS	= $D2
-FAKE_HGR_SHAPE	= $D3
-FAKE_HGR_SHAPE2	= $D4
-WHICH_BALL	= $D5
-ORBITS		= $D6
-NEXT_BALL       = $D7
-ERASE_COUNT     = $D8
-BALL_X		= $D9
-
-; four color
-CURRENT		= $D0
-LEFT		= $D1
-XSTART		= $D2
-XEND		= $D3
-COLORSG		= $D4
-COLORSF		= $D5
-COLORSE		= $D6
-COLORSD		= $D7
-COLORSC		= $D8
-COLORSB		= $D9
-COLORSA		= $DA
-ODD		= $DB
-
-; Plasma
-COMPT1		= $D0
-COMPT2		= $D1
-PARAM1		= $D2
-PARAM2		= $D3
-PARAM3		= $D4
-PARAM4		= $D5
 COUNT		= $D6
+WHICH_DROP	= $D7
 
 ; 
-TEMP_VOL	= $D9
+;TEMP_VOL	= $D9
 WHICH		= $DA
 FRAME_RATE	= $DB
 
