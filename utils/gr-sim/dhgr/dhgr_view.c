@@ -9,10 +9,19 @@
 int main(int argc, char **argv) {
 
 	int ch,fd;
+	int onefile=0;
 
 	if (argc<2) {
 		fprintf(stderr,"Usage: dhgr_view FILENAME.AUX FILENAME.MAIN\n");
 		fprintf(stderr,"  where FILENAME AUX/MAIN are 8k AppleII DHIRES dumps\n\n");
+		return -1;
+	}
+
+	if (argc==3) {
+		onefile=0;
+	}
+	if (argc==2) {
+		onefile=1;
 	}
 
 	grsim_init();
@@ -28,26 +37,44 @@ int main(int argc, char **argv) {
 
 	soft_switch(SET_PAGE2);
 
-	/* Load AUX RAM */
-	fd=open(argv[1],O_RDONLY);
-	if (fd<0) {
-		printf("Error opening!\n");
-		return -1;
+	if (onefile==1) {
+		/* Load AUX RAM */
+		fd=open(argv[1],O_RDONLY);
+		if (fd<0) {
+			printf("Error opening!\n");
+			return -1;
+		}
+		read(fd,&ram[0x12000],8192);
+
+		soft_switch(SET_PAGE1);
+
+		/* load MAIN RAM */
+		read(fd,&ram[0x02000],8192);
+		close(fd);
+
 	}
-	read(fd,&ram[0x12000],8192);
-	close(fd);
+	else {
+		/* Load AUX RAM */
+		fd=open(argv[1],O_RDONLY);
+		if (fd<0) {
+			printf("Error opening!\n");
+			return -1;
+		}
+		read(fd,&ram[0x12000],8192);
+		close(fd);
 
-	soft_switch(SET_PAGE1);
+		soft_switch(SET_PAGE1);
 
-	/* load MAIN RAM */
-	fd=open(argv[2],O_RDONLY);
-	if (fd<0) {
-		printf("Error opening!\n");
-		return -1;
+		/* load MAIN RAM */
+		fd=open(argv[2],O_RDONLY);
+		if (fd<0) {
+			printf("Error opening!\n");
+			return -1;
+		}
+		read(fd,&ram[0x02000],8192);
+		close(fd);
+
 	}
-	read(fd,&ram[0x02000],8192);
-	close(fd);
-
 
 	grsim_update();
 
