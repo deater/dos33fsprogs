@@ -472,7 +472,7 @@ int main(int argc, char **argv) {
 		fwrite(apple2_image,8184,sizeof(unsigned char),stdout);
 	}
 	else {
-		fwrite(apple2_image,8191,sizeof(unsigned char),stdout);
+		fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
 	}
 	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 

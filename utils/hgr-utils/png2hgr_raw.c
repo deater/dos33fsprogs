@@ -1,5 +1,9 @@
 /* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
 
+/* This is an extended version which puts the colors in a */
+/* non-interlaced form to make ZX02 compression work better */
+/* It needs a special unpacker to view */
+
 #define VERSION "0.0.2"
 
 #include <stdio.h>	/* For FILE I/O */
@@ -243,13 +247,11 @@ static void print_help(char *name,int version) {
 
 	printf("\nUsage: %s [-d] [-f] [-t] PNGFILE\n\n",name);
 	printf("\t[-d] debug\n");
-	printf("\t[-f] fill gaps with last color\n");
-	printf("\t[-t] truncate output to 8184 bytes\n");
 	printf("\n");
 
 	exit(1);
 }
-
+#if 0
 static int hgr_offset_table[48]={
 	0x0000,0x0080,0x0100,0x0180,0x0200,0x0280,0x0300,0x0380,
 	0x0028,0x00A8,0x0128,0x01A8,0x0228,0x02A8,0x0328,0x03A8,
@@ -268,6 +270,7 @@ static int hgr_offset(int y) {
 
 	return address;
 }
+#endif
 
 /* Count both black/white variants */
 static int color_high(int color) {
@@ -385,8 +388,6 @@ int main(int argc, char **argv) {
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
 
-	int fill_gaps=0,truncate_early=0;
-
 	char *filename;
 
 	/* Parse command line arguments */
@@ -397,14 +398,8 @@ int main(int argc, char **argv) {
                         case 'd':
 				debug=1;
 				break;
-			case 'f':
-				fill_gaps=1;
-				break;
                         case 'h':
                                 print_help(argv[0],0);
-				break;
-			case 't':
-				truncate_early=1;
 				break;
                         case 'v':
                                 print_help(argv[0],1);
@@ -449,31 +444,14 @@ int main(int argc, char **argv) {
 					x*14+error*7,y);
 			}
 
-			apple2_image[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_image[hgr_offset(y)+(x*2)+1]=byte2;
+			apple2_image[y*40+(x*2)+0]=byte1;
+			apple2_image[y*40+(x*2)+1]=byte2;
 		}
 
 	}
 
-	if (fill_gaps) {
-		/* gaps at lines ending in 0x50 and 0xd0 */
-		/* 0x00..0x27, 0x28..0x4f, 0x50..0x77, 8 bytes at 0x78..0x7f */
-		/* 0x80..0xA7, 0xA8..0xcf, 0xd0..0xf7, 8 bytes at 0xf8..0xff */
-		for(y=0;y<8192;y+=256) {
-			for(x=0;x<8;x++) {
-				apple2_image[y+0x78+x]=apple2_image[y+0x77];
-				apple2_image[y+0xf8+x]=apple2_image[y+0xf7];
-			}
-		}
+	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
 
-	}
-
-	if (truncate_early) {
-		fwrite(apple2_image,8184,sizeof(unsigned char),stdout);
-	}
-	else {
-		fwrite(apple2_image,8191,sizeof(unsigned char),stdout);
-	}
 	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 
 	return 0;
