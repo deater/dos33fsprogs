@@ -1,0 +1,109 @@
+; compress_test startup
+
+;
+; by deater (Vince Weaver) <vince@deater.net>
+
+;.include "zp.inc"
+;.include "hardware.inc"
+;.include "qload.inc"
+;.include "music.inc"
+
+DEBUG=0
+
+star_lady_start:
+	;=====================
+	; initializations
+	;=====================
+
+	bit	PAGE1
+	bit	KEYRESET
+
+	jsr	hardware_detect
+
+	lda	APPLEII_MODEL
+	sta	message_type_offset
+
+	; init vars
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	;=====================
+	; clear text screen
+
+	lda	#$A0
+	jsr	clear_top_a
+	jsr	clear_bottom
+
+	; print start message
+
+	jsr	set_normal
+
+	lda	#<start_message
+	sta	OUTL
+	lda	#>start_message
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	;===============================
+	; pause at warning if not e/c/gs
+
+	lda	APPLEII_MODEL
+	cmp	#'e'
+	beq	good_to_go
+	cmp	#'g'
+	beq	good_to_go
+	cmp	#'c'
+	beq	good_to_go
+
+	jsr	wait_until_keypress
+
+good_to_go:
+
+	;=========================================
+	;=========================================
+	; start loading the demo
+	;=========================================
+	;=========================================
+
+
+	jsr	hgr_make_tables
+
+
+	;=======================
+	;=======================
+	; Run ANIMATION
+	;=======================
+	;=======================
+
+	; load from disk
+
+	sei
+	lda	#PART_ANIMATION	; Load bucket
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	; Run Animation
+
+;	cli			; start music
+
+	jsr	$6000
+
+blah:
+	jmp	blah
+
+
+start_message:	  ;01234567890123456789012345678901234567890
+	.byte 0,0,"LOADING COMPRESS_TEST V1.0",0
+	.byte 0,3,"SYSTEM DETECTED: APPLE II"
+message_type_offset:
+	.byte "   ",0
+	.byte 0,16,"FAST DISK LOAD BY QKUMBA",0
+	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
+	.byte 0,18,"EVERYTHING ELSE BY DEATER",0
+	.byte 10,20,"  ______",0
+	.byte 10,21,"A \/\/\/ PRODUCTION",0
+	.byte $FF
+
+
