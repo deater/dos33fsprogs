@@ -55,17 +55,31 @@ peasantry:
 	; 192*40 = 7680 = $1E00 ($3E00)
 	; $3E00-40=$3DD8
 
+
+	;  $3F00 $3F28 $3F50 $3F80 $3FA8 $3FD0
+
+
+	; $3FD0 $3FA8 $3F50 $3F28 $3F00
+	; -40, -40, -48, -40, -40, -48
+
+
+	; reinit
+
+	lda	#0
+	sta	three_smc+1
+
 	lda	#$D8
 	sta	depack_in_smc+1
 	lda	#$3D
 	sta	depack_in_smc+2
 
+	lda	#$D0
+	sta	depack_out_smc+1
+	lda	#$3F
+	sta	depack_out_smc+2
+
 	ldx	#191
 depack_outer:
-	lda	hposn_low,X
-	sta	depack_out_smc+1
-	lda	hposn_high,X
-	sta	depack_out_smc+2
 
 	ldy	#39
 depack_inner:
@@ -85,6 +99,35 @@ depack_out_smc:
 	lda	depack_in_smc+2
 	sbc	#0
 	sta	depack_in_smc+2
+
+	inc	three_smc+1
+
+
+
+three_smc:
+	lda	#0
+
+	cmp	#3
+	bne	sub40
+
+	lda	#0
+	sta	three_smc+1
+
+	sec
+	lda	depack_out_smc+1
+	sbc	#48
+	jmp	subcommon
+
+
+sub40:
+	sec
+	lda	depack_out_smc+1
+	sbc	#40
+subcommon:
+	sta	depack_out_smc+1
+	lda	depack_out_smc+2
+	sbc	#0
+	sta	depack_out_smc+2
 
 	dex
 	cpx	#$ff
@@ -135,6 +178,8 @@ sort_out_smc2:
 	dey
 	bpl	sort_inner
 
+;	jsr	wait_until_keypress
+
 	inx
 	cpx	#188
 	bne	sort_outer
@@ -147,7 +192,10 @@ animation_loop:
 
 
 graphics_frame1:
-	.incbin "graphics/kerrek1.raw.zx02"
+;	.incbin "graphics/kerrek1.raw.zx02"
+;	.incbin "graphics/merry_christmas.raw.zx02"
+;	.incbin "graphics/ice3.raw.zx02"
+	.incbin "graphics/magsteps2_n.raw.zx02"
 
 
 swap_table:
