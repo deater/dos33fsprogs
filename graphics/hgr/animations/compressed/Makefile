@@ -26,6 +26,7 @@ ANIMATION:	animation.o
 
 animation.o:	animation.s \
 	zp.inc ../hardware.inc qload.inc common_defines.inc \
+	hgr_repack.s \
 	graphics/kerrek1.hgr.zx02
 	ca65 -o animation.o animation.s -l animation.lst
 
