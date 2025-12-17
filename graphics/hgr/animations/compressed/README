@@ -1,0 +1,154 @@
+Maximing Compression of Apple II Hi-res Images
+
+I have the somewhat niche probem of trying to fit as many Apple II
+hi-res images into RAM (and disk) at a time.  Uncompressed these images
+are 8k (well, you can get away with 8184 bytes without any trouble
+for reasons we'll discuss later).
+
+Background
+~~~~~~~~~~
+
+
+I won't go too much into the wacky world of Apple II graphics,
+you can read more on that here.  For our purposes the important part
+is that you can think of it as a 280x192 monochrome image with 7-bits
+per byte that typically is used to generate NTSC artifact color 
+(the top bit shifts the pixel slightly to essentially choose another
+palette, blue/orange vs purple/green).
+
+You might think 280x192, at 7bpp, it should be 40 byte by 192 image fitting
+nicely in a linear 7.5k.  Alas, no, and you can probably blame Woz for it.
+
+The first part is to avoid crossing page boundaries there are "holes" 
+in the memory map.  After each three rows (120 bytes) 8 bytes are left
+unused to pad things out to a nice power of 2.
+
+The final issue is that complex interleaving goes on so rows are not
+contiguous in memory.  This is for various reasons, possibly to save
+a few chips on the motherboard.  (In addition the addresses are all over
+the place on the actual RAM chips to make the "free" DRAM refresh but
+that's hard to notice unless you're logic-probing the address lines).
+
+For example, in PAGE1 of hi-res memory starting at $2000 (on 6502 processors
+you use $ to indicate hexadecimal) you get something like this:
+
+$2000:	Row0	Row64 Row 128, 8-bytes padding
+$2080:  Row8	Row72 Row 136, 8 bytes padding
+...
+and after 1k of this, you then start over with
+$2400:	Row1	Row65 Row129, 8 bytes padding
+
+This leads to the "venetian blind" effect often seen when loading HGR
+graphics linearly.
+
+Compression
+~~~~~~~~~~~
+
+I won't go into too many details here, there are a lot of 6502 compression
+algorithms that have various tradeoffs between code size, compression
+ratio, and speed.  I've settled on ZX02 for now which is a nice compromise
+and has low code size which I like because often I am doing size coding.
+
+Extra-Compression
+~~~~~~~~~~~~~~~~~
+
+It turns out though that while compressing the interleaved graphics works
+pretty well, you can get a bit more compression if you de-interlace first.
+
+With some examples (you can see a video here):
+				zx02		de-interlace+zx02
+Kerrek 1			951		808	(-143)
+(video game)			12%		10%
+
+Christmas			2572		2402	(-170)
+(fancy writing)			31%		29%
+
+riven maglev			3423		3263	(-160)
+(hand converted bitmap)		42%		40%
+
+Ice3				5176		5094	(-82)
+(iipix converted bitmap)	63%		62%
+
+
+So you can save rouchly 100 or so bytes per image, depending on the entropy
+in the original image.  Does this matter?  I definitely have had projects
+where every byte counts and if you have more than 10 or so images it can
+add up.
+
+The Algorithm
+~~~~~~~~~~~~~
+
+The nice thing about this algorithm is you can do it in-place so you don't
+have to have 8k free to do this.
+
+It's two steps
+
+1. Add in the 8-byte memory holes every 128 bytes
+2. Sort the lines to the proper location (via what is essentially
+	a selection sort)
+
+The Cost
+~~~~~~~~
+
+Code Size
+=========
+
+So this isn't free.  How expensive is it to do this?
+
+The current code I have, the zx02 compression is
+2a5-217=142 bytes
+
+On top of this, the de-interlace code (which I have not optimized at all)
+uses an 188 byte lookup table, the total space is 
+19f-3c = 355 bytes.  So currently you'd need to have 4 images before it
+is a net win.
+
+This assumes that we already have 384 bytes of hi/lo hires lookup tables
+already in memory for other reasons.  Usually you do if you're doing hires
+work with any sort of speed.
+
+
+Time Overhead
+=============
+
+For the ice3 case which is a bit of a worst case for zx02
+
+zx02 decompression time:	$1417 - $6028 (the rts in zx02 used multiple)
+		0x68176 cycles = 426538 = ~417ms = ~ 25 frames
+add-back-holes: $60A2
+		0x1d8c7 = 121031 = ~118ms = ~ 7 frames
+de-interlace:	$60E2 = 39a78+4EE= $39f66 = 237414 = 232ms = ~14 frames
+
+As a reminder, an NTSC Apple II updates the screen at 60Hz which is
+approximately 16.7ms.
+
+Note the Apple II runs the 6502 at approximately 1.023 MHz (it's complicated).
+
+The zx02 compression routine is the one optimized by qkumba.
+
+Other Uses
+~~~~~~~~~~
+
+I originally thought of doing this when doing my double-hires
+Monstersplash demo for Demosplash 2025.  Double-hires has its own issues
+that make compression harder (the graphics are spread across two memory banks
+and the pixels alternate between them in complex ways) so the deinterlace
+is more of a win.
+
+I would like to see if this would help much on lo-res or double-lores.
+There are some scenes from the Rewind2 and Second Reality that are space
+constained.
+
+I also think it might be of use in various of my games like Myst demake
+or Peasant's Quest demake.
+
+
+Questions
+~~~~~~~~~~
+
+Q. Could you just modify ZX02 to be apple-ii hires aware?
+
+A. Maybe?  The problem is compression algorithms like this will grab
+	into the already-decompressed output data for patterns and so if you
+	are scattering it around it makes life more difficult.
+
