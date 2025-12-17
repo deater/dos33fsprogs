@@ -29,4 +29,4 @@ PT3_ENABLE_APPLE_IIC = 1
 
 .align $100
 PT3_LOC:
-.incbin "music/alex_rostov_intro_theme.pt3"
+.incbin "music/ana_ng.pt3"

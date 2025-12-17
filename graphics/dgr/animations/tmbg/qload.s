@@ -24,7 +24,7 @@ qload_start:
 
 ;	jsr	load_file
 
-	jmp	star_lady_start
+	jmp	tmbg_start
 
 ;	jmp	$2000			; jump to ZW
 
@@ -92,16 +92,16 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"../pt3lib/pt3_lib_detect_model.s"
 	.include	"../pt3lib/pt3_lib_mockingboard_detect.s"
 
-        .include        "../hgr_table.s"
+;        .include        "../hgr_table.s"
 ;	.include	"random8.s"
 ;	.include	"vblank.s"
 	.include	"../irq_wait.s"
-	.include	"../hgr_page_flip.s"
+	.include	"../gr_page_flip.s"
 	.include	"../wait_keypress.s"
 	.include	"../zx02_optim.s"
 	.include	"../pt3lib/gs_interrupt.s"
 	.include	"../pt3lib/hardware_detect.s"
-	.include	"../hgr_clear_screen.s"
+;	.include	"../hgr_clear_screen.s"
 
 	.include	"start.s"
 

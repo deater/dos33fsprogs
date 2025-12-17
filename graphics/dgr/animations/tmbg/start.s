@@ -1,4 +1,4 @@
-; star_lady startup
+; tmbg startup
 
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
@@ -10,7 +10,7 @@
 
 DEBUG=0
 
-star_lady_start:
+tmbg_start:
 	;=====================
 	; initializations
 	;=====================
@@ -121,9 +121,6 @@ dont_enable_mc:
 skip_all_checks:
 
 
-	jsr	hgr_make_tables
-
-
 	;=======================
 	;=======================
 	; Run ANIMATION
@@ -148,13 +145,14 @@ blah:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING STAR_LADY 2025 V1.0",0
+	.byte 0,0,"LOADING TMBG/ANANG 2025 V1.0",0
 	.byte 0,1,"REQUIRES APPLE II, MOCKINGBOARD",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
 	.byte "   ",0
-	.byte 0,10,"MUSIC: INTRO THEME BY ALEX ROSTOV",0
-	.byte 0,12,"GRAPHICS BY @REDLOT_TO",0
+	.byte 0,10,"MUSIC BASED ON .MOD BY",0
+	.byte 0,11,"    FILET O'FISH AND COMPUWIZ (1991)",0
+;	.byte 0,12,"GRAPHICS BY @REDLOT_TO",0
 	.byte 0,16,"FAST DISK LOAD BY QKUMBA",0
 	.byte 0,17,"ZX02 DECOMPRESSION BY DMSC",0
 	.byte 0,18,"EVERYTHING ELSE BY DEATER",0

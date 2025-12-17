@@ -2,54 +2,94 @@
 	; draw sound bars
 	;===================================
 draw_sound_bars:
-
 	clc
 	lda	DRAW_PAGE
-	adc	#$23
+	eor	#$4
+	adc	#$7
 	sta	dsb_smc1+2
-	lda	#$E2
-	sta	dsb_smc1+1
+	sta	dsb_smc2+2
+	sta	dsb_smc3+2
+	sta	dsb_smc4+2
 
-	ldy	#0
-dsb_loop:
-	ldx	#0
-draw_bar_xloop:
-	lda	A_VOLUME,X
+	sta	dsb_smc5+2
+	sta	dsb_smc6+2
+	sta	dsb_smc7+2
+	sta	dsb_smc8+2
+
+	sta	dsb_smc9+2
+	sta	dsb_smc10+2
+	sta	dsb_smc11+2
+	sta	dsb_smc12+2
+
+
+	lda	A_VOLUME
 	and	#$f
 	lsr
-	sta	TEMP_VOL
-	cpy	TEMP_VOL
-	bcs	bar_yes		; bge
-
-bar_none:
-	lda	#0
-	beq	draw_bar	; bra
-bar_yes:
-	lda	bar_colors,X
-
-draw_bar:
+	lsr
+	tax
+	lda	a_bar_top,X
 dsb_smc1:
-	; 21A8 = left centered veritcally
-	; 23E4 = bottom centered horizontally
+	sta	$750
+dsb_smc2:
+	sta	$775
+	lda	a_bar_bottom,X
+dsb_smc3:
+	sta	$7d0
+dsb_smc4:
+	sta	$7f5
 
-	sta	$23E3,X
+	lda	B_VOLUME
+	and	#$f
+	lsr
+	lsr
+	tax
+	lda	b_bar_top,X
+dsb_smc5:
+	sta	$751
+dsb_smc6:
+	sta	$776
+	lda	b_bar_bottom,X
+dsb_smc7:
+	sta	$7d1
+dsb_smc8:
+	sta	$7f6
 
-	inx
-	cpx	#3
-	bne	draw_bar_xloop
+	lda	C_VOLUME
+	and	#$f
+	lsr
+	lsr
+	tax
+	lda	c_bar_top,X
+dsb_smc9:
+	sta	$752
+dsb_smc10:
+	sta	$777
+	lda	c_bar_bottom,X
+dsb_smc11:
+	sta	$7d2
+dsb_smc12:
+	sta	$7f7
 
-	lda	dsb_smc1+2
-	clc
-	adc	#$4
-	sta	dsb_smc1+2
-
-	iny
-	cpy	#8
-	bne	dsb_loop
 
 
 	rts
 
-bar_colors:
-	.byte $85,$8f,$8a
+a_bar_top:
+	.byte $00,$00,$20,$22
+
+a_bar_bottom:
+	.byte $00,$20,$22,$22
+
+b_bar_top:
+	.byte $00,$00,$40,$44
+
+b_bar_bottom:
+	.byte $00,$40,$44,$44
+
+c_bar_top:
+	.byte $00,$00,$60,$66
+
+c_bar_bottom:
+	.byte $00,$60,$66,$66
+
 

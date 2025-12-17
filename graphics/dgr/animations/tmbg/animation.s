@@ -16,7 +16,7 @@ tmbg:
 	; init vars
 	;=================================
 
-	lda	#3
+	lda	#10
 	sta	FRAME_RATE
 
 	;=================================
@@ -99,14 +99,6 @@ tmbg:
 	ldx	#$20
 	jsr	copy_to_400_main
 
-oop:
-	jsr	wait_until_keypress
-	bit	PAGE1
-	jsr	wait_until_keypress
-	bit	PAGE2
-	jmp	oop
-
-
 	;=======================
 	; start music
 
@@ -118,14 +110,6 @@ yes_music:
 	cli
 no_music:
 
-	; so frame1 is on page1
-	;    frame2 is on page2
-
-	;	show page2 (frame2)			FRAME2
-	;	page1	1->3, fiip to page1		FRAME3
-	; 	page2	2->4, flip to page2		FRAME4
-	;	page1	3->5, flip to page1		FRAME5
-
 	lda	#0
 	sta	DRAW_PAGE
 	sta	WHICH
@@ -133,44 +117,62 @@ no_music:
 animation_loop:
 
 	; draw page1, view page2
-.if 0
-	ldx	WHICH
-	ldy	patches_page1_h,X
-	lda	patches_page1_l,X
-	tax
-.endif
-	jsr	patch_graphics
 
-	jsr	draw_sound_bars
+	ldx	WHICH
+	ldy	patches_page1_aux_h,X
+	lda	patches_page1_aux_l,X
+	tax
+
+	jsr	patch_graphics_aux
+
+
+	ldx	WHICH
+	ldy	patches_page1_main_h,X
+	lda	patches_page1_main_l,X
+	tax
+
+	jsr	patch_graphics_main
 
 	jsr	wait_some
 
 ;	jsr	wait_until_keypress
 
-	jsr	hgr_page_flip
+	jsr	gr_page_flip
 
 
 	; draw page2, view page1
-.if 0
+
 	jsr	wait_some
 
 ;	jsr	wait_until_keypress
 
 	ldx	WHICH
-	ldy	patches_page2_h,X
-	lda	patches_page2_l,X
+	ldy	patches_page2_aux_h,X
+	lda	patches_page2_aux_l,X
 	tax
-.endif
-	jsr	patch_graphics
 
-	jsr	draw_sound_bars
+	jsr	patch_graphics_aux
 
-	jsr	hgr_page_flip
+	ldx	WHICH
+	ldy	patches_page2_main_h,X
+	lda	patches_page2_main_l,X
+	tax
+
+	jsr	patch_graphics_main
+
+
+	jsr	gr_page_flip
 
 	inc	WHICH
 	lda	WHICH
-	and	#$3		; wrap at 4
+
+	cmp	#5
+	bne	done_wrap
+
+	lda	#0
+
 	sta	WHICH
+done_wrap:
 
 	;=====================
 	; handle keyboard
@@ -215,7 +217,7 @@ wait_some:
 
 wait_nomock:
 	lda	FRAME_RATE
-	jmp	wait_50ms
+	jmp	wait_50ms_sound
 
 wait_mockingboard:
 	lda	FRAME_RATE
@@ -224,7 +226,7 @@ wait_mockingboard:
 .include "../patch_graphics.s"
 .include "../sound_bars.s"
 .include "../copy_400.s"
-
+.include "wait_a_bit.s"
 
 graphics_frame1_aux:
 	.incbin "graphics/tmbg01.aux.zx02"
@@ -301,9 +303,4 @@ patches_page2_main_h:
 	.byte	>f13_main_diff
 	.byte	>f35_main_diff
 	.byte	>f52_main_diff
-
-
-
-
-
 

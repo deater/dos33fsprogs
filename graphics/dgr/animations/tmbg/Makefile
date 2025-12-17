@@ -28,7 +28,7 @@ ANIMATION:	animation.o
 
 animation.o:	animation.s \
 	zp.inc ../hardware.inc qload.inc common_defines.inc \
-	../sound_bars.s ../change_palette.s ../patch_graphics.s \
+	../sound_bars.s ../patch_graphics.s \
 	graphics/tmbg01.aux.zx02 graphics/tmbg02.aux.zx02
 	ca65 -o animation.o animation.s -l animation.lst
 
@@ -58,7 +58,6 @@ qload.o:	zp.inc ../hardware.inc common_defines.inc music.inc qload.s \
 	../wait_a_bit.s \
 	../gr_fast_clear.s \
 	../text_print.s \
-	../hgr_table.s \
 	../pt3lib/lc_detect.s \
 	../pt3lib/pt3_lib_detect_model.s \
 	../pt3lib/pt3_lib_mockingboard_detect.s \
@@ -66,8 +65,6 @@ qload.o:	zp.inc ../hardware.inc common_defines.inc music.inc qload.s \
 	../pt3lib/interrupt_handler.s \
 	../pt3lib/pt3_lib_mockingboard_patch.s \
 	../irq_wait.s \
-	../hgr_page_flip.s \
-	../hgr_clear_screen.s \
 	start.s
 	ca65 -o qload.o qload.s -l qload.lst
 
@@ -101,7 +98,7 @@ qload.inc:	$(GENERATE_COMMON) QLOAD
 	$(GENERATE_COMMON) -a 0x1200 -s wait_seconds qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s wait_for_pattern qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s wait_ticks qload.lst >> qload.inc
-	$(GENERATE_COMMON) -a 0x1200 -s hgr_page_flip qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s gr_page_flip qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s gr_offsets qload.lst >> qload.inc
 #	$(GENERATE_COMMON) -a 0x1200 -s inc_base5 qload.lst >> qload.inc
 #	$(GENERATE_COMMON) -a 0x1200 -s draw_full_dni_number qload.lst >> qload.inc
@@ -109,9 +106,9 @@ qload.inc:	$(GENERATE_COMMON) QLOAD
 #	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_fizzle qload.lst >> qload.inc
 #	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_lr qload.lst >> qload.inc
 #	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_center qload.lst >> qload.inc
-	$(GENERATE_COMMON) -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
-	$(GENERATE_COMMON) -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
-	$(GENERATE_COMMON) -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s hgr_clear_screen qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s check_timeout qload.lst >> qload.inc
 
 
@@ -156,7 +153,7 @@ MUSIC:	music.o
 	ld65 -o MUSIC music.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
 
 music.o:	music.s zp.inc \
-	music/alex_rostov_intro_theme.pt3 \
+	music/ana_ng.pt3 \
 	../pt3lib/pt3_lib_core.s \
 	../pt3lib/pt3_lib_mockingboard_detect.s \
 	../pt3lib/pt3_lib_mockingboard.inc \

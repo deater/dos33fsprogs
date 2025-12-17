@@ -7,7 +7,7 @@ PNG_TO_DGR_DIFF = ../../../../../utils/gr-utils/png2dgr_diff
 
 all:	\
 	tmbg01.aux.zx02 tmbg01.main.zx02 \
-	tmbg02.aux.zx02 tmbg02.main.zx02
+	tmbg02.aux.zx02 tmbg02.main.zx02 \
 	frame1_frame3_diff.inc frame3_frame5_diff.inc \
 	frame5_frame2_diff.inc frame2_frame4_diff.inc \
 	frame4_frame1_diff.inc
@@ -16,19 +16,19 @@ all:	\
 ####
 
 frame1_frame3_diff.inc:	tmbg01.png tmbg03.png
-	$(PNG_TO_DGR_DIFF) tmbg01.png tmbg03.png > frame1_frame3_diff.inc
+	$(PNG_TO_DGR_DIFF) tmbg01.png tmbg03.png f13 > frame1_frame3_diff.inc
 
 frame3_frame5_diff.inc:	tmbg03.png tmbg05.png
-	$(PNG_TO_DGR_DIFF) tmbg03.png tmbg05.png > frame3_frame5_diff.inc
+	$(PNG_TO_DGR_DIFF) tmbg03.png tmbg05.png f35 > frame3_frame5_diff.inc
 
 frame5_frame2_diff.inc:	tmbg05.png tmbg02.png
-	$(PNG_TO_DGR_DIFF) tmbg05.png tmbg02.png > frame5_frame2_diff.inc
+	$(PNG_TO_DGR_DIFF) tmbg05.png tmbg02.png f52 > frame5_frame2_diff.inc
 
 frame2_frame4_diff.inc:	tmbg02.png tmbg04.png
-	$(PNG_TO_DGR_DIFF) tmbg02.png tmbg04.png > frame2_frame4_diff.inc
+	$(PNG_TO_DGR_DIFF) tmbg02.png tmbg04.png f24 > frame2_frame4_diff.inc
 
 frame4_frame1_diff.inc:	tmbg04.png tmbg01.png
-	$(PNG_TO_DGR_DIFF) tmbg04.png tmbg01.png > frame4_frame1_diff.inc
+	$(PNG_TO_DGR_DIFF) tmbg04.png tmbg01.png f41 > frame4_frame1_diff.inc
 
 ####
 
