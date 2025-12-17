@@ -180,20 +180,6 @@ animation_loop:
 
 	bit	KEYRESET
 
-check_g:
-	cmp	#'G'+$80
-	bne	check_o
-
-	jsr	make_green
-	jmp	keep_going
-
-check_o:
-	cmp	#'O'+$80
-	bne	check_plus
-
-	jsr	make_orange
-	jmp	keep_going
-
 check_plus:
 	cmp	#'+'+$80
 	bne	check_minus
@@ -237,6 +223,8 @@ wait_mockingboard:
 
 .include "../patch_graphics.s"
 .include "../sound_bars.s"
+.include "../copy_400.s"
+
 
 graphics_frame1_aux:
 	.incbin "graphics/tmbg01.aux.zx02"
@@ -252,61 +240,70 @@ graphics_frame2_main:
 
 
 
-
-.if 0
-
-frame1_frame3_diff:
 	.include "graphics/frame1_frame3_diff.inc"
-
-frame3_frame5_diff:
 	.include "graphics/frame3_frame5_diff.inc"
-
-frame5_frame7_diff:
-	.include "graphics/frame5_frame7_diff.inc"
-
-frame7_frame1_diff:
-	.include "graphics/frame7_frame1_diff.inc"
-
-
-frame2_frame4_diff:
+	.include "graphics/frame5_frame2_diff.inc"
 	.include "graphics/frame2_frame4_diff.inc"
+	.include "graphics/frame4_frame1_diff.inc"
 
-frame4_frame6_diff:
-	.include "graphics/frame4_frame6_diff.inc"
+patches_page1_aux_l:
+	.byte	<f13_aux_diff
+	.byte	<f35_aux_diff
+	.byte	<f52_aux_diff
+	.byte	<f24_aux_diff
+	.byte	<f41_aux_diff
 
-frame6_frame8_diff:
-	.include "graphics/frame6_frame8_diff.inc"
+patches_page1_aux_h:
+	.byte	>f13_aux_diff
+	.byte	>f35_aux_diff
+	.byte	>f52_aux_diff
+	.byte	>f24_aux_diff
+	.byte	>f41_aux_diff
 
-frame8_frame2_diff:
-	.include "graphics/frame8_frame2_diff.inc"
+patches_page1_main_l:
+	.byte	<f13_main_diff
+	.byte	<f35_main_diff
+	.byte	<f52_main_diff
+	.byte	<f24_main_diff
+	.byte	<f41_main_diff
+
+patches_page1_main_h:
+	.byte	>f13_main_diff
+	.byte	>f35_main_diff
+	.byte	>f52_main_diff
+	.byte	>f24_main_diff
+	.byte	>f41_main_diff
+
+patches_page2_aux_l:
+	.byte	<f24_aux_diff
+	.byte	<f41_aux_diff
+	.byte	<f13_aux_diff
+	.byte	<f35_aux_diff
+	.byte	<f52_aux_diff
+
+patches_page2_aux_h:
+	.byte	>f24_aux_diff
+	.byte	>f41_aux_diff
+	.byte	>f13_aux_diff
+	.byte	>f35_aux_diff
+	.byte	>f52_aux_diff
+
+patches_page2_main_l:
+	.byte	<f24_main_diff
+	.byte	<f41_main_diff
+	.byte	<f13_main_diff
+	.byte	<f35_main_diff
+	.byte	<f52_main_diff
+
+patches_page2_main_h:
+	.byte	>f24_main_diff
+	.byte	>f41_main_diff
+	.byte	>f13_main_diff
+	.byte	>f35_main_diff
+	.byte	>f52_main_diff
 
 
-patches_page1_l:
-	.byte	<frame1_frame3_diff
-	.byte	<frame3_frame5_diff
-	.byte	<frame5_frame7_diff
-	.byte	<frame7_frame1_diff
-
-patches_page1_h:
-	.byte	>frame1_frame3_diff
-	.byte	>frame3_frame5_diff
-	.byte	>frame5_frame7_diff
-	.byte	>frame7_frame1_diff
 
 
-patches_page2_l:
-	.byte	<frame2_frame4_diff
-	.byte	<frame4_frame6_diff
-	.byte	<frame6_frame8_diff
-	.byte	<frame8_frame2_diff
-
-patches_page2_h:
-	.byte	>frame2_frame4_diff
-	.byte	>frame4_frame6_diff
-	.byte	>frame6_frame8_diff
-	.byte	>frame8_frame2_diff
 
 
-.endif
-
-.include "../copy_400.s"
