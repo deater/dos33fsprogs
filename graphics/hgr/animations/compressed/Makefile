@@ -7,7 +7,7 @@ TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../../linker_scripts/
 GENERATE_COMMON = ../generate_common
 
-all:	compress_test.dsk
+all:	compress_test.dsk special_hgr.dsk
 
 compress_test.dsk:	QBOOT QLOAD \
 	qload.inc \
@@ -19,6 +19,17 @@ compress_test.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) compress_test.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) compress_test.dsk 5 0 ANIMATION 0 0
 
+special_hgr.dsk:	QBOOT QLOAD \
+	qload.inc \
+	SPECIAL_HGR
+	cp $(EMPTY_DISK) special_hgr.dsk
+	$(DOS33_RAW) special_hgr.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) special_hgr.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) special_hgr.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) special_hgr.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) special_hgr.dsk 5 0 SPECIAL_HGR 0 0
+
+
 ####
 
 ANIMATION:	animation.o
@@ -29,6 +40,18 @@ animation.o:	animation.s \
 	hgr_repack.s \
 	graphics/kerrek1.hgr.zx02
 	ca65 -o animation.o animation.s -l animation.lst
+
+####
+
+SPECIAL_HGR:	special_hgr.o
+	ld65 -o SPECIAL_HGR special_hgr.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+special_hgr.o:	special_hgr.s \
+	zp.inc ../hardware.inc qload2.inc common_defines.inc \
+	zx02_hgr.s \
+	graphics/kerrek1.hgr.zx02
+	ca65 -o special_hgr.o special_hgr.s -l special_hgr.lst
+
 
 ####
 
@@ -106,11 +129,54 @@ qload.inc:	$(GENERATE_COMMON) QLOAD
 	$(GENERATE_COMMON) -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload.inc
 #	$(GENERATE_COMMON) -a 0x1200 -s check_timeout qload.lst >> qload.inc
 
+
+qload2.inc:	$(GENERATE_COMMON) QLOAD
+	$(GENERATE_COMMON) -a 0x1200 -s load_file qload.lst > qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s detect_appleii_model qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_all qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_all_color qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s set_normal qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s set_inverse qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_a_bit qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_50ms qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s move_and_print qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s detect_language_card qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s mockingboard_detect qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_bottom qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_bottoms qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_screens qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_top qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s zx02_full_decomp qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s zx_src_h qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s zx_src_l qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_until_keypress qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s hgr_draw_sprite qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s wait_50xms qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s random8 qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s wait_vblank qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s wait_seconds qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s wait_for_pattern qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s wait_ticks qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page_flip qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s gr_offsets qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s inc_base5 qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s draw_full_dni_number qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s gr_flip_page qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_fizzle qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_lr qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s do_wipe_center qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_clear_screen qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page1_clearscreen qload.lst >> qload2.inc
+	$(GENERATE_COMMON) -a 0x1200 -s hgr_page2_clearscreen qload.lst >> qload2.inc
+#	$(GENERATE_COMMON) -a 0x1200 -s check_timeout qload.lst >> qload2.inc
+
+
 ###
 
 
 clean:
-	rm -f *~ *.o *.lst HELLO ANIMATION QBOOT QLOAD MUSIC
-	rm -f qload.inc qload2.inc music.inc music2.inc
+	rm -f *~ *.o *.lst HELLO ANIMATION QBOOT QLOAD SPECIAL_HGR
+	rm -f qload.inc qload2.inc
 
 
