@@ -197,8 +197,6 @@ div_by_40_pntr:
 	lda	pntr
 	sta	TEMPL
 	lda	pntr+1
-	and	#$1F
-	sta	TEMPH
 	jmp	div_by_40_common
 
 	;==============================
@@ -217,9 +215,9 @@ div_by_40:
 	lda	ZX0_dst
 	sta	TEMPL
 	lda	ZX0_dst+1
+div_by_40_common:
 	and	#$1F
 	sta	TEMPH
-div_by_40_common:
 	lda	#0
 	sta	RESULT
 
