@@ -19,6 +19,17 @@
 ;bitr            = ZP+6
 ;pntr            = ZP+7
 
+
+RESULT = $D0
+TEMPL = $D1
+TEMPH = $D2
+FAKEL = $D3
+FAKEH = $D4
+CURRENT_Y = $D5
+HGR_OUTL = $D6
+HGR_OUTH = $D7
+CURRENT_X = $D8
+
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
 
@@ -28,10 +39,17 @@ zx02_full_decomp:
 
 	ldy	#$80
 	sty	bitr
+
+	ldy	#$20
+	sty	HGR_OUTH
+
 	ldy	#0
+	sty	HGR_OUTL
 	sty	offset
 	sty	offset+1
 	sty	ZX0_dst		; assume dest always on page boundary
+	sty	CURRENT_Y
+	sty	CURRENT_X
 
 ; Decode literal: Ccopy next N bytes from compressed file
 ;    Elias(length)  byte[1]  byte[2]  ...  byte[N]
@@ -45,13 +63,8 @@ cop0:
 	bne	plus1
 	inc	ZX0_src+1
 plus1:
-	jsr	div_by_40
-	sta	(FAKEL),Y
-;	sta	(ZX0_dst),y
-	inc	ZX0_dst
-	bne	plus2
-	inc	ZX0_dst+1
-plus2:
+	jsr	store_and_inc
+
 	dex
 	bne	cop0
 
@@ -79,13 +92,9 @@ cop1:
 	bne	plus3
 	inc	pntr+1
 plus3:
-	jsr	div_by_40
-	sta	(FAKEL),Y
-;	sta	(ZX0_dst),Y
-	inc	ZX0_dst
-	bne	plus4
-	inc	ZX0_dst+1
-plus4:
+
+	jsr	store_and_inc
+
 	dex
 	bne	cop1
 
@@ -165,6 +174,38 @@ exit:
 	rts
 
 
+store_and_inc:
+
+	sta	(HGR_OUTL),Y
+
+	inc	ZX0_dst
+	bne	done_zxadd
+	inc	ZX0_dst+1
+done_zxadd:
+
+	inc	HGR_OUTL
+	inc	CURRENT_X
+	lda	CURRENT_X
+	cmp	#40
+	bne	done_store_and_inc
+
+	lda	#0
+	sta	CURRENT_X
+	inc	CURRENT_Y
+	ldy	CURRENT_Y
+	lda	hposn_low,Y
+	sta	HGR_OUTL
+	lda	hposn_high,Y
+	sta	HGR_OUTH
+	ldy	#0
+
+;	inc	ZX0_dst
+;	bne	done_store_and_inc
+;	inc	ZX0_dst+1
+done_store_and_inc:
+
+	rts
+
 
 
 ; want to map packed to actual
@@ -179,11 +220,6 @@ exit:
 ; $2000/8 = $1000, $800,$400
 ; 1k lookup table?
 
-RESULT = $D0
-TEMPL = $D1
-TEMPH = $D2
-FAKEL = $D3
-FAKEH = $D4
 
 div_by_40_pntr:
 	pha				; save values
@@ -191,7 +227,7 @@ div_by_40_pntr:
 	lda	pntr
 	sta	TEMPL
 	lda	pntr+1
-	jmp	div_by_40_common
+;	jmp	div_by_40_common
 
 	;==============================
 	; 16-bit div by 40
@@ -201,13 +237,13 @@ div_by_40_pntr:
 	;	to 0x000
 
 	; put remapped address in FAKEL/FAKEH
-div_by_40:
-	pha				; save values
+;div_by_40:
+;	pha				; save values
 
-	lda	ZX0_dst
-	sta	TEMPL
-	lda	ZX0_dst+1
-div_by_40_common:
+;	lda	ZX0_dst
+;	sta	TEMPL
+;	lda	ZX0_dst+1
+;div_by_40_common:
 	and	#$1F
 	sta	TEMPH
 	lda	#0
