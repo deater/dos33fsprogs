@@ -38,9 +38,9 @@ graphics_loop:
 	ldx	WHICH
 
 	lda	graphics_low,X
-	sta	zx_src_l+1
+	sta	ZX0_src
 	lda	graphics_high,X
-	sta	zx_src_h+1
+	sta	ZX0_src+1
 
 	lda	#$20
 

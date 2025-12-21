@@ -26,13 +26,17 @@
 RESULT = $D0
 TEMPL = $D1
 TEMPH = $D2
-;FAKEL = $D3
-;FAKEH = $D4
+lowTen = $D3
+highTen = $D4
 CURRENT_Y = $D5
 HGR_OUTL = $D6
 HGR_OUTH = $D7
 CURRENT_X = $D8
 PNTR_ROW	= $D9
+temp = $CF
+counterLow = $CD
+counterHigh = $CE
+
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
@@ -95,7 +99,8 @@ cop1:
 ;	lda	(FAKEL),Y
 
 	lda	(pntr), Y
-	inc	pntr
+	inc	pntr		; can never overflow
+
 
 	pha
 
@@ -258,6 +263,9 @@ done_store_and_inc:
 ; 1k lookup table?
 
 
+; 0..192*40 = 7680 bytes
+; 960 / 5 would also work
+
 
 
 	;==============================
@@ -270,33 +278,27 @@ done_store_and_inc:
 	; put remapped address in FAKEL/FAKEH
 
 div_by_40_pntr:
-	pha				; save values
+	pha
 
 	lda	pntr
-	sta	TEMPL
+	sta	counterLow
 	lda	pntr+1
+	and	#$1f
+	sta	counterHigh
 
-	and	#$1F
-	sta	TEMPH
-	lda	#0
-	sta	RESULT
+	jsr	startDivideBy10
 
-div_by_40_loop:
-	sec
-	lda	TEMPL
-	sbc	#40
-	sta	TEMPL
-	bcc	dbuflo
-	inc	RESULT
-	jmp	div_by_40_loop
-dbuflo:
-	lda	TEMPH
-	sbc	#0
-	sta	TEMPH
-	inc	RESULT
-	bcs	div_by_40_loop
-	ldy	RESULT
-	dey				; adjust
+	; 7680 / 10 = 768
+
+	lsr	highTen
+	ror	lowTen
+
+	lsr	highTen
+	ror	lowTen
+
+	; lowTen is now address / 40
+
+	ldy	lowTen
 
 	lda	hposn_low,Y
 	sta	pntr
@@ -305,21 +307,61 @@ dbuflo:
 
 	sty	PNTR_ROW
 
-	; add back #40
-	clc
-	lda	TEMPL
-	adc	#40
 
-	cmp	#40
-	bcs	no_r
+	;==========================
+	; calculate remainder
+
+	; 16-bit multiply by 40
+	;	((x*4)+x)*8
+
+
+	lda	#0
+	sta	TEMPH
+
+	lda	PNTR_ROW
+
+	asl				;
+	rol	TEMPH			; *2
+	asl				;
+	rol	TEMPH			; *4
 
 	clc
-	adc	pntr
+	adc	PNTR_ROW
+	bcc	rnoflo
+	inc	TEMPH
+rnoflo:
+					; now has X*5
+
+	asl				;
+	rol	TEMPH			; *10
+	asl				;
+	rol	TEMPH			; *20
+	asl				;
+	rol	TEMPH			; *40
+
+	sta	TEMPL
+
+	sec
+	lda	counterLow
+	sbc	TEMPL
+	sta	TEMPL			; know this is < 255?
+	lda	counterHigh
+	sbc	TEMPH
+	sta	TEMPH
+
+	lda	pntr
+	clc
+	adc	TEMPL
 	sta	pntr
-no_r:
+	lda	TEMPH
+	adc	pntr+1
+	sta	pntr+1
+
 
 	ldy	#0		; Y always 0 in this code
 
 	pla
 
 	rts
+
+.include "div10.s"
