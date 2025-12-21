@@ -23,7 +23,7 @@
 ;pntr            = ZP+7
 
 
-RESULT = $D0
+;RESULT = $D0
 TEMPL = $D1
 TEMPH = $D2
 lowTen = $D3
@@ -87,20 +87,24 @@ dzx0s_copy:
 
 	lda	ZX0_dst
 	sbc	offset			; C=0 from get_elias
-	sta	pntr
+;	sta	pntr
+	sta	counterLow
+
 	lda	ZX0_dst+1
 	sbc	offset+1
-	sta	pntr+1
+
+	and	#$1f
+;	sta	pntr+1
+	sta	counterHigh
+
+	; inline?
 
 	jsr	div_by_40_pntr
 
 cop1:
 
-;	lda	(FAKEL),Y
-
 	lda	(pntr), Y
 	inc	pntr		; can never overflow
-
 
 	pha
 
@@ -124,14 +128,10 @@ pntr_oflo:
 	lda	hposn_high,Y
 	sta	pntr+1
 
-	ldy	#0
+	ldy	#0			; restore Y to 0
 pntr_oflo_done:
 
 	pla
-
-;	bne	plus3
-;	inc	pntr+1
-;plus3:
 
 	jsr	store_and_inc
 
@@ -271,42 +271,30 @@ done_store_and_inc:
 	;==============================
 	; 16-bit div by 40
 	;==============================
-	; in ZX0_dst/ZX0_dst-1
-	; mask off top 3 bits? 0x2000 0x4000
-	;	to 0x000
+	; in counterLow/counterHigh (counterHigh has top 3 bits masked off)
 
-	; put remapped address in FAKEL/FAKEH
+	; puts divided address in PNTR_ROW
+
+	; pntr/pntr+1 is set up with address
 
 div_by_40_pntr:
 	pha
 
-	lda	pntr
-	sta	counterLow
-	lda	pntr+1
-	and	#$1f
-	sta	counterHigh
-
 	jsr	startDivideBy10
 
-	; 7680 / 10 = 768
+	; divide by 4 to get divide by 40
+
+	lda	lowTen
 
 	lsr	highTen
-	ror	lowTen
+	ror				;	lowTen
 
 	lsr	highTen
-	ror	lowTen
+	ror				;	lowTen
 
-	; lowTen is now address / 40
+	; A is now address / 40
 
-	ldy	lowTen
-
-	lda	hposn_low,Y
-	sta	pntr
-	lda	hposn_high,Y
-	sta	pntr+1
-
-	sty	PNTR_ROW
-
+	sta	PNTR_ROW		;
 
 	;==========================
 	; calculate remainder
@@ -315,10 +303,10 @@ div_by_40_pntr:
 	;	((x*4)+x)*8
 
 
-	lda	#0
-	sta	TEMPH
+	ldy	#0
+	sty	TEMPH
 
-	lda	PNTR_ROW
+;	lda	PNTR_ROW
 
 	asl				;
 	rol	TEMPH			; *2
@@ -345,16 +333,33 @@ rnoflo:
 	lda	counterLow
 	sbc	TEMPL
 	sta	TEMPL			; know this is < 255?
-	lda	counterHigh
-	sbc	TEMPH
-	sta	TEMPH
 
-	lda	pntr
+;	lda	counterHigh
+;	sbc	TEMPH
+;	sta	TEMPH
+
+;	lda	pntr
+;	clc
+;	adc	TEMPL
+;	sta	pntr
+
+;	lda	#0
+
+;	tay
+
+;	lda	TEMPH
+;	adc	pntr+1
+;	sta	pntr+1
+
+	; set up pntr
+
+	ldy	PNTR_ROW
 	clc
+	lda	hposn_low,Y
 	adc	TEMPL
 	sta	pntr
-	lda	TEMPH
-	adc	pntr+1
+
+	lda	hposn_high,Y
 	sta	pntr+1
 
 
