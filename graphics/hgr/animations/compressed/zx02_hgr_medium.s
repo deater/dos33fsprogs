@@ -8,9 +8,6 @@
 ;    zx02 input.bin output.zx0
 ;
 ; (c) 2022 DMSC
-
-; modified by deater to be Apple II hi-res specific
-
 ; Code under MIT license, see LICENSE file.
 
 
@@ -26,13 +23,12 @@
 RESULT = $D0
 TEMPL = $D1
 TEMPH = $D2
-;FAKEL = $D3
-;FAKEH = $D4
+FAKEL = $D3
+FAKEH = $D4
 CURRENT_Y = $D5
 HGR_OUTL = $D6
 HGR_OUTH = $D7
 CURRENT_X = $D8
-PNTR_ROW	= $D9
 
 ;--------------------------------------------------
 ; Decompress ZX0 data (6502 optimized format)
@@ -88,45 +84,15 @@ dzx0s_copy:
 	sbc	offset+1
 	sta	pntr+1
 
-	jsr	div_by_40_pntr
-
 cop1:
+	jsr	div_by_40_pntr
+	lda	(FAKEL),Y
 
-;	lda	(FAKEL),Y
-
-	lda	(pntr), Y
+;	lda	(pntr), Y
 	inc	pntr
-
-	pha
-
-	lda	pntr
-	and	#$7f		; oflo if $28, $50, $78
-				;	  $A8, $D0, $F8
-
-	cmp	#$28
-	beq	pntr_oflo
-	cmp	#$50
-	beq	pntr_oflo
-	cmp	#$78
-	bne	pntr_oflo_done
-
-pntr_oflo:
-	inc	PNTR_ROW
-
-	ldy	PNTR_ROW
-	lda	hposn_low,Y
-	sta	pntr
-	lda	hposn_high,Y
-	sta	pntr+1
-
-	ldy	#0
-pntr_oflo_done:
-
-	pla
-
-;	bne	plus3
-;	inc	pntr+1
-;plus3:
+	bne	plus3
+	inc	pntr+1
+plus3:
 
 	jsr	store_and_inc
 
@@ -209,11 +175,6 @@ exit:
 	rts
 
 	;===============================
-	; store and inc
-	;===============================
-	; store value in A to HGR_OUT
-	; increment ZX0_dst
-	; also increment HGR_OUT, wrapping to next row if needed
 
 store_and_inc:
 
@@ -299,11 +260,9 @@ dbuflo:
 	dey				; adjust
 
 	lda	hposn_low,Y
-	sta	pntr
+	sta	FAKEL
 	lda	hposn_high,Y
-	sta	pntr+1
-
-	sty	PNTR_ROW
+	sta	FAKEH
 
 	; add back #40
 	clc
@@ -314,8 +273,8 @@ dbuflo:
 	bcs	no_r
 
 	clc
-	adc	pntr
-	sta	pntr
+	adc	FAKEL
+	sta	FAKEL
 no_r:
 
 	ldy	#0		; Y always 0 in this code
