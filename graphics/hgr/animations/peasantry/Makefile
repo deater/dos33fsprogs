@@ -27,6 +27,7 @@ ANIMATION:	animation.o
 	ld65 -o ANIMATION animation.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 animation.o:	animation.s \
+	rain.s grey_sky.s \
 	zp.inc ../hardware.inc qload.inc common_defines.inc \
 	graphics/kerrek1.hgr.zx02
 	ca65 -o animation.o animation.s -l animation.lst

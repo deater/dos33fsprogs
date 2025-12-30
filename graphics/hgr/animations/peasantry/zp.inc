@@ -98,9 +98,10 @@ REPACK_TMP	= $D0	; $D0...$D7
 
 COUNT		= $D6
 WHICH_DROP	= $D7
+WHICH_RAIN	= $D8
 
-; 
-;TEMP_VOL	= $D9
+TEMP		= $D9
+
 WHICH		= $DA
 FRAME_RATE	= $DB
 
