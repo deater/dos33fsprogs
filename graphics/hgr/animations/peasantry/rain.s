@@ -3,6 +3,23 @@
 	; draw_rain
 draw_rain:
 
+	lda	FRAME
+	and	#$C
+	lsr
+	lsr
+	tax
+
+	lda	puddle_list_x_l,X
+	sta	pl_smc1+1
+	lda	puddle_list_x_h,X
+	sta	pl_smc1+2
+
+	lda	puddle_list_y_l,X
+	sta	pl_smc2+1
+	lda	puddle_list_y_h,X
+	sta	pl_smc2+2
+
+
 	;==========================
 	; draw puddles
 
@@ -11,11 +28,12 @@ draw_rain:
 puddle_loop:
 
 	ldx	WHICH_DROP
-
-	lda	puddle_locations_x,X
+pl_smc1:
+	lda	puddle_locations0_x,X
 	bmi	done_puddles
 	sta	SPRITE_X
-	lda	puddle_locations_y,X
+pl_smc2:
+	lda	puddle_locations0_y,X
 	sta	SPRITE_Y
 
 	lda	FRAME
@@ -96,7 +114,7 @@ rl_smc1:
 
 ;	eor	rain_sprite1,Y
 	and	rain_mask1,Y
-;	ora	rain_sprite1,Y
+	ora	rain_sprite2,Y
 
 
 rl_smc2:
@@ -119,6 +137,14 @@ rain_sprite1:			;		flip
 	.byte $07		; X 111 0000	X 000 0111
 	.byte $03		; X 110 0000	X 000 0011
 
+rain_sprite2:			;		flip
+	.byte $60		; X 000 0011	X 110 0000
+	.byte $00		; X 000 0111	X 111 0000
+	.byte $38		; X 000 1110	X 011 1000
+	.byte $00		; X 001 1100	X 001 1100
+	.byte $0E		; X 011 1000	X 000 1110
+	.byte $00		; X 111 0000	X 000 0111
+	.byte $03		; X 110 0000	X 000 0011
 
 rain_mask1:			;		flip
 	.byte $9f		; X 000 0011	X 110 0000
@@ -212,7 +238,7 @@ sprites_ysize:
 	.byte	9,9,9,9
 
 
-puddle_locations_x:
+puddle_locations0_x:
 	.byte 18		; 126,73
 	.byte 24		; 168,81
 	.byte 30		; 210,74
@@ -222,7 +248,7 @@ puddle_locations_x:
 	.byte  7		; 42,166
 	.byte  4		; 28,102
 	.byte $ff
-puddle_locations_y:
+puddle_locations0_y:
 	.byte 73		; 126,73
 	.byte 81		; 168,81
 	.byte 74		; 210,74
@@ -231,4 +257,72 @@ puddle_locations_y:
 	.byte 157		; 112,157
 	.byte 166		; 42,166
 	.byte 102		; 28,102
+
+
+puddle_locations1_x:
+	.byte 0			; 0,67
+	.byte 14		; 98,91
+	.byte 22		; 154,68
+	.byte 30		; 210,77
+	.byte 34		; 238,69
+	.byte 26		; 182,168
+	.byte  7		; 28,140
+	.byte $ff
+puddle_locations1_y:
+	.byte 67		; 0,67
+	.byte 91		; 98,91
+	.byte 68		; 154,68
+	.byte 77		; 210,77
+	.byte 69		; 238,69
+	.byte 168		; 182,168
+	.byte 140		; 28,140
+
+
+puddle_locations2_x:
+	.byte 0			; 0,74
+	.byte 12		; 84,73
+	.byte 30		; 210,79
+	.byte 34		; 238,128
+	.byte 18		; 126,113
+	.byte 30		; 210,163
+	.byte 14		; 98,166
+	.byte  2		; 14,165
+	.byte $ff
+
+puddle_locations2_y:
+	.byte 74		; 0,74
+	.byte 73		; 84,73
+	.byte 79		; 210,79
+	.byte 128		; 238,128
+	.byte 113		; 126,113
+	.byte 163		; 210,163
+	.byte 166		; 98,166
+	.byte 165		; 14,165
+	.byte $ff
+
+
+puddle_list_x_l:
+	.byte <puddle_locations0_x
+	.byte <puddle_locations1_x
+	.byte <puddle_locations0_x
+	.byte <puddle_locations2_x
+
+puddle_list_x_h:
+	.byte >puddle_locations0_x
+	.byte >puddle_locations1_x
+	.byte >puddle_locations0_x
+	.byte >puddle_locations2_x
+
+puddle_list_y_l:
+	.byte <puddle_locations0_y
+	.byte <puddle_locations1_y
+	.byte <puddle_locations0_y
+	.byte <puddle_locations2_y
+
+puddle_list_y_h:
+	.byte >puddle_locations0_y
+	.byte >puddle_locations1_y
+	.byte >puddle_locations0_y
+	.byte >puddle_locations2_y
+
 
