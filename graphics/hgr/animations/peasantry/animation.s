@@ -19,6 +19,9 @@ peasantry:
 	lda	#3
 	sta	FRAME_RATE
 
+	lda	#0
+	sta	FRAME
+
 	;=================================
 	; init graphics
 	;=================================
@@ -100,6 +103,8 @@ keep_going:
 	and	#$1
 	sta	WHICH_RAIN
 
+	inc	FRAME
+
 	jmp	animation_loop
 
 
@@ -112,6 +117,9 @@ keep_going:
 .include "hgr_copy.s"
 .include "grey_sky.s"
 
+.include "hgr_sprite_mask.s"
+
 graphics_frame1:
 	.incbin "graphics/kerrek1.hgr.zx02"
+
 

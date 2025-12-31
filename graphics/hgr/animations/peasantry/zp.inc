@@ -14,6 +14,13 @@ pntr		= $07
 WHICH_LOAD	= $09
 CURRENT_DISK	= $0A
 
+TEMP_SPRITE	= $10
+TEMP_MASK	= $11
+MASK_TEMP	= $12
+SPRITE_TEMP	= $13
+SPRITE_X	= $14
+SPRITE_Y	= $15
+
 ; Zero page monitor routines addresses
 ; We don't use the monitor but we use some of these anyway
 

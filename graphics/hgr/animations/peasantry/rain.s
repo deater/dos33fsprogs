@@ -3,6 +3,32 @@
 	; draw_rain
 draw_rain:
 
+	;==========================
+	; draw puddles
+
+	lda	#0
+	sta	WHICH_DROP
+puddle_loop:
+
+	ldx	WHICH_DROP
+
+	lda	puddle_locations_x,X
+	bmi	done_puddles
+	sta	SPRITE_X
+	lda	puddle_locations_y,X
+	sta	SPRITE_Y
+
+	lda	FRAME
+	and	#$3
+	tax
+	jsr	hgr_draw_sprite_mask
+
+	inc	WHICH_DROP
+	bne	puddle_loop			; bra
+
+done_puddles:
+
+
 	lda	#0
 	sta	WHICH_DROP
 rain_loop:
@@ -162,4 +188,47 @@ dark_rain_locations_y:
 	.byte	104	;63,104
 	.byte	124	;91,124
 	.byte	127	;224,127
+
+
+.include "sprites/rain_sprites.inc"
+
+sprites_mask_l:
+	.byte	<splash_sprite0,<splash_sprite1,<splash_sprite2,<splash_sprite3
+
+sprites_mask_h:
+	.byte	>splash_sprite0,>splash_sprite1,>splash_sprite2,>splash_sprite3
+
+sprites_data_l:
+	.byte	<splash_sprite0,<splash_sprite1,<splash_sprite2,<splash_sprite3
+
+sprites_data_h:
+	.byte	>splash_sprite0,>splash_sprite1,>splash_sprite2,>splash_sprite3
+
+
+sprites_xsize:
+	.byte	2,2,2,2
+
+sprites_ysize:
+	.byte	9,9,9,9
+
+
+puddle_locations_x:
+	.byte 18		; 126,73
+	.byte 24		; 168,81
+	.byte 30		; 210,74
+	.byte 36		; 252,105
+	.byte 32		; 224,146
+	.byte 16		; 112,157
+	.byte  7		; 42,166
+	.byte  4		; 28,102
+	.byte $ff
+puddle_locations_y:
+	.byte 73		; 126,73
+	.byte 81		; 168,81
+	.byte 74		; 210,74
+	.byte 105		; 252,105
+	.byte 146		; 224,146
+	.byte 157		; 112,157
+	.byte 166		; 42,166
+	.byte 102		; 28,102
 
