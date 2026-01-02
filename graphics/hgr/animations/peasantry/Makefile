@@ -29,7 +29,8 @@ ANIMATION:	animation.o
 animation.o:	animation.s \
 	rain.s grey_sky.s \
 	zp.inc ../hardware.inc qload.inc common_defines.inc \
-	graphics/kerrek1.hgr.zx02
+	graphics/kerrek1.hgr.zx02 \
+	graphics/crooked_tree_night.hgr.zx02
 	ca65 -o animation.o animation.s -l animation.lst
 
 ####

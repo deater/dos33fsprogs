@@ -32,6 +32,85 @@ peasantry:
 
         bit	PAGE2		; display page1
 
+	;=======================
+	; start music
+
+	lda	SOUND_STATUS
+	and	#SOUND_MOCKINGBOARD
+	beq	no_music
+
+yes_music:
+	cli
+no_music:
+
+
+
+	;=============================================
+	; Load burninating graphics
+	;=============================================
+
+	lda	#$0
+	sta	DRAW_PAGE
+
+	lda	#<graphics_burninated
+	sta	zx_src_l+1
+	lda	#>graphics_burninated
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; Burninate Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text1
+	sta	OUTL
+	lda	#>our_text1
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; Burninate Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text2
+	sta	OUTL
+	lda	#>our_text2
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+blargh:
+	jmp	blargh
+
+
+	;============================
+	;============================
+	;============================
+	; rain scene
+	;============================
+	;============================
+	;============================
 
 	;===========================
 	; decompress frame1 to $A000
@@ -50,29 +129,9 @@ peasantry:
 
 ;	jsr	grey_sky
 
-	;===========================
-	; decompress frame2 to page2
-
-;	lda	#<graphics_frame1
-;	sta	zx_src_l+1
-;	lda	#>graphics_frame1
-;	sta	zx_src_h+1
-
-;	lda	#$40
-
-;	jsr	zx02_full_decomp
 
 
-	;=======================
-	; start music
 
-	lda	SOUND_STATUS
-	and	#SOUND_MOCKINGBOARD
-	beq	no_music
-
-yes_music:
-	cli
-no_music:
 
 	lda	#0
 	sta	DRAW_PAGE
@@ -118,8 +177,73 @@ keep_going:
 .include "grey_sky.s"
 
 .include "hgr_sprite_mask.s"
+.include "hgr_font.s"
 
 graphics_frame1:
 	.incbin "graphics/kerrek1.hgr.zx02"
 
+graphics_burninated:
+	.incbin "graphics/crooked_tree_night.hgr.zx02"
 
+
+our_text1:
+	.byte 1,161,"I hear Trogdor coming in the night",0
+	.byte 1,171,"Burninating my cottage",0
+
+our_text2:
+	.byte 1,161,"He's askin' me for a fight",0
+	.byte 1,171,"His moonlit wings reflect the stars",0
+	.byte 1,181,"    and brutal carnage",0
+
+our_text3:          ;0123456789012345678901234567890123456789
+	.byte 1,161,"I saw an old man sailing in the bay",0
+	.byte 1,171,"Hopin' to catch some cold delicious fish",0
+	.byte 1,181," or peasant hotel guests",0
+
+our_text4:
+	.byte 1,161,"He turned to me as if to say",0
+	.byte 1,171,"Hurry boy",0
+	.byte 1,181,"Trogdor's waiting there for you",0
+
+our_text5:
+	.byte 1,161,"It's going to take a lot to keep me away from you",0
+	.byte 1,171,"That's something a bunch of NPCs will try to do",0
+
+our_text6:
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,171,"Gonna take some time to solve the puzzles in this land, ooh-hoo",0
+
+our_text7:
+	.byte 1,161,"I hate talking with this-here knight",0
+	.byte 1,171,"As he grows restless from incessant questioning",0
+
+our_text8:
+	.byte 1,161,"I know I must do what's right ",0
+	.byte 1,171,"Sure as this improbable cliff rises like Olympus above these pixelated plains",0
+
+our_text9:
+	.byte 1,161,"I seek to cure what's deep inside",0
+	.byte 1,171,"Frightened of this thing that I've become",0
+
+our_text10:
+	.byte 1,161,"I'm going to climb a mountain and cleave you through",0
+	.byte 1,171,"This disk is over, please insert Side 2",0
+
+our_text11:
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,171,"Gonna take some time to get my revenge, ooh-hoo",0
+
+our_text12:
+	.byte 1,161,"Hurry boy, she's waiting there for you",0
+
+our_text13:
+	.byte 1,161,"I think she stole the Jhonka's riches away from you",0
+	.byte 1,171,"Better take good care of that baby, what else can you do",0
+
+our_text14:
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte 1,171,"Gonna take some time to cut off Trogdor's head, ooh-hoo",0
