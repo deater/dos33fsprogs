@@ -185,6 +185,15 @@ graphics_frame1:
 graphics_burninated:
 	.incbin "graphics/crooked_tree_night.hgr.zx02"
 
+graphics_lake_e:
+	.incbin "graphics/lake_e.hgr.zx02"
+
+graphics_knight:
+	.incbin "graphics/knight.hgr.zx02"
+
+graphics_cottage:
+	.incbin "graphics/inside_cottage.hgr.zx02"
+
 
 our_text1:
 	.byte 1,161,"I hear Trogdor coming in the night",0
@@ -247,3 +256,4 @@ our_text14:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"Gonna take some time to cut off Trogdor's head, ooh-hoo",0
+

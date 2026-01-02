@@ -9,7 +9,34 @@ PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
 
 all:	\
 	kerrek1.hgr.zx02 kerrek1.raw.zx02 \
-	crooked_tree_night.hgr.zx02
+	crooked_tree_night.hgr.zx02 \
+	lake_e.hgr.zx02 \
+	knight.hgr.zx02 \
+	inside_cottage.hgr.zx02
+
+####
+
+inside_cottage.hgr.zx02:	inside_cottage.hgr
+	$(ZX02) inside_cottage.hgr inside_cottage.hgr.zx02
+
+inside_cottage.hgr:  inside_cottage.png
+	$(PNG_TO_HGR) inside_cottage.png > inside_cottage.hgr
+
+####
+
+knight.hgr.zx02:	knight.hgr
+	$(ZX02) knight.hgr knight.hgr.zx02
+
+knight.hgr:  knight.png
+	$(PNG_TO_HGR) knight.png > knight.hgr
+
+####
+
+lake_e.hgr.zx02:	lake_e.hgr
+	$(ZX02) lake_e.hgr lake_e.hgr.zx02
+
+lake_e.hgr:  lake_e.png
+	$(PNG_TO_HGR) lake_e.png > lake_e.hgr
 
 ####
 
