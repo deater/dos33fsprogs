@@ -10,6 +10,7 @@ PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
 all:	\
 	kerrek1.hgr.zx02 kerrek1.raw.zx02 \
 	crooked_tree_night.hgr.zx02 \
+	crooked_alone.hgr.zx02 \
 	lake_e.hgr.zx02 \
 	knight.hgr.zx02 \
 	inside_cottage.hgr.zx02
@@ -45,6 +46,14 @@ crooked_tree_night.hgr.zx02:	crooked_tree_night.hgr
 
 crooked_tree_night.hgr:  crooked_tree_night.png
 	$(PNG_TO_HGR) crooked_tree_night.png > crooked_tree_night.hgr
+
+####
+
+crooked_alone.hgr.zx02:	crooked_alone.hgr
+	$(ZX02) crooked_alone.hgr crooked_alone.hgr.zx02
+
+crooked_alone.hgr:  crooked_alone.png
+	$(PNG_TO_HGR) crooked_alone.png > crooked_alone.hgr
 
 ####
 

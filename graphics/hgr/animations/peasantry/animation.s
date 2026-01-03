@@ -58,13 +58,34 @@ no_music:
 	bit	KEYRESET
 
 	;=============================================
-	; Burninate Part1
+	; Burninate Part0
 	;=============================================
 
 	lda	#<our_text1
 	sta	OUTL
 	lda	#>our_text1
 	sta	OUTH
+
+	ldx	#<graphics_alone
+	ldy	#>graphics_alone
+	jsr	reload_graphics
+
+bp0_loop:
+	jsr	hgr_copy
+	jsr	increment_lyrics
+	bcs	done_bp0_loop
+	jsr	hgr_page_flip
+	jmp	bp0_loop
+done_bp0_loop:
+
+	;=============================================
+	; Burninate Part1
+	;=============================================
+
+;	lda	#<our_text1
+;	sta	OUTL
+;	lda	#>our_text1
+;	sta	OUTH
 
 	ldx	#<graphics_burninated
 	ldy	#>graphics_burninated
@@ -560,6 +581,9 @@ graphics_kerrek1:
 graphics_burninated:
 	.incbin "graphics/crooked_tree_night.hgr.zx02"
 
+graphics_alone:
+	.incbin "graphics/crooked_alone.hgr.zx02"
+
 graphics_lake_e:
 	.incbin "graphics/lake_e.hgr.zx02"
 
@@ -574,6 +598,7 @@ graphics_cottage:
 ; burninated
 
 our_text1:
+	.byte $FF	; switch scenes
 	.byte 1,161,"I hear Trogdor coming in the night",0
 	.byte 1,171,"Burninating",0
 	.byte 13,171,"my cot-t-tage",0
@@ -763,6 +788,7 @@ reload_graphics:
 
 
 pattern_increment:
+.byte $01,$30	; $FF
 .byte $02,$0	; "I hear Trogdor coming in the night",0
 .byte $03,$10	; "Burninating",0
 .byte $03,$38	; "my cot-t-tage",0
@@ -772,6 +798,8 @@ pattern_increment:
 .byte $06,$08	; "His moonlit wings reflect the stars",0
 .byte $06,$28	; "    and brutal carnage",0
 .byte $07,$28	; $FF
+
+; lake e
 
 .byte $08,$00	; "I saw an old man sailing in the bay",0
 .byte $09,$10	; "Hopin' to catch some fish",0
