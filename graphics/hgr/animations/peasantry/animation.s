@@ -702,7 +702,7 @@ our_text8:
 our_text9:
 	.byte 0,161,"I know I must do what's right",0
 	.byte 0,171,"Sure as this improbable cliff rises like",0
-	.byte 1,181,"    Olympus above this pixelated plain",0
+	.byte 1,181,"    Olympus above the pixelated plain",0
 
 ;========================
 ; 2nd kerrek1
