@@ -47,7 +47,7 @@ no_music:
 
 	;=============================================
 	;=============================================
-	; Load burninating graphics
+	; Burninating Background
 	;=============================================
 	;=============================================
 
@@ -96,60 +96,45 @@ done_bp2_loop:
 
 	;=============================================
 	;=============================================
-	; Load Lake East graphics
+	; Lake East graphics
 	;=============================================
 	;=============================================
-
-	lda	#<graphics_lake_e
-	sta	zx_src_l+1
-	lda	#>graphics_lake_e
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
 
 	;=============================================
 	; East Lake Part1
 	;=============================================
 
+	ldx	#<graphics_lake_e
+	ldy	#>graphics_lake_e
+	jsr	reload_graphics
 
+	; lda	#<our_text3
+
+el1_loop:
 	jsr	hgr_copy
-
-	lda	#<our_text3
-	sta	OUTL
-	lda	#>our_text3
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_el1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	el1_loop
+done_el1_loop:
 
 	;=============================================
 	; East Lake Part2
 	;=============================================
 
+	ldx	#<graphics_lake_e
+	ldy	#>graphics_lake_e
+	jsr	reload_graphics
 
+	; lda	#<our_text3
+
+el2_loop:
 	jsr	hgr_copy
-
-	lda	#<our_text4
-	sta	OUTL
-	lda	#>our_text4
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_el2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
+	jmp	el2_loop
+done_el2_loop:
 
 	;=============================================
 	;=============================================
@@ -157,28 +142,16 @@ done_bp2_loop:
 	;=============================================
 	;=============================================
 
-	lda	#<graphics_kerrek1
-	sta	zx_src_l+1
-	lda	#>graphics_kerrek1
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
-	jsr	grey_sky
-
 	;=============================================
 	; 1st Kerrek1 Part1
 	;=============================================
 
-	lda	#<our_text5
-	sta	OUTL
-	lda	#>our_text5
-	sta	OUTH
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
-	jsr	hgr_put_string
-	jsr	hgr_put_string
+	; lda	#<our_text5
 
 	lda	#0
 	sta	WHICH
@@ -186,83 +159,88 @@ done_bp2_loop:
 
 fkp1_loop:
 	inc	FRAME
-
 	jsr	hgr_copy
-
 	jsr	draw_rain
-
+	jsr	increment_lyrics
+	bcs	done_fkp1_loop
 	jsr	hgr_page_flip
-
-	lda	KEYPRESS
-	bmi	fkp1_done
-
-
-
 	jmp	fkp1_loop
-
-fkp1_done:
-	bit	KEYRESET
-
+done_fkp1_loop:
 
 	;=============================================
 	; 1st Kerrek Part2
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text6
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+fkp2_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text6
-	sta	OUTL
-	lda	#>our_text6
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_fkp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
+	jmp	fkp2_loop
+done_fkp2_loop:
 
 	;=============================================
 	; 1st Kerrek Part3
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text7
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+fkp3_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text7
-	sta	OUTL
-	lda	#>our_text7
-	sta	OUTH
-
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_fkp3_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	fkp3_loop
+done_fkp3_loop:
 
 	;=============================================
 	; 1st Kerrek Part4
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text75
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+fkp4_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text75
-	sta	OUTL
-	lda	#>our_text75
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_fkp4_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
-
+	jmp	fkp4_loop
+done_fkp4_loop:
 
 	;=============================================
 	;=============================================
@@ -270,56 +248,43 @@ fkp1_done:
 	;=============================================
 	;=============================================
 
-	lda	#<graphics_knight
-	sta	zx_src_l+1
-	lda	#>graphics_knight
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
 	;=============================================
 	; Knight Part1
 	;=============================================
 
+	ldx	#<graphics_knight
+	ldy	#>graphics_knight
+	jsr	reload_graphics
 
+	; lda	#<our_text8
+
+kp1_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text8
-	sta	OUTL
-	lda	#>our_text8
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_kp1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	kp1_loop
+done_kp1_loop:
 
 	;=============================================
 	; Knight Part2
 	;=============================================
 
+	ldx	#<graphics_knight
+	ldy	#>graphics_knight
+	jsr	reload_graphics
 
+	; lda	#<our_text9
+
+kp2_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text9
-	sta	OUTL
-	lda	#>our_text9
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_kp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
+	jmp	kp2_loop
+done_kp2_loop:
 
 	;=============================================
 	;=============================================
@@ -327,95 +292,106 @@ fkp1_done:
 	;=============================================
 	;=============================================
 
-	lda	#<graphics_kerrek1
-	sta	zx_src_l+1
-	lda	#>graphics_kerrek1
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
 	;=============================================
 	; 2nd Kerrek1 Part1
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text10
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+skp1_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text10
-	sta	OUTL
-	lda	#>our_text10
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_skp1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	skp1_loop
+done_skp1_loop:
 
 	;=============================================
 	; 2nd Kerrek Part2
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text11
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+skp2_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text11
-	sta	OUTL
-	lda	#>our_text11
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_skp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	skp2_loop
+done_skp2_loop:
 
 
 	;=============================================
 	; 2nd Kerrek Part3
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text12
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+skp3_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text12
-	sta	OUTL
-	lda	#>our_text12
-	sta	OUTH
-
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_skp3_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	skp3_loop
+done_skp3_loop:
 
 	;=============================================
 	; 2nd Kerrek Part4
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text13
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+skp4_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text13
-	sta	OUTL
-	lda	#>our_text13
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_skp4_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
-
+	jmp	skp4_loop
+done_skp4_loop:
 
 	;=============================================
 	;=============================================
@@ -423,73 +399,62 @@ fkp1_done:
 	;=============================================
 	;=============================================
 
-	lda	#<graphics_cottage
-	sta	zx_src_l+1
-	lda	#>graphics_cottage
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
 	;=============================================
 	; Cottage Part1
 	;=============================================
 
+	ldx	#<graphics_cottage
+	ldy	#>graphics_cottage
+	jsr	reload_graphics
 
+	; lda	#<our_text14
+
+cp1_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text14
-	sta	OUTL
-	lda	#>our_text14
-	sta	OUTH
-
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_cp1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	cp1_loop
+done_cp1_loop:
 
 	;=============================================
 	; Cottage Part2
 	;=============================================
 
+	ldx	#<graphics_cottage
+	ldy	#>graphics_cottage
+	jsr	reload_graphics
 
+	; lda	#<our_text15
+
+cp2_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text15
-	sta	OUTL
-	lda	#>our_text15
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_cp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
+	jmp	cp2_loop
+done_cp2_loop:
 
 	;=============================================
 	; Cottage Part3
 	;=============================================
 
+	ldx	#<graphics_cottage
+	ldy	#>graphics_cottage
+	jsr	reload_graphics
+
+	; lda	#<our_text16
+
+cp3_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text16
-	sta	OUTL
-	lda	#>our_text16
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_cp3_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
-
+	jmp	cp3_loop
+done_cp3_loop:
 
 	;=============================================
 	;=============================================
@@ -497,140 +462,84 @@ fkp1_done:
 	;=============================================
 	;=============================================
 
-	lda	#<graphics_kerrek1
-	sta	zx_src_l+1
-	lda	#>graphics_kerrek1
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
 	;=============================================
 	; 3rd Kerrek1 Part1
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text17
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+tkp1_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text17
-	sta	OUTL
-	lda	#>our_text17
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_tkp1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	tkp1_loop
+done_tkp1_loop:
 
 	;=============================================
 	; 3rd Kerrek Part2
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text18
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+tkp2_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text18
-	sta	OUTL
-	lda	#>our_text18
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_tkp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
+	jmp	tkp2_loop
+done_tkp2_loop:
 
 	;=============================================
 	; 3rd Kerrek Part3
 	;=============================================
 
+	ldx	#<graphics_kerrek1
+	ldy	#>graphics_kerrek1
+	jsr	reload_graphics
+	jsr	grey_sky
 
+	; lda	#<our_text18
+
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+tkp3_loop:
+	inc	FRAME
 	jsr	hgr_copy
-
-	lda	#<our_text19
-	sta	OUTL
-	lda	#>our_text19
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	draw_rain
+	jsr	increment_lyrics
+	bcs	done_tkp3_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
-
-
+	jmp	tkp3_loop
+done_tkp3_loop:
 
 blargh:
 	jmp	blargh
 
-.if 0
-	;============================
-	;============================
-	;============================
-	; rain scene
-	;============================
-	;============================
-	;============================
-
-	;===========================
-	; decompress frame1 to $A000
-
-	lda	#$0
-	sta	DRAW_PAGE
-
-	lda	#<graphics_kerrek1
-	sta	zx_src_l+1
-	lda	#>graphics_kerrek1
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
-
-;	jsr	grey_sky
-
-
-	lda	#0
-	sta	DRAW_PAGE
-	sta	WHICH
-	sta	WHICH_RAIN
-
-animation_loop:
-
-	jsr	hgr_copy
-
-	jsr	draw_rain
-
-	jsr	hgr_page_flip
-
-	;=====================
-	; handle keyboard
-;wait_loop:
-;	lda	KEYPRESS
-;	bpl	wait_loop
-
-;	bit	KEYRESET
-
-
-keep_going:
-
-	inc	WHICH_RAIN
-	lda	WHICH_RAIN
-	and	#$1
-	sta	WHICH_RAIN
-
-	inc	FRAME
-
-	jmp	animation_loop
-
-.endif
 
 .include "rain.s"
 
@@ -682,11 +591,13 @@ our_text3:          ;0123456789012345678901234567890123456789
 	.byte 1,161,"I saw an old man sailing in the bay",0
 	.byte 1,171,"Hopin' to catch some fish",0
 	.byte 1,181,"    but he has no chicken feed",0
+	.byte $ff
 
 our_text4:
 	.byte 1,161,"He turned to me as if to say:",0
 	.byte 1,171,34,"Hurry boy",0
 	.byte 1,181,"       Trogdor's waiting there for you",34,0
+	.byte $ff
 
 ;===========================
 ; 1st kerrek1
@@ -694,17 +605,21 @@ our_text4:
 our_text5:
 	.byte 1,161,"It's going to take a lot",0
 	.byte 1,171,"           to keep me away from you",0
+	.byte $ff
 
 our_text6:
 	.byte 1,161,"That's somethin' a bunch of NPCs",0
 	.byte 1,171,"           will try to do",0
+	.byte $ff
 
 our_text7:
 	.byte 1,161,"I bless the rains down in Peasantry",0
+	.byte $ff
 
 our_text75:
 	.byte 1,161,"Gonna take some time to solve the",0
 	.byte 1,171,"  puzzles in this land, ooh-hoo",0
+	.byte $ff
 
 ;============================
 ; knight
@@ -713,11 +628,13 @@ our_text8:
 	.byte 1,161,"I hate talking with this blue knight",0
 	.byte 1,171,"As he grows restless from my",0
 	.byte 1,181,"            endless questioning",0
+	.byte $ff
 
 our_text9:
 	.byte 0,161,"I know I must do what's right",0
 	.byte 0,171,"Sure as this improbable cliff rises like",0
 	.byte 1,181,"    Olympus above the pixelated plain",0
+	.byte $ff
 
 ;========================
 ; 2nd kerrek1
@@ -726,33 +643,39 @@ our_text10:
 	.byte 1,161,"I seek to cure what's deep inside",0
 	.byte 1,171,"Frightened of this thing",0
 	.byte 1,181,"              that I've become",0
+	.byte $ff
 
 our_text11:
 	.byte 1,161,"I'm going to climb a mountain",0
 	.byte 1,171,"          and cleave you through",0
+	.byte $ff
 
 our_text12:
 	.byte 0,161,"This disk is over, please insert Side 2",0
+	.byte $ff
 
 our_text13:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"Gonna take some time to",0
 	.byte 1,181,"      get my revenge, ooh-hoo",0
+	.byte $ff
 
 ;==============
 ; cottage
 
 our_text14:
 	.byte 1,161,"Hurry boy, she's waiting there for you",0
+	.byte $ff
 
 our_text15:
 	.byte 1,161,"She's gonna take the Jhonka's riches",0
 	.byte 1,171,"          away from you",0
-
+	.byte $ff
 
 our_text16:
 	.byte 1,161,"Better take good care of that baby,",0
 	.byte 1,171,"      what else can you do",0
+	.byte $ff
 
 ;==================
 ; 3rd krerek1
@@ -761,15 +684,17 @@ our_text17:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"I bless the rains down in Peasantry",0
 	.byte 1,181,"I bless the rains down in Peasantry",0
+	.byte $ff
 
 our_text18:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"I bless the rains down in Peasantry",0
+	.byte $ff
 
 our_text19:
 	.byte 1,161,"     Gonna take some time to make",0
 	.byte 1,171,"        Trogdor sad, ooh-hoo",0
-
+	.byte $ff
 
 
 	;==============================
