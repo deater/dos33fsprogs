@@ -1,15 +1,26 @@
 
 	;=====================
+	;=====================
 	; draw_rain
+	;=====================
+	;=====================
+
 draw_rain:
 
-	lda	FRAME
+	;=====================
+	; draw puddles
+	;=====================
+
+	;=============================
+	; select which of 3 locations
+
+	lda	FRAME			; get from FRAME
 	and	#$C
 	lsr
 	lsr
 	tax
 
-	lda	puddle_list_x_l,X
+	lda	puddle_list_x_l,X	; self modify which list
 	sta	pl_smc1+1
 	lda	puddle_list_x_h,X
 	sta	pl_smc1+2
@@ -21,64 +32,153 @@ draw_rain:
 
 
 	;==========================
-	; draw puddles
+	; draw puddle loop
 
-	lda	#0
+	lda	#0				; draw some puddles
 	sta	WHICH_DROP
 puddle_loop:
 
 	ldx	WHICH_DROP
 pl_smc1:
-	lda	puddle_locations0_x,X
-	bmi	done_puddles
+	lda	puddle_locations0_x,X		; get x location
+	bmi	done_puddles			; if negative, done
 	sta	SPRITE_X
 pl_smc2:
-	lda	puddle_locations0_y,X
+	lda	puddle_locations0_y,X		; get y location
 	sta	SPRITE_Y
 
-	lda	FRAME
-	and	#$3
+	lda	FRAME				; get which sprite
+	and	#$3				; based on FRAME
 	tax
-	jsr	hgr_draw_sprite_mask
+	jsr	hgr_draw_sprite_mask		; draw it
 
-	inc	WHICH_DROP
+	inc	WHICH_DROP			; move to next puddle
+
 	bne	puddle_loop			; bra
 
 done_puddles:
 
 
+	;=================================
+	; draw rain
+	;=================================
+	; we have two rain frames
+	; we have two colors of rain
+
+
+	lda	FRAME			; see which frame to draw
+	and	#1
+	beq	rain_frame_even
+
+rain_frame_odd:
+	lda	#<light_rain_locations1_x
+	sta	rllx_smc+1
+	lda	#>light_rain_locations1_x
+	sta	rllx_smc+2
+
+	lda	#<dark_rain_locations1_x
+	sta	rdlx_smc+1
+	lda	#>dark_rain_locations1_x
+	sta	rdlx_smc+2
+
+	lda	#<light_rain_locations1_y
+	sta	rlly_smc+1
+	lda	#>light_rain_locations1_y
+	sta	rlly_smc+2
+
+	lda	#<dark_rain_locations1_y
+	sta	rdly_smc+1
+	lda	#>dark_rain_locations1_y
+	sta	rdly_smc+2
+
+
+	jmp	rain_frame_common
+
+rain_frame_even:
+	lda	#<light_rain_locations2_x
+	sta	rllx_smc+1
+	lda	#>light_rain_locations2_x
+	sta	rllx_smc+2
+
+	lda	#<dark_rain_locations2_x
+	sta	rdlx_smc+1
+	lda	#>dark_rain_locations2_x
+	sta	rdlx_smc+2
+
+	lda	#<light_rain_locations2_y
+	sta	rlly_smc+1
+	lda	#>light_rain_locations2_y
+	sta	rlly_smc+2
+
+	lda	#<dark_rain_locations2_y
+	sta	rdly_smc+1
+	lda	#>dark_rain_locations2_y
+	sta	rdly_smc+2
+
+rain_frame_common:
+
+	;=====================================
+	; loop through all the light drops first
+
+	lda	#<rain_sprite1
+	sta	which_rain_smc+1
+	lda	#>rain_sprite1
+	sta	which_rain_smc+2
+
 	lda	#0
 	sta	WHICH_DROP
-rain_loop:
-	ldx	WHICH_DROP
-
-
-	lda	WHICH_RAIN
-	bne	rain_loop_dark
 
 rain_loop_light:
-	ldy	light_rain_locations_x,X
-	bmi	rain_loop_done
-	lda	light_rain_locations_y,X
-	jmp	rain_loop_common
+	ldx	WHICH_DROP
 
-rain_loop_dark:
-	ldy	dark_rain_locations_x,X
-	bmi	rain_loop_done
-	lda	dark_rain_locations_y,X
-
-rain_loop_common:
+rllx_smc:
+	ldy	light_rain_locations1_x,X
+	bmi	rain_loop_light_done
+rlly_smc:
+	lda	light_rain_locations1_y,X
 
 	tax
 
 	jsr	draw_rain_drop
 
 	inc	WHICH_DROP
-;	lda	WHICH_DROP
-;	cmp	#15
-	bne	rain_loop
 
-rain_loop_done:
+	jmp	rain_loop_light
+
+rain_loop_light_done:
+
+
+
+	;=====================================
+	; loop through all the dark drops next
+
+	lda	#<rain_sprite2
+	sta	which_rain_smc+1
+	lda	#>rain_sprite2
+	sta	which_rain_smc+2
+
+	lda	#0
+	sta	WHICH_DROP
+
+rain_loop_dark:
+	ldx	WHICH_DROP
+
+rdlx_smc:
+	ldy	dark_rain_locations1_x,X
+	bmi	rain_loop_dark_done
+rdly_smc:
+	lda	dark_rain_locations1_y,X
+
+	tax
+
+	jsr	draw_rain_drop
+
+	inc	WHICH_DROP
+
+	jmp	rain_loop_dark
+
+rain_loop_dark_done:
+
 
 	rts
 
@@ -90,10 +190,7 @@ rain_loop_done:
 	; y-position in X
 
 draw_rain_drop:
-;	ldy	#1			; x position
-	sty	COUNT
-
-;	ldx	#49			; y position
+	sty	COUNT			; X-position
 
 	ldy	#0			; sprite offset
 
@@ -113,8 +210,10 @@ rl_smc1:
 	lda	$2000				; load screen value
 
 ;	eor	rain_sprite1,Y
+
 	and	rain_mask1,Y
-	ora	rain_sprite2,Y
+which_rain_smc:
+	ora	rain_sprite1,Y
 
 
 rl_smc2:
@@ -156,8 +255,7 @@ rain_mask1:			;		flip
 	.byte $FC		; X 110 0000	X 000 0011
 
 
-
-light_rain_locations_x:
+light_rain_locations1_x:
 	.byte 9		; 63,36
 	.byte 16	; 112,46
 	.byte 27	; 189,26
@@ -175,7 +273,7 @@ light_rain_locations_x:
 	.byte 32	; 224,166
 	.byte $FF
 
-light_rain_locations_y:
+light_rain_locations1_y:
 	.byte 36	; 63,36
 	.byte 46	; 112,46
 	.byte 26	; 189,26
@@ -192,7 +290,7 @@ light_rain_locations_y:
 	.byte 143	; 266,143
 	.byte 166	; 224,166
 
-dark_rain_locations_x:
+dark_rain_locations1_x:
 	.byte	1	;7,49
 	.byte	6	;42,63
 	.byte	21	;147,37
@@ -204,7 +302,7 @@ dark_rain_locations_x:
 	.byte	32	;224,127
 	.byte	$FF
 
-dark_rain_locations_y:
+dark_rain_locations1_y:
 	.byte	49	;7,49
 	.byte	63	;42,63
 	.byte	37	;147,37
@@ -214,6 +312,52 @@ dark_rain_locations_y:
 	.byte	104	;63,104
 	.byte	124	;91,124
 	.byte	127	;224,127
+
+
+
+light_rain_locations2_x:
+	.byte 23	; 161,54
+	.byte 27	; 189,59
+	.byte 34	; 238,59
+	.byte 12	; 84,116
+	.byte 16	; 112,123
+	.byte 23	; 161,123
+	.byte 30	; 210,112
+	.byte 37	; 259,130
+	.byte $FF
+
+light_rain_locations2_y:
+	.byte 54	; 161,54
+	.byte 59	; 189,59
+	.byte 59	; 238,59
+	.byte 116	; 84,116
+	.byte 123	; 112,123
+	.byte 123	; 161,123
+	.byte 112	; 210,112
+	.byte 130	; 259,130
+	.byte $FF
+
+
+dark_rain_locations2_x:
+	.byte	6	;42,21
+	.byte	12	;84,28
+	.byte	30	;210,24
+	.byte	34	;238,35
+	.byte	38	;266,92
+	.byte	19	;133,91
+	.byte	15	;105,70
+	.byte	22	;154,14
+	.byte	$FF
+
+dark_rain_locations2_y:
+	.byte	21	;42,21
+	.byte	28	;84,28
+	.byte	24	;209,24
+	.byte	35	;238,35
+	.byte	92	;266,92
+	.byte	91	;133,91
+	.byte	70	;105,70
+	.byte	14	;154,14
 
 
 .include "sprites/rain_sprites.inc"
