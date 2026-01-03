@@ -28,7 +28,13 @@ hgr_1x8_sprite_yloop:
 	sta	GBASL
 	lda	hposn_high,Y
 	clc
-	adc	DRAW_PAGE
+;	adc	DRAW_PAGE
+
+	; HARD CODE to $A000
+
+	adc	#($a0-$20)
+
+
 	sta	GBASH
 
 	ldy	CURSOR_X

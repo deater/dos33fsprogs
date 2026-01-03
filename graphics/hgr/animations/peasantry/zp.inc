@@ -101,7 +101,9 @@ CURRENT_ROW	= $CD	; dhgr_repack
 ;==============================================
 
 ; repack
-REPACK_TMP	= $D0	; $D0...$D7
+;REPACK_TMP	= $D0	; $D0...$D7
+
+SCENE_DONE	= $D0
 
 COUNT		= $D6
 WHICH_DROP	= $D7

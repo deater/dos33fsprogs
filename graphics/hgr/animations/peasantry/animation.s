@@ -44,7 +44,7 @@ yes_music:
 no_music:
 
 
-.if 0
+
 	;=============================================
 	;=============================================
 	; Load burninating graphics
@@ -54,53 +54,44 @@ no_music:
 	lda	#$0
 	sta	DRAW_PAGE
 
-	lda	#<graphics_burninated
-	sta	zx_src_l+1
-	lda	#>graphics_burninated
-	sta	zx_src_h+1
-
-	lda	#$A0
-
-	jsr	zx02_full_decomp
+	bit	KEYRESET
 
 	;=============================================
 	; Burninate Part1
 	;=============================================
-
-
-	jsr	hgr_copy
 
 	lda	#<our_text1
 	sta	OUTL
 	lda	#>our_text1
 	sta	OUTH
 
-	jsr	hgr_put_string
-	jsr	hgr_put_string
+	ldx	#<graphics_burninated
+	ldy	#>graphics_burninated
+	jsr	reload_graphics
 
+bp1_loop:
+	jsr	hgr_copy
+	jsr	increment_lyrics
+	bcs	done_bp1_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	bp1_loop
+done_bp1_loop:
 
 	;=============================================
 	; Burninate Part2
 	;=============================================
 
+	ldx	#<graphics_burninated
+	ldy	#>graphics_burninated
+	jsr	reload_graphics
 
+bp2_loop:
 	jsr	hgr_copy
-
-	lda	#<our_text2
-	sta	OUTL
-	lda	#>our_text2
-	sta	OUTH
-
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-	jsr	hgr_put_string
-
+	jsr	increment_lyrics
+	bcs	done_bp2_loop
 	jsr	hgr_page_flip
-
-	jsr	wait_until_keypress
+	jmp	bp2_loop
+done_bp2_loop:
 
 
 	;=============================================
@@ -158,7 +149,7 @@ no_music:
 
 	jsr	wait_until_keypress
 
-.endif
+
 
 	;=============================================
 	;=============================================
@@ -174,6 +165,8 @@ no_music:
 	lda	#$A0
 
 	jsr	zx02_full_decomp
+
+	jsr	grey_sky
 
 	;=============================================
 	; 1st Kerrek1 Part1
@@ -673,11 +666,13 @@ graphics_cottage:
 our_text1:
 	.byte 1,161,"I hear Trogdor coming in the night",0
 	.byte 1,171,"Burninating my cottage",0
+	.byte $FF
 
 our_text2:
 	.byte 1,161,"He's askin' me for a fight",0
 	.byte 1,171,"His moonlit wings reflect the stars",0
 	.byte 1,181,"    and brutal carnage",0
+	.byte $FF
 
 
 ;========================
@@ -774,4 +769,44 @@ our_text18:
 our_text19:
 	.byte 1,161,"     Gonna take some time to make",0
 	.byte 1,171,"        Trogdor sad, ooh-hoo",0
+
+
+
+	;==============================
+	; increment lyrics
+	;==============================
+	; OUTL/OUTH points to next lyric
+	; NUL terminated
+	; ??? means move to next scene
+
+increment_lyrics:
+	lda	KEYPRESS
+	bpl	done_increment_lyrics
+
+	bit	KEYRESET
+
+	lda	#$0
+	sta	SCENE_DONE
+
+	jsr	hgr_put_string
+
+	lda	SCENE_DONE
+	bne	really_done_increment_lyrics
+
+done_increment_lyrics:
+	clc
+	rts
+
+really_done_increment_lyrics:
+	sec
+	rts
+
+	;=================================
+	; reload graphics
+	;=================================
+reload_graphics:
+	stx	zx_src_l+1
+	sty	zx_src_h+1
+	lda	#$A0
+	jmp	zx02_full_decomp
 

@@ -13,6 +13,8 @@ hgr_put_string:
 	ldy	#0
 	lda	(OUTL),Y
 	sta	CURSOR_X
+	bmi	hgr_put_string_really_done
+
 	jsr	inc_outl
 	lda	(OUTL),Y
 	sta	CURSOR_Y
@@ -21,6 +23,7 @@ hgr_put_string_loop:
 	ldy	#0
 	lda	(OUTL),Y
 	beq	hgr_put_string_done
+	bmi	hgr_put_string_really_done
 
 	jsr	hgr_put_char_cursor
 
@@ -28,8 +31,11 @@ hgr_put_string_loop:
 	jsr	inc_outl
 	jmp	hgr_put_string_loop
 
+hgr_put_string_really_done:
+	inc	SCENE_DONE
+
 hgr_put_string_done:
-;	rts	; inc once more
+		; inc once more
 
 
 

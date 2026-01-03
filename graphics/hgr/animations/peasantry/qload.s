@@ -75,7 +75,7 @@ sector_array:
 	.byte 0,0,0		; ???, MUSIC, ANIMATION
 
 length_array:
-	.byte 48,40,48		; ???, MUSIC, ANIMATION
+	.byte 48,40,64		; ???, MUSIC, ANIMATION
 
 
 PT3_ENABLE_APPLE_IIC = 1
