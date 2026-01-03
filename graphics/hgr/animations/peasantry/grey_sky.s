@@ -8,7 +8,7 @@
 
 grey_sky:
 
-	ldx	#12
+	ldx	#0			; 12 on normal
 grey_outer:
 	lda	hposn_low,X
 	sta	GBASL
@@ -19,12 +19,19 @@ grey_outer:
 
 	ldy	#0
 grey_loop:
-	lda	(GBASL),Y
+	tya
+	lsr
+	lda	#$55
+	bcc	skip_col
+	lsr
+skip_col:
+
+	cmp	(GBASL),Y
 ;	cmp	#$7F
-	cmp	#$55
-	beq	grey_swap
+;	cmp	#$55
+;	beq	grey_swap
 ;	cmp	#$ff
-	cmp	#$2A
+;	cmp	#$2A
 	bne	grey_continue
 grey_swap:
 
@@ -60,7 +67,7 @@ grey_continue:
 	bne	grey_loop
 
 	inx
-	cpx	#42
+	cpx	#24
 	bne	grey_outer
 
 	rts

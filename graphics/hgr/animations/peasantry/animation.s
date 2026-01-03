@@ -44,6 +44,7 @@ yes_music:
 no_music:
 
 
+.if 0
 	;=============================================
 	;=============================================
 	; Load burninating graphics
@@ -157,6 +158,7 @@ no_music:
 
 	jsr	wait_until_keypress
 
+.endif
 
 	;=============================================
 	;=============================================
@@ -177,9 +179,6 @@ no_music:
 	; 1st Kerrek1 Part1
 	;=============================================
 
-
-	jsr	hgr_copy
-
 	lda	#<our_text5
 	sta	OUTL
 	lda	#>our_text5
@@ -188,9 +187,29 @@ no_music:
 	jsr	hgr_put_string
 	jsr	hgr_put_string
 
+	lda	#0
+	sta	WHICH
+	sta	WHICH_RAIN
+
+fkp1_loop:
+	inc	FRAME
+
+	jsr	hgr_copy
+
+	jsr	draw_rain
+
 	jsr	hgr_page_flip
 
-	jsr	wait_until_keypress
+	lda	KEYPRESS
+	bmi	fkp1_done
+
+
+
+	jmp	fkp1_loop
+
+fkp1_done:
+	bit	KEYRESET
+
 
 	;=============================================
 	; 1st Kerrek Part2
@@ -558,7 +577,7 @@ no_music:
 blargh:
 	jmp	blargh
 
-
+.if 0
 	;============================
 	;============================
 	;============================
@@ -618,6 +637,7 @@ keep_going:
 
 	jmp	animation_loop
 
+.endif
 
 .include "rain.s"
 
