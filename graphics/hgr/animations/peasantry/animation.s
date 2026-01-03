@@ -620,7 +620,7 @@ our_text7:
 
 our_text75:
 	.byte 1,161,"Gonna take some time to solve the",0
-	.byte 1,171,"  puzzles in this land,"
+	.byte 1,171,"  puzzles in this land,",0
 	.byte 1,181,"    ooh-hoo",0
 	.byte $ff
 
@@ -661,7 +661,7 @@ our_text13:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"Gonna take some time to",0
 	.byte 1,181,"      get my revenge,",0
-	.byte 34,181," ooh-hoo",0
+	.byte 23,181," ooh-hoo",0
 	.byte $ff
 
 ;==============
@@ -781,54 +781,54 @@ pattern_increment:
 .byte $0B,$00	; "He turned to me as if to say:",0
 .byte $0C,$10	; "Hurry boy",0
 .byte $0C,$18	; "       Trogdor's waiting there for you",34,0
-.byte $0D,$28	; $FF
+.byte $0D,$18	; $FF
 
 .byte $0E,$00	; "It's going to take a lot",0
-.byte $0E,$18	; "           to keep me away from you",0
+.byte $0E,$10	; "           to keep me away from you",0
 .byte $0E,$28	; $ff
 
 .byte $0F,$00	; "That's somethin' a bunch of NPCs",0
-.byte $0F,$28	; "           will try to do",0
-.byte $10,$00	; $ff
+.byte $0F,$20	; "           will try to do",0
+.byte $0F,$28	; $ff
 
-.byte $10,$10	; "I bless the rains down in Peasantry",0
-.byte $11,$00	; $ff
+.byte $10,$00	; "I bless the rains down in Peasantry",0
+.byte $10,$28	; $ff
 
-.byte $11,$08	; "Gonna take some time to solve the",0
-.byte $11,$11	; "  puzzles in this land,"
-.byte $13,$00	; "    ooh-hoo",0
-.byte $15,$20	; $ff
+.byte $11,$00	; "Gonna take some time to solve the",0
+.byte $11,$18	; "  puzzles in this land,"
+.byte $12,$28	; "    ooh-hoo",0
+.byte $15,$08	; $ff
 
 ;============================
 ; knight
 
 .byte $16,$00	; "I hate talking with this knight",0
-.byte $17,$08	; "As he grows restless from my",0
-.byte $17,$28	; "            endless questioning",0
-.byte $19,$00	; $ff
+.byte $17,$00	; "As he grows restless from my",0
+.byte $17,$30	; "            endless questioning",0
+.byte $18,$18	; $ff
 
-.byte $19,$08	; "I know I must do what's right",0
+.byte $19,$00	; "I know I must do what's right",0
 .byte $1A,$08	; "Sure as this improbable cliff rises like",0
 .byte $1A,$28	; "    Olympus above the pixelated plain",0
-.byte $1C,$00	; $ff
+.byte $1B,$18	; $ff
 
 ;========================
 ; 2nd kerrek1
 
-.byte $1C,$08	; "I seek to cure what's deep inside",0
+.byte $1B,$20	; "I seek to cure what's deep inside",0
 .byte $1D,$08	; "Frightened of this thing",0
-.byte $1E,$08	; "              that I've become",0
+.byte $1E,$00	; "              that I've become",0
 .byte $1E,$28	; $ff
 
-.byte $1F,$08	; "I'm going to climb a mountain",0
-.byte $1F,$20	; "          and cleave you through",0
-.byte $20,$00
+.byte $1F,$00	; "I'm going to climb a mountain",0
+.byte $1F,$18	; "          and cleave you through",0
+.byte $1F,$28
 
-.byte $20,$08	; "This disk is over, please insert Side 2",0
+.byte $20,$00	; "This disk is over, please insert Side 2",0
 .byte $21,$00	; $ff
 
-.byte $21,$08	; "I bless the rains down in Peasantry",0
-.byte $21,$38	; "Gonna take some time to",0
+.byte $21,$04	; "I bless the rains down in Peasantry",0
+.byte $22,$00	; "Gonna take some time to",0
 .byte $22,$18	; "      get my revenge,",0
 .byte $23,$28	; " ooh-hoo",0
 .byte $2A,$00	; $ff
@@ -840,27 +840,27 @@ pattern_increment:
 .byte $2B,$00	; $ff
 
 .byte $2C,$00	; "She's gonna take the Jhonka's riches",0
-.byte $2C,$20	; "          away from you",0
-.byte $2D,$00	; $ff
+.byte $2C,$18	; "          away from you",0
+.byte $2C,$38	; $ff
 
-.byte $2D,$08	; "Better take good care of that baby,",0
+.byte $2D,$00	; "Better take good care of that baby,",0
 .byte $2D,$20	; "      what else can you do",0
-.byte $2E,$00	; $ff
+.byte $2D,$30	; $ff
 
 ;==================
 ; 3rd krerek1
 
-.byte $2E,$08	; "I bless the rains down in Peasantry",0
+.byte $2E,$00	; "I bless the rains down in Peasantry",0
 .byte $2F,$00	; "I bless the rains down in Peasantry",0
-.byte $30,$08	; "I bless the rains down in Peasantry",0
+.byte $30,$00	; "I bless the rains down in Peasantry",0
 .byte $30,$38	; .byte $ff
 
-.byte $31,$08	; "I bless the rains down in Peasantry",0
-.byte $32,$08	; "I bless the rains down in Peasantry",0
-.byte $33,$00	; .byte $ff
+.byte $31,$00	; "I bless the rains down in Peasantry",0
+.byte $32,$00	; "I bless the rains down in Peasantry",0
+.byte $32,$38	; .byte $ff
 
-.byte $33,$08	; "     Gonna take some time to make",0
-.byte $33,$28	; "        Trogdor sad,"
-.byte $34,$08	; " ooh-hoo",0
+.byte $33,$00	; "     Gonna take some time to make",0
+.byte $33,$24	; "        Trogdor sad,"
+.byte $34,$28	; " ooh-hoo",0
 
 .byte $ff
