@@ -100,10 +100,8 @@ CURRENT_ROW	= $CD	; dhgr_repack
 ; $D0-$DB can re-use in each file
 ;==============================================
 
-; repack
-;REPACK_TMP	= $D0	; $D0...$D7
-
 SCENE_DONE	= $D0
+NEXT_LYRIC	= $D1
 
 COUNT		= $D6
 WHICH_DROP	= $D7

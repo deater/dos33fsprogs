@@ -21,6 +21,7 @@ peasantry:
 
 	lda	#0
 	sta	FRAME
+	sta	NEXT_LYRIC
 
 	;=================================
 	; init graphics
@@ -574,7 +575,8 @@ graphics_cottage:
 
 our_text1:
 	.byte 1,161,"I hear Trogdor coming in the night",0
-	.byte 1,171,"Burninating my cottage",0
+	.byte 1,171,"Burninating",0
+	.byte 13,171,"my cot-t-tage",0
 	.byte $FF
 
 our_text2:
@@ -618,14 +620,15 @@ our_text7:
 
 our_text75:
 	.byte 1,161,"Gonna take some time to solve the",0
-	.byte 1,171,"  puzzles in this land, ooh-hoo",0
+	.byte 1,171,"  puzzles in this land,"
+	.byte 1,181,"    ooh-hoo",0
 	.byte $ff
 
 ;============================
 ; knight
 
 our_text8:
-	.byte 1,161,"I hate talking with this blue knight",0
+	.byte 1,161,"I hate talking with this knight",0
 	.byte 1,171,"As he grows restless from my",0
 	.byte 1,181,"            endless questioning",0
 	.byte $ff
@@ -657,7 +660,8 @@ our_text12:
 our_text13:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"Gonna take some time to",0
-	.byte 1,181,"      get my revenge, ooh-hoo",0
+	.byte 1,181,"      get my revenge,",0
+	.byte 34,181," ooh-hoo",0
 	.byte $ff
 
 ;==============
@@ -693,7 +697,8 @@ our_text18:
 
 our_text19:
 	.byte 1,161,"     Gonna take some time to make",0
-	.byte 1,171,"        Trogdor sad, ooh-hoo",0
+	.byte 1,171,"              Trogdor sad,",0
+	.byte 1,181,"               ooh-hoo",0
 	.byte $ff
 
 
@@ -705,9 +710,28 @@ our_text19:
 	; ??? means move to next scene
 
 increment_lyrics:
+
+	; first check pattern list
+
+	ldx	NEXT_LYRIC
+	lda	pattern_increment,X
+	cmp	current_pattern_smc+1
+	bne	il_check_keyboard
+
+	lda	pattern_increment+1,X
+	cmp	current_line_smc+1
+	bcs	il_check_keyboard		; in case we increment too fast
+
+	inc	NEXT_LYRIC
+	inc	NEXT_LYRIC
+
+	jmp	il_do_increment
+
+il_check_keyboard:
 	lda	KEYPRESS
 	bpl	done_increment_lyrics
 
+il_do_increment:
 	bit	KEYRESET
 
 	lda	#$0
@@ -735,3 +759,108 @@ reload_graphics:
 	lda	#$A0
 	jmp	zx02_full_decomp
 
+
+
+
+pattern_increment:
+.byte $02,$0	; "I hear Trogdor coming in the night",0
+.byte $03,$10	; "Burninating",0
+.byte $03,$38	; "my cot-t-tage",0
+.byte $04,$28	; $FF
+
+.byte $05,$00	; "He's askin' me for a fight",0
+.byte $06,$08	; "His moonlit wings reflect the stars",0
+.byte $06,$28	; "    and brutal carnage",0
+.byte $07,$28	; $FF
+
+.byte $08,$00	; "I saw an old man sailing in the bay",0
+.byte $09,$10	; "Hopin' to catch some fish",0
+.byte $09,$20	; "    but he has no chicken feed",0
+.byte $0A,$28	; $ff
+
+.byte $0B,$00	; "He turned to me as if to say:",0
+.byte $0C,$10	; "Hurry boy",0
+.byte $0C,$18	; "       Trogdor's waiting there for you",34,0
+.byte $0D,$28	; $FF
+
+.byte $0E,$00	; "It's going to take a lot",0
+.byte $0E,$18	; "           to keep me away from you",0
+.byte $0E,$28	; $ff
+
+.byte $0F,$00	; "That's somethin' a bunch of NPCs",0
+.byte $0F,$28	; "           will try to do",0
+.byte $10,$00	; $ff
+
+.byte $10,$10	; "I bless the rains down in Peasantry",0
+.byte $11,$00	; $ff
+
+.byte $11,$08	; "Gonna take some time to solve the",0
+.byte $11,$11	; "  puzzles in this land,"
+.byte $13,$00	; "    ooh-hoo",0
+.byte $15,$20	; $ff
+
+;============================
+; knight
+
+.byte $16,$00	; "I hate talking with this knight",0
+.byte $17,$08	; "As he grows restless from my",0
+.byte $17,$28	; "            endless questioning",0
+.byte $19,$00	; $ff
+
+.byte $19,$08	; "I know I must do what's right",0
+.byte $1A,$08	; "Sure as this improbable cliff rises like",0
+.byte $1A,$28	; "    Olympus above the pixelated plain",0
+.byte $1C,$00	; $ff
+
+;========================
+; 2nd kerrek1
+
+.byte $1C,$08	; "I seek to cure what's deep inside",0
+.byte $1D,$08	; "Frightened of this thing",0
+.byte $1E,$08	; "              that I've become",0
+.byte $1E,$28	; $ff
+
+.byte $1F,$08	; "I'm going to climb a mountain",0
+.byte $1F,$20	; "          and cleave you through",0
+.byte $20,$00
+
+.byte $20,$08	; "This disk is over, please insert Side 2",0
+.byte $21,$00	; $ff
+
+.byte $21,$08	; "I bless the rains down in Peasantry",0
+.byte $21,$38	; "Gonna take some time to",0
+.byte $22,$18	; "      get my revenge,",0
+.byte $23,$28	; " ooh-hoo",0
+.byte $2A,$00	; $ff
+
+;==============
+; cottage
+
+.byte $2A,$10	; "Hurry boy, she's waiting there for you",0
+.byte $2B,$00	; $ff
+
+.byte $2C,$00	; "She's gonna take the Jhonka's riches",0
+.byte $2C,$20	; "          away from you",0
+.byte $2D,$00	; $ff
+
+.byte $2D,$08	; "Better take good care of that baby,",0
+.byte $2D,$20	; "      what else can you do",0
+.byte $2E,$00	; $ff
+
+;==================
+; 3rd krerek1
+
+.byte $2E,$08	; "I bless the rains down in Peasantry",0
+.byte $2F,$00	; "I bless the rains down in Peasantry",0
+.byte $30,$08	; "I bless the rains down in Peasantry",0
+.byte $30,$38	; .byte $ff
+
+.byte $31,$08	; "I bless the rains down in Peasantry",0
+.byte $32,$08	; "I bless the rains down in Peasantry",0
+.byte $33,$00	; .byte $ff
+
+.byte $33,$08	; "     Gonna take some time to make",0
+.byte $33,$28	; "        Trogdor sad,"
+.byte $34,$08	; " ooh-hoo",0
+
+.byte $ff

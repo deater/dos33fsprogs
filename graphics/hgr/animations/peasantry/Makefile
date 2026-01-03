@@ -123,6 +123,7 @@ music.inc:	$(GENERATE_COMMON) MUSIC
 	$(GENERATE_COMMON) -a 0xd000 -s done_pt3_irq_handler music.lst >> music.inc
 	$(GENERATE_COMMON) -a 0xd000 -s PT3_LOC music.lst >> music.inc
 	$(GENERATE_COMMON) -a 0xd000 -s current_pattern_smc music.lst >> music.inc
+	$(GENERATE_COMMON) -a 0xd000 -s current_line_smc music.lst >> music.inc
 	$(GENERATE_COMMON) -a 0xd000 -s pt3_set_pattern music.lst >> music.inc
 	$(GENERATE_COMMON) -a 0xd000 -s mute_ay_both music.lst >> music.inc
 	$(GENERATE_COMMON) -a 0xd000 -s unmute_ay_both music.lst >> music.inc
