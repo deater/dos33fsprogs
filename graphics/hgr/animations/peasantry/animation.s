@@ -158,6 +158,403 @@ no_music:
 	jsr	wait_until_keypress
 
 
+	;=============================================
+	;=============================================
+	; First Kerrek1 sequence
+	;=============================================
+	;=============================================
+
+	lda	#<graphics_kerrek1
+	sta	zx_src_l+1
+	lda	#>graphics_kerrek1
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; 1st Kerrek1 Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text5
+	sta	OUTL
+	lda	#>our_text5
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; 1st Kerrek Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text6
+	sta	OUTL
+	lda	#>our_text6
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+	;=============================================
+	; 1st Kerrek Part3
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text7
+	sta	OUTL
+	lda	#>our_text7
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; 1st Kerrek Part4
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text75
+	sta	OUTL
+	lda	#>our_text75
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+
+
+	;=============================================
+	;=============================================
+	; Knight sequence
+	;=============================================
+	;=============================================
+
+	lda	#<graphics_knight
+	sta	zx_src_l+1
+	lda	#>graphics_knight
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; Knight Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text8
+	sta	OUTL
+	lda	#>our_text8
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; Knight Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text9
+	sta	OUTL
+	lda	#>our_text9
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+
+	;=============================================
+	;=============================================
+	; Second Kerrek1 sequence
+	;=============================================
+	;=============================================
+
+	lda	#<graphics_kerrek1
+	sta	zx_src_l+1
+	lda	#>graphics_kerrek1
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; 2nd Kerrek1 Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text10
+	sta	OUTL
+	lda	#>our_text10
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; 2nd Kerrek Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text11
+	sta	OUTL
+	lda	#>our_text11
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+	;=============================================
+	; 2nd Kerrek Part3
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text12
+	sta	OUTL
+	lda	#>our_text12
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; 2nd Kerrek Part4
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text13
+	sta	OUTL
+	lda	#>our_text13
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+
+
+	;=============================================
+	;=============================================
+	; Cottage sequence
+	;=============================================
+	;=============================================
+
+	lda	#<graphics_cottage
+	sta	zx_src_l+1
+	lda	#>graphics_cottage
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; Cottage Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text14
+	sta	OUTL
+	lda	#>our_text14
+	sta	OUTH
+
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; Cottage Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text15
+	sta	OUTL
+	lda	#>our_text15
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+	;=============================================
+	; Cottage Part3
+	;=============================================
+
+	jsr	hgr_copy
+
+	lda	#<our_text16
+	sta	OUTL
+	lda	#>our_text16
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+
+
+	;=============================================
+	;=============================================
+	; Third Kerrek1 sequence
+	;=============================================
+	;=============================================
+
+	lda	#<graphics_kerrek1
+	sta	zx_src_l+1
+	lda	#>graphics_kerrek1
+	sta	zx_src_h+1
+
+	lda	#$A0
+
+	jsr	zx02_full_decomp
+
+	;=============================================
+	; 3rd Kerrek1 Part1
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text17
+	sta	OUTL
+	lda	#>our_text17
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+	;=============================================
+	; 3rd Kerrek Part2
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text18
+	sta	OUTL
+	lda	#>our_text18
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+	;=============================================
+	; 3rd Kerrek Part3
+	;=============================================
+
+
+	jsr	hgr_copy
+
+	lda	#<our_text19
+	sta	OUTL
+	lda	#>our_text19
+	sta	OUTH
+
+	jsr	hgr_put_string
+	jsr	hgr_put_string
+
+	jsr	hgr_page_flip
+
+	jsr	wait_until_keypress
+
+
+
 blargh:
 	jmp	blargh
 
@@ -176,9 +573,9 @@ blargh:
 	lda	#$0
 	sta	DRAW_PAGE
 
-	lda	#<graphics_frame1
+	lda	#<graphics_kerrek1
 	sta	zx_src_l+1
-	lda	#>graphics_frame1
+	lda	#>graphics_kerrek1
 	sta	zx_src_h+1
 
 	lda	#$A0
@@ -186,9 +583,6 @@ blargh:
 	jsr	zx02_full_decomp
 
 ;	jsr	grey_sky
-
-
-
 
 
 	lda	#0
@@ -237,7 +631,7 @@ keep_going:
 .include "hgr_sprite_mask.s"
 .include "hgr_font.s"
 
-graphics_frame1:
+graphics_kerrek1:
 	.incbin "graphics/kerrek1.hgr.zx02"
 
 graphics_burninated:
@@ -271,76 +665,82 @@ our_text2:
 
 our_text3:          ;0123456789012345678901234567890123456789
 	.byte 1,161,"I saw an old man sailing in the bay",0
-	.byte 1,171,"Hopin' to catch some cold delicious",0
-	.byte 1,181,"  fish or peasant hotel guests",0
+	.byte 1,171,"Hopin' to catch some fish",0
+	.byte 1,181,"    but he has no chicken feed",0
 
 our_text4:
 	.byte 1,161,"He turned to me as if to say:",0
-	.byte 1,171,"Hurry boy",0
-	.byte 1,181,"       Trogdor's waiting there for you",0
+	.byte 1,171,34,"Hurry boy",0
+	.byte 1,181,"       Trogdor's waiting there for you",34,0
 
 ;===========================
-; kerrek1
+; 1st kerrek1
 
 our_text5:
 	.byte 1,161,"It's going to take a lot",0
-	.byte 1,171,"to keep me away from you",0
+	.byte 1,171,"           to keep me away from you",0
 
 our_text6:
-	.byte 1,161,"That's something a bunch of NPCs"
-	.byte 1,171,"  will try to do",0
+	.byte 1,161,"That's somethin' a bunch of NPCs",0
+	.byte 1,171,"           will try to do",0
 
 our_text7:
 	.byte 1,161,"I bless the rains down in Peasantry",0
-	.byte 1,171,"Gonna take some time to solve the",0
-	.byte 1,181,"puzzles in this land, ooh-hoo",0
+
+our_text75:
+	.byte 1,161,"Gonna take some time to solve the",0
+	.byte 1,171,"  puzzles in this land, ooh-hoo",0
 
 ;============================
 ; knight
 
 our_text8:
-	.byte 1,161,"I hate talking with this-here knight",0
-	.byte 1,171,"As he grows restless from",0
-	.byte 1,181,"     incessant questioning",0
+	.byte 1,161,"I hate talking with this blue knight",0
+	.byte 1,171,"As he grows restless from my",0
+	.byte 1,181,"            endless questioning",0
 
 our_text9:
-	.byte 1,161,"I know I must do what's right",0
-	.byte 1,171,"Sure as this improbable cliff rises",0
-	.byte 1,181,"like Olympus above these pixelated plains",0
+	.byte 0,161,"I know I must do what's right",0
+	.byte 0,171,"Sure as this improbable cliff rises like",0
+	.byte 1,181,"    Olympus above this pixelated plain",0
 
-; kerrek1 again
+;========================
+; 2nd kerrek1
 
 our_text10:
 	.byte 1,161,"I seek to cure what's deep inside",0
-	.byte 1,171,"Frightened of this thing that I've become",0
+	.byte 1,171,"Frightened of this thing",0
+	.byte 1,181,"              that I've become",0
 
 our_text11:
 	.byte 1,161,"I'm going to climb a mountain",0
-	.byte 1,171,"    and cleave you through",0
+	.byte 1,171,"          and cleave you through",0
 
 our_text12:
-	.byte 1,161,"This disk is over, please insert Side 2",0
+	.byte 0,161,"This disk is over, please insert Side 2",0
 
 our_text13:
 	.byte 1,161,"I bless the rains down in Peasantry",0
 	.byte 1,171,"Gonna take some time to",0
 	.byte 1,181,"      get my revenge, ooh-hoo",0
 
+;==============
 ; cottage
 
 our_text14:
 	.byte 1,161,"Hurry boy, she's waiting there for you",0
 
 our_text15:
-	.byte 1,161,"I think she stole the Jhonka's",0
-	.byte 1,171,"          riches away from you",0
+	.byte 1,161,"She's gonna take the Jhonka's riches",0
+	.byte 1,171,"          away from you",0
 
 
 our_text16:
 	.byte 1,161,"Better take good care of that baby,",0
-	.byte 1,171,"what else can you do",0
+	.byte 1,171,"      what else can you do",0
 
-; krerek1 again
+;==================
+; 3rd krerek1
 
 our_text17:
 	.byte 1,161,"I bless the rains down in Peasantry",0
@@ -352,6 +752,6 @@ our_text18:
 	.byte 1,171,"I bless the rains down in Peasantry",0
 
 our_text19:
-	.byte 1,161,"Gonna take some time to make",0
-	.byte 1,171," Trogdor sad, ooh-hoo",0
+	.byte 1,161,"     Gonna take some time to make",0
+	.byte 1,171,"        Trogdor sad, ooh-hoo",0
 
