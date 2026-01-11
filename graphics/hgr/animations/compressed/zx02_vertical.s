@@ -22,19 +22,22 @@
 ;bitr            = ZP+6
 ;pntr            = ZP+7
 
-
+RESULT		= $D0
 TEMPL		= $D1
 TEMPH		= $D2
-lowTen		= $D3
-highTen		= $D4
+FAKEL		= $D3
+FAKEH		= $D4
+
+;lowTen		= $D3
+;highTen		= $D4
 CURRENT_Y	= $D5
 HGR_OUTL	= $D6
 HGR_OUTH	= $D7
 CURRENT_X	= $D8
 PNTR_ROW	= $D9
 temp		= $CF
-counterLow	= $CD
-counterHigh	= $CE
+;counterLow	= $CD
+;counterHigh	= $CE
 
 
 ;--------------------------------------------------
@@ -89,59 +92,46 @@ plus1:
 
 	; copy from existing decompressed values
 
-dzx0s_copy:
-
-	lda	ZX0_dst
-	sbc	offset			; C=0 from get_elias
-;	sta	pntr
 
 	; convert destination from expected linear to instead be
 	; apple II interleave
 
-	sta	counterLow
+	; $0000 -> $2000  (x=0,y=0)
+	; $0001 ->        (x=0,y=1)
+	; ...
+	; $00BF ->        (x=0,y=191)
+	; $00C0 -> $2001  (x=1,y=0)
+	; $00C1 ->        (x=1,y=1)
+
+	; read_addr= y_lookup[(actual_addr)%192]+(actual_addr/192)
+
+
+dzx0s_copy:
+
+
+	lda	ZX0_dst
+	sbc	offset			; C=0 from get_elias
+	sta	pntr
+;	sta	counterLow
 
 	lda	ZX0_dst+1
 	sbc	offset+1
 
 	and	#$1f
-;	sta	pntr+1
-	sta	counterHigh
-
-	; inline?
-
-	jsr	div_by_40_pntr
+	sta	pntr+1
+;	sta	counterHigh
 
 cop1:
 
-	lda	(pntr), Y
-	inc	pntr		; can never overflow
+	jsr	div_by_192_pntr
 
-	pha
+	lda	(FAKEL), Y
 
-	lda	pntr
-	and	#$7f		; oflo if $28, $50, $78
-				;	  $A8, $D0, $F8
+	inc	pntr
+	bne	pntr_noflo
+	inc	pntr+1
 
-	cmp	#$28
-	beq	pntr_oflo
-	cmp	#$50
-	beq	pntr_oflo
-	cmp	#$78
-	bne	pntr_oflo_done
-
-pntr_oflo:
-	inc	PNTR_ROW
-
-	ldy	PNTR_ROW
-	lda	hposn_low,Y
-	sta	pntr
-	lda	hposn_high,Y
-	sta	pntr+1
-
-	ldy	#0			; restore Y to 0
-pntr_oflo_done:
-
-	pla
+pntr_noflo:
 
 	jsr	store_and_inc
 
@@ -232,31 +222,41 @@ exit:
 
 store_and_inc:
 
+	ldy	CURRENT_X
+
 	sta	(HGR_OUTL),Y
 
-	; increment ZX02_dst for bookkeeping purposes
+	; incrememnt ZX02_dst for bookkeeping purposes
 
 	inc	ZX0_dst
 	bne	done_zxadd
 	inc	ZX0_dst+1
 done_zxadd:
 
-	inc	HGR_OUTL
-	inc	CURRENT_X
-	lda	CURRENT_X
-	cmp	#40
-	bne	done_store_and_inc
+	inc	CURRENT_Y		; go to next row
 
-	inc	CURRENT_Y
 	ldy	CURRENT_Y
+	cpy	#192
+	bne	yadd_nowrap
+
+	; go to next column
+
+	lda	#0
+	sta	CURRENT_Y
+
+	inc	CURRENT_X
+
+yadd_nowrap:
+	ldy	CURRENT_Y		; lookup in lookup table
 	lda	hposn_low,Y
 	sta	HGR_OUTL
+
 	lda	hposn_high,Y
 	sta	HGR_OUTH
-	ldy	#0
-	sty	CURRENT_X
 
 done_store_and_inc:
+
+	ldy	#0			; restore y to 0
 
 	rts
 
@@ -279,9 +279,15 @@ done_store_and_inc:
 ; 960 / 5 would also work
 
 
+; max is 8192
+; 0x20.00 >> 64 (6)
+; 0x02.00 >>4
+; 0x0
+
+;/ 192 = /64 = 3
 
 	;==============================
-	; 16-bit div by 40
+	; 16-bit div by 192
 	;==============================
 	; in counterLow/counterHigh (counterHigh has top 3 bits masked off)
 
@@ -289,96 +295,66 @@ done_store_and_inc:
 
 	; pntr/pntr+1 is set up with address
 
-div_by_40_pntr:
+
+div_by_192_pntr:
+	pha				; save values
+	txa
 	pha
 
-	jsr	startDivideBy10
-
-	; divide by 4 to get divide by 40
-
-	lda	lowTen
-
-	lsr	highTen
-	ror				;	lowTen
-
-	lsr	highTen
-	ror				;	lowTen
-
-	; A is now address / 40
-
-	sta	PNTR_ROW		;
-
-	;==========================
-	; calculate remainder
-
-	; 16-bit multiply by 40
-	;	((x*4)+x)*8
-
-
-	ldy	#0
-	sty	TEMPH
-
-;	lda	PNTR_ROW
-
-	asl				;
-	rol	TEMPH			; *2
-	asl				;
-	rol	TEMPH			; *4
-
-	clc
-	adc	PNTR_ROW
-	bcc	rnoflo
-	inc	TEMPH
-rnoflo:
-					; now has X*5
-
-	asl				;
-	rol	TEMPH			; *10
-	asl				;
-	rol	TEMPH			; *20
-	asl				;
-	rol	TEMPH			; *40
-
+	lda	pntr			; put pntr value into TEMPL/TEMPH
 	sta	TEMPL
+	lda	pntr+1
+;	and	#$1F
+	sta	TEMPH
 
+	lda	#0			; set result to 0
+	sta	RESULT
+
+div_by_192_loop:
 	sec
-	lda	counterLow
-	sbc	TEMPL
-	sta	TEMPL			; know this is < 255?
+	lda	TEMPL
+	sbc	#192
+	sta	TEMPL
+	bcc	dbuflo
+	inc	RESULT
+	jmp	div_by_192_loop
+dbuflo:
+	lda	TEMPH
+	sbc	#0
+	sta	TEMPH
+	inc	RESULT
+	bcs	div_by_192_loop
 
-;	lda	counterHigh
-;	sbc	TEMPH
-;	sta	TEMPH
+	; here if less than 0
 
-;	lda	pntr
-;	clc
-;	adc	TEMPL
-;	sta	pntr
+	dec	RESULT			; adjust for going 1 past
 
-;	lda	#0
-
-;	tay
-
-;	lda	TEMPH
-;	adc	pntr+1
-;	sta	pntr+1
-
-	; set up pntr
-
-	ldy	PNTR_ROW
+	; add back #192
 	clc
-	lda	hposn_low,Y
-	adc	TEMPL
-	sta	pntr
+	lda	TEMPL
+	adc	#192
 
-	lda	hposn_high,Y
-	sta	pntr+1
+	; A is remainder
 
+	tax
+	lda	hposn_low,X		; lookup location of row X
+	sta	FAKEL
+	lda	hposn_high,X
+	sta	FAKEH
 
-	ldy	#0		; Y always 0 in this code
+	; FIXME: combine with above?
 
+	clc
+	lda	RESULT			; get result
+
+	adc	FAKEL
+	sta	FAKEL			; add back in remainder
+	lda	FAKEH
+	adc	#0
+	sta	FAKEH
+
+	pla				; restore
+	tax
 	pla
 
 	rts
-
-.include "div10.s"

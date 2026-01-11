@@ -12,10 +12,10 @@ LINKER_SCRIPTS = ../../../../../linker_scripts/
 PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
 
 all:	\
-	kerrek1.hgr.zx02 kerrek1.raw.zx02 \
-	merry_christmas.hgr.zx02 merry_christmas.raw.zx02 \
-	ice3.hgr.zx02 ice3.raw.zx02 \
-	magsteps2_n.hgr.zx02 magsteps2_n.raw.zx02
+	kerrek1.hgr.zx02 kerrek1.raw.zx02 kerrek1.vraw.zx02 \
+	merry_christmas.hgr.zx02 merry_christmas.raw.zx02 merry_christmas.vraw.zx02 \
+	ice3.hgr.zx02 ice3.raw.zx02 ice3.vraw.zx02 \
+	magsteps2_n.hgr.zx02 magsteps2_n.raw.zx02 magsteps2_n.vraw.zx02
 
 ####
 
@@ -35,6 +35,15 @@ kerrek1.raw:  kerrek1.png
 
 ####
 
+kerrek1.vraw.zx02:	kerrek1.vraw
+	$(ZX02) kerrek1.vraw kerrek1.vraw.zx02
+
+kerrek1.vraw:  kerrek1.png
+	$(PNG_TO_HGR_RAW) -r kerrek1.png > kerrek1.vraw
+
+
+####
+
 merry_christmas.hgr.zx02:	merry_christmas.hgr
 	$(ZX02) merry_christmas.hgr merry_christmas.hgr.zx02
 
@@ -51,6 +60,15 @@ merry_christmas.raw:  merry_christmas.png
 
 ####
 
+merry_christmas.vraw.zx02:	merry_christmas.vraw
+	$(ZX02) merry_christmas.vraw merry_christmas.vraw.zx02
+
+merry_christmas.vraw:  merry_christmas.png
+	$(PNG_TO_HGR_RAW) -r merry_christmas.png > merry_christmas.vraw
+
+
+####
+
 ice3.hgr.zx02:	ice3.hgr
 	$(ZX02) ice3.hgr ice3.hgr.zx02
 
@@ -64,6 +82,15 @@ ice3.raw.zx02:	ice3.raw
 
 ice3.raw:  ice3.png
 	$(PNG_TO_HGR_RAW) ice3.png > ice3.raw
+
+####
+
+ice3.vraw.zx02:	ice3.vraw
+	$(ZX02) ice3.vraw ice3.vraw.zx02
+
+ice3.vraw:  ice3.png
+	$(PNG_TO_HGR_RAW) -r ice3.png > ice3.vraw
+
 
 
 ####
@@ -82,11 +109,20 @@ magsteps2_n.raw.zx02:	magsteps2_n.raw
 magsteps2_n.raw:  magsteps2_n.png
 	$(PNG_TO_HGR_RAW) magsteps2_n.png > magsteps2_n.raw
 
+####
+
+magsteps2_n.vraw.zx02:	magsteps2_n.vraw
+	$(ZX02) magsteps2_n.vraw magsteps2_n.vraw.zx02
+
+magsteps2_n.vraw:  magsteps2_n.png
+	$(PNG_TO_HGR_RAW) -r magsteps2_n.png > magsteps2_n.vraw
+
+
 
 
 
 ####
 
 clean:
-	rm -f *~ *.zx02 *.lst *.o *.hgr *_diff.inc *.raw
+	rm -f *~ *.zx02 *.lst *.o *.hgr *_diff.inc *.raw *.vraw
 

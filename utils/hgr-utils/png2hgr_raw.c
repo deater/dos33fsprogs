@@ -245,8 +245,9 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-d] [-f] [-t] PNGFILE\n\n",name);
+	printf("\nUsage: %s [-d] [-r] PNGFILE\n\n",name);
 	printf("\t[-d] debug\n");
+	printf("\t[-r] rotate (rotate image for vertical compression)\n");
 	printf("\n");
 
 	exit(1);
@@ -387,14 +388,18 @@ int main(int argc, char **argv) {
 	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
+	int vertical=0;
 
 	char *filename;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hfvd") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdr") ) != -1) {
 
 		switch(c) {
+			case 'r':
+				vertical=1;	/* rotate */
+				break;
                         case 'd':
 				debug=1;
 				break;
@@ -426,6 +431,8 @@ int main(int argc, char **argv) {
 
 	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
+	if (vertical==0) {
+
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
 			for(z=0;z<14;z++) {
@@ -447,6 +454,39 @@ int main(int argc, char **argv) {
 			apple2_image[y*40+(x*2)+0]=byte1;
 			apple2_image[y*40+(x*2)+1]=byte2;
 		}
+
+	}
+	}
+
+	else { /* vertical == 1 */
+	for(y=0;y<192;y++) {
+		for(x=0;x<20;x++) {
+			for(z=0;z<14;z++) {
+				color1=image[y*280+x*14+z];
+//				if (color1!=color2) {
+//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
+//							x*14+z*2,y);
+//
+//				}
+				colors[z]=color1;
+			}
+			error=colors_to_bytes(colors,&byte1,&byte2);
+			if (error!=0) {
+				color_warnings++;
+				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
+					x*14+error*7,y);
+			}
+
+			/* original: 40x192 bytes */
+			/* rotated: 192x40 bytes */
+
+			/* (x*192)+y */
+
+			apple2_image[(((x*2)+0)*192)+y]=byte1;
+			apple2_image[(((x*2)+1)*192)+y]=byte2;
+		}
+
+	}
 
 	}
 

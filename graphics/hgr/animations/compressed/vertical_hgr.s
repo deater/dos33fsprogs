@@ -1,14 +1,14 @@
 .include "zp.inc"
 .include "../hardware.inc"
-.include "qload.inc"
+.include "qload2.inc"
 ;.include "music.inc"
 .include "common_defines.inc"
 
 	;=======================================
-	; test raw image compression
+	; test raw image compression / custom zx02
 	;=======================================
 
-compression_test:
+special_hgr:
 
 	bit	KEYRESET	; just to be safe
 
@@ -38,15 +38,13 @@ graphics_loop:
 	ldx	WHICH
 
 	lda	graphics_low,X
-	sta	zx_src_l+1
+	sta	ZX0_src
 	lda	graphics_high,X
-	sta	zx_src_h+1
+	sta	ZX0_src+1
 
 	lda	#$20
 
 	jsr	zx02_full_decomp
-
-	jsr	hgr_repack
 
 	jsr	wait_until_keypress
 
@@ -62,8 +60,7 @@ graphics_loop:
 	beq	graphics_loop		; bra
 
 
-.include "hgr_repack.s"
-
+.include "zx02_vertical.s"
 
 graphics_low:
 	.byte <graphic1,<graphic2,<graphic3,<graphic4
@@ -71,18 +68,6 @@ graphics_low:
 graphics_high:
 	.byte >graphic1,>graphic2,>graphic3,>graphic4
 
-
-graphic1:
-	.incbin "graphics/kerrek1.raw.zx02"
-graphic2:
-	.incbin "graphics/merry_christmas.raw.zx02"
-graphic3:
-	.incbin "graphics/ice3.raw.zx02"
-graphic4:
-	.incbin "graphics/magsteps2_n.raw.zx02"
-
-
-.if 0
 graphic1:
 	.incbin "graphics/kerrek1.vraw.zx02"
 graphic2:
@@ -91,6 +76,4 @@ graphic3:
 	.incbin "graphics/ice3.vraw.zx02"
 graphic4:
 	.incbin "graphics/magsteps2_n.vraw.zx02"
-
-.endif
 

@@ -56,18 +56,18 @@ It turns out though that while compressing the interleaved graphics works
 pretty well, you can get a bit more compression if you de-interlace first.
 
 With some examples (you can see a video here):
-				zx02		de-interlace+zx02
-Kerrek 1			951		808	(-143)
-(video game)			12%		10%
+				zx02		de-interlace+zx02	vert
+Kerrek 1			951		808	(-143)		724
+(video game)			12%		10%			9%
 
-Christmas			2572		2402	(-170)
-(fancy writing)			31%		29%
+Christmas			2572		2402	(-170)		1806
+(fancy writing)			31%		29%			22%
 
-riven maglev			3423		3263	(-160)
-(hand converted bitmap)		42%		40%
+riven maglev			3423		3263	(-160)		2865
+(hand converted bitmap)		42%		40%			35%
 
-Ice3				5176		5094	(-82)
-(iipix converted bitmap)	63%		62%
+Ice3				5176		5094	(-82)		4070
+(iipix converted bitmap)	63%		62%			50%
 
 
 So you can save rouchly 100 or so bytes per image, depending on the entropy
