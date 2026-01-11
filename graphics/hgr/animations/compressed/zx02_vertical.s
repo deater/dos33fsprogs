@@ -297,14 +297,14 @@ done_store_and_inc:
 
 
 div_by_192_pntr:
-;	pha				; save values
-	txa
+
+	txa				; save X as we mess with it
 	pha
 
 	lda	pntr			; put pntr value into TEMPL/TEMPH
 	sta	TEMPL
 	lda	pntr+1
-	sta	TEMPH
+;	sta	TEMPH
 
 	; divide by 64, >>6
 	; actually since maximum image size is 8k = 13 bits 1fff
@@ -312,7 +312,8 @@ div_by_192_pntr:
 	; we can instead rotate  left by 2
 
 	clc
-	lda	TEMPH
+
+	; TEMPH in A
 
 	rol	TEMPL
 	rol
@@ -352,28 +353,30 @@ div_by_192_pntr:
 	adc	RESULT
 
 	; multiply by 64
+	; only need to care about low 8 bits (?)
+	;  as never going to be more than 192 apart
 
-	sta	FAKEL
-	ldx	#0
-	stx	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
+;	sta	FAKEL
+;	ldx	#0
+;	stx	FAKEH
 
 	asl
-	rol	FAKEH
+;	rol	FAKEH
 
 	asl
-	rol	FAKEH
+;	rol	FAKEH
 
 	asl
-	rol	FAKEH
+;	rol	FAKEH
 
 	asl
-	rol	FAKEH
+;	rol	FAKEH
+
+	asl
+;	rol	FAKEH
+
+	asl
+;	rol	FAKEH
 
 	sta	FAKEL
 
@@ -386,24 +389,25 @@ div_by_192_pntr:
 	; A is remainder
 
 	tax
+	clc
 	lda	hposn_low,X		; lookup location of row X
+	adc	RESULT
 	sta	FAKEL
 	lda	hposn_high,X
 	sta	FAKEH
 
 	; FIXME: combine with above?
 
-	clc
-	lda	RESULT			; get result
+;	clc
+;	lda	RESULT			; get result
 
-	adc	FAKEL
-	sta	FAKEL			; add back in remainder
-	lda	FAKEH
-	adc	#0
-	sta	FAKEH
+;	adc	FAKEL
+;	sta	FAKEL			; add back in remainder
+;	lda	FAKEH
+;	adc	#0
+;	sta	FAKEH
 
 	pla				; restore
 	tax
-;	pla
 
 	rts

@@ -76,4 +76,3 @@ graphic3:
 	.incbin "graphics/ice3.raw.zx02"
 graphic4:
 	.incbin "graphics/magsteps2_n.raw.zx02"
-
