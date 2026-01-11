@@ -297,91 +297,42 @@ done_store_and_inc:
 
 
 div_by_192_pntr:
-;	pha				; save values
+	pha				; save values
 	txa
 	pha
 
 	lda	pntr			; put pntr value into TEMPL/TEMPH
 	sta	TEMPL
 	lda	pntr+1
+;	and	#$1F
 	sta	TEMPH
 
-	; divide by 64, >>6
-	; actually since maximum image size is 8k = 13 bits 1fff
-	; result always finishes in 8 bits
-	; we can instead rotate  left by 2
-
-	clc
-	lda	TEMPH
-
-	rol	TEMPL
-	rol
-
-	rol	TEMPL
-	rol
-
-	; now divide by 3
-
-
-	; Divide by 3
-	; Omegamatrix
-	; https://forums.nesdev.org/viewtopic.php?t=11336
-	; 18 bytes, 30 cycles
-	sta	temp
-	lsr
-	adc	#21
-	lsr
-	adc	temp
-	ror
-	lsr
-	adc	temp
-	ror
-	lsr
-	adc	temp
-	ror
-	lsr
-
+	lda	#0			; set result to 0
 	sta	RESULT
 
-	; result guaranteed to be 40 or less
-
-	; multiply by 3
-
-	clc
-	asl
-	adc	RESULT
-
-	; multiply by 64
-
-	sta	FAKEL
-	ldx	#0
-	stx	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
-
-	asl
-	rol	FAKEH
-
-	sta	FAKEL
-
+div_by_192_loop:
 	sec
-	lda	pntr
-	sbc	FAKEL
+	lda	TEMPL
+	sbc	#192
+	sta	TEMPL
+	bcc	dbuflo
+	inc	RESULT
+	jmp	div_by_192_loop
+dbuflo:
+	lda	TEMPH
+	sbc	#0
+	sta	TEMPH
+	inc	RESULT
+	bcs	div_by_192_loop
 
-;	lda	#0
+	; here if less than 0
+
+	dec	RESULT			; adjust for going 1 past
+
+	; add back #192
+	clc
+	lda	TEMPL
+	adc	#192
 
 	; A is remainder
 
@@ -404,6 +355,6 @@ div_by_192_pntr:
 
 	pla				; restore
 	tax
-;	pla
+	pla
 
 	rts
