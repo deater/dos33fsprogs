@@ -22,22 +22,15 @@
 ;bitr            = ZP+6
 ;pntr            = ZP+7
 
-RESULT		= $D0
-TEMPL		= $D1
-TEMPH		= $D2
+;RESULT		= $D0
+;TEMPL		= $D1
+;TEMPH		= $D2
 FAKEL		= $D3
 FAKEH		= $D4
-
-;lowTen		= $D3
-;highTen		= $D4
 CURRENT_Y	= $D5
 HGR_OUTL	= $D6
 HGR_OUTH	= $D7
 CURRENT_X	= $D8
-PNTR_ROW	= $D9
-temp		= $CF
-;counterLow	= $CD
-;counterHigh	= $CE
 
 
 ;--------------------------------------------------
@@ -50,11 +43,11 @@ zx02_full_decomp:
 	ldy	#$80		; ??
 	sty	bitr
 
-	ldy	#$20		; set OUTH to be $2000
-	sty	HGR_OUTH
+;	ldy	#$20		; set OUTH to be $2000
+;	sty	HGR_OUTH
 
 	ldy	#0
-	sty	HGR_OUTL
+;	sty	HGR_OUTL
 
 	sty	offset		; ?
 	sty	offset+1
@@ -111,9 +104,31 @@ dzx0s_copy:
 
 cop1:
 
-	jsr	div_by_256_pntr
+	;==============================
+	; 16-bit div by 256
+	;==============================
+
+	; pntr   has Y
+	; pntr+1 has X
+
+	ldy	pntr			; if >192 clamp to 191
+	cpy	#192
+	bcc	pntr_good
+	ldy	#191
+
+pntr_good:
+
+	clc
+	lda	hposn_low,Y		; lookup location of row X
+	sta	FAKEL
+	lda	hposn_high,Y
+	sta	FAKEH
+
+	ldy	pntr+1
 
 	lda	(FAKEL), Y
+
+	ldy	#0
 
 	inc	pntr
 	bne	pntr_noflo
@@ -210,11 +225,21 @@ exit:
 
 store_and_inc:
 
-	ldy	CURRENT_Y
+	ldy	CURRENT_Y		; lookup in lookup table
 	cpy	#192
 	bcs	sai_skip_store
 
+	pha
+
+	lda	hposn_low,Y
+	sta	HGR_OUTL
+
+	lda	hposn_high,Y
+	sta	HGR_OUTH
+
 	ldy	CURRENT_X
+
+	pla
 
 	sta	(HGR_OUTL),Y
 
@@ -237,81 +262,10 @@ done_zxadd:
 	inc	CURRENT_X
 
 yadd_nowrap:
-	ldy	CURRENT_Y		; lookup in lookup table
-	lda	hposn_low,Y
-	sta	HGR_OUTL
 
-	lda	hposn_high,Y
-	sta	HGR_OUTH
 
 done_store_and_inc:
 
 	ldy	#0			; restore y to 0
-
-	rts
-
-
-
-; want to map packed to actual
-
-; any time dest used
-
-; $2000 -> row one
-; $2028 -> row two
-
-; divide by 40?  divide by 8 then by 5?
-; 8192 = $2000
-; $2000/8 = $1000, $800,$400
-; 1k lookup table?
-
-
-; 0..192*40 = 7680 bytes
-; 960 / 5 would also work
-
-
-; max is 8192
-; 0x20.00 >> 64 (6)
-; 0x02.00 >>4
-; 0x0
-
-;/ 192 = /64 = 3
-
-	;==============================
-	; 16-bit div by 256
-	;==============================
-	; in counterLow/counterHigh (counterHigh has top 3 bits masked off)
-
-	; puts divided address in PNTR_ROW
-
-	; pntr/pntr+1 is set up with address
-
-
-div_by_256_pntr:
-
-	txa				; save X as we mess with it
-	pha
-
-	; pntr   has Y
-	; pntr+1 has X
-
-	lda	pntr+1
-	sta	RESULT
-
-	ldx	pntr			; if >192 clamp to 191
-	cpx	#192
-	bcc	pntr_good
-	ldx	#191
-
-pntr_good:
-
-	clc
-	lda	hposn_low,X		; lookup location of row X
-	adc	RESULT
-	sta	FAKEL
-	lda	hposn_high,X
-	sta	FAKEH
-
-	pla				; restore
-	tax
 
 	rts

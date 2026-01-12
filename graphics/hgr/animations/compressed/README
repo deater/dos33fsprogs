@@ -74,8 +74,8 @@ Timing
 
 ice3:
 	vert+zx		v256/last
-	176B1B		16B0A3 = 1487011cycles = xcycles (second/1023000)
-	1534744=1.5s		1.45s (!)
+	176B1B		1337B5 = 1259445cycles = xcycles (second/1023000)
+	1534744=1.5s		1.2s (!)
 
 
 
