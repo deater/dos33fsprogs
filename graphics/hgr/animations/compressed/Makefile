@@ -7,7 +7,7 @@ TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../../linker_scripts/
 GENERATE_COMMON = ../generate_common
 
-all:	compress_test.dsk special_hgr.dsk vertical_hgr.dsk
+all:	compress_test.dsk special_hgr.dsk vertical_hgr.dsk bvertical_hgr.dsk
 
 compress_test.dsk:	QBOOT QLOAD \
 	qload.inc \
@@ -38,6 +38,16 @@ vertical_hgr.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) vertical_hgr.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) vertical_hgr.dsk 1 0 QLOAD		0 0
 	$(DOS33_RAW) vertical_hgr.dsk 5 0 VERTICAL_HGR 0 0
+
+bvertical_hgr.dsk:	QBOOT QLOAD \
+	qload.inc \
+	BVERTICAL_HGR
+	cp $(EMPTY_DISK) bvertical_hgr.dsk
+	$(DOS33_RAW) bvertical_hgr.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) bvertical_hgr.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) bvertical_hgr.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) bvertical_hgr.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) bvertical_hgr.dsk 5 0 BVERTICAL_HGR 0 0
 
 
 
@@ -74,7 +84,16 @@ vertical_hgr.o:	vertical_hgr.s \
 	graphics/kerrek1.vraw.zx02
 	ca65 -o vertical_hgr.o vertical_hgr.s -l vertical_hgr.lst
 
+####
 
+BVERTICAL_HGR:	bvertical_hgr.o
+	ld65 -o BVERTICAL_HGR bvertical_hgr.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+bvertical_hgr.o:	bvertical_hgr.s \
+	zp.inc ../hardware.inc qload2.inc common_defines.inc \
+	zx02_bvertical.s \
+	graphics/kerrek1.bvraw.zx02
+	ca65 -o bvertical_hgr.o bvertical_hgr.s -l bvertical_hgr.lst
 
 ####
 
@@ -199,7 +218,7 @@ qload2.inc:	$(GENERATE_COMMON) QLOAD
 
 
 clean:
-	rm -f *~ *.o *.lst HELLO ANIMATION QBOOT QLOAD SPECIAL_HGR VERTICAL_HGR
+	rm -f *~ *.o *.lst HELLO ANIMATION QBOOT QLOAD SPECIAL_HGR VERTICAL_HGR BVERTICAL_HGR
 	rm -f qload.inc qload2.inc
 
 

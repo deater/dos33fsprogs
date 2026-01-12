@@ -380,58 +380,15 @@ static int colors_to_bytes(unsigned char colors[14],
 }
 
 
-static unsigned char apple2_image[8192];
+/* normally 8k but for big+vertical we need more */
+static unsigned char apple2_image[40*256];
 
-int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0,error;
-	int c,x,y,z,color1;
-	unsigned char *image;
+void dump_raw_plain(unsigned char *image) {
+
+	int error;
 	unsigned char byte1,byte2,colors[14];
-	int vertical=0;
-
-	char *filename;
-
-	/* Parse command line arguments */
-
-	while ( (c=getopt(argc, argv, "hvdr") ) != -1) {
-
-		switch(c) {
-			case 'r':
-				vertical=1;	/* rotate */
-				break;
-                        case 'd':
-				debug=1;
-				break;
-                        case 'h':
-                                print_help(argv[0],0);
-				break;
-                        case 'v':
-                                print_help(argv[0],1);
-				break;
-			default:
-				print_help(argv[0],0);
-				break;
-		}
-	}
-
-	if (optind>=argc) {
-		printf("ERROR: Was expecting filename!\n");
-		exit(1);
-	}
-
-	filename=strdup(argv[optind]);
-
-	memset(apple2_image,0,8192);
-
-	if (loadpng(filename,&image,&xsize,&ysize)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
-	}
-
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
-
-	if (vertical==0) {
+	int x,y,z,color1;
 
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
@@ -456,9 +413,19 @@ int main(int argc, char **argv) {
 		}
 
 	}
-	}
 
-	else { /* vertical == 1 */
+	fwrite(apple2_image,40*192,sizeof(unsigned char),stdout);
+
+
+}
+
+
+void dump_raw_vertical(unsigned char *image) {
+
+	int error;
+	unsigned char byte1,byte2,colors[14];
+	int x,y,z,color1;
+
 	for(y=0;y<192;y++) {
 		for(x=0;x<20;x++) {
 			for(z=0;z<14;z++) {
@@ -488,9 +455,123 @@ int main(int argc, char **argv) {
 
 	}
 
+	fwrite(apple2_image,40*192,sizeof(unsigned char),stdout);
+
+}
+
+
+void dump_raw_vertical_big(unsigned char *image, int fill_color) {
+
+	int error;
+	unsigned char byte1,byte2,colors[14];
+	int x,y,z,color1;
+
+	for(y=0;y<192;y++) {
+		for(x=0;x<20;x++) {
+			for(z=0;z<14;z++) {
+				color1=image[y*280+x*14+z];
+//				if (color1!=color2) {
+//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
+//							x*14+z*2,y);
+//
+//				}
+				colors[z]=color1;
+			}
+			error=colors_to_bytes(colors,&byte1,&byte2);
+			if (error!=0) {
+				color_warnings++;
+				fprintf(stderr,"Warning: mixing colors at %d x %d\n",
+					x*14+error*7,y);
+			}
+
+			/* original: 40x192 bytes */
+			/* rotated: 192x40 bytes */
+
+			/* (x*192)+y */
+
+			apple2_image[(((x*2)+0)*256)+y]=byte1;
+			apple2_image[(((x*2)+1)*256)+y]=byte2;
+		}
+
 	}
 
-	fwrite(apple2_image,40*192,sizeof(unsigned char),stdout);
+	/* fill empty area with "last" color */
+	if (fill_color) {
+		for(y=192;y<256;y++) {
+			for(x=0;x<40;x++) {
+				apple2_image[(x*256)+y]=apple2_image[(x*256+191)];
+			}
+		}
+	}
+
+	fwrite(apple2_image,40*256,sizeof(unsigned char),stdout);
+}
+
+
+
+int main(int argc, char **argv) {
+
+	int xsize=0,ysize=0;
+	int c;
+	unsigned char *image;
+	int vertical=0,big=0;
+
+	char *filename;
+
+	/* Parse command line arguments */
+
+	while ( (c=getopt(argc, argv, "hvdrb") ) != -1) {
+
+		switch(c) {
+                        case 'h':
+                                print_help(argv[0],0);
+				break;
+                        case 'v':
+                                print_help(argv[0],1);
+				break;
+                        case 'd':
+				debug=1;
+				break;
+			case 'r':
+				vertical=1;	/* rotate */
+				break;
+			case 'b':
+				big=1;		/* padded  */
+				break;
+
+			default:
+				print_help(argv[0],0);
+				break;
+		}
+	}
+
+	if (optind>=argc) {
+		printf("ERROR: Was expecting filename!\n");
+		exit(1);
+	}
+
+	filename=strdup(argv[optind]);
+
+	memset(apple2_image,0,8192);
+
+	if (loadpng(filename,&image,&xsize,&ysize)<0) {
+		fprintf(stderr,"Error loading png!\n");
+		exit(-1);
+	}
+
+	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+	if (vertical==0) {
+		dump_raw_plain(image);
+	}
+	else {
+		if (big) {
+			dump_raw_vertical_big(image,1);
+		}
+		else {
+			dump_raw_vertical(image);
+		}
+	}
 
 	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 
