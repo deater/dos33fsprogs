@@ -43,18 +43,15 @@ zx02_full_decomp:
 	ldy	#$80		; ??
 	sty	bitr
 
-;	ldy	#$20		; set OUTH to be $2000
-;	sty	HGR_OUTH
-
 	ldy	#0
-;	sty	HGR_OUTL
 
 	sty	offset		; ?
 	sty	offset+1
 
-	sty	ZX0_dst		; assume dest always on page boundary
+	sty	ZX0_dst		; destination (always on page boundary)
+				; maintained virtually, we remap as needed
 
-	sty	CURRENT_Y	; ?
+	sty	CURRENT_Y	; actual Y and X of output
 	sty	CURRENT_X
 
 ; Decode literal: Ccopy next N bytes from compressed file
@@ -64,7 +61,8 @@ decode_literal:
 	jsr	get_elias
 
 cop0:
-	lda	(ZX0_src), Y
+	lda	(ZX0_src), Y	; load value
+
 	inc	ZX0_src		; 16-bit increment
 	bne	plus1
 	inc	ZX0_src+1
@@ -87,20 +85,18 @@ plus1:
 
 dzx0s_copy:
 
+	; adjust source to destination minus an offset
 
 	lda	ZX0_dst
 	sbc	offset			; C=0 from get_elias
 	sta	pntr
-;	sta	counterLow
 
 	lda	ZX0_dst+1
 	sbc	offset+1
 
-;	and	#$1f
-	sbc	#$20			;get down to 0
+	sbc	#$20			; get down to offset 0
 
 	sta	pntr+1
-;	sta	counterHigh
 
 cop1:
 
@@ -112,25 +108,29 @@ cop1:
 	; pntr+1 has X
 
 	ldy	pntr			; if >192 clamp to 191
-	cpy	#192
+	cpy	#192			; assume output mirrors that in gap
+					; an alternate might have 0 instead
 	bcc	pntr_good
+
 	ldy	#191
 
 pntr_good:
-
-	clc
+					; Ypos value is in Y
+;	clc
 	lda	hposn_low,Y		; lookup location of row X
 	sta	FAKEL
 	lda	hposn_high,Y
 	sta	FAKEH
 
-	ldy	pntr+1
+	ldy	pntr+1			; get Xpos value
 
-	lda	(FAKEL), Y
+	lda	(FAKEL), Y		; load value
 
-	ldy	#0
+;	ldy	#0			; restore Y to 0
+					; not needed as store_and_inc
+					; does it?
 
-	inc	pntr
+	inc	pntr			; increment pointer
 	bne	pntr_noflo
 	inc	pntr+1
 
@@ -138,7 +138,7 @@ pntr_noflo:
 
 	jsr	store_and_inc
 
-	dex
+	dex				; decrement count
 	bne	cop1
 
 	asl	bitr
