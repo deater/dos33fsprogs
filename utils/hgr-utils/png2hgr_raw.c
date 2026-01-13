@@ -245,9 +245,11 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s [-d] [-r] PNGFILE\n\n",name);
+	printf("\nUsage: %s [-d] [-r] [-b] [-z] PNGFILE\n\n",name);
 	printf("\t[-d] debug\n");
 	printf("\t[-r] rotate (rotate image for vertical compression)\n");
+	printf("\t[-b] create image with 256 rows\n");
+	printf("\t[-z] pad with zeros\n");
 	printf("\n");
 
 	exit(1);
@@ -460,7 +462,7 @@ void dump_raw_vertical(unsigned char *image) {
 }
 
 
-void dump_raw_vertical_big(unsigned char *image, int fill_color) {
+void dump_raw_vertical_big(unsigned char *image, int fill_with_zero) {
 
 	int error;
 	unsigned char byte1,byte2,colors[14];
@@ -496,7 +498,10 @@ void dump_raw_vertical_big(unsigned char *image, int fill_color) {
 	}
 
 	/* fill empty area with "last" color */
-	if (fill_color) {
+	if (fill_with_zero) {
+		/* the memset earlier will get this for us */
+	}
+	else {
 		for(y=192;y<256;y++) {
 			for(x=0;x<40;x++) {
 				apple2_image[(x*256)+y]=apple2_image[(x*256+191)];
@@ -514,13 +519,13 @@ int main(int argc, char **argv) {
 	int xsize=0,ysize=0;
 	int c;
 	unsigned char *image;
-	int vertical=0,big=0;
+	int vertical=0,big=0,zero_fill=0;
 
 	char *filename;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvdrb") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdrbz") ) != -1) {
 
 		switch(c) {
                         case 'h':
@@ -537,6 +542,9 @@ int main(int argc, char **argv) {
 				break;
 			case 'b':
 				big=1;		/* padded  */
+				break;
+			case 'z':
+				zero_fill=1;	/* padded with zeros */
 				break;
 
 			default:
@@ -566,7 +574,7 @@ int main(int argc, char **argv) {
 	}
 	else {
 		if (big) {
-			dump_raw_vertical_big(image,1);
+			dump_raw_vertical_big(image,zero_fill);
 		}
 		else {
 			dump_raw_vertical(image);

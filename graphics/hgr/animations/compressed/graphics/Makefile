@@ -12,10 +12,14 @@ LINKER_SCRIPTS = ../../../../../linker_scripts/
 PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
 
 all:	\
-	kerrek1.hgr.zx02 kerrek1.raw.zx02 kerrek1.vraw.zx02 kerrek1.bvraw.zx02 \
-	merry_christmas.hgr.zx02 merry_christmas.raw.zx02 merry_christmas.vraw.zx02 merry_christmas.bvraw.zx02 \
-	ice3.hgr.zx02 ice3.raw.zx02 ice3.vraw.zx02 ice3.bvraw.zx02 \
-	magsteps2_n.hgr.zx02 magsteps2_n.raw.zx02 magsteps2_n.vraw.zx02 magsteps2_n.bvraw.zx02
+	kerrek1.hgr.zx02 kerrek1.raw.zx02 kerrek1.vraw.zx02 \
+	kerrek1.bvraw.zx02 kerrek1.bzvraw.zx02 \
+	merry_christmas.hgr.zx02 merry_christmas.raw.zx02 merry_christmas.vraw.zx02 \
+	merry_christmas.bvraw.zx02 merry_christmas.bzvraw.zx02 \
+	ice3.hgr.zx02 ice3.raw.zx02 ice3.vraw.zx02 \
+	ice3.bvraw.zx02 ice3.bzvraw.zx02 \
+	magsteps2_n.hgr.zx02 magsteps2_n.raw.zx02 magsteps2_n.vraw.zx02 \
+	magsteps2_n.bvraw.zx02 magsteps2_n.bzvraw.zx02
 
 ####
 
@@ -48,6 +52,15 @@ kerrek1.bvraw.zx02:	kerrek1.bvraw
 
 kerrek1.bvraw:  kerrek1.png
 	$(PNG_TO_HGR_RAW) -r -b kerrek1.png > kerrek1.bvraw
+
+####
+
+kerrek1.bzvraw.zx02:	kerrek1.bzvraw
+	$(ZX02) kerrek1.bzvraw kerrek1.bzvraw.zx02
+
+kerrek1.bzvraw:  kerrek1.png
+	$(PNG_TO_HGR_RAW) -r -b -z kerrek1.png > kerrek1.bzvraw
+
 
 
 
@@ -85,6 +98,15 @@ merry_christmas.bvraw:  merry_christmas.png
 
 ####
 
+merry_christmas.bzvraw.zx02:	merry_christmas.bzvraw
+	$(ZX02) merry_christmas.bzvraw merry_christmas.bzvraw.zx02
+
+merry_christmas.bzvraw:  merry_christmas.png
+	$(PNG_TO_HGR_RAW) -r -b -z merry_christmas.png > merry_christmas.bzvraw
+
+
+####
+
 ice3.hgr.zx02:	ice3.hgr
 	$(ZX02) ice3.hgr ice3.hgr.zx02
 
@@ -114,6 +136,15 @@ ice3.bvraw.zx02:	ice3.bvraw
 
 ice3.bvraw:  ice3.png
 	$(PNG_TO_HGR_RAW) -r -b ice3.png > ice3.bvraw
+
+####
+
+ice3.bzvraw.zx02:	ice3.bzvraw
+	$(ZX02) ice3.bzvraw ice3.bzvraw.zx02
+
+ice3.bzvraw:  ice3.png
+	$(PNG_TO_HGR_RAW) -r -b -z ice3.png > ice3.bzvraw
+
 
 
 
@@ -149,9 +180,18 @@ magsteps2_n.bvraw.zx02:	magsteps2_n.bvraw
 magsteps2_n.bvraw:  magsteps2_n.png
 	$(PNG_TO_HGR_RAW) -r -b magsteps2_n.png > magsteps2_n.bvraw
 
+####
+
+magsteps2_n.bzvraw.zx02:	magsteps2_n.bzvraw
+	$(ZX02) magsteps2_n.bzvraw magsteps2_n.bzvraw.zx02
+
+magsteps2_n.bzvraw:  magsteps2_n.png
+	$(PNG_TO_HGR_RAW) -r -b magsteps2_n.png > magsteps2_n.bzvraw
+
+
 
 ####
 
 clean:
-	rm -f *~ *.zx02 *.lst *.o *.hgr *_diff.inc *.raw *.vraw *.bvraw
+	rm -f *~ *.zx02 *.lst *.o *.hgr *_diff.inc *.raw *.vraw *.bvraw *.bzvraw
 

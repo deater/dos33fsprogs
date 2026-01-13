@@ -106,7 +106,10 @@ cop1:
 				; an alternate might have 0 instead
 	bcc	pntr_good						; 2/3
 
-	ldy	#191							; 2
+;	ldy	#191							; 2
+
+	lda	#0
+	beq	pntr_zero
 
 pntr_good:
 					; Ypos value is in Y
@@ -119,6 +122,7 @@ pntr_good:
 
 	lda	(FAKEL), Y		; load value			; 5+
 
+pntr_zero:
 	inc	pntr			; increment pointer		; 6
 	bne	pntr_noflo						; 2/3
 	inc	pntr+1							; 6
