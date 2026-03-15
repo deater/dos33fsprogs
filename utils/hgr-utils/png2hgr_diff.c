@@ -1,4 +1,6 @@
-/* Converts 280x192 8-bit PNG file with correct palette to Apple II HGR */
+/* Diffs two 280x192 8-bit PNG file with correct palette to Apple II HGR */
+
+/* */
 
 #define VERSION "0.0.1"
 
@@ -15,42 +17,69 @@
 #define OUTPUT_ASM	1
 #define OUTPUT_RAW	2
 
-/* If you want default black a different color try the below */
-/* Useful if you are trying to xdraw to get red/blue */
-#if 0
-/* Default is BLACK0 */
-#define DEFAULT_BLACK	-1
-#else
-/* DEFAULT is BLACK1 */
-#define DEFAULT_BLACK	1
-#endif
 
 static int debug=0,color_warnings=0;
+
+
+
+int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2,
+		int *differences) {
+
+	int i,j;
+	int last_diff=0,diff_bytes=0;
+	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
+
+	for(i=0;i<8192;i++) {
+		if (apple2_image1[i]!=apple2_image2[i]) {
+			if (in_diff==0) {
+				diff_start=i;
+				in_diff=1;
+				diff_diff=i-last_diff;
+				last_diff=i;
+			}
+			else {
+
+			}
+//			fprintf(stderr,"; Difference at %x: %02x %02x\n",
+//				i,apple2_image1[i],apple2_image2[i]);
+			(*differences)++;
+		}
+		/* ended a diff */
+		else if (in_diff) {
+//			printf("Diff ended: %x %x %x\n",
+//				diff_diff,diff_start,i);
+			run_length=i-diff_start;
+
+			if (run_length>254) {
+				fprintf(stderr,"FIXME!  Run too big %d!\n",run_length);
+				exit(-1);
+			}
+
+			printf(".byte $%02X,$%02X,$%02X",
+				run_length,diff_diff&0xff,(diff_diff>>8)&0xff);
+
+			diff_bytes+=3;
+
+			for(j=0;j<run_length;j++) {
+				printf(",$%02X",apple2_image2[i-run_length+j]);
+				diff_bytes++;
+			}
+
+			printf("\n");
+
+			in_diff=0;
+		}
+	}
+	printf(".byte $ff\n");
+
+	return diff_bytes;
+}
 
 static int convert_color(int color) {
 
 	int c=0;
 
 	switch(color) {
-#if 0
-		case 0x000000:	c=0; break;	/* black */
-		case 0xe31e60:	c=1; break;	/* magenta */
-		case 0x604ebd:	c=2; break;	/* dark blue */
-		case 0xff44fd:	c=3; break;	/* purple */
-		case 0x00a360:	c=4; break;	/* dark green */
-		case 0x9c9c9c:	c=5; break;	/* grey 1 */
-		case 0x14cffd:	c=6; break;	/* medium blue */
-		case 0xd0c3ff:	c=7; break;	/* light blue */
-		case 0x607203:	c=8; break;	/* brown */
-		case 0xff6a3c:	c=9; break;	/* orange */
-		case 0x9d9d9d:	c=10; break;	/* grey 2 */
-		case 0xffa0d0:	c=11; break;	/* pink */
-		case 0x14f53c:	c=12; break;	/* bright green */
-		case 0xd0dd8d:	c=13; break;	/* yellow */
-		case 0x72ffd0:	c=14; break;	/* aqua */
-		case 0xffffff:	c=15; break;	/* white */
-#endif
-
 		/* These use the questionable palette my older code used */
 		/* Also handle the newer one */
 		/* Bitflipped because HGR is backwards, woz is crazy */
@@ -378,9 +407,9 @@ static unsigned char apple2_image2[8192];
 
 int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0,error,differences=0;
+	int xsize=0,ysize=0,error,differences=0,diff_bytes;
 	int warn_colors=0;
-	int c,x,y,z,color1,i,j;
+	int c,x,y,z,color1;
 	unsigned char *image;
 	unsigned char byte1,byte2,colors[14];
 
@@ -496,51 +525,8 @@ int main(int argc, char **argv) {
 
 //	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
 
-	int last_diff=0,diff_bytes=0;
-	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
 
-	for(i=0;i<8192;i++) {
-		if (apple2_image1[i]!=apple2_image2[i]) {
-			if (in_diff==0) {
-				diff_start=i;
-				in_diff=1;
-				diff_diff=i-last_diff;
-				last_diff=i;
-			}
-			else {
-
-			}
-//			fprintf(stderr,"; Difference at %x: %02x %02x\n",
-//				i,apple2_image1[i],apple2_image2[i]);
-			differences++;
-		}
-		/* ended a diff */
-		else if (in_diff) {
-//			printf("Diff ended: %x %x %x\n",
-//				diff_diff,diff_start,i);
-			run_length=i-diff_start;
-
-			if (run_length>254) {
-				fprintf(stderr,"FIXME!  Run too big %d!\n",run_length);
-				exit(-1);
-			}
-
-			printf(".byte $%02X,$%02X,$%02X",
-				run_length,diff_diff&0xff,(diff_diff>>8)&0xff);
-
-			diff_bytes+=3;
-
-			for(j=0;j<run_length;j++) {
-				printf(",$%02X",apple2_image2[i-run_length+j]);
-				diff_bytes++;
-			}
-
-			printf("\n");
-
-			in_diff=0;
-		}
-	}
-	printf(".byte $ff\n");
+	diff_bytes=hgr_diff_v1(apple2_image1,apple2_image2,&differences);
 
 //	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 	fprintf(stderr,"Total differences: %d, %d bytes\n",
