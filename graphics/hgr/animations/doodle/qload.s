@@ -71,7 +71,7 @@ sector_array:
 	.byte 0,0,0		; ???, BG_LOAD, ANIMATION
 
 length_array:
-	.byte 48,32,40		; ???, BG_LOAD, ANIMATION
+	.byte 48,16,96		; ???, BG_LOAD, ANIMATION
 
 
 	.include	"../wait.s"

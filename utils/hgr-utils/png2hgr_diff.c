@@ -1,6 +1,23 @@
 /* Diffs two 280x192 8-bit PNG file with correct palette to Apple II HGR */
 
-/* */
+/* v1 format:
+	repeat:	(dest_offsetl:h is amount to skip before next patch)
+		(run_length maxes out at 254 bytes)
+		run_length,dest_offsetl,dest_offseth, (repeated) diff bytes
+        $ff at end
+
+   v2 format:
+	repeat:
+		run_length offsetl, repeated diff bytes
+
+		look for byte pattern in src file?
+			would need offset (up to 8192) from that?
+			rl, src_offset, dest_offset
+
+		merge runs together?
+
+
+*/
 
 #define VERSION "0.0.1"
 
@@ -74,6 +91,94 @@ int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2,
 
 	return diff_bytes;
 }
+
+int hgr_diff_v2(unsigned char *apple2_image1,unsigned char *apple2_image2,
+		int *differences) {
+
+	int i,j;
+	int k;
+	int found=0;
+
+	int last_diff=0,diff_bytes=0;
+	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
+
+	for(i=0;i<8192;i++) {
+		if (apple2_image1[i]!=apple2_image2[i]) {
+			if (in_diff==0) {
+				diff_start=i;
+				in_diff=1;
+				diff_diff=i-last_diff;
+				last_diff=i;
+			}
+			else {
+
+			}
+//			fprintf(stderr,"; Difference at %x: %02x %02x\n",
+//				i,apple2_image1[i],apple2_image2[i]);
+			(*differences)++;
+		}
+		/* ended a diff */
+		else if (in_diff) {
+//			printf("Diff ended: %x %x %x\n",
+//				diff_diff,diff_start,i);
+			run_length=i-diff_start;
+
+			if (run_length>254) {
+				fprintf(stderr,"FIXME!  Run too big %d!\n",run_length);
+				exit(-1);
+			}
+
+			if (diff_diff>255) {
+				fprintf(stderr,"FIXME!  Offset too big %d!\n",diff_diff);
+				exit(-1);
+			}
+
+			/* see if found in image */
+
+			for(k=0;k<8192-run_length;k++) {
+			if (!memcmp(&apple2_image1[k],
+				&apple2_image2[i-run_length],
+					run_length)) {
+					found=1;
+					break;
+				}
+			}
+
+/* FIXME: need 3 inputs?  Or else need to make sure non-overlap... */
+
+			if ((found)&&(run_length>2)) {
+				/* found pattern elsewhere */
+				printf(".byte $%02X,$%02X,$%02X,$%02X",
+					run_length|0x80,
+					diff_diff&0xff,
+					k&0xff,(k>>8)&0xff);
+
+				diff_bytes+=4;
+
+			}
+			else {
+				printf(".byte $%02X,$%02X",
+					run_length,diff_diff&0xff);
+
+				diff_bytes+=2;
+
+
+				for(j=0;j<run_length;j++) {
+					printf(",$%02X",apple2_image2[i-run_length+j]);
+					diff_bytes++;
+				}
+			}
+
+			printf("\n");
+
+			in_diff=0;
+		}
+	}
+	printf(".byte $ff\n");
+
+	return diff_bytes;
+}
+
 
 static int convert_color(int color) {
 
@@ -523,12 +628,11 @@ int main(int argc, char **argv) {
 	}
 
 
-//	fwrite(apple2_image,8192,sizeof(unsigned char),stdout);
+//	diff_bytes=hgr_diff_v1(apple2_image1,apple2_image2,&differences);
+
+	diff_bytes=hgr_diff_v2(apple2_image1,apple2_image2,&differences);
 
 
-	diff_bytes=hgr_diff_v1(apple2_image1,apple2_image2,&differences);
-
-//	fprintf(stderr,"Total warnings: %d\n",color_warnings);
 	fprintf(stderr,"Total differences: %d, %d bytes\n",
 			differences,diff_bytes);
 

@@ -54,13 +54,13 @@ farm_start:
 
 	; load from disk
 
-;	lda	#PART_BG_LOAD
-;	sta	WHICH_LOAD
-;	jsr	load_file
+	lda	#PART_BG_LOAD
+	sta	WHICH_LOAD
+	jsr	load_file
 
 	; Do decompress
 
-;	jsr	$6000
+	jsr	$6000
 
 	;=======================
 	;=======================
@@ -105,5 +105,5 @@ blah:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING FARM",0
+	.byte 0,0,"LOADING DOODLE",0
 	.byte $FF

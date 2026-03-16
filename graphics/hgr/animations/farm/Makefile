@@ -10,14 +10,12 @@ all:	farm.dsk
 
 farm.dsk:	QBOOT QLOAD \
 	qload.inc \
-	BG_LOAD \
 	ANIMATION
 	cp $(EMPTY_DISK) farm.dsk
 	$(DOS33_RAW) farm.dsk 0 0 QBOOT		0 1
 	$(DOS33_RAW) farm.dsk 0 2 QBOOT		1 1
 	$(DOS33_RAW) farm.dsk 0 4 QBOOT		2 1
 	$(DOS33_RAW) farm.dsk 1 0 QLOAD		0 0
-	$(DOS33_RAW) farm.dsk 2 0 BG_LOAD 0 0
 	$(DOS33_RAW) farm.dsk 5 0 ANIMATION 0 0
 
 ####
@@ -110,5 +108,4 @@ generate_common.o:	generate_common.c
 clean:
 	rm -f *~ *.o *.lst ANIMATION QBOOT QLOAD BG_LOAD generate_common
 	rm -f qload.inc qload2.inc
-
 

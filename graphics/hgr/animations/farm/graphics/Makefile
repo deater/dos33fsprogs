@@ -9,10 +9,13 @@ PNG2GR = ../../../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../../../linker_scripts/
 PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
+PNG_TO_HGR_RAW = ../../../../../utils/hgr-utils/png2hgr_raw
 
 all:	\
+	a2_gentfish_farm01.bzvraw.zx02 \
 	a2_gentfish_farm01.hgr.zx02 \
 	a2_gentfish_farm02.hgr.zx02 \
+	a2_gentfish_farm01_02_diff.inc \
 	a2_gentfish_farm01_03_diff.inc a2_gentfish_farm03_05_diff.inc \
 	a2_gentfish_farm05_07_diff.inc a2_gentfish_farm07_09_diff.inc \
 	a2_gentfish_farm09_11_diff.inc a2_gentfish_farm11_13_diff.inc \
@@ -41,6 +44,14 @@ all:	\
 
 ####
 
+a2_gentfish_farm01.bzvraw.zx02:	a2_gentfish_farm01.bzvraw
+	$(ZX02) a2_gentfish_farm01.bzvraw a2_gentfish_farm01.bzvraw.zx02
+
+a2_gentfish_farm01.bzvraw:	a2_gentfish_farm01.png
+	$(PNG_TO_HGR_RAW) -r -b -z a2_gentfish_farm01.png > a2_gentfish_farm01.bzvraw
+
+####
+
 a2_gentfish_farm01.hgr.zx02:	a2_gentfish_farm01.hgr
 	$(ZX02) a2_gentfish_farm01.hgr a2_gentfish_farm01.hgr.zx02
 
@@ -56,6 +67,11 @@ a2_gentfish_farm02.hgr:  a2_gentfish_farm02.png
 	$(PNG_TO_HGR) a2_gentfish_farm02.png > a2_gentfish_farm02.hgr
 
 ####
+
+a2_gentfish_farm01_02_diff.inc:	a2_gentfish_farm01.png a2_gentfish_farm02.png
+	$(PNG_TO_HGR_DIFF) a2_gentfish_farm01.png a2_gentfish_farm02.png > a2_gentfish_farm01_02_diff.inc
+
+###
 
 a2_gentfish_farm01_03_diff.inc:	a2_gentfish_farm01.png a2_gentfish_farm03.png
 	$(PNG_TO_HGR_DIFF) a2_gentfish_farm01.png a2_gentfish_farm03.png > a2_gentfish_farm01_03_diff.inc

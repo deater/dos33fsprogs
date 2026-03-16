@@ -108,8 +108,8 @@ cop1:
 
 ;	ldy	#191							; 2
 
-	lda	#0
-	beq	pntr_zero
+	lda	#0							; 2
+	beq	pntr_zero						; 2/3
 
 pntr_good:
 					; Ypos value is in Y

@@ -4,6 +4,7 @@
 ;.include "music.inc"
 .include "common_defines.inc"
 
+
 	;=======================================
 	; draw farmtown by gentfish
 	;=======================================
@@ -19,15 +20,6 @@ gentfsh_farm:
 	lda	#3
 	sta	FRAME_RATE
 
-	;=================================
-	; init graphics
-	;=================================
-
-	bit	SET_GR
-        bit	HIRES
-        bit	FULLGR
-
-        bit	PAGE2		; display page1
 
 
 .if 0
@@ -43,9 +35,72 @@ yes_music:
 no_music:
 .endif
 
+
+	;=======================================
+	; load backgrounds from animation
+	;=======================================
+
+load_bg:
+
+	bit	KEYRESET	; just to be safe
+
+	;=================================
+	; init vars
+	;=================================
+
+
+	;===================================
+	; decompress first graphic to page1
+
+	lda	#$0
+	sta	DRAW_PAGE
+
+	lda	#<bg1_graphic
+	sta	zx_src_l+1
+	lda	#>bg1_graphic
+	sta	zx_src_h+1
+
+	lda	#$20
+
+	jsr	zx02_full_decomp
+
+
+	;====================================
+	; decompress second graphics to page2
+
+	lda	#<bg1_graphic
+	sta	zx_src_l+1
+	lda	#>bg1_graphic
+	sta	zx_src_h+1
+
+	lda	#$40
+
+	jsr	zx02_full_decomp
+
 	lda	#0
 	sta	DRAW_PAGE
 	sta	WHICH
+
+	;====================================
+	; patch page2
+
+	ldy	#>patch_page1_2
+	ldx	#<patch_page1_2
+
+	jsr	patch_graphics
+
+
+	;=================================
+	; init graphics
+	;=================================
+
+	bit	SET_GR
+        bit	HIRES
+        bit	FULLGR
+
+        bit	PAGE2		; display page2
+
+
 
 animation_loop:
 
@@ -143,8 +198,8 @@ wait_some:
 ;	bne	wait_mockingboard
 
 wait_nomock:
-	lda	FRAME_RATE
-	jmp	wait_50ms
+	ldx	FRAME_RATE
+	jmp	wait_50xms
 
 ;wait_mockingboard:
 ;	lda	FRAME_RATE
@@ -314,8 +369,12 @@ patches_page2_h:
 	.byte	>farm46_farm48_diff
 	.byte	>farm48_farm02_diff
 
+bg1_graphic:
+	.incbin "graphics/a2_gentfish_farm01.hgr.zx02"
+
+;bg2_graphic:
+;	.incbin "graphics/a2_gentfish_farm02.hgr.zx02"
 
 
-
-
-
+patch_page1_2:
+	.include "graphics/a2_gentfish_farm01_02_diff.inc"
