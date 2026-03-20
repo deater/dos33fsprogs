@@ -8,13 +8,17 @@
 
    v2 format:
 	repeat:
-		run_length offsetl, repeated diff bytes
+		max run length 32
+		run_length top two bits
+		00 = immediate
+			run_length dest_offset_add byte byte byte
 
-		look for byte pattern in src file?
-			would need offset (up to 8192) from that?
-			rl, src_offset, dest_offset
+		10 = run from current
+			run_length dest_offset_add addrl addrh
 
-		merge runs together?
+		11 = run from other page
+
+		merge runs together
 
 
 */
@@ -37,14 +41,24 @@
 
 static int debug=0,color_warnings=0;
 
+void print_stats(int differences, int diff_bytes, int max_run) {
+
+	fprintf(stderr,"Total differences: %d, %d bytes, max_run %d\n",
+			differences,diff_bytes,max_run);
+
+	printf("; Total differences: %d, %d bytes, max_run %d\n",
+			differences,diff_bytes,max_run);
+
+}
 
 
-int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2,
-		int *differences) {
+
+int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2) {
 
 	int i,j;
 	int last_diff=0,diff_bytes=0;
 	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
+	int max_run=0,differences=0;
 
 	for(i=0;i<8192;i++) {
 		if (apple2_image1[i]!=apple2_image2[i]) {
@@ -59,7 +73,7 @@ int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2,
 			}
 //			fprintf(stderr,"; Difference at %x: %02x %02x\n",
 //				i,apple2_image1[i],apple2_image2[i]);
-			(*differences)++;
+			differences++;
 		}
 		/* ended a diff */
 		else if (in_diff) {
@@ -88,93 +102,69 @@ int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2,
 		}
 	}
 	printf(".byte $ff\n");
+	diff_bytes++;
+
+	print_stats(differences,diff_bytes,max_run);
 
 	return diff_bytes;
 }
 
-int hgr_diff_v2(unsigned char *apple2_image1,unsigned char *apple2_image2,
-		int *differences) {
+int hgr_diff_v2(unsigned char *apple2_old,
+		unsigned char *apple2_new,
+		unsigned char *apple2_alt) {
 
 	int i,j;
 	int k;
-	int found=0;
 
-	int last_diff=0,diff_bytes=0;
-	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
+//	int found=0;
+//	int last_diff=0;
+//	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
+	int local_diff;
+	int differences=0,max_run=0,diff_bytes=0;
+	int max_diff;
 
-	for(i=0;i<8192;i++) {
-		if (apple2_image1[i]!=apple2_image2[i]) {
-			if (in_diff==0) {
-				diff_start=i;
-				in_diff=1;
-				diff_diff=i-last_diff;
-				last_diff=i;
-			}
-			else {
+#define MAX_DIFF 31
 
-			}
-//			fprintf(stderr,"; Difference at %x: %02x %02x\n",
-//				i,apple2_image1[i],apple2_image2[i]);
-			(*differences)++;
-		}
-		/* ended a diff */
-		else if (in_diff) {
-//			printf("Diff ended: %x %x %x\n",
-//				diff_diff,diff_start,i);
-			run_length=i-diff_start;
+	i=0;
+	while(i<8192) {
 
-			if (run_length>254) {
-				fprintf(stderr,"FIXME!  Run too big %d!\n",run_length);
-				exit(-1);
+		/* If not match, find maximum diff length */
+
+		if (apple2_old[i]!=apple2_new[i]) {
+
+			max_diff=MAX_DIFF;
+			if (i+max_diff>8192) max_diff=8192-i;
+
+			local_diff=0;
+			for(k=max_diff;k>=0;k--) {
+				if (apple2_old[i+k]!=apple2_new[i+k]) local_diff++;
 			}
 
-			if (diff_diff>255) {
-				fprintf(stderr,"FIXME!  Offset too big %d!\n",diff_diff);
-				exit(-1);
+			for(k=max_diff;k>=0;k--) {
+				fprintf(stderr,"%d %d %x %x\n",i,k,
+					apple2_old[i+k],apple2_new[i+k]);
+				if (apple2_old[i+k]!=apple2_new[i+k]) break;
 			}
+			max_diff=k+1;
 
-			/* see if found in image */
-
-			for(k=0;k<8192-run_length;k++) {
-			if (!memcmp(&apple2_image1[k],
-				&apple2_image2[i-run_length],
-					run_length)) {
-					found=1;
-					break;
-				}
+			printf(".byte $%02x,$%02x",max_diff,0);
+			for(j=0;j<max_diff;j++) {
+				printf(",$%02x",apple2_new[i+j]);
 			}
-
-/* FIXME: need 3 inputs?  Or else need to make sure non-overlap... */
-
-			if ((found)&&(run_length>2)) {
-				/* found pattern elsewhere */
-				printf(".byte $%02X,$%02X,$%02X,$%02X",
-					run_length|0x80,
-					diff_diff&0xff,
-					k&0xff,(k>>8)&0xff);
-
-				diff_bytes+=4;
-
-			}
-			else {
-				printf(".byte $%02X,$%02X",
-					run_length,diff_diff&0xff);
-
-				diff_bytes+=2;
-
-
-				for(j=0;j<run_length;j++) {
-					printf(",$%02X",apple2_image2[i-run_length+j]);
-					diff_bytes++;
-				}
-			}
-
+			printf("; diff = %d\n",local_diff);
 			printf("\n");
-
-			in_diff=0;
+			if (max_diff>max_run) max_run=max_diff;
+			diff_bytes+=(2+max_diff);
+			i+=max_diff;
+		}
+		else {
+			i++;
 		}
 	}
 	printf(".byte $ff\n");
+	diff_bytes++;
+
+	print_stats(differences,diff_bytes,max_run);
 
 	return diff_bytes;
 }
@@ -211,9 +201,8 @@ static int convert_color(int color) {
 }
 
 
-
 /* expects a PNG where the xsize is *2 */
-int loadpng(char *filename,
+static int loadpng(char *filename,
 		unsigned char **image_ptr, int *xsize, int *ysize) {
 
 	int x,y;
@@ -375,8 +364,9 @@ static void print_help(char *name,int version) {
 
 	if (version) exit(1);
 
-	printf("\nUsage: %s PNGFILE1 PNGFILE2\n\n",name);
+	printf("\nUsage: %s [-w which] PNGFILE1 PNGFILE2 PNGFILE3 \n\n",name);
 	printf("\n");
+	printf("\t-w : which  version of format to use\n");
 
 	exit(1);
 }
@@ -507,138 +497,133 @@ static int colors_to_bytes(unsigned char colors[14],
 }
 
 
-static unsigned char apple2_image1[8192];
-static unsigned char apple2_image2[8192];
+static int load_image(unsigned char *a2_image,char *filename) {
+
+	int x,y,z,xsize,ysize;
+	unsigned char *image;
+	int color1,error;
+	unsigned char byte1,byte2,colors[14];
+
+	if (loadpng(filename,&image,&xsize,&ysize)<0) {
+		fprintf(stderr,"Error loading png!\n");
+		exit(-1);
+	}
+
+	fprintf(stderr,"Loaded image %s %d by %d\n",
+					filename,xsize,ysize);
+
+	for(y=0;y<192;y++) {
+		for(x=0;x<20;x++) {
+			for(z=0;z<14;z++) {
+				color1=image[y*280+x*14+z];
+				colors[z]=color1;
+			}
+			error=colors_to_bytes(colors,&byte1,&byte2);
+			if (error!=0) {
+				color_warnings++;
+			}
+
+			a2_image[hgr_offset(y)+(x*2)+0]=byte1;
+			a2_image[hgr_offset(y)+(x*2)+1]=byte2;
+		}
+	}
+
+	return 0;
+}
+
+static unsigned char apple2_old[8192];
+static unsigned char apple2_new[8192];
+static unsigned char apple2_alt[8192];
 
 int main(int argc, char **argv) {
 
-	int xsize=0,ysize=0,error,differences=0,diff_bytes;
-	int warn_colors=0;
-	int c,x,y,z,color1;
-	unsigned char *image;
-	unsigned char byte1,byte2,colors[14];
+	int c;
+//	int xsize=0,ysize=0,error;
+//	int c,x,y,z,color1;
+//	unsigned char *image;
+//	unsigned char byte1,byte2,colors[14];
 
-	char *filename1,*filename2;
+	char *filename_old=NULL,*filename_new=NULL,*filename_alt=NULL;
+	int version=0;
 
 	/* Parse command line arguments */
 
-	while ( (c=getopt(argc, argv, "hvd") ) != -1) {
+	while ( (c=getopt(argc, argv, "hvdw:") ) != -1) {
 
 		switch(c) {
 
-                        case 'h':
-                                print_help(argv[0],0);
+			case 'h':
+				print_help(argv[0],0);
 				break;
-                        case 'v':
-                                print_help(argv[0],1);
+			case 'v':
+				print_help(argv[0],1);
 				break;
-                        case 'd':
+			case 'd':
 				debug=1;
 				break;
+			case 'w':
+				version=atoi(optarg);
+                                break;
 			default:
 				print_help(argv[0],0);
 				break;
 		}
 	}
 
+//	printf("%d %d\n",optind,argc);
+
 	if (optind>=argc) {
-		printf("ERROR: Was expecting filename!\n");
+		fprintf(stderr,
+			"ERROR: Was expecting filename!\n");
 		exit(1);
 	}
 
 	if (optind+1>=argc) {
-		printf("ERROR: Was expecting two filenames!\n");
+		fprintf(stderr,
+			"ERROR: Was expecting at least two filenames!\n");
 		exit(1);
 	}
 
-
-	filename1=strdup(argv[optind]);
-	filename2=strdup(argv[optind+1]);
-
-	memset(apple2_image1,0,8192);
-	memset(apple2_image2,0,8192);
-
-	/* load image 1 */
-
-	if (loadpng(filename1,&image,&xsize,&ysize)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
-	}
-
-	fprintf(stderr,"Loaded image1 (%s) %d by %d\n",filename1,xsize,ysize);
-
-	for(y=0;y<192;y++) {
-		for(x=0;x<20;x++) {
-			for(z=0;z<14;z++) {
-				color1=image[y*280+x*14+z];
-//				if (color1!=color2) {
-//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
-//							x*14+z*2,y);
-//
-//				}
-				colors[z]=color1;
-			}
-			error=colors_to_bytes(colors,&byte1,&byte2);
-			if (error!=0) {
-				color_warnings++;
-				if (warn_colors) {
-					fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-						x*14+error*7,y);
-				}
-			}
-
-			apple2_image1[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_image1[hgr_offset(y)+(x*2)+1]=byte2;
-		}
+	/* load alt image */
+	if ((optind+2>=argc) && (version==2)) {
+		fprintf(stderr,"Error, need 3 files for version 2\n");
+		return -1;
 	}
 
 
-	/* load image 2 */
+	filename_old=strdup(argv[optind]);
+	filename_new=strdup(argv[optind+1]);
 
-	if (loadpng(filename2,&image,&xsize,&ysize)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
+	if (optind+2<argc) {
+		filename_alt=strdup(argv[optind+2]);
 	}
 
-	fprintf(stderr,"Loaded image2 (%s) %d by %d\n",filename2,xsize,ysize);
+	memset(apple2_old,0,8192);
+	memset(apple2_new,0,8192);
+	memset(apple2_alt,0,8192);
 
-	for(y=0;y<192;y++) {
-		for(x=0;x<20;x++) {
-			for(z=0;z<14;z++) {
-				color1=image[y*280+x*14+z];
-//				if (color1!=color2) {
-//					fprintf(stderr,"Warning: color at %d x %d doesn't match\n",
-//							x*14+z*2,y);
-//
-//				}
-				colors[z]=color1;
-			}
-			error=colors_to_bytes(colors,&byte1,&byte2);
-			if (error!=0) {
-				color_warnings++;
-				if (warn_colors) {
-					fprintf(stderr,"Warning: mixing colors at %d x %d\n",
-						x*14+error*7,y);
-				}
-			}
+	/* load old image */
+	load_image(apple2_old,filename_old);
 
-			apple2_image2[hgr_offset(y)+(x*2)+0]=byte1;
-			apple2_image2[hgr_offset(y)+(x*2)+1]=byte2;
-		}
+	/* load new image */
+	load_image(apple2_new,filename_new);
+
+	if (filename_alt!=NULL) {
+		load_image(apple2_alt,filename_alt);
 	}
 
-
-//	diff_bytes=hgr_diff_v1(apple2_image1,apple2_image2,&differences);
-
-	diff_bytes=hgr_diff_v2(apple2_image1,apple2_image2,&differences);
-
-
-	fprintf(stderr,"Total differences: %d, %d bytes\n",
-			differences,diff_bytes);
-
-	printf("; Total differences: %d, %d bytes\n",
-			differences,diff_bytes);
-
+	switch(version) {
+		case 1:
+			hgr_diff_v1(apple2_old,apple2_new);
+			break;
+		case 2:
+			hgr_diff_v2(apple2_old,
+					apple2_new,apple2_alt);
+			break;
+		default:
+			fprintf(stderr,"Unknown version %d\n",version);
+			return -1;
+	}
 
 
 	return 0;
