@@ -39,35 +39,35 @@ a2_doodle008.hgr:  a2_doodle008.png
 ####
 
 a2_doodle001_008_diff.inc:	a2_doodle001.png a2_doodle008.png
-	$(PNG_TO_HGR_DIFF) a2_doodle001.png a2_doodle008.png > a2_doodle001_008_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle001.png a2_doodle008.png a2_doodle001.png > a2_doodle001_008_diff.inc
 
 ###
 
 a2_doodle001_003_diff.inc:	a2_doodle001.png a2_doodle003.png
-	$(PNG_TO_HGR_DIFF) a2_doodle001.png a2_doodle003.png > a2_doodle001_003_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle001.png a2_doodle003.png a2_doodle002.png > a2_doodle001_003_diff.inc
 
 a2_doodle003_005_diff.inc:	a2_doodle003.png a2_doodle005.png
-	$(PNG_TO_HGR_DIFF) a2_doodle003.png a2_doodle005.png > a2_doodle003_005_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle003.png a2_doodle005.png a2_doodle004.png > a2_doodle003_005_diff.inc
 
 a2_doodle005_007_diff.inc:	a2_doodle005.png a2_doodle007.png
-	$(PNG_TO_HGR_DIFF) a2_doodle005.png a2_doodle007.png > a2_doodle005_007_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle005.png a2_doodle007.png a2_doodle006.png > a2_doodle005_007_diff.inc
 
 a2_doodle007_001_diff.inc:	a2_doodle007.png a2_doodle001.png
-	$(PNG_TO_HGR_DIFF) a2_doodle007.png a2_doodle001.png > a2_doodle007_001_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle007.png a2_doodle001.png a2_doodle008.png > a2_doodle007_001_diff.inc
 
 ####
 
 a2_doodle002_004_diff.inc:	a2_doodle002.png a2_doodle004.png
-	$(PNG_TO_HGR_DIFF) a2_doodle002.png a2_doodle004.png > a2_doodle002_004_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle002.png a2_doodle004.png a2_doodle003.png > a2_doodle002_004_diff.inc
 
 a2_doodle004_006_diff.inc:	a2_doodle004.png a2_doodle006.png
-	$(PNG_TO_HGR_DIFF) a2_doodle004.png a2_doodle006.png > a2_doodle004_006_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle004.png a2_doodle006.png a2_doodle005.png > a2_doodle004_006_diff.inc
 
 a2_doodle006_008_diff.inc:	a2_doodle006.png a2_doodle008.png
-	$(PNG_TO_HGR_DIFF) a2_doodle006.png a2_doodle008.png > a2_doodle006_008_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle006.png a2_doodle008.png a2_doodle007.png > a2_doodle006_008_diff.inc
 
 a2_doodle008_002_diff.inc:	a2_doodle008.png a2_doodle002.png
-	$(PNG_TO_HGR_DIFF) a2_doodle008.png a2_doodle002.png > a2_doodle008_002_diff.inc
+	$(PNG_TO_HGR_DIFF) a2_doodle008.png a2_doodle002.png a2_doodle001.png > a2_doodle008_002_diff.inc
 
 
 ####

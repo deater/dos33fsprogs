@@ -186,7 +186,7 @@ wait_mockingboard:
 	lda	FRAME_RATE
 	jmp	wait_ticks
 
-.include "../patch_graphics.s"
+.include "../patch_graphics_v1.s"
 .include "../change_palette.s"
 .include "../sound_bars.s"
 

@@ -8,7 +8,7 @@ PNG_TO_DHGR4 = ../../../../../utils/hgr-utils/png2dhgr4
 PNG2GR = ../../../../../utils/gr-utils/png2gr
 HGR_SPRITE = ../../../../../utils/hgr-utils/hgr_make_sprite
 LINKER_SCRIPTS = ../../../../../linker_scripts/
-PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff
+PNG_TO_HGR_DIFF = ../../../../../utils/hgr-utils/png2hgr_diff -w1
 PNG_TO_HGR_RAW = ../../../../../utils/hgr-utils/png2hgr_raw
 
 all:	\

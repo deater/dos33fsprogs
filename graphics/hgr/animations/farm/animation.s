@@ -77,18 +77,22 @@ load_bg:
 
 	jsr	zx02_full_decomp
 
-	lda	#0
-	sta	DRAW_PAGE
+	lda	#$0
 	sta	WHICH
 
 	;====================================
 	; patch page2
+
+	lda	#$20
+	sta	DRAW_PAGE
 
 	ldy	#>patch_page1_2
 	ldx	#<patch_page1_2
 
 	jsr	patch_graphics
 
+	lda	#$0
+	sta	DRAW_PAGE
 
 	;=================================
 	; init graphics
@@ -206,7 +210,7 @@ wait_nomock:
 ;	jmp	wait_ticks
 
 
-.include "../patch_graphics.s"
+.include "../patch_graphics_v1.s"
 .include "../change_palette.s"
 
 farm01_farm03_diff: .include "graphics/a2_gentfish_farm01_03_diff.inc"

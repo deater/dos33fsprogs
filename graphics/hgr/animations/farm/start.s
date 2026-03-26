@@ -1,4 +1,4 @@
-; surprise startup
+; farm startup
 
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
@@ -37,6 +37,8 @@ farm_start:
 	jsr	move_and_print_list
 
 
+;	jsr	wait_until_keypress
+
 	;=========================================
 	;=========================================
 	; start loading the demo
@@ -62,6 +64,20 @@ farm_start:
 
 ;	jsr	$6000
 
+
+	;=======================
+	;=======================
+	; Run ANIMATION
+	;=======================
+	;=======================
+
+	; load from disk
+
+	lda	#PART_ANIMATION
+	sta	WHICH_LOAD
+	jsr	load_file
+
+
 	;=======================
 	;=======================
 	; setup graphics
@@ -74,28 +90,6 @@ farm_start:
 
 	bit	PAGE2			; display page1
 
-;oog:
-;	jsr	wait_until_keypress
-;	jsr	hgr_page_flip
-
-;	jmp	oog
-
-
-
-
-
-	;=======================
-	;=======================
-	; Run ANIMATION
-	;=======================
-	;=======================
-
-	; load from disk
-
-	lda	#PART_ANIMATION	; Load bucket
-	sta	WHICH_LOAD
-	jsr	load_file
-
 	; Run Animation
 
 	jsr	$6000
@@ -105,5 +99,6 @@ blah:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"LOADING FARM",0
+	.byte 0,0,"LOADING ANIMATION",0
+	.byte 0,2,"ORIGINAL GRAPHICS BY @GENTFISH",0
 	.byte $FF
