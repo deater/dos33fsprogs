@@ -6,17 +6,17 @@ EMPTY_DISK = ../../../../empty_disk/empty.dsk
 TOKENIZE = ../../../../utils/asoft_basic-utils/tokenize_asoft
 LINKER_SCRIPTS = ../../../../linker_scripts/
 
-all:	farm.dsk
+all:	town.dsk
 
-farm.dsk:	QBOOT QLOAD \
+town.dsk:	QBOOT QLOAD \
 	qload.inc \
 	ANIMATION
-	cp $(EMPTY_DISK) farm.dsk
-	$(DOS33_RAW) farm.dsk 0 0 QBOOT		0 1
-	$(DOS33_RAW) farm.dsk 0 2 QBOOT		1 1
-	$(DOS33_RAW) farm.dsk 0 4 QBOOT		2 1
-	$(DOS33_RAW) farm.dsk 1 0 QLOAD		0 0
-	$(DOS33_RAW) farm.dsk 5 0 ANIMATION 0 0
+	cp $(EMPTY_DISK) town.dsk
+	$(DOS33_RAW) town.dsk 0 0 QBOOT		0 1
+	$(DOS33_RAW) town.dsk 0 2 QBOOT		1 1
+	$(DOS33_RAW) town.dsk 0 4 QBOOT		2 1
+	$(DOS33_RAW) town.dsk 1 0 QLOAD		0 0
+	$(DOS33_RAW) town.dsk 5 0 ANIMATION 0 0
 
 ####
 
