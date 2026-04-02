@@ -5,23 +5,8 @@
 		(run_length maxes out at 254 bytes)
 		run_length,dest_offsetl,dest_offseth, (repeated) diff bytes
         $ff at end
-
-   v2 format:
-	repeat:
-		max run length 32
-		run_length top two bits
-		00 = immediate
-			run_length dest_offset_add byte byte byte
-
-		10 = run from current
-			run_length dest_offset_add addrl addrh
-
-		11 = run from other page
-
-		merge runs together
-
-
 */
+
 
 #define VERSION "0.0.1"
 
@@ -52,6 +37,57 @@ void print_stats(int differences, int diff_bytes, int max_run) {
 }
 
 
+static int hgr_offset_table[48]={
+        0x0000,0x0080,0x0100,0x0180,0x0200,0x0280,0x0300,0x0380,
+        0x0028,0x00A8,0x0128,0x01A8,0x0228,0x02A8,0x0328,0x03A8,
+        0x0050,0x00D0,0x0150,0x01D0,0x0250,0x02D0,0x0350,0x03D0,
+};
+
+static int hgr_lookup[192];
+
+static int hgr_offset(int y) {
+
+        int temp,temp2,address;
+        temp=y/8;
+        temp2=y%8;
+
+        temp2=temp2*0x400;
+
+        address=hgr_offset_table[temp]+temp2;
+
+        return address;
+}
+
+static int hgr_lookup_init(void) {
+
+	int i;
+	for(i=0;i<192;i++) hgr_lookup[i]=hgr_offset(i);
+
+	return 0;
+}
+
+#define HGR_LOOKUP_X	0
+#define HGR_LOOKUP_Y	1
+
+
+int hgr_addr_to_xy(int addr, int which) {
+
+	int i;
+	int tempx,tempy;
+
+	for(i=0;i<192;i++) {
+		if ((addr>hgr_lookup[i])&&(addr<hgr_lookup[i]+40)) break;
+	}
+
+	tempy=i;
+	tempx=addr-hgr_lookup[i];
+
+	if (which==HGR_LOOKUP_X) return tempx;
+	else return tempy;
+
+}
+
+
 
 int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2) {
 
@@ -71,8 +107,12 @@ int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2) {
 			else {
 
 			}
-//			fprintf(stderr,"; Difference at %x: %02x %02x\n",
-//				i,apple2_image1[i],apple2_image2[i]);
+			if (debug) {
+				fprintf(stderr,"; Difference at $%04x (%d,%d): %02x -> %02x\n",
+					i,hgr_addr_to_xy(i,HGR_LOOKUP_X)*7,
+					hgr_addr_to_xy(i,HGR_LOOKUP_Y),
+					apple2_image1[i],apple2_image2[i]);
+			}
 			differences++;
 		}
 		/* ended a diff */
@@ -109,21 +149,51 @@ int hgr_diff_v1(unsigned char *apple2_image1,unsigned char *apple2_image2) {
 	return diff_bytes;
 }
 
+
+/*
+   v2 format:
+	repeat:
+
+		dest_offset
+		0000 0000 = done
+
+		max run length 32
+
+			run_length
+
+			run_length top two bits
+
+		00 = immediate
+			run_length dest_offset_add byte byte byte
+
+		10 = run from current
+			run_length dest_offset_add addrl addrh
+
+		11 = run from other page
+
+		merge runs together
+
+
+*/
+
+
+#define MAX_DIFF 31
+
+
 int hgr_diff_v2(unsigned char *apple2_old,
 		unsigned char *apple2_new,
 		unsigned char *apple2_alt) {
 
-	int i,j;
-	int k;
+	int i;
+//	int j,k;
 
 //	int found=0;
 //	int last_diff=0;
-//	int diff_start=0,in_diff=0,diff_diff=0,run_length=0;
-	int local_diff;
-	int differences=0,max_run=0,diff_bytes=0;
-	int max_diff;
+//	int diff_start=0,in_diff=0,diff_diff=0
+	int run_length=1,addr_last=-1;
 
-#define MAX_DIFF 31
+	int differences=0,max_run=0,diff_bytes=0;
+//	int max_diff,local_diff;
 
 	i=0;
 	while(i<8192) {
@@ -131,7 +201,14 @@ int hgr_diff_v2(unsigned char *apple2_old,
 		/* If not match, find maximum diff length */
 
 		if (apple2_old[i]!=apple2_new[i]) {
+			printf(".byte $%0X,$%0X,$%0X ; $%x\n",
+				i-addr_last-1,run_length,apple2_new[i],i);
+			differences++;
+			diff_bytes+=3;
+			addr_last=i;
+		}
 
+#if 0
 			max_diff=MAX_DIFF;
 			if (i+max_diff>8192) max_diff=8192-i;
 
@@ -158,10 +235,12 @@ int hgr_diff_v2(unsigned char *apple2_old,
 			i+=max_diff;
 		}
 		else {
-			i++;
-		}
+#endif
+		i++;
+
+
 	}
-	printf(".byte $ff\n");
+	printf(".byte $FF\n");
 	diff_bytes++;
 
 	print_stats(differences,diff_bytes,max_run);
@@ -371,24 +450,6 @@ static void print_help(char *name,int version) {
 	exit(1);
 }
 
-static int hgr_offset_table[48]={
-	0x0000,0x0080,0x0100,0x0180,0x0200,0x0280,0x0300,0x0380,
-	0x0028,0x00A8,0x0128,0x01A8,0x0228,0x02A8,0x0328,0x03A8,
-	0x0050,0x00D0,0x0150,0x01D0,0x0250,0x02D0,0x0350,0x03D0,
-};
-
-static int hgr_offset(int y) {
-
-	int temp,temp2,address;
-	temp=y/8;
-	temp2=y%8;
-
-	temp2=temp2*0x400;
-
-	address=hgr_offset_table[temp]+temp2;
-
-	return address;
-}
 
 /* Count both black/white variants */
 static int color_high(int color) {
@@ -545,6 +606,8 @@ int main(int argc, char **argv) {
 
 	char *filename_old=NULL,*filename_new=NULL,*filename_alt=NULL;
 	int version=0;
+
+	hgr_lookup_init();
 
 	/* Parse command line arguments */
 

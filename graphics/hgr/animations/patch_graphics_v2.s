@@ -5,7 +5,10 @@
 
 	; OUTH:OUTL = output
 
-	; patches DRAW_PAGE, using !DRAW_PAGE
+	; initial
+	;	addr_offset = 0, end
+	;	run_length top bits 00:
+	;		addr offset, run_length, immediate ...
 
 patch_graphics:
 
@@ -22,14 +25,41 @@ patch_graphics:
 	lda	#$0
 	sta	OUTL
 
-;	ldy	#0
+	ldy	#0
 patch_graphics_loop:
 	jsr	get_next
 
-	cmp	#$ff				; $FF means done
+	cmp	#$FF				; $FF means done
 	beq	done_patch_graphics_loop
 
-	cmp	#$00
+	; add in addr_offset
+
+	clc
+	adc	OUTL
+	sta	OUTL
+	lda	OUTH
+	adc	#0
+	sta	OUTH
+
+	; get run_length
+
+	jsr	get_next
+	tax
+
+immediate_loop:
+	jsr	get_next
+
+	sta	(OUTL),Y
+	inc	OUTL
+	bne	outl_noflo
+	inc	OUTH
+outl_noflo:
+
+	dex
+	bne	immediate_loop
+
+.if 0
+	cmp	#$FF
 	bpl	regular_rle
 
 	;=====================================
@@ -113,9 +143,10 @@ patch_length_smc:
 
 	jmp	patch_graphics_loop
 
+
+.endif
+	jmp	patch_graphics_loop
 done_patch_graphics_loop:
-
-
 	rts
 
 
