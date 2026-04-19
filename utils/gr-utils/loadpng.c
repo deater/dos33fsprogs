@@ -43,7 +43,7 @@ static int convert_color(int color, char *filename) {
 		default:
 			fprintf(stderr,"Unknown color %x, file %s\n",
 				color,filename);
-			exit(-1);
+			return 16;
 			break;
 	}
 
@@ -174,21 +174,24 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-	if (debug) {
+//	if (debug) {
 		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
 		if (color_type==PNG_COLOR_TYPE_RGB) printf("Type RGB\n");
 		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) printf("Type RGBA\n");
 		else if (color_type==PNG_COLOR_TYPE_PALETTE) printf("Type palette\n");
 		printf("Generating output size %d x %d\n",*xsize,*ysize);
-	}
+//	}
 
 //        number_of_passes = png_set_interlace_handling(png_ptr);
 	png_read_update_info(png_ptr, info_ptr);
 
+	fprintf(stderr,"Rowbytes: %ld\n",png_get_rowbytes(png_ptr,info_ptr));
+
 	row_pointers = (png_bytep*) malloc(sizeof(png_bytep) * height);
 	for (y=0; y<height; y++) {
 		/* FIXME: do we ever free these? */
-		row_pointers[y] = (png_byte*) malloc(png_get_rowbytes(png_ptr,info_ptr));
+		row_pointers[y] = (png_byte*)
+			malloc(png_get_rowbytes(png_ptr,info_ptr));
 	}
 
 	png_read_image(png_ptr, row_pointers);
@@ -204,25 +207,36 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	out_ptr=image;
 
 	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
+		if (debug) fprintf(stderr,"PNG_COLOR_TYPE_RGB_ALPHA\n");
+		fprintf(stderr,"Width=%d, xadd=%d, yadd=%d\n",
+				width,xadd,yadd);
+
 		for(y=ystart;y<height;y+=yadd) {
+
 			for(x=0;x<width;x+=xadd) {
 
 				/* top color */
-				color=	(row_pointers[y][x*xadd*4]<<16)+
-					(row_pointers[y][x*xadd*4+1]<<8)+
-					(row_pointers[y][x*xadd*4+2]);
+				color=	(row_pointers[y][x*4]<<16)+
+					(row_pointers[y][x*4+1]<<8)+
+					(row_pointers[y][x*4+2]);
 				if (debug) {
-					printf("%x ",color);
+					fprintf(stderr,"%x ",color);
 				}
 
 				a2_color=convert_color(color,filename);
+				if (a2_color>15) {
+					fprintf(stderr,
+						"Unknown color at %d,%x\n",
+						x,y);
+				}
+
 
 				/* bottom color */
-				color=	(row_pointers[y+1][x*xadd*4]<<16)+
-					(row_pointers[y+1][x*xadd*4+1]<<8)+
-					(row_pointers[y+1][x*xadd*4+2]);
+				color=	(row_pointers[y+1][x*4]<<16)+
+					(row_pointers[y+1][x*4+1]<<8)+
+					(row_pointers[y+1][x*4+2]);
 				if (debug) {
-					printf("%x ",color);
+					fprintf(stderr,"%x ",color);
 				}
 
 				a2_color|=(convert_color(color,filename)<<4);
@@ -231,9 +245,12 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 				out_ptr++;
 			}
 			if (debug) printf("\n");
+
 		}
+
 	}
 	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
+		if (debug) fprintf(stderr,"PNG_COLOR_TYPE_PALETTE\n");
 		for(y=ystart;y<height;y+=yadd) {
 			for(x=0;x<width;x+=xadd) {
 
@@ -294,8 +311,49 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 			if (debug) printf("\n");
 		}
 	}
+	else if (color_type==PNG_COLOR_TYPE_RGB) {
+		if (debug) fprintf(stderr,"PNG_COLOR_TYPE_RGB\n");
+		fprintf(stderr,"Width=%d, xadd=%d, yadd=%d\n",
+				width,xadd,yadd);
+
+		for(y=ystart;y<height;y+=yadd) {
+			for(x=0;x<width;x+=xadd) {
+
+				/* top color */
+				color=	(row_pointers[y][x*3]<<16)+
+					(row_pointers[y][x*3+1]<<8)+
+					(row_pointers[y][x*3+2]);
+				if (debug) {
+					printf("t (%d %d) 0x%x ",
+						x,xadd,color);
+				}
+
+				a2_color=convert_color(color,filename);
+				if (a2_color>15) {
+					fprintf(stderr,
+						"Unknown color at %d,%d\n",
+						x,y);
+				}
+
+				/* bottom color */
+				color=	(row_pointers[y+1][x*3]<<16)+
+					(row_pointers[y+1][x*3+1]<<8)+
+					(row_pointers[y+1][x*3+2]);
+				if (debug) {
+					printf("b0x%x ",color);
+				}
+
+				a2_color|=(convert_color(color,filename)<<4);
+
+				*out_ptr=a2_color;
+				out_ptr++;
+			}
+			if (debug) printf("\n");
+		}
+	}
 	else {
-		printf("Unknown color type\n");
+		fprintf(stderr,"Unknown color type\n");
+		exit(-1);
 	}
 
 	/* Stripe test image */
