@@ -70,16 +70,6 @@ game_loop:
 	jsr	update_screen
 
 
-	;=======================
-	; increment frame
-
-	inc	FRAME
-
-	;====================
-	; increment flame
-
-	jsr	increment_flame
-
 	;====================
 	; page flip
 
@@ -115,6 +105,17 @@ really_level_over:
 	;=============================
 
 update_screen:
+
+	;=======================
+	; increment frame
+
+	inc	FRAME
+
+	;====================
+	; increment flame
+
+	jsr	increment_flame
+
 
 	;===========================
 	; copy bg to current screen

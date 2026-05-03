@@ -4,8 +4,8 @@
 ; check borders when leaving
 
 
-	; check if going outside cottage
-        ;       inside_lady->outside_cottage
+	; check if going outside inn
+        ;       inside_inn->outside_inn
 check_outside:
 
 	; need to position to correct x/y/facing co-ords

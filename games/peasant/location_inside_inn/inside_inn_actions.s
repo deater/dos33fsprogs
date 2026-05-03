@@ -63,8 +63,8 @@ inside_inn_look_day:
 	beq	inn_look_at_man
 	cmp	#NOUN_WINDOW
 	beq	inn_look_at_window
-	cmp	#NOUN_PILLOW
-	beq	inn_look_at_pillow
+;	cmp	#NOUN_PILLOW
+;	beq	inn_look_at_pillow
 	cmp	#NOUN_RUG
 	beq	inn_look_at_rug
 	cmp	#NOUN_CARPET
@@ -442,11 +442,11 @@ inn_get_room_on_fire:
 	jmp	finish_parse_message
 
 inn_get_room_have_robe:
-	lda	GAME_STATE_1
-	and	#NIGHT
-	beq	inn_get_room_have_room_day
+;	lda	GAME_STATE_1
+;	and	#NIGHT
+;	beq	inn_get_room_have_room_day
 
-	jmp	parse_common_get
+;	jmp	parse_common_get
 
 inn_get_room_have_room_day:
 	lda	GAME_STATE_2
@@ -476,7 +476,7 @@ inn_get_room_have_room_day:
 	;==========================
 	; Make it night
 	lda	GAME_STATE_1
-	ora	#(NIGHT|ALREADY_GOT_ROOM)
+	ora	#(NIGHT)
 	sta	GAME_STATE_1
 
 	lda	GAME_STATE_3
@@ -499,6 +499,10 @@ inn_get_room_have_room_day:
 	lda	GAME_STATE_1
 	and	#ALREADY_GOT_ROOM
 	bne	inn_get_room_skip_points
+
+	lda	GAME_STATE_1
+	ora	#(ALREADY_GOT_ROOM)
+	sta	GAME_STATE_1
 
 	lda	#3
 	jsr	score_points

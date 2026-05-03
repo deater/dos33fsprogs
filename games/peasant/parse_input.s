@@ -1257,30 +1257,49 @@ last_bg_h:	.byte $00
 	; partial message step
 	;======================
 	;======================
+	; message is in X,Y
 
 partial_message_step:
-	pha
-	txa
-	pha
-	tya
-	pha
+;	pha
+;	txa
+;	pha
+;	tya
+;	pha
+
+	stx	pms_x_smc+1
+	sty	pms_y_smc+1
+
+partial_message_loop:
 
 update_screen_smc:
 	jsr	$ffff
 
-	pla
-	tay
-	pla
-	tax
-	pla
+;	pla
+;	tay
+;	pla
+;	tax
+;	pla
 
-
+pms_x_smc:
+	ldx	#$00
 	stx	OUTL
+pms_y_smc:
+	ldy	#$00
 	sty	OUTH
+
 	jsr	print_text_message
 	jsr	hgr_page_flip
-	bit	KEYRESET
-	jsr	wait_until_keypress
+
+	lda	KEYPRESS				; 4
+	bmi	donedone
+
+	jmp	partial_message_loop
+
+donedone:
+	bit	KEYRESET	; clear the keyboard buffer
+
+;	bit	KEYRESET
+;	jsr	wait_until_keypress
 
 	rts
 
