@@ -1,0 +1,286 @@
+; Apple II  256B
+
+; by deater (Vince Weaver) <vince@deater.net>	/ DsR
+
+; Outline 2026
+
+.include "zp.inc"
+.include "hardware.inc"
+
+blue_flame:
+
+	; clear both pages of graphics
+;	jsr	HGR
+	jsr	HGR2
+
+do_letters:
+
+	;=========================================
+	; SETUP
+	;=========================================
+
+	jsr	HGR2			; set/clear HGR page2 to black
+					; Hi-res graphics, no text at bottom
+					; Y=0, A=$60 after this call
+
+	;==============================
+	; print deater
+
+	lda	#28			; y position
+	sta	YPOS
+
+;	lda	#$ff			; start on right hand side
+;	sta	start_smc+1		; default
+
+;	lda	#$fc			; movement size to add
+;	sta	add_smc+1		;
+
+;	lda	#<desire_ends+1		; default
+;	sta	type_smc+1
+
+;	lda	#<deater_offsets	; default
+;	sta	offsets_smc+1
+
+	jsr	slide_in
+
+
+	;==============================
+	; print maze
+
+	lda	#28			; start on left hand side
+	sta	start_smc+1
+
+	lda	#4			; movement size to add
+	sta	add_smc+1
+
+	lda	#128			; Y location
+	sta	YPOS
+
+	lda	#<ma2e_ends		; point to the end table
+	sta	type_smc+1
+
+	lda	#<ma2e_offsets		; point to the shape offset
+	sta	offsets_smc+1
+
+	jsr	slide_in		; slide it
+
+;	jsr	zoom_in			; just fall through
+
+	; A is $FF here
+
+	;=========================
+	; zoom in
+	;=========================
+
+zoom_in:
+
+	lda	#0			; reset rotate and pointer
+	sta	ROTATE
+	sta	WHICH
+
+outer_zoom_loop:
+
+	lda	WHICH
+	tax				; update offset
+
+	lda	desire_offsets,X	; get offsets in place
+	sta	xdraw_offset_smc+1	; setup xdraw
+
+	bmi	done2			; if negative, done
+
+	lda	#36			; start big
+	sta	HGR_SCALE
+
+	lda	desire_ends,X		; X Position
+	sta	XPOS
+
+	lda	#76			; Y position
+	sta	YPOS
+
+
+inner_zoom_loop:
+
+	jsr	draw_wait_erase
+
+	dec	HGR_SCALE		; zoom in
+	dec	HGR_SCALE
+
+	lda	HGR_SCALE
+
+	cmp	#10			; stop if big enough
+	bcs	inner_zoom_loop
+
+	jsr	xdraw			; leave it on screen
+
+	inc	WHICH			; move to next letter
+
+	bpl	outer_zoom_loop		; bra
+
+done2:
+
+
+
+
+
+draw_wait_erase:
+	jsr	xdraw			; draw
+
+	lda	#100			; wait a bit
+	jsr	WAIT
+
+	jmp	xdraw			; draw for good
+
+
+	;=========================
+	; slide in
+	;=========================
+
+slide_in:
+
+	lda	#4
+	sta	HGR_SCALE
+
+	lda	#0
+	sta	WHICH
+
+outer_slide_loop:
+
+start_smc:
+	lda	#252			; start position
+	sta	XPOS			; 252 instead of 279 for size reasons
+
+	lda	WHICH
+	tax
+type_smc:
+	lda	desire_ends+1,X
+	sta	ends_smc+1
+
+offsets_smc:
+	lda	deater_offsets,X	; point to next
+	sta	xdraw_offset_smc+1
+
+	bmi	done
+
+slide_loop:
+
+	jsr	draw_wait_erase
+
+	clc
+	lda	XPOS
+add_smc:
+	adc	#$FC
+	sta	XPOS
+
+	lsr				; derive rotation from location
+	lsr
+	and	#$f
+	tax
+	lda	rotate_pattern,X
+	sta	ROTATE
+
+	lda	XPOS			; see if hit end
+ends_smc:
+	cmp	#65
+	bne	slide_loop
+
+	jsr	xdraw			; one last draw so remains onscreen
+
+	inc	WHICH			; move to next letter
+
+	bpl	outer_slide_loop	; bra (WHICH always positive)
+done:
+	rts
+
+
+	;=======================
+	; xdraw
+	;=======================
+
+xdraw:
+	ldy	#0		; guess we can't draw far right edge
+	ldx	XPOS
+	lda	YPOS
+	jsr	HPOSN		; X= (y,x) Y=(a)
+
+	clc			; get shape table from offset
+	lda	#<shape_table_d
+xdraw_offset_smc:
+	adc	#0
+	tax
+	ldy	#>shape_table_d		; assume always in same page
+
+	lda	ROTATE
+
+	jmp	XDRAW0			; tail call
+
+
+deater_offsets:
+	.byte 0		; D
+	.byte 8		; E
+	.byte 15	; A
+	.byte 23	; T
+	.byte 8		; E
+	.byte 30	; R
+	.byte $FF	; end
+
+
+ma2e_offsets:
+	.byte 8		; E
+	.byte 47	; 2
+	.byte 15	; A
+	.byte 39	; M
+	.byte $FF	; end
+
+
+desire_offsets:
+	.byte 67	; -
+	.byte 0		; D
+	.byte 8		; E
+	.byte 54	; S
+	.byte 61	; I
+	.byte 30	; R
+	.byte 8		; E
+	.byte 67	; -
+	.byte $FF	; end
+
+desire_ends:
+	; center of screen is 140, offset by 16 each way
+	.byte	28,60,92,124,156,188,220,252
+
+ma2e_ends:
+	.byte	 188,156,124,92
+
+rotate_pattern:
+	; offset by 3 to give original effect
+;	.byte 0,3,6
+	.byte 9, 9,6,3,0, 0,$FD,$FA,$F7, $F7,$FA,$FD, 0
+	.byte 0,3,6
+
+
+shape_table:
+
+shape_table_d:	.byte	$23,$2c,$2e,$36, $37,$27,$04,$00	; 0
+shape_table_e:	.byte	$27,$2c,$95,$12, $3f,$24,$00		; 8
+shape_table_a:	.byte	$23,$2c,$35,$96, $24,$3f,$36,$00	; 15
+shape_table_t:	.byte	$12,$24,$e4,$2b, $2d,$05,$00		; 23
+shape_table_r:	.byte	$97,$24,$24,$2d, $36,$37,$35,$06,$00	; 30
+shape_table_m:	.byte	$24,$37,$36,$4e, $24,$24,$07,$00	; 39
+shape_table_2:	.byte	$25,$3c,$97,$39, $36,$2d,$00		; 47
+shape_table_s:	.byte	$27,$2c,$95,$2b, $36,$3f,$00		; 54
+shape_table_i:	.byte	$d2,$ed,$24,$e4, $2d,$00		; 61
+shape_table_hline:	.byte	$2b,$05,$00			; 67
+
+
+
+
+;shape_table_vline:	.byte	$12,$24,$24,$00			; 67
+;shape_table_o:	.byte	$23,$2c,$35,$36, $3e,$27,$04,$00	;
+;shape_table_v:	.byte	$18,$30,$36,$35, $28,$24,$04,$00	;
+
+
+; O U T L I N E
+; o U T L I n E
+;
+;
+;
+;
