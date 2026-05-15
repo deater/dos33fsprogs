@@ -1,0 +1,19 @@
+Hectic // A 256 Byte  Apple II Intro 
+
+Outline 2026
+
+by deater / dsr
+
+code:      deater
+
+Does some fancy mid-screen mode changes
+for various effects.
+
+Requires an Apple IIe because it reads
+the IIe VSYNC register.
+
+The sync doesn't end up where I think
+it should on MAME. Try Applewin
+instead
+
+It's been hectic times

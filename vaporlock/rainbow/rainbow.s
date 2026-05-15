@@ -12,6 +12,7 @@
 ; 259 bytes -- initialize HGR_SCALE inside the memory copy
 ; 258 bytes -- re-arrange params to draw_gear to remove txa
 ; 257 bytes -- make smaller a ZP location not smc
+; 255 bytes -- use HGR to init Y to 0
 
 ; zero page locations
 H2		= $2C
@@ -29,6 +30,7 @@ HGR_ROTATION	= $E8
 
 FAKE_NOP	= $F0
 
+ROTSMC		= $F8
 SMALLER		= $F9
 ROTATION	= $FA
 SCALE		= $FB
@@ -96,9 +98,11 @@ rainbow_loop:
 
 memory_copy:
 
+	jsr	HGR		; hack!  Y is 0 after
+
 	; copy mem from A1H/L thru A2H/L to A4H/L (A trashed, Y start 0)
 
-	ldy	#0		; 2
+;	ldy	#0		; 2
 
 	sty	A1L		; 2
 	sty	A2L		; 2
@@ -125,7 +129,7 @@ memory_copy:
 
 	; page 1
 
-	jsr	HGR
+
 
 	jsr	draw_scene
 
@@ -216,20 +220,20 @@ hack:
 	lda	#$0A	; hides 'asl a'
 	bpl	hack+1
 
+	;========================
 	; switch to HIRES
+	;========================
 
 	bit	HIRES		; 4	; 28
 
 	; delay ?? cycles then switch to LORES
 
-;	nop			; 2
-;	nop			; 2
-;	nop			; 2
-;	nop			; 2
-;	nop			; 2
+;	nop
+;	nop
 
-	inc	FRAME		; 5	; 33 ; nop5
-	dec	FRAME		; 5	; 38 ; nop5
+	lda	$0
+
+;	inc	FRAME		; 5	; 33 ; nop5
 
 
 	; create zig-zags
@@ -251,12 +255,16 @@ less:
 				; 50 / 52
 more_done:
 
+	;==============================
+	; switch back to LORES
+	;==============================
+
 	bit	LORES		; 4	; 54 / 56
 
-;	lda	$0		; 3	; 57 / 59	; nop3
-;	nop
+	dec	FAKE_NOP	; 5	; 38 ; nop5
 
 	inc	$F0		; 5			; nop5
+	nop
 
 	; decrement row and see if at end
 
@@ -475,10 +483,12 @@ draw_gear:
 
 gear1_loop:
 
-	clc
+	clc			; sadly needed
 	lda	rot_smc+1
+;	lda	ROTSMC
 	adc	SMALLER
 	sta	rot_smc+1
+;	sta	ROTSMC
 
 not_smaller:
 
@@ -488,6 +498,7 @@ which_smc:
 				; this is always 0 if in zero page
 
 rot_smc:
+;	lda	ROTSMC
 	lda	#1		; ROT=1 at first
 
 	jsr	XDRAW0		; XDRAW 1 AT X,Y
