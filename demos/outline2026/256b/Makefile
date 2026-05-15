@@ -11,7 +11,7 @@ all:	blue_flame.dsk
 
 ###
 
-blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY
+blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY RAINBOW
 	cp $(EMPTYDISK) blue_flame.dsk
 	$(DOS33) -y blue_flame.dsk SAVE A HELLO
 	$(DOS33) -y blue_flame.dsk SAVE A TEST.BAS
@@ -19,6 +19,7 @@ blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x8000 BLUE_FLAME
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BLACKHOLE_64
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 ENTROPY
+	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 RAINBOW
 #	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BF
 
 ###
@@ -54,6 +55,14 @@ ENTROPY:	entropy.o
 
 entropy.o:	entropy.s
 	ca65 -o entropy.o entropy.s -l entropy.lst
+
+###
+
+RAINBOW:	rainbow.o
+	ld65 -o RAINBOW rainbow.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+rainbow.o:	rainbow.s
+	ca65 -o rainbow.o rainbow.s -l rainbow.lst
 
 
 
