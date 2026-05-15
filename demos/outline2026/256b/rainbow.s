@@ -57,6 +57,8 @@ VBLANK          = $C019 ; *not* RDVBL (VBL signal low) (iie, opposite iigs)
 
 rainbow_effect:
 
+	jsr	HGR2
+
 	bit	LORES			; switch to lores (necessary?)
 	bit	PAGE1			; switch to PAGE1 (necessary?)
 	bit	SET_GR			; set graphics mode (necessary?)
@@ -215,35 +217,37 @@ start_text:
 	; delay first to avoid text tearing
 	; 5071
 	; -4   set_text
+	; -15  flip page
 	; -22  smc the string
 	; -21  load new char
 	; -841 string move
 	; -5   inc frame
 	; -9   end loop
 	;===============
-	; 4169
+	; 4154
 
-	; delay = 4169
+	; delay = 4154
 
 
 	;=============================
 	; delay!
 	;=============================
 
-	; 9*(256+204)=4140
+	; 9*(256+202)=4122
 
 	lda	#1		; 2
-	ldy	#204		; 2
-	jsr	size_delay	; 20+4140+4 = 4164
+	ldy	#202		; 2
+	jsr	size_delay	; 20+4122+4 = 4146
 
 	; padding
 
-	lda	$0		; 3
 	nop			; 2
-
+	nop
+	nop
+	nop
 
 				;=============
-				; 4164 + 5 = 4169
+				; 4146 + 8 = 4152
 
 
 	;================================================
@@ -252,6 +256,15 @@ start_text:
 	; note it's too fast, only do this one time in 4?
 
 
+flip_page:
+	lda	FRAME			; 3
+	lsr				; 2
+	lsr				; 2
+	and	#1			; 2
+	tay				; 2
+	lda	PAGE1,Y			; 4
+					;====
+					; 15
 draw_string:
 
 	; see if should move
