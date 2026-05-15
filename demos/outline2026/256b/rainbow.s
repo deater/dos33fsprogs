@@ -1,11 +1,8 @@
-; rainbow
+; hectic
 
 ; by Vince `deater` Weaver / dSr
 
-; For ???
-
-; 177 bytes: initial
-
+; For Outline 2026
 
 ; zero page locations
 H2		= $2C
@@ -18,7 +15,7 @@ A2H		= $3F
 A4L		= $42
 A4H		= $43
 
-HGR_COLOR	= $E4
+;HGR_COLOR	= $E4
 HGR_SCALE	= $E7
 HGR_ROTATION	= $E8
 
@@ -35,14 +32,14 @@ FRAME		= $FF
 HGR2		= $F3D8
 HGR		= $F3E2
 HPOSN		= $F411
-DRAW0		= $F601
+;DRAW0		= $F601
 XDRAW0		= $F65D
 XDRAW1		= $F661
-HPLOT0          = $F457
+;HPLOT0          = $F457
 
 HLINE		= $F819			; HLINE Y,$2C at A
-VLINE		= $F828			; VLINE A,$2D at Y
-TABV		= $FB5B			; go to A
+;VLINE		= $F828			; VLINE A,$2D at Y
+;TABV		= $FB5B			; go to A
 
 SETCOL		= $F864
 
@@ -50,8 +47,8 @@ MOVE		= $FE2C		; move mem from A1 thru A2 to A4 (A trashed, Y start 0)
 
 SET_GR		= $C050
 SET_TEXT	= $C051
-FULLGR		= $C052
-TEXTGR		= $C053
+;FULLGR		= $C052
+;TEXTGR		= $C053
 PAGE1		= $C054
 PAGE2		= $C055
 LORES		= $C056	; Enable LORES graphics
@@ -297,9 +294,11 @@ start_text:
 
 
 flip_page:
-	lda	FRAME			; 3
+	lda	FRAME_DIV		; 3
 	lsr				; 2
-	lsr				; 2
+;	lsr				; 2
+;	nop
+	nop
 	and	#1			; 2
 	tay				; 2
 	lda	PAGE1,Y			; 4
