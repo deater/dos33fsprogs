@@ -70,7 +70,7 @@ hgr_draw_sprite_bg_mask_common:
 
 	lda	CURSOR_Y
 
-	cmp	#48
+	cmp	#48			; force to be at least 48
 	bcs	prio_big_enough
 
 	lda	#48
@@ -82,8 +82,9 @@ prio_big_enough:
 	lsr
 	lsr
 	clc
-	adc	#2
-	sta	PEASANT_PRIORITY
+
+	adc	#2			; skip colors 0/1
+	sta	PEASANT_PRIORITY	; 1=never mask, 0 used to be collision
 
 
 	;===============================
