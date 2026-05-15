@@ -4,6 +4,9 @@
 
 ; For ???
 
+; 177 bytes: initial
+
+
 ; zero page locations
 H2		= $2C
 V2		= $2D
@@ -211,30 +214,34 @@ start_text:
 	;====================================
 	; delay first to avoid text tearing
 	; 5071
-	; -999 string move
+	; -4   set_text
+	; -856 string move
 	; -5   inc frame
-	; -9 end loop
+	; -9   end loop
 	;===============
-	; 4058
+	; 4197
 
-	; dealy = 4058
+	; delay = 4197
 
 
 	;=============================
 	; delay!
 	;=============================
 
-	; 9*(256+192)=4032
+	; 9*(256+207)=4167
 
 	lda	#1		; 2
-	ldy	#192		; 2
-	jsr	size_delay	; 20+4032 = 4052
+	ldy	#207		; 2
+	jsr	size_delay	; 20+4167+4 = 4191
 
 	; padding
 
 	nop			; 2
+	nop			; 2
+	nop			; 2	; 6
+
 				;=============
-				; 4032+20+6=4058
+				; 4191 + 6 = 4197
 
 
 	;================================================
@@ -242,33 +249,35 @@ start_text:
 	;================================================
 	; note it's too fast, only do this one time in 4?
 
-move_string:
 
-	ldy	#0			; 2
-move_string_loop:
-	lda	$7D1,Y			; 4+
-	sta	$7D0,Y			; 5
-	nop
-	nop
-;	lda	$BD1,Y			; 4+
-	sta	$BD0,Y			; 5
-	iny				; 2
-	cpy	#39			; 2
-	bne	move_string_loop	; 2/3
-
+draw_string:
 	; draw new character
+	; one past end as in theory that's unused at least on PAGE2
 
 	lda	FRAME		; 3
 	and	#$7		; 2
 	tay			; 2
 	lda	string,Y	; 4+
-	sta	$7F7		; 4
-	sta	$BF7		; 4
+	sta	$BF8		; 4
 				;===
-				; 19
+				; 15
 
-	; 4+2+(25*39)-1 = 975+5 =980
-	; 980+19 = 999
+move_string:
+
+	ldy	#0			; 2
+move_string_loop:
+	lda	$BD1,Y			; 4+
+	sta	$7D0,Y			; 5
+;	nop
+;	nop
+;	lda	$BD1,Y			; ;;;;;;;;;;;;;;;;;;4+
+	sta	$BD0,Y			; 5
+	iny				; 2
+	cpy	#40			; 2
+	bne	move_string_loop	; 2/3
+
+	; 2+(21*40)-1 = 840+1 =841
+	; 841+15 = 856
 
 	;===========================
 	; increment frame
@@ -302,3 +311,4 @@ delay_12:
 
 string:
 	.byte 'O'+$80,'U'+$80,'T'+$80,'L'+$80,'I'+$80,'N'+$80,'E'+$80,' '+$80
+
