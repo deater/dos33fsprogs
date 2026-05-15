@@ -22,7 +22,6 @@ HGR_COLOR	= $E4
 HGR_SCALE	= $E7
 HGR_ROTATION	= $E8
 
-FRAME_DIV	= $FE
 FRAME		= $FF
 
 ; ROM locations
@@ -177,8 +176,8 @@ main_loop:
 	nop
 	nop
 	nop
-	nop
-	nop
+;	nop
+;	nop
 ;	nop
 
 	; create zig-zags
@@ -188,9 +187,9 @@ main_loop:
 	txa			; 2	; 44
 
 	clc			; 2
-	adc	FRAME_DIV	; 3
-;	lsr
-;	lsr
+	adc	FRAME		; 3
+	lsr
+	lsr
 
 	and	#$4		; 2	; 46
 	beq	less		; 2/3
@@ -216,7 +215,7 @@ more_done:
 	; increment row and see if at end
 
 	inx			; 2	; 59 / 61
-	cpx	#183		; 2	; 61 / 63
+	cpx	#184		; 2	; 61 / 63
 	bne	main_loop	; 3/2	; 64 / 66
 
 
@@ -231,41 +230,43 @@ start_text:
 	;=======================================
 
 	; need to delay 4551 = (4550+1) from fall through
-	; plus9*65 for text mode = 5136
+	; plus8*65 for text mode = 5071
 
 	;====================================
 	; delay first to avoid text tearing
-	; 5136
+	; 5071
 	; -4   set_text
 	; -15  flip page
 	; -22  smc the string
-	; -24  draw new char
+	; -21  load new char
 	; -841 string move
 	; -5   inc frame
 	; -9   end loop
 	;===============
-	; 4216
+	; 4154
 
-	; delay = 4216
+	; delay = 4154
 
 
 	;=============================
 	; delay!
 	;=============================
 
-	; 9*(256+209)=4185
+	; 9*(256+202)=4122
 
 	lda	#1		; 2
-	ldy	#209		; 2
-	jsr	size_delay	; 20+4185+4 = 4209
+	ldy	#202		; 2
+	jsr	size_delay	; 20+4122+4 = 4146
+
 	; padding
 
 	nop			; 2
-	nop			; 2
-	lda	$0		; 3
+	nop
+	nop
+	nop
 
 				;=================
-				; 4209 + 7 = 4216
+				; 4146 + 8 = 4152
 
 
 	;================================================
@@ -304,14 +305,13 @@ draw_string:
 	lda	FRAME		; 3
 	lsr			; 2
 	lsr			; 2
-	sta	FRAME_DIV	; 3
 	lsr			; 2
 	and	#$7		; 2
 	tay			; 2
 	lda	string,Y	; 4+
 	sta	$BF8		; 4
 				;===
-				; 24
+				; 21
 
 move_string:
 
@@ -332,11 +332,6 @@ move_smc:
 	; increment frame
 
 	inc	FRAME		; 5
-
-;	lda	FRAME		; 3
-;	lsr			; 2
-;	lsr			; 2
-
 
 	;==========================
 	; restore graphics mode
