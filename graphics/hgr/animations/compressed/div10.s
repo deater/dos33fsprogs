@@ -13,7 +13,7 @@ ModRemaing:
     .byte 0,6,2,8,4,0,6,2,8,4
 
 startDivideBy10:
-    ldy    #-2                   ;2  @2   skips a branch the first time through
+    ldy    #<-2                   ;2  @2   skips a branch the first time through
     lda    counterHigh           ;3  @5
 do8bitDiv:
     sta    temp                  ;3  @8
