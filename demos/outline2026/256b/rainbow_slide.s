@@ -8,10 +8,6 @@
 ; 270 bytes -- consolidate nops
 ; 266 bytes -- delay routines from bisqwit
 ; 265 bytes -- replace jmp with branch
-; 261 bytes -- run main loop backward, re-arrange to re-eliminate jump
-; 259 bytes -- initialize HGR_SCALE inside the memory copy
-; 258 bytes -- re-arrange params to draw_gear to remove txa
-; 257 bytes -- make smaller a ZP location not smc
 
 ; zero page locations
 H2		= $2C
@@ -24,12 +20,10 @@ A2H		= $3F
 A4L		= $42
 A4H		= $43
 
+;HGR_COLOR	= $E4
 HGR_SCALE	= $E7
 HGR_ROTATION	= $E8
 
-FAKE_NOP	= $F0
-
-SMALLER		= $F9
 ROTATION	= $FA
 SCALE		= $FB
 XPOS		= $FC
@@ -64,6 +58,27 @@ VBLANK		= $C019	; *not* RDVBL (VBL signal low) (iie, opposite iigs)
 
 hectic_demo:
 
+	;============================
+	; setup gears
+	;============================
+
+	lda	#8
+	sta	HGR_SCALE
+
+	; page 1
+
+	jsr	HGR
+
+	jsr	draw_scene
+
+	; page 2
+
+	jsr	HGR2
+
+	lda	#<gear2_table	; draw alternate gear
+	sta	which_smc+1
+
+	jsr	draw_scene
 
 
 rainbow_effect:
@@ -106,38 +121,11 @@ memory_copy:
 	lda	#$4		; 2	; $400
 	sta	A1H		; 2
 	asl			; 1	; $800
-
-	sta	HGR_SCALE		; saves us 2 bytes!
-
-
 	sta	A2H		; 2
 	sta	A4H		; 2
 	jsr	MOVE		; 3 	; call MOVE
 				;=======
 				; 20 bytes
-
-
-
-	;============================
-	; setup gears
-	;============================
-
-
-	; page 1
-
-	jsr	HGR
-
-	jsr	draw_scene
-
-	; page 2
-
-	jsr	HGR2
-
-	lda	#<gear2_table	; draw alternate gear
-	sta	which_smc+1
-
-	jsr	draw_scene
-
 
 
 	;=====================================
@@ -196,9 +184,9 @@ lp17029:
 	; vblank
 	; alternate page1/page2 each time through
 
-	; ldx	#0
-outer_loop:
-	ldx	#183
+;	ldx	#0
+
+	ldx	#184
 
 main_loop:
 
@@ -253,15 +241,12 @@ more_done:
 
 	bit	LORES		; 4	; 54 / 56
 
-;	lda	$0		; 3	; 57 / 59	; nop3
-;	nop
+	lda	$0		; 3	; 57 / 59	; nop3
 
-	inc	$F0		; 5			; nop5
-
-	; decrement row and see if at end
+	; increment row and see if at end
 
 	dex
-;
+	nop
 ;	inx			; 2	; 59 / 61
 ;	cpx	#183		; 2	; 61 / 63
 	bne	main_loop	; 3/2	; 64 / 66
@@ -278,7 +263,7 @@ start_text:
 	;=======================================
 
 	; need to delay 4551 = (4550+1) from fall through
-	; plus 9*65 for text mode = 5136
+	; plus9*65 for text mode = 5136
 
 	;====================================
 	; delay first to avoid text tearing
@@ -379,23 +364,6 @@ draw_string:
 				;===
 				; 24
 
-
-	;===========================
-	; increment frame
-
-	inc	FRAME		; 5
-
-
-	;==========================
-	; restore graphics mode
-
-	bit	SET_GR		; 4		; reset graphics
-
-
-	;==============================
-	; move string
-
-
 move_string:
 
 	ldy	#0			; 2
@@ -411,9 +379,18 @@ move_smc:
 
 	; 2+(21*40)-1 = 840+1 =841
 
-;	ldx	#183		; 2		; clear X
-;	bne	main_loop	; 3		; bra
-	beq	outer_loop
+	;===========================
+	; increment frame
+
+	inc	FRAME		; 5
+
+
+	;==========================
+	; restore graphics mode
+
+	bit	SET_GR		; 4		; reset graphics
+	ldx	#184		; 2		; clear X
+	bne	main_loop	; 3		; bra
 
 
 	;=====================================
@@ -447,25 +424,25 @@ gear2_table:
 
 draw_scene:
 
-	lda	#10		; A = y position
+	ldx	#10		; X = y position
 	ldy	#32		; Y = steps to draw
-	ldx	#2		; X = rotation increment
+	lda	#2		; A = rotation increment
 	jsr	draw_gear	; A and X zero on return
 
-	lda	#50		; A = y position
+	ldx	#50		; X = y position
 	ldy	#16		; only 16 repeats
-	ldx	#4		; X = rotation increment
+	lda	#4		; A = rotation increment
 
 	; fall through
 
 	;===============================
 	;===============================
-
 draw_gear:
 	sty	ROTATION	; set number of rotations
-	stx	SMALLER		; set rotation increment
+	sta	smaller_smc+1	; set rotation increment
 
 	ldy	#0
+	txa
 	ldx	#160
 	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
 				; saves X,Y,A to zero page
@@ -477,7 +454,8 @@ gear1_loop:
 
 	clc
 	lda	rot_smc+1
-	adc	SMALLER
+smaller_smc:
+	adc	#2
 	sta	rot_smc+1
 
 not_smaller:
