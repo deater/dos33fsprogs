@@ -11,7 +11,7 @@ all:	blue_flame.dsk
 
 ###
 
-blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY RAINBOW
+blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY RAINBOW GEARS_FANCY
 	cp $(EMPTYDISK) blue_flame.dsk
 	$(DOS33) -y blue_flame.dsk SAVE A HELLO
 	$(DOS33) -y blue_flame.dsk SAVE A TEST.BAS
@@ -20,6 +20,7 @@ blue_flame.dsk:	HELLO BLUE_FLAME TEST.BAS BEE.BAS BLACKHOLE_64 ENTROPY RAINBOW
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BLACKHOLE_64
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 ENTROPY
 	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 RAINBOW
+	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 GEARS_FANCY
 #	$(DOS33) -y blue_flame.dsk BSAVE -a 0x6000 BF
 
 ###
@@ -42,11 +43,20 @@ BEE.BAS:	bee.bas
 
 ###
 
+GEARS_FANCY:	gears_fancy.o
+	ld65 -o GEARS_FANCY gears_fancy.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
+
+gears_fancy.o:	gears_fancy.s
+	ca65 -o gears_fancy.o gears_fancy.s -l gears_fancy.lst
+
+###
+
 BLACKHOLE_64:	blackhole_64.o
 	ld65 -o BLACKHOLE_64 blackhole_64.o -C $(LINKER_SCRIPTS)/apple2_6000.inc
 
 blackhole_64.o:	blackhole_64.s
 	ca65 -o blackhole_64.o blackhole_64.s -l blackhole_64.lst
+
 
 ###
 

@@ -22,11 +22,18 @@ HGR_COLOR	= $E4
 HGR_SCALE	= $E7
 HGR_ROTATION	= $E8
 
+ROTATION	=       $F9
+SCALE           =       $FA
+ROTATE          =       $FB
+XPOS            =       $FC
+YPOS            =       $FD
+
 FRAME_DIV	= $FE
 FRAME		= $FF
 
 ; ROM locations
 HGR2		= $F3D8
+HGR		= $F3E2
 HPOSN		= $F411
 DRAW0		= $F601
 XDRAW0		= $F65D
@@ -56,14 +63,32 @@ VBLANK          = $C019 ; *not* RDVBL (VBL signal low) (iie, opposite iigs)
 
 
 
-rainbow_effect:
+do_demo:
+
+	;============================
+	; setup gears
+	;============================
+
+	lda	#8
+	sta	HGR_SCALE
+
+	; page 1
+
+	jsr	HGR
+
+	jsr	draw_scene
+
+	; page 2
 
 	jsr	HGR2
 
-	bit	LORES			; switch to lores (necessary?)
-	bit	PAGE1			; switch to PAGE1 (necessary?)
-	bit	SET_GR			; set graphics mode (necessary?)
+	lda	#<gear2_table	; draw alternate gear
+	sta	which_smc+1
 
+	jsr	draw_scene
+
+
+rainbow_effect:
 	;=====================================
 	; draw rainbow pattern
 	;=====================================
@@ -189,9 +214,6 @@ main_loop:
 
 	clc			; 2
 	adc	FRAME_DIV	; 3
-;	lsr
-;	lsr
-
 	and	#$4		; 2	; 46
 	beq	less		; 2/3
 more:
@@ -333,10 +355,6 @@ move_smc:
 
 	inc	FRAME		; 5
 
-;	lda	FRAME		; 3
-;	lsr			; 2
-;	lsr			; 2
-
 
 	;==========================
 	; restore graphics mode
@@ -366,3 +384,68 @@ delay_12:
 string:
 	.byte 'O'+$80,'U'+$80,'T'+$80,'L'+$80,'I'+$80,'N'+$80,'E'+$80,' '+$80
 
+
+	;=========================
+	; draw scene
+	;=========================
+
+draw_scene:
+
+	ldx	#10		; X = y position
+	ldy	#32		; Y = steps to draw
+	lda	#2		; A = rotation increment
+	jsr	draw_gear	; A and X zero on return
+
+	ldx	#50		; X = y position
+	ldy	#16		; only 16 repeats
+	lda	#4		; A = rotation increment
+
+	; fall through
+
+	;===============================
+	;===============================
+draw_gear:
+	sty	ROTATION	; set number of rotations
+	sta	smaller_smc+1	; set rotation increment
+
+	ldy	#0
+	txa
+	ldx	#160
+	jsr	HPOSN		; set screen position to X= (y,x) Y=(a)
+				; saves X,Y,A to zero page
+				; after Y= orig X/7
+				; A and X are ??
+
+
+gear1_loop:
+
+	clc
+	lda	rot_smc+1
+smaller_smc:
+	adc	#2
+	sta	rot_smc+1
+
+not_smaller:
+
+which_smc:
+	ldx	#<gear1_table	; point to bottom byte of shape address
+	ldy	#>gear1_table	; point to top byte of shape address
+				; this is always 0 if in zero page
+
+rot_smc:
+	lda	#1		; ROT=1 at first
+
+	jsr	XDRAW0		; XDRAW 1 AT X,Y
+				; Both A and X are 0 at exit
+				; Z flag set on exit
+				; Y varies
+
+	dec	ROTATION
+	bne	gear1_loop
+	rts
+
+
+gear1_table:
+.byte	$25,$35,$00		; 37,53,0
+gear2_table:
+.byte	$2c,$2e,$00		; 44,46,0
