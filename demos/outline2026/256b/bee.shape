@@ -1,0 +1,18 @@
+# Bee
+1
+START
+NUP NUP NLT
+NUP NUP NLT
+NUP NUP NLT 
+NUP				# get to start pos
+DN DN				# antenna
+NDN NDN NRT			# get to eye
+UP RT DN			# eye
+NDN NDN				# to body
+RT UP RT UP UP			# top of right wing
+RT UP RT UP
+RT RT RT
+				# rest of wing
+NRT NDN
+
+STOP

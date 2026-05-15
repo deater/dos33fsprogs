@@ -44,36 +44,12 @@ do_letters:
 	jsr	slide_in
 
 
-	;==============================
-	; print maze
-
-	lda	#28			; start on left hand side
-	sta	start_smc+1
-
-	lda	#4			; movement size to add
-	sta	add_smc+1
-
-	lda	#128			; Y location
-	sta	YPOS
-
-	lda	#<ma2e_ends		; point to the end table
-	sta	type_smc+1
-
-	lda	#<ma2e_offsets		; point to the shape offset
-	sta	offsets_smc+1
-
-	jsr	slide_in		; slide it
-
-;	jsr	zoom_in			; just fall through
-
-	; A is $FF here
-
 	;=========================
 	; zoom in
 	;=========================
 
 zoom_in:
-
+.if 0
 	lda	#0			; reset rotate and pointer
 	sta	ROTATE
 	sta	WHICH
@@ -120,7 +96,7 @@ done2:
 
 
 
-
+.endif
 
 draw_wait_erase:
 	jsr	xdraw			; draw
@@ -129,6 +105,7 @@ draw_wait_erase:
 	jsr	WAIT
 
 	jmp	xdraw			; draw for good
+
 
 
 	;=========================
