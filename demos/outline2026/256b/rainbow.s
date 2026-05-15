@@ -215,33 +215,35 @@ start_text:
 	; delay first to avoid text tearing
 	; 5071
 	; -4   set_text
-	; -856 string move
+	; -22  smc the string
+	; -21  load new char
+	; -841 string move
 	; -5   inc frame
 	; -9   end loop
 	;===============
-	; 4197
+	; 4169
 
-	; delay = 4197
+	; delay = 4169
 
 
 	;=============================
 	; delay!
 	;=============================
 
-	; 9*(256+207)=4167
+	; 9*(256+204)=4140
 
 	lda	#1		; 2
-	ldy	#207		; 2
-	jsr	size_delay	; 20+4167+4 = 4191
+	ldy	#204		; 2
+	jsr	size_delay	; 20+4140+4 = 4164
 
 	; padding
 
+	lda	$0		; 3
 	nop			; 2
-	nop			; 2
-	nop			; 2	; 6
+
 
 				;=============
-				; 4191 + 6 = 4197
+				; 4164 + 5 = 4169
 
 
 	;================================================
@@ -251,33 +253,48 @@ start_text:
 
 
 draw_string:
+
+	; see if should move
+	lda	FRAME			; 3
+	and	#$7			; 2
+	php				; 3	; hack to get zero flag into A
+	pla				; 4
+	and	#$2			; 2
+	lsr				; 2
+	ora	#$D0			; 2
+	sta	move_smc+1		; 4
+					;=====
+					; 22
+
+	;==================================
 	; draw new character
 	; one past end as in theory that's unused at least on PAGE2
 
 	lda	FRAME		; 3
+	lsr			; 2
+	lsr			; 2
+	lsr			; 2
 	and	#$7		; 2
 	tay			; 2
 	lda	string,Y	; 4+
 	sta	$BF8		; 4
 				;===
-				; 15
+				; 21
 
 move_string:
 
 	ldy	#0			; 2
 move_string_loop:
+
+move_smc:
 	lda	$BD1,Y			; 4+
 	sta	$7D0,Y			; 5
-;	nop
-;	nop
-;	lda	$BD1,Y			; ;;;;;;;;;;;;;;;;;;4+
 	sta	$BD0,Y			; 5
 	iny				; 2
 	cpy	#40			; 2
 	bne	move_string_loop	; 2/3
 
 	; 2+(21*40)-1 = 840+1 =841
-	; 841+15 = 856
 
 	;===========================
 	; increment frame
