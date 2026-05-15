@@ -52,72 +52,70 @@ VBLANK          = $C019 ; *not* RDVBL (VBL signal low) (iie, opposite iigs)
 
 
 
-rainbow:
-	bit	LORES
-	bit	PAGE1
-	bit	SET_GR
+rainbow_effect:
 
-	lda	#39
+	bit	LORES			; switch to lores (necessary?)
+	bit	PAGE1			; switch to PAGE1 (necessary?)
+	bit	SET_GR			; set graphics mode (necessary?)
+
+	;=====================================
+	; draw rainbow pattern
+	;=====================================
+
+	lda	#39			; want to HLIN from 0 to 39
 	sta	H2
 
-	ldx	#0
+	ldx	#47			; reverse rainbow to save 2 bytes
+					; 47 down to 0
 rainbow_loop:
+
 	ldy	#$0
 
-	txa
-	jsr	SETCOL
+	txa				; set color
+	jsr	SETCOL			; A is A*17 after running
 
 	txa
-	jsr	HLINE		; draw hline from Y to H2 at A
-	inx
-	cpx	#48
-	bne	rainbow_loop
+	jsr	HLINE			; draw hline from Y to H2 at A
+	dex
+	bpl	rainbow_loop
+
+	;=====================================
+	; copy rainbow to PAGE2
+	;=====================================
+	; using MOVE for this is maybe 4 bytes shorter than open-coding
+	;	with self-modifying code?
 
 memory_copy:
-	bit	PAGE2
 
-.if 1
-	lda	#0		; 2
-	tay			; 1
-
-	sta	A1L		; 2
-	sta	A2L		; 2
-	sta	A4L		; 2
-	lda	#$4		; 2
-	sta	A1H		; 2
-	asl		; $8	; 1
-	sta	A2H		; 2
-	sta	A4H		; 2
-	jsr	MOVE	; move mem from A1 thru A2 to A4 (A trashed, Y start 0)
-				; 3
-				;=======
-				; 21 bytes
-.else
+	; copy mem from A1H/L thru A2H/L to A4H/L (A trashed, Y start 0)
 
 	ldy	#0		; 2
-cpyloop:
-src_smc:
-	lda	$400,Y		; 3
-dst_smc:
-	sta	$800,Y		; 3
-	dey			; 1
-	bne	cpyloop		; 2
-	inc	src_smc+2	; 3
-	inc	dst_smc+2	; 3
-	lda	dst_smc+2	; 3
-	cmp	#$c		; 2
-	bne	cpyloop		; 2
-				;=====
-				; 24 bytes
-.endif
+
+	sty	A1L		; 2
+	sty	A2L		; 2
+	sty	A4L		; 2
+	lda	#$4		; 2	; $400
+	sta	A1H		; 2
+	asl			; 1	; $800
+	sta	A2H		; 2
+	sta	A4H		; 2
+	jsr	MOVE		; 3 	; call MOVE
+				;=======
+				; 20 bytes
 
 
-;  65 total;  25 blank, 40 drawing
-; 262 lines (192 on screen, 70 vblank)
-; 262/4 = 65.5
-; 262 = 2* 131 (prime)
+	;=====================================
+	; sync screen to start of frame
+	;=====================================
+	; HACK: this only works on Apple IIe
+	; This is based on code from Sather Apple IIe book
+	;
+	;  each line 65 cycles total;  25 hblank, 40 drawing
+	; 262 lines total (192 on screen, 70 vblank)
+	; 262/4 = 65.5
+	; 262 = 2* 131 (prime)
 
-initial:
+sync_frame:
 
 poll1:
         lda     VBLANK          ; Find end of VBL
@@ -141,15 +139,11 @@ lp17029:
         bmi     lp17029         ; no, slew back                         ; 2/3
 
 
-; 0: 4+21		4+3+33
-;    4+21+(x*2)		4+3+33-(x*2)
 
-
-;delay_2:			; 1 -> 6+(5*x)-1	1->4 2->9
-;	dex		; 2
-;	bne	delay_2	; 2/3
-;	rts		; 6
-
+	;================================================
+	; do the cycle-counted effect
+	;================================================
+	;
 
 	ldx	#0
 
