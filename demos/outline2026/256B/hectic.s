@@ -110,6 +110,8 @@ memory_copy:
 
 ;	ldy	#0		; 2
 
+	sty	FRAME		; init FRAME to zero
+
 	sty	A1L		; 2
 	sty	A2L		; 2
 	sty	A4L		; 2
@@ -172,6 +174,21 @@ poll2:
 
 	lda     $00     ;nop3   ; Now slew back in 17029 cycle loops    ; 3
 lp17029:
+
+.if 0
+	;===================
+	; delay 17018
+
+	; 10 bytes
+	ldx	#(17018-222)/221
+	ldy	#43
+	dey
+	bne *-1
+	dex
+	bpl *-6
+
+.endif
+
 	;===================
         ; delay 17020
 
@@ -191,6 +208,7 @@ lp17029:
 
 
 
+
 	;================================================
 	; do the cycle-counted effect
 	;================================================
@@ -199,6 +217,7 @@ lp17029:
 	; vblank
 	; alternate page1/page2 each time through
 
+;	lda	FAKE_NOP
 
 outer_loop:
 	ldx	#183
@@ -249,9 +268,11 @@ more_done:
 
 	bit	LORES		; 4	; 47 / 49
 
-	dec	FAKE_NOP	; 5	; 52 / 54	; nop5
-	inc	FAKE_NOP	; 5	; 57 / 59	; nop5
-	nop			; 2	; 59 / 61
+;	dec	FAKE_NOP	; 5	; 52 / 54	; nop5
+;	inc	FAKE_NOP	; 5	; 57 / 59	; nop5
+;	nop			; 2	; 59 / 61
+
+	jsr	delay_12
 
 	; decrement row and see if at end
 
@@ -460,4 +481,5 @@ rot_smc:
 	bne	gear1_loop
 delay_12:
 	rts
+
 
