@@ -544,7 +544,7 @@ jhonka_ask:
 	cmp	#NOUN_SMELL
 	beq	jhonka_ask_smell
 	cmp	#NOUN_TROGDOR
-	beq	jhonka_ask_smell
+	beq	jhonka_ask_trogdor
 
 jhonka_ask_unknown:
 	ldx	#<jhonka_ask_about_unknown_message
