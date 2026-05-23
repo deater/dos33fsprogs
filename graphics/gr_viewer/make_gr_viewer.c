@@ -90,7 +90,7 @@ int main(int argc, char **argv) {
 	}
 
 
-	fprintf(sss,"; Some nice hires images\n\n");
+	fprintf(sss,"; Some nice lores images\n\n");
 	fprintf(sss,".include \"../lores_main.s\"\n\n");
 	fprintf(sss,"MAX_FILES = %d\n\n",num_files);
 
