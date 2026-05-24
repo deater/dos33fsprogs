@@ -281,6 +281,7 @@ ned_cottage_baby:
 	and	#COTTAGE_ROCK_MOVED
 	beq	ned_cottage_baby_before
 
+	; FIXME: why is this twice?
 	; see if baby was deployed
 	lda	INVENTORY_1_GONE
 	and	#INV1_BABY

@@ -1137,6 +1137,7 @@ kerrek_look_there_dead_bones:
 	cmp	#NOUN_KERREK
 	beq	kerrek_look_there_dead_bones_kerrek
 
+	; FIXME: check if NOUN_NONE instead?
 kerrek_look_there_dead_bones_default:
 	; typed "look" after kerrek a skeleton
 	ldx	#<kerrek_look_kerrek_bones_message
@@ -1167,6 +1168,7 @@ kerrek_look_there_dead_dead:
 	cmp	#NOUN_KERREK
 	beq	kerrek_look_there_dead_look_kerrek
 
+	; FIXME: check if NOUN_NONE instead?
 	; typed "look" when kerrek just killed
 kerrek_look_there_dead_look:
 	ldx	#<kerrek_look_dead_message
@@ -1204,6 +1206,7 @@ kerrek_look_there_dead_decomposing:
 	cmp	#NOUN_KERREK
 	beq	kerrek_look_there_dead_decomposing_kerrek
 
+	; FIXME: check if NOUN_NONE instead?
 	; here if "look" when decomposing
 
 	ldx	#<kerrek_look_decomposing_message
@@ -1231,6 +1234,7 @@ kerrek_look_not_there:
 	cmp	#NOUN_TRACKS
 	beq	kerrek_look_footprints
 
+; FIXME: should only do the below if NOUN_NONE
 
 	; check if alive elsewhere
 
