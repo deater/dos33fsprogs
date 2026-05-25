@@ -241,6 +241,12 @@ well_use_pebbles_message:
 .byte "What do you propose to do",13
 .byte "with them? Discuss.",0
 
+; + use pebbles (not have)
+well_use_pebbles_not_have_message:
+.byte "Find some pebbles first and",13
+.byte "you might have the makings",13
+.byte "of a good idea.  About time.",0
+
 ; + deploy/drop/use baby (if you have it)
 well_use_baby_message:
 .byte "Like where?",0

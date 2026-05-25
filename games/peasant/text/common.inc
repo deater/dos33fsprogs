@@ -92,7 +92,7 @@ dance_message:
 .byte "You'd rather just stand",13
 .byte "here and soak up the scene.",0
 
-; + die (anywhere) (Warning: This kills you.)
+; + die (anywhere) (Warning, This kills you.)
 die_message:
 .byte "That wasn't very smart. You",13
 .byte "dead.",0
@@ -106,7 +106,7 @@ drink_message:
 drink_message2:
 .byte "Which is nice.",0
  
-; + quit  (Warning: The game actually does quit.) 
+; + quit  (Warning, The game actually does quit.) 
 quit_message:
 .byte "Well fine Boring Sanders!",13
 .byte "Hope you saved your game",13
@@ -183,7 +183,7 @@ climb_tree_message:
 .byte "get all sappy.",0
 
 ; + climb tree (at night?)
-;	(wiki says: after getting room at inn but that doesn't seem to be right)
+;	(wiki says, after getting room at inn but that doesn't seem to be right)
 climb_tree_night_message:
 .byte "Naw. That's dumb. Do better.",0
 
@@ -205,6 +205,12 @@ get_pebbles_message:
 give_message:
 .byte "You don't need to give",13
 .byte "that now.",0
+
+; + use
+use_message:
+.byte "You don't need to use that",13
+.byte "now.",0
+
 
 ; + throw baby (anywhere but the west side of the lake)
 throw_baby_yes_message:
@@ -240,9 +246,6 @@ look_inventory_there_message:
 ; + save
 ; + show priority
 ; + version
-
-;version_message:
-;.include "../version.inc"
 
 version_message:
 .byte   "APPLE ][ PEASANT'S QUEST",13

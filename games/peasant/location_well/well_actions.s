@@ -222,11 +222,32 @@ well_use:
 	jmp	parse_common_unknown
 
 well_use_pebbles:
+
+	; only if have them
+
+	lda	INVENTORY_1
+	and	#INV1_PEBBLES
+	bne	well_use_pebbles_have
+
+well_use_pebbles_dont_have:
+	ldx	#<well_use_pebbles_not_have_message
+	ldy	#>well_use_pebbles_not_have_message
+	jmp	finish_parse_message
+
+well_use_pebbles_have:
 	ldx	#<well_use_pebbles_message
 	ldy	#>well_use_pebbles_message
 	jmp	finish_parse_message
 
 well_use_baby:
+
+	lda	INVENTORY_1
+	and	#INV1_BABY
+	bne	well_use_baby_have_baby
+
+	jmp	parse_common_use
+
+well_use_baby_have_baby:
 	ldx	#<well_use_baby_message
 	ldy	#>well_use_baby_message
 	jmp	finish_parse_message

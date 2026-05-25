@@ -540,6 +540,15 @@ parse_unknown_smc2:
 	ldy	#>unknown_message
 	jmp	finish_parse_message
 
+
+	;================
+	; use
+	;================
+parse_common_use:
+	ldx	#<use_message
+	ldy	#>use_message
+	jmp	finish_parse_message
+
 	;=====================
 	; version
 	;=====================
@@ -1440,6 +1449,8 @@ common_verb_table:
 	.word parse_common_this-1
 	.byte VERB_THROW
 	.word parse_common_throw-1
+	.byte VERB_USE
+	.word parse_common_use-1
 	.byte VERB_VERSION
 	.word parse_common_version-1
 	.byte VERB_WEAR
