@@ -1,3 +1,37 @@
+; Draw the inventory screen
+;   documenting it a bit here because porting to DOS was a bit of a pain
+;   the actual flash game (when sized to 320x200) has inventory items
+;   sized at 50x60 or so.
+; The Apple II version uses 14x16 sized sprites, stored (???) taking up (???)
+
+
+; what this does
+
+;	+ draw the text box on screen
+;	+ writes the inventory and ESC message
+;	+ draws the two rows of inventory items
+;	  - if have item, print name
+;	  - if not have item, print ?????
+;	  - if had item but got rid of, strikeout (how?)
+;	+ main loop
+;	  - draw current selected, inverse
+;	  - handle keypres
+;	  - draw itemes
+
+; code currently compresses strings but doesn't fully use the string mechanism
+;	when press enter, what happens?
+
+; On Apple II inventory code fits in 4k ($D0-$DF of language card bank2)
+;	currenty it takes up 3122 bytes of which presumably
+;	16*2=32 bytes * 18 images = 576 bytes of sprites
+;		that means there's roughly room to double the size?
+;		maybe it can be possible also to compress the images and
+;		temporarily and decompress when needed?
+;       7*60 = 420 * 18 = 7560 bytes
+
+$D0-$DF (bank2) (4k)    inventory       (3122 bytes)
+
+
 .include "../zp.inc"
 .include "../hardware.inc"
 .include "../qload.inc"
