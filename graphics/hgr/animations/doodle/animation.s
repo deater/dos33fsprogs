@@ -101,7 +101,7 @@ load_bg:
 
 ;	jsr	patch_graphics
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	; at this point, PAGE1= 001, PAGE2=008
 
@@ -139,6 +139,8 @@ animation_loop:
 
 	jsr	wait_until_keypress
 
+oog:
+	jmp	oog
 
 	;========================================
 	; now drawing page1, viewing page2
@@ -220,15 +222,23 @@ wait_nomock:
 .include "../patch_graphics_v2.s"
 
 
-doodle001_doodle003_diff: .include "graphics/a2_doodle001_003_diff.inc"
-doodle003_doodle005_diff: .include "graphics/a2_doodle003_005_diff.inc"
-doodle005_doodle007_diff: .include "graphics/a2_doodle005_007_diff.inc"
-doodle007_doodle001_diff: .include "graphics/a2_doodle007_001_diff.inc"
+doodle001_doodle003_diff:
+	.include "graphics/a2_doodle001_003_diff.inc"
+doodle003_doodle005_diff:
+	.include "graphics/a2_doodle003_005_diff.inc"
+doodle005_doodle007_diff:
+;	.include "graphics/a2_doodle005_007_diff.inc"
+doodle007_doodle001_diff:
+;	.include "graphics/a2_doodle007_001_diff.inc"
 
-doodle002_doodle004_diff: .include "graphics/a2_doodle002_004_diff.inc"
-doodle004_doodle006_diff: .include "graphics/a2_doodle004_006_diff.inc"
-doodle006_doodle008_diff: ;.include "graphics/a2_doodle006_008_diff.inc"
-doodle008_doodle002_diff: .include "graphics/a2_doodle008_002_diff.inc"
+doodle002_doodle004_diff:
+;	.include "graphics/a2_doodle002_004_diff.inc"
+doodle004_doodle006_diff:
+;	.include "graphics/a2_doodle004_006_diff.inc"
+doodle006_doodle008_diff:
+;	.include "graphics/a2_doodle006_008_diff.inc"
+doodle008_doodle002_diff:
+	.include "graphics/a2_doodle008_002_diff.inc"
 
 patches_page1_l:
 	.byte	<doodle001_doodle003_diff

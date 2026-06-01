@@ -184,13 +184,13 @@ int hgr_diff_v2(unsigned char *apple2_old,
 		unsigned char *apple2_new,
 		unsigned char *apple2_alt) {
 
-	int i;
+	int i,j;
 //	int j,k;
 
 //	int found=0;
 //	int last_diff=0;
 //	int diff_start=0,in_diff=0,diff_diff=0
-	int run_length=1,addr_last=-1;
+	int run_length=1,addr_last=-1,this_run;
 
 	int differences=0,max_run=0,diff_bytes=0;
 //	int max_diff,local_diff;
@@ -201,10 +201,23 @@ int hgr_diff_v2(unsigned char *apple2_old,
 		/* If not match, find maximum diff length */
 
 		if (apple2_old[i]!=apple2_new[i]) {
-			printf(".byte $%0X,$%0X,$%0X ; $%x\n",
-				i-addr_last-1,run_length,apple2_new[i],i);
-			differences++;
-			diff_bytes+=3;
+			run_length=1;
+			for(j=1;j<MAX_DIFF;j++) {
+				if (apple2_old[i+j]!=apple2_new[i+j]) {
+					run_length=j;
+				}
+			}
+			printf(".byte $%0X,$%0X",
+				i-addr_last-1,run_length);
+			diff_bytes+=2;
+
+			for(j=0;j<run_length;j++) {
+				printf(",$%0X",apple2_new[i+j]);
+				differences++;
+				diff_bytes++;
+			}
+			printf("\t; $%04X-$%04X\n",i,i+j-1);
+			i+=j-1;
 			addr_last=i;
 		}
 

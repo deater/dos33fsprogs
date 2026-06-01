@@ -13,6 +13,7 @@ PNG_TO_HGR_RAW = ../../../../../utils/hgr-utils/png2hgr_raw
 
 all:	\
 	a2_doodle001.hgr.zx02 \
+	a2_doodle002.hgr.zx02 \
 	a2_doodle008.hgr.zx02 \
 	a2_doodle001_008_diff.inc \
 	a2_doodle001_003_diff.inc a2_doodle003_005_diff.inc \
@@ -27,6 +28,14 @@ a2_doodle001.hgr.zx02:	a2_doodle001.hgr
 
 a2_doodle001.hgr:  a2_doodle001.png
 	$(PNG_TO_HGR) a2_doodle001.png > a2_doodle001.hgr
+
+####
+
+a2_doodle002.hgr.zx02:	a2_doodle002.hgr
+	$(ZX02) a2_doodle002.hgr a2_doodle002.hgr.zx02
+
+a2_doodle002.hgr:  a2_doodle002.png
+	$(PNG_TO_HGR) a2_doodle002.png > a2_doodle002.hgr
 
 ####
 
