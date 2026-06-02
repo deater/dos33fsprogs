@@ -70,7 +70,7 @@ skip_draw_hgr_sprite:
 	iny
 
 
-	inc	sprite_smc1+1
+	inc	sprite_smc1+1		; 16-bit increment sprite
 	bne	sprite_noflo
 	inc	sprite_smc1+2
 sprite_noflo:

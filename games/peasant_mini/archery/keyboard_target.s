@@ -15,7 +15,9 @@ keyboard_bow:
 	rts
 
 key_was_pressed:
-	inc	SEEDL		; ????
+;	inc	SEEDL		; ????
+
+	inc	rand_a		; perturb random number generator
 
 	and	#$7f			; strip off high
 	cmp	#$96
@@ -103,7 +105,7 @@ keyboard_meter:
 	rts
 
 meter_key_was_pressed:
-	inc	SEEDL		; ????
+	inc	rand_a		; perturb random number generator
 
 	and	#$7f			; strip off high
 	cmp	#$96

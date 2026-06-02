@@ -4,6 +4,9 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 
+; vaguely trying to make this as similar to the actual game
+;	code to make inclusion easier
+
 
 .include "zp.inc"
 .include "hardware.inc"
@@ -25,22 +28,33 @@ target_start:
 
 	lda	#$00
 	sta	DRAW_PAGE
+
+	jsr	hgr_make_tables		; init hi-res lookup tables
+
+
+	;======================
+	; restart game
+	;======================
+	; reset variables, etc
+restart_game:
+
+
+	lda	#$00
 	sta	ARROW_SCORE
 	sta	WIND_DIR
 
 	lda	#4
 	sta	ARROWS_LEFT		; 0 indexed, so 5
 
-	jsr	hgr_make_tables
-
-
-restart_game:
 
 	;===================
 	; Load graphics
 	;===================
+	; both PAGE1 and PAGE2, with background also at $6000
 
 load_graphics:
+
+	; also load to PAGE1 $2000
 
 	lda	#<bg_data
 	sta	zx_src_l+1
@@ -51,9 +65,7 @@ load_graphics:
 
 	jsr	zx02_full_decomp
 
-
-	; also load to $40
-	;	in final version prob load to $60 instead
+	; also load to PAGE2 $4000
 
 	lda	#<bg_data
 	sta	zx_src_l+1
@@ -65,9 +77,40 @@ load_graphics:
 	jsr	zx02_full_decomp
 
 
+	; also load to $8000
+	; (in actual game would be at $6000, but we are being lazy
+	;	and are loading from DOS which is at $9400 or similar
+	;	so we can't load the code that high)
+
+	; note we could be copying here which might be faster?
+
+	lda	#<bg_data
+	sta	zx_src_l+1
+	lda	#>bg_data
+	sta	zx_src_h+1
+
+	lda	#$80
+
+	jsr	zx02_full_decomp
+
+
+	;==============================
+	; ???
+	;==============================
+
 try_again:
 
-game_loop:
+
+	;==============================
+	;==============================
+	;==============================
+	; Setup for another shot
+	;==============================
+	;==============================
+	;==============================
+
+another_shot:
+
 	;======================
 	; clear flag
 
@@ -86,7 +129,8 @@ try_wind_again:
 	and	#$f
 	tax
 	lda	wind_dir_lookup,X
-	cmp	WIND_DIR
+
+	cmp	WIND_DIR		; try again if same as last time
 	beq	try_wind_again
 
 	sta	WIND_DIR
