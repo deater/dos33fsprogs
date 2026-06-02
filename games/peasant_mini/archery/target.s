@@ -179,6 +179,12 @@ bow_loop:
 
 	inc	FRAME
 
+	;====================
+	; flip page
+
+	jsr	hgr_page_flip
+
+
 	jmp	bow_loop
 
 	;===================
@@ -340,6 +346,7 @@ score_string:
 
 	.include	"random8.s"
 	.include	"wait_keypress.s"
+	.include	"hgr_page_flip.s"
 
 bg_data:
 	.incbin "target_graphics/target_bg.hgr.zx02"
@@ -356,7 +363,37 @@ bg_data:
 	;=======================
 	; draw arrow
 	;=======================
+	; note: currently we aren't centered because of the weird
+	;	Apple II 3.5-pixel tiles
+	; 	Is this worth fixing?
+
 draw_arrow:
+
+	lda	BOW_X
+	clc
+	adc	#15
+	sta	CURSOR_X
+
+	lda	#149
+	sta	CURSOR_Y
+
+	lda	BOW_X
+	lsr
+	bcs	draw_arrow_even
+draw_arrow_odd:
+	lda	#<arrow_odd_sprite
+	sta	INL
+	lda	#>arrow_odd_sprite
+	jmp	draw_arrow_common
+draw_arrow_even:
+	lda	#<arrow_even_sprite
+	sta	INL
+	lda	#>arrow_even_sprite
+draw_arrow_common:
+
+	sta	INH
+
+	jsr	hgr_draw_sprite
 
 	rts
 

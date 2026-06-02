@@ -12,9 +12,11 @@ draw_bow:
 	lda	BOW_X
 	and	#$1
 	eor	#$1			; our sprite X is off by one
-	asl
+	asl				; 0 or 4 based on odd or even
 	asl
 	sta	draw_bow_smc+1
+
+	; our bow is so wide it takes 4 sprites to draw it!
 
 draw_bow_loop:
 	clc
