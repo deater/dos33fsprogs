@@ -158,6 +158,11 @@ bow_loop:
 	bcs	take_shot
 
 	;===================
+	; clear bottom green
+
+	jsr	clear_bottom_green
+
+	;===================
 	; draw bow
 
 	jsr	draw_bow
@@ -178,6 +183,7 @@ bow_loop:
 	jsr	draw_flag
 
 	inc	FRAME
+
 
 	;====================
 	; flip page
@@ -357,6 +363,54 @@ bg_data:
 	.include "target_sprites/arrow_sprites.inc"
 
 
+	;===========================
+	; clear bottom
+	;===========================
+	; unrolled would be faster?
+	; clear 149-192 to green
+
+	; green will be: $2a/$55
+
+	; initial = 4cc4 cycles
+	; 
+
+clear_bottom_green:
+
+	ldx	#149							; 2
+
+cbg_yloop:
+	ldy	#39							; 2
+
+	lda	hposn_low,X						; 4
+	sta	cbg_smc1+1						; 4
+	sta	cbg_smc2+1						; 4
+
+	lda	hposn_high,X						; 4
+	clc								; 2
+	adc	DRAW_PAGE						; 2
+	sta	cbg_smc1+2						; 4
+	sta	cbg_smc2+2						; 4
+
+cbg_xloop:
+	lda	#$55							; 2
+
+cbg_smc1:
+	sta	$2000,Y							; 5
+	dey								; 2
+
+	lda	#$2a							; 2
+
+cbg_smc2:
+	sta	$2000,Y							; 5
+
+	dey								; 2
+	bpl	cbg_xloop						; 2/3
+
+	inx								; 2
+	cpx	#192							; 2
+	bne	cbg_yloop						; 2/3
+
+	rts
 
 
 
