@@ -368,6 +368,26 @@ move_arrow:
 	lda	#0
 	sta	FRAME
 
+	;======================
+	; erase arrow
+
+	; it's erased just before it's shot
+	; we have to erase it from both pages
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+	jsr	erase_arrow_from_pile
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	erase_arrow_from_pile
+	pla
+	sta	DRAW_PAGE
+
+
+
 	;===================
 	;===================
 	; arrow loop
@@ -439,13 +459,15 @@ end_arrow:
 	dec	ARROWS_LEFT
 	bmi	game_over
 
-	;======================
-	; erase arrow
 
 	jmp	try_again
 
+	;======================
+	; print game over message
+
 game_over:
 	bit	TEXTGR
+	bit	PAGE1
 
 	lda	ARROW_SCORE
 	clc
@@ -582,6 +604,28 @@ draw_pointers:
 	rts
 
 
+	;======================
+	; erase arrow from pile
+
+	; it's erased just before it's shot
+
+erase_arrow_from_pile:
+
+	lda	ARROWS_LEFT
+	asl
+	sta	CURSOR_X
+
+	lda	#48
+	sta	CURSOR_Y
+
+	lda	#<arrow_delete_sprite
+	sta	INL
+	lda	#>arrow_delete_sprite
+	sta	INH
+
+	jmp	hgr_draw_sprite		; tail call
+
+
 
 	;===========================
 	; clear bottom
@@ -592,7 +636,7 @@ draw_pointers:
 	; green will be: $2a/$55
 
 	; initial = 4cc4 cycles
-	; 
+
 
 clear_bottom_green:
 
