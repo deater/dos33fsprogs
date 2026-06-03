@@ -383,6 +383,7 @@ CURRENT_ROCK	= $EF		; for cliff climb
 
 METER_LEFT	= $EC		; target
 METER_RIGHT	= $ED		; target
+METER_PRESSES	= $EE		; target
 
 P0		= $F1
 P1		= $F2

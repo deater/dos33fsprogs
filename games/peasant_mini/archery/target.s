@@ -164,6 +164,14 @@ try_wind_again:
 	lda	#3
 	sta	BOW_X
 
+	;=====================
+	; reset meter
+
+	lda	#0
+	sta	METER_LEFT
+	sta	METER_RIGHT
+
+
 
 	;===================
 	;===================
@@ -243,6 +251,7 @@ take_shot:
 
 	lda	#0			; 0..32?
 	sta	POWER_METER
+	sta	METER_PRESSES
 
 ;	lda	#$11
 ;	sta	METER_ADD
@@ -294,17 +303,33 @@ going_down:
 	sbc	POWER_METER
 
 going_common:
-	sta	METER_LEFT
-	sta	METER_RIGHT
 
+	ldx	METER_PRESSES
+	cpx	#2
+	bcs	presses_two
+	cpx	#1
+	bcs	presses_one
+
+presses_none:
+	sta	METER_LEFT
+presses_one:
+	sta	METER_RIGHT
+presses_two:
 
 	;=======================
 	; check keypress
 	;=======================
 
-;	jsr	keyboard_meter
-;	bcs	end_meter
+	jsr	keyboard_meter
+	bcc	no_presses
 
+	inc	METER_PRESSES
+	lda	METER_PRESSES
+	cmp	#2
+	bcs	end_meter
+
+
+no_presses:
 
 	;===================
 	; clear bottom green
