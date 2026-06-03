@@ -182,6 +182,17 @@ bow_loop:
 
 	jsr	draw_flag
 
+
+	;===================
+	; draw meter
+
+	jsr	draw_meter_bottom
+	jsr	draw_pointers
+
+
+	;=====================
+	; increment frame
+
 	inc	FRAME
 
 
@@ -361,6 +372,66 @@ bg_data:
 	.include "target_sprites/bow_sprites.inc"
 	.include "target_sprites/flag_sprites.inc"
 	.include "target_sprites/arrow_sprites.inc"
+
+
+	;===========================
+	; draw meter bottom
+	;===========================
+	; it gets erased by the bow
+draw_meter_bottom:
+
+	lda	#36			; 252/7 = 36
+	sta	CURSOR_X
+
+	lda	#149
+	sta	CURSOR_Y
+
+	lda	#<meter_bottom
+	sta	INL
+	lda	#>meter_bottom
+
+	sta	INH
+
+	jmp	hgr_draw_sprite		; tail call
+
+
+	;===========================
+	; draw pointers
+	;===========================
+draw_pointers:
+
+	lda	#35			; 245/7 = 35
+	sta	CURSOR_X
+
+	lda	#149
+	sta	CURSOR_Y
+
+	lda	#<l_pointer
+	sta	INL
+	lda	#>l_pointer
+
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#38			; 266/7 = 38
+	sta	CURSOR_X
+
+	lda	#149
+	sta	CURSOR_Y
+
+	lda	#<r_pointer
+	sta	INL
+	lda	#>r_pointer
+
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+
+
+	rts
+
 
 
 	;===========================

@@ -32,15 +32,13 @@ flag_sprites.inc:	flag_sprites.png
 arrow_sprites.inc:	arrow_sprites.png
 	$(HGR_SPRITE) -s -l l_pointer arrow_sprites.png 245 172 251 181 > arrow_sprites.inc
 	$(HGR_SPRITE) -s -l r_pointer arrow_sprites.png 266 172 272 181 >> arrow_sprites.inc
-	$(HGR_SPRITE) -s -l arrow_odd_sprite arrow_sprites.png  119   6 132 48 >> arrow_sprites.inc
-	$(HGR_SPRITE) -s -l arrow_even_sprite arrow_sprites.png 126 149 139 191 >> arrow_sprites.inc
+	$(HGR_SPRITE) -s -l arrow_odd_sprite arrow_sprites.png  119   6 132 49 >> arrow_sprites.inc
+	$(HGR_SPRITE) -s -l arrow_even_sprite arrow_sprites.png 126 149 139 192 >> arrow_sprites.inc
+	$(HGR_SPRITE) -s -l meter_bottom arrow_sprites.png 252 63 265 93 >> arrow_sprites.inc
+
+
 #	$(HGR_SPRITE) -l arrow0_sprite arrow_sprites.png 126 104 139 147 >> arrow_sprites.inc
 #	$(HGR_SPRITE) -l arrow0_mask   arrow_sprites.png 154 104 167 147 >> arrow_sprites.inc
-
-
-
-
-
 
 clean:	
 	rm -f *~ bow_sprites.inc arrow_sprites.inc
