@@ -115,10 +115,29 @@ try_again:
 
 another_shot:
 
-	;======================
-	; clear flag
+	;=======================
+	; clear flag both pages
 
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
 	jsr	clear_flag
+
+	lda	#$20
+	sta	DRAW_PAGE
+	jsr	clear_flag
+
+	pla
+	sta	DRAW_PAGE
+
+	;=========================
+	; clear keyboard strobe
+	;	in case pressed any button while arrow flying
+
+	bit	KEYRESET
+
 
 	;======================
 	; pick wind direction
@@ -286,6 +305,13 @@ going_common:
 ;	jsr	keyboard_meter
 ;	bcs	end_meter
 
+
+	;===================
+	; clear bottom green
+
+	jsr	clear_bottom_green
+
+
 	;===================
 	; draw bow
 
@@ -326,7 +352,7 @@ going_common:
 
 
 	jmp	meter_loop
-
+end_meter:
 
 
 	;====================================================================
@@ -337,8 +363,10 @@ going_common:
 	;===================
 	;===================
 
-end_meter:
+move_arrow:
 
+	lda	#0
+	sta	FRAME
 
 	;===================
 	;===================
@@ -348,38 +376,62 @@ end_meter:
 
 arrow_loop:
 
+	;===================
+	; clear bottom green
 
+	jsr	clear_bottom_green
 
 	;===================
 	; draw bow
 
-;	jsr	draw_bow
+	jsr	draw_bow
 
 	;===================
 	; draw string
 
-;	jsr	draw_string
+	jsr	draw_string
 
 	;===================
-	; draw arrow
+	; draw moving arrow
 
-;	jsr	draw_arrow
+;	jsr	draw_moving_arrow
 
 	;===================
 	; draw windsock
 
 	jsr	draw_flag
 
-	inc	FRAME
+	;===================
+	; draw meter
+
+	jsr	draw_meter_bottom
+	jsr	draw_pointers
 
 	;===================
-	; move arrow
+	; increment frame
+
+	inc	FRAME
+
+	lda	FRAME
+	cmp	#64
+	beq	end_arrow
+
+	;====================
+	; flip page
+
+	jsr	hgr_page_flip
 
 	jmp	arrow_loop
 
-	;===================
 
 end_arrow:
+
+
+	;=======================================================
+	;=====================
+	; next turn
+	;=====================
+	;=====================
 
 	;=====================
 	; decrement tries

@@ -2,19 +2,25 @@ HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	bow_sprites.inc flag_sprites.inc arrow_sprites.inc
 
-bow_sprites.inc:	bow_sprites.png
-	$(HGR_SPRITE) -s -l bow_sprite_odd0 bow_sprites.png  21 159  76 183 > bow_sprites.inc
+bow_sprites.inc:	bow_sprites.png bow_drawn.png
+	$(HGR_SPRITE) -s -l bow_sprite_odd0 bow_sprites.png  28 168  76 183 > bow_sprites.inc
 	$(HGR_SPRITE) -s -l bow_sprite_odd1 bow_sprites.png  77 159 125 183 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l bow_sprite_odd2 bow_sprites.png 126 159 174 183 >> bow_sprites.inc
-	$(HGR_SPRITE) -s -l bow_sprite_odd3 bow_sprites.png 175 159 230 183 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l bow_sprite_odd3 bow_sprites.png 175 168 223 183 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_odd0 bow_sprites.png  35 183 125 184 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_odd1 bow_sprites.png 126 183 216 184 >> bow_sprites.inc
-	$(HGR_SPRITE) -s -l bow_sprite_even0 bow_sprites.png  14   7  69  31 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l bow_sprite_even0 bow_sprites.png  21  16  69  31 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l bow_sprite_even1 bow_sprites.png  70   7 118  31 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l bow_sprite_even2 bow_sprites.png 119   7 167  31 >> bow_sprites.inc
-	$(HGR_SPRITE) -s -l bow_sprite_even3 bow_sprites.png 168   7 223  31 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l bow_sprite_even3 bow_sprites.png 168  16 216  31 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_even0 bow_sprites.png  28 31 118 32 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_sprite_even1 bow_sprites.png 119 31 209 32 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l string_drawn_even0 bow_drawn.png  35  31  69  40 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l string_drawn_even1 bow_drawn.png 161  31 202  40 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l string_drawn_odd0  bow_drawn.png  42 183  76 192 >> bow_sprites.inc
+	$(HGR_SPRITE) -s -l string_drawn_odd1  bow_drawn.png 168 183 209 192 >> bow_sprites.inc
+
+
 
 flag_sprites.inc:	flag_sprites.png
 	$(HGR_SPRITE) -s -l flag_nowind0 flag_sprites.png  14   0  41  37 > flag_sprites.inc

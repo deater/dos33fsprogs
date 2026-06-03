@@ -29,9 +29,12 @@ draw_bow_smc:
 
 	clc
 	lda	BOW_X
-	adc	bow_sprite_offsets,X
+	adc	bow_sprite_x_offsets,X
 	sta	CURSOR_X
+
+	clc
 	lda	#159
+	adc	bow_sprite_y_offsets,X
 	sta	CURSOR_Y
 
 	; set up sprites
@@ -103,8 +106,11 @@ draw_string_smc:
 	rts
 
 
-bow_sprite_offsets:
-	.byte 0,8,15,22,0,8,15,22
+bow_sprite_x_offsets:
+	.byte 1,8,15,22,1,8,15,22
+
+bow_sprite_y_offsets:
+	.byte 9,0,0,9,9,0,0,9
 
 bow_sprites_l:
 	.byte <bow_sprite_odd0,<bow_sprite_odd1
