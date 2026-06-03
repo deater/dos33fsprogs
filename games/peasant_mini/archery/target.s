@@ -42,6 +42,10 @@ restart_game:
 	lda	#$00
 	sta	ARROW_SCORE
 	sta	WIND_DIR
+	sta	METER_LEFT
+	sta	METER_RIGHT
+
+
 
 	lda	#4
 	sta	ARROWS_LEFT		; 0 indexed, so 5
@@ -204,11 +208,17 @@ bow_loop:
 
 	jmp	bow_loop
 
+
+
+	;====================================================================
 	;===================
 	;===================
 	; take shot
 	;===================
 	;===================
+	;===================
+	; pull back string
+	; start the meter count
 
 take_shot:
 
@@ -240,36 +250,91 @@ take_shot:
 meter_loop:
 
 	;=======================
-	; increment power meter
+	; move power meter
+	;=======================
+	; go for 0..128
+	; 	if keypress 1st, lock left, if keypress 2nd lock right
+
+	inc	POWER_METER
+
+	lda	POWER_METER
+	cmp	#128
+	bcs	end_meter
+
+	cmp	#64
+	bcs	going_down
+going_up:
+
+	jmp	going_common
+
+going_down:
+	; want 128-POWER_METER
+
+	lda	#128
+	sec
+	sbc	POWER_METER
+
+going_common:
+	sta	METER_LEFT
+	sta	METER_RIGHT
+
+
+	;=======================
+	; check keypress
 	;=======================
 
-	jsr	keyboard_meter
-	bcs	end_meter
+;	jsr	keyboard_meter
+;	bcs	end_meter
 
 	;===================
 	; draw bow
 
-;	jsr	draw_bow
+	jsr	draw_bow
 
 	;===================
 	; draw string
 
-;	jsr	draw_string
+	jsr	draw_string
 
 	;===================
 	; draw arrow
 
-;	jsr	draw_arrow
+	jsr	draw_arrow
 
 	;===================
 	; draw windsock
 
 	jsr	draw_flag
 
+	;===================
+	; draw meter
+
+	jsr	draw_meter_bottom
+	jsr	draw_pointers
+
+
+	;=====================
+	; increment frame
+
 	inc	FRAME
+
+
+	;====================
+	; flip page
+
+	jsr	hgr_page_flip
+
 
 	jmp	meter_loop
 
+
+
+	;====================================================================
+	;===================
+	;===================
+	; move arrow
+	;===================
+	;===================
 	;===================
 
 end_meter:
@@ -398,12 +463,32 @@ draw_meter_bottom:
 	;===========================
 	; draw pointers
 	;===========================
+
+	; original:
+	; draw at 116+(14-METER_LEFT)*4
+	;	so if 0, should be 172
+
+	; modified:
+	;	draw at 108+(64-METER_LEFTT)
+
 draw_pointers:
 
 	lda	#35			; 245/7 = 35
 	sta	CURSOR_X
 
-	lda	#149
+	lda	#64
+	sec
+	sbc	METER_LEFT
+	clc
+	adc	#108
+
+;	lda	#14
+;	sec
+;	sbc	METER_LEFT
+;	asl
+;	asl
+;	clc
+;	adc	#116
 	sta	CURSOR_Y
 
 	lda	#<l_pointer
@@ -417,7 +502,19 @@ draw_pointers:
 	lda	#38			; 266/7 = 38
 	sta	CURSOR_X
 
-	lda	#149
+	lda	#64
+	sec
+	sbc	METER_RIGHT
+	clc
+	adc	#108
+
+;	lda	#14
+;	sec
+;	sbc	METER_RIGHT
+;	asl
+;	asl
+;	clc
+;	adc	#116
 	sta	CURSOR_Y
 
 	lda	#<r_pointer

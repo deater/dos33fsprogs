@@ -381,6 +381,9 @@ CLIMB_COUNT	= $ED		; for cliff climb
 FLAME_COUNT	= $EE
 CURRENT_ROCK	= $EF		; for cliff climb
 
+METER_LEFT	= $EC		; target
+METER_RIGHT	= $ED		; target
+
 P0		= $F1
 P1		= $F2
 P2		= $F3
