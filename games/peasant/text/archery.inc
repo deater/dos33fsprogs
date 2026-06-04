@@ -267,13 +267,22 @@ archery_zero_message:
 .byte "back when your shipment",13
 .byte "comes in.",0
 
-archery_some_message:
+archery_one_message:
 .byte 34,"Sorry!",34," says",13
 .byte "Dongolev.",34,"Only 1",13
 .byte "hit. Your game face must be",13
 .byte "on back-order. Maybe come",13
 .byte "back when your shipment",13
 .byte "comes in.",0
+
+archery_two_message:
+.byte 34,"Sorry!",34," says",13
+.byte "Dongolev.",34,"Only w",13
+.byte "hits. Your game face must be",13
+.byte "on back-order. Maybe come",13
+.byte "back when your shipment",13
+.byte "comes in.",0
+
 
 archery_lose_message:
 .byte 34,"But since you gave us this",13

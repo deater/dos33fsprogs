@@ -8,7 +8,12 @@
 notes:
 	note: has one head location for each map square
 		(i.e. it's not based on your x/y of your location in the level)
+
+TODO:
 	if you're inside a building it just shows you on the map outside
+	looking at flash (frame 995) being inside a hut your head is drawn
+		over the hut
+
 	if you're in the hidden glen it shows you off the map to the side
 
 	if you're on the cliff and beyond it shows you off the map the
