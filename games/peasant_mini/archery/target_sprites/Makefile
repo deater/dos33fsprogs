@@ -64,28 +64,28 @@ arrow_sprites.inc:	arrow_sprites.png arrows_moving.png
 	$(HGR_SPRITE) -l miss3e_mask    arrows_moving.png  84  84  97  93 >> arrow_sprites.inc
 	$(HGR_SPRITE) -l miss4e_sprite  arrows_moving.png 112  68 125  76 >> arrow_sprites.inc
 	$(HGR_SPRITE) -l miss4e_mask    arrows_moving.png 112  84 125  92 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss5e_sprite  arrows_moving.png 140  84 153  76 >> arrow_sprites.inc
+	$(HGR_SPRITE) -l miss5e_sprite  arrows_moving.png 140  68 153  76 >> arrow_sprites.inc
 	$(HGR_SPRITE) -l miss5e_mask    arrows_moving.png 140  84 153  92 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot0o_sprite arrows_moving.png  21 100  34 130 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot0o_mask   arrows_moving.png  21 131  34 161 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot1o_sprite arrows_moving.png  49 100  62 112 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot1o_mask   arrows_moving.png  49 131  62 143 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot2o_sprite arrows_moving.png  77 100  90 108 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l shoot2o_mask   arrows_moving.png  77 131  90 139 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l hit1o_sprite   arrows_moving.png 105 100 118 105 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l hit1o_mask     arrows_moving.png 105 131 118 136 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l hit2o_sprite   arrows_moving.png 133 100 146 106 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l hit2o_mask     arrows_moving.png 133 131 146 137 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss1o_sprite  arrows_moving.png  21 165  34 174 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss1o_mask    arrows_moving.png  21 181  34 190 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss2o_sprite  arrows_moving.png  49 165  62 174 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss2o_mask    arrows_moving.png  49 181  62 190 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss3o_sprite  arrows_moving.png  77 165  90 174 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss3o_mask    arrows_moving.png  77 181  90 190 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss4o_sprite  arrows_moving.png 105 165 118 173 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss4o_mask    arrows_moving.png 105 181 118 189 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss5o_sprite  arrows_moving.png 133 165 146 173 >> arrow_sprites.inc
-	$(HGR_SPRITE) -l miss5o_mask    arrows_moving.png 133 181 146 189 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot0o_sprite arrows_moving.png  21 100  34 130 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot0o_mask   arrows_moving.png  21 131  34 161 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot1o_sprite arrows_moving.png  49 100  62 112 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot1o_mask   arrows_moving.png  49 131  62 143 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot2o_sprite arrows_moving.png  77 100  90 108 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l shoot2o_mask   arrows_moving.png  77 131  90 139 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l hit1o_sprite   arrows_moving.png 105 100 118 105 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l hit1o_mask     arrows_moving.png 105 131 118 136 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l hit2o_sprite   arrows_moving.png 133 100 146 106 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l hit2o_mask     arrows_moving.png 133 131 146 137 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss1o_sprite  arrows_moving.png  21 165  34 174 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss1o_mask    arrows_moving.png  21 181  34 190 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss2o_sprite  arrows_moving.png  49 165  62 174 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss2o_mask    arrows_moving.png  49 181  62 190 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss3o_sprite  arrows_moving.png  77 165  90 174 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss3o_mask    arrows_moving.png  77 181  90 190 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss4o_sprite  arrows_moving.png 105 165 118 173 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss4o_mask    arrows_moving.png 105 181 118 189 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss5o_sprite  arrows_moving.png 133 165 146 173 >> arrow_sprites.inc
+#	$(HGR_SPRITE) -l miss5o_mask    arrows_moving.png 133 181 146 189 >> arrow_sprites.inc
 
 #	$(HGR_SPRITE) -l arrow0_sprite arrow_sprites.png 126 104 139 147 >> arrow_sprites.inc
 #	$(HGR_SPRITE) -l arrow0_mask   arrow_sprites.png 154 104 167 147 >> arrow_sprites.inc

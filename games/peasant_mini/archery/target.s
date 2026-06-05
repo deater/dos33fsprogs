@@ -439,7 +439,8 @@ arrow_loop:
 	;===================
 	; draw moving arrow
 
-;	jsr	draw_moving_arrow
+	jsr	draw_arrow_move
+	bcs	end_arrow
 
 	;===================
 	; draw windsock
@@ -525,9 +526,12 @@ score_string:
 	.include	"draw_bow.s"
 	.include	"draw_flag.s"
 
+	.include	"move_arrows.s"
+
 	.include	"random8.s"
 	.include	"wait_keypress.s"
 	.include	"hgr_page_flip.s"
+	.include	"hgr_sprite_mask.s"
 
 bg_data:
 	.incbin "target_graphics/target_bg.hgr.zx02"
