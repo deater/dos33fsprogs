@@ -388,7 +388,7 @@ end_meter:
 	;===================
 	;===================
 
-move_arrow:
+actually_shoot_arrow_arrow:
 
 	lda	#0
 	sta	FRAME
@@ -411,6 +411,10 @@ move_arrow:
 	pla
 	sta	DRAW_PAGE
 
+
+	lda	#0
+	sta	backup1_valid
+	sta	backup2_valid
 
 
 	;===================
@@ -435,6 +439,21 @@ arrow_loop:
 	; draw string
 
 	jsr	draw_string
+
+	;====================
+	; erase old arrow
+
+	jsr	restore_arrow_bg
+
+	;=====================
+	; move arrow
+
+	jsr	move_arrows
+
+	;=====================
+	; save arrow bg
+
+	jsr	backup_arrow_bg
 
 	;===================
 	; draw moving arrow

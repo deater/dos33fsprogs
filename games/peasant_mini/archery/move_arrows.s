@@ -2,6 +2,32 @@
 
 USE_BG_PALETTE = 1
 
+
+	;=======================
+	; move arrows
+	;=======================
+move_arrows:
+
+	ldy	FRAME
+
+	; set X-coord
+
+	clc
+	lda	BOW_X
+	adc	#15
+	sta	ARROW_X
+
+	; set Y-coord
+
+	; note bow starts at 149 - 83 = 66
+
+	lda	shoot_sprite_y,Y
+	clc
+	adc	#64
+	sta	ARROW_Y
+
+	rts
+
 	;=======================
 	; draw arrow move
 	;=======================
@@ -11,18 +37,12 @@ draw_arrow_move:
 
 	; set X-coord
 
-	clc
-	lda	BOW_X
-	adc	#15
+	lda	ARROW_X
 	sta	SPRITE_X
 
 	; set Y-coord
 
-	; note bow starts at 149 - 83 = 66
-
-	lda	shoot_sprite_y,Y
-	clc
-	adc	#64
+	lda	ARROW_Y
 	sta	SPRITE_Y
 
 	; get sprite
@@ -117,5 +137,250 @@ miss_sprite_y:
 
 
 
+	;=======================
+	; backup arrow bg
+	;=======================
+backup_arrow_bg:
+
+	lda	DRAW_PAGE
+	beq	backup_arrow_bg_page1
+
+backup_arrow_bg_page2:
+
+	lda	#1
+	sta	backup2_valid
+
+	lda	ARROW_X
+	sta	backup2_x
+
+	lda	ARROW_Y
+	sta	backup2_y
+
+	ldy	#0
+	ldx	#0
+backup_arrow_loop2:
+	stx	ARROW_TEMP
+
+	txa
+	clc
+	adc	ARROW_Y
+	tax
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	bal2_smc1+2
+	sta	bal2_smc2+2
+
+	clc
+	lda	hposn_low,X
+	adc	ARROW_X
+	sta	bal2_smc1+1
+	adc	#1		; can't overflow
+	sta	bal2_smc2+1
+
+bal2_smc1:
+	lda	$2000
+	sta	backup2_data,Y
+	iny
+
+bal2_smc2:
+	lda	$2001
+	sta	backup2_data,Y
+	iny
+
+	ldx	ARROW_TEMP
+	inx
+	cpx	#30
+	bne	backup_arrow_loop2
+
+	rts
+
+
+backup_arrow_bg_page1:
+
+	lda	#1
+	sta	backup1_valid
+
+	lda	ARROW_X
+	sta	backup1_x
+
+	lda	ARROW_Y
+	sta	backup1_y
+
+	ldy	#0
+	ldx	#0
+backup_arrow_loop:
+	stx	ARROW_TEMP
+
+	txa
+	clc
+	adc	ARROW_Y
+	tax
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	bal_smc1+2
+	sta	bal_smc2+2
+
+	clc
+	lda	hposn_low,X
+	adc	ARROW_X
+	sta	bal_smc1+1
+	adc	#1		; can't overflow
+	sta	bal_smc2+1
+
+bal_smc1:
+	lda	$2000
+	sta	backup1_data,Y
+	iny
+
+bal_smc2:
+	lda	$2001
+	sta	backup1_data,Y
+	iny
+
+	ldx	ARROW_TEMP
+	inx
+	cpx	#30
+	bne	backup_arrow_loop
+
+	rts
+
+
+
+	;=======================
+	; restore arrow bg
+	;=======================
+restore_arrow_bg:
+
+	ldy	#0			; set output pointer to 0
+	ldx	#0			; set input row to 0
+
+	lda	DRAW_PAGE
+	beq	restore_arrow_bg_page1
+
+restore_arrow_bg_page2:
+
+	lda	backup2_valid
+	beq	done_restore_arrow_bg
+
+restore_arrow_loop2:
+	stx	ARROW_TEMP
+
+	txa
+	clc
+	adc	backup2_y
+	tax
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE
+	sta	ral2_smc1+2
+	sta	ral2_smc2+2
+
+	clc
+	lda	hposn_low,X
+	adc	backup2_x
+	sta	ral2_smc1+1
+	clc
+	adc	#1		; can't overflow
+	sta	ral2_smc2+1
+
+;	lda	#$00
+
+	lda	backup2_data,Y
+ral2_smc1:
+	sta	$2000
+
+	iny
+
+;	lda	#$ff
+
+	lda	backup2_data,Y
+ral2_smc2:
+	sta	$2001
+
+	iny
+
+	ldx	ARROW_TEMP
+	inx
+	cpx	#30
+	bne	restore_arrow_loop2
+
+	rts
+
+
+
+restore_arrow_bg_page1:
+
+	lda	backup1_valid		; exit early if no valid backup data
+	beq	done_restore_arrow_bg
+
+restore_arrow_loop:
+	stx	ARROW_TEMP
+
+	txa				; put row in A
+	clc
+	adc	backup1_y		; add y-offset
+
+	tax				; X is the current row
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE		; adjust for correct page
+	sta	ral_smc1+2		; self modify
+	sta	ral_smc2+2
+
+	clc
+	lda	hposn_low,X		; get low address
+	adc	backup1_x		; add in x position
+	sta	ral_smc1+1
+
+	clc				; not needed?
+	adc	#1			; can't overflow
+	sta	ral_smc2+1
+
+;	lda	#$00
+
+	lda	backup1_data,Y
+ral_smc1:
+	sta	$2000
+
+	iny
+
+;	lda	#$ff
+
+	lda	backup1_data,Y
+ral_smc2:
+	sta	$2001
+
+	iny
+
+	ldx	ARROW_TEMP
+	inx
+	cpx	#30
+	bne	restore_arrow_loop
+
+done_restore_arrow_bg:
+	rts
+
+
+
+
+backup1_valid:
+	.byte 0
+backup1_x:
+	.byte 0
+backup1_y:
+	.byte 0
+backup1_data:
+	.res 30*2
+
+backup2_valid:
+	.byte 0
+backup2_x:
+	.byte 0
+backup2_y:
+	.byte 0
+backup2_data:
+	.res 30*2
 
 
