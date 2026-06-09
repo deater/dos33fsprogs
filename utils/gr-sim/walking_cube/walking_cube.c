@@ -26,21 +26,21 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 #define canvasSizeX 32
 #define canvasSizeY 48
 
-	const int canvasZoomX = 4 * (64/canvasSizeX);
-	const int canvasZoomY = 4 * (48/canvasSizeY);
+//	const int canvasZoomX = 4 * (64/canvasSizeX);
+//	const int canvasZoomY = 4 * (48/canvasSizeY);
 
-	int frame = 0;
-	double zxFrame;
-	const double framesForRender = 5.2;
-	const double slowDown = 1;
+static	int frame = 0;
+static	double zxFrame;
+static	const double framesForRender = 5.2;
+static	const double slowDown = 1;
 
-	int palette[3][8]={
-		{0x000073,0x000073,0x00009D,0x0000E6,0x0073E6,0x009DE6,0x009DE6,0x009DE6},
-		{0x0000E6,0x0073E6,0x009DE6,0x00E6E6,0x73E6E6,0x9DE6E6,0xE6E6E6,0xE6E6E6},
-		{0x000000,0x730073,0x9D009D,0xE600E6,0xE67300,0xE69D00,0xE6E69D,0xE6E6E6},
-	};
+//static int palette[3][8]={
+//		{0x000073,0x000073,0x00009D,0x0000E6,0x0073E6,0x009DE6,0x009DE6,0x009DE6},
+//		{0x0000E6,0x0073E6,0x009DE6,0x00E6E6,0x73E6E6,0x9DE6E6,0xE6E6E6,0xE6E6E6},
+//		{0x000000,0x730073,0x9D009D,0xE600E6,0xE67300,0xE69D00,0xE6E69D,0xE6E6E6},
+//	};
 
-	int apple2_palette[3][8]={
+static int apple2_palette[3][8]={
 
 		/* Palette for dark floor tiles (to the back) */
 
@@ -95,6 +95,7 @@ static int paletteZX[] = {
 		0,	// 0x000073 darkest blue
 	};
 
+/* used to shade the tiles based on distance */
 static int backShade[] = {
 		0,0,0,0,
 		1,1,1,1,
@@ -106,30 +107,22 @@ static int backShade[] = {
 		6,6,
 	};
 
+/* directions for the cube to take */
 static int dirListId = 0;
 static int dirList[] = {
-		0,0,0,3,
-		3,2,2,1,
-		0,0,0,1,
-		2,1,1,2,
+	0,0,0,3,
+	3,2,2,1,
+	0,0,0,1,
+	2,1,1,2,
 
-		2,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,1,1,1,
-		1,
-	};
+	2,1,1,1,
+	1,1,1,1,
+	1,1,1,1,
+	1,1,1,1,
+	1,
+};
 
-	//int mapLightArr[256];
-//		0x00: 0,
-//		0x40: 1,
-//		0x60: 2,
-//		0x80: 3,
-//		0xA0: 4,
-//		0xC0: 5,
-//		0xE0: 6,
-//		0xFF: 7,
-//	}
+/* hard-coded lighting */
 
 static int mapLight[32][32] = {
 //0 1 2 3  4 5 6 7  8 9 1011 12131415 16171819 20212223 24252627 28293031
@@ -168,47 +161,47 @@ static int mapLight[32][32] = {
 };
 
 
-	/* scr buff */
-	int screenBuff[canvasSizeY][canvasSizeX];
-	int screenBuffMask[128][128];
-	int screenBuffShadow[128][128];
+/* screen buffers */
+static int screenBuff[canvasSizeY][canvasSizeX];
+//int screenBuffMask[128][128];
+//int screenBuffShadow[128][128];
 
 #define mapSizeX	63
 #define mapSizeY	63
 
-	double map[mapSizeX][mapSizeY];
+static double map[mapSizeX][mapSizeY];
 
 #define	drogMax		2
 
 #define cubePolygonsLength	6
 #define cubePolygonsRotLength	6
 
-	int cubePolygons[cubePolygonsLength][5] = {
-		{0,1,2,3,0},
-		{5,4,7,6,0},
-		{1,5,6,2,0},
-		{4,0,3,7,0},
-		{0,4,5,1,0},
-		{2,6,7,3,0}
-	};
+/* vertices for the six sides of the cube */
+static int cubePolygons[cubePolygonsLength][5] = {
+	{0,1,2,3,0},
+	{5,4,7,6,0},
+	{1,5,6,2,0},
+	{4,0,3,7,0},
+	{0,4,5,1,0},
+	{2,6,7,3,0}
+};
 
-	int drog;
+static int drog;	// ????
 
-	int mapDx = 8;
-	int mapDz = 8;
-	int mapAngle = 0;
+static double mapDx = 8;
+static double mapDz = 8;
+static double mapAngle = 0;
 
+static double rotAngleCubeDir;
+static double rotAngleCubeX = 0;
+static double rotAngleCubeY = 0;
+static double rotAngleCubeZ = 0;
+static double cubeDx = 0;
+static double cubeDz = 0;
 
-	int rotAngleCubeDir;
-	int rotAngleCubeX = 0;
-	int rotAngleCubeY = 0;
-	int rotAngleCubeZ = 0;
-	int cubeDx = 0;
-	int cubeDz = 0;
-
-	int phase = 0;
-	int phaseCubeDz = 0;
-	int phaseBgDz = 0;
+static int phase = 0;
+static double phaseCubeDz = 0;
+static double phaseBgDz = 0;
 
 #define	mapAnglePhase2Max	104 //112
 
@@ -240,7 +233,7 @@ struct coord_type cubePoints[cubePointsLength] = {
 	{x:0, y:0, z:0},
 };
 
-const int cubeAngleMax = 64;
+const double cubeAngleMax = 64;
 const double cubeAngleStep = 12 / slowDown;
 const double cubeStep = 4 / slowDown;
 const double mapStep = 3.2 / slowDown;
@@ -272,8 +265,6 @@ static void init(void) {
 	rotAngleCubeZ = 0;
 	cubeDx = 0;
 	cubeDz = 0;
-
-
 
 	phase = 0;
 	phaseCubeDz = 0;
@@ -340,26 +331,25 @@ void rotate3d(struct coord_type *result,
 
 }
 
-	int minCx = 9999;
-	int minCy = 9999;
-	int minCz = 9999;
-	int maxCx = 0;
-	int maxCy = 0;
-	int maxCz = 0;
+static double minCx = 9999;
+static double minCy = 9999;
+static double minCz = 9999;
+static double maxCx = 0;
+static double maxCy = 0;
+static double maxCz = 0;
 
-	int minLx = 9999;
-	int maxLx = 0;
-	int minLy = 9999;
-	int maxLy = 0;
+static double minLx = 9999;
+static double maxLx = 0;
+static double minLy = 9999;
+static double maxLy = 0;
 
-	int minNx = 9999;
-	int maxNx = 0;
-	int minNy = 9999;
-	int maxNy = 0;
+static double minNx = 9999;
+static double maxNx = 0;
+static double minNy = 9999;
+static double maxNy = 0;
 
 
-
-void nextStep(void) {
+static void nextStep(void) {
 
 		// next frame
 	if (rotAngleCubeDir == 0) { //right
@@ -544,8 +534,12 @@ void zxDrawPolygon(
 //	var leftLLL = [];
 //	var rightLLL = [];
 
-	double leftX[32],rightX[32];	/* size??? */
-	struct coord_type leftLLL[32],rightLLL[32];
+	/* size??? running is as high as 34? */
+
+#define LSIZE	64
+
+	double leftX[LSIZE],rightX[LSIZE];
+	struct coord_type leftLLL[LSIZE],rightLLL[LSIZE];
 
 	i=0;
 	for(y=zxPoints[0].py; y<=zxPoints[1].py; y++) {
@@ -579,6 +573,17 @@ void zxDrawPolygon(
 		i++;
 	}
 
+	static int old_i=0;
+
+	if (i>old_i) {
+		old_i=i;
+		printf("\tfinal i: %d\n",i);
+		if (i>LSIZE) {
+			fprintf(stderr,"i too big!\n");
+			exit(1);
+		}
+	}
+
 	i=0;
 	for(y=zxPoints[0].py; y <= zxPoints[2].py; y++) {
 		rightX[i] = zxPoints[0].px +
@@ -594,6 +599,15 @@ void zxDrawPolygon(
 					(zxPoints[2].ly-zxPoints[0].ly) /
 					(zxPoints[2].py-zxPoints[0].py) );
 		i++;
+	}
+
+	if (i>old_i) {
+		old_i=i;
+		printf("\tfinal i: %d\n",i);
+		if (i>LSIZE) {
+			fprintf(stderr,"i too big!\n");
+			exit(1);
+		}
 	}
 
 	//draw
@@ -623,7 +637,7 @@ void zxDrawPolygon(
 				L = L > 1 ? L : 1;
 
 				screenBuff[y][x] = paletteZX[(int)floor(L)];
-				screenBuffMask[y][x] = 1;
+				//screenBuffMask[y][x] = 1;
 
 
 			}
@@ -641,7 +655,7 @@ void zxDrawPolygon(
 				L = L > 1 ? L : 1;
 
 				screenBuff[y][x] = paletteZX[(int)floor(L)];
-				screenBuffMask[y][x] = 1;
+				//screenBuffMask[y][x] = 1;
 			}
 		}
 		i++;
@@ -715,10 +729,10 @@ static void vec3sub(
 	/* calc & render */
 void renderFrame(void) {
 
-	int minSx = 9999;
-	int maxSx = 0;
-	int minSy = 9999;
-	int maxSy = 0;
+	double minSx = 9999;
+	double maxSx = 0;
+	double minSy = 9999;
+	double maxSy = 0;
 
 	int y,x,i;
 
@@ -726,8 +740,8 @@ void renderFrame(void) {
 	for(y=0; y<canvasSizeY; y++) {
 		for(x=0; x<canvasSizeX; x++) {
 			screenBuff[y][x] = 0;
-			screenBuffMask[y][x] = 0;
-			screenBuffShadow[y][x] = 0;
+			//screenBuffMask[y][x] = 0;
+			//screenBuffShadow[y][x] = 0;
 		}
 	}
 
@@ -778,15 +792,10 @@ void renderFrame(void) {
 		}
 	}
 
+	/*****************/
 	/* draw the cube */
-
+	/*****************/
 	struct coord_type vec3;
-
-//	struct rot_type {
-//		double x,y,z;
-//		double xx,yy,zz;
-//	}
-
 	struct coord_type cubePointsRot[cubePointsLength];
 
         for(i=0; i<cubePointsLength; i++) {
@@ -925,6 +934,7 @@ void renderFrame(void) {
 				cubePolygonsRot[i].centerPoints[0],
 
 				cubePolygonsRot[i].nn);
+
 		for(p=0; p<4; p++) {
 			minCx = fmin(minCx, cubePolygonsRot[i].points[p].x);
 			minCy = fmin(minCy, cubePolygonsRot[i].points[p].y);
@@ -937,43 +947,28 @@ void renderFrame(void) {
         }
 
 
-        // draw buff zx
-#if 0
-	int buffDy = 0;
-	if (drog > 0) {
-		buffDy = ((drog % 2) == 0 ? -1 : +1);
-	}
-#endif
+        // draw out to graphics framebuffer
+
         for (y = 0; y < canvasSizeY; y++) {
             for (x = 0; x < canvasSizeX; x++) {
 		framebuffer_putpixel(x,y,screenBuff[y][x]);
-
-//                ctxZX.fillStyle = screenBuff[y+buffDy-2]!=undefined ? screenBuff[y+buffDy-2][x] : screenBuff[y][x];
-  //              ctxZX.fillRect(x*canvasZoomX, y*canvasZoomY, canvasZoomX, canvasZoomY);
             }
         }
 
         // show info
-#if 0
-		document.getElementById('info').innerHTML = ''
-			+ 'frameRendered: ' + frame + ', frameZX: ' + floor(framesForRender * frame) + '<br>'
-			+ 'sx: ' + minSx + ' .. ' + maxSx + '<br>'
-			+ 'sy: ' + minSy + ' .. ' + maxSy + '<br>'
+	printf("frameRendered: %d\tframeZX: %d\n",
+		frame,(int)floor(framesForRender * frame));
+	printf("sx: %.1lf .. %.1lf\n",minSx,maxSx);
+	printf("sy: %.1lf .. %.1lf\n",minSy,maxSy);
+	printf("x:  %.1lf .. %.1lf\n",minCx,maxCx);
+	printf("y:  %.1lf .. %.1lf\n",minCy,maxCy);
+	printf("z:  %.1lf .. %.1lf\n",minCz,maxCz);
+	printf("Lx:  %.1lf .. %.1lf\n",minLx,maxLx);
+	printf("Ly:  %.1lf .. %.1lf\n",minLy,maxLy);
+	printf("Nx:  %.1lf .. %.1lf\n",minNx,maxNx);
+	printf("Ny:  %.1lf .. %.1lf\n",minNy,maxNy);
 
-			+ 'x: ' + minCx + ' .. ' + maxCx + '<br>'
-			+ 'y: ' + minCy + ' .. ' + maxCy + '<br>'
-			+ 'z: ' + minCz + ' .. ' + maxCz + '<br>'
-
-			+ 'Lx: ' + minLx + ' .. ' + maxLx + '<br>'
-			+ 'Ly: ' + minLx + ' .. ' + maxLy + '<br>'
-
-			+ 'Nx: ' + minNx + ' .. ' + maxNx + '<br>'
-			+ 'Ny: ' + minNx + ' .. ' + maxNy + '<br>'
-			;
-
-#endif
-
-	printf("frame: %d\n",frame);
+//	printf("frame: %d\n",frame);
 
 	frame++;
 	zxFrame = (int)floor(framesForRender * frame);
@@ -1005,9 +1000,6 @@ void renderFrame(void) {
 		phaseBgDz = 0;
 		mapAngle = 0;
 		frame = 0;
-//		isAudioStarted = 0;
-//		document.getElementById('player').pause();
-//		document.getElementById('player').currentTime = 0;
 		dirListId = 0;
 	}
 
