@@ -40,6 +40,9 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	};
 
 	int apple2_palette[3][8]={
+
+		/* Palette for dark floor tiles (to the back) */
+
 		{0,	//0x000073,// dark blue
 		 0,	//0x000073,// dark blue
 		 2,	//0x00009D,// lighter blue
@@ -48,6 +51,9 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 		 6,	//0x009DE6,// light blue
 		 6,	//0x009DE6,// light blue
 		 6},	//0x009DE6},// light blue
+
+		/* palette for close floor tiles (to the front) */
+
 		{2,	//0x0000E6,// lighter blue
 		 2,	//0x0073E6,// medium blue
 		 6,	//0x009DE6,// light blue
@@ -56,6 +62,8 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 		 7,	//0x9DE6E6,// really light teal
 		 15,	//0xE6E6E6,// grey
 		 15},	//0xE6E6E6},// grey
+
+		/* palette for the cube? */
 		{0,	//0x000000,// black
 		 1,	//0x730073,// magenta
 		 3,	//0x9D009D,// lighter magenta
@@ -135,7 +143,10 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 
 #define	drogMax		2
 
-	int cubePoligons[6][5] = {
+#define cubePolygonsLength	6
+#define cubePolygonsRotLength	6
+
+	int cubePolygons[cubePolygonsLength][5] = {
 		{0,1,2,3,0},
 		{5,4,7,6,0},
 		{1,5,6,2,0},
@@ -173,9 +184,14 @@ int getNextDir(void) {
 
 struct coord_type {
 	double x,y,z;
+	double xx,yy,zz;
+	double px,py;
+	double l,lx,ly;
 };
 
-	struct coord_type cubePoints[9] = {
+#define cubePointsLength	9
+
+	struct coord_type cubePoints[cubePointsLength] = {
 		{x:-cubeSz, y:cubeSz, z:cubeSz},
 		{x:cubeSz, y:cubeSz, z:cubeSz},
 		{x:cubeSz, y:-cubeSz, z:cubeSz},
@@ -236,29 +252,34 @@ void init(void) {
 
 
 
-void rotate3d(struct coord_type *point,
+void rotate3d(struct coord_type *result,
+	struct coord_type point,
 	double alphaX, double alphaY, double alphaZ) {
 
 	double a,x,y,z;
 
 	// rotate X
 	a = M_PI * alphaX / 128;
-	y = round(point->y * cos(a)) + round(point->z * sin(a));
-	z = - round(point->y * sin(a)) + round(point->z * cos(a));
-	point->y = y;
-	point->z = z;
+	y = round(point.y * cos(a)) + round(point.z * sin(a));
+	z = -round(point.y * sin(a)) + round(point.z * cos(a));
+	point.y = y;
+	point.z = z;
 	// rotate Y
 	a = M_PI * alphaY / 128;
-	x = round(point->x * cos(a)) + round(point->z * sin(a));
-	z = - round(point->x * sin(a)) + round(point->z * cos(a));
-	point->x = x;
-	point->z = z;
+	x = round(point.x * cos(a)) + round(point.z * sin(a));
+	z = -round(point.x * sin(a)) + round(point.z * cos(a));
+	point.x = x;
+	point.z = z;
 	// rotate Z
 	a = M_PI * alphaZ / 128;
-	x = round(point->x * cos(a)) + round(point->y * sin(a));
-	y = - round(point->x * sin(a)) + round(point->y * cos(a));
-	point->x = x;
-	point->y = y;
+	x = round(point.x * cos(a)) + round(point.y * sin(a));
+	y = -round(point.x * sin(a)) + round(point.y * cos(a));
+	point.x = x;
+	point.y = y;
+
+	result->x=point.x;
+	result->y=point.y;
+	result->z=point.z;
 
 }
 
@@ -344,6 +365,246 @@ void nextStep(void) {
 }
 
 
+#if 0
+        function compareSortPolygons(a, b) {
+            var comparison = 0;
+            if (a.z > b.z) {
+                comparison = 1;
+            } else if (a.z < b.z) {
+                comparison = -1;
+            } else if (a.y > b.y) {
+                comparison = -1;
+            } else if (a.y < b.y) {
+                comparison = 1;
+            }
+            return comparison;
+        }
+#endif
+
+void zxDrawPolygon(
+	struct coord_type points0,
+	struct coord_type points1,
+	struct coord_type points2,
+	struct coord_type centerPoints0,
+	struct coord_type centerPoints1,
+	struct coord_type centerPoints2,
+	struct coord_type nn) {
+
+	int i,x,y;
+
+	struct coord_type *points[3]={&points0,&points1,&points2};
+
+	if (nn.z > 0) {
+		return;
+	}
+
+	//calc lights
+	minNx = fmin(minNx, nn.x);
+	maxNx = fmax(maxNx, nn.x);
+	minNy = fmin(minNy, nn.y);
+	maxNy = fmax(maxNy, nn.y);
+
+#if 0
+	globL = mapLight[31&(10+nn.y)][31&(16+nn.x)];
+
+	for(i=0; i<3; i++) {
+		points[i].l = mapLight[31&(10+nn.y)][31&(16+nn.x)];
+		//lights method 3
+		var nadd = {x:floor((centerPoints[i].x+nn.x)/2), y:floor((centerPoints[i].y+nn.y)/2), z:floor((centerPoints[i].z+nn.z)/2)};
+		points[i].lx = nadd.x;
+		points[i].ly = nadd.y;
+		points[i].l += floor(mapLight[31&(10+nadd.y)][31&(16+nadd.x)]/2);
+		points[i].l = points[i].l <= 7 ? points[i].l : 7;
+		minLx = fmin(minLx, nadd.x);
+		maxLx = fmax(maxLx, nadd.x);
+		minLy = fmin(minLy, nadd.y);
+		maxLy = fmax(maxLy, nadd.y);
+	}
+
+	// draw polygon
+	points.sort(zxComparePY);
+#endif
+
+	struct coord_type zxPoints[4];
+
+	for(i=0; i<3; i++) {
+		zxPoints[i].px = points[i]->px; //floor(16+(points[i].px-128)/8);
+		zxPoints[i].py = points[i]->py; //floor(24+(points[i].py-96)/4);
+		zxPoints[i].l = points[i]->l;
+		zxPoints[i].lx = points[i]->lx;
+		zxPoints[i].ly = points[i]->ly;
+	}
+
+//	var leftX = [];
+//	var rightX = [];
+//	var leftLLL = [];
+//	var rightLLL = [];
+
+	double leftX[32],rightX[32];	/* size??? */
+	struct coord_type leftLLL[32],rightLLL[32];
+
+	i=0;
+	for(y=zxPoints[0].py; y<=zxPoints[1].py; y++) {
+		leftX[i] = zxPoints[0].px + round( (y-zxPoints[0].py) *
+				(zxPoints[1].px-zxPoints[0].px) /
+				(zxPoints[1].py-zxPoints[0].py) );
+
+		leftLLL[i].lx=zxPoints[0].lx +
+				round( (y-zxPoints[0].py) *
+					(zxPoints[1].lx-zxPoints[0].lx) /
+					(zxPoints[1].py-zxPoints[0].py) );
+		leftLLL[i].ly=zxPoints[0].ly +
+				round( (y-zxPoints[0].py) *
+					(zxPoints[1].ly-zxPoints[0].ly) /
+					(zxPoints[1].py-zxPoints[0].py) );
+		i++;
+	}
+	for(y=zxPoints[1].py; y<zxPoints[2].py; y++) {
+		leftX[i] = zxPoints[1].px +
+				round( (y-zxPoints[1].py) *
+					(zxPoints[2].px-zxPoints[1].px) /
+					(zxPoints[2].py-zxPoints[1].py) );
+		leftLLL[i].lx=zxPoints[1].lx +
+				round( (y-zxPoints[1].py) *
+					(zxPoints[2].lx-zxPoints[1].lx) /
+					(zxPoints[2].py-zxPoints[1].py) );
+		leftLLL[i].ly=zxPoints[1].ly +
+				round( (y-zxPoints[1].py) *
+					(zxPoints[2].ly-zxPoints[1].ly) /
+					(zxPoints[2].py-zxPoints[1].py) );
+		i++;
+	}
+
+	i=0;
+	for(y=zxPoints[0].py; y <= zxPoints[2].py; y++) {
+		rightX[i] = zxPoints[0].px +
+				round( (y-zxPoints[0].py) *
+					(zxPoints[2].px-zxPoints[0].px) /
+					(zxPoints[2].py-zxPoints[0].py) );
+		rightLLL[i].lx=zxPoints[0].lx +
+				round( (y-zxPoints[0].py) *
+					(zxPoints[2].lx-zxPoints[0].lx) /
+					(zxPoints[2].py-zxPoints[0].py) );
+		rightLLL[i].ly=zxPoints[0].ly +
+				round( (y-zxPoints[0].py) *
+					(zxPoints[2].ly-zxPoints[0].ly) /
+					(zxPoints[2].py-zxPoints[0].py) );
+		i++;
+	}
+
+	//draw
+	i = 0;
+	double dx = 0,lx,ly,L;
+	for (y = zxPoints[0].py; y <= zxPoints[2].py; y++) {
+
+//		if (rightX[i] != undefined && leftX[i] != undefined) {
+		dx = fabs(rightX[i] - leftX[i]);
+
+		if (rightX[i] >= leftX[i]) {
+			for (x=leftX[i]; x<=rightX[i]; x++) {
+				lx = leftLLL[i].lx + (x-leftX[i]) *
+					(rightLLL[i].lx - leftLLL[i].lx) / dx;
+				ly = leftLLL[i].ly + (x-leftX[i]) *
+					(rightLLL[i].ly - leftLLL[i].ly) / dx;
+#if 0
+				L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
+				L = Math.max(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
+				L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
+				L = L <= 7 ? L : 7;
+				L = L > 1 ? L : 1;
+#endif
+				screenBuff[y][x] = paletteZX[(int)floor(L)];
+				screenBuffMask[y][x] = 1;
+
+
+			}
+		} else {
+			for(x=rightX[i]; x<=leftX[i]; x++) {
+				lx = rightLLL[i].lx + (x-rightX[i]) * (leftLLL[i].lx - rightLLL[i].lx) / dx;
+				ly = rightLLL[i].ly + (x-rightX[i]) * (leftLLL[i].ly - rightLLL[i].ly) / dx;
+#if 0
+				L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
+				L = fmax(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
+				L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
+				L = L <= 7 ? L : 7;
+				L = L > 1 ? L : 1;
+#endif
+				screenBuff[y][x] = paletteZX[(int)floor(L)];
+				screenBuffMask[y][x] = 1;
+			}
+		}
+		i++;
+	} // y
+
+}
+
+
+
+#if 0
+void zxComparePY(a, b) {
+	if (a.py == b.py) {
+		return 0;
+	}
+	return a.py > b.py ? 1 : -1;
+}
+
+
+void calcNorm(points) {
+		var ab = {
+			x: points[1].x - points[0].x,
+			y: points[1].y - points[0].y,
+			z: points[1].z - points[0].z,
+		};
+		var ac = {
+			x: points[2].x - points[0].x,
+			y: points[2].y - points[0].y,
+			z: points[2].z - points[0].z,
+		}
+		var n = {
+			x: ab.y*ac.z - ac.y*ab.z,
+			y: ab.x*ac.z - ac.x*ab.z,
+			z: ab.x*ac.y - ac.x*ab.y,
+		}
+		return n;
+}
+
+
+#endif
+
+void calcNorm2(
+	struct coord_type *result,
+	struct coord_type centerPoints[4]) {
+
+	result->x = floor((centerPoints[0].x + centerPoints[1].x +
+			centerPoints[2].x + centerPoints[3].x) / 40*15);
+	result->y = floor((centerPoints[0].y + centerPoints[1].y +
+			centerPoints[2].y + centerPoints[3].y) / 40*15);
+	result->z = floor((centerPoints[0].z + centerPoints[1].z +
+			centerPoints[2].z + centerPoints[3].z) / 40*15);
+
+}
+
+double vec3ugol(
+	struct coord_type a,
+	struct coord_type b) {
+
+	return ((a.x*b.x + a.y*b.y + a.z*b.z) /
+		( sqrt(a.x*a.x + a.y*a.y + a.z*a.z) *
+		  sqrt(b.x*b.x + b.y*b.y + b.z*b.z) ) );
+}
+
+
+void vec3sub(
+	struct coord_type *result,
+	struct coord_type a,
+	struct coord_type b) {
+
+	result->x=b.x-a.x;
+	result->y=b.y-a.y;
+	result->z=b.z-a.z;
+}
+
+
 	/* calc & render */
 void renderFrame(void) {
 
@@ -352,7 +613,7 @@ void renderFrame(void) {
 	int minSy = 9999;
 	int maxSy = 0;
 
-	int y,x;
+	int y,x,i;
 
 		// clear buff
 	for(y=0; y<canvasSizeY; y++) {
@@ -409,114 +670,177 @@ void renderFrame(void) {
 			maxSy = fmax(maxSy, sy);
 		}
 	}
+
+	/* draw the cube */
+
+	struct coord_type vec3;
+
+//	struct rot_type {
+//		double x,y,z;
+//		double xx,yy,zz;
+//	}
+
+	struct coord_type cubePointsRot[cubePointsLength];
+
+        for(i=0; i<cubePointsLength; i++) {
+
+		vec3.x=cubePoints[i].x;
+		vec3.y=cubePoints[i].y;
+		vec3.z=cubePoints[i].z;
+
+		if (rotAngleCubeDir == 0) { //right
+			vec3.x -= cubeSz;
+		} else if (rotAngleCubeDir == 1) { //down
+			vec3.z -= cubeSz;
+		} else if (rotAngleCubeDir == 2) { //left
+			vec3.x += cubeSz;
+		} else if (rotAngleCubeDir == 3) { //up
+			vec3.z += cubeSz;
+		}
+
+		vec3.y -= cubeSz;
+
+		//cubePointsRot[i] =
+		rotate3d(&cubePointsRot[i], vec3,
+			rotAngleCubeX, rotAngleCubeY, rotAngleCubeZ);
+
+		if (rotAngleCubeDir == 0) { //right
+			cubePointsRot[i].x += cubeSz;
+		} else if (rotAngleCubeDir == 1) { //down
+			cubePointsRot[i].z += cubeSz;
+		} else if (rotAngleCubeDir == 2) { //left
+			cubePointsRot[i].x -= cubeSz;
+		} else if (rotAngleCubeDir == 3) { //up
+			cubePointsRot[i].z -= cubeSz;
+		}
+		cubePointsRot[i].y += cubeSz;
+
+			// step add & rotate with bg
+		cubePointsRot[i].z += cubeDz;
+		cubePointsRot[i].x += cubeDx;
+		cubePointsRot[i].z += fazeCubeDz;
+//		cubePointsRot[i] =
+		rotate3d(&cubePointsRot[i],cubePointsRot[i], 0, mapAngle, 0);
+
+		cubePointsRot[i].xx = cubePointsRot[i].x;
+		cubePointsRot[i].yy = cubePointsRot[i].y;
+		cubePointsRot[i].zz = cubePointsRot[i].z;
+
+		// move to scr cooords
+		cubePointsRot[i].y += cubeSz + 12.5;
+
+		// project
+		double k = -64;
+		cubePointsRot[i].px = floor(k * cubePointsRot[i].x /
+						(k + cubePointsRot[i].z));
+		cubePointsRot[i].py = floor(k * cubePointsRot[i].y /
+						(k + cubePointsRot[i].z));
+		cubePointsRot[i].px = floor(cubePointsRot[i].px / 2);
+
+		//move to scr
+		cubePointsRot[i].px += 16;
+		cubePointsRot[i].py += 0;
+	}
+
+//        var cubePolygonsRot = [];
+
+	struct cubePolygonsRot_type {
+		struct coord_type points[4];
+		double x,y,z;
+		struct coord_type centerPoints[4];
+		struct coord_type nn;		// normal
+		struct coord_type center;
+	} cubePolygonsRot[cubePolygonsLength];
+
+	for (i=0; i<cubePolygonsLength; i++) {
+
+		cubePolygonsRot[i].points[0] =
+					cubePointsRot[cubePolygons[i][0]];
+		cubePolygonsRot[i].points[1] =
+					cubePointsRot[cubePolygons[i][1]];
+		cubePolygonsRot[i].points[2] =
+					cubePointsRot[cubePolygons[i][2]];
+		cubePolygonsRot[i].points[3] =
+					cubePointsRot[cubePolygons[i][3]];
+		cubePolygonsRot[i].z = round(cubePolygonsRot[i].points[0].z +
+					cubePolygonsRot[i].points[1].z +
+					cubePolygonsRot[i].points[2].z +
+					cubePolygonsRot[i].points[3].z) / 4;
+		cubePolygonsRot[i].y = round(cubePolygonsRot[i].points[0].y +
+					cubePolygonsRot[i].points[1].y +
+					cubePolygonsRot[i].points[2].y +
+					cubePolygonsRot[i].points[3].y) / 4;
+		cubePolygonsRot[i].center = cubePointsRot[8];
+
+
+		vec3sub(&cubePolygonsRot[i].centerPoints[0],
+				cubePolygonsRot[i].points[0],
+				cubePolygonsRot[i].center);
+		vec3sub(&cubePolygonsRot[i].centerPoints[1],
+				cubePolygonsRot[i].points[1],
+				cubePolygonsRot[i].center);
+		vec3sub(&cubePolygonsRot[i].centerPoints[2],
+				cubePolygonsRot[i].points[2],
+				cubePolygonsRot[i].center);
+		vec3sub(&cubePolygonsRot[i].centerPoints[3],
+				cubePolygonsRot[i].points[3],
+				cubePolygonsRot[i].center);
+		calcNorm2(&cubePolygonsRot[i].nn,
+					cubePolygonsRot[i].centerPoints);
+
+	}
+
+
+
 #if 0
-        var cubePointsRot = [];
-        for (var i = 0; i < cubePoints.length; i++) {
-            var vec3 = {x: cubePoints[i].x, y: cubePoints[i].y, z: cubePoints[i].z};
-            if (rotAngleCubeDir == 0) { //right
-                vec3.x -= cubeSz;
-            } else if (rotAngleCubeDir == 1) { //down
-                vec3.z -= cubeSz;
-            } else if (rotAngleCubeDir == 2) { //left
-                vec3.x += cubeSz;
-            } else if (rotAngleCubeDir == 3) { //up
-                vec3.z += cubeSz;
-            }
-            vec3.y -= cubeSz;
-            cubePointsRot[i] = rotate3d(vec3, rotAngleCubeX, rotAngleCubeY, rotAngleCubeZ);
-            if (rotAngleCubeDir == 0) { //right
-                cubePointsRot[i].x += cubeSz;
-            } else if (rotAngleCubeDir == 1) { //down
-                cubePointsRot[i].z += cubeSz;
-            } else if (rotAngleCubeDir == 2) { //left
-                cubePointsRot[i].x -= cubeSz;
-            } else if (rotAngleCubeDir == 3) { //up
-                cubePointsRot[i].z -= cubeSz;
-            }
-            cubePointsRot[i].y += cubeSz;
-
-            // step add & rotate with bg
-			cubePointsRot[i].z += cubeDz;
-            cubePointsRot[i].x += cubeDx;
-			cubePointsRot[i].z += fazeCubeDz;
-			cubePointsRot[i] = rotate3d(cubePointsRot[i], 0, mapAngle, 0);
-
-			cubePointsRot[i].xx = cubePointsRot[i].x;
-			cubePointsRot[i].yy = cubePointsRot[i].y;
-			cubePointsRot[i].zz = cubePointsRot[i].z;
-
-			// move to scr cooords
-            cubePointsRot[i].y += cubeSz + 12.5;
-
-            // project
-            var k = -64;
-            cubePointsRot[i].px = floor(k * cubePointsRot[i].x / (k + cubePointsRot[i].z));
-            cubePointsRot[i].py = floor(k * cubePointsRot[i].y / (k + cubePointsRot[i].z));
-			cubePointsRot[i].px = floor(cubePointsRot[i].px / 2);
-
-            //move to scr
-            cubePointsRot[i].px += 16;
-            cubePointsRot[i].py += 0;
-        }
-        var cubePoligonsRot = [];
-        for (var i = 0; i < cubePoligons.length; i++) {
-            cubePoligonsRot[i] = {};
-            cubePoligonsRot[i].points = [];
-            cubePoligonsRot[i].points[0] = cubePointsRot[cubePoligons[i][0]];
-            cubePoligonsRot[i].points[1] = cubePointsRot[cubePoligons[i][1]];
-            cubePoligonsRot[i].points[2] = cubePointsRot[cubePoligons[i][2]];
-            cubePoligonsRot[i].points[3] = cubePointsRot[cubePoligons[i][3]];
-            cubePoligonsRot[i].z = round(cubePoligonsRot[i].points[0].z + cubePoligonsRot[i].points[1].z + cubePoligonsRot[i].points[2].z + cubePoligonsRot[i].points[3].z) / 4;
-            cubePoligonsRot[i].y = round(cubePoligonsRot[i].points[0].y + cubePoligonsRot[i].points[1].y + cubePoligonsRot[i].points[2].y + cubePoligonsRot[i].points[3].y) / 4;
-			cubePoligonsRot[i].center = cubePointsRot[8];
-			cubePoligonsRot[i].centerPoints = [];
-			cubePoligonsRot[i].centerPoints[0] = vec3sub(cubePoligonsRot[i].points[0], cubePoligonsRot[i].center);
-			cubePoligonsRot[i].centerPoints[1] = vec3sub(cubePoligonsRot[i].points[1], cubePoligonsRot[i].center);
-			cubePoligonsRot[i].centerPoints[2] = vec3sub(cubePoligonsRot[i].points[2], cubePoligonsRot[i].center);
-			cubePoligonsRot[i].centerPoints[3] = vec3sub(cubePoligonsRot[i].points[3], cubePoligonsRot[i].center);
-			cubePoligonsRot[i].nn = calcNorm2(cubePoligonsRot[i].centerPoints);
-        }
-
-        function compareSortPoligons(a, b) {
-            var comparison = 0;
-            if (a.z > b.z) {
-                comparison = 1;
-            } else if (a.z < b.z) {
-                comparison = -1;
-            } else if (a.y > b.y) {
-                comparison = -1;
-            } else if (a.y < b.y) {
-                comparison = 1;
-            }
-            return comparison;
-        }
-
-        cubePoligonsRot.sort(compareSortPoligons);
-
-		// draw poligons zx
-        for (var i = 0; i < cubePoligonsRot.length; i++) {
-            var rgb = floor(i*255/(cubePoligonsRot.length-1));
-            var fillStyle = 'rgb(' + rgb + ',' + rgb + ',' + rgb + ')';
-			zxDrawPoligon([cubePoligonsRot[i].points[0], cubePoligonsRot[i].points[1], cubePoligonsRot[i].points[2]], [cubePoligonsRot[i].centerPoints[0], cubePoligonsRot[i].centerPoints[1], cubePoligonsRot[i].centerPoints[2]], cubePoligonsRot[i].nn);
-			zxDrawPoligon([cubePoligonsRot[i].points[2], cubePoligonsRot[i].points[3], cubePoligonsRot[i].points[0]], [cubePoligonsRot[i].centerPoints[2], cubePoligonsRot[i].centerPoints[3], cubePoligonsRot[i].centerPoints[0]], cubePoligonsRot[i].nn);
-			for (var p = 0; p < 4; p++) {
-				minCx = Math.min(minCx, cubePoligonsRot[i].points[p].x);
-				minCy = Math.min(minCy, cubePoligonsRot[i].points[p].y);
-				minCz = Math.min(minCz, cubePoligonsRot[i].points[p].z);
-				maxCx = Math.max(maxCx, cubePoligonsRot[i].points[p].x);
-				maxCy = Math.max(maxCy, cubePoligonsRot[i].points[p].y);
-				maxCz = Math.max(maxCz, cubePoligonsRot[i].points[p].z);
-			}
-
-        }
+        cubePolygonsRot.sort(compareSortPolygons);
 #endif
 
+	double rgb;
+	int p;
+
+		// draw polygons zx
+	for(i=0; i<cubePolygonsRotLength; i++) {
+		rgb = floor(i*255/(cubePolygonsRotLength-1));
+            	//var fillStyle = 'rgb(' + rgb + ',' + rgb + ',' + rgb + ')';
+		zxDrawPolygon(cubePolygonsRot[i].points[0],
+				cubePolygonsRot[i].points[1],
+				cubePolygonsRot[i].points[2],
+
+				cubePolygonsRot[i].centerPoints[0],
+				cubePolygonsRot[i].centerPoints[1],
+				cubePolygonsRot[i].centerPoints[2],
+
+				cubePolygonsRot[i].nn);
+
+		zxDrawPolygon(cubePolygonsRot[i].points[2],
+				cubePolygonsRot[i].points[3],
+				cubePolygonsRot[i].points[0],
+
+				cubePolygonsRot[i].centerPoints[2],
+				cubePolygonsRot[i].centerPoints[3],
+				cubePolygonsRot[i].centerPoints[0],
+
+				cubePolygonsRot[i].nn);
+		for(p=0; p<4; p++) {
+			minCx = fmin(minCx, cubePolygonsRot[i].points[p].x);
+			minCy = fmin(minCy, cubePolygonsRot[i].points[p].y);
+			minCz = fmin(minCz, cubePolygonsRot[i].points[p].z);
+			maxCx = fmax(maxCx, cubePolygonsRot[i].points[p].x);
+			maxCy = fmax(maxCy, cubePolygonsRot[i].points[p].y);
+			maxCz = fmax(maxCz, cubePolygonsRot[i].points[p].z);
+		}
+
+        }
+
+
         // draw buff zx
+#if 0
 	int buffDy = 0;
 	if (drog > 0) {
 		buffDy = ((drog % 2) == 0 ? -1 : +1);
 	}
-
+#endif
         for (y = 0; y < canvasSizeY; y++) {
             for (x = 0; x < canvasSizeX; x++) {
 		framebuffer_putpixel(x,y,screenBuff[y][x]);
@@ -588,183 +912,6 @@ void renderFrame(void) {
 }
 
 
-#if 0
-void zxDrawPolygon(points, centerPoints, nn) {
-
-	int i;
-
-	if (nn.z > 0) {
-		return;
-	}
-
-	//calc lights
-	minNx = fmin(minNx, nn.x);
-	maxNx = fmax(maxNx, nn.x);
-	minNy = fmin(minNy, nn.y);
-	maxNy = fmax(maxNy, nn.y);
-
-	var globL = mapLight[31&(10+nn.y)][31&(16+nn.x)];
-
-	for(i=0; i<3; i++) {
-		points[i].l = mapLight[31&(10+nn.y)][31&(16+nn.x)];
-		//lights method 3
-		var nadd = {x:floor((centerPoints[i].x+nn.x)/2), y:floor((centerPoints[i].y+nn.y)/2), z:floor((centerPoints[i].z+nn.z)/2)};
-		points[i].lx = nadd.x;
-		points[i].ly = nadd.y;
-		points[i].l += floor(mapLight[31&(10+nadd.y)][31&(16+nadd.x)]/2);
-		points[i].l = points[i].l <= 7 ? points[i].l : 7;
-		minLx = fmin(minLx, nadd.x);
-		maxLx = fmax(maxLx, nadd.x);
-		minLy = fmin(minLy, nadd.y);
-		maxLy = fmax(maxLy, nadd.y);
-	}
-
-	// draw polygon
-	points.sort(zxComparePY);
-	var zxPoints = [];
-	for(i=0; i<3; i++) {
-		zxPoints[i] = {};
-		zxPoints[i].px = points[i].px; //floor(16+(points[i].px-128)/8);
-		zxPoints[i].py = points[i].py; //floor(24+(points[i].py-96)/4);
-		zxPoints[i].l = points[i].l;
-		zxPoints[i].lx = points[i].lx;
-		zxPoints[i].ly = points[i].ly;
-	}
-	var leftX = [];
-	var rightX = [];
-	var leftLLL = [];
-	var rightLLL = [];
-
-	i = 0;
-	for (var y = zxPoints[0].py; y <= zxPoints[1].py; y++) {
-		leftX[i] = zxPoints[0].px + round( (y-zxPoints[0].py) * (zxPoints[1].px-zxPoints[0].px) / (zxPoints[1].py-zxPoints[0].py) );
-		leftLLL[i] = {
-			lx: zxPoints[0].lx + round( (y-zxPoints[0].py) * (zxPoints[1].lx-zxPoints[0].lx) / (zxPoints[1].py-zxPoints[0].py) ),
-			ly: zxPoints[0].ly + round( (y-zxPoints[0].py) * (zxPoints[1].ly-zxPoints[0].ly) / (zxPoints[1].py-zxPoints[0].py) )
-		};
-		i++;
-	}
-
-	for (var y = zxPoints[1].py; y < zxPoints[2].py; y++) {
-		leftX[i] = zxPoints[1].px + round( (y-zxPoints[1].py) * (zxPoints[2].px-zxPoints[1].px) / (zxPoints[2].py-zxPoints[1].py) );
-		leftLLL[i] = {
-			lx: zxPoints[1].lx + round( (y-zxPoints[1].py) * (zxPoints[2].lx-zxPoints[1].lx) / (zxPoints[2].py-zxPoints[1].py) ),
-			ly: zxPoints[1].ly + round( (y-zxPoints[1].py) * (zxPoints[2].ly-zxPoints[1].ly) / (zxPoints[2].py-zxPoints[1].py) )
-		};
-		i++;
-	}
-
-	i = 0;
-	for (var y = zxPoints[0].py; y <= zxPoints[2].py; y++) {
-		rightX[i] = zxPoints[0].px + round( (y-zxPoints[0].py) * (zxPoints[2].px-zxPoints[0].px) / (zxPoints[2].py-zxPoints[0].py) );
-		rightLLL[i] = {
-			lx: zxPoints[0].lx + round( (y-zxPoints[0].py) * (zxPoints[2].lx-zxPoints[0].lx) / (zxPoints[2].py-zxPoints[0].py) ),
-			ly: zxPoints[0].ly + round( (y-zxPoints[0].py) * (zxPoints[2].ly-zxPoints[0].ly) / (zxPoints[2].py-zxPoints[0].py) )
-		};
-		i++;
-	}
-
-	//draw
-	i = 0;
-	dx = 0;
-	for (y = zxPoints[0].py; y <= zxPoints[2].py; y++) {
-		if (rightX[i] != undefined && leftX[i] != undefined) {
-			dx = Math.abs(rightX[i] - leftX[i]);
-
-			if (rightX[i] >= leftX[i]) {
-				for (var x = leftX[i]; x <= rightX[i]; x++) {
-					var lx = leftLLL[i].lx + (x-leftX[i]) * (rightLLL[i].lx - leftLLL[i].lx) / dx;
-					var ly = leftLLL[i].ly + (x-leftX[i]) * (rightLLL[i].ly - leftLLL[i].ly) / dx;
-					var L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
-					var L = Math.max(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
-					var L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
-					L = L <= 7 ? L : 7;
-					L = L > 1 ? L : 1;
-
-					screenBuff[y][x] = paletteZX[floor(L)];
-					screenBuffMask[y][x] = 1;
-
-				}
-			} else {
-				for (var x = rightX[i]; x <= leftX[i]; x++) {
-					var lx = rightLLL[i].lx + (x-rightX[i]) * (leftLLL[i].lx - rightLLL[i].lx) / dx;
-					var ly = rightLLL[i].ly + (x-rightX[i]) * (leftLLL[i].ly - rightLLL[i].ly) / dx;
-					var L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
-					var L = Math.max(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
-					var L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
-					L = L <= 7 ? L : 7;
-					L = L > 1 ? L : 1;
-					screenBuff[y][x] = paletteZX[floor(L)];
-					screenBuffMask[y][x] = 1;
-				}
-			}
-			i++;
-		}
-	}
-}
-#endif
-
-
-#if 0
-void zxComparePY(a, b) {
-	if (a.py == b.py) {
-		return 0;
-	}
-	return a.py > b.py ? 1 : -1;
-}
-
-
-void calcNorm(points) {
-		var ab = {
-			x: points[1].x - points[0].x,
-			y: points[1].y - points[0].y,
-			z: points[1].z - points[0].z,
-		};
-		var ac = {
-			x: points[2].x - points[0].x,
-			y: points[2].y - points[0].y,
-			z: points[2].z - points[0].z,
-		}
-		var n = {
-			x: ab.y*ac.z - ac.y*ab.z,
-			y: ab.x*ac.z - ac.x*ab.z,
-			z: ab.x*ac.y - ac.x*ab.y,
-		}
-		return n;
-}
-
-
-#endif
-
-void calcNorm2(
-	struct coord_type *result,
-	struct coord_type centerPoints[4]) {
-
-		result->x = floor((centerPoints[0].x + centerPoints[1].x + centerPoints[2].x + centerPoints[3].x) / 40*15);
-		result->y = floor((centerPoints[0].y + centerPoints[1].y + centerPoints[2].y + centerPoints[3].y) / 40*15);
-		result->z = floor((centerPoints[0].z + centerPoints[1].z + centerPoints[2].z + centerPoints[3].z) / 40*15);
-
-}
-
-double vec3ugol(
-	struct coord_type a,
-	struct coord_type b) {
-
-	return ((a.x*b.x + a.y*b.y + a.z*b.z) /
-		( sqrt(a.x*a.x + a.y*a.y + a.z*a.z) *
-		  sqrt(b.x*b.x + b.y*b.y + b.z*b.z) ) );
-}
-
-
-void vec3sub(
-	struct coord_type *result,
-	struct coord_type a,
-	struct coord_type b) {
-
-	result->x=b.x-a.x;
-	result->y=b.y-a.y;
-	result->z=b.z-a.z;
-}
 
 
 
