@@ -415,7 +415,7 @@ actually_shoot_arrow_arrow:
 	lda	#0
 	sta	backup1_valid
 	sta	backup2_valid
-
+	sta	HIT_OFFSET
 
 	;===================
 	;===================

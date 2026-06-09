@@ -8,7 +8,25 @@ USE_BG_PALETTE = 1
 	;=======================
 move_arrows:
 
-	ldy	FRAME
+	clc
+	lda	FRAME
+	adc	HIT_OFFSET
+	tay
+
+	cpy	#7
+	bne	dont_mess_with
+
+check_if_hit_target:
+
+	jsr	check_target		; carry set if hit
+
+	bcs	dont_mess_with
+
+	; point to miss animation instead
+	lda	#15
+	sta	HIT_OFFSET
+
+dont_mess_with:
 
 	; set X-coord
 
@@ -33,7 +51,10 @@ move_arrows:
 	;=======================
 draw_arrow_move:
 
-	ldy	FRAME
+	clc
+	lda	FRAME
+	adc	HIT_OFFSET
+	tay
 
 	; set X-coord
 
@@ -384,3 +405,55 @@ backup2_data:
 	.res 30*2
 
 
+
+	;=========================
+	; check target
+	;=========================
+	; carry clear = miss
+	; carry set = hit
+check_target:
+
+	ldx	#0
+
+check_target_loop:
+
+	lda	ARROW_X
+
+	cmp	target_x1,X
+	bcc	check_target_again
+
+	cmp	target_x2,X
+	bcs	check_target_again
+
+	lda	ARROW_Y
+	cmp	target_y1,X
+	bcc	check_target_again
+
+	cmp	target_y2,X
+	bcs	check_target_again
+
+	bcc	check_target_hit
+
+check_target_again:
+	inx
+	cpx	#14
+	bne	check_target_loop
+
+check_target_missed:
+	clc
+	rts
+
+check_target_hit:
+	sec
+	rts
+
+target_x1:
+;	.byte 119,111,104, 97, 89, 84, 90, 97,104,104, 97,153,153,160
+	.byte  17, 16, 15, 14, 13, 12, 13, 14, 15, 15, 14, 22, 22, 23
+target_y1:
+	.byte 15,  19, 23, 29, 37, 49, 85, 95,106,119,126,119,125,134
+target_x2:
+;	.byte 160,168,174,182,189,189,188,181,175,126,119,176,181,174
+	.byte  23, 24, 25, 26, 27, 27, 27, 26, 25, 18, 17, 25, 26, 25
+target_y2:
+	.byte 19,  24, 30, 38, 49, 85, 95,106,119,126,139,125,135,139

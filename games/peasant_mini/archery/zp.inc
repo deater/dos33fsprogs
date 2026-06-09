@@ -385,6 +385,7 @@ METER_LEFT	= $EC		; target
 METER_RIGHT	= $ED		; target
 METER_PRESSES	= $EE		; target
 ARROW_TEMP	= $EF		; target
+HIT_OFFSET	= $F0		; target
 
 
 P0		= $F1
