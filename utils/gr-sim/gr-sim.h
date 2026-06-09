@@ -39,8 +39,8 @@ void set_plaid(void);
 void clear_plaid(void);
 
 //void clear_top_a(void);
-//void clear_top(int page);
-//void clear_bottom(int page);
+void clear_top_color(int page,int color);
+void clear_bottom_color(int page,int color);
 
 void vtab(int ypos);
 void htab(int xpos);

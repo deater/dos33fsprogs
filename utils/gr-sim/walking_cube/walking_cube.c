@@ -20,7 +20,7 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	unsigned char color) {
 
 	color_equals(color);
-	basic_plot(x,y);
+	basic_plot(x+4,y);
 
 }
 
@@ -1064,6 +1064,7 @@ int main(int argc, char **argv) {
 	gr();
 
 	clear_screens();
+	clear_bottom_color(0,0);
 
 	init();
 

@@ -1914,26 +1914,27 @@ void clear_top_a(void) {
 	}
 }
 
-void clear_top(int page) {
+#endif
+
+void clear_top_color(int page, int color) {
 	int i;
 
-	ram[COLOR]=0x0;
+	ram[COLOR]=color;
 	for(i=0;i<40;i+=2) {
 		hlin_double(page,0,40,i);
 	}
 }
 
-void clear_bottom(int page) {
+void clear_bottom_color(int page,int color) {
 	int i;
 
 	/* NORMAL space */
-	ram[COLOR]=0xa0;
+	ram[COLOR]=color;
 	for(i=40;i<48;i+=2) {
 		hlin_double(page,0,40,i);
 	}
 }
 
-#endif
 
 void vtab(int ypos) {
 	ram[CV]=ypos-1;
