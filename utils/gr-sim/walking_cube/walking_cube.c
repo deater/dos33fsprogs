@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	unsigned char color) {
@@ -307,19 +308,19 @@ void rotate3d(struct coord_type *result,
 	double a,x,y,z;
 
 	// rotate X
-	a = M_PI * alphaX / 128;
+	a = M_PI * alphaX / 128.0;
 	y = round(point.y * cos(a)) + round(point.z * sin(a));
 	z = -round(point.y * sin(a)) + round(point.z * cos(a));
 	point.y = y;
 	point.z = z;
 	// rotate Y
-	a = M_PI * alphaY / 128;
+	a = M_PI * alphaY / 128.0;
 	x = round(point.x * cos(a)) + round(point.z * sin(a));
 	z = -round(point.x * sin(a)) + round(point.z * cos(a));
 	point.x = x;
 	point.z = z;
 	// rotate Z
-	a = M_PI * alphaZ / 128;
+	a = M_PI * alphaZ / 128.0;
 	x = round(point.x * cos(a)) + round(point.y * sin(a));
 	y = -round(point.x * sin(a)) + round(point.y * cos(a));
 	point.x = x;
@@ -434,6 +435,8 @@ int compareSortPolygons(const void *a1, const void *b1) {
 	a=(struct cubePolygonsRot_type *)a1;
 	b=(struct cubePolygonsRot_type *)b1;
 
+//	printf("\ta->z: %.1f, b->z: %.1f\n",a->z,b->z);
+
 	if (a->z > b->z) {
 		comparison = 1;
 	} else if (a->z < b->z) {
@@ -455,8 +458,10 @@ static int zxComparePY(const void *a1, const void *b1) {
 
 	struct coord_type *a,*b;
 
-	a=(struct coord_type *)a1;
-	b=(struct coord_type *)b1;
+	a=*(struct coord_type **)a1;
+	b=*(struct coord_type **)b1;
+
+//	printf("\ta->py %.1lf b->py %.1lf\n",a->py,b->py);
 
 	if (a->py == b->py) {
 		return 0;
@@ -517,7 +522,15 @@ void zxDrawPolygon(
 	// draw polygon
 	//points.sort(zxComparePY);
 
+//	printf("Before\n");
+//	for(i=0;i<3;i++) printf("%d px %.1lf py %.1lf\n",i,
+//		points[i]->px,points[i]->py);
+
 	qsort(&points[0],3,sizeof(struct coord_type *),zxComparePY);
+
+//	printf("After\n");
+//	for(i=0;i<3;i++) printf("%d px %.1lf py %.1lf\n",i,
+//		points[i]->px,points[i]->py);
 
 	struct coord_type zxPoints[4];
 
@@ -798,6 +811,9 @@ void renderFrame(void) {
 	struct coord_type vec3;
 	struct coord_type cubePointsRot[cubePointsLength];
 
+	memset(&cubePointsRot,
+		0xff,sizeof(struct coord_type[cubePointsLength]));
+
         for(i=0; i<cubePointsLength; i++) {
 
 		vec3.x=cubePoints[i].x;
@@ -863,6 +879,9 @@ void renderFrame(void) {
 
 	struct cubePolygonsRot_type cubePolygonsRot[cubePolygonsLength];
 
+	memset(&cubePolygonsRot,
+		0xff,sizeof(struct coord_type[cubePointsLength]));
+
 	for (i=0; i<cubePolygonsLength; i++) {
 
 		cubePolygonsRot[i].points[0] =
@@ -873,6 +892,8 @@ void renderFrame(void) {
 					cubePointsRot[cubePolygons[i][2]];
 		cubePolygonsRot[i].points[3] =
 					cubePointsRot[cubePolygons[i][3]];
+
+
 		cubePolygonsRot[i].z = round(cubePolygonsRot[i].points[0].z +
 					cubePolygonsRot[i].points[1].z +
 					cubePolygonsRot[i].points[2].z +
@@ -901,11 +922,31 @@ void renderFrame(void) {
 
 	}
 
+//	printf("Before\n");
+//	for(i=0;i<cubePolygonsLength;i++) {
+//		printf("%d: %.1lf %.1lf %.1lf\n",
+//			i,cubePolygonsRot[i].x,
+//			cubePolygonsRot[i].y,
+//			cubePolygonsRot[i].z);
+//	}
+
+
 
 	qsort(&cubePolygonsRot[0],
 			cubePolygonsLength,
-			sizeof(struct cubePolygonsRot_type *),
+			sizeof(struct cubePolygonsRot_type),
 			compareSortPolygons);
+
+//	printf("After\n");
+//	for(i=0;i<cubePolygonsLength;i++) {
+//		printf("%d: %.1lf %.1lf %.1lf\n",
+//			i,cubePolygonsRot[i].x,
+//			cubePolygonsRot[i].y,
+//			cubePolygonsRot[i].z);
+//	}
+
+//	exit(1);
+
 //        cubePolygonsRot.sort(compareSortPolygons);
 
 //	double rgb;
