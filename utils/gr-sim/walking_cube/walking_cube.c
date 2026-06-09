@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
+#include <stdlib.h>
 
 static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	unsigned char color) {
@@ -75,12 +76,26 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	};
 
 
-	int paletteZX[] = {
-		0x000000,0x9D009D,0x9D00E6,0xE600E6,0xE6739D,0xE69D73,0xE6E69D,0xE6E6E6,
-		0x9DE6E6,0x73E6E6,0x00E6E6,0x009DE6,0x0073E6,0x0000E6,0x00009D,0x000073
+static int paletteZX[] = {
+		0,	// 0x000000, black
+		1,	// 0x9D009D, magenta
+		2,	// 0x9D00E6, purple
+		3,	// 0xE600E6, light magenta?
+		11,	// 0xE6739D, rose?
+		9,	// 0xE69D73, light orange?
+		13,	// 0xE6E69D, yellow
+		15,	// 0xE6E6E6, grey
+		14,	// 0x9DE6E6, light teal
+		7,	// 0x73E6E6, medium teal
+		6,	// 0x00E6E6, dark teal
+		2,	// 0x009DE6, medium blue
+		2,	// 0x0073E6, dark medium blue
+		2,	// 0x0000E6, blue
+		0,	// 0x00009D, darker blue
+		0,	// 0x000073 darkest blue
 	};
 
-	int backShade[] = {
+static int backShade[] = {
 		0,0,0,0,
 		1,1,1,1,
 		2,2,2,2,
@@ -91,8 +106,8 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 		6,6,
 	};
 
-	int dirListId = 0;
-	int dirList[] = {
+static int dirListId = 0;
+static int dirList[] = {
 		0,0,0,3,
 		3,2,2,1,
 		0,0,0,1,
@@ -105,7 +120,7 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 		1,
 	};
 
-	int mapLightArr[256];
+	//int mapLightArr[256];
 //		0x00: 0,
 //		0x40: 1,
 //		0x60: 2,
@@ -116,20 +131,42 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 //		0xFF: 7,
 //	}
 
-//	var mapLight = [];
-//	var canvasLight = document.getElementById('canvas-light');
-//	var ctxLight = canvasLight.getContext('2d');
-//	var imgLight = document.getElementById('img-light');
-//	ctxLight.drawImage(imgLight, 0, 0);
-//	var lightData = ctxLight.getImageData(0,0,32,32).data;
-//	for (var y = 0; y < 32; y++) {
-//		mapLight[y] = [];
-//		for (var x = 0; x < 32; x++) {
-//			var adr = 4*(y*32+x);
-//			var color = lightData[adr];
-//			mapLight[y][x] = mapLightArr[color];
-//		}
-//	}
+static int mapLight[32][32] = {
+//0 1 2 3  4 5 6 7  8 9 1011 12131415 16171819 20212223 24252627 28293031
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //0
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //1
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //2
+{ 0,0,0,0, 0,0,0,0, 0,0,1,1, 1,1,1,1, 1,1,1,1, 1,1,0,0, 0,0,0,0, 0,0,0,0}, //3
+{ 0,0,0,0, 0,0,0,0, 1,1,1,1, 1,2,2,2, 2,2,2,1, 1,1,1,1, 0,0,0,0, 0,0,0,0}, //4
+{ 0,0,0,0, 0,0,0,1, 1,1,2,2, 2,2,2,2, 2,2,2,2, 2,2,1,1, 1,0,0,0, 0,0,0,0}, //5
+{ 0,0,0,0, 0,0,1,1, 1,2,2,2, 2,3,3,3, 3,3,3,2, 2,2,2,1, 1,1,0,0, 0,0,0,0}, //6
+{ 0,0,0,0, 0,1,1,1, 2,2,2,3, 3,3,3,3, 3,3,3,3, 3,2,2,2, 1,1,1,0, 0,0,0,0}, //7
+{ 0,0,0,0, 1,1,1,2, 2,3,3,3, 3,4,4,4, 4,4,4,3, 3,3,3,2, 2,1,1,1, 0,0,0,0}, //8
+{ 0,0,0,0, 1,1,2,2, 3,3,3,4, 4,4,4,4, 4,4,4,4, 4,3,3,3, 2,2,1,1, 0,0,0,0}, //9
+{ 0,0,0,1, 1,2,2,2, 3,3,4,4, 4,4,5,5, 5,5,4,4, 4,4,3,3, 2,2,2,1, 1,0,0,0}, //10
+{ 0,0,0,1, 1,2,2,3, 3,4,4,4, 5,5,5,5, 5,5,5,5, 4,4,4,3, 3,2,2,1, 1,0,0,0}, //11
+{ 0,0,1,1, 1,2,2,3, 3,4,4,5, 5,5,6,6, 6,6,5,5, 5,4,4,3, 3,2,2,1, 1,1,0,0}, //12
+{ 0,0,1,1, 2,2,3,3, 4,4,4,5, 5,6,6,6, 6,6,6,5, 5,4,4,4, 3,3,2,2, 1,1,0,0}, //13
+{ 0,0,1,1, 2,2,3,3, 4,4,5,5, 6,6,6,7, 7,6,6,6, 5,5,4,4, 3,3,2,2, 1,1,0,0}, //14
+{ 0,0,1,1, 2,2,3,3, 4,4,5,5, 6,6,7,7, 7,7,6,6, 5,5,4,4, 3,3,2,2, 1,1,0,0}, //15
+{ 0,0,1,1, 2,2,3,3, 4,4,5,5, 6,6,7,7, 7,7,6,6, 5,5,4,4, 3,3,2,2, 1,1,0,0}, //16
+{ 0,0,1,1, 2,2,3,3, 4,4,5,5, 6,6,6,7, 7,6,6,6, 5,5,4,4, 3,3,2,2, 1,1,0,0}, //17
+{ 0,0,1,1, 2,2,3,3, 4,4,4,5, 5,6,6,6, 6,6,6,5, 5,4,4,4, 3,3,2,2, 1,1,0,0}, //18
+{ 0,0,1,1, 1,2,2,3, 3,4,4,5, 5,5,6,6, 6,6,5,5, 5,4,4,3, 3,2,2,1, 1,1,0,0}, //19
+{ 0,0,0,1, 1,2,2,3, 3,4,4,4, 5,5,5,5, 5,5,5,5, 4,4,4,3, 3,2,2,1, 1,0,0,0}, //20
+{ 0,0,0,1, 1,2,2,2, 3,3,4,4, 4,4,5,5, 5,5,4,4, 4,4,3,3, 2,2,2,1, 1,0,0,0}, //21
+{ 0,0,0,0, 1,1,2,2, 3,3,3,4, 4,4,4,4, 4,4,4,4, 4,3,3,3, 2,2,1,1, 0,0,0,0}, //22
+{ 0,0,0,0, 1,1,1,2, 2,3,3,3, 3,4,4,4, 4,4,4,3, 3,3,3,2, 2,1,1,1, 0,0,0,0}, //23
+{ 0,0,0,0, 0,1,1,1, 2,2,2,3, 3,3,3,3, 3,3,3,3, 3,2,2,2, 1,1,1,0, 0,0,0,0}, //24
+{ 0,0,0,0, 0,0,1,1, 1,2,2,2, 2,3,3,3, 3,3,3,2, 2,2,2,1, 1,1,0,0, 0,0,0,0}, //25
+{ 0,0,0,0, 0,0,0,1, 1,1,2,2, 2,2,2,2, 2,2,2,2, 2,2,1,1, 1,0,0,0, 0,0,0,0}, //26
+{ 0,0,0,0, 0,0,0,0, 1,1,1,1, 1,2,2,2, 2,2,2,1, 1,1,1,1, 0,0,0,0, 0,0,0,0}, //27
+{ 0,0,0,0, 0,0,0,0, 0,0,1,1, 1,1,1,1, 1,1,1,1, 1,1,0,0, 0,0,0,0, 0,0,0,0}, //28
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //29
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //30
+{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0}, //31
+};
+
 
 	/* scr buff */
 	int screenBuff[canvasSizeY][canvasSizeX];
@@ -169,13 +206,13 @@ static void framebuffer_putpixel(unsigned int x, unsigned int y,
 	int cubeDx = 0;
 	int cubeDz = 0;
 
-	int faze = 0;
-	int fazeCubeDz = 0;
-	int fazeBgDz = 0;
+	int phase = 0;
+	int phaseCubeDz = 0;
+	int phaseBgDz = 0;
 
-#define	mapAngleFaze2Max	104 //112
+#define	mapAnglePhase2Max	104 //112
 
-int getNextDir(void) {
+static int getNextDir(void) {
 	dirListId++;
 	return dirList[dirListId];
 }
@@ -191,27 +228,28 @@ struct coord_type {
 
 #define cubePointsLength	9
 
-	struct coord_type cubePoints[cubePointsLength] = {
-		{x:-cubeSz, y:cubeSz, z:cubeSz},
-		{x:cubeSz, y:cubeSz, z:cubeSz},
-		{x:cubeSz, y:-cubeSz, z:cubeSz},
-		{x:-cubeSz, y:-cubeSz, z:cubeSz},
-		{x:-cubeSz, y:cubeSz, z:-cubeSz},
-		{x:cubeSz, y:cubeSz, z:-cubeSz},
-		{x:cubeSz, y:-cubeSz, z:-cubeSz},
-		{x:-cubeSz, y:-cubeSz, z:-cubeSz},
-		{x:0, y:0, z:0},
-    };
+struct coord_type cubePoints[cubePointsLength] = {
+	{x:-cubeSz, y:cubeSz, z:cubeSz},
+	{x:cubeSz, y:cubeSz, z:cubeSz},
+	{x:cubeSz, y:-cubeSz, z:cubeSz},
+	{x:-cubeSz, y:-cubeSz, z:cubeSz},
+	{x:-cubeSz, y:cubeSz, z:-cubeSz},
+	{x:cubeSz, y:cubeSz, z:-cubeSz},
+	{x:cubeSz, y:-cubeSz, z:-cubeSz},
+	{x:-cubeSz, y:-cubeSz, z:-cubeSz},
+	{x:0, y:0, z:0},
+};
 
-	const int cubeAngleMax = 64;
-	const double cubeAngleStep = 12 / slowDown;
-	const double cubeStep = 4 / slowDown;
-	const double mapStep = 3.2 / slowDown;
+const int cubeAngleMax = 64;
+const double cubeAngleStep = 12 / slowDown;
+const double cubeStep = 4 / slowDown;
+const double mapStep = 3.2 / slowDown;
 
-	const double cubeStep2 = 30 * cubeStep / 80;
-	const double mapStep2 = 30 * mapStep / 80;
+const double cubeStep2 = 30 * cubeStep / 80;
+const double mapStep2 = 30 * mapStep / 80;
 
-void init(void) {
+
+static void init(void) {
 
 	int x,y;
 
@@ -237,9 +275,28 @@ void init(void) {
 
 
 
-	faze = 0;
-	fazeCubeDz = 0;
-	fazeBgDz = 0;
+	phase = 0;
+	phaseCubeDz = 0;
+	phaseBgDz = 0;
+
+	/* init lighting */
+
+//	var mapLight = [];
+//	var canvasLight = document.getElementById('canvas-light');
+//	var ctxLight = canvasLight.getContext('2d');
+//	var imgLight = document.getElementById('img-light');
+//	ctxLight.drawImage(imgLight, 0, 0);
+//	var lightData = ctxLight.getImageData(0,0,32,32).data;
+
+//	int addr;
+
+//	for (y=0; y<32; y++) {
+//		for (x=0; x<32; x++) {
+//			addr = 4*(y*32+x);
+//			var color = lightData[adr];
+//			mapLight[y][x] = mapLightArr[color];
+//		}
+//	}
 
 
 }
@@ -364,22 +421,59 @@ void nextStep(void) {
 	}
 }
 
+struct cubePolygonsRot_type {
+	struct coord_type points[4];
+	double x,y,z;
+	struct coord_type centerPoints[4];
+	struct coord_type nn;		// normal
+	struct coord_type center;
+};
 
-#if 0
-        function compareSortPolygons(a, b) {
-            var comparison = 0;
-            if (a.z > b.z) {
-                comparison = 1;
-            } else if (a.z < b.z) {
-                comparison = -1;
-            } else if (a.y > b.y) {
-                comparison = -1;
-            } else if (a.y < b.y) {
-                comparison = 1;
-            }
-            return comparison;
-        }
-#endif
+
+//	qsort(&cubePolygonsRot[0],
+//			cubePolygonsLength,
+//			sizeof(struct cubePolygonsRot_type *),
+//			compareSortPolygons);
+
+int compareSortPolygons(const void *a1, const void *b1) {
+
+	int comparison=0;
+
+	struct cubePolygonsRot_type *a,*b;
+
+	a=(struct cubePolygonsRot_type *)a1;
+	b=(struct cubePolygonsRot_type *)b1;
+
+	if (a->z > b->z) {
+		comparison = 1;
+	} else if (a->z < b->z) {
+		comparison = -1;
+	} else if (a->y > b->y) {
+		comparison = -1;
+	} else if (a->y < b->y) {
+		comparison = 1;
+	}
+
+	return comparison;
+}
+
+
+
+
+/* for sort */
+static int zxComparePY(const void *a1, const void *b1) {
+
+	struct coord_type *a,*b;
+
+	a=(struct coord_type *)a1;
+	b=(struct coord_type *)b1;
+
+	if (a->py == b->py) {
+		return 0;
+	}
+	return a->py > b->py ? 1 : -1;
+}
+
 
 void zxDrawPolygon(
 	struct coord_type points0,
@@ -393,6 +487,8 @@ void zxDrawPolygon(
 	int i,x,y;
 
 	struct coord_type *points[3]={&points0,&points1,&points2};
+	struct coord_type *centerPoints[3]=
+		{&centerPoints0,&centerPoints1,&centerPoints2};
 
 	if (nn.z > 0) {
 		return;
@@ -404,17 +500,24 @@ void zxDrawPolygon(
 	minNy = fmin(minNy, nn.y);
 	maxNy = fmax(maxNy, nn.y);
 
-#if 0
-	globL = mapLight[31&(10+nn.y)][31&(16+nn.x)];
+	double globL;
+
+	globL = mapLight[31&(10+(int)nn.y)][31&(16+(int)nn.x)];
+
+	struct coord_type nadd;
 
 	for(i=0; i<3; i++) {
-		points[i].l = mapLight[31&(10+nn.y)][31&(16+nn.x)];
+		points[i]->l = mapLight[31&(10+(int)nn.y)][31&(16+(int)nn.x)];
 		//lights method 3
-		var nadd = {x:floor((centerPoints[i].x+nn.x)/2), y:floor((centerPoints[i].y+nn.y)/2), z:floor((centerPoints[i].z+nn.z)/2)};
-		points[i].lx = nadd.x;
-		points[i].ly = nadd.y;
-		points[i].l += floor(mapLight[31&(10+nadd.y)][31&(16+nadd.x)]/2);
-		points[i].l = points[i].l <= 7 ? points[i].l : 7;
+		nadd.x=floor((centerPoints[i]->x+nn.x)/2);
+		nadd.y=floor((centerPoints[i]->y+nn.y)/2);
+		nadd.z=floor((centerPoints[i]->z+nn.z)/2);
+		points[i]->lx = nadd.x;
+		points[i]->ly = nadd.y;
+		points[i]->l +=
+			floor(mapLight[31&(10+
+				(int)nadd.y)][31&(16+(int)nadd.x)]/2);
+		points[i]->l = points[i]->l <= 7 ? points[i]->l : 7;
 		minLx = fmin(minLx, nadd.x);
 		maxLx = fmax(maxLx, nadd.x);
 		minLy = fmin(minLy, nadd.y);
@@ -422,8 +525,9 @@ void zxDrawPolygon(
 	}
 
 	// draw polygon
-	points.sort(zxComparePY);
-#endif
+	//points.sort(zxComparePY);
+
+	qsort(&points[0],3,sizeof(struct coord_type *),zxComparePY);
 
 	struct coord_type zxPoints[4];
 
@@ -497,6 +601,8 @@ void zxDrawPolygon(
 	double dx = 0,lx,ly,L;
 	for (y = zxPoints[0].py; y <= zxPoints[2].py; y++) {
 
+		if ( isnan(rightX[i]) || isnan(leftX[i])) continue;
+
 //		if (rightX[i] != undefined && leftX[i] != undefined) {
 		dx = fabs(rightX[i] - leftX[i]);
 
@@ -506,13 +612,16 @@ void zxDrawPolygon(
 					(rightLLL[i].lx - leftLLL[i].lx) / dx;
 				ly = leftLLL[i].ly + (x-leftX[i]) *
 					(rightLLL[i].ly - leftLLL[i].ly) / dx;
-#if 0
-				L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
-				L = Math.max(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
-				L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
+
+				L = round(globL/1.5 +
+					mapLight[31&(9+(int)ly)][31&(16+(int)lx)]/1.5);
+				L = fmax(round(globL/1.5),
+					round(mapLight[31&(9+(int)ly)][31&(16+(int)lx)]/1));
+				L = round(globL/3 +
+					mapLight[31&(9+(int)ly)][31&(16+(int)lx)]);
 				L = L <= 7 ? L : 7;
 				L = L > 1 ? L : 1;
-#endif
+
 				screenBuff[y][x] = paletteZX[(int)floor(L)];
 				screenBuffMask[y][x] = 1;
 
@@ -522,13 +631,15 @@ void zxDrawPolygon(
 			for(x=rightX[i]; x<=leftX[i]; x++) {
 				lx = rightLLL[i].lx + (x-rightX[i]) * (leftLLL[i].lx - rightLLL[i].lx) / dx;
 				ly = rightLLL[i].ly + (x-rightX[i]) * (leftLLL[i].ly - rightLLL[i].ly) / dx;
-#if 0
-				L = round(globL/1.5 + mapLight[31&(9+ly)][31&(16+lx)]/1.5);
-				L = fmax(round(globL/1.5), round(mapLight[31&(9+ly)][31&(16+lx)]/1));
-				L = round(globL/3 + mapLight[31&(9+ly)][31&(16+lx)]);
+
+				L = round(globL/1.5 +
+					mapLight[31&(9+(int)ly)][31&(16+(int)lx)]/1.5);
+				L = fmax(round(globL/1.5),
+					round(mapLight[31&(9+(int)ly)][31&(16+(int)lx)]/1));
+				L = round(globL/3 + mapLight[31&(9+(int)ly)][31&(16+(int)lx)]);
 				L = L <= 7 ? L : 7;
 				L = L > 1 ? L : 1;
-#endif
+
 				screenBuff[y][x] = paletteZX[(int)floor(L)];
 				screenBuffMask[y][x] = 1;
 			}
@@ -541,14 +652,7 @@ void zxDrawPolygon(
 
 
 #if 0
-void zxComparePY(a, b) {
-	if (a.py == b.py) {
-		return 0;
-	}
-	return a.py > b.py ? 1 : -1;
-}
-
-
+/* not used */
 void calcNorm(points) {
 		var ab = {
 			x: points[1].x - points[0].x,
@@ -571,7 +675,7 @@ void calcNorm(points) {
 
 #endif
 
-void calcNorm2(
+static void calcNorm2(
 	struct coord_type *result,
 	struct coord_type centerPoints[4]) {
 
@@ -584,6 +688,9 @@ void calcNorm2(
 
 }
 
+#if 0
+
+/* unused? */
 double vec3ugol(
 	struct coord_type a,
 	struct coord_type b) {
@@ -592,9 +699,9 @@ double vec3ugol(
 		( sqrt(a.x*a.x + a.y*a.y + a.z*a.z) *
 		  sqrt(b.x*b.x + b.y*b.y + b.z*b.z) ) );
 }
+#endif
 
-
-void vec3sub(
+static void vec3sub(
 	struct coord_type *result,
 	struct coord_type a,
 	struct coord_type b) {
@@ -642,7 +749,7 @@ void renderFrame(void) {
 			ty = floor(sx * sin(M_PI * mapAngle / 128)) +
 				floor(sy * cos(M_PI * mapAngle / 128));
 
-			ty = (mapSizeY - 1) & (int)floor(ty + mapDz + fazeBgDz);
+			ty = (mapSizeY - 1) & (int)floor(ty + mapDz + phaseBgDz);
 			tx = (mapSizeX - 1) & (int)floor(tx + mapDx);
 
 			// if (screenBuff[y] != undefined && screenBuff[y][x] != undefined) {
@@ -718,7 +825,7 @@ void renderFrame(void) {
 			// step add & rotate with bg
 		cubePointsRot[i].z += cubeDz;
 		cubePointsRot[i].x += cubeDx;
-		cubePointsRot[i].z += fazeCubeDz;
+		cubePointsRot[i].z += phaseCubeDz;
 //		cubePointsRot[i] =
 		rotate3d(&cubePointsRot[i],cubePointsRot[i], 0, mapAngle, 0);
 
@@ -744,13 +851,8 @@ void renderFrame(void) {
 
 //        var cubePolygonsRot = [];
 
-	struct cubePolygonsRot_type {
-		struct coord_type points[4];
-		double x,y,z;
-		struct coord_type centerPoints[4];
-		struct coord_type nn;		// normal
-		struct coord_type center;
-	} cubePolygonsRot[cubePolygonsLength];
+
+	struct cubePolygonsRot_type cubePolygonsRot[cubePolygonsLength];
 
 	for (i=0; i<cubePolygonsLength; i++) {
 
@@ -791,17 +893,18 @@ void renderFrame(void) {
 	}
 
 
+	qsort(&cubePolygonsRot[0],
+			cubePolygonsLength,
+			sizeof(struct cubePolygonsRot_type *),
+			compareSortPolygons);
+//        cubePolygonsRot.sort(compareSortPolygons);
 
-#if 0
-        cubePolygonsRot.sort(compareSortPolygons);
-#endif
-
-	double rgb;
+//	double rgb;
 	int p;
 
 		// draw polygons zx
 	for(i=0; i<cubePolygonsRotLength; i++) {
-		rgb = floor(i*255/(cubePolygonsRotLength-1));
+		//rgb = floor(i*255/(cubePolygonsRotLength-1));
             	//var fillStyle = 'rgb(' + rgb + ',' + rgb + ',' + rgb + ')';
 		zxDrawPolygon(cubePolygonsRot[i].points[0],
 				cubePolygonsRot[i].points[1],
@@ -879,27 +982,27 @@ void renderFrame(void) {
             drog--;
         }
 
-	if (faze == 1) {
+	if (phase == 1) {
 		mapAngle += 2;
-		if (mapAngle >= mapAngleFaze2Max) {
-			faze = 2;
+		if (mapAngle >= mapAnglePhase2Max) {
+			phase = 2;
 		}
-	} else if (faze == 2) {
-		fazeCubeDz += cubeStep2;
-		fazeBgDz += mapStep2;
+	} else if (phase == 2) {
+		phaseCubeDz += cubeStep2;
+		phaseBgDz += mapStep2;
 	}
 
-		// next faze
-	if (zxFrame >= slowDown*208*2 && faze == 0) {
-		faze = 1;
+		// next phase
+	if (zxFrame >= slowDown*208*2 && phase == 0) {
+		phase = 1;
 	}
-	if (zxFrame >= slowDown*208*2+182 && faze == 0) {
-		faze = 3;
+	if (zxFrame >= slowDown*208*2+182 && phase == 0) {
+		phase = 3;
 	}
 	if (zxFrame >= slowDown*208*4) {
-		faze = 0;
-		fazeCubeDz = 0;
-		fazeBgDz = 0;
+		phase = 0;
+		phaseCubeDz = 0;
+		phaseBgDz = 0;
 		mapAngle = 0;
 		frame = 0;
 //		isAudioStarted = 0;
@@ -943,7 +1046,7 @@ int main(int argc, char **argv) {
 
 	grsim_update();
 
-	usleep(20000);
+	usleep(100000);
 
 	ch=grsim_input();
 	if (ch=='q') return 0;
