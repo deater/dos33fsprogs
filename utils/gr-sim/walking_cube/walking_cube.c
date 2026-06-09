@@ -235,12 +235,12 @@ struct coord_type cubePoints[cubePointsLength] = {
 };
 
 const double cubeAngleMax = 64;
-const double cubeAngleStep = 12 / slowDown;
-const double cubeStep = 4 / slowDown;
+const double cubeAngleStep = 12.0 / slowDown;
+const double cubeStep = 4.0 / slowDown;
 const double mapStep = 3.2 / slowDown;
 
-const double cubeStep2 = 30 * cubeStep / 80;
-const double mapStep2 = 30 * mapStep / 80;
+const double cubeStep2 = 30.0 * cubeStep / 80.0;
+const double mapStep2 = 30.0 * mapStep / 80.0;
 
 
 static void init(void) {
@@ -628,7 +628,7 @@ void zxDrawPolygon(
 	double dx = 0,lx,ly,L;
 	for (y = zxPoints[0].py; y <= zxPoints[2].py; y++) {
 
-		if ( isnan(rightX[i]) || isnan(leftX[i])) continue;
+//		if ( isnan(rightX[i]) || isnan(leftX[i])) continue;
 
 //		if (rightX[i] != undefined && leftX[i] != undefined) {
 		dx = fabs(rightX[i] - leftX[i]);
