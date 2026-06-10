@@ -19,7 +19,7 @@ bow_sprites.inc:	bow_sprites.png bow_drawn.png
 	$(HGR_SPRITE) -s -l string_drawn_even1 bow_drawn.png 161  31 202  40 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_drawn_odd0  bow_drawn.png  42 183  76 192 >> bow_sprites.inc
 	$(HGR_SPRITE) -s -l string_drawn_odd1  bow_drawn.png 168 183 209 192 >> bow_sprites.inc
-
+	$(HGR_SPRITE) -s -l circle_sprite      bow_sprites.png 14  77 27  88 >> bow_sprites.inc
 
 
 flag_sprites.inc:	flag_sprites.png

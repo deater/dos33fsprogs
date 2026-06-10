@@ -491,6 +491,43 @@ arrow_loop:
 
 end_arrow:
 
+	;===========================
+	; check if bullseye
+	;===========================
+
+	jsr	check_bullseye
+	bcc	no_bullseye
+
+yes_bullseye:
+
+	; draw circle, both pages
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	draw_circle
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	jsr	draw_circle
+
+	pla
+	sta	DRAW_PAGE
+
+
+	; increment hits
+	inc	ARROW_SCORE
+
+	; play sound effect?
+
+
+
+no_bullseye:
+
 
 	;=======================================================
 	;=====================

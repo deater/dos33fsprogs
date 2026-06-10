@@ -457,3 +457,67 @@ target_x2:
 	.byte  23, 24, 25, 26, 27, 27, 27, 26, 25, 18, 17, 25, 26, 25
 target_y2:
 	.byte 19,  24, 30, 38, 49, 85, 95,106,119,126,139,125,135,139
+
+
+
+
+
+
+	;=========================
+	; check bullseye
+	;=========================
+	; carry clear = miss
+	; carry set = hit
+check_bullseye:
+
+	; box is 133,60 146, 73  (19+20)
+	; arrow is 2 blocks wide, so from 18..20?
+
+	lda	ARROW_X
+	cmp	#18
+	bcc	check_bullseye_missed
+	cmp	#21
+	bcs	check_bullseye_missed
+
+	lda	ARROW_Y
+	cmp	#61
+	bcc	check_bullseye_missed
+	cmp	#73
+	bcs	check_bullseye_missed
+
+check_bullseye_hit:
+	sec
+	rts
+
+check_bullseye_missed:
+	clc
+	rts
+
+
+	;========================
+	; draw circle
+	;========================
+
+draw_circle:
+
+	; set X-coord
+
+	lda	ARROW_SCORE
+	asl
+	sta	CURSOR_X
+
+	; set Y-coord
+
+	lda	#77
+	sta	CURSOR_Y
+
+	; get sprite
+
+	lda	#<circle_sprite
+	sta	INL
+	lda	#>circle_sprite
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	rts
