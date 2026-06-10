@@ -478,7 +478,7 @@ arrow_loop:
 	inc	FRAME
 
 	lda	FRAME
-	cmp	#64
+	cmp	#21			; 21 frames of shooting animation
 	beq	end_arrow
 
 	;====================
