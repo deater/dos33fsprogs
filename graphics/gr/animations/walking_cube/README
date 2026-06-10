@@ -1,0 +1,19 @@
+This is an effect from the Tiratok demo by deMarche
+	from CAfE 2019
+	https://www.pouet.net/prod.php?which=83538
+
+Originally for ZX Spectrum
+
+music is by nq
+
+This is an 88 frame animation playing on the Apple II as Mockingboard
+music plays.  The frames are compressed with zx02 in 8k (8 frame) chunks.
+
+The Tiratok devs nicely released their souce code. However I am not a z80
+expert so the code is a bit dense to me.  However for this I use
+their javascript prototype code, converted it to C, and then had it
+dump the frames that I could import into my existing Scroll Block port.
+
+The music is truncated a bit as the existing player only had room for 8k
+of pt3 file and the original music is quite long (and large).
+

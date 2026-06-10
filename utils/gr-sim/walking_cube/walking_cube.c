@@ -1047,7 +1047,24 @@ void renderFrame(void) {
 	nextStep();
 }
 
+void dump_framebuffer_gr(int which) {
 
+	FILE *fff;
+
+	char name[BUFSIZ];
+
+	sprintf(name,"file%04d.gr",which);
+	fff=fopen(name,"w");
+	if (fff==NULL) {
+		fprintf(stderr,"Error opening %s\n",name);
+		exit(1);
+	}
+
+	fwrite(&ram[0x400],sizeof(char),1024,fff);
+
+	fclose(fff);
+
+}
 
 
 
@@ -1076,7 +1093,12 @@ int main(int argc, char **argv) {
 
 	frame++;		// increment frame counter
 
-//	dump_framebuffer_gr();
+#if 0
+	static int framed=1;
+	dump_framebuffer_gr(framed);
+	framed++;
+	if (framed==89) exit(1);
+#endif
 
 	grsim_update();
 
