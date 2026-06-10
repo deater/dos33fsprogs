@@ -16,13 +16,29 @@ hposn_low	= $1100
 
 target_start:
 
+	;=======================================
+	; clear screen and print opening message
+	;=======================================
+	jsr	HOME
+
+	bit	KEYRESET
+
+	jsr	set_normal
+
+	lda	#<opening_string
+	sta	OUTL
+	lda	#>opening_string
+	sta	OUTH
+
+	jsr	move_and_print_list
+
+	jsr	wait_until_keypress
+
 	;===================
 	; set graphics mode
 	;===================
-	jsr	HOME
 
 	bit	HIRES
-	bit	FULLGR
 	bit	SET_GR
 	bit	PAGE1
 
@@ -37,7 +53,7 @@ target_start:
 	;======================
 	; reset variables, etc
 restart_game:
-
+	bit	FULLGR
 
 	lda	#$00
 	sta	ARROW_SCORE
@@ -548,31 +564,64 @@ no_bullseye:
 	; print game over message
 
 game_over:
+	; clear any lingering keypresses
+	bit	KEYRESET
+
+	; flip to page1 and allow text on bottom 4 lines
 	bit	TEXTGR
 	bit	PAGE1
+	lda	#$0
+	sta	DRAW_PAGE
 
 	lda	ARROW_SCORE
 	clc
 	adc	#'0'
-	sta	score_string+8
+	sta	score_string+9
 
-	ldx	#0
-string_loop:
-	lda	score_string,X
-	beq	string_loop_done
-	sta	$650,X
-	inx
-	jmp	string_loop
-string_loop_done:
+	lda	#<score_string
+	sta	OUTL
+	lda	#>score_string
+	sta	OUTH
 
-	jsr	wait_until_keypress
+	jsr	move_and_print
+	jsr	move_and_print
 
-	bit	FULLGR
+
+	bit	KEYRESET
+
+wait_until_keypress2:
+	lda	KEYPRESS                                ; 4
+	bpl	wait_until_keypress2                    ; 3
+
+	cmp	#'N'|$80
+	beq	exit_game
+
+	cmp	#'n'|$80
+	beq	exit_game
+
+	bit	KEYRESET		; clear the keyboard buffer
 
 	jmp	restart_game
 
+exit_game:
+	lda	#0
+	sta	WHICH_LOAD
+
+	rts	; will this work?
+
+opening_string:
+	.byte 0,0,"ARCHERY GAME",0
+	.byte 0,2,"HALDO! TRY TO HIT THE BULLSEYE",0
+	.byte 0,4,"THE ARROW KEYS AIM LEFT",0
+	.byte 0,5,"AND RIGHT AND THE SPACE BAR",0
+	.byte 0,6,"OPERATES THE BOW.",0
+	.byte 0,7,"DON'T IGNORE THE WIND!",0
+	.byte 0,9,"PRESS ANY KEY TO START",0
+	.byte $FF
+
 score_string:
-	.byte "SCORE: 0   ",0
+	.byte 0,20,"SCORE: 0",0
+	.byte 0,22,"PLAY AGAIN? (Y/N)",0
 
 	.include	"zx02_optim.s"
 	.include	"hgr_sprite.s"
@@ -583,6 +632,8 @@ score_string:
 	.include	"draw_flag.s"
 
 	.include	"move_arrows.s"
+	.include	"gr_offsets.s"
+	.include	"text_print.s"
 
 	.include	"random8.s"
 	.include	"wait_keypress.s"
