@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <termios.h>
+#include <fcntl.h>
 
 #define SHOTS_PER_GAME	5
 
@@ -15,24 +18,24 @@ struct collide_type {
 	int visible;
 };
 
-int origIndicatorY;
+static int origIndicatorY;
 
-int shotNum,shotsPerGame;
-int aimAllowed,shotAllowed,arrowFlying;
-int ar_gameOver,hits,gLastPointAmount;
-int buttonPress,meterDir,windDir=0;
-struct coord_type currentArrow_mc, arrowOriginalLoc;
-struct coord_type indicatorL,indicatorR;
-struct coord_type bow_mc,bowOriginalLoc;
-struct coord_type arrow_mc,meter_mc,hitmark_mc;
+static int shotNum;
+static int aimAllowed,shotAllowed,arrowFlying;
+static int ar_gameOver,hits,gLastPointAmount;
+static int buttonPress,meterDir,windDir=0;
+static struct coord_type currentArrow_mc, arrowOriginalLoc;
+static struct coord_type indicatorL,indicatorR;
+static struct coord_type bow_mc,bowOriginalLoc;
+static struct coord_type arrow_mc,meter_mc,hitmark_mc;
 
-struct collide_type bullseyeCollide_mc,targetCollide_mc;
+static struct collide_type bullseyeCollide_mc,targetCollide_mc;
 
-int success_visible[SHOTS_PER_GAME];
+static int success_visible[SHOTS_PER_GAME];
 
-int hitmarkCenter,vertOffset,horizOffset;
+static int hitmarkCenter,vertOffset,horizOffset;
 
-void ar_endGame(void) {
+static void ar_endGame(void) {
 
 	ar_gameOver = 1;
  	if (hits < 3) {
@@ -69,7 +72,7 @@ void ar_endGame(void) {
 	//trace("end game");
 }
 
-void ar_updateWind(void) {
+static void ar_updateWind(void) {
 
 	int oldWind = windDir;
 
@@ -79,10 +82,12 @@ void ar_updateWind(void) {
 	// trace("ar_updateWind(): New wind direction chosen " + windDir);
 	// trace("wind" + windDir);
 	// flag_mc.gotoAndPlay("wind" + windDir);
+	printf("windDir %d\n",windDir);
+
 }
 
 
-int ar_initShot(void) {
+static int ar_initShot(void) {
 	// trace(arrowOriginalLoc.x);
 	// currentArrow_mc = arrowClip_mc.attachMovie("arrow_mc","arrow_mc" + shotNum,shotNum);
 	// trace(currentArrow_mc._x);
@@ -113,19 +118,28 @@ int ar_initShot(void) {
 }
 
 
-void ar_initArchery(void) {
+static void ar_initArchery(void) {
 
 	int i;
 
 	shotNum = 0;
-//	shotsPerGame = 5;
 
 	origIndicatorY = indicatorL.y;
 	arrowOriginalLoc.x = arrow_mc.x;
 	arrowOriginalLoc.y = arrow_mc.y;
 	arrowOriginalLoc.scale = arrow_mc.xscale;
+
+	bow_mc.x = 256; /* think game assumes 512 wide window? */
 	bowOriginalLoc.x = bow_mc.x;
+	bow_mc.y = 320; /* this is a guess? */
+
 	bowOriginalLoc.y = bow_mc.y;
+
+	meter_mc.x=10;
+	meter_mc.y=70;
+	meter_mc.height=70;
+
+
 	arrow_mc.visible = 0;
 	ar_initShot();
 	bullseyeCollide_mc.visible = 0;
@@ -138,7 +152,7 @@ void ar_initArchery(void) {
 	ar_gameOver = 0;
 }
 
-void ar_shiftAim(int dir) {
+static void ar_shiftAim(int dir) {
 
 	currentArrow_mc.x += dir;
 	bow_mc.x += dir;
@@ -146,28 +160,32 @@ void ar_shiftAim(int dir) {
 		currentArrow_mc.x -= dir;
 		bow_mc.x -= dir;
 	}
-	printf("Bow now at: %d\n",bow_mc.x);
+	printf("Bow now at: %d,%d\n",bow_mc.x,bow_mc.y);
 }
 
 	/* erase arrows left as use up shots */
-void ar_updateShotsMeter(void) {
-	//eval("arrowsLeft" + (shotsPerGame - (shotNum - 1)))._visible = false;
+static void ar_updateShotsMeter(void) {
+	printf("Shots left: %d\n",SHOTS_PER_GAME - (shotNum-1));
+	//eval("arrowsLeft" + (SHOTS_PER_GAME - (shotNum - 1)))._visible = false;
 }
 
-int ar_hitMovieClip(struct collide_type the_mc) {
+static int ar_hitMovieClip(struct collide_type the_mc) {
 //	var arrowTip = new Object({x:currentArrow_mc.arrowCollide_mc._x,y:currentArrow_mc.arrowCollide_mc._y});
 //	currentArrow_mc.localToGlobal(arrowTip);
 //	return the_mc.hitTest(arrowTip.x,arrowTip.y,true);
 	return 0;
 }
 
-void ar_shootArrow(void) {
+static void ar_shootArrow(void) {
 
 	if (!arrowFlying) {
 		arrowFlying = 1;
 		// bow_mc.gotoAndStop("idle");
 		// currentArrow_mc.gotoAndPlay("shoot");
-		// playSound("arrowshoot");
+
+		printf("playSound arrowshoot\n");
+
+		/* update number of arrows in pile */
 		ar_updateShotsMeter();
 
 		horizOffset = (indicatorL.y - indicatorR.y) / 5;
@@ -178,7 +196,11 @@ void ar_shootArrow(void) {
 			horizOffset = -15;
 		}
 
+		printf("horizOffset %d\n",horizOffset);
+
 		hitmarkCenter = hitmark_mc.y + hitmark_mc.height / 2;
+
+		printf("hitmarkCenter %d\n",hitmarkCenter);
 
 		vertOffset = (- (hitmarkCenter - indicatorL.y +
 				(hitmarkCenter - indicatorR.y))) / 3;
@@ -189,6 +211,8 @@ void ar_shootArrow(void) {
 		if (vertOffset < -15) {
 			vertOffset = -15;
 		}
+
+		printf("vertOffset %d\n",vertOffset);
 	}
 
 	switch(windDir) {
@@ -212,6 +236,7 @@ void ar_shootArrow(void) {
 	currentArrow_mc.x += horizOffset;
 	currentArrow_mc.y += vertOffset;
 
+	printf("Arrow %d,%d\n",currentArrow_mc.x,currentArrow_mc.y);
 
 	//void ar_doneShooting(void) {
 	//delete this.onEnterFrame;
@@ -229,9 +254,7 @@ void ar_shootArrow(void) {
 
 }
 
-
-
-void ar_updateMeter(void) {
+static void ar_updateMeter(void) {
 
 	if (buttonPress == 1) {
 		indicatorL.y += 10 * meterDir;
@@ -250,18 +273,30 @@ void ar_updateMeter(void) {
 		indicatorL.y = meter_mc.y;
 	}
 
+	printf("Meter: %d %d\n",indicatorL.y,indicatorR.y);
+
 	if (indicatorR.y > meter_mc.y + meter_mc.height) {
 		buttonPress++;
 		indicatorL.y = indicatorR.y = origIndicatorY;
 		ar_shootArrow();
 	}
+
+	usleep(100000);
 }
-
-
 
 int main(int argc, char **argv) {
 
+	struct termios old_attr, new_attr;
+
 	int ch=0;
+
+	tcgetattr (0, &old_attr);
+	tcgetattr (0, &new_attr);
+	new_attr.c_lflag &= ~ICANON;
+	new_attr.c_cc[VMIN] = 1;
+	new_attr.c_lflag &= ~ECHO;
+	tcsetattr (0, TCSANOW, &new_attr);
+	fcntl (0, F_SETFL, fcntl (0, F_GETFL) | O_NONBLOCK);
 
 	ar_initArchery();
 
@@ -280,6 +315,12 @@ int main(int argc, char **argv) {
 				printf("Right!\n");
 			}
 		}
+
+
+		if (ch=='q') {
+			break;
+		}
+
 		if (ch==' ') {
 
 			// void ar_spacePressed(void) {
@@ -296,9 +337,10 @@ int main(int argc, char **argv) {
 		if (buttonPress > 0) {
 			ar_updateMeter();
 		}
+		if (ar_gameOver) break;
 	}
 
-
+	tcsetattr (0, TCSANOW, &old_attr);
 
 }
 
@@ -311,6 +353,3 @@ void ar_targetLevelReached(void) {
 //		currentArrow_mc.gotoAndPlay("miss");
 //	}
 }
-
-
-

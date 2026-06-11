@@ -6,17 +6,17 @@ SDL_LIBS= `sdl-config --libs`
 SDL_INCLUDE= `sdl-config --cflags`
 GR_SIM = ../gr-sim.a
 
-all:	rombs
+all:	hexagons
 
 ###
 
-rombs: rombs.o
-	$(CC) $(LFLAGS) -o rombs rombs.o $(GR_SIM) $(SDL_LIBS) $(LFLAGS)
+hexagons: hexagons.o
+	$(CC) $(LFLAGS) -o hexagons hexagons.o $(GR_SIM) $(SDL_LIBS) $(LFLAGS)
 
-rombs.o:	rombs.c
-	$(CC) $(CFLAGS) -c rombs.c
+hexagons.o:	hexagons.c
+	$(CC) $(CFLAGS) -c hexagons.c
 
 ###
 
 clean:	
-	rm -f *~ *.o rombs
+	rm -f *~ *.o hexagons
