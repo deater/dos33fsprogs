@@ -58,8 +58,12 @@ restart_game:
 	lda	#$00
 	sta	ARROW_SCORE
 	sta	WIND_DIR
+
+	lda	#172
 	sta	METER_LEFT
 	sta	METER_RIGHT
+	sta	OLD_METER_LEFT
+	sta	OLD_METER_RIGHT
 
 
 
@@ -183,9 +187,11 @@ try_wind_again:
 	;=====================
 	; reset meter
 
-	lda	#0
+	lda	#172
 	sta	METER_LEFT
 	sta	METER_RIGHT
+	sta	OLD_METER_LEFT
+	sta	OLD_METER_RIGHT
 
 
 
@@ -234,7 +240,7 @@ bow_loop:
 	; draw meter
 
 	jsr	draw_meter_bottom
-	jsr	draw_pointers
+	jsr	draw_meter_pointers
 
 
 	;=====================
@@ -265,12 +271,12 @@ bow_loop:
 
 take_shot:
 
-	lda	#0			; 0..32?
-	sta	POWER_METER
+	lda	#0
 	sta	METER_PRESSES
 
-;	lda	#$11
-;	sta	METER_ADD
+	lda	#<(-5)		; start out subtracting 5
+	sta	METER_ADD
+
 
 	;===================
 	;===================
@@ -289,48 +295,79 @@ take_shot:
 	; vertoffset = -(center-r + (center-l)/3, +-15
 	; wind -12,-6,0,6,12 (only adjust starting point, not add)
 	; each frame add horiz/vert
-	
 
 meter_loop:
 
 	;=======================
 	; move power meter
 	;=======================
-	; go for 0..128
-	; 	if keypress 1st, lock left, if keypress 2nd lock right
+	; if keypress 1st add/subtract 5 from left/right
+	; if keypress 2nd add/subtract 6 from right
 
-	inc	POWER_METER
+	lda	METER_LEFT
+	sta	OLD_METER_LEFT
+	lda	METER_RIGHT
+	sta	OLD_METER_RIGHT
 
-	lda	POWER_METER
-	cmp	#128
-	bcs	end_meter
+	lda	METER_PRESSES
+	cmp	#1
+	bcs	move_right_meter
 
-	cmp	#64
-	bcs	going_down
-going_up:
+	; otherwise move both
 
-	jmp	going_common
-
-going_down:
-	; want 128-POWER_METER
-
-	lda	#128
-	sec
-	sbc	POWER_METER
-
-going_common:
-
-	ldx	METER_PRESSES
-	cpx	#2
-	bcs	presses_two
-	cpx	#1
-	bcs	presses_one
-
-presses_none:
+move_left_meter:
+	clc
+	lda	METER_LEFT
+	adc	METER_ADD
 	sta	METER_LEFT
-presses_one:
+
+move_right_meter:
+	clc
+	lda	METER_RIGHT
+	adc	METER_ADD
 	sta	METER_RIGHT
-presses_two:
+
+	; bounds check
+
+meter_bounds_left:
+	lda	METER_LEFT
+	cmp	#106
+	bcs	meter_bounds_right
+
+	; off scale, so peg
+	lda	#106
+	sta	METER_LEFT
+
+meter_bounds_right:
+	lda	METER_RIGHT
+	cmp	#106
+	bcs	meter_bounds_lr_done
+
+	lda	#106
+	sta	METER_RIGHT
+	lda	#6		; change to add plus 6
+	sta	METER_ADD
+
+meter_bounds_lr_done:
+
+	; check if right goes off the end, if so
+	; force a shot, also set R/L to 0?
+
+	lda	METER_RIGHT
+	cmp	#172
+	bcc	meter_bounds_done
+
+	; off end on right
+
+	lda	#172
+	sta	METER_RIGHT
+	sta	METER_LEFT
+
+	inc	METER_PRESSES
+
+meter_bounds_done:
+
+
 
 	;=======================
 	; check keypress
@@ -340,18 +377,19 @@ presses_two:
 	bcc	no_presses
 
 	inc	METER_PRESSES
+
+no_presses:
+
+	; check if we're done
 	lda	METER_PRESSES
 	cmp	#2
 	bcs	end_meter
-
-
-no_presses:
 
 	;===================
 	; clear bottom green
 
 	jsr	clear_bottom_green
-
+	jsr	erase_meter_pointers
 
 	;===================
 	; draw bow
@@ -377,7 +415,7 @@ no_presses:
 	; draw meter
 
 	jsr	draw_meter_bottom
-	jsr	draw_pointers
+	jsr	draw_meter_pointers
 
 
 	;=====================
@@ -486,7 +524,7 @@ arrow_loop:
 	; draw meter
 
 	jsr	draw_meter_bottom
-	jsr	draw_pointers
+	jsr	draw_meter_pointers
 
 	;===================
 	; increment frame
@@ -671,7 +709,7 @@ draw_meter_bottom:
 
 
 	;===========================
-	; draw pointers
+	; draw meter pointers
 	;===========================
 
 	; original:
@@ -679,18 +717,21 @@ draw_meter_bottom:
 	;	so if 0, should be 172
 
 	; modified:
-	;	draw at 108+(64-METER_LEFTT)
+	;	draw at 108+(64-METER_LEFT)
 
-draw_pointers:
+
+	; new: METER_LEFT and METER_RIGHT are their actual coords
+
+draw_meter_pointers:
 
 	lda	#35			; 245/7 = 35
 	sta	CURSOR_X
 
-	lda	#64
-	sec
-	sbc	METER_LEFT
-	clc
-	adc	#108
+;	lda	#64
+;	sec
+;	sbc	METER_LEFT
+;	clc
+;	adc	#108
 
 ;	lda	#14
 ;	sec
@@ -699,6 +740,8 @@ draw_pointers:
 ;	asl
 ;	clc
 ;	adc	#116
+
+	lda	METER_LEFT
 	sta	CURSOR_Y
 
 	lda	#<l_pointer
@@ -712,11 +755,11 @@ draw_pointers:
 	lda	#38			; 266/7 = 38
 	sta	CURSOR_X
 
-	lda	#64
-	sec
-	sbc	METER_RIGHT
-	clc
-	adc	#108
+;	lda	#64
+;	sec
+;	sbc	METER_RIGHT
+;	clc
+;	adc	#108
 
 ;	lda	#14
 ;	sec
@@ -725,6 +768,8 @@ draw_pointers:
 ;	asl
 ;	clc
 ;	adc	#116
+
+	lda	METER_RIGHT
 	sta	CURSOR_Y
 
 	lda	#<r_pointer
@@ -735,9 +780,44 @@ draw_pointers:
 
 	jsr	hgr_draw_sprite
 
+	rts
 
+
+	;===========================
+	; erase meter pointers
+	;===========================
+	; OLD_METER_RIGHT, OLD_METER_LEFT
+
+erase_meter_pointers:
+
+	lda	#35			; 245/7 = 35
+	sta	CURSOR_X
+
+	lda	OLD_METER_LEFT
+	sta	CURSOR_Y
+
+	lda	#<l_pointer_erase
+	sta	INL
+	lda	#>l_pointer_erase
+	sta	INH
+
+	jsr	hgr_draw_sprite
+
+	lda	#38			; 266/7 = 38
+	sta	CURSOR_X
+
+	lda	OLD_METER_RIGHT
+	sta	CURSOR_Y
+
+	lda	#<r_pointer_erase
+	sta	INL
+	lda	#>r_pointer_erase
+	sta	INH
+
+	jsr	hgr_draw_sprite
 
 	rts
+
 
 
 	;======================
@@ -823,7 +903,7 @@ wind_dir_lookup:
 	;	70/5 = 14 steps
 
 	; 172 ... 108 = 64, 16 steps?  so 4 each?
-meter_y_lookup:
-	.byte	172,168,164,160, 156,152,148,144
-	.byte	140,136,132,128, 124,120,116,112
+;meter_y_lookup:
+;	.byte	172,168,164,160, 156,152,148,144
+;	.byte	140,136,132,128, 124,120,116,112
 

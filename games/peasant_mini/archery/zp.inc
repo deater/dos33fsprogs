@@ -365,7 +365,7 @@ PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
 
 PREV_Y		= $CE	; kerrek
-POWER_METER	= $CE	; target
+METER_ADD	= $CE	; target
 
 ARROWS_LEFT	= $CF	; target
 
@@ -386,7 +386,8 @@ METER_RIGHT	= $ED		; target
 METER_PRESSES	= $EE		; target
 ARROW_TEMP	= $EF		; target
 HIT_OFFSET	= $F0		; target
-
+OLD_METER_LEFT	= $F1		; target
+OLD_METER_RIGHT	= $F2		; target
 
 P0		= $F1
 P1		= $F2

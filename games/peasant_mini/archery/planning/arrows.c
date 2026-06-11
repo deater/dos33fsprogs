@@ -256,11 +256,13 @@ static void ar_shootArrow(void) {
 
 static void ar_updateMeter(void) {
 
+	/* If first button pressed, increment both by 10 */
 	if (buttonPress == 1) {
 		indicatorL.y += 10 * meterDir;
 		indicatorR.y += 10 * meterDir;
 	}
 	else {
+		/* if second button pressed, only right moves, and by 12??? */
 		indicatorR.y += 12 * meterDir;
 	}
 
