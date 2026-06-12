@@ -391,6 +391,7 @@ VERT_OFFSET	= $F2		; target
 ARROW_FLYING	= $F3		; target
 ARROW_XL	= $F4		; target
 HORIZ_OFFSETL	= $F5		; target
+ARROW_YH	= $F6		; target
 
 P0		= $F1
 P1		= $F2

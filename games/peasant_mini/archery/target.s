@@ -394,6 +394,11 @@ end_meter:
 	adc	#15
 	sta	ARROW_X
 
+	; note bow starts at 149 - 83 = 66
+;	lda	#64
+	lda	#147
+	sta	ARROW_Y
+
 
 	lda	#0
 	sta	ARROW_XL

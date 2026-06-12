@@ -48,14 +48,17 @@ dont_mess_with:
 
 
 
-	;======================
+	;================================
 	; actually move arrow
+	;================================
 	; only do this if arrow is in air
 
 	lda	ARROW_FLYING
 	beq	arrow_not_flying
 
 arrow_is_flying:
+
+	;=================
 	; adjust X-coord
 
 	clc
@@ -68,17 +71,40 @@ arrow_is_flying:
 	adc	HORIZ_OFFSET
 	sta	ARROW_X
 
+	;=================
+	; adjust Y-coord
+
+;	clc
+;	lda	ARROW_Y
+;	adc	VERT_OFFSET
+;	sta	ARROW_Y
 
 arrow_not_flying:
 
+	; final adjust for Y-coord even if not flying?
+
 	; set Y-coord
 
-	; note bow starts at 149 - 83 = 66
+	; arrow_y starts at 147
+	; subtract 32 to do math so fits in 8-bit signed?
+	; or maybe we need to do 16-bit math here?
 
-	lda	shoot_sprite_y,Y
+
+	lda	#0
+	sta	ARROW_YH
+	lda	shoot_sprite_yadd,Y
+	bpl	yadd_was_pos
+	lda	#$ff
+	sta	ARROW_YH
+yadd_was_pos:
+
 	clc
-	adc	#64
+	lda	ARROW_Y
+	adc	shoot_sprite_yadd,Y
 	sta	ARROW_Y
+	lda	ARROW_YH
+	adc	#0
+	sta	ARROW_YH
 
 	rts
 
@@ -97,6 +123,8 @@ draw_arrow_move:
 	lda	ARROW_X
 	sta	SPRITE_X
 
+	bmi	draw_arrow_no_sprite	; off screen to left
+
 	; set Y-coord
 
 	lda	ARROW_Y
@@ -105,16 +133,17 @@ draw_arrow_move:
 	; get sprite
 
 	lda	shoot_sprite_which,Y
-	bmi	skip_draw_arrow_move
+	bmi	draw_arrow_no_sprite
 
 	tax				; which sprite in X
 
 	jsr	hgr_draw_sprite_mask
 
+draw_arrow_done:
 	clc
 	rts
 
-skip_draw_arrow_move:
+draw_arrow_no_sprite:
 	sec
 	rts
 
@@ -182,15 +211,36 @@ miss_sprite_which:
 	.byte	5,6,7,8, 9,8,9,7,7, 7,7,7,7,7,$FF
 
 
-shoot_sprite_y:
-	.byte	83, 72, 54, 44, 26
-	.byte	19,  9
+;shoot_sprite_y:
+;	.byte	83, 72, 54, 44, 26
+;	.byte	19,  9
 
-hit_sprite_y:
-	.byte	2,1,0,3,  2,1,0,1,2, 2,2,2,2,2,$FF
+;hit_sprite_y:
+;	.byte	2,1,0,3,  2,1,0,1,2, 2,2,2,2,2,$FF
 
-miss_sprite_y:
-	.byte	11,12,24,25, 25,25,25,24,24, 24,24,24,24,24,$FF
+;miss_sprite_y:
+;	.byte	11,12,24,25, 25,25,25,24,24, 24,24,24,24,24,$FF
+
+
+; starts at 83+64=147
+; then diffs each one
+
+shoot_sprite_yadd:
+	.byte	0,<-11,<-18,<-10,<-18		; 83, 72, 54, 44, 26
+	.byte	<-7,<-10			; 19,  9
+
+hit_sprite_yadd:
+	.byte	<-7,<-1,<-1,3			; 2,1,0,3
+	.byte	<-1,<-1,<-1,1,1			; 2,1,0,1,2
+	.byte	0,0,0,0,0			; 2,2,2,2,2
+	.byte	$FF				; not needed but padding?
+
+miss_sprite_yadd:
+	.byte	2,1,12,1			; 11,12,24,25
+	.byte	0,0,0,<-1,0			; 25,25,25,24,24
+	.byte	0,0,0,0,0			; 24,24,24,24,24
+
+
 
 
 
