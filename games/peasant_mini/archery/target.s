@@ -294,22 +294,6 @@ take_shot:
 
 meter_loop:
 
-	;=======================
-	; check keypress 1
-	;=======================
-
-;	jsr	keyboard_meter
-;	bcc	no_presses1
-
-;	inc	METER_PRESSES
-
-;no_presses1:
-
-	; check if we're done
-;	lda	METER_PRESSES
-;	cmp	#2
-;	bcs	end_meter
-
 	;===================
 	; clear bottom green
 
@@ -320,23 +304,6 @@ meter_loop:
 	; draw bow
 
 	jsr	draw_bow
-
-
-	;=======================
-	; check keypress 2
-	;=======================
-
-;	jsr	keyboard_meter
-;	bcc	no_presses2
-
-;	inc	METER_PRESSES
-
-;no_presses2:
-
-	; check if we're done
-;	lda	METER_PRESSES
-;	cmp	#2
-;	bcs	end_meter
 
 	;===================
 	; draw string
@@ -355,21 +322,23 @@ meter_loop:
 
 
 	;=======================
-	; check keypress 3
+	; check keypress
 	;=======================
 
 	jsr	keyboard_meter
-	bcc	no_presses3
+	bcc	no_presses
 
 	inc	METER_PRESSES
 
-no_presses3:
+no_presses:
 
 	; check if we're done
 	lda	METER_PRESSES
 	cmp	#2
 	bcs	end_meter
 
+	;=======================
+	; adjust meter location
 
 	jsr	move_power_meter
 
