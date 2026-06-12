@@ -7,12 +7,21 @@
 ; vaguely trying to make this as similar to the actual game
 ;	code to make inclusion easier
 
+; o/~ Shot through the heart, and you're to blame o/~
+
 
 .include "zp.inc"
 .include "hardware.inc"
 
 hposn_high	= $1000
 hposn_low	= $1100
+
+; defines
+
+METER_ADJUST	= 100	; adjust down 100 so math fits in 8-bit signed
+METER_TOP	= 106-METER_ADJUST
+METER_START	= 172-METER_ADJUST
+METER_MARK	= 130-METER_ADJUST
 
 target_start:
 
@@ -59,7 +68,7 @@ restart_game:
 	sta	ARROW_SCORE
 	sta	WIND_DIR
 
-	lda	#172
+	lda	#METER_START
 	sta	METER_LEFT
 	sta	METER_RIGHT
 
@@ -186,7 +195,7 @@ try_wind_again:
 	;=====================
 	; reset meter
 
-	lda	#172
+	lda	#METER_START
 	sta	METER_LEFT
 	sta	METER_RIGHT
 
@@ -364,6 +373,95 @@ no_presses:
 	jmp	meter_loop
 end_meter:
 
+
+	;=============================
+	;=============================
+	; dir the shot, now
+	; calculate flight parameters
+	;=============================
+	;=============================
+
+	; set arrow flying
+
+	lda	#1
+	sta	ARROW_FLYING
+
+	;======================
+	; set initial location
+
+	clc
+	lda	BOW_X
+	adc	#15
+	sta	ARROW_X
+
+
+	lda	#0
+	sta	ARROW_XL
+	sta	HORIZ_OFFSET
+	sta	HORIZ_OFFSETL
+	sta	VERT_OFFSET
+
+	;=======================
+	; set horizontal offset
+	;  note: in original maxes to +/-15
+	;        it just doesn't draw if off the screen
+
+
+	; original: horiz_offset=(meter_left-meter_right)/5
+
+	sec
+	lda	METER_LEFT
+	sbc	METER_RIGHT
+
+	cmp	#$80	; grrr, asr
+	ror
+	ror	HORIZ_OFFSETL
+
+	cmp	#$80	; grrr, asr
+	ror
+	ror	HORIZ_OFFSETL
+
+	cmp	#$80	; grrr, asr
+	ror
+	ror	HORIZ_OFFSETL
+
+	cmp	#$80	; grrr, asr
+	ror
+	ror	HORIZ_OFFSETL
+
+	cmp	#$80	; grrr, asr
+	ror
+	ror	HORIZ_OFFSETL
+
+	sta	HORIZ_OFFSET
+
+	; orig: vertical_offset=((- (hitmarkCenter - indicatorL.y +
+	;                        (hitmarkCenter - indicatorR.y))) / 3;
+	; wher hitmarkCenter is the red stripe on the meter
+	;	hitmarkCenter is 130 on apple II
+	;	we adjust meter by 100 so math fits in signed 8-bit
+	;	so 30
+
+	sec
+	lda	#30
+	sta	METER_RIGHT
+	sta	ARROW_TEMP
+
+	sec
+	lda	#30
+	sbc	METER_LEFT
+
+	clc
+	adc	ARROW_TEMP
+
+	eor	#$FF			; negate
+	clc
+	adc	#1
+
+	cmp	#$80			; /2, supposed to div3?
+	ror
+
+	sta	VERT_OFFSET
 
 	;====================================================================
 	;===================
@@ -693,8 +791,6 @@ cbg_smc2:
 	bne	cbg_yloop						; 2/3
 
 	rts
-
-
 
 
 wind_dir_lookup:

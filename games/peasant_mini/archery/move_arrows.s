@@ -13,6 +13,24 @@ move_arrows:
 	adc	HIT_OFFSET
 	tay
 
+	;===========================
+	; check sprite to see if stop moving
+	;   sprite 2 (hit) or 7 (miss) mean stop
+	lda	shoot_sprite_which,Y
+	cmp	#2
+	beq	arrow_stop_flying
+	cmp	#7
+	bne	arrow_keep_flying
+
+arrow_stop_flying:
+	lda	#0
+	sta	ARROW_FLYING
+
+arrow_keep_flying:
+
+	;=========================
+	; check if hit target
+
 	cpy	#7
 	bne	dont_mess_with
 
@@ -28,12 +46,30 @@ check_if_hit_target:
 
 dont_mess_with:
 
-	; set X-coord
+
+
+	;======================
+	; actually move arrow
+	; only do this if arrow is in air
+
+	lda	ARROW_FLYING
+	beq	arrow_not_flying
+
+arrow_is_flying:
+	; adjust X-coord
 
 	clc
-	lda	BOW_X
-	adc	#15
+	lda	ARROW_XL
+	adc	HORIZ_OFFSETL
+
+	sta	ARROW_XL
+
+	lda	ARROW_X
+	adc	HORIZ_OFFSET
 	sta	ARROW_X
+
+
+arrow_not_flying:
 
 	; set Y-coord
 

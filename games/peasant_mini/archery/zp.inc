@@ -386,6 +386,11 @@ METER_RIGHT	= $ED		; target
 METER_PRESSES	= $EE		; target
 ARROW_TEMP	= $EF		; target
 HIT_OFFSET	= $F0		; target
+HORIZ_OFFSET	= $F1		; target
+VERT_OFFSET	= $F2		; target
+ARROW_FLYING	= $F3		; target
+ARROW_XL	= $F4		; target
+HORIZ_OFFSETL	= $F5		; target
 
 P0		= $F1
 P1		= $F2
@@ -393,7 +398,7 @@ P2		= $F3
 P3		= $F4
 P4		= $F5
 P5		= $F6
-SPRITE_X	= $F7	; ?
+SPRITE_X	= $F7	; hgr_sprite_mask
 SPRITE_Y	= $F8	; ?
 
 CURRENT_ROW	= $F9	; ?

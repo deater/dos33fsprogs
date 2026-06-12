@@ -198,6 +198,9 @@ static void ar_shootArrow(void) {
 
 		printf("horizOffset %d\n",horizOffset);
 
+		/* hitmark is the red stripe on the meter */
+		/* it appears to be 5 pixels in height? */
+
 		hitmarkCenter = hitmark_mc.y + hitmark_mc.height / 2;
 
 		printf("hitmarkCenter %d\n",hitmarkCenter);

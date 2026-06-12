@@ -1,0 +1,5 @@
++ don't draw arrow if off-screen right or left
++ in theory in original the bow/meter resets as soon as the arrow hits,
+	the arrow wiggle animation conitnues after that.
+	Might not be worth fixing that.
+

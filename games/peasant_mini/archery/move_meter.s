@@ -23,37 +23,18 @@ draw_meter_bottom:
 	;===========================
 	; draw meter pointers
 	;===========================
-
-	; original:
-	; draw at 116+(14-METER_LEFT)*4
-	;	so if 0, should be 172
-
-	; modified:
-	;	draw at 108+(64-METER_LEFT)
-
-
 	; new: METER_LEFT and METER_RIGHT are their actual coords
+	;	minus 100 so fit in signed 8-bit
+	;	so we need to add 100 before drawing
 
 draw_meter_pointers:
 
 	lda	#35			; 245/7 = 35
 	sta	CURSOR_X
 
-;	lda	#64
-;	sec
-;	sbc	METER_LEFT
-;	clc
-;	adc	#108
-
-;	lda	#14
-;	sec
-;	sbc	METER_LEFT
-;	asl
-;	asl
-;	clc
-;	adc	#116
-
+	clc
 	lda	METER_LEFT
+	adc	#METER_ADJUST
 	sta	CURSOR_Y
 
 	lda	#<l_pointer
@@ -67,21 +48,9 @@ draw_meter_pointers:
 	lda	#38			; 266/7 = 38
 	sta	CURSOR_X
 
-;	lda	#64
-;	sec
-;	sbc	METER_RIGHT
-;	clc
-;	adc	#108
-
-;	lda	#14
-;	sec
-;	sbc	METER_RIGHT
-;	asl
-;	asl
-;	clc
-;	adc	#116
-
+	clc
 	lda	METER_RIGHT
+	adc	#METER_ADJUST
 	sta	CURSOR_Y
 
 	lda	#<r_pointer
@@ -158,19 +127,19 @@ move_right_meter:
 
 meter_bounds_left:
 	lda	METER_LEFT
-	cmp	#106
+	cmp	#METER_TOP
 	bcs	meter_bounds_right
 
 	; off scale, so peg
-	lda	#106
+	lda	#METER_TOP
 	sta	METER_LEFT
 
 meter_bounds_right:
 	lda	METER_RIGHT
-	cmp	#106
+	cmp	#METER_TOP
 	bcs	meter_bounds_lr_done
 
-	lda	#106
+	lda	#METER_TOP
 	sta	METER_RIGHT
 	lda	#6		; change to add plus 6
 	sta	METER_ADD
@@ -181,12 +150,12 @@ meter_bounds_lr_done:
 	; force a shot, also set R/L to 0?
 
 	lda	METER_RIGHT
-	cmp	#172
+	cmp	#METER_START
 	bcc	meter_bounds_done
 
 	; off end on right
 
-	lda	#172
+	lda	#METER_START
 	sta	METER_RIGHT
 	sta	METER_LEFT
 
