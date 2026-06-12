@@ -1,6 +1,12 @@
 + don't draw arrow if off-screen right or left
+	or better yet, clamp
 + in theory in original the bow/meter resets as soon as the arrow hits,
 	the arrow wiggle animation conitnues after that.
 	Might not be worth fixing that.
++ sound effects
+
+
+done:
+
 + add a slight delay, meter should take roughly 2.5s for a full cycle
 	not 2s

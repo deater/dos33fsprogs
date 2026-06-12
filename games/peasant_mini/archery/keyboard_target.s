@@ -52,7 +52,7 @@ check_right:
 	cmp	#$15
 	beq	right_pressed
 	cmp	#'D'
-	bne	check_up
+	bne	check_number
 right_pressed:
 
 	lda	BOW_X
@@ -60,12 +60,23 @@ right_pressed:
 	beq	bow_dont_inc
 
 	inc	BOW_X
-
 bow_dont_inc:
-
 	jmp	done_keyboard_regular		; bra
 
-check_up:
+check_number:
+
+	; DEBUG: allow setting wind direction
+
+	cmp	#'0'
+	bcc	check_down
+	cmp	#'5'
+	bcs	check_down
+
+	sec
+	sbc	#'0'
+	sta	WIND_DIR
+	jmp	done_keyboard_regular		; bra
+
 check_down:
 check_enter:
 	cmp	#13

@@ -21,7 +21,7 @@ hposn_low	= $1100
 METER_ADJUST	= 100	; adjust down 100 so math fits in 8-bit signed
 METER_TOP	= 106-METER_ADJUST
 METER_START	= 172-METER_ADJUST
-METER_MARK	= 130-METER_ADJUST
+METER_MARK	= 128-METER_ADJUST	; adjusted from 130 as meter arrow 5 high
 
 target_start:
 
@@ -330,6 +330,14 @@ meter_loop:
 	jsr	draw_flag
 
 
+	;===================
+	; delay?
+	;===================
+
+	lda	#100
+	jsr	WAIT
+
+
 	;=======================
 	; check keypress
 	;=======================
@@ -484,7 +492,25 @@ end_meter:
 
 	sta	VERT_OFFSET
 
-vmw:
+	; FIXME: clamp to +/- 15
+
+	lda	VERT_OFFSET
+	bmi	vert_clamp_neg
+
+	cmp	#7
+	bcc	vert_clamp_done
+	lda	#7
+	sta	VERT_OFFSET
+	bne	vert_clamp_done		; bra
+
+vert_clamp_neg:
+	cmp	#$f9
+	bcs	vert_clamp_done
+	lda	#$f9
+	sta	VERT_OFFSET
+
+vert_clamp_done:
+
 
 	;====================================================================
 	;===================
@@ -831,5 +857,5 @@ wind_offset_l:
 	.byte	0,0,0,0,0
 
 wind_offset_h:
-	.byte	0,1,<-1,<-2,2
+	.byte	0,3,<-3,<-6,6
 
