@@ -58,8 +58,8 @@ dont_mess_with:
 
 arrow_is_flying:
 
-	;=================
-	; adjust X-coord
+	;=====================================
+	; adjust X-coord based on horiz offset
 
 	clc
 	lda	ARROW_XL
@@ -71,13 +71,13 @@ arrow_is_flying:
 	adc	HORIZ_OFFSET
 	sta	ARROW_X
 
-	;=================
-	; adjust Y-coord
+	;====================================
+	; adjust Y-coord based on vert offset
 
-;	clc
-;	lda	ARROW_Y
-;	adc	VERT_OFFSET
-;	sta	ARROW_Y
+	clc
+	lda	ARROW_Y
+	adc	VERT_OFFSET
+	sta	ARROW_Y
 
 arrow_not_flying:
 

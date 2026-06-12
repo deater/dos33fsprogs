@@ -389,10 +389,24 @@ end_meter:
 	;======================
 	; set initial location
 
+	; adjust for wind
+
 	clc
 	lda	BOW_X
 	adc	#15
 	sta	ARROW_X
+	lda	#0
+	sta	ARROW_XL
+
+	ldx	WIND_DIR
+	clc
+	lda	ARROW_XL
+	adc	wind_offset_l,X
+	sta	ARROW_XL
+	lda	ARROW_X
+	adc	wind_offset_h,X
+	sta	ARROW_X
+
 
 	; note bow starts at 149 - 83 = 66
 ;	lda	#64
@@ -401,7 +415,6 @@ end_meter:
 
 
 	lda	#0
-	sta	ARROW_XL
 	sta	HORIZ_OFFSET
 	sta	HORIZ_OFFSETL
 	sta	VERT_OFFSET
@@ -448,12 +461,12 @@ end_meter:
 	;	so 30
 
 	sec
-	lda	#30
-	sta	METER_RIGHT
+	lda	#METER_MARK
+	sbc	METER_RIGHT
 	sta	ARROW_TEMP
 
 	sec
-	lda	#30
+	lda	#METER_MARK
 	sbc	METER_LEFT
 
 	clc
@@ -466,7 +479,12 @@ end_meter:
 	cmp	#$80			; /2, supposed to div3?
 	ror
 
+	cmp	#$80			; /2, supposed to div3?
+	ror
+
 	sta	VERT_OFFSET
+
+vmw:
 
 	;====================================================================
 	;===================
@@ -801,4 +819,17 @@ cbg_smc2:
 wind_dir_lookup:
 	.byte 0,0,0,1, 1,1,2,2
 	.byte 2,3,3,3, 4,4,4,0
+
+;wind_offset:
+;	.byte -12,-6,0,6,12
+
+	; wind dir doesn't math original
+	; original, 0=strong left, 1=mild left, 2=none, 3=mild right, 4=right
+	; us 0=none, 1=mild right, 2=mild left, 3=strong left, 4=strong right
+
+wind_offset_l:
+	.byte	0,0,0,0,0
+
+wind_offset_h:
+	.byte	0,1,<-1,<-2,2
 
