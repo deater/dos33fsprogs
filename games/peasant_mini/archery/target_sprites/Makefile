@@ -38,8 +38,8 @@ flag_sprites.inc:	flag_sprites.png
 arrow_sprites.inc:	arrow_sprites.png arrows_moving.png
 	$(HGR_SPRITE) -s -l l_pointer arrow_sprites.png 245 174 251 179 > arrow_sprites.inc
 	$(HGR_SPRITE) -s -l r_pointer arrow_sprites.png 266 174 272 179 >> arrow_sprites.inc
-	$(HGR_SPRITE) -s -l l_pointer_erase arrow_sprites.png 245 164 251 169 >> arrow_sprites.inc
-	$(HGR_SPRITE) -s -l r_pointer_erase arrow_sprites.png 266 164 272 169 >> arrow_sprites.inc
+	$(HGR_SPRITE) -s -l l_pointer_erase arrow_sprites.png 245 105 251 149 >> arrow_sprites.inc
+	$(HGR_SPRITE) -s -l r_pointer_erase arrow_sprites.png 266 105 272 149 >> arrow_sprites.inc
 	$(HGR_SPRITE) -s -l arrow_odd_sprite arrow_sprites.png  119   6 132 49 >> arrow_sprites.inc
 	$(HGR_SPRITE) -s -l arrow_even_sprite arrow_sprites.png 126 149 139 192 >> arrow_sprites.inc
 	$(HGR_SPRITE) -s -l arrow_nostring_odd_sprite  arrow_sprites.png  7 77 20 120 >> arrow_sprites.inc

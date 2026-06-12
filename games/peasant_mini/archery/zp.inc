@@ -386,8 +386,6 @@ METER_RIGHT	= $ED		; target
 METER_PRESSES	= $EE		; target
 ARROW_TEMP	= $EF		; target
 HIT_OFFSET	= $F0		; target
-OLD_METER_LEFT	= $F1		; target
-OLD_METER_RIGHT	= $F2		; target
 
 P0		= $F1
 P1		= $F2

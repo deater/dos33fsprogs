@@ -62,9 +62,6 @@ restart_game:
 	lda	#172
 	sta	METER_LEFT
 	sta	METER_RIGHT
-	sta	OLD_METER_LEFT
-	sta	OLD_METER_RIGHT
-
 
 
 	lda	#4
@@ -144,10 +141,12 @@ another_shot:
 	lda	#0
 	sta	DRAW_PAGE
 	jsr	clear_flag
+	jsr	erase_meter_pointers
 
 	lda	#$20
 	sta	DRAW_PAGE
 	jsr	clear_flag
+	jsr	erase_meter_pointers
 
 	pla
 	sta	DRAW_PAGE
@@ -190,9 +189,6 @@ try_wind_again:
 	lda	#172
 	sta	METER_LEFT
 	sta	METER_RIGHT
-	sta	OLD_METER_LEFT
-	sta	OLD_METER_RIGHT
-
 
 
 	;===================
@@ -303,11 +299,6 @@ meter_loop:
 	;=======================
 	; if keypress 1st add/subtract 5 from left/right
 	; if keypress 2nd add/subtract 6 from right
-
-	lda	METER_LEFT
-	sta	OLD_METER_LEFT
-	lda	METER_RIGHT
-	sta	OLD_METER_RIGHT
 
 	lda	METER_PRESSES
 	cmp	#1
@@ -483,6 +474,7 @@ arrow_loop:
 	; clear bottom green
 
 	jsr	clear_bottom_green
+	jsr	erase_meter_pointers
 
 	;===================
 	; draw bow
@@ -786,14 +778,14 @@ draw_meter_pointers:
 	;===========================
 	; erase meter pointers
 	;===========================
-	; OLD_METER_RIGHT, OLD_METER_LEFT
+	;
 
 erase_meter_pointers:
 
 	lda	#35			; 245/7 = 35
 	sta	CURSOR_X
 
-	lda	OLD_METER_LEFT
+	lda	#105
 	sta	CURSOR_Y
 
 	lda	#<l_pointer_erase
@@ -806,7 +798,7 @@ erase_meter_pointers:
 	lda	#38			; 266/7 = 38
 	sta	CURSOR_X
 
-	lda	OLD_METER_RIGHT
+	lda	#105
 	sta	CURSOR_Y
 
 	lda	#<r_pointer_erase
