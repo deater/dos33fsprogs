@@ -163,13 +163,15 @@ update_screen:
 
 handle_archery_return:
 
-	and	#$7f		; unset
+	and	#$7f			; unset
 	sta	ARROW_SCORE
 
 	and	#$f			; see if score (bottom) is 0
 	beq	arrow_game_zero
 
 	sta	TEMP0
+
+	; why are we comparing top to bottom nibble?
 
 	lda	ARROW_SCORE
 	lsr
@@ -212,12 +214,18 @@ arrow_game_zero:
 
 arrow_game_lost:
 	lda	TEMP0
-	clc
-	adc	#'0'
-	sta	archery_some_message+24	; urgh affected by compression
+	cmp	#2
+	beq	arrow_game_two
 
-	ldx	#<archery_some_message
-	ldy	#>archery_some_message
+arrow_game_one:
+	ldx	#<archery_one_message
+	ldy	#>archery_one_message
+	jsr	partial_message_step
+	jmp	arrow_game_lose_common
+
+arrow_game_two:
+	ldx	#<archery_two_message
+	ldy	#>archery_two_message
 	jsr	partial_message_step
 
 arrow_game_lose_common:

@@ -29,7 +29,7 @@
 ;		temporarily and decompress when needed?
 ;       7*60 = 420 * 18 = 7560 bytes
 
-$D0-$DF (bank2) (4k)    inventory       (3122 bytes)
+; $D0-$DF (bank2) (4k)    inventory       (3122 bytes)
 
 
 .include "../zp.inc"
