@@ -166,27 +166,27 @@ error_string:
 .endif
 
 which_disk_array:
-	.byte 1,1,1,1		; TITLE,  DUCK,   ROOF,  ASPLODE
+	.byte 1,1,1,1		; TITLE,  DUCK,   TARGET,  ASPLODE
 	.byte 1,1,1,1		; CLIMB,  FISH,   RAT,   DATING
 	.byte 1			; BACK_OFF
 
 load_address_array:
-        .byte $60,$60,$60,$40	; TITLE,  DUCK,  ROOF,  ASPLODE
+        .byte $60,$60,$60,$40	; TITLE,  DUCK,  TARGET,  ASPLODE
 	.byte $60,$40,$60,$40	; CLIMB,  FISH,  RAT,   DATING
 	.byte $60		; BACK_OFF
 
 track_array:
-        .byte  2, 5, 8, 9	; TITLE,  DUCK,  ROOF, ASPLODE
+        .byte  2, 5, 6, 9	; TITLE,  DUCK,  TARGET, ASPLODE
 	.byte 24,14,20,28	; CLIMB,  FISH,  RAT,  DATING
 	.byte 22		; BACK_OFF
 
 sector_array:
-        .byte  0, 0, 0, 0	; TITLE,  DUCK,  ROOF, ASPLODE
+        .byte  0, 0, 0, 0	; TITLE,  DUCK,  TARGET, ASPLODE
 	.byte  0, 0, 0, 0	; CLIMB,  FISH,  RAT,  DATING
 	.byte  0		; BACK_OFF
 
 length_array:
-        .byte  40, 16, 16, 70	; TITLE,  DUCK,  ROOF, ASPLODE
+        .byte  40, 16, 40, 70	; TITLE,  DUCK,  TARGET, ASPLODE
 	.byte  64, 92, 32, 96	; CLIMB,  FISH,  RAT,  DATING
 	.byte  32		; BACK_OFF
 

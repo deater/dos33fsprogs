@@ -13,8 +13,8 @@
 .include "zp.inc"
 .include "hardware.inc"
 
-hposn_high	= $1000
-hposn_low	= $1100
+hposn_high	= $8800
+hposn_low	= $8900
 
 ; defines
 
@@ -28,6 +28,12 @@ target_start:
 	;=======================================
 	; clear screen and print opening message
 	;=======================================
+
+	bit	SET_TEXT
+	bit	PAGE1
+	lda	#0
+	sta	DRAW_PAGE
+
 	jsr	HOME
 
 	bit	KEYRESET
@@ -84,7 +90,7 @@ restart_game:
 
 load_graphics:
 
-	; also load to PAGE1 $2000
+	; load to PAGE1 $2000
 
 	lda	#<bg_data
 	sta	zx_src_l+1
@@ -105,23 +111,6 @@ load_graphics:
 	lda	#$40
 
 	jsr	zx02_full_decomp
-
-
-	; also load to $8000
-	; (in actual game would be at $6000, but we are being lazy
-	;	and are loading from DOS which is at $9400 or similar
-	;	so we can't load the code that high)
-
-	; note we could be copying here which might be faster?
-
-;	lda	#<bg_data
-;	sta	zx_src_l+1
-;	lda	#>bg_data
-;	sta	zx_src_h+1
-
-;	lda	#$80
-
-;	jsr	zx02_full_decomp
 
 
 	;==============================

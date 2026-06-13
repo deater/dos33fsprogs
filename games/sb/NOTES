@@ -1,5 +1,22 @@
 Disk contents
 
+(new)
+Disk00 Map (disk has 35 tracks, each 4k in size)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$~~~~~~~
+T         0 = Qboot
+T         1 = QLOAD         99 bytes         = 1T         (4096)  4k free
+T         2 = TITLE       9280 bytes         = 3T        (12288)  3k free
+T         5 = DUCK_POND   3474 bytes         = 1T (3T)   (12288)  9k free
+T         6 = TARGET      8327 bytes         = 3T        (12288)  4k free
+T         9 = ASPLODE	 17042 bytes	     = 5T        (20480)  3k free
+T        14 = FISH       23287 bytes         = 6T        (24576)  1k free
+T        20 = RAT         7581 bytes         = 2T        ( 8192)  1k free
+T        22 = BACK_OFF    6072 bytes         = 2T        ( 8192)  2k free
+T	 24 = CLIMB	 13013 bytes         = 4T        (16384)  3k free
+T	 28 = DATING     24576 bytes         = 6T        (24576)  4k free
+
+
+(old)
 Disk00 Map (disk has 35 tracks, each 4k in size)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~$~~~~~~~
 T         0 = Qboot
