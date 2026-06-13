@@ -11,6 +11,17 @@ move_arrows:
 	clc
 	lda	FRAME
 	adc	HIT_OFFSET
+
+	pha
+	; see if hit ground
+
+	cmp	#24
+	bne	skip_hit_ground
+
+	jsr	miss_sound
+skip_hit_ground:
+
+	pla
 	tay
 
 	;===========================
@@ -23,6 +34,7 @@ move_arrows:
 	bne	arrow_keep_flying
 
 arrow_stop_flying:
+
 	lda	#0
 	sta	ARROW_FLYING
 
@@ -31,10 +43,11 @@ arrow_keep_flying:
 	;=========================
 	; check if hit target
 
-	cpy	#7
+	cpy	#8
 	bne	dont_mess_with
 
 check_if_hit_target:
+
 
 	jsr	check_target		; carry set if hit
 
@@ -43,6 +56,7 @@ check_if_hit_target:
 	; point to miss animation instead
 	lda	#15
 	sta	HIT_OFFSET
+
 
 dont_mess_with:
 
@@ -105,6 +119,26 @@ yadd_was_pos:
 	lda	ARROW_YH
 	adc	#0
 	sta	ARROW_YH
+
+	;========================
+	; keep on screen?
+
+	lda	ARROW_X
+	bpl	arrow_left_good
+
+	lda	#0
+	beq	arrow_x_fix_common	; bra
+
+arrow_left_good:
+	cmp	#39
+	bcc	arrow_on_screen
+
+	lda	#38
+arrow_x_fix_common:
+	sta	ARROW_X
+
+arrow_on_screen:
+
 
 	rts
 
@@ -566,16 +600,44 @@ check_bullseye:
 	bcs	check_bullseye_missed
 
 	lda	ARROW_Y
-	cmp	#61
+	cmp	#59
 	bcc	check_bullseye_missed
 	cmp	#73
 	bcs	check_bullseye_missed
 
 check_bullseye_hit:
+
+	; play sound effect
+
+	jsr	hit_sound
+
+	; draw circle, both pages
+
+	lda	DRAW_PAGE
+	pha
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	draw_circle
+
+	lda	#$20
+	sta	DRAW_PAGE
+
+	jsr	draw_circle
+
+	pla
+	sta	DRAW_PAGE
+
+	; increment hits
+	inc	ARROW_SCORE
+
 	sec
 	rts
 
 check_bullseye_missed:
+	jsr	miss_sound
+
 	clc
 	rts
 

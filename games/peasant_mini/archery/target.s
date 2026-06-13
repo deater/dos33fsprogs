@@ -21,7 +21,7 @@ hposn_low	= $1100
 METER_ADJUST	= 100	; adjust down 100 so math fits in 8-bit signed
 METER_TOP	= 106-METER_ADJUST
 METER_START	= 172-METER_ADJUST
-METER_MARK	= 128-METER_ADJUST	; adjusted from 130 as meter arrow 5 high
+METER_MARK	= 129-METER_ADJUST	; adjusted from 130 as meter arrow 5 high
 
 target_start:
 
@@ -114,14 +114,14 @@ load_graphics:
 
 	; note we could be copying here which might be faster?
 
-	lda	#<bg_data
-	sta	zx_src_l+1
-	lda	#>bg_data
-	sta	zx_src_h+1
+;	lda	#<bg_data
+;	sta	zx_src_l+1
+;	lda	#>bg_data
+;	sta	zx_src_h+1
 
-	lda	#$80
+;	lda	#$80
 
-	jsr	zx02_full_decomp
+;	jsr	zx02_full_decomp
 
 
 	;==============================
@@ -401,7 +401,7 @@ end_meter:
 
 	clc
 	lda	BOW_X
-	adc	#15
+	adc	#16
 	sta	ARROW_X
 	lda	#0
 	sta	ARROW_XL
@@ -511,6 +511,8 @@ vert_clamp_neg:
 
 vert_clamp_done:
 
+	jsr	launch_sound
+
 
 	;====================================================================
 	;===================
@@ -614,6 +616,19 @@ arrow_loop:
 	cmp	#21			; 21 frames of shooting animation
 	beq	end_arrow
 
+
+	;===========================
+	; check if bullseye
+	;===========================
+	; do this frame 8
+
+	cmp	#8
+	bne	no_check_bullseye
+
+	jsr	check_bullseye
+
+no_check_bullseye:
+
 	;====================
 	; flip page
 
@@ -623,43 +638,6 @@ arrow_loop:
 
 
 end_arrow:
-
-	;===========================
-	; check if bullseye
-	;===========================
-
-	jsr	check_bullseye
-	bcc	no_bullseye
-
-yes_bullseye:
-
-	; draw circle, both pages
-
-	lda	DRAW_PAGE
-	pha
-
-	lda	#0
-	sta	DRAW_PAGE
-
-	jsr	draw_circle
-
-	lda	#$20
-	sta	DRAW_PAGE
-
-	jsr	draw_circle
-
-	pla
-	sta	DRAW_PAGE
-
-
-	; increment hits
-	inc	ARROW_SCORE
-
-	; play sound effect?
-
-
-
-no_bullseye:
 
 
 	;=======================================================
@@ -758,6 +736,8 @@ score_string:
 	.include	"wait_keypress.s"
 	.include	"hgr_page_flip.s"
 	.include	"hgr_sprite_mask.s"
+	.include	"redbook_sound.s"
+
 
 bg_data:
 	.incbin "target_graphics/target_bg.hgr.zx02"
@@ -858,4 +838,50 @@ wind_offset_l:
 
 wind_offset_h:
 	.byte	0,3,<-3,<-6,6
+
+
+
+launch_sound:
+	rts
+
+miss_sound:
+	lda	#NOTE_G3
+	sta	speaker_frequency
+
+	lda	#30
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+;	lda	#100
+;	jsr	WAIT
+
+	rts
+
+
+	; 600/1200
+hit_sound:
+
+	lda	#NOTE_D5
+	sta	speaker_frequency
+
+	lda	#30
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+	lda	#100
+	jsr	WAIT
+
+	lda	#NOTE_D6
+	sta	speaker_frequency
+
+	lda	#60
+	sta	speaker_duration
+
+	jsr	speaker_tone
+
+
+	rts
+
 
