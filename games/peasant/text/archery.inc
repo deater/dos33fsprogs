@@ -104,7 +104,7 @@ archery_give_trinket_message:
 .byte 34,"That'll work,",34," says",13
 .byte "Mendelev. Just hit 3",13
 .byte "bullseyes and you win the",13
-.byte "SuperTime FunBow TM!",0
+.byte "SuperTime FunBow TM!",34,0
 
 ; jmp to archery_play_game_message2
 
@@ -117,9 +117,10 @@ archery_give_trinket_again_message:
 .byte "humiliate yourself at the",13
 .byte "range.",0
 
-; launches into game...
+; launches into game... (then prints the ARROW_KEYS message
+;	*after* which must be a bug)
 
-; play game, after trinket
+; play game, (or play none) after trinket
 archery_play_game_message:
 .byte 34,"Haldo again!",34," say the",13
 .byte "brothers. ",34,"Get 3 bullseyes",13
@@ -135,7 +136,7 @@ archery_play_game_message2:
 .byte "of times to get a nice shot",13
 .byte "off but we don't give",13
 .byte "lessons so you're on your",13
-.byte "own.",0
+.byte "own.",34,0
 
 
 
@@ -277,7 +278,7 @@ archery_one_message:
 
 archery_two_message:
 .byte 34,"Sorry!",34," says",13
-.byte "Dongolev.",34,"Only w",13
+.byte "Dongolev.",34,"Only 2",13
 .byte "hits. Your game face must be",13
 .byte "on back-order. Maybe come",13
 .byte "back when your shipment",13

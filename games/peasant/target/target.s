@@ -685,8 +685,25 @@ game_over:
 ;	jmp	restart_game
 
 exit_game:
+	; set up  score
+	; for some reason when I first wrote this eons ago I thought
+	; the number of hits needed was random 0-5?  not sure why
+
+	lda	ARROW_SCORE
+	ora	#(ARROW_DONE|$30)
+	sta	ARROW_SCORE
+
+
+
+;	rts
+
+;	jmp	update_map_location
+
 	lda	#LOCATION_ARCHERY
 	sta	MAP_LOCATION
+
+	lda	#LOAD_BROTHERS
+	sta	WHICH_LOAD
 
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER

@@ -202,8 +202,9 @@ archery_give_trinket_first:
 archery_give_trinket_again:
 	ldx	#<archery_give_trinket_again_message
 	ldy	#>archery_give_trinket_again_message
-	jmp	finish_parse_message
+	jsr	partial_message_step
 
+	jmp	archery_play_game2
 
 	;================
 	; haldo
@@ -290,6 +291,8 @@ archery_play:
 
 	cmp	#NOUN_GAME
 	beq	archery_check_play_game
+	cmp	#NOUN_NONE
+	beq	archery_check_play_game
 
 	jmp	parse_common_unknown
 
@@ -328,8 +331,9 @@ archery_play_game2:
 	jsr	update_map_location
 
 	; FIXME: make random
-	lda	#$30
-	sta	ARROW_SCORE
+	; wait, why?  it isn't random as far as I can tell...
+	;lda	#$30
+	;sta	ARROW_SCORE
 
 	rts
 
