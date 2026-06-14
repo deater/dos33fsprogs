@@ -113,7 +113,7 @@ peasant_disk3.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk3.dsk  29 0 ./location_jhonka/JHONKA_LOADER          0   0
 
 peasant_disk4.dsk:	\
-	./archery/ARCHERY \
+	./target/TARGET \
 	./wrong_boot/WBOOT4 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
@@ -123,7 +123,7 @@ peasant_disk4.dsk:	\
 	$(DOS33_RAW) peasant_disk4.dsk   3 0 ./sprites_peasant/PEASANT_SPRITES_COMMON  0   0
 	$(DOS33_RAW) peasant_disk4.dsk   4 0 ./game_over/GAME_OVER    0   0
 	$(DOS33_RAW) peasant_disk4.dsk   5 0 ./map/MAP          0   0
-	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./archery/ARCHERY      0   0
+	$(DOS33_RAW) peasant_disk4.dsk   7 0 ./target/TARGET      0   0
 
 
 peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
@@ -158,7 +158,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./map/MAP ./archery/ARCHERY \
+	./map/MAP ./target/TARGET \
 	./trogdor/TROGDOR_LOADER ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./climb/sprites/climbing_sprites.zx02 \
 	./location_outer/OUTER_LOADER \
@@ -234,7 +234,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 25 0` ./location_hidden_glen/HIDDEN_GLEN_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 27 0` ./location_inside_inn_night/INSIDE_INN_NIGHT_LOADER          0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 3 29 0` ./location_jhonka/JHONKA_LOADER	  0   0
-	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./archery/ARCHERY      0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 4  7 0` ./target/TARGET      0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  1 0` ./location_cliff_base/CLIFF_BASE_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  3 0` ./sprites_peasant/PEASANT_SPRITES_OUTER    0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5  7 0` ./climb/CLIMB	  0   0
@@ -412,6 +412,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s location_names_h qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s wait_until_keypress qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s random8 qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s rand_a qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s score_points qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s print_score qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s update_score qload.lst >> qload.inc
@@ -466,8 +467,8 @@ inventory/INVENTORY:
 ./climb/sprites/climbing_sprites.zx02:
 	cd climb/sprites && make
 
-./archery/ARCHERY:
-	cd archery && make
+./target/TARGET:
+	cd target && make
 
 ./map/MAP:	
 	cd map && make
@@ -689,7 +690,7 @@ peasant.2mg.zip:	peasant.2mg
 
 distclean:
 	make clean
-	cd archery && make distclean
+	cd target && make distclean
 	cd climb && make distclean
 	cd copy && make distclean
 	cd ending && make distclean
@@ -743,7 +744,7 @@ clean:
 		parse_input.inc \
 			*.ZX02 \
 			generate_common generate_all_symbols
-	cd archery && make clean
+	cd target && make clean
 	cd climb && make clean
 	cd copy && make clean
 	cd ending && make clean

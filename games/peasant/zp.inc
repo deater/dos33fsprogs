@@ -398,11 +398,12 @@ PREV_X		= $CD	; kerrek
 WIND_DIR	= $CD	; target
 BLOWN_AWAY_COUNT= $CD	; jhonka,hay,gary,cottage,puddle
 
-
 WRONG_KEY	= $CE	; outer1/2/3
 PREV_Y		= $CE	; kerrek
+METER_ADD	= $CE	; target
 
 SWORD_COUNT	= $CF	; outer3
+ARROWS_LEFT	= $CF	; target
 
 ; D0-D? used by HGR?
 
@@ -412,16 +413,37 @@ HGR_COLOR	= $E4		; hgr rectangle
 ;HGR_PAGE	= $E6
 
 TEMP_CENTER	= $EC		; for cliff climb
+METER_LEFT	= $EC		; target
+
 CLIMB_COUNT	= $ED		; for cliff climb
-FLAME_COUNT	= $EE
+METER_RIGHT	= $ED		; target
+
+FLAME_COUNT	= $EE		; ??
+METER_PRESSES	= $EE		; target
+
 CURRENT_ROCK	= $EF		; for cliff climb
+ARROW_TEMP	= $EF		; target
+
+HIT_OFFSET	= $F0		; target
 
 P0		= $F1
+HORIZ_OFFSET	= $F1		; target
+
 P1		= $F2
+VERT_OFFSET	= $F2		; target
+
 P2		= $F3
+ARROW_FLYING	= $F3		; target
+
 P3		= $F4
+ARROW_XL	= $F4		; target
+
 P4		= $F5
+HORIZ_OFFSETL	= $F5		; target
+
 P5		= $F6
+ARROW_YH	= $F6		; target
+
 SPRITE_X	= $F7	; ?
 SPRITE_Y	= $F8	; ?
 

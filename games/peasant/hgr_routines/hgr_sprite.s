@@ -8,6 +8,8 @@
 
 	; sprite AT INL/INH
 
+	; modified to crop if less than 0 or > 39
+
 hgr_draw_sprite:
 
 	ldy	#0
@@ -49,26 +51,26 @@ hgr_sprite_yloop:
 
 	clc
 	adc	DRAW_PAGE
-
-	; eor	#$00 draws on page2
-	; eor	#$60 draws on page1
-;hgr_sprite_page_smc:
-;	eor	#$00
 	sta	GBASH
 
 	ldy	CURSOR_X
 
 sprite_inner_loop:
 
+	cpy	#40			; this catches both <0 and >=40
+	bcs	skip_draw_hgr_sprite
+
 sprite_smc1:
 	lda	$d000		; get sprite pattern
 	sta	(GBASL),Y	; store out
+
+skip_draw_hgr_sprite:
 
 	inx
 	iny
 
 
-	inc	sprite_smc1+1
+	inc	sprite_smc1+1		; 16-bit increment sprite
 	bne	sprite_noflo
 	inc	sprite_smc1+2
 sprite_noflo:

@@ -1,0 +1,152 @@
+
+	;=========================
+	; check keyboard
+	;	for target
+	;==========================
+
+	; note, this is different from the rest of the game
+
+keyboard_bow:
+
+	lda	KEYPRESS
+	bmi	key_was_pressed
+
+	clc
+	rts
+
+key_was_pressed:
+;	inc	SEEDL		; ????
+
+	inc	rand_a		; perturb random number generator
+
+	and	#$7f			; strip off high
+	cmp	#$96
+	bcc	no_upper_convert	; blt
+
+	and	#$5f		; strip off high bit and make uppercase
+
+no_upper_convert:
+
+				; what if punctuation like / which is $2F
+				; 0101 1111 & 0010 1111 -> 0xF
+
+	;==========================
+	; Left
+	;==========================
+check_left:
+	cmp	#$8
+	beq	left_pressed
+	cmp	#'A'
+	bne	check_right
+left_pressed:
+
+	lda	BOW_X
+	cmp	#$F7
+	beq	bow_dont_dec
+
+	dec	BOW_X
+bow_dont_dec:
+	jmp	done_keyboard_regular		; bra
+
+check_right:
+	cmp	#$15
+	beq	right_pressed
+	cmp	#'D'
+	bne	check_number
+right_pressed:
+
+	lda	BOW_X
+	cmp	#$10
+	beq	bow_dont_inc
+
+	inc	BOW_X
+bow_dont_inc:
+	jmp	done_keyboard_regular		; bra
+
+check_number:
+
+	; DEBUG: allow setting wind direction
+
+	cmp	#'0'
+	bcc	check_down
+	cmp	#'5'
+	bcs	check_down
+
+	sec
+	sbc	#'0'
+	sta	WIND_DIR
+	jmp	done_keyboard_regular		; bra
+
+check_down:
+check_enter:
+	cmp	#13
+	beq	enter_pressed
+	cmp	#' '
+	bne	done_keyboard_regular
+enter_pressed:
+	sec
+	bcs	done_keyboard_enter		; bra
+
+done_keyboard_enter:
+	bit	KEYRESET
+	sec					; enter pressed
+	rts
+
+done_keyboard_regular:
+	bit	KEYRESET
+	clc					; not enter pressed
+	rts
+
+
+
+
+
+
+	;=========================
+	; check keyboard
+	;	for meter
+	;==========================
+
+keyboard_meter:
+
+	lda	KEYPRESS
+	bmi	meter_key_was_pressed
+
+	clc
+	rts
+
+meter_key_was_pressed:
+	inc	rand_a		; perturb random number generator
+
+	and	#$7f			; strip off high
+	cmp	#$96
+	bcc	meter_no_upper_convert	; blt
+
+	and	#$5f		; strip off high bit and make uppercase
+
+meter_no_upper_convert:
+
+				; what if punctuation like / which is $2F
+				; 0101 1111 & 0010 1111 -> 0xF
+
+
+meter_check_enter:
+	cmp	#13
+	beq	meter_enter_pressed
+	cmp	#' '
+	bne	meter_done_keyboard_regular
+meter_enter_pressed:
+	sec
+	bcs	meter_done_keyboard_enter		; bra
+
+meter_done_keyboard_enter:
+	bit	KEYRESET
+	sec					; enter pressed
+	rts
+
+meter_done_keyboard_regular:
+	bit	KEYRESET
+	clc					; not enter pressed
+	rts
+
+
