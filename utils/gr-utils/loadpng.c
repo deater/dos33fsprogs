@@ -174,13 +174,13 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	color_type = png_get_color_type(png_ptr, info_ptr);
 	bit_depth = png_get_bit_depth(png_ptr, info_ptr);
 
-//	if (debug) {
-		printf("PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
-		if (color_type==PNG_COLOR_TYPE_RGB) printf("Type RGB\n");
-		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) printf("Type RGBA\n");
-		else if (color_type==PNG_COLOR_TYPE_PALETTE) printf("Type palette\n");
-		printf("Generating output size %d x %d\n",*xsize,*ysize);
-//	}
+	if (debug) {
+		fprintf(stderr,"PNG: width=%d height=%d depth=%d\n",width,height,bit_depth);
+		if (color_type==PNG_COLOR_TYPE_RGB) fprintf(stderr,"Type RGB\n");
+		else if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) fprintf(stderr,"Type RGBA\n");
+		else if (color_type==PNG_COLOR_TYPE_PALETTE) fprintf(stderr,"Type palette\n");
+		fprintf(stderr,"Generating output size %d x %d\n",*xsize,*ysize);
+	}
 
 //        number_of_passes = png_set_interlace_handling(png_ptr);
 	png_read_update_info(png_ptr, info_ptr);
