@@ -6,7 +6,7 @@ TOKENIZE = ../../utils/asoft_basic-utils/tokenize_asoft
 
 all:	fire.dsk
 
-fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT RASTER FIRE_ELSEWHERE
+fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFECT RASTER FIRE_ELSEWHERE FIRE_NEW
 	$(DOS33) -y fire.dsk SAVE A HELLO
 	$(DOS33) -y fire.dsk BSAVE -a 0x1000 FIRE
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 FIRE_TINY
@@ -16,6 +16,8 @@ fire.dsk:	FIRE FIRE_TINY FIRE_FIRMWARE FIRE_EXTREME FIRE_QKUMBA HELLO COOL_EFFEC
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 RASTER
 	$(DOS33) -y fire.dsk BSAVE -a 0x70 COOL_EFFECT
 	$(DOS33) -y fire.dsk BSAVE -a 0xC0 FIRE_ELSEWHERE
+	$(DOS33) -y fire.dsk BSAVE -a 0xE0 FIRE_NEW
+
 ####
 
 FIRE:	fire.o
@@ -32,6 +34,15 @@ FIRE_TINY:	fire_tiny.o
 
 fire_tiny.o:	fire_tiny.s
 	ca65 -o fire_tiny.o fire_tiny.s -l fire_tiny.lst
+
+####
+
+FIRE_NEW:	fire_new.o
+	ld65 -o FIRE_NEW fire_new.o -C ../../linker_scripts/apple2_e0.inc
+
+fire_new.o:	fire_new.s
+	ca65 -o fire_new.o fire_new.s -l fire_new.lst
+
 
 ####
 
