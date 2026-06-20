@@ -1,3 +1,9 @@
+new:
+	updated inventory screen with full-size sprites
+	updated load/save screen
+
+	don't show random garbage when loading new level?  happens all over
+
 graphics:
 	haystack blowing away probably has unnecessary full hay-stack
 	sprite.  Getting rid of it might save 512 bytes on some levels
@@ -62,7 +68,7 @@ QUESTIONS FOR VIDELECTRIX:
   It seems like if you enter from a screen and he's not there then
      he'll never appear from that direction unless you enter from
      a different direction
-
+  ... can find this in actionscript
 
 Peasant sprites:
 ~~~~~~~~~~~~~~~~

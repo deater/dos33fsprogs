@@ -173,14 +173,19 @@ handle_archery_return:
 	sta	TEMP0
 
 	; why are we comparing top to bottom nibble?
+	; for some reason we though the number of games to win was in top nibble
+	; so we'd compare against that
+	; as far as I can tell, right now it's always 3 to win
 
 	lda	ARROW_SCORE
 	lsr
 	lsr
 	lsr
 	lsr
-	cmp	TEMP0
-	bne	arrow_game_lost
+;	cmp	TEMP0
+
+	cmp	#3
+	bcc	arrow_game_lost
 
 arrow_game_won:
 	; get 3 points
