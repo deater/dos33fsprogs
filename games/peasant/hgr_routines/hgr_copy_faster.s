@@ -115,7 +115,13 @@ hgr_copy_faster_page2:
 
 	lda	KEYPRESS
 	bpl	page2_no_keypress
-	jsr	insert_keyboard_buffer
+;	jsr	insert_keyboard_buffer
+
+	txa				; x is destroyed and must be saved
+	pha
+	jsr	check_keyboard
+	pla
+	tax
 
 page2_no_keypress:
 
@@ -226,7 +232,15 @@ hgr_copy_faster_page1:
 
 	lda	KEYPRESS
 	bpl	page1_nokeypress
-	jsr	insert_keyboard_buffer
+;	jsr	insert_keyboard_buffer
+
+	txa				; x is destroyed and must be saved
+	pha
+
+	jsr	check_keyboard
+
+	pla
+	tax
 
 page1_nokeypress:
 
@@ -238,24 +252,27 @@ hgr_copy_faster_page1_done:
 	rts								; 6
 
 
-keyboard_buffer:
-	.byte 0,0,0,0,0,0,0,0
+;keyboard_buffer:
+;	.byte 0,0,0,0,0,0,0,0
 
 
-insert_keyboard_buffer:
-	txa
-	pha
+;insert_keyboard_buffer:
 
-	ldx	KEY_OFFSET
-	cpx	#8
-	bcs	done_insert_keyboard_buffer     ; can we hit this?
+;	jmp	check_keyboard
 
-	lda	KEYPRESS
-	sta	keyboard_buffer,X
-	inc	KEY_OFFSET
+;	txa
+;	pha
 
-done_insert_keyboard_buffer:
-	pla
-	tax
-	bit	KEYRESET
-	rts
+;	ldx	KEY_OFFSET
+;	cpx	#8
+;	bcs	done_insert_keyboard_buffer     ; can we hit this?
+
+;	lda	KEYPRESS
+;	sta	keyboard_buffer,X
+;	inc	KEY_OFFSET
+
+;done_insert_keyboard_buffer:
+;	pla
+;	tax
+;	bit	KEYRESET
+;	rts

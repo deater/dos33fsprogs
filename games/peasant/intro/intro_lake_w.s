@@ -135,12 +135,14 @@ done_lake_w_action:
 	jsr	hgr_page_flip
 
 	;========================
-	; drain keyboard buffer
+	; check if escape pressed
 
-	jsr	intro_drain_keyboard_buffer
+;	jsr	intro_drain_keyboard_buffer
 
-	lda	ESC_PRESSED
-	bne	done_lake_w
+;	lda	ESC_PRESSED
+
+	jsr	check_escape_pressed
+	bcs	done_lake_w
 
 
 	lda	#DEFAULT_WAIT

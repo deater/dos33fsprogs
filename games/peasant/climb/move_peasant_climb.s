@@ -88,7 +88,7 @@ really_move_peasant:
 	bne	climb_continue
 climb_stop:
 
-	jsr	stop_peasant
+	jsr	stop_peasant_climb
 
 climb_continue:
 
@@ -147,7 +147,7 @@ done_xadd:
 	;==================================
 	; we collided in X, so stop moving
 
-	jsr	stop_peasant			; stop moving
+	jsr	stop_peasant_climb			; stop moving
 
 	; leave PEASANT_X same as was
 	lda	PEASANT_X
@@ -207,7 +207,7 @@ do_move_peasant_y:
 
 	bcc	done_movey			; no collide
 
-	jsr	stop_peasant			; stop moving
+	jsr	stop_peasant_climb			; stop moving
 
 	lda	PEASANT_Y			; leave same
 
@@ -350,7 +350,7 @@ move_map_south:
 	rts
 
 
-stop_peasant:
+stop_peasant_climb:
 	lda	#0
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD

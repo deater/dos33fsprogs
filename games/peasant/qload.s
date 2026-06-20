@@ -16,6 +16,8 @@
 
 .include "qboot.inc"
 
+;.include "parse_input.inc"
+
 qload_start:
 
 .if FLOPPY=1
@@ -111,7 +113,7 @@ length_array:
 load_file:
 	jmp	load_file_internal
 
-.include "qkumba_popwr.s"
+;.include "qkumba_popwr.s"	; FIXME: add back later
 .include "zx02_optim.s"
 .include "hgr_routines/hgr_font.s"
 .include "hgr_routines/hgr_draw_box.s"
@@ -120,7 +122,7 @@ load_file:
 .include "hgr_routines/hgr_tables.s"
 .include "hgr_routines/hgr_text_box.s"
 .include "clear_bottom.s"
-.include "hgr_routines/hgr_clearscreen.s"	; maybe only for title?
+;.include "hgr_routines/hgr_clearscreen.s"	; maybe only for title?
 .include "gr_offsets.s"
 .include "loadsave/loadsave_menu.s"
 .include "wait_keypress.s"
@@ -131,6 +133,7 @@ load_file:
 .include "wait.s"
 .include "load_peasant_sprites.s"
 .include "hgr_routines/hgr_copy_faster.s"
+.include "keyboard.s"
 
 peasant_text:
 	.byte 25,2,"Peasant's Quest",0

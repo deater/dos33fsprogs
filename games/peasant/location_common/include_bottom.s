@@ -9,7 +9,7 @@
 
 .include "../new_map_location.s"
 
-.include "../keyboard.s"
+;.include "../keyboard.s"
 
 .include "../vblank.s"
 

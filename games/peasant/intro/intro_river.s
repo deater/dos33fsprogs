@@ -129,12 +129,10 @@ done_river_action:
 	jsr	hgr_page_flip
 
 	;========================
-	; drain keyboard buffer
+	; check escape pressed
 
-	jsr	intro_drain_keyboard_buffer
-
-	lda	ESC_PRESSED
-	bne	done_river
+	jsr	check_escape_pressed
+	bcs	done_river
 
 
 	lda	#DEFAULT_WAIT

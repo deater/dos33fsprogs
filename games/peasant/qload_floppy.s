@@ -2,7 +2,7 @@ qload_floppy:
 
 	; init the write code
 	lda	WHICH_SLOT
-	jsr	popwr_init
+;	jsr	popwr_init
 
 	; set current disk
 	lda	#1
@@ -223,15 +223,17 @@ insert_disk_string:
 .byte " THEN PRESS RETURN",0
 
 do_savegame:
+	; FIXME: not currently working
+
 	; spin up disk
 	jsr     driveon
 
 	; actually save it
 
 	lda	#12                     ; save is track0 sector 12
-	sta	requested_sector+1
+;	sta	requested_sector+1
 
-	jsr	sector_write
+;	jsr	sector_write
 
 	jsr	driveoff
 

@@ -71,7 +71,9 @@ MASK6			= $35
 
 PEASANT_PRIORITY	= $36
 MASK_COUNTDOWN		= $37
-KEY_OFFSET		= $38
+ENTER_PRESSED		= $38
+INTRO_MODE		= $39	; set keyboard to only accept ESC/ENTER
+
 
 ; this is the structure for a ProDOS smartport command, at least
 ; for a read (command=1)

@@ -134,15 +134,10 @@ done_knight_action:
 	jsr	hgr_page_flip
 
 	;========================
-	; drain keyboard buffer
+	; check if escape pressed
 
-	jsr	intro_drain_keyboard_buffer
-
-	lda	ESC_PRESSED
-	bne	done_knight
-
-
-
+	jsr	check_escape_pressed
+	bcs	done_knight
 
 	lda	#DEFAULT_WAIT
 	jsr	wait_a_bit

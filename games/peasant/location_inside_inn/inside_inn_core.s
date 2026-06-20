@@ -33,7 +33,7 @@ game_loop:
 	; check keyboard
 
 	jsr	check_keyboard
-
+	jsr	handle_enter
 
 	;========================
 	; move the peasant
@@ -128,6 +128,7 @@ really_level_over:
 .include "sprites_inside_inn/keeper_sprites.inc"
 
 .include "wipe_center.s"
+.include "../hgr_routines/hgr_clearscreen.s"
 
 	;==========================
 	; update screen

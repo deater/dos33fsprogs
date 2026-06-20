@@ -175,12 +175,10 @@ done_cottage_action:
 
 
 	;========================
-	; drain keyboard buffer
+	; check if escape pressed
 
-	jsr	intro_drain_keyboard_buffer
-
-	lda	ESC_PRESSED
-	bne	done_cottage
+	jsr	check_escape_pressed
+	bcs	done_cottage
 
 	;======================
 	; extra delays

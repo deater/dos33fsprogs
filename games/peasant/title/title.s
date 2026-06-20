@@ -129,3 +129,5 @@ peasant_ed:
 ;.include "graphics_title/altfire.inc"
 
 .include "sprites_title/title_sprites.inc"
+
+.include "../hgr_routines/hgr_clearscreen.s"

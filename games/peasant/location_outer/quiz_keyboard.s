@@ -8,15 +8,19 @@ check_keyboard_answer:
 
 
 quiz_drain_keyboard_buffer:
-	ldx	KEY_OFFSET
-	beq	skip_quiz_drain_keyboard
+
+	; FIXME: should check the output buffer?
+	;	need special quiz mode?
+
+;	ldx	KEY_OFFSET
+;	beq	skip_quiz_drain_keyboard
 
 	; TODO: should look at whole buffer, not just first?
 
-	ldx	#0
-	stx	KEY_OFFSET		; reset
-	lda	keyboard_buffer,X
-	jmp	skip_kb_read
+;	ldx	#0
+;	stx	KEY_OFFSET		; reset
+;	lda	keyboard_buffer,X
+;	jmp	skip_kb_read
 
 skip_quiz_drain_keyboard:
 

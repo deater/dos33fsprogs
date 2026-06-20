@@ -5,7 +5,8 @@ init_global_vars:
 	lda	#0
 	sta	DRAW_PAGE
 	sta	INPUT_X		; text pointer
-	sta	KEY_OFFSET	; keyboard buffer pointer
+;	sta	KEY_OFFSET	; keyboard buffer pointer
 	sta	SUPPRESS_DRAWING
+	sta	ENTER_PRESSED
 
 	rts

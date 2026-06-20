@@ -164,7 +164,7 @@ flame_good:
 	;=====================
 	; check keyboard
 
-	jsr	check_keyboard
+	jsr	check_keyboard_climb
 
 	;===========================
 	; check level over

@@ -8,22 +8,30 @@
 	;	Note in the game, pressing a key starts walking
 	;	To stop you have to press the same direction again
 	;	This is convenient as this is how actual Apple II works
-
-	; Text
-	;	We originally tries having WASD but it's a bit of a pain
+	;	Apple II+ has no up/down arrow
 	;		so instead on Apple II+ use :,/ for up/down
 	;		and have text input like original game
 
 	;	Can walk while typing text, but
 	;		Once enter is pressed, stop walking
 
+	; note we can call this multiple times before handling enter being pressed
+	;	if ENTER_PRESSED set, then should ignore everything until handled
+
 check_keyboard:
 
-	jsr	drain_keyboard_buffer	; drain keyboard buffer if events
-					; happened while slow screen update
+;	jsr	drain_keyboard_buffer	; drain keyboard buffer if events
+;					; happened while slow screen update
 					; happening
 
-check_keyboard_no_drain:
+	lda	ENTER_PRESSED		; exit early if enter has been pressed
+	beq	keep_checking_keyboard	; but not handled yet
+
+waiting_for_enter_to_be_handled:
+	bit	KEYRESET		; ignore key
+	rts
+
+keep_checking_keyboard:
 
 	lda	KEYPRESS
 	bmi	key_was_pressed
@@ -39,6 +47,30 @@ check_key:
 	and	#$7f			; strip off high bit
 
 	; don't convert to uppercase, we can handle lowercase
+
+
+	;===============================
+	; check if "intro" mode
+	;===============================
+	; in that case only handle ESC and everything else is like ENTER
+
+	ldx	INTRO_MODE
+	beq	not_intro_mode
+intro_mode:
+
+	cmp	#27		; can press by accident when skipping intro
+	bne	intro_all_other_keys
+
+	inc	ESC_PRESSED
+	jmp	done_check_keyboard
+
+intro_all_other_keys:
+
+	inc	ENTER_PRESSED
+	jmp	done_check_keyboard
+
+
+not_intro_mode:
 
 	;==========================
 	; Left
@@ -143,7 +175,10 @@ check_enter:
 
 check_escape:
 	cmp	#27		; can press by accident when skipping intro
-	beq	done_check_keyboard
+	bne	all_other_keys
+
+	inc	ESC_PRESSED
+	jmp	done_check_keyboard
 
 all_other_keys:
 
@@ -154,6 +189,30 @@ all_other_keys:
 	jmp	done_check_keyboard
 
 enter_pressed:
+	lda	#1
+	sta	ENTER_PRESSED
+
+
+done_check_keyboard:
+
+	rts
+
+stop_peasant:
+	lda	#0
+	sta	PEASANT_XADD
+	sta	PEASANT_YADD
+	rts
+
+
+	;========================
+	; handle enter
+	;========================
+handle_enter:
+	lda	ENTER_PRESSED
+	beq	done_handle_enter
+
+	lda	#0			; clear handle enter
+	sta	ENTER_PRESSED
 
 	jsr	stop_peasant
 
@@ -171,15 +230,7 @@ enter_pressed:
 
 	lda	DRAW_PAGE_SAVE
 	sta	DRAW_PAGE
-
-done_check_keyboard:
-
-	rts
-
-stop_peasant:
-	lda	#0
-	sta	PEASANT_XADD
-	sta	PEASANT_YADD
+done_handle_enter:
 	rts
 
 	;==================================
@@ -254,6 +305,9 @@ done_insert_keyboard_buffer:
 	rts
 
 .endif
+
+.if 0
+
 	;=========================
 	; drain keyboard buffer
 	;=========================
@@ -277,9 +331,10 @@ drain_keyboard_buffer_loop:
 	cpx	KEY_OFFSET
 	bne	drain_keyboard_buffer_loop
 
+reset_keyboard_buffer:
 done_drain_keyboard_buffer:
 	ldx	#0		; reset
 	stx	KEY_OFFSET
+
 	rts
-
-
+.endif

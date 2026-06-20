@@ -9,6 +9,9 @@
 	;=============================
 start_new_game:
 
+	lda	#0
+	sta	INTRO_MODE		; clear intro keyboard mode
+
 	;===================================================
 	; load inventory code to language card $d000 bank 2
 

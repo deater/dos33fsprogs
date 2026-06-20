@@ -536,6 +536,7 @@ delays:
 
 .include "graphics_vid/vid_graphics.inc"
 
+.include "../hgr_routines/hgr_clearscreen.s"
 
 ;             0123456789012345678901234567890123456789
 boot_message:

@@ -326,6 +326,7 @@ qload.o:	qload.s qboot.inc \
 		gr_offsets.s \
 		qkumba_popwr.s \
 		random8.s \
+		keyboard.s \
 		loadsave/loadsave_menu.s \
 		load_peasant_sprites.s
 	ca65 -o qload.o qload.s -DFLOPPY=1 -l qload.lst
@@ -377,14 +378,14 @@ qboot.inc:	generate_common QBOOT
 
 qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s load_file qload.lst > qload.inc
-	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s sector_write qload.lst >> qload.inc
 #	./generate_common -a 0xb00 -s check_floppy_in_drive2 qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s do_savegame qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s requested_sector qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx02_full_decomp qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_l qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s zx_src_h qload.lst >> qload.inc
-	./generate_common -a 0xb00 -s hgr2_clearscreen qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s hgr2_clearscreen qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_make_tables qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_put_string qload.lst >> qload.inc
 #	./generate_common -a 0xb00 -s restore_bg_1x28 qload.lst >> qload.inc
@@ -393,6 +394,10 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s hgr_text_box qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_text_box_nosave qload.lst >> qload.inc
 #	./generate_common -a 0xb00 -s hgr_partial_restore qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s handle_enter qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s check_keyboard qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s stop_peasant qload.lst >> qload.inc
+	./generate_common -a 0xb00 -s setup_prompt qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s clear_bottom qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s hgr_input qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s done_hgr_input qload.lst >> qload.inc
@@ -426,6 +431,7 @@ qload.inc:	generate_common QLOAD
 	./generate_common -a 0xb00 -s gr_offsets qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s keyboard_buffer qload.lst >> qload.inc
 	./generate_common -a 0xb00 -s insert_keyboard_buffer qload.lst >> qload.inc
+#	./generate_common -a 0xb00 -s reset_keyboard_buffer qload.lst >> qload.inc
 #	echo "hposn_high = \$$BA00" >> qload.inc
 #	echo "hposn_low = \$$BB00" >> qload.inc
 #	./generate_common -a 0xb00 -s speaker_beep qload.lst >> qload.inc
@@ -588,8 +594,7 @@ inventory/INVENTORY:
 ###
 
 parse_input.inc:	generate_common parse_input
-	./generate_common -a 0xee00 -s parse_input parse_input.lst > parse_input.inc
-	./generate_common -a 0xee00 -s setup_default_verb_table parse_input.lst >> parse_input.inc
+	./generate_common -a 0xee00 -s setup_default_verb_table parse_input.lst > parse_input.inc
 	./generate_common -a 0xee00 -s load_custom_verb_table parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s partial_message_step parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s finish_parse_message parse_input.lst >> parse_input.inc
@@ -616,6 +621,7 @@ parse_input.inc:	generate_common parse_input
 	./generate_common -a 0xee00 -s parse_unknown_smc2 parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s unknown_message parse_input.lst >> parse_input.inc
 	./generate_common -a 0xee00 -s clear_default_verb_table parse_input.lst >> parse_input.inc
+#	./generate_common -a 0xee00 -s parse_input parse_input.lst > parse_input.inc
 
 
 

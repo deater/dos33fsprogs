@@ -27,7 +27,11 @@ peasant_quest_intro:
 	sta	INPUT_X
 	sta     input_buffer	; reset buffer (NUL at start)
 				; ????
-	sta	GAME_STATE_2
+	sta	GAME_STATE_2	; ???
+
+	lda	#1
+	sta	INTRO_MODE
+
 
 
 	;==============================
@@ -238,8 +242,20 @@ no_peasant_wrap:
 
 	rts
 
+check_escape_pressed:
+	lda	ESC_PRESSED
+	bne	yes_escape_pressed
+	clc
+	rts
 
 
+yes_escape_pressed:
+	; don't clear ESC_PRESSED as we use it to exit intro
+	sec
+	rts
+
+
+.if 0
 	;================================
 	; intro drain keyboard buffer
 	;================================
@@ -273,6 +289,7 @@ done_intro_drain_keyboard_buffer:
 	ldx	#0		; reset
 	stx	KEY_OFFSET
 	rts
+.endif
 
 peasant_quest_intro_end:
 

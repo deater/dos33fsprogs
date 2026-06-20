@@ -123,6 +123,7 @@ forever:
 ;.include "hgr_text_box.s"
 ;.include "hgr_partial_save.s"
 ;.include "hgr_hgr2.s"
+.include "../hgr_routines/hgr_clearscreen.s"
 
 .include "graphics_copy/copy_graphics.inc"
 

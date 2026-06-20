@@ -13,7 +13,7 @@
 	;
 	; holding down key just restarts from scratch
 
-check_keyboard:
+check_keyboard_climb:
 
 	lda	PEASANT_FALLING
 	beq	keyboard_not_falling

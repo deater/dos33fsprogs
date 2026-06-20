@@ -7,6 +7,11 @@
 
 .include "tokens.inc"
 
+
+
+; NOTE: parse_input *must* be the first thing in this file
+;	to avoid circular dependency with qload/keyboard.s
+
 parse_input_file_begin:
 
 
@@ -15,7 +20,7 @@ parse_input_file_begin:
 	;==========================
 	; input is in input_buffer
 
-parse_input:
+;parse_input:
 
 	;===========================
 	; special case: pot on head
@@ -1278,7 +1283,11 @@ partial_message_step:
 	stx	pms_x_smc+1
 	sty	pms_y_smc+1
 
+	lda	#1
+	sta	INTRO_MODE
+
 partial_message_loop:
+
 
 update_screen_smc:
 	jsr	$ffff
@@ -1299,19 +1308,40 @@ pms_y_smc:
 	jsr	print_text_message
 	jsr	hgr_page_flip
 
-	lda	KEYPRESS				; 4
-	bmi	donedone
+	lda	ENTER_PRESSED
+	bne	donedone
+
+;	jsr	drain_keyboard_ignore			; cs if not empty
+;	bcs	donedone
+
+;	lda	KEYPRESS				; 4
+;	bmi	donedone
 
 	jmp	partial_message_loop
 
 donedone:
 	bit	KEYRESET	; clear the keyboard buffer
 
-;	bit	KEYRESET
-;	jsr	wait_until_keypress
+	lda	#0
+	sta	ENTER_PRESSED
+	sta	INTRO_MODE
 
 	rts
 
+.if 0
+drain_keyboard_ignore:
+	lda	KEY_OFFSET
+	bne	dki_something
+	clc
+	rts
+
+dki_something:
+	lda	#0
+	sta	KEY_OFFSET
+
+	sec
+	rts
+.endif
 
 	;=========================
 	;=========================

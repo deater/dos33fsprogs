@@ -57,6 +57,7 @@ normal_keyboard_check:
 	sta	OLD_DIR		; direction while being quizzed
 
 	jsr	check_keyboard
+	jsr	handle_enter
 
 done_keyboard_check:
 

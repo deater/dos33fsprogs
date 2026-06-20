@@ -93,7 +93,7 @@ game_loop:
 	sta	OLD_DIR
 
 	jsr	check_keyboard
-
+	jsr	handle_enter
 
 	;=======================
 	; don't move if being quizzed

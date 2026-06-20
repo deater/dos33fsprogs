@@ -48,6 +48,7 @@ game_loop:
 
 	jsr	check_keyboard
 
+	jsr	handle_enter
 
 	;====================
 	; move peasant

@@ -129,12 +129,12 @@ done_lake_e_action:
 
 
 	;========================
-	; drain keyboard buffer
+	; check if escape pressed
 
-	jsr	intro_drain_keyboard_buffer
+;	jsr	intro_drain_keyboard_buffer
 
-	lda	ESC_PRESSED
-	bne	done_lake_e
+	jsr	check_escape_pressed
+	bcs	done_lake_e
 
 
 	lda	#DEFAULT_WAIT
