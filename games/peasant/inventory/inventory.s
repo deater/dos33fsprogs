@@ -22,14 +22,8 @@
 ;	when press enter, what happens?
 
 ; On Apple II inventory code fits in 4k ($D0-$DF of language card bank2)
-;	currenty it takes up 3122 bytes of which presumably
-;	16*2=32 bytes * 18 images = 576 bytes of sprites
-;		that means there's roughly room to double the size?
-;		maybe it can be possible also to compress the images and
-;		temporarily and decompress when needed?
-;       7*60 = 420 * 18 = 7560 bytes
-
-; $D0-$DF (bank2) (4k)    inventory       (3122 bytes)
+;	we have new code drawing 35x48 (5x48) byte sprites
+;	the sprite data is decompressed to the other graphics page
 
 
 .include "../zp.inc"
@@ -45,10 +39,29 @@ show_inventory:
 	lda	#0
 	sta	INVENTORY_Y
 
+
+	;=================================
+	; decompress sprite to other page
+
+	lda	#<inventory_sprites
+	sta	zx_src_l+1
+	lda	#>inventory_sprites
+	sta	zx_src_h+1
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
+
+	jsr	zx02_full_decomp
+
+	;======================
+	; setup draw page
 	;==============================
 	; HACK: draw to visible screen
 	;	the alternative, with page flipping, is complicated
-	;	as we run out of the other $D0 page
+	; this also lets us load the large sprites to the other page
+
+
 
 	lda	DRAW_PAGE
 	eor	#$20		; flip $00/$20
@@ -56,21 +69,14 @@ show_inventory:
 
 	;====================
 	; draw text box
+
+	; from 14,20 to 261,135
 draw_inv_box:
 
-;	lda	#0
-;	sta	BOX_X1H
-
-;	lda	#14
 	lda	#2		; 14/7 = 2
 	sta	BOX_X1L
 	lda	#20
 	sta	BOX_Y1
-
-;	lda	#1
-;	sta	BOX_X2H
-;	lda	#5		; ?
-
 	lda	#38		; 261/7 = 38
 	sta	BOX_X2L
 	lda	#135
@@ -432,31 +438,35 @@ really_gone:
 	;=======================
 	; draw inventory sprite
 	;=======================
+	; Y is inventory item
+
 draw_inv_sprite:
 
 	jsr	have_item
 
-	bne	do_draw_inv_sprite
+;	bne	do_draw_inv_sprite
 
-no_draw_inv_sprite:
-	lda	#<no_sprite
-	sta	INL
-	lda	#>no_sprite
-	jmp	done_draw_inv_sprite
+;no_draw_inv_sprite:
+;	lda	#<no_sprite
+;	sta	INL
+;	lda	#>no_sprite
+;	jmp	done_draw_inv_sprite
 
-do_draw_inv_sprite:
-	lda	inv_sprite_table_low,Y
-	sta	INL
-	lda	inv_sprite_table_high,Y
-done_draw_inv_sprite:
-	sta	INH
+;do_draw_inv_sprite:
+;	lda	inv_sprite_table_low,Y
+;	sta	INL
+;	lda	inv_sprite_table_high,Y
+;done_draw_inv_sprite:
+;	sta	INH
 
-	lda	#18
-	sta	CURSOR_X
-	lda	#88
-	sta	CURSOR_Y
+;	lda	#18
+;	sta	CURSOR_X
+;	lda	#88
+;	sta	CURSOR_Y
 
-	jsr	hgr_draw_sprite_2x16
+	; sprite to draw in Y
+
+	jsr	hgr_draw_sprite_5x48
 
 	rts
 
@@ -467,20 +477,10 @@ done_draw_inv_sprite:
 	;====================
 	;====================
 show_item:
-
-;	lda	#0
-;	sta	BOX_X1H
-;	lda	#14
-
 	lda	#2		; 14/7=2
 	sta	BOX_X1L
 	lda	#20
 	sta	BOX_Y1
-
-;	lda	#1
-;	sta	BOX_X2H
-;	lda	#5		; ?
-
 	lda	#38		; 261/7=~38
 	sta	BOX_X2L
 	lda	#135
@@ -595,8 +595,6 @@ item_offsets:
 .byte	(item_impossible-item_strings)
 .byte	(item_shirt-item_strings)
 
-
-
 item_string_lens:
 .byte	5	; arrow
 .byte	4	; baby
@@ -696,8 +694,11 @@ descriptions_high:
 	.byte >map_description
 	.byte >tshirt_description
 
-.include "../text/lookup.inc"
-.include "../text/inventory.inc.lookup"
+;.include "../text/lookup.inc"
+;.include "../text/inventory.inc.lookup"
+
+.include "../text/dialog_inventory.inc"
+.incbin	"../text/DIALOG_INVENTORY.ZX02"
 
 .if 0
 
@@ -912,61 +913,107 @@ overwrite_char_smc:
 
 	rts
 
-
+; ???
 masks:
 	.byte $01,$02,$04,$08, $10,$20,$40,$80
 
-no_sprite:
-	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
-	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
-	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
-	.byte $7f,$7f,$7f,$7f,$7f,$7f,$7f,$7f
-
-inv_sprite_table_low:
-	.byte	<arrow_sprite
-	.byte	<baby_sprite
-	.byte	<kerrek_belt_sprite
-	.byte	<chicken_feed_sprite
-	.byte	<bow_sprite
-	.byte	<mask_sprite
-	.byte	<pebbles_sprite
-	.byte	<pills_sprite
-	.byte	<riches_sprite
-	.byte	<robe_sprite
-	.byte	<soda_sprite
-	.byte	<sub_sprite
-	.byte	<trinket_sprite
-	.byte	<troghelm_sprite
-	.byte	<trogshield_sprite
-	.byte	<trogsword_sprite
-	.byte	<no_sprite
-	.byte	<tshirt_sprite
-
-inv_sprite_table_high:
-	.byte	>arrow_sprite
-	.byte	>baby_sprite
-	.byte	>kerrek_belt_sprite
-	.byte	>chicken_feed_sprite
-	.byte	>bow_sprite
-	.byte	>mask_sprite
-	.byte	>pebbles_sprite
-	.byte	>pills_sprite
-	.byte	>riches_sprite
-	.byte	>robe_sprite
-	.byte	>soda_sprite
-	.byte	>sub_sprite
-	.byte	>trinket_sprite
-	.byte	>troghelm_sprite
-	.byte	>trogshield_sprite
-	.byte	>trogsword_sprite
-	.byte	>no_sprite
-	.byte	>tshirt_sprite
 
 
+	;======================
+	; hgr 5x48 draw sprite
+	;======================
+	; Note: NOT TRANSPARENT
+	;
+	; sprites are in $2000 or $4000
+	; padded to start of a page
+
+	; hardcoded destination at 17,142
+
+	; which sprite is in Y
+
+	; X, Y, A trashed
+
+INV_LOC_X = 17
+INV_LOC_Y = 138
+
+hgr_draw_sprite_5x48:
+
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
+	eor	#$60			; get opposite of DRAW page
+	sta	INH
+	tya				; point to sprite page
+	adc	INH
+
+	sta	hds2_smc1+2
+
+	lda	#0			; reset low byte of pointer
+	sta	hds2_smc1+1
+
+	ldx	#0			; X is ROW
+hgr_5x48_sprite_yloop:
+	txa
+	pha				; save row
+
+	clc
+	adc	#INV_LOC_Y		; add LOC_Y to row
+
+	tax				; lookup hi-res address for row
+	lda	hposn_low,X
+	sta	GBASL
+	lda	hposn_high,X
+	clc
+	adc	DRAW_PAGE		; draw to DRAW_PAGE
+	sta	GBASH
+
+	pla
+	tax				; restore row
+
+	ldy	#INV_LOC_X		; get column into Y
+
+hds2_inner_loop:
+
+hds2_smc1:
+	lda	$D000			; load byte from sprite
+	sta	(GBASL),Y		; store to screen
+
+	inc	hds2_smc1+1
+	iny
+
+	cpy	#(INV_LOC_X+5)
+	bne	hds2_inner_loop
+
+	inx
+	cpx	#(48)
+	bne	hgr_5x48_sprite_yloop
+
+	rts
 
 
-.include "sprites/inventory_sprites.inc"
 
-; only used by us
+.if 0
 
-.include "hgr_2x16_sprite.s"
+draw_screen_white:
+	clc
+	lda	DRAW_PAGE
+	adc	#$20
+	sta	banal_smc+2
+
+	lda	#$ff
+	ldx	#0
+	ldy	#0
+loop:
+banal_smc:
+	sta	$2000,Y
+	dey
+	bne	loop
+	inx
+	inc	banal_smc+2
+	cpx	#32
+	bne	loop
+.endif
+
+inventory_sprites:
+
+.incbin "sprites/inventory_sprites.zx02"

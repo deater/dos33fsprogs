@@ -40,7 +40,7 @@ all:	dump_text shrink_text \
 	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
-	inventory.inc.lookup
+	DIALOG_INVENTORY.ZX02 dialog_inventory.inc
 
 ###
 
@@ -490,20 +490,20 @@ dialog_outer3.inc:	../generate_all_symbols dialog_outer3
 
 ###
 
-DIALOG_PEASANT1.ZX02:	dialog_peasant1
-	$(ZX02) -f  dialog_peasant1 DIALOG_PEASANT1.ZX02
+#DIALOG_PEASANT1.ZX02:	dialog_peasant1
+#	$(ZX02) -f  dialog_peasant1 DIALOG_PEASANT1.ZX02
+#
+#dialog_peasant1:	dialog_peasant1.o
+#	ld65 -o dialog_peasant1 dialog_peasant1.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+#
+#dialog_peasant1.o:	dialog_peasant1.s \
+#		gary.inc.lookup kerrek.inc.lookup \
+#		well.inc.lookup yellow_tree.inc.lookup \
+#		falls.inc.lookup
+#	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
 
-dialog_peasant1:	dialog_peasant1.o
-	ld65 -o dialog_peasant1 dialog_peasant1.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
-
-dialog_peasant1.o:	dialog_peasant1.s \
-		gary.inc.lookup kerrek.inc.lookup \
-		well.inc.lookup yellow_tree.inc.lookup \
-		falls.inc.lookup
-	ca65 -o dialog_peasant1.o dialog_peasant1.s -l dialog_peasant1.lst
-
-dialog_peasant1.inc:	../generate_all_symbols dialog_peasant1
-	../generate_all_symbols -a 0xd000 dialog_peasant1.lst > dialog_peasant1.inc
+#dialog_peasant1.inc:	../generate_all_symbols dialog_peasant1
+#	../generate_all_symbols -a 0xd000 dialog_peasant1.lst > dialog_peasant1.inc
 
 ###
 
@@ -601,6 +601,22 @@ dialog_inside.o:	dialog_inside.s \
 
 dialog_inside.inc:	../generate_all_symbols dialog_inside
 	../generate_all_symbols -a 0xd000 dialog_inside.lst > dialog_inside.inc
+
+###
+
+DIALOG_INVENTORY.ZX02:	dialog_inventory
+	$(ZX02) -f  dialog_inventory DIALOG_INVENTORY.ZX02
+
+dialog_inventory:	dialog_inventory.o
+	ld65 -o dialog_inventory dialog_inventory.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_inventory.o:	dialog_inventory.s \
+		inventory.inc.lookup
+	ca65 -o dialog_inventory.o dialog_inventory.s -l dialog_inventory.lst
+
+dialog_inventory.inc:	../generate_all_symbols dialog_inventory
+	../generate_all_symbols -a 0xd000 dialog_inventory.lst > dialog_inventory.inc
+
 
 ###
 

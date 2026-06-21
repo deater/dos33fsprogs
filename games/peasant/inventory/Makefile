@@ -17,7 +17,7 @@ INVENTORY:	inventory.o
 inventory.o:	inventory.s \
 		../text/invenory.inc.lookup \
 		sprites/inventory_sprites.inc \
-		hgr_2x16_sprite.s
+		../text/DIALOG_INVENTORY.ZX02
 	ca65 -o inventory.o inventory.s -l inventory.lst
 
 
