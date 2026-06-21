@@ -82,10 +82,11 @@ inventory_sprites_new.inc:	inventory_new.png
 	echo ".align 256" >> inventory_sprites_new.inc
 #	$(HGR_SPRITE) -l map_sprite inventory_new.png 210 147 251 188 >> inventory_sprites_new.inc
 #	echo ".align 256" >> inventory_sprites_new.inc
-	$(HGR_SPRITE) -l tshirt_sprite inventory_new.png 175 140 209 188 >> inventory_sprites_new.inc
-	echo ".align 256" >> inventory_sprites_new.inc
 	echo "empty_sprite: .byte 0" >> inventory_sprites_new.inc
 	echo ".align 256" >> inventory_sprites_new.inc
+	$(HGR_SPRITE) -l tshirt_sprite inventory_new.png 175 140 209 188 >> inventory_sprites_new.inc
+	echo ".align 256" >> inventory_sprites_new.inc
+
 
 
 

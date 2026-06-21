@@ -54,6 +54,22 @@ show_inventory:
 
 	jsr	zx02_full_decomp
 
+
+	;=================================
+	; decompress dialog to other page
+
+	lda	#<dialog_data
+	sta	zx_src_l+1
+	lda	#>dialog_data
+	sta	zx_src_h+1
+
+	clc			; draw it $18 in
+	lda	DRAW_PAGE
+	adc	#$38
+
+	jsr	zx02_full_decomp
+
+
 	;======================
 	; setup draw page
 	;==============================
@@ -443,26 +459,12 @@ really_gone:
 draw_inv_sprite:
 
 	jsr	have_item
+	bne	do_draw_inv_sprite
 
-;	bne	do_draw_inv_sprite
+no_draw_inv_sprite:
+	ldy	#16			; empty sprite
 
-;no_draw_inv_sprite:
-;	lda	#<no_sprite
-;	sta	INL
-;	lda	#>no_sprite
-;	jmp	done_draw_inv_sprite
-
-;do_draw_inv_sprite:
-;	lda	inv_sprite_table_low,Y
-;	sta	INL
-;	lda	inv_sprite_table_high,Y
-;done_draw_inv_sprite:
-;	sta	INH
-
-;	lda	#18
-;	sta	CURSOR_X
-;	lda	#88
-;	sta	CURSOR_Y
+do_draw_inv_sprite:
 
 	; sprite to draw in Y
 
@@ -507,7 +509,16 @@ show_item:
 
 	lda	descriptions_low,Y
 	sta	OUTL
+
+	; these assume to start at $D0, but they actually are at
+	; $38 or $58.  So need to subtract.
+	; DRAW_PAGE = $00 -> $58   $D0-$58=$78
+	; DRAW_PAGE = $20 -> $38   $D0-$38=$98
+
+	sec
 	lda	descriptions_high,Y
+	sbc	#$78
+	sbc	DRAW_PAGE
 	sta	OUTH
 
 	lda	#4
@@ -557,7 +568,7 @@ handle_item_keypress:
 
 ; printed after description
 no_longer_message:
-.byte	4,86,"You no longer    has this item.",0
+.byte	6,86,"You no longer has this item.",0
 
 item_message:
 .byte	5,106,"Hit RETURN to go back to list",0
@@ -698,6 +709,7 @@ descriptions_high:
 ;.include "../text/inventory.inc.lookup"
 
 .include "../text/dialog_inventory.inc"
+dialog_data:
 .incbin	"../text/DIALOG_INVENTORY.ZX02"
 
 .if 0
@@ -934,7 +946,7 @@ masks:
 	; X, Y, A trashed
 
 INV_LOC_X = 17
-INV_LOC_Y = 138
+INV_LOC_Y = 130
 
 hgr_draw_sprite_5x48:
 
