@@ -11,7 +11,8 @@
 ;.include "save1_02_pebbles.s"
 ;.include "save1_03_well.s"
 ;.include "save1_34_outer3.s"
-.include "save1_07_trinket.s"
+;.include "save1_07_trinket.s"
+.include "save1_08_bow.s"
 .align $20
 ;.include  "save1_20_in_robe.s"
 ;.include  "save1_11_riches.s"
