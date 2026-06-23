@@ -1,4 +1,6 @@
 - Kerrek 1
+  + When a message is displayed, the kerrek stops coming toward you
+	but still animates in place
   + allow kerrek to hit from left (instead of just right)
   + make sure kerrek hit animation doesn't go off screen
   + Implement dead kerrek
