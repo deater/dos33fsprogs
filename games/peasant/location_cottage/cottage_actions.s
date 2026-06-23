@@ -11,10 +11,10 @@
 cottage_verb_table:
 	.byte VERB_GET
 	.word cottage_get-1
-	.byte VERB_TAKE
-	.word cottage_take-1
-	.byte VERB_STEAL
-	.word cottage_steal-1
+;	.byte VERB_TAKE
+;	.word cottage_take-1
+;	.byte VERB_STEAL
+;	.word cottage_steal-1
 	.byte VERB_LOOK
 	.word cottage_look-1
 	.byte 0
@@ -24,8 +24,8 @@ cottage_verb_table:
 	; get
 	;================
 cottage_get:
-cottage_steal:
-cottage_take:
+;cottage_steal:
+;cottage_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_MAP

@@ -7,7 +7,7 @@
 	;==================================
 
 keeper2_verb_table:
-	.byte VERB_TAKE
+	.byte VERB_GET			; synonym for TAKE
 	.word keeper2_take-1
 	.byte VERB_GIVE
 	.word keeper2_give-1

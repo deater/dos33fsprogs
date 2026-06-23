@@ -19,10 +19,10 @@ wishing_well_verb_table:
 	.word well_make-1
 	.byte VERB_PUT
 	.word well_put-1
-	.byte VERB_STEAL
-	.word well_get-1
-	.byte VERB_TAKE
-	.word well_get-1
+;	.byte VERB_STEAL
+;	.word well_get-1
+;	.byte VERB_TAKE
+;	.word well_get-1
 	.byte VERB_TALK
 	.word well_talk-1
 	.byte VERB_THROW

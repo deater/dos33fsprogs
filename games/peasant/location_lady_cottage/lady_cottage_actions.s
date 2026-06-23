@@ -17,8 +17,8 @@ lady_cottage_verb_table:
 	.word lady_cottage_open-1
 	.byte VERB_GET
 	.word lady_cottage_get-1
-	.byte VERB_TAKE
-	.word lady_cottage_get-1
+;	.byte VERB_TAKE
+;	.word lady_cottage_get-1
 	.byte VERB_SEARCH
 	.word lady_cottage_search-1
 	.byte 0

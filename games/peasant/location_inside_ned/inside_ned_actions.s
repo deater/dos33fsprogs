@@ -18,18 +18,18 @@ inside_nn_verb_table:
 	.word inside_nn_close-1
 	.byte VERB_GET
 	.word inside_nn_get-1
-	.byte VERB_TAKE
-	.word inside_nn_take-1
-	.byte VERB_STEAL
-	.word inside_nn_steal-1
+;	.byte VERB_TAKE
+;	.word inside_nn_take-1
+;	.byte VERB_STEAL
+;	.word inside_nn_steal-1
 	.byte 0
 
 	;================
 	; get
 	;================
 inside_nn_get:
-inside_nn_steal:
-inside_nn_take:
+;inside_nn_steal:
+;inside_nn_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_ROBE

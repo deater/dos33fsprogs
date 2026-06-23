@@ -13,20 +13,18 @@ river_stone_verb_table:
         .word river_stone_get-1
         .byte VERB_LOOK
         .word river_stone_look-1
-        .byte VERB_STEAL
-        .word river_stone_steal-1
+;        .byte VERB_STEAL
+;        .word river_stone_steal-1
         .byte VERB_SWIM
         .word river_stone_swim-1
-        .byte VERB_TAKE
-        .word river_stone_take-1
+;        .byte VERB_TAKE
+;        .word river_stone_take-1
 	.byte 0
 
 
 	;================
 	; get
 	;================
-river_stone_steal:
-river_stone_take:
 river_stone_get:
 	lda	CURRENT_NOUN
 

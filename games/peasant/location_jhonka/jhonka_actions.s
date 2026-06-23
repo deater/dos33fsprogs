@@ -14,10 +14,10 @@ jhonka_cave_verb_table:
 	.word jhonka_climb-1
 	.byte VERB_GET
 	.word jhonka_get-1
-	.byte VERB_TAKE
-	.word jhonka_get-1
-	.byte VERB_STEAL
-	.word jhonka_get-1
+;	.byte VERB_TAKE
+;	.word jhonka_get-1
+;	.byte VERB_STEAL
+;	.word jhonka_get-1
 	.byte VERB_JUMP
 	.word jhonka_jump-1
 	.byte VERB_LOOK

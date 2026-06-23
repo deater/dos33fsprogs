@@ -9,22 +9,22 @@
 	;=======================
 
 hay_bale_verb_table:
-        .byte VERB_ENTER
-        .word hay_bale_enter-1
-        .byte VERB_GET
-        .word hay_bale_get-1
-        .byte VERB_JUMP
-        .word hay_bale_jump-1
-        .byte VERB_HIDE
-        .word hay_bale_hide-1
-        .byte VERB_HUG
-        .word hay_bale_hug-1
-        .byte VERB_LOOK
-        .word hay_bale_look-1
-        .byte VERB_STEAL
-        .word hay_bale_steal-1
-        .byte VERB_TAKE
-        .word hay_bale_take-1
+	.byte VERB_ENTER
+	.word hay_bale_enter-1
+	.byte VERB_GET
+	.word hay_bale_get-1
+	.byte VERB_JUMP
+	.word hay_bale_jump-1
+	.byte VERB_HIDE
+	.word hay_bale_hide-1
+	.byte VERB_HUG
+	.word hay_bale_hug-1
+	.byte VERB_LOOK
+	.word hay_bale_look-1
+;	.byte VERB_STEAL
+;	.word hay_bale_steal-1
+;	.byte VERB_TAKE
+;	.word hay_bale_take-1
 	.byte VERB_CLIMB
 	.word hay_bale_climb-1
 	.byte 0
@@ -34,8 +34,8 @@ hay_bale_verb_table:
 	; get
 	;================
 hay_bale_get:
-hay_bale_steal:
-hay_bale_take:
+;hay_bale_steal:
+;hay_bale_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_HAY

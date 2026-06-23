@@ -800,8 +800,8 @@ kerrek_got_ya:
 kerrek_verb_table:
 	.byte VERB_GET
 	.word kerrek_get-1
-	.byte VERB_TAKE
-	.word kerrek_get-1
+;	.byte VERB_TAKE
+;	.word kerrek_get-1
 	.byte VERB_LOAD
 	.word kerrek_load-1
 	.byte VERB_SAVE

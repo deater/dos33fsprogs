@@ -7,7 +7,7 @@
 	;=======================================
 
 keeper1_verb_table:
-	.byte VERB_TAKE
+	.byte VERB_GET			; get/take/steal are synonyms?
 	.word keeper1_take-1
 	.byte VERB_GIVE
 	.word keeper1_give-1

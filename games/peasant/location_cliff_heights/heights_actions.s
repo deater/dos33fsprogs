@@ -15,10 +15,10 @@
 cliff_heights_verb_table:
 	.byte VERB_GET
 	.word cliff_heights_get-1
-	.byte VERB_TAKE
-	.word cliff_heights_get-1
-	.byte VERB_STEAL
-	.word cliff_heights_get-1
+;	.byte VERB_TAKE
+;	.word cliff_heights_get-1
+;	.byte VERB_STEAL
+;	.word cliff_heights_get-1
 	.byte VERB_CLIMB
 	.word cliff_heights_climb-1
 	.byte VERB_LOOK

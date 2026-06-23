@@ -866,6 +866,7 @@ verb_lookup:
 .byte "OPEN",VERB_OPEN|$80
 .byte "PARTY",VERB_PARTY|$80
 .byte "PET",VERB_PET|$80
+.byte "PICK",VERB_GET|$80
 .byte "PLAY",VERB_PLAY|$80
 .byte "PULL",VERB_PULL|$80
 .byte "PUNCH",VERB_PUNCH|$80
@@ -888,9 +889,9 @@ verb_lookup:
 .byte "SLEEP",VERB_SLEEP|$80
 .byte "SMELL",VERB_SMELL|$80
 .byte "SNIFF",VERB_SNIFF|$80
-.byte "STEAL",VERB_STEAL|$80
+.byte "STEAL",VERB_GET|$80
 .byte "SWIM",VERB_SWIM|$80
-.byte "TAKE",VERB_TAKE|$80
+.byte "TAKE",VERB_GET|$80
 .byte "TALK",VERB_TALK|$80
 .byte "THIS",VERB_THIS|$80
 .byte "THROW",VERB_THROW|$80
@@ -1471,8 +1472,8 @@ common_verb_table:
 	.word parse_common_smell-1
 	.byte VERB_SNIFF
 	.word parse_common_sniff-1
-	.byte VERB_TAKE
-	.word parse_common_take-1
+;	.byte VERB_TAKE
+;	.word parse_common_take-1
 	.byte VERB_TALK
 	.word parse_common_talk-1
 	.byte VERB_THIS

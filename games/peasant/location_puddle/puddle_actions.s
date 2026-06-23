@@ -12,10 +12,10 @@
 puddle_verb_table:
 	.byte VERB_GET
 	.word puddle_get-1
-	.byte VERB_TAKE
-	.word puddle_take-1
-	.byte VERB_STEAL
-	.word puddle_steal-1
+;	.byte VERB_TAKE
+;	.word puddle_take-1
+;	.byte VERB_STEAL
+;	.word puddle_steal-1
 	.byte VERB_LOOK
 	.word puddle_look-1
 	.byte 0
@@ -25,8 +25,8 @@ puddle_verb_table:
 	; get
 	;================
 puddle_get:
-puddle_steal:
-puddle_take:
+;puddle_steal:
+;puddle_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_ROCK

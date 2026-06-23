@@ -15,10 +15,10 @@ inside_cottage_verb_table:
 	.word inside_cottage_talk-1
 	.byte VERB_GET
 	.word inside_cottage_get-1
-	.byte VERB_TAKE
-	.word inside_cottage_get-1
-	.byte VERB_STEAL
-	.word inside_cottage_get-1
+;	.byte VERB_TAKE
+;	.word inside_cottage_get-1
+;	.byte VERB_STEAL
+;	.word inside_cottage_get-1
 	.byte VERB_GIVE
 	.word inside_cottage_give-1
 	.byte VERB_ASK

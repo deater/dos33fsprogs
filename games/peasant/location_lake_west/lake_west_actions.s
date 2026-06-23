@@ -11,12 +11,12 @@
 lake_west_verb_table:
 	.byte VERB_GET
 	.word lake_west_get-1
-	.byte VERB_STEAL
-	.word lake_west_steal-1
+;	.byte VERB_STEAL
+;	.word lake_west_steal-1
 	.byte VERB_SKIP
 	.word lake_west_skip-1
-	.byte VERB_TAKE
-	.word lake_west_take-1
+;	.byte VERB_TAKE
+;	.word lake_west_take-1
 	.byte VERB_LOOK
 	.word lake_west_look-1
 	.byte VERB_SWIM
@@ -31,8 +31,8 @@ lake_west_verb_table:
 	; get
 	;================
 lake_west_get:
-lake_west_steal:
-lake_west_take:
+;lake_west_steal:
+;lake_west_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_BERRIES
