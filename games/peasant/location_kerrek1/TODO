@@ -12,3 +12,53 @@
   + check if you have to type "shoot kerrek" or if you can "shoot bow" too or
 	just "shoot"
 
+
+Kerrek logic:
+
++ All maps: if kerrekdead + havebelt then increment screens_since_belt_taken
+
++ Arrive to either place
+
+	if !kerreckDead
+	if random()<0.8 then kerrek there
+		kerrekPresent=true
+		play sound
+		walkSpeed=2;
+	if dead, check screensincebelttaken
+		<10 dead.  draw body, with belt if not taken yet
+		10..15 "rot" with animation
+		15+ bones
+	
+updateKerrek
+	if kerrek_x>player_x then kerrek_dir=left,x-=walk_speed
+	else kerrek_dir=right,x+=walk_speed
+
+	if kerrek_y+kerrek_height>player_y+player_height move up
+	else move down (by walkspeed)
+
+	if abs(kerrek_y+kerrek_height - player_y+player_height)
+		+ abs(kerrek_x-player_x)  < 50 then start collision?
+
+	start_collision
+		stop input
+		if above equation <40 then start attack
+			make player invisible
+			start animation
+			show text
+			gameover
+
+		else
+			keep walking toward you with speed being +/-2
+
+
+kerreck shoot routine mostly about facing left/right
+		
+what is default X/Y?
+
+			
+
+			
+
+
+	
+	
