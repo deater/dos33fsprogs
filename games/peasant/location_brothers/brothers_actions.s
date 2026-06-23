@@ -21,12 +21,14 @@ archery_verb_table:
 	.word archery_look-1
 	.byte VERB_PLAY
 	.word archery_play-1
-;	.byte VERB_STEAL
-;	.word archery_steal-1
+	.byte VERB_PUSH
+	.word archery_get-1
+	.byte VERB_PULL
+	.word archery_get-1
+	.byte VERB_MOVE
+	.word archery_get-1
 	.byte VERB_TALK
 	.word archery_talk-1
-;	.byte VERB_TAKE
-;	.word archery_take-1
 	.byte 0
 
 
@@ -121,8 +123,6 @@ archery_ask_about_trogdor:
 	; get
 	;================
 archery_get:
-;archery_steal:
-;archery_take:
 	lda	CURRENT_NOUN
 
 	cmp	#NOUN_TARGET

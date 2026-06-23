@@ -1,10 +1,13 @@
 
+dialog:
+	some vocab is missing (See the dialog file in text)
+
 walking:
 	borders (mostly fixed?  can sometimes walk through trees
 	on left even though you shouldn't)
 - Archery
   + (done) Archer animations
-  + Hook up minigame
+  + (done)Hook up minigame
   + (done) fix where we can get stuck on top of targets at archery range
 
   + Fix priority issue where it doesn't cut off at the edge of the desk

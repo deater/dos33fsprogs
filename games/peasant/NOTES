@@ -1,0 +1,79 @@
+Missing verbs:
+	SPEAK, CONVERSE, YELL
+	DESTROY, ASSAULT, HIT, SMASH
+	
+Missing nouns:
+	TABLE (archery)
+	TWINS (archery)
+	MEN (archery)
+	BROTHERS (archery)
+	CLOTHING/CLOTHES/DRESS (archery)
+	STINK/SMELLING (archery)
+	RANGE/GALLERY (archery)
+
+
+ask/talk: ??? maybe OK
+
+aliases for things:
+(fixed) get:	take, steal, pick up, 
+talk:	speak, converse, yell, ask
+kill:	destroy, assault, attack, hit, smash, kick, punch, break
+
+
+rain, raincounter starts at 5, decrements each time enter room
+
+
+ned 
+	always waits 45 (45 what?)
+	coming out 80% of time
+	if not,rand()*40+20
+
+
+
+updateKerreck()
+kerreckIntoKillzone()
+
+apparently it's an 80% chance of kerrek appearing
+starts with walkspeed of 2 in location?
+if kerrek dead
+	if 10 screens since belt taken, rot
+	if 15 screens, bones
+
+
+used to be able to load/save by number from prompt
+
+ned: get/take besides robes
+	clothes, robes, robe, empty drawer, empty dresser
+
+
+Help message changes once you have map?  at end
+	Type MAP to read and maybe print your map of Peasantry.
+
+north/south/east/west should print the go response of
+	Use arrow keys
+
+"what the f", "give me a break", "this sucks"
+	gives the "don't get discouraged" response
+	we probably handle all but give me a break?
+	
+"exit" "leave" "remove" while wearing hay should say a message
+	"This hay is stuck to you and you can\'t shake it.
+	Like that kid Philo from art school."
+
+default
+	"haldo"
+	"mendelev says hello"
+	"tell Dongolev haldo
+	"tell the archer haldo"
+	"say haldo"
+	"tell man/guy haldo"
+		should all bring up "that's totally not Dongolev"
+
+
+missing responses that seem left behind in the code from
+earlier versions?
+"use" would say
+	"No. No. No. No. No. Maybe. Wait, No."
+"drink" would say
+	"Right, right.  Wait, what?"
+"map" would say "you peep the map"

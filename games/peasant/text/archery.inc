@@ -17,7 +17,7 @@ archery_look_at_archer_message:
 .byte "obviously like he wants you",13
 .byte "to ask about it.",0
 
-; + look archer (after talk but before saying haldo to Dongolev)
+; + look archer (after talk mendeleve but before saying haldo to Dongolev)
 archery_look_at_archer_sponge_message:
 .byte "He looks depressed. Jeez,",13
 .byte "who invited the fun sponge?",0
@@ -35,7 +35,7 @@ archery_look_at_target_message:
 .byte "targets at Peasant Scout",13
 .byte "Camp!",0
 
-; + look desk
+; + look desk / table
 archery_look_at_desk_message:
 .byte "It says 'archery' on it. My",13
 .byte "wife's drunk.",0
@@ -78,9 +78,35 @@ archery_talk_mendelev_between_message:
 .byte "if you see him,",34," he says",13
 .byte "and goes back to pouting.",0
 
-; + talk (after dongolev back, before minigame)
-;   talk mendelev, dongolev, brothers, guy, dude, man
-;        (have arrow, not sure if that matters)
+
+; + talk (after trinket, before minigame) same as "play game"
+
+; + (after beating the minigame)
+; + play / play again / play game again / play the game again / play the game
+;   play game 
+; + try the game again / try game again
+; + talk (none)
+; + talk / speak / use
+;	  archers / dongolev / mendelev / guys/ guy / men/ man/ dudes/ brothers/
+;         range / gallery
+
+; above, but have bow (won minigame)
+archery_talk_after_minigame_message:
+.byte 34,"Go away!",34," says Dongolev.",13
+.byte 34,"We're arguing about who's",13
+.byte "hotter,",34," adds Mendelev.",0
+
+
+; above, but after gave trinket but no bow
+archery_play_game_message:
+.byte 34,"Haldo again!",34," say the",13
+.byte "brothers. ",34,"Get 3 bullseyes",13
+.byte "this time and you'll win",13
+.byte "yourself an SuperTime",13		; [sic]
+.byte "FunBow",34,0
+; continues on with the directions
+
+; above but you haven't given trinket
 archery_talk_before_minigame_message:
 .byte 34,"Haldo!",34," say the brothers.",13
 .byte 34,"Test your skill! Give us",13
@@ -89,17 +115,17 @@ archery_talk_before_minigame_message:
 .byte "give it as many tries as",13
 .byte "you need!",34,0
 
-; + talk (after trinket, before minigame) same as "play game"
 
-; + talk (after beating the minigame)
-;   talk mendelev, dongolev, brothers, guy, dude, man
-archery_talk_after_minigame_message:
-.byte 34,"Go away!",34," says Dongolev.",13
-.byte 34,"We're arguing about who's",13
-.byte "hotter,",34," adds Mendelev.",0
 
+; play the game, play game
+; give trinket
+; given trinket to archers/archer/brothers/brother/guys/men
+
+
+; + play game after won (have bow) goes the "arguing" thing
+
+; + give trinket (haven't given yet)
 ; + 2 POINTS
-; + give super trinket
 archery_give_trinket_message:
 .byte 34,"That'll work,",34," says",13
 .byte "Mendelev. Just hit 3",13
@@ -108,8 +134,7 @@ archery_give_trinket_message:
 
 ; jmp to archery_play_game_message2
 
-
-; give trinket (already gave)		not in wiki
+; + give trinket (already gave)		not in wiki
 archery_give_trinket_again_message:
 .byte "You already gave them the",13
 .byte "trinket. Fortunately, you",13
@@ -117,16 +142,15 @@ archery_give_trinket_again_message:
 .byte "humiliate yourself at the",13
 .byte "range.",0
 
+
+; FIXME:
+; give trinket but you don't have trinket
+archery_give_trinket_have_none:
+.byte "You're flying trinket-free",13
+.byte "right now.",0
+
 ; launches into game... (then prints the ARROW_KEYS message
 ;	*after* which must be a bug)
-
-; play game, (or play none) after trinket
-archery_play_game_message:
-.byte 34,"Haldo again!",34," say the",13
-.byte "brothers. ",34,"Get 3 bullseyes",13
-.byte "this time and you'll win",13
-.byte "yourself an SuperTime",13		; [sic]
-.byte "FunBow",34,0
 
 archery_play_game_message2:
 .byte 34,"The ARROW KEYS aim left",13
@@ -146,13 +170,33 @@ archery_play_game_message2:
 ; full left, aim at right edge of leg
 ; full right, aim at left edge of leg
 
-; play game after won, goes the "arguing" thing
+
+
+
+
+; FIXME
+; If talked to Dongolev
+; + mendelev says haldo
+; + haldo
+; + tell Dongolev haldo
+; + tell the archer haldo
+; + tell archer haldo
+; + say haldo
+; + tell man haldo
+; + tell guy haldo
+; + tell the man haldo
+; + tell the guy haldo
+archery_haldo_message:
+.byte 34,"Haldo!!!",34,0
 
 
 ;=======
-; ask
+; ask   (all ask abouts m&d must both be there)
 
-; + ask about fire (all ask abouts m&d must both be there)
+; FIXME
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
+; +     ... about fire
+
 archery_ask_about_fire_message:
 .byte 34,"Trogdor just burned down",13
 .byte "some idiot peasant's",13
@@ -172,25 +216,34 @@ archery_ask_about_fire_message4:
 .byte "What's a fire?",34," adds",13
 .byte "Mendelwhatever.",0
 
-; + ask about naked ned
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
+; +     ... about ned/
 archery_ask_about_ned_message:
 .byte "That guy creeps us out. In",13
 .byte "fact, shut up about him.",0
 
-; + ask about robe
+; FIXME
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
+; +     ... about robe/robes/dress/clothing/clothes
 archery_ask_about_robe_message:
 .byte 34,"We wouldn't know. We only",13
 .byte "wear archer clothes. You",13
 .byte "just can't arch real well",13
 .byte "in a robe, y'know?",34,0
 
-; + ask about smell
+; FIXME
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
+; +     ... about robe/robes/dress/clothing/clothes
+; + ask about smell/stink/smelling
 archery_ask_about_smell_message:
 .byte 34,"That giant pig running",13
 .byte "around sure smells bad. Maybe",13
 .byte "talk to him.",34,0
 
-; + ask about trogdor
+; FIXME
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
+; +     ... about trogdor
+
 archery_ask_about_trogdor_message:
 .byte 34,"Oh man, there was this one",13
 .byte "time when I came THIS close",13
@@ -211,17 +264,17 @@ archery_ask_about_trogdor_message6:
 .byte "(You see where this is",13
 .byte "going.)",0
 
+; + ask dongolev/mendelev/twins/guys/guy/dudes/dude/men/brothers/brother/archer/archers
 ; + ask about (unknown)
 archery_ask_about_unknown_message:
 .byte 34,"Either we don't know",13
 .byte "anything about that, or",13
 .byte "you're real boring.",34,0
 
-; + haldo (after Dongolev has returned)
-archery_haldo_message:
-.byte "HALDO!!",0
+; (before saying haldo to Dongolev)
+; + play game
+; + use/shoot gallery/range
 
-; + play game (before saying haldo to Dongolev) (before trinket?)
 archery_play_game_closed_message:
 .byte "The gallery's not open and",13
 .byte "you got no bow or arrows,",13
@@ -229,7 +282,7 @@ archery_play_game_closed_message:
 
 
 
-; + get/take/steal target
+; + get/take/steal, push/pull/move target
 archery_get_target_message:
 .byte "No. Those will fall on you",13
 .byte "and more than likely kill",13
