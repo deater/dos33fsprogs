@@ -139,6 +139,7 @@ really_level_over:
 .include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "kerrek1_actions.s"
+.include "../sound/kerrek_sting.s"
 .include "sprites_kerrek1/kerrek_sprites.inc"
 
 	;==========================

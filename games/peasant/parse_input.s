@@ -1059,6 +1059,7 @@ noun_lookup_again:
 .byte "BOW",NOUN_BOW|$80
 .byte "BROOM",NOUN_BROOM|$80
 .byte "BUCKET",NOUN_BUCKET|$80
+.byte "BUCKLE",NOUN_BELT|$80
 .byte "BUSH",NOUN_BUSH|$80
 .byte "CANDLE",NOUN_CANDLE|$80
 .byte "CARPET",NOUN_CARPET|$80
@@ -1101,6 +1102,7 @@ noun_lookup_again:
 .byte "HORSE",NOUN_HORSE|$80
 .byte "INN",NOUN_INN|$80
 .byte "JHONKA",NOUN_JHONKA|$80
+.byte "KERRECK",NOUN_KERREK|$80
 .byte "KERREK",NOUN_KERREK|$80
 .byte "KNIGHT",NOUN_KNIGHT|$80
 .byte "LADY",NOUN_LADY|$80
@@ -1114,6 +1116,7 @@ noun_lookup_again:
 .byte "MATTRESS",NOUN_MATTRESS|$80
 .byte "MENDELEV",NOUN_MENDELEV|$80
 .byte "MONEY",NOUN_MONEY|$80
+.byte "MONSTER",NOUN_MONSTER|$80
 .byte "MUD",NOUN_MUD|$80
 .byte "NED",NOUN_NED|$80
 .byte "NOTE",NOUN_NOTE|$80
@@ -1140,6 +1143,7 @@ noun_lookup_again:
 .byte "SAND",NOUN_SAND|$80
 .byte "SHELF",NOUN_SHELF|$80
 .byte "SHIELD",NOUN_SHIELD|$80
+.byte "SHINY",NOUN_BELT|$80
 .byte "SHIRT",NOUN_SHIRT|$80
 .byte "SIGN",NOUN_SIGN|$80
 .byte "SKELETON",NOUN_SKELETON|$80

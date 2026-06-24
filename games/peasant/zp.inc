@@ -241,13 +241,20 @@ BUSH_STATUS	= $9B	; status of bush search
 	BUSH_3_SEARCHED = $04
 	BUSH_4_SEARCHED = $08
 
+; KERREK_STATE need to know these things:
+;	if kerrek dead
+;	if kerrek body in kerrek1 or kerrek2
+;	screens since belt taken (0...15)
+
 KERREK_STATE	= $9C
-	KERREK_ALIVE	= $00
-	KERREK_ARROWED	= $01
-	KERREK_DECOMPOSING = $02
-	KERREK_SKELETON	= $03
+;	KERREK_ALIVE	= $80	; KERREK_DEAD in GAME_STATE3
+	KERREK_ONSCREEN = $80	; don't need to save this, but simpler
 	KERREK_ROW1	= $40
-	KERREK_ONSCREEN = $80
+	KERREK_SCREENS_POST_BELT_MASK	= $0F
+;	KERREK_ARROWED	= $01
+;	KERREK_DECOMPOSING = $02
+;	KERREK_SKELETON	= $03
+
 
 ARROW_SCORE	= $9D	; bottom=score, top=random num needed 3-5?
 	ARROW_DONE  = $80
@@ -321,8 +328,7 @@ VISITED_3		= $AB
 	; MAP_INSIDE_INN	=	27
 
 PEASANT_STEPS		= $AC
-
-;PEASANT_XL		= $91	; in case we ever add sub-pixel resolution
+PEASANT_XL		= $AD	; in case we ever add sub-pixel resolution
 ; also move XADD/XADDL/YADD here
 ;  so we save in case we change it later
 
@@ -330,7 +336,7 @@ END_OF_SAVE		= $AD
 
 ;=============================================
 
-PEASANT_FALLING	= $AF		; cliff climb
+
 
 CURRENT_VERB	= $B0		; parser
 CURRENT_NOUN	= $B1
@@ -413,6 +419,8 @@ WHICH_SLOT	= $DA
 CURRENT_DISK	= $DC
 HGR_COLOR	= $E4		; hgr rectangle
 ;HGR_PAGE	= $E6
+
+PEASANT_FALLING	= $EB		; cliff climb
 
 TEMP_CENTER	= $EC		; for cliff climb
 METER_LEFT	= $EC		; target

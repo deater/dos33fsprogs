@@ -11,8 +11,6 @@
 ;======================================
 ; Look, Kerrek Present
 
-; FIXME:
-
 ; if kerrek present and do not have belt
 ; + look belt/buckle/shiny
 kerrek_look_belt_alive_message:
@@ -278,10 +276,3 @@ kerrek_talk_message:
 .byte "stupid ",34,"Learn Kerrek in 3",13
 .byte "Weeks",34," cassette did",13
 .byte "nothing for you!",0
-
-
-
-
-
-; rain stops after 5 screns?
-; on/off screen X times to rotting? or is it time?
