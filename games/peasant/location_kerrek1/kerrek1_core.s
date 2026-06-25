@@ -13,15 +13,16 @@ kerrek1_core:
 .include "../location_common/common_core.s"
 
 
+
+	;==============================
+	; draw kerrek body if necessary
+	;==============================
+
+	jsr	kerrek_draw_body
+
 	;====================
 	; handle kerrek
 	;====================
-
-	; clear out old state otherwise kerrek can follow us around
-	; no?  should not be necessary?
-
-;	lda	#0
-;	sta	KERREK_STATE
 
 	jsr	kerrek_setup
 
@@ -138,9 +139,11 @@ really_level_over:
 
 .include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 .include "kerrek1_actions.s"
 .include "../sound/kerrek_sting.s"
 .include "sprites_kerrek1/kerrek_sprites.inc"
+.include "sprites_kerrek1/kerrek_body_sprites.inc"
 
 	;==========================
 	; update screen
@@ -167,3 +170,6 @@ update_screen:
 
 
 	rts
+
+
+

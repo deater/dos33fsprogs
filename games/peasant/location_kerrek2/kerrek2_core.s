@@ -13,16 +13,16 @@ kerrek2_core:
 .include "../location_common/common_core.s"
 
 
+	;===============================
+	; draw kerrek body if necessary
+	;===============================
+
+	jsr	kerrek_draw_body
+
 
 	;====================
 	; handle kerrek
 	;====================
-
-	; clear out state otherwise kerrek can follow us around
-	; no?
-
-;	lda	#0
-;	sta	KERREK_STATE
 
 	jsr	kerrek_setup
 
@@ -134,9 +134,11 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "../location_kerrek1/kerrek1_actions.s"
 .include "../location_kerrek1/sprites_kerrek1/kerrek_sprites.inc"
+.include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
 
 
 

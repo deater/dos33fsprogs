@@ -662,3 +662,57 @@ kerrek_got_ya:
 	rts
 
 
+
+
+	;=======================
+	;=======================
+	; draw kerrek body
+	;=======================
+	;=======================
+kerrek_draw_body:
+	; check if dead
+
+	; check if this screen
+
+	; draw to back buffer
+
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
+
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
+
+	lda	#9			; 63/7 = 9
+	sta	SPRITE_X
+	lda	#100
+	sta	SPRITE_Y
+
+	ldx	#0
+
+	jsr	hgr_draw_sprite_mask
+
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
+
+no_draw_body:
+
+
+	rts
+
+
+
+sprites_mask_l:
+	.byte <kerrek_body0r_mask
+sprites_mask_h:
+	.byte >kerrek_body0r_mask
+sprites_data_l:
+	.byte <kerrek_body0r_sprite
+sprites_data_h:
+	.byte >kerrek_body0r_sprite
+sprites_xsize:
+	.byte 7
+sprites_ysize:
+	.byte 14
+
+
+
