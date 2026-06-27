@@ -114,9 +114,7 @@ LEVEL_OVER	= $6D
 	NEW_FROM_DISK	= $01
 	NEW_FROM_LOAD	= $02		; loaded from load/save menu
 KERREK_SPEED	= $6E
-KERREK_DIRECTION= $6F	; 0 = left, 1=right
-	KERREK_LEFT = 0
-	KERREK_RIGHT = 1
+
 
 
 SPEECH_PTRL    = $70
@@ -242,21 +240,20 @@ BUSH_STATUS	= $9B	; status of bush search
 	BUSH_4_SEARCHED = $08
 
 ; KERREK_STATE need to know these things:
-;	if kerrek dead
+;	if kerrek dead (this actually stored in GAME_STATE_3)
 ;	if kerrek body in kerrek1 or kerrek2
+;	if kerrek facing left/right
 ;	screens since belt taken (0...15)
 
 KERREK_STATE	= $9C
-;	KERREK_ALIVE	= $80	; KERREK_DEAD in GAME_STATE3
 	KERREK_ONSCREEN = $80	; don't need to save this, but simpler
 	KERREK_ROW1	= $40
+	KERREK_DIRECTION= $20	; KERREK_LEFT = 0
+		KERREK_RIGHT = $20
 	KERREK_SCREENS_POST_BELT_MASK	= $0F
-;	KERREK_ARROWED	= $01
-;	KERREK_DECOMPOSING = $02
-;	KERREK_SKELETON	= $03
 
 
-ARROW_SCORE	= $9D	; bottom=score, top=random num needed 3-5?
+ARROW_SCORE	= $9D	; bottom is score we got, 0..5
 	ARROW_DONE  = $80
 
 SCORE_HUNDREDS	= $9E

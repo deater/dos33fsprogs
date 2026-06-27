@@ -27,7 +27,8 @@ kerrek_actually_draw:
 	; draw kerrek body
 	;=================
 
-	lda	KERREK_DIRECTION
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION	; 0=LEFT
 	beq	kerrek_draw_body_left
 
 kerrek_draw_body_right:
@@ -85,7 +86,8 @@ kerrek_draw_body_common:
 	; draw kerrek head
 	;=================
 
-	lda	KERREK_DIRECTION
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION		; 0=left
 	beq	kerrek_draw_head_left
 
 kerrek_draw_head_right:
@@ -197,13 +199,17 @@ kerrek_move:
 	cmp	PEASANT_X
 	bcs	kerrek_move_left
 kerrek_move_right:
-	lda	#KERREK_RIGHT
-	sta	KERREK_DIRECTION
+	; right is $20
+	lda	KERREK_STATE
+	ora	#KERREK_RIGHT
+	sta	KERREK_STATE
 	inc	KERREK_X
 	jmp	kerrek_lr_done
 kerrek_move_left:
-	lda	#KERREK_LEFT
-	sta	KERREK_DIRECTION
+	; left is 0
+	lda	KERREK_STATE
+	and	#<~(KERREK_RIGHT)
+	sta	KERREK_STATE
 	dec	KERREK_X
 
 kerrek_lr_done:
@@ -664,15 +670,55 @@ kerrek_got_ya:
 
 
 
+
 	;=======================
 	;=======================
 	; draw kerrek body
 	;=======================
 	;=======================
+	; draw dead body on background
+	; + only if dead
+	; + only if on current screen
+	; + which sprite depends on if we have belt and post-belt count
+
 kerrek_draw_body:
 	; check if dead
 
+
+	lda	GAME_STATE_3
+	and	#KERREK_DEAD
+	bne	kerrek_is_dead
+
+
+
+	; o/~ the kerrek's not dead o/~
+kerrek_not_dead:
+	rts
+
+kerrek_is_dead:
+
 	; check if this screen
+	; if KERREK_STATE/KERREK_ROW1 and MAP_LOCATION is LOCATION_KERREK_1
+
+	lda	KERREK_STATE
+	and	#KERREK_ROW1
+	beq	kerrek_body_row2
+kerrek_body_row1:
+	lda	MAP_LOCATION
+	cmp	#LOCATION_KERREK_1
+	beq	kerrek_is_dead_and_correct_screen
+
+	rts
+
+kerrek_body_row2:
+	lda	MAP_LOCATION
+	cmp	#LOCATION_KERREK_2
+	beq	kerrek_is_dead_and_correct_screen
+
+	rts
+
+kerrek_is_dead_and_correct_screen:
+
 
 	; draw to back buffer
 

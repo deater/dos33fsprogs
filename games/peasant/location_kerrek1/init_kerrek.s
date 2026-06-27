@@ -25,8 +25,6 @@ kerrek_alive_out:
 	lda	#76
 	sta	KERREK_Y
 	sta	PREV_Y
-	lda	#KERREK_RIGHT		; right
-	sta	KERREK_DIRECTION
 	lda	#1			; original game this is "2"
 	sta	KERREK_SPEED
 
@@ -34,6 +32,7 @@ kerrek_alive_out:
 
 	lda	KERREK_STATE
 	and	#<(~KERREK_ROW1)
+	ora	#KERREK_RIGHT		; init to facing right
 	sta	KERREK_STATE
 
 	lda	MAP_LOCATION		; set which map location we are at
