@@ -1,3 +1,11 @@
+
+
+fitting the exceptionally large amount of sprites:
++ only need to decompress dead body sprites if dead
++ death sprites only need to decompress left or right variants, not both
+
+
+
 - Kerrek 1
   + When a message is displayed, the kerrek stops coming toward you
 	but still animates in place

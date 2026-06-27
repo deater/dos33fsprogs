@@ -689,8 +689,6 @@ kerrek_draw_body:
 	and	#KERREK_DEAD
 	bne	kerrek_is_dead
 
-
-
 	; o/~ the kerrek's not dead o/~
 kerrek_not_dead:
 	rts
@@ -728,12 +726,49 @@ kerrek_is_dead_and_correct_screen:
 	lda	#$40			; draw to $6000
 	sta	DRAW_PAGE
 
-	lda	#9			; 63/7 = 9
+	; do we need to adjust?
+	; we probably need to add at least 20 to the Y, what value exactly?
+
+	lda	KERREK_X
 	sta	SPRITE_X
-	lda	#100
+	clc
+	lda	KERREK_Y
+	adc	#20
 	sta	SPRITE_Y
 
+	; have to set X to which sprite to show
+	; if facing right, 0..3, if facing left 4..7
+	; if not have belt, show #0
+	; if KERREK_STATE bottom bits >=15 then show 3
+	; if KERREK_STATE bottom bits >=10 then show 2
+	; else show 1
+
 	ldx	#0
+
+	lda	INVENTORY_1
+	and	#INV1_KERREK_BELT
+	beq	adjust_for_left_right
+
+	ldx	#1
+
+	lda	KERREK_STATE
+	and	#$f
+	cmp	#15
+	bcs	draw_skeleton
+	cmp	#10
+	bcs	draw_decay
+	bcc	adjust_for_left_right
+
+draw_decay:
+	ldx	#2
+	bne	adjust_for_left_right		; bra
+
+draw_skeleton:
+	ldx	#3
+						; fallthrough
+
+adjust_for_left_right:
+
 
 	jsr	hgr_draw_sprite_mask
 
@@ -748,17 +783,41 @@ no_draw_body:
 
 
 sprites_mask_l:
-	.byte <kerrek_body0r_mask
+	; right first?
+	.byte <kerrek_body0r_mask,<kerrek_body1r_mask
+	.byte <kerrek_body2r_mask,<kerrek_body3r_mask
+	; left next
+	.byte <kerrek_body0l_mask,<kerrek_body1l_mask
+	.byte <kerrek_body2l_mask,<kerrek_body3l_mask
+
 sprites_mask_h:
-	.byte >kerrek_body0r_mask
+	; right first?
+	.byte >kerrek_body0r_mask,>kerrek_body1r_mask
+	.byte >kerrek_body2r_mask,>kerrek_body3r_mask
+	; left next
+	.byte >kerrek_body0l_mask,>kerrek_body1l_mask
+	.byte >kerrek_body2l_mask,>kerrek_body3l_mask
+
 sprites_data_l:
-	.byte <kerrek_body0r_sprite
+	; right first?
+	.byte <kerrek_body0r_sprite,<kerrek_body1r_sprite
+	.byte <kerrek_body2r_sprite,<kerrek_body3r_sprite
+	; left next
+	.byte <kerrek_body0l_sprite,<kerrek_body1l_sprite
+	.byte <kerrek_body2l_sprite,<kerrek_body3l_sprite
+
 sprites_data_h:
-	.byte >kerrek_body0r_sprite
+	; right first?
+	.byte >kerrek_body0r_sprite,>kerrek_body1r_sprite
+	.byte >kerrek_body2r_sprite,>kerrek_body3r_sprite
+	; left next
+	.byte >kerrek_body0l_sprite,>kerrek_body1l_sprite
+	.byte >kerrek_body2l_sprite,>kerrek_body3l_sprite
+
 sprites_xsize:
-	.byte 7
+	.byte 7,7,7,7, 7,7,7,7
 sprites_ysize:
-	.byte 14
+	.byte 14,14,14,14, 14,14,14,14
 
 
 

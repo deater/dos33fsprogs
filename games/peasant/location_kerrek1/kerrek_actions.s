@@ -306,6 +306,10 @@ kerrek_actually_kill:
 	ora	#KERREK_DEAD
 	sta	GAME_STATE_3
 
+	; draw body on background
+
+	jsr	kerrek_draw_body
+
 	; make it rain, make the puddle wet
 
 	lda	GAME_STATE_1
