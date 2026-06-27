@@ -1,0 +1,44 @@
+
+Apple II by default has non-buffered input you have to always check.
+
+We have a few routines for doing this.
+
+When we moved to fully double-buffered graphics it turns out the lag was
+enough that keypresses not appearing caused trouble.
+
+As a hack to work around that the screen copy code will stop and call the
+keyboard handler and buffer up keypresses which are then handled after
+it is done.  This allows OK typing but has issues as all users of this
+routine have to add code to drain the buffer or else things get stuck.
+
+A better solution might be to sprinkle calls to read keyboard around
+and if pressed drop everything and instantly write to both graphics pages
+the key that was pressed.  No interrupts on Apple II keyboard so this
+is trickier.
+
+
+	wait_until_keypress:
+		mainly used for debugging.
+		Also at title screen/intro/game_over/trogdor_levels?
+		Also wait_a_bit variant
+
+	insert_keyboard_buffer: (hgr_copy_fast.s)
+	-> called during the copy 40 times (once each column copied)
+	
+
+	check_keyboard: (in keyboard.s)
+	-> calls drain_keyboard_buffer
+
+	-> if enter pressed -> parse_input in parse_input.s called
+
+
+	partial_message_loop is problem:
+	-> calls update_screen_scm / print_text_message/print
+	-> open codes check keypress
+	-> should call reset_
+
+
+	other keyboard options
+
+	-> archery minigame uses its own keyboard routines
+
