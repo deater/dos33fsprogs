@@ -33,7 +33,6 @@ jhonka_core.o:	jhonka_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		sprites_jhonka/sprites_jhonka.inc \
 		sprites_jhonka/sprites_riches.inc \
 		sprites_jhonka/sprites_beat.inc \

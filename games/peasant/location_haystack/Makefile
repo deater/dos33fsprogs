@@ -12,7 +12,6 @@ HAYSTACK_LOADER:	haystack_loader.o
 
 haystack_loader.o:	haystack_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
-		../location_common/init_common.s \
 		graphics_haystack/haystack_graphics.inc \
 		HAYSTACK_CORE.zx02
 	ca65 -o haystack_loader.o haystack_loader.s -l haystack_loader.lst
@@ -30,7 +29,6 @@ haystack_core.o:	haystack_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \

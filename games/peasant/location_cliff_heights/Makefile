@@ -35,7 +35,6 @@ cliff_heights_core.o:	cliff_heights_core.s \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		heights_actions.s draw_lightning.s \
 		../text/DIALOG_CLIFF_HEIGHTS.ZX02 ../text/dialog_cliff_heights.inc \
 		sprites_heights/lightning_sprites.inc \

@@ -34,7 +34,6 @@ lake_east_core.o:	lake_east_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		sprites_lake_east/boat_sprites.inc \

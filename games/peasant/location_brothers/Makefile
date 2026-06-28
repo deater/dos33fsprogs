@@ -15,7 +15,6 @@ brothers_loader.o:	brothers_loader.s \
 		../inventory/inventory.inc \
 		../parse_input.inc \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		../gr_copy.s \
 		../new_map_location.s ../keyboard.s \
 		../text/DIALOG_BROTHERS.ZX02 \
@@ -38,7 +37,6 @@ brothers_core.o:	brothers_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \

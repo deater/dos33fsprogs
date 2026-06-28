@@ -33,7 +33,6 @@ cottage_core.o:	cottage_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		haystack_data.s \
 		../location_haystack/check_haystack.s \
 		../location_haystack/sprites_haystack/blown_away_sprite.inc \

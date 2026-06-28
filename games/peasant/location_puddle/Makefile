@@ -11,7 +11,6 @@ PUDDLE_LOADER:	puddle_loader.o
 	ld65 -o PUDDLE_LOADER puddle_loader.o -C $(LINKER_SCRIPTS)/apple2_4000.inc
 
 puddle_loader.o:	puddle_loader.s ../zp.inc ../hardware.inc ../qload.inc \
-		../location_common/init_common.s \
 		graphics_puddle/puddle_graphics.inc \
 		graphics_puddle/puddle_priority.inc \
 		PUDDLE_CORE.zx02
@@ -30,7 +29,6 @@ puddle_core.o:	puddle_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../parse_input.inc \
 		../location_common/flame_common.s \
 		../location_common/include_common.s \
-		../location_common/init_common.s \
 		../move_peasant_new.s ../draw_peasant_new.s \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
