@@ -300,8 +300,6 @@ kerrek_actually_kill:
 
 	; make kerrek dead
 
-	inc	KERREK_STATE
-
 	lda	GAME_STATE_3
 	ora	#KERREK_DEAD
 	sta	GAME_STATE_3
