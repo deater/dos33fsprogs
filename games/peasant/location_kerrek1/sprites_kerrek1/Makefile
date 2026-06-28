@@ -38,12 +38,12 @@ kerrek_body_sprites.inc:	kerrek_body_sprites.png
 	$(HGR_SPRITE) -l kerrek_body2l_mask   kerrek_body_sprites.png  84 112 132 126 >> kerrek_body_sprites.inc
 	$(HGR_SPRITE) -l kerrek_body3l_sprite kerrek_body_sprites.png  84 154 132 168 >> kerrek_body_sprites.inc
 	$(HGR_SPRITE) -l kerrek_body3l_mask   kerrek_body_sprites.png  84 175 132 189 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies0_sptite kerrek_body_sprites.png 210  70 230  81 >> kerrek_body_sprites.inc
+	$(HGR_SPRITE) -l kerrek_flies0_sprite kerrek_body_sprites.png 210  70 230  81 >> kerrek_body_sprites.inc
 	$(HGR_SPRITE) -l kerrek_flies0_mask   kerrek_body_sprites.png 210  84 230  95 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies1_sptite kerrek_body_sprites.png 210  99 230 110 >> kerrek_body_sprites.inc
+	$(HGR_SPRITE) -l kerrek_flies1_sprite kerrek_body_sprites.png 210  99 230 110 >> kerrek_body_sprites.inc
 	$(HGR_SPRITE) -l kerrek_flies1_mask   kerrek_body_sprites.png 210 113 230 124 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies2_sptite kerrek_body_sprites.png 210 130 230 140 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies2_mask   kerrek_body_sprites.png 210 203 230 223 >> kerrek_body_sprites.inc
+	$(HGR_SPRITE) -l kerrek_flies2_sprite kerrek_body_sprites.png 210 130 230 140 >> kerrek_body_sprites.inc
+	$(HGR_SPRITE) -l kerrek_flies2_mask   kerrek_body_sprites.png 210 143 230 153 >> kerrek_body_sprites.inc
 
 
 

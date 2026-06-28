@@ -164,6 +164,11 @@ update_screen:
 	jsr	kerrek_draw
 
 	;======================
+	; draw flies (should this be before or after peasant?)
+
+	jsr	kerrek_draw_flies
+
+	;======================
 	; always draw peasant
 
 	jsr	draw_peasant

@@ -152,6 +152,13 @@ update_screen:
 
 	jsr	hgr_copy_faster
 
+
+	;======================
+	; draw flies (should this be before or after peasant?)
+
+	jsr	kerrek_draw_flies
+
+
 	;=====================
 	; always draw peasant
 

@@ -376,6 +376,7 @@ WIPE_COUNT	= $C9	; inside inn day/night
 SLEEP_COUNT	= $C9	; trogdor
 MUD_COUNT	= $C9	; puddle
 HAY_JUMP_COUNT	= $C9	; hay
+FLY_COUNT	= $C9	; kerrek1/2
 
 BEAT_COUNT	= $CA	; jhonka
 BUCKET_STATE	= $CA	; well

@@ -670,28 +670,17 @@ kerrek_got_ya:
 
 
 
-
-
-	;=======================
-	;=======================
-	; draw kerrek body
-	;=======================
-	;=======================
-	; draw dead body on background
-	; + only if dead
-	; + only if on current screen
-	; + which sprite depends on if we have belt and post-belt count
-
-kerrek_draw_body:
-	; check if dead
-
-
+	;===================================
+	; check if kerrek dead and onscreen
+	;===================================
+check_kerrek_dead_onscreen:
 	lda	GAME_STATE_3
 	and	#KERREK_DEAD
 	bne	kerrek_is_dead
 
 	; o/~ the kerrek's not dead o/~
 kerrek_not_dead:
+	clc
 	rts
 
 kerrek_is_dead:
@@ -706,18 +695,39 @@ kerrek_body_row1:
 	lda	MAP_LOCATION
 	cmp	#LOCATION_KERREK_1
 	beq	kerrek_is_dead_and_correct_screen
-
+kerrek_wrong_row:
+	clc
 	rts
 
 kerrek_body_row2:
 	lda	MAP_LOCATION
 	cmp	#LOCATION_KERREK_2
-	beq	kerrek_is_dead_and_correct_screen
+	bne	kerrek_wrong_row
+
+kerrek_is_dead_and_correct_screen:
+	sec
+	rts
+
+
+	;=======================
+	;=======================
+	; draw kerrek body
+	;=======================
+	;=======================
+	; draw dead body on background
+	; + only if dead
+	; + only if on current screen
+	; + which sprite depends on if we have belt and post-belt count
+
+kerrek_draw_body:
+	; check if dead/right screen
+
+	jsr	check_kerrek_dead_onscreen	; carry set if dead/onscreen
+	bcs	kerrek_really_draw_body
 
 	rts
 
-kerrek_is_dead_and_correct_screen:
-
+kerrek_really_draw_body:
 
 	; draw to back buffer
 
@@ -801,6 +811,8 @@ sprites_mask_l:
 	; left next
 	.byte <kerrek_body0l_mask,<kerrek_body1l_mask
 	.byte <kerrek_body2l_mask,<kerrek_body3l_mask
+	; flies
+	.byte <kerrek_flies0_mask,<kerrek_flies1_mask,<kerrek_flies2_mask
 
 sprites_mask_h:
 	; right first?
@@ -809,6 +821,8 @@ sprites_mask_h:
 	; left next
 	.byte >kerrek_body0l_mask,>kerrek_body1l_mask
 	.byte >kerrek_body2l_mask,>kerrek_body3l_mask
+	; flies
+	.byte >kerrek_flies0_mask,>kerrek_flies1_mask,>kerrek_flies2_mask
 
 sprites_data_l:
 	; right first?
@@ -817,6 +831,8 @@ sprites_data_l:
 	; left next
 	.byte <kerrek_body0l_sprite,<kerrek_body1l_sprite
 	.byte <kerrek_body2l_sprite,<kerrek_body3l_sprite
+	; flies
+	.byte <kerrek_flies0_sprite,<kerrek_flies1_sprite,<kerrek_flies2_sprite
 
 sprites_data_h:
 	; right first?
@@ -825,11 +841,88 @@ sprites_data_h:
 	; left next
 	.byte >kerrek_body0l_sprite,>kerrek_body1l_sprite
 	.byte >kerrek_body2l_sprite,>kerrek_body3l_sprite
+	; flies
+	.byte >kerrek_flies0_sprite,>kerrek_flies1_sprite,>kerrek_flies2_sprite
 
 sprites_xsize:
-	.byte 7,7,7,7, 7,7,7,7
+	.byte 7,7,7,7, 7,7,7,7, 3,3,3
 sprites_ysize:
-	.byte 14,14,14,14, 14,14,14,14
+	.byte 14,14,14,14, 14,14,14,14, 11,11,10
 
 
 
+
+	;=======================
+	;=======================
+	; draw kerrek flies
+	;=======================
+	;=======================
+	; draw dead body on background
+	; + only if dead
+	; + only if on current screen
+	; + only if post-belt count between 10 and 14
+
+kerrek_draw_flies:
+	; check if dead
+
+	jsr	check_kerrek_dead_onscreen	; carry set if dead/onscreen
+	bcs	kerrek_really_draw_flies
+
+kerrek_draw_flies_early_out:
+	rts
+
+kerrek_really_draw_flies:
+
+	; check if right state of decomposition
+	lda	KERREK_STATE
+	and	#$f
+	cmp	#10
+	bcc	kerrek_draw_flies_early_out
+	cmp	#15
+	bcs	kerrek_draw_flies_early_out
+
+	; adjust; FIXME: adjust based on which direction facing?
+
+	clc
+	lda	KERREK_X
+	adc	#1
+	sta	SPRITE_X
+
+	lda	KERREK_STATE	; left=0, right $20
+	and	#KERREK_RIGHT
+	beq	flies_x_ok
+
+	inc	SPRITE_X	; adjust
+	inc	SPRITE_X
+
+
+flies_x_ok:
+
+	clc
+	lda	KERREK_Y
+	adc	#33
+	sta	SPRITE_Y
+
+	; only 3 frames.
+
+	; only every other frame
+
+	lda	FRAME
+	and	#1
+	beq	done_fly_adjust
+
+	inc	FLY_COUNT
+	lda	FLY_COUNT
+	cmp	#3
+	bcc	fly_adjust
+	lda	#0
+	sta	FLY_COUNT
+fly_adjust:
+	clc
+	adc	#8		; skip body sprites
+	tax
+
+	jsr	hgr_draw_sprite_mask
+
+done_fly_adjust:
+	rts
