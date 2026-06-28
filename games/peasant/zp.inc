@@ -94,6 +94,7 @@ SEEDH = $4F
 LOC4E          =       $4E	; electric duet
 COUNT256       =       $4F
 
+; smartport on GS clobbers $57-$5A?
 
 DRAW_PAGE_SAVE	= $5F
 WALK_DEST_X	= $60
