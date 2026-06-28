@@ -162,7 +162,7 @@ kerrek_draw_head_common:
 
 	;=======================
 	;=======================
-	; kerrek collision
+	; kerrek move/collision
 	;=======================
 	;=======================
 	; see if the kerrek got us
@@ -175,7 +175,8 @@ kerrek_move_and_check_collision:
 	bpl	kerrek_no_collision
 
 	; next, see if kerrek alive
-	and	#$f
+	lda	GAME_STATE_3
+	and	#KERREK_DEAD
 	bne	kerrek_no_collision
 
 
@@ -733,7 +734,7 @@ kerrek_is_dead_and_correct_screen:
 	sta	SPRITE_X
 	clc
 	lda	KERREK_Y
-	adc	#20
+	adc	#40
 	sta	SPRITE_Y
 
 	; have to set X to which sprite to show
@@ -769,6 +770,17 @@ draw_skeleton:
 
 adjust_for_left_right:
 
+	; if right, fine, otherwise increment
+
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION	; 0=left, 1=right
+	bne	kerrek_body_fine
+
+	inx
+	inx
+	inx
+	inx
+kerrek_body_fine:
 
 	jsr	hgr_draw_sprite_mask
 
