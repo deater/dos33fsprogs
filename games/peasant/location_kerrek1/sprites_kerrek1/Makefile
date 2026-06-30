@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	kerrek_sprites.inc kerrek_body_sprites.inc
+all:	kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc
 
 kerrek_sprites.inc:	kerrek_sprites.png
 	$(HGR_SPRITE) -s -l kerrek_l1_sprite kerrek_sprites.png 14 2 27 53 > kerrek_sprites.inc
@@ -47,8 +47,17 @@ kerrek_body_sprites.inc:	kerrek_body_sprites.png
 
 
 
-
+kerrek_belt.inc:	get_belt_full.png
+	$(HGR_SPRITE) -s -l belt_base_sprite get_belt_full.png 217 31 244 49 > kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt0_sprite get_belt_full.png   7  63  34  87 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l betl1_sprite get_belt_full.png  49  63  76  83 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt2_sprite get_belt_full.png  91  63 118  79 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt3_sprite get_belt_full.png 133  62 160  74 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt4_sprite get_belt_full.png 182  60 199  73 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt5_sprite get_belt_full.png  14 103  27 122 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt6_sprite get_belt_full.png  56 100  69 122 >> kerrek_belt.inc
+	$(HGR_SPRITE) -s -l belt7_sprite get_belt_full.png  91  97 118 122 >> kerrek_belt.inc
 
 
 clean:
-	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc
+	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc
