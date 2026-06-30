@@ -122,6 +122,7 @@ start_new_game:
 	sta	KERREK_STATE
 	sta	ARROW_SCORE
 	sta	WHICH_PEASANT_SPRITES
+	sta	RAIN_COUNT
 
 	;==============================
 	; load initial peasant sprites

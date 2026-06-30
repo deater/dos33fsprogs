@@ -1,4 +1,3 @@
-
 	;=====================
 	;=====================
 	; draw_rain
@@ -6,7 +5,11 @@
 	;=====================
 
 draw_rain:
+	lda	RAIN_COUNT
+	bne	do_draw_rain
+	rts
 
+do_draw_rain:
 	;=====================
 	; draw puddles
 	;=====================
@@ -50,7 +53,7 @@ pl_smc2:
 	lda	FRAME				; get which sprite
 	and	#$3				; based on FRAME
 	tax
-	jsr	hgr_draw_sprite_mask		; draw it
+	jsr	rhgr_draw_sprite_mask		; draw it
 
 	inc	WHICH_DROP			; move to next puddle
 
@@ -360,26 +363,26 @@ dark_rain_locations2_y:
 	.byte	14	;154,14
 
 
-.include "sprites/rain_sprites.inc"
+.include "rain_sprites/rain_sprites.inc"
 
-sprites_mask_l:
+rsprites_mask_l:
 	.byte	<splash_sprite0,<splash_sprite1,<splash_sprite2,<splash_sprite3
 
-sprites_mask_h:
+rsprites_mask_h:
 	.byte	>splash_sprite0,>splash_sprite1,>splash_sprite2,>splash_sprite3
 
-sprites_data_l:
+rsprites_data_l:
 	.byte	<splash_sprite0,<splash_sprite1,<splash_sprite2,<splash_sprite3
 
-sprites_data_h:
+rsprites_data_h:
 	.byte	>splash_sprite0,>splash_sprite1,>splash_sprite2,>splash_sprite3
 
 
-sprites_xsize:
-	.byte	2,2,2,2
+;sprites_xsize:
+;	.byte	2,2,2,2
 
-sprites_ysize:
-	.byte	9,9,9,9
+;sprites_ysize:
+;	.byte	9,9,9,9
 
 
 puddle_locations0_x:
@@ -468,5 +471,214 @@ puddle_list_y_h:
 	.byte >puddle_locations1_y
 	.byte >puddle_locations0_y
 	.byte >puddle_locations2_y
+
+
+	;=================================================
+	; rain hgr draw sprite with mask
+	;=================================================
+	; version of hgr_sprite_mask hacked up to be rain specific
+
+	; if Ypos+SPRITE_Y>191 we clip to 191
+rhgdsm_early_exit:
+	rts
+
+rhgr_draw_sprite_mask:
+
+	lda	SPRITE_Y
+	cmp	#192			; exit if try to draw off bottom
+	bcs	rhgdsm_early_exit	; bge
+
+	; generate x-end for both restore as well as inner loop
+
+	lda	#2			; always 2 wide
+	clc
+	adc	SPRITE_X
+	sta	rhgr_sprite_mask_width_end_smc+1	; self modify for end of line
+
+	; handle ysize for both restore as well as outer loop
+
+	lda	#9				; always 9 tall
+	sta	rhgr_sprite_mask_ysize_smc+1	; self modify for end row
+	clc
+	adc	SPRITE_Y
+	cmp	#192
+	bcc	rhgr_sprite_mask_ysize_ok		; blt
+
+rhgr_sprite_mask_ysize_not_ok:
+
+	; adjust self modify
+	; want it to be (192-SPRITE_Y)
+
+	lda	#192
+	sec
+	sbc	SPRITE_Y
+	sta	rhgr_sprite_mask_ysize_smc+1	; self modify for end row
+
+	lda	#191				; max out yend
+
+rhgr_sprite_mask_ysize_ok:
+
+	; point smc to sprite
+
+	lda	rsprites_data_l,X
+	sta	rhgr_sm_data_smc1+1
+	sta	rhgr_sm_data_smc2+1
+
+	lda	rsprites_data_h,X
+	sta	rhgr_sm_data_smc1+2
+	sta	rhgr_sm_data_smc2+2
+
+	; point smc to mask
+
+	lda	rsprites_mask_l,X
+	sta	rhgr_sm_mask_smc1+1
+	sta	rhgr_sm_mask_smc2+1
+
+	lda	rsprites_mask_h,X
+	sta	rhgr_sm_mask_smc1+2
+	sta	rhgr_sm_mask_smc2+2
+
+	;=============================
+	; set up outer loop
+
+
+	ldx	#0			; X is pointer offset
+	stx	CURRENT_ROW		; actual row
+
+rhgr_sprite_mask_yloop:
+
+
+	lda	CURRENT_ROW		; row
+
+	clc
+	adc	SPRITE_Y		; add in sprite_y
+
+	; calc GBASL/GBASH
+
+	tay				; get output ROW into GBASL/H
+	lda	hposn_low,Y
+	sta	GBASL
+	lda	hposn_high,Y
+	clc
+	adc	DRAW_PAGE
+	sta	GBASH
+
+	; setup Xpos for inner loop
+
+	ldy	SPRITE_X
+
+	; values to shift in for odd columns
+
+	lda	#$0
+	sta	SPRITE_TEMP	; default high bit to 0
+	sta	MASK_TEMP	; defailt high bit to 0
+
+
+rhgr_sprite_mask_inner_loop:
+
+	; pick if even or odd code
+
+	lda	SPRITE_X
+	ror
+	bcs	rhgr_draw_sprite_odd
+
+
+	;================================
+
+rhgr_draw_sprite_even:
+
+
+rhgr_sm_data_smc1:
+        lda     $f000,X			; load sprite data
+	sta	TEMP_SPRITE
+rhgr_sm_mask_smc1:
+	lda	$f000,X			; mask
+
+	jmp	rhgr_draw_sprite_both
+
+rhgr_draw_sprite_odd:
+
+rhgr_sm_data_smc2:
+        lda	$f000,X			; load sprite data
+
+					;            PSSS SSSS
+					; rol   C=P, SSSS SSST
+
+					; want to set bit7 to C?
+
+	rol	SPRITE_TEMP
+	rol
+	sta	SPRITE_TEMP
+	bcc	rpal0
+rpal1:
+	ora	#$80			; set pal bit
+	bne	rpal_done
+rpal0:
+	and	#$7f			; clear pal bit
+
+rpal_done:
+	sta	TEMP_SPRITE
+
+rhgr_sm_mask_smc2:
+        lda	$f000,X			; load mask data
+
+	rol	MASK_TEMP
+	rol
+	sta	MASK_TEMP
+
+rhgr_draw_sprite_both:
+	eor	#$FF
+	and	#$7F
+	sta	TEMP_MASK
+
+					;   BBBB BBBB	; background
+					; & 1111 0000	; mask
+					;  ============
+					;   BBBB 0000
+					; | 0000 SSSS   ; sprite
+					; =============
+					;   BBBB SSSS
+
+
+	; do the actual sprite-ing
+
+
+	; what if we want to use background palette?
+	; if so TEMP_SPRITE should be anded with $7f previously
+	; and temp mask should have high bit set
+
+;.ifdef USE_BG_PALETTE
+	lda	TEMP_SPRITE
+	and	#$7f
+	sta	TEMP_SPRITE		; clear palette bit on sprite
+
+	lda	TEMP_MASK
+	ora	#$80
+	sta	TEMP_MASK
+;.endif
+
+	lda     (GBASL),Y		; load bg
+
+	and	TEMP_MASK
+	ora	TEMP_SPRITE
+	sta	(GBASL),Y		; store to screen
+
+	inx				; increment sprite offset
+	iny				; increment output position
+
+
+rhgr_sprite_mask_width_end_smc:
+	cpy	#6				; see if reached end of row
+	bne	rhgr_sprite_mask_inner_loop	; if not, loop
+
+	inc	CURRENT_ROW			; row
+	lda	CURRENT_ROW			; row
+
+rhgr_sprite_mask_ysize_smc:
+	cmp	#31				; see if at end
+	bne	rhgr_sprite_mask_yloop		; if not, loop
+
+	rts
+
 
 

@@ -311,9 +311,11 @@ kerrek_actually_kill:
 	; make it rain, make the puddle wet
 
 	lda	GAME_STATE_1
-	ora	#(RAINING|PUDDLE_WET)
+	ora	#(PUDDLE_WET)
 	sta	GAME_STATE_1
 
+	lda	#6			; should this be 5?
+	sta	RAIN_COUNT
 
 	ldx	#<kerrek_kill_message3
 	ldy	#>kerrek_kill_message3

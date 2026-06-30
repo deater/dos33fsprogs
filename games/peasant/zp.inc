@@ -115,7 +115,7 @@ LEVEL_OVER	= $6D
 	NEW_FROM_DISK	= $01
 	NEW_FROM_LOAD	= $02		; loaded from load/save menu
 KERREK_SPEED	= $6E
-
+WHICH_DROP	= $6F			; rain code
 
 
 SPEECH_PTRL    = $70
@@ -161,10 +161,12 @@ PREVIOUS_LOCATION= $8D
 PEASANT_NEWY	= $8E
 OUTFIT_BG_PALETTE	= $8F
 
-
+;=======================
 ;=======================
 ; savegame state
 ;=======================
+;=======================
+
 
 LOAD_START	= $90
 
@@ -205,7 +207,7 @@ GAME_STATE_1 = $97
 	PUDDLE_WET=$02
 	IN_HAY_BALE=$04
 	ALREADY_GOT_ROOM=$08
-	RAINING=$10
+;	RAINING=$10		; use RAIN_COUNT for this
 	NIGHT=$20
 	POT_ON_HEAD=$40
 	WEARING_ROBE=$80
@@ -325,12 +327,18 @@ VISITED_3		= $AB
 	; MAP_INSIDE_NN		=	26
 	; MAP_INSIDE_INN	=	27
 
+
+; do we really need to track these across saves though?
 PEASANT_STEPS		= $AC
 PEASANT_XL		= $AD	; in case we ever add sub-pixel resolution
 ; also move XADD/XADDL/YADD here
 ;  so we save in case we change it later
 
-END_OF_SAVE		= $AD
+; note: only needs to be 0..6 so we could probably store it in unused
+;	bytes of another variable
+RAIN_COUNT		= $AE
+
+END_OF_SAVE		= $AF
 
 ;=============================================
 

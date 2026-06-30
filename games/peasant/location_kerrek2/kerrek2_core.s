@@ -172,4 +172,11 @@ update_screen:
 	jsr	kerrek_draw
 
 
+	;=====================
+	jsr	draw_rain
+
+
 	rts
+
+
+.include "../rain/rain.s"

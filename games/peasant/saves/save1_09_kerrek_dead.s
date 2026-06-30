@@ -11,7 +11,7 @@
 	; BABY_IN_WELL | BUCKET_DOWN_WELL
 	;LADY_GONE
 			; GAME_STATE_0	=	$96
-.byte PUDDLE_WET|RAINING
+.byte PUDDLE_WET
 	; FISH_FED | IN_HAY_BALE | NIGHT | POT_ON_HEAD | WEARING_ROBE
 		; GAME_STATE_1	=	$97
 .byte TALKED_TO_KNIGHT
@@ -38,4 +38,12 @@
 .byte $00		; INVENTORY_3_GONE =	$A5
 .byte 22		; KERREK_X	=	$A6
 .byte 76		; KERREK_Y	=	$A7
+.byte $00		; VISITED_0	=	$A8
+.byte $00		; VISITED_1	=	$A9
+.byte $00		; VISITED_2	=	$AA
+.byte $00		; VISITED_3	=	$AB
+.byte $00		; PEASANT_STEPS	=	$AC
+.byte $00		; PEASANT_XL	=	$AD
+.byte $06		; RAIN_COUNT	=	$AE
+
 

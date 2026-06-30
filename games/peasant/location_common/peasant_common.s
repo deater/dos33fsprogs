@@ -11,6 +11,19 @@
 
 check_common_entry:
 
+	;==========================
+	; rain countdown
+rain_countdown:
+	lda	RAIN_COUNT
+	beq	done_rain_countdown
+
+	dec	RAIN_COUNT
+
+done_rain_countdown:
+
+	;==========================
+	; kerrek countdown
+
 
 	; only happens if INV1_KERREK_BELT and KERREK_STATE low bits <15
 kerrek_body_countdown:
