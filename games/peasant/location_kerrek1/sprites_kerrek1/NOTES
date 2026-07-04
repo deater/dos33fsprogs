@@ -1,0 +1,38 @@
+shooting
+455 -> 312
+456 -> 313
+457 -> 314
+458 -> 315
+459 -> 316
+460 -> 317
+461 -> 318
+462 -> 319
+463 -> 320
+...
+468 -> 320
+469 -> 321
+470 -> 321
+471 -> 312
+
+
+
+
+
+
+
+16 frames (8 are hitting)
+8 walking (638+644 very similar)
+
+	roughly 50 tall by 3 wide so 150 bytes per
+	16 (left and right) = 150
+			      x16
+			==========
+			      900
+                             1500
+			============
+			     2400
+
+	for hitting can just use arm on top of one of existing standing
+
+	
+
