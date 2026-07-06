@@ -1,7 +1,7 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc \
-	kerrek_hit_sprites.inc
+	kerrek_hit_sprites.inc kerrek_shoot_sprites.inc
 
 kerrek_sprites.inc:	kerrek_sprites.png
 	$(HGR_SPRITE) -s -l kerrek_l1_sprite kerrek_sprites.png 14 2 27 53 > kerrek_sprites.inc
@@ -57,6 +57,44 @@ kerrek_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -s -l belt6_sprite get_belt_full.png  56 100  69 122 >> kerrek_belt.inc
 	$(HGR_SPRITE) -s -l belt7_sprite get_belt_full.png  91  97 118 122 >> kerrek_belt.inc
 
+kerrek_shoot_sprites.inc:	peasant_shot_left.png peasant_shot_right.png
+	$(HGR_SPRITE) -l shoot0_l_sprite peasant_shot_left.png   7  32  27  62 > kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot0_l_mask   peasant_shot_left.png   7  63  27  93 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot1_l_sprite peasant_shot_left.png  49  32  69  62 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot1_l_mask   peasant_shot_left.png  49  63  69  93 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot2_l_sprite peasant_shot_left.png  91  32 111  62 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot2_l_mask   peasant_shot_left.png  91  63 111  93 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot3_l_sprite peasant_shot_left.png 133  32 153  62 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot3_l_mask   peasant_shot_left.png 133  63 153  93 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot4_l_sprite peasant_shot_left.png 175  32 195  62 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot4_l_mask   peasant_shot_left.png 175  63 195  93 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot5_l_sprite peasant_shot_left.png   0 130  27 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot5_l_mask   peasant_shot_left.png   0 161  27 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot6_l_sprite peasant_shot_left.png  42 130  69 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot6_l_mask   peasant_shot_left.png  42 161  69 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot7_l_sprite peasant_shot_left.png  84 130 111 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot7_l_mask   peasant_shot_left.png  84 161 111 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot8_l_sprite peasant_shot_left.png 132 190 153 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot8_l_mask   peasant_shot_left.png 133 161 153 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot0_r_sprite peasant_shot_right.png  14  33  34  63 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot0_r_mask   peasant_shot_right.png  14  64  34  94 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot1_r_sprite peasant_shot_right.png  56  33  76  63 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot1_r_mask   peasant_shot_right.png  56  64  76  94 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot2_r_sprite peasant_shot_right.png  98  33 118  63 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot2_r_mask   peasant_shot_right.png  98  64 118  94 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot3_r_sprite peasant_shot_right.png 140  33 160  63 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot3_r_mask   peasant_shot_right.png 140  64 160  94 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot4_r_sprite peasant_shot_right.png 182  33 202  63 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot4_r_mask   peasant_shot_right.png 182  64 202  94 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot5_r_sprite peasant_shot_right.png  14 130  41 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot5_r_mask   peasant_shot_right.png  14 161  41 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot6_r_sprite peasant_shot_right.png  56 130  83 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot6_r_mask   peasant_shot_right.png  56 161  83 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot7_r_sprite peasant_shot_right.png  98 130 125 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot7_r_mask   peasant_shot_right.png  98 161 125 191 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot8_r_sprite peasant_shot_right.png 140 130 160 160 >> kerrek_shot_sprites.inc
+	$(HGR_SPRITE) -l shoot8_r_mask   peasant_shot_right.png 140 161 160 191 >> kerrek_shot_sprites.inc
+
 kerrek_hit_sprites.inc:	kerrek_hit_sprites_left.png kerrek_hit_sprites_right.png kerrek_body_sprites.png
 	$(HGR_SPRITE) -l kerrek_hit_left0_sprite kerrek_hit_sprites_left.png  14  60  41 108 > kerrek_hit_sprites.inc
 	$(HGR_SPRITE) -l kerrek_hit_left0_mask   kerrek_hit_sprites_left.png  14 113  41 161 >> kerrek_hit_sprites.inc
@@ -96,4 +134,5 @@ kerrek_hit_sprites.inc:	kerrek_hit_sprites_left.png kerrek_hit_sprites_right.png
 
 
 clean:
-	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc kerrek_hit_sprites.inc
+	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc \
+		kerrek_hit_sprites.inc kerrek_shoot_sprites.inc
