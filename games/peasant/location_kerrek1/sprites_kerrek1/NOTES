@@ -1,3 +1,14 @@
+kerrek smash is in sprite675
+	0,1,2,3,4,5,6,6,6,6,7 (smash)
+	8,9, 9 (in ground, no sparks)
+	4,3,2
+	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+
+kerrek walk is start of sprite675 but only 4 frames?
+also 646 with 8 frames
+
+
+
 shooting
 455 -> 312
 456 -> 313

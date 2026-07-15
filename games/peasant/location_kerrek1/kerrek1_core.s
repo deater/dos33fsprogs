@@ -142,7 +142,8 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_mask.s"
 .include "kerrek1_actions.s"
 .include "../sound/kerrek_sting.s"
-.include "sprites_kerrek1/kerrek_sprites.inc"
+.include "sprites_kerrek1/kerrek_walk_sprites.inc"
+;.include "sprites_kerrek1/kerrek_sprites.inc"
 .include "sprites_kerrek1/kerrek_body_sprites.inc"
 
 	;==========================
