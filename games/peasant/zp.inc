@@ -104,9 +104,9 @@ INVENTORY_Y	= $63
 CURSOR_X	= $64
 CURSOR_Y	= $65
 FRAME		= $66
-ALTFIRE		= $67
-ALTL		= $68
-ALTH		= $69
+;ALTFIRE		= $67
+;ALTL		= $68
+;ALTH		= $69
 SAVED_X		= $6A
 PEASANT_XADD	= $6B
 PEASANT_YADD	= $6C
@@ -114,7 +114,9 @@ LEVEL_OVER	= $6D
 	NEW_LOCATION	= $FF
 	NEW_FROM_DISK	= $01
 	NEW_FROM_LOAD	= $02		; loaded from load/save menu
-KERREK_SPEED	= $6E
+
+;KERREK_SPEED	= $6E
+
 WHICH_DROP	= $6F			; rain code
 
 
@@ -431,17 +433,22 @@ PEASANT_FALLING	= $EB		; cliff climb
 
 TEMP_CENTER	= $EC		; for cliff climb
 METER_LEFT	= $EC		; target
+KERREK_XSPEED_L	= $EC		; kerrek1/kerrek2
 
 CLIMB_COUNT	= $ED		; for cliff climb
 METER_RIGHT	= $ED		; target
+KERREK_XSPEED_H	= $ED		; kerrek1/kerrek2
 
 FLAME_COUNT	= $EE		; ??
 METER_PRESSES	= $EE		; target
+KERREK_X_L	= $EE		; kerrek1/kerrek2
 
 CURRENT_ROCK	= $EF		; for cliff climb
 ARROW_TEMP	= $EF		; target
+KERREK_YSPEED	= $EF		; kerrek1/kerrek2
 
 HIT_OFFSET	= $F0		; target
+KERREK_COUNT	= $F0		; kerrek1/kerrek2
 
 P0		= $F1
 HORIZ_OFFSET	= $F1		; target

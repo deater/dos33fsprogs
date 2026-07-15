@@ -36,8 +36,8 @@ kerrek_walk_sprites.inc:	kerrek_walk_right_sprites.png kerrek_walk_left_sprites.
 	$(HGR_SPRITE) -l kerrek_walk4r_mask   kerrek_walk_right_sprites.png 126 112 146 160 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk5r_sprite kerrek_walk_right_sprites.png 154  59 174 107 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk5r_mask   kerrek_walk_right_sprites.png 154 112 174 160 >> kerrek_walk_sprites.inc
-	$(HGR_SPRITE) -l kerrek_walk6r_sprite kerrek_walk_right_sprites.png 181  59 201 107 >> kerrek_walk_sprites.inc
-	$(HGR_SPRITE) -l kerrek_walk6r_mask   kerrek_walk_right_sprites.png 181 112 201 160 >> kerrek_walk_sprites.inc
+	$(HGR_SPRITE) -l kerrek_walk6r_sprite kerrek_walk_right_sprites.png 182  59 202 107 >> kerrek_walk_sprites.inc
+	$(HGR_SPRITE) -l kerrek_walk6r_mask   kerrek_walk_right_sprites.png 182 112 202 160 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk7r_sprite kerrek_walk_right_sprites.png 210  59 230 107 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk7r_mask   kerrek_walk_right_sprites.png 210 112 230 160 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk0l_sprite kerrek_walk_left_sprites.png  14  59  34 107 >> kerrek_walk_sprites.inc
@@ -52,8 +52,8 @@ kerrek_walk_sprites.inc:	kerrek_walk_right_sprites.png kerrek_walk_left_sprites.
 	$(HGR_SPRITE) -l kerrek_walk4l_mask   kerrek_walk_left_sprites.png 126 112 146 160 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk5l_sprite kerrek_walk_left_sprites.png 154  59 174 107 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk5l_mask   kerrek_walk_left_sprites.png 154 112 174 160 >> kerrek_walk_sprites.inc
-	$(HGR_SPRITE) -l kerrek_walk6l_sprite kerrek_walk_left_sprites.png 181  59 201 107 >> kerrek_walk_sprites.inc
-	$(HGR_SPRITE) -l kerrek_walk6l_mask   kerrek_walk_left_sprites.png 181 112 201 160 >> kerrek_walk_sprites.inc
+	$(HGR_SPRITE) -l kerrek_walk6l_sprite kerrek_walk_left_sprites.png 182  59 202 107 >> kerrek_walk_sprites.inc
+	$(HGR_SPRITE) -l kerrek_walk6l_mask   kerrek_walk_left_sprites.png 182 112 202 160 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk7l_sprite kerrek_walk_left_sprites.png 210  59 230 107 >> kerrek_walk_sprites.inc
 	$(HGR_SPRITE) -l kerrek_walk7l_mask   kerrek_walk_left_sprites.png 210 112 230 160 >> kerrek_walk_sprites.inc
 

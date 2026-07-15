@@ -123,7 +123,12 @@ kerrek_buy:
 	bne	kerrek_buy_not_there
 
 	; increase speed.  actual games goes to 8????
-	inc	KERREK_SPEED
+
+	lda	#$80
+	sta	KERREK_XSPEED_L
+
+	lda	#2
+	sta	KERREK_YSPEED
 
 	ldx	#<kerrek_buy_cold_one_message
 	ldy	#>kerrek_buy_cold_one_message
