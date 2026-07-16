@@ -6,6 +6,7 @@
 	; kerrek warning sting
 	;=======================
 	;=======================
+	; called "kerrekappear" in original
 
 	; not sure about this one
 	; GFED?
