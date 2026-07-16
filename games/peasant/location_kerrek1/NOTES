@@ -1,3 +1,22 @@
+Sprites needed:
+
++ Kerrek Alive
+	kerrek walk sprites	*
+	kerrek smash sprites
+	peasant shoot sprites
+	kerrek shot sprites
++ Kerrek Dead
+	kerrek body sprites	*
+	peasant belt sprites
+	peasant belt robe sprites
+
+
+Room for sprites:
+	12k total for game logic/sprites
+	
+
+
+
 Size of sprites:
 	kerrek walk (sprite+mask) $A40 - $1D00 = $12C0 = 4800 bytes
 
