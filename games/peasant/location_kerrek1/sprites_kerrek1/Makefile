@@ -1,7 +1,7 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
 all:	kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc \
-	kerrek_hit_sprites.inc kerrek_shoot_sprites.inc \
+	kerrek_hit_sprites.inc kerrek_shot_sprites.inc \
 	kerrek_walk_sprites.inc
 
 kerrek_sprites.inc:	kerrek_sprites.png
@@ -103,7 +103,7 @@ kerrek_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -s -l belt6_sprite get_belt_full.png  56 100  69 122 >> kerrek_belt.inc
 	$(HGR_SPRITE) -s -l belt7_sprite get_belt_full.png  91  97 118 122 >> kerrek_belt.inc
 
-kerrek_shoot_sprites.inc:	peasant_shot_left.png peasant_shot_right.png
+kerrek_shot_sprites.inc:	peasant_shot_left.png peasant_shot_right.png
 	$(HGR_SPRITE) -l shoot0_l_sprite peasant_shot_left.png   7  32  27  62 > kerrek_shot_sprites.inc
 	$(HGR_SPRITE) -l shoot0_l_mask   peasant_shot_left.png   7  63  27  93 >> kerrek_shot_sprites.inc
 	$(HGR_SPRITE) -l shoot1_l_sprite peasant_shot_left.png  49  32  69  62 >> kerrek_shot_sprites.inc
@@ -181,6 +181,6 @@ kerrek_hit_sprites.inc:	kerrek_hit_sprites_left.png kerrek_hit_sprites_right.png
 
 clean:
 	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc kerrek_belt.inc \
-		kerrek_hit_sprites.inc kerrek_shoot_sprites.inc \
+		kerrek_hit_sprites.inc kerrek_shot_sprites.inc \
 		kerrek_walk_sprites.inc
 
