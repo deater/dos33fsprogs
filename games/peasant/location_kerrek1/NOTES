@@ -1,12 +1,13 @@
 Sprites needed:
 
 + Kerrek Alive
-	kerrek walk sprites	*
-	kerrek smash sprites
+	kerrek walk sprites	$1c7a-$A7A  = $1200 = 4608 bytes 
+	kerrek smash sprites	$2274-$1c7a = $5fA  = 1530 bytes
 	peasant shoot sprites
-	kerrek shot sprites
+	kerrek hit sprites	$32A0-$1C7A = $1626 = 5670 bytes
+
 + Kerrek Dead
-	kerrek body sprites	*
+	kerrek body sprites	$3980-$32A0 = $6e0 = 1760 bytes
 	peasant belt sprites
 	peasant belt robe sprites
 
@@ -17,6 +18,5 @@ Room for sprites:
 
 
 
-Size of sprites:
-	kerrek walk (sprite+mask) $A40 - $1D00 = $12C0 = 4800 bytes
+
 

@@ -143,7 +143,8 @@ really_level_over:
 .include "kerrek1_actions.s"
 .include "../sound/kerrek_sting.s"
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
-;.include "sprites_kerrek1/kerrek_sprites.inc"
+.include "sprites_kerrek1/kerrek_smash_sprites.inc"
+;.include "sprites_kerrek1/kerrek_hit_sprites.inc"
 .include "sprites_kerrek1/kerrek_body_sprites.inc"
 
 	;==========================
