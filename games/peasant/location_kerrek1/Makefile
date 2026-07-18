@@ -38,7 +38,8 @@ kerrek1_core.o:	kerrek1_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../wait_a_bit.s borders.s \
 		../sound/kerrek_sting.s \
 		kerrek1_actions.s kerrek_actions.s \
-		draw_kerrek.s init_kerrek.s \
+		init_kerrek.s draw_kerrek.s draw_kerrek_body.s \
+		move_kerrek.s draw_kerrek_smash.s \
 		graphics_kerrek1/kerrek1_graphics.inc \
 		sprites_kerrek1/kerrek_walk_sprites.inc
 	ca65 -o kerrek1_core.o kerrek1_core.s -l kerrek1_core.lst
