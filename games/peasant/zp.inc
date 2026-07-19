@@ -452,6 +452,7 @@ KERREK_COUNT	= $F0		; kerrek1/kerrek2
 
 P0		= $F1
 HORIZ_OFFSET	= $F1		; target
+KERREK_SMASH_COUNT = $F1	; kerrek1/kerrek2
 
 P1		= $F2
 VERT_OFFSET	= $F2		; target

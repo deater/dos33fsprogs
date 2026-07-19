@@ -13,7 +13,7 @@ all:	kerrek_body_sprites.inc peasant_belt.inc peasant_robe_belt.inc \
 #	$(HGR_SPRITE) -s -l kerrek_r1_head_sprite kerrek_sprites.png 21 60 27 68 >> kerrek_sprites.inc
 #	$(HGR_SPRITE) -s -l kerrek_r2_sprite kerrek_sprites.png 42 56 55 108 >> kerrek_sprites.inc
 #	$(HGR_SPRITE) -s -l kerrek_r2_head_sprite kerrek_sprites.png 56 60 62 66 >> kerrek_sprites.inc
-	# hitting animation
+# hitting animation
 #	$(HGR_SPRITE) -s -l kerrek_r_hitting_legs_sprite kerrek_sprites.png 70 23 83 54 >> kerrek_sprites.inc
 #	$(HGR_SPRITE) -s -l kerrek_r_hitting_head_sprite kerrek_sprites.png 70 2 83 13 >> kerrek_sprites.inc
 #	$(HGR_SPRITE) -s -l kerrek_r_hitting_teeth_sprite kerrek_sprites.png 84 10 90 12 >> kerrek_sprites.inc
@@ -62,12 +62,12 @@ kerrek_smash_sprites.inc:	kerrek_smash_sprites_left.png kerrek_smash_sprites_rig
 	$(HGR_SPRITE) -l kerrek_smash_basel_mask   kerrek_smash_sprites_left.png  42 116  62 164 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm0l_sprite kerrek_smash_sprites_left.png  42  72  62  90 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm1l_sprite kerrek_smash_sprites_left.png  70  72  90  88 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm2l_sprite kerrek_smash_sprites_left.png  98  72 118  86 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm3l_sprite kerrek_smash_sprites_left.png 126  72 153  81 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm4l_sprite kerrek_smash_sprites_left.png 168  67 195  79 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm5l_sprite kerrek_smash_sprites_left.png  42  95  62 110 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm6l_sprite kerrek_smash_sprites_left.png  70  95  90 111 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm7l_sprite kerrek_smash_sprites_left.png  98 108 132 124 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm2l_sprite kerrek_smash_sprites_left.png  98  72 111  86 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm3l_sprite kerrek_smash_sprites_left.png 126  72 146  81 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm4l_sprite kerrek_smash_sprites_left.png 168  67 188  79 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm5l_sprite kerrek_smash_sprites_left.png  42  95  55 110 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm6l_sprite kerrek_smash_sprites_left.png  70  95  83 111 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm7l_sprite kerrek_smash_sprites_left.png  98 108 125 124 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l peasant_head_sprite       kerrek_smash_sprites_left.png 203  73 216  87 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l peasant_head_mask         kerrek_smash_sprites_left.png 203  88 216 102 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l smash1_sprite             kerrek_smash_sprites_left.png 196 113 223 120 >> kerrek_smash_sprites.inc
@@ -220,5 +220,5 @@ clean:
 	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc \
 		peasant_belt.inc peasant_robe_belt.inc \
 		kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
-		kerrek_walk_sprites.inc
+		kerrek_smash_sprites.inc kerrek_walk_sprites.inc
 

@@ -139,6 +139,7 @@ really_level_over:
 .include "../location_kerrek1/kerrek1_actions.s"
 ;.include "../location_kerrek1/sprites_kerrek1/kerrek_sprites.inc"
 .include "../location_kerrek1/sprites_kerrek1/kerrek_walk_sprites.inc"
+.include "../location_kerrek1/sprites_kerrek1/kerrek_smash_sprites.inc"
 .include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
 
 

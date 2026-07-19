@@ -26,19 +26,17 @@ kerrek_alive_out:
 	sta	KERREK_Y
 	sta	PREV_Y
 
-;	lda	#1			; original game this is "2"
-;	sta	KERREK_SPEED
-
 	lda	#1
 	sta	KERREK_YSPEED
 
-	lda	#$40
+	lda	#$40			; original game this is "2"
 	sta	KERREK_XSPEED_L
 
 	lda	#0
 	sta	KERREK_XSPEED_H
 	sta	KERREK_X_L
 	sta	KERREK_COUNT
+	sta	KERREK_SMASH_COUNT
 
 	; clear out fields to default state
 

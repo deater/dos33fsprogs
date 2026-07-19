@@ -163,6 +163,8 @@ update_screen:
 
 	; FIXME: draw kerrek before peasant if behind him?
 
+	; note: if in smash mode don't let peasant move?
+
 	jsr	kerrek_draw
 
 	;======================

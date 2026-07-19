@@ -15,5 +15,6 @@
 .include "move_kerrek.s"
 .include "draw_kerrek_smash.s"
 .include "draw_kerrek_body.s"
+.include "kerrek_sprite_list.s"
 
 .include "../text/dialog_kerrek1.inc"

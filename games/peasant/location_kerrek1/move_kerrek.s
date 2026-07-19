@@ -135,7 +135,10 @@ kerrek_y_distance_negate:
 	adc	#1
 kerrek_y_distance_good:
 	cmp	#5
-	bcc	kerrek_got_ya
+	bcs	kerrek_no_collision
+kerrek_collision:
+	lda	#1
+	sta	KERREK_SMASH_COUNT
 
 kerrek_no_collision:
 
