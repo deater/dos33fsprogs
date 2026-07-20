@@ -60,7 +60,7 @@ kerrek_walk_sprites.inc:	kerrek_walk_right_sprites.png kerrek_walk_left_sprites.
 kerrek_smash_sprites.inc:	kerrek_smash_sprites_left.png kerrek_smash_sprites_right.png
 	$(HGR_SPRITE) -l kerrek_smash_basel_sprite kerrek_smash_sprites_left.png  14 116  34 164 > kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_basel_mask   kerrek_smash_sprites_left.png  42 116  62 164 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm0l_sprite kerrek_smash_sprites_left.png  42  72  62  90 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm0l_sprite kerrek_smash_sprites_left.png  49  72  62  90 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm1l_sprite kerrek_smash_sprites_left.png  70  72  90  88 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm2l_sprite kerrek_smash_sprites_left.png  98  72 111  86 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm3l_sprite kerrek_smash_sprites_left.png 126  72 146  81 >> kerrek_smash_sprites.inc

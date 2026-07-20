@@ -77,9 +77,19 @@ game_loop:
 
 
 	;===========================
-	; handle kerrek
+	; move/collide kerrek
+
+	; don't do this if in process of smashing
+
+	lda	KERREK_SMASH_COUNT
+	bne	too_busy_smashing
 
 	jsr	kerrek_move_and_check_collision
+
+too_busy_smashing:
+
+	;===========================
+	; handle kerrek sting
 
 	; FIXME: is this needed in KERREK2
 
@@ -158,23 +168,26 @@ update_screen:
 
 	jsr	hgr_copy_faster
 
-	;======================
-	; draw kerrerk
 
-	; FIXME: draw kerrek before peasant if behind him?
+	; peasant is ~30 tall, kerrek ~48 tall
+	sec
+	lda	PEASANT_Y
+	sbc	#18
+	cmp	KERREK_Y
+	bcs	kerrek1_draw_kerrek_first
 
-	; note: if in smash mode don't let peasant move?
+kerrek1_draw_peasant_first:
 
-	jsr	kerrek_draw
+	jsr	draw_peasant
+	jsr	kerrek_draw		; draw kerrek
+	jsr	kerrek_draw_flies	; draw flies
 
-	;======================
-	; draw flies (should this be before or after peasant?)
+	rts
 
-	jsr	kerrek_draw_flies
+kerrek1_draw_kerrek_first:
 
-	;======================
-	; always draw peasant
-
+	jsr	kerrek_draw		; draw kerrek
+	jsr	kerrek_draw_flies	; draw flies
 	jsr	draw_peasant
 
 

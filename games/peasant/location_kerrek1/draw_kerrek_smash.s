@@ -10,10 +10,24 @@ kerrek_smash_progress:
 ;.byte	4,3,2
 ;.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$ff
 
-.byte	0,1,2,3,4,5,6,6,6,6,7	; (smash)
+; skip first one is ignored
+.byte	0,0,1,2,3,4,5,6,6,6,6,7	; (smash)
 .byte	7,7,7			; (in ground, no sparks)
 .byte	4,3,2
 .byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$ff
+
+kerrek_arm_offset_x_left:
+.byte 1,0,0,$ff,	$ff,0,0,$FE
+
+kerrek_arm_offset_y_left:
+.byte 11,11,11,11,	6,$ff,$ff,11
+
+kerrek_arm_offset_x_right:
+.byte 0,0,1,1,	1,1,1,1
+
+; dupe of the other?
+kerrek_arm_offset_y_right:
+.byte 11,11,11,11,	6,$ff,$ff,11
 
 
 
@@ -46,36 +60,74 @@ kerrek_base_correct_dir:
 	;==============================
 	; next draw appropriate arms
 
-
-
-	lda	KERREK_X
-	sta	SPRITE_X
-	clc
-	lda	KERREK_Y
-	adc	#10
-	sta	SPRITE_Y
-
-	ldx	#KERREK_SMASH_ARM_OFFSET_LEFT
+	ldy	KERREK_SMASH_COUNT
 
 	lda	KERREK_STATE
 	and	#KERREK_DIRECTION	; 0=LEFT
-	beq	kerrek_arm_correct_dir
+	bne	draw_kerrek_arm_right
 
-	; switch direction
+draw_kerrek_arm_left:
 
-	ldx	#KERREK_SMASH_ARM_OFFSET_RIGHT
+	clc
+	lda	KERREK_X
+	adc	kerrek_arm_offset_x_left,Y
+	sta	SPRITE_X
 
-kerrek_arm_correct_dir:
+	clc
+	lda	KERREK_Y
+	adc	kerrek_arm_offset_y_left,Y
+	sta	SPRITE_Y
+
+	lda	#KERREK_SMASH_ARM_OFFSET_LEFT
+
+	jmp	draw_kerrek_arm_done
+
+
+draw_kerrek_arm_right:
+
+	clc
+	lda	KERREK_X
+	adc	kerrek_arm_offset_x_right,Y
+	sta	SPRITE_X
+
+	clc
+	lda	KERREK_Y
+	adc	kerrek_arm_offset_y_right,Y
+	sta	SPRITE_Y
+
+	lda	#KERREK_SMASH_ARM_OFFSET_RIGHT
+
+
+draw_kerrek_arm_done:
+	clc
+	adc	kerrek_smash_progress,Y
+	tax
 
 	jsr	hgr_draw_sprite_mask
+
 
 	;==============================
 	; if frame X,Y,Z draw sparks
 
 
+	;==========================
+	; move to next frame
+
+	inc	KERREK_SMASH_COUNT
+	ldx	KERREK_SMASH_COUNT
+
+	lda	kerrek_smash_progress,X
+	bmi	smash_done
+
+	rts
 
 
+smash_done:
 
+	; temp debug hack
+
+	lda	#1
+	sta	KERREK_SMASH_COUNT	; reset
 
 .if 0
 	; bonk sound effect
