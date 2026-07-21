@@ -76,14 +76,14 @@ kerrek_smash_sprites.inc:	kerrek_smash_sprites_left.png kerrek_smash_sprites_rig
 	$(HGR_SPRITE) -l smash2_mask               kerrek_smash_sprites_left.png 196 145 223 150 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_baser_sprite kerrek_smash_sprites_right.png  14 116  34 164 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_baser_mask   kerrek_smash_sprites_right.png  42 116  62 164 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm0r_sprite kerrek_smash_sprites_right.png  42  72  62  90 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm0r_sprite kerrek_smash_sprites_right.png  42  72  55  90 >> kerrek_smash_sprites.inc
 	$(HGR_SPRITE) -l kerrek_smash_arm1r_sprite kerrek_smash_sprites_right.png  70  72  90  88 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm2r_sprite kerrek_smash_sprites_right.png  98  72 118  86 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm3r_sprite kerrek_smash_sprites_right.png 126  72 153  81 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm4r_sprite kerrek_smash_sprites_right.png 168  67 195  79 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm5r_sprite kerrek_smash_sprites_right.png  42  95  62 110 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm6r_sprite kerrek_smash_sprites_right.png  70  95  90 111 >> kerrek_smash_sprites.inc
-	$(HGR_SPRITE) -l kerrek_smash_arm7r_sprite kerrek_smash_sprites_right.png  98 108 132 124 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm2r_sprite kerrek_smash_sprites_right.png 105  72 118  86 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm3r_sprite kerrek_smash_sprites_right.png 133  72 153  81 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm4r_sprite kerrek_smash_sprites_right.png 175  67 195  79 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm5r_sprite kerrek_smash_sprites_right.png  49  95  62 110 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm6r_sprite kerrek_smash_sprites_right.png  77  95  90 111 >> kerrek_smash_sprites.inc
+	$(HGR_SPRITE) -l kerrek_smash_arm7r_sprite kerrek_smash_sprites_right.png 105 108 132 124 >> kerrek_smash_sprites.inc
 
 
 

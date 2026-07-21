@@ -61,6 +61,8 @@ kerrek_base_correct_dir:
 	; next draw appropriate arms
 
 	ldy	KERREK_SMASH_COUNT
+	lda	kerrek_smash_progress,Y
+	tay
 
 	lda	KERREK_STATE
 	and	#KERREK_DIRECTION	; 0=LEFT
@@ -78,7 +80,9 @@ draw_kerrek_arm_left:
 	adc	kerrek_arm_offset_y_left,Y
 	sta	SPRITE_Y
 
-	lda	#KERREK_SMASH_ARM_OFFSET_LEFT
+	clc
+	tya
+	adc	#KERREK_SMASH_ARM_OFFSET_LEFT
 
 	jmp	draw_kerrek_arm_done
 
@@ -95,12 +99,12 @@ draw_kerrek_arm_right:
 	adc	kerrek_arm_offset_y_right,Y
 	sta	SPRITE_Y
 
-	lda	#KERREK_SMASH_ARM_OFFSET_RIGHT
-
+	clc
+	tya
+	adc	#KERREK_SMASH_ARM_OFFSET_RIGHT
 
 draw_kerrek_arm_done:
-	clc
-	adc	kerrek_smash_progress,Y
+
 	tax
 
 	jsr	hgr_draw_sprite_mask

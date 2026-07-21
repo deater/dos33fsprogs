@@ -163,11 +163,11 @@ sprites_data_h:
 	.byte >kerrek_flies0_sprite,>kerrek_flies1_sprite,>kerrek_flies2_sprite
 
 sprites_xsize:
-	.byte 3,3,3,3, 3,3,3,3, 3,3,3,3, 3,3,3,3
+	.byte 3,3,3,3, 3,3,3,3, 3,3,3,3, 3,3,3,3		; walk
 
-	.byte 3,3
-	.byte 3,3,2,3,     3,2,2,4
-	.byte 3,3,2,3,     3,2,2,4
+	.byte 3,3						; smash base
+	.byte 2,3,2,3,     3,2,2,4				; arml
+	.byte 2,3,2,3,     3,2,2,4				; armr
 	.byte 2,4,4
 
 	.byte 7,7,7,7, 7,7,7,7, 3,3,3
