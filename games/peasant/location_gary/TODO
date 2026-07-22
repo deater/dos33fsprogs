@@ -11,8 +11,8 @@
   + Verify sound effects for everything
 
 	gary_revenge:
-		gary rears up (neigh)
+		gary rears up (neigh+thunder)
 		when peasant hits ground (bonk)
 	gary_scared:
 		gary rears up (neigh+neigh)
-		breaks through fence (bonk)
+		breaks through fence (thunder)

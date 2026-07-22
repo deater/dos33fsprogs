@@ -404,6 +404,7 @@ reset_enemy_state:
 	.include	"erase_bg.s"
 
 	.include	"../sound/mud_splat.s"
+	.include	"../sound/thunder.s"
 
 	.include	"../hgr_routines/hgr_sprite_mask.s"
 	.include 	"../hgr_routines/hgr_sprite_bg_mask.s"

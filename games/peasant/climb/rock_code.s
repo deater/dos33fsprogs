@@ -48,6 +48,9 @@ do_explode_rock:
 	; explode is 1 or 2
 	; map to 6,7 or 12,13
 
+	; FIXME:
+	; jsr	thunder_sound
+
 	lda	rock_type,X
 	beq	explode_big_rock
 explode_small_rock:

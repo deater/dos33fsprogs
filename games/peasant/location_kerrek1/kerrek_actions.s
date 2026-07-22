@@ -315,6 +315,12 @@ kerrek_actually_kill:
 
 	; make it rain, make the puddle wet
 
+	; sound: three thunders
+
+	jsr	thunder_sound
+	jsr	thunder_sound
+	jsr	thunder_sound
+
 	lda	GAME_STATE_1
 	ora	#(PUDDLE_WET)
 	sta	GAME_STATE_1

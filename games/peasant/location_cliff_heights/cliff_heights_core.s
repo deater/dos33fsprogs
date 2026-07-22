@@ -135,6 +135,7 @@ really_level_over:
 .include "heights_actions.s"
 
 .include "draw_lightning.s"
+.include "../sound/thunder.s"
 
 	;=========================
 	; update screen

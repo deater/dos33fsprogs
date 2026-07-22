@@ -12,7 +12,7 @@
 	;  8 frames -- nothing, flies still move
 	;  6 frames -- rear1 @ 49,117
 	;  6 frames -- rear2 @ 49,115
-	;  6 frames -- rear3 
+	;  6 frames -- rear3
 	;		peasant0 off feet (3)
 	;		peasant1 (3)
 	;  6 frames -- rear2
@@ -118,8 +118,8 @@ draw_peasant_revenge:
 	; handle sound
 	;
 	; in theory neigh
-	;	FIXME: maybe bonk when legs back down
-	;	bonk when peasant lands
+	;	FIXME: thunder when legs back down
+	;	mudsplat when peasant lands
 
 
 	lda	GARY_COUNT

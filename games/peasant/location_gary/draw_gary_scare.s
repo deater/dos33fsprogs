@@ -34,12 +34,6 @@ draw_gary_scare:
 	lda	#1
 	sta	WEARING_MASK
 
-	;===============================
-	; FIXME: sound effect for this
-	; neigh sound @21
-	; neigh sound @36
-	; maybe bonk (splat) when feet down?
-
 	lda	#0
 	sta	GARY_COUNT
 
@@ -76,7 +70,7 @@ scare_gary_loop:
 	; FIXME: sound effect for this
 	; neigh sound @21
 	; neigh sound @36
-	; maybe bonk (splat) when feet down?
+	; FIXME: thunder when break fence
 
 	lda	GARY_COUNT
 	cmp	#21

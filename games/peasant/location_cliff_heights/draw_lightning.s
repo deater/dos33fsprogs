@@ -21,8 +21,6 @@ draw_lightning:
 	; draw big
 draw_big_lightning:
 
-	;
-
 	inc	big_lightning_out
 
 	ldx	big_lightning_out
@@ -42,13 +40,11 @@ keep_drawing_big_lightning:
 	pha
 	cmp	#3
 	bne	no_boom
-        ; boom sound
 
-        lda     #8
-        sta     speaker_duration
-        lda     #NOTE_G3
-        sta     speaker_frequency
-        jsr     speaker_tone
+	; boom sound
+
+	jsr	thunder_sound
+
 no_boom:
 	pla
 	tax
@@ -103,13 +99,12 @@ keep_drawing_small_lightning:
 	pha
 	cmp	#3
 	bne	no_little_boom
+
         ; boom sound
 
-        lda     #8
-        sta     speaker_duration
-        lda     #NOTE_G3
-        sta     speaker_frequency
-        jsr     speaker_tone
+	jsr	thunder_sound
+
+
 no_little_boom:
 	pla
 

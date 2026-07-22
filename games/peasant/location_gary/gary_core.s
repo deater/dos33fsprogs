@@ -137,6 +137,7 @@ really_level_over:
 .include "../sound/mud_splat.s"
 .include "../sound/gary_neigh.s"
 .include "../sound/baby_lady.s"
+.include "../sound/thunder.s"
 
 BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"
