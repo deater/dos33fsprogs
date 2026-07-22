@@ -139,6 +139,8 @@ level_over:
 
 .include "../sound/falling.s"
 .include "../sound/trogdor_appear.s"
+.include "../sound/burninate.s"
+.include "../sound/earthquake.s"
 
 	;===========================
 	; update screen

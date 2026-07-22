@@ -7,7 +7,7 @@
 
 	; used in
 	; (----)	676	location_kerrek1/2 (jhonka falling)
-	; (----)	957	trogdor (flames)
+	; (----)	957	trogdor (flames, while sleeping)
 
 falling_sound:
 
