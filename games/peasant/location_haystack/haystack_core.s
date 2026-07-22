@@ -131,6 +131,8 @@ BLOWN_AWAY_OFFSET=0
 .include "sprites_haystack/blown_away_sprite.inc"
 .include "haystack_data.s"
 
+.include "../sound/baby_lady.s"
+
 	;========================
 	; update screen
 	;========================

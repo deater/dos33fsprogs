@@ -106,6 +106,8 @@ really_level_over:
 .include "../location_common/include_bottom.s"
 .include "cottage_actions.s"
 
+.include "../sound/baby_lady.s"
+
 BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"
 .include "../location_haystack/sprites_haystack/blown_away_sprite.inc"

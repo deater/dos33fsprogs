@@ -159,6 +159,7 @@ really_level_over:
 
 .include "draw_lady.s"
 .include "inside_lady_actions.s"
+.include "../sound/baby_lady.s"
 
 .include "sprites_inside_lady/lady_cottage_sprites.inc"
 .include "../hgr_routines/hgr_sprite.s"

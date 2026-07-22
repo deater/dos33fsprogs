@@ -85,6 +85,10 @@ inside_cottage_give_riches:
 	ora	#LADY_GONE
 	sta	GAME_STATE_0
 
+	; play sound
+
+	jsr	baby_lady_gone_sound
+
 	; update chair priority
 	jsr	update_priority_chair
 

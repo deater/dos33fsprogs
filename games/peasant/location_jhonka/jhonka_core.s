@@ -177,6 +177,8 @@ really_level_over:
 .include "update_bg.s"
 .include "jhonka_beat.s"
 
+.include "../sound/baby_lady.s"
+
 USE_BG_PALETTE=1
 .include "../hgr_routines/hgr_sprite_mask.s"
 .include "../hgr_routines/hgr_sprite.s"

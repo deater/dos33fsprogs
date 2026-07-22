@@ -43,6 +43,10 @@ blow_hay_away:
 
 blow_away_hay_no_message:
 
+	; play sound effect
+
+	jsr	baby_lady_gone_sound
+
 	; exit hay bale
 
 	lda	GAME_STATE_1
