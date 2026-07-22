@@ -18,7 +18,7 @@ move_arrows:
 	cmp	#24
 	bne	skip_hit_ground
 
-	jsr	miss_sound
+	jsr	arrow_miss_sound
 skip_hit_ground:
 
 	pla
@@ -636,7 +636,7 @@ check_bullseye_hit:
 	rts
 
 check_bullseye_missed:
-	jsr	miss_sound
+	jsr	arrow_miss_sound
 
 	clc
 	rts

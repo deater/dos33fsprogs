@@ -164,24 +164,25 @@ update_screen:
 
 handle_archery_return:
 
-	and	#$7f			; unset
-	sta	ARROW_SCORE
+;	and	#$7f			; unset
+;	sta	ARROW_SCORE
 
+	lda	ARROW_SCORE
 	and	#$f			; see if score (bottom) is 0
 	beq	arrow_game_zero
 
-	sta	TEMP0
+;	sta	TEMP0
 
 	; why are we comparing top to bottom nibble?
 	; for some reason we though the number of games to win was in top nibble
 	; so we'd compare against that
 	; as far as I can tell, right now it's always 3 to win
 
-	lda	ARROW_SCORE
-	lsr
-	lsr
-	lsr
-	lsr
+;	lda	ARROW_SCORE
+;	lsr
+;	lsr
+;	lsr
+;	lsr
 ;	cmp	TEMP0
 
 	cmp	#3

@@ -885,19 +885,19 @@ launch_sound:
 
 	rts
 
-miss_sound:
-	lda	#NOTE_G3
-	sta	speaker_frequency
 
-	lda	#30
-	sta	speaker_duration
+.include "../sound/mud_splat.s"
 
-	jsr	speaker_tone
-
-;	lda	#100
-;	jsr	wait
-
-	rts
+;miss_sound:
+;	lda	#NOTE_G3
+;	sta	speaker_frequency
+;
+;	lda	#30
+;	sta	speaker_duration
+;
+;	jsr	speaker_tone
+;
+;	rts
 
 
 	; 600/1200

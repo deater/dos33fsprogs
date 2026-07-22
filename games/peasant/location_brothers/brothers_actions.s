@@ -162,7 +162,19 @@ archery_give_trinket:
 	and	#HALDO_TO_DONGOLEV
 	beq	archery_no_give
 
-	; check if already gave it
+	; this is complicated, four options
+	; 1. don't have trinket yet (archery_no_give)
+	; 2. have trinket (archery_give_trinket_first)
+	; 3. no longer have trinket but have not won archery
+	;	(archery_give_trinket_again)
+	; 4. have the bow (archery_talk_after_minigame_message)
+
+	; check if we have bow, exit early
+	lda	INVENTORY_1
+	and	#INV1_BOW
+	bne	archery_give_done_minigame
+
+	; check if already gave trinket
 	lda	GAME_STATE_0
 	and	#TRINKET_GIVEN
 	bne	archery_give_trinket_again
@@ -175,6 +187,9 @@ archery_give_trinket:
 	; otherwise, default
 archery_no_give:
 	jmp	parse_common_give
+
+archery_give_done_minigame:
+	jmp	archery_after_minigame
 
 archery_give_trinket_first:
 
