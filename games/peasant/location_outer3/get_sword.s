@@ -13,6 +13,10 @@
 
 get_sword:
 
+	; play fanfare
+	;	FIXME: also play curtain open noise?
+	jsr	raise_up_sound
+
 	lda	#0
 	sta	SWORD_COUNT
 

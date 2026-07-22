@@ -189,6 +189,7 @@ really_level_over:
 
 .include "../sound/mud_slip.s"
 .include "../sound/twinkle.s"
+.include "../sound/raise_up.s"
 
 
 .include "sprites_outer3/keeper3_sprites.inc"
