@@ -199,6 +199,7 @@ really_level_over:
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 
 .include "../sound/mud_splat.s"
+.include "../sound/mud_slip.s"
 
 BLOWN_AWAY_OFFSET=15
 .include "../location_haystack/check_haystack.s"

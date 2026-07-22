@@ -124,6 +124,7 @@ really_level_over:
 .include "sprites_lake_west/throw_sprites.inc"
 .include "sprites_lake_west/swim_sprites.inc"
 .include "throw_baby.s"
+.include "../sound/mud_slip.s"
 
 	;========================
 	; update screen

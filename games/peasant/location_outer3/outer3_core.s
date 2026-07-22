@@ -187,6 +187,10 @@ really_level_over:
 .include "../location_outer/outer_actions_common.s"
 .include "outer3_actions.s"
 
+.include "../sound/mud_slip.s"
+.include "../sound/twinkle.s"
+
+
 .include "sprites_outer3/keeper3_sprites.inc"
 .include "sprites_outer3/skeleton_sprites.inc"
 .include "sprites_outer3/curtain_sprites.inc"

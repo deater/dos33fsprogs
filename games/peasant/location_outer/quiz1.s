@@ -235,19 +235,14 @@ ron1_loop:
 	cmp	#12
 	bcs	skip_ron_sound
 
-	and	#1
-	beq	ron_other_note
+	beq	ron_slip_sound
 
-        lda     #NOTE_F6
-	beq	ron_common_note		; bra
-ron_other_note:
-        lda     #NOTE_E6
+ron_twinkle_sound:
+	jsr	twinkle_sound
+	jmp	skip_ron_sound
 
-ron_common_note:
-        sta     speaker_frequency
-        lda     #8
-        sta     speaker_duration
-        jsr     speaker_tone
+ron_slip_sound:
+	jsr	mud_slip_sound
 
 skip_ron_sound:
 

@@ -221,25 +221,23 @@ guitar_loop:
 
 	; play sound if needed, 2.. 12
 
+	; FIXME: long guitar song
+
+
 	lda	GUITAR_COUNT
 	cmp	#2
 	bcc	skip_guitar_sound
 	cmp	#12
 	bcs	skip_guitar_sound
+	beq	guitar_slip_sound
 
-	and	#1
-	beq	guitar_other_note
 
-        lda     #NOTE_F6
-	beq	guitar_common_note		; bra
-guitar_other_note:
-        lda     #NOTE_E6
+guitar_twinkle_sound:
+	jsr	twinkle_sound
+	jmp	skip_guitar_sound
 
-guitar_common_note:
-        sta     speaker_frequency
-        lda     #8
-        sta     speaker_duration
-        jsr     speaker_tone
+guitar_slip_sound:
+	jsr	mud_slip_sound
 
 skip_guitar_sound:
 

@@ -16,3 +16,8 @@ Outer3
   It's mostly noticable when walking to the right, so maybe just 
 	add it for those?
 
++ sound:
+	- wiggle figures when wrong
+	- mud slip when wrong
+	- play triumph music when get sword
+

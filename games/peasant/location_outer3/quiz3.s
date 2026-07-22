@@ -232,19 +232,14 @@ skeleton_loop:
 	cmp	#12
 	bcs	skip_skeleton_sound
 
-	and	#1
-	beq	skeleton_other_note
+	beq	skeleton_slip_sound
 
-        lda     #NOTE_F6
-	beq	skeleton_common_note		; bra
-skeleton_other_note:
-        lda     #NOTE_E6
+skeleton_twinkle_sound:
+	jsr	twinkle_sound
+	jmp	skip_skeleton_sound
 
-skeleton_common_note:
-        sta     speaker_frequency
-        lda     #8
-        sta     speaker_duration
-        jsr     speaker_tone
+skeleton_slip_sound:
+	jsr	mud_slip_sound
 
 skip_skeleton_sound:
 

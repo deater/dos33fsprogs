@@ -92,6 +92,18 @@ no_baby_today:
 
 	inc	BABY_COUNT
 
+	;========================
+	; do sound
+
+	lda	BABY_COUNT
+	cmp	#15
+	bne	no_baby_sound
+
+	jsr	mud_slip_sound
+
+no_baby_sound:
+
+
 	lda	BABY_COUNT
 	cmp	#30
 	bne	baby_loop

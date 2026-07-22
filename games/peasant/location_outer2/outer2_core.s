@@ -173,6 +173,8 @@ really_level_over:
 .include "quiz2.s"
 .include "../location_outer/outer_actions_common.s"
 .include "outer2_actions.s"
+.include "../sound/mud_slip.s"
+.include "../sound/twinkle.s"
 
 .include "sprites_outer2/keeper2_sprites.inc"
 .include "sprites_outer2/guitar_sprites.inc"

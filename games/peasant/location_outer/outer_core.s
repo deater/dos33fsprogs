@@ -181,7 +181,8 @@ really_level_over:
 .include "sprites_outer/ron_sprites.inc"
 ;.include "sprites_outer/keeper2_sprites.inc"
 ;.include "sprites_outer/guitar_sprites.inc"
-
+.include "../sound/mud_slip.s"
+.include "../sound/twinkle.s"
 
 	;======================
 	; update screen
