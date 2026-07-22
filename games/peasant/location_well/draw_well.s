@@ -45,6 +45,11 @@ lower_bucket:
 	lda	#$0
 	sta	BUCKET_COUNT
 
+	;=====================
+	; arrow shoot noise
+
+	jsr	arrow_shoot_sound
+
 lower_bucket_loop:
 	ldy	BUCKET_COUNT
 	ldx	lower_bucket_animation,Y

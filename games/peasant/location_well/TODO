@@ -6,6 +6,10 @@
 + Animate baby in well
 + can re-use some of the sprites/masks in the well animations to save space
 
++ sound effects
+	- "arrow shoot" when bucket going down well
+
+
 + (done) put pebbles in bucket animation
 		walk over (doesn't check for closeness)
 		crank animates turning and bucket goes down

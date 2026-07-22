@@ -4,3 +4,8 @@ Trogdor:
 + Animate fire death
 + Animate throwing sword
 + Animate Trogdor standing up
++ sounds
+	-> initial sting
+	-> hit with thrown sword (bullseye sound)
+	-> earthquake?
+	-> maybe more

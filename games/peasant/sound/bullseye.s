@@ -6,7 +6,7 @@
 
 	; used in
 	;        954	trogdor (thrown sword hits him)
-	;		target (bullseye)
+	; (done)	target (bullseye)
 
 bullseye_sound:
 

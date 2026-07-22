@@ -497,7 +497,7 @@ vert_clamp_neg:
 
 vert_clamp_done:
 
-	jsr	launch_sound
+	jsr	arrow_shoot_sound
 
 
 	;====================================================================
@@ -849,45 +849,44 @@ wind_offset_h:
 
 
 
-launch_sound:
+;launch_sound:
 
-	lda	#NOTE_A4		; 440
-	sta	speaker_frequency
-	lda	#10
-	sta	speaker_duration
-	jsr	speaker_tone
+;	lda	#NOTE_A4		; 440
+;	sta	speaker_frequency
+;	lda	#10
+;	sta	speaker_duration
+;	jsr	speaker_tone
 
-	lda	#NOTE_G4		; 400
-	sta	speaker_frequency
-	lda	#10
-	sta	speaker_duration
-	jsr	speaker_tone
+;	lda	#NOTE_G4		; 400
+;	sta	speaker_frequency
+;	lda	#10
+;	sta	speaker_duration
+;	jsr	speaker_tone
 
-	lda	#NOTE_E4		;
-	sta	speaker_frequency
-	lda	#10
-	sta	speaker_duration
-	jsr	speaker_tone
+;	lda	#NOTE_E4		;
+;	sta	speaker_frequency
+;	lda	#10
+;	sta	speaker_duration
+;	jsr	speaker_tone
 
-	lda	#NOTE_C4		;
-	sta	speaker_frequency
-	lda	#10
-	sta	speaker_duration
-	jsr	speaker_tone
+;	lda	#NOTE_C4		;
+;	sta	speaker_frequency
+;	lda	#10
+;	sta	speaker_duration
+;	jsr	speaker_tone
 
-	lda	#NOTE_G5		; 800
-	sta	speaker_frequency
-	lda	#30
-	sta	speaker_duration
-	jsr	speaker_tone
+;	lda	#NOTE_G5		; 800
+;	sta	speaker_frequency
+;	lda	#30
+;	sta	speaker_duration
+;	jsr	speaker_tone
 
-
-
-	rts
+;	rts
 
 
 .include "../sound/mud_splat.s"
 .include "../sound/bullseye.s"
+.include "../sound/arrow_shoot.s"
 
 ;miss_sound:
 ;	lda	#NOTE_G3
