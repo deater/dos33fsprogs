@@ -79,6 +79,10 @@ dont_suppress_yet:
 no_peasant_just_jhonka:
 
 
+	; play sound
+
+	jsr	rumble_sound
+
 	; draw jhonka
 
 	ldy	BEAT_COUNT

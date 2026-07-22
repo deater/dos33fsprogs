@@ -110,7 +110,9 @@ fish_loop:
 	bcs	fish_land_sound
 
 fish_pull_sound:
-	; TODO
+
+	jsr	rumble_sound
+
 	jmp	done_fish_sound
 
 fish_land_sound:

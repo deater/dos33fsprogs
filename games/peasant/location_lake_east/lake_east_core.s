@@ -121,6 +121,7 @@ USE_BG_PALETTE = 1
 .include "../wait_a_bit.s"
 
 .include "../sound/gary_neigh.s"
+.include "../sound/rumble.s"
 
 	;=====================
 	; update screen
