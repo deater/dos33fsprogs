@@ -113,6 +113,15 @@ draw_peasant_revenge:
 	jsr	hgr_page_flip
 
 	inc	GARY_COUNT
+
+	lda	GARY_COUNT
+	cmp	#39
+	bne	no_splat_sound
+
+	jsr	mud_splat_sound
+
+no_splat_sound:
+
 	jmp	revenge_gary_loop
 
 done_revenge_gary_loop:
@@ -170,7 +179,7 @@ revenge_peasant_which:
 	.byte	4,5,5,5,5, 5,5,5,5,5
 	.byte	5,5,5,5,5, 5,5,5,5,5
 	.byte	5	; last one displayed when done
-
+			; 39? play splat sound?
 	; peasant starts at 15,119	28->119 + 91
 	;	peasant0:	18,117
 	;	peasant1:	20,117

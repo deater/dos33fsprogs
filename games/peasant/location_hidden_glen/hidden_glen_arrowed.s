@@ -93,6 +93,15 @@ do_animation:
 
 	inc	ARROWED_COUNT
 
+	; sound effect
+
+	lda	ARROWED_COUNT
+	cmp	#2
+	bne	no_arrow_sound
+
+	jsr	mud_splat_sound
+no_arrow_sound:
+
 not_arrowed_yet:
 
 

@@ -5,9 +5,11 @@
   + (done) When try to walk in front of and/or get arrows while shooting, then
 	it walks you to center and then has an animation
 
-
   + Handle better when you walk behind archer or arrows (should check for
 	this and switch drawing order)
-  + Sound effect as arrow flies
   + slow down dongolev leaving?
   + Have arrowed guy still on tree when dialog printed (both get arrow and walk)
+
+  + Verify sound effects:
+	+ Sound effect as arrow flies
+	+ sound when walk in front of arrow

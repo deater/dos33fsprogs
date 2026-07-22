@@ -134,6 +134,8 @@ really_level_over:
 .include "sprites_gary/gary_bg.inc"
 .include "sprites_gary/gary_scare.inc"
 
+.include "../sound/mud_splat.s"
+
 BLOWN_AWAY_OFFSET = 0
 .include "../location_haystack/check_haystack.s"
 .include "../location_haystack/sprites_haystack/blown_away_sprite.inc"

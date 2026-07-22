@@ -8,6 +8,7 @@
   + (done?) update x-coords when walk off screen (fence)
 
   + have flies be animated independently.  Not sure if worth it
-  + Sound effects for everything
+  + Verify sound effects for everything
+	when peasant hits ground
 	when gary rears up (mask)
-	whe he breaks fence
+	whe gary breaks fence

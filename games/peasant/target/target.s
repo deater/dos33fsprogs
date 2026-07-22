@@ -734,7 +734,7 @@ exit_game:
 	.include	"move_arrows.s"
 	.include	"move_meter.s"
 
-	.include	"../redbook_sound.inc"
+	.include	"../sound/redbook_sound.inc"
 
 ;	.include	"gr_offsets.s"
 ;	.include	"text_print.s"

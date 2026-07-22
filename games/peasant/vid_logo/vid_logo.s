@@ -514,7 +514,7 @@ delays:
 
 .include "../hgr_routines/hgr_overlay.s"
 
-.include "../redbook_sound.inc"
+.include "../sound/redbook_sound.inc"
 
 .include "../text_print.s"
 ;.include "../gr_offsets.s"

@@ -59,6 +59,12 @@ check_falling_hit_ground:
 
 	; if here, finish falling
 
+	; play sound?
+
+	jsr	mud_splat_sound
+
+	;
+
 	inc	PEASANT_FALLING
 	jmp	done_falling_peasant
 

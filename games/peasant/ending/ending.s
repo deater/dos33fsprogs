@@ -554,7 +554,7 @@ stuck_forever:
 ;.include "../wait.s"
 .include "../wait_a_bit.s"
 
-.include "../redbook_sound.inc"
+.include "../sound/redbook_sound.inc"
 
 .include "graphics_end/ending_graphics.inc"
 

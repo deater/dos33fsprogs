@@ -793,6 +793,7 @@ clean:
 	cd map && make clean
 	cd music && make clean
 	cd saves && make clean
+	cd sound && make clean
 	cd sprites_peasant && make clean
 	cd text && make clean
 	cd title && make clean

@@ -130,6 +130,8 @@ really_level_over:
 .include "archer.s"
 .include "archer_leave.s"
 
+.include "../sound/mud_splat.s"
+
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_custom_bg_mask.s"
 

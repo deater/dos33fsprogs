@@ -7,6 +7,7 @@
 
 .include "../zp.inc"
 .include "../hardware.inc"
+.include "../sound/redbook_sound.inc"
 
 .include "../qload.inc"
 .include "../text/dialog_climb.inc"
@@ -401,6 +402,8 @@ reset_enemy_state:
 	.include	"../priority_copy.s"
 
 	.include	"erase_bg.s"
+
+	.include	"../sound/mud_splat.s"
 
 	.include	"../hgr_routines/hgr_sprite_mask.s"
 	.include 	"../hgr_routines/hgr_sprite_bg_mask.s"

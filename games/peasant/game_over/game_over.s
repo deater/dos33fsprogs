@@ -182,7 +182,7 @@ done_beep:
 
 .include "../hgr_routines/hgr_sprite.s"
 ;.include "../speaker_beeps.inc"
-.include "../redbook_sound.inc"
+.include "../sound/redbook_sound.inc"
 
 .include "../wait_a_bit.s"
 ;.include "../wait.s"

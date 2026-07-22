@@ -6,4 +6,4 @@
 .include "../inventory/inventory.inc"
 .include "../parse_input.inc"
 .include "../common_defines.inc"
-.include "../redbook_sound.inc"
+.include "../sound/redbook_sound.inc"

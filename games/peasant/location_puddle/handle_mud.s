@@ -94,9 +94,21 @@ mud_fall_loop:
 
 	inc	MUD_COUNT
 
+	; play sound effects
+
+	; slip noise? TODO
+
+	; splat sound at 4
+	lda	MUD_COUNT
+	cmp	#4
+	bne	no_mud_splat_sound
+	jsr	mud_splat_sound
+no_mud_splat_sound:
+
 	lda	MUD_COUNT
 	cmp	#28
 	bne	mud_fall_loop
+
 
 done_mud_fall:
 

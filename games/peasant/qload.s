@@ -128,7 +128,7 @@ load_file:
 .include "wait_keypress.s"
 .include "random8.s"
 .include "score.s"
-.include "redbook_sound.s"
+.include "sound/redbook_sound.s"
 .include "hgr_routines/hgr_page_flip.s"
 .include "wait.s"
 .include "load_peasant_sprites.s"
