@@ -609,7 +609,7 @@ check_bullseye_hit:
 
 	; play sound effect
 
-	jsr	hit_sound
+	jsr	bullseye_sound
 
 	; draw circle, both pages
 

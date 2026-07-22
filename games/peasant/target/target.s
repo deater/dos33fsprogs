@@ -887,6 +887,7 @@ launch_sound:
 
 
 .include "../sound/mud_splat.s"
+.include "../sound/bullseye.s"
 
 ;miss_sound:
 ;	lda	#NOTE_G3
@@ -901,28 +902,28 @@ launch_sound:
 
 
 	; 600/1200
-hit_sound:
+;hit_sound:
 
-	lda	#NOTE_D5
-	sta	speaker_frequency
+;	lda	#NOTE_D5
+;	sta	speaker_frequency
 
-	lda	#30
-	sta	speaker_duration
+;	lda	#30
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
-	lda	#100
-	jsr	wait
+;	lda	#100
+;	jsr	wait
 
-	lda	#NOTE_D6
-	sta	speaker_frequency
+;	lda	#NOTE_D6
+;	sta	speaker_frequency
 
-	lda	#60
-	sta	speaker_duration
+;	lda	#60
+;	sta	speaker_duration
 
-	jsr	speaker_tone
+;	jsr	speaker_tone
 
 
-	rts
+;	rts
 
 
