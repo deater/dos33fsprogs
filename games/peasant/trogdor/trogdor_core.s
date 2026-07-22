@@ -136,7 +136,7 @@ level_over:
 .include "sprites_trogdor/sleep_sprites.inc"
 
 .include "trogdor_actions.s"
-
+.include "../sound/falling.s"
 
 	;===========================
 	; update screen

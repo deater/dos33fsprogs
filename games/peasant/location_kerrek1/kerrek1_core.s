@@ -156,6 +156,7 @@ really_level_over:
 .include "../sound/mud_splat.s"
 .include "../sound/thunder.s"
 .include "../sound/raise_up.s"
+.include "../sound/fallling.s"
 
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
