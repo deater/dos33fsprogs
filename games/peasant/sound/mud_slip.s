@@ -6,6 +6,6 @@
 
 	; happens when get quiz question right?
 
-gary_neigh_sound:
+mud_slip_sound:
 
 	rts

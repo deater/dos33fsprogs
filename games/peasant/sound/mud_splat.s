@@ -9,14 +9,17 @@
 	; (done)   60	target: arrow miss at bullseye
 	; (done)  425	location_gary: kicked by gary
 	; (done)	location_hidden_glen: arrow to head
-	;		location_puddle: fall in mud
-	;         675	location_kerrek1/2: kerrek hit on head
+	; (done)	location_puddle: fall in mud
+	; (done)  675	location_kerrek1/2: kerrek hit on head
 	;         961	?
 	;        1118	save game?
 	;        1181	fall off cliff?
 
 mud_splat_sound:
 arrow_miss_sound:
+
+	lda	SOUND_STATUS		; if sound disabled
+	bmi	done_mud_splat_sound
 
 	; based on the arrow miss sound
 
@@ -28,5 +31,6 @@ arrow_miss_sound:
 
         jsr     speaker_tone
 
+done_mud_splat_sound:
         rts
 

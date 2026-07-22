@@ -138,27 +138,10 @@ clear_top:
 
 	;==========================
 	; play tone
-
-	;===========================
 	; weep-boom sound
 
-	lda	#32
-	sta	speaker_duration
-	lda	#NOTE_E5
-	sta	speaker_frequency
-	jsr	speaker_tone
-	lda	#64
-	sta	speaker_duration
-	lda	#NOTE_F5
-	sta	speaker_frequency
-	jsr	speaker_tone
-	lda	#128
-	sta	speaker_duration
-	lda	#NOTE_F4
-	sta	speaker_frequency
-	jsr	speaker_tone
+	jmp	get_point_sound		; tail call
 
-	rts
 
 
 
@@ -169,3 +152,5 @@ score_text:
 score_tail:
 	.byte " of 150",0
 
+
+.include "sound/get_point.s"
