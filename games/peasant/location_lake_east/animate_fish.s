@@ -23,7 +23,7 @@
 animate_throw:
 
 	ldy	#0
-	sty	BABY_COUNT
+	sty	FISH_COUNT
 
 	lda	#SUPPRESS_PEASANT		; turn off our peasant
 	sta	SUPPRESS_DRAWING
@@ -39,7 +39,7 @@ throw_loop:
 	lda	PEASANT_Y
 	sta	SPRITE_Y
 
-	ldy	BABY_COUNT
+	ldy	FISH_COUNT
 	ldx	throw_progress,Y
 
 	jsr	hgr_draw_sprite_mask
@@ -48,7 +48,7 @@ throw_loop:
 	;=======================
 	; draw feed
 
-	ldy	BABY_COUNT
+	ldy	FISH_COUNT
 	lda	feed_progress,Y
 	beq	skip_draw_feed
 
@@ -74,8 +74,8 @@ skip_draw_feed:
 	lda	#2
 	jsr	wait_a_bit
 
-	inc	BABY_COUNT
-	lda	BABY_COUNT
+	inc	FISH_COUNT
+	lda	FISH_COUNT
 	cmp	#18
 	beq	done_animate_throw
 	jmp	throw_loop
@@ -89,65 +89,80 @@ done_animate_throw:
 animate_fish:
 
 	lda	#0
-	sta	BABY_COUNT
+	sta	FISH_COUNT
 	lda	#SUPPRESS_BOAT
 	sta	SUPPRESS_DRAWING
 fish_loop:
 
+	; 7,8 = fish pull?
+
+	; 9,10 = fish land (garyneigh)
+
 	; play sound effect
-	lda	BABY_COUNT
+	lda	FISH_COUNT
 	cmp	#7
-	bcc	no_sound
+	bcc	done_fish_sound
+
 	cmp	#11
-	bcs	no_sound
+	bcs	done_fish_sound
 
-	cmp	#10
-	beq	bloop
+	cmp	#9
+	bcs	fish_land_sound
 
-click:
-	lda	#NOTE_C4
-	sta	speaker_frequency
-	lda	#6
-	sta	speaker_duration
-	jsr	speaker_tone
-	jmp	no_sound
+fish_pull_sound:
+	; TODO
+	jmp	done_fish_sound
 
-bloop:
-	lda	#10
-	sta	speaker_duration
-	lda	#NOTE_C5
-	sta	speaker_frequency
-	jsr	speaker_tone
+fish_land_sound:
 
-	lda	#10
-	sta	speaker_duration
-	lda	#NOTE_D5
-	sta	speaker_frequency
-	jsr	speaker_tone
+	jsr	gary_neigh_sound
 
-	lda	#10
-	sta	speaker_duration
-	lda	#NOTE_E5
-	sta	speaker_frequency
-	jsr	speaker_tone
 
-	lda	#10
-	sta	speaker_duration
-	lda	#NOTE_D5
-	sta	speaker_frequency
-	jsr	speaker_tone
 
-	lda	#10
-	sta	speaker_duration
-	lda	#NOTE_C5
-	sta	speaker_frequency
-	jsr	speaker_tone
-	jmp	no_sound
+;click:
+;	lda	#NOTE_C4
+;	sta	speaker_frequency
+;	lda	#6
+;	sta	speaker_duration
+;	jsr	speaker_tone
+;	jmp	no_sound
 
-no_sound:
+;bloop:
+;	lda	#10
+;	sta	speaker_duration
+;	lda	#NOTE_C5
+;	sta	speaker_frequency
+;	jsr	speaker_tone
+
+;	lda	#10
+;	sta	speaker_duration
+;	lda	#NOTE_D5
+;	sta	speaker_frequency
+;	jsr	speaker_tone
+
+;	lda	#10
+;	sta	speaker_duration
+;	lda	#NOTE_E5
+;	sta	speaker_frequency
+;	jsr	speaker_tone
+
+;	lda	#10
+;	sta	speaker_duration
+;	lda	#NOTE_D5
+;	sta	speaker_frequency
+;	jsr	speaker_tone
+
+;	lda	#10
+;	sta	speaker_duration
+;	lda	#NOTE_C5
+;	sta	speaker_frequency
+;	jsr	speaker_tone
+;	jmp	no_sound
+
+done_fish_sound:
 	jsr	update_screen
 
-	ldy	BABY_COUNT
+	ldy	FISH_COUNT
 
 	lda	#1
 	sta	CURSOR_X
@@ -168,8 +183,8 @@ no_sound:
 
 ;       jsr	wait_until_keypress
 
-	inc	BABY_COUNT
-	lda	BABY_COUNT
+	inc	FISH_COUNT
+	lda	FISH_COUNT
 	cmp	#14
 	beq	done_animate_fish
 	jmp	fish_loop

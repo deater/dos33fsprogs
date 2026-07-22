@@ -114,6 +114,21 @@ draw_peasant_revenge:
 
 	inc	GARY_COUNT
 
+	;=========================
+	; handle sound
+	;
+	; in theory neigh
+	;	FIXME: maybe bonk when legs back down
+	;	bonk when peasant lands
+
+
+	lda	GARY_COUNT
+	cmp	#6
+	bne	no_revenge_sound
+
+	jsr	gary_neigh_sound
+no_revenge_sound:
+
 	lda	GARY_COUNT
 	cmp	#39
 	bne	no_splat_sound

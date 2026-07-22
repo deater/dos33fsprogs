@@ -377,6 +377,7 @@ SAVED_Y2	= $C8		; climb
 BUCKET_COUNT	= $C9	; well
 WALK_COUNT	= $C9	; intro
 BABY_COUNT	= $C9	; ending,west_lake,ned_cottage
+FISH_COUNT	= $C9	; east_lake
 KEEPER_COUNT	= $C9	; cliff heights
 SUBGUITAR_COUNT = $C9	; outer2
 ARCHER_COUNT	= $C9	; hidden glen

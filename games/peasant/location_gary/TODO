@@ -9,6 +9,10 @@
 
   + have flies be animated independently.  Not sure if worth it
   + Verify sound effects for everything
-	when peasant hits ground
-	when gary rears up (mask)
-	whe gary breaks fence
+
+	gary_revenge:
+		gary rears up (neigh)
+		when peasant hits ground (bonk)
+	gary_scared:
+		gary rears up (neigh+neigh)
+		breaks through fence (bonk)

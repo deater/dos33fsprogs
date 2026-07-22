@@ -109,6 +109,11 @@ game_loop:
 	ora	#ON_FIRE
 	sta	GAME_STATE_2
 
+	; play sound effect
+	;	gary_neigh for horse grease, come on brothers chaps
+
+	jsr	gary_neigh_sound
+
 	; increment score
 	lda	#$10	; bcd
 	jsr	score_points
@@ -160,7 +165,7 @@ really_level_over:
 
 .include "../hgr_routines/hgr_sprite.s"
 .include "sprites_burninated/flame_sprites.inc"
-
+.include "../sound/gary_neigh.s"
 
 	;=======================
 	; update screen

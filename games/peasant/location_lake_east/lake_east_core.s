@@ -120,6 +120,7 @@ USE_BG_PALETTE = 1
 .include "animate_fish.s"
 .include "../wait_a_bit.s"
 
+.include "../sound/gary_neigh.s"
 
 	;=====================
 	; update screen

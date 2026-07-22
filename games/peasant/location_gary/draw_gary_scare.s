@@ -36,6 +36,9 @@ draw_gary_scare:
 
 	;===============================
 	; FIXME: sound effect for this
+	; neigh sound @21
+	; neigh sound @36
+	; maybe bonk (splat) when feet down?
 
 	lda	#0
 	sta	GARY_COUNT
@@ -68,6 +71,26 @@ scare_gary_loop:
 	jsr	hgr_page_flip
 
 	inc	GARY_COUNT
+
+	;===============================
+	; FIXME: sound effect for this
+	; neigh sound @21
+	; neigh sound @36
+	; maybe bonk (splat) when feet down?
+
+	lda	GARY_COUNT
+	cmp	#21
+	beq	scare_neigh
+	cmp	#36
+	beq	scare_neigh
+	bne	no_scare_neigh
+
+
+scare_neigh:
+        jsr     gary_neigh_sound
+
+no_scare_neigh:
+
 	jmp	scare_gary_loop
 
 done_scare_gary_loop:
