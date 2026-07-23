@@ -1,6 +1,5 @@
 ; Oh Kerrek, where is thine sting?
 
-
 	;=======================
 	;=======================
 	; kerrek warning sting
@@ -14,6 +13,13 @@
 	; GEFC?
 	; GFEC?
 kerrek_warning_music:
+
+	lda	SOUND_STATUS		; if sound disabled
+	bmi	done_kerrek_appear_sound
+
+
+
+
 	lda     #96
 	sta     speaker_duration
 	lda     #NOTE_G4
@@ -37,5 +43,7 @@ kerrek_warning_music:
 	lda     #NOTE_C4
 	sta     speaker_frequency
 	jsr     speaker_tone
+
+done_kerrek_appear_sound:
 
 	rts
