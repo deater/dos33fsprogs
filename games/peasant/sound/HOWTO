@@ -1,0 +1,27 @@
+In the end for the musical ones I end up trimming each note then
+playing it by ear.  inefficient
+
+
+
+
+
+
+
+sox 4_kerrekappear.wav note1.wav trim 0.150 0.070
+					start length
+sox note1.wav -n stat
+
+
+
+
+
+
+
+
+
+
+sox 4_kerrekappear.wav -n rate 4k spectrogram -x 1000 -y 800
+
+
+musescore for viewing midi
+

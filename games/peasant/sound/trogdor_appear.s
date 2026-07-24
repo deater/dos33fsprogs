@@ -11,6 +11,7 @@ trogdor_appear_sound:
 	lda	SOUND_STATUS		; if sound disabled
 	bmi	done_trogdor_appear_sound
 
+
 done_trogdor_appear_sound:
         rts
 

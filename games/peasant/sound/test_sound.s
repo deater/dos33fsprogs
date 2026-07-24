@@ -14,7 +14,7 @@ test_sound:
 	lda	#>text_list
 	sta	OUTH
 
-	ldx	#17
+	ldx	#19
 print_loop:
 	jsr	move_and_print
 	dex
@@ -31,7 +31,7 @@ keypress_loop:
 	sec
 	sbc	#$41
 
-	cmp	#18
+	cmp	#20
 	bcs	test_sound_loop
 
 	tax
@@ -56,6 +56,7 @@ wait_until_keypress:
 
 .include "redbook_sound.s"
 .include "../wait.s"
+.include "../wait_a_bit.s"
 .include "../text_print.s"
 .include "../gr_offsets.s"
 
@@ -76,6 +77,8 @@ wait_until_keypress:
 .include "thunder.s"
 .include "trogdor_appear.s"
 .include "twinkle.s"
+.include "videlectrix.s"
+.include "game_over.s"
 
 text_list:
 .byte 0,0,"A: ARROW_SHOOT",0
@@ -95,6 +98,8 @@ text_list:
 .byte 0,14,"O: THUNDER",0
 .byte 0,15,"P: TROGDOR_APPEAR",0
 .byte 0,16,"Q: TWINKLE",0
+.byte 0,17,"R: VIDELECTRIX",0
+.byte 0,18,"S: GAME_OVER",0
 .byte $ff
 
 effect_table_l:
@@ -106,7 +111,8 @@ effect_table_l:
 	.byte <(mud_slip_sound),<(mud_splat_sound)
 	.byte <(raise_up_sound),<(rumble_sound)
 	.byte <(thunder_sound),<(trogdor_appear_sound)
-	.byte <(twinkle_sound)
+	.byte <(twinkle_sound),<(videlectrix_theme)
+	.byte <(game_over_music)
 
 effect_table_h:
 
@@ -118,4 +124,5 @@ effect_table_h:
 	.byte >(mud_slip_sound),>(mud_splat_sound)
 	.byte >(raise_up_sound),>(rumble_sound)
 	.byte >(thunder_sound),>(trogdor_appear_sound)
-	.byte >(twinkle_sound)
+	.byte >(twinkle_sound),>(videlectrix_theme)
+	.byte >(game_over_music)
