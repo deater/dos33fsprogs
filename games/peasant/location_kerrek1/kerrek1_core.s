@@ -51,6 +51,10 @@ kerrek1_core:
 
 game_loop:
 
+
+	lda	KERREK_SMASH_COUNT
+	bne	skip_peasant_actions
+
 	;=======================
 	; check keyboard
 
@@ -61,6 +65,8 @@ game_loop:
 	; move peasant
 
 	jsr	move_peasant
+
+skip_peasant_actions:
 
 	;======================
 	; check if level over
@@ -91,14 +97,23 @@ too_busy_smashing:
 	;===========================
 	; handle kerrek sting
 
-	; FIXME: is this needed in KERREK2
+	; wait a frame before playing as otherwise it happens
+	;	before first page_flip
+	; TODO: split across multiple frames?
 
 	; oh kerrek where is thine sting
 	; play music sting if needed
+
 	lda	kerrek_play_sting
 	beq	no_sting
-	jsr	kerrek_warning_music
+
 	dec	kerrek_play_sting
+
+	cmp	#1
+	bne	no_sting
+
+	jsr	kerrek_warning_music
+
 no_sting:
 
 
@@ -156,7 +171,7 @@ really_level_over:
 .include "../sound/mud_splat.s"
 .include "../sound/thunder.s"
 .include "../sound/raise_up.s"
-.include "../sound/fallling.s"
+.include "../sound/falling.s"
 
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
@@ -184,7 +199,12 @@ update_screen:
 
 kerrek1_draw_peasant_first:
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant_first
+
 	jsr	draw_peasant
+skip_draw_peasant_first:
 	jsr	kerrek_draw		; draw kerrek
 	jsr	kerrek_draw_flies	; draw flies
 
@@ -194,8 +214,12 @@ kerrek1_draw_kerrek_first:
 
 	jsr	kerrek_draw		; draw kerrek
 	jsr	kerrek_draw_flies	; draw flies
-	jsr	draw_peasant
 
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant_second
+	jsr	draw_peasant
+skip_draw_peasant_second:
 
 	rts
 

@@ -1,3 +1,7 @@
+
+kerrek_move_early_out:
+	rts
+
 	;=======================
 	;=======================
 	; kerrek move/collision
@@ -10,12 +14,12 @@ kerrek_move_and_check_collision:
 	; first, only if kerrek out
 
 	lda	KERREK_STATE
-	bpl	kerrek_no_collision
+	bpl	kerrek_move_early_out
 
 	; next, see if kerrek alive
 	lda	GAME_STATE_3
 	and	#KERREK_DEAD
-	bne	kerrek_no_collision
+	bne	kerrek_move_early_out
 
 
 	;=======================
@@ -102,11 +106,27 @@ kerrek_ud_done:
 
 kerrek_move_done:
 
+	;====================================
+	; kerrek check collision
+	;====================================
+	; in flash code, you were too close if
+	;   |kerrek_y+kerrek_height - player_y+player_height|
+        ;    + |kerrek_x-player_x|  < 50
+	; in that case player frozen and then kerrek walk until this
+	;   is <40
+
+	; this makes sort of a diamond shaped hitbox?
+
+	; we cheat and don't get so fancy.
+	;	if x+/-3 and Y+/-20?
+
 kerrek_check_collision:
 
 	; first check X
 
-	; if (peasant_x >= kerrek_x) && (peasant_x<=kerrek_x+2)
+	; PP HKKKH
+
+	; old if (peasant_x >= kerrek_x) && (peasant_x<=kerrek_x+2)
 
 	lda	PEASANT_X
 	cmp	KERREK_X
@@ -137,6 +157,40 @@ kerrek_y_distance_good:
 	cmp	#5
 	bcs	kerrek_no_collision
 kerrek_collision:
+
+	; collision happened
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
+
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION	; 0=LEFT
+	bne	kerrek_collide_right
+
+kerrek_collide_left:
+
+	sec
+	lda	KERREK_X
+	sbc	#2
+	sta	PEASANT_X
+
+	jmp	kerrek_collide_common
+
+kerrek_collide_right:
+
+	clc
+	lda	KERREK_X
+	adc	#3
+	sta	PEASANT_X
+
+kerrek_collide_common:
+
+	clc
+	lda	KERREK_Y
+	adc	#16
+	sta	PEASANT_Y
+
 	lda	#1
 	sta	KERREK_SMASH_COUNT
 

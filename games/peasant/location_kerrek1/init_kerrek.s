@@ -56,7 +56,12 @@ kerrek_alive_out:
 kerrek_there:
 
 	; play sting
-	inc	kerrek_play_sting		; why do it this way?
+	; wait until displayed?
+	; otherwise it happens before the first page flip
+
+	lda	#2
+	sta	kerrek_play_sting
+
 kerrek_set_there:
 	lda	KERREK_STATE
 	ora	#KERREK_ONSCREEN

@@ -111,8 +111,87 @@ draw_kerrek_arm_done:
 
 
 	;==============================
-	; if frame X,Y,Z draw sparks
+	; if frame 12,13,14 draw sparks
 
+	lda	KERREK_SMASH_COUNT
+	cmp	#12
+	bcc	no_draw_splat
+	cmp	#15
+	bcs	no_draw_splat
+
+drawing_splat:
+
+	jsr	mud_splat_sound
+
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION		; 0=LEFT
+	beq	draw_splat_left
+draw_splat_right:
+
+	clc
+	lda	KERREK_X
+	adc	#2
+	sta	SPRITE_X
+	clc
+	lda	KERREK_Y
+	adc	#24
+	sta	SPRITE_Y
+
+	jmp	draw_splat_common
+
+draw_splat_left:
+
+	sec
+	lda	KERREK_X
+	sbc	#3
+	sta	SPRITE_X
+	clc
+	lda	KERREK_Y
+	adc	#24
+	sta	SPRITE_Y
+
+draw_splat_common:
+	ldx	#KERREK_SMASH1_OFFSET
+
+	lda	KERREK_SMASH_COUNT
+	cmp	#13
+	bcc	draw_splat1
+
+draw_splat2:
+	inx
+
+draw_splat1:
+
+	jsr	hgr_draw_sprite_mask
+
+
+no_draw_splat:
+
+	;===================================================
+	; if frame >12 disable peasant+put head in ground
+check_in_ground:
+	lda	KERREK_SMASH_COUNT
+	cmp	#12
+	bcc	peasant_still_above_ground
+
+	lda	#SUPPRESS_PEASANT
+	ora	SUPPRESS_DRAWING
+	sta	SUPPRESS_DRAWING
+
+	; draw peasant_head
+
+	lda	PEASANT_X
+	sta	SPRITE_X
+	clc
+	lda	KERREK_Y
+	adc	#34
+	sta	SPRITE_Y
+
+	ldx	#KERREK_SMASHED_PEASANT_OFFSET
+
+	jsr	hgr_draw_sprite_mask
+
+peasant_still_above_ground:
 
 	;==========================
 	; move to next frame
@@ -130,17 +209,8 @@ smash_done:
 
 	; temp debug hack
 
-	lda	#1
-	sta	KERREK_SMASH_COUNT	; reset
-
-.if 0
-	; bonk sound effect
-	lda	#96
-	sta	speaker_duration
-	lda	#NOTE_C4
-	sta	speaker_frequency
-	jsr	speaker_tone
-
+;	lda	#1
+;	sta	KERREK_SMASH_COUNT	; reset
 
 	; print message
 
@@ -153,7 +223,6 @@ smash_done:
 
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER
-.endif
 
 	rts
 
