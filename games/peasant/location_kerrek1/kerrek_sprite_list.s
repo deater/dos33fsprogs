@@ -8,6 +8,9 @@ KERREK_SMASHED_PEASANT_OFFSET	= 34
 KERREK_SMASH1_OFFSET		= 35
 KERREK_SMASH2_OFFSET		= 36
 
+KERREK_RIGHT_BODY_OFFSET	= 37
+KERREK_LEFT_BODY_OFFSET		= 41
+KERREK_FLIES_OFFSET		= 45
 
 sprites_mask_l:
 	; 0
@@ -42,9 +45,12 @@ sprites_mask_l:
 	; right first?
 	.byte <kerrek_body0r_mask,<kerrek_body1r_mask
 	.byte <kerrek_body2r_mask,<kerrek_body3r_mask
+	; 41
 	; left next
 	.byte <kerrek_body0l_mask,<kerrek_body1l_mask
 	.byte <kerrek_body2l_mask,<kerrek_body3l_mask
+	; 45
+
 	; flies
 	.byte <kerrek_flies0_mask,<kerrek_flies1_mask,<kerrek_flies2_mask
 

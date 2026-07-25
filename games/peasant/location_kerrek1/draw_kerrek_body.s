@@ -82,13 +82,13 @@ kerrek_really_draw_body:
 	; if KERREK_STATE bottom bits >=10 then show 2
 	; else show 1
 
-	ldx	#0
+	ldx	#KERREK_RIGHT_BODY_OFFSET
 
 	lda	INVENTORY_1
 	and	#INV1_KERREK_BELT
 	beq	adjust_for_left_right
 
-	ldx	#1
+	ldx	#KERREK_RIGHT_BODY_OFFSET+1
 
 	lda	KERREK_STATE
 	and	#$f
@@ -99,11 +99,11 @@ kerrek_really_draw_body:
 	bcc	adjust_for_left_right
 
 draw_decay:
-	ldx	#2
+	ldx	#KERREK_RIGHT_BODY_OFFSET+2
 	bne	adjust_for_left_right		; bra
 
 draw_skeleton:
-	ldx	#3
+	ldx	#KERREK_RIGHT_BODY_OFFSET+3
 						; fallthrough
 
 adjust_for_left_right:
@@ -201,7 +201,7 @@ flies_x_ok:
 	sta	FLY_COUNT
 fly_adjust:
 	clc
-	adc	#8		; skip body sprites
+	adc	#KERREK_FLIES_OFFSET		; skip body sprites
 	tax
 
 	jsr	hgr_draw_sprite_mask
