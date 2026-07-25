@@ -57,6 +57,9 @@ kerrek2_core:
 
 game_loop:
 
+	lda	KERREK_SMASH_COUNT
+	bne	skip_peasant_actions
+
 	;=======================
 	; check keyboard
 
@@ -67,6 +70,8 @@ game_loop:
 	; move peasant
 
 	jsr	move_peasant
+
+skip_peasant_actions:
 
 	;===================
 	; check if level over
@@ -80,6 +85,44 @@ game_loop:
 
 	jsr	update_screen
 
+
+	;==========================
+	; check if kerrek collision
+	;==========================
+
+	; don't do this if in process of smashing
+
+	lda	KERREK_SMASH_COUNT
+	bne	too_busy_smashing
+
+	jsr	kerrek_move_and_check_collision
+
+too_busy_smashing:
+
+
+	;===========================
+	; handle kerrek sting
+
+	; wait a frame before playing as otherwise it happens
+	;       before first page_flip
+	; TODO: split across multiple frames?
+
+	; oh kerrek where is thine sting
+	; play music sting if needed
+
+	lda	kerrek_play_sting
+	beq	no_sting
+
+	dec	kerrek_play_sting
+
+	cmp	#1
+        bne	no_sting
+
+	jsr	kerrek_warning_music
+
+no_sting:
+
+
 	;====================
 	; increment frame
 
@@ -90,11 +133,6 @@ game_loop:
 
 	jsr	increment_flame
 
-	;==========================
-	; check if kerrek collision
-	;==========================
-
-	jsr	kerrek_move_and_check_collision
 
 
 	;==================
@@ -142,6 +180,7 @@ really_level_over:
 .include "../location_kerrek1/sprites_kerrek1/kerrek_smash_sprites.inc"
 .include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
 
+.include "../sound/kerrek_appear.s"
 .include "../sound/thunder.s"
 .include "../sound/mud_splat.s"
 
@@ -156,24 +195,41 @@ update_screen:
 	jsr	hgr_copy_faster
 
 
-	;======================
-	; draw flies (should this be before or after peasant?)
+	; draw peasant infront of / behind kerrek as necessary
 
-	jsr	kerrek_draw_flies
+	; peasant is ~30 tall, kerrek ~48 tall
+	sec
+	lda	PEASANT_Y
+	sbc	#18
+	cmp	KERREK_Y
+	bcs	kerrek2_draw_kerrek_first
 
+kerrek2_draw_peasant_first:
 
-	;=====================
-	; always draw peasant
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant_first
 
 	jsr	draw_peasant
+skip_draw_peasant_first:
+	jsr	kerrek_draw		; draw kerrek
+	jsr	kerrek_draw_flies	; draw flies
+
+	jmp	done_kerrek2_update
+
+kerrek2_draw_kerrek_first:
+	jsr	kerrek_draw		; draw kerrek
+	jsr	kerrek_draw_flies	; draw flies
+
+	lda	SUPPRESS_DRAWING
+	and	#SUPPRESS_PEASANT
+	bne	skip_draw_peasant_second
+	jsr	draw_peasant
+
+skip_draw_peasant_second:
 
 
-	;=====================
-	; draw kerrek
-	;  FIXME: what if in front of/behind peasant?
-
-	jsr	kerrek_draw
-
+done_kerrek2_update:
 
 	;=====================
 	jsr	draw_rain
