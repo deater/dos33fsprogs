@@ -546,6 +546,7 @@ done_load:
 	lda	#0
 	sta	PEASANT_XADD
 	sta	PEASANT_YADD
+	sta	SUPPRESS_DRAWING
 
 
 ;	jsr	stop_walking

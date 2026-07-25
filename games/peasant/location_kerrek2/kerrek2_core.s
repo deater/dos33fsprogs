@@ -143,6 +143,7 @@ really_level_over:
 .include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
 
 .include "../sound/thunder.s"
+.include "../sound/mud_splat.s"
 
 	;=========================
 	; update screen

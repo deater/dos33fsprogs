@@ -2,19 +2,19 @@
 	; kerrek got ya!
 	;=============================
 
-
-
-kerrek_smash_progress:
-;.byte	0,1,2,3,4,5,6,6,6,6,7	; (smash)
-;.byte	8,9,9			; (in ground, no sparks)
-;.byte	4,3,2
-;.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$ff
+KERREK_SMASH_SPARK1 = 11
+KERREK_SMASH_SPARK2 = 12
+KERREK_SMASH_IN_GROUND = 13
+KERREK_MAX_SMASH = 33	; one previous so lookups still work at 34
 
 ; skip first one is ignored
-.byte	0,0,1,2,3,4,5,6,6,6,6,7	; (smash)
-.byte	7,7,7			; (in ground, no sparks)
+kerrek_smash_progress:
+.byte	0,0,1,2,3,4,5,6,6,6,6	; (hand moving up in air)
+.byte	7			; (smash, makes noise, splat1 over tall peasant)
+.byte	7			; (in ground, splat2, possibly peasant squished)
+.byte	7,7			; (in ground, no sparks)
 .byte	4,3,2
-.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,$ff
+.byte	0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 
 kerrek_arm_offset_x_left:
 .byte 1,0,0,$ff,	$ff,0,0,$FE
@@ -111,17 +111,27 @@ draw_kerrek_arm_done:
 
 
 	;==============================
-	; if frame 12,13,14 draw sparks
+	; if frame 11,12 draw sparks
 
 	lda	KERREK_SMASH_COUNT
-	cmp	#12
-	bcc	no_draw_splat
-	cmp	#15
-	bcs	no_draw_splat
+	cmp	#KERREK_SMASH_SPARK1
+	beq	draw_splat1
+	cmp	#KERREK_SMASH_SPARK2
+	bne	no_draw_splat
 
-drawing_splat:
+draw_splat2:
+
+	ldx	#KERREK_SMASH2_OFFSET
+
+	bne	draw_splat_common_start		; bra
+
+draw_splat1:
 
 	jsr	mud_splat_sound
+
+	ldx	#KERREK_SMASH1_OFFSET
+
+draw_splat_common_start:
 
 	lda	KERREK_STATE
 	and	#KERREK_DIRECTION		; 0=LEFT
@@ -131,11 +141,6 @@ draw_splat_right:
 	clc
 	lda	KERREK_X
 	adc	#2
-	sta	SPRITE_X
-	clc
-	lda	KERREK_Y
-	adc	#24
-	sta	SPRITE_Y
 
 	jmp	draw_splat_common
 
@@ -144,23 +149,14 @@ draw_splat_left:
 	sec
 	lda	KERREK_X
 	sbc	#3
+
+draw_splat_common:
+
 	sta	SPRITE_X
 	clc
 	lda	KERREK_Y
 	adc	#24
 	sta	SPRITE_Y
-
-draw_splat_common:
-	ldx	#KERREK_SMASH1_OFFSET
-
-	lda	KERREK_SMASH_COUNT
-	cmp	#13
-	bcc	draw_splat1
-
-draw_splat2:
-	inx
-
-draw_splat1:
 
 	jsr	hgr_draw_sprite_mask
 
@@ -194,25 +190,32 @@ check_in_ground:
 peasant_still_above_ground:
 
 	;==========================
-	; move to next frame
+	; don't increment if at end
+
+
+	lda	KERREK_SMASH_COUNT
+	cmp	#KERREK_MAX_SMASH
+	beq	smash_done_first
+	bcs	dks_just_return
+
+	; increment count
 
 	inc	KERREK_SMASH_COUNT
-	ldx	KERREK_SMASH_COUNT
 
-	lda	kerrek_smash_progress,X
-	bmi	smash_done
+dks_just_return:
 
 	rts
 
 
-smash_done:
+smash_done_first:
 
-	; temp debug hack
-
-;	lda	#1
-;	sta	KERREK_SMASH_COUNT	; reset
-
+	;==========================
 	; print message
+	;==========================
+	; note: did to stop the smash increment in this case
+	; as update_screen is called which possibly calls here
+
+	inc	KERREK_SMASH_COUNT	; don't call this twice
 
 	ldx	#<kerrek_pound_message
 	ldy	#>kerrek_pound_message
