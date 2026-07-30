@@ -37,6 +37,7 @@ kerrek_alive_out:
 	sta	KERREK_X_L
 	sta	KERREK_COUNT
 	sta	KERREK_SMASH_COUNT
+	sta	PEASANT_BELT_COUNT
 
 	; clear out fields to default state
 

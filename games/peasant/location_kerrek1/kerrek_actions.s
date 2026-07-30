@@ -87,7 +87,11 @@ kerrek_get_belt:
 
 kerrek_get_belt_finally:
 	; get belt
-	; add 10 to score
+	;
+	; first walk to body
+	; then animate picking up, while playing music
+	; then print message
+	; then add 10 to score
 
 	; walk to kerrek body
 
@@ -96,24 +100,38 @@ kerrek_get_belt_finally:
 	adc	#2
 	tax
 
-	sec
+	clc
 	lda	KERREK_Y
-	sbc	#10
+	adc	#17
 	tay
 
 	jsr	peasant_walkto
 
+	; look down
+
+	lda	#PEASANT_DIR_DOWN
+	sta	PEASANT_DIR
+
+;	lda	#1
+;	sta	PEASANT_BELT_COUNT
+
+	jsr	draw_peasant_belt
+
+	ldx	#<kerrek_get_belt_message
+	ldy	#>kerrek_get_belt_message
+	jsr	partial_message_step
+
+	; update score
 
 	lda	INVENTORY_1
 	ora	#INV1_KERREK_BELT
 	sta	INVENTORY_1
 
 	lda	#$10		; it's BCD
-	jsr	score_points
+	jmp	score_points
 
-	ldx	#<kerrek_get_belt_message
-	ldy	#>kerrek_get_belt_message
-	jmp	finish_parse_message
+;	rts
+
 
 kerrek_get_belt_already:
 	ldx	#<kerrek_get_belt_already_message

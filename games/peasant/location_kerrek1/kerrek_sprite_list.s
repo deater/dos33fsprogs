@@ -12,6 +12,9 @@ KERREK_RIGHT_BODY_OFFSET	= 37
 KERREK_LEFT_BODY_OFFSET		= 41
 KERREK_FLIES_OFFSET		= 45
 
+PEASANT_BELT_BASE_OFFSET	= 48
+PEASANT_BELT_OFFSET		= 49
+
 sprites_mask_l:
 	; 0
 	.byte <kerrek_walk0l_mask,<kerrek_walk1l_mask
@@ -53,6 +56,15 @@ sprites_mask_l:
 
 	; flies
 	.byte <kerrek_flies0_mask,<kerrek_flies1_mask,<kerrek_flies2_mask
+	; 48
+
+	; peasant belt legs
+	.byte <belt_base_mask
+	; peasant belt animation
+	.byte <belt0_mask,<belt1_mask,<belt2_mask,<belt3_mask
+	.byte <belt4_mask,<belt5_mask,<belt6_mask,<belt7_mask
+	.byte <belt8_mask
+
 
 sprites_mask_h:
 	.byte >kerrek_walk0l_mask,>kerrek_walk1l_mask
@@ -92,6 +104,13 @@ sprites_mask_h:
 	; flies
 	.byte >kerrek_flies0_mask,>kerrek_flies1_mask,>kerrek_flies2_mask
 
+	; peasant belt legs
+	.byte >belt_base_mask
+	; peasant belt animation
+	.byte >belt0_mask,>belt1_mask,>belt2_mask,>belt3_mask
+	.byte >belt4_mask,>belt5_mask,>belt6_mask,>belt7_mask
+	.byte >belt8_mask
+
 sprites_data_l:
 	.byte <kerrek_walk0l_sprite,<kerrek_walk1l_sprite
 	.byte <kerrek_walk2l_sprite,<kerrek_walk3l_sprite
@@ -129,6 +148,13 @@ sprites_data_l:
 	.byte <kerrek_body2l_sprite,<kerrek_body3l_sprite
 	; flies
 	.byte <kerrek_flies0_sprite,<kerrek_flies1_sprite,<kerrek_flies2_sprite
+
+	; peasant belt legs
+	.byte <belt_base_sprite
+	; peasant belt animation
+	.byte <belt0_sprite,<belt1_sprite,<belt2_sprite,<belt3_sprite
+	.byte <belt4_sprite,<belt5_sprite,<belt6_sprite,<belt7_sprite
+	.byte <belt8_sprite
 
 sprites_data_h:
 	.byte >kerrek_walk0l_sprite,>kerrek_walk1l_sprite
@@ -168,6 +194,13 @@ sprites_data_h:
 	; flies
 	.byte >kerrek_flies0_sprite,>kerrek_flies1_sprite,>kerrek_flies2_sprite
 
+	; peasant belt legs
+	.byte >belt_base_sprite
+	; peasant belt animation
+	.byte >belt0_sprite,>belt1_sprite,>belt2_sprite,>belt3_sprite
+	.byte >belt4_sprite,>belt5_sprite,>belt6_sprite,>belt7_sprite
+	.byte >belt8_sprite
+
 sprites_xsize:
 	.byte 3,3,3,3, 3,3,3,3, 3,3,3,3, 3,3,3,3		; walk
 
@@ -176,7 +209,11 @@ sprites_xsize:
 	.byte 2,3,2,3,     3,2,2,4				; armr
 	.byte 2,4,4
 
-	.byte 7,7,7,7, 7,7,7,7, 3,3,3
+	.byte 7,7,7,7, 7,7,7,7, 3,3,3				; body/flies
+
+	.byte 2, 4,4,4,4, 2,2,2,2, 4				; belt lift
+
+
 sprites_ysize:
 	.byte 48,48,48,48, 48,48,48,48, 48,48,48,48, 48,48,48,48
 
@@ -186,3 +223,5 @@ sprites_ysize:
 	.byte 14,7,5
 
 	.byte 14,14,14,14, 14,14,14,14, 11,11,10
+
+	.byte 20, 23,19,12,12, 13,13,19,22, 24

@@ -454,10 +454,11 @@ KERREK_COUNT	= $F0		; kerrek1/kerrek2
 P0		= $F1
 HORIZ_OFFSET	= $F1		; target
 KERREK_SMASH_COUNT = $F1	; kerrek1/kerrek2
-PEASANT_BELT_COUNT = $F1	; kerrek1/kerrek2
 
 P1		= $F2
 VERT_OFFSET	= $F2		; target
+PEASANT_BELT_COUNT = $F2	; kerrek1/kerrek2
+
 
 P2		= $F3
 ARROW_FLYING	= $F3		; target

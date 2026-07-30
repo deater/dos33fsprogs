@@ -183,6 +183,7 @@ really_level_over:
 .include "../sound/kerrek_appear.s"
 .include "../sound/thunder.s"
 .include "../sound/mud_splat.s"
+.include "../sound/raise_up.s"
 
 	;=========================
 	; update screen
