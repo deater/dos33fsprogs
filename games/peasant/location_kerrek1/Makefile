@@ -37,6 +37,7 @@ kerrek1_core.o:	kerrek1_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s borders.s \
 		../sound/kerrek_appear.s \
+		peasant_animations.s \
 		kerrek1_actions.s kerrek_actions.s \
 		init_kerrek.s draw_kerrek.s draw_kerrek_body.s \
 		move_kerrek.s draw_kerrek_smash.s \

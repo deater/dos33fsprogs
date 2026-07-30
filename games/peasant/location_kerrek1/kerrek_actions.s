@@ -89,6 +89,21 @@ kerrek_get_belt_finally:
 	; get belt
 	; add 10 to score
 
+	; walk to kerrek body
+
+	clc
+	lda	KERREK_X
+	adc	#2
+	tax
+
+	sec
+	lda	KERREK_Y
+	sbc	#10
+	tay
+
+	jsr	peasant_walkto
+
+
 	lda	INVENTORY_1
 	ora	#INV1_KERREK_BELT
 	sta	INVENTORY_1
