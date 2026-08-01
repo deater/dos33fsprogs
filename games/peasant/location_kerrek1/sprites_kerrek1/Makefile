@@ -123,8 +123,8 @@ peasant_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -l belt0_mask   get_belt_full.png      56  70  83  93 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt1_sprite get_belt_full.png      98  43 125  62 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt1_mask   get_belt_full.png      98  66 125  85 >> peasant_belt.inc
-	$(HGR_SPRITE) -l belt2_sprite get_belt_full.png     140  42 167  54 >> peasant_belt.inc
-	$(HGR_SPRITE) -l belt2_mask   get_belt_full.png     140  57 167  69 >> peasant_belt.inc
+	$(HGR_SPRITE) -l belt2_sprite get_belt_full.png     140  42 167  58 >> peasant_belt.inc
+	$(HGR_SPRITE) -l belt2_mask   get_belt_full.png     140  60 167  76 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt3_sprite get_belt_full.png     182  42 209  54 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt3_mask   get_belt_full.png     182  57 209  69 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt4_sprite get_belt_full.png     224  40 237  53 >> peasant_belt.inc
@@ -138,27 +138,27 @@ peasant_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -l belt8_sprite get_belt_full.png     210 121 237 145 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt8_mask   get_belt_full.png     210 149 237 173 >> peasant_belt.inc
 
-
-
-
-
-
-
-
-
-
-
-peasant_robe_belt.inc:	get_belt_robe_full.png
-	$(HGR_SPRITE) -s -l robe_belt_base_sprite get_belt_robe_full.png 217 31 244 49 > peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt0_sprite get_belt_robe_full.png   7  63  34  87 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_betl1_sprite get_belt_robe_full.png  49  63  76  83 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt2_sprite get_belt_robe_full.png  91  63 118  79 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt3_sprite get_belt_robe_full.png 133  62 160  74 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt4_sprite get_belt_robe_full.png 182  60 199  73 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt5_sprite get_belt_robe_full.png  14 103  27 122 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt6_sprite get_belt_robe_full.png  56 100  69 122 >> peasant_robe_belt.inc
-	$(HGR_SPRITE) -s -l robe_belt7_sprite get_belt_robe_full.png  91  97 118 122 >> peasant_robe_belt.inc
-
+peasant_belt_robe.inc:	get_belt_full_robe.png
+	$(HGR_SPRITE) -l belt_base_sprite get_belt_full.png  28  52  41  72 > peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt_base_mask   get_belt_full.png  28  89  41 109 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt0_sprite get_belt_full.png      56  43  83  66 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt0_mask   get_belt_full.png      56  70  83  93 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt1_sprite get_belt_full.png      98  43 125  62 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt1_mask   get_belt_full.png      98  66 125  85 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt2_sprite get_belt_full.png     140  42 167  58 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt2_mask   get_belt_full.png     140  60 167  76 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt3_sprite get_belt_full.png     182  42 209  54 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt3_mask   get_belt_full.png     182  57 209  69 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt4_sprite get_belt_full.png     224  40 237  53 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt4_mask   get_belt_full.png     224  56 237  69 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt5_sprite get_belt_full.png     252  38 265  51 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt5_mask   get_belt_full.png     252  75 265  88 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt6_sprite get_belt_full.png     140 120 153 139 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt6_mask   get_belt_full.png     140 142 153 161 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt7_sprite get_belt_full.png     182 120 195 142 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt7_mask   get_belt_full.png     182 145 195 167 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt8_sprite get_belt_full.png     210 121 237 145 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt8_mask   get_belt_full.png     210 149 237 173 >> peasant_belt_robe.inc
 
 
 peasant_shoot_sprites.inc:	peasant_shot_left.png peasant_shot_right.png
