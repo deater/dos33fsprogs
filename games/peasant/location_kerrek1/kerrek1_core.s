@@ -176,8 +176,8 @@ really_level_over:
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
 ;.include "sprites_kerrek1/kerrek_hit_sprites.inc"
-.include "sprites_kerrek1/peasant_belt.inc"
-;.include "sprites_kerrek1/peasant_robe_belt.inc"
+;.include "sprites_kerrek1/peasant_belt.inc"
+.include "sprites_kerrek1/peasant_belt_robe.inc"
 .include "sprites_kerrek1/kerrek_body_sprites.inc"
 
 	;==========================

@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	kerrek_body_sprites.inc peasant_belt.inc peasant_robe_belt.inc \
+all:	kerrek_body_sprites.inc peasant_belt.inc peasant_belt_robe.inc \
 	kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
 	kerrek_walk_sprites.inc kerrek_smash_sprites.inc
 
@@ -138,27 +138,27 @@ peasant_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -l belt8_sprite get_belt_full.png     210 121 237 145 >> peasant_belt.inc
 	$(HGR_SPRITE) -l belt8_mask   get_belt_full.png     210 149 237 173 >> peasant_belt.inc
 
-peasant_belt_robe.inc:	get_belt_full_robe.png
-	$(HGR_SPRITE) -l belt_base_sprite get_belt_full.png  28  52  41  72 > peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt_base_mask   get_belt_full.png  28  89  41 109 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt0_sprite get_belt_full.png      56  43  83  66 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt0_mask   get_belt_full.png      56  70  83  93 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt1_sprite get_belt_full.png      98  43 125  62 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt1_mask   get_belt_full.png      98  66 125  85 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt2_sprite get_belt_full.png     140  42 167  58 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt2_mask   get_belt_full.png     140  60 167  76 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt3_sprite get_belt_full.png     182  42 209  54 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt3_mask   get_belt_full.png     182  57 209  69 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt4_sprite get_belt_full.png     224  40 237  53 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt4_mask   get_belt_full.png     224  56 237  69 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt5_sprite get_belt_full.png     252  38 265  51 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt5_mask   get_belt_full.png     252  75 265  88 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt6_sprite get_belt_full.png     140 120 153 139 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt6_mask   get_belt_full.png     140 142 153 161 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt7_sprite get_belt_full.png     182 120 195 142 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt7_mask   get_belt_full.png     182 145 195 167 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt8_sprite get_belt_full.png     210 121 237 145 >> peasant_belt_robe.inc
-	$(HGR_SPRITE) -l belt8_mask   get_belt_full.png     210 149 237 173 >> peasant_belt_robe.inc
+peasant_belt_robe.inc:	get_belt_robe_full.png
+	$(HGR_SPRITE) -l belt_base_sprite get_belt_robe_full.png  28  52  41  72 > peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt_base_mask   get_belt_robe_full.png  28  89  41 109 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt0_sprite get_belt_robe_full.png      56  43  83  66 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt0_mask   get_belt_robe_full.png      56  70  83  93 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt1_sprite get_belt_robe_full.png      98  43 125  62 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt1_mask   get_belt_robe_full.png      98  66 125  85 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt2_sprite get_belt_robe_full.png     140  42 167  58 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt2_mask   get_belt_robe_full.png     140  60 167  76 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt3_sprite get_belt_robe_full.png     182  42 209  54 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt3_mask   get_belt_robe_full.png     182  57 209  69 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt4_sprite get_belt_robe_full.png     224  40 237  53 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt4_mask   get_belt_robe_full.png     224  56 237  69 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt5_sprite get_belt_robe_full.png     252  38 265  51 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt5_mask   get_belt_robe_full.png     252  75 265  88 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt6_sprite get_belt_robe_full.png     140 120 153 139 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt6_mask   get_belt_robe_full.png     140 142 153 161 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt7_sprite get_belt_robe_full.png     182 120 195 142 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt7_mask   get_belt_robe_full.png     182 145 195 167 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt8_sprite get_belt_robe_full.png     210 121 237 145 >> peasant_belt_robe.inc
+	$(HGR_SPRITE) -l belt8_mask   get_belt_robe_full.png     210 149 237 173 >> peasant_belt_robe.inc
 
 
 peasant_shoot_sprites.inc:	peasant_shot_left.png peasant_shot_right.png
@@ -239,7 +239,7 @@ kerrek_hit_sprites.inc:	kerrek_hit_sprites_left.png kerrek_hit_sprites_right.png
 
 clean:
 	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc \
-		peasant_belt.inc peasant_robe_belt.inc \
+		peasant_belt.inc peasant_belt_robe.inc \
 		kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
 		kerrek_smash_sprites.inc kerrek_walk_sprites.inc
 
