@@ -3,7 +3,7 @@ Sprites needed:
 + Kerrek Alive
 	kerrek walk sprites	$1c7a-$A7A  = $1200 = 4608 bytes 
 	kerrek smash sprites	$2274-$1c7a = $5fA  = 1530 bytes
-	peasant shoot sprites	
+	peasant shoot sprites	$3D53-$2F9D = $DC0  = 6700 bytes
 	kerrek hit sprites	$32A0-$1C7A = $1626 = 5670 bytes
 
 + Kerrek Dead
@@ -11,6 +11,7 @@ Sprites needed:
 	peasant belt sprites		$28bd-$2471 = $44c = 1100 bytes
 	peasant belt robe sprites	$28bd-$2471 = $44c = 1100 bytes
 
+Sprites = 22k?
 
 Room for sprites:
 	12k total for game logic/sprites

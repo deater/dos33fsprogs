@@ -179,6 +179,7 @@ really_level_over:
 ;.include "sprites_kerrek1/peasant_belt.inc"
 .include "sprites_kerrek1/peasant_belt_robe.inc"
 .include "sprites_kerrek1/kerrek_body_sprites.inc"
+.include "sprites_kerrek1/peasant_shoot_sprites.inc"
 
 	;==========================
 	; update screen
