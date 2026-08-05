@@ -1,44 +1,62 @@
 ; Peasant's Quest
 
-; Kerrek1 (Top Prints), Location (2,1)
+; Downfall of the Kerrek
+
+; separate file as can't really fit all 22k of sprites
+; in the normal space
 
 ; by Vince `deater` Weaver	vince@deater.net
 
 .include "../location_common/include_common.s"
 
-VERB_TABLE = kerrek_verb_table
+;VERB_TABLE = kerrek_verb_table
 
-kerrek1_core:
-
-.include "../location_common/common_core.s"
+kerrek_fall:
 
 
+        ;=======================
+	; draw header offscreen
+	;=======================
 
-	;==============================
-	; draw kerrek body if necessary
-	;==============================
+	lda	DRAW_PAGE
+	sta	DRAW_PAGE_SAVE
 
-	jsr	kerrek_draw_body
+	lda	#$40			; draw to $6000
+	sta	DRAW_PAGE
 
-	;====================
-	; handle kerrek
-	;====================
+        ; put peasant text
 
-	jsr	kerrek_setup
+        lda     #<peasant_text
+        sta     OUTL
+        lda     #>peasant_text
+        sta     OUTH
+
+        jsr     hgr_put_string
+
+	; update / print score
+
+	jsr	update_score
+
+	jsr	print_score
+
+	; show prompt
+
+	jsr	setup_prompt
 
 
-	;===================================
-	; mark location visited
-
-	lda	VISITED_0
-	ora	#MAP_KERREK_1
-	sta	VISITED_0
+	lda	DRAW_PAGE_SAVE
+	sta	DRAW_PAGE
 
 
-	;====================================================
-	; clear the keyboard in case we were holding it down
+	;================================
+	; setup pointer to update_screen
 
-	bit	KEYRESET
+	lda	#<update_screen
+	sta	update_screen_smc+1
+	lda	#>update_screen
+	sta	update_screen_smc+2
+
+
 
 
 	;========================================
@@ -51,22 +69,6 @@ kerrek1_core:
 
 game_loop:
 
-
-	lda	KERREK_SMASH_COUNT
-	bne	skip_peasant_actions
-
-	;=======================
-	; check keyboard
-
-	jsr	check_keyboard
-	jsr	handle_enter
-
-	;======================
-	; move peasant
-
-	jsr	move_peasant
-
-skip_peasant_actions:
 
 	;======================
 	; check if level over
@@ -83,39 +85,9 @@ skip_peasant_actions:
 
 
 	;===========================
-	; move/collide kerrek
+	; "move"
 
-	; don't do this if in process of smashing
-
-	lda	KERREK_SMASH_COUNT
-	bne	too_busy_smashing
-
-	jsr	kerrek_move_and_check_collision
-
-too_busy_smashing:
-
-	;===========================
-	; handle kerrek sting
-
-	; wait a frame before playing as otherwise it happens
-	;	before first page_flip
-	; TODO: split across multiple frames?
-
-	; oh kerrek where is thine sting
-	; play music sting if needed
-
-	lda	kerrek_play_sting
-	beq	no_sting
-
-	dec	kerrek_play_sting
-
-	cmp	#1
-	bne	no_sting
-
-	jsr	kerrek_warning_music
-
-no_sting:
-
+	jsr	kerrek_move
 
 	;=======================
 	; increment frame
@@ -150,10 +122,6 @@ level_over:
 
 .include "../location_common/end_of_level_common.s"
 
-	;======================================
-	; special case leaving-level borders
-
-.include "borders.s"
 
 really_level_over:
 	rts
@@ -165,21 +133,17 @@ really_level_over:
 .include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
-.include "kerrek1_actions.s"
+.include "kerrek_fall_actions.s"
 
-.include "../sound/kerrek_appear.s"
 .include "../sound/mud_splat.s"
 .include "../sound/thunder.s"
 .include "../sound/raise_up.s"
 .include "../sound/falling.s"
 
-.include "sprites_kerrek1/kerrek_walk_sprites.inc"
-.include "sprites_kerrek1/kerrek_smash_sprites.inc"
-;.include "sprites_kerrek1/kerrek_hit_sprites.inc"
-;.include "sprites_kerrek1/peasant_belt.inc"
-.include "sprites_kerrek1/peasant_belt_robe.inc"
-.include "sprites_kerrek1/kerrek_body_sprites.inc"
-;.include "sprites_kerrek1/peasant_shoot_sprites.inc"
+.include "sprites_kerrek_fall/kerrek_walk_sprites.inc"
+;.include "sprites_kerrek_fall/kerrek_hit_sprites.inc"
+.include "sprites_kerrek_fall/peasant_shoot_sprites.inc"
+
 
 	;==========================
 	; update screen
@@ -209,14 +173,12 @@ kerrek1_draw_peasant_first:
 	jsr	draw_peasant
 skip_draw_peasant_first:
 	jsr	kerrek_draw		; draw kerrek
-	jsr	kerrek_draw_flies	; draw flies
 
 	rts
 
 kerrek1_draw_kerrek_first:
 
 	jsr	kerrek_draw		; draw kerrek
-	jsr	kerrek_draw_flies	; draw flies
 
 	lda	SUPPRESS_DRAWING
 	and	#SUPPRESS_PEASANT

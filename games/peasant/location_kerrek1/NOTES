@@ -3,8 +3,17 @@ Sprites needed:
 + Kerrek Alive
 	kerrek walk sprites	$1c7a-$A7A  = $1200 = 4608 bytes 
 	kerrek smash sprites	$2274-$1c7a = $5fA  = 1530 bytes
+
++ In process of shooting
+
+	kerrek stomps in place during "kid icarus message"
+	kerrek stomps in place while shoot sprite happens
+	peasant holds the last arrow animation until you walk again
+
+	
 	peasant shoot sprites	$3D53-$2F9D = $DC0  = 6700 bytes
 	kerrek hit sprites	$32A0-$1C7A = $1626 = 5670 bytes
+
 
 + Kerrek Dead
 	kerrek body sprites		$3980-$32A0 = $6e0 = 1760 bytes
