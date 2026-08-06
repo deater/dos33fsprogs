@@ -137,7 +137,8 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	./trogdor/TROGDOR_LOADER ./ending/ENDING \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_OUTER \
-	map/MAP
+	map/MAP \
+	./location_kerrek_fall/KERREK_FALL_LOADER
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk5.dsk
 	$(DOS33_RAW) peasant_disk5.dsk   0 0  ./wrong_boot/WBOOT5	0   1
 	$(DOS33_RAW) peasant_disk5.dsk   1 0 ./location_cliff_base/CLIFF_BASE_LOADER	0   0
@@ -152,6 +153,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk  17 0 ./location_outer3/OUTER3_LOADER	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./trogdor/TROGDOR_LOADER  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  23 0 ./ending/ENDING	  	0   0
+	$(DOS33_RAW) peasant_disk5.dsk  28 0 ./location_kerrek_fall/KERREK_FALL_LOADER	  	0   0
 
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
@@ -192,7 +194,8 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./location_puddle/PUDDLE_LOADER \
 	./location_haystack/HAYSTACK_LOADER \
 	./sprites_peasant/PEASANT_SPRITES_COMMON \
-	./sprites_peasant/PEASANT_SPRITES_OUTER
+	./sprites_peasant/PEASANT_SPRITES_OUTER \
+	./location_kerrek_fall/KERREK_FALL_LOADER
 	$(PRODOSDIR)/mkprodosfs peasant.2mg -n PeasantsQ -b 3360 -2
 	$(PRODOS_RAW) peasant.2mg 0 PROBOOTHD 0 0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 0 1  0`  QLOAD_HD 0 0
@@ -245,6 +248,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 17 0` ./location_outer3/OUTER3_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 28 0` ./location_kerrek_fall/KERREK_FALL_LOADER	  0   0
 
 
 
@@ -538,6 +542,9 @@ inventory/INVENTORY:
 ./location_kerrek2/KERREK2_LOADER:
 	cd location_kerrek2 && make
 
+./location_kerrek_fall/KERREK_FALL_LOADER:
+	cd location_kerrek_fall && make
+
 ./location_knight/KNIGHT_LOADER:
 	cd location_knight && make
 
@@ -718,6 +725,7 @@ distclean:
 	cd location_jhonka && make distclean
 	cd location_kerrek1 && make distclean
 	cd location_kerrek2 && make distclean
+	cd location_kerrek_fall && make distclean
 	cd location_knight && make distclean
 	cd location_lady_cottage && make distclean
 	cd location_lake_east && make distclean
@@ -775,6 +783,7 @@ clean:
 	cd location_jhonka && make clean
 	cd location_kerrek1 && make clean
 	cd location_kerrek2 && make clean
+	cd location_kerrek_fall && make clean
 	cd location_knight && make clean
 	cd location_lady_cottage && make clean
 	cd location_lake_east && make clean

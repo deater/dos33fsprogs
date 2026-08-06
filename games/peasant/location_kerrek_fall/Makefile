@@ -33,7 +33,7 @@ kerrek_fall_core.o:	kerrek_fall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
 		../sound/kerrek_appear.s \
-		peasant_animations.s \
+		draw_bow.s \
 		kerrek_fall_actions.s \
 		kerrek_sprite_list.s \
 		draw_kerrek.s \

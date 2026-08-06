@@ -329,41 +329,45 @@ kerrek_actually_kill:
 	ldy	#>kerrek_kill_message
 	jsr	partial_message_step
 
-	ldx	#<kerrek_kill_message2
-	ldy	#>kerrek_kill_message2
-	jsr	partial_message_step
+	lda	#LOCATION_KERREK_FALL
+	jmp	update_map_location
 
-	lda	#5
-	jsr	score_points
 
-	; make kerrek dead
+;	ldx	#<kerrek_kill_message2
+;	ldy	#>kerrek_kill_message2
+;	jsr	partial_message_step
 
-	lda	GAME_STATE_3
-	ora	#KERREK_DEAD
-	sta	GAME_STATE_3
+;	lda	#5
+;	jsr	score_points
 
-	; draw body on background
+;	; make kerrek dead
 
-	jsr	kerrek_draw_body
+;	lda	GAME_STATE_3
+;	ora	#KERREK_DEAD
+;	sta	GAME_STATE_3
 
-	; make it rain, make the puddle wet
+;	; draw body on background
 
-	; sound: three thunders
+;	jsr	kerrek_draw_body
 
-	jsr	thunder_sound
-	jsr	thunder_sound
-	jsr	thunder_sound
+;	; make it rain, make the puddle wet
 
-	lda	GAME_STATE_1
-	ora	#(PUDDLE_WET)
-	sta	GAME_STATE_1
+;	; sound: three thunders
 
-	lda	#6			; should this be 5?
-	sta	RAIN_COUNT
+;	jsr	thunder_sound
+;	jsr	thunder_sound
+;	jsr	thunder_sound
 
-	ldx	#<kerrek_kill_message3
-	ldy	#>kerrek_kill_message3
-	jmp	finish_parse_message
+;	lda	GAME_STATE_1
+;	ora	#(PUDDLE_WET)
+;	sta	GAME_STATE_1
+
+;	lda	#6			; should this be 5?
+;	sta	RAIN_COUNT
+
+;	ldx	#<kerrek_kill_message3
+;	ldy	#>kerrek_kill_message3
+;	jmp	finish_parse_message
 
 
 kerrek_kill_only_bow:

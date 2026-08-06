@@ -69,7 +69,9 @@ kerrek_fall:
 
 game_loop:
 
+	jsr	draw_peasant_bow
 
+.if 0
 	;======================
 	; check if level over
 
@@ -108,6 +110,10 @@ game_loop:
 	jsr	hgr_page_flip
 
 	jmp	game_loop
+.endif
+
+;	lda	#LOCATION_KERREK_FALL
+;	jsr	update_map_location
 
 
 	;========================

@@ -1,4 +1,3 @@
-
 	;=============================
 	;=============================
 	;=============================
@@ -7,17 +6,21 @@
 	;=============================
 	;=============================
 
-PEASANT_MAX_BOW = 28
+PEASANT_MAX_BOW = 16
 
 
 peasant_bow_progress:
-.byte	0,0,1,2,3,4		; (hand moving up in air)
-.byte	6,6			; small sparkle
-.byte	7,7			; medium sparkle
-.byte	8,8,8,8,8		; bright sparkle
-.byte	7,7
-.byte	6,6
-.byte	4,3,3,3,3,3,3,2,2
+.byte	0			; 455
+.byte	1			; 456
+.byte	2			; 457
+.byte	3			; 458 (arrow out)
+.byte	4			; 459 (arrow up)
+.byte	5			; 460
+; missing?			; 461 (start draw)
+.byte	6			; 462
+.byte	7,7,7,7,7,7		; 463,464,465,466,467,468
+.byte	8,8,8			; 469 (release)
+.byte	0			; 471 back to orig
 
 peasant_bow_offset_x:
 .byte $ff,$ff,$ff,$ff,	0,0,0,0, $ff
@@ -36,9 +39,6 @@ draw_peasant_bow:
 
 	lda	#SUPPRESS_PEASANT
 	sta	SUPPRESS_DRAWING
-
-	;FIXME:	RAISE_UP_SOUND
-;	jsr	raise_up_sound
 
 draw_peasant_bow_loop:
 
@@ -73,7 +73,7 @@ draw_peasant_bow_loop:
 
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
+	jsr	wait_until_keypress
 
 	; increment count
 
