@@ -23,10 +23,10 @@ peasant_bow_progress:
 .byte	0			; 471 back to orig
 
 peasant_bow_offset_x:
-.byte $ff,$ff,$ff,$ff,	0,0,0,0, $ff
+.byte $ff,$ff,$ff,$ff,	$ff,$fe,$fe,$fe, $ff
 
 peasant_bow_offset_y:
-.byte 1,1,0,$ff,	$fd,$fb,$f8,$f5, $f2
+.byte 0,0,0,0,	0,0,0,0, 0
 
 
 	;===============================
@@ -41,6 +41,8 @@ draw_peasant_bow:
 	sta	SUPPRESS_DRAWING
 
 draw_peasant_bow_loop:
+
+	jsr	kerrek_move		; walk during first part
 
 	jsr	update_screen
 
@@ -63,7 +65,7 @@ draw_peasant_bow_loop:
 
 	clc
 	tya
-	adc	#PEASANT_BOW_OFFSET
+	adc	#PEASANT_BOW_OFFSET_RIGHT
 
 	tax
 

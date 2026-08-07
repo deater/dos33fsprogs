@@ -38,7 +38,9 @@ kerrek_fall_core.o:	kerrek_fall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		kerrek_sprite_list.s \
 		draw_kerrek.s \
 		move_kerrek.s \
-		sprites_kerrek_fall/kerrek_walk_sprites.inc
+		sprites_kerrek_fall/kerrek_walk_sprites.inc \
+		sprites_kerrek_fall/peasant_shoot_sprites_left.inc \
+		sprites_kerrek_fall/peasant_shoot_sprites_right.inc
 	ca65 -o kerrek_fall_core.o kerrek_fall_core.s -l kerrek_fall_core.lst
 
 
