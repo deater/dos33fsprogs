@@ -1,6 +1,6 @@
 include ../../Makefile.inc
 
-CFLAGS = -g -Wall -O2
+CFLAGS += -g
 
 all:	text2gr png2gr png2gr_text png2rle png2lz4 png_to_40x48d png_to_40x96 \
 	png2sixbitmap png2six80 png2sixrle png2fourrle png2sixrle2 png_16x16 \
