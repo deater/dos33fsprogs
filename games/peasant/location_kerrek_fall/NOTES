@@ -1,0 +1,9 @@
+
+Size:
+	12k
+
+kerrek_shoot_left_sprites:
+	18e0 - 1fe8 = $708 = 1800
+
+kerrek_shoot_right_sprites:
+	1fe8 - 26f0 = $708 = 1800

@@ -22,8 +22,14 @@ peasant_bow_progress:
 .byte	8,8,8			; 469 (release)
 .byte	0			; 471 back to orig
 
-peasant_bow_offset_x:
+peasant_bow_offset_x_left:
 .byte $ff,$ff,$ff,$ff,	$ff,$fe,$fe,$fe, $ff
+
+peasant_bow_offset_y_left:
+.byte 0,0,0,0,	0,0,0,0, 0
+
+peasant_bow_offset_x:
+.byte $0,$0,$0,$0,	$0,$0,$0,$0, $0
 
 peasant_bow_offset_y:
 .byte 0,0,0,0,	0,0,0,0, 0
