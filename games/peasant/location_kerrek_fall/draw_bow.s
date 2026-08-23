@@ -25,14 +25,11 @@ peasant_bow_progress:
 peasant_bow_offset_x_left:
 .byte $ff,$ff,$ff,$ff,	$ff,$fe,$fe,$fe, $ff
 
-peasant_bow_offset_y_left:
-.byte 0,0,0,0,	0,0,0,0, 0
-
-peasant_bow_offset_x:
+peasant_bow_offset_x_right:
 .byte $0,$0,$0,$0,	$0,$0,$0,$0, $0
 
-peasant_bow_offset_y:
-.byte 0,0,0,0,	0,0,0,0, 0
+;peasant_bow_offset_y:
+;.byte 0,0,0,0,	0,0,0,0, 0
 
 
 	;===============================
@@ -59,14 +56,35 @@ draw_peasant_bow_loop:
 	lda	peasant_bow_progress,Y
 	tay
 
-	clc
+	; adjust for left/right
+
 	lda	PEASANT_X
-	adc	peasant_bow_offset_x,Y
-	sta	SPRITE_X
+	cmp	KERREK_X
+	bcs	adjust_shooter_left
+
+adjust_shooter_right:
 
 	clc
-	lda	PEASANT_Y
-	adc	peasant_bow_offset_y,Y
+	lda	PEASANT_X
+	adc	peasant_bow_offset_x_right,Y
+	jmp	adjust_shooter_common
+
+adjust_shooter_left:
+
+	clc
+	lda	PEASANT_X
+	adc	peasant_bow_offset_x_left,Y
+
+adjust_shooter_common:
+	sta	SPRITE_X
+
+
+
+;	clc
+;	lda	PEASANT_Y
+;	adc	peasant_bow_offset_y_left,Y
+
+	lda	PEASANT_Y			; offset always 0
 	sta	SPRITE_Y
 
 	clc
@@ -77,11 +95,9 @@ draw_peasant_bow_loop:
 
 	jsr	hgr_draw_sprite_mask
 
-
-
 	jsr	hgr_page_flip
 
-	jsr	wait_until_keypress
+;	jsr	wait_until_keypress
 
 	; increment count
 

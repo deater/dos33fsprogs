@@ -9,14 +9,33 @@
 NUM_SHOOTING_SPRITES = 9
 
 load_shooting_sprites:
-	; TODO: pick which one to decompress based on direction
 
-	; decompress data to $A800
+	;    PPKKK	right
+	;     PPK	right
+	;      KPP	left
+	;      KKKPP	left
+	; so if roughly PP <=kerrek shoot right
 
+	lda	PEASANT_X
+	cmp	KERREK_X
+	bcs	shoot_left		; bge
+
+shoot_right:
 	lda     #<shoot_right_zx02
 	sta     zx_src_l+1
 	lda	#>shoot_right_zx02
+	jmp	shoot_common
+
+shoot_left:
+	lda     #<shoot_left_zx02
+	sta     zx_src_l+1
+	lda	#>shoot_left_zx02
+
+shoot_common:
+
 	sta	zx_src_h+1
+
+	; decompress data to $A800
 
 	lda	#>$a800
 
