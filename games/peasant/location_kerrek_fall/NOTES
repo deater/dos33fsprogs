@@ -3,11 +3,15 @@ Size:
 	12k,	$80-$AF
 
 
-program:	$80-$9D		= 7.5k (7680)
+program:	$80-$92		= 4.5k (4608)
 
+hit sprites	$92-$9D		= 3k
 walk sprites    $9E-$A7		= 2.5k
 shoot sprites	$A8-$AF		= 2k
 
+
+kerrek_hit_left = 2877 bytes	(3k)
+kerrek_hit_right = 2877 bytes	(3k)
 
 kerrek_walk_left = 2352 bytes   (2.5k)
 kerrek_walk_right = 2352 bytes  (2.5k)

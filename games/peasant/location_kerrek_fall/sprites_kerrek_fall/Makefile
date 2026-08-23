@@ -3,7 +3,9 @@ SPRITE_DIR = ../../location_kerrek1/sprites_kerrek1/
 
 all:	kerrek_hit_sprites.inc \
 	peasant_shoot_sprites_right.inc peasant_shoot_sprites_left.inc \
-	kerrek_walk_sprites_left.inc kerrek_walk_sprites_right.inc
+	kerrek_walk_sprites_left.inc kerrek_walk_sprites_right.inc \
+	kerrek_hit_sprites_left.inc kerrek_hit_sprites_right.inc
+
 
 kerrek_walk_sprites_right.inc:	$(SPRITE_DIR)/kerrek_walk_right_sprites.png
 	$(HGR_SPRITE) -l kerrek_walk0r_sprite $(SPRITE_DIR)/kerrek_walk_right_sprites.png  14  59  34 107 > kerrek_walk_sprites_right.inc
@@ -106,35 +108,37 @@ peasant_shoot_sprites_right.inc:	$(SPRITE_DIR)/peasant_shot_right.png
 	$(HGR_SPRITE) -l shoot8_r_mask   $(SPRITE_DIR)/peasant_shot_right.png 140 161 160 191 >> peasant_shoot_sprites_right.inc
 
 
-kerrek_hit_sprites.inc:	$(SPRITE_DIR)/kerrek_hit_sprites_left.png $(SPRITE_DIR)/kerrek_hit_sprites_right.png $(SPRITE_DIR)/kerrek_body_sprites.png
-	$(HGR_SPRITE) -l kerrek_hit_left0_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png  14  60  41 108 > kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  14 113  41 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56  60 104 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56 113 104 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112  64 146 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112 116 146 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154  63 195 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154 116 195 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left4_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210  35 258  58 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left4_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210  63 258  86 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left5_sprite $(SPRITE_DIR)/kerrek_body_sprites.png  84  28 132  42 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left5_mask   $(SPRITE_DIR)/kerrek_body_sprites.png  84  49 132  63 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left6_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210 136 251 159 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_left6_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210 162 251 185 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right0_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png  14  60  41 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  14 113  41 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56  60 104 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56 113 104 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112  64 146 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112 116 146 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154  63 195 108 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154 116 195 161 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right4_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210  35 258  58 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right4_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210  63 258  86 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right5_sprite $(SPRITE_DIR)/kerrek_body_sprites.png  14  28  62  42 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right5_mask   $(SPRITE_DIR)/kerrek_body_sprites.png  14  49  62  63 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right6_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210 136 251 159 >> kerrek_hit_sprites.inc
-	$(HGR_SPRITE) -l kerrek_hit_right6_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210 162 251 185 >> kerrek_hit_sprites.inc
+kerrek_hit_sprites_left.inc:	$(SPRITE_DIR)/kerrek_hit_sprites_left.png $(SPRITE_DIR)/kerrek_body_sprites.png
+	$(HGR_SPRITE) -l kerrek_hit_left0_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png  14  60  41 108 > kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  14 113  41 161 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56  60 104 108 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56 113 104 161 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112  64 146 108 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112 116 146 161 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154  63 195 108 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154 116 195 161 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left4_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210  35 258  58 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left4_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210  63 258  86 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left5_sprite $(SPRITE_DIR)/kerrek_body_sprites.png  84  28 132  42 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left5_mask   $(SPRITE_DIR)/kerrek_body_sprites.png  84  49 132  63 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left6_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210 136 251 159 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left6_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 210 162 251 185 >> kerrek_hit_sprites_left.inc
+
+kerrek_hit_sprites_right.inc:	$(SPRITE_DIR)/kerrek_hit_sprites_right.png $(SPRITE_DIR)/kerrek_body_sprites.png
+	$(HGR_SPRITE) -l kerrek_hit_right0_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png  14  60  41 108 > kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  14 113  41 161 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56  60 104 108 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56 113 104 161 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112  64 146 108 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112 116 146 161 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154  63 195 108 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154 116 195 161 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right4_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210  35 258  58 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right4_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210  63 258  86 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right5_sprite $(SPRITE_DIR)/kerrek_body_sprites.png  14  28  62  42 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right5_mask   $(SPRITE_DIR)/kerrek_body_sprites.png  14  49  62  63 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right6_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210 136 251 159 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right6_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 210 162 251 185 >> kerrek_hit_sprites_right.inc
 
 
 
@@ -150,5 +154,6 @@ clean:
 		kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
 		peasant_shoot_sprites_left.inc peasant_shoot_sprites_right.inc \
 		kerrek_smash_sprites.inc kerrek_walk_sprites.inc \
-		kerrek_walk_sprites_right.inc kerrek_walk_sprites_left.inc
+		kerrek_walk_sprites_right.inc kerrek_walk_sprites_left.inc \
+		kerrek_hit_sprites_right.inc kerrek_hit_sprites_left.inc
 

@@ -21,6 +21,8 @@ kerrek_fall:
 
 	jsr	load_kerrek_walking_sprites
 
+	jsr	load_kerrek_hit_sprites
+
         ;=======================
 	; draw header offscreen
 	;=======================
