@@ -1,7 +1,6 @@
 KERREK_WALK_OFFSET_LEFT		= 0
 KERREK_WALK_OFFSET_RIGHT	= 8
-PEASANT_BOW_OFFSET_LEFT		= 16
-PEASANT_BOW_OFFSET_RIGHT	= 25
+PEASANT_BOW_OFFSET		= 16
 
 sprites_mask_l:
 	; 0
@@ -15,13 +14,14 @@ sprites_mask_l:
 	.byte <kerrek_walk4r_mask,<kerrek_walk5r_mask
 	.byte <kerrek_walk6r_mask,<kerrek_walk7r_mask
 	; 16
-	.byte <shoot0_l_mask,<shoot1_l_mask,<shoot2_l_mask
-	.byte <shoot3_l_mask,<shoot4_l_mask,<shoot5_l_mask
-	.byte <shoot6_l_mask,<shoot7_l_mask,<shoot8_l_mask
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte <shoot0_l_mask,<shoot1_l_mask,<shoot2_l_mask
+;	.byte <shoot3_l_mask,<shoot4_l_mask,<shoot5_l_mask
+;	.byte <shoot6_l_mask,<shoot7_l_mask,<shoot8_l_mask
 	; 25
-	.byte <shoot0_r_mask,<shoot1_r_mask,<shoot2_r_mask
-	.byte <shoot3_r_mask,<shoot4_r_mask,<shoot5_r_mask
-	.byte <shoot6_r_mask,<shoot7_r_mask,<shoot8_r_mask
+;	.byte <shoot0_r_mask,<shoot1_r_mask,<shoot2_r_mask
+;	.byte <shoot3_r_mask,<shoot4_r_mask,<shoot5_r_mask
+;	.byte <shoot6_r_mask,<shoot7_r_mask,<shoot8_r_mask
 
 
 
@@ -36,13 +36,15 @@ sprites_mask_h:
 	.byte >kerrek_walk4r_mask,>kerrek_walk5r_mask
 	.byte >kerrek_walk6r_mask,>kerrek_walk7r_mask
 
-	.byte >shoot0_l_mask,>shoot1_l_mask,>shoot2_l_mask
-	.byte >shoot3_l_mask,>shoot4_l_mask,>shoot5_l_mask
-	.byte >shoot6_l_mask,>shoot7_l_mask,>shoot8_l_mask
+	; 16
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte >shoot0_l_mask,>shoot1_l_mask,>shoot2_l_mask
+;	.byte >shoot3_l_mask,>shoot4_l_mask,>shoot5_l_mask
+;	.byte >shoot6_l_mask,>shoot7_l_mask,>shoot8_l_mask
 	; 25
-	.byte >shoot0_r_mask,>shoot1_r_mask,>shoot2_r_mask
-	.byte >shoot3_r_mask,>shoot4_r_mask,>shoot5_r_mask
-	.byte >shoot6_r_mask,>shoot7_r_mask,>shoot8_r_mask
+;	.byte >shoot0_r_mask,>shoot1_r_mask,>shoot2_r_mask
+;	.byte >shoot3_r_mask,>shoot4_r_mask,>shoot5_r_mask
+;	.byte >shoot6_r_mask,>shoot7_r_mask,>shoot8_r_mask
 
 sprites_data_l:
 	.byte <kerrek_walk0l_sprite,<kerrek_walk1l_sprite
@@ -55,13 +57,14 @@ sprites_data_l:
 	.byte <kerrek_walk4r_sprite,<kerrek_walk5r_sprite
 	.byte <kerrek_walk6r_sprite,<kerrek_walk7r_sprite
 	; 16
-	.byte <shoot0_l_sprite,<shoot1_l_sprite,<shoot2_l_sprite
-	.byte <shoot3_l_sprite,<shoot4_l_sprite,<shoot5_l_sprite
-	.byte <shoot6_l_sprite,<shoot7_l_sprite,<shoot8_l_sprite
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte <shoot0_l_sprite,<shoot1_l_sprite,<shoot2_l_sprite
+;	.byte <shoot3_l_sprite,<shoot4_l_sprite,<shoot5_l_sprite
+;	.byte <shoot6_l_sprite,<shoot7_l_sprite,<shoot8_l_sprite
 	; 25
-	.byte <shoot0_r_sprite,<shoot1_r_sprite,<shoot2_r_sprite
-	.byte <shoot3_r_sprite,<shoot4_r_sprite,<shoot5_r_sprite
-	.byte <shoot6_r_sprite,<shoot7_r_sprite,<shoot8_r_sprite
+;	.byte <shoot0_r_sprite,<shoot1_r_sprite,<shoot2_r_sprite
+;	.byte <shoot3_r_sprite,<shoot4_r_sprite,<shoot5_r_sprite
+;	.byte <shoot6_r_sprite,<shoot7_r_sprite,<shoot8_r_sprite
 
 sprites_data_h:
 	.byte >kerrek_walk0l_sprite,>kerrek_walk1l_sprite
@@ -75,25 +78,29 @@ sprites_data_h:
 	.byte >kerrek_walk6r_sprite,>kerrek_walk7r_sprite
 
 	; 16
-
-	.byte >shoot0_l_sprite,>shoot1_l_sprite,>shoot2_l_sprite
-	.byte >shoot3_l_sprite,>shoot4_l_sprite,>shoot5_l_sprite
-	.byte >shoot6_l_sprite,>shoot7_l_sprite,>shoot8_l_sprite
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte >shoot0_l_sprite,>shoot1_l_sprite,>shoot2_l_sprite
+;	.byte >shoot3_l_sprite,>shoot4_l_sprite,>shoot5_l_sprite
+;	.byte >shoot6_l_sprite,>shoot7_l_sprite,>shoot8_l_sprite
 
 	; 25
-	.byte >shoot0_r_sprite,>shoot1_r_sprite,>shoot2_r_sprite
-	.byte >shoot3_r_sprite,>shoot4_r_sprite,>shoot5_r_sprite
-	.byte >shoot6_r_sprite,>shoot7_r_sprite,>shoot8_r_sprite
+;	.byte >shoot0_r_sprite,>shoot1_r_sprite,>shoot2_r_sprite
+;	.byte >shoot3_r_sprite,>shoot4_r_sprite,>shoot5_r_sprite
+;	.byte >shoot6_r_sprite,>shoot7_r_sprite,>shoot8_r_sprite
 
 
 sprites_xsize:
 	.byte 3,3,3,3, 3,3,3,3, 3,3,3,3, 3,3,3,3		; walk
 
-	.byte 3,3,3,3, 3,4,4,4, 3
-	.byte 3,3,3,3, 3,4,4,4, 3
+	; 16
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte 3,3,3,3, 3,4,4,4, 3
+;	.byte 3,3,3,3, 3,4,4,4, 3
 
 sprites_ysize:
 	.byte 48,48,48,48, 48,48,48,48, 48,48,48,48, 48,48,48,48
 
-	.byte 30,30,30,30, 30,30,30,30, 30
-	.byte 30,30,30,30, 30,30,30,30, 30
+	; 16
+	.byte $dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd,$dd
+;	.byte 30,30,30,30, 30,30,30,30, 30
+;	.byte 30,30,30,30, 30,30,30,30, 30

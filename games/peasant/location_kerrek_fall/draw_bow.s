@@ -71,7 +71,7 @@ draw_peasant_bow_loop:
 
 	clc
 	tya
-	adc	#PEASANT_BOW_OFFSET_RIGHT
+	adc	#PEASANT_BOW_OFFSET
 
 	tax
 
