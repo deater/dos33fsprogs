@@ -70,6 +70,78 @@ copy_shoot_loop:
 
 	rts
 
+	;=============================
+	;=============================
+	;=============================
+	; load proper kerrek walk sprite
+	;=============================
+	;=============================
+	;=============================
+
+NUM_KERREK_WALK_SPRITES = 8
+
+load_kerrek_walking_sprites:
+
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION	; 0 = left
+	beq	load_walk_left
+
+load_walk_right:
+	lda     #<walk_right_zx02
+	sta     zx_src_l+1
+	lda	#>walk_right_zx02
+	jmp	load_walk_common
+
+load_walk_left:
+	lda     #<walk_left_zx02
+	sta     zx_src_l+1
+	lda	#>walk_left_zx02
+
+load_walk_common:
+
+	sta	zx_src_h+1
+
+	; decompress data to $9e00
+
+	lda	#>$9e00
+
+	jsr	zx02_full_decomp
+
+	; copy to the sprite data
+
+	ldx	#0
+copy_walk_loop:
+	; mask_l
+	lda	$9e00,X
+	sta	sprites_mask_l+KERREK_WALK_OFFSET,X
+	; mask_h
+	lda	$9e00+NUM_KERREK_WALK_SPRITES,X
+	sta	sprites_mask_h+KERREK_WALK_OFFSET,X
+	; sprite_l
+	lda	$9e00+(NUM_KERREK_WALK_SPRITES*2),X
+	sta	sprites_data_l+KERREK_WALK_OFFSET,X
+	; sprite_h
+	lda	$9e00+(NUM_KERREK_WALK_SPRITES*3),X
+	sta	sprites_data_h+KERREK_WALK_OFFSET,X
+	; sprite_xsize
+	lda	$9e00+(NUM_KERREK_WALK_SPRITES*4),X
+	sta	sprites_xsize+KERREK_WALK_OFFSET,X
+	; sprite_h
+	lda	$9e00+(NUM_KERREK_WALK_SPRITES*5),X
+	sta	sprites_ysize+KERREK_WALK_OFFSET,X
+
+	inx
+	cpx	#NUM_KERREK_WALK_SPRITES
+	bne	copy_walk_loop
+
+	rts
+
+
+
+walk_right_zx02:
+.incbin	"kerrek_walk_right_sprites.zx02"
+walk_left_zx02:
+.incbin	"kerrek_walk_left_sprites.zx02"
 
 shoot_right_zx02:
 .incbin	"shoot_right_sprites.zx02"

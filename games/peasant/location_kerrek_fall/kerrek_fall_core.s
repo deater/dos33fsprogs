@@ -13,8 +13,13 @@
 
 kerrek_fall:
 
+        ;=======================
+	; load proper sprites
+	;=======================
+
 	jsr	load_shooting_sprites
 
+	jsr	load_kerrek_walking_sprites
 
         ;=======================
 	; draw header offscreen
@@ -148,7 +153,9 @@ really_level_over:
 .include "../sound/raise_up.s"
 .include "../sound/falling.s"
 
-.include "sprites_kerrek_fall/kerrek_walk_sprites.inc"
+;.include "sprites_kerrek_fall/kerrek_walk_sprites_right.inc"
+;.include "sprites_kerrek_fall/kerrek_walk_sprites_left.inc"
+
 ;.include "sprites_kerrek_fall/kerrek_hit_sprites.inc"
 ;.include "sprites_kerrek_fall/peasant_shoot_sprites_left.inc"
 ;.include "sprites_kerrek_fall/peasant_shoot_sprites_right.inc"

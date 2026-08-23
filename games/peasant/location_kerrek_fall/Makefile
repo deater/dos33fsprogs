@@ -19,6 +19,30 @@ kerrek_fall_loader.o:	kerrek_fall_loader.s \
 
 ###
 
+kerrek_walk_left_sprites.zx02:	kerrek_walk_left_sprites
+	$(ZX02) -f kerrek_walk_left_sprites kerrek_walk_left_sprites.zx02
+
+kerrek_walk_left_sprites:	kerrek_walk_left_sprites.o
+	ld65 -o kerrek_walk_left_sprites kerrek_walk_left_sprites.o -C $(LINKER_SCRIPTS)/apple2_9e00.inc
+
+kerrek_walk_left_sprites.o:	kerrek_walk_left_sprites.s
+	ca65 -o kerrek_walk_left_sprites.o kerrek_walk_left_sprites.s -l kerrek_walk_left_sprites.lst
+
+
+###
+
+kerrek_walk_right_sprites.zx02:	kerrek_walk_right_sprites
+	$(ZX02) -f kerrek_walk_right_sprites kerrek_walk_right_sprites.zx02
+
+kerrek_walk_right_sprites:	kerrek_walk_right_sprites.o
+	ld65 -o kerrek_walk_right_sprites kerrek_walk_right_sprites.o -C $(LINKER_SCRIPTS)/apple2_9e00.inc
+
+kerrek_walk_right_sprites.o:	kerrek_walk_right_sprites.s
+	ca65 -o kerrek_walk_right_sprites.o kerrek_walk_right_sprites.s -l kerrek_walk_right_sprites.lst
+
+
+###
+
 shoot_left_sprites.zx02:	shoot_left_sprites
 	$(ZX02) -f shoot_left_sprites shoot_left_sprites.zx02
 
@@ -64,10 +88,12 @@ kerrek_fall_core.o:	kerrek_fall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		kerrek_sprite_list.s \
 		draw_kerrek.s \
 		move_kerrek.s \
-		sprites_kerrek_fall/kerrek_walk_sprites.inc \
+		sprites_kerrek_fall/kerrek_walk_sprites_left.inc \
+		sprites_kerrek_fall/kerrek_walk_sprites_right.inc \
 		sprites_kerrek_fall/peasant_shoot_sprites_left.inc \
 		sprites_kerrek_fall/peasant_shoot_sprites_right.inc \
-		shoot_left_sprites.zx02 shoot_right_sprites.zx02
+		shoot_left_sprites.zx02 shoot_right_sprites.zx02 \
+		kerrek_walk_left_sprites.zx02 kerrek_walk_right_sprites.zx02
 	ca65 -o kerrek_fall_core.o kerrek_fall_core.s -l kerrek_fall_core.lst
 
 
