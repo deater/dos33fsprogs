@@ -1043,6 +1043,10 @@ static int truncate_filename(char *out, char *in) {
 	return truncated;
 }
 
+#define OPT_PARSE_DONE		0
+#define OPT_PARSE_1ST_PASS	1
+#define OPT_PARSE_2ND_PASS	2
+
 int main(int argc, char **argv) {
 
 	char image[BUFSIZ];
@@ -1060,81 +1064,108 @@ int main(int argc, char **argv) {
 	int address=0, length=0;
 	unsigned char vtoc[BYTES_PER_SECTOR];
 	int retval=0;
+	int parse_phase=OPT_PARSE_1ST_PASS;
 
 	/* Check command line arguments */
-	while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
-		switch (c) {
+	while (parse_phase != OPT_PARSE_DONE) {
+		while ((c = getopt (argc, argv,"a:l:t:s:dhvxy"))!=-1) {
+			switch (c) {
 
-		case 'd':
-			fprintf(stderr,"DEBUG enabled\n");
-			debug=1;
-			break;
-		case 'a':
-			address=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Address=%d\n",address);
-			break;
-		case 'l':
-			length=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Length=%d\n",address);
-			break;
+			case 'd':
+				fprintf(stderr,"DEBUG enabled\n");
+				debug=1;
+				break;
+			case 'a':
+				address=strtol(optarg,&endptr,0);
+				if (debug) fprintf(stderr,"Address=%d\n",address);
+				break;
+			case 'l':
+				length=strtol(optarg,&endptr,0);
+				if (debug) fprintf(stderr,"Length=%d\n",address);
+				break;
 #if 0
-		case 't':
-			track=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Track=%d\n",address);
-			break;
-		case 's':
-			sector=strtol(optarg,&endptr,0);
-			if (debug) fprintf(stderr,"Sector=%d\n",address);
-			break;
+			case 't':
+				track=strtol(optarg,&endptr,0);
+				if (debug) fprintf(stderr,"Track=%d\n",address);
+				break;
+			case 's':
+				sector=strtol(optarg,&endptr,0);
+				if (debug) fprintf(stderr,"Sector=%d\n",address);
+				break;
 #endif
-		case 'v':
-			display_help(argv[0],1);
-			return 0;
-		case 'h': display_help(argv[0],0);
-			return 0;
-		case 'x':
-			ignore_errors=1;
-			break;
-		case 'y':
-			always_yes=1;
+			case 'v':
+				display_help(argv[0],1);
+				return 0;
+			case 'h': display_help(argv[0],0);
+				return 0;
+			case 'x':
+				ignore_errors=1;
+				break;
+			case 'y':
+				always_yes=1;
+				break;
+			}
+		}
+
+		if (parse_phase == OPT_PARSE_2ND_PASS) {
+			parse_phase = OPT_PARSE_DONE;
 			break;
 		}
+
+		if (optind==argc) {
+			fprintf(stderr,"ERROR!  Must specify disk image!\n\n");
+			return -ERROR_INVALID_PARAMATER;
+		}
+
+		/* get argument 1, which is image name */
+		strncpy(image,argv[optind],BUFSIZ-1);
+		dos_fd=open(image,O_RDWR);
+		if (dos_fd<0) {
+			fprintf(stderr,"Error opening disk_image: %s\n",image);
+			return -ERROR_FILE_NOT_FOUND;
+		}
+		retval=dos33_read_vtoc(dos_fd,vtoc);
+		if (retval<0) goto exit_and_close;
+
+		/* Move to next argument */
+		optind++;
+
+		if (optind==argc) {
+			fprintf(stderr,"ERROR!  Must specify command!\n\n");
+			retval=-ERROR_INVALID_PARAMATER;
+			goto exit_and_close;
+		}
+
+		/* Grab command */
+		strncpy(temp_string,argv[optind],BUFSIZ-1);
+
+		/* Make command be uppercase */
+		for(i=0;i<strlen(temp_string);i++) {
+			temp_string[i]=toupper(temp_string[i]);
+		}
+
+		/* Move to next argument */
+		optind++;
+
+		/* Non-GNU platforms don't permute all the options to */
+		/* occur before the non-option args. Thus, more */
+		/* options may be available to process after */
+		/* we grabbed the command. */
+		if (optind != argc && argv[optind][0] == '-'
+			&& argv[optind][1] != '\0'
+			&& !(argv[optind][1] == '-' && argv[optind][2] == '\0')) {
+
+			/* More options to parse; go back around with */
+			/* what's left of argv. */
+			parse_phase = OPT_PARSE_2ND_PASS;
+			argv += (optind - 1);
+			argc -= (optind - 1);
+			optind = 1;
+		}
+                else {
+                    parse_phase = OPT_PARSE_DONE;
+                }
 	}
-
-	if (optind==argc) {
-		fprintf(stderr,"ERROR!  Must specify disk image!\n\n");
-		return -ERROR_INVALID_PARAMATER;
-	}
-
-	/* get argument 1, which is image name */
-	strncpy(image,argv[optind],BUFSIZ-1);
-	dos_fd=open(image,O_RDWR);
-	if (dos_fd<0) {
-		fprintf(stderr,"Error opening disk_image: %s\n",image);
-		return -ERROR_FILE_NOT_FOUND;
-	}
-	retval=dos33_read_vtoc(dos_fd,vtoc);
-	if (retval<0) goto exit_and_close;
-
-	/* Move to next argument */
-	optind++;
-
-	if (optind==argc) {
-		fprintf(stderr,"ERROR!  Must specify command!\n\n");
-		retval=-ERROR_INVALID_PARAMATER;
-		goto exit_and_close;
-	}
-
-	/* Grab command */
-	strncpy(temp_string,argv[optind],BUFSIZ-1);
-
-	/* Make command be uppercase */
-	for(i=0;i<strlen(temp_string);i++) {
-		temp_string[i]=toupper(temp_string[i]);
-	}
-
-	/* Move to next argument */
-	optind++;
 
 	command=lookup_command(temp_string);
 
@@ -1381,7 +1412,7 @@ int main(int argc, char **argv) {
 				"apple_filename_new\n",
 				argv[0],image);
 			retval=-ERROR_INVALID_PARAMATER;
-	     		goto exit_and_close;
+			goto exit_and_close;
 		}
 
 		/* Truncate filename if too long */
@@ -1394,7 +1425,7 @@ int main(int argc, char **argv) {
 				"apple_filename_new\n",
 				argv[0],image);
 			retval=-ERROR_INVALID_PARAMATER;
-	     		goto exit_and_close;
+			goto exit_and_close;
 		}
 
 		truncate_filename(new_filename,argv[optind]);
