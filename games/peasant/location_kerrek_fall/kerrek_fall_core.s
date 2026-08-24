@@ -80,46 +80,8 @@ game_loop:
 
 	jsr	draw_peasant_bow
 
-.if 0
-	;======================
-	; check if level over
-
-	lda	LEVEL_OVER
-	bmi	oops_new_location
-	bne	level_over
-
-	;==========================
-	; update screen
-
-
-	jsr	update_screen
-
-
-	;===========================
-	; "move"
-
-	jsr	kerrek_move
-
-	;=======================
-	; increment frame
-
-	inc	FRAME
-
-	;=======================
-	; increment flame
-
-	jsr	increment_flame
-
-
-	;=======================
-	; flip page
-
-;	jsr	wait_vblank
-
-	jsr	hgr_page_flip
-
-	jmp	game_loop
-.endif
+	; FIXME: update score, etc
+	; FIXME: return from whence we came
 
 ;	lda	#LOCATION_KERREK_FALL
 ;	jsr	update_map_location

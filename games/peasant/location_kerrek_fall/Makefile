@@ -106,7 +106,7 @@ kerrek_fall_core.o:	kerrek_fall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		../new_map_location.s ../keyboard.s \
 		../wait_a_bit.s \
 		../sound/kerrek_appear.s \
-		draw_bow.s \
+		draw_peasant_bow.s \
 		load_shooting_sprites.s \
 		kerrek_fall_actions.s \
 		kerrek_sprite_list.s \

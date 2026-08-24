@@ -1,13 +1,16 @@
-	;=============================
-	;=============================
-	;=============================
-	; shoot the bow
-	;=============================
-	;=============================
-	;=============================
+	;================================
+	;================================
+	;================================
+	; shoot the bow / hit the kerrek
+	;================================
+	;================================
+	;================================
 
-PEASANT_MAX_BOW = 16
+PEASANT_MAX_BOW = 16+37
 
+;===============================================
+; peasant progress
+;===============================================
 
 peasant_bow_progress:
 .byte	0			; 455
@@ -32,8 +35,12 @@ peasant_bow_offset_x_right:
 ;.byte 0,0,0,0,	0,0,0,0, 0
 
 
-	;===============================
-	;
+
+;===============================
+;===============================
+; actual code
+;===============================
+;===============================
 
 draw_peasant_bow:
 
@@ -53,6 +60,13 @@ draw_peasant_bow_loop:
 	; next draw appropriate frame
 
 	ldy	PEASANT_BOW_COUNT
+	cpy	#16
+	bcc	bow_count_less_than_16
+
+	ldy	#16			; force to 16 if higher
+
+bow_count_less_than_16:
+
 	lda	peasant_bow_progress,Y
 	tay
 
@@ -77,8 +91,6 @@ adjust_shooter_left:
 
 adjust_shooter_common:
 	sta	SPRITE_X
-
-
 
 ;	clc
 ;	lda	PEASANT_Y
@@ -114,4 +126,7 @@ adjust_shooter_common:
 	sta	SUPPRESS_DRAWING
 
 	rts
+
+
+
 
