@@ -23,9 +23,9 @@
 	.byte >kerrek_hit_right6_sprite
 
 ;sprites_xsize:
-	.byte 3,3,3,3, 3,3,3
+	.byte 4,7,5,6, 7,7,6
 
 ;sprites_ysize:
-	.byte 48,48,48,48, 48,48,48
+	.byte 48,48,45,45, 23,14,23
 
 	.include "sprites_kerrek_fall/kerrek_hit_sprites_right.inc"
