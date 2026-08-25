@@ -19,6 +19,16 @@ CORE_DESTINATION = $8000
 	sta	FLAME_COUNT
 
 	;========================
+	; Load Sprites
+	;========================
+
+	jsr	load_shooting_sprites
+
+	jsr	load_kerrek_walking_sprites
+
+	jsr	load_kerrek_hit_sprites
+
+	;========================
 	; Load Core
 	;========================
 	; do this before background
@@ -39,5 +49,4 @@ CORE_DESTINATION = $8000
 kerrek_fall_core_zx02:
 .incbin "KERREK_FALL_CORE.zx02"
 
-;.include "../priority_copy.s"
-
+.include "load_shooting_sprites.s"

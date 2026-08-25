@@ -14,7 +14,9 @@ kerrek_fall_loader.o:	kerrek_fall_loader.s \
 		../zp.inc ../hardware.inc ../qload.inc \
 		../location_common/loader_common.s \
 		KERREK_FALL_CORE.zx02 \
-		shoot_left_sprites.zx02 shoot_right_sprites.zx02
+		shoot_left_sprites.zx02 shoot_right_sprites.zx02 \
+		kerrek_walk_left_sprites.zx02 kerrek_walk_right_sprites.zx02 \
+		kerrek_hit_left_sprites.zx02 kerrek_hit_right_sprites.zx02
 	ca65 -o kerrek_fall_loader.o kerrek_fall_loader.s -l kerrek_fall_loader.lst
 
 ###
@@ -112,13 +114,7 @@ kerrek_fall_core.o:	kerrek_fall_core.s ../zp.inc ../hardware.inc ../qload.inc \
 		kerrek_sprite_list.s \
 		draw_kerrek.s \
 		move_kerrek.s \
-		sprites_kerrek_fall/kerrek_walk_sprites_left.inc \
-		sprites_kerrek_fall/kerrek_walk_sprites_right.inc \
-		sprites_kerrek_fall/peasant_shoot_sprites_left.inc \
-		sprites_kerrek_fall/peasant_shoot_sprites_right.inc \
-		shoot_left_sprites.zx02 shoot_right_sprites.zx02 \
-		kerrek_walk_left_sprites.zx02 kerrek_walk_right_sprites.zx02 \
-		kerrek_hit_left_sprites.zx02 kerrek_hit_right_sprites.zx02
+		patch_sprite_table.s
 	ca65 -o kerrek_fall_core.o kerrek_fall_core.s -l kerrek_fall_core.lst
 
 

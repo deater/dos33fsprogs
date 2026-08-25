@@ -41,6 +41,7 @@ shoot_common:
 
 	jsr	zx02_full_decomp
 
+.if 0
 	; copy to the sprite data
 
 	ldx	#0
@@ -67,6 +68,7 @@ copy_shoot_loop:
 	inx
 	cpx	#NUM_SHOOTING_SPRITES
 	bne	copy_shoot_loop
+.endif
 
 	rts
 
@@ -107,6 +109,7 @@ load_walk_common:
 
 	jsr	zx02_full_decomp
 
+.if 0
 	; copy to the sprite data
 
 	ldx	#0
@@ -133,7 +136,7 @@ copy_walk_loop:
 	inx
 	cpx	#NUM_KERREK_WALK_SPRITES
 	bne	copy_walk_loop
-
+.endif
 	rts
 
 
@@ -174,6 +177,7 @@ load_hit_common:
 
 	jsr	zx02_full_decomp
 
+.if 0
 	; copy to the sprite data
 
 	ldx	#0
@@ -200,7 +204,7 @@ copy_hit_loop:
 	inx
 	cpx	#NUM_KERREK_HIT_SPRITES
 	bne	copy_hit_loop
-
+.endif
 	rts
 
 hit_right_zx02:
