@@ -1,8 +1,7 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 SPRITE_DIR = ../../location_kerrek1/sprites_kerrek1/
 
-all:	kerrek_hit_sprites.inc \
-	peasant_shoot_sprites_right.inc peasant_shoot_sprites_left.inc \
+all:	peasant_shoot_sprites_right.inc peasant_shoot_sprites_left.inc \
 	kerrek_walk_sprites_left.inc kerrek_walk_sprites_right.inc \
 	kerrek_hit_sprites_left.inc kerrek_hit_sprites_right.inc
 
