@@ -112,7 +112,7 @@ kerrek_hit_sprites_left.inc:	$(SPRITE_DIR)/kerrek_hit_sprites_left.png $(SPRITE_
 	$(HGR_SPRITE) -l kerrek_hit_left0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  14 113  41 161 >> kerrek_hit_sprites_left.inc
 	$(HGR_SPRITE) -l kerrek_hit_left1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56  60 104 108 >> kerrek_hit_sprites_left.inc
 	$(HGR_SPRITE) -l kerrek_hit_left1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png  56 113 104 161 >> kerrek_hit_sprites_left.inc
-	$(HGR_SPRITE) -l kerrek_hit_left2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112  64 146 108 >> kerrek_hit_sprites_left.inc
+	$(HGR_SPRITE) -l kerrek_hit_left2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112  63 146 108 >> kerrek_hit_sprites_left.inc
 	$(HGR_SPRITE) -l kerrek_hit_left2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 112 116 146 161 >> kerrek_hit_sprites_left.inc
 	$(HGR_SPRITE) -l kerrek_hit_left3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154  63 195 108 >> kerrek_hit_sprites_left.inc
 	$(HGR_SPRITE) -l kerrek_hit_left3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_left.png 154 116 195 161 >> kerrek_hit_sprites_left.inc
@@ -128,7 +128,7 @@ kerrek_hit_sprites_right.inc:	$(SPRITE_DIR)/kerrek_hit_sprites_right.png $(SPRIT
 	$(HGR_SPRITE) -l kerrek_hit_right0_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  14 113  41 161 >> kerrek_hit_sprites_right.inc
 	$(HGR_SPRITE) -l kerrek_hit_right1_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56  60 104 108 >> kerrek_hit_sprites_right.inc
 	$(HGR_SPRITE) -l kerrek_hit_right1_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png  56 113 104 161 >> kerrek_hit_sprites_right.inc
-	$(HGR_SPRITE) -l kerrek_hit_right2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112  64 146 108 >> kerrek_hit_sprites_right.inc
+	$(HGR_SPRITE) -l kerrek_hit_right2_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112  63 146 108 >> kerrek_hit_sprites_right.inc
 	$(HGR_SPRITE) -l kerrek_hit_right2_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 112 116 146 161 >> kerrek_hit_sprites_right.inc
 	$(HGR_SPRITE) -l kerrek_hit_right3_sprite $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154  63 195 108 >> kerrek_hit_sprites_right.inc
 	$(HGR_SPRITE) -l kerrek_hit_right3_mask   $(SPRITE_DIR)/kerrek_hit_sprites_right.png 154 116 195 161 >> kerrek_hit_sprites_right.inc
