@@ -32,7 +32,7 @@ kerrek_hit_offset_x_left:
 .byte $00,$fe,$ff,$ff,	$ff,$ff,$00
 
 kerrek_hit_offset_x_right:
-.byte $0,$0,$0,$0,	$0,$0,$0
+.byte $FF,$FE,$FF,$FE,	$FB,$FB,$FB
 
 kerrek_hit_offset_y_left:
 .byte 0,0,3,3,	25,34,25

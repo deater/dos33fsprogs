@@ -1,7 +1,7 @@
 	;=================================================
 	; hgr draw sprite with mask (only at 7-bit boundaries)
 	;=================================================
-	; *cannot* handle sprites bigger than a 256 byte page
+	; Update: now handles sprites bigger than a 256 byte page
 	;
 	; attempts to shift to allow arbitray odd/even columns
 	;
@@ -199,6 +199,13 @@ hgr_draw_sprite_both:
 	sta	(GBASL),Y		; store to screen
 
 	inx				; increment sprite offset
+	bne	skip_wrap
+
+	inc	hgr_sm_data_smc1+2
+	inc	hgr_sm_data_smc2+2
+	inc	hgr_sm_mask_smc1+2
+	inc	hgr_sm_mask_smc2+2
+skip_wrap:
 	iny				; increment output position
 
 
