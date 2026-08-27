@@ -187,4 +187,9 @@ update_screen:
 
 	jsr	draw_peasant
 
+	;======================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts

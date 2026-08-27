@@ -13,6 +13,15 @@ start_new_game:
 	sta	INTRO_MODE		; clear intro keyboard mode
 
 	;===================================================
+	; load RAIN code to $e000
+        ; actually load it
+
+        lda     #LOAD_RAIN
+        sta     WHICH_LOAD
+
+        jsr     load_file
+
+	;===================================================
 	; load inventory code to language card $d000 bank 2
 
 	; switch in language card

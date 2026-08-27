@@ -150,6 +150,11 @@ update_screen:
 	jsr	draw_peasant
 skip_draw_peasant:
 
+	;===================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts
 
 

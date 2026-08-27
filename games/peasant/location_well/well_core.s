@@ -156,5 +156,10 @@ update_screen:
 
 	jsr	draw_well
 
+	;========================
+	; draw rain
+
+	jsr	draw_rain
+
 
 	rts

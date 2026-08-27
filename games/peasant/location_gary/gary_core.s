@@ -221,4 +221,10 @@ not_wearing_mask:
 
 	jsr	increment_flame
 
+
+	;=======================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts

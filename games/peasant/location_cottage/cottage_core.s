@@ -135,4 +135,9 @@ update_screen:
 
 skip_draw_peasant:
 
+	;======================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts

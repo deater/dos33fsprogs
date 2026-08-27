@@ -1,6 +1,7 @@
 .include "../zp.inc"
 .include "../hardware.inc"
 
+.include "../rain/rain.inc"
 .include "../peasant_sprite.inc"
 .include "../qload.inc"
 .include "../inventory/inventory.inc"

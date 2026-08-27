@@ -1,37 +1,37 @@
 TODO:
 	+ handle properly loading regular vs robe sprites at load time
 	+ proper sound when lifting up belt
+	+ In theory can get belt when muddy, do we care?
+	+ (done) only decompress the sprites that are needed
+
+Animation issues:
+	+ technically in smash the peasant head is squished for a frame
+		when going into the ground, it would be easy to add it I just
+		forgot at the time
+	+ There's an extra kerrek falling frame that's a slight rotation
+		on an existing one that we don't implement
+	+ When a message is displayed, the kerrek stops
+		coming toward you but should still animates in place
+		(as per the real game)
+		(such as a "look kerrek")
+
+	+ (done) handle being smashed at extreme edge of screen
+	+ (done) allow kerrek to hit from left (instead of just right)
+
+Sound
+	+ kerrek arrival sound still isn't the best
+	+ kerrek falling (falling)
+	+ raise_up when pick up belt
+
+Parser:
+	+ double check we handle all the various combinatios
+		"shoot kerrek" or if you can "shoot bow" too or
+		just "shoot", etc
 
 
-+ technically in smash the peasant head is squished for a frame
-  when going into the ground, it would be easy to add it I just
-  forgot at the time
+%%%%%%%%%%%%%%%%%%%%%%
 
-
-+ handle being smashed at extreme edge of screen (OK?)
-
-fitting the exceptionally large amount of sprites:
-+ only need to decompress dead body sprites if dead
-+ death sprites only need to decompress left or right variants, not both
-
-
-
-- Kerrek 1
-  + When a message is displayed, the kerrek stops coming toward you
-	but still animates in place
-  + allow kerrek to hit from left (instead of just right)
-  + make sure kerrek hit animation doesn't go off screen
-  + Implement dead kerrek
-  + Animate kerrek (more frames)
-  + Animate shooting kerrek
-  + Sound effect when kerrek appears
-  + Animate getting belt
-  + Implement rain
-  + check if you have to type "shoot kerrek" or if you can "shoot bow" too or
-	just "shoot"
-
-
-Kerrek logic:
+Kerrek logic notes:
 
 + All maps: if kerrekdead + havebelt then increment screens_since_belt_taken
 
@@ -69,14 +69,5 @@ updateKerrek
 			keep walking toward you with speed being +/-2
 
 
-kerreck shoot routine mostly about facing left/right
-		
-what is default X/Y?
 
-			
-
-sound:
-	+ sting/appear if kerrek there
-	+ kerrek falling (falling)
-	+ raise_up when pick up belt
 

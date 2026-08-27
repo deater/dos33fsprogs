@@ -228,4 +228,9 @@ skip_draw_peasant:
 	jsr	draw_jhonka
 skip_draw_jhonka:
 
+	;=====================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts

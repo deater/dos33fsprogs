@@ -165,8 +165,14 @@ skip_draw_peasant:
 	;	note: might need extra work to make sure appears
 	;	in front of / behind peasant
 
+	; TODO: see kerrek code for this
+
 	jsr	draw_archer
 
+	;===========================
+	; draw rain
+
+	jsr	draw_rain
 
 	rts
 

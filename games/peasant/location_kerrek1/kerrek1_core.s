@@ -225,7 +225,7 @@ skip_draw_peasant_second:
 done_kerrek1_update:
 
 	;=====================
-;	jsr	draw_rain
+	jsr	draw_rain
 
 	rts
 

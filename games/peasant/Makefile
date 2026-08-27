@@ -20,7 +20,8 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	PARSE_INPUT.ZX02 \
 	./game_over/GAME_OVER \
 	sprites_peasant/PEASANT_SPRITES_COMMON \
-	map/MAP
+	map/MAP \
+	rain/RAIN
 	cp $(EMPTY_DISK)/empty.dsk peasant_disk1.dsk
 	$(DOS33_RAW) peasant_disk1.dsk  0  0 QBOOT      0   1
 	$(DOS33_RAW) peasant_disk1.dsk  0  2 QBOOT      1   1
@@ -36,6 +37,7 @@ peasant_disk1.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) peasant_disk1.dsk  18 0 PARSE_INPUT.ZX02  0   0
 	$(DOS33_RAW) peasant_disk1.dsk  19 0 ./inventory/INVENTORY  0   0
 	$(DOS33_RAW) peasant_disk1.dsk  30 0 ./copy/COPY_CHECK   0   0
+	$(DOS33_RAW) peasant_disk1.dsk  31 0 ./rain/RAIN   0   0
 
 peasant_disk2.dsk:	QBOOT QLOAD \
 	./wrong_boot/WBOOT2 \
@@ -209,6 +211,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 18 0` PARSE_INPUT.ZX02  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 19 0` ./inventory/INVENTORY  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 1 30 0` ./copy/COPY_CHECK   0   0
+	$(PRODOS_RAW) peasant.2mg `./dts_block 1 31 0` ./rain/RAIN   0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  0 0`  ./wrong_boot/WBOOT2      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2 0 12` ./saves/SAVE_DATA      0   1
 	$(PRODOS_RAW) peasant.2mg `./dts_block 2  1 0` ./location_inside_inn/INSIDE_INN_LOADER          0   0
@@ -456,6 +459,9 @@ qload.inc:	generate_common QLOAD
 
 inventory/INVENTORY:	
 	cd inventory && make
+
+rain/RAIN:	
+	cd rain && make
 
 ./vid_logo/VID_LOGO: qload.inc
 	cd vid_logo && make
@@ -743,6 +749,7 @@ distclean:
 	cd location_yellow_tree && make distclean
 	cd map && make distclean
 	cd music && make distclean
+	cd rain && make distclean
 	cd saves && make distclean
 	cd sprites_peasant && make distclean
 	cd text && make distclean
@@ -801,6 +808,7 @@ clean:
 	cd location_yellow_tree && make clean
 	cd map && make clean
 	cd music && make clean
+	cd rain && make clean
 	cd saves && make clean
 	cd sound && make clean
 	cd sprites_peasant && make clean

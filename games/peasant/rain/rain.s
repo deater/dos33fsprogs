@@ -552,3 +552,5 @@ puddle_list_y_h:
 	.byte >puddle_locations1_y
 	.byte >puddle_locations0_y
 	.byte >puddle_locations2_y
+
+.include "grey_sky.s"

@@ -171,7 +171,10 @@ knight_y_smc:
 
 	jsr	draw_peasant
 
+	;====================
+	; draw rain
 
+	jsr	draw_rain
 
 	rts
 

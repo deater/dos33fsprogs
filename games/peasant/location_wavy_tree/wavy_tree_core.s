@@ -155,4 +155,9 @@ update_screen:
 
 	jsr	handle_ned
 
+	;==========================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts

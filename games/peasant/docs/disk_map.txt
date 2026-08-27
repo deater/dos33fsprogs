@@ -16,9 +16,10 @@ Disk1
 	INTRO		14-17	       10836 (3)
 	PARSE_INPUT	18		3316 (1)
 	INVENTORY	19		3872 (1)
-	???		21-29
+	???		20-29
 	COPY_CHECK	30		2934 (1)
-	???		31-34
+	RAIN		31		 650 (1)
+	???		32-34
 
 DISK2
 	WBOOT2		0		159

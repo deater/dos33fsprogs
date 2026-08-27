@@ -135,6 +135,9 @@ update_screen:
 
 	jsr	animate_river
 
+	;=======================
+	; draw rain
 
+	jsr	draw_rain
 
 	rts

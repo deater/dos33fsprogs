@@ -2,12 +2,19 @@ include ../../../Makefile.inc
 
 LINKER_SCRIPTS = ../../../linker_scripts
 
-all:	RAIN
+all:	RAIN rain.inc
+
+###
+
+rain.inc:	RAIN
+	../generate_common -a 0xe000 -s draw_rain rain.lst > rain.inc
+	../generate_common -a 0xe000 -s grey_sky rain.lst >> rain.inc
+
 
 ###
 
 RAIN:	rain.o
-	ld65 -o RAIN rain.o -C $(LINKER_SCRIPTS)/apple2_8000.inc
+	ld65 -o RAIN rain.o -C $(LINKER_SCRIPTS)/apple2_e000.inc
 
 rain.o:	rain.s \
 		../hardware.inc ../zp.inc ../qload.inc

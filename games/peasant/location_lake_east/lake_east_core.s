@@ -160,6 +160,11 @@ skip_boat:
 	jsr	draw_peasant
 skip_peasant:
 
+	;======================
+	; draw rain
+
+	jsr	draw_rain
+
 	rts
 
 

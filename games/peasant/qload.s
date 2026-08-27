@@ -42,7 +42,7 @@ which_disk_array:
 .byte 5,5		; OUTER2,OUTER3
 .byte 3			; INSIDE_INN_NIGHT
 .byte 2,$FF,5,5		; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
-.byte 5			; KERREK_FALL
+.byte 5,1		; KERREK_FALL, RAIN
 .byte $FF		; disk detect
 
 load_address_array:
@@ -60,7 +60,7 @@ load_address_array:
 .byte $40			; INSIDE_INN_NIGHT
 .byte >load_buffer,>peasant_sprites_temp,>peasant_sprites_temp,>peasant_sprites_temp
 				; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
-.byte $40			; KERREK_FALL
+.byte $40,$e0			; KERREK_FALL, RAIN
 .byte >load_buffer		; disk detect
 
 track_array:
@@ -77,7 +77,7 @@ track_array:
 .byte 15,17		; OUTER2, OUTER3
 .byte 27		; INSIDE_INN_NIGHT
 .byte  0, 3, 10, 3	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
-.byte 28		; KERREK_FALL
+.byte 28,31		; KERREK_FALL,RAIN
 .byte  0		; disk detect
 
 sector_array:
@@ -94,7 +94,7 @@ sector_array:
 .byte  0, 0		; OUTER2,OUTER3
 .byte  0		; INSIDE_INN_NIGHT
 .byte  12,0,0,0		; SAVE_DATA, PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
-.byte 0			; KERREK_FALL
+.byte  0,0		; KERREK_FALL, RAIN
 .byte  0		; disk detect
 
 length_array:
@@ -111,8 +111,8 @@ length_array:
 .byte  32,32		; OUTER2, OUTER3
 .byte  32		; INSIDE_INN_NIGHT
 .byte   1,16,16,16	; SAVE_DATA,PEASANT_SPRITES,CLIMB_SPRITES,OUTER_SPRITES
-.byte 32		; KERREK_FALL
-.byte   1		; disk detect	; 47
+.byte 32,4		; KERREK_FALL, RAIN
+.byte   1		; disk detect	; 48
 
 
 load_file:
