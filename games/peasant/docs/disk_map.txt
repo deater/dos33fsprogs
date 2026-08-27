@@ -6,15 +6,15 @@ Common: peasant sprites (1)	TRACK3
 Disk1
 	QBOOT		0	0..6?
 	SAVE_DATA	0	12
-	QLOAD		1-2		4905 (2)
+	QLOAD		1-2		4919 (2)
 	PSPRITE		3		3321 (1)
 	GAME_OVER	4		2079 (1)
-	MAP		5-6		4067 (1)
+	MAP		5-6		4068 (1)
 	MUSIC		7-8		5981 (2)
-	VID_LOGO	9-10		7441 (2)
+	VID_LOGO	9-10		7443 (2)
 	TITLE		11-13	       10485 (3)
-	INTRO		14-17	       10834 (3)
-	PARSE_INPUT	18		3298 (1)
+	INTRO		14-17	       10836 (3)
+	PARSE_INPUT	18		3316 (1)
 	INVENTORY	19		3872 (1)
 	???		21-29
 	COPY_CHECK	30		2934 (1)
@@ -22,43 +22,43 @@ Disk1
 
 DISK2
 	WBOOT2		0		159
-	INSIDE_INN	1-2		5698 (2)
+	INSIDE_INN	1-2		5713 (2)
 	PSPRITE		3		3321 (1)
-	GAME_OVER	4		2075 (1)
-	MAP		5-6		4063 (1)
-	KNIGHT		7-8		6926 (2)	night
+	GAME_OVER	4		2079 (1)
+	MAP		5-6		4068 (1)
+	KNIGHT		7-8		6956 (2)	night
 	????		9
-	OUSTSIDE_INN	10-12		8726 (3)	night
-	BURN_TREE	13-14		6399 (2)	night
-	WATERFALL	15-16		3543 (1)
-	YELLOW_TREE	17-18		3427 (1)
-	RIVER		19-20		6492 (2)	night
-	LAKE_E		21-22		7805 (2)	night
-	LADY_COTTAGE	23-24		5517 (2)	night
-	INSIDE_LADY	25-26		6185 (2)
-	LAKE_W		27-28		5043 (2)
-	BROTHERS	29-30		5707 (2)
-	WELL		31-32		5842 (2)
-	KERREK2		33-34		4459 (2)
+	OUSTSIDE_INN	10-12		8750 (3)	night
+	BURN_TREE	13-14		6437 (2)	night
+	WATERFALL	15-16		3567 (1)
+	YELLOW_TREE	17-18		3446 (1)
+	RIVER		19-20		6506 (2)	night
+	LAKE_E		21-22		7817 (2)	night
+	LADY_COTTAGE	23-24		5533 (2)	night
+	INSIDE_LADY	25-26		6242 (2)
+	LAKE_W		27-28		5081 (2)
+	BROTHERS	29-30		5743 (2)
+	WELL		31-32		5909 (2)
+	KERREK2		33-34		6984 (2)
 
 DISK3
 	WBOOT3		0		159
 	???		1-2
 	PSPRITE		3		3321 (1)
-	GAME_OVER	4		2075 (1)
-	MAP		5-6		4063 (1)
-	KERREK1		7-8		4610 (2)
-	PUDDLE		9-10		5432 (2)
-	COTTAGE		11-12		4326 (2)
-	WAVY_TREE	13-14		2527 (1)
+	GAME_OVER	4		2079 (1)
+	MAP		5-6		4068 (1)
+	KERREK1		7-8		7050 (2)
+	PUDDLE		9-10		5454 (2)
+	COTTAGE		11-12		4215 (2)
+	WAVY_TREE	13-14		2386 (1)
 	HAYSTACK	15-16		5988 (2)
 	????		17		???? 
-	NED_COTTAGE	18-20		8413 (3)		
-	INSIDE_NED	21-22		4776 (2)
-	GARY		23-24		7277 (2)
-	HIDDEN_GLEN	25-26		6104 (2)
-	INSIDE_INN_NIGHT27-28		5635 (2)
-	JHONKA		29-31		8319 (3)
+	NED_COTTAGE	18-20		8475 (3)		
+	INSIDE_NED	21-22		4634 (2)
+	GARY		23-24		7221 (2)
+	HIDDEN_GLEN	25-26		5993 (2)
+	INSIDE_INN_NIGHT27-28		5495 (2)
+	JHONKA		29-31		8234 (3)
 	????		32-34		????
 
 DISK4
@@ -66,25 +66,26 @@ DISK4
 	???		1-2
 	PSPRITE		3		3331 (1)
 	GAME_OVER	4		2075 (1)
-	MAP		5-6		4063 (2)
+	MAP		5-6		4068 (2)
 	ARCHERY		7-10		2029 (1)
 	??		11-34
 
 DISK5
 	WBOOT5		0		159
-	CLIFF_BASE	1-2		4576 (2)
+	CLIFF_BASE	1-2		4512 (2)
 	OUTER_SPRITES	3		2856 (1)
-	GAME_OVER	4		2075 (1)
-	MAP		5-6		4056 (1)
-	CLIMB		7-9		11291 (3)
+	GAME_OVER	4		2079 (1)
+	MAP		5-6		4068 (1)
+	CLIMB		7-9		11357 (3)
 	CLIMB_SPRITES	10		1270  (1)
-	CLIFF_HEIGHTS	11-12		4950  (2)
-	OUTER		13-14		6505  (2)
-	OUTER2		15-16		6470  (2)
-	OUTER3		17-18		6363  (2)
+	CLIFF_HEIGHTS	11-12		4887  (2)
+	OUTER		13-14		6459  (2)
+	OUTER2		15-16		6422  (2)
+	OUTER3		17-18		7222  (2)
 	TROGDOR		19-22		????  (4)
-	ENDING		23-27		16984 (5)
-	???		28-34
+	ENDING		23-27		16988 (5)
+	KERREK_FALL	28-29		6258  (2)
+	???		30-34
 
 
 
@@ -107,9 +108,13 @@ Glen
                                    14     | 10
 
 
-
+;==========================================================================
+;==========================================================================
+;==========================================================================
 ; OLD OLD OLD
-
+;==========================================================================
+;==========================================================================
+;==========================================================================
 
 
 Common: peasant sprites (1)	TRACK3

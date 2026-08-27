@@ -1,9 +1,14 @@
+TODO:
+	+ handle properly loading regular vs robe sprites at load time
+	+ proper sound when lifting up belt
+
+
 + technically in smash the peasant head is squished for a frame
   when going into the ground, it would be easy to add it I just
   forgot at the time
 
 
-+ handle being smashed at extreme edge of screen
++ handle being smashed at extreme edge of screen (OK?)
 
 fitting the exceptionally large amount of sprites:
 + only need to decompress dead body sprites if dead

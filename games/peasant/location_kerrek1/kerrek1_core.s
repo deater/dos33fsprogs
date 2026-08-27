@@ -13,7 +13,6 @@ kerrek1_core:
 .include "../location_common/common_core.s"
 
 
-
 	;==============================
 	; draw kerrek body if necessary
 	;==============================
@@ -78,9 +77,7 @@ skip_peasant_actions:
 	;==========================
 	; update screen
 
-
 	jsr	update_screen
-
 
 	;===========================
 	; move/collide kerrek
@@ -169,9 +166,9 @@ really_level_over:
 
 .include "../sound/kerrek_appear.s"
 .include "../sound/mud_splat.s"
-.include "../sound/thunder.s"
+;.include "../sound/thunder.s"
 .include "../sound/raise_up.s"
-.include "../sound/falling.s"
+;.include "../sound/falling.s"
 
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
@@ -211,7 +208,7 @@ skip_draw_peasant_first:
 	jsr	kerrek_draw		; draw kerrek
 	jsr	kerrek_draw_flies	; draw flies
 
-	rts
+	jmp	done_kerrek1_update
 
 kerrek1_draw_kerrek_first:
 
@@ -223,6 +220,12 @@ kerrek1_draw_kerrek_first:
 	bne	skip_draw_peasant_second
 	jsr	draw_peasant
 skip_draw_peasant_second:
+
+
+done_kerrek1_update:
+
+	;=====================
+;	jsr	draw_rain
 
 	rts
 

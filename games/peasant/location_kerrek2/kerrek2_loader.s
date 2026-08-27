@@ -2,7 +2,6 @@
 
 ; Kerrek2 Loader
 
-
 ; by Vince `deater` Weaver	vince@deater.net
 
 

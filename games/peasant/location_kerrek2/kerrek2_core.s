@@ -85,10 +85,8 @@ skip_peasant_actions:
 
 	jsr	update_screen
 
-
 	;==========================
-	; check if kerrek collision
-	;==========================
+	; move/collide kerrek
 
 	; don't do this if in process of smashing
 
@@ -134,7 +132,6 @@ no_sting:
 	jsr	increment_flame
 
 
-
 	;==================
 	; flip page
 
@@ -166,24 +163,23 @@ level_over:
 really_level_over:
 	rts
 
-
-
-.include "../wait_a_bit.s"
 .include "../location_common/include_bottom.s"
 
+.include "../wait_a_bit.s"
 .include "../hgr_routines/hgr_sprite.s"
 .include "../hgr_routines/hgr_sprite_mask.s"
-
 .include "../location_kerrek1/kerrek1_actions.s"
-.include "../location_kerrek1/sprites_kerrek1/kerrek_walk_sprites.inc"
-.include "../location_kerrek1/sprites_kerrek1/kerrek_smash_sprites.inc"
-.include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
-.include "../location_kerrek1/sprites_kerrek1/peasant_belt.inc"
 
 .include "../sound/kerrek_appear.s"
-.include "../sound/thunder.s"
 .include "../sound/mud_splat.s"
+;.include "../sound/thunder.s"
 .include "../sound/raise_up.s"
+;.include "../sound/falling.s"
+
+.include "../location_kerrek1/sprites_kerrek1/kerrek_walk_sprites.inc"
+.include "../location_kerrek1/sprites_kerrek1/kerrek_smash_sprites.inc"
+.include "../location_kerrek1/sprites_kerrek1/peasant_belt.inc"
+.include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
 
 	;=========================
 	; update screen
@@ -233,10 +229,10 @@ skip_draw_peasant_second:
 done_kerrek2_update:
 
 	;=====================
-	jsr	draw_rain
+;	jsr	draw_rain
 
 
 	rts
 
 
-.include "../rain/rain.s"
+;.include "../rain/rain.s"
