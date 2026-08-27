@@ -82,6 +82,7 @@ $C0-$CF	(n/a)	I/O
 Language card (high 16k) (new)
 
 $D0-$DF (bank1)	(4k)	per-levelstrings (biggest is ~3571 [outer]  currently)
+					(maybe now is ~2973 (inside lady)
 $D0-$DF (bank2) (4k)	inventory	(3122 bytes)
 $E0-$E7 (2k)    unused/temporary for overflow graphics/sprites
 $E8-$E9 (512B)	temp area for load/save file marshalling

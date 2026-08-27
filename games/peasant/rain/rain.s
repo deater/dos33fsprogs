@@ -1,3 +1,6 @@
+.include "../zp.inc"
+.include "../common_defines.inc"
+
 	;=====================
 	;=====================
 	; draw_rain
