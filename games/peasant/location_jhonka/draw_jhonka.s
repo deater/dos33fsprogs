@@ -8,8 +8,9 @@
 draw_jhonka:
 	; first check if he's there
 
-	lda	KERREK_STATE
-	and	#$f
+	lda	GAME_STATE_3
+	and	#KERREK_DEAD
+
 	beq	done_draw_jhonka
 
 

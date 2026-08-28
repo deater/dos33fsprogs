@@ -652,12 +652,14 @@ jhonka_do_kill:
 	;	Carry Set = yes
 	;	Carry Clear = no
 
-	; FIXME: we can check GAME_STATE_3 KERREK_DEAD too
+	; check GAME_STATE_3 KERREK_DEAD
+	; rather than KERREK_STATE
 check_kerrek_dead:
 	sec
-	lda	KERREK_STATE
-	and	#$f
+	lda	GAME_STATE_3
+	and	#KERREK_DEAD
 	bne	done_check_kerrek_dead
+
 	clc
 done_check_kerrek_dead:
 	rts
