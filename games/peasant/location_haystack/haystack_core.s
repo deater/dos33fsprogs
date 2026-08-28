@@ -160,6 +160,10 @@ skip_draw_peasant:
 
 	jsr	draw_haystack
 
+	;======================
+	; draw rain
+
+	jsr	draw_rain
 
 
 	rts

@@ -80,14 +80,69 @@ kerrek_fall:
 
 game_loop:
 
+	;==================================
+	; do the shooting animation
+
 	jsr	draw_peasant_bow
 
-	; FIXME: update score, etc
-	; FIXME: return from whence we came
 
-;	lda	#LOCATION_KERREK_FALL
-;	jsr	update_map_location
+	;=================================
+	; done with animation
 
+	; turn peasant back on
+	;	real game keep holding bow until moved??
+
+	lda	SUPPRESS_DRAWING
+	and	#<(~SUPPRESS_PEASANT)
+	sta	SUPPRESS_DRAWING
+
+	ldx	#<kerrek_kill_message2
+	ldy	#>kerrek_kill_message2
+	jsr	partial_message_step
+
+	lda	#5
+	jsr	score_points
+
+	; make kerrek dead
+
+	lda	GAME_STATE_3
+	ora	#KERREK_DEAD
+	sta	GAME_STATE_3
+
+	; make it rain, make the puddle wet
+
+	; sound: three thunders
+
+	jsr     thunder_sound
+	; pause?
+	jsr     thunder_sound
+	; pause?
+	jsr     thunder_sound
+
+	lda	GAME_STATE_1
+	ora	#(PUDDLE_WET)
+	sta	GAME_STATE_1
+
+	lda	#6			; should this be 5?
+	sta	RAIN_COUNT
+
+	ldx     #<kerrek_kill_message3
+	ldy     #>kerrek_kill_message3
+	jsr	partial_message_step
+
+	;==========================================
+	; return to level we were called from
+
+	; this sets WHICH_LOAD to proper place
+
+	lda	PREVIOUS_LOCATION
+	jsr	update_map_location
+
+	; skip updating our location as if we were
+	; loading from save game
+
+	lda	#NEW_FROM_LOAD
+	sta	LEVEL_OVER
 
 	;========================
 	; exit level
@@ -172,6 +227,30 @@ kerrek1_draw_kerrek_first:
 skip_draw_peasant_second:
 
 	rts
+
+
+
+
+
+; FIXME: use the compressed versions of these to save a few bytes
+
+
+kerrek_kill_message2:
+.byte "ARROWED!! Nice shot. You",13
+.byte "smote the Kerrek! He lay",13
+.byte "there stinking.",0
+
+; start the rain
+
+; pause
+kerrek_kill_message3:
+.byte "A light rain heralds the",13
+.byte "washing free of the",13
+.byte "Kerrek's grip on the land.",13
+.byte "You're feeling pretty",13
+.byte "good, though, so the",13
+.byte "artless symbolism doesn't",13
+.byte "bug you.",0
 
 
 
