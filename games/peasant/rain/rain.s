@@ -82,8 +82,10 @@ draw_puddle_loop:
 
 	ldy	#0
 
+	; tries to preserve palette
+
 	lda	splash_sprite0,X	; load mask
-	eor	#$7f			; invert mask
+	eor	#$ff			; invert mask
 	and	(GBASL),Y		; mask screen value
 	ora	splash_sprite0,X	; put sprite
 	sta	(GBASL),Y		; save back out
@@ -92,7 +94,7 @@ draw_puddle_loop:
 	iny				; increment hgr column
 
 	lda	splash_sprite0,X	; load mask
-	eor	#$7f			; invert mask
+	eor	#$ff			; invert mask
 	and	(GBASL),Y		; mask screen value
 	ora	splash_sprite0,X	; put sprite
 	sta	(GBASL),Y		; save back out

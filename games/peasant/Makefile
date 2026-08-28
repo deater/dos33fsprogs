@@ -162,7 +162,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
-	./map/MAP ./target/TARGET \
+	./map/MAP ./target/TARGET ./rain/RAIN \
 	./trogdor/TROGDOR_LOADER ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./climb/sprites/climbing_sprites.zx02 \
 	./location_outer/OUTER_LOADER \
