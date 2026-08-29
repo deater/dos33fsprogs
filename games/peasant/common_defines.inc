@@ -8,8 +8,8 @@ collision_temp			= priority_temp+$400	; 256 bytes
 
 dialog_location			= $d000		; 4k
 
-; note, is anyone using this?
-sprite_staging			= $e000		; 2k
+rain_location			= $e000		; 1k
+sprite_staging			= $e400		; 1k	;kerrek
 
 load_buffer			= $e800		; 512 bytes
 hposn_low			= $ea00		; 256 bytes

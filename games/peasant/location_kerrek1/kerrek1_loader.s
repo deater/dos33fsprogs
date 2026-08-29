@@ -14,6 +14,15 @@ PRIORITY_LOCATION=kerrek1_priority_zx02
 BG_LOCATION=kerrek1_zx02
 CORE_LOCATION=kerrek1_core_zx02
 
+	;========================
+	; Load Sprites
+	;========================
+
+	jsr	load_belt_sprites
+
+	jsr	load_kerrek_body_sprites
+
+
 .include "../location_common/loader_common.s"
 
         jmp     $8000
@@ -28,4 +37,6 @@ kerrek1_core_zx02:
 .incbin "KERREK1_CORE.zx02"
 
 .include "../priority_copy.s"
+
+.include "load_compressed_sprites.s"
 

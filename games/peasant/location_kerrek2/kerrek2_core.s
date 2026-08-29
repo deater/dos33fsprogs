@@ -12,6 +12,11 @@ kerrek2_core:
 
 .include "../location_common/common_core.s"
 
+	;==============================
+	; patch sprite tables
+	;==============================
+
+	jsr	patch_sprite_tables
 
 	;===============================
 	; draw kerrek body if necessary
@@ -178,8 +183,12 @@ really_level_over:
 
 .include "../location_kerrek1/sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "../location_kerrek1/sprites_kerrek1/kerrek_smash_sprites.inc"
-.include "../location_kerrek1/sprites_kerrek1/peasant_belt.inc"
-.include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
+;.include "../location_kerrek1/sprites_kerrek1/peasant_belt.inc"
+;.include "../location_kerrek1/sprites_kerrek1/kerrek_body_sprites.inc"
+
+.include "../location_kerrek1/sprites_kerrek1/kerrek_flies.inc"
+.include "../location_kerrek1/patch_sprite_table.s"
+
 
 	;=========================
 	; update screen

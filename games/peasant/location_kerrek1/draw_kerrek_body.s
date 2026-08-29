@@ -76,19 +76,19 @@ kerrek_really_draw_body:
 	sta	SPRITE_Y
 
 	; have to set X to which sprite to show
-	; if facing right, 0..3, if facing left 4..7
+	; Always 0..3, we load right/left at beginning of level
 	; if not have belt, show #0
 	; if KERREK_STATE bottom bits >=15 then show 3
 	; if KERREK_STATE bottom bits >=10 then show 2
 	; else show 1
 
-	ldx	#KERREK_RIGHT_BODY_OFFSET
+	ldx	#KERREK_BODY_OFFSET
 
 	lda	INVENTORY_1
 	and	#INV1_KERREK_BELT
 	beq	adjust_for_left_right
 
-	ldx	#KERREK_RIGHT_BODY_OFFSET+1
+	ldx	#KERREK_BODY_OFFSET+1
 
 	lda	KERREK_STATE
 	and	#$f
@@ -99,25 +99,25 @@ kerrek_really_draw_body:
 	bcc	adjust_for_left_right
 
 draw_decay:
-	ldx	#KERREK_RIGHT_BODY_OFFSET+2
+	ldx	#KERREK_BODY_OFFSET+2
 	bne	adjust_for_left_right		; bra
 
 draw_skeleton:
-	ldx	#KERREK_RIGHT_BODY_OFFSET+3
+	ldx	#KERREK_BODY_OFFSET+3
 						; fallthrough
 
 adjust_for_left_right:
 
 	; if right, fine, otherwise increment
 
-	lda	KERREK_STATE
-	and	#KERREK_DIRECTION	; 0=left, 1=right
-	bne	kerrek_body_fine
+;	lda	KERREK_STATE
+;	and	#KERREK_DIRECTION	; 0=left, 1=right
+;	bne	kerrek_body_fine
 
-	inx
-	inx
-	inx
-	inx
+;	inx
+;	inx
+;	inx
+;	inx
 kerrek_body_fine:
 
 	jsr	hgr_draw_sprite_mask

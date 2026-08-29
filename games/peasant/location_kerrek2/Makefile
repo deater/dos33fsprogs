@@ -17,7 +17,11 @@ kerrek2_loader.o:	kerrek2_loader.s \
 		graphics_kerrek2/bottom_prints_graphics.inc \
 		graphics_kerrek2/bottom_prints_priority.inc\
 		../location_common/loader_common.s \
-		KERREK2_CORE.zx02
+		KERREK2_CORE.zx02 \
+		../location_kerrek1/peasant_belt_sprites.zx02 \
+		../location_kerrek1/peasant_belt_robe_sprites.zx02 \
+		../location_kerrek1/kerrek_body_left_sprites.zx02 \
+		../location_kerrek1/kerrek_body_right_sprites.zx02
 	ca65 -o kerrek2_loader.o kerrek2_loader.s -l kerrek2_loader.lst
 
 ###

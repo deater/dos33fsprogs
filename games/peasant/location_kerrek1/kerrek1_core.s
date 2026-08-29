@@ -14,6 +14,12 @@ kerrek1_core:
 
 
 	;==============================
+	; patch sprite tables
+	;==============================
+
+	jsr	patch_sprite_tables
+
+	;==============================
 	; draw kerrek body if necessary
 	;==============================
 
@@ -172,11 +178,14 @@ really_level_over:
 
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
-;.include "sprites_kerrek1/kerrek_hit_sprites.inc"
 ;.include "sprites_kerrek1/peasant_belt.inc"
-.include "sprites_kerrek1/peasant_belt_robe.inc"
-.include "sprites_kerrek1/kerrek_body_sprites.inc"
-;.include "sprites_kerrek1/peasant_shoot_sprites.inc"
+;.include "sprites_kerrek1/peasant_belt_robe.inc"
+
+;.include "sprites_kerrek1/kerrek_body_left_sprites.inc"
+;.include "sprites_kerrek1/kerrek_body_right_sprites.inc"
+.include "sprites_kerrek1/kerrek_flies.inc"
+
+.include "patch_sprite_table.s"
 
 	;==========================
 	; update screen

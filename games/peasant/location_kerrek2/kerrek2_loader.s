@@ -14,6 +14,15 @@ PRIORITY_LOCATION=bottom_prints_priority_zx02
 BG_LOCATION=bottom_prints_zx02
 CORE_LOCATION=kerrek2_core_zx02
 
+	;========================
+	; Load Sprites
+	;========================
+
+	jsr	load_belt_sprites
+
+	jsr	load_kerrek_body_sprites
+
+
 .include "../location_common/loader_common.s"
 
         jmp     $8000
@@ -29,3 +38,4 @@ kerrek2_core_zx02:
 
 .include "../priority_copy.s"
 
+.include "../location_kerrek1/load_compressed_sprites.s"

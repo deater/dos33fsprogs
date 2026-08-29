@@ -1,8 +1,10 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	kerrek_body_sprites.inc peasant_belt.inc peasant_belt_robe.inc \
+all:	peasant_belt.inc peasant_belt_robe.inc \
 	kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
-	kerrek_walk_sprites.inc kerrek_smash_sprites.inc
+	kerrek_walk_sprites.inc kerrek_smash_sprites.inc \
+	kerrek_flies.inc \
+	kerrek_body_left_sprites.inc kerrek_body_right_sprites.inc
 
 kerrek_walk_sprites.inc:	kerrek_walk_right_sprites.png kerrek_walk_left_sprites.png
 	$(HGR_SPRITE) -l kerrek_walk0r_sprite kerrek_walk_right_sprites.png  14  59  34 107 > kerrek_walk_sprites.inc
@@ -73,29 +75,33 @@ kerrek_smash_sprites.inc:	kerrek_smash_sprites_left.png kerrek_smash_sprites_rig
 
 
 
-kerrek_body_sprites.inc:	kerrek_body_sprites.png
-	$(HGR_SPRITE) -l kerrek_body1r_sprite kerrek_body_sprites.png 154  28 202  42 > kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body1r_mask   kerrek_body_sprites.png 154  49 202  63 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body0r_sprite kerrek_body_sprites.png  14  28  62  42 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body0r_mask   kerrek_body_sprites.png  14  49  62  63 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body2r_sprite kerrek_body_sprites.png  14  91  62 105 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body2r_mask   kerrek_body_sprites.png  14 112  62 126 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body3r_sprite kerrek_body_sprites.png  14 154  62 168 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body3r_mask   kerrek_body_sprites.png  14 175  62 189 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body1l_sprite kerrek_body_sprites.png 224  28 272  42 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body1l_mask   kerrek_body_sprites.png 224  49 272  63 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body0l_sprite kerrek_body_sprites.png  84  28 132  42 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body0l_mask   kerrek_body_sprites.png  84  49 132  63 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body2l_sprite kerrek_body_sprites.png  84  91 132 105 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body2l_mask   kerrek_body_sprites.png  84 112 132 126 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body3l_sprite kerrek_body_sprites.png  84 154 132 168 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_body3l_mask   kerrek_body_sprites.png  84 175 132 189 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies0_sprite kerrek_body_sprites.png 210  70 230  81 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies0_mask   kerrek_body_sprites.png 210  84 230  95 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies1_sprite kerrek_body_sprites.png 210  99 230 110 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies1_mask   kerrek_body_sprites.png 210 113 230 124 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies2_sprite kerrek_body_sprites.png 210 130 230 140 >> kerrek_body_sprites.inc
-	$(HGR_SPRITE) -l kerrek_flies2_mask   kerrek_body_sprites.png 210 143 230 153 >> kerrek_body_sprites.inc
+kerrek_body_right_sprites.inc:	kerrek_body_sprites.png
+	$(HGR_SPRITE) -l kerrek_body1r_sprite kerrek_body_sprites.png 154  28 202  42 > kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body1r_mask   kerrek_body_sprites.png 154  49 202  63 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body0r_sprite kerrek_body_sprites.png  14  28  62  42 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body0r_mask   kerrek_body_sprites.png  14  49  62  63 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body2r_sprite kerrek_body_sprites.png  14  91  62 105 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body2r_mask   kerrek_body_sprites.png  14 112  62 126 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body3r_sprite kerrek_body_sprites.png  14 154  62 168 >> kerrek_body_right_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body3r_mask   kerrek_body_sprites.png  14 175  62 189 >> kerrek_body_right_sprites.inc
+
+kerrek_body_left_sprites.inc:	kerrek_body_sprites.png
+	$(HGR_SPRITE) -l kerrek_body1l_sprite kerrek_body_sprites.png 224  28 272  42 > kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body1l_mask   kerrek_body_sprites.png 224  49 272  63 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body0l_sprite kerrek_body_sprites.png  84  28 132  42 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body0l_mask   kerrek_body_sprites.png  84  49 132  63 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body2l_sprite kerrek_body_sprites.png  84  91 132 105 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body2l_mask   kerrek_body_sprites.png  84 112 132 126 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body3l_sprite kerrek_body_sprites.png  84 154 132 168 >> kerrek_body_left_sprites.inc
+	$(HGR_SPRITE) -l kerrek_body3l_mask   kerrek_body_sprites.png  84 175 132 189 >> kerrek_body_left_sprites.inc
+
+kerrek_flies.inc:	kerrek_body_sprites.png
+	$(HGR_SPRITE) -l kerrek_flies0_sprite kerrek_body_sprites.png 210  70 230  81 > kerrek_flies.inc
+	$(HGR_SPRITE) -l kerrek_flies0_mask   kerrek_body_sprites.png 210  84 230  95 >> kerrek_flies.inc
+	$(HGR_SPRITE) -l kerrek_flies1_sprite kerrek_body_sprites.png 210  99 230 110 >> kerrek_flies.inc
+	$(HGR_SPRITE) -l kerrek_flies1_mask   kerrek_body_sprites.png 210 113 230 124 >> kerrek_flies.inc
+	$(HGR_SPRITE) -l kerrek_flies2_sprite kerrek_body_sprites.png 210 130 230 140 >> kerrek_flies.inc
+	$(HGR_SPRITE) -l kerrek_flies2_mask   kerrek_body_sprites.png 210 143 230 153 >> kerrek_flies.inc
 
 peasant_belt.inc:	get_belt_full.png
 	$(HGR_SPRITE) -l belt_base_sprite get_belt_full.png  28  52  41  72 > peasant_belt.inc
@@ -219,7 +225,9 @@ kerrek_hit_sprites.inc:	kerrek_hit_sprites_left.png kerrek_hit_sprites_right.png
 
 
 clean:
-	rm -f *~ kerrek_sprites.inc kerrek_body_sprites.inc \
+	rm -f *~ kerrek_sprites.inc \
+		kerrek_body_right_sprites.inc kerrek_body_left_sprites.inc \
+		kerrek_flies.inc \
 		peasant_belt.inc peasant_belt_robe.inc \
 		kerrek_hit_sprites.inc peasant_shoot_sprites.inc \
 		kerrek_smash_sprites.inc kerrek_walk_sprites.inc
