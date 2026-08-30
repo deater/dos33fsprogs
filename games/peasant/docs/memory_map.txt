@@ -84,7 +84,8 @@ Language card (high 16k) (new)
 $D0-$DF (bank1)	(4k)	per-levelstrings (biggest is ~3571 [outer]  currently)
 					(maybe now is ~2973 (inside lady)
 $D0-$DF (bank2) (4k)	inventory	(3122 bytes)
-$E0-$E3	(1k)	rain code?
+$E0-$E2	(768B)	rain code
+$E3	(256B)  autosave?
 $E4-$E7 (1k)    unused/temporary for overflow graphics/sprites
 		currently only kerrek1/kerrek2 use?
 $E8-$E9 (512B)	temp area for load/save file marshalling
