@@ -26,9 +26,9 @@ kerrek_hit_progress:
 .byte	5,5,5,5	; 104,105,106,107	(hit5)				; 39
 .byte	5,5,5,5	; 108,109,110,111					; 43
 .byte	5,5,5,5	; 112,113,114,115					; 47
-.byte	5,5,5	; 116,117,118						; 50
+.byte	5,5,5	; 116,117,118						; 51
 
-.byte	5			; one extra for after the animation?	; 53
+.byte	5			; one extra for after the animation?	; 54
 
 kerrek_hit_offset_x_left:
 .byte $00,$fe,$ff,$ff,	$ff,$ff,$00

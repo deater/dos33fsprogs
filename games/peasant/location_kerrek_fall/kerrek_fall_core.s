@@ -163,6 +163,9 @@ game_loop:
 	ldy     #>kerrek_kill_message3
 	jsr	partial_message_step
 
+
+
+
 	;==========================================
 	; return to level we were called from
 
@@ -191,6 +194,40 @@ level_over:
 
 
 really_level_over:
+
+	;===========================================
+	; HACK!  adjust kerrek body position
+	;	where we draw it here is slightly different
+	;	than where the kerrek1/kerrek2 code draws it
+
+	; left ff/right fb		y draws+34
+	;				kerrek1 adds 40?
+
+	lda	KERREK_Y
+	clc
+	adc	#$FA
+	sta	KERREK_Y
+
+	lda	KERREK_STATE
+	and	#KERREK_DIRECTION       ; 0 = left
+	beq	kerrek_body_x_adjust_left
+
+
+kerrek_body_x_adjust_right:
+
+	clc
+	lda	KERREK_X
+	adc	#$fb
+	jmp	done_kerrek_body_x_adjust
+
+kerrek_body_x_adjust_left:
+	clc
+	lda	KERREK_X
+	adc	#$ff
+
+done_kerrek_body_x_adjust:
+	sta	KERREK_X
+
 	rts
 
 
@@ -285,6 +322,3 @@ kerrek_kill_message3:
 .byte "good, though, so the",13
 .byte "artless symbolism doesn't",13
 .byte "bug you.",0
-
-
-
