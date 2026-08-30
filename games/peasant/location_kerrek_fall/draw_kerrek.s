@@ -3,32 +3,32 @@
 ;===============================================
 ; ignore first 16 steps (peasant shooting, kerrek walking)
 
-; 37 frames
+; 37 frames after that
 
 ; sprite 675
 
 kerrek_hit_progress:
-.byte	$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-.byte	$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff
-.byte	0,0	; 81, 82 (hit0)
-.byte	1,1,1	; 83, 84, 85     (hit1)
-.byte	2,2	; 86, 87 (hit2)
-.byte	3,3	; 88, 89 (hit3)
-.byte	2,2	; 90, 91 (hit2)
-.byte	3,3	; 92, 93 (hit3)
-.byte	2,2	; 94, 95 (hit2)
-.byte	3,3	; 96, 97 (hit3)
-.byte	4,4	; 98, 99  (hit4) (fallen, arms up)
-.byte	4,4	; 100,101 (hit4)
+.byte	$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff					; 0
+.byte	$ff,$ff,$ff,$ff,$ff,$ff,$ff,$ff					; 8
+.byte	0,0	; 81, 82 (hit0)						; 16
+.byte	1,1,1	; 83, 84, 85     (hit1)					; 18
+.byte	2,2	; 86, 87 (hit2)						; 21
+.byte	3,3	; 88, 89 (hit3)						; 23
+.byte	2,2	; 90, 91 (hit2)						; 25
+.byte	3,3	; 92, 93 (hit3)	(kerrek falling noise?)			; 27
+.byte	2,2	; 94, 95 (hit2)						; 29
+.byte	3,3	; 96, 97 (hit3)						; 31
+.byte	4,4	; 98, 99  (hit4) (fallen, arms up)			; 33
+.byte	4,4	; 100,101 (hit4)					; 35
 		; (techincally there's a "bounce" frame we don't have)
-.byte	5	; 102	 (hit5) (flat)
-.byte	6	; 103    (hit6) (fallen, arms down)
-.byte	5,5,5,5	; 104,105,106,107	(hit5)
-.byte	5,5,5,5	; 108,109,110,111
-.byte	5,5,5,5	; 112,113,114,115
-.byte	5,5,5	; 116,117,118
+.byte	5	; 102	 (hit5) (flat)	(mud_splat_noise?)		; 37
+.byte	6	; 103    (hit6) (fallen, arms down)			; 38
+.byte	5,5,5,5	; 104,105,106,107	(hit5)				; 39
+.byte	5,5,5,5	; 108,109,110,111					; 43
+.byte	5,5,5,5	; 112,113,114,115					; 47
+.byte	5,5,5	; 116,117,118						; 50
 
-.byte	5			; one extra for after the animation?
+.byte	5			; one extra for after the animation?	; 53
 
 kerrek_hit_offset_x_left:
 .byte $00,$fe,$ff,$ff,	$ff,$ff,$00
@@ -108,6 +108,25 @@ adjust_kerrek_hit_common:
 
 	jsr	hgr_draw_sprite_mask
 
+
+	lda	PEASANT_BOW_COUNT
+	cmp	#27
+	beq	kerrek_fall_play_falling
+
+	lda	PEASANT_BOW_COUNT
+	cmp	#37
+	beq	kerrek_fall_play_mud_splat
+
+	rts
+
+	; play sound
+
+kerrek_fall_play_falling:
+	jsr	falling_sound
+	rts
+
+kerrek_fall_play_mud_splat:
+	jsr	mud_splat_sound
 	rts
 
 

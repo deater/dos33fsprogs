@@ -16,7 +16,7 @@ TEST_SOUND: test_sound.o
 	ld65 -o TEST_SOUND test_sound.o -C $(LINKER_SCRIPTS)/apple2_1000.inc
 
 test_sound.o:	test_sound.s \
-	kerrek_appear.s baby_lady.s raise_up.s
+	kerrek_appear.s baby_lady.s raise_up.s falling.s
 	ca65 -o test_sound.o test_sound.s -l test_sound.lst
 
 ###

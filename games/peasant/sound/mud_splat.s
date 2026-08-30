@@ -11,6 +11,7 @@
 	; (done)	location_hidden_glen: arrow to head
 	; (done)	location_puddle: fall in mud
 	; (done)  675	location_kerrek1/2: kerrek hit on head
+	;		location_kerrek1/2: kerrek fell on ground
 	;         961	?
 	;        1118	save game?
 	;        1181	fall off cliff?
