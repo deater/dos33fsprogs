@@ -22,11 +22,32 @@ thunder_sound:
 
 	; from original lightning code
 
-	lda	#8
+	; 255 * .25 * 2 = 128 (for quarter sectond)
+
+	lda	#20
 	sta	speaker_duration
 	lda	#NOTE_G3
 	sta	speaker_frequency
 	jsr	speaker_tone
+
+	lda	#20
+	sta	speaker_duration
+	lda	#NOTE_A3
+	sta	speaker_frequency
+	jsr	speaker_tone
+
+	lda	#20
+	sta	speaker_duration
+	lda	#NOTE_G3
+	sta	speaker_frequency
+	jsr	speaker_tone
+
+	lda	#20
+	sta	speaker_duration
+	lda	#NOTE_A3
+	sta	speaker_frequency
+	jsr	speaker_tone
+
 
 done_thunder_sound:
         rts

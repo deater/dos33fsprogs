@@ -89,6 +89,13 @@ game_loop:
 	;=================================
 	; done with animation
 
+
+	; actual game happenings:
+	;  kerrek falls
+	;	"arrowed!" message and score goes up
+	;	three peals of thunder, BOOM (pause) BOOM (pause) BOOM (pause)
+	;	"a light rain" message appears while the rain starts in bg
+
 	; turn peasant back on
 	;	real game keep holding bow until moved??
 
@@ -96,12 +103,14 @@ game_loop:
 	and	#<(~SUPPRESS_PEASANT)
 	sta	SUPPRESS_DRAWING
 
+	; update score
+	lda	#5
+	jsr	score_points
+
+	; print "arrowed" message
 	ldx	#<kerrek_kill_message2
 	ldy	#>kerrek_kill_message2
 	jsr	partial_message_step
-
-	lda	#5
-	jsr	score_points
 
 	; make kerrek dead
 
@@ -109,22 +118,46 @@ game_loop:
 	ora	#KERREK_DEAD
 	sta	GAME_STATE_3
 
-	; make it rain, make the puddle wet
+	; pause a bit
+
+	lda	#1
+	jsr	wait_a_bit
 
 	; sound: three thunders
 
 	jsr     thunder_sound
-	; pause?
+
+	; pause
+
+	lda	#5
+	jsr	wait_a_bit
+
 	jsr     thunder_sound
-	; pause?
+
+	; pause
+	lda	#5
+	jsr	wait_a_bit
+
 	jsr     thunder_sound
+
+	; make the puddle wet
 
 	lda	GAME_STATE_1
 	ora	#(PUDDLE_WET)
 	sta	GAME_STATE_1
 
+	; start the rain
+	; we should start the rain *before* / while message shown
+
 	lda	#6			; should this be 5?
 	sta	RAIN_COUNT
+
+	; make sure rain appears?
+
+;	jsr	update_screen
+;	jsr	hgr_page_flip
+
+	; print rain message
 
 	ldx     #<kerrek_kill_message3
 	ldy     #>kerrek_kill_message3
@@ -173,14 +206,13 @@ really_level_over:
 .include "../sound/thunder.s"
 .include "../sound/raise_up.s"
 .include "../sound/falling.s"
+.include "../sound/arrow_shoot.s"
 
 ;.include "sprites_kerrek_fall/kerrek_walk_sprites_right.inc"
 ;.include "sprites_kerrek_fall/kerrek_walk_sprites_left.inc"
-
 ;.include "sprites_kerrek_fall/kerrek_hit_sprites.inc"
 ;.include "sprites_kerrek_fall/peasant_shoot_sprites_left.inc"
 ;.include "sprites_kerrek_fall/peasant_shoot_sprites_right.inc"
-
 ;.include "load_shooting_sprites.s"
 
 .include "patch_sprite_table.s"
@@ -225,6 +257,8 @@ kerrek1_draw_kerrek_first:
 	bne	skip_draw_peasant_second
 	jsr	draw_peasant
 skip_draw_peasant_second:
+
+	jsr	draw_rain
 
 	rts
 

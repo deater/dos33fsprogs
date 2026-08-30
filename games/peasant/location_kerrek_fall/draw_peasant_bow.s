@@ -8,6 +8,8 @@
 
 PEASANT_MAX_BOW = 16+37
 
+PEASANT_SHOOT_NOISE = 16
+
 ;===============================================
 ; peasant progress
 ;===============================================
@@ -110,6 +112,18 @@ adjust_shooter_common:
 	jsr	hgr_page_flip
 
 ;	jsr	wait_until_keypress
+
+
+	;=======================
+	; do shooit noise
+
+	lda	PEASANT_BOW_COUNT
+	cmp	#PEASANT_SHOOT_NOISE
+	bne	skip_shoot_noise
+
+	jsr	arrow_shoot_sound
+
+skip_shoot_noise:
 
 	; increment count
 

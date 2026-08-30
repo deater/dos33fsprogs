@@ -6,7 +6,8 @@
 
 	; used in
 	;	776	location_well (bucket going down)
-	;		target (arrow shoot)
+	;	???	(done) kerrek1/kerrek2 (shooting arrow)
+	;		(done) target (arrow shoot)
 
 arrow_shoot_sound:
 

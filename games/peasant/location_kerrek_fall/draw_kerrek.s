@@ -108,9 +108,14 @@ adjust_kerrek_hit_common:
 
 	jsr	hgr_draw_sprite_mask
 
+	; make fall noise for a bit?
 
 	lda	PEASANT_BOW_COUNT
 	cmp	#27
+	beq	kerrek_fall_play_falling
+	cmp	#28
+	beq	kerrek_fall_play_falling
+	cmp	#29
 	beq	kerrek_fall_play_falling
 
 	lda	PEASANT_BOW_COUNT
@@ -128,8 +133,3 @@ kerrek_fall_play_falling:
 kerrek_fall_play_mud_splat:
 	jsr	mud_splat_sound
 	rts
-
-
-
-
-
