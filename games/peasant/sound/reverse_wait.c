@@ -33,8 +33,8 @@ int main(int argc, char **argv) {
 
 	printf("x1=%.2lf, x2=%.2lf\n",x1,x2);
 
-	int q=50;
-	printf("If A=50, result=%d us\n",
+	int q=(int)x1;
+	printf("If A=%d, result=%d us\n",q,
 		(26+27*q+5*q*q)/2);
 
 	return 0;
