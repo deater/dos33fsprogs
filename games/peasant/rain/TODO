@@ -1,5 +1,16 @@
 
-+ Puddles force green palette, most notable when over something orange
-	(on puddle location)
-+ Hook up support for sky darkening
 + Check if game lets it rain if you're inside a building?
+
+
+==========
+Completed:
+==========
+
++ (done) For grey sky code should have table for each location
+	including sky color (blue/purple) and number of lines
+	of sky to convert.  Possibly have room for this?
+
++ (fixed) Puddles force green palette, most notable when over something orange
+		(on puddle location)
++ (done) Hook up support for sky darkening
+
