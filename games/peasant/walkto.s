@@ -103,6 +103,8 @@ walkto_right_left_dir_smc:
 
 walkto_draw:
 
+	inc	FRAME		; so rain keeps happening
+
 	jsr	update_screen
 
 	jsr	hgr_page_flip

@@ -33,6 +33,7 @@
 
 PEASANT_MAX_BELT = 28
 
+PEASANT_BELT_SOUND = 12
 
 peasant_belt_progress:
 .byte	0,0,1,2,3,4		; (hand moving up in air)
@@ -60,9 +61,6 @@ draw_peasant_belt:
 
 	lda	#SUPPRESS_PEASANT
 	sta	SUPPRESS_DRAWING
-
-	;FIXME:	RAISE_UP_SOUND
-	jsr	raise_up_sound
 
 draw_peasant_belt_loop:
 
@@ -114,7 +112,18 @@ draw_peasant_belt_loop:
 
 	jsr	hgr_page_flip
 
-;	jsr	wait_until_keypress
+	; RAISE_UP_SOUND
+
+	; ideally we'd spread across multiple frames
+	;	but that'd be a lot of work
+
+	lda	PEASANT_BELT_COUNT
+	cmp	#PEASANT_BELT_SOUND
+	bne	skip_raise_up_sound
+	jsr	raise_up_sound
+skip_raise_up_sound:
+
+	inc	FRAME		; so rain keeps working?
 
 	; increment count
 

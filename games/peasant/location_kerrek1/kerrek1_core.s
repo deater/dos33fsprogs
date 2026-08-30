@@ -172,20 +172,22 @@ really_level_over:
 
 .include "../sound/kerrek_appear.s"
 .include "../sound/mud_splat.s"
-;.include "../sound/thunder.s"
 .include "../sound/raise_up.s"
-;.include "../sound/falling.s"
 
 .include "sprites_kerrek1/kerrek_walk_sprites.inc"
 .include "sprites_kerrek1/kerrek_smash_sprites.inc"
-;.include "sprites_kerrek1/peasant_belt.inc"
-;.include "sprites_kerrek1/peasant_belt_robe.inc"
 
-;.include "sprites_kerrek1/kerrek_body_left_sprites.inc"
-;.include "sprites_kerrek1/kerrek_body_right_sprites.inc"
 .include "sprites_kerrek1/kerrek_flies.inc"
 
 .include "patch_sprite_table.s"
+
+;.include "../sound/falling.s"
+;.include "../sound/thunder.s"
+;.include "sprites_kerrek1/peasant_belt.inc"
+;.include "sprites_kerrek1/peasant_belt_robe.inc"
+;.include "sprites_kerrek1/kerrek_body_left_sprites.inc"
+;.include "sprites_kerrek1/kerrek_body_right_sprites.inc"
+
 
 	;==========================
 	; update screen

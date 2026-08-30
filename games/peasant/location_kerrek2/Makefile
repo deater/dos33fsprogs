@@ -53,6 +53,9 @@ kerrek2_core.o:	kerrek2_core.s ../zp.inc ../hardware.inc ../qload.inc \
 graphics_kerrek2/bottom_prints_graphics.inc:
 	cd graphics_kerrek2 && make
 
+../location_kerrek1/peasant_belt_sprites.zx02:
+	cd ../location_kerrek1 && make
+
 sprites_kerrek2/kerrek2_sprites.inc:
 	cd sprites_kerrek2 && make
 
