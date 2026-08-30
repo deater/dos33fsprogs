@@ -62,6 +62,10 @@ draw_peasant_bow_loop:
 	; next draw appropriate frame
 
 	ldy	PEASANT_BOW_COUNT
+
+	; we only have 16 peasant frames, so once we go past
+	;	that halt at last one
+
 	cpy	#16
 	bcc	bow_count_less_than_16
 

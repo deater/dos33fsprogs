@@ -431,6 +431,7 @@ HGR_COLOR	= $E4		; hgr rectangle
 ;HGR_PAGE	= $E6
 
 PEASANT_FALLING	= $EB		; cliff climb
+PEASANT_BOW_COUNT = $EB		; kerrek_fall
 
 TEMP_CENTER	= $EC		; for cliff climb
 METER_LEFT	= $EC		; target
@@ -462,7 +463,6 @@ PEASANT_BELT_COUNT = $F2	; kerrek1/kerrek2
 
 P2		= $F3
 ARROW_FLYING	= $F3		; target
-PEASANT_BOW_COUNT = $F3		; kerrek_fall
 
 P3		= $F4
 ARROW_XL	= $F4		; target
