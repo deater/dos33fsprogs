@@ -6,6 +6,91 @@
 	;=======================
 	;=======================
 	; called "kerrekappear" in original
+	; used in
+	; (----)	425	kerrek1/kerrek2: raise up belt
+
+	; based onn audacity "analyze/plot spectrum"
+
+	; F5/A#3
+	; D5/G3
+	; E5/C5/G#3/F#4
+	; F#5/D5/F4/G#4
+
+KERREK_APPEAR_NOTES=4
+
+kerrek_appear_notes:
+.byte NOTE_F4,NOTE_D4,NOTE_E4,NOTE_D4
+;.byte NOTE_F5,NOTE_D5,NOTE_E5,NOTE_FSHARP5
+;.byte NOTE_ASHARP4,NOTE_G4,NOTE_GSHARP4,NOTE_GSHARP3
+
+
+	; duration
+	; assuming 255 means 0.5s
+	; seems more likely 255 means 0.5s
+
+	; 50ms (255*.05=13)*2
+	; 80ms (255*.08 =20)*2
+
+kerrek_appear_lengths:
+	.byte	36	; .150 - .220 = 70ms
+	.byte	54	; .260 - .370 = 110ms
+	.byte	36	; .410 - .480 = 70ms
+	.byte	255	; .530 - 1.370 = 840ms	; 428?
+
+	; use the apple II wait function
+	;  use reverse_wait program
+kerrek_appear_delay:
+	.byte	123	; .220 - .260 = 40ms
+	.byte	123	; .370 - .410 = 40ms
+	.byte	138	; .480 - .530 = 50ms
+	.byte	0	; 0
+
+
+kerrek_warning_music:
+
+	lda	SOUND_STATUS		; if sound disabled
+	bmi	done_kerrek_appear_sound
+
+	ldx	#0
+
+kerrek_appear_loop:
+	txa
+	pha
+
+	lda     kerrek_appear_notes,X
+	sta     speaker_frequency
+	lda     kerrek_appear_lengths,X
+	sta	speaker_duration
+	jsr     speaker_tone
+
+	pla
+	tax
+
+	lda	kerrek_appear_delay,X
+	jsr	wait
+
+	inx
+	cpx	#KERREK_APPEAR_NOTES
+	bne	kerrek_appear_loop
+
+done_kerrek_appear_sound:
+
+	rts
+
+
+
+
+
+;======================================================
+; old
+
+.if 0
+	;=======================
+	;=======================
+	; kerrek warning sting
+	;=======================
+	;=======================
+	; called "kerrekappear" in original
 
 	; not sure about this one
 	; GFED?
@@ -77,3 +162,4 @@ kerrek_warning_music:
 done_kerrek_appear_sound:
 
 	rts
+.endif
