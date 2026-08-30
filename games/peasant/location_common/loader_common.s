@@ -96,3 +96,4 @@ load_bg_common:
 
 	jsr	zx02_full_decomp
 
+	jsr	grey_sky

@@ -152,11 +152,6 @@ game_loop:
 	lda	#6			; should this be 5?
 	sta	RAIN_COUNT
 
-	; make sure rain appears?
-
-;	jsr	update_screen
-;	jsr	hgr_page_flip
-
 	; print rain message
 
 	ldx     #<kerrek_kill_message3

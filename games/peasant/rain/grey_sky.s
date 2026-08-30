@@ -1,12 +1,24 @@
+BACKGROUND_LOCATION = $6000
+
+MAX_GREY_LINE = 30
+
 	;=====================
 	; make the sky grey
-	;	page $A000
 	;	make $FF/$7F to be black/white pattern?
 
 	;	$55/$2A = purple?
 	;		need $55 to be in even column?
 
 grey_sky:
+	lda	RAIN_COUNT		; see if raining
+	cmp	#2
+	bcs	do_grey_sky		; bge (we decrement later
+					; so 1 means end, not 0)
+
+;	bne	do_grey_sky		; if not, early exit
+	rts
+
+do_grey_sky:
 
 	ldx	#0			; 12 on normal
 grey_outer:
@@ -14,7 +26,7 @@ grey_outer:
 	sta	GBASL
 	lda	hposn_high,X
 	clc
-	adc	#($A0-$20)
+	adc	#>(BACKGROUND_LOCATION-$2000)
 	sta	GBASH
 
 	ldy	#0
@@ -67,7 +79,7 @@ grey_continue:
 	bne	grey_loop
 
 	inx
-	cpx	#24
+	cpx	#MAX_GREY_LINE
 	bne	grey_outer
 
 	rts

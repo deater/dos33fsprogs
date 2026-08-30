@@ -16,7 +16,7 @@ rain.inc:	RAIN
 RAIN:	rain.o
 	ld65 -o RAIN rain.o -C $(LINKER_SCRIPTS)/apple2_e000.inc
 
-rain.o:	rain.s \
+rain.o:	rain.s grey_sky.s \
 		../hardware.inc ../zp.inc ../qload.inc
 	ca65 -o rain.o rain.s -l rain.lst
 
