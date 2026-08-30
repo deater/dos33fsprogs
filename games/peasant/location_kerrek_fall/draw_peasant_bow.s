@@ -52,6 +52,27 @@ draw_peasant_bow:
 	lda	#SUPPRESS_PEASANT
 	sta	SUPPRESS_DRAWING
 
+	;=============================================
+	; calculate if shooting left/right and update
+
+
+
+	lda	PEASANT_X
+	cmp	KERREK_X
+	bcs	aim_peasant_left
+
+aim_peasant_right:
+
+	lda	#PEASANT_DIR_RIGHT
+	jmp	aim_peasant_common
+
+aim_peasant_left:
+
+	lda	#PEASANT_DIR_LEFT
+
+aim_peasant_common:
+	sta	PEASANT_DIR
+
 draw_peasant_bow_loop:
 
 	jsr	kerrek_move		; walk during first part
@@ -78,9 +99,9 @@ bow_count_less_than_16:
 
 	; adjust for left/right
 
-	lda	PEASANT_X
-	cmp	KERREK_X
-	bcs	adjust_shooter_left
+	lda	PEASANT_DIR
+	cmp	#PEASANT_DIR_LEFT
+	beq	adjust_shooter_left
 
 adjust_shooter_right:
 
@@ -97,10 +118,6 @@ adjust_shooter_left:
 
 adjust_shooter_common:
 	sta	SPRITE_X
-
-;	clc
-;	lda	PEASANT_Y
-;	adc	peasant_bow_offset_y_left,Y
 
 	lda	PEASANT_Y			; offset always 0
 	sta	SPRITE_Y
