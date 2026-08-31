@@ -330,44 +330,15 @@ kerrek_actually_kill:
 	jsr	partial_message_step
 
 	lda	#LOCATION_KERREK_FALL
-	jmp	update_map_location
+	jsr	update_map_location
 
+	; skip updating our location as if we were
+	; loading from save game
 
-;	ldx	#<kerrek_kill_message2
-;	ldy	#>kerrek_kill_message2
-;	jsr	partial_message_step
+	lda	#NEW_FROM_LOAD
+	sta	LEVEL_OVER
 
-;	lda	#5
-;	jsr	score_points
-
-;	; make kerrek dead
-
-;	lda	GAME_STATE_3
-;	ora	#KERREK_DEAD
-;	sta	GAME_STATE_3
-
-;	; draw body on background
-
-;	jsr	kerrek_draw_body
-
-;	; make it rain, make the puddle wet
-
-;	; sound: three thunders
-
-;	jsr	thunder_sound
-;	jsr	thunder_sound
-;	jsr	thunder_sound
-
-;	lda	GAME_STATE_1
-;	ora	#(PUDDLE_WET)
-;	sta	GAME_STATE_1
-
-;	lda	#6			; should this be 5?
-;	sta	RAIN_COUNT
-
-;	ldx	#<kerrek_kill_message3
-;	ldy	#>kerrek_kill_message3
-;	jmp	finish_parse_message
+	rts
 
 
 kerrek_kill_only_bow:
