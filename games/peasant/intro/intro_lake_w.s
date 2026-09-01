@@ -153,7 +153,9 @@ done_lake_w_action:
 
 	inc	FRAME
 
-	jsr	really_move_peasant
+	; update peasant animation frame
+
+	jsr	update_peasant_steps
 
 	jmp	lake_w_walk_loop
 

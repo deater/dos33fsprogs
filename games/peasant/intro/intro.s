@@ -29,7 +29,7 @@ peasant_quest_intro:
 				; ????
 	sta	GAME_STATE_2	; ???
 
-	lda	#1
+	lda	#1		; keryboard only accepts enter/esc
 	sta	INTRO_MODE
 
 
@@ -179,7 +179,15 @@ lake_e_priority_zx02:	.incbin "../location_lake_east/graphics_lake_east/lake_e_p
 river_priority_zx02:	.incbin "../location_river/graphics_river/river_priority.zx02"
 knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priority.zx02"
 
+;==================================
+; include dialog
+;	note: not compressed
+;	also not using common code as it uses custom box sizes
+
 .include "../text/intro.inc"
+
+;==================================
+; animation sprites
 
 .include "../location_lake_east/sprites_lake_east/bubble_sprites_e.inc"
 .include "../location_lake_west/sprites_lake_west/bubble_sprites_w.inc"
@@ -225,9 +233,10 @@ intro_print_title:
 
 
 	;================================
-	; really_move_peasant
+	; really_move_peasant?
+	;	more like 'update peasant steps'
 
-really_move_peasant:
+update_peasant_steps:
 
         ; increment step count, wrapping at 6
 
@@ -242,6 +251,9 @@ no_peasant_wrap:
 
 	rts
 
+	;=============================
+	; ????
+
 check_escape_pressed:
 	lda	ESC_PRESSED
 	bne	yes_escape_pressed
@@ -253,43 +265,6 @@ yes_escape_pressed:
 	; don't clear ESC_PRESSED as we use it to exit intro
 	sec
 	rts
-
-
-.if 0
-	;================================
-	; intro drain keyboard buffer
-	;================================
-	; because hgr_copy_faster isn't really
-intro_drain_keyboard_buffer:
-	ldx	KEY_OFFSET
-	beq	done_intro_drain_keyboard_buffer
-
-	ldx	#0
-
-intro_drain_keyboard_buffer_loop:
-	txa
-	pha
-
-	lda	keyboard_buffer,X
-	and	#$7f
-	cmp	#27
-	bne	idk_not_esc
-
-	inc	ESC_PRESSED
-
-idk_not_esc:
-
-	pla
-	tax
-	inx
-	cpx	KEY_OFFSET
-	bne	intro_drain_keyboard_buffer_loop
-
-done_intro_drain_keyboard_buffer:
-	ldx	#0		; reset
-	stx	KEY_OFFSET
-	rts
-.endif
 
 peasant_quest_intro_end:
 

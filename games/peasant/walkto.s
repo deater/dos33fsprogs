@@ -41,12 +41,12 @@ walking_right_left_common:
 	cpy	PEASANT_Y
 	bcs	walking_down
 walking_up:
-	lda	#$FF
+	lda	#$FC
 	sta	walkto_up_down_add_smc+1
 	lda	#PEASANT_DIR_UP
 	jmp	walking_up_down_common
 walking_down:
-	lda	#1
+	lda	#4
 	sta	walkto_up_down_add_smc+1
 	lda	#PEASANT_DIR_DOWN
 walking_up_down_common:

@@ -41,13 +41,17 @@ walk_check_x:
 walk_to_left:
 	sec
 	lda	PEASANT_X
-	sbc	PEASANT_XADD
+	sbc	#SPEASANT_XADD
 	sta	PEASANT_X
 	jmp	walk_check_y
 walk_to_right:
 	clc
+	lda	PEASANT_XL
+	adc	#SPEASANT_XADD_L
+	sta	PEASANT_XL
+
 	lda	PEASANT_X
-	adc	PEASANT_XADD
+	adc	#SPEASANT_XADD
 	sta	PEASANT_X
 
 	; fallthrough
@@ -60,14 +64,14 @@ walk_check_y:
 walk_to_up:
 	sec
 	lda	PEASANT_Y
-	sbc	PEASANT_YADD
+	sbc	#SPEASANT_YADD
 	sta	PEASANT_Y
 	jmp	done_walk_to_step
 
 walk_to_down:
 	clc
 	lda	PEASANT_Y
-	adc	PEASANT_YADD
+	adc	#SPEASANT_YADD
 	sta	PEASANT_Y
 
 done_walk_to_step:

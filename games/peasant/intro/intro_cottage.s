@@ -2,6 +2,26 @@
 
 ; More specifically, the Dashing Residence
 
+
+TEXT1_FRAME=0		; display at 0:00  (for 5s)
+TEXT2_FRAME=25		; display at 0:05s (for 8s)
+TEXT3_FRAME=50		; display at 0:13s (until end)
+
+WALK1_FRAME=0		; no walking
+WALK2_FRAME=44		; start walking at roughly 10s
+WALK3_FRAME=50		; turn corner at roughtly 13s
+WALK4_FRAME=80		; end of level at 19s?
+
+SPEASANT_XADD_L	=	$C0
+SPEASANT_XADD	=	$00
+SPEASANT_YADD	=	2
+
+; text message 1 (displays 5s)
+; text message 2 (displays 5s)
+; start walking, text message 2 still (displays 3s)
+; walk head by cottage, text message 3
+; total time to walk 3+3=6
+
 intro_cottage:
 
 	;========================
@@ -10,6 +30,7 @@ intro_cottage:
 
 	lda	#0
 	sta	FRAME
+	sta	WALK_OVER
 
 	;=========================
 	; init peasant position
@@ -61,110 +82,59 @@ intro_cottage:
 
 
 	;====================
+	; walk loop setup
 	;====================
-	; walk loop
-	;====================
-	;====================
+
 
 	lda	#0
 	sta	WALK_COUNT
 
-	lda	#1
-	sta	PEASANT_XADD
-	lda	#5
-	sta	PEASANT_YADD
+	; setup walking speed
 
-	jsr	update_walk
+;	lda	#1
+;	sta	PEASANT_XADD
+;	lda	#5
+;	sta	PEASANT_YADD
 
+	; setup walking detination
+
+;	jsr	update_walk
+
+	;====================
+	;====================
+	; walk loop
+	;====================
+	;====================
 cottage_walk_loop:
 
 	;===========================
 	; copy bg to current screen
 
-	jsr	hgr_copy_faster
+	; also checks keyboard
 
+	jsr	hgr_copy_faster
 
 	;=======================
 	; draw peasant
 
 	jsr	draw_peasant
 
-
 	;=====================
 	; move peasant
 
-	jsr	walk_to
-	bcc	move_good
+	jsr	move_peasant
 
-	jsr	update_walk
-	bcs	done_cottage
+;	jsr	walk_to
+;	bcc	move_good		; cc if not at destination yet
+
+;	jsr	update_walk		; at destination so update new dest
+;	bcs	done_cottage		; if totally done, end loop
 
 move_good:
 
 
-;	lda	FRAME
-;	asl
-;	tax
+	jsr	display_text
 
-;	lda	cottage_path,X
-;	bmi	done_cottage
-;	sta	PEASANT_X
-
-;	inx
-;	lda	cottage_path,X
-;	sta	PEASANT_Y
-
-
-
-
-	;=======================
-	; handle special actions
-	;=======================
-	; FRAMES  0 - ?      display cottage text 1, wait 25
-	; FRAMES  1 - 12     display cottage text 2, wait 12 except wait 3 as 12
-	; FRAMES 23 -        display cottage text 3
-	;	we move this to 23 from 13?
-
-	lda	FRAME
-check_cottage_action1:
-	cmp	#0
-	bne	check_cottage_action2
-
-	;========================
-	; FRAME0: display cottage text 1
-
-	lda	#<cottage_text1
-	sta	OUTL
-	lda	#>cottage_text1
-
-	jmp	finish_cottage_action
-
-check_cottage_action2:
-
-	cmp	#23
-	bcs	check_cottage_action3		; bgt
-
-
-	;=============================
-	; FRAME 1-22: display cottage text 2
-
-	lda	#<cottage_text2
-	sta	OUTL
-	lda	#>cottage_text2
-	jmp	finish_cottage_action
-
-check_cottage_action3:
-
-	;=========================
-	; FRAME 23-?? display cottage text 3
-
-	lda	#<cottage_text3
-	sta	OUTL
-	lda	#>cottage_text3
-
-finish_cottage_action:
-	sta	OUTH
-	jsr	hgr_text_box
 
 done_cottage_action:
 
@@ -177,33 +147,18 @@ done_cottage_action:
 	;========================
 	; check if escape pressed
 
-	jsr	check_escape_pressed
-	bcs	done_cottage
-
-	;======================
-	; extra delays
-
-	lda	FRAME
-	bne	regular_wait
-
-	; frame==0, wait 25
-	lda	#25
-	jsr	wait_a_bit
-	jmp	now_wait
-
-regular_wait:
-;	lda	#DEFAULT_WAIT
-now_wait:
-;	jsr	wait_a_bit
+;	jsr	check_escape_pressed
+;	bcs	done_cottage
 
 	lda	ESC_PRESSED
 	bne	done_cottage
 
 	inc	FRAME
 
-	jsr	really_move_peasant
+	lda	WALK_OVER
+	beq	cottage_walk_loop
 
-	jmp	cottage_walk_loop
+;	jmp	cottage_walk_loop
 
 
 	;===================
@@ -213,112 +168,186 @@ done_cottage:
 
 	rts
 
-
-
-
-; even      odd
-; 01234567 01234567
-
-
-;cottage_text1:
-;	.byte 0,52,24,  0,253,82
-;	.byte 9,35,"YOU are Rather Dashing, a",13
-;	.byte	   "humble peasant living in",13
-;	.byte      "the peasant kingdom of",13
-;	.byte      "Peasantry.",0
-
-; wait a few seconds
-
-;cottage_text2:
-;	.byte 0,41,15, 0,255,96
-;	.byte 8,25,"You return home from a",13
-;	.byte	    "vacation on Scalding Lake",13
-;	.byte	    "only to find that TROGDOR",13
-;	.byte	    "THE BURNINATOR has",13
-;	.byte	    "burninated your thatched",13
-;	.byte	    "roof cottage along with all",13
-;	.byte	    "your goods and services.",0
-
-; wait a few seconds, then start walking toward cottage
-
-;cottage_text3:
-;	.byte	0,28,20, 0,252,86
-;	.byte 7,33,"With nothing left to lose,",13
-;	.byte	   "you swear to get revenge on",13
-;	.byte	   "the Wingaling Dragon in the",13
-;	.byte	   "name of burninated peasants",13
-;	.byte	   "everywhere.",0
-
 ; Walk to edge of screen
 
 	; note by default XADD=1,YADD=5
 	;	though note originally only moved every other frame?
 
-cottage_path:
-	.byte 10,117		; 0 ; 5s, text 1
-	.byte 10,117		; 1 ; 3s, text 2
-	.byte 16,147
-	.byte 38,147
+cottage_path_x:
+	.byte 10		; 0 ; original location	(5s, then text 1)
+	.byte 10		; 1 ; original location (5s, then text 2)
+	.byte 16
+	.byte 38
 	.byte $FF		; end
 
-.if 0
-cottage_path:
-	.byte 10,117		; 0 ; 5s, text 1
-	.byte 10,117		; 1 ; 3s, text 2
-	; diagonal
-	.byte 11,122
-	.byte 12,127
-	.byte 13,132
-	.byte 14,137
-	.byte 15,142
-	.byte 16,147
-	; horizontal
-	.byte 17,147
-	.byte 18,147
-	.byte 19,147
-	.byte 20,147
-	.byte 21,147
-	.byte 22,147
-	.byte 23,147		; text 3
-	.byte 24,147
-	.byte 25,147
-	.byte 26,147
-	.byte 27,147
-	.byte 28,147
-	.byte 29,147
-	.byte 30,147
-	.byte 31,147
-	.byte 32,147
-	.byte 33,147
-	.byte 34,147
-	.byte 35,147
-	.byte 36,147
-	.byte 37,147
-	.byte 38,147
-	.byte $FF,$FF
+cottage_path_y:
+	.byte 117		; 0 ; original location	(5s, then text 1)
+	.byte 117		; 1 ; original location (5s, then text 2)
+	.byte 147
+	.byte 147
 
-.endif
+
+cottage_path_frames:
+	.byte 20		; 0 ; original location	(5s, then text 1)
+	.byte 20		; 1 ; original location (5s, then text 2)
+	.byte 20
+	.byte 20
+
+
+.if 0
+	;================================
+	; update walking status
+	;================================
 
 update_walk:
+
+	; index intro the path
+
 	ldy	WALK_COUNT
 
-	lda	cottage_path,Y
+	; load X destination
+
+	lda	cottage_path_x,Y
+
+	; if $FF then we're done
+
 	cmp	#$ff
 	beq	update_walk_done
+
+	; otherwise store as destination
+
 	sta	WALK_DEST_X
 
-	iny
+	; load y coord, put in place
 
-	lda	cottage_path,Y
+	lda	cottage_path_y,Y
 	sta	WALK_DEST_Y
 
-	inc	WALK_COUNT
-	inc	WALK_COUNT
+	; point to next entry
 
+	inc	WALK_COUNT
 
 	clc
 	rts
+
 update_walk_done:
 	sec
 	rts
+.endif
 
+
+	;=======================
+	; move_peasant
+	;=======================
+
+move_peasant:
+
+	lda	FRAME
+
+check_cottage_walk1:
+
+	cmp	#WALK1_FRAME
+	bcc	done_cottage_no_walk
+
+	cmp	#WALK2_FRAME
+	bcs	check_cottage_walk2
+
+	;========================
+	; walk cottage text 1
+
+	; no walking for 10s
+
+	jmp	done_cottage_no_walk
+
+check_cottage_walk2:
+
+	cmp	#WALK3_FRAME
+	bcs	check_cottage_walk3		; bge
+
+	;  walk to 16,147
+
+	lda	#16
+	sta	WALK_DEST_X
+
+	lda	#147
+	sta	WALK_DEST_Y
+
+	bne	cottage_walk_common	; bra
+
+check_cottage_walk3:
+
+	cmp	#WALK4_FRAME
+	bcs	check_cottage_walk4
+
+	; walk to 38,147
+
+	lda	#38
+	sta	WALK_DEST_X
+
+	lda	#147
+	sta	WALK_DEST_Y
+
+	bne	cottage_walk_common	; bra
+
+check_cottage_walk4:
+	inc	WALK_OVER
+
+cottage_walk_common:
+	; updates peasant animation frame
+
+	jsr	walk_to
+
+	jsr	update_peasant_steps
+
+done_cottage_no_walk:
+	rts
+
+
+
+
+
+
+	;=======================
+	; handle text display
+	;=======================
+
+display_text:
+
+	lda	FRAME
+
+check_cottage_text1:
+
+	cmp	#TEXT1_FRAME
+	bcc	done_display_text
+
+	cmp	#TEXT2_FRAME
+	bcs	check_cottage_text2
+
+	;========================
+	; display cottage text 1
+
+	lda	#<cottage_text1
+	sta	OUTL
+	lda	#>cottage_text1
+	jmp	common_cottage_text
+
+check_cottage_text2:
+
+	cmp	#TEXT3_FRAME
+	bcs	check_cottage_text3		; bge
+
+	lda	#<cottage_text2
+	sta	OUTL
+	lda	#>cottage_text2
+	jmp	common_cottage_text
+
+check_cottage_text3:
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+
+common_cottage_text:
+	sta	OUTH
+	jsr	hgr_text_box
+done_display_text:
+	rts

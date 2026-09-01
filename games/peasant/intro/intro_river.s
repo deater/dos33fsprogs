@@ -143,7 +143,9 @@ done_river_action:
 
 	inc	FRAME
 
-	jsr	really_move_peasant
+	; update peasant animation frame
+
+	jsr	update_peasant_steps
 
 	jmp	river_walk_loop
 

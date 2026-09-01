@@ -375,7 +375,8 @@ SAVED_Y2	= $C8		; climb
 ; temp for animations, etc
 
 BUCKET_COUNT	= $C9	; well
-WALK_COUNT	= $C9	; intro
+WALK_COUNT	= $C9	; intro (deprecated)
+WALK_OVER	= $C9	; intro
 BABY_COUNT	= $C9	; ending,west_lake,ned_cottage
 FISH_COUNT	= $C9	; east_lake
 KEEPER_COUNT	= $C9	; cliff heights
