@@ -122,18 +122,12 @@ cottage_walk_loop:
 	;=====================
 	; move peasant
 
-	jsr	move_peasant
-
-;	jsr	walk_to
-;	bcc	move_good		; cc if not at destination yet
-
-;	jsr	update_walk		; at destination so update new dest
-;	bcs	done_cottage		; if totally done, end loop
+	jsr	move_peasant_cottage
 
 move_good:
 
 
-	jsr	display_text
+	jsr	display_text_cottage
 
 
 done_cottage_action:
@@ -168,6 +162,7 @@ done_cottage:
 
 	rts
 
+.if 0
 ; Walk to edge of screen
 
 	; note by default XADD=1,YADD=5
@@ -192,55 +187,13 @@ cottage_path_frames:
 	.byte 20		; 1 ; original location (5s, then text 2)
 	.byte 20
 	.byte 20
-
-
-.if 0
-	;================================
-	; update walking status
-	;================================
-
-update_walk:
-
-	; index intro the path
-
-	ldy	WALK_COUNT
-
-	; load X destination
-
-	lda	cottage_path_x,Y
-
-	; if $FF then we're done
-
-	cmp	#$ff
-	beq	update_walk_done
-
-	; otherwise store as destination
-
-	sta	WALK_DEST_X
-
-	; load y coord, put in place
-
-	lda	cottage_path_y,Y
-	sta	WALK_DEST_Y
-
-	; point to next entry
-
-	inc	WALK_COUNT
-
-	clc
-	rts
-
-update_walk_done:
-	sec
-	rts
 .endif
 
-
 	;=======================
-	; move_peasant
+	; move_peasant cottage
 	;=======================
 
-move_peasant:
+move_peasant_cottage:
 
 	lda	FRAME
 
@@ -311,7 +264,7 @@ done_cottage_no_walk:
 	; handle text display
 	;=======================
 
-display_text:
+display_text_cottage:
 
 	lda	FRAME
 

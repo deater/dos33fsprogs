@@ -1,7 +1,7 @@
-; Lake West
+; Lake West Intro
 
-; Everyone knows west lake is the best lake
-
+; 4 seconds, walking, previous message
+; 4 seconds, walking new message
 
 	;========================
 	; Lake West
@@ -9,6 +9,7 @@
 intro_lake_west:
 	lda	#0
 	sta	FRAME
+	sta	WALK_OVER
 
 	;=========================
 	; init peasant position
@@ -57,6 +58,16 @@ intro_lake_west:
 
 	jsr	intro_print_title
 
+	;========================================
+	; setup walk, we only walk straight line
+
+	; walk to 39,155
+
+        lda     #39
+        sta     WALK_DEST_X
+
+        lda     #155
+        sta     WALK_DEST_Y
 
 	;================
 	;================
@@ -68,96 +79,48 @@ lake_w_walk_loop:
 	;===========================
 	; copy bg to current screen
 
+	; also checks keyboard
+
 	jsr	hgr_copy_faster
 
 	;===============
 	; draw peasant
 
-	lda	FRAME
-	asl
-	tax
-
-	lda	lake_w_path,X
-	bmi	done_lake_w
-	sta	PEASANT_X
-
-	inx
-	lda	lake_w_path,X
-	sta	PEASANT_Y
-
 	jsr	draw_peasant
 
+	;===============
+	; move peasant
 
-	;============================
-	; handle special action
-	;============================
-	; FRAME  0 -- 19         cottage_text_3
-	; FRAME 20 -- ??         lake_w_text
+	jsr	move_peasant_lake_w
 
-	lda	FRAME
-check_lake_w_action1:
-	cmp	#20
-	bcs	check_lake_w_action2	; bge
-
-	;==========================
-	; re-display cottage text 3
-	lda	#<cottage_text3
-	sta	OUTL
-	lda	#>cottage_text3
-
-	jmp	done_lake_w_action
-
-check_lake_w_action2:
-;	cmp	#20
-;	bne	done_lake_w_action
-
-	;===========================
+	;================
 	; display text
 
-	;============================
-	; display cottage text 1
-	;============================
-display_lake_w_text1:
+	jsr	display_text_lake_w
 
-	lda	#<lake_w_message1
-	sta	OUTL
-	lda	#>lake_w_message1
-
-done_lake_w_action:
-        sta	OUTH
-        jsr	hgr_text_box
 
 	;=========================
 	; animate bubbles
 
 	jsr	animate_bubbles_w
 
+	;=========================
+	; flip page
+
 	jsr	hgr_page_flip
 
 	;========================
 	; check if escape pressed
-
-;	jsr	intro_drain_keyboard_buffer
-
-;	lda	ESC_PRESSED
-
-	jsr	check_escape_pressed
-	bcs	done_lake_w
-
-
-	lda	#DEFAULT_WAIT
-	jsr	wait_a_bit
 
 	lda	ESC_PRESSED
 	bne	done_lake_w
 
 	inc	FRAME
 
-	; update peasant animation frame
+	lda	WALK_OVER
+	beq	lake_w_walk_loop			; bra
 
-	jsr	update_peasant_steps
-
-	jmp	lake_w_walk_loop
+;	jmp	lake_w_walk_loop
 
 
 	;===================
@@ -180,7 +143,7 @@ done_lake_w:
 
 ; walk to edge
 
-
+.if 0
 
 lake_w_path:
 	.byte 1,155
@@ -223,5 +186,63 @@ lake_w_path:
 	.byte 38,155
 	.byte 39,155
 	.byte $FF,$FF
+.endif
+
+	;=====================
+	; move_peasant_lake_w
+	;=====================
+
+move_peasant_lake_w:
 
 
+	jsr	walk_to
+
+	jsr	update_peasant_steps
+
+	rts
+
+
+
+
+	;============================
+	; handle special action
+	;============================
+	; FRAME  0 -- 19         cottage_text_3
+	; FRAME 20 -- ??         lake_w_text
+
+display_text_lake_w:
+
+	lda	FRAME
+check_lake_w_action1:
+	cmp	#20
+	bcs	check_lake_w_action2	; bge
+
+	;==========================
+	; re-display cottage text 3
+	lda	#<cottage_text3
+	sta	OUTL
+	lda	#>cottage_text3
+
+	jmp	done_lake_w_action
+
+check_lake_w_action2:
+;	cmp	#20
+;	bne	done_lake_w_action
+
+	;===========================
+	; display text
+
+	;============================
+	; display cottage text 1
+	;============================
+display_lake_w_text1:
+
+	lda	#<lake_w_message1
+	sta	OUTL
+	lda	#>lake_w_message1
+
+done_lake_w_action:
+        sta	OUTH
+        jsr	hgr_text_box
+
+	rts
