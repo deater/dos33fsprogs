@@ -72,7 +72,7 @@ intro_cottage:
 	jsr	zx02_full_decomp
 
 	;===================
-	; print title
+	; print title line
 
 	jsr	intro_print_title
 
@@ -85,20 +85,10 @@ intro_cottage:
 	lda	#0
 	sta	WALK_COUNT
 
-	; setup walking speed
-
-;	lda	#1
-;	sta	PEASANT_XADD
-;	lda	#5
-;	sta	PEASANT_YADD
-
-	; setup walking detination
-
-;	jsr	update_walk
 
 	;====================
 	;====================
-	; walk loop
+	; cottage walk loop
 	;====================
 	;====================
 cottage_walk_loop:

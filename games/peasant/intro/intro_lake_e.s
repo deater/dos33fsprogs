@@ -1,6 +1,20 @@
-; Lake East
+; Lake East Intro
 
-; apparently nothing witty to say about this one
+; nothing shown first 4 s
+; then lake text for 2 s
+; then another 2s
+
+; walking right
+; start moving diagonal (still facing right)
+; start walking up (facing up)
+
+LAKE_E_TEXT1 = 0		; nothing
+LAKE_E_TEXT2 = $1A		; lake message
+LAKE_E_TEXT3 = $35		; nothing again
+
+LAKE_E_WALKING1 = $24		; start diagonal
+LAKE_E_WALKING2 = $35		; start vertical
+LAKE_E_WALKING_END = $5b	; all over
 
 	;========================
 	; Lake East
@@ -8,14 +22,15 @@
 intro_lake_east:
 	lda	#0
 	sta	FRAME
+	sta	WALK_OVER
 
 	;=========================
 	; init peasant position
-	; draw at 7,152
+	; draw at 0,151
 
-	lda	#7
+	lda	#0
 	sta	PEASANT_X
-	lda	#152
+	lda	#151
 	sta	PEASANT_Y
 
 	lda	#PEASANT_DIR_RIGHT
@@ -56,9 +71,23 @@ intro_lake_east:
 	jsr	intro_print_title
 
 
+
+	;====================
+	; walk loop setup
+	;====================
+
+	lda	#0
+	sta	WALK_COUNT
+
+	lda	#28
+	sta	WALK_DEST_X
+
+	lda	#151
+	sta	WALK_DEST_Y
+
 	;===================
 	;===================
-	; lake_e loop
+	; lake_e walk loop
 	;===================
 	;===================
 
@@ -67,56 +96,23 @@ lake_e_walk_loop:
 	;===========================
 	; copy bg to current screen
 
+	; also checks keyboard
+
 	jsr	hgr_copy_faster
 
 
-	;==============
+	;=======================
 	; draw peasant
-
-	lda	FRAME
-	asl
-	tax
-
-	lda	lake_e_path,X
-	bmi	done_lake_e
-	sta	PEASANT_X
-
-	inx
-	lda	lake_e_path,X
-	sta	PEASANT_Y
 
 	jsr	draw_peasant
 
-	;=======================
-	; handle special action
-	;=======================
-	; FRAME 0..9 - nothing
-	; FRAME 10..?? - lake_e_message1
-	; FRAME 28. - change peasant direction?
+	;======================
+	; move peasant
 
-	lda	FRAME
-check_lake_e_action1:
-	cmp	#10			; <10 do nothing extra
-	bcc	done_lake_e_action
+	jsr	move_peasant_lake_e
 
-	; 10 and above, print message
+	jsr	display_text_lake_e
 
-	lda	#<lake_e_message1
-	sta	OUTL
-	lda	#>lake_e_message1
-	sta	OUTH
-	jsr	hgr_text_box
-
-	; if frame #28 change peasant to be walking upward
-
-	lda	FRAME
-	cmp	#28
-	bne	done_lake_e_action
-
-	lda	#PEASANT_DIR_UP
-	sta	PEASANT_DIR
-
-done_lake_e_action:
 
 	;=======================
 	; animate bubbles
@@ -124,6 +120,9 @@ done_lake_e_action:
 	jsr	animate_bubbles_e
 
 ;	jsr	wait_until_keypress
+
+	;======================
+	; flip page
 
 	jsr	hgr_page_flip
 
@@ -133,23 +132,13 @@ done_lake_e_action:
 
 ;	jsr	intro_drain_keyboard_buffer
 
-	jsr	check_escape_pressed
-	bcs	done_lake_e
-
-
-	lda	#DEFAULT_WAIT
-	jsr	wait_a_bit
-
 	lda	ESC_PRESSED
 	bne	done_lake_e
 
 	inc	FRAME
 
-	; update peasant animation frame
-
-	jsr	update_peasant_steps
-
-	jmp	lake_e_walk_loop
+	lda	WALK_OVER
+	beq	lake_e_walk_loop
 
 
 	;===================
@@ -167,7 +156,7 @@ done_lake_e:
 ;	.byte 7,49,"That's a nice looking lake.",0
 
 ; nearly hit head on sign, it goes away, walk off screen
-
+.if 0
 lake_e_path:
 	.byte 4,151
 	.byte 5,151
@@ -206,5 +195,85 @@ lake_e_path:
 	.byte 35,51
 	.byte 35,41
 	.byte $FF,$FF
+.endif
+
+	;==========================
+	; move_peasant lake_e
+
+move_peasant_lake_e:
+
+	lda	FRAME
+
+	cmp	#LAKE_E_WALKING1
+	beq	lake_e_switch1
+
+	cmp	#LAKE_E_WALKING2
+	beq	lake_e_switch2
+
+	cmp	#LAKE_E_WALKING_END
+	beq	lake_e_switch3
+
+	bne	no_lake_e_switch
 
 
+lake_e_switch1:
+	lda	#35
+	sta	WALK_DEST_X
+
+	lda	#81
+	sta	WALK_DEST_Y
+
+	bne	no_lake_e_switch		; bra
+
+lake_e_switch2:
+	lda	#35
+	sta	WALK_DEST_X
+
+	lda	#41
+	sta	WALK_DEST_Y
+
+	; face upward
+
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+	jmp	no_lake_e_switch
+
+lake_e_switch3:
+	inc	WALK_OVER
+
+no_lake_e_switch:
+
+	jsr	walk_to
+
+	jsr	update_peasant_steps
+
+	rts
+
+	;=======================
+	; handle text display
+	;=======================
+	; FRAME 0		nothing
+	; FRAME LAKE_E_TEXT2	lake_e_message1
+	; FRAME LAKE_E_TEXT3	change peasant direction?
+
+display_text_lake_e:
+
+	lda	FRAME
+check_lake_e_action1:
+	cmp	#LAKE_E_TEXT2			; blt
+	bcc	done_lake_e_action
+	cmp	#LAKE_E_TEXT3			;
+	bcs	done_lake_e_action		; bge
+
+	; print message
+
+	lda	#<lake_e_message1
+	sta	OUTL
+	lda	#>lake_e_message1
+	sta	OUTH
+	jsr	hgr_text_box
+
+done_lake_e_action:
+
+	rts

@@ -81,10 +81,10 @@ mockingboard_notfound:
 	; Lake West
 	;========================
 
-	jsr	intro_lake_west
+;	jsr	intro_lake_west
 
-	lda	ESC_PRESSED
-	bne	escape_handler
+;	lda	ESC_PRESSED
+;	bne	escape_handler
 
 	;========================
 	; Lake East
