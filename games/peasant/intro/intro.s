@@ -72,28 +72,28 @@ mockingboard_notfound:
 	; Cottage
 	;========================
 
-;	jsr	intro_cottage
+	jsr	intro_cottage
 
-;	lda	ESC_PRESSED
-;	bne	escape_handler
+	lda	ESC_PRESSED
+	bne	escape_handler
 
 	;========================
 	; Lake West
 	;========================
 
-;	jsr	intro_lake_west
+	jsr	intro_lake_west
 
-;	lda	ESC_PRESSED
-;	bne	escape_handler
+	lda	ESC_PRESSED
+	bne	escape_handler
 
 	;========================
 	; Lake East
 	;========================
 
-;	jsr	intro_lake_east
+	jsr	intro_lake_east
 
-;	lda	ESC_PRESSED
-;	bne	escape_handler
+	lda	ESC_PRESSED
+	bne	escape_handler
 
 	;========================
 	; River
@@ -251,6 +251,8 @@ no_peasant_wrap:
 
 	rts
 
+
+.if 0
 	;=============================
 	; ????
 
@@ -265,6 +267,7 @@ yes_escape_pressed:
 	; don't clear ESC_PRESSED as we use it to exit intro
 	sec
 	rts
+.endif
 
 peasant_quest_intro_end:
 
