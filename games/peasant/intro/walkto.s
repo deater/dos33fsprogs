@@ -1,3 +1,7 @@
+SPEASANT_XADD_L =       $C0
+SPEASANT_XADD   =       $00
+SPEASANT_YADD   =       2
+
 
 	;=====================================
 	; walk to

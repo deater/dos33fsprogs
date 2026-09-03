@@ -3,6 +3,9 @@
 ; 4 seconds, walking, previous message
 ; 4 seconds, walking new message
 
+LAKE_W_NEXT_TEXT = $18
+LAKE_W_END_FRAME = $34
+
 	;========================
 	; Lake West
 	;========================
@@ -14,8 +17,9 @@ intro_lake_west:
 	;=========================
 	; init peasant position
 	; draw at 7,155
+	;	0,155?
 
-	lda	#1
+	lda	#0
 	sta	PEASANT_X
 	lda	#155
 	sta	PEASANT_Y
@@ -75,6 +79,9 @@ intro_lake_west:
 	;================
 	;================
 
+	lda	#0
+	sta	WALK_COUNT		; needed?
+
 lake_w_walk_loop:
 	;===========================
 	; copy bg to current screen
@@ -117,8 +124,10 @@ lake_w_walk_loop:
 
 	inc	FRAME
 
-	lda	WALK_OVER
-	beq	lake_w_walk_loop			; bra
+	lda	FRAME
+	cmp	#LAKE_W_END_FRAME
+
+	bne	lake_w_walk_loop			; bra
 
 ;	jmp	lake_w_walk_loop
 
@@ -201,21 +210,18 @@ move_peasant_lake_w:
 
 	rts
 
-
-
-
 	;============================
 	; handle special action
 	;============================
-	; FRAME  0 -- 19         cottage_text_3
-	; FRAME 20 -- ??         lake_w_text
+	; FRAME  0 --          			cottage_text_3
+	; FRAME LAKE_W_NEXT_TEXT -- ??		lake_w_text
 
 display_text_lake_w:
 
 	lda	FRAME
 check_lake_w_action1:
-	cmp	#20
-	bcs	check_lake_w_action2	; bge
+	cmp	#LAKE_W_NEXT_TEXT
+	bcs	display_lake_w_text1	; bge
 
 	;==========================
 	; re-display cottage text 3
@@ -225,16 +231,6 @@ check_lake_w_action1:
 
 	jmp	done_lake_w_action
 
-check_lake_w_action2:
-;	cmp	#20
-;	bne	done_lake_w_action
-
-	;===========================
-	; display text
-
-	;============================
-	; display cottage text 1
-	;============================
 display_lake_w_text1:
 
 	lda	#<lake_w_message1

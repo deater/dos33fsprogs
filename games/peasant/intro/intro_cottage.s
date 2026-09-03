@@ -12,10 +12,6 @@ WALK2_FRAME=44		; start walking at roughly 10s
 WALK3_FRAME=50		; turn corner at roughtly 13s
 WALK4_FRAME=80		; end of level at 19s?
 
-SPEASANT_XADD_L	=	$C0
-SPEASANT_XADD	=	$00
-SPEASANT_YADD	=	2
-
 ; text message 1 (displays 5s)
 ; text message 2 (displays 5s)
 ; start walking, text message 2 still (displays 3s)

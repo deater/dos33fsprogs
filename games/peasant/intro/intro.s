@@ -72,10 +72,10 @@ mockingboard_notfound:
 	; Cottage
 	;========================
 
-	jsr	intro_cottage
+;	jsr	intro_cottage
 
-	lda	ESC_PRESSED
-	bne	escape_handler
+;	lda	ESC_PRESSED
+;	bne	escape_handler
 
 	;========================
 	; Lake West
