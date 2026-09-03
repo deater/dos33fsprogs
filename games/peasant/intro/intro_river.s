@@ -1,4 +1,12 @@
+; Intro at the River
+
 ; o/~ At the beautiful, the beautiful, River o/~
+
+
+; like 2s up, then right
+
+RIVER_SWITCH_DIRECTION = 20
+RIVER_WALK_DONE = 25
 
 	;========================
 	; River
@@ -7,6 +15,7 @@
 intro_river:
 	lda	#0
 	sta	FRAME
+	sta	WALK_OVER
 
 	;=========================
 	; init peasant position
@@ -14,7 +23,7 @@ intro_river:
 
 	lda	#33
 	sta	PEASANT_X
-	lda	#157
+	lda	#160
 	sta	PEASANT_Y
 
 	lda	#PEASANT_DIR_UP
@@ -52,11 +61,24 @@ intro_river:
 	jsr	zx02_full_decomp
 
 
-	;================
-	; print title
+	;==================
+	; print title line
 
 	jsr	intro_print_title
 
+
+	;===================
+	; walk loop setup
+	;===================
+
+	lda	#0
+	sta	WALK_COUNT
+
+	lda	#32
+	sta	WALK_DEST_X
+
+	lda	#105
+	sta	WALK_DEST_Y
 
 	;=======================
 	;=======================
@@ -75,79 +97,38 @@ river_walk_loop:
 	;====================
 	; draw peasant
 
-	lda	FRAME
-	asl
-	tax
-
-	lda	river_path,X
-	bmi	done_river
-	sta	PEASANT_X
-
-	inx
-	lda	river_path,X
-	sta	PEASANT_Y
-
 	jsr	draw_peasant
 
-	;=========================
-	; handle special action
-	;========================
-	; 0..9 - nothing
-	; 10..? - print message
-	; 15    - change direction walking
+	;====================
+	; move peasant
 
-	lda	FRAME
-check_river_action1:
-	cmp	#10
-	bcc	done_river_action
+	jsr	move_peasant_river
 
-	; over 10, print message
+	jsr	display_text_river
 
-	lda	#<river_message1
-	sta	OUTL
-	lda	#>river_message1
-	sta	OUTH
-
-	jsr	hgr_text_box
-
-	; if 15 switch direction
-
-	lda	FRAME
-	cmp	#15
-	bne	done_river_action
-
-	lda	#PEASANT_DIR_RIGHT
-	sta	PEASANT_DIR
-
-done_river_action:
+	;=====================
+	; animate river
 
 	jsr	animate_river
 
-
 ;	jsr	wait_until_keypress
+
+	;======================
+	; flip page
 
 	jsr	hgr_page_flip
 
 	;========================
 	; check escape pressed
 
-	jsr	check_escape_pressed
-	bcs	done_river
-
-
-	lda	#DEFAULT_WAIT
-	jsr	wait_a_bit
-
 	lda	ESC_PRESSED
 	bne	done_river
 
 	inc	FRAME
 
-	; update peasant animation frame
+	lda	WALK_OVER
 
-	jsr	update_peasant_steps
-
-	jmp	river_walk_loop
+	beq	river_walk_loop
 
 
 	;===================
@@ -169,7 +150,7 @@ done_river:
 ; walks behind tree
 
 
-
+.if 0
 river_path:
 	.byte 32,157
 	.byte 32,153
@@ -193,4 +174,63 @@ river_path:
 	.byte 37,105
 	.byte 38,105
 	.byte $FF,$FF
+.endif
 
+
+move_peasant_river:
+	lda	FRAME
+
+	cmp	#RIVER_SWITCH_DIRECTION
+	beq	river_switch_direction
+
+	cmp	#RIVER_WALK_DONE
+	bne	done_move_river
+
+	inc	WALK_OVER
+
+	bne	done_move_river		; bra
+
+river_switch_direction:
+
+	lda	#38
+	sta	WALK_DEST_X
+
+	lda	#105
+	sta	WALK_DEST_Y
+
+	lda	#PEASANT_DIR_RIGHT
+	sta	PEASANT_DIR
+
+done_move_river:
+	jsr	walk_to
+
+	jsr	update_peasant_steps
+
+	rts
+
+	;=========================
+	; handle text display
+	;========================
+	; 0..9 - nothing
+	; 10..? - print message
+	; 15    - change direction walking
+display_text_river:
+
+	lda	FRAME
+check_river_action1:
+	cmp	#10
+	bcc	done_river_action
+
+	; over 10, print message
+
+	lda	#<river_message1
+	sta	OUTL
+	lda	#>river_message1
+	sta	OUTH
+
+	jsr	hgr_text_box
+
+
+done_river_action:
+
+	rts

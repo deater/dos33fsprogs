@@ -90,10 +90,10 @@ mockingboard_notfound:
 	; Lake East
 	;========================
 
-	jsr	intro_lake_east
+;	jsr	intro_lake_east
 
-	lda	ESC_PRESSED
-	bne	escape_handler
+;	lda	ESC_PRESSED
+;	bne	escape_handler
 
 	;========================
 	; River

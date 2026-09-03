@@ -1,4 +1,4 @@
-+ escape takes a while to take effect when walking for some reason
++ update the river rock animation to match the better one
 + add "walk to support"
 + move "ok to start" comment to knight level
 + adjust timing of walking so time to read messages
@@ -7,4 +7,4 @@
 
 Finished:
 + (done) update knight level (remove knight from bg, then draw sprite)
-
++ (fixed) escape takes a while to take effect when walking for some reason
