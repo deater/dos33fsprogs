@@ -196,3 +196,6 @@ knight_ask_unknown_message:
 .byte 34,"I don't know anything",13
 .byte "about that, short pants.",34,0
 
+; say at beginning if arrive through intro
+knight_message1:
+.byte   "OK go for it.",0

@@ -184,7 +184,7 @@ knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priorit
 ;	note: not compressed
 ;	also not using common code as it uses custom box sizes
 
-.include "../text/intro.inc"
+.include "../text/old_intro.inc"
 
 ;==================================
 ; animation sprites
