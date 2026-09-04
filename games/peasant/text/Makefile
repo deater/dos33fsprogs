@@ -751,9 +751,6 @@ well.inc.lookup:	well.inc shrink_text
 yellow_tree.inc.lookup:	yellow_tree.inc shrink_text
 	./shrink_text < yellow_tree.inc > yellow_tree.inc.lookup
 
-
-
-
 ###
 
 cliff.inc.lookup:	cliff.inc shrink_text
@@ -761,7 +758,6 @@ cliff.inc.lookup:	cliff.inc shrink_text
 
 common.inc.lookup:	common.inc ../version.inc shrink_text
 	./shrink_text < common.inc > common.inc.lookup
-
 
 inside.inc.lookup:	inside.inc shrink_text
 	./shrink_text < inside.inc > inside.inc.lookup

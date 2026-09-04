@@ -30,6 +30,13 @@ intro_knight:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
+	;==========================
+	; load bg graphics
+
+	ldx	#INTRO_KNIGHT_BG
+	jsr	intro_load_bg_common
+
+.if 0
 
 	;=========================
 	; load priority to $400
@@ -65,7 +72,7 @@ intro_knight:
 	; print title line
 
 	jsr	intro_print_title
-
+.endif
 
 	;==========================
 	; knight walk loop setup

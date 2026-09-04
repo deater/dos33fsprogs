@@ -29,6 +29,13 @@ intro_river:
 	lda	#PEASANT_DIR_UP
 	sta	PEASANT_DIR
 
+	;==========================
+	; load bg graphics
+
+	ldx	#INTRO_RIVER_BG
+	jsr	intro_load_bg_common
+
+.if 0
 	;========================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
@@ -65,7 +72,7 @@ intro_river:
 	; print title line
 
 	jsr	intro_print_title
-
+.endif
 
 	;===================
 	; walk loop setup

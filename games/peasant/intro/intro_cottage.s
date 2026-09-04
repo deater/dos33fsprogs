@@ -40,6 +40,13 @@ intro_cottage:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
+	;==========================
+	; load bg graphics
+
+	ldx	#INTRO_COTTAGE_BG
+	jsr	intro_load_bg_common
+
+.if 0
 	;=============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
@@ -75,7 +82,7 @@ intro_cottage:
 	; print title line
 
 	jsr	intro_print_title
-
+.endif
 
 	;====================
 	; walk loop setup

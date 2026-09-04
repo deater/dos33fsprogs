@@ -179,6 +179,23 @@ lake_e_priority_zx02:	.incbin "../location_lake_east/graphics_lake_east/lake_e_p
 river_priority_zx02:	.incbin "../location_river/graphics_river/river_priority.zx02"
 knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priority.zx02"
 
+bg_data_l:
+	.byte <cottage_zx02,<lake_w_zx02
+	.byte <lake_e_zx02,<river_zx02,<intro_knight_zx02
+bg_data_h:
+	.byte >cottage_zx02,>lake_w_zx02
+	.byte >lake_e_zx02,>river_zx02,>intro_knight_zx02
+priority_data_l:
+	.byte <cottage_priority_zx02,<lake_w_priority_zx02
+	.byte <lake_e_priority_zx02,<river_priority_zx02,<knight_priority_zx02
+priority_data_h:
+	.byte >cottage_priority_zx02,>lake_w_priority_zx02
+	.byte >lake_e_priority_zx02,>river_priority_zx02,>knight_priority_zx02
+
+
+
+
+
 ;==================================
 ; include dialog
 ;	note: not compressed
@@ -192,7 +209,6 @@ knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priorit
 .include "../location_lake_east/sprites_lake_east/bubble_sprites_e.inc"
 .include "../location_lake_west/sprites_lake_west/bubble_sprites_w.inc"
 
-
 .include "animate_bubbles.s"
 .include "animate_river.s"
 .include "walkto.s"
@@ -200,8 +216,66 @@ knight_priority_zx02:	.incbin "../location_knight/graphics_knight/knight_priorit
 skip_text:
         .byte 0,2,"ESC Skips",0
 
+INTRO_COTTAGE_BG = 0
+INTRO_LAKE_W_BG = 1
+INTRO_LAKE_E_BG = 2
+INTRO_RIVER_BG = 3
+INTRO_KNIGHT_BG = 4
+
+	;=============================
+	;=============================
+	; intro load background common
+	;=============================
+	;=============================
+	; which one to load in X
+
+intro_load_bg_common:
+
+	;=============================
+	; load priority to $400
+	; indirectly as we can't trash screen holes
+
+	lda	priority_data_l,X
+	sta	zx_src_l+1
+	lda	priority_data_h,X
+	sta	zx_src_h+1
+
+	txa
+	pha
+
+	lda	#>priority_temp		; temporarily load to $7000
+
+	jsr	zx02_full_decomp
+
+	; copy to $400
+
+	jsr	priority_copy
+
+	;==========================
+	; load background to $6000
+
+	pla
+	tax
+
+	lda	bg_data_l,X
+	sta	zx_src_l+1
+	lda	bg_data_h,X
+	sta	zx_src_h+1
+
+	lda	#$60
+
+	jsr	zx02_full_decomp
+
 	;===================
-        ; print title
+	; print title line
+
+	; fall through
+
+;	jmp	intro_print_title		; tail call
+
+
+	;===================
+        ; print title line
 	;===================
 	; print to $6000 area
 intro_print_title:
@@ -252,23 +326,10 @@ no_peasant_wrap:
 	rts
 
 
-.if 0
-	;=============================
-	; ????
-
-check_escape_pressed:
-	lda	ESC_PRESSED
-	bne	yes_escape_pressed
-	clc
-	rts
-
-
-yes_escape_pressed:
-	; don't clear ESC_PRESSED as we use it to exit intro
-	sec
-	rts
-.endif
 
 peasant_quest_intro_end:
 
 .assert (>peasant_quest_intro_end - >peasant_quest_intro) < $30 , error, "intro too big"
+
+
+

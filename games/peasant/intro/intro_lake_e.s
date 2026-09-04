@@ -36,6 +36,14 @@ intro_lake_east:
 	lda	#PEASANT_DIR_RIGHT
 	sta	PEASANT_DIR
 
+	;==========================
+	; load bg graphics
+
+	ldx	#INTRO_LAKE_E_BG
+	jsr	intro_load_bg_common
+
+.if 0
+
 	;============================
 	; load priority to $400
 	; indirectly as we can't trash screen holes
@@ -70,7 +78,7 @@ intro_lake_east:
 
 	jsr	intro_print_title
 
-
+.endif
 
 	;====================
 	; walk loop setup
