@@ -36,44 +36,6 @@ intro_knight:
 	ldx	#INTRO_KNIGHT_BG
 	jsr	intro_load_bg_common
 
-.if 0
-
-	;=========================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<knight_priority_zx02
-	sta	zx_src_l+1
-	lda	#>knight_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#>priority_temp			; temporarily load to $7000
-
-	jsr	zx02_full_decomp
-
-	; copy to $400
-
-	jsr	priority_copy
-
-
-	;=====================
-	; load bg
-
-	lda	#<(intro_knight_zx02)
-	sta	zx_src_l+1
-	lda	#>(intro_knight_zx02)
-	sta	zx_src_h+1
-
-	lda	#$60
-
-	jsr	zx02_full_decomp
-
-	;==================
-	; print title line
-
-	jsr	intro_print_title
-.endif
-
 	;==========================
 	; knight walk loop setup
 	;==========================
@@ -221,7 +183,7 @@ check_knight_action1:
 	lda	#>river_message1
 	sta	OUTH
 
-	jsr	hgr_text_box
+	jsr	print_text_message
 
 	jmp	done_knight_action
 
@@ -236,7 +198,7 @@ check_knight_action3:
 	lda	#>knight_message1
 	sta	OUTH
 
-	jsr	hgr_text_box
+	jsr	print_text_message
 
 
 done_knight_action:

@@ -41,6 +41,11 @@ start_new_game:
         lda     LCBANK1
         lda     LCBANK1
 
+	;=================================
+	; parse_input loaded before intro now
+	;	because it uses print code
+
+.if 0
 	; load parse_input compressed to $6000
 	; (was $2000 but that puts garbage on screen)
 
@@ -59,7 +64,7 @@ start_new_game:
         lda     #>parse_input_location
 
         jsr     zx02_full_decomp
-
+.endif
 
 	;=========================
 	; init peasant position

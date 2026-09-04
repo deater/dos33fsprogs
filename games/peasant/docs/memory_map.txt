@@ -41,21 +41,14 @@ Memory Map
 
 ;=========================== intro
 
-	$6000 = code, 14k or so ($6000 - $9FFF)
-	$A000 - $AFFF = peasant sprite data
-	$D000 - $DFFF = pt3 music still (4k) though hacked
-	
-	New:
 	$6000 - $7FFF = offscreen image
-	$8000 - $B800 = code (14k?)
-	
-	$BC-$BD (512B)	Hi-res lookup tables
+	$8000 - $AFFF = code (12k?)
+	$B000 - $BFFF = peasant data
 
-	blurgh
-		river.zx02 = 2379
-		knight.zx02 = 1938
-		lake_e.zx02 = 1750
+	$D000 - $DFFF = music, also some bg data
 
+	$E400 - $E7ff = dialog data
+	$EE00 - $FF00 = parser code (we use it to print text)
 
 ; ================================
 ; This is the layout for levels
@@ -94,6 +87,30 @@ $EC	(256B)	collision lookup
 $ED	(256B)	verb table
 $EE-$FF (4.5k)	parser code	(4608 bytes, 4332 currently)
 
+-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+
+
+
+
+
+
+
+
+
+
+
+((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((
+OLD HISTORICAL STUFF BELOW
+IGNORE
+))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))
+
+Intro (old)
+	$6000 = code, 14k or so ($6000 - $9FFF)
+	$A000 - $AFFF = peasant sprite data
+	$D000 - $DFFF = pt3 music still (4k) though hacked
+	
 
 Language card (high 16k) (old)
 
@@ -103,4 +120,8 @@ Language card (high 16k) (old)
 ;$D0-$DF (bank2) (4k)	inventory	(3122 bytes)
 ;$EE-$FF (both)	(4.5k)	parser code	(4608 bytes, 4332 currently)
 
--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+
+
+
+
+

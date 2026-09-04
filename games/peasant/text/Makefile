@@ -41,7 +41,7 @@ all:	dump_text shrink_text \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
 	DIALOG_INVENTORY.ZX02 dialog_inventory.inc \
-	DIALOG_INTRO.ZX02
+	DIALOG_INTRO.ZX02 dialog_intro.inc
 
 ###
 
@@ -624,14 +624,14 @@ DIALOG_INTRO.ZX02:	dialog_intro
 	$(ZX02) -f  dialog_intro DIALOG_INTRO.ZX02
 
 dialog_intro:	dialog_intro.o
-	ld65 -o dialog_intro dialog_intro.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+	ld65 -o dialog_intro dialog_intro.o -C $(LINKER_SCRIPTS)/apple2_e400.inc
 
 dialog_intro.o:	dialog_intro.s \
 		intro.inc.lookup
 	ca65 -o dialog_intro.o dialog_intro.s -l dialog_intro.lst
 
 dialog_intro.inc:	../generate_all_symbols dialog_intro
-	../generate_all_symbols -a 0xd000 dialog_intro.lst > dialog_intro.inc
+	../generate_all_symbols -a 0xe400 dialog_intro.lst > dialog_intro.inc
 
 
 

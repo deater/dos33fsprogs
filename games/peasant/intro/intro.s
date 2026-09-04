@@ -11,6 +11,7 @@
 .include "../qload.inc"
 .include "../music/music.inc"
 .include "../peasant_sprite.inc"
+.include "../parse_input.inc"
 
 DEFAULT_WAIT = 1	; was 3 before we changed background copy?
 
@@ -32,7 +33,40 @@ peasant_quest_intro:
 	lda	#1		; keryboard only accepts enter/esc
 	sta	INTRO_MODE
 
+	;=============================================
+	; load parse_input compressed to $6000
+	;=============================================
+	; this isn't just for the intro, but the whole game?
 
+	lda	#LOAD_PARSE_INPUT
+	sta	WHICH_LOAD
+
+	jsr	load_file
+
+	; decompress to $EE00
+
+	lda	#$00
+	sta	zx_src_l+1
+	lda	#$60
+	sta	zx_src_h+1
+
+	lda	#>parse_input_location
+
+	jsr	zx02_full_decomp
+
+
+	;===============================
+	; decompress dialog to $e400
+	;===============================
+
+	lda	#<intro_text_zx02
+	sta	zx_src_l+1
+	lda	#>intro_text_zx02
+	sta	zx_src_h+1
+
+	lda	#>$e400
+
+	jsr	zx02_full_decomp
 
 	;==============================
 	; load sprite data
@@ -201,7 +235,11 @@ priority_data_h:
 ;	note: not compressed
 ;	also not using common code as it uses custom box sizes
 
-.include "../text/old_intro.inc"
+;.include "../text/old_intro.inc"
+
+intro_text_zx02:
+.incbin "../text/DIALOG_INTRO.ZX02"
+.include "../text/dialog_intro.inc"
 
 ;==================================
 ; animation sprites

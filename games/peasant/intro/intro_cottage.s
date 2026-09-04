@@ -46,44 +46,6 @@ intro_cottage:
 	ldx	#INTRO_COTTAGE_BG
 	jsr	intro_load_bg_common
 
-.if 0
-	;=============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<cottage_priority_zx02
-	sta	zx_src_l+1
-	lda	#>cottage_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#>priority_temp		; temporarily load to $7000
-
-	jsr	zx02_full_decomp
-
-	; copy to $400
-
-	jsr	priority_copy
-
-
-
-	;==========================
-	; load background to $6000
-
-	lda	#<(cottage_zx02)
-	sta	zx_src_l+1
-	lda	#>(cottage_zx02)
-	sta	zx_src_h+1
-
-	lda	#$60
-
-	jsr	zx02_full_decomp
-
-	;===================
-	; print title line
-
-	jsr	intro_print_title
-.endif
-
 	;====================
 	; walk loop setup
 	;====================
@@ -294,6 +256,6 @@ check_cottage_text3:
 
 common_cottage_text:
 	sta	OUTH
-	jsr	hgr_text_box
+	jsr	print_text_message
 done_display_text:
 	rts

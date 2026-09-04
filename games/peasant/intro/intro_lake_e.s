@@ -280,7 +280,7 @@ check_lake_e_action1:
 	sta	OUTL
 	lda	#>lake_e_message1
 	sta	OUTH
-	jsr	hgr_text_box
+	jsr	print_text_message
 
 done_lake_e_action:
 

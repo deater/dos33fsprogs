@@ -34,43 +34,7 @@ intro_lake_west:
         ldx     #INTRO_LAKE_W_BG
         jsr     intro_load_bg_common
 
-.if 0
 
-	;===============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<lake_w_priority_zx02
-	sta	zx_src_l+1
-	lda	#>lake_w_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#>priority_temp		; temporarily load to $7000
-
-	jsr     zx02_full_decomp
-
-	; copy to $400
-
-	jsr	priority_copy
-
-	;=================================
-	; load background to $6000 (PAGE1)
-
-	lda	#<(lake_w_zx02)
-	sta	zx_src_l+1
-	lda	#>(lake_w_zx02)
-	sta	zx_src_h+1
-
-	lda	#$60
-
-	jsr	zx02_full_decomp
-
-
-	;================
-	; print title
-
-	jsr	intro_print_title
-.endif
 	;========================================
 	; setup walk, we only walk straight line
 
@@ -248,6 +212,6 @@ display_lake_w_text1:
 
 done_lake_w_action:
         sta	OUTH
-        jsr	hgr_text_box
+        jsr	print_text_message
 
 	rts

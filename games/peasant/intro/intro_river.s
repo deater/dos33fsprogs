@@ -35,45 +35,6 @@ intro_river:
 	ldx	#INTRO_RIVER_BG
 	jsr	intro_load_bg_common
 
-.if 0
-	;========================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<river_priority_zx02
-	sta	zx_src_l+1
-	lda	#>river_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#>priority_temp		; temporarily load to $7000
-
-	jsr	zx02_full_decomp
-
-	; copy to $400
-
-	jsr	priority_copy
-
-
-	;====================
-	; load bg to $6000
-
-
-	lda	#<(river_zx02)
-	sta	zx_src_l+1
-	lda	#>(river_zx02)
-	sta	zx_src_h+1
-
-	lda	#$60
-
-	jsr	zx02_full_decomp
-
-
-	;==================
-	; print title line
-
-	jsr	intro_print_title
-.endif
-
 	;===================
 	; walk loop setup
 	;===================
@@ -235,7 +196,7 @@ check_river_action1:
 	lda	#>river_message1
 	sta	OUTH
 
-	jsr	hgr_text_box
+	jsr	print_text_message
 
 
 done_river_action:
