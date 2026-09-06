@@ -45,9 +45,11 @@ Memory Map
 	$8000 - $AFFF = code (12k?)
 	$B000 - $BFFF = peasant data
 
-	$D000 - $DFFF = music, also some bg data
+	$D000 - $DFFF = music
+	$E000 - $E75d = knight background	
+	$E800 - $E9ff = dialog data
+	$EA00 - $EB00 = hgr table lookup
 
-	$E400 - $E7ff = dialog data
 	$EE00 - $FF00 = parser code (we use it to print text)
 
 ; ================================

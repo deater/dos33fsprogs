@@ -56,7 +56,7 @@ peasant_quest_intro:
 
 
 	;===============================
-	; decompress dialog to $e400
+	; decompress dialog to $e800
 	;===============================
 
 	lda	#<intro_text_zx02
@@ -64,7 +64,7 @@ peasant_quest_intro:
 	lda	#>intro_text_zx02
 	sta	zx_src_h+1
 
-	lda	#>$e400
+	lda	#>$e800
 
 	jsr	zx02_full_decomp
 
@@ -368,6 +368,3 @@ no_peasant_wrap:
 peasant_quest_intro_end:
 
 .assert (>peasant_quest_intro_end - >peasant_quest_intro) < $30 , error, "intro too big"
-
-
-
