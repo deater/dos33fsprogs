@@ -469,7 +469,7 @@ rain/RAIN:
 ./title/TITLE:	./music/music.inc
 	cd title && make
 
-./intro/INTRO:	./music/music.inc
+./intro/INTRO:	./music/music.inc parse_input.inc
 	cd intro && make
 
 ./music/MUSIC:	
@@ -647,7 +647,7 @@ PARSE_INPUT.ZX02:	parse_input parse_input.inc
 parse_input:	parse_input.o
 	ld65 -o parse_input parse_input.o -C ../../linker_scripts/apple2_ee00.inc
 
-parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup
+parse_input.o:	parse_input.s tokens.inc text/common.inc.lookup inventory/inventory.inc
 	ca65 -o parse_input.o parse_input.s -l parse_input.lst
 
 ###

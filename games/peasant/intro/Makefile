@@ -29,6 +29,12 @@ all:	INTRO
 
 ###
 
+../text/DIALOG_INTRO.ZX02:	
+	cd ../text && make
+
+
+###
+
 ../sprites/peasant_sprites.inc:	
 	cd ../sprites && make
 
@@ -65,7 +71,7 @@ intro.o:	intro.s ../zp.inc ../qload.inc ../music/music.inc \
 		../location_lake_east/sprites_lake_east/bubble_sprites_e.inc \
 		../location_lake_west/sprites_lake_west/bubble_sprites_w.inc \
 		../location_river/sprites_river/river_bubble_sprites.inc \
-		../text/intro.inc \
+		../text/DIALOG_INTRO.ZX02 \
 		../location_river/animate_river.s \
 		../location_lake_west/animate_bubbles.s \
 		../hgr_routines/hgr_draw_box.s \
