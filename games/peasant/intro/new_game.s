@@ -138,6 +138,12 @@ start_new_game:
 	sta	WHICH_PEASANT_SPRITES
 	sta	RAIN_COUNT
 
+	sta	VISITED_0
+	sta	VISITED_1
+	sta	VISITED_2
+	sta	VISITED_3
+
+
 	;==============================
 	; load initial peasant sprites
 
