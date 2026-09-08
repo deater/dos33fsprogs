@@ -1,6 +1,7 @@
 
 
 + work on smoother walk cycle
++ add slowdown so we don't walk faster when no text displayed?
 + see if we can size-optimize to get knight code back from MUSIC
 	we'd need to get like 700 bytes back
 + move "ok to start" comment to knight level

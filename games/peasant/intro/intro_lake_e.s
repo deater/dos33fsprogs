@@ -9,7 +9,7 @@
 ; start walking up (facing up)
 
 LAKE_E_TEXT1 = 0		; nothing
-LAKE_E_TEXT2 = $1A		; lake message
+LAKE_E_TEXT2 = $1C		; lake message
 LAKE_E_TEXT3 = $35		; nothing again
 
 LAKE_E_WALKING1 = $24		; start diagonal
@@ -42,43 +42,6 @@ intro_lake_east:
 	ldx	#INTRO_LAKE_E_BG
 	jsr	intro_load_bg_common
 
-.if 0
-
-	;============================
-	; load priority to $400
-	; indirectly as we can't trash screen holes
-
-	lda	#<lake_e_priority_zx02
-	sta	zx_src_l+1
-	lda	#>lake_e_priority_zx02
-	sta	zx_src_h+1
-
-	lda	#>priority_temp		; temporarily load to $7000
-
-	jsr	zx02_full_decomp
-
-	; copy to $400
-
-	jsr	priority_copy
-
-	;=========================
-	; load bg to $6000
-
-	lda	#<(lake_e_zx02)
-	sta	zx_src_l+1
-	lda	#>(lake_e_zx02)
-	sta	zx_src_h+1
-
-	lda	#$60
-
-	jsr	zx02_full_decomp
-
-	;================
-	; print title line
-
-	jsr	intro_print_title
-
-.endif
 
 	;====================
 	; walk loop setup
@@ -212,6 +175,20 @@ move_peasant_lake_e:
 
 	lda	FRAME
 
+	; switch direction, we switch earlier than the walkto change
+
+	cmp	#(LAKE_E_WALKING2-3)
+	bne	mple_same_dir
+
+	; face upward
+
+	lda	#PEASANT_DIR_UP
+	sta	PEASANT_DIR
+
+mple_same_dir:
+
+	lda	FRAME
+
 	cmp	#LAKE_E_WALKING1
 	beq	lake_e_switch1
 
@@ -240,10 +217,6 @@ lake_e_switch2:
 	lda	#41
 	sta	WALK_DEST_Y
 
-	; face upward
-
-	lda	#PEASANT_DIR_UP
-	sta	PEASANT_DIR
 
 	jmp	no_lake_e_switch
 

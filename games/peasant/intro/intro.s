@@ -371,18 +371,42 @@ intro_print_title:
 update_peasant_steps:
 
         ; increment step count, wrapping at 6
+.if 0
+        inc     PEASANT_WHICH
 
-        inc     PEASANT_STEPS
-        lda     PEASANT_STEPS
+        lda     PEASANT_WHICH
+        cmp     #12
+        bne     no_peasant_wrap
+        lda     #0
+        sta     PEASANT_WHICH
+
+no_peasant_wrap:
+	lsr
+	sta	PEASANT_STEPS
+.endif
+	clc
+	lda	PEASANT_WHICH
+	adc	#$C0
+	sta	PEASANT_WHICH
+
+        lda     PEASANT_WHICH_H
+	adc	#$0
+	sta	PEASANT_WHICH_H
+
         cmp     #6
         bne     no_peasant_wrap
         lda     #0
-        sta     PEASANT_STEPS
+        sta     PEASANT_WHICH_H
 
 no_peasant_wrap:
+	sta	PEASANT_STEPS
 
 	rts
 
+PEASANT_WHICH:
+	.byte	0
+PEASANT_WHICH_H:
+	.byte	0
 
 
 peasant_quest_intro_end:
