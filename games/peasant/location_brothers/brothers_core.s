@@ -16,6 +16,10 @@ peasantry_brothers_core:
 	; check if coming back from archery minigame
 	;============================================
 
+	lda	PREVIOUS_LOCATION
+	cmp	#LOCATION_ARCHERY_GAME
+	bne	not_from_archery
+
 	lda	ARROW_SCORE
 	bpl	not_from_archery
 

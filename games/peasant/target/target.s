@@ -699,6 +699,12 @@ exit_game:
 
 ;	jmp	update_map_location
 
+	bit	PAGE1			; leave on page1 to avoid
+					; glitches on page2 when loading
+
+	lda	#LOCATION_ARCHERY_GAME
+	sta	PREVIOUS_LOCATION
+
 	lda	#LOCATION_ARCHERY
 	sta	MAP_LOCATION
 
