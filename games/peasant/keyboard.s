@@ -66,7 +66,8 @@ intro_mode:
 
 intro_all_other_keys:
 
-	inc	ENTER_PRESSED
+;	inc	ENTER_PRESSED		; why did we do this?
+	bit	KEYRESET
 	jmp	done_check_keyboard
 
 
