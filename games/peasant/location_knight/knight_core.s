@@ -41,10 +41,24 @@ knight_core:
 	;================================
 game_loop:
 
+	;=============================
+	; see if need opening message
+
+	lda	PREVIOUS_LOCATION
+	cmp	#LOCATION_INTRO
+	bne	not_from_intro
+
+	ldx	#<knight_message1
+	ldy	#>knight_message1
+
+	jsr	partial_message_step
+
+	lda	#LOCATION_MOUNTAIN_PASS
+	sta	PREVIOUS_LOCATION
+
+not_from_intro:
 	;====================
 	; check keyboard
-
-;	jsr	drain_keyboard_buffer
 
 	jsr	check_keyboard
 

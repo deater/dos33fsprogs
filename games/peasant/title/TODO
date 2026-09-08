@@ -1,7 +1,13 @@
 + page flipping?
 + proper trogdor integration with animated lightning
-+ print warning message on 48k systems that we need at least 64k
-  (done, but should we stop them from continuing?)
 + Better electric duet music?
 
+Not a bug:
++ garbage on screen after tips done (this is actually an issue with
+	the peasant sprite load at beginning of intro)
+
+Finished:
+
++ (done) print warning message on 48k systems that we need at least 64k
+	but should we stop them from continuing?)
 

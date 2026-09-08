@@ -513,6 +513,9 @@ load_buffer_smc:
 	lda	#NEW_FROM_LOAD		; load whole level from disk
 	sta	LEVEL_OVER
 
+	lda	#0			; avoid thinking we're coming
+	sta	PREVIOUS_LOCATION	; from INTRO->KNIGHT
+
 done_load:
 
 	;==================

@@ -1,14 +1,20 @@
-+ make sure on page1 before loading next level
-+ update the river rock animation to match the better one
-+ work on smoother walk cycle
-+ migrate to the generic textbox printing code
-+ see if we can size-optimize to get knight code back from MUSIC
-+ combine the common code chunks from the 4 intro scenes
 
+
++ work on smoother walk cycle
++ see if we can size-optimize to get knight code back from MUSIC
+	we'd need to get like 700 bytes back
 + move "ok to start" comment to knight level
 	Note that if "SKIP" it doesn't print it at all
++ get rid of on-screen garbage when peasant sprites loaded
+	this is hard, it's hard-coded to load at $2000 because
+	levels load at $4000 so we can't use that area.
+	We need roughly 4k free spot to load into
 
 Finished:
 + (done) update knight level (remove knight from bg, then draw sprite)
 + (fixed) escape takes a while to take effect when walking for some reason
 + (done) add "walk to support"
++ (done) make sure on page1 before loading knight from disk
++ (done) update the river rock animation to match the newer one
++ (done) migrate to the generic textbox printing code
++ (done) combine the common code chunks from the 4 intro scenes

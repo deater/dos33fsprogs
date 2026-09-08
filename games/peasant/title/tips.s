@@ -41,6 +41,8 @@ directions_loop:
 	dex
 	bne	directions_loop
 
+	; show page1...
+
 	jsr	hgr_page_flip
 
 	jsr	wait_until_keypress

@@ -30,6 +30,9 @@ peasant_quest_intro:
 				; ????
 	sta	GAME_STATE_2	; ???
 
+	lda	#LOCATION_INTRO
+	sta	PREVIOUS_LOCATION
+
 	lda	#1		; keryboard only accepts enter/esc
 	sta	INTRO_MODE
 
@@ -75,7 +78,11 @@ peasant_quest_intro:
 	;==============================
         ; load initial peasant sprites
 
-        ; loads temporarily in $6000
+        ; loads temporarily in $2000 -> $d000
+
+	; FIXME: should we load to $4000 instead?
+	;	I guess the problem is the level loader
+	;	loads things at $4000 so we can't load there?
 
 	lda     #PEASANT_OUTFIT_SHORTS
 	jsr	load_peasant_sprites
@@ -144,18 +151,31 @@ mockingboard_notfound:
 
 	jsr	intro_knight
 
+	lda	ESC_PRESSED
+;	bne	escape_handler
+	beq	start_actual_game
 	;========================
 	; Start actual game
 	;========================
 
-;	jsr	draw_peasant
-
-	; wait a bit
-
-;	lda	#10
-;	jsr	wait_a_bit
 
 escape_handler:
+	; escape was pressed
+
+	; this makes it skip "OK go for it..."
+
+	lda	#LOCATION_MOUNTAIN_PASS
+	sta	PREVIOUS_LOCATION
+
+start_actual_game:
+
+	; make sure we display page1, as graphics, etc, will be loaded
+	;	to page 2
+
+	; FIXME: do we need to set DRAW_PAGE as well?
+
+	bit	PAGE1
+
 
 	;==========================
 	; disable music
