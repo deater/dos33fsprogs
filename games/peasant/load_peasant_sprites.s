@@ -55,4 +55,5 @@ no_adjust_peasant_sprites:
 	; shorts, robe, mud, pot, haystack
 	; shield, robe2, helm, sword
 outfit_bg_pal_lookup:
-	.byte 1,0,0,0,0,0,0,0
+	.byte 1,1,0,1,0
+	.byte 1,0,0

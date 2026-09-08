@@ -128,7 +128,9 @@ done_blown_away:
 
 	; use bg palette again
 
-	lda	#0
+	; shouldn't load_peasant_sprites do this for us?
+
+	lda	#1
 	sta     OUTFIT_BG_PALETTE
 
 	rts
