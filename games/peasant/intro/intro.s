@@ -33,8 +33,8 @@ peasant_quest_intro:
 	lda	#LOCATION_INTRO
 	sta	PREVIOUS_LOCATION
 
-	lda	#1		; keryboard only accepts enter/esc
-	sta	INTRO_MODE
+	lda	#KEYBOARD_MODE_INTRO	; keryboard only accepts enter/esc
+	sta	KEYBOARD_MODE
 
 	;=============================================
 	; load parse_input compressed to $6000

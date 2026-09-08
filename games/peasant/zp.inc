@@ -72,7 +72,10 @@ MASK6			= $35
 PEASANT_PRIORITY	= $36
 MASK_COUNTDOWN		= $37
 ENTER_PRESSED		= $38
-INTRO_MODE		= $39	; set keyboard to only accept ESC/ENTER
+KEYBOARD_MODE		= $39
+	KEYBOARD_MODE_NORMAL = 0	; normal keyboard handling
+	KEYBOARD_MODE_MESSAGE = 1	; all inputs treated as enter
+	KEYBOARD_MODE_INTRO = 2		; ignore all but escape
 
 
 ; this is the structure for a ProDOS smartport command, at least

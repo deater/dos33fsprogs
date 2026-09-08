@@ -9,8 +9,8 @@
 	;=============================
 start_new_game:
 
-	lda	#0
-	sta	INTRO_MODE		; clear intro keyboard mode
+	lda	#KEYBOARD_MODE_NORMAL
+	sta	KEYBOARD_MODE		; clear intro keyboard mode
 
 	;===================================================
 	; load RAIN code to $e000

@@ -1288,8 +1288,8 @@ partial_message_step:
 	stx	pms_x_smc+1
 	sty	pms_y_smc+1
 
-	lda	#1
-	sta	INTRO_MODE
+	lda	#KEYBOARD_MODE_MESSAGE
+	sta	KEYBOARD_MODE
 
 partial_message_loop:
 
@@ -1329,7 +1329,7 @@ donedone:
 
 	lda	#0
 	sta	ENTER_PRESSED
-	sta	INTRO_MODE
+	sta	KEYBOARD_MODE
 
 	rts
 

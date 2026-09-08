@@ -48,14 +48,32 @@ check_key:
 
 	; don't convert to uppercase, we can handle lowercase
 
-
 	;===============================
-	; check if "intro" mode
+	; check keboard mode
 	;===============================
 	; in that case only handle ESC and everything else is like ENTER
 
-	ldx	INTRO_MODE
-	beq	not_intro_mode
+	ldx	KEYBOARD_MODE
+	beq	normal_keyboard_mode
+
+	cmp	#KEYBOARD_MODE_INTRO
+	beq	intro_mode
+
+	; message mode, ignore all until enter pressed
+
+message_mode:
+
+	cmp	#27		; can press by accident when skipping intro
+	bne	message_all_other_keys
+
+	inc	ESC_PRESSED
+	jmp	done_check_keyboard
+
+message_all_other_keys:
+
+	inc	ENTER_PRESSED		;
+	jmp	done_check_keyboard
+
 intro_mode:
 
 	cmp	#27		; can press by accident when skipping intro
@@ -66,12 +84,11 @@ intro_mode:
 
 intro_all_other_keys:
 
-;	inc	ENTER_PRESSED		; why did we do this?
 	bit	KEYRESET
 	jmp	done_check_keyboard
 
 
-not_intro_mode:
+normal_keyboard_mode:
 
 	;==========================
 	; Left
