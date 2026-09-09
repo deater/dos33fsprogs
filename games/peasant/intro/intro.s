@@ -174,7 +174,14 @@ start_actual_game:
 
 	; FIXME: do we need to set DRAW_PAGE as well?
 
-	bit	PAGE1
+	bit	PAGE1			; display page1
+	lda	#$20			; draw page2
+	sta	DRAW_PAGE
+
+	lda	#0
+	sta	ENTER_PRESSED
+
+	bit	KEYRESET
 
 
 	;==========================
