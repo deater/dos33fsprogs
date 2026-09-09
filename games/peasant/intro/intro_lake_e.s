@@ -177,7 +177,7 @@ move_peasant_lake_e:
 
 	; switch direction, we switch earlier than the walkto change
 
-	cmp	#(LAKE_E_WALKING2-3)
+	cmp	#(LAKE_E_WALKING2-5)
 	bne	mple_same_dir
 
 	; face upward
