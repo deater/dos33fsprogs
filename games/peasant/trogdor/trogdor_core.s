@@ -9,7 +9,8 @@
 VERB_TABLE = trogdor_inner_verb_table
 
 
-trogdor:
+trogdor_core:
+
 	lda	#0
 	sta	LEVEL_OVER
 	sta	FRAME
@@ -29,6 +30,9 @@ trogdor:
 	ldy	#>trogdor_entry_message
 	jsr	finish_parse_message
 
+	; TODO: play music
+	;	note: do this after it's displayed?
+
 
 	;==========================
 	;==========================
@@ -44,6 +48,7 @@ game_loop:
 	; check keyboard
 
 	jsr	check_keyboard
+	jsr	handle_enter
 
 	;===================
 	; move peasant
@@ -101,23 +106,15 @@ level_over:
 .include "draw_peasant_tiny.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
-;.include "../gr_offsets.s"
 
 .include "../location_common/peasant_common.s"
 .include "../location_common/flame_common.s"
-
-;.include "../new_map_location.s"
-
-;.include "../keyboard.s"
 
 .include "../vblank.s"
 
 
 ; end include_bottom.s
 
-
-
-;.include "../gr_copy.s"
 .include "../hgr_routines/hgr_copy_fast.s"
 
 .include "../wait_a_bit.s"
