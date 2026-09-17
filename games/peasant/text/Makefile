@@ -38,6 +38,7 @@ all:	dump_text shrink_text \
 	DIALOG_OUTER2.ZX02 dialog_outer2.inc \
 	DIALOG_OUTER3.ZX02 dialog_outer3.inc \
 	DIALOG_TROGDOR.ZX02 dialog_trogdor.inc \
+	DIALOG_TROGDOR2.ZX02 dialog_trogdor2.inc \
 	DIALOG_CLIMB.ZX02 dialog_climb.inc \
 	common.inc.lookup \
 	DIALOG_INVENTORY.ZX02 dialog_inventory.inc \
@@ -652,6 +653,23 @@ dialog_trogdor.inc:	../generate_all_symbols dialog_trogdor
 	../generate_all_symbols -a 0xd000 dialog_trogdor.lst > dialog_trogdor.inc
 
 
+###
+
+DIALOG_TROGDOR2.ZX02:	dialog_trogdor2
+	$(ZX02) -f  dialog_trogdor2 DIALOG_TROGDOR2.ZX02
+
+dialog_trogdor2:	dialog_trogdor2.o
+	ld65 -o dialog_trogdor2 dialog_trogdor2.o -C $(LINKER_SCRIPTS)/apple2_d000.inc
+
+dialog_trogdor2.o:	dialog_trogdor2.s \
+		trogdor2.inc.lookup
+	ca65 -o dialog_trogdor2.o dialog_trogdor2.s -l dialog_trogdor2.lst
+
+dialog_trogdor2.inc:	../generate_all_symbols dialog_trogdor2
+	../generate_all_symbols -a 0xd000 dialog_trogdor2.lst > dialog_trogdor2.inc
+
+
+
 
 
 ###
@@ -770,6 +788,9 @@ intro.inc.lookup:	intro.inc shrink_text
 
 trogdor.inc.lookup:	trogdor.inc shrink_text
 	./shrink_text < trogdor.inc > trogdor.inc.lookup
+
+trogdor2.inc.lookup:	trogdor2.inc shrink_text
+	./shrink_text < trogdor2.inc > trogdor2.inc.lookup
 
 ###
 

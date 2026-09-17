@@ -1,6 +1,6 @@
 ; Peasant's Quest Trgodor scene
 
-; The inner sanctum
+; The inner sanctum, Part II
 
 ; by Vince `deater` Weaver	vince@deater.net
 
@@ -26,9 +26,9 @@ trogdor_core:
 	;====================
 	; intro message
 
-	ldx	#<trogdor_entry_message
-	ldy	#>trogdor_entry_message
-	jsr	finish_parse_message
+;	ldx	#<trogdor_entry_message
+;	ldy	#>trogdor_entry_message
+;	jsr	finish_parse_message
 
 	; TODO: play music
 	;	note: do this after it's displayed?
@@ -53,7 +53,7 @@ game_loop:
 	;===================
 	; move peasant
 
-	jsr	move_peasant_tiny
+;	jsr	move_peasant_tiny
 
 	;======================
 	; check if done level
@@ -102,8 +102,8 @@ level_over:
 
 ; include bottom.s
 
-.include "move_peasant_tiny.s"
-.include "draw_peasant_tiny.s"
+;.include "move_peasant_tiny.s"
+;.include "draw_peasant_tiny.s"
 
 .include "../hgr_routines/hgr_sprite_bg_mask.s"
 
@@ -119,18 +119,15 @@ level_over:
 
 .include "../wait_a_bit.s"
 
-
 .include "../hgr_routines/hgr_sprite.s"
 
-.include "trogdor_sleep.s"
+.include "../ssi263/ssi263_simple_speech.s"
+.include "trogdor_speech.s"
 
-;.include "graphics_trogdor/trogdor_graphics.inc"
-;.include "graphics_trogdor/priority_trogdor.inc"
+.include "sprites_trogdor2/trogdor_sprites.inc"
+;.include "sprites_trogdor/sleep_sprites.inc"
 
-.include "sprites_trogdor/trogdor_sprites.inc"
-.include "sprites_trogdor/sleep_sprites.inc"
-
-.include "trogdor_actions.s"
+.include "trogdor2_actions.s"
 
 .include "../sound/falling.s"
 .include "../sound/trogdor_appear.s"
@@ -152,12 +149,12 @@ update_screen:
 	;===================
 	; always draw peasant
 
-	jsr	draw_peasant_tiny
+;	jsr	draw_peasant_tiny
 
 	;======================
 	; draw sleeping trogdor
 
-	jsr	draw_sleeping_trogdor
+;	jsr	draw_sleeping_trogdor
 
 
 	rts

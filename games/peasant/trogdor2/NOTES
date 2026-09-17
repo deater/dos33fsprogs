@@ -1,0 +1,35 @@
+walk in
+
+	"The beaded curtain slams shut..."
+	music plays
+
+	Trogdor is snoring
+
+death:
+	step too close to vertical line
+
+	flames, playing noise
+
+	"Yow..looks like"
+
+	
+
+throw sword
+	prints "This is it!"
+	wa;ls t sot
+	throws
+
+	wall shakes, trogdor stands
+
+	"Now you've done it!" message
+
+can't walk
+
+
+wait too long
+	wait too long and he zaps you
+
+	still get the "congrats" message?
+
+
+

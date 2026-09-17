@@ -8,21 +8,25 @@
 	;=======================
 	;=======================
 
+; can only look or talk
+; anything else gives generic message
+;	what about save/load common stuff?
+
 trogdor_inner_verb_table:
-	.byte VERB_ATTACK
-	.word trogdor_attack-1
-	.byte VERB_KILL
-	.word trogdor_attack-1
-	.byte VERB_SLAY
-	.word trogdor_attack-1
+;	.byte VERB_ATTACK
+;	.word trogdor_attack-1
+;	.byte VERB_KILL
+;	.word trogdor_attack-1
+;	.byte VERB_SLAY
+;	.word trogdor_attack-1
 	.byte VERB_LOOK
 	.word trogdor_look-1
-	.byte VERB_WAKE
-	.word trogdor_wake-1
+;	.byte VERB_WAKE
+;	.word trogdor_wake-1
 	.byte VERB_TALK
 	.word trogdor_talk-1
-	.byte VERB_THROW
-	.word trogdor_throw-1
+;	.byte VERB_THROW
+;	.word trogdor_throw-1
 	.byte 0
 
 
@@ -39,16 +43,17 @@ trogdor_look:
 	jmp	parse_common_look
 
 trogdor_look_at:
-	ldx	#<trogdor_look_message
-	ldy	#>trogdor_look_message
+	ldx	#<trogdor_look_awake_message
+	ldy	#>trogdor_look_awake_message
 	jmp	finish_parse_message
 
 trogdor_look_trogdor:
-	ldx	#<trogdor_look_trogdor_message
-	ldy	#>trogdor_look_trogdor_message
+;	ldx	#<trogdor_look_trogdor_message
+;	ldy	#>trogdor_look_trogdor_message
 	jmp	finish_parse_message
 
 
+.if 0
 trogdor_wake:
 
 	lda     CURRENT_NOUN
@@ -77,7 +82,7 @@ trogdor_attack_trogdor:
 	ldx	#<trogdor_attack_message
 	ldy	#>trogdor_attack_message
 	jmp	finish_parse_message
-
+.endif
 
 trogdor_talk:
 	lda     CURRENT_NOUN
@@ -89,11 +94,11 @@ trogdor_talk:
 	jmp	parse_common_talk
 
 trogdor_talk_trogdor:
-	ldx	#<trogdor_talk_message
-	ldy	#>trogdor_talk_message
+	ldx	#<end_talk_message
+	ldy	#>end_talk_message
 	jmp	finish_parse_message
 
-
+.if 0
 trogdor_throw:
 	lda     CURRENT_NOUN
 	cmp	#NOUN_SWORD
@@ -106,16 +111,9 @@ trogdor_throw_sword:
 	ldy	#>trogdor_throw_sword_message
 	jsr	partial_message_step
 
-	; walk to...
-
-	; throw animation...
-
-	; TROGDOR2
-
-	; wake animation, stand, ceiling shake
-.if 0
 	lda	#7
 	jsr	score_points
+.endif
 
 	ldx	#<trogdor_throw_sword_message2
 	ldy	#>trogdor_throw_sword_message2
@@ -196,6 +194,7 @@ awake_talk_trogdor:
 
 ;	jsr	zx02_full_decomp
 
+.if 0
 	;======================
 	; draw rather dashing
 
@@ -210,7 +209,7 @@ awake_talk_trogdor:
 	sta	INH
 
 	jsr	hgr_draw_sprite
-
+.endif
 	jsr	update_score
 	jsr	print_score
 
@@ -307,6 +306,7 @@ trogdor_open:
 
 ;	jsr	zx02_full_decomp
 
+.if 0
 	;======================
 	; draw rather dashing
 
@@ -321,7 +321,7 @@ trogdor_open:
 	sta	INH
 
 	jsr	hgr_draw_sprite
-
+.endif
 	jsr	update_score
 	jsr	print_score
 
@@ -457,10 +457,55 @@ game_over:
 
 	lda     #LOAD_ENDING
         sta     WHICH_LOAD
-.endif
+
         rts
 
 
+
+	;============================
+	; trogdor talks
+	;============================
+
+trogdor_talks:
+
+	;==================================
+	; text to speech, where available!
+
+	lda	SOUND_STATUS
+	and	#SOUND_SSI263
+	beq	skip_speech
+
+	lda	MOCKINGBOARD_SLOT		; assume slot #4 for now
+	jsr	ssi263_speech_init
+
+        jsr     ssi263_speak
+
+	bit	KEYRESET
+wait_for_speech:
+	lda	KEYPRESS
+	bmi	cancel_speech
+
+	lda	speech_busy
+	bmi	wait_for_speech
+	bpl	done_speech
+
+cancel_speech:
+	bit	KEYRESET
+
+	jsr	ssi263_speech_shutdown
+
+	jmp	done_speech
+
+
+skip_speech:
+	jsr	wait_until_keypress
+
+done_speech:
+;	lda	#0
+;	ldx	#39
+;	jsr	hgr_partial_restore
+
+	rts
 
 
 
@@ -475,5 +520,5 @@ dashing_progress_h:
 	.byte >dashing6_sprite,>dashing7_sprite,>dashing8_sprite
 
 
-.include "../text/dialog_trogdor.inc"
+.include "../text/dialog_trogdor2.inc"
 
