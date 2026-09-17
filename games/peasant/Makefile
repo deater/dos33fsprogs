@@ -137,7 +137,7 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	./location_cliff_base/CLIFF_BASE_LOADER \
 	./location_cliff_heights/CLIFF_HEIGHTS_LOADER \
 	./trogdor/TROGDOR_LOADER ./ending/ENDING \
-	./game_over/GAME_OVER \
+	./game_over/GAME_OVER ./trogdor2/TROGDOR2_LOADER \
 	sprites_peasant/PEASANT_SPRITES_OUTER \
 	map/MAP \
 	./location_kerrek_fall/KERREK_FALL_LOADER
@@ -156,14 +156,16 @@ peasant_disk5.dsk:	./wrong_boot/WBOOT5 \
 	$(DOS33_RAW) peasant_disk5.dsk  19 0 ./trogdor/TROGDOR_LOADER  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  23 0 ./ending/ENDING	  	0   0
 	$(DOS33_RAW) peasant_disk5.dsk  28 0 ./location_kerrek_fall/KERREK_FALL_LOADER	  	0   0
-
+	$(DOS33_RAW) peasant_disk5.dsk  30 0 ./trogdor2/TROGDOR2_LOADER  	0   0
 
 peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	./saves/SAVE_DATA \
 	./vid_logo/VID_LOGO ./title/TITLE ./intro/INTRO \
 	./music/MUSIC ./copy/COPY_CHECK ./inventory/INVENTORY \
 	./map/MAP ./target/TARGET ./rain/RAIN \
-	./trogdor/TROGDOR_LOADER ./ending/ENDING ./location_cliff_base/CLIFF_BASE_LOADER \
+	./trogdor/TROGDOR_LOADER ./ending/ENDING \
+	./trogdor2/TROGDOR2_LOADER \
+	./location_cliff_base/CLIFF_BASE_LOADER \
 	./climb/CLIMB ./climb/sprites/climbing_sprites.zx02 \
 	./location_outer/OUTER_LOADER \
 	./location_outer2/OUTER2_LOADER \
@@ -252,7 +254,7 @@ peasant.2mg:  dts_block PROBOOTHD QLOAD_HD \
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 19 0` ./trogdor/TROGDOR_LOADER	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 23 0` ./ending/ENDING	  0   0
 	$(PRODOS_RAW) peasant.2mg `./dts_block 5 28 0` ./location_kerrek_fall/KERREK_FALL_LOADER	  0   0
-
+	$(PRODOS_RAW) peasant.2mg `./dts_block 5 30 0` ./trogdor2/TROGDOR2_LOADER	  0   0
 
 
 
@@ -496,6 +498,9 @@ rain/RAIN:
 
 ./trogdor/TROGDOR_LOADER:	
 	cd trogdor && make
+
+./trogdor2/TROGDOR2_LOADER:	
+	cd trogdor2 && make
 
 ./ending/ENDING:	
 	cd ending && make
