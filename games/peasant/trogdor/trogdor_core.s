@@ -121,6 +121,7 @@ level_over:
 
 
 .include "../hgr_routines/hgr_sprite.s"
+.include "../hgr_routines/hgr_sprite_mask.s"
 
 .include "trogdor_sleep.s"
 
@@ -129,8 +130,11 @@ level_over:
 
 .include "sprites_trogdor/trogdor_sprites.inc"
 .include "sprites_trogdor/sleep_sprites.inc"
+.include "sprites_trogdor/tiny_dashing.inc"
 
 .include "trogdor_actions.s"
+
+.include "sprite_list.s"
 
 .include "../sound/falling.s"
 .include "../sound/trogdor_appear.s"

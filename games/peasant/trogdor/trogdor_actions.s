@@ -455,7 +455,7 @@ game_over:
 	lda	#NEW_FROM_DISK
 	sta	LEVEL_OVER
 
-	lda     #LOAD_ENDING
+	lda     #LOAD_TROGDOR2
         sta     WHICH_LOAD
 .endif
         rts

@@ -1,6 +1,18 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	trogdor_sprites.inc sleep_sprites.inc
+all:	trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc
+
+tiny_dashing.inc:	trogdor_sprites.png
+	$(HGR_SPRITE) -l tiny0r_sprite trogdor_sprites.png  70 99  83 104 > tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny1r_sprite trogdor_sprites.png  84 99  97 104 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny2r_sprite trogdor_sprites.png  98 99 111 104 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny3r_sprite trogdor_sprites.png 112 99 125 104 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny0r_mask trogdor_sprites.png    70 113  83 118 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny1r_mask trogdor_sprites.png    84 113  97 118 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny2r_mask trogdor_sprites.png    98 113 111 118 >> tiny_dashing.inc
+	$(HGR_SPRITE) -l tiny3r_mask trogdor_sprites.png   112 113 125 118 >> tiny_dashing.inc
+
+
 
 sleep_sprites.inc:	sleep_sprites.png
 	$(HGR_SPRITE) -s -l sleep_sprite0 sleep_sprites.png  14  26  69  44 > sleep_sprites.inc
@@ -32,14 +44,7 @@ trogdor_sprites.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -s -l sword4_sprite trogdor_sprites.png 63 48 69 53 >> trogdor_sprites.inc
 	$(HGR_SPRITE) -s -l sword5_sprite trogdor_sprites.png 70 48 76 53 >> trogdor_sprites.inc
 	$(HGR_SPRITE) -s -l sword6_sprite trogdor_sprites.png 77 48 83 53 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l smoke1_sprite trogdor_sprites.png 14 62 20 69 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l smoke2_sprite trogdor_sprites.png 28 62 34 69 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l smoke3_sprite trogdor_sprites.png 42 62 48 69 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l smoke4_sprite trogdor_sprites.png 56 62 62 69 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l smoke5_sprite trogdor_sprites.png 70 62 76 69 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l sleep1_sprite trogdor_sprites.png 14 70 27 79 >> trogdor_sprites.inc
-#	$(HGR_SPRITE) -s -l sleep2_sprite trogdor_sprites.png 28 70 41 79 >> trogdor_sprites.inc
 
 
 clean:
-	rm -f *~ trogdor_sprites.inc sleep_sprites.inc
+	rm -f *~ trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc
