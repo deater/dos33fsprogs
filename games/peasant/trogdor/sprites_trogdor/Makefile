@@ -1,6 +1,6 @@
 HGR_SPRITE = ../../../../utils/hgr-utils/hgr_make_sprite
 
-all:	trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc
+all:	trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc sleep_flame.inc
 
 tiny_dashing.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -l tiny0r_sprite trogdor_sprites.png  70 99  83 104 > tiny_dashing.inc
@@ -11,6 +11,15 @@ tiny_dashing.inc:	trogdor_sprites.png
 	$(HGR_SPRITE) -l tiny1r_mask trogdor_sprites.png    84 113  97 118 >> tiny_dashing.inc
 	$(HGR_SPRITE) -l tiny2r_mask trogdor_sprites.png    98 113 111 118 >> tiny_dashing.inc
 	$(HGR_SPRITE) -l tiny3r_mask trogdor_sprites.png   112 113 125 118 >> tiny_dashing.inc
+
+
+sleep_flame.inc:	sleep_flame.png
+	$(HGR_SPRITE) -l little_flame_sprite sleep_flame.png  147 39 174  59 > sleep_flame.inc
+	$(HGR_SPRITE) -l big_flame_sprite    sleep_flame.png   63 35 132  77 >> sleep_flame.inc
+	$(HGR_SPRITE) -l little_flame_mask   sleep_flame.png  147 88 174 108 >> sleep_flame.inc
+	$(HGR_SPRITE) -l big_flame_mask      sleep_flame.png   63 84 132 126 >> sleep_flame.inc
+
+
 
 
 
@@ -47,4 +56,4 @@ trogdor_sprites.inc:	trogdor_sprites.png
 
 
 clean:
-	rm -f *~ trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc
+	rm -f *~ trogdor_sprites.inc sleep_sprites.inc tiny_dashing.inc sleep_flame.inc
