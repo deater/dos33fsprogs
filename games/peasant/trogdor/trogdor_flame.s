@@ -5,6 +5,8 @@
 	10 nothing
 
 
+big: 63,138
+little: 105, 142
 
 
 
