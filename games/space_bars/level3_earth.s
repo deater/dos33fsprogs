@@ -53,68 +53,78 @@ level3_earth:
 	lda	#12
 	sta	ASTEROID_Y
 
-	lda	#64
-	sta	YPOS
 
 	lda	#1
 	sta	ASTEROID_SPEED
 	sta	XPOS
 
+	; if re-starting level need to reset the output smc code
+	; otherwise the last thing drawn previous time through still there
+
+	;================
+	; erase old
+
+	; lines 32-159 so 127 lines?
+
+	ldy	#0
+	sty	YPOS
+erase_loop:
+	ldy	YPOS			; 3		; 0
+	jsr	erase_line		; 6+94
+	inc	YPOS
+	ldy	YPOS
+	cpy	#127
+	bne	erase_loop
+
+
+	; initial x position
+
+	lda	#64
+	sta	YPOS
+
+
 	;=============================
-	; Load graphic page0
+	; Load graphic page1
+
+	lda	#<earth_low
+	sta	zx_src_l+1
+	lda	#>earth_low
+	sta	zx_src_h+1
 
 	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
 
-	lda	WHICH
-	asl
-	asl				; which*4
-	tay
+	jsr	zx02_full_decomp
 
-	lda	pictures,Y
-	sta	GBASL
-	lda	pictures+1,Y
-	sta	GBASH
-	jsr	load_rle_gr
 
 	lda	#4
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current	; copy to page1
+	jsr	gr_copy_to_current	; copy to page2
 
 	; GR part
-	bit	PAGE1
+	bit	PAGE2
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
 	;=============================
-	; Load graphic page1
+	; Load graphic page2
+
+	lda	#<earth_high
+	sta	zx_src_l+1
+	lda	#>earth_high
+	sta	zx_src_h+1
 
 	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
 
-	lda	WHICH
-	asl
-	asl				; which*4
-	tay
-
-	lda	pictures+2,Y
-	sta	GBASL
-	lda	pictures+3,Y
-	sta	GBASH
-	jsr	load_rle_gr
+	jsr	zx02_full_decomp
 
 	lda	#0
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current
+	jsr	gr_copy_to_current	; copy to page1
 
-	lda	#8
+	lda	#8			; write score to ofscreen $c00
 	sta	DRAW_PAGE
 
 	lda     #<score_text2
@@ -124,9 +134,12 @@ level3_earth:
 
 	jsr     move_and_print
 
+;	lda	#4
+;	sta	DRAW_PAGE
 
-;	; GR part
-	bit	PAGE0
+
+	; GR part
+	bit	PAGE1
 
 	;==============================
 	; setup graphics for vapor lock
@@ -180,7 +193,11 @@ loopR:	dex								; 2
         ;       vblank = 4550 cycles to do scrolling
 
 
+
 sprites_display_loop:
+
+	; in theory X is 0 here
+
 
 .include "sprites_screen.s"
 
@@ -1400,10 +1417,11 @@ random_values:
 .assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
 .assert >wait_loop = >(wait_loop_end-1), error, "wait_loop crosses page"
 
-pictures:
-	.word earth_low,earth_high
 
-.include "earth.inc"
+earth_low:
+.incbin "graphics/earth_low.zx02"
+earth_high:
+.incbin "graphics/earth_high.zx02"
 
 .align $100
 
@@ -1441,7 +1459,7 @@ ship_sprite_l10:
 	.byte	$00,$00,$00,$ff,$ff,$77,$ff
 
 
-.include	"asteroid.inc"
+.include	"sprites/asteroid.inc"
 
 
 score_text2:

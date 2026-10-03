@@ -1,13 +1,16 @@
 ; Zero Page
 FRAMEBUFFER	= $00	; $00 - $0F
 
-;; LZ4 addresses
+; zx02 code
+offset  = $10
+offseth = $11
+ZX0_src = $12
+ZX0_dst = $14
+ZX0_srch= $15
+bitr    = $16
+pntr    = $17
+pntrh   = $18
 
-LZ4_SRC		= $00
-LZ4_DST		= $02
-LZ4_END		= $04
-COUNT		= $06
-DELTA		= $08
 
 CH		= $24
 CV		= $25

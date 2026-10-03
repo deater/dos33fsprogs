@@ -4,11 +4,13 @@
 level6_saturn:
 
 	;===================
-	; init screen
+	; clear keyboard
+
 	bit	KEYRESET
 
 	;===================
 	; init vars
+
 	lda	#15
 	sta	XPOS
 	lda	#38
@@ -21,22 +23,13 @@ level6_saturn:
 	; Load graphic hgr
 
 	lda	#<background_hgr
-	sta	LZ4_SRC
+	sta	zx_src_l+1
 	lda	#>background_hgr
-	sta	LZ4_SRC+1
+	sta	zx_src_h+1
 
-	lda	#<(background_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END
-	lda	#>(background_hgr_end-8)	; skip checksum at end
-	sta	LZ4_END+1
+	lda	#$20			;  to HGR_PAGE1
 
-	lda	#<$2000
-	sta	LZ4_DST
-	lda	#>$2000
-	sta	LZ4_DST+1
-
-	jsr	lz4_decode
-
+	jsr	zx02_full_decomp
 
 
 	;==================
@@ -73,12 +66,8 @@ level6_saturn:
 ;	sta	FRAMEBUFFER+12
 
 
-
-
-
-
 	;=============================
-	; Load graphic page1 $800
+	; Clear page2 $800
 
 	lda	#4
 	sta	DRAW_PAGE
@@ -86,12 +75,8 @@ level6_saturn:
 	lda	#$22
 	jsr	clear_gr
 
-
-
-
 	;=============================
-	; Load graphic page2 $c00
-
+	; Clear offscreen $c00
 
 	lda	#8
 	sta	DRAW_PAGE
@@ -99,6 +84,8 @@ level6_saturn:
 	lda	#$00
 	jsr	clear_gr
 
+	;============================
+	; print score at top
 
 	lda	#<score_text
         sta	OUTL
@@ -112,7 +99,7 @@ level6_saturn:
 	sta	DRAW_PAGE
 
 	; GR part
-	bit	PAGE0
+	bit	PAGE1
 
 
 	;==============================
@@ -125,6 +112,8 @@ level6_saturn:
 	; 114 (7410 cycles), so with 5070 lines to go
 
 	; so we have 5070 + 4550 = 9620 to kill
+
+	; copies off-screen $c00 to DRAW_PAGE
 
 	jsr	gr_copy_to_current		; 6+ 9292
 
@@ -487,14 +476,13 @@ fb40_loop:
 .include "screen_split.s"
 
 
-;.include "deater.inc"
 background_hgr:
-.incbin "SB_BACKGROUNDC.BIN.lz4",11
-background_hgr_end:
+.incbin "graphics/sb_background.zx02"
+;background_hgr_end:
 
 score_text:
 .byte 0,0
-.asciiz "LEVEL:6  LIVES:2  SCORE:001978 HI:002018"
+.asciiz "LEVEL:6  LIVES:2  SCORE:001978 HI:002026"
 
 
 
@@ -512,7 +500,7 @@ score_text:
 ; 6    RED	1,b,f,b,1,0,0,0
 ; 7		0,0,0,0,0,0,0,0
 
-.align 64
+; .align 64 ??
 raster_texture:
 	.byte	$5,$7,$f,$7,$5,$0,$0,$0		; grey
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
@@ -523,6 +511,9 @@ raster_texture:
 	.byte	$1,$b,$f,$b,$1,$0,$0,$0		; red
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0,$0
 
+.align $100
+
+
 offset_lookup:
 
 ;	Linear
@@ -530,7 +521,7 @@ offset_lookup:
 
 	.byte	29,24,20,16,13,10,8,6,4,3,2,1,0,0
 
-.align $100
+
 
 	; 2 + 40*13 + 5 = 527
 setup_framebuffer:
@@ -560,7 +551,3 @@ setup_fb_loop:
 
 									; -1
 	rts								; 6
-
-
-
-

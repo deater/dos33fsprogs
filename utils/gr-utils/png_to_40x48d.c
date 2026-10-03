@@ -14,6 +14,13 @@
 
 #include "rle_common.h"
 
+static short gr_offsets[]={
+        0x400,0x480,0x500,0x580,0x600,0x680,0x700,0x780,
+        0x428,0x4a8,0x528,0x5a8,0x628,0x6a8,0x728,0x7a8,
+        0x450,0x4d0,0x550,0x5d0,0x650,0x6d0,0x750,0x7d0,
+};
+
+
 static int convert_color(int color,int which) {
 
 	int hi,low;
@@ -170,11 +177,11 @@ static int convert_color(int color,int which) {
 
 
 
-/* expects a PNG where the xsize is 40 */
+/* expects a PNG where the xsize is 40 (or 80?) */
 int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 		int high) {
 
-	int x,y;
+	int x,y,xadd=1;
 	int color;
 	FILE *infile;
 	int debug=0;
@@ -252,6 +259,16 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 
 	fclose(infile);
 
+	if (width==40) {
+		xadd=1;
+	}  else if (width==80) {
+		xadd=2;
+	}
+	else {
+		fprintf(stderr,"Error!  Unknown x width %d\n",width);
+		return -1;
+	}
+
 	image=calloc(width*height,sizeof(unsigned char));
 	if (image==NULL) {
 		fprintf(stderr,"Memory error!\n");
@@ -261,7 +278,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 
 	if (color_type==PNG_COLOR_TYPE_RGB_ALPHA) {
 		for(y=0;y<height;y+=2) {
-			for(x=0;x<width;x++) {
+			for(x=0;x<width;x+=xadd) {
 
 				/* top color */
 				color=	(row_pointers[y][x*4]<<16)+
@@ -292,7 +309,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 	else if (color_type==PNG_COLOR_TYPE_PALETTE) {
 
 		for(y=0;y<height;y+=2) {
-			for(x=0;x<width;x++) {
+			for(x=0;x<width;x+=xadd) {
 
 				if (high) {
 					/* top color */
@@ -350,7 +367,7 @@ int loadpng(char *filename, unsigned char **image_ptr, int *xsize, int *ysize,
 int main(int argc, char **argv) {
 
 	unsigned char *image;
-	int xsize,ysize;
+	int xsize=0,ysize=0;
 	int size=0;
 	int out_type=OUTPUT_C;
 	char output_name[BUFSIZ];
@@ -365,40 +382,105 @@ int main(int argc, char **argv) {
 	}
 
 	if (!strcmp(argv[1],"c")) {
+		/* rle c */
 		out_type=OUTPUT_C;
 	}
 	else if (!strcmp(argv[1],"asm")) {
+		/* rle asm */
 		out_type=OUTPUT_ASM;
+	} else if (!strcmp(argv[1],"bin")) {
+		/* raw bin */
+		out_type=OUTPUT_BIN;
 	}
 
-	if (loadpng(argv[2],&image,&xsize,&ysize,1)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
+
+	if (out_type==OUTPUT_BIN) {
+
+		FILE *ggg;
+		unsigned char out_buffer[1024];
+		int row,col;
+
+		if (loadpng(argv[2],&image,&xsize,&ysize,1)<0) {
+			fprintf(stderr,"Error loading png!\n");
+			exit(-1);
+		}
+
+		fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+		sprintf(output_name,"%s_low.gr",argv[3]);
+		ggg=fopen(output_name,"w");
+		if (ggg==NULL) {
+			fprintf(stderr,"Error opening %s\n",output_name);
+			exit(-1);
+		}
+
+		/* convert to interleaved */
+		memset(out_buffer,0,1024);
+		for(row=0;row<24;row++) {
+			for(col=0;col<40;col++) {
+                        	out_buffer[(gr_offsets[row]-0x400)+col]=
+					image[row*40+col];
+			}
+		}
+
+		fwrite(out_buffer,1024,1,ggg);
+		fclose(ggg);
+
+		if (loadpng(argv[2],&image,&xsize,&ysize,0)<0) {
+			fprintf(stderr,"Error loading png!\n");
+			exit(-1);
+		}
+
+		fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+		sprintf(output_name,"%s_high.gr",argv[3]);
+		ggg=fopen(output_name,"w");
+		if (ggg==NULL) {
+			fprintf(stderr,"Error opening %s\n",output_name);
+			exit(-1);
+		}
+		/* convert to interleaved */
+		memset(out_buffer,0,1024);
+		for(row=0;row<24;row++) {
+			for(col=0;col<40;col++) {
+                        	out_buffer[(gr_offsets[row]-0x400)+col]=
+					image[row*40+col];
+			}
+		}
+
+		fwrite(out_buffer,1024,1,ggg);
+		fclose(ggg);
 	}
+	else {
 
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+		if (loadpng(argv[2],&image,&xsize,&ysize,1)<0) {
+			fprintf(stderr,"Error loading png!\n");
+			exit(-1);
+		}
+		fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
 
-	sprintf(output_name,"%s_low",argv[3]);
-	size=rle_smaller(out_type,output_name,
-		xsize,ysize,image);
+		sprintf(output_name,"%s_low",argv[3]);
+		size=rle_smaller(out_type,output_name,
+			xsize,ysize,image);
 
-	fprintf(stderr,"Size %d bytes\n",size);
+		fprintf(stderr,"Size %d bytes\n",size);
 
-	if (loadpng(argv[2],&image,&xsize,&ysize,0)<0) {
-		fprintf(stderr,"Error loading png!\n");
-		exit(-1);
+		if (loadpng(argv[2],&image,&xsize,&ysize,0)<0) {
+			fprintf(stderr,"Error loading png!\n");
+			exit(-1);
+		}
+
+		fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
+
+	//	size=rle_original(out_type,argv[3],
+	//		xsize,ysize,image);
+
+		sprintf(output_name,"%s_high",argv[3]);
+		size=rle_smaller(out_type,output_name,
+			xsize,ysize,image);
+
+		fprintf(stderr,"Size %d bytes\n",size);
 	}
-
-	fprintf(stderr,"Loaded image %d by %d\n",xsize,ysize);
-
-//	size=rle_original(out_type,argv[3],
-//		xsize,ysize,image);
-
-	sprintf(output_name,"%s_high",argv[3]);
-	size=rle_smaller(out_type,output_name,
-		xsize,ysize,image);
-
-	fprintf(stderr,"Size %d bytes\n",size);
 
 
 	return 0;

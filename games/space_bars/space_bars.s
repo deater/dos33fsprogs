@@ -65,7 +65,7 @@ loop_forever:
 
 .include "gr_offsets.s"
 
-.include "gr_unrle.s"
+;.include "gr_unrle.s"
 .include "keypress.s"
 .include "gr_copy.s"
 .include "title.s"
@@ -76,11 +76,14 @@ loop_forever:
 .align $100
 .include "vapor_lock.s"
 .include "delay_a.s"
-.include "lz4_decode.s"
+.include "zx02_optim.s"
 .align $100
 .include "gr_putsprite.s"
+spacebars_title_low:
+.incbin "graphics/sb_title_low.zx02"
+spacebars_title_high:
+.incbin "graphics/sb_title_high.zx02"
 
-.include "spacebars_title.inc"
 .align $100
 .include "mode7_sprites.inc"
 

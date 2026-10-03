@@ -17,49 +17,70 @@ title_screen:
 	sta	DRAW_PAGE
 
 	;=============================
-	; Load graphic page0
-
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
+	; Load title graphic page1
 
 	lda	#<spacebars_title_low
-	sta	GBASL
+	sta	zx_src_l+1
 	lda	#>spacebars_title_low
-	sta	GBASH
-	jsr	load_rle_gr
+	sta	zx_src_h+1
+
+	lda	#$0c			;  to $c00
+
+	jsr	zx02_full_decomp
+
+
+;	lda	#$0c
+;	sta	BASH
+;	lda	#$00
+;	sta	BASL                    ; load image to $c00
+
+;	lda	#<spacebars_title_low
+;	sta	GBASL
+;	lda	#>spacebars_title_low
+;	sta	GBASH
+;	jsr	load_rle_gr
 
 	lda	#4
 	sta	DRAW_PAGE
 
-	jsr	gr_copy_to_current	; copy to page1
+	jsr	gr_copy_to_current	; copy to page2
 
 	; GR part
-	bit	PAGE1
+	bit	PAGE2
 	bit	LORES							; 4
 	bit	SET_GR							; 4
 	bit	FULLGR							; 4
 
 	;=============================
-	; Load graphic page1
+	; Load graphic page2
 
-	lda	#$0c
-	sta	BASH
-	lda	#$00
-	sta	BASL                    ; load image to $c00
 
 	lda	#<spacebars_title_high
-	sta	GBASL
+	sta	zx_src_l+1
 	lda	#>spacebars_title_high
-	sta	GBASH
-	jsr	load_rle_gr
+	sta	zx_src_h+1
+
+	lda	#$0c			;  to $c00
+
+	jsr	zx02_full_decomp
+
+
+;	lda	#$0c
+;	sta	BASH
+;	lda	#$00
+;	sta	BASL                    ; load image to $c00
+
+;	lda	#<spacebars_title_high
+;	sta	GBASL
+;	lda	#>spacebars_title_high
+;	sta	GBASH
+;	jsr	load_rle_gr
 
 	lda	#0
 	sta	DRAW_PAGE
 
 	; GR part
-	bit	PAGE0
+	bit	PAGE1
 
 
 	;==============================
@@ -106,7 +127,7 @@ loopB:
 	; Vertical blank = 4550 cycles (70 scan lines)
 	; Total of 17030 cycles to get back to where was
 
-	; We want to alternate between page1 and page2 every 65 cycles
+	; We want to alternate between page2 and page2 every 65 cycles
         ;       vblank = 4550 cycles to do scrolling
 
 
@@ -119,22 +140,22 @@ display_loop:
 
 outer_loop:
 
-	bit	PAGE0						; 4
-	ldx	#12		; 65 cycles with PAGE0		; 2
-page0_loop:			; delay 61+bit
+	bit	PAGE1						; 4
+	ldx	#12		; 65 cycles with PAGE1		; 2
+page1_loop:			; delay 61+bit
 	dex							; 2
-	bne	page0_loop					; 2/3
+	bne	page1_loop					; 2/3
 
 
 	; bit(4) -1(fallthrough) + loop*5 -1(fallthrouh)+4 extra = 61
 	; 5L = 55
 
-	bit	PAGE1						; 4
-	ldx	#11		; 65 cycles with PAGE1		; 2
+	bit	PAGE2						; 4
+	ldx	#11		; 65 cycles with PAGE2		; 2
 				;
-page1_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
+page2_loop:			; delay 115+(7 loop)+4 (bit)+4(extra)
 	dex							; 2
-	bne	page1_loop					; 2/3
+	bne	page2_loop					; 2/3
 
 	dey							; 2
 	bne	outer_loop					; 2/3
