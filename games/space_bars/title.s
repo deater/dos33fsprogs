@@ -1,7 +1,44 @@
+;=====================================
+; Rasterbars in Space (Title Screen)
+;
+; a cycle-counting racing-the-beam game
+;
+; by deater (Vince Weaver) <vince@deater.net>
+;=====================================
+
+; Zero Page
+.include "zp.inc"
+
+; hardware addresses/soft_switches
+.include "hardware.inc"
+
+.include "qload.inc"
+
+
+
+	;==================
+	; show title screen
+	;==================
+view_title:
+
+	jsr	title_screen
+
+	;==================
+	; Display Text
+	;==================
+
+	jsr	instructions
+
+	rts
+
+
+
 	;================================
 	; Show the title screen
 	; return when a key is pressed
 	;================================
+
+
 
 title_screen:
 	;===================
@@ -202,5 +239,17 @@ return:
 	rts								; 6
 
 
+.include "gr_simple_clear.s"
+;.include "keypress.s"
+.include "gr_copy.s"
 
+.include "instructions.s"
+.align $100
+.include "vapor_lock.s"
+.include "delay_a.s"
+
+spacebars_title_low:
+.incbin "graphics/sb_title_low.zx02"
+spacebars_title_high:
+.incbin "graphics/sb_title_high.zx02"
 

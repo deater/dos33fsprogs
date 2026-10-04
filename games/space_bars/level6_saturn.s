@@ -1,6 +1,11 @@
 	;================================
 	; spacebars gameplay
 	;================================
+
+.include "zp.inc"
+.include "hardware.inc"
+.include "qload.inc"
+
 level6_saturn:
 
 	;===================
@@ -478,7 +483,6 @@ fb40_loop:
 
 background_hgr:
 .incbin "graphics/sb_background.zx02"
-;background_hgr_end:
 
 score_text:
 .byte 0,0
@@ -551,3 +555,13 @@ setup_fb_loop:
 
 									; -1
 	rts								; 6
+
+
+.include "gr_copy.s"
+.include "sprites/mode7_sprites.inc"
+.include "gr_putsprite.s"
+.include "gr_simple_clear.s"
+.align $100
+.include "vapor_lock.s"
+.include "delay_a.s"
+

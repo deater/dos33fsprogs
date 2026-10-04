@@ -1,3 +1,5 @@
+; SPACE_BARS: LEVEL3 EARTH
+
 ; Uses the 40x48d page1/page2 every-1-scanline pageflip mode
 
 ; self modifying code to get some extra colors (pseudo 40x192 mode)
@@ -10,12 +12,17 @@
 ;	track score properly
 
 
+.include "zp.inc"
+.include "hardware.inc"
+.include "qload.inc"
+
+
 level3_earth:
 
 	;===================
 	; init screen
-	jsr	TEXT
-	jsr	HOME
+;	jsr	TEXT
+;	jsr	HOME
 	bit	KEYRESET
 
 	;===================
@@ -82,6 +89,12 @@ erase_loop:
 	lda	#64
 	sta	YPOS
 
+	; set graphics
+
+	bit	LORES							; 4
+	bit	SET_GR							; 4
+	bit	FULLGR							; 4
+
 
 	;=============================
 	; Load graphic page1
@@ -103,9 +116,7 @@ erase_loop:
 
 	; GR part
 	bit	PAGE2
-	bit	LORES							; 4
-	bit	SET_GR							; 4
-	bit	FULLGR							; 4
+
 
 	;=============================
 	; Load graphic page2
@@ -1414,7 +1425,6 @@ random_values:
 .align $100
 .include "gr_putsprite_fast.s"
 
-.assert >gr_offsets = >gr_offsets_done, error, "gr_offsets crosses page"
 .assert >wait_loop = >(wait_loop_end-1), error, "wait_loop crosses page"
 
 
@@ -1465,4 +1475,11 @@ ship_sprite_l10:
 score_text2:
 .byte 0,0
 .asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
+
+.align $100
+.include "gr_copy.s"
+.align $100
+.include "vapor_lock.s"
+.include "delay_a.s"
+.include "gr_simple_clear.s"
 

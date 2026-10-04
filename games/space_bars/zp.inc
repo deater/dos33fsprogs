@@ -2,14 +2,17 @@
 FRAMEBUFFER	= $00	; $00 - $0F
 
 ; zx02 code
-offset  = $10
-offseth = $11
-ZX0_src = $12
-ZX0_dst = $14
-ZX0_srch= $15
-bitr    = $16
-pntr    = $17
-pntrh   = $18
+offset		= $10
+offseth		= $11
+ZX0_src		= $12
+ZX0_dst		= $14
+ZX0_srch	= $15
+bitr		= $16
+pntr		= $17
+pntrh		= $18
+
+WHICH_LOAD	= $19
+CURRENT_DISK	= $1A
 
 
 CH		= $24
@@ -25,15 +28,60 @@ FRAME		= $60
 FRAMEH		= $61
 BLARGH		= $69
 
-ZPOS		= $78
+;==========================
+; $70-$7F for PT3 Player
+;==========================
 
-GREEN0		= $80
-GREEN1		= $81
-GREEN2		= $82
-GREEN3		= $83
-GREEN4		= $84
-ZERO		= $85
-GAME_OVER	= $86
+AY_REGISTERS    = $70
+A_FINE_TONE     = $70
+A_COARSE_TONE   = $71
+B_FINE_TONE     = $72
+B_COARSE_TONE   = $73
+C_FINE_TONE     = $74
+C_COARSE_TONE   = $75
+NOISE           = $76
+ENABLE          = $77
+PT3_MIXER_VAL   = $77
+A_VOLUME        = $78
+B_VOLUME        = $79
+C_VOLUME        = $7A
+ENVELOPE_FINE   = $7B
+ENVELOPE_COARSE = $7C
+ENVELOPE_SHAPE  = $7D
+PATTERN_L       = $7E
+PATTERN_H       = $7F
+
+;============================
+; $80-$8D rest of pt3_player
+;============================
+
+PT3_TEMP        = $80
+ORNAMENT_L      = $81
+ORNAMENT_H      = $82
+SAMPLE_L        = $83
+SAMPLE_H        = $84
+LOOP            = $85
+MB_VALUE        = $86
+MB_ADDR_L       = $87
+MB_ADDR_H       = $88
+DONE_PLAYING    = $89
+DONE_SONG       = $8A
+APPLEII_MODEL   = $8B
+SOUND_STATUS    = $8C
+        SOUND_DISABLED  = $80
+        SOUND_IN_LC     = $01 ; $01 sound effects in language card
+        SOUND_MOCKINGBOARD = $02 ; mockingboard detected
+
+GREEN0		= $90
+GREEN1		= $91
+GREEN2		= $92
+GREEN3		= $93
+GREEN4		= $94
+ZERO		= $95
+GAME_OVER	= $96
+ZPOS		= $97
+IRQ_COUNTDOWN   = $98
+SECOND_COUNTDOWN= $99
 
 SPRITE_XPOS	= $E0
 SPRITE_YPOS	= $E1

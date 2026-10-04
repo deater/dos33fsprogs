@@ -18,6 +18,7 @@ TBCOLOR		=	$C022	; IIgs text foreground / background colors
 NEWVIDEO	=	$C029	; IIgs graphics modes
 SPEAKER		=	$C030
 CLOCKCTL	=	$C034	; bits 0-3 are IIgs border color
+CYAREG		=	$C036	; iigs motor detect and clock speed
 SET_GR		=	$C050
 SET_TEXT	=	$C051
 FULLGR		=	$C052
@@ -56,7 +57,7 @@ HPLOT0		= $F457		; plot at (Y,X), (A)
 ;CLRSCR	= $F832			; Clear low-res screen
 ;CLRTOP	= $F836			; clear only top of low-res screen
 ;SETCOL	= $F864			; COLOR=A
-;ROM_TEXT2COPY = $F962		; iigs
+ROM_TEXT2COPY = $F962		; iigs
 INIT_TEXT = $FB2F		; set lo-res/page1 and call text
 TEXT	= $FB36							; qboot
 ;TABV	= $FB5B			; VTAB to A
