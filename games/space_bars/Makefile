@@ -23,12 +23,12 @@ space_bars.dsk:	TITLE QBOOT QLOAD LEVEL3_EARTH LEVEL6_SATURN
 
 #space_bars.dsk:	SPACE_BARS HELLO
 #	$(DOS33) -y space_bars.dsk SAVE A HELLO
-#	$(DOS33) -y space_bars.dsk BSAVE -a 0x4000 SPACE_BARS
+#	$(DOS33) -y space_bars.dsk BSAVE -a 0x6000 SPACE_BARS
 
 ####
 
 SPACE_BARS:	space_bars.o
-	ld65 -o SPACE_BARS space_bars.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o SPACE_BARS space_bars.o -C ../../linker_scripts/apple2_6000.inc
 
 space_bars.o:	space_bars.s instructions.s \
 	level3_earth.s level6_saturn.s \
@@ -69,7 +69,7 @@ qload.inc:	QLOAD
 ####
 
 TITLE:	title.o
-	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o TITLE title.o -C ../../linker_scripts/apple2_6000.inc
 
 title.o:	title.s instructions.s \
 	gr_copy.s text_print.s title.s \
@@ -81,7 +81,7 @@ title.o:	title.s instructions.s \
 ####
 
 LEVEL3_EARTH:	level3_earth.o
-	ld65 -o LEVEL3_EARTH level3_earth.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o LEVEL3_EARTH level3_earth.o -C ../../linker_scripts/apple2_6000.inc
 
 level3_earth.o:	level3_earth.s \
 	gr_copy.s title.s \
@@ -96,7 +96,7 @@ level3_earth.o:	level3_earth.s \
 ####
 
 LEVEL6_SATURN:	level6_saturn.o
-	ld65 -o LEVEL6_SATURN level6_saturn.o -C ../../linker_scripts/apple2_4000.inc
+	ld65 -o LEVEL6_SATURN level6_saturn.o -C ../../linker_scripts/apple2_6000.inc
 
 level6_saturn.o:	level6_saturn.s \
 	gr_copy.s text_print.s title.s \

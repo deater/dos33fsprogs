@@ -166,8 +166,8 @@ which_disk_array:
 	.byte 1			; LEVEL6
 
 load_address_array:
-	.byte $D0,$D0,$40,$40	; ???, MUSIC, TITLE, LEVEL3
-	.byte $40		; LEVEL6
+	.byte $D0,$D0,$60,$60	; ???, MUSIC, TITLE, LEVEL3
+	.byte $60		; LEVEL6
 
 start_address:
 	.byte $D0,$D0,$40,$40	; ???, MUSIC, TITLE, LEVEL3

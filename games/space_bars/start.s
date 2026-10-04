@@ -132,7 +132,7 @@ run_title:
 
 	; Run Title
 
-	jsr	$4000
+	jsr	$6000
 
 	; Run LEVEL3_EARTH
 
@@ -140,7 +140,7 @@ run_title:
 	sta	WHICH_LOAD
 	jsr	load_file
 
-	jsr	$4000
+	jsr	$6000
 
 	lda	GAME_OVER
 	bne	game_over_man
@@ -151,7 +151,7 @@ run_title:
 	sta	WHICH_LOAD
 	jsr	load_file
 
-	jsr	$4000
+	jsr	$6000
 
 	lda	GAME_OVER
 	bne	game_over_man
