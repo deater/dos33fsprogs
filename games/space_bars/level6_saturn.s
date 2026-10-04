@@ -23,6 +23,10 @@ level6_saturn:
 
 	lda	#0
 	sta	FRAMEH
+	sta	XADDH
+	sta	XADDL
+	sta	XPOSL
+
 
 	;=============================
 	; Load graphic hgr
@@ -288,19 +292,19 @@ sbloopF:dex								; 2
 	;			   -3470 draw_framebuffer
 	;			    -533 setup framebuffer
 	;			     -21 frame count
-	;			     -34 keypress
-	;				-1 adjust center mark back
+	;			     -52 keypress
+	;			     -48 move_ship
+	;			      -1 adjust center mark back
 	;			===========
-	;			     491
+	;			     425
 
-	; Try X=11 Y=8 cycles=489 R2
 
-	; Try X=8 Y=5 cycles=231
+	; Try X=41 Y=2 cycles=423
 
 	nop
 
-	ldy	#8							; 2
-sbloop1:ldx	#11							; 2
+	ldy	#2							; 2
+sbloop1:ldx	#41							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
@@ -310,7 +314,65 @@ sbloop2:dex								; 2
 
 	jsr	draw_framebuffer			; 6+3464
 
+	;=================================
+	;  move ship
+; 0
+	clc						; 2
+	lda	XPOSL					; 3
+	adc	XADDL					; 3
+	sta	XPOSL					; 3
+	lda	XPOS					; 3
+	adc	XADDH					; 3
+	sta	XPOS					; 3
+							;===
+							; 20
+check_left:
+; 20
+	cmp	#1					; 2
+	bcs	check_right				; 2/3
+stop_left:
+; 24
+	lda	#1					; 2
+	bne	stop_common_5				; 3
+
+
+check_right:
+; 25
+	cmp	#30					; 2
+	bcc	no_stop					; 2/3
+
+stop_right:
+; 29
+	lda	#30					; 2
+	bne	stop_common				; 3
+
+
+stop_common_5:
+; 29
+	inc	TEMPY					; 5
+
+stop_common:
+; 34
+	sta	XPOS					; 3
+	lda	#0					; 2
+	sta	XADDL					; 3
+	sta	XADDH					; 3
+; 45
+	jmp	done_move_ship				; 3
+
+no_stop:
+; 30
+	jsr	sb_exit					; 12
+	lda	$0					; 3
+	lda	$0					; 3
+
+
+done_move_ship:
+; 48
+
+	;=======================
 	; Increment frame count
+
 	; noflo: 16 + 2 + (3)  = 21
 	;  oflo: 16 + 5  = 21
 	inc	FRAME						; 5
@@ -327,55 +389,135 @@ sb_frame_oflo:
 	inc	FRAMEH						; 5
 sb_frame_noflo:
 
+	;===============================
+	; check keypress
 
-	; no keypress =  10+(24)   = 34
-	; left pressed = 9+8+12+(5)= 34
-	; right pressed = 9+8+5+12 = 34
-
+	; no keypress =  10+(36)   = 52
+	; left pressed = 9+8+12+(5)= 52
+	; right pressed = 9+8+5+12 = 52
+sb_check_keypress:
 	lda	KEYPRESS				; 4
 	bpl	sb_no_keypress				; 3
 							; -1
 	jmp	sb_handle_keypress			; 3
 sb_no_keypress:
+; 7
 	inc	$0					; 5
 	dec	$0					; 5
 	inc	$0					; 5
 	dec	$0					; 5
-	nop						; 2
-	nop						; 2
+	inc	$0					; 5
+	dec	$0					; 5
+	lda	$0					; 3
+	lda	$0					; 3
+	lda	$0					; 3
+	lda	$0					; 3
 
+; 49
 	jmp	sb_display_loop				; 3
 
 sb_handle_keypress:
+; 9
 	bit	KEYRESET	; clear keypress	; 4
 	cmp	#27|$80		; escape		; 2
 	beq	sb_exit					; 3
 							; -1
-
 sb_check_left:
+; 17
 	cmp	#$08|$80	; left			; 2
 	bne	sb_check_right				; 3
 							; -1
-	dec	XPOS					; 5
 
-	nop		; nop				; 2
+; 21
+	; if going left, stop
+	; otherwise set XADDH/L to $ff:$80
+
+	lda	XADDH					; 3
+	bmi	sb_stop					; 2/3
+
+
+sb_move_left:
+; 26
+	ldx	#$ff					; 2
+	ldy	#$80					; 2
+	bne	sb_common				; 3
+
+; 27
+sb_stop:
+	ldx	#0					; 2
+	ldy	#0					; 2
+; 31
+	nop
+
+sb_common:
+; 33
+	stx	XADDH					; 3
+	sty	XADDL					; 3
+; 39
+
 	lda	$0	; nop				; 3
+	nop						; 2
+	lda	$0	; nop				; 3
+	nop						; 2
+
+; 44
+
 	jmp	sb_display_loop				; 3
 
 sb_check_right:
+; 22
 	cmp	#$15|$80				; 2
 	bne	sb_unknown				; 3
 							; -1
-	inc	XPOS					; 5
+
+; 26
+	; if going right, stop
+	; otherwise set XADDH/L to $00:$80
+
+	; if XADDH==0 and XADDL=$80, stop
+	; else move right
+
+	lda	XADDH					; 3
+	bne	sb_move_right_5				; 2/3
+; 31
+	lda	XADDL					; 3
+	beq	sb_move_right				; 2/3
+
+sb_stop_right:
+; 36
+	ldy	#0					; 2
+	beq	sb_right_common				; 3
+
+sb_move_right_5:
+; 32
+	nop						; 2
+	lda	$0					; 3
+
+sb_move_right:
+; 37
+	ldy	#$80					; 2
+	nop						; 2
+
+sb_right_common:
+; 41
+	ldx	#0					; 2
+	stx	XADDH					; 3
+	sty	XADDL					; 3
+
+; 49
 
 	jmp	sb_display_loop				; 3
 
 sb_unknown:
-	nop
-	nop
+; 27
+	jsr	sb_exit					; 12
+	lda	$0					; 3
+	nop						; 2
+
+; 44
 	jmp	sb_display_loop				; 3
 
-
+; 18
 sb_exit:
 	rts						; 6
 

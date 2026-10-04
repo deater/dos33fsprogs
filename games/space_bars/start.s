@@ -172,7 +172,7 @@ game_over_man:
 
 
 start_message:	  ;01234567890123456789012345678901234567890
-	.byte 0,0,"SPACE_BARS GAME FOR APPLE II",0
+	.byte 0,0,"SPACE_BARS GAME FOR APPLE II V0.8",0
 	.byte 0,1,"REQUIRES 48K",0
 	.byte 0,3,"SYSTEM DETECTED: APPLE II"
 message_type_offset:
