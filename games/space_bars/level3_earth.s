@@ -280,7 +280,7 @@ sprites_display_loop:
 	jsr	erase_line		; 6+94
 
 	;==========================
-	; erase the fire
+	; erase the fire missile
 	;==========================
 
 	ldy	FIRE_Y			; 3
@@ -371,7 +371,7 @@ done_move_asteroid:
 
 
 	;==========================
-	; move the fire
+	; move the fire missile
 	;==========================
 	; no-fire:	6+7	= 13 [4]
 	; too-far:	6+4+7	= 17
@@ -382,7 +382,7 @@ done_move_asteroid:
 	beq	no_fire		; 3
 				; -1
 	cmp	#39		; 2
-	bcs	kill_fire	; bge 3
+	bcs	kill_fire	; 3	; bge
 				; -1
 	inc	FIRE_X		; 5
 	jmp	done_move_fire	; 3
@@ -391,7 +391,7 @@ no_fire:
 	nop
 kill_fire:
 	nop			; 2
-	lda	#0		; 2
+	lda	#0		; 2	; disable missile
 	sta	FIRE_X		; 3
 done_move_fire:
 
@@ -495,10 +495,10 @@ nop_sled:
 
 	inc	ASTEROID_SPEED		; 5
 
-	lda	#0			; 2
+	lda	#0			; 2	; disable missile
 	sta	FIRE_X			; 3
 
-	inc	$41D			; 6
+	inc	$41D			; 6	; ??? score?
 
 	jmp	collision_done		; 3
 					;====
@@ -682,7 +682,7 @@ ship_collision_done:
 
 
 	;==========================
-	; draw the fire
+	; draw the fire missile
 	;==========================
 	; 6+(61*7)+3 = 436
 
@@ -692,27 +692,27 @@ ship_collision_done:
 	ldy	FIRE_Y			; 3
 
 	; line 0
-	ldx	#0			; 2
+	ldx	#0			; 2	; first row
 	jsr	fire_line		; 6+51
 					;====
 					; 61
 
 	; line 1
-	iny				; 2
+	iny				; 2	; next row
 	ldx	#1			; 2
 	jsr	fire_line		; 6+51
 					;====
 					; 61
 
 	; line 2
-	iny				; 2
+	iny				; 2	; next row
 	ldx	#2			; 2
 	jsr	fire_line		; 6+51
 					;====
 					; 61
 
 	; line 3
-	iny				; 2
+	iny				; 2	; next row
 	ldx	#3			; 2
 	jsr	fire_line		; 6+51
 					;====
@@ -734,7 +734,7 @@ ship_collision_done:
 
 	; line 6
 	iny				; 2
-	ldx	#5	; zero again	; 2
+	ldx	#5			; 2	; zero again (?)
 	jsr	fire_line		; 6+51
 					;====
 					; 61
@@ -960,20 +960,20 @@ wait_loop_end:
 	; no FIRE:      6+5   = 11 [22]
 	; urgh pain to make this invariant
 
-	lda	FIRE			; 3
+	lda	FIRE			; 3	; is $FF if space pressed
 	beq	no_firing2		; 3
 					; -1
 
-	lda	FIRE_X			; 3
+	lda	FIRE_X			; 3	; if already a missile out, skip
 	bne	no_firing		; 3
 					; -1
 
 	clc				; 2
-	lda	YPOS			; 3
+	lda	YPOS			; 3	; fire_y=ypos+10
 	adc	#10			; 2
 	sta	FIRE_Y			; 3
 
-	lda	#7			; 2
+	lda	#7			; 2	; fire_x=7
 	sta	FIRE_X			; 3
 
 	jmp	really_no_firing	; 3
@@ -987,7 +987,7 @@ no_firing:
 	nop				; 2
 
 really_no_firing:
-	lda	#0			; 2
+	lda	#0			; 2	; reset to no space pressed
 	sta	FIRE			; 3
 
 
@@ -1065,7 +1065,7 @@ asteroid_done_done:
 	inc	XPOS						; 5
 	jmp	final_loop					; 3
 								;=====
-								; 12 
+								; 12
 
 final_loop_short:
 	inc	TEMP
@@ -1314,7 +1314,7 @@ erase_line:
 	; Draw a line of a fire
 	;========================
 	; Y = y value
-	; x = location in sprite
+	; x = location in sprite ($90+0..5 in zero page?)
 	; 17+11+14+9 = 51
 fire_line:
 	sty	TEMPY			; 3
@@ -1328,21 +1328,21 @@ fire_line:
 
 	; 38/40
 	; XPOS
-	lda	FIRE_X			; 3
+	lda	FIRE_X			; 3	; offset of missile save
 	ldy	#37			; 2
 	sta	(OUTL),Y		; 6
 					;=======
 					; 11
 	; COL0
-	ldy	#39			; 2
-	txa				; 2
-	ora	#$80			; 2
+	ldy	#39			; 2	; points to zero page loc?
+	txa				; 2	; X is ?
+	ora	#$90			; 2	; ?????
 	tax				; 2
 	sta	(OUTL),Y		; 6
 					;=======
 					; 14
 
-	ldy	TEMPY			; 3
+	ldy	TEMPY			; 3	; restore Y
 	rts				; 6
 					;=======
 					; 9
