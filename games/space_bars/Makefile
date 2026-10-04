@@ -64,6 +64,9 @@ qload.inc:	QLOAD
 	$(GENERATE_COMMON) -a 0x1200 -s zx_src_l qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s gr_offsets qload.lst >> qload.inc
 	$(GENERATE_COMMON) -a 0x1200 -s wait_until_keypressed qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s vapor_lock qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s delay_a qload.lst >> qload.inc
+	$(GENERATE_COMMON) -a 0x1200 -s clear_gr qload.lst >> qload.inc
 
 
 ####

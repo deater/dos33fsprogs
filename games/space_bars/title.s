@@ -239,14 +239,14 @@ return:
 	rts								; 6
 
 
-.include "gr_simple_clear.s"
+;.include "gr_simple_clear.s"
 ;.include "keypress.s"
 .include "gr_copy.s"
 
 .include "instructions.s"
-.align $100
-.include "vapor_lock.s"
-.include "delay_a.s"
+;.align $100
+;.include "vapor_lock.s"
+;.include "delay_a.s"
 
 spacebars_title_low:
 .incbin "graphics/sb_title_low.zx02"

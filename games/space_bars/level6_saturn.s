@@ -560,8 +560,8 @@ setup_fb_loop:
 .include "gr_copy.s"
 .include "sprites/mode7_sprites.inc"
 .include "gr_putsprite.s"
-.include "gr_simple_clear.s"
-.align $100
-.include "vapor_lock.s"
-.include "delay_a.s"
+;.include "gr_simple_clear.s"
+;.align $100
+;.include "vapor_lock.s"
+;.include "delay_a.s"
 

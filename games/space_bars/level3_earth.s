@@ -1478,8 +1478,8 @@ score_text2:
 
 .align $100
 .include "gr_copy.s"
-.align $100
-.include "vapor_lock.s"
-.include "delay_a.s"
-.include "gr_simple_clear.s"
+;.align $100
+;.include "vapor_lock.s"
+;.include "delay_a.s"
+;.include "gr_simple_clear.s"
 

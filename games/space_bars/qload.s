@@ -215,6 +215,11 @@ PT3_ENABLE_APPLE_IIC = 1
 	.include	"start.s"
 	.include	"game_over.s"
 
+.align	$100
+	.include	"vapor_lock.s"
+	.include	"delay_a.s"
+	.include	"gr_simple_clear.s"
+
 qload_end:
 
 .assert (>qload_end - >qload_start) < $e , error, "loader too big"
