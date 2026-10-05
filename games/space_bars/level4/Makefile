@@ -20,7 +20,7 @@ level4_city.o:	level4_city.s \
 
 ###
 
-graphics/sb_background.zx02:	
+graphics/car.zx02:	
 	cd graphics && make
 
 ###
