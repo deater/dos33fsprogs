@@ -12,9 +12,9 @@
 ;	track score properly
 
 
-.include "zp.inc"
-.include "hardware.inc"
-.include "qload.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
+.include "../qload.inc"
 
 
 level3_earth:
@@ -1407,23 +1407,13 @@ erase_fire:
 					; 11
 
 
-;.include "gr_simple_clear.s"
-
-
-;.include "../asm_routines/gr_unrle.s"
-;.include "../asm_routines/keypress.s"
 .align $100
 random_values:
 .incbin	"random.data"
 .include "sprites_table.s"
-;.include "gr_offsets.s"
 
-;.include "movement_table.s"
-;.include "gr_copy.s"
-;.include "vapor_lock.s"
-;.include "delay_a.s"
 .align $100
-.include "gr_putsprite_fast.s"
+.include "../gr_putsprite_fast.s"
 
 .assert >wait_loop = >(wait_loop_end-1), error, "wait_loop crosses page"
 
@@ -1477,9 +1467,6 @@ score_text2:
 .asciiz "LEVEL:3  LIVES:1  SCORE:000000 HI:001978"
 
 .align $100
-.include "gr_copy.s"
-;.align $100
-;.include "vapor_lock.s"
-;.include "delay_a.s"
-;.include "gr_simple_clear.s"
+.include "../gr_copy.s"
+
 

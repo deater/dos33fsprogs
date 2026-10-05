@@ -1,10 +1,18 @@
 	;================================
 	; spacebars gameplay
 	;================================
+	;
+	;  Leve6 saturn
+	;	text mode at top
+	;	hgr/lo-res at bottom
+	;	different routines for different splits, self-modified
+	;		while racing the beam
+	;	TODO:
+	;		flip pages on lo-res to give 96 rows instead of 48
 
-.include "zp.inc"
-.include "hardware.inc"
-.include "qload.inc"
+.include "../zp.inc"
+.include "../hardware.inc"
+.include "../qload.inc"
 
 level6_saturn:
 
@@ -699,11 +707,8 @@ setup_fb_loop:
 	rts								; 6
 
 
-.include "gr_copy.s"
+.include "../gr_copy.s"
 .include "sprites/mode7_sprites.inc"
-.include "gr_putsprite.s"
-;.include "gr_simple_clear.s"
-;.align $100
-;.include "vapor_lock.s"
-;.include "delay_a.s"
+.include "../gr_putsprite.s"
+
 

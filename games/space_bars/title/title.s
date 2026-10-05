@@ -5,14 +5,20 @@
 ;
 ; by deater (Vince Weaver) <vince@deater.net>
 ;=====================================
+;
+; Flips every other line page1/page2 to give somewhat
+;	dithered/interlaced graphics effect with the
+;	illusion of extra colors
+
 
 ; Zero Page
-.include "zp.inc"
+.include "../zp.inc"
 
 ; hardware addresses/soft_switches
-.include "hardware.inc"
+.include "../hardware.inc"
 
-.include "qload.inc"
+; common routines
+.include "../qload.inc"
 
 
 
@@ -239,14 +245,9 @@ return:
 	rts								; 6
 
 
-;.include "gr_simple_clear.s"
-;.include "keypress.s"
-.include "gr_copy.s"
+.include "../gr_copy.s"
 
 .include "instructions.s"
-;.align $100
-;.include "vapor_lock.s"
-;.include "delay_a.s"
 
 spacebars_title_low:
 .incbin "graphics/sb_title_low.zx02"
