@@ -10,6 +10,7 @@ all:	space_bars.dsk
 space_bars.dsk:	QBOOT QLOAD \
 	./title/TITLE \
 	./level3/LEVEL3_EARTH \
+	./level4/LEVEL4_CITY \
 	./level6/LEVEL6_SATURN
 	cp $(EMPTY_DISK) space_bars.dsk
 	$(DOS33_RAW) space_bars.dsk 0 0 QBOOT			0 1
@@ -18,7 +19,8 @@ space_bars.dsk:	QBOOT QLOAD \
 	$(DOS33_RAW) space_bars.dsk 1 0 QLOAD			0 0
 	$(DOS33_RAW) space_bars.dsk 3 0 ./title/TITLE		0 0
 	$(DOS33_RAW) space_bars.dsk 4 0 ./level3/LEVEL3_EARTH	0 0
-	$(DOS33_RAW) space_bars.dsk 8 0 ./level6/LEVEL6_SATURN	0 0
+	$(DOS33_RAW) space_bars.dsk 8 0 ./level4/LEVEL4_CITY	0 0
+	$(DOS33_RAW) space_bars.dsk 12 0 ./level6/LEVEL6_SATURN	0 0
 
 ####
 
@@ -27,6 +29,9 @@ title/TITLE:	qload.inc
 
 level3/LEVEL3_EARTH:	qload.inc
 	cd level3 && make
+
+level4/LEVEL4_CITY:	qload.inc
+	cd level4 && make
 
 level6/LEVEL6_SATURN:	qload.inc
 	cd level6 && make
@@ -92,5 +97,6 @@ clean:
 	rm -f *~ *.o *.lst qload.inc
 	cd title && make clean
 	cd level3 && make clean
+	cd level4 && make clean
 	cd level6 && make clean
 

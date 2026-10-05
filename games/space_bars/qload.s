@@ -163,31 +163,31 @@ error_string:
 
 which_disk_array:
 	.byte 1,1,1,1		; ???, MUSIC, TITLE, LEVEL3
-	.byte 1			; LEVEL6
+	.byte 1,1		; LEVEL4, LEVEL6
 
 load_address_array:
 	.byte $D0,$D0,$60,$60	; ???, MUSIC, TITLE, LEVEL3
-	.byte $60		; LEVEL6
+	.byte $60,$60		; LEVEL4, LEVEL6
 
 start_address:
-	.byte $D0,$D0,$40,$40	; ???, MUSIC, TITLE, LEVEL3
-	.byte $40		; LEVEL6
+	.byte $D0,$D0,$60,$60	; ???, MUSIC, TITLE, LEVEL3
+	.byte $60,$60		; LEVEL4, LEVEL6
 
 aux_dest:
-	.byte $D0,$D0,$40,$40	; ???, MUSIC, TITLE, LEVEL3
-	.byte $40		; LEVEL6
+	.byte $D0,$D0,$60,$60	; ???, MUSIC, TITLE, LEVEL3
+	.byte $60,$60		; LEVEL4, LEVEL6
 
 track_array:
 	.byte 2,2,3,4		; ???, MUSIC, TITLE, LEVEL3
-	.byte 8			; LEVEL6
+	.byte 8,12		; LEVEL4, LEVEL6
 
 sector_array:
 	.byte 0,0,0,0		; ???, MUSIC, TITLE, LEVEL3
-	.byte 0			; LEVEL6
+	.byte 0,0		; LEVEL4, LEVEL6
 
 length_array:
 	.byte 48,47,16,64	; ???, MUSIC, TITLE, LEVEL3
-	.byte 16		; LEVEL6
+	.byte 16,16		; LEVEL4, LEVEL6
 
 PT3_ENABLE_APPLE_IIC = 1
 

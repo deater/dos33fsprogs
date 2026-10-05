@@ -145,6 +145,18 @@ run_title:
 	lda	GAME_OVER
 	bne	game_over_man
 
+	; Run LEVEL4_CITY
+
+	lda	#PART_CITY	; Level4 City
+	sta	WHICH_LOAD
+	jsr	load_file
+
+	jsr	$6000
+
+	lda	GAME_OVER
+	bne	game_over_man
+
+
 	; Run LEVEL6_SATURN
 
 	lda	#PART_SATURN	; Level6 Saturn
