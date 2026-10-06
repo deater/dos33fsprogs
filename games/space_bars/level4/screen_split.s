@@ -27,8 +27,8 @@ split_4:
 	nop
 	nop
 	nop
-	bit	LORES
 	bit	HIRES
+	bit	LORES
 	nop
 	nop
 	nop
@@ -47,10 +47,10 @@ split_8:
 	nop
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	nop
@@ -67,12 +67,12 @@ split_12:
 	nop
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	nop
@@ -87,14 +87,14 @@ split_16:
 	nop
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	nop
@@ -107,16 +107,16 @@ split_20:
 	nop
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	nop
@@ -127,18 +127,18 @@ split_24:
 	nop
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	nop
@@ -147,64 +147,64 @@ split_24:
 split_28:
 	nop
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	nop
 	rts
 
 split_32:
 	nop
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	nop
 	rts
 
 split_36:
-	bit	LORES
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
-	nop
 	bit	HIRES
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	bit	LORES
 	rts
 
 

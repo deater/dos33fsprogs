@@ -65,7 +65,7 @@ level4_city:
 	lda	#4
 	sta	DRAW_PAGE
 
-	lda	#$22
+	lda	#$22		; blue for some reason
 	jsr	clear_gr
 
 	;=============================
@@ -145,6 +145,12 @@ sbloopB:dex								; 2
 
 sb_begin_loop:
 
+	; PLAN:
+	; 0-7  = text mode
+	; 8-87 = hgr
+	; 88 - 168 = split
+	; 169 - 191 = gr
+
 sb_display_loop:
 
 
@@ -152,10 +158,7 @@ sb_display_loop:
 ;0123456789012345678901234567890123456789
 ;LEVEL: 6 LIVES: 2 SCORE: 01978 HI: 02018
 
-	; 0-7  = text mode
-	; 8-87 = hgr
-	; 88 - 168 = split
-	; 169 - 191 = gr
+
 
 
 	; 8 lines of text mode
@@ -176,13 +179,13 @@ sb_text_loop:
 
 							; -1
 
-
-sb_hgr_loop:
+	; hgr at  top?
+sb_hgr:
 	; delay 80*65 =  5200
 	;                			; 2180
-	;                    -2
-	;		     +1
-	;		     -8
+	;                    -1	; from	entry	; -2?
+	;		     			; +1?
+	;		     -8	; get hires
 	;=========================
 	;			5191		; 3011
 
@@ -190,20 +193,7 @@ sb_hgr_loop:
 	bit	HIRES				; 4
 
 
-
-	; draw sprite at same time
-;	lda	#>ship_forward						; 2
-;	sta	INH							; 3
-;	lda	#<ship_forward						; 2
-;	sta	INL							; 3
-;	jsr	put_sprite						; 6
-								; + 2164
-								;===========
-								; 2180
-
 	; Try X=68 Y=15 cycles=5191
-
-	; Try X=59 Y=10 cycles=3011
 
 	ldy	#15							; 2
 sbloopC:ldx	#68							; 2
@@ -595,7 +585,7 @@ background_hgr:
 
 score_text:
 .byte 0,0
-.asciiz "LEVEL:6  LIVES:2  SCORE:001978 HI:002026"
+.asciiz "LEVEL:4  LIVES:2  SCORE:001978 HI:002026"
 
 
 
@@ -613,7 +603,7 @@ score_text:
 ; 6    RED	1,b,f,b,1,0,0,0
 ; 7		0,0,0,0,0,0,0,0
 
-; .align 64 ??
+.align $100
 raster_texture:
 	.byte	$5,$7,$f,$7,$5,$0,$0,$0		; grey
 	.byte	$0,$0,$0,$0,$0,$0,$0,$0
