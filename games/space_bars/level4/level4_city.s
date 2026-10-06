@@ -52,30 +52,48 @@ level4_city:
 	jsr	zx02_full_decomp
 
 
+	;================================
+	; Load low-res graphics to page2
+
+	lda     #<track_low_data
+	sta     zx_src_l+1
+	lda     #>track_low_data
+	sta     zx_src_h+1
+
+	lda	#$0c			;  to $c00
+
+	jsr	zx02_full_decomp
+
+	lda	#4
+	sta	DRAW_PAGE
+
+	jsr	gr_copy_to_current	; copy to page2
+
+	;================================
+	; Load low-res graphics to page1
+
+	lda     #<track_high_data
+	sta     zx_src_l+1
+	lda     #>track_high_data
+	sta     zx_src_h+1
+
+	lda	#$0c			;  to $c00
+
+	jsr	zx02_full_decomp
+
+	lda	#0
+	sta	DRAW_PAGE
+
+	jsr	gr_copy_to_current	; copy to page2
+
+
+
 
 	;==================
 	; setup framebuffer
 
 	lda	#0
 	sta	ZPOS
-
-	;=============================
-	; Clear page2 $800
-
-	lda	#4
-	sta	DRAW_PAGE
-
-	lda	#$22		; blue for some reason
-	jsr	clear_gr
-
-	;=============================
-	; Clear offscreen $c00
-
-	lda	#8
-	sta	DRAW_PAGE
-
-	lda	#$00
-	jsr	clear_gr
 
 	;============================
 	; print score at top
@@ -146,10 +164,10 @@ sbloopB:dex								; 2
 sb_begin_loop:
 
 	; PLAN:
-	; 0-7  = text mode
-	; 8-87 = hgr
+	; 0-15  = text mode
+	; 16 - 87 = lores alternate
 	; 88 - 168 = split
-	; 169 - 191 = gr
+	; 169 - 191 = hgr
 
 sb_display_loop:
 
@@ -245,7 +263,7 @@ sb_all_gr:
 	;       =========
 	;	    1478
 
-	bit	LORES						; 4
+	bit	HIRES						; 4
 
 	; Try X=41 Y=7 cycles=1478
 
@@ -580,8 +598,7 @@ fb40_loop:
 .include "screen_split.s"
 
 
-background_hgr:
-.incbin "graphics/car.zx02"
+
 
 score_text:
 .byte 0,0
@@ -657,7 +674,13 @@ setup_fb_loop:
 
 
 .include "../gr_copy.s"
-;.include "sprites/mode7_sprites.inc"
-;.include "../gr_putsprite.s"
 
+
+
+background_hgr:
+.incbin "graphics/car.zx02"
+track_low_data:
+.incbin "graphics/track_low.zx02"
+track_high_data:
+.incbin "graphics/track_high.zx02"
 
