@@ -164,10 +164,9 @@ sbloopB:dex								; 2
 sb_begin_loop:
 
 	; PLAN:
-	; 0-15  = text mode
-	; 16 - 87 = lores alternate
-	; 88 - 168 = split
-	; 169 - 191 = hgr
+	; 0-16    (16) = text mode
+	; 17-112  (96) = lores-alternate
+	; 112-191 (80) = split
 
 sb_display_loop:
 
@@ -179,83 +178,99 @@ sb_display_loop:
 
 
 
-	; 8 lines of text mode
+	; 16 lines of text mode
 
 
-	ldy	#8					; 2
+	ldy	#14					; 2
 
 sb_text_loop:
 	bit	SET_TEXT				; 4
-	lda	#29					; 2
-	jsr	delay_a					; 25+29
+	bit	LORES					; 4
+	lda	#25					; 2
+	jsr	delay_a					; 25+25
 
 	dey						; 2
 	bne	sb_text_loop				; 3
 						;================
 						;	65
 
+	; finish one line early
+	; do things for 65 cycles
+
+; -1
+	ldy	#36+12		; setup loop for next part		; 2
+; 1
+	; want delay 58
+	lda	#33							; 2
+	jsr	delay_a							; 25+33
+; 61
+	bit	SET_GR					; 4
+; 65
+
+	;============================================
+	;============================================
+	; lores at  top?
+	;============================================
+	;============================================
+	; mixed lo-res every other line
+
+top_mix_loop:
+	bit	PAGE1					; 4
+	lda	#34					; 2
+	jsr	delay_a					; 25+34
+
+	bit	PAGE2					; 4
+	lda	#29					; 2
+	jsr	delay_a					; 25+29
+
+	dey						; 2
+	bne	top_mix_loop				; 2/3
 
 							; -1
 
-	; hgr at  top?
-sb_hgr:
-	; delay 80*65 =  5200
-	;                			; 2180
-	;                    -1	; from	entry	; -2?
-	;		     			; +1?
-	;		     -8	; get hires
-	;=========================
-	;			5191		; 3011
 
-	bit	SET_GR				; 4
-	bit	HIRES				; 4
-
-
-	; Try X=68 Y=15 cycles=5191
-
-	ldy	#15							; 2
-sbloopC:ldx	#68							; 2
-sbloopD:dex								; 2
-	bne	sbloopD							; 2nt/3
-	dey								; 2
-	bne	sbloopC							; 2nt/3
-
-
+	;=========================================
+	; split mixed
+	;
+	;=========================================
 
 
 sb_mixed:
-	lda	$0		;kill 6 cycles (room for rts)	; 2
-	ldx	#9					; 2
-	ldy	#9 ; 14 ; 126				; 2
+	nop
+;	nop
+;	nop
+;	lda	$0		;kill 6 cycles (room for rts)		; 3
+	ldx	#9							; 2
+	ldy	#9		; 14 ; 126				; 2
 
 sb_mixed_loop:
-	lda	ss_multiples,x				; 4
-	sta	split_smc+1				; 4
+	lda	ss_multiples,x						; 4
+	sta	split_smc+1						; 4
 split_smc:
-	jsr	split_4					; 6+46
-	dey						; 2
-	bne	sb_mixed_loop				; 3
+	jsr	split_4							; 6+46
+	dey								; 2
+	bne	sb_mixed_loop						; 3
 
-							; -1
-	nop						; 2
-	ldy	#9					; 2
-	dex						; 2
-	bne	split_smc				; 3
+									; -1
+	nop								; 2
+	ldy	#9							; 2
+	dex								; 2
+	bne	split_smc						; 3
 
 							; -1
 
 						; need to kill
 						; -6 from offset
 						; +1 fall through
-						; -9 from check 
+						; -9 from check
 						; +1 from other fallthrough
 					;================
 					;	 -13
 
 
 
-sb_all_gr:
-	; 23 lines of this
+;sb_all_gr:
+;	; 23 lines of this
 
 	; 23 * 65 = 1495
 	;             -4
@@ -263,16 +278,16 @@ sb_all_gr:
 	;       =========
 	;	    1478
 
-	bit	HIRES						; 4
+;	bit	HIRES						; 4
 
 	; Try X=41 Y=7 cycles=1478
 
-	ldy	#7							; 2
-sbloopE:ldx	#41							; 2
-sbloopF:dex								; 2
-	bne	sbloopF							; 2nt/3
-	dey								; 2
-	bne	sbloopE							; 2nt/3
+;	ldy	#7							; 2
+;sbloopE:ldx	#41							; 2
+;sbloopF:dex								; 2
+;	bne	sbloopF							; 2nt/3
+;	dey								; 2
+;	bne	sbloopE							; 2nt/3
 
 
 
@@ -290,13 +305,17 @@ sbloopF:dex								; 2
 	;			===========
 	;			     425
 
+	;				-13
+	;				412
 
 	; Try X=41 Y=2 cycles=423
 
-	nop
+	; Try X=81 Y=1 cycles=412
 
-	ldy	#2							; 2
-sbloop1:ldx	#41							; 2
+;	nop
+
+	ldy	#1							; 2
+sbloop1:ldx	#81							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
