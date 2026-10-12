@@ -164,9 +164,9 @@ sbloopB:dex								; 2
 sb_begin_loop:
 
 	; PLAN:
-	; 0-16    (16) = text mode
-	; 17-112  (96) = lores-alternate
-	; 112-191 (80) = split
+	; 0..3    0-16    (16) = text mode
+	; 4-35   17-144  (128) = lores-alternate
+	; 36-47 144-191   (48) = split
 
 sb_display_loop:
 
@@ -177,11 +177,11 @@ sb_display_loop:
 
 
 
-
+	;=============================
 	; 16 lines of text mode
 
 
-	ldy	#14					; 2
+	ldy	#15					; 2
 
 sb_text_loop:
 	bit	SET_TEXT				; 4
@@ -198,7 +198,7 @@ sb_text_loop:
 	; do things for 65 cycles
 
 ; -1
-	ldy	#36+12		; setup loop for next part		; 2
+	ldy	#(128/2)	; setup loop for next part		; 2
 ; 1
 	; want delay 58
 	lda	#33							; 2
@@ -213,6 +213,10 @@ sb_text_loop:
 	;============================================
 	;============================================
 	; mixed lo-res every other line
+
+	; we want to do this the whole way to line
+
+	; do this for 128 lines (64*2)
 
 top_mix_loop:
 	bit	PAGE1					; 4
@@ -236,24 +240,34 @@ top_mix_loop:
 
 
 sb_mixed:
-	nop
-;	nop
-;	nop
-;	lda	$0		;kill 6 cycles (room for rts)		; 3
-	ldx	#9							; 2
-	ldy	#9		; 14 ; 126				; 2
+	;kill 6 cycles (room for rts) (what does that mean?)
+
+	nop								; 2
+	ldx	#8							; 2
+	ldy	#6		; 9x9=81 lines?				; 2
+
+	;======================================
+	; loop
 
 sb_mixed_loop:
+
+	; patch the smc to the correct split
+
 	lda	ss_multiples,x						; 4
 	sta	split_smc+1						; 4
+
+	; call the split
+
 split_smc:
 	jsr	split_4							; 6+46
 	dey								; 2
 	bne	sb_mixed_loop						; 3
 
+	; finished 9 lines?
+
 									; -1
 	nop								; 2
-	ldy	#9							; 2
+	ldy	#6							; 2
 	dex								; 2
 	bne	split_smc						; 3
 
