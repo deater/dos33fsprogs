@@ -27,6 +27,22 @@ level4_city:
 	sta	XADDH
 	sta	XADDL
 	sta	XPOSL
+	sta	TIME
+	sta	HZ
+
+	; detect 65c02 and patch
+
+	lda	#0
+	.byte	$3A		; dec A on 65c02, nop on 6502
+	bne	not_real_6502
+
+
+	lda	#$EA		; nop
+	sta	new_second_smc
+
+	; only here if 65c02
+
+not_real_6502:
 
 
 	;=============================
@@ -108,6 +124,8 @@ level4_city:
 
 	jsr     move_and_print
 	jsr     move_and_print
+
+	; put fake progress meter
 
 	lda	#32
 	sta	$880+19
@@ -339,21 +357,25 @@ split_smc:
 	;			     -21 frame count
 	;			     -52 keypress
 	;			     -48 move_ship
+	;			     -84 update time
 	;			      -1 adjust center mark back
 	;			===========
-	;			     425
+	;			     341
 
 	;				-13
-	;				412
-
-	; Try X=41 Y=2 cycles=423
+	;				328
 
 	; Try X=81 Y=1 cycles=412
+	;Try X=65 Y=1 cycles=332
+	; Try X=1 Y=29 cycles=320
 
-;	nop
+	nop
+	nop
+	nop
+	nop
 
-	ldy	#1							; 2
-sbloop1:ldx	#81							; 2
+	ldy	#29							; 2
+sbloop1:ldx	#1							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
@@ -437,6 +459,18 @@ done_move_ship:
 sb_frame_oflo:
 	inc	FRAMEH						; 5
 sb_frame_noflo:
+
+	;================================
+	; update time
+
+	jsr	update_time					; 6+74 = 80
+
+; delay 80 cycles
+; 6 bytes
+;	ldx #136 ;hides 'dey'
+;	nop
+;	dex
+;	bmi	*-3
 
 	;===============================
 	; check keypress
@@ -730,6 +764,78 @@ setup_fb_loop:
 
 									; -1
 	rts								; 6
+
+
+
+	;===================================
+	; update time
+	;===================================
+	; 78 cycles
+
+update_time:
+; 0
+	inc	HZ							; 5
+	lda	HZ							; 3
+	cmp	#60							; 2
+	bne	time_good						; 2/3
+; 12
+new_second:
+
+	; decimal add takes 2 cyces 6502, 3 on 65c02
+	; patch the following to handle_that
+
+new_second_smc:
+	cmp	$EA		; 3 cycles				; 4
+				; patch to nop/nop (4 cycles) if 6502
+
+; 16
+	lda	#0							; 2
+	sta	HZ							; 3
+	sed								; 2
+	clc								; 2
+	lda	TIME							; 3
+	adc	#1							; 2
+	cld								; 2
+	sta	TIME							; 3
+; 35
+	jmp	print_time						; 3
+
+; 13
+time_good:
+	; need to delay 25
+
+	; 5 bytes
+	nop
+	nop
+	clc
+	lda	#$2A	; hides 'rol'
+	bcc	*-1
+
+; 38
+print_time:
+	; print ones
+
+	lda	TIME							; 3
+; 41
+	clc								; 2
+	and	#$f							; 2
+	adc	#'0'							; 2
+	sta	$880+7							; 4
+; 51
+	lda	TIME							; 3
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	lsr								; 2
+	clc								; 2
+	and	#$f							; 2
+	adc	#'0'							; 2
+	sta	$880+6							; 4
+; 72
+time_done:
+
+	rts								; 6
+; 78
 
 
 .include "../gr_copy.s"
