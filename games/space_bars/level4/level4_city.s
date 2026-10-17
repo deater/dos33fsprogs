@@ -95,8 +95,11 @@ level4_city:
 	lda	#0
 	sta	ZPOS
 
-	;============================
-	; print score at top
+	;=============================
+	; print score at top of page2
+
+	lda	#4
+	sta	DRAW_PAGE
 
 	lda	#<score_text
         sta	OUTL
@@ -104,10 +107,31 @@ level4_city:
         sta	OUTH
 
 	jsr     move_and_print
+	jsr     move_and_print
 
+	lda	#32
+	sta	$880+19
+	sta	$880+20
+
+	;============================
+	; print score at top of page1
+
+	; not needed, only page2 drawn?
 
 	lda	#0
 	sta	DRAW_PAGE
+.if 0
+	lda	#<score_text
+        sta	OUTL
+        lda	#>score_text
+        sta	OUTH
+
+	jsr     move_and_print
+	jsr     move_and_print
+.endif
+
+
+
 
 	; GR part
 	bit	PAGE1
@@ -635,8 +659,10 @@ fb40_loop:
 
 score_text:
 .byte 0,0
-.asciiz "LEVEL:4  LIVES:2  SCORE:001978 HI:002026"
-
+.byte "LEVEL: 4 LIVES: 2  SCORE:01978  HI:02026",0
+score_text2:
+.byte 0,1
+.byte "TIME: 00 PROGRESS: __________________   ",0
 
 
 ; Note on the distance calculations
