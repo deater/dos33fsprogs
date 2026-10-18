@@ -14,7 +14,6 @@ LEVEL4_CITY:	level4_city.o
 level4_city.o:	level4_city.s \
 	../zp.inc ../hardware.inc ../qload.inc \
 	../gr_copy.s \
-	screen_split.s \
 	graphics/car.zx02 graphics/track_low.zx02 graphics/track_high.zx02
 	ca65 -o level4_city.o level4_city.s -l level4_city.lst
 

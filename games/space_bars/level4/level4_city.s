@@ -309,8 +309,16 @@ early_enter:
 ; 4
 	bit	PAGE1							; 4
 ; 8
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+; 22
 	bit	HIRES							; 4
-; 12
+; 26
 	nop
 	nop
 	nop
@@ -321,21 +329,14 @@ early_enter:
 	nop
 	nop
 	nop
-; 32
 	nop
-	nop
-	nop
-	nop
-; 40
-	bit	LORES
-; 44
-	nop
-	nop
-	nop
-	nop
-; 52
+; 48
+
 	lda	$0	; 3
 	nop		; 2
+; 53
+	bit	LORES
+; 57
 	nop		; 2
 	nop		; 2
 	nop		; 2
@@ -344,12 +345,21 @@ early_enter:
 
 split_32_2:
 ; 0
+	nop								; 2
+	nop								; 2
+; 4
 	bit	PAGE2							; 4
-	nop								; 2
-; 6
-	nop								; 2
+; 8
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+; 22
 	bit	HIRES							; 4
-; 12
+; 26
 	nop
 	nop
 	nop
@@ -360,23 +370,15 @@ split_32_2:
 	nop
 	nop
 	nop
-; 32
 	nop
-	nop
-	nop
-	nop
-; 40
+; 48
+	lda	$0	; 3
+	nop		; 2
+; 53
 	bit	LORES
-; 44
-	nop
-	nop
-	nop
-	nop
-; 52
-	nop		; 2
-	nop		; 2
-	nop		; 2
-	nop		; 2
+; 57
+	lda	$0	; 3
+; 60
 	dey								; 2
 	bne	sb_mixed_loop						; 2/3
 ; 65
