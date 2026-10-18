@@ -221,7 +221,8 @@ sb_display_loop:
 
 	;=============================
 	; 16 lines of text mode
-
+	;=============================
+	;
 
 	ldy	#15					; 2
 
@@ -277,76 +278,118 @@ top_mix_loop:
 
 	;=========================================
 	; split mixed
-	;
 	;=========================================
-
+	; PAGE1   lores/hires/lores
+	; PAGE2   lores/hires/lores
+	;
+	; do this for 48 lines
 
 sb_mixed:
 	;kill 6 cycles (room for rts) (what does that mean?)
 
-	nop								; 2
-	ldx	#8							; 2
-	ldy	#6		; 9x9=81 lines?				; 2
+; -1
+	ldy	#24		; 24*2=48 lines				; 2
+; 1
+	jmp	early_enter
+; 4
 
 	;======================================
 	; loop
 
 sb_mixed_loop:
 
-	; patch the smc to the correct split
 
-	lda	ss_multiples,x						; 4
-	sta	split_smc+1						; 4
+split_loop:
 
-	; call the split
-
-split_smc:
-	jsr	split_4							; 6+46
-	dey								; 2
-	bne	sb_mixed_loop						; 3
-
-	; finished 9 lines?
-
-									; -1
+split_32_1:
+; 0
 	nop								; 2
-	ldy	#6							; 2
-	dex								; 2
-	bne	split_smc						; 3
+	nop								; 2
+early_enter:
+; 4
+	bit	PAGE1							; 4
+; 8
+	bit	HIRES							; 4
+; 12
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+; 32
+	nop
+	nop
+	nop
+	nop
+; 40
+	bit	LORES
+; 44
+	nop
+	nop
+	nop
+	nop
+; 52
+	lda	$0	; 3
+	nop		; 2
+	nop		; 2
+	nop		; 2
+	nop		; 2
+	nop		; 2
+; 65
 
-							; -1
-
-						; need to kill
-						; -6 from offset
-						; +1 fall through
-						; -9 from check
-						; +1 from other fallthrough
+split_32_2:
+; 0
+	bit	PAGE2							; 4
+	nop								; 2
+; 6
+	nop								; 2
+	bit	HIRES							; 4
+; 12
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+	nop
+; 32
+	nop
+	nop
+	nop
+	nop
+; 40
+	bit	LORES
+; 44
+	nop
+	nop
+	nop
+	nop
+; 52
+	nop		; 2
+	nop		; 2
+	nop		; 2
+	nop		; 2
+	dey								; 2
+	bne	sb_mixed_loop						; 2/3
+; 65
+									; -1
 					;================
-					;	 -13
+					;	 -1
 
+	jmp	handle_vblank
+; 2
 
+.align $100
 
-;sb_all_gr:
-;	; 23 lines of this
-
-	; 23 * 65 = 1495
-	;             -4
-	;            -13
-	;       =========
-	;	    1478
-
-;	bit	HIRES						; 4
-
-	; Try X=41 Y=7 cycles=1478
-
-;	ldy	#7							; 2
-;sbloopE:ldx	#41							; 2
-;sbloopF:dex								; 2
-;	bne	sbloopF							; 2nt/3
-;	dey								; 2
-;	bne	sbloopE							; 2nt/3
-
-
-
+handle_vblank:
 	;======================================================
 	; We have 4550 cycles in the vblank, use them wisely
 	;======================================================
@@ -362,20 +405,21 @@ split_smc:
 	;			===========
 	;			     341
 
-	;				-13
-	;				328
+	;				-2	; arrival
+	;				339
 
-	; Try X=81 Y=1 cycles=412
-	;Try X=65 Y=1 cycles=332
+
 	; Try X=1 Y=29 cycles=320
 
+	;Try X=65 Y=1 cycles=332
+
 	nop
 	nop
-	nop
+;	lda	$0	; nop3
 	nop
 
-	ldy	#29							; 2
-sbloop1:ldx	#1							; 2
+	ldy	#1							; 2
+sbloop1:ldx	#65							; 2
 sbloop2:dex								; 2
 	bne	sbloop2							; 2nt/3
 	dey								; 2
@@ -432,7 +476,7 @@ stop_common:
 	jmp	done_move_ship				; 3
 
 no_stop:
-; 30
+; 3
 	jsr	sb_exit					; 12
 	lda	$0					; 3
 	lda	$0					; 3
@@ -686,7 +730,7 @@ fb40_loop:
 
 
 .align $100
-.include "screen_split.s"
+;.include "screen_split.s"
 
 
 
